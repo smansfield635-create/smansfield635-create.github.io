@@ -940,67 +940,126 @@
         </div>
         <div class="card" id="c2">
           <h3>Category C2 — Visibility states (9–13)</h3>
-          <p>States 9–13 classify documentation completeness, categorical closure, extension, higher-order execution, and re-stabilization.</p>
-          <span class="tag">Visibility</span>
-        </div>
-        <div class="card" id="c3">
-          <h3>Category C3 — Closure rule</h3>
-          <p>Closure exists when additions fail unless explicit exceptions are added. Extension exists when invariants remain valid but insufficient.</p>
-          <span class="tag">Closure</span>
-        </div>
-      </div>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geodiametrics · Apps</title>
+  <style>
+    :root{--fg:#e9eefc;--muted:rgba(233,238,252,.78);--stroke:rgba(233,238,252,.12);--panel:rgba(8,12,26,.58)}
+    *{box-sizing:border-box}html,body{height:100%}
+    body{
+      margin:0;color:var(--fg);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      overflow-x:hidden;
+      background:
+        radial-gradient(1400px 900px at 15% 10%, rgba(140,120,255,.18), transparent 55%),
+        radial-gradient(1200px 800px at 85% 25%, rgba(80,210,255,.14), transparent 60%),
+        radial-gradient(900px 700px at 60% 80%, rgba(255,140,120,.08), transparent 60%),
+        linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%);
+    }
+    header{padding:18px 22px;border-bottom:1px solid var(--stroke);background:rgba(8,12,26,.55);backdrop-filter:blur(6px)}
+    .top{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{font-weight:900;letter-spacing:.35px}
+    nav a{margin-left:14px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:700}
+    nav a:hover{color:var(--fg)}
+    main{max-width:980px;margin:0 auto;padding:34px 22px 64px}
+    h1{margin:10px 0 12px;font-size:32px}
+    .sub{max-width:78ch;color:var(--muted);line-height:1.7;margin:0 0 18px}
+    .card{padding:18px;border:1px solid var(--stroke);border-radius:16px;background:var(--panel);backdrop-filter:blur(8px)}
+    .card p{margin:0;color:var(--muted);line-height:1.55;font-size:14px}
+    footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--stroke);font-size:13px;color:rgba(233,238,252,.55)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top">
+      <div class="brand">Geodiametrics</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/methods/">Methods</a>
+        <a href="/apps/">Apps</a>
+        <a href="/news/">News</a>
+      </nav>
+    </div>
+  </header>
 
-      <p class="mini">
-        State table: see <code>/</code> Home (cycle module) or embed the same module in this page if required.
-      </p>
-    </section>
-
-    <section id="independent">
-      <h2>Independent Findings</h2>
-      <p>These findings are observer-invariant. Independent observers can reproduce classifications and verify outputs from the same evidence.</p>
-
-      <div class="grid">
-        <div class="card" id="i1">
-          <h3>Independent I1 — State classification is reproducible</h3>
-          <p>Given the same trace, independent observers classify the same state without inferring intent.</p>
-          <span class="tag">Observer-invariant</span>
-        </div>
-        <div class="card" id="i2">
-          <h3>Independent I2 — Outputs are verifiable</h3>
-          <p>Outputs are valid only when the receipt chain and log inclusion prove the transition.</p>
-          <span class="tag">Verifiable</span>
-        </div>
-        <div class="card" id="i3">
-          <h3>Independent I3 — Drift detection is objective</h3>
-          <p>Drift is detected by violated constraints and missing gates, not by inferred intent or narrative framing.</p>
-          <span class="tag">Objective</span>
-        </div>
-        <div class="card" id="i4">
-          <h3>Independent I4 — Audit does not require trust</h3>
-          <p>Audit relies on explicit artifacts, not authority. The system remains legible under independent review.</p>
-          <span class="tag">Trust-minimal</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="summary">
-      <h2>Method Summary</h2>
-      <p>
-        Core loop: <code>CHECK → RECEIPT → LOG → SEARCH → PROOF</code>. This loop is mandatory. A result exists only when it is traceable.
-      </p>
-      <p class="mini" style="margin-top:10px">
-        Domain rule: internal meaning and external causality remain separated. Mixed-domain claims are rejected as drift.
-      </p>
-      <p class="mini" style="margin-top:10px">
-        Reference: canonical definitions, index, and appendix live at <code>/reference/</code>.
-      </p>
-    </section>
-
+  <main>
+    <h1>Apps</h1>
+    <p class="sub">
+      This page lists stable tools and demos. Each entry is provable and traceable. No artifact is published without provenance.
+    </p>
+    <div class="card">
+      <p>Apps publish next. This page is the canonical index.</p>
+    </div>
     <footer>© <span id="y"></span> Geodiametrics</footer>
   </main>
 
-  <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
-  </script>
+  <script>document.getElementById("y").textContent=new Date().getFullYear();</script>
+</body>
+</html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geodiametrics · News</title>
+  <style>
+    :root{--fg:#e9eefc;--muted:rgba(233,238,252,.78);--stroke:rgba(233,238,252,.12);--panel:rgba(8,12,26,.58)}
+    *{box-sizing:border-box}html,body{height:100%}
+    body{
+      margin:0;color:var(--fg);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      overflow-x:hidden;
+      background:
+        radial-gradient(1400px 900px at 15% 10%, rgba(140,120,255,.18), transparent 55%),
+        radial-gradient(1200px 800px at 85% 25%, rgba(80,210,255,.14), transparent 60%),
+        radial-gradient(900px 700px at 60% 80%, rgba(255,140,120,.08), transparent 60%),
+        linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%);
+    }
+    header{padding:18px 22px;border-bottom:1px solid var(--stroke);background:rgba(8,12,26,.55);backdrop-filter:blur(6px)}
+    .top{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{font-weight:900;letter-spacing:.35px}
+    nav a{margin-left:14px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:700}
+    nav a:hover{color:var(--fg)}
+    main{max-width:980px;margin:0 auto;padding:34px 22px 64px}
+    h1{margin:10px 0 12px;font-size:32px}
+    .sub{max-width:78ch;color:var(--muted);line-height:1.7;margin:0 0 18px}
+    .card{padding:18px;border:1px solid var(--stroke);border-radius:16px;background:var(--panel);backdrop-filter:blur(8px)}
+    .item{margin-top:14px;padding-top:14px;border-top:1px solid rgba(233,238,252,.10)}
+    .ts{font-size:12px;color:rgba(233,238,252,.60);font-weight:800}
+    .card p{margin:0;color:var(--muted);line-height:1.55;font-size:14px}
+    footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--stroke);font-size:13px;color:rgba(233,238,252,.55)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top">
+      <div class="brand">Geodiametrics</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/methods/">Methods</a>
+        <a href="/apps/">Apps</a>
+        <a href="/news/">News</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>News</h1>
+    <p class="sub">Updates are short, timestamped, and artifact-linked. No hype. Proof only.</p>
+    <div class="card">
+      <div class="item">
+        <div class="ts">INITIAL</div>
+        <p>Geodiametrics is live. Foundation pages are published. Domain mapping is pending.</p>
+      </div>
+    </div>
+    <footer>© <span id="y"></span> Geodiametrics</footer>
+  </main>
+
+  <script>document.getElementById("y").textContent=new Date().getFullYear();</script>
 </body>
 </html>

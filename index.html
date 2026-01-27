@@ -543,523 +543,126 @@
 </section>
 
 <style>
-  #state-table .controls{
-    display:flex;gap:10px;flex-wrap:wrap;margin:14px 0
-  }
-  #state-table input,#state-table select,#state-table button{
-    padding:10px 12px;border-radius:10px;border:1px solid var(--stroke);
-    background:rgba(8,12,26,.85);color:var(--fg)
-  }
-  #cycleGrid{display:grid;gap:12px;margin-top:12px}
-  .state-card{
-    border:1px solid var(--stroke);
-    background:rgba(6,10,24,.92);
-    border-radius:14px;
-    padding:14px;
-  }
-  .state-head{
-    display:flex;gap:10px;align-items:center;margin-bottom:6px
-  }
-  .state-num{
-    font-weight:900;opacity:.7;min-width:24px
-  }
-  .state-label{
-    font-weight:800;letter-spacing:.3px
-  }
-  .state-obs{color:var(--muted);margin:6px 0}
-  .state-edge{font-size:13px;opacity:.75}
-</style>
-<section id="state-table" style="max-width:1100px;margin:0 auto 48px;padding:0 16px">
-  <header style="margin:28px 0 16px">
-    <h2 style="margin:0 0 6px;font-size:34px;letter-spacing:.2px">
-      0–13 Structural Cycle
-    </h2>
-    <p style="margin:0;color:rgba(233,238,252,.78)">
-      Observer-invariant lifecycle classifier. Evidence-only. No intent inference.
-    </p>
-  </header>
+          <!-- ===================== -->
+<!-- 0–13 STRUCTURAL CYCLE -->
+<!-- ===================== -->
+<section id="state-table" style="max-width:1100px;margin:80px auto;padding:0 20px;">
+  <h2 style="font-size:32px;margin-bottom:8px;">0–13 Structural Cycle</h2>
+  <p style="opacity:.75;margin-bottom:24px;">
+    Observer-invariant lifecycle classifier. Evidence-only. No intent inference.
+  </p>
 
   <!-- Controls -->
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 18px">
-    <input id="cycleSearch" placeholder="Search states (e.g., 7, closure, projection)"
-      style="flex:1;min-width:220px;padding:12px 14px;border-radius:12px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:#fff" />
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
+    <input id="cycleSearch" placeholder="Search states (e.g. 7, closure, projection)"
+      style="flex:1;min-width:220px;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.35);color:#fff;">
     <select id="cycleFilter"
-      style="padding:12px 14px;border-radius:12px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:#fff">
+      style="padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.35);color:#fff;">
       <option value="all">All</option>
       <option value="execution">Execution</option>
       <option value="visibility">Visibility</option>
     </select>
     <button id="cycleReset"
-      style="padding:12px 16px;border-radius:12px;border:0;background:#fff;color:#000;font-weight:700">
+      style="padding:12px 18px;border-radius:12px;border:none;
+      background:#fff;color:#000;font-weight:700;cursor:pointer;">
       Reset
     </button>
-    <button id="cycleExport"
-      style="padding:12px 16px;border-radius:12px;border:1px solid rgba(233,238,252,.25);background:transparent;color:#fff">
-      Export JSON
-    </button>
   </div>
 
-  <!-- Cards -->
-  <div id="cycleBody" style="display:grid;gap:14px"></div>
-</section>
-<section id="cycle" style="max-width:1100px;margin:0 auto 56px;padding:0 16px">
-  <header class="cycleHdr">
-    <h2>0–13 Structural Cycle</h2>
-    <p>Observer-invariant lifecycle classifier. Evidence-only. No intent inference.</p>
-    <p class="meta"><b>Scope:</b> public artifacts with measurable ingress and identifiable structure. <b>Rule:</b> classify from evidence traces; exclude narrative/intent.</p>
-  </header>
-
-  <div class="cycleCtrl">
-    <input id="cycleSearch" placeholder="Search states (e.g., 7, closure, projection)" />
-    <select id="cycleFilter">
-      <option value="all">All</option>
-      <option value="execution">Execution</option>
-      <option value="visibility">Visibility</option>
-    </select>
-    <button id="cycleReset">Reset</button>
-    <button id="cycleExport">Export JSON</button>
+  <!-- Table -->
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr style="text-align:left;border-bottom:1px solid rgba(255,255,255,.25);">
+          <th style="padding:12px;">#</th>
+          <th style="padding:12px;">Label</th>
+          <th style="padding:12px;">Observable indicators</th>
+          <th style="padding:12px;">Empirical edge</th>
+        </tr>
+      </thead>
+      <tbody id="cycleBody"></tbody>
+    </table>
   </div>
-
-  <div id="cycleBody" class="cycleGrid"></div>
 </section>
-
-<style>
-  /* COMPLETE TABLE MODULE — no legacy table markup allowed */
-  #cycle .cycleHdr{
-    background:rgba(6,10,24,.88);
-    border:1px solid rgba(233,238,252,.14);
-    border-radius:18px;
-    padding:18px;
-    margin-top:24px;
-    backdrop-filter: blur(8px);
-  }
-  #cycle .cycleHdr h2{
-    margin:0 0 6px;
-    font-size:28px;
-    letter-spacing:.2px;
-  }
-  #cycle .cycleHdr p{
-    margin:0;
-    color:rgba(233,238,252,.78);
-    line-height:1.55;
-  }
-  #cycle .cycleHdr .meta{
-    margin-top:10px;
-    color:rgba(233,238,252,.70);
-    font-size:13px;
-  }
-
-  #cycle .cycleCtrl{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin:14px 0 16px;
-  }
-  #cycle input,#cycle select,#cycle button{
-    padding:12px 14px;
-    border-radius:12px;
-    border:1px solid rgba(233,238,252,.16);
-    background:rgba(10,14,26,.60);
-    color:#fff;
-  }
-  #cycle button{
-    font-weight:800;
-    cursor:pointer;
-  }
-  #cycle #cycleReset{
-    background:#fff;
-    color:#000;
-    border:0;
-  }
-
-  #cycle .cycleGrid{
-    display:grid;
-    gap:14px;
-  }
-  #cycle .stateCard{
-    border:1px solid rgba(233,238,252,.14);
-    background:rgba(10,14,26,.68);
-    border-radius:18px;
-    padding:16px;
-    box-shadow: 0 14px 36px rgba(0,0,0,.45);
-  }
-  #cycle .stateTop{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    cursor:pointer;
-  }
-  #cycle .n{
-    min-width:28px;
-    font-size:20px;
-    font-weight:900;
-    opacity:.75;
-  }
-  #cycle .lbl{
-    font-size:18px;
-    font-weight:900;
-    letter-spacing:.2px;
-  }
-  #cycle .tap{
-    margin-left:auto;
-    opacity:.55;
-    font-size:12px;
-    font-weight:800;
-  }
-  #cycle .body{
-    margin-top:12px;
-    line-height:1.55;
-    color:rgba(233,238,252,.86);
-  }
-  #cycle .edge{
-    margin-top:8px;
-    opacity:.75;
-    font-size:13px;
-  }
-</style>
 
 <script>
-(() => {
+(function(){
   const STATES = [
-    { n: 0, phase: "execution", label: "NULL / RESET",
-      obs: "No active constraints; exploratory activity without directional accumulation; prior structure archived/abandoned.",
-      edge: "Attempted actions do not compound." },
-    { n: 1, phase: "execution", label: "CONSTRAINT INTRODUCED",
-      obs: "First binding rule/boundary defined; first canonical artifact; scope becomes directional.",
-      edge: "Activity begins aligning around a single axis." },
-    { n: 2, phase: "execution", label: "CONTRAST / BOUNDARY",
-      obs: "Explicit exclusions; alternatives rejected; decision points narrow future paths.",
-      edge: "Variance decreases; execution not yet viable." },
-    { n: 3, phase: "execution", label: "EXECUTABLE MINIMUM",
-      obs: "First repeatable loop; same input yields same output; minimal working example exists.",
-      edge: "Execution possible but fragile." },
-    { n: 4, phase: "execution", label: "STABLE STRUCTURE",
-      obs: "Loops complete repeatably; core structure unchanged across iterations; absorbs small disturbances.",
-      edge: "System persists without constant repair." },
-    { n: 5, phase: "execution", label: "PROJECTION / THROUGHPUT",
-      obs: "External access points added; measurable inbound; outputs cross system boundary.",
-      edge: "System becomes observable without explanation." },
-    { n: 6, phase: "execution", label: "FEEDBACK",
-      obs: "External responses shape adjustments; recurring questions/errors; system reacts to outside signals.",
-      edge: "Change is responsive, not structural." },
-    { n: 7, phase: "execution", label: "CHAPTER COMPLETION",
-      obs: "No admissible improvements within constraints; attempts yield diminishing returns; done-state distinct from stall.",
-      edge: "Work stops because it should, not because it failed." },
-    { n: 9, phase: "visibility", label: "FULL STATE VISIBILITY",
-      obs: "All components documented/navigable; failure modes enumerated; hidden dependencies removed.",
-      edge: "Independent audit becomes possible." },
-    { n: 10, phase: "visibility", label: "CATEGORICAL CLOSURE",
-      obs: "New additions fail unless exceptions are added; edge cases accumulate; capacity saturated.",
-      edge: "Growth attempts break coherence under current category." },
-    { n: 11, phase: "visibility", label: "CATEGORY EXTENSION (UNDER FIT)",
-      obs: "New behavior violates completeness assumptions of 10; core invariants remain valid but insufficient; category expands.",
-      edge: "Old tools still work but no longer cover everything." },
-    { n: 12, phase: "visibility", label: "HIGHER-ORDER EXECUTION",
-      obs: "Parallel subsystems execute coherently; execution scales across categories; coordination emerges without central control.",
-      edge: "Execution occurs at a higher abstraction layer." },
-    { n: 13, phase: "visibility", label: "RE-STABILIZATION (RETURN TO 4)",
-      obs: "Expanded system stabilizes; new constraints + execution form durable structure; cycle can repeat at higher scale.",
-      edge: "System becomes boring again—in a good way." }
+    {n:0,phase:"execution",label:"NULL / RESET",
+     obs:"No active constraints; exploratory motion without accumulation; prior structure archived.",
+     edge:"Actions do not compound."},
+    {n:1,phase:"execution",label:"CONSTRAINT INTRODUCED",
+     obs:"First binding rule; first canonical artifact; scope becomes directional.",
+     edge:"Activity aligns on one axis."},
+    {n:2,phase:"execution",label:"CONTRAST / BOUNDARY",
+     obs:"Explicit exclusions; alternatives rejected; future paths narrow.",
+     edge:"Variance drops; execution not viable."},
+    {n:3,phase:"execution",label:"EXECUTABLE MINIMUM",
+     obs:"Repeatable loop; identical input yields identical output.",
+     edge:"Execution possible but fragile."},
+    {n:4,phase:"execution",label:"STABLE STRUCTURE",
+     obs:"Loops persist across iterations; absorbs small disturbance.",
+     edge:"System endures."},
+    {n:5,phase:"execution",label:"PROJECTION / THROUGHPUT",
+     obs:"External interfaces added; measurable ingress and output.",
+     edge:"System becomes observable."},
+    {n:6,phase:"execution",label:"FEEDBACK",
+     obs:"External signals induce adjustments; recurring error patterns.",
+     edge:"Responsive but not structural."},
+    {n:7,phase:"execution",label:"CHAPTER COMPLETION",
+     obs:"No admissible improvements; diminishing returns.",
+     edge:"Work stops by sufficiency."},
+    {n:9,phase:"visibility",label:"FULL STATE VISIBILITY",
+     obs:"All components documented; dependencies surfaced.",
+     edge:"Independent audit possible."},
+    {n:10,phase:"visibility",label:"CATEGORICAL CLOSURE",
+     obs:"Additions fail unless exceptions added; saturation reached.",
+     edge:"Category exhausted."},
+    {n:11,phase:"visibility",label:"CATEGORY EXTENSION",
+     obs:"New behavior violates prior completeness; invariants insufficient.",
+     edge:"Category expands."},
+    {n:12,phase:"visibility",label:"HIGHER-ORDER EXECUTION",
+     obs:"Parallel subsystems execute coherently.",
+     edge:"Execution at higher abstraction."},
+    {n:13,phase:"visibility",label:"RE-STABILIZATION",
+     obs:"Expanded system stabilizes; new durable loop formed.",
+     edge:"Cycle restarts at scale."}
   ];
 
-  const elBody = document.getElementById("cycleBody");
-  const elSearch = document.getElementById("cycleSearch");
-  const elFilter = document.getElementById("cycleFilter");
-  const elReset = document.getElementById("cycleReset");
-  const elExport = document.getElementById("cycleExport");
+  const body=document.getElementById("cycleBody"),
+        search=document.getElementById("cycleSearch"),
+        filter=document.getElementById("cycleFilter"),
+        reset=document.getElementById("cycleReset");
 
-  const render = (rows) => {
-    elBody.innerHTML = "";
-    rows.forEach(s => {
-      const card = document.createElement("article");
-      card.className = "stateCard";
-      card.id = `state-${s.n}`;
-
-      card.innerHTML = `
-        <div class="stateTop" role="button" aria-expanded="false">
-          <div class="n">${s.n}</div>
-          <div class="lbl">${s.label}</div>
-          <div class="tap">tap</div>
-        </div>
-        <div class="body" hidden>
-          <div>${s.obs}</div>
-          <div class="edge"><i>${s.edge}</i></div>
-        </div>
-      `;
-
-      const top = card.querySelector(".stateTop");
-      const body = card.querySelector(".body");
-      top.addEventListener("click", () => {
-        const open = !body.hasAttribute("hidden");
-        if (open) body.setAttribute("hidden", "");
-        else body.removeAttribute("hidden");
-        top.setAttribute("aria-expanded", String(!open));
-      });
-
-      elBody.appendChild(card);
+  function render(rows){
+    body.innerHTML="";
+    rows.forEach(r=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML=`
+        <td style="padding:14px;font-weight:800;">${r.n}</td>
+        <td style="padding:14px;font-weight:700;">${r.label}</td>
+        <td style="padding:14px;opacity:.85;">${r.obs}</td>
+        <td style="padding:14px;opacity:.75;">${r.edge}</td>`;
+      body.appendChild(tr);
     });
-  };
+  }
 
-  const apply = () => {
-    const q = (elSearch.value || "").trim().toLowerCase();
-    const f = elFilter.value;
-
-    let rows = STATES.slice();
-    if (f !== "all") rows = rows.filter(r => r.phase === f);
-    if (q) rows = rows.filter(r => (`${r.n} ${r.label} ${r.obs} ${r.edge}`).toLowerCase().includes(q));
-
+  function apply(){
+    let rows=[...STATES];
+    const q=search.value.toLowerCase();
+    if(filter.value!=="all") rows=rows.filter(r=>r.phase===filter.value);
+    if(q) rows=rows.filter(r=>
+      `${r.n} ${r.label} ${r.obs} ${r.edge}`.toLowerCase().includes(q)
+    );
     render(rows);
-  };
+  }
 
-  elSearch.addEventListener("input", apply);
-  elFilter.addEventListener("change", apply);
-  elReset.addEventListener("click", () => { elSearch.value=""; elFilter.value="all"; apply(); });
-  elExport.addEventListener("click", async () => {
-    const text = JSON.stringify(STATES, null, 2);
-    try { await navigator.clipboard.writeText(text); elExport.textContent = "Copied"; setTimeout(()=>elExport.textContent="Export JSON", 900); }
-    catch { alert(text); }
-  });
+  search.oninput=apply;
+  filter.onchange=apply;
+  reset.onclick=()=>{search.value="";filter.value="all";apply();};
 
   render(STATES);
 })();
 </script>
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Geodiametrics · Methods</title>
-  <style>
-    :root{--fg:#e9eefc;--muted:rgba(233,238,252,.78);--stroke:rgba(233,238,252,.14);--panel:rgba(10,14,26,.68)}
-    *{box-sizing:border-box}html,body{height:100%}
-    body{
-      margin:0;color:var(--fg);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      overflow-x:hidden;
-      background:
-        radial-gradient(1400px 900px at 15% 10%, rgba(140,120,255,.18), transparent 55%),
-        radial-gradient(1200px 800px at 85% 25%, rgba(80,210,255,.14), transparent 60%),
-        radial-gradient(900px 700px at 60% 80%, rgba(255,140,120,.08), transparent 60%),
-        linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%);
-    }
-    header{padding:18px 22px;border-bottom:1px solid var(--stroke);background:rgba(8,12,26,.55);backdrop-filter:blur(6px)}
-    .top{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .brand{font-weight:900;letter-spacing:.35px}
-    nav a{margin-left:14px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:800}
-    nav a:hover{color:var(--fg)}
-    main{max-width:1100px;margin:0 auto;padding:28px 16px 64px}
-    h1{margin:14px 0 8px;font-size:34px;letter-spacing:.2px}
-    .sub{margin:0 0 18px;max-width:82ch;color:var(--muted);line-height:1.65}
-    .jump{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 18px}
-    .jump a{padding:10px 12px;border-radius:999px;border:1px solid rgba(233,238,252,.16);background:rgba(10,14,26,.55);color:#fff;text-decoration:none;font-weight:800;font-size:13px}
-    .jump a:hover{border-color:rgba(233,238,252,.28)}
-    section{margin-top:18px;padding:18px;border:1px solid rgba(233,238,252,.14);border-radius:18px;background:rgba(6,10,24,.88);backdrop-filter:blur(8px)}
-    section h2{margin:0 0 8px;font-size:20px;letter-spacing:.2px}
-    section p{margin:0;color:var(--muted);line-height:1.6}
-    .grid{display:grid;gap:14px;margin-top:12px}
-    .card{padding:16px;border-radius:16px;border:1px solid rgba(233,238,252,.12);background:var(--panel);box-shadow:0 14px 36px rgba(0,0,0,.45)}
-    .card h3{margin:0 0 6px;font-size:15px}
-    .card p{margin:0;color:rgba(233,238,252,.84);line-height:1.55}
-    .tag{display:inline-block;margin-top:8px;padding:6px 10px;border-radius:999px;border:1px solid rgba(233,238,252,.16);color:rgba(233,238,252,.78);font-size:12px;font-weight:800}
-    .mini{margin-top:10px;color:rgba(233,238,252,.70);font-size:13px;line-height:1.55}
-    footer{margin-top:26px;padding-top:18px;border-top:1px solid rgba(233,238,252,.12);font-size:13px;color:rgba(233,238,252,.55)}
-    code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:8px}
-  </style>
-</head>
-<body>
-  <header>
-    <div class="top">
-      <div class="brand">Geodiametrics</div>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/methods/">Methods</a>
-        <a href="/apps/">Apps</a>
-        <a href="/about/">About</a>
-        <a href="/news/">News</a>
-        <a href="/reference/">Reference</a>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <h1>Methods</h1>
-    <p class="sub">
-      Geodiametrics classifies systems from evidence traces. It rejects narrative and intent inference. It enforces provability through explicit constraints and auditable artifacts.
-    </p>
-
-    <div class="jump">
-      <a href="#scientific">Scientific</a>
-      <a href="#categorical">Categorical</a>
-      <a href="#independent">Independent</a>
-      <a href="#summary">Summary</a>
-      <a href="/reference/">Reference</a>
-    </div>
-
-    <section id="scientific">
-      <h2>Scientific Findings</h2>
-      <p>These findings are bounded, falsifiable, and operational. Each finding is a testable claim about structure, behavior, and evidence.</p>
-
-      <div class="grid">
-        <div class="card" id="s1">
-          <h3>Finding S1 — Constraint-first execution is provable</h3>
-          <p>Execution is admissible only when constraints are satisfied and outcomes are traceable through a deterministic proof chain.</p>
-          <span class="tag">Bounded</span>
-        </div>
-        <div class="card" id="s2">
-          <h3>Finding S2 — Receipts block silent state change</h3>
-          <p>A state transition exists only when it emits a receipt. Absence of receipt invalidates advancement.</p>
-          <span class="tag">Audit-safe</span>
-        </div>
-        <div class="card" id="s3">
-          <h3>Finding S3 — Drift is detectable as boundary violation</h3>
-          <p>Drift is observed when outputs exceed allowed vocabulary, violate domain separation, or bypass required gates.</p>
-          <span class="tag">Evidence-only</span>
-        </div>
-        <div class="card" id="s4">
-          <h3>Finding S4 — Trajectory is constrained by admissibility</h3>
-          <p>Trajectories evolve within admissible structure. Constraint tightening changes reachable states without altering the proof standard.</p>
-          <span class="tag">Structural</span>
-        </div>
-        <div class="card" id="s5">
-          <h3>Finding S5 — Lossless compression requires invariants</h3>
-          <p>Compression is valid only when invariants preserve meaning and reproducibility. Invariant loss produces false positives.</p>
-          <span class="tag">No hand-waving</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="categorical">
-      <h2>Categorical Findings</h2>
-      <p>This section defines categories and closure rules. It separates execution states from visibility states and specifies when extension is required.</p>
-
-      <div class="grid">
-        <div class="card" id="c1">
-          <h3>Category C1 — Execution states (0–7)</h3>
-          <p>States 0–7 classify formation, constraint binding, executable minimum, stabilization, projection, feedback, and completion from evidence traces.</p>
-          <span class="tag">Execution</span>
-        </div>
-        <div class="card" id="c2">
-          <h3>Category C2 — Visibility states (9–13)</h3>
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Geodiametrics · Apps</title>
-  <style>
-    :root{--fg:#e9eefc;--muted:rgba(233,238,252,.78);--stroke:rgba(233,238,252,.12);--panel:rgba(8,12,26,.58)}
-    *{box-sizing:border-box}html,body{height:100%}
-    body{
-      margin:0;color:var(--fg);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      overflow-x:hidden;
-      background:
-        radial-gradient(1400px 900px at 15% 10%, rgba(140,120,255,.18), transparent 55%),
-        radial-gradient(1200px 800px at 85% 25%, rgba(80,210,255,.14), transparent 60%),
-        radial-gradient(900px 700px at 60% 80%, rgba(255,140,120,.08), transparent 60%),
-        linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%);
-    }
-    header{padding:18px 22px;border-bottom:1px solid var(--stroke);background:rgba(8,12,26,.55);backdrop-filter:blur(6px)}
-    .top{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .brand{font-weight:900;letter-spacing:.35px}
-    nav a{margin-left:14px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:700}
-    nav a:hover{color:var(--fg)}
-    main{max-width:980px;margin:0 auto;padding:34px 22px 64px}
-    h1{margin:10px 0 12px;font-size:32px}
-    .sub{max-width:78ch;color:var(--muted);line-height:1.7;margin:0 0 18px}
-    .card{padding:18px;border:1px solid var(--stroke);border-radius:16px;background:var(--panel);backdrop-filter:blur(8px)}
-    .card p{margin:0;color:var(--muted);line-height:1.55;font-size:14px}
-    footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--stroke);font-size:13px;color:rgba(233,238,252,.55)}
-  </style>
-</head>
-<body>
-  <header>
-    <div class="top">
-      <div class="brand">Geodiametrics</div>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/methods/">Methods</a>
-        <a href="/apps/">Apps</a>
-        <a href="/news/">News</a>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <h1>Apps</h1>
-    <p class="sub">
-      This page lists stable tools and demos. Each entry is provable and traceable. No artifact is published without provenance.
-    </p>
-    <div class="card">
-      <p>Apps publish next. This page is the canonical index.</p>
-    </div>
-    <footer>© <span id="y"></span> Geodiametrics</footer>
-  </main>
-
-  <script>document.getElementById("y").textContent=new Date().getFullYear();</script>
-</body>
-</html>
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Geodiametrics · News</title>
-  <style>
-    :root{--fg:#e9eefc;--muted:rgba(233,238,252,.78);--stroke:rgba(233,238,252,.12);--panel:rgba(8,12,26,.58)}
-    *{box-sizing:border-box}html,body{height:100%}
-    body{
-      margin:0;color:var(--fg);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      overflow-x:hidden;
-      background:
-        radial-gradient(1400px 900px at 15% 10%, rgba(140,120,255,.18), transparent 55%),
-        radial-gradient(1200px 800px at 85% 25%, rgba(80,210,255,.14), transparent 60%),
-        radial-gradient(900px 700px at 60% 80%, rgba(255,140,120,.08), transparent 60%),
-        linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%);
-    }
-    header{padding:18px 22px;border-bottom:1px solid var(--stroke);background:rgba(8,12,26,.55);backdrop-filter:blur(6px)}
-    .top{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .brand{font-weight:900;letter-spacing:.35px}
-    nav a{margin-left:14px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:700}
-    nav a:hover{color:var(--fg)}
-    main{max-width:980px;margin:0 auto;padding:34px 22px 64px}
-    h1{margin:10px 0 12px;font-size:32px}
-    .sub{max-width:78ch;color:var(--muted);line-height:1.7;margin:0 0 18px}
-    .card{padding:18px;border:1px solid var(--stroke);border-radius:16px;background:var(--panel);backdrop-filter:blur(8px)}
-    .item{margin-top:14px;padding-top:14px;border-top:1px solid rgba(233,238,252,.10)}
-    .ts{font-size:12px;color:rgba(233,238,252,.60);font-weight:800}
-    .card p{margin:0;color:var(--muted);line-height:1.55;font-size:14px}
-    footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--stroke);font-size:13px;color:rgba(233,238,252,.55)}
-  </style>
-</head>
-<body>
-  <header>
-    <div class="top">
-      <div class="brand">Geodiametrics</div>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/methods/">Methods</a>
-        <a href="/apps/">Apps</a>
-        <a href="/news/">News</a>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <h1>News</h1>
-    <p class="sub">Updates are short, timestamped, and artifact-linked. No hype. Proof only.</p>
-    <div class="card">
-      <div class="item">
-        <div class="ts">INITIAL</div>
-        <p>Geodiametrics is live. Foundation pages are published. Domain mapping is pending.</p>
-      </div>
-    </div>
-    <footer>© <span id="y"></span> Geodiametrics</footer>
-  </main>
-
-  <script>document.getElementById("y").textContent=new Date().getFullYear();</script>
-</body>
-</html>

@@ -5,18 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Geodiametrics</title>
 <style>
-:root{--fg:#e9eefc;--muted:rgba(233,238,252,.78);--stroke:rgba(233,238,252,.14);--glass:rgba(8,12,26,.62);--panel:rgba(10,14,26,.68);--panel2:rgba(6,10,24,.88);--shadow:0 18px 55px rgba(0,0,0,.55)}
+:root{--fg:#e9eefc;--muted:rgba(233,238,252,.78);--stroke:rgba(233,238,252,.14);--glass:rgba(8,12,26,.62);--panel:rgba(10,14,26,.68);--shadow:0 18px 55px rgba(0,0,0,.55)}
 *{box-sizing:border-box}html,body{height:100%}body{margin:0;color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow-x:hidden}
 body{background:radial-gradient(1400px 900px at 12% 10%, rgba(140,120,255,.20), transparent 60%),radial-gradient(1200px 820px at 85% 25%, rgba(80,210,255,.14), transparent 62%),radial-gradient(980px 760px at 55% 82%, rgba(255,140,120,.09), transparent 64%),linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%)}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;opacity:.85;background:radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,.85), transparent 60%),radial-gradient(1px 1px at 20% 70%, rgba(255,255,255,.55), transparent 60%),radial-gradient(1px 1px at 35% 30%, rgba(255,255,255,.70), transparent 60%),radial-gradient(1px 1px at 55% 18%, rgba(255,255,255,.75), transparent 60%),radial-gradient(1px 1px at 63% 62%, rgba(255,255,255,.55), transparent 60%),radial-gradient(1px 1px at 78% 40%, rgba(255,255,255,.60), transparent 60%),radial-gradient(1px 1px at 92% 22%, rgba(255,255,255,.65), transparent 60%)}
-body::after{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:-1;transform:rotate(-12deg);opacity:.85;filter:blur(1px);background:radial-gradient(1300px 360px at 54% 55%, rgba(120,180,255,.14), transparent 75%),radial-gradient(900px 280px at 48% 52%, rgba(255,190,220,.09), transparent 78%)}
-.planet{position:fixed;border-radius:999px;pointer-events:none;z-index:-1;box-shadow:0 0 70px rgba(120,160,255,.14);filter:saturate(1.05)}
-.p1{width:240px;height:240px;left:-90px;top:110px;opacity:.90;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.20), transparent 44%),radial-gradient(circle at 65% 70%, rgba(80,210,255,.16), transparent 56%),radial-gradient(circle at 50% 50%, rgba(90,120,255,.40), rgba(18,26,50,.92))}
-.p2{width:170px;height:170px;right:34px;top:190px;opacity:.82;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), transparent 44%),radial-gradient(circle at 60% 60%, rgba(255,170,120,.14), transparent 60%),radial-gradient(circle at 50% 50%, rgba(220,120,255,.22), rgba(25,20,45,.92))}
-.p3{width:360px;height:360px;right:-190px;bottom:70px;opacity:.72;background:radial-gradient(circle at 30% 25%, rgba(255,255,255,.16), transparent 48%),radial-gradient(circle at 55% 60%, rgba(120,255,190,.10), transparent 62%),radial-gradient(circle at 50% 50%, rgba(70,210,255,.18), rgba(10,16,30,.94))}
-@keyframes float{0%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-10px,0)}100%{transform:translate3d(0,0,0)}}
-.planet{animation:float 14s ease-in-out infinite}.p2{animation-duration:18s}.p3{animation-duration:22s}
-@media (prefers-reduced-motion: reduce){.planet{animation:none!important}}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;opacity:.85;background:radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,.85), transparent 60%),radial-gradient(1px 1px at 22% 70%, rgba(255,255,255,.55), transparent 60%),radial-gradient(1px 1px at 38% 32%, rgba(255,255,255,.70), transparent 60%),radial-gradient(1px 1px at 55% 18%, rgba(255,255,255,.75), transparent 60%),radial-gradient(1px 1px at 78% 40%, rgba(255,255,255,.60), transparent 60%)}
 header{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--stroke);background:var(--glass);backdrop-filter:blur(10px)}
 .wrap{max-width:1100px;margin:0 auto;padding:0 16px}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0}
@@ -24,7 +16,7 @@ header{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--stroke);ba
 nav a{margin-left:14px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:850}
 nav a:hover{color:var(--fg)}
 main{max-width:1100px;margin:0 auto;padding:28px 16px 64px}
-h1{margin:14px 0 10px;font-size:38px;line-height:1.08;letter-spacing:.2px}
+h1{margin:14px 0 10px;font-size:38px;line-height:1.08}
 p{margin:0;color:var(--muted);line-height:1.65;max-width:92ch}
 .sub{margin:0 0 18px}
 .grid{display:grid;gap:14px;margin-top:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
@@ -36,8 +28,6 @@ footer{margin-top:26px;padding-top:18px;border-top:1px solid rgba(233,238,252,.1
 </style>
 </head>
 <body>
-<div class="planet p1"></div><div class="planet p2"></div><div class="planet p3"></div>
-
 <header>
   <div class="wrap bar">
     <div class="brand">Geodiametrics</div>
@@ -45,26 +35,23 @@ footer{margin-top:26px;padding-top:18px;border-top:1px solid rgba(233,238,252,.1
       <a href="/">Home</a>
       <a href="/methods/">Methods</a>
       <a href="/apps/">Apps</a>
-      <a href="/about/">About</a>
-      <a href="/news/">News</a>
       <a href="/reference/">Reference</a>
+      <a href="/dashboard/">Dashboard</a>
     </nav>
   </div>
 </header>
 
 <main>
   <h1>Constraint-first systems. Provable execution.</h1>
-  <p class="sub">This site is a clean front door. Methods is the entry point. No tables, findings, or scripts live on Home.</p>
+  <p class="sub">Home is a front door only. Methods is the entry point.</p>
 
   <div class="grid">
-    <div class="card"><h3>Start</h3><p>Open Methods for the 0–13 cycle, core laws, and audit limits.</p><p class="small"><a href="/methods/">Go to /methods/ →</a></p></div>
-    <div class="card"><h3>Apps</h3><p>Apps publish as stable artifacts. This page remains the canonical index.</p><p class="small"><a href="/apps/">Go to /apps/ →</a></p></div>
-    <div class="card"><h3>Reference</h3><p>Glossary, index, and appendix live as one audit surface.</p><p class="small"><a href="/reference/">Go to /reference/ →</a></p></div>
+    <div class="card"><h3>Start</h3><p>Open Methods for the cycle, laws, and audit limits.</p><p class="small"><a href="/methods/">Go to /methods/ →</a></p></div>
+    <div class="card"><h3>Apps</h3><p>Published artifacts list.</p><p class="small"><a href="/apps/">Go to /apps/ →</a></p></div>
+    <div class="card"><h3>Reference</h3><p>Glossary and appendix.</p><p class="small"><a href="/reference/">Go to /reference/ →</a></p></div>
   </div>
 
-  <footer>© <span id="y"></span> Geodiametrics</footer>
+  <footer>© 2026 Geodiametrics</footer>
 </main>
-
-<script>document.getElementById("y").textContent=new Date().getFullYear();</script>
 </body>
 </html>

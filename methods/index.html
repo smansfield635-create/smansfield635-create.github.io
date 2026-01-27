@@ -1,1 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Geodiametrics · Methods</title>
 
+<style>
+:root{
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.72);
+  --stroke:rgba(233,238,252,.14);
+  --panel:rgba(10,14,26,.68);
+  --glass:rgba(8,12,26,.55);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--fg);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(1200px 800px at 20% 10%, rgba(120,150,255,.20), transparent 60%),
+    radial-gradient(1000px 700px at 80% 70%, rgba(255,120,200,.14), transparent 65%),
+    linear-gradient(180deg,#050816,#060b1e);
+  overflow-x:hidden;
+}
+
+/* stars */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(1px 1px at 38% 32%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(1px 1px at 66% 28%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(1px 1px at 78% 58%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(1px 1px at 92% 22%, rgba(255,255,255,.6), transparent 60%);
+  opacity:.85;
+  z-index:-2;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:var(--glass);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--stroke);
+}
+.bar{
+  max-width:1100px;
+  margin:0 auto;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.brand{font-weight:900;letter-spacing:.35px}
+nav a{
+  margin-left:14px;
+  text-decoration:none;
+  color:var(--muted);
+  font-weight:800;
+  font-size:14px;
+}
+nav a:hover{color:var(--fg)}
+
+main{
+  max-width:1100px;
+  margin:48px auto;
+  padding:0 16px;
+}
+
+h1{font-size:40px;margin:0 0 10px}
+.sub{max-width:80ch;color:var(--muted);line-height:1.6;margin-bottom:32px}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.card h2{margin:0 0 8px;font-size:20px}
+.card p{margin:0;line-height:1.55;color:var(--muted)}
+
+.section-title{
+  margin:32px 0 12px;
+  font-size:22px;
+}
+.item{
+  padding:14px;
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  background:rgba(0,0,0,.22);
+  margin-bottom:12px;
+}
+
+footer{
+  margin-top:60px;
+  padding-top:18px;
+  border-top:1px solid var(--stroke);
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="bar">
+    <div class="brand">Geodiametrics</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/methods/">Methods</a>
+      <a href="/apps/">Apps</a>
+      <a href="/reference/">Reference</a>
+      <a href="/news/">News</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Methods</h1>
+  <p class="sub">
+    Constraint-first diagnostic system. Evidence-only. No intent inference.
+    This page defines invariant laws, categorical structure, and audit limits.
+  </p>
+
+  <div class="card">
+    <h2>Core Loop</h2>
+    <p><strong>CHECK → RECEIPT → LOG → SEARCH → PROOF</strong><br>
+    Results exist only when traceable.</p>
+  </div>
+
+  <h2 class="section-title">Scientific Findings</h2>
+  <div class="item"><strong>S1 — Provability from structure.</strong> Execution admissible only when constraints are satisfied and outcomes trace.</div>
+  <div class="item"><strong>S2 — Receipts block silent change.</strong> No receipt, no state transition.</div>
+  <div class="item"><strong>S3 — Drift is observable.</strong> Detected via violated constraints or bypassed gates.</div>
+  <div class="item"><strong>S4 — Trajectory is bounded.</strong> Tightening constraints changes reachable futures.</div>
+  <div class="item"><strong>S5 — Invariants preserve compression.</strong> Loss of invariants produces false positives.</div>
+
+  <h2 class="section-title">Categorical Findings</h2>
+  <div class="item"><strong>C1 — Execution band (0–7).</strong> Formation → constraint → boundary → executable minimum → stability → projection → feedback → completion.</div>
+  <div class="item"><strong>C2 — Visibility band (9–13).</strong> Visibility → closure → extension → higher-order execution → re-stabilization.</div>
+  <div class="item"><strong>C3 — Closure rule.</strong> Additions fail unless explicit exceptions are introduced.</div>
+
+  <h2 class="section-title">Independent Findings</h2>
+  <div class="item"><strong>I1 — Reproducible classification.</strong> Independent observers converge on the same state.</div>
+  <div class="item"><strong>I2 — Verifiable outcomes.</strong> Verified via receipts and append-only logs.</div>
+  <div class="item"><strong>I3 — Objective drift detection.</strong> No narrative inference required.</div>
+  <div class="item"><strong>I4 — Audit without authority.</strong> Validity governed by artifacts, not identity.</div>
+
+  <div class="card">
+    <h2>Audit Limits</h2>
+    <p>
+      No inference of intent, motive, personality, or internal cognition.
+      Mixed-domain claims are rejected. Missing receipts invalidate results.
+    </p>
+  </div>
+</main>
+
+<footer>© 2026 Geodiametrics</footer>
+</body>
+</html>

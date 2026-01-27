@@ -4,174 +4,46 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Geodiametrics · Reference</title>
-
 <style>
-:root{
-  --fg:#e9eefc;
-  --muted:rgba(233,238,252,.72);
-  --stroke:rgba(233,238,252,.14);
-  --glass:rgba(8,12,26,.60);
-  --panel:rgba(10,14,26,.70);
-  --panel2:rgba(6,10,24,.88);
-  --shadow:0 18px 55px rgba(0,0,0,.55);
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  color:var(--fg);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  overflow-x:hidden;
-  background:
-    radial-gradient(1400px 900px at 12% 10%, rgba(140,120,255,.20), transparent 60%),
-    radial-gradient(1200px 820px at 85% 25%, rgba(80,210,255,.14), transparent 62%),
-    radial-gradient(980px 760px at 55% 82%, rgba(255,140,120,.09), transparent 64%),
-    linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%);
-}
-
-/* stars */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:-2;
-  opacity:.85;
-  background:
-    radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,.85), transparent 60%),
-    radial-gradient(1px 1px at 22% 70%, rgba(255,255,255,.55), transparent 60%),
-    radial-gradient(1px 1px at 38% 32%, rgba(255,255,255,.70), transparent 60%),
-    radial-gradient(1px 1px at 55% 18%, rgba(255,255,255,.75), transparent 60%),
-    radial-gradient(1px 1px at 78% 40%, rgba(255,255,255,.60), transparent 60%);
-}
-
-/* header */
-header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  background:var(--glass);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--stroke);
-}
-.bar{
-  max-width:1100px;
-  margin:0 auto;
-  padding:14px 16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.brand{font-weight:900;letter-spacing:.35px}
-nav a{
-  margin-left:14px;
-  text-decoration:none;
-  color:var(--muted);
-  font-weight:800;
-  font-size:14px;
-}
-nav a:hover{color:var(--fg)}
-
-main{
-  max-width:1100px;
-  margin:48px auto;
-  padding:0 16px 64px;
-}
-
-h1{font-size:40px;margin:0 0 10px}
-h2{font-size:24px;margin:0 0 10px}
-h3{font-size:18px;margin:0 0 8px}
-
-p{margin:0;color:var(--muted);line-height:1.6;max-width:92ch}
-.sub{margin:0 0 24px}
-
-.section{
-  margin-top:32px;
-  padding:20px;
-  border-radius:18px;
-  background:var(--panel2);
-  border:1px solid var(--stroke);
-  box-shadow:var(--shadow);
-}
-
-.card{
-  background:var(--panel);
-  border:1px solid var(--stroke);
-  border-radius:14px;
-  padding:16px;
-  margin-bottom:14px;
-}
-
-.list{margin-top:10px}
-.list p{margin:8px 0}
-
-footer{
-  margin-top:64px;
-  padding-top:18px;
-  border-top:1px solid var(--stroke);
-  text-align:center;
-  font-size:13px;
-  color:var(--muted);
-}
+body{margin:0;font-family:system-ui;color:#e9eefc;
+background:linear-gradient(180deg,#050816,#0b1022)}
+main{max-width:900px;margin:64px auto;padding:0 16px}
+.card{background:rgba(10,14,26,.7);border:1px solid rgba(233,238,252,.12);
+border-radius:18px;padding:20px;margin-bottom:18px}
+h1{font-size:40px;margin:0 0 16px}
+p{opacity:.85;line-height:1.6}
+footer{margin-top:48px;text-align:center;font-size:13px;opacity:.6}
+a{color:#9fb6ff}
 </style>
 </head>
-
 <body>
-<header>
-  <div class="bar">
-    <div class="brand">Geodiametrics</div>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/methods/">Methods</a>
-      <a href="/apps/">Apps</a>
-      <a href="/about/">About</a>
-      <a href="/news/">News</a>
-      <a href="/reference/">Reference</a>
-    </nav>
-  </div>
-</header>
-
 <main>
-  <h1>Reference</h1>
-  <p class="sub">
-    Canonical definitions, index, and appendix.
-    This page is non-narrative and audit-oriented.
-  </p>
+<h1>Reference</h1>
 
-  <!-- GLOSSARY -->
-  <div class="section">
-    <h2>Glossary</h2>
-    <div class="card list">
-      <p><strong>Receipt.</strong> Proof token emitted by a valid state transition. Absence invalidates advancement.</p>
-      <p><strong>Drift.</strong> Observable boundary violation (bypassed gates, mixed layers, constraint breaks).</p>
-      <p><strong>Closure.</strong> Category saturation under current fit; additions fail unless exceptions are introduced.</p>
-      <p><strong>Trace.</strong> Reproducible sequence of artifacts enabling independent verification.</p>
-      <p><strong>Invariant.</strong> Property that must hold under domain transfer for compression to remain valid.</p>
-    </div>
-  </div>
+<div class="card">
+<p>
+This page is a <strong>non-narrative audit surface</strong>.
+It contains definitions, indices, and appendices referenced by Methods.
+</p>
+</div>
 
-  <!-- INDEX -->
-  <div class="section">
-    <h2>Index</h2>
-    <div class="card list">
-      <p><a href="/methods/">Methods.</a> Core loop, laws, structured index, audit limits.</p>
-      <p><a href="/apps/">Apps.</a> Registry of published artifacts.</p>
-      <p><a href="/news/">News.</a> Timestamped updates and releases.</p>
-      <p><a href="/">Home.</a> Orientation and routing.</p>
-    </div>
-  </div>
+<div class="card">
+<p><strong>Contents:</strong></p>
+<ul>
+<li>Canonical definitions</li>
+<li>Numeric state references (0–13)</li>
+<li>Constraint vocabulary</li>
+<li>Audit limits and exclusions</li>
+</ul>
+</div>
 
-  <!-- APPENDIX -->
-  <div class="section">
-    <h2>Appendix</h2>
-    <div class="card list">
-      <p><strong>A1 — Structural Cycle Dataset.</strong> Pending publication.</p>
-      <p><strong>A2 — Findings Ledger.</strong> Pending publication.</p>
-      <p><strong>A3 — Audit Examples.</strong> Pending publication.</p>
-    </div>
-  </div>
-</main>
+<div class="card">
+<p>
+Primary system definitions live in <a href="/methods/">Methods</a>.
+</p>
+</div>
 
 <footer>© 2026 Geodiametrics</footer>
+</main>
 </body>
 </html>

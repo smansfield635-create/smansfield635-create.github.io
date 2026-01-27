@@ -1,3 +1,71 @@
+<!-- =============================== -->
+<!-- LOCAL ANALYTICS (VIEWER) (TNB) -->
+<!-- =============================== -->
+<div class="section" id="localAnalytics">
+  <h2 style="margin:0 0 10px;font-size:22px;">Local Analytics (Device)</h2>
+  <p class="sub">This is local-first telemetry stored in this browser. It proves the dashboard pipeline is functioning without external services.</p>
+
+  <div class="card">
+    <p><strong>Summary</strong></p>
+    <p class="small">Pageviews: <code id="la_pv">—</code> · Sessions: <code id="la_sess">—</code> · Last seen: <code id="la_last">—</code></p>
+  </div>
+
+  <div class="card">
+    <p><strong>Top Paths</strong></p>
+    <div id="la_paths" class="small">—</div>
+  </div>
+
+  <div class="card">
+    <p><strong>Export</strong></p>
+    <div class="row">
+      <button class="btn" id="la_export" type="button">Export Telemetry JSON</button>
+      <button class="btn" id="la_clear" type="button">Clear Telemetry</button>
+    </div>
+    <p class="small">Export gives you an empirical record you can archive or compare to OSF timestamps.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  const KEY="geo_telemetry_v1";
+  function load(){ try{return JSON.parse(localStorage.getItem(KEY)||"{}");}catch{return {};} }
+
+  function render(){
+    const d=load();
+    document.getElementById("la_pv").textContent=(d.pageviews!=null?d.pageviews:"0");
+    document.getElementById("la_sess").textContent=(d.sessions!=null?d.sessions:"0");
+    document.getElementById("la_last").textContent=(d.last_seen||"—");
+
+    const by=d.by_path||{};
+    const top=Object.entries(by).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    document.getElementById("la_paths").innerHTML = top.length
+      ? top.map(([p,c])=>`<div><code>${p}</code> — ${c}</div>`).join("")
+      : "—";
+  }
+
+  document.getElementById("la_export").onclick=()=>{
+    const payload=load();
+    payload.exported_at=new Date().toISOString();
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download="geodiametrics-telemetry.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),500);
+  };
+
+  document.getElementById("la_clear").onclick=()=>{
+    localStorage.removeItem(KEY);
+    render();
+  };
+
+  render();
+  setInterval(render, 1500);
+})();
+</script>
 <!doctype html>
 <html lang="en">
 <head>

@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Geodiametrics · Dashboard</title>
+
 <style>
 :root{--fg:#e9eefc;--muted:rgba(233,238,252,.72);--stroke:rgba(233,238,252,.14);--glass:rgba(8,12,26,.60);--panel:rgba(10,14,26,.70);--panel2:rgba(6,10,24,.88);--shadow:0 18px 55px rgba(0,0,0,.55)}
 *{box-sizing:border-box}html,body{height:100%}
 body{margin:0;color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow-x:hidden;
 background:radial-gradient(1400px 900px at 12% 10%, rgba(140,120,255,.20), transparent 60%),radial-gradient(1200px 820px at 85% 25%, rgba(80,210,255,.14), transparent 62%),radial-gradient(980px 760px at 55% 82%, rgba(255,140,120,.09), transparent 64%),linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%)}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;opacity:.85;
-background:radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,.85), transparent 60%),radial-gradient(1px 1px at 22% 70%, rgba(255,255,255,.55), transparent 60%),radial-gradient(1px 1px at 38% 32%, rgba(255,255,255,.70), transparent 60%),radial-gradient(1px 1px at 55% 18%, rgba(255,255,255,.75), transparent 60%),radial-gradient(1px 1px at 78% 40%, rgba(255,255,255,.60), transparent 60%)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;opacity:.85;background:radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,.85), transparent 60%),radial-gradient(1px 1px at 22% 70%, rgba(255,255,255,.55), transparent 60%),radial-gradient(1px 1px at 38% 32%, rgba(255,255,255,.70), transparent 60%),radial-gradient(1px 1px at 55% 18%, rgba(255,255,255,.75), transparent 60%),radial-gradient(1px 1px at 78% 40%, rgba(255,255,255,.60), transparent 60%)}
 header{position:sticky;top:0;z-index:10;background:var(--glass);backdrop-filter:blur(10px);border-bottom:1px solid var(--stroke)}
 .bar{max-width:1100px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
 .brand{font-weight:900;letter-spacing:.35px}
@@ -18,17 +18,25 @@ nav a{margin-left:14px;text-decoration:none;color:var(--muted);font-weight:800;f
 nav a:hover{color:var(--fg)}
 main{max-width:1100px;margin:48px auto;padding:0 16px 64px}
 h1{font-size:40px;margin:0 0 10px}
+h2{font-size:22px;margin:0 0 10px}
 p{margin:0;color:var(--muted);line-height:1.6;max-width:92ch}
-.sub{margin:0 0 24px}
+.sub{margin:0 0 18px}
 .section{margin-top:28px;padding:20px;border-radius:18px;background:var(--panel2);border:1px solid var(--stroke);box-shadow:var(--shadow)}
 .card{background:var(--panel);border:1px solid var(--stroke);border-radius:14px;padding:16px;margin-bottom:12px}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-a.btn{display:inline-block;text-decoration:none;font-weight:900;font-size:13px;padding:9px 12px;border-radius:12px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:rgba(233,238,252,.90)}
-a.btn:hover{color:var(--fg);border-color:rgba(233,238,252,.28)}
-code{color:rgba(233,238,252,.92)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+a.btn,button.btn,select.btn,input.btn{display:inline-block;text-decoration:none;font-weight:900;font-size:13px;padding:9px 12px;border-radius:12px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:rgba(233,238,252,.90)}
+a.btn:hover,button.btn:hover{color:var(--fg);border-color:rgba(233,238,252,.28);cursor:pointer}
+.badge{display:inline-block;font-weight:900;font-size:12px;letter-spacing:.25px;padding:6px 10px;border-radius:999px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:rgba(233,238,252,.92)}
+.badge.ok{border-color:rgba(120,255,190,.35)}
+.badge.warn{border-color:rgba(255,210,120,.35)}
+.badge.bad{border-color:rgba(255,120,140,.35)}
+.small{margin-top:8px;font-size:13px;color:rgba(233,238,252,.68);line-height:1.55}
+code{color:rgba(233,238,252,.92);background:rgba(255,255,255,.08);padding:2px 6px;border-radius:8px}
+textarea{width:100%;min-height:120px;resize:vertical}
 footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--stroke);text-align:center;font-size:13px;color:var(--muted)}
 </style>
 </head>
+
 <body>
 <header>
   <div class="bar">
@@ -45,114 +53,181 @@ footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--stroke);text-
 
 <main>
   <h1>Dashboard</h1>
-  <p class="sub">Empirical tracking hub. This page links to analytics surfaces and records baselines. No narrative. Evidence-only.</p>
+  <p class="sub">Empirical tracking hub. Evidence-first. Audit-friendly. No narrative ordering.</p>
 
-  <div class="section">
-    <h2 style="margin:0 0 10px;font-size:22px">External Surfaces</h2>
+  <!-- CDL STATUS -->
+  <div class="section" id="cdlStatus">
+    <h2>Cyclical Dynamics Law Status</h2>
+
     <div class="card">
-      <p><b>OSF analytics</b></p>
+      <p><strong>Current</strong> <span id="cdlBadge" class="badge warn">UNKNOWN</span></p>
+      <p class="small">This status is a local operator control until automated telemetry is wired.</p>
+
       <div class="row">
-        <a class="btn" href="#" rel="nofollow">Add OSF analytics link</a>
+        <select id="cdlSelect" class="btn" aria-label="CDL status">
+          <option value="UNKNOWN">UNKNOWN</option>
+          <option value="RUNNING">RUNNING</option>
+          <option value="HURDLE">HURDLE</option>
+          <option value="WALL">WALL</option>
+          <option value="COMPLETE">COMPLETE</option>
+        </select>
+
+        <button id="cdlSave" class="btn" type="button">Save</button>
+        <button id="cdlReset" class="btn" type="button">Reset</button>
       </div>
-      <p style="margin-top:10px">Replace the placeholder with your OSF project analytics URL(s).</p>
+
+      <p class="small">Last set: <code id="cdlWhen">—</code></p>
     </div>
 
     <div class="card">
-      <p><b>GitHub</b></p>
-      <div class="row">
-        <a class="btn" href="#" rel="nofollow">Repo insights</a>
-        <a class="btn" href="#" rel="nofollow">Traffic (if enabled)</a>
-      </div>
-      <p style="margin-top:10px">Use GitHub Insights + repository traffic as an auxiliary surface.</p>
-    </div>
-
-    <div class="card">
-      <p><b>Domain / DNS</b></p>
-      <div class="row">
-        <a class="btn" href="#" rel="nofollow">Cloudflare dashboard</a>
-      </div>
-      <p style="margin-top:10px">If the domain is on Cloudflare, link to DNS + SSL + Analytics here.</p>
+      <p><strong>Definition</strong></p>
+      <p class="small">
+        RUNNING = cycle executing (reduce/contrast/condense/dedup/improve).<br>
+        HURDLE = friction; continue internally; no escalation.<br>
+        WALL = proven blocker; notify; await decision.<br>
+        COMPLETE = stable minimal state; proceed to next task/cycle.
+      </p>
     </div>
   </div>
 
+  <!-- PROVENANCE -->
   <div class="section">
-    <h2 style="margin:0 0 10px;font-size:22px">Baselines</h2>
+    <h2>Research Identity & Provenance</h2>
+
     <div class="card">
-      <p><b>Baseline log (manual)</b></p>
-      <p style="margin-top:10px">Record timestamped baselines here until automated analytics are wired.</p>
-      <p style="margin-top:10px"><code>YYYY-MM-DD hh:mm — baseline event — notes</code></p>
+      <p><strong>ORCID iD</strong></p>
+      <p class="small">
+        ORCID (Open Researcher and Contributor ID) is a persistent digital identifier
+        that uniquely links a researcher to their outputs across platforms.
+      </p>
       <div class="row">
-        <a class="btn" href="/news/">Log to News →</a>
+        <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">ORCID: 0009-0004-1293-0405 →</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <p><strong>OSF Projects</strong></p>
+      <p class="small">
+        OSF provides timestamped artifacts and version history. Use it to cross-check
+        creation dates against the current system state.
+      </p>
+      <div class="row">
+        <a class="btn" href="https://osf.io/" target="_blank" rel="noopener">View OSF →</a>
+        <!-- Replace the link below with your specific OSF project URL when ready -->
+        <a class="btn" href="#" rel="nofollow">Add specific OSF project link</a>
       </div>
     </div>
   </div>
 
+  <!-- BASELINES -->
   <div class="section">
-    <h2 style="margin:0 0 10px;font-size:22px">Next Instrumentation</h2>
+    <h2>Baselines</h2>
     <div class="card">
-      <p><b>Option A (fastest): Cloudflare Web Analytics</b></p>
-      <p style="margin-top:10px">Add a single script tag site-wide once you have the token.</p>
+      <p><strong>Manual baseline log</strong></p>
+      <p class="small">Paste timestamped baselines here until automated analytics are wired.</p>
+      <p class="small"><code>YYYY-MM-DD hh:mm — baseline event — notes</code></p>
+      <textarea id="baselineLog" class="btn" placeholder="YYYY-MM-DD hh:mm — baseline event — notes"></textarea>
+      <div class="row">
+        <button id="baselineSave" class="btn" type="button">Save</button>
+        <button id="baselineClear" class="btn" type="button">Clear</button>
+        <button id="baselineExport" class="btn" type="button">Export JSON</button>
+      </div>
+      <p class="small">Stored locally in this browser until you choose a server or analytics provider.</p>
+    </div>
+  </div>
+
+  <!-- NEXT INSTRUMENTATION -->
+  <div class="section">
+    <h2>Next Instrumentation</h2>
+    <div class="card">
+      <p><strong>Option A — Cloudflare Web Analytics</strong></p>
+      <p class="small">One script tag site-wide once you have the token.</p>
     </div>
     <div class="card">
-      <p><b>Option B: Plausible / Umami</b></p>
-      <p style="margin-top:10px">Lightweight privacy-first analytics; also one script tag.</p>
+      <p><strong>Option B — Umami / Plausible</strong></p>
+      <p class="small">One script tag site-wide. Privacy-first.</p>
     </div>
     <div class="card">
-      <p><b>Option C: GA4</b></p>
-      <p style="margin-top:10px">Standard; also one script tag, but heavier. Use only if needed.</p>
+      <p><strong>Option C — GA4</strong></p>
+      <p class="small">One script tag site-wide. Use only if needed.</p>
     </div>
   </div>
 
   <footer>© 2026 Geodiametrics</footer>
 </main>
+
+<script>
+(function(){
+  // CDL status (local)
+  const badge=document.getElementById("cdlBadge");
+  const when=document.getElementById("cdlWhen");
+  const sel=document.getElementById("cdlSelect");
+  const save=document.getElementById("cdlSave");
+  const reset=document.getElementById("cdlReset");
+  const KEY="gd_cdl_status_v1";
+  const KEYT="gd_cdl_when_v1";
+
+  function paint(v){
+    badge.textContent=v;
+    badge.classList.remove("ok","warn","bad");
+    if(v==="COMPLETE") badge.classList.add("ok");
+    else if(v==="WALL") badge.classList.add("bad");
+    else if(v==="RUNNING"||v==="HURDLE") badge.classList.add("warn");
+    else badge.classList.add("warn");
+  }
+
+  function load(){
+    const v=localStorage.getItem(KEY)||"UNKNOWN";
+    const t=localStorage.getItem(KEYT)||"—";
+    sel.value=v;
+    paint(v);
+    when.textContent=t;
+  }
+
+  save.onclick=()=>{
+    const v=sel.value;
+    const t=new Date().toISOString();
+    localStorage.setItem(KEY,v);
+    localStorage.setItem(KEYT,t);
+    paint(v);
+    when.textContent=t;
+  };
+
+  reset.onclick=()=>{
+    localStorage.removeItem(KEY);
+    localStorage.removeItem(KEYT);
+    load();
+  };
+
+  // Baseline log (local)
+  const log=document.getElementById("baselineLog");
+  const bSave=document.getElementById("baselineSave");
+  const bClear=document.getElementById("baselineClear");
+  const bExport=document.getElementById("baselineExport");
+  const BKEY="gd_baselines_v1";
+
+  function loadBaselines(){
+    log.value=localStorage.getItem(BKEY)||"";
+  }
+
+  bSave.onclick=()=>{localStorage.setItem(BKEY,log.value||"");};
+  bClear.onclick=()=>{log.value="";localStorage.setItem(BKEY,"");};
+  bExport.onclick=()=>{
+    const payload={exported_at:new Date().toISOString(),baselines:(log.value||"").split("\n").filter(Boolean)};
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download="geodiametrics-baselines.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),500);
+  };
+
+  load();
+  loadBaselines();
+})();
+</script>
 </body>
 </html>
-<!-- =============================== -->
-<!-- RESEARCH ID & PROVENANCE (TNB) -->
-<!-- =============================== -->
-<div class="section">
-  <h2 style="margin:0 0 10px;font-size:22px">Research Identity & Provenance</h2>
-
-  <div class="card">
-    <p><strong>ORCID iD</strong></p>
-    <p style="margin-top:8px">
-      ORCID provides a persistent digital identifier that distinguishes a researcher
-      from others with similar names and links their work across platforms.
-    </p>
-    <p style="margin-top:8px">
-      This identifier allows independent verification of authorship, publication dates,
-      and research continuity.
-    </p>
-    <p style="margin-top:8px">
-      <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">
-        ORCID: 0009-0004-1293-0405 →
-      </a>
-    </p>
-  </div>
-
-  <div class="card">
-    <p><strong>Open Science Framework (OSF)</strong></p>
-    <p style="margin-top:8px">
-      OSF hosts project artifacts, version history, timestamps, and research materials.
-      It provides a public, time-indexed record that supports independent review and
-      correlation with external events.
-    </p>
-    <p style="margin-top:8px">
-      This site’s methods, findings, and timeline can be cross-checked directly against
-      OSF records.
-    </p>
-    <p style="margin-top:8px">
-      <a class="btn" href="https://osf.io/" target="_blank" rel="noopener">
-        View OSF Projects →
-      </a>
-    </p>
-  </div>
-
-  <div class="card">
-    <p><strong>Interpretation Note</strong></p>
-    <p style="margin-top:8px">
-      These links are provided for verification, not persuasion. Dates, revisions,
-      and publication order can be inspected independently.
-    </p>
-  </div>
-</div>

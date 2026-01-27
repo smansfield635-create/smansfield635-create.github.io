@@ -569,57 +569,97 @@
   .state-obs{color:var(--muted);margin:6px 0}
   .state-edge{font-size:13px;opacity:.75}
 </style>
+<section id="state-table" style="max-width:1100px;margin:0 auto 48px;padding:0 16px">
+  <header style="margin:28px 0 16px">
+    <h2 style="margin:0 0 6px;font-size:34px;letter-spacing:.2px">
+      0–13 Structural Cycle
+    </h2>
+    <p style="margin:0;color:rgba(233,238,252,.78)">
+      Observer-invariant lifecycle classifier. Evidence-only. No intent inference.
+    </p>
+  </header>
+
+  <!-- Controls -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 18px">
+    <input id="cycleSearch" placeholder="Search states (e.g., 7, closure, projection)"
+      style="flex:1;min-width:220px;padding:12px 14px;border-radius:12px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:#fff" />
+    <select id="cycleFilter"
+      style="padding:12px 14px;border-radius:12px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:#fff">
+      <option value="all">All</option>
+      <option value="execution">Execution</option>
+      <option value="visibility">Visibility</option>
+    </select>
+    <button id="cycleReset"
+      style="padding:12px 16px;border-radius:12px;border:0;background:#fff;color:#000;font-weight:700">
+      Reset
+    </button>
+    <button id="cycleExport"
+      style="padding:12px 16px;border-radius:12px;border:1px solid rgba(233,238,252,.25);background:transparent;color:#fff">
+      Export JSON
+    </button>
+  </div>
+
+  <!-- Cards -->
+  <div id="cycleBody" style="display:grid;gap:14px"></div>
+</section>
 
 <script>
 const STATES=[
-{n:0,phase:"execution",label:"NULL / RESET",obs:"No active constraints from prior chapter; exploratory activity without directional accumulation; prior structure archived/abandoned.",edge:"Attempted actions do not compound."},
-{n:1,phase:"execution",label:"CONSTRAINT INTRODUCED",obs:"First binding rule/boundary defined; first canonical artifact; scope becomes directional.",edge:"Activity begins aligning around a single axis."},
-{n:2,phase:"execution",label:"CONTRAST / BOUNDARY",obs:"Explicit exclusions; alternatives rejected; decision points narrow future paths.",edge:"Variance decreases; execution not yet viable."},
-{n:3,phase:"execution",label:"EXECUTABLE MINIMUM",obs:"First repeatable loop; same input yields same output; minimal working example exists.",edge:"Execution possible but fragile."},
-{n:4,phase:"execution",label:"STABLE STRUCTURE",obs:"Loops complete repeatably; structure persists across iterations.",edge:"System absorbs small disturbances."},
-{n:5,phase:"execution",label:"PROJECTION / THROUGHPUT",obs:"External access points added; outputs cross system boundary.",edge:"System observable without explanation."},
-{n:6,phase:"execution",label:"FEEDBACK",obs:"External responses shape adjustments; recurring signals.",edge:"Change responsive, not structural."},
-{n:7,phase:"execution",label:"CHAPTER COMPLETION",obs:"No admissible improvements within constraints; diminishing returns.",edge:"Work stops because it should."},
-{n:9,phase:"visibility",label:"FULL STATE VISIBILITY",obs:"All components documented; failure modes enumerated.",edge:"Independent audit possible."},
-{n:10,phase:"visibility",label:"CATEGORICAL CLOSURE",obs:"New additions fail without exceptions; capacity saturated.",edge:"Growth breaks coherence."},
-{n:11,phase:"visibility",label:"CATEGORY EXTENSION",obs:"New behavior violates closure; category expands.",edge:"Old tools partially apply."},
-{n:12,phase:"visibility",label:"HIGHER-ORDER EXECUTION",obs:"Parallel subsystems execute coherently.",edge:"Execution at higher abstraction."},
-{n:13,phase:"visibility",label:"RE-STABILIZATION",obs:"Expanded system stabilizes; cycle returns to structure.",edge:"System becomes boring again."}
+{n:0,phase:"execution",label:"NULL / RESET",obs:"No active constraints; exploratory activity without directional accumulation; prior structure archived.",edge:"Attempts do not compound."},
+{n:1,phase:"execution",label:"CONSTRAINT INTRODUCED",obs:"First binding rule defined; first canonical artifact; scope becomes directional.",edge:"Activity aligns on a single axis."},
+{n:2,phase:"execution",label:"CONTRAST / BOUNDARY",obs:"Explicit exclusions; alternatives rejected; decision space narrows.",edge:"Variance decreases; execution not viable."},
+{n:3,phase:"execution",label:"EXECUTABLE MINIMUM",obs:"First repeatable loop; same input → same output.",edge:"Execution possible but fragile."},
+{n:4,phase:"execution",label:"STABLE STRUCTURE",obs:"Loops persist across iterations; absorbs small disturbances.",edge:"System self-maintains."},
+{n:5,phase:"execution",label:"PROJECTION / THROUGHPUT",obs:"External access points added; outputs cross boundary.",edge:"System observable without explanation."},
+{n:6,phase:"execution",label:"FEEDBACK",obs:"External responses shape adjustments.",edge:"Change is responsive, not structural."},
+{n:7,phase:"execution",label:"CHAPTER COMPLETION",obs:"No admissible improvements remain.",edge:"Work stops because it should."},
+{n:9,phase:"visibility",label:"FULL STATE VISIBILITY",obs:"All components documented; dependencies explicit.",edge:"Independent audit possible."},
+{n:10,phase:"visibility",label:"CATEGORICAL CLOSURE",obs:"New additions fail without exception.",edge:"Category saturated."},
+{n:11,phase:"visibility",label:"CATEGORY EXTENSION",obs:"New behavior violates prior completeness.",edge:"Old tools insufficient."},
+{n:12,phase:"visibility",label:"HIGHER-ORDER EXECUTION",obs:"Parallel subsystems execute coherently.",edge:"Abstraction level rises."},
+{n:13,phase:"visibility",label:"RE-STABILIZATION",obs:"Expanded system stabilizes; cycle resets at higher scale.",edge:"System becomes boring (good)."}
 ];
 
-const grid=document.getElementById("cycleGrid");
-const search=document.getElementById("cycleSearch");
-const filter=document.getElementById("cycleFilter");
-const reset=document.getElementById("cycleReset");
+const body=document.getElementById("cycleBody");
+const q=document.getElementById("cycleSearch");
+const f=document.getElementById("cycleFilter");
+const r=document.getElementById("cycleReset");
+const x=document.getElementById("cycleExport");
 
 function render(rows){
-  grid.innerHTML="";
-  rows.forEach(r=>{
-    const d=document.createElement("div");
-    d.className="state-card";
-    d.innerHTML=`
-      <div class="state-head">
-        <div class="state-num">${r.n}</div>
-        <div class="state-label">${r.label}</div>
-      </div>
-      <div class="state-obs">${r.obs}</div>
-      <div class="state-edge">${r.edge}</div>
-    `;
-    grid.appendChild(d);
-  });
+ body.innerHTML="";
+ rows.forEach(s=>{
+  const c=document.createElement("article");
+  c.id="state-"+s.n;
+  c.style="padding:18px;border-radius:18px;background:rgba(10,14,26,.65);border:1px solid rgba(233,238,252,.14);box-shadow:0 14px 36px rgba(0,0,0,.45)";
+  c.innerHTML=`
+   <div style="display:flex;align-items:center;gap:14px;cursor:pointer" onclick="this.nextElementSibling.toggleAttribute('hidden')">
+     <div style="font-size:22px;font-weight:900;opacity:.7">${s.n}</div>
+     <div style="font-size:18px;font-weight:800">${s.label}</div>
+     <div style="margin-left:auto;opacity:.5">tap</div>
+   </div>
+   <div hidden style="margin-top:12px;line-height:1.55;color:rgba(233,238,252,.9)">
+     <div style="margin-bottom:6px">${s.obs}</div>
+     <div style="opacity:.75"><i>${s.edge}</i></div>
+   </div>`;
+  body.appendChild(c);
+ });
 }
 
 function apply(){
-  let rows=[...STATES];
-  const q=(search.value||"").toLowerCase();
-  if(filter.value!=="all") rows=rows.filter(r=>r.phase===filter.value);
-  if(q) rows=rows.filter(r=>(`${r.n} ${r.label} ${r.obs} ${r.edge}`).toLowerCase().includes(q));
-  render(rows);
+ let rows=[...STATES];
+ if(f.value!=="all") rows=rows.filter(s=>s.phase===f.value);
+ if(q.value){
+  const t=q.value.toLowerCase();
+  rows=rows.filter(s=>`${s.n} ${s.label} ${s.obs} ${s.edge}`.toLowerCase().includes(t));
+ }
+ render(rows);
 }
 
-search.oninput=apply;
-filter.onchange=apply;
-reset.onclick=()=>{search.value="";filter.value="all";apply();};
+q.oninput=apply;
+f.onchange=apply;
+r.onclick=()=>{q.value="";f.value="all";apply();};
+x.onclick=()=>navigator.clipboard.writeText(JSON.stringify(STATES,null,2));
 
 render(STATES);
 </script>

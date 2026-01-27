@@ -1,1 +1,83 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Geodiametrics · Apps</title>
+<style>
+:root{--fg:#e9eefc;--muted:rgba(233,238,252,.72);--stroke:rgba(233,238,252,.14);--glass:rgba(8,12,26,.60);--panel:rgba(10,14,26,.70);--panel2:rgba(6,10,24,.88);--shadow:0 18px 55px rgba(0,0,0,.55)}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow-x:hidden;
+background:radial-gradient(1400px 900px at 12% 10%, rgba(140,120,255,.20), transparent 60%),radial-gradient(1200px 820px at 85% 25%, rgba(80,210,255,.14), transparent 62%),radial-gradient(980px 760px at 55% 82%, rgba(255,140,120,.09), transparent 64%),linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;opacity:.85;
+background:radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,.85), transparent 60%),radial-gradient(1px 1px at 22% 70%, rgba(255,255,255,.55), transparent 60%),radial-gradient(1px 1px at 38% 32%, rgba(255,255,255,.70), transparent 60%),radial-gradient(1px 1px at 55% 18%, rgba(255,255,255,.75), transparent 60%),radial-gradient(1px 1px at 78% 40%, rgba(255,255,255,.60), transparent 60%)}
+header{position:sticky;top:0;z-index:10;background:var(--glass);backdrop-filter:blur(10px);border-bottom:1px solid var(--stroke)}
+.bar{max-width:1100px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-weight:900;letter-spacing:.35px}
+nav a{margin-left:14px;text-decoration:none;color:var(--muted);font-weight:800;font-size:14px}
+nav a:hover{color:var(--fg)}
+main{max-width:1100px;margin:48px auto;padding:0 16px 64px}
+h1{font-size:40px;margin:0 0 10px}
+p{margin:0;color:var(--muted);line-height:1.6;max-width:90ch}
+.sub{margin:0 0 24px}
+.section{margin-top:28px;padding:20px;border-radius:18px;background:var(--panel2);border:1px solid var(--stroke);box-shadow:var(--shadow)}
+.card{background:var(--panel);border:1px solid var(--stroke);border-radius:14px;padding:16px;margin-bottom:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.tag{font-size:12px;font-weight:900;letter-spacing:.2px;padding:6px 10px;border-radius:999px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:rgba(233,238,252,.86)}
+a.btn{display:inline-block;text-decoration:none;font-weight:900;font-size:13px;padding:9px 12px;border-radius:12px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:rgba(233,238,252,.90)}
+a.btn:hover{color:var(--fg);border-color:rgba(233,238,252,.28)}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--stroke);text-align:center;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="brand">Geodiametrics</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/methods/">Methods</a>
+      <a href="/apps/">Apps</a>
+      <a href="/about/">About</a>
+      <a href="/news/">News</a>
+      <a href="/reference/">Reference</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Apps</h1>
+  <p class="sub">This page lists published artifacts. Each entry is traceable. No artifact ships without provenance.</p>
+
+  <div class="section">
+    <h2 style="margin:0 0 10px;font-size:22px">Registry</h2>
+
+    <div class="card">
+      <p><strong>Status:</strong> No published apps yet.</p>
+      <p style="margin-top:8px">When an app is released, this page will show its purpose, scope, and proof surface.</p>
+      <div class="row">
+        <span class="tag">Artifact-first</span>
+        <span class="tag">Traceable</span>
+        <span class="tag">No hype</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <p><strong>Next candidates (placeholders):</strong></p>
+      <p style="margin-top:8px">• 0–13 State Table Explorer (interactive view)</p>
+      <p>• Receipt/Log Chain Demo (minimal provenance pipeline)</p>
+      <p>• Constraint Checklist (CHECK→RECEIPT→LOG→SEARCH→PROOF)</p>
+      <div class="row">
+        <a class="btn" href="/methods/">Methods entry point →</a>
+        <a class="btn" href="/reference/">Reference surface →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>© 2026 Geodiametrics</footer>
+</main>
+
+</body>
+</html>

@@ -602,64 +602,224 @@
   <!-- Cards -->
   <div id="cycleBody" style="display:grid;gap:14px"></div>
 </section>
+<section id="cycle" style="max-width:1100px;margin:0 auto 56px;padding:0 16px">
+  <header class="cycleHdr">
+    <h2>0–13 Structural Cycle</h2>
+    <p>Observer-invariant lifecycle classifier. Evidence-only. No intent inference.</p>
+    <p class="meta"><b>Scope:</b> public artifacts with measurable ingress and identifiable structure. <b>Rule:</b> classify from evidence traces; exclude narrative/intent.</p>
+  </header>
+
+  <div class="cycleCtrl">
+    <input id="cycleSearch" placeholder="Search states (e.g., 7, closure, projection)" />
+    <select id="cycleFilter">
+      <option value="all">All</option>
+      <option value="execution">Execution</option>
+      <option value="visibility">Visibility</option>
+    </select>
+    <button id="cycleReset">Reset</button>
+    <button id="cycleExport">Export JSON</button>
+  </div>
+
+  <div id="cycleBody" class="cycleGrid"></div>
+</section>
+
+<style>
+  /* COMPLETE TABLE MODULE — no legacy table markup allowed */
+  #cycle .cycleHdr{
+    background:rgba(6,10,24,.88);
+    border:1px solid rgba(233,238,252,.14);
+    border-radius:18px;
+    padding:18px;
+    margin-top:24px;
+    backdrop-filter: blur(8px);
+  }
+  #cycle .cycleHdr h2{
+    margin:0 0 6px;
+    font-size:28px;
+    letter-spacing:.2px;
+  }
+  #cycle .cycleHdr p{
+    margin:0;
+    color:rgba(233,238,252,.78);
+    line-height:1.55;
+  }
+  #cycle .cycleHdr .meta{
+    margin-top:10px;
+    color:rgba(233,238,252,.70);
+    font-size:13px;
+  }
+
+  #cycle .cycleCtrl{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:14px 0 16px;
+  }
+  #cycle input,#cycle select,#cycle button{
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid rgba(233,238,252,.16);
+    background:rgba(10,14,26,.60);
+    color:#fff;
+  }
+  #cycle button{
+    font-weight:800;
+    cursor:pointer;
+  }
+  #cycle #cycleReset{
+    background:#fff;
+    color:#000;
+    border:0;
+  }
+
+  #cycle .cycleGrid{
+    display:grid;
+    gap:14px;
+  }
+  #cycle .stateCard{
+    border:1px solid rgba(233,238,252,.14);
+    background:rgba(10,14,26,.68);
+    border-radius:18px;
+    padding:16px;
+    box-shadow: 0 14px 36px rgba(0,0,0,.45);
+  }
+  #cycle .stateTop{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    cursor:pointer;
+  }
+  #cycle .n{
+    min-width:28px;
+    font-size:20px;
+    font-weight:900;
+    opacity:.75;
+  }
+  #cycle .lbl{
+    font-size:18px;
+    font-weight:900;
+    letter-spacing:.2px;
+  }
+  #cycle .tap{
+    margin-left:auto;
+    opacity:.55;
+    font-size:12px;
+    font-weight:800;
+  }
+  #cycle .body{
+    margin-top:12px;
+    line-height:1.55;
+    color:rgba(233,238,252,.86);
+  }
+  #cycle .edge{
+    margin-top:8px;
+    opacity:.75;
+    font-size:13px;
+  }
+</style>
 
 <script>
-const STATES=[
-{n:0,phase:"execution",label:"NULL / RESET",obs:"No active constraints; exploratory activity without directional accumulation; prior structure archived.",edge:"Attempts do not compound."},
-{n:1,phase:"execution",label:"CONSTRAINT INTRODUCED",obs:"First binding rule defined; first canonical artifact; scope becomes directional.",edge:"Activity aligns on a single axis."},
-{n:2,phase:"execution",label:"CONTRAST / BOUNDARY",obs:"Explicit exclusions; alternatives rejected; decision space narrows.",edge:"Variance decreases; execution not viable."},
-{n:3,phase:"execution",label:"EXECUTABLE MINIMUM",obs:"First repeatable loop; same input → same output.",edge:"Execution possible but fragile."},
-{n:4,phase:"execution",label:"STABLE STRUCTURE",obs:"Loops persist across iterations; absorbs small disturbances.",edge:"System self-maintains."},
-{n:5,phase:"execution",label:"PROJECTION / THROUGHPUT",obs:"External access points added; outputs cross boundary.",edge:"System observable without explanation."},
-{n:6,phase:"execution",label:"FEEDBACK",obs:"External responses shape adjustments.",edge:"Change is responsive, not structural."},
-{n:7,phase:"execution",label:"CHAPTER COMPLETION",obs:"No admissible improvements remain.",edge:"Work stops because it should."},
-{n:9,phase:"visibility",label:"FULL STATE VISIBILITY",obs:"All components documented; dependencies explicit.",edge:"Independent audit possible."},
-{n:10,phase:"visibility",label:"CATEGORICAL CLOSURE",obs:"New additions fail without exception.",edge:"Category saturated."},
-{n:11,phase:"visibility",label:"CATEGORY EXTENSION",obs:"New behavior violates prior completeness.",edge:"Old tools insufficient."},
-{n:12,phase:"visibility",label:"HIGHER-ORDER EXECUTION",obs:"Parallel subsystems execute coherently.",edge:"Abstraction level rises."},
-{n:13,phase:"visibility",label:"RE-STABILIZATION",obs:"Expanded system stabilizes; cycle resets at higher scale.",edge:"System becomes boring (good)."}
-];
+(() => {
+  const STATES = [
+    { n: 0, phase: "execution", label: "NULL / RESET",
+      obs: "No active constraints; exploratory activity without directional accumulation; prior structure archived/abandoned.",
+      edge: "Attempted actions do not compound." },
+    { n: 1, phase: "execution", label: "CONSTRAINT INTRODUCED",
+      obs: "First binding rule/boundary defined; first canonical artifact; scope becomes directional.",
+      edge: "Activity begins aligning around a single axis." },
+    { n: 2, phase: "execution", label: "CONTRAST / BOUNDARY",
+      obs: "Explicit exclusions; alternatives rejected; decision points narrow future paths.",
+      edge: "Variance decreases; execution not yet viable." },
+    { n: 3, phase: "execution", label: "EXECUTABLE MINIMUM",
+      obs: "First repeatable loop; same input yields same output; minimal working example exists.",
+      edge: "Execution possible but fragile." },
+    { n: 4, phase: "execution", label: "STABLE STRUCTURE",
+      obs: "Loops complete repeatably; core structure unchanged across iterations; absorbs small disturbances.",
+      edge: "System persists without constant repair." },
+    { n: 5, phase: "execution", label: "PROJECTION / THROUGHPUT",
+      obs: "External access points added; measurable inbound; outputs cross system boundary.",
+      edge: "System becomes observable without explanation." },
+    { n: 6, phase: "execution", label: "FEEDBACK",
+      obs: "External responses shape adjustments; recurring questions/errors; system reacts to outside signals.",
+      edge: "Change is responsive, not structural." },
+    { n: 7, phase: "execution", label: "CHAPTER COMPLETION",
+      obs: "No admissible improvements within constraints; attempts yield diminishing returns; done-state distinct from stall.",
+      edge: "Work stops because it should, not because it failed." },
+    { n: 9, phase: "visibility", label: "FULL STATE VISIBILITY",
+      obs: "All components documented/navigable; failure modes enumerated; hidden dependencies removed.",
+      edge: "Independent audit becomes possible." },
+    { n: 10, phase: "visibility", label: "CATEGORICAL CLOSURE",
+      obs: "New additions fail unless exceptions are added; edge cases accumulate; capacity saturated.",
+      edge: "Growth attempts break coherence under current category." },
+    { n: 11, phase: "visibility", label: "CATEGORY EXTENSION (UNDER FIT)",
+      obs: "New behavior violates completeness assumptions of 10; core invariants remain valid but insufficient; category expands.",
+      edge: "Old tools still work but no longer cover everything." },
+    { n: 12, phase: "visibility", label: "HIGHER-ORDER EXECUTION",
+      obs: "Parallel subsystems execute coherently; execution scales across categories; coordination emerges without central control.",
+      edge: "Execution occurs at a higher abstraction layer." },
+    { n: 13, phase: "visibility", label: "RE-STABILIZATION (RETURN TO 4)",
+      obs: "Expanded system stabilizes; new constraints + execution form durable structure; cycle can repeat at higher scale.",
+      edge: "System becomes boring again—in a good way." }
+  ];
 
-const body=document.getElementById("cycleBody");
-const q=document.getElementById("cycleSearch");
-const f=document.getElementById("cycleFilter");
-const r=document.getElementById("cycleReset");
-const x=document.getElementById("cycleExport");
+  const elBody = document.getElementById("cycleBody");
+  const elSearch = document.getElementById("cycleSearch");
+  const elFilter = document.getElementById("cycleFilter");
+  const elReset = document.getElementById("cycleReset");
+  const elExport = document.getElementById("cycleExport");
 
-function render(rows){
- body.innerHTML="";
- rows.forEach(s=>{
-  const c=document.createElement("article");
-  c.id="state-"+s.n;
-  c.style="padding:18px;border-radius:18px;background:rgba(10,14,26,.65);border:1px solid rgba(233,238,252,.14);box-shadow:0 14px 36px rgba(0,0,0,.45)";
-  c.innerHTML=`
-   <div style="display:flex;align-items:center;gap:14px;cursor:pointer" onclick="this.nextElementSibling.toggleAttribute('hidden')">
-     <div style="font-size:22px;font-weight:900;opacity:.7">${s.n}</div>
-     <div style="font-size:18px;font-weight:800">${s.label}</div>
-     <div style="margin-left:auto;opacity:.5">tap</div>
-   </div>
-   <div hidden style="margin-top:12px;line-height:1.55;color:rgba(233,238,252,.9)">
-     <div style="margin-bottom:6px">${s.obs}</div>
-     <div style="opacity:.75"><i>${s.edge}</i></div>
-   </div>`;
-  body.appendChild(c);
- });
-}
+  const render = (rows) => {
+    elBody.innerHTML = "";
+    rows.forEach(s => {
+      const card = document.createElement("article");
+      card.className = "stateCard";
+      card.id = `state-${s.n}`;
 
-function apply(){
- let rows=[...STATES];
- if(f.value!=="all") rows=rows.filter(s=>s.phase===f.value);
- if(q.value){
-  const t=q.value.toLowerCase();
-  rows=rows.filter(s=>`${s.n} ${s.label} ${s.obs} ${s.edge}`.toLowerCase().includes(t));
- }
- render(rows);
-}
+      card.innerHTML = `
+        <div class="stateTop" role="button" aria-expanded="false">
+          <div class="n">${s.n}</div>
+          <div class="lbl">${s.label}</div>
+          <div class="tap">tap</div>
+        </div>
+        <div class="body" hidden>
+          <div>${s.obs}</div>
+          <div class="edge"><i>${s.edge}</i></div>
+        </div>
+      `;
 
-q.oninput=apply;
-f.onchange=apply;
-r.onclick=()=>{q.value="";f.value="all";apply();};
-x.onclick=()=>navigator.clipboard.writeText(JSON.stringify(STATES,null,2));
+      const top = card.querySelector(".stateTop");
+      const body = card.querySelector(".body");
+      top.addEventListener("click", () => {
+        const open = !body.hasAttribute("hidden");
+        if (open) body.setAttribute("hidden", "");
+        else body.removeAttribute("hidden");
+        top.setAttribute("aria-expanded", String(!open));
+      });
 
-render(STATES);
+      elBody.appendChild(card);
+    });
+  };
+
+  const apply = () => {
+    const q = (elSearch.value || "").trim().toLowerCase();
+    const f = elFilter.value;
+
+    let rows = STATES.slice();
+    if (f !== "all") rows = rows.filter(r => r.phase === f);
+    if (q) rows = rows.filter(r => (`${r.n} ${r.label} ${r.obs} ${r.edge}`).toLowerCase().includes(q));
+
+    render(rows);
+  };
+
+  elSearch.addEventListener("input", apply);
+  elFilter.addEventListener("change", apply);
+  elReset.addEventListener("click", () => { elSearch.value=""; elFilter.value="all"; apply(); });
+  elExport.addEventListener("click", async () => {
+    const text = JSON.stringify(STATES, null, 2);
+    try { await navigator.clipboard.writeText(text); elExport.textContent = "Copied"; setTimeout(()=>elExport.textContent="Export JSON", 900); }
+    catch { alert(text); }
+  });
+
+  render(STATES);
+})();
 </script>

@@ -516,87 +516,110 @@
 
 <script>
 (() => {
-  const STATES = [
-    { n: 0, phase: "execution", label: "NULL / RESET",
-      obs: "No active constraints from prior chapter; exploratory activity without directional accumulation; prior structure archived/abandoned.",
-      edge: "Attempted actions do not compound." },
-    { n: 1, phase: "execution", label: "CONSTRAINT INTRODUCED",
-      obs: "First binding rule/boundary defined; first canonical artifact; scope becomes directional.",
-      edge: "Activity begins aligning around a single axis." },
-    { n: 2, phase: "execution", label: "CONTRAST / BOUNDARY",
-      obs: "Explicit exclusions; alternatives rejected; decision points narrow future paths.",
-      edge: "Variance decreases; execution not yet viable." },
-    { n: 3, phase: "execution", label: "EXECUTABLE MINIMUM",
-      obs: "First repeatable loop; same input yields same output; minimal working example exists.",
-      edge: "Execution possible but fragile." },
-    { n: 4, phase: "execution", label: "STABLE STRUCTURE",
-      obs: "Loops complete repeatably; core structure unchanged across iterations; absorbs small disturbances.",
-      edge: "System persists without constant repair." },
-    { n: 5, phase: "execution", label: "PROJECTION / THROUGHPUT",
-      obs: "External access points added; measurable inbound; outputs cross system boundary.",
-      edge: "System becomes observable without explanation." },
-    { n: 6, phase: "execution", label: "FEEDBACK",
-      obs: "External responses shape adjustments; recurring questions/errors; system reacts to outside signals.",
-      edge: "Change is responsive, not structural." },
-    { n: 7, phase: "execution", label: "CHAPTER COMPLETION",
-      obs: "No admissible improvements within constraints; attempts yield diminishing returns; done-state distinct from stall.",
-      edge: "Work stops because it should, not because it failed." },
-    { n: 9, phase: "visibility", label: "FULL STATE VISIBILITY",
-      obs: "All components documented/navigable; failure modes enumerated; hidden dependencies removed.",
-      edge: "Independent audit becomes possible." },
-    { n: 10, phase: "visibility", label: "CATEGORICAL CLOSURE",
-      obs: "New additions fail unless exceptions are added; edge cases accumulate; capacity saturated.",
-      edge: "Growth attempts break coherence under current category." },
-    { n: 11, phase: "visibility", label: "CATEGORY EXTENSION (UNDER FIT)",
-      obs: "New behavior violates completeness assumptions of 10; core invariants remain valid but insufficient; category expands.",
-      edge: "Old tools still work but no longer cover everything." },
-    { n: 12, phase: "visibility", label: "HIGHER-ORDER EXECUTION",
-      obs: "Parallel subsystems execute coherently; execution scales across categories; coordination emerges without central control.",
-      edge: "Execution occurs at a higher abstraction layer." },
-    { n: 13, phase: "visibility", label: "RE-STABILIZATION (RETURN TO 4)",
-      obs: "Expanded system stabilizes; new constraints + execution form durable structure; cycle can repeat at higher scale.",
-      edge: "System becomes boring again—in a good way." },
-  ];
-
-  const elBody = document.getElementById("cycleBody");
-  const elSearch = document.getElementById("cycleSearch");
-  const elFilter = document.getElementById("cycleFilter");
-  const elReset = document.getElementById("cycleReset");
-
-  const render = (rows) => {
-    elBody.innerHTML = "";
-    rows.forEach(r => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td style="padding:12px;border-bottom:1px solid #f0f0f0;white-space:nowrap;"><b>${r.n}</b></td>
-        <td style="padding:12px;border-bottom:1px solid #f0f0f0;"><b>${r.label}</b></td>
-        <td style="padding:12px;border-bottom:1px solid #f0f0f0;color:#333;">${r.obs}</td>
-        <td style="padding:12px;border-bottom:1px solid #f0f0f0;color:#444;">${r.edge}</td>
-      `;
-      elBody.appendChild(tr);
-    });
-  };
-
-  const apply = () => {
-    const q = (elSearch.value || "").trim().toLowerCase();
-    const f = elFilter.value;
-    let rows = STATES.slice();
-
-    if (f !== "all") rows = rows.filter(r => r.phase === f);
-
-    if (q) {
-      rows = rows.filter(r => {
-        const hay = `${r.n} ${r.label} ${r.obs} ${r.edge}`.toLowerCase();
-        return hay.includes(q);
-      });
-    }
-    render(rows);
-  };
-
-  elSearch.addEventListener("input", apply);
-  elFilter.addEventListener("change", apply);
+  
   elReset.addEventListener("click", () => { elSearch.value=""; elFilter.value="all"; apply(); });
 
   render(STATES);
 })();
+</script>
+
+<section id="state-table" style="margin-top:32px">
+  <h2 style="margin-bottom:10px">State Table</h2>
+  <p style="color:var(--muted);max-width:80ch">
+    Observer-invariant lifecycle classifier. Evidence-only. No intent inference.
+  </p>
+
+  <div class="controls">
+    <input id="cycleSearch" placeholder="Search states (e.g., 7, categorical closure, projection)" />
+    <select id="cycleFilter">
+      <option value="all">All</option>
+      <option value="execution">Execution</option>
+      <option value="visibility">Visibility</option>
+    </select>
+    <button id="cycleReset">Reset</button>
+  </div>
+
+  <div id="cycleGrid"></div>
+</section>
+
+<style>
+  #state-table .controls{
+    display:flex;gap:10px;flex-wrap:wrap;margin:14px 0
+  }
+  #state-table input,#state-table select,#state-table button{
+    padding:10px 12px;border-radius:10px;border:1px solid var(--stroke);
+    background:rgba(8,12,26,.85);color:var(--fg)
+  }
+  #cycleGrid{display:grid;gap:12px;margin-top:12px}
+  .state-card{
+    border:1px solid var(--stroke);
+    background:rgba(6,10,24,.92);
+    border-radius:14px;
+    padding:14px;
+  }
+  .state-head{
+    display:flex;gap:10px;align-items:center;margin-bottom:6px
+  }
+  .state-num{
+    font-weight:900;opacity:.7;min-width:24px
+  }
+  .state-label{
+    font-weight:800;letter-spacing:.3px
+  }
+  .state-obs{color:var(--muted);margin:6px 0}
+  .state-edge{font-size:13px;opacity:.75}
+</style>
+
+<script>
+const STATES=[
+{n:0,phase:"execution",label:"NULL / RESET",obs:"No active constraints from prior chapter; exploratory activity without directional accumulation; prior structure archived/abandoned.",edge:"Attempted actions do not compound."},
+{n:1,phase:"execution",label:"CONSTRAINT INTRODUCED",obs:"First binding rule/boundary defined; first canonical artifact; scope becomes directional.",edge:"Activity begins aligning around a single axis."},
+{n:2,phase:"execution",label:"CONTRAST / BOUNDARY",obs:"Explicit exclusions; alternatives rejected; decision points narrow future paths.",edge:"Variance decreases; execution not yet viable."},
+{n:3,phase:"execution",label:"EXECUTABLE MINIMUM",obs:"First repeatable loop; same input yields same output; minimal working example exists.",edge:"Execution possible but fragile."},
+{n:4,phase:"execution",label:"STABLE STRUCTURE",obs:"Loops complete repeatably; structure persists across iterations.",edge:"System absorbs small disturbances."},
+{n:5,phase:"execution",label:"PROJECTION / THROUGHPUT",obs:"External access points added; outputs cross system boundary.",edge:"System observable without explanation."},
+{n:6,phase:"execution",label:"FEEDBACK",obs:"External responses shape adjustments; recurring signals.",edge:"Change responsive, not structural."},
+{n:7,phase:"execution",label:"CHAPTER COMPLETION",obs:"No admissible improvements within constraints; diminishing returns.",edge:"Work stops because it should."},
+{n:9,phase:"visibility",label:"FULL STATE VISIBILITY",obs:"All components documented; failure modes enumerated.",edge:"Independent audit possible."},
+{n:10,phase:"visibility",label:"CATEGORICAL CLOSURE",obs:"New additions fail without exceptions; capacity saturated.",edge:"Growth breaks coherence."},
+{n:11,phase:"visibility",label:"CATEGORY EXTENSION",obs:"New behavior violates closure; category expands.",edge:"Old tools partially apply."},
+{n:12,phase:"visibility",label:"HIGHER-ORDER EXECUTION",obs:"Parallel subsystems execute coherently.",edge:"Execution at higher abstraction."},
+{n:13,phase:"visibility",label:"RE-STABILIZATION",obs:"Expanded system stabilizes; cycle returns to structure.",edge:"System becomes boring again."}
+];
+
+const grid=document.getElementById("cycleGrid");
+const search=document.getElementById("cycleSearch");
+const filter=document.getElementById("cycleFilter");
+const reset=document.getElementById("cycleReset");
+
+function render(rows){
+  grid.innerHTML="";
+  rows.forEach(r=>{
+    const d=document.createElement("div");
+    d.className="state-card";
+    d.innerHTML=`
+      <div class="state-head">
+        <div class="state-num">${r.n}</div>
+        <div class="state-label">${r.label}</div>
+      </div>
+      <div class="state-obs">${r.obs}</div>
+      <div class="state-edge">${r.edge}</div>
+    `;
+    grid.appendChild(d);
+  });
+}
+
+function apply(){
+  let rows=[...STATES];
+  const q=(search.value||"").toLowerCase();
+  if(filter.value!=="all") rows=rows.filter(r=>r.phase===filter.value);
+  if(q) rows=rows.filter(r=>(`${r.n} ${r.label} ${r.obs} ${r.edge}`).toLowerCase().includes(q));
+  render(rows);
+}
+
+search.oninput=apply;
+filter.onchange=apply;
+reset.onclick=()=>{search.value="";filter.value="all";apply();};
+
+render(STATES);
 </script>

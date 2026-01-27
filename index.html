@@ -823,3 +823,184 @@
   render(STATES);
 })();
 </script>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Geodiametrics · Methods</title>
+  <style>
+    :root{--fg:#e9eefc;--muted:rgba(233,238,252,.78);--stroke:rgba(233,238,252,.14);--panel:rgba(10,14,26,.68)}
+    *{box-sizing:border-box}html,body{height:100%}
+    body{
+      margin:0;color:var(--fg);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      overflow-x:hidden;
+      background:
+        radial-gradient(1400px 900px at 15% 10%, rgba(140,120,255,.18), transparent 55%),
+        radial-gradient(1200px 800px at 85% 25%, rgba(80,210,255,.14), transparent 60%),
+        radial-gradient(900px 700px at 60% 80%, rgba(255,140,120,.08), transparent 60%),
+        linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%);
+    }
+    header{padding:18px 22px;border-bottom:1px solid var(--stroke);background:rgba(8,12,26,.55);backdrop-filter:blur(6px)}
+    .top{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{font-weight:900;letter-spacing:.35px}
+    nav a{margin-left:14px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:800}
+    nav a:hover{color:var(--fg)}
+    main{max-width:1100px;margin:0 auto;padding:28px 16px 64px}
+    h1{margin:14px 0 8px;font-size:34px;letter-spacing:.2px}
+    .sub{margin:0 0 18px;max-width:82ch;color:var(--muted);line-height:1.65}
+    .jump{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 18px}
+    .jump a{padding:10px 12px;border-radius:999px;border:1px solid rgba(233,238,252,.16);background:rgba(10,14,26,.55);color:#fff;text-decoration:none;font-weight:800;font-size:13px}
+    .jump a:hover{border-color:rgba(233,238,252,.28)}
+    section{margin-top:18px;padding:18px;border:1px solid rgba(233,238,252,.14);border-radius:18px;background:rgba(6,10,24,.88);backdrop-filter:blur(8px)}
+    section h2{margin:0 0 8px;font-size:20px;letter-spacing:.2px}
+    section p{margin:0;color:var(--muted);line-height:1.6}
+    .grid{display:grid;gap:14px;margin-top:12px}
+    .card{padding:16px;border-radius:16px;border:1px solid rgba(233,238,252,.12);background:var(--panel);box-shadow:0 14px 36px rgba(0,0,0,.45)}
+    .card h3{margin:0 0 6px;font-size:15px}
+    .card p{margin:0;color:rgba(233,238,252,.84);line-height:1.55}
+    .tag{display:inline-block;margin-top:8px;padding:6px 10px;border-radius:999px;border:1px solid rgba(233,238,252,.16);color:rgba(233,238,252,.78);font-size:12px;font-weight:800}
+    .mini{margin-top:10px;color:rgba(233,238,252,.70);font-size:13px;line-height:1.55}
+    footer{margin-top:26px;padding-top:18px;border-top:1px solid rgba(233,238,252,.12);font-size:13px;color:rgba(233,238,252,.55)}
+    code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:8px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top">
+      <div class="brand">Geodiametrics</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/methods/">Methods</a>
+        <a href="/apps/">Apps</a>
+        <a href="/about/">About</a>
+        <a href="/news/">News</a>
+        <a href="/reference/">Reference</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Methods</h1>
+    <p class="sub">
+      Geodiametrics classifies systems from evidence traces. It rejects narrative and intent inference. It enforces provability through explicit constraints and auditable artifacts.
+    </p>
+
+    <div class="jump">
+      <a href="#scientific">Scientific</a>
+      <a href="#categorical">Categorical</a>
+      <a href="#independent">Independent</a>
+      <a href="#summary">Summary</a>
+      <a href="/reference/">Reference</a>
+    </div>
+
+    <section id="scientific">
+      <h2>Scientific Findings</h2>
+      <p>These findings are bounded, falsifiable, and operational. Each finding is a testable claim about structure, behavior, and evidence.</p>
+
+      <div class="grid">
+        <div class="card" id="s1">
+          <h3>Finding S1 — Constraint-first execution is provable</h3>
+          <p>Execution is admissible only when constraints are satisfied and outcomes are traceable through a deterministic proof chain.</p>
+          <span class="tag">Bounded</span>
+        </div>
+        <div class="card" id="s2">
+          <h3>Finding S2 — Receipts block silent state change</h3>
+          <p>A state transition exists only when it emits a receipt. Absence of receipt invalidates advancement.</p>
+          <span class="tag">Audit-safe</span>
+        </div>
+        <div class="card" id="s3">
+          <h3>Finding S3 — Drift is detectable as boundary violation</h3>
+          <p>Drift is observed when outputs exceed allowed vocabulary, violate domain separation, or bypass required gates.</p>
+          <span class="tag">Evidence-only</span>
+        </div>
+        <div class="card" id="s4">
+          <h3>Finding S4 — Trajectory is constrained by admissibility</h3>
+          <p>Trajectories evolve within admissible structure. Constraint tightening changes reachable states without altering the proof standard.</p>
+          <span class="tag">Structural</span>
+        </div>
+        <div class="card" id="s5">
+          <h3>Finding S5 — Lossless compression requires invariants</h3>
+          <p>Compression is valid only when invariants preserve meaning and reproducibility. Invariant loss produces false positives.</p>
+          <span class="tag">No hand-waving</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="categorical">
+      <h2>Categorical Findings</h2>
+      <p>This section defines categories and closure rules. It separates execution states from visibility states and specifies when extension is required.</p>
+
+      <div class="grid">
+        <div class="card" id="c1">
+          <h3>Category C1 — Execution states (0–7)</h3>
+          <p>States 0–7 classify formation, constraint binding, executable minimum, stabilization, projection, feedback, and completion from evidence traces.</p>
+          <span class="tag">Execution</span>
+        </div>
+        <div class="card" id="c2">
+          <h3>Category C2 — Visibility states (9–13)</h3>
+          <p>States 9–13 classify documentation completeness, categorical closure, extension, higher-order execution, and re-stabilization.</p>
+          <span class="tag">Visibility</span>
+        </div>
+        <div class="card" id="c3">
+          <h3>Category C3 — Closure rule</h3>
+          <p>Closure exists when additions fail unless explicit exceptions are added. Extension exists when invariants remain valid but insufficient.</p>
+          <span class="tag">Closure</span>
+        </div>
+      </div>
+
+      <p class="mini">
+        State table: see <code>/</code> Home (cycle module) or embed the same module in this page if required.
+      </p>
+    </section>
+
+    <section id="independent">
+      <h2>Independent Findings</h2>
+      <p>These findings are observer-invariant. Independent observers can reproduce classifications and verify outputs from the same evidence.</p>
+
+      <div class="grid">
+        <div class="card" id="i1">
+          <h3>Independent I1 — State classification is reproducible</h3>
+          <p>Given the same trace, independent observers classify the same state without inferring intent.</p>
+          <span class="tag">Observer-invariant</span>
+        </div>
+        <div class="card" id="i2">
+          <h3>Independent I2 — Outputs are verifiable</h3>
+          <p>Outputs are valid only when the receipt chain and log inclusion prove the transition.</p>
+          <span class="tag">Verifiable</span>
+        </div>
+        <div class="card" id="i3">
+          <h3>Independent I3 — Drift detection is objective</h3>
+          <p>Drift is detected by violated constraints and missing gates, not by inferred intent or narrative framing.</p>
+          <span class="tag">Objective</span>
+        </div>
+        <div class="card" id="i4">
+          <h3>Independent I4 — Audit does not require trust</h3>
+          <p>Audit relies on explicit artifacts, not authority. The system remains legible under independent review.</p>
+          <span class="tag">Trust-minimal</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="summary">
+      <h2>Method Summary</h2>
+      <p>
+        Core loop: <code>CHECK → RECEIPT → LOG → SEARCH → PROOF</code>. This loop is mandatory. A result exists only when it is traceable.
+      </p>
+      <p class="mini" style="margin-top:10px">
+        Domain rule: internal meaning and external causality remain separated. Mixed-domain claims are rejected as drift.
+      </p>
+      <p class="mini" style="margin-top:10px">
+        Reference: canonical definitions, index, and appendix live at <code>/reference/</code>.
+      </p>
+    </section>
+
+    <footer>© <span id="y"></span> Geodiametrics</footer>
+  </main>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

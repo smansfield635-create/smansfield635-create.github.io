@@ -299,3 +299,86 @@ footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--stroke);text-
     </p>
   </div>
 </div>
+<!-- =============================== -->
+<!-- CYCLICAL RUN CARD (TNB)        -->
+<!-- =============================== -->
+<section id="cdlRun" style="margin-top:28px;padding:20px;border-radius:18px;background:rgba(6,10,24,.88);border:1px solid rgba(233,238,252,.14);box-shadow:0 18px 55px rgba(0,0,0,.55);">
+  <h2 style="margin:0 0 10px;font-size:22px;color:rgba(233,238,252,.92);">Cyclical Law Run</h2>
+  <p style="margin:0;color:rgba(233,238,252,.72);line-height:1.6;max-width:92ch;">
+    Status is operational. HURDLE continues internally. WALL halts and notifies. COMPLETE advances to the next task/cycle.
+  </p>
+
+  <div style="margin-top:14px;padding:16px;border-radius:14px;background:rgba(10,14,26,.70);border:1px solid rgba(233,238,252,.14);">
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+      <div style="font-weight:900;letter-spacing:.2px;">RUN STATUS</div>
+      <span id="cdlBadge" style="font-weight:900;font-size:12px;letter-spacing:.25px;padding:6px 10px;border-radius:999px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:rgba(233,238,252,.92);">UNKNOWN</span>
+      <span style="margin-left:auto;color:rgba(233,238,252,.62);font-size:12px;">Last set: <code id="cdlWhen" style="color:rgba(233,238,252,.92);background:rgba(255,255,255,.08);padding:2px 6px;border-radius:8px;">—</code></span>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+      <select id="cdlSelect" style="padding:10px 14px;border-radius:12px;border:1px solid rgba(233,238,252,.16);background:rgba(10,14,26,.55);color:#fff;font-weight:900;">
+        <option value="UNKNOWN">UNKNOWN</option>
+        <option value="RUNNING">RUNNING</option>
+        <option value="HURDLE">HURDLE</option>
+        <option value="WALL">WALL</option>
+        <option value="COMPLETE">COMPLETE</option>
+      </select>
+
+      <button id="cdlSave" style="padding:10px 14px;border-radius:12px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:rgba(233,238,252,.90);font-weight:900;cursor:pointer;">Save</button>
+      <button id="cdlReset" style="padding:10px 14px;border-radius:12px;border:0;background:#fff;color:#000;font-weight:900;cursor:pointer;">Reset</button>
+    </div>
+
+    <p style="margin-top:12px;color:rgba(233,238,252,.62);font-size:13px;line-height:1.55;">
+      Reduce → Contrast → Condense → De-duplicate → Improve → Advance → Repeat.
+    </p>
+  </div>
+</section>
+
+<script>
+(function(){
+  const KEY="gd_cdl_status_v1";
+  const KEYT="gd_cdl_when_v1";
+
+  const badge=document.getElementById("cdlBadge");
+  const when=document.getElementById("cdlWhen");
+  const sel=document.getElementById("cdlSelect");
+  const save=document.getElementById("cdlSave");
+  const reset=document.getElementById("cdlReset");
+
+  function paint(v){
+    badge.textContent=v;
+    // soft color via border only (keeps your cosmic theme)
+    const base="1px solid rgba(233,238,252,.18)";
+    let border=base;
+    if(v==="COMPLETE") border="1px solid rgba(120,255,190,.35)";
+    if(v==="WALL") border="1px solid rgba(255,120,140,.35)";
+    if(v==="RUNNING"||v==="HURDLE") border="1px solid rgba(255,210,120,.35)";
+    badge.style.border=border;
+  }
+
+  function load(){
+    const v=localStorage.getItem(KEY)||"UNKNOWN";
+    const t=localStorage.getItem(KEYT)||"—";
+    sel.value=v;
+    paint(v);
+    when.textContent=t;
+  }
+
+  save.onclick=()=>{
+    const v=sel.value;
+    const t=new Date().toISOString();
+    localStorage.setItem(KEY,v);
+    localStorage.setItem(KEYT,t);
+    paint(v);
+    when.textContent=t;
+  };
+
+  reset.onclick=()=>{
+    localStorage.removeItem(KEY);
+    localStorage.removeItem(KEYT);
+    load();
+  };
+
+  load();
+})();
+</script>

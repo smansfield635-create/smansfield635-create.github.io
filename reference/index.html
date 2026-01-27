@@ -47,3 +47,101 @@ Primary system definitions live in <a href="/methods/">Methods</a>.
 </main>
 </body>
 </html>
+<script>
+(function(){
+  // GEO Telemetry v1 (local-only, no external services)
+  // Stored in localStorage and shared across pages on the same domain + browser.
+
+  const KEY="geo_telemetry_v1";
+  const NOW=Date.now();
+
+  const path=(location.pathname||"/").replace(/\/+$/,"/"); // normalize
+  const ref=document.referrer||"";
+  const ua=navigator.userAgent||"";
+  const sessionKey="geo_session_v1";
+  const sessionId=sessionStorage.getItem(sessionKey) || (NOW+"-"+Math.random().toString(16).slice(2));
+  sessionStorage.setItem(sessionKey, sessionId);
+
+  function load(){
+    try{ return JSON.parse(localStorage.getItem(KEY)||"{}"); }catch{ return {}; }
+  }
+  function save(d){
+    try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch{}
+  }
+
+  const d=load();
+  d.version=1;
+  d.first_seen=d.first_seen||new Date(NOW).toISOString();
+  d.last_seen=new Date(NOW).toISOString();
+
+  // Counters
+  d.pageviews=d.pageviews||0;
+  d.sessions=d.sessions||0;
+  d.by_path=d.by_path||{};
+  d.by_ref=d.by_ref||{};
+  d.events=d.events||[];
+
+  // Session accounting (count once per session)
+  d._seen_sessions=d._seen_sessions||{};
+  if(!d._seen_sessions[sessionId]){
+    d._seen_sessions[sessionId]=true;
+    d.sessions++;
+  }
+
+  // Pageview
+  d.pageviews++;
+  d.by_path[path]=(d.by_path[path]||0)+1;
+  if(ref) d.by_ref[ref]=(d.by_ref[ref]||0)+1;
+
+  // Time on page (measured on unload / visibility change)
+  const t0=performance.now();
+  let maxScroll=0;
+
+  function emit(type, meta){
+    d.events.push({
+      t:new Date().toISOString(),
+      type,
+      path,
+      session:sessionId,
+      meta:meta||{}
+    });
+    // keep last 500 events to avoid bloat
+    if(d.events.length>500) d.events=d.events.slice(d.events.length-500);
+    save(d);
+  }
+
+  // Track nav/button clicks (links + buttons)
+  document.addEventListener("click", function(e){
+    const a=e.target && (e.target.closest ? e.target.closest("a") : null);
+    const b=e.target && (e.target.closest ? e.target.closest("button") : null);
+    if(a){
+      emit("click_link",{href:a.getAttribute("href")||"", text:(a.textContent||"").trim().slice(0,80)});
+    }else if(b){
+      emit("click_button",{id:b.id||"", text:(b.textContent||"").trim().slice(0,80)});
+    }
+  }, true);
+
+  // Scroll depth
+  window.addEventListener("scroll", function(){
+    const doc=document.documentElement;
+    const scrollTop=doc.scrollTop||document.body.scrollTop||0;
+    const scrollHeight=doc.scrollHeight||0;
+    const clientHeight=doc.clientHeight||window.innerHeight||1;
+    const pct=Math.min(100, Math.round((scrollTop/(scrollHeight-clientHeight+1))*100));
+    if(pct>maxScroll) maxScroll=pct;
+  }, {passive:true});
+
+  function finalize(){
+    const dt=Math.max(0, Math.round(performance.now()-t0));
+    emit("page_exit",{ms:dt, scroll_pct:maxScroll});
+  }
+
+  window.addEventListener("pagehide", finalize);
+  document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState==="hidden") finalize();
+  });
+
+  // initial mark
+  emit("page_view",{ref, ua:ua.slice(0,120)});
+})();
+</script>

@@ -1,155 +1,161 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Control Room · Geodiametrics</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Control Room · Geodiametrics</title>
+  <style>
+    :root{
+      --fg:#e9eefc;--muted:rgba(233,238,252,.70);--stroke:rgba(233,238,252,.14);
+      --panel:rgba(10,14,28,.58);--panel2:rgba(10,14,28,.44);
+      --shadow:0 18px 55px rgba(0,0,0,.55);--r:22px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;color:var(--fg);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      overflow-x:hidden;
+      background:
+        radial-gradient(1200px 900px at 15% 10%, rgba(80,120,255,.20), transparent 60%),
+        radial-gradient(900px 720px at 85% 30%, rgba(200,110,255,.18), transparent 55%),
+        radial-gradient(1000px 800px at 55% 85%, rgba(120,255,220,.10), transparent 60%),
+        linear-gradient(180deg,#040713,#02040a);
+    }
+    /* cosmic drift */
+    body:before, body:after{
+      content:"";position:fixed;inset:-40%;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.10) 0 1px, transparent 2px),
+        radial-gradient(circle at 60% 50%, rgba(255,255,255,.08) 0 1px, transparent 2px),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,.07) 0 1px, transparent 2px),
+        radial-gradient(circle at 35% 75%, rgba(255,255,255,.06) 0 1px, transparent 2px);
+      background-size: 220px 220px, 260px 260px, 320px 320px, 280px 280px;
+      opacity:.55;pointer-events:none;filter:blur(.2px);
+      animation: driftA 55s linear infinite;
+    }
+    body:after{
+      opacity:.35;filter:blur(.8px);
+      animation: driftB 80s linear infinite;
+      transform:scale(1.15);
+    }
+    @keyframes driftA{from{transform:translate3d(-2%, -1%, 0)}to{transform:translate3d(2%, 1%, 0)}}
+    @keyframes driftB{from{transform:translate3d(1%, -2%, 0)}to{transform:translate3d(-1%, 2%, 0)}}
 
-<style>
-:root{
-  --fg:#e9eefc;--muted:rgba(233,238,252,.65);
-  --panel:rgba(12,16,34,.62);--stroke:rgba(233,238,252,.14);
-  --radius:22px;--shadow:0 18px 55px rgba(0,0,0,.55);
-}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:var(--fg);
-  background:
-    radial-gradient(1200px 900px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
-    radial-gradient(900px 700px at 80% 30%, rgba(180,140,255,.14), transparent 60%),
-    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
-  overflow-x:hidden;
-}
-header{
-  position:sticky;top:0;z-index:10;
-  backdrop-filter:blur(12px);
-  background:linear-gradient(180deg,rgba(6,9,20,.75),rgba(6,9,20,.35));
-  border-bottom:1px solid var(--stroke);
-}
-.bar{max-width:1100px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
-.brand{font-weight:700;letter-spacing:.4px}
-nav a{margin-left:10px;padding:8px 14px;border-radius:999px;border:1px solid var(--stroke);background:rgba(255,255,255,.05);color:var(--fg);text-decoration:none}
-main{max-width:1100px;margin:0 auto;padding:48px 18px 96px}
-h1{font-size:clamp(36px,6vw,60px);margin:0 0 8px}
-.lead{color:var(--muted);max-width:760px}
-.panel{margin-top:28px;padding:22px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--stroke);box-shadow:var(--shadow)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:16px}
-.card{padding:18px;border-radius:18px;background:rgba(10,14,28,.6);border:1px solid var(--stroke)}
-.btn{appearance:none;border:1px solid rgba(233,238,252,.18);background:rgba(255,255,255,.06);color:var(--fg);padding:10px 14px;border-radius:999px;font-weight:800;cursor:pointer}
-.btn:active{transform:translateY(1px)}
-.table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
-th,td{padding:8px;border-bottom:1px solid var(--stroke);text-align:left}
-footer{text-align:center;color:var(--muted);margin-top:64px}
-small{color:var(--muted)}
-</style>
+    header{
+      position:sticky;top:0;z-index:50;
+      padding:18px 18px;
+      background:linear-gradient(180deg, rgba(2,4,10,.88), rgba(2,4,10,.55));
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .bar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{font-weight:800;letter-spacing:.2px}
+    .tabs{display:flex;gap:10px;flex-wrap:wrap}
+    .tab{
+      padding:10px 14px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--fg);text-decoration:none;font-weight:650;
+    }
+    .tab[aria-current="page"]{background:rgba(255,255,255,.10)}
+    main{max-width:980px;margin:0 auto;padding:22px 18px 70px;display:grid;gap:16px}
+    .card{
+      background:var(--panel);border:1px solid rgba(255,255,255,.14);
+      border-radius:var(--r);box-shadow:var(--shadow);
+      padding:18px;
+    }
+    h1{margin:10px 0 4px;font-size:40px;letter-spacing:.4px}
+    p{margin:0;color:var(--muted);line-height:1.55}
+    .grid{display:grid;gap:14px}
+    iframe{
+      width:100%;height:560px;border:none;border-radius:16px;
+      background:rgba(0,0,0,.25);
+    }
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 14px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--fg);font-weight:650;
+    }
+    .dot{width:9px;height:9px;border-radius:50%;background:#6b7280}
+    .dot.ok{background:#34d399}
+    .dot.bad{background:#fb7185}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 14px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.06);
+      color:var(--fg);text-decoration:none;font-weight:700;
+    }
+    footer{padding:22px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
+  </style>
 </head>
-
 <body>
 <header>
   <div class="bar">
-    <div class="brand">Geodiametrics</div>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/apps/">Apps</a>
-      <a href="/architecture/">Architecture</a>
-    </nav>
+    <div class="brand">Geodiametrics · Control Room</div>
+    <div class="tabs">
+      <a class="tab" href="/">Home</a>
+      <a class="tab" href="/methods/">Methods</a>
+      <a class="tab" href="/apps/">Apps</a>
+      <a class="tab" href="/control-room/" aria-current="page">Control Room</a>
+    </div>
   </div>
 </header>
 
 <main>
-  <h1>Control Room</h1>
-  <p class="lead">Single execution authority. Engines are namespaces. Matrix observes registrations. Viewer pages do not execute.</p>
-
-  <!-- Quad-Core Controls -->
-  <section class="panel">
-    <h2>Diamond Fusion · Quad Core</h2>
-    <div class="grid">
-      <div class="card"><b>Core I</b><br/><small>Selection</small></div>
-      <div class="card"><b>Core II</b><br/><small>Resolution</small></div>
-      <div class="card"><b>Core III</b><br/><small>Commitment</small></div>
-      <div class="card"><b>Core IV</b><br/><small>Continuation</small></div>
+  <section class="card">
+    <h1>Control Room</h1>
+    <p>Single control surface. Engine Room + Engine Matrix. Device-local registry. No external calls.</p>
+    <div class="row" style="margin-top:14px">
+      <span class="pill"><span id="lockDot" class="dot"></span><span id="lockText">Structure: checking…</span></span>
+      <a class="btn" href="/control-room/engine-room/">Open Engine Room</a>
+      <a class="btn" href="/control-room/engine-matrix/">Open Engine Matrix</a>
     </div>
-    <div style="margin-top:12px">
-      <button class="btn" id="registerAll">Register All Cores</button>
-      <button class="btn" id="clearAll">Clear Registry</button>
-    </div>
-    <small>Registration writes to localStorage using a canonical key.</small>
   </section>
 
-  <!-- Matrix -->
-  <section class="panel">
-    <h2>Engine Matrix</h2>
-    <button class="btn" id="refresh">Refresh</button>
-    <table class="table">
-      <thead>
-        <tr><th>Namespace</th><th>Family</th><th>Core</th><th>Version</th><th>Seen</th></tr>
-      </thead>
-      <tbody id="matrix-body">
-        <tr><td colspan="5">No engines registered.</td></tr>
-      </tbody>
-    </table>
+  <section class="card">
+    <h2 style="margin:0 0 10px">Engine Room</h2>
+    <iframe src="/control-room/engine-room/"></iframe>
+  </section>
+
+  <section class="card">
+    <h2 style="margin:0 0 10px">Engine Matrix</h2>
+    <iframe src="/control-room/engine-matrix/"></iframe>
   </section>
 
   <footer>© 2026 Geodiametrics · Control Room</footer>
 </main>
 
 <script>
-/* CANONICAL REGISTRATION CONTRACT */
-const PREFIX = "GEOD_ENGINE::";
-const CORES = [
-  {ns:"diamond_fusion_core_1", family:"diamond_fusion", core:1},
-  {ns:"diamond_fusion_core_2", family:"diamond_fusion", core:2},
-  {ns:"diamond_fusion_core_3", family:"diamond_fusion", core:3},
-  {ns:"diamond_fusion_core_4", family:"diamond_fusion", core:4}
-];
+(async function(){
+  const dot=document.getElementById("lockDot");
+  const txt=document.getElementById("lockText");
 
-function register(core){
-  const payload = {
-    namespace: core.ns,
-    family: core.family,
-    core: core.core,
-    version: "1.0",
-    cycle: ["input","admissibility","execution","evidence","return"],
-    invariants: ["agency","constraint","responsibility","coherence"],
-    registered_at: new Date().toISOString()
-  };
-  localStorage.setItem(PREFIX + core.ns, JSON.stringify(payload));
-}
+  const mustHave=[
+    "/control-room/engine-room/",
+    "/control-room/engine-matrix/"
+  ];
 
-function registerAll(){
-  CORES.forEach(register);
-  render();
-}
-
-function clearAll(){
-  Object.keys(localStorage)
-    .filter(k => k.startsWith(PREFIX))
-    .forEach(k => localStorage.removeItem(k));
-  render();
-}
-
-function render(){
-  const body = document.getElementById("matrix-body");
-  body.innerHTML = "";
-  const keys = Object.keys(localStorage).filter(k=>k.startsWith(PREFIX)).sort();
-  if(!keys.length){
-    body.innerHTML = "<tr><td colspan='5'>No engines registered.</td></tr>";
-    return;
+  async function exists(url){
+    try{
+      const r=await fetch(url,{method:"GET",cache:"no-store"});
+      return r.ok;
+    }catch(e){ return false; }
   }
-  keys.forEach(k=>{
-    const d = JSON.parse(localStorage.getItem(k) || "{}");
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${d.namespace}</td><td>${d.family}</td><td>${d.core}</td><td>${d.version}</td><td>local</td>`;
-    body.appendChild(tr);
-  });
-}
 
-document.getElementById("registerAll").onclick = registerAll;
-document.getElementById("clearAll").onclick = clearAll;
-document.getElementById("refresh").onclick = render;
-render();
+  let ok=true;
+  for(const u of mustHave){
+    const e=await exists(u);
+    if(!e){ ok=false; break; }
+  }
+
+  dot.classList.add(ok?"ok":"bad");
+  txt.textContent = ok ? "Structure: LOCKED (self-check OK)" : "Structure: BROKEN (missing page)";
+})();
 </script>
 </body>
 </html>

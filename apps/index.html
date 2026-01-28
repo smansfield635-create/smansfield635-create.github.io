@@ -1,166 +1,181 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Apps · Geodiametrics</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Apps · Geodiametrics</title>
 
-  <style>
-    :root{
-      --fg:#e9eefc;
-      --muted:rgba(233,238,252,.65);
-      --stroke:rgba(233,238,252,.14);
-      --panel:rgba(12,16,34,.62);
-      --glass:rgba(10,14,28,.55);
-      --shadow:0 18px 55px rgba(0,0,0,.55);
-      --radius:22px;
-    }
+<style>
+:root{
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.66);
+  --stroke:rgba(233,238,252,.14);
+  --panel:rgba(12,16,34,.62);
+  --panel2:rgba(12,16,34,.42);
+  --glass:rgba(10,14,28,.55);
+  --radius:22px;
+  --shadow:0 18px 55px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--fg);
+  overflow-x:hidden;
+  background:
+    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
+    radial-gradient(1000px 800px at 60% 90%, rgba(120,220,255,.08), transparent 60%),
+    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
+}
+/* starfield */
+body:before{
+  content:"";
+  position:fixed;inset:-60px;
+  pointer-events:none;
+  opacity:.78;
+  background:
+    radial-gradient(2px 2px at 12% 12%, rgba(255,255,255,.95), transparent 60%),
+    radial-gradient(1px 1px at 18% 38%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(2px 2px at 26% 62%, rgba(255,255,255,.80), transparent 60%),
+    radial-gradient(1px 1px at 33% 28%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(2px 2px at 41% 18%, rgba(255,255,255,.85), transparent 60%),
+    radial-gradient(1px 1px at 48% 46%, rgba(255,255,255,.60), transparent 60%),
+    radial-gradient(2px 2px at 57% 70%, rgba(255,255,255,.78), transparent 60%),
+    radial-gradient(1px 1px at 63% 26%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(2px 2px at 71% 14%, rgba(255,255,255,.88), transparent 60%),
+    radial-gradient(1px 1px at 76% 44%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(2px 2px at 84% 64%, rgba(255,255,255,.80), transparent 60%),
+    radial-gradient(1px 1px at 90% 22%, rgba(255,255,255,.60), transparent 60%),
+    radial-gradient(2px 2px at 92% 82%, rgba(255,255,255,.82), transparent 60%),
+    radial-gradient(1px 1px at 10% 86%, rgba(255,255,255,.55), transparent 60%);
+  filter:blur(.15px);
+}
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell;
-      color:var(--fg);
-      background:
-        radial-gradient(1200px 900px at 15% 10%, rgba(140,160,255,.18), transparent 60%),
-        radial-gradient(900px 700px at 85% 30%, rgba(180,120,255,.14), transparent 60%),
-        linear-gradient(180deg,#070b18,#050714 70%,#04040f);
-      overflow-x:hidden;
-    }
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+.top{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(10px);
+  background:linear-gradient(180deg, rgba(7,11,24,.86), rgba(7,11,24,.55));
+  border-bottom:1px solid rgba(233,238,252,.10);
+}
+.bar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:14px 16px;
+}
+.brand{font-weight:900;letter-spacing:.4px}
+.nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+.bubble{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.16);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);
+  text-decoration:none;
+  font-weight:900;
+  box-shadow:0 10px 26px rgba(0,0,0,.35);
+}
+.bubble:active{transform:translateY(1px)}
 
-    header{
-      position:sticky;
-      top:0;
-      z-index:10;
-      backdrop-filter:blur(14px);
-      background:linear-gradient(180deg,rgba(6,9,20,.75),rgba(6,9,20,.35));
-      border-bottom:1px solid var(--stroke);
-    }
+.hero{padding:28px 2px 8px}
+h1{margin:0;font-size:44px;letter-spacing:.2px}
+.sub{margin:10px 0 0;color:var(--muted);max-width:780px}
+.hr{height:1px;background:rgba(233,238,252,.10);margin:20px 0 24px}
 
-    .bar{
-      max-width:1100px;
-      margin:auto;
-      padding:16px 20px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-    }
-
-    .brand{font-weight:600;letter-spacing:.3px}
-
-    nav a{
-      margin-left:12px;
-      padding:10px 16px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.06);
-      color:var(--fg);
-      text-decoration:none;
-      box-shadow:0 10px 26px rgba(0,0,0,.35);
-    }
-
-    main{
-      max-width:1100px;
-      margin:auto;
-      padding:56px 20px 80px;
-    }
-
-    h1{
-      font-size:42px;
-      margin:0 0 12px;
-      letter-spacing:.4px;
-    }
-
-    .subtitle{
-      color:var(--muted);
-      max-width:720px;
-      margin-bottom:36px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:28px;
-    }
-
-    .card{
-      padding:28px;
-      border-radius:var(--radius);
-      background:var(--panel);
-      border:1px solid var(--stroke);
-      box-shadow:var(--shadow);
-    }
-
-    .card h2{margin-top:0}
-
-    .button{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      margin-top:18px;
-      padding:12px 18px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.08);
-      color:var(--fg);
-      text-decoration:none;
-      min-width:160px;
-      box-shadow:0 10px 26px rgba(0,0,0,.35);
-    }
-
-    footer{
-      text-align:center;
-      color:var(--muted);
-      padding:48px 20px 28px;
-    }
-  </style>
+.card{
+  border-radius:var(--radius);
+  border:1px solid var(--stroke);
+  background:var(--panel);
+  box-shadow:var(--shadow);
+}
+.card .in{padding:18px}
+.card h2{margin:0 0 10px;font-size:22px}
+.card p{margin:0 0 14px;color:var(--muted);line-height:1.55}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid rgba(233,238,252,.18);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);
+  padding:12px 16px;border-radius:999px;
+  font-weight:900;text-decoration:none;
+  box-shadow:0 10px 26px rgba(0,0,0,.35);
+}
+.btn:active{transform:translateY(1px)}
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.16);
+  background:rgba(255,255,255,.06);
+  font-weight:900;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
+}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+.footer{margin-top:18px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
+</style>
 </head>
 
 <body>
-
-<header>
-  <div class="bar">
+<div class="top">
+  <div class="bar wrap" style="padding:14px 16px;">
     <div class="brand">Geodiametrics</div>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/architecture/">Architecture</a>
-      <a href="/apps/">Apps</a>
+    <nav class="nav">
+      <a class="bubble" href="/">Home</a>
+      <a class="bubble" href="/methods/">Methods</a>
+      <a class="bubble" href="/dashboard/">Dashboard</a>
+      <a class="bubble" href="/apps/">Apps</a>
+      <a class="bubble" href="/reference/">Reference</a>
+      <a class="bubble" href="/problem/">Problem</a>
+      <a class="bubble" href="/architecture/">Architecture</a>
     </nav>
   </div>
-</header>
+</div>
 
-<main>
-  <h1>Apps</h1>
-  <p class="subtitle">
-    Viewer surface only. Engines execute elsewhere. Nothing runs here.
-  </p>
+<div class="wrap">
+  <section class="hero">
+    <h1>Apps</h1>
+    <p class="sub">Viewer surface only. Engines execute elsewhere. Nothing runs here.</p>
+    <div class="hr"></div>
+  </section>
 
-  <div class="grid">
+  <section class="grid">
 
     <div class="card">
-      <h2>Engine Room</h2>
-      <p>
-        Foundational execution space. Engines live, register, and operate here.
-      </p>
-      <a class="button" href="/engine-room/">Open Engine Room</a>
+      <div class="in">
+        <div class="pill">Control Room · Primary</div>
+        <h2>Geometric Quad-Core Fusion</h2>
+        <p>Single-page quad-core console + registry + walls. Device-local only. No implicit coupling.</p>
+        <div class="row">
+          <a class="btn" href="/control-room/diamond/geometric-quad-core-fusion/">Open Control Room</a>
+        </div>
+      </div>
     </div>
 
     <div class="card">
-      <h2>Engine Matrix</h2>
-      <p>
-        Cross-engine registry and supervision layer. Discovers engines by device.
-      </p>
-      <a class="button" href="/engine-matrix/">Open Engine Matrix</a>
+      <div class="in">
+        <div class="pill">Engine Room · Workspace</div>
+        <h2>Engine Room</h2>
+        <p>Foundational execution space. Engines live, register, and operate here.</p>
+        <div class="row">
+          <a class="btn" href="/control-room/engine-room/">Open Engine Room</a>
+        </div>
+      </div>
     </div>
 
-  </div>
-</main>
+    <div class="card">
+      <div class="in">
+        <div class="pill">Matrix · Registry</div>
+        <h2>Engine Matrix</h2>
+        <p>Cross-engine registry and supervision layer. Discovers engines by device.</p>
+        <div class="row">
+          <a class="btn" href="/apps/engine-matrix/">Open Engine Matrix</a>
+        </div>
+      </div>
+    </div>
 
-<footer>
-  © 2026 Geodiametrics · Apps Viewer
-</footer>
+  </section>
 
+  <div class="footer">© 2026 Geodiametrics · Apps</div>
+</div>
 </body>
 </html>
+```0

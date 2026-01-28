@@ -3,148 +3,175 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Dashboard · Control Room</title>
+<title>Dashboard · Geodiametrics</title>
 
 <style>
 :root{
-  --fg:#e9eefc;
-  --muted:rgba(233,238,252,.66);
+  --bg:#050714;
+  --panel:rgba(12,16,34,.65);
   --stroke:rgba(233,238,252,.14);
-  --panel:rgba(12,16,34,.62);
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.6);
+  --green:#4ade80;
+  --yellow:#facc15;
+  --red:#f87171;
+  --blue:#60a5fa;
   --radius:22px;
-  --shadow:0 18px 55px rgba(0,0,0,.55);
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:var(--fg);
-  background:
-    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
-    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
-    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
-}
-.wrap{max-width:1100px;margin:0 auto;padding:22px 16px 70px}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:system-ui}
+.wrap{max-width:1100px;margin:0 auto;padding:22px}
+
 .card{
-  border-radius:var(--radius);
-  border:1px solid var(--stroke);
   background:var(--panel);
-  box-shadow:var(--shadow);
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
   padding:18px;
   margin-bottom:16px;
 }
-h1{margin:0 0 10px}
-p{color:var(--muted)}
-.row{display:flex;gap:10px;flex-wrap:wrap}
+
+h1{margin:0 0 6px}
+p{margin:0 0 10px;color:var(--muted)}
+
+.row{display:flex;gap:12px;flex-wrap:wrap}
 .btn{
   padding:10px 14px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.18);
+  border:1px solid var(--stroke);
   background:rgba(255,255,255,.06);
-  color:var(--fg);font-weight:900;cursor:pointer
+  color:var(--fg);font-weight:900;text-decoration:none
 }
-.table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
-th,td{padding:8px;border-bottom:1px solid rgba(233,238,252,.12);text-align:left}
-th{color:#fff;font-weight:900}
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--muted)}
-.small{font-size:13px;color:var(--muted)}
-.footer{margin-top:18px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
+
+.gauges{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+
+.gauge{
+  background:rgba(0,0,0,.25);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:14px;
+}
+
+.gauge h3{margin:0 0 8px;font-size:14px;letter-spacing:.6px;text-transform:uppercase}
+.light{
+  width:14px;height:14px;border-radius:50%;
+  display:inline-block;margin-right:8px;
+}
+.bar{
+  display:flex;gap:4px;margin-top:8px
+}
+.block{
+  flex:1;height:10px;border-radius:6px;
+  background:rgba(255,255,255,.12)
+}
+.block.on.green{background:var(--green)}
+.block.on.yellow{background:var(--yellow)}
+.block.on.red{background:var(--red)}
+.block.on.blue{background:var(--blue)}
+
+.table{
+  width:100%;border-collapse:collapse;margin-top:10px;font-size:13px
+}
+th,td{padding:8px;border-bottom:1px solid var(--stroke);text-align:left}
+th{color:#fff}
+.footer{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
 </style>
 </head>
 
 <body>
 <div class="wrap">
 
-  <div class="card">
-    <h1>Dashboard</h1>
-    <p>Observer-only surface. Reads <span class="mono">ENGINE::</span> keys. No execution. No mutation.</p>
-
-    <div class="row" style="margin-top:12px">
-      <button class="btn" onclick="scan()">Refresh</button>
-      <button class="btn" onclick="exportJSON()">Export JSON</button>
-      <a class="btn" href="/control-room/">Back to Control Room</a>
-    </div>
-
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Namespace</th>
-          <th>Keys</th>
-          <th>Last Update</th>
-        </tr>
-      </thead>
-      <tbody id="rows">
-        <tr><td colspan="3" class="mono">No engines discovered.</td></tr>
-      </tbody>
-    </table>
-
-    <p class="mono" id="meta" style="margin-top:10px">Last scan: —</p>
+<div class="card">
+  <h1>Dashboard</h1>
+  <p>Observer-only. Gauges reflect ENGINE:: state. No execution.</p>
+  <div class="row">
+    <button class="btn" onclick="refresh()">Refresh</button>
+    <a class="btn" href="/control-room/">Back to Control Room</a>
   </div>
+</div>
 
-  <div class="footer">© 2026 Geodiametrics · Dashboard</div>
+<div class="card">
+  <h2>Engine Gauges</h2>
+  <div class="gauges" id="gauges"></div>
+</div>
+
+<div class="card">
+  <h2>Registry Table</h2>
+  <table class="table">
+    <thead>
+      <tr><th>Engine</th><th>Status</th><th>Cycle</th><th>Updated</th></tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+</div>
+
+<div class="footer">© 2026 Geodiametrics · Dashboard</div>
 
 </div>
 
 <script>
-/* ============================
-   DASHBOARD · OBSERVER ONLY
-   Reads ENGINE:: keys only
-============================= */
+const PREFIX="ENGINE::";
 
-const ENGINE_PREFIX = "ENGINE::";
-
-function scan(){
-  const body = document.getElementById("rows");
-  const meta = document.getElementById("meta");
-  body.innerHTML = "";
-
-  const found = [];
-  for(let i=0;i<localStorage.length;i++){
-    const k = localStorage.key(i);
-    if(k && k.startsWith(ENGINE_PREFIX)){
-      try{
-        const v = JSON.parse(localStorage.getItem(k));
-        found.push({
-          ns: k.slice(ENGINE_PREFIX.length),
-          keys: v?.state ? Object.keys(v.state).length : 0,
-          last: v?.updated_at || "—"
-        });
-      }catch{}
-    }
-  }
-
-  if(!found.length){
-    body.innerHTML = "<tr><td colspan='3' class='mono'>No engines discovered.</td></tr>";
-  }else{
-    found.sort((a,b)=>a.ns.localeCompare(b.ns)).forEach(e=>{
-      const tr = document.createElement("tr");
-      tr.innerHTML =
-        "<td class='mono'>"+e.ns+"</td>"+
-        "<td class='mono'>"+e.keys+"</td>"+
-        "<td class='mono'>"+e.last+"</td>";
-      body.appendChild(tr);
-    });
-  }
-
-  meta.textContent = "Last scan: " + new Date().toISOString();
+function readEngines(){
+  return Object.keys(localStorage)
+    .filter(k=>k.startsWith(PREFIX))
+    .map(k=>JSON.parse(localStorage.getItem(k)));
 }
 
-function exportJSON(){
-  const data = [];
-  for(let i=0;i<localStorage.length;i++){
-    const k = localStorage.key(i);
-    if(k && k.startsWith(ENGINE_PREFIX)){
-      try{ data.push(JSON.parse(localStorage.getItem(k))); }catch{}
-    }
-  }
-  const blob = new Blob([JSON.stringify({exported_at:new Date().toISOString(), engines:data},null,2)],{type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "dashboard_engines.json";
-  a.click();
-  URL.revokeObjectURL(a.href);
+function cycleColor(c){
+  return c==="RUNNING"?"green":
+         c==="HURDLE"?"yellow":
+         c==="WALL"?"red":
+         c==="COMPLETE"?"blue":"";
 }
 
-scan();
+function refresh(){
+  const engines=readEngines();
+  const gauges=document.getElementById("gauges");
+  const rows=document.getElementById("rows");
+  gauges.innerHTML="";
+  rows.innerHTML="";
+
+  engines.forEach(e=>{
+    const s=e.state||{};
+    const cycle=s.continuation?.cycle||"IDLE";
+    const blocks=[
+      s.selection,
+      s.resolution,
+      s.commitment,
+      s.continuation
+    ].filter(Boolean).length;
+
+    const g=document.createElement("div");
+    g.className="gauge";
+    g.innerHTML=`
+      <h3>
+        <span class="light" style="background:${blocks? "var(--green)":"var(--red)"}"></span>
+        ${e.namespace}
+      </h3>
+      <div class="bar">
+        ${[1,2,3,4].map(i=>
+          `<div class="block ${i<=blocks?"on "+cycleColor(cycle):""}"></div>`
+        ).join("")}
+      </div>
+      <p style="margin-top:6px;font-size:12px">${cycle}</p>
+    `;
+    gauges.appendChild(g);
+
+    const r=document.createElement("tr");
+    r.innerHTML=`
+      <td>${e.namespace}</td>
+      <td>${blocks?"ACTIVE":"IDLE"}</td>
+      <td>${cycle}</td>
+      <td>${e.updated_at||"—"}</td>
+    `;
+    rows.appendChild(r);
+  });
+}
+
+refresh();
 </script>
 </body>
 </html>

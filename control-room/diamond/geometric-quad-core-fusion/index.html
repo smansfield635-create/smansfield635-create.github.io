@@ -287,7 +287,11 @@ tfoot td{border-bottom:0}
 
   <div class="footer">© 2026 Geodiametrics · Control Room</div>
 </div>
-
+// Universal discovery prefix (what your Matrix should scan)
+const ENGINE_PREFIX = "DF::"; 
+// Internal bundle prefixes
+const DF_PREFIX = "DF::";
+const DF_REG = "DF_REG::";
 <script>
 /* =========================================================
    DIAMOND FUSION · CONTROL ROOM (v1)
@@ -295,23 +299,16 @@ tfoot td{border-bottom:0}
    Device-local only. No external calls.
 ========================================================= */
 
-const DF = (() => {
-  // Universal discovery prefix (what your Matrix should scan)
-  const ENGINE_PREFIX = "ENGINE::";
 
-  // Internal bundle prefixes (fine to keep)
-  const DF_PREFIX  = "DF::";
-  const DF_REG     = "DF_REG::";
-  const SUPKEY     = "DF_SUPERVISOR::v1";
-  const LOCKKEY    = "DF_LOCK::v1";
 
   // FOUR CORES (one geometry)
   const CORES = [
-    { name:"Core 1", sub:"Selection",    ns:"diamond_fusion_core_1" },
-    { name:"Core 2", sub:"Resolution",   ns:"diamond_fusion_core_2" },
-    { name:"Core 3", sub:"Commitment",   ns:"diamond_fusion_core_3" },
-    { name:"Core 4", sub:"Continuation", ns:"diamond_fusion_core_4" }
-  ];
+    { name:"Core 1", sub:"Selection",    /index.html                     ← Front door
+/control-room/
+  └── diamond/
+      └── geometric-quad-core-fusion/
+          └── index.html        ← ALL ENGINES LIVE HERE
+
 
   let active = CORES[0].ns;
 

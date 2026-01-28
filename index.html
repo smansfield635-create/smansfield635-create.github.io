@@ -1,211 +1,5 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Geodiametrics</title>
-
-  <style>
-    :root{
-      --bg:#0b0f1a;
-      --fg:#e8ecf5;
-      --muted:#aab0c5;
-      --stroke:rgba(255,255,255,.08);
-      --panel:rgba(255,255,255,.04);
-      --accent:#8fa4ff;
-    }
-
-    *{box-sizing:border-box}
-
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:
-        radial-gradient(900px 600px at 15% 10%, rgba(120,150,255,.18), transparent 60%),
-        radial-gradient(800px 500px at 85% 80%, rgba(255,120,200,.14), transparent 65%),
-        linear-gradient(180deg,#0b0f1a,#06080f);
-      color:var(--fg);
-    }
-
-    header{
-      position:sticky;
-      top:0;
-      z-index:10;
-      backdrop-filter:blur(10px);
-      background:rgba(10,14,26,.75);
-      border-bottom:1px solid var(--stroke);
-    }
-
-    .nav{
-      max-width:1100px;
-      margin:0 auto;
-      padding:14px 20px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-    }
-
-    .brand{
-      font-weight:800;
-      letter-spacing:.4px;
-    }
-
-    nav a{
-      margin-left:18px;
-      color:var(--muted);
-      text-decoration:none;
-      font-size:14px;
-    }
-
-    main{
-      max-width:1000px;
-      margin:0 auto;
-      padding:64px 20px 96px;
-    }
-
-    h1{
-      font-size:clamp(32px,6vw,56px);
-      line-height:1.1;
-      margin:0 0 16px;
-      letter-spacing:.5px;
-    }
-
-    .subtitle{
-      font-size:18px;
-      color:var(--muted);
-      max-width:700px;
-      margin-bottom:48px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-      gap:20px;
-    }
-
-    .bubble{
-      display:block;
-      padding:22px;
-      border-radius:18px;
-      background:var(--panel);
-      border:1px solid var(--stroke);
-      text-decoration:none;
-      color:var(--fg);
-      transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-    }
-
-    .bubble:hover{
-      transform:translateY(-3px);
-      border-color:rgba(255,255,255,.18);
-      box-shadow:0 12px 30px rgba(0,0,0,.35);
-    }
-
-    .bubble h2{
-      margin:0 0 8px;
-      font-size:18px;
-      letter-spacing:.3px;
-    }
-
-    .bubble p{
-      margin:0;
-      font-size:14px;
-      color:var(--muted);
-      line-height:1.5;
-    }
-
-    footer{
-      border-top:1px solid var(--stroke);
-      text-align:center;
-      padding:28px 20px;
-      font-size:13px;
-      color:var(--muted);
-    }
-  </style>
-</head>
-
-<body>
-
-<header>
-  <div class="nav">
-    <div class="brand">Geodiametrics</div>
-    <nav>
-      <a href="/methods/">Methods</a>
-      <a href="/dashboard/">Dashboard</a>
-      <a href="/apps/">Apps</a>
-      <a href="/reference/">Reference</a>
-      <a href="/problem/">Problem</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-
-  <h1>Constraint-first systems.<br>Provable execution.</h1>
-
-  <p class="subtitle">
-    Home is a front door only.  
-    This project documents empirical execution under constraint, with
-    audit-friendly diagnostics and verifiable artifacts.
-  </p>
-
-  <div class="grid">
-
-    <a class="bubble" href="/methods/">
-      <h2>Methods</h2>
-      <p>
-        Tiered empirical findings.  
-        High-signal results only.  
-        Branches handle depth.
-      </p>
-    </a>
-
-    <a class="bubble" href="/dashboard/">
-      <h2>Dashboard</h2>
-      <p>
-        Live execution state.  
-        Local-first telemetry.  
-        Proof without narrative.
-      </p>
-    </a>
-
-    <a class="bubble" href="/apps/">
-      <h2>Apps</h2>
-      <p>
-        Published artifacts and tools.  
-        Stable execution surfaces.
-      </p>
-    </a>
-
-    <a class="bubble" href="/reference/">
-      <h2>Reference</h2>
-      <p>
-        Glossary, definitions, and boundaries.  
-        Canonical language only.
-      </p>
-    </a>
-
-    <a class="bubble" href="/problem/">
-      <h2>The Problem</h2>
-      <p>
-        What fails without constraint-first execution.  
-        Why coherence collapses.
-      </p>
-    </a>
-
-  </div>
-
-</main>
-
-<footer>
-  © 2026 Geodiametrics · Front Door Only
-</footer>
-
-</body>
-</html>
-
 <!-- ===============================
      GEODIAMETRICS · NAVIGATION BUBBLES
-     TNT DROP-IN BLOCK
 ================================ -->
 
 <style>
@@ -256,32 +50,27 @@
 
   <a class="nav-bubble" href="/problem/">
     <h3>The Problem</h3>
-    <p>What fails without constraint-first execution. Why coherence collapses.</p>
+    <p>What fails without constraint-first execution.</p>
   </a>
 
   <a class="nav-bubble" href="/methods/">
     <h3>Methods</h3>
-    <p>Tiered empirical findings. High-signal results only.</p>
+    <p>Tiered empirical findings. High-signal only.</p>
   </a>
 
   <a class="nav-bubble" href="/dashboard/">
     <h3>Dashboard</h3>
-    <p>Live execution state. Local-first telemetry. Proof without narrative.</p>
+    <p>Live execution state. Local-first telemetry.</p>
   </a>
 
   <a class="nav-bubble" href="/apps/">
     <h3>Apps</h3>
-    <p>Published artifacts and tools. Stable execution surfaces.</p>
+    <p>Published artifacts and tools.</p>
   </a>
 
   <a class="nav-bubble" href="/reference/">
     <h3>Reference</h3>
-    <p>Glossary, definitions, and boundaries. Canonical language only.</p>
-  </a>
-
-  <a class="nav-bubble" href="/about/">
-    <h3>About</h3>
-    <p>Origin, background, and empirical path of construction.</p>
+    <p>Canonical definitions and boundaries.</p>
   </a>
 
 </section>

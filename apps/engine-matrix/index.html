@@ -1,1 +1,706 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Engine Matrix · Geodiametrics</title>
+
+  <style>
+    :root{
+      --bg:#070b14;
+      --fg:#e9eefc;
+      --muted:rgba(233,238,252,.72);
+      --muted2:rgba(233,238,252,.55);
+      --stroke:rgba(233,238,252,.12);
+      --stroke2:rgba(233,238,252,.18);
+      --panel:rgba(12,16,34,.62);
+      --panel2:rgba(12,16,34,.45);
+      --glass:rgba(18,22,44,.50);
+      --shadow:0 18px 55px rgba(0,0,0,.55);
+      --radius:22px;
+      --radius2:16px;
+      --btnbg:rgba(255,255,255,.06);
+      --btnbg2:rgba(255,255,255,.10);
+      --ok:rgba(120,255,190,.9);
+      --warn:rgba(255,210,120,.95);
+      --bad:rgba(255,120,160,.92);
+      --accent:rgba(122,162,255,.95);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      color:var(--fg);
+      background:
+        radial-gradient(1200px 820px at 20% 10%, rgba(120,150,255,.20), transparent 60%),
+        radial-gradient(900px 700px at 80% 70%, rgba(255,120,200,.14), transparent 65%),
+        radial-gradient(1000px 900px at 50% 40%, rgba(25,35,85,.55), transparent 60%),
+        linear-gradient(180deg, #050816, #060b1e 60%, #050816);
+      overflow-x:hidden;
+    }
+
+    /* cosmic dust + stars */
+    .cosmos{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+      opacity:.95;
+      filter:saturate(1.05);
+    }
+    .cosmos:before,
+    .cosmos:after{
+      content:"";
+      position:absolute;
+      inset:-20%;
+      background-repeat:repeat;
+      transform:translateZ(0);
+    }
+    /* dense stars */
+    .cosmos:before{
+      opacity:.55;
+      background-image:
+        radial-gradient(2px 2px at 12% 18%, rgba(255,255,255,.90), transparent 55%),
+        radial-gradient(1.6px 1.6px at 28% 62%, rgba(255,255,255,.75), transparent 55%),
+        radial-gradient(1.2px 1.2px at 44% 34%, rgba(255,255,255,.70), transparent 55%),
+        radial-gradient(1.8px 1.8px at 67% 22%, rgba(255,255,255,.85), transparent 55%),
+        radial-gradient(1.3px 1.3px at 79% 78%, rgba(255,255,255,.68), transparent 55%),
+        radial-gradient(1.2px 1.2px at 18% 85%, rgba(255,255,255,.62), transparent 55%),
+        radial-gradient(1.6px 1.6px at 91% 45%, rgba(255,255,255,.72), transparent 55%),
+        radial-gradient(1px 1px at 6% 55%, rgba(255,255,255,.58), transparent 55%),
+        radial-gradient(1px 1px at 36% 10%, rgba(255,255,255,.52), transparent 55%),
+        radial-gradient(1px 1px at 58% 92%, rgba(255,255,255,.50), transparent 55%);
+      background-size: 220px 220px, 260px 260px, 240px 240px, 300px 300px, 280px 280px,
+                       260px 260px, 320px 320px, 200px 200px, 240px 240px, 280px 280px;
+      animation: driftA 70s linear infinite;
+    }
+    /* milky dust */
+    .cosmos:after{
+      opacity:.45;
+      background-image:
+        radial-gradient(600px 420px at 35% 55%, rgba(180,170,255,.10), transparent 70%),
+        radial-gradient(520px 380px at 60% 45%, rgba(255,170,220,.10), transparent 72%),
+        radial-gradient(700px 520px at 52% 60%, rgba(120,140,255,.08), transparent 75%);
+      background-size: 1200px 900px, 1200px 900px, 1200px 900px;
+      animation: driftB 90s linear infinite;
+    }
+
+    @keyframes driftA{
+      from{transform:translate3d(0,0,0) scale(1)}
+      to{transform:translate3d(-120px,80px,0) scale(1)}
+    }
+    @keyframes driftB{
+      from{transform:translate3d(0,0,0) rotate(0deg)}
+      to{transform:translate3d(120px,-80px,0) rotate(2deg)}
+    }
+
+    .wrap{
+      position:relative;
+      z-index:1;
+      max-width:980px;
+      margin:0 auto;
+      padding:26px 18px 80px;
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:3;
+      backdrop-filter: blur(10px);
+      background:linear-gradient(180deg, rgba(6,10,24,.82), rgba(6,10,24,.40));
+      border-bottom:1px solid rgba(233,238,252,.10);
+    }
+    .bar{
+      max-width:980px;
+      margin:0 auto;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+    .brand{
+      font-weight:800;
+      letter-spacing:.4px;
+      color:var(--fg);
+      opacity:.95;
+    }
+    .bubbles{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
+    }
+    .bubble{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(233,238,252,.18);
+      background:rgba(255,255,255,.06);
+      color:var(--fg);
+      text-decoration:none;
+      font-weight:700;
+      letter-spacing:.2px;
+      box-shadow:0 10px 26px rgba(0,0,0,.35);
+      min-width:118px;
+    }
+    .bubble:hover{background:rgba(255,255,255,.10)}
+    .bubble:active{transform:translateY(1px)}
+
+    h1{
+      font-size:44px;
+      line-height:1.05;
+      letter-spacing:.2px;
+      margin:22px 0 10px;
+    }
+    .subtitle{
+      color:var(--muted);
+      font-size:18px;
+      margin:0 0 18px;
+      max-width:64ch;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+      margin-top:16px;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid rgba(233,238,252,.10);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size:22px;
+      letter-spacing:.2px;
+    }
+    .card p{
+      margin:0 0 12px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(233,238,252,.16);
+      background:rgba(255,255,255,.06);
+      color:var(--fg);
+      font-weight:800;
+      letter-spacing:.2px;
+      min-height:40px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background:rgba(233,238,252,.40);
+      box-shadow:0 0 0 6px rgba(233,238,252,.07);
+    }
+    .dot.ok{background:var(--ok); box-shadow:0 0 0 6px rgba(120,255,190,.12)}
+    .dot.warn{background:var(--warn); box-shadow:0 0 0 6px rgba(255,210,120,.12)}
+    .dot.bad{background:var(--bad); box-shadow:0 0 0 6px rgba(255,120,160,.12)}
+
+    .btn{
+      appearance:none;
+      border:1px solid rgba(233,238,252,.18);
+      background:rgba(255,255,255,.06);
+      color:var(--fg);
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:800;
+      letter-spacing:.2px;
+      cursor:pointer;
+      box-shadow:0 10px 26px rgba(0,0,0,.32);
+    }
+    .btn:hover{background:rgba(255,255,255,.10)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{border-color:rgba(122,162,255,.35)}
+    .btn.danger{border-color:rgba(255,120,160,.35)}
+    .btn.small{padding:8px 12px; font-weight:800}
+
+    .field{
+      width:min(520px,100%);
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    input{
+      flex:1 1 260px;
+      min-width:220px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(233,238,252,.18);
+      background:rgba(0,0,0,.22);
+      color:var(--fg);
+      outline:none;
+    }
+    input::placeholder{color:rgba(233,238,252,.45)}
+
+    .table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:var(--radius2);
+      border:1px solid rgba(233,238,252,.10);
+      background:rgba(0,0,0,.16);
+      margin-top:12px;
+    }
+    .table th,.table td{
+      padding:12px 12px;
+      border-bottom:1px solid rgba(233,238,252,.08);
+      text-align:left;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .table th{
+      color:rgba(233,238,252,.82);
+      font-size:13px;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      background:rgba(255,255,255,.04);
+    }
+    .table tr:last-child td{border-bottom:none}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+    .muted2{color:var(--muted2)}
+    .right{margin-left:auto}
+
+    footer{
+      margin-top:28px;
+      padding:22px 0 0;
+      border-top:1px solid rgba(233,238,252,.10);
+      color:rgba(233,238,252,.55);
+      text-align:center;
+      font-size:14px;
+    }
+
+    @media(min-width:860px){
+      .grid{grid-template-columns:1.1fr .9fr}
+      h1{font-size:52px}
+      .subtitle{font-size:19px}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="cosmos"></div>
+
+  <header>
+    <div class="bar">
+      <div class="brand">Geodiametrics</div>
+      <nav class="bubbles" aria-label="Primary">
+        <a class="bubble" href="/">Home</a>
+        <a class="bubble" href="/methods/">Methods</a>
+        <a class="bubble" href="/dashboard/">Dashboard</a>
+        <a class="bubble" href="/apps/">Apps</a>
+        <a class="bubble" href="/reference/">Reference</a>
+        <a class="bubble" href="/problem/">Problem</a>
+        <a class="bubble" href="/architecture/">Architecture</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h1>Engine Matrix</h1>
+    <p class="subtitle">
+      Cross-engine coordination surface. Device-only. No external calls. Explicit sync only.
+    </p>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Registry</h2>
+        <p>Local namespaces discovered from this browser’s storage.</p>
+
+        <div class="row">
+          <span class="pill"><span id="dotRegistry" class="dot"></span><span>Engines:</span><span id="engCount" class="mono">—</span></span>
+          <span class="pill"><span class="dot"></span><span>Last scan:</span><span id="lastScan" class="mono">—</span></span>
+          <span class="right"></span>
+          <button class="btn primary" id="btnRefresh">Refresh</button>
+          <button class="btn" id="btnExportRegistry">Export JSON</button>
+        </div>
+
+        <table class="table" aria-label="Engines table">
+          <thead>
+            <tr>
+              <th>Namespace</th>
+              <th>Keys</th>
+              <th>Last update</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            <tr><td colspan="4" class="muted2">No engines discovered yet.</td></tr>
+          </tbody>
+        </table>
+
+        <p class="muted2" style="margin-top:12px">
+          Tip: open each engine page once on this device so it writes its localStorage keys, then refresh here.
+        </p>
+      </section>
+
+      <aside class="card">
+        <h2>Supervisor</h2>
+        <p>Defines how engines relate. Default is isolation.</p>
+
+        <div class="row" style="margin-top:10px">
+          <span class="pill"><span id="dotMode" class="dot"></span><span>Mode:</span><span id="mode" class="mono">ISOLATED</span></span>
+          <span class="pill"><span>Rule:</span><span id="rule" class="mono">NONE</span></span>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <span class="pill"><span>Updated:</span><span id="updated" class="mono">—</span></span>
+          <span class="right"></span>
+          <button class="btn" id="btnExportSup">Export JSON</button>
+        </div>
+
+        <div style="margin-top:14px" class="card" aria-hidden="true"></div>
+
+        <div class="row" style="margin-top:14px">
+          <button class="btn primary" id="btnIso">Set ISOLATED</button>
+        </div>
+        <p class="muted2" style="margin-top:10px">
+          ISOLATED = engines do not share state. Safe for A/B and parallel runs.
+        </p>
+
+        <hr style="border:none;border-top:1px solid rgba(233,238,252,.10);margin:14px 0" />
+
+        <h2 style="margin-top:0">Structural Sync</h2>
+        <p class="muted2">Write a shared rule label (no state copying).</p>
+        <div class="field">
+          <input id="inpRule" placeholder="Rule version (e.g., ENGINE_SYNC_v1)" />
+          <button class="btn primary" id="btnApplyRule">Apply</button>
+        </div>
+
+        <hr style="border:none;border-top:1px solid rgba(233,238,252,.10);margin:14px 0" />
+
+        <h2 style="margin-top:0">State Sync (manual)</h2>
+        <p class="muted2">Copy state from one engine namespace to another (explicit, one-shot).</p>
+        <div class="field">
+          <input id="inpSrc" placeholder="Source namespace (e.g., engine_sync_v1)" />
+          <input id="inpDst" placeholder="Target namespace (e.g., engine_sync_v2)" />
+          <button class="btn primary" id="btnMirror">Mirror State →</button>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <button class="btn danger" id="btnResetDst">Reset Target Namespace</button>
+        </div>
+
+        <p class="muted2" style="margin-top:10px">
+          State sync is opt-in. If you don’t click it, nothing couples.
+        </p>
+      </aside>
+    </div>
+
+    <footer>© 2026 Geodiametrics · Engine Matrix</footer>
+  </main>
+
+  <script>
+  (function(){
+    const nowISO=()=>new Date().toISOString();
+
+    // ---- Config ----
+    const SUP_KEY="geod_supervisor_v1";
+    const REG_PREFIXES=["engine_sync","ENGINE_SYNC","geod_engine","ENGINE"];
+
+    // ---- DOM ----
+    const $=(id)=>document.getElementById(id);
+    const tbody=$("tbody");
+    const dotRegistry=$("dotRegistry");
+    const dotMode=$("dotMode");
+
+    // ---- Storage helpers ----
+    const listLSKeys=()=>{
+      const out=[];
+      for(let i=0;i<localStorage.length;i++){
+        const k=localStorage.key(i);
+        if(k) out.push(k);
+      }
+      return out.sort();
+    };
+
+    const parseMaybeJSON=(v)=>{
+      if(v==null) return null;
+      const s=String(v);
+      if(!s) return null;
+      if(s[0]==="{" || s[0]==="["){
+        try{ return JSON.parse(s); }catch(_){ return null; }
+      }
+      return null;
+    };
+
+    // ---- Engine discovery ----
+    // We treat an "engine namespace" as:
+    // 1) exact key like "engine_sync_v1" containing JSON, OR
+    // 2) key prefix like "engine_sync_v1:*" / "engine_sync_v1::" / "engine_sync_v1__" (we capture root)
+    const discoverEngines=()=>{
+      const keys=listLSKeys();
+      const map=new Map(); // ns -> {keys:Set, last:iso|null}
+      const consider=(ns, k, last)=>{
+        if(!ns) return;
+        if(!map.has(ns)) map.set(ns,{keys:new Set(), last:null});
+        map.get(ns).keys.add(k);
+        if(last){
+          const cur=map.get(ns).last;
+          if(!cur || String(last) > String(cur)) map.get(ns).last=String(last);
+        }
+      };
+
+      for(const k of keys){
+        // skip supervisor
+        if(k===SUP_KEY) continue;
+
+        // split patterns
+        const splitBy = [":","::","__","/"];
+        for(const sep of splitBy){
+          if(k.includes(sep)){
+            const root=k.split(sep)[0];
+            if(REG_PREFIXES.some(p=>root.startsWith(p) || root.toLowerCase().startsWith(p.toLowerCase()))){
+              consider(root,k,null);
+              break;
+            }
+          }
+        }
+
+        // exact namespace keys
+        if(REG_PREFIXES.some(p=>k.startsWith(p) || k.toLowerCase().startsWith(p.toLowerCase()))){
+          // if key is not obviously a subkey, treat as possible root
+          const v=localStorage.getItem(k);
+          const j=parseMaybeJSON(v);
+          if(j && typeof j==="object"){
+            const last = j.last_set || j.lastSeen || j.last_seen || j.updated || j.timestamp || j.t || null;
+            consider(k,k,last);
+          }
+        }
+      }
+
+      // derive keycounts + last updates by scanning values for timestamps
+      for(const [ns,rec] of map.entries()){
+        let best=null;
+        for(const k of rec.keys){
+          const v=localStorage.getItem(k);
+          const j=parseMaybeJSON(v);
+          if(j && typeof j==="object"){
+            const cand = j.last_set || j.lastSeen || j.last_seen || j.updated || j.timestamp || j.t || null;
+            if(cand && (!best || String(cand) > String(best))) best=String(cand);
+          }
+        }
+        rec.last = rec.last || best;
+      }
+
+      return [...map.entries()].map(([ns,rec])=>({
+        ns,
+        keyCount: rec.keys.size,
+        last: rec.last || null
+      })).sort((a,b)=>a.ns.localeCompare(b.ns));
+    };
+
+    // ---- Supervisor ----
+    const loadSupervisor=()=>{
+      const raw=localStorage.getItem(SUP_KEY);
+      if(!raw){
+        const sup={mode:"ISOLATED", rule:"NONE", updated:null};
+        localStorage.setItem(SUP_KEY, JSON.stringify(sup));
+        return sup;
+      }
+      try{
+        const sup=JSON.parse(raw);
+        return {
+          mode: sup.mode || "ISOLATED",
+          rule: sup.rule || "NONE",
+          updated: sup.updated || null
+        };
+      }catch(_){
+        const sup={mode:"ISOLATED", rule:"NONE", updated:null};
+        localStorage.setItem(SUP_KEY, JSON.stringify(sup));
+        return sup;
+      }
+    };
+
+    const saveSupervisor=(patch)=>{
+      const cur=loadSupervisor();
+      const next={
+        mode: patch.mode ?? cur.mode,
+        rule: patch.rule ?? cur.rule,
+        updated: nowISO()
+      };
+      localStorage.setItem(SUP_KEY, JSON.stringify(next));
+      renderSupervisor(next);
+      return next;
+    };
+
+    // ---- Export helper ----
+    const dlJSON=(name,obj)=>{
+      const blob=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"});
+      const a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);
+      a.download=name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(a.href),500);
+    };
+
+    // ---- Render ----
+    const statusDotClass=(n)=>{
+      if(n>=3) return "ok";
+      if(n>=1) return "warn";
+      return "bad";
+    };
+
+    const renderEngines=(engs)=>{
+      $("engCount").textContent = engs.length ? String(engs.length) : "0";
+      $("lastScan").textContent = nowISO();
+      dotRegistry.className = "dot " + statusDotClass(engs.length);
+
+      tbody.innerHTML="";
+      if(!engs.length){
+        tbody.innerHTML = `<tr><td colspan="4" class="muted2">No engines discovered on this device yet.</td></tr>`;
+        return;
+      }
+
+      for(const e of engs){
+        const last = e.last ? `<span class="mono">${e.last}</span>` : `<span class="muted2">—</span>`;
+        const s = e.keyCount>=6 ? "ACTIVE" : (e.keyCount>=1 ? "PARTIAL" : "EMPTY");
+        const dot = e.keyCount>=6 ? "ok" : (e.keyCount>=1 ? "warn" : "bad");
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class="mono">${e.ns}</td>
+          <td class="mono">${e.keyCount}</td>
+          <td>${last}</td>
+          <td><span class="pill"><span class="dot ${dot}"></span><span class="mono">${s}</span></span></td>
+        `;
+        tbody.appendChild(row);
+      }
+    };
+
+    const renderSupervisor=(sup)=>{
+      $("mode").textContent = sup.mode || "ISOLATED";
+      $("rule").textContent = sup.rule || "NONE";
+      $("updated").textContent = sup.updated ? sup.updated : "—";
+
+      if((sup.mode||"").toUpperCase()==="ISOLATED"){ dotMode.className="dot ok"; }
+      else { dotMode.className="dot warn"; }
+    };
+
+    // ---- Actions ----
+    const refreshAll=()=>{
+      const engs=discoverEngines();
+      renderEngines(engs);
+      renderSupervisor(loadSupervisor());
+    };
+
+    const mirrorState=(src,dst)=>{
+      if(!src || !dst) return false;
+      const keys=listLSKeys();
+      const copyPairs=[];
+
+      // copy root object if exists
+      const srcRoot=localStorage.getItem(src);
+      if(srcRoot!=null){
+        localStorage.setItem(dst, srcRoot);
+        copyPairs.push([src,dst]);
+      }
+
+      // copy subkeys
+      for(const k of keys){
+        const v=localStorage.getItem(k);
+        if(v==null) continue;
+
+        // patterns: src:*, src::*, src__*, src/*
+        const patterns=[src+":", src+"::", src+"__", src+"/"];
+        for(const p of patterns){
+          if(k.startsWith(p)){
+            const suffix=k.slice(src.length);
+            const nk = dst + suffix;
+            localStorage.setItem(nk, v);
+            copyPairs.push([k,nk]);
+            break;
+          }
+        }
+      }
+
+      return copyPairs.length>0;
+    };
+
+    const resetNamespace=(dst)=>{
+      if(!dst) return 0;
+      const keys=listLSKeys();
+      let removed=0;
+
+      // remove root
+      if(localStorage.getItem(dst)!=null){
+        localStorage.removeItem(dst);
+        removed++;
+      }
+
+      // remove subkeys
+      for(const k of keys){
+        const patterns=[dst+":", dst+"::", dst+"__", dst+"/"];
+        if(patterns.some(p=>k.startsWith(p))){
+          localStorage.removeItem(k);
+          removed++;
+        }
+      }
+      return removed;
+    };
+
+    // ---- Wire UI ----
+    $("btnRefresh").addEventListener("click", refreshAll);
+
+    $("btnExportRegistry").addEventListener("click", ()=>{
+      const engs=discoverEngines();
+      dlJSON("engine_registry_v1.json", {generated: nowISO(), engines: engs});
+    });
+
+    $("btnIso").addEventListener("click", ()=>saveSupervisor({mode:"ISOLATED", rule:"NONE"}));
+
+    $("btnApplyRule").addEventListener("click", ()=>{
+      const rv=String($("inpRule").value||"").trim();
+      saveSupervisor({mode:"STRUCTURAL", rule: rv || "ENGINE_SYNC_v1"});
+    });
+
+    $("btnMirror").addEventListener("click", ()=>{
+      const src=String($("inpSrc").value||"").trim();
+      const dst=String($("inpDst").value||"").trim();
+      const ok=mirrorState(src,dst);
+      saveSupervisor({mode:"STATE_SYNC", rule: ok ? `MIRROR:${src}->${dst}` : "MIRROR:FAILED"});
+      refreshAll();
+    });
+
+    $("btnResetDst").addEventListener("click", ()=>{
+      const dst=String($("inpDst").value||"").trim();
+      const n=resetNamespace(dst);
+      saveSupervisor({mode:"ISOLATED", rule: n?`RESET:${dst}(${n})`:`RESET:FAILED`});
+      refreshAll();
+    });
+
+    $("btnExportSup").addEventListener("click", ()=>{
+      dlJSON("engine_supervisor_v1.json", loadSupervisor());
+    });
+
+    // boot
+    refreshAll();
+  })();
+  </script>
+</body>
+</html>
+```0

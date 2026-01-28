@@ -1,559 +1,64 @@
-<!-- =============================== -->
-<!-- LOCAL ANALYTICS (VIEWER) (TNB) -->
-<!-- =============================== -->
-<div class="section" id="localAnalytics">
-  <h2 style="margin:0 0 10px;font-size:22px;">Local Analytics (Device)</h2>
-  <p class="sub">This is local-first telemetry stored in this browser. It proves the dashboard pipeline is functioning without external services.</p>
-
-  <div class="card">
-    <p><strong>Summary</strong></p>
-    <p class="small">Pageviews: <code id="la_pv">—</code> · Sessions: <code id="la_sess">—</code> · Last seen: <code id="la_last">—</code></p>
-  </div>
-
-  <div class="card">
-    <p><strong>Top Paths</strong></p>
-    <div id="la_paths" class="small">—</div>
-  </div>
-
-  <div class="card">
-    <p><strong>Export</strong></p>
-    <div class="row">
-      <button class="btn" id="la_export" type="button">Export Telemetry JSON</button>
-      <button class="btn" id="la_clear" type="button">Clear Telemetry</button>
-    </div>
-    <p class="small">Export gives you an empirical record you can archive or compare to OSF timestamps.</p>
-  </div>
-</div>
-
-<script>
-(function(){
-  const KEY="geo_telemetry_v1";
-  function load(){ try{return JSON.parse(localStorage.getItem(KEY)||"{}");}catch{return {};} }
-
-  function render(){
-    const d=load();
-    document.getElementById("la_pv").textContent=(d.pageviews!=null?d.pageviews:"0");
-    document.getElementById("la_sess").textContent=(d.sessions!=null?d.sessions:"0");
-    document.getElementById("la_last").textContent=(d.last_seen||"—");
-
-    const by=d.by_path||{};
-    const top=Object.entries(by).sort((a,b)=>b[1]-a[1]).slice(0,8);
-    document.getElementById("la_paths").innerHTML = top.length
-      ? top.map(([p,c])=>`<div><code>${p}</code> — ${c}</div>`).join("")
-      : "—";
-  }
-
-  document.getElementById("la_export").onclick=()=>{
-    const payload=load();
-    payload.exported_at=new Date().toISOString();
-    const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url;
-    a.download="geodiametrics-telemetry.json";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),500);
-  };
-
-  document.getElementById("la_clear").onclick=()=>{
-    localStorage.removeItem(KEY);
-    render();
-  };
-
-  render();
-  setInterval(render, 1500);
-})();
-</script>
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Geodiametrics · Dashboard</title>
+<title>Dashboard · Live Execution</title>
 
 <style>
-:root{--fg:#e9eefc;--muted:rgba(233,238,252,.72);--stroke:rgba(233,238,252,.14);--glass:rgba(8,12,26,.60);--panel:rgba(10,14,26,.70);--panel2:rgba(6,10,24,.88);--shadow:0 18px 55px rgba(0,0,0,.55)}
-*{box-sizing:border-box}html,body{height:100%}
-body{margin:0;color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow-x:hidden;
-background:radial-gradient(1400px 900px at 12% 10%, rgba(140,120,255,.20), transparent 60%),radial-gradient(1200px 820px at 85% 25%, rgba(80,210,255,.14), transparent 62%),radial-gradient(980px 760px at 55% 82%, rgba(255,140,120,.09), transparent 64%),linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%)}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;opacity:.85;background:radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,.85), transparent 60%),radial-gradient(1px 1px at 22% 70%, rgba(255,255,255,.55), transparent 60%),radial-gradient(1px 1px at 38% 32%, rgba(255,255,255,.70), transparent 60%),radial-gradient(1px 1px at 55% 18%, rgba(255,255,255,.75), transparent 60%),radial-gradient(1px 1px at 78% 40%, rgba(255,255,255,.60), transparent 60%)}
-header{position:sticky;top:0;z-index:10;background:var(--glass);backdrop-filter:blur(10px);border-bottom:1px solid var(--stroke)}
-.bar{max-width:1100px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
-.brand{font-weight:900;letter-spacing:.35px}
-nav a{margin-left:14px;text-decoration:none;color:var(--muted);font-weight:800;font-size:14px}
-nav a:hover{color:var(--fg)}
-main{max-width:1100px;margin:48px auto;padding:0 16px 64px}
-h1{font-size:40px;margin:0 0 10px}
-h2{font-size:22px;margin:0 0 10px}
-p{margin:0;color:var(--muted);line-height:1.6;max-width:92ch}
-.sub{margin:0 0 18px}
-.section{margin-top:28px;padding:20px;border-radius:18px;background:var(--panel2);border:1px solid var(--stroke);box-shadow:var(--shadow)}
-.card{background:var(--panel);border:1px solid var(--stroke);border-radius:14px;padding:16px;margin-bottom:12px}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
-a.btn,button.btn,select.btn,input.btn{display:inline-block;text-decoration:none;font-weight:900;font-size:13px;padding:9px 12px;border-radius:12px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:rgba(233,238,252,.90)}
-a.btn:hover,button.btn:hover{color:var(--fg);border-color:rgba(233,238,252,.28);cursor:pointer}
-.badge{display:inline-block;font-weight:900;font-size:12px;letter-spacing:.25px;padding:6px 10px;border-radius:999px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:rgba(233,238,252,.92)}
-.badge.ok{border-color:rgba(120,255,190,.35)}
-.badge.warn{border-color:rgba(255,210,120,.35)}
-.badge.bad{border-color:rgba(255,120,140,.35)}
-.small{margin-top:8px;font-size:13px;color:rgba(233,238,252,.68);line-height:1.55}
-code{color:rgba(233,238,252,.92);background:rgba(255,255,255,.08);padding:2px 6px;border-radius:8px}
-textarea{width:100%;min-height:120px;resize:vertical}
-footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--stroke);text-align:center;font-size:13px;color:var(--muted)}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:#0b0f1a;
+  color:#e8ecf5;
+}
+main{
+  max-width:900px;
+  margin:auto;
+  padding:56px 20px;
+}
+h1{
+  font-size:40px;
+  margin-bottom:16px;
+}
+.card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:22px;
+  margin:24px 0;
+}
+p{
+  color:#aab0c5;
+  line-height:1.6;
+}
 </style>
 </head>
 
 <body>
-<header>
-  <div class="bar">
-    <div class="brand">Geodiametrics</div>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/methods/">Methods</a>
-      <a href="/apps/">Apps</a>
-      <a href="/reference/">Reference</a>
-      <a href="/dashboard/">Dashboard</a>
-    </nav>
-  </div>
-</header>
-
 <main>
-  <h1>Dashboard</h1>
-  <p class="sub">Empirical tracking hub. Evidence-first. Audit-friendly. No narrative ordering.</p>
 
-  <!-- CDL STATUS -->
-  <div class="section" id="cdlStatus">
-    <h2>Cyclical Dynamics Law Status</h2>
+<h1>Dashboard</h1>
 
-    <div class="card">
-      <p><strong>Current</strong> <span id="cdlBadge" class="badge warn">UNKNOWN</span></p>
-      <p class="small">This status is a local operator control until automated telemetry is wired.</p>
+<div class="card">
+  <strong>LIVE EXECUTION STATE.</strong>
+  <p>This page exposes observable execution state only. No narrative ordering. No interpretation. No persuasion.</p>
+</div>
 
-      <div class="row">
-        <select id="cdlSelect" class="btn" aria-label="CDL status">
-          <option value="UNKNOWN">UNKNOWN</option>
-          <option value="RUNNING">RUNNING</option>
-          <option value="HURDLE">HURDLE</option>
-          <option value="WALL">WALL</option>
-          <option value="COMPLETE">COMPLETE</option>
-        </select>
+<div class="card">
+  <strong>TELEMETRY SURFACE.</strong>
+  <p>All values shown are derived from active instrumentation. Identity inference is explicitly excluded.</p>
+</div>
 
-        <button id="cdlSave" class="btn" type="button">Save</button>
-        <button id="cdlReset" class="btn" type="button">Reset</button>
-      </div>
+<div class="card" id="telemetry-root">
+  <!-- KEEP YOUR EXISTING DASHBOARD / TELEMETRY JS HERE -->
+</div>
 
-      <p class="small">Last set: <code id="cdlWhen">—</code></p>
-    </div>
+<div class="card">
+  <strong>EXPORT.</strong>
+  <p>Recorded data may be exported for independent verification. Exported records constitute receipts.</p>
+</div>
 
-    <div class="card">
-      <p><strong>Definition</strong></p>
-      <p class="small">
-        RUNNING = cycle executing (reduce/contrast/condense/dedup/improve).<br>
-        HURDLE = friction; continue internally; no escalation.<br>
-        WALL = proven blocker; notify; await decision.<br>
-        COMPLETE = stable minimal state; proceed to next task/cycle.
-      </p>
-    </div>
-  </div>
-
-  <!-- PROVENANCE -->
-  <div class="section">
-    <h2>Research Identity & Provenance</h2>
-
-    <div class="card">
-      <p><strong>ORCID iD</strong></p>
-      <p class="small">
-        ORCID (Open Researcher and Contributor ID) is a persistent digital identifier
-        that uniquely links a researcher to their outputs across platforms.
-      </p>
-      <div class="row">
-        <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">ORCID: 0009-0004-1293-0405 →</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <p><strong>OSF Projects</strong></p>
-      <p class="small">
-        OSF provides timestamped artifacts and version history. Use it to cross-check
-        creation dates against the current system state.
-      </p>
-      <div class="row">
-        <a class="btn" href="https://osf.io/" target="_blank" rel="noopener">View OSF →</a>
-        <!-- Replace the link below with your specific OSF project URL when ready -->
-        <a class="btn" href="#" rel="nofollow">Add specific OSF project link</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- BASELINES -->
-  <div class="section">
-    <h2>Baselines</h2>
-    <div class="card">
-      <p><strong>Manual baseline log</strong></p>
-      <p class="small">Paste timestamped baselines here until automated analytics are wired.</p>
-      <p class="small"><code>YYYY-MM-DD hh:mm — baseline event — notes</code></p>
-      <textarea id="baselineLog" class="btn" placeholder="YYYY-MM-DD hh:mm — baseline event — notes"></textarea>
-      <div class="row">
-        <button id="baselineSave" class="btn" type="button">Save</button>
-        <button id="baselineClear" class="btn" type="button">Clear</button>
-        <button id="baselineExport" class="btn" type="button">Export JSON</button>
-      </div>
-      <p class="small">Stored locally in this browser until you choose a server or analytics provider.</p>
-    </div>
-  </div>
-
-  <!-- NEXT INSTRUMENTATION -->
-  <div class="section">
-    <h2>Next Instrumentation</h2>
-    <div class="card">
-      <p><strong>Option A — Cloudflare Web Analytics</strong></p>
-      <p class="small">One script tag site-wide once you have the token.</p>
-    </div>
-    <div class="card">
-      <p><strong>Option B — Umami / Plausible</strong></p>
-      <p class="small">One script tag site-wide. Privacy-first.</p>
-    </div>
-    <div class="card">
-      <p><strong>Option C — GA4</strong></p>
-      <p class="small">One script tag site-wide. Use only if needed.</p>
-    </div>
-  </div>
-
-  <footer>© 2026 Geodiametrics</footer>
 </main>
-
-<script>
-(function(){
-  // CDL status (local)
-  const badge=document.getElementById("cdlBadge");
-  const when=document.getElementById("cdlWhen");
-  const sel=document.getElementById("cdlSelect");
-  const save=document.getElementById("cdlSave");
-  const reset=document.getElementById("cdlReset");
-  const KEY="gd_cdl_status_v1";
-  const KEYT="gd_cdl_when_v1";
-
-  function paint(v){
-    badge.textContent=v;
-    badge.classList.remove("ok","warn","bad");
-    if(v==="COMPLETE") badge.classList.add("ok");
-    else if(v==="WALL") badge.classList.add("bad");
-    else if(v==="RUNNING"||v==="HURDLE") badge.classList.add("warn");
-    else badge.classList.add("warn");
-  }
-
-  function load(){
-    const v=localStorage.getItem(KEY)||"UNKNOWN";
-    const t=localStorage.getItem(KEYT)||"—";
-    sel.value=v;
-    paint(v);
-    when.textContent=t;
-  }
-
-  save.onclick=()=>{
-    const v=sel.value;
-    const t=new Date().toISOString();
-    localStorage.setItem(KEY,v);
-    localStorage.setItem(KEYT,t);
-    paint(v);
-    when.textContent=t;
-  };
-
-  reset.onclick=()=>{
-    localStorage.removeItem(KEY);
-    localStorage.removeItem(KEYT);
-    load();
-  };
-
-  // Baseline log (local)
-  const log=document.getElementById("baselineLog");
-  const bSave=document.getElementById("baselineSave");
-  const bClear=document.getElementById("baselineClear");
-  const bExport=document.getElementById("baselineExport");
-  const BKEY="gd_baselines_v1";
-
-  function loadBaselines(){
-    log.value=localStorage.getItem(BKEY)||"";
-  }
-
-  bSave.onclick=()=>{localStorage.setItem(BKEY,log.value||"");};
-  bClear.onclick=()=>{log.value="";localStorage.setItem(BKEY,"");};
-  bExport.onclick=()=>{
-    const payload={exported_at:new Date().toISOString(),baselines:(log.value||"").split("\n").filter(Boolean)};
-    const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url;
-    a.download="geodiametrics-baselines.json";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),500);
-  };
-
-  load();
-  loadBaselines();
-})();
-</script>
 </body>
 </html>
-<!-- =============================== -->
-<!-- CYCLICAL LAW RUN (TNB ADD-ON)  -->
-<!-- =============================== -->
-<div class="section">
-  <h2 style="margin:0 0 10px;font-size:22px;">Cyclical Law</h2>
-
-  <div class="card">
-    <p><strong>Definition.</strong></p>
-    <p style="margin-top:8px;">
-      The <strong>Cyclical Law</strong> defines a universal mechanism of operation across domains.
-      A system advances by repeatedly executing a closed loop of evaluation, reduction,
-      contrast, validation, and regeneration until a stable boundary or blocking wall is reached.
-    </p>
-    <p style="margin-top:8px;">
-      The law applies to living systems, engineered systems, research programs, and institutions.
-      It governs <em>function</em>, not belief, intent, or narrative.
-    </p>
-  </div>
-
-  <div class="card">
-    <p><strong>Cyclical Law Run.</strong></p>
-    <p style="margin-top:8px;">
-      A <strong>Cyclical Law Run</strong> is a bounded execution of the cycle below,
-      performed until one of the terminal conditions is met.
-    </p>
-
-    <ul style="margin:10px 0 0 18px;line-height:1.6;">
-      <li><strong>Reduce</strong> — Remove duplication, collapse noise, retain invariants.</li>
-      <li><strong>Contrast</strong> — Test distinctions, boundaries, and exclusions.</li>
-      <li><strong>Validate</strong> — Check against evidence, receipts, and artifacts.</li>
-      <li><strong>Improve</strong> — Increase clarity, stability, or explanatory power.</li>
-      <li><strong>Regenerate</strong> — Re-enter the cycle at the next admissible state.</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <p><strong>Hurdle vs Wall.</strong></p>
-    <p style="margin-top:8px;">
-      A <strong>hurdle</strong> is a temporary obstruction that can be cleared through
-      research, restructuring, or external linkage without invalidating the cycle.
-    </p>
-    <p style="margin-top:8px;">
-      A <strong>wall</strong> is a hard boundary where no admissible advance exists
-      without violating evidence rules, constraints, or scope. Walls terminate the run.
-    </p>
-  </div>
-
-  <div class="card">
-    <p><strong>Terminal Conditions.</strong></p>
-    <ul style="margin:10px 0 0 18px;line-height:1.6;">
-      <li>Stable completion is reached (cycle closes cleanly).</li>
-      <li>A wall is detected (no lawful advance possible).</li>
-      <li>The system collapses to baseline (7 → 0 reset).</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <p><strong>Structural Alignment.</strong></p>
-    <p style="margin-top:8px;">
-      The cyclical law aligns with the structural cycle:
-      <strong>0–7</strong> as execution formation and
-      <strong>9–13</strong> as visibility, closure, and re-stabilization.
-    </p>
-    <p style="margin-top:8px;">
-      Baseline is treated as <strong>7 ≡ 0</strong> when regeneration is required.
-    </p>
-  </div>
-</div>
-<!-- =============================== -->
-<!-- CYCLICAL RUN CARD (TNB)        -->
-<!-- =============================== -->
-<section id="cdlRun" style="margin-top:28px;padding:20px;border-radius:18px;background:rgba(6,10,24,.88);border:1px solid rgba(233,238,252,.14);box-shadow:0 18px 55px rgba(0,0,0,.55);">
-  <h2 style="margin:0 0 10px;font-size:22px;color:rgba(233,238,252,.92);">Cyclical Law Run</h2>
-  <p style="margin:0;color:rgba(233,238,252,.72);line-height:1.6;max-width:92ch;">
-    Status is operational. HURDLE continues internally. WALL halts and notifies. COMPLETE advances to the next task/cycle.
-  </p>
-
-  <div style="margin-top:14px;padding:16px;border-radius:14px;background:rgba(10,14,26,.70);border:1px solid rgba(233,238,252,.14);">
-    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
-      <div style="font-weight:900;letter-spacing:.2px;">RUN STATUS</div>
-      <span id="cdlBadge" style="font-weight:900;font-size:12px;letter-spacing:.25px;padding:6px 10px;border-radius:999px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:rgba(233,238,252,.92);">UNKNOWN</span>
-      <span style="margin-left:auto;color:rgba(233,238,252,.62);font-size:12px;">Last set: <code id="cdlWhen" style="color:rgba(233,238,252,.92);background:rgba(255,255,255,.08);padding:2px 6px;border-radius:8px;">—</code></span>
-    </div>
-
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
-      <select id="cdlSelect" style="padding:10px 14px;border-radius:12px;border:1px solid rgba(233,238,252,.16);background:rgba(10,14,26,.55);color:#fff;font-weight:900;">
-        <option value="UNKNOWN">UNKNOWN</option>
-        <option value="RUNNING">RUNNING</option>
-        <option value="HURDLE">HURDLE</option>
-        <option value="WALL">WALL</option>
-        <option value="COMPLETE">COMPLETE</option>
-      </select>
-
-      <button id="cdlSave" style="padding:10px 14px;border-radius:12px;border:1px solid rgba(233,238,252,.18);background:rgba(10,14,26,.55);color:rgba(233,238,252,.90);font-weight:900;cursor:pointer;">Save</button>
-      <button id="cdlReset" style="padding:10px 14px;border-radius:12px;border:0;background:#fff;color:#000;font-weight:900;cursor:pointer;">Reset</button>
-    </div>
-
-    <p style="margin-top:12px;color:rgba(233,238,252,.62);font-size:13px;line-height:1.55;">
-      Reduce → Contrast → Condense → De-duplicate → Improve → Advance → Repeat.
-    </p>
-  </div>
-</section>
-
-<script>
-(function(){
-  const KEY="gd_cdl_status_v1";
-  const KEYT="gd_cdl_when_v1";
-
-  const badge=document.getElementById("cdlBadge");
-  const when=document.getElementById("cdlWhen");
-  const sel=document.getElementById("cdlSelect");
-  const save=document.getElementById("cdlSave");
-  const reset=document.getElementById("cdlReset");
-
-  function paint(v){
-    badge.textContent=v;
-    // soft color via border only (keeps your cosmic theme)
-    const base="1px solid rgba(233,238,252,.18)";
-    let border=base;
-    if(v==="COMPLETE") border="1px solid rgba(120,255,190,.35)";
-    if(v==="WALL") border="1px solid rgba(255,120,140,.35)";
-    if(v==="RUNNING"||v==="HURDLE") border="1px solid rgba(255,210,120,.35)";
-    badge.style.border=border;
-  }
-
-  function load(){
-    const v=localStorage.getItem(KEY)||"UNKNOWN";
-    const t=localStorage.getItem(KEYT)||"—";
-    sel.value=v;
-    paint(v);
-    when.textContent=t;
-  }
-
-  save.onclick=()=>{
-    const v=sel.value;
-    const t=new Date().toISOString();
-    localStorage.setItem(KEY,v);
-    localStorage.setItem(KEYT,t);
-    paint(v);
-    when.textContent=t;
-  };
-
-  reset.onclick=()=>{
-    localStorage.removeItem(KEY);
-    localStorage.removeItem(KEYT);
-    load();
-  };
-
-  load();
-})();
-</script>
-<script>
-(function(){
-  // GEO Telemetry v1 (local-only, no external services)
-  // Stored in localStorage and shared across pages on the same domain + browser.
-
-  const KEY="geo_telemetry_v1";
-  const NOW=Date.now();
-
-  const path=(location.pathname||"/").replace(/\/+$/,"/"); // normalize
-  const ref=document.referrer||"";
-  const ua=navigator.userAgent||"";
-  const sessionKey="geo_session_v1";
-  const sessionId=sessionStorage.getItem(sessionKey) || (NOW+"-"+Math.random().toString(16).slice(2));
-  sessionStorage.setItem(sessionKey, sessionId);
-
-  function load(){
-    try{ return JSON.parse(localStorage.getItem(KEY)||"{}"); }catch{ return {}; }
-  }
-  function save(d){
-    try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch{}
-  }
-
-  const d=load();
-  d.version=1;
-  d.first_seen=d.first_seen||new Date(NOW).toISOString();
-  d.last_seen=new Date(NOW).toISOString();
-
-  // Counters
-  d.pageviews=d.pageviews||0;
-  d.sessions=d.sessions||0;
-  d.by_path=d.by_path||{};
-  d.by_ref=d.by_ref||{};
-  d.events=d.events||[];
-
-  // Session accounting (count once per session)
-  d._seen_sessions=d._seen_sessions||{};
-  if(!d._seen_sessions[sessionId]){
-    d._seen_sessions[sessionId]=true;
-    d.sessions++;
-  }
-
-  // Pageview
-  d.pageviews++;
-  d.by_path[path]=(d.by_path[path]||0)+1;
-  if(ref) d.by_ref[ref]=(d.by_ref[ref]||0)+1;
-
-  // Time on page (measured on unload / visibility change)
-  const t0=performance.now();
-  let maxScroll=0;
-
-  function emit(type, meta){
-    d.events.push({
-      t:new Date().toISOString(),
-      type,
-      path,
-      session:sessionId,
-      meta:meta||{}
-    });
-    // keep last 500 events to avoid bloat
-    if(d.events.length>500) d.events=d.events.slice(d.events.length-500);
-    save(d);
-  }
-
-  // Track nav/button clicks (links + buttons)
-  document.addEventListener("click", function(e){
-    const a=e.target && (e.target.closest ? e.target.closest("a") : null);
-    const b=e.target && (e.target.closest ? e.target.closest("button") : null);
-    if(a){
-      emit("click_link",{href:a.getAttribute("href")||"", text:(a.textContent||"").trim().slice(0,80)});
-    }else if(b){
-      emit("click_button",{id:b.id||"", text:(b.textContent||"").trim().slice(0,80)});
-    }
-  }, true);
-
-  // Scroll depth
-  window.addEventListener("scroll", function(){
-    const doc=document.documentElement;
-    const scrollTop=doc.scrollTop||document.body.scrollTop||0;
-    const scrollHeight=doc.scrollHeight||0;
-    const clientHeight=doc.clientHeight||window.innerHeight||1;
-    const pct=Math.min(100, Math.round((scrollTop/(scrollHeight-clientHeight+1))*100));
-    if(pct>maxScroll) maxScroll=pct;
-  }, {passive:true});
-
-  function finalize(){
-    const dt=Math.max(0, Math.round(performance.now()-t0));
-    emit("page_exit",{ms:dt, scroll_pct:maxScroll});
-  }
-
-  window.addEventListener("pagehide", finalize);
-  document.addEventListener("visibilitychange", function(){
-    if(document.visibilityState==="hidden") finalize();
-  });
-
-  // initial mark
-  emit("page_view",{ref, ua:ua.slice(0,120)});
-})();
-</script>
-<!-- =============================== -->
-<!-- Cloudflare Web Analytics (V1) -->
-<!-- =============================== -->
-<script
-  defer
-  src="https://static.cloudflareinsights.com/beacon.min.js"
-  data-cf-beacon='{"token":"3e3cd56630124b00b85f07270feb179"}'>
-</script>
-<!-- =============================== -->

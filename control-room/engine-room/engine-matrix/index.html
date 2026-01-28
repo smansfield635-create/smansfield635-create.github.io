@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Engine Matrix · Geodiametrics</title>
+  <style>
+    :root{--fg:#e9eefc;--muted:rgba(233,238,252,.70);--stroke:rgba(233,238,252,.14);--panel:rgba(10,14,28,.58);--shadow:0 18px 55px rgba(0,0,0,.55);--r:22px;}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto;color:var(--fg);background:transparent}
+    .wrap{max-width:980px;margin:0 auto;padding:18px}
+    .card{background:var(--panel);border:1px solid rgba(255,255,255,.14);border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
+    h1{margin:6px 0 6px;font-size:30px}
+    p{margin:0;color:var(--muted);line-height:1.55}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:var(--fg);text-decoration:none;font-weight:750}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.10);text-align:left;font-size:14px}
+    th{color:rgba(233,238,252,.75);font-weight:800}
+    td{color:rgba(233,238,252,.78)}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);font-weight:800}
+    .dot{width:9px;height:9px;border-radius:50%;background:#6b7280}
+    .dot.ok{background:#34d399}
+    .dot.bad{background:#fb7185}
+    input{
+      width:100%;padding:12px 14px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.20);color:var(--fg);
+      outline:none;
+    }
+    .grid{display:grid;gap:12px;margin-top:12px}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="card">
+    <h1>Engine Matrix</h1>
+    <p>Cross-engine registry + supervisor controls. Device-local only.</p>
+    <div class="row">
+      <span class="pill"><span id="dot" class="dot"></span><span id="status">Loading…</span></span>
+      <button class="btn" id="refresh">Refresh</button>
+      <button class="btn" id="export">Export JSON</button>
+      <a class="btn" href="/control-room/">Back</a>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:14px">
+    <h2 style="margin:0 0 8px">Discovered Engines</h2>
+    <table>
+      <thead>
+        <tr><th>Namespace</th><th>Title</th><th>Status</th><th>Open</th></tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="4" style="color:rgba(233,238,252,.65)">No engines registered yet.</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:10px">Tip: open <b>Control Room → Engine Room</b> once. It auto-registers Diamond Fusion cores.</p>
+  </section>
+
+  <section class="card" style="margin-top:14px">
+    <h2 style="margin:0 0 8px">Supervisor</h2>
+    <p>Default is isolation. Structural sync writes a shared rule label only. State mirror copies one namespace into another (one-shot).</p>
+
+    <div class="row" style="margin-top:12px">
+      <button class="btn" id="setIso">Set ISOLATED</button>
+      <button class="btn" id="setStruct">Set STRUCTURAL</button>
+      <button class="btn" id="setState">Set STATE (manual)</button>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div style="font-weight:850;margin:10px 0 6px">Rule label (STRUCTURAL)</div>
+        <div class="row">
+          <input id="ruleLabel" placeholder="Rule version (e.g., DIAMOND_FUSION_v1)"/>
+          <button class="btn" id="applyRule">Apply</button>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-weight:850;margin:10px 0 6px">State Mirror (manual)</div>
+        <div class="row">
+          <input id="src" placeholder="Source namespace (e.g., df_core_1)"/>
+          <input id="dst" placeholder="Target namespace (e.g., df_core_2)"/>
+          <button class="btn" id="mirror">Mirror →</button>
+          <button class="btn" id="resetDst">Reset Target</button>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top:10px">State sync is opt-in. If you don’t click mirror, nothing couples.</p>
+  </section>
+
+  <footer style="padding:22px;text-align:center;color:rgba(233,238,252,.55);font-size:13px">© 2026 Geodiametrics · Engine Matrix</footer>
+</div>
+
+<script>
+(function(){
+  const REG_KEY="gd_engine_registry_v1";
+  const SUP_KEY="gd_supervisor_v1";
+
+  const $tbody=document.getElementById("tbody");
+  const $dot=document.getElementById("dot");
+  const $status=document.getElementById("status");
+
+  function loadReg(){
+    try{ return JSON.parse(localStorage.getItem(REG_KEY)||"[]"); }catch(e){ return []; }
+  }
+  function loadSup(){
+    try{ return JSON.parse(localStorage.getItem(SUP_KEY)||"{}"); }catch(e){ return {}; }
+  }
+  function saveSup(obj){
+    localStorage.setItem(SUP_KEY, JSON.stringify(obj));
+  }
+  function dlJSON(name,obj){
+    const blob=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download=name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),500);
+  }
+
+  function render(){
+    const reg=loadReg();
+    if(!reg.length){
+      $tbody.innerHTML=`<tr><td colspan="4" style="color:rgba(233,238,252,.65)">No engines registered yet.</td></tr>`;
+      $dot.className="dot bad";
+      $status.textContent="No engines";
+      return;
+    }
+    $tbody.innerHTML="";
+    for(const e of reg){
+      const tr=document.createElement("tr");
+      tr.innerHTML=`
+        <td>${e.namespace}</td>
+        <td>${e.title}</td>
+        <td>${e.status}</td>
+        <td><a class="btn" href="${e.path}">Open</a></td>
+      `;
+      $tbody.appendChild(tr);
+    }
+    $dot.className="dot ok";
+    $status.textContent=`Engines: ${reg.length}`;
+  }
+
+  function setMode(mode){
+    const sup=loadSup();
+    sup.mode=mode;
+    sup.updated=new Date().toISOString();
+    saveSup(sup);
+    render();
+  }
+
+  document.getElementById("refresh").onclick=render;
+  document.getElementById("export").onclick=()=>{
+    dlJSON("gd_engine_matrix_export.json",{registry:loadReg(),supervisor:loadSup()});
+  };
+
+  document.getElementById("setIso").onclick=()=>setMode("ISOLATED");
+  document.getElementById("setStruct").onclick=()=>setMode("STRUCTURAL");
+  document.getElementById("setState").onclick=()=>setMode("STATE_MANUAL");
+
+  document.getElementById("applyRule").onclick=()=>{
+    const v=(document.getElementById("ruleLabel").value||"").trim();
+    const sup=loadSup();
+    sup.mode="STRUCTURAL";
+    sup.ruleLabel=v||"UNSET";
+    sup.updated=new Date().toISOString();
+    saveSup(sup);
+    render();
+  };
+
+  document.getElementById("mirror").onclick=()=>{
+    const src=(document.getElementById("src").value||"").trim();
+    const dst=(document.getElementById("dst").value||"").trim();
+    if(!src||!dst) return;
+
+    const srcKey="gd_ns_"+src;
+    const dstKey="gd_ns_"+dst;
+
+    const srcVal=localStorage.getItem(srcKey);
+    if(srcVal===null) return;
+
+    localStorage.setItem(dstKey, srcVal);
+
+    const sup=loadSup();
+    sup.mode="STATE_MANUAL";
+    sup.lastMirror={src,dst,at:new Date().toISOString()};
+    sup.updated=new Date().toISOString();
+    saveSup(sup);
+    render();
+  };
+
+  document.getElementById("resetDst").onclick=()=>{
+    const dst=(document.getElementById("dst").value||"").trim();
+    if(!dst) return;
+    localStorage.removeItem("gd_ns_"+dst);
+    const sup=loadSup();
+    sup.updated=new Date().toISOString();
+    saveSup(sup);
+    render();
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>

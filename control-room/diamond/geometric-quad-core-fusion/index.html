@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Engine Sync · Control Room</title>
+
+<style>
+:root{
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.65);
+  --stroke:rgba(233,238,252,.14);
+  --panel:rgba(12,16,34,.62);
+  --radius:22px;
+  --shadow:0 18px 55px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--fg);
+  background:
+    radial-gradient(1200px 900px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 80% 30%, rgba(180,140,255,.14), transparent 60%),
+    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
+}
+main{max-width:1100px;margin:0 auto;padding:48px 18px 96px}
+h1{font-size:44px;margin:0 0 8px}
+p{color:var(--muted)}
+.panel{
+  margin-top:28px;
+  padding:22px;
+  border-radius:var(--radius);
+  background:var(--panel);
+  border:1px solid var(--stroke);
+  box-shadow:var(--shadow);
+}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.btn{
+  appearance:none;
+  border:1px solid rgba(233,238,252,.18);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);
+  padding:10px 14px;
+  border-radius:999px;
+  font-weight:800;
+  cursor:pointer;
+}
+.btn:active{transform:translateY(1px)}
+.table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+th,td{padding:8px;border-bottom:1px solid var(--stroke);text-align:left}
+small{color:var(--muted)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+</style>
+</head>
+
+<body>
+<main>
+  <h1>Engine Sync</h1>
+  <p>Canonical engine registration and synchronization surface. No UI logic outside Control Room.</p>
+
+  <section class="panel">
+    <h2>Diamond Fusion · Register Cores</h2>
+    <div class="row">
+      <button class="btn" onclick="registerAll()">Register All</button>
+      <button class="btn" onclick="clearAll()">Clear Registry</button>
+      <button class="btn" onclick="render()">Refresh</button>
+    </div>
+    <small>Writes canonical engine keys to localStorage.</small>
+  </section>
+
+  <section class="panel">
+    <h2>Registered Engines</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Namespace</th>
+          <th>Family</th>
+          <th>Core</th>
+          <th>Version</th>
+          <th>Seen</th>
+        </tr>
+      </thead>
+      <tbody id="body">
+        <tr><td colspan="5">No engines registered.</td></tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+
+<script>
+const PREFIX="GEOD_ENGINE::";
+const CORES=[
+  {ns:"diamond_fusion_core_1",family:"diamond_fusion",core:1},
+  {ns:"diamond_fusion_core_2",family:"diamond_fusion",core:2},
+  {ns:"diamond_fusion_core_3",family:"diamond_fusion",core:3},
+  {ns:"diamond_fusion_core_4",family:"diamond_fusion",core:4}
+];
+
+function registerCore(c){
+  const payload={
+    namespace:c.ns,
+    family:c.family,
+    core:c.core,
+    version:"1.0",
+    cycle:["input","admissibility","execution","evidence","return"],
+    invariants:["agency","constraint","responsibility","coherence"],
+    registered_at:new Date().toISOString()
+  };
+  localStorage.setItem(PREFIX+c.ns,JSON.stringify(payload));
+}
+
+function registerAll(){
+  CORES.forEach(registerCore);
+  render();
+}
+
+function clearAll(){
+  Object.keys(localStorage)
+    .filter(k=>k.startsWith(PREFIX))
+    .forEach(k=>localStorage.removeItem(k));
+  render();
+}
+
+function render(){
+  const body=document.getElementById("body");
+  body.innerHTML="";
+  const keys=Object.keys(localStorage).filter(k=>k.startsWith(PREFIX)).sort();
+  if(!keys.length){
+    body.innerHTML="<tr><td colspan='5'>No engines registered.</td></tr>";
+    return;
+  }
+  keys.forEach(k=>{
+    const d=JSON.parse(localStorage.getItem(k)||"{}");
+    const tr=document.createElement("tr");
+    tr.innerHTML=
+      "<td class='mono'>"+d.namespace+"</td>"+
+      "<td>"+d.family+"</td>"+
+      "<td>"+d.core+"</td>"+
+      "<td>"+d.version+"</td>"+
+      "<td>local</td>";
+    body.appendChild(tr);
+  });
+}
+
+render();
+</script>
+</body>
+</html>

@@ -11,8 +11,8 @@
   --muted:rgba(233,238,252,.66);
   --stroke:rgba(233,238,252,.14);
   --panel:rgba(12,16,34,.62);
-  --glass:rgba(10,14,28,.55);
   --radius:22px;
+  --shadow:0 18px 55px rgba(0,0,0,.55);
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
@@ -26,24 +26,23 @@ body{
   border-radius:var(--radius);
   border:1px solid var(--stroke);
   background:var(--panel);
+  box-shadow:var(--shadow);
   padding:18px;
 }
 h1{margin:0 0 10px}
 p{color:var(--muted)}
-table{width:100%;border-collapse:collapse;margin-top:12px}
-th,td{padding:8px;border-bottom:1px solid var(--stroke)}
-th{color:#fff}
+.row{display:flex;gap:10px;flex-wrap:wrap}
 .btn{
-  margin-right:8px;
-  padding:10px 14px;
-  border-radius:999px;
-  border:1px solid var(--stroke);
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.18);
   background:rgba(255,255,255,.06);
-  color:var(--fg);
-  font-weight:800;
-  cursor:pointer;
+  color:var(--fg);font-weight:900;cursor:pointer
 }
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+th,td{padding:8px;border-bottom:1px solid rgba(233,238,252,.12)}
+th{color:#fff;text-align:left;font-weight:900}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--muted)}
+.footer{margin-top:18px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
 </style>
 </head>
 
@@ -51,14 +50,14 @@ th{color:#fff}
 <div class="wrap">
   <div class="card">
     <h1>Engine Matrix</h1>
-    <p>Device-local registry. Auto-discovers all Diamond Fusion cores.</p>
+    <p>Authoritative registry view. Reads <span class="mono">ENGINE::</span> keys only. No writes.</p>
 
-    <div style="margin:12px 0">
+    <div class="row" style="margin:12px 0">
       <button class="btn" onclick="Matrix.refresh()">Refresh</button>
-      <button class="btn" onclick="Matrix.export()">Export JSON</button>
+      <button class="btn" onclick="Matrix.exportJSON()">Export JSON</button>
     </div>
 
-    <table>
+    <table class="table">
       <thead>
         <tr>
           <th>Namespace</th>
@@ -73,21 +72,18 @@ th{color:#fff}
 
     <p class="mono" id="meta" style="margin-top:10px">Last scan: —</p>
   </div>
+
+  <div class="footer">© 2026 Geodiametrics · Engine Matrix</div>
 </div>
 
 <script>
 /* ============================
    ENGINE MATRIX · TNT (v1)
-   Single responsibility:
-   Discover engines.
-   Nothing else.
+   READ-ONLY REGISTRY
 ============================= */
 
 const Matrix = (() => {
-
-  const ENGINE_PREFIX = "DF::";      // THIS IS THE KEY
-  const REG_PREFIX    = "DF_REG::";  // Registry metadata
-
+  const ENGINE_PREFIX = "ENGINE::";
   const now = () => new Date().toISOString();
 
   function get(k){
@@ -96,60 +92,52 @@ const Matrix = (() => {
   }
 
   function discover(){
-    const engines = {};
+    const map = {};
     for(let i=0;i<localStorage.length;i++){
       const k = localStorage.key(i);
-      if(k.startsWith(ENGINE_PREFIX)){
-        const ns = k.replace(ENGINE_PREFIX,"");
-        engines[ns] = engines[ns] || { keys:0, last:"—" };
-        engines[ns].keys++;
+      if(k && k.startsWith(ENGINE_PREFIX)){
+        const ns = k.slice(ENGINE_PREFIX.length);
         const v = get(k);
-        if(v?.updated_at) engines[ns].last = v.updated_at;
+        map[ns] = map[ns] || { keys:0, last:"—" };
+        map[ns].keys = v?.state ? Object.keys(v.state).length : 0;
+        map[ns].last = v?.updated_at || "—";
       }
     }
-    return engines;
+    return map;
   }
 
   function render(data){
-    const body = document.getElementById("rows");
-    body.innerHTML = "";
-
-    const keys = Object.keys(data);
+    const tbody = document.getElementById("rows");
+    tbody.innerHTML = "";
+    const keys = Object.keys(data).sort();
     if(!keys.length){
-      body.innerHTML =
-        "<tr><td colspan='3' class='mono'>No engines discovered.</td></tr>";
+      tbody.innerHTML = "<tr><td colspan='3' class='mono'>No engines discovered.</td></tr>";
       return;
     }
-
-    keys.sort().forEach(ns=>{
-      const r = document.createElement("tr");
-      r.innerHTML =
+    keys.forEach(ns=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML =
         "<td class='mono'>"+ns+"</td>"+
         "<td class='mono'>"+data[ns].keys+"</td>"+
         "<td class='mono'>"+data[ns].last+"</td>";
-      body.appendChild(r);
+      tbody.appendChild(tr);
     });
   }
 
   function refresh(){
-    const data = discover();
-    render(data);
-    document.getElementById("meta").textContent =
-      "Last scan: " + now();
+    render(discover());
+    document.getElementById("meta").textContent = "Last scan: " + now();
   }
 
   function exportJSON(){
-    const blob = new Blob(
-      [JSON.stringify(discover(),null,2)],
-      {type:"application/json"}
-    );
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "engine_matrix.json";
+    const blob=new Blob([JSON.stringify(discover(),null,2)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="engine_matrix.json";
     a.click();
   }
 
-  return { refresh, export:exportJSON };
+  return { refresh, exportJSON };
 })();
 
 Matrix.refresh();

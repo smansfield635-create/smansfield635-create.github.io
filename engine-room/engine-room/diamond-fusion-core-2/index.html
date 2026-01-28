@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Diamond Fusion · Core II</title>
+
+<script>
+/*
+  DIAMOND FUSION — CORE II
+  ROLE: Parallel Core Instance
+  MODE: Declaration Only
+*/
+
+(function registerDiamondFusionCore2(){
+
+  const ENGINE_NAMESPACE = "diamond_fusion_core_2";
+
+  const payload = {
+    name: "Diamond Fusion · Core II",
+    namespace: ENGINE_NAMESPACE,
+    role: "core-parallel",
+    model: "quad-core-fusion",
+    invariants: [
+      "agency",
+      "constraint",
+      "responsibility",
+      "coherence"
+    ],
+    cycle: [
+      "input",
+      "admissibility",
+      "execution",
+      "evidence",
+      "return"
+    ],
+    registered_at: new Date().toISOString(),
+    status: "idle"
+  };
+
+  try {
+    localStorage.setItem(
+      ENGINE_NAMESPACE,
+      JSON.stringify(payload)
+    );
+  } catch (e) {
+    console.error("Diamond Fusion Core II registration failed", e);
+  }
+
+})();
+</script>
+</head>
+
+<body>
+<!-- Intentionally empty. Registration only. -->
+</body>
+</html>

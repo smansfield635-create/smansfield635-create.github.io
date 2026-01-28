@@ -1,275 +1,280 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodiametrics</title>
 
   <style>
     :root{
       --fg:#e9eefc;
       --muted:rgba(233,238,252,.72);
-      --muted2:rgba(233,238,252,.55);
       --stroke:rgba(233,238,252,.14);
       --panel:rgba(12,16,34,.62);
       --panel2:rgba(12,16,34,.42);
-      --glass:rgba(10,14,26,.55);
-      --shadow:0 18px 55px rgba(0,0,0,.55);
       --radius:22px;
+      --shadow:0 24px 70px rgba(0,0,0,.65);
     }
 
     *{box-sizing:border-box}
-    html,body{height:100%}
+    html,body{margin:0;height:100%}
     body{
-      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
       color:var(--fg);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:
-        radial-gradient(1200px 760px at 20% 10%, rgba(120,150,255,.22), transparent 60%),
-        radial-gradient(980px 720px at 85% 75%, rgba(255,120,200,.14), transparent 65%),
-        linear-gradient(180deg, #070b14, #050816);
       overflow-x:hidden;
+
+      /* cosmic base */
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(120,140,255,.20), transparent 60%),
+        radial-gradient(900px 520px at 80% 25%, rgba(180,120,255,.16), transparent 62%),
+        radial-gradient(1100px 820px at 55% 85%, rgba(255,120,200,.12), transparent 62%),
+        radial-gradient(900px 700px at 50% 55%, rgba(90,160,255,.10), transparent 70%),
+        #070b18;
     }
 
-    /* star field */
-    body:before{
+    /* starfield */
+    body::before{
       content:"";
-      position:fixed; inset:0;
+      position:fixed;
+      inset:-10%;
       pointer-events:none;
-      opacity:.65;
+      opacity:.70;
       background-image:
-        radial-gradient(1px 1px at 8% 12%, rgba(255,255,255,.85), transparent 60%),
-        radial-gradient(1px 1px at 18% 28%, rgba(255,255,255,.7), transparent 60%),
-        radial-gradient(1px 1px at 28% 70%, rgba(255,255,255,.65), transparent 60%),
-        radial-gradient(1px 1px at 40% 40%, rgba(255,255,255,.8), transparent 60%),
-        radial-gradient(1px 1px at 52% 18%, rgba(255,255,255,.7), transparent 60%),
-        radial-gradient(1px 1px at 64% 62%, rgba(255,255,255,.85), transparent 60%),
-        radial-gradient(1px 1px at 76% 30%, rgba(255,255,255,.7), transparent 60%),
-        radial-gradient(1px 1px at 88% 78%, rgba(255,255,255,.8), transparent 60%),
-        radial-gradient(2px 2px at 14% 52%, rgba(255,255,255,.55), transparent 60%),
-        radial-gradient(2px 2px at 72% 10%, rgba(255,255,255,.55), transparent 60%),
-        radial-gradient(2px 2px at 92% 44%, rgba(255,255,255,.5), transparent 60%);
-      background-size: 100% 100%;
-      z-index:-1;
+        radial-gradient(1px 1px at 5% 10%, rgba(255,255,255,.9), transparent),
+        radial-gradient(1px 1px at 15% 70%, rgba(255,255,255,.75), transparent),
+        radial-gradient(1px 1px at 25% 30%, rgba(255,255,255,.8), transparent),
+        radial-gradient(1px 1px at 35% 90%, rgba(255,255,255,.7), transparent),
+        radial-gradient(1px 1px at 45% 20%, rgba(255,255,255,.85), transparent),
+        radial-gradient(1px 1px at 55% 60%, rgba(255,255,255,.78), transparent),
+        radial-gradient(1px 1px at 65% 35%, rgba(255,255,255,.72), transparent),
+        radial-gradient(1px 1px at 75% 80%, rgba(255,255,255,.82), transparent),
+        radial-gradient(1px 1px at 85% 15%, rgba(255,255,255,.76), transparent),
+        radial-gradient(1px 1px at 95% 55%, rgba(255,255,255,.84), transparent);
+      background-size:900px 900px;
+      filter:blur(.2px);
+      transform:rotate(-6deg);
     }
 
     header{
-      position:sticky; top:0; z-index:10;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(180deg, rgba(8,12,24,.82), rgba(8,12,24,.42));
+      position:sticky;
+      top:0;
+      z-index:10;
       border-bottom:1px solid var(--stroke);
+      backdrop-filter:blur(10px);
+      background:linear-gradient(to bottom, rgba(7,11,24,.88), rgba(7,11,24,.30));
     }
+
     .bar{
       max-width:1100px;
       margin:0 auto;
-      padding:14px 16px;
+      padding:16px 16px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:14px;
     }
+
     .brand{
-      font-weight:900;
-      letter-spacing:.35px;
-      font-size:18px;
+      font-weight:800;
+      letter-spacing:.2px;
+      font-size:20px;
       white-space:nowrap;
     }
+
+    /* bubble nav */
     .bubbles{
       display:flex;
-      flex-wrap:wrap;
       gap:10px;
+      flex-wrap:wrap;
       justify-content:flex-end;
     }
+
     .bubble{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      padding:10px 14px;
+      padding:10px 16px;
       border-radius:999px;
       border:1px solid rgba(233,238,252,.18);
-      background: rgba(255,255,255,.06);
+      background:rgba(255,255,255,.05);
+      box-shadow:0 10px 26px rgba(0,0,0,.35);
       color:var(--fg);
       text-decoration:none;
       font-weight:650;
-      box-shadow: 0 10px 26px rgba(0,0,0,.35);
-      min-width:110px;
+      min-width:118px;
     }
-    .bubble:hover{ background: rgba(255,255,255,.09); border-color: rgba(233,238,252,.28); }
+
+    .bubble:active{transform:translateY(1px)}
+    .bubble:hover{background:rgba(255,255,255,.08)}
+
+    /* ✅ mobile: kill the dead space + make bubbles a compact grid */
+    @media (max-width:720px){
+      .bar{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .bubbles{
+        width:100%;
+        display:grid;
+        grid-template-columns:repeat(2, minmax(0,1fr));
+        gap:10px;
+        justify-content:stretch;
+      }
+      .bubble{
+        width:100%;
+        min-width:0;
+        padding:12px 14px;
+      }
+    }
 
     main{
       max-width:1100px;
       margin:0 auto;
-      padding:42px 16px 80px;
+      padding:48px 16px 90px;
     }
 
     .hero{
-      padding:14px 0 26px;
+      padding:8px 2px 22px;
+      margin-bottom:22px;
       border-bottom:1px solid rgba(233,238,252,.12);
     }
+
     h1{
       margin:0;
-      font-size:64px;
-      letter-spacing:-1px;
+      font-size:56px;
       line-height:1.05;
+      letter-spacing:-.5px;
     }
+
     .sub{
-      max-width:80ch;
+      max-width:60ch;
       margin-top:14px;
       color:var(--muted);
       font-size:18px;
-      line-height:1.6;
+      line-height:1.65;
     }
 
     .grid{
-      margin-top:26px;
       display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap:16px;
+      grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+      gap:18px;
+      margin-top:26px;
     }
+
     .card{
-      grid-column: span 12;
-      background: var(--panel);
-      border:1px solid rgba(233,238,252,.12);
-      border-radius: var(--radius);
-      padding:22px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      position:relative;
+      background:linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid rgba(233,238,252,.14);
+      border-radius:var(--radius);
+      padding:26px;
+      box-shadow:var(--shadow);
     }
-    .card:after{
-      content:"";
-      position:absolute; inset:-1px;
-      border-radius: var(--radius);
-      pointer-events:none;
-      background: radial-gradient(420px 220px at 20% 0%, rgba(255,255,255,.08), transparent 60%),
-                  radial-gradient(520px 260px at 100% 120%, rgba(255,255,255,.06), transparent 60%);
-      opacity:.7;
-    }
-    .card > *{ position:relative; z-index:1; }
 
     .card h2{
-      margin:0 0 10px;
-      font-size:28px;
+      margin:0 0 8px;
+      font-size:22px;
       letter-spacing:.2px;
     }
+
     .card p{
       margin:0 0 16px;
-      color:var(--muted2);
-      font-size:16px;
-      line-height:1.55;
+      color:var(--muted);
+      line-height:1.65;
     }
 
     .button{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      padding:12px 16px;
+      padding:12px 18px;
       border-radius:999px;
       border:1px solid rgba(233,238,252,.18);
-      background: rgba(255,255,255,.06);
+      background:rgba(255,255,255,.06);
       color:var(--fg);
       text-decoration:none;
       font-weight:700;
-      box-shadow: 0 10px 26px rgba(0,0,0,.35);
+      box-shadow:0 10px 26px rgba(0,0,0,.35);
       min-width:170px;
     }
-    .button:hover{ background: rgba(255,255,255,.09); border-color: rgba(233,238,252,.28); }
 
-    .span6{ grid-column: span 12; }
-    @media (min-width: 860px){
-      .span6{ grid-column: span 6; }
-      h1{ font-size:72px; }
-    }
-
+    .button:hover{background:rgba(255,255,255,.09)}
     footer{
-      margin-top:40px;
-      padding-top:18px;
-      border-top:1px solid rgba(233,238,252,.12);
-      color:rgba(233,238,252,.55);
       text-align:center;
-      font-size:13px;
+      color:var(--muted);
+      padding:40px 16px;
+      border-top:1px solid rgba(233,238,252,.12);
+      background:linear-gradient(to top, rgba(7,11,24,.75), transparent);
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <div class="bar">
-      <div class="brand">Geodiametrics</div>
-      <nav class="bubbles" aria-label="Site navigation">
-        <a class="bubble" href="/">Home</a>
-        <a class="bubble" href="/methods/">Methods</a>
-        <a class="bubble" href="/dashboard/">Dashboard</a>
-        <a class="bubble" href="/apps/">Apps</a>
-        <a class="bubble" href="/reference/">Reference</a>
-        <a class="bubble" href="/problem/">Problem</a>
-        <a class="bubble" href="/architecture/">Architecture</a>
-      </nav>
+
+<header>
+  <div class="bar">
+    <div class="brand">Geodiametrics</div>
+    <nav class="bubbles">
+      <a class="bubble" href="/">Home</a>
+      <a class="bubble" href="/methods/">Methods</a>
+      <a class="bubble" href="/dashboard/">Dashboard</a>
+      <a class="bubble" href="/apps/">Apps</a>
+      <a class="bubble" href="/reference/">Reference</a>
+      <a class="bubble" href="/problem/">Problem</a>
+      <a class="bubble" href="/architecture/">Architecture</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <h1>Geodiametrics</h1>
+    <div class="sub">
+      A constraint-first framework for diagnosing coherence, collapse, and execution across systems.
+      This site presents scientific findings, live proof surfaces, and audit-friendly instrumentation.
     </div>
-  </header>
+  </section>
 
-  <main>
-    <section class="hero">
-      <h1>Geodiametrics</h1>
-      <div class="sub">
-        A constraint-first framework for diagnosing coherence, collapse, and execution across systems.
-        This site presents scientific findings, live proof surfaces, and audit-friendly instrumentation.
-      </div>
-    </section>
+  <section class="grid">
+    <div class="card">
+      <h2>Scientific Findings</h2>
+      <p>Tiered discoveries organized by Tier 1, Tier 2, and Tier 3 hierarchy.</p>
+      <a class="button" href="/methods/">Read Methods</a>
+    </div>
 
-    <section class="grid">
-      <div class="card span6">
-        <h2>Scientific Findings</h2>
-        <p>Foundational discoveries organized by Tier 1, Tier 2, and Tier 3 hierarchy.</p>
-        <a class="button" href="/methods/">Read Methods</a>
-      </div>
+    <div class="card">
+      <h2>Live Dashboard</h2>
+      <p>Empirical tracking hub. Evidence-first. No narrative ordering.</p>
+      <a class="button" href="/dashboard/">Open Dashboard</a>
+    </div>
 
-      <div class="card span6">
-        <h2>Live Dashboard</h2>
-        <p>Empirical tracking hub. Evidence-first. No narrative ordering.</p>
-        <a class="button" href="/dashboard/">Open Dashboard</a>
-      </div>
+    <div class="card">
+      <h2>Execution Apps</h2>
+      <p>Executable proof surfaces demonstrating constraint-first behavior.</p>
+      <a class="button" href="/apps/">View Apps</a>
+    </div>
 
-      <div class="card span6">
-        <h2>Execution Apps</h2>
-        <p>Executable proof surfaces demonstrating constraint-first behavior.</p>
-        <a class="button" href="/apps/">View Apps</a>
-      </div>
+    <div class="card">
+      <h2>Canonical Reference</h2>
+      <p>Invariant definitions and scope boundaries used throughout the system.</p>
+      <a class="button" href="/reference/">Open Reference</a>
+    </div>
 
-      <div class="card span6">
-        <h2>Canonical Reference</h2>
-        <p>Invariant definitions and scope boundaries used throughout the system.</p>
-        <a class="button" href="/reference/">Open Reference</a>
-      </div>
+    <div class="card">
+      <h2>The Problem</h2>
+      <p>What fails without constraint-first execution. Why coherence collapses.</p>
+      <a class="button" href="/problem/">Read Problem</a>
+    </div>
 
-      <div class="card span6">
-        <h2>The Problem</h2>
-        <p>What fails without constraint-first ordering. Why coherence collapses.</p>
-        <a class="button" href="/problem/">Read Problem</a>
-      </div>
+    <div class="card">
+      <h2>Architecture</h2>
+      <p>Quad-core engine model, cross-engine invariants, and structural walls.</p>
+      <a class="button" href="/architecture/">Open Architecture</a>
+    </div>
+  </section>
 
-      <div class="card span6">
-        <h2>Architecture</h2>
-        <p>Quad-core execution structure, cross-engine relations, and audit surfaces.</p>
-        <a class="button" href="/architecture/">Open Architecture</a>
-      </div>
+</main>
 
-      <div class="card">
-        <h2>About</h2>
-        <p>
-          This project emerged from long-form observation of system failure and recovery across domains,
-          informed by philosophy, science, and lived experience. The work emphasizes structure over narrative
-          and execution over explanation.
-        </p>
-      </div>
-    </section>
-
-    <footer>© 2026 Geodiametrics</footer>
-  </main>
-
-  <!-- Cloudflare Web Analytics (leave exactly as Cloudflare provided) -->
-  <!-- PASTE YOUR CF SCRIPT TAG HERE if you want it on the homepage too -->
+<footer>© 2026 Geodiametrics</footer>
 
 </body>
 </html>
-```0

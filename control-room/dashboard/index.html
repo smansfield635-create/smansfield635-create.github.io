@@ -1,155 +1,201 @@
-<!-- ========================= -->
-<!-- ENGINE REGISTRY + SUPERVISOR (TNB) -->
-<!-- ========================= -->
-<section class="section">
-  <h2 class="section-title">Engine Registry</h2>
-  <div class="card">
-    <p class="kicker"><strong>REGISTRY.</strong> Local namespaces discovered and summarized from this device.</p>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Dashboard · Geodiametrics</title>
 
-    <div class="row" style="gap:12px;flex-wrap:wrap;margin-top:12px;">
-      <div class="pill" id="regTotal">Engines: —</div>
-      <div class="pill" id="regLastSeen">Last seen: —</div>
-    </div>
+<style>
+:root{
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.66);
+  --stroke:rgba(233,238,252,.14);
+  --panel:rgba(12,16,34,.62);
+  --glass:rgba(10,14,28,.55);
+  --radius:22px;
+  --shadow:0 18px 55px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--fg);
+  background:
+    radial-gradient(1200px 900px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 80% 30%, rgba(180,140,255,.14), transparent 60%),
+    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
+}
+.wrap{max-width:1100px;margin:0 auto;padding:26px 16px 80px}
+.top{
+  position:sticky;top:0;z-index:20;
+  backdrop-filter:blur(10px);
+  background:linear-gradient(180deg, rgba(7,11,24,.85), rgba(7,11,24,.55));
+  border-bottom:1px solid rgba(233,238,252,.12);
+}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px}
+.brand{font-weight:900}
+.nav{display:flex;gap:10px;flex-wrap:wrap}
+.bubble{
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.18);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);text-decoration:none;font-weight:800;
+}
+.hero h1{margin:0;font-size:38px}
+.sub{color:var(--muted);margin-top:8px;max-width:780px}
+.hr{height:1px;background:rgba(233,238,252,.12);margin:22px 0}
 
-    <div id="engineTable" style="margin-top:14px;display:grid;gap:10px;"></div>
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
 
-    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
-      <button class="btn" id="regRefresh">Refresh Registry</button>
-      <button class="btn" id="regExport">Export Registry JSON</button>
-    </div>
-    <p class="note" style="margin-top:10px;">Device-only. No identity inference. No external calls.</p>
-  </div>
-</section>
+.card{
+  border-radius:var(--radius);
+  border:1px solid var(--stroke);
+  background:var(--panel);
+  box-shadow:var(--shadow);
+}
+.card .in{padding:18px}
+.card h2{margin:0 0 10px}
+.card p{margin:0;color:var(--muted);line-height:1.5}
 
-<section class="section">
-  <h2 class="section-title">Supervisor</h2>
-  <div class="card">
-    <p class="kicker"><strong>SUPERVISOR.</strong> Defines how engines relate. Default is isolation.</p>
+.btn{
+  appearance:none;border:1px solid rgba(233,238,252,.18);
+  background:rgba(255,255,255,.06);color:var(--fg);
+  padding:11px 14px;border-radius:999px;
+  font-weight:900;cursor:pointer;
+}
+.row{display:flex;gap:10px;flex-wrap:wrap}
 
-    <div class="row" style="gap:12px;flex-wrap:wrap;margin-top:12px;">
-      <div class="pill">Mode: <strong id="supMode">ISOLATED</strong></div>
-      <div class="pill">Rule: <strong id="supRule">NONE</strong></div>
-      <div class="pill">Updated: <strong id="supUpdated">—</strong></div>
-    </div>
+.table{
+  width:100%;border-collapse:collapse;margin-top:10px;font-size:13px
+}
+th,td{
+  text-align:left;padding:8px;border-bottom:1px solid rgba(233,238,252,.12)
+}
+th{font-weight:900;color:rgba(233,238,252,.85)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--muted)}
 
-    <div style="margin-top:14px;display:grid;gap:10px;">
-      <div class="mini">
-        <div class="miniTitle">ISOLATED (default)</div>
-        <div class="miniBody">Engines do not share state. Safe for A/B and parallel runs.</div>
-        <button class="btn small" data-sup="ISOLATED">Set ISOLATED</button>
-      </div>
-
-      <div class="mini">
-        <div class="miniTitle">STRUCTURAL SYNC</div>
-        <div class="miniBody">Engines share the same rule version label (no state sharing).</div>
-        <div class="row" style="gap:10px;flex-wrap:wrap;margin-top:10px;">
-          <input class="input" id="ruleVersion" placeholder="Rule version (e.g., ENGINE_SYNC_v1.2)" />
-          <button class="btn small" data-sup="STRUCTURAL">Apply Rule Version</button>
-        </div>
-      </div>
-      <style>
-  body {
-    margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: radial-gradient(1200px 600px at 50% -10%, #1b2240, #070b14 60%);
-    color: #e8ecf5;
-    line-height: 1.6;
-  }
-
-  .container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 32px 20px 80px;
-  }
-
-  h1, h2, h3 {
-    margin-top: 0;
-    letter-spacing: 0.3px;
-  }
-
-  h1 {
-    font-size: 34px;
-    margin-bottom: 8px;
-  }
-
-  h2 {
-    font-size: 24px;
-    margin-top: 36px;
-  }
-
-  p, label {
-    color: #b9c2d8;
-  }
-
-  .card {
-    background: rgba(255,255,255,0.04);
-    border-radius: 16px;
-    padding: 20px;
-    margin-top: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.35);
-    backdrop-filter: blur(10px);
-  }
-
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 12px;
-  }
-
-  button {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.18);
-    color: #e8ecf5;
-    border-radius: 999px;
-    padding: 10px 16px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  button:hover {
-    background: rgba(255,255,255,0.18);
-  }
-
-  input {
-    background: rgba(0,0,0,0.35);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #e8ecf5;
-    border-radius: 10px;
-    padding: 8px 10px;
-    min-width: 220px;
-  }
-
-  .muted {
-    color: #8e97ad;
-    font-size: 14px;
-  }
-
-  .footer {
-    margin-top: 60px;
-    text-align: center;
-    color: #6f7890;
-    font-size: 13px;
-  }
+.footer{
+  margin-top:18px;text-align:center;
+  color:rgba(233,238,252,.55);font-size:13px
+}
 </style>
+</head>
 
-      <div class="mini">
-        <div class="miniTitle">STATE SYNC (manual)</div>
-        <div class="miniBody">Copy state from one engine namespace to another (explicit, one-shot).</div>
-        <div class="row" style="gap:10px;flex-wrap:wrap;margin-top:10px;">
-          <input class="input" id="srcNs" placeholder="Source namespace (e.g., engine_sync_v1)" />
-          <input class="input" id="dstNs" placeholder="Target namespace (e.g., engine_sync_v2)" />
-          <button class="btn small" id="supMirror">Mirror State →</button>
+<body>
+<div class="top">
+  <div class="bar wrap">
+    <div class="brand">Geodiametrics</div>
+    <nav class="nav">
+      <a class="bubble" href="/">Home</a>
+      <a class="bubble" href="/control-room/">Control Room</a>
+      <a class="bubble" href="/apps/">Apps</a>
+      <a class="bubble" href="/reference/">Reference</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="hero">
+    <h1>Dashboard</h1>
+    <p class="sub">
+      Read-only system surface. No execution. No mutation.
+      This page summarizes what already exists on this device.
+    </p>
+    <div class="hr"></div>
+  </section>
+
+  <section class="grid">
+
+    <div class="card">
+      <div class="in">
+        <h2>System Status</h2>
+        <p>Local discovery of registered engines.</p>
+
+        <div class="row" style="margin-top:12px">
+          <button class="btn" onclick="scan()">Refresh</button>
         </div>
-        <div class="row" style="gap:10px;flex-wrap:wrap;margin-top:10px;">
-          <button class="btn small danger" id="supHardReset">Reset Target Namespace</button>
-          <button class="btn small" id="supExport">Export Supervisor JSON</button>
-        </div>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Namespace</th>
+              <th>Keys</th>
+              <th>Last Update</th>
+            </tr>
+          </thead>
+          <tbody id="rows">
+            <tr><td colspan="3" class="mono">No engines discovered.</td></tr>
+          </tbody>
+        </table>
+
+        <p class="mono" id="meta" style="margin-top:10px">Last scan: —</p>
       </div>
     </div>
 
-    <p class="note" style="margin-top:12px;">
-      State sync is opt-in. If you don’t click it, nothing couples.
-    </p>
-  </div>
-</section>
+    <div class="card">
+      <div class="in">
+        <h2>Navigation</h2>
+        <p>Execution lives elsewhere.</p>
+
+        <div class="row" style="margin-top:12px">
+          <a class="btn" href="/control-room/">Open Control Room</a>
+          <a class="btn" href="/apps/">Apps Viewer</a>
+        </div>
+
+        <div class="hr"></div>
+
+        <p class="mono">
+          Rule: Dashboard never writes state.
+        </p>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="footer">© 2026 Geodiametrics · Dashboard</div>
+</div>
+
+<script>
+const PREFIX = "ENGINE::";
+
+function scan(){
+  const rows = [];
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k && k.startsWith(PREFIX)){
+      try{
+        const v = JSON.parse(localStorage.getItem(k));
+        rows.push({
+          ns: k.replace(PREFIX,""),
+          keys: Object.keys(v?.state||{}).length,
+          last: v?.updated_at || "—"
+        });
+      }catch{}
+    }
+  }
+
+  const body = document.getElementById("rows");
+  body.innerHTML = "";
+
+  if(!rows.length){
+    body.innerHTML = "<tr><td colspan='3' class='mono'>No engines discovered.</td></tr>";
+  }else{
+    rows.forEach(r=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML =
+        "<td class='mono'>"+r.ns+"</td>"+
+        "<td class='mono'>"+r.keys+"</td>"+
+        "<td class='mono'>"+r.last+"</td>";
+      body.appendChild(tr);
+    });
+  }
+
+  document.getElementById("meta").textContent =
+    "Last scan: " + new Date().toISOString();
+}
+
+scan();
+</script>
+</body>
+</html>

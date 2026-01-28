@@ -1,345 +1,118 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Geodiametrics · Methods</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Methods · Tiered Findings</title>
 
-<style>
-:root{
-  --fg:#e9eefc;
-  --muted:rgba(233,238,252,.72);
-  --stroke:rgba(233,238,252,.14);
-  --panel:rgba(10,14,26,.68);
-  --glass:rgba(8,12,26,.55);
-}
-
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  color:var(--fg);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:
-    radial-gradient(1200px 800px at 20% 10%, rgba(120,150,255,.20), transparent 60%),
-    radial-gradient(1000px 700px at 80% 70%, rgba(255,120,200,.14), transparent 65%),
-    linear-gradient(180deg,#050816,#060b1e);
-  overflow-x:hidden;
-}
-
-/* stars */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.8), transparent 60%),
-    radial-gradient(1px 1px at 38% 32%, rgba(255,255,255,.7), transparent 60%),
-    radial-gradient(1px 1px at 66% 28%, rgba(255,255,255,.65), transparent 60%),
-    radial-gradient(1px 1px at 78% 58%, rgba(255,255,255,.7), transparent 60%),
-    radial-gradient(1px 1px at 92% 22%, rgba(255,255,255,.6), transparent 60%);
-  opacity:.85;
-  z-index:-2;
-}
-
-header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  background:var(--glass);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--stroke);
-}
-.bar{
-  max-width:1100px;
-  margin:0 auto;
-  padding:14px 16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.brand{font-weight:900;letter-spacing:.35px}
-nav a{
-  margin-left:14px;
-  text-decoration:none;
-  color:var(--muted);
-  font-weight:800;
-  font-size:14px;
-}
-nav a:hover{color:var(--fg)}
-
-main{
-  max-width:1100px;
-  margin:48px auto;
-  padding:0 16px;
-}
-
-h1{font-size:40px;margin:0 0 10px}
-.sub{max-width:80ch;color:var(--muted);line-height:1.6;margin-bottom:32px}
-
-.card{
-  background:var(--panel);
-  border:1px solid var(--stroke);
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:18px;
-}
-.card h2{margin:0 0 8px;font-size:20px}
-.card p{margin:0;line-height:1.55;color:var(--muted)}
-
-.section-title{
-  margin:32px 0 12px;
-  font-size:22px;
-}
-.item{
-  padding:14px;
-  border:1px solid var(--stroke);
-  border-radius:14px;
-  background:rgba(0,0,0,.22);
-  margin-bottom:12px;
-}
-
-footer{
-  margin-top:60px;
-  padding-top:18px;
-  border-top:1px solid var(--stroke);
-  text-align:center;
-  font-size:13px;
-  color:var(--muted);
-}
-</style>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: #0b0f1a;
+      color: #e8ecf5;
+      line-height: 1.6;
+    }
+    header {
+      padding: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0.5px;
+    }
+    main {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+    section {
+      margin-bottom: 48px;
+    }
+    h2 {
+      font-size: 20px;
+      margin: 0 0 16px;
+      letter-spacing: 0.4px;
+    }
+    h3 {
+      font-size: 16px;
+      margin: 32px 0 12px;
+      letter-spacing: 0.3px;
+    }
+    p {
+      margin: 0 0 14px;
+      color: #d6dbeb;
+    }
+    .tier {
+      padding: 20px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 24px;
+      text-align: center;
+      font-size: 14px;
+      color: #aab0c5;
+    }
+    a {
+      color: #9bb2ff;
+      text-decoration: none;
+    }
+  </style>
 </head>
 
 <body>
+
 <header>
-  <div class="bar">
-    <div class="brand">Geodiametrics</div>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/methods/">Methods</a>
-      <a href="/apps/">Apps</a>
-      <a href="/reference/">Reference</a>
-      <a href="/news/">News</a>
-    </nav>
-  </div>
+  <h1>Methods · Tiered Findings</h1>
 </header>
 
 <main>
-  <h1>Methods</h1>
-  <p class="sub">
-    Constraint-first diagnostic system. Evidence-only. No intent inference.
-    This page defines invariant laws, categorical structure, and audit limits.
-  </p>
 
-  <div class="card">
-    <h2>Core Loop</h2>
-    <p><strong>CHECK → RECEIPT → LOG → SEARCH → PROOF</strong><br>
-    Results exist only when traceable.</p>
-  </div>
+  <section>
+    <p><strong>PRIORITY KNOWLEDGE BOUNDARY.</strong> All pre-verbal, sensory, and intuitive inputs are treated as priority knowledge—providing access to signal without conferring authority. These inputs may inform exploration but may not override externally observable evidence, invariant structure, or proof-gated execution.</p>
+  </section>
 
-  <h2 class="section-title">Scientific Findings</h2>
-  <div class="item"><strong>S1 — Provability from structure.</strong> Execution admissible only when constraints are satisfied and outcomes trace.</div>
-  <div class="item"><strong>S2 — Receipts block silent change.</strong> No receipt, no state transition.</div>
-  <div class="item"><strong>S3 — Drift is observable.</strong> Detected via violated constraints or bypassed gates.</div>
-  <div class="item"><strong>S4 — Trajectory is bounded.</strong> Tightening constraints changes reachable futures.</div>
-  <div class="item"><strong>S5 — Invariants preserve compression.</strong> Loss of invariants produces false positives.</div>
+  <section class="tier">
+    <h2>TIER 1 FINDING (FOUNDATIONAL)</h2>
 
-  <h2 class="section-title">Categorical Findings</h2>
-  <div class="item"><strong>C1 — Execution band (0–7).</strong> Formation → constraint → boundary → executable minimum → stability → projection → feedback → completion.</div>
-  <div class="item"><strong>C2 — Visibility band (9–13).</strong> Visibility → closure → extension → higher-order execution → re-stabilization.</div>
-  <div class="item"><strong>C3 — Closure rule.</strong> Additions fail unless explicit exceptions are introduced.</div>
+    <p><strong>CONSTRAINT-FIRST EXECUTION GENERATES STRUCTURE.</strong> A functioning execution system can be constructed by enforcing constraints before optimization, narrative framing, or tooling selection. When constraints are primary, architecture emerges as a consequence rather than a design objective.</p>
 
-  <h2 class="section-title">Independent Findings</h2>
-  <div class="item"><strong>I1 — Reproducible classification.</strong> Independent observers converge on the same state.</div>
-  <div class="item"><strong>I2 — Verifiable outcomes.</strong> Verified via receipts and append-only logs.</div>
-  <div class="item"><strong>I3 — Objective drift detection.</strong> No narrative inference required.</div>
-  <div class="item"><strong>I4 — Audit without authority.</strong> Validity governed by artifacts, not identity.</div>
+    <p><strong>FOUNDATIONAL SIGNIFICANCE.</strong> This finding establishes that execution coherence is not dependent on prior expertise or incremental refinement, but on the correct ordering and enforcement of constraints.</p>
+  </section>
 
-  <div class="card">
-    <h2>Audit Limits</h2>
-    <p>
-      No inference of intent, motive, personality, or internal cognition.
-      Mixed-domain claims are rejected. Missing receipts invalidate results.
-    </p>
-  </div>
+  <section class="tier">
+    <h2>TIER 2 FINDINGS (CORE MECHANISMS)</h2>
+
+    <p><strong>ENGINE COHERENCE PRECEDES COMPONENT SPECIALIZATION.</strong> A unified execution engine can subsume roles typically treated as independent systems—such as hosting, application logic, validation, search, and interaction—when closure and proof rules are enforced globally rather than locally.</p>
+
+    <p><strong>INSTRUMENTATION ENABLES DIAGNOSTIC EXECUTION.</strong> Execution becomes diagnosable only when state, activity, and transitions are explicitly recorded. Instrumentation is a prerequisite for determining whether execution is coherent, fragmenting, or stalled.</p>
+  </section>
+
+  <section class="tier">
+    <h2>TIER 3 FINDINGS (DERIVED IMPLICATIONS)</h2>
+
+    <p><strong>RAPID CONSTRUCTION UNDER STRESS IS A VALID PROOF SURFACE.</strong> Successful system construction under severe constraints—single device usage, cellular connectivity, and compressed time windows—provides stronger empirical evidence than builds performed under idealized conditions.</p>
+
+    <p><strong>ARCHITECTURAL COLLAPSE IS A SIGNAL, NOT A FAILURE.</strong> When independent architectural concerns collapse into a single executable structure, the collapse indicates successful constraint convergence rather than oversimplification.</p>
+
+    <p><strong>FAILURE MODES CONSTITUTE DIAGNOSTIC DATA.</strong> Execution failures that do not violate core invariants provide information about boundary conditions and system limits. Such failures are admissible data rather than disproof.</p>
+  </section>
+
+  <section>
+    <p><strong>METHODS PAGE SCOPE.</strong> This page documents only the highest-level empirical findings. It does not enumerate procedures, execution rules, instrumentation mechanics, or validation workflows.</p>
+
+    <p><strong>DOCUMENTATION STRUCTURE.</strong> Detailed mechanisms, diagnostics, and execution protocols are documented in subordinate pages branching from this Methods overview.</p>
+  </section>
+
 </main>
 
-<footer>© 2026 Geodiametrics</footer>
+<footer>
+  © 2026 Geodiametrics · Methods Overview
+</footer>
+
 </body>
 </html>
-<!-- =============================== -->
-<!-- CYCLICAL LAW RUN (TNB ADD-ON)  -->
-<!-- =============================== -->
-<div class="section">
-  <h2 style="margin:0 0 10px;font-size:22px;">Cyclical Law</h2>
-
-  <div class="card">
-    <p><strong>Definition.</strong></p>
-    <p style="margin-top:8px;">
-      The <strong>Cyclical Law</strong> defines a universal mechanism of operation across domains.
-      A system advances by repeatedly executing a closed loop of evaluation, reduction,
-      contrast, validation, and regeneration until a stable boundary or blocking wall is reached.
-    </p>
-    <p style="margin-top:8px;">
-      The law applies to living systems, engineered systems, research programs, and institutions.
-      It governs <em>function</em>, not belief, intent, or narrative.
-    </p>
-  </div>
-
-  <div class="card">
-    <p><strong>Cyclical Law Run.</strong></p>
-    <p style="margin-top:8px;">
-      A <strong>Cyclical Law Run</strong> is a bounded execution of the cycle below,
-      performed until one of the terminal conditions is met.
-    </p>
-
-    <ul style="margin:10px 0 0 18px;line-height:1.6;">
-      <li><strong>Reduce</strong> — Remove duplication, collapse noise, retain invariants.</li>
-      <li><strong>Contrast</strong> — Test distinctions, boundaries, and exclusions.</li>
-      <li><strong>Validate</strong> — Check against evidence, receipts, and artifacts.</li>
-      <li><strong>Improve</strong> — Increase clarity, stability, or explanatory power.</li>
-      <li><strong>Regenerate</strong> — Re-enter the cycle at the next admissible state.</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <p><strong>Hurdle vs Wall.</strong></p>
-    <p style="margin-top:8px;">
-      A <strong>hurdle</strong> is a temporary obstruction that can be cleared through
-      research, restructuring, or external linkage without invalidating the cycle.
-    </p>
-    <p style="margin-top:8px;">
-      A <strong>wall</strong> is a hard boundary where no admissible advance exists
-      without violating evidence rules, constraints, or scope. Walls terminate the run.
-    </p>
-  </div>
-
-  <div class="card">
-    <p><strong>Terminal Conditions.</strong></p>
-    <ul style="margin:10px 0 0 18px;line-height:1.6;">
-      <li>Stable completion is reached (cycle closes cleanly).</li>
-      <li>A wall is detected (no lawful advance possible).</li>
-      <li>The system collapses to baseline (7 → 0 reset).</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <p><strong>Structural Alignment.</strong></p>
-    <p style="margin-top:8px;">
-      The cyclical law aligns with the structural cycle:
-      <strong>0–7</strong> as execution formation and
-      <strong>9–13</strong> as visibility, closure, and re-stabilization.
-    </p>
-    <p style="margin-top:8px;">
-      Baseline is treated as <strong>7 ≡ 0</strong> when regeneration is required.
-    </p>
-  </div>
-</div>
-<script>
-(function(){
-  // GEO Telemetry v1 (local-only, no external services)
-  // Stored in localStorage and shared across pages on the same domain + browser.
-
-  const KEY="geo_telemetry_v1";
-  const NOW=Date.now();
-
-  const path=(location.pathname||"/").replace(/\/+$/,"/"); // normalize
-  const ref=document.referrer||"";
-  const ua=navigator.userAgent||"";
-  const sessionKey="geo_session_v1";
-  const sessionId=sessionStorage.getItem(sessionKey) || (NOW+"-"+Math.random().toString(16).slice(2));
-  sessionStorage.setItem(sessionKey, sessionId);
-
-  function load(){
-    try{ return JSON.parse(localStorage.getItem(KEY)||"{}"); }catch{ return {}; }
-  }
-  function save(d){
-    try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch{}
-  }
-
-  const d=load();
-  d.version=1;
-  d.first_seen=d.first_seen||new Date(NOW).toISOString();
-  d.last_seen=new Date(NOW).toISOString();
-
-  // Counters
-  d.pageviews=d.pageviews||0;
-  d.sessions=d.sessions||0;
-  d.by_path=d.by_path||{};
-  d.by_ref=d.by_ref||{};
-  d.events=d.events||[];
-
-  // Session accounting (count once per session)
-  d._seen_sessions=d._seen_sessions||{};
-  if(!d._seen_sessions[sessionId]){
-    d._seen_sessions[sessionId]=true;
-    d.sessions++;
-  }
-
-  // Pageview
-  d.pageviews++;
-  d.by_path[path]=(d.by_path[path]||0)+1;
-  if(ref) d.by_ref[ref]=(d.by_ref[ref]||0)+1;
-
-  // Time on page (measured on unload / visibility change)
-  const t0=performance.now();
-  let maxScroll=0;
-
-  function emit(type, meta){
-    d.events.push({
-      t:new Date().toISOString(),
-      type,
-      path,
-      session:sessionId,
-      meta:meta||{}
-    });
-    // keep last 500 events to avoid bloat
-    if(d.events.length>500) d.events=d.events.slice(d.events.length-500);
-    save(d);
-  }
-
-  // Track nav/button clicks (links + buttons)
-  document.addEventListener("click", function(e){
-    const a=e.target && (e.target.closest ? e.target.closest("a") : null);
-    const b=e.target && (e.target.closest ? e.target.closest("button") : null);
-    if(a){
-      emit("click_link",{href:a.getAttribute("href")||"", text:(a.textContent||"").trim().slice(0,80)});
-    }else if(b){
-      emit("click_button",{id:b.id||"", text:(b.textContent||"").trim().slice(0,80)});
-    }
-  }, true);
-
-  // Scroll depth
-  window.addEventListener("scroll", function(){
-    const doc=document.documentElement;
-    const scrollTop=doc.scrollTop||document.body.scrollTop||0;
-    const scrollHeight=doc.scrollHeight||0;
-    const clientHeight=doc.clientHeight||window.innerHeight||1;
-    const pct=Math.min(100, Math.round((scrollTop/(scrollHeight-clientHeight+1))*100));
-    if(pct>maxScroll) maxScroll=pct;
-  }, {passive:true});
-
-  function finalize(){
-    const dt=Math.max(0, Math.round(performance.now()-t0));
-    emit("page_exit",{ms:dt, scroll_pct:maxScroll});
-  }
-
-  window.addEventListener("pagehide", finalize);
-  document.addEventListener("visibilitychange", function(){
-    if(document.visibilityState==="hidden") finalize();
-  });
-
-  // initial mark
-  emit("page_view",{ref, ua:ua.slice(0,120)});
-})();
-</script>
-<!-- =============================== -->
-<!-- Cloudflare Web Analytics (V1) -->
-<!-- =============================== -->
-<script
-  defer
-  src="https://static.cloudflareinsights.com/beacon.min.js"
-  data-cf-beacon='{"token":"3e3cd56630124b00b85f07270feb179"}'>
-</script>
-<!-- =============================== -->

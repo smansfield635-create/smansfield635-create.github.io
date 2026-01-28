@@ -1,60 +1,249 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Engine Room · Geodiametrics</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-  <style>
-    :root{
-      --fg:#e9eefc;
-      --muted:rgba(233,238,252,.65);
-      --panel:rgba(12,16,34,.62);
-      --stroke:rgba(233,238,252,.14);
-      --radius:22px;
-    }
+<title>Engine Room · Geodiametrics</title>
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      color:var(--fg);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      background:
-        radial-gradient(1200px 900px at 20% 10%, rgba(122,162,255,.14), transparent 60%),
-        radial-gradient(900px 700px at 80% 30%, rgba(180,140,255,.12), transparent 55%),
-        linear-gradient(180deg,#070b18,#05070f 60%,#04050b);
-      overflow-x:hidden;
-    }
+<style>
+:root{
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.65);
+  --stroke:rgba(233,238,252,.14);
+  --panel:rgba(12,16,34,.62);
+  --panel-soft:rgba(12,16,34,.42);
+  --glass:rgba(10,14,28,.65);
+  --accent:#7aa2ff;
+  --radius:22px;
+  --shadow:0 18px 55px rgba(0,0,0,.55);
+}
 
-    main{
-      max-width:1100px;
-      margin:0 auto;
-      padding:96px 20px 120px;
-    }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--fg);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:
+    radial-gradient(1200px 900px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 80% 20%, rgba(156,122,255,.16), transparent 60%),
+    radial-gradient(1100px 800px at 50% 80%, rgba(90,140,255,.14), transparent 65%),
+    linear-gradient(180deg,#070b14,#03060c);
+  overflow-x:hidden;
+}
 
-    h1{
-      font-size:clamp(36px,6vw,64px);
-      margin:0 0 12px;
-    }
+/* subtle star noise */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.35), transparent),
+    radial-gradient(1px 1px at 80% 40%, rgba(255,255,255,.25), transparent),
+    radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,.22), transparent);
+  opacity:.35;
+}
 
-    p.lead{
-      color:var(--muted);
-      max-width:720px;
-      font-size:18px;
-      line-height:1.6;
-    }
+header{
+  position:sticky;
+  top:0;
+  z-index:5;
+  backdrop-filter:blur(12px);
+  background:linear-gradient(180deg,rgba(3,6,12,.75),rgba(3,6,12,.35));
+  border-bottom:1px solid var(--stroke);
+}
 
-    .panel{
-      margin-top:48px;
-      padding:28px;
-      border-radius:var(--radius);
-      background:var(--panel);
-      border:1px solid var(--stroke);
-    }
-  </style>
+.bar{
+  max-width:1100px;
+  margin:auto;
+  padding:16px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.brand{font-weight:600;letter-spacing:.4px}
+
+.nav a{
+  margin-left:14px;
+  padding:10px 16px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.04);
+  color:var(--fg);
+  text-decoration:none;
+  box-shadow:0 10px 26px rgba(0,0,0,.35);
+}
+
+main{
+  max-width:1100px;
+  margin:0 auto;
+  padding:64px 20px 120px;
+}
+
+h1{
+  font-size:clamp(38px,6vw,64px);
+  margin:0 0 12px;
+}
+
+.lead{
+  color:var(--muted);
+  max-width:720px;
+  font-size:18px;
+}
+
+.panel{
+  margin-top:48px;
+  padding:28px;
+  border-radius:var(--radius);
+  background:var(--panel);
+  border:1px solid var(--stroke);
+  box-shadow:var(--shadow);
+}
+
+.panel.soft{background:var(--panel-soft)}
+
+.panel h2{margin-top:0}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:22px;
+  margin-top:24px;
+}
+
+.card{
+  padding:22px;
+  border-radius:18px;
+  background:var(--glass);
+  border:1px solid var(--stroke);
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  font-size:12px;
+  letter-spacing:.3px;
+}
+
+.kv{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  margin-top:12px;
+  font-size:14px;
+  color:var(--muted);
+}
+
+.matrix{
+  margin-top:32px;
+  padding:22px;
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(20,26,56,.55),rgba(10,14,28,.65));
+  border:1px solid var(--stroke);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:12px;
+  font-size:14px;
+}
+
+th,td{
+  padding:10px 8px;
+  border-bottom:1px solid var(--stroke);
+  text-align:left;
+}
+
+footer{
+  text-align:center;
+  color:rgba(233,238,252,.4);
+  margin-top:80px;
+}
+</style>
 </head>
 
 <body>
-  <main>
-    <h1>Engine Room</
+
+<header>
+  <div class="bar">
+    <div class="brand">Geodiametrics</div>
+    <nav class="nav">
+      <a href="/">Home</a>
+      <a href="/apps/">Apps</a>
+      <a href="/architecture/">Architecture</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <h1>Engine Room</h1>
+  <p class="lead">
+    The authoritative execution core. All engines register here.  
+    All coordination, isolation, and invariants are enforced here.
+  </p>
+
+  <section class="panel">
+    <span class="badge">FOUNDATIONAL</span>
+    <h2>Core Cycle</h2>
+    <div class="grid">
+      <div class="card">Input</div>
+      <div class="card">Admissibility</div>
+      <div class="card">Execution</div>
+      <div class="card">Evidence</div>
+      <div class="card">Return</div>
+    </div>
+  </section>
+
+  <section class="panel soft">
+    <span class="badge">INVARIANTS</span>
+    <div class="grid">
+      <div class="card">Agency</div>
+      <div class="card">Constraint</div>
+      <div class="card">Responsibility</div>
+      <div class="card">Coherence</div>
+    </div>
+  </section>
+
+  <section class="matrix">
+    <h2>Engine Matrix</h2>
+    <p class="lead">Discovered engines on this device.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Namespace</th>
+          <th>Keys</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="matrix-body">
+        <tr>
+          <td colspan="3">No engines registered yet.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel">
+    <h2>Rules</h2>
+    <ul>
+      <li>No implicit execution</li>
+      <li>No cross-engine mutation without declaration</li>
+      <li>No UI outside authority</li>
+    </ul>
+  </section>
+
+  <footer>© 2026 Geodiametrics · Engine Room</footer>
+
+</main>
+
+</body>
+</html>

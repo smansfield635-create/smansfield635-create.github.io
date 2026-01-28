@@ -1,142 +1,84 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Engine Room · Geodiametrics</title>
-  <style>
-    :root{--fg:#e9eefc;--muted:rgba(233,238,252,.70);--stroke:rgba(233,238,252,.14);--panel:rgba(10,14,28,.58);--shadow:0 18px 55px rgba(0,0,0,.55);--r:22px;}
-    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto;color:var(--fg);background:transparent}
-    .wrap{max-width:980px;margin:0 auto;padding:18px}
-    .card{background:var(--panel);border:1px solid rgba(255,255,255,.14);border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
-    h1{margin:6px 0 6px;font-size:30px}
-    p{margin:0;color:var(--muted);line-height:1.55}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:var(--fg);text-decoration:none;font-weight:750}
-    .grid{display:grid;gap:12px;margin-top:14px}
-    .mini{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:14px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05)}
-    .tag{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);font-weight:700;font-size:12px}
-    .ok{color:#34d399}.bad{color:#fb7185}
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Engine Room · Control Room</title>
+
+<style>
+:root{
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.66);
+  --stroke:rgba(233,238,252,.14);
+  --panel:rgba(12,16,34,.62);
+  --radius:22px;
+  --shadow:0 18px 55px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--fg);
+  background:linear-gradient(180deg,#070b18,#050714);
+}
+.wrap{max-width:1100px;margin:0 auto;padding:22px}
+.card{
+  border-radius:var(--radius);
+  border:1px solid var(--stroke);
+  background:var(--panel);
+  box-shadow:var(--shadow);
+  padding:18px;
+  margin-bottom:16px;
+}
+h1{margin:0 0 10px}
+p{color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.18);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);font-weight:900;text-decoration:none;cursor:pointer
+}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--muted)}
+.footer{margin-top:18px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
+</style>
 </head>
+
 <body>
 <div class="wrap">
-  <section class="card">
-    <div class="tag">FOUNDATIONAL</div>
+
+  <div class="card">
     <h1>Engine Room</h1>
-    <p>Registers engine pages on this device and exposes stable entry points. Device-local only.</p>
+    <p>Execution workspace. Engines are instantiated and maintained here. This page is authoritative for engine lifecycle.</p>
+  </div>
+
+  <div class="card">
+    <h2>Diamond Fusion</h2>
+    <p>Quad-core geometry. Single execution surface.</p>
     <div class="row">
-      <a class="btn" href="/control-room/">Back to Control Room</a>
-      <button class="btn" id="reReg">Re-Register Engines</button>
-      <button class="btn" id="exportReg">Export Registry JSON</button>
+      <a class="btn" href="/control-room/diamond/geometric-quad-core-fusion/">Open Quad-Core Fusion</a>
     </div>
-  </section>
+    <p class="mono" style="margin-top:10px">
+      Namespaces:<br/>
+      ENGINE::diamond_fusion_core_1<br/>
+      ENGINE::diamond_fusion_core_2<br/>
+      ENGINE::diamond_fusion_core_3<br/>
+      ENGINE::diamond_fusion_core_4
+    </p>
+  </div>
 
-  <section class="card" style="margin-top:14px">
-    <h2 style="margin:0 0 10px">Diamond Fusion Cores</h2>
-    <div id="list" class="grid"></div>
-  </section>
+  <div class="card">
+    <h2>Rules</h2>
+    <p class="mono">
+      • Engines register only by executing<br/>
+      • Engine Room may write ENGINE:: keys<br/>
+      • No observer logic here<br/>
+      • Control Room links in, does not override
+    </p>
+  </div>
 
-  <section class="card" style="margin-top:14px">
-    <h2 style="margin:0 0 10px">Rules</h2>
-    <p>• No implicit execution<br/>• No cross-engine mutation without declaration<br/>• No external storage (device-only)</p>
-  </section>
+  <div class="footer">© 2026 Geodiametrics · Engine Room</div>
+
 </div>
-
-<script>
-(function(){
-  const REG_KEY="gd_engine_registry_v1";
-
-  const cores=[
-    {id:"diamond-fusion-core-1", title:"Diamond Fusion · Core 1", ns:"df_core_1", paths:["/engine-room/diamond-fusion-core-1/","/control-room/engine-room/diamond-fusion-core-1/"]},
-    {id:"diamond-fusion-core-2", title:"Diamond Fusion · Core 2", ns:"df_core_2", paths:["/engine-room/diamond-fusion-core-2/","/control-room/engine-room/diamond-fusion-core-2/"]},
-    {id:"diamond-fusion-core-3", title:"Diamond Fusion · Core 3", ns:"df_core_3", paths:["/engine-room/diamond-fusion-core-3/","/control-room/engine-room/diamond-fusion-core-3/"]},
-    {id:"diamond-fusion-core-4", title:"Diamond Fusion · Core 4", ns:"df_core_4", paths:["/engine-room/diamond-fusion-core-4/","/control-room/engine-room/diamond-fusion-core-4/"]}
-  ];
-
-  const $list=document.getElementById("list");
-
-  function loadReg(){
-    try{ return JSON.parse(localStorage.getItem(REG_KEY)||"[]"); }catch(e){ return []; }
-  }
-  function saveReg(arr){
-    localStorage.setItem(REG_KEY, JSON.stringify(arr));
-  }
-
-  async function firstLivePath(paths){
-    for(const p of paths){
-      try{
-        const r=await fetch(p,{method:"GET",cache:"no-store"});
-        if(r.ok) return p;
-      }catch(e){}
-    }
-    return null;
-  }
-
-  async function register(){
-    const reg=loadReg();
-    const byId=new Map(reg.map(x=>[x.id,x]));
-
-    for(const c of cores){
-      const live=await firstLivePath(c.paths);
-      const entry={
-        id:c.id,
-        title:c.title,
-        namespace:c.ns,
-        path: live || c.paths[0],
-        status: live ? "OK" : "MISSING",
-        lastSeen: new Date().toISOString()
-      };
-      byId.set(c.id, entry);
-
-      // also ensure each namespace exists (so Matrix can “see” something)
-      try{
-        localStorage.setItem("gd_ns_"+c.ns, JSON.stringify({created:entry.lastSeen, id:c.id}));
-      }catch(e){}
-    }
-
-    const out=[...byId.values()].sort((a,b)=>a.id.localeCompare(b.id));
-    saveReg(out);
-    render(out);
-  }
-
-  function render(reg){
-    $list.innerHTML="";
-    for(const e of reg){
-      const row=document.createElement("div");
-      row.className="mini";
-      row.innerHTML=`
-        <div>
-          <div style="font-weight:850">${e.title}</div>
-          <div style="color:rgba(233,238,252,.65);font-size:13px;margin-top:3px">${e.path}</div>
-          <div style="color:rgba(233,238,252,.55);font-size:12px;margin-top:3px">namespace: ${e.namespace}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-          <div class="${e.status==="OK"?"ok":"bad"}" style="font-weight:850">${e.status}</div>
-          <a class="btn" href="${e.path}">Open</a>
-        </div>
-      `;
-      $list.appendChild(row);
-    }
-  }
-
-  function dlJSON(name,obj){
-    const blob=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"});
-    const a=document.createElement("a");
-    a.href=URL.createObjectURL(blob);
-    a.download=name;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=>URL.revokeObjectURL(a.href),500);
-  }
-
-  document.getElementById("reReg").onclick=register;
-  document.getElementById("exportReg").onclick=()=>dlJSON("gd_engine_registry_v1.json", loadReg());
-
-  // auto-run
-  register();
-})();
-</script>
 </body>
 </html>

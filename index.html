@@ -202,3 +202,86 @@
 
 </body>
 </html>
+
+<!-- ===============================
+     GEODIAMETRICS · NAVIGATION BUBBLES
+     TNT DROP-IN BLOCK
+================================ -->
+
+<style>
+  .nav-bubbles {
+    max-width: 1100px;
+    margin: 64px auto 0;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+  }
+
+  .nav-bubble {
+    background: linear-gradient(
+      145deg,
+      rgba(255,255,255,0.06),
+      rgba(255,255,255,0.02)
+    );
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 22px;
+    text-decoration: none;
+    color: #e9ecf6;
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+
+  .nav-bubble:hover {
+    transform: translateY(-3px);
+    border-color: rgba(155,178,255,0.45);
+    box-shadow: 0 12px 30px rgba(0,0,0,.35);
+  }
+
+  .nav-bubble h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    letter-spacing: .3px;
+  }
+
+  .nav-bubble p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #cfd6ef;
+  }
+</style>
+
+<section class="nav-bubbles">
+
+  <a class="nav-bubble" href="/problem/">
+    <h3>The Problem</h3>
+    <p>What fails without constraint-first execution. Why coherence collapses.</p>
+  </a>
+
+  <a class="nav-bubble" href="/methods/">
+    <h3>Methods</h3>
+    <p>Tiered empirical findings. High-signal results only.</p>
+  </a>
+
+  <a class="nav-bubble" href="/dashboard/">
+    <h3>Dashboard</h3>
+    <p>Live execution state. Local-first telemetry. Proof without narrative.</p>
+  </a>
+
+  <a class="nav-bubble" href="/apps/">
+    <h3>Apps</h3>
+    <p>Published artifacts and tools. Stable execution surfaces.</p>
+  </a>
+
+  <a class="nav-bubble" href="/reference/">
+    <h3>Reference</h3>
+    <p>Glossary, definitions, and boundaries. Canonical language only.</p>
+  </a>
+
+  <a class="nav-bubble" href="/about/">
+    <h3>About</h3>
+    <p>Origin, background, and empirical path of construction.</p>
+  </a>
+
+</section>

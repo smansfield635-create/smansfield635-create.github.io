@@ -1,161 +1,221 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Apps · Geodiametrics</title>
+
   <style>
     :root{
       --fg:#e9eefc;
-      --muted:rgba(233,238,252,.72);
-      --stroke:rgba(233,238,252,.14);
-      --panel:rgba(10,14,26,.68);
-      --glass:rgba(8,12,26,.55);
+      --muted:rgba(233,238,252,.65);
+      --panel:rgba(12,16,34,.55);
+      --stroke:rgba(233,238,252,.12);
+      --shadow:0 30px 90px rgba(0,0,0,.55);
+      --radius:22px;
     }
+
     *{box-sizing:border-box}
-    html,body{height:100%}
+    html,body{margin:0;padding:0;height:100%}
     body{
-      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
       color:var(--fg);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      overflow-x:hidden;
       background:
-        radial-gradient(1200px 800px at 20% 10%, rgba(120,150,255,.18), transparent 60%),
-        radial-gradient(1000px 700px at 80% 70%, rgba(255,120,200,.14), transparent 65%),
-        linear-gradient(180deg, #050816, #060b1e);
+        radial-gradient(1200px 600px at 50% -200px, rgba(120,140,255,.25), transparent 60%),
+        radial-gradient(800px 500px at 80% 20%, rgba(180,120,255,.18), transparent 55%),
+        linear-gradient(#05070f,#070b18 60%, #05070f);
+      overflow-x:hidden;
     }
+
     body::before{
       content:"";
-      position:fixed; inset:0;
+      position:fixed;
+      inset:0;
+      background-image:
+        radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.6), transparent),
+        radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.5), transparent),
+        radial-gradient(1px 1px at 80% 40%, rgba(255,255,255,.4), transparent),
+        radial-gradient(1px 1px at 60% 10%, rgba(255,255,255,.45), transparent);
+      opacity:.35;
       pointer-events:none;
-      background:
-        radial-gradient(2px 2px at 12% 18%, rgba(255,255,255,.95), transparent 60%),
-        radial-gradient(1px 1px at 22% 72%, rgba(255,255,255,.9), transparent 60%),
-        radial-gradient(2px 2px at 38% 32%, rgba(255,255,255,.9), transparent 60%),
-        radial-gradient(1px 1px at 48% 86%, rgba(255,255,255,.85), transparent 60%),
-        radial-gradient(2px 2px at 66% 28%, rgba(255,255,255,.9), transparent 60%),
-        radial-gradient(1px 1px at 78% 58%, rgba(255,255,255,.85), transparent 60%),
-        radial-gradient(2px 2px at 92% 22%, rgba(255,255,255,.9), transparent 60%);
-      opacity:.55;
-      z-index:-2;
     }
-    body::after{
-      content:"";
-      position:fixed; inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(1100px 380px at 55% 55%, rgba(120,180,255,.10), transparent 75%),
-        radial-gradient(900px 280px at 48% 52%, rgba(255,190,220,.08), transparent 78%);
-      opacity:.9;
-      z-index:-1;
-      filter:blur(1px);
-    }
+
     header{
-      position:sticky; top:0; z-index:10;
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(8,10,20,.75), rgba(8,10,20,.35));
       border-bottom:1px solid var(--stroke);
-      background:var(--glass);
-      backdrop-filter:blur(10px);
     }
+
     .bar{
-      max-width:1100px;
+      max-width:1200px;
       margin:0 auto;
-      padding:14px 16px;
+      padding:18px 20px;
       display:flex;
       align-items:center;
       justify-content:space-between;
+      gap:20px;
+    }
+
+    .brand{font-weight:700;letter-spacing:.3px}
+
+    .bubbles{
+      display:flex;
       gap:12px;
+      flex-wrap:wrap;
     }
-    .brand{font-weight:900;letter-spacing:.35px}
-    .navBubbles{
-      display:flex; flex-wrap:wrap; gap:10px;
-      justify-content:flex-end;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 14px;
+
+    .bubble{
+      padding:10px 16px;
       border-radius:999px;
       border:1px solid var(--stroke);
-      background:rgba(10,14,26,.55);
-      color:var(--muted);
+      background:rgba(255,255,255,.06);
+      color:var(--fg);
       text-decoration:none;
-      font-weight:800;
-      letter-spacing:.2px;
+      font-size:14px;
+      box-shadow:0 10px 24px rgba(0,0,0,.35);
     }
-    .pill:hover{color:var(--fg)}
-    main{max-width:1100px;margin:0 auto;padding:34px 16px 70px}
-    h1{margin:10px 0 12px;font-size:44px;letter-spacing:.2px}
-    .sub{max-width:78ch;color:var(--muted);line-height:1.7;margin:0 0 22px}
-    .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+
+    main{
+      max-width:1200px;
+      margin:0 auto;
+      padding:60px 20px 100px;
+    }
+
+    h1{
+      font-size:clamp(34px,5vw,54px);
+      margin:0 0 12px;
+    }
+
+    .lede{
+      max-width:720px;
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.6;
+    }
+
+    .grid{
+      margin-top:40px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:26px;
+    }
+
     .card{
       background:var(--panel);
       border:1px solid var(--stroke);
-      border-radius:18px;
-      padding:18px;
-      box-shadow:0 14px 36px rgba(0,0,0,.35);
+      border-radius:var(--radius);
+      padding:26px;
+      box-shadow:var(--shadow);
     }
-    .card h2{margin:0 0 8px;font-size:22px}
-    .card p{margin:0 0 14px;color:var(--muted);line-height:1.6}
-    .btn{
+
+    .card h2{
+      margin:0 0 8px;
+      font-size:22px;
+    }
+
+    .card p{
+      margin:0 0 18px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .button{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      padding:12px 16px;
+      padding:12px 18px;
       border-radius:999px;
       border:1px solid var(--stroke);
-      background:rgba(10,14,26,.60);
+      background:rgba(255,255,255,.08);
       color:var(--fg);
       text-decoration:none;
-      font-weight:900;
-      letter-spacing:.2px;
+      font-weight:600;
+      min-width:160px;
+      box-shadow:0 12px 26px rgba(0,0,0,.4);
     }
-    .btn:hover{filter:brightness(1.05)}
+
     footer{
-      max-width:1100px;margin:0 auto;
-      padding:18px 16px 26px;
-      border-top:1px solid var(--stroke);
-      color:rgba(233,238,252,.55);
+      margin-top:80px;
       text-align:center;
+      color:rgba(233,238,252,.45);
+      font-size:14px;
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <div class="bar">
-      <div class="brand">Geodiametrics</div>
-      <div class="navBubbles">
-        <a class="pill" href="/">Home</a>
-        <a class="pill" href="/methods/">Methods</a>
-        <a class="pill" href="/dashboard/">Dashboard</a>
-        <a class="pill" href="/apps/">Apps</a>
-        <a class="pill" href="/reference/">Reference</a>
-        <a class="pill" href="/problem/">Problem</a>
-      </div>
+<header>
+  <div class="bar">
+    <div class="brand">Geodiametrics</div>
+    <nav class="bubbles">
+      <a class="bubble" href="/">Home</a>
+      <a class="bubble" href="/methods/">Methods</a>
+      <a class="bubble" href="/dashboard/">Dashboard</a>
+      <a class="bubble" href="/apps/">Apps</a>
+      <a class="bubble" href="/reference/">Reference</a>
+      <a class="bubble" href="/problem/">Problem</a>
+      <a class="bubble" href="/architecture/">Architecture</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Apps</h1>
+  <p class="lede">
+    Published execution artifacts and diagnostic tools.
+    These are live proof surfaces — not demos.
+  </p>
+
+  <section class="grid">
+
+    <div class="card">
+      <h2>Engine Sync (v1)</h2>
+      <p>
+        Quad-core execution surface
+        (Selection → Resolution → Commitment → Continuation).
+        Local-first. Reload-safe.
+      </p>
+      <a class="button" href="/apps/engine-sync/">Open App</a>
     </div>
-  </header>
 
-  <main>
-    <h1>Apps</h1>
-    <p class="sub">
-      Published execution artifacts and diagnostic tools. These are live proof surfaces — not demos.
-    </p>
-
-    <div class="grid">
-      <div class="card">
-        <h2>Engine Sync (v1)</h2>
-        <p>Quad-core execution surface (Selection → Resolution → Commitment → Continuation). Local-first. Reload-safe.</p>
-        <a class="btn" href="/apps/engine-sync/">Open App</a>
-      </div>
-
-      <div class="card">
-        <h2>Engine Sync (v2)</h2>
-        <p>Second engine instance. Independent state namespace. Use this for A/B runs and parallel cycles.</p>
-        <a class="btn" href="/apps/engine-sync-2/">Open App</a>
-      </div>
+    <div class="card">
+      <h2>Engine Sync (v2)</h2>
+      <p>
+        Independent engine namespace.
+        Designed for A/B runs and parallel cycles
+        without state collision.
+      </p>
+      <a class="button" href="/apps/engine-sync-2/">Open App</a>
     </div>
-  </main>
 
-  <footer>© 2026 Geodiametrics · Apps</footer>
+    <div class="card">
+      <h2>Engine Sync (v3)</h2>
+      <p>
+        Extended engine instance.
+        Used for motion, interaction, supervision,
+        and cross-engine experimentation.
+      </p>
+      <a class="button" href="/apps/engine-sync-v3/">Open App</a>
+    </div>
+
+    <div class="card">
+      <h2>Engine Matrix</h2>
+      <p>
+        Cross-engine coordination surface.
+        Visualizes isolation, structural sync,
+        and explicit state walls.
+      </p>
+      <a class="button" href="/apps/engine-matrix/">Open App</a>
+    </div>
+
+  </section>
+
+  <footer>
+    © 2026 Geodiametrics · Apps
+  </footer>
+</main>
 </body>
 </html>

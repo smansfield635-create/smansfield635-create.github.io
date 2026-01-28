@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Engine Sync (v1) · Geodiametrics</title>
+
+  <style>
+    :root{
+      --fg:#e9eefc;
+      --muted:rgba(233,238,252,.68);
+      --panel:rgba(12,16,34,.55);
+      --stroke:rgba(233,238,252,.12);
+      --shadow:0 30px 90px rgba(0,0,0,.55);
+      --radius:22px;
+      --btnbg:rgba(255,255,255,.08);
+      --btnbd:rgba(233,238,252,.14);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;height:100%}
+
+    body{
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      color:var(--fg);
+      background:
+        radial-gradient(1200px 600px at 50% -200px, rgba(120,140,255,.25), transparent 60%),
+        radial-gradient(900px 520px at 75% 18%, rgba(180,120,255,.18), transparent 55%),
+        radial-gradient(700px 520px at 20% 55%, rgba(120,255,230,.10), transparent 60%),
+        linear-gradient(#05070f,#070b18 60%, #05070f);
+      overflow-x:hidden;
+    }
+
+    /* starfield */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.55;
+      background:
+        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.9), transparent 60%),
+        radial-gradient(1px 1px at 22% 72%, rgba(255,255,255,.7), transparent 60%),
+        radial-gradient(1px 1px at 35% 30%, rgba(255,255,255,.6), transparent 60%),
+        radial-gradient(1px 1px at 48% 80%, rgba(255,255,255,.75), transparent 60%),
+        radial-gradient(1px 1px at 58% 20%, rgba(255,255,255,.55), transparent 60%),
+        radial-gradient(1px 1px at 70% 62%, rgba(255,255,255,.8), transparent 60%),
+        radial-gradient(1px 1px at 82% 35%, rgba(255,255,255,.65), transparent 60%),
+        radial-gradient(1px 1px at 92% 74%, rgba(255,255,255,.7), transparent 60%);
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;

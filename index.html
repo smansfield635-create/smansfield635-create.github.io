@@ -1,166 +1,204 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Geodiametrics</title>
-<style>
-:root{--fg:#e9eefc;--muted:rgba(233,238,252,.78);--stroke:rgba(233,238,252,.14);--glass:rgba(8,12,26,.62);--panel:rgba(10,14,26,.68);--shadow:0 18px 55px rgba(0,0,0,.55)}
-*{box-sizing:border-box}html,body{height:100%}body{margin:0;color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow-x:hidden}
-body{background:radial-gradient(1400px 900px at 12% 10%, rgba(140,120,255,.20), transparent 60%),radial-gradient(1200px 820px at 85% 25%, rgba(80,210,255,.14), transparent 62%),radial-gradient(980px 760px at 55% 82%, rgba(255,140,120,.09), transparent 64%),linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%)}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;opacity:.85;background:radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,.85), transparent 60%),radial-gradient(1px 1px at 22% 70%, rgba(255,255,255,.55), transparent 60%),radial-gradient(1px 1px at 38% 32%, rgba(255,255,255,.70), transparent 60%),radial-gradient(1px 1px at 55% 18%, rgba(255,255,255,.75), transparent 60%),radial-gradient(1px 1px at 78% 40%, rgba(255,255,255,.60), transparent 60%)}
-header{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--stroke);background:var(--glass);backdrop-filter:blur(10px)}
-.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
-.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0}
-.brand{font-weight:900;letter-spacing:.35px}
-nav a{margin-left:14px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:850}
-nav a:hover{color:var(--fg)}
-main{max-width:1100px;margin:0 auto;padding:28px 16px 64px}
-h1{margin:14px 0 10px;font-size:38px;line-height:1.08}
-p{margin:0;color:var(--muted);line-height:1.65;max-width:92ch}
-.sub{margin:0 0 18px}
-.grid{display:grid;gap:14px;margin-top:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-.card{padding:16px;border-radius:16px;border:1px solid rgba(233,238,252,.12);background:var(--panel);box-shadow:0 14px 36px rgba(0,0,0,.45)}
-.card h3{margin:0 0 8px;font-size:16px}
-.card p{margin:0;color:rgba(233,238,252,.86)}
-.small{margin-top:10px;color:rgba(233,238,252,.62);font-size:13px;line-height:1.55}
-footer{margin-top:26px;padding-top:18px;border-top:1px solid rgba(233,238,252,.12);font-size:13px;color:rgba(233,238,252,.55)}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geodiametrics</title>
+
+  <style>
+    :root{
+      --bg:#0b0f1a;
+      --fg:#e8ecf5;
+      --muted:#aab0c5;
+      --stroke:rgba(255,255,255,.08);
+      --panel:rgba(255,255,255,.04);
+      --accent:#8fa4ff;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:
+        radial-gradient(900px 600px at 15% 10%, rgba(120,150,255,.18), transparent 60%),
+        radial-gradient(800px 500px at 85% 80%, rgba(255,120,200,.14), transparent 65%),
+        linear-gradient(180deg,#0b0f1a,#06080f);
+      color:var(--fg);
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(10px);
+      background:rgba(10,14,26,.75);
+      border-bottom:1px solid var(--stroke);
+    }
+
+    .nav{
+      max-width:1100px;
+      margin:0 auto;
+      padding:14px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .brand{
+      font-weight:800;
+      letter-spacing:.4px;
+    }
+
+    nav a{
+      margin-left:18px;
+      color:var(--muted);
+      text-decoration:none;
+      font-size:14px;
+    }
+
+    main{
+      max-width:1000px;
+      margin:0 auto;
+      padding:64px 20px 96px;
+    }
+
+    h1{
+      font-size:clamp(32px,6vw,56px);
+      line-height:1.1;
+      margin:0 0 16px;
+      letter-spacing:.5px;
+    }
+
+    .subtitle{
+      font-size:18px;
+      color:var(--muted);
+      max-width:700px;
+      margin-bottom:48px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:20px;
+    }
+
+    .bubble{
+      display:block;
+      padding:22px;
+      border-radius:18px;
+      background:var(--panel);
+      border:1px solid var(--stroke);
+      text-decoration:none;
+      color:var(--fg);
+      transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+
+    .bubble:hover{
+      transform:translateY(-3px);
+      border-color:rgba(255,255,255,.18);
+      box-shadow:0 12px 30px rgba(0,0,0,.35);
+    }
+
+    .bubble h2{
+      margin:0 0 8px;
+      font-size:18px;
+      letter-spacing:.3px;
+    }
+
+    .bubble p{
+      margin:0;
+      font-size:14px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    footer{
+      border-top:1px solid var(--stroke);
+      text-align:center;
+      padding:28px 20px;
+      font-size:13px;
+      color:var(--muted);
+    }
+  </style>
 </head>
+
 <body>
-  <a href="/problem/">The Problem</a>
+
 <header>
-  <div class="wrap bar">
+  <div class="nav">
     <div class="brand">Geodiametrics</div>
     <nav>
-      <a href="/">Home</a>
       <a href="/methods/">Methods</a>
+      <a href="/dashboard/">Dashboard</a>
       <a href="/apps/">Apps</a>
       <a href="/reference/">Reference</a>
-      <a href="/dashboard/">Dashboard</a>
+      <a href="/problem/">Problem</a>
     </nav>
   </div>
 </header>
 
 <main>
-  <h1>Constraint-first systems. Provable execution.</h1>
-  <p class="sub">Home is a front door only. Methods is the entry point.</p>
+
+  <h1>Constraint-first systems.<br>Provable execution.</h1>
+
+  <p class="subtitle">
+    Home is a front door only.  
+    This project documents empirical execution under constraint, with
+    audit-friendly diagnostics and verifiable artifacts.
+  </p>
 
   <div class="grid">
-    <div class="card"><h3>Start</h3><p>Open Methods for the cycle, laws, and audit limits.</p><p class="small"><a href="/methods/">Go to /methods/ →</a></p></div>
-    <div class="card"><h3>Apps</h3><p>Published artifacts list.</p><p class="small"><a href="/apps/">Go to /apps/ →</a></p></div>
-    <div class="card"><h3>Reference</h3><p>Glossary and appendix.</p><p class="small"><a href="/reference/">Go to /reference/ →</a></p></div>
+
+    <a class="bubble" href="/methods/">
+      <h2>Methods</h2>
+      <p>
+        Tiered empirical findings.  
+        High-signal results only.  
+        Branches handle depth.
+      </p>
+    </a>
+
+    <a class="bubble" href="/dashboard/">
+      <h2>Dashboard</h2>
+      <p>
+        Live execution state.  
+        Local-first telemetry.  
+        Proof without narrative.
+      </p>
+    </a>
+
+    <a class="bubble" href="/apps/">
+      <h2>Apps</h2>
+      <p>
+        Published artifacts and tools.  
+        Stable execution surfaces.
+      </p>
+    </a>
+
+    <a class="bubble" href="/reference/">
+      <h2>Reference</h2>
+      <p>
+        Glossary, definitions, and boundaries.  
+        Canonical language only.
+      </p>
+    </a>
+
+    <a class="bubble" href="/problem/">
+      <h2>The Problem</h2>
+      <p>
+        What fails without constraint-first execution.  
+        Why coherence collapses.
+      </p>
+    </a>
+
   </div>
 
-  <footer>© 2026 Geodiametrics</footer>
 </main>
+
+<footer>
+  © 2026 Geodiametrics · Front Door Only
+</footer>
+
 </body>
 </html>
-<script>
-(function(){
-  // GEO Telemetry v1 (local-only, no external services)
-  // Stored in localStorage and shared across pages on the same domain + browser.
-
-  const KEY="geo_telemetry_v1";
-  const NOW=Date.now();
-
-  const path=(location.pathname||"/").replace(/\/+$/,"/"); // normalize
-  const ref=document.referrer||"";
-  const ua=navigator.userAgent||"";
-  const sessionKey="geo_session_v1";
-  const sessionId=sessionStorage.getItem(sessionKey) || (NOW+"-"+Math.random().toString(16).slice(2));
-  sessionStorage.setItem(sessionKey, sessionId);
-
-  function load(){
-    try{ return JSON.parse(localStorage.getItem(KEY)||"{}"); }catch{ return {}; }
-  }
-  function save(d){
-    try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch{}
-  }
-
-  const d=load();
-  d.version=1;
-  d.first_seen=d.first_seen||new Date(NOW).toISOString();
-  d.last_seen=new Date(NOW).toISOString();
-
-  // Counters
-  d.pageviews=d.pageviews||0;
-  d.sessions=d.sessions||0;
-  d.by_path=d.by_path||{};
-  d.by_ref=d.by_ref||{};
-  d.events=d.events||[];
-
-  // Session accounting (count once per session)
-  d._seen_sessions=d._seen_sessions||{};
-  if(!d._seen_sessions[sessionId]){
-    d._seen_sessions[sessionId]=true;
-    d.sessions++;
-  }
-
-  // Pageview
-  d.pageviews++;
-  d.by_path[path]=(d.by_path[path]||0)+1;
-  if(ref) d.by_ref[ref]=(d.by_ref[ref]||0)+1;
-
-  // Time on page (measured on unload / visibility change)
-  const t0=performance.now();
-  let maxScroll=0;
-
-  function emit(type, meta){
-    d.events.push({
-      t:new Date().toISOString(),
-      type,
-      path,
-      session:sessionId,
-      meta:meta||{}
-    });
-    // keep last 500 events to avoid bloat
-    if(d.events.length>500) d.events=d.events.slice(d.events.length-500);
-    save(d);
-  }
-
-  // Track nav/button clicks (links + buttons)
-  document.addEventListener("click", function(e){
-    const a=e.target && (e.target.closest ? e.target.closest("a") : null);
-    const b=e.target && (e.target.closest ? e.target.closest("button") : null);
-    if(a){
-      emit("click_link",{href:a.getAttribute("href")||"", text:(a.textContent||"").trim().slice(0,80)});
-    }else if(b){
-      emit("click_button",{id:b.id||"", text:(b.textContent||"").trim().slice(0,80)});
-    }
-  }, true);
-
-  // Scroll depth
-  window.addEventListener("scroll", function(){
-    const doc=document.documentElement;
-    const scrollTop=doc.scrollTop||document.body.scrollTop||0;
-    const scrollHeight=doc.scrollHeight||0;
-    const clientHeight=doc.clientHeight||window.innerHeight||1;
-    const pct=Math.min(100, Math.round((scrollTop/(scrollHeight-clientHeight+1))*100));
-    if(pct>maxScroll) maxScroll=pct;
-  }, {passive:true});
-
-  function finalize(){
-    const dt=Math.max(0, Math.round(performance.now()-t0));
-    emit("page_exit",{ms:dt, scroll_pct:maxScroll});
-  }
-
-  window.addEventListener("pagehide", finalize);
-  document.addEventListener("visibilitychange", function(){
-    if(document.visibilityState==="hidden") finalize();
-  });
-
-  // initial mark
-  emit("page_view",{ref, ua:ua.slice(0,120)});
-})();
-</script>
-
-<!-- =============================== -->
-<!-- Cloudflare Web Analytics (V1) -->
-<!-- =============================== -->
-<script
-  defer
-  src="https://static.cloudflareinsights.com/beacon.min.js"
-  data-cf-beacon='{"token":"3e3cd56630124b00b85f07270feb179"}'>
-</script>
-<!-- =============================== -->

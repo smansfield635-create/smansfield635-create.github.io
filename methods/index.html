@@ -3,94 +3,68 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Methods · Tiered Findings</title>
+  <title>Methods · Geodiametrics</title>
 
   <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      background: #0b0f1a;
-      color: #e8ecf5;
-      line-height: 1.6;
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:radial-gradient(1200px 600px at 50% -200px,#1a2342,#0b0f1a 60%);
+      color:#e9ecf5;
+      line-height:1.6;
     }
-    header {
-      padding: 24px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+    header{
+      padding:32px 24px;
+      border-bottom:1px solid rgba(255,255,255,.08);
     }
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-      letter-spacing: 0.5px;
+    header h1{
+      margin:0;
+      font-size:34px;
+      letter-spacing:.5px;
     }
-    main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 32px 24px 64px;
+    main{
+      max-width:960px;
+      margin:0 auto;
+      padding:40px 24px 80px;
     }
-    p {
-      margin: 0 0 14px;
-      color: #d6dbeb;
+    .card{
+      background:rgba(255,255,255,.035);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:28px;
+      margin-bottom:28px;
+      box-shadow:0 20px 40px rgba(0,0,0,.35);
     }
-
-    /* Bubble grid */
-    .bubble-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 16px;
-      margin: 32px 0;
+    h2{
+      margin:0 0 12px;
+      font-size:22px;
+      letter-spacing:.4px;
     }
-    .bubble {
-      padding: 18px;
-      border-radius: 999px;
-      text-align: center;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      cursor: pointer;
-      transition: background 0.2s ease, transform 0.2s ease;
-      font-weight: 600;
+    p{
+      margin:0 0 14px;
+      color:#d6dbeb;
     }
-    .bubble:hover {
-      background: rgba(255,255,255,0.1);
-      transform: translateY(-2px);
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:18px;
+      margin-top:18px;
     }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(5,8,18,0.92);
-      z-index: 1000;
-      overflow-y: auto;
-      padding: 40px 20px;
+    .bubble{
+      padding:22px;
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.1);
+      text-align:center;
+      font-weight:600;
+      letter-spacing:.3px;
     }
-    .modal-content {
-      max-width: 760px;
-      margin: 0 auto;
-      background: #0b0f1a;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 28px;
-    }
-    .modal h2 {
-      margin-top: 0;
-      font-size: 22px;
-      margin-bottom: 16px;
-    }
-    .close {
-      display: inline-block;
-      margin-bottom: 20px;
-      color: #9bb2ff;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    footer {
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 24px;
-      text-align: center;
-      font-size: 14px;
-      color: #aab0c5;
+    footer{
+      text-align:center;
+      padding:28px;
+      border-top:1px solid rgba(255,255,255,.08);
+      color:#aab0c5;
+      font-size:14px;
     }
   </style>
 </head>
@@ -98,101 +72,63 @@
 <body>
 
 <header>
-  <h1>Methods · Tiered Findings</h1>
+  <h1>Methods</h1>
 </header>
 
 <main>
 
-  <p><strong>PRIORITY KNOWLEDGE BOUNDARY.</strong> All pre-verbal, sensory, and intuitive inputs are treated as priority knowledge—providing access to signal without conferring authority. These inputs may inform exploration but may not override externally observable evidence, invariant structure, or proof-gated execution.</p>
+  <div class="card">
+    <p><strong>PRIORITY KNOWLEDGE BOUNDARY.</strong>  
+    All pre-verbal, sensory, and intuitive inputs are treated as priority knowledge—providing access to signal without conferring authority. Such inputs may inform exploration but may not override externally observable evidence, invariant structure, or proof-gated execution.</p>
 
-  <p><strong>METHODS PAGE ROLE.</strong> This page presents only the highest-signal empirical findings. Detailed mechanisms, diagnostics, and stress analyses are available through tiered branches below.</p>
+    <p><strong>METHODS PAGE ROLE.</strong>  
+    This page presents only the highest-signal empirical findings. Detailed mechanisms, diagnostics, instrumentation mechanics, and stress narratives are intentionally deferred to branch pages.</p>
+  </div>
 
-  <!-- Bubble Navigation -->
-  <div class="bubble-grid">
-    <div class="bubble" onclick="openModal('tier1')">Tier 1 · Foundation</div>
-    <div class="bubble" onclick="openModal('tier2')">Tier 2 · Engine</div>
-    <div class="bubble" onclick="openModal('tier2b')">Tier 2 · Instrumentation</div>
-    <div class="bubble" onclick="openModal('tier3a')">Tier 3 · Stress</div>
-    <div class="bubble" onclick="openModal('tier3b')">Tier 3 · Collapse</div>
-    <div class="bubble" onclick="openModal('tier3c')">Tier 3 · Failure</div>
-    <div class="bubble" onclick="openModal('limits')">Scope & Limits</div>
+  <div class="card">
+    <h2>Tier 1 · Foundational</h2>
+    <p><strong>CONSTRAINT-FIRST EXECUTION GENERATES STRUCTURE.</strong>  
+    Coherent execution systems emerge when constraints are enforced before optimization, tooling, or narrative framing. Architecture appears as a consequence—not a design target.</p>
+  </div>
+
+  <div class="card">
+    <h2>Tier 2 · Core Mechanisms</h2>
+    <p><strong>ENGINE COHERENCE PRECEDES SPECIALIZATION.</strong>  
+    Unified execution can subsume hosting, logic, validation, search, and interaction when closure and proof rules are enforced globally.</p>
+
+    <p><strong>INSTRUMENTATION ENABLES DIAGNOSTICS.</strong>  
+    Execution is only diagnosable when state, activity, and transitions are explicitly recorded.</p>
+  </div>
+
+  <div class="card">
+    <h2>Tier 3 · Derived Implications</h2>
+    <p><strong>STRESS IS A VALID PROOF SURFACE.</strong>  
+    Successful construction under severe constraints—single device, cellular network, compressed time—carries greater evidenti weight than idealized builds.</p>
+
+    <p><strong>COLLAPSE IS A SIGNAL.</strong>  
+    Architectural collapse indicates successful constraint convergence when invariants remain preserved.</p>
+
+    <p><strong>FAILURE MODES ARE DATA.</strong>  
+    Failures that do not violate invariants define system boundaries and are admissible diagnostic evidence.</p>
+  </div>
+
+  <div class="card">
+    <h2>Branch Map</h2>
+    <div class="grid">
+      <div class="bubble">Tier 1 · Foundation</div>
+      <div class="bubble">Tier 2 · Engine</div>
+      <div class="bubble">Tier 2 · Instrumentation</div>
+      <div class="bubble">Tier 3 · Stress</div>
+      <div class="bubble">Tier 3 · Collapse</div>
+      <div class="bubble">Tier 3 · Failure Modes</div>
+    </div>
   </div>
 
 </main>
 
 <footer>
-  © 2026 Geodiametrics · Methods Overview
+  © 2026 Geodiametrics · Methods
 </footer>
-
-<!-- MODALS -->
-
-<div id="tier1" class="modal">
-  <div class="modal-content">
-    <div class="close" onclick="closeModal('tier1')">← Back</div>
-    <h2>Tier 1 · Foundational Finding</h2>
-    <p><strong>CONSTRAINT-FIRST EXECUTION GENERATES STRUCTURE.</strong> A functioning execution system can be constructed by enforcing constraints before optimization, narrative framing, or tooling selection. When constraints are primary, architecture emerges as a consequence rather than a design objective.</p>
-    <p><strong>FOUNDATIONAL SIGNIFICANCE.</strong> Execution coherence depends on constraint ordering, not prior expertise or incremental refinement.</p>
-  </div>
-</div>
-
-<div id="tier2" class="modal">
-  <div class="modal-content">
-    <div class="close" onclick="closeModal('tier2')">← Back</div>
-    <h2>Tier 2 · Engine Coherence</h2>
-    <p><strong>ENGINE COHERENCE PRECEDES COMPONENT SPECIALIZATION.</strong> A unified execution engine can subsume hosting, application logic, validation, search, and interaction when closure and proof rules are enforced globally.</p>
-  </div>
-</div>
-
-<div id="tier2b" class="modal">
-  <div class="modal-content">
-    <div class="close" onclick="closeModal('tier2b')">← Back</div>
-    <h2>Tier 2 · Instrumentation</h2>
-    <p><strong>INSTRUMENTATION ENABLES DIAGNOSTIC EXECUTION.</strong> Execution is diagnosable only when state, activity, and transitions are explicitly recorded. Instrumentation distinguishes coherence from fragmentation or stall.</p>
-  </div>
-</div>
-
-<div id="tier3a" class="modal">
-  <div class="modal-content">
-    <div class="close" onclick="closeModal('tier3a')">← Back</div>
-    <h2>Tier 3 · Stress-Test Construction</h2>
-    <p><strong>STRESS AS PROOF SURFACE.</strong> Construction under severe constraints—single device, cellular network, compressed time—provides higher evidenti weight than optimized builds.</p>
-  </div>
-</div>
-
-<div id="tier3b" class="modal">
-  <div class="modal-content">
-    <div class="close" onclick="closeModal('tier3b')">← Back</div>
-    <h2>Tier 3 · Architectural Collapse</h2>
-    <p><strong>COLLAPSE AS SIGNAL.</strong> Collapse of independent architectural layers into a single executable structure indicates successful constraint convergence when invariants are preserved.</p>
-  </div>
-</div>
-
-<div id="tier3c" class="modal">
-  <div class="modal-content">
-    <div class="close" onclick="closeModal('tier3c')">← Back</div>
-    <h2>Tier 3 · Failure Modes</h2>
-    <p><strong>FAILURE AS DATA.</strong> Failures that do not violate invariants are admissible diagnostic data. Invariant violations constitute disproof at the relevant tier.</p>
-  </div>
-</div>
-
-<div id="limits" class="modal">
-  <div class="modal-content">
-    <div class="close" onclick="closeModal('limits')">← Back</div>
-    <h2>Scope & Limits</h2>
-    <p><strong>LIMIT CONDITIONS.</strong> This framework claims validity only within observed execution. Boundaries encountered during stress define limits of applicability.</p>
-  </div>
-</div>
-
-<script>
-  function openModal(id) {
-    document.getElementById(id).style.display = "block";
-    document.body.style.overflow = "hidden";
-  }
-  function closeModal(id) {
-    document.getElementById(id).style.display = "none";
-    document.body.style.overflow = "";
-  }
-</script>
 
 </body>
 </html>

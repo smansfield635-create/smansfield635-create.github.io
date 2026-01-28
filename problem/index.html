@@ -1,129 +1,206 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>The Problem · Geodiametrics</title>
 
   <style>
+    :root{
+      --fg:#e9eefc;
+      --muted:rgba(233,238,252,.72);
+      --muted2:rgba(233,238,252,.55);
+      --stroke:rgba(233,238,252,.14);
+      --panel:rgba(12,16,34,.62);
+      --shadow:0 18px 55px rgba(0,0,0,.55);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:#0b0f1a;
-      color:#e8ecf5;
-      line-height:1.6;
+      color:var(--fg);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      overflow-x:hidden;
+      background:
+        radial-gradient(1200px 900px at 18% 12%, rgba(120,150,255,.20), transparent 60%),
+        radial-gradient(900px 720px at 78% 34%, rgba(255,120,200,.14), transparent 62%),
+        radial-gradient(1100px 800px at 55% 78%, rgba(90,210,255,.10), transparent 68%),
+        linear-gradient(180deg, #070a12, #0b1020 45%, #070a12);
+    }
+
+    /* Stars */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-3;
+      background:
+        radial-gradient(1px 1px at 6% 18%, rgba(255,255,255,.95), transparent 60%),
+        radial-gradient(1px 1px at 12% 62%, rgba(255,255,255,.75), transparent 60%),
+        radial-gradient(1px 1px at 18% 32%, rgba(255,255,255,.85), transparent 60%),
+        radial-gradient(1px 1px at 24% 78%, rgba(255,255,255,.70), transparent 60%),
+        radial-gradient(1px 1px at 31% 44%, rgba(255,255,255,.80), transparent 60%),
+        radial-gradient(1px 1px at 38% 22%, rgba(255,255,255,.90), transparent 60%),
+        radial-gradient(1px 1px at 43% 68%, rgba(255,255,255,.78), transparent 60%),
+        radial-gradient(1px 1px at 49% 36%, rgba(255,255,255,.92), transparent 60%),
+        radial-gradient(1px 1px at 56% 82%, rgba(255,255,255,.72), transparent 60%),
+        radial-gradient(1px 1px at 62% 18%, rgba(255,255,255,.88), transparent 60%),
+        radial-gradient(1px 1px at 69% 55%, rgba(255,255,255,.75), transparent 60%),
+        radial-gradient(1px 1px at 74% 28%, rgba(255,255,255,.90), transparent 60%),
+        radial-gradient(1px 1px at 81% 70%, rgba(255,255,255,.78), transparent 60%),
+        radial-gradient(1px 1px at 88% 24%, rgba(255,255,255,.88), transparent 60%),
+        radial-gradient(1px 1px at 92% 58%, rgba(255,255,255,.80), transparent 60%),
+        radial-gradient(2px 2px at 15% 15%, rgba(180,210,255,.35), transparent 60%),
+        radial-gradient(2px 2px at 72% 22%, rgba(255,190,220,.28), transparent 60%),
+        radial-gradient(2px 2px at 84% 66%, rgba(140,220,255,.24), transparent 60%);
+      opacity:.55;
+      filter:drop-shadow(0 0 10px rgba(160,190,255,.16));
+    }
+
+    /* Milky Way haze */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:-12%;
+      pointer-events:none;
+      z-index:-2;
+      background:
+        radial-gradient(1200px 460px at 50% 45%, rgba(160,190,255,.14), transparent 70%),
+        radial-gradient(900px 320px at 52% 50%, rgba(255,190,220,.10), transparent 75%),
+        radial-gradient(740px 260px at 48% 55%, rgba(120,220,255,.08), transparent 78%);
+      opacity:.9;
+      transform:rotate(-10deg);
+      filter:blur(10px);
     }
 
     header{
-      padding:28px;
-      border-bottom:1px solid rgba(255,255,255,.08);
+      position:sticky;
+      top:0;
+      z-index:5;
+      border-bottom:1px solid rgba(233,238,252,.10);
+      background:rgba(10,14,28,.62);
+      backdrop-filter:blur(12px);
     }
-
-    header h1{
-      margin:0;
-      font-size:28px;
-      letter-spacing:.4px;
-    }
-
-    main{
-      max-width:920px;
+    .bar{
+      max-width:1100px;
       margin:0 auto;
-      padding:48px 24px 72px;
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
     }
-
-    section{
-      margin-bottom:48px;
+    .brand{
+      font-weight:900;
+      letter-spacing:.35px;
+      font-size:18px;
+      white-space:nowrap;
     }
+    .bubbles{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .bubble{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 14px;border-radius:999px;
+      border:1px solid rgba(233,238,252,.18);
+      background:rgba(12,16,34,.36);
+      color:rgba(233,238,252,.78);
+      text-decoration:none;font-weight:800;font-size:14px;letter-spacing:.2px;
+      box-shadow:0 10px 26px rgba(0,0,0,.35);
+    }
+    .bubble:hover{color:var(--fg);border-color:rgba(233,238,252,.28);background:rgba(12,16,34,.46)}
 
+    main{max-width:1100px;margin:0 auto;padding:28px 16px 72px}
+    h1{margin:16px 0 10px;font-size:52px;letter-spacing:.4px;line-height:1.05}
+    .sub{margin:0 0 18px;color:var(--muted);max-width:80ch;font-size:18px;line-height:1.6}
+
+    .stack{display:grid;gap:18px;margin-top:16px}
     .card{
-      padding:26px;
-      border-radius:14px;
-      background:rgba(255,255,255,.035);
-      border:1px solid rgba(255,255,255,.07);
+      background:var(--panel);
+      border:1px solid rgba(233,238,252,.12);
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+    }
+    .card h2{margin:0 0 8px;font-size:22px;letter-spacing:.25px}
+    .card p{margin:0 0 12px;color:var(--muted);line-height:1.6;font-size:16px}
+
+    .callout{
+      padding:18px;
+      border-radius:var(--radius);
+      border:1px dashed rgba(233,238,252,.22);
+      background:rgba(12,16,34,.30);
+      color:var(--muted2);
     }
 
-    h2{
-      margin:0 0 16px;
-      font-size:20px;
-      letter-spacing:.4px;
-    }
-
-    p{
-      margin:0 0 14px;
-      color:#d6dbeb;
-    }
-
-    footer{
-      border-top:1px solid rgba(255,255,255,.08);
-      padding:24px;
-      text-align:center;
-      font-size:14px;
-      color:#aab0c5;
-    }
+    footer{margin-top:48px;padding-top:18px;border-top:1px solid rgba(233,238,252,.10);text-align:center;color:rgba(233,238,252,.55);font-size:13px}
   </style>
 </head>
 
 <body>
+  <header>
+    <div class="bar">
+      <div class="brand">Geodiametrics</div>
+      <nav class="bubbles" aria-label="Primary navigation">
+        <a class="bubble" href="/">Home</a>
+        <a class="bubble" href="/methods/">Methods</a>
+        <a class="bubble" href="/dashboard/">Dashboard</a>
+        <a class="bubble" href="/apps/">Apps</a>
+        <a class="bubble" href="/reference/">Reference</a>
+        <a class="bubble" href="/problem/">Problem</a>
+      </nav>
+    </div>
+  </header>
 
-<header>
-  <h1>The Problem</h1>
-</header>
+  <main>
+    <h1>The Problem</h1>
+    <p class="sub">
+      Why systems fail quietly—long before collapse becomes visible—and why narrative explanations cannot prevent it.
+    </p>
 
-<main>
+    <section class="stack">
+      <div class="card">
+        <h2>Silent Degradation</h2>
+        <p>
+          Most systems fail gradually. Coherence erodes while activity continues.
+          Outputs accumulate, metrics improve, and narratives remain intact
+          even as structural alignment decays.
+        </p>
+      </div>
 
-  <section class="card">
-    <h2>CORE FAILURE</h2>
-    <p><strong>EXECUTION FAILS WITHOUT CONSTRAINT-FIRST ORDERING.</strong>  
-    Most systems fail not because of lack of intelligence, effort, or resources, but because execution proceeds before constraints are defined. When optimization, tooling, or narrative framing precede constraint enforcement, systems fragment under load.</p>
-  </section>
+      <div class="card">
+        <h2>Narrative Substitution</h2>
+        <p>
+          When structure is not instrumented, explanation replaces measurement.
+          Success and failure are rationalized after the fact,
+          masking causal violations.
+        </p>
+      </div>
 
-  <section class="card">
-    <h2>FALSE SIGNALS</h2>
-    <p><strong>ACTIVITY IS MISTAKEN FOR PROGRESS.</strong>  
-    Motion without constraint produces visible output but no stable trajectory. Systems appear productive while accumulating hidden incoherence. Growth becomes indistinguishable from drift.</p>
-  </section>
+      <div class="card">
+        <h2>Tooling Illusion</h2>
+        <p>
+          Frameworks, KPIs, and optimization techniques can amplify activity
+          without preserving coherence.
+          Tools substitute for proof when constraints are undefined.
+        </p>
+      </div>
 
-  <section class="card">
-    <h2>ARCHITECTURAL FRAGMENTATION</h2>
-    <p><strong>COMPONENTS ARE BUILT IN ISOLATION.</strong>  
-    Hosting, logic, validation, analytics, governance, and interfaces are treated as separate concerns. Without global closure rules, integration becomes brittle and collapse-prone.</p>
-  </section>
+      <div class="card">
+        <h2>Late Detection</h2>
+        <p>
+          By the time collapse is acknowledged, recovery paths have already closed.
+          Without structural diagnostics, intervention becomes guesswork.
+        </p>
+      </div>
 
-  <section class="card">
-    <h2>UNDIAGNOSED FAILURE</h2>
-    <p><strong>FAILURE MODES ARE NOT OBSERVABLE.</strong>  
-    Without explicit instrumentation, systems cannot distinguish between coherent execution, stall, or fragmentation. Failure is detected only after irreversible loss.</p>
-  </section>
+      <div class="callout">
+        This page defines the failure space only.
+        Solutions, methods, and execution artifacts are presented elsewhere as evidence.
+      </div>
+    </section>
 
-  <section class="card">
-    <h2>NARRATIVE SUBSTITUTION</h2>
-    <p><strong>EXPLANATION REPLACES PROOF.</strong>  
-    When systems cannot demonstrate execution integrity, narrative authority fills the gap. Claims persist without verification, and persuasion replaces structure.</p>
-  </section>
-
-  <section class="card">
-    <h2>BOUNDARY CONFUSION</h2>
-    <p><strong>INTUITION OVERRIDES EVIDENCE.</strong>  
-    Pre-verbal, emotional, or intuitive signals are allowed to override observable invariants. Systems lose the ability to distinguish access to signal from authority over outcome.</p>
-  </section>
-
-  <section class="card">
-    <h2>RESULTING CONDITION</h2>
-    <p><strong>COHERENCE COLLAPSES.</strong>  
-    The combined effect is systemic instability: repeated rebuilds, escalating complexity, declining trust, and eventual collapse under stress.</p>
-  </section>
-
-  <section class="card">
-    <h2>WHY THIS MATTERS</h2>
-    <p><strong>THE PROBLEM IS UNIVERSAL.</strong>  
-    These failure patterns appear in software, organizations, research, governance, and personal systems. The issue is not domain-specific—it is structural.</p>
-  </section>
-
-</main>
-
-<footer>
-  © 2026 Geodiametrics · Problem Definition
-</footer>
-
+    <footer>© 2026 Geodiametrics · Problem</footer>
+  </main>
 </body>
 </html>

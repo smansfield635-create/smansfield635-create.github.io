@@ -59,9 +59,7 @@ body:before{
   gap:12px;padding:14px 16px;
 }
 .brand{font-weight:900;letter-spacing:.4px}
-.nav{
-  display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;
-}
+.nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
 .bubble{
   display:inline-flex;align-items:center;justify-content:center;
   padding:10px 14px;border-radius:999px;
@@ -105,18 +103,17 @@ h1{margin:0;font-size:42px;letter-spacing:.2px}
   font-weight:900;cursor:pointer;
 }
 .btn:active{transform:translateY(1px)}
+.btn.danger{border-color:rgba(255,120,120,.35)}
+.btn.good{border-color:rgba(120,255,170,.25)}
 .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
 
-.coreTabs{
-  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
-}
+.coreTabs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 @media(min-width:720px){.coreTabs{grid-template-columns:repeat(4,1fr)}}
 .tab{
   padding:12px 12px;border-radius:16px;
   border:1px solid rgba(233,238,252,.16);
   background:rgba(255,255,255,.06);
-  font-weight:900;
-  cursor:pointer;
+  font-weight:900;cursor:pointer;
 }
 .tab small{display:block;color:var(--muted);font-weight:700;margin-top:2px}
 .tab.active{background:rgba(255,255,255,.10);border-color:rgba(233,238,252,.26)}
@@ -128,13 +125,10 @@ h1{margin:0;font-size:42px;letter-spacing:.2px}
   background:rgba(10,14,28,.45);
   padding:14px;
 }
-.kv{
-  display:grid;grid-template-columns:1fr;gap:10px;
-}
+.kv{display:grid;grid-template-columns:1fr;gap:10px}
 @media(min-width:720px){.kv{grid-template-columns:1fr 1fr}}
 .k{
-  border-radius:16px;
-  border:1px solid rgba(233,238,252,.12);
+  border-radius:16px;border:1px solid rgba(233,238,252,.12);
   background:rgba(255,255,255,.05);
   padding:12px;
 }
@@ -142,26 +136,22 @@ h1{margin:0;font-size:42px;letter-spacing:.2px}
 .k span{color:var(--muted)}
 .small{font-size:13px;color:var(--muted)}
 
-.table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
-  font-size:13px;
-}
+.table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
 th,td{
-  text-align:left;
-  padding:8px 8px;
+  text-align:left;padding:8px 8px;
   border-bottom:1px solid rgba(233,238,252,.12);
   color:var(--muted);
 }
 th{color:rgba(233,238,252,.85);font-weight:900}
 tfoot td{border-bottom:0}
 
-.footer{
-  margin-top:18px;
-  text-align:center;
-  color:rgba(233,238,252,.55);
-  font-size:13px;
+.footer{margin-top:18px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
+.lockline{
+  margin-top:10px;
+  border-radius:16px;
+  border:1px solid rgba(233,238,252,.12);
+  background:rgba(255,255,255,.04);
+  padding:12px;
 }
 </style>
 </head>
@@ -199,27 +189,35 @@ tfoot td{border-bottom:0}
         <p>Operate all cores from one file. Each core has a namespace. State persists locally.</p>
 
         <div class="coreTabs" id="tabs"></div>
-
-        <div class="corePanel" id="panel">
-          <!-- injected -->
-        </div>
+        <div class="corePanel" id="panel"></div>
 
         <div class="row" style="margin-top:12px;">
-          <button class="btn" onclick="DF.registerAll()">Register All Cores</button>
-          <button class="btn" onclick="DF.resetActive()">Reset Active Core</button>
+          <button class="btn good" onclick="DF.registerAll()">Register All Cores</button>
+          <button class="btn danger" onclick="DF.resetActive()">Reset Active Core</button>
           <button class="btn" onclick="DF.exportAll()">Export All JSON</button>
         </div>
 
-        <p class="small" style="margin-top:10px;">Rule: No cross-core mutation unless explicit Mirror action is used in Registry.</p>
+        <div class="lockline">
+          <div class="pill">Safety Lock</div>
+          <p class="small" style="margin-top:10px;">
+            Lock prevents destructive actions (reset/mirror). Default is <b>LOCKED</b>.
+          </p>
+          <div class="row">
+            <button class="btn" onclick="DF.lock(true)">Lock</button>
+            <button class="btn danger" onclick="DF.lock(false)">Unlock</button>
+          </div>
+          <p class="small mono" id="lockState" style="margin-top:10px;">LOCK: —</p>
+        </div>
+
       </div>
     </div>
 
-    <!-- RIGHT: REGISTRY / MATRIX -->
+    <!-- RIGHT: MATRIX + SUPERVISOR -->
     <div class="card">
       <div class="in">
         <div class="pill">Matrix · Registry</div>
         <h2>Engine Matrix</h2>
-        <p>Discovered cores on this device (by key prefix). Refresh after opening any core.</p>
+        <p>Discovered engines on this device. Discovery is based on keys that begin with <span class="mono">ENGINE::</span>.</p>
 
         <div class="row">
           <button class="btn" onclick="DF.refreshMatrix()">Refresh</button>
@@ -246,7 +244,7 @@ tfoot td{border-bottom:0}
 
         <div class="pill">Supervisor · Walls</div>
         <h2 style="margin-top:10px;">Cross-Core Walls</h2>
-        <p>Default is ISOLATED. Structural sync is rule label only. State sync is one-shot copy.</p>
+        <p>Default is ISOLATED. Structural sync is a rule label only. State sync is one-shot copy.</p>
 
         <div class="row">
           <button class="btn" onclick="DF.setMode('ISOLATED')">Set ISOLATED</button>
@@ -275,8 +273,8 @@ tfoot td{border-bottom:0}
             <input id="dstNS" class="btn mono" style="flex:1;min-width:210px;text-align:left" placeholder="Target namespace (e.g., diamond_fusion_core_2)"/>
           </div>
           <div class="row" style="margin-top:10px;">
-            <button class="btn" onclick="DF.mirrorState()">Mirror State →</button>
-            <button class="btn" onclick="DF.resetNamespace()">Reset Target Namespace</button>
+            <button class="btn danger" onclick="DF.mirrorState()">Mirror State →</button>
+            <button class="btn danger" onclick="DF.resetNamespace()">Reset Target Namespace</button>
           </div>
 
           <p class="small" style="margin-top:10px;">State sync is opt-in. If you don’t click it, nothing couples.</p>
@@ -292,19 +290,27 @@ tfoot td{border-bottom:0}
 
 <script>
 /* =========================================================
-   DIAMOND FUSION · SINGLE FILE (v1)
-   All localStorage. No identity inference. No external calls.
+   DIAMOND FUSION · CONTROL ROOM (v1)
+   FIX: Writes universal ENGINE:: keys for matrix discovery.
+   Device-local only. No external calls.
 ========================================================= */
 
 const DF = (() => {
-  const PREFIX = "DF::";              // core state prefix
-  const REG    = "DF_REG::";          // registry metadata prefix
-  const SUPKEY = "DF_SUPERVISOR::v1"; // supervisor
+  // Universal discovery prefix (what your Matrix should scan)
+  const ENGINE_PREFIX = "ENGINE::";
+
+  // Internal bundle prefixes (fine to keep)
+  const DF_PREFIX  = "DF::";
+  const DF_REG     = "DF_REG::";
+  const SUPKEY     = "DF_SUPERVISOR::v1";
+  const LOCKKEY    = "DF_LOCK::v1";
+
+  // FOUR CORES (one geometry)
   const CORES = [
-    { id:"core_1", name:"Core 1", sub:"Selection", ns:"diamond_fusion_core_1" },
-    { id:"core_2", name:"Core 2", sub:"Resolution", ns:"diamond_fusion_core_2" },
-    { id:"core_3", name:"Core 3", sub:"Commitment", ns:"diamond_fusion_core_3" },
-    { id:"core_4", name:"Core 4", sub:"Continuation", ns:"diamond_fusion_core_4" }
+    { name:"Core 1", sub:"Selection",    ns:"diamond_fusion_core_1" },
+    { name:"Core 2", sub:"Resolution",   ns:"diamond_fusion_core_2" },
+    { name:"Core 3", sub:"Commitment",   ns:"diamond_fusion_core_3" },
+    { name:"Core 4", sub:"Continuation", ns:"diamond_fusion_core_4" }
   ];
 
   let active = CORES[0].ns;
@@ -317,16 +323,41 @@ const DF = (() => {
   };
   const set = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 
-  function coreKey(ns){ return PREFIX + ns; }
-  function regKey(ns){ return REG + ns; }
+  const coreKeyDF     = (ns) => DF_PREFIX + ns;
+  const coreKeyENGINE = (ns) => ENGINE_PREFIX + ns;
+  const regKeyDF      = (ns) => DF_REG + ns;
+
+  function locked(){ return get(LOCKKEY, {locked:true}).locked !== false; }
+  function lock(on){
+    set(LOCKKEY, {locked: !!on, updated_at: nowISO()});
+    renderLock();
+  }
+  function renderLock(){
+    const el = document.getElementById("lockState");
+    const state = locked() ? "LOCKED" : "UNLOCKED";
+    el.textContent = "LOCK: " + state + " · updated_at: " + (get(LOCKKEY,{updated_at:"—"}).updated_at || "—");
+  }
 
   function ensureCore(ns){
-    const k = coreKey(ns);
-    const exists = localStorage.getItem(k);
-    if (exists) return;
+    // If universal engine key exists, treat as registered.
+    if (localStorage.getItem(coreKeyENGINE(ns))) {
+      // also ensure internal registry exists
+      if(!localStorage.getItem(regKeyDF(ns))){
+        set(regKeyDF(ns), {
+          ns,
+          family:"diamond_fusion",
+          geometry:"GEOMETRIC_QUAD_CORE_FUSION",
+          version:"1.0",
+          registered_at: nowISO(),
+          last_seen: nowISO()
+        });
+      }
+      return;
+    }
 
-    set(k, {
+    const base = {
       ns,
+      geometry:"GEOMETRIC_QUAD_CORE_FUSION",
       cycle:["input","admissibility","execution","evidence","return"],
       invariants:["agency","constraint","responsibility","coherence"],
       state:{
@@ -336,11 +367,15 @@ const DF = (() => {
         continuation:{ cycle:"RUNNING", last_set: nowISO() }
       },
       updated_at: nowISO()
-    });
+    };
 
-    set(regKey(ns), {
+    // Write BOTH keys so ALL pages can discover them.
+    set(coreKeyENGINE(ns), base); // universal discovery
+    set(coreKeyDF(ns), base);     // internal bundle mirror
+    set(regKeyDF(ns), {
       ns,
       family:"diamond_fusion",
+      geometry:"GEOMETRIC_QUAD_CORE_FUSION",
       version:"1.0",
       registered_at: nowISO(),
       last_seen: nowISO()
@@ -348,32 +383,33 @@ const DF = (() => {
   }
 
   function touch(ns){
-    const rk = regKey(ns);
-    const r = get(rk, null);
+    const r = get(regKeyDF(ns), null);
     if(!r) return;
     r.last_seen = nowISO();
-    set(rk, r);
+    set(regKeyDF(ns), r);
   }
 
   function readCore(ns){
     ensureCore(ns);
     touch(ns);
-    return get(coreKey(ns), null);
+    return get(coreKeyENGINE(ns), null);
   }
 
   function writeCore(ns, obj){
     obj.updated_at = nowISO();
-    set(coreKey(ns), obj);
-    // keep registry updated
+    // keep the two mirrors consistent
+    set(coreKeyENGINE(ns), obj);
+    set(coreKeyDF(ns), obj);
     ensureCore(ns);
-    const r = get(regKey(ns), {});
+    const r = get(regKeyDF(ns), {});
     r.last_seen = nowISO();
-    set(regKey(ns), r);
+    set(regKeyDF(ns), r);
   }
 
   function resetCore(ns){
-    localStorage.removeItem(coreKey(ns));
-    localStorage.removeItem(regKey(ns));
+    localStorage.removeItem(coreKeyENGINE(ns));
+    localStorage.removeItem(coreKeyDF(ns));
+    localStorage.removeItem(regKeyDF(ns));
     ensureCore(ns);
   }
 
@@ -391,6 +427,8 @@ const DF = (() => {
   }
 
   function resetActive(){
+    if(locked()) return alert("LOCKED. Tap Unlock first.");
+    if(!confirm("Reset ACTIVE core?")) return;
     resetCore(active);
     refreshMatrix();
     render();
@@ -400,6 +438,7 @@ const DF = (() => {
     const bundle = {
       exported_at: nowISO(),
       supervisor: get(SUPKEY, {mode:"ISOLATED", rule:"NONE", updated_at:null}),
+      lock: get(LOCKKEY, {locked:true, updated_at:null}),
       cores: CORES.map(c => readCore(c.ns))
     };
     downloadJSON("diamond_fusion_bundle.json", bundle);
@@ -416,7 +455,7 @@ const DF = (() => {
     setTimeout(() => URL.revokeObjectURL(a.href), 500);
   }
 
-  // -------- Core actions (simple, demo-safe) --------
+  // -------- Core actions (demo-safe) --------
   function setSelection(val){
     const c = readCore(active);
     c.state.selection = val;
@@ -450,22 +489,27 @@ const DF = (() => {
     renderPanel();
   }
 
-  // -------- Matrix (discovery by REG keys) --------
-  function discover(){
-    const keys = [];
+  // -------- Matrix (discovery by ENGINE:: keys) --------
+  function discoverEngines(){
+    const engines = [];
     for(let i=0;i<localStorage.length;i++){
       const k = localStorage.key(i);
-      if(k && k.startsWith(REG)) keys.push(k);
+      if(k && k.startsWith(ENGINE_PREFIX)){
+        const ns = k.slice(ENGINE_PREFIX.length);
+        const obj = get(k, null);
+        if(obj && obj.ns) engines.push({ ns, obj });
+      }
     }
-    return keys.sort().map(k => get(k, null)).filter(Boolean);
+    engines.sort((a,b)=>a.ns.localeCompare(b.ns));
+    return engines;
   }
 
   function refreshMatrix(){
-    const rows = discover().map(r => {
-      const state = get(coreKey(r.ns), null);
-      const keyCount = state ? Object.keys(state.state || {}).length : 0;
-      const lastUpdate = state?.updated_at || r.last_seen || "—";
-      return { ns:r.ns, keys:keyCount, last:lastUpdate };
+    const rows = discoverEngines().map(e => {
+      const obj = e.obj || {};
+      const keys = obj?.state ? Object.keys(obj.state).length : 0;
+      const last = obj?.updated_at || "—";
+      return { ns:e.ns, keys, last };
     });
 
     const tbody = document.getElementById("matrixBody");
@@ -488,7 +532,14 @@ const DF = (() => {
   }
 
   function exportMatrix(){
-    const out = { exported_at: nowISO(), engines: discover() };
+    const out = {
+      exported_at: nowISO(),
+      engines: discoverEngines().map(e => ({
+        namespace: e.ns,
+        updated_at: e.obj?.updated_at || null,
+        geometry: e.obj?.geometry || null
+      }))
+    };
     downloadJSON("engine_matrix.json", out);
   }
 
@@ -515,18 +566,26 @@ const DF = (() => {
   }
 
   function mirrorState(){
+    if(locked()) return alert("LOCKED. Tap Unlock first.");
+    if(!confirm("Mirror state from SOURCE to TARGET?")) return;
+
     const src = (document.getElementById("srcNS").value || "").trim();
     const dst = (document.getElementById("dstNS").value || "").trim();
     if(!src || !dst) return;
+
     ensureCore(src); ensureCore(dst);
     const s = readCore(src);
     const d = readCore(dst);
+
     d.state = JSON.parse(JSON.stringify(s.state));
     writeCore(dst, d);
     refreshMatrix();
   }
 
   function resetNamespace(){
+    if(locked()) return alert("LOCKED. Tap Unlock first.");
+    if(!confirm("Reset TARGET namespace?")) return;
+
     const dst = (document.getElementById("dstNS").value || "").trim();
     if(!dst) return;
     resetCore(dst);
@@ -548,7 +607,7 @@ const DF = (() => {
 
   function renderPanel(){
     const c = readCore(active);
-    const coreMeta = CORES.find(x=>x.ns===active) || {name:"Core"};
+    const meta = CORES.find(x=>x.ns===active) || {name:"Core", sub:""};
     const sel = c.state.selection;
     const res = c.state.resolution;
     const com = c.state.commitment;
@@ -557,7 +616,7 @@ const DF = (() => {
 
     const panel = document.getElementById("panel");
     panel.innerHTML = `
-      <div class="pill">${escapeHTML(coreMeta.name)} · ${escapeHTML(coreMeta.sub)} · <span class="mono">${escapeHTML(active)}</span></div>
+      <div class="pill">${escapeHTML(meta.name)} · ${escapeHTML(meta.sub)} · <span class="mono">${escapeHTML(active)}</span></div>
       <div class="kv" style="margin-top:12px;">
         <div class="k"><b>Selection</b><span class="mono">${escapeHTML(sel ?? "—")}</span></div>
         <div class="k"><b>Resolution</b><span class="mono">${escapeHTML(res ?? "—")}</span></div>
@@ -584,7 +643,7 @@ const DF = (() => {
         <button class="btn" onclick="DF.setCycle('COMPLETE')">4 · COMPLETE</button>
       </div>
 
-      <p class="small" style="margin-top:12px;">Cycle = operator status. Selection→Resolution→Commitment are minimal demo transitions for proof surface.</p>
+      <p class="small" style="margin-top:12px;">Rule: This page writes <span class="mono">ENGINE::</span> keys so the Matrix can discover every core immediately.</p>
     `;
   }
 
@@ -592,8 +651,8 @@ const DF = (() => {
     renderTabs();
     renderPanel();
     refreshMatrix();
-    const s = readSup();
-    writeSup(s);
+    writeSup(readSup());
+    renderLock();
   }
 
   function escapeHTML(s){
@@ -616,12 +675,14 @@ const DF = (() => {
     applyRule,
     mirrorState,
     resetNamespace,
+    lock,
     render
   };
 })();
 
+// AUTO-REGISTER ON LOAD (so Matrix never shows empty)
+DF.registerAll();
 DF.render();
 </script>
 </body>
 </html>
-```0

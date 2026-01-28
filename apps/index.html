@@ -2,147 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Apps · Geodiametrics</title>
 
   <style>
     :root{
       --fg:#e9eefc;
-      --muted:rgba(233,238,252,.65);
-      --panel:rgba(12,16,34,.55);
-      --stroke:rgba(233,238,252,.12);
-      --shadow:0 30px 90px rgba(0,0,0,.55);
+      --muted:rgba(233,238,252,.72);
+      --stroke:rgba(233,238,252,.14);
+      --panel:rgba(12,16,34,.62);
+      --glass:rgba(10,14,28,.62);
+      --shadow:0 18px 55px rgba(0,0,0,.55);
       --radius:22px;
     }
-
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;height:100%}
+    html,body{height:100%}
     body{
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      margin:0;
       color:var(--fg);
-      background:
-        radial-gradient(1200px 600px at 50% -200px, rgba(120,140,255,.25), transparent 60%),
-        radial-gradient(800px 500px at 80% 20%, rgba(180,120,255,.18), transparent 55%),
-        linear-gradient(#05070f,#070b18 60%, #05070f);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       overflow-x:hidden;
+      background:
+        radial-gradient(1200px 900px at 18% 12%, rgba(120,150,255,.20), transparent 60%),
+        radial-gradient(900px 720px at 78% 34%, rgba(255,120,200,.14), transparent 62%),
+        radial-gradient(1100px 800px at 55% 78%, rgba(90,210,255,.10), transparent 68%),
+        linear-gradient(180deg, #070a12, #0b1020 45%, #070a12);
     }
-
     body::before{
       content:"";
-      position:fixed;
-      inset:0;
-      background-image:
-        radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.6), transparent),
-        radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.5), transparent),
-        radial-gradient(1px 1px at 80% 40%, rgba(255,255,255,.4), transparent),
-        radial-gradient(1px 1px at 60% 10%, rgba(255,255,255,.45), transparent);
-      opacity:.35;
-      pointer-events:none;
+      position:fixed; inset:0;
+      pointer-events:none; z-index:-3;
+      background:
+        radial-gradient(1px 1px at 6% 18%, rgba(255,255,255,.95), transparent 60%),
+        radial-gradient(1px 1px at 12% 62%, rgba(255,255,255,.75), transparent 60%),
+        radial-gradient(1px 1px at 18% 32%, rgba(255,255,255,.85), transparent 60%),
+        radial-gradient(1px 1px at 24% 78%, rgba(255,255,255,.70), transparent 60%),
+        radial-gradient(2px 2px at 72% 22%, rgba(255,190,220,.28), transparent 60%),
+        radial-gradient(2px 2px at 84% 66%, rgba(140,220,255,.24), transparent 60%);
+      opacity:.55;
+      filter:drop-shadow(0 0 10px rgba(160,190,255,.16));
     }
-
     header{
-      position:sticky;
-      top:0;
-      z-index:10;
-      backdrop-filter: blur(14px);
-      background: linear-gradient(to bottom, rgba(8,10,20,.75), rgba(8,10,20,.35));
-      border-bottom:1px solid var(--stroke);
+      position:sticky; top:0; z-index:10;
+      border-bottom:1px solid rgba(233,238,252,.10);
+      background:var(--glass);
+      backdrop-filter:blur(12px);
     }
-
     .bar{
-      max-width:1200px;
-      margin:0 auto;
-      padding:18px 20px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:20px;
+      max-width:1200px;margin:0 auto;padding:14px 16px;
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
     }
-
-    .brand{font-weight:700;letter-spacing:.3px}
-
-    .bubbles{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
+    .brand{font-weight:900;letter-spacing:.35px;font-size:18px;white-space:nowrap}
+    .bubbles{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
     .bubble{
-      padding:10px 16px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.06);
-      color:var(--fg);
-      text-decoration:none;
-      font-size:14px;
-      box-shadow:0 10px 24px rgba(0,0,0,.35);
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 14px;border-radius:999px;
+      border:1px solid rgba(233,238,252,.18);
+      background:rgba(12,16,34,.36);
+      color:rgba(233,238,252,.78);
+      text-decoration:none;font-weight:800;font-size:14px;letter-spacing:.2px;
+      box-shadow:0 10px 26px rgba(0,0,0,.35);
+      min-width:118px;
     }
+    .bubble:hover{color:var(--fg);border-color:rgba(233,238,252,.28);background:rgba(12,16,34,.46)}
 
-    main{
-      max-width:1200px;
-      margin:0 auto;
-      padding:60px 20px 100px;
-    }
+    main{max-width:1200px;margin:0 auto;padding:34px 16px 70px}
+    h1{margin:16px 0 10px;font-size:54px;letter-spacing:.2px;line-height:1.05}
+    .sub{margin:0 0 18px;color:var(--muted);max-width:90ch;font-size:18px;line-height:1.6}
 
-    h1{
-      font-size:clamp(34px,5vw,54px);
-      margin:0 0 12px;
-    }
-
-    .lede{
-      max-width:720px;
-      color:var(--muted);
-      font-size:18px;
-      line-height:1.6;
-    }
-
-    .grid{
-      margin-top:40px;
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-      gap:26px;
-    }
-
+    .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));margin-top:18px}
     .card{
       background:var(--panel);
-      border:1px solid var(--stroke);
+      border:1px solid rgba(233,238,252,.12);
       border-radius:var(--radius);
-      padding:26px;
+      padding:18px;
       box-shadow:var(--shadow);
     }
-
-    .card h2{
-      margin:0 0 8px;
-      font-size:22px;
-    }
-
-    .card p{
-      margin:0 0 18px;
-      color:var(--muted);
-      line-height:1.6;
-    }
-
-    .button{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:12px 18px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.08);
-      color:var(--fg);
-      text-decoration:none;
-      font-weight:600;
+    .card h2{margin:0 0 8px;font-size:22px;letter-spacing:.25px}
+    .card p{margin:0 0 12px;color:var(--muted);line-height:1.6;font-size:16px}
+    .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:12px 16px;border-radius:999px;
+      border:1px solid rgba(233,238,252,.18);
+      background:rgba(255,255,255,.06);
+      color:var(--fg);text-decoration:none;font-weight:900;letter-spacing:.2px;
+      box-shadow:0 10px 26px rgba(0,0,0,.35);
       min-width:160px;
-      box-shadow:0 12px 26px rgba(0,0,0,.4);
     }
-
-    footer{
-      margin-top:80px;
-      text-align:center;
-      color:rgba(233,238,252,.45);
-      font-size:14px;
-    }
+    .btn:hover{background:rgba(255,255,255,.09);border-color:rgba(233,238,252,.28)}
+    footer{margin-top:48px;padding-top:18px;border-top:1px solid rgba(233,238,252,.10);text-align:center;color:rgba(233,238,252,.55);font-size:13px}
   </style>
 </head>
 
@@ -158,64 +107,36 @@
       <a class="bubble" href="/reference/">Reference</a>
       <a class="bubble" href="/problem/">Problem</a>
       <a class="bubble" href="/architecture/">Architecture</a>
+      <a class="bubble" href="/engine-room/">Engine Room</a>
     </nav>
   </div>
 </header>
 
 <main>
   <h1>Apps</h1>
-  <p class="lede">
-    Published execution artifacts and diagnostic tools.
-    These are live proof surfaces — not demos.
+  <p class="sub">
+    Viewer surface for published artifacts. Engines and coordination live in the Engine Room.
   </p>
 
   <section class="grid">
-
     <div class="card">
-      <h2>Engine Sync (v1)</h2>
-      <p>
-        Quad-core execution surface
-        (Selection → Resolution → Commitment → Continuation).
-        Local-first. Reload-safe.
-      </p>
-      <a class="button" href="/apps/engine-sync/">Open App</a>
+      <h2>Engine Room</h2>
+      <p>Authoritative execution locus: engines + matrix + cross-engine walls.</p>
+      <div class="btnrow">
+        <a class="btn" href="/engine-room/">Open Engine Room</a>
+      </div>
     </div>
 
     <div class="card">
-      <h2>Engine Sync (v2)</h2>
-      <p>
-        Independent engine namespace.
-        Designed for A/B runs and parallel cycles
-        without state collision.
-      </p>
-      <a class="button" href="/apps/engine-sync-2/">Open App</a>
+      <h2>Published Artifacts</h2>
+      <p>Public-facing tools and stable outputs appear here when promoted from Engine Room.</p>
+      <div class="btnrow">
+        <a class="btn" href="/apps/">Refresh</a>
+      </div>
     </div>
-
-    <div class="card">
-      <h2>Engine Sync (v3)</h2>
-      <p>
-        Extended engine instance.
-        Used for motion, interaction, supervision,
-        and cross-engine experimentation.
-      </p>
-      <a class="button" href="/apps/engine-sync-v3/">Open App</a>
-    </div>
-
-    <div class="card">
-      <h2>Engine Matrix</h2>
-      <p>
-        Cross-engine coordination surface.
-        Visualizes isolation, structural sync,
-        and explicit state walls.
-      </p>
-      <a class="button" href="/apps/engine-matrix/">Open App</a>
-    </div>
-
   </section>
 
-  <footer>
-    © 2026 Geodiametrics · Apps
-  </footer>
+  <footer>© 2026 Geodiametrics · Apps</footer>
 </main>
 </body>
 </html>

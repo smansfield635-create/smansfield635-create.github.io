@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Architecture · Geodiametrics</title>
+
+<style>
+:root{
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.66);
+  --stroke:rgba(233,238,252,.14);
+  --panel:rgba(12,16,34,.62);
+  --radius:22px;
+  --shadow:0 18px 55px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--fg);
+  background:linear-gradient(180deg,#070b18,#050714);
+}
+.wrap{max-width:1100px;margin:0 auto;padding:22px}
+.card{
+  border-radius:var(--radius);
+  border:1px solid var(--stroke);
+  background:var(--panel);
+  box-shadow:var(--shadow);
+  padding:18px;
+  margin-bottom:16px;
+}
+h1{margin:0 0 10px}
+h2{margin:14px 0 8px}
+p{color:var(--muted);line-height:1.55}
+.list{margin:10px 0 0;padding-left:18px;color:var(--muted)}
+.list li{margin:6px 0}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--muted)}
+.btn{
+  display:inline-block;margin-top:10px;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.18);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);font-weight:900;text-decoration:none
+}
+.footer{margin-top:18px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="card">
+    <h1>Architecture</h1>
+    <p>Structural map of the system. Defines authority boundaries, discovery rules, and execution geometry.</p>
+  </div>
+
+  <div class="card">
+    <h2>Authority Layers</h2>
+    <ul class="list">
+      <li><b>Control Room</b> — sole execution authority.</li>
+      <li><b>Engine Room</b> — execution workspace.</li>
+      <li><b>Engine Matrix</b> — read-only registry.</li>
+      <li><b>Dashboard</b> — observer-only summary.</li>
+      <li><b>Apps</b> — viewer/launcher.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Discovery & Registry</h2>
+    <ul class="list">
+      <li><b>Prefix Law</b>: discover engines via <span class="mono">ENGINE::</span>.</li>
+      <li><b>Device-Local</b>: state lives in localStorage.</li>
+      <li><b>Deterministic</b>: discovery by prefix scan only.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Execution Geometry</h2>
+    <ul class="list">
+      <li><b>Quad-Core Fusion</b>: Selection → Resolution → Commitment → Continuation.</li>
+      <li><b>Namespaces</b>: stable identifiers per core.</li>
+      <li><b>Isolation</b>: no implicit cross-core mutation.</li>
+    </ul>
+    <a class="btn" href="/control-room/">Open Control Room</a>
+  </div>
+
+  <div class="footer">© 2026 Geodiametrics · Architecture</div>
+
+</div>
+</body>
+</html>

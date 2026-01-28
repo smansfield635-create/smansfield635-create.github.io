@@ -1,422 +1,70 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Dashboard · Geodiametrics</title>
+<!-- ========================= -->
+<!-- ENGINE REGISTRY + SUPERVISOR (TNB) -->
+<!-- ========================= -->
+<section class="section">
+  <h2 class="section-title">Engine Registry</h2>
+  <div class="card">
+    <p class="kicker"><strong>REGISTRY.</strong> Local namespaces discovered and summarized from this device.</p>
 
-  <style>
-    :root{
-      --fg:#e9eefc;
-      --muted:rgba(233,238,252,.72);
-      --muted2:rgba(233,238,252,.55);
-      --stroke:rgba(233,238,252,.14);
-      --panel:rgba(12,16,34,.62);
-      --panel2:rgba(12,16,34,.42);
-      --shadow:0 18px 55px rgba(0,0,0,.55);
-      --radius:22px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      color:var(--fg);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      overflow-x:hidden;
-      background:
-        radial-gradient(1200px 900px at 18% 12%, rgba(120,150,255,.20), transparent 60%),
-        radial-gradient(900px 720px at 78% 34%, rgba(255,120,200,.14), transparent 62%),
-        radial-gradient(1100px 800px at 55% 78%, rgba(90,210,255,.10), transparent 68%),
-        linear-gradient(180deg, #070a12, #0b1020 45%, #070a12);
-    }
-
-    /* Stars */
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:-3;
-      background:
-        radial-gradient(1px 1px at 6% 18%, rgba(255,255,255,.95), transparent 60%),
-        radial-gradient(1px 1px at 12% 62%, rgba(255,255,255,.75), transparent 60%),
-        radial-gradient(1px 1px at 18% 32%, rgba(255,255,255,.85), transparent 60%),
-        radial-gradient(1px 1px at 24% 78%, rgba(255,255,255,.70), transparent 60%),
-        radial-gradient(1px 1px at 31% 44%, rgba(255,255,255,.80), transparent 60%),
-        radial-gradient(1px 1px at 38% 22%, rgba(255,255,255,.90), transparent 60%),
-        radial-gradient(1px 1px at 43% 68%, rgba(255,255,255,.78), transparent 60%),
-        radial-gradient(1px 1px at 49% 36%, rgba(255,255,255,.92), transparent 60%),
-        radial-gradient(1px 1px at 56% 82%, rgba(255,255,255,.72), transparent 60%),
-        radial-gradient(1px 1px at 62% 18%, rgba(255,255,255,.88), transparent 60%),
-        radial-gradient(1px 1px at 69% 55%, rgba(255,255,255,.75), transparent 60%),
-        radial-gradient(1px 1px at 74% 28%, rgba(255,255,255,.90), transparent 60%),
-        radial-gradient(1px 1px at 81% 70%, rgba(255,255,255,.78), transparent 60%),
-        radial-gradient(1px 1px at 88% 24%, rgba(255,255,255,.88), transparent 60%),
-        radial-gradient(1px 1px at 92% 58%, rgba(255,255,255,.80), transparent 60%),
-        radial-gradient(2px 2px at 15% 15%, rgba(180,210,255,.35), transparent 60%),
-        radial-gradient(2px 2px at 72% 22%, rgba(255,190,220,.28), transparent 60%),
-        radial-gradient(2px 2px at 84% 66%, rgba(140,220,255,.24), transparent 60%);
-      opacity:.55;
-      filter:drop-shadow(0 0 10px rgba(160,190,255,.16));
-    }
-
-    /* Milky Way haze */
-    body::after{
-      content:"";
-      position:fixed;
-      inset:-12%;
-      pointer-events:none;
-      z-index:-2;
-      background:
-        radial-gradient(1200px 460px at 50% 45%, rgba(160,190,255,.14), transparent 70%),
-        radial-gradient(900px 320px at 52% 50%, rgba(255,190,220,.10), transparent 75%),
-        radial-gradient(740px 260px at 48% 55%, rgba(120,220,255,.08), transparent 78%);
-      opacity:.9;
-      transform:rotate(-10deg);
-      filter:blur(10px);
-    }
-
-    header{
-      position:sticky;
-      top:0;
-      z-index:5;
-      border-bottom:1px solid rgba(233,238,252,.10);
-      background:rgba(10,14,28,.62);
-      backdrop-filter:blur(12px);
-    }
-    .bar{
-      max-width:1100px;
-      margin:0 auto;
-      padding:14px 16px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-    }
-    .brand{
-      font-weight:900;
-      letter-spacing:.35px;
-      font-size:18px;
-      white-space:nowrap;
-    }
-    .bubbles{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .bubble{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:10px 14px;border-radius:999px;
-      border:1px solid rgba(233,238,252,.18);
-      background:rgba(12,16,34,.36);
-      color:rgba(233,238,252,.78);
-      text-decoration:none;font-weight:800;font-size:14px;letter-spacing:.2px;
-      box-shadow:0 10px 26px rgba(0,0,0,.35);
-    }
-    .bubble:hover{color:var(--fg);border-color:rgba(233,238,252,.28);background:rgba(12,16,34,.46)}
-
-    main{max-width:1100px;margin:0 auto;padding:28px 16px 72px}
-    h1{margin:16px 0 10px;font-size:52px;letter-spacing:.4px;line-height:1.05}
-    .sub{margin:0 0 18px;color:var(--muted);max-width:80ch;font-size:18px;line-height:1.6}
-
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:14px}
-
-    .card{
-      background:var(--panel);
-      border:1px solid rgba(233,238,252,.12);
-      border-radius:var(--radius);
-      padding:22px;
-      box-shadow:var(--shadow);
-    }
-    .card h2{margin:0 0 8px;font-size:22px;letter-spacing:.25px}
-    .card p{margin:0 0 14px;color:var(--muted);line-height:1.6;font-size:16px}
-
-    .pillrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:10px 14px;border-radius:999px;
-      border:1px solid rgba(233,238,252,.18);
-      background:rgba(255,255,255,.06);
-      color:var(--fg);font-weight:900;letter-spacing:.2px;
-    }
-    .pill small{color:var(--muted2);font-weight:800;letter-spacing:.15px}
-    .pill.good{border-color:rgba(120,255,180,.22)}
-    .pill.warn{border-color:rgba(255,210,120,.22)}
-    .pill.bad{border-color:rgba(255,120,140,.22)}
-
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:12px 16px;border-radius:999px;
-      border:1px solid rgba(233,238,252,.18);
-      background:rgba(255,255,255,.06);
-      color:var(--fg);text-decoration:none;font-weight:900;letter-spacing:.2px;
-      box-shadow:0 10px 26px rgba(0,0,0,.35);
-      min-width:140px;
-      cursor:pointer;
-    }
-    .btn:hover{background:rgba(255,255,255,.09);border-color:rgba(233,238,252,.28)}
-    .btn.ghost{min-width:auto;padding:10px 14px}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-
-    textarea{
-      width:100%;
-      min-height:160px;
-      resize:vertical;
-      padding:14px;
-      border-radius:16px;
-      border:1px solid rgba(233,238,252,.14);
-      background:rgba(0,0,0,.22);
-      color:var(--fg);
-      outline:none;
-      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:13px;
-      line-height:1.45;
-    }
-    .tiny{margin-top:10px;color:var(--muted2);font-size:13px;line-height:1.45}
-
-    footer{margin-top:48px;padding-top:18px;border-top:1px solid rgba(233,238,252,.10);text-align:center;color:rgba(233,238,252,.55);font-size:13px}
-
-    @media (prefers-reduced-motion: reduce){
-      body::after{transform:none}
-    }
-  </style>
-</head>
-
-<body>
-  <header>
-    <div class="bar">
-      <div class="brand">Geodiametrics</div>
-      <nav class="bubbles" aria-label="Primary navigation">
-        <a class="bubble" href="/">Home</a>
-        <a class="bubble" href="/methods/">Methods</a>
-        <a class="bubble" href="/dashboard/">Dashboard</a>
-        <a class="bubble" href="/apps/">Apps</a>
-        <a class="bubble" href="/reference/">Reference</a>
-        <a class="bubble" href="/problem/">Problem</a>
-      </nav>
+    <div class="row" style="gap:12px;flex-wrap:wrap;margin-top:12px;">
+      <div class="pill" id="regTotal">Engines: —</div>
+      <div class="pill" id="regLastSeen">Last seen: —</div>
     </div>
-  </header>
 
-  <main>
-    <h1>Dashboard</h1>
-    <p class="sub">Empirical tracking hub. Evidence-first. Audit-friendly. No narrative ordering.</p>
+    <div id="engineTable" style="margin-top:14px;display:grid;gap:10px;"></div>
 
-    <section class="grid">
-      <!-- Local analytics -->
-      <div class="card" id="localAnalyticsCard">
-        <h2>Local Analytics (Device)</h2>
-        <p>This is local-first telemetry stored in this browser. It proves the dashboard pipeline is functioning without external services.</p>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn" id="regRefresh">Refresh Registry</button>
+      <button class="btn" id="regExport">Export Registry JSON</button>
+    </div>
+    <p class="note" style="margin-top:10px;">Device-only. No identity inference. No external calls.</p>
+  </div>
+</section>
 
-        <div class="pillrow">
-          <span class="pill"><small>Pageviews</small><span id="pv">0</span></span>
-          <span class="pill"><small>Sessions</small><span id="ss">0</span></span>
-          <span class="pill"><small>Last seen</small><span id="ls">—</span></span>
-        </div>
+<section class="section">
+  <h2 class="section-title">Supervisor</h2>
+  <div class="card">
+    <p class="kicker"><strong>SUPERVISOR.</strong> Defines how engines relate. Default is isolation.</p>
 
-        <div style="height:14px"></div>
+    <div class="row" style="gap:12px;flex-wrap:wrap;margin-top:12px;">
+      <div class="pill">Mode: <strong id="supMode">ISOLATED</strong></div>
+      <div class="pill">Rule: <strong id="supRule">NONE</strong></div>
+      <div class="pill">Updated: <strong id="supUpdated">—</strong></div>
+    </div>
 
-        <h3 style="margin:0 0 10px;font-size:18px;letter-spacing:.2px">Top Paths</h3>
-        <div id="paths" class="tiny">—</div>
-
-        <div style="height:14px"></div>
-
-        <div class="row">
-          <button class="btn" id="exportTelemetry">Export Telemetry JSON</button>
-          <button class="btn" id="clearTelemetry">Clear Telemetry</button>
-        </div>
-
-        <div class="tiny">Export gives you an empirical record you can archive or compare to OSF timestamps.</div>
+    <div style="margin-top:14px;display:grid;gap:10px;">
+      <div class="mini">
+        <div class="miniTitle">ISOLATED (default)</div>
+        <div class="miniBody">Engines do not share state. Safe for A/B and parallel runs.</div>
+        <button class="btn small" data-sup="ISOLATED">Set ISOLATED</button>
       </div>
 
-      <!-- Cyclical law status -->
-      <div class="card">
-        <h2>Cyclical Dynamics Law Status</h2>
-        <p>This status is a local operator control until automated telemetry is wired.</p>
-
-        <div class="pillrow">
-          <span class="pill" id="statusPill"><small>Current</small><span id="cdoCurrent">UNKNOWN</span></span>
-          <span class="pill"><small>Last set</small><span id="cdoLast">—</span></span>
-        </div>
-
-        <div style="height:14px"></div>
-
-        <div class="row">
-          <select id="cdoSelect" class="btn" style="min-width:220px;appearance:none">
-            <option value="RUNNING">RUNNING</option>
-            <option value="HURDLE">HURDLE</option>
-            <option value="WALL">WALL</option>
-            <option value="COMPLETE">COMPLETE</option>
-          </select>
-          <button class="btn" id="cdoSave">Save</button>
-          <button class="btn" id="cdoReset">Reset</button>
-        </div>
-
-        <div class="tiny" style="margin-top:12px">
-          <b>RUNNING</b> = cycle executing (reduce/contrast/condense/dedup/improve).<br/>
-          <b>HURDLE</b> = friction; continue internally; no escalation.<br/>
-          <b>WALL</b> = proven blocker; notify; await decision.<br/>
-          <b>COMPLETE</b> = stable minimal state; proceed to next task/cycle.
+      <div class="mini">
+        <div class="miniTitle">STRUCTURAL SYNC</div>
+        <div class="miniBody">Engines share the same rule version label (no state sharing).</div>
+        <div class="row" style="gap:10px;flex-wrap:wrap;margin-top:10px;">
+          <input class="input" id="ruleVersion" placeholder="Rule version (e.g., ENGINE_SYNC_v1.2)" />
+          <button class="btn small" data-sup="STRUCTURAL">Apply Rule Version</button>
         </div>
       </div>
 
-      <!-- Manual baseline log -->
-      <div class="card">
-        <h2>Baselines</h2>
-        <p>Paste timestamped baselines here until automated analytics are wired.</p>
-
-        <textarea id="baselineText" placeholder="YYYY-MM-DD hh:mm — baseline event — notes"></textarea>
-
-        <div class="row" style="margin-top:12px">
-          <button class="btn" id="baselineSave">Save</button>
-          <button class="btn" id="baselineClear">Clear</button>
+      <div class="mini">
+        <div class="miniTitle">STATE SYNC (manual)</div>
+        <div class="miniBody">Copy state from one engine namespace to another (explicit, one-shot).</div>
+        <div class="row" style="gap:10px;flex-wrap:wrap;margin-top:10px;">
+          <input class="input" id="srcNs" placeholder="Source namespace (e.g., engine_sync_v1)" />
+          <input class="input" id="dstNs" placeholder="Target namespace (e.g., engine_sync_v2)" />
+          <button class="btn small" id="supMirror">Mirror State →</button>
         </div>
-
-        <div class="tiny">Stored locally in this browser. Reload-safe. No external services.</div>
-      </div>
-
-      <!-- Next instrumentation -->
-      <div class="card">
-        <h2>Next Instrumentation</h2>
-        <p>External analytics are deferred by default. Enable only when you want cross-device counts.</p>
-
-        <div class="pillrow">
-          <span class="pill"><small>Option A</small>Cloudflare Web Analytics</span>
-          <span class="pill"><small>Option B</small>Umami / Plausible</span>
-          <span class="pill"><small>Option C</small>GA4</span>
-        </div>
-
-        <div class="tiny" style="margin-top:12px">
-          Trigger condition: enable external analytics only after baseline integrity is locked for the current cycle and you want cross-device aggregation.
+        <div class="row" style="gap:10px;flex-wrap:wrap;margin-top:10px;">
+          <button class="btn small danger" id="supHardReset">Reset Target Namespace</button>
+          <button class="btn small" id="supExport">Export Supervisor JSON</button>
         </div>
       </div>
-    </section>
+    </div>
 
-    <footer>© 2026 Geodiametrics · Dashboard</footer>
-  </main>
-
-  <script>
-    (function(){
-      // ---------------------------
-      // LOCAL TELEMETRY (DEVICE)
-      // ---------------------------
-      const KEY = "geo.telemetry.v1";
-      const nowISO = () => new Date().toISOString();
-
-      function load(){
-        try{
-          return JSON.parse(localStorage.getItem(KEY)) || {pageviews:0,sessions:0,lastSeen:null,paths:{}};
-        }catch(e){
-          return {pageviews:0,sessions:0,lastSeen:null,paths:{}};
-        }
-      }
-      function save(data){ localStorage.setItem(KEY, JSON.stringify(data)); }
-
-      function bump(){
-        const data = load();
-        // session bucketing
-        const sKey = "geo.telemetry.session.v1";
-        const last = Number(sessionStorage.getItem(sKey) || "0");
-        const t = Date.now();
-        if (!last || (t - last) > 30*60*1000){
-          data.sessions += 1;
-        }
-        sessionStorage.setItem(sKey, String(t));
-
-        data.pageviews += 1;
-        const path = location.pathname.endsWith("/") ? location.pathname : (location.pathname + "/");
-        data.paths[path] = (data.paths[path] || 0) + 1;
-        data.lastSeen = nowISO();
-
-        save(data);
-      }
-
-      bump();
-
-      function render(){
-        const data = load();
-        document.getElementById("pv").textContent = String(data.pageviews);
-        document.getElementById("ss").textContent = String(data.sessions);
-        document.getElementById("ls").textContent = data.lastSeen ? data.lastSeen : "—";
-
-        // Top paths
-        const entries = Object.entries(data.paths || {});
-        entries.sort((a,b)=> (b[1]-a[1]));
-        const top = entries.slice(0,6);
-        const el = document.getElementById("paths");
-        if(!top.length){ el.textContent = "—"; return; }
-        el.innerHTML = top.map(([p,c])=> `<div><b>${p}</b> — ${c}</div>`).join("");
-      }
-
-      render();
-
-      document.getElementById("exportTelemetry").onclick = () => {
-        const data = load();
-        const blob = new Blob([JSON.stringify({exportedAt:nowISO(),...data}, null, 2)], {type:"application/json"});
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "geodiametrics-telemetry.json";
-        a.click();
-        setTimeout(()=>URL.revokeObjectURL(a.href), 1500);
-      };
-
-      document.getElementById("clearTelemetry").onclick = () => {
-        localStorage.removeItem(KEY);
-        render();
-      };
-
-      // ---------------------------
-      // CDO STATUS (LOCAL)
-      // ---------------------------
-      const CDO_KEY = "geo.cdo.status.v1";
-      function loadCDO(){
-        try{ return JSON.parse(localStorage.getItem(CDO_KEY)) || {status:"UNKNOWN", lastSet:null}; }
-        catch(e){ return {status:"UNKNOWN", lastSet:null}; }
-      }
-      function saveCDO(x){ localStorage.setItem(CDO_KEY, JSON.stringify(x)); }
-
-      function setCDOPill(status){
-        const pill = document.getElementById("statusPill");
-        pill.classList.remove("good","warn","bad");
-        if(status==="RUNNING" || status==="COMPLETE") pill.classList.add("good");
-        if(status==="HURDLE") pill.classList.add("warn");
-        if(status==="WALL") pill.classList.add("bad");
-        document.getElementById("cdoCurrent").textContent = status;
-      }
-
-      function renderCDO(){
-        const x = loadCDO();
-        setCDOPill(x.status || "UNKNOWN");
-        document.getElementById("cdoLast").textContent = x.lastSet ? x.lastSet : "—";
-        document.getElementById("cdoSelect").value = (x.status && x.status!=="UNKNOWN") ? x.status : "RUNNING";
-      }
-
-      document.getElementById("cdoSave").onclick = () => {
-        const v = document.getElementById("cdoSelect").value;
-        saveCDO({status:v, lastSet: nowISO()});
-        renderCDO();
-      };
-      document.getElementById("cdoReset").onclick = () => {
-        localStorage.removeItem(CDO_KEY);
-        renderCDO();
-      };
-
-      renderCDO();
-
-      // ---------------------------
-      // BASELINE LOG (LOCAL)
-      // ---------------------------
-      const BL_KEY = "geo.baselines.v1";
-      const ta = document.getElementById("baselineText");
-
-      function loadBL(){ return localStorage.getItem(BL_KEY) || ""; }
-      function saveBL(v){ localStorage.setItem(BL_KEY, v); }
-
-      ta.value = loadBL();
-
-      document.getElementById("baselineSave").onclick = () => {
-        saveBL(ta.value || "");
-      };
-      document.getElementById("baselineClear").onclick = () => {
-        localStorage.removeItem(BL_KEY);
-        ta.value = "";
-      };
-    })();
-  </script>
-</body>
-</html>
+    <p class="note" style="margin-top:12px;">
+      State sync is opt-in. If you don’t click it, nothing couples.
+    </p>
+  </div>
+</section>

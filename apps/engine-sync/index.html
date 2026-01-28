@@ -6,58 +6,70 @@
   <title>Engine Sync · Geodiametrics</title>
 
   <style>
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:#0b0f1a;
-      color:#e8ecf5;
-      line-height:1.6;
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: #0b0f1a;
+      color: #e8ecf5;
+      line-height: 1.6;
     }
-    header{
-      padding:28px;
-      border-bottom:1px solid rgba(255,255,255,0.08);
+
+    header {
+      padding: 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
-    h1{
-      margin:0;
-      font-size:28px;
-      letter-spacing:.5px;
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0.5px;
     }
-    main{
-      max-width:900px;
-      margin:0 auto;
-      padding:36px 24px 72px;
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 36px 24px 72px;
     }
-    .card{
-      padding:22px;
-      border-radius:14px;
-      background:rgba(255,255,255,0.035);
-      border:1px solid rgba(255,255,255,0.07);
-      margin-bottom:28px;
+
+    .card {
+      padding: 22px;
+      margin-bottom: 28px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.07);
     }
-    h2{
-      margin:0 0 12px;
-      font-size:18px;
-      letter-spacing:.4px;
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      letter-spacing: 0.4px;
     }
-    p{
-      margin:0 0 14px;
-      color:#d6dbeb;
+
+    p {
+      margin: 0 0 12px;
+      color: #d6dbeb;
     }
-    a.button{
-      display:inline-block;
-      padding:10px 18px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,0.18);
-      color:#fff;
-      text-decoration:none;
-      font-size:14px;
+
+    .button {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #e8ecf5;
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 14px;
     }
-    footer{
-      border-top:1px solid rgba(255,255,255,0.08);
-      padding:24px;
-      text-align:center;
-      font-size:14px;
-      color:#aab0c5;
+
+    .button:hover {
+      background: rgba(255,255,255,0.14);
+    }
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 24px;
+      text-align: center;
+      font-size: 14px;
+      color: #aab0c5;
     }
   </style>
 </head>
@@ -70,36 +82,69 @@
 
 <main>
 
-  <div class="card">
+  <section class="card">
     <h2>PURPOSE</h2>
     <p>
       Local-first execution state tracking. Operator-controlled cycles.
       Proof without narrative. This surface exists to make execution observable,
       not persuasive.
     </p>
-  </div>
+  </section>
 
-  <div class="card">
+  <section class="card">
     <h2>FUNCTION</h2>
     <p>
-      Engine Sync records execution state transitions and cycle status
-      without external analytics or identity inference.
+      Engine Sync records execution state transitions and cycle status without
+      external analytics, identity inference, or remote storage.
     </p>
-  </div>
+  </section>
 
-  <div class="card">
-    <h2>STATUS</h2>
-    <p>
-      Live. Operator-controlled. Telemetry local-first.
+  <section class="card">
+    <h2>CYCLE STATE</h2>
+
+    <p id="cycle-description">
+      Current execution state.
     </p>
-    <a class="button" href="/apps/">Back to Apps</a>
-  </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;">
+      <button class="button" onclick="setCycle(1)">1 · RUNNING</button>
+      <button class="button" onclick="setCycle(2)">2 · HURDLE</button>
+      <button class="button" onclick="setCycle(3)">3 · WALL</button>
+      <button class="button" onclick="setCycle(4)">4 · COMPLETE</button>
+    </div>
+
+    <p style="margin-top:14px;font-size:14px;color:#aab0c5;">
+      State persists locally. Reload-safe. No external services.
+    </p>
+  </section>
 
 </main>
 
 <footer>
   © 2026 Geodiametrics · Engine Sync
 </footer>
+
+<script>
+  const cycleMap = {
+    1: "RUNNING — cycle executing (reduce / condense / improve)",
+    2: "HURDLE — friction detected; continue internally",
+    3: "WALL — proven blocker; await decision",
+    4: "COMPLETE — stable minimal state; advance cycle"
+  };
+
+  function setCycle(n) {
+    localStorage.setItem("engineSyncCycle", n);
+    renderCycle();
+  }
+
+  function renderCycle() {
+    const n = localStorage.getItem("engineSyncCycle") || 1;
+    document.getElementById("cycle-description").innerText =
+      "Current: " + cycleMap[n];
+  }
+
+  renderCycle();
+</script>
 
 </body>
 </html>

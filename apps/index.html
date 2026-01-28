@@ -1,142 +1,166 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Apps · Geodiametrics</title>
 
   <style>
     :root{
       --fg:#e9eefc;
-      --muted:rgba(233,238,252,.72);
+      --muted:rgba(233,238,252,.65);
       --stroke:rgba(233,238,252,.14);
       --panel:rgba(12,16,34,.62);
-      --glass:rgba(10,14,28,.62);
+      --glass:rgba(10,14,28,.55);
       --shadow:0 18px 55px rgba(0,0,0,.55);
       --radius:22px;
     }
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell;
       color:var(--fg);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 900px at 15% 10%, rgba(140,160,255,.18), transparent 60%),
+        radial-gradient(900px 700px at 85% 30%, rgba(180,120,255,.14), transparent 60%),
+        linear-gradient(180deg,#070b18,#050714 70%,#04040f);
       overflow-x:hidden;
-      background:
-        radial-gradient(1200px 900px at 18% 12%, rgba(120,150,255,.20), transparent 60%),
-        radial-gradient(900px 720px at 78% 34%, rgba(255,120,200,.14), transparent 62%),
-        radial-gradient(1100px 800px at 55% 78%, rgba(90,210,255,.10), transparent 68%),
-        linear-gradient(180deg, #070a12, #0b1020 45%, #070a12);
     }
-    body::before{
-      content:"";
-      position:fixed; inset:0;
-      pointer-events:none; z-index:-3;
-      background:
-        radial-gradient(1px 1px at 6% 18%, rgba(255,255,255,.95), transparent 60%),
-        radial-gradient(1px 1px at 12% 62%, rgba(255,255,255,.75), transparent 60%),
-        radial-gradient(1px 1px at 18% 32%, rgba(255,255,255,.85), transparent 60%),
-        radial-gradient(1px 1px at 24% 78%, rgba(255,255,255,.70), transparent 60%),
-        radial-gradient(2px 2px at 72% 22%, rgba(255,190,220,.28), transparent 60%),
-        radial-gradient(2px 2px at 84% 66%, rgba(140,220,255,.24), transparent 60%);
-      opacity:.55;
-      filter:drop-shadow(0 0 10px rgba(160,190,255,.16));
-    }
+
     header{
-      position:sticky; top:0; z-index:10;
-      border-bottom:1px solid rgba(233,238,252,.10);
-      background:var(--glass);
-      backdrop-filter:blur(12px);
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(14px);
+      background:linear-gradient(180deg,rgba(6,9,20,.75),rgba(6,9,20,.35));
+      border-bottom:1px solid var(--stroke);
     }
+
     .bar{
-      max-width:1200px;margin:0 auto;padding:14px 16px;
-      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      max-width:1100px;
+      margin:auto;
+      padding:16px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
     }
-    .brand{font-weight:900;letter-spacing:.35px;font-size:18px;white-space:nowrap}
-    .bubbles{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .bubble{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:10px 14px;border-radius:999px;
-      border:1px solid rgba(233,238,252,.18);
-      background:rgba(12,16,34,.36);
-      color:rgba(233,238,252,.78);
-      text-decoration:none;font-weight:800;font-size:14px;letter-spacing:.2px;
+
+    .brand{font-weight:600;letter-spacing:.3px}
+
+    nav a{
+      margin-left:12px;
+      padding:10px 16px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      color:var(--fg);
+      text-decoration:none;
       box-shadow:0 10px 26px rgba(0,0,0,.35);
-      min-width:118px;
     }
-    .bubble:hover{color:var(--fg);border-color:rgba(233,238,252,.28);background:rgba(12,16,34,.46)}
 
-    main{max-width:1200px;margin:0 auto;padding:34px 16px 70px}
-    h1{margin:16px 0 10px;font-size:54px;letter-spacing:.2px;line-height:1.05}
-    .sub{margin:0 0 18px;color:var(--muted);max-width:90ch;font-size:18px;line-height:1.6}
+    main{
+      max-width:1100px;
+      margin:auto;
+      padding:56px 20px 80px;
+    }
 
-    .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));margin-top:18px}
+    h1{
+      font-size:42px;
+      margin:0 0 12px;
+      letter-spacing:.4px;
+    }
+
+    .subtitle{
+      color:var(--muted);
+      max-width:720px;
+      margin-bottom:36px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:28px;
+    }
+
     .card{
-      background:var(--panel);
-      border:1px solid rgba(233,238,252,.12);
+      padding:28px;
       border-radius:var(--radius);
-      padding:18px;
+      background:var(--panel);
+      border:1px solid var(--stroke);
       box-shadow:var(--shadow);
     }
-    .card h2{margin:0 0 8px;font-size:22px;letter-spacing:.25px}
-    .card p{margin:0 0 12px;color:var(--muted);line-height:1.6;font-size:16px}
-    .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:12px 16px;border-radius:999px;
-      border:1px solid rgba(233,238,252,.18);
-      background:rgba(255,255,255,.06);
-      color:var(--fg);text-decoration:none;font-weight:900;letter-spacing:.2px;
-      box-shadow:0 10px 26px rgba(0,0,0,.35);
+
+    .card h2{margin-top:0}
+
+    .button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      margin-top:18px;
+      padding:12px 18px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.08);
+      color:var(--fg);
+      text-decoration:none;
       min-width:160px;
+      box-shadow:0 10px 26px rgba(0,0,0,.35);
     }
-    .btn:hover{background:rgba(255,255,255,.09);border-color:rgba(233,238,252,.28)}
-    footer{margin-top:48px;padding-top:18px;border-top:1px solid rgba(233,238,252,.10);text-align:center;color:rgba(233,238,252,.55);font-size:13px}
+
+    footer{
+      text-align:center;
+      color:var(--muted);
+      padding:48px 20px 28px;
+    }
   </style>
 </head>
 
 <body>
+
 <header>
   <div class="bar">
     <div class="brand">Geodiametrics</div>
-    <nav class="bubbles">
-      <a class="bubble" href="/">Home</a>
-      <a class="bubble" href="/methods/">Methods</a>
-      <a class="bubble" href="/dashboard/">Dashboard</a>
-      <a class="bubble" href="/apps/">Apps</a>
-      <a class="bubble" href="/reference/">Reference</a>
-      <a class="bubble" href="/problem/">Problem</a>
-      <a class="bubble" href="/architecture/">Architecture</a>
-      <a class="bubble" href="/engine-room/">Engine Room</a>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/architecture/">Architecture</a>
+      <a href="/apps/">Apps</a>
     </nav>
   </div>
 </header>
 
 <main>
   <h1>Apps</h1>
-  <p class="sub">
-    Viewer surface for published artifacts. Engines and coordination live in the Engine Room.
+  <p class="subtitle">
+    Viewer surface only. Engines execute elsewhere. Nothing runs here.
   </p>
 
-  <section class="grid">
+  <div class="grid">
+
     <div class="card">
       <h2>Engine Room</h2>
-      <p>Authoritative execution locus: engines + matrix + cross-engine walls.</p>
-      <div class="btnrow">
-        <a class="btn" href="/engine-room/">Open Engine Room</a>
-      </div>
+      <p>
+        Foundational execution space. Engines live, register, and operate here.
+      </p>
+      <a class="button" href="/engine-room/">Open Engine Room</a>
     </div>
 
     <div class="card">
-      <h2>Published Artifacts</h2>
-      <p>Public-facing tools and stable outputs appear here when promoted from Engine Room.</p>
-      <div class="btnrow">
-        <a class="btn" href="/apps/">Refresh</a>
-      </div>
+      <h2>Engine Matrix</h2>
+      <p>
+        Cross-engine registry and supervision layer. Discovers engines by device.
+      </p>
+      <a class="button" href="/engine-matrix/">Open Engine Matrix</a>
     </div>
-  </section>
 
-  <footer>© 2026 Geodiametrics · Apps</footer>
+  </div>
 </main>
+
+<footer>
+  © 2026 Geodiametrics · Apps Viewer
+</footer>
+
 </body>
 </html>

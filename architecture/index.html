@@ -2,251 +2,124 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Quad-Core Engine · Geodiametrics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Architecture · Geodiametrics</title>
 
 <style>
 :root{
-  --fg:#eef2ff;
-  --muted:rgba(238,242,255,.75);
-  --stroke:rgba(238,242,255,.16);
-  --panel:rgba(10,14,32,.72);
-  --panel-soft:rgba(10,14,32,.52);
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.65);
+  --panel:rgba(12,16,34,.62);
+  --stroke:rgba(233,238,252,.14);
   --radius:22px;
-  --shadow:0 30px 90px rgba(0,0,0,.75);
 }
 
-/* reset */
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
+html,body{height:100%}
+
 body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  margin:0;
   color:var(--fg);
-  overflow-x:hidden;
-
-  /* COSMIC / MILKY WAY BACKGROUND */
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   background:
-    radial-gradient(1200px 900px at 15% 20%, rgba(140,170,255,.28), transparent 60%),
-    radial-gradient(900px 700px at 80% 25%, rgba(255,160,220,.22), transparent 60%),
-    radial-gradient(1000px 900px at 55% 85%, rgba(180,140,255,.20), transparent 65%),
-    radial-gradient(1200px 1200px at 50% 50%, rgba(90,130,255,.12), transparent 70%),
-    #050814;
+    radial-gradient(1200px 900px at 20% 10%, rgba(122,162,255,.16), transparent 60%),
+    radial-gradient(900px 700px at 80% 30%, rgba(180,140,255,.14), transparent 60%),
+    linear-gradient(180deg,#070b18,#04040f);
 }
 
-/* STARFIELD */
-body::before{
-  content:"";
-  position:fixed;
-  inset:-10%;
-  pointer-events:none;
-  opacity:.85;
-  background-image:
-    radial-gradient(1px 1px at 5% 10%, #fff, transparent),
-    radial-gradient(1px 1px at 15% 70%, #fff, transparent),
-    radial-gradient(1px 1px at 25% 30%, #fff, transparent),
-    radial-gradient(1px 1px at 35% 90%, #fff, transparent),
-    radial-gradient(1px 1px at 45% 20%, #fff, transparent),
-    radial-gradient(1px 1px at 55% 60%, #fff, transparent),
-    radial-gradient(1px 1px at 65% 35%, #fff, transparent),
-    radial-gradient(1px 1px at 75% 80%, #fff, transparent),
-    radial-gradient(1px 1px at 85% 15%, #fff, transparent),
-    radial-gradient(1px 1px at 95% 55%, #fff, transparent);
-  background-size:900px 900px;
-  filter:blur(.3px);
-}
-
-/* HEADER */
-header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  backdrop-filter:blur(12px);
-  background:linear-gradient(to bottom, rgba(5,8,20,.92), rgba(5,8,20,.35));
-  border-bottom:1px solid var(--stroke);
-}
-
-.bar{
-  max-width:1100px;
-  margin:0 auto;
-  padding:16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-
-.brand{
-  font-weight:800;
-  letter-spacing:.3px;
-}
-
-.nav{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-}
-
-.nav a{
-  padding:10px 16px;
-  border-radius:999px;
-  border:1px solid rgba(238,242,255,.22);
-  background:rgba(255,255,255,.06);
-  color:var(--fg);
-  text-decoration:none;
-  font-weight:650;
-  box-shadow:0 10px 26px rgba(0,0,0,.45);
-}
-
-.nav a:hover{background:rgba(255,255,255,.1)}
-
-@media (max-width:720px){
-  .bar{flex-direction:column;align-items:flex-start}
-  .nav{width:100%;display:grid;grid-template-columns:repeat(2,1fr)}
-}
-
-/* CONTENT */
 main{
   max-width:1100px;
   margin:0 auto;
-  padding:56px 16px 96px;
-}
-
-.hero{
-  padding-bottom:28px;
-  border-bottom:1px solid rgba(238,242,255,.14);
+  padding:96px 20px 120px;
 }
 
 h1{
-  font-size:54px;
-  margin:0;
-  letter-spacing:-.6px;
+  font-size:clamp(38px,6vw,64px);
+  margin:0 0 12px;
 }
 
-.subtitle{
-  margin-top:14px;
-  max-width:62ch;
+.lead{
+  color:var(--muted);
+  max-width:780px;
   font-size:18px;
-  line-height:1.65;
-  color:var(--muted);
+  line-height:1.6;
 }
 
-.section{
-  margin-top:36px;
-  background:linear-gradient(180deg,var(--panel),var(--panel-soft));
-  border:1px solid var(--stroke);
-  border-radius:var(--radius);
+.panel{
+  margin-top:48px;
   padding:28px;
-  box-shadow:var(--shadow);
-}
-
-.section h2{
-  margin:0 0 10px;
-  font-size:26px;
-}
-
-.section p{
-  margin:0;
-  line-height:1.7;
-  color:var(--muted);
+  border-radius:var(--radius);
+  background:var(--panel);
+  border:1px solid var(--stroke);
 }
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:18px;
-  margin-top:18px;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:22px;
+  margin-top:24px;
 }
 
 .card{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(238,242,255,.14);
-  border-radius:18px;
   padding:22px;
+  border-radius:18px;
+  background:rgba(10,14,28,.6);
+  border:1px solid var(--stroke);
 }
 
-.card h3{margin:0 0 6px}
-.card p{margin:0;color:var(--muted)}
-
-footer{
-  text-align:center;
-  padding:48px 16px;
-  color:var(--muted);
-  border-top:1px solid rgba(238,242,255,.14);
-  background:linear-gradient(to top, rgba(5,8,20,.85), transparent);
+a.button{
+  display:inline-block;
+  margin-top:14px;
+  padding:10px 16px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  color:var(--fg);
+  text-decoration:none;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <div class="bar">
-    <div class="brand">Geodiametrics</div>
-    <nav class="nav">
-      <a href="/">Home</a>
-      <a href="/methods/">Methods</a>
-      <a href="/dashboard/">Dashboard</a>
-      <a href="/apps/">Apps</a>
-      <a href="/reference/">Reference</a>
-      <a href="/problem/">Problem</a>
-      <a href="/architecture/">Architecture</a>
-    </nav>
-  </div>
-</header>
-
 <main>
-
-<section class="hero">
-  <h1>Quad-Core Engine</h1>
-  <div class="subtitle">
-    Structural execution model and cross-engine invariants.
-  </div>
-</section>
-
-<section class="section">
-  <h2>System Overview</h2>
-  <p>
-    The Geodiametrics engine is not a workflow, dashboard, or optimization tool.
-    It is a constraint-first execution surface composed of four irreducible cores.
-    Multiple engines may exist simultaneously. Their interaction is governed by
-    explicit, non-negotiable walls.
+  <h1>Architecture</h1>
+  <p class="lead">
+    This page defines the structural system of Geodiametrics.
+    Execution, engines, and coordination are components within this architecture,
+    not the architecture itself.
   </p>
-</section>
 
-<section class="section">
-  <h2>The Four Cores</h2>
-  <div class="grid">
-    <div class="card">
-      <h3>Selection</h3>
-      <p>Admissibility gate. Inputs must satisfy constraints to enter execution.</p>
+  <section class="panel">
+    <h2>Structural Layers</h2>
+    <div class="grid">
+      <div class="card">
+        <strong>Architecture</strong><br/>
+        System structure, invariants, and relationships.
+      </div>
+      <div class="card">
+        <strong>Engine Room</strong><br/>
+        Execution core where engines are instantiated and observed.
+        <br/>
+        <a class="button" href="/engine-room/">Open Engine Room</a>
+      </div>
+      <div class="card">
+        <strong>Apps</strong><br/>
+        Viewer surfaces only. No execution.
+        <br/>
+        <a class="button" href="/apps/">Open Apps</a>
+      </div>
     </div>
-    <div class="card">
-      <h3>Resolution</h3>
-      <p>Minimal structural completion. One admitted path resolves.</p>
-    </div>
-    <div class="card">
-      <h3>Commitment</h3>
-      <p>Irreversible binding. No rollback once committed.</p>
-    </div>
-    <div class="card">
-      <h3>Continuation</h3>
-      <p>Persistent execution state across time and reloads.</p>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="section">
-  <h2>Cross-Engine Walls</h2>
-  <p>
-    Engines do not implicitly share state. Synchronization is explicit, scoped,
-    and auditable. Structural walls prevent contamination, narrative leakage,
-    and retroactive reinterpretation.
-  </p>
-</section>
+  <section class="panel">
+    <h2>Execution Principle</h2>
+    <p class="lead">
+      Engines do not define structure. Structure defines engines.
+      Architecture is authoritative; execution is subordinate.
+    </p>
+  </section>
 
 </main>
-
-<footer>© 2026 Geodiametrics</footer>
 
 </body>
 </html>

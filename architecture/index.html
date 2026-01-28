@@ -1,1 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quad-Core Engine & Cross-Engine Laws · Geodiametrics</title>
 
+  <style>
+    :root{
+      --bg:#070b14;
+      --panel:#0e1422;
+      --panel-soft:#111a2d;
+      --text:#e8ecf5;
+      --muted:#aab2c8;
+      --accent:#7aa2ff;
+      --border:rgba(255,255,255,.08);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:radial-gradient(1200px 600px at 70% -10%, #141c33 0%, transparent 60%),
+                 radial-gradient(900px 500px at 10% 10%, #0c1326 0%, transparent 55%),
+                 var(--bg);
+      color:var(--text);
+      line-height:1.6;
+    }
+
+    header{
+      padding:64px 24px 24px;
+      border-bottom:1px solid var(--border);
+    }
+
+    h1{
+      margin:0 0 8px;
+      font-size:40px;
+      letter-spacing:.4px;
+    }
+
+    h2{
+      margin:0 0 8px;
+      font-size:26px;
+    }
+
+    h3{
+      margin:0 0 6px;
+      font-size:18px;
+      letter-spacing:.3px;
+    }
+
+    p{margin:0 0 12px;color:var(--muted)}
+
+    main{
+      max-width:980px;
+      margin:0 auto;
+      padding:32px 20px 96px;
+    }
+
+    section{
+      background:linear-gradient(180deg, var(--panel), var(--panel-soft));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:28px;
+      margin-bottom:28px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:16px;
+    }
+
+    .card{
+      background:rgba(255,255,255,.02);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:18px;
+    }
+
+    .tag{
+      display:inline-block;
+      font-size:12px;
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    ul{
+      margin:10px 0 0 18px;
+      padding:0;
+    }
+
+    li{margin-bottom:6px}
+
+    footer{
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      border-top:1px solid var(--border);
+      padding:24px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Quad-Core Engine</h1>
+  <p>Structural execution model and cross-engine invariants.</p>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section>
+    <h2>System Overview</h2>
+    <p>
+      The Geodiametrics engine is not a workflow, dashboard, or optimization tool.
+      It is a constraint-first execution surface composed of four irreducible cores.
+    </p>
+    <p>
+      Multiple engines may exist simultaneously. Their interaction is governed
+      by explicit, non-negotiable walls.
+    </p>
+  </section>
+
+  <!-- QUAD CORE -->
+  <section>
+    <h2>The Four Cores</h2>
+
+    <div class="grid">
+      <div class="card">
+        <span class="tag">Core 1</span>
+        <h3>Selection</h3>
+        <p>Admissibility gate.</p>
+        <ul>
+          <li>Inputs are either admitted or rejected</li>
+          <li>No optimization, persuasion, or intent inference</li>
+          <li>All downstream cores depend on this decision</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <span class="tag">Core 2</span>
+        <h3>Resolution</h3>
+        <p>Minimal structural completion.</p>
+        <ul>
+          <li>Exactly one admitted input resolves</li>
+          <li>No branching once resolution begins</li>
+          <li>Produces a single executable state</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <span class="tag">Core 3</span>
+        <h3>Commitment</h3>
+        <p>Irreversible lock.</p>
+        <ul>
+          <li>No rollback after commit</li>
+          <li>Resets are explicit, not implicit</li>
+          <li>Commit marks state as authoritative</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <span class="tag">Core 4</span>
+        <h3>Continuation</h3>
+        <p>Persistent execution.</p>
+        <ul>
+          <li>State survives reloads</li>
+          <li>Cycle stages are observable</li>
+          <li>No escalation without operator action</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CROSS ENGINE WALLS -->
+  <section>
+    <h2>Cross-Engine Walls</h2>
+    <p>
+      Engines may coexist, but they are never implicitly coupled.
+      These walls are structural law.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>State Isolation</h3>
+        <ul>
+          <li>Engines do not share state by default</li>
+          <li>State sync is opt-in and one-shot</li>
+          <li>No background propagation</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Structural Sync Only</h3>
+        <ul>
+          <li>Engines may share rule labels</li>
+          <li>No data or history transfer</li>
+          <li>Used for A/B and parallel runs</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>No Identity Inference</h3>
+        <ul>
+          <li>Engines cannot identify operators</li>
+          <li>No cross-engine attribution</li>
+          <li>No behavioral fingerprinting</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Supervisor Constraints</h3>
+        <ul>
+          <li>Supervisor never mutates engine state automatically</li>
+          <li>All actions are operator-initiated</li>
+          <li>Exports are explicit and auditable</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY THIS MATTERS -->
+  <section>
+    <h2>Why This Architecture Exists</h2>
+    <ul>
+      <li>To make execution observable instead of persuasive</li>
+      <li>To separate structure from narrative</li>
+      <li>To allow parallel truth testing without contamination</li>
+      <li>To prevent hidden coupling and silent drift</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 Geodiametrics · Quad-Core Architecture
+</footer>
+
+</body>
+</html>

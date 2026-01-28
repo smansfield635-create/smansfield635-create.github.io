@@ -1,95 +1,107 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Methods · Scientific Findings</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Methods · Scientific Findings — Geodiametrics</title>
 
 <style>
-/* ---------- RESET ---------- */
+:root{
+  --bg:#02040a;
+  --card:rgba(10,14,26,.78);
+  --border:rgba(255,255,255,.08);
+  --text:#e9edf7;
+  --muted:#b8c0d9;
+}
+
 *{box-sizing:border-box}
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  color:#e8ecf5;
-  background:#05070f;
+  color:var(--text);
+  background:radial-gradient(1200px 800px at 20% 30%, #0b1230 0%, #02040a 60%);
   overflow-x:hidden;
 }
 
-/* ---------- STARFIELD ---------- */
-body::before,
-body::after{
+/* STARFIELD */
+body::before{
   content:"";
   position:fixed;
   inset:0;
   background:
-    radial-gradient(1px 1px at 10% 20%, #fff 50%, transparent 51%),
-    radial-gradient(1px 1px at 30% 80%, #fff 50%, transparent 51%),
-    radial-gradient(1px 1px at 70% 40%, #fff 50%, transparent 51%),
-    radial-gradient(1px 1px at 90% 60%, #fff 50%, transparent 51%),
-    radial-gradient(1px 1px at 50% 10%, #fff 50%, transparent 51%);
-  opacity:.35;
+    radial-gradient(1px 1px at 20% 30%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 80% 20%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 60% 70%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 40% 80%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 10% 60%, #fff 50%, transparent 51%);
+  background-size:200px 200px;
+  opacity:.25;
   pointer-events:none;
 }
+
+/* MILKY WAY BAND */
 body::after{
+  content:"";
+  position:fixed;
+  inset:-20%;
   background:
-    radial-gradient(2px 2px at 20% 30%, #9bb2ff 50%, transparent 51%),
-    radial-gradient(2px 2px at 60% 70%, #9bb2ff 50%, transparent 51%),
-    radial-gradient(2px 2px at 80% 20%, #9bb2ff 50%, transparent 51%);
-  opacity:.18;
+    radial-gradient(800px 200px at 40% 50%, rgba(180,140,255,.12), transparent 70%),
+    radial-gradient(600px 160px at 55% 55%, rgba(255,200,160,.08), transparent 75%);
+  transform:rotate(-18deg);
+  pointer-events:none;
 }
 
-/* ---------- HEADER ---------- */
 header{
-  padding:48px 24px 32px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  backdrop-filter:blur(6px);
+  padding:56px 24px 32px;
+  max-width:960px;
+  margin:auto;
 }
-header h1{
+h1{
   margin:0;
-  font-size:36px;
+  font-size:42px;
   letter-spacing:.6px;
 }
+hr{
+  border:0;
+  border-top:1px solid var(--border);
+  margin:24px 0 0;
+}
 
-/* ---------- LAYOUT ---------- */
 main{
-  max-width:900px;
-  margin:0 auto;
-  padding:48px 24px 96px;
+  max-width:960px;
+  margin:auto;
+  padding:32px 24px 96px;
 }
-.section{
-  margin-bottom:48px;
-}
+
 .card{
-  padding:28px;
+  background:var(--card);
+  border:1px solid var(--border);
   border-radius:18px;
-  background:rgba(255,255,255,.045);
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 20px 60px rgba(0,0,0,.45);
+  padding:26px;
+  margin-bottom:28px;
+  backdrop-filter:blur(6px);
 }
+
 h2{
   margin:0 0 12px;
   font-size:22px;
   letter-spacing:.4px;
 }
 h3{
-  margin:0 0 10px;
+  margin:22px 0 10px;
   font-size:18px;
-  letter-spacing:.3px;
 }
 p{
   margin:0 0 14px;
-  color:#d6dbeb;
+  color:var(--muted);
   line-height:1.7;
 }
 
-/* ---------- FOOTER ---------- */
 footer{
-  border-top:1px solid rgba(255,255,255,.08);
-  padding:24px;
   text-align:center;
-  font-size:14px;
-  color:#aab0c5;
+  padding:40px 16px;
+  color:#8f97b3;
+  border-top:1px solid var(--border);
 }
 </style>
 </head>
@@ -98,65 +110,83 @@ footer{
 
 <header>
   <h1>Methods · Scientific Findings</h1>
+  <hr>
 </header>
 
 <main>
 
-  <div class="section card">
+  <section class="card">
     <h2>Priority Knowledge Boundary</h2>
     <p>
-      All pre-verbal, sensory, and intuitive inputs are treated as priority knowledge—providing access to signal without conferring authority.
-      Such inputs may guide exploration but may not override externally observable evidence, invariant structure, or proof-gated execution.
+      All pre-verbal, sensory, and intuitive inputs are treated as priority knowledge—
+      providing access to signal without conferring authority.
+      Such inputs may guide exploration but may not override externally observable
+      evidence, invariant structure, or proof-gated execution.
     </p>
-  </div>
+  </section>
 
-  <div class="section card">
+  <section class="card">
     <h2>Methods Page Role</h2>
     <p>
       This page documents <strong>scientific findings only</strong>.
-      It does not describe engineering implementation, interface design, tooling, or narrative framing.
+      It does not describe engineering implementation, interface design,
+      tooling, or narrative framing.
       Those appear elsewhere as execution artifacts.
     </p>
-  </div>
+  </section>
 
-  <div class="section card">
+  <section class="card">
     <h2>Tier 1 · Foundational Discovery</h2>
     <h3>Coherence Is the Primary Constraint</h3>
     <p>
       Stable systems across domains persist only when internal coherence is preserved.
-      Optimization, intelligence, and activity cannot compensate for incoherent structure.
-      Coherence functions as a governing constraint, not an emergent property.
+      When coherence is violated, growth, activity, intelligence, or scale
+      cannot prevent collapse.
     </p>
-  </div>
+  </section>
 
-  <div class="section card">
-    <h2>Tier 2 · Secondary Findings</h2>
-    <h3>Constraint Precedes Strategy</h3>
-    <p>
-      Systems fail when strategy, tooling, or narrative framing precede constraint definition.
-      When constraints are enforced first, structure emerges naturally without prescriptive design.
-    </p>
-    <h3>Execution Reveals Structure</h3>
-    <p>
-      Coherence and fragmentation become visible only through execution.
-      Static reasoning is insufficient to diagnose system stability.
-    </p>
-  </div>
+  <section class="card">
+    <h2>Tier 2 · Core Consequences</h2>
 
-  <div class="section card">
+    <h3>Constraint Precedes Optimization</h3>
+    <p>
+      Systems fail when execution begins before constraints are enforced.
+      Optimization applied prior to admissibility produces fragmentation.
+    </p>
+
+    <h3>Structure Emerges from Constraint</h3>
+    <p>
+      Architecture is not a design target.
+      It emerges as a consequence of constraint satisfaction and admissible execution.
+    </p>
+  </section>
+
+  <section class="card">
     <h2>Tier 3 · Derived Implications</h2>
+
+    <h3>Failure Modes Are Diagnostic</h3>
     <p>
-      • Activity without constraint produces false progress.<br/>
-      • Collapse is diagnostic unless invariants are violated.<br/>
-      • Stress reveals structure faster than optimization.<br/>
-      • Measurement without interpretation preserves objectivity.
+      Failures that do not violate core constraints provide information
+      about system boundaries rather than disproof.
     </p>
-  </div>
+
+    <h3>Activity Without Coherence Produces False Progress</h3>
+    <p>
+      Motion without constraint creates visible output
+      without stable trajectory or persistence.
+    </p>
+
+    <h3>Collapse Reveals Violated Constraints</h3>
+    <p>
+      Collapse is not random.
+      It is the observable signature of coherence loss.
+    </p>
+  </section>
 
 </main>
 
 <footer>
-  © 2026 Geodiametrics · Scientific Methods
+  © 2026 Geodiametrics · Scientific Findings
 </footer>
 
 </body>

@@ -1,107 +1,122 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Quad-Core Engine & Cross-Engine Laws · Geodiametrics</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Quad-Core Engine · Geodiametrics</title>
 
   <style>
     :root{
-      --bg:#070b14;
-      --panel:#0e1422;
-      --panel-soft:#111a2d;
-      --text:#e8ecf5;
-      --muted:#aab2c8;
-      --accent:#7aa2ff;
-      --border:rgba(255,255,255,.08);
-      --radius:18px;
+      --fg:#e9eefc;
+      --muted:rgba(233,238,252,.7);
+      --stroke:rgba(233,238,252,.14);
+      --panel:rgba(12,16,34,.62);
+      --panel-soft:rgba(12,16,34,.42);
+      --radius:22px;
+      --shadow:0 24px 70px rgba(0,0,0,.65);
     }
 
     *{box-sizing:border-box}
+    html,body{margin:0;height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+
     body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:radial-gradient(1200px 600px at 70% -10%, #141c33 0%, transparent 60%),
-                 radial-gradient(900px 500px at 10% 10%, #0c1326 0%, transparent 55%),
-                 var(--bg);
-      color:var(--text);
-      line-height:1.6;
+      color:var(--fg);
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(120,140,255,.18), transparent 60%),
+        radial-gradient(900px 500px at 80% 30%, rgba(180,120,255,.14), transparent 60%),
+        radial-gradient(1000px 700px at 50% 80%, rgba(255,120,200,.10), transparent 60%),
+        #070b18;
+      overflow-x:hidden;
+    }
+
+    /* star field */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:
+        radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.9), transparent),
+        radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,.7), transparent),
+        radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,.8), transparent),
+        radial-gradient(1px 1px at 90% 10%, rgba(255,255,255,.6), transparent),
+        radial-gradient(1px 1px at 55% 60%, rgba(255,255,255,.75), transparent);
+      background-size:800px 800px;
+      pointer-events:none;
+      opacity:.55;
     }
 
     header{
-      padding:64px 24px 24px;
-      border-bottom:1px solid var(--border);
+      padding:26px 28px;
+      border-bottom:1px solid var(--stroke);
+      background:linear-gradient(to bottom, rgba(7,11,24,.85), rgba(7,11,24,.35));
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(10px);
     }
 
-    h1{
-      margin:0 0 8px;
-      font-size:40px;
-      letter-spacing:.4px;
+    .bar{
+      max-width:1200px;
+      margin:auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
     }
 
-    h2{
-      margin:0 0 8px;
-      font-size:26px;
+    .brand{font-weight:700;letter-spacing:.3px}
+
+    nav a{
+      text-decoration:none;
+      color:var(--fg);
+      border:1px solid var(--stroke);
+      padding:10px 16px;
+      border-radius:999px;
+      margin-left:8px;
+      background:rgba(255,255,255,.04);
+      box-shadow:0 10px 26px rgba(0,0,0,.35);
     }
 
-    h3{
-      margin:0 0 6px;
-      font-size:18px;
-      letter-spacing:.3px;
+    main{max-width:1100px;margin:0 auto;padding:64px 20px 96px}
+
+    h1{font-size:42px;margin:0 0 10px}
+    h2{margin:0 0 12px}
+    p{color:var(--muted);line-height:1.65}
+
+    .hero{
+      margin-bottom:46px;
     }
 
-    p{margin:0 0 12px;color:var(--muted)}
-
-    main{
-      max-width:980px;
-      margin:0 auto;
-      padding:32px 20px 96px;
-    }
-
-    section{
+    .card{
       background:linear-gradient(180deg, var(--panel), var(--panel-soft));
-      border:1px solid var(--border);
+      border:1px solid var(--stroke);
       border-radius:var(--radius);
       padding:28px;
+      box-shadow:var(--shadow);
       margin-bottom:28px;
     }
 
     .grid{
       display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:16px;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:20px;
     }
 
-    .card{
-      background:rgba(255,255,255,.02);
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:18px;
+    .core{
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--stroke);
+      border-radius:18px;
+      padding:22px;
     }
 
-    .tag{
-      display:inline-block;
-      font-size:12px;
-      padding:4px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      color:var(--muted);
-      margin-bottom:8px;
-    }
-
-    ul{
-      margin:10px 0 0 18px;
-      padding:0;
-    }
-
-    li{margin-bottom:6px}
+    .core h3{margin-top:0}
 
     footer{
       text-align:center;
       color:var(--muted);
-      font-size:13px;
-      border-top:1px solid var(--border);
-      padding:24px;
+      padding:40px 20px;
+      border-top:1px solid var(--stroke);
+      background:linear-gradient(to top, rgba(7,11,24,.75), transparent);
     }
   </style>
 </head>
@@ -109,138 +124,76 @@
 <body>
 
 <header>
-  <h1>Quad-Core Engine</h1>
-  <p>Structural execution model and cross-engine invariants.</p>
+  <div class="bar">
+    <div class="brand">Geodiametrics</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/methods/">Methods</a>
+      <a href="/dashboard/">Dashboard</a>
+      <a href="/apps/">Apps</a>
+      <a href="/reference/">Reference</a>
+      <a href="/problem/">Problem</a>
+    </nav>
+  </div>
 </header>
 
 <main>
 
-  <!-- OVERVIEW -->
-  <section>
+  <section class="hero">
+    <h1>Quad-Core Engine</h1>
+    <p>Structural execution model and cross-engine invariants.</p>
+  </section>
+
+  <section class="card">
     <h2>System Overview</h2>
     <p>
       The Geodiametrics engine is not a workflow, dashboard, or optimization tool.
       It is a constraint-first execution surface composed of four irreducible cores.
     </p>
     <p>
-      Multiple engines may exist simultaneously. Their interaction is governed
-      by explicit, non-negotiable walls.
+      Multiple engines may exist simultaneously. Their interaction is governed by
+      explicit, non-negotiable walls rather than implicit coupling.
     </p>
   </section>
 
-  <!-- QUAD CORE -->
-  <section>
+  <section class="card">
     <h2>The Four Cores</h2>
-
     <div class="grid">
-      <div class="card">
-        <span class="tag">Core 1</span>
+      <div class="core">
         <h3>Selection</h3>
-        <p>Admissibility gate.</p>
-        <ul>
-          <li>Inputs are either admitted or rejected</li>
-          <li>No optimization, persuasion, or intent inference</li>
-          <li>All downstream cores depend on this decision</li>
-        </ul>
+        <p>Admissibility gate. Inputs must satisfy constraints before entering execution.</p>
       </div>
-
-      <div class="card">
-        <span class="tag">Core 2</span>
+      <div class="core">
         <h3>Resolution</h3>
-        <p>Minimal structural completion.</p>
-        <ul>
-          <li>Exactly one admitted input resolves</li>
-          <li>No branching once resolution begins</li>
-          <li>Produces a single executable state</li>
-        </ul>
+        <p>Minimal structural completion. One admitted input resolves.</p>
       </div>
-
-      <div class="card">
-        <span class="tag">Core 3</span>
+      <div class="core">
         <h3>Commitment</h3>
-        <p>Irreversible lock.</p>
-        <ul>
-          <li>No rollback after commit</li>
-          <li>Resets are explicit, not implicit</li>
-          <li>Commit marks state as authoritative</li>
-        </ul>
+        <p>Irreversible state transition. No rollback once committed.</p>
       </div>
-
-      <div class="card">
-        <span class="tag">Core 4</span>
+      <div class="core">
         <h3>Continuation</h3>
-        <p>Persistent execution.</p>
-        <ul>
-          <li>State survives reloads</li>
-          <li>Cycle stages are observable</li>
-          <li>No escalation without operator action</li>
-        </ul>
+        <p>Persistent execution state. Reload-safe. Operator-controlled.</p>
       </div>
     </div>
   </section>
 
-  <!-- CROSS ENGINE WALLS -->
-  <section>
+  <section class="card">
     <h2>Cross-Engine Walls</h2>
     <p>
-      Engines may coexist, but they are never implicitly coupled.
-      These walls are structural law.
+      Engines do not implicitly share state, memory, or authority.
+      Any synchronization is explicit, opt-in, and auditable.
     </p>
-
-    <div class="grid">
-      <div class="card">
-        <h3>State Isolation</h3>
-        <ul>
-          <li>Engines do not share state by default</li>
-          <li>State sync is opt-in and one-shot</li>
-          <li>No background propagation</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>Structural Sync Only</h3>
-        <ul>
-          <li>Engines may share rule labels</li>
-          <li>No data or history transfer</li>
-          <li>Used for A/B and parallel runs</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>No Identity Inference</h3>
-        <ul>
-          <li>Engines cannot identify operators</li>
-          <li>No cross-engine attribution</li>
-          <li>No behavioral fingerprinting</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>Supervisor Constraints</h3>
-        <ul>
-          <li>Supervisor never mutates engine state automatically</li>
-          <li>All actions are operator-initiated</li>
-          <li>Exports are explicit and auditable</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- WHY THIS MATTERS -->
-  <section>
-    <h2>Why This Architecture Exists</h2>
-    <ul>
-      <li>To make execution observable instead of persuasive</li>
-      <li>To separate structure from narrative</li>
-      <li>To allow parallel truth testing without contamination</li>
-      <li>To prevent hidden coupling and silent drift</li>
-    </ul>
+    <p>
+      This prevents cascade failure, narrative bleed-through, and hidden coupling
+      across parallel executions.
+    </p>
   </section>
 
 </main>
 
 <footer>
-  © 2026 Geodiametrics · Quad-Core Architecture
+  © 2026 Geodiametrics · Architecture
 </footer>
 
 </body>

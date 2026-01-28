@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Engine · Core</title>
+
+  <script>
+    (function registerEngine(){
+      const ENGINE_NAMESPACE = "engine_core_v1";
+
+      const payload = {
+        namespace: ENGINE_NAMESPACE,
+        registered_at: new Date().toISOString(),
+        version: "1.0",
+        role: "execution-engine",
+        cycle: ["input","admissibility","execution","evidence","return"]
+      };
+
+      try {
+        localStorage.setItem(
+          ENGINE_NAMESPACE,
+          JSON.stringify(payload)
+        );
+      } catch (e) {
+        console.error("Engine registration failed:", e);
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <!-- Intentionally empty.
+       This page exists to declare an engine, not to render UI. -->
+</body>
+</html>

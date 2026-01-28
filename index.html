@@ -1,127 +1,222 @@
-=== FILE: /index.html ===
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Geodiametrics</title><style>
-:root{--fg:#e9eefc;--muted:rgba(233,238,252,.78);--stroke:rgba(233,238,252,.14);--glass:rgba(8,12,26,.62);--panel:rgba(10,14,26,.68);--shadow:0 18px 55px rgba(0,0,0,.55);--r:22px}
-*{box-sizing:border-box}html,body{height:100%}body{margin:0;color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow-x:hidden;background:
-radial-gradient(1400px 900px at 12% 10%, rgba(140,120,255,.20), transparent 60%),
-radial-gradient(1200px 800px at 85% 30%, rgba(80,210,255,.16), transparent 62%),
-radial-gradient(900px 700px at 55% 85%, rgba(255,140,120,.10), transparent 62%),
-linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%)}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-3;opacity:.82;background:
-radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.80), transparent 60%),
-radial-gradient(1px 1px at 22% 72%, rgba(255,255,255,.60), transparent 60%),
-radial-gradient(1px 1px at 38% 32%, rgba(255,255,255,.72), transparent 60%),
-radial-gradient(1px 1px at 48% 86%, rgba(255,255,255,.50), transparent 60%),
-radial-gradient(1px 1px at 66% 28%, rgba(255,255,255,.65), transparent 60%),
-radial-gradient(1px 1px at 78% 58%, rgba(255,255,255,.55), transparent 60%),
-radial-gradient(1px 1px at 92% 22%, rgba(255,255,255,.66), transparent 60%);filter:drop-shadow(0 0 10px rgba(160,190,255,.18))}
-body:after{content:"";position:fixed;inset:-12% -12%;pointer-events:none;z-index:-2;opacity:.78;transform:rotate(-12deg);background:
-radial-gradient(1300px 360px at 55% 55%, rgba(120,180,255,.14), transparent 75%),
-radial-gradient(900px 280px at 48% 52%, rgba(255,190,220,.09), transparent 78%);filter:blur(1px)}
-.planet{position:fixed;border-radius:999px;pointer-events:none;z-index:-1;box-shadow:0 0 70px rgba(120,160,255,.14);filter:saturate(1.05)}
-.p1{width:240px;height:240px;left:-90px;top:110px;opacity:.90;background:
-radial-gradient(circle at 30% 30%, rgba(255,255,255,.20), transparent 44%),
-radial-gradient(circle at 65% 70%, rgba(80,210,255,.16), transparent 56%),
-radial-gradient(circle at 50% 50%, rgba(90,120,255,.40), rgba(18,26,50,.92))}
-.p2{width:170px;height:170px;right:34px;top:190px;opacity:.82;background:
-radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), transparent 46%),
-radial-gradient(circle at 70% 65%, rgba(255,160,210,.11), transparent 62%),
-radial-gradient(circle at 50% 50%, rgba(220,120,255,.24), rgba(18,26,50,.92))}
-.p3{width:420px;height:420px;right:-190px;bottom:70px;opacity:.72;background:
-radial-gradient(circle at 30% 25%, rgba(255,255,255,.16), transparent 48%),
-radial-gradient(circle at 55% 60%, rgba(120,255,190,.10), transparent 62%),
-radial-gradient(circle at 50% 50%, rgba(70,210,255,.18), rgba(10,16,30,.94))}
-@keyframes float{0%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-10px,0)}100%{transform:translate3d(0,0,0)}}
-.planet{animation:float 14s ease-in-out infinite}.p2{animation-duration:18s}.p3{animation-duration:22s}
-@media (prefers-reduced-motion:reduce){.planet{animation:none!important}}
-header{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--stroke);background:var(--glass);backdrop-filter:blur(10px)}
-.bar{max-width:1100px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{font-weight:900;letter-spacing:.35px;white-space:nowrap}
-nav{display:flex;flex-wrap:wrap;gap:10px 12px;justify-content:flex-end}
-.navpill{display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.22);color:var(--muted);text-decoration:none;font-weight:800;font-size:13px;letter-spacing:.25px}
-.navpill:hover{color:var(--fg);border-color:rgba(255,255,255,.22)}
-main{max-width:1100px;margin:0 auto;padding:34px 22px 64px}
-h1{margin:10px 0 14px;font-size:46px;line-height:1.02;letter-spacing:-.5px}
-.sub{max-width:78ch;color:var(--muted);line-height:1.7;margin:0 0 18px}
-.grid{display:grid;gap:16px;margin-top:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-.card{padding:18px;border:1px solid rgba(255,255,255,.14);border-radius:22px;background:rgba(10,14,26,.55);box-shadow:var(--shadow)}
-.card h3{margin:0 0 8px;font-size:18px;letter-spacing:.2px}
-.card p{margin:0;color:var(--muted);line-height:1.55}
-.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
-.bubble{display:inline-flex;align-items:center;justify-content:center;min-width:140px;padding:14px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.22);color:var(--fg);text-decoration:none;font-weight:900;letter-spacing:.25px;box-shadow:0 10px 26px rgba(0,0,0,.35)}
-.bubble:hover{border-color:rgba(255,255,255,.28);background:rgba(0,0,0,.30)}
-footer{margin-top:44px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);color:rgba(233,238,252,.55);font-size:13px;text-align:center}
-.small{font-size:12px;opacity:.7}
-.kicker{font-weight:900;letter-spacing:.28px}
-.leadcap{font-weight:900;letter-spacing:.28px;text-transform:uppercase}
-.note{margin-top:14px;color:rgba(233,238,252,.65);max-width:90ch}
-</style></head><body>
-<div class="planet p1"></div><div class="planet p2"></div><div class="planet p3"></div>
-<header><div class="bar"><div class="brand">Geodiametrics</div><nav>
-<a class="navpill" href="/">Home</a>
-<a class="navpill" href="/methods/">Methods</a>
-<a class="navpill" href="/dashboard/">Dashboard</a>
-<a class="navpill" href="/apps/">Apps</a>
-<a class="navpill" href="/reference/">Reference</a>
-<a class="navpill" href="/problem/">Problem</a>
-</nav></div></header>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Geodiametrics</title>
+
+<style>
+:root{
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.72);
+  --muted2:rgba(233,238,252,.55);
+  --stroke:rgba(233,238,252,.14);
+  --panel:rgba(12,16,34,.62);
+  --shadow:0 18px 55px rgba(0,0,0,.55);
+  --radius:22px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--fg);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  overflow-x:hidden;
+  background:
+    radial-gradient(1200px 900px at 18% 12%, rgba(120,150,255,.20), transparent 60%),
+    radial-gradient(900px 720px at 78% 34%, rgba(255,120,200,.14), transparent 62%),
+    radial-gradient(1100px 800px at 55% 78%, rgba(90,210,255,.10), transparent 68%),
+    linear-gradient(180deg, #070a12, #0b1020 45%, #070a12);
+}
+
+/* Stars */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-3;
+  background:
+    radial-gradient(1px 1px at 6% 18%, rgba(255,255,255,.95), transparent 60%),
+    radial-gradient(1px 1px at 12% 62%, rgba(255,255,255,.75), transparent 60%),
+    radial-gradient(1px 1px at 18% 32%, rgba(255,255,255,.85), transparent 60%),
+    radial-gradient(1px 1px at 24% 78%, rgba(255,255,255,.70), transparent 60%),
+    radial-gradient(1px 1px at 31% 44%, rgba(255,255,255,.80), transparent 60%),
+    radial-gradient(1px 1px at 38% 22%, rgba(255,255,255,.90), transparent 60%),
+    radial-gradient(1px 1px at 43% 68%, rgba(255,255,255,.78), transparent 60%),
+    radial-gradient(1px 1px at 49% 36%, rgba(255,255,255,.92), transparent 60%),
+    radial-gradient(1px 1px at 56% 82%, rgba(255,255,255,.72), transparent 60%),
+    radial-gradient(1px 1px at 62% 18%, rgba(255,255,255,.88), transparent 60%),
+    radial-gradient(1px 1px at 69% 55%, rgba(255,255,255,.75), transparent 60%),
+    radial-gradient(1px 1px at 74% 28%, rgba(255,255,255,.90), transparent 60%),
+    radial-gradient(1px 1px at 81% 70%, rgba(255,255,255,.78), transparent 60%),
+    radial-gradient(1px 1px at 88% 24%, rgba(255,255,255,.88), transparent 60%),
+    radial-gradient(1px 1px at 92% 58%, rgba(255,255,255,.80), transparent 60%),
+    radial-gradient(2px 2px at 15% 15%, rgba(180,210,255,.35), transparent 60%),
+    radial-gradient(2px 2px at 72% 22%, rgba(255,190,220,.28), transparent 60%),
+    radial-gradient(2px 2px at 84% 66%, rgba(140,220,255,.24), transparent 60%);
+  opacity:.55;
+  filter:drop-shadow(0 0 10px rgba(160,190,255,.16));
+}
+
+/* Milky Way haze */
+body::after{
+  content:"";
+  position:fixed;
+  inset:-12%;
+  pointer-events:none;
+  z-index:-2;
+  background:
+    radial-gradient(1200px 460px at 50% 45%, rgba(160,190,255,.14), transparent 70%),
+    radial-gradient(900px 320px at 52% 50%, rgba(255,190,220,.10), transparent 75%),
+    radial-gradient(740px 260px at 48% 55%, rgba(120,220,255,.08), transparent 78%);
+  opacity:.9;
+  transform:rotate(-10deg);
+  filter:blur(10px);
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:5;
+  border-bottom:1px solid rgba(233,238,252,.10);
+  background:rgba(10,14,28,.62);
+  backdrop-filter:blur(12px);
+}
+.bar{
+  max-width:1100px;
+  margin:0 auto;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+.brand{
+  font-weight:900;
+  letter-spacing:.35px;
+  font-size:18px;
+  white-space:nowrap;
+}
+.bubbles{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.bubble{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.18);
+  background:rgba(12,16,34,.36);
+  color:rgba(233,238,252,.78);
+  text-decoration:none;font-weight:800;font-size:14px;letter-spacing:.2px;
+  box-shadow:0 10px 26px rgba(0,0,0,.35);
+}
+.bubble:hover{color:var(--fg);border-color:rgba(233,238,252,.28);background:rgba(12,16,34,.46)}
+
+main{max-width:1100px;margin:0 auto;padding:36px 16px 72px}
+.hero{padding:36px 0 22px}
+h1{margin:0 0 12px;font-size:58px;letter-spacing:.4px;line-height:1.05}
+.sub{margin:0 0 18px;color:var(--muted);max-width:80ch;font-size:20px;line-height:1.6}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:22px}
+.card{
+  background:var(--panel);
+  border:1px solid rgba(233,238,252,.12);
+  border-radius:var(--radius);
+  padding:24px;
+  box-shadow:var(--shadow);
+}
+.card h2{margin:0 0 8px;font-size:22px;letter-spacing:.25px}
+.card p{margin:0 0 14px;color:var(--muted);line-height:1.6;font-size:16px}
+.button{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:12px 16px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.18);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);text-decoration:none;font-weight:900;letter-spacing:.2px;
+  box-shadow:0 10px 26px rgba(0,0,0,.35);
+  min-width:160px;
+}
+.button:hover{background:rgba(255,255,255,.09);border-color:rgba(233,238,252,.28)}
+
+.about{
+  margin-top:48px;
+  padding:28px;
+  border-radius:var(--radius);
+  border:1px solid rgba(233,238,252,.10);
+  background:rgba(12,16,34,.35);
+}
+.about h2{margin-top:0}
+
+footer{
+  margin-top:48px;
+  padding-top:18px;
+  border-top:1px solid rgba(233,238,252,.10);
+  text-align:center;
+  color:rgba(233,238,252,.55);
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="bar">
+    <div class="brand">Geodiametrics</div>
+    <nav class="bubbles">
+      <a class="bubble" href="/">Home</a>
+      <a class="bubble" href="/methods/">Methods</a>
+      <a class="bubble" href="/dashboard/">Dashboard</a>
+      <a class="bubble" href="/apps/">Apps</a>
+      <a class="bubble" href="/reference/">Reference</a>
+      <a class="bubble" href="/problem/">Problem</a>
+    </nav>
+  </div>
+</header>
 
 <main>
-<h1>Constraint-first systems.<br/>Provable execution.</h1>
-<p class="sub">Home is a front door only. Methods is the entry point. Bubbles route to stable pages.</p>
+  <section class="hero">
+    <h1>Geodiametrics</h1>
+    <p class="sub">
+      A constraint-first framework for diagnosing coherence, collapse, and execution across systems.
+      This site presents scientific findings, live proof surfaces, and audit-friendly instrumentation.
+    </p>
+  </section>
 
-<div class="grid">
-  <div class="card">
-    <h3>Methods</h3>
-    <p>Tiered empirical findings. High-signal results only. Branch bubbles handle depth.</p>
-    <div class="actions"><a class="bubble" href="/methods/">Open Methods</a></div>
-  </div>
+  <section class="grid">
+    <div class="card">
+      <h2>Scientific Findings</h2>
+      <p>Foundational discoveries organized by Tier 1, Tier 2, and Tier 3 hierarchy.</p>
+      <a class="button" href="/methods/">Read Methods</a>
+    </div>
 
-  <div class="card">
-    <h3>Dashboard</h3>
-    <p>Live execution state. Local-first telemetry. Proof without narrative.</p>
-    <div class="actions"><a class="bubble" href="/dashboard/">Open Dashboard</a></div>
-  </div>
+    <div class="card">
+      <h2>Live Dashboard</h2>
+      <p>Empirical tracking hub. Evidence-first. No narrative ordering.</p>
+      <a class="button" href="/dashboard/">Open Dashboard</a>
+    </div>
 
-  <div class="card">
-    <h3>Apps</h3>
-    <p>Published artifacts and tools. Stable execution surfaces.</p>
-    <div class="actions"><a class="bubble" href="/apps/">Open Apps</a></div>
-  </div>
+    <div class="card">
+      <h2>Execution Apps</h2>
+      <p>Executable proof surfaces demonstrating constraint-first behavior.</p>
+      <a class="button" href="/apps/">View Apps</a>
+    </div>
 
-  <div class="card">
-    <h3>Reference</h3>
-    <p>Glossary, definitions, and boundaries. Canonical language only.</p>
-    <div class="actions"><a class="bubble" href="/reference/">Open Reference</a></div>
-  </div>
+    <div class="card">
+      <h2>Canonical Reference</h2>
+      <p>Invariant definitions and scope boundaries used throughout the system.</p>
+      <a class="button" href="/reference/">Open Reference</a>
+    </div>
+  </section>
 
-  <div class="card">
-    <h3>The Problem</h3>
-    <p>What fails without constraint-first execution. Why coherence collapses.</p>
-    <div class="actions"><a class="bubble" href="/problem/">Open Problem</a></div>
-  </div>
+  <section class="about">
+    <h2>About</h2>
+    <p>
+      This project emerged from long-form observation of system failure and recovery across domains,
+      informed by philosophy, science, and lived experience. The work emphasizes structure over narrative
+      and execution over explanation.
+    </p>
+  </section>
 
-  <div class="card">
-    <h3>About</h3>
-    <p>Origin story and stance. Philosophy, theology, science—without authority claims.</p>
-    <div class="actions"><a class="bubble" href="#about">Read Here</a></div>
-  </div>
-</div>
-
-<section id="about" style="margin-top:36px">
-  <div class="card">
-    <h3 class="leadcap">About</h3>
-    <p class="note"><span class="leadcap">Origin.</span> I am a builder-philosopher drawn to philosophy, theology, and science since childhood. I came from instability and learned self-cultivation through repeated real-world collapse and repair.</p>
-    <p class="note"><span class="leadcap">Inflection.</span> On a solitary Christmas, an empirical question landed: human behavior appears to follow constraints like physical systems. I did not know “constraints,” “canonical,” or “social thermodynamics.” I started executing and letting evidence steer.</p>
-    <p class="note"><span class="leadcap">China.</span> Time in China and deep exposure to Chinese culture—Laozi, Mengzi, Zhuangzi, Tsun Tsu: The Art of War, Confucius—reshaped my question-asking. Mandarin study and lived contrast sharpened my focus on structure, boundaries, and coherence.</p>
-    <p class="note"><span class="leadcap">Present.</span> Born Oct 1, 1985 in Grand Prairie, Texas. I currently sell LeafGuard gutters. This work is independent: it documents execution, artifacts, and limits—no credential claims, no persuasion, no intent inference.</p>
-  </div>
-</section>
-
-<footer>© <span id="y"></span> Geodiametrics · One file per page · Bubble navigation · Cosmic glass UI</footer>
+  <footer>© 2026 Geodiametrics</footer>
 </main>
-
-<script>document.getElementById("y").textContent=new Date().getFullYear();</script>
-
-<!-- Cloudflare Web Analytics (if you already added it elsewhere, keep ONE copy site-wide) -->
-<!-- paste your Cloudflare snippet right above </body> on EVERY page OR keep only here + make other pages no-snippet -->
-</body></html>
+</body>
+</html>

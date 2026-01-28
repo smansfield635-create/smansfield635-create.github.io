@@ -1,69 +1,97 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Methods · Scientific Findings</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Methods · Scientific Findings</title>
 
-  <style>
-    body{
+<style>
+/* ---------- RESET ---------- */
+*{box-sizing:border-box}
+body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  background:
-    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.6), transparent),
-    radial-gradient(1px 1px at 80% 40%, rgba(255,255,255,.4), transparent),
-    radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,.5), transparent),
-    radial-gradient(2px 2px at 30% 80%, rgba(255,255,255,.3), transparent),
-    radial-gradient(2px 2px at 70% 20%, rgba(255,255,255,.25), transparent),
-    linear-gradient(180deg, #070b14 0%, #0b1220 40%, #070b14 100%);
-  background-repeat: repeat;
-  background-size: 600px 600px;
   color:#e8ecf5;
-  line-height:1.65;
+  background:#05070f;
+  overflow-x:hidden;
 }
-    header{
-      padding:32px 24px;
-      border-bottom:1px solid rgba(255,255,255,.08);
-    }
-    header h1{
-      margin:0;
-      font-size:30px;
-      letter-spacing:.6px;
-    }
-    main{
-      max-width:900px;
-      margin:0 auto;
-      padding:40px 24px 80px;
-    }
-    .card{
-      background:rgba(255,255,255,.035);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:26px;
-      margin-bottom:28px;
-    }
-    h2{
-      margin:0 0 14px;
-      font-size:22px;
-      letter-spacing:.5px;
-    }
-    h3{
-      margin:0 0 10px;
-      font-size:18px;
-      letter-spacing:.4px;
-    }
-    p{
-      margin:0 0 14px;
-      color:#d3d9ea;
-    }
-    footer{
-      border-top:1px solid rgba(255,255,255,.08);
-      padding:24px;
-      text-align:center;
-      font-size:14px;
-      color:#aab0c5;
-    }
-  </style>
+
+/* ---------- STARFIELD ---------- */
+body::before,
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(1px 1px at 10% 20%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 30% 80%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 70% 40%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 90% 60%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 50% 10%, #fff 50%, transparent 51%);
+  opacity:.35;
+  pointer-events:none;
+}
+body::after{
+  background:
+    radial-gradient(2px 2px at 20% 30%, #9bb2ff 50%, transparent 51%),
+    radial-gradient(2px 2px at 60% 70%, #9bb2ff 50%, transparent 51%),
+    radial-gradient(2px 2px at 80% 20%, #9bb2ff 50%, transparent 51%);
+  opacity:.18;
+}
+
+/* ---------- HEADER ---------- */
+header{
+  padding:48px 24px 32px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(6px);
+}
+header h1{
+  margin:0;
+  font-size:36px;
+  letter-spacing:.6px;
+}
+
+/* ---------- LAYOUT ---------- */
+main{
+  max-width:900px;
+  margin:0 auto;
+  padding:48px 24px 96px;
+}
+.section{
+  margin-bottom:48px;
+}
+.card{
+  padding:28px;
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+h2{
+  margin:0 0 12px;
+  font-size:22px;
+  letter-spacing:.4px;
+}
+h3{
+  margin:0 0 10px;
+  font-size:18px;
+  letter-spacing:.3px;
+}
+p{
+  margin:0 0 14px;
+  color:#d6dbeb;
+  line-height:1.7;
+}
+
+/* ---------- FOOTER ---------- */
+footer{
+  border-top:1px solid rgba(255,255,255,.08);
+  padding:24px;
+  text-align:center;
+  font-size:14px;
+  color:#aab0c5;
+}
+</style>
 </head>
 
 <body>
@@ -74,72 +102,54 @@
 
 <main>
 
-  <div class="card">
-    <h3>PRIORITY KNOWLEDGE BOUNDARY</h3>
+  <div class="section card">
+    <h2>Priority Knowledge Boundary</h2>
     <p>
       All pre-verbal, sensory, and intuitive inputs are treated as priority knowledge—providing access to signal without conferring authority.
       Such inputs may guide exploration but may not override externally observable evidence, invariant structure, or proof-gated execution.
     </p>
   </div>
 
-  <div class="card">
-    <h3>METHODS PAGE ROLE</h3>
+  <div class="section card">
+    <h2>Methods Page Role</h2>
     <p>
-      This page documents scientific findings only. It does not describe system architecture, implementation details, or execution mechanics.
-      Those are presented separately as empirical proof surfaces.
+      This page documents <strong>scientific findings only</strong>.
+      It does not describe engineering implementation, interface design, tooling, or narrative framing.
+      Those appear elsewhere as execution artifacts.
     </p>
   </div>
 
-  <div class="card">
+  <div class="section card">
     <h2>Tier 1 · Foundational Discovery</h2>
+    <h3>Coherence Is the Primary Constraint</h3>
     <p>
-      <strong>COHERENCE IS A CONSTRAINT-GOVERNED PROPERTY.</strong>
-      Coherence is not psychological, narrative, or belief-based. It emerges if and only if structural constraints are satisfied.
-      Systems lose coherence through predictable violations of constraint order.
-    </p>
-    <p>
-      This establishes coherence as a measurable, falsifiable property of systems rather than a subjective human attribute.
+      Stable systems across domains persist only when internal coherence is preserved.
+      Optimization, intelligence, and activity cannot compensate for incoherent structure.
+      Coherence functions as a governing constraint, not an emergent property.
     </p>
   </div>
 
-  <div class="card">
-    <h2>Tier 2 · Core Discoveries</h2>
+  <div class="section card">
+    <h2>Tier 2 · Secondary Findings</h2>
+    <h3>Constraint Precedes Strategy</h3>
     <p>
-      <strong>CONSTRAINT-FIRST ORDERING DETERMINES SYSTEM TRAJECTORY.</strong>
-      Systems that act before constraints are defined fragment under load.
-      Optimization, tooling, or narrative framing cannot recover coherence once ordering is violated.
+      Systems fail when strategy, tooling, or narrative framing precede constraint definition.
+      When constraints are enforced first, structure emerges naturally without prescriptive design.
     </p>
+    <h3>Execution Reveals Structure</h3>
     <p>
-      <strong>INSTRUMENTATION IS REQUIRED FOR COHERENCE TO BE OBSERVABLE.</strong>
-      Without explicit state, transitions, and persistence, coherence cannot be diagnosed.
-      Uninstrumented systems confuse activity with progress.
-    </p>
-  </div>
-
-  <div class="card">
-    <h2>Tier 3 · Derived Discoveries</h2>
-    <p>
-      <strong>ACTIVITY CAN MASQUERADE AS PROGRESS.</strong>
-      Systems may produce visible output while lacking any stable trajectory.
-      Apparent productivity does not imply coherence.
-    </p>
-    <p>
-      <strong>ARCHITECTURAL COLLAPSE CAN BE DIAGNOSTIC.</strong>
-      Collapse that preserves invariants reveals constraint convergence rather than failure.
-      Only collapse that violates invariants constitutes disproof.
-    </p>
-    <p>
-      <strong>STRESS AMPLIFIES COHERENCE SIGNALS.</strong>
-      Execution under severe constraints increases evidenti weight.
-      Coherent systems survive compression; incoherent systems fragment faster.
+      Coherence and fragmentation become visible only through execution.
+      Static reasoning is insufficient to diagnose system stability.
     </p>
   </div>
 
-  <div class="card">
-    <h3>EVIDENCE MODEL</h3>
+  <div class="section card">
+    <h2>Tier 3 · Derived Implications</h2>
     <p>
-      These findings are supported by live execution artifacts, diagnostic engines, and stress-tested systems.
-      Applications and engines serve as evidence, not claims.
+      • Activity without constraint produces false progress.<br/>
+      • Collapse is diagnostic unless invariants are violated.<br/>
+      • Stress reveals structure faster than optimization.<br/>
+      • Measurement without interpretation preserves objectivity.
     </p>
   </div>
 

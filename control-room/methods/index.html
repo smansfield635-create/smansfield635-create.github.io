@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Control Room · Geodiametrics</title>
+
+<style>
+:root{
+  --fg:#e9eefc;--muted:rgba(233,238,252,.70);
+  --stroke:rgba(233,238,252,.14);
+  --panel:rgba(10,14,28,.58);
+  --panel2:rgba(10,14,28,.42);
+  --shadow:0 18px 55px rgba(0,0,0,.55);
+  --r:22px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;color:var(--fg);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  overflow-x:hidden;
+  background:
+    radial-gradient(1200px 900px at 18% 10%, rgba(80,120,255,.22), transparent 60%),
+    radial-gradient(900px 720px at 85% 30%, rgba(200,110,255,.20), transparent 55%),
+    radial-gradient(1000px 800px at 55% 85%, rgba(120,255,220,.12), transparent 60%),
+    linear-gradient(180deg,#040713,#02040a);
+}
+/* subtle star drift */
+body::before{
+  content:"";position:fixed;inset:-40%;pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,.10) 0 1px, transparent 2px),
+    radial-gradient(circle at 60% 50%, rgba(255,255,255,.08) 0 1px, transparent 2px),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,.07) 0 1px, transparent 2px);
+  background-size:240px 240px,300px 300px,360px 360px;
+  opacity:.45;animation:drift 70s linear infinite;
+}
+@keyframes drift{from{transform:translate(-2%,-1%)}to{transform:translate(2%,1%)}}
+
+header{
+  position:sticky;top:0;z-index:50;
+  padding:16px;
+  backdrop-filter:blur(10px);
+  background:linear-gradient(180deg,rgba(3,5,12,.9),rgba(3,5,12,.6));
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.bar{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:900;letter-spacing:.3px}
+nav{display:flex;gap:10px;flex-wrap:wrap}
+nav a{
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);text-decoration:none;font-weight:700;
+}
+
+main{max-width:1100px;margin:0 auto;padding:24px 18px 80px;display:grid;gap:18px}
+.card{
+  background:var(--panel);border:1px solid rgba(255,255,255,.14);
+  border-radius:var(--r);box-shadow:var(--shadow);padding:18px;
+}
+h1{margin:8px 0 6px;font-size:44px}
+h2{margin:0 0 8px;font-size:22px}
+p{margin:0;color:var(--muted);line-height:1.6}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{
+  padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.08);color:var(--fg);font-weight:800;cursor:pointer;
+}
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);font-weight:800;font-size:12px;
+}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,.12);text-align:left}
+small{color:var(--muted)}
+footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:16px}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="bar">
+    <div class="brand">Geodiametrics · Control Room</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/methods/">Methods</a>
+      <a href="/apps/">Apps</a>
+      <a href="/reference/">Reference</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- DECLARATION -->
+  <section class="card">
+    <h1>Control Room</h1>
+    <p>Single authority for execution governance. This page declares structure, rules, registry, and supervision. No public narrative. No marketing.</p>
+    <div class="row" style="margin-top:12px">
+      <span class="pill">MODE · LOCKED</span>
+      <span class="pill">DEVICE-LOCAL</span>
+      <span class="pill">NO IMPLICIT EXECUTION</span>
+    </div>
+  </section>
+
+  <!-- CONTROL ROOM METHODS (INTERNAL) -->
+  <section class="card">
+    <h2>Control Room · Methods</h2>
+    <p>Defines how this Control Room operates. Distinct from site-wide Methods.</p>
+    <div class="grid" style="margin-top:10px">
+      <div class="card" style="background:var(--panel2)">
+        <strong>Registration Rule</strong>
+        <p>Engines exist only when declared in the registry. No discovery by inference.</p>
+      </div>
+      <div class="card" style="background:var(--panel2)">
+        <strong>Isolation Rule</strong>
+        <p>Default mode is ISOLATED. Cross-core mutation requires explicit action.</p>
+      </div>
+      <div class="card" style="background:var(--panel2)">
+        <strong>Evidence Rule</strong>
+        <p>All state is observable and exportable. No hidden transitions.</p>
+      </div>
+      <div class="card" style="background:var(--panel2)">
+        <strong>Lock Rule</strong>
+        <p>Structural elements cannot be mutated from outside the Control Room.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGISTRY -->
+  <section class="card">
+    <h2>Engine Registry</h2>
+    <div class="row">
+      <button class="btn" onclick="registerAll()">Register Diamond Fusion (1–4)</button>
+      <button class="btn" onclick="clearAll()">Clear Registry</button>
+      <button class="btn" onclick="render()">Refresh</button>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Namespace</th><th>Family</th><th>Core</th><th>Version</th><th>Seen</th></tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="5">No engines registered.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- RESEARCH TEASER -->
+  <section class="card">
+    <h2>Research (Preview)</h2>
+    <p>Preliminary instrumentation and constraint-first experiments in progress. This section will expand into <strong>Mission to Mars</strong>.</p>
+    <div class="grid" style="margin-top:10px">
+      <div class="card" style="background:var(--panel2)">
+        <strong>Constraint-First Execution</strong>
+        <p>Empirical builds under severe limits to expose coherence and failure modes.</p>
+      </div>
+      <div class="card" style="background:var(--panel2)">
+        <strong>Quad-Core Fusion</strong>
+        <p>Selection, Resolution, Commitment, Continuation observed as coupled roles.</p>
+      </div>
+      <div class="card" style="background:var(--panel2)">
+        <strong>Telemetry Without Identity</strong>
+        <p>Local-first evidence surfaces; exportable, auditable, minimal.</p>
+      </div>
+    </div>
+    <small>Mission to Mars launches soon.</small>
+  </section>
+
+  <footer>© 2026 Geodiametrics · Control Room</footer>
+
+</main>
+
+<script>
+/* CANONICAL REGISTRY */
+const PREFIX="GEOD_ENGINE::";
+const CORES=[
+  {ns:"diamond_fusion_core_1",family:"diamond_fusion",core:1},
+  {ns:"diamond_fusion_core_2",family:"diamond_fusion",core:2},
+  {ns:"diamond_fusion_core_3",family:"diamond_fusion",core:3},
+  {ns:"diamond_fusion_core_4",family:"diamond_fusion",core:4}
+];
+
+function registerCore(c){
+  const payload={
+    namespace:c.ns,family:c.family,core:c.core,version:"1.0",
+    cycle:["input","admissibility","execution","evidence","return"],
+    invariants:["agency","constraint","responsibility","coherence"],
+    registered_at:new Date().toISOString()
+  };
+  localStorage.setItem(PREFIX+c.ns,JSON.stringify(payload));
+}
+
+function registerAll(){CORES.forEach(registerCore);render();}
+function clearAll(){
+  Object.keys(localStorage).filter(k=>k.startsWith(PREFIX)).forEach(k=>localStorage.removeItem(k));
+  render();
+}
+
+function render(){
+  const body=document.getElementById("tbody");
+  const keys=Object.keys(localStorage).filter(k=>k.startsWith(PREFIX)).sort();
+  body.innerHTML="";
+  if(!keys.length){
+    body.innerHTML="<tr><td colspan='5'>No engines registered.</td></tr>";return;
+  }
+  keys.forEach(k=>{
+    const d=JSON.parse(localStorage.getItem(k)||"{}");
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td class="mono">${d.namespace}</td><td>${d.family}</td><td>${d.core}</td><td>${d.version}</td><td>local</td>`;
+    body.appendChild(tr);
+  });
+}
+render();
+</script>
+
+</body>
+</html>

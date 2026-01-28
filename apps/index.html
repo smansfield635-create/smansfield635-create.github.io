@@ -3,195 +3,90 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Engine Sync · Geodiametrics</title>
-
+<title>Apps · Geodiametrics</title>
 <style>
-html,body{
-  margin:0;
-  padding:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.08), transparent 40%),
-    radial-gradient(circle at 70% 60%, rgba(120,160,255,.08), transparent 45%),
-    linear-gradient(#060913,#0b1020);
-  color:#e8ecf5;
-}
-
-header{
-  padding:28px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-h1{
-  margin:0;
-  font-size:28px;
-  letter-spacing:.6px;
-}
-
-main{
-  max-width:880px;
-  margin:0 auto;
-  padding:32px 24px 72px;
-}
-
-.card{
-  background:rgba(255,255,255,.035);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  padding:24px;
-  margin-bottom:28px;
-  backdrop-filter:blur(6px);
-}
-
-h2{
-  margin:0 0 12px;
-  font-size:18px;
-  letter-spacing:.4px;
-}
-
-p{
-  margin:0 0 14px;
-  color:#d6dbeb;
-}
-
-button{
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.15);
-  color:#fff;
-  padding:10px 16px;
-  border-radius:999px;
-  cursor:pointer;
-  margin:6px 6px 6px 0;
-}
-
-button:hover{
-  background:rgba(255,255,255,.15);
-}
-
-.status{
-  margin-top:10px;
-  font-weight:600;
-}
-
-footer{
-  text-align:center;
-  padding:24px;
-  border-top:1px solid rgba(255,255,255,.08);
-  color:#aab0c5;
-  font-size:14px;
-}
+  :root{--fg:#e8ecf5;--muted:rgba(233,238,252,.72);--stroke:rgba(233,238,252,.14);--glass:rgba(8,12,26,.55);--panel:rgba(10,14,26,.68)}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;color:var(--fg);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    overflow-x:hidden;
+    background:
+      radial-gradient(1400px 900px at 20% 10%, rgba(120,150,255,.18), transparent 60%),
+      radial-gradient(1100px 800px at 80% 75%, rgba(255,120,200,.10), transparent 65%),
+      linear-gradient(180deg,#050816,#060b1e);
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;opacity:.85;
+    background:
+      radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.9), transparent 60%),
+      radial-gradient(1px 1px at 22% 72%, rgba(255,255,255,.7), transparent 60%),
+      radial-gradient(1px 1px at 38% 32%, rgba(255,255,255,.8), transparent 60%),
+      radial-gradient(1px 1px at 48% 86%, rgba(255,255,255,.6), transparent 60%),
+      radial-gradient(1px 1px at 66% 28%, rgba(255,255,255,.8), transparent 60%),
+      radial-gradient(1px 1px at 78% 58%, rgba(255,255,255,.7), transparent 60%),
+      radial-gradient(1px 1px at 92% 22%, rgba(255,255,255,.6), transparent 60%);
+  }
+  header{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--stroke);background:var(--glass);backdrop-filter:blur(10px)}
+  .bar{max-width:1100px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{font-weight:900;letter-spacing:.35px}
+  nav a{margin-left:12px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:800}
+  nav a:hover{color:var(--fg)}
+  main{max-width:1100px;margin:0 auto;padding:36px 24px 72px}
+  h1{margin:10px 0 12px;font-size:40px;letter-spacing:.4px}
+  .sub{max-width:80ch;color:var(--muted);line-height:1.6;margin:0 0 22px}
+  .card{
+    background:var(--panel);
+    border:1px solid var(--stroke);
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 14px 28px rgba(0,0,0,.35);
+    margin-bottom:18px;
+  }
+  .card h2{margin:0 0 8px;font-size:20px}
+  .card p{margin:0;line-height:1.55;color:var(--muted)}
+  .btn{
+    display:inline-block;margin-top:14px;
+    padding:10px 14px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.08);
+    color:var(--fg);text-decoration:none;font-weight:800;font-size:14px;
+  }
+  .btn:hover{background:rgba(255,255,255,.14)}
+  footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--stroke);text-align:center;font-size:13px;color:var(--muted)}
 </style>
 </head>
-
 <body>
 
 <header>
-  <h1>Engine Sync</h1>
+  <div class="bar">
+    <div class="brand">Geodiametrics</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/methods/">Methods</a>
+      <a href="/dashboard/">Dashboard</a>
+      <a href="/apps/">Apps</a>
+      <a href="/reference/">Reference</a>
+      <a href="/problem/">Problem</a>
+    </nav>
+  </div>
 </header>
 
 <main>
+  <h1>Apps</h1>
+  <p class="sub">Published execution artifacts and diagnostic tools. These are live proof surfaces — not demos.</p>
 
-<!-- CONTINUATION -->
-<div class="card">
-  <h2>CONTINUATION</h2>
-  <p>Persistent execution state. Reload-safe. Operator-controlled.</p>
+  <div class="card">
+    <h2>Engine Sync</h2>
+    <p>Quad-core execution surface (Selection → Resolution → Commitment → Continuation). Local-first. Reload-safe.</p>
+    <a class="btn" href="/apps/engine-sync/">Open App</a>
+  </div>
 
-  <button onclick="setCycle('RUNNING')">1 · RUNNING</button>
-  <button onclick="setCycle('HURDLE')">2 · HURDLE</button>
-  <button onclick="setCycle('WALL')">3 · WALL</button>
-  <button onclick="setCycle('COMPLETE')">4 · COMPLETE</button>
-
-  <div class="status">Current cycle: <span id="cycle">—</span></div>
-</div>
-
-<!-- SELECTION -->
-<div class="card">
-  <h2>SELECTION</h2>
-  <p>Admissibility gate. Inputs must satisfy constraints.</p>
-
-  <button onclick="setSelection('ADMITTED')">Submit Admissible Input</button>
-  <button onclick="setSelection('REJECTED')">Submit Rejected Input</button>
-
-  <div class="status">Selection: <span id="selection">—</span></div>
-</div>
-
-<!-- RESOLUTION -->
-<div class="card">
-  <h2>RESOLUTION</h2>
-  <p>Minimal structural completion. One admitted input resolves.</p>
-
-  <button onclick="resolve()">Resolve</button>
-
-  <div class="status">Resolution: <span id="resolution">—</span></div>
-</div>
-
-<!-- COMMITMENT -->
-<div class="card">
-  <h2>COMMITMENT</h2>
-  <p>No rollback once committed.</p>
-
-  <button onclick="commit()">Commit</button>
-  <button onclick="resetEngine()">Reset Engine</button>
-
-  <div class="status">Commitment: <span id="commitment">—</span></div>
-</div>
-
+  <footer>© <span id="y"></span> Geodiametrics · Apps</footer>
 </main>
 
-<footer>
-© 2026 Geodiametrics · Engine Sync
-</footer>
-
-<script>
-const store = {
-  cycle: localStorage.getItem('cycle') || 'RUNNING',
-  selection: localStorage.getItem('selection') || '—',
-  resolution: localStorage.getItem('resolution') || '—',
-  commitment: localStorage.getItem('commitment') || '—'
-};
-
-function sync(){
-  cycle.textContent = store.cycle;
-  selection.textContent = store.selection;
-  resolution.textContent = store.resolution;
-  commitment.textContent = store.commitment;
-}
-
-function setCycle(v){
-  store.cycle=v;
-  localStorage.setItem('cycle',v);
-  sync();
-}
-
-function setSelection(v){
-  store.selection=v;
-  localStorage.setItem('selection',v);
-  sync();
-}
-
-function resolve(){
-  store.resolution = store.selection === 'ADMITTED' ? 'RESOLVED' : 'BLOCKED';
-  localStorage.setItem('resolution',store.resolution);
-  sync();
-}
-
-function commit(){
-  if(store.resolution==='RESOLVED'){
-    store.commitment='COMMITTED';
-  }else{
-    store.commitment='DENIED';
-  }
-  localStorage.setItem('commitment',store.commitment);
-  sync();
-}
-
-function resetEngine(){
-  localStorage.clear();
-  location.reload();
-}
-
-sync();
-</script>
+<script>document.getElementById("y").textContent=new Date().getFullYear();</script>
 
 </body>
 </html>

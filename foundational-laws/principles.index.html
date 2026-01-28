@@ -1,1 +1,200 @@
-H
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methods · Scientific Findings — Geodiametrics</title>
+
+<style>
+:root{
+  --bg:#02030a;
+  --card:rgba(14,18,34,.78);
+  --border:rgba(255,255,255,.08);
+  --text:#eef1ff;
+  --muted:#b9c1e3;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 600px at 30% 40%, #1a1f4a 0%, transparent 60%),
+    radial-gradient(900px 500px at 60% 55%, #3a1b3f 0%, transparent 65%),
+    radial-gradient(700px 400px at 50% 65%, #1a3b55 0%, transparent 70%),
+    #02030a;
+  overflow-x:hidden;
+}
+
+/* STARFIELD */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 25% 80%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 40% 40%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 55% 65%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 70% 30%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 85% 75%, #fff 50%, transparent 51%);
+  background-size:220px 220px;
+  opacity:.35;
+  pointer-events:none;
+}
+
+/* MILKY WAY DUST BAND */
+body::after{
+  content:"";
+  position:fixed;
+  inset:-20%;
+  background:
+    radial-gradient(800px 240px at 45% 50%, rgba(255,220,180,.14), transparent 75%),
+    radial-gradient(1000px 280px at 55% 52%, rgba(180,160,255,.12), transparent 78%),
+    radial-gradient(1200px 320px at 50% 48%, rgba(120,200,255,.08), transparent 80%);
+  transform:rotate(-17deg);
+  opacity:.9;
+  pointer-events:none;
+}
+
+header{
+  max-width:980px;
+  margin:auto;
+  padding:64px 24px 32px;
+}
+
+h1{
+  margin:0;
+  font-size:44px;
+  letter-spacing:.6px;
+}
+
+hr{
+  margin:24px 0 0;
+  border:0;
+  border-top:1px solid var(--border);
+}
+
+main{
+  max-width:980px;
+  margin:auto;
+  padding:32px 24px 96px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:28px;
+  margin-bottom:30px;
+  backdrop-filter:blur(6px);
+}
+
+h2{
+  margin:0 0 14px;
+  font-size:22px;
+  letter-spacing:.4px;
+}
+
+h3{
+  margin:22px 0 10px;
+  font-size:18px;
+}
+
+p{
+  margin:0 0 14px;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+footer{
+  text-align:center;
+  padding:40px 16px;
+  color:#8f97c5;
+  border-top:1px solid var(--border);
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Methods · Scientific Findings</h1>
+  <hr>
+</header>
+
+<main>
+
+  <section class="card">
+    <h2>Priority Knowledge Boundary</h2>
+    <p>
+      All pre-verbal, sensory, and intuitive inputs are treated as priority knowledge—
+      providing access to signal without conferring authority.
+      Such inputs may guide exploration but may not override externally observable
+      evidence, invariant structure, or proof-gated execution.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Methods Page Role</h2>
+    <p>
+      This page documents <strong>scientific findings only</strong>.
+      It does not describe engineering implementation, interface design,
+      tooling, or narrative framing.
+      Those appear elsewhere as execution artifacts.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Tier 1 · Foundational Discovery</h2>
+    <h3>Coherence Is the Primary Constraint</h3>
+    <p>
+      Stable systems across domains persist only when internal coherence is preserved.
+      When coherence is violated, growth, intelligence, effort, or scale
+      cannot prevent collapse.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Tier 2 · Core Consequences</h2>
+    <h3>Constraint Precedes Optimization</h3>
+    <p>
+      Systems fail when execution begins before constraints are enforced.
+      Optimization applied prior to admissibility produces fragmentation.
+    </p>
+    <h3>Structure Emerges from Constraint</h3>
+    <p>
+      Architecture is not a design target.
+      It emerges as a consequence of constraint satisfaction.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Tier 3 · Derived Implications</h2>
+    <h3>Failure Modes Are Diagnostic</h3>
+    <p>
+      Failures that do not violate core constraints reveal boundary conditions,
+      not disproof.
+    </p>
+    <h3>Activity Without Coherence Produces False Progress</h3>
+    <p>
+      Motion without constraint creates visible output
+      without stable trajectory.
+    </p>
+    <h3>Collapse Reveals Violated Constraints</h3>
+    <p>
+      Collapse is the observable signature of coherence loss.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 Geodiametrics · Scientific Findings
+</footer>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Control Room · Dashboard</title>
+<title>Dashboard · Control Room</title>
 
 <style>
 :root{
@@ -11,56 +11,60 @@
   --muted:rgba(233,238,252,.66);
   --stroke:rgba(233,238,252,.14);
   --panel:rgba(12,16,34,.62);
-  --glass:rgba(10,14,28,.55);
   --radius:22px;
+  --shadow:0 18px 55px rgba(0,0,0,.55);
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
-  background:linear-gradient(180deg,#070b18,#050714);
+  background:
+    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
+    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
 }
-.wrap{max-width:1100px;margin:0 auto;padding:24px}
-h1{margin:0 0 10px}
+.wrap{max-width:1100px;margin:0 auto;padding:22px 16px 70px}
 .card{
-  margin-top:16px;
   border-radius:var(--radius);
   border:1px solid var(--stroke);
   background:var(--panel);
+  box-shadow:var(--shadow);
   padding:18px;
+  margin-bottom:16px;
 }
+h1{margin:0 0 10px}
+p{color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
 .btn{
+  padding:10px 14px;border-radius:999px;
   border:1px solid rgba(233,238,252,.18);
   background:rgba(255,255,255,.06);
-  color:var(--fg);
-  padding:10px 14px;
-  border-radius:999px;
-  font-weight:800;
-  cursor:pointer;
+  color:var(--fg);font-weight:900;cursor:pointer
 }
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{padding:8px;border-bottom:1px solid var(--stroke);text-align:left}
-th{font-weight:900}
-.small{color:var(--muted);font-size:13px}
+.table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+th,td{padding:8px;border-bottom:1px solid rgba(233,238,252,.12);text-align:left}
+th{color:#fff;font-weight:900}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--muted)}
+.small{font-size:13px;color:var(--muted)}
+.footer{margin-top:18px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
 </style>
 </head>
 
 <body>
 <div class="wrap">
-  <h1>Control Room · Dashboard</h1>
-  <p class="small">Device-local registry. No remote calls. No analytics.</p>
 
   <div class="card">
-    <div class="row">
-      <button class="btn" onclick="registerAll()">Register Engines</button>
+    <h1>Dashboard</h1>
+    <p>Observer-only surface. Reads <span class="mono">ENGINE::</span> keys. No execution. No mutation.</p>
+
+    <div class="row" style="margin-top:12px">
       <button class="btn" onclick="scan()">Refresh</button>
       <button class="btn" onclick="exportJSON()">Export JSON</button>
+      <a class="btn" href="/control-room/">Back to Control Room</a>
     </div>
 
-    <table>
+    <table class="table">
       <thead>
         <tr>
           <th>Namespace</th>
@@ -73,88 +77,74 @@ th{font-weight:900}
       </tbody>
     </table>
 
-    <p class="small" id="meta"></p>
+    <p class="mono" id="meta" style="margin-top:10px">Last scan: —</p>
   </div>
+
+  <div class="footer">© 2026 Geodiametrics · Dashboard</div>
+
 </div>
 
 <script>
-/* ===============================
-   CONTROL ROOM DASHBOARD (TNT)
-   Single-source engine discovery
-================================ */
+/* ============================
+   DASHBOARD · OBSERVER ONLY
+   Reads ENGINE:: keys only
+============================= */
 
 const ENGINE_PREFIX = "ENGINE::";
-const CORES = [
-  "diamond_fusion_core_1",
-  "diamond_fusion_core_2",
-  "diamond_fusion_core_3",
-  "diamond_fusion_core_4"
-];
-
-const now = () => new Date().toISOString();
-
-function ensure(ns){
-  const key = ENGINE_PREFIX + ns;
-  if(localStorage.getItem(key)) return;
-  localStorage.setItem(key, JSON.stringify({
-    namespace: ns,
-    created_at: now(),
-    updated_at: now(),
-    state:{}
-  }));
-}
-
-function registerAll(){
-  CORES.forEach(ensure);
-  scan();
-}
 
 function scan(){
   const body = document.getElementById("rows");
   const meta = document.getElementById("meta");
   body.innerHTML = "";
 
-  const keys = Object.keys(localStorage)
-    .filter(k => k.startsWith(ENGINE_PREFIX));
-
-  if(!keys.length){
-    body.innerHTML = "<tr><td colspan='3' class='mono'>No engines discovered.</td></tr>";
-    meta.textContent = "Last scan: " + now();
-    return;
+  const found = [];
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k && k.startsWith(ENGINE_PREFIX)){
+      try{
+        const v = JSON.parse(localStorage.getItem(k));
+        found.push({
+          ns: k.slice(ENGINE_PREFIX.length),
+          keys: v?.state ? Object.keys(v.state).length : 0,
+          last: v?.updated_at || "—"
+        });
+      }catch{}
+    }
   }
 
-  keys.forEach(k=>{
-    const v = JSON.parse(localStorage.getItem(k));
-    const tr = document.createElement("tr");
-    tr.innerHTML =
-      "<td class='mono'>"+v.namespace+"</td>"+
-      "<td class='mono'>"+Object.keys(v.state||{}).length+"</td>"+
-      "<td class='mono'>"+(v.updated_at||v.created_at)+"</td>";
-    body.appendChild(tr);
-  });
+  if(!found.length){
+    body.innerHTML = "<tr><td colspan='3' class='mono'>No engines discovered.</td></tr>";
+  }else{
+    found.sort((a,b)=>a.ns.localeCompare(b.ns)).forEach(e=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML =
+        "<td class='mono'>"+e.ns+"</td>"+
+        "<td class='mono'>"+e.keys+"</td>"+
+        "<td class='mono'>"+e.last+"</td>";
+      body.appendChild(tr);
+    });
+  }
 
-  meta.textContent = "Last scan: " + now();
+  meta.textContent = "Last scan: " + new Date().toISOString();
 }
 
 function exportJSON(){
-  const data = Object.keys(localStorage)
-    .filter(k=>k.startsWith(ENGINE_PREFIX))
-    .map(k=>JSON.parse(localStorage.getItem(k)));
-
-  const blob = new Blob([JSON.stringify({
-    exported_at: now(),
-    engines: data
-  },null,2)],{type:"application/json"});
-
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="control_room_dashboard.json";
+  const data = [];
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k && k.startsWith(ENGINE_PREFIX)){
+      try{ data.push(JSON.parse(localStorage.getItem(k))); }catch{}
+    }
+  }
+  const blob = new Blob([JSON.stringify({exported_at:new Date().toISOString(), engines:data},null,2)],{type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "dashboard_engines.json";
   a.click();
   URL.revokeObjectURL(a.href);
 }
 
-/* AUTO-BOOT */
-registerAll();
+scan();
 </script>
 </body>
 </html>

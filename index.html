@@ -1,76 +1,79 @@
 <!-- ===============================
-     GEODIAMETRICS · NAVIGATION BUBBLES
+     GEODIAMETRICS · NAV BUBBLES (SAFE ON ANY BACKGROUND)
 ================================ -->
 
 <style>
-  .nav-bubbles {
-    max-width: 1100px;
-    margin: 64px auto 0;
-    padding: 0 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px;
+  .nav-bubbles-wrap{
+    max-width:1100px;
+    margin:64px auto 0;
+    padding:24px 20px;
+    border-radius:24px;
+    background:rgba(8,12,26,.78);
+    border:1px solid rgba(255,255,255,.10);
+    box-shadow:0 18px 50px rgba(0,0,0,.40);
   }
-
-  .nav-bubble {
-    background: linear-gradient(
-      145deg,
-      rgba(255,255,255,0.06),
-      rgba(255,255,255,0.02)
-    );
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
-    padding: 22px;
-    text-decoration: none;
-    color: #e9ecf6;
-    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  .nav-bubbles{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:16px;
   }
-
-  .nav-bubble:hover {
-    transform: translateY(-3px);
-    border-color: rgba(155,178,255,0.45);
-    box-shadow: 0 12px 30px rgba(0,0,0,.35);
+  .nav-bubble{
+    display:block;
+    padding:20px;
+    border-radius:20px;
+    text-decoration:none;
+    background:rgba(0,0,0,.28);
+    border:1px solid rgba(255,255,255,.10);
+    color:#e9eefc !important;
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
   }
-
-  .nav-bubble h3 {
-    margin: 0 0 8px;
-    font-size: 18px;
-    letter-spacing: .3px;
+  .nav-bubble:hover{
+    transform:translateY(-3px);
+    border-color:rgba(155,178,255,.55);
+    background:rgba(0,0,0,.38);
+    box-shadow:0 12px 30px rgba(0,0,0,.45);
   }
-
-  .nav-bubble p {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.5;
-    color: #cfd6ef;
+  .nav-bubble h3{
+    margin:0 0 8px;
+    font-size:18px;
+    letter-spacing:.3px;
+    color:#ffffff !important;
+  }
+  .nav-bubble p{
+    margin:0;
+    font-size:14px;
+    line-height:1.5;
+    color:rgba(233,238,252,.82) !important;
   }
 </style>
 
-<section class="nav-bubbles">
+<section class="nav-bubbles-wrap">
+  <div class="nav-bubbles">
 
-  <a class="nav-bubble" href="/problem/">
-    <h3>The Problem</h3>
-    <p>What fails without constraint-first execution.</p>
-  </a>
+    <a class="nav-bubble" href="/problem/">
+      <h3>The Problem</h3>
+      <p>What fails without constraint-first execution.</p>
+    </a>
 
-  <a class="nav-bubble" href="/methods/">
-    <h3>Methods</h3>
-    <p>Tiered empirical findings. High-signal only.</p>
-  </a>
+    <a class="nav-bubble" href="/methods/">
+      <h3>Methods</h3>
+      <p>Tiered empirical findings. High-signal only.</p>
+    </a>
 
-  <a class="nav-bubble" href="/dashboard/">
-    <h3>Dashboard</h3>
-    <p>Live execution state. Local-first telemetry.</p>
-  </a>
+    <a class="nav-bubble" href="/dashboard/">
+      <h3>Dashboard</h3>
+      <p>Live execution state. Local-first telemetry.</p>
+    </a>
 
-  <a class="nav-bubble" href="/apps/">
-    <h3>Apps</h3>
-    <p>Published artifacts and tools.</p>
-  </a>
+    <a class="nav-bubble" href="/apps/">
+      <h3>Apps</h3>
+      <p>Published artifacts and tools.</p>
+    </a>
 
-  <a class="nav-bubble" href="/reference/">
-    <h3>Reference</h3>
-    <p>Canonical definitions and boundaries.</p>
-  </a>
+    <a class="nav-bubble" href="/reference/">
+      <h3>Reference</h3>
+      <p>Glossary, definitions, and boundaries.</p>
+    </a>
 
+  </div>
 </section>

@@ -1,79 +1,203 @@
-<!-- ===============================
-     GEODIAMETRICS · NAV BUBBLES (SAFE ON ANY BACKGROUND)
-================================ -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Geodiametrics</title>
+  <style>
+    :root{
+      --fg:#e9eefc;
+      --muted:rgba(233,238,252,.78);
+      --stroke:rgba(233,238,252,.12);
+      --glass:rgba(8,12,26,.62);
+      --panel:rgba(10,14,26,.68);
+      --shadow:0 18px 55px rgba(0,0,0,.55);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--fg);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      overflow-x:hidden;
+      background:
+        radial-gradient(1400px 900px at 12% 10%, rgba(140,120,255,.20), transparent 60%),
+        radial-gradient(1200px 900px at 85% 25%, rgba(80,210,255,.16), transparent 62%),
+        radial-gradient(900px 700px at 55% 85%, rgba(255,160,120,.10), transparent 60%),
+        linear-gradient(180deg,#050713 0%,#060821 40%,#03040b 100%);
+    }
 
-<style>
-  .nav-bubbles-wrap{
-    max-width:1100px;
-    margin:64px auto 0;
-    padding:24px 20px;
-    border-radius:24px;
-    background:rgba(8,12,26,.78);
-    border:1px solid rgba(255,255,255,.10);
-    box-shadow:0 18px 50px rgba(0,0,0,.40);
-  }
-  .nav-bubbles{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:16px;
-  }
-  .nav-bubble{
-    display:block;
-    padding:20px;
-    border-radius:20px;
-    text-decoration:none;
-    background:rgba(0,0,0,.28);
-    border:1px solid rgba(255,255,255,.10);
-    color:#e9eefc !important;
-    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
-  }
-  .nav-bubble:hover{
-    transform:translateY(-3px);
-    border-color:rgba(155,178,255,.55);
-    background:rgba(0,0,0,.38);
-    box-shadow:0 12px 30px rgba(0,0,0,.45);
-  }
-  .nav-bubble h3{
-    margin:0 0 8px;
-    font-size:18px;
-    letter-spacing:.3px;
-    color:#ffffff !important;
-  }
-  .nav-bubble p{
-    margin:0;
-    font-size:14px;
-    line-height:1.5;
-    color:rgba(233,238,252,.82) !important;
-  }
-</style>
+    /* Stars */
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.85), transparent 60%),
+        radial-gradient(1px 1px at 22% 72%, rgba(255,255,255,.65), transparent 60%),
+        radial-gradient(1px 1px at 38% 32%, rgba(255,255,255,.75), transparent 60%),
+        radial-gradient(1px 1px at 48% 86%, rgba(255,255,255,.55), transparent 60%),
+        radial-gradient(1px 1px at 66% 28%, rgba(255,255,255,.65), transparent 60%),
+        radial-gradient(1px 1px at 78% 58%, rgba(255,255,255,.55), transparent 60%),
+        radial-gradient(1px 1px at 92% 22%, rgba(255,255,255,.70), transparent 60%);
+      opacity:.85;
+      z-index:-3;
+    }
+    /* Milky way haze */
+    body::after{
+      content:"";
+      position:fixed; inset:-20%;
+      pointer-events:none;
+      background:
+        radial-gradient(1300px 360px at 55% 55%, rgba(120,180,255,.14), transparent 75%),
+        radial-gradient(900px 280px at 48% 52%, rgba(255,190,220,.09), transparent 78%);
+      filter:blur(1px);
+      opacity:.9;
+      transform:rotate(-12deg);
+      z-index:-2;
+    }
 
-<section class="nav-bubbles-wrap">
-  <div class="nav-bubbles">
+    /* Soft planets (pure CSS) */
+    .planet{position:fixed;border-radius:999px;pointer-events:none;z-index:-1;filter:saturate(1.05)}
+    .p1{
+      width:240px;height:240px;left:-90px;top:110px;opacity:.90;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.20), transparent 44%),
+        radial-gradient(circle at 65% 70%, rgba(80,210,255,.16), transparent 56%),
+        radial-gradient(circle at 50% 50%, rgba(90,120,255,.40), rgba(18,26,50,.92));
+      box-shadow:0 0 70px rgba(120,160,255,.14);
+    }
+    .p2{
+      width:170px;height:170px;right:34px;top:190px;opacity:.82;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), transparent 45%),
+        radial-gradient(circle at 60% 60%, rgba(255,170,210,.12), transparent 64%),
+        radial-gradient(circle at 50% 50%, rgba(220,120,255,.30), rgba(20,18,40,.92));
+      box-shadow:0 0 60px rgba(255,170,210,.10);
+    }
+    .p3{
+      width:380px;height:380px;right:-190px;bottom:70px;opacity:.72;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,.16), transparent 48%),
+        radial-gradient(circle at 55% 60%, rgba(120,255,190,.10), transparent 62%),
+        radial-gradient(circle at 50% 50%, rgba(70,210,255,.18), rgba(10,16,30,.94));
+      box-shadow:0 0 70px rgba(70,210,255,.10);
+    }
 
-    <a class="nav-bubble" href="/problem/">
-      <h3>The Problem</h3>
-      <p>What fails without constraint-first execution.</p>
-    </a>
+    header{
+      position:sticky;top:0;z-index:10;
+      border-bottom:1px solid var(--stroke);
+      background:var(--glass);
+      backdrop-filter:blur(10px);
+    }
+    .bar{
+      max-width:1100px;margin:0 auto;
+      padding:14px 16px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+    }
+    .brand{font-weight:900;letter-spacing:.35px}
+    nav{display:flex;gap:12px;flex-wrap:wrap}
+    nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:850}
+    nav a:hover{color:var(--fg)}
 
-    <a class="nav-bubble" href="/methods/">
-      <h3>Methods</h3>
-      <p>Tiered empirical findings. High-signal only.</p>
-    </a>
+    main{max-width:1100px;margin:0 auto;padding:34px 16px 72px}
+    .hero{
+      padding:22px;border:1px solid var(--stroke);
+      border-radius:22px;background:rgba(0,0,0,.26);
+      box-shadow:var(--shadow);
+    }
+    h1{margin:0 0 10px;font-size:42px;line-height:1.05;letter-spacing:-.5px}
+    .sub{margin:0;max-width:78ch;color:var(--muted);line-height:1.7}
+    .grid{margin-top:18px;display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+    .bubble{
+      display:block;
+      padding:18px 18px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      background:rgba(0,0,0,.22);
+      text-decoration:none;
+      box-shadow:0 12px 34px rgba(0,0,0,.25);
+      transition:transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
+    }
+    .bubble:hover{
+      transform:translateY(-3px);
+      border-color:rgba(155,178,255,.55);
+      background:rgba(0,0,0,.30);
+      box-shadow:0 16px 44px rgba(0,0,0,.40);
+    }
+    .bubble h3{margin:0 0 8px;font-size:18px;color:#fff;letter-spacing:.2px}
+    .bubble p{margin:0;color:rgba(233,238,252,.82);line-height:1.55;font-size:14px}
 
-    <a class="nav-bubble" href="/dashboard/">
-      <h3>Dashboard</h3>
-      <p>Live execution state. Local-first telemetry.</p>
-    </a>
+    footer{
+      max-width:1100px;margin:0 auto;
+      padding:18px 16px 28px;
+      border-top:1px solid var(--stroke);
+      color:rgba(233,238,252,.60);
+      font-size:13px;
+    }
 
-    <a class="nav-bubble" href="/apps/">
-      <h3>Apps</h3>
-      <p>Published artifacts and tools.</p>
-    </a>
+    @media (prefers-reduced-motion: reduce){
+      .planet{animation:none !important}
+    }
+  </style>
+</head>
 
-    <a class="nav-bubble" href="/reference/">
-      <h3>Reference</h3>
-      <p>Glossary, definitions, and boundaries.</p>
-    </a>
+<body>
+  <div class="planet p1"></div>
+  <div class="planet p2"></div>
+  <div class="planet p3"></div>
 
-  </div>
-</section>
+  <header>
+    <div class="bar">
+      <div class="brand">Geodiametrics</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/methods/">Methods</a>
+        <a href="/dashboard/">Dashboard</a>
+        <a href="/apps/">Apps</a>
+        <a href="/reference/">Reference</a>
+        <a href="/problem/">Problem</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Constraint-first systems. Provable execution.</h1>
+      <p class="sub">Home is a front door only. Methods is the entry point.</p>
+
+      <div class="grid">
+        <a class="bubble" href="/problem/">
+          <h3>The Problem</h3>
+          <p>What fails without constraint-first execution.</p>
+        </a>
+
+        <a class="bubble" href="/methods/">
+          <h3>Methods</h3>
+          <p>Tiered empirical findings. High-signal only.</p>
+        </a>
+
+        <a class="bubble" href="/dashboard/">
+          <h3>Dashboard</h3>
+          <p>Live execution state. Telemetry + cycle status.</p>
+        </a>
+
+        <a class="bubble" href="/apps/">
+          <h3>Apps</h3>
+          <p>Published artifacts and tools. Stable surfaces.</p>
+        </a>
+
+        <a class="bubble" href="/reference/">
+          <h3>Reference</h3>
+          <p>Glossary, definitions, and boundaries.</p>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>© <span id="y"></span> Geodiametrics</footer>
+  <script>document.getElementById("y").textContent=new Date().getFullYear();</script>
+
+  <!-- If you already installed Cloudflare Web Analytics, keep that snippet right above this line. -->
+</body>
+</html>

@@ -1,154 +1,81 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Geodiametrics</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Geodiametrics</title><style>
+:root{--bg:#0b0f14;--panel:#111826;--panel2:#0f1623;--border:#223044;--text:#e7eef7;--muted:#93a4b8;--hi:#3a5273}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:radial-gradient(1200px 800px at 50% -20%,#16223a 0%,var(--bg) 60%);color:var(--text);font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Arial}
+.wrapper{max-width:1100px;margin:0 auto;padding:22px 14px 52px}
+.header{text-align:center;margin:8px 0 18px}
+.header h1{margin:0;font-size:34px;letter-spacing:.4px}
+.header p{margin:10px 0 0;color:var(--muted)}
+.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--border);border-radius:22px;padding:18px;margin:14px 0}
+.pill{display:inline-block;padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:var(--panel2);font-weight:800;letter-spacing:.6px;text-transform:uppercase;font-size:12px}
+.nav-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:12px}
+.btn{display:flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid var(--border);background:linear-gradient(180deg,#121a2a,#0d1422);color:var(--text);border-radius:999px;padding:14px 12px;font-weight:800;letter-spacing:.3px;cursor:pointer;user-select:none}
+.btn:hover{border-color:var(--hi);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.anchor-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
+.muted{color:var(--muted)}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.breadcrumb{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.crumb{color:var(--muted);font-weight:800}
+.hide{display:none!important}
+.room{min-height:42vh}
+.room h2{margin:10px 0 8px;font-size:18px;letter-spacing:.3px}
+.room p{margin:0;color:var(--muted);max-width:820px}
+</style></head><body><div class="wrapper">
+<div class="header"><h1>Geodiametrics</h1><p>Constraint-first execution platform<br>Selection → Resolution → Commitment → Continuation</p></div>
 
-<style>
-:root{
-  --bg:#0b0f14;
-  --panel:#111826;
-  --panel2:#0f1623;
-  --border:#223044;
-  --text:#e7eef7;
-  --muted:#93a4b8;
-}
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  background:radial-gradient(1200px 800px at 50% -20%, #16223a 0%, var(--bg) 60%);
-  color:var(--text);
-  font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Arial;
-}
-
-.wrapper{
-  max-width:1100px;
-  margin:0 auto;
-  padding:28px 16px 56px;
-}
-
-.header{
-  text-align:center;
-  margin-bottom:32px;
-}
-
-.header h1{
-  margin:0;
-  font-size:34px;
-  letter-spacing:.4px;
-}
-
-.header p{
-  margin:10px 0 0;
-  color:var(--muted);
-}
-
-.card{
-  background:linear-gradient(180deg,var(--panel),var(--panel2));
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:22px;
-  margin-bottom:28px;
-}
-
-.section-title{
-  display:inline-block;
-  padding:8px 14px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  background:var(--panel2);
-  font-weight:700;
-  letter-spacing:.6px;
-  text-transform:uppercase;
-  font-size:12px;
-  margin-bottom:14px;
-}
-
-.nav-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:14px;
-}
-
-.nav-btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  border:1px solid var(--border);
-  background:linear-gradient(180deg,#121a2a,#0d1422);
-  color:var(--text);
-  border-radius:999px;
-  padding:16px 14px;
-  font-weight:700;
-  letter-spacing:.3px;
-}
-
-.nav-btn:hover{
-  border-color:#3a5273;
-}
-
-.anchor-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:14px;
-}
-
-.anchor-btn{
-  text-decoration:none;
-  text-align:center;
-  border:1px solid var(--border);
-  background:linear-gradient(180deg,#121a2a,#0d1422);
-  color:var(--text);
-  border-radius:999px;
-  padding:16px 14px;
-  font-weight:800;
-}
-
-.footer{
-  text-align:center;
-  color:var(--muted);
-  font-size:12px;
-  margin-top:36px;
-}
-</style>
-</head>
-
-<body>
-<div class="wrapper">
-
-  <div class="header">
-    <h1>Geodiametrics</h1>
-    <p>Constraint-first execution platform<br>
-    Selection → Resolution → Commitment → Continuation</p>
-  </div>
-
-  <div class="card">
-    <div class="section-title">Navigate</div>
-    <div class="nav-grid">
-      <a class="nav-btn" href="toc.html">Table of Contents</a>
-      <a class="nav-btn" href="mission.html">Mission Statement</a>
-      <a class="nav-btn" href="about.html">About</a>
-      <a class="nav-btn" href="rights.html">Rights & IP</a>
-      <a class="nav-btn" href="control.html">Control Room</a>
-      <a class="nav-btn" href="apps.html">Apps</a>
-      <a class="nav-btn" href="reference.html">Reference</a>
-      <a class="nav-btn" href="problem.html">Problem</a>
+<div class="card" id="router">
+  <div class="topbar">
+    <span class="pill">Navigate</span>
+    <div class="breadcrumb">
+      <span class="crumb" id="crumb">HOME</span>
+      <button class="btn" id="backBtn" style="padding:10px 14px;border-radius:999px" type="button">Back</button>
+      <button class="btn" id="homeBtn" style="padding:10px 14px;border-radius:999px" type="button">Home</button>
     </div>
   </div>
-
-  <div class="card">
-    <div class="section-title">Public Anchors</div>
-    <div class="anchor-grid">
-      <a class="anchor-btn" href="https://osf.io/" target="_blank">Open OSF</a>
-      <a class="anchor-btn" href="https://orcid.org/" target="_blank">Open ORCID</a>
-    </div>
+  <div class="nav-grid" id="homeNav">
+    <a class="btn" href="#toc">Table of Contents</a>
+    <a class="btn" href="#mission">Mission Statement</a>
+    <a class="btn" href="#about">About</a>
+    <a class="btn" href="#rights">Rights & IP</a>
+    <a class="btn" href="#control">Control Room</a>
+    <a class="btn" href="#apps">Apps</a>
+    <a class="btn" href="#reference">Reference</a>
+    <a class="btn" href="#problem">Problem</a>
   </div>
-
-  <div class="footer">© 2026 Geodiametrics</div>
-
 </div>
-</body>
-</html>
+
+<div class="card" id="anchors">
+  <span class="pill">Public Anchors</span>
+  <div class="anchor-grid">
+    <a class="btn" href="https://osf.io/" target="_blank" rel="noopener">Open OSF</a>
+    <a class="btn" href="https://orcid.org/" target="_blank" rel="noopener">Open ORCID</a>
+  </div>
+  <p class="muted" style="margin:12px 0 0">External identifiers for validation and citation.</p>
+</div>
+
+<!-- ROOMS (single-file, no 404 ever) -->
+<div class="card room hide" data-room="toc"><span class="pill">Table of Contents</span><h2>Table of Contents</h2><p>System structure and index. Replace this room body with your actual TOC content.</p></div>
+<div class="card room hide" data-room="mission"><span class="pill">Mission Statement</span><h2>Mission Statement</h2><p>Purpose, scope, and execution posture. Replace this room body with your mission statement.</p></div>
+<div class="card room hide" data-room="about"><span class="pill">About</span><h2>About</h2><p>What this platform is and is not. Replace this room body with your about copy.</p></div>
+<div class="card room hide" data-room="rights"><span class="pill">Rights & IP</span><h2>Rights & IP</h2><p>Usage, attribution, and licensing. Replace this room body with your rights/IP terms.</p></div>
+<div class="card room hide" data-room="control"><span class="pill">Control Room</span><h2>Control Room</h2><p>Authoritative observer surface. Instrumentation and live gauges operate here.</p></div>
+<div class="card room hide" data-room="apps"><span class="pill">Apps</span><h2>Apps</h2><p>Execution and viewing surfaces. Replace this room body with your apps list/links.</p></div>
+<div class="card room hide" data-room="reference"><span class="pill">Reference</span><h2>Reference</h2><p>Definitions and formal grounding. Replace this room body with references and definitions.</p></div>
+<div class="card room hide" data-room="problem"><span class="pill">Problem</span><h2>Problem</h2><p>The instability this system addresses. Replace this room body with the problem statement.</p></div>
+
+<div class="footer">© 2026 Geodiametrics</div>
+</div>
+
+<script>
+(()=>{const rooms=[...document.querySelectorAll("[data-room]")],homeNav=document.getElementById("homeNav"),crumb=document.getElementById("crumb"),backBtn=document.getElementById("backBtn"),homeBtn=document.getElementById("homeBtn");
+const normalize=(h)=>String(h||"").replace("#","").trim().toLowerCase();
+const showHome=()=>{rooms.forEach(r=>r.classList.add("hide"));homeNav.classList.remove("hide");crumb.textContent="HOME";history.replaceState(null,"","#");};
+const showRoom=(id)=>{const key=normalize(id);const target=rooms.find(r=>r.dataset.room===key);if(!target){showHome();return;}
+rooms.forEach(r=>r.classList.toggle("hide",r!==target));homeNav.classList.add("hide");crumb.textContent=key.toUpperCase();target.scrollIntoView({block:"start",behavior:"smooth"});};
+const route=()=>{const key=normalize(location.hash);if(!key){showHome();return;}showRoom(key);};
+window.addEventListener("hashchange",route);
+backBtn.addEventListener("click",()=>{if(location.hash) history.back(); else showHome();});
+homeBtn.addEventListener("click",showHome);
+route();
+})();
+</script></body></html>

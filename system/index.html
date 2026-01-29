@@ -18,30 +18,46 @@ body{
              var(--bg);
   color:var(--fg);font-family:var(--sans);
 }
-main{max-width:1000px;margin:0 auto;padding:40px 18px 72px}
-header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}
+main{max-width:1050px;margin:0 auto;padding:40px 18px 72px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
 h1{margin:0;font-size:28px}
-.sub{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.sub{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
 
 .nav{display:flex;gap:10px;flex-wrap:wrap}
 .pill{
-  display:inline-flex;align-items:center;
+  display:inline-flex;align-items:center;gap:8px;
   padding:10px 12px;border-radius:999px;
-  border:1px solid var(--stroke);background:rgba(255,255,255,.02);
-  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);
+  color:var(--fg);text-decoration:none;
+  font-family:var(--mono);font-size:12px;
 }
 .pill:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:16px}
 .card{
-  border:1px solid var(--stroke);border-radius:var(--radius);padding:22px;
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  padding:22px;
   background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
 }
 .card:hover{border-color:rgba(122,162,255,.45)}
-.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-.title{font-size:18px;font-weight:600;margin-bottom:8px}
+.kicker{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+.title{font-size:18px;font-weight:650;margin-bottom:8px}
 .list{margin:0;padding-left:16px;color:var(--muted);line-height:1.55}
-footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+footer{
+  margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+}
 </style>
 </head>
 
@@ -93,7 +109,10 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);font-
   </div>
 </section>
 
-<footer>Reference · Layer 2 · v1.1</footer>
+<footer>
+  <div>© 2026 Geodiametrics</div>
+  <div>Reference · Layer 2 · v1.2</div>
+</footer>
 
 </main>
 </body>

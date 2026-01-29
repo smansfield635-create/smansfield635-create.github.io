@@ -60,7 +60,9 @@ h1{margin:0 0 8px;font-size:32px;font-weight:650}
   box-shadow:0 18px 55px rgba(0,0,0,.45);
 }
 .diamond.disabled{
-  opacity:.75;
+  opacity:.6;
+  cursor:not-allowed;
+  pointer-events:none;
 }
 .diamond::before{
   content:"";
@@ -162,13 +164,13 @@ footer{
       </div>
     </a>
 
-    <a class="diamond disabled" href="/execution/">
+    <div class="diamond disabled">
       <div class="inner">
         <div class="kicker">Reserved</div>
         <div class="title">Execution</div>
         <div class="desc">Disabled by design.</div>
       </div>
-    </a>
+    </div>
   </div>
 
   <footer>
@@ -178,7 +180,7 @@ footer{
       <a href="/system/">Reference</a>
       <a href="/artifacts/">Artifacts</a>
       <a href="/problem/">Problem</a>
-      <a href="/execution/">Execution</a>
+      <span style="opacity:.6">Execution</span>
     </div>
   </footer>
 </main>

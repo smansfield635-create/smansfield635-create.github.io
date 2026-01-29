@@ -8,11 +8,14 @@
 <style>
 :root{
   --fg:#e9eefc;
-  --muted:rgba(233,238,252,.70);
+  --muted:rgba(233,238,252,.66);
   --stroke:rgba(233,238,252,.14);
   --panel:rgba(12,16,34,.62);
-  --radius:22px;
+  --panel2:rgba(12,16,34,.42);
   --shadow:0 18px 55px rgba(0,0,0,.55);
+  --radius:22px;
+  --accent:rgba(122,162,255,.35);
+  --accent2:rgba(180,140,255,.28);
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
@@ -21,75 +24,97 @@ body{
   color:var(--fg);
   overflow-x:hidden;
   background:
-    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.16), transparent 62%),
-    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.12), transparent 62%),
-    radial-gradient(1000px 800px at 60% 90%, rgba(120,220,255,.08), transparent 62%),
+    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
+    radial-gradient(1000px 800px at 60% 90%, rgba(120,220,255,.08), transparent 60%),
     linear-gradient(180deg,#070b18,#050714 70%,#04040f);
 }
 
-/* COSMIC LAYER (stars + milky-way band) */
-body:before{
-  content:"";
-  position:fixed;inset:-80px;
+/* ---- STARFIELD (visible) ---- */
+.starfield{
+  position:fixed; inset:0;
   pointer-events:none;
-  opacity:.95;
-  background:
-    radial-gradient(2px 2px at 10% 15%, rgba(255,255,255,.95), transparent 60%),
-    radial-gradient(1px 1px at 30% 28%, rgba(255,255,255,.75), transparent 60%),
-    radial-gradient(2px 2px at 55% 18%, rgba(255,255,255,.85), transparent 60%),
-    radial-gradient(1px 1px at 72% 22%, rgba(255,255,255,.70), transparent 60%),
-    radial-gradient(2px 2px at 88% 35%, rgba(255,255,255,.90), transparent 60%),
-    radial-gradient(1px 1px at 18% 62%, rgba(255,255,255,.70), transparent 60%),
-    radial-gradient(2px 2px at 42% 70%, rgba(255,255,255,.80), transparent 60%),
-    radial-gradient(1px 1px at 67% 78%, rgba(255,255,255,.62), transparent 60%),
-    radial-gradient(2px 2px at 90% 82%, rgba(255,255,255,.85), transparent 60%),
-    radial-gradient(1px 1px at 8% 88%, rgba(255,255,255,.60), transparent 60%),
-    /* additional dense field */
-    radial-gradient(1px 1px at 12% 26%, rgba(255,255,255,.55), transparent 60%),
-    radial-gradient(1px 1px at 22% 44%, rgba(255,255,255,.45), transparent 60%),
-    radial-gradient(1px 1px at 38% 52%, rgba(255,255,255,.50), transparent 60%),
-    radial-gradient(1px 1px at 58% 40%, rgba(255,255,255,.45), transparent 60%),
-    radial-gradient(1px 1px at 74% 60%, rgba(255,255,255,.50), transparent 60%),
-    radial-gradient(1px 1px at 84% 14%, rgba(255,255,255,.45), transparent 60%);
-  filter:blur(.2px);
-  animation: starDrift 18s ease-in-out infinite;
+  z-index:-1;
+  overflow:hidden;
+}
+.starsA,.starsB,.starsC{
+  position:absolute; inset:-120px;
+  background-repeat:no-repeat;
+  opacity:.75;
+  filter:drop-shadow(0 0 2px rgba(255,255,255,.25));
+  animation: twinkle 6.5s ease-in-out infinite;
+}
+.starsA{
+  background-image:
+    radial-gradient(2px 2px at 12% 18%, rgba(255,255,255,.95), transparent 60%),
+    radial-gradient(1px 1px at 22% 34%, rgba(255,255,255,.85), transparent 60%),
+    radial-gradient(2px 2px at 36% 22%, rgba(255,255,255,.9), transparent 60%),
+    radial-gradient(1px 1px at 48% 16%, rgba(255,255,255,.75), transparent 60%),
+    radial-gradient(2px 2px at 62% 28%, rgba(255,255,255,.9), transparent 60%),
+    radial-gradient(1px 1px at 74% 18%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(2px 2px at 86% 26%, rgba(255,255,255,.92), transparent 60%),
+    radial-gradient(1px 1px at 14% 66%, rgba(255,255,255,.72), transparent 60%),
+    radial-gradient(2px 2px at 28% 78%, rgba(255,255,255,.88), transparent 60%),
+    radial-gradient(1px 1px at 44% 70%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(2px 2px at 58% 84%, rgba(255,255,255,.9), transparent 60%),
+    radial-gradient(1px 1px at 76% 72%, rgba(255,255,255,.62), transparent 60%),
+    radial-gradient(2px 2px at 90% 86%, rgba(255,255,255,.92), transparent 60%);
+  animation-duration: 7.8s;
+}
+.starsB{
+  opacity:.55;
+  transform:translate3d(0,0,0);
+  background-image:
+    radial-gradient(1px 1px at 8% 12%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(2px 2px at 18% 44%, rgba(255,255,255,.85), transparent 60%),
+    radial-gradient(1px 1px at 32% 36%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(2px 2px at 52% 40%, rgba(255,255,255,.9), transparent 60%),
+    radial-gradient(1px 1px at 68% 46%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(2px 2px at 82% 52%, rgba(255,255,255,.88), transparent 60%),
+    radial-gradient(1px 1px at 92% 60%, rgba(255,255,255,.6), transparent 60%),
+    radial-gradient(2px 2px at 10% 86%, rgba(255,255,255,.82), transparent 60%),
+    radial-gradient(1px 1px at 36% 88%, rgba(255,255,255,.58), transparent 60%),
+    radial-gradient(2px 2px at 66% 90%, rgba(255,255,255,.84), transparent 60%),
+    radial-gradient(1px 1px at 88% 78%, rgba(255,255,255,.6), transparent 60%);
+  animation-duration: 9.5s;
+  animation-delay: -1.4s;
+}
+.starsC{
+  opacity:.30;
+  background-image:
+    radial-gradient(2px 2px at 26% 14%, rgba(180,140,255,.55), transparent 70%),
+    radial-gradient(2px 2px at 64% 18%, rgba(122,162,255,.48), transparent 70%),
+    radial-gradient(2px 2px at 18% 56%, rgba(120,220,255,.35), transparent 70%),
+    radial-gradient(2px 2px at 78% 66%, rgba(180,140,255,.40), transparent 70%),
+    radial-gradient(2px 2px at 52% 82%, rgba(122,162,255,.38), transparent 70%);
+  animation-duration: 11.2s;
+  animation-delay: -2.2s;
+}
+@keyframes twinkle{
+  0%,100%{ opacity:.55; transform:translateY(0px) }
+  50%{ opacity:.85; transform:translateY(-2px) }
 }
 
-/* milky-way / nebula band */
-body:after{
-  content:"";
-  position:fixed;inset:-120px;
-  pointer-events:none;
-  opacity:.70;
-  background:
-    linear-gradient(115deg,
-      transparent 0%,
-      rgba(255,170,120,.08) 20%,
-      rgba(160,140,255,.10) 35%,
-      rgba(120,220,255,.06) 55%,
-      rgba(255,140,200,.08) 70%,
-      transparent 100%),
-    radial-gradient(900px 700px at 40% 55%, rgba(255,190,140,.10), transparent 65%),
-    radial-gradient(1100px 800px at 62% 48%, rgba(170,160,255,.10), transparent 68%),
-    radial-gradient(1000px 900px at 55% 60%, rgba(140,220,255,.06), transparent 70%);
-  filter:blur(18px) saturate(1.15);
-  transform:rotate(-8deg);
-  animation: nebulaDrift 22s ease-in-out infinite;
-  mix-blend-mode:screen;
-}
-
-@keyframes starDrift{0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-12px,8px,0)}100%{transform:translate3d(0,0,0)}}
-@keyframes nebulaDrift{0%{transform:rotate(-8deg) translate3d(0,0,0)}50%{transform:rotate(-8deg) translate3d(14px,-10px,0)}100%{transform:rotate(-8deg) translate3d(0,0,0)}}
-
-.wrap{max-width:1100px;margin:0 auto;padding:22px 16px 90px}
+/* ---- Layout ---- */
+.wrap{max-width:1100px;margin:0 auto;padding:18px 14px 92px}
 .top{
-  position:sticky;top:0;z-index:50;
+  position:sticky; top:0; z-index:50;
   backdrop-filter:blur(10px);
-  background:linear-gradient(180deg, rgba(7,11,24,.86), rgba(7,11,24,.52));
+  background:linear-gradient(180deg, rgba(7,11,24,.84), rgba(7,11,24,.55));
   border-bottom:1px solid rgba(233,238,252,.10);
 }
-.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
-.brand{font-weight:900;letter-spacing:.4px}
+.bar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:14px 14px;
+}
+.brand{
+  display:flex;align-items:center;gap:10px;
+  font-weight:1000;letter-spacing:.4px;
+}
+.logo{
+  width:28px;height:28px;flex:0 0 auto;
+  filter:drop-shadow(0 10px 22px rgba(0,0,0,.45));
+}
 .nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
 .bubble{
   display:inline-flex;align-items:center;justify-content:center;
@@ -98,18 +123,35 @@ body:after{
   background:rgba(255,255,255,.06);
   color:var(--fg);
   text-decoration:none;
-  font-weight:900;
+  font-weight:1000;
   box-shadow:0 10px 26px rgba(0,0,0,.35);
 }
 .bubble:active{transform:translateY(1px)}
 
-.hero{padding:30px 2px 8px}
-h1{margin:0;font-size:56px;letter-spacing:.2px}
-.sub{margin:12px 0 0;color:var(--muted);max-width:900px;line-height:1.55}
-.hr{height:1px;background:rgba(233,238,252,.10);margin:22px 0 26px}
+.hero{
+  padding:18px 2px 0;
+}
+.hero h1{
+  margin:0;
+  font-size:56px;
+  letter-spacing:.2px;
+  text-align:left;          /* keep left */
+  transform:translateX(-4px); /* pull slightly left */
+}
+.hero p{
+  margin:10px 0 0;
+  color:var(--muted);
+  max-width:860px;
+  line-height:1.55;
+}
+.hr{height:1px;background:rgba(233,238,252,.10);margin:18px 0 18px}
 
-.grid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:900px){.grid{grid-template-columns:1.2fr .8fr}}
+.grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+}
+@media(min-width:920px){ .grid{grid-template-columns:1fr 1fr} }
 
 .card{
   border-radius:var(--radius);
@@ -117,35 +159,76 @@ h1{margin:0;font-size:56px;letter-spacing:.2px}
   background:var(--panel);
   box-shadow:var(--shadow);
 }
-.card .in{padding:18px}
-.card h2{margin:0 0 10px;font-size:22px}
-.card p{margin:0 0 12px;color:var(--muted);line-height:1.55}
-
+.in{padding:18px}
 .pill{
   display:inline-flex;align-items:center;gap:8px;
   padding:8px 12px;border-radius:999px;
   border:1px solid rgba(233,238,252,.16);
   background:rgba(255,255,255,.06);
-  font-weight:900;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
+  font-weight:1000;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
 }
-
-.row{display:flex;flex-wrap:wrap;gap:10px}
+h2{margin:10px 0 8px;font-size:22px}
+p{margin:0 0 12px;color:var(--muted);line-height:1.55}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .btn{
-  appearance:none;border:1px solid rgba(233,238,252,.18);
-  background:rgba(255,255,255,.06);color:var(--fg);
-  padding:11px 14px;border-radius:999px;
-  font-weight:900;cursor:pointer;text-decoration:none;
   display:inline-flex;align-items:center;justify-content:center;
+  padding:11px 16px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.18);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);
+  font-weight:1000;
+  text-decoration:none;
+  cursor:pointer;
+  min-width:170px;
 }
 .btn:active{transform:translateY(1px)}
-.footer{margin-top:22px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
+.footer{
+  margin-top:18px;
+  text-align:center;
+  color:rgba(233,238,252,.55);
+  font-size:13px;
+}
+
+/* safety: ensure no stray debug text can appear bottom-left */
+#debug, .debug, .dev, .__debug { display:none !important; }
 </style>
 </head>
 
 <body>
+<div class="starfield" aria-hidden="true">
+  <div class="starsA"></div>
+  <div class="starsB"></div>
+  <div class="starsC"></div>
+</div>
+
 <div class="top">
-  <div class="bar wrap" style="padding:14px 16px;">
-    <div class="brand">Geodiametrics</div>
+  <div class="bar wrap" style="padding:14px 14px;">
+    <div class="brand">
+      <!-- Snowflake / Diamond fractal logo (SVG) -->
+      <svg class="logo" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="64" y2="64">
+            <stop stop-color="rgba(122,162,255,.95)"/>
+            <stop offset="1" stop-color="rgba(180,140,255,.95)"/>
+          </linearGradient>
+        </defs>
+        <!-- core diamond -->
+        <path d="M32 8 L44 20 L32 32 L20 20 Z" stroke="url(#g)" stroke-width="2.6" opacity=".95"/>
+        <path d="M32 32 L44 44 L32 56 L20 44 Z" stroke="url(#g)" stroke-width="2.6" opacity=".80"/>
+        <!-- arms (snowflake) -->
+        <path d="M32 6 V58" stroke="rgba(233,238,252,.55)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M6 32 H58" stroke="rgba(233,238,252,.55)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M13 13 L51 51" stroke="rgba(233,238,252,.40)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M51 13 L13 51" stroke="rgba(233,238,252,.40)" stroke-width="2" stroke-linecap="round"/>
+        <!-- small diamonds (fractal) -->
+        <path d="M32 20 L36 24 L32 28 L28 24 Z" stroke="rgba(233,238,252,.70)" stroke-width="1.6"/>
+        <path d="M32 36 L36 40 L32 44 L28 40 Z" stroke="rgba(233,238,252,.60)" stroke-width="1.6"/>
+        <path d="M20 32 L24 36 L20 40 L16 36 Z" stroke="rgba(233,238,252,.45)" stroke-width="1.4"/>
+        <path d="M44 32 L48 36 L44 40 L40 36 Z" stroke="rgba(233,238,252,.45)" stroke-width="1.4"/>
+      </svg>
+      <span>Geodiametrics</span>
+    </div>
+
     <nav class="nav">
       <a class="bubble" href="/">Home</a>
       <a class="bubble" href="/apps/">Apps</a>
@@ -157,20 +240,21 @@ h1{margin:0;font-size:56px;letter-spacing:.2px}
 </div>
 
 <div class="wrap">
+
   <section class="hero">
     <h1>Geodiametrics</h1>
-    <p class="sub">A constraint-first execution platform. Control Room is the authority. Dashboards observe. Apps launch.</p>
+    <p>A constraint-first execution platform. Control Room is the authority. Dashboards observe. Apps launch.</p>
     <div class="hr"></div>
   </section>
 
   <section class="grid">
-    <!-- LEFT -->
+
     <div class="card">
       <div class="in">
         <div class="pill">Front Door</div>
         <h2>Navigation</h2>
         <p>Enter Control Room for gauges and lawful monitoring. Use Apps as viewer/launcher surfaces.</p>
-        <div class="row" style="margin-top:10px;">
+        <div class="row">
           <a class="btn" href="/control-room/">Enter Control Room</a>
           <a class="btn" href="/apps/">Apps</a>
           <a class="btn" href="/reference/">Reference</a>
@@ -179,22 +263,23 @@ h1{margin:0;font-size:56px;letter-spacing:.2px}
       </div>
     </div>
 
-    <!-- RIGHT -->
     <div class="card">
       <div class="in">
         <div class="pill">Public Anchors</div>
         <h2>External Links</h2>
         <p>Primary public identifiers for validation and citation.</p>
-        <div class="row" style="margin-top:10px;">
+        <div class="row">
           <a class="btn" href="https://osf.io/mn6vu" target="_blank" rel="noopener">Open OSF</a>
           <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">Open ORCID</a>
         </div>
       </div>
     </div>
+
   </section>
 
   <div class="footer">© 2026 Geodiametrics</div>
 </div>
+
 </body>
 </html>
 ```0

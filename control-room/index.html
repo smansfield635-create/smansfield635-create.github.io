@@ -25,139 +25,49 @@ body{
     radial-gradient(1100px 900px at 55% 85%, rgba(120,220,255,.10), transparent 60%),
     linear-gradient(180deg,#070b18,#050714 70%,#04040f);
 }
-body:before{
-  content:"";
-  position:fixed;inset:-60px;
-  pointer-events:none;
-  opacity:.75;
-  filter:blur(.15px);
-  background:
-    radial-gradient(2px 2px at 10% 15%, rgba(255,255,255,.9), transparent 60%),
-    radial-gradient(1px 1px at 30% 28%, rgba(255,255,255,.7), transparent 60%),
-    radial-gradient(2px 2px at 55% 18%, rgba(255,255,255,.8), transparent 60%),
-    radial-gradient(1px 1px at 72% 22%, rgba(255,255,255,.6), transparent 60%),
-    radial-gradient(2px 2px at 88% 35%, rgba(255,255,255,.85), transparent 60%),
-    radial-gradient(1px 1px at 18% 62%, rgba(255,255,255,.65), transparent 60%),
-    radial-gradient(2px 2px at 42% 70%, rgba(255,255,255,.75), transparent 60%),
-    radial-gradient(1px 1px at 67% 78%, rgba(255,255,255,.55), transparent 60%),
-    radial-gradient(2px 2px at 90% 82%, rgba(255,255,255,.8), transparent 60%),
-    radial-gradient(1px 1px at 8% 88%, rgba(255,255,255,.55), transparent 60%);
-}
-.wrap{max-width:1200px;margin:0 auto;padding:18px 14px 80px}
-.top{
-  position:sticky;top:0;z-index:50;
-  backdrop-filter:blur(10px);
-  background:linear-gradient(180deg, rgba(7,11,24,.86), rgba(7,11,24,.55));
-  border-bottom:1px solid rgba(233,238,252,.10);
-}
-.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 14px}
-.brand{font-weight:950;letter-spacing:.4px}
-.nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
-.bubble{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:10px 14px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.16);
-  background:rgba(255,255,255,.06);
-  color:var(--fg);
-  text-decoration:none;
-  font-weight:900;
-  box-shadow:0 10px 26px rgba(0,0,0,.35);
-}
-.bubble:active{transform:translateY(1px)}
-.card{
-  border-radius:var(--radius);
-  border:1px solid var(--stroke);
-  background:var(--panel);
-  box-shadow:var(--shadow);
-  padding:18px;
-  margin:14px 0;
-}
+.wrap{max-width:1200px;margin:0 auto;padding:22px 16px 80px}
+.card{border-radius:var(--radius);border:1px solid var(--stroke);background:var(--panel);box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
 h1{margin:0 0 10px;font-size:42px}
 h2{margin:0 0 10px;font-size:22px}
 p{margin:0 0 10px;color:var(--muted);line-height:1.55}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.btn{
-  padding:11px 16px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.18);
-  background:rgba(255,255,255,.06);
-  color:var(--fg);
-  font-weight:900;
-  cursor:pointer;
-}
+.btn{padding:11px 16px;border-radius:999px;border:1px solid rgba(233,238,252,.18);background:rgba(255,255,255,.06);color:var(--fg);font-weight:900;cursor:pointer}
 .btn:active{transform:translateY(1px)}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-.small{font-size:13px;color:var(--muted);margin-top:8px}
+.small{font-size:13px;color:var(--muted)}
 .hr{height:1px;background:rgba(233,238,252,.10);margin:14px 0}
-.pill{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 12px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.16);
-  background:rgba(255,255,255,.06);
-  font-weight:950;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
-}
 .grid{display:grid;grid-template-columns:1fr;gap:14px}
 @media(min-width:980px){.grid{grid-template-columns:1.1fr .9fr}}
 .tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 @media(min-width:720px){.tabs{grid-template-columns:repeat(4,1fr)}}
-.tab{
-  padding:12px;border-radius:16px;border:1px solid rgba(233,238,252,.16);
-  background:rgba(255,255,255,.06);
-  font-weight:950;cursor:pointer;
-}
-.tab small{display:block;color:var(--muted);font-weight:700;margin-top:2px}
+.tab{padding:12px;border-radius:16px;border:1px solid rgba(233,238,252,.16);background:rgba(255,255,255,.06);font-weight:900;cursor:pointer}
 .tab.active{background:rgba(255,255,255,.12)}
-.panel{
-  margin-top:12px;border-radius:18px;border:1px solid rgba(233,238,252,.14);
-  background:rgba(0,0,0,.22);padding:14px;
-}
+.tab small{display:block;color:var(--muted);font-weight:700;margin-top:2px}
+.panel{margin-top:12px;border-radius:18px;border:1px solid rgba(233,238,252,.14);background:rgba(0,0,0,.22);padding:14px}
 .kv{display:grid;grid-template-columns:1fr;gap:10px}
 @media(min-width:720px){.kv{grid-template-columns:1fr 1fr}}
 .k{border-radius:16px;border:1px solid rgba(233,238,252,.12);background:rgba(255,255,255,.05);padding:12px}
 .k b{display:block;margin-bottom:6px}
 .table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
 th,td{padding:8px;border-bottom:1px solid rgba(233,238,252,.12);text-align:left;color:var(--muted)}
-th{color:rgba(233,238,252,.92);font-weight:950}
+th{color:#fff;font-weight:950}
 .gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
 .gauge{border-radius:18px;border:1px solid rgba(233,238,252,.14);background:rgba(0,0,0,.22);padding:14px}
-.gaugeHead{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.gaugeTitle{display:flex;align-items:center;gap:10px;font-weight:950}
-.light{width:12px;height:12px;border-radius:50%;display:inline-block;background:var(--red)}
-.bar2{display:flex;gap:4px;margin-top:10px}
-.block{flex:1;height:10px;border-radius:6px;background:rgba(255,255,255,.12)}
-.block.on.green{background:var(--green)}
-.block.on.yellow{background:var(--yellow)}
-.block.on.red{background:var(--red)}
-.block.on.blue{background:var(--blue)}
-.pulse{animation:pulse 1.8s ease-in-out infinite}
-@keyframes pulse{
-  0%,100%{filter:drop-shadow(0 0 0 rgba(74,222,128,0));opacity:1}
-  50%{filter:drop-shadow(0 0 10px rgba(74,222,128,.35));opacity:.92}
-}
+.gauge h3{margin:0 0 8px;font-size:12px;letter-spacing:.7px;text-transform:uppercase;color:rgba(233,238,252,.85)}
+.meter{height:14px;background:rgba(255,255,255,.12);border-radius:8px;overflow:hidden}
+.fill{height:100%;width:0%;transition:width .35s ease}
 .footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:18px}
 </style>
 </head>
 
 <body>
-<div class="top">
-  <div class="bar wrap" style="padding:14px 14px;">
-    <div class="brand">Geodiametrics</div>
-    <nav class="nav">
-      <a class="bubble" href="/">Home</a>
-      <a class="bubble" href="/apps/">Apps</a>
-      <a class="bubble" href="/reference/">Reference</a>
-      <a class="bubble" href="/problem/">Problem</a>
-    </nav>
-  </div>
-</div>
-
 <div class="wrap">
 
   <div class="card">
-    <div class="pill">Authority · Control Room</div>
-    <h1 style="margin-top:10px;">Control Room</h1>
-    <p>Dashboard + Supervisor + Diamond Fusion in one place. Device-local only. Engines are keys: <span class="mono">ENGINE::</span>.</p>
-    <div class="row" style="margin-top:12px;">
+    <h1>Control Room</h1>
+    <p>Single surface. Governor + Gauges + Diamond Fusion. Fuel stays full when coherence flows; depletes only on burnout or fragmentation.</p>
+    <div class="row">
       <button class="btn" onclick="CR.registerAll()">Register All</button>
       <button class="btn" onclick="CR.refreshAll()">Refresh</button>
       <button class="btn" onclick="CR.exportAll()">Export JSON</button>
@@ -168,40 +78,27 @@ th{color:rgba(233,238,252,.92);font-weight:950}
 
   <div class="grid">
 
+    <!-- LEFT: Diamond Fusion Console -->
     <div class="card">
-      <div class="pill">Core · Diamond Fusion</div>
-      <h2 style="margin-top:10px;">Quad-Core Console</h2>
-      <p>Selection → Resolution → Commitment → Continuation.</p>
-
+      <h2>Diamond Fusion (Quad-Core)</h2>
+      <p>Selection → Resolution → Commitment → Continuation. Four namespaces. Device-local state.</p>
       <div class="tabs" id="tabs"></div>
       <div class="panel" id="corePanel"></div>
-
       <div class="row" style="margin-top:10px;">
         <button class="btn" onclick="CR.resetActive()" id="btnResetActive">Reset Active Core</button>
       </div>
-      <div class="small">Rule: No cross-core mutation unless explicit Mirror is used in Supervisor.</div>
+      <div class="small">Rule: Cross-core mutation only via Mirror in Governor.</div>
     </div>
 
+    <!-- RIGHT: Governor + Gauges -->
     <div>
-      <div class="card">
-        <div class="pill">Dashboard · Gauges</div>
-        <h2 style="margin-top:10px;">Engine Gauges</h2>
-        <div class="gauges" id="gauges"></div>
-
-        <table class="table">
-          <thead><tr><th>Engine</th><th>Status</th><th>Cycle</th><th>Updated</th></tr></thead>
-          <tbody id="rows"><tr><td colspan="4" class="mono">No engines discovered.</td></tr></tbody>
-          <tfoot><tr><td colspan="4" class="mono" id="scan">Last scan: —</td></tr></tfoot>
-        </table>
-      </div>
 
       <div class="card">
-        <div class="pill">Supervisor · Governor</div>
-        <h2 style="margin-top:10px;">Cross-Core Walls</h2>
-
+        <h2>Governor (Supervisor)</h2>
+        <p>ISOLATED default. STRUCTURAL is rule-label only. MIRROR is one-shot copy.</p>
         <div class="row">
-          <button class="btn" onclick="CR.setMode('ISOLATED')">Set ISOLATED</button>
-          <button class="btn" onclick="CR.setMode('STRUCTURAL')">Set STRUCTURAL</button>
+          <button class="btn" onclick="CR.setMode('ISOLATED')">ISOLATED</button>
+          <button class="btn" onclick="CR.setMode('STRUCTURAL')">STRUCTURAL</button>
         </div>
 
         <div class="panel">
@@ -231,6 +128,44 @@ th{color:rgba(233,238,252,.92);font-weight:950}
           <div class="small">State sync is opt-in. If you don’t click it, nothing couples.</div>
         </div>
       </div>
+
+      <div class="card">
+        <h2>Gauges</h2>
+
+        <div class="gauges">
+          <div class="gauge">
+            <h3>Fuel</h3>
+            <div class="meter"><div id="fuel" class="fill" style="background:var(--green)"></div></div>
+            <div class="small">Full unless burnout/fragmentation</div>
+          </div>
+
+          <div class="gauge">
+            <h3>RPM</h3>
+            <div class="meter"><div id="rpm" class="fill" style="background:var(--blue)"></div></div>
+            <div class="small">Recent activity rate</div>
+          </div>
+
+          <div class="gauge">
+            <h3>Speed</h3>
+            <div class="meter"><div id="speed" class="fill" style="background:var(--green)"></div></div>
+            <div class="small">Cycle position</div>
+          </div>
+
+          <div class="gauge">
+            <h3>Risk</h3>
+            <div class="meter"><div id="risk" class="fill" style="background:var(--red)"></div></div>
+            <div class="small">Fragmentation + Wall</div>
+          </div>
+        </div>
+
+        <table class="table">
+          <thead><tr><th>Engine</th><th>Status</th><th>Cycle</th><th>Updated</th></tr></thead>
+          <tbody id="rows"><tr><td colspan="4" class="mono">No engines discovered.</td></tr></tbody>
+        </table>
+
+        <div class="small mono" id="scan">Last scan: —</div>
+      </div>
+
     </div>
 
   </div>
@@ -240,36 +175,53 @@ th{color:rgba(233,238,252,.92);font-weight:950}
 
 <script>
 const CR = (() => {
-  const PREFIX="ENGINE::";
-  const LOCKKEY="ENGINE::CONTROL_ROOM_LOCK::v1";
-  const SUPKEY="ENGINE::SUPERVISOR::v1";
-  const CORES=[
-    {name:"Core 1",stage:"Selection",ns:"diamond_fusion_core_1"},
-    {name:"Core 2",stage:"Resolution",ns:"diamond_fusion_core_2"},
-    {name:"Core 3",stage:"Commitment",ns:"diamond_fusion_core_3"},
-    {name:"Core 4",stage:"Continuation",ns:"diamond_fusion_core_4"}
-  ];
-  let active=CORES[0].ns;
-  const now=()=>new Date().toISOString();
-  const get=(k,fb=null)=>{try{return JSON.parse(localStorage.getItem(k))??fb}catch{return fb}};
-  const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-  const del=(k)=>localStorage.removeItem(k);
-  const key=(ns)=>PREFIX+ns;
+  const PREFIX = "ENGINE::";
+  const LOGKEY = "ENGINE::LOG::";                 // per-engine event log
+  const LOCKKEY = "ENGINE::CONTROL_ROOM_LOCK::v1";
+  const SUPKEY  = "ENGINE::SUPERVISOR::v1";
 
-  function locked(){return get(LOCKKEY,{locked:true}).locked!==false}
-  function setLocked(v){set(LOCKKEY,{locked:!!v,updated_at:now()});paintLock()}
+  const CORES = [
+    {name:"Core 1", stage:"Selection",   ns:"diamond_fusion_core_1"},
+    {name:"Core 2", stage:"Resolution",  ns:"diamond_fusion_core_2"},
+    {name:"Core 3", stage:"Commitment",  ns:"diamond_fusion_core_3"},
+    {name:"Core 4", stage:"Continuation",ns:"diamond_fusion_core_4"}
+  ];
+
+  let active = CORES[0].ns;
+
+  const now = () => Date.now();
+  const nowISO = () => new Date().toISOString();
+
+  const get = (k, fb=null) => { try { return JSON.parse(localStorage.getItem(k)) ?? fb; } catch { return fb; } };
+  const set = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+  const del = (k) => localStorage.removeItem(k);
+  const key = (ns) => PREFIX + ns;
+  const lkey = (ns) => LOGKEY + ns;
+
+  function locked(){ return get(LOCKKEY,{locked:true}).locked !== false; }
+  function setLocked(v){ set(LOCKKEY,{locked:!!v, updated_at: nowISO()}); paintLock(); }
+
   function paintLock(){
-    const L=locked();
-    const lb=document.getElementById("lockBtn");
-    lb.textContent=L?"LOCKED":"UNLOCKED";
-    document.getElementById("btnResetActive").disabled=L;
-    document.getElementById("btnMirror").disabled=L;
-    document.getElementById("btnResetTarget").disabled=L;
+    const isLocked = locked();
+    const lb = document.getElementById("lockBtn");
+    lb.textContent = isLocked ? "LOCKED" : "UNLOCKED";
+    lb.style.borderColor = isLocked ? "rgba(233,238,252,.18)" : "rgba(74,222,128,.55)";
+    document.getElementById("btnResetActive").disabled = isLocked;
+    document.getElementById("btnMirror").disabled = isLocked;
+    document.getElementById("btnResetTarget").disabled = isLocked;
   }
+
   function toggleLock(){
-    if(!locked()){setLocked(true);return}
-    const token=prompt('Type UNLOCK to enable destructive actions.');
-    if((token||"").trim().toUpperCase()==="UNLOCK"){setLocked(false)}
+    if(!locked()){ setLocked(true); return; }
+    const token = prompt('Type UNLOCK to enable destructive actions (Reset/Mirror).');
+    if((token||"").trim().toUpperCase()==="UNLOCK"){ setLocked(false); }
+  }
+
+  function logEvent(ns, type){
+    const log = get(lkey(ns), []);
+    log.push({t: now(), type});
+    while(log.length > 200) log.shift();
+    set(lkey(ns), log);
   }
 
   function ensure(ns){
@@ -277,81 +229,182 @@ const CR = (() => {
     set(key(ns),{
       namespace:ns,
       state:{
-        selection:null,resolution:null,commitment:null,
-        continuation:{cycle:"RUNNING",last_set:now()}
+        selection:null,
+        resolution:null,
+        commitment:null,
+        continuation:{cycle:"RUNNING", last_set: nowISO()}
       },
-      created_at:now(),
-      updated_at:now()
+      created_at: nowISO(),
+      updated_at: nowISO()
     });
+    logEvent(ns, "init");
   }
-  function registerAll(){CORES.forEach(c=>ensure(c.ns));refreshAll()}
-  function read(ns){ensure(ns);return get(key(ns))}
-  function write(ns,obj){obj.updated_at=now();set(key(ns),obj)}
 
-  function setActive(ns){active=ns;renderTabs();renderPanel();refreshDashboard()}
+  function registerAll(){
+    CORES.forEach(c=>ensure(c.ns));
+    refreshAll();
+  }
 
-  function setSelection(v){const s=read(active);s.state.selection=v;write(active,s);refreshAll()}
-  function setResolution(){const s=read(active);s.state.resolution=s.state.selection?"RESOLVED":"BLOCKED";write(active,s);refreshAll()}
-  function setCommitment(){const s=read(active);s.state.commitment=s.state.resolution==="RESOLVED"?"COMMITTED":"DENIED";write(active,s);refreshAll()}
-  function setCycle(c){const s=read(active);s.state.continuation={cycle:c,last_set:now()};write(active,s);refreshAll()}
+  function read(ns){ ensure(ns); return get(key(ns)); }
+  function write(ns,obj,type){
+    obj.updated_at = nowISO();
+    set(key(ns), obj);
+    logEvent(ns, type || "write");
+  }
 
-  function resetActive(){if(locked())return;del(key(active));ensure(active);refreshAll()}
+  function setActive(ns){ active=ns; renderTabs(); renderPanel(); refreshDashboard(); }
+
+  function setSelection(v){ const s=read(active); s.state.selection=v; write(active,s,"selection"); refreshAll(); }
+  function setResolution(){
+    const s=read(active);
+    s.state.resolution = (s.state.selection ? "RESOLVED" : "BLOCKED");
+    write(active,s,"resolution");
+    refreshAll();
+  }
+  function setCommitment(){
+    const s=read(active);
+    s.state.commitment = (s.state.resolution==="RESOLVED" ? "COMMITTED" : "DENIED");
+    write(active,s,"commitment");
+    refreshAll();
+  }
+  function setCycle(c){
+    const s=read(active);
+    s.state.continuation = {cycle:c,last_set: nowISO()};
+    write(active,s,"cycle");
+    refreshAll();
+  }
+
+  function resetActive(){
+    if(locked()) return;
+    del(key(active)); del(lkey(active));
+    ensure(active);
+    refreshAll();
+  }
 
   function discover(){
     const out=[];
     for(let i=0;i<localStorage.length;i++){
       const k=localStorage.key(i);
-      if(k&&k.startsWith(PREFIX)){
+      if(k && k.startsWith(PREFIX)){
         const v=get(k,null);
-        if(v&&v.namespace) out.push(v);
+        if(v && v.namespace) out.push(v);
       }
     }
-    return out.sort((a,b)=>a.namespace.localeCompare(b.namespace))
+    return out.sort((a,b)=>a.namespace.localeCompare(b.namespace));
   }
 
-  function cycleColor(c){return c==="RUNNING"?"green":c==="HURDLE"?"yellow":c==="WALL"?"red":c==="COMPLETE"?"blue":""}
+  // fragmentation: rule violations in state ordering
+  function fragmentationScore(engine){
+    const s=engine.state||{};
+    let v=0;
+    const sel = s.selection;
+    const res = s.resolution;
+    const com = s.commitment;
+    const cyc = s.continuation?.cycle;
+
+    // violations
+    if(res && !sel) v++;
+    if(com && res!=="RESOLVED") v++;
+    if(cyc==="WALL") v++;
+
+    // normalized to 0..1 (max 3)
+    return Math.min(1, v/3);
+  }
+
+  // burnout: too many events recently
+  function burnoutScore(ns){
+    const log = get(lkey(ns), []);
+    const cutoff = now() - (5*60*1000); // 5 min
+    const n = log.filter(e=>e.t>=cutoff).length;
+    // 0 at <=10 events, 1 at >=60 events (clipped)
+    const score = (n<=10) ? 0 : (n>=60) ? 1 : (n-10)/(60-10);
+    return Math.min(1, Math.max(0, score));
+  }
+
+  function cycleColor(c){
+    return c==="RUNNING"?"green":c==="HURDLE"?"yellow":c==="WALL"?"red":c==="COMPLETE"?"blue":"";
+  }
+
+  function setGauge(id, val){
+    const pct = Math.min(100, Math.max(0, Math.round(val*100)));
+    document.getElementById(id).style.width = pct+"%";
+  }
 
   function refreshDashboard(){
     const engines=discover();
-    const gauges=document.getElementById("gauges");
     const rows=document.getElementById("rows");
     const scan=document.getElementById("scan");
-    gauges.innerHTML="";rows.innerHTML="";
+
+    rows.innerHTML="";
+
     if(!engines.length){
       rows.innerHTML="<tr><td colspan='4' class='mono'>No engines discovered.</td></tr>";
-      scan.textContent="Last scan: "+now();return;
+      setGauge("fuel",0); setGauge("rpm",0); setGauge("speed",0); setGauge("risk",0);
+      scan.textContent="Last scan: "+nowISO();
+      return;
     }
+
+    // aggregate metrics
+    let frag=0, burn=0, rpm=0, speed=0, wall=0;
+    engines.forEach(e=>{
+      frag += fragmentationScore(e);
+      burn += burnoutScore(e.namespace);
+      const recent = burnoutScore(e.namespace); // proxy for activity density
+      rpm += recent;
+
+      const cyc = e.state?.continuation?.cycle || "IDLE";
+      if(cyc==="WALL") wall++;
+
+      speed += (cyc==="RUNNING"?1:cyc==="COMPLETE"?4:2);
+    });
+
+    frag /= engines.length;
+    burn /= engines.length;
+    rpm  /= engines.length;
+    speed = speed / (engines.length*4);
+    const risk = Math.min(1, (0.7*frag + 0.3*(wall/engines.length)));
+
+    // FUEL RULE (your rule):
+    // Full unless penalties. Deplete only with burnout/fragmentation.
+    const fuel = Math.max(0, 1 - (0.55*burn + 0.45*frag));
+
+    setGauge("fuel", fuel);
+    setGauge("rpm", rpm);
+    setGauge("speed", speed);
+    setGauge("risk", risk);
+
     engines.forEach(e=>{
       const st=e.state||{};
       const cyc=st.continuation?.cycle||"IDLE";
       const updated=e.updated_at||"—";
-      const hasSel=st.selection!=null, hasRes=st.resolution!=null, hasCom=st.commitment!=null, hasCon=!!st.continuation;
-      const blocks=[hasSel,hasRes,hasCom,hasCon].filter(Boolean).length;
-      const status=blocks?"ACTIVE":"IDLE";
-      const pulse = cyc==="RUNNING" ? "pulse" : "";
-      const g=document.createElement("div");
-      g.className="gauge "+pulse;
-      g.innerHTML=`
-        <div class="gaugeHead">
-          <div class="gaugeTitle"><span class="light" style="background:${blocks? "var(--green)":"var(--red)"}"></span><span class="mono">${e.namespace.toUpperCase()}</span></div>
-          <span class="mono small">${status}</span>
-        </div>
-        <div class="bar2">
-          ${[1,2,3,4].map(i=>`<div class="block ${i<=blocks ? ("on "+cycleColor(cyc)) : ""}"></div>`).join("")}
-        </div>
-        <div class="small mono" style="margin-top:8px">cycle: ${cyc}</div>
-      `;
-      gauges.appendChild(g);
+      const blocks = [
+        st.selection!==null && st.selection!==undefined,
+        st.resolution!==null && st.resolution!==undefined,
+        st.commitment!==null && st.commitment!==undefined,
+        !!st.continuation
+      ].filter(Boolean).length;
 
       const tr=document.createElement("tr");
-      tr.innerHTML=`<td class="mono">${e.namespace}</td><td class="mono">${status}</td><td class="mono">${cyc}</td><td class="mono">${updated}</td>`;
+      tr.innerHTML=`
+        <td class="mono">${e.namespace}</td>
+        <td>${blocks?"ACTIVE":"IDLE"}</td>
+        <td class="mono">${cyc}</td>
+        <td class="mono">${updated}</td>
+      `;
       rows.appendChild(tr);
     });
-    scan.textContent="Last scan: "+now();
+
+    scan.textContent="Last scan: "+nowISO();
   }
 
   function exportAll(){
-    const out={exported_at:now(), lock:get(LOCKKEY,{}), supervisor:get(SUPKEY,{}), engines:discover()};
+    const out = {
+      exported_at: nowISO(),
+      lock: get(LOCKKEY,{}),
+      supervisor: get(SUPKEY,{}),
+      engines: discover(),
+      logs: Object.fromEntries(CORES.map(c=>[c.ns, get(lkey(c.ns),[])]))
+    };
     const blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json"});
     const a=document.createElement("a");
     a.href=URL.createObjectURL(blob);
@@ -360,29 +413,37 @@ const CR = (() => {
     URL.revokeObjectURL(a.href);
   }
 
-  function sup(){return get(SUPKEY,{mode:"ISOLATED",rule:"NONE",updated_at:null})}
-  function supWrite(s){s.updated_at=now();set(SUPKEY,s);paintSup()}
-  function paintSup(){const s=sup();document.getElementById("supMode").textContent=s.mode;document.getElementById("supRule").textContent=s.rule}
-  function setMode(m){const s=sup();s.mode=m;supWrite(s)}
-  function applyRule(){const v=(document.getElementById("ruleLabel").value||"").trim();const s=sup();s.rule=v||"NONE";supWrite(s)}
+  // Supervisor
+  function sup(){ return get(SUPKEY, {mode:"ISOLATED", rule:"NONE", updated_at:null}); }
+  function supWrite(s){ s.updated_at=nowISO(); set(SUPKEY,s); paintSup(); }
+  function paintSup(){
+    const s=sup();
+    document.getElementById("supMode").textContent=s.mode;
+    document.getElementById("supRule").textContent=s.rule;
+  }
+  function setMode(m){ const s=sup(); s.mode=m; supWrite(s); }
+  function applyRule(){ const v=(document.getElementById("ruleLabel").value||"").trim(); const s=sup(); s.rule=v||"NONE"; supWrite(s); }
   function mirrorState(){
-    if(locked())return;
+    if(locked()) return;
     const src=(document.getElementById("srcNS").value||"").trim();
     const dst=(document.getElementById("dstNS").value||"").trim();
-    if(!src||!dst)return;
-    ensure(src);ensure(dst);
-    const s=read(src);const d=read(dst);
-    d.state=JSON.parse(JSON.stringify(s.state));
-    write(dst,d);
+    if(!src||!dst) return;
+    ensure(src); ensure(dst);
+    const s=read(src); const d=read(dst);
+    d.state = JSON.parse(JSON.stringify(s.state));
+    write(dst,d,"mirror");
     refreshAll();
   }
   function resetNamespace(){
-    if(locked())return;
+    if(locked()) return;
     const dst=(document.getElementById("dstNS").value||"").trim();
-    if(!dst)return;
-    del(key(dst));ensure(dst);refreshAll();
+    if(!dst) return;
+    del(key(dst)); del(lkey(dst));
+    ensure(dst);
+    refreshAll();
   }
 
+  // Render
   function renderTabs(){
     const tabs=document.getElementById("tabs");
     tabs.innerHTML="";
@@ -396,32 +457,36 @@ const CR = (() => {
   }
 
   function renderPanel(){
-    const st=read(active).state;
+    const s=read(active).state;
     const meta=CORES.find(c=>c.ns===active);
-    const cyc=st.continuation?.cycle||"—";
-    const last=st.continuation?.last_set||"—";
-    document.getElementById("corePanel").innerHTML=`
+
+    const cyc=s.continuation?.cycle||"—";
+    const last=s.continuation?.last_set||"—";
+
+    document.getElementById("corePanel").innerHTML = `
       <div class="pill">${meta.name} · ${meta.stage} · <span class="mono">${meta.ns}</span></div>
       <div class="kv" style="margin-top:12px">
-        <div class="k"><b>Selection</b><span class="mono">${st.selection ?? "—"}</span></div>
-        <div class="k"><b>Resolution</b><span class="mono">${st.resolution ?? "—"}</span></div>
-        <div class="k"><b>Commitment</b><span class="mono">${st.commitment ?? "—"}</span></div>
+        <div class="k"><b>Selection</b><span class="mono">${s.selection ?? "—"}</span></div>
+        <div class="k"><b>Resolution</b><span class="mono">${s.resolution ?? "—"}</span></div>
+        <div class="k"><b>Commitment</b><span class="mono">${s.commitment ?? "—"}</span></div>
         <div class="k"><b>Continuation</b><span class="mono">${cyc}</span><div class="small mono" style="margin-top:6px">last_set: ${last}</div></div>
       </div>
+
       <div class="hr"></div>
+
       <div class="row">
         <button class="btn" onclick="CR.setSelection('ADMITTED')">Admit</button>
         <button class="btn" onclick="CR.setSelection('REJECTED')">Reject</button>
         <button class="btn" onclick="CR.setResolution()">Resolve</button>
         <button class="btn" onclick="CR.setCommitment()">Commit</button>
       </div>
+
       <div class="row" style="margin-top:10px">
         <button class="btn" onclick="CR.setCycle('RUNNING')">RUNNING</button>
         <button class="btn" onclick="CR.setCycle('HURDLE')">HURDLE</button>
         <button class="btn" onclick="CR.setCycle('WALL')">WALL</button>
         <button class="btn" onclick="CR.setCycle('COMPLETE')">COMPLETE</button>
       </div>
-      <div class="small mono" style="margin-top:10px">Key: ${PREFIX}${meta.ns}</div>
     `;
   }
 
@@ -431,7 +496,7 @@ const CR = (() => {
     renderTabs();
     renderPanel();
     refreshDashboard();
-    document.getElementById("metaTop").textContent="Last refresh: "+now();
+    document.getElementById("metaTop").textContent="Last refresh: "+nowISO();
   }
 
   function boot(){
@@ -441,9 +506,10 @@ const CR = (() => {
   }
 
   return {
-    registerAll, refreshAll, exportAll, resetActive, toggleLock,
+    registerAll, refreshAll, exportAll, resetActive,
     setSelection, setResolution, setCommitment, setCycle,
-    setMode, applyRule, mirrorState, resetNamespace
+    setMode, applyRule, mirrorState, resetNamespace,
+    toggleLock
   };
 })();
 

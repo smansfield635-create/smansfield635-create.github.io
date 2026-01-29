@@ -7,42 +7,50 @@
 
 <style>
 :root{
-  --fg:#e9eefc;
-  --muted:rgba(233,238,252,.66);
+  --fg:#e9eefc;--muted:rgba(233,238,252,.66);
   --stroke:rgba(233,238,252,.14);
   --panel:rgba(12,16,34,.62);
-  --radius:22px;
-  --shadow:0 18px 55px rgba(0,0,0,.55);
+  --radius:22px;--shadow:0 18px 55px rgba(0,0,0,.55);
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
-  background:linear-gradient(180deg,#070b18,#050714);
+  background:
+    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
+    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
 }
-.wrap{max-width:1100px;margin:0 auto;padding:22px}
+.wrap{max-width:1100px;margin:0 auto;padding:22px 16px 70px}
 .card{
-  border-radius:var(--radius);
+  border-radius:22px;
   border:1px solid var(--stroke);
   background:var(--panel);
   box-shadow:var(--shadow);
   padding:18px;
   margin-bottom:16px;
 }
-h1{margin:0 0 10px}
-h2{margin:14px 0 8px}
-p{color:var(--muted);line-height:1.55}
-.list{margin:10px 0 0;padding-left:18px;color:var(--muted)}
-.list li{margin:6px 0}
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--muted)}
-.footer{margin-top:18px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
+h1{margin:0 0 10px;font-size:40px}
+h2{margin:0 0 10px;font-size:22px}
+p{margin:0 0 10px;color:var(--muted);line-height:1.55}
+.row{display:flex;gap:10px;flex-wrap:wrap}
 .btn{
-  display:inline-block;margin-top:10px;
-  padding:10px 14px;border-radius:999px;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:12px 16px;border-radius:999px;
   border:1px solid rgba(233,238,252,.18);
   background:rgba(255,255,255,.06);
   color:var(--fg);font-weight:900;text-decoration:none
+}
+.list{margin:0;padding-left:18px}
+.list li{margin:6px 0;color:var(--muted)}
+.footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:18px}
+.pill{
+  display:inline-flex;align-items:center;
+  padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.16);
+  background:rgba(255,255,255,.06);
+  font-weight:900;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
 }
 </style>
 </head>
@@ -51,48 +59,48 @@ p{color:var(--muted);line-height:1.55}
 <div class="wrap">
 
   <div class="card">
-    <h1>Problem</h1>
-    <p>The problem addressed here is structural, not cosmetic: systems fail when execution authority, observation, and registry are mixed or ambiguous.</p>
+    <div class="pill">Problem Statement</div>
+    <h1>The Problem</h1>
+    <p>Most systems fail not from lack of effort, intelligence, or resources—but from fragmentation, manual control, and incoherent feedback.</p>
+    <div class="row" style="margin-top:12px;">
+      <a class="btn" href="/control-room/">Control Room</a>
+      <a class="btn" href="/apps/">Apps</a>
+      <a class="btn" href="/reference/">Reference</a>
+    </div>
   </div>
 
   <div class="card">
     <h2>Observed Failures</h2>
     <ul class="list">
-      <li>Hidden coupling between execution and observation.</li>
-      <li>Implicit state mutation without declaration.</li>
-      <li>Non-deterministic discovery due to inconsistent naming.</li>
-      <li>UI surfaces acting as authorities.</li>
+      <li>Systems require constant manual intervention to remain stable.</li>
+      <li>Progress depends on narrative explanation rather than observable state.</li>
+      <li>Metrics reward activity instead of coherence.</li>
+      <li>Breakage is hidden until collapse.</li>
     </ul>
   </div>
 
   <div class="card">
-    <h2>Root Causes</h2>
+    <h2>Why This Matters</h2>
+    <p>When coherence is not measurable, systems drift silently. Control becomes performative. Failures are detected too late.</p>
+    <p>The absence of a lawful, observer-invariant diagnostic surface is the root problem.</p>
+  </div>
+
+  <div class="card">
+    <h2>Required Properties</h2>
     <ul class="list">
-      <li>Lack of a single execution surface.</li>
-      <li>No enforced registry prefix.</li>
-      <li>Observer logic running in the same context as writers.</li>
-      <li>Navigation not aligned to filesystem truth.</li>
+      <li>No manual advancement required for normal operation.</li>
+      <li>Continuous evaluation under fixed laws.</li>
+      <li>Silence during healthy function.</li>
+      <li>Immediate signal on breakage.</li>
     </ul>
   </div>
 
   <div class="card">
-    <h2>Constraints Required</h2>
-    <ul class="list">
-      <li><b>Prefix Law</b>: discovery by <span class="mono">ENGINE::</span>.</li>
-      <li><b>Authority Law</b>: Control Room writes; others read.</li>
-      <li><b>Separation Law</b>: observer-only dashboards.</li>
-      <li><b>Filesystem Law</b>: URL == folder == <span class="mono">index.html</span>.</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h2>Resolution Path</h2>
-    <p>Introduce a single Control Room as the authoritative executor, enforce a global discovery prefix, and constrain all other pages to observer or viewer roles.</p>
-    <a class="btn" href="/control-room/">Go to Control Room</a>
+    <h2>Geodiametrics’ Answer</h2>
+    <p>A constraint-first execution system with automatic evaluation, permanent gauges, and a single authoritative Control Room.</p>
   </div>
 
   <div class="footer">© 2026 Geodiametrics · Problem</div>
-
 </div>
 </body>
 </html>

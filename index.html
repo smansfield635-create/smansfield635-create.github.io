@@ -1,174 +1,208 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Geodiametrics</title>
+
 <style>
 :root{
-  --fg:#e9eefc;
-  --muted:rgba(233,238,252,.66);
-  --stroke:rgba(233,238,252,.14);
-  --panel:rgba(12,16,34,.62);
-  --glass:rgba(10,14,28,.55);
-  --radius:22px;
-  --shadow:0 18px 55px rgba(0,0,0,.55);
-  --accent:rgba(150,190,255,.9);
+  --bg:#0b0f14;
+  --panel:#111826;
+  --panel-2:#0f1623;
+  --border:#223044;
+  --text:#e7eef7;
+  --muted:#93a4b8;
 }
+
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
+
 body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:var(--fg);
-  overflow-x:hidden;
-  background:
-    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.20), transparent 60%),
-    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.16), transparent 60%),
-    radial-gradient(1100px 820px at 55% 92%, rgba(120,220,255,.10), transparent 60%),
-    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(1200px 800px at 50% -20%, #16223a 0%, var(--bg) 60%);
+  color:var(--text);
+  font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Arial;
 }
-body:before{
-  content:"";
-  position:fixed;inset:-60px;
-  pointer-events:none;
-  opacity:.82;
-  filter:blur(.12px);
-  background:
-    radial-gradient(2px 2px at 10% 15%, rgba(255,255,255,.90), transparent 60%),
-    radial-gradient(1px 1px at 30% 28%, rgba(255,255,255,.70), transparent 60%),
-    radial-gradient(2px 2px at 55% 18%, rgba(255,255,255,.80), transparent 60%),
-    radial-gradient(1px 1px at 72% 22%, rgba(255,255,255,.60), transparent 60%),
-    radial-gradient(2px 2px at 88% 35%, rgba(255,255,255,.85), transparent 60%),
-    radial-gradient(1px 1px at 18% 62%, rgba(255,255,255,.65), transparent 60%),
-    radial-gradient(2px 2px at 42% 70%, rgba(255,255,255,.75), transparent 60%),
-    radial-gradient(1px 1px at 67% 78%, rgba(255,255,255,.55), transparent 60%),
-    radial-gradient(2px 2px at 90% 82%, rgba(255,255,255,.80), transparent 60%),
-    radial-gradient(1px 1px at 8% 88%, rgba(255,255,255,.55), transparent 60%);
-  animation:twinkle 9s ease-in-out infinite;
+
+.wrapper{
+  max-width:1100px;
+  margin:0 auto;
+  padding:28px 16px 48px;
 }
-@keyframes twinkle{
-  0%,100%{opacity:.78;transform:translateY(0)}
-  50%{opacity:.92;transform:translateY(-2px)}
+
+.header{
+  text-align:center;
+  margin-bottom:28px;
 }
-.wrap{max-width:980px;margin:0 auto;padding:26px 16px 90px}
+
+.header h1{
+  margin:0;
+  font-size:34px;
+  letter-spacing:.4px;
+}
+
+.header p{
+  margin:10px 0 0;
+  color:var(--muted);
+  font-size:15px;
+}
+
 .card{
-  border-radius:var(--radius);
-  border:1px solid var(--stroke);
-  background:var(--panel);
-  box-shadow:var(--shadow);
+  background:linear-gradient(180deg,var(--panel),var(--panel-2));
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:22px;
+  margin-bottom:22px;
 }
-.in{padding:20px}
-.hero{display:flex;gap:18px;align-items:flex-start}
-.logoWrap{width:72px;height:72px;flex:0 0 72px;display:flex;align-items:center;justify-content:center}
-.logo{width:72px;height:72px;opacity:.95}
-h1{margin:0;font-size:48px;letter-spacing:.2px}
-.sub{margin:10px 0 0;color:var(--muted);line-height:1.55;max-width:640px}
-.hr{height:1px;background:rgba(233,238,252,.10);margin:18px 0}
-.row{display:flex;gap:12px;flex-wrap:wrap}
-.bubble{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:12px 16px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.16);
-  background:rgba(255,255,255,.06);
-  color:var(--fg);text-decoration:none;font-weight:900;
-  box-shadow:0 10px 26px rgba(0,0,0,.35);
+
+.section-title{
+  display:inline-block;
+  padding:8px 14px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:var(--panel-2);
+  font-weight:700;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  font-size:12px;
+  margin-bottom:14px;
 }
-.bubble:active{transform:translateY(1px)}
-.pill{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 12px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.16);
-  background:rgba(255,255,255,.06);
-  font-weight:900;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
+
+.nav-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:14px;
 }
-.grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
-@media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
-.small{font-size:13px;color:rgba(233,238,252,.55)}
-.footer{margin-top:16px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
+
+.nav-btn{
+  appearance:none;
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,#121a2a,#0d1422);
+  color:var(--text);
+  border-radius:999px;
+  padding:16px 14px;
+  font-weight:700;
+  letter-spacing:.3px;
+  cursor:pointer;
+  transition:transform .12s ease, border-color .12s ease, background .12s ease;
+}
+
+.nav-btn:hover{
+  border-color:#3a5273;
+  transform:translateY(-1px);
+}
+
+.nav-btn:active{
+  transform:translateY(0);
+}
+
+.anchor-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;
+}
+
+.anchor-btn{
+  text-decoration:none;
+  text-align:center;
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,#121a2a,#0d1422);
+  color:var(--text);
+  border-radius:999px;
+  padding:16px 14px;
+  font-weight:800;
+  letter-spacing:.4px;
+  transition:transform .12s ease, border-color .12s ease;
+}
+
+.anchor-btn:hover{
+  border-color:#3a5273;
+  transform:translateY(-1px);
+}
+
+.info{
+  color:var(--muted);
+  font-size:14px;
+  max-width:760px;
+}
+
+.footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:32px;
+}
 </style>
 </head>
 
 <body>
-<div class="wrap">
+<div class="wrapper">
 
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Geodiametrics</h1>
+    <p>
+      A constraint-first execution platform built on a quad-core cycle:
+      <br />
+      Selection → Resolution → Commitment → Continuation
+    </p>
+  </div>
+
+  <!-- NAVIGATION -->
   <div class="card">
-    <div class="in hero">
-      <div class="logoWrap" aria-hidden="true">
-        <!-- snowflake-diamond logo -->
-        <svg class="logo" viewBox="0 0 64 64" fill="none">
-          <g stroke="rgba(150,190,255,.95)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M32 6v52"/>
-            <path d="M6 32h52"/>
-            <path d="M14 14l36 36"/>
-            <path d="M50 14L14 50"/>
-            <path d="M32 16l10 16-10 16-10-16 10-16z"/>
-            <path d="M32 6l5 5-5 5-5-5 5-5z"/>
-            <path d="M32 48l5 5-5 5-5-5 5-5z"/>
-            <path d="M6 32l5-5 5 5-5 5-5-5z"/>
-            <path d="M48 32l5-5 5 5-5 5-5-5z"/>
-            <!-- tip diamonds to emphasize snowflake ends -->
-            <path d="M32 2l4 4-4 4-4-4 4-4z"/>
-            <path d="M32 54l4 4-4 4-4-4 4-4z"/>
-            <path d="M2 32l4-4 4 4-4 4-4-4z"/>
-            <path d="M54 32l4-4 4 4-4 4-4-4z"/>
-            <path d="M14 14l6 0 0 6-6 0 0-6z"/>
-            <path d="M44 14l6 0 0 6-6 0 0-6z"/>
-            <path d="M14 44l6 0 0 6-6 0 0-6z"/>
-            <path d="M44 44l6 0 0 6-6 0 0-6z"/>
-          </g>
-        </svg>
-      </div>
-      <div>
-        <h1>Geodiametrics</h1>
-        <p class="sub">A constraint-first execution platform built on a quad-core cycle: Selection → Resolution → Commitment → Continuation.</p>
-
-        <div class="hr"></div>
-
-        <div class="pill">Home</div>
-        <div class="row" style="margin-top:12px">
-          <a class="bubble" href="/toc/">Table of Contents</a>
-          <a class="bubble" href="/about/">About Us</a>
-          <a class="bubble" href="/mission/">Mission Statement</a>
-          <a class="bubble" href="/rights/">Rights & IP</a>
-        </div>
-
-        <div class="row" style="margin-top:12px">
-          <a class="bubble" href="/control-room/">Control Room</a>
-          <a class="bubble" href="/apps/">Apps</a>
-          <a class="bubble" href="/reference/">Reference</a>
-          <a class="bubble" href="/problem/">Problem</a>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="pill">Public Anchors</div>
-        <div class="row" style="margin-top:12px">
-          <a class="bubble" href="https://osf.io/mn6vu" target="_blank" rel="noopener">Open OSF</a>
-          <a class="bubble" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">Open ORCID</a>
-        </div>
-        <div class="small" style="margin-top:10px">These identifiers are for validation and citation.</div>
-      </div>
+    <div class="section-title">Navigate</div>
+    <div class="nav-grid">
+      <button class="nav-btn" onclick="go('index.html')">Home</button>
+      <button class="nav-btn" onclick="go('toc.html')">Table of Contents</button>
+      <button class="nav-btn" onclick="go('mission.html')">Mission Statement</button>
+      <button class="nav-btn" onclick="go('about.html')">About</button>
+      <button class="nav-btn" onclick="go('rights.html')">Rights & IP</button>
+      <button class="nav-btn" onclick="go('control.html')">Control Room</button>
+      <button class="nav-btn" onclick="go('apps.html')">Apps</button>
+      <button class="nav-btn" onclick="go('reference.html')">Reference</button>
+      <button class="nav-btn" onclick="go('problem.html')">Problem</button>
     </div>
   </div>
 
-  <div class="grid">
-    <div class="card">
-      <div class="in">
-        <div class="pill">What This Is</div>
-        <p style="margin-top:12px" class="sub">
-          Geodiametrics reports coherence, momentum, and instability without manual control. The Control Room is the authoritative observer surface. Apps are execution/viewer surfaces.
-        </p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="in">
-        <div class="pill">Status</div>
-        <p style="margin-top:12px" class="sub">This front page is informational. Instrumentation and gauges live in the Control Room.</p>
-      </div>
+  <!-- PUBLIC ANCHORS -->
+  <div class="card">
+    <div class="section-title">Public Anchors</div>
+    <div class="anchor-grid">
+      <a class="anchor-btn" href="https://osf.io/" target="_blank" rel="noopener">Open OSF</a>
+      <a class="anchor-btn" href="https://orcid.org/" target="_blank" rel="noopener">Open ORCID</a>
     </div>
   </div>
 
-  <div class="footer">© 2026 Geodiametrics</div>
+  <!-- WHAT THIS IS -->
+  <div class="card">
+    <div class="section-title">What This Is</div>
+    <p class="info">
+      Geodiametrics reports coherence, momentum, and instability without manual control.
+      The Control Room is the authoritative observer surface.
+      Apps function as execution and viewing surfaces.
+    </p>
+  </div>
+
+  <!-- STATUS -->
+  <div class="card">
+    <div class="section-title">Status</div>
+    <p class="info">
+      This front page is informational only.
+      Instrumentation and live gauges operate in the Control Room.
+    </p>
+  </div>
+
+  <div class="footer">
+    © 2026 Geodiametrics
+  </div>
+
 </div>
+
+<script>
+function go(path){
+  window.location.href = path;
+}
+</script>
 </body>
 </html>

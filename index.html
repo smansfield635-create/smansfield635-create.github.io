@@ -10,12 +10,13 @@
 :root{
   --fg:#e9eefc;
   --muted:rgba(233,238,252,.65);
-  --accent:#7aa2ff;
+  --panel:rgba(10,14,28,.78);
+  --stroke:rgba(233,238,252,.14);
   --good:#4ade80;
   --warn:#facc15;
   --risk:#f87171;
-  --panel:rgba(10,14,28,.72);
-  --stroke:rgba(233,238,252,.12);
+  --accent:#7aa2ff;
+  --radius:24px;
 }
 
 *{box-sizing:border-box}
@@ -24,15 +25,11 @@ html,body{margin:0;height:100%}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
-  background:
-    radial-gradient(1200px 800px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
-    radial-gradient(900px 700px at 80% 30%, rgba(180,140,255,.14), transparent 60%),
-    radial-gradient(1000px 900px at 50% 80%, rgba(120,220,255,.10), transparent 60%),
-    linear-gradient(180deg,#030615,#02040f 70%,#01020a);
+  background:#03040a;
   overflow-x:hidden;
 }
 
-/* stars */
+/* Starfield */
 body::before{
   content:"";
   position:fixed;
@@ -43,68 +40,92 @@ body::before{
     radial-gradient(1px 1px at 30% 40%, #fff, transparent),
     radial-gradient(1px 1px at 60% 10%, #fff, transparent),
     radial-gradient(1px 1px at 80% 70%, #fff, transparent),
-    radial-gradient(1px 1px at 45% 85%, #fff, transparent);
+    radial-gradient(1px 1px at 45% 85%, #fff, transparent),
+    radial-gradient(1200px 700px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 800px at 80% 30%, rgba(180,140,255,.14), transparent 60%);
   opacity:.35;
 }
 
-/* ===================== LAYOUT ===================== */
-.wrap{max-width:1100px;margin:0 auto;padding:32px 16px 96px}
+.wrap{max-width:1200px;margin:0 auto;padding:40px 16px 120px}
+
+/* ===================== CARDS ===================== */
 .card{
   background:var(--panel);
   border:1px solid var(--stroke);
-  border-radius:22px;
-  padding:22px;
-  margin-bottom:18px;
+  border-radius:var(--radius);
+  padding:26px;
+  margin-bottom:22px;
   box-shadow:0 18px 55px rgba(0,0,0,.55);
 }
 
-h1{margin:0 0 10px;font-size:44px}
-h2{margin:16px 0 8px}
+h1{margin:0 0 12px;font-size:48px}
+h2{margin:0 0 10px;font-size:26px}
 p{margin:0;color:var(--muted);line-height:1.6}
 
-.pill{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 14px;
+.row{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}
+
+.link{
+  padding:12px 18px;
   border-radius:999px;
   border:1px solid var(--stroke);
   background:rgba(255,255,255,.06);
-  font-weight:800;
-  letter-spacing:.6px;
-  text-transform:uppercase;
-  font-size:12px;
+  color:var(--fg);
+  font-weight:900;
+  text-decoration:none;
 }
 
-/* ===================== LIVE SIGNALS ===================== */
-.signal{
-  display:flex;
+.badge{
+  display:inline-flex;
   align-items:center;
   gap:10px;
-  font-weight:800;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  font-weight:900;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.6px;
 }
+
 .dot{
-  width:12px;height:12px;border-radius:50%;
+  width:10px;height:10px;border-radius:50%;
   background:var(--good);
   box-shadow:0 0 12px currentColor;
 }
 
-.grid{
+/* ===================== GAUGES ===================== */
+.gauges{
   display:grid;
-  gap:14px;
+  grid-template-columns:1fr;
+  gap:16px;
 }
 @media(min-width:900px){
-  .grid{grid-template-columns:1fr 1fr}
+  .gauges{grid-template-columns:1fr 1fr}
 }
 
-.engine{
-  border:1px solid var(--stroke);
+.gauge{
   border-radius:18px;
-  padding:16px;
+  border:1px solid var(--stroke);
+  padding:18px;
   background:rgba(0,0,0,.25);
 }
 
-/* ===================== FOOTER ===================== */
+.label{font-weight:900;margin-bottom:6px}
+.bar{
+  height:14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  width:0%;
+  transition:width .6s ease;
+}
+
+.small{font-size:13px;color:var(--muted)}
+
 .footer{
   margin-top:40px;
   text-align:center;
@@ -119,126 +140,125 @@ p{margin:0;color:var(--muted);line-height:1.6}
 
   <!-- ===================== HERO ===================== -->
   <div class="card">
+    <span class="badge">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">STANDBY</span>
+    </span>
+
     <h1>Geodiametrics</h1>
     <p>
-      Constraint-first systems for observing coherence, instability, and trajectory
-      across complex domains.
-    </p>
-  </div>
-
-  <!-- ===================== SYSTEM STATUS ===================== -->
-  <div class="card">
-    <div class="signal">
-      <span class="dot" id="statusDot"></span>
-      <span id="statusText">OPERATIONAL</span>
-    </div>
-    <p style="margin-top:8px">
-      This system is alive if and only if interaction is occurring.
-      No buttons. No control. Presence is the signal.
-    </p>
-    <p class="mono" style="margin-top:6px">
-      Last interaction: <span id="lastSeen">—</span>
-    </p>
-  </div>
-
-  <!-- ===================== QUAD-CORE WORLDVIEW ===================== -->
-  <div class="card">
-    <span class="pill">Foundational Law</span>
-    <h2>Quad-Core Cycle</h2>
-    <p>
-      All lawful systems resolve through the same four-phase geometry.
-      These are not steps — they are constraints.
+      A coherence-first system organized around a quad-core cycle.
+      This site observes reality; it does not simulate it.
     </p>
 
-    <div class="grid" style="margin-top:14px">
-      <div class="engine">
-        <strong>Integrity Engine</strong>
-        <p>Selection · What is admissible.</p>
-      </div>
-      <div class="engine">
-        <strong>Clarity Engine</strong>
-        <p>Resolution · What survives constraint.</p>
-      </div>
-      <div class="engine">
-        <strong>Commitment Engine</strong>
-        <p>Commitment · What is acted upon.</p>
-      </div>
-      <div class="engine">
-        <strong>Vitality Engine</strong>
-        <p>Continuation · What sustains momentum.</p>
-      </div>
+    <div class="row">
+      <a class="link" href="/control-room/">Control Room</a>
+      <a class="link" href="/apps/">Apps</a>
     </div>
   </div>
 
-  <!-- ===================== LIVE WIRING (HONEST) ===================== -->
+  <!-- ===================== INTERACTION GAUGES ===================== -->
   <div class="card">
-    <span class="pill">Live Wiring</span>
-    <h2>What This Page Can Truly Observe</h2>
+    <h2>On-Site Interaction</h2>
     <p>
-      Without servers or external APIs, this page still detects:
+      These gauges reflect real interaction with this website.
+      No external APIs. No artificial activity.
     </p>
-    <ul style="margin-top:10px;color:var(--muted)">
-      <li>Human presence</li>
-      <li>Session duration</li>
-      <li>Interaction frequency</li>
-      <li>Idle decay</li>
-    </ul>
-    <p style="margin-top:10px">
-      Coherence exists if interaction continues.
-      Instability rises when attention fragments.
+
+    <div class="gauges" style="margin-top:18px">
+
+      <div class="gauge">
+        <div class="label">Hourly Activity</div>
+        <div class="bar"><div id="hFill" class="fill"></div></div>
+        <p class="small">Interaction within the last hour.</p>
+      </div>
+
+      <div class="gauge">
+        <div class="label">Daily Activity</div>
+        <div class="bar"><div id="dFill" class="fill"></div></div>
+        <p class="small">Interaction within the last 24 hours.</p>
+      </div>
+
+      <div class="gauge">
+        <div class="label">Weekly Activity</div>
+        <div class="bar"><div id="wFill" class="fill"></div></div>
+        <p class="small">Interaction within the last 7 days.</p>
+      </div>
+
+      <div class="gauge">
+        <div class="label">Monthly Activity</div>
+        <div class="bar"><div id="mFill" class="fill"></div></div>
+        <p class="small">Interaction within the last 30 days.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== EXTERNAL SIGNAL ===================== -->
+  <div class="card">
+    <h2>External Signal (OSF)</h2>
+    <p>
+      External coherence (OSF) is intentionally idle until a lawful bridge is attached.
+      Silence here is correct.
     </p>
+    <div class="bar" style="margin-top:12px">
+      <div class="fill" style="width:0%"></div>
+    </div>
+    <p class="small" style="margin-top:6px">Awaiting external signal.</p>
   </div>
 
   <div class="footer">
-    © 2026 Geodiametrics · Homeroom
+    © 2026 Geodiametrics
   </div>
 
 </div>
 
 <script>
-/* ===================== LIVE SIGNAL LOGIC ===================== */
-const now = () => new Date().toISOString();
-const KEY = "GM_LAST_INTERACTION";
+/* ===================== INTERACTION SIGNAL ===================== */
 
-function update(){
-  const last = localStorage.getItem(KEY);
-  const lastSeen = document.getElementById("lastSeen");
+const KEY = "GM_INTERACTIONS";
+const now = () => Date.now();
+
+function record(){
+  const arr = JSON.parse(localStorage.getItem(KEY) || "[]");
+  arr.push(now());
+  localStorage.setItem(KEY, JSON.stringify(arr));
+}
+
+function compute(){
+  const arr = JSON.parse(localStorage.getItem(KEY) || "[]");
+  const t = now();
+
+  const h = arr.filter(x => t - x < 3600000).length;
+  const d = arr.filter(x => t - x < 86400000).length;
+  const w = arr.filter(x => t - x < 604800000).length;
+  const m = arr.filter(x => t - x < 2592000000).length;
+
+  document.getElementById("hFill").style.width = Math.min(100, h*10)+"%";
+  document.getElementById("dFill").style.width = Math.min(100, d*5)+"%";
+  document.getElementById("wFill").style.width = Math.min(100, w*2)+"%";
+  document.getElementById("mFill").style.width = Math.min(100, m)+"%";
+
   const dot = document.getElementById("statusDot");
   const text = document.getElementById("statusText");
 
-  if(!last){
-    text.textContent = "STANDBY";
-    dot.style.background = "#facc15";
-    lastSeen.textContent = "—";
-    return;
-  }
-
-  const diff = Date.now() - new Date(last).getTime();
-
-  if(diff < 60000){
-    text.textContent = "OPERATIONAL";
+  if(h>0){
     dot.style.background = "#4ade80";
-  } else if(diff < 300000){
-    text.textContent = "IDLE";
+    text.textContent = "OPERATIONAL";
+  }else if(d>0){
     dot.style.background = "#facc15";
-  } else {
-    text.textContent = "DORMANT";
+    text.textContent = "IDLE";
+  }else{
     dot.style.background = "#f87171";
+    text.textContent = "DORMANT";
   }
-
-  lastSeen.textContent = last;
-}
-
-function mark(){
-  localStorage.setItem(KEY, now());
-  update();
 }
 
 ["mousemove","keydown","touchstart","scroll"].forEach(e=>{
-  window.addEventListener(e, mark, {passive:true});
+  window.addEventListener(e, ()=>{record();compute();},{passive:true});
 });
 
-update();
+compute();
 </script>
 </body>
 </html>

@@ -2,73 +2,183 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Table of Contents · Geodiametrics</title>
 
 <style>
 :root{
   --fg:#e9eefc;
-  --muted:rgba(233,238,252,.7);
+  --muted:rgba(233,238,252,.65);
+  --panel:rgba(10,14,28,.82);
   --stroke:rgba(233,238,252,.16);
-  --panel:rgba(12,16,34,.6);
-  --radius:22px;
+  --accent:#7aa2ff;
 }
+
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
-  background:
-    radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.35), transparent 60%),
-    radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,.25), transparent 60%),
-    linear-gradient(180deg,#050713,#03040c 70%,#020308);
+  background:#02030a;
 }
-.wrap{max-width:900px;margin:0 auto;padding:48px 20px}
-.card{
+
+/* starfield */
+body::before,
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+body::before{
+  background:
+    radial-gradient(1px 1px at 18% 28%, #fff, transparent),
+    radial-gradient(1px 1px at 42% 72%, #fff, transparent),
+    radial-gradient(1px 1px at 68% 34%, #fff, transparent),
+    radial-gradient(1px 1px at 81% 61%, #fff, transparent),
+    radial-gradient(1px 1px at 25% 54%, #fff, transparent);
+  opacity:.45;
+}
+body::after{
+  background:
+    radial-gradient(700px 480px at 30% 20%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(800px 520px at 80% 60%, rgba(180,140,255,.14), transparent 60%);
+}
+
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:44px 18px 70px;
+}
+
+.header{
+  margin-bottom:22px;
+}
+h1{
+  margin:0 0 8px;
+  font-size:34px;
+}
+.subtitle{
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.section{
   background:var(--panel);
   border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  padding:28px;
+  border-radius:22px;
+  padding:22px;
+  margin-top:18px;
 }
-h1{margin:0 0 12px;font-size:40px}
-p{color:var(--muted);line-height:1.6;margin:0 0 22px}
-.list{display:grid;gap:14px}
-.item{
-  padding:16px 20px;
-  border-radius:999px;
+
+.section h2{
+  margin:0 0 10px;
+  font-size:18px;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+}
+
+a.item{
+  display:block;
+  padding:16px 14px;
+  border-radius:16px;
   border:1px solid var(--stroke);
-  background:rgba(255,255,255,.06);
-  color:var(--fg);
-  font-weight:800;
+  background:rgba(255,255,255,.04);
   text-decoration:none;
+  color:var(--fg);
 }
-footer{
-  margin-top:30px;
-  text-align:center;
+a.item:hover{
+  background:rgba(255,255,255,.08);
+}
+.item span{
+  display:block;
+  font-size:13px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+.footer{
+  margin-top:28px;
   font-size:12px;
   color:rgba(233,238,252,.45);
+  text-align:center;
 }
 </style>
 </head>
 
 <body>
 <div class="wrap">
-  <div class="card">
-    <h1>Table of Contents</h1>
-    <p>
-      This page is the front door to the system.  
-      Only sections that exist are listed here.
-    </p>
 
-    <div class="list">
-      <a class="item" href="/control-room/">Control Room</a>
-      <a class="item" href="/apps/">Apps</a>
-      <a class="item" href="/reference/">Reference</a>
-      <a class="item" href="/problem/">Problem</a>
+  <div class="header">
+    <h1>Table of Contents</h1>
+    <div class="subtitle">
+      The authoritative index of what exists.<br/>
+      No speculation. No placeholders beyond structure.
     </div>
   </div>
 
-  <footer>© 2026 Geodiametrics</footer>
+  <!-- CORE SURFACES -->
+  <div class="section">
+    <h2>Core Surfaces</h2>
+    <div class="grid">
+      <a class="item" href="/control-room/">
+        Control Room
+        <span>Read-only observation and system gauges</span>
+      </a>
+      <a class="item" href="/apps/">
+        Apps
+        <span>Viewer and launcher surfaces</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- KNOWLEDGE -->
+  <div class="section">
+    <h2>Foundations</h2>
+    <div class="grid">
+      <a class="item" href="/foundational-laws/">
+        Foundational Laws
+        <span>Constraint rules and invariants</span>
+      </a>
+      <a class="item" href="/reference/">
+        Reference
+        <span>Definitions, terms, and explanations</span>
+      </a>
+      <a class="item" href="/problem/">
+        Problem
+        <span>What this system is designed to solve</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- IDENTITY -->
+  <div class="section">
+    <h2>Identity</h2>
+    <div class="grid">
+      <a class="item" href="/about/">
+        About Us
+        <span>Who built this and why</span>
+      </a>
+      <a class="item" href="/mission/">
+        Mission
+        <span>Intent, direction, and scope</span>
+      </a>
+      <a class="item" href="/rights/">
+        Rights & IP
+        <span>Ownership, licensing, and usage</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer">© 2026 Geodiametrics</div>
+
 </div>
 </body>
 </html>

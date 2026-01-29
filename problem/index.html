@@ -8,50 +8,81 @@
 <style>
 :root{
   --bg:#0b0e14;--fg:#e6ebff;--muted:#9aa3c7;--stroke:rgba(230,235,255,.12);
-  --accent:#7aa2ff;--radius:18px;--mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --accent:#7aa2ff;--accent2:#ff7ac6;--radius:18px;
+  --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
 }
-*{box-sizing:border-box}html,body{margin:0;height:100%}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
 body{
   background:radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),
              radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),
              var(--bg);
   color:var(--fg);font-family:var(--sans);
 }
-main{max-width:1050px;margin:0 auto;padding:40px 18px 72px}
-header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+main{max-width:1100px;margin:0 auto;padding:40px 18px 72px}
+
+header{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:14px;
+  margin-bottom:18px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{
+  width:34px;height:34px;flex:0 0 auto;
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  background:rgba(255,255,255,.02);
+  display:flex;align-items:center;justify-content:center;
+}
 h1{margin:0;font-size:28px}
 .sub{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
 
 .nav{display:flex;gap:10px;flex-wrap:wrap}
 .pill{
   display:inline-flex;align-items:center;gap:8px;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.02);
-  color:var(--fg);text-decoration:none;
+  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);color:var(--fg);text-decoration:none;
   font-family:var(--mono);font-size:12px;
 }
 .pill:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+
 .card{
-  border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  padding:22px;
+  border:1px solid var(--stroke);border-radius:var(--radius);padding:22px;
   background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
 }
 .card:hover{border-color:rgba(122,162,255,.45)}
 .kicker{
+  font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px;
+}
+.muted{color:var(--muted)}
+.content{color:var(--muted);line-height:1.6;font-size:14px}
+
+details{
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:14px 14px;
+  background:rgba(255,255,255,.02);
+  margin-top:12px;
+}
+details:hover{border-color:rgba(122,162,255,.45)}
+summary{
+  cursor:pointer;list-style:none;
   font-family:var(--mono);
   font-size:12px;
   letter-spacing:.08em;
   text-transform:uppercase;
-  color:var(--accent);
-  margin-bottom:10px;
+  color:var(--fg);
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
 }
-.title{font-size:18px;font-weight:650;margin-bottom:8px}
-.body{color:var(--muted);line-height:1.55}
+summary::-webkit-details-marker{display:none}
+.chev{color:var(--muted);font-family:var(--mono);font-size:12px}
+details[open] .chev{color:var(--accent)}
+
+.bullets{margin:10px 0 0 16px}
 
 footer{
   margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);
@@ -65,10 +96,20 @@ footer{
 <main>
 
 <header>
-  <div>
-    <h1>Problem</h1>
-    <div class="sub">Context · Why the instrument exists</div>
+  <div class="brand">
+    <div class="mark" aria-hidden="true">
+      <!-- Logo slot: replace this SVG later with your snowflake/diamond logo -->
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2 22 12 12 22 2 12 12 2Z" stroke="rgba(122,162,255,.95)" stroke-width="1.6"/>
+        <path d="M12 6 18 12 12 18 6 12 12 6Z" stroke="rgba(230,235,255,.55)" stroke-width="1.2"/>
+      </svg>
+    </div>
+    <div>
+      <h1>Problem</h1>
+      <div class="sub">Layer 4 · Tap to expand · Context only</div>
+    </div>
   </div>
+
   <nav class="nav">
     <a class="pill" href="/">Orientation</a>
     <a class="pill" href="/control/">Control</a>
@@ -78,28 +119,84 @@ footer{
 </header>
 
 <section class="grid">
+
   <div class="card">
-    <div class="kicker">Observation</div>
-    <div class="title">People need signal</div>
-    <div class="body">Most systems require trust without providing a public, inspectable gauge of live state.</div>
+    <div class="kicker">The gap (expand)</div>
+    <div class="muted">These are short, non-technical statements that frame why the instrument exists.</div>
+
+    <details open>
+      <summary>Signal <span class="chev">tap</span></summary>
+      <div class="content">
+        Most systems require trust without providing a public, inspectable gauge of live state.
+        <ul class="bullets">
+          <li>People can’t verify motion.</li>
+          <li>Observers can’t distinguish growth from claims.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Structure <span class="chev">tap</span></summary>
+      <div class="content">
+        Narrative collapses under stress. Constraint-first structure holds.
+        <ul class="bullets">
+          <li>Surfaces separate authority, observation, and execution.</li>
+          <li>Read-only surfaces reduce ambiguity and drift.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Applicability <span class="chev">tap</span></summary>
+      <div class="content">
+        Outputs must be visible without requiring full theory comprehension.
+        <ul class="bullets">
+          <li>Artifacts exist so observers can inspect demonstrations quickly.</li>
+          <li>OSF remains canonical for deep work.</li>
+        </ul>
+      </div>
+    </details>
   </div>
 
   <div class="card">
-    <div class="kicker">Consistency</div>
-    <div class="title">Structure beats narrative</div>
-    <div class="body">The goal is stable structure first: surfaces, constraints, and bounded interpretation.</div>
+    <div class="kicker">Boundary</div>
+    <div class="content">
+      This site is a public instrument surface. It does not enforce interpretation. It does not request belief.
+      It provides structure and anchors to canonical records.
+    </div>
+
+    <details style="margin-top:16px">
+      <summary>What this is <span class="chev">tap</span></summary>
+      <div class="content">
+        A constrained, inspectable surface that routes observers to live signal (Control) and canonical records (OSF).
+      </div>
+    </details>
+
+    <details>
+      <summary>What this is not <span class="chev">tap</span></summary>
+      <div class="content">
+        Not a tutorial, not a sales page, not a platform, not a social feed.
+      </div>
+    </details>
+
+    <details>
+      <summary>Canonical anchors <span class="chev">tap</span></summary>
+      <div class="content">
+        OSF projects remain the authoritative archival sources:
+        <ul class="bullets">
+          <li>https://osf.io/4su3v/</li>
+          <li>https://osf.io/ftuvs/</li>
+          <li>https://osf.io/mn6vu/</li>
+        </ul>
+      </div>
+    </details>
   </div>
 
-  <div class="card">
-    <div class="kicker">Application</div>
-    <div class="title">Make outputs visible</div>
-    <div class="body">Artifacts exist so observers can see concrete demonstrations without reading the entire theory stack.</div>
-  </div>
 </section>
 
 <footer>
   <div>© 2026 Geodiametrics</div>
-  <div>Problem · Layer 2b · v1.2</div>
+  <div>Problem · Layer 4 · v1.0</div>
 </footer>
 
 </main>

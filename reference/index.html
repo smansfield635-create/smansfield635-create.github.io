@@ -2,57 +2,72 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Reference · Geodiametrics</title>
 
 <style>
 :root{
-  --fg:#e9eefc;--muted:rgba(233,238,252,.66);
-  --stroke:rgba(233,238,252,.14);
-  --panel:rgba(12,16,34,.62);
-  --radius:22px;--shadow:0 18px 55px rgba(0,0,0,.55);
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.65);
+  --panel:rgba(10,14,28,.82);
+  --stroke:rgba(233,238,252,.16);
+  --radius:22px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
+  background:#02030a;
+}
+body::before{
+  content:"";
+  position:fixed; inset:0; pointer-events:none;
   background:
-    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
-    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
-    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
+    radial-gradient(1px 1px at 18% 28%, #fff, transparent),
+    radial-gradient(1px 1px at 42% 72%, #fff, transparent),
+    radial-gradient(1px 1px at 68% 34%, #fff, transparent),
+    radial-gradient(1px 1px at 81% 61%, #fff, transparent),
+    radial-gradient(1px 1px at 25% 54%, #fff, transparent);
+  opacity:.35;
 }
-.wrap{max-width:1100px;margin:0 auto;padding:22px 16px 70px}
+
+.wrap{max-width:1000px;margin:0 auto;padding:44px 18px 80px}
 .card{
-  border-radius:22px;
-  border:1px solid var(--stroke);
   background:var(--panel);
-  box-shadow:var(--shadow);
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  padding:22px;
+  margin-top:18px;
+}
+h1{margin:0 0 10px;font-size:36px}
+p{margin:0;color:var(--muted);line-height:1.6}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:14px;
+  margin-top:16px;
+}
+.item{
+  border:1px solid var(--stroke);
+  border-radius:16px;
   padding:18px;
-  margin-bottom:16px;
+  background:rgba(255,255,255,.04);
 }
-h1{margin:0 0 10px;font-size:40px}
-h2{margin:0 0 10px;font-size:22px}
-p{margin:0 0 10px;color:var(--muted);line-height:1.55}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:12px 16px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.18);
-  background:rgba(255,255,255,.06);
-  color:var(--fg);font-weight:900;text-decoration:none
+.item h2{
+  margin:0 0 8px;
+  font-size:18px;
+  color:rgba(233,238,252,.9);
 }
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-.footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:18px}
-.pill{
-  display:inline-flex;align-items:center;
-  padding:8px 12px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.16);
-  background:rgba(255,255,255,.06);
-  font-weight:900;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
+.item p{
+  font-size:14px;
 }
-.list{margin:0;padding-left:18px}
-.list li{margin:6px 0;color:var(--muted)}
+.footer{
+  margin-top:26px;
+  font-size:12px;
+  color:rgba(233,238,252,.45);
+  text-align:center;
+}
 </style>
 </head>
 
@@ -60,39 +75,47 @@ p{margin:0 0 10px;color:var(--muted);line-height:1.55}
 <div class="wrap">
 
   <div class="card">
-    <div class="pill">Canonical</div>
     <h1>Reference</h1>
-    <p>Definitions and invariants. Read-only. No execution.</p>
-    <div class="row" style="margin-top:12px;">
-      <a class="btn" href="/control-room/">Control Room</a>
-      <a class="btn" href="/apps/">Apps</a>
-      <a class="btn" href="/problem/">Problem</a>
+    <p>Canonical terms, definitions, and invariants used throughout the system.</p>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+
+      <div class="item">
+        <h2>Quad-Core Cycle</h2>
+        <p>Selection → Resolution → Commitment → Continuation.</p>
+      </div>
+
+      <div class="item">
+        <h2>Constraint-First</h2>
+        <p>Structure precedes optimization, narrative, or control.</p>
+      </div>
+
+      <div class="item">
+        <h2>Coherence</h2>
+        <p>Sustained agreement under shared constraints.</p>
+      </div>
+
+      <div class="item">
+        <h2>Fragmentation</h2>
+        <p>Loss of alignment between intent, structure, and execution.</p>
+      </div>
+
+      <div class="item">
+        <h2>Authority</h2>
+        <p>Structural validity, not persuasion or identity.</p>
+      </div>
+
+      <div class="item">
+        <h2>Observation</h2>
+        <p>Read-only measurement without intervention.</p>
+      </div>
+
     </div>
   </div>
 
-  <div class="card">
-    <h2>Core Terms</h2>
-    <ul class="list">
-      <li><b>Coherence</b> — sustained lawful progression without contradiction or fragmentation.</li>
-      <li><b>Cycle</b> — Selection → Resolution → Commitment → Continuation.</li>
-      <li><b>Fuel</b> — coherence reserve; full unless burnout or fragmentation occurs.</li>
-      <li><b>RPM</b> — activity density over time.</li>
-      <li><b>Speed</b> — net forward progression in the cycle.</li>
-      <li><b>Risk</b> — instability derived from fragmentation and wall states.</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h2>Invariants</h2>
-    <ul class="list">
-      <li>No manual advancement is required for coherence.</li>
-      <li>Breakage produces signal; normal operation produces silence.</li>
-      <li>Authority lives in the Control Room.</li>
-      <li>Apps are viewers only.</li>
-    </ul>
-  </div>
-
-  <div class="footer">© 2026 Geodiametrics · Reference</div>
+  <div class="footer">© 2026 Geodiametrics</div>
 </div>
 </body>
 </html>

@@ -1,213 +1,110 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Control Room · Geodiametrics</title>
+/* =========================================================
+   GEODIAMETRICS · SEARCH ENGINE QUAD-CORES
+   Four lawful instantiations of the same cycle
+   No overlap. No manual control.
+========================================================= */
 
-<style>
-:root{
-  --fg:#e9eefc;--muted:rgba(233,238,252,.62);
-  --stroke:rgba(233,238,252,.14);
-  --panel:rgba(12,16,34,.62);
-  --radius:22px;
-  --green:#4ade80;--yellow:#facc15;--red:#f87171;--blue:#60a5fa;--grey:#9ca3af;
-}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:var(--fg);
-  background:
-    radial-gradient(1400px 1000px at 20% 12%, rgba(122,162,255,.22), transparent 60%),
-    radial-gradient(1000px 800px at 85% 30%, rgba(180,140,255,.18), transparent 60%),
-    linear-gradient(180deg,#060a18,#040610 70%,#03030c);
-}
-.wrap{max-width:1200px;margin:0 auto;padding:22px 16px 80px}
-.card{
-  border-radius:var(--radius);
-  border:1px solid var(--stroke);
-  background:var(--panel);
-  padding:18px;margin-bottom:16px
-}
-h1{margin:0 0 8px;font-size:40px}
-h2{margin:0 0 10px;font-size:22px}
-p{margin:0 0 10px;color:var(--muted);line-height:1.55}
-.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.small{font-size:13px;color:var(--muted)}
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-.hr{height:1px;background:rgba(233,238,252,.10);margin:14px 0}
+const ENGINE_PREFIX = "ENGINE::SEARCH::";
+const nowISO = () => new Date().toISOString();
 
-.gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-.gauge{
-  border-radius:18px;border:1px solid rgba(233,238,252,.14);
-  background:rgba(0,0,0,.22);padding:14px
-}
-.gauge h3{margin:0 0 8px;font-size:12px;letter-spacing:.7px;text-transform:uppercase}
-.meter{height:14px;background:rgba(255,255,255,.12);border-radius:8px;overflow:hidden}
-.fill{height:100%;width:0%;transition:width .35s ease}
-.badge{
-  display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.16);background:rgba(255,255,255,.06);
-  font-weight:900;font-size:12px;letter-spacing:.6px;text-transform:uppercase
-}
-.light{width:12px;height:12px;border-radius:50%;display:inline-block;background:var(--grey)}
-.table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
-th,td{padding:8px;border-bottom:1px solid rgba(233,238,252,.12);text-align:left;color:var(--muted)}
-th{color:#fff;font-weight:900}
-.footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:18px}
-</style>
-</head>
-
-<body>
-<div class="wrap">
-
-  <div class="card">
-    <h1>Control Room</h1>
-    <p>Live observation of collective knowledge coherence. <b>Source: Wikipedia (Global)</b>. No controls. Signals only.</p>
-    <div class="row">
-      <span class="badge"><span id="sysLight" class="light"></span><span id="sysState">STANDBY</span></span>
-      <span class="mono small" id="lastScan">Last event: —</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>System Gauges</h2>
-    <div class="gauges">
-      <div class="gauge">
-        <h3>Fuel (Coherence)</h3>
-        <div class="meter"><div id="fuel" class="fill" style="background:var(--green)"></div></div>
-        <div class="small">Agreement under constraint. Full unless fragmentation/burnout.</div>
-      </div>
-      <div class="gauge">
-        <h3>RPM (Activity)</h3>
-        <div class="meter"><div id="rpm" class="fill" style="background:var(--blue)"></div></div>
-        <div class="small">Edits per minute (rolling).</div>
-      </div>
-      <div class="gauge">
-        <h3>Speed (Momentum)</h3>
-        <div class="meter"><div id="speed" class="fill" style="background:var(--green)"></div></div>
-        <div class="small">Δ(RPM).</div>
-      </div>
-      <div class="gauge">
-        <h3>Risk (Instability)</h3>
-        <div class="meter"><div id="risk" class="fill" style="background:var(--red)"></div></div>
-        <div class="small">Reverts + contention.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Live Snapshot (last 60s)</h2>
-    <table class="table">
-      <thead><tr><th>Edits</th><th>Reverts</th><th>Acceptance</th><th>RPM</th><th>Risk</th></tr></thead>
-      <tbody><tr>
-        <td id="tEdits">0</td>
-        <td id="tReverts">0</td>
-        <td id="tAccept">—</td>
-        <td id="tRPM">0</td>
-        <td id="tRisk">—</td>
-      </tr></tbody>
-    </table>
-  </div>
-
-  <div class="footer">© 2026 Geodiametrics · Control Room</div>
-</div>
-
-<script>
-/* ==========================================================
-   WIKIPEDIA LIVE WIRING (READ-ONLY)
-   - EventSource to Wikimedia recentchange stream
-   - Rolling windows
-   - No writes to engines
-========================================================== */
-
-const STREAM = "https://stream.wikimedia.org/v2/stream/recentchange";
-
-// Rolling windows (ms)
-const W1 = 60_000;   // 1 minute
-const W2 = 120_000;  // 2 minutes (for speed delta)
-
-// State
-let events = [];   // {t, type, reverted}
-let lastRPM = 0;
-
-// Utils
-const now = () => Date.now();
-const pct = v => Math.max(0, Math.min(100, Math.round(v*100)));
-const setW = (id, v) => document.getElementById(id).style.width = pct(v) + "%";
-
-function trim(){
-  const cutoff = now() - W2;
-  events = events.filter(e => e.t >= cutoff);
+/* ---- Quad-Core Factory ---- */
+function createQuadCore(name, domain){
+  return {
+    name,
+    domain,
+    state: {
+      selection: null,
+      resolution: null,
+      commitment: null,
+      continuation: {
+        cycle: "IDLE",
+        last_set: null
+      }
+    },
+    updated_at: null
+  };
 }
 
-function compute(){
-  trim();
-  const last1 = events.filter(e => e.t >= now()-W1);
-  const edits = last1.length;
-  const reverts = last1.filter(e => e.reverted).length;
-  const accept = edits ? (1 - reverts/edits) : null;
+/* ---- Engine Registry ---- */
+const SearchEngines = {
+  INGEST: createQuadCore(
+    "Ingest Engine",
+    "Source collection, normalization, acceptance"
+  ),
 
-  // RPM normalized: 30 edits/min = full
-  const rpm = Math.min(1, edits / 30);
+  INDEX: createQuadCore(
+    "Index Engine",
+    "Tokenization, structure, validation"
+  ),
 
-  // Speed = ΔRPM (scaled)
-  const speed = Math.min(1, Math.max(0, (rpm - lastRPM) + 0.5));
-  lastRPM = rpm;
+  QUERY: createQuadCore(
+    "Query & Rank Engine",
+    "Interpretation, retrieval, scoring"
+  ),
 
-  // Risk = revert density (0..1)
-  const risk = edits ? Math.min(1, reverts / edits) : 0;
-
-  // Fuel rule: full unless fragmentation/burnout
-  // Fragmentation proxy = revert density; Burnout proxy = very high RPM
-  const burn = rpm > 0.9 ? 1 : 0;
-  const fuel = Math.max(0, 1 - (0.55*burn + 0.45*risk));
-
-  // UI
-  setW("fuel", fuel);
-  setW("rpm", rpm);
-  setW("speed", speed);
-  setW("risk", risk);
-
-  document.getElementById("tEdits").textContent = edits;
-  document.getElementById("tReverts").textContent = reverts;
-  document.getElementById("tAccept").textContent = accept===null ? "—" : Math.round(accept*100)+"%";
-  document.getElementById("tRPM").textContent = Math.round(rpm*100)+"%";
-  document.getElementById("tRisk").textContent = Math.round(risk*100)+"%";
-
-  const light = document.getElementById("sysLight");
-  const state = document.getElementById("sysState");
-  if(edits === 0){
-    light.style.background = "var(--grey)";
-    state.textContent = "STANDBY";
-  }else if(risk < 0.33){
-    light.style.background = "var(--green)";
-    state.textContent = "OPERATIONAL";
-  }else if(risk < 0.66){
-    light.style.background = "var(--yellow)";
-    state.textContent = "CONTESTED";
-  }else{
-    light.style.background = "var(--red)";
-    state.textContent = "FRAGMENTING";
-  }
-}
-
-const es = new EventSource(STREAM);
-es.onmessage = ev => {
-  try{
-    const d = JSON.parse(ev.data);
-    // Consider only content edits (namespace 0) for signal clarity
-    if(d.namespace !== 0) return;
-    const reverted = d.type === "revert";
-    events.push({t: now(), reverted});
-    document.getElementById("lastScan").textContent = "Last event: " + new Date().toISOString();
-    compute();
-  }catch(e){}
+  FEEDBACK: createQuadCore(
+    "Feedback & Update Engine",
+    "Observation, correction, stabilization"
+  )
 };
-es.onerror = () => {
-  document.getElementById("sysState").textContent = "STREAM ERROR";
-};
-</script>
-</body>
-</html>
+
+/* ---- Persistence ---- */
+function saveEngine(key, engine){
+  engine.updated_at = nowISO();
+  localStorage.setItem(
+    ENGINE_PREFIX + key,
+    JSON.stringify(engine)
+  );
+}
+
+function loadEngine(key){
+  const raw = localStorage.getItem(ENGINE_PREFIX + key);
+  return raw ? JSON.parse(raw) : null;
+}
+
+/* ---- Initialization ---- */
+function registerSearchEngines(){
+  Object.keys(SearchEngines).forEach(k => {
+    const existing = loadEngine(k);
+    if(existing){
+      SearchEngines[k] = existing;
+    } else {
+      saveEngine(k, SearchEngines[k]);
+    }
+  });
+}
+
+/* ---- Lawful Transitions (no UI hooks here) ---- */
+function advanceSelection(key, value){
+  const e = loadEngine(key);
+  if(!e) return;
+  e.state.selection = value;
+  e.state.continuation = { cycle: "SELECTED", last_set: nowISO() };
+  saveEngine(key, e);
+}
+
+function resolve(key, value){
+  const e = loadEngine(key);
+  if(!e || !e.state.selection) return;
+  e.state.resolution = value;
+  e.state.continuation = { cycle: "RESOLVED", last_set: nowISO() };
+  saveEngine(key, e);
+}
+
+function commit(key, value){
+  const e = loadEngine(key);
+  if(!e || !e.state.resolution) return;
+  e.state.commitment = value;
+  e.state.continuation = { cycle: "COMMITTED", last_set: nowISO() };
+  saveEngine(key, e);
+}
+
+function continueCycle(key){
+  const e = loadEngine(key);
+  if(!e || !e.state.commitment) return;
+  e.state.continuation = { cycle: "CONTINUING", last_set: nowISO() };
+  saveEngine(key, e);
+}
+
+/* ---- Boot ---- */
+registerSearchEngines();

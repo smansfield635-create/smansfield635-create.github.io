@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Geodiametrics · Control</title>
+
+  <style>
+    :root{
+      --bg:#0b0e14;
+      --panel:#0f1420;
+      --fg:#e6ebff;
+      --muted:#9aa3c7;
+      --stroke:rgba(230,235,255,.12);
+      --accent:#7aa2ff;
+      --radius:14px;
+      --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%}
+    body{
+      background:var(--bg);
+      color:var(--fg);
+      font-family:var(--sans);
+    }
+    .wrap{
+      max-width:880px;
+      margin:0 auto;
+      padding:48px 20px 72px;
+    }
+    header{
+      margin-bottom:28px;
+      padding-bottom:18px;
+      border-bottom:1px solid var(--stroke);
+    }
+    h1{
+      margin:0 0 6px;
+      font-size:22px;
+      font-weight:600;
+    }
+    .sub{
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+    }
+    section{
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      padding:18px;
+      margin-bottom:18px;
+      background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
+    }
+    h2{
+      margin:0 0 10px;
+      font-size:13px;
+      font-family:var(--mono);
+      text-transform:uppercase;
+      letter-spacing:1.2px;
+      color:var(--accent);
+    }
+    .kv{
+      font-family:var(--mono);
+      font-size:13px;
+      line-height:1.6;
+    }
+    .muted{color:var(--muted)}
+    footer{
+      margin-top:40px;
+      padding-top:16px;
+      border-top:1px solid var(--stroke);
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+  </style>
+</head>
+
+<body>
+<main class="wrap">
+
+  <header>
+    <h1>Control</h1>
+    <div class="sub">Observer Surface · Public Gauge · Read-Only</div>
+  </header>
+
+  <section>
+    <h2>System State</h2>
+    <div class="kv">
+      Operational Surface: ACTIVE<br/>
+      Mutation: DISABLED<br/>
+      Authority: FIXED<br/>
+      Execution Enabled: FALSE
+    </div>
+  </section>
+
+  <section>
+    <h2>Live Site Activity</h2>
+    <div class="kv">
+      Session ID: <span id="sid">—</span><br/>
+      Visits (this browser): <span id="visits">—</span><br/>
+      Last Seen: <span id="time">—</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>OSF Projects</h2>
+    <div class="kv">
+      1. <a href="https://osf.io/" target="_blank">Primary Canonical Project</a> · ACTIVE<br/>
+      2. <a href="https://osf.io/" target="_blank">Supporting Project A</a> · ACTIVE<br/>
+      3. <a href="https://osf.io/" target="_blank">Supporting Project B</a> · ACTIVE
+    </div>
+  </section>
+
+  <section>
+    <h2>Observer Notice</h2>
+    <div class="kv muted">
+      This surface exposes live signal only.<br/>
+      No execution, mutation, or validation occurs here.
+    </div>
+  </section>
+
+  <footer>

@@ -1,0 +1,10 @@
+name = "geodiametrics-live-analytics"
+main = "worker.js"
+compatibility_date = "2026-01-29"
+
+[durable_objects]
+bindings = [{ name = "ANALYTICS", class_name = "AnalyticsDO" }]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["AnalyticsDO"]

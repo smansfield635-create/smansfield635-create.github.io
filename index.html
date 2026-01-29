@@ -15,12 +15,11 @@
       --accent:#7aa2ff;
       --radius:14px;
       --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      --sans:system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
     }
 
     *{box-sizing:border-box}
     html,body{margin:0;height:100%}
-
     body{
       background:radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),
                  radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),
@@ -30,29 +29,10 @@
       letter-spacing:.2px;
     }
 
-    .wrap{
-      max-width:880px;
-      padding:48px 20px 72px;
-      margin:0 auto;
-    }
-
-    header{
-      border-bottom:1px solid var(--stroke);
-      padding-bottom:24px;
-      margin-bottom:32px;
-    }
-
-    h1{
-      margin:0 0 8px;
-      font-size:28px;
-      font-weight:600;
-    }
-
-    .tagline{
-      font-family:var(--mono);
-      color:var(--muted);
-      font-size:13px;
-    }
+    .wrap{max-width:880px;margin:0 auto;padding:48px 20px 72px}
+    header{border-bottom:1px solid var(--stroke);padding-bottom:24px;margin-bottom:32px}
+    h1{margin:0 0 8px;font-size:28px;font-weight:600}
+    .tagline{font-family:var(--mono);color:var(--muted);font-size:13px}
 
     section{
       background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
@@ -61,7 +41,6 @@
       padding:20px;
       margin-bottom:20px;
     }
-
     section h2{
       margin:0 0 10px;
       font-size:14px;
@@ -71,35 +50,30 @@
       color:var(--accent);
       font-family:var(--mono);
     }
-
-    p{
-      margin:0;
-      line-height:1.6;
-      color:var(--fg);
-    }
-
+    p{margin:0;line-height:1.6}
     .muted{color:var(--muted)}
 
-    ul{
-      list-style:none;
-      padding:0;
-      margin:0;
-    }
-
-    li{
-      padding:10px 0;
-      border-bottom:1px solid var(--stroke);
-    }
-
-    li:last-child{border-bottom:none}
-
-    .surface{
+    .ctaRow{
       display:flex;
-      flex-direction:column;
-      gap:4px;
-      font-family:var(--mono);
-      font-size:13px;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:14px;
     }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.02);
+      color:var(--fg);
+      font-family:var(--mono);
+      font-size:12px;
+      text-decoration:none;
+      cursor:pointer;
+    }
+    .btn:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
 
     footer{
       margin-top:48px;
@@ -134,77 +108,30 @@
       <p class="muted" style="margin-top:10px">
         This surface reflects live structure only. Interpretation is external.
       </p>
+      <div class="ctaRow">
+        <a class="btn" href="/control/">Enter Control Gauge</a>
+      </div>
     </section>
 
     <section>
       <h2>Access</h2>
-      <p>
-        The system is divided into distinct surfaces. Each surface enforces its own constraints.
-      </p>
+      <p>The system is divided into distinct surfaces. Each surface enforces its own constraints.</p>
       <p class="muted" style="margin-top:10px">
         Not all surfaces permit action. Not all surfaces permit interpretation. Not all surfaces are visible.
       </p>
     </section>
 
     <section>
-      <h2>Surfaces</h2>
-      <ul>
-        <li>
-          <div class="surface">
-            <strong>Control</strong>
-            <span class="muted">Observer-only surface · Read access · No execution</span>
-          </div>
-        </li>
-        <li>
-          <div class="surface">
-            <strong>Engine</strong>
-            <span class="muted">Execution surface · Constrained inputs only · No definition</span>
-          </div>
-        </li>
-        <li>
-          <div class="surface">
-            <strong>Syntax</strong>
-            <span class="muted">Formal definitions · Immutable · No execution</span>
-          </div>
-        </li>
-        <li>
-          <div class="surface">
-            <strong>Build</strong>
-            <span class="muted">Construction surface · Restricted access · May alter system state</span>
-          </div>
-        </li>
-        <li>
-          <div class="surface">
-            <strong>Apps</strong>
-            <span class="muted">Instantiated outputs · No authority</span>
-          </div>
-        </li>
-        <li>
-          <div class="surface">
-            <strong>Reference</strong>
-            <span class="muted">Grounding material · Non-executing</span>
-          </div>
-        </li>
-      </ul>
-    </section>
-
-    <section>
       <h2>Constraints</h2>
-      <ul>
-        <li class="surface">This system does not guide usage.</li>
-        <li class="surface">This system does not validate interpretation.</li>
-        <li class="surface">This system does not accept feedback through this surface.</li>
-      </ul>
-      <p class="muted" style="margin-top:10px">
-        Traversal implies responsibility.
-      </p>
+      <p>This system does not guide usage.</p>
+      <p style="margin-top:10px">This system does not validate interpretation.</p>
+      <p style="margin-top:10px">This system does not accept feedback through this surface.</p>
+      <p class="muted" style="margin-top:10px">Traversal implies responsibility.</p>
     </section>
 
     <section>
       <h2>Legal</h2>
-      <p>
-        All rights reserved. Unauthorized use, replication, or misrepresentation is prohibited.
-      </p>
+      <p>All rights reserved. Unauthorized use, replication, or misrepresentation is prohibited.</p>
     </section>
 
     <footer>

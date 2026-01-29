@@ -84,13 +84,71 @@ body{
   padding:16px 14px;
   font-weight:700;
   letter-spacing:.3px;
-  transition:.12s ease;
 }
 
 .nav-btn:hover{
   border-color:#3a5273;
-  transform:translateY(-1px);
 }
 
-.info{
+.anchor-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;
+}
+
+.anchor-btn{
+  text-decoration:none;
+  text-align:center;
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,#121a2a,#0d1422);
+  color:var(--text);
+  border-radius:999px;
+  padding:16px 14px;
+  font-weight:800;
+}
+
+.footer{
+  text-align:center;
   color:var(--muted);
+  font-size:12px;
+  margin-top:36px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <h1>Geodiametrics</h1>
+    <p>Constraint-first execution platform<br>
+    Selection → Resolution → Commitment → Continuation</p>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Navigate</div>
+    <div class="nav-grid">
+      <a class="nav-btn" href="toc.html">Table of Contents</a>
+      <a class="nav-btn" href="mission.html">Mission Statement</a>
+      <a class="nav-btn" href="about.html">About</a>
+      <a class="nav-btn" href="rights.html">Rights & IP</a>
+      <a class="nav-btn" href="control.html">Control Room</a>
+      <a class="nav-btn" href="apps.html">Apps</a>
+      <a class="nav-btn" href="reference.html">Reference</a>
+      <a class="nav-btn" href="problem.html">Problem</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Public Anchors</div>
+    <div class="anchor-grid">
+      <a class="anchor-btn" href="https://osf.io/" target="_blank">Open OSF</a>
+      <a class="anchor-btn" href="https://orcid.org/" target="_blank">Open ORCID</a>
+    </div>
+  </div>
+
+  <div class="footer">© 2026 Geodiametrics</div>
+
+</div>
+</body>
+</html>

@@ -4,117 +4,58 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Geodiametrics · Control</title>
-
+<script defer src="/assets/cfwa.js"></script>
+<script defer src="/assets/live_site_metrics.js"></script>
 <style>
-:root{
-  --bg:#070a12;
-  --fg:#eef2ff;
-  --muted:rgba(238,242,255,.65);
-  --stroke:rgba(238,242,255,.10);
-  --accent:#7aa2ff;
-  --accent2:#ff7ac6;
-  --good:#44d07b;
-  --warn:#ffcc66;
-  --bad:#ff7ac6;
-  --radius:20px;
-  --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{
-  color:var(--fg);
-  font-family:var(--sans);
-  background:
-    radial-gradient(900px 700px at 15% 10%,rgba(122,162,255,.12),transparent 60%),
-    radial-gradient(900px 700px at 85% 20%,rgba(255,122,198,.10),transparent 60%),
-    radial-gradient(700px 500px at 50% 90%,rgba(68,208,123,.06),transparent 60%),
-    var(--bg);
-}
+:root{--bg:#070a12;--fg:#eef2ff;--muted:rgba(238,242,255,.65);--stroke:rgba(238,242,255,.10);
+--accent:#7aa2ff;--accent2:#ff7ac6;--good:#44d07b;--warn:#ffcc66;--bad:#ff7ac6;--radius:20px;
+--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{color:var(--fg);font-family:var(--sans);background:
+radial-gradient(900px 700px at 15% 10%,rgba(122,162,255,.12),transparent 60%),
+radial-gradient(900px 700px at 85% 20%,rgba(255,122,198,.10),transparent 60%),
+radial-gradient(700px 500px at 50% 90%,rgba(68,208,123,.06),transparent 60%),var(--bg);}
 main{max-width:1100px;margin:0 auto;padding:42px 18px 84px}
-
 header{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
 .brand{display:flex;align-items:center;gap:12px}
-.mark{
-  width:40px;height:40px;border-radius:14px;
-  border:1px solid var(--stroke);
-  background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 14px 45px rgba(0,0,0,.45);
-}
+.mark{width:40px;height:40px;border-radius:14px;border:1px solid var(--stroke);
+background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);display:flex;align-items:center;justify-content:center;
+box-shadow:0 14px 45px rgba(0,0,0,.45);}
 h1{margin:0;font-size:28px}
 .sub{margin-top:6px;font-family:var(--mono);font-size:12px;color:var(--muted)}
-
 .nav{display:flex;gap:10px;flex-wrap:wrap}
-.pill{
-  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
-  background:rgba(255,255,255,.02);
-  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;
-}
+.pill{padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);background:rgba(255,255,255,.02);
+color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px}
 .pill:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
-
 .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.tab{
-  cursor:pointer;
-  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
-  background:rgba(255,255,255,.02);
-  color:var(--fg);font-family:var(--mono);font-size:12px;
-}
+.tab{cursor:pointer;padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);background:rgba(255,255,255,.02);
+color:var(--fg);font-family:var(--mono);font-size:12px}
 .tab.active{border-color:rgba(122,162,255,.65);box-shadow:0 16px 45px rgba(0,0,0,.35)}
 .dot{width:10px;height:10px;border-radius:50%}
-.dot.good{background:var(--good);box-shadow:0 0 18px rgba(68,208,123,.35)}
+.dot.site{background:var(--good);box-shadow:0 0 18px rgba(68,208,123,.35)}
 .dot.osf{background:var(--accent);box-shadow:0 0 18px rgba(122,162,255,.35)}
-
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:16px}
-.card{
-  border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
-  padding:22px;
-  box-shadow:0 18px 60px rgba(0,0,0,.40);
-}
-.kicker{
-  font-family:var(--mono);
-  font-size:12px;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:var(--accent);
-  margin-bottom:12px;
-}
+.card{border:1px solid var(--stroke);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
+padding:22px;box-shadow:0 18px 60px rgba(0,0,0,.40)}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
 .kv{font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--muted)}
 .big{font-family:var(--mono);font-size:26px;margin-top:6px;color:var(--fg)}
-
 .gaugeRow{margin-top:10px}
 .glabel{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted)}
-.track{
-  height:12px;border-radius:999px;background:rgba(255,255,255,.08);
-  overflow:hidden;margin-top:8px;
-}
-.fill{
-  height:100%;width:0%;
-  background:linear-gradient(90deg,rgba(122,162,255,.85),rgba(255,122,198,.55));
-  border-radius:999px;
-}
+.track{height:12px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:8px}
+.fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,rgba(122,162,255,.85),rgba(255,122,198,.55))}
 .fill.good{background:linear-gradient(90deg,rgba(68,208,123,.85),rgba(122,162,255,.55))}
 .fill.warn{background:linear-gradient(90deg,rgba(255,204,102,.90),rgba(255,122,198,.45))}
-.fill.bad{background:linear-gradient(90deg,rgba(255,122,198,.85),rgba(122,162,255,.45))}
-
 .hidden{display:none}
-
 .list{margin:0;padding:0;list-style:none}
 .list li{padding:10px 0;border-bottom:1px solid var(--stroke)}
 .list li:last-child{border-bottom:none}
 a.out{color:var(--fg);text-decoration:none}
 a.out:hover{color:var(--accent)}
-
-footer{
-  margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);
-  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
-  font-family:var(--mono);font-size:12px;color:var(--muted);
-}
+footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+font-family:var(--mono);font-size:12px;color:var(--muted)}
 </style>
 </head>
-
 <body>
 <main>
 
@@ -127,9 +68,8 @@ footer{
         <div class="sub">Observer Surface · Dual Gauge · Read-Only</div>
       </div>
     </div>
-
     <div class="tabs">
-      <button class="tab active" id="tabSite" type="button"><span class="dot good"></span> SITE</button>
+      <button class="tab active" id="tabSite" type="button"><span class="dot site"></span> SITE</button>
       <button class="tab" id="tabOSF" type="button"><span class="dot osf"></span> OSF</button>
     </div>
   </div>
@@ -145,51 +85,33 @@ footer{
 
 <section id="panelSite">
   <div class="grid">
-
     <div class="card">
       <div class="kicker">Site Gauge</div>
       <div class="kv" id="siteMeta">Loading…</div>
       <div class="big" id="siteStatus">—</div>
-      <div class="kv" style="margin-top:10px">Feed: <span style="color:var(--fg)">/assets/site_metrics.json</span></div>
+      <div class="kv" style="margin-top:10px">Global live: Cloudflare dashboard · Device live: localStorage</div>
     </div>
 
     <div class="card">
       <div class="kicker">Interaction (24h)</div>
 
-      <div class="gaugeRow">
-        <div class="glabel"><span>Sessions</span><span id="s_sessions">—</span></div>
-        <div class="track"><div class="fill good" id="b_sessions"></div></div>
-      </div>
+      <div class="gaugeRow"><div class="glabel"><span>Sessions</span><span id="s_sessions">—</span></div><div class="track"><div class="fill good" id="b_sessions"></div></div></div>
+      <div class="gaugeRow"><div class="glabel"><span>Pageviews</span><span id="s_pageviews">—</span></div><div class="track"><div class="fill" id="b_pageviews"></div></div></div>
+      <div class="gaugeRow"><div class="glabel"><span>Clicks</span><span id="s_clicks">—</span></div><div class="track"><div class="fill warn" id="b_clicks"></div></div></div>
+      <div class="gaugeRow"><div class="glabel"><span>Avg Time (sec)</span><span id="s_time">—</span></div><div class="track"><div class="fill" id="b_time"></div></div></div>
 
-      <div class="gaugeRow">
-        <div class="glabel"><span>Pageviews</span><span id="s_pageviews">—</span></div>
-        <div class="track"><div class="fill" id="b_pageviews"></div></div>
-      </div>
-
-      <div class="gaugeRow">
-        <div class="glabel"><span>Clicks</span><span id="s_clicks">—</span></div>
-        <div class="track"><div class="fill warn" id="b_clicks"></div></div>
-      </div>
-
-      <div class="gaugeRow">
-        <div class="glabel"><span>Avg Time (sec)</span><span id="s_time">—</span></div>
-        <div class="track"><div class="fill" id="b_time"></div></div>
-      </div>
-
-      <div class="kv" style="margin-top:12px">Note: hardwired metrics feed (manual updates).</div>
+      <div class="kv" style="margin-top:12px">Fallback feed: <span style="color:var(--fg)">/assets/site_metrics.json</span></div>
     </div>
 
     <div class="card">
       <div class="kicker">Sources (24h)</div>
       <ul class="list" id="sourcesList"></ul>
     </div>
-
   </div>
 </section>
 
 <section id="panelOSF" class="hidden">
   <div class="grid">
-
     <div class="card">
       <div class="kicker">OSF Gauge</div>
       <div class="kv" id="osfMeta">Loading…</div>
@@ -211,7 +133,6 @@ footer{
         • ORCID: 0009-0004-1293-0405
       </div>
     </div>
-
   </div>
 </section>
 
@@ -227,7 +148,8 @@ const tabSite=document.getElementById("tabSite");
 const tabOSF=document.getElementById("tabOSF");
 const panelSite=document.getElementById("panelSite");
 const panelOSF=document.getElementById("panelOSF");
-
+tabSite.addEventListener("click",()=>setActive("site"));
+tabOSF.addEventListener("click",()=>setActive("osf"));
 function setActive(which){
   const isSite = which==="site";
   tabSite.classList.toggle("active",isSite);
@@ -235,72 +157,62 @@ function setActive(which){
   panelSite.classList.toggle("hidden",!isSite);
   panelOSF.classList.toggle("hidden",isSite);
 }
-tabSite.addEventListener("click",()=>setActive("site"));
-tabOSF.addEventListener("click",()=>setActive("osf"));
-
 function clamp01(n){ return Math.max(0, Math.min(1, n)); }
-function bar(elId,val,mode){
+function bar(elId,val){
   const el=document.getElementById(elId);
-  const v=clamp01(val);
-  el.style.width=Math.round(v*100)+"%";
-  el.classList.remove("good","warn","bad");
-  if(mode==="risk"){
-    el.classList.add(v<0.2?"good":v<0.6?"warn":"bad");
-  }else{
-    el.classList.add(v<0.2?"bad":v<0.6?"warn":"good");
-  }
+  el.style.width=Math.round(clamp01(val)*100)+"%";
 }
+function renderFrom(obj, label){
+  document.getElementById("siteMeta").textContent = `${label} · Updated: ${obj.timestamp || "—"}`;
+  document.getElementById("siteStatus").textContent = `Status: ${obj.site?.status || "OPERATIONAL"}`;
 
-fetch("/assets/site_metrics.json")
-  .then(r=>r.json())
-  .then(m=>{
-    document.getElementById("siteMeta").textContent =
-      `Release: ${m.site.release} · Updated: ${m.timestamp}`;
-    document.getElementById("siteStatus").textContent =
-      `Status: ${m.site.status}`;
+  const s=obj.interaction||{};
+  document.getElementById("s_sessions").textContent = String(s.sessions_24h||0);
+  document.getElementById("s_pageviews").textContent = String(s.pageviews_24h||0);
+  document.getElementById("s_clicks").textContent = String(s.clicks_24h||0);
+  document.getElementById("s_time").textContent = String(s.avg_time_sec||0);
 
-    const s=m.interaction || {};
-    document.getElementById("s_sessions").textContent = String(s.sessions_24h ?? 0);
-    document.getElementById("s_pageviews").textContent = String(s.pageviews_24h ?? 0);
-    document.getElementById("s_clicks").textContent = String(s.clicks_24h ?? 0);
-    document.getElementById("s_time").textContent = String(s.avg_time_sec ?? 0);
+  bar("b_sessions",(s.sessions_24h||0)/200);
+  bar("b_pageviews",(s.pageviews_24h||0)/800);
+  bar("b_clicks",(s.clicks_24h||0)/1200);
+  bar("b_time",(s.avg_time_sec||0)/600);
 
-    const norm = (x,max)=>max?clamp01((x||0)/max):0;
-    bar("b_sessions", norm(s.sessions_24h, 200), "pos");
-    bar("b_pageviews", norm(s.pageviews_24h, 800), "pos");
-    bar("b_clicks", norm(s.clicks_24h, 1200), "pos");
-    bar("b_time", norm(s.avg_time_sec, 600), "pos");
-
-    const list=document.getElementById("sourcesList");
-    list.innerHTML="";
-    (m.sources_24h||[]).forEach(src=>{
-      const li=document.createElement("li");
-      li.innerHTML = `<span style="color:var(--fg)">${src.label}</span><br><span class="kv">${src.value}</span>`;
-      list.appendChild(li);
-    });
-  })
-  .catch(()=>{ document.getElementById("siteMeta").textContent="Failed to load /assets/site_metrics.json"; });
-
+  const list=document.getElementById("sourcesList");
+  list.innerHTML="";
+  (obj.sources_24h||[]).forEach(src=>{
+    const li=document.createElement("li");
+    li.innerHTML = `<span style="color:var(--fg)">${src.label}</span><br><span class="kv">${src.value}</span>`;
+    list.appendChild(li);
+  });
+  if(!list.children.length){ list.innerHTML="<li>No data</li>"; }
+}
+function tryDeviceLive(){
+  const KEY="geo_live_site";
+  try{
+    const d=JSON.parse(localStorage.getItem(KEY))||null;
+    if(d){ renderFrom(d,"Device live"); return true; }
+  }catch(e){}
+  return false;
+}
+if(!tryDeviceLive()){
+  fetch("/assets/site_metrics.json").then(r=>r.json()).then(m=>renderFrom(m,"Feed")).catch(()=>{document.getElementById("siteMeta").textContent="Failed to load site feed";});
+}
 fetch("/assets/osf_metrics.json")
   .then(r=>r.json())
   .then(m=>{
-    document.getElementById("osfMeta").textContent =
-      `Updated: ${m.timestamp}`;
-    const t=m.osf?.totals_24h || {views:0,downloads:0};
-    document.getElementById("osfTotals").textContent =
-      `Views: ${t.views} · Downloads: ${t.downloads}`;
-
+    document.getElementById("osfMeta").textContent = `Updated: ${m.timestamp}`;
+    const t=m.osf?.totals_24h||{views:0,downloads:0};
+    document.getElementById("osfTotals").textContent = `Views: ${t.views} · Downloads: ${t.downloads}`;
     const list=document.getElementById("osfProjects");
     list.innerHTML="";
     (m.osf?.projects||[]).forEach(p=>{
       const li=document.createElement("li");
-      li.innerHTML =
-        `<span style="color:var(--fg)">${p.label}</span><br>`+
-        `<span class="kv">Views: ${p.views_24h} · Downloads: ${p.downloads_24h}</span>`;
+      li.innerHTML = `<span style="color:var(--fg)">${p.label}</span><br><span class="kv">Views: ${p.views_24h} · Downloads: ${p.downloads_24h}</span>`;
       list.appendChild(li);
     });
+    if(!list.children.length){ list.innerHTML="<li>No data</li>"; }
   })
-  .catch(()=>{ document.getElementById("osfMeta").textContent="Failed to load /assets/osf_metrics.json"; });
+  .catch(()=>{ document.getElementById("osfMeta").textContent="Failed to load OSF feed"; });
 </script>
 
 </body>

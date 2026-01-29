@@ -8,194 +8,128 @@
 <style>
 :root{
   --fg:#e9eefc;
-  --muted:rgba(233,238,252,.65);
-  --stroke:rgba(233,238,252,.14);
-  --panel:rgba(12,16,34,.62);
+  --muted:rgba(233,238,252,.7);
+  --stroke:rgba(233,238,252,.16);
+  --panel:rgba(12,16,34,.55);
   --radius:22px;
-  --glow:#7aa2ff;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:#02040c;color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-
-/* --- COSMIC BACKGROUND --- */
-body::before,
+html,body{margin:0;height:100%}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--fg);
+  background:
+    radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.35), transparent 60%),
+    radial-gradient(1.5px 1.5px at 70% 40%, rgba(255,255,255,.25), transparent 60%),
+    radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,.2), transparent 60%),
+    linear-gradient(180deg,#050713,#03040c 70%,#020308);
+  overflow:hidden;
+}
 body::after{
   content:"";
   position:fixed;inset:0;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(120,150,255,.08), transparent 60%);
   pointer-events:none;
 }
-body::before{
-  background:
-    radial-gradient(1200px 800px at 20% 15%, rgba(122,162,255,.18), transparent 60%),
-    radial-gradient(900px 700px at 80% 35%, rgba(180,140,255,.14), transparent 60%),
-    linear-gradient(180deg,#030614,#02030a 70%,#010208);
-}
-body::after{
-  background-image:
-    radial-gradient(1px 1px at 12% 22%, rgba(255,255,255,.6), transparent),
-    radial-gradient(1px 1px at 38% 71%, rgba(255,255,255,.5), transparent),
-    radial-gradient(1px 1px at 64% 18%, rgba(255,255,255,.45), transparent),
-    radial-gradient(1px 1px at 81% 63%, rgba(255,255,255,.55), transparent),
-    radial-gradient(1px 1px at 55% 44%, rgba(255,255,255,.35), transparent);
-  opacity:.55;
-}
 
-/* --- LAYOUT --- */
-.wrap{max-width:1200px;margin:0 auto;padding:36px 20px 90px;position:relative}
+.wrap{
+  min-height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
 .card{
+  max-width:720px;
+  width:100%;
+  padding:36px 28px;
   border-radius:var(--radius);
-  border:1px solid var(--stroke);
   background:var(--panel);
+  border:1px solid var(--stroke);
+  text-align:center;
   backdrop-filter:blur(8px);
-  padding:28px;
-  margin-bottom:22px;
 }
-
-/* --- HEADER --- */
-.header{
-  display:flex;align-items:center;gap:22px;
-}
-.brand{
-  display:flex;align-items:center;gap:18px;
+.logo{
+  margin:0 auto 18px;
+  width:88px;height:88px;
 }
 h1{
-  margin:0;font-size:54px;letter-spacing:.4px;
-}
-.tagline{
-  margin-top:8px;color:var(--muted);font-size:18px;max-width:680px;
-}
-
-/* --- LOGO (SNOWFLAKE DIAMOND) --- */
-.logo{
-  width:86px;height:86px;flex:0 0 auto;
-}
-.logo svg{width:100%;height:100%}
-.logo line,
-.logo polygon{
-  stroke:var(--glow);
-  stroke-width:3;
-  fill:none;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-}
-.logo .core{
-  stroke-width:4;
-}
-.logo .tip{
-  fill:rgba(122,162,255,.25);
-}
-
-/* --- NAV --- */
-.nav{
-  display:flex;gap:14px;flex-wrap:wrap;margin-top:26px;
-}
-.btn{
-  padding:14px 20px;
-  border-radius:999px;
-  border:1px solid rgba(233,238,252,.2);
-  background:rgba(255,255,255,.06);
-  color:var(--fg);
-  text-decoration:none;
-  font-weight:800;
+  margin:6px 0 10px;
+  font-size:44px;
   letter-spacing:.4px;
 }
-.btn:hover{background:rgba(255,255,255,.12)}
-
-/* --- SECTIONS --- */
-.section-title{
-  font-weight:900;
-  letter-spacing:.8px;
-  text-transform:uppercase;
-  font-size:13px;
+p{
+  margin:0 auto 26px;
+  max-width:560px;
   color:var(--muted);
-  margin-bottom:10px;
+  line-height:1.55;
+  font-size:17px;
 }
-.copy{
-  color:var(--muted);
-  line-height:1.6;
-  max-width:760px;
+.bubbles{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  justify-content:center;
 }
-
-/* --- FOOTER --- */
-.footer{
-  text-align:center;
-  margin-top:40px;
+.bubble{
+  padding:14px 18px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);
+  font-weight:800;
+  text-decoration:none;
+}
+footer{
+  margin-top:26px;
+  font-size:12px;
   color:rgba(233,238,252,.45);
-  font-size:13px;
 }
 </style>
 </head>
 
 <body>
 <div class="wrap">
-
-  <!-- HERO -->
   <div class="card">
-    <div class="header">
-      <div class="logo">
-        <!-- Snowflake / Diamond Fractal -->
-        <svg viewBox="0 0 100 100" aria-hidden="true">
-          <!-- main axes -->
-          <line x1="50" y1="5"  x2="50" y2="95"/>
-          <line x1="5"  y1="50" x2="95" y2="50"/>
-          <line x1="15" y1="15" x2="85" y2="85"/>
-          <line x1="85" y1="15" x2="15" y2="85"/>
 
-          <!-- inner diamond -->
-          <polygon class="core" points="50,30 70,50 50,70 30,50"/>
+    <!-- Snowflake / Diamond logo -->
+    <svg class="logo" viewBox="0 0 100 100" fill="none" stroke="#9bb6ff" stroke-width="3" stroke-linecap="round">
+      <g transform="translate(50 50)">
+        <g>
+          <line x1="0" y1="-36" x2="0" y2="36"/>
+          <line x1="-36" y1="0" x2="36" y2="0"/>
+          <line x1="-26" y1="-26" x2="26" y2="26"/>
+          <line x1="-26" y1="26" x2="26" y2="-26"/>
+        </g>
+        <!-- diamonds at tips -->
+        <g stroke-width="2">
+          <rect x="-4" y="-46" width="8" height="8" transform="rotate(45)"/>
+          <rect x="-4" y="38" width="8" height="8" transform="rotate(45)"/>
+          <rect x="38" y="-4" width="8" height="8" transform="rotate(45)"/>
+          <rect x="-46" y="-4" width="8" height="8" transform="rotate(45)"/>
+        </g>
+        <!-- inner fractal -->
+        <rect x="-8" y="-8" width="16" height="16" transform="rotate(45)" stroke-width="2"/>
+      </g>
+    </svg>
 
-          <!-- tip diamonds -->
-          <polygon class="tip" points="50,0 56,6 50,12 44,6"/>
-          <polygon class="tip" points="100,50 94,56 88,50 94,44"/>
-          <polygon class="tip" points="50,100 44,94 50,88 56,94"/>
-          <polygon class="tip" points="0,50 6,44 12,50 6,56"/>
+    <h1>Geodiametrics</h1>
 
-          <!-- diagonal tips -->
-          <polygon class="tip" points="14,14 20,14 20,20 14,20"/>
-          <polygon class="tip" points="86,14 80,14 80,20 86,20"/>
-          <polygon class="tip" points="86,86 80,86 80,80 86,80"/>
-          <polygon class="tip" points="14,86 20,86 20,80 14,80"/>
-        </svg>
-      </div>
-      <div>
-        <h1>Geodiametrics</h1>
-        <div class="tagline">
-          A constraint-first execution platform.  
-          Control Room is the authority. Dashboards observe. Apps launch.
-        </div>
-      </div>
+    <p>
+      A constraint-first execution platform built on a quad-core cycle:
+      Selection → Resolution → Commitment → Continuation.
+    </p>
+
+    <div class="bubbles">
+      <a class="bubble" href="/control-room/">Control Room</a>
+      <a class="bubble" href="/apps/">Apps</a>
+      <a class="bubble" href="/reference/">Reference</a>
+      <a class="bubble" href="/problem/">Problem</a>
     </div>
 
-    <div class="nav">
-      <a class="btn" href="/control-room/">Enter Control Room</a>
-      <a class="btn" href="/apps/">Apps</a>
-      <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/problem/">Problem</a>
-    </div>
+    <footer>© 2026 Geodiametrics</footer>
   </div>
-
-  <!-- ABOUT -->
-  <div class="card">
-    <div class="section-title">What This Is</div>
-    <div class="copy">
-      Geodiametrics is built around a quad-core execution geometry:
-      Selection → Resolution → Commitment → Continuation.  
-      The system reports coherence, momentum, and instability without manual control.
-      Observation only. Authority remains structural.
-    </div>
-  </div>
-
-  <!-- ANCHORS -->
-  <div class="card">
-    <div class="section-title">Public Anchors</div>
-    <div class="nav">
-      <a class="btn" href="https://osf.io/mn6vu" target="_blank" rel="noopener">Open OSF</a>
-      <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">Open ORCID</a>
-    </div>
-  </div>
-
-  <div class="footer">© 2026 Geodiametrics</div>
-
 </div>
 </body>
 </html>

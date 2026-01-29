@@ -1,225 +1,217 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Geodiametrics</title><style>
-:root{--bg:#0b0f14;--panel:#111826;--panel2:#0f1623;--border:#223044;--text:#e7eef7;--muted:#93a4b8;--hi:#3a5273;--ok:#2bd576;--bad:#ff5c5c}
-*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:radial-gradient(1200px 800px at 50% -20%,#16223a 0%,var(--bg) 60%);color:var(--text);font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Arial}
-.wrapper{max-width:1100px;margin:0 auto;padding:18px 14px 52px}
-.header{text-align:center;margin:8px 0 14px}.header h1{margin:0;font-size:34px;letter-spacing:.4px}.header p{margin:10px 0 0;color:var(--muted)}
-.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--border);border-radius:22px;padding:16px;margin:12px 0}
-.pill{display:inline-block;padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:var(--panel2);font-weight:900;letter-spacing:.6px;text-transform:uppercase;font-size:12px}
-.btn{display:flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid var(--border);background:linear-gradient(180deg,#121a2a,#0d1422);color:var(--text);border-radius:999px;padding:12px 12px;font-weight:900;letter-spacing:.3px;cursor:pointer;user-select:none}
-.btn:hover{border-color:var(--hi);transform:translateY(-1px)}.btn:active{transform:translateY(0)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:12px}
-.gridWide{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px}
-.muted{color:var(--muted)}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}
-.hide{display:none!important}
-.shell{position:sticky;top:0;z-index:50;margin-bottom:12px}
-.shellRow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.shellLeft{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.crumb{color:var(--muted);font-weight:900;letter-spacing:.6px;text-transform:uppercase;font-size:12px}
-.shellBtns{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.mini{padding:10px 14px}
-.room{display:none}
-.room.active{display:block}
-.room h2{margin:10px 0 6px;font-size:22px;letter-spacing:.2px}
-.room p{margin:0;color:var(--muted);max-width:860px}
-.roomBody{margin-top:12px;padding:14px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#0f1623,#0b1220)}
-.homeOnly{display:block}body.room-active .homeOnly{display:none!important}
-.mono{font:13px/1.35 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
-input.mono,textarea.mono{outline:none}
-</style></head><body><div class="wrapper">
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geodiametrics</title>
 
-<div class="header homeOnly"><h1>Geodiametrics</h1><p>Constraint-first execution platform<br>Selection → Resolution → Commitment → Continuation</p></div>
+  <style>
+    :root{
+      --bg:#0b0e14;
+      --panel:#0f1420;
+      --fg:#e6ebff;
+      --muted:#9aa3c7;
+      --stroke:rgba(230,235,255,.12);
+      --accent:#7aa2ff;
+      --radius:14px;
+      --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --sans:system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
 
-<div class="card shell">
-  <div class="shellRow">
-    <div class="shellLeft">
-      <span class="pill" id="modePill">Navigate</span>
-      <span class="crumb" id="crumb">HOME</span>
-    </div>
-    <div class="shellBtns">
-      <button class="btn mini" id="navBtn" type="button">Rooms</button>
-      <button class="btn mini" id="backBtn" type="button">Back</button>
-      <button class="btn mini" id="homeBtn" type="button">Home</button>
-    </div>
-  </div>
-  <div class="grid hide" id="roomNav">
-    <a class="btn" href="#control">Control Room</a>
-    <a class="btn" href="#engine">Engine Room</a>
-    <a class="btn" href="#syntax">Syntax Room</a>
-    <a class="btn" href="#build">Build Room</a>
-    <a class="btn" href="#apps">Apps</a>
-    <a class="btn" href="#reference">Reference</a>
-    <a class="btn" href="#problem">Problem</a>
-    <a class="btn" href="#toc">Table of Contents</a>
-    <a class="btn" href="#mission">Mission Statement</a>
-    <a class="btn" href="#about">About</a>
-    <a class="btn" href="#rights">Rights & IP</a>
-  </div>
-</div>
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%}
 
-<div class="card homeOnly" id="homeRouter">
-  <span class="pill">Home</span>
-  <div class="grid" style="margin-top:12px">
-    <a class="btn" href="#control">Control Room</a>
-    <a class="btn" href="#engine">Engine Room</a>
-    <a class="btn" href="#syntax">Syntax Room</a>
-    <a class="btn" href="#build">Build Room</a>
-    <a class="btn" href="#apps">Apps</a>
-    <a class="btn" href="#reference">Reference</a>
-    <a class="btn" href="#problem">Problem</a>
-    <a class="btn" href="#toc">Table of Contents</a>
-    <a class="btn" href="#mission">Mission Statement</a>
-    <a class="btn" href="#about">About</a>
-    <a class="btn" href="#rights">Rights & IP</a>
-  </div>
-</div>
+    body{
+      background:radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),
+                 radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),
+                 var(--bg);
+      color:var(--fg);
+      font-family:var(--sans);
+      letter-spacing:.2px;
+    }
 
-<div class="card homeOnly" id="anchors">
-  <span class="pill">Public Anchors</span>
-  <div class="gridWide">
-    <a class="btn" href="https://osf.io/" target="_blank" rel="noopener">Open OSF</a>
-    <a class="btn" href="https://orcid.org/" target="_blank" rel="noopener">Open ORCID</a>
-  </div>
-  <p class="muted" style="margin:12px 0 0">External identifiers for validation and citation.</p>
-</div>
+    .wrap{
+      max-width:880px;
+      padding:48px 20px 72px;
+      margin:0 auto;
+    }
 
-<div class="card room" data-room="control"><span class="pill">Control Room</span><h2>Control Room</h2><p>Authoritative observer surface. Instrumentation and live gauges operate here.</p><div class="roomBody">
+    header{
+      border-bottom:1px solid var(--stroke);
+      padding-bottom:24px;
+      margin-bottom:32px;
+    }
 
-  <div class="pill" style="margin-bottom:10px">Live Analytics</div>
+    h1{
+      margin:0 0 8px;
+      font-size:28px;
+      font-weight:600;
+    }
 
-  <div style="display:grid;gap:10px;grid-template-columns:1fr">
-    <textarea id="osBox" class="mono" style="width:100%;min-height:110px;resize:vertical;border:1px solid var(--border);border-radius:16px;background:linear-gradient(180deg,#0f1623,#0b1220);color:var(--text);padding:12px" placeholder='{"timestamp":"YYYY-MM-DDTHH:MM:SSZ","views_60m":0,"downloads_60m":0}'></textarea>
+    .tagline{
+      font-family:var(--mono);
+      color:var(--muted);
+      font-size:13px;
+    }
 
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <button class="btn" id="osApply" type="button">Apply</button>
-      <button class="btn" id="osFormat" type="button">Format</button>
-      <button class="btn" id="osCopy" type="button">Copy</button>
-      <button class="btn" id="osClear" type="button">Clear</button>
-    </div>
+    section{
+      background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      padding:20px;
+      margin-bottom:20px;
+    }
 
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-      <input id="osUrl" class="mono" style="flex:1;min-width:220px;border:1px solid var(--border);border-radius:999px;background:linear-gradient(180deg,#0f1623,#0b1220);color:var(--text);padding:12px 14px" placeholder="osf.json OR https://.../osf.json" value="osf.json">
-      <button class="btn" id="osFetch" type="button">Fetch</button>
-      <button class="btn" id="osDemo" type="button">Load Demo</button>
-    </div>
+    section h2{
+      margin:0 0 10px;
+      font-size:14px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:1.2px;
+      color:var(--accent);
+      font-family:var(--mono);
+    }
 
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-      <span class="pill" id="osStatus">WAITING</span>
-      <span class="muted" id="osHint">Paste JSON or Fetch.</span>
-    </div>
+    p{
+      margin:0;
+      line-height:1.6;
+      color:var(--fg);
+    }
 
-    <div style="display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
-      <div style="padding:14px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#0f1623,#0b1220)">
-        <div class="muted" style="font-weight:900;letter-spacing:.6px;text-transform:uppercase;font-size:12px">Timestamp</div>
-        <div id="osTs" class="mono" style="margin-top:6px">—</div>
-      </div>
+    .muted{color:var(--muted)}
 
-      <div style="padding:14px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#0f1623,#0b1220)">
-        <div class="muted" style="font-weight:900;letter-spacing:.6px;text-transform:uppercase;font-size:12px">Views (60m)</div>
-        <div id="osViews" style="margin-top:6px;font-size:28px;font-weight:900">0</div>
-        <div style="margin-top:10px;border:1px solid var(--border);border-radius:999px;overflow:hidden;height:12px;background:#0b1220">
-          <div id="osViewsBar" style="height:100%;width:0%"></div>
-        </div>
-      </div>
+    ul{
+      list-style:none;
+      padding:0;
+      margin:0;
+    }
 
-      <div style="padding:14px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#0f1623,#0b1220)">
-        <div class="muted" style="font-weight:900;letter-spacing:.6px;text-transform:uppercase;font-size:12px">Downloads (60m)</div>
-        <div id="osDl" style="margin-top:6px;font-size:28px;font-weight:900">0</div>
-        <div style="margin-top:10px;border:1px solid var(--border);border-radius:999px;overflow:hidden;height:12px;background:#0b1220">
-          <div id="osDlBar" style="height:100%;width:0%"></div>
-        </div>
-      </div>
-    </div>
+    li{
+      padding:10px 0;
+      border-bottom:1px solid var(--stroke);
+    }
 
-    <div style="padding:14px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#0f1623,#0b1220)">
-      <div class="muted" style="font-weight:900;letter-spacing:.6px;text-transform:uppercase;font-size:12px">Recent Updates</div>
-      <div id="osHistory" class="muted" style="margin-top:8px">—</div>
-    </div>
+    li:last-child{border-bottom:none}
 
-    <div class="pill" style="margin:4px 0 0">Engine Rooms</div>
-    <div class="grid">
-      <a class="btn" href="#engine">Engine Room</a>
-      <a class="btn" href="#syntax">Syntax Room</a>
-      <a class="btn" href="#build">Build Room</a>
-    </div>
+    .surface{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      font-family:var(--mono);
+      font-size:13px;
+    }
 
-    <p class="muted" style="margin:2px 0 0">Operational path: create <span class="mono">osf.json</span> in repo root → update it → tap Fetch.</p>
-  </div>
+    footer{
+      margin-top:48px;
+      padding-top:20px;
+      border-top:1px solid var(--stroke);
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+  </style>
+</head>
 
-</div></div>
+<body>
+  <main class="wrap">
 
-<div class="card room" data-room="engine"><span class="pill">Engine Room</span><h2>Engine Room</h2><p>Execution engine surfaces live here.</p><div class="roomBody"><div class="muted">PASTE ENGINE ROOM UI HERE.</div></div></div>
-<div class="card room" data-room="syntax"><span class="pill">Syntax Room</span><h2>Syntax Room</h2><p>Syntax-only surfaces live here.</p><div class="roomBody"><div class="muted">PASTE SYNTAX ROOM UI HERE.</div></div></div>
-<div class="card room" data-room="build"><span class="pill">Build Room</span><h2>Build Room</h2><p>Build and deployment surfaces live here.</p><div class="roomBody"><div class="muted">PASTE BUILD ROOM UI HERE.</div></div></div>
-<div class="card room" data-room="apps"><span class="pill">Apps</span><h2>Apps</h2><p>Execution and viewing surfaces.</p><div class="roomBody"><div class="muted">PUT APPS LIST / LINKS HERE.</div></div></div>
-<div class="card room" data-room="reference"><span class="pill">Reference</span><h2>Reference</h2><p>Definitions and formal grounding.</p><div class="roomBody"><div class="muted">PUT REFERENCE CONTENT HERE.</div></div></div>
-<div class="card room" data-room="problem"><span class="pill">Problem</span><h2>Problem</h2><p>The instability this system addresses.</p><div class="roomBody"><div class="muted">PUT PROBLEM STATEMENT HERE.</div></div></div>
-<div class="card room" data-room="toc"><span class="pill">Table of Contents</span><h2>Table of Contents</h2><p>System structure and index.</p><div class="roomBody"><div class="muted">PUT TOC CONTENT HERE.</div></div></div>
-<div class="card room" data-room="mission"><span class="pill">Mission Statement</span><h2>Mission Statement</h2><p>Purpose, scope, and execution posture.</p><div class="roomBody"><div class="muted">PUT MISSION STATEMENT HERE.</div></div></div>
-<div class="card room" data-room="about"><span class="pill">About</span><h2>About</h2><p>What this platform is and is not.</p><div class="roomBody"><div class="muted">PUT ABOUT COPY HERE.</div></div></div>
-<div class="card room" data-room="rights"><span class="pill">Rights & IP</span><h2>Rights & IP</h2><p>Usage, attribution, and licensing.</p><div class="roomBody"><div class="muted">PUT RIGHTS / IP TERMS HERE.</div></div></div>
+    <header>
+      <h1>Geodiametrics</h1>
+      <div class="tagline">A structural execution instrument.</div>
+    </header>
 
-<div class="footer">© 2026 Geodiametrics</div>
-</div>
+    <section>
+      <h2>Status</h2>
+      <p>
+        <strong>Operational Surface:</strong> ACTIVE<br />
+        <strong>Mutation:</strong> RESTRICTED<br />
+        <strong>Authority:</strong> FIXED
+      </p>
+      <p class="muted" style="margin-top:10px">
+        This surface reflects live structure only. Interpretation is external.
+      </p>
+    </section>
 
-<script>
-(()=>{const rooms=[...document.querySelectorAll(".room")],crumb=document.getElementById("crumb"),modePill=document.getElementById("modePill"),roomNav=document.getElementById("roomNav"),navBtn=document.getElementById("navBtn"),backBtn=document.getElementById("backBtn"),homeBtn=document.getElementById("homeBtn");
-const k=()=>location.hash.replace("#","").trim().toLowerCase();
-const setActive=(id)=>{rooms.forEach(r=>r.classList.toggle("active",r.dataset.room===id));};
-const showHome=()=>{document.body.classList.remove("room-active");setActive("");crumb.textContent="HOME";modePill.textContent="Navigate";roomNav.classList.add("hide");history.replaceState(null,"","#");window.scrollTo({top:0,behavior:"instant"});};
-const showRoom=(id)=>{const target=rooms.find(r=>r.dataset.room===id);if(!target){showHome();return;}
-document.body.classList.add("room-active");setActive(id);crumb.textContent=id.toUpperCase();modePill.textContent="Room";roomNav.classList.add("hide");requestAnimationFrame(()=>target.scrollIntoView({block:"start",behavior:"instant"}));};
-const route=()=>{const id=k();if(!id){showHome();return;}showRoom(id);};
-window.addEventListener("hashchange",route);
-navBtn.onclick=()=>roomNav.classList.toggle("hide");
-backBtn.onclick=()=>history.length>1?history.back():showHome();
-homeBtn.onclick=showHome;
-route();
-})();
-</script>
+    <section>
+      <h2>Access</h2>
+      <p>
+        The system is divided into distinct surfaces. Each surface enforces its own constraints.
+      </p>
+      <p class="muted" style="margin-top:10px">
+        Not all surfaces permit action. Not all surfaces permit interpretation. Not all surfaces are visible.
+      </p>
+    </section>
 
-<script>
-(()=>{const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
-const toInt=(v)=>{if(typeof v==="number"&&Number.isFinite(v))return Math.trunc(v);if(typeof v==="string"&&v.trim()!==""&&/^-?\d+(\.\d+)?$/.test(v.trim()))return Math.trunc(Number(v.trim()));return NaN;};
-const isIsoZ=(s)=>typeof s==="string"&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(s);
-const getVar=(n)=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const varOk=()=>getVar("--ok")||"#2bd576";const varBad=()=>getVar("--bad")||"#ff5c5c";
-const E=()=>({box:document.getElementById("osBox"),apply:document.getElementById("osApply"),fmt:document.getElementById("osFormat"),copy:document.getElementById("osCopy"),clear:document.getElementById("osClear"),fetch:document.getElementById("osFetch"),demo:document.getElementById("osDemo"),url:document.getElementById("osUrl"),status:document.getElementById("osStatus"),hint:document.getElementById("osHint"),ts:document.getElementById("osTs"),views:document.getElementById("osViews"),dl:document.getElementById("osDl"),vbar:document.getElementById("osViewsBar"),dbar:document.getElementById("osDlBar"),hist:document.getElementById("osHistory")});
-function setStatus(kind,text,hint){const e=E();if(!e.status)return;e.status.textContent=text;e.hint.textContent=hint||"";e.status.style.borderColor=kind==="ok"?varOk():kind==="bad"?varBad():getVar("--border");}
-function normalize(obj){const ts=obj?.timestamp;const v=toInt(obj?.views_60m);const d=toInt(obj?.downloads_60m);const errs=[];
-if(!isIsoZ(ts))errs.push('timestamp must be ISO with "Z"');if(!Number.isFinite(v))errs.push("views_60m must be a number");if(!Number.isFinite(d))errs.push("downloads_60m must be a number");
-if(Number.isFinite(v)&&v<0)errs.push("views_60m cannot be negative");if(Number.isFinite(d)&&d<0)errs.push("downloads_60m cannot be negative");
-return{norm:{timestamp:isIsoZ(ts)?ts:String(ts??""),views_60m:Number.isFinite(v)?v:0,downloads_60m:Number.isFinite(d)?d:0},errs};}
-function render(norm){const e=E();if(!e.ts)return;e.ts.textContent=norm.timestamp||"—";e.views.textContent=String(norm.views_60m);e.dl.textContent=String(norm.downloads_60m);
-const hist=JSON.parse(localStorage.getItem("osf_hist")||"[]");
-const maxV=Math.max(1,...hist.map(x=>x.views_60m||0),norm.views_60m||0);
-const maxD=Math.max(1,...hist.map(x=>x.downloads_60m||0),norm.downloads_60m||0);
-const vp=clamp((norm.views_60m/maxV)*100,0,100),dp=clamp((norm.downloads_60m/maxD)*100,0,100);
-e.vbar.style.width=vp.toFixed(1)+"%";e.dbar.style.width=dp.toFixed(1)+"%";
-e.vbar.style.background="linear-gradient(90deg,"+varOk()+","+getVar("--hi")+")";e.dbar.style.background="linear-gradient(90deg,"+getVar("--hi")+","+varOk()+")";
-const last=[norm,...hist].slice(0,8);
-e.hist.innerHTML=last.map(x=>`<div style="display:flex;gap:10px;justify-content:space-between;align-items:center;padding:6px 0;border-top:1px solid ${getVar("--border")}">
-<span class="mono">${(x.timestamp||"").replace("T"," ").replace("Z","")}</span><span class="mono">v:${x.views_60m} d:${x.downloads_60m}</span></div>`).join("")||"—";}
-function store(norm){const hist=JSON.parse(localStorage.getItem("osf_hist")||"[]");hist.unshift(norm);localStorage.setItem("osf_hist",JSON.stringify(hist.slice(0,50)));localStorage.setItem("osf_last",JSON.stringify(norm));}
-function applyText(raw,format){const e=E();if(!e.box)return;const t=(raw??e.box.value??"").trim();if(!t){setStatus("warn","WAITING","Paste JSON or Fetch.");return;}
-let obj;try{obj=JSON.parse(t);}catch(err){setStatus("bad","INVALID JSON",String(err.message||err));return;}
-const {norm,errs}=normalize(obj);render(norm);if(errs.length){setStatus("bad","VALIDATION FAIL",errs.join(" · "));return;}
-store(norm);if(format)e.box.value=JSON.stringify(norm,null,2);setStatus("ok","OK","Applied.");}
-async function fetchNow(){const e=E();if(!e.url)return;const url=(e.url.value||"").trim()||"osf.json";setStatus("warn","FETCHING",url);
-try{const bust=(url.includes("?")?"&":"?")+"t="+Date.now();const res=await fetch(url+bust,{cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);
-const obj=await res.json();const {norm,errs}=normalize(obj);render(norm);if(errs.length){setStatus("bad","VALIDATION FAIL",errs.join(" · "));return;}
-store(norm);e.box.value=JSON.stringify(norm,null,2);setStatus("ok","LIVE","Fetched + applied.");}
-catch(err){setStatus("bad","FETCH FAIL",String(err.message||err));}}
-async function copyNorm(){const e=E();const t=(e.box?.value||"").trim();if(!t){setStatus("warn","NOT COPIED","");return;}
-try{const obj=JSON.parse(t);const {norm,errs}=normalize(obj);if(errs.length){setStatus("warn","NOT COPIED","Fix validation.");return;}
-await navigator.clipboard.writeText(JSON.stringify(norm));setStatus("ok","COPIED","Normalized payload copied.");}
-catch{setStatus("warn","NOT COPIED","Fix JSON.");}}
-function loadDemo(){const now=new Date().toISOString().replace(/\.\d{3}Z$/,"Z");const demo={timestamp:now,views_60m:12,downloads_60m:3};const e=E();e.box.value=JSON.stringify(demo,null,2);applyText(e.box.value,false);}
-function boot(){const e=E();if(!e.box)return;const last=localStorage.getItem("osf_last");
-if(last){try{const norm=JSON.parse(last);e.box.value=JSON.stringify(norm,null,2);render(norm);setStatus("ok","READY","Loaded last.");}catch{setStatus("warn","WAITING","Paste JSON or Fetch.");}}
-e.apply.onclick=()=>applyText(null,false);e.fmt.onclick=()=>applyText(null,true);e.copy.onclick=copyNorm;e.clear.onclick=()=>{e.box.value="";setStatus("warn","WAITING","Paste JSON or Fetch.");};
-e.fetch.onclick=fetchNow;e.demo.onclick=loadDemo;let timer=null;e.box.addEventListener("input",()=>{clearTimeout(timer);timer=setTimeout(()=>applyText(null,false),220);});}
-document.addEventListener("DOMContentLoaded",boot);
-})();
-</script>
+    <section>
+      <h2>Surfaces</h2>
+      <ul>
+        <li>
+          <div class="surface">
+            <strong>Control</strong>
+            <span class="muted">Observer-only surface · Read access · No execution</span>
+          </div>
+        </li>
+        <li>
+          <div class="surface">
+            <strong>Engine</strong>
+            <span class="muted">Execution surface · Constrained inputs only · No definition</span>
+          </div>
+        </li>
+        <li>
+          <div class="surface">
+            <strong>Syntax</strong>
+            <span class="muted">Formal definitions · Immutable · No execution</span>
+          </div>
+        </li>
+        <li>
+          <div class="surface">
+            <strong>Build</strong>
+            <span class="muted">Construction surface · Restricted access · May alter system state</span>
+          </div>
+        </li>
+        <li>
+          <div class="surface">
+            <strong>Apps</strong>
+            <span class="muted">Instantiated outputs · No authority</span>
+          </div>
+        </li>
+        <li>
+          <div class="surface">
+            <strong>Reference</strong>
+            <span class="muted">Grounding material · Non-executing</span>
+          </div>
+        </li>
+      </ul>
+    </section>
 
-</body></html>
+    <section>
+      <h2>Constraints</h2>
+      <ul>
+        <li class="surface">This system does not guide usage.</li>
+        <li class="surface">This system does not validate interpretation.</li>
+        <li class="surface">This system does not accept feedback through this surface.</li>
+      </ul>
+      <p class="muted" style="margin-top:10px">
+        Traversal implies responsibility.
+      </p>
+    </section>
+
+    <section>
+      <h2>Legal</h2>
+      <p>
+        All rights reserved. Unauthorized use, replication, or misrepresentation is prohibited.
+      </p>
+    </section>
+
+    <footer>
+      <div>© 2026 Geodiametrics</div>
+      <div>Index · Canonical · v1.0</div>
+    </footer>
+
+  </main>
+</body>
+</html>

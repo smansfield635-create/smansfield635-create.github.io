@@ -10,7 +10,6 @@
   --fg:#e9eefc;--muted:rgba(233,238,252,.66);
   --stroke:rgba(233,238,252,.14);
   --panel:rgba(12,16,34,.62);
-  --panel2:rgba(12,16,34,.42);
   --radius:22px;--shadow:0 18px 55px rgba(0,0,0,.55);
   --green:#4ade80;--yellow:#facc15;--red:#f87171;--blue:#60a5fa;
 }
@@ -51,10 +50,7 @@ body:before{
   background:linear-gradient(180deg, rgba(7,11,24,.86), rgba(7,11,24,.55));
   border-bottom:1px solid rgba(233,238,252,.10);
 }
-.bar{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;padding:14px 14px;
-}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 14px}
 .brand{font-weight:950;letter-spacing:.4px}
 .nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
 .bubble{
@@ -76,7 +72,7 @@ body:before{
   padding:18px;
   margin:14px 0;
 }
-h1{margin:0 0 10px;font-size:40px}
+h1{margin:0 0 10px;font-size:42px}
 h2{margin:0 0 10px;font-size:22px}
 p{margin:0 0 10px;color:var(--muted);line-height:1.55}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -88,10 +84,10 @@ p{margin:0 0 10px;color:var(--muted);line-height:1.55}
   font-weight:900;
   cursor:pointer;
 }
-.btn:disabled{opacity:.45;cursor:not-allowed}
 .btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
 .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-.small{font-size:13px;color:var(--muted)}
+.small{font-size:13px;color:var(--muted);margin-top:8px}
 .hr{height:1px;background:rgba(233,238,252,.10);margin:14px 0}
 .pill{
   display:inline-flex;align-items:center;gap:8px;
@@ -110,7 +106,7 @@ p{margin:0 0 10px;color:var(--muted);line-height:1.55}
   font-weight:950;cursor:pointer;
 }
 .tab small{display:block;color:var(--muted);font-weight:700;margin-top:2px}
-.tab.active{background:rgba(255,255,255,.12);border-color:rgba(233,238,252,.26)}
+.tab.active{background:rgba(255,255,255,.12)}
 .panel{
   margin-top:12px;border-radius:18px;border:1px solid rgba(233,238,252,.14);
   background:rgba(0,0,0,.22);padding:14px;
@@ -122,17 +118,22 @@ p{margin:0 0 10px;color:var(--muted);line-height:1.55}
 .table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
 th,td{padding:8px;border-bottom:1px solid rgba(233,238,252,.12);text-align:left;color:var(--muted)}
 th{color:rgba(233,238,252,.92);font-weight:950}
-.gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}
+.gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
 .gauge{border-radius:18px;border:1px solid rgba(233,238,252,.14);background:rgba(0,0,0,.22);padding:14px}
 .gaugeHead{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .gaugeTitle{display:flex;align-items:center;gap:10px;font-weight:950}
 .light{width:12px;height:12px;border-radius:50%;display:inline-block;background:var(--red)}
-.bar{display:flex;gap:4px;margin-top:10px}
+.bar2{display:flex;gap:4px;margin-top:10px}
 .block{flex:1;height:10px;border-radius:6px;background:rgba(255,255,255,.12)}
 .block.on.green{background:var(--green)}
 .block.on.yellow{background:var(--yellow)}
 .block.on.red{background:var(--red)}
 .block.on.blue{background:var(--blue)}
+.pulse{animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{
+  0%,100%{filter:drop-shadow(0 0 0 rgba(74,222,128,0));opacity:1}
+  50%{filter:drop-shadow(0 0 10px rgba(74,222,128,.35));opacity:.92}
+}
 .footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:18px}
 </style>
 </head>
@@ -155,7 +156,7 @@ th{color:rgba(233,238,252,.92);font-weight:950}
   <div class="card">
     <div class="pill">Authority · Control Room</div>
     <h1 style="margin-top:10px;">Control Room</h1>
-    <p>Dashboard + Supervisor + Diamond Fusion are the same surface. One page. One authority.</p>
+    <p>Dashboard + Supervisor + Diamond Fusion in one place. Device-local only. Engines are keys: <span class="mono">ENGINE::</span>.</p>
     <div class="row" style="margin-top:12px;">
       <button class="btn" onclick="CR.registerAll()">Register All</button>
       <button class="btn" onclick="CR.refreshAll()">Refresh</button>
@@ -167,11 +168,10 @@ th{color:rgba(233,238,252,.92);font-weight:950}
 
   <div class="grid">
 
-    <!-- LEFT: Diamond Fusion Console -->
     <div class="card">
       <div class="pill">Core · Diamond Fusion</div>
       <h2 style="margin-top:10px;">Quad-Core Console</h2>
-      <p>Selection → Resolution → Commitment → Continuation. Four namespaces. Device-local state.</p>
+      <p>Selection → Resolution → Commitment → Continuation.</p>
 
       <div class="tabs" id="tabs"></div>
       <div class="panel" id="corePanel"></div>
@@ -182,32 +182,22 @@ th{color:rgba(233,238,252,.92);font-weight:950}
       <div class="small">Rule: No cross-core mutation unless explicit Mirror is used in Supervisor.</div>
     </div>
 
-    <!-- RIGHT: Gauges + Supervisor -->
     <div>
-
       <div class="card">
         <div class="pill">Dashboard · Gauges</div>
         <h2 style="margin-top:10px;">Engine Gauges</h2>
-        <div class="row">
-          <button class="btn" onclick="CR.refreshAll()">Refresh</button>
-        </div>
         <div class="gauges" id="gauges"></div>
 
         <table class="table">
-          <thead>
-            <tr><th>Engine</th><th>Status</th><th>Cycle</th><th>Updated</th></tr>
-          </thead>
-          <tbody id="rows">
-            <tr><td colspan="4" class="mono">No engines discovered.</td></tr>
-          </tbody>
+          <thead><tr><th>Engine</th><th>Status</th><th>Cycle</th><th>Updated</th></tr></thead>
+          <tbody id="rows"><tr><td colspan="4" class="mono">No engines discovered.</td></tr></tbody>
+          <tfoot><tr><td colspan="4" class="mono" id="scan">Last scan: —</td></tr></tfoot>
         </table>
-        <div class="small mono" id="scan">Last scan: —</div>
       </div>
 
       <div class="card">
         <div class="pill">Supervisor · Governor</div>
         <h2 style="margin-top:10px;">Cross-Core Walls</h2>
-        <p>ISOLATED default. STRUCTURAL is rule-label only. MIRROR is one-shot copy.</p>
 
         <div class="row">
           <button class="btn" onclick="CR.setMode('ISOLATED')">Set ISOLATED</button>
@@ -241,8 +231,8 @@ th{color:rgba(233,238,252,.92);font-weight:950}
           <div class="small">State sync is opt-in. If you don’t click it, nothing couples.</div>
         </div>
       </div>
-
     </div>
+
   </div>
 
   <div class="footer">© 2026 Geodiametrics · Control Room</div>
@@ -250,43 +240,36 @@ th{color:rgba(233,238,252,.92);font-weight:950}
 
 <script>
 const CR = (() => {
-  // DISCOVERY PREFIX (Matrix/Gauges scan THIS)
-  const PREFIX = "ENGINE::";
-  const LOCKKEY = "ENGINE::CONTROL_ROOM_LOCK::v1";
-  const SUPKEY  = "ENGINE::SUPERVISOR::v1";
-
-  const CORES = [
-    {name:"Core 1", stage:"Selection",   ns:"diamond_fusion_core_1"},
-    {name:"Core 2", stage:"Resolution",  ns:"diamond_fusion_core_2"},
-    {name:"Core 3", stage:"Commitment",  ns:"diamond_fusion_core_3"},
-    {name:"Core 4", stage:"Continuation",ns:"diamond_fusion_core_4"}
+  const PREFIX="ENGINE::";
+  const LOCKKEY="ENGINE::CONTROL_ROOM_LOCK::v1";
+  const SUPKEY="ENGINE::SUPERVISOR::v1";
+  const CORES=[
+    {name:"Core 1",stage:"Selection",ns:"diamond_fusion_core_1"},
+    {name:"Core 2",stage:"Resolution",ns:"diamond_fusion_core_2"},
+    {name:"Core 3",stage:"Commitment",ns:"diamond_fusion_core_3"},
+    {name:"Core 4",stage:"Continuation",ns:"diamond_fusion_core_4"}
   ];
+  let active=CORES[0].ns;
+  const now=()=>new Date().toISOString();
+  const get=(k,fb=null)=>{try{return JSON.parse(localStorage.getItem(k))??fb}catch{return fb}};
+  const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+  const del=(k)=>localStorage.removeItem(k);
+  const key=(ns)=>PREFIX+ns;
 
-  let active = CORES[0].ns;
-
-  const now = () => new Date().toISOString();
-  const get = (k, fb=null) => { try { return JSON.parse(localStorage.getItem(k)) ?? fb; } catch { return fb; } };
-  const set = (k,v) => localStorage.setItem(k, JSON.stringify(v));
-  const del = (k) => localStorage.removeItem(k);
-  const key = (ns) => PREFIX + ns;
-
-  function locked(){ return get(LOCKKEY,{locked:true}).locked !== false; }
-  function setLocked(v){ set(LOCKKEY,{locked:!!v, updated_at: now()}); paintLock(); }
-
+  function locked(){return get(LOCKKEY,{locked:true}).locked!==false}
+  function setLocked(v){set(LOCKKEY,{locked:!!v,updated_at:now()});paintLock()}
   function paintLock(){
-    const isLocked = locked();
-    const lb = document.getElementById("lockBtn");
-    lb.textContent = isLocked ? "LOCKED" : "UNLOCKED";
-    lb.style.borderColor = isLocked ? "rgba(233,238,252,.18)" : "rgba(74,222,128,.55)";
-    document.getElementById("btnResetActive").disabled = isLocked;
-    document.getElementById("btnMirror").disabled = isLocked;
-    document.getElementById("btnResetTarget").disabled = isLocked;
+    const L=locked();
+    const lb=document.getElementById("lockBtn");
+    lb.textContent=L?"LOCKED":"UNLOCKED";
+    document.getElementById("btnResetActive").disabled=L;
+    document.getElementById("btnMirror").disabled=L;
+    document.getElementById("btnResetTarget").disabled=L;
   }
-
   function toggleLock(){
-    if(!locked()){ setLocked(true); return; }
-    const token = prompt('Type UNLOCK to enable destructive actions (Reset/Mirror).');
-    if((token||"").trim().toUpperCase()==="UNLOCK"){ setLocked(false); }
+    if(!locked()){setLocked(true);return}
+    const token=prompt('Type UNLOCK to enable destructive actions.');
+    if((token||"").trim().toUpperCase()==="UNLOCK"){setLocked(false)}
   }
 
   function ensure(ns){
@@ -294,128 +277,81 @@ const CR = (() => {
     set(key(ns),{
       namespace:ns,
       state:{
-        selection:null,
-        resolution:null,
-        commitment:null,
-        continuation:{cycle:"RUNNING", last_set: now()}
+        selection:null,resolution:null,commitment:null,
+        continuation:{cycle:"RUNNING",last_set:now()}
       },
-      created_at: now(),
-      updated_at: now()
+      created_at:now(),
+      updated_at:now()
     });
   }
+  function registerAll(){CORES.forEach(c=>ensure(c.ns));refreshAll()}
+  function read(ns){ensure(ns);return get(key(ns))}
+  function write(ns,obj){obj.updated_at=now();set(key(ns),obj)}
 
-  function registerAll(){
-    CORES.forEach(c=>ensure(c.ns));
-    refreshAll();
-  }
+  function setActive(ns){active=ns;renderTabs();renderPanel();refreshDashboard()}
 
-  function read(ns){ ensure(ns); return get(key(ns)); }
-  function write(ns,obj){ obj.updated_at=now(); set(key(ns),obj); }
+  function setSelection(v){const s=read(active);s.state.selection=v;write(active,s);refreshAll()}
+  function setResolution(){const s=read(active);s.state.resolution=s.state.selection?"RESOLVED":"BLOCKED";write(active,s);refreshAll()}
+  function setCommitment(){const s=read(active);s.state.commitment=s.state.resolution==="RESOLVED"?"COMMITTED":"DENIED";write(active,s);refreshAll()}
+  function setCycle(c){const s=read(active);s.state.continuation={cycle:c,last_set:now()};write(active,s);refreshAll()}
 
-  function setActive(ns){ active=ns; renderTabs(); renderPanel(); refreshDashboard(); }
-
-  function setSelection(v){ const s=read(active); s.state.selection=v; write(active,s); refreshAll(); }
-  function setResolution(){
-    const s=read(active);
-    s.state.resolution = (s.state.selection ? "RESOLVED" : "BLOCKED");
-    write(active,s);
-    refreshAll();
-  }
-  function setCommitment(){
-    const s=read(active);
-    s.state.commitment = (s.state.resolution==="RESOLVED" ? "COMMITTED" : "DENIED");
-    write(active,s);
-    refreshAll();
-  }
-  function setCycle(c){
-    const s=read(active);
-    s.state.continuation = {cycle:c, last_set: now()};
-    write(active,s);
-    refreshAll();
-  }
-
-  function resetActive(){
-    if(locked()) return;
-    del(key(active));
-    ensure(active);
-    refreshAll();
-  }
+  function resetActive(){if(locked())return;del(key(active));ensure(active);refreshAll()}
 
   function discover(){
     const out=[];
     for(let i=0;i<localStorage.length;i++){
       const k=localStorage.key(i);
-      if(k && k.startsWith(PREFIX)){
+      if(k&&k.startsWith(PREFIX)){
         const v=get(k,null);
-        if(v && v.namespace) out.push(v);
+        if(v&&v.namespace) out.push(v);
       }
     }
-    return out.sort((a,b)=>a.namespace.localeCompare(b.namespace));
+    return out.sort((a,b)=>a.namespace.localeCompare(b.namespace))
   }
 
-  function cycleColor(c){
-    return c==="RUNNING"?"green":c==="HURDLE"?"yellow":c==="WALL"?"red":c==="COMPLETE"?"blue":"";
-  }
+  function cycleColor(c){return c==="RUNNING"?"green":c==="HURDLE"?"yellow":c==="WALL"?"red":c==="COMPLETE"?"blue":""}
 
   function refreshDashboard(){
     const engines=discover();
     const gauges=document.getElementById("gauges");
     const rows=document.getElementById("rows");
     const scan=document.getElementById("scan");
-    gauges.innerHTML="";
-    rows.innerHTML="";
-
+    gauges.innerHTML="";rows.innerHTML="";
     if(!engines.length){
       rows.innerHTML="<tr><td colspan='4' class='mono'>No engines discovered.</td></tr>";
-      scan.textContent="Last scan: "+now();
-      return;
+      scan.textContent="Last scan: "+now();return;
     }
-
     engines.forEach(e=>{
       const st=e.state||{};
       const cyc=st.continuation?.cycle||"IDLE";
       const updated=e.updated_at||"—";
-
-      const hasSel = st.selection !== null && st.selection !== undefined;
-      const hasRes = st.resolution !== null && st.resolution !== undefined;
-      const hasCom = st.commitment !== null && st.commitment !== undefined;
-      const hasCon = !!st.continuation;
-
-      const blocks = [hasSel,hasRes,hasCom,hasCon].filter(Boolean).length;
-      const status = blocks ? "ACTIVE" : "IDLE";
-
+      const hasSel=st.selection!=null, hasRes=st.resolution!=null, hasCom=st.commitment!=null, hasCon=!!st.continuation;
+      const blocks=[hasSel,hasRes,hasCom,hasCon].filter(Boolean).length;
+      const status=blocks?"ACTIVE":"IDLE";
+      const pulse = cyc==="RUNNING" ? "pulse" : "";
       const g=document.createElement("div");
-      g.className="gauge";
+      g.className="gauge "+pulse;
       g.innerHTML=`
         <div class="gaugeHead">
-          <div class="gaugeTitle">
-            <span class="light" style="background:${blocks? "var(--green)":"var(--red)"}"></span>
-            <span class="mono">${e.namespace.toUpperCase()}</span>
-          </div>
+          <div class="gaugeTitle"><span class="light" style="background:${blocks? "var(--green)":"var(--red)"}"></span><span class="mono">${e.namespace.toUpperCase()}</span></div>
           <span class="mono small">${status}</span>
         </div>
-        <div class="bar">
+        <div class="bar2">
           ${[1,2,3,4].map(i=>`<div class="block ${i<=blocks ? ("on "+cycleColor(cyc)) : ""}"></div>`).join("")}
         </div>
-        <div class="small mono" style="margin-top:8px;">cycle: ${cyc}</div>
+        <div class="small mono" style="margin-top:8px">cycle: ${cyc}</div>
       `;
       gauges.appendChild(g);
 
       const tr=document.createElement("tr");
-      tr.innerHTML=`
-        <td class="mono">${e.namespace}</td>
-        <td class="mono">${status}</td>
-        <td class="mono">${cyc}</td>
-        <td class="mono">${updated}</td>
-      `;
+      tr.innerHTML=`<td class="mono">${e.namespace}</td><td class="mono">${status}</td><td class="mono">${cyc}</td><td class="mono">${updated}</td>`;
       rows.appendChild(tr);
     });
-
     scan.textContent="Last scan: "+now();
   }
 
   function exportAll(){
-    const out = { exported_at: now(), lock: get(LOCKKEY,{}), supervisor: get(SUPKEY,{}), engines: discover() };
+    const out={exported_at:now(), lock:get(LOCKKEY,{}), supervisor:get(SUPKEY,{}), engines:discover()};
     const blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json"});
     const a=document.createElement("a");
     a.href=URL.createObjectURL(blob);
@@ -424,40 +360,29 @@ const CR = (() => {
     URL.revokeObjectURL(a.href);
   }
 
-  // Supervisor
-  function sup(){ return get(SUPKEY,{mode:"ISOLATED", rule:"NONE", updated_at:null}); }
-  function supWrite(s){ s.updated_at=now(); set(SUPKEY,s); paintSup(); }
-  function paintSup(){
-    const s=sup();
-    document.getElementById("supMode").textContent=s.mode;
-    document.getElementById("supRule").textContent=s.rule;
-  }
-  function setMode(m){ const s=sup(); s.mode=m; supWrite(s); }
-  function applyRule(){
-    const v=(document.getElementById("ruleLabel").value||"").trim();
-    const s=sup(); s.rule=v||"NONE"; supWrite(s);
-  }
+  function sup(){return get(SUPKEY,{mode:"ISOLATED",rule:"NONE",updated_at:null})}
+  function supWrite(s){s.updated_at=now();set(SUPKEY,s);paintSup()}
+  function paintSup(){const s=sup();document.getElementById("supMode").textContent=s.mode;document.getElementById("supRule").textContent=s.rule}
+  function setMode(m){const s=sup();s.mode=m;supWrite(s)}
+  function applyRule(){const v=(document.getElementById("ruleLabel").value||"").trim();const s=sup();s.rule=v||"NONE";supWrite(s)}
   function mirrorState(){
-    if(locked()) return;
+    if(locked())return;
     const src=(document.getElementById("srcNS").value||"").trim();
     const dst=(document.getElementById("dstNS").value||"").trim();
-    if(!src||!dst) return;
-    ensure(src); ensure(dst);
-    const s=read(src); const d=read(dst);
-    d.state = JSON.parse(JSON.stringify(s.state));
+    if(!src||!dst)return;
+    ensure(src);ensure(dst);
+    const s=read(src);const d=read(dst);
+    d.state=JSON.parse(JSON.stringify(s.state));
     write(dst,d);
     refreshAll();
   }
   function resetNamespace(){
-    if(locked()) return;
+    if(locked())return;
     const dst=(document.getElementById("dstNS").value||"").trim();
-    if(!dst) return;
-    del(key(dst));
-    ensure(dst);
-    refreshAll();
+    if(!dst)return;
+    del(key(dst));ensure(dst);refreshAll();
   }
 
-  // Render
   function renderTabs(){
     const tabs=document.getElementById("tabs");
     tabs.innerHTML="";
@@ -471,40 +396,32 @@ const CR = (() => {
   }
 
   function renderPanel(){
-    const s=read(active).state;
+    const st=read(active).state;
     const meta=CORES.find(c=>c.ns===active);
-
-    const cyc=s.continuation?.cycle||"—";
-    const last=s.continuation?.last_set||"—";
-
-    document.getElementById("corePanel").innerHTML = `
+    const cyc=st.continuation?.cycle||"—";
+    const last=st.continuation?.last_set||"—";
+    document.getElementById("corePanel").innerHTML=`
       <div class="pill">${meta.name} · ${meta.stage} · <span class="mono">${meta.ns}</span></div>
       <div class="kv" style="margin-top:12px">
-        <div class="k"><b>Selection</b><span class="mono">${s.selection ?? "—"}</span></div>
-        <div class="k"><b>Resolution</b><span class="mono">${s.resolution ?? "—"}</span></div>
-        <div class="k"><b>Commitment</b><span class="mono">${s.commitment ?? "—"}</span></div>
+        <div class="k"><b>Selection</b><span class="mono">${st.selection ?? "—"}</span></div>
+        <div class="k"><b>Resolution</b><span class="mono">${st.resolution ?? "—"}</span></div>
+        <div class="k"><b>Commitment</b><span class="mono">${st.commitment ?? "—"}</span></div>
         <div class="k"><b>Continuation</b><span class="mono">${cyc}</span><div class="small mono" style="margin-top:6px">last_set: ${last}</div></div>
       </div>
-
       <div class="hr"></div>
-
       <div class="row">
-        <button class="btn" onclick="CR.setSelection('ADMITTED')">Submit Admissible</button>
-        <button class="btn" onclick="CR.setSelection('REJECTED')">Submit Rejected</button>
+        <button class="btn" onclick="CR.setSelection('ADMITTED')">Admit</button>
+        <button class="btn" onclick="CR.setSelection('REJECTED')">Reject</button>
         <button class="btn" onclick="CR.setResolution()">Resolve</button>
         <button class="btn" onclick="CR.setCommitment()">Commit</button>
       </div>
-
       <div class="row" style="margin-top:10px">
         <button class="btn" onclick="CR.setCycle('RUNNING')">RUNNING</button>
         <button class="btn" onclick="CR.setCycle('HURDLE')">HURDLE</button>
         <button class="btn" onclick="CR.setCycle('WALL')">WALL</button>
         <button class="btn" onclick="CR.setCycle('COMPLETE')">COMPLETE</button>
       </div>
-
-      <div class="small" style="margin-top:10px">
-        Keys: <span class="mono">${PREFIX}${meta.ns}</span>
-      </div>
+      <div class="small mono" style="margin-top:10px">Key: ${PREFIX}${meta.ns}</div>
     `;
   }
 
@@ -524,10 +441,9 @@ const CR = (() => {
   }
 
   return {
-    registerAll, refreshAll, exportAll,
+    registerAll, refreshAll, exportAll, resetActive, toggleLock,
     setSelection, setResolution, setCommitment, setCycle,
-    setMode, applyRule, mirrorState, resetNamespace,
-    resetActive, toggleLock
+    setMode, applyRule, mirrorState, resetNamespace
   };
 })();
 

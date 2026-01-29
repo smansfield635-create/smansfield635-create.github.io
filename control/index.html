@@ -4,74 +4,205 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Geodiametrics · Control</title>
+
 <style>
 :root{
-  --bg:#0b0e14;--fg:#e6ebff;--muted:#9aa3c7;--stroke:rgba(230,235,255,.12);
-  --accent:#7aa2ff;--ok:#44d07b;--warn:#ffcc66;--bad:#ff7ac6;--radius:18px;
+  --bg:#070a12;
+  --fg:#eef2ff;
+  --muted:rgba(238,242,255,.65);
+  --stroke:rgba(238,242,255,.10);
+  --glass:rgba(255,255,255,.03);
+  --accent:#7aa2ff;
+  --accent2:#ff7ac6;
+  --good:#44d07b;
+  --warn:#ffcc66;
+  --bad:#ff7ac6;
+  --radius:20px;
   --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
 }
-*{box-sizing:border-box}html,body{margin:0;height:100%}
-body{background:var(--bg);color:var(--fg);font-family:var(--sans)}
-main{max-width:900px;margin:0 auto;padding:40px 18px 72px}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  color:var(--fg);
+  font-family:var(--sans);
+  background:
+    radial-gradient(900px 700px at 15% 10%,rgba(122,162,255,.12),transparent 60%),
+    radial-gradient(900px 700px at 85% 20%,rgba(255,122,198,.10),transparent 60%),
+    radial-gradient(700px 500px at 50% 90%,rgba(68,208,123,.06),transparent 60%),
+    var(--bg);
+}
+main{max-width:1100px;margin:0 auto;padding:42px 18px 84px}
+
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{
+  width:40px;height:40px;border-radius:14px;
+  border:1px solid var(--stroke);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 14px 45px rgba(0,0,0,.45);
+}
 h1{margin:0;font-size:28px}
-.sub{font-family:var(--mono);font-size:12px;color:var(--muted)}
-.card{border:1px solid var(--stroke);border-radius:var(--radius);padding:22px;margin-top:16px}
-.kicker{font-family:var(--mono);font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em}
-.bar{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:8px}
-.fill{height:100%}
-.good{background:var(--ok)} .mid{background:var(--warn)} .low{background:var(--bad)}
-.kv{font-family:var(--mono);font-size:13px;margin-top:6px}
-footer{margin-top:28px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.sub{margin-top:6px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+.nav{display:flex;gap:10px;flex-wrap:wrap}
+.pill{
+  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);
+  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;
+}
+.pill:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
+
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.tab{
+  cursor:pointer;
+  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);
+  color:var(--fg);font-family:var(--mono);font-size:12px;
+}
+.tab.active{border-color:rgba(122,162,255,.65);box-shadow:0 16px 45px rgba(0,0,0,.35)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.good{background:var(--good);box-shadow:0 0 18px rgba(68,208,123,.35)}
+.dot.osf{background:var(--accent);box-shadow:0 0 18px rgba(122,162,255,.35)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:16px}
+.card{
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
+  padding:22px;
+  box-shadow:0 18px 60px rgba(0,0,0,.40);
+}
+.kicker{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:12px;
+}
+.kv{font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--muted)}
+.big{font-family:var(--mono);font-size:26px;margin-top:6px;color:var(--fg)}
+
+.gaugeRow{margin-top:10px}
+.glabel{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.track{
+  height:12px;border-radius:999px;background:rgba(255,255,255,.08);
+  overflow:hidden;margin-top:8px;
+}
+.fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,rgba(122,162,255,.85),rgba(255,122,198,.55));
+  border-radius:999px;
+}
+.fill.good{background:linear-gradient(90deg,rgba(68,208,123,.85),rgba(122,162,255,.55))}
+.fill.warn{background:linear-gradient(90deg,rgba(255,204,102,.90),rgba(255,122,198,.45))}
+.fill.bad{background:linear-gradient(90deg,rgba(255,122,198,.85),rgba(122,162,255,.45))}
+
+.hidden{display:none}
+
+footer{
+  margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+}
 </style>
 </head>
+
 <body>
 <main>
-  <h1>Control</h1>
-  <div class="sub">Observer Surface · Live Gauge · Read-Only</div>
 
-  <div class="card">
-    <div class="kicker">System</div>
-    <div class="kv" id="meta">—</div>
+<header>
+  <div>
+    <div class="brand">
+      <div class="mark"><img src="/assets/logo.svg" alt="Geodiametrics" style="width:20px;height:20px"></div>
+      <div>
+        <h1>Control</h1>
+        <div class="sub">Observer Surface · Dual Gauge · Read-Only</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" id="tabSite" type="button"><span class="dot good"></span> SITE</button>
+      <button class="tab" id="tabOSF" type="button"><span class="dot osf"></span> OSF</button>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="kicker">Gauges</div>
+  <nav class="nav">
+    <a class="pill" href="/">Orientation</a>
+    <a class="pill" href="/system/">Reference</a>
+    <a class="pill" href="/artifacts/">Artifacts</a>
+    <a class="pill" href="/problem/">Problem</a>
+    <a class="pill" href="/execution/">Execution</a>
+  </nav>
+</header>
 
-    <div class="kv">Activity</div>
-    <div class="bar"><div id="g-activity" class="fill good"></div></div>
+<!-- SITE GAUGE -->
+<section id="panelSite">
+  <div class="grid">
 
-    <div class="kv">Momentum</div>
-    <div class="bar"><div id="g-momentum" class="fill good"></div></div>
+    <div class="card">
+      <div class="kicker">Site Gauge</div>
+      <div class="kv" id="siteMeta">—</div>
+      <div class="big" id="siteStatus">—</div>
+    </div>
 
-    <div class="kv">Stability</div>
-    <div class="bar"><div id="g-stability" class="fill good"></div></div>
+    <div class="card">
+      <div class="kicker">Interaction (24h)</div>
+      <div class="gaugeRow">
+        <div class="glabel"><span>Sessions</span><span id="s_sessions">—</span></div>
+        <div class="track"><div class="fill good" id="b_sessions"></div></div>
+      </div>
+      <div class="gaugeRow">
+        <div class="glabel"><span>Pageviews</span><span id="s_pageviews">—</span></div>
+        <div class="track"><div class="fill" id="b_pageviews"></div></div>
+      </div>
+      <div class="gaugeRow">
+        <div class="glabel"><span>Clicks</span><span id="s_clicks">—</span></div>
+        <div class="track"><div class="fill warn" id="b_clicks"></div></div>
+      </div>
+      <div class="gaugeRow">
+        <div class="glabel"><span>Avg Time (sec)</span><span id="s_time">—</span></div>
+        <div class="track"><div class="fill" id="b_time"></div></div>
+      </div>
+      <div class="kv" style="margin-top:12px">Source split is manually updated in <span class="kv" style="color:var(--fg)">/assets/site_metrics.json</span>.</div>
+    </div>
 
-    <div class="kv">Risk</div>
-    <div class="bar"><div id="g-risk" class="fill low"></div></div>
+    <div class="card">
+      <div class="kicker">Sources (24h)</div>
+      <div id="sourcesList" class="kv">—</div>
+    </div>
+
   </div>
+</section>
 
-  <footer>© 2026 Geodiametrics · Control · v1.3</footer>
-</main>
+<!-- OSF GAUGE -->
+<section id="panelOSF" class="hidden">
+  <div class="grid">
 
-<script>
-fetch("/assets/metrics.json")
-  .then(r=>r.json())
-  .then(m=>{
-    document.getElementById("meta").textContent =
-      `Status: ${m.status} · Release: ${m.release} · Updated: ${m.timestamp}`;
+    <div class="card">
+      <div class="kicker">OSF Gauge</div>
+      <div class="kv" id="osfMeta">—</div>
+      <div class="big" id="osfTotals">—</div>
+    </div>
 
-    const set=(id,v)=>{
-      const el=document.getElementById(id);
-      el.style.width=Math.round(v*100)+"%";
-      el.className="fill "+(v<.2?"low":v<.6?"mid":"good");
-    };
+    <div class="card">
+      <div class="kicker">Projects (24h)</div>
+      <div id="osfProjects" class="kv">—</div>
+    </div>
 
-    set("g-activity",m.signals.activity);
-    set("g-momentum",m.signals.momentum);
-    set("g-stability",m.signals.stability);
-    set("g-risk",m.signals.risk);
-  });
-</script>
-</body>
-</html>
+    <div class="card">
+      <div class="kicker">Anchors</div>
+      <div class="kv">
+        • https://osf.io/4su3v/<br>
+        • https://osf.io/ftuvs/<br>
+        • https://osf.io/mn6vu/<br>
+        • ORCID: 0009-0004-1293-0405
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footerorei

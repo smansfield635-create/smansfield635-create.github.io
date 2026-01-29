@@ -6,121 +6,74 @@
 <title>Control Room · Geodiametrics</title>
 
 <style>
-/* ===============================
-   COSMIC BASE (MATCHES HOME)
-================================ */
 :root{
   --fg:#e9eefc;
   --muted:rgba(233,238,252,.65);
   --panel:rgba(10,14,28,.78);
   --stroke:rgba(233,238,252,.14);
-  --radius:24px;
-  --green:#4ade80;
-  --yellow:#facc15;
-  --red:#f87171;
+  --good:#4ade80;
+  --warn:#facc15;
+  --risk:#f87171;
   --glow:0 0 60px rgba(120,160,255,.35);
 }
-
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
-  background:#03040a;
+  background:
+    radial-gradient(1200px 800px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 80% 30%, rgba(180,140,255,.14), transparent 60%),
+    radial-gradient(1000px 900px at 50% 80%, rgba(120,220,255,.10), transparent 60%),
+    linear-gradient(180deg,#030615,#02040f 70%,#01020a);
+  overflow-x:hidden;
 }
 
-/* ===============================
-   STARFIELD
-================================ */
-.sky{
+/* stars */
+body::before{
+  content:"";
   position:fixed;
-  inset:0;
-  z-index:-3;
+  inset:-50px;
+  pointer-events:none;
   background:
-    radial-gradient(1200px 600px at 30% 20%, rgba(120,160,255,.18), transparent 60%),
-    radial-gradient(1000px 800px at 80% 40%, rgba(200,140,255,.14), transparent 65%),
-    linear-gradient(180deg,#050713,#03040a 70%);
-}
-.stars,.stars:after{
-  position:absolute;
-  inset:0;
-  background-image:
-    radial-gradient(2px 2px at 20% 30%, #fff, transparent),
-    radial-gradient(1px 1px at 40% 70%, #fff, transparent),
-    radial-gradient(1px 1px at 60% 20%, #fff, transparent),
-    radial-gradient(2px 2px at 80% 60%, #fff, transparent),
-    radial-gradient(1px 1px at 10% 80%, #fff, transparent);
-  background-size:900px 900px;
+    radial-gradient(1px 1px at 10% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 30% 40%, #fff, transparent),
+    radial-gradient(1px 1px at 60% 10%, #fff, transparent),
+    radial-gradient(1px 1px at 80% 70%, #fff, transparent),
+    radial-gradient(1px 1px at 45% 85%, #fff, transparent);
   opacity:.35;
 }
-.stars:after{
-  content:"";
-  background-size:1400px 1400px;
-  opacity:.25;
-}
 
-/* ===============================
-   LAYOUT
-================================ */
-.wrap{
-  max-width:1200px;
-  margin:0 auto;
-  padding:80px 16px 140px;
-}
-
+.wrap{max-width:1100px;margin:0 auto;padding:40px 16px 120px}
 .card{
   background:var(--panel);
   border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  padding:26px;
-  margin-bottom:26px;
-  backdrop-filter:blur(10px);
+  border-radius:22px;
+  padding:22px;
+  margin-bottom:18px;
+  box-shadow:0 18px 55px rgba(0,0,0,.55);
 }
 
-h1{
-  font-size:52px;
-  margin:0 0 12px;
-  text-shadow:var(--glow);
-}
+h1{margin:0 0 10px;font-size:44px;text-shadow:var(--glow)}
+h2{margin:16px 0 8px;font-size:26px}
+p{margin:0;color:var(--muted);line-height:1.6}
 
-h2{
-  margin:0 0 10px;
-  font-size:26px;
-}
-
-p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.6;
-}
-
-.badge{
-  display:inline-flex;
+.signal{
+  display:flex;
   align-items:center;
   gap:10px;
-  padding:10px 14px;
-  border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.06);
-  font-weight:900;
-  font-size:12px;
-  text-transform:uppercase;
-  letter-spacing:.6px;
+  font-weight:800;
 }
-
 .dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:var(--yellow);
-  box-shadow:0 0 12px rgba(250,204,21,.8);
+  width:12px;height:12px;border-radius:50%;
+  background:var(--good);
+  box-shadow:0 0 12px currentColor;
 }
 
 .grid{
   display:grid;
-  grid-template-columns:1fr;
-  gap:18px;
+  gap:16px;
 }
 @media(min-width:900px){
   .grid{grid-template-columns:1fr 1fr}
@@ -130,58 +83,47 @@ p{
   border-radius:18px;
   border:1px solid var(--stroke);
   padding:18px;
-  background:rgba(0,0,0,.28);
+  background:rgba(0,0,0,.25);
 }
 
-.gauge{
-  margin-top:10px;
-}
 .bar{
   height:14px;
-  border-radius:10px;
+  border-radius:999px;
   background:rgba(255,255,255,.12);
   overflow:hidden;
 }
 .fill{
   height:100%;
   width:0%;
-  background:linear-gradient(90deg,#4ade80,#22c55e);
 }
 
-/* ===============================
-   FOOTER
-================================ */
 .footer{
-  text-align:center;
-  color:rgba(233,238,252,.55);
-  font-size:14px;
   margin-top:40px;
+  text-align:center;
+  color:rgba(233,238,252,.45);
+  font-size:13px;
 }
+
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
 </style>
 </head>
 
 <body>
-<div class="sky">
-  <div class="stars"></div>
-</div>
-
 <div class="wrap">
 
   <!-- HEADER -->
   <div class="card">
-    <span class="badge">
-      <span class="dot"></span>
-      Standby
-    </span>
-
     <h1>Control Room</h1>
-    <p>
-      Read-only authority layer.  
-      No buttons. No modes. No manual state changes.
+    <div class="signal">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">OPERATIONAL</span>
+    </div>
+    <p style="margin-top:8px">
+      This page observes the system.  
+      It does not issue commands.
     </p>
-    <p style="margin-top:8px;">
-      Live coherence inferred from **public OSF activity** when available.
-      Silence means no signal — not failure.
+    <p class="mono" style="margin-top:6px">
+      Last observed interaction: <span id="lastSeen">—</span>
     </p>
   </div>
 
@@ -191,75 +133,62 @@ p{
 
     <div class="engine">
       <strong>Fuel (Coherence)</strong>
-      <p class="muted">Sustained agreement under constraint.</p>
-      <div class="gauge">
-        <div class="bar"><div class="fill" style="width:0%"></div></div>
-      </div>
+      <p>Sustained interaction without fragmentation.</p>
+      <div class="bar"><div id="fuel" class="fill"></div></div>
     </div>
 
     <div class="engine">
       <strong>RPM (Activity)</strong>
-      <p class="muted">OSF views + downloads per hour.</p>
-      <div class="gauge">
-        <div class="bar"><div class="fill" style="width:0%"></div></div>
-      </div>
+      <p>Interaction frequency over time.</p>
+      <div class="bar"><div id="rpm" class="fill"></div></div>
     </div>
 
     <div class="engine">
       <strong>Speed (Momentum)</strong>
-      <p class="muted">Δ(RPM) across hours.</p>
-      <div class="gauge">
-        <div class="bar"><div class="fill" style="width:0%"></div></div>
-      </div>
+      <p>Acceleration or decay of activity.</p>
+      <div class="bar"><div id="speed" class="fill"></div></div>
     </div>
 
     <div class="engine">
       <strong>Risk (Instability)</strong>
-      <p class="muted">Drop-offs, volatility, curiosity without commitment.</p>
-      <div class="gauge">
-        <div class="bar"><div class="fill" style="width:0%"></div></div>
-      </div>
+      <p>Idle decay and fragmentation pressure.</p>
+      <div class="bar"><div id="risk" class="fill"></div></div>
     </div>
   </div>
 
-  <!-- QUAD-CORE SEARCH ENGINES -->
+  <!-- QUAD-CORE ENGINES -->
   <div class="card">
-    <h2>Search Engine · Quad-Cores</h2>
-    <p>
-      Four lawful instantiations of the same cycle.  
-      No overlap. No manual control.
-    </p>
+    <h2>Quad-Core Engines</h2>
 
-    <div class="grid" style="margin-top:16px;">
+    <div class="grid">
       <div class="engine">
-        <strong>INGEST</strong>
-        <p>Collection · Normalization · Acceptance</p>
+        <strong>Integrity Engine</strong>
+        <p>Selection · Admissibility · Boundaries</p>
       </div>
       <div class="engine">
-        <strong>INDEX</strong>
-        <p>Tokenization · Structure · Validation</p>
+        <strong>Clarity Engine</strong>
+        <p>Resolution · Understanding · Structure</p>
       </div>
       <div class="engine">
-        <strong>QUERY</strong>
-        <p>Interpretation · Retrieval · Ranking</p>
+        <strong>Commitment Engine</strong>
+        <p>Decision · Action · Investment</p>
       </div>
       <div class="engine">
-        <strong>FEEDBACK</strong>
-        <p>Observation · Correction · Stability</p>
+        <strong>Vitality Engine</strong>
+        <p>Continuation · Sustainability · Recovery</p>
       </div>
     </div>
   </div>
 
-  <!-- TRUTH STATEMENT -->
+  <!-- LAW -->
   <div class="card">
     <h2>Operating Law</h2>
     <p>
-      The system does not act because you ask it to.  
-      It acts when the world produces admissible signal.
+      Silence is not failure.  
+      Motion appears only when real interaction exists.
     </p>
-    <p style="margin-top:10px;">
-      All gauges remain dark until real data arrives.
-      This is intentional.
+    <p style="margin-top:10px">
+      This system never simulates life.
     </p>
   </div>
 
@@ -268,5 +197,64 @@ p{
   </div>
 
 </div>
+
+<script>
+/* ===================== LIVE PRESENCE SIGNAL ===================== */
+
+const KEY = "GM_LAST_INTERACTION";
+const now = () => new Date().toISOString();
+
+function update(){
+  const last = localStorage.getItem(KEY);
+  const dot = document.getElementById("statusDot");
+  const text = document.getElementById("statusText");
+  const seen = document.getElementById("lastSeen");
+
+  if(!last){
+    text.textContent = "STANDBY";
+    dot.style.background = "#facc15";
+    seen.textContent = "—";
+    setBars(0,0,0,20);
+    return;
+  }
+
+  const age = Date.now() - new Date(last).getTime();
+
+  if(age < 60000){
+    text.textContent = "OPERATIONAL";
+    dot.style.background = "#4ade80";
+    setBars(100,60,60,0);
+  } else if(age < 300000){
+    text.textContent = "IDLE";
+    dot.style.background = "#facc15";
+    setBars(60,20,10,30);
+  } else {
+    text.textContent = "DORMANT";
+    dot.style.background = "#f87171";
+    setBars(20,0,0,60);
+  }
+
+  seen.textContent = last;
+}
+
+function setBars(fuel,rpm,speed,risk){
+  document.getElementById("fuel").style.width = fuel+"%";
+  document.getElementById("rpm").style.width = rpm+"%";
+  document.getElementById("speed").style.width = speed+"%";
+  document.getElementById("risk").style.width = risk+"%";
+}
+
+function mark(){
+  localStorage.setItem(KEY, now());
+  update();
+}
+
+["mousemove","keydown","touchstart","scroll"].forEach(e=>{
+  window.addEventListener(e, mark, {passive:true});
+});
+
+update();
+</script>
+
 </body>
 </html>

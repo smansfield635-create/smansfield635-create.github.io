@@ -4,184 +4,43 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Geodiametrics</title>
-
+<script defer src="/assets/cfwa.js"></script>
+<script defer src="/assets/live_site_metrics.js"></script>
 <style>
-:root{
-  --bg:#0b0e14;
-  --fg:#e6ebff;
-  --muted:#9aa3c7;
-  --stroke:rgba(230,235,255,.12);
-  --accent:#7aa2ff;
-  --accent2:#ff7ac6;
-  --radius:18px;
-  --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{
-  background:
-    radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),
-    radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),
-    var(--bg);
-  color:var(--fg);
-  font-family:var(--sans);
-}
+:root{--bg:#0b0e14;--fg:#e6ebff;--muted:#9aa3c7;--stroke:rgba(230,235,255,.12);--accent:#7aa2ff;--radius:18px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{background:radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),var(--bg);color:var(--fg);font-family:var(--sans);}
 main{max-width:1100px;margin:0 auto;padding:48px 18px 72px}
 h1{margin:0 0 8px;font-size:32px;font-weight:650}
 .tagline{font-family:var(--mono);font-size:13px;color:var(--muted);margin-bottom:26px}
-
-.row{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:28px;
-  flex-wrap:wrap;
-}
-
-.diamond{
-  width:220px;
-  height:220px;
-  border:1px solid var(--stroke);
-  background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
-  transform:rotate(45deg);
-  border-radius:22px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  color:var(--fg);
-  position:relative;
-  overflow:hidden;
-}
+.row{display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap}
+.diamond{width:220px;height:220px;border:1px solid var(--stroke);background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);transform:rotate(45deg);border-radius:22px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--fg);position:relative;overflow:hidden}
 .diamond:hover{border-color:rgba(122,162,255,.45)}
-.diamond.primary{
-  border-color:rgba(122,162,255,.65);
-  box-shadow:0 18px 55px rgba(0,0,0,.45);
-}
-.diamond.disabled{
-  opacity:.6;
-  cursor:not-allowed;
-  pointer-events:none;
-}
-.diamond::before{
-  content:"";
-  position:absolute;
-  inset:-40%;
-  background:
-    radial-gradient(280px 180px at 20% 20%,rgba(122,162,255,.14),transparent 60%),
-    radial-gradient(280px 180px at 80% 80%,rgba(255,122,198,.10),transparent 60%);
-  transform:rotate(-45deg);
-  pointer-events:none;
-}
-
-.inner{
-  transform:rotate(-45deg);
-  width:82%;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  text-align:left;
-}
-.kicker{
-  font-family:var(--mono);
-  font-size:12px;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:var(--accent);
-}
+.diamond.primary{border-color:rgba(122,162,255,.65);box-shadow:0 18px 55px rgba(0,0,0,.45)}
+.diamond::before{content:"";position:absolute;inset:-40%;background:radial-gradient(280px 180px at 20% 20%,rgba(122,162,255,.14),transparent 60%),radial-gradient(280px 180px at 80% 80%,rgba(255,122,198,.10),transparent 60%);transform:rotate(-45deg);pointer-events:none}
+.inner{transform:rotate(-45deg);width:82%;display:flex;flex-direction:column;gap:10px;text-align:left}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
 .title{font-size:20px;font-weight:650;line-height:1.2}
 .desc{color:var(--muted);font-size:13.5px;line-height:1.45}
-
-footer{
-  margin-top:40px;
-  padding-top:16px;
-  border-top:1px solid var(--stroke);
-  font-family:var(--mono);
-  font-size:12px;
-  color:var(--muted);
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  flex-wrap:wrap;
-}
-.footer-nav{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-.footer-nav a{
-  padding:8px 10px;
-  border:1px solid var(--stroke);
-  border-radius:999px;
-  text-decoration:none;
-  color:var(--fg);
-}
-.footer-nav a:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
-
-@media (max-width:520px){
-  .diamond{width:200px;height:200px}
-  .row{gap:18px}
-}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--stroke);font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 </style>
 </head>
-
 <body>
 <main>
   <h1>Geodiametrics</h1>
   <div class="tagline">Orientation · Tap a surface</div>
 
   <div class="row">
-    <a class="diamond primary" href="/control/">
-      <div class="inner">
-        <div class="kicker">Live</div>
-        <div class="title">Control</div>
-        <div class="desc">Public, read-only status gauge.</div>
-      </div>
-    </a>
-
-    <a class="diamond" href="/system/">
-      <div class="inner">
-        <div class="kicker">Grounding</div>
-        <div class="title">Reference</div>
-        <div class="desc">Formal structure and terms.</div>
-      </div>
-    </a>
-
-    <a class="diamond" href="/artifacts/">
-      <div class="inner">
-        <div class="kicker">Demonstrations</div>
-        <div class="title">Artifacts</div>
-        <div class="desc">Concrete outputs and examples.</div>
-      </div>
-    </a>
-
-    <a class="diamond" href="/problem/">
-      <div class="inner">
-        <div class="kicker">Context</div>
-        <div class="title">Problem</div>
-        <div class="desc">Why the instrument exists.</div>
-      </div>
-    </a>
-
-    <div class="diamond disabled">
-      <div class="inner">
-        <div class="kicker">Reserved</div>
-        <div class="title">Execution</div>
-        <div class="desc">Disabled by design.</div>
-      </div>
-    </div>
+    <a class="diamond primary" href="/control/"><div class="inner"><div class="kicker">Live</div><div class="title">Control</div><div class="desc">Global + device gauges.</div></div></a>
+    <a class="diamond" href="/system/"><div class="inner"><div class="kicker">Grounding</div><div class="title">Reference</div><div class="desc">Formal structure and terms.</div></div></a>
+    <a class="diamond" href="/artifacts/"><div class="inner"><div class="kicker">Demonstrations</div><div class="title">Artifacts</div><div class="desc">Interactive exhibits.</div></div></a>
+    <a class="diamond" href="/problem/"><div class="inner"><div class="kicker">Context</div><div class="title">Problem</div><div class="desc">Why the instrument exists.</div></div></a>
+    <a class="diamond" href="/execution/"><div class="inner"><div class="kicker">Reserved</div><div class="title">Execution</div><div class="desc">Disabled by design.</div></div></a>
   </div>
 
   <footer>
     <div>© 2026 Geodiametrics</div>
-    <div class="footer-nav">
-      <a href="/control/">Control</a>
-      <a href="/system/">Reference</a>
-      <a href="/artifacts/">Artifacts</a>
-      <a href="/problem/">Problem</a>
-      <span style="opacity:.6">Execution</span>
-    </div>
+    <div>Global: Cloudflare · Device: localStorage</div>
   </footer>
 </main>
 </body>

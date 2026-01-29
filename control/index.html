@@ -12,6 +12,7 @@
   --muted:#9aa3c7;
   --stroke:rgba(230,235,255,.12);
   --accent:#7aa2ff;
+  --accent2:#ff7ac6;
   --ok:#44d07b;
   --radius:18px;
   --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -27,62 +28,64 @@ body{
   color:var(--fg);
   font-family:var(--sans);
 }
-main{max-width:980px;margin:0 auto;padding:44px 18px 72px}
-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:18px;
-}
-h1{margin:0;font-size:22px}
-.sub{font-family:var(--mono);font-size:12px;color:var(--muted)}
+main{max-width:1050px;margin:0 auto;padding:40px 18px 72px}
 
-.chip{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:10px 14px;border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.02);
-  font-family:var(--mono);font-size:12px;color:var(--fg);
-}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--ok);box-shadow:0 0 18px rgba(68,208,123,.45)}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+h1{margin:0;font-size:28px}
+.sub{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
 
-section{
-  border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  padding:20px;
-  margin-top:16px;
-  background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
-}
-h2{
-  margin:0 0 12px;
-  font-size:13px;
-  font-family:var(--mono);
-  text-transform:uppercase;
-  letter-spacing:1.2px;
-  color:var(--accent);
-}
-.kv{font-family:var(--mono);font-size:13px;line-height:1.6}
-.muted{color:var(--muted)}
-.counter{font-size:22px;font-family:var(--mono);margin-top:6px}
-
-.item{
-  padding:12px 0;
-  border-bottom:1px solid var(--stroke);
-}
-.item:last-child{border-bottom:none}
-
-a{color:var(--fg);text-decoration:none}
-a:hover{color:var(--accent)}
+.nav{display:flex;gap:10px;flex-wrap:wrap}
 .pill{
   display:inline-flex;align-items:center;gap:8px;
   padding:10px 12px;border-radius:999px;
   border:1px solid var(--stroke);
   background:rgba(255,255,255,.02);
+  color:var(--fg);text-decoration:none;
+  font-family:var(--mono);font-size:12px;
+}
+.pill:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
+
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.chip{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);
+  font-family:var(--mono);font-size:12px;color:var(--fg);
+}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--ok);box-shadow:0 0 18px rgba(68,208,123,.45)}
+.dot2{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px rgba(122,162,255,.35)}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:16px;
+  margin-top:16px;
+}
+.card{
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  padding:22px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
+}
+.card:hover{border-color:rgba(122,162,255,.45)}
+.kicker{
   font-family:var(--mono);
   font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:10px;
 }
-.pill:hover{border-color:rgba(122,162,255,.45)}
+.big{
+  font-family:var(--mono);
+  font-size:22px;
+  margin-top:6px;
+}
+.kv{font-family:var(--mono);font-size:13px;line-height:1.6}
+.muted{color:var(--muted)}
+.item{padding:12px 0;border-bottom:1px solid var(--stroke)}
+.item:last-child{border-bottom:none}
 
 footer{
   margin-top:28px;
@@ -106,90 +109,101 @@ footer{
   <div>
     <h1>Control</h1>
     <div class="sub">Observer Surface · Live Gauge · Read-Only</div>
+    <div class="chips">
+      <div class="chip"><span class="dot"></span> OPERATIONAL</div>
+      <div class="chip"><span class="dot2"></span> NO DEPENDENCIES</div>
+    </div>
   </div>
-  <div class="chip"><span class="dot"></span> OPERATIONAL</div>
+
+  <nav class="nav">
+    <a class="pill" href="/">Orientation</a>
+    <a class="pill" href="/system/">Reference</a>
+    <a class="pill" href="/artifacts/">Artifacts</a>
+    <a class="pill" href="/problem/">Problem</a>
+  </nav>
 </header>
 
-<section>
-  <h2>System State</h2>
-  <div class="kv">
-    Operational Surface: ACTIVE<br>
-    Mutation: RESTRICTED<br>
-    Authority: FIXED
+<section class="grid">
+
+  <div class="card">
+    <div class="kicker">System State</div>
+    <div class="kv">
+      Operational Surface: ACTIVE<br>
+      Mutation: RESTRICTED<br>
+      Authority: FIXED
+    </div>
+    <div class="kv muted" style="margin-top:10px">Read-only status monitor. No interaction required.</div>
   </div>
-  <div class="kv muted" style="margin-top:10px">Read-only status monitor. No interaction required.</div>
-</section>
 
-<section>
-  <h2>Live Activity</h2>
-  <div class="kv muted">Approximate, client-side signal</div>
-  <div class="counter" id="visits">—</div>
-  <div class="kv muted" id="timestamp">Last updated —</div>
-</section>
+  <div class="card">
+    <div class="kicker">Live Activity</div>
+    <div class="kv muted">Approximate, client-side signal</div>
+    <div class="big" id="visits">—</div>
+    <div class="kv muted" id="timestamp">Last updated —</div>
+  </div>
 
-<section>
-  <h2>OSF Projects</h2>
+  <div class="card">
+    <div class="kicker">OSF Projects</div>
 
-  <div class="item">
-    <div class="kv"><strong>Coherence Constraint Law</strong></div>
-    <div class="kv muted">Canonical research record</div>
-    <div style="margin-top:10px">
-      <a class="pill" href="https://osf.io/4su3v/" target="_blank" rel="noopener">Open OSF →</a>
+    <div class="item">
+      <div class="kv"><strong>Coherence Constraint Law</strong></div>
+      <div class="kv muted">Canonical research record</div>
+      <div style="margin-top:10px">
+        <a class="pill" href="https://osf.io/4su3v/" target="_blank" rel="noopener">Open OSF →</a>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="kv"><strong>Quad-Core Execution Cycle</strong></div>
+      <div class="kv muted">Selection → Resolution → Commitment → Continuation</div>
+      <div style="margin-top:10px">
+        <a class="pill" href="https://osf.io/ftuvs/" target="_blank" rel="noopener">Open OSF →</a>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="kv"><strong>Diamond Geometry Model</strong></div>
+      <div class="kv muted">Ordering framework</div>
+      <div style="margin-top:10px">
+        <a class="pill" href="https://osf.io/mn6vu/" target="_blank" rel="noopener">Open OSF →</a>
+      </div>
     </div>
   </div>
 
-  <div class="item">
-    <div class="kv"><strong>Quad-Core Execution Cycle</strong></div>
-    <div class="kv muted">Selection → Resolution → Commitment → Continuation</div>
-    <div style="margin-top:10px">
-      <a class="pill" href="https://osf.io/ftuvs/" target="_blank" rel="noopener">Open OSF →</a>
+  <div class="card">
+    <div class="kicker">Identity</div>
+    <div class="item">
+      <div class="kv"><strong>ORCID</strong></div>
+      <div class="kv muted">Author identifier</div>
+      <div style="margin-top:10px">
+        <a class="pill" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">0009-0004-1293-0405 →</a>
+      </div>
+    </div>
+
+    <div class="kicker" style="margin-top:18px">Constraints</div>
+    <div class="kv">
+      • Read-only observer surface<br>
+      • No execution permitted<br>
+      • No interpretation validated
     </div>
   </div>
 
-  <div class="item">
-    <div class="kv"><strong>Diamond Geometry Model</strong></div>
-    <div class="kv muted">Ordering framework</div>
-    <div style="margin-top:10px">
-      <a class="pill" href="https://osf.io/mn6vu/" target="_blank" rel="noopener">Open OSF →</a>
-    </div>
-  </div>
-
-</section>
-
-<section>
-  <h2>Identity</h2>
-  <div class="item">
-    <div class="kv"><strong>ORCID</strong></div>
-    <div style="margin-top:10px">
-      <a class="pill" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">0009-0004-1293-0405 →</a>
-    </div>
-  </div>
-</section>
-
-<section>
-  <h2>Constraints</h2>
-  <div class="kv">
-    • Read-only observer surface<br>
-    • No execution permitted<br>
-    • No interpretation validated
-  </div>
 </section>
 
 <footer>
-  <div><a href="/" style="color:var(--muted)">← Back to Orientation</a></div>
-  <div>Control Surface · Gauge · v1.1</div>
+  <div>© 2026 Geodiametrics</div>
+  <div>Control · Gauge · v1.2</div>
 </footer>
 
 </main>
 
 <script>
-/* simple client-side visit signal */
-const key = "geo_visits";
-let count = localStorage.getItem(key);
-count = count ? (parseInt(count, 10) + 1) : 1;
-localStorage.setItem(key, String(count));
-document.getElementById("visits").textContent = "Local Visits: " + count;
-document.getElementById("timestamp").textContent = "Last updated " + new Date().toLocaleString();
+const key="geo_visits";
+let c=localStorage.getItem(key);
+c=c?(parseInt(c,10)+1):1;
+localStorage.setItem(key,String(c));
+document.getElementById("visits").textContent="Local Visits: "+c;
+document.getElementById("timestamp").textContent="Last updated "+new Date().toLocaleString();
 </script>
 
 </body>

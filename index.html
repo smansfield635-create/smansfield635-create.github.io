@@ -12,26 +12,38 @@
   --stroke:rgba(233,238,252,.16);
   --panel:rgba(12,16,34,.55);
   --radius:22px;
+  --accent:#9bb6ff;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
-  background:
-    radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.35), transparent 60%),
-    radial-gradient(1.5px 1.5px at 70% 40%, rgba(255,255,255,.25), transparent 60%),
-    radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,.2), transparent 60%),
-    linear-gradient(180deg,#050713,#03040c 70%,#020308);
+  background:#02040c;
   overflow:hidden;
 }
-body::after{
-  content:"";
-  position:fixed;inset:0;
-  background:radial-gradient(circle at 50% 50%, rgba(120,150,255,.08), transparent 60%);
+
+/* ---- COSMIC STARFIELD ---- */
+.starfield,.starfield2,.starfield3{
+  position:fixed; inset:0;
   pointer-events:none;
 }
+.starfield{z-index:-3}
+.starfield2{z-index:-2; opacity:.7}
+.starfield3{z-index:-1; opacity:.45}
 
+.star{
+  position:absolute;
+  width:2px;height:2px;
+  background:#fff;border-radius:50%;
+  animation: drift linear infinite;
+}
+@keyframes drift{
+  from{transform:translateY(0)}
+  to{transform:translateY(-2000px)}
+}
+
+/* ---- LAYOUT ---- */
 .wrap{
   min-height:100%;
   display:flex;
@@ -46,13 +58,10 @@ body::after{
   border-radius:var(--radius);
   background:var(--panel);
   border:1px solid var(--stroke);
-  text-align:center;
   backdrop-filter:blur(8px);
+  text-align:center;
 }
-.logo{
-  margin:0 auto 18px;
-  width:88px;height:88px;
-}
+.logo{width:88px;height:88px;margin:0 auto 18px}
 h1{
   margin:6px 0 10px;
   font-size:44px;
@@ -65,6 +74,8 @@ p{
   line-height:1.55;
   font-size:17px;
 }
+
+/* ---- BUBBLES ---- */
 .bubbles{
   display:flex;
   flex-wrap:wrap;
@@ -80,6 +91,8 @@ p{
   font-weight:800;
   text-decoration:none;
 }
+.bubble:hover{background:rgba(255,255,255,.12)}
+
 footer{
   margin-top:28px;
   font-size:12px;
@@ -89,28 +102,32 @@ footer{
 </head>
 
 <body>
+
+<!-- STAR LAYERS -->
+<div class="starfield" id="s1"></div>
+<div class="starfield2" id="s2"></div>
+<div class="starfield3" id="s3"></div>
+
 <div class="wrap">
   <div class="card">
 
-    <!-- Snowflake / Diamond Logo -->
-    <svg class="logo" viewBox="0 0 100 100" fill="none" stroke="#9bb6ff" stroke-width="3" stroke-linecap="round">
-      <g transform="translate(50 50)">
-        <line x1="0" y1="-36" x2="0" y2="36"/>
-        <line x1="-36" y1="0" x2="36" y2="0"/>
-        <line x1="-26" y1="-26" x2="26" y2="26"/>
-        <line x1="-26" y1="26" x2="26" y2="-26"/>
+    <!-- SNOWFLAKE / DIAMOND LOGO -->
+    <svg class="logo" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <!-- axes -->
+      <line x1="50" y1="8"  x2="50" y2="92"/>
+      <line x1="8"  y1="50" x2="92" y2="50"/>
+      <line x1="20" y1="20" x2="80" y2="80"/>
+      <line x1="80" y1="20" x2="20" y2="80"/>
 
-        <!-- diamond tips -->
-        <g stroke-width="2">
-          <rect x="-4" y="-46" width="8" height="8" transform="rotate(45)"/>
-          <rect x="-4" y="38" width="8" height="8" transform="rotate(45)"/>
-          <rect x="38" y="-4" width="8" height="8" transform="rotate(45)"/>
-          <rect x="-46" y="-4" width="8" height="8" transform="rotate(45)"/>
-        </g>
+      <!-- inner diamonds -->
+      <polygon points="50,32 68,50 50,68 32,50"/>
+      <polygon points="50,40 60,50 50,60 40,50"/>
 
-        <!-- inner fractal -->
-        <rect x="-8" y="-8" width="16" height="16" transform="rotate(45)" stroke-width="2"/>
-      </g>
+      <!-- tip diamonds -->
+      <polygon points="50,2 56,8 50,14 44,8"/>
+      <polygon points="98,50 92,56 86,50 92,44"/>
+      <polygon points="50,98 44,92 50,86 56,92"/>
+      <polygon points="2,50 8,44 14,50 8,56"/>
     </svg>
 
     <h1>Geodiametrics</h1>
@@ -122,15 +139,35 @@ footer{
 
     <!-- FRONT-MATTER NAVIGATION -->
     <div class="bubbles">
-      <a class="bubble" href="/table-of-contents/">Table of Contents</a>
-      <a class="bubble" href="/about/">About Us</a>
+      <a class="bubble" href="/toc/">Table of Contents</a>
       <a class="bubble" href="/mission/">Mission Statement</a>
-      <a class="bubble" href="/ip/">Trademarks &amp; IP</a>
+      <a class="bubble" href="/about/">About Us</a>
+      <a class="bubble" href="/rights/">Trademarks &amp; IP</a>
     </div>
 
     <footer>© 2026 Geodiametrics</footer>
 
   </div>
 </div>
+
+<script>
+/* generate stars */
+function stars(el,count,size,minDur,maxDur){
+  for(let i=0;i<count;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    s.style.left=Math.random()*100+'%';
+    s.style.top=Math.random()*2000+'px';
+    s.style.width=s.style.height=size+'px';
+    s.style.opacity=Math.random();
+    s.style.animationDuration=(minDur+Math.random()*(maxDur-minDur))+'s';
+    el.appendChild(s);
+  }
+}
+stars(document.getElementById('s1'),120,2,160,260);
+stars(document.getElementById('s2'),80,2,260,360);
+stars(document.getElementById('s3'),40,3,360,520);
+</script>
+
 </body>
 </html>

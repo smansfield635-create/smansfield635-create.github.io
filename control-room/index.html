@@ -1,4 +1,4 @@
-<!doctype html>
+      <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -8,191 +8,440 @@
 <style>
 :root{
   --fg:#e9eefc;
-  --muted:rgba(233,238,252,.65);
-  --panel:rgba(10,14,28,.78);
+  --muted:rgba(233,238,252,.70);
   --stroke:rgba(233,238,252,.14);
-  --good:#4ade80;
-  --warn:#facc15;
-  --risk:#f87171;
-  --radius:24px;
+  --panel:rgba(12,16,34,.62);
+  --panel2:rgba(12,16,34,.42);
+  --glass:rgba(10,14,28,.55);
+  --radius:22px;
+  --shadow:0 18px 55px rgba(0,0,0,.55);
+  --green:#4ade80;
+  --blue:#60a5fa;
+  --yellow:#facc15;
+  --red:#f87171;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
-  background:
-    radial-gradient(1200px 800px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
-    radial-gradient(900px 700px at 80% 30%, rgba(180,140,255,.14), transparent 60%),
-    radial-gradient(1000px 900px at 50% 80%, rgba(120,220,255,.10), transparent 60%),
-    linear-gradient(180deg,#030615,#02040f 70%,#01020a);
   overflow-x:hidden;
-}
-body::before{
-  content:"";
-  position:fixed;
-  inset:-50px;
-  pointer-events:none;
   background:
-    radial-gradient(1px 1px at 10% 20%, #fff, transparent),
-    radial-gradient(1px 1px at 30% 40%, #fff, transparent),
-    radial-gradient(1px 1px at 60% 10%, #fff, transparent),
-    radial-gradient(1px 1px at 80% 70%, #fff, transparent),
-    radial-gradient(1px 1px at 45% 85%, #fff, transparent);
-  opacity:.35;
+    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
+    radial-gradient(1000px 800px at 60% 90%, rgba(120,220,255,.08), transparent 60%),
+    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
 }
+body:before{
+  content:"";
+  position:fixed;inset:-60px;
+  pointer-events:none;
+  opacity:.75;
+  filter:blur(.15px);
+  background:
+    radial-gradient(2px 2px at 10% 15%, rgba(255,255,255,.9), transparent 60%),
+    radial-gradient(1px 1px at 30% 28%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(2px 2px at 55% 18%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(1px 1px at 72% 22%, rgba(255,255,255,.6), transparent 60%),
+    radial-gradient(2px 2px at 88% 35%, rgba(255,255,255,.85), transparent 60%),
+    radial-gradient(1px 1px at 18% 62%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(2px 2px at 42% 70%, rgba(255,255,255,.75), transparent 60%),
+    radial-gradient(1px 1px at 67% 78%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(2px 2px at 90% 82%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(1px 1px at 8% 88%, rgba(255,255,255,.55), transparent 60%);
+  animation: drift 18s ease-in-out infinite;
+}
+@keyframes drift{0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-10px,6px,0)}100%{transform:translate3d(0,0,0)}}
 
-.wrap{max-width:1200px;margin:0 auto;padding:40px 16px 120px}
-.card{
-  background:var(--panel);
-  border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  padding:26px;
-  margin-bottom:22px;
-  box-shadow:0 18px 55px rgba(0,0,0,.55);
+.wrap{max-width:1100px;margin:0 auto;padding:22px 16px 90px}
+.top{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(10px);
+  background:linear-gradient(180deg, rgba(7,11,24,.86), rgba(7,11,24,.52));
+  border-bottom:1px solid rgba(233,238,252,.10);
 }
-h1{margin:0 0 10px;font-size:44px}
-h2{margin:0 0 10px;font-size:26px}
-p{margin:0;color:var(--muted);line-height:1.6}
+.bar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:14px 16px;
+}
+.brand{font-weight:900;letter-spacing:.4px}
+.nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+.bubble{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.16);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);
+  text-decoration:none;
+  font-weight:900;
+  box-shadow:0 10px 26px rgba(0,0,0,.35);
+}
+.bubble:active{transform:translateY(1px)}
+
+.hero{padding:30px 2px 8px}
+h1{margin:0;font-size:48px;letter-spacing:.2px}
+.sub{margin:12px 0 0;color:var(--muted);max-width:900px;line-height:1.55}
+.hr{height:1px;background:rgba(233,238,252,.10);margin:22px 0 26px}
+
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+
+.card{
+  border-radius:var(--radius);
+  border:1px solid var(--stroke);
+  background:var(--panel);
+  box-shadow:var(--shadow);
+}
+.card .in{padding:18px}
+.card h2{margin:0 0 10px;font-size:22px}
+.card p{margin:0 0 12px;color:var(--muted);line-height:1.55}
+
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.16);
+  background:rgba(255,255,255,.06);
+  font-weight:900;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
+}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.btn{
+  appearance:none;border:1px solid rgba(233,238,252,.18);
+  background:rgba(255,255,255,.06);color:var(--fg);
+  padding:11px 14px;border-radius:999px;
+  font-weight:900;cursor:pointer;text-decoration:none;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.btn:active{transform:translateY(1px)}
 
 .badge{
   display:inline-flex;align-items:center;gap:10px;
   padding:10px 14px;border-radius:999px;
-  border:1px solid var(--stroke);
+  border:1px solid rgba(233,238,252,.18);
   background:rgba(255,255,255,.06);
-  font-weight:900;font-size:12px;text-transform:uppercase;
+  font-weight:900;
 }
-.dot{width:10px;height:10px;border-radius:50%;background:var(--warn)}
+.dot{width:12px;height:12px;border-radius:999px;background:rgba(233,238,252,.35);box-shadow:0 0 0 3px rgba(233,238,252,.06)}
+.dot.green{background:var(--green)}
+.dot.red{background:var(--red)}
+.dot.yellow{background:var(--yellow)}
+.dot.blue{background:var(--blue)}
 
-.gauges{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:16px;
-}
-@media(min-width:900px){
-  .gauges{grid-template-columns:1fr 1fr}
-}
-
-.gauge{
-  border-radius:18px;
-  border:1px solid var(--stroke);
-  padding:18px;
-  background:rgba(0,0,0,.25);
-}
-
-.label{font-weight:900;margin-bottom:6px}
-.bar{
-  height:14px;border-radius:999px;
-  background:rgba(255,255,255,.12);
-  overflow:hidden;
-}
-.fill{
-  height:100%;width:0%;
-  transition:width .6s ease;
-}
-
-.small{font-size:13px;color:var(--muted)}
-.footer{text-align:center;color:rgba(233,238,252,.45);font-size:13px;margin-top:40px}
+.gauges{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+.gauge{border:1px solid rgba(233,238,252,.14);background:rgba(0,0,0,.22);border-radius:18px;padding:14px}
+.gauge b{display:block;margin-bottom:8px;letter-spacing:.6px}
+.track{height:14px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}
+.fill{height:100%;width:0%;border-radius:999px;background:rgba(255,255,255,.35)}
+.fill.green{background:var(--green)}
+.fill.blue{background:var(--blue)}
+.fill.yellow{background:var(--yellow)}
+.fill.red{background:var(--red)}
+.small{margin-top:8px;font-size:13px;color:var(--muted)}
+.table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+th,td{padding:8px;border-bottom:1px solid rgba(233,238,252,.12);color:var(--muted);text-align:left}
+th{color:rgba(233,238,252,.85);font-weight:900}
+.footer{margin-top:22px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
 </style>
 </head>
 
 <body>
+<div class="top">
+  <div class="bar wrap" style="padding:14px 16px;">
+    <div class="brand">Geodiametrics</div>
+    <nav class="nav">
+      <a class="bubble" href="/">Home</a>
+      <a class="bubble" href="/apps/">Apps</a>
+      <a class="bubble" href="/reference/">Reference</a>
+      <a class="bubble" href="/problem/">Problem</a>
+    </nav>
+  </div>
+</div>
+
 <div class="wrap">
-
-  <!-- HEADER -->
-  <div class="card">
-    <span class="badge">
-      <span class="dot" id="sysDot"></span>
-      <span id="sysState">STANDBY</span>
-    </span>
+  <section class="hero">
     <h1>Control Room</h1>
-    <p>
-      Authoritative observation surface.  
-      Reports what is knowable. Nothing more.
-    </p>
-  </div>
+    <p class="sub">Read-only monitor. No manual control. Gauges wake only from lawful signals. Website signal is local. OSF signal is external.</p>
+    <div class="hr"></div>
+  </section>
 
-  <!-- ON-SITE INTERACTION -->
-  <div class="card">
-    <h2>On-Site Interaction</h2>
-    <p>Derived from real interaction with this site.</p>
+  <section class="grid">
+    <!-- LEFT: STATUS + SYSTEM GAUGES -->
+    <div class="card">
+      <div class="in">
+        <div class="pill">System</div>
+        <h2>Status</h2>
+        <div class="row" style="align-items:center;margin-bottom:10px;">
+          <div class="badge"><span id="statusDot" class="dot"></span><span id="statusText">STANDBY</span></div>
+          <div class="mono" style="color:rgba(233,238,252,.60)">Last event: <span id="lastEvent">—</span></div>
+        </div>
 
-    <div class="gauges" style="margin-top:16px">
-      <div class="gauge">
-        <div class="label">Hourly</div>
-        <div class="bar"><div id="hFill" class="fill"></div></div>
-      </div>
-      <div class="gauge">
-        <div class="label">Daily</div>
-        <div class="bar"><div id="dFill" class="fill"></div></div>
-      </div>
-      <div class="gauge">
-        <div class="label">Weekly</div>
-        <div class="bar"><div id="wFill" class="fill"></div></div>
-      </div>
-      <div class="gauge">
-        <div class="label">Monthly</div>
-        <div class="bar"><div id="mFill" class="fill"></div></div>
+        <div class="pill" style="margin-top:6px;">Gauges</div>
+        <h2 style="margin-top:10px;">System Gauges</h2>
+
+        <div class="gauges">
+          <div class="gauge">
+            <b>FUEL (COHERENCE)</b>
+            <div class="track"><div id="fuelFill" class="fill green"></div></div>
+            <div class="small" id="fuelNote">Sustained engagement stability. Full unless fragmentation/burnout.</div>
+          </div>
+
+          <div class="gauge">
+            <b>RPM (ACTIVITY)</b>
+            <div class="track"><div id="rpmFill" class="fill blue"></div></div>
+            <div class="small" id="rpmNote">Website interactions per hour (local). OSF optional.</div>
+          </div>
+
+          <div class="gauge">
+            <b>SPEED (MOMENTUM)</b>
+            <div class="track"><div id="spdFill" class="fill green"></div></div>
+            <div class="small" id="spdNote">Δ(RPM) across the last hour.</div>
+          </div>
+
+          <div class="gauge">
+            <b>RISK (INSTABILITY)</b>
+            <div class="track"><div id="riskFill" class="fill red"></div></div>
+            <div class="small" id="riskNote">Derived from idleness + contention signals.</div>
+          </div>
+        </div>
+
+        <div class="hr" style="margin:18px 0;"></div>
+
+        <div class="pill">Snapshot</div>
+        <h2 style="margin-top:10px;">Live Snapshot (last 60m)</h2>
+        <table class="table">
+          <thead>
+            <tr><th>Metric</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Website events (60m)</td><td class="mono" id="wEvents">—</td></tr>
+            <tr><td>RPM (events/hr)</td><td class="mono" id="wRpm">—</td></tr>
+            <tr><td>Risk %</td><td class="mono" id="wRisk">—</td></tr>
+            <tr><td>OSF views (60m)</td><td class="mono" id="osfViews">—</td></tr>
+            <tr><td>OSF downloads (60m)</td><td class="mono" id="osfDl">—</td></tr>
+          </tbody>
+        </table>
+
+        <div class="row" style="margin-top:12px;">
+          <button class="btn" onclick="CR.refresh()">Refresh</button>
+          <button class="btn" onclick="CR.export()">Export JSON</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- EXTERNAL SIGNAL -->
-  <div class="card">
-    <h2>External Signal (OSF)</h2>
-    <p>Awaiting lawful bridge. Idle is correct.</p>
-    <div class="bar" style="margin-top:12px">
-      <div class="fill" style="width:0%"></div>
+    <!-- RIGHT: ENGINES + OSF INPUT -->
+    <div class="card">
+      <div class="in">
+        <div class="pill">Search Engine · Quad-Cores</div>
+        <h2>Engines</h2>
+        <p>Four lawful instantiations of the same cycle. No overlap. No manual control. These are structural placeholders until ingestion/index/query/feedback are wired to real inputs.</p>
+
+        <table class="table">
+          <thead>
+            <tr><th>Engine</th><th>RPM</th><th>Cycle</th><th>Updated</th></tr>
+          </thead>
+          <tbody id="engTable">
+            <tr><td class="mono">INGEST</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td></tr>
+            <tr><td class="mono">INDEX</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td></tr>
+            <tr><td class="mono">QUERY</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td></tr>
+            <tr><td class="mono">FEEDBACK</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td></tr>
+          </tbody>
+        </table>
+
+        <div class="hr" style="margin:18px 0;"></div>
+
+        <div class="pill">OSF (manual · honest)</div>
+        <h2 style="margin-top:10px;">OSF Snapshot</h2>
+        <p class="mono" style="margin-bottom:10px;">Project: mn6vu · Window: 60 minutes</p>
+
+        <div class="gauge" style="background:rgba(0,0,0,.18)">
+          <div class="mono" style="margin-bottom:8px;color:rgba(233,238,252,.75)">Paste JSON here (example below):</div>
+          <textarea id="osfBox" class="mono" style="width:100%;min-height:120px;border-radius:16px;border:1px solid rgba(233,238,252,.14);background:rgba(0,0,0,.18);color:var(--fg);padding:12px;outline:none"></textarea>
+          <div class="row" style="margin-top:10px;">
+            <button class="btn" onclick="CR.applyOSF()">Apply Snapshot</button>
+            <button class="btn" onclick="CR.clearOSF()">Clear</button>
+          </div>
+          <div class="small mono" style="margin-top:10px;opacity:.9">
+            {"timestamp":"2026-02-02T22:00:02Z","views_60m":42,"downloads_60m":7}
+          </div>
+          <div class="small" id="osfStatus">Status: STANDBY</div>
+        </div>
+
+        <p class="small" style="margin-top:12px;">If OSF auto-polling fails, it stays blank by design. No scraping.</p>
+      </div>
     </div>
-    <p class="small" style="margin-top:6px">No external data attached.</p>
-  </div>
+  </section>
 
   <div class="footer">© 2026 Geodiametrics · Control Room</div>
 </div>
 
 <script>
-/* ===================== INTERACTION SIGNAL ===================== */
+/* =========================================================
+   CONTROL ROOM (READ-ONLY) · v1
+   Website signal: local (GM kernel event stream)
+   OSF signal: manual JSON (until lawful endpoint exists)
+========================================================= */
 
-const KEY="GM_INTERACTIONS";
-const now=()=>Date.now();
+const CR = (() => {
+  const ISO = () => new Date().toISOString();
 
-function record(){
-  const arr=JSON.parse(localStorage.getItem(KEY)||"[]");
-  arr.push(now());
-  localStorage.setItem(KEY,JSON.stringify(arr));
-}
+  // Local website signal (from gm-kernel.js if present)
+  // Falls back to localStorage event log if the kernel writes one.
+  const GM_EVENTS_KEY = "GM_EVENTS::geodiametrics"; // if your kernel uses a different key, this still works as a harmless fallback
+  const OSF_KEY = "CR_OSF_SNAPSHOT::mn6vu::60m";
 
-function compute(){
-  const arr=JSON.parse(localStorage.getItem(KEY)||"[]");
-  const t=now();
-
-  const h=arr.filter(x=>t-x<3600000).length;
-  const d=arr.filter(x=>t-x<86400000).length;
-  const w=arr.filter(x=>t-x<604800000).length;
-  const m=arr.filter(x=>t-x<2592000000).length;
-
-  hFill.style.width=Math.min(100,h*10)+"%";
-  dFill.style.width=Math.min(100,d*5)+"%";
-  wFill.style.width=Math.min(100,w*2)+"%";
-  mFill.style.width=Math.min(100,m)+"%";
-
-  if(h>0){
-    sysDot.style.background=varGood="#4ade80";
-    sysState.textContent="OPERATIONAL";
-  }else if(d>0){
-    sysDot.style.background="#facc15";
-    sysState.textContent="IDLE";
-  }else{
-    sysDot.style.background="#f87171";
-    sysState.textContent="DORMANT";
+  function getJSON(k, fb){
+    try{ return JSON.parse(localStorage.getItem(k) || "null") ?? fb; }catch{ return fb; }
   }
-}
+  function setJSON(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
 
-["mousemove","keydown","touchstart","scroll"].forEach(e=>{
-  window.addEventListener(e,()=>{record();compute();},{passive:true});
-});
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+  function pct(x){ return Math.round(clamp01(x)*100); }
 
-compute();
+  function setFill(id, val01, cls){
+    const el = document.getElementById(id);
+    el.style.width = pct(val01) + "%";
+    el.className = "fill " + cls;
+  }
+
+  function setStatus(kind, text){
+    const dot = document.getElementById("statusDot");
+    const lab = document.getElementById("statusText");
+    dot.className = "dot " + (kind || "");
+    lab.textContent = text;
+  }
+
+  function readWebsiteEvents60m(){
+    // Prefer GM_LAST_SIGNAL if kernel exposes it
+    try{
+      if(window.GM_LAST_SIGNAL && window.GM_LAST_SIGNAL.website){
+        const w = window.GM_LAST_SIGNAL.website;
+        // Expect shape: { events_60m, rpm, risk, updated_at }
+        if(typeof w.events_60m === "number") return w;
+      }
+    }catch(e){}
+
+    // Fallback: naive event log stored in localStorage (array of ISO timestamps)
+    const raw = getJSON(GM_EVENTS_KEY, []);
+    const cutoff = Date.now() - 60*60*1000;
+    const recent = (Array.isArray(raw) ? raw : [])
+      .map(x => (typeof x === "string" ? Date.parse(x) : (x && x.t ? Date.parse(x.t) : NaN)))
+      .filter(t => Number.isFinite(t) && t >= cutoff);
+
+    const events = recent.length;
+    const rpm = events / 60; // events per minute
+    // Risk heuristic: if no events, risk rises; otherwise low
+    const risk = events === 0 ? 0.75 : (events < 5 ? 0.35 : 0.05);
+
+    return { events_60m: events, rpm, risk, updated_at: ISO() };
+  }
+
+  function readOSF(){
+    return getJSON(OSF_KEY, null);
+  }
+
+  function applyOSF(){
+    const box = document.getElementById("osfBox");
+    const s = (box.value || "").trim();
+    try{
+      const j = JSON.parse(s);
+      if(typeof j.views_60m !== "number" || typeof j.downloads_60m !== "number") throw new Error("shape");
+      setJSON(OSF_KEY, j);
+      document.getElementById("osfStatus").textContent = "Status: APPLIED · " + (j.timestamp || ISO());
+      refresh();
+    }catch(e){
+      document.getElementById("osfStatus").textContent = "Status: ERROR (Invalid JSON)";
+      alert("Invalid JSON");
+    }
+  }
+
+  function clearOSF(){
+    localStorage.removeItem(OSF_KEY);
+    document.getElementById("osfBox").value = "";
+    document.getElementById("osfStatus").textContent = "Status: STANDBY";
+    refresh();
+  }
+
+  function exportAll(){
+    const out = {
+      exported_at: ISO(),
+      website: readWebsiteEvents60m(),
+      osf: readOSF()
+    };
+    const blob = new Blob([JSON.stringify(out,null,2)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "control_room_snapshot.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 500);
+  }
+
+  function refresh(){
+    const w = readWebsiteEvents60m();
+    const osf = readOSF();
+
+    document.getElementById("lastEvent").textContent = w.updated_at || "—";
+    document.getElementById("wEvents").textContent = String(w.events_60m ?? "—");
+    document.getElementById("wRpm").textContent = String(Math.round((w.rpm || 0)*100)/100);
+    document.getElementById("wRisk").textContent = String(Math.round((w.risk || 0)*100)) + "%";
+
+    // OSF readout
+    document.getElementById("osfViews").textContent = osf ? String(osf.views_60m) : "—";
+    document.getElementById("osfDl").textContent = osf ? String(osf.downloads_60m) : "—";
+
+    // Gauges (local-only "alive vibe" comes from website events)
+    const rpm01  = clamp01((w.rpm || 0) / 5);                 // 0..5 rpm => 0..1
+    const spd01  = clamp01(rpm01);                            // momentum mirrors activity (v1)
+    const risk01 = clamp01(w.risk || 0);
+
+    // Fuel: full unless risk high (simple coherent rule)
+    const fuel01 = clamp01(1 - (risk01 * 0.8));
+
+    setFill("fuelFill", fuel01, fuel01>0.6 ? "green" : (fuel01>0.3 ? "yellow" : "red"));
+    setFill("rpmFill", rpm01, "blue");
+    setFill("spdFill", spd01, spd01>0.6 ? "green" : "yellow");
+    setFill("riskFill", risk01, risk01<0.2 ? "green" : (risk01<0.5 ? "yellow" : "red"));
+
+    // Overall status
+    if(risk01 >= 0.5) setStatus("red","ERROR");
+    else if(rpm01 > 0 || osf) setStatus("green","OPERATIONAL");
+    else setStatus("", "STANDBY");
+
+    // Engines table (search quad-cores placeholder)
+    const now = ISO();
+    const rpmCell = Math.max(1, Math.round((w.rpm || 0))); // minimal non-zero display when active
+    const rows = [
+      ["INGEST", rpm01>0 ? rpmCell : 0, rpm01>0 ? "RUNNING" : "IDLE", now],
+      ["INDEX",  rpm01>0 ? rpmCell : 0, rpm01>0 ? "RUNNING" : "IDLE", now],
+      ["QUERY",  rpm01>0 ? rpmCell : 0, rpm01>0 ? "RUNNING" : "IDLE", now],
+      ["FEEDBACK",rpm01>0 ? rpmCell : 0, rpm01>0 ? "RUNNING" : "IDLE", now]
+    ];
+    const tb = document.getElementById("engTable");
+    tb.innerHTML = rows.map(r =>
+      `<tr><td class="mono">${r[0]}</td><td class="mono">${r[1]}</td><td class="mono">${r[2]}</td><td class="mono">${r[3]}</td></tr>`
+    ).join("");
+  }
+
+  return { refresh, export: exportAll, applyOSF, clearOSF };
+})();
+
+CR.refresh();
 </script>
+
+<!-- GM KERNEL PLANT (this page) -->
+<script>
+window.GM_PLANT = {
+  id: "geodiametrics:control-room",
+  primitive_ms: 60*60*1000,
+  signals: {
+    // osf_json: "/osf-metrics.json" // enable later when you create it
+  }
+};
+</script>
+<script src="/assets/gm-kernel.js"></script>
+
 </body>
 </html>
+```0

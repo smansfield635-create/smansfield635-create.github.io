@@ -10,43 +10,52 @@
   --fg:#e9eefc;--muted:rgba(233,238,252,.62);
   --stroke:rgba(233,238,252,.14);
   --panel:rgba(12,16,34,.62);
-  --radius:22px;--shadow:0 18px 55px rgba(0,0,0,.55);
-  --green:#4ade80;--yellow:#facc15;--red:#f87171;--blue:#60a5fa;
+  --radius:22px;
+  --green:#4ade80;--yellow:#facc15;--red:#f87171;--blue:#60a5fa;--grey:#9ca3af;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
-  overflow-x:hidden;
   background:
-    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
-    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
-    radial-gradient(1100px 900px at 55% 85%, rgba(120,220,255,.10), transparent 60%),
-    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
+    radial-gradient(1400px 1000px at 20% 12%, rgba(122,162,255,.22), transparent 60%),
+    radial-gradient(1000px 800px at 85% 30%, rgba(180,140,255,.18), transparent 60%),
+    linear-gradient(180deg,#060a18,#040610 70%,#03030c);
 }
 .wrap{max-width:1200px;margin:0 auto;padding:22px 16px 80px}
-.card{border-radius:var(--radius);border:1px solid var(--stroke);background:var(--panel);box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
-h1{margin:0 0 8px;font-size:42px}
+.card{
+  border-radius:var(--radius);
+  border:1px solid var(--stroke);
+  background:var(--panel);
+  padding:18px;margin-bottom:16px
+}
+h1{margin:0 0 8px;font-size:40px}
 h2{margin:0 0 10px;font-size:22px}
 p{margin:0 0 10px;color:var(--muted);line-height:1.55}
 .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
 .small{font-size:13px;color:var(--muted)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
 .hr{height:1px;background:rgba(233,238,252,.10);margin:14px 0}
 
-.gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}
-.gauge{border-radius:18px;border:1px solid rgba(233,238,252,.14);background:rgba(0,0,0,.22);padding:14px}
-.gauge h3{margin:0 0 8px;font-size:12px;letter-spacing:.7px;text-transform:uppercase;color:rgba(233,238,252,.85)}
+.gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.gauge{
+  border-radius:18px;border:1px solid rgba(233,238,252,.14);
+  background:rgba(0,0,0,.22);padding:14px
+}
+.gauge h3{margin:0 0 8px;font-size:12px;letter-spacing:.7px;text-transform:uppercase}
 .meter{height:14px;background:rgba(255,255,255,.12);border-radius:8px;overflow:hidden}
 .fill{height:100%;width:0%;transition:width .35s ease}
-.light{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:8px;background:var(--green)}
-.grid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:980px){.grid{grid-template-columns:1fr 1fr}}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.16);background:rgba(255,255,255,.06);
+  font-weight:900;font-size:12px;letter-spacing:.6px;text-transform:uppercase
+}
+.light{width:12px;height:12px;border-radius:50%;display:inline-block;background:var(--grey)}
 .table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
 th,td{padding:8px;border-bottom:1px solid rgba(233,238,252,.12);text-align:left;color:var(--muted)}
-th{color:#fff;font-weight:950}
-.zone{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid rgba(233,238,252,.14);background:rgba(255,255,255,.06);font-weight:900;font-size:12px;letter-spacing:.6px;text-transform:uppercase}
+th{color:#fff;font-weight:900}
+.footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:18px}
 </style>
 </head>
 
@@ -55,10 +64,10 @@ th{color:#fff;font-weight:950}
 
   <div class="card">
     <h1>Control Room</h1>
-    <p>No buttons. No modes. No manual state changes. This page is a read-only monitor. It only reports breakage.</p>
+    <p>Live observation of collective knowledge coherence. <b>Source: Wikipedia (Global)</b>. No controls. Signals only.</p>
     <div class="row">
-      <span class="zone"><span id="sysLight" class="light"></span><span id="sysZone">SAFE</span></span>
-      <span class="mono small" id="lastScan">Last scan: —</span>
+      <span class="badge"><span id="sysLight" class="light"></span><span id="sysState">STANDBY</span></span>
+      <span class="mono small" id="lastScan">Last event: —</span>
     </div>
   </div>
 
@@ -68,223 +77,137 @@ th{color:#fff;font-weight:950}
       <div class="gauge">
         <h3>Fuel (Coherence)</h3>
         <div class="meter"><div id="fuel" class="fill" style="background:var(--green)"></div></div>
-        <div class="small">100% unless burnout or fragmentation is detected.</div>
+        <div class="small">Agreement under constraint. Full unless fragmentation/burnout.</div>
       </div>
       <div class="gauge">
         <h3>RPM (Activity)</h3>
         <div class="meter"><div id="rpm" class="fill" style="background:var(--blue)"></div></div>
-        <div class="small">Recent write density (last 60s).</div>
+        <div class="small">Edits per minute (rolling).</div>
       </div>
       <div class="gauge">
-        <h3>Speed (Progress)</h3>
+        <h3>Speed (Momentum)</h3>
         <div class="meter"><div id="speed" class="fill" style="background:var(--green)"></div></div>
-        <div class="small">Cycle position average.</div>
+        <div class="small">Δ(RPM).</div>
       </div>
       <div class="gauge">
         <h3>Risk (Instability)</h3>
         <div class="meter"><div id="risk" class="fill" style="background:var(--red)"></div></div>
-        <div class="small">Derived from fragmentation + wall + fuel drop.</div>
+        <div class="small">Reverts + contention.</div>
       </div>
     </div>
   </div>
 
-  <div class="grid">
-
-    <div class="card">
-      <h2>Core Status</h2>
-      <table class="table">
-        <thead>
-          <tr><th>Core</th><th>Fuel</th><th>RPM</th><th>Speed</th><th>Risk</th><th>Cycle</th></tr>
-        </thead>
-        <tbody id="coreRows">
-          <tr><td colspan="6" class="mono">No engines discovered.</td></tr>
-        </tbody>
-      </table>
-      <div class="small mono" id="coreMeta">—</div>
-    </div>
-
-    <div class="card">
-      <h2>Break Log (Only)</h2>
-      <p>This log records only breakage events. Normal function produces silence.</p>
-      <pre id="breakLog" class="mono small" style="white-space:pre-wrap;margin:0">—</pre>
-    </div>
-
+  <div class="card">
+    <h2>Live Snapshot (last 60s)</h2>
+    <table class="table">
+      <thead><tr><th>Edits</th><th>Reverts</th><th>Acceptance</th><th>RPM</th><th>Risk</th></tr></thead>
+      <tbody><tr>
+        <td id="tEdits">0</td>
+        <td id="tReverts">0</td>
+        <td id="tAccept">—</td>
+        <td id="tRPM">0</td>
+        <td id="tRisk">—</td>
+      </tr></tbody>
+    </table>
   </div>
 
   <div class="footer">© 2026 Geodiametrics · Control Room</div>
-
 </div>
 
 <script>
-/* ===============================
-   CONTROL ROOM (READ ONLY)
-   - No buttons
-   - No writes (except break log write)
-   - Scans ENGINE:: keys
-================================ */
+/* ==========================================================
+   WIKIPEDIA LIVE WIRING (READ-ONLY)
+   - EventSource to Wikimedia recentchange stream
+   - Rolling windows
+   - No writes to engines
+========================================================== */
 
-const PREFIX = "ENGINE::";
-const BREAK_KEY = "ENGINE::BREAK_LOG::v1";
-const CORES = [
-  "diamond_fusion_core_1",
-  "diamond_fusion_core_2",
-  "diamond_fusion_core_3",
-  "diamond_fusion_core_4"
-];
+const STREAM = "https://stream.wikimedia.org/v2/stream/recentchange";
 
-const nowISO = () => new Date().toISOString();
-const nowMS  = () => Date.now();
+// Rolling windows (ms)
+const W1 = 60_000;   // 1 minute
+const W2 = 120_000;  // 2 minutes (for speed delta)
 
-function getJSON(k, fb=null){
-  try { return JSON.parse(localStorage.getItem(k)) ?? fb; }
-  catch { return fb; }
+// State
+let events = [];   // {t, type, reverted}
+let lastRPM = 0;
+
+// Utils
+const now = () => Date.now();
+const pct = v => Math.max(0, Math.min(100, Math.round(v*100)));
+const setW = (id, v) => document.getElementById(id).style.width = pct(v) + "%";
+
+function trim(){
+  const cutoff = now() - W2;
+  events = events.filter(e => e.t >= cutoff);
 }
 
-function setGauge(id, val){
-  const pct = Math.max(0, Math.min(100, Math.round(val*100)));
-  document.getElementById(id).style.width = pct + "%";
-}
+function compute(){
+  trim();
+  const last1 = events.filter(e => e.t >= now()-W1);
+  const edits = last1.length;
+  const reverts = last1.filter(e => e.reverted).length;
+  const accept = edits ? (1 - reverts/edits) : null;
 
-function cycleSpeed(c){
-  return c==="RUNNING" ? 0.35 :
-         c==="HURDLE"  ? 0.55 :
-         c==="WALL"    ? 0.20 :
-         c==="COMPLETE"? 1.00 : 0.00;
-}
+  // RPM normalized: 30 edits/min = full
+  const rpm = Math.min(1, edits / 30);
 
-function fragScore(s){
-  // Fragmentation = invalid ordering signals (observer-only)
-  // resolution without selection, commitment without resolved, WALL cycle
-  let v = 0;
-  if(s.resolution && !s.selection) v++;
-  if(s.commitment && s.resolution!=="RESOLVED") v++;
-  if((s.continuation?.cycle||"") === "WALL") v++;
-  return Math.min(1, v/3);
-}
+  // Speed = ΔRPM (scaled)
+  const speed = Math.min(1, Math.max(0, (rpm - lastRPM) + 0.5));
+  lastRPM = rpm;
 
-function rpmScore(updated_at){
-  // RPM = 1 if updated within 5s, 0 if older than 60s
-  const t = updated_at ? new Date(updated_at).getTime() : 0;
-  const age = Math.max(0, nowMS() - t);
-  if(age <= 5000) return 1;
-  if(age >= 60000) return 0;
-  return 1 - (age-5000)/(60000-5000);
-}
+  // Risk = revert density (0..1)
+  const risk = edits ? Math.min(1, reverts / edits) : 0;
 
-function readCore(ns){
-  const e = getJSON(PREFIX + ns, null);
-  if(!e || !e.state) return null;
-  return e;
-}
+  // Fuel rule: full unless fragmentation/burnout
+  // Fragmentation proxy = revert density; Burnout proxy = very high RPM
+  const burn = rpm > 0.9 ? 1 : 0;
+  const fuel = Math.max(0, 1 - (0.55*burn + 0.45*risk));
 
-function appendBreak(msg){
-  const log = getJSON(BREAK_KEY, []);
-  log.push({t: nowISO(), msg});
-  while(log.length > 200) log.shift();
-  localStorage.setItem(BREAK_KEY, JSON.stringify(log));
-}
+  // UI
+  setW("fuel", fuel);
+  setW("rpm", rpm);
+  setW("speed", speed);
+  setW("risk", risk);
 
-function render(){
-  const coreRows = document.getElementById("coreRows");
-  const breakLog = document.getElementById("breakLog");
-  const coreMeta = document.getElementById("coreMeta");
-  const lastScan = document.getElementById("lastScan");
-  const sysLight = document.getElementById("sysLight");
-  const sysZone  = document.getElementById("sysZone");
+  document.getElementById("tEdits").textContent = edits;
+  document.getElementById("tReverts").textContent = reverts;
+  document.getElementById("tAccept").textContent = accept===null ? "—" : Math.round(accept*100)+"%";
+  document.getElementById("tRPM").textContent = Math.round(rpm*100)+"%";
+  document.getElementById("tRisk").textContent = Math.round(risk*100)+"%";
 
-  lastScan.textContent = "Last scan: " + nowISO();
-
-  const rows = [];
-  let sysFrag = 0, sysBurn = 0, sysRisk = 0, sysSpeed = 0, sysRPM = 0;
-  let n = 0;
-
-  CORES.forEach(ns=>{
-    const e = readCore(ns);
-    if(!e) return;
-    n++;
-
-    const s = e.state || {};
-    const cyc = s.continuation?.cycle || "IDLE";
-
-    const f = fragScore(s);
-    const r = rpmScore(e.updated_at);
-    const sp = cycleSpeed(cyc);
-
-    // Burnout proxy = high RPM sustained (observer-only)
-    // (If rpm > .75 and cycle not progressing, treat as burn risk)
-    const stagnation = (sp < 0.35 && (s.selection || s.resolution || s.commitment));
-    const burn = (r > 0.75 && stagnation) ? 1 : 0;
-
-    const risk = Math.min(1, (0.7*f + 0.3*(cyc==="WALL"?1:0)));
-
-    // Fuel stays full unless burnout/fragmentation
-    const fuel = Math.max(0, 1 - (0.55*burn + 0.45*f));
-
-    sysFrag += f;
-    sysBurn += burn;
-    sysRisk += risk;
-    sysSpeed += sp;
-    sysRPM += r;
-
-    rows.push({ns, fuel, rpm:r, speed:sp, risk, cyc});
-  });
-
-  if(!n){
-    coreRows.innerHTML = `<tr><td colspan="6" class="mono">No engines discovered.</td></tr>`;
-    setGauge("fuel",0); setGauge("rpm",0); setGauge("speed",0); setGauge("risk",0);
-    sysLight.style.background = "var(--yellow)";
-    sysZone.textContent = "NO DATA";
-    coreMeta.textContent = "—";
-  } else {
-    const avgFuel = rows.reduce((a,x)=>a+x.fuel,0)/n;
-    const avgRPM  = rows.reduce((a,x)=>a+x.rpm,0)/n;
-    const avgSpd  = rows.reduce((a,x)=>a+x.speed,0)/n;
-    const avgRisk = rows.reduce((a,x)=>a+x.risk,0)/n;
-
-    setGauge("fuel", avgFuel);
-    setGauge("rpm", avgRPM);
-    setGauge("speed", avgSpd);
-    setGauge("risk", avgRisk);
-
-    // Zone thresholds
-    const zone =
-      (avgRisk >= 0.66 || avgFuel <= 0.40) ? "FAULT" :
-      (avgRisk >= 0.33 || avgFuel <= 0.70) ? "WARNING" :
-      "SAFE";
-
-    sysZone.textContent = zone;
-    sysLight.style.background =
-      zone==="SAFE" ? "var(--green)" :
-      zone==="WARNING" ? "var(--yellow)" :
-      "var(--red)";
-
-    // Log breakage only
-    if(zone !== "SAFE"){
-      appendBreak(`ZONE=${zone} fuel=${avgFuel.toFixed(2)} risk=${avgRisk.toFixed(2)} rpm=${avgRPM.toFixed(2)} speed=${avgSpd.toFixed(2)}`);
-    }
-
-    coreRows.innerHTML = rows.map(x=>`
-      <tr>
-        <td class="mono">${x.ns}</td>
-        <td class="mono">${Math.round(x.fuel*100)}%</td>
-        <td class="mono">${Math.round(x.rpm*100)}%</td>
-        <td class="mono">${Math.round(x.speed*100)}%</td>
-        <td class="mono">${Math.round(x.risk*100)}%</td>
-        <td class="mono">${x.cyc}</td>
-      </tr>
-    `).join("");
-
-    coreMeta.textContent = `cores=${n} avg_fuel=${Math.round(avgFuel*100)}% avg_risk=${Math.round(avgRisk*100)}%`;
+  const light = document.getElementById("sysLight");
+  const state = document.getElementById("sysState");
+  if(edits === 0){
+    light.style.background = "var(--grey)";
+    state.textContent = "STANDBY";
+  }else if(risk < 0.33){
+    light.style.background = "var(--green)";
+    state.textContent = "OPERATIONAL";
+  }else if(risk < 0.66){
+    light.style.background = "var(--yellow)";
+    state.textContent = "CONTESTED";
+  }else{
+    light.style.background = "var(--red)";
+    state.textContent = "FRAGMENTING";
   }
-
-  const log = getJSON(BREAK_KEY, []);
-  breakLog.textContent = log.length ? log.map(x=>`${x.t}  ${x.msg}`).join("\n") : "—";
 }
 
-// auto-refresh every 5 seconds (observer only)
-render();
-setInterval(render, 5000);
+const es = new EventSource(STREAM);
+es.onmessage = ev => {
+  try{
+    const d = JSON.parse(ev.data);
+    // Consider only content edits (namespace 0) for signal clarity
+    if(d.namespace !== 0) return;
+    const reverted = d.type === "revert";
+    events.push({t: now(), reverted});
+    document.getElementById("lastScan").textContent = "Last event: " + new Date().toISOString();
+    compute();
+  }catch(e){}
+};
+es.onerror = () => {
+  document.getElementById("sysState").textContent = "STREAM ERROR";
+};
 </script>
 </body>
 </html>
-```0

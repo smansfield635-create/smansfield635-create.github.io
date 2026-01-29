@@ -1,4 +1,3 @@
-// Cloudflare Web Analytics (global live)
 (function(){
   var s=document.createElement("script");
   s.defer=true;

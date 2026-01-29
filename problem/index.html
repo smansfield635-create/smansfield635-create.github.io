@@ -2,55 +2,53 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Problem · Geodiametrics</title>
 
 <style>
 :root{
-  --fg:#e9eefc;--muted:rgba(233,238,252,.66);
-  --stroke:rgba(233,238,252,.14);
-  --panel:rgba(12,16,34,.62);
-  --radius:22px;--shadow:0 18px 55px rgba(0,0,0,.55);
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.65);
+  --panel:rgba(10,14,28,.82);
+  --stroke:rgba(233,238,252,.16);
+  --radius:22px;
+  --accent:#7aa2ff;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
+  background:#02030a;
+}
+body::before{
+  content:"";
+  position:fixed; inset:0; pointer-events:none;
   background:
-    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
-    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
-    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
+    radial-gradient(1px 1px at 18% 28%, #fff, transparent),
+    radial-gradient(1px 1px at 42% 72%, #fff, transparent),
+    radial-gradient(1px 1px at 68% 34%, #fff, transparent),
+    radial-gradient(1px 1px at 81% 61%, #fff, transparent),
+    radial-gradient(1px 1px at 25% 54%, #fff, transparent);
+  opacity:.35;
 }
-.wrap{max-width:1100px;margin:0 auto;padding:22px 16px 70px}
+
+.wrap{max-width:1000px;margin:0 auto;padding:44px 18px 80px}
 .card{
-  border-radius:22px;
-  border:1px solid var(--stroke);
   background:var(--panel);
-  box-shadow:var(--shadow);
-  padding:18px;
-  margin-bottom:16px;
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  padding:26px;
+  margin-top:18px;
 }
-h1{margin:0 0 10px;font-size:40px}
-h2{margin:0 0 10px;font-size:22px}
-p{margin:0 0 10px;color:var(--muted);line-height:1.55}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:12px 16px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.18);
-  background:rgba(255,255,255,.06);
-  color:var(--fg);font-weight:900;text-decoration:none
-}
-.list{margin:0;padding-left:18px}
-.list li{margin:6px 0;color:var(--muted)}
-.footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:18px}
-.pill{
-  display:inline-flex;align-items:center;
-  padding:8px 12px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.16);
-  background:rgba(255,255,255,.06);
-  font-weight:900;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
+h1{margin:0 0 12px;font-size:36px}
+h2{margin:18px 0 8px;font-size:20px;color:var(--accent)}
+p{margin:0 0 14px;color:var(--muted);line-height:1.65}
+.footer{
+  margin-top:26px;
+  font-size:12px;
+  color:rgba(233,238,252,.45);
+  text-align:center;
 }
 </style>
 </head>
@@ -59,48 +57,57 @@ p{margin:0 0 10px;color:var(--muted);line-height:1.55}
 <div class="wrap">
 
   <div class="card">
-    <div class="pill">Problem Statement</div>
     <h1>The Problem</h1>
-    <p>Most systems fail not from lack of effort, intelligence, or resources—but from fragmentation, manual control, and incoherent feedback.</p>
-    <div class="row" style="margin-top:12px;">
-      <a class="btn" href="/control-room/">Control Room</a>
-      <a class="btn" href="/apps/">Apps</a>
-      <a class="btn" href="/reference/">Reference</a>
-    </div>
+
+    <p>
+      Modern systems fail not from lack of intelligence, effort, or data,
+      but from loss of coherence under pressure.
+    </p>
+
+    <p>
+      Tools optimize locally while fragmenting globally.
+      Authority is confused with visibility.
+      Control is applied where observation is required.
+    </p>
+
+    <p>
+      As systems scale, feedback becomes distorted,
+      responsibility diffuses,
+      and decision cycles lose structural alignment.
+    </p>
+
+    <h2>What Is Missing</h2>
+
+    <p>
+      There is no shared execution grammar that distinguishes
+      selection from resolution,
+      commitment from continuation,
+      or motion from stability.
+    </p>
+
+    <p>
+      Without this grammar, systems drift,
+      decisions compound error,
+      and intervention arrives too late.
+    </p>
+
+    <h2>The Geodiametrics Response</h2>
+
+    <p>
+      Geodiametrics addresses this by enforcing a quad-core execution cycle
+      and measuring coherence directly,
+      rather than inferring it from outcomes or narratives.
+    </p>
+
+    <p>
+      The platform does not attempt to fix every problem.
+      It identifies when systems are no longer admissible,
+      and where fragmentation begins.
+    </p>
   </div>
 
-  <div class="card">
-    <h2>Observed Failures</h2>
-    <ul class="list">
-      <li>Systems require constant manual intervention to remain stable.</li>
-      <li>Progress depends on narrative explanation rather than observable state.</li>
-      <li>Metrics reward activity instead of coherence.</li>
-      <li>Breakage is hidden until collapse.</li>
-    </ul>
-  </div>
+  <div class="footer">© 2026 Geodiametrics</div>
 
-  <div class="card">
-    <h2>Why This Matters</h2>
-    <p>When coherence is not measurable, systems drift silently. Control becomes performative. Failures are detected too late.</p>
-    <p>The absence of a lawful, observer-invariant diagnostic surface is the root problem.</p>
-  </div>
-
-  <div class="card">
-    <h2>Required Properties</h2>
-    <ul class="list">
-      <li>No manual advancement required for normal operation.</li>
-      <li>Continuous evaluation under fixed laws.</li>
-      <li>Silence during healthy function.</li>
-      <li>Immediate signal on breakage.</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h2>Geodiametrics’ Answer</h2>
-    <p>A constraint-first execution system with automatic evaluation, permanent gauges, and a single authoritative Control Room.</p>
-  </div>
-
-  <div class="footer">© 2026 Geodiametrics · Problem</div>
 </div>
 </body>
 </html>

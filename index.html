@@ -100,6 +100,19 @@ footer{
   gap:12px;
   flex-wrap:wrap;
 }
+.footer-nav{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.footer-nav a{
+  padding:8px 10px;
+  border:1px solid var(--stroke);
+  border-radius:999px;
+  text-decoration:none;
+  color:var(--fg);
+}
+.footer-nav a:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
 
 @media (max-width:520px){
   .diamond{width:200px;height:200px}
@@ -149,7 +162,12 @@ footer{
 
   <footer>
     <div>© 2026 Geodiametrics</div>
-    <div>Layer 1 · Orientation · Diamond Nav</div>
+    <div class="footer-nav">
+      <a href="/control/">Control</a>
+      <a href="/system/">Reference</a>
+      <a href="/artifacts/">Artifacts</a>
+      <a href="/problem/">Problem</a>
+    </div>
   </footer>
 </main>
 </body>

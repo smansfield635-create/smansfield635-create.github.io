@@ -18,36 +18,46 @@ body{
              var(--bg);
   color:var(--fg);font-family:var(--sans);
 }
-main{max-width:1000px;margin:0 auto;padding:40px 18px 72px}
-header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}
+main{max-width:1050px;margin:0 auto;padding:40px 18px 72px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
 h1{margin:0;font-size:28px}
-.sub{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.sub{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
 
 .nav{display:flex;gap:10px;flex-wrap:wrap}
 .pill{
   display:inline-flex;align-items:center;gap:8px;
   padding:10px 12px;border-radius:999px;
-  border:1px solid var(--stroke);background:rgba(255,255,255,.02);
-  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);
+  color:var(--fg);text-decoration:none;
+  font-family:var(--mono);font-size:12px;
 }
 .pill:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:16px}
 .card{
-  border:1px solid var(--stroke);border-radius:var(--radius);padding:22px;
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  padding:22px;
   background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
   display:flex;flex-direction:column;gap:10px;
 }
 .card:hover{border-color:rgba(122,162,255,.45)}
-.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
-.title{font-size:20px;font-weight:600}
+.kicker{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.title{font-size:20px;font-weight:650;line-height:1.2}
 .desc{color:var(--muted);line-height:1.5;font-size:14px}
-
 .link{margin-top:auto;font-family:var(--mono);font-size:12px;color:var(--fg);text-decoration:none}
 .link:hover{color:var(--accent)}
 
 footer{
   margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
   font-family:var(--mono);font-size:12px;color:var(--muted);
 }
 </style>
@@ -70,6 +80,7 @@ footer{
 </header>
 
 <section class="grid">
+
   <div class="card">
     <div class="kicker">Canonical</div>
     <div class="title">Coherence Constraint Law</div>
@@ -90,9 +101,13 @@ footer{
     <div class="desc">Ordering framework used to maintain constraint-first system design.</div>
     <a class="link" href="https://osf.io/mn6vu/" target="_blank" rel="noopener">View on OSF →</a>
   </div>
+
 </section>
 
-<footer>Artifacts · Layer 3 · v1.1</footer>
+<footer>
+  <div>© 2026 Geodiametrics</div>
+  <div>Artifacts · Layer 3 · v1.2</div>
+</footer>
 
 </main>
 </body>

@@ -1,144 +1,137 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Geodiametrics</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Geodiametrics</title>
 
-  <style>
-    :root{
-      --bg:#0b0e14;
-      --panel:#0f1420;
-      --fg:#e6ebff;
-      --muted:#9aa3c7;
-      --stroke:rgba(230,235,255,.12);
-      --accent:#7aa2ff;
-      --radius:14px;
-      --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-    }
+<style>
+:root{
+  --bg:#0b0e14;
+  --fg:#e6ebff;
+  --muted:#9aa3c7;
+  --stroke:rgba(230,235,255,.12);
+  --accent:#7aa2ff;
+  --accent2:#ff7ac6;
+  --radius:18px;
+  --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:
+    radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),
+    radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),
+    var(--bg);
+  color:var(--fg);
+  font-family:var(--sans);
+}
+main{max-width:1000px;margin:0 auto;padding:48px 18px 72px}
+header{margin-bottom:28px}
+h1{margin:0 0 8px;font-size:30px;font-weight:600}
+.tagline{font-family:var(--mono);font-size:13px;color:var(--muted)}
 
-    *{box-sizing:border-box}
-    html,body{margin:0;height:100%}
-    body{
-      background:radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),
-                 radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),
-                 var(--bg);
-      color:var(--fg);
-      font-family:var(--sans);
-      letter-spacing:.2px;
-    }
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
 
-    .wrap{max-width:880px;margin:0 auto;padding:48px 20px 72px}
-    header{border-bottom:1px solid var(--stroke);padding-bottom:24px;margin-bottom:32px}
-    h1{margin:0 0 8px;font-size:28px;font-weight:600}
-    .tagline{font-family:var(--mono);color:var(--muted);font-size:13px}
-
-    section{
-      background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
-      border:1px solid var(--stroke);
-      border-radius:var(--radius);
-      padding:20px;
-      margin-bottom:20px;
-    }
-    section h2{
-      margin:0 0 10px;
-      font-size:14px;
-      font-weight:600;
-      text-transform:uppercase;
-      letter-spacing:1.2px;
-      color:var(--accent);
-      font-family:var(--mono);
-    }
-    p{margin:0;line-height:1.6}
-    .muted{color:var(--muted)}
-
-    .ctaRow{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.02);
-      color:var(--fg);
-      font-family:var(--mono);
-      font-size:12px;
-      text-decoration:none;
-      cursor:pointer;
-    }
-    .btn:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
-
-    footer{
-      margin-top:48px;
-      padding-top:20px;
-      border-top:1px solid var(--stroke);
-      font-family:var(--mono);
-      font-size:12px;
-      color:var(--muted);
-      display:flex;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      gap:12px;
-    }
-  </style>
+.tile{
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  padding:22px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
+  text-decoration:none;
+  color:var(--fg);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  min-height:140px;
+}
+.tile:hover{
+  border-color:rgba(122,162,255,.45);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+.tile.primary{
+  border-color:rgba(122,162,255,.6);
+  background:
+    radial-gradient(500px 220px at 80% 0%,rgba(122,162,255,.12),transparent 60%),
+    linear-gradient(180deg,rgba(255,255,255,.05),transparent);
+}
+.kicker{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.title{
+  font-size:20px;
+  font-weight:600;
+}
+.desc{
+  color:var(--muted);
+  line-height:1.5;
+  font-size:14px;
+}
+footer{
+  margin-top:40px;
+  padding-top:16px;
+  border-top:1px solid var(--stroke);
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--muted);
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+</style>
 </head>
 
 <body>
-  <main class="wrap">
+<main>
 
-    <header>
-      <h1>Geodiametrics</h1>
-      <div class="tagline">A structural execution instrument.</div>
-    </header>
+<header>
+  <h1>Geodiametrics</h1>
+  <div class="tagline">A structural execution instrument.</div>
+</header>
 
-    <section>
-      <h2>Status</h2>
-      <p>
-        <strong>Operational Surface:</strong> ACTIVE<br />
-        <strong>Mutation:</strong> RESTRICTED<br />
-        <strong>Authority:</strong> FIXED
-      </p>
-      <p class="muted" style="margin-top:10px">
-        This surface reflects live structure only. Interpretation is external.
-      </p>
-      <div class="ctaRow">
-        <a class="btn" href="/control/">Enter Control Gauge</a>
-      </div>
-    </section>
+<section class="grid">
 
-    <section>
-      <h2>Access</h2>
-      <p>The system is divided into distinct surfaces. Each surface enforces its own constraints.</p>
-      <p class="muted" style="margin-top:10px">
-        Not all surfaces permit action. Not all surfaces permit interpretation. Not all surfaces are visible.
-      </p>
-    </section>
+  <a class="tile primary" href="/control/">
+    <div class="kicker">Live</div>
+    <div class="title">Control Room</div>
+    <div class="desc">Public, read-only system status and activity.</div>
+  </a>
 
-    <section>
-      <h2>Constraints</h2>
-      <p>This system does not guide usage.</p>
-      <p style="margin-top:10px">This system does not validate interpretation.</p>
-      <p style="margin-top:10px">This system does not accept feedback through this surface.</p>
-      <p class="muted" style="margin-top:10px">Traversal implies responsibility.</p>
-    </section>
+  <a class="tile" href="/artifacts/">
+    <div class="kicker">Demonstrations</div>
+    <div class="title">Apps</div>
+    <div class="desc">Concrete outputs and interactive examples.</div>
+  </a>
 
-    <section>
-      <h2>Legal</h2>
-      <p>All rights reserved. Unauthorized use, replication, or misrepresentation is prohibited.</p>
-    </section>
+  <a class="tile" href="/system/">
+    <div class="kicker">Grounding</div>
+    <div class="title">Reference</div>
+    <div class="desc">Formal definitions and structure.</div>
+  </a>
 
-    <footer>
-      <div>© 2026 Geodiametrics</div>
-      <div>Index · Canonical · v1.0</div>
-    </footer>
+  <a class="tile" href="/problem/">
+    <div class="kicker">Context</div>
+    <div class="title">Problem</div>
+    <div class="desc">Why this exists.</div>
+  </a>
 
-  </main>
+</section>
+
+<footer>
+  <div>© 2026 Geodiametrics</div>
+  <div>Layer 1 · Orientation</div>
+</footer>
+
+</main>
 </body>
 </html>

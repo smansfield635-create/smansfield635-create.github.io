@@ -6,181 +6,267 @@
 <title>Control Room · Geodiametrics</title>
 
 <style>
+/* ===============================
+   COSMIC BASE (MATCHES HOME)
+================================ */
 :root{
-  --bg1:#070b18; --bg2:#04040f;
-  --fg:#e9eefc; --muted:rgba(233,238,252,.65);
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.65);
+  --panel:rgba(10,14,28,.78);
   --stroke:rgba(233,238,252,.14);
-  --panel:rgba(12,16,34,.62);
-  --radius:22px;
-  --shadow:0 18px 55px rgba(0,0,0,.55);
-  --green:#4ade80; --blue:#60a5fa; --yellow:#facc15; --red:#f87171;
+  --radius:24px;
+  --green:#4ade80;
+  --yellow:#facc15;
+  --red:#f87171;
+  --glow:0 0 60px rgba(120,160,255,.35);
 }
+
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
+
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
-  background:
-    radial-gradient(1200px 900px at 15% 10%, rgba(122,162,255,.18), transparent 60%),
-    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
-    linear-gradient(180deg,var(--bg1),var(--bg2));
+  background:#03040a;
 }
-.wrap{max-width:1100px;margin:0 auto;padding:22px 16px 80px}
+
+/* ===============================
+   STARFIELD
+================================ */
+.sky{
+  position:fixed;
+  inset:0;
+  z-index:-3;
+  background:
+    radial-gradient(1200px 600px at 30% 20%, rgba(120,160,255,.18), transparent 60%),
+    radial-gradient(1000px 800px at 80% 40%, rgba(200,140,255,.14), transparent 65%),
+    linear-gradient(180deg,#050713,#03040a 70%);
+}
+.stars,.stars:after{
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 40% 70%, #fff, transparent),
+    radial-gradient(1px 1px at 60% 20%, #fff, transparent),
+    radial-gradient(2px 2px at 80% 60%, #fff, transparent),
+    radial-gradient(1px 1px at 10% 80%, #fff, transparent);
+  background-size:900px 900px;
+  opacity:.35;
+}
+.stars:after{
+  content:"";
+  background-size:1400px 1400px;
+  opacity:.25;
+}
+
+/* ===============================
+   LAYOUT
+================================ */
+.wrap{
+  max-width:1200px;
+  margin:0 auto;
+  padding:80px 16px 140px;
+}
+
 .card{
   background:var(--panel);
   border:1px solid var(--stroke);
   border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:18px;
-  margin-bottom:16px;
+  padding:26px;
+  margin-bottom:26px;
+  backdrop-filter:blur(10px);
 }
-h1{margin:0 0 8px;font-size:42px}
-h2{margin:0 0 10px}
-p{margin:0;color:var(--muted);line-height:1.55}
+
+h1{
+  font-size:52px;
+  margin:0 0 12px;
+  text-shadow:var(--glow);
+}
+
+h2{
+  margin:0 0 10px;
+  font-size:26px;
+}
+
+p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
+}
+
 .badge{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 14px;border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border-radius:999px;
   border:1px solid var(--stroke);
   background:rgba(255,255,255,.06);
   font-weight:900;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.6px;
 }
-.dot{width:12px;height:12px;border-radius:50%}
-.gauges{display:grid;grid-template-columns:1fr;gap:14px;margin-top:12px}
-@media(min-width:800px){.gauges{grid-template-columns:1fr 1fr}}
-.gauge{
-  border:1px solid var(--stroke);
+
+.dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:var(--yellow);
+  box-shadow:0 0 12px rgba(250,204,21,.8);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
+}
+@media(min-width:900px){
+  .grid{grid-template-columns:1fr 1fr}
+}
+
+.engine{
   border-radius:18px;
-  padding:14px;
-  background:rgba(0,0,0,.25);
+  border:1px solid var(--stroke);
+  padding:18px;
+  background:rgba(0,0,0,.28);
 }
-.label{font-weight:900;margin-bottom:6px}
-.bar{height:14px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}
-.fill{height:100%;width:0%}
-.table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
-th,td{padding:8px;border-bottom:1px solid var(--stroke);text-align:left}
-th{color:#fff}
-.footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:20px}
+
+.gauge{
+  margin-top:10px;
+}
+.bar{
+  height:14px;
+  border-radius:10px;
+  background:rgba(255,255,255,.12);
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#4ade80,#22c55e);
+}
+
+/* ===============================
+   FOOTER
+================================ */
+.footer{
+  text-align:center;
+  color:rgba(233,238,252,.55);
+  font-size:14px;
+  margin-top:40px;
+}
 </style>
 </head>
 
 <body>
+<div class="sky">
+  <div class="stars"></div>
+</div>
+
 <div class="wrap">
 
+  <!-- HEADER -->
   <div class="card">
+    <span class="badge">
+      <span class="dot"></span>
+      Standby
+    </span>
+
     <h1>Control Room</h1>
-    <p>Read-only. No buttons. No manual control.  
-       Live coherence inferred from OSF public activity.</p>
-    <div style="margin-top:10px">
-      <span class="badge"><span id="statusDot" class="dot"></span><span id="statusText">STANDBY</span></span>
-      <span class="badge">Source: OSF · Project <b>mn6vu</b></span>
-      <span class="badge">Window: 60 minutes</span>
-    </div>
-    <p style="margin-top:8px" id="lastScan">Last scan: —</p>
+    <p>
+      Read-only authority layer.  
+      No buttons. No modes. No manual state changes.
+    </p>
+    <p style="margin-top:8px;">
+      Live coherence inferred from **public OSF activity** when available.
+      Silence means no signal — not failure.
+    </p>
   </div>
 
+  <!-- SYSTEM GAUGES -->
   <div class="card">
     <h2>System Gauges</h2>
 
-    <div class="gauges">
-
+    <div class="engine">
+      <strong>Fuel (Coherence)</strong>
+      <p class="muted">Sustained agreement under constraint.</p>
       <div class="gauge">
-        <div class="label">FUEL (COHERENCE)</div>
-        <div class="bar"><div id="fuel" class="fill"></div></div>
-        <p>Sustained engagement stability.</p>
+        <div class="bar"><div class="fill" style="width:0%"></div></div>
       </div>
+    </div>
 
+    <div class="engine">
+      <strong>RPM (Activity)</strong>
+      <p class="muted">OSF views + downloads per hour.</p>
       <div class="gauge">
-        <div class="label">RPM (ACTIVITY)</div>
-        <div class="bar"><div id="rpm" class="fill"></div></div>
-        <p>OSF views + downloads per hour.</p>
+        <div class="bar"><div class="fill" style="width:0%"></div></div>
       </div>
+    </div>
 
+    <div class="engine">
+      <strong>Speed (Momentum)</strong>
+      <p class="muted">Δ(RPM) across hours.</p>
       <div class="gauge">
-        <div class="label">SPEED (MOMENTUM)</div>
-        <div class="bar"><div id="speed" class="fill"></div></div>
-        <p>Δ(RPM) across hours.</p>
+        <div class="bar"><div class="fill" style="width:0%"></div></div>
       </div>
+    </div>
 
+    <div class="engine">
+      <strong>Risk (Instability)</strong>
+      <p class="muted">Drop-offs, volatility, curiosity without commitment.</p>
       <div class="gauge">
-        <div class="label">RISK (INSTABILITY)</div>
-        <div class="bar"><div id="risk" class="fill"></div></div>
-        <p>Drop-offs and volatility.</p>
+        <div class="bar"><div class="fill" style="width:0%"></div></div>
       </div>
-
     </div>
   </div>
 
+  <!-- QUAD-CORE SEARCH ENGINES -->
   <div class="card">
-    <h2>Live Snapshot (last 60m)</h2>
-    <table class="table">
-      <thead>
-        <tr><th>Metric</th><th>Value</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Views</td><td id="views">—</td></tr>
-        <tr><td>Downloads</td><td id="downloads">—</td></tr>
-        <tr><td>RPM</td><td id="rpmNum">—</td></tr>
-        <tr><td>Risk %</td><td id="riskNum">—</td></tr>
-      </tbody>
-    </table>
+    <h2>Search Engine · Quad-Cores</h2>
+    <p>
+      Four lawful instantiations of the same cycle.  
+      No overlap. No manual control.
+    </p>
+
+    <div class="grid" style="margin-top:16px;">
+      <div class="engine">
+        <strong>INGEST</strong>
+        <p>Collection · Normalization · Acceptance</p>
+      </div>
+      <div class="engine">
+        <strong>INDEX</strong>
+        <p>Tokenization · Structure · Validation</p>
+      </div>
+      <div class="engine">
+        <strong>QUERY</strong>
+        <p>Interpretation · Retrieval · Ranking</p>
+      </div>
+      <div class="engine">
+        <strong>FEEDBACK</strong>
+        <p>Observation · Correction · Stability</p>
+      </div>
+    </div>
   </div>
 
-  <div class="footer">© 2026 Geodiametrics · Control Room</div>
+  <!-- TRUTH STATEMENT -->
+  <div class="card">
+    <h2>Operating Law</h2>
+    <p>
+      The system does not act because you ask it to.  
+      It acts when the world produces admissible signal.
+    </p>
+    <p style="margin-top:10px;">
+      All gauges remain dark until real data arrives.
+      This is intentional.
+    </p>
+  </div>
+
+  <div class="footer">
+    © 2026 Geodiametrics · Control Room
+  </div>
 
 </div>
-
-<script>
-const NODE = "mn6vu";
-const ANALYTICS = `https://api.osf.io/v2/nodes/${NODE}/analytics/`;
-
-let lastRPM = null;
-
-function pct(v){ return Math.max(0,Math.min(100,v)); }
-
-function setBar(id,val,color){
-  const el=document.getElementById(id);
-  el.style.width=pct(val)+"%";
-  el.style.background=color;
-}
-
-async function poll(){
-  try{
-    const res = await fetch(ANALYTICS);
-    const json = await res.json();
-
-    const views = json.data.attributes.views || 0;
-    const downloads = json.data.attributes.downloads || 0;
-    const rpm = views + downloads;
-
-    const speed = lastRPM===null ? 0 : Math.abs(rpm-lastRPM);
-    lastRPM = rpm;
-
-    const fuel = rpm>0 ? 100 : 40;
-    const risk = rpm===0 ? 60 : speed>rpm*0.5 ? 40 : 10;
-
-    document.getElementById("views").textContent = views;
-    document.getElementById("downloads").textContent = downloads;
-    document.getElementById("rpmNum").textContent = rpm;
-    document.getElementById("riskNum").textContent = risk+"%";
-
-    setBar("fuel",fuel,"var(--green)");
-    setBar("rpm",Math.min(100,rpm),"var(--blue)");
-    setBar("speed",Math.min(100,speed*10),"var(--green)");
-    setBar("risk",risk,"var(--red)");
-
-    document.getElementById("statusDot").style.background = rpm>0?"var(--green)":"var(--yellow)";
-    document.getElementById("statusText").textContent = rpm>0?"OPERATIONAL":"IDLE";
-    document.getElementById("lastScan").textContent = "Last scan: "+new Date().toISOString();
-
-  }catch(e){
-    document.getElementById("statusDot").style.background="var(--red)";
-    document.getElementById("statusText").textContent="ERROR";
-  }
-}
-
-poll();
-setInterval(poll, 5*60*1000);
-</script>
-
 </body>
 </html>

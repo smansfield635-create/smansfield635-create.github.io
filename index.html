@@ -1,46 +1,49 @@
-<!doctype html>
+  <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Geodiametrics</title>
 
 <style>
 :root{
   --fg:#e9eefc;
-  --muted:rgba(233,238,252,.7);
+  --muted:rgba(233,238,252,.65);
+  --panel:rgba(10,14,28,.78);
   --stroke:rgba(233,238,252,.16);
-  --panel:rgba(12,16,34,.55);
-  --radius:22px;
-  --accent:#9bb6ff;
+  --accent:#7aa2ff;
 }
+
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
-  background:#02040c;
-  overflow:hidden;
+  background:#02030a;
+  overflow-x:hidden;
 }
 
-/* ---- COSMIC STARFIELD ---- */
-.starfield,.starfield2,.starfield3{
-  position:fixed; inset:0;
+/* ---- STARFIELD ---- */
+body::before,
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
   pointer-events:none;
 }
-.starfield{z-index:-3}
-.starfield2{z-index:-2; opacity:.7}
-.starfield3{z-index:-1; opacity:.45}
-
-.star{
-  position:absolute;
-  width:2px;height:2px;
-  background:#fff;border-radius:50%;
-  animation: drift linear infinite;
+body::before{
+  background:
+    radial-gradient(1px 1px at 12% 22%, #fff, transparent),
+    radial-gradient(1px 1px at 38% 77%, #fff, transparent),
+    radial-gradient(1px 1px at 65% 31%, #fff, transparent),
+    radial-gradient(1px 1px at 82% 61%, #fff, transparent),
+    radial-gradient(1px 1px at 25% 55%, #fff, transparent);
+  opacity:.45;
 }
-@keyframes drift{
-  from{transform:translateY(0)}
-  to{transform:translateY(-2000px)}
+body::after{
+  background:
+    radial-gradient(600px 400px at 30% 20%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(700px 500px at 80% 60%, rgba(180,140,255,.14), transparent 60%);
 }
 
 /* ---- LAYOUT ---- */
@@ -49,52 +52,71 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:24px;
-}
-.card{
-  max-width:720px;
-  width:100%;
-  padding:36px 28px;
-  border-radius:var(--radius);
-  background:var(--panel);
-  border:1px solid var(--stroke);
-  backdrop-filter:blur(8px);
-  text-align:center;
-}
-.logo{width:88px;height:88px;margin:0 auto 18px}
-h1{
-  margin:6px 0 10px;
-  font-size:44px;
-  letter-spacing:.4px;
-}
-p{
-  margin:0 auto 28px;
-  max-width:560px;
-  color:var(--muted);
-  line-height:1.55;
-  font-size:17px;
+  padding:40px 16px;
 }
 
-/* ---- BUBBLES ---- */
-.bubbles{
-  display:flex;
-  flex-wrap:wrap;
-  gap:14px;
-  justify-content:center;
+.card{
+  width:100%;
+  max-width:560px;
+  background:var(--panel);
+  border:1px solid var(--stroke);
+  border-radius:26px;
+  box-shadow:0 40px 120px rgba(0,0,0,.75);
+  padding:34px 28px 30px;
+  text-align:center;
 }
-.bubble{
-  padding:15px 20px;
+
+/* ---- LOGO ---- */
+.logo{
+  width:92px;
+  height:92px;
+  margin:0 auto 14px;
+}
+.logo svg{
+  width:100%;
+  height:100%;
+  stroke:var(--accent);
+  stroke-width:2;
+  fill:none;
+  opacity:.9;
+}
+
+/* ---- TYPE ---- */
+h1{
+  margin:6px 0 10px;
+  font-size:38px;
+  letter-spacing:.3px;
+}
+.tagline{
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.6;
+  margin-bottom:22px;
+}
+
+/* ---- BUTTONS ---- */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+a.btn{
+  display:block;
+  padding:14px 10px;
   border-radius:999px;
   border:1px solid var(--stroke);
-  background:rgba(255,255,255,.06);
+  background:rgba(255,255,255,.04);
   color:var(--fg);
   font-weight:800;
   text-decoration:none;
 }
-.bubble:hover{background:rgba(255,255,255,.12)}
+a.btn:hover{
+  background:rgba(255,255,255,.08);
+}
 
-footer{
-  margin-top:28px;
+/* ---- FOOTER ---- */
+.footer{
+  margin-top:22px;
   font-size:12px;
   color:rgba(233,238,252,.45);
 }
@@ -102,72 +124,45 @@ footer{
 </head>
 
 <body>
-
-<!-- STAR LAYERS -->
-<div class="starfield" id="s1"></div>
-<div class="starfield2" id="s2"></div>
-<div class="starfield3" id="s3"></div>
-
 <div class="wrap">
   <div class="card">
 
-    <!-- SNOWFLAKE / DIAMOND LOGO -->
-    <svg class="logo" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <!-- axes -->
-      <line x1="50" y1="8"  x2="50" y2="92"/>
-      <line x1="8"  y1="50" x2="92" y2="50"/>
-      <line x1="20" y1="20" x2="80" y2="80"/>
-      <line x1="80" y1="20" x2="20" y2="80"/>
+    <!-- LOGO -->
+    <div class="logo">
+      <!-- Snowflake / Diamond Fractal -->
+      <svg viewBox="0 0 100 100">
+        <g>
+          <line x1="50" y1="5" x2="50" y2="95"/>
+          <line x1="5" y1="50" x2="95" y2="50"/>
+          <line x1="15" y1="15" x2="85" y2="85"/>
+          <line x1="85" y1="15" x2="15" y2="85"/>
 
-      <!-- inner diamonds -->
-      <polygon points="50,32 68,50 50,68 32,50"/>
-      <polygon points="50,40 60,50 50,60 40,50"/>
-
-      <!-- tip diamonds -->
-      <polygon points="50,2 56,8 50,14 44,8"/>
-      <polygon points="98,50 92,56 86,50 92,44"/>
-      <polygon points="50,98 44,92 50,86 56,92"/>
-      <polygon points="2,50 8,44 14,50 8,56"/>
-    </svg>
-
-    <h1>Geodiametrics</h1>
-
-    <p>
-      A constraint-first execution platform built on a quad-core cycle:
-      Selection → Resolution → Commitment → Continuation.
-    </p>
-
-    <!-- FRONT-MATTER NAVIGATION -->
-    <div class="bubbles">
-      <a class="bubble" href="/toc/">Table of Contents</a>
-      <a class="bubble" href="/mission/">Mission Statement</a>
-      <a class="bubble" href="/about/">About Us</a>
-      <a class="bubble" href="/rights/">Trademarks &amp; IP</a>
+          <!-- diamond tips -->
+          <rect x="46" y="2" width="8" height="8" transform="rotate(45 50 6)"/>
+          <rect x="46" y="90" width="8" height="8" transform="rotate(45 50 94)"/>
+          <rect x="90" y="46" width="8" height="8" transform="rotate(45 94 50)"/>
+          <rect x="2" y="46" width="8" height="8" transform="rotate(45 6 50)"/>
+        </g>
+      </svg>
     </div>
 
-    <footer>© 2026 Geodiametrics</footer>
+    <!-- TITLE -->
+    <h1>Geodiametrics</h1>
+    <div class="tagline">
+      A constraint-first execution platform built on a quad-core cycle:<br/>
+      <strong>Selection → Resolution → Commitment → Continuation</strong>
+    </div>
 
+    <!-- FRONT DOOR -->
+    <div class="grid">
+      <a class="btn" href="/toc/">Table of Contents</a>
+      <a class="btn" href="/about/">About Us</a>
+      <a class="btn" href="/mission/">Mission</a>
+      <a class="btn" href="/rights/">Rights & IP</a>
+    </div>
+
+    <div class="footer">© 2026 Geodiametrics</div>
   </div>
 </div>
-
-<script>
-/* generate stars */
-function stars(el,count,size,minDur,maxDur){
-  for(let i=0;i<count;i++){
-    const s=document.createElement('div');
-    s.className='star';
-    s.style.left=Math.random()*100+'%';
-    s.style.top=Math.random()*2000+'px';
-    s.style.width=s.style.height=size+'px';
-    s.style.opacity=Math.random();
-    s.style.animationDuration=(minDur+Math.random()*(maxDur-minDur))+'s';
-    el.appendChild(s);
-  }
-}
-stars(document.getElementById('s1'),120,2,160,260);
-stars(document.getElementById('s2'),80,2,260,360);
-stars(document.getElementById('s3'),40,3,360,520);
-</script>
-
 </body>
 </html>

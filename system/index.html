@@ -8,17 +8,19 @@
 <style>
 :root{
   --bg:#0b0e14;--fg:#e6ebff;--muted:#9aa3c7;--stroke:rgba(230,235,255,.12);
-  --accent:#7aa2ff;--radius:18px;--mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --accent:#7aa2ff;--accent2:#ff7ac6;--radius:18px;
+  --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
 }
-*{box-sizing:border-box}html,body{margin:0;height:100%}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
 body{
   background:radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),
              radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),
              var(--bg);
   color:var(--fg);font-family:var(--sans);
 }
-main{max-width:1050px;margin:0 auto;padding:40px 18px 72px}
+main{max-width:1100px;margin:0 auto;padding:40px 18px 72px}
 header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
 h1{margin:0;font-size:28px}
 .sub{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
@@ -26,32 +28,68 @@ h1{margin:0;font-size:28px}
 .nav{display:flex;gap:10px;flex-wrap:wrap}
 .pill{
   display:inline-flex;align-items:center;gap:8px;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.02);
-  color:var(--fg);text-decoration:none;
+  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);color:var(--fg);text-decoration:none;
   font-family:var(--mono);font-size:12px;
 }
 .pill:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+
 .card{
-  border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  padding:22px;
+  border:1px solid var(--stroke);border-radius:var(--radius);padding:22px;
   background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
 }
 .card:hover{border-color:rgba(122,162,255,.45)}
 .kicker{
+  font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px;
+}
+.muted{color:var(--muted)}
+.kv{font-family:var(--mono);font-size:13px;line-height:1.6}
+
+details{
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:14px 14px;
+  background:rgba(255,255,255,.02);
+  margin-top:12px;
+}
+details:hover{border-color:rgba(122,162,255,.45)}
+summary{
+  cursor:pointer;
+  list-style:none;
   font-family:var(--mono);
   font-size:12px;
   letter-spacing:.08em;
   text-transform:uppercase;
-  color:var(--accent);
-  margin-bottom:10px;
+  color:var(--fg);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
 }
-.title{font-size:18px;font-weight:650;margin-bottom:8px}
-.list{margin:0;padding-left:16px;color:var(--muted);line-height:1.55}
+summary::-webkit-details-marker{display:none}
+.chev{color:var(--muted);font-family:var(--mono);font-size:12px}
+details[open] .chev{color:var(--accent)}
+
+.content{
+  margin-top:12px;
+  color:var(--muted);
+  line-height:1.6;
+  font-size:14px;
+}
+.bullets{margin:10px 0 0 16px}
+
+.links{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);
+  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;
+}
+.btn:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
 
 footer{
   margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);
@@ -67,7 +105,7 @@ footer{
 <header>
   <div>
     <h1>Reference</h1>
-    <div class="sub">Formal structure · Read-only</div>
+    <div class="sub">Layer 4 · Tap to expand · Read-only</div>
   </div>
   <nav class="nav">
     <a class="pill" href="/">Orientation</a>
@@ -78,40 +116,111 @@ footer{
 </header>
 
 <section class="grid">
+
   <div class="card">
-    <div class="kicker">Foundations</div>
-    <div class="title">Constraint-first framing</div>
-    <ul class="list">
-      <li>Coherence vs fragmentation</li>
-      <li>Observer vs execution separation</li>
-      <li>Refusal by surface</li>
-    </ul>
+    <div class="kicker">Definitions (expand)</div>
+    <div class="muted">Tap a section to view the condensed definition set.</div>
+
+    <details>
+      <summary>Coherence <span class="chev">tap</span></summary>
+      <div class="content">
+        Coherence is internal alignment across claims, actions, and outcomes under constraints.
+        <ul class="bullets">
+          <li>Coherence is observable via consistency under load.</li>
+          <li>Coherence bounds external trust to internal self-honesty/self-respect.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Fragmentation <span class="chev">tap</span></summary>
+      <div class="content">
+        Fragmentation is misalignment between stated values, actions, and resulting outcomes.
+        <ul class="bullets">
+          <li>Fragmentation is a structural signal, not a narrative judgment.</li>
+          <li>Fragmentation increases instability risk when paired with confusion.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Confusion <span class="chev">tap</span></summary>
+      <div class="content">
+        Confusion is unresolved coordinate assignment that amplifies instability once present.
+        <ul class="bullets">
+          <li>Confusion is not required for instability, but it accelerates it.</li>
+          <li>Confusion increases interpretive variance between observers.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Surface discipline <span class="chev">tap</span></summary>
+      <div class="content">
+        A surface is a constrained context. Surfaces separate authority, observation, and execution.
+        <ul class="bullets">
+          <li>Control is read-only by design.</li>
+          <li>Artifacts are interactive demonstrations without state mutation.</li>
+        </ul>
+      </div>
+    </details>
   </div>
 
   <div class="card">
-    <div class="kicker">Architecture</div>
-    <div class="title">Quad-core cycle</div>
-    <ul class="list">
-      <li>Selection → Resolution → Commitment → Continuation</li>
-      <li>State stability and traversal integrity</li>
-      <li>Surface boundaries as constraints</li>
-    </ul>
+    <div class="kicker">Anchors (OSF / ORCID)</div>
+    <div class="kv muted">Canonical sources live outside this site. This site links to them.</div>
+
+    <div class="links" style="margin-top:14px">
+      <a class="btn" href="https://osf.io/4su3v/" target="_blank" rel="noopener">OSF · 4su3v →</a>
+      <a class="btn" href="https://osf.io/ftuvs/" target="_blank" rel="noopener">OSF · ftuvs →</a>
+      <a class="btn" href="https://osf.io/mn6vu/" target="_blank" rel="noopener">OSF · mn6vu →</a>
+      <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">ORCID →</a>
+    </div>
+
+    <div class="kicker" style="margin-top:18px">Core structure (condensed)</div>
+
+    <details>
+      <summary>Quad-core cycle <span class="chev">tap</span></summary>
+      <div class="content">
+        Selection → Resolution → Commitment → Continuation.
+        <ul class="bullets">
+          <li>Traversal preserves receipts and invalidates downstream receipts on back-nav.</li>
+          <li>Execution is receipt-gated; no timers as gates.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Signals <span class="chev">tap</span></summary>
+      <div class="content">
+        The public gauge reports observable signals.
+        <ul class="bullets">
+          <li>Activity: observation/attention</li>
+          <li>Momentum: sustained change</li>
+          <li>Stability: coherence under load</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Limits <span class="chev">tap</span></summary>
+      <div class="content">
+        This surface does not execute and does not validate interpretation.
+        <ul class="bullets">
+          <li>Read-only by design</li>
+          <li>No state mutation</li>
+          <li>OSF remains canonical record</li>
+        </ul>
+      </div>
+    </details>
+
   </div>
 
-  <div class="card">
-    <div class="kicker">Signals</div>
-    <div class="title">Measurement terms</div>
-    <ul class="list">
-      <li>Activity (attention / observation)</li>
-      <li>Momentum (sustained change)</li>
-      <li>Stability (coherence under load)</li>
-    </ul>
-  </div>
 </section>
 
 <footer>
   <div>© 2026 Geodiametrics</div>
-  <div>Reference · Layer 2 · v1.2</div>
+  <div>Reference · Layer 4 · v1.0</div>
 </footer>
 
 </main>

@@ -14,12 +14,11 @@
   --text:#e7eef7;
   --muted:#93a4b8;
 }
-
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 
 body{
   margin:0;
-  min-height:100vh;
   background:radial-gradient(1200px 800px at 50% -20%, #16223a 0%, var(--bg) 60%);
   color:var(--text);
   font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Arial;
@@ -45,7 +44,6 @@ body{
 .header p{
   margin:10px 0 0;
   color:var(--muted);
-  font-size:15px;
 }
 
 .card{
@@ -76,7 +74,10 @@ body{
 }
 
 .nav-btn{
-  appearance:none;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  text-decoration:none;
   border:1px solid var(--border);
   background:linear-gradient(180deg,#121a2a,#0d1422);
   color:var(--text);
@@ -84,17 +85,12 @@ body{
   padding:16px 14px;
   font-weight:700;
   letter-spacing:.3px;
-  cursor:pointer;
-  transition:transform .12s ease, border-color .12s ease, background .12s ease;
+  transition:.12s ease;
 }
 
 .nav-btn:hover{
   border-color:#3a5273;
   transform:translateY(-1px);
-}
-
-.nav-btn:active{
-  transform:translateY(0);
 }
 
 .anchor-grid{
@@ -112,18 +108,10 @@ body{
   border-radius:999px;
   padding:16px 14px;
   font-weight:800;
-  letter-spacing:.4px;
-  transition:transform .12s ease, border-color .12s ease;
-}
-
-.anchor-btn:hover{
-  border-color:#3a5273;
-  transform:translateY(-1px);
 }
 
 .info{
   color:var(--muted);
-  font-size:14px;
   max-width:760px;
 }
 
@@ -132,6 +120,11 @@ body{
   color:var(--muted);
   font-size:12px;
   margin-top:32px;
+}
+
+/* Anchor spacing */
+.anchor{
+  scroll-margin-top:24px;
 }
 </style>
 </head>
@@ -143,8 +136,7 @@ body{
   <div class="header">
     <h1>Geodiametrics</h1>
     <p>
-      A constraint-first execution platform built on a quad-core cycle:
-      <br />
+      Constraint-first execution platform<br>
       Selection → Resolution → Commitment → Continuation
     </p>
   </div>
@@ -153,15 +145,15 @@ body{
   <div class="card">
     <div class="section-title">Navigate</div>
     <div class="nav-grid">
-      <button class="nav-btn" onclick="go('index.html')">Home</button>
-      <button class="nav-btn" onclick="go('toc.html')">Table of Contents</button>
-      <button class="nav-btn" onclick="go('mission.html')">Mission Statement</button>
-      <button class="nav-btn" onclick="go('about.html')">About</button>
-      <button class="nav-btn" onclick="go('rights.html')">Rights & IP</button>
-      <button class="nav-btn" onclick="go('control.html')">Control Room</button>
-      <button class="nav-btn" onclick="go('apps.html')">Apps</button>
-      <button class="nav-btn" onclick="go('reference.html')">Reference</button>
-      <button class="nav-btn" onclick="go('problem.html')">Problem</button>
+      <a class="nav-btn" href="#home">Home</a>
+      <a class="nav-btn" href="#toc">Table of Contents</a>
+      <a class="nav-btn" href="#mission">Mission Statement</a>
+      <a class="nav-btn" href="#about">About</a>
+      <a class="nav-btn" href="#rights">Rights & IP</a>
+      <a class="nav-btn" href="#control">Control Room</a>
+      <a class="nav-btn" href="#apps">Apps</a>
+      <a class="nav-btn" href="#reference">Reference</a>
+      <a class="nav-btn" href="#problem">Problem</a>
     </div>
   </div>
 
@@ -169,23 +161,24 @@ body{
   <div class="card">
     <div class="section-title">Public Anchors</div>
     <div class="anchor-grid">
-      <a class="anchor-btn" href="https://osf.io/" target="_blank" rel="noopener">Open OSF</a>
-      <a class="anchor-btn" href="https://orcid.org/" target="_blank" rel="noopener">Open ORCID</a>
+      <a class="anchor-btn" href="https://osf.io/" target="_blank">Open OSF</a>
+      <a class="anchor-btn" href="https://orcid.org/" target="_blank">Open ORCID</a>
     </div>
   </div>
 
-  <!-- WHAT THIS IS -->
-  <div class="card">
+  <!-- SECTIONS (STUBS — SAFE, NO 404) -->
+  <div id="home" class="anchor"></div>
+
+  <div id="what" class="card anchor">
     <div class="section-title">What This Is</div>
     <p class="info">
       Geodiametrics reports coherence, momentum, and instability without manual control.
       The Control Room is the authoritative observer surface.
-      Apps function as execution and viewing surfaces.
+      Apps are execution and viewing surfaces.
     </p>
   </div>
 
-  <!-- STATUS -->
-  <div class="card">
+  <div id="status" class="card anchor">
     <div class="section-title">Status</div>
     <p class="info">
       This front page is informational only.
@@ -193,16 +186,20 @@ body{
     </p>
   </div>
 
+  <!-- Empty anchors for future pages -->
+  <div id="toc" class="anchor"></div>
+  <div id="mission" class="anchor"></div>
+  <div id="about" class="anchor"></div>
+  <div id="rights" class="anchor"></div>
+  <div id="control" class="anchor"></div>
+  <div id="apps" class="anchor"></div>
+  <div id="reference" class="anchor"></div>
+  <div id="problem" class="anchor"></div>
+
   <div class="footer">
     © 2026 Geodiametrics
   </div>
 
 </div>
-
-<script>
-function go(path){
-  window.location.href = path;
-}
-</script>
 </body>
 </html>

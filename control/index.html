@@ -8,48 +8,51 @@
 <style>
 :root{
   --bg:#0b0e14;
-  --panel:#0f1420;
   --fg:#e6ebff;
   --muted:#9aa3c7;
   --stroke:rgba(230,235,255,.12);
   --accent:#7aa2ff;
-  --radius:14px;
+  --ok:#44d07b;
+  --radius:18px;
   --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
-  background:var(--bg);
+  background:
+    radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),
+    radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),
+    var(--bg);
   color:var(--fg);
   font-family:var(--sans);
 }
-main{
-  max-width:900px;
-  margin:0 auto;
-  padding:48px 20px 72px;
-}
+main{max-width:980px;margin:0 auto;padding:44px 18px 72px}
 header{
-  border-bottom:1px solid var(--stroke);
-  padding-bottom:20px;
-  margin-bottom:32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:18px;
 }
-h1{
-  margin:0;
-  font-size:22px;
-  font-weight:600;
+h1{margin:0;font-size:22px}
+.sub{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+.chip{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);
+  font-family:var(--mono);font-size:12px;color:var(--fg);
 }
-.sub{
-  font-family:var(--mono);
-  font-size:12px;
-  color:var(--muted);
-}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--ok);box-shadow:0 0 18px rgba(68,208,123,.45)}
+
 section{
   border:1px solid var(--stroke);
   border-radius:var(--radius);
   padding:20px;
-  margin-bottom:20px;
-  background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
+  margin-top:16px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
 }
 h2{
   margin:0 0 12px;
@@ -59,37 +62,39 @@ h2{
   letter-spacing:1.2px;
   color:var(--accent);
 }
-.kv{
-  font-family:var(--mono);
-  font-size:13px;
-  line-height:1.6;
-}
+.kv{font-family:var(--mono);font-size:13px;line-height:1.6}
 .muted{color:var(--muted)}
-.project{
-  padding:10px 0;
+.counter{font-size:22px;font-family:var(--mono);margin-top:6px}
+
+.item{
+  padding:12px 0;
   border-bottom:1px solid var(--stroke);
 }
-.project:last-child{border-bottom:none}
-a{
-  color:var(--fg);
-  text-decoration:none;
-}
+.item:last-child{border-bottom:none}
+
+a{color:var(--fg);text-decoration:none}
 a:hover{color:var(--accent)}
-footer{
-  margin-top:40px;
-  padding-top:16px;
-  border-top:1px solid var(--stroke);
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);
   font-family:var(--mono);
   font-size:12px;
-  color:var(--muted);
+}
+.pill:hover{border-color:rgba(122,162,255,.45)}
+
+footer{
+  margin-top:28px;
+  padding-top:14px;
+  border-top:1px solid var(--stroke);
   display:flex;
   justify-content:space-between;
   flex-wrap:wrap;
-}
-.counter{
-  font-size:22px;
+  gap:12px;
   font-family:var(--mono);
-  margin-top:6px;
+  font-size:12px;
+  color:var(--muted);
 }
 </style>
 </head>
@@ -98,8 +103,11 @@ footer{
 <main>
 
 <header>
-  <h1>Control</h1>
-  <div class="sub">Observer Surface · Live Gauge · Read-Only</div>
+  <div>
+    <h1>Control</h1>
+    <div class="sub">Observer Surface · Live Gauge · Read-Only</div>
+  </div>
+  <div class="chip"><span class="dot"></span> OPERATIONAL</div>
 </header>
 
 <section>
@@ -109,6 +117,7 @@ footer{
     Mutation: RESTRICTED<br>
     Authority: FIXED
   </div>
+  <div class="kv muted" style="margin-top:10px">Read-only status monitor. No interaction required.</div>
 </section>
 
 <section>
@@ -121,21 +130,40 @@ footer{
 <section>
   <h2>OSF Projects</h2>
 
-  <div class="project kv">
-    <a href="https://osf.io/YOUR_PROJECT_1" target="_blank">Project One</a><br>
-    <span class="muted">Status: Active</span>
+  <div class="item">
+    <div class="kv"><strong>Coherence Constraint Law</strong></div>
+    <div class="kv muted">Canonical research record</div>
+    <div style="margin-top:10px">
+      <a class="pill" href="https://osf.io/4su3v/" target="_blank" rel="noopener">Open OSF →</a>
+    </div>
   </div>
 
-  <div class="project kv">
-    <a href="https://osf.io/YOUR_PROJECT_2" target="_blank">Project Two</a><br>
-    <span class="muted">Status: Active</span>
+  <div class="item">
+    <div class="kv"><strong>Quad-Core Execution Cycle</strong></div>
+    <div class="kv muted">Selection → Resolution → Commitment → Continuation</div>
+    <div style="margin-top:10px">
+      <a class="pill" href="https://osf.io/ftuvs/" target="_blank" rel="noopener">Open OSF →</a>
+    </div>
   </div>
 
-  <div class="project kv">
-    <a href="https://osf.io/YOUR_PROJECT_3" target="_blank">Project Three</a><br>
-    <span class="muted">Status: Active</span>
+  <div class="item">
+    <div class="kv"><strong>Diamond Geometry Model</strong></div>
+    <div class="kv muted">Ordering framework</div>
+    <div style="margin-top:10px">
+      <a class="pill" href="https://osf.io/mn6vu/" target="_blank" rel="noopener">Open OSF →</a>
+    </div>
   </div>
 
+</section>
+
+<section>
+  <h2>Identity</h2>
+  <div class="item">
+    <div class="kv"><strong>ORCID</strong></div>
+    <div style="margin-top:10px">
+      <a class="pill" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">0009-0004-1293-0405 →</a>
+    </div>
+  </div>
 </section>
 
 <section>
@@ -148,8 +176,8 @@ footer{
 </section>
 
 <footer>
-  <div>© 2026 Geodiametrics</div>
-  <div>Control Surface · Gauge · v1.0</div>
+  <div><a href="/" style="color:var(--muted)">← Back to Orientation</a></div>
+  <div>Control Surface · Gauge · v1.1</div>
 </footer>
 
 </main>
@@ -158,12 +186,10 @@ footer{
 /* simple client-side visit signal */
 const key = "geo_visits";
 let count = localStorage.getItem(key);
-count = count ? parseInt(count) + 1 : 1;
-localStorage.setItem(key, count);
+count = count ? (parseInt(count, 10) + 1) : 1;
+localStorage.setItem(key, String(count));
 document.getElementById("visits").textContent = "Local Visits: " + count;
-
-document.getElementById("timestamp").textContent =
-  "Last updated " + new Date().toLocaleString();
+document.getElementById("timestamp").textContent = "Last updated " + new Date().toLocaleString();
 </script>
 
 </body>

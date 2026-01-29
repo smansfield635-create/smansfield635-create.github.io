@@ -29,7 +29,7 @@ body{
   overflow-x:hidden;
 }
 
-/* Starfield */
+/* Starfield + Milky Way glow */
 body::before{
   content:"";
   position:fixed;
@@ -46,7 +46,7 @@ body::before{
   opacity:.35;
 }
 
-.wrap{max-width:1200px;margin:0 auto;padding:40px 16px 120px}
+.wrap{max-width:1200px;margin:0 auto;padding:48px 16px 120px}
 
 /* ===================== CARDS ===================== */
 .card{
@@ -62,7 +62,7 @@ h1{margin:0 0 12px;font-size:48px}
 h2{margin:0 0 10px;font-size:26px}
 p{margin:0;color:var(--muted);line-height:1.6}
 
-.row{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}
+.row{display:flex;gap:14px;flex-wrap:wrap;margin-top:16px}
 
 .link{
   padding:12px 18px;
@@ -94,37 +94,21 @@ p{margin:0;color:var(--muted);line-height:1.6}
   box-shadow:0 0 12px currentColor;
 }
 
-/* ===================== GAUGES ===================== */
-.gauges{
+.grid{
   display:grid;
   grid-template-columns:1fr;
-  gap:16px;
+  gap:18px;
 }
 @media(min-width:900px){
-  .gauges{grid-template-columns:1fr 1fr}
+  .grid{grid-template-columns:1fr 1fr}
 }
 
-.gauge{
-  border-radius:18px;
+.engine{
   border:1px solid var(--stroke);
+  border-radius:18px;
   padding:18px;
   background:rgba(0,0,0,.25);
 }
-
-.label{font-weight:900;margin-bottom:6px}
-.bar{
-  height:14px;
-  border-radius:999px;
-  background:rgba(255,255,255,.12);
-  overflow:hidden;
-}
-.fill{
-  height:100%;
-  width:0%;
-  transition:width .6s ease;
-}
-
-.small{font-size:13px;color:var(--muted)}
 
 .footer{
   margin-top:40px;
@@ -141,70 +125,80 @@ p{margin:0;color:var(--muted);line-height:1.6}
   <!-- ===================== HERO ===================== -->
   <div class="card">
     <span class="badge">
-      <span class="dot" id="statusDot"></span>
-      <span id="statusText">STANDBY</span>
+      <span class="dot"></span>
+      System Stable
     </span>
 
     <h1>Geodiametrics</h1>
     <p>
-      A coherence-first system organized around a quad-core cycle.
+      A coherence-first system organized around a quad-core engine.
       This site observes reality; it does not simulate it.
     </p>
 
     <div class="row">
       <a class="link" href="/control-room/">Control Room</a>
       <a class="link" href="/apps/">Apps</a>
+      <a class="link" href="/reference/">Reference</a>
+      <a class="link" href="/problem/">Problem</a>
     </div>
   </div>
 
-  <!-- ===================== INTERACTION GAUGES ===================== -->
+  <!-- ===================== QUAD-CORE OVERVIEW ===================== -->
   <div class="card">
-    <h2>On-Site Interaction</h2>
+    <h2>Quad-Core Architecture</h2>
     <p>
-      These gauges reflect real interaction with this website.
-      No external APIs. No artificial activity.
+      All systems resolve through the same four constraints.
+      These are not features — they are laws.
     </p>
 
-    <div class="gauges" style="margin-top:18px">
-
-      <div class="gauge">
-        <div class="label">Hourly Activity</div>
-        <div class="bar"><div id="hFill" class="fill"></div></div>
-        <p class="small">Interaction within the last hour.</p>
+    <div class="grid" style="margin-top:16px;">
+      <div class="engine">
+        <strong>Integrity Engine</strong>
+        <p>Selection · Admissibility · Boundaries</p>
       </div>
-
-      <div class="gauge">
-        <div class="label">Daily Activity</div>
-        <div class="bar"><div id="dFill" class="fill"></div></div>
-        <p class="small">Interaction within the last 24 hours.</p>
+      <div class="engine">
+        <strong>Structure Engine</strong>
+        <p>Resolution · Organization · Memory</p>
       </div>
-
-      <div class="gauge">
-        <div class="label">Weekly Activity</div>
-        <div class="bar"><div id="wFill" class="fill"></div></div>
-        <p class="small">Interaction within the last 7 days.</p>
+      <div class="engine">
+        <strong>Trajectory Engine</strong>
+        <p>Commitment · Direction · Momentum</p>
       </div>
-
-      <div class="gauge">
-        <div class="label">Monthly Activity</div>
-        <div class="bar"><div id="mFill" class="fill"></div></div>
-        <p class="small">Interaction within the last 30 days.</p>
+      <div class="engine">
+        <strong>Vitality Engine</strong>
+        <p>Continuation · Sustainability · Recovery</p>
       </div>
-
     </div>
   </div>
 
-  <!-- ===================== EXTERNAL SIGNAL ===================== -->
+  <!-- ===================== EXTERNAL ANCHORS ===================== -->
   <div class="card">
-    <h2>External Signal (OSF)</h2>
+    <h2>Authoritative External Anchors</h2>
     <p>
-      External coherence (OSF) is intentionally idle until a lawful bridge is attached.
-      Silence here is correct.
+      These links provide independent verification and public record.
     </p>
-    <div class="bar" style="margin-top:12px">
-      <div class="fill" style="width:0%"></div>
+
+    <div class="row">
+      <a class="link" href="https://osf.io/mn6vu" target="_blank" rel="noreferrer">
+        OSF Project
+      </a>
+      <a class="link" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noreferrer">
+        ORCID iD
+      </a>
     </div>
-    <p class="small" style="margin-top:6px">Awaiting external signal.</p>
+  </div>
+
+  <!-- ===================== DESIGN LAW ===================== -->
+  <div class="card">
+    <h2>Design Law</h2>
+    <p>
+      Silence is not failure.  
+      Motion appears only when real signal exists.
+    </p>
+    <p style="margin-top:10px">
+      This system never performs vitality.  
+      It reports truth.
+    </p>
   </div>
 
   <div class="footer">
@@ -212,53 +206,5 @@ p{margin:0;color:var(--muted);line-height:1.6}
   </div>
 
 </div>
-
-<script>
-/* ===================== INTERACTION SIGNAL ===================== */
-
-const KEY = "GM_INTERACTIONS";
-const now = () => Date.now();
-
-function record(){
-  const arr = JSON.parse(localStorage.getItem(KEY) || "[]");
-  arr.push(now());
-  localStorage.setItem(KEY, JSON.stringify(arr));
-}
-
-function compute(){
-  const arr = JSON.parse(localStorage.getItem(KEY) || "[]");
-  const t = now();
-
-  const h = arr.filter(x => t - x < 3600000).length;
-  const d = arr.filter(x => t - x < 86400000).length;
-  const w = arr.filter(x => t - x < 604800000).length;
-  const m = arr.filter(x => t - x < 2592000000).length;
-
-  document.getElementById("hFill").style.width = Math.min(100, h*10)+"%";
-  document.getElementById("dFill").style.width = Math.min(100, d*5)+"%";
-  document.getElementById("wFill").style.width = Math.min(100, w*2)+"%";
-  document.getElementById("mFill").style.width = Math.min(100, m)+"%";
-
-  const dot = document.getElementById("statusDot");
-  const text = document.getElementById("statusText");
-
-  if(h>0){
-    dot.style.background = "#4ade80";
-    text.textContent = "OPERATIONAL";
-  }else if(d>0){
-    dot.style.background = "#facc15";
-    text.textContent = "IDLE";
-  }else{
-    dot.style.background = "#f87171";
-    text.textContent = "DORMANT";
-  }
-}
-
-["mousemove","keydown","touchstart","scroll"].forEach(e=>{
-  window.addEventListener(e, ()=>{record();compute();},{passive:true});
-});
-
-compute();
-</script>
 </body>
 </html>

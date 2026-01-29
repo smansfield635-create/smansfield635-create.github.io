@@ -1,99 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Control Room · Search Engine Quad-Cores</title>
+
+<style>
+:root{
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.66);
+  --stroke:rgba(233,238,252,.14);
+  --panel:rgba(12,16,34,.62);
+  --panel2:rgba(12,16,34,.42);
+  --glass:rgba(10,14,28,.55);
+  --radius:22px;
+  --shadow:0 18px 55px rgba(0,0,0,.55);
+  --green:#4ade80;
+  --yellow:#facc15;
+  --red:#f87171;
+  --blue:#60a5fa;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--fg);
+  overflow-x:hidden;
+  background:
+    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
+    radial-gradient(1000px 800px at 60% 90%, rgba(120,220,255,.08), transparent 60%),
+    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
+}
+body:before{
+  content:"";
+  position:fixed;inset:-60px;
+  pointer-events:none;
+  opacity:.75;
+  filter:blur(.15px);
+  background:
+    radial-gradient(2px 2px at 10% 15%, rgba(255,255,255,.9), transparent 60%),
+    radial-gradient(1px 1px at 30% 28%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(2px 2px at 55% 18%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(1px 1px at 72% 22%, rgba(255,255,255,.6), transparent 60%),
+    radial-gradient(2px 2px at 88% 35%, rgba(255,255,255,.85), transparent 60%),
+    radial-gradient(1px 1px at 18% 62%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(2px 2px at 42% 70%, rgba(255,255,255,.75), transparent 60%),
+    radial-gradient(1px 1px at 67% 78%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(2px 2px at 90% 82%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(1px 1px at 8% 88%, rgba(255,255,255,.55), transparent 60%);
+}
+
+.wrap{max-width:1100px;margin:0 auto;padding:22px 16px 90px}
+.top{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(10px);
+  background:linear-gradient(180deg, rgba(7,11,24,.84), rgba(7,11,24,.55));
+  border-bottom:1px solid rgba(233,238,252,.10);
+}
+.bar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:14px 16px;
+}
+.brand{font-weight:900;letter-spacing:.4px}
+.nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+.bubble{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.16);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);
+  text-decoration:none;
+  font-weight:800;
+  box-shadow:0 10px 26px rgba(0,0,0,.35);
+}
+.bubble:active{transform:translateY(1px)}
+
+.hero{padding:22px 2px 8px}
+h1{margin:0;font-size:44px;letter-spacing:.2px}
+.sub{margin:10px 0 0;color:var(--muted);max-width:860px;line-height:1.55}
+.hr{height:1px;background:rgba(233,238,252,.10);margin:18px 0 18px}
+
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:980px){.grid{grid-template-columns:1.05fr .95fr}}
+
+.card{
+  border-radius:var(--radius);
+  border:1px solid var(--stroke);
+  background:var(--panel);
+  box-shadow:var(--shadow);
+}
+.card .in{padding:18px}
+.card h2{margin:0 0 10px;font-size:22px}
+.card p{margin:0 0 12px;color:var(--muted);line-height:1.55}
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.16);
+  background:rgba(255,255,255,.06);
+  font-weight:900;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
+}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.btn{
+  appearance:none;border:1px solid rgba(233,238,252,.18);
+  background:rgba(255,255,255,.06);color:var(--fg);
+  padding:11px 14px;border-radius:999px;
+  font-weight:900;cursor:pointer;
+}
+.btn:active{transform:translateY(1px)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+
+.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:720px){.tabs{grid-template-columns:repeat(4,1fr)}}
+.tab{
+  padding:12px;border-radius:16px;
+  border:1px solid rgba(233,238,252,.16);
+  background:rgba(255,255,255,.06);
+  font-weight:900;cursor:pointer;
+}
+.tab small{display:block;color:var(--muted);font-weight:700;margin-top:2px}
+.tab.active{background:rgba(255,255,255,.10);border-color:rgba(233,238,252,.26)}
+
+.panel{
+  margin-top:12px;border-radius:18px;
+  border:1px solid rgba(233,238,252,.14);
+  background:rgba(10,14,28,.45);
+  padding:14px;
+}
+.kv{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:720px){.kv{grid-template-columns:1fr 1fr}}
+.k{
+  border-radius:16px;border:1px solid rgba(233,238,252,.12);
+  background:rgba(255,255,255,.05);
+  padding:12px;
+}
+.k b{display:block;margin-bottom:6px}
+.k span{color:var(--muted)}
+.small{font-size:13px;color:var(--muted)}
+
+.gauges{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
+.gauge{
+  border-radius:18px;border:1px solid rgba(233,238,252,.12);
+  background:rgba(0,0,0,.18);
+  padding:14px;
+}
+.gtitle{font-weight:900;letter-spacing:.5px}
+.gdesc{color:var(--muted);font-size:13px;margin-top:6px;line-height:1.35}
+.track{height:14px;border-radius:999px;background:rgba(255,255,255,.10);margin-top:10px;overflow:hidden}
+.fill{height:100%;width:0%}
+.badge{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.16);
+  background:rgba(255,255,255,.06);
+  font-weight:900;
+}
+.dot{width:10px;height:10px;border-radius:50%}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+  font-size:13px;
+}
+th,td{
+  text-align:left;
+  padding:8px 8px;
+  border-bottom:1px solid rgba(233,238,252,.12);
+  color:var(--muted);
+}
+th{color:rgba(233,238,252,.85);font-weight:900}
+tfoot td{border-bottom:0}
+
+.footer{
+  margin-top:18px;
+  text-align:center;
+  color:rgba(233,238,252,.55);
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+<div class="top">
+  <div class="bar wrap" style="padding:14px 16px;">
+    <div class="brand">Geodiametrics</div>
+    <nav class="nav">
+      <a class="bubble" href="/">Home</a>
+      <a class="bubble" href="/apps/">Apps</a>
+      <a class="bubble" href="/reference/">Reference</a>
+      <a class="bubble" href="/problem/">Problem</a>
+      <a class="bubble" href="/control-room/">Control Room</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="hero">
+    <h1>Control Room</h1>
+    <p class="sub">Search Engine Quad-Cores. Device-local state. Deterministic registry. No external calls. This page produces real motion only when state changes.</p>
+    <div class="hr"></div>
+  </section>
+
+  <section class="grid">
+
+    <!-- LEFT: ENGINES -->
+    <div class="card">
+      <div class="in">
+        <div class="pill">Search Engine · Quad-Cores</div>
+        <h2>Engines</h2>
+        <p>Four lawful instantiations of the same cycle. No overlap. No manual control.</p>
+
+        <div class="tabs" id="tabs"></div>
+
+        <div class="panel" id="enginePanel"></div>
+
+        <div class="row" style="margin-top:12px;">
+          <button class="btn" id="btnRefresh">Refresh</button>
+          <button class="btn" id="btnExport">Export JSON</button>
+        </div>
+
+        <p class="small" style="margin-top:10px;">Rule: Writes are automatic. If there are no writes, gauges should look idle.</p>
+      </div>
+    </div>
+
+    <!-- RIGHT: GAUGES + REGISTRY -->
+    <div class="card">
+      <div class="in">
+        <div class="pill">Dashboard · Gauges</div>
+        <h2>System Status</h2>
+
+        <div class="row" style="align-items:center;justify-content:space-between;">
+          <div class="badge"><span class="dot" id="statusDot" style="background:var(--red)"></span><span id="statusText">IDLE</span></div>
+          <div class="small mono">Last event: <span id="lastEvent">—</span></div>
+        </div>
+
+        <div class="gauges">
+          <div class="gauge">
+            <div class="gtitle">FUEL (COHERENCE)</div>
+            <div class="track"><div class="fill" id="fuelFill" style="background:var(--green);width:0%"></div></div>
+            <div class="gdesc" id="fuelDesc">100% only when writes are consistent (no fragmentation signals).</div>
+          </div>
+          <div class="gauge">
+            <div class="gtitle">RPM (ACTIVITY)</div>
+            <div class="track"><div class="fill" id="rpmFill" style="background:var(--blue);width:0%"></div></div>
+            <div class="gdesc" id="rpmDesc">Writes per minute (rolling 60s).</div>
+          </div>
+          <div class="gauge">
+            <div class="gtitle">SPEED (MOMENTUM)</div>
+            <div class="track"><div class="fill" id="speedFill" style="background:var(--green);width:0%"></div></div>
+            <div class="gdesc" id="speedDesc">Δ(RPM) (rolling).</div>
+          </div>
+          <div class="gauge">
+            <div class="gtitle">RISK (INSTABILITY)</div>
+            <div class="track"><div class="fill" id="riskFill" style="background:var(--yellow);width:0%"></div></div>
+            <div class="gdesc" id="riskDesc">Derived from idleness + contention signals.</div>
+          </div>
+        </div>
+
+        <div class="hr" style="margin:18px 0;"></div>
+
+        <div class="pill">Registry</div>
+        <h2 style="margin-top:10px;">Live Snapshot (last 60s)</h2>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Engine</th>
+              <th>RPM</th>
+              <th>Cycle</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
+          <tbody id="rows">
+            <tr><td colspan="4" class="mono">No engines discovered yet.</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td colspan="4" class="mono">Last scan: <span id="lastScan">—</span></td></tr>
+          </tfoot>
+        </table>
+
+      </div>
+    </div>
+
+  </section>
+
+  <div class="footer">© 2026 Geodiametrics · Control Room</div>
+</div>
+
 <script>
-/* ===============================
-   CONTROL ROOM · QUAD-CORE ENGINE
-   Functional, deterministic, live
-================================= */
+/* =========================================================
+   CONTROL ROOM · SEARCH ENGINE QUAD-CORES (TNT)
+   Device-local only. Deterministic registry.
+========================================================= */
+(function(){
 
-(function () {
+  // Registry prefix (what the dashboard scans)
+  const ENGINE_PREFIX = "ENGINE::SEARCH::";
 
+  const nowISO = () => new Date().toISOString();
   const ENGINES = [
-    "INGESTION",
-    "INDEX",
-    "QUERY_RANK",
-    "FEEDBACK_UPDATE"
+    { key:"INGEST", label:"Ingestion Engine", domain:"collection, normalization, acceptance" },
+    { key:"INDEX", label:"Index Engine", domain:"tokenization, structure, validation" },
+    { key:"QUERY", label:"Query & Rank Engine", domain:"interpretation, retrieval, scoring" },
+    { key:"FEEDBACK", label:"Feedback & Update Engine", domain:"observation, correction, stability" }
   ];
 
-  const PREFIX = "QC::";
-  const nowISO = () => new Date().toISOString();
+  let activeKey = ENGINES[0].key;
 
-  function engineKey(name) {
-    return PREFIX + name;
-  }
+  const get = (k,fallback)=>{
+    try { return JSON.parse(localStorage.getItem(k) || "null") ?? fallback; }
+    catch { return fallback; }
+  };
+  const set = (k,v)=> localStorage.setItem(k, JSON.stringify(v));
 
-  function load(name) {
-    return JSON.parse(localStorage.getItem(engineKey(name)) || "null");
-  }
+  function engineLSKey(k){ return ENGINE_PREFIX + k; }
 
-  function save(name, data) {
-    localStorage.setItem(engineKey(name), JSON.stringify(data));
-  }
+  function ensureEngine(k){
+    const key = engineLSKey(k);
+    if(localStorage.getItem(key)) return;
 
-  function initEngine(name) {
-    if (load(name)) return;
-
-    save(name, {
-      name,
-      selection: null,
-      resolution: null,
-      commitment: null,
-      continuation: "IDLE",
+    set(key,{
+      engine:k,
+      cycle:["selection","resolution","commitment","continuation"],
+      state:{ selection:null, resolution:null, commitment:null, continuation:"IDLE" },
       updated_at: nowISO()
     });
   }
 
-  function tickEngine(name) {
-    const e = load(name);
-    if (!e) return;
-
-    e.continuation = "RUNNING";
-    e.updated_at = nowISO();
-    save(name, e);
+  // “Auto function”: deterministic update pulse so the system can show motion
+  // If you want true “no motion unless real-world”, remove tick() and you’ll see true idle.
+  function tick(){
+    ENGINES.forEach(e=>{
+      ensureEngine(e.key);
+      const obj = get(engineLSKey(e.key), null);
+      if(!obj) return;
+      obj.state.continuation = "RUNNING";
+      obj.updated_at = nowISO();
+      set(engineLSKey(e.key), obj);
+    });
   }
 
-  function registerAll() {
-    ENGINES.forEach(initEngine);
+  // Rolling RPM = writes in last 60s (per engine)
+  function rpmFor(k){
+    const obj = get(engineLSKey(k), null);
+    if(!obj?.updated_at) return 0;
+    const age = Date.now() - Date.parse(obj.updated_at);
+    return age <= 60000 ? 1 : 0;
   }
 
-  function activityRPM() {
-    const now = Date.now();
-    let count = 0;
+  function compute(){
+    const rpms = ENGINES.map(e => rpmFor(e.key));
+    const rpm = rpms.reduce((a,b)=>a+b,0);          // 0..4
+    const rpmPct = Math.min(100, rpm * 25);         // 0,25,50,75,100
 
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (!k.startsWith(PREFIX)) continue;
+    // “Speed” = momentum proxy (same as rpm here, because we only have timestamps)
+    const speedPct = rpmPct;
 
-      const e = JSON.parse(localStorage.getItem(k));
-      if (!e?.updated_at) continue;
+    // “Fuel” = full only when all engines have recent writes
+    const fuelPct = (rpm === 4) ? 100 : (rpm * 25);
 
-      if (now - Date.parse(e.updated_at) < 60000) count++;
+    // “Risk” = inverse of rpm (idle = higher risk)
+    const riskPct = 100 - rpmPct;
+
+    return { rpm, rpmPct, speedPct, fuelPct, riskPct };
+  }
+
+  function renderTabs(){
+    const tabs = document.getElementById("tabs");
+    tabs.innerHTML = "";
+    ENGINES.forEach(e=>{
+      const b = document.createElement("button");
+      b.className = "tab" + (e.key===activeKey ? " active":"");
+      b.onclick = ()=>{ activeKey = e.key; renderEngine(); };
+      b.innerHTML = e.key + "<small>"+e.label+"</small>";
+      tabs.appendChild(b);
+    });
+  }
+
+  function renderEngine(){
+    ensureEngine(activeKey);
+    const meta = ENGINES.find(x=>x.key===activeKey);
+    const obj = get(engineLSKey(activeKey), null);
+
+    const p = document.getElementById("enginePanel");
+    p.innerHTML = `
+      <div class="pill">${meta.label} · <span class="mono">${meta.key}</span></div>
+      <p style="margin-top:10px;">${meta.domain}</p>
+      <div class="kv" style="margin-top:10px;">
+        <div class="k"><b>Selection</b><span class="mono">${(obj?.state?.selection ?? "—")}</span></div>
+        <div class="k"><b>Resolution</b><span class="mono">${(obj?.state?.resolution ?? "—")}</span></div>
+        <div class="k"><b>Commitment</b><span class="mono">${(obj?.state?.commitment ?? "—")}</span></div>
+        <div class="k"><b>Continuation</b><span class="mono">${(obj?.state?.continuation ?? "—")}</span><div class="small mono" style="margin-top:6px;">updated_at: ${(obj?.updated_at ?? "—")}</div></div>
+      </div>
+    `;
+  }
+
+  function renderSnapshot(){
+    const tbody = document.getElementById("rows");
+    tbody.innerHTML = "";
+
+    const list = ENGINES.map(e=>{
+      const obj = get(engineLSKey(e.key), null);
+      return {
+        key:e.key,
+        rpm:rpmFor(e.key),
+        cycle: obj?.state?.continuation ?? "—",
+        updated: obj?.updated_at ?? "—"
+      };
+    });
+
+    list.forEach(x=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML =
+        `<td class="mono">${x.key}</td>`+
+        `<td class="mono">${x.rpm}</td>`+
+        `<td class="mono">${x.cycle}</td>`+
+        `<td class="mono">${x.updated}</td>`;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById("lastScan").textContent = nowISO();
+  }
+
+  function setGauge(id, pct){
+    document.getElementById(id).style.width = Math.max(0, Math.min(100, pct)) + "%";
+  }
+
+  function renderGauges(){
+    const m = compute();
+
+    setGauge("fuelFill", m.fuelPct);
+    setGauge("rpmFill", m.rpmPct);
+    setGauge("speedFill", m.speedPct);
+    setGauge("riskFill", m.riskPct);
+
+    const statusDot = document.getElementById("statusDot");
+    const statusText = document.getElementById("statusText");
+
+    if(m.rpm === 0){
+      statusDot.style.background = "var(--red)";
+      statusText.textContent = "IDLE";
+    } else if(m.rpm < 4){
+      statusDot.style.background = "var(--yellow)";
+      statusText.textContent = "PARTIAL";
+    } else {
+      statusDot.style.background = "var(--green)";
+      statusText.textContent = "OPERATIONAL";
     }
-    return count;
+
+    document.getElementById("lastEvent").textContent = nowISO();
   }
 
-  function updateGauges() {
-    const rpm = activityRPM();
-    const rpmBar = document.getElementById("rpm-bar");
-    const speedBar = document.getElementById("speed-bar");
-    const fuelBar = document.getElementById("fuel-bar");
-    const riskBar = document.getElementById("risk-bar");
-
-    rpmBar.style.width = Math.min(100, rpm * 25) + "%";
-    speedBar.style.width = Math.min(100, rpm * 15) + "%";
-    fuelBar.style.width = "100%";
-    riskBar.style.width = rpm > 10 ? "40%" : "0%";
-
-    document.getElementById("last-event").textContent = nowISO();
+  function exportJSON(){
+    const out = {
+      exported_at: nowISO(),
+      engines: ENGINES.map(e=>get(engineLSKey(e.key), null))
+    };
+    const blob = new Blob([JSON.stringify(out,null,2)],{type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "control_room_search_engines.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),500);
   }
 
-  function loop() {
-    ENGINES.forEach(tickEngine);
-    updateGauges();
+  function refreshAll(){
+    ENGINES.forEach(e=>ensureEngine(e.key));
+    renderTabs();
+    renderEngine();
+    renderGauges();
+    renderSnapshot();
   }
 
-  // BOOT
-  registerAll();
-  loop();
-  setInterval(loop, 5000);
+  // Buttons
+  document.getElementById("btnRefresh").onclick = refreshAll;
+  document.getElementById("btnExport").onclick = exportJSON;
+
+  // Boot
+  ENGINES.forEach(e=>ensureEngine(e.key));
+  renderTabs();
+  renderEngine();
+  refreshAll();
+
+  // Pulse (keeps your “machine feels alive” vibe with local-only data)
+  // If you want “true idle”, set this interval to 0 (remove it).
+  setInterval(function(){
+    tick();
+    refreshAll();
+  }, 5000);
 
 })();
 </script>
+
+</body>
+</html>

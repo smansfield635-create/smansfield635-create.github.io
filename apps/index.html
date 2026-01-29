@@ -7,109 +7,146 @@
 
 <style>
 :root{
-  --fg:#e9eefc;
-  --muted:rgba(233,238,252,.66);
+  --fg:#e9eefc;--muted:rgba(233,238,252,.66);
   --stroke:rgba(233,238,252,.14);
   --panel:rgba(12,16,34,.62);
-  --radius:22px;
-  --shadow:0 18px 55px rgba(0,0,0,.55);
+  --radius:22px;--shadow:0 18px 55px rgba(0,0,0,.55);
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
+  overflow-x:hidden;
   background:
     radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
     radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
+    radial-gradient(1100px 900px at 55% 85%, rgba(120,220,255,.10), transparent 60%),
     linear-gradient(180deg,#070b18,#050714 70%,#04040f);
 }
-.wrap{max-width:1100px;margin:0 auto;padding:22px 16px 70px}
+body:before{
+  content:"";
+  position:fixed;inset:-60px;
+  pointer-events:none;
+  opacity:.75;
+  filter:blur(.15px);
+  background:
+    radial-gradient(2px 2px at 10% 15%, rgba(255,255,255,.9), transparent 60%),
+    radial-gradient(1px 1px at 30% 28%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(2px 2px at 55% 18%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(1px 1px at 72% 22%, rgba(255,255,255,.6), transparent 60%),
+    radial-gradient(2px 2px at 88% 35%, rgba(255,255,255,.85), transparent 60%),
+    radial-gradient(1px 1px at 18% 62%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(2px 2px at 42% 70%, rgba(255,255,255,.75), transparent 60%),
+    radial-gradient(1px 1px at 67% 78%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(2px 2px at 90% 82%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(1px 1px at 8% 88%, rgba(255,255,255,.55), transparent 60%);
+}
+.wrap{max-width:1100px;margin:0 auto;padding:18px 14px 80px}
 .top{
   position:sticky;top:0;z-index:50;
   backdrop-filter:blur(10px);
-  background:linear-gradient(180deg, rgba(7,11,24,.84), rgba(7,11,24,.55));
+  background:linear-gradient(180deg, rgba(7,11,24,.86), rgba(7,11,24,.55));
   border-bottom:1px solid rgba(233,238,252,.10);
 }
-.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
-.brand{font-weight:900}
-.nav{display:flex;gap:10px;flex-wrap:wrap}
+.bar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:14px 14px;
+}
+.brand{font-weight:950;letter-spacing:.4px}
+.nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
 .bubble{
+  display:inline-flex;align-items:center;justify-content:center;
   padding:10px 14px;border-radius:999px;
   border:1px solid rgba(233,238,252,.16);
   background:rgba(255,255,255,.06);
-  color:var(--fg);text-decoration:none;font-weight:800;
+  color:var(--fg);
+  text-decoration:none;
+  font-weight:900;
+  box-shadow:0 10px 26px rgba(0,0,0,.35);
 }
-.hero{padding:26px 2px 8px}
-h1{margin:0;font-size:44px}
-.sub{margin:10px 0 0;color:var(--muted);max-width:860px}
-.hr{height:1px;background:rgba(233,238,252,.10);margin:20px 0 24px}
-.grid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
-.card{border-radius:var(--radius);border:1px solid var(--stroke);background:var(--panel);box-shadow:var(--shadow)}
-.card .in{padding:18px}
-.card h2{margin:0 0 10px;font-size:22px}
-.card p{margin:0 0 14px;color:var(--muted)}
+.bubble:active{transform:translateY(1px)}
+.card{
+  border-radius:22px;
+  border:1px solid var(--stroke);
+  background:var(--panel);
+  box-shadow:var(--shadow);
+  padding:18px;
+  margin:14px 0;
+}
+h1{margin:0 0 10px;font-size:40px}
+h2{margin:0 0 10px;font-size:22px}
+p{margin:0 0 10px;color:var(--muted);line-height:1.55}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;
   padding:11px 16px;border-radius:999px;
   border:1px solid rgba(233,238,252,.18);
   background:rgba(255,255,255,.06);
-  color:var(--fg);text-decoration:none;font-weight:900;
+  color:var(--fg);
+  font-weight:900;
+  text-decoration:none;
+  display:inline-flex;align-items:center;justify-content:center;
 }
-.footer{margin-top:22px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
+.btn:active{transform:translateY(1px)}
 .pill{
-  display:inline-flex;align-items:center;
+  display:inline-flex;align-items:center;gap:8px;
   padding:8px 12px;border-radius:999px;
   border:1px solid rgba(233,238,252,.16);
   background:rgba(255,255,255,.06);
-  font-weight:900;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
+  font-weight:950;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
 }
+.footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:18px}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 
 <body>
 <div class="top">
-  <div class="bar wrap">
+  <div class="bar wrap" style="padding:14px 14px;">
     <div class="brand">Geodiametrics</div>
     <nav class="nav">
       <a class="bubble" href="/">Home</a>
-      <a class="bubble" href="/apps/">Apps</a>
       <a class="bubble" href="/control-room/">Control Room</a>
-      <a class="bubble" href="/control-room/dashboard/">Dashboard</a>
-      <a class="bubble" href="/control-room/diamond/geometric-quad-core-fusion/">Diamond Fusion</a>
+      <a class="bubble" href="/reference/">Reference</a>
+      <a class="bubble" href="/problem/">Problem</a>
     </nav>
   </div>
 </div>
 
 <div class="wrap">
-  <section class="hero">
-    <h1>Apps</h1>
-    <p class="sub">Viewer-only surface. Nothing executes here. All engines live in the Control Room.</p>
-    <div class="hr"></div>
-  </section>
 
-  <section class="grid">
+  <div class="card">
+    <div class="pill">Viewer Only</div>
+    <h1 style="margin-top:10px;">Apps</h1>
+    <p>Launch surfaces only. Authority + engines live in the Control Room.</p>
+    <div class="row" style="margin-top:12px;">
+      <a class="btn" href="/control-room/">Open Control Room</a>
+    </div>
+  </div>
+
+  <div class="grid">
     <div class="card">
-      <div class="in">
-        <div class="pill">Execution</div>
-        <h2>Control Room</h2>
-        <p>Engines, registry, supervisor, and cross-core walls.</p>
-        <a class="btn" href="/control-room/">Open Control Room</a>
+      <div class="pill">Control</div>
+      <h2>Control Room</h2>
+      <p>Dashboard + Supervisor + Diamond Fusion combined.</p>
+      <div class="row" style="margin-top:10px;">
+        <a class="btn" href="/control-room/">Open</a>
       </div>
     </div>
 
     <div class="card">
-      <div class="in">
-        <div class="pill">Quad-Core</div>
-        <h2>Diamond Fusion</h2>
-        <p>Single-file quad-core engine. Device-local state.</p>
-        <a class="btn" href="/control-room/diamond/geometric-quad-core-fusion/">Open Diamond Fusion</a>
+      <div class="pill">Reference</div>
+      <h2>Canonical Reference</h2>
+      <p>Definitions and invariants.</p>
+      <div class="row" style="margin-top:10px;">
+        <a class="btn" href="/reference/">Open</a>
       </div>
     </div>
-  </section>
+  </div>
 
-  <div class="footer">© 2026 Geodiametrics · Apps (Viewer Only)</div>
+  <div class="footer">© 2026 Geodiametrics · Apps</div>
 </div>
 </body>
 </html>
+```0

@@ -17,9 +17,12 @@
 .breadcrumb{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .crumb{color:var(--muted);font-weight:800}
 .hide{display:none!important}
-.room{min-height:42vh}
-.room h2{margin:10px 0 8px;font-size:18px;letter-spacing:.3px}
+/* FIX: rooms must not collapse; remove forced huge empty area; ensure content is visible and scrollable */
+.room{min-height:auto}
+.room h2{margin:10px 0 8px;font-size:22px;letter-spacing:.2px}
 .room p{margin:0;color:var(--muted);max-width:820px}
+.room-body{margin-top:12px;padding:14px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#0f1623,#0b1220);color:var(--text)}
+.room-body *{color:inherit}
 </style></head><body><div class="wrapper">
 <div class="header"><h1>Geodiametrics</h1><p>Constraint-first execution platform<br>Selection → Resolution → Commitment → Continuation</p></div>
 
@@ -28,8 +31,8 @@
     <span class="pill">Navigate</span>
     <div class="breadcrumb">
       <span class="crumb" id="crumb">HOME</span>
-      <button class="btn" id="backBtn" style="padding:10px 14px;border-radius:999px" type="button">Back</button>
-      <button class="btn" id="homeBtn" style="padding:10px 14px;border-radius:999px" type="button">Home</button>
+      <button class="btn" id="backBtn" style="padding:10px 14px" type="button">Back</button>
+      <button class="btn" id="homeBtn" style="padding:10px 14px" type="button">Home</button>
     </div>
   </div>
   <div class="nav-grid" id="homeNav">
@@ -53,25 +56,26 @@
   <p class="muted" style="margin:12px 0 0">External identifiers for validation and citation.</p>
 </div>
 
-<!-- ROOMS (single-file, no 404 ever) -->
-<div class="card room hide" data-room="toc"><span class="pill">Table of Contents</span><h2>Table of Contents</h2><p>System structure and index. Replace this room body with your actual TOC content.</p></div>
-<div class="card room hide" data-room="mission"><span class="pill">Mission Statement</span><h2>Mission Statement</h2><p>Purpose, scope, and execution posture. Replace this room body with your mission statement.</p></div>
-<div class="card room hide" data-room="about"><span class="pill">About</span><h2>About</h2><p>What this platform is and is not. Replace this room body with your about copy.</p></div>
-<div class="card room hide" data-room="rights"><span class="pill">Rights & IP</span><h2>Rights & IP</h2><p>Usage, attribution, and licensing. Replace this room body with your rights/IP terms.</p></div>
-<div class="card room hide" data-room="control"><span class="pill">Control Room</span><h2>Control Room</h2><p>Authoritative observer surface. Instrumentation and live gauges operate here.</p></div>
-<div class="card room hide" data-room="apps"><span class="pill">Apps</span><h2>Apps</h2><p>Execution and viewing surfaces. Replace this room body with your apps list/links.</p></div>
-<div class="card room hide" data-room="reference"><span class="pill">Reference</span><h2>Reference</h2><p>Definitions and formal grounding. Replace this room body with references and definitions.</p></div>
-<div class="card room hide" data-room="problem"><span class="pill">Problem</span><h2>Problem</h2><p>The instability this system addresses. Replace this room body with the problem statement.</p></div>
+<div class="card room hide" data-room="toc"><span class="pill">Table of Contents</span><h2>Table of Contents</h2><p class="muted">System structure and index.</p><div class="room-body">PUT YOUR TOC CONTENT HERE.</div></div>
+<div class="card room hide" data-room="mission"><span class="pill">Mission Statement</span><h2>Mission Statement</h2><p class="muted">Purpose, scope, and execution posture.</p><div class="room-body">PUT YOUR MISSION STATEMENT HERE.</div></div>
+<div class="card room hide" data-room="about"><span class="pill">About</span><h2>About</h2><p class="muted">What this platform is and is not.</p><div class="room-body">PUT YOUR ABOUT COPY HERE.</div></div>
+<div class="card room hide" data-room="rights"><span class="pill">Rights & IP</span><h2>Rights & IP</h2><p class="muted">Usage, attribution, and licensing.</p><div class="room-body">PUT YOUR RIGHTS / IP TERMS HERE.</div></div>
+<div class="card room hide" data-room="control"><span class="pill">Control Room</span><h2>Control Room</h2><p class="muted">Authoritative observer surface. Instrumentation and live gauges operate here.</p><div class="room-body">PUT YOUR CONTROL ROOM UI HERE.</div></div>
+<div class="card room hide" data-room="apps"><span class="pill">Apps</span><h2>Apps</h2><p class="muted">Execution and viewing surfaces.</p><div class="room-body">PUT YOUR APPS LIST / LINKS HERE.</div></div>
+<div class="card room hide" data-room="reference"><span class="pill">Reference</span><h2>Reference</h2><p class="muted">Definitions and formal grounding.</p><div class="room-body">PUT YOUR REFERENCE CONTENT HERE.</div></div>
+<div class="card room hide" data-room="problem"><span class="pill">Problem</span><h2>Problem</h2><p class="muted">The instability this system addresses.</p><div class="room-body">PUT YOUR PROBLEM STATEMENT HERE.</div></div>
 
 <div class="footer">© 2026 Geodiametrics</div>
 </div>
 
 <script>
 (()=>{const rooms=[...document.querySelectorAll("[data-room]")],homeNav=document.getElementById("homeNav"),crumb=document.getElementById("crumb"),backBtn=document.getElementById("backBtn"),homeBtn=document.getElementById("homeBtn");
-const normalize=(h)=>String(h||"").replace("#","").trim().toLowerCase();
+const normalize=h=>String(h||"").replace("#","").trim().toLowerCase();
 const showHome=()=>{rooms.forEach(r=>r.classList.add("hide"));homeNav.classList.remove("hide");crumb.textContent="HOME";history.replaceState(null,"","#");};
-const showRoom=(id)=>{const key=normalize(id);const target=rooms.find(r=>r.dataset.room===key);if(!target){showHome();return;}
-rooms.forEach(r=>r.classList.toggle("hide",r!==target));homeNav.classList.add("hide");crumb.textContent=key.toUpperCase();target.scrollIntoView({block:"start",behavior:"smooth"});};
+const showRoom=id=>{const key=normalize(id);const target=rooms.find(r=>r.dataset.room===key);if(!target){showHome();return;}
+rooms.forEach(r=>r.classList.toggle("hide",r!==target));homeNav.classList.add("hide");crumb.textContent=key.toUpperCase();
+requestAnimationFrame(()=>target.scrollIntoView({block:"start",behavior:"smooth"}));
+};
 const route=()=>{const key=normalize(location.hash);if(!key){showHome();return;}showRoom(key);};
 window.addEventListener("hashchange",route);
 backBtn.addEventListener("click",()=>{if(location.hash) history.back(); else showHome();});

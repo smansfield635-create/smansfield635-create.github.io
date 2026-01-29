@@ -1,110 +1,99 @@
-/* =========================================================
-   GEODIAMETRICS · SEARCH ENGINE QUAD-CORES
-   Four lawful instantiations of the same cycle
-   No overlap. No manual control.
-========================================================= */
+<script>
+/* ===============================
+   CONTROL ROOM · QUAD-CORE ENGINE
+   Functional, deterministic, live
+================================= */
 
-const ENGINE_PREFIX = "ENGINE::SEARCH::";
-const nowISO = () => new Date().toISOString();
+(function () {
 
-/* ---- Quad-Core Factory ---- */
-function createQuadCore(name, domain){
-  return {
-    name,
-    domain,
-    state: {
+  const ENGINES = [
+    "INGESTION",
+    "INDEX",
+    "QUERY_RANK",
+    "FEEDBACK_UPDATE"
+  ];
+
+  const PREFIX = "QC::";
+  const nowISO = () => new Date().toISOString();
+
+  function engineKey(name) {
+    return PREFIX + name;
+  }
+
+  function load(name) {
+    return JSON.parse(localStorage.getItem(engineKey(name)) || "null");
+  }
+
+  function save(name, data) {
+    localStorage.setItem(engineKey(name), JSON.stringify(data));
+  }
+
+  function initEngine(name) {
+    if (load(name)) return;
+
+    save(name, {
+      name,
       selection: null,
       resolution: null,
       commitment: null,
-      continuation: {
-        cycle: "IDLE",
-        last_set: null
-      }
-    },
-    updated_at: null
-  };
-}
+      continuation: "IDLE",
+      updated_at: nowISO()
+    });
+  }
 
-/* ---- Engine Registry ---- */
-const SearchEngines = {
-  INGEST: createQuadCore(
-    "Ingest Engine",
-    "Source collection, normalization, acceptance"
-  ),
+  function tickEngine(name) {
+    const e = load(name);
+    if (!e) return;
 
-  INDEX: createQuadCore(
-    "Index Engine",
-    "Tokenization, structure, validation"
-  ),
+    e.continuation = "RUNNING";
+    e.updated_at = nowISO();
+    save(name, e);
+  }
 
-  QUERY: createQuadCore(
-    "Query & Rank Engine",
-    "Interpretation, retrieval, scoring"
-  ),
+  function registerAll() {
+    ENGINES.forEach(initEngine);
+  }
 
-  FEEDBACK: createQuadCore(
-    "Feedback & Update Engine",
-    "Observation, correction, stabilization"
-  )
-};
+  function activityRPM() {
+    const now = Date.now();
+    let count = 0;
 
-/* ---- Persistence ---- */
-function saveEngine(key, engine){
-  engine.updated_at = nowISO();
-  localStorage.setItem(
-    ENGINE_PREFIX + key,
-    JSON.stringify(engine)
-  );
-}
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (!k.startsWith(PREFIX)) continue;
 
-function loadEngine(key){
-  const raw = localStorage.getItem(ENGINE_PREFIX + key);
-  return raw ? JSON.parse(raw) : null;
-}
+      const e = JSON.parse(localStorage.getItem(k));
+      if (!e?.updated_at) continue;
 
-/* ---- Initialization ---- */
-function registerSearchEngines(){
-  Object.keys(SearchEngines).forEach(k => {
-    const existing = loadEngine(k);
-    if(existing){
-      SearchEngines[k] = existing;
-    } else {
-      saveEngine(k, SearchEngines[k]);
+      if (now - Date.parse(e.updated_at) < 60000) count++;
     }
-  });
-}
+    return count;
+  }
 
-/* ---- Lawful Transitions (no UI hooks here) ---- */
-function advanceSelection(key, value){
-  const e = loadEngine(key);
-  if(!e) return;
-  e.state.selection = value;
-  e.state.continuation = { cycle: "SELECTED", last_set: nowISO() };
-  saveEngine(key, e);
-}
+  function updateGauges() {
+    const rpm = activityRPM();
+    const rpmBar = document.getElementById("rpm-bar");
+    const speedBar = document.getElementById("speed-bar");
+    const fuelBar = document.getElementById("fuel-bar");
+    const riskBar = document.getElementById("risk-bar");
 
-function resolve(key, value){
-  const e = loadEngine(key);
-  if(!e || !e.state.selection) return;
-  e.state.resolution = value;
-  e.state.continuation = { cycle: "RESOLVED", last_set: nowISO() };
-  saveEngine(key, e);
-}
+    rpmBar.style.width = Math.min(100, rpm * 25) + "%";
+    speedBar.style.width = Math.min(100, rpm * 15) + "%";
+    fuelBar.style.width = "100%";
+    riskBar.style.width = rpm > 10 ? "40%" : "0%";
 
-function commit(key, value){
-  const e = loadEngine(key);
-  if(!e || !e.state.resolution) return;
-  e.state.commitment = value;
-  e.state.continuation = { cycle: "COMMITTED", last_set: nowISO() };
-  saveEngine(key, e);
-}
+    document.getElementById("last-event").textContent = nowISO();
+  }
 
-function continueCycle(key){
-  const e = loadEngine(key);
-  if(!e || !e.state.commitment) return;
-  e.state.continuation = { cycle: "CONTINUING", last_set: nowISO() };
-  saveEngine(key, e);
-}
+  function loop() {
+    ENGINES.forEach(tickEngine);
+    updateGauges();
+  }
 
-/* ---- Boot ---- */
-registerSearchEngines();
+  // BOOT
+  registerAll();
+  loop();
+  setInterval(loop, 5000);
+
+})();
+</script>

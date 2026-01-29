@@ -1,19 +1,16 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Geodiametrics</title><style>
-:root{--bg:#0b0f14;--panel:#111826;--panel2:#0f1623;--border:#223044;--text:#e7eef7;--muted:#93a4b8;--hi:#3a5273}
+:root{--bg:#0b0f14;--panel:#111826;--panel2:#0f1623;--border:#223044;--text:#e7eef7;--muted:#93a4b8;--hi:#3a5273;--ok:#2bd576;--bad:#ff5c5c}
 *{box-sizing:border-box}html,body{height:100%}body{margin:0;background:radial-gradient(1200px 800px at 50% -20%,#16223a 0%,var(--bg) 60%);color:var(--text);font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Arial}
 .wrapper{max-width:1100px;margin:0 auto;padding:18px 14px 52px}
-.header{text-align:center;margin:8px 0 14px} .header h1{margin:0;font-size:34px;letter-spacing:.4px} .header p{margin:10px 0 0;color:var(--muted)}
+.header{text-align:center;margin:8px 0 14px}.header h1{margin:0;font-size:34px;letter-spacing:.4px}.header p{margin:10px 0 0;color:var(--muted)}
 .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--border);border-radius:22px;padding:16px;margin:12px 0}
 .pill{display:inline-block;padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:var(--panel2);font-weight:900;letter-spacing:.6px;text-transform:uppercase;font-size:12px}
 .btn{display:flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid var(--border);background:linear-gradient(180deg,#121a2a,#0d1422);color:var(--text);border-radius:999px;padding:12px 12px;font-weight:900;letter-spacing:.3px;cursor:pointer;user-select:none}
-.btn:hover{border-color:var(--hi);transform:translateY(-1px)} .btn:active{transform:translateY(0)}
+.btn:hover{border-color:var(--hi);transform:translateY(-1px)}.btn:active{transform:translateY(0)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:12px}
 .gridWide{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px}
-.muted{color:var(--muted)}
-.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}
+.muted{color:var(--muted)}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}
 .hide{display:none!important}
-
-/* COHERENCE: ONE TOP NAV ALWAYS; HOME CONTENT ONLY WHEN HOME; ROOM CONTENT ONLY WHEN ROOM */
 .shell{position:sticky;top:0;z-index:50;margin-bottom:12px}
 .shellRow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .shellLeft{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -25,15 +22,12 @@
 .room h2{margin:10px 0 6px;font-size:22px;letter-spacing:.2px}
 .room p{margin:0;color:var(--muted);max-width:860px}
 .roomBody{margin-top:12px;padding:14px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#0f1623,#0b1220)}
-.roomBody a{color:var(--text)}
-/* HOME sections */
-.homeOnly{display:block}
-body.room-active .homeOnly{display:none!important}
+.homeOnly{display:block}body.room-active .homeOnly{display:none!important}
+.mono{font:13px/1.35 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
 </style></head><body><div class="wrapper">
 
 <div class="header homeOnly"><h1>Geodiametrics</h1><p>Constraint-first execution platform<br>Selection → Resolution → Commitment → Continuation</p></div>
 
-<!-- ALWAYS-ON TOP NAV (NEVER DISAPPEARS) -->
 <div class="card shell">
   <div class="shellRow">
     <div class="shellLeft">
@@ -48,6 +42,9 @@ body.room-active .homeOnly{display:none!important}
   </div>
   <div class="grid hide" id="roomNav">
     <a class="btn" href="#control">Control Room</a>
+    <a class="btn" href="#engine">Engine Room</a>
+    <a class="btn" href="#syntax">Syntax Room</a>
+    <a class="btn" href="#build">Build Room</a>
     <a class="btn" href="#apps">Apps</a>
     <a class="btn" href="#reference">Reference</a>
     <a class="btn" href="#problem">Problem</a>
@@ -58,11 +55,13 @@ body.room-active .homeOnly{display:none!important}
   </div>
 </div>
 
-<!-- HOME (ROUTER SURFACE) -->
 <div class="card homeOnly" id="homeRouter">
   <span class="pill">Home</span>
   <div class="grid" style="margin-top:12px">
     <a class="btn" href="#control">Control Room</a>
+    <a class="btn" href="#engine">Engine Room</a>
+    <a class="btn" href="#syntax">Syntax Room</a>
+    <a class="btn" href="#build">Build Room</a>
     <a class="btn" href="#apps">Apps</a>
     <a class="btn" href="#reference">Reference</a>
     <a class="btn" href="#problem">Problem</a>
@@ -82,57 +81,74 @@ body.room-active .homeOnly{display:none!important}
   <p class="muted" style="margin:12px 0 0">External identifiers for validation and citation.</p>
 </div>
 
-<!-- ROOMS (VISIBLE WHEN ACTIVE) -->
 <div class="card room" data-room="control"><span class="pill">Control Room</span><h2>Control Room</h2><p>Authoritative observer surface. Instrumentation and live gauges operate here.</p><div class="roomBody">
-  <div class="pill" style="margin-bottom:10px">Engine Rooms</div>
-  <div class="grid">
-    <a class="btn" href="#engine">Engine Room</a>
-    <a class="btn" href="#syntax">Syntax Room</a>
-    <a class="btn" href="#build">Build Room</a>
+
+  <div class="pill" style="margin-bottom:10px">Live Analytics</div>
+
+  <div style="display:grid;gap:10px;grid-template-columns:1fr">
+    <textarea id="osBox" class="mono" style="width:100%;min-height:110px;resize:vertical;border:1px solid var(--border);border-radius:16px;background:linear-gradient(180deg,#0f1623,#0b1220);color:var(--text);padding:12px" placeholder='{"timestamp":"YYYY-MM-DDTHH:MM:SSZ","views_60m":0,"downloads_60m":0}'></textarea>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" id="osApply" type="button">Apply</button>
+      <button class="btn" id="osFormat" type="button">Format</button>
+      <button class="btn" id="osCopy" type="button">Copy</button>
+      <button class="btn" id="osClear" type="button">Clear</button>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <span class="pill" id="osStatus">WAITING</span>
+      <span class="muted" id="osHint"></span>
+    </div>
+
+    <div style="display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+      <div style="padding:14px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#0f1623,#0b1220)">
+        <div class="muted" style="font-weight:900;letter-spacing:.6px;text-transform:uppercase;font-size:12px">Timestamp</div>
+        <div id="osTs" class="mono" style="margin-top:6px">—</div>
+      </div>
+
+      <div style="padding:14px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#0f1623,#0b1220)">
+        <div class="muted" style="font-weight:900;letter-spacing:.6px;text-transform:uppercase;font-size:12px">Views (60m)</div>
+        <div id="osViews" style="margin-top:6px;font-size:28px;font-weight:900">0</div>
+        <div style="margin-top:10px;border:1px solid var(--border);border-radius:999px;overflow:hidden;height:12px;background:#0b1220">
+          <div id="osViewsBar" style="height:100%;width:0%"></div>
+        </div>
+      </div>
+
+      <div style="padding:14px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#0f1623,#0b1220)">
+        <div class="muted" style="font-weight:900;letter-spacing:.6px;text-transform:uppercase;font-size:12px">Downloads (60m)</div>
+        <div id="osDl" style="margin-top:6px;font-size:28px;font-weight:900">0</div>
+        <div style="margin-top:10px;border:1px solid var(--border);border-radius:999px;overflow:hidden;height:12px;background:#0b1220">
+          <div id="osDlBar" style="height:100%;width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:14px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#0f1623,#0b1220)">
+      <div class="muted" style="font-weight:900;letter-spacing:.6px;text-transform:uppercase;font-size:12px">Recent Updates</div>
+      <div id="osHistory" class="muted" style="margin-top:8px">—</div>
+    </div>
+
+    <div class="pill" style="margin:4px 0 0">Engine Rooms</div>
+    <div class="grid">
+      <a class="btn" href="#engine">Engine Room</a>
+      <a class="btn" href="#syntax">Syntax Room</a>
+      <a class="btn" href="#build">Build Room</a>
+    </div>
   </div>
-  <p class="muted" style="margin-top:12px">Put your Control Room UI here.</p>
+
 </div></div>
 
-<div class="card room" data-room="apps"><span class="pill">Apps</span><h2>Apps</h2><p>Execution and viewing surfaces.</p><div class="roomBody">
-  <p class="muted">Put your Apps list / links here.</p>
-</div></div>
+<div class="card room" data-room="engine"><span class="pill">Engine Room</span><h2>Engine Room</h2><p>Execution engine surfaces live here.</p><div class="roomBody"><div class="muted">PASTE ENGINE ROOM UI HERE.</div></div></div>
+<div class="card room" data-room="syntax"><span class="pill">Syntax Room</span><h2>Syntax Room</h2><p>Syntax-only surfaces live here.</p><div class="roomBody"><div class="muted">PASTE SYNTAX ROOM UI HERE.</div></div></div>
+<div class="card room" data-room="build"><span class="pill">Build Room</span><h2>Build Room</h2><p>Build and deployment surfaces live here.</p><div class="roomBody"><div class="muted">PASTE BUILD ROOM UI HERE.</div></div></div>
 
-<div class="card room" data-room="reference"><span class="pill">Reference</span><h2>Reference</h2><p>Definitions and formal grounding.</p><div class="roomBody">
-  <p class="muted">Put your Reference content here.</p>
-</div></div>
-
-<div class="card room" data-room="problem"><span class="pill">Problem</span><h2>Problem</h2><p>The instability this system addresses.</p><div class="roomBody">
-  <p class="muted">Put your Problem statement here.</p>
-</div></div>
-
-<div class="card room" data-room="toc"><span class="pill">Table of Contents</span><h2>Table of Contents</h2><p>System structure and index.</p><div class="roomBody">
-  <p class="muted">Put your TOC content here.</p>
-</div></div>
-
-<div class="card room" data-room="mission"><span class="pill">Mission Statement</span><h2>Mission Statement</h2><p>Purpose, scope, and execution posture.</p><div class="roomBody">
-  <p class="muted">Put your Mission Statement here.</p>
-</div></div>
-
-<div class="card room" data-room="about"><span class="pill">About</span><h2>About</h2><p>What this platform is and is not.</p><div class="roomBody">
-  <p class="muted">Put your About copy here.</p>
-</div></div>
-
-<div class="card room" data-room="rights"><span class="pill">Rights & IP</span><h2>Rights & IP</h2><p>Usage, attribution, and licensing.</p><div class="roomBody">
-  <p class="muted">Put your Rights / IP terms here.</p>
-</div></div>
-
-<!-- ENGINE ROOMS (ALSO ROUTED; YOU SAID THEY'RE UP—THIS MAKES THEM VISIBLE NOW) -->
-<div class="card room" data-room="engine"><span class="pill">Engine Room</span><h2>Engine Room</h2><p>Execution engine surfaces live here.</p><div class="roomBody">
-  <p class="muted">Paste your Engine Room UI here.</p>
-</div></div>
-
-<div class="card room" data-room="syntax"><span class="pill">Syntax Room</span><h2>Syntax Room</h2><p>Syntax-only surfaces live here.</p><div class="roomBody">
-  <p class="muted">Paste your Syntax Room UI here.</p>
-</div></div>
-
-<div class="card room" data-room="build"><span class="pill">Build Room</span><h2>Build Room</h2><p>Build and deployment surfaces live here.</p><div class="roomBody">
-  <p class="muted">Paste your Build Room UI here.</p>
-</div></div>
+<div class="card room" data-room="apps"><span class="pill">Apps</span><h2>Apps</h2><p>Execution and viewing surfaces.</p><div class="roomBody"><div class="muted">PUT APPS LIST / LINKS HERE.</div></div></div>
+<div class="card room" data-room="reference"><span class="pill">Reference</span><h2>Reference</h2><p>Definitions and formal grounding.</p><div class="roomBody"><div class="muted">PUT REFERENCE CONTENT HERE.</div></div></div>
+<div class="card room" data-room="problem"><span class="pill">Problem</span><h2>Problem</h2><p>The instability this system addresses.</p><div class="roomBody"><div class="muted">PUT PROBLEM STATEMENT HERE.</div></div></div>
+<div class="card room" data-room="toc"><span class="pill">Table of Contents</span><h2>Table of Contents</h2><p>System structure and index.</p><div class="roomBody"><div class="muted">PUT TOC CONTENT HERE.</div></div></div>
+<div class="card room" data-room="mission"><span class="pill">Mission Statement</span><h2>Mission Statement</h2><p>Purpose, scope, and execution posture.</p><div class="roomBody"><div class="muted">PUT MISSION STATEMENT HERE.</div></div></div>
+<div class="card room" data-room="about"><span class="pill">About</span><h2>About</h2><p>What this platform is and is not.</p><div class="roomBody"><div class="muted">PUT ABOUT COPY HERE.</div></div></div>
+<div class="card room" data-room="rights"><span class="pill">Rights & IP</span><h2>Rights & IP</h2><p>Usage, attribution, and licensing.</p><div class="roomBody"><div class="muted">PUT RIGHTS / IP TERMS HERE.</div></div></div>
 
 <div class="footer">© 2026 Geodiametrics</div>
 </div>
@@ -151,4 +167,44 @@ backBtn.onclick=()=>history.length>1?history.back():showHome();
 homeBtn.onclick=showHome;
 route();
 })();
-</script></body></html>
+</script>
+
+<script>
+(()=>{const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+const toInt=(v)=>{if(typeof v==="number"&&Number.isFinite(v))return Math.trunc(v);if(typeof v==="string"&&v.trim()!==""&&/^-?\d+(\.\d+)?$/.test(v.trim()))return Math.trunc(Number(v.trim()));return NaN;};
+const isIsoZ=(s)=>typeof s==="string"&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(s);
+const E=()=>({box:document.getElementById("osBox"),apply:document.getElementById("osApply"),fmt:document.getElementById("osFormat"),copy:document.getElementById("osCopy"),clear:document.getElementById("osClear"),status:document.getElementById("osStatus"),hint:document.getElementById("osHint"),ts:document.getElementById("osTs"),views:document.getElementById("osViews"),dl:document.getElementById("osDl"),vbar:document.getElementById("osViewsBar"),dbar:document.getElementById("osDlBar"),hist:document.getElementById("osHistory")});
+function setStatus(kind,text,hint){const e=E();if(!e.status)return;e.status.textContent=text;e.hint.textContent=hint||"";e.status.style.borderColor=kind==="ok"?varOk():kind==="bad"?varBad():getVar("--border");}
+function getVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+function varOk(){return getVar("--ok")||"#2bd576"}function varBad(){return getVar("--bad")||"#ff5c5c"}
+function normalize(obj){const ts=obj?.timestamp;const v=toInt(obj?.views_60m);const d=toInt(obj?.downloads_60m);const errs=[];
+if(!isIsoZ(ts))errs.push('timestamp must be ISO with "Z"');if(!Number.isFinite(v))errs.push("views_60m must be a number");if(!Number.isFinite(d))errs.push("downloads_60m must be a number");
+if(Number.isFinite(v)&&v<0)errs.push("views_60m cannot be negative");if(Number.isFinite(d)&&d<0)errs.push("downloads_60m cannot be negative");
+return{norm:{timestamp:isIsoZ(ts)?ts:String(ts??""),views_60m:Number.isFinite(v)?v:0,downloads_60m:Number.isFinite(d)?d:0},errs};}
+function render(norm){const e=E();if(!e.ts)return;e.ts.textContent=norm.timestamp||"—";e.views.textContent=String(norm.views_60m);e.dl.textContent=String(norm.downloads_60m);
+const hist=JSON.parse(localStorage.getItem("osf_hist")||"[]");const maxV=Math.max(1,...hist.map(x=>x.views_60m||0),norm.views_60m||0);const maxD=Math.max(1,...hist.map(x=>x.downloads_60m||0),norm.downloads_60m||0);
+const vp=clamp((norm.views_60m/maxV)*100,0,100);const dp=clamp((norm.downloads_60m/maxD)*100,0,100);
+e.vbar.style.width=vp.toFixed(1)+"%";e.dbar.style.width=dp.toFixed(1)+"%";
+e.vbar.style.background="linear-gradient(90deg,"+varOk()+","+getVar("--hi")+ ")";e.dbar.style.background="linear-gradient(90deg,"+getVar("--hi")+","+varOk()+")";
+const last=[norm,...hist].slice(0,6);
+e.hist.innerHTML=last.map(x=>`<div style="display:flex;gap:10px;justify-content:space-between;align-items:center;padding:6px 0;border-top:1px solid ${getVar("--border")}">
+<span class="mono">${(x.timestamp||"").replace("T"," ").replace("Z","")}</span><span class="mono">v:${x.views_60m} d:${x.downloads_60m}</span></div>`).join("")||"—";}
+function apply(raw,format){const e=E();if(!e.box)return;const t=(raw??e.box.value??"").trim();if(!t){setStatus("warn","WAITING","Paste JSON.");return;}
+let obj;try{obj=JSON.parse(t);}catch(err){setStatus("bad","INVALID JSON",String(err.message||err));return;}
+const {norm,errs}=normalize(obj);render(norm);if(errs.length){setStatus("bad","VALIDATION FAIL",errs.join(" · "));return;}
+const hist=JSON.parse(localStorage.getItem("osf_hist")||"[]");hist.unshift(norm);localStorage.setItem("osf_hist",JSON.stringify(hist.slice(0,50)));localStorage.setItem("osf_last",JSON.stringify(norm));
+if(format)e.box.value=JSON.stringify(norm,null,2);render(norm);setStatus("ok","OK","Applied + stored.");}
+async function copyText(txt){try{await navigator.clipboard.writeText(txt);setStatus("ok","COPIED","");}
+catch{const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);setStatus("ok","COPIED","(fallback)");}}
+function boot(){const e=E();if(!e.box)return;const last=localStorage.getItem("osf_last");if(last){try{const norm=JSON.parse(last);e.box.value=JSON.stringify(norm,null,2);render(norm);setStatus("ok","READY","Loaded last stored payload.");}catch{setStatus("warn","WAITING","Paste JSON.");}}else setStatus("warn","WAITING","Paste JSON.");
+e.apply.onclick=()=>apply(null,false);e.fmt.onclick=()=>apply(null,true);
+e.copy.onclick=()=>{const t=(e.box.value||"").trim();if(!t){setStatus("warn","NOT COPIED","");return;}
+try{const obj=JSON.parse(t);const {norm,errs}=normalize(obj);if(errs.length){setStatus("warn","NOT COPIED","Fix validation.");return;}copyText(JSON.stringify(norm));}
+catch{setStatus("warn","NOT COPIED","Fix JSON.");}};
+e.clear.onclick=()=>{e.box.value="";setStatus("warn","WAITING","Paste JSON.");};
+let timer=null;e.box.addEventListener("input",()=>{clearTimeout(timer);timer=setTimeout(()=>apply(null,false),220);});}
+document.addEventListener("DOMContentLoaded",boot);
+})();
+</script>
+
+</body></html>

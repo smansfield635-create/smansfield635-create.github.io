@@ -8,17 +8,20 @@
 <style>
 :root{
   --bg:#0b0e14;--fg:#e6ebff;--muted:#9aa3c7;--stroke:rgba(230,235,255,.12);
-  --accent:#7aa2ff;--radius:18px;--mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --accent:#7aa2ff;--accent2:#ff7ac6;--ok:#44d07b;--warn:#ffcc66;
+  --radius:18px;--mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
 }
-*{box-sizing:border-box}html,body{margin:0;height:100%}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
 body{
-  background:radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),
-             radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),
-             var(--bg);
+  background:
+    radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),
+    radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),
+    var(--bg);
   color:var(--fg);font-family:var(--sans);
 }
-main{max-width:1050px;margin:0 auto;padding:40px 18px 72px}
+main{max-width:1100px;margin:0 auto;padding:40px 18px 72px}
 header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
 h1{margin:0;font-size:28px}
 .sub{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
@@ -26,34 +29,97 @@ h1{margin:0;font-size:28px}
 .nav{display:flex;gap:10px;flex-wrap:wrap}
 .pill{
   display:inline-flex;align-items:center;gap:8px;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.02);
-  color:var(--fg);text-decoration:none;
+  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);color:var(--fg);text-decoration:none;
   font-family:var(--mono);font-size:12px;
 }
 .pill:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:16px}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:16px}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+
 .card{
-  border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  padding:22px;
+  border:1px solid var(--stroke);border-radius:var(--radius);padding:22px;
   background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
-  display:flex;flex-direction:column;gap:10px;
 }
 .card:hover{border-color:rgba(122,162,255,.45)}
 .kicker{
+  font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:12px;
+}
+.muted{color:var(--muted)}
+.kv{font-family:var(--mono);font-size:13px;line-height:1.6}
+
+.bubbles{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:14px;
+  margin-top:12px;
+}
+.bubble{
+  border:1px solid var(--stroke);
+  border-radius:999px;
+  padding:16px 14px;
+  background:rgba(255,255,255,.02);
+  cursor:pointer;
+  text-align:left;
+  position:relative;
+  overflow:hidden;
+}
+.bubble:hover{border-color:rgba(122,162,255,.45)}
+.bubble.active{border-color:rgba(122,162,255,.75);box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.bubble .tag{
   font-family:var(--mono);
-  font-size:12px;
+  font-size:11px;
   letter-spacing:.08em;
   text-transform:uppercase;
   color:var(--accent);
 }
-.title{font-size:20px;font-weight:650;line-height:1.2}
-.desc{color:var(--muted);line-height:1.5;font-size:14px}
-.link{margin-top:auto;font-family:var(--mono);font-size:12px;color:var(--fg);text-decoration:none}
-.link:hover{color:var(--accent)}
+.bubble .name{margin-top:6px;font-weight:650;font-size:15px}
+.bubble .hint{margin-top:6px;font-size:12.5px;color:var(--muted);line-height:1.35}
+
+.detailTitle{font-size:18px;font-weight:700;margin:0 0 8px}
+.detailBody{color:var(--muted);line-height:1.55;margin:0 0 14px}
+.detailLinks{display:flex;gap:10px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);
+  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;
+}
+.btn:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
+.btn.ghost{border-color:rgba(230,235,255,.08);color:var(--muted)}
+
+.hr{height:1px;background:var(--stroke);margin:16px 0}
+
+.sliderRow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+input[type="range"]{width:100%}
+.readout{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+@media (max-width:520px){.readout{grid-template-columns:1fr}}
+.metric{
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  padding:14px;
+  background:rgba(255,255,255,.02);
+}
+.metric .mname{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.metric .mval{font-family:var(--mono);font-size:20px;margin-top:8px}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 10px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);
+  font-family:var(--mono);font-size:12px;color:var(--fg);
+  margin-top:12px;
+}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.ok{background:var(--ok);box-shadow:0 0 18px rgba(68,208,123,.35)}
+.dot.warn{background:var(--warn);box-shadow:0 0 18px rgba(255,204,102,.25)}
+.dot.bad{background:var(--accent2);box-shadow:0 0 18px rgba(255,122,198,.25)}
 
 footer{
   margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);
@@ -69,7 +135,7 @@ footer{
 <header>
   <div>
     <h1>Artifacts</h1>
-    <div class="sub">Demonstrations and outputs · Read-only</div>
+    <div class="sub">Layer 4 · Interactive demonstrations (local only)</div>
   </div>
   <nav class="nav">
     <a class="pill" href="/">Orientation</a>
@@ -81,34 +147,190 @@ footer{
 
 <section class="grid">
 
+  <!-- LEFT: interactive bubbles -->
   <div class="card">
-    <div class="kicker">Canonical</div>
-    <div class="title">Coherence Constraint Law</div>
-    <div class="desc">Formal constraint describing coherence, fragmentation, and instability across systems.</div>
-    <a class="link" href="https://osf.io/4su3v/" target="_blank" rel="noopener">View on OSF →</a>
+    <div class="kicker">Tap to inspect</div>
+    <div class="muted">These are interactive exhibits. No system state changes occur.</div>
+
+    <div class="bubbles" id="bubbles"></div>
+
+    <div class="hr"></div>
+
+    <div id="detail">
+      <div class="detailTitle">Select an artifact</div>
+      <p class="detailBody">Tap a bubble to view the exhibit summary and OSF anchor.</p>
+      <div class="detailLinks">
+        <a class="btn ghost" href="/control/">Go to Control →</a>
+      </div>
+    </div>
   </div>
 
+  <!-- RIGHT: local what-if simulator -->
   <div class="card">
-    <div class="kicker">Engine</div>
-    <div class="title">Quad-Core Execution Cycle</div>
-    <div class="desc">Selection → Resolution → Commitment → Continuation. Structural execution loop.</div>
-    <a class="link" href="https://osf.io/ftuvs/" target="_blank" rel="noopener">View on OSF →</a>
-  </div>
+    <div class="kicker">Local what-if</div>
+    <div class="muted">A toy interactive gauge for intuition only. Not a scientific claim.</div>
 
-  <div class="card">
-    <div class="kicker">Geometry</div>
-    <div class="title">Diamond Geometry Model</div>
-    <div class="desc">Ordering framework used to maintain constraint-first system design.</div>
-    <a class="link" href="https://osf.io/mn6vu/" target="_blank" rel="noopener">View on OSF →</a>
+    <div class="hr"></div>
+
+    <div class="sliderRow">
+      <div class="kv"><strong>Coherence</strong> (0–100)</div>
+      <div class="kv muted" id="cohVal">50</div>
+    </div>
+    <input id="coh" type="range" min="0" max="100" value="50" />
+
+    <div class="sliderRow" style="margin-top:10px">
+      <div class="kv"><strong>Confusion</strong> (0–100)</div>
+      <div class="kv muted" id="confVal">20</div>
+    </div>
+    <input id="conf" type="range" min="0" max="100" value="20" />
+
+    <div class="readout">
+      <div class="metric">
+        <div class="mname">Stability</div>
+        <div class="mval" id="stability">—</div>
+      </div>
+      <div class="metric">
+        <div class="mname">Risk</div>
+        <div class="mval" id="risk">—</div>
+      </div>
+      <div class="metric">
+        <div class="mname">Momentum</div>
+        <div class="mval" id="momentum">—</div>
+      </div>
+      <div class="metric">
+        <div class="mname">Interpretation</div>
+        <div class="mval" id="interp">—</div>
+      </div>
+    </div>
+
+    <div class="badge" id="badge"><span class="dot ok"></span>—</div>
+
+    <div class="detailLinks" style="margin-top:14px">
+      <button class="btn" id="reset" type="button">Reset</button>
+      <a class="btn ghost" href="/system/">Reference →</a>
+    </div>
   </div>
 
 </section>
 
 <footer>
   <div>© 2026 Geodiametrics</div>
-  <div>Artifacts · Layer 3 · v1.2</div>
+  <div>Artifacts · Layer 4 · v1.0</div>
 </footer>
 
 </main>
+
+<script>
+const artifacts = [
+  {
+    id:"ccl",
+    tag:"Canonical",
+    name:"Coherence Constraint Law",
+    hint:"Constraint describing coherence, fragmentation, instability.",
+    title:"Coherence Constraint Law",
+    body:"OSF is the canonical record. This exhibit is a navigation surface only.",
+    osf:"https://osf.io/4su3v/"
+  },
+  {
+    id:"qce",
+    tag:"Engine",
+    name:"Quad-Core Execution Cycle",
+    hint:"Selection → Resolution → Commitment → Continuation.",
+    title:"Quad-Core Execution Cycle",
+    body:"Structural loop representation. This page provides an interactive entry, not execution.",
+    osf:"https://osf.io/ftuvs/"
+  },
+  {
+    id:"dgm",
+    tag:"Geometry",
+    name:"Diamond Geometry Model",
+    hint:"Ordering framework and surface discipline.",
+    title:"Diamond Geometry Model",
+    body:"Geometry as navigation/ordering. The OSF link anchors the formal model.",
+    osf:"https://osf.io/mn6vu/"
+  }
+];
+
+const bubblesEl = document.getElementById("bubbles");
+const detailEl = document.getElementById("detail");
+
+function renderBubbles(){
+  bubblesEl.innerHTML = "";
+  artifacts.forEach(a=>{
+    const b = document.createElement("button");
+    b.className = "bubble";
+    b.type = "button";
+    b.setAttribute("data-id", a.id);
+    b.innerHTML = `
+      <div class="tag">${a.tag}</div>
+      <div class="name">${a.name}</div>
+      <div class="hint">${a.hint}</div>
+    `;
+    b.addEventListener("click", ()=>select(a.id));
+    bubblesEl.appendChild(b);
+  });
+}
+
+function select(id){
+  document.querySelectorAll(".bubble").forEach(x=>x.classList.toggle("active", x.dataset.id===id));
+  const a = artifacts.find(x=>x.id===id);
+  detailEl.innerHTML = `
+    <div class="detailTitle">${a.title}</div>
+    <p class="detailBody">${a.body}</p>
+    <div class="detailLinks">
+      <a class="btn" href="${a.osf}" target="_blank" rel="noopener">Open OSF →</a>
+      <a class="btn ghost" href="/control/">Control →</a>
+    </div>
+  `;
+}
+
+renderBubbles();
+
+/* Local what-if simulator (toy) */
+const coh = document.getElementById("coh");
+const conf = document.getElementById("conf");
+const cohVal = document.getElementById("cohVal");
+const confVal = document.getElementById("confVal");
+const stability = document.getElementById("stability");
+const risk = document.getElementById("risk");
+const momentum = document.getElementById("momentum");
+const interp = document.getElementById("interp");
+const badge = document.getElementById("badge");
+
+function clamp(n){ return Math.max(0, Math.min(100, n)); }
+
+function compute(){
+  const C = parseInt(coh.value,10);
+  const X = parseInt(conf.value,10);
+  cohVal.textContent = C;
+  confVal.textContent = X;
+
+  // toy model: stability rises with coherence, falls with confusion
+  const S = clamp(Math.round((C*0.85) - (X*0.55) + 20));
+  const R = clamp(Math.round((100 - S) * (0.7 + X/200))); // confusion amplifies risk
+  const M = clamp(Math.round((C*0.6) + (S*0.2) - (X*0.2)));
+
+  stability.textContent = S + "/100";
+  risk.textContent = R + "/100";
+  momentum.textContent = M + "/100";
+
+  let label = "Stable";
+  let dotClass = "ok";
+  if(R >= 60){ label = "Unstable"; dotClass = "bad"; }
+  else if(R >= 35){ label = "Caution"; dotClass = "warn"; }
+
+  interp.textContent = label;
+  badge.innerHTML = `<span class="dot ${dotClass}"></span>${label} (toy)`;
+}
+
+coh.addEventListener("input", compute);
+conf.addEventListener("input", compute);
+document.getElementById("reset").addEventListener("click", ()=>{
+  coh.value = 50; conf.value = 20; compute();
+});
+
+compute();
+</script>
+
 </body>
 </html>

@@ -28,8 +28,7 @@ body{
 body::after{
   content:"";
   position:fixed;inset:0;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(120,150,255,.08), transparent 60%);
+  background:radial-gradient(circle at 50% 50%, rgba(120,150,255,.08), transparent 60%);
   pointer-events:none;
 }
 
@@ -60,7 +59,7 @@ h1{
   letter-spacing:.4px;
 }
 p{
-  margin:0 auto 26px;
+  margin:0 auto 28px;
   max-width:560px;
   color:var(--muted);
   line-height:1.55;
@@ -69,11 +68,11 @@ p{
 .bubbles{
   display:flex;
   flex-wrap:wrap;
-  gap:12px;
+  gap:14px;
   justify-content:center;
 }
 .bubble{
-  padding:14px 18px;
+  padding:15px 20px;
   border-radius:999px;
   border:1px solid var(--stroke);
   background:rgba(255,255,255,.06);
@@ -82,7 +81,7 @@ p{
   text-decoration:none;
 }
 footer{
-  margin-top:26px;
+  margin-top:28px;
   font-size:12px;
   color:rgba(233,238,252,.45);
 }
@@ -93,22 +92,22 @@ footer{
 <div class="wrap">
   <div class="card">
 
-    <!-- Snowflake / Diamond logo -->
+    <!-- Snowflake / Diamond Logo -->
     <svg class="logo" viewBox="0 0 100 100" fill="none" stroke="#9bb6ff" stroke-width="3" stroke-linecap="round">
       <g transform="translate(50 50)">
-        <g>
-          <line x1="0" y1="-36" x2="0" y2="36"/>
-          <line x1="-36" y1="0" x2="36" y2="0"/>
-          <line x1="-26" y1="-26" x2="26" y2="26"/>
-          <line x1="-26" y1="26" x2="26" y2="-26"/>
-        </g>
-        <!-- diamonds at tips -->
+        <line x1="0" y1="-36" x2="0" y2="36"/>
+        <line x1="-36" y1="0" x2="36" y2="0"/>
+        <line x1="-26" y1="-26" x2="26" y2="26"/>
+        <line x1="-26" y1="26" x2="26" y2="-26"/>
+
+        <!-- diamond tips -->
         <g stroke-width="2">
           <rect x="-4" y="-46" width="8" height="8" transform="rotate(45)"/>
           <rect x="-4" y="38" width="8" height="8" transform="rotate(45)"/>
           <rect x="38" y="-4" width="8" height="8" transform="rotate(45)"/>
           <rect x="-46" y="-4" width="8" height="8" transform="rotate(45)"/>
         </g>
+
         <!-- inner fractal -->
         <rect x="-8" y="-8" width="16" height="16" transform="rotate(45)" stroke-width="2"/>
       </g>
@@ -121,14 +120,16 @@ footer{
       Selection → Resolution → Commitment → Continuation.
     </p>
 
+    <!-- FRONT-MATTER NAVIGATION -->
     <div class="bubbles">
-      <a class="bubble" href="/control-room/">Control Room</a>
-      <a class="bubble" href="/apps/">Apps</a>
-      <a class="bubble" href="/reference/">Reference</a>
-      <a class="bubble" href="/problem/">Problem</a>
+      <a class="bubble" href="/table-of-contents/">Table of Contents</a>
+      <a class="bubble" href="/about/">About Us</a>
+      <a class="bubble" href="/mission/">Mission Statement</a>
+      <a class="bubble" href="/ip/">Trademarks &amp; IP</a>
     </div>
 
     <footer>© 2026 Geodiametrics</footer>
+
   </div>
 </div>
 </body>

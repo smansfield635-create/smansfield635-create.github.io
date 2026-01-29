@@ -7,40 +7,31 @@
 
 <style>
 :root{
-  --bg:#0b0e14;
-  --fg:#e6ebff;
-  --muted:#9aa3c7;
-  --stroke:rgba(230,235,255,.12);
-  --accent:#7aa2ff;
-  --accent2:#ff7ac6;
-  --ok:#44d07b;
-  --radius:18px;
+  --bg:#0b0e14;--fg:#e6ebff;--muted:#9aa3c7;--stroke:rgba(230,235,255,.12);
+  --accent:#7aa2ff;--ok:#44d07b;--radius:18px;
   --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
 }
-*{box-sizing:border-box}
-html,body{margin:0;height:100%}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
 body{
-  background:
-    radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),
-    radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),
-    var(--bg);
-  color:var(--fg);
-  font-family:var(--sans);
+  background:radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),
+             radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),
+             var(--bg);
+  color:var(--fg);font-family:var(--sans);
 }
 main{max-width:1050px;margin:0 auto;padding:40px 18px 72px}
 
 header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:34px;height:34px;border:1px solid var(--stroke);border-radius:12px;background:rgba(255,255,255,.02);display:flex;align-items:center;justify-content:center}
 h1{margin:0;font-size:28px}
 .sub{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
 
 .nav{display:flex;gap:10px;flex-wrap:wrap}
 .pill{
   display:inline-flex;align-items:center;gap:8px;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.02);
-  color:var(--fg);text-decoration:none;
+  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);color:var(--fg);text-decoration:none;
   font-family:var(--mono);font-size:12px;
 }
 .pill:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
@@ -48,57 +39,18 @@ h1{margin:0;font-size:28px}
 .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .chip{
   display:inline-flex;align-items:center;gap:10px;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.02);
-  font-family:var(--mono);font-size:12px;color:var(--fg);
+  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.02);font-family:var(--mono);font-size:12px
 }
 .dot{width:10px;height:10px;border-radius:50%;background:var(--ok);box-shadow:0 0 18px rgba(68,208,123,.45)}
-.dot2{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px rgba(122,162,255,.35)}
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:16px;
-  margin-top:16px;
-}
-.card{
-  border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  padding:22px;
-  background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
-}
-.card:hover{border-color:rgba(122,162,255,.45)}
-.kicker{
-  font-family:var(--mono);
-  font-size:12px;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:var(--accent);
-  margin-bottom:10px;
-}
-.big{
-  font-family:var(--mono);
-  font-size:22px;
-  margin-top:6px;
-}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:16px}
+.card{border:1px solid var(--stroke);border-radius:var(--radius);padding:22px;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
 .kv{font-family:var(--mono);font-size:13px;line-height:1.6}
 .muted{color:var(--muted)}
-.item{padding:12px 0;border-bottom:1px solid var(--stroke)}
-.item:last-child{border-bottom:none}
 
-footer{
-  margin-top:28px;
-  padding-top:14px;
-  border-top:1px solid var(--stroke);
-  display:flex;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:12px;
-  font-family:var(--mono);
-  font-size:12px;
-  color:var(--muted);
-}
+footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:12px;color:var(--muted)}
 </style>
 </head>
 
@@ -106,12 +58,17 @@ footer{
 <main>
 
 <header>
-  <div>
-    <h1>Control</h1>
-    <div class="sub">Observer Surface · Live Gauge · Read-Only</div>
-    <div class="chips">
-      <div class="chip"><span class="dot"></span> OPERATIONAL</div>
-      <div class="chip"><span class="dot2"></span> NO DEPENDENCIES</div>
+  <div class="brand">
+    <div class="mark">
+      <img src="/assets/logo.svg" alt="Geodiametrics" style="width:18px;height:18px">
+    </div>
+    <div>
+      <h1>Control</h1>
+      <div class="sub">Observer Surface · Live Gauge · Read-Only</div>
+      <div class="chips">
+        <div class="chip"><span class="dot"></span> OPERATIONAL</div>
+        <div class="chip">RELEASE · v1.3</div>
+      </div>
     </div>
   </div>
 
@@ -124,7 +81,6 @@ footer{
 </header>
 
 <section class="grid">
-
   <div class="card">
     <div class="kicker">System State</div>
     <div class="kv">
@@ -132,79 +88,30 @@ footer{
       Mutation: RESTRICTED<br>
       Authority: FIXED
     </div>
-    <div class="kv muted" style="margin-top:10px">Read-only status monitor. No interaction required.</div>
-  </div>
-
-  <div class="card">
-    <div class="kicker">Live Activity</div>
-    <div class="kv muted">Approximate, client-side signal</div>
-    <div class="big" id="visits">—</div>
-    <div class="kv muted" id="timestamp">Last updated —</div>
-  </div>
-
-  <div class="card">
-    <div class="kicker">OSF Projects</div>
-
-    <div class="item">
-      <div class="kv"><strong>Coherence Constraint Law</strong></div>
-      <div class="kv muted">Canonical research record</div>
-      <div style="margin-top:10px">
-        <a class="pill" href="https://osf.io/4su3v/" target="_blank" rel="noopener">Open OSF →</a>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="kv"><strong>Quad-Core Execution Cycle</strong></div>
-      <div class="kv muted">Selection → Resolution → Commitment → Continuation</div>
-      <div style="margin-top:10px">
-        <a class="pill" href="https://osf.io/ftuvs/" target="_blank" rel="noopener">Open OSF →</a>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="kv"><strong>Diamond Geometry Model</strong></div>
-      <div class="kv muted">Ordering framework</div>
-      <div style="margin-top:10px">
-        <a class="pill" href="https://osf.io/mn6vu/" target="_blank" rel="noopener">Open OSF →</a>
-      </div>
+    <div class="kv muted" style="margin-top:10px">
+      Frozen release. No execution enabled.
     </div>
   </div>
 
   <div class="card">
-    <div class="kicker">Identity</div>
-    <div class="item">
-      <div class="kv"><strong>ORCID</strong></div>
-      <div class="kv muted">Author identifier</div>
-      <div style="margin-top:10px">
-        <a class="pill" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">0009-0004-1293-0405 →</a>
-      </div>
+    <div class="kicker">Anchors</div>
+    <div class="kv muted">
+      Canonical records live on OSF.<br>
+      This surface provides a public, inspectable gauge only.
     </div>
-
-    <div class="kicker" style="margin-top:18px">Constraints</div>
-    <div class="kv">
-      • Read-only observer surface<br>
-      • No execution permitted<br>
-      • No interpretation validated
+    <div class="kv" style="margin-top:10px">
+      • osf.io/4su3v<br>
+      • osf.io/ftuvs<br>
+      • osf.io/mn6vu
     </div>
   </div>
-
 </section>
 
 <footer>
   <div>© 2026 Geodiametrics</div>
-  <div>Control · Gauge · v1.2</div>
+  <div>Control · Frozen · v1.3</div>
 </footer>
 
 </main>
-
-<script>
-const key="geo_visits";
-let c=localStorage.getItem(key);
-c=c?(parseInt(c,10)+1):1;
-localStorage.setItem(key,String(c));
-document.getElementById("visits").textContent="Local Visits: "+c;
-document.getElementById("timestamp").textContent="Last updated "+new Date().toLocaleString();
-</script>
-
 </body>
 </html>

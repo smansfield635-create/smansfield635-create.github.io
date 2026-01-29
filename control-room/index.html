@@ -7,7 +7,7 @@
 
 <style>
 :root{
-  --fg:#e9eefc;--muted:rgba(233,238,252,.66);
+  --fg:#e9eefc;--muted:rgba(233,238,252,.62);
   --stroke:rgba(233,238,252,.14);
   --panel:rgba(12,16,34,.62);
   --radius:22px;--shadow:0 18px 55px rgba(0,0,0,.55);
@@ -27,37 +27,26 @@ body{
 }
 .wrap{max-width:1200px;margin:0 auto;padding:22px 16px 80px}
 .card{border-radius:var(--radius);border:1px solid var(--stroke);background:var(--panel);box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
-h1{margin:0 0 10px;font-size:42px}
+h1{margin:0 0 8px;font-size:42px}
 h2{margin:0 0 10px;font-size:22px}
 p{margin:0 0 10px;color:var(--muted);line-height:1.55}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.btn{padding:11px 16px;border-radius:999px;border:1px solid rgba(233,238,252,.18);background:rgba(255,255,255,.06);color:var(--fg);font-weight:900;cursor:pointer}
-.btn:active{transform:translateY(1px)}
-.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
 .small{font-size:13px;color:var(--muted)}
 .hr{height:1px;background:rgba(233,238,252,.10);margin:14px 0}
-.grid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:980px){.grid{grid-template-columns:1.1fr .9fr}}
-.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-@media(min-width:720px){.tabs{grid-template-columns:repeat(4,1fr)}}
-.tab{padding:12px;border-radius:16px;border:1px solid rgba(233,238,252,.16);background:rgba(255,255,255,.06);font-weight:900;cursor:pointer}
-.tab.active{background:rgba(255,255,255,.12)}
-.tab small{display:block;color:var(--muted);font-weight:700;margin-top:2px}
-.panel{margin-top:12px;border-radius:18px;border:1px solid rgba(233,238,252,.14);background:rgba(0,0,0,.22);padding:14px}
-.kv{display:grid;grid-template-columns:1fr;gap:10px}
-@media(min-width:720px){.kv{grid-template-columns:1fr 1fr}}
-.k{border-radius:16px;border:1px solid rgba(233,238,252,.12);background:rgba(255,255,255,.05);padding:12px}
-.k b{display:block;margin-bottom:6px}
-.table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
-th,td{padding:8px;border-bottom:1px solid rgba(233,238,252,.12);text-align:left;color:var(--muted)}
-th{color:#fff;font-weight:950}
-.gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
+
+.gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}
 .gauge{border-radius:18px;border:1px solid rgba(233,238,252,.14);background:rgba(0,0,0,.22);padding:14px}
 .gauge h3{margin:0 0 8px;font-size:12px;letter-spacing:.7px;text-transform:uppercase;color:rgba(233,238,252,.85)}
 .meter{height:14px;background:rgba(255,255,255,.12);border-radius:8px;overflow:hidden}
 .fill{height:100%;width:0%;transition:width .35s ease}
-.footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:18px}
+.light{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:8px;background:var(--green)}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:980px){.grid{grid-template-columns:1fr 1fr}}
+.table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+th,td{padding:8px;border-bottom:1px solid rgba(233,238,252,.12);text-align:left;color:var(--muted)}
+th{color:#fff;font-weight:950}
+.zone{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid rgba(233,238,252,.14);background:rgba(255,255,255,.06);font-weight:900;font-size:12px;letter-spacing:.6px;text-transform:uppercase}
 </style>
 </head>
 
@@ -66,454 +55,235 @@ th{color:#fff;font-weight:950}
 
   <div class="card">
     <h1>Control Room</h1>
-    <p>Single surface. Governor + Gauges + Diamond Fusion. Fuel stays full when coherence flows; depletes only on burnout or fragmentation.</p>
+    <p>No buttons. No modes. No manual state changes. This page is a read-only monitor. It only reports breakage.</p>
     <div class="row">
-      <button class="btn" onclick="CR.registerAll()">Register All</button>
-      <button class="btn" onclick="CR.refreshAll()">Refresh</button>
-      <button class="btn" onclick="CR.exportAll()">Export JSON</button>
-      <button class="btn" id="lockBtn" onclick="CR.toggleLock()">LOCKED</button>
+      <span class="zone"><span id="sysLight" class="light"></span><span id="sysZone">SAFE</span></span>
+      <span class="mono small" id="lastScan">Last scan: —</span>
     </div>
-    <div class="small mono" id="metaTop">Last refresh: —</div>
+  </div>
+
+  <div class="card">
+    <h2>System Gauges</h2>
+    <div class="gauges">
+      <div class="gauge">
+        <h3>Fuel (Coherence)</h3>
+        <div class="meter"><div id="fuel" class="fill" style="background:var(--green)"></div></div>
+        <div class="small">100% unless burnout or fragmentation is detected.</div>
+      </div>
+      <div class="gauge">
+        <h3>RPM (Activity)</h3>
+        <div class="meter"><div id="rpm" class="fill" style="background:var(--blue)"></div></div>
+        <div class="small">Recent write density (last 60s).</div>
+      </div>
+      <div class="gauge">
+        <h3>Speed (Progress)</h3>
+        <div class="meter"><div id="speed" class="fill" style="background:var(--green)"></div></div>
+        <div class="small">Cycle position average.</div>
+      </div>
+      <div class="gauge">
+        <h3>Risk (Instability)</h3>
+        <div class="meter"><div id="risk" class="fill" style="background:var(--red)"></div></div>
+        <div class="small">Derived from fragmentation + wall + fuel drop.</div>
+      </div>
+    </div>
   </div>
 
   <div class="grid">
 
-    <!-- LEFT: Diamond Fusion Console -->
     <div class="card">
-      <h2>Diamond Fusion (Quad-Core)</h2>
-      <p>Selection → Resolution → Commitment → Continuation. Four namespaces. Device-local state.</p>
-      <div class="tabs" id="tabs"></div>
-      <div class="panel" id="corePanel"></div>
-      <div class="row" style="margin-top:10px;">
-        <button class="btn" onclick="CR.resetActive()" id="btnResetActive">Reset Active Core</button>
-      </div>
-      <div class="small">Rule: Cross-core mutation only via Mirror in Governor.</div>
+      <h2>Core Status</h2>
+      <table class="table">
+        <thead>
+          <tr><th>Core</th><th>Fuel</th><th>RPM</th><th>Speed</th><th>Risk</th><th>Cycle</th></tr>
+        </thead>
+        <tbody id="coreRows">
+          <tr><td colspan="6" class="mono">No engines discovered.</td></tr>
+        </tbody>
+      </table>
+      <div class="small mono" id="coreMeta">—</div>
     </div>
 
-    <!-- RIGHT: Governor + Gauges -->
-    <div>
-
-      <div class="card">
-        <h2>Governor (Supervisor)</h2>
-        <p>ISOLATED default. STRUCTURAL is rule-label only. MIRROR is one-shot copy.</p>
-        <div class="row">
-          <button class="btn" onclick="CR.setMode('ISOLATED')">ISOLATED</button>
-          <button class="btn" onclick="CR.setMode('STRUCTURAL')">STRUCTURAL</button>
-        </div>
-
-        <div class="panel">
-          <div class="kv">
-            <div class="k"><b>Mode</b><span class="mono" id="supMode">ISOLATED</span></div>
-            <div class="k"><b>Rule</b><span class="mono" id="supRule">NONE</span></div>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="row">
-            <input id="ruleLabel" class="btn mono" style="flex:1;min-width:240px;text-align:left" placeholder="Rule label (e.g., DIAMOND_FUSION_v1)"/>
-            <button class="btn" onclick="CR.applyRule()">Apply</button>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="row">
-            <input id="srcNS" class="btn mono" style="flex:1;min-width:240px;text-align:left" placeholder="Source namespace (e.g., diamond_fusion_core_1)"/>
-            <input id="dstNS" class="btn mono" style="flex:1;min-width:240px;text-align:left" placeholder="Target namespace (e.g., diamond_fusion_core_2)"/>
-          </div>
-          <div class="row" style="margin-top:10px;">
-            <button class="btn" onclick="CR.mirrorState()" id="btnMirror">Mirror →</button>
-            <button class="btn" onclick="CR.resetNamespace()" id="btnResetTarget">Reset Target</button>
-          </div>
-
-          <div class="small">State sync is opt-in. If you don’t click it, nothing couples.</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Gauges</h2>
-
-        <div class="gauges">
-          <div class="gauge">
-            <h3>Fuel</h3>
-            <div class="meter"><div id="fuel" class="fill" style="background:var(--green)"></div></div>
-            <div class="small">Full unless burnout/fragmentation</div>
-          </div>
-
-          <div class="gauge">
-            <h3>RPM</h3>
-            <div class="meter"><div id="rpm" class="fill" style="background:var(--blue)"></div></div>
-            <div class="small">Recent activity rate</div>
-          </div>
-
-          <div class="gauge">
-            <h3>Speed</h3>
-            <div class="meter"><div id="speed" class="fill" style="background:var(--green)"></div></div>
-            <div class="small">Cycle position</div>
-          </div>
-
-          <div class="gauge">
-            <h3>Risk</h3>
-            <div class="meter"><div id="risk" class="fill" style="background:var(--red)"></div></div>
-            <div class="small">Fragmentation + Wall</div>
-          </div>
-        </div>
-
-        <table class="table">
-          <thead><tr><th>Engine</th><th>Status</th><th>Cycle</th><th>Updated</th></tr></thead>
-          <tbody id="rows"><tr><td colspan="4" class="mono">No engines discovered.</td></tr></tbody>
-        </table>
-
-        <div class="small mono" id="scan">Last scan: —</div>
-      </div>
-
+    <div class="card">
+      <h2>Break Log (Only)</h2>
+      <p>This log records only breakage events. Normal function produces silence.</p>
+      <pre id="breakLog" class="mono small" style="white-space:pre-wrap;margin:0">—</pre>
     </div>
 
   </div>
 
   <div class="footer">© 2026 Geodiametrics · Control Room</div>
+
 </div>
 
 <script>
-const CR = (() => {
-  const PREFIX = "ENGINE::";
-  const LOGKEY = "ENGINE::LOG::";                 // per-engine event log
-  const LOCKKEY = "ENGINE::CONTROL_ROOM_LOCK::v1";
-  const SUPKEY  = "ENGINE::SUPERVISOR::v1";
+/* ===============================
+   CONTROL ROOM (READ ONLY)
+   - No buttons
+   - No writes (except break log write)
+   - Scans ENGINE:: keys
+================================ */
 
-  const CORES = [
-    {name:"Core 1", stage:"Selection",   ns:"diamond_fusion_core_1"},
-    {name:"Core 2", stage:"Resolution",  ns:"diamond_fusion_core_2"},
-    {name:"Core 3", stage:"Commitment",  ns:"diamond_fusion_core_3"},
-    {name:"Core 4", stage:"Continuation",ns:"diamond_fusion_core_4"}
-  ];
+const PREFIX = "ENGINE::";
+const BREAK_KEY = "ENGINE::BREAK_LOG::v1";
+const CORES = [
+  "diamond_fusion_core_1",
+  "diamond_fusion_core_2",
+  "diamond_fusion_core_3",
+  "diamond_fusion_core_4"
+];
 
-  let active = CORES[0].ns;
+const nowISO = () => new Date().toISOString();
+const nowMS  = () => Date.now();
 
-  const now = () => Date.now();
-  const nowISO = () => new Date().toISOString();
+function getJSON(k, fb=null){
+  try { return JSON.parse(localStorage.getItem(k)) ?? fb; }
+  catch { return fb; }
+}
 
-  const get = (k, fb=null) => { try { return JSON.parse(localStorage.getItem(k)) ?? fb; } catch { return fb; } };
-  const set = (k,v) => localStorage.setItem(k, JSON.stringify(v));
-  const del = (k) => localStorage.removeItem(k);
-  const key = (ns) => PREFIX + ns;
-  const lkey = (ns) => LOGKEY + ns;
+function setGauge(id, val){
+  const pct = Math.max(0, Math.min(100, Math.round(val*100)));
+  document.getElementById(id).style.width = pct + "%";
+}
 
-  function locked(){ return get(LOCKKEY,{locked:true}).locked !== false; }
-  function setLocked(v){ set(LOCKKEY,{locked:!!v, updated_at: nowISO()}); paintLock(); }
+function cycleSpeed(c){
+  return c==="RUNNING" ? 0.35 :
+         c==="HURDLE"  ? 0.55 :
+         c==="WALL"    ? 0.20 :
+         c==="COMPLETE"? 1.00 : 0.00;
+}
 
-  function paintLock(){
-    const isLocked = locked();
-    const lb = document.getElementById("lockBtn");
-    lb.textContent = isLocked ? "LOCKED" : "UNLOCKED";
-    lb.style.borderColor = isLocked ? "rgba(233,238,252,.18)" : "rgba(74,222,128,.55)";
-    document.getElementById("btnResetActive").disabled = isLocked;
-    document.getElementById("btnMirror").disabled = isLocked;
-    document.getElementById("btnResetTarget").disabled = isLocked;
-  }
+function fragScore(s){
+  // Fragmentation = invalid ordering signals (observer-only)
+  // resolution without selection, commitment without resolved, WALL cycle
+  let v = 0;
+  if(s.resolution && !s.selection) v++;
+  if(s.commitment && s.resolution!=="RESOLVED") v++;
+  if((s.continuation?.cycle||"") === "WALL") v++;
+  return Math.min(1, v/3);
+}
 
-  function toggleLock(){
-    if(!locked()){ setLocked(true); return; }
-    const token = prompt('Type UNLOCK to enable destructive actions (Reset/Mirror).');
-    if((token||"").trim().toUpperCase()==="UNLOCK"){ setLocked(false); }
-  }
+function rpmScore(updated_at){
+  // RPM = 1 if updated within 5s, 0 if older than 60s
+  const t = updated_at ? new Date(updated_at).getTime() : 0;
+  const age = Math.max(0, nowMS() - t);
+  if(age <= 5000) return 1;
+  if(age >= 60000) return 0;
+  return 1 - (age-5000)/(60000-5000);
+}
 
-  function logEvent(ns, type){
-    const log = get(lkey(ns), []);
-    log.push({t: now(), type});
-    while(log.length > 200) log.shift();
-    set(lkey(ns), log);
-  }
+function readCore(ns){
+  const e = getJSON(PREFIX + ns, null);
+  if(!e || !e.state) return null;
+  return e;
+}
 
-  function ensure(ns){
-    if(get(key(ns))) return;
-    set(key(ns),{
-      namespace:ns,
-      state:{
-        selection:null,
-        resolution:null,
-        commitment:null,
-        continuation:{cycle:"RUNNING", last_set: nowISO()}
-      },
-      created_at: nowISO(),
-      updated_at: nowISO()
-    });
-    logEvent(ns, "init");
-  }
+function appendBreak(msg){
+  const log = getJSON(BREAK_KEY, []);
+  log.push({t: nowISO(), msg});
+  while(log.length > 200) log.shift();
+  localStorage.setItem(BREAK_KEY, JSON.stringify(log));
+}
 
-  function registerAll(){
-    CORES.forEach(c=>ensure(c.ns));
-    refreshAll();
-  }
+function render(){
+  const coreRows = document.getElementById("coreRows");
+  const breakLog = document.getElementById("breakLog");
+  const coreMeta = document.getElementById("coreMeta");
+  const lastScan = document.getElementById("lastScan");
+  const sysLight = document.getElementById("sysLight");
+  const sysZone  = document.getElementById("sysZone");
 
-  function read(ns){ ensure(ns); return get(key(ns)); }
-  function write(ns,obj,type){
-    obj.updated_at = nowISO();
-    set(key(ns), obj);
-    logEvent(ns, type || "write");
-  }
+  lastScan.textContent = "Last scan: " + nowISO();
 
-  function setActive(ns){ active=ns; renderTabs(); renderPanel(); refreshDashboard(); }
+  const rows = [];
+  let sysFrag = 0, sysBurn = 0, sysRisk = 0, sysSpeed = 0, sysRPM = 0;
+  let n = 0;
 
-  function setSelection(v){ const s=read(active); s.state.selection=v; write(active,s,"selection"); refreshAll(); }
-  function setResolution(){
-    const s=read(active);
-    s.state.resolution = (s.state.selection ? "RESOLVED" : "BLOCKED");
-    write(active,s,"resolution");
-    refreshAll();
-  }
-  function setCommitment(){
-    const s=read(active);
-    s.state.commitment = (s.state.resolution==="RESOLVED" ? "COMMITTED" : "DENIED");
-    write(active,s,"commitment");
-    refreshAll();
-  }
-  function setCycle(c){
-    const s=read(active);
-    s.state.continuation = {cycle:c,last_set: nowISO()};
-    write(active,s,"cycle");
-    refreshAll();
-  }
+  CORES.forEach(ns=>{
+    const e = readCore(ns);
+    if(!e) return;
+    n++;
 
-  function resetActive(){
-    if(locked()) return;
-    del(key(active)); del(lkey(active));
-    ensure(active);
-    refreshAll();
-  }
+    const s = e.state || {};
+    const cyc = s.continuation?.cycle || "IDLE";
 
-  function discover(){
-    const out=[];
-    for(let i=0;i<localStorage.length;i++){
-      const k=localStorage.key(i);
-      if(k && k.startsWith(PREFIX)){
-        const v=get(k,null);
-        if(v && v.namespace) out.push(v);
-      }
-    }
-    return out.sort((a,b)=>a.namespace.localeCompare(b.namespace));
-  }
+    const f = fragScore(s);
+    const r = rpmScore(e.updated_at);
+    const sp = cycleSpeed(cyc);
 
-  // fragmentation: rule violations in state ordering
-  function fragmentationScore(engine){
-    const s=engine.state||{};
-    let v=0;
-    const sel = s.selection;
-    const res = s.resolution;
-    const com = s.commitment;
-    const cyc = s.continuation?.cycle;
+    // Burnout proxy = high RPM sustained (observer-only)
+    // (If rpm > .75 and cycle not progressing, treat as burn risk)
+    const stagnation = (sp < 0.35 && (s.selection || s.resolution || s.commitment));
+    const burn = (r > 0.75 && stagnation) ? 1 : 0;
 
-    // violations
-    if(res && !sel) v++;
-    if(com && res!=="RESOLVED") v++;
-    if(cyc==="WALL") v++;
+    const risk = Math.min(1, (0.7*f + 0.3*(cyc==="WALL"?1:0)));
 
-    // normalized to 0..1 (max 3)
-    return Math.min(1, v/3);
-  }
+    // Fuel stays full unless burnout/fragmentation
+    const fuel = Math.max(0, 1 - (0.55*burn + 0.45*f));
 
-  // burnout: too many events recently
-  function burnoutScore(ns){
-    const log = get(lkey(ns), []);
-    const cutoff = now() - (5*60*1000); // 5 min
-    const n = log.filter(e=>e.t>=cutoff).length;
-    // 0 at <=10 events, 1 at >=60 events (clipped)
-    const score = (n<=10) ? 0 : (n>=60) ? 1 : (n-10)/(60-10);
-    return Math.min(1, Math.max(0, score));
-  }
+    sysFrag += f;
+    sysBurn += burn;
+    sysRisk += risk;
+    sysSpeed += sp;
+    sysRPM += r;
 
-  function cycleColor(c){
-    return c==="RUNNING"?"green":c==="HURDLE"?"yellow":c==="WALL"?"red":c==="COMPLETE"?"blue":"";
-  }
+    rows.push({ns, fuel, rpm:r, speed:sp, risk, cyc});
+  });
 
-  function setGauge(id, val){
-    const pct = Math.min(100, Math.max(0, Math.round(val*100)));
-    document.getElementById(id).style.width = pct+"%";
-  }
+  if(!n){
+    coreRows.innerHTML = `<tr><td colspan="6" class="mono">No engines discovered.</td></tr>`;
+    setGauge("fuel",0); setGauge("rpm",0); setGauge("speed",0); setGauge("risk",0);
+    sysLight.style.background = "var(--yellow)";
+    sysZone.textContent = "NO DATA";
+    coreMeta.textContent = "—";
+  } else {
+    const avgFuel = rows.reduce((a,x)=>a+x.fuel,0)/n;
+    const avgRPM  = rows.reduce((a,x)=>a+x.rpm,0)/n;
+    const avgSpd  = rows.reduce((a,x)=>a+x.speed,0)/n;
+    const avgRisk = rows.reduce((a,x)=>a+x.risk,0)/n;
 
-  function refreshDashboard(){
-    const engines=discover();
-    const rows=document.getElementById("rows");
-    const scan=document.getElementById("scan");
+    setGauge("fuel", avgFuel);
+    setGauge("rpm", avgRPM);
+    setGauge("speed", avgSpd);
+    setGauge("risk", avgRisk);
 
-    rows.innerHTML="";
+    // Zone thresholds
+    const zone =
+      (avgRisk >= 0.66 || avgFuel <= 0.40) ? "FAULT" :
+      (avgRisk >= 0.33 || avgFuel <= 0.70) ? "WARNING" :
+      "SAFE";
 
-    if(!engines.length){
-      rows.innerHTML="<tr><td colspan='4' class='mono'>No engines discovered.</td></tr>";
-      setGauge("fuel",0); setGauge("rpm",0); setGauge("speed",0); setGauge("risk",0);
-      scan.textContent="Last scan: "+nowISO();
-      return;
+    sysZone.textContent = zone;
+    sysLight.style.background =
+      zone==="SAFE" ? "var(--green)" :
+      zone==="WARNING" ? "var(--yellow)" :
+      "var(--red)";
+
+    // Log breakage only
+    if(zone !== "SAFE"){
+      appendBreak(`ZONE=${zone} fuel=${avgFuel.toFixed(2)} risk=${avgRisk.toFixed(2)} rpm=${avgRPM.toFixed(2)} speed=${avgSpd.toFixed(2)}`);
     }
 
-    // aggregate metrics
-    let frag=0, burn=0, rpm=0, speed=0, wall=0;
-    engines.forEach(e=>{
-      frag += fragmentationScore(e);
-      burn += burnoutScore(e.namespace);
-      const recent = burnoutScore(e.namespace); // proxy for activity density
-      rpm += recent;
+    coreRows.innerHTML = rows.map(x=>`
+      <tr>
+        <td class="mono">${x.ns}</td>
+        <td class="mono">${Math.round(x.fuel*100)}%</td>
+        <td class="mono">${Math.round(x.rpm*100)}%</td>
+        <td class="mono">${Math.round(x.speed*100)}%</td>
+        <td class="mono">${Math.round(x.risk*100)}%</td>
+        <td class="mono">${x.cyc}</td>
+      </tr>
+    `).join("");
 
-      const cyc = e.state?.continuation?.cycle || "IDLE";
-      if(cyc==="WALL") wall++;
-
-      speed += (cyc==="RUNNING"?1:cyc==="COMPLETE"?4:2);
-    });
-
-    frag /= engines.length;
-    burn /= engines.length;
-    rpm  /= engines.length;
-    speed = speed / (engines.length*4);
-    const risk = Math.min(1, (0.7*frag + 0.3*(wall/engines.length)));
-
-    // FUEL RULE (your rule):
-    // Full unless penalties. Deplete only with burnout/fragmentation.
-    const fuel = Math.max(0, 1 - (0.55*burn + 0.45*frag));
-
-    setGauge("fuel", fuel);
-    setGauge("rpm", rpm);
-    setGauge("speed", speed);
-    setGauge("risk", risk);
-
-    engines.forEach(e=>{
-      const st=e.state||{};
-      const cyc=st.continuation?.cycle||"IDLE";
-      const updated=e.updated_at||"—";
-      const blocks = [
-        st.selection!==null && st.selection!==undefined,
-        st.resolution!==null && st.resolution!==undefined,
-        st.commitment!==null && st.commitment!==undefined,
-        !!st.continuation
-      ].filter(Boolean).length;
-
-      const tr=document.createElement("tr");
-      tr.innerHTML=`
-        <td class="mono">${e.namespace}</td>
-        <td>${blocks?"ACTIVE":"IDLE"}</td>
-        <td class="mono">${cyc}</td>
-        <td class="mono">${updated}</td>
-      `;
-      rows.appendChild(tr);
-    });
-
-    scan.textContent="Last scan: "+nowISO();
+    coreMeta.textContent = `cores=${n} avg_fuel=${Math.round(avgFuel*100)}% avg_risk=${Math.round(avgRisk*100)}%`;
   }
 
-  function exportAll(){
-    const out = {
-      exported_at: nowISO(),
-      lock: get(LOCKKEY,{}),
-      supervisor: get(SUPKEY,{}),
-      engines: discover(),
-      logs: Object.fromEntries(CORES.map(c=>[c.ns, get(lkey(c.ns),[])]))
-    };
-    const blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json"});
-    const a=document.createElement("a");
-    a.href=URL.createObjectURL(blob);
-    a.download="control_room_export.json";
-    a.click();
-    URL.revokeObjectURL(a.href);
-  }
+  const log = getJSON(BREAK_KEY, []);
+  breakLog.textContent = log.length ? log.map(x=>`${x.t}  ${x.msg}`).join("\n") : "—";
+}
 
-  // Supervisor
-  function sup(){ return get(SUPKEY, {mode:"ISOLATED", rule:"NONE", updated_at:null}); }
-  function supWrite(s){ s.updated_at=nowISO(); set(SUPKEY,s); paintSup(); }
-  function paintSup(){
-    const s=sup();
-    document.getElementById("supMode").textContent=s.mode;
-    document.getElementById("supRule").textContent=s.rule;
-  }
-  function setMode(m){ const s=sup(); s.mode=m; supWrite(s); }
-  function applyRule(){ const v=(document.getElementById("ruleLabel").value||"").trim(); const s=sup(); s.rule=v||"NONE"; supWrite(s); }
-  function mirrorState(){
-    if(locked()) return;
-    const src=(document.getElementById("srcNS").value||"").trim();
-    const dst=(document.getElementById("dstNS").value||"").trim();
-    if(!src||!dst) return;
-    ensure(src); ensure(dst);
-    const s=read(src); const d=read(dst);
-    d.state = JSON.parse(JSON.stringify(s.state));
-    write(dst,d,"mirror");
-    refreshAll();
-  }
-  function resetNamespace(){
-    if(locked()) return;
-    const dst=(document.getElementById("dstNS").value||"").trim();
-    if(!dst) return;
-    del(key(dst)); del(lkey(dst));
-    ensure(dst);
-    refreshAll();
-  }
-
-  // Render
-  function renderTabs(){
-    const tabs=document.getElementById("tabs");
-    tabs.innerHTML="";
-    CORES.forEach(c=>{
-      const b=document.createElement("button");
-      b.className="tab"+(c.ns===active?" active":"");
-      b.onclick=()=>setActive(c.ns);
-      b.innerHTML=`${c.name}<small>${c.stage}</small>`;
-      tabs.appendChild(b);
-    });
-  }
-
-  function renderPanel(){
-    const s=read(active).state;
-    const meta=CORES.find(c=>c.ns===active);
-
-    const cyc=s.continuation?.cycle||"—";
-    const last=s.continuation?.last_set||"—";
-
-    document.getElementById("corePanel").innerHTML = `
-      <div class="pill">${meta.name} · ${meta.stage} · <span class="mono">${meta.ns}</span></div>
-      <div class="kv" style="margin-top:12px">
-        <div class="k"><b>Selection</b><span class="mono">${s.selection ?? "—"}</span></div>
-        <div class="k"><b>Resolution</b><span class="mono">${s.resolution ?? "—"}</span></div>
-        <div class="k"><b>Commitment</b><span class="mono">${s.commitment ?? "—"}</span></div>
-        <div class="k"><b>Continuation</b><span class="mono">${cyc}</span><div class="small mono" style="margin-top:6px">last_set: ${last}</div></div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="row">
-        <button class="btn" onclick="CR.setSelection('ADMITTED')">Admit</button>
-        <button class="btn" onclick="CR.setSelection('REJECTED')">Reject</button>
-        <button class="btn" onclick="CR.setResolution()">Resolve</button>
-        <button class="btn" onclick="CR.setCommitment()">Commit</button>
-      </div>
-
-      <div class="row" style="margin-top:10px">
-        <button class="btn" onclick="CR.setCycle('RUNNING')">RUNNING</button>
-        <button class="btn" onclick="CR.setCycle('HURDLE')">HURDLE</button>
-        <button class="btn" onclick="CR.setCycle('WALL')">WALL</button>
-        <button class="btn" onclick="CR.setCycle('COMPLETE')">COMPLETE</button>
-      </div>
-    `;
-  }
-
-  function refreshAll(){
-    paintLock();
-    paintSup();
-    renderTabs();
-    renderPanel();
-    refreshDashboard();
-    document.getElementById("metaTop").textContent="Last refresh: "+nowISO();
-  }
-
-  function boot(){
-    if(!get(LOCKKEY,null)) setLocked(true);
-    registerAll();
-    refreshAll();
-  }
-
-  return {
-    registerAll, refreshAll, exportAll, resetActive,
-    setSelection, setResolution, setCommitment, setCycle,
-    setMode, applyRule, mirrorState, resetNamespace,
-    toggleLock
-  };
-})();
-
-CR.refreshAll();
+// auto-refresh every 5 seconds (observer only)
+render();
+setInterval(render, 5000);
 </script>
 </body>
 </html>

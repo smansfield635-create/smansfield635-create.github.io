@@ -1,15 +1,15 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Geodiametrics</title>
 
 <style>
 :root{
   --bg:#0b0f14;
   --panel:#111826;
-  --panel-2:#0f1623;
+  --panel2:#0f1623;
   --border:#223044;
   --text:#e7eef7;
   --muted:#93a4b8;
@@ -27,12 +27,12 @@ body{
 .wrapper{
   max-width:1100px;
   margin:0 auto;
-  padding:28px 16px 48px;
+  padding:28px 16px 56px;
 }
 
 .header{
   text-align:center;
-  margin-bottom:28px;
+  margin-bottom:32px;
 }
 
 .header h1{
@@ -47,11 +47,11 @@ body{
 }
 
 .card{
-  background:linear-gradient(180deg,var(--panel),var(--panel-2));
+  background:linear-gradient(180deg,var(--panel),var(--panel2));
   border:1px solid var(--border);
   border-radius:22px;
   padding:22px;
-  margin-bottom:22px;
+  margin-bottom:28px;
 }
 
 .section-title{
@@ -59,7 +59,7 @@ body{
   padding:8px 14px;
   border-radius:999px;
   border:1px solid var(--border);
-  background:var(--panel-2);
+  background:var(--panel2);
   font-weight:700;
   letter-spacing:.6px;
   text-transform:uppercase;
@@ -74,9 +74,9 @@ body{
 }
 
 .nav-btn{
-  display:inline-flex;
-  justify-content:center;
+  display:flex;
   align-items:center;
+  justify-content:center;
   text-decoration:none;
   border:1px solid var(--border);
   background:linear-gradient(180deg,#121a2a,#0d1422);
@@ -91,6 +91,15 @@ body{
 .nav-btn:hover{
   border-color:#3a5273;
   transform:translateY(-1px);
+}
+
+.anchor{
+  scroll-margin-top:24px;
+}
+
+.info{
+  color:var(--muted);
+  max-width:760px;
 }
 
 .anchor-grid{
@@ -110,21 +119,11 @@ body{
   font-weight:800;
 }
 
-.info{
-  color:var(--muted);
-  max-width:760px;
-}
-
 .footer{
   text-align:center;
   color:var(--muted);
   font-size:12px;
-  margin-top:32px;
-}
-
-/* Anchor spacing */
-.anchor{
-  scroll-margin-top:24px;
+  margin-top:36px;
 }
 </style>
 </head>
@@ -133,7 +132,7 @@ body{
 <div class="wrapper">
 
   <!-- HEADER -->
-  <div class="header">
+  <div id="home" class="header anchor">
     <h1>Geodiametrics</h1>
     <p>
       Constraint-first execution platform<br>
@@ -166,35 +165,49 @@ body{
     </div>
   </div>
 
-  <!-- SECTIONS (STUBS — SAFE, NO 404) -->
-  <div id="home" class="anchor"></div>
+  <!-- FUNCTIONAL SCROLL TARGETS -->
+  <div id="toc" class="card anchor">
+    <div class="section-title">Table of Contents</div>
+    <p class="info">System structure and index.</p>
+  </div>
 
-  <div id="what" class="card anchor">
-    <div class="section-title">What This Is</div>
+  <div id="mission" class="card anchor">
+    <div class="section-title">Mission Statement</div>
+    <p class="info">Purpose, scope, and execution posture.</p>
+  </div>
+
+  <div id="about" class="card anchor">
+    <div class="section-title">About</div>
+    <p class="info">What this platform is and is not.</p>
+  </div>
+
+  <div id="rights" class="card anchor">
+    <div class="section-title">Rights & IP</div>
+    <p class="info">Usage, attribution, and licensing.</p>
+  </div>
+
+  <div id="control" class="card anchor">
+    <div class="section-title">Control Room</div>
     <p class="info">
-      Geodiametrics reports coherence, momentum, and instability without manual control.
-      The Control Room is the authoritative observer surface.
-      Apps are execution and viewing surfaces.
+      Authoritative observer surface.<br>
+      Instrumentation and live gauges operate here.
     </p>
   </div>
 
-  <div id="status" class="card anchor">
-    <div class="section-title">Status</div>
-    <p class="info">
-      This front page is informational only.
-      Instrumentation and live gauges operate in the Control Room.
-    </p>
+  <div id="apps" class="card anchor">
+    <div class="section-title">Apps</div>
+    <p class="info">Execution and viewing surfaces.</p>
   </div>
 
-  <!-- Empty anchors for future pages -->
-  <div id="toc" class="anchor"></div>
-  <div id="mission" class="anchor"></div>
-  <div id="about" class="anchor"></div>
-  <div id="rights" class="anchor"></div>
-  <div id="control" class="anchor"></div>
-  <div id="apps" class="anchor"></div>
-  <div id="reference" class="anchor"></div>
-  <div id="problem" class="anchor"></div>
+  <div id="reference" class="card anchor">
+    <div class="section-title">Reference</div>
+    <p class="info">Definitions and formal grounding.</p>
+  </div>
+
+  <div id="problem" class="card anchor">
+    <div class="section-title">Problem</div>
+    <p class="info">The instability this system addresses.</p>
+  </div>
 
   <div class="footer">
     © 2026 Geodiametrics

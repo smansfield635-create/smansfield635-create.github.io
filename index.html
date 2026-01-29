@@ -83,3 +83,55 @@ homeBtn.addEventListener("click",showHome);
 route();
 })();
 </script></body></html>
+<!-- TNT-NEXT: FOCUS MODE (ROOMS ARE FULLY VISIBLE, HOME UI HIDES) -->
+<!-- DROP THIS PATCH INTO THE SAME index.html (replace <style> additions + <script>) -->
+
+<style>
+/* === FOCUS MODE FIX === */
+body.room-active #router,
+body.room-active #anchors{display:none!important}
+body.room-active .room{display:block!important}
+body.room-active .wrapper{padding-top:18px}
+.room{display:none}
+.room.active{display:block}
+.topbar{position:sticky;top:0;z-index:20}
+</style>
+
+<script>
+/* === TNT ROUTER FIX: HARD SHOW ROOM CONTENT === */
+(()=> {
+  const rooms=[...document.querySelectorAll(".room")];
+  const crumb=document.getElementById("crumb");
+  const backBtn=document.getElementById("backBtn");
+  const homeBtn=document.getElementById("homeBtn");
+
+  const key=()=>location.hash.replace("#","").toLowerCase().trim();
+
+  function showHome(){
+    document.body.classList.remove("room-active");
+    rooms.forEach(r=>r.classList.remove("active"));
+    crumb.textContent="HOME";
+    history.replaceState(null,"","#");
+  }
+
+  function showRoom(id){
+    const r=rooms.find(x=>x.dataset.room===id);
+    if(!r){showHome();return;}
+    document.body.classList.add("room-active");
+    rooms.forEach(x=>x.classList.toggle("active",x===r));
+    crumb.textContent=id.toUpperCase();
+    r.scrollIntoView({block:"start",behavior:"instant"});
+  }
+
+  function route(){
+    const k=key();
+    if(!k){showHome();return;}
+    showRoom(k);
+  }
+
+  window.addEventListener("hashchange",route);
+  backBtn.onclick=()=>history.length>1?history.back():showHome();
+  homeBtn.onclick=showHome;
+  route();
+})();
+</script>

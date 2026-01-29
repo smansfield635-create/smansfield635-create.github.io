@@ -1,127 +1,170 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodiametrics · Control</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geodiametrics · Control</title>
 
-  <style>
-    :root{
-      --bg:#0b0e14;
-      --panel:#0f1420;
-      --fg:#e6ebff;
-      --muted:#9aa3c7;
-      --stroke:rgba(230,235,255,.12);
-      --accent:#7aa2ff;
-      --radius:14px;
-      --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;height:100%}
-    body{
-      background:var(--bg);
-      color:var(--fg);
-      font-family:var(--sans);
-    }
-    .wrap{
-      max-width:880px;
-      margin:0 auto;
-      padding:48px 20px 72px;
-    }
-    header{
-      margin-bottom:28px;
-      padding-bottom:18px;
-      border-bottom:1px solid var(--stroke);
-    }
-    h1{
-      margin:0 0 6px;
-      font-size:22px;
-      font-weight:600;
-    }
-    .sub{
-      font-family:var(--mono);
-      font-size:12px;
-      color:var(--muted);
-    }
-    section{
-      border:1px solid var(--stroke);
-      border-radius:var(--radius);
-      padding:18px;
-      margin-bottom:18px;
-      background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
-    }
-    h2{
-      margin:0 0 10px;
-      font-size:13px;
-      font-family:var(--mono);
-      text-transform:uppercase;
-      letter-spacing:1.2px;
-      color:var(--accent);
-    }
-    .kv{
-      font-family:var(--mono);
-      font-size:13px;
-      line-height:1.6;
-    }
-    .muted{color:var(--muted)}
-    footer{
-      margin-top:40px;
-      padding-top:16px;
-      border-top:1px solid var(--stroke);
-      font-family:var(--mono);
-      font-size:12px;
-      color:var(--muted);
-      display:flex;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      gap:12px;
-    }
-  </style>
+<style>
+:root{
+  --bg:#0b0e14;
+  --panel:#0f1420;
+  --fg:#e6ebff;
+  --muted:#9aa3c7;
+  --stroke:rgba(230,235,255,.12);
+  --accent:#7aa2ff;
+  --radius:14px;
+  --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:var(--sans);
+}
+main{
+  max-width:900px;
+  margin:0 auto;
+  padding:48px 20px 72px;
+}
+header{
+  border-bottom:1px solid var(--stroke);
+  padding-bottom:20px;
+  margin-bottom:32px;
+}
+h1{
+  margin:0;
+  font-size:22px;
+  font-weight:600;
+}
+.sub{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--muted);
+}
+section{
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  padding:20px;
+  margin-bottom:20px;
+  background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
+}
+h2{
+  margin:0 0 12px;
+  font-size:13px;
+  font-family:var(--mono);
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+  color:var(--accent);
+}
+.kv{
+  font-family:var(--mono);
+  font-size:13px;
+  line-height:1.6;
+}
+.muted{color:var(--muted)}
+.project{
+  padding:10px 0;
+  border-bottom:1px solid var(--stroke);
+}
+.project:last-child{border-bottom:none}
+a{
+  color:var(--fg);
+  text-decoration:none;
+}
+a:hover{color:var(--accent)}
+footer{
+  margin-top:40px;
+  padding-top:16px;
+  border-top:1px solid var(--stroke);
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--muted);
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+.counter{
+  font-size:22px;
+  font-family:var(--mono);
+  margin-top:6px;
+}
+</style>
 </head>
 
 <body>
-<main class="wrap">
+<main>
 
-  <header>
-    <h1>Control</h1>
-    <div class="sub">Observer Surface · Public Gauge · Read-Only</div>
-  </header>
+<header>
+  <h1>Control</h1>
+  <div class="sub">Observer Surface · Live Gauge · Read-Only</div>
+</header>
 
-  <section>
-    <h2>System State</h2>
-    <div class="kv">
-      Operational Surface: ACTIVE<br/>
-      Mutation: DISABLED<br/>
-      Authority: FIXED<br/>
-      Execution Enabled: FALSE
-    </div>
-  </section>
+<section>
+  <h2>System State</h2>
+  <div class="kv">
+    Operational Surface: ACTIVE<br>
+    Mutation: RESTRICTED<br>
+    Authority: FIXED
+  </div>
+</section>
 
-  <section>
-    <h2>Live Site Activity</h2>
-    <div class="kv">
-      Session ID: <span id="sid">—</span><br/>
-      Visits (this browser): <span id="visits">—</span><br/>
-      Last Seen: <span id="time">—</span>
-    </div>
-  </section>
+<section>
+  <h2>Live Activity</h2>
+  <div class="kv muted">Approximate, client-side signal</div>
+  <div class="counter" id="visits">—</div>
+  <div class="kv muted" id="timestamp">Last updated —</div>
+</section>
 
-  <section>
-    <h2>OSF Projects</h2>
-    <div class="kv">
-      1. <a href="https://osf.io/" target="_blank">Primary Canonical Project</a> · ACTIVE<br/>
-      2. <a href="https://osf.io/" target="_blank">Supporting Project A</a> · ACTIVE<br/>
-      3. <a href="https://osf.io/" target="_blank">Supporting Project B</a> · ACTIVE
-    </div>
-  </section>
+<section>
+  <h2>OSF Projects</h2>
 
-  <section>
-    <h2>Observer Notice</h2>
-    <div class="kv muted">
-      This surface exposes live signal only.<br/>
-      No execution, mutation, or validation occurs here.
-    </div>
-  </section>
+  <div class="project kv">
+    <a href="https://osf.io/YOUR_PROJECT_1" target="_blank">Project One</a><br>
+    <span class="muted">Status: Active</span>
+  </div>
 
-  <footer>
+  <div class="project kv">
+    <a href="https://osf.io/YOUR_PROJECT_2" target="_blank">Project Two</a><br>
+    <span class="muted">Status: Active</span>
+  </div>
+
+  <div class="project kv">
+    <a href="https://osf.io/YOUR_PROJECT_3" target="_blank">Project Three</a><br>
+    <span class="muted">Status: Active</span>
+  </div>
+
+</section>
+
+<section>
+  <h2>Constraints</h2>
+  <div class="kv">
+    • Read-only observer surface<br>
+    • No execution permitted<br>
+    • No interpretation validated
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 Geodiametrics</div>
+  <div>Control Surface · Gauge · v1.0</div>
+</footer>
+
+</main>
+
+<script>
+/* simple client-side visit signal */
+const key = "geo_visits";
+let count = localStorage.getItem(key);
+count = count ? parseInt(count) + 1 : 1;
+localStorage.setItem(key, count);
+document.getElementById("visits").textContent = "Local Visits: " + count;
+
+document.getElementById("timestamp").textContent =
+  "Last updated " + new Date().toLocaleString();
+</script>
+
+</body>
+</html>

@@ -9,19 +9,15 @@
 :root{
   --fg:#e9eefc;
   --muted:rgba(233,238,252,.66);
-  --muted2:rgba(233,238,252,.50);
   --stroke:rgba(233,238,252,.14);
   --panel:rgba(12,16,34,.62);
   --panel2:rgba(12,16,34,.42);
-  --glass:rgba(10,14,28,.55);
-  --radius:22px;
   --shadow:0 18px 55px rgba(0,0,0,.55);
-
+  --radius:22px;
   --green:#4ade80;
+  --blue:#60a5fa;
   --yellow:#facc15;
   --red:#f87171;
-  --blue:#60a5fa;
-  --purple:#c084fc;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
@@ -35,50 +31,66 @@ body{
     radial-gradient(1000px 800px at 60% 90%, rgba(120,220,255,.08), transparent 60%),
     linear-gradient(180deg,#070b18,#050714 70%,#04040f);
 }
-body:before{
-  content:"";
-  position:fixed;inset:-80px;
-  pointer-events:none;
-  opacity:.78;
-  filter:blur(.15px);
-  background:
-    radial-gradient(2px 2px at 10% 15%, rgba(255,255,255,.9), transparent 60%),
-    radial-gradient(1px 1px at 30% 28%, rgba(255,255,255,.7), transparent 60%),
-    radial-gradient(2px 2px at 55% 18%, rgba(255,255,255,.8), transparent 60%),
-    radial-gradient(1px 1px at 72% 22%, rgba(255,255,255,.6), transparent 60%),
-    radial-gradient(2px 2px at 88% 35%, rgba(255,255,255,.85), transparent 60%),
-    radial-gradient(1px 1px at 18% 62%, rgba(255,255,255,.65), transparent 60%),
-    radial-gradient(2px 2px at 42% 70%, rgba(255,255,255,.75), transparent 60%),
-    radial-gradient(1px 1px at 67% 78%, rgba(255,255,255,.55), transparent 60%),
-    radial-gradient(2px 2px at 90% 82%, rgba(255,255,255,.8), transparent 60%),
-    radial-gradient(1px 1px at 8% 88%, rgba(255,255,255,.55), transparent 60%);
-}
 
-.wrap{max-width:1200px;margin:0 auto;padding:18px 14px 92px}
+/* visible starfield */
+.starfield{position:fixed;inset:0;pointer-events:none;z-index:-1}
+.starsA,.starsB{
+  position:absolute;inset:-120px;opacity:.7;
+  background-repeat:no-repeat;
+  animation:twinkle 8s ease-in-out infinite;
+  filter:drop-shadow(0 0 2px rgba(255,255,255,.22));
+}
+.starsA{
+  background-image:
+    radial-gradient(2px 2px at 10% 18%, rgba(255,255,255,.95), transparent 60%),
+    radial-gradient(1px 1px at 22% 30%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(2px 2px at 36% 22%, rgba(255,255,255,.92), transparent 60%),
+    radial-gradient(1px 1px at 52% 16%, rgba(255,255,255,.72), transparent 60%),
+    radial-gradient(2px 2px at 66% 28%, rgba(255,255,255,.9), transparent 60%),
+    radial-gradient(1px 1px at 78% 18%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(2px 2px at 90% 26%, rgba(255,255,255,.92), transparent 60%),
+    radial-gradient(1px 1px at 14% 66%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(2px 2px at 28% 78%, rgba(255,255,255,.88), transparent 60%),
+    radial-gradient(1px 1px at 44% 70%, rgba(255,255,255,.6), transparent 60%),
+    radial-gradient(2px 2px at 58% 84%, rgba(255,255,255,.9), transparent 60%),
+    radial-gradient(1px 1px at 76% 72%, rgba(255,255,255,.6), transparent 60%),
+    radial-gradient(2px 2px at 90% 86%, rgba(255,255,255,.9), transparent 60%);
+  animation-duration: 9.5s;
+}
+.starsB{
+  opacity:.45;
+  background-image:
+    radial-gradient(2px 2px at 18% 44%, rgba(180,140,255,.40), transparent 70%),
+    radial-gradient(2px 2px at 64% 18%, rgba(122,162,255,.35), transparent 70%),
+    radial-gradient(2px 2px at 78% 66%, rgba(180,140,255,.30), transparent 70%),
+    radial-gradient(2px 2px at 52% 82%, rgba(122,162,255,.28), transparent 70%);
+  animation-duration: 12s;
+  animation-delay:-2s;
+}
+@keyframes twinkle{0%,100%{opacity:.45;transform:translateY(0)}50%{opacity:.85;transform:translateY(-2px)}}
+
+/* top */
+.wrap{max-width:1100px;margin:0 auto;padding:18px 14px 92px}
 .top{
   position:sticky;top:0;z-index:50;
   backdrop-filter:blur(10px);
   background:linear-gradient(180deg, rgba(7,11,24,.84), rgba(7,11,24,.55));
   border-bottom:1px solid rgba(233,238,252,.10);
 }
-.bar{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;padding:14px 14px;
-}
-.brand{font-weight:900;letter-spacing:.4px}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 14px}
+.brand{font-weight:1000;letter-spacing:.4px}
 .nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
 .bubble{
   display:inline-flex;align-items:center;justify-content:center;
   padding:10px 14px;border-radius:999px;
   border:1px solid rgba(233,238,252,.16);
   background:rgba(255,255,255,.06);
-  color:var(--fg);
-  text-decoration:none;
-  font-weight:900;
+  color:var(--fg);text-decoration:none;font-weight:1000;
   box-shadow:0 10px 26px rgba(0,0,0,.35);
 }
 .bubble:active{transform:translateY(1px)}
 
+/* cards */
 .card{
   border-radius:var(--radius);
   border:1px solid var(--stroke);
@@ -86,95 +98,69 @@ body:before{
   box-shadow:var(--shadow);
 }
 .in{padding:18px}
-.hero h1{margin:0;font-size:44px;letter-spacing:.2px}
-.hero p{margin:10px 0 0;color:var(--muted);line-height:1.55;max-width:920px}
+h1{margin:0;font-size:44px;letter-spacing:.2px}
+.sub{margin:10px 0 0;color:var(--muted);line-height:1.55;max-width:900px}
 .hr{height:1px;background:rgba(233,238,252,.10);margin:18px 0 18px}
+
 .pill{
-  display:inline-flex;align-items:center;gap:8px;
+  display:inline-flex;align-items:center;gap:10px;
   padding:8px 12px;border-radius:999px;
   border:1px solid rgba(233,238,252,.16);
   background:rgba(255,255,255,.06);
-  font-weight:900;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
+  font-weight:1000;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
 }
+.light{width:10px;height:10px;border-radius:50%;display:inline-block}
+.light.green{background:var(--green)}
+.light.blue{background:var(--blue)}
+.light.yellow{background:var(--yellow)}
+.light.red{background:var(--red)}
+
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:920px){.grid{grid-template-columns:1.15fr .85fr}}
+
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .btn{
-  appearance:none;border:1px solid rgba(233,238,252,.18);
-  background:rgba(255,255,255,.06);color:var(--fg);
-  padding:11px 14px;border-radius:999px;
-  font-weight:900;cursor:pointer;
+  padding:11px 16px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.18);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);font-weight:1000;
+  cursor:pointer;
 }
 .btn:active{transform:translateY(1px)}
 .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
 .small{font-size:13px;color:var(--muted)}
-.mini{font-size:12px;color:rgba(233,238,252,.55)}
 
-.grid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:980px){.grid{grid-template-columns:1fr 1fr}}
+.gauges{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+.gauge{
+  border-radius:18px;border:1px solid rgba(233,238,252,.12);
+  background:rgba(0,0,0,.22);padding:14px;
+}
+.gauge h3{margin:0 0 8px;font-size:14px;letter-spacing:.7px;text-transform:uppercase}
+.track{height:14px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
+.fill{height:100%;width:0%;border-radius:999px;background:var(--blue);transition:width .35s ease}
+.fill.green{background:var(--green)}
+.fill.yellow{background:var(--yellow)}
+.fill.red{background:var(--red)}
+.meta{margin-top:8px;color:var(--muted);line-height:1.4}
 
-.kpiGrid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
-@media(min-width:720px){.kpiGrid{grid-template-columns:repeat(2,1fr)}}
-.kpi{
-  border-radius:18px;border:1px solid rgba(233,238,252,.14);
-  background:rgba(10,14,28,.42);
-  padding:14px;
-}
-.kpiTop{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.kpiTitle{font-weight:1000;letter-spacing:.4px}
-.kpiValue{font-weight:1000}
-.kpiHelp{margin-top:8px;color:var(--muted);line-height:1.45}
-
-.meter{
-  margin-top:10px;
-  height:12px;border-radius:999px;
-  background:rgba(255,255,255,.10);
-  overflow:hidden;border:1px solid rgba(233,238,252,.10);
-}
-.meter > i{
-  display:block;height:100%;
-  width:0%;
-  background:linear-gradient(90deg, rgba(74,222,128,.95), rgba(96,165,250,.95));
-  border-radius:999px;
-}
-.meter.red > i{background:linear-gradient(90deg, rgba(248,113,113,.95), rgba(250,204,21,.95))}
-.meter.blue > i{background:linear-gradient(90deg, rgba(96,165,250,.95), rgba(192,132,252,.95))}
-.meter.green > i{background:linear-gradient(90deg, rgba(74,222,128,.95), rgba(96,165,250,.55))}
-
-.light{
-  width:12px;height:12px;border-radius:50%;
-  background:rgba(233,238,252,.20);
-  box-shadow:0 0 0 3px rgba(233,238,252,.06);
-}
-.light.g{background:var(--green)}
-.light.y{background:var(--yellow)}
-.light.r{background:var(--red)}
-.light.b{background:var(--blue)}
-
-.table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
-  font-size:13px;
-}
-th,td{
-  text-align:left;
-  padding:8px 8px;
-  border-bottom:1px solid rgba(233,238,252,.12);
-  color:var(--muted);
-  vertical-align:top;
-}
+.table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+th,td{padding:8px;border-bottom:1px solid rgba(233,238,252,.12);text-align:left;color:var(--muted)}
 th{color:rgba(233,238,252,.85);font-weight:1000}
 tfoot td{border-bottom:0}
 
-.footer{
-  margin-top:18px;
-  text-align:center;
-  color:rgba(233,238,252,.55);
-  font-size:13px;
-}
+.footer{margin-top:18px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
+
+/* hard-hide any stray glyph text */
+#debug,.debug,.dev,.__debug{display:none!important}
 </style>
 </head>
 
 <body>
+<div class="starfield" aria-hidden="true">
+  <div class="starsA"></div>
+  <div class="starsB"></div>
+</div>
+
 <div class="top">
   <div class="bar wrap" style="padding:14px 14px;">
     <div class="brand">Geodiametrics</div>
@@ -189,172 +175,106 @@ tfoot td{border-bottom:0}
 </div>
 
 <div class="wrap">
-
-  <div class="card hero">
+  <div class="card">
     <div class="in">
-      <div class="row" style="justify-content:space-between;gap:12px;">
-        <div class="pill"><span class="light g" id="modeLight"></span><span id="modeText">OPERATIONAL</span></div>
-        <div class="mini mono" id="lastScan">Last scan: —</div>
+      <div class="pill"><span class="light blue"></span><span id="statusText">Operational</span></div>
+      <h1>Control Room</h1>
+      <p class="sub">Authoritative observation surface. Reports what is knowable. Nothing more.</p>
+      <div class="hr"></div>
+
+      <div class="row">
+        <button class="btn" id="btnRefresh">Refresh</button>
+        <button class="btn" id="btnExport">Export JSON</button>
+        <span class="small mono" id="lastScan">Last scan: —</span>
       </div>
-      <h1 style="margin-top:10px;">Control Room</h1>
-      <p>Authoritative observation surface. Reports what is knowable. Nothing more.</p>
     </div>
   </div>
 
   <div class="grid">
-
-    <!-- LEFT: ON-SITE + ENGINE SIGNALS -->
-    <div class="card">
-      <div class="in">
-        <div class="pill">On-Site Interaction</div>
-        <h2 style="margin:10px 0 0;">Local Gauges</h2>
-        <p class="small">Counts from this browser/device only. No external APIs.</p>
-
-        <div class="kpiGrid">
-
-          <div class="kpi">
-            <div class="kpiTop">
-              <div class="kpiTitle">Hourly</div>
-              <div class="kpiValue mono" id="hVal">—</div>
-            </div>
-            <div class="meter blue"><i id="hBar"></i></div>
-            <div class="kpiHelp">Interactions in the last <span class="mono">60m</span>.</div>
-          </div>
-
-          <div class="kpi">
-            <div class="kpiTop">
-              <div class="kpiTitle">Daily</div>
-              <div class="kpiValue mono" id="dVal">—</div>
-            </div>
-            <div class="meter blue"><i id="dBar"></i></div>
-            <div class="kpiHelp">Interactions in the last <span class="mono">24h</span>.</div>
-          </div>
-
-          <div class="kpi">
-            <div class="kpiTop">
-              <div class="kpiTitle">Weekly</div>
-              <div class="kpiValue mono" id="wVal">—</div>
-            </div>
-            <div class="meter blue"><i id="wBar"></i></div>
-            <div class="kpiHelp">Interactions in the last <span class="mono">7d</span>.</div>
-          </div>
-
-          <div class="kpi">
-            <div class="kpiTop">
-              <div class="kpiTitle">Monthly</div>
-              <div class="kpiValue mono" id="mVal">—</div>
-            </div>
-            <div class="meter blue"><i id="mBar"></i></div>
-            <div class="kpiHelp">Interactions in the last <span class="mono">30d</span>.</div>
-          </div>
-
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="pill">Engine Signal</div>
-        <h2 style="margin:10px 0 0;">Detected Engines</h2>
-        <p class="small">From localStorage keys: <span class="mono">ENGINE::</span> (and <span class="mono">DF::</span> / <span class="mono">DF_REG::</span> if present).</p>
-
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Namespace</th>
-              <th>Keys</th>
-              <th>Updated</th>
-            </tr>
-          </thead>
-          <tbody id="engRows">
-            <tr><td colspan="3" class="mono">No engines detected.</td></tr>
-          </tbody>
-          <tfoot>
-            <tr><td colspan="3" class="mono" id="engMeta">Last scan: —</td></tr>
-          </tfoot>
-        </table>
-
-      </div>
-    </div>
-
-    <!-- RIGHT: SYSTEM INTERPRETATION (FUEL/RPM/SPEED/RISK) -->
+    <!-- LEFT: SYSTEM GAUGES -->
     <div class="card">
       <div class="in">
         <div class="pill">System Gauges</div>
-        <h2 style="margin:10px 0 0;">Coherence Readout</h2>
-        <p class="small">Derived from interaction stability + engine freshness + volatility.</p>
 
-        <div class="kpiGrid">
-
-          <div class="kpi">
-            <div class="kpiTop">
-              <div class="kpiTitle">Fuel (Coherence)</div>
-              <div class="kpiValue mono" id="fuelVal">—</div>
-            </div>
-            <div class="meter green"><i id="fuelBar"></i></div>
-            <div class="kpiHelp">High when signals are stable and engines are fresh.</div>
+        <div class="gauges">
+          <div class="gauge">
+            <h3>Fuel (Coherence)</h3>
+            <div class="track"><div class="fill green" id="gFuel"></div></div>
+            <div class="meta" id="mFuel">Sustained agreement under constraint (derived).</div>
           </div>
 
-          <div class="kpi">
-            <div class="kpiTop">
-              <div class="kpiTitle">RPM (Activity)</div>
-              <div class="kpiValue mono" id="rpmVal">—</div>
-            </div>
-            <div class="meter blue"><i id="rpmBar"></i></div>
-            <div class="kpiHelp">Writes per hour (interaction events + engine updates).</div>
+          <div class="gauge">
+            <h3>RPM (Activity)</h3>
+            <div class="track"><div class="fill" id="gRpm"></div></div>
+            <div class="meta" id="mRpm">Writes per hour (rolling).</div>
           </div>
 
-          <div class="kpi">
-            <div class="kpiTop">
-              <div class="kpiTitle">Speed (Momentum)</div>
-              <div class="kpiValue mono" id="spdVal">—</div>
-            </div>
-            <div class="meter green"><i id="spdBar"></i></div>
-            <div class="kpiHelp">Δ(RPM) across recent windows.</div>
+          <div class="gauge">
+            <h3>Speed (Momentum)</h3>
+            <div class="track"><div class="fill green" id="gSpeed"></div></div>
+            <div class="meta" id="mSpeed">Δ(RPM) across hours.</div>
           </div>
 
-          <div class="kpi">
-            <div class="kpiTop">
-              <div class="kpiTitle">Risk (Instability)</div>
-              <div class="kpiValue mono" id="riskVal">—</div>
-            </div>
-            <div class="meter red"><i id="riskBar"></i></div>
-            <div class="kpiHelp">Volatility + staleness + drop-offs.</div>
-          </div>
-
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="pill">What you’re seeing</div>
-        <div class="kpi" style="margin-top:10px;">
-          <div class="kpiTop">
-            <div class="kpiTitle">Interpretation</div>
-            <div class="kpiValue"><span class="light" id="stateLight"></span></div>
-          </div>
-          <div class="kpiHelp" id="interp">
-            —
+          <div class="gauge">
+            <h3>Risk (Instability)</h3>
+            <div class="track"><div class="fill red" id="gRisk"></div></div>
+            <div class="meta" id="mRisk">Volatility + contention signals (derived).</div>
           </div>
         </div>
 
-        <div class="hr"></div>
+        <div class="hr" style="margin:18px 0;"></div>
 
-        <div class="pill">Diagnostics</div>
-        <h2 style="margin:10px 0 0;">Raw Counters</h2>
-        <p class="small">This is the minimum truth layer (no inference).</p>
-
+        <div class="pill">Live Snapshot (last 60m)</div>
         <table class="table">
           <thead>
-            <tr>
-              <th>Metric</th>
-              <th>Value</th>
-              <th>Window</th>
-            </tr>
+            <tr><th>Metric</th><th>Value</th></tr>
           </thead>
-          <tbody id="rawRows"></tbody>
+          <tbody>
+            <tr><td>Views</td><td class="mono" id="vViews">—</td></tr>
+            <tr><td>Downloads</td><td class="mono" id="vDl">—</td></tr>
+            <tr><td>RPM</td><td class="mono" id="vRpm">—</td></tr>
+            <tr><td>Risk %</td><td class="mono" id="vRisk">—</td></tr>
+          </tbody>
         </table>
 
       </div>
     </div>
 
+    <!-- RIGHT: SOURCES + ENGINE LIST -->
+    <div class="card">
+      <div class="in">
+        <div class="pill">Sources</div>
+        <h2 style="margin:10px 0 8px;">On-Site Signal</h2>
+        <p class="small">This reads local activity written by the site kernel (device-local).</p>
+
+        <div class="hr" style="margin:14px 0;"></div>
+
+        <div class="pill">Engines</div>
+        <p class="small">Discovered engines on this device (key prefix scan).</p>
+
+        <table class="table">
+          <thead>
+            <tr><th>Engine</th><th>RPM</th><th>Cycle</th><th>Updated</th></tr>
+          </thead>
+          <tbody id="enginesBody">
+            <tr><td colspan="4" class="mono">No engines discovered.</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td colspan="4" class="mono" id="engMeta">Last scan: —</td></tr>
+          </tfoot>
+        </table>
+
+        <div class="hr" style="margin:14px 0;"></div>
+
+        <div class="pill">External Signal (OSF)</div>
+        <p class="small">Lawful bridge required. This page stays device-local unless a lawful JSON endpoint is attached.</p>
+        <div class="row">
+          <a class="btn" href="https://osf.io/mn6vu" target="_blank" rel="noopener" style="text-decoration:none">Open OSF</a>
+          <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener" style="text-decoration:none">Open ORCID</a>
+        </div>
+
+      </div>
+    </div>
   </div>
 
   <div class="footer">© 2026 Geodiametrics · Control Room</div>
@@ -363,267 +283,199 @@ tfoot td{border-bottom:0}
 <script>
 /* =========================================================
    CONTROL ROOM (v1)
-   Device-local only. No external calls.
+   Reads:
+   - window.GM_GAUGES / window.GM_LAST_SIGNAL (if kernel is present)
+   - localStorage ENGINE::* keys (engine discovery)
+   No mutation. No manual control.
 ========================================================= */
 
 (function(){
-  const ISO = () => new Date().toISOString();
-  const now = () => Date.now();
+  const $ = (id)=>document.getElementById(id);
+  const nowISO = ()=>new Date().toISOString();
 
-  // ---------- Storage helpers ----------
-  const jget = (k, fb=null) => { try{ return JSON.parse(localStorage.getItem(k) || "null") ?? fb; } catch(e){ return fb; } };
-  const jset = (k, v) => localStorage.setItem(k, JSON.stringify(v));
-
-  // ---------- Local interaction log ----------
-  // Stored as timestamps; window queries count by time.
-  const EV_KEY = "CR::events_v1"; // array of ms timestamps
-  const MAX_EVENTS = 5000;
-
-  function logEvent(){
-    const arr = jget(EV_KEY, []);
-    arr.push(now());
-    if(arr.length > MAX_EVENTS) arr.splice(0, arr.length - MAX_EVENTS);
-    jset(EV_KEY, arr);
-  }
-
-  // log page view and any click
-  logEvent();
-  window.addEventListener("click", logEvent, {passive:true});
-
-  function countInWindow(ms){
-    const arr = jget(EV_KEY, []);
-    const cutoff = now() - ms;
-    let c = 0;
-    for(let i=arr.length-1;i>=0;i--){
-      if(arr[i] >= cutoff) c++;
-      else break;
-    }
-    return c;
-  }
-
-  // ---------- Engine discovery ----------
-  // We treat "engine" as any key with these prefixes.
-  const ENGINE_PREFIXES = ["ENGINE::", "DF::", "DF_REG::", "DF_SUPERVISOR::", "DF_SUPERVISOR::v1", "DF_SUPERVISOR::v1".toUpperCase()];
-  function isEngineKey(k){
-    if(!k) return false;
-    for(const p of ENGINE_PREFIXES){ if(k.startsWith(p)) return true; }
-    return false;
-  }
+  // ---- Engine discovery ----
+  const ENGINE_PREFIX = "ENGINE::";
+  function safeParse(v){ try{return JSON.parse(v)}catch{return null} }
 
   function discoverEngines(){
-    const rows = [];
-    const nsMap = new Map();
-
+    const engines = [];
     for(let i=0;i<localStorage.length;i++){
       const k = localStorage.key(i);
-      if(!isEngineKey(k)) continue;
+      if(!k || !k.startsWith(ENGINE_PREFIX)) continue;
+      const obj = safeParse(localStorage.getItem(k));
+      if(!obj) continue;
+      engines.push({ key:k, ns:(obj.namespace||obj.ns||k.replace(ENGINE_PREFIX,"")), obj });
+    }
+    engines.sort((a,b)=>a.ns.localeCompare(b.ns));
+    return engines;
+  }
 
-      // derive namespace:
-      // ENGINE::<namespace>  -> namespace
-      // DF::<namespace>      -> namespace
-      // DF_REG::<namespace>  -> namespace
-      let ns = k;
-      if(k.startsWith("ENGINE::")) ns = k.slice("ENGINE::".length);
-      else if(k.startsWith("DF::")) ns = k.slice("DF::".length);
-      else if(k.startsWith("DF_REG::")) ns = k.slice("DF_REG::".length);
-      else if(k.startsWith("DF_SUPERVISOR::")) ns = "SUPERVISOR";
+  function renderEngines(list){
+    const body = $("enginesBody");
+    const meta = $("engMeta");
+    meta.textContent = "Last scan: " + nowISO();
 
-      const cur = nsMap.get(ns) || { ns, keys:0, updated:"—", updated_ms:0 };
-      cur.keys++;
-
-      // attempt to read updated_at if object
-      const obj = jget(k, null);
-      const upd = obj?.updated_at || obj?.updatedAt || obj?.updated || obj?.last_set || obj?.state?.continuation?.last_set || null;
-      if(upd){
-        // prefer newest
-        const ms = Date.parse(upd);
-        if(!Number.isNaN(ms) && ms > cur.updated_ms){
-          cur.updated_ms = ms;
-          cur.updated = upd;
-        }
-      }
-
-      nsMap.set(ns, cur);
+    body.innerHTML = "";
+    if(!list.length){
+      body.innerHTML = "<tr><td colspan='4' class='mono'>No engines discovered.</td></tr>";
+      return;
     }
 
-    nsMap.forEach(v => rows.push(v));
-    rows.sort((a,b) => (b.updated_ms||0) - (a.updated_ms||0));
-    return rows;
-  }
-
-  // ---------- Gauges (0..100) ----------
-  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
-  function pct(x){ return Math.round(clamp01(x)*100); }
-
-  function setBar(id, p){
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.style.width = Math.max(0, Math.min(100, p)) + "%";
-  }
-  function setText(id, t){
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.textContent = t;
-  }
-
-  // normalize interaction counts into 0..1 (soft cap)
-  function norm(count, cap){
-    return clamp01(count / Math.max(1, cap));
-  }
-
-  function render(){
-    // timestamps
-    setText("lastScan", "Last scan: " + ISO());
-    setText("engMeta", "Last scan: " + ISO());
-
-    // local counts
-    const hourly  = countInWindow(60*60*1000);
-    const daily   = countInWindow(24*60*60*1000);
-    const weekly  = countInWindow(7*24*60*60*1000);
-    const monthly = countInWindow(30*24*60*60*1000);
-
-    setText("hVal", String(hourly));
-    setText("dVal", String(daily));
-    setText("wVal", String(weekly));
-    setText("mVal", String(monthly));
-
-    setBar("hBar", pct(norm(hourly, 120)));    // ~2/min soft cap
-    setBar("dBar", pct(norm(daily, 1200)));    // ~50/h avg
-    setBar("wBar", pct(norm(weekly, 4000)));
-    setBar("mBar", pct(norm(monthly, 12000)));
-
-    // engine rows
-    const engines = discoverEngines();
-    const tbody = document.getElementById("engRows");
-    tbody.innerHTML = "";
-    if(!engines.length){
-      tbody.innerHTML = "<tr><td colspan='3' class='mono'>No engines detected.</td></tr>";
-    } else {
-      engines.forEach(r=>{
-        const tr = document.createElement("tr");
-        tr.innerHTML =
-          "<td class='mono'>"+escapeHTML(r.ns)+"</td>"+
-          "<td class='mono'>"+String(r.keys)+"</td>"+
-          "<td class='mono'>"+escapeHTML(r.updated)+"</td>";
-        tbody.appendChild(tr);
-      });
-    }
-
-    // compute activity RPM: (hourly interactions + engine updates) scaled to per-hour
-    // engineFreshness: newest updated_at within last 60m -> strong
-    const newestMs = engines.reduce((m,r)=>Math.max(m, r.updated_ms||0), 0);
-    const ageMs = newestMs ? (now() - newestMs) : Infinity;
-
-    // engine freshness 1 if <= 15m, 0.6 if <= 60m, 0.2 if <= 6h, 0 if older
-    let fresh = 0;
-    if(ageMs <= 15*60*1000) fresh = 1;
-    else if(ageMs <= 60*60*1000) fresh = 0.6;
-    else if(ageMs <= 6*60*60*1000) fresh = 0.2;
-    else fresh = 0;
-
-    // volatility proxy: drop-off ratio (hourly vs daily rate)
-    const hourlyRate = hourly; // events per hour
-    const dailyRatePerHour = daily / 24;
-    const drop = (dailyRatePerHour > 0) ? clamp01(1 - (hourlyRate / dailyRatePerHour)) : 0;
-
-    // rpm gauge: based on hourly interactions + freshness weight
-    const rpmRaw = hourlyRate + (fresh * 30); // freshness contributes up to +30
-    const rpmN = norm(rpmRaw, 180); // soft cap
-    const rpmPct = pct(rpmN);
-
-    // momentum: compare last hour to expected from last day
-    const delta = (dailyRatePerHour > 0) ? (hourlyRate - dailyRatePerHour) : hourlyRate;
-    const spdN = clamp01((delta + 50) / 100); // center ~0.5
-    const spdPct = pct(spdN);
-
-    // risk: staleness + drop-off + low monthly baseline
-    const stale = clamp01(ageMs / (6*60*60*1000)); // 0..1 up to 6h
-    const lowBase = clamp01(1 - norm(monthly, 200)); // if monthly < 200 => higher risk
-    const riskN = clamp01(0.45*stale + 0.35*drop + 0.20*lowBase);
-    const riskPct = pct(riskN);
-
-    // fuel: inverse of risk, but penalize if no engines and no activity
-    const dead = (engines.length===0 && hourly===0) ? 1 : 0;
-    const fuelN = clamp01(1 - (riskN*0.85 + dead*0.35));
-    const fuelPct = pct(fuelN);
-
-    setText("fuelVal", fuelPct + "%");
-    setText("rpmVal", rpmPct + "%");
-    setText("spdVal", spdPct + "%");
-    setText("riskVal", riskPct + "%");
-
-    setBar("fuelBar", fuelPct);
-    setBar("rpmBar", rpmPct);
-    setBar("spdBar", spdPct);
-    setBar("riskBar", riskPct);
-
-    // overall mode
-    const modeLight = document.getElementById("modeLight");
-    const modeText = document.getElementById("modeText");
-    const stateLight = document.getElementById("stateLight");
-    const interp = document.getElementById("interp");
-
-    let mode = "OPERATIONAL";
-    let lightClass = "g";
-    let sClass = "g";
-    let msg = "Stable. Signals are coherent enough to trust the dashboard.";
-
-    if(dead){
-      mode = "STANDBY";
-      lightClass = "y";
-      sClass = "y";
-      msg = "No local activity and no engines detected. This is not failure; it means nothing is producing signal on this device.";
-    } else if(riskN >= 0.70){
-      mode = "ERROR";
-      lightClass = "r";
-      sClass = "r";
-      msg = "High instability. Causes: stale engines, sharp drop-offs, or low baseline. Investigate staleness + traffic.";
-    } else if(riskN >= 0.40){
-      mode = "WATCH";
-      lightClass = "y";
-      sClass = "y";
-      msg = "Moderate risk. Expect volatility. If this persists, refresh engines and confirm recent activity.";
-    } else if(fresh === 0 && engines.length>0){
-      mode = "READY";
-      lightClass = "y";
-      sClass = "y";
-      msg = "Engines exist but are stale. Open the engine page once to refresh local keys.";
-    }
-
-    modeText.textContent = mode;
-    modeLight.className = "light " + lightClass;
-    stateLight.className = "light " + sClass;
-    interp.textContent = msg;
-
-    // raw table
-    const raw = [
-      ["Interactions", hourly, "last 60m"],
-      ["Interactions", daily, "last 24h"],
-      ["Interactions", weekly, "last 7d"],
-      ["Interactions", monthly, "last 30d"],
-      ["Engines detected", engines.length, "scan"],
-      ["Newest engine update", newestMs ? new Date(newestMs).toISOString() : "—", "scan"],
-      ["Engine freshness", Math.round(fresh*100)+"%", "derived"],
-      ["Drop-off", Math.round(drop*100)+"%", "derived"],
-      ["Staleness", Math.round(stale*100)+"%", "derived"]
-    ];
-    const rawT = document.getElementById("rawRows");
-    rawT.innerHTML = "";
-    raw.forEach(r=>{
+    list.forEach(e=>{
+      const st = e.obj.state || {};
+      const cyc = (st.continuation && (st.continuation.cycle || st.continuation)) || (st.cycle || "—");
+      const upd = e.obj.updated_at || e.obj.updatedAt || "—";
+      // RPM from engine meta if present; otherwise blank
+      const rpm = (e.obj.rpm!=null ? e.obj.rpm : "—");
       const tr = document.createElement("tr");
-      tr.innerHTML = "<td>"+escapeHTML(String(r[0]))+"</td><td class='mono'>"+escapeHTML(String(r[1]))+"</td><td>"+escapeHTML(String(r[2]))+"</td>";
-      rawT.appendChild(tr);
+      tr.innerHTML =
+        "<td class='mono'>"+esc(e.ns)+"</td>"+
+        "<td class='mono'>"+esc(String(rpm))+"</td>"+
+        "<td class='mono'>"+esc(String(cyc))+"</td>"+
+        "<td class='mono'>"+esc(String(upd))+"</td>";
+      body.appendChild(tr);
     });
   }
 
-  function escapeHTML(s){
+  // ---- Gauges (prefer kernel if present; otherwise derived from local) ----
+  function clamp01(x){ x=Number(x)||0; return Math.max(0,Math.min(1,x)); }
+  function pct01(x){ return Math.round(clamp01(x)*100); }
+
+  function setFill(id, value01, cls){
+    const el = $(id);
+    el.classList.remove("green","yellow","red");
+    if(cls) el.classList.add(cls);
+    el.style.width = pct01(value01) + "%";
+  }
+
+  function setStatus(kind){
+    // kind: ok/warn/error
+    const pill = $("statusText").parentElement;
+    const light = pill.querySelector(".light");
+    light.classList.remove("green","yellow","red","blue");
+    if(kind==="ok"){ light.classList.add("green"); $("statusText").textContent="Operational"; }
+    else if(kind==="warn"){ light.classList.add("yellow"); $("statusText").textContent="Warning"; }
+    else { light.classList.add("red"); $("statusText").textContent="Error"; }
+  }
+
+  function renderFromKernel(){
+    const g = window.GM_GAUGES || null;
+    const sig = window.GM_LAST_SIGNAL || null;
+    if(!g || !sig) return false;
+
+    // Expected shape (best-effort):
+    // g.fuel, g.rpm, g.speed, g.risk in [0..1] or [0..100]
+    const norm = (x)=>{
+      if(x==null) return 0;
+      const n = Number(x);
+      if(!isFinite(n)) return 0;
+      return (n>1 ? clamp01(n/100) : clamp01(n));
+    };
+
+    setFill("gFuel", norm(g.fuel), "green");
+    setFill("gRpm",  norm(g.rpm),  "green");
+    setFill("gSpeed",norm(g.speed),"green");
+    setFill("gRisk", norm(g.risk), "red");
+
+    // Snapshot
+    $("vViews").textContent = sig.osf?.views_60m ?? "—";
+    $("vDl").textContent    = sig.osf?.downloads_60m ?? "—";
+    $("vRpm").textContent   = sig.website?.rpm ?? "—";
+    $("vRisk").textContent  = sig.website?.risk ?? "—";
+
+    return true;
+  }
+
+  function renderDerived(){
+    // Derive from localStorage ENGINE::* keys if kernel not present
+    const engines = discoverEngines();
+
+    // Simple derived signals:
+    // - RPM: count of engine updates within last hour (coarse)
+    // - Fuel: 1.0 unless any engine reports wall/block/denied
+    // - Risk: increases if many engines share same timestamp (contention) or if fuel drops
+    const now = Date.now();
+    let recent = 0;
+    let bad = 0;
+    const stamps = {};
+    engines.forEach(e=>{
+      const upd = e.obj.updated_at || e.obj.updatedAt;
+      const t = upd ? Date.parse(upd) : NaN;
+      if(isFinite(t) && (now - t) <= 60*60*1000) recent++;
+      const st = e.obj.state || {};
+      const res = (st.resolution || "").toString().toUpperCase();
+      const com = (st.commitment || "").toString().toUpperCase();
+      const cyc = (st.continuation && (st.continuation.cycle || st.continuation)) || "";
+      const cycU = cyc.toString().toUpperCase();
+      if(res==="BLOCKED" || com==="DENIED" || cycU==="WALL") bad++;
+      if(upd){ stamps[upd] = (stamps[upd]||0)+1; }
+    });
+
+    const rpm01 = engines.length ? clamp01(recent / Math.max(4, engines.length)) : 0;
+    const fuel01 = engines.length ? clamp01(1 - (bad / Math.max(1, engines.length))) : 0.5;
+
+    // contention: if multiple engines share exact same timestamp string
+    const maxBucket = Object.values(stamps).reduce((m,v)=>Math.max(m,v), 0);
+    const contention01 = engines.length ? clamp01((maxBucket-1)/Math.max(1, engines.length-1)) : 0;
+
+    const risk01 = clamp01((1-fuel01)*0.6 + contention01*0.4);
+    const speed01 = clamp01(rpm01*0.7 + (1-risk01)*0.3);
+
+    setFill("gFuel", fuel01, fuel01>0.7?"green":(fuel01>0.4?"yellow":"red"));
+    setFill("gRpm", rpm01, rpm01>0.6?"green":(rpm01>0.3?"yellow":"red"));
+    setFill("gSpeed", speed01, speed01>0.6?"green":(speed01>0.3?"yellow":"red"));
+    setFill("gRisk", risk01, risk01<0.25?"green":(risk01<0.55?"yellow":"red"));
+
+    $("vViews").textContent = "—";
+    $("vDl").textContent = "—";
+    $("vRpm").textContent = String(Math.round(rpm01*100)) + "%";
+    $("vRisk").textContent = String(Math.round(risk01*100)) + "%";
+  }
+
+  function refresh(){
+    $("lastScan").textContent = "Last scan: " + nowISO();
+
+    const engines = discoverEngines();
+    renderEngines(engines);
+
+    const ok = renderFromKernel();
+    if(!ok) renderDerived();
+
+    // Status heuristic
+    const riskTxt = ($("vRisk").textContent || "").toString();
+    const riskNum = parseInt(riskTxt,10);
+    if(isFinite(riskNum) && riskNum>=55) setStatus("warn");
+    else setStatus("ok");
+  }
+
+  function exportJSON(){
+    const engines = discoverEngines().map(e=>e.obj);
+    const out = {
+      exported_at: nowISO(),
+      kernel: {
+        GM_GAUGES: window.GM_GAUGES || null,
+        GM_LAST_SIGNAL: window.GM_LAST_SIGNAL || null
+      },
+      engines
+    };
+    const blob = new Blob([JSON.stringify(out,null,2)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "control_room_export.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),500);
+  }
+
+  function esc(s){
     return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   }
 
-  // initial + cadence
-  render();
-  setInterval(render, 15*1000); // primitive cadence: 15s
+  $("btnRefresh").addEventListener("click", refresh);
+  $("btnExport").addEventListener("click", exportJSON);
 
+  refresh();
 })();
 </script>
 </body>

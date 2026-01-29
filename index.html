@@ -6,16 +6,16 @@
 <title>Geodiametrics</title>
 
 <style>
-/* ===============================
-   COSMIC BASE
-================================ */
+/* ===================== COSMIC FOUNDATION ===================== */
 :root{
   --fg:#e9eefc;
   --muted:rgba(233,238,252,.65);
+  --accent:#7aa2ff;
+  --good:#4ade80;
+  --warn:#facc15;
+  --risk:#f87171;
   --panel:rgba(10,14,28,.72);
-  --stroke:rgba(233,238,252,.14);
-  --radius:24px;
-  --glow:0 0 60px rgba(120,160,255,.35);
+  --stroke:rgba(233,238,252,.12);
 }
 
 *{box-sizing:border-box}
@@ -24,212 +24,221 @@ html,body{margin:0;height:100%}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
-  background:#03040a;
+  background:
+    radial-gradient(1200px 800px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 80% 30%, rgba(180,140,255,.14), transparent 60%),
+    radial-gradient(1000px 900px at 50% 80%, rgba(120,220,255,.10), transparent 60%),
+    linear-gradient(180deg,#030615,#02040f 70%,#01020a);
   overflow-x:hidden;
 }
 
-/* ===============================
-   STARFIELD (PURE CSS)
-================================ */
-.sky{
+/* stars */
+body::before{
+  content:"";
   position:fixed;
-  inset:0;
-  z-index:-3;
+  inset:-50px;
+  pointer-events:none;
   background:
-    radial-gradient(1200px 600px at 30% 20%, rgba(120,160,255,.18), transparent 60%),
-    radial-gradient(1000px 800px at 80% 40%, rgba(200,140,255,.14), transparent 65%),
-    linear-gradient(180deg,#050713,#03040a 70%);
-}
-.stars, .stars:after{
-  position:absolute;
-  inset:0;
-  background-image:
-    radial-gradient(2px 2px at 20% 30%, #fff, transparent),
-    radial-gradient(1px 1px at 40% 70%, #fff, transparent),
-    radial-gradient(1px 1px at 60% 20%, #fff, transparent),
-    radial-gradient(2px 2px at 80% 60%, #fff, transparent),
-    radial-gradient(1px 1px at 10% 80%, #fff, transparent);
-  background-size:800px 800px;
+    radial-gradient(1px 1px at 10% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 30% 40%, #fff, transparent),
+    radial-gradient(1px 1px at 60% 10%, #fff, transparent),
+    radial-gradient(1px 1px at 80% 70%, #fff, transparent),
+    radial-gradient(1px 1px at 45% 85%, #fff, transparent);
   opacity:.35;
 }
-.stars:after{
-  content:"";
-  background-size:1200px 1200px;
-  opacity:.25;
-}
 
-/* ===============================
-   LAYOUT
-================================ */
-.wrap{
-  max-width:1200px;
-  margin:0 auto;
-  padding:80px 16px 120px;
-}
-
+/* ===================== LAYOUT ===================== */
+.wrap{max-width:1100px;margin:0 auto;padding:32px 16px 96px}
 .card{
   background:var(--panel);
   border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  padding:28px;
-  margin-bottom:24px;
-  backdrop-filter:blur(8px);
+  border-radius:22px;
+  padding:22px;
+  margin-bottom:18px;
+  box-shadow:0 18px 55px rgba(0,0,0,.55);
 }
 
-h1{
-  font-size:56px;
-  margin:0 0 12px;
-  letter-spacing:.4px;
-  text-shadow:var(--glow);
-}
+h1{margin:0 0 10px;font-size:44px}
+h2{margin:16px 0 8px}
+p{margin:0;color:var(--muted);line-height:1.6}
 
-h2{
-  margin:0 0 10px;
-  font-size:26px;
-}
-
-p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.6;
-}
-
-.row{
-  display:flex;
-  gap:16px;
-  flex-wrap:wrap;
-  margin-top:18px;
-}
-
-.btn{
-  padding:14px 20px;
-  border-radius:999px;
-  border:1px solid rgba(233,238,252,.2);
-  background:rgba(255,255,255,.06);
-  color:var(--fg);
-  font-weight:900;
-  text-decoration:none;
-  letter-spacing:.4px;
-}
-
-.badge{
+.pill{
   display:inline-flex;
   align-items:center;
-  gap:10px;
-  padding:10px 14px;
+  gap:8px;
+  padding:8px 14px;
   border-radius:999px;
   border:1px solid var(--stroke);
   background:rgba(255,255,255,.06);
-  font-weight:900;
-  font-size:12px;
-  text-transform:uppercase;
+  font-weight:800;
   letter-spacing:.6px;
+  text-transform:uppercase;
+  font-size:12px;
 }
 
+/* ===================== LIVE SIGNALS ===================== */
+.signal{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:800;
+}
 .dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#4ade80;
-  box-shadow:0 0 12px rgba(74,222,128,.8);
+  width:12px;height:12px;border-radius:50%;
+  background:var(--good);
+  box-shadow:0 0 12px currentColor;
 }
 
 .grid{
   display:grid;
-  grid-template-columns:1fr;
-  gap:18px;
+  gap:14px;
 }
 @media(min-width:900px){
   .grid{grid-template-columns:1fr 1fr}
 }
 
 .engine{
-  border-radius:18px;
   border:1px solid var(--stroke);
-  padding:18px;
+  border-radius:18px;
+  padding:16px;
   background:rgba(0,0,0,.25);
 }
 
+/* ===================== FOOTER ===================== */
 .footer{
-  text-align:center;
-  color:rgba(233,238,252,.55);
-  font-size:14px;
   margin-top:40px;
+  text-align:center;
+  color:rgba(233,238,252,.45);
+  font-size:13px;
 }
 </style>
 </head>
 
 <body>
-<div class="sky">
-  <div class="stars"></div>
-</div>
-
 <div class="wrap">
 
-  <!-- HERO -->
+  <!-- ===================== HERO ===================== -->
   <div class="card">
-    <span class="badge">
-      <span class="dot"></span>
-      System Stable
-    </span>
-
     <h1>Geodiametrics</h1>
     <p>
-      Constraint-first systems for observing coherence, instability,
-      and trajectory across complex domains.
+      Constraint-first systems for observing coherence, instability, and trajectory
+      across complex domains.
     </p>
-
-    <div class="row">
-      <a class="btn" href="/control-room/">Enter Control Room</a>
-      <a class="btn" href="/apps/">Apps</a>
-    </div>
   </div>
 
-  <!-- CORE CONCEPT -->
+  <!-- ===================== SYSTEM STATUS ===================== -->
   <div class="card">
-    <h2>Quad-Core Architecture</h2>
+    <div class="signal">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">OPERATIONAL</span>
+    </div>
+    <p style="margin-top:8px">
+      This system is alive if and only if interaction is occurring.
+      No buttons. No control. Presence is the signal.
+    </p>
+    <p class="mono" style="margin-top:6px">
+      Last interaction: <span id="lastSeen">—</span>
+    </p>
+  </div>
+
+  <!-- ===================== QUAD-CORE WORLDVIEW ===================== -->
+  <div class="card">
+    <span class="pill">Foundational Law</span>
+    <h2>Quad-Core Cycle</h2>
     <p>
-      All systems are lawful instantiations of the same cycle.
-      No overlap. No manual control. Observation only.
+      All lawful systems resolve through the same four-phase geometry.
+      These are not steps — they are constraints.
     </p>
 
-    <div class="grid" style="margin-top:16px;">
+    <div class="grid" style="margin-top:14px">
       <div class="engine">
         <strong>Integrity Engine</strong>
-        <p class="small">Admissibility · Boundaries · Rejection</p>
+        <p>Selection · What is admissible.</p>
       </div>
       <div class="engine">
-        <strong>Structure Engine</strong>
-        <p class="small">Organization · Memory · Drift</p>
+        <strong>Clarity Engine</strong>
+        <p>Resolution · What survives constraint.</p>
       </div>
       <div class="engine">
-        <strong>Trajectory Engine</strong>
-        <p class="small">Momentum · Direction · Priority</p>
+        <strong>Commitment Engine</strong>
+        <p>Commitment · What is acted upon.</p>
       </div>
       <div class="engine">
         <strong>Vitality Engine</strong>
-        <p class="small">Sustainability · Burnout · Recovery</p>
+        <p>Continuation · What sustains momentum.</p>
       </div>
     </div>
   </div>
 
-  <!-- PHILOSOPHY -->
+  <!-- ===================== LIVE WIRING (HONEST) ===================== -->
   <div class="card">
-    <h2>Design Law</h2>
+    <span class="pill">Live Wiring</span>
+    <h2>What This Page Can Truly Observe</h2>
     <p>
-      Silence is not failure.  
-      Motion appears only when a real signal exists.
+      Without servers or external APIs, this page still detects:
     </p>
-    <p style="margin-top:10px;">
-      The system never pretends to be alive.
-      It only reports truth.
+    <ul style="margin-top:10px;color:var(--muted)">
+      <li>Human presence</li>
+      <li>Session duration</li>
+      <li>Interaction frequency</li>
+      <li>Idle decay</li>
+    </ul>
+    <p style="margin-top:10px">
+      Coherence exists if interaction continues.
+      Instability rises when attention fragments.
     </p>
   </div>
 
   <div class="footer">
-    © 2026 Geodiametrics
+    © 2026 Geodiametrics · Homeroom
   </div>
 
 </div>
+
+<script>
+/* ===================== LIVE SIGNAL LOGIC ===================== */
+const now = () => new Date().toISOString();
+const KEY = "GM_LAST_INTERACTION";
+
+function update(){
+  const last = localStorage.getItem(KEY);
+  const lastSeen = document.getElementById("lastSeen");
+  const dot = document.getElementById("statusDot");
+  const text = document.getElementById("statusText");
+
+  if(!last){
+    text.textContent = "STANDBY";
+    dot.style.background = "#facc15";
+    lastSeen.textContent = "—";
+    return;
+  }
+
+  const diff = Date.now() - new Date(last).getTime();
+
+  if(diff < 60000){
+    text.textContent = "OPERATIONAL";
+    dot.style.background = "#4ade80";
+  } else if(diff < 300000){
+    text.textContent = "IDLE";
+    dot.style.background = "#facc15";
+  } else {
+    text.textContent = "DORMANT";
+    dot.style.background = "#f87171";
+  }
+
+  lastSeen.textContent = last;
+}
+
+function mark(){
+  localStorage.setItem(KEY, now());
+  update();
+}
+
+["mousemove","keydown","touchstart","scroll"].forEach(e=>{
+  window.addEventListener(e, mark, {passive:true});
+});
+
+update();
+</script>
 </body>
 </html>

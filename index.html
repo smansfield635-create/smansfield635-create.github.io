@@ -24,6 +24,7 @@
 .roomBody{margin-top:12px;padding:14px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#0f1623,#0b1220)}
 .homeOnly{display:block}body.room-active .homeOnly{display:none!important}
 .mono{font:13px/1.35 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+input.mono,textarea.mono{outline:none}
 </style></head><body><div class="wrapper">
 
 <div class="header homeOnly"><h1>Geodiametrics</h1><p>Constraint-first execution platform<br>Selection → Resolution → Commitment → Continuation</p></div>
@@ -96,8 +97,14 @@
     </div>
 
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <input id="osUrl" class="mono" style="flex:1;min-width:220px;border:1px solid var(--border);border-radius:999px;background:linear-gradient(180deg,#0f1623,#0b1220);color:var(--text);padding:12px 14px" placeholder="osf.json OR https://.../osf.json" value="osf.json">
+      <button class="btn" id="osFetch" type="button">Fetch</button>
+      <button class="btn" id="osDemo" type="button">Load Demo</button>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
       <span class="pill" id="osStatus">WAITING</span>
-      <span class="muted" id="osHint"></span>
+      <span class="muted" id="osHint">Paste JSON or Fetch.</span>
     </div>
 
     <div style="display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
@@ -134,6 +141,8 @@
       <a class="btn" href="#syntax">Syntax Room</a>
       <a class="btn" href="#build">Build Room</a>
     </div>
+
+    <p class="muted" style="margin:2px 0 0">Operational path: create <span class="mono">osf.json</span> in repo root → update it → tap Fetch.</p>
   </div>
 
 </div></div>
@@ -141,7 +150,6 @@
 <div class="card room" data-room="engine"><span class="pill">Engine Room</span><h2>Engine Room</h2><p>Execution engine surfaces live here.</p><div class="roomBody"><div class="muted">PASTE ENGINE ROOM UI HERE.</div></div></div>
 <div class="card room" data-room="syntax"><span class="pill">Syntax Room</span><h2>Syntax Room</h2><p>Syntax-only surfaces live here.</p><div class="roomBody"><div class="muted">PASTE SYNTAX ROOM UI HERE.</div></div></div>
 <div class="card room" data-room="build"><span class="pill">Build Room</span><h2>Build Room</h2><p>Build and deployment surfaces live here.</p><div class="roomBody"><div class="muted">PASTE BUILD ROOM UI HERE.</div></div></div>
-
 <div class="card room" data-room="apps"><span class="pill">Apps</span><h2>Apps</h2><p>Execution and viewing surfaces.</p><div class="roomBody"><div class="muted">PUT APPS LIST / LINKS HERE.</div></div></div>
 <div class="card room" data-room="reference"><span class="pill">Reference</span><h2>Reference</h2><p>Definitions and formal grounding.</p><div class="roomBody"><div class="muted">PUT REFERENCE CONTENT HERE.</div></div></div>
 <div class="card room" data-room="problem"><span class="pill">Problem</span><h2>Problem</h2><p>The instability this system addresses.</p><div class="roomBody"><div class="muted">PUT PROBLEM STATEMENT HERE.</div></div></div>
@@ -173,211 +181,45 @@ route();
 (()=>{const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 const toInt=(v)=>{if(typeof v==="number"&&Number.isFinite(v))return Math.trunc(v);if(typeof v==="string"&&v.trim()!==""&&/^-?\d+(\.\d+)?$/.test(v.trim()))return Math.trunc(Number(v.trim()));return NaN;};
 const isIsoZ=(s)=>typeof s==="string"&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(s);
-const E=()=>({box:document.getElementById("osBox"),apply:document.getElementById("osApply"),fmt:document.getElementById("osFormat"),copy:document.getElementById("osCopy"),clear:document.getElementById("osClear"),status:document.getElementById("osStatus"),hint:document.getElementById("osHint"),ts:document.getElementById("osTs"),views:document.getElementById("osViews"),dl:document.getElementById("osDl"),vbar:document.getElementById("osViewsBar"),dbar:document.getElementById("osDlBar"),hist:document.getElementById("osHistory")});
+const getVar=(n)=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const varOk=()=>getVar("--ok")||"#2bd576";const varBad=()=>getVar("--bad")||"#ff5c5c";
+const E=()=>({box:document.getElementById("osBox"),apply:document.getElementById("osApply"),fmt:document.getElementById("osFormat"),copy:document.getElementById("osCopy"),clear:document.getElementById("osClear"),fetch:document.getElementById("osFetch"),demo:document.getElementById("osDemo"),url:document.getElementById("osUrl"),status:document.getElementById("osStatus"),hint:document.getElementById("osHint"),ts:document.getElementById("osTs"),views:document.getElementById("osViews"),dl:document.getElementById("osDl"),vbar:document.getElementById("osViewsBar"),dbar:document.getElementById("osDlBar"),hist:document.getElementById("osHistory")});
 function setStatus(kind,text,hint){const e=E();if(!e.status)return;e.status.textContent=text;e.hint.textContent=hint||"";e.status.style.borderColor=kind==="ok"?varOk():kind==="bad"?varBad():getVar("--border");}
-function getVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
-function varOk(){return getVar("--ok")||"#2bd576"}function varBad(){return getVar("--bad")||"#ff5c5c"}
 function normalize(obj){const ts=obj?.timestamp;const v=toInt(obj?.views_60m);const d=toInt(obj?.downloads_60m);const errs=[];
 if(!isIsoZ(ts))errs.push('timestamp must be ISO with "Z"');if(!Number.isFinite(v))errs.push("views_60m must be a number");if(!Number.isFinite(d))errs.push("downloads_60m must be a number");
 if(Number.isFinite(v)&&v<0)errs.push("views_60m cannot be negative");if(Number.isFinite(d)&&d<0)errs.push("downloads_60m cannot be negative");
 return{norm:{timestamp:isIsoZ(ts)?ts:String(ts??""),views_60m:Number.isFinite(v)?v:0,downloads_60m:Number.isFinite(d)?d:0},errs};}
 function render(norm){const e=E();if(!e.ts)return;e.ts.textContent=norm.timestamp||"—";e.views.textContent=String(norm.views_60m);e.dl.textContent=String(norm.downloads_60m);
-const hist=JSON.parse(localStorage.getItem("osf_hist")||"[]");const maxV=Math.max(1,...hist.map(x=>x.views_60m||0),norm.views_60m||0);const maxD=Math.max(1,...hist.map(x=>x.downloads_60m||0),norm.downloads_60m||0);
-const vp=clamp((norm.views_60m/maxV)*100,0,100);const dp=clamp((norm.downloads_60m/maxD)*100,0,100);
+const hist=JSON.parse(localStorage.getItem("osf_hist")||"[]");
+const maxV=Math.max(1,...hist.map(x=>x.views_60m||0),norm.views_60m||0);
+const maxD=Math.max(1,...hist.map(x=>x.downloads_60m||0),norm.downloads_60m||0);
+const vp=clamp((norm.views_60m/maxV)*100,0,100),dp=clamp((norm.downloads_60m/maxD)*100,0,100);
 e.vbar.style.width=vp.toFixed(1)+"%";e.dbar.style.width=dp.toFixed(1)+"%";
-e.vbar.style.background="linear-gradient(90deg,"+varOk()+","+getVar("--hi")+ ")";e.dbar.style.background="linear-gradient(90deg,"+getVar("--hi")+","+varOk()+")";
-const last=[norm,...hist].slice(0,6);
+e.vbar.style.background="linear-gradient(90deg,"+varOk()+","+getVar("--hi")+")";e.dbar.style.background="linear-gradient(90deg,"+getVar("--hi")+","+varOk()+")";
+const last=[norm,...hist].slice(0,8);
 e.hist.innerHTML=last.map(x=>`<div style="display:flex;gap:10px;justify-content:space-between;align-items:center;padding:6px 0;border-top:1px solid ${getVar("--border")}">
 <span class="mono">${(x.timestamp||"").replace("T"," ").replace("Z","")}</span><span class="mono">v:${x.views_60m} d:${x.downloads_60m}</span></div>`).join("")||"—";}
-function apply(raw,format){const e=E();if(!e.box)return;const t=(raw??e.box.value??"").trim();if(!t){setStatus("warn","WAITING","Paste JSON.");return;}
+function store(norm){const hist=JSON.parse(localStorage.getItem("osf_hist")||"[]");hist.unshift(norm);localStorage.setItem("osf_hist",JSON.stringify(hist.slice(0,50)));localStorage.setItem("osf_last",JSON.stringify(norm));}
+function applyText(raw,format){const e=E();if(!e.box)return;const t=(raw??e.box.value??"").trim();if(!t){setStatus("warn","WAITING","Paste JSON or Fetch.");return;}
 let obj;try{obj=JSON.parse(t);}catch(err){setStatus("bad","INVALID JSON",String(err.message||err));return;}
 const {norm,errs}=normalize(obj);render(norm);if(errs.length){setStatus("bad","VALIDATION FAIL",errs.join(" · "));return;}
-const hist=JSON.parse(localStorage.getItem("osf_hist")||"[]");hist.unshift(norm);localStorage.setItem("osf_hist",JSON.stringify(hist.slice(0,50)));localStorage.setItem("osf_last",JSON.stringify(norm));
-if(format)e.box.value=JSON.stringify(norm,null,2);render(norm);setStatus("ok","OK","Applied + stored.");}
-async function copyText(txt){try{await navigator.clipboard.writeText(txt);setStatus("ok","COPIED","");}
-catch{const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);setStatus("ok","COPIED","(fallback)");}}
-function boot(){const e=E();if(!e.box)return;const last=localStorage.getItem("osf_last");if(last){try{const norm=JSON.parse(last);e.box.value=JSON.stringify(norm,null,2);render(norm);setStatus("ok","READY","Loaded last stored payload.");}catch{setStatus("warn","WAITING","Paste JSON.");}}else setStatus("warn","WAITING","Paste JSON.");
-e.apply.onclick=()=>apply(null,false);e.fmt.onclick=()=>apply(null,true);
-e.copy.onclick=()=>{const t=(e.box.value||"").trim();if(!t){setStatus("warn","NOT COPIED","");return;}
-try{const obj=JSON.parse(t);const {norm,errs}=normalize(obj);if(errs.length){setStatus("warn","NOT COPIED","Fix validation.");return;}copyText(JSON.stringify(norm));}
-catch{setStatus("warn","NOT COPIED","Fix JSON.");}};
-e.clear.onclick=()=>{e.box.value="";setStatus("warn","WAITING","Paste JSON.");};
-let timer=null;e.box.addEventListener("input",()=>{clearTimeout(timer);timer=setTimeout(()=>apply(null,false),220);});}
+store(norm);if(format)e.box.value=JSON.stringify(norm,null,2);setStatus("ok","OK","Applied.");}
+async function fetchNow(){const e=E();if(!e.url)return;const url=(e.url.value||"").trim()||"osf.json";setStatus("warn","FETCHING",url);
+try{const bust=(url.includes("?")?"&":"?")+"t="+Date.now();const res=await fetch(url+bust,{cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);
+const obj=await res.json();const {norm,errs}=normalize(obj);render(norm);if(errs.length){setStatus("bad","VALIDATION FAIL",errs.join(" · "));return;}
+store(norm);e.box.value=JSON.stringify(norm,null,2);setStatus("ok","LIVE","Fetched + applied.");}
+catch(err){setStatus("bad","FETCH FAIL",String(err.message||err));}}
+async function copyNorm(){const e=E();const t=(e.box?.value||"").trim();if(!t){setStatus("warn","NOT COPIED","");return;}
+try{const obj=JSON.parse(t);const {norm,errs}=normalize(obj);if(errs.length){setStatus("warn","NOT COPIED","Fix validation.");return;}
+await navigator.clipboard.writeText(JSON.stringify(norm));setStatus("ok","COPIED","Normalized payload copied.");}
+catch{setStatus("warn","NOT COPIED","Fix JSON.");}}
+function loadDemo(){const now=new Date().toISOString().replace(/\.\d{3}Z$/,"Z");const demo={timestamp:now,views_60m:12,downloads_60m:3};const e=E();e.box.value=JSON.stringify(demo,null,2);applyText(e.box.value,false);}
+function boot(){const e=E();if(!e.box)return;const last=localStorage.getItem("osf_last");
+if(last){try{const norm=JSON.parse(last);e.box.value=JSON.stringify(norm,null,2);render(norm);setStatus("ok","READY","Loaded last.");}catch{setStatus("warn","WAITING","Paste JSON or Fetch.");}}
+e.apply.onclick=()=>applyText(null,false);e.fmt.onclick=()=>applyText(null,true);e.copy.onclick=copyNorm;e.clear.onclick=()=>{e.box.value="";setStatus("warn","WAITING","Paste JSON or Fetch.");};
+e.fetch.onclick=fetchNow;e.demo.onclick=loadDemo;let timer=null;e.box.addEventListener("input",()=>{clearTimeout(timer);timer=setTimeout(()=>applyText(null,false),220);});}
 document.addEventListener("DOMContentLoaded",boot);
 })();
 </script>
 
 </body></html>
-<!-- TNT FIX: YOU’RE MISSING A LIVE DATA SOURCE. GAUGES EXIST; INPUT STREAM DOES NOT. -->
-<!-- DROP-IN PATCH: adds (1) Demo Load, (2) Fetch-from-URL, (3) Same-origin osf.json support on GitHub Pages. -->
-<!-- HOW TO USE: create a file at repo root named osf.json and update it. Then tap FETCH. -->
-
-<!-- 1) ADD THESE TWO BUTTONS + URL INPUT INSIDE Control Room "Live Analytics" UI (under the existing Apply/Format/Copy/Clear row) -->
-<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-  <input id="osUrl" class="mono" style="flex:1;min-width:220px;border:1px solid var(--border);border-radius:999px;background:linear-gradient(180deg,#0f1623,#0b1220);color:var(--text);padding:12px 14px" placeholder="osf.json (same site) OR https://.../osf.json" value="osf.json">
-  <button class="btn" id="osFetch" type="button">Fetch</button>
-  <button class="btn" id="osDemo" type="button">Load Demo</button>
-</div>
-
-<script>
-/* 2) ADD THIS SCRIPT BELOW YOUR EXISTING ANALYTICS SCRIPT (or replace it if easier) */
-(()=> {
-  const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
-  const toInt=(v)=>{if(typeof v==="number"&&Number.isFinite(v))return Math.trunc(v);if(typeof v==="string"&&v.trim()!==""&&/^-?\d+(\.\d+)?$/.test(v.trim()))return Math.trunc(Number(v.trim()));return NaN;};
-  const isIsoZ=(s)=>typeof s==="string"&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(s);
-
-  const getVar=(n)=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-  const varOk=()=>getVar("--ok")||"#2bd576";
-  const varBad=()=>getVar("--bad")||"#ff5c5c";
-
-  const E=()=>({
-    box:document.getElementById("osBox"),
-    apply:document.getElementById("osApply"),
-    fmt:document.getElementById("osFormat"),
-    copy:document.getElementById("osCopy"),
-    clear:document.getElementById("osClear"),
-    fetch:document.getElementById("osFetch"),
-    demo:document.getElementById("osDemo"),
-    url:document.getElementById("osUrl"),
-    status:document.getElementById("osStatus"),
-    hint:document.getElementById("osHint"),
-    ts:document.getElementById("osTs"),
-    views:document.getElementById("osViews"),
-    dl:document.getElementById("osDl"),
-    vbar:document.getElementById("osViewsBar"),
-    dbar:document.getElementById("osDlBar"),
-    hist:document.getElementById("osHistory"),
-  });
-
-  function setStatus(kind,text,hint){
-    const e=E(); if(!e.status) return;
-    e.status.textContent=text;
-    e.hint.textContent=hint||"";
-    e.status.style.borderColor = kind==="ok" ? varOk() : kind==="bad" ? varBad() : getVar("--border");
-  }
-
-  function normalize(obj){
-    const ts=obj?.timestamp;
-    const v=toInt(obj?.views_60m);
-    const d=toInt(obj?.downloads_60m);
-    const errs=[];
-    if(!isIsoZ(ts)) errs.push('timestamp must be ISO with "Z" (e.g., 2026-01-29T18:00:00Z)');
-    if(!Number.isFinite(v)) errs.push("views_60m must be a number");
-    if(!Number.isFinite(d)) errs.push("downloads_60m must be a number");
-    if(Number.isFinite(v)&&v<0) errs.push("views_60m cannot be negative");
-    if(Number.isFinite(d)&&d<0) errs.push("downloads_60m cannot be negative");
-    return {norm:{timestamp:isIsoZ(ts)?ts:String(ts??""),views_60m:Number.isFinite(v)?v:0,downloads_60m:Number.isFinite(d)?d:0},errs};
-  }
-
-  function render(norm){
-    const e=E(); if(!e.ts) return;
-    e.ts.textContent = norm.timestamp || "—";
-    e.views.textContent = String(norm.views_60m);
-    e.dl.textContent = String(norm.downloads_60m);
-
-    const hist = JSON.parse(localStorage.getItem("osf_hist")||"[]");
-    const maxV = Math.max(1, ...hist.map(x=>x.views_60m||0), norm.views_60m||0);
-    const maxD = Math.max(1, ...hist.map(x=>x.downloads_60m||0), norm.downloads_60m||0);
-    const vp = clamp((norm.views_60m/maxV)*100,0,100);
-    const dp = clamp((norm.downloads_60m/maxD)*100,0,100);
-
-    e.vbar.style.width = vp.toFixed(1)+"%";
-    e.dbar.style.width = dp.toFixed(1)+"%";
-    e.vbar.style.background = "linear-gradient(90deg,"+varOk()+","+getVar("--hi")+")";
-    e.dbar.style.background = "linear-gradient(90deg,"+getVar("--hi")+","+varOk()+")";
-
-    const last = [norm, ...hist].slice(0,8);
-    e.hist.innerHTML = last.map(x =>
-      `<div style="display:flex;gap:10px;justify-content:space-between;align-items:center;padding:6px 0;border-top:1px solid ${getVar("--border")}">
-        <span class="mono">${(x.timestamp||"").replace("T"," ").replace("Z","")}</span>
-        <span class="mono">v:${x.views_60m} d:${x.downloads_60m}</span>
-      </div>`
-    ).join("") || "—";
-  }
-
-  function store(norm){
-    const hist = JSON.parse(localStorage.getItem("osf_hist")||"[]");
-    hist.unshift(norm);
-    localStorage.setItem("osf_hist", JSON.stringify(hist.slice(0,50)));
-    localStorage.setItem("osf_last", JSON.stringify(norm));
-  }
-
-  function applyText(raw, format){
-    const e=E(); if(!e.box) return;
-    const t = (raw ?? e.box.value ?? "").trim();
-    if(!t){ setStatus("warn","WAITING","Paste JSON or Fetch."); return; }
-    let obj;
-    try{ obj = JSON.parse(t); } catch(err){ setStatus("bad","INVALID JSON", String(err.message||err)); return; }
-    const {norm, errs} = normalize(obj);
-    render(norm);
-    if(errs.length){ setStatus("bad","VALIDATION FAIL", errs.join(" · ")); return; }
-    store(norm);
-    if(format) e.box.value = JSON.stringify(norm,null,2);
-    setStatus("ok","OK","Applied.");
-  }
-
-  async function fetchNow(){
-    const e=E(); if(!e.url) return;
-    const url = (e.url.value||"").trim() || "osf.json";
-    setStatus("warn","FETCHING",""+url);
-    try{
-      const bust = (url.includes("?") ? "&" : "?") + "t=" + Date.now();
-      const res = await fetch(url + bust, {cache:"no-store"});
-      if(!res.ok) throw new Error("HTTP "+res.status);
-      const obj = await res.json();
-      const {norm, errs} = normalize(obj);
-      render(norm);
-      if(errs.length){ setStatus("bad","VALIDATION FAIL", errs.join(" · ")); return; }
-      store(norm);
-      e.box.value = JSON.stringify(norm,null,2);
-      setStatus("ok","LIVE","Fetched + applied.");
-    } catch(err){
-      setStatus("bad","FETCH FAIL", String(err.message||err));
-    }
-  }
-
-  async function copyNorm(){
-    const e=E(); if(!e.box) return;
-    const t=(e.box.value||"").trim();
-    if(!t){ setStatus("warn","NOT COPIED",""); return; }
-    try{
-      const obj=JSON.parse(t);
-      const {norm, errs}=normalize(obj);
-      if(errs.length){ setStatus("warn","NOT COPIED","Fix validation."); return; }
-      await navigator.clipboard.writeText(JSON.stringify(norm));
-      setStatus("ok","COPIED","Normalized payload copied.");
-    } catch{
-      setStatus("warn","NOT COPIED","Fix JSON.");
-    }
-  }
-
-  function loadDemo(){
-    const now = new Date().toISOString().replace(/\.\d{3}Z$/,"Z");
-    const demo = {timestamp:now,views_60m:12,downloads_60m:3};
-    const e=E();
-    e.box.value = JSON.stringify(demo,null,2);
-    applyText(e.box.value,false);
-  }
-
-  function boot(){
-    const e=E(); if(!e.box) return;
-
-    const last = localStorage.getItem("osf_last");
-    if(last){
-      try{ const norm=JSON.parse(last); e.box.value=JSON.stringify(norm,null,2); render(norm); setStatus("ok","READY","Loaded last."); }
-      catch{ setStatus("warn","WAITING","Paste JSON or Fetch."); }
-    } else setStatus("warn","WAITING","Paste JSON or Fetch.");
-
-    e.apply.onclick=()=>applyText(null,false);
-    e.fmt.onclick=()=>applyText(null,true);
-    e.copy.onclick=copyNorm;
-    e.clear.onclick=()=>{ e.box.value=""; setStatus("warn","WAITING","Paste JSON or Fetch."); };
-    if(e.fetch) e.fetch.onclick=fetchNow;
-    if(e.demo) e.demo.onclick=loadDemo;
-
-    // When you open Control Room, you can tap Fetch. No timers required.
-  }
-
-  document.addEventListener("DOMContentLoaded", boot);
-})();
-</script>

@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Geodiametrics · Control</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Geodiametrics</title>
 
 <style>
 :root{
@@ -11,7 +11,6 @@
   --fg:#e6ebff;
   --muted:#9aa3c7;
   --stroke:rgba(230,235,255,.12);
-  --ok:#44d07b;
   --accent:#7aa2ff;
   --radius:18px;
   --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -20,10 +19,90 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
-  background:var(--bg);
+  background:
+    radial-gradient(900px 600px at 15% 10%,rgba(122,162,255,.08),transparent 60%),
+    radial-gradient(800px 500px at 85% 20%,rgba(255,122,198,.06),transparent 60%),
+    var(--bg);
   color:var(--fg);
   font-family:var(--sans);
 }
-main{max-width:980px;margin:0 auto;padding:40px 18px 72px}
-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
-h1{margin
+main{max-width:1000px;margin:0 auto;padding:48px 18px 72px}
+h1{margin:0 0 8px;font-size:30px;font-weight:600}
+.tagline{font-family:var(--mono);font-size:13px;color:var(--muted);margin-bottom:22px}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+.tile{
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  padding:22px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
+  text-decoration:none;
+  color:var(--fg);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  min-height:140px;
+}
+.tile:hover{border-color:rgba(122,162,255,.45)}
+.tile.primary{border-color:rgba(122,162,255,.6)}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.title{font-size:20px;font-weight:600}
+.desc{color:var(--muted);line-height:1.5;font-size:14px}
+
+footer{
+  margin-top:40px;
+  padding-top:16px;
+  border-top:1px solid var(--stroke);
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--muted);
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+</style>
+</head>
+
+<body>
+<main>
+  <h1>Geodiametrics</h1>
+  <div class="tagline">A structural execution instrument.</div>
+
+  <section class="grid">
+    <a class="tile primary" href="/control/">
+      <div class="kicker">Live</div>
+      <div class="title">Control Room</div>
+      <div class="desc">Public, read-only system status and activity.</div>
+    </a>
+
+    <a class="tile" href="/artifacts/">
+      <div class="kicker">Demonstrations</div>
+      <div class="title">Apps</div>
+      <div class="desc">Concrete outputs and examples.</div>
+    </a>
+
+    <a class="tile" href="/system/">
+      <div class="kicker">Grounding</div>
+      <div class="title">Reference</div>
+      <div class="desc">Formal definitions and structure.</div>
+    </a>
+
+    <a class="tile" href="/problem/">
+      <div class="kicker">Context</div>
+      <div class="title">Problem</div>
+      <div class="desc">Why this exists.</div>
+    </a>
+  </section>
+
+  <footer>
+    <div>© 2026 Geodiametrics</div>
+    <div>Layer 1 · Orientation</div>
+  </footer>
+</main>
+</body>
+</html>

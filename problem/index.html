@@ -12,7 +12,6 @@
   --panel:rgba(10,14,28,.82);
   --stroke:rgba(233,238,252,.16);
   --radius:22px;
-  --accent:#7aa2ff;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
@@ -38,12 +37,13 @@ body::before{
   background:var(--panel);
   border:1px solid var(--stroke);
   border-radius:var(--radius);
-  padding:26px;
+  padding:22px;
   margin-top:18px;
 }
-h1{margin:0 0 12px;font-size:36px}
-h2{margin:18px 0 8px;font-size:20px;color:var(--accent)}
-p{margin:0 0 14px;color:var(--muted);line-height:1.65}
+h1{margin:0 0 10px;font-size:36px}
+h2{margin:16px 0 8px;font-size:20px}
+p{margin:0;color:var(--muted);line-height:1.6}
+.section{margin-top:18px}
 .footer{
   margin-top:26px;
   font-size:12px;
@@ -58,56 +58,47 @@ p{margin:0 0 14px;color:var(--muted);line-height:1.65}
 
   <div class="card">
     <h1>The Problem</h1>
-
     <p>
-      Modern systems fail not from lack of intelligence, effort, or data,
-      but from loss of coherence under pressure.
+      Most systems fail not because of insufficient intelligence, effort,
+      or resources, but because execution fragments under pressure.
     </p>
+  </div>
 
+  <div class="card section">
+    <h2>Fragmentation</h2>
     <p>
-      Tools optimize locally while fragmenting globally.
-      Authority is confused with visibility.
-      Control is applied where observation is required.
+      Fragmentation occurs when selection, resolution, commitment,
+      and continuation fall out of alignment. Decisions accumulate
+      without closure, or commitments are made without admissible resolution.
     </p>
+  </div>
 
+  <div class="card section">
+    <h2>False Signals</h2>
     <p>
-      As systems scale, feedback becomes distorted,
-      responsibility diffuses,
-      and decision cycles lose structural alignment.
+      Metrics optimized in isolation generate misleading confidence.
+      Activity is mistaken for progress; authority is mistaken for coherence.
     </p>
+  </div>
 
+  <div class="card section">
+    <h2>Lack of Observation</h2>
+    <p>
+      Systems rarely expose their own instability.
+      Without read-only observation surfaces,
+      failure is detected only after collapse.
+    </p>
+  </div>
+
+  <div class="card section">
     <h2>What Is Missing</h2>
-
     <p>
-      There is no shared execution grammar that distinguishes
-      selection from resolution,
-      commitment from continuation,
-      or motion from stability.
-    </p>
-
-    <p>
-      Without this grammar, systems drift,
-      decisions compound error,
-      and intervention arrives too late.
-    </p>
-
-    <h2>The Geodiametrics Response</h2>
-
-    <p>
-      Geodiametrics addresses this by enforcing a quad-core execution cycle
-      and measuring coherence directly,
-      rather than inferring it from outcomes or narratives.
-    </p>
-
-    <p>
-      The platform does not attempt to fix every problem.
-      It identifies when systems are no longer admissible,
-      and where fragmentation begins.
+      A constraint-first execution model that remains coherent
+      across time, pressure, and scale.
     </p>
   </div>
 
   <div class="footer">© 2026 Geodiametrics</div>
-
 </div>
 </body>
 </html>

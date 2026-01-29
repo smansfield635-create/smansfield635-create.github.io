@@ -6,205 +6,220 @@
 <title>Geodiametrics</title>
 
 <style>
-/* ===================== COSMIC FOUNDATION ===================== */
 :root{
   --fg:#e9eefc;
-  --muted:rgba(233,238,252,.65);
-  --panel:rgba(10,14,28,.78);
+  --muted:rgba(233,238,252,.66);
   --stroke:rgba(233,238,252,.14);
-  --good:#4ade80;
-  --warn:#facc15;
-  --risk:#f87171;
-  --accent:#7aa2ff;
-  --radius:24px;
+  --panel:rgba(12,16,34,.62);
+  --glass:rgba(10,14,28,.55);
+  --radius:22px;
+  --shadow:0 18px 55px rgba(0,0,0,.55);
 }
-
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
-  background:#03040a;
   overflow-x:hidden;
-}
-
-/* Starfield + Milky Way glow */
-body::before{
-  content:"";
-  position:fixed;
-  inset:-50px;
-  pointer-events:none;
   background:
-    radial-gradient(1px 1px at 10% 20%, #fff, transparent),
-    radial-gradient(1px 1px at 30% 40%, #fff, transparent),
-    radial-gradient(1px 1px at 60% 10%, #fff, transparent),
-    radial-gradient(1px 1px at 80% 70%, #fff, transparent),
-    radial-gradient(1px 1px at 45% 85%, #fff, transparent),
-    radial-gradient(1200px 700px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
-    radial-gradient(900px 800px at 80% 30%, rgba(180,140,255,.14), transparent 60%);
-  opacity:.35;
+    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
+    radial-gradient(1100px 800px at 60% 90%, rgba(120,220,255,.08), transparent 60%),
+    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
 }
+body:before{
+  content:"";
+  position:fixed;inset:-60px;
+  pointer-events:none;
+  opacity:.70;
+  filter:blur(.15px);
+  background:
+    radial-gradient(2px 2px at 10% 15%, rgba(255,255,255,.9), transparent 60%),
+    radial-gradient(1px 1px at 30% 28%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(2px 2px at 55% 18%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(1px 1px at 72% 22%, rgba(255,255,255,.6), transparent 60%),
+    radial-gradient(2px 2px at 88% 35%, rgba(255,255,255,.85), transparent 60%),
+    radial-gradient(1px 1px at 18% 62%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(2px 2px at 42% 70%, rgba(255,255,255,.75), transparent 60%),
+    radial-gradient(1px 1px at 67% 78%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(2px 2px at 90% 82%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(1px 1px at 8% 88%, rgba(255,255,255,.55), transparent 60%);
+}
+.wrap{max-width:1120px;margin:0 auto;padding:22px 16px 90px}
+.top{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(10px);
+  background:linear-gradient(180deg, rgba(7,11,24,.84), rgba(7,11,24,.55));
+  border-bottom:1px solid rgba(233,238,252,.10);
+}
+.bar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:14px 16px;
+}
+.brand{font-weight:900;letter-spacing:.4px}
+.nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+.bubble{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.16);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);
+  text-decoration:none;
+  font-weight:900;
+  box-shadow:0 10px 26px rgba(0,0,0,.35);
+}
+.bubble:active{transform:translateY(1px)}
+.hero{padding:34px 2px 6px}
+h1{margin:0;font-size:54px;letter-spacing:.3px;line-height:1.02}
+.sub{margin:12px 0 0;color:var(--muted);max-width:860px;font-size:18px;line-height:1.55}
+.hr{height:1px;background:rgba(233,238,252,.10);margin:22px 0 24px}
 
-.wrap{max-width:1200px;margin:0 auto;padding:48px 16px 120px}
-
-/* ===================== CARDS ===================== */
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:920px){.grid{grid-template-columns:1.15fr .85fr}}
 .card{
-  background:var(--panel);
-  border:1px solid var(--stroke);
   border-radius:var(--radius);
-  padding:26px;
-  margin-bottom:22px;
-  box-shadow:0 18px 55px rgba(0,0,0,.55);
-}
-
-h1{margin:0 0 12px;font-size:48px}
-h2{margin:0 0 10px;font-size:26px}
-p{margin:0;color:var(--muted);line-height:1.6}
-
-.row{display:flex;gap:14px;flex-wrap:wrap;margin-top:16px}
-
-.link{
-  padding:12px 18px;
-  border-radius:999px;
   border:1px solid var(--stroke);
+  background:var(--panel);
+  box-shadow:var(--shadow);
+}
+.card .in{padding:20px}
+.card h2{margin:0 0 10px;font-size:24px}
+.card p{margin:0 0 12px;color:var(--muted);line-height:1.55}
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.16);
+  background:rgba(255,255,255,.06);
+  font-weight:900;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
+}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:12px 16px;border-radius:999px;
+  border:1px solid rgba(233,238,252,.18);
   background:rgba(255,255,255,.06);
   color:var(--fg);
   font-weight:900;
   text-decoration:none;
+  box-shadow:0 10px 26px rgba(0,0,0,.35);
 }
-
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 14px;
-  border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.06);
-  font-weight:900;
-  font-size:12px;
-  text-transform:uppercase;
-  letter-spacing:.6px;
+.btn:active{transform:translateY(1px)}
+.mini{
+  font-size:13px;
+  color:rgba(233,238,252,.58);
+  margin-top:10px;
 }
-
-.dot{
-  width:10px;height:10px;border-radius:50%;
-  background:var(--good);
-  box-shadow:0 0 12px currentColor;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:18px;
-}
-@media(min-width:900px){
-  .grid{grid-template-columns:1fr 1fr}
-}
-
-.engine{
-  border:1px solid var(--stroke);
-  border-radius:18px;
-  padding:18px;
-  background:rgba(0,0,0,.25);
-}
-
 .footer{
-  margin-top:40px;
+  margin-top:28px;
   text-align:center;
-  color:rgba(233,238,252,.45);
+  color:rgba(233,238,252,.50);
   font-size:13px;
 }
+.k{
+  border-radius:18px;
+  border:1px solid rgba(233,238,252,.12);
+  background:rgba(0,0,0,.22);
+  padding:14px;
+}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
 </style>
 </head>
 
 <body>
+<div class="top">
+  <div class="bar wrap" style="padding:14px 16px;">
+    <div class="brand">Geodiametrics</div>
+    <nav class="nav">
+      <a class="bubble" href="/">Home</a>
+      <a class="bubble" href="/apps/">Apps</a>
+      <a class="bubble" href="/control-room/">Control Room</a>
+      <a class="bubble" href="/reference/">Reference</a>
+      <a class="bubble" href="/problem/">Problem</a>
+    </nav>
+  </div>
+</div>
+
 <div class="wrap">
-
-  <!-- ===================== HERO ===================== -->
-  <div class="card">
-    <span class="badge">
-      <span class="dot"></span>
-      System Stable
-    </span>
-
+  <section class="hero">
     <h1>Geodiametrics</h1>
-    <p>
-      A coherence-first system organized around a quad-core engine.
-      This site observes reality; it does not simulate it.
+    <p class="sub">
+      A constraint-first execution framework for diagnosing coherence, collapse, and recovery across systems.
+      This site publishes proofs, reference definitions, and live instrumentation.
     </p>
+    <div class="hr"></div>
+  </section>
 
-    <div class="row">
-      <a class="link" href="/control-room/">Control Room</a>
-      <a class="link" href="/apps/">Apps</a>
-      <a class="link" href="/reference/">Reference</a>
-      <a class="link" href="/problem/">Problem</a>
+  <section class="grid">
+
+    <!-- LEFT: COVER / STORY -->
+    <div class="card">
+      <div class="in">
+        <div class="pill">Cover</div>
+        <h2>What this is</h2>
+        <p>
+          This is not a blog. It is an execution platform: definitions up front, proofs in the middle,
+          and instrumentation deep inside the system.
+        </p>
+
+        <div class="k" style="margin-top:12px;">
+          <div class="pill" style="margin-bottom:10px;">Quad-Core</div>
+          <p class="mono" style="margin:0;color:rgba(233,238,252,.86);font-weight:900;">
+            Selection → Resolution → Commitment → Continuation
+          </p>
+          <p class="mini" style="margin:10px 0 0;">
+            Gauges and technical readouts live inside <b>Control Room</b>. The homepage stays informational.
+          </p>
+        </div>
+
+        <div class="row" style="margin-top:14px;">
+          <a class="btn" href="/control-room/">Enter Control Room</a>
+          <a class="btn" href="/apps/">Open Apps</a>
+        </div>
+
+        <div class="row" style="margin-top:10px;">
+          <a class="btn" href="https://osf.io/mn6vu" target="_blank" rel="noreferrer">OSF Project</a>
+          <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noreferrer">ORCID iD</a>
+        </div>
+
+        <p class="mini">
+          Rule: No “fake life.” If a gauge moves, it is driven by lawful signal.
+        </p>
+      </div>
     </div>
-  </div>
 
-  <!-- ===================== QUAD-CORE OVERVIEW ===================== -->
-  <div class="card">
-    <h2>Quad-Core Architecture</h2>
-    <p>
-      All systems resolve through the same four constraints.
-      These are not features — they are laws.
-    </p>
+    <!-- RIGHT: TABLE OF CONTENTS -->
+    <div class="card">
+      <div class="in">
+        <div class="pill">Table of Contents</div>
+        <h2>Where to go</h2>
+        <p>Use the Control Room for instruments. Use Reference for definitions. Use Problem for framing.</p>
 
-    <div class="grid" style="margin-top:16px;">
-      <div class="engine">
-        <strong>Integrity Engine</strong>
-        <p>Selection · Admissibility · Boundaries</p>
-      </div>
-      <div class="engine">
-        <strong>Structure Engine</strong>
-        <p>Resolution · Organization · Memory</p>
-      </div>
-      <div class="engine">
-        <strong>Trajectory Engine</strong>
-        <p>Commitment · Direction · Momentum</p>
-      </div>
-      <div class="engine">
-        <strong>Vitality Engine</strong>
-        <p>Continuation · Sustainability · Recovery</p>
+        <div class="k" style="margin-top:12px;">
+          <h2 style="margin:0 0 10px;font-size:20px;">Core Sections</h2>
+          <div class="row">
+            <a class="btn" href="/control-room/">Control Room</a>
+            <a class="btn" href="/apps/">Apps</a>
+            <a class="btn" href="/reference/">Reference</a>
+            <a class="btn" href="/problem/">Problem</a>
+          </div>
+          <p class="mini">
+            Control Room = gauges, engines, supervisor. Apps = launchers/viewers only.
+          </p>
+        </div>
+
+        <div class="k" style="margin-top:12px;">
+          <div class="pill" style="margin-bottom:10px;">Mission to Mars</div>
+          <p>
+            Research teaser surface. Platform build will attach here once the external topology is ready.
+          </p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ===================== EXTERNAL ANCHORS ===================== -->
-  <div class="card">
-    <h2>Authoritative External Anchors</h2>
-    <p>
-      These links provide independent verification and public record.
-    </p>
+  </section>
 
-    <div class="row">
-      <a class="link" href="https://osf.io/mn6vu" target="_blank" rel="noreferrer">
-        OSF Project
-      </a>
-      <a class="link" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noreferrer">
-        ORCID iD
-      </a>
-    </div>
-  </div>
-
-  <!-- ===================== DESIGN LAW ===================== -->
-  <div class="card">
-    <h2>Design Law</h2>
-    <p>
-      Silence is not failure.  
-      Motion appears only when real signal exists.
-    </p>
-    <p style="margin-top:10px">
-      This system never performs vitality.  
-      It reports truth.
-    </p>
-  </div>
-
-  <div class="footer">
-    © 2026 Geodiametrics
-  </div>
-
+  <div class="footer">© 2026 Geodiametrics</div>
 </div>
 </body>
 </html>
+```0

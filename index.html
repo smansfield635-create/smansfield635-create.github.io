@@ -3,160 +3,232 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Geodiametrics · Quad-Core System</title>
+<title>Geodiametrics</title>
 
 <style>
+/* ===============================
+   COSMIC BASE
+================================ */
 :root{
   --fg:#e9eefc;
   --muted:rgba(233,238,252,.65);
+  --panel:rgba(10,14,28,.72);
   --stroke:rgba(233,238,252,.14);
-  --panel:rgba(12,16,34,.62);
-  --radius:22px;
-  --green:#4ade80;
-  --blue:#60a5fa;
-  --yellow:#facc15;
-  --red:#f87171;
+  --radius:24px;
+  --glow:0 0 60px rgba(120,160,255,.35);
 }
+
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
+
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
+  background:#03040a;
+  overflow-x:hidden;
+}
+
+/* ===============================
+   STARFIELD (PURE CSS)
+================================ */
+.sky{
+  position:fixed;
+  inset:0;
+  z-index:-3;
   background:
-    radial-gradient(1400px 1000px at 20% 12%, rgba(122,162,255,.22), transparent 60%),
-    radial-gradient(1000px 800px at 85% 30%, rgba(180,140,255,.18), transparent 60%),
-    linear-gradient(180deg,#060a18,#040610 70%,#03030c);
+    radial-gradient(1200px 600px at 30% 20%, rgba(120,160,255,.18), transparent 60%),
+    radial-gradient(1000px 800px at 80% 40%, rgba(200,140,255,.14), transparent 65%),
+    linear-gradient(180deg,#050713,#03040a 70%);
 }
-.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 80px}
+.stars, .stars:after{
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 40% 70%, #fff, transparent),
+    radial-gradient(1px 1px at 60% 20%, #fff, transparent),
+    radial-gradient(2px 2px at 80% 60%, #fff, transparent),
+    radial-gradient(1px 1px at 10% 80%, #fff, transparent);
+  background-size:800px 800px;
+  opacity:.35;
+}
+.stars:after{
+  content:"";
+  background-size:1200px 1200px;
+  opacity:.25;
+}
+
+/* ===============================
+   LAYOUT
+================================ */
+.wrap{
+  max-width:1200px;
+  margin:0 auto;
+  padding:80px 16px 120px;
+}
+
 .card{
-  border-radius:var(--radius);
-  border:1px solid var(--stroke);
   background:var(--panel);
-  padding:18px;
-  margin-bottom:16px;
-}
-h1{margin:0 0 8px;font-size:42px}
-h2{margin:0 0 10px;font-size:22px}
-p{margin:0;color:var(--muted);line-height:1.55}
-.hr{height:1px;background:rgba(233,238,252,.10);margin:16px 0}
-.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.link{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:10px 14px;border-radius:999px;
   border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  padding:28px;
+  margin-bottom:24px;
+  backdrop-filter:blur(8px);
+}
+
+h1{
+  font-size:56px;
+  margin:0 0 12px;
+  letter-spacing:.4px;
+  text-shadow:var(--glow);
+}
+
+h2{
+  margin:0 0 10px;
+  font-size:26px;
+}
+
+p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.row{
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+
+.btn{
+  padding:14px 20px;
+  border-radius:999px;
+  border:1px solid rgba(233,238,252,.2);
   background:rgba(255,255,255,.06);
-  color:var(--fg);text-decoration:none;font-weight:900
+  color:var(--fg);
+  font-weight:900;
+  text-decoration:none;
+  letter-spacing:.4px;
 }
-.grid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
-.engine{
-  border-radius:18px;border:1px solid var(--stroke);
-  background:rgba(0,0,0,.22);padding:14px
-}
+
 .badge{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 12px;border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border-radius:999px;
   border:1px solid var(--stroke);
   background:rgba(255,255,255,.06);
-  font-weight:900;font-size:12px;letter-spacing:.6px;text-transform:uppercase
+  font-weight:900;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.6px;
 }
-.dot{width:10px;height:10px;border-radius:50%}
-.footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:20px}
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+
+.dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#4ade80;
+  box-shadow:0 0 12px rgba(74,222,128,.8);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
+}
+@media(min-width:900px){
+  .grid{grid-template-columns:1fr 1fr}
+}
+
+.engine{
+  border-radius:18px;
+  border:1px solid var(--stroke);
+  padding:18px;
+  background:rgba(0,0,0,.25);
+}
+
+.footer{
+  text-align:center;
+  color:rgba(233,238,252,.55);
+  font-size:14px;
+  margin-top:40px;
+}
 </style>
 </head>
 
 <body>
+<div class="sky">
+  <div class="stars"></div>
+</div>
+
 <div class="wrap">
 
   <!-- HERO -->
   <div class="card">
+    <span class="badge">
+      <span class="dot"></span>
+      System Stable
+    </span>
+
     <h1>Geodiametrics</h1>
     <p>
-      A coherence-first system organized around a <b>Quad-Core Engine</b>.
-      This site is an instrument: it observes, explains, and reports state—
-      without persuasion or simulation.
+      Constraint-first systems for observing coherence, instability,
+      and trajectory across complex domains.
     </p>
-    <div class="nav">
-      <a class="link" href="/control-room/">Control Room</a>
-      <a class="link" href="/apps/">Apps</a>
-      <a class="link" href="/reference/">Reference</a>
-      <a class="link" href="/problem/">Problem</a>
+
+    <div class="row">
+      <a class="btn" href="/control-room/">Enter Control Room</a>
+      <a class="btn" href="/apps/">Apps</a>
     </div>
   </div>
 
-  <!-- WHAT THIS IS -->
+  <!-- CORE CONCEPT -->
   <div class="card">
-    <h2>What You’re Looking At</h2>
+    <h2>Quad-Core Architecture</h2>
     <p>
-      This system replaces page-centric websites with an engine-centric model.
-      Content, metrics, and interpretation all flow through the same lawful cycle.
+      All systems are lawful instantiations of the same cycle.
+      No overlap. No manual control. Observation only.
     </p>
-    <div class="hr"></div>
-    <p class="mono">
-      Selection → Resolution → Commitment → Continuation
-    </p>
+
+    <div class="grid" style="margin-top:16px;">
+      <div class="engine">
+        <strong>Integrity Engine</strong>
+        <p class="small">Admissibility · Boundaries · Rejection</p>
+      </div>
+      <div class="engine">
+        <strong>Structure Engine</strong>
+        <p class="small">Organization · Memory · Drift</p>
+      </div>
+      <div class="engine">
+        <strong>Trajectory Engine</strong>
+        <p class="small">Momentum · Direction · Priority</p>
+      </div>
+      <div class="engine">
+        <strong>Vitality Engine</strong>
+        <p class="small">Sustainability · Burnout · Recovery</p>
+      </div>
+    </div>
   </div>
 
-  <!-- ENGINES -->
-  <div class="grid">
-
-    <div class="engine">
-      <span class="badge"><span class="dot" style="background:var(--green)"></span>Integrity Engine</span>
-      <h2>Integrity</h2>
-      <p>
-        Governs admissibility. What enters the system, what is rejected,
-        and where boundaries are enforced.
-      </p>
-      <p class="mono">Input · Constraints · Validity</p>
-    </div>
-
-    <div class="engine">
-      <span class="badge"><span class="dot" style="background:var(--blue)"></span>Structure Engine</span>
-      <h2>Structure</h2>
-      <p>
-        Governs organization and memory. How accepted inputs are formed,
-        related, and stabilized.
-      </p>
-      <p class="mono">Index · Representation · Drift</p>
-    </div>
-
-    <div class="engine">
-      <span class="badge"><span class="dot" style="background:var(--yellow)"></span>Trajectory Engine</span>
-      <h2>Trajectory</h2>
-      <p>
-        Governs direction. What matters now, what accelerates,
-        and where focus is applied.
-      </p>
-      <p class="mono">Query · Rank · Momentum</p>
-    </div>
-
-    <div class="engine">
-      <span class="badge"><span class="dot" style="background:var(--red)"></span>Vitality Engine</span>
-      <h2>Vitality</h2>
-      <p>
-        Governs sustainability. Burnout, recovery, and long-term viability
-        under load.
-      </p>
-      <p class="mono">Feedback · Renewal · Stability</p>
-    </div>
-
-  </div>
-
-  <!-- HOW TO READ -->
+  <!-- PHILOSOPHY -->
   <div class="card">
-    <h2>How to Read the System</h2>
+    <h2>Design Law</h2>
     <p>
-      The <b>Control Room</b> is the authoritative surface. It reports live state
-      from external signals when available, and remains quiet when none exist.
+      Silence is not failure.  
+      Motion appears only when a real signal exists.
     </p>
-    <div class="hr"></div>
-    <p>
-      If something is idle, that is truth—not failure.
+    <p style="margin-top:10px;">
+      The system never pretends to be alive.
+      It only reports truth.
     </p>
   </div>
 
-  <div class="footer">© 2026 Geodiametrics</div>
+  <div class="footer">
+    © 2026 Geodiametrics
+  </div>
 
 </div>
 </body>

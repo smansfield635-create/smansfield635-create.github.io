@@ -3,14 +3,19 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Geodiametrics</title>
+<title>Geodiametrics · Quad-Core System</title>
 
 <style>
 :root{
-  --fg:#e9eefc;--muted:rgba(233,238,252,.66);
+  --fg:#e9eefc;
+  --muted:rgba(233,238,252,.65);
   --stroke:rgba(233,238,252,.14);
   --panel:rgba(12,16,34,.62);
-  --radius:24px;--shadow:0 20px 60px rgba(0,0,0,.6);
+  --radius:22px;
+  --green:#4ade80;
+  --blue:#60a5fa;
+  --yellow:#facc15;
+  --red:#f87171;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
@@ -20,114 +25,139 @@ body{
   background:
     radial-gradient(1400px 1000px at 20% 12%, rgba(122,162,255,.22), transparent 60%),
     radial-gradient(1000px 800px at 85% 30%, rgba(180,140,255,.18), transparent 60%),
-    radial-gradient(1200px 900px at 55% 88%, rgba(120,220,255,.12), transparent 60%),
     linear-gradient(180deg,#060a18,#040610 70%,#03030c);
 }
-.wrap{max-width:1200px;margin:0 auto;padding:26px 16px 90px}
-.top{
-  position:sticky;top:0;z-index:50;
-  backdrop-filter:blur(10px);
-  background:linear-gradient(180deg, rgba(6,10,24,.88), rgba(6,10,24,.55));
-  border-bottom:1px solid rgba(233,238,252,.12);
-}
-.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
-.brand{font-weight:950;letter-spacing:.5px}
-.nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
-.bubble{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:10px 14px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.18);
-  background:rgba(255,255,255,.06);
-  color:var(--fg);text-decoration:none;font-weight:900;
-  box-shadow:0 10px 28px rgba(0,0,0,.35);
-}
-.bubble:active{transform:translateY(1px)}
-
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 80px}
 .card{
   border-radius:var(--radius);
   border:1px solid var(--stroke);
   background:var(--panel);
-  box-shadow:var(--shadow);
-  padding:22px;
-  margin:18px 0;
+  padding:18px;
+  margin-bottom:16px;
 }
-h1{margin:0 0 10px;font-size:52px;letter-spacing:.2px}
-h2{margin:0 0 10px;font-size:26px}
-p{margin:0 0 12px;color:var(--muted);line-height:1.6}
-.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.btn{
-  padding:12px 18px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.22);
-  background:rgba(255,255,255,.08);
-  color:var(--fg);font-weight:950;text-decoration:none
-}
-.footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:24px}
-.pill{
-  display:inline-flex;align-items:center;
-  padding:8px 12px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.18);
+h1{margin:0 0 8px;font-size:42px}
+h2{margin:0 0 10px;font-size:22px}
+p{margin:0;color:var(--muted);line-height:1.55}
+.hr{height:1px;background:rgba(233,238,252,.10);margin:16px 0}
+.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.link{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid var(--stroke);
   background:rgba(255,255,255,.06);
-  font-weight:950;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
+  color:var(--fg);text-decoration:none;font-weight:900
 }
-.grid{display:grid;grid-template-columns:1fr;gap:16px}
-@media(min-width:900px){.grid{grid-template-columns:1.2fr .8fr}}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+.engine{
+  border-radius:18px;border:1px solid var(--stroke);
+  background:rgba(0,0,0,.22);padding:14px
+}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 12px;border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  font-weight:900;font-size:12px;letter-spacing:.6px;text-transform:uppercase
+}
+.dot{width:10px;height:10px;border-radius:50%}
+.footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:20px}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
 </style>
 </head>
 
 <body>
-<div class="top">
-  <div class="bar wrap" style="padding:14px 16px;">
-    <div class="brand">Geodiametrics</div>
-    <nav class="nav">
-      <a class="bubble" href="/control-room/">Control Room</a>
-      <a class="bubble" href="/apps/">Apps</a>
-      <a class="bubble" href="/reference/">Reference</a>
-      <a class="bubble" href="/problem/">Problem</a>
-    </nav>
-  </div>
-</div>
-
 <div class="wrap">
 
+  <!-- HERO -->
   <div class="card">
-    <div class="pill">Front Door</div>
     <h1>Geodiametrics</h1>
     <p>
-      A constraint-first execution system with automatic evaluation,
-      permanent gauges, and a single authoritative Control Room.
+      A coherence-first system organized around a <b>Quad-Core Engine</b>.
+      This site is an instrument: it observes, explains, and reports state—
+      without persuasion or simulation.
     </p>
-    <div class="row" style="margin-top:14px;">
-      <a class="btn" href="/control-room/">Enter Control Room</a>
-      <a class="btn" href="/apps/">View Apps</a>
+    <div class="nav">
+      <a class="link" href="/control-room/">Control Room</a>
+      <a class="link" href="/apps/">Apps</a>
+      <a class="link" href="/reference/">Reference</a>
+      <a class="link" href="/problem/">Problem</a>
     </div>
   </div>
 
+  <!-- WHAT THIS IS -->
+  <div class="card">
+    <h2>What You’re Looking At</h2>
+    <p>
+      This system replaces page-centric websites with an engine-centric model.
+      Content, metrics, and interpretation all flow through the same lawful cycle.
+    </p>
+    <div class="hr"></div>
+    <p class="mono">
+      Selection → Resolution → Commitment → Continuation
+    </p>
+  </div>
+
+  <!-- ENGINES -->
   <div class="grid">
-    <div class="card">
-      <h2>What This Is</h2>
+
+    <div class="engine">
+      <span class="badge"><span class="dot" style="background:var(--green)"></span>Integrity Engine</span>
+      <h2>Integrity</h2>
       <p>
-        Geodiametrics replaces manual control with lawful execution.
-        Systems advance when constraints are satisfied and stall when they are not.
+        Governs admissibility. What enters the system, what is rejected,
+        and where boundaries are enforced.
       </p>
-      <p>
-        Healthy operation produces silence. Only breakage produces signal.
-      </p>
+      <p class="mono">Input · Constraints · Validity</p>
     </div>
 
-    <div class="card">
-      <h2>How It Works</h2>
+    <div class="engine">
+      <span class="badge"><span class="dot" style="background:var(--blue)"></span>Structure Engine</span>
+      <h2>Structure</h2>
       <p>
-        A quad-core cycle—Selection, Resolution, Commitment, Continuation—
-        is continuously evaluated and rendered as readable gauges.
+        Governs organization and memory. How accepted inputs are formed,
+        related, and stabilized.
       </p>
-      <div class="row" style="margin-top:10px;">
-        <a class="btn" href="/reference/">Read the Reference</a>
-        <a class="btn" href="/problem/">See the Problem</a>
-      </div>
+      <p class="mono">Index · Representation · Drift</p>
     </div>
+
+    <div class="engine">
+      <span class="badge"><span class="dot" style="background:var(--yellow)"></span>Trajectory Engine</span>
+      <h2>Trajectory</h2>
+      <p>
+        Governs direction. What matters now, what accelerates,
+        and where focus is applied.
+      </p>
+      <p class="mono">Query · Rank · Momentum</p>
+    </div>
+
+    <div class="engine">
+      <span class="badge"><span class="dot" style="background:var(--red)"></span>Vitality Engine</span>
+      <h2>Vitality</h2>
+      <p>
+        Governs sustainability. Burnout, recovery, and long-term viability
+        under load.
+      </p>
+      <p class="mono">Feedback · Renewal · Stability</p>
+    </div>
+
+  </div>
+
+  <!-- HOW TO READ -->
+  <div class="card">
+    <h2>How to Read the System</h2>
+    <p>
+      The <b>Control Room</b> is the authoritative surface. It reports live state
+      from external signals when available, and remains quiet when none exist.
+    </p>
+    <div class="hr"></div>
+    <p>
+      If something is idle, that is truth—not failure.
+    </p>
   </div>
 
   <div class="footer">© 2026 Geodiametrics</div>
+
 </div>
 </body>
 </html>

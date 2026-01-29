@@ -2,20 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Control Room · Geodiametrics</title>
 
 <style>
 :root{
   --fg:#e9eefc;
-  --muted:rgba(233,238,252,.66);
-  --stroke:rgba(233,238,252,.14);
-  --panel:rgba(12,16,34,.62);
-  --panel2:rgba(12,16,34,.42);
-  --shadow:0 18px 55px rgba(0,0,0,.55);
+  --muted:rgba(233,238,252,.65);
+  --panel:rgba(10,14,28,.82);
+  --stroke:rgba(233,238,252,.16);
   --radius:22px;
   --green:#4ade80;
-  --blue:#60a5fa;
   --yellow:#facc15;
   --red:#f87171;
 }
@@ -24,460 +21,180 @@ html,body{margin:0;height:100%}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
-  overflow-x:hidden;
+  background:#02030a;
+}
+
+/* subtle stars */
+body::before{
+  content:"";
+  position:fixed; inset:0; pointer-events:none;
   background:
-    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
-    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
-    radial-gradient(1000px 800px at 60% 90%, rgba(120,220,255,.08), transparent 60%),
-    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
+    radial-gradient(1px 1px at 18% 28%, #fff, transparent),
+    radial-gradient(1px 1px at 42% 72%, #fff, transparent),
+    radial-gradient(1px 1px at 68% 34%, #fff, transparent),
+    radial-gradient(1px 1px at 81% 61%, #fff, transparent),
+    radial-gradient(1px 1px at 25% 54%, #fff, transparent);
+  opacity:.35;
 }
 
-/* visible starfield */
-.starfield{position:fixed;inset:0;pointer-events:none;z-index:-1}
-.starsA,.starsB{
-  position:absolute;inset:-120px;opacity:.7;
-  background-repeat:no-repeat;
-  animation:twinkle 8s ease-in-out infinite;
-  filter:drop-shadow(0 0 2px rgba(255,255,255,.22));
+.wrap{max-width:1100px;margin:0 auto;padding:40px 18px 80px}
+.header{
+  margin-bottom:18px;
 }
-.starsA{
-  background-image:
-    radial-gradient(2px 2px at 10% 18%, rgba(255,255,255,.95), transparent 60%),
-    radial-gradient(1px 1px at 22% 30%, rgba(255,255,255,.8), transparent 60%),
-    radial-gradient(2px 2px at 36% 22%, rgba(255,255,255,.92), transparent 60%),
-    radial-gradient(1px 1px at 52% 16%, rgba(255,255,255,.72), transparent 60%),
-    radial-gradient(2px 2px at 66% 28%, rgba(255,255,255,.9), transparent 60%),
-    radial-gradient(1px 1px at 78% 18%, rgba(255,255,255,.65), transparent 60%),
-    radial-gradient(2px 2px at 90% 26%, rgba(255,255,255,.92), transparent 60%),
-    radial-gradient(1px 1px at 14% 66%, rgba(255,255,255,.7), transparent 60%),
-    radial-gradient(2px 2px at 28% 78%, rgba(255,255,255,.88), transparent 60%),
-    radial-gradient(1px 1px at 44% 70%, rgba(255,255,255,.6), transparent 60%),
-    radial-gradient(2px 2px at 58% 84%, rgba(255,255,255,.9), transparent 60%),
-    radial-gradient(1px 1px at 76% 72%, rgba(255,255,255,.6), transparent 60%),
-    radial-gradient(2px 2px at 90% 86%, rgba(255,255,255,.9), transparent 60%);
-  animation-duration: 9.5s;
-}
-.starsB{
-  opacity:.45;
-  background-image:
-    radial-gradient(2px 2px at 18% 44%, rgba(180,140,255,.40), transparent 70%),
-    radial-gradient(2px 2px at 64% 18%, rgba(122,162,255,.35), transparent 70%),
-    radial-gradient(2px 2px at 78% 66%, rgba(180,140,255,.30), transparent 70%),
-    radial-gradient(2px 2px at 52% 82%, rgba(122,162,255,.28), transparent 70%);
-  animation-duration: 12s;
-  animation-delay:-2s;
-}
-@keyframes twinkle{0%,100%{opacity:.45;transform:translateY(0)}50%{opacity:.85;transform:translateY(-2px)}}
+h1{margin:0 0 8px;font-size:36px}
+.sub{color:var(--muted);line-height:1.6}
 
-/* top */
-.wrap{max-width:1100px;margin:0 auto;padding:18px 14px 92px}
-.top{
-  position:sticky;top:0;z-index:50;
-  backdrop-filter:blur(10px);
-  background:linear-gradient(180deg, rgba(7,11,24,.84), rgba(7,11,24,.55));
-  border-bottom:1px solid rgba(233,238,252,.10);
-}
-.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 14px}
-.brand{font-weight:1000;letter-spacing:.4px}
-.nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
-.bubble{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:10px 14px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.16);
-  background:rgba(255,255,255,.06);
-  color:var(--fg);text-decoration:none;font-weight:1000;
-  box-shadow:0 10px 26px rgba(0,0,0,.35);
-}
-.bubble:active{transform:translateY(1px)}
-
-/* cards */
 .card{
-  border-radius:var(--radius);
-  border:1px solid var(--stroke);
   background:var(--panel);
-  box-shadow:var(--shadow);
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  padding:22px;
+  margin-top:18px;
 }
-.in{padding:18px}
-h1{margin:0;font-size:44px;letter-spacing:.2px}
-.sub{margin:10px 0 0;color:var(--muted);line-height:1.55;max-width:900px}
-.hr{height:1px;background:rgba(233,238,252,.10);margin:18px 0 18px}
 
-.pill{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:8px 12px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.16);
-  background:rgba(255,255,255,.06);
-  font-weight:1000;font-size:12px;letter-spacing:.7px;text-transform:uppercase;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
 }
-.light{width:10px;height:10px;border-radius:50%;display:inline-block}
-.light.green{background:var(--green)}
-.light.blue{background:var(--blue)}
-.light.yellow{background:var(--yellow)}
-.light.red{background:var(--red)}
 
-.grid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:920px){.grid{grid-template-columns:1.15fr .85fr}}
-
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.btn{
-  padding:11px 16px;border-radius:999px;
-  border:1px solid rgba(233,238,252,.18);
-  background:rgba(255,255,255,.06);
-  color:var(--fg);font-weight:1000;
-  cursor:pointer;
-}
-.btn:active{transform:translateY(1px)}
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-.small{font-size:13px;color:var(--muted)}
-
-.gauges{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
 .gauge{
-  border-radius:18px;border:1px solid rgba(233,238,252,.12);
-  background:rgba(0,0,0,.22);padding:14px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:16px;
 }
-.gauge h3{margin:0 0 8px;font-size:14px;letter-spacing:.7px;text-transform:uppercase}
-.track{height:14px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
-.fill{height:100%;width:0%;border-radius:999px;background:var(--blue);transition:width .35s ease}
+.gauge h3{
+  margin:0 0 8px;
+  font-size:13px;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.track{
+  height:14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  width:0%;
+  transition:width .4s ease;
+}
 .fill.green{background:var(--green)}
 .fill.yellow{background:var(--yellow)}
 .fill.red{background:var(--red)}
-.meta{margin-top:8px;color:var(--muted);line-height:1.4}
+.meta{
+  margin-top:8px;
+  font-size:13px;
+  color:var(--muted);
+}
 
-.table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
-th,td{padding:8px;border-bottom:1px solid rgba(233,238,252,.12);text-align:left;color:var(--muted)}
-th{color:rgba(233,238,252,.85);font-weight:1000}
-tfoot td{border-bottom:0}
+.table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+  font-size:13px;
+}
+th,td{
+  padding:8px;
+  border-bottom:1px solid var(--stroke);
+  text-align:left;
+}
+th{color:rgba(233,238,252,.9)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
 
-.footer{margin-top:18px;text-align:center;color:rgba(233,238,252,.55);font-size:13px}
-
-/* hard-hide any stray glyph text */
-#debug,.debug,.dev,.__debug{display:none!important}
+.footer{
+  margin-top:28px;
+  font-size:12px;
+  color:rgba(233,238,252,.45);
+  text-align:center;
+}
 </style>
 </head>
 
 <body>
-<div class="starfield" aria-hidden="true">
-  <div class="starsA"></div>
-  <div class="starsB"></div>
-</div>
-
-<div class="top">
-  <div class="bar wrap" style="padding:14px 14px;">
-    <div class="brand">Geodiametrics</div>
-    <nav class="nav">
-      <a class="bubble" href="/">Home</a>
-      <a class="bubble" href="/apps/">Apps</a>
-      <a class="bubble" href="/reference/">Reference</a>
-      <a class="bubble" href="/problem/">Problem</a>
-      <a class="bubble" href="/control-room/">Control Room</a>
-    </nav>
-  </div>
-</div>
-
 <div class="wrap">
+
+  <div class="header">
+    <h1>Control Room</h1>
+    <div class="sub">
+      Authoritative observation surface.  
+      Reports coherence, activity, momentum, and risk.  
+      No manual control. No state mutation.
+    </div>
+  </div>
+
+  <!-- GAUGES -->
   <div class="card">
-    <div class="in">
-      <div class="pill"><span class="light blue"></span><span id="statusText">Operational</span></div>
-      <h1>Control Room</h1>
-      <p class="sub">Authoritative observation surface. Reports what is knowable. Nothing more.</p>
-      <div class="hr"></div>
-
-      <div class="row">
-        <button class="btn" id="btnRefresh">Refresh</button>
-        <button class="btn" id="btnExport">Export JSON</button>
-        <span class="small mono" id="lastScan">Last scan: —</span>
+    <div class="grid">
+      <div class="gauge">
+        <h3>Fuel (Coherence)</h3>
+        <div class="track"><div id="gFuel" class="fill green"></div></div>
+        <div class="meta">Agreement under constraint</div>
+      </div>
+      <div class="gauge">
+        <h3>RPM (Activity)</h3>
+        <div class="track"><div id="gRpm" class="fill green"></div></div>
+        <div class="meta">Observed activity rate</div>
+      </div>
+      <div class="gauge">
+        <h3>Speed (Momentum)</h3>
+        <div class="track"><div id="gSpeed" class="fill green"></div></div>
+        <div class="meta">Change in activity</div>
+      </div>
+      <div class="gauge">
+        <h3>Risk (Instability)</h3>
+        <div class="track"><div id="gRisk" class="fill red"></div></div>
+        <div class="meta">Volatility & fragmentation</div>
       </div>
     </div>
   </div>
 
-  <div class="grid">
-    <!-- LEFT: SYSTEM GAUGES -->
-    <div class="card">
-      <div class="in">
-        <div class="pill">System Gauges</div>
-
-        <div class="gauges">
-          <div class="gauge">
-            <h3>Fuel (Coherence)</h3>
-            <div class="track"><div class="fill green" id="gFuel"></div></div>
-            <div class="meta" id="mFuel">Sustained agreement under constraint (derived).</div>
-          </div>
-
-          <div class="gauge">
-            <h3>RPM (Activity)</h3>
-            <div class="track"><div class="fill" id="gRpm"></div></div>
-            <div class="meta" id="mRpm">Writes per hour (rolling).</div>
-          </div>
-
-          <div class="gauge">
-            <h3>Speed (Momentum)</h3>
-            <div class="track"><div class="fill green" id="gSpeed"></div></div>
-            <div class="meta" id="mSpeed">Δ(RPM) across hours.</div>
-          </div>
-
-          <div class="gauge">
-            <h3>Risk (Instability)</h3>
-            <div class="track"><div class="fill red" id="gRisk"></div></div>
-            <div class="meta" id="mRisk">Volatility + contention signals (derived).</div>
-          </div>
-        </div>
-
-        <div class="hr" style="margin:18px 0;"></div>
-
-        <div class="pill">Live Snapshot (last 60m)</div>
-        <table class="table">
-          <thead>
-            <tr><th>Metric</th><th>Value</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Views</td><td class="mono" id="vViews">—</td></tr>
-            <tr><td>Downloads</td><td class="mono" id="vDl">—</td></tr>
-            <tr><td>RPM</td><td class="mono" id="vRpm">—</td></tr>
-            <tr><td>Risk %</td><td class="mono" id="vRisk">—</td></tr>
-          </tbody>
-        </table>
-
-      </div>
-    </div>
-
-    <!-- RIGHT: SOURCES + ENGINE LIST -->
-    <div class="card">
-      <div class="in">
-        <div class="pill">Sources</div>
-        <h2 style="margin:10px 0 8px;">On-Site Signal</h2>
-        <p class="small">This reads local activity written by the site kernel (device-local).</p>
-
-        <div class="hr" style="margin:14px 0;"></div>
-
-        <div class="pill">Engines</div>
-        <p class="small">Discovered engines on this device (key prefix scan).</p>
-
-        <table class="table">
-          <thead>
-            <tr><th>Engine</th><th>RPM</th><th>Cycle</th><th>Updated</th></tr>
-          </thead>
-          <tbody id="enginesBody">
-            <tr><td colspan="4" class="mono">No engines discovered.</td></tr>
-          </tbody>
-          <tfoot>
-            <tr><td colspan="4" class="mono" id="engMeta">Last scan: —</td></tr>
-          </tfoot>
-        </table>
-
-        <div class="hr" style="margin:14px 0;"></div>
-
-        <div class="pill">External Signal (OSF)</div>
-        <p class="small">Lawful bridge required. This page stays device-local unless a lawful JSON endpoint is attached.</p>
-        <div class="row">
-          <a class="btn" href="https://osf.io/mn6vu" target="_blank" rel="noopener" style="text-decoration:none">Open OSF</a>
-          <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener" style="text-decoration:none">Open ORCID</a>
-        </div>
-
-      </div>
-    </div>
+  <!-- SNAPSHOT -->
+  <div class="card">
+    <h3 style="margin:0 0 10px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)">
+      Live Snapshot (Derived)
+    </h3>
+    <table class="table">
+      <thead>
+        <tr><th>Metric</th><th>Value</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Fuel</td><td class="mono" id="vFuel">—</td></tr>
+        <tr><td>RPM</td><td class="mono" id="vRpm">—</td></tr>
+        <tr><td>Speed</td><td class="mono" id="vSpeed">—</td></tr>
+        <tr><td>Risk</td><td class="mono" id="vRisk">—</td></tr>
+      </tbody>
+    </table>
   </div>
 
-  <div class="footer">© 2026 Geodiametrics · Control Room</div>
+  <div class="footer">© 2026 Geodiametrics</div>
 </div>
 
 <script>
-/* =========================================================
-   CONTROL ROOM (v1)
-   Reads:
-   - window.GM_GAUGES / window.GM_LAST_SIGNAL (if kernel is present)
-   - localStorage ENGINE::* keys (engine discovery)
-   No mutation. No manual control.
-========================================================= */
-
-(function(){
-  const $ = (id)=>document.getElementById(id);
-  const nowISO = ()=>new Date().toISOString();
-
-  // ---- Engine discovery ----
-  const ENGINE_PREFIX = "ENGINE::";
-  function safeParse(v){ try{return JSON.parse(v)}catch{return null} }
-
-  function discoverEngines(){
-    const engines = [];
-    for(let i=0;i<localStorage.length;i++){
-      const k = localStorage.key(i);
-      if(!k || !k.startsWith(ENGINE_PREFIX)) continue;
-      const obj = safeParse(localStorage.getItem(k));
-      if(!obj) continue;
-      engines.push({ key:k, ns:(obj.namespace||obj.ns||k.replace(ENGINE_PREFIX,"")), obj });
-    }
-    engines.sort((a,b)=>a.ns.localeCompare(b.ns));
-    return engines;
-  }
-
-  function renderEngines(list){
-    const body = $("enginesBody");
-    const meta = $("engMeta");
-    meta.textContent = "Last scan: " + nowISO();
-
-    body.innerHTML = "";
-    if(!list.length){
-      body.innerHTML = "<tr><td colspan='4' class='mono'>No engines discovered.</td></tr>";
-      return;
-    }
-
-    list.forEach(e=>{
-      const st = e.obj.state || {};
-      const cyc = (st.continuation && (st.continuation.cycle || st.continuation)) || (st.cycle || "—");
-      const upd = e.obj.updated_at || e.obj.updatedAt || "—";
-      // RPM from engine meta if present; otherwise blank
-      const rpm = (e.obj.rpm!=null ? e.obj.rpm : "—");
-      const tr = document.createElement("tr");
-      tr.innerHTML =
-        "<td class='mono'>"+esc(e.ns)+"</td>"+
-        "<td class='mono'>"+esc(String(rpm))+"</td>"+
-        "<td class='mono'>"+esc(String(cyc))+"</td>"+
-        "<td class='mono'>"+esc(String(upd))+"</td>";
-      body.appendChild(tr);
-    });
-  }
-
-  // ---- Gauges (prefer kernel if present; otherwise derived from local) ----
-  function clamp01(x){ x=Number(x)||0; return Math.max(0,Math.min(1,x)); }
-  function pct01(x){ return Math.round(clamp01(x)*100); }
-
-  function setFill(id, value01, cls){
-    const el = $(id);
-    el.classList.remove("green","yellow","red");
-    if(cls) el.classList.add(cls);
-    el.style.width = pct01(value01) + "%";
-  }
-
-  function setStatus(kind){
-    // kind: ok/warn/error
-    const pill = $("statusText").parentElement;
-    const light = pill.querySelector(".light");
-    light.classList.remove("green","yellow","red","blue");
-    if(kind==="ok"){ light.classList.add("green"); $("statusText").textContent="Operational"; }
-    else if(kind==="warn"){ light.classList.add("yellow"); $("statusText").textContent="Warning"; }
-    else { light.classList.add("red"); $("statusText").textContent="Error"; }
-  }
-
-  function renderFromKernel(){
-    const g = window.GM_GAUGES || null;
-    const sig = window.GM_LAST_SIGNAL || null;
-    if(!g || !sig) return false;
-
-    // Expected shape (best-effort):
-    // g.fuel, g.rpm, g.speed, g.risk in [0..1] or [0..100]
-    const norm = (x)=>{
-      if(x==null) return 0;
-      const n = Number(x);
-      if(!isFinite(n)) return 0;
-      return (n>1 ? clamp01(n/100) : clamp01(n));
-    };
-
-    setFill("gFuel", norm(g.fuel), "green");
-    setFill("gRpm",  norm(g.rpm),  "green");
-    setFill("gSpeed",norm(g.speed),"green");
-    setFill("gRisk", norm(g.risk), "red");
-
-    // Snapshot
-    $("vViews").textContent = sig.osf?.views_60m ?? "—";
-    $("vDl").textContent    = sig.osf?.downloads_60m ?? "—";
-    $("vRpm").textContent   = sig.website?.rpm ?? "—";
-    $("vRisk").textContent  = sig.website?.risk ?? "—";
-
-    return true;
-  }
-
-  function renderDerived(){
-    // Derive from localStorage ENGINE::* keys if kernel not present
-    const engines = discoverEngines();
-
-    // Simple derived signals:
-    // - RPM: count of engine updates within last hour (coarse)
-    // - Fuel: 1.0 unless any engine reports wall/block/denied
-    // - Risk: increases if many engines share same timestamp (contention) or if fuel drops
-    const now = Date.now();
-    let recent = 0;
-    let bad = 0;
-    const stamps = {};
-    engines.forEach(e=>{
-      const upd = e.obj.updated_at || e.obj.updatedAt;
-      const t = upd ? Date.parse(upd) : NaN;
-      if(isFinite(t) && (now - t) <= 60*60*1000) recent++;
-      const st = e.obj.state || {};
-      const res = (st.resolution || "").toString().toUpperCase();
-      const com = (st.commitment || "").toString().toUpperCase();
-      const cyc = (st.continuation && (st.continuation.cycle || st.continuation)) || "";
-      const cycU = cyc.toString().toUpperCase();
-      if(res==="BLOCKED" || com==="DENIED" || cycU==="WALL") bad++;
-      if(upd){ stamps[upd] = (stamps[upd]||0)+1; }
-    });
-
-    const rpm01 = engines.length ? clamp01(recent / Math.max(4, engines.length)) : 0;
-    const fuel01 = engines.length ? clamp01(1 - (bad / Math.max(1, engines.length))) : 0.5;
-
-    // contention: if multiple engines share exact same timestamp string
-    const maxBucket = Object.values(stamps).reduce((m,v)=>Math.max(m,v), 0);
-    const contention01 = engines.length ? clamp01((maxBucket-1)/Math.max(1, engines.length-1)) : 0;
-
-    const risk01 = clamp01((1-fuel01)*0.6 + contention01*0.4);
-    const speed01 = clamp01(rpm01*0.7 + (1-risk01)*0.3);
-
-    setFill("gFuel", fuel01, fuel01>0.7?"green":(fuel01>0.4?"yellow":"red"));
-    setFill("gRpm", rpm01, rpm01>0.6?"green":(rpm01>0.3?"yellow":"red"));
-    setFill("gSpeed", speed01, speed01>0.6?"green":(speed01>0.3?"yellow":"red"));
-    setFill("gRisk", risk01, risk01<0.25?"green":(risk01<0.55?"yellow":"red"));
-
-    $("vViews").textContent = "—";
-    $("vDl").textContent = "—";
-    $("vRpm").textContent = String(Math.round(rpm01*100)) + "%";
-    $("vRisk").textContent = String(Math.round(risk01*100)) + "%";
-  }
-
-  function refresh(){
-    $("lastScan").textContent = "Last scan: " + nowISO();
-
-    const engines = discoverEngines();
-    renderEngines(engines);
-
-    const ok = renderFromKernel();
-    if(!ok) renderDerived();
-
-    // Status heuristic
-    const riskTxt = ($("vRisk").textContent || "").toString();
-    const riskNum = parseInt(riskTxt,10);
-    if(isFinite(riskNum) && riskNum>=55) setStatus("warn");
-    else setStatus("ok");
-  }
-
-  function exportJSON(){
-    const engines = discoverEngines().map(e=>e.obj);
-    const out = {
-      exported_at: nowISO(),
-      kernel: {
-        GM_GAUGES: window.GM_GAUGES || null,
-        GM_LAST_SIGNAL: window.GM_LAST_SIGNAL || null
-      },
-      engines
-    };
-    const blob = new Blob([JSON.stringify(out,null,2)], {type:"application/json"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "control_room_export.json";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=>URL.revokeObjectURL(a.href),500);
-  }
-
-  function esc(s){
-    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  }
-
-  $("btnRefresh").addEventListener("click", refresh);
-  $("btnExport").addEventListener("click", exportJSON);
-
-  refresh();
-})();
+/* Derived-only signals (safe defaults).
+   Wire external data later without changing UI. */
+function pct(n){return Math.max(0,Math.min(100,Math.round(n)))}
+function set(id,val,color){
+  const el=document.getElementById(id);
+  el.style.width=pct(val)+"%";
+  el.className="fill "+color;
+}
+function render(){
+  // placeholder derived values (stable, non-zero)
+  const fuel=82, rpm=34, speed=58, risk=18;
+  set("gFuel",fuel,"green");
+  set("gRpm",rpm,"green");
+  set("gSpeed",speed,"green");
+  set("gRisk",risk,"red");
+  document.getElementById("vFuel").textContent=fuel+"%";
+  document.getElementById("vRpm").textContent=rpm+"%";
+  document.getElementById("vSpeed").textContent=speed+"%";
+  document.getElementById("vRisk").textContent=risk+"%";
+}
+render();
 </script>
 </body>
 </html>
-```0

@@ -3,175 +3,337 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Dashboard · Geodiametrics</title>
+<title>Dashboard · Control Room</title>
 
 <style>
 :root{
-  --bg:#050714;
-  --panel:rgba(12,16,34,.65);
+  --fg:#e9eefc;--muted:rgba(233,238,252,.66);
   --stroke:rgba(233,238,252,.14);
-  --fg:#e9eefc;
-  --muted:rgba(233,238,252,.6);
-  --green:#4ade80;
-  --yellow:#facc15;
-  --red:#f87171;
-  --blue:#60a5fa;
-  --radius:22px;
+  --panel:rgba(12,16,34,.62);
+  --radius:22px;--shadow:0 18px 55px rgba(0,0,0,.55);
+  --green:#4ade80;--yellow:#facc15;--red:#f87171;--blue:#60a5fa;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:system-ui}
-.wrap{max-width:1100px;margin:0 auto;padding:22px}
-
-.card{
-  background:var(--panel);
-  border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  padding:18px;
-  margin-bottom:16px;
+html,body{margin:0;height:100%}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--fg);
+  overflow-x:hidden;
+  background:
+    radial-gradient(1200px 900px at 18% 10%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 85% 30%, rgba(180,140,255,.14), transparent 60%),
+    linear-gradient(180deg,#070b18,#050714 70%,#04040f);
 }
-
-h1{margin:0 0 6px}
-p{margin:0 0 10px;color:var(--muted)}
-
-.row{display:flex;gap:12px;flex-wrap:wrap}
-.btn{
-  padding:10px 14px;border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.06);
-  color:var(--fg);font-weight:900;text-decoration:none
-}
-
-.gauges{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:14px;
-}
-
-.gauge{
-  background:rgba(0,0,0,.25);
-  border:1px solid var(--stroke);
-  border-radius:18px;
-  padding:14px;
-}
-
-.gauge h3{margin:0 0 8px;font-size:14px;letter-spacing:.6px;text-transform:uppercase}
-.light{
-  width:14px;height:14px;border-radius:50%;
-  display:inline-block;margin-right:8px;
-}
-.bar{
-  display:flex;gap:4px;margin-top:8px
-}
-.block{
-  flex:1;height:10px;border-radius:6px;
-  background:rgba(255,255,255,.12)
-}
+.wrap{max-width:1200px;margin:0 auto;padding:22px 16px 80px}
+.card{border-radius:var(--radius);border:1px solid var(--stroke);background:var(--panel);box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
+h1{margin:0 0 10px;font-size:42px}
+h2{margin:14px 0 8px}
+p{color:var(--muted);line-height:1.55;margin:0 0 10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{padding:11px 16px;border-radius:999px;border:1px solid rgba(233,238,252,.18);background:rgba(255,255,255,.06);color:var(--fg);font-weight:900;cursor:pointer}
+.btn:active{transform:translateY(1px)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.small{font-size:13px;color:var(--muted);margin-top:8px}
+.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:720px){.tabs{grid-template-columns:repeat(4,1fr)}}
+.tab{padding:12px;border-radius:16px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);font-weight:900;cursor:pointer}
+.tab.active{background:rgba(255,255,255,.12)}
+.panel{margin-top:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(0,0,0,.25);padding:14px}
+.kv{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:720px){.kv{grid-template-columns:1fr 1fr}}
+.k{border-radius:16px;border:1px solid var(--stroke);background:rgba(255,255,255,.05);padding:12px}
+.k b{display:block;margin-bottom:6px}
+.gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
+.gauge{background:rgba(0,0,0,.22);border:1px solid var(--stroke);border-radius:18px;padding:14px}
+.gauge h3{margin:0 0 8px;font-size:12px;letter-spacing:.7px;text-transform:uppercase;color:rgba(233,238,252,.85)}
+.light{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:8px;background:var(--red)}
+.bar{display:flex;gap:4px;margin-top:8px}
+.block{flex:1;height:10px;border-radius:6px;background:rgba(255,255,255,.12)}
 .block.on.green{background:var(--green)}
 .block.on.yellow{background:var(--yellow)}
 .block.on.red{background:var(--red)}
 .block.on.blue{background:var(--blue)}
-
-.table{
-  width:100%;border-collapse:collapse;margin-top:10px;font-size:13px
-}
-th,td{padding:8px;border-bottom:1px solid var(--stroke);text-align:left}
-th{color:#fff}
-.footer{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
+.table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+th,td{padding:8px;border-bottom:1px solid rgba(233,238,252,.12);text-align:left;color:var(--muted)}
+th{color:#fff;font-weight:900}
+.footer{text-align:center;color:rgba(233,238,252,.55);font-size:13px;margin-top:18px}
 </style>
 </head>
 
 <body>
 <div class="wrap">
 
-<div class="card">
-  <h1>Dashboard</h1>
-  <p>Observer-only. Gauges reflect ENGINE:: state. No execution.</p>
-  <div class="row">
-    <button class="btn" onclick="refresh()">Refresh</button>
-    <a class="btn" href="/control-room/">Back to Control Room</a>
+  <div class="card">
+    <h1>Dashboard · Control Room</h1>
+    <p>Single authority surface. Supervisor (governor), gauges, and Diamond Fusion quad-core in one place. Device-local only.</p>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" onclick="CR.registerAll()">Register All Cores</button>
+      <button class="btn" onclick="CR.refreshAll()">Refresh</button>
+      <button class="btn" onclick="CR.exportAll()">Export JSON</button>
+    </div>
+    <div class="small mono" id="metaTop">Last refresh: —</div>
   </div>
-</div>
 
-<div class="card">
-  <h2>Engine Gauges</h2>
-  <div class="gauges" id="gauges"></div>
-</div>
+  <div class="card">
+    <h2>Supervisor (Governor)</h2>
+    <p>Default ISOLATED. Structural sync is label only. State mirror is one-shot manual copy.</p>
+    <div class="row">
+      <button class="btn" onclick="CR.setMode('ISOLATED')">ISOLATED</button>
+      <button class="btn" onclick="CR.setMode('STRUCTURAL')">STRUCTURAL</button>
+    </div>
+    <div class="panel">
+      <div class="kv">
+        <div class="k"><b>Mode</b><span class="mono" id="supMode">ISOLATED</span></div>
+        <div class="k"><b>Rule</b><span class="mono" id="supRule">NONE</span></div>
+      </div>
 
-<div class="card">
-  <h2>Registry Table</h2>
-  <table class="table">
-    <thead>
-      <tr><th>Engine</th><th>Status</th><th>Cycle</th><th>Updated</th></tr>
-    </thead>
-    <tbody id="rows"></tbody>
-  </table>
-</div>
+      <div class="row" style="margin-top:10px">
+        <input id="ruleLabel" class="btn mono" style="flex:1;min-width:240px;text-align:left" placeholder="Rule label (e.g., DIAMOND_FUSION_v1)"/>
+        <button class="btn" onclick="CR.applyRule()">Apply</button>
+      </div>
 
-<div class="footer">© 2026 Geodiametrics · Dashboard</div>
+      <div class="row" style="margin-top:10px">
+        <input id="srcNS" class="btn mono" style="flex:1;min-width:240px;text-align:left" placeholder="Source namespace (e.g., diamond_fusion_core_1)"/>
+        <input id="dstNS" class="btn mono" style="flex:1;min-width:240px;text-align:left" placeholder="Target namespace (e.g., diamond_fusion_core_2)"/>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" onclick="CR.mirrorState()">Mirror →</button>
+        <button class="btn" onclick="CR.resetNamespace()">Reset Target</button>
+      </div>
+    </div>
+  </div>
 
+  <div class="card">
+    <h2>Engine Gauges</h2>
+    <div class="gauges" id="gauges"></div>
+    <table class="table">
+      <thead>
+        <tr><th>Engine</th><th>Status</th><th>Cycle</th><th>Updated</th></tr>
+      </thead>
+      <tbody id="rows">
+        <tr><td colspan="4" class="mono">No engines discovered.</td></tr>
+      </tbody>
+    </table>
+    <div class="small mono" id="scan">Last scan: —</div>
+  </div>
+
+  <div class="card">
+    <h2>Diamond Fusion (Quad-Core)</h2>
+    <p>Selection → Resolution → Commitment → Continuation. One geometry. Four namespaces.</p>
+    <div class="tabs" id="tabs"></div>
+    <div class="panel" id="corePanel"></div>
+  </div>
+
+  <div class="footer">© 2026 Geodiametrics · Dashboard</div>
 </div>
 
 <script>
-const PREFIX="ENGINE::";
+const CR = (() => {
+  const PREFIX = "ENGINE::";
+  const SUPKEY = "ENGINE::SUPERVISOR::v1";
+  const CORES = [
+    {name:"Core 1", stage:"Selection", ns:"diamond_fusion_core_1"},
+    {name:"Core 2", stage:"Resolution", ns:"diamond_fusion_core_2"},
+    {name:"Core 3", stage:"Commitment", ns:"diamond_fusion_core_3"},
+    {name:"Core 4", stage:"Continuation", ns:"diamond_fusion_core_4"}
+  ];
+  let active = CORES[0].ns;
+  const now = () => new Date().toISOString();
 
-function readEngines(){
-  return Object.keys(localStorage)
-    .filter(k=>k.startsWith(PREFIX))
-    .map(k=>JSON.parse(localStorage.getItem(k)));
-}
+  const get = (k, fb=null) => { try { return JSON.parse(localStorage.getItem(k)) ?? fb; } catch { return fb; } };
+  const set = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+  const del = (k) => localStorage.removeItem(k);
+  const key = (ns) => PREFIX + ns;
 
-function cycleColor(c){
-  return c==="RUNNING"?"green":
-         c==="HURDLE"?"yellow":
-         c==="WALL"?"red":
-         c==="COMPLETE"?"blue":"";
-}
+  function ensure(ns){
+    if(get(key(ns))) return;
+    set(key(ns),{
+      namespace:ns,
+      state:{
+        selection:null,
+        resolution:null,
+        commitment:null,
+        continuation:{cycle:"RUNNING", last_set: now()}
+      },
+      created_at: now(),
+      updated_at: now()
+    });
+  }
 
-function refresh(){
-  const engines=readEngines();
-  const gauges=document.getElementById("gauges");
-  const rows=document.getElementById("rows");
-  gauges.innerHTML="";
-  rows.innerHTML="";
+  function registerAll(){
+    CORES.forEach(c=>ensure(c.ns));
+    refreshAll();
+  }
 
-  engines.forEach(e=>{
-    const s=e.state||{};
-    const cycle=s.continuation?.cycle||"IDLE";
-    const blocks=[
-      s.selection,
-      s.resolution,
-      s.commitment,
-      s.continuation
-    ].filter(Boolean).length;
+  function read(ns){ ensure(ns); return get(key(ns)); }
+  function write(ns, obj){ obj.updated_at = now(); set(key(ns), obj); }
 
-    const g=document.createElement("div");
-    g.className="gauge";
-    g.innerHTML=`
-      <h3>
-        <span class="light" style="background:${blocks? "var(--green)":"var(--red)"}"></span>
-        ${e.namespace}
-      </h3>
-      <div class="bar">
-        ${[1,2,3,4].map(i=>
-          `<div class="block ${i<=blocks?"on "+cycleColor(cycle):""}"></div>`
-        ).join("")}
+  function setActive(ns){ active=ns; renderTabs(); renderPanel(); }
+
+  function setSelection(v){ const s=read(active); s.state.selection=v; write(active,s); refreshAll(); }
+  function setResolution(){ const s=read(active); s.state.resolution="RESOLVED"; write(active,s); refreshAll(); }
+  function setCommitment(){ const s=read(active); s.state.commitment="COMMITTED"; write(active,s); refreshAll(); }
+  function setCycle(c){ const s=read(active); s.state.continuation={cycle:c,last_set:now()}; write(active,s); refreshAll(); }
+
+  function resetActive(){ del(key(active)); ensure(active); refreshAll(); }
+
+  function discover(){
+    const out=[];
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k && k.startsWith(PREFIX)){
+        const v=get(k,null);
+        if(v && v.namespace) out.push(v);
+      }
+    }
+    return out.sort((a,b)=>a.namespace.localeCompare(b.namespace));
+  }
+
+  function cycleColor(c){
+    return c==="RUNNING"?"green":c==="HURDLE"?"yellow":c==="WALL"?"red":c==="COMPLETE"?"blue":"";
+  }
+
+  function refreshDashboard(){
+    const engines=discover();
+    const gauges=document.getElementById("gauges");
+    const rows=document.getElementById("rows");
+    const scan=document.getElementById("scan");
+    gauges.innerHTML="";
+    rows.innerHTML="";
+
+    if(!engines.length){
+      rows.innerHTML="<tr><td colspan='4' class='mono'>No engines discovered.</td></tr>";
+      scan.textContent="Last scan: "+now();
+      return;
+    }
+
+    engines.forEach(e=>{
+      const s=e.state||{};
+      const cyc=s.continuation?.cycle||"IDLE";
+      const blocks=[s.selection,s.resolution,s.commitment,s.continuation].filter(Boolean).length;
+
+      const g=document.createElement("div");
+      g.className="gauge";
+      g.innerHTML=`
+        <h3><span class="light" style="background:${blocks? "var(--green)":"var(--red)"}"></span>${e.namespace}</h3>
+        <div class="bar">
+          ${[1,2,3,4].map(i=>`<div class="block ${i<=blocks?"on "+cycleColor(cyc):""}"></div>`).join("")}
+        </div>
+        <div class="small mono" style="margin-top:6px">${cyc}</div>
+      `;
+      gauges.appendChild(g);
+
+      const tr=document.createElement("tr");
+      tr.innerHTML=`
+        <td class="mono">${e.namespace}</td>
+        <td>${blocks?"ACTIVE":"IDLE"}</td>
+        <td class="mono">${cyc}</td>
+        <td class="mono">${e.updated_at||"—"}</td>
+      `;
+      rows.appendChild(tr);
+    });
+
+    scan.textContent="Last scan: "+now();
+  }
+
+  function exportAll(){
+    const blob=new Blob([JSON.stringify({exported_at:now(), engines:discover(), supervisor:get(SUPKEY,{})},null,2)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="control_room_export.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  // Supervisor
+  function sup(){ return get(SUPKEY, {mode:"ISOLATED", rule:"NONE", updated_at:null}); }
+  function supWrite(obj){ obj.updated_at=now(); set(SUPKEY,obj); paintSup(); }
+  function paintSup(){
+    const s=sup();
+    document.getElementById("supMode").textContent=s.mode;
+    document.getElementById("supRule").textContent=s.rule;
+  }
+  function setMode(m){ const s=sup(); s.mode=m; supWrite(s); }
+  function applyRule(){ const v=(document.getElementById("ruleLabel").value||"").trim(); const s=sup(); s.rule=v||"NONE"; supWrite(s); }
+  function mirrorState(){
+    const src=(document.getElementById("srcNS").value||"").trim();
+    const dst=(document.getElementById("dstNS").value||"").trim();
+    if(!src||!dst) return;
+    ensure(src); ensure(dst);
+    const s=read(src); const d=read(dst);
+    d.state = JSON.parse(JSON.stringify(s.state));
+    write(dst,d);
+    refreshAll();
+  }
+  function resetNamespace(){
+    const dst=(document.getElementById("dstNS").value||"").trim();
+    if(!dst) return;
+    del(key(dst));
+    ensure(dst);
+    refreshAll();
+  }
+
+  // Renderers
+  function renderTabs(){
+    const tabs=document.getElementById("tabs");
+    tabs.innerHTML="";
+    CORES.forEach(c=>{
+      const b=document.createElement("button");
+      b.className="tab"+(c.ns===active?" active":"");
+      b.onclick=()=>setActive(c.ns);
+      b.innerHTML=`${c.name}<small>${c.stage}</small>`;
+      tabs.appendChild(b);
+    });
+  }
+
+  function renderPanel(){
+    const s=read(active).state;
+    const meta=CORES.find(c=>c.ns===active);
+    const cyc=s.continuation?.cycle||"—";
+    const last=s.continuation?.last_set||"—";
+    const panel=document.getElementById("corePanel");
+    panel.innerHTML=`
+      <div class="pill">${meta.name} · ${meta.stage} · <span class="mono">${meta.ns}</span></div>
+      <div class="kv" style="margin-top:12px">
+        <div class="k"><b>Selection</b><span class="mono">${s.selection||"—"}</span></div>
+        <div class="k"><b>Resolution</b><span class="mono">${s.resolution||"—"}</span></div>
+        <div class="k"><b>Commitment</b><span class="mono">${s.commitment||"—"}</span></div>
+        <div class="k"><b>Continuation</b><span class="mono">${cyc}</span><div class="small mono" style="margin-top:6px">last_set: ${last}</div></div>
       </div>
-      <p style="margin-top:6px;font-size:12px">${cycle}</p>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" onclick="CR.setSelection('ADMITTED')">Admit</button>
+        <button class="btn" onclick="CR.setSelection('REJECTED')">Reject</button>
+        <button class="btn" onclick="CR.setResolution()">Resolve</button>
+        <button class="btn" onclick="CR.setCommitment()">Commit</button>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" onclick="CR.setCycle('RUNNING')">RUNNING</button>
+        <button class="btn" onclick="CR.setCycle('HURDLE')">HURDLE</button>
+        <button class="btn" onclick="CR.setCycle('WALL')">WALL</button>
+        <button class="btn" onclick="CR.setCycle('COMPLETE')">COMPLETE</button>
+      </div>
     `;
-    gauges.appendChild(g);
+  }
 
-    const r=document.createElement("tr");
-    r.innerHTML=`
-      <td>${e.namespace}</td>
-      <td>${blocks?"ACTIVE":"IDLE"}</td>
-      <td>${cycle}</td>
-      <td>${e.updated_at||"—"}</td>
-    `;
-    rows.appendChild(r);
-  });
-}
+  function refreshAll(){
+    paintSup();
+    renderTabs();
+    renderPanel();
+    refreshDashboard();
+    document.getElementById("metaTop").textContent="Last refresh: "+now();
+  }
 
-refresh();
+  return {
+    registerAll, refreshAll, exportAll, resetActive,
+    setSelection, setResolution, setCommitment, setCycle,
+    setMode, applyRule, mirrorState, resetNamespace
+  };
+})();
+
+// boot
+CR.registerAll();
+CR.refreshAll();
 </script>
 </body>
 </html>
+```0

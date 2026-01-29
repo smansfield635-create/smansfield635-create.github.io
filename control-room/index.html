@@ -14,11 +14,10 @@
   --good:#4ade80;
   --warn:#facc15;
   --risk:#f87171;
-  --glow:0 0 60px rgba(120,160,255,.35);
+  --radius:24px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--fg);
@@ -29,8 +28,6 @@ body{
     linear-gradient(180deg,#030615,#02040f 70%,#01020a);
   overflow-x:hidden;
 }
-
-/* stars */
 body::before{
   content:"";
   position:fixed;
@@ -45,66 +42,57 @@ body::before{
   opacity:.35;
 }
 
-.wrap{max-width:1100px;margin:0 auto;padding:40px 16px 120px}
+.wrap{max-width:1200px;margin:0 auto;padding:40px 16px 120px}
 .card{
   background:var(--panel);
   border:1px solid var(--stroke);
-  border-radius:22px;
-  padding:22px;
-  margin-bottom:18px;
+  border-radius:var(--radius);
+  padding:26px;
+  margin-bottom:22px;
   box-shadow:0 18px 55px rgba(0,0,0,.55);
 }
-
-h1{margin:0 0 10px;font-size:44px;text-shadow:var(--glow)}
-h2{margin:16px 0 8px;font-size:26px}
+h1{margin:0 0 10px;font-size:44px}
+h2{margin:0 0 10px;font-size:26px}
 p{margin:0;color:var(--muted);line-height:1.6}
 
-.signal{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:800;
+.badge{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  font-weight:900;font-size:12px;text-transform:uppercase;
 }
-.dot{
-  width:12px;height:12px;border-radius:50%;
-  background:var(--good);
-  box-shadow:0 0 12px currentColor;
-}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--warn)}
 
-.grid{
+.gauges{
   display:grid;
+  grid-template-columns:1fr;
   gap:16px;
 }
 @media(min-width:900px){
-  .grid{grid-template-columns:1fr 1fr}
+  .gauges{grid-template-columns:1fr 1fr}
 }
 
-.engine{
+.gauge{
   border-radius:18px;
   border:1px solid var(--stroke);
   padding:18px;
   background:rgba(0,0,0,.25);
 }
 
+.label{font-weight:900;margin-bottom:6px}
 .bar{
-  height:14px;
-  border-radius:999px;
+  height:14px;border-radius:999px;
   background:rgba(255,255,255,.12);
   overflow:hidden;
 }
 .fill{
-  height:100%;
-  width:0%;
+  height:100%;width:0%;
+  transition:width .6s ease;
 }
 
-.footer{
-  margin-top:40px;
-  text-align:center;
-  color:rgba(233,238,252,.45);
-  font-size:13px;
-}
-
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.small{font-size:13px;color:var(--muted)}
+.footer{text-align:center;color:rgba(233,238,252,.45);font-size:13px;margin-top:40px}
 </style>
 </head>
 
@@ -113,148 +101,98 @@ p{margin:0;color:var(--muted);line-height:1.6}
 
   <!-- HEADER -->
   <div class="card">
+    <span class="badge">
+      <span class="dot" id="sysDot"></span>
+      <span id="sysState">STANDBY</span>
+    </span>
     <h1>Control Room</h1>
-    <div class="signal">
-      <span class="dot" id="statusDot"></span>
-      <span id="statusText">OPERATIONAL</span>
-    </div>
-    <p style="margin-top:8px">
-      This page observes the system.  
-      It does not issue commands.
-    </p>
-    <p class="mono" style="margin-top:6px">
-      Last observed interaction: <span id="lastSeen">—</span>
-    </p>
-  </div>
-
-  <!-- SYSTEM GAUGES -->
-  <div class="card">
-    <h2>System Gauges</h2>
-
-    <div class="engine">
-      <strong>Fuel (Coherence)</strong>
-      <p>Sustained interaction without fragmentation.</p>
-      <div class="bar"><div id="fuel" class="fill"></div></div>
-    </div>
-
-    <div class="engine">
-      <strong>RPM (Activity)</strong>
-      <p>Interaction frequency over time.</p>
-      <div class="bar"><div id="rpm" class="fill"></div></div>
-    </div>
-
-    <div class="engine">
-      <strong>Speed (Momentum)</strong>
-      <p>Acceleration or decay of activity.</p>
-      <div class="bar"><div id="speed" class="fill"></div></div>
-    </div>
-
-    <div class="engine">
-      <strong>Risk (Instability)</strong>
-      <p>Idle decay and fragmentation pressure.</p>
-      <div class="bar"><div id="risk" class="fill"></div></div>
-    </div>
-  </div>
-
-  <!-- QUAD-CORE ENGINES -->
-  <div class="card">
-    <h2>Quad-Core Engines</h2>
-
-    <div class="grid">
-      <div class="engine">
-        <strong>Integrity Engine</strong>
-        <p>Selection · Admissibility · Boundaries</p>
-      </div>
-      <div class="engine">
-        <strong>Clarity Engine</strong>
-        <p>Resolution · Understanding · Structure</p>
-      </div>
-      <div class="engine">
-        <strong>Commitment Engine</strong>
-        <p>Decision · Action · Investment</p>
-      </div>
-      <div class="engine">
-        <strong>Vitality Engine</strong>
-        <p>Continuation · Sustainability · Recovery</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- LAW -->
-  <div class="card">
-    <h2>Operating Law</h2>
     <p>
-      Silence is not failure.  
-      Motion appears only when real interaction exists.
-    </p>
-    <p style="margin-top:10px">
-      This system never simulates life.
+      Authoritative observation surface.  
+      Reports what is knowable. Nothing more.
     </p>
   </div>
 
-  <div class="footer">
-    © 2026 Geodiametrics · Control Room
+  <!-- ON-SITE INTERACTION -->
+  <div class="card">
+    <h2>On-Site Interaction</h2>
+    <p>Derived from real interaction with this site.</p>
+
+    <div class="gauges" style="margin-top:16px">
+      <div class="gauge">
+        <div class="label">Hourly</div>
+        <div class="bar"><div id="hFill" class="fill"></div></div>
+      </div>
+      <div class="gauge">
+        <div class="label">Daily</div>
+        <div class="bar"><div id="dFill" class="fill"></div></div>
+      </div>
+      <div class="gauge">
+        <div class="label">Weekly</div>
+        <div class="bar"><div id="wFill" class="fill"></div></div>
+      </div>
+      <div class="gauge">
+        <div class="label">Monthly</div>
+        <div class="bar"><div id="mFill" class="fill"></div></div>
+      </div>
+    </div>
   </div>
 
+  <!-- EXTERNAL SIGNAL -->
+  <div class="card">
+    <h2>External Signal (OSF)</h2>
+    <p>Awaiting lawful bridge. Idle is correct.</p>
+    <div class="bar" style="margin-top:12px">
+      <div class="fill" style="width:0%"></div>
+    </div>
+    <p class="small" style="margin-top:6px">No external data attached.</p>
+  </div>
+
+  <div class="footer">© 2026 Geodiametrics · Control Room</div>
 </div>
 
 <script>
-/* ===================== LIVE PRESENCE SIGNAL ===================== */
+/* ===================== INTERACTION SIGNAL ===================== */
 
-const KEY = "GM_LAST_INTERACTION";
-const now = () => new Date().toISOString();
+const KEY="GM_INTERACTIONS";
+const now=()=>Date.now();
 
-function update(){
-  const last = localStorage.getItem(KEY);
-  const dot = document.getElementById("statusDot");
-  const text = document.getElementById("statusText");
-  const seen = document.getElementById("lastSeen");
-
-  if(!last){
-    text.textContent = "STANDBY";
-    dot.style.background = "#facc15";
-    seen.textContent = "—";
-    setBars(0,0,0,20);
-    return;
-  }
-
-  const age = Date.now() - new Date(last).getTime();
-
-  if(age < 60000){
-    text.textContent = "OPERATIONAL";
-    dot.style.background = "#4ade80";
-    setBars(100,60,60,0);
-  } else if(age < 300000){
-    text.textContent = "IDLE";
-    dot.style.background = "#facc15";
-    setBars(60,20,10,30);
-  } else {
-    text.textContent = "DORMANT";
-    dot.style.background = "#f87171";
-    setBars(20,0,0,60);
-  }
-
-  seen.textContent = last;
+function record(){
+  const arr=JSON.parse(localStorage.getItem(KEY)||"[]");
+  arr.push(now());
+  localStorage.setItem(KEY,JSON.stringify(arr));
 }
 
-function setBars(fuel,rpm,speed,risk){
-  document.getElementById("fuel").style.width = fuel+"%";
-  document.getElementById("rpm").style.width = rpm+"%";
-  document.getElementById("speed").style.width = speed+"%";
-  document.getElementById("risk").style.width = risk+"%";
-}
+function compute(){
+  const arr=JSON.parse(localStorage.getItem(KEY)||"[]");
+  const t=now();
 
-function mark(){
-  localStorage.setItem(KEY, now());
-  update();
+  const h=arr.filter(x=>t-x<3600000).length;
+  const d=arr.filter(x=>t-x<86400000).length;
+  const w=arr.filter(x=>t-x<604800000).length;
+  const m=arr.filter(x=>t-x<2592000000).length;
+
+  hFill.style.width=Math.min(100,h*10)+"%";
+  dFill.style.width=Math.min(100,d*5)+"%";
+  wFill.style.width=Math.min(100,w*2)+"%";
+  mFill.style.width=Math.min(100,m)+"%";
+
+  if(h>0){
+    sysDot.style.background=varGood="#4ade80";
+    sysState.textContent="OPERATIONAL";
+  }else if(d>0){
+    sysDot.style.background="#facc15";
+    sysState.textContent="IDLE";
+  }else{
+    sysDot.style.background="#f87171";
+    sysState.textContent="DORMANT";
+  }
 }
 
 ["mousemove","keydown","touchstart","scroll"].forEach(e=>{
-  window.addEventListener(e, mark, {passive:true});
+  window.addEventListener(e,()=>{record();compute();},{passive:true});
 });
 
-update();
+compute();
 </script>
-
 </body>
 </html>

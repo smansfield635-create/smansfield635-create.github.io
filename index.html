@@ -3,59 +3,51 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Geodiametrics</title>
 
 <link rel="stylesheet" href="/assets/style.css">
 <script defer src="/assets/capture.js"></script>
-
 </head>
+
 <body>
+<main class="page" style="max-width:1100px;margin:0 auto;padding:24px">
 
-<main style="max-width:960px;margin:0 auto;padding:20px">
+  <header class="card">
+    <h1>Geodiametrics</h1>
+    <p class="muted">
+      A live coherence and execution instrument.
+    </p>
 
-<header class="card">
-  <h1>Geodiametrics</h1>
-  <p class="muted">
-    Live coherence and execution instrument.
-  </p>
+    <nav class="nav" style="margin-top:14px">
+      <a href="/">Home</a>
+      <a href="/control/">Control</a>
+      <a href="/system/">Reference</a>
+      <a href="/artifacts/">Artifacts</a>
+      <a href="/problem/">Problem</a>
+      <a href="/execution/">Execution</a>
+    </nav>
+  </header>
 
-  <nav class="nav">
-    <a href="/">Home</a>
-    <a href="/control/">Control</a>
-    <a href="/system/">Reference</a>
-    <a href="/artifacts/">Artifacts</a>
-    <a href="/problem/">Problem</a>
-    <a href="/execution/">Execution</a>
-  </nav>
-</header>
+  <section class="card" style="margin-top:18px">
+    <h2>Unarch</h2>
+    <p>
+      Unarch is the canonical coherence framework behind this system.
+      It exposes state without hiding execution.
+    </p>
+    <p class="muted">
+      Canonical records live on OSF.
+    </p>
+  </section>
 
-<section class="card">
-  <h2>Unarch</h2>
-  <p>
-    This system is live.
-    It exposes state without hiding execution.
-  </p>
+  <section class="card" style="margin-top:18px">
+    <h3>Live status</h3>
+    <div class="metric-value" id="global-status">Loading…</div>
+    <div class="muted" id="global-meta">—</div>
+  </section>
 
-  <p>
-    All activity is aggregated globally at the edge.
-    Local activity is visible only to the device.
-  </p>
-
-  <p class="muted">
-    Canonical records live on OSF.
-  </p>
-</section>
-
-<section class="card">
-  <h3>Global Status</h3>
-  <div class="metric-value" id="global-status">Loading…</div>
-  <div class="muted" id="global-meta">—</div>
-</section>
-
-<footer class="muted" style="margin-top:40px">
-  © 2026 Geodiametrics · Live system
-</footer>
+  <footer class="muted" style="margin-top:32px;text-align:center">
+    © 2026 Geodiametrics · Live system
+  </footer>
 
 </main>
 
@@ -68,10 +60,12 @@
     const m=j.metrics||{};
     document.getElementById("global-status").textContent =
       `Sessions ${m.sessions||0} · Pageviews ${m.pageviews||0} · Clicks ${m.clicks||0}`;
-    document.getElementById("global-meta").textContent =
-      `Updated ${new Date(m.lastUpdated||0).toLocaleString()}`;
+    if (m.lastUpdated) {
+      document.getElementById("global-meta").textContent =
+        "Updated " + new Date(m.lastUpdated).toLocaleString();
+    }
   }catch(e){
-    document.getElementById("global-status").textContent = "Global unavailable";
+    document.getElementById("global-status").textContent = "Unavailable";
     document.getElementById("global-meta").textContent = "—";
   }
 })();

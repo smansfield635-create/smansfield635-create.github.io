@@ -1,46 +1,85 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>Execution · Geodiametrics</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <style>
-    main{max-width:860px;margin:0 auto;padding:4rem 1.5rem}
-    h1{font-size:2.4rem;margin-bottom:1rem}
-    ol{margin-top:2rem}
-    li{margin:1.25rem 0;line-height:1.6}
-  </style>
-</head>
-<body>
-<main>
-  <h1>Execution</h1>
+<!-- FULL ROOM REPASTE — /execution/index.html -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Execution · Geodiametrics</title><link rel="stylesheet" href="/assets/ui.css"/></head>
+<body class="execution"><main>
 
-  <p>
-    The system operates as a closed loop. It does not infer intent.
-    It records structure.
-  </p>
+<h1>Execution</h1>
+<p>Four engines. Sixteen cores. One loop. Click bubbles to inspect each surface and jump deeper.</p>
 
-  <ol>
-    <li>
-      Inputs are captured as observable declarations or actions.
-    </li>
-    <li>
-      Constraints are applied to ensure internal consistency.
-    </li>
-    <li>
-      Outputs are evaluated for alignment with prior inputs.
-    </li>
-    <li>
-      A receipt is produced indicating coherence or breakdown.
-    </li>
-  </ol>
+<div class="nav">
+  <a href="/">Home</a><a href="/problem/">Problem</a><a href="/execution/">Execution</a><a href="/foundations/">Foundations</a><a href="/reference/">Reference</a><a href="/control/">Control</a>
+</div>
 
-  <p>
-    No optimization occurs. No corrective action is imposed.
-    The system reports structure only.
-  </p>
+<section data-tabs>
+  <div class="tabs" role="tablist" aria-label="Execution Tabs">
+    <button class="tab" role="tab" aria-selected="true" data-tab="map">Map</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="engines">4 Engines</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="cores">16 Cores</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="receipts">Receipts</button>
+  </div>
 
-</main>
-</body>
-</html>
+  <div class="tabpanels">
+
+    <div class="tabpanel" role="tabpanel" data-panel="map" data-open="true">
+      <div class="panel">
+        <p><strong>Loop:</strong> Selection → Resolution → Commitment → Continuation → (back to Selection).</p>
+        <p><strong>Policy:</strong> report structure only. No intent inference. No narrative grading.</p>
+      </div>
+      <div class="bubble-board">
+        <div class="bubbles">
+          <div class="bubble blue" data-detail='{"title":"Selection","body":"Choose what enters the system.\nIf selection is wrong, everything downstream is distorted.","links":[{"label":"Engines tab","href":"/execution/"}]}'><div class="t">Selection</div><div class="s">Inputs</div></div>
+          <div class="bubble mint" data-detail='{"title":"Resolution","body":"Apply constraints.\nIf constraints drift, anything becomes admissible.","links":[{"label":"Foundations: Constraint","href":"/foundations/"}]}'><div class="t">Resolution</div><div class="s">Constraints</div></div>
+          <div class="bubble pink" data-detail='{"title":"Commitment","body":"Lock the choice.\nReceipts bind or integrity collapses by exception.","links":[{"label":"Receipts tab","href":"/execution/"}]}'><div class="t">Commitment</div><div class="s">Binding</div></div>
+          <div class="bubble gray" data-detail='{"title":"Continuation","body":"Sustain the loop.\nDetect drift and invalidate broken downstream receipts.","links":[{"label":"Control Room","href":"/control/"}]}'><div class="t">Continuation</div><div class="s">Drift control</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="engines" data-open="false">
+      <a id="selection"></a>
+      <div class="panel"><p><strong>Engine detail:</strong> each engine has four cores: Perception, Constraint, Choice, Receipt.</p></div>
+      <div class="bubble-board">
+        <div class="bubbles">
+          <div class="bubble blue" data-detail='{"title":"Selection Engine","body":"Perception: intake candidates.\nConstraint: filter noise.\nChoice: select input.\nReceipt: record what entered."}'><div class="t">Selection</div><div class="s">Engine</div></div>
+          <a id="resolution"></a>
+          <div class="bubble mint" data-detail='{"title":"Resolution Engine","body":"Perception: detect boundaries.\nConstraint: apply rule set.\nChoice: pick admissible options.\nReceipt: record admissibility."}'><div class="t">Resolution</div><div class="s">Engine</div></div>
+          <a id="commitment"></a>
+          <div class="bubble pink" data-detail='{"title":"Commitment Engine","body":"Perception: read decision.\nConstraint: prevent reversal without invalidation.\nChoice: lock.\nReceipt: issue binding token."}'><div class="t">Commitment</div><div class="s">Engine</div></div>
+          <a id="continuation"></a>
+          <div class="bubble gray" data-detail='{"title":"Continuation Engine","body":"Perception: monitor drift.\nConstraint: enforce receipts.\nChoice: continue or exit.\nReceipt: record loop state."}'><div class="t">Continuation</div><div class="s">Engine</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="cores" data-open="false">
+      <div class="panel"><p><strong>Sixteen cores</strong> are four repeated core-types across the four engines.</p></div>
+      <div class="bubble-board">
+        <div class="bubbles">
+          <div class="bubble blue" data-detail='{"title":"Perception (x4)","body":"Signal intake per engine.\nWhat is observed becomes admissible evidence."}'><div class="t">Perception</div><div class="s">x4</div></div>
+          <div class="bubble mint" data-detail='{"title":"Constraint (x4)","body":"Boundary enforcement per engine.\nConstraints define the geometry of possibility."}'><div class="t">Constraint</div><div class="s">x4</div></div>
+          <div class="bubble pink" data-detail='{"title":"Choice (x4)","body":"Decision points per engine.\nChoices without receipts are non-binding."}'><div class="t">Choice</div><div class="s">x4</div></div>
+          <div class="bubble gray" data-detail='{"title":"Receipt (x4)","body":"Verification per engine.\nReceipts store the audit trail and gate downstream movement."}'><div class="t">Receipt</div><div class="s">x4</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="receipts" data-open="false">
+      <div class="panel"><p><strong>Receipt rules:</strong> receipts gate advancement. Back-navigation invalidates downstream receipts. Exit emits terminal + return token.</p></div>
+      <div class="bubble-board">
+        <div class="bubbles">
+          <div class="bubble gray" data-detail='{"title":"Receipt-Gated Advancement","body":"No progress without a receipt.\nA receipt is the proof of step completion."}'><div class="t">Gate</div><div class="s">No receipt, no move</div></div>
+          <div class="bubble gray" data-detail='{"title":"Invalidation","body":"If upstream changes, downstream receipts are invalid.\nThis prevents silent drift."}'><div class="t">Invalidate</div><div class="s">Drift control</div></div>
+          <div class="bubble gray" data-detail='{"title":"Exit Token","body":"Exit creates a terminal receipt plus a return token.\nThis preserves state without pretending continuity."}'><div class="t">Exit</div><div class="s">Token</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="modal" id="bubbleModal" data-open="false"><div class="sheet">
+  <button class="x" id="bmClose" aria-label="Close">✕</button>
+  <h2 id="bmTitle">Detail</h2><div id="bmBody"></div><div class="actions" id="bmLinks"></div>
+</div></div>
+
+<script defer src="/assets/bubbles.js"></script>
+</main></body></html>

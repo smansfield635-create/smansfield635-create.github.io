@@ -1,16 +1,34 @@
-<!-- FULL REWRITE — /index.html (HOME) -->
+<!-- FULL REWRITE — /index.html (HOME / STORY GATE) -->
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Geodiametrics</title><link rel="stylesheet" href="/assets/ui.css"/></head>
 <body><main>
 
-<h1>?</h1>
-<p>Touch something. Curiosity is the interface.</p>
+<h1>Symptoms → Diagnosis → Execution</h1>
+<p class="small">Nothing explains itself until pressed.</p>
 
 <div class="nav">
-  <a href="/">Home</a><a href="/problem/">Problem</a><a href="/execution/">Execution</a>
-  <a href="/principles/">Principles</a><a href="/reference/">Reference</a><a href="/control/">Control</a>
+  <a href="/">Home</a>
+  <a href="/symptoms/">Symptoms</a>
+  <a href="/diagnosis/">Diagnosis</a>
+  <a href="/execution/">Execution</a>
+  <a href="/principles/">Principles</a>
+  <a href="/control/">Control</a>
 </div>
+
+<div class="panel">
+  <p><strong>Story:</strong> Recognize symptoms → identify diagnosis → execute correction.</p>
+  <p><strong>Engine:</strong> Quad-core loop expresses execution mechanically.</p>
+  <p><strong>Metric:</strong> Coherence is measurable when evidence, constraints, and receipts exist.</p>
+</div>
+
+<div class="diamondRow">
+  <a class="diamondTile" href="/symptoms/"><div><div class="k">Act I</div><div class="h">Symptoms ?</div><div class="d">What is being noticed?</div></div></a>
+  <a class="diamondTile" href="/diagnosis/"><div><div class="k">Act II</div><div class="h">Diagnosis ?</div><div class="d">What is actually happening?</div></div></a>
+  <a class="diamondTile" href="/execution/"><div><div class="k">Act III</div><div class="h">Execution ?</div><div class="d">What must change?</div></div></a>
+</div>
+
+<hr class="sep"/>
 
 <section data-tabs>
   <div class="tabs" role="tablist">
@@ -22,27 +40,27 @@
   <div class="tabpanels">
     <div class="tabpanel" role="tabpanel" data-panel="one" data-open="true">
       <div class="bubbles">
-        <button class="bubble blue" data-detail='{"title":"What is breaking?","body":"Systems drift.\nRules bend.\nPromises blur.","links":[{"label":"Go","href":"/problem/"}]}'>
-          <div><div class="t">What?</div><div class="s">Notice</div></div>
+        <button class="bubble blue" data-detail='{"title":"Start ?","body":"Choose the act.\nNothing else matters until the story is followed.","links":[{"label":"Symptoms","href":"/symptoms/"},{"label":"Diagnosis","href":"/diagnosis/"},{"label":"Execution","href":"/execution/"}]}'>
+          <div><div class="t">Start ?</div><div class="s">Choose act</div></div>
         </button>
       </div>
     </div>
 
     <div class="tabpanel" role="tabpanel" data-panel="two">
       <div class="bubbles">
-        <button class="bubble mint" data-detail='{"title":"What can I do?","body":"Choose.\nConstrain.\nCommit.","links":[{"label":"Go","href":"/execution/"}]}'>
-          <div><div class="t">How?</div><div class="s">Act</div></div>
+        <button class="bubble mint" data-detail='{"title":"Quad-Core Engine ?","body":"Execution becomes mechanical.\nSelection → Resolution → Commitment → Continuation.","links":[{"label":"Open engine","href":"/engine/"}]}'>
+          <div><div class="t">Quad-Core ?</div><div class="s">Engine</div></div>
         </button>
-        <button class="bubble pink" data-detail='{"title":"What keeps it honest?","body":"Principles.\nLaws.\nBoundaries.","links":[{"label":"Go","href":"/principles/"}]}'>
-          <div><div class="t">Why?</div><div class="s">Ground</div></div>
+        <button class="bubble pink" data-fetch="/assets/coherence_metric.json">
+          <div><div class="t">Metric ?</div><div class="s">Coherence</div></div>
         </button>
       </div>
     </div>
 
     <div class="tabpanel" role="tabpanel" data-panel="three">
       <div class="bubbles">
-        <button class="bubble gray" data-detail='{"title":"Can I trust this?","body":"No fake liveness.\nReceipts only.","links":[{"label":"Go","href":"/control/"}]}'>
-          <div><div class="t">Proof?</div><div class="s">Verify</div></div>
+        <button class="bubble gray" data-detail='{"title":"OSS + Global Data ?","body":"Signals can be tracked at device scope and global scope.\nThis is evidence input, not narrative.","links":[{"label":"Control","href":"/control/"},{"label":"Reference","href":"/reference/"}]}'>
+          <div><div class="t">Data ?</div><div class="s">OSS + global</div></div>
         </button>
       </div>
     </div>
@@ -50,9 +68,9 @@
 </section>
 
 <div class="modal" id="bubbleModal" data-open="false"><div class="sheet">
-<button class="x" id="bmClose">✕</button><h2 id="bmTitle"></h2><div id="bmBody"></div><div class="actions" id="bmLinks"></div>
+<button class="x" id="bmClose">✕</button><h2 id="bmTitle">?</h2><div id="bmBody"></div><div class="actions" id="bmLinks"></div>
 </div></div>
 
-<footer>© Geodiametrics</footer>
+<footer>© 2026 Geodiametrics</footer>
 <script defer src="/assets/bubbles.js"></script>
 </main></body></html>

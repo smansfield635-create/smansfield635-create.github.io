@@ -1,91 +1,139 @@
 /* =========================================================
-   TNT: POLISH v2 — DEPTH + HIERARCHY + DIAMOND DOMINANCE
+   TNT #16: TABS + BUBBLES (interactive exploration UI)
    Paste at BOTTOM of assets/ui.css
    ========================================================= */
 
-/* 1) Stronger typography hierarchy */
-h1{
-  font-size:3.1rem !important;
-  letter-spacing:-0.02em !important;
-  text-shadow:0 10px 35px rgba(0,0,0,.55) !important;
+/* Tabs */
+.tabs{
+  display:flex;flex-wrap:wrap;gap:.6rem;
+  margin:1.25rem 0 1.15rem;
 }
-p{
-  font-size:1.05rem !important;
-  color:rgba(233,238,252,.78) !important;
+.tab{
+  appearance:none;border:0;
+  padding:.72rem 1.05rem;
+  border-radius:999px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  color:#fff;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
+  cursor:pointer;
+}
+.tab[aria-selected="true"]{
+  background:rgba(255,255,255,.10);
+  border-color:rgba(255,255,255,.24);
+}
+.tab:active{opacity:.85}
+
+/* Tab panels */
+.tabpanels{margin-top:.75rem}
+.tabpanel{display:none}
+.tabpanel[data-open="true"]{display:block}
+
+/* Bubble board container */
+.bubble-board{
+  margin:1.25rem 0 2.5rem;
+}
+.bubble-board .hint{
+  margin:.25rem 0 1.0rem;
+  color:rgba(233,238,252,.65);
+  font-size:.98rem;
 }
 
-/* 2) True “glass” panels (premium) */
-.panel{
-  background:rgba(10,14,30,.55) !important;
-  border:1px solid rgba(255,255,255,.14) !important;
-  box-shadow:0 25px 90px rgba(0,0,0,.62) !important;
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
+/* Bubble grid */
+.bubbles{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:.9rem;
 }
-.panel strong{color:#fff !important}
+.bubble{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:.25rem;
+  padding:1.05rem .95rem;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 18px 50px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.03);
+  cursor:pointer;
+  user-select:none;
+  transition:transform .12s ease, background .12s ease, border-color .12s ease, opacity .12s ease;
+}
+.bubble:hover{
+  background:rgba(255,255,255,.10);
+  border-color:rgba(255,255,255,.22);
+  transform:translateY(-2px);
+}
+.bubble:active{
+  transform:translateY(0px) scale(.99);
+  opacity:.9;
+}
+.bubble .t{font-weight:700;color:#fff}
+.bubble .s{font-size:.92rem;color:rgba(233,238,252,.70);line-height:1.35}
 
-/* 3) Nav pills: less chunky + more elegant */
-.nav{
-  gap:.55rem !important;
-  margin:1.0rem 0 1.35rem !important;
-}
-.nav a{
-  padding:.62rem .95rem !important;
-  background:rgba(255,255,255,.045) !important;
-  border:1px solid rgba(255,255,255,.12) !important;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03) !important;
-}
-.nav a:hover{
-  background:rgba(255,255,255,.075) !important;
-  border-color:rgba(255,255,255,.20) !important;
-}
+/* Bubble color families */
+.bubble.pink{background:rgba(255,122,198,.10);border-color:rgba(255,122,198,.22)}
+.bubble.blue{background:rgba(122,162,255,.10);border-color:rgba(122,162,255,.22)}
+.bubble.mint{background:rgba(92,207,191,.10);border-color:rgba(92,207,191,.22)}
+.bubble.gray{background:rgba(233,238,252,.06);border-color:rgba(233,238,252,.14)}
 
-/* 4) Make diamonds feel “center stage” + overlap like the original */
-.diamond-stack{
-  margin:2.0rem 0 4.5rem !important;
-  gap:0rem !important;
+/* Modal / Drawer */
+.modal{
+  position:fixed;inset:0;
+  display:none;
+  background:rgba(0,0,0,.55);
+  z-index:50;
 }
-.diamond{
-  width:360px !important;
-  height:360px !important;
-  margin:-72px 0 !important;           /* overlap */
-  border-radius:40px !important;
-  border:1px solid rgba(255,255,255,.16) !important;
-  box-shadow:0 40px 120px rgba(0,0,0,.70), inset 0 0 0 1px rgba(255,255,255,.05) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
+.modal[data-open="true"]{display:block}
+.modal .sheet{
+  position:absolute;
+  left:50%;
+  top:12%;
+  transform:translateX(-50%);
+  width:min(940px,92vw);
+  background:rgba(10,14,30,.70);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:22px;
+  box-shadow:0 40px 140px rgba(0,0,0,.75);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  padding:1.25rem 1.25rem 1.1rem;
 }
-.diamond:first-child{margin-top:0 !important}
-.diamond:last-child{margin-bottom:0 !important}
+.modal .sheet h2{
+  margin:.2rem 0 .35rem;
+  font-size:1.85rem;
+  color:#fff;
+}
+.modal .sheet p{
+  margin:.5rem 0;
+  color:rgba(233,238,252,.76);
+  line-height:1.65;
+}
+.modal .actions{
+  display:flex;flex-wrap:wrap;gap:.6rem;
+  margin-top:1.05rem;
+}
+.modal .a{
+  display:inline-block;
+  padding:.7rem 1rem;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  color:#fff;
+  text-decoration:none;
+}
+.modal .a:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28)}
+.modal .x{
+  position:absolute;right:14px;top:14px;
+  width:42px;height:42px;border-radius:12px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14);
+  color:#fff;font-size:18px;
+  cursor:pointer;
+}
+.modal .x:active{opacity:.85}
 
-.diamond .content{
-  width:76% !important;
-}
-.diamond h3{
-  font-size:1.95rem !important;
-  text-shadow:0 8px 30px rgba(0,0,0,.55) !important;
-}
-.diamond p{
-  color:rgba(233,238,252,.80) !important;
-}
-
-/* 5) Replace “old-school underline links” with modern pills inside panels */
-.panel a{
-  display:inline-block !important;
-  padding:.55rem .8rem !important;
-  border-radius:999px !important;
-  background:rgba(255,255,255,.06) !important;
-  border:1px solid rgba(255,255,255,.16) !important;
-  color:#fff !important;
-  text-decoration:none !important;
-}
-.panel a:hover{
-  background:rgba(255,255,255,.11) !important;
-  border-color:rgba(255,255,255,.28) !important;
-}
-
-/* 6) Mobile tuning */
 @media (max-width:700px){
-  h1{font-size:2.65rem !important}
-  .diamond{width:300px !important;height:300px !important;margin:-58px 0 !important}
+  .modal .sheet{top:8%}
+  .bubbles{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
 }

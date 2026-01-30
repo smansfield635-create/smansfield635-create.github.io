@@ -4,53 +4,202 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Geodiametrics</title>
+
 <script defer src="/assets/cfwa.js"></script>
 <script defer src="/assets/live_site_metrics.js"></script>
+
 <style>
-:root{--bg:#070a12;--fg:#eef2ff;--muted:rgba(238,242,255,.65);--stroke:rgba(238,242,255,.10);--accent:#7aa2ff;--accent2:#ff7ac6;--radius:20px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;}
-*{box-sizing:border-box}html,body{margin:0;height:100%}
-body{color:var(--fg);font-family:var(--sans);background:radial-gradient(900px 700px at 15% 10%,rgba(122,162,255,.12),transparent 60%),radial-gradient(900px 700px at 85% 20%,rgba(255,122,198,.10),transparent 60%),var(--bg);}
-main{max-width:1100px;margin:0 auto;padding:48px 18px 72px}
-.header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+:root{
+  --bg0:#0a0d18;--bg1:#0d1224;
+  --fg:#f3f6ff;--muted:rgba(243,246,255,.68);
+  --stroke:rgba(243,246,255,.12);
+  --accent:#7aa2ff;--accent2:#ff7ac6;--good:#44d07b;
+  --radius:22px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  color:var(--fg);font-family:var(--sans);
+  background:
+    radial-gradient(900px 700px at 12% 10%,rgba(122,162,255,.22),transparent 60%),
+    radial-gradient(900px 700px at 88% 18%,rgba(255,122,198,.18),transparent 60%),
+    radial-gradient(800px 650px at 50% 92%,rgba(68,208,123,.10),transparent 65%),
+    linear-gradient(180deg,var(--bg0),var(--bg1));
+}
+main{max-width:1120px;margin:0 auto;padding:44px 18px 92px}
+
+.header{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  margin-bottom:18px;
+}
 .brand{display:flex;align-items:center;gap:12px}
-.mark{width:40px;height:40px;border-radius:14px;border:1px solid var(--stroke);background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);display:flex;align-items:center;justify-content:center;box-shadow:0 14px 45px rgba(0,0,0,.45);}
-h1{margin:0;font-size:32px;font-weight:650}
-.tag{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
-.row{display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap;margin-top:10px}
-.diamond{width:220px;height:220px;border:1px solid var(--stroke);background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);transform:rotate(45deg);border-radius:22px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--fg);position:relative;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,.40)}
-.diamond:hover{border-color:rgba(122,162,255,.45)}
-.diamond::before{content:"";position:absolute;inset:-40%;background:radial-gradient(280px 180px at 20% 20%,rgba(122,162,255,.14),transparent 60%),radial-gradient(280px 180px at 80% 80%,rgba(255,122,198,.10),transparent 60%);transform:rotate(-45deg);pointer-events:none}
-.inner{transform:rotate(-45deg);width:82%;display:flex;flex-direction:column;gap:10px;text-align:left}
-.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
-.title{font-size:20px;font-weight:650;line-height:1.2}
+.mark{
+  width:46px;height:46px;border-radius:16px;border:1px solid var(--stroke);
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 26px 90px rgba(0,0,0,.40);
+  backdrop-filter:blur(14px);
+}
+h1{margin:0;font-size:34px;font-weight:700;letter-spacing:.2px}
+.tag{
+  margin-top:6px;
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--muted);
+}
+
+.row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:28px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.diamond{
+  width:230px;
+  height:230px;
+  border:1px solid var(--stroke);
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02));
+  transform:rotate(45deg);
+  border-radius:26px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:var(--fg);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 26px 90px rgba(0,0,0,.38);
+  backdrop-filter:blur(14px);
+}
+.diamond:hover{border-color:rgba(122,162,255,.60)}
+.diamond::before{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background:
+    radial-gradient(280px 180px at 20% 20%,rgba(122,162,255,.18),transparent 60%),
+    radial-gradient(280px 180px at 80% 80%,rgba(255,122,198,.14),transparent 60%);
+  transform:rotate(-45deg);
+  pointer-events:none;
+}
+
+.inner{
+  transform:rotate(-45deg);
+  width:82%;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  text-align:left;
+}
+.kicker{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.title{font-size:20px;font-weight:700;line-height:1.2}
 .desc{color:var(--muted);font-size:13.5px;line-height:1.45}
-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--stroke);font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+.badgeRow{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:9px 11px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.03);
+  font-family:var(--mono);font-size:12px;color:var(--fg);
+  backdrop-filter:blur(10px);
+}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.ok{background:var(--good);box-shadow:0 0 22px rgba(68,208,123,.30)}
+.dot.info{background:var(--accent);box-shadow:0 0 22px rgba(122,162,255,.30)}
+
+footer{
+  margin-top:40px;
+  padding-top:16px;
+  border-top:1px solid var(--stroke);
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--muted);
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
 </style>
 </head>
+
 <body>
 <main>
+
   <div class="header">
     <div class="brand">
-      <div class="mark"><img src="/assets/logo.svg" alt="Geodiametrics" style="width:20px;height:20px"></div>
+      <div class="mark"><img src="/assets/logo.svg" alt="Geodiametrics" style="width:24px;height:24px"></div>
       <div>
         <h1>Geodiametrics</h1>
-        <div class="tag">Orientation · v1.4 · Global: Cloudflare · Device: local</div>
+        <div class="tag">Orientation · v1.6 · Global aggregation via Worker · Device capture enabled</div>
+        <div class="badgeRow">
+          <div class="badge"><span class="dot ok"></span> OPERATIONAL</div>
+          <div class="badge"><span class="dot info"></span> GLOBAL + DEVICE</div>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="row">
-    <a class="diamond" href="/control/"><div class="inner"><div class="kicker">Live</div><div class="title">Control</div><div class="desc">SITE + OSF gauges (single page).</div></div></a>
-    <a class="diamond" href="/system/"><div class="inner"><div class="kicker">Grounding</div><div class="title">Reference</div><div class="desc">Definitions and anchors.</div></div></a>
-    <a class="diamond" href="/artifacts/"><div class="inner"><div class="kicker">Demonstrations</div><div class="title">Artifacts</div><div class="desc">Interactive exhibits (no mutation).</div></div></a>
-    <a class="diamond" href="/problem/"><div class="inner"><div class="kicker">Context</div><div class="title">Problem</div><div class="desc">Why the instrument exists.</div></div></a>
-    <a class="diamond" href="/execution/"><div class="inner"><div class="kicker">Reserved</div><div class="title">Execution</div><div class="desc">Disabled by design.</div></div></a>
+    <a class="diamond" href="/control/">
+      <div class="inner">
+        <div class="kicker">Live</div>
+        <div class="title">Control</div>
+        <div class="desc">Global + device gauges.</div>
+      </div>
+    </a>
+
+    <a class="diamond" href="/system/">
+      <div class="inner">
+        <div class="kicker">Grounding</div>
+        <div class="title">Reference</div>
+        <div class="desc">Definitions and anchors.</div>
+      </div>
+    </a>
+
+    <a class="diamond" href="/artifacts/">
+      <div class="inner">
+        <div class="kicker">Demonstrations</div>
+        <div class="title">Artifacts</div>
+        <div class="desc">Interactive exhibits (no durable mutation).</div>
+      </div>
+    </a>
+
+    <a class="diamond" href="/problem/">
+      <div class="inner">
+        <div class="kicker">Context</div>
+        <div class="title">Problem</div>
+        <div class="desc">Why the instrument exists.</div>
+      </div>
+    </a>
+
+    <a class="diamond" href="/execution/">
+      <div class="inner">
+        <div class="kicker">Applicable</div>
+        <div class="title">Execution</div>
+        <div class="desc">Local receipt generator (exportable).</div>
+      </div>
+    </a>
   </div>
 
   <footer>
     <div>© 2026 Geodiametrics</div>
-    <div>Pages: /control /system /artifacts /problem /execution</div>
+    <div>Pages: /control · /system · /artifacts · /problem · /execution</div>
   </footer>
+
 </main>
 </body>
 </html>
+```0

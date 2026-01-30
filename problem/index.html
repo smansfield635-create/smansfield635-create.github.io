@@ -1,24 +1,57 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>Problem · Geodiametrics</title><style>
-:root{--bg1:#0b0f1a;--bg2:#1a1f33;--ink:#e9ecff;--muted:#aab0ff;--accent:#7aa2ff}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:radial-gradient(1200px 800px at 20% 10%,#2a2f55 0%,transparent 60%),linear-gradient(180deg,var(--bg2),var(--bg1));color:var(--ink);display:flex;justify-content:center;align-items:center}
-main{width:100%;max-width:420px;padding:24px;text-align:center}
-h1{font-size:2.2rem;margin:0 0 .25rem}.subtitle{color:var(--muted);margin:0 0 1.5rem}
-.nav{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:0 0 2rem}
-.nav a{padding:8px 14px;border-radius:999px;text-decoration:none;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);font-size:.9rem}
-.stack{position:relative;width:260px;height:260px;margin:0 auto 2rem}
-.diamond{position:absolute;inset:0;margin:auto;width:180px;height:180px;background:linear-gradient(145deg,#2a3060,#161a33);border:1px solid rgba(255,255,255,.18);border-radius:16px;transform:rotate(45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 30px 80px rgba(0,0,0,.55)}
-.diamond.inner{width:130px;height:130px;background:linear-gradient(145deg,#343a75,#1b2040)}
-.diamond span{transform:rotate(-45deg);text-align:center;padding:12px}
-.label{font-size:.8rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
-.title{font-size:1.1rem;font-weight:600}
-.card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px;margin-top:1rem;text-align:left}
-.card h2{font-size:1.05rem;margin:0 0 6px}.card p{font-size:.95rem;color:var(--muted);margin:0;line-height:1.45}
-footer{margin-top:1.5rem;font-size:.75rem;color:#8b90d9}
-</style></head><body><main>
-<h1>Problem</h1><div class="subtitle">Why this exists.</div>
-<nav class="nav"><a href="/">Home</a><a href="/control/">Control</a><a href="/reference/">Reference</a><a href="/artifacts/">Artifacts</a><a href="/problem/">Problem</a><a href="/execution/">Execution</a></nav>
-<div class="stack"><div class="diamond"><span><div class="label">Focus</div><div class="title">Drift</div></span></div><div class="diamond inner"><span><div class="label">Show</div><div class="title">Truth</div></span></div></div>
-<div class="card"><h2>The issue</h2><p>Systems slowly drift. People don’t notice until something breaks.</p></div>
-<div class="card"><h2>The goal</h2><p>Make drift visible early, using simple signals and clear boundaries.</p></div>
-<footer>© 2026 Geodiametrics · Problem surface</footer>
-</main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Problem · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css">
+<script defer src="/assets/capture.js"></script>
+<script defer src="/assets/app.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="brand">
+      <div class="mark"><img src="/assets/logo.svg" alt=""></div>
+      <div>
+        <h1>Problem</h1>
+        <div class="sub">Why we built this.</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="pill" href="/">Home</a>
+      <a class="pill" href="/control/">Control Room</a>
+      <a class="pill" href="/system/">Foundations</a>
+      <a class="pill" href="/artifacts/">Table of Contents</a>
+      <a class="pill" href="/problem/">Problem</a>
+      <a class="pill" href="/execution/">Execution</a>
+    </nav>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="kicker">The issue</div>
+      <div class="big">Systems drift quietly.</div>
+      <div class="muted">People don’t notice until something breaks.</div>
+    </div>
+    <div class="card">
+      <div class="kicker">The fix</div>
+      <div class="big">Make drift visible.</div>
+      <div class="muted">Clear state. Clear rules. Public inspection.</div>
+    </div>
+    <div class="card">
+      <div class="kicker">Why it matters</div>
+      <div class="big">Trust depends on coherence.</div>
+      <div class="muted">If it can’t be verified, it can’t be relied on.</div>
+    </div>
+  </div>
+
+  <footer>
+    <div>© 2026 Geodiametrics</div>
+    <div>Problem</div>
+  </footer>
+
+</div>
+</body>
+</html>

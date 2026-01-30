@@ -1,72 +1,64 @@
-/* ---------- BASE ---------- */
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: linear-gradient(180deg, #f5f1ea 0%, #ffffff 100%);
-  color: #1b1b1b;
+  background: #f7f4ee;
+  color: #1c1c1c;
+  font-family: Georgia, "Times New Roman", serif;
   line-height: 1.6;
 }
 
-/* ---------- LAYOUT ---------- */
 .page {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
-  padding: 3rem 1.5rem 4rem;
+  padding: 64px 24px 96px;
 }
 
-section {
-  margin-bottom: 2.5rem;
-}
-
-/* ---------- TYPE ---------- */
 h1 {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 2.4rem;
-  margin-bottom: 0.75rem;
-}
-
-h2 {
-  font-size: 1.4rem;
-  margin-top: 2rem;
+  font-size: 42px;
+  margin-bottom: 24px;
 }
 
 p {
-  font-size: 1.05rem;
-  margin: 0.75rem 0;
+  font-size: 18px;
+  margin-bottom: 18px;
 }
 
-/* ---------- LINKS ---------- */
+.lead {
+  font-size: 20px;
+}
+
+.flow {
+  font-size: 19px;
+  margin: 24px 0;
+}
+
+.nav {
+  margin: 32px 0;
+  padding-left: 20px;
+}
+
+.nav li {
+  margin: 10px 0;
+}
+
 a {
-  color: #4b3ca7;
-  text-decoration: none;
-}
-
-a:hover {
+  color: #4b2ea8;
   text-decoration: underline;
 }
 
-/* ---------- BUTTONS ---------- */
-.nav a,
-.button {
-  display: block;
-  background: rgba(75, 60, 167, 0.08);
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-  margin: 0.75rem 0;
-  font-weight: 500;
-}
-
-.nav a:hover,
-.button:hover {
-  background: rgba(75, 60, 167, 0.16);
+a:hover {
   text-decoration: none;
 }
 
-/* ---------- FOOTER ---------- */
-footer {
-  margin-top: 3rem;
-  font-size: 0.9rem;
-  opacity: 0.7;
+.note {
+  margin-top: 40px;
+  font-style: italic;
+  font-size: 16px;
 }

@@ -1,0 +1,62 @@
+<!-- FULL TNT — /diagnosis/index.html (LIMIT LAYER: DIAGNOSIS) -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Diagnosis · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<style>
+.reactor{position:relative;height:88vh;min-height:640px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.smoke{position:absolute;inset:-20%;background:
+radial-gradient(650px 650px at 28% 45%, rgba(92,207,191,.16), transparent 62%),
+radial-gradient(700px 700px at 74% 50%, rgba(122,162,255,.14), transparent 62%),
+radial-gradient(900px 900px at 50% 72%, rgba(255,122,198,.10), transparent 68%);
+filter:blur(60px);animation:drift 32s linear infinite}
+@keyframes drift{0%{transform:translate(0,0)}50%{transform:translate(3%,-2%)}100%{transform:translate(0,0)}}
+.diamond{position:absolute;width:280px;height:280px;transform:rotate(45deg);border-radius:36px;
+background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+border:1px solid rgba(255,255,255,.18);
+box-shadow:0 40px 140px rgba(0,0,0,.75), inset 0 0 0 1px rgba(255,255,255,.06);
+display:flex;align-items:center;justify-content:center;cursor:pointer}
+.diamond .in{transform:rotate(-45deg);text-align:center}
+.diamond .t{font-weight:900;font-size:1.6rem}
+.diamond .s{margin-top:.35rem;color:rgba(233,238,252,.7)}
+.core{width:180px;height:180px;opacity:.88}
+.core:hover{opacity:1}
+.blue{background:linear-gradient(180deg,rgba(122,162,255,.24),rgba(122,162,255,.06));border-color:rgba(122,162,255,.32)}
+.mint{background:linear-gradient(180deg,rgba(92,207,191,.26),rgba(92,207,191,.06));border-color:rgba(92,207,191,.34)}
+.pink{background:linear-gradient(180deg,rgba(255,122,198,.20),rgba(255,122,198,.06));border-color:rgba(255,122,198,.30)}
+.gray{background:linear-gradient(180deg,rgba(233,238,252,.20),rgba(233,238,252,.06));border-color:rgba(233,238,252,.26)}
+#core{z-index:3}
+#d1{top:14%;left:50%;transform:translate(-50%,-50%) rotate(45deg)}
+#d2{left:16%;top:52%;transform:translate(-50%,-50%) rotate(45deg)}
+#d3{right:16%;top:52%;transform:translate(50%,-50%) rotate(45deg)}
+#panel{position:absolute;bottom:3%;width:min(860px,92vw);background:rgba(10,14,30,.70);
+border:1px solid rgba(255,255,255,.14);border-radius:28px;padding:1.1rem 1.2rem;
+box-shadow:0 28px 90px rgba(0,0,0,.7);backdrop-filter:blur(14px)}
+#panel p{margin:.4rem 0}
+</style>
+</head>
+<body>
+<main>
+<div class="reactor">
+  <div class="smoke"></div>
+
+  <div id="core" class="diamond gray" onclick="go('/execution/')">
+    <div class="in"><div class="t">Limit</div><div class="s">Diagnosis</div></div>
+  </div>
+
+  <div id="d1" class="diamond core blue" onclick="go('/execution/')">
+    <div class="in"><div class="t">Mismatch</div><div class="s">?</div></div>
+  </div>
+
+  <div id="d2" class="diamond core mint" onclick="go('/execution/')">
+    <div class="in"><div class="t">Boundaries</div><div class="s">?</div></div>
+  </div>
+
+  <div id="d3" class="diamond core pink" onclick="go('/execution/')">
+    <div class="in"><div class="t">Follow-through</div><div class="s">?</div></div>
+  </div>
+
+  <div id="panel">
+    <p><strong>Layer:</strong> Limit (Diagnosis)</p>

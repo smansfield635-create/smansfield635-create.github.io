@@ -1,195 +1,20 @@
-<!-- FULL TNT — /control/index.html (CORRECTED GEOMETRY: ONE OBSERVATION STATE + 3 FACETS, NO INTERACTIONS REQUIRED) -->
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Control · Geodiametrics</title>
-<link rel="stylesheet" href="/assets/ui.css"/>
-
-<style>
-/* === CONTROL REACTOR === */
-.reactor{
-  position:relative;
-  height:88vh;
-  min-height:640px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-}
-
-/* SMOKE — COOLER, INSTRUMENTAL */
-.smoke{
-  position:absolute;
-  inset:-25%;
-  background:
+<!-- TNT — /control/index.html (LEGIBLE) -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Control</title><link rel="stylesheet" href="/assets/ui.css"/></head>
+<body><main>
+<div class="reactor">
+  <div class="smoke" style="background:
     radial-gradient(720px 720px at 50% 34%, rgba(233,238,252,.10), transparent 64%),
     radial-gradient(820px 820px at 35% 60%, rgba(122,162,255,.10), transparent 66%),
     radial-gradient(820px 820px at 65% 60%, rgba(92,207,191,.10), transparent 66%),
-    radial-gradient(980px 980px at 50% 78%, rgba(255,122,198,.08), transparent 72%);
-  filter:blur(75px);
-  animation: drift 40s linear infinite;
-}
-@keyframes drift{
-  0%{transform:translate(0,0)}
-  50%{transform:translate(-3%,-2%)}
-  100%{transform:translate(0,0)}
-}
+    radial-gradient(980px 980px at 50% 78%, rgba(255,122,198,.08), transparent 72%);"></div>
 
-/* CENTRAL DECISION DIAMOND (OBSERVATION STATE) */
-.diamond{
-  position:absolute;
-  width:320px;height:320px;
-  transform:rotate(45deg);
-  border-radius:42px;
-  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow:
-    0 55px 170px rgba(0,0,0,.82),
-    inset 0 0 0 1px rgba(255,255,255,.08);
-  display:flex;align-items:center;justify-content:center;
-  z-index:3;
-}
-.diamond .in{
-  transform:rotate(-45deg);
-  text-align:center;
-}
-.diamond .t{
-  font-weight:900;
-  font-size:1.65rem;
-}
-.diamond .s{
-  margin-top:.35rem;
-  color:rgba(233,238,252,.72);
-}
+  <div class="facet" style="top:10%;left:50%;transform:translate(-50%,-50%) rotate(45deg)"><div class="in"><div class="t">OSS</div><div class="s">Evidence</div></div></div>
+  <div class="facet" style="left:10%;top:52%;transform:translate(-50%,-50%) rotate(45deg)"><div class="in"><div class="t">Global</div><div class="s">Aggregate</div></div></div>
+  <div class="facet" style="right:10%;top:52%;transform:translate(50%,-50%) rotate(45deg)"><div class="in"><div class="t">Receipts</div><div class="s">Verifiable</div></div></div>
 
-/* FACETS — INSTRUMENTATION (NOT CLICKABLE) */
-.facet{
-  position:absolute;
-  width:175px;height:175px;
-  transform:rotate(45deg);
-  border-radius:28px;
-  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:
-    0 32px 105px rgba(0,0,0,.68),
-    inset 0 0 0 1px rgba(255,255,255,.05);
-  display:flex;align-items:center;justify-content:center;
-  opacity:.60;
-  pointer-events:none; /* FACETS ARE NOT CHOICES */
-}
-.facet .in{
-  transform:rotate(-45deg);
-  text-align:center;
-}
-.facet .t{
-  font-weight:850;
-  font-size:1.12rem;
-}
-.facet .s{
-  margin-top:.25rem;
-  font-size:.92rem;
-  color:rgba(233,238,252,.65);
-}
+  <div class="diamond" onclick="go('/reference/')"><div class="in"><div class="t">Persist</div><div class="s">Control</div></div></div>
 
-/* FACET COLORS */
-.facet.blue{
-  background:linear-gradient(180deg,rgba(122,162,255,.16),rgba(122,162,255,.05));
-  border-color:rgba(122,162,255,.24);
-}
-.facet.mint{
-  background:linear-gradient(180deg,rgba(92,207,191,.16),rgba(92,207,191,.05));
-  border-color:rgba(92,207,191,.24);
-}
-.facet.gray{
-  background:linear-gradient(180deg,rgba(233,238,252,.12),rgba(233,238,252,.04));
-  border-color:rgba(233,238,252,.20);
-}
-
-/* POSITIONS */
-#persist{ z-index:3; }
-
-#oss{
-  top:14%;
-  left:50%;
-  transform:translate(-50%,-50%) rotate(45deg);
-}
-#global{
-  left:16%;
-  top:52%;
-  transform:translate(-50%,-50%) rotate(45deg);
-}
-#receipts{
-  right:16%;
-  top:52%;
-  transform:translate(50%,-50%) rotate(45deg);
-}
-
-/* PANEL */
-#panel{
-  position:absolute;
-  bottom:3%;
-  width:min(880px,92vw);
-  background:rgba(10,14,30,.72);
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:30px;
-  padding:1.15rem 1.3rem;
-  box-shadow:0 30px 100px rgba(0,0,0,.75);
-  backdrop-filter:blur(14px);
-}
-#panel p{margin:.45rem 0}
-.small{font-size:.95rem;color:rgba(233,238,252,.65)}
-</style>
-</head>
-
-<body>
-<main>
-
-<div class="reactor">
-
-  <div class="smoke"></div>
-
-  <!-- FACETS (INSTRUMENTATION) -->
-  <div id="oss" class="facet blue">
-    <div class="in">
-      <div class="t">OSS</div>
-      <div class="s">Evidence</div>
-    </div>
-  </div>
-
-  <div id="global" class="facet mint">
-    <div class="in">
-      <div class="t">Global</div>
-      <div class="s">Aggregate</div>
-    </div>
-  </div>
-
-  <div id="receipts" class="facet gray">
-    <div class="in">
-      <div class="t">Receipts</div>
-      <div class="s">Verifiable</div>
-    </div>
-  </div>
-
-  <!-- CENTRAL OBSERVATION STATE -->
-  <div id="persist" class="diamond">
-    <div class="in">
-      <div class="t">Persist</div>
-      <div class="s">Control</div>
-    </div>
-  </div>
-
-  <!-- PANEL -->
-  <div id="panel">
-    <p><strong>Layer:</strong> Persist (Control)</p>
-    <p><strong>Rule:</strong> Instrumentation applies pressure. Observation is singular.</p>
-    <p class="small"><strong>Truth:</strong> no source → no live</p>
-  </div>
-
+  <div class="panel"><p><strong>Tap:</strong> Persist → Reference</p><p class="small"><strong>Truth:</strong> no source → no live</p></div>
 </div>
-
-<footer>© 2026 Geodiametrics</footer>
-</main>
-</body>
-</html>
+<script>function go(h){location.href=h;}</script>
+</main></body></html>

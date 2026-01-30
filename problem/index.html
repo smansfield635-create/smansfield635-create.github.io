@@ -1,14 +1,80 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Problem · Geodiametrics</title><link rel="stylesheet" href="/assets/ui.css"/></head>
-<body><main>
-<h1>Problem</h1>
-<div class="nav"><a href="/">Home</a><a href="/problem/">Problem</a><a href="/execution/">Execution</a><a href="/foundations/">Foundations</a><a href="/reference/">Reference</a><a href="/control/">Control</a></div>
-<div class="panel">
-  <p>Modern systems drift quietly. Failures surface late. Measurement is fragmented. Accountability is optional.</p>
-  <p>This work makes structure observable: coherence vs incoherence is reported from evidence, not narrative.</p>
-  <p>The goal is not persuasion. The goal is verifiability.</p>
-</div>
-<footer>© 2026 Geodiametrics</footer>
-</main></body></html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Problem · Geodiametrics</title>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+</head>
+<body class="problem">
+<main>
+
+<h1>The Problem</h1>
+<p>Why modern systems fail quietly — and why that failure is invisible until it’s too late.</p>
+
+<section data-tabs>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="overview">Overview</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="failures">Failure Modes</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="engines">Quad-Core View</button>
+  </div>
+
+  <div class="tabpanels">
+
+    <div class="tabpanel" role="tabpanel" data-panel="overview" data-open="true">
+      <div class="panel">
+        <p>Systems optimize performance while eroding coherence. Metrics lag reality. Accountability dissolves. Collapse appears sudden only because structure was never observed.</p>
+      </div>
+
+      <div class="bubble-board">
+        <div class="bubbles">
+          <div class="bubble blue" data-detail='{"title":"Silent Drift","body":"Misalignment grows without visible signals.\nBy the time metrics change, the system is already unstable."}'>
+            <div class="t">Silent Drift</div><div class="s">Unseen decay</div>
+          </div>
+          <div class="bubble pink" data-detail='{"title":"Lagging Metrics","body":"Most dashboards report outcomes, not structure.\nThey explain the past, not the present."}'>
+            <div class="t">Lagging Metrics</div><div class="s">Too late</div>
+          </div>
+          <div class="bubble mint" data-detail='{"title":"Narrative Control","body":"Stories replace measurement.\nIntent substitutes for evidence."}'>
+            <div class="t">Narrative Control</div><div class="s">Appearance</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="failures" data-open="false">
+      <div class="bubble-board">
+        <div class="bubbles">
+          <div class="bubble pink" data-detail='{"title":"Misaligned Incentives","body":"Local optimization undermines global stability."}'>
+            <div class="t">Incentives</div><div class="s">Local vs global</div>
+          </div>
+          <div class="bubble blue" data-detail='{"title":"Fragmented Measurement","body":"Different teams measure incompatible signals."}'>
+            <div class="t">Fragmentation</div><div class="s">No shared truth</div>
+          </div>
+          <div class="bubble gray" data-detail='{"title":"Delayed Accountability","body":"Consequences surface long after decisions are made."}'>
+            <div class="t">Delay</div><div class="s">No feedback</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="engines" data-open="false">
+      <div class="panel">
+        <p>The problem manifests differently across the four quad-core engines. Each engine exposes a different failure surface.</p>
+      </div>
+      <div class="bubble-board">
+        <div class="bubbles">
+          <div class="bubble blue"><div class="t">Selection</div><div class="s">Wrong inputs chosen</div></div>
+          <div class="bubble mint"><div class="t">Resolution</div><div class="s">Constraints ignored</div></div>
+          <div class="bubble pink"><div class="t">Commitment</div><div class="s">Decisions not honored</div></div>
+          <div class="bubble gray"><div class="t">Continuation</div><div class="s">Drift uncorrected</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script defer src="/assets/bubbles.js"></script>
+</main>
+</body>
+</html>

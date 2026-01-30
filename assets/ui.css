@@ -1,26 +1,94 @@
-/* ===========================
-   TNT: BUTTON VISIBILITY FIX
-   Paste at BOTTOM of assets/ui.css
-   Purpose: Force action buttons to readable white text (kills purple/disabled look)
-   =========================== */
+/* =========================================================
+   TNT: RESTORE DIAMOND CARD DESIGN
+   Purpose: Bring back stacked diamond UI cards (not just background glow)
+   Scope: Home action tiles + future reuse
+   ========================================================= */
 
-.actions a,
-.actions a:visited,
-.actions a:hover,
-.actions a:active{
+/* Diamond card container */
+.diamond-stack{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3.5rem;
+  margin:4rem 0 6rem;
+}
+
+/* Base diamond */
+.diamond{
+  width:320px;
+  height:320px;
+  transform:rotate(45deg);
+  border-radius:32px;
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.10),
+      rgba(255,255,255,0.03));
+  border:1px solid rgba(255,255,255,0.18);
+  box-shadow:
+    0 30px 90px rgba(0,0,0,0.55),
+    inset 0 0 0 1px rgba(255,255,255,0.04);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Inner content (unrotate text) */
+.diamond > .diamond-content{
+  transform:rotate(-45deg);
+  text-align:center;
+  max-width:70%;
+}
+
+/* Diamond label styles */
+.diamond .eyebrow{
+  font-size:0.75rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  opacity:.65;
+  margin-bottom:.5rem;
+}
+
+.diamond h3{
+  font-size:1.6rem;
+  margin:.25rem 0 .5rem;
+}
+
+.diamond p{
+  font-size:.95rem;
+  opacity:.8;
+  line-height:1.45;
+}
+
+/* Color tiers */
+.diamond.control{
+  background:linear-gradient(180deg,
+    rgba(122,162,255,.18),
+    rgba(122,162,255,.04));
+}
+
+.diamond.reference{
+  background:linear-gradient(180deg,
+    rgba(92,207,191,.18),
+    rgba(92,207,191,.04));
+}
+
+.diamond.foundations{
+  background:linear-gradient(180deg,
+    rgba(255,122,198,.16),
+    rgba(255,122,198,.04));
+}
+
+/* Make diamonds clickable */
+.diamond a{
   color:#fff !important;
-  text-shadow:0 1px 2px rgba(0,0,0,.45);
-  background:rgba(255,255,255,.08) !important;
-  border:1px solid rgba(255,255,255,.35) !important;
+  text-decoration:none;
 }
 
-.actions a:hover{
-  background:rgba(255,255,255,.16) !important;
-  border-color:rgba(255,255,255,.60) !important;
+/* Mobile scale-down */
+@media (max-width:700px){
+  .diamond{
+    width:260px;
+    height:260px;
+  }
 }
-
-.actions a:active{
-  background:rgba(255,255,255,.22) !important;
-}
-
-.actions a *{color:#fff !important;}

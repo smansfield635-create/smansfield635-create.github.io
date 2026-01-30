@@ -3,23 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Geodiametrics</title>
-
+<title>Geodiametrics · Problem</title>
 <link rel="stylesheet" href="/assets/style.css">
 <script defer src="/assets/capture.js"></script>
-
 </head>
 <body>
-
-<main style="max-width:960px;margin:0 auto;padding:20px">
+<main class="page">
 
 <header class="card">
-  <h1>Geodiametrics</h1>
-  <p class="muted">
-    Live coherence and execution instrument.
-  </p>
-
+  <h1>Problem</h1>
+  <p class="muted">Why this instrument exists.</p>
   <nav class="nav">
     <a href="/">Home</a>
     <a href="/control/">Control</a>
@@ -31,51 +24,14 @@
 </header>
 
 <section class="card">
-  <h2>Unarch</h2>
   <p>
-    This system is live.
-    It exposes state without hiding execution.
-  </p>
-
-  <p>
-    All activity is aggregated globally at the edge.
-    Local activity is visible only to the device.
-  </p>
-
-  <p class="muted">
-    Canonical records live on OSF.
+    Modern systems drift quietly. Geodiametrics makes drift observable
+    before outcomes fail.
   </p>
 </section>
 
-<section class="card">
-  <h3>Global Status</h3>
-  <div class="metric-value" id="global-status">Loading…</div>
-  <div class="muted" id="global-meta">—</div>
-</section>
-
-<footer class="muted" style="margin-top:40px">
-  © 2026 Geodiametrics · Live system
-</footer>
+<footer class="muted">© 2026 Geodiametrics</footer>
 
 </main>
-
-<script>
-(async ()=>{
-  try{
-    const BASE="https://geodiametrics-aggregator.smansfield635.workers.dev";
-    const r=await fetch(BASE+"/metrics?t="+Date.now(),{cache:"no-store"});
-    const j=await r.json();
-    const m=j.metrics||{};
-    document.getElementById("global-status").textContent =
-      `Sessions ${m.sessions||0} · Pageviews ${m.pageviews||0} · Clicks ${m.clicks||0}`;
-    document.getElementById("global-meta").textContent =
-      `Updated ${new Date(m.lastUpdated||0).toLocaleString()}`;
-  }catch(e){
-    document.getElementById("global-status").textContent = "Global unavailable";
-    document.getElementById("global-meta").textContent = "—";
-  }
-})();
-</script>
-
 </body>
 </html>

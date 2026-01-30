@@ -1,0 +1,91 @@
+<!-- FULL TNT — /404.html (REACTOR-CONSISTENT NOT FOUND) -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>404 · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css"/>
+
+<style>
+.reactor{
+  position:relative;
+  height:88vh;
+  min-height:640px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.smoke{
+  position:absolute;
+  inset:-25%;
+  background:
+    radial-gradient(820px 820px at 50% 42%, rgba(233,238,252,.10), transparent 68%),
+    radial-gradient(920px 920px at 35% 62%, rgba(122,162,255,.10), transparent 70%),
+    radial-gradient(920px 920px at 65% 62%, rgba(255,122,198,.08), transparent 70%);
+  filter:blur(86px);
+  animation: drift 48s linear infinite;
+}
+@keyframes drift{
+  0%{transform:translate(0,0)}
+  50%{transform:translate(2%,-1%)}
+  100%{transform:translate(0,0)}
+}
+.diamond{
+  position:absolute;
+  width:340px;height:340px;
+  transform:rotate(45deg);
+  border-radius:44px;
+  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:
+    0 55px 170px rgba(0,0,0,.82),
+    inset 0 0 0 1px rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+  z-index:3;
+}
+.diamond .in{transform:rotate(-45deg);text-align:center;width:75%}
+.diamond .t{font-weight:900;font-size:1.6rem}
+.diamond .s{margin-top:.35rem;color:rgba(233,238,252,.72);line-height:1.45}
+#panel{
+  position:absolute;
+  bottom:3%;
+  width:min(920px,92vw);
+  background:rgba(10,14,30,.72);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:30px;
+  padding:1.15rem 1.3rem;
+  box-shadow:0 30px 100px rgba(0,0,0,.75);
+  backdrop-filter:blur(14px);
+}
+#panel p{margin:.45rem 0}
+a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.22);padding-bottom:1px}
+.small{font-size:.95rem;color:rgba(233,238,252,.65)}
+</style>
+</head>
+
+<body>
+<main>
+
+<div class="reactor">
+  <div class="smoke"></div>
+
+  <div class="diamond">
+    <div class="in">
+      <div class="t">Not Found</div>
+      <div class="s">This path is not a valid seam.</div>
+    </div>
+  </div>
+
+  <div id="panel">
+    <p><strong>State:</strong> 404</p>
+    <p class="small"><strong>Rule:</strong> Only canonical seams exist.</p>
+    <p class="small"><a href="/">Return to reactor</a></p>
+  </div>
+</div>
+
+<footer>© 2026 Geodiametrics</footer>
+</main>
+</body>
+</html>

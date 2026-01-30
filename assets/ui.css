@@ -1,154 +1,91 @@
 /* =========================================================
-   Geodiametrics — TNT UI (single-file CSS)
+   TNT: POLISH v2 — DEPTH + HIERARCHY + DIAMOND DOMINANCE
+   Paste at BOTTOM of assets/ui.css
    ========================================================= */
 
-:root{
-  --fg:#e9eefc;
-  --muted:rgba(233,238,252,.70);
-  --panel:rgba(12,16,34,.55);
-  --stroke:rgba(233,238,252,.14);
-  --shadow:0 20px 60px rgba(0,0,0,.55);
-  --radius:22px;
+/* 1) Stronger typography hierarchy */
+h1{
+  font-size:3.1rem !important;
+  letter-spacing:-0.02em !important;
+  text-shadow:0 10px 35px rgba(0,0,0,.55) !important;
+}
+p{
+  font-size:1.05rem !important;
+  color:rgba(233,238,252,.78) !important;
 }
 
-*{box-sizing:border-box}
-html,body{margin:0;height:100%}
-
-body{
-  color:var(--fg);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  background:
-    radial-gradient(1200px 900px at 20% 10%,rgba(122,162,255,.25),transparent 60%),
-    radial-gradient(900px 700px at 80% 20%,rgba(255,122,198,.18),transparent 60%),
-    radial-gradient(900px 800px at 50% 100%,rgba(92,207,191,.12),transparent 60%),
-    #070914;
-  overflow-x:hidden;
+/* 2) True “glass” panels (premium) */
+.panel{
+  background:rgba(10,14,30,.55) !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  box-shadow:0 25px 90px rgba(0,0,0,.62) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
 }
+.panel strong{color:#fff !important}
 
-/* Diamond ambient */
-body::before,body::after{
-  content:"";
-  position:fixed;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:28px;
-  pointer-events:none;
-  z-index:0;
-}
-body::before{
-  width:720px;height:720px;
-  background:rgba(122,162,255,0.08);
-  border:1px solid rgba(122,162,255,0.18);
-  box-shadow:0 30px 90px rgba(0,0,0,0.55);
-  opacity:.55;
-}
-body::after{
-  width:560px;height:560px;
-  background:rgba(255,122,198,0.05);
-  border:1px solid rgba(255,255,255,0.12);
-  box-shadow:0 20px 60px rgba(0,0,0,0.45);
-  opacity:.35;
-  transform:translate(-50%,-40%) rotate(45deg);
-}
-
-/* Layout */
-main,header,footer{position:relative;z-index:1}
-main{max-width:980px;margin:0 auto;padding:3.25rem 1.25rem 4.5rem}
-h1{font-size:2.8rem;margin:.25rem 0 .5rem}
-h2{font-size:2.0rem;margin:2.2rem 0 .75rem}
-p{line-height:1.65;color:var(--muted);margin:.5rem 0}
-
-/* Top nav */
+/* 3) Nav pills: less chunky + more elegant */
 .nav{
-  display:flex;flex-wrap:wrap;gap:.6rem;
-  margin:1.15rem 0 1.75rem;
+  gap:.55rem !important;
+  margin:1.0rem 0 1.35rem !important;
 }
 .nav a{
-  text-decoration:none;
-  padding:.7rem 1rem;
-  border-radius:999px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.12);
-  color:#fff;
+  padding:.62rem .95rem !important;
+  background:rgba(255,255,255,.045) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03) !important;
 }
-.nav a:active{opacity:.85}
-
-/* Panels */
-.panel{
-  background:var(--panel);
-  border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:1.35rem 1.25rem;
+.nav a:hover{
+  background:rgba(255,255,255,.075) !important;
+  border-color:rgba(255,255,255,.20) !important;
 }
 
-/* Diamond stack (Home) */
+/* 4) Make diamonds feel “center stage” + overlap like the original */
 .diamond-stack{
-  margin:2.4rem 0 3.2rem;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:3.2rem;
+  margin:2.0rem 0 4.5rem !important;
+  gap:0rem !important;
 }
 .diamond{
-  width:330px;height:330px;
-  transform:rotate(45deg);
-  border-radius:34px;
-  border:1px solid rgba(255,255,255,0.18);
-  box-shadow:0 30px 90px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.04);
-  display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(180deg,rgba(255,255,255,0.10),rgba(255,255,255,0.03));
+  width:360px !important;
+  height:360px !important;
+  margin:-72px 0 !important;           /* overlap */
+  border-radius:40px !important;
+  border:1px solid rgba(255,255,255,.16) !important;
+  box-shadow:0 40px 120px rgba(0,0,0,.70), inset 0 0 0 1px rgba(255,255,255,.05) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
 }
+.diamond:first-child{margin-top:0 !important}
+.diamond:last-child{margin-bottom:0 !important}
+
 .diamond .content{
-  transform:rotate(-45deg);
-  text-align:left;
-  width:72%;
-}
-.eyebrow{
-  font-size:.75rem;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  opacity:.65;
-  margin-bottom:.55rem;
+  width:76% !important;
 }
 .diamond h3{
-  margin:.1rem 0 .45rem;
-  font-size:1.7rem;
-  color:#fff;
+  font-size:1.95rem !important;
+  text-shadow:0 8px 30px rgba(0,0,0,.55) !important;
 }
-.diamond p{margin:0;color:rgba(233,238,252,.78)}
-.diamond a{color:#fff;text-decoration:none}
+.diamond p{
+  color:rgba(233,238,252,.80) !important;
+}
 
-/* Color tiers */
-.diamond.control{background:linear-gradient(180deg,rgba(122,162,255,.18),rgba(122,162,255,.04))}
-.diamond.problem{background:linear-gradient(180deg,rgba(255,122,198,.16),rgba(255,122,198,.04))}
-.diamond.execution{background:linear-gradient(180deg,rgba(92,207,191,.16),rgba(92,207,191,.04))}
-.diamond.foundations{background:linear-gradient(180deg,rgba(233,238,252,.12),rgba(233,238,252,.03))}
-.diamond.reference{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03))}
+/* 5) Replace “old-school underline links” with modern pills inside panels */
+.panel a{
+  display:inline-block !important;
+  padding:.55rem .8rem !important;
+  border-radius:999px !important;
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(255,255,255,.16) !important;
+  color:#fff !important;
+  text-decoration:none !important;
+}
+.panel a:hover{
+  background:rgba(255,255,255,.11) !important;
+  border-color:rgba(255,255,255,.28) !important;
+}
 
+/* 6) Mobile tuning */
 @media (max-width:700px){
-  h1{font-size:2.35rem}
-  .diamond{width:270px;height:270px}
-  .diamond .content{width:78%}
-}
-
-/* Modern links (inside pages) */
-a.link{
-  color:rgba(233,238,252,0.95);
-  text-decoration:none;
-  border-bottom:1px solid rgba(233,238,252,0.22);
-  padding-bottom:1px;
-}
-a.link:hover{
-  border-bottom-color:rgba(233,238,252,0.55);
-  background:rgba(255,255,255,0.06);
-}
-
-/* Footer */
-footer{
-  margin-top:3.25rem;
-  opacity:.6;
-  font-size:.85rem;
-  text-align:center;
+  h1{font-size:2.65rem !important}
+  .diamond{width:300px !important;height:300px !important;margin:-58px 0 !important}
 }

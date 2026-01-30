@@ -1,73 +1,191 @@
-<!-- FULL TNT — /execution/index.html (NOTICE LAYER: SYMPTOMS → DIAGNOSIS → EXECUTION) -->
+<!-- FULL TNT — /execution/index.html (CORRECTED GEOMETRY: ONE DECISION + 3 FACETS, NO INTERACTIONS REQUIRED) -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Execution · Geodiametrics</title>
 <link rel="stylesheet" href="/assets/ui.css"/>
+
 <style>
-.reactor{position:relative;height:88vh;min-height:640px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.smoke{position:absolute;inset:-20%;background:
-radial-gradient(600px 600px at 30% 40%, rgba(122,162,255,.18), transparent 60%),
-radial-gradient(700px 700px at 70% 55%, rgba(255,122,198,.16), transparent 60%),
-radial-gradient(800px 800px at 50% 70%, rgba(92,207,191,.14), transparent 65%);
-filter:blur(60px);animation:drift 30s linear infinite}
-@keyframes drift{0%{transform:translate(0,0)}50%{transform:translate(-4%,2%)}100%{transform:translate(0,0)}}
-.diamond{position:absolute;width:280px;height:280px;transform:rotate(45deg);border-radius:36px;
-background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
-border:1px solid rgba(255,255,255,.18);
-box-shadow:0 40px 140px rgba(0,0,0,.75), inset 0 0 0 1px rgba(255,255,255,.06);
-display:flex;align-items:center;justify-content:center;cursor:pointer}
-.diamond .in{transform:rotate(-45deg);text-align:center}
-.diamond .t{font-weight:900;font-size:1.6rem}
-.diamond .s{margin-top:.35rem;color:rgba(233,238,252,.7)}
-.core{width:180px;height:180px;opacity:.88}
-.core:hover{opacity:1}
-.blue{background:linear-gradient(180deg,rgba(122,162,255,.28),rgba(122,162,255,.06));border-color:rgba(122,162,255,.35)}
-.mint{background:linear-gradient(180deg,rgba(92,207,191,.28),rgba(92,207,191,.06));border-color:rgba(92,207,191,.35)}
-.pink{background:linear-gradient(180deg,rgba(255,122,198,.26),rgba(255,122,198,.06));border-color:rgba(255,122,198,.34)}
-.gray{background:linear-gradient(180deg,rgba(233,238,252,.20),rgba(233,238,252,.06));border-color:rgba(233,238,252,.26)}
-#core{z-index:3}
-#s1{top:14%;left:50%;transform:translate(-50%,-50%) rotate(45deg)}
-#s2{left:16%;top:52%;transform:translate(-50%,-50%) rotate(45deg)}
-#s3{right:16%;top:52%;transform:translate(50%,-50%) rotate(45deg)}
-#panel{position:absolute;bottom:3%;width:min(860px,92vw);background:rgba(10,14,30,.70);
-border:1px solid rgba(255,255,255,.14);border-radius:28px;padding:1.1rem 1.2rem;
-box-shadow:0 28px 90px rgba(0,0,0,.7);backdrop-filter:blur(14px)}
-#panel p{margin:.4rem 0}
+/* === EXECUTION REACTOR === */
+.reactor{
+  position:relative;
+  height:88vh;
+  min-height:640px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+/* SMOKE — HOTTER, DIRECTIONAL */
+.smoke{
+  position:absolute;
+  inset:-25%;
+  background:
+    radial-gradient(600px 600px at 50% 30%, rgba(255,122,198,.16), transparent 62%),
+    radial-gradient(700px 700px at 35% 60%, rgba(92,207,191,.14), transparent 66%),
+    radial-gradient(760px 760px at 65% 60%, rgba(122,162,255,.14), transparent 66%);
+  filter:blur(70px);
+  animation: drift 30s linear infinite;
+}
+@keyframes drift{
+  0%{transform:translate(0,0)}
+  50%{transform:translate(2%,-2%)}
+  100%{transform:translate(0,0)}
+}
+
+/* CENTRAL DECISION DIAMOND */
+.diamond{
+  position:absolute;
+  width:300px;height:300px;
+  transform:rotate(45deg);
+  border-radius:40px;
+  background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:
+    0 50px 160px rgba(0,0,0,.80),
+    inset 0 0 0 1px rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+  z-index:3;
+}
+.diamond .in{
+  transform:rotate(-45deg);
+  text-align:center;
+}
+.diamond .t{
+  font-weight:900;
+  font-size:1.7rem;
+}
+.diamond .s{
+  margin-top:.35rem;
+  color:rgba(233,238,252,.72);
+}
+
+/* FACETS — PRESSURE VECTORS (NOT CLICKABLE) */
+.facet{
+  position:absolute;
+  width:180px;height:180px;
+  transform:rotate(45deg);
+  border-radius:28px;
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:
+    0 30px 100px rgba(0,0,0,.65),
+    inset 0 0 0 1px rgba(255,255,255,.05);
+  display:flex;align-items:center;justify-content:center;
+  opacity:.60;
+  pointer-events:none; /* FACETS ARE NOT CHOICES */
+}
+.facet .in{
+  transform:rotate(-45deg);
+  text-align:center;
+}
+.facet .t{
+  font-weight:800;
+  font-size:1.2rem;
+}
+.facet .s{
+  margin-top:.25rem;
+  font-size:.95rem;
+  color:rgba(233,238,252,.65);
+}
+
+/* FACET COLORS */
+.facet.blue{
+  background:linear-gradient(180deg,rgba(122,162,255,.18),rgba(122,162,255,.05));
+  border-color:rgba(122,162,255,.26);
+}
+.facet.mint{
+  background:linear-gradient(180deg,rgba(92,207,191,.18),rgba(92,207,191,.05));
+  border-color:rgba(92,207,191,.26);
+}
+.facet.pink{
+  background:linear-gradient(180deg,rgba(255,122,198,.18),rgba(255,122,198,.05));
+  border-color:rgba(255,122,198,.26);
+}
+
+/* POSITIONS */
+#bind{ z-index:3; }
+
+#observe{
+  top:14%;
+  left:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+#constrain{
+  left:16%;
+  top:52%;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+#verify{
+  right:16%;
+  top:52%;
+  transform:translate(50%,-50%) rotate(45deg);
+}
+
+/* PANEL */
+#panel{
+  position:absolute;
+  bottom:3%;
+  width:min(880px,92vw);
+  background:rgba(10,14,30,.72);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:30px;
+  padding:1.15rem 1.3rem;
+  box-shadow:0 30px 100px rgba(0,0,0,.75);
+  backdrop-filter:blur(14px);
+}
+#panel p{margin:.45rem 0}
 </style>
 </head>
+
 <body>
 <main>
+
 <div class="reactor">
+
   <div class="smoke"></div>
 
-  <div id="core" class="diamond gray" onclick="go('/')">
-    <div class="in"><div class="t">Notice</div><div class="s">Symptoms</div></div>
+  <!-- FACETS (PRESSURE VECTORS) -->
+  <div id="observe" class="facet blue">
+    <div class="in">
+      <div class="t">Observe</div>
+      <div class="s">Evidence</div>
+    </div>
   </div>
 
-  <div id="s1" class="diamond core blue" onclick="go('/diagnosis/')">
-    <div class="in"><div class="t">Drift</div><div class="s">?</div></div>
+  <div id="constrain" class="facet mint">
+    <div class="in">
+      <div class="t">Constrain</div>
+      <div class="s">Admissible</div>
+    </div>
   </div>
 
-  <div id="s2" class="diamond core mint" onclick="go('/diagnosis/')">
-    <div class="in"><div class="t">Rules</div><div class="s">?</div></div>
+  <div id="verify" class="facet pink">
+    <div class="in">
+      <div class="t">Verify</div>
+      <div class="s">Receipt</div>
+    </div>
   </div>
 
-  <div id="s3" class="diamond core pink" onclick="go('/diagnosis/')">
-    <div class="in"><div class="t">Promises</div><div class="s">?</div></div>
+  <!-- CENTRAL DECISION -->
+  <div id="bind" class="diamond">
+    <div class="in">
+      <div class="t">Bind</div>
+      <div class="s">Execution</div>
+    </div>
   </div>
 
+  <!-- PANEL -->
   <div id="panel">
-    <p><strong>Layer:</strong> Notice (Symptoms)</p>
-    <p><strong>Zipper:</strong> any symptom → Diagnosis</p>
-    <p><strong>Next:</strong> Diagnosis → Execution</p>
+    <p><strong>Layer:</strong> Bind (Execution)</p>
+    <p><strong>Rule:</strong> Facets apply pressure. The diamond makes the decision.</p>
+    <p><strong>Zipper:</strong> Execution → Engine</p>
   </div>
-</div>
 
-<script>
-function go(h){location.href=h;}
-</script>
+</div>
 
 <footer>© 2026 Geodiametrics</footer>
 </main>

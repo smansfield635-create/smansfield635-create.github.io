@@ -1,18 +1,8 @@
-<!-- TNT — /index.html (ROOT MAIN PAGE) -->
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Geodiametrics</title><style>
-html,body{margin:0;height:100%;background:#0b0f1a;color:#e9eefc;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-.reactor{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.smoke{position:absolute;inset:-25%;background:radial-gradient(700px 700px at 50% 35%,rgba(122,162,255,.18),transparent 60%),radial-gradient(800px 800px at 30% 65%,rgba(92,207,191,.16),transparent 65%),radial-gradient(900px 900px at 70% 65%,rgba(255,122,198,.14),transparent 68%);filter:blur(70px);animation:drift 40s linear infinite;pointer-events:none}
-@keyframes drift{0%{transform:translate(0,0)}50%{transform:translate(-3%,2%)}100%{transform:translate(0,0)}}
-.diamond{width:320px;height:320px;transform:rotate(45deg);border-radius:44px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.22);box-shadow:0 60px 180px rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:3;-webkit-tap-highlight-color:transparent}
-.diamond:active{opacity:.92}
-.in{transform:rotate(-45deg);text-align:center;user-select:none}
-.t{font-weight:900;font-size:1.9rem}
-.s{margin-top:.4rem;color:rgba(233,238,252,.75);font-size:1.05rem}
-.panel{position:absolute;bottom:4%;width:min(900px,92vw);background:rgba(10,14,30,.75);border:1px solid rgba(255,255,255,.16);border-radius:30px;padding:1.2rem 1.4rem;box-shadow:0 30px 110px rgba(0,0,0,.8);backdrop-filter:blur(16px)}
-.panel p{margin:.4rem 0}
-.small{font-size:.95rem;color:rgba(233,238,252,.70)}
-</style></head><body><main><div class="reactor"><div class="smoke"></div>
-<div class="diamond" onclick="location.href='/symptoms/'"><div class="in"><div class="t">Hold</div><div class="s">Tap to begin</div></div></div>
-<div class="panel"><p><strong>Main:</strong> /</p><p class="small">Tap Hold → /symptoms/</p></div>
-</div></main></body></html>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Geodiametrics</title></head>
+<body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;font-family:system-ui;background:#0b0f1a;color:#e9eefc">
+<div>
+<h1 style="margin:0 0 10px">Geodiametrics</h1>
+<p style="margin:0 0 20px;opacity:.8">Main page is live.</p>
+<a href="/symptoms/" style="color:#e9eefc">Enter → /symptoms/</a>
+</div>
+</body></html>

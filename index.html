@@ -1,80 +1,81 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodiametrics</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="A public system for examining structural coherence under pressure." />
-
-  <link rel="stylesheet" href="/assets/ui.css" />
-
-  <style>
-    main { max-width: 920px; margin: 0 auto; padding: 4rem 1.5rem; }
-    h1 { font-size: 2.6rem; margin-bottom: 0.75rem; }
-    p.lead { font-size: 1.2rem; line-height: 1.6; opacity: 0.9; }
-    .status {
-      margin: 2.5rem 0;
-      padding: 1.25rem 1.5rem;
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 12px;
-      background: rgba(255,255,255,0.03);
-    }
-    .status strong { display: block; margin-bottom: 0.25rem; }
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-top: 3rem;
-    }
-    .actions a {
-      display: block;
-      padding: 1.1rem 1.25rem;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.2);
-      text-decoration: none;
-      font-weight: 500;
-      text-align: center;
-      transition: background 0.15s ease, border 0.15s ease;
-    }
-    .actions a:hover {
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(255,255,255,0.35);
-    }
-    footer {
-      margin-top: 5rem;
-      opacity: 0.6;
-      font-size: 0.85rem;
-      text-align: center;
-    }
-  </style>
+  <meta name="description" content="A public system that shows what holds together under pressure."/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
-
 <body>
-  <main>
-    <h1>Geodiametrics</h1>
+<main>
 
-    <p class="lead">
-      A public system for examining what remains coherent under pressure —
-      across individuals, organizations, and systems.
-    </p>
+  <h1>Geodiametrics</h1>
+  <p>A public system that shows what holds together under pressure.</p>
 
-    <section class="status">
-      <strong>System Status</strong>
-      Operational (public surfaces stable)<br />
+  <div class="nav">
+    <a href="/">Home</a>
+    <a href="/problem/">Problem</a>
+    <a href="/execution/">Execution</a>
+    <a href="/foundations/">Foundations</a>
+    <a href="/reference/">Reference</a>
+    <a href="/control/">Control</a>
+  </div>
+
+  <div class="panel">
+    <strong>System Status</strong>
+    <div style="margin-top:.35rem;color:rgba(233,238,252,.78)">
+      Operational (public surfaces stable)<br/>
       Live metrics: <em>not yet enabled</em>
-    </section>
+    </div>
+  </div>
 
-    <section class="actions">
-      <a href="/problem/">Read the Problem</a>
-      <a href="/execution/">How the System Works</a>
-      <a href="/foundations/">Foundational Definitions</a>
-      <a href="/reference/">Canonical Records</a>
-      <a href="/control/">Control Room (Experimental)</a>
-    </section>
+  <div class="diamond-stack">
 
-    <footer>
-      Canonical research records maintained via OSF · UI is a supporting surface
-    </footer>
-  </main>
+    <div class="diamond problem">
+      <div class="content">
+        <div class="eyebrow">START HERE</div>
+        <h3><a href="/problem/">Problem</a></h3>
+        <p>What fails, and why it matters.</p>
+      </div>
+    </div>
+
+    <div class="diamond execution">
+      <div class="content">
+        <div class="eyebrow">METHOD</div>
+        <h3><a href="/execution/">Execution</a></h3>
+        <p>How the system runs, end-to-end.</p>
+      </div>
+    </div>
+
+    <div class="diamond foundations">
+      <div class="content">
+        <div class="eyebrow">BASICS</div>
+        <h3><a href="/foundations/">Foundations</a></h3>
+        <p>Definitions and rules.</p>
+      </div>
+    </div>
+
+    <div class="diamond reference">
+      <div class="content">
+        <div class="eyebrow">GROUNDING</div>
+        <h3><a href="/reference/">Reference</a></h3>
+        <p>Canonical anchors and records.</p>
+      </div>
+    </div>
+
+    <div class="diamond control">
+      <div class="content">
+        <div class="eyebrow">LIVE</div>
+        <h3><a href="/control/">Control</a></h3>
+        <p>Gauges (experimental surface).</p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>© 2026 Geodiametrics · Canonical records maintained off-site</footer>
+
+</main>
 </body>
 </html>

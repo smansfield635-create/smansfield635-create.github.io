@@ -3,23 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Geodiametrics</title>
-
+<title>Geodiametrics · Control</title>
 <link rel="stylesheet" href="/assets/style.css">
 <script defer src="/assets/capture.js"></script>
-
 </head>
 <body>
-
-<main style="max-width:960px;margin:0 auto;padding:20px">
+<main class="page">
 
 <header class="card">
-  <h1>Geodiametrics</h1>
-  <p class="muted">
-    Live coherence and execution instrument.
-  </p>
-
+  <h1>Control</h1>
+  <p class="muted">Read-only global and device gauges.</p>
   <nav class="nav">
     <a href="/">Home</a>
     <a href="/control/">Control</a>
@@ -31,51 +24,44 @@
 </header>
 
 <section class="card">
-  <h2>Unarch</h2>
-  <p>
-    This system is live.
-    It exposes state without hiding execution.
-  </p>
-
-  <p>
-    All activity is aggregated globally at the edge.
-    Local activity is visible only to the device.
-  </p>
-
-  <p class="muted">
-    Canonical records live on OSF.
-  </p>
+  <h3>Global (Worker)</h3>
+  <div class="metric-value" id="g">Loading…</div>
+  <div class="muted" id="gmeta">—</div>
 </section>
 
 <section class="card">
-  <h3>Global Status</h3>
-  <div class="metric-value" id="global-status">Loading…</div>
-  <div class="muted" id="global-meta">—</div>
+  <h3>Device (This browser)</h3>
+  <div class="metric-value" id="d">Loading…</div>
+  <div class="muted" id="dmeta">—</div>
 </section>
 
-<footer class="muted" style="margin-top:40px">
-  © 2026 Geodiametrics · Live system
-</footer>
+<footer class="muted">© 2026 Geodiametrics</footer>
 
 </main>
 
 <script>
 (async ()=>{
+  const BASE="https://geodiametrics-aggregator.smansfield635.workers.dev";
   try{
-    const BASE="https://geodiametrics-aggregator.smansfield635.workers.dev";
     const r=await fetch(BASE+"/metrics?t="+Date.now(),{cache:"no-store"});
-    const j=await r.json();
-    const m=j.metrics||{};
-    document.getElementById("global-status").textContent =
+    const j=await r.json(); const m=j.metrics||{};
+    document.getElementById("g").textContent =
       `Sessions ${m.sessions||0} · Pageviews ${m.pageviews||0} · Clicks ${m.clicks||0}`;
-    document.getElementById("global-meta").textContent =
-      `Updated ${new Date(m.lastUpdated||0).toLocaleString()}`;
+    document.getElementById("gmeta").textContent =
+      m.lastUpdated ? new Date(m.lastUpdated).toLocaleString() : "—";
   }catch(e){
-    document.getElementById("global-status").textContent = "Global unavailable";
-    document.getElementById("global-meta").textContent = "—";
+    document.getElementById("g").textContent="Unavailable";
+  }
+  try{
+    const d=JSON.parse(localStorage.getItem("geo_live_site")||"{}");
+    const s=d.interaction||{};
+    document.getElementById("d").textContent =
+      `Sessions ${s.sessions_24h||0} · Pageviews ${s.pageviews_24h||0} · Clicks ${s.clicks_24h||0}`;
+    document.getElementById("dmeta").textContent=d.timestamp||"—";
+  }catch(e){
+    document.getElementById("d").textContent="Unavailable";
   }
 })();
 </script>
-
 </body>
 </html>

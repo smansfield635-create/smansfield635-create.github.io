@@ -1,155 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Geodiametrics · Control Room</title>
-
-<style>
-:root{
-  --bg1:#0a0f1f;--bg2:#121a33;
-  --glass:rgba(255,255,255,.08);
-  --line:rgba(255,255,255,.18);
-  --text:#eef1ff;--muted:#9aa9ff;
-  --accent:#6fa8ff;--good:#4ade80;--warn:#facc15;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  color:var(--text);
-  background:
-    radial-gradient(900px 600px at 20% 10%,#1b2350,transparent 60%),
-    radial-gradient(800px 700px at 80% 30%,#2a356d,transparent 60%),
-    linear-gradient(180deg,var(--bg1),var(--bg2));
-}
-header{padding:26px 20px 10px}
-h1{margin:0;font-size:34px}
-.sub{margin-top:6px;color:var(--muted)}
-nav{display:flex;flex-wrap:wrap;gap:10px;padding:14px 20px}
-.nav{
-  padding:10px 16px;border-radius:999px;
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--line)
-}
-section{padding:22px 20px}
-.card{
-  max-width:1100px;margin:0 auto 22px;padding:22px;
-  border-radius:22px;background:var(--glass);
-  border:1px solid var(--line);backdrop-filter:blur(14px)
-}
-.grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:18px;margin-top:18px
-}
-.metric{
-  font-size:34px;font-weight:700;letter-spacing:.3px
-}
-.label{font-size:13px;color:var(--muted)}
-.bar{height:10px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}
-.fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#9fb0ff)}
-.fill.good{background:linear-gradient(90deg,var(--good),#86efac)}
-.fill.warn{background:linear-gradient(90deg,var(--warn),#fde047)}
-.hr{height:1px;background:rgba(255,255,255,.14);margin:14px 0}
-.badge{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 14px;border-radius:999px;
-  background:rgba(255,255,255,.08);border:1px solid var(--line)
-}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--good)}
-footer{text-align:center;color:var(--muted);font-size:13px;padding:28px 10px}
-</style>
+  <meta charset="utf-8" />
+  <title>Control Room · Geodiametrics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <style>
+    main{max-width:960px;margin:0 auto;padding:4rem 1.5rem}
+    h1{font-size:2.4rem;margin-bottom:1rem}
+    .card{
+      border:1px solid rgba(255,255,255,.2);
+      border-radius:12px;
+      padding:1.5rem;
+      margin:2rem 0;
+      background:rgba(255,255,255,.03)
+    }
+  </style>
 </head>
-
 <body>
-
-<header>
+<main>
   <h1>Control Room</h1>
-  <div class="sub">Live gauges · OSF anchors · Quad-core status</div>
-</header>
 
-<nav>
-  <div class="nav">Home</div>
-  <div class="nav">Control Room</div>
-  <div class="nav">Foundations</div>
-  <div class="nav">Table of Contents</div>
-  <div class="nav">Problem</div>
-  <div class="nav">Execution</div>
-</nav>
+  <p>
+    This surface displays experimental system metrics.
+    Data may be incomplete or unavailable.
+  </p>
 
-<section class="card">
-  <span class="badge"><span class="dot"></span> GLOBAL + DEVICE · READ ONLY</span>
-</section>
+  <div class="card">
+    <strong>Status</strong><br />
+    Experimental<br />
+    Last updated: unavailable<br />
+    Source: not yet connected
+  </div>
 
-<section class="card">
-  <h3>Global Gauge (Everyone)</h3>
-  <div class="metric" id="gSessions">—</div>
-  <div class="label">Sessions</div>
-  <div class="bar"><div class="fill good" id="gSessionsBar"></div></div>
+  <div class="card">
+    <strong>Notice</strong>
+    <p>
+      No live metrics are currently enabled.
+      This page will activate only when a verified data source is present.
+    </p>
+  </div>
 
-  <div class="hr"></div>
-
-  <div class="metric" id="gPageviews">—</div>
-  <div class="label">Pageviews</div>
-  <div class="bar"><div class="fill" id="gPageviewsBar"></div></div>
-
-  <div class="hr"></div>
-
-  <div class="metric" id="gClicks">—</div>
-  <div class="label">Clicks</div>
-  <div class="bar"><div class="fill warn" id="gClicksBar"></div></div>
-
-  <div class="label" id="gUpdated">Last updated: —</div>
-</section>
-
-<section class="card">
-  <h3>Device Gauge (This device)</h3>
-  <div class="metric" id="dSessions">—</div>
-  <div class="label">Sessions</div>
-  <div class="bar"><div class="fill good" id="dSessionsBar"></div></div>
-
-  <div class="label" id="dUpdated">Updated: —</div>
-</section>
-
-<section class="card">
-  <h3>Canonical Anchors</h3>
-  <ul>
-    <li><a href="https://osf.io/4su3v" target="_blank">Coherence Constraint Law (OSF)</a></li>
-    <li><a href="https://osf.io/ftuvs" target="_blank">Quad-Core Execution Cycle (OSF)</a></li>
-    <li><a href="https://osf.io/mn6vu" target="_blank">Diamond Geometry Model (OSF)</a></li>
-    <li>ORCID: 0009-0004-1293-0405</li>
-  </ul>
-</section>
-
-<footer>
-© 2026 Geodiametrics · Control Room
-</footer>
-
-<script>
-/* DEVICE */
-const dKey="geo_device";
-let d=JSON.parse(localStorage.getItem(dKey)||'{"sessions":0}');
-d.sessions++;
-localStorage.setItem(dKey,JSON.stringify(d));
-document.getElementById("dSessions").textContent=d.sessions;
-document.getElementById("dSessionsBar").style.width=Math.min(100,d.sessions*5)+"%";
-document.getElementById("dUpdated").textContent="Updated: "+new Date().toLocaleString();
-
-/* GLOBAL */
-fetch("https://geodiametrics-aggregator.smansfield635.workers.dev/")
-.then(r=>r.json())
-.then(j=>{
-  const m=j.metrics||{};
-  document.getElementById("gSessions").textContent=m.sessions??"—";
-  document.getElementById("gPageviews").textContent=m.pageviews??"—";
-  document.getElementById("gClicks").textContent=m.clicks??"—";
-  document.getElementById("gSessionsBar").style.width=Math.min(100,(m.sessions||0)*5)+"%";
-  document.getElementById("gPageviewsBar").style.width=Math.min(100,(m.pageviews||0)*2)+"%";
-  document.getElementById("gClicksBar").style.width=Math.min(100,(m.clicks||0)*5)+"%";
-  document.getElementById("gUpdated").textContent="Last updated: "+new Date(m.lastUpdated||Date.now()).toLocaleString();
-})
-.catch(()=>{});
-</script>
-
+</main>
 </body>
 </html>

@@ -1,62 +1,183 @@
-<!-- FULL TNT — /diagnosis/index.html (LIMIT LAYER: DIAGNOSIS) -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Diagnosis · Geodiametrics</title>
 <link rel="stylesheet" href="/assets/ui.css"/>
+
 <style>
-.reactor{position:relative;height:88vh;min-height:640px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.smoke{position:absolute;inset:-20%;background:
-radial-gradient(650px 650px at 28% 45%, rgba(92,207,191,.16), transparent 62%),
-radial-gradient(700px 700px at 74% 50%, rgba(122,162,255,.14), transparent 62%),
-radial-gradient(900px 900px at 50% 72%, rgba(255,122,198,.10), transparent 68%);
-filter:blur(60px);animation:drift 32s linear infinite}
-@keyframes drift{0%{transform:translate(0,0)}50%{transform:translate(3%,-2%)}100%{transform:translate(0,0)}}
-.diamond{position:absolute;width:280px;height:280px;transform:rotate(45deg);border-radius:36px;
-background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
-border:1px solid rgba(255,255,255,.18);
-box-shadow:0 40px 140px rgba(0,0,0,.75), inset 0 0 0 1px rgba(255,255,255,.06);
-display:flex;align-items:center;justify-content:center;cursor:pointer}
-.diamond .in{transform:rotate(-45deg);text-align:center}
-.diamond .t{font-weight:900;font-size:1.6rem}
-.diamond .s{margin-top:.35rem;color:rgba(233,238,252,.7)}
-.core{width:180px;height:180px;opacity:.88}
-.core:hover{opacity:1}
-.blue{background:linear-gradient(180deg,rgba(122,162,255,.24),rgba(122,162,255,.06));border-color:rgba(122,162,255,.32)}
-.mint{background:linear-gradient(180deg,rgba(92,207,191,.26),rgba(92,207,191,.06));border-color:rgba(92,207,191,.34)}
-.pink{background:linear-gradient(180deg,rgba(255,122,198,.20),rgba(255,122,198,.06));border-color:rgba(255,122,198,.30)}
-.gray{background:linear-gradient(180deg,rgba(233,238,252,.20),rgba(233,238,252,.06));border-color:rgba(233,238,252,.26)}
-#core{z-index:3}
-#d1{top:14%;left:50%;transform:translate(-50%,-50%) rotate(45deg)}
-#d2{left:16%;top:52%;transform:translate(-50%,-50%) rotate(45deg)}
-#d3{right:16%;top:52%;transform:translate(50%,-50%) rotate(45deg)}
-#panel{position:absolute;bottom:3%;width:min(860px,92vw);background:rgba(10,14,30,.70);
-border:1px solid rgba(255,255,255,.14);border-radius:28px;padding:1.1rem 1.2rem;
-box-shadow:0 28px 90px rgba(0,0,0,.7);backdrop-filter:blur(14px)}
-#panel p{margin:.4rem 0}
+/* === DIAGNOSIS REACTOR === */
+.reactor{
+  position:relative;
+  height:88vh;
+  min-height:640px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+/* SMOKE — PRESSURE FIELD */
+.smoke{
+  position:absolute;
+  inset:-25%;
+  background:
+    radial-gradient(520px 520px at 40% 35%, rgba(122,162,255,.16), transparent 62%),
+    radial-gradient(620px 620px at 60% 35%, rgba(92,207,191,.16), transparent 62%),
+    radial-gradient(820px 820px at 50% 65%, rgba(255,122,198,.12), transparent 70%);
+  filter:blur(70px);
+  animation: drift 34s linear infinite;
+}
+@keyframes drift{
+  0%{transform:translate(0,0)}
+  50%{transform:translate(-3%,2%)}
+  100%{transform:translate(0,0)}
+}
+
+/* DIAMOND BASE */
+.diamond{
+  position:absolute;
+  width:300px;height:300px;
+  transform:rotate(45deg);
+  border-radius:40px;
+  background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:
+    0 50px 160px rgba(0,0,0,.80),
+    inset 0 0 0 1px rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* INNER TEXT */
+.diamond .in{
+  transform:rotate(-45deg);
+  text-align:center;
+}
+.diamond .t{
+  font-weight:900;
+  font-size:1.7rem;
+}
+.diamond .s{
+  margin-top:.35rem;
+  color:rgba(233,238,252,.72);
+}
+
+/* FACETS — NOT CLICKABLE */
+.facet{
+  position:absolute;
+  width:180px;height:180px;
+  transform:rotate(45deg);
+  border-radius:28px;
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:
+    0 30px 100px rgba(0,0,0,.65),
+    inset 0 0 0 1px rgba(255,255,255,.05);
+  display:flex;align-items:center;justify-content:center;
+  opacity:.55;
+  pointer-events:none; /* FACETS ARE PRESSURE ONLY */
+}
+.facet .in{
+  transform:rotate(-45deg);
+  text-align:center;
+}
+.facet .t{
+  font-weight:800;
+  font-size:1.2rem;
+}
+.facet .s{
+  margin-top:.25rem;
+  font-size:.95rem;
+  color:rgba(233,238,252,.65);
+}
+
+/* POSITIONS */
+#limit{
+  z-index:3;
+}
+
+#mismatch{
+  top:14%;
+  left:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+
+#boundaries{
+  left:16%;
+  top:52%;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+
+#follow{
+  right:16%;
+  top:52%;
+  transform:translate(50%,-50%) rotate(45deg);
+}
+
+/* PANEL */
+#panel{
+  position:absolute;
+  bottom:3%;
+  width:min(880px,92vw);
+  background:rgba(10,14,30,.72);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:30px;
+  padding:1.15rem 1.3rem;
+  box-shadow:0 30px 100px rgba(0,0,0,.75);
+  backdrop-filter:blur(14px);
+}
+#panel p{margin:.45rem 0}
 </style>
 </head>
+
 <body>
 <main>
+
 <div class="reactor">
+
   <div class="smoke"></div>
 
-  <div id="core" class="diamond gray" onclick="go('/execution/')">
-    <div class="in"><div class="t">Limit</div><div class="s">Diagnosis</div></div>
+  <!-- FACETS (PRESSURE VECTORS) -->
+  <div id="mismatch" class="facet">
+    <div class="in">
+      <div class="t">Mismatch</div>
+      <div class="s">Structure diverges</div>
+    </div>
   </div>
 
-  <div id="d1" class="diamond core blue" onclick="go('/execution/')">
-    <div class="in"><div class="t">Mismatch</div><div class="s">?</div></div>
+  <div id="boundaries" class="facet">
+    <div class="in">
+      <div class="t">Boundaries</div>
+      <div class="s">Constraints fail</div>
+    </div>
   </div>
 
-  <div id="d2" class="diamond core mint" onclick="go('/execution/')">
-    <div class="in"><div class="t">Boundaries</div><div class="s">?</div></div>
+  <div id="follow" class="facet">
+    <div class="in">
+      <div class="t">Follow-through</div>
+      <div class="s">Decisions don’t bind</div>
+    </div>
   </div>
 
-  <div id="d3" class="diamond core pink" onclick="go('/execution/')">
-    <div class="in"><div class="t">Follow-through</div><div class="s">?</div></div>
+  <!-- CENTRAL DECISION DIAMOND -->
+  <div id="limit" class="diamond">
+    <div class="in">
+      <div class="t">Limit</div>
+      <div class="s">Diagnosis</div>
+    </div>
   </div>
 
+  <!-- PANEL -->
   <div id="panel">
     <p><strong>Layer:</strong> Limit (Diagnosis)</p>
+    <p><strong>Rule:</strong> Facets create pressure. The diamond makes the decision.</p>
+    <p><strong>Zipper:</strong> Diagnosis → Execution</p>
+  </div>
+
+</div>
+
+<footer>© 2026 Geodiametrics</footer>
+</main>
+</body>
+</html>

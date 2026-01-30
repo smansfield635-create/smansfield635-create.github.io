@@ -3,260 +3,78 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Geodiametrics · Control</title>
 
-<script defer src="/assets/cfwa.js"></script>
-<script defer src="/assets/live_site_metrics.js"></script>
+<title>Geodiametrics</title>
 
-<style>
-:root{
-  --bg0:#060914;--bg1:#0a0f24;
-  --fg:#f7f9ff;
-  --muted:rgba(247,249,255,.70);
-  --stroke:rgba(247,249,255,.14);
-  --cardA:rgba(8,12,28,.72);
-  --cardB:rgba(8,12,28,.46);
-  --accent:#7aa2ff;
-  --good:#44d07b;
-  --warn:#ffcc66;
-  --radius:22px;
-  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{
-  color:var(--fg);
-  font-family:var(--sans);
-  background:
-    radial-gradient(900px 700px at 12% 10%,rgba(122,162,255,.16),transparent 60%),
-    radial-gradient(900px 700px at 88% 18%,rgba(255,122,198,.12),transparent 60%),
-    radial-gradient(800px 650px at 50% 92%,rgba(68,208,123,.08),transparent 65%),
-    linear-gradient(180deg,var(--bg0),var(--bg1));
-}
-/* hard cap the "wash out" effect on mobile */
-@media (max-width: 600px){
-  body{
-    background:
-      radial-gradient(700px 520px at 12% 10%,rgba(122,162,255,.12),transparent 62%),
-      radial-gradient(700px 520px at 88% 18%,rgba(255,122,198,.10),transparent 62%),
-      linear-gradient(180deg,var(--bg0),var(--bg1));
-  }
-}
+<link rel="stylesheet" href="/assets/style.css">
+<script defer src="/assets/capture.js"></script>
 
-main{max-width:1120px;margin:0 auto;padding:42px 18px 90px}
-
-header{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
-.brand{display:flex;align-items:center;gap:12px}
-.mark{
-  width:44px;height:44px;border-radius:16px;border:1px solid var(--stroke);
-  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02));
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 20px 70px rgba(0,0,0,.55);
-}
-h1{margin:0;font-size:28px}
-.sub{margin-top:6px;font-family:var(--mono);font-size:12px;color:var(--muted)}
-
-.nav{display:flex;gap:10px;flex-wrap:wrap}
-.pill{
-  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
-  background:rgba(8,12,28,.55);
-  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;
-}
-.pill:hover{border-color:rgba(122,162,255,.65);color:var(--accent)}
-
-.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.tab{
-  cursor:pointer;padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
-  background:rgba(8,12,28,.55);
-  color:var(--fg);font-family:var(--mono);font-size:12px;
-}
-.tab.active{border-color:rgba(122,162,255,.80);box-shadow:0 16px 50px rgba(0,0,0,.45)}
-.dot{width:10px;height:10px;border-radius:50%}
-.dot.g{background:var(--good);box-shadow:0 0 18px rgba(68,208,123,.35)}
-.dot.d{background:var(--accent);box-shadow:0 0 18px rgba(122,162,255,.35)}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px}
-.card{
-  border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  background:linear-gradient(180deg,var(--cardA),var(--cardB));
-  padding:22px;
-  box-shadow:0 26px 90px rgba(0,0,0,.52);
-  backdrop-filter:blur(10px);
-}
-.kicker{
-  font-family:var(--mono);
-  font-size:12px;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-  color:rgba(122,162,255,.95);
-  margin-bottom:12px;
-}
-.kv{font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--muted)}
-.big{font-family:var(--mono);font-size:24px;margin-top:6px;color:var(--fg)}
-
-.track{height:12px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden;margin-top:8px}
-.fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,rgba(122,162,255,.95),rgba(255,122,198,.55))}
-.fill.good{background:linear-gradient(90deg,rgba(68,208,123,.95),rgba(122,162,255,.55))}
-.fill.warn{background:linear-gradient(90deg,rgba(255,204,102,.95),rgba(255,122,198,.40))}
-.hidden{display:none}
-
-footer{
-  margin-top:28px;padding-top:14px;border-top:1px solid rgba(247,249,255,.12);
-  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
-  font-family:var(--mono);font-size:12px;color:var(--muted)
-}
-</style>
 </head>
-
 <body>
-<main>
 
-<header>
-  <div>
-    <div class="brand">
-      <div class="mark"><img src="/assets/logo.svg" alt="Geodiametrics" style="width:22px;height:22px"></div>
-      <div>
-        <h1>Control</h1>
-        <div class="sub">ONE PAGE · Global + Device gauges</div>
-      </div>
-    </div>
+<main style="max-width:960px;margin:0 auto;padding:20px">
 
-    <div class="tabs">
-      <button class="tab active" id="tabGlobal" type="button"><span class="dot g"></span> GLOBAL</button>
-      <button class="tab" id="tabDevice" type="button"><span class="dot d"></span> DEVICE</button>
-    </div>
-  </div>
+<header class="card">
+  <h1>Geodiametrics</h1>
+  <p class="muted">
+    Live coherence and execution instrument.
+  </p>
 
   <nav class="nav">
-    <a class="pill" href="/">Orientation</a>
-    <a class="pill" href="/system/">Reference</a>
-    <a class="pill" href="/artifacts/">Artifacts</a>
-    <a class="pill" href="/problem/">Problem</a>
-    <a class="pill" href="/execution/">Execution</a>
+    <a href="/">Home</a>
+    <a href="/control/">Control</a>
+    <a href="/system/">Reference</a>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/problem/">Problem</a>
+    <a href="/execution/">Execution</a>
   </nav>
 </header>
 
-<section id="panelGlobal">
-  <div class="grid">
-    <div class="card">
-      <div class="kicker">Global Gauge (Worker)</div>
-      <div class="kv" id="g_meta">Loading…</div>
-      <div class="big" id="g_nums">—</div>
-    </div>
+<section class="card">
+  <h2>Unarch</h2>
+  <p>
+    This system is live.
+    It exposes state without hiding execution.
+  </p>
 
-    <div class="card">
-      <div class="kicker">Global Bars</div>
+  <p>
+    All activity is aggregated globally at the edge.
+    Local activity is visible only to the device.
+  </p>
 
-      <div class="kv">Sessions</div>
-      <div class="track"><div class="fill good" id="g_s"></div></div>
-
-      <div class="kv" style="margin-top:10px">Pageviews</div>
-      <div class="track"><div class="fill" id="g_p"></div></div>
-
-      <div class="kv" style="margin-top:10px">Clicks</div>
-      <div class="track"><div class="fill warn" id="g_c"></div></div>
-
-      <div class="kv" style="margin-top:10px">Last Updated</div>
-      <div class="kv" id="g_lu">—</div>
-    </div>
-  </div>
+  <p class="muted">
+    Canonical records live on OSF.
+  </p>
 </section>
 
-<section id="panelDevice" class="hidden">
-  <div class="grid">
-    <div class="card">
-      <div class="kicker">Device Gauge (localStorage)</div>
-      <div class="kv" id="d_meta">Loading…</div>
-      <div class="big" id="d_nums">—</div>
-    </div>
-
-    <div class="card">
-      <div class="kicker">Device Bars</div>
-
-      <div class="kv">Sessions</div>
-      <div class="track"><div class="fill good" id="d_s"></div></div>
-
-      <div class="kv" style="margin-top:10px">Pageviews</div>
-      <div class="track"><div class="fill" id="d_p"></div></div>
-
-      <div class="kv" style="margin-top:10px">Clicks</div>
-      <div class="track"><div class="fill warn" id="d_c"></div></div>
-
-      <div class="kv" style="margin-top:10px">Avg Time (sec)</div>
-      <div class="kv" id="d_t">—</div>
-    </div>
-  </div>
+<section class="card">
+  <h3>Global Status</h3>
+  <div class="metric-value" id="global-status">Loading…</div>
+  <div class="muted" id="global-meta">—</div>
 </section>
 
-<footer>
-  <div>© 2026 Geodiametrics</div>
-  <div>Control · v1.7</div>
+<footer class="muted" style="margin-top:40px">
+  © 2026 Geodiametrics · Live system
 </footer>
 
 </main>
 
 <script>
-const WORKER_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
-const WORKER_METRICS = WORKER_BASE + "/metrics";
-
-const tabGlobal=document.getElementById("tabGlobal");
-const tabDevice=document.getElementById("tabDevice");
-const panelGlobal=document.getElementById("panelGlobal");
-const panelDevice=document.getElementById("panelDevice");
-
-tabGlobal.onclick=()=>setTab(true);
-tabDevice.onclick=()=>setTab(false);
-
-function setTab(isGlobal){
-  tabGlobal.classList.toggle("active",isGlobal);
-  tabDevice.classList.toggle("active",!isGlobal);
-  panelGlobal.classList.toggle("hidden",!isGlobal);
-  panelDevice.classList.toggle("hidden",isGlobal);
-}
-
-function clamp01(n){return Math.max(0,Math.min(1,n))}
-function bar(id,val){document.getElementById(id).style.width=Math.round(clamp01(val)*100)+"%"}
-
-async function loadGlobal(){
+(async ()=>{
   try{
-    const r=await fetch(WORKER_METRICS);
+    const BASE="https://geodiametrics-aggregator.smansfield635.workers.dev";
+    const r=await fetch(BASE+"/metrics?t="+Date.now(),{cache:"no-store"});
     const j=await r.json();
-    const m=(j && j.metrics) ? j.metrics : {};
-    document.getElementById("g_meta").textContent = "Worker: " + WORKER_METRICS;
-    document.getElementById("g_nums").textContent =
+    const m=j.metrics||{};
+    document.getElementById("global-status").textContent =
       `Sessions ${m.sessions||0} · Pageviews ${m.pageviews||0} · Clicks ${m.clicks||0}`;
-    document.getElementById("g_lu").textContent = String(m.lastUpdated||"—");
-    bar("g_s",(m.sessions||0)/1000);
-    bar("g_p",(m.pageviews||0)/5000);
-    bar("g_c",(m.clicks||0)/5000);
+    document.getElementById("global-meta").textContent =
+      `Updated ${new Date(m.lastUpdated||0).toLocaleString()}`;
   }catch(e){
-    document.getElementById("g_meta").textContent = "Global fetch failed";
-    document.getElementById("g_nums").textContent = "—";
-    document.getElementById("g_lu").textContent = "—";
+    document.getElementById("global-status").textContent = "Global unavailable";
+    document.getElementById("global-meta").textContent = "—";
   }
-}
-
-function loadDevice(){
-  try{
-    const d=JSON.parse(localStorage.getItem("geo_live_site"))||null;
-    if(!d){ document.getElementById("d_meta").textContent="No device data yet"; return; }
-    const s=d.interaction||{};
-    document.getElementById("d_meta").textContent = "Updated: " + d.timestamp;
-    document.getElementById("d_nums").textContent =
-      `Sessions ${s.sessions_24h||0} · Pageviews ${s.pageviews_24h||0} · Clicks ${s.clicks_24h||0}`;
-    document.getElementById("d_t").textContent = String(s.avg_time_sec||0);
-    bar("d_s",(s.sessions_24h||0)/200);
-    bar("d_p",(s.pageviews_24h||0)/800);
-    bar("d_c",(s.clicks_24h||0)/1200);
-  }catch(e){
-    document.getElementById("d_meta").textContent="Device read failed";
-  }
-}
-
-loadGlobal();
-loadDevice();
+})();
 </script>
 
 </body>

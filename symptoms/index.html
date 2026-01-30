@@ -1,0 +1,56 @@
+<!-- FULL REWRITE — /symptoms/index.html -->
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Symptoms</title><link rel="stylesheet" href="/assets/ui.css"/></head>
+<body><main>
+
+<h1>Symptoms ?</h1>
+<p class="small">Only what is noticed. No causes here.</p>
+
+<div class="nav">
+  <a href="/">Home</a><a href="/symptoms/">Symptoms</a><a href="/diagnosis/">Diagnosis</a><a href="/execution/">Execution</a><a href="/engine/">Engine</a><a href="/control/">Control</a>
+</div>
+
+<section data-tabs>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="one">1</button>
+    <button class="tab" role="tab" data-tab="two">2</button>
+    <button class="tab" role="tab" data-tab="three">3</button>
+  </div>
+
+  <div class="tabpanels">
+    <div class="tabpanel" role="tabpanel" data-panel="one" data-open="true">
+      <div class="bubbles">
+        <button class="bubble blue" data-detail='{"title":"Drift ?","body":"Things stop lining up slowly.\nNo single breaking moment.","links":[{"label":"Diagnosis","href":"/diagnosis/"}]}'>
+          <div><div class="t">Drift ?</div><div class="s">Slow mismatch</div></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="two">
+      <div class="bubbles">
+        <button class="bubble mint" data-detail='{"title":"Rule failure ?","body":"Boundaries exist.\nBut they don’t constrain reliably.","links":[{"label":"Diagnosis","href":"/diagnosis/"}]}'>
+          <div><div class="t">Rules ?</div><div class="s">Not holding</div></div>
+        </button>
+        <button class="bubble pink" data-detail='{"title":"Promise failure ?","body":"Decisions are made.\nOutcomes don’t follow.","links":[{"label":"Diagnosis","href":"/diagnosis/"}]}'>
+          <div><div class="t">Promises ?</div><div class="s">Not landing</div></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="three">
+      <div class="bubbles">
+        <button class="bubble gray" data-detail='{"title":"Next ?","body":"Symptoms are recognition.\nDiagnosis names the structure underneath.","links":[{"label":"Go to Diagnosis","href":"/diagnosis/"}]}'>
+          <div><div class="t">Next ?</div><div class="s">Diagnosis</div></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal" id="bubbleModal" data-open="false"><div class="sheet">
+<button class="x" id="bmClose">✕</button><h2 id="bmTitle">?</h2><div id="bmBody"></div><div class="actions" id="bmLinks"></div>
+</div></div>
+
+<script defer src="/assets/bubbles.js"></script>
+</main></body></html>

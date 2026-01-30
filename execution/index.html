@@ -1,56 +1,75 @@
-<!-- FULL REWRITE — /execution/index.html -->
-<!doctype html><html lang="en"><head>
+<!-- FULL TNT — /execution/index.html (NOTICE LAYER: SYMPTOMS → DIAGNOSIS → EXECUTION) -->
+<!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Execution</title><link rel="stylesheet" href="/assets/ui.css"/></head>
-<body><main>
+<title>Execution · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<style>
+.reactor{position:relative;height:88vh;min-height:640px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.smoke{position:absolute;inset:-20%;background:
+radial-gradient(600px 600px at 30% 40%, rgba(122,162,255,.18), transparent 60%),
+radial-gradient(700px 700px at 70% 55%, rgba(255,122,198,.16), transparent 60%),
+radial-gradient(800px 800px at 50% 70%, rgba(92,207,191,.14), transparent 65%);
+filter:blur(60px);animation:drift 30s linear infinite}
+@keyframes drift{0%{transform:translate(0,0)}50%{transform:translate(-4%,2%)}100%{transform:translate(0,0)}}
+.diamond{position:absolute;width:280px;height:280px;transform:rotate(45deg);border-radius:36px;
+background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+border:1px solid rgba(255,255,255,.18);
+box-shadow:0 40px 140px rgba(0,0,0,.75), inset 0 0 0 1px rgba(255,255,255,.06);
+display:flex;align-items:center;justify-content:center;cursor:pointer}
+.diamond .in{transform:rotate(-45deg);text-align:center}
+.diamond .t{font-weight:900;font-size:1.6rem}
+.diamond .s{margin-top:.35rem;color:rgba(233,238,252,.7)}
+.core{width:180px;height:180px;opacity:.88}
+.core:hover{opacity:1}
+.blue{background:linear-gradient(180deg,rgba(122,162,255,.28),rgba(122,162,255,.06));border-color:rgba(122,162,255,.35)}
+.mint{background:linear-gradient(180deg,rgba(92,207,191,.28),rgba(92,207,191,.06));border-color:rgba(92,207,191,.35)}
+.pink{background:linear-gradient(180deg,rgba(255,122,198,.26),rgba(255,122,198,.06));border-color:rgba(255,122,198,.34)}
+.gray{background:linear-gradient(180deg,rgba(233,238,252,.20),rgba(233,238,252,.06));border-color:rgba(233,238,252,.26)}
+#core{z-index:3}
+#s1{top:14%;left:50%;transform:translate(-50%,-50%) rotate(45deg)}
+#s2{left:16%;top:52%;transform:translate(-50%,-50%) rotate(45deg)}
+#s3{right:16%;top:52%;transform:translate(50%,-50%) rotate(45deg)}
+#panel{position:absolute;bottom:3%;width:min(860px,92vw);background:rgba(10,14,30,.70);
+border:1px solid rgba(255,255,255,.14);border-radius:28px;padding:1.1rem 1.2rem;
+box-shadow:0 28px 90px rgba(0,0,0,.7);backdrop-filter:blur(14px)}
+#panel p{margin:.4rem 0}
+</style>
+</head>
+<body>
+<main>
+<div class="reactor">
+  <div class="smoke"></div>
 
-<h1>Execution ?</h1>
-<p class="small">Restore alignment. Mechanically. With verification.</p>
+  <div id="core" class="diamond gray" onclick="go('/')">
+    <div class="in"><div class="t">Notice</div><div class="s">Symptoms</div></div>
+  </div>
 
-<div class="nav">
-  <a href="/">Home</a><a href="/symptoms/">Symptoms</a><a href="/diagnosis/">Diagnosis</a><a href="/execution/">Execution</a><a href="/engine/">Engine</a><a href="/control/">Control</a>
+  <div id="s1" class="diamond core blue" onclick="go('/diagnosis/')">
+    <div class="in"><div class="t">Drift</div><div class="s">?</div></div>
+  </div>
+
+  <div id="s2" class="diamond core mint" onclick="go('/diagnosis/')">
+    <div class="in"><div class="t">Rules</div><div class="s">?</div></div>
+  </div>
+
+  <div id="s3" class="diamond core pink" onclick="go('/diagnosis/')">
+    <div class="in"><div class="t">Promises</div><div class="s">?</div></div>
+  </div>
+
+  <div id="panel">
+    <p><strong>Layer:</strong> Notice (Symptoms)</p>
+    <p><strong>Zipper:</strong> any symptom → Diagnosis</p>
+    <p><strong>Next:</strong> Diagnosis → Execution</p>
+  </div>
 </div>
 
-<section data-tabs>
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" aria-selected="true" data-tab="one">1</button>
-    <button class="tab" role="tab" data-tab="two">2</button>
-    <button class="tab" role="tab" data-tab="three">3</button>
-  </div>
+<script>
+function go(h){location.href=h;}
+</script>
 
-  <div class="tabpanels">
-    <div class="tabpanel" role="tabpanel" data-panel="one" data-open="true">
-      <div class="bubbles">
-        <button class="bubble blue" data-detail='{"title":"Observe honestly ?","body":"Only what can be observed counts.\nThis feeds Selection.","links":[{"label":"Engine","href":"/engine/"}]}'>
-          <div><div class="t">Observe ?</div><div class="s">Evidence</div></div>
-        </button>
-      </div>
-    </div>
-
-    <div class="tabpanel" role="tabpanel" data-panel="two">
-      <div class="bubbles">
-        <button class="bubble mint" data-detail='{"title":"Choose within constraints ?","body":"Boundaries define admissibility.\nThis feeds Resolution.","links":[{"label":"Principles","href":"/principles/"}]}'>
-          <div><div class="t">Constrain ?</div><div class="s">Admissible</div></div>
-        </button>
-        <button class="bubble pink" data-detail='{"title":"Follow through with verification ?","body":"Choices must bind.\nThis feeds Commitment.","links":[{"label":"Engine","href":"/engine/"}]}'>
-          <div><div class="t">Verify ?</div><div class="s">Receipt</div></div>
-        </button>
-      </div>
-    </div>
-
-    <div class="tabpanel" role="tabpanel" data-panel="three">
-      <div class="bubbles">
-        <button class="bubble gray" data-detail='{"title":"Repeat and measure ?","body":"Continuation sustains stability.\nTracking becomes meaningful when sourced and timestamped.","links":[{"label":"Control","href":"/control/"}]}'>
-          <div><div class="t">Continue ?</div><div class="s">Loop</div></div>
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="modal" id="bubbleModal" data-open="false"><div class="sheet">
-<button class="x" id="bmClose">✕</button><h2 id="bmTitle">?</h2><div id="bmBody"></div><div class="actions" id="bmLinks"></div>
-</div></div>
-
-<script defer src="/assets/bubbles.js"></script>
-</main></body></html>
+<footer>© 2026 Geodiametrics</footer>
+</main>
+</body>
+</html>

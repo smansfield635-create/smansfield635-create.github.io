@@ -1,68 +1,242 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Geodiametrics</title>
-<link rel="stylesheet" href="/assets/ui.css">
-<script defer src="/assets/capture.js"></script>
-<script defer src="/assets/app.js"></script>
+
+<style>
+:root{
+  --bg1:#0b1020;
+  --bg2:#121a33;
+  --glass:rgba(255,255,255,.08);
+  --line:rgba(255,255,255,.18);
+  --text:#e9eeff;
+  --muted:#9fb0ff;
+  --accent:#6fa8ff;
+  --good:#4ade80;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(900px 600px at 20% 10%,#1c2450,transparent 60%),
+    radial-gradient(800px 700px at 80% 30%,#2a356d,transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+
+a{color:var(--accent);text-decoration:none}
+header{
+  padding:28px 20px 12px;
+}
+h1{
+  margin:0;
+  font-size:36px;
+  letter-spacing:.3px;
+}
+.sub{
+  margin-top:6px;
+  color:var(--muted);
+}
+
+nav{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  padding:16px 20px;
+}
+.nav{
+  padding:10px 16px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+}
+
+section{
+  padding:24px 20px 10px;
+}
+
+.card{
+  max-width:760px;
+  margin:0 auto 22px;
+  padding:22px;
+  border-radius:22px;
+  background:var(--glass);
+  border:1px solid var(--line);
+  backdrop-filter:blur(14px);
+}
+
+.center{ text-align:center }
+
+.diamond-wrap{
+  display:flex;
+  justify-content:center;
+  margin:18px 0 26px;
+}
+.diamond{
+  width:200px;
+  height:200px;
+  transform:rotate(45deg);
+  border-radius:26px;
+  background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.05));
+  border:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.diamond span{
+  transform:rotate(-45deg);
+  font-weight:700;
+  letter-spacing:.4px;
+}
+
+.row{
+  display:grid;
+  gap:14px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--line);
+}
+.dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--good);
+}
+
+.stat{
+  font-size:30px;
+  font-weight:700;
+}
+.label{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.bar{
+  height:10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.1);
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  background:linear-gradient(90deg,#6fa8ff,#9fb0ff);
+  width:0%;
+}
+
+footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  padding:30px 10px;
+}
+</style>
 </head>
+
 <body>
-<div class="wrap">
 
-  <div class="header">
-    <div class="brand">
-      <div class="mark"><img src="/assets/logo.svg" alt=""></div>
-      <div>
-        <h1>Geodiametrics</h1>
-        <div class="sub">A live system that shows what holds together under pressure.</div>
-        <div class="badges">
-          <div class="badge"><span class="dot ok"></span> OPERATIONAL</div>
-          <div class="badge"><span class="dot info"></span> GLOBAL + DEVICE</div>
-        </div>
-      </div>
-    </div>
+<header>
+  <h1>Geodiametrics</h1>
+  <div class="sub">A live system that shows what holds together under pressure.</div>
+</header>
 
-    <nav class="nav">
-      <a class="pill" href="/">Home</a>
-      <a class="pill" href="/control/">Control Room</a>
-      <a class="pill" href="/system/">Foundations</a>
-      <a class="pill" href="/artifacts/">Table of Contents</a>
-      <a class="pill" href="/problem/">Why this exists</a>
-      <a class="pill" href="/execution/">Try it</a>
-    </nav>
-  </div>
+<nav>
+  <div class="nav">Home</div>
+  <div class="nav">Control Room</div>
+  <div class="nav">Foundations</div>
+  <div class="nav">Table of Contents</div>
+  <div class="nav">Problem</div>
+  <div class="nav">Execution</div>
+</nav>
 
-  <div class="dgrid">
-    <div class="diamond"><a href="/control/"><div class="inner"><div class="k">Live</div><div class="t">Control Room</div><div class="d">Gauges and status.</div></div></a></div>
-    <div class="diamond"><a href="/system/"><div class="inner"><div class="k">Basics</div><div class="t">Foundations</div><div class="d">Rules and principles.</div></div></a></div>
-    <div class="diamond"><a href="/artifacts/"><div class="inner"><div class="k">Map</div><div class="t">Table of Contents</div><div class="d">Everything in one list.</div></div></a></div>
-    <div class="diamond"><a href="/problem/"><div class="inner"><div class="k">Why</div><div class="t">Problem</div><div class="d">What this fixes.</div></div></a></div>
-    <div class="diamond"><a href="/execution/"><div class="inner"><div class="k">Do</div><div class="t">Execution</div><div class="d">Make a clean receipt.</div></div></a></div>
-    <div class="diamond"><a href="/system/#principles"><div class="inner"><div class="k">Unarch</div><div class="t">No Hidden Control</div><div class="d">Simple and inspectable.</div></div></a></div>
-  </div>
+<section class="center">
+  <span class="badge"><span class="dot"></span> OPERATIONAL</span>
+  <span class="badge">GLOBAL + DEVICE</span>
+</section>
 
-  <div class="grid">
-    <div class="card">
-      <div class="kicker">Global Status</div>
-      <div class="big" id="g_nums">Loading…</div>
-      <div class="muted" id="g_lu">—</div>
-      <div class="hr"></div>
-      <div class="muted">This counts real visits. It updates live through the Worker.</div>
-    </div>
-    <div class="card">
-      <div class="kicker">What this is</div>
-      <div class="big">A public gauge.</div>
-      <div class="muted">It shows activity and structure. It does not control people.</div>
-    </div>
-  </div>
-
-  <footer>
-    <div>© 2026 Geodiametrics</div>
-    <div>Live · Read-only surfaces · OSF anchors</div>
-  </footer>
-
+<div class="diamond-wrap">
+  <div class="diamond"><span>CONTROL ROOM</span></div>
 </div>
+
+<section class="card center">
+  <div class="label">What this page is</div>
+  <p>This site shows real system activity. Nothing here controls behavior — it only reveals it.</p>
+</section>
+
+<section class="card">
+  <h3>Global Gauge (Everyone)</h3>
+  <div class="row">
+    <div class="stat" id="gSessions">—</div>
+    <div class="label">Sessions</div>
+    <div class="bar"><div class="fill" id="gBar"></div></div>
+    <div class="label" id="gUpdated">Last updated: —</div>
+  </div>
+</section>
+
+<section class="card">
+  <h3>Device Gauge (This device)</h3>
+  <div class="row">
+    <div class="stat" id="dSessions">—</div>
+    <div class="label">Sessions</div>
+    <div class="bar"><div class="fill" id="dBar"></div></div>
+    <div class="label" id="dUpdated">Updated: —</div>
+  </div>
+</section>
+
+<section class="card">
+  <h3>Foundations (Plain language)</h3>
+  <ul>
+    <li><b>Coherence:</b> What you say, what you do, and what happens line up.</li>
+    <li><b>Fragmentation:</b> Things stop lining up under pressure.</li>
+    <li><b>Confusion:</b> Signals conflict and decisions slow.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h3>OSF Anchors</h3>
+  <ul>
+    <li><a href="#" target="_blank">Coherence Constraint Law</a></li>
+    <li><a href="#" target="_blank">Quad-Core Execution Cycle</a></li>
+    <li><a href="#" target="_blank">Diamond Geometry Model</a></li>
+    <li>ORCID: 0009-0004-1293-0405</li>
+  </ul>
+</section>
+
+<footer>
+© 2026 Geodiametrics · Live observational system
+</footer>
+
+<script>
+/* DEVICE (local) */
+const dKey="geo_device";
+let d=JSON.parse(localStorage.getItem(dKey)||'{"sessions":0}');
+d.sessions++;
+localStorage.setItem(dKey,JSON.stringify(d));
+document.getElementById("dSessions").textContent=d.sessions;
+document.getElementById("dBar").style.width=Math.min(100,d.sessions*5)+"%";
+document.getElementById("dUpdated").textContent="Updated: "+new Date().toLocaleString();
+
+/* GLOBAL (worker) */
+fetch("https://geodiametrics-aggregator.smansfield635.workers.dev/")
+.then(r=>r.json())
+.then(j=>{
+  document.getElementById("gSessions").textContent=j.metrics?.sessions ?? "—";
+  document.getElementById("gBar").style.width=Math.min(100,(j.metrics?.sessions||0)*5)+"%";
+  document.getElementById("gUpdated").textContent="Last updated: "+new Date(j.metrics?.lastUpdated||Date.now()).toLocaleString();
+})
+.catch(()=>{
+  document.getElementById("gSessions").textContent="—";
+});
+</script>
+
 </body>
 </html>

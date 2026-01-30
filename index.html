@@ -1,63 +1,150 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Geodiametrics</title>
-<link rel="stylesheet" href="/assets/style.css">
-<script defer src="/assets/capture.js"></script>
-</head>
-<body>
-<main class="page">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Geodiametrics</title>
 
-<header class="card">
-  <h1>Geodiametrics</h1>
-  <p class="muted">Live coherence and execution instrument.</p>
-  <nav class="nav">
-    <a href="/">Home</a>
-    <a href="/control/">Control</a>
-    <a href="/system/">Reference</a>
-    <a href="/artifacts/">Artifacts</a>
-    <a href="/problem/">Problem</a>
-    <a href="/execution/">Execution</a>
-  </nav>
-</header>
-
-<section class="card">
-  <h2>Unarch</h2>
-  <p>
-    Unarch is the canonical coherence framework behind this system.
-    It exposes state without hiding execution.
-  </p>
-  <p class="muted">Canonical records live on OSF.</p>
-</section>
-
-<section class="card">
-  <h3>Live status</h3>
-  <div class="metric-value" id="home-global">Loading…</div>
-  <div class="muted" id="home-updated">—</div>
-</section>
-
-<footer class="muted">© 2026 Geodiametrics · Live system</footer>
-
-</main>
-
-<script>
-(async ()=>{
-  try{
-    const BASE="https://geodiametrics-aggregator.smansfield635.workers.dev";
-    const r=await fetch(BASE+"/metrics?t="+Date.now(),{cache:"no-store"});
-    const j=await r.json(); const m=j.metrics||{};
-    document.getElementById("home-global").textContent =
-      `Sessions ${m.sessions||0} · Pageviews ${m.pageviews||0} · Clicks ${m.clicks||0}`;
-    if(m.lastUpdated){
-      document.getElementById("home-updated").textContent =
-        "Updated " + new Date(m.lastUpdated).toLocaleString();
+  <style>
+    :root {
+      --bg1: #0b1020;
+      --bg2: #121933;
+      --card: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.14);
+      --text: #e6ebff;
+      --muted: rgba(230,235,255,0.65);
+      --accent: #7aa2ff;
+      --accent2: #ff7ac6;
+      --radius: 18px;
     }
-  }catch(e){
-    document.getElementById("home-global").textContent="Unavailable";
-  }
-})();
-</script>
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 900px at 20% 10%, rgba(122,162,255,.25), transparent 60%),
+        radial-gradient(900px 700px at 80% 20%, rgba(255,122,198,.18), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+    }
+
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      margin: 0 0 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin-bottom: 32px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+
+    nav a {
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: transform .15s ease, background .15s ease;
+    }
+
+    nav a:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.14);
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 1.4rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .status {
+      font-size: 1.1rem;
+      margin-top: 12px;
+      letter-spacing: .3px;
+    }
+
+    footer {
+      margin-top: 48px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <h1>Geodiametrics</h1>
+    <div class="subtitle">Live coherence and execution instrument.</div>
+
+    <nav>
+      <a href="/">Home</a>
+      <a href="/control/">Control</a>
+      <a href="/reference/">Reference</a>
+      <a href="/artifacts/">Artifacts</a>
+      <a href="/problem/">Problem</a>
+      <a href="/execution/">Execution</a>
+    </nav>
+
+    <div class="card">
+      <h2>Unarch</h2>
+      <p>
+        This system is live. It exposes state without hiding execution.
+        Activity is aggregated globally at the edge. Local activity remains device-scoped.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Global Status</h2>
+      <div class="status">
+        Sessions · Pageviews · Clicks<br/>
+        <span style="color:var(--muted)">Live via Cloudflare Worker</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Canonical Records</h2>
+      <p>Authoritative research and definitions live on OSF.</p>
+    </div>
+
+    <footer>
+      © 2026 Geodiametrics · Live system
+    </footer>
+  </div>
 </body>
 </html>

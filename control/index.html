@@ -1,24 +1,108 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>Control · Geodiametrics</title><style>
-:root{--bg1:#0b0f1a;--bg2:#1a1f33;--ink:#e9ecff;--muted:#aab0ff;--accent:#7aa2ff}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:radial-gradient(1200px 800px at 20% 10%,#2a2f55 0%,transparent 60%),linear-gradient(180deg,var(--bg2),var(--bg1));color:var(--ink);display:flex;justify-content:center;align-items:center}
-main{width:100%;max-width:420px;padding:24px;text-align:center}
-h1{font-size:2.2rem;margin:0 0 .25rem}.subtitle{color:var(--muted);margin:0 0 1.5rem}
-.nav{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:0 0 2rem}
-.nav a{padding:8px 14px;border-radius:999px;text-decoration:none;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);font-size:.9rem}
-.stack{position:relative;width:260px;height:260px;margin:0 auto 2rem}
-.diamond{position:absolute;inset:0;margin:auto;width:180px;height:180px;background:linear-gradient(145deg,#2a3060,#161a33);border:1px solid rgba(255,255,255,.18);border-radius:16px;transform:rotate(45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 30px 80px rgba(0,0,0,.55)}
-.diamond.inner{width:130px;height:130px;background:linear-gradient(145deg,#343a75,#1b2040)}
-.diamond span{transform:rotate(-45deg);text-align:center;padding:12px}
-.label{font-size:.8rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
-.title{font-size:1.1rem;font-weight:600}
-.card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px;margin-top:1rem;text-align:left}
-.card h2{font-size:1.1rem;margin:0 0 6px}.card p{font-size:.95rem;color:var(--muted);margin:0;line-height:1.45}
-footer{margin-top:1.5rem;font-size:.75rem;color:#8b90d9}
-</style></head><body><main>
-<h1>Control</h1><div class="subtitle">Read-only live status.</div>
-<nav class="nav"><a href="/">Home</a><a href="/control/">Control</a><a href="/reference/">Reference</a><a href="/artifacts/">Artifacts</a><a href="/problem/">Problem</a><a href="/execution/">Execution</a></nav>
-<div class="stack"><div class="diamond"><span><div class="label">Live</div><div class="title">Global Activity</div></span></div><div class="diamond inner"><span><div class="label">Safe</div><div class="title">Read Only</div></span></div></div>
-<div class="card"><h2>What you see</h2><p>Live totals and updates. This page does not control anything.</p></div>
-<div class="card"><h2>What you don’t see</h2><p>No personal data. No private tracking. Only basic counts.</p></div>
-<footer>© 2026 Geodiametrics · Control surface</footer>
-</main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Control Room · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css">
+<script defer src="/assets/capture.js"></script>
+<script defer src="/assets/app.js"></script>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="brand">
+      <div class="mark"><img src="/assets/logo.svg" alt=""></div>
+      <div>
+        <h1>Control Room</h1>
+        <div class="sub">Live gauges · OSF anchors · Worker status</div>
+        <div class="badges">
+          <div class="badge"><span class="dot ok"></span> OPERATIONAL</div>
+          <div class="badge"><span class="dot info"></span> GLOBAL + DEVICE</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="pill" href="/">Home</a>
+      <a class="pill" href="/control/">Control Room</a>
+      <a class="pill" href="/system/">Foundations</a>
+      <a class="pill" href="/artifacts/">Table of Contents</a>
+      <a class="pill" href="/problem/">Problem</a>
+      <a class="pill" href="/execution/">Execution</a>
+    </nav>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="kicker">Global Gauge</div>
+      <div class="big" id="g_nums">Loading…</div>
+      <div class="muted" id="g_meta">—</div>
+      <div class="muted">Last updated: <span id="g_lu">—</span></div>
+    </div>
+
+    <div class="card">
+      <div class="kicker">Global Bars</div>
+      <div class="muted">Sessions</div>
+      <div class="track"><div class="fill good" id="g_s"></div></div>
+
+      <div class="muted" style="margin-top:10px">Pageviews</div>
+      <div class="track"><div class="fill" id="g_p"></div></div>
+
+      <div class="muted" style="margin-top:10px">Clicks</div>
+      <div class="track"><div class="fill warn" id="g_c"></div></div>
+
+      <div class="hr"></div>
+      <div class="muted">This is the Worker aggregate (everyone).</div>
+    </div>
+
+    <div class="card">
+      <div class="kicker">Device Gauge</div>
+      <div class="big" id="d_nums">—</div>
+      <div class="muted" id="d_meta">—</div>
+      <div class="muted">Avg time (sec): <span id="d_t">—</span></div>
+
+      <div class="hr"></div>
+
+      <div class="kicker">Device Bars</div>
+      <div class="muted">Sessions</div>
+      <div class="track"><div class="fill good" id="d_s"></div></div>
+
+      <div class="muted" style="margin-top:10px">Pageviews</div>
+      <div class="track"><div class="fill" id="d_p"></div></div>
+
+      <div class="muted" style="margin-top:10px">Clicks</div>
+      <div class="track"><div class="fill warn" id="d_c"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="kicker">OSF Anchors</div>
+      <div class="muted">Canonical records:</div>
+      <div class="hr"></div>
+      <div class="muted">Coherence Constraint Law</div>
+      <a class="pill" href="https://osf.io/4su3v" target="_blank" rel="noopener">Open OSF</a>
+
+      <div class="hr"></div>
+      <div class="muted">Quad-Core Execution Cycle</div>
+      <a class="pill" href="https://osf.io/ftuvs" target="_blank" rel="noopener">Open OSF</a>
+
+      <div class="hr"></div>
+      <div class="muted">Diamond Geometry Model</div>
+      <a class="pill" href="https://osf.io/mn6vu" target="_blank" rel="noopener">Open OSF</a>
+
+      <div class="hr"></div>
+      <div class="muted">ORCID</div>
+      <a class="pill" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">0009-0004-1293-0405</a>
+    </div>
+  </div>
+
+  <footer>
+    <div>© 2026 Geodiametrics</div>
+    <div>Control Room · Live gauges</div>
+  </footer>
+
+</div>
+</body>
+</html>

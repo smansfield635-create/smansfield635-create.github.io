@@ -1,67 +1,144 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Table of Contents · Geodiametrics</title>
-<link rel="stylesheet" href="/assets/ui.css">
-<script defer src="/assets/capture.js"></script>
-<script defer src="/assets/app.js"></script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Geodiametrics · Table of Contents</title>
+
+<style>
+:root{
+  --bg1:#0a0f1f;--bg2:#121a33;
+  --glass:rgba(255,255,255,.08);
+  --line:rgba(255,255,255,.18);
+  --text:#eef1ff;--muted:#9aa9ff;--accent:#6fa8ff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(900px 600px at 20% 10%,#1b2350,transparent 60%),
+    radial-gradient(800px 700px at 80% 30%,#2a356d,transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+header{padding:26px 20px 10px}
+h1{margin:0;font-size:34px}
+.sub{margin-top:6px;color:var(--muted)}
+nav{
+  display:flex;flex-wrap:wrap;gap:10px;padding:14px 20px
+}
+.nav{
+  padding:10px 16px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line)
+}
+section{padding:22px 20px}
+.card{
+  max-width:980px;margin:0 auto 22px;padding:22px;
+  border-radius:22px;background:var(--glass);
+  border:1px solid var(--line);backdrop-filter:blur(14px)
+}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:18px;margin-top:18px
+}
+.diamond{
+  position:relative;min-height:220px;display:flex;align-items:center;justify-content:center
+}
+.diamond a{
+  width:200px;height:200px;transform:rotate(45deg);
+  border-radius:26px;border:1px solid var(--line);
+  background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.05));
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text);text-decoration:none;
+  box-shadow:0 30px 80px rgba(0,0,0,.55)
+}
+.diamond span{
+  transform:rotate(-45deg);text-align:center;padding:12px
+}
+.k{font-size:.75rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+.t{font-size:1.1rem;font-weight:600}
+p{margin:8px 0 0;color:#dbe1ff;line-height:1.45}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:28px 10px}
+</style>
 </head>
+
 <body>
-<div class="wrap">
 
-  <div class="header">
-    <div class="brand">
-      <div class="mark"><img src="/assets/logo.svg" alt=""></div>
-      <div>
-        <h1>Table of Contents</h1>
-        <div class="sub">Everything in one place.</div>
-      </div>
-    </div>
-    <nav class="nav">
-      <a class="pill" href="/">Home</a>
-      <a class="pill" href="/control/">Control Room</a>
-      <a class="pill" href="/system/">Foundations</a>
-      <a class="pill" href="/artifacts/">Table of Contents</a>
-      <a class="pill" href="/problem/">Problem</a>
-      <a class="pill" href="/execution/">Execution</a>
-    </nav>
-  </div>
+<header>
+  <h1>Table of Contents</h1>
+  <div class="sub">Everything, clearly organized.</div>
+</header>
 
+<nav>
+  <div class="nav">Home</div>
+  <div class="nav">Control Room</div>
+  <div class="nav">Foundations</div>
+  <div class="nav">Table of Contents</div>
+  <div class="nav">Problem</div>
+  <div class="nav">Execution</div>
+</nav>
+
+<section class="card">
   <div class="grid">
-    <div class="card">
-      <div class="kicker">Start here</div>
-      <div class="big"><a href="/" class="pill">Home</a></div>
-      <div class="muted">Entry point and live status.</div>
+
+    <div class="diamond">
+      <a href="/">
+        <span>
+          <div class="k">Start</div>
+          <div class="t">Home</div>
+          <p>Overview and live status.</p>
+        </span>
+      </a>
     </div>
-    <div class="card">
-      <div class="kicker">Live</div>
-      <div class="big"><a href="/control/" class="pill">Control Room</a></div>
-      <div class="muted">Global + device gauges.</div>
+
+    <div class="diamond">
+      <a href="/control/">
+        <span>
+          <div class="k">Live</div>
+          <div class="t">Control Room</div>
+          <p>Global and device gauges.</p>
+        </span>
+      </a>
     </div>
-    <div class="card">
-      <div class="kicker">Basics</div>
-      <div class="big"><a href="/system/" class="pill">Foundations</a></div>
-      <div class="muted">Principles and definitions.</div>
+
+    <div class="diamond">
+      <a href="/foundations/">
+        <span>
+          <div class="k">Rules</div>
+          <div class="t">Foundations</div>
+          <p>Tiered laws and principles.</p>
+        </span>
+      </a>
     </div>
-    <div class="card">
-      <div class="kicker">Context</div>
-      <div class="big"><a href="/problem/" class="pill">Problem</a></div>
-      <div class="muted">Why this exists.</div>
+
+    <div class="diamond">
+      <a href="/problem/">
+        <span>
+          <div class="k">Why</div>
+          <div class="t">Problem</div>
+          <p>The issue this system addresses.</p>
+        </span>
+      </a>
     </div>
-    <div class="card">
-      <div class="kicker">Try</div>
-      <div class="big"><a href="/execution/" class="pill">Execution</a></div>
-      <div class="muted">Make a clean receipt.</div>
+
+    <div class="diamond">
+      <a href="/execution/">
+        <span>
+          <div class="k">Do</div>
+          <div class="t">Execution</div>
+          <p>Simple, safe next steps.</p>
+        </span>
+      </a>
     </div>
+
   </div>
+</section>
 
-  <footer>
-    <div>© 2026 Geodiametrics</div>
-    <div>Table of Contents</div>
-  </footer>
+<footer>
+© 2026 Geodiametrics · Table of Contents
+</footer>
 
-</div>
 </body>
 </html>

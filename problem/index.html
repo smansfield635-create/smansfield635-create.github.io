@@ -1,57 +1,147 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Problem · Geodiametrics</title>
-<link rel="stylesheet" href="/assets/ui.css">
-<script defer src="/assets/capture.js"></script>
-<script defer src="/assets/app.js"></script>
-</head>
-<body>
-<div class="wrap">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Geodiametrics · Problem</title>
 
-  <div class="header">
-    <div class="brand">
-      <div class="mark"><img src="/assets/logo.svg" alt=""></div>
+<style>
+:root{
+  --bg1:#0a0f1f;--bg2:#121a33;
+  --glass:rgba(255,255,255,.08);
+  --line:rgba(255,255,255,.18);
+  --text:#eef1ff;--muted:#9aa9ff;--accent:#6fa8ff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(900px 600px at 20% 10%,#1b2350,transparent 60%),
+    radial-gradient(800px 700px at 80% 30%,#2a356d,transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+header{padding:26px 20px 10px}
+h1{margin:0;font-size:34px}
+.sub{margin-top:6px;color:var(--muted)}
+nav{display:flex;flex-wrap:wrap;gap:10px;padding:14px 20px}
+.nav{
+  padding:10px 16px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line)
+}
+section{padding:22px 20px}
+.card{
+  max-width:980px;margin:0 auto 22px;padding:22px;
+  border-radius:22px;background:var(--glass);
+  border:1px solid var(--line);backdrop-filter:blur(14px)
+}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:18px;margin-top:18px
+}
+.diamond{
+  position:relative;min-height:220px;display:flex;align-items:center;justify-content:center
+}
+.diamond div{
+  width:200px;height:200px;transform:rotate(45deg);
+  border-radius:26px;border:1px solid var(--line);
+  background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.05));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 30px 80px rgba(0,0,0,.55)
+}
+.diamond span{
+  transform:rotate(-45deg);text-align:center;padding:12px
+}
+.k{font-size:.75rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+.t{font-size:1.1rem;font-weight:600}
+p{margin:8px 0 0;color:#dbe1ff;line-height:1.45}
+ul{margin:8px 0 0 18px}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:28px 10px}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Problem</h1>
+  <div class="sub">Why this system exists.</div>
+</header>
+
+<nav>
+  <div class="nav">Home</div>
+  <div class="nav">Control Room</div>
+  <div class="nav">Foundations</div>
+  <div class="nav">Table of Contents</div>
+  <div class="nav">Problem</div>
+  <div class="nav">Execution</div>
+</nav>
+
+<section class="card center">
+  <p>
+    Most systems fail quietly.  
+    They drift long before they break.
+  </p>
+</section>
+
+<section class="card">
+  <div class="grid">
+
+    <div class="diamond">
       <div>
-        <h1>Problem</h1>
-        <div class="sub">Why we built this.</div>
+        <span>
+          <div class="k">Hidden</div>
+          <div class="t">Drift</div>
+          <p>Small misalignments compound over time.</p>
+        </span>
       </div>
     </div>
-    <nav class="nav">
-      <a class="pill" href="/">Home</a>
-      <a class="pill" href="/control/">Control Room</a>
-      <a class="pill" href="/system/">Foundations</a>
-      <a class="pill" href="/artifacts/">Table of Contents</a>
-      <a class="pill" href="/problem/">Problem</a>
-      <a class="pill" href="/execution/">Execution</a>
-    </nav>
+
+    <div class="diamond">
+      <div>
+        <span>
+          <div class="k">Delayed</div>
+          <div class="t">Failure</div>
+          <p>Problems appear only after damage is done.</p>
+        </span>
+      </div>
+    </div>
+
+    <div class="diamond">
+      <div>
+        <span>
+          <div class="k">No</div>
+          <div class="t">Early Warning</div>
+          <p>Signals exist but aren’t made visible.</p>
+        </span>
+      </div>
+    </div>
+
   </div>
+</section>
 
-  <div class="grid">
-    <div class="card">
-      <div class="kicker">The issue</div>
-      <div class="big">Systems drift quietly.</div>
-      <div class="muted">People don’t notice until something breaks.</div>
-    </div>
-    <div class="card">
-      <div class="kicker">The fix</div>
-      <div class="big">Make drift visible.</div>
-      <div class="muted">Clear state. Clear rules. Public inspection.</div>
-    </div>
-    <div class="card">
-      <div class="kicker">Why it matters</div>
-      <div class="big">Trust depends on coherence.</div>
-      <div class="muted">If it can’t be verified, it can’t be relied on.</div>
-    </div>
-  </div>
+<section class="card">
+  <h3>What usually goes wrong</h3>
+  <ul>
+    <li>Decisions leave no trace.</li>
+    <li>Rules change without notice.</li>
+    <li>Trust is assumed instead of verified.</li>
+  </ul>
+</section>
 
-  <footer>
-    <div>© 2026 Geodiametrics</div>
-    <div>Problem</div>
-  </footer>
+<section class="card">
+  <h3>What this system changes</h3>
+  <ul>
+    <li>State is visible.</li>
+    <li>Actions leave receipts.</li>
+    <li>Drift shows up early.</li>
+  </ul>
+</section>
 
-</div>
+<footer>
+© 2026 Geodiametrics · Problem surface
+</footer>
+
 </body>
 </html>

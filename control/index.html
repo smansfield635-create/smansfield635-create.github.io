@@ -1,15 +1,79 @@
-<!doctype html>
-<html lang="en">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Control · Geodiametrics</title><link rel="stylesheet" href="/assets/ui.css"/></head>
-<body><main>
-<h1>Control</h1>
-<div class="nav"><a href="/">Home</a><a href="/problem/">Problem</a><a href="/execution/">Execution</a><a href="/foundations/">Foundations</a><a href="/reference/">Reference</a><a href="/control/">Control</a></div>
-<div class="panel">
-  <p><strong>Status:</strong> Experimental</p>
-  <p><strong>Live metrics:</strong> Not enabled</p>
-  <p><strong>Last updated:</strong> Unavailable</p>
-  <p>This surface activates only when a verified data source is present.</p>
+<!-- FULL ROOM REPASTE — /control/index.html -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Control · Geodiametrics</title><link rel="stylesheet" href="/assets/ui.css"/></head>
+<body class="control"><main>
+
+<h1>Control Room</h1>
+<p>Frame for metrics. No fake liveness. Click bubbles to inspect the intended gauges and meanings.</p>
+
+<div class="nav">
+  <a href="/">Home</a><a href="/problem/">Problem</a><a href="/execution/">Execution</a><a href="/foundations/">Foundations</a><a href="/reference/">Reference</a><a href="/control/">Control</a>
 </div>
-<footer>© 2026 Geodiametrics</footer>
+
+<section data-tabs>
+  <div class="tabs" role="tablist" aria-label="Control Tabs">
+    <button class="tab" role="tab" aria-selected="true" data-tab="status">Status</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="global">Global</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="device">Device</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="rules">Honesty Rules</button>
+  </div>
+
+  <div class="tabpanels">
+
+    <div class="tabpanel" role="tabpanel" data-panel="status" data-open="true">
+      <div class="panel">
+        <p><strong>Status:</strong> Experimental</p>
+        <p><strong>Live metrics:</strong> Disabled until verified source is present</p>
+        <p><strong>Last updated:</strong> Unavailable</p>
+      </div>
+      <div class="bubble-board">
+        <div class="bubbles">
+          <div class="bubble gray" data-detail='{"title":"Why Disabled?","body":"Live metrics must have a verified source and timestamp.\nIf not guaranteed, the UI must not imply it."}'><div class="t">Disabled</div><div class="s">Truth policy</div></div>
+          <div class="bubble gray" data-detail='{"title":"Activation Requirement","body":"A source must exist.\nA timestamp must exist.\nFailure states must exist.\nThen live gauges are allowed."}'><div class="t">Activate</div><div class="s">Requirements</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="global" data-open="false">
+      <div class="panel"><p><strong>Global gauges</strong> represent the system-wide surface (aggregate only).</p></div>
+      <div class="bubble-board">
+        <div class="bubbles">
+          <div class="bubble blue" data-detail='{"title":"Global Coherence","body":"Aggregate coherence classification.\nRequires observer-invariant rules and receipts."}'><div class="t">Coherence</div><div class="s">Global</div></div>
+          <div class="bubble pink" data-detail='{"title":"Global Incoherence","body":"Aggregate misalignment markers.\nReported from evidence only."}'><div class="t">Incoherence</div><div class="s">Global</div></div>
+          <div class="bubble mint" data-detail='{"title":"Constraint Stability","body":"How stable constraints are over time.\nSilent drift is flagged here once live is enabled."}'><div class="t">Constraints</div><div class="s">Stability</div></div>
+          <div class="bubble gray" data-detail='{"title":"Receipt Coverage","body":"What proportion of steps have receipts.\nLow coverage = low verifiability."}'><div class="t">Receipts</div><div class="s">Coverage</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="device" data-open="false">
+      <div class="panel"><p><strong>Device gauges</strong> represent local signals (diagnostic only).</p></div>
+      <div class="bubble-board">
+        <div class="bubbles">
+          <div class="bubble blue" data-detail='{"title":"Local Coherence","body":"Local classification signals.\nUsed for diagnostics.\nNot canonical."}'><div class="t">Coherence</div><div class="s">Device</div></div>
+          <div class="bubble pink" data-detail='{"title":"Local Drift","body":"Local drift markers.\nOnly meaningful when timestamped and sourced."}'><div class="t">Drift</div><div class="s">Device</div></div>
+          <div class="bubble gray" data-detail='{"title":"Local Receipts","body":"Receipt count on device.\nIf receipts are missing, diagnostics are limited."}'><div class="t">Receipts</div><div class="s">Device</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="rules" data-open="false">
+      <div class="panel"><p><strong>Honesty rules</strong> prevent the Control Room from damaging trust.</p></div>
+      <div class="bubble-board">
+        <div class="bubbles">
+          <div class="bubble gray" data-detail='{"title":"No Fake Liveness","body":"Never show “loading” forever.\nNever show gauges without timestamps.\nNever imply real-time without a real source."}'><div class="t">No Fake</div><div class="s">Liveness</div></div>
+          <div class="bubble gray" data-detail='{"title":"Failure States","body":"If fetch fails: show Unavailable.\nIf empty: show No data yet.\nIf cached: show cached + refreshing."}'><div class="t">Failures</div><div class="s">Graceful</div></div>
+          <div class="bubble gray" data-detail='{"title":"Source Labels","body":"Every metric must show source: worker/device.\nEvery metric must show last updated."}'><div class="t">Source</div><div class="s">Always visible</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="modal" id="bubbleModal" data-open="false"><div class="sheet">
+  <button class="x" id="bmClose" aria-label="Close">✕</button>
+  <h2 id="bmTitle">Detail</h2><div id="bmBody"></div><div class="actions" id="bmLinks"></div>
+</div></div>
+
+<script defer src="/assets/bubbles.js"></script>
 </main></body></html>

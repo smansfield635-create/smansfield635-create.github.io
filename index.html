@@ -1,197 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Geodiametrics</title>
-
-<style>
-:root{
-  --bg1:#0b0f1a;
-  --bg2:#1a1f33;
-  --card:#1f2540;
-  --ink:#e9ecff;
-  --muted:#aab0ff;
-  --accent:#7aa2ff;
-}
-
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  min-height:100vh;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  background:
-    radial-gradient(1200px 800px at 20% 10%, #2a2f55 0%, transparent 60%),
-    linear-gradient(180deg, var(--bg2), var(--bg1));
-  color:var(--ink);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-main{
-  width:100%;
-  max-width:420px;
-  padding:24px;
-  text-align:center;
-}
-
-h1{
-  font-size:2.2rem;
-  margin-bottom:.25rem;
-}
-
-.subtitle{
-  color:var(--muted);
-  margin-bottom:1.5rem;
-}
-
-/* NAV */
-.nav{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:10px;
-  margin-bottom:2rem;
-}
-.nav a{
-  padding:8px 14px;
-  border-radius:999px;
-  text-decoration:none;
-  color:var(--ink);
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12);
-  font-size:.9rem;
-}
-
-/* DIAMOND STACK */
-.stack{
-  position:relative;
-  width:260px;
-  height:260px;
-  margin:0 auto 2rem;
-}
-
-.diamond{
-  position:absolute;
-  inset:0;
-  margin:auto;
-  width:180px;
-  height:180px;
-  background:linear-gradient(145deg,#2a3060,#161a33);
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:16px;
-  transform:rotate(45deg);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 30px 80px rgba(0,0,0,.55);
-}
-
-.diamond.inner{
-  width:130px;
-  height:130px;
-  background:linear-gradient(145deg,#343a75,#1b2040);
-}
-
-.diamond span{
-  transform:rotate(-45deg);
-  text-align:center;
-  padding:12px;
-}
-
-.label{
-  font-size:.8rem;
-  letter-spacing:.15em;
-  color:var(--accent);
-  text-transform:uppercase;
-  margin-bottom:6px;
-}
-
-.title{
-  font-size:1.1rem;
-  font-weight:600;
-}
-
-/* STATUS CARD */
-.card{
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:18px;
-  padding:16px;
-  margin-top:1rem;
-}
-
-.card h2{
-  font-size:1.1rem;
-  margin:0 0 6px;
-}
-
-.card p{
-  font-size:.95rem;
-  color:var(--muted);
-  margin:0;
-}
-
-footer{
-  margin-top:1.5rem;
-  font-size:.75rem;
-  color:#8b90d9;
-}
-</style>
+<link rel="stylesheet" href="/assets/ui.css">
+<script defer src="/assets/capture.js"></script>
+<script defer src="/assets/app.js"></script>
 </head>
-
 <body>
-<main>
+<div class="wrap">
 
-<h1>Geodiametrics</h1>
-<div class="subtitle">A live system that shows how things hold together.</div>
+  <div class="header">
+    <div class="brand">
+      <div class="mark"><img src="/assets/logo.svg" alt=""></div>
+      <div>
+        <h1>Geodiametrics</h1>
+        <div class="sub">A live system that shows what holds together under pressure.</div>
+        <div class="badges">
+          <div class="badge"><span class="dot ok"></span> OPERATIONAL</div>
+          <div class="badge"><span class="dot info"></span> GLOBAL + DEVICE</div>
+        </div>
+      </div>
+    </div>
 
-<nav class="nav">
-  <a href="/">Home</a>
-  <a href="/control/">Control</a>
-  <a href="/reference/">Reference</a>
-  <a href="/artifacts/">Artifacts</a>
-  <a href="/problem/">Problem</a>
-  <a href="/execution/">Execution</a>
-</nav>
-
-<div class="stack">
-  <div class="diamond">
-    <span>
-      <div class="label">Live</div>
-      <div class="title">System State</div>
-    </span>
+    <nav class="nav">
+      <a class="pill" href="/">Home</a>
+      <a class="pill" href="/control/">Control Room</a>
+      <a class="pill" href="/system/">Foundations</a>
+      <a class="pill" href="/artifacts/">Table of Contents</a>
+      <a class="pill" href="/problem/">Why this exists</a>
+      <a class="pill" href="/execution/">Try it</a>
+    </nav>
   </div>
-  <div class="diamond inner">
-    <span>
-      <div class="label">Unarch</div>
-      <div class="title">No Hidden Control</div>
-    </span>
+
+  <div class="dgrid">
+    <div class="diamond"><a href="/control/"><div class="inner"><div class="k">Live</div><div class="t">Control Room</div><div class="d">Gauges and status.</div></div></a></div>
+    <div class="diamond"><a href="/system/"><div class="inner"><div class="k">Basics</div><div class="t">Foundations</div><div class="d">Rules and principles.</div></div></a></div>
+    <div class="diamond"><a href="/artifacts/"><div class="inner"><div class="k">Map</div><div class="t">Table of Contents</div><div class="d">Everything in one list.</div></div></a></div>
+    <div class="diamond"><a href="/problem/"><div class="inner"><div class="k">Why</div><div class="t">Problem</div><div class="d">What this fixes.</div></div></a></div>
+    <div class="diamond"><a href="/execution/"><div class="inner"><div class="k">Do</div><div class="t">Execution</div><div class="d">Make a clean receipt.</div></div></a></div>
+    <div class="diamond"><a href="/system/#principles"><div class="inner"><div class="k">Unarch</div><div class="t">No Hidden Control</div><div class="d">Simple and inspectable.</div></div></a></div>
   </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="kicker">Global Status</div>
+      <div class="big" id="g_nums">Loading…</div>
+      <div class="muted" id="g_lu">—</div>
+      <div class="hr"></div>
+      <div class="muted">This counts real visits. It updates live through the Worker.</div>
+    </div>
+    <div class="card">
+      <div class="kicker">What this is</div>
+      <div class="big">A public gauge.</div>
+      <div class="muted">It shows activity and structure. It does not control people.</div>
+    </div>
+  </div>
+
+  <footer>
+    <div>© 2026 Geodiametrics</div>
+    <div>Live · Read-only surfaces · OSF anchors</div>
+  </footer>
+
 </div>
-
-<div class="card">
-  <h2>What this is</h2>
-  <p>
-    This site shows real system activity.  
-    Nothing here controls behavior — it only reveals it.
-  </p>
-</div>
-
-<div class="card">
-  <h2>How activity works</h2>
-  <p>
-    Activity from anywhere is combined globally.  
-    Your own device activity stays local.
-  </p>
-</div>
-
-<footer>
-© 2026 Geodiametrics · Live observational system
-</footer>
-
-</main>
 </body>
 </html>

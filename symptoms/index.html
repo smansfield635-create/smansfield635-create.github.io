@@ -1,125 +1,28 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Symptoms · Geodiametrics</title>
-
-<style>
+<!-- TNT — /symptoms/index.html -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Symptoms · Geodiametrics</title><style>
 html,body{margin:0;height:100%;background:#0b0f1a;color:#e9eefc;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
 .reactor{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-
-/* smoke must NEVER steal taps */
-.smoke{
-  position:absolute;inset:-25%;
-  background:
-    radial-gradient(760px 760px at 50% 38%, rgba(122,162,255,.14), transparent 66%),
-    radial-gradient(860px 860px at 35% 62%, rgba(255,122,198,.12), transparent 68%),
-    radial-gradient(860px 860px at 65% 62%, rgba(92,207,191,.12), transparent 68%);
-  filter:blur(82px);
-  animation:drift 46s linear infinite;
-  pointer-events:none;
-}
+.smoke{position:absolute;inset:-25%;background:radial-gradient(760px 760px at 50% 38%,rgba(122,162,255,.14),transparent 66%),radial-gradient(860px 860px at 35% 62%,rgba(255,122,198,.12),transparent 68%),radial-gradient(860px 860px at 65% 62%,rgba(92,207,191,.12),transparent 68%);filter:blur(82px);animation:drift 46s linear infinite;pointer-events:none}
 @keyframes drift{0%{transform:translate(0,0)}50%{transform:translate(2%,-2%)}100%{transform:translate(0,0)}}
-
-/* central decision diamond (clickable) */
-.diamond{
-  position:absolute;
-  width:320px;height:320px;
-  transform:rotate(45deg);
-  border-radius:42px;
-  background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));
-  border:1px solid rgba(255,255,255,.24);
-  box-shadow:0 60px 180px rgba(0,0,0,.85), inset 0 0 0 1px rgba(255,255,255,.10);
-  display:flex;align-items:center;justify-content:center;
-  z-index:3;
-  cursor:pointer;
-  -webkit-tap-highlight-color: transparent;
-}
+.diamond{position:absolute;width:320px;height:320px;transform:rotate(45deg);border-radius:42px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.24);box-shadow:0 60px 180px rgba(0,0,0,.85),inset 0 0 0 1px rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;z-index:3;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .diamond:active{opacity:.92}
 .diamond .in{transform:rotate(-45deg);text-align:center;user-select:none}
 .diamond .t{font-weight:900;font-size:1.75rem}
 .diamond .s{margin-top:.4rem;color:rgba(233,238,252,.78);font-size:1.05rem}
-
-/* facets (pressure only, inert) */
-.facet{
-  position:absolute;
-  width:200px;height:200px;
-  transform:rotate(45deg);
-  border-radius:30px;
-  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
-  border:1px solid rgba(255,255,255,.20);
-  box-shadow:0 36px 120px rgba(0,0,0,.70), inset 0 0 0 1px rgba(255,255,255,.07);
-  display:flex;align-items:center;justify-content:center;
-  opacity:.68;
-  pointer-events:none;
-}
+.facet{position:absolute;width:200px;height:200px;transform:rotate(45deg);border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.20);box-shadow:0 36px 120px rgba(0,0,0,.70),inset 0 0 0 1px rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;opacity:.68;pointer-events:none}
 .facet .in{transform:rotate(-45deg);text-align:center;padding:0 12px}
 .facet .t{font-weight:850;font-size:1.25rem;line-height:1.2}
 .facet .s{margin-top:.35rem;font-size:1rem;line-height:1.25;color:rgba(233,238,252,.75)}
-
-/* positions */
-#notice{z-index:3}
 #drift{top:8%;left:50%;transform:translate(-50%,-50%) rotate(45deg)}
 #rules{left:8%;top:56%;transform:translate(-50%,-50%) rotate(45deg)}
 #promises{right:8%;top:56%;transform:translate(50%,-50%) rotate(45deg)}
-
-/* panel */
-.panel{
-  position:absolute;bottom:4%;
-  width:min(900px,92vw);
-  background:rgba(10,14,30,.75);
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:30px;
-  padding:1.2rem 1.4rem;
-  box-shadow:0 30px 110px rgba(0,0,0,.8);
-  backdrop-filter:blur(16px);
-}
+.panel{position:absolute;bottom:4%;width:min(900px,92vw);background:rgba(10,14,30,.75);border:1px solid rgba(255,255,255,.16);border-radius:30px;padding:1.2rem 1.4rem;box-shadow:0 30px 110px rgba(0,0,0,.8);backdrop-filter:blur(16px)}
 .panel p{margin:.4rem 0}
 .small{font-size:.95rem;color:rgba(233,238,252,.70)}
-</style>
-</head>
-
-<body>
-<main>
-<div class="reactor">
-
-  <div class="smoke"></div>
-
-  <!-- facets (pressure) -->
-  <div id="drift" class="facet">
-    <div class="in"><div class="t">Drift</div><div class="s">Slow misalignment</div></div>
-  </div>
-
-  <div id="rules" class="facet">
-    <div class="in"><div class="t">Rules</div><div class="s">Not holding</div></div>
-  </div>
-
-  <div id="promises" class="facet">
-    <div class="in"><div class="t">Promises</div><div class="s">Not landing</div></div>
-  </div>
-
-  <!-- decision (clickable seam) -->
-  <div id="notice" class="diamond" onclick="go('/diagnosis/')">
-    <div class="in">
-      <div class="t">Notice</div>
-      <div class="s">Symptoms</div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <p><strong>Layer:</strong> Symptoms</p>
-    <p class="small"><strong>Rule:</strong> Facets apply pressure. The diamond decides.</p>
-    <p class="small"><strong>Tap:</strong> Notice → Diagnosis</p>
-  </div>
-
-</div>
-
-<script>
-function go(h){ window.location.href = h; }
-</script>
-
-<footer style="text-align:center;padding:1rem;color:rgba(233,238,252,.55)">© 2026 Geodiametrics</footer>
-</main>
-</body>
-</html>
+</style></head><body><main><div class="reactor"><div class="smoke"></div>
+<div id="drift" class="facet"><div class="in"><div class="t">Drift</div><div class="s">Slow misalignment</div></div></div>
+<div id="rules" class="facet"><div class="in"><div class="t">Rules</div><div class="s">Not holding</div></div></div>
+<div id="promises" class="facet"><div class="in"><div class="t">Promises</div><div class="s">Not landing</div></div></div>
+<div class="diamond" onclick="go('/diagnosis/')"><div class="in"><div class="t">Notice</div><div class="s">Symptoms</div></div></div>
+<div class="panel"><p><strong>Tap:</strong> Notice → Diagnosis</p><p class="small"><strong>Rule:</strong> Facets apply pressure. The diamond decides.</p></div>
+</div><script>function go(h){location.href=h;}</script></main></body></html>

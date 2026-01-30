@@ -1,100 +1,26 @@
-/* =========================================================
-   WEBSITE RESCUE OVERRIDE — DIAMOND BACKGROUND + LINKS
+/* ===========================
+   TNT: BUTTON VISIBILITY FIX
    Paste at BOTTOM of assets/ui.css
-   ========================================================= */
+   Purpose: Force action buttons to readable white text (kills purple/disabled look)
+   =========================== */
 
-/* --- Ensure content sits above background --- */
-main, header, footer {
-  position: relative;
-  z-index: 1;
+.actions a,
+.actions a:visited,
+.actions a:hover,
+.actions a:active{
+  color:#fff !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.45);
+  background:rgba(255,255,255,.08) !important;
+  border:1px solid rgba(255,255,255,.35) !important;
 }
 
-/* --- Diamond background (global) --- */
-html, body {
-  min-height: 100%;
+.actions a:hover{
+  background:rgba(255,255,255,.16) !important;
+  border-color:rgba(255,255,255,.60) !important;
 }
 
-body {
-  position: relative;
-  overflow-x: hidden;
+.actions a:active{
+  background:rgba(255,255,255,.22) !important;
 }
 
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) rotate(45deg);
-  border-radius: 28px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-body::before {
-  width: 680px;
-  height: 680px;
-  background: rgba(122, 162, 255, 0.08);
-  border: 1px solid rgba(122, 162, 255, 0.18);
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
-  opacity: 0.55;
-}
-
-body::after {
-  width: 520px;
-  height: 520px;
-  background: rgba(255, 122, 198, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-  opacity: 0.35;
-  transform: translate(-50%, -40%) rotate(45deg);
-}
-
-/* --- Home action buttons: readable & clickable --- */
-.actions a {
-  color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  text-decoration: none;
-}
-
-.actions a:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.6);
-}
-
-.actions a:active {
-  background: rgba(255, 255, 255, 0.22);
-}
-
-/* --- Modern link styling (kills blue underlined print look) --- */
-a {
-  color: rgba(233, 238, 252, 0.95);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(233, 238, 252, 0.22);
-  padding-bottom: 1px;
-  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
-}
-
-a:hover {
-  border-bottom-color: rgba(233, 238, 252, 0.55);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-a:active {
-  opacity: 0.85;
-}
-
-/* --- Optional pill-style links (OSF / Canonical Anchors) --- */
-a.pill-link {
-  display: inline-block;
-  padding: 0.55rem 0.8rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-a.pill-link:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.4);
-}
+.actions a *{color:#fff !important;}

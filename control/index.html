@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Control Room (Experimental)</title>
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#0b0f1a;color:#fff;line-height:1.6}
+    main{max-width:720px;margin:0 auto;padding:32px 20px 80px}
+    h1{font-size:2rem;margin:0 0 12px}
+    p{opacity:.86;margin:0 0 16px}
+    .card{background:#121a34;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px 18px;margin:14px 0}
+    .label{opacity:.7;font-size:.95rem;margin-bottom:6px}
+    .value{font-weight:800;font-size:1.3rem}
+    a.button{display:inline-block;padding:12px 16px;background:#1a2140;border-radius:12px;color:#fff;text-decoration:none;font-weight:700}
+    a.button:hover{background:#24306a}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Control Room (Experimental)</h1>
+  <p>This page will show two gauges once Phase One is stable.</p>
+
+  <div class="card">
+    <div class="label">Gauge A</div>
+    <div class="value">OSF (Canonical)</div>
+    <p>Tracks OSF signal (analytics or canonical state). Not live until sourced.</p>
+  </div>
+
+  <div class="card">
+    <div class="label">Gauge B</div>
+    <div class="value">Live Internet</div>
+    <p>Tracks real-time public signal via a live endpoint. Not live until wired.</p>
+  </div>
+
+  <a class="button" href="/">Back to Home</a>
+</main>
+</body>
+</html>

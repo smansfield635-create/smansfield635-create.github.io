@@ -1,39 +1,55 @@
+<!-- TNT — /control/index.html (uniform placeholder; Phase Two ready) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Control Room (Experimental)</title>
+  <title>Control Room · Geodiametrics</title>
   <style>
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#0b0f1a;color:#fff;line-height:1.6}
-    main{max-width:720px;margin:0 auto;padding:32px 20px 80px}
-    h1{font-size:2rem;margin:0 0 12px}
-    p{opacity:.86;margin:0 0 16px}
-    .card{background:#121a34;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px 18px;margin:14px 0}
-    .label{opacity:.7;font-size:.95rem;margin-bottom:6px}
-    .value{font-weight:800;font-size:1.3rem}
-    a.button{display:inline-block;padding:12px 16px;background:#1a2140;border-radius:12px;color:#fff;text-decoration:none;font-weight:700}
-    a.button:hover{background:#24306a}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;line-height:1.6;color:#fff;
+      background:
+        radial-gradient(1200px 800px at 20% 10%,rgba(122,162,255,.40),transparent 60%),
+        radial-gradient(1000px 700px at 80% 20%,rgba(255,122,198,.28),transparent 60%),
+        radial-gradient(900px 700px at 50% 90%,rgba(92,207,191,.18),transparent 60%),
+        #0a1020;}
+    main{max-width:780px;margin:0 auto;padding:44px 20px 96px}
+    h1{font-size:2.6rem;margin:0 0 12px;letter-spacing:-.01em}
+    p{opacity:.88;margin:0 0 16px}
+    .card{margin:22px 0;padding:18px 18px;background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.14);border-radius:18px}
+    .label{opacity:.65;font-size:.95rem;margin:0 0 10px}
+    .door{display:block;padding:16px 18px;margin:12px 0;background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);border-radius:14px;color:#fff;text-decoration:none;font-weight:800}
+    .door:hover{background:rgba(255,255,255,.12)}
+    .small{opacity:.65;font-size:.95rem;margin-top:22px}
   </style>
 </head>
 <body>
 <main>
-  <h1>Control Room (Experimental)</h1>
-  <p>This page will show two gauges once Phase One is stable.</p>
+  <h1>Control Room</h1>
+  <p>This page will become the live instrument surface in Phase Two.</p>
 
   <div class="card">
-    <div class="label">Gauge A</div>
-    <div class="value">OSF (Canonical)</div>
-    <p>Tracks OSF signal (analytics or canonical state). Not live until sourced.</p>
+    <div class="label">Gauge A (Canonical)</div>
+    <p><b>OSF Gauge</b> — sourced from OSF (analytics or state signal). Not live until wired.</p>
   </div>
 
   <div class="card">
-    <div class="label">Gauge B</div>
-    <div class="value">Live Internet</div>
-    <p>Tracks real-time public signal via a live endpoint. Not live until wired.</p>
+    <div class="label">Gauge B (Live)</div>
+    <p><b>Internet Gauge</b> — sourced from a live public endpoint. Not live until wired.</p>
   </div>
 
-  <a class="button" href="/">Back to Home</a>
+  <div class="card">
+    <div class="label">Truth policy</div>
+    <p><b>No fake liveness.</b> If a source is missing, the gauge reads “Unavailable”.</p>
+  </div>
+
+  <a class="door" href="/reference/">Reference (anchors)</a>
+  <a class="door" href="/execution/">Back → Act III: Execution</a>
+  <a class="door" href="/principles/">Foundational Laws (Tier 1 · 2 · 3)</a>
+  <a class="door" href="/">Back to Home</a>
+
+  <p class="small">When you’re ready, we’ll wire both sources and render the gauges.</p>
 </main>
 </body>
 </html>

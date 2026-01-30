@@ -1,0 +1,9 @@
+// FULL REWRITE — /assets/coherence_metric.json
+{
+  "title": "Coherence Metric ?",
+  "body": "This is the defined metric behind coherence.\n\nStatus: Defined\nSource: OSS + Global (when connected)\nLast updated: Unavailable\n\nPress deeper to see the structure of the metric.",
+  "links": [
+    { "label": "Metric structure", "href": "/metrics/" },
+    { "label": "Control (global)", "href": "/control/" }
+  ]
+}

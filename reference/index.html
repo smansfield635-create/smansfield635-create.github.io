@@ -1,198 +1,22 @@
-<!-- FULL TNT — /reference/index.html (CORRECTED GEOMETRY: ONE ANCHOR STATE + 3 FACETS, NO INTERACTIONS REQUIRED) -->
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Reference · Geodiametrics</title>
-<link rel="stylesheet" href="/assets/ui.css"/>
-
-<style>
-/* === REFERENCE REACTOR === */
-.reactor{
-  position:relative;
-  height:88vh;
-  min-height:640px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-}
-
-/* SMOKE — LOW ENERGY, HIGH CLARITY */
-.smoke{
-  position:absolute;
-  inset:-25%;
-  background:
-    radial-gradient(760px 760px at 50% 38%, rgba(233,238,252,.10), transparent 66%),
-    radial-gradient(860px 860px at 35% 62%, rgba(122,162,255,.08), transparent 68%),
-    radial-gradient(860px 860px at 65% 62%, rgba(92,207,191,.08), transparent 68%);
-  filter:blur(80px);
-  animation: drift 44s linear infinite;
-}
-@keyframes drift{
-  0%{transform:translate(0,0)}
-  50%{transform:translate(2%,2%)}
-  100%{transform:translate(0,0)}
-}
-
-/* CENTRAL STATE DIAMOND */
-.diamond{
-  position:absolute;
-  width:320px;height:320px;
-  transform:rotate(45deg);
-  border-radius:42px;
-  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow:
-    0 55px 170px rgba(0,0,0,.82),
-    inset 0 0 0 1px rgba(255,255,255,.08);
-  display:flex;align-items:center;justify-content:center;
-  z-index:3;
-}
-.diamond .in{
-  transform:rotate(-45deg);
-  text-align:center;
-}
-.diamond .t{
-  font-weight:900;
-  font-size:1.65rem;
-}
-.diamond .s{
-  margin-top:.35rem;
-  color:rgba(233,238,252,.72);
-}
-
-/* FACETS — ANCHOR TYPES (NOT CLICKABLE) */
-.facet{
-  position:absolute;
-  width:175px;height:175px;
-  transform:rotate(45deg);
-  border-radius:28px;
-  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:
-    0 32px 105px rgba(0,0,0,.68),
-    inset 0 0 0 1px rgba(255,255,255,.05);
-  display:flex;align-items:center;justify-content:center;
-  opacity:.60;
-  pointer-events:none;
-}
-.facet .in{
-  transform:rotate(-45deg);
-  text-align:center;
-}
-.facet .t{
-  font-weight:850;
-  font-size:1.12rem;
-}
-.facet .s{
-  margin-top:.25rem;
-  font-size:.92rem;
-  color:rgba(233,238,252,.65);
-}
-
-/* FACET COLORS */
-.facet.blue{
-  background:linear-gradient(180deg,rgba(122,162,255,.14),rgba(122,162,255,.05));
-  border-color:rgba(122,162,255,.22);
-}
-.facet.mint{
-  background:linear-gradient(180deg,rgba(92,207,191,.14),rgba(92,207,191,.05));
-  border-color:rgba(92,207,191,.22);
-}
-.facet.gray{
-  background:linear-gradient(180deg,rgba(233,238,252,.12),rgba(233,238,252,.04));
-  border-color:rgba(233,238,252,.20);
-}
-
-/* POSITIONS */
-#anchor{ z-index:3; }
-#osf{
-  top:14%;
-  left:50%;
-  transform:translate(-50%,-50%) rotate(45deg);
-}
-#orcid{
-  left:16%;
-  top:52%;
-  transform:translate(-50%,-50%) rotate(45deg);
-}
-#freeze{
-  right:16%;
-  top:52%;
-  transform:translate(50%,-50%) rotate(45deg);
-}
-
-/* PANEL (LINKS LIVE HERE, NOT AS SHAPES) */
-#panel{
-  position:absolute;
-  bottom:3%;
-  width:min(920px,92vw);
-  background:rgba(10,14,30,.72);
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:30px;
-  padding:1.15rem 1.3rem;
-  box-shadow:0 30px 100px rgba(0,0,0,.75);
-  backdrop-filter:blur(14px);
-}
-#panel p{margin:.45rem 0}
-.small{font-size:.95rem;color:rgba(233,238,252,.65)}
+<!-- TNT — /reference/index.html -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Reference · Geodiametrics</title><style>
+html,body{margin:0;height:100%;background:#0b0f1a;color:#e9eefc;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+.reactor{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.smoke{position:absolute;inset:-25%;background:radial-gradient(760px 760px at 50% 38%,rgba(233,238,252,.10),transparent 66%),radial-gradient(860px 860px at 35% 62%,rgba(122,162,255,.08),transparent 68%),radial-gradient(860px 860px at 65% 62%,rgba(92,207,191,.08),transparent 68%);filter:blur(80px);animation:drift 44s linear infinite;pointer-events:none}
+@keyframes drift{0%{transform:translate(0,0)}50%{transform:translate(2%,2%)}100%{transform:translate(0,0)}}
+.panel{position:relative;width:min(920px,92vw);background:rgba(10,14,30,.78);border:1px solid rgba(255,255,255,.18);border-radius:32px;padding:1.3rem 1.5rem;box-shadow:0 32px 110px rgba(0,0,0,.78);backdrop-filter:blur(16px);z-index:3}
+h1{margin:.2rem 0 1rem;font-size:2.1rem}
+p{margin:.55rem 0;color:rgba(233,238,252,.75);line-height:1.55}
 a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.22);padding-bottom:1px}
-</style>
-</head>
-
-<body>
-<main>
-
-<div class="reactor">
-
-  <div class="smoke"></div>
-
-  <!-- FACETS (ANCHOR TYPES) -->
-  <div id="osf" class="facet blue">
-    <div class="in">
-      <div class="t">OSF</div>
-      <div class="s">Canonical</div>
-    </div>
-  </div>
-
-  <div id="orcid" class="facet mint">
-    <div class="in">
-      <div class="t">ORCID</div>
-      <div class="s">Identity</div>
-    </div>
-  </div>
-
-  <div id="freeze" class="facet gray">
-    <div class="in">
-      <div class="t">Freeze</div>
-      <div class="s">Integrity</div>
-    </div>
-  </div>
-
-  <!-- CENTRAL STATE -->
-  <div id="anchor" class="diamond">
-    <div class="in">
-      <div class="t">Anchor</div>
-      <div class="s">Reference</div>
-    </div>
-  </div>
-
-  <!-- PANEL -->
-  <div id="panel">
-    <p><strong>Layer:</strong> Anchor (Reference)</p>
-    <p class="small"><strong>Rule:</strong> Links are anchors. The geometry is not the link.</p>
-    <hr class="sep"/>
-    <p><strong>Coherence Constraint Law (OSF):</strong> <a href="#">set link</a></p>
-    <p><strong>Quad-Core Engine (OSF):</strong> <a href="#">set link</a></p>
-    <p><strong>Diamond Geometry (OSF):</strong> <a href="#">set link</a></p>
-    <p><strong>ORCID:</strong> 0009-0004-1293-0405</p>
-  </div>
-
+.sep{border:0;height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,.12),transparent);margin:1.2rem 0}
+</style></head><body><main><div class="reactor"><div class="smoke"></div>
+<div class="panel">
+<h1>Anchors</h1>
+<p><strong>Coherence Constraint Law (OSF):</strong> <a href="#">set link</a></p>
+<p><strong>Quad-Core Engine (OSF):</strong> <a href="#">set link</a></p>
+<p><strong>Diamond Geometry (OSF):</strong> <a href="#">set link</a></p>
+<p><strong>ORCID:</strong> 0009-0004-1293-0405</p>
+<hr class="sep"/>
+<p><a href="/">Back to reactor</a></p>
 </div>
-
-<footer>© 2026 Geodiametrics</footer>
-</main>
-</body>
-</html>
+</div></main></body></html>

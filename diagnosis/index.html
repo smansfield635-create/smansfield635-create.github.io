@@ -1,0 +1,59 @@
+<!-- FULL REWRITE — /diagnosis/index.html -->
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Diagnosis</title><link rel="stylesheet" href="/assets/ui.css"/></head>
+<body><main>
+
+<h1>Diagnosis ?</h1>
+<p class="small">One diagnosis: loss of coherence.</p>
+
+<div class="nav">
+  <a href="/">Home</a><a href="/symptoms/">Symptoms</a><a href="/diagnosis/">Diagnosis</a><a href="/execution/">Execution</a><a href="/principles/">Principles</a><a href="/control/">Control</a>
+</div>
+
+<section data-tabs>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="one">1</button>
+    <button class="tab" role="tab" data-tab="two">2</button>
+    <button class="tab" role="tab" data-tab="three">3</button>
+  </div>
+
+  <div class="tabpanels">
+    <div class="tabpanel" role="tabpanel" data-panel="one" data-open="true">
+      <div class="bubbles">
+        <button class="bubble gray" data-detail='{"title":"Coherence ?","body":"Coherence is when what is said, done, and produced match.\nLoss of coherence explains the symptoms.","links":[{"label":"Principles","href":"/principles/"}]}'>
+          <div><div class="t">Coherence ?</div><div class="s">Exists?</div></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="two">
+      <div class="bubbles">
+        <button class="bubble blue" data-detail='{"title":"Misalignment ?","body":"Words, actions, outcomes diverge.\nThis is structure, not intent.","links":[{"label":"Execution","href":"/execution/"}]}'>
+          <div><div class="t">Misalignment ?</div><div class="s">Mismatch</div></div>
+        </button>
+        <button class="bubble mint" data-detail='{"title":"Boundary failure ?","body":"Constraints drift or are unenforced.\nAnything becomes admissible.","links":[{"label":"Execution","href":"/execution/"}]}'>
+          <div><div class="t">Boundaries ?</div><div class="s">Failing</div></div>
+        </button>
+        <button class="bubble pink" data-detail='{"title":"Follow-through failure ?","body":"Decisions don’t bind.\nReceipts don’t exist or don’t gate.","links":[{"label":"Engine","href":"/engine/"}]}'>
+          <div><div class="t">Follow-through ?</div><div class="s">Broken</div></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="three">
+      <div class="bubbles">
+        <button class="bubble gray" data-detail='{"title":"Next ?","body":"Diagnosis names the structure.\nExecution restores it mechanically.","links":[{"label":"Go to Execution","href":"/execution/"}]}'>
+          <div><div class="t">Next ?</div><div class="s">Execution</div></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal" id="bubbleModal" data-open="false"><div class="sheet">
+<button class="x" id="bmClose">✕</button><h2 id="bmTitle">?</h2><div id="bmBody"></div><div class="actions" id="bmLinks"></div>
+</div></div>
+
+<script defer src="/assets/bubbles.js"></script>
+</main></body></html>

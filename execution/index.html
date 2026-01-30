@@ -3,46 +3,53 @@
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Execution</title><link rel="stylesheet" href="/assets/ui.css"/></head>
 <body><main>
-<h1>?</h1>
-<p>What happens when I act?</p>
+
+<h1>Execution ?</h1>
+<p class="small">Restore alignment. Mechanically. With verification.</p>
+
+<div class="nav">
+  <a href="/">Home</a><a href="/symptoms/">Symptoms</a><a href="/diagnosis/">Diagnosis</a><a href="/execution/">Execution</a><a href="/engine/">Engine</a><a href="/control/">Control</a>
+</div>
 
 <section data-tabs>
-<div class="tabs" role="tablist">
-  <button class="tab" role="tab" aria-selected="true" data-tab="one">1</button>
-  <button class="tab" role="tab" data-tab="two">2</button>
-  <button class="tab" role="tab" data-tab="three">3</button>
-</div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="one">1</button>
+    <button class="tab" role="tab" data-tab="two">2</button>
+    <button class="tab" role="tab" data-tab="three">3</button>
+  </div>
 
-<div class="tabpanels">
-<div class="tabpanel" role="tabpanel" data-panel="one" data-open="true">
-  <div class="bubbles">
-    <button class="bubble blue" data-detail='{"title":"Notice","body":"What am I seeing?"}'>
-      <div><div class="t">Notice</div><div class="s">Perceive</div></div>
-    </button>
+  <div class="tabpanels">
+    <div class="tabpanel" role="tabpanel" data-panel="one" data-open="true">
+      <div class="bubbles">
+        <button class="bubble blue" data-detail='{"title":"Observe honestly ?","body":"Only what can be observed counts.\nThis feeds Selection.","links":[{"label":"Engine","href":"/engine/"}]}'>
+          <div><div class="t">Observe ?</div><div class="s">Evidence</div></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="two">
+      <div class="bubbles">
+        <button class="bubble mint" data-detail='{"title":"Choose within constraints ?","body":"Boundaries define admissibility.\nThis feeds Resolution.","links":[{"label":"Principles","href":"/principles/"}]}'>
+          <div><div class="t">Constrain ?</div><div class="s">Admissible</div></div>
+        </button>
+        <button class="bubble pink" data-detail='{"title":"Follow through with verification ?","body":"Choices must bind.\nThis feeds Commitment.","links":[{"label":"Engine","href":"/engine/"}]}'>
+          <div><div class="t">Verify ?</div><div class="s">Receipt</div></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="three">
+      <div class="bubbles">
+        <button class="bubble gray" data-detail='{"title":"Repeat and measure ?","body":"Continuation sustains stability.\nTracking becomes meaningful when sourced and timestamped.","links":[{"label":"Control","href":"/control/"}]}'>
+          <div><div class="t">Continue ?</div><div class="s">Loop</div></div>
+        </button>
+      </div>
+    </div>
   </div>
-</div>
-<div class="tabpanel" role="tabpanel" data-panel="two">
-  <div class="bubbles">
-    <button class="bubble mint" data-detail='{"title":"Limit","body":"What can I do?"}'>
-      <div><div class="t">Limit</div><div class="s">Constrain</div></div>
-    </button>
-    <button class="bubble pink" data-detail='{"title":"Choose","body":"What did I decide?"}'>
-      <div><div class="t">Choose</div><div class="s">Commit</div></div>
-    </button>
-  </div>
-</div>
-<div class="tabpanel" role="tabpanel" data-panel="three">
-  <div class="bubbles">
-    <button class="bubble gray" data-detail='{"title":"Continue","body":"What happens next?"}'>
-      <div><div class="t">Continue</div><div class="s">Loop</div></div>
-    </button>
-  </div>
-</div>
-</div>
 </section>
 
 <div class="modal" id="bubbleModal" data-open="false"><div class="sheet">
-<button class="x" id="bmClose">✕</button><h2 id="bmTitle"></h2><div id="bmBody"></div><div class="actions" id="bmLinks"></div>
+<button class="x" id="bmClose">✕</button><h2 id="bmTitle">?</h2><div id="bmBody"></div><div class="actions" id="bmLinks"></div>
 </div></div>
 
 <script defer src="/assets/bubbles.js"></script>

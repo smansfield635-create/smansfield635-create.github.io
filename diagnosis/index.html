@@ -7,127 +7,131 @@
 <link rel="stylesheet" href="/assets/ui.css"/>
 
 <style>
-/* === DIAGNOSIS REACTOR === */
+/* === DIAGNOSIS CHAMBER (TUNED) === */
 .reactor{
   position:relative;
-  height:88vh;
-  min-height:640px;
+  height:92vh;
+  min-height:680px;
   display:flex;
   align-items:center;
   justify-content:center;
   overflow:hidden;
+  padding-top:4vh;
 }
 
-/* SMOKE — PRESSURE FIELD */
+/* SMOKE — ORGANIZED PRESSURE */
 .smoke{
   position:absolute;
   inset:-25%;
   background:
-    radial-gradient(520px 520px at 40% 35%, rgba(122,162,255,.16), transparent 62%),
-    radial-gradient(620px 620px at 60% 35%, rgba(92,207,191,.16), transparent 62%),
-    radial-gradient(820px 820px at 50% 65%, rgba(255,122,198,.12), transparent 70%);
-  filter:blur(70px);
-  animation: drift 34s linear infinite;
+    radial-gradient(680px 680px at 50% 30%, rgba(92,207,191,.16), transparent 62%),
+    radial-gradient(820px 820px at 35% 60%, rgba(122,162,255,.14), transparent 65%),
+    radial-gradient(900px 900px at 65% 60%, rgba(255,122,198,.12), transparent 68%);
+  filter: blur(72px);
+  animation: drift 36s linear infinite;
 }
 @keyframes drift{
   0%{transform:translate(0,0)}
-  50%{transform:translate(-3%,2%)}
+  50%{transform:translate(2%,-3%)}
   100%{transform:translate(0,0)}
 }
 
-/* DIAMOND BASE */
+/* CENTRAL DECISION */
 .diamond{
   position:absolute;
-  width:300px;height:300px;
+  width:320px;height:320px;
   transform:rotate(45deg);
-  border-radius:40px;
-  background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));
-  border:1px solid rgba(255,255,255,.22);
+  border-radius:42px;
+  background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.24);
   box-shadow:
-    0 50px 160px rgba(0,0,0,.80),
-    inset 0 0 0 1px rgba(255,255,255,.08);
-  display:flex;align-items:center;justify-content:center;
+    0 60px 180px rgba(0,0,0,.82),
+    inset 0 0 0 1px rgba(255,255,255,.10);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:3;
 }
-
-/* INNER TEXT */
 .diamond .in{
   transform:rotate(-45deg);
   text-align:center;
 }
 .diamond .t{
   font-weight:900;
-  font-size:1.7rem;
+  font-size:1.75rem;
 }
 .diamond .s{
-  margin-top:.35rem;
-  color:rgba(233,238,252,.72);
+  margin-top:.4rem;
+  color:rgba(233,238,252,.78);
 }
 
-/* FACETS — NOT CLICKABLE */
+/* FACETS — CLEARER BUT STILL INERT */
 .facet{
   position:absolute;
-  width:180px;height:180px;
+  width:200px;height:200px;
   transform:rotate(45deg);
-  border-radius:28px;
-  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
-  border:1px solid rgba(255,255,255,.16);
+  border-radius:30px;
+  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.20);
   box-shadow:
-    0 30px 100px rgba(0,0,0,.65),
-    inset 0 0 0 1px rgba(255,255,255,.05);
-  display:flex;align-items:center;justify-content:center;
-  opacity:.55;
-  pointer-events:none; /* FACETS ARE PRESSURE ONLY */
+    0 36px 120px rgba(0,0,0,.70),
+    inset 0 0 0 1px rgba(255,255,255,.07);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:.72;
+  pointer-events:none;
 }
 .facet .in{
   transform:rotate(-45deg);
   text-align:center;
+  padding:0 12px;
 }
 .facet .t{
-  font-weight:800;
-  font-size:1.2rem;
+  font-weight:850;
+  font-size:1.25rem;
+  line-height:1.2;
 }
 .facet .s{
-  margin-top:.25rem;
-  font-size:.95rem;
-  color:rgba(233,238,252,.65);
+  margin-top:.35rem;
+  font-size:1rem;
+  line-height:1.25;
+  color:rgba(233,238,252,.75);
 }
 
-/* POSITIONS */
-#limit{
-  z-index:3;
-}
+/* POSITIONS — PUSHED OUT */
+#limit{ z-index:3; }
 
 #mismatch{
-  top:14%;
+  top:8%;
   left:50%;
   transform:translate(-50%,-50%) rotate(45deg);
 }
-
 #boundaries{
-  left:16%;
-  top:52%;
+  left:8%;
+  top:56%;
   transform:translate(-50%,-50%) rotate(45deg);
 }
-
 #follow{
-  right:16%;
-  top:52%;
+  right:8%;
+  top:56%;
   transform:translate(50%,-50%) rotate(45deg);
 }
 
 /* PANEL */
 #panel{
   position:absolute;
-  bottom:3%;
-  width:min(880px,92vw);
-  background:rgba(10,14,30,.72);
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:30px;
-  padding:1.15rem 1.3rem;
-  box-shadow:0 30px 100px rgba(0,0,0,.75);
-  backdrop-filter:blur(14px);
+  bottom:2.5%;
+  width:min(900px,92vw);
+  background:rgba(10,14,30,.74);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:32px;
+  padding:1.2rem 1.4rem;
+  box-shadow:0 32px 110px rgba(0,0,0,.78);
+  backdrop-filter:blur(16px);
 }
-#panel p{margin:.45rem 0}
+#panel p{margin:.5rem 0}
+.small{font-size:1rem;color:rgba(233,238,252,.72)}
 </style>
 </head>
 
@@ -160,7 +164,7 @@
     </div>
   </div>
 
-  <!-- CENTRAL DECISION DIAMOND -->
+  <!-- CENTRAL DECISION -->
   <div id="limit" class="diamond">
     <div class="in">
       <div class="t">Limit</div>
@@ -171,8 +175,8 @@
   <!-- PANEL -->
   <div id="panel">
     <p><strong>Layer:</strong> Limit (Diagnosis)</p>
-    <p><strong>Rule:</strong> Facets create pressure. The diamond makes the decision.</p>
-    <p><strong>Zipper:</strong> Diagnosis → Execution</p>
+    <p class="small"><strong>Rule:</strong> Facets apply pressure. The diamond decides.</p>
+    <p class="small"><strong>Zipper:</strong> Diagnosis → Execution</p>
   </div>
 
 </div>

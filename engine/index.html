@@ -1,78 +1,208 @@
-<!-- FULL TNT — /engine/index.html (BIND LAYER: QUAD-CORE) -->
+<!-- FULL TNT — /engine/index.html (CORRECTED GEOMETRY: ONE ENGINE + 4 FACETS, NO INTERACTIONS REQUIRED) -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Engine · Geodiametrics</title>
 <link rel="stylesheet" href="/assets/ui.css"/>
+
 <style>
-.reactor{position:relative;height:88vh;min-height:640px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.smoke{position:absolute;inset:-20%;background:
-radial-gradient(700px 700px at 30% 45%, rgba(255,122,198,.14), transparent 62%),
-radial-gradient(700px 700px at 70% 45%, rgba(92,207,191,.12), transparent 62%),
-radial-gradient(900px 900px at 50% 74%, rgba(122,162,255,.12), transparent 68%);
-filter:blur(60px);animation:drift 34s linear infinite}
-@keyframes drift{0%{transform:translate(0,0)}50%{transform:translate(-2%,3%)}100%{transform:translate(0,0)}}
-.diamond{position:absolute;width:280px;height:280px;transform:rotate(45deg);border-radius:36px;
-background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
-border:1px solid rgba(255,255,255,.18);
-box-shadow:0 40px 140px rgba(0,0,0,.75), inset 0 0 0 1px rgba(255,255,255,.06);
-display:flex;align-items:center;justify-content:center;cursor:pointer}
-.diamond .in{transform:rotate(-45deg);text-align:center}
-.diamond .t{font-weight:900;font-size:1.55rem}
-.diamond .s{margin-top:.35rem;color:rgba(233,238,252,.7)}
-.core{width:180px;height:180px;opacity:.88}
-.core:hover{opacity:1}
-.blue{background:linear-gradient(180deg,rgba(122,162,255,.26),rgba(122,162,255,.06));border-color:rgba(122,162,255,.34)}
-.mint{background:linear-gradient(180deg,rgba(92,207,191,.26),rgba(92,207,191,.06));border-color:rgba(92,207,191,.34)}
-.pink{background:linear-gradient(180deg,rgba(255,122,198,.24),rgba(255,122,198,.06));border-color:rgba(255,122,198,.34)}
-.gray{background:linear-gradient(180deg,rgba(233,238,252,.20),rgba(233,238,252,.06));border-color:rgba(233,238,252,.26)}
-#core{z-index:3}
-#q1{top:14%;left:50%;transform:translate(-50%,-50%) rotate(45deg)}
-#q2{left:16%;top:52%;transform:translate(-50%,-50%) rotate(45deg)}
-#q3{right:16%;top:52%;transform:translate(50%,-50%) rotate(45deg)}
-#q4{bottom:14%;left:50%;transform:translate(-50%,50%) rotate(45deg)}
-#panel{position:absolute;bottom:3%;width:min(860px,92vw);background:rgba(10,14,30,.70);
-border:1px solid rgba(255,255,255,.14);border-radius:28px;padding:1.1rem 1.2rem;
-box-shadow:0 28px 90px rgba(0,0,0,.7);backdrop-filter:blur(14px)}
-#panel p{margin:.4rem 0}
+/* === ENGINE REACTOR === */
+.reactor{
+  position:relative;
+  height:88vh;
+  min-height:640px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+/* SMOKE — MOST ENERGETIC (ENGINE FIELD) */
+.smoke{
+  position:absolute;
+  inset:-25%;
+  background:
+    radial-gradient(640px 640px at 50% 34%, rgba(122,162,255,.16), transparent 62%),
+    radial-gradient(720px 720px at 35% 58%, rgba(92,207,191,.14), transparent 66%),
+    radial-gradient(720px 720px at 65% 58%, rgba(255,122,198,.14), transparent 66%),
+    radial-gradient(980px 980px at 50% 78%, rgba(233,238,252,.10), transparent 72%);
+  filter:blur(72px);
+  animation: drift 28s linear infinite;
+}
+@keyframes drift{
+  0%{transform:translate(0,0)}
+  50%{transform:translate(-2%,3%)}
+  100%{transform:translate(0,0)}
+}
+
+/* CENTRAL DECISION DIAMOND (THE ENGINE AS A SINGLE OBJECT) */
+.diamond{
+  position:absolute;
+  width:320px;height:320px;
+  transform:rotate(45deg);
+  border-radius:42px;
+  background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:
+    0 55px 170px rgba(0,0,0,.82),
+    inset 0 0 0 1px rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+  z-index:3;
+}
+.diamond .in{
+  transform:rotate(-45deg);
+  text-align:center;
+}
+.diamond .t{
+  font-weight:900;
+  font-size:1.7rem;
+}
+.diamond .s{
+  margin-top:.35rem;
+  color:rgba(233,238,252,.72);
+}
+
+/* FACETS — QUAD-CORE COILS (NOT CLICKABLE) */
+.facet{
+  position:absolute;
+  width:175px;height:175px;
+  transform:rotate(45deg);
+  border-radius:28px;
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:
+    0 32px 105px rgba(0,0,0,.68),
+    inset 0 0 0 1px rgba(255,255,255,.05);
+  display:flex;align-items:center;justify-content:center;
+  opacity:.62;
+  pointer-events:none; /* FACETS ARE NOT CHOICES */
+}
+.facet .in{
+  transform:rotate(-45deg);
+  text-align:center;
+}
+.facet .t{
+  font-weight:850;
+  font-size:1.15rem;
+}
+.facet .s{
+  margin-top:.25rem;
+  font-size:.92rem;
+  color:rgba(233,238,252,.65);
+}
+
+/* FACET COLORS */
+.facet.blue{
+  background:linear-gradient(180deg,rgba(122,162,255,.18),rgba(122,162,255,.05));
+  border-color:rgba(122,162,255,.26);
+}
+.facet.mint{
+  background:linear-gradient(180deg,rgba(92,207,191,.18),rgba(92,207,191,.05));
+  border-color:rgba(92,207,191,.26);
+}
+.facet.pink{
+  background:linear-gradient(180deg,rgba(255,122,198,.18),rgba(255,122,198,.05));
+  border-color:rgba(255,122,198,.26);
+}
+.facet.gray{
+  background:linear-gradient(180deg,rgba(233,238,252,.14),rgba(233,238,252,.04));
+  border-color:rgba(233,238,252,.20);
+}
+
+/* POSITIONS (N-S-E-W COILS) */
+#engineCore{ z-index:3; }
+
+#sel{
+  top:14%;
+  left:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+#res{
+  left:16%;
+  top:52%;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+#com{
+  right:16%;
+  top:52%;
+  transform:translate(50%,-50%) rotate(45deg);
+}
+#con{
+  bottom:14%;
+  left:50%;
+  transform:translate(-50%,50%) rotate(45deg);
+}
+
+/* PANEL */
+#panel{
+  position:absolute;
+  bottom:3%;
+  width:min(880px,92vw);
+  background:rgba(10,14,30,.72);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:30px;
+  padding:1.15rem 1.3rem;
+  box-shadow:0 30px 100px rgba(0,0,0,.75);
+  backdrop-filter:blur(14px);
+}
+#panel p{margin:.45rem 0}
 </style>
 </head>
+
 <body>
 <main>
+
 <div class="reactor">
+
   <div class="smoke"></div>
 
-  <div id="core" class="diamond gray" onclick="go('/execution/')">
-    <div class="in"><div class="t">Bind</div><div class="s">Quad-Core</div></div>
+  <!-- FACETS (QUAD-CORE COILS) -->
+  <div id="sel" class="facet blue">
+    <div class="in">
+      <div class="t">Selection</div>
+      <div class="s">Inputs</div>
+    </div>
   </div>
 
-  <div id="q1" class="diamond core blue" onclick="go('/principles/')">
-    <div class="in"><div class="t">Selection</div><div class="s">?</div></div>
+  <div id="res" class="facet mint">
+    <div class="in">
+      <div class="t">Resolution</div>
+      <div class="s">Constraints</div>
+    </div>
   </div>
 
-  <div id="q2" class="diamond core mint" onclick="go('/principles/')">
-    <div class="in"><div class="t">Resolution</div><div class="s">?</div></div>
+  <div id="com" class="facet pink">
+    <div class="in">
+      <div class="t">Commitment</div>
+      <div class="s">Binding</div>
+    </div>
   </div>
 
-  <div id="q3" class="diamond core pink" onclick="go('/principles/')">
-    <div class="in"><div class="t">Commitment</div><div class="s">?</div></div>
+  <div id="con" class="facet gray">
+    <div class="in">
+      <div class="t">Continuation</div>
+      <div class="s">Persist</div>
+    </div>
   </div>
 
-  <div id="q4" class="diamond core gray" onclick="go('/control/')">
-    <div class="in"><div class="t">Continuation</div><div class="s">?</div></div>
+  <!-- CENTRAL ENGINE -->
+  <div id="engineCore" class="diamond">
+    <div class="in">
+      <div class="t">Quad-Core</div>
+      <div class="s">Engine</div>
+    </div>
   </div>
 
+  <!-- PANEL -->
   <div id="panel">
-    <p><strong>Layer:</strong> Bind (Engine)</p>
-    <p><strong>Zipper:</strong> Engine → Principles (constraints) → Control (observation)</p>
-    <p><strong>Next:</strong> Control (OSS/global)</p>
+    <p><strong>Layer:</strong> Quad-Core (Engine)</p>
+    <p><strong>Rule:</strong> Coils apply pressure. The engine is singular.</p>
+    <p><strong>Zipper:</strong> Engine → Control</p>
   </div>
-</div>
 
-<script>
-function go(h){location.href=h;}
-</script>
+</div>
 
 <footer>© 2026 Geodiametrics</footer>
 </main>

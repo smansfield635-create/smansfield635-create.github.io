@@ -10,68 +10,103 @@
 
 <style>
 :root{
-  --bg0:#0a0d18;--bg1:#0d1224;--fg:#f3f6ff;--muted:rgba(243,246,255,.68);
-  --stroke:rgba(243,246,255,.12);--accent:#7aa2ff;--accent2:#ff7ac6;
-  --good:#44d07b;--warn:#ffcc66;--radius:22px;
+  --bg0:#060914;--bg1:#0a0f24;
+  --fg:#f7f9ff;
+  --muted:rgba(247,249,255,.70);
+  --stroke:rgba(247,249,255,.14);
+  --cardA:rgba(8,12,28,.72);
+  --cardB:rgba(8,12,28,.46);
+  --accent:#7aa2ff;
+  --good:#44d07b;
+  --warn:#ffcc66;
+  --radius:22px;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
 }
-*{box-sizing:border-box}html,body{margin:0;height:100%}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
 body{
-  color:var(--fg);font-family:var(--sans);
+  color:var(--fg);
+  font-family:var(--sans);
   background:
--    radial-gradient(900px 700px at 12% 10%,rgba(122,162,255,.20),transparent 60%),
--    radial-gradient(900px 700px at 88% 18%,rgba(255,122,198,.16),transparent 60%),
--    radial-gradient(800px 650px at 50% 92%,rgba(68,208,123,.10),transparent 65%),
-+    radial-gradient(900px 700px at 12% 10%,rgba(122,162,255,.20),transparent 60%),
-+    radial-gradient(900px 700px at 88% 18%,rgba(255,122,198,.16),transparent 60%),
-+    radial-gradient(800px 650px at 50% 92%,rgba(68,208,123,.10),transparent 65%),
+    radial-gradient(900px 700px at 12% 10%,rgba(122,162,255,.16),transparent 60%),
+    radial-gradient(900px 700px at 88% 18%,rgba(255,122,198,.12),transparent 60%),
+    radial-gradient(800px 650px at 50% 92%,rgba(68,208,123,.08),transparent 65%),
     linear-gradient(180deg,var(--bg0),var(--bg1));
 }
+/* hard cap the "wash out" effect on mobile */
+@media (max-width: 600px){
+  body{
+    background:
+      radial-gradient(700px 520px at 12% 10%,rgba(122,162,255,.12),transparent 62%),
+      radial-gradient(700px 520px at 88% 18%,rgba(255,122,198,.10),transparent 62%),
+      linear-gradient(180deg,var(--bg0),var(--bg1));
+  }
+}
+
 main{max-width:1120px;margin:0 auto;padding:42px 18px 90px}
+
 header{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
 .brand{display:flex;align-items:center;gap:12px}
 .mark{
   width:44px;height:44px;border-radius:16px;border:1px solid var(--stroke);
-  background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02));
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 22px 80px rgba(0,0,0,.45);
+  box-shadow:0 20px 70px rgba(0,0,0,.55);
 }
 h1{margin:0;font-size:28px}
 .sub{margin-top:6px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+
 .nav{display:flex;gap:10px;flex-wrap:wrap}
 .pill{
   padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
-  background:rgba(255,255,255,.03);
-  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;backdrop-filter:blur(10px);
+  background:rgba(8,12,28,.55);
+  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;
 }
-.pill:hover{border-color:rgba(122,162,255,.55);color:var(--accent)}
+.pill:hover{border-color:rgba(122,162,255,.65);color:var(--accent)}
+
 .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 .tab{
   cursor:pointer;padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
-  background:rgba(255,255,255,.03);color:var(--fg);
-  font-family:var(--mono);font-size:12px;backdrop-filter:blur(10px);
+  background:rgba(8,12,28,.55);
+  color:var(--fg);font-family:var(--mono);font-size:12px;
 }
-.tab.active{border-color:rgba(122,162,255,.75);box-shadow:0 22px 80px rgba(0,0,0,.35)}
+.tab.active{border-color:rgba(122,162,255,.80);box-shadow:0 16px 50px rgba(0,0,0,.45)}
 .dot{width:10px;height:10px;border-radius:50%}
-.dot.g{background:var(--good);box-shadow:0 0 22px rgba(68,208,123,.35)}
-.dot.d{background:var(--accent);box-shadow:0 0 22px rgba(122,162,255,.35)}
+.dot.g{background:var(--good);box-shadow:0 0 18px rgba(68,208,123,.35)}
+.dot.d{background:var(--accent);box-shadow:0 0 18px rgba(122,162,255,.35)}
+
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px}
 .card{
-  border:1px solid var(--stroke);border-radius:var(--radius);
-  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
-  padding:22px;box-shadow:0 26px 90px rgba(0,0,0,.38);backdrop-filter:blur(14px);
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  background:linear-gradient(180deg,var(--cardA),var(--cardB));
+  padding:22px;
+  box-shadow:0 26px 90px rgba(0,0,0,.52);
+  backdrop-filter:blur(10px);
 }
-.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.kicker{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  color:rgba(122,162,255,.95);
+  margin-bottom:12px;
+}
 .kv{font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--muted)}
 .big{font-family:var(--mono);font-size:24px;margin-top:6px;color:var(--fg)}
+
 .track{height:12px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden;margin-top:8px}
 .fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,rgba(122,162,255,.95),rgba(255,122,198,.55))}
 .fill.good{background:linear-gradient(90deg,rgba(68,208,123,.95),rgba(122,162,255,.55))}
 .fill.warn{background:linear-gradient(90deg,rgba(255,204,102,.95),rgba(255,122,198,.40))}
 .hidden{display:none}
-footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);
-display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+footer{
+  margin-top:28px;padding-top:14px;border-top:1px solid rgba(247,249,255,.12);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  font-family:var(--mono);font-size:12px;color:var(--muted)
+}
 </style>
 </head>
 
@@ -157,7 +192,7 @@ display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:v
 
 <footer>
   <div>© 2026 Geodiametrics</div>
-  <div>Control · Global Worker + Device Local</div>
+  <div>Control · v1.7</div>
 </footer>
 
 </main>
@@ -226,3 +261,4 @@ loadDevice();
 
 </body>
 </html>
+```0

@@ -2,44 +2,62 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Geodiametrics · Reference</title>
-<link rel="stylesheet" href="/assets/style.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Foundations · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css">
 <script defer src="/assets/capture.js"></script>
+<script defer src="/assets/app.js"></script>
 </head>
 <body>
-<main class="page">
+<div class="wrap">
 
-<header class="card">
-  <h1>Reference</h1>
-  <p class="muted">Operational definitions used by the system.</p>
-  <nav class="nav">
-    <a href="/">Home</a>
-    <a href="/control/">Control</a>
-    <a href="/system/">Reference</a>
-    <a href="/artifacts/">Artifacts</a>
-    <a href="/problem/">Problem</a>
-    <a href="/execution/">Execution</a>
-  </nav>
-</header>
+  <div class="header">
+    <div class="brand">
+      <div class="mark"><img src="/assets/logo.svg" alt=""></div>
+      <div>
+        <h1>Foundations</h1>
+        <div class="sub">Clear rules. Simple language.</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="pill" href="/">Home</a>
+      <a class="pill" href="/control/">Control Room</a>
+      <a class="pill" href="/system/">Foundations</a>
+      <a class="pill" href="/artifacts/">Table of Contents</a>
+      <a class="pill" href="/problem/">Problem</a>
+      <a class="pill" href="/execution/">Execution</a>
+    </nav>
+  </div>
 
-<section class="card">
-  <h3>Coherence</h3>
-  <p>Alignment between claims, actions, and outcomes under constraint.</p>
-</section>
+  <div class="grid">
+    <div class="card">
+      <div class="kicker">Foundation</div>
+      <div class="big">No Hidden Control</div>
+      <div class="muted">If something matters, it must be visible. No silent changes.</div>
+    </div>
+    <div class="card" id="principles">
+      <div class="kicker">Principles</div>
+      <div class="big">Simple tests</div>
+      <div class="muted">1) Does it match what it claims? 2) Does it hold under pressure? 3) Can anyone verify it?</div>
+    </div>
+    <div class="card">
+      <div class="kicker">Definitions</div>
+      <div class="big">Coherence</div>
+      <div class="muted">Things match: what you say, what you do, and what happens.</div>
+      <div class="hr"></div>
+      <div class="big">Fragmentation</div>
+      <div class="muted">Things don’t match. Misalignment grows under pressure.</div>
+      <div class="hr"></div>
+      <div class="big">Confusion</div>
+      <div class="muted">You can’t tell what’s true or what to do. That makes failure faster.</div>
+    </div>
+  </div>
 
-<section class="card">
-  <h3>Fragmentation</h3>
-  <p>Misalignment that increases instability under load.</p>
-</section>
+  <footer>
+    <div>© 2026 Geodiametrics</div>
+    <div>Foundations</div>
+  </footer>
 
-<section class="card">
-  <h3>Confusion</h3>
-  <p>Unresolved state assignment that amplifies fragmentation.</p>
-</section>
-
-<footer class="muted">© 2026 Geodiametrics</footer>
-
-</main>
+</div>
 </body>
 </html>

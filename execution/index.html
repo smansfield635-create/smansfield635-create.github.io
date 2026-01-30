@@ -11,18 +11,24 @@
 <style>
 :root{
   --bg0:#0a0d18;--bg1:#0d1224;--fg:#f3f6ff;--muted:rgba(243,246,255,.68);
-  --stroke:rgba(243,246,255,.12);--accent:#7aa2ff;--radius:22px;
-  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  --stroke:rgba(243,246,255,.12);--accent:#7aa2ff;--accent2:#ff7ac6;
+  --good:#44d07b;--warn:#ffcc66;--bad:#ff7ac6;
+  --radius:22px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
 }
-*{box-sizing:border-box}html,body{margin:0;height:100%}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
 body{
   color:var(--fg);font-family:var(--sans);
   background:
     radial-gradient(900px 700px at 12% 10%,rgba(122,162,255,.20),transparent 60%),
     radial-gradient(900px 700px at 88% 18%,rgba(255,122,198,.16),transparent 60%),
+    radial-gradient(800px 650px at 50% 92%,rgba(68,208,123,.10),transparent 65%),
     linear-gradient(180deg,var(--bg0),var(--bg1));
 }
 main{max-width:1120px;margin:0 auto;padding:42px 18px 90px}
+
 header{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
 .brand{display:flex;align-items:center;gap:12px}
 .mark{
@@ -33,6 +39,7 @@ header{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;
 }
 h1{margin:0;font-size:28px}
 .sub{margin-top:6px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+
 .nav{display:flex;gap:10px;flex-wrap:wrap}
 .pill{
   padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
@@ -40,20 +47,75 @@ h1{margin:0;font-size:28px}
   color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;backdrop-filter:blur(10px);
 }
 .pill:hover{border-color:rgba(122,162,255,.55);color:var(--accent)}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:980px){.grid{grid-template-columns:1fr}}
+
 .card{
   border:1px solid var(--stroke);border-radius:var(--radius);
   background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
   padding:22px;box-shadow:0 26px 90px rgba(0,0,0,.38);backdrop-filter:blur(14px);
-  margin-top:16px;
 }
 .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
-.content{color:var(--muted);line-height:1.6;font-size:14px;margin-top:8px}
+.note{color:var(--muted);line-height:1.6;font-size:14px}
+.hr{height:1px;background:var(--stroke);margin:16px 0}
+
+label{display:block;font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:12px}
+input,textarea,select{
+  width:100%;
+  margin-top:8px;
+  padding:12px 12px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.03);
+  color:var(--fg);
+  outline:none;
+  font-family:var(--sans);
+}
+textarea{min-height:92px;resize:vertical}
+
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.03);
+  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;
+  backdrop-filter:blur(10px);cursor:pointer;
+}
+.btn:hover{border-color:rgba(122,162,255,.55);color:var(--accent)}
+.btn.good{border-color:rgba(68,208,123,.45)}
+.btn.good:hover{border-color:rgba(68,208,123,.75);color:rgba(68,208,123,.95)}
+.btn.warn{border-color:rgba(255,204,102,.45)}
+.btn.warn:hover{border-color:rgba(255,204,102,.75);color:rgba(255,204,102,.95)}
+
+pre{
+  white-space:pre-wrap;word-break:break-word;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  padding:14px;
+  color:var(--fg);
+  font-family:var(--mono);
+  font-size:12px;
+  margin:0;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 10px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.03);
+  font-family:var(--mono);font-size:12px;color:var(--fg);
+}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.ok{background:var(--good);box-shadow:0 0 22px rgba(68,208,123,.30)}
+.dot.no{background:var(--warn);box-shadow:0 0 22px rgba(255,204,102,.20)}
 footer{
   margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);
-  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:12px;color:var(--muted)
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  font-family:var(--mono);font-size:12px;color:var(--muted)
 }
 </style>
 </head>
+
 <body>
 <main>
 
@@ -62,7 +124,7 @@ footer{
     <div class="mark"><img src="/assets/logo.svg" alt="Geodiametrics" style="width:22px;height:22px"></div>
     <div>
       <h1>Execution</h1>
-      <div class="sub">Reserved · Disabled by design</div>
+      <div class="sub">Applicable · Local-only · Receipt export</div>
     </div>
   </div>
   <nav class="nav">
@@ -74,16 +136,143 @@ footer{
   </nav>
 </header>
 
-<section class="card">
-  <div class="kicker">Status</div>
-  <div class="content">Execution remains disabled. No executable actions occur on this surface.</div>
+<section class="grid">
+
+  <div class="card">
+    <div class="kicker">Local execution builder</div>
+    <div class="note">
+      This surface does not execute actions on the world. It produces a structured, auditable <b>receipt</b> you can use elsewhere.
+      All data stays in your browser unless you export it.
+    </div>
+
+    <div class="hr"></div>
+
+    <label>Selection · Goal</label>
+    <input id="goal" placeholder="What outcome are you trying to produce?" />
+
+    <label>Resolution · Constraints</label>
+    <textarea id="constraints" placeholder="List constraints (time, budget, rules, safety, dependencies)."></textarea>
+
+    <label>Commitment · Chosen option</label>
+    <textarea id="commitment" placeholder="State the selected option and why it fits constraints."></textarea>
+
+    <label>Continuation · Next actions</label>
+    <textarea id="continuation" placeholder="List next actions as bullet points."></textarea>
+
+    <label>Receipt label</label>
+    <input id="label" placeholder="Example: Mars Surface Ops · v0.1 · Trial A" />
+
+    <div class="row">
+      <button class="btn good" id="make" type="button">Generate receipt</button>
+      <button class="btn warn" id="clear" type="button">Clear</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="kicker">Receipt</div>
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <div class="badge" id="status"><span class="dot no"></span> Not generated</div>
+      <div class="badge" id="scope"><span class="dot ok"></span> Local-only</div>
+    </div>
+
+    <div class="hr"></div>
+
+    <pre id="out">{}</pre>
+
+    <div class="row">
+      <button class="btn" id="copy" type="button">Copy JSON</button>
+      <button class="btn" id="download" type="button">Download .json</button>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="kicker">Rule</div>
+    <div class="note">
+      Execution becomes “real” only when a receipt is honored by an external executor (human, team, system). This page is the receipt generator.
+    </div>
+  </div>
+
 </section>
 
 <footer>
   <div>© 2026 Geodiametrics</div>
-  <div>Execution · v1.5</div>
+  <div>Execution · Applicable · Local receipt</div>
 </footer>
 
 </main>
+
+<script>
+function uid(){
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11)
+    .replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));
+}
+function safeStr(s){ return String(s||"").trim(); }
+
+function buildReceipt(){
+  const r = {
+    id: uid(),
+    timestamp: new Date().toISOString(),
+    surface: "execution",
+    mode: "local_receipt",
+    quad_core: {
+      selection: { goal: safeStr(document.getElementById("goal").value) },
+      resolution: { constraints: safeStr(document.getElementById("constraints").value) },
+      commitment: { choice: safeStr(document.getElementById("commitment").value) },
+      continuation: { next_actions: safeStr(document.getElementById("continuation").value) }
+    },
+    label: safeStr(document.getElementById("label").value),
+    integrity: {
+      generated_on: "client",
+      durable_mutation: false,
+      execution_enabled: false
+    }
+  };
+  return r;
+}
+
+function setStatus(ok){
+  const el = document.getElementById("status");
+  if(ok){
+    el.innerHTML = '<span class="dot ok"></span> Generated';
+  }else{
+    el.innerHTML = '<span class="dot no"></span> Not generated';
+  }
+}
+
+let last = {};
+
+document.getElementById("make").addEventListener("click", ()=>{
+  last = buildReceipt();
+  document.getElementById("out").textContent = JSON.stringify(last, null, 2);
+  setStatus(true);
+});
+
+document.getElementById("clear").addEventListener("click", ()=>{
+  ["goal","constraints","commitment","continuation","label"].forEach(id=>document.getElementById(id).value="");
+  last = {};
+  document.getElementById("out").textContent = "{}";
+  setStatus(false);
+});
+
+document.getElementById("copy").addEventListener("click", async ()=>{
+  try{
+    await navigator.clipboard.writeText(JSON.stringify(last, null, 2));
+    alert("Copied.");
+  }catch(e){
+    alert("Copy failed. Select text manually.");
+  }
+});
+
+document.getElementById("download").addEventListener("click", ()=>{
+  const blob = new Blob([JSON.stringify(last, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = (last.label ? last.label.replace(/[^a-z0-9\-_. ]/gi,"_") : "geodiametrics_receipt") + ".json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+</script>
+
 </body>
 </html>
+```0

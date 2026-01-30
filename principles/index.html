@@ -1,27 +1,71 @@
-<!-- FULL REWRITE — /principles/index.html (FOUNDATIONAL LAWS) -->
+<!-- FULL REWRITE — /principles/index.html (FOUNDATIONAL LAWS TIER 1/2/3) -->
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Principles</title><link rel="stylesheet" href="/assets/ui.css"/></head>
 <body><main>
-<h1>?</h1>
-<p>What must always be true?</p>
+
+<h1>Principles ?</h1>
+<p class="small">Tier 1 → Tier 2 → Tier 3. Nothing else.</p>
+
+<div class="nav">
+  <a href="/">Home</a><a href="/principles/">Principles</a><a href="/diagnosis/">Diagnosis</a><a href="/execution/">Execution</a><a href="/engine/">Engine</a><a href="/control/">Control</a>
+</div>
 
 <section data-tabs>
-<div class="tabs" role="tablist">
-  <button class="tab" role="tab" aria-selected="true" data-tab="t1">Tier 1</button>
-  <button class="tab" role="tab" data-tab="t2">Tier 2</button>
-  <button class="tab" role="tab" data-tab="t3">Tier 3</button>
-</div>
-
-<div class="tabpanels">
-<div class="tabpanel" role="tabpanel" data-panel="t1" data-open="true">
-  <div class="bubbles">
-    <button class="bubble blue" data-detail='{"title":"Coherence","body":"Alignment exists or it doesn’t."}'>
-      <div><div class="t">Alignment</div><div class="s">Exists?</div></div>
-    </button>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="t1">Tier 1</button>
+    <button class="tab" role="tab" data-tab="t2">Tier 2</button>
+    <button class="tab" role="tab" data-tab="t3">Tier 3</button>
   </div>
-</div>
-<div class="tabpanel" role="tabpanel" data-panel="t2">
-  <div class="bubbles">
-    <button class="bubble mint" data-detail='{"title":"Constraints","body":"Boundaries shape outcomes."}'>
-      <div><div class="t">Boundaries</div><div class="s
+
+  <div class="tabpanels">
+    <div class="tabpanel" role="tabpanel" data-panel="t1" data-open="true">
+      <div class="bubbles">
+        <button class="bubble blue" data-detail='{"title":"Alignment exists ?","body":"Either the system aligns, or it doesn’t.\nThis is binary at Tier 1.","links":[{"label":"Diagnosis","href":"/diagnosis/"}]}'>
+          <div><div class="t">Alignment ?</div><div class="s">Exists</div></div>
+        </button>
+        <button class="bubble mint" data-detail='{"title":"Boundaries exist ?","body":"Constraints exist, or they don’t.\nIf they drift, the system becomes unfalsifiable."}'>
+          <div><div class="t">Boundaries ?</div><div class="s">Exist</div></div>
+        </button>
+        <button class="bubble pink" data-detail='{"title":"Receipts exist ?","body":"Verification exists, or it doesn’t.\nNo receipts = no audit."}'>
+          <div><div class="t">Receipts ?</div><div class="s">Exist</div></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="t2">
+      <div class="bubbles">
+        <button class="bubble gray" data-detail='{"title":"Drift accelerates ?","body":"When alignment weakens, drift increases.\nThis is structural, not moral."}'>
+          <div><div class="t">Drift ?</div><div class="s">Accelerates</div></div>
+        </button>
+        <button class="bubble gray" data-detail='{"title":"Trust decays ?","body":"When boundaries and receipts weaken, trust becomes narrative.\nNarrative is unstable."}'>
+          <div><div class="t">Trust ?</div><div class="s">Decays</div></div>
+        </button>
+        <button class="bubble gray" data-detail='{"title":"Decisions lose force ?","body":"When commitment fails, choices do not bind.\nExecution becomes cosmetic."}'>
+          <div><div class="t">Decisions ?</div><div class="s">Weaken</div></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" data-panel="t3">
+      <div class="bubbles">
+        <button class="bubble gray" data-detail='{"title":"Confusion ?","body":"People feel uncertainty.\nSignals conflict.\nDirection collapses."}'>
+          <div><div class="t">Confusion ?</div><div class="s">Experience</div></div>
+        </button>
+        <button class="bubble gray" data-detail='{"title":"Conflict ?","body":"Disputes persist because evidence cannot converge.\nNo shared receipts."}'>
+          <div><div class="t">Conflict ?</div><div class="s">Experience</div></div>
+        </button>
+        <button class="bubble gray" data-detail='{"title":"Collapse ?","body":"Failure appears sudden.\nIt wasn’t sudden.\nIt was unobserved."}'>
+          <div><div class="t">Collapse ?</div><div class="s">Outcome</div></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal" id="bubbleModal" data-open="false"><div class="sheet">
+<button class="x" id="bmClose">✕</button><h2 id="bmTitle">?</h2><div id="bmBody"></div><div class="actions" id="bmLinks"></div>
+</div></div>
+
+<script defer src="/assets/bubbles.js"></script>
+</main></body></html>

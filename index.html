@@ -4,98 +4,104 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Geodiametrics</title>
-<link rel="stylesheet" href="/assets/ui.css"/>
 
 <style>
-/* === REACTOR CORE === */
+html,body{
+  margin:0;
+  padding:0;
+  height:100%;
+  background:#0b0f1a;
+  color:#e9eefc;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+}
+
+/* === HOME REACTOR === */
 .reactor{
   position:relative;
-  height:88vh;
-  min-height:640px;
+  height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
   overflow:hidden;
 }
 
-/* SMOKE LAYER */
+/* SMOKE */
 .smoke{
   position:absolute;
-  inset:-20%;
+  inset:-25%;
   background:
-    radial-gradient(600px 600px at 30% 40%, rgba(122,162,255,.18), transparent 60%),
-    radial-gradient(700px 700px at 70% 55%, rgba(255,122,198,.16), transparent 60%),
-    radial-gradient(800px 800px at 50% 70%, rgba(92,207,191,.14), transparent 65%);
-  filter: blur(60px);
-  animation: drift 30s linear infinite;
+    radial-gradient(700px 700px at 50% 35%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(800px 800px at 30% 65%, rgba(92,207,191,.16), transparent 65%),
+    radial-gradient(900px 900px at 70% 65%, rgba(255,122,198,.14), transparent 68%);
+  filter:blur(70px);
+  animation: drift 40s linear infinite;
 }
 @keyframes drift{
   0%{transform:translate(0,0)}
-  50%{transform:translate(-4%,2%)}
+  50%{transform:translate(-3%,2%)}
   100%{transform:translate(0,0)}
 }
 
 /* DIAMOND */
 .diamond{
-  position:absolute;
-  width:280px;height:280px;
+  position:relative;
+  width:320px;
+  height:320px;
   transform:rotate(45deg);
-  border-radius:36px;
-  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow:0 40px 140px rgba(0,0,0,.75), inset 0 0 0 1px rgba(255,255,255,.06);
-  display:flex;align-items:center;justify-content:center;
+  border-radius:44px;
+  background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.24);
+  box-shadow:
+    0 60px 180px rgba(0,0,0,.85),
+    inset 0 0 0 1px rgba(255,255,255,.10);
+  display:flex;
+  align-items:center;
+  justify-content:center;
   cursor:pointer;
+  z-index:3;
 }
+
+.diamond:active{opacity:.92}
+
 .diamond .in{
   transform:rotate(-45deg);
   text-align:center;
+  user-select:none;
 }
+
 .diamond .t{
   font-weight:900;
-  font-size:1.6rem;
+  font-size:1.9rem;
 }
+
 .diamond .s{
-  margin-top:.35rem;
-  color:rgba(233,238,252,.7);
+  margin-top:.4rem;
+  color:rgba(233,238,252,.75);
+  font-size:1.05rem;
 }
 
-/* CORE */
-#core{z-index:3}
-
-/* CORES */
-.core{
-  width:180px;height:180px;
-  opacity:.85;
-  transition:opacity .2s ease, box-shadow .2s ease;
-}
-.core:hover{opacity:1}
-
-/* POSITIONS */
-#notice{top:12%;left:50%;transform:translate(-50%,-50%) rotate(45deg)}
-#limit{left:12%;top:50%;transform:translate(-50%,-50%) rotate(45deg)}
-#bind{right:12%;top:50%;transform:translate(50%,-50%) rotate(45deg)}
-#persist{bottom:12%;left:50%;transform:translate(-50%,50%) rotate(45deg)}
-
-/* COLORS */
-.blue{background:linear-gradient(180deg,rgba(122,162,255,.28),rgba(122,162,255,.06));border-color:rgba(122,162,255,.35)}
-.mint{background:linear-gradient(180deg,rgba(92,207,191,.28),rgba(92,207,191,.06));border-color:rgba(92,207,191,.35)}
-.pink{background:linear-gradient(180deg,rgba(255,122,198,.26),rgba(255,122,198,.06));border-color:rgba(255,122,198,.34)}
-.gray{background:linear-gradient(180deg,rgba(233,238,252,.20),rgba(233,238,252,.06));border-color:rgba(233,238,252,.26)}
-
-/* INFO PANEL */
-#panel{
+/* FOOTER PANEL */
+.panel{
   position:absolute;
-  bottom:3%;
-  width:min(820px,92vw);
-  background:rgba(10,14,30,.70);
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:28px;
-  padding:1.1rem 1.2rem;
-  box-shadow:0 28px 90px rgba(0,0,0,.7);
-  backdrop-filter:blur(14px);
+  bottom:4%;
+  width:min(900px,92vw);
+  background:rgba(10,14,30,.75);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:30px;
+  padding:1.2rem 1.4rem;
+  box-shadow:0 30px 110px rgba(0,0,0,.8);
+  backdrop-filter:blur(16px);
 }
-#panel p{margin:.4rem 0}
+
+.panel p{
+  margin:.4rem 0;
+  font-size:1rem;
+}
+
+.small{
+  font-size:.95rem;
+  color:rgba(233,238,252,.70);
+}
 </style>
 </head>
 
@@ -106,50 +112,35 @@
 
   <div class="smoke"></div>
 
-  <!-- CORE -->
-  <div id="core" class="diamond gray">
+  <!-- CLICKABLE HOME DIAMOND -->
+  <div class="diamond" onclick="enter()">
     <div class="in">
       <div class="t">Hold</div>
-      <div class="s">Does it cohere?</div>
+      <div class="s">Tap to begin</div>
     </div>
   </div>
 
-  <!-- QUAD-CORE -->
-  <div id="notice" class="diamond core blue" onclick="show('notice')">
-    <div class="in"><div class="t">Notice</div><div class="s">What is felt?</div></div>
-  </div>
-
-  <div id="limit" class="diamond core mint" onclick="show('limit')">
-    <div class="in"><div class="t">Limit</div><div class="s">What is allowed?</div></div>
-  </div>
-
-  <div id="bind" class="diamond core pink" onclick="show('bind')">
-    <div class="in"><div class="t">Bind</div><div class="s">What holds?</div></div>
-  </div>
-
-  <div id="persist" class="diamond core gray" onclick="show('persist')">
-    <div class="in"><div class="t">Persist</div><div class="s">What remains?</div></div>
-  </div>
-
-  <!-- PANEL -->
-  <div id="panel">
-    <p><strong>Fusion Reactor:</strong> Symptoms → Diagnosis → Execution</p>
-    <p><strong>Mechanism:</strong> Selection · Resolution · Commitment · Continuation</p>
-    <p><strong>Measurement:</strong> Coherence (observable, sourced, verifiable)</p>
+  <div class="panel">
+    <p><strong>System:</strong> Coherence under pressure</p>
+    <p class="small">
+      One chamber. One decision.  
+      Entry opens the Symptoms → Diagnosis → Execution flow.
+    </p>
   </div>
 
 </div>
 
 <script>
-function show(which){
-  if(which==='notice') location.href='/execution/';
-  if(which==='limit') location.href='/principles/';
-  if(which==='bind') location.href='/engine/';
-  if(which==='persist') location.href='/control/';
+function enter(){
+  // FIRST AND ONLY ENTRY SEAM
+  window.location.href = "/symptoms/";
 }
 </script>
 
-<footer>© 2026 Geodiametrics</footer>
+<footer style="text-align:center;padding:1rem;color:rgba(233,238,252,.55)">
+© 2026 Geodiametrics
+</footer>
+
 </main>
 </body>
 </html>

@@ -3,212 +3,79 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Geodiametrics · Reference</title>
 
-<script defer src="/assets/cfwa.js"></script>
-<script defer src="/assets/live_site_metrics.js"></script>
+<title>Geodiametrics</title>
 
-<style>
-:root{
-  --bg0:#0a0d18;--bg1:#0d1224;--fg:#f3f6ff;--muted:rgba(243,246,255,.68);
-  --stroke:rgba(243,246,255,.12);--accent:#7aa2ff;--radius:22px;
-  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-}
-*{box-sizing:border-box}html,body{margin:0;height:100%}
-body{
-  color:var(--fg);font-family:var(--sans);
-  background:
-    radial-gradient(900px 700px at 12% 10%,rgba(122,162,255,.20),transparent 60%),
-    radial-gradient(900px 700px at 88% 18%,rgba(255,122,198,.16),transparent 60%),
-    linear-gradient(180deg,var(--bg0),var(--bg1));
-}
-main{max-width:1120px;margin:0 auto;padding:42px 18px 90px}
-header{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
-.brand{display:flex;align-items:center;gap:12px}
-.mark{
-  width:44px;height:44px;border-radius:16px;border:1px solid var(--stroke);
-  background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 22px 80px rgba(0,0,0,.45);
-}
-h1{margin:0;font-size:28px}
-.sub{margin-top:6px;font-family:var(--mono);font-size:12px;color:var(--muted)}
-.nav{display:flex;gap:10px;flex-wrap:wrap}
-.pill{
-  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
-  background:rgba(255,255,255,.03);
-  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;
-  backdrop-filter:blur(10px);
-}
-.pill:hover{border-color:rgba(122,162,255,.55);color:var(--accent)}
+<link rel="stylesheet" href="/assets/style.css">
+<script defer src="/assets/capture.js"></script>
 
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
-@media (max-width:950px){.grid{grid-template-columns:1fr}}
-.card{
-  border:1px solid var(--stroke);border-radius:var(--radius);
-  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
-  padding:22px;box-shadow:0 26px 90px rgba(0,0,0,.38);backdrop-filter:blur(14px);
-}
-.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
-.kv{font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--muted)}
-.content{color:var(--muted);line-height:1.6;font-size:14px;margin-top:8px}
-
-details{
-  border:1px solid var(--stroke);
-  border-radius:16px;
-  padding:14px 14px;
-  background:rgba(255,255,255,.03);
-  margin-top:12px;
-}
-details:hover{border-color:rgba(122,162,255,.55)}
-summary{
-  cursor:pointer;list-style:none;
-  font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg);
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-}
-summary::-webkit-details-marker{display:none}
-.chev{color:var(--muted)}
-details[open] .chev{color:rgba(122,162,255,.9)}
-.list{margin:10px 0 0 16px}
-a.out{color:var(--fg);text-decoration:none}
-a.out:hover{color:rgba(122,162,255,.95)}
-footer{
-  margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);
-  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
-  font-family:var(--mono);font-size:12px;color:var(--muted)
-}
-</style>
 </head>
 <body>
-<main>
 
-<header>
-  <div class="brand">
-    <div class="mark"><img src="/assets/logo.svg" alt="Geodiametrics" style="width:22px;height:22px"></div>
-    <div>
-      <h1>Reference</h1>
-      <div class="sub">Read-only · Tap to expand</div>
-    </div>
-  </div>
+<main style="max-width:960px;margin:0 auto;padding:20px">
+
+<header class="card">
+  <h1>Geodiametrics</h1>
+  <p class="muted">
+    Live coherence and execution instrument.
+  </p>
 
   <nav class="nav">
-    <a class="pill" href="/">Orientation</a>
-    <a class="pill" href="/control/">Control</a>
-    <a class="pill" href="/artifacts/">Artifacts</a>
-    <a class="pill" href="/problem/">Problem</a>
-    <a class="pill" href="/execution/">Execution</a>
+    <a href="/">Home</a>
+    <a href="/control/">Control</a>
+    <a href="/system/">Reference</a>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/problem/">Problem</a>
+    <a href="/execution/">Execution</a>
   </nav>
 </header>
 
-<section class="grid">
+<section class="card">
+  <h2>Unarch</h2>
+  <p>
+    This system is live.
+    It exposes state without hiding execution.
+  </p>
 
-  <div class="card">
-    <div class="kicker">Definitions</div>
-    <div class="kv">Condensed reference terms. No interpretation enforcement.</div>
+  <p>
+    All activity is aggregated globally at the edge.
+    Local activity is visible only to the device.
+  </p>
 
-    <details open>
-      <summary>Coherence <span class="chev">tap</span></summary>
-      <div class="content">
-        Coherence is alignment across claims, actions, and outcomes under constraints.
-        <ul class="list">
-          <li>External trust cannot exceed internal self-honesty/self-respect.</li>
-          <li>Coherence is observable via consistency under load.</li>
-        </ul>
-      </div>
-    </details>
-
-    <details>
-      <summary>Fragmentation <span class="chev">tap</span></summary>
-      <div class="content">
-        Fragmentation is misalignment between stated values, actions, and outcomes.
-        <ul class="list">
-          <li>Structural signal, not a narrative judgment.</li>
-          <li>Amplifies instability when paired with confusion.</li>
-        </ul>
-      </div>
-    </details>
-
-    <details>
-      <summary>Confusion <span class="chev">tap</span></summary>
-      <div class="content">
-        Confusion is unresolved coordinate assignment that accelerates instability once present.
-        <ul class="list">
-          <li>Not required for instability, but increases rate of failure.</li>
-          <li>Increases interpretive variance between observers.</li>
-        </ul>
-      </div>
-    </details>
-
-    <details>
-      <summary>Surface discipline <span class="chev">tap</span></summary>
-      <div class="content">
-        A surface is a constrained context separating authority, observation, and execution.
-        <ul class="list">
-          <li>Control is observer-only.</li>
-          <li>Artifacts are interactive without durable state mutation.</li>
-          <li>Execution remains disabled unless explicitly enabled by versioned release.</li>
-        </ul>
-      </div>
-    </details>
-  </div>
-
-  <div class="card">
-    <div class="kicker">Canonical Anchors</div>
-    <div class="kv">OSF is authoritative. This site routes and mirrors.</div>
-
-    <div class="content">
-      • <a class="out" href="https://osf.io/4su3v/" target="_blank" rel="noopener">osf.io/4su3v</a><br>
-      • <a class="out" href="https://osf.io/ftuvs/" target="_blank" rel="noopener">osf.io/ftuvs</a><br>
-      • <a class="out" href="https://osf.io/mn6vu/" target="_blank" rel="noopener">osf.io/mn6vu</a><br>
-      • ORCID: <a class="out" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">0009-0004-1293-0405</a>
-    </div>
-
-    <details style="margin-top:14px">
-      <summary>Quad-core cycle <span class="chev">tap</span></summary>
-      <div class="content">
-        Selection → Resolution → Commitment → Continuation.
-        <ul class="list">
-          <li>Receipt-gated advancement.</li>
-          <li>No timers as gates.</li>
-          <li>Back-navigation invalidates downstream receipts.</li>
-        </ul>
-      </div>
-    </details>
-
-    <details>
-      <summary>Signals <span class="chev">tap</span></summary>
-      <div class="content">
-        Public gauges describe observable signals, not intent.
-        <ul class="list">
-          <li>Activity: observation / attention.</li>
-          <li>Momentum: sustained change.</li>
-          <li>Stability: coherence under load.</li>
-        </ul>
-      </div>
-    </details>
-
-    <details>
-      <summary>Limits <span class="chev">tap</span></summary>
-      <div class="content">
-        This surface is read-only.
-        <ul class="list">
-          <li>No execution.</li>
-          <li>No interpretation validation.</li>
-          <li>No hidden mutation.</li>
-        </ul>
-      </div>
-    </details>
-
-  </div>
-
+  <p class="muted">
+    Canonical records live on OSF.
+  </p>
 </section>
 
-<footer>
-  <div>© 2026 Geodiametrics</div>
-  <div>Reference · v1.5</div>
+<section class="card">
+  <h3>Global Status</h3>
+  <div class="metric-value" id="global-status">Loading…</div>
+  <div class="muted" id="global-meta">—</div>
+</section>
+
+<footer class="muted" style="margin-top:40px">
+  © 2026 Geodiametrics · Live system
 </footer>
 
 </main>
+
+<script>
+(async ()=>{
+  try{
+    const BASE="https://geodiametrics-aggregator.smansfield635.workers.dev";
+    const r=await fetch(BASE+"/metrics?t="+Date.now(),{cache:"no-store"});
+    const j=await r.json();
+    const m=j.metrics||{};
+    document.getElementById("global-status").textContent =
+      `Sessions ${m.sessions||0} · Pageviews ${m.pageviews||0} · Clicks ${m.clicks||0}`;
+    document.getElementById("global-meta").textContent =
+      `Updated ${new Date(m.lastUpdated||0).toLocaleString()}`;
+  }catch(e){
+    document.getElementById("global-status").textContent = "Global unavailable";
+    document.getElementById("global-meta").textContent = "—";
+  }
+})();
+</script>
+
 </body>
 </html>

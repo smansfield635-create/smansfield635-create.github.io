@@ -20,9 +20,12 @@
 body{
   color:var(--fg);font-family:var(--sans);
   background:
-    radial-gradient(900px 700px at 12% 10%,rgba(122,162,255,.20),transparent 60%),
-    radial-gradient(900px 700px at 88% 18%,rgba(255,122,198,.16),transparent 60%),
-    radial-gradient(800px 650px at 50% 92%,rgba(68,208,123,.10),transparent 65%),
+-    radial-gradient(900px 700px at 12% 10%,rgba(122,162,255,.20),transparent 60%),
+-    radial-gradient(900px 700px at 88% 18%,rgba(255,122,198,.16),transparent 60%),
+-    radial-gradient(800px 650px at 50% 92%,rgba(68,208,123,.10),transparent 65%),
++    radial-gradient(900px 700px at 12% 10%,rgba(122,162,255,.20),transparent 60%),
++    radial-gradient(900px 700px at 88% 18%,rgba(255,122,198,.16),transparent 60%),
++    radial-gradient(800px 650px at 50% 92%,rgba(68,208,123,.10),transparent 65%),
     linear-gradient(180deg,var(--bg0),var(--bg1));
 }
 main{max-width:1120px;margin:0 auto;padding:42px 18px 90px}
@@ -40,11 +43,9 @@ h1{margin:0;font-size:28px}
 .pill{
   padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
   background:rgba(255,255,255,.03);
-  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;
-  backdrop-filter:blur(10px);
+  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;backdrop-filter:blur(10px);
 }
 .pill:hover{border-color:rgba(122,162,255,.55);color:var(--accent)}
-
 .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 .tab{
   cursor:pointer;padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
@@ -55,7 +56,6 @@ h1{margin:0;font-size:28px}
 .dot{width:10px;height:10px;border-radius:50%}
 .dot.g{background:var(--good);box-shadow:0 0 22px rgba(68,208,123,.35)}
 .dot.d{background:var(--accent);box-shadow:0 0 22px rgba(122,162,255,.35)}
-
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px}
 .card{
   border:1px solid var(--stroke);border-radius:var(--radius);
@@ -65,14 +65,11 @@ h1{margin:0;font-size:28px}
 .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
 .kv{font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--muted)}
 .big{font-family:var(--mono);font-size:24px;margin-top:6px;color:var(--fg)}
-.row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-
 .track{height:12px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden;margin-top:8px}
 .fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,rgba(122,162,255,.95),rgba(255,122,198,.55))}
 .fill.good{background:linear-gradient(90deg,rgba(68,208,123,.95),rgba(122,162,255,.55))}
 .fill.warn{background:linear-gradient(90deg,rgba(255,204,102,.95),rgba(255,122,198,.40))}
 .hidden{display:none}
-
 footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);
 display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:12px;color:var(--muted)}
 </style>
@@ -166,7 +163,8 @@ display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:v
 </main>
 
 <script>
-const WORKER_URL = "https://geodiametrics-aggregator.smansfield635.workers.dev/";
+const WORKER_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
+const WORKER_METRICS = WORKER_BASE + "/metrics";
 
 const tabGlobal=document.getElementById("tabGlobal");
 const tabDevice=document.getElementById("tabDevice");
@@ -188,18 +186,20 @@ function bar(id,val){document.getElementById(id).style.width=Math.round(clamp01(
 
 async function loadGlobal(){
   try{
-    const r=await fetch(WORKER_URL);
+    const r=await fetch(WORKER_METRICS);
     const j=await r.json();
-    const m=j.metrics||{};
-    document.getElementById("g_meta").textContent = "Worker: " + WORKER_URL;
-    document.getElementById("g_nums").textContent = `Sessions ${m.sessions||0} · Pageviews ${m.pageviews||0} · Clicks ${m.clicks||0}`;
+    const m=(j && j.metrics) ? j.metrics : {};
+    document.getElementById("g_meta").textContent = "Worker: " + WORKER_METRICS;
+    document.getElementById("g_nums").textContent =
+      `Sessions ${m.sessions||0} · Pageviews ${m.pageviews||0} · Clicks ${m.clicks||0}`;
     document.getElementById("g_lu").textContent = String(m.lastUpdated||"—");
-
     bar("g_s",(m.sessions||0)/1000);
     bar("g_p",(m.pageviews||0)/5000);
     bar("g_c",(m.clicks||0)/5000);
   }catch(e){
     document.getElementById("g_meta").textContent = "Global fetch failed";
+    document.getElementById("g_nums").textContent = "—";
+    document.getElementById("g_lu").textContent = "—";
   }
 }
 
@@ -209,9 +209,9 @@ function loadDevice(){
     if(!d){ document.getElementById("d_meta").textContent="No device data yet"; return; }
     const s=d.interaction||{};
     document.getElementById("d_meta").textContent = "Updated: " + d.timestamp;
-    document.getElementById("d_nums").textContent = `Sessions ${s.sessions_24h||0} · Pageviews ${s.pageviews_24h||0} · Clicks ${s.clicks_24h||0}`;
+    document.getElementById("d_nums").textContent =
+      `Sessions ${s.sessions_24h||0} · Pageviews ${s.pageviews_24h||0} · Clicks ${s.clicks_24h||0}`;
     document.getElementById("d_t").textContent = String(s.avg_time_sec||0);
-
     bar("d_s",(s.sessions_24h||0)/200);
     bar("d_p",(s.pageviews_24h||0)/800);
     bar("d_c",(s.clicks_24h||0)/1200);

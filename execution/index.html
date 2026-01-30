@@ -1,184 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Geodiametrics · Execution</title>
-
-<style>
-:root{
-  --bg1:#0a0f1f;--bg2:#121a33;
-  --glass:rgba(255,255,255,.08);
-  --line:rgba(255,255,255,.18);
-  --text:#eef1ff;--muted:#9aa9ff;--accent:#6fa8ff;--good:#4ade80;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  color:var(--text);
-  background:
-    radial-gradient(900px 600px at 20% 10%,#1b2350,transparent 60%),
-    radial-gradient(800px 700px at 80% 30%,#2a356d,transparent 60%),
-    linear-gradient(180deg,var(--bg1),var(--bg2));
-}
-header{padding:26px 20px 10px}
-h1{margin:0;font-size:34px}
-.sub{margin-top:6px;color:var(--muted)}
-nav{display:flex;flex-wrap:wrap;gap:10px;padding:14px 20px}
-.nav{
-  padding:10px 16px;border-radius:999px;
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--line)
-}
-section{padding:22px 20px}
-.card{
-  max-width:1100px;margin:0 auto 22px;padding:22px;
-  border-radius:22px;background:var(--glass);
-  border:1px solid var(--line);backdrop-filter:blur(14px)
-}
-.center{text-align:center}
-.grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:18px;margin-top:18px
-}
-
-/* Quad-core diamonds */
-.engine{
-  position:relative;
-  width:420px;height:420px;
-  margin:24px auto 10px;
-}
-.core{
-  position:absolute;left:50%;top:50%;
-  width:170px;height:170px;
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:26px;border:1px solid var(--line);
-  background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.05));
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 30px 80px rgba(0,0,0,.55)
-}
-.core span{transform:rotate(-45deg);text-align:center}
-.core .k{font-size:.75rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase}
-.core .t{font-size:1.1rem;font-weight:700}
-
-.node{
-  position:absolute;width:150px;height:150px;
-  transform:rotate(45deg);
-  border-radius:24px;border:1px solid var(--line);
-  background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04));
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 26px 70px rgba(0,0,0,.5)
-}
-.node span{transform:rotate(-45deg);text-align:center}
-.n1{left:0;top:50%;transform:translateY(-50%) rotate(45deg)}
-.n2{right:0;top:50%;transform:translateY(-50%) rotate(45deg)}
-.n3{left:50%;top:0;transform:translateX(-50%) rotate(45deg)}
-.n4{left:50%;bottom:0;transform:translateX(-50%) rotate(45deg)}
-
-.label{font-size:.75rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
-.title{font-size:1.05rem;font-weight:600}
-.desc{font-size:.9rem;color:#dbe1ff;line-height:1.4}
-
-.list{margin:10px 0 0 18px}
-.list li{margin:6px 0}
-
-.badge{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 14px;border-radius:999px;
-  background:rgba(255,255,255,.08);border:1px solid var(--line)
-}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--good)}
-
-footer{text-align:center;color:var(--muted);font-size:13px;padding:28px 10px}
-</style>
+  <meta charset="utf-8" />
+  <title>Execution · Geodiametrics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <style>
+    main{max-width:860px;margin:0 auto;padding:4rem 1.5rem}
+    h1{font-size:2.4rem;margin-bottom:1rem}
+    ol{margin-top:2rem}
+    li{margin:1.25rem 0;line-height:1.6}
+  </style>
 </head>
-
 <body>
-
-<header>
+<main>
   <h1>Execution</h1>
-  <div class="sub">Quad-core engine · simple, safe, and checkable.</div>
-</header>
 
-<nav>
-  <div class="nav">Home</div>
-  <div class="nav">Control Room</div>
-  <div class="nav">Foundations</div>
-  <div class="nav">Table of Contents</div>
-  <div class="nav">Problem</div>
-  <div class="nav">Execution</div>
-</nav>
+  <p>
+    The system operates as a closed loop. It does not infer intent.
+    It records structure.
+  </p>
 
-<section class="card center">
-  <span class="badge"><span class="dot"></span> RECEIPT-BASED · NO HIDDEN ACTIONS</span>
-</section>
+  <ol>
+    <li>
+      Inputs are captured as observable declarations or actions.
+    </li>
+    <li>
+      Constraints are applied to ensure internal consistency.
+    </li>
+    <li>
+      Outputs are evaluated for alignment with prior inputs.
+    </li>
+    <li>
+      A receipt is produced indicating coherence or breakdown.
+    </li>
+  </ol>
 
-<section class="card">
-  <div class="engine">
-    <div class="core">
-      <span>
-        <div class="k">Engine</div>
-        <div class="t">Quad-Core</div>
-      </span>
-    </div>
+  <p>
+    No optimization occurs. No corrective action is imposed.
+    The system reports structure only.
+  </p>
 
-    <div class="node n3">
-      <span>
-        <div class="label">Selection</div>
-        <div class="title">Choose</div>
-        <div class="desc">Name the goal.</div>
-      </span>
-    </div>
-
-    <div class="node n1">
-      <span>
-        <div class="label">Resolution</div>
-        <div class="title">Check</div>
-        <div class="desc">Test constraints.</div>
-      </span>
-    </div>
-
-    <div class="node n2">
-      <span>
-        <div class="label">Commitment</div>
-        <div class="title">Decide</div>
-        <div class="desc">Pick one path.</div>
-      </span>
-    </div>
-
-    <div class="node n4">
-      <span>
-        <div class="label">Continuation</div>
-        <div class="title">Act</div>
-        <div class="desc">Take the next step.</div>
-      </span>
-    </div>
-  </div>
-</section>
-
-<section class="card">
-  <h3>How it works (plain language)</h3>
-  <ul class="list">
-    <li>Start by choosing one clear goal.</li>
-    <li>Check what must not be violated.</li>
-    <li>Make one decision you can stand behind.</li>
-    <li>Take a small, visible next step.</li>
-  </ul>
-</section>
-
-<section class="card">
-  <h3>What makes this safe</h3>
-  <ul class="list">
-    <li>No automation without a receipt.</li>
-    <li>No hidden changes.</li>
-    <li>Every step can be reviewed later.</li>
-  </ul>
-</section>
-
-<footer>
-© 2026 Geodiametrics · Execution surface
-</footer>
-
+</main>
 </body>
 </html>

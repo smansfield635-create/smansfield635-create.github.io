@@ -1,56 +1,37 @@
-/* /assets/site.css — canonical style */
+/* =========================================================
+   COSMIC / ANCIENT / ORGANIC ATMOSPHERE (GLOBAL)
+   Subtle only. No mysticism. No preachiness.
+   ========================================================= */
+
+/* Warm life accents (barely there) */
 :root{
-  --bg:#0a1020;
-  --fg:#fff;
-  --muted:rgba(255,255,255,.88);
-  --muted2:rgba(255,255,255,.65);
-  --card:rgba(255,255,255,.07);
-  --stroke:rgba(255,255,255,.14);
-  --btn:rgba(255,255,255,.08);
-  --btnHover:rgba(255,255,255,.12);
+  --life: rgba(255, 200, 140, 0.18);
+  --growth: rgba(120, 200, 160, 0.18);
 }
 
-*{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  line-height:1.6;color:var(--fg);
+/* Ancient cosmic veil (texture + continuity) */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
   background:
-    radial-gradient(1200px 800px at 20% 10%,rgba(122,162,255,.40),transparent 60%),
-    radial-gradient(1000px 700px at 80% 20%,rgba(255,122,198,.28),transparent 60%),
-    radial-gradient(900px 700px at 50% 90%,rgba(92,207,191,.18),transparent 60%),
-    var(--bg);
+    radial-gradient(1200px 800px at 12% 18%, var(--life), transparent 62%),
+    radial-gradient(1100px 760px at 88% 82%, var(--growth), transparent 62%);
+  opacity:0.25;
+  mix-blend-mode:screen;
+  animation:cosmic-drift 180s linear infinite;
 }
 
-.container{max-width:780px;margin:0 auto;padding:44px 20px 96px}
-h1{font-size:2.6rem;margin:0 0 10px;letter-spacing:-.01em}
-h2{font-size:1.6rem;margin:0 0 10px}
-p{opacity:.88;margin:0 0 16px}
-.lead{font-size:1.15rem;opacity:.92}
-
-.card{
-  margin:26px 0;padding:18px;background:var(--card);
-  border:1px solid var(--stroke);border-radius:18px
+/* Imperceptible drift = “alive” */
+@keyframes cosmic-drift{
+  0%{transform:translate(0,0)}
+  50%{transform:translate(-1.5%,1%)}
+  100%{transform:translate(0,0)}
 }
 
-.doors{display:grid;gap:12px;margin-top:18px}
-.door{
-  display:block;padding:16px 18px;background:var(--btn);
-  border:1px solid var(--stroke);border-radius:14px;
-  color:var(--fg);text-decoration:none;font-weight:800
-}
-.door:hover{background:var(--btnHover)}
-
-.small{opacity:.65;font-size:.95rem;margin-top:22px}
-.hr{height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,.14),transparent);margin:24px 0}
-
-.navgrid{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-.pill{
-  display:inline-block;padding:12px 14px;border-radius:999px;
-  background:var(--btn);border:1px solid var(--stroke);
-  color:var(--fg);text-decoration:none;font-weight:800
-}
-.pill:hover{background:var(--btnHover)}
-
-ul{margin:10px 0 0 18px;opacity:.9}
-li{margin:10px 0}
+/* Ancient cadence (more breath, less crunch) */
+.container{line-height:1.7}
+.card{margin:32px 0}
+b,strong{font-weight:700;color:rgba(255,255,255,0.95)}
+.hr{opacity:0.6}

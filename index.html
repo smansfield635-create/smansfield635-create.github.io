@@ -1,150 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Geodiametrics</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Geodiametrics</title>
 
-  <style>
-    :root {
-      --bg1: #0b1020;
-      --bg2: #121933;
-      --card: rgba(255,255,255,0.08);
-      --border: rgba(255,255,255,0.14);
-      --text: #e6ebff;
-      --muted: rgba(230,235,255,0.65);
-      --accent: #7aa2ff;
-      --accent2: #ff7ac6;
-      --radius: 18px;
-    }
+<style>
+:root{
+  --bg1:#0b0f1a;
+  --bg2:#1a1f33;
+  --card:#1f2540;
+  --ink:#e9ecff;
+  --muted:#aab0ff;
+  --accent:#7aa2ff;
+}
 
-    * { box-sizing: border-box; }
+*{box-sizing:border-box}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      color: var(--text);
-      background:
-        radial-gradient(1200px 900px at 20% 10%, rgba(122,162,255,.25), transparent 60%),
-        radial-gradient(900px 700px at 80% 20%, rgba(255,122,198,.18), transparent 60%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  background:
+    radial-gradient(1200px 800px at 20% 10%, #2a2f55 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg2), var(--bg1));
+  color:var(--ink);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-    .wrap {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 48px 20px 80px;
-    }
+main{
+  width:100%;
+  max-width:420px;
+  padding:24px;
+  text-align:center;
+}
 
-    h1 {
-      font-size: clamp(2.2rem, 5vw, 3rem);
-      margin: 0 0 8px;
-      letter-spacing: 0.3px;
-    }
+h1{
+  font-size:2.2rem;
+  margin-bottom:.25rem;
+}
 
-    .subtitle {
-      color: var(--muted);
-      font-size: 1.1rem;
-      margin-bottom: 32px;
-    }
+.subtitle{
+  color:var(--muted);
+  margin-bottom:1.5rem;
+}
 
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 40px;
-    }
+/* NAV */
+.nav{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:2rem;
+}
+.nav a{
+  padding:8px 14px;
+  border-radius:999px;
+  text-decoration:none;
+  color:var(--ink);
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  font-size:.9rem;
+}
 
-    nav a {
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
-      text-decoration: none;
-      font-size: 0.95rem;
-      transition: transform .15s ease, background .15s ease;
-    }
+/* DIAMOND STACK */
+.stack{
+  position:relative;
+  width:260px;
+  height:260px;
+  margin:0 auto 2rem;
+}
 
-    nav a:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.14);
-    }
+.diamond{
+  position:absolute;
+  inset:0;
+  margin:auto;
+  width:180px;
+  height:180px;
+  background:linear-gradient(145deg,#2a3060,#161a33);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:16px;
+  transform:rotate(45deg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 30px 80px rgba(0,0,0,.55);
+}
 
-    .card {
-      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.45);
-    }
+.diamond.inner{
+  width:130px;
+  height:130px;
+  background:linear-gradient(145deg,#343a75,#1b2040);
+}
 
-    .card h2 {
-      margin: 0 0 10px;
-      font-size: 1.4rem;
-    }
+.diamond span{
+  transform:rotate(-45deg);
+  text-align:center;
+  padding:12px;
+}
 
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-    }
+.label{
+  font-size:.8rem;
+  letter-spacing:.15em;
+  color:var(--accent);
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
 
-    .status {
-      font-size: 1.1rem;
-      margin-top: 12px;
-      letter-spacing: .3px;
-    }
+.title{
+  font-size:1.1rem;
+  font-weight:600;
+}
 
-    footer {
-      margin-top: 48px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-  </style>
+/* STATUS CARD */
+.card{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  padding:16px;
+  margin-top:1rem;
+}
+
+.card h2{
+  font-size:1.1rem;
+  margin:0 0 6px;
+}
+
+.card p{
+  font-size:.95rem;
+  color:var(--muted);
+  margin:0;
+}
+
+footer{
+  margin-top:1.5rem;
+  font-size:.75rem;
+  color:#8b90d9;
+}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <h1>Geodiametrics</h1>
-    <div class="subtitle">Live coherence and execution instrument.</div>
+<main>
 
-    <nav>
-      <a href="/">Home</a>
-      <a href="/control/">Control</a>
-      <a href="/reference/">Reference</a>
-      <a href="/artifacts/">Artifacts</a>
-      <a href="/problem/">Problem</a>
-      <a href="/execution/">Execution</a>
-    </nav>
+<h1>Geodiametrics</h1>
+<div class="subtitle">A live system that shows how things hold together.</div>
 
-    <div class="card">
-      <h2>Unarch</h2>
-      <p>
-        This system is live. It exposes state without hiding execution.
-        Activity is aggregated globally at the edge. Local activity remains device-scoped.
-      </p>
-    </div>
+<nav class="nav">
+  <a href="/">Home</a>
+  <a href="/control/">Control</a>
+  <a href="/reference/">Reference</a>
+  <a href="/artifacts/">Artifacts</a>
+  <a href="/problem/">Problem</a>
+  <a href="/execution/">Execution</a>
+</nav>
 
-    <div class="card">
-      <h2>Global Status</h2>
-      <div class="status">
-        Sessions · Pageviews · Clicks<br/>
-        <span style="color:var(--muted)">Live via Cloudflare Worker</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Canonical Records</h2>
-      <p>Authoritative research and definitions live on OSF.</p>
-    </div>
-
-    <footer>
-      © 2026 Geodiametrics · Live system
-    </footer>
+<div class="stack">
+  <div class="diamond">
+    <span>
+      <div class="label">Live</div>
+      <div class="title">System State</div>
+    </span>
   </div>
+  <div class="diamond inner">
+    <span>
+      <div class="label">Unarch</div>
+      <div class="title">No Hidden Control</div>
+    </span>
+  </div>
+</div>
+
+<div class="card">
+  <h2>What this is</h2>
+  <p>
+    This site shows real system activity.  
+    Nothing here controls behavior — it only reveals it.
+  </p>
+</div>
+
+<div class="card">
+  <h2>How activity works</h2>
+  <p>
+    Activity from anywhere is combined globally.  
+    Your own device activity stays local.
+  </p>
+</div>
+
+<footer>
+© 2026 Geodiametrics · Live observational system
+</footer>
+
+</main>
 </body>
 </html>

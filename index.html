@@ -1,76 +1,155 @@
-<!-- FULL REWRITE — /index.html (HOME / STORY GATE) -->
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Geodiametrics</title><link rel="stylesheet" href="/assets/ui.css"/></head>
-<body><main>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css"/>
 
-<h1>Symptoms → Diagnosis → Execution</h1>
-<p class="small">Nothing explains itself until pressed.</p>
+<style>
+/* === REACTOR CORE === */
+.reactor{
+  position:relative;
+  height:88vh;
+  min-height:640px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
 
-<div class="nav">
-  <a href="/">Home</a>
-  <a href="/symptoms/">Symptoms</a>
-  <a href="/diagnosis/">Diagnosis</a>
-  <a href="/execution/">Execution</a>
-  <a href="/principles/">Principles</a>
-  <a href="/control/">Control</a>
-</div>
+/* SMOKE LAYER */
+.smoke{
+  position:absolute;
+  inset:-20%;
+  background:
+    radial-gradient(600px 600px at 30% 40%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(700px 700px at 70% 55%, rgba(255,122,198,.16), transparent 60%),
+    radial-gradient(800px 800px at 50% 70%, rgba(92,207,191,.14), transparent 65%);
+  filter: blur(60px);
+  animation: drift 30s linear infinite;
+}
+@keyframes drift{
+  0%{transform:translate(0,0)}
+  50%{transform:translate(-4%,2%)}
+  100%{transform:translate(0,0)}
+}
 
-<div class="panel">
-  <p><strong>Story:</strong> Recognize symptoms → identify diagnosis → execute correction.</p>
-  <p><strong>Engine:</strong> Quad-core loop expresses execution mechanically.</p>
-  <p><strong>Metric:</strong> Coherence is measurable when evidence, constraints, and receipts exist.</p>
-</div>
+/* DIAMOND */
+.diamond{
+  position:absolute;
+  width:280px;height:280px;
+  transform:rotate(45deg);
+  border-radius:36px;
+  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 40px 140px rgba(0,0,0,.75), inset 0 0 0 1px rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+}
+.diamond .in{
+  transform:rotate(-45deg);
+  text-align:center;
+}
+.diamond .t{
+  font-weight:900;
+  font-size:1.6rem;
+}
+.diamond .s{
+  margin-top:.35rem;
+  color:rgba(233,238,252,.7);
+}
 
-<div class="diamondRow">
-  <a class="diamondTile" href="/symptoms/"><div><div class="k">Act I</div><div class="h">Symptoms ?</div><div class="d">What is being noticed?</div></div></a>
-  <a class="diamondTile" href="/diagnosis/"><div><div class="k">Act II</div><div class="h">Diagnosis ?</div><div class="d">What is actually happening?</div></div></a>
-  <a class="diamondTile" href="/execution/"><div><div class="k">Act III</div><div class="h">Execution ?</div><div class="d">What must change?</div></div></a>
-</div>
+/* CORE */
+#core{z-index:3}
 
-<hr class="sep"/>
+/* CORES */
+.core{
+  width:180px;height:180px;
+  opacity:.85;
+  transition:opacity .2s ease, box-shadow .2s ease;
+}
+.core:hover{opacity:1}
 
-<section data-tabs>
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" aria-selected="true" data-tab="one">1</button>
-    <button class="tab" role="tab" data-tab="two">2</button>
-    <button class="tab" role="tab" data-tab="three">3</button>
+/* POSITIONS */
+#notice{top:12%;left:50%;transform:translate(-50%,-50%) rotate(45deg)}
+#limit{left:12%;top:50%;transform:translate(-50%,-50%) rotate(45deg)}
+#bind{right:12%;top:50%;transform:translate(50%,-50%) rotate(45deg)}
+#persist{bottom:12%;left:50%;transform:translate(-50%,50%) rotate(45deg)}
+
+/* COLORS */
+.blue{background:linear-gradient(180deg,rgba(122,162,255,.28),rgba(122,162,255,.06));border-color:rgba(122,162,255,.35)}
+.mint{background:linear-gradient(180deg,rgba(92,207,191,.28),rgba(92,207,191,.06));border-color:rgba(92,207,191,.35)}
+.pink{background:linear-gradient(180deg,rgba(255,122,198,.26),rgba(255,122,198,.06));border-color:rgba(255,122,198,.34)}
+.gray{background:linear-gradient(180deg,rgba(233,238,252,.20),rgba(233,238,252,.06));border-color:rgba(233,238,252,.26)}
+
+/* INFO PANEL */
+#panel{
+  position:absolute;
+  bottom:3%;
+  width:min(820px,92vw);
+  background:rgba(10,14,30,.70);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:28px;
+  padding:1.1rem 1.2rem;
+  box-shadow:0 28px 90px rgba(0,0,0,.7);
+  backdrop-filter:blur(14px);
+}
+#panel p{margin:.4rem 0}
+</style>
+</head>
+
+<body>
+<main>
+
+<div class="reactor">
+
+  <div class="smoke"></div>
+
+  <!-- CORE -->
+  <div id="core" class="diamond gray">
+    <div class="in">
+      <div class="t">Hold</div>
+      <div class="s">Does it cohere?</div>
+    </div>
   </div>
 
-  <div class="tabpanels">
-    <div class="tabpanel" role="tabpanel" data-panel="one" data-open="true">
-      <div class="bubbles">
-        <button class="bubble blue" data-detail='{"title":"Start ?","body":"Choose the act.\nNothing else matters until the story is followed.","links":[{"label":"Symptoms","href":"/symptoms/"},{"label":"Diagnosis","href":"/diagnosis/"},{"label":"Execution","href":"/execution/"}]}'>
-          <div><div class="t">Start ?</div><div class="s">Choose act</div></div>
-        </button>
-      </div>
-    </div>
-
-    <div class="tabpanel" role="tabpanel" data-panel="two">
-      <div class="bubbles">
-        <button class="bubble mint" data-detail='{"title":"Quad-Core Engine ?","body":"Execution becomes mechanical.\nSelection → Resolution → Commitment → Continuation.","links":[{"label":"Open engine","href":"/engine/"}]}'>
-          <div><div class="t">Quad-Core ?</div><div class="s">Engine</div></div>
-        </button>
-        <button class="bubble pink" data-fetch="/assets/coherence_metric.json">
-          <div><div class="t">Metric ?</div><div class="s">Coherence</div></div>
-        </button>
-      </div>
-    </div>
-
-    <div class="tabpanel" role="tabpanel" data-panel="three">
-      <div class="bubbles">
-        <button class="bubble gray" data-detail='{"title":"OSS + Global Data ?","body":"Signals can be tracked at device scope and global scope.\nThis is evidence input, not narrative.","links":[{"label":"Control","href":"/control/"},{"label":"Reference","href":"/reference/"}]}'>
-          <div><div class="t">Data ?</div><div class="s">OSS + global</div></div>
-        </button>
-      </div>
-    </div>
+  <!-- QUAD-CORE -->
+  <div id="notice" class="diamond core blue" onclick="show('notice')">
+    <div class="in"><div class="t">Notice</div><div class="s">What is felt?</div></div>
   </div>
-</section>
 
-<div class="modal" id="bubbleModal" data-open="false"><div class="sheet">
-<button class="x" id="bmClose">✕</button><h2 id="bmTitle">?</h2><div id="bmBody"></div><div class="actions" id="bmLinks"></div>
-</div></div>
+  <div id="limit" class="diamond core mint" onclick="show('limit')">
+    <div class="in"><div class="t">Limit</div><div class="s">What is allowed?</div></div>
+  </div>
+
+  <div id="bind" class="diamond core pink" onclick="show('bind')">
+    <div class="in"><div class="t">Bind</div><div class="s">What holds?</div></div>
+  </div>
+
+  <div id="persist" class="diamond core gray" onclick="show('persist')">
+    <div class="in"><div class="t">Persist</div><div class="s">What remains?</div></div>
+  </div>
+
+  <!-- PANEL -->
+  <div id="panel">
+    <p><strong>Fusion Reactor:</strong> Symptoms → Diagnosis → Execution</p>
+    <p><strong>Mechanism:</strong> Selection · Resolution · Commitment · Continuation</p>
+    <p><strong>Measurement:</strong> Coherence (observable, sourced, verifiable)</p>
+  </div>
+
+</div>
+
+<script>
+function show(which){
+  if(which==='notice') location.href='/execution/';
+  if(which==='limit') location.href='/principles/';
+  if(which==='bind') location.href='/engine/';
+  if(which==='persist') location.href='/control/';
+}
+</script>
 
 <footer>© 2026 Geodiametrics</footer>
-<script defer src="/assets/bubbles.js"></script>
-</main></body></html>
+</main>
+</body>
+</html>

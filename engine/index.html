@@ -1,30 +1,21 @@
-<!-- TNT — /engine/index.html -->
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Engine · Geodiametrics</title><style>
-html,body{margin:0;height:100%;background:#0b0f1a;color:#e9eefc;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-.reactor{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.smoke{position:absolute;inset:-25%;background:radial-gradient(740px 740px at 50% 34%,rgba(122,162,255,.14),transparent 62%),radial-gradient(760px 760px at 35% 58%,rgba(92,207,191,.12),transparent 66%),radial-gradient(760px 760px at 65% 58%,rgba(255,122,198,.12),transparent 66%),radial-gradient(980px 980px at 50% 78%,rgba(233,238,252,.10),transparent 72%);filter:blur(72px);animation:drift 32s linear infinite;pointer-events:none}
-@keyframes drift{0%{transform:translate(0,0)}50%{transform:translate(-2%,3%)}100%{transform:translate(0,0)}}
-.diamond{position:absolute;width:340px;height:340px;transform:rotate(45deg);border-radius:44px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.22);box-shadow:0 60px 180px rgba(0,0,0,.85),inset 0 0 0 1px rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;z-index:3;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.diamond:active{opacity:.92}
-.diamond .in{transform:rotate(-45deg);text-align:center;user-select:none}
-.diamond .t{font-weight:900;font-size:1.7rem}
-.diamond .s{margin-top:.4rem;color:rgba(233,238,252,.78);font-size:1.05rem}
-.facet{position:absolute;width:190px;height:190px;transform:rotate(45deg);border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.20);box-shadow:0 36px 120px rgba(0,0,0,.70),inset 0 0 0 1px rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;opacity:.66;pointer-events:none}
-.facet .in{transform:rotate(-45deg);text-align:center;padding:0 10px}
-.facet .t{font-weight:850;font-size:1.15rem;line-height:1.2}
-.facet .s{margin-top:.3rem;font-size:.95rem;line-height:1.2;color:rgba(233,238,252,.75)}
-#sel{top:10%;left:50%;transform:translate(-50%,-50%) rotate(45deg)}
-#res{left:10%;top:52%;transform:translate(-50%,-50%) rotate(45deg)}
-#com{right:10%;top:52%;transform:translate(50%,-50%) rotate(45deg)}
-#con{bottom:10%;left:50%;transform:translate(-50%,50%) rotate(45deg)}
-.panel{position:absolute;bottom:4%;width:min(900px,92vw);background:rgba(10,14,30,.75);border:1px solid rgba(255,255,255,.18);border-radius:32px;padding:1.2rem 1.4rem;box-shadow:0 32px 110px rgba(0,0,0,.78);backdrop-filter:blur(16px)}
-.panel p{margin:.4rem 0}
-.small{font-size:.95rem;color:rgba(233,238,252,.70)}
-</style></head><body><main><div class="reactor"><div class="smoke"></div>
-<div id="sel" class="facet"><div class="in"><div class="t">Selection</div><div class="s">Inputs</div></div></div>
-<div id="res" class="facet"><div class="in"><div class="t">Resolution</div><div class="s">Constraints</div></div></div>
-<div id="com" class="facet"><div class="in"><div class="t">Commitment</div><div class="s">Binding</div></div></div>
-<div id="con" class="facet"><div class="in"><div class="t">Continuation</div><div class="s">Persist</div></div></div>
-<div class="diamond" onclick="go('/control/')"><div class="in"><div class="t">Quad-Core</div><div class="s">Engine</div></div></div>
-<div class="panel"><p><strong>Tap:</strong> Quad-Core → Control</p><p class="small"><strong>Rule:</strong> Coils apply pressure. The engine is singular.</p></div>
-</div><script>function go(h){location.href=h;}</script></main></body></html>
+<!-- TNT — /engine/index.html (LEGIBLE) -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Engine</title><link rel="stylesheet" href="/assets/ui.css"/></head>
+<body><main>
+<div class="reactor">
+  <div class="smoke" style="background:
+    radial-gradient(740px 740px at 50% 34%, rgba(122,162,255,.14), transparent 62%),
+    radial-gradient(760px 760px at 35% 58%, rgba(92,207,191,.12), transparent 66%),
+    radial-gradient(760px 760px at 65% 58%, rgba(255,122,198,.12), transparent 66%),
+    radial-gradient(980px 980px at 50% 78%, rgba(233,238,252,.10), transparent 72%);"></div>
+
+  <div class="facet" style="top:10%;left:50%;transform:translate(-50%,-50%) rotate(45deg)"><div class="in"><div class="t">Selection</div><div class="s">Inputs</div></div></div>
+  <div class="facet" style="left:10%;top:52%;transform:translate(-50%,-50%) rotate(45deg)"><div class="in"><div class="t">Resolution</div><div class="s">Constraints</div></div></div>
+  <div class="facet" style="right:10%;top:52%;transform:translate(50%,-50%) rotate(45deg)"><div class="in"><div class="t">Commitment</div><div class="s">Binding</div></div></div>
+  <div class="facet" style="bottom:10%;left:50%;transform:translate(-50%,50%) rotate(45deg)"><div class="in"><div class="t">Continuation</div><div class="s">Persist</div></div></div>
+
+  <div class="diamond" onclick="go('/control/')"><div class="in"><div class="t">Quad-Core</div><div class="s">Engine</div></div></div>
+
+  <div class="panel"><p><strong>Tap:</strong> Quad-Core → Control</p><p class="small">Coils apply pressure. The engine is singular.</p></div>
+</div>
+<script>function go(h){location.href=h;}</script>
+</main></body></html>

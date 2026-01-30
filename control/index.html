@@ -5,187 +5,87 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Geodiametrics · Control</title>
 
-<!-- Global + Local capture (already approved) -->
 <script defer src="/assets/cfwa.js"></script>
 <script defer src="/assets/live_site_metrics.js"></script>
 
 <style>
 :root{
-  --bg:#070a12;--fg:#eef2ff;--muted:rgba(238,242,255,.65);--stroke:rgba(238,242,255,.10);
-  --accent:#7aa2ff;--accent2:#ff7ac6;--good:#44d07b;--warn:#ffcc66;--bad:#ff7ac6;
-  --radius:20px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --bg0:#0a0d18;
+  --bg1:#0d1224;
+  --fg:#f3f6ff;
+  --muted:rgba(243,246,255,.68);
+  --stroke:rgba(243,246,255,.12);
+  --glass:rgba(255,255,255,.05);
+  --accent:#7aa2ff;
+  --accent2:#ff7ac6;
+  --good:#44d07b;
+  --warn:#ffcc66;
+  --bad:#ff7ac6;
+  --radius:22px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
 }
-*{box-sizing:border-box}html,body{margin:0;height:100%}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
 body{
-  color:var(--fg);font-family:var(--sans);
+  color:var(--fg);
+  font-family:var(--sans);
   background:
-    radial-gradient(900px 700px at 15% 10%,rgba(122,162,255,.12),transparent 60%),
-    radial-gradient(900px 700px at 85% 20%,rgba(255,122,198,.10),transparent 60%),
-    radial-gradient(700px 500px at 50% 90%,rgba(68,208,123,.06),transparent 60%),
-    var(--bg);
+    radial-gradient(900px 700px at 12% 10%,rgba(122,162,255,.20),transparent 60%),
+    radial-gradient(900px 700px at 88% 18%,rgba(255,122,198,.16),transparent 60%),
+    radial-gradient(800px 650px at 50% 92%,rgba(68,208,123,.10),transparent 65%),
+    linear-gradient(180deg,var(--bg0),var(--bg1));
 }
-main{max-width:1100px;margin:0 auto;padding:42px 18px 84px}
+main{max-width:1120px;margin:0 auto;padding:42px 18px 90px}
 header{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
 .brand{display:flex;align-items:center;gap:12px}
-.mark{width:40px;height:40px;border-radius:14px;border:1px solid var(--stroke);
-background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
-display:flex;align-items:center;justify-content:center;box-shadow:0 14px 45px rgba(0,0,0,.45)}
-h1{margin:0;font-size:28px}
+.mark{
+  width:44px;height:44px;border-radius:16px;border:1px solid var(--stroke);
+  background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 22px 80px rgba(0,0,0,.45);
+}
+h1{margin:0;font-size:28px;letter-spacing:.2px}
 .sub{margin-top:6px;font-family:var(--mono);font-size:12px;color:var(--muted)}
 
 .nav{display:flex;gap:10px;flex-wrap:wrap}
-.pill{padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
-background:rgba(255,255,255,.02);color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px}
-.pill:hover{border-color:rgba(122,162,255,.45);color:var(--accent)}
+.pill{
+  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.03);
+  color:var(--fg);text-decoration:none;font-family:var(--mono);font-size:12px;
+  backdrop-filter:blur(10px);
+}
+.pill:hover{border-color:rgba(122,162,255,.55);color:var(--accent)}
 
 .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.tab{cursor:pointer;padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
-background:rgba(255,255,255,.02);color:var(--fg);font-family:var(--mono);font-size:12px}
-.tab.active{border-color:rgba(122,162,255,.65);box-shadow:0 16px 45px rgba(0,0,0,.35)}
+.tab{
+  cursor:pointer;
+  padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.03);
+  color:var(--fg);font-family:var(--mono);font-size:12px;
+  backdrop-filter:blur(10px);
+}
+.tab.active{
+  border-color:rgba(122,162,255,.75);
+  box-shadow:0 22px 80px rgba(0,0,0,.35);
+}
 .dot{width:10px;height:10px;border-radius:50%}
-.dot.site{background:var(--good);box-shadow:0 0 18px rgba(68,208,123,.35)}
-.dot.osf{background:var(--accent);box-shadow:0 0 18px rgba(122,162,255,.35)}
+.dot.site{background:var(--good);box-shadow:0 0 22px rgba(68,208,123,.35)}
+.dot.osf{background:var(--accent);box-shadow:0 0 22px rgba(122,162,255,.35)}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:16px}
-.card{border:1px solid var(--stroke);border-radius:var(--radius);
-background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
-padding:22px;box-shadow:0 18px 60px rgba(0,0,0,.40)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin-top:16px}
+.card{
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+  padding:22px;
+  box-shadow:0 26px 90px rgba(0,0,0,.38);
+  backdrop-filter:blur(14px);
+}
 .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
 .kv{font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--muted)}
 .big{font-family:var(--mono);font-size:26px;margin-top:6px;color:var(--fg)}
 
 .gaugeRow{margin-top:10px}
 .glabel{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted)}
-.track{height:12px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:8px}
-.fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,rgba(122,162,255,.85),rgba(255,122,198,.55))}
-.fill.good{background:linear-gradient(90deg,rgba(68,208,123,.85),rgba(122,162,255,.55))}
-.fill.warn{background:linear-gradient(90deg,rgba(255,204,102,.90),rgba(255,122,198,.45))}
-.hidden{display:none}
-
-.list{margin:0;padding:0;list-style:none}
-.list li{padding:10px 0;border-bottom:1px solid var(--stroke)}
-.list li:last-child{border-bottom:none}
-a.out{color:var(--fg);text-decoration:none}
-a.out:hover{color:var(--accent)}
-
-footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--stroke);
-display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
-font-family:var(--mono);font-size:12px;color:var(--muted)}
-</style>
-</head>
-
-<body>
-<main>
-
-<header>
-  <div>
-    <div class="brand">
-      <div class="mark"><img src="/assets/logo.svg" alt="Geodiametrics" style="width:20px;height:20px"></div>
-      <div>
-        <h1>Control</h1>
-        <div class="sub">Observer Surface · **ONE PAGE** · SITE + OSF</div>
-      </div>
-    </div>
-    <div class="tabs">
-      <button class="tab active" id="tabSite" type="button"><span class="dot site"></span> SITE</button>
-      <button class="tab" id="tabOSF" type="button"><span class="dot osf"></span> OSF</button>
-    </div>
-  </div>
-
-  <nav class="nav">
-    <a class="pill" href="/">Orientation</a>
-    <a class="pill" href="/system/">Reference</a>
-    <a class="pill" href="/artifacts/">Artifacts</a>
-    <a class="pill" href="/problem/">Problem</a>
-    <a class="pill" href="/execution/">Execution</a>
-  </nav>
-</header>
-
-<!-- SITE -->
-<section id="panelSite">
-  <div class="grid">
-    <div class="card">
-      <div class="kicker">Site Gauge</div>
-      <div class="kv" id="siteMeta">Device live (this browser) · Global live via Cloudflare</div>
-      <div class="big" id="siteStatus">OPERATIONAL</div>
-    </div>
-
-    <div class="card">
-      <div class="kicker">Interaction</div>
-      <div class="gaugeRow"><div class="glabel"><span>Sessions</span><span id="s_sessions">—</span></div><div class="track"><div class="fill good" id="b_sessions"></div></div></div>
-      <div class="gaugeRow"><div class="glabel"><span>Pageviews</span><span id="s_pageviews">—</span></div><div class="track"><div class="fill" id="b_pageviews"></div></div></div>
-      <div class="gaugeRow"><div class="glabel"><span>Clicks</span><span id="s_clicks">—</span></div><div class="track"><div class="fill warn" id="b_clicks"></div></div></div>
-      <div class="gaugeRow"><div class="glabel"><span>Avg Time (sec)</span><span id="s_time">—</span></div><div class="track"><div class="fill" id="b_time"></div></div></div>
-    </div>
-
-    <div class="card">
-      <div class="kicker">Sources</div>
-      <ul class="list" id="sourcesList"><li>Device-local only</li></ul>
-    </div>
-  </div>
-</section>
-
-<!-- OSF -->
-<section id="panelOSF" class="hidden">
-  <div class="grid">
-    <div class="card">
-      <div class="kicker">OSF Gauge</div>
-      <div class="big" id="osfTotals">Refer to OSF dashboard</div>
-      <div class="kv">Mirrored manually when desired</div>
-    </div>
-    <div class="card">
-      <div class="kicker">Anchors</div>
-      <div class="kv">
-        • <a class="out" href="https://osf.io/4su3v/" target="_blank">osf.io/4su3v</a><br>
-        • <a class="out" href="https://osf.io/ftuvs/" target="_blank">osf.io/ftuvs</a><br>
-        • <a class="out" href="https://osf.io/mn6vu/" target="_blank">osf.io/mn6vu</a><br>
-        • ORCID: 0009-0004-1293-0405
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div>© 2026 Geodiametrics</div>
-  <div>Control · Single Page · Dual Gauges</div>
-</footer>
-
-</main>
-
-<script>
-const tabSite=document.getElementById("tabSite");
-const tabOSF=document.getElementById("tabOSF");
-const panelSite=document.getElementById("panelSite");
-const panelOSF=document.getElementById("panelOSF");
-tabSite.onclick=()=>setActive(true);
-tabOSF.onclick=()=>setActive(false);
-function setActive(isSite){
-  tabSite.classList.toggle("active",isSite);
-  tabOSF.classList.toggle("active",!isSite);
-  panelSite.classList.toggle("hidden",!isSite);
-  panelOSF.classList.toggle("hidden",isSite);
-}
-
-function clamp01(n){return Math.max(0,Math.min(1,n))}
-function bar(id,val){document.getElementById(id).style.width=Math.round(clamp01(val)*100)+"%"}
-
-(function(){
-  try{
-    const d=JSON.parse(localStorage.getItem("geo_live_site"));
-    if(!d) return;
-    const s=d.interaction||{};
-    document.getElementById("s_sessions").textContent=s.sessions_24h||0;
-    document.getElementById("s_pageviews").textContent=s.pageviews_24h||0;
-    document.getElementById("s_clicks").textContent=s.clicks_24h||0;
-    document.getElementById("s_time").textContent=s.avg_time_sec||0;
-    bar("b_sessions",(s.sessions_24h||0)/200);
-    bar("b_pageviews",(s.pageviews_24h||0)/800);
-    bar("b_clicks",(s.clicks_24h||0)/1200);
-    bar("b_time",(s.avg_time_sec||0)/600);
-  }catch(e){}
-})();
-</script>
-
-</body>
-</html>
+.track{height:12px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden;margin-top:8

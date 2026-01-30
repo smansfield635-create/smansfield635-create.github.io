@@ -1,108 +1,155 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Control Room · Geodiametrics</title>
-<link rel="stylesheet" href="/assets/ui.css">
-<script defer src="/assets/capture.js"></script>
-<script defer src="/assets/app.js"></script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Geodiametrics · Control Room</title>
+
+<style>
+:root{
+  --bg1:#0a0f1f;--bg2:#121a33;
+  --glass:rgba(255,255,255,.08);
+  --line:rgba(255,255,255,.18);
+  --text:#eef1ff;--muted:#9aa9ff;
+  --accent:#6fa8ff;--good:#4ade80;--warn:#facc15;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(900px 600px at 20% 10%,#1b2350,transparent 60%),
+    radial-gradient(800px 700px at 80% 30%,#2a356d,transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+header{padding:26px 20px 10px}
+h1{margin:0;font-size:34px}
+.sub{margin-top:6px;color:var(--muted)}
+nav{display:flex;flex-wrap:wrap;gap:10px;padding:14px 20px}
+.nav{
+  padding:10px 16px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line)
+}
+section{padding:22px 20px}
+.card{
+  max-width:1100px;margin:0 auto 22px;padding:22px;
+  border-radius:22px;background:var(--glass);
+  border:1px solid var(--line);backdrop-filter:blur(14px)
+}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:18px;margin-top:18px
+}
+.metric{
+  font-size:34px;font-weight:700;letter-spacing:.3px
+}
+.label{font-size:13px;color:var(--muted)}
+.bar{height:10px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}
+.fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#9fb0ff)}
+.fill.good{background:linear-gradient(90deg,var(--good),#86efac)}
+.fill.warn{background:linear-gradient(90deg,var(--warn),#fde047)}
+.hr{height:1px;background:rgba(255,255,255,.14);margin:14px 0}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 14px;border-radius:999px;
+  background:rgba(255,255,255,.08);border:1px solid var(--line)
+}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--good)}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:28px 10px}
+</style>
 </head>
 
 <body>
-<div class="wrap">
 
-  <div class="header">
-    <div class="brand">
-      <div class="mark"><img src="/assets/logo.svg" alt=""></div>
-      <div>
-        <h1>Control Room</h1>
-        <div class="sub">Live gauges · OSF anchors · Worker status</div>
-        <div class="badges">
-          <div class="badge"><span class="dot ok"></span> OPERATIONAL</div>
-          <div class="badge"><span class="dot info"></span> GLOBAL + DEVICE</div>
-        </div>
-      </div>
-    </div>
+<header>
+  <h1>Control Room</h1>
+  <div class="sub">Live gauges · OSF anchors · Quad-core status</div>
+</header>
 
-    <nav class="nav">
-      <a class="pill" href="/">Home</a>
-      <a class="pill" href="/control/">Control Room</a>
-      <a class="pill" href="/system/">Foundations</a>
-      <a class="pill" href="/artifacts/">Table of Contents</a>
-      <a class="pill" href="/problem/">Problem</a>
-      <a class="pill" href="/execution/">Execution</a>
-    </nav>
-  </div>
+<nav>
+  <div class="nav">Home</div>
+  <div class="nav">Control Room</div>
+  <div class="nav">Foundations</div>
+  <div class="nav">Table of Contents</div>
+  <div class="nav">Problem</div>
+  <div class="nav">Execution</div>
+</nav>
 
-  <div class="grid">
-    <div class="card">
-      <div class="kicker">Global Gauge</div>
-      <div class="big" id="g_nums">Loading…</div>
-      <div class="muted" id="g_meta">—</div>
-      <div class="muted">Last updated: <span id="g_lu">—</span></div>
-    </div>
+<section class="card">
+  <span class="badge"><span class="dot"></span> GLOBAL + DEVICE · READ ONLY</span>
+</section>
 
-    <div class="card">
-      <div class="kicker">Global Bars</div>
-      <div class="muted">Sessions</div>
-      <div class="track"><div class="fill good" id="g_s"></div></div>
+<section class="card">
+  <h3>Global Gauge (Everyone)</h3>
+  <div class="metric" id="gSessions">—</div>
+  <div class="label">Sessions</div>
+  <div class="bar"><div class="fill good" id="gSessionsBar"></div></div>
 
-      <div class="muted" style="margin-top:10px">Pageviews</div>
-      <div class="track"><div class="fill" id="g_p"></div></div>
+  <div class="hr"></div>
 
-      <div class="muted" style="margin-top:10px">Clicks</div>
-      <div class="track"><div class="fill warn" id="g_c"></div></div>
+  <div class="metric" id="gPageviews">—</div>
+  <div class="label">Pageviews</div>
+  <div class="bar"><div class="fill" id="gPageviewsBar"></div></div>
 
-      <div class="hr"></div>
-      <div class="muted">This is the Worker aggregate (everyone).</div>
-    </div>
+  <div class="hr"></div>
 
-    <div class="card">
-      <div class="kicker">Device Gauge</div>
-      <div class="big" id="d_nums">—</div>
-      <div class="muted" id="d_meta">—</div>
-      <div class="muted">Avg time (sec): <span id="d_t">—</span></div>
+  <div class="metric" id="gClicks">—</div>
+  <div class="label">Clicks</div>
+  <div class="bar"><div class="fill warn" id="gClicksBar"></div></div>
 
-      <div class="hr"></div>
+  <div class="label" id="gUpdated">Last updated: —</div>
+</section>
 
-      <div class="kicker">Device Bars</div>
-      <div class="muted">Sessions</div>
-      <div class="track"><div class="fill good" id="d_s"></div></div>
+<section class="card">
+  <h3>Device Gauge (This device)</h3>
+  <div class="metric" id="dSessions">—</div>
+  <div class="label">Sessions</div>
+  <div class="bar"><div class="fill good" id="dSessionsBar"></div></div>
 
-      <div class="muted" style="margin-top:10px">Pageviews</div>
-      <div class="track"><div class="fill" id="d_p"></div></div>
+  <div class="label" id="dUpdated">Updated: —</div>
+</section>
 
-      <div class="muted" style="margin-top:10px">Clicks</div>
-      <div class="track"><div class="fill warn" id="d_c"></div></div>
-    </div>
+<section class="card">
+  <h3>Canonical Anchors</h3>
+  <ul>
+    <li><a href="https://osf.io/4su3v" target="_blank">Coherence Constraint Law (OSF)</a></li>
+    <li><a href="https://osf.io/ftuvs" target="_blank">Quad-Core Execution Cycle (OSF)</a></li>
+    <li><a href="https://osf.io/mn6vu" target="_blank">Diamond Geometry Model (OSF)</a></li>
+    <li>ORCID: 0009-0004-1293-0405</li>
+  </ul>
+</section>
 
-    <div class="card">
-      <div class="kicker">OSF Anchors</div>
-      <div class="muted">Canonical records:</div>
-      <div class="hr"></div>
-      <div class="muted">Coherence Constraint Law</div>
-      <a class="pill" href="https://osf.io/4su3v" target="_blank" rel="noopener">Open OSF</a>
+<footer>
+© 2026 Geodiametrics · Control Room
+</footer>
 
-      <div class="hr"></div>
-      <div class="muted">Quad-Core Execution Cycle</div>
-      <a class="pill" href="https://osf.io/ftuvs" target="_blank" rel="noopener">Open OSF</a>
+<script>
+/* DEVICE */
+const dKey="geo_device";
+let d=JSON.parse(localStorage.getItem(dKey)||'{"sessions":0}');
+d.sessions++;
+localStorage.setItem(dKey,JSON.stringify(d));
+document.getElementById("dSessions").textContent=d.sessions;
+document.getElementById("dSessionsBar").style.width=Math.min(100,d.sessions*5)+"%";
+document.getElementById("dUpdated").textContent="Updated: "+new Date().toLocaleString();
 
-      <div class="hr"></div>
-      <div class="muted">Diamond Geometry Model</div>
-      <a class="pill" href="https://osf.io/mn6vu" target="_blank" rel="noopener">Open OSF</a>
+/* GLOBAL */
+fetch("https://geodiametrics-aggregator.smansfield635.workers.dev/")
+.then(r=>r.json())
+.then(j=>{
+  const m=j.metrics||{};
+  document.getElementById("gSessions").textContent=m.sessions??"—";
+  document.getElementById("gPageviews").textContent=m.pageviews??"—";
+  document.getElementById("gClicks").textContent=m.clicks??"—";
+  document.getElementById("gSessionsBar").style.width=Math.min(100,(m.sessions||0)*5)+"%";
+  document.getElementById("gPageviewsBar").style.width=Math.min(100,(m.pageviews||0)*2)+"%";
+  document.getElementById("gClicksBar").style.width=Math.min(100,(m.clicks||0)*5)+"%";
+  document.getElementById("gUpdated").textContent="Last updated: "+new Date(m.lastUpdated||Date.now()).toLocaleString();
+})
+.catch(()=>{});
+</script>
 
-      <div class="hr"></div>
-      <div class="muted">ORCID</div>
-      <a class="pill" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">0009-0004-1293-0405</a>
-    </div>
-  </div>
-
-  <footer>
-    <div>© 2026 Geodiametrics</div>
-    <div>Control Room · Live gauges</div>
-  </footer>
-
-</div>
 </body>
 </html>

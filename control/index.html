@@ -6,7 +6,7 @@
 
 <section class="hero">
   <h1>Control Room</h1>
-  <p class="subtitle">Live gauges + engine receipts.</p>
+  <p class="subtitle">Truth Service + Receipts + Gauges</p>
 </section>
 
 <nav class="tabs">
@@ -21,57 +21,72 @@
 </nav>
 
 <section class="panel strong">
-  <h2>Engine Receipts (Device)</h2>
-  <div id="r" class="kv">Loading…</div>
+  <h2>Build Receipt</h2>
+  <div id="build" class="kv">Loading…</div>
 </section>
 
 <section class="panel">
-  <h2>Clicks (Device)</h2>
-  <div id="c" class="kv">Loading…</div>
+  <h2>Metrics</h2>
+  <div id="metrics" class="kv">Loading…</div>
 </section>
 
-<section class="panel">
-  <h2>Global Gauge (Worker)</h2>
-  <div id="m" class="kv">Loading…</div>
+<section class="panel muted">
+  <h2>Mismatch Flags</h2>
+  <div id="flags" class="kv">Loading…</div>
 </section>
 
 <section class="panel">
   <div class="nav-grid">
-    <a class="btn" href="/engine/" data-click="control.engine">Engine Room</a>
-    <a class="btn secondary" href="/" data-click="control.home">Home</a>
-    <a class="btn tertiary" href="/reference/" data-click="control.reference">Reference</a>
+    <a class="btn primary" href="/engine/">Engine Room</a>
+    <a class="btn secondary" href="/">Home</a>
+    <a class="btn tertiary" href="/reference/">Reference</a>
   </div>
 </section>
 
-<script src="/assets/engine.js"></script>
 <script>
-  GM.receipt("CON",{page:"control"});
-  GM.bindClicks();
+  // SET THIS to your deployed Worker base URL:
+  const TRUTH_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
 
-  const fmt = (x) => x ? (x.iso || new Date(x.ts).toISOString()) : "—";
+  async function j(path){
+    const res = await fetch(TRUTH_BASE + path, { cache:"no-store" });
+    if(!res.ok) throw new Error(String(res.status));
+    return await res.json();
+  }
 
-  // receipts
-  const R = GM.receipts();
-  document.getElementById("r").innerHTML =
-    "<div><b>SEL</b>: "+fmt(R.SEL)+"</div>" +
-    "<div><b>RES</b>: "+fmt(R.RES)+"</div>" +
-    "<div><b>COM</b>: "+fmt(R.COM)+"</div>" +
-    "<div><b>CON</b>: "+fmt(R.CON)+"</div>";
+  async function report(){
+    try{
+      await fetch(TRUTH_BASE + "/report",{
+        method:"POST",
+        headers:{"content-type":"application/json"},
+        body:JSON.stringify({ host: location.host, route: location.pathname })
+      });
+    }catch(e){}
+  }
 
-  // clicks
-  const C = GM.clicks();
-  document.getElementById("c").innerHTML =
-    "<div><b>Total</b>: "+(C.total||0)+"</div>" +
-    "<div><b>Last</b>: "+(C.last? (C.last.iso+" · "+C.last.name) : "—")+"</div>" +
-    "<pre style='white-space:pre-wrap;opacity:.9'>"+JSON.stringify(C.by||{},null,2)+"</pre>";
+  function pre(obj){ return "<pre style='white-space:pre-wrap;opacity:.9'>"+JSON.stringify(obj,null,2)+"</pre>"; }
 
-  // worker metrics (best-effort)
-  (async () => {
-    const res = await GM.fetchMetrics();
-    const el = document.getElementById("m");
-    if (res.skipped) el.innerHTML = "Unavailable (WORKER_BASE not set).";
-    else if (!res.ok) el.innerHTML = "Unavailable ("+(res.status||res.error||"error")+")";
-    else el.innerHTML = "<pre style='white-space:pre-wrap;opacity:.9'>"+JSON.stringify(res.data,null,2)+"</pre>";
+  (async function(){
+    await report();
+    try{
+      const b = await j("/build");
+      document.getElementById("build").innerHTML = pre(b);
+    }catch(e){
+      document.getElementById("build").innerHTML = "Unavailable";
+    }
+
+    try{
+      const m = await j("/metrics");
+      document.getElementById("metrics").innerHTML = pre(m);
+    }catch(e){
+      document.getElementById("metrics").innerHTML = "Unavailable";
+    }
+
+    try{
+      const b2 = await j("/build");
+      document.getElementById("flags").innerHTML = pre(b2.flags || {});
+    }catch(e){
+      document.getElementById("flags").innerHTML = "Unavailable";
+    }
   })();
 </script>
 

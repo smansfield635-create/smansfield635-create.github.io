@@ -1,4 +1,3 @@
-<!-- TNT — /index.html (FULL REPLACE: LOGO PANEL + SNOWFLAKE BACKGROUND + 2 PROFOUND SAYINGS · green/blue/brown) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,35 +7,27 @@
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 
-<body class="bg-gradient">
-<main class="page">
-
-  <!-- SNOWFLAKE FIELD (foundation layer) -->
+<body>
+  <!-- Snowflake foundation layer (green / blue / brown) -->
   <svg class="snowfield" aria-hidden="true" viewBox="0 0 1000 1600" preserveAspectRatio="none">
     <defs>
-      <!-- one simple snowflake glyph -->
       <symbol id="flake" viewBox="-60 -60 120 120">
         <g fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22">
           <path d="M0-46V46"/>
           <path d="M-46 0H46"/>
           <path d="M-33-33L33 33"/>
           <path d="M-33 33L33-33"/>
-
           <path d="M0-46l-10 12M0-46l10 12"/>
           <path d="M0 46l-10-12M0 46l10-12"/>
-
           <path d="M-46 0l12-10M-46 0l12 10"/>
           <path d="M46 0l-12-10M46 0l-12 10"/>
-
           <path d="M-33-33l14 0M-33-33l0 14"/>
           <path d="M33 33l-14 0M33 33l0-14"/>
-
           <path d="M-33 33l14 0M-33 33l0-14"/>
           <path d="M33-33l-14 0M33-33l0 14"/>
         </g>
       </symbol>
 
-      <!-- soft color roles (green/blue/brown) -->
       <linearGradient id="flakeBlue" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0" stop-color="#2f4f8f" stop-opacity="0.22"/>
         <stop offset="1" stop-color="#2f4f8f" stop-opacity="0.10"/>
@@ -51,9 +42,7 @@
       </linearGradient>
     </defs>
 
-    <!-- scatter (foundation) -->
     <g>
-      <!-- blue layer -->
       <g stroke="url(#flakeBlue)">
         <use href="#flake" x="140" y="180" transform="scale(1.25)"/>
         <use href="#flake" x="700" y="260" transform="scale(0.95) rotate(8 700 260)"/>
@@ -65,7 +54,6 @@
         <use href="#flake" x="820" y="1350" transform="scale(1.05) rotate(10 820 1350)"/>
       </g>
 
-      <!-- green layer -->
       <g stroke="url(#flakeGreen)">
         <use href="#flake" x="520" y="170" transform="scale(0.85) rotate(-8 520 170)"/>
         <use href="#flake" x="120" y="420" transform="scale(1.05) rotate(6 120 420)"/>
@@ -76,7 +64,6 @@
         <use href="#flake" x="520" y="1470" transform="scale(0.95) rotate(-6 520 1470)"/>
       </g>
 
-      <!-- brown layer -->
       <g stroke="url(#flakeBrown)">
         <use href="#flake" x="880" y="140" transform="scale(0.80) rotate(10 880 140)"/>
         <use href="#flake" x="360" y="320" transform="scale(1.05) rotate(-10 360 320)"/>
@@ -89,72 +76,81 @@
   </svg>
 
   <style>
+    /* Background snowflake field */
     .snowfield{
       position:fixed; inset:-120px -120px -120px -120px;
       width:calc(100% + 240px); height:calc(100% + 240px);
       z-index:0; pointer-events:none;
-      filter: blur(0.2px);
       opacity:0.55;
+      filter: blur(0.25px);
     }
+
+    /* Keep content above background */
     .stack{ position:relative; z-index:1; }
-    .logoWrap{ display:flex; justify-content:center; align-items:center; padding:18px 0 6px; }
-    .logoCard{
-      width:min(360px, 78vw);
-      aspect-ratio:1/1;
-      border-radius:26px;
+
+    /* Logo card */
+    .hero-logo{ display:flex; justify-content:center; margin:22px 0 22px; }
+    .logo-card{
+      width:100%;
+      max-width:520px;
+      padding:26px;
+      border-radius:22px;
       background:rgba(10,16,32,.35);
-      box-shadow: 0 20px 70px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.08);
-      display:flex; align-items:center; justify-content:center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 30px 70px rgba(0,0,0,.55);
+      display:flex;
+      justify-content:center;
       position:relative;
       overflow:hidden;
     }
-    .logoCard::before{
+    .logo-card::before{
       content:"";
-      position:absolute; inset:0;
+      position:absolute;
+      inset:0;
       background:
-        radial-gradient(500px 360px at 20% 20%, rgba(47,79,143,.25), transparent 60%),
-        radial-gradient(520px 400px at 80% 30%, rgba(47,143,107,.18), transparent 60%),
-        radial-gradient(520px 420px at 50% 90%, rgba(122,90,58,.16), transparent 60%);
-      opacity:.9;
+        radial-gradient(520px 380px at 20% 20%, rgba(47,79,143,.26), transparent 60%),
+        radial-gradient(520px 380px at 80% 30%, rgba(47,143,107,.22), transparent 60%),
+        radial-gradient(520px 420px at 50% 90%, rgba(122,90,58,.18), transparent 60%);
+      opacity:.95;
     }
-    .logoCard img{
-      position:relative; z-index:1;
-      width:72%; height:72%;
-      filter: drop-shadow(0 14px 26px rgba(0,0,0,.35));
-      opacity:0.95;
+    .logo-image{
+      position:relative;
+      z-index:1;
+      width:72%;
+      max-width:360px;
+      height:auto;
+      opacity:.96;
+      filter:
+        drop-shadow(0 18px 36px rgba(0,0,0,.55))
+        drop-shadow(0 0 18px rgba(90,160,255,.22));
     }
+
+    /* Subtitle + profound lines */
+    .hero-sub{ margin:.55rem 0 0 0; }
     .sayings p{ margin:.65rem 0; }
   </style>
 
-  <div class="stack">
+  <main class="page stack">
 
     <section class="panel hero">
       <h1>Geodiametrics</h1>
-      <!-- keep this line (requested) -->
-      <p class="subtle">
+      <p class="hero-sub subtle">
         You’re not alone in the confusion. There is a clearer way to see what’s happening.
       </p>
     </section>
 
-    <!-- LOGO (replaces the old middle block) -->
-    <section class="panel">
-      <div class="logoWrap">
-        <div class="logoCard">
-          <img src="/assets/logo.svg" alt="Geodiametrics logo"/>
-        </div>
+    <section class="panel hero-logo">
+      <div class="logo-card">
+        <img src="/assets/logo.svg" alt="Geodiametrics Logo" class="logo-image"/>
       </div>
     </section>
 
-    <!-- TWO PROFOUND SAYINGS -->
     <section class="panel sayings">
       <p><strong>Clarity is not certainty.</strong> Clarity is what remains checkable under pressure.</p>
       <p><strong>What holds together is what is true.</strong> Everything else is drift waiting to be measured.</p>
-      <!-- keep this bottom line (requested) -->
       <p class="subtle" style="margin-top:1rem">Exploration is welcome. There is no required path.</p>
     </section>
 
-    <!-- ACTIONS -->
-    <section class="panel">
+    <section class="panel nav">
       <a class="btn primary block" href="/symptoms/">Enter the Story</a>
       <a class="btn block" href="/engine/">Engine</a>
       <a class="btn block" href="/control/">Control</a>
@@ -163,7 +159,6 @@
       <a class="btn block" href="/about/">About</a>
     </section>
 
-    <!-- BUILD STAMP -->
     <section class="panel">
       <p class="subtle" style="margin:0">
         <strong>Build:</strong> 2026-02-01a ·
@@ -171,9 +166,7 @@
       </p>
     </section>
 
-  </div>
-
-</main>
+  </main>
 </body>
 </html>
 ```0

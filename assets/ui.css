@@ -1,203 +1,142 @@
-/* =========================================================
-   GEODIAMETRICS — CANONICAL UI
-   CMT: FULL REWRITE
-   Build: 2026-02-01a
-   Scope: Global
-   ========================================================= */
+:root{
+  --bg0:#070a14;
+  --bg1:#0b1023;
+  --bg2:#101a33;
+  --ink:#e9eefc;
+  --muted:rgba(233,238,252,.70);
 
-/* -----------------------
-   Root variables
-   ----------------------- */
-:root {
-  --bg-main: radial-gradient(1200px 800px at 50% -10%, #3a3f7a 0%, #0b1020 60%, #060914 100%);
-  --card-bg: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-  --card-border: rgba(255,255,255,0.12);
+  --card:rgba(18,24,46,.62);
+  --card2:rgba(12,16,34,.55);
+  --stroke:rgba(233,238,252,.14);
 
-  --text-main: #e9ecf6;
-  --text-muted: rgba(233,236,246,0.65);
+  --bubble:rgba(255,255,255,.06);
+  --bubble2:rgba(255,255,255,.10);
+  --shadow:0 20px 60px rgba(0,0,0,.55);
 
-  --accent-blue: #4fa3ff;
-  --accent-green: #35e36a;
-  --accent-yellow: #f4d03f;
-  --accent-red: #ff5c5c;
-  --accent-brown: #7a5a3a;
-
-  --radius-lg: 26px;
-  --radius-md: 18px;
-
-  --shadow-soft: 0 20px 40px rgba(0,0,0,0.35);
-  --shadow-hard: 0 30px 70px rgba(0,0,0,0.55);
+  --radius:22px;
+  --radius2:28px;
 }
 
-/* -----------------------
-   Global reset
-   ----------------------- */
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--ink);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:
+    radial-gradient(1200px 900px at 20% 10%,rgba(122,162,255,.24),transparent 60%),
+    radial-gradient(900px 700px at 80% 20%,rgba(255,122,198,.14),transparent 60%),
+    radial-gradient(700px 600px at 35% 75%,rgba(60,220,170,.12),transparent 55%),
+    linear-gradient(180deg,var(--bg1),var(--bg0));
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg-main);
-  color: var(--text-main);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-               Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.45;
+/* Kill “blue underlined print” everywhere */
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+a:hover{text-decoration:none}
+
+.wrap{
+  width:min(980px,92vw);
+  margin:0 auto;
+  padding:26px 0 40px;
 }
 
-/* -----------------------
-   Layout
-   ----------------------- */
-.page {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 28px 18px 80px;
+.stack{display:grid;gap:16px}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:var(--radius2);
+  box-shadow:var(--shadow);
+  padding:20px;
+  backdrop-filter: blur(10px);
 }
 
-/* -----------------------
-   Cards
-   ----------------------- */
-.card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-lg);
-  padding: 26px 24px;
-  margin-bottom: 22px;
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(14px);
+.card.soft{background:var(--card2)}
+
+h1{
+  margin:0 0 10px;
+  font-size:42px;
+  letter-spacing:-.02em;
+}
+p{
+  margin:0;
+  line-height:1.55;
+  color:var(--muted);
+  font-size:18px;
+}
+strong{color:var(--ink)}
+
+.heroLogo{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px 0 6px;
+}
+.heroLogo img{
+  width:min(240px,62vw);   /* SHRINKED */
+  height:auto;
+  display:block;
+  filter: drop-shadow(0 18px 40px rgba(0,0,0,.55));
+  opacity:.98;
 }
 
-.card-title {
-  font-size: 1.9rem;
-  font-weight: 700;
-  margin: 0 0 10px 0;
+/* Bubble buttons */
+.bubbles{
+  display:grid;
+  gap:14px;
+}
+.btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+
+  padding:18px 18px;
+  border-radius:999px;
+
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
+  border:1px solid rgba(233,238,252,.16);
+
+  box-shadow:0 18px 50px rgba(0,0,0,.45);
+  color:var(--ink);
+  font-weight:700;
+  font-size:20px;
+
+  user-select:none;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active{
+  transform:translateY(1px);
+  filter:brightness(1.06);
+}
+.btn.primary{
+  background:linear-gradient(180deg,rgba(122,162,255,.22),rgba(122,162,255,.10));
+  border-color:rgba(122,162,255,.28);
+}
+.btn.ghost{
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
 }
 
-.card-subtitle {
-  font-size: 1rem;
-  color: var(--text-muted);
+/* Footer */
+.footer{
+  margin-top:8px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  color:rgba(233,238,252,.55);
+  font-size:13px;
+}
+.hr{
+  height:1px;
+  background:rgba(233,238,252,.10);
+  border-radius:999px;
 }
 
-/* -----------------------
-   Logo card
-   ----------------------- */
-.logo-card {
-  text-align: center;
-}
-
-.logo-card svg {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-/* -----------------------
-   Typography blocks
-   ----------------------- */
-.statement {
-  font-size: 1.15rem;
-  margin-bottom: 12px;
-}
-
-.statement strong {
-  font-weight: 700;
-}
-
-.muted {
-  color: var(--text-muted);
-}
-
-/* -----------------------
-   Buttons
-   ----------------------- */
-.button {
-  display: block;
-  width: 100%;
-  text-align: center;
-  padding: 16px 18px;
-  margin-top: 14px;
-  border-radius: var(--radius-md);
-  background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.05));
-  border: 1px solid var(--card-border);
-  color: var(--text-main);
-  text-decoration: none;
-  font-weight: 600;
-  box-shadow: var(--shadow-soft);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-
-.button:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-hard);
-}
-
-/* -----------------------
-   Status pills
-   ----------------------- */
-.pill {
-  display: inline-block;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.4px;
-}
-
-.pill.green { background: rgba(53,227,106,0.18); color: var(--accent-green); }
-.pill.yellow { background: rgba(244,208,63,0.18); color: var(--accent-yellow); }
-.pill.red { background: rgba(255,92,92,0.18); color: var(--accent-red); }
-
-/* -----------------------
-   Gauges
-   ----------------------- */
-.gauge {
-  margin-top: 14px;
-}
-
-.gauge-label {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.gauge-bar {
-  width: 100%;
-  height: 12px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.1);
-  overflow: hidden;
-}
-
-.gauge-fill {
-  height: 100%;
-  border-radius: 999px;
-}
-
-/* intensity colors */
-.fill-green { background: linear-gradient(90deg, #2ecc71, #35e36a); }
-.fill-yellow { background: linear-gradient(90deg, #f1c40f, #f4d03f); }
-.fill-red { background: linear-gradient(90deg, #e74c3c, #ff5c5c); }
-
-/* -----------------------
-   Footer / metadata
-   ----------------------- */
-.footer {
-  margin-top: 30px;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-/* -----------------------
-   Links
-   ----------------------- */
-a {
-  color: var(--accent-blue);
-}
-
-a:hover {
-  text-decoration: underline;
+/* Small screens */
+@media (max-width:520px){
+  h1{font-size:36px}
+  p{font-size:16px}
+  .btn{font-size:18px;padding:16px}
+  .card{padding:18px}
 }

@@ -6,7 +6,7 @@
 
 <section class="hero">
   <h1>Control Room</h1>
-  <p class="subtitle">Read-only observer surface.</p>
+  <p class="subtitle">Live gauges + engine receipts.</p>
 </section>
 
 <nav class="tabs">
@@ -20,21 +20,59 @@
   <a class="tab" href="/reference/">Reference</a>
 </nav>
 
-<section class="panel">
-  <h2>Gauge A — OSF (Canonical)</h2>
-  <p class="note">Unavailable until wired.</p>
-</section>
-
-<section class="panel">
-  <h2>Gauge B — Live Internet</h2>
-  <p class="note">Unavailable until wired.</p>
-</section>
-
 <section class="panel strong">
+  <h2>Engine Receipts (Device)</h2>
+  <div id="r" class="kv">Loading…</div>
+</section>
+
+<section class="panel">
+  <h2>Clicks (Device)</h2>
+  <div id="c" class="kv">Loading…</div>
+</section>
+
+<section class="panel">
+  <h2>Global Gauge (Worker)</h2>
+  <div id="m" class="kv">Loading…</div>
+</section>
+
+<section class="panel">
   <div class="nav-grid">
-    <a class="btn" href="/engine/">Go → Engine Room</a>
-    <a class="btn secondary" href="/">Back to Home</a>
+    <a class="btn" href="/engine/" data-click="control.engine">Engine Room</a>
+    <a class="btn secondary" href="/" data-click="control.home">Home</a>
+    <a class="btn tertiary" href="/reference/" data-click="control.reference">Reference</a>
   </div>
 </section>
+
+<script src="/assets/engine.js"></script>
+<script>
+  GM.receipt("CON",{page:"control"});
+  GM.bindClicks();
+
+  const fmt = (x) => x ? (x.iso || new Date(x.ts).toISOString()) : "—";
+
+  // receipts
+  const R = GM.receipts();
+  document.getElementById("r").innerHTML =
+    "<div><b>SEL</b>: "+fmt(R.SEL)+"</div>" +
+    "<div><b>RES</b>: "+fmt(R.RES)+"</div>" +
+    "<div><b>COM</b>: "+fmt(R.COM)+"</div>" +
+    "<div><b>CON</b>: "+fmt(R.CON)+"</div>";
+
+  // clicks
+  const C = GM.clicks();
+  document.getElementById("c").innerHTML =
+    "<div><b>Total</b>: "+(C.total||0)+"</div>" +
+    "<div><b>Last</b>: "+(C.last? (C.last.iso+" · "+C.last.name) : "—")+"</div>" +
+    "<pre style='white-space:pre-wrap;opacity:.9'>"+JSON.stringify(C.by||{},null,2)+"</pre>";
+
+  // worker metrics (best-effort)
+  (async () => {
+    const res = await GM.fetchMetrics();
+    const el = document.getElementById("m");
+    if (res.skipped) el.innerHTML = "Unavailable (WORKER_BASE not set).";
+    else if (!res.ok) el.innerHTML = "Unavailable ("+(res.status||res.error||"error")+")";
+    else el.innerHTML = "<pre style='white-space:pre-wrap;opacity:.9'>"+JSON.stringify(res.data,null,2)+"</pre>";
+  })();
+</script>
 
 </main></body></html>

@@ -10,13 +10,13 @@
 <body class="bg-gradient">
 <main class="page">
 
+  <!-- HERO -->
   <section class="panel hero">
     <h1>Control</h1>
-    <p class="subtle">
-      Observable system state.
-    </p>
+    <p class="subtle">Read-only system state.</p>
   </section>
 
+  <!-- BUILD STAMP -->
   <section class="panel">
     <p class="subtle">
       <strong>Build:</strong> 2026-02-01a ·
@@ -24,32 +24,15 @@
     </p>
   </section>
 
+  <!-- LIVE GAUGE -->
   <section class="panel">
-    <h2>Global Gauge</h2>
-    <p class="subtle">
-      Worker-backed telemetry surface (read-only).
-    </p>
+    <h2>Live Gauge</h2>
+    <p class="subtle">Pulled from the canonical Truth Service.</p>
+    <pre id="gauge" class="subtle">Loading…</pre>
   </section>
 
-  <section class="panel">
-    <div class="metric">
-      <span>Sessions</span>
-      <strong>—</strong>
-    </div>
-    <div class="metric">
-      <span>Pageviews</span>
-      <strong>—</strong>
-    </div>
-    <div class="metric">
-      <span>Clicks</span>
-      <strong>—</strong>
-    </div>
-    <p class="subtle">
-      Last updated: —
-    </p>
-  </section>
-
-  <section class="panel">
+  <!-- NAV -->
+  <section class="panel nav">
     <a class="btn block" href="/">Home</a>
     <a class="btn block" href="/engine/">Engine</a>
     <a class="btn block" href="/principles/">Laws</a>
@@ -58,5 +41,25 @@
   </section>
 
 </main>
+
+<script>
+  // SET THIS to your deployed Worker base URL (no trailing slash)
+  const TRUTH_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
+
+  async function loadGauge(){
+    try{
+      const res = await fetch(TRUTH_BASE + "/metrics", { cache: "no-store" });
+      if(!res.ok) throw new Error(res.status);
+      const data = await res.json();
+      document.getElementById("gauge").textContent =
+        JSON.stringify(data, null, 2);
+    }catch(e){
+      document.getElementById("gauge").textContent =
+        "Unavailable";
+    }
+  }
+  loadGauge();
+</script>
+
 </body>
 </html>

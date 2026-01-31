@@ -1,4 +1,4 @@
-<!-- TNT — /index.html (FULL REPLACE: add Geodynamics button) -->
+<!-- TNT #1 — /index.html (FULL REPLACE) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,42 +9,42 @@
 </head>
 <body>
   <main class="wrap">
-    <section class="stack">
 
-      <section class="card hero">
-        <h1>Geodiametrics</h1>
-        <p>You’re not alone in the confusion. There is a clearer way to see what’s happening.</p>
-      </section>
-
-      <section class="card soft">
-        <div class="heroLogo">
-          <img src="/assets/logo.svg" alt="Geodiametrics Logo" class="logo"/>
-        </div>
-      </section>
-
-      <section class="card">
-        <p><strong>Clarity is not certainty.</strong> Clarity is what remains checkable under pressure.</p>
-        <p style="margin-top:12px"><strong>What holds together is what is true.</strong> Everything else is drift waiting to be measured.</p>
-        <p style="margin-top:14px;opacity:.85">Exploration is welcome. There is no required path.</p>
-      </section>
-
-      <section class="bubbles">
-        <a class="btn primary" href="/symptoms/">Enter the Story</a>
-        <a class="btn" href="/principles/">Landing (Foundations)</a>
-        <a class="btn" href="/geodynamics/">Geodynamics</a>
-        <a class="btn" href="/engine/">Engine</a>
-        <a class="btn" href="/control/">Control</a>
-        <a class="btn" href="/reference/">Reference</a>
-        <a class="btn ghost" href="/about/">About</a>
-      </section>
-
-      <div class="hr"></div>
-      <section class="footer">
-        <div>Build: 2026-02-01a</div>
-        <div>Canonical: smansfield635-create.github.io</div>
-      </section>
-
+    <section class="panel hero">
+      <h1>Geodiametrics</h1>
+      <p class="muted">You’re not alone in the confusion. There is a clearer way to see what’s happening.</p>
     </section>
+
+    <section class="panel">
+      <div class="logoCard">
+        <img class="logoImg" src="/assets/logo.svg" alt="Geodiametrics Logo"/>
+      </div>
+    </section>
+
+    <section class="panel">
+      <p><strong>Clarity is not certainty.</strong> <span class="muted">Clarity is what remains checkable under pressure.</span></p>
+      <p><strong>What holds together is what is true.</strong> <span class="muted">Everything else is drift waiting to be measured.</span></p>
+      <p class="muted">Exploration is welcome. There is no required path.</p>
+    </section>
+
+    <section class="panel nav">
+      <a class="btn primary" href="/symptoms/">Enter the Story</a>
+      <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/control/">Control</a>
+      <a class="btn" href="/foundations/">Foundations</a>
+      <a class="btn" href="/reference/">Reference</a>
+      <a class="btn" href="/about/">About</a>
+    </section>
+
+    <footer class="footer">
+      <div class="muted">Build: 2026-02-01a · Canonical: smansfield635-create.github.io</div>
+    </footer>
+
   </main>
+
+  <style>
+    .logoCard{display:flex;align-items:center;justify-content:center;min-height:220px}
+    .logoImg{width:min(240px,70vw);height:auto;display:block;filter:drop-shadow(0 18px 40px rgba(0,0,0,.55))}
+  </style>
 </body>
 </html>

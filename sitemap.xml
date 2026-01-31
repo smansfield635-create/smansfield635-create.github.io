@@ -1,74 +1,21 @@
+<!-- TNT — /sitemap.xml (FULL REPLACE: add /geodynamics/ + /principles/ landing) -->
 <?xml version="1.0" encoding="UTF-8"?>
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="-500 -500 1000 1000"
-  width="1000"
-  height="1000"
-  aria-label="Geodiametrics Logo"
-  role="img"
->
-  <defs>
-    <!-- Colors -->
-    <linearGradient id="blueGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#2f4f8f"/>
-      <stop offset="100%" stop-color="#4f6fbf"/>
-    </linearGradient>
-
-    <linearGradient id="greenGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#2f8f6b"/>
-      <stop offset="100%" stop-color="#5fbf9a"/>
-    </linearGradient>
-
-    <linearGradient id="brownGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#7a5a3a"/>
-      <stop offset="100%" stop-color="#a07850"/>
-    </linearGradient>
-
-    <!-- Glow -->
-    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="6" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
-
-  <!-- Snowflake foundation -->
-  <g stroke="url(#greenGrad)" stroke-width="10" fill="none" opacity="0.45">
-    <line x1="0" y1="-420" x2="0" y2="420"/>
-    <line x1="-420" y1="0" x2="420" y2="0"/>
-    <line x1="-300" y1="-300" x2="300" y2="300"/>
-    <line x1="-300" y1="300" x2="300" y2="-300"/>
-
-    <!-- Branches -->
-    <line x1="0" y1="-420" x2="-40" y2="-360"/>
-    <line x1="0" y1="-420" x2="40" y2="-360"/>
-
-    <line x1="420" y1="0" x2="360" y2="-40"/>
-    <line x1="420" y1="0" x2="360" y2="40"/>
-
-    <line x1="0" y1="420" x2="-40" y2="360"/>
-    <line x1="0" y1="420" x2="40" y2="360"/>
-
-    <line x1="-420" y1="0" x2="-360" y2="-40"/>
-    <line x1="-420" y1="0" x2="-360" y2="40"/>
-  </g>
-
-  <!-- Diamond lattice overlay -->
-  <g stroke="url(#blueGrad)" stroke-width="12" fill="none" filter="url(#softGlow)">
-    <polygon points="0,-220 220,0 0,220 -220,0"/>
-    <polygon points="0,-140 140,0 0,140 -140,0"/>
-    <polygon points="0,-60 60,0 0,60 -60,0"/>
-
-    <polygon points="-220,-220 0,-340 220,-220 0,-100"/>
-    <polygon points="-220,220 0,340 220,220 0,100"/>
-    <polygon points="-340,0 -220,-220 -100,0 -220,220"/>
-    <polygon points="340,0 220,-220 100,0 220,220"/>
-  </g>
-
-  <!-- Core constraint node -->
-  <g fill="url(#brownGrad)">
-    <circle cx="0" cy="0" r="28"/>
-  </g>
-</svg>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://smansfield635-create.github.io/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/symptoms/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/diagnosis/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/execution/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/principles/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/geodynamics/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/engine/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/engine/selection/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/engine/resolution/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/engine/commitment/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/engine/continuation/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/control/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/reference/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/about/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/explore/confusion/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/explore/breaking/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/explore/return/</loc></url>
+</urlset>

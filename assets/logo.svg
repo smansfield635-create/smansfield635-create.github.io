@@ -1,57 +1,51 @@
-<!-- TNT — LOGO CARD ONLY (drop-in replacement) -->
-<!-- Replace ONLY the logo card section with this block -->
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1000 1000"
+  width="100%"
+  height="100%"
+  aria-label="Geodiametrics Logo"
+  role="img">
 
-<section class="panel">
-  <div class="logoWrap">
-    <div class="logoCard">
-      <!-- REPLACE src WITH YOUR LOGO FILE -->
-      <img src="/assets/logo.svg" alt="Geodiametrics logo"/>
-    </div>
-  </div>
-</section>
+  <defs>
+    <!-- Snowflake base -->
+    <radialGradient id="snowGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3aa7ff" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0b1d3a" stop-opacity="0"/>
+    </radialGradient>
 
-<style>
-  .logoWrap{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:18px 0 6px;
-  }
+    <!-- Diamond overlay -->
+    <linearGradient id="diamondGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2ecc71"/>
+      <stop offset="50%" stop-color="#3498db"/>
+      <stop offset="100%" stop-color="#6b4f3f"/>
+    </linearGradient>
+  </defs>
 
-  .logoCard{
-    width:min(360px,78vw);
-    aspect-ratio:1/1;
-    border-radius:26px;
-    background:rgba(10,16,32,.35);
-    box-shadow:
-      0 20px 70px rgba(0,0,0,.45),
-      inset 0 0 0 1px rgba(255,255,255,.08);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    position:relative;
-    overflow:hidden;
-  }
+  <!-- Background -->
+  <rect x="0" y="0" width="1000" height="1000" fill="none"/>
 
-  /* Snowflake foundation glow (green / blue / brown) */
-  .logoCard::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:
-      radial-gradient(500px 360px at 20% 20%, rgba(47,79,143,.28), transparent 60%),
-      radial-gradient(520px 400px at 80% 30%, rgba(47,143,107,.22), transparent 60%),
-      radial-gradient(520px 420px at 50% 90%, rgba(122,90,58,.20), transparent 60%);
-    opacity:.95;
-  }
+  <!-- Snowflake foundation -->
+  <g stroke="#3aa7ff" stroke-width="10" stroke-linecap="round" opacity="0.55">
+    <line x1="500" y1="120" x2="500" y2="880"/>
+    <line x1="120" y1="500" x2="880" y2="500"/>
+    <line x1="200" y1="200" x2="800" y2="800"/>
+    <line x1="800" y1="200" x2="200" y2="800"/>
+  </g>
 
-  .logoCard img{
-    position:relative;
-    z-index:1;
-    width:72%;
-    height:72%;
-    object-fit:contain;
-    filter: drop-shadow(0 14px 26px rgba(0,0,0,.35));
-    opacity:.96;
-  }
-</style>
+  <!-- Snow glow -->
+  <circle cx="500" cy="500" r="420" fill="url(#snowGlow)"/>
+
+  <!-- Diamond core -->
+  <g fill="url(#diamondGrad)" stroke="#ffffff" stroke-width="8">
+    <polygon points="500,250 750,500 500,750 250,500"/>
+    <polygon points="500,350 650,500 500,650 350,500"/>
+  </g>
+
+  <!-- Inner diamond -->
+  <polygon
+    points="500,430 570,500 500,570 430,500"
+    fill="#ffffff"
+    opacity="0.85"/>
+
+</svg>

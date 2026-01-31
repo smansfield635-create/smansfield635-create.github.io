@@ -1,93 +1,55 @@
-<!DOCTYPE html><html lang="en"><head>
-<meta charset="utf-8"/><title>Control Room · Geodiametrics</title>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link rel="stylesheet" href="/assets/ui.css"/></head>
-<body class="bg-gradient"><main class="page">
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Control · Geodiametrics</title>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+</head>
+<body>
 
-<section class="hero">
-  <h1>Control Room</h1>
-  <p class="subtitle">Truth Service + Receipts + Gauges</p>
-</section>
-
-<nav class="tabs">
-  <a class="tab" href="/">Home</a>
-  <a class="tab" href="/engine/">Engine</a>
-  <a class="tab" href="/symptoms/">Symptoms</a>
-  <a class="tab" href="/diagnosis/">Diagnosis</a>
-  <a class="tab" href="/execution/">Execution</a>
-  <a class="tab" href="/principles/">Laws</a>
-  <a class="tab active" href="/control/">Control</a>
-  <a class="tab" href="/reference/">Reference</a>
-</nav>
-
-<section class="panel strong">
-  <h2>Build Receipt</h2>
-  <div id="build" class="kv">Loading…</div>
+<section class="panel hero">
+  <h1>Control</h1>
+  <p class="subtle">
+    Observable system state.
+  </p>
 </section>
 
 <section class="panel">
-  <h2>Metrics</h2>
-  <div id="metrics" class="kv">Loading…</div>
-</section>
-
-<section class="panel muted">
-  <h2>Mismatch Flags</h2>
-  <div id="flags" class="kv">Loading…</div>
+  <h2>Global Gauge (Worker)</h2>
+  <p class="mono">
+    Worker: https://geodiametrics-aggregator.smansfield635.workers.dev/
+  </p>
 </section>
 
 <section class="panel">
-  <div class="nav-grid">
-    <a class="btn primary" href="/engine/">Engine Room</a>
-    <a class="btn secondary" href="/">Home</a>
-    <a class="btn tertiary" href="/reference/">Reference</a>
+  <div class="metric">
+    <span>Sessions</span>
+    <strong id="sessions">—</strong>
+  </div>
+  <div class="metric">
+    <span>Pageviews</span>
+    <strong id="pageviews">—</strong>
+  </div>
+  <div class="metric">
+    <span>Clicks</span>
+    <strong id="clicks">—</strong>
+  </div>
+  <div class="metric subtle">
+    Last Updated: <span id="updated">—</span>
   </div>
 </section>
 
-<script>
-  // SET THIS to your deployed Worker base URL:
-  const TRUTH_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
+<section class="panel nav">
+  <a class="btn" href="/">Home</a>
+  <a class="btn" href="/engine/">Engine</a>
+  <a class="btn" href="/principles/">Laws</a>
+  <a class="btn" href="/reference/">Reference</a>
+</section>
 
-  async function j(path){
-    const res = await fetch(TRUTH_BASE + path, { cache:"no-store" });
-    if(!res.ok) throw new Error(String(res.status));
-    return await res.json();
-  }
+<footer class="footer">
+  Control · Global Worker + Device Local
+</footer>
 
-  async function report(){
-    try{
-      await fetch(TRUTH_BASE + "/report",{
-        method:"POST",
-        headers:{"content-type":"application/json"},
-        body:JSON.stringify({ host: location.host, route: location.pathname })
-      });
-    }catch(e){}
-  }
-
-  function pre(obj){ return "<pre style='white-space:pre-wrap;opacity:.9'>"+JSON.stringify(obj,null,2)+"</pre>"; }
-
-  (async function(){
-    await report();
-    try{
-      const b = await j("/build");
-      document.getElementById("build").innerHTML = pre(b);
-    }catch(e){
-      document.getElementById("build").innerHTML = "Unavailable";
-    }
-
-    try{
-      const m = await j("/metrics");
-      document.getElementById("metrics").innerHTML = pre(m);
-    }catch(e){
-      document.getElementById("metrics").innerHTML = "Unavailable";
-    }
-
-    try{
-      const b2 = await j("/build");
-      document.getElementById("flags").innerHTML = pre(b2.flags || {});
-    }catch(e){
-      document.getElementById("flags").innerHTML = "Unavailable";
-    }
-  })();
-</script>
-
-</main></body></html>
+</body>
+</html>

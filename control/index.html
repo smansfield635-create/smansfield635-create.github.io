@@ -1,4 +1,4 @@
-<!-- TNT — /control/index.html (FULL REPLACE: LIVE JSON → VISUAL GAUGES + RAW TOGGLE) -->
+<!-- TNT — /control/index.html (FULL REPLACE: LIVE POLLING + DUAL MEANING: HEALTH + INTENSITY) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,21 +13,26 @@
 
   <!-- HERO -->
   <section class="panel hero">
-    <h1>Control</h1>
-    <p class="subtle">Read-only system state (live).</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div>
+        <h1 style="margin:0">Control</h1>
+        <p class="subtle" style="margin:.35rem 0 0 0">Read-only system state (live).</p>
+      </div>
+      <div class="pill" id="healthPill">HEALTH: —</div>
+    </div>
   </section>
 
   <!-- BUILD STAMP -->
   <section class="panel">
-    <p class="subtle">
+    <p class="subtle" style="margin:0">
       <strong>Build:</strong> 2026-02-01a ·
       <strong>Canonical:</strong> smansfield635-create.github.io
     </p>
   </section>
 
-  <!-- STATUS -->
+  <!-- HEALTH (INVARIANT) -->
   <section class="panel">
-    <h2>Status</h2>
+    <h2>Health</h2>
     <div class="metric">
       <span>State</span>
       <strong id="status">—</strong>
@@ -36,17 +41,22 @@
       <span>Scope</span>
       <strong id="scope">—</strong>
     </div>
+    <div class="metric">
+      <span>Age (sec)</span>
+      <strong id="ageSec">—</strong>
+    </div>
     <div class="metric subtle">
       Last Updated: <span id="updatedHuman">—</span>
     </div>
-    <p class="subtle mono" id="truthBaseLine">Truth: —</p>
+    <p class="subtle mono" id="truthLine" style="margin:.6rem 0 0 0">Truth: —</p>
+    <p class="subtle" id="pollLine" style="margin:.35rem 0 0 0">Polling: —</p>
   </section>
 
-  <!-- PRIMARY GAUGES -->
+  <!-- INTENSITY (TO SCALE) -->
   <section class="panel">
-    <h2>Gauges</h2>
+    <h2>Intensity (to scale)</h2>
 
-    <div class="gauge">
+    <div class="gauge" data-key="sessions">
       <div class="gauge-head">
         <span>Sessions</span>
         <strong id="sessionsVal">—</strong>
@@ -54,7 +64,7 @@
       <div class="bar"><div class="fill" id="sessionsBar"></div></div>
     </div>
 
-    <div class="gauge">
+    <div class="gauge" data-key="pageviews">
       <div class="gauge-head">
         <span>Pageviews</span>
         <strong id="pageviewsVal">—</strong>
@@ -62,7 +72,7 @@
       <div class="bar"><div class="fill" id="pageviewsBar"></div></div>
     </div>
 
-    <div class="gauge">
+    <div class="gauge" data-key="clicks">
       <div class="gauge-head">
         <span>Clicks</span>
         <strong id="clicksVal">—</strong>
@@ -70,7 +80,7 @@
       <div class="bar"><div class="fill" id="clicksBar"></div></div>
     </div>
 
-    <div class="gauge">
+    <div class="gauge" data-key="writes">
       <div class="gauge-head">
         <span>Writes</span>
         <strong id="writesVal">—</strong>
@@ -78,14 +88,17 @@
       <div class="bar"><div class="fill" id="writesBar"></div></div>
     </div>
 
-    <p class="subtle">Bars are normalized to the largest metric in the current payload.</p>
+    <p class="subtle" style="margin:.6rem 0 0 0">
+      Bars are scaled against the single largest value in the current payload.
+      Color is intensity: red→yellow→green.
+    </p>
   </section>
 
-  <!-- SOURCES -->
+  <!-- SOURCES (TO SCALE) -->
   <section class="panel">
-    <h2>Sources</h2>
+    <h2>Sources (to scale)</h2>
 
-    <div class="gauge">
+    <div class="gauge" data-key="srcGitHub">
       <div class="gauge-head">
         <span>GitHub</span>
         <strong id="srcGithub">—</strong>
@@ -93,7 +106,7 @@
       <div class="bar"><div class="fill" id="srcGithubBar"></div></div>
     </div>
 
-    <div class="gauge">
+    <div class="gauge" data-key="srcOSF">
       <div class="gauge-head">
         <span>OSF</span>
         <strong id="srcOsf">—</strong>
@@ -101,7 +114,7 @@
       <div class="bar"><div class="fill" id="srcOsfBar"></div></div>
     </div>
 
-    <div class="gauge">
+    <div class="gauge" data-key="srcDirect">
       <div class="gauge-head">
         <span>Direct</span>
         <strong id="srcDirect">—</strong>
@@ -109,7 +122,7 @@
       <div class="bar"><div class="fill" id="srcDirectBar"></div></div>
     </div>
 
-    <div class="gauge">
+    <div class="gauge" data-key="srcOther">
       <div class="gauge-head">
         <span>Other</span>
         <strong id="srcOther">—</strong>
@@ -117,14 +130,16 @@
       <div class="bar"><div class="fill" id="srcOtherBar"></div></div>
     </div>
 
-    <p class="subtle">Bars are normalized to the largest source value in the current payload.</p>
+    <p class="subtle" style="margin:.6rem 0 0 0">
+      Same scale and intensity coloring as gauges.
+    </p>
   </section>
 
   <!-- RAW (TOGGLE) -->
   <section class="panel">
     <details>
       <summary><strong>Raw payload (JSON)</strong></summary>
-      <pre id="raw" class="mono subtle">Loading…</pre>
+      <pre id="raw" class="mono subtle" style="white-space:pre-wrap">Loading…</pre>
     </details>
   </section>
 
@@ -140,20 +155,38 @@
 </main>
 
 <style>
-  /* Local-only: safe visual layer; does not modify global ui.css */
   .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
   .metric{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:10px 0}
   .gauge{margin:14px 0}
   .gauge-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
   .bar{height:14px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.10);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);margin-top:8px}
-  .fill{height:100%;width:0%;background:rgba(255,255,255,.28);border-radius:999px;transition:width .35s ease}
+  .fill{height:100%;width:0%;border-radius:999px;transition:width .35s ease, background-color .35s ease}
+  .pill{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    font-weight:700;
+    letter-spacing:.5px;
+    padding:.55rem .8rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.10);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  }
+  .pill.green{background:rgba(0,255,140,.14); box-shadow:inset 0 0 0 1px rgba(0,255,140,.25)}
+  .pill.yellow{background:rgba(255,210,0,.14); box-shadow:inset 0 0 0 1px rgba(255,210,0,.25)}
+  .pill.red{background:rgba(255,60,60,.14); box-shadow:inset 0 0 0 1px rgba(255,60,60,.25)}
 </style>
 
 <script>
-  // SET THIS to your deployed Worker base URL (no trailing slash)
-  const TRUTH_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
+  // ---- CONFIG (canonical truth service) ----
+  const TRUTH_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev"; // no trailing slash
 
+  // ---- POLLING POLICY (exact) ----
+  const FG_MS = 10_000;            // foreground: 10s
+  const BG_MS = 60_000;            // background: 60s
+  const BACKOFF_STEPS = [10_000, 20_000, 40_000, 80_000, 120_000]; // capped at 120s
+
+  // ---- HELPERS ----
   const el = (id)=>document.getElementById(id);
+  const num = (v)=> (typeof v === "number" && isFinite(v)) ? v : 0;
 
   function toHuman(ts){
     if(!ts || !Number.isFinite(ts)) return "—";
@@ -162,82 +195,175 @@
     return d.toLocaleString();
   }
 
-  function setBar(id, ratio){
-    const pct = Math.max(0, Math.min(1, ratio)) * 100;
-    el(id).style.width = pct.toFixed(1) + "%";
+  // Intensity color (to scale): ratio -> red/yellow/green thresholds
+  function intensityColor(ratio){
+    const r = Math.max(0, Math.min(1, ratio));
+    if(r < 0.20) return "hsl(0 75% 55%)";       // red
+    if(r < 0.60) return "hsl(52 85% 55%)";      // yellow
+    return "hsl(120 70% 50%)";                  // green
+  }
+
+  function setBar(barId, ratio){
+    const r = Math.max(0, Math.min(1, ratio));
+    el(barId).style.width = (r * 100).toFixed(1) + "%";
+    el(barId).style.backgroundColor = intensityColor(r);
   }
 
   function setVal(id, v){
     el(id).textContent = (v === undefined || v === null) ? "—" : String(v);
   }
 
-  function normalize(values){
-    const nums = values.map(v => (typeof v === "number" && isFinite(v)) ? v : 0);
-    const max = Math.max(1, ...nums);
-    return nums.map(v => v / max);
+  // Health (invariant) rules:
+  // GREEN: fetch ok + status OPERATIONAL + age<=45 + required fields exist + sources exists
+  // YELLOW: degraded OR 45<age<=180 OR partial missing OR sources mismatch
+  // RED: fetch fail OR age>180 OR lastUpdated invalid OR metrics missing
+  function computeHealth(data, fetchOk){
+    if(!fetchOk) return {level:"red", label:"HEALTH: RED"};
+    const m = data?.metrics;
+    const src = m?.sources;
+
+    const hasMetrics = !!m && typeof m === "object";
+    const hasLastUpdated = typeof m?.lastUpdated === "number" && isFinite(m.lastUpdated);
+    if(!hasMetrics || !hasLastUpdated) return {level:"red", label:"HEALTH: RED"};
+
+    const ageSec = Math.max(0, (Date.now() - m.lastUpdated) / 1000);
+
+    const reqOk =
+      typeof m.sessions === "number" &&
+      typeof m.pageviews === "number" &&
+      typeof m.clicks === "number" &&
+      typeof m.writes === "number";
+
+    const sourcesOk = !!src && typeof src === "object";
+
+    const status = String(data?.status || "");
+    const operational = (status === "OPERATIONAL");
+
+    // Red conditions
+    if(ageSec > 180) return {level:"red", label:"HEALTH: RED"};
+    if(!reqOk) return {level:"yellow", label:"HEALTH: YELLOW"};
+    if(!sourcesOk) return {level:"yellow", label:"HEALTH: YELLOW"};
+
+    // Attribution mismatch heuristic (invariant-ish): if activity but all sources zero -> incomplete
+    const activity = (m.sessions + m.pageviews + m.clicks + m.writes) > 0;
+    const srcSum = num(src.GitHub) + num(src.OSF) + num(src.Direct) + num(src.Other);
+    if(activity && srcSum === 0) return {level:"yellow", label:"HEALTH: YELLOW"};
+
+    // Yellow conditions
+    if(!operational) return {level:"yellow", label:"HEALTH: YELLOW"};
+    if(ageSec > 45) return {level:"yellow", label:"HEALTH: YELLOW"};
+
+    // Green
+    return {level:"green", label:"HEALTH: GREEN"};
   }
 
-  async function load(){
-    el("truthBaseLine").textContent = "Truth: " + TRUTH_BASE + "/metrics";
+  // ---- RENDER ----
+  function render(data, fetchOk){
+    // Raw
+    el("raw").textContent = fetchOk ? JSON.stringify(data, null, 2) : "Unavailable";
+
+    // Status + scope
+    setVal("status", fetchOk ? (data.status || "—") : "UNAVAILABLE");
+    setVal("scope", fetchOk ? (data.scope || "—") : "—");
+
+    // lastUpdated + age
+    const ts = fetchOk ? num(data?.metrics?.lastUpdated) : 0;
+    el("updatedHuman").textContent = ts ? toHuman(ts) : "—";
+    const age = ts ? Math.max(0, Math.round((Date.now() - ts) / 1000)) : "—";
+    el("ageSec").textContent = age;
+
+    // Health pill
+    const h = computeHealth(data, fetchOk);
+    const pill = el("healthPill");
+    pill.classList.remove("green","yellow","red");
+    pill.classList.add(h.level);
+    pill.textContent = h.label;
+
+    // Metrics + sources
+    const sessions = fetchOk ? num(data?.metrics?.sessions) : 0;
+    const pageviews = fetchOk ? num(data?.metrics?.pageviews) : 0;
+    const clicks = fetchOk ? num(data?.metrics?.clicks) : 0;
+    const writes = fetchOk ? num(data?.metrics?.writes) : 0;
+
+    setVal("sessionsVal", fetchOk ? sessions : "—");
+    setVal("pageviewsVal", fetchOk ? pageviews : "—");
+    setVal("clicksVal", fetchOk ? clicks : "—");
+    setVal("writesVal", fetchOk ? writes : "—");
+
+    const src = fetchOk ? (data?.metrics?.sources || {}) : {};
+    const sGithub = num(src.GitHub);
+    const sOsf = num(src.OSF);
+    const sDirect = num(src.Direct);
+    const sOther = num(src.Other);
+
+    setVal("srcGithub", fetchOk ? sGithub : "—");
+    setVal("srcOsf", fetchOk ? sOsf : "—");
+    setVal("srcDirect", fetchOk ? sDirect : "—");
+    setVal("srcOther", fetchOk ? sOther : "—");
+
+    // ONE SHARED SCALE across all bars
+    const globalMax = Math.max(1, sessions, pageviews, clicks, writes, sGithub, sOsf, sDirect, sOther);
+
+    setBar("sessionsBar", sessions / globalMax);
+    setBar("pageviewsBar", pageviews / globalMax);
+    setBar("clicksBar", clicks / globalMax);
+    setBar("writesBar", writes / globalMax);
+
+    setBar("srcGithubBar", sGithub / globalMax);
+    setBar("srcOsfBar", sOsf / globalMax);
+    setBar("srcDirectBar", sDirect / globalMax);
+    setBar("srcOtherBar", sOther / globalMax);
+  }
+
+  // ---- POLLING ENGINE ----
+  let timer = null;
+  let backoffIndex = 0;
+
+  function currentInterval(){
+    return document.visibilityState === "visible" ? FG_MS : BG_MS;
+  }
+
+  function scheduleNext(ms){
+    clearTimeout(timer);
+    timer = setTimeout(tick, ms);
+    el("pollLine").textContent = "Polling: " + Math.round(ms/1000) + "s";
+  }
+
+  async function tick(){
+    el("truthLine").textContent = "Truth: " + TRUTH_BASE + "/metrics";
     try{
-      const res = await fetch(TRUTH_BASE + "/metrics", { cache: "no-store" });
+      const res = await fetch(TRUTH_BASE + "/metrics", { cache:"no-store" });
       if(!res.ok) throw new Error("HTTP " + res.status);
       const data = await res.json();
 
-      // Raw
-      el("raw").textContent = JSON.stringify(data, null, 2);
+      render(data, true);
 
-      // Status
-      setVal("status", data.status || "—");
-      setVal("scope", data.scope || "—");
-
-      const ts = data?.metrics?.lastUpdated;
-      el("updatedHuman").textContent = toHuman(ts);
-
-      // Metrics
-      const sessions = data?.metrics?.sessions ?? 0;
-      const pageviews = data?.metrics?.pageviews ?? 0;
-      const clicks = data?.metrics?.clicks ?? 0;
-      const writes = data?.metrics?.writes ?? 0;
-
-      setVal("sessionsVal", sessions);
-      setVal("pageviewsVal", pageviews);
-      setVal("clicksVal", clicks);
-      setVal("writesVal", writes);
-
-      const ratios = normalize([sessions, pageviews, clicks, writes]);
-      setBar("sessionsBar", ratios[0]);
-      setBar("pageviewsBar", ratios[1]);
-      setBar("clicksBar", ratios[2]);
-      setBar("writesBar", ratios[3]);
-
-      // Sources
-      const src = data?.metrics?.sources || {};
-      const sDirect = src.Direct ?? 0;
-      const sOsf = src.OSF ?? 0;
-      const sGithub = src.GitHub ?? 0;
-      const sOther = src.Other ?? 0;
-
-      setVal("srcDirect", sDirect);
-      setVal("srcOsf", sOsf);
-      setVal("srcGithub", sGithub);
-      setVal("srcOther", sOther);
-
-      const sRatios = normalize([sGithub, sOsf, sDirect, sOther]);
-      setBar("srcGithubBar", sRatios[0]);
-      setBar("srcOsfBar", sRatios[1]);
-      setBar("srcDirectBar", sRatios[2]);
-      setBar("srcOtherBar", sRatios[3]);
-
+      // success -> reset backoff -> normal interval
+      backoffIndex = 0;
+      scheduleNext(currentInterval());
     }catch(e){
-      el("status").textContent = "UNAVAILABLE";
-      el("scope").textContent = "—";
-      el("updatedHuman").textContent = "—";
-      el("raw").textContent = "Unavailable";
+      render({}, false);
+
+      // error -> backoff
+      const ms = BACKOFF_STEPS[Math.min(backoffIndex, BACKOFF_STEPS.length-1)];
+      backoffIndex++;
+      scheduleNext(ms);
     }
   }
 
-  load();
+  document.addEventListener("visibilitychange", ()=>{
+    // immediate refresh on focus; slow down when hidden
+    if(document.visibilityState === "visible"){
+      tick();
+    }else{
+      scheduleNext(BG_MS);
+    }
+  });
+
+  window.addEventListener("focus", ()=>tick());
+
+  // start
+  tick();
 </script>
 
 </body>

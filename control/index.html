@@ -1,56 +1,33 @@
-<!-- TNT — /control/index.html (FULL REPLACE: add Landing + Geodynamics nav) -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Control · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Control</title>
+<link rel="stylesheet" href="/assets/ui.css"/>
 </head>
-<body class="bg-gradient">
+<body>
+
 <main class="page">
 
-  <section class="panel hero">
-    <h1>Control</h1>
-    <p class="subtitle">Read-only system state (live).</p>
-  </section>
+<section class="panel hero">
+  <h1>Control</h1>
+  <p>Live system state.</p>
+</section>
 
-  <section class="panel">
-    <p class="subtle">
-      <strong>Build:</strong> 2026-02-01a · <strong>Canonical:</strong> smansfield635-create.github.io
-    </p>
-  </section>
+<section class="panel">
+  <details class="bubble">
+    <summary>Live Gauge</summary>
+    <div class="bubble-content">Read-only</div>
+  </details>
+</section>
 
-  <section class="panel strong">
-    <h2>Live Gauge</h2>
-    <pre id="raw" class="kv">Loading…</pre>
-  </section>
-
-  <section class="panel nav">
-    <a class="btn block" href="/">Home</a>
-    <a class="btn block" href="/principles/">Landing (Foundations)</a>
-    <a class="btn block" href="/geodynamics/">Geodynamics</a>
-    <a class="btn block" href="/engine/">Engine</a>
-    <a class="btn block" href="/reference/">Reference</a>
-    <a class="btn block" href="/about/">About</a>
-  </section>
+<section class="panel center">
+  <div class="bubble-grid">
+    <a class="bubble nav" href="/">Home</a>
+  </div>
+</section>
 
 </main>
-
-<script>
-  const TRUTH_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
-  (async () => {
-    try{
-      const res = await fetch(TRUTH_BASE + "/metrics?t=" + Date.now(), { cache:"no-store" });
-      if(!res.ok) throw new Error(res.status);
-      const data = await res.json();
-      document.getElementById("raw").textContent = JSON.stringify(data, null, 2);
-    }catch(e){
-      document.getElementById("raw").textContent = "Unavailable";
-    }
-  })();
-</script>
-
 </body>
 </html>
-```0

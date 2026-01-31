@@ -1,96 +1,40 @@
-<!-- TNT — /control/index.html (REPLACE FULL FILE) -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <title>Control Room · Geodiametrics</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <link rel="stylesheet" href="/assets/ui.css"/>
-</head>
-<body class="bg-gradient">
-  <main class="page">
-    <section class="hero">
-      <h1>Control Room</h1>
-      <p class="subtitle">Fusion Core View · Receipts + Gauges</p>
-    </section>
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><title>Control Room · Geodiametrics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="stylesheet" href="/assets/ui.css"/></head>
+<body class="bg-gradient"><main class="page">
 
-    <section class="card">
-      <h2>Engine Receipts (Device)</h2>
-      <p class="note">Local receipts prove independent cycle completion.</p>
-      <div id="localReceipts" class="kv"></div>
-    </section>
+<section class="hero">
+  <h1>Control Room</h1>
+  <p class="subtitle">Read-only observer surface.</p>
+</section>
 
-    <section class="card muted">
-      <h2>Engine Receipts (Live)</h2>
-      <p class="note">Activates when <code>RECEIPT_ENDPOINT</code> is set in <code>/assets/fusion.js</code>.</p>
-      <div id="remoteReceipts" class="kv"></div>
-    </section>
+<nav class="tabs">
+  <a class="tab" href="/">Home</a>
+  <a class="tab" href="/engine/">Engine</a>
+  <a class="tab" href="/symptoms/">Symptoms</a>
+  <a class="tab" href="/diagnosis/">Diagnosis</a>
+  <a class="tab" href="/execution/">Execution</a>
+  <a class="tab" href="/principles/">Laws</a>
+  <a class="tab active" href="/control/">Control</a>
+  <a class="tab" href="/reference/">Reference</a>
+</nav>
 
-    <section class="card">
-      <h2>Gauge A — OSF (Canonical)</h2>
-      <p class="note">Activates when <code>OSF_GAUGE_URL</code> is set in <code>/assets/fusion.js</code>.</p>
-      <div id="osfGauge" class="kv"></div>
-    </section>
+<section class="panel">
+  <h2>Gauge A — OSF (Canonical)</h2>
+  <p class="note">Unavailable until wired.</p>
+</section>
 
-    <section class="card">
-      <h2>Gauge B — Live Internet</h2>
-      <p class="note">Live GitHub signal (repo state) — no setup required.</p>
-      <div id="liveGauge" class="kv"></div>
-    </section>
+<section class="panel">
+  <h2>Gauge B — Live Internet</h2>
+  <p class="note">Unavailable until wired.</p>
+</section>
 
-    <section class="card">
-      <div class="nav-grid">
-        <a class="nav-button primary" href="/">Back to Home</a>
-        <a class="nav-button" href="/reference/">Reference</a>
-        <a class="nav-button" href="/principles/">Foundational Laws</a>
-      </div>
-    </section>
-  </main>
+<section class="panel strong">
+  <div class="nav-grid">
+    <a class="btn" href="/engine/">Go → Engine Room</a>
+    <a class="btn secondary" href="/">Back to Home</a>
+  </div>
+</section>
 
-  <script src="/assets/fusion.js"></script>
-  <script>
-    Fusion.receipt("CON",{page:"control"});
-
-    function fmt(s){
-      if(!s) return "—";
-      return (s.ts||"—") + (s.meta ? (" · " + JSON.stringify(s.meta)) : "");
-    }
-    function render(el,obj){
-      el.innerHTML =
-        "<div><b>SEL</b>: "+fmt(obj.SEL)+"</div>"+
-        "<div><b>RES</b>: "+fmt(obj.RES)+"</div>"+
-        "<div><b>COM</b>: "+fmt(obj.COM)+"</div>"+
-        "<div><b>CON</b>: "+fmt(obj.CON)+"</div>";
-    }
-
-    (async function(){
-      render(document.getElementById("localReceipts"), Fusion.getReceipts());
-
-      const rr = await Fusion.fetchRemote();
-      const rEl = document.getElementById("remoteReceipts");
-      if(rr.skipped) rEl.innerHTML = "Unavailable (RECEIPT_ENDPOINT not set).";
-      else if(!rr.ok) rEl.innerHTML = "Unavailable ("+(rr.status||rr.error||"error")+").";
-      else render(rEl, rr.data || {});
-
-      const og = await Fusion.osfGauge();
-      const oEl = document.getElementById("osfGauge");
-      if(og.skipped) oEl.innerHTML = "Unavailable (OSF_GAUGE_URL not set).";
-      else if(!og.ok) oEl.innerHTML = "Unavailable ("+(og.status||og.error||"error")+").";
-      else oEl.innerHTML = "<div><b>source</b>: "+og.source+"</div><div><b>ts</b>: "+og.ts+"</div><pre style='white-space:pre-wrap;opacity:.9'>"+JSON.stringify(og.value,null,2)+"</pre>";
-
-      const lg = await Fusion.liveGauge();
-      const lEl = document.getElementById("liveGauge");
-      if(!lg.ok) lEl.innerHTML = "Unavailable ("+(lg.status||lg.error||"error")+").";
-      else lEl.innerHTML =
-        "<div><b>source</b>: "+lg.source+"</div>"+
-        "<div><b>ts</b>: "+lg.ts+"</div>"+
-        "<div><b>pushed_at</b>: "+(lg.value.pushed_at||"—")+"</div>"+
-        "<div><b>updated_at</b>: "+(lg.value.updated_at||"—")+"</div>"+
-        "<div><b>stars</b>: "+(lg.value.stargazers_count??"—")+"</div>"+
-        "<div><b>watchers</b>: "+(lg.value.watchers_count??"—")+"</div>"+
-        "<div><b>forks</b>: "+(lg.value.forks_count??"—")+"</div>";
-    })();
-  </script>
-</body>
-</html>
-```0
+</main></body></html>

@@ -1,348 +1,56 @@
-<!-- TNT — /control/index.html (FULL REPLACE: cache-bust + lastUpdated normalization) -->
+<!-- TNT — /control/index.html (FULL REPLACE: add Landing + Geodynamics nav) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Control · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 </head>
-
 <body class="bg-gradient">
 <main class="page">
 
   <section class="panel hero">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-      <div>
-        <h1 style="margin:0">Control</h1>
-        <p class="subtle" style="margin:.35rem 0 0 0">Read-only system state (live).</p>
-      </div>
-      <div class="pill" id="healthPill">HEALTH: —</div>
-    </div>
+    <h1>Control</h1>
+    <p class="subtitle">Read-only system state (live).</p>
   </section>
 
   <section class="panel">
-    <p class="subtle" style="margin:0">
-      <strong>Build:</strong> 2026-02-01a ·
-      <strong>Canonical:</strong> smansfield635-create.github.io
+    <p class="subtle">
+      <strong>Build:</strong> 2026-02-01a · <strong>Canonical:</strong> smansfield635-create.github.io
     </p>
   </section>
 
-  <section class="panel">
-    <h2>Health</h2>
-    <div class="metric">
-      <span>State</span>
-      <strong id="status">—</strong>
-    </div>
-    <div class="metric">
-      <span>Scope</span>
-      <strong id="scope">—</strong>
-    </div>
-    <div class="metric">
-      <span>Age (sec)</span>
-      <strong id="ageSec">—</strong>
-    </div>
-    <div class="metric subtle">
-      Last Updated: <span id="updatedHuman">—</span>
-    </div>
-    <p class="subtle mono" id="truthLine" style="margin:.6rem 0 0 0">Truth: —</p>
-    <p class="subtle" id="pollLine" style="margin:.35rem 0 0 0">Polling: —</p>
-  </section>
-
-  <section class="panel">
-    <h2>Intensity (to scale)</h2>
-
-    <div class="gauge">
-      <div class="gauge-head">
-        <span>Sessions</span>
-        <strong id="sessionsVal">—</strong>
-      </div>
-      <div class="bar"><div class="fill" id="sessionsBar"></div></div>
-    </div>
-
-    <div class="gauge">
-      <div class="gauge-head">
-        <span>Pageviews</span>
-        <strong id="pageviewsVal">—</strong>
-      </div>
-      <div class="bar"><div class="fill" id="pageviewsBar"></div></div>
-    </div>
-
-    <div class="gauge">
-      <div class="gauge-head">
-        <span>Clicks</span>
-        <strong id="clicksVal">—</strong>
-      </div>
-      <div class="bar"><div class="fill" id="clicksBar"></div></div>
-    </div>
-
-    <div class="gauge">
-      <div class="gauge-head">
-        <span>Writes</span>
-        <strong id="writesVal">—</strong>
-      </div>
-      <div class="bar"><div class="fill" id="writesBar"></div></div>
-    </div>
-
-    <p class="subtle" style="margin:.6rem 0 0 0">
-      Bars are scaled against the single largest value in the current payload. Color is intensity: red → yellow → green.
-    </p>
-  </section>
-
-  <section class="panel">
-    <h2>Sources (to scale)</h2>
-
-    <div class="gauge">
-      <div class="gauge-head">
-        <span>GitHub</span>
-        <strong id="srcGithub">—</strong>
-      </div>
-      <div class="bar"><div class="fill" id="srcGithubBar"></div></div>
-    </div>
-
-    <div class="gauge">
-      <div class="gauge-head">
-        <span>OSF</span>
-        <strong id="srcOsf">—</strong>
-      </div>
-      <div class="bar"><div class="fill" id="srcOsfBar"></div></div>
-    </div>
-
-    <div class="gauge">
-      <div class="gauge-head">
-        <span>Direct</span>
-        <strong id="srcDirect">—</strong>
-      </div>
-      <div class="bar"><div class="fill" id="srcDirectBar"></div></div>
-    </div>
-
-    <div class="gauge">
-      <div class="gauge-head">
-        <span>Other</span>
-        <strong id="srcOther">—</strong>
-      </div>
-      <div class="bar"><div class="fill" id="srcOtherBar"></div></div>
-    </div>
-
-    <p class="subtle" style="margin:.6rem 0 0 0">
-      Same scale and intensity coloring as gauges.
-    </p>
-  </section>
-
-  <section class="panel">
-    <details>
-      <summary><strong>Raw payload (JSON)</strong></summary>
-      <pre id="raw" class="mono subtle" style="white-space:pre-wrap">Loading…</pre>
-    </details>
+  <section class="panel strong">
+    <h2>Live Gauge</h2>
+    <pre id="raw" class="kv">Loading…</pre>
   </section>
 
   <section class="panel nav">
     <a class="btn block" href="/">Home</a>
+    <a class="btn block" href="/principles/">Landing (Foundations)</a>
+    <a class="btn block" href="/geodynamics/">Geodynamics</a>
     <a class="btn block" href="/engine/">Engine</a>
-    <a class="btn block" href="/principles/">Laws</a>
     <a class="btn block" href="/reference/">Reference</a>
     <a class="btn block" href="/about/">About</a>
   </section>
 
 </main>
 
-<style>
-  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
-  .metric{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:10px 0}
-  .gauge{margin:14px 0}
-  .gauge-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-  .bar{height:14px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.10);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);margin-top:8px}
-  .fill{height:100%;width:0%;border-radius:999px;transition:width .35s ease, background-color .35s ease}
-  .pill{
-    font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-    font-weight:700;
-    letter-spacing:.5px;
-    padding:.55rem .8rem;
-    border-radius:999px;
-    background:rgba(255,255,255,.10);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  }
-  .pill.green{background:rgba(0,255,140,.14); box-shadow:inset 0 0 0 1px rgba(0,255,140,.25)}
-  .pill.yellow{background:rgba(255,210,0,.14); box-shadow:inset 0 0 0 1px rgba(255,210,0,.25)}
-  .pill.red{background:rgba(255,60,60,.14); box-shadow:inset 0 0 0 1px rgba(255,60,60,.25)}
-</style>
-
 <script>
   const TRUTH_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
-
-  const FG_MS = 10_000;
-  const BG_MS = 60_000;
-  const BACKOFF_STEPS = [10_000, 20_000, 40_000, 80_000, 120_000];
-
-  const el = (id)=>document.getElementById(id);
-  const num = (v)=> (typeof v === "number" && isFinite(v)) ? v : 0;
-
-  function toHuman(ts){
-    if(!ts || !Number.isFinite(ts)) return "—";
-    const d = new Date(ts);
-    if(String(d)==="Invalid Date") return String(ts);
-    return d.toLocaleString();
-  }
-
-  function normalizeLastUpdated(ts){
-    // if seconds, convert to ms (1e12 ~ 2001-09-09 in ms)
-    if(!Number.isFinite(ts)) return 0;
-    return (ts < 1e12) ? ts * 1000 : ts;
-  }
-
-  function intensityColor(ratio){
-    const r = Math.max(0, Math.min(1, ratio));
-    if(r < 0.20) return "hsl(0 75% 55%)";
-    if(r < 0.60) return "hsl(52 85% 55%)";
-    return "hsl(120 70% 50%)";
-  }
-
-  function setBar(barId, ratio){
-    const r = Math.max(0, Math.min(1, ratio));
-    el(barId).style.width = (r * 100).toFixed(1) + "%";
-    el(barId).style.backgroundColor = intensityColor(r);
-  }
-
-  function setVal(id, v){
-    el(id).textContent = (v === undefined || v === null) ? "—" : String(v);
-  }
-
-  function computeHealth(data, fetchOk){
-    if(!fetchOk) return {level:"red", label:"HEALTH: RED"};
-
-    const m = data?.metrics;
-    if(!m || typeof m !== "object") return {level:"red", label:"HEALTH: RED"};
-
-    const luRaw = m.lastUpdated;
-    const lu = normalizeLastUpdated(luRaw);
-    if(!lu) return {level:"red", label:"HEALTH: RED"};
-
-    const ageSec = Math.max(0, (Date.now() - lu) / 1000);
-
-    const reqOk =
-      typeof m.sessions === "number" &&
-      typeof m.pageviews === "number" &&
-      typeof m.clicks === "number" &&
-      typeof m.writes === "number";
-
-    const src = m.sources;
-    const sourcesOk = !!src && typeof src === "object";
-
-    const status = String(data?.status || "");
-    const operational = (status === "OPERATIONAL");
-
-    if(ageSec > 180) return {level:"red", label:"HEALTH: RED"};
-    if(!reqOk) return {level:"yellow", label:"HEALTH: YELLOW"};
-    if(!sourcesOk) return {level:"yellow", label:"HEALTH: YELLOW"};
-
-    const activity = (m.sessions + m.pageviews + m.clicks + m.writes) > 0;
-    const srcSum = num(src.GitHub) + num(src.OSF) + num(src.Direct) + num(src.Other);
-    if(activity && srcSum === 0) return {level:"yellow", label:"HEALTH: YELLOW"};
-
-    if(!operational) return {level:"yellow", label:"HEALTH: YELLOW"};
-    if(ageSec > 45) return {level:"yellow", label:"HEALTH: YELLOW"};
-
-    return {level:"green", label:"HEALTH: GREEN"};
-  }
-
-  function render(data, fetchOk){
-    el("raw").textContent = fetchOk ? JSON.stringify(data, null, 2) : "Unavailable";
-
-    setVal("status", fetchOk ? (data.status || "—") : "UNAVAILABLE");
-    setVal("scope", fetchOk ? (data.scope || "—") : "—");
-
-    const ts = fetchOk ? normalizeLastUpdated(num(data?.metrics?.lastUpdated)) : 0;
-    el("updatedHuman").textContent = ts ? toHuman(ts) : "—";
-    const age = ts ? Math.max(0, Math.round((Date.now() - ts) / 1000)) : "—";
-    el("ageSec").textContent = age;
-
-    const h = computeHealth(data, fetchOk);
-    const pill = el("healthPill");
-    pill.classList.remove("green","yellow","red");
-    pill.classList.add(h.level);
-    pill.textContent = h.label;
-
-    const sessions = fetchOk ? num(data?.metrics?.sessions) : 0;
-    const pageviews = fetchOk ? num(data?.metrics?.pageviews) : 0;
-    const clicks = fetchOk ? num(data?.metrics?.clicks) : 0;
-    const writes = fetchOk ? num(data?.metrics?.writes) : 0;
-
-    setVal("sessionsVal", fetchOk ? sessions : "—");
-    setVal("pageviewsVal", fetchOk ? pageviews : "—");
-    setVal("clicksVal", fetchOk ? clicks : "—");
-    setVal("writesVal", fetchOk ? writes : "—");
-
-    const src = fetchOk ? (data?.metrics?.sources || {}) : {};
-    const sGithub = num(src.GitHub);
-    const sOsf = num(src.OSF);
-    const sDirect = num(src.Direct);
-    const sOther = num(src.Other);
-
-    setVal("srcGithub", fetchOk ? sGithub : "—");
-    setVal("srcOsf", fetchOk ? sOsf : "—");
-    setVal("srcDirect", fetchOk ? sDirect : "—");
-    setVal("srcOther", fetchOk ? sOther : "—");
-
-    const globalMax = Math.max(1, sessions, pageviews, clicks, writes, sGithub, sOsf, sDirect, sOther);
-
-    setBar("sessionsBar", sessions / globalMax);
-    setBar("pageviewsBar", pageviews / globalMax);
-    setBar("clicksBar", clicks / globalMax);
-    setBar("writesBar", writes / globalMax);
-
-    setBar("srcGithubBar", sGithub / globalMax);
-    setBar("srcOsfBar", sOsf / globalMax);
-    setBar("srcDirectBar", sDirect / globalMax);
-    setBar("srcOtherBar", sOther / globalMax);
-  }
-
-  let timer = null;
-  let backoffIndex = 0;
-
-  function currentInterval(){
-    return document.visibilityState === "visible" ? FG_MS : BG_MS;
-  }
-
-  function scheduleNext(ms){
-    clearTimeout(timer);
-    timer = setTimeout(tick, ms);
-    el("pollLine").textContent = "Polling: " + Math.round(ms/1000) + "s";
-  }
-
-  async function tick(){
-    const url = TRUTH_BASE + "/metrics?t=" + Date.now(); // cache-bust
-    el("truthLine").textContent = "Truth: " + url;
-
+  (async () => {
     try{
-      const res = await fetch(url, { cache:"no-store" });
-      if(!res.ok) throw new Error("HTTP " + res.status);
+      const res = await fetch(TRUTH_BASE + "/metrics?t=" + Date.now(), { cache:"no-store" });
+      if(!res.ok) throw new Error(res.status);
       const data = await res.json();
-
-      render(data, true);
-
-      backoffIndex = 0;
-      scheduleNext(currentInterval());
+      document.getElementById("raw").textContent = JSON.stringify(data, null, 2);
     }catch(e){
-      render({}, false);
-
-      const ms = BACKOFF_STEPS[Math.min(backoffIndex, BACKOFF_STEPS.length-1)];
-      backoffIndex++;
-      scheduleNext(ms);
+      document.getElementById("raw").textContent = "Unavailable";
     }
-  }
-
-  document.addEventListener("visibilitychange", ()=>{
-    if(document.visibilityState === "visible"){
-      tick();
-    }else{
-      scheduleNext(BG_MS);
-    }
-  });
-
-  window.addEventListener("focus", ()=>tick());
-  tick();
+  })();
 </script>
 
 </body>
 </html>
+```0

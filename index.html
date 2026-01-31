@@ -1,26 +1,135 @@
-    <section class="panel sayings">
-      <p><strong>Clarity is not certainty.</strong> Clarity is what remains checkable under pressure.</p>
-      <p><strong>What holds together is what is true.</strong> Everything else is drift waiting to be measured.</p>
-      <p class="subtle" style="margin-top:1rem">Exploration is welcome. There is no required path.</p>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Geodiametrics</title>
+
+  <style>
+    :root{
+      --bg0:#050814;
+      --bg1:#0b1330;
+      --card:rgba(18,24,48,.62);
+      --stroke:rgba(255,255,255,.10);
+      --soft:rgba(255,255,255,.06);
+      --text:#e9eefc;
+      --muted:rgba(233,238,252,.70);
+      --shadow:0 26px 70px rgba(0,0,0,.55);
+      --r:22px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:
+        radial-gradient(1100px 900px at 18% 12%, rgba(102,120,255,.22), transparent 60%),
+        radial-gradient(1000px 800px at 78% 18%, rgba(168,92,255,.14), transparent 62%),
+        radial-gradient(900px 700px at 55% 72%, rgba(48,210,180,.10), transparent 62%),
+        linear-gradient(180deg,var(--bg0),var(--bg1));
+      overflow-x:hidden;
+    }
+    .wrap{max-width:860px;margin:0 auto;padding:24px 18px 40px}
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+      border:1px solid var(--stroke);
+      border-radius:var(--r);
+      box-shadow:var(--shadow);
+      padding:22px 18px;
+      margin:0 0 16px 0;
+      backdrop-filter: blur(10px);
+    }
+    .title{margin:0 0 10px 0;font-size:44px;letter-spacing:-0.02em}
+    .lede{margin:0;color:var(--muted);font-size:18px;line-height:1.5}
+    .quote{margin:0 0 12px 0;line-height:1.55;font-size:18px;color:var(--muted)}
+    .quote strong{color:var(--text)}
+    .muted{margin:8px 0 0 0;color:var(--muted)}
+    .logoCard{display:flex;align-items:center;justify-content:center;padding:18px 8px}
+    .logoImg{
+      width:min(320px,80%);
+      height:auto;
+      filter:drop-shadow(0 16px 40px rgba(0,0,0,.55));
+      opacity:.95;
+    }
+
+    .nav{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      margin-top:6px;
+    }
+    .btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color:var(--text);
+      font-weight:700;
+      letter-spacing:.01em;
+      padding:16px 18px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      box-shadow:0 18px 45px rgba(0,0,0,.45);
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      background:linear-gradient(180deg, rgba(110,132,255,.26), rgba(255,255,255,.05));
+      border-color:rgba(140,160,255,.28);
+    }
+
+    .footer{
+      margin-top:18px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      color:rgba(233,238,252,.55);
+      font-size:12px;
+      letter-spacing:.02em;
+    }
+    .dot{opacity:.55}
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <section class="card">
+      <h1 class="title">Geodiametrics</h1>
+      <p class="lede">You’re not alone in the confusion. There is a clearer way to see what’s happening.</p>
     </section>
 
-    <section class="panel nav">
-      <a class="btn primary block" href="/symptoms/">Enter the Story</a>
-      <a class="btn block" href="/engine/">Engine</a>
-      <a class="btn block" href="/control/">Control</a>
-      <a class="btn block" href="/principles/">Laws</a>
-      <a class="btn block" href="/reference/">Reference</a>
-      <a class="btn block" href="/about/">About</a>
+    <section class="card">
+      <div class="logoCard">
+        <img class="logoImg" src="/assets/logo.svg" alt="Geodiametrics Logo">
+      </div>
     </section>
 
-    <section class="panel">
-      <p class="subtle" style="margin:0">
-        <strong>Build:</strong> 2026-02-01a ·
-        <strong>Canonical:</strong> smansfield635-create.github.io
-      </p>
+    <section class="card">
+      <p class="quote"><strong>Clarity is not certainty.</strong> Clarity is what remains checkable under pressure.</p>
+      <p class="quote"><strong>What holds together is what is true.</strong> Everything else is drift waiting to be measured.</p>
+      <p class="muted">Exploration is welcome. There is no required path.</p>
     </section>
+
+    <section class="nav">
+      <a class="btn primary" href="/symptoms/">Enter the Story</a>
+      <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/control/">Control</a>
+      <a class="btn" href="/principles/">Laws</a>
+      <a class="btn" href="/reference/">Reference</a>
+      <a class="btn" href="/about/">About</a>
+    </section>
+
+    <footer class="footer">
+      <span>© 2026 Geodiametrics</span>
+      <span class="dot">•</span>
+      <span>smansfield635-create.github.io</span>
+    </footer>
 
   </main>
 </body>
 </html>
-```0

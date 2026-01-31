@@ -4,148 +4,50 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodiametrics</title>
-
-  <!-- Canonical UI skin -->
   <link rel="stylesheet" href="/assets/ui.css"/>
-
-  <style>
-    /* Minimal page-specific glue. (Keep UI rules in /assets/ui.css) */
-    .logoCard{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:22px 16px;
-      min-height:120px;
-    }
-    .logoWrap{
-      width:min(260px, 80vw);
-      aspect-ratio: 1 / 1;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border-radius: 999px;
-      overflow:hidden;
-    }
-    .logoWrap svg{
-      width:100%;
-      height:100%;
-      display:block;
-    }
-    .btnStack{display:grid;gap:14px;margin-top:10px}
-    .muted{opacity:.78}
-    .small{font-size:.92rem;opacity:.75}
-  </style>
 </head>
-
 <body>
   <main class="wrap">
-    <!-- CARD 1: ORIENTATION -->
-    <section class="panel">
-      <h1>Geodiametrics</h1>
-      <p class="muted">You’re not alone in the confusion. There is a clearer way to see what’s happening.</p>
+    <section class="stack">
+
+      <!-- Top: title + one line -->
+      <section class="card">
+        <h1>Geodiametrics</h1>
+        <p>You’re not alone in the confusion. There is a clearer way to see what’s happening.</p>
+      </section>
+
+      <!-- Logo card (you replace the asset file; page stays stable) -->
+      <section class="card soft">
+        <div class="heroLogo">
+          <img src="/assets/logo.svg" alt="Geodiametrics Logo"/>
+        </div>
+      </section>
+
+      <!-- Two sayings + line -->
+      <section class="card">
+        <p><strong>Clarity is not certainty.</strong> Clarity is what remains checkable under pressure.</p>
+        <p style="margin-top:12px"><strong>What holds together is what is true.</strong> Everything else is drift waiting to be measured.</p>
+        <p style="margin-top:14px">Exploration is welcome. There is no required path.</p>
+      </section>
+
+      <!-- Bubble navigation -->
+      <section class="bubbles">
+        <a class="btn primary" href="/symptoms/">Enter the Story</a>
+        <a class="btn" href="/engine/">Engine</a>
+        <a class="btn" href="/control/">Control</a>
+        <a class="btn" href="/principles/">Laws</a>
+        <a class="btn" href="/reference/">Reference</a>
+        <a class="btn ghost" href="/about/">About</a>
+      </section>
+
+      <div class="hr"></div>
+
+      <section class="footer">
+        <div>Build: 2026-02-01a</div>
+        <div>Canonical: smansfield635-create.github.io</div>
+      </section>
+
     </section>
-
-    <!-- CARD 2: LOGO -->
-    <section class="panel logoCard" aria-label="Geodiametrics mark">
-      <div class="logoWrap">
-        <!-- INLINE SVG (B): no file paths, no broken image, ever -->
-        <svg viewBox="0 0 512 512" role="img" aria-label="Geodiametrics logo">
-          <defs>
-            <!-- Background snowflake haze -->
-            <radialGradient id="bg" cx="50%" cy="40%" r="70%">
-              <stop offset="0%" stop-color="#2b3a55" stop-opacity="0.55"/>
-              <stop offset="55%" stop-color="#1a2030" stop-opacity="0.20"/>
-              <stop offset="100%" stop-color="#0b0f19" stop-opacity="0.0"/>
-            </radialGradient>
-
-            <!-- Core gradient (green → blue → brown) -->
-            <linearGradient id="core" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#2bd17f"/>
-              <stop offset="55%" stop-color="#2a7fff"/>
-              <stop offset="100%" stop-color="#6b4a2b"/>
-            </linearGradient>
-
-            <!-- Inner glow -->
-            <radialGradient id="glow" cx="50%" cy="50%" r="60%">
-              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/>
-              <stop offset="60%" stop-color="#ffffff" stop-opacity="0.06"/>
-              <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-            </radialGradient>
-
-            <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="1.2"/>
-            </filter>
-
-            <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%">
-              <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#000000" flood-opacity="0.35"/>
-            </filter>
-          </defs>
-
-          <!-- Background mist -->
-          <rect x="0" y="0" width="512" height="512" fill="url(#bg)"/>
-
-          <!-- Snowflake scaffold (subtle) -->
-          <g opacity="0.28" stroke="#9fb7ff" stroke-width="10" stroke-linecap="round">
-            <line x1="256" y1="60"  x2="256" y2="128"/>
-            <line x1="256" y1="384" x2="256" y2="452"/>
-            <line x1="60"  y1="256" x2="128" y2="256"/>
-            <line x1="384" y1="256" x2="452" y2="256"/>
-            <line x1="116" y1="116" x2="164" y2="164"/>
-            <line x1="348" y1="348" x2="396" y2="396"/>
-            <line x1="396" y1="116" x2="348" y2="164"/>
-            <line x1="164" y1="348" x2="116" y2="396"/>
-          </g>
-
-          <!-- Core diamond stack -->
-          <g filter="url(#shadow)">
-            <!-- Outer diamond -->
-            <polygon points="256,96 416,256 256,416 96,256" fill="url(#core)" opacity="0.95"/>
-            <!-- Outer rim -->
-            <polygon points="256,110 402,256 256,402 110,256" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="6"/>
-
-            <!-- Middle diamond (cut) -->
-            <polygon points="256,152 360,256 256,360 152,256" fill="#0f1422" opacity="0.55"/>
-            <polygon points="256,160 352,256 256,352 160,256" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="5"/>
-
-            <!-- Inner diamond -->
-            <polygon points="256,204 308,256 256,308 204,256" fill="#ffffff" opacity="0.18"/>
-            <polygon points="256,214 298,256 256,298 214,256" fill="url(#glow)" opacity="0.95"/>
-
-            <!-- Center point -->
-            <circle cx="256" cy="256" r="7" fill="#ffffff" opacity="0.55" filter="url(#soft)"/>
-          </g>
-
-          <!-- Small diamond “facets” (hint of geometry) -->
-          <g opacity="0.35" fill="#ffffff">
-            <polygon points="256,40 272,56 256,72 240,56"/>
-            <polygon points="256,440 272,456 256,472 240,456"/>
-            <polygon points="40,256 56,240 72,256 56,272"/>
-            <polygon points="440,256 456,240 472,256 456,272"/>
-          </g>
-        </svg>
-      </div>
-    </section>
-
-    <!-- CARD 3: PRIMARY THEME + SUBTHEME -->
-    <section class="panel">
-      <p><strong>Clarity is not certainty.</strong> <span class="muted">Clarity is what remains checkable under pressure.</span></p>
-      <p><strong>What holds together is what is true.</strong> <span class="muted">Everything else is drift waiting to be measured.</span></p>
-      <p class="small">Exploration is welcome. There is no required path.</p>
-    </section>
-
-    <!-- ACTIONS -->
-    <section class="btnStack">
-      <a class="btn primary" href="/symptoms/">Enter the Story</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/control/">Control</a>
-      <a class="btn" href="/principles/">Laws</a>
-      <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/about/">About</a>
-    </section>
-
-    <footer class="footer">
-      <span class="muted">Build: 2026-02-01a · Canonical: smansfield635-create.github.io</span>
-    </footer>
   </main>
 </body>
 </html>

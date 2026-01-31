@@ -1,22 +1,41 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>404 · Geodiametrics</title>
-<style>
-  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#0a1020;color:#fff;display:flex;min-height:100vh;align-items:center;justify-content:center}
-  .box{max-width:700px;padding:28px 20px;text-align:center}
-  h1{font-size:2.2rem;margin:0 0 10px}
-  p{opacity:.8;margin:0 0 18px}
-  a{display:inline-block;padding:14px 18px;border-radius:12px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);color:#fff;text-decoration:none;font-weight:800}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Redirecting · Geodiametrics</title>
+  <meta http-equiv="refresh" content="0; url=/"/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+  <script>
+    // Hard redirect to canonical home
+    location.replace("/");
+  </script>
 </head>
-<body>
-  <div class="box">
-    <h1>Not Found</h1>
-    <p>This page doesn’t exist. Return to the front door.</p>
-    <a href="/">Back to Home</a>
-  </div>
+
+<body class="bg-gradient">
+<main class="page">
+
+  <section class="panel hero">
+    <h1>Redirecting</h1>
+    <p class="subtle">
+      You’ve reached a non-canonical path.
+    </p>
+  </section>
+
+  <section class="panel">
+    <p class="subtle">
+      <strong>Build:</strong> 2026-02-01a ·
+      <strong>Canonical:</strong> smansfield635-create.github.io
+    </p>
+    <p class="subtle">
+      Returning you to the canonical surface…
+    </p>
+  </section>
+
+  <section class="panel">
+    <a class="btn block" href="/">Go to Home</a>
+  </section>
+
+</main>
 </body>
 </html>

@@ -1,55 +1,96 @@
-<!-- TNT — /control/index.html (uniform placeholder; Phase Two ready) -->
-<!doctype html>
+<!-- TNT — /control/index.html (REPLACE FULL FILE) -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8"/>
   <title>Control Room · Geodiametrics</title>
-  <style>
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;line-height:1.6;color:#fff;
-      background:
-        radial-gradient(1200px 800px at 20% 10%,rgba(122,162,255,.40),transparent 60%),
-        radial-gradient(1000px 700px at 80% 20%,rgba(255,122,198,.28),transparent 60%),
-        radial-gradient(900px 700px at 50% 90%,rgba(92,207,191,.18),transparent 60%),
-        #0a1020;}
-    main{max-width:780px;margin:0 auto;padding:44px 20px 96px}
-    h1{font-size:2.6rem;margin:0 0 12px;letter-spacing:-.01em}
-    p{opacity:.88;margin:0 0 16px}
-    .card{margin:22px 0;padding:18px 18px;background:rgba(255,255,255,.07);
-      border:1px solid rgba(255,255,255,.14);border-radius:18px}
-    .label{opacity:.65;font-size:.95rem;margin:0 0 10px}
-    .door{display:block;padding:16px 18px;margin:12px 0;background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.14);border-radius:14px;color:#fff;text-decoration:none;font-weight:800}
-    .door:hover{background:rgba(255,255,255,.12)}
-    .small{opacity:.65;font-size:.95rem;margin-top:22px}
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
-<body>
-<main>
-  <h1>Control Room</h1>
-  <p>This page will become the live instrument surface in Phase Two.</p>
+<body class="bg-gradient">
+  <main class="page">
+    <section class="hero">
+      <h1>Control Room</h1>
+      <p class="subtitle">Fusion Core View · Receipts + Gauges</p>
+    </section>
 
-  <div class="card">
-    <div class="label">Gauge A (Canonical)</div>
-    <p><b>OSF Gauge</b> — sourced from OSF (analytics or state signal). Not live until wired.</p>
-  </div>
+    <section class="card">
+      <h2>Engine Receipts (Device)</h2>
+      <p class="note">Local receipts prove independent cycle completion.</p>
+      <div id="localReceipts" class="kv"></div>
+    </section>
 
-  <div class="card">
-    <div class="label">Gauge B (Live)</div>
-    <p><b>Internet Gauge</b> — sourced from a live public endpoint. Not live until wired.</p>
-  </div>
+    <section class="card muted">
+      <h2>Engine Receipts (Live)</h2>
+      <p class="note">Activates when <code>RECEIPT_ENDPOINT</code> is set in <code>/assets/fusion.js</code>.</p>
+      <div id="remoteReceipts" class="kv"></div>
+    </section>
 
-  <div class="card">
-    <div class="label">Truth policy</div>
-    <p><b>No fake liveness.</b> If a source is missing, the gauge reads “Unavailable”.</p>
-  </div>
+    <section class="card">
+      <h2>Gauge A — OSF (Canonical)</h2>
+      <p class="note">Activates when <code>OSF_GAUGE_URL</code> is set in <code>/assets/fusion.js</code>.</p>
+      <div id="osfGauge" class="kv"></div>
+    </section>
 
-  <a class="door" href="/reference/">Reference (anchors)</a>
-  <a class="door" href="/execution/">Back → Act III: Execution</a>
-  <a class="door" href="/principles/">Foundational Laws (Tier 1 · 2 · 3)</a>
-  <a class="door" href="/">Back to Home</a>
+    <section class="card">
+      <h2>Gauge B — Live Internet</h2>
+      <p class="note">Live GitHub signal (repo state) — no setup required.</p>
+      <div id="liveGauge" class="kv"></div>
+    </section>
 
-  <p class="small">When you’re ready, we’ll wire both sources and render the gauges.</p>
-</main>
+    <section class="card">
+      <div class="nav-grid">
+        <a class="nav-button primary" href="/">Back to Home</a>
+        <a class="nav-button" href="/reference/">Reference</a>
+        <a class="nav-button" href="/principles/">Foundational Laws</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="/assets/fusion.js"></script>
+  <script>
+    Fusion.receipt("CON",{page:"control"});
+
+    function fmt(s){
+      if(!s) return "—";
+      return (s.ts||"—") + (s.meta ? (" · " + JSON.stringify(s.meta)) : "");
+    }
+    function render(el,obj){
+      el.innerHTML =
+        "<div><b>SEL</b>: "+fmt(obj.SEL)+"</div>"+
+        "<div><b>RES</b>: "+fmt(obj.RES)+"</div>"+
+        "<div><b>COM</b>: "+fmt(obj.COM)+"</div>"+
+        "<div><b>CON</b>: "+fmt(obj.CON)+"</div>";
+    }
+
+    (async function(){
+      render(document.getElementById("localReceipts"), Fusion.getReceipts());
+
+      const rr = await Fusion.fetchRemote();
+      const rEl = document.getElementById("remoteReceipts");
+      if(rr.skipped) rEl.innerHTML = "Unavailable (RECEIPT_ENDPOINT not set).";
+      else if(!rr.ok) rEl.innerHTML = "Unavailable ("+(rr.status||rr.error||"error")+").";
+      else render(rEl, rr.data || {});
+
+      const og = await Fusion.osfGauge();
+      const oEl = document.getElementById("osfGauge");
+      if(og.skipped) oEl.innerHTML = "Unavailable (OSF_GAUGE_URL not set).";
+      else if(!og.ok) oEl.innerHTML = "Unavailable ("+(og.status||og.error||"error")+").";
+      else oEl.innerHTML = "<div><b>source</b>: "+og.source+"</div><div><b>ts</b>: "+og.ts+"</div><pre style='white-space:pre-wrap;opacity:.9'>"+JSON.stringify(og.value,null,2)+"</pre>";
+
+      const lg = await Fusion.liveGauge();
+      const lEl = document.getElementById("liveGauge");
+      if(!lg.ok) lEl.innerHTML = "Unavailable ("+(lg.status||lg.error||"error")+").";
+      else lEl.innerHTML =
+        "<div><b>source</b>: "+lg.source+"</div>"+
+        "<div><b>ts</b>: "+lg.ts+"</div>"+
+        "<div><b>pushed_at</b>: "+(lg.value.pushed_at||"—")+"</div>"+
+        "<div><b>updated_at</b>: "+(lg.value.updated_at||"—")+"</div>"+
+        "<div><b>stars</b>: "+(lg.value.stargazers_count??"—")+"</div>"+
+        "<div><b>watchers</b>: "+(lg.value.watchers_count??"—")+"</div>"+
+        "<div><b>forks</b>: "+(lg.value.forks_count??"—")+"</div>";
+    })();
+  </script>
 </body>
 </html>
+```0

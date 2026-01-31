@@ -1,3 +1,4 @@
+<!-- TNT — /engine/index.html (FULL REPLACE) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,43 +10,38 @@
 <body class="bg-gradient">
 <main class="page">
 
-  <!-- HERO -->
   <section class="panel hero">
     <h1>Engine</h1>
     <p class="subtle">Canonical execution cycle.</p>
   </section>
 
-  <!-- GLOBAL NAV -->
+  <!-- GLOBAL NAV (hard-nav: works even if something is intercepting clicks) -->
   <section class="panel nav">
-    <a class="btn" href="/">Home</a>
-    <a class="btn primary" href="/engine/">Engine</a>
-    <a class="btn" href="/control/">Control</a>
-    <a class="btn" href="/principles/">Laws</a>
-    <a class="btn" href="/reference/">Reference</a>
-    <a class="btn" href="/about/">About</a>
+    <a class="btn" href="/" onclick="location.href='/';return false;">Home</a>
+    <a class="btn primary" href="/engine/" onclick="location.href='/engine/';return false;">Engine</a>
+    <a class="btn" href="/control/" onclick="location.href='/control/';return false;">Control</a>
+    <a class="btn" href="/principles/" onclick="location.href='/principles/';return false;">Laws</a>
+    <a class="btn" href="/reference/" onclick="location.href='/reference/';return false;">Reference</a>
+    <a class="btn" href="/about/" onclick="location.href='/about/';return false;">About</a>
   </section>
 
-  <!-- SUMMARY -->
   <section class="panel">
     <p><strong>Selection → Resolution → Commitment → Continuation</strong></p>
     <p class="subtle">All engine paths are absolute and canonical under <code>/engine/</code>.</p>
   </section>
 
-  <!-- ENGINE BUTTONS -->
   <section class="panel">
-    <a class="btn block" href="/engine/selection/">Selection</a>
-    <a class="btn block" href="/engine/resolution/">Resolution</a>
-    <a class="btn block" href="/engine/commitment/">Commitment</a>
-    <a class="btn block" href="/engine/continuation/">Continuation</a>
+    <a class="btn block" href="/engine/selection/" onclick="location.href='/engine/selection/';return false;">Selection</a>
+    <a class="btn block" href="/engine/resolution/" onclick="location.href='/engine/resolution/';return false;">Resolution</a>
+    <a class="btn block" href="/engine/commitment/" onclick="location.href='/engine/commitment/';return false;">Commitment</a>
+    <a class="btn block" href="/engine/continuation/" onclick="location.href='/engine/continuation/';return false;">Continuation</a>
   </section>
 
-  <!-- FLOW START -->
   <section class="panel nav">
-    <a class="btn primary" href="/engine/selection/">Start → Selection</a>
-    <a class="btn" href="/engine/continuation/">Jump → Continuation</a>
+    <a class="btn primary" href="/engine/selection/" onclick="location.href='/engine/selection/';return false;">Start → Selection</a>
+    <a class="btn" href="/engine/continuation/" onclick="location.href='/engine/continuation/';return false;">Jump → Continuation</a>
   </section>
 
 </main>
 </body>
 </html>
-```0

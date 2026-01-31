@@ -1,64 +1,113 @@
-* {
-  box-sizing: border-box;
+/* TNT — /assets/ui.css (FULL REPLACE) */
+:root{
+  --bg0:#0b0f18;
+  --bg1:#111a2b;
+  --bg2:#1a2a4a;
+  --card:rgba(255,255,255,.06);
+  --stroke:rgba(255,255,255,.14);
+  --text:#eef2ff;
+  --muted:rgba(238,242,255,.72);
+  --muted2:rgba(238,242,255,.55);
+  --accent:#b7c7ff;
+  --accent2:#7aa2ff;
+  --shadow:0 18px 46px rgba(0,0,0,.45);
+  --r:20px;
+  --r2:16px;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;line-height:1.6;background:var(--bg0)}
+.bg-gradient{
+  background:
+    radial-gradient(1200px 800px at 18% 8%, rgba(122,162,255,.35), transparent 60%),
+    radial-gradient(1000px 700px at 82% 18%, rgba(255,122,198,.18), transparent 62%),
+    radial-gradient(900px 700px at 50% 92%, rgba(92,207,191,.12), transparent 60%),
+    linear-gradient(180deg, rgba(17,26,43,1) 0%, rgba(11,15,24,1) 100%);
 }
 
-body {
-  background: #f7f4ee;
-  color: #1c1c1c;
-  font-family: Georgia, "Times New Roman", serif;
-  line-height: 1.6;
+/* layout */
+.page{max-width:860px;margin:0 auto;padding:56px 18px 90px}
+.hero{margin-bottom:18px}
+h1{margin:0 0 10px;font-size:52px;letter-spacing:-.02em}
+.subtitle{margin:0;color:var(--muted);font-size:18px;line-height:1.45}
+.lead{margin:0;color:var(--text);font-size:18px}
+.note{margin:0;color:var(--muted2);font-size:14px}
+.flow{color:var(--muted);font-size:16px}
+
+/* cards */
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+  border:1px solid var(--stroke);
+  border-radius:var(--r);
+  box-shadow:var(--shadow);
+  padding:22px 20px;
+  margin:18px 0;
+}
+.card.muted{opacity:.92}
+
+/* “bubble button” style */
+.nav-grid{display:grid;gap:14px}
+.nav-button{
+  display:block;
+  padding:18px 18px;
+  border-radius:var(--r);
+  background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
+  border:1px solid var(--stroke);
+  box-shadow:0 14px 36px rgba(0,0,0,.35);
+  color:var(--text);
+  text-decoration:none;
+  font-weight:750;
+}
+.nav-button:hover{border-color:rgba(255,255,255,.22);transform:translateY(-1px)}
+.nav-button:active{transform:translateY(0)}
+.nav-button.primary{
+  background:linear-gradient(180deg, rgba(122,162,255,.18), rgba(255,255,255,.05));
+  border-color:rgba(122,162,255,.35);
 }
 
-.page {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 64px 24px 96px;
+/* bullets */
+.bullets{margin:12px 0 0 18px;color:var(--muted)}
+.bullets li{margin:10px 0}
+.bullets strong{color:var(--text)}
+
+/* key/value blocks */
+.kv{color:var(--muted)}
+.kv b{color:var(--text)}
+.kv pre{margin:12px 0 0;padding:14px;border-radius:var(--r2);border:1px solid var(--stroke);background:rgba(0,0,0,.25);overflow:auto}
+
+/* links inside cards */
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* TAB BAR (pills) */
+.tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:18px 0 10px;
+}
+.tab{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--stroke);
+  color:var(--text);
+  text-decoration:none;
+  font-weight:750;
+}
+.tab:hover{background:rgba(255,255,255,.11)}
+.tab.active{
+  background:rgba(122,162,255,.18);
+  border-color:rgba(122,162,255,.35);
 }
 
-h1 {
-  font-size: 42px;
-  margin-bottom: 24px;
-}
-
-p {
-  font-size: 18px;
-  margin-bottom: 18px;
-}
-
-.lead {
-  font-size: 20px;
-}
-
-.flow {
-  font-size: 19px;
-  margin: 24px 0;
-}
-
-.nav {
-  margin: 32px 0;
-  padding-left: 20px;
-}
-
-.nav li {
-  margin: 10px 0;
-}
-
-a {
-  color: #4b2ea8;
-  text-decoration: underline;
-}
-
-a:hover {
-  text-decoration: none;
-}
-
-.note {
-  margin-top: 40px;
-  font-style: italic;
-  font-size: 16px;
+/* mobile */
+@media (max-width:520px){
+  h1{font-size:44px}
+  .page{padding:46px 16px 80px}
+  .nav-button{padding:16px 16px}
 }

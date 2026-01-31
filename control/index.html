@@ -1,3 +1,4 @@
+<!-- DEMOLITION TNT #6 — /control/index.html (FULL REPLACE: LIVE POLL + COLORED GAUGES + BUBBLES ONLY) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,214 +11,229 @@
 <body class="bg-gradient">
 <main class="page">
 
-  <section class="panel hero">
+  <section class="panel hero center">
     <h1>Control</h1>
-    <p class="subtitle">Read-only system state (live).</p>
+    <p class="subtitle">Live read-only gauges. Color = intensity. Badge = health.</p>
   </section>
 
-  <section class="panel">
+  <section class="panel center">
     <div id="healthBadge" class="badge red">HEALTH: RED</div>
-    <div class="kv" style="margin-top:14px">
-      <div class="k">State</div><div class="v" id="state">UNAVAILABLE</div>
-      <div class="k">Scope</div><div class="v" id="scope">—</div>
-      <div class="k">Age (sec)</div><div class="v" id="age">—</div>
-      <div class="k">Last Updated</div><div class="v" id="updated">—</div>
-      <div class="k">Truth</div><div class="v mono" id="truth">—</div>
-      <div class="k">Polling</div><div class="v" id="polling">10s</div>
-    </div>
+    <p class="small" style="margin-top:10px">
+      Truth: <span class="mono" id="truth">—</span> · Polling: <span id="poll">10s</span>
+    </p>
+    <p class="small">
+      Last updated: <span id="last">—</span> · Age: <span id="age">—</span>s
+    </p>
   </section>
 
   <section class="panel">
-    <h2>Intensity (to scale)</h2>
+    <details class="bubble" open>
+      <summary>Gauges (to scale)</summary>
+      <div class="bubble-content">
 
-    <div class="kv" style="margin-top:10px">
-      <div class="k">Sessions</div><div class="v" id="m_sessions">—</div>
-    </div>
-    <div class="bar"><i id="b_sessions"></i></div>
+        <div class="kv">
+          <div class="k">Sessions</div><div class="v" id="v_sessions">—</div>
+        </div>
+        <div class="bar"><i id="b_sessions"></i></div>
 
-    <div class="kv" style="margin-top:14px">
-      <div class="k">Pageviews</div><div class="v" id="m_pageviews">—</div>
-    </div>
-    <div class="bar"><i id="b_pageviews"></i></div>
+        <div style="height:10px"></div>
 
-    <div class="kv" style="margin-top:14px">
-      <div class="k">Clicks</div><div class="v" id="m_clicks">—</div>
-    </div>
-    <div class="bar"><i id="b_clicks"></i></div>
+        <div class="kv">
+          <div class="k">Pageviews</div><div class="v" id="v_pageviews">—</div>
+        </div>
+        <div class="bar"><i id="b_pageviews"></i></div>
 
-    <div class="kv" style="margin-top:14px">
-      <div class="k">Writes</div><div class="v" id="m_writes">—</div>
-    </div>
-    <div class="bar"><i id="b_writes"></i></div>
+        <div style="height:10px"></div>
 
-    <p class="note">Bars are scaled against the largest metric in the current payload. Color is intensity: red → yellow → green.</p>
-  </section>
+        <div class="kv">
+          <div class="k">Clicks</div><div class="v" id="v_clicks">—</div>
+        </div>
+        <div class="bar"><i id="b_clicks"></i></div>
 
-  <section class="panel">
-    <h2>Sources (to scale)</h2>
+        <div style="height:10px"></div>
 
-    <div class="kv" style="margin-top:10px">
-      <div class="k">GitHub</div><div class="v" id="s_github">—</div>
-    </div>
-    <div class="bar"><i id="b_github"></i></div>
+        <div class="kv">
+          <div class="k">Writes</div><div class="v" id="v_writes">—</div>
+        </div>
+        <div class="bar"><i id="b_writes"></i></div>
 
-    <div class="kv" style="margin-top:14px">
-      <div class="k">OSF</div><div class="v" id="s_osf">—</div>
-    </div>
-    <div class="bar"><i id="b_osf"></i></div>
+        <p class="note" style="margin-top:12px">
+          Bars share one scale (max value across metrics + sources in this payload).
+        </p>
 
-    <div class="kv" style="margin-top:14px">
-      <div class="k">Direct</div><div class="v" id="s_direct">—</div>
-    </div>
-    <div class="bar"><i id="b_direct"></i></div>
-
-    <div class="kv" style="margin-top:14px">
-      <div class="k">Other</div><div class="v" id="s_other">—</div>
-    </div>
-    <div class="bar"><i id="b_other"></i></div>
-
-    <p class="note">Same scale and intensity coloring as gauges.</p>
-  </section>
-
-  <section class="panel bubble">
-    <details>
-      <summary>Raw payload (JSON)</summary>
-      <div class="bubble-body">
-        <pre class="mono" id="raw" style="white-space:pre-wrap;margin:0;color:rgba(233,238,252,.75)">{}</pre>
       </div>
     </details>
   </section>
 
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn" href="/">Home</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/foundational-laws/">Laws</a>
-      <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/about/">About</a>
+  <section class="panel">
+    <details class="bubble">
+      <summary>Sources (to scale)</summary>
+      <div class="bubble-content">
+
+        <div class="kv">
+          <div class="k">GitHub</div><div class="v" id="s_github">—</div>
+        </div>
+        <div class="bar"><i id="b_github"></i></div>
+
+        <div style="height:10px"></div>
+
+        <div class="kv">
+          <div class="k">OSF</div><div class="v" id="s_osf">—</div>
+        </div>
+        <div class="bar"><i id="b_osf"></i></div>
+
+        <div style="height:10px"></div>
+
+        <div class="kv">
+          <div class="k">Direct</div><div class="v" id="s_direct">—</div>
+        </div>
+        <div class="bar"><i id="b_direct"></i></div>
+
+        <div style="height:10px"></div>
+
+        <div class="kv">
+          <div class="k">Other</div><div class="v" id="s_other">—</div>
+        </div>
+        <div class="bar"><i id="b_other"></i></div>
+
+      </div>
+    </details>
+  </section>
+
+  <section class="panel">
+    <details class="bubble">
+      <summary>Raw payload (JSON)</summary>
+      <div class="bubble-content">
+        <pre id="raw" class="mono" style="white-space:pre-wrap;margin:0;color:rgba(233,238,252,.75)">{}</pre>
+      </div>
+    </details>
+  </section>
+
+  <section class="panel center">
+    <div class="bubble-grid">
+      <a class="bubble nav" href="/">Home</a>
+      <a class="bubble nav" href="/engine/">Engine</a>
+      <a class="bubble nav" href="/laws/">Laws</a>
+      <a class="bubble nav" href="/principles/">Principles</a>
+      <a class="bubble nav" href="/geodynamics/">Geodynamics</a>
+      <a class="bubble nav" href="/reference/">Reference</a>
+      <a class="bubble nav" href="/about/">About</a>
     </div>
+  </section>
+
+  <section class="panel footer center">
+    <p class="small">Build: 2026-02-01a · Canonical</p>
   </section>
 
 </main>
 
 <script>
   const POLL_MS = 10000;
-  const TRUTH_URL = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
+  const TRUTH_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
+  const METRICS_URL = TRUTH_BASE + "/metrics";
 
   const el = (id)=>document.getElementById(id);
+  const num = (v)=> (typeof v==="number" && isFinite(v)) ? v : 0;
 
-  function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
-  function pct(value, max){ return max<=0 ? 0 : clamp((value/max)*100, 0, 100); }
+  function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
+  function pct(v,max){return max<=0?0:clamp((v/max)*100,0,100);}
 
-  // intensity: red -> yellow -> green based on percentage
   function intensityColor(p){
-    if (p >= 66) return "rgba(50,255,140,.75)";      // green
-    if (p >= 33) return "rgba(255,210,60,.78)";      // yellow
-    return "rgba(255,80,80,.78)";                    // red
+    // red <33, yellow <66, green >=66
+    if(p>=66) return "rgba(50,255,140,.75)";
+    if(p>=33) return "rgba(255,210,60,.78)";
+    return "rgba(255,80,80,.78)";
   }
 
-  function setBadge(color){
+  function setBar(id, p){
+    const bar = el(id);
+    bar.style.width = p.toFixed(1)+"%";
+    bar.style.background = intensityColor(p);
+  }
+
+  function setBadge(level){
     const b = el("healthBadge");
     b.classList.remove("red","yellow","green");
-    b.classList.add(color);
-    b.textContent = "HEALTH: " + color.toUpperCase();
+    b.classList.add(level);
+    b.textContent = "HEALTH: " + level.toUpperCase();
   }
 
-  function formatTimeFromEpochMs(ms){
-    const d = new Date(ms);
-    if (isNaN(d.getTime())) return "—";
+  function fmtTime(ms){
+    const d=new Date(ms);
+    if(isNaN(d.getTime())) return "—";
     return d.toLocaleString();
   }
 
-  function updateBars(metrics){
-    const vals = [
-      metrics.sessions||0,
-      metrics.pageviews||0,
-      metrics.clicks||0,
-      metrics.writes||0
-    ];
-    const maxV = Math.max(0, ...vals);
-
-    const map = [
-      ["sessions","b_sessions","m_sessions"],
-      ["pageviews","b_pageviews","m_pageviews"],
-      ["clicks","b_clicks","m_clicks"],
-      ["writes","b_writes","m_writes"]
-    ];
-
-    map.forEach(([k,bid,mid])=>{
-      const v = metrics[k] ?? 0;
-      el(mid).textContent = String(v);
-      const p = pct(v,maxV);
-      const bar = el(bid);
-      bar.style.width = p.toFixed(1)+"%";
-      bar.style.background = intensityColor(p);
-    });
-  }
-
-  function updateSources(sources){
-    const s = sources || {};
-    const vals = [s.GitHub||0, s.OSF||0, s.Direct||0, s.Other||0];
-    const maxV = Math.max(0, ...vals);
-
-    const map = [
-      ["GitHub","b_github","s_github"],
-      ["OSF","b_osf","s_osf"],
-      ["Direct","b_direct","s_direct"],
-      ["Other","b_other","s_other"]
-    ];
-
-    map.forEach(([k,bid,mid])=>{
-      const v = s[k] ?? 0;
-      el(mid).textContent = String(v);
-      const p = pct(v,maxV);
-      const bar = el(bid);
-      bar.style.width = p.toFixed(1)+"%";
-      bar.style.background = intensityColor(p);
-    });
-  }
-
   async function tick(){
-    const url = TRUTH_URL + "?t=" + Date.now();
+    const url = METRICS_URL + "?t=" + Date.now();
     el("truth").textContent = url;
-
     try{
-      const r = await fetch(url, {cache:"no-store"});
+      const r = await fetch(url,{cache:"no-store"});
+      if(!r.ok) throw new Error(r.status);
       const j = await r.json();
+      el("raw").textContent = JSON.stringify(j,null,2);
 
-      el("raw").textContent = JSON.stringify(j, null, 2);
+      const m = j.metrics || {};
+      const src = m.sources || j.sources || {};
 
-      const status = j.status || "UNKNOWN";
-      const scope = j.scope || "—";
-      const metrics = (j.metrics || {});
-      const sources = (metrics.sources || j.sources || {});
+      const sessions = num(m.sessions);
+      const pageviews = num(m.pageviews);
+      const clicks = num(m.clicks);
+      const writes = num(m.writes);
+      const lu = num(m.lastUpdated);
 
-      el("state").textContent = status;
-      el("scope").textContent = scope;
+      el("v_sessions").textContent = sessions;
+      el("v_pageviews").textContent = pageviews;
+      el("v_clicks").textContent = clicks;
+      el("v_writes").textContent = writes;
 
-      const lu = metrics.lastUpdated ?? j.lastUpdated ?? null;
-      el("updated").textContent = formatTimeFromEpochMs(lu);
+      const gGitHub = num(src.GitHub);
+      const gOSF = num(src.OSF);
+      const gDirect = num(src.Direct);
+      const gOther = num(src.Other);
 
-      const ageSec = lu ? Math.max(0, Math.floor((Date.now()-lu)/1000)) : "—";
-      el("age").textContent = String(ageSec);
+      el("s_github").textContent = gGitHub;
+      el("s_osf").textContent = gOSF;
+      el("s_direct").textContent = gDirect;
+      el("s_other").textContent = gOther;
 
-      updateBars(metrics);
-      updateSources(sources);
+      const globalMax = Math.max(1, sessions, pageviews, clicks, writes, gGitHub, gOSF, gDirect, gOther);
 
-      // health badge = based on "errors" or availability + freshness
-      const errors = metrics.errors ?? 0;
-      const stale = (lu ? (Date.now()-lu) > (POLL_MS*3) : true);
+      setBar("b_sessions", pct(sessions, globalMax));
+      setBar("b_pageviews", pct(pageviews, globalMax));
+      setBar("b_clicks", pct(clicks, globalMax));
+      setBar("b_writes", pct(writes, globalMax));
 
-      if (status === "OPERATIONAL" && !stale && errors === 0) setBadge("green");
-      else if (status === "DEGRADED" || errors > 0 || stale) setBadge("yellow");
+      setBar("b_github", pct(gGitHub, globalMax));
+      setBar("b_osf", pct(gOSF, globalMax));
+      setBar("b_direct", pct(gDirect, globalMax));
+      setBar("b_other", pct(gOther, globalMax));
+
+      el("last").textContent = fmtTime(lu);
+      const age = lu ? Math.max(0, Math.floor((Date.now()-lu)/1000)) : "—";
+      el("age").textContent = String(age);
+
+      const errors = num(m.errors);
+      const stale = lu ? (Date.now()-lu) > (POLL_MS*3) : true;
+      const status = (j.status||"").toUpperCase();
+
+      if(status==="OPERATIONAL" && !stale && errors===0) setBadge("green");
+      else if(status==="DEGRADED" || stale || errors>0) setBadge("yellow");
       else setBadge("red");
 
+      el("poll").textContent = (POLL_MS/1000).toFixed(0)+"s";
     }catch(e){
-      el("state").textContent = "UNAVAILABLE";
-      el("scope").textContent = "—";
-      el("age").textContent = "—";
-      el("updated").textContent = "—";
       el("raw").textContent = "Unavailable";
+      el("v_sessions").textContent = "—";
+      el("v_pageviews").textContent = "—";
+      el("v_clicks").textContent = "—";
+      el("v_writes").textContent = "—";
+      el("s_github").textContent = "—";
+      el("s_osf").textContent = "—";
+      el("s_direct").textContent = "—";
+      el("s_other").textContent = "—";
+      el("last").textContent = "—";
+      el("age").textContent = "—";
       setBadge("red");
     }
   }
@@ -225,5 +241,6 @@
   tick();
   setInterval(tick, POLL_MS);
 </script>
+
 </body>
 </html>

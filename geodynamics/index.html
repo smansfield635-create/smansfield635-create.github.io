@@ -1,4 +1,4 @@
-<!-- TNT — /geodynamics/index.html (FULL REPLACE: EQUATION + SCIENTIFIC DEFINITION + HUMAN EXPLANATION + DROPDOWNS + BUBBLES) -->
+<!-- TNT #3 — /geodynamics/index.html (FULL REPLACE) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,133 +7,94 @@
   <title>Geodynamics · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
-<body class="bg-gradient">
-<main class="page">
+<body>
+  <main class="wrap">
 
-  <section class="panel hero">
-    <h1>Geodynamics</h1>
-    <p class="subtitle">The dynamics of coherence across time, pressure, and scale.</p>
-  </section>
+    <section class="panel hero">
+      <h1>Geodynamics</h1>
+      <p class="muted">Scientific layer: equation → definition → human layer → structure by choice.</p>
+    </section>
 
-  <!-- EQUATION (TOP) -->
-  <section class="panel strong">
-    <h2>Equation</h2>
-    <p class="note">Minimal structural form (domain-agnostic):</p>
-    <pre class="kv">C(t) = 1 / (1 + D(t))
-D(t) = || y(t) − x(t) || / max(ε, || x(t) ||)
-ΔC/Δt = C(t+Δt) − C(t)</pre>
-    <p class="note">Where x(t) is the intended/declared state, y(t) is the observed state, D(t) is normalized divergence, and C(t) is coherence in [0,1].</p>
-  </section>
+    <section class="panel">
+      <h2>Equation</h2>
+      <pre class="code">
+Coherence = Alignment(Inputs, Actions, Outcomes | Pressure)
+      </pre>
+      <p class="muted">This is a constraint expression, not a belief statement.</p>
+    </section>
 
-  <!-- SCIENTIFIC DEFINITION -->
-  <section class="panel">
-    <h2>Scientific definition</h2>
-    <p class="lead">
-      <strong>Geodynamics</strong> is the study of how coherence evolves as a constrained trajectory:
-      changes in admissibility, evidence, latency, and receipts determine the allowable motion of a system through state-space.
-    </p>
-  </section>
+    <section class="panel">
+      <h2>Definition</h2>
+      <p><strong>Coherence is the degree to which inputs, actions, and outcomes remain aligned under pressure.</strong></p>
+      <p class="muted">When alignment survives stress, reality stays checkable. When it breaks, drift grows.</p>
+    </section>
 
-  <!-- HUMAN EXPLANATION -->
-  <section class="panel">
-    <h2>Human explanation</h2>
-    <p class="lead">
-      Coherence is what “still lines up” when life applies pressure. Geodynamics is the map of how that lining-up strengthens, weakens, drifts, and re-stabilizes over time.
-    </p>
-    <p class="note">This page is browse-first. Everything below is optional depth.</p>
-  </section>
+    <section class="panel">
+      <h2>Human layer</h2>
+      <p>When things feel confusing, signals are no longer lining up.</p>
+      <p class="muted">This instrument separates what you feel (symptoms) from what is failing (diagnosis) and what must change (execution).</p>
+    </section>
 
-  <!-- BROWSE BUBBLES (FREE WILL) -->
-  <section class="panel">
-    <h2>Browse</h2>
-    <div class="nav-grid">
-      <a class="btn" href="#invariants">Seven Invariants</a>
-      <a class="btn secondary" href="#tiers">Foundational Tiers</a>
-      <a class="btn tertiary" href="#engine">Engine Mapping</a>
-    </div>
-  </section>
+    <section class="panel">
+      <h2>Seven invariant constraints</h2>
 
-  <!-- SEVEN INVARIANTS (VISIBLE HEADER + DROPDOWN BODY) -->
-  <section class="panel" id="invariants">
-    <h2>Seven Invariant Constraints</h2>
+      <details class="drop">
+        <summary>Invariant 1 — Coherence cannot exceed evidence.</summary>
+        <div class="dropBody">Claims that outrun observation collapse under scrutiny.</div>
+      </details>
 
-    <details open>
-      <summary><strong>Show / hide</strong></summary>
-      <ul class="bullets">
-        <li><strong>Coherence Constraint:</strong> outputs cannot remain aligned beyond the alignment of inputs under pressure.</li>
-        <li><strong>Evidence Constraint:</strong> claims cannot outrun verifiable evidence without collapse.</li>
-        <li><strong>Feedback Latency Constraint:</strong> delayed feedback amplifies instability non-linearly.</li>
-        <li><strong>Conservation of Load:</strong> unresolved load does not disappear; it redistributes.</li>
-        <li><strong>Boundary Integrity Constraint:</strong> boundaries inconsistently enforced cease to function.</li>
-        <li><strong>Selection Pressure Constraint:</strong> systems evolve toward what is selected, not what is stated.</li>
-        <li><strong>Receipts Constraint:</strong> systems cannot learn or converge without persistent records of decisions and outcomes.</li>
-      </ul>
-    </details>
-  </section>
+      <details class="drop">
+        <summary>Invariant 2 — External trust cannot exceed internal honesty.</summary>
+        <div class="dropBody">A system cannot be more credible than it is self-consistent.</div>
+      </details>
 
-  <!-- TIERS (ALL DROPDOWNS) -->
-  <section class="panel" id="tiers">
-    <h2>Foundational Tiers</h2>
+      <details class="drop">
+        <summary>Invariant 3 — Outcomes cannot be more coherent than inputs.</summary>
+        <div class="dropBody">Integrity cannot be generated from incoherent premises.</div>
+      </details>
 
-    <details>
-      <summary><strong>Tier 1 — Derived Laws</strong></summary>
-      <ul class="bullets">
-        <li><strong>Coherence cannot exceed evidence.</strong></li>
-        <li><strong>Outcomes cannot exceed input coherence.</strong></li>
-        <li><strong>Constraints define admissibility.</strong></li>
-        <li><strong>No receipt → no defensible claim.</strong></li>
-      </ul>
-    </details>
+      <details class="drop">
+        <summary>Invariant 4 — Constraints define admissibility.</summary>
+        <div class="dropBody">Without real constraints, “truth” becomes negotiable.</div>
+      </details>
 
-    <details>
-      <summary><strong>Tier 2 — Failure Dynamics</strong></summary>
-      <ul class="bullets">
-        <li><strong>Pressure reveals structure.</strong></li>
-        <li><strong>Unobserved drift accumulates.</strong></li>
-        <li><strong>Exceptions dissolve rules.</strong></li>
-        <li><strong>Lag follows drag; slack follows lag.</strong></li>
-      </ul>
-    </details>
+      <details class="drop">
+        <summary>Invariant 5 — Verification gates reality.</summary>
+        <div class="dropBody">No receipt → no defensible claim.</div>
+      </details>
 
-    <details>
-      <summary><strong>Tier 3 — Observable Signals</strong></summary>
-      <ul class="bullets">
-        <li><strong>Drift:</strong> plans, behavior, outcomes diverge over time.</li>
-        <li><strong>Rule failure:</strong> boundaries exist but don’t constrain.</li>
-        <li><strong>Promise failure:</strong> decisions are made without follow-through.</li>
-        <li><strong>Metric conflict:</strong> different measurements tell incompatible stories.</li>
-      </ul>
-    </details>
-  </section>
+      <details class="drop">
+        <summary>Invariant 6 — Confusion accelerates failure once incoherence exists.</summary>
+        <div class="dropBody>Confusion amplifies collapse after instability begins.</div>
+      </details>
 
-  <!-- ENGINE MAPPING (DROPDOWN) -->
-  <section class="panel" id="engine">
-    <h2>Engine mapping</h2>
-    <details>
-      <summary><strong>Show / hide</strong></summary>
-      <ul class="bullets">
-        <li><strong>Selection:</strong> Evidence + Selection Pressure (what enters, why it was admissible).</li>
-        <li><strong>Resolution:</strong> Boundary Integrity (what constraints bind, what conflicts resolve).</li>
-        <li><strong>Commitment:</strong> Coherence (what is locked, what is promised).</li>
-        <li><strong>Continuation:</strong> Receipts + Latency + Load (what persists, what drifts, what is verified).</li>
-      </ul>
-    </details>
-  </section>
+      <details class="drop">
+        <summary>Invariant 7 — Receipts enable convergence.</summary>
+        <div class="dropBody">Without verification, systems cannot learn.</div>
+      </details>
 
-  <!-- NAV -->
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn" href="/principles/">Back → Landing</a>
-      <a class="btn secondary" href="/engine/">Engine</a>
-      <a class="btn tertiary" href="/control/">Control</a>
-      <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/">Home</a>
-    </div>
-  </section>
+      <p class="muted">Everything else is optional structure built on these.</p>
+    </section>
 
-  <p class="footer-note">Build: 2026-02-01a · Canonical: smansfield635-create.github.io</p>
+    <section class="panel nav">
+      <a class="btn" href="/foundations/">Back → Foundations</a>
+      <a class="btn" href="/">Back to Home</a>
+      <a class="btn primary" href="/symptoms/">Enter Story</a>
+    </section>
 
-</main>
+    <footer class="footer">
+      <div class="muted">Geodynamics · Scientific surface for the invariant constraints</div>
+    </footer>
+
+  </main>
+
+  <style>
+    .code{white-space:pre-wrap;word-break:break-word;line-height:1.4}
+    details.drop{margin:12px 0;border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(10,14,30,.30);padding:12px 14px}
+    details.drop > summary{cursor:pointer;list-style:none;font-weight:700}
+    details.drop > summary::-webkit-details-marker{display:none}
+    .dropBody{margin-top:10px;color:rgba(233,238,252,.80)}
+  </style>
 </body>
 </html>
 ```0

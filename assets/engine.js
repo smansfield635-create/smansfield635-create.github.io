@@ -1,80 +1,107 @@
-/* /assets/engine.js — receipts + click capture + optional worker sync */
+/* Geodiametrics — Engine Tracker (B)
+   B = Session is created only by CHOICE (first user interaction).
+   No page-load tracking. No background pings.
+*/
 (() => {
-  const KEY = "gm_receipts_v1";
-  const CLICK_KEY = "gm_clicks_v1";
+  "use strict";
 
-  // SET THIS to your worker metrics base if you have it:
-  // Example seen earlier: https://geodiametrics-aggregator.smansfield635.workers.dev
-  const WORKER_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
+  // === CONFIG ===
+  const TRUTH_BASE =
+    "https://geodiametrics-aggregator.smansfield635.workers.dev";
+  const METRICS_ENDPOINT = `${TRUTH_BASE}/metrics`;
 
-  const now = () => Date.now();
-  const iso = () => new Date().toISOString();
+  // local guard so one device doesn't spam
+  const LS_KEY = "gd_session_touch_v1";
+  const SESSION_WINDOW_MS = 30 * 60 * 1000; // 30 minutes
 
-  const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k) || JSON.stringify(d)); } catch { return d; } };
-  const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+  function now() {
+    return Date.now();
+  }
 
-  const receipts = () => load(KEY, {});
-  const clicks = () => load(CLICK_KEY, { total: 0, by: {} });
+  function safeJsonParse(s) {
+    try { return JSON.parse(s); } catch { return null; }
+  }
 
-  async function post(path, payload) {
-    if (!WORKER_BASE) return { ok:false, skipped:true };
+  function shouldSendTouch() {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return true;
+    const obj = safeJsonParse(raw);
+    if (!obj || typeof obj.t !== "number") return true;
+    return (now() - obj.t) > SESSION_WINDOW_MS;
+  }
+
+  function markTouchSent() {
     try {
-      const res = await fetch(WORKER_BASE + path, {
+      localStorage.setItem(LS_KEY, JSON.stringify({ t: now() }));
+    } catch {
+      // ignore storage failures
+    }
+  }
+
+  function sendTouchReceipt() {
+    if (!shouldSendTouch()) return;
+
+    const payload = {
+      event: "session_touch",
+      ts: now(),
+      path: location.pathname,
+      ref: document.referrer || "",
+      ua: navigator.userAgent || ""
+    };
+
+    const url = `${METRICS_ENDPOINT}?t=${payload.ts}`;
+
+    const body = JSON.stringify(payload);
+    const blob = new Blob([body], { type: "application/json" });
+
+    // Prefer beacon (mobile-safe)
+    const beaconOk = typeof navigator.sendBeacon === "function"
+      ? navigator.sendBeacon(url, blob)
+      : false;
+
+    if (!beaconOk) {
+      // Fallback fetch with keepalive (also mobile-safe)
+      fetch(url, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      return { ok: res.ok, status: res.status };
-    } catch (e) {
-      return { ok:false, error: String(e) };
+        body,
+        keepalive: true,
+        cache: "no-store"
+      }).catch(() => {});
     }
+
+    markTouchSent();
   }
 
-  async function get(path) {
-    if (!WORKER_BASE) return { ok:false, skipped:true };
-    try {
-      const res = await fetch(WORKER_BASE + path, { method: "GET" });
-      if (!res.ok) return { ok:false, status: res.status };
-      return { ok:true, data: await res.json() };
-    } catch (e) {
-      return { ok:false, error: String(e) };
-    }
+  // Fire ONCE per session-window, on first real interaction only.
+  let armed = false;
+
+  function armOnce() {
+    if (armed) return;
+    armed = true;
+
+    const fire = () => {
+      disarm();
+      sendTouchReceipt();
+    };
+
+    // capture phase so we catch taps even if a link navigates immediately
+    document.addEventListener("pointerdown", fire, { capture: true, once: true });
+    document.addEventListener("keydown", fire, { capture: true, once: true });
+    document.addEventListener("touchstart", fire, { capture: true, once: true });
   }
 
-  // Engines: SEL / RES / COM / CON
-  async function receipt(engine, meta = {}) {
-    const db = receipts();
-    db[engine] = { ts: now(), iso: iso(), meta };
-    save(KEY, db);
-
-    // Best-effort publish (safe if endpoint ignores)
-    await post("/receipt", { engine, stamp: db[engine] });
-    return db[engine];
+  function disarm() {
+    // no-op because we used {once:true}; kept for clarity
   }
 
-  async function click(name = "click") {
-    const db = clicks();
-    db.total += 1;
-    db.by[name] = (db.by[name] || 0) + 1;
-    db.last = { ts: now(), iso: iso(), name };
-    save(CLICK_KEY, db);
-
-    // Best-effort publish
-    await post("/click", { name, stamp: db.last, total: db.total });
-    return db;
+  // Arm when DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", armOnce, { once: true });
+  } else {
+    armOnce();
   }
 
-  async function fetchMetrics() {
-    // If your worker exposes /metrics, this will populate Control
-    return await get("/metrics");
-  }
-
-  function bindClicks() {
-    // Any element with data-click="NAME" will emit a click receipt
-    document.querySelectorAll("[data-click]").forEach(el => {
-      el.addEventListener("click", () => click(el.getAttribute("data-click") || "click"));
-    });
-  }
-
-  window.GM = { receipt, receipts, click, clicks, fetchMetrics, bindClicks };
+  // Optional: expose a manual trigger for debugging from console
+  window.GD_TOUCH = () => sendTouchReceipt();
 })();

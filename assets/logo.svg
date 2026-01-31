@@ -1,15 +1,57 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <defs>
-    <linearGradient id="g" x1="10" y1="10" x2="54" y2="54" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#7aa2ff" stop-opacity="0.95"/>
-      <stop offset="1" stop-color="#ff7ac6" stop-opacity="0.55"/>
-    </linearGradient>
-  </defs>
-  <path d="M32 4 60 32 32 60 4 32 32 4Z" stroke="url(#g)" stroke-width="3"/>
-  <path d="M32 14 50 32 32 50 14 32 32 14Z" stroke="rgba(230,235,255,.75)" stroke-width="2"/>
-  <path d="M32 10v44" stroke="rgba(122,162,255,.55)" stroke-width="1.6"/>
-  <path d="M10 32h44" stroke="rgba(122,162,255,.55)" stroke-width="1.6"/>
-  <path d="M18 18 46 46" stroke="rgba(255,122,198,.35)" stroke-width="1.4"/>
-  <path d="M46 18 18 46" stroke="rgba(255,122,198,.35)" stroke-width="1.4"/>
-  <circle cx="32" cy="32" r="3.2" fill="rgba(230,235,255,.85)"/>
-</svg>
+<!-- TNT — LOGO CARD ONLY (drop-in replacement) -->
+<!-- Replace ONLY the logo card section with this block -->
+
+<section class="panel">
+  <div class="logoWrap">
+    <div class="logoCard">
+      <!-- REPLACE src WITH YOUR LOGO FILE -->
+      <img src="/assets/logo.svg" alt="Geodiametrics logo"/>
+    </div>
+  </div>
+</section>
+
+<style>
+  .logoWrap{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:18px 0 6px;
+  }
+
+  .logoCard{
+    width:min(360px,78vw);
+    aspect-ratio:1/1;
+    border-radius:26px;
+    background:rgba(10,16,32,.35);
+    box-shadow:
+      0 20px 70px rgba(0,0,0,.45),
+      inset 0 0 0 1px rgba(255,255,255,.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* Snowflake foundation glow (green / blue / brown) */
+  .logoCard::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(500px 360px at 20% 20%, rgba(47,79,143,.28), transparent 60%),
+      radial-gradient(520px 400px at 80% 30%, rgba(47,143,107,.22), transparent 60%),
+      radial-gradient(520px 420px at 50% 90%, rgba(122,90,58,.20), transparent 60%);
+    opacity:.95;
+  }
+
+  .logoCard img{
+    position:relative;
+    z-index:1;
+    width:72%;
+    height:72%;
+    object-fit:contain;
+    filter: drop-shadow(0 14px 26px rgba(0,0,0,.35));
+    opacity:.96;
+  }
+</style>

@@ -1,113 +1,187 @@
-/* TNT — /assets/ui.css (FULL REPLACE) */
-:root{
-  --bg0:#0b0f18;
-  --bg1:#111a2b;
-  --bg2:#1a2a4a;
-  --card:rgba(255,255,255,.06);
-  --stroke:rgba(255,255,255,.14);
-  --text:#eef2ff;
-  --muted:rgba(238,242,255,.72);
-  --muted2:rgba(238,242,255,.55);
-  --accent:#b7c7ff;
-  --accent2:#7aa2ff;
-  --shadow:0 18px 46px rgba(0,0,0,.45);
-  --r:20px;
-  --r2:16px;
+/* ================================
+   GEODIAMETRICS — UI AUTHORITY
+   Single-source-of-truth stylesheet
+   ================================ */
+
+/* ---------- RESET ---------- */
+*,
+*::before,
+*::after{
+  box-sizing:border-box;
+}
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
 }
 
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;line-height:1.6;background:var(--bg0)}
+/* ---------- ROOT THEME ---------- */
+:root{
+  --bg-0:#0b0f18;
+  --bg-1:#111a2b;
+  --ink:#e9eefc;
+  --ink-soft:rgba(233,238,252,.75);
+  --ink-muted:rgba(233,238,252,.55);
+
+  --panel:rgba(18,26,46,.55);
+  --panel-strong:rgba(18,26,46,.72);
+  --panel-stroke:rgba(233,238,252,.12);
+
+  --accent-a:#7aa2ff;
+  --accent-b:#ff7ac6;
+  --accent-c:#5ccfbf;
+
+  --radius-lg:22px;
+  --radius-md:16px;
+  --radius-sm:12px;
+
+  --shadow-lg:0 30px 80px rgba(0,0,0,.55);
+  --shadow-md:0 18px 50px rgba(0,0,0,.45);
+
+  --maxw:980px;
+}
+
+/* ---------- BODY / BACKGROUND ---------- */
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  color:var(--ink);
+  background:var(--bg-0);
+  line-height:1.55;
+}
+
 .bg-gradient{
   background:
     radial-gradient(1200px 800px at 18% 8%, rgba(122,162,255,.35), transparent 60%),
     radial-gradient(1000px 700px at 82% 18%, rgba(255,122,198,.18), transparent 62%),
     radial-gradient(900px 700px at 50% 92%, rgba(92,207,191,.12), transparent 60%),
     linear-gradient(180deg, rgba(17,26,43,1) 0%, rgba(11,15,24,1) 100%);
+  min-height:100vh;
 }
 
-/* layout */
-.page{max-width:860px;margin:0 auto;padding:56px 18px 90px}
-.hero{margin-bottom:18px}
-h1{margin:0 0 10px;font-size:52px;letter-spacing:-.02em}
-.subtitle{margin:0;color:var(--muted);font-size:18px;line-height:1.45}
-.lead{margin:0;color:var(--text);font-size:18px}
-.note{margin:0;color:var(--muted2);font-size:14px}
-.flow{color:var(--muted);font-size:16px}
-
-/* cards */
-.card{
-  background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-  border:1px solid var(--stroke);
-  border-radius:var(--r);
-  box-shadow:var(--shadow);
-  padding:22px 20px;
-  margin:18px 0;
+/* ---------- LAYOUT ---------- */
+.page{
+  max-width:var(--maxw);
+  margin:0 auto;
+  padding:64px 22px 96px;
 }
-.card.muted{opacity:.92}
 
-/* “bubble button” style */
-.nav-grid{display:grid;gap:14px}
-.nav-button{
+.section{
+  margin:48px 0;
+}
+
+/* ---------- TYPOGRAPHY ---------- */
+h1,h2,h3{
+  margin:0 0 14px;
+  letter-spacing:.2px;
+}
+h1{font-size:clamp(34px,5vw,52px)}
+h2{font-size:clamp(26px,4vw,36px)}
+h3{font-size:clamp(20px,3vw,26px)}
+
+p{
+  margin:0 0 16px;
+  color:var(--ink-soft);
+}
+
+strong{color:var(--ink)}
+
+ul{
+  padding-left:22px;
+  margin:16px 0;
+}
+li{margin:10px 0}
+
+/* ---------- PANELS ---------- */
+.panel{
+  background:var(--panel);
+  border:1px solid var(--panel-stroke);
+  border-radius:var(--radius-lg);
+  padding:26px 26px;
+  box-shadow:var(--shadow-md);
+  backdrop-filter:blur(10px);
+}
+
+.panel.strong{
+  background:var(--panel-strong);
+}
+
+/* ---------- BUTTONS (BUBBLES) ---------- */
+.btn{
   display:block;
-  padding:18px 18px;
-  border-radius:var(--r);
-  background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
-  border:1px solid var(--stroke);
-  box-shadow:0 14px 36px rgba(0,0,0,.35);
-  color:var(--text);
+  width:100%;
+  text-align:center;
+  padding:16px 20px;
+  margin:14px 0;
+  border-radius:var(--radius-lg);
+  background:linear-gradient(180deg, rgba(122,162,255,.25), rgba(122,162,255,.12));
+  color:var(--ink);
   text-decoration:none;
-  font-weight:750;
-}
-.nav-button:hover{border-color:rgba(255,255,255,.22);transform:translateY(-1px)}
-.nav-button:active{transform:translateY(0)}
-.nav-button.primary{
-  background:linear-gradient(180deg, rgba(122,162,255,.18), rgba(255,255,255,.05));
-  border-color:rgba(122,162,255,.35);
+  font-weight:600;
+  border:1px solid var(--panel-stroke);
+  box-shadow:var(--shadow-md);
 }
 
-/* bullets */
-.bullets{margin:12px 0 0 18px;color:var(--muted)}
-.bullets li{margin:10px 0}
-.bullets strong{color:var(--text)}
+.btn.secondary{
+  background:linear-gradient(180deg, rgba(255,122,198,.22), rgba(255,122,198,.10));
+}
 
-/* key/value blocks */
-.kv{color:var(--muted)}
-.kv b{color:var(--text)}
-.kv pre{margin:12px 0 0;padding:14px;border-radius:var(--r2);border:1px solid var(--stroke);background:rgba(0,0,0,.25);overflow:auto}
+.btn.tertiary{
+  background:linear-gradient(180deg, rgba(92,207,191,.22), rgba(92,207,191,.10));
+}
 
-/* links inside cards */
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
+.btn:active{
+  transform:translateY(1px);
+}
 
-/* TAB BAR (pills) */
+/* ---------- TAB NAV ---------- */
 .tabs{
   display:flex;
   flex-wrap:wrap;
-  gap:10px;
-  margin:18px 0 10px;
-}
-.tab{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:12px 14px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-  border:1px solid var(--stroke);
-  color:var(--text);
-  text-decoration:none;
-  font-weight:750;
-}
-.tab:hover{background:rgba(255,255,255,.11)}
-.tab.active{
-  background:rgba(122,162,255,.18);
-  border-color:rgba(122,162,255,.35);
+  gap:12px;
+  margin-top:26px;
 }
 
-/* mobile */
-@media (max-width:520px){
-  h1{font-size:44px}
-  .page{padding:46px 16px 80px}
-  .nav-button{padding:16px 16px}
+.tab{
+  padding:14px 18px;
+  border-radius:var(--radius-md);
+  background:rgba(233,238,252,.08);
+  border:1px solid var(--panel-stroke);
+  color:var(--ink);
+  text-decoration:none;
+  font-weight:600;
+}
+
+/* ---------- LINKS ---------- */
+a{
+  color:var(--accent-a);
+  text-decoration:none;
+}
+a:hover{opacity:.85}
+
+/* ---------- FOOTER ---------- */
+.footer-note{
+  margin-top:34px;
+  color:var(--ink-muted);
+  font-size:14px;
+}
+
+/* ---------- CONTROL ROOM ---------- */
+.gauge{
+  background:rgba(18,26,46,.6);
+  border:1px solid var(--panel-stroke);
+  border-radius:var(--radius-lg);
+  padding:22px;
+  margin:18px 0;
+}
+
+/* ---------- 404 ---------- */
+.notfound{
+  text-align:center;
+  padding:120px 22px;
+}
+
+/* ---------- MOBILE ---------- */
+@media (max-width:640px){
+  .page{padding:48px 18px 72px}
 }

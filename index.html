@@ -7,61 +7,51 @@
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 <body class="bg-gradient">
+
 <main class="page">
 
-  <!-- Row 1 (two columns on wide screens, stacked on mobile) -->
-  <section class="grid2">
-    <!-- Left -->
-    <section class="panel hero">
-      <h1>Geodiametrics</h1>
-      <p class="subtitle">You’re not alone in the confusion. There is a clearer way to see what’s happening.</p>
-
-      <div class="btn-stack">
-        <a class="btn primary" href="/symptoms/">Enter the Story</a>
-        <a class="btn" href="/engine/">Engine</a>
-        <a class="btn" href="/control/">Control</a>
-        <a class="btn" href="/principles/">Laws</a>
-      </div>
-
-      <div class="btn-row">
-        <a class="btn" href="/reference/">Reference</a>
-        <a class="btn" href="/about/">About</a>
-        <a class="btn" href="/foundations/">Foundations</a>
-      </div>
-    </section>
-
-    <!-- Right -->
-    <section class="panel logo-panel">
-      <div class="logo-wrap" aria-label="Geodiametrics mark">
-        <img class="logo-img" src="/assets/logo.svg" alt="Geodiametrics Logo"/>
-      </div>
-      <p class="muted center">Exploration is welcome. There is no required path.</p>
-    </section>
+  <!-- Hero -->
+  <section class="panel hero">
+    <h1>Geodiametrics</h1>
+    <p class="subtitle">You’re not alone in the confusion. There is a clearer way to see what’s happening.</p>
   </section>
 
-  <!-- Row 2 (bubbles only) -->
+  <!-- Logo -->
   <section class="panel">
-    <h2>Explore</h2>
-
-    <details class="bubble" open>
-      <summary>Clarity</summary>
-      <p><strong>Clarity is not certainty.</strong> Clarity is what remains checkable under pressure.</p>
-    </details>
-
-    <details class="bubble">
-      <summary>What Holds</summary>
-      <p><strong>What holds together is what is true.</strong> Everything else is drift waiting to be measured.</p>
-    </details>
-  </section>
-
-  <!-- Footer -->
-  <section class="panel foot">
-    <div class="foot-row">
-      <div class="muted">© 2026 Geodiametrics</div>
-      <div class="muted">Build: 2026-02-01a · Canonical: smansfield635-create.github.io</div>
+    <div class="logo-wrap">
+      <img class="logo" src="/assets/logo.svg" alt="Geodiametrics Logo"/>
     </div>
   </section>
 
+  <!-- Two sayings -->
+  <section class="panel">
+    <p class="lead"><strong>Clarity is not certainty.</strong> Clarity is what remains checkable under pressure.</p>
+    <p class="lead"><strong>What holds together is what is true.</strong> Everything else is drift waiting to be measured.</p>
+    <p class="note">Exploration is welcome. There is no required path.</p>
+  </section>
+
+  <!-- Navigation bubbles -->
+  <section class="panel nav">
+    <div class="nav-grid">
+      <a class="btn primary" href="/symptoms/">Enter the Story</a>
+      <a class="btn" href="/engine/">Engine</a>
+
+      <a class="btn" href="/control/">Control</a>
+      <a class="btn" href="/laws/">Laws</a>
+
+      <a class="btn" href="/reference/">Reference</a>
+      <a class="btn" href="/about/">About</a>
+
+      <!-- IMPORTANT: canonical path -->
+      <a class="btn" href="/foundational-laws/">Foundations</a>
+    </div>
+  </section>
+
+  <section class="footer">
+    <span>Build: 2026-02-01a · Canonical: smansfield635-create.github.io</span>
+  </section>
+
 </main>
+
 </body>
 </html>

@@ -1,3 +1,4 @@
+<!-- TNT — /control/index.html (FULL REPLACE: LIVE JSON → VISUAL GAUGES + RAW TOGGLE) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,7 +14,7 @@
   <!-- HERO -->
   <section class="panel hero">
     <h1>Control</h1>
-    <p class="subtle">Read-only system state.</p>
+    <p class="subtle">Read-only system state (live).</p>
   </section>
 
   <!-- BUILD STAMP -->
@@ -24,11 +25,107 @@
     </p>
   </section>
 
-  <!-- LIVE GAUGE -->
+  <!-- STATUS -->
   <section class="panel">
-    <h2>Live Gauge</h2>
-    <p class="subtle">Pulled from the canonical Truth Service.</p>
-    <pre id="gauge" class="subtle">Loading…</pre>
+    <h2>Status</h2>
+    <div class="metric">
+      <span>State</span>
+      <strong id="status">—</strong>
+    </div>
+    <div class="metric">
+      <span>Scope</span>
+      <strong id="scope">—</strong>
+    </div>
+    <div class="metric subtle">
+      Last Updated: <span id="updatedHuman">—</span>
+    </div>
+    <p class="subtle mono" id="truthBaseLine">Truth: —</p>
+  </section>
+
+  <!-- PRIMARY GAUGES -->
+  <section class="panel">
+    <h2>Gauges</h2>
+
+    <div class="gauge">
+      <div class="gauge-head">
+        <span>Sessions</span>
+        <strong id="sessionsVal">—</strong>
+      </div>
+      <div class="bar"><div class="fill" id="sessionsBar"></div></div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-head">
+        <span>Pageviews</span>
+        <strong id="pageviewsVal">—</strong>
+      </div>
+      <div class="bar"><div class="fill" id="pageviewsBar"></div></div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-head">
+        <span>Clicks</span>
+        <strong id="clicksVal">—</strong>
+      </div>
+      <div class="bar"><div class="fill" id="clicksBar"></div></div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-head">
+        <span>Writes</span>
+        <strong id="writesVal">—</strong>
+      </div>
+      <div class="bar"><div class="fill" id="writesBar"></div></div>
+    </div>
+
+    <p class="subtle">Bars are normalized to the largest metric in the current payload.</p>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="panel">
+    <h2>Sources</h2>
+
+    <div class="gauge">
+      <div class="gauge-head">
+        <span>GitHub</span>
+        <strong id="srcGithub">—</strong>
+      </div>
+      <div class="bar"><div class="fill" id="srcGithubBar"></div></div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-head">
+        <span>OSF</span>
+        <strong id="srcOsf">—</strong>
+      </div>
+      <div class="bar"><div class="fill" id="srcOsfBar"></div></div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-head">
+        <span>Direct</span>
+        <strong id="srcDirect">—</strong>
+      </div>
+      <div class="bar"><div class="fill" id="srcDirectBar"></div></div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-head">
+        <span>Other</span>
+        <strong id="srcOther">—</strong>
+      </div>
+      <div class="bar"><div class="fill" id="srcOtherBar"></div></div>
+    </div>
+
+    <p class="subtle">Bars are normalized to the largest source value in the current payload.</p>
+  </section>
+
+  <!-- RAW (TOGGLE) -->
+  <section class="panel">
+    <details>
+      <summary><strong>Raw payload (JSON)</strong></summary>
+      <pre id="raw" class="mono subtle">Loading…</pre>
+    </details>
   </section>
 
   <!-- NAV -->
@@ -42,24 +139,107 @@
 
 </main>
 
+<style>
+  /* Local-only: safe visual layer; does not modify global ui.css */
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+  .metric{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:10px 0}
+  .gauge{margin:14px 0}
+  .gauge-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .bar{height:14px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.10);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);margin-top:8px}
+  .fill{height:100%;width:0%;background:rgba(255,255,255,.28);border-radius:999px;transition:width .35s ease}
+</style>
+
 <script>
   // SET THIS to your deployed Worker base URL (no trailing slash)
   const TRUTH_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
 
-  async function loadGauge(){
+  const el = (id)=>document.getElementById(id);
+
+  function toHuman(ts){
+    if(!ts || !Number.isFinite(ts)) return "—";
+    const d = new Date(ts);
+    if(String(d)==="Invalid Date") return String(ts);
+    return d.toLocaleString();
+  }
+
+  function setBar(id, ratio){
+    const pct = Math.max(0, Math.min(1, ratio)) * 100;
+    el(id).style.width = pct.toFixed(1) + "%";
+  }
+
+  function setVal(id, v){
+    el(id).textContent = (v === undefined || v === null) ? "—" : String(v);
+  }
+
+  function normalize(values){
+    const nums = values.map(v => (typeof v === "number" && isFinite(v)) ? v : 0);
+    const max = Math.max(1, ...nums);
+    return nums.map(v => v / max);
+  }
+
+  async function load(){
+    el("truthBaseLine").textContent = "Truth: " + TRUTH_BASE + "/metrics";
     try{
       const res = await fetch(TRUTH_BASE + "/metrics", { cache: "no-store" });
-      if(!res.ok) throw new Error(res.status);
+      if(!res.ok) throw new Error("HTTP " + res.status);
       const data = await res.json();
-      document.getElementById("gauge").textContent =
-        JSON.stringify(data, null, 2);
+
+      // Raw
+      el("raw").textContent = JSON.stringify(data, null, 2);
+
+      // Status
+      setVal("status", data.status || "—");
+      setVal("scope", data.scope || "—");
+
+      const ts = data?.metrics?.lastUpdated;
+      el("updatedHuman").textContent = toHuman(ts);
+
+      // Metrics
+      const sessions = data?.metrics?.sessions ?? 0;
+      const pageviews = data?.metrics?.pageviews ?? 0;
+      const clicks = data?.metrics?.clicks ?? 0;
+      const writes = data?.metrics?.writes ?? 0;
+
+      setVal("sessionsVal", sessions);
+      setVal("pageviewsVal", pageviews);
+      setVal("clicksVal", clicks);
+      setVal("writesVal", writes);
+
+      const ratios = normalize([sessions, pageviews, clicks, writes]);
+      setBar("sessionsBar", ratios[0]);
+      setBar("pageviewsBar", ratios[1]);
+      setBar("clicksBar", ratios[2]);
+      setBar("writesBar", ratios[3]);
+
+      // Sources
+      const src = data?.metrics?.sources || {};
+      const sDirect = src.Direct ?? 0;
+      const sOsf = src.OSF ?? 0;
+      const sGithub = src.GitHub ?? 0;
+      const sOther = src.Other ?? 0;
+
+      setVal("srcDirect", sDirect);
+      setVal("srcOsf", sOsf);
+      setVal("srcGithub", sGithub);
+      setVal("srcOther", sOther);
+
+      const sRatios = normalize([sGithub, sOsf, sDirect, sOther]);
+      setBar("srcGithubBar", sRatios[0]);
+      setBar("srcOsfBar", sRatios[1]);
+      setBar("srcDirectBar", sRatios[2]);
+      setBar("srcOtherBar", sRatios[3]);
+
     }catch(e){
-      document.getElementById("gauge").textContent =
-        "Unavailable";
+      el("status").textContent = "UNAVAILABLE";
+      el("scope").textContent = "—";
+      el("updatedHuman").textContent = "—";
+      el("raw").textContent = "Unavailable";
     }
   }
-  loadGauge();
+
+  load();
 </script>
 
 </body>
 </html>
+```0

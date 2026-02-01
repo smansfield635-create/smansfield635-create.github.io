@@ -1,4 +1,4 @@
-        <!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
@@ -7,103 +7,53 @@
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 <body class="bg-gradient">
-  <main class="page">
+<main class="page">
 
-    <section class="panel hero">
-      <h1>Principles</h1>
-      <p class="subtitle">How laws appear in lived reality. Same meaning, two lenses.</p>
-    </section>
+  <section class="panel hero">
+    <h1>Principles</h1>
+    <p class="subtitle">How laws appear in lived reality.</p>
+  </section>
 
-    <section class="panel" data-lens-root data-default-lens="human">
-      <div class="pills" role="group" aria-label="Lens toggle">
-        <button class="pill active" type="button" data-lens-pill="human" aria-pressed="true">Human</button>
-        <button class="pill" type="button" data-lens-pill="scientific" aria-pressed="false">Scientific</button>
+  <section class="panel">
+    <details open>
+      <summary>Tier 1 — What must hold <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>What is true stays true under pressure. What isn’t eventually breaks.</p>
       </div>
+    </details>
 
-      <div class="card" style="margin-top:12px" data-lens-pane="human">
-        <h2 class="section-title">Human language</h2>
-
-        <details open>
-          <summary>Tier 1 — What must hold <span class="chev">▾</span></summary>
-          <div class="body">
-            <p>What is true stays true under pressure. What isn’t eventually breaks.</p>
-            <ul>
-              <li>Honesty stabilizes decisions.</li>
-              <li>Boundaries reduce harm.</li>
-              <li>Inputs shape outcomes.</li>
-            </ul>
-          </div>
-        </details>
-
-        <details>
-          <summary>Tier 2 — How coherence is maintained <span class="chev">▾</span></summary>
-          <div class="body">
-            <ul>
-              <li>Clarify what’s allowed before acting.</li>
-              <li>Verify steps so claims stay defensible.</li>
-              <li>Make decisions produce receipts (proof of follow-through).</li>
-            </ul>
-          </div>
-        </details>
-
-        <details>
-          <summary>Tier 3 — What you notice when coherence shifts <span class="chev">▾</span></summary>
-          <div class="body">
-            <ul>
-              <li>Drift: what you say, do, and get stop matching.</li>
-              <li>Rule fatigue: boundaries exist but don’t constrain behavior.</li>
-              <li>Promise decay: decisions are made without follow-through.</li>
-            </ul>
-          </div>
-        </details>
+    <details>
+      <summary>Tier 2 — How coherence is maintained <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>Constraints applied consistently + verification receipts keep the system defensible.</p>
       </div>
+    </details>
 
-      <div class="card" style="margin-top:12px" data-lens-pane="scientific">
-        <h2 class="section-title">Scientific language</h2>
-
-        <details open>
-          <summary>Tier 1 — Invariant <span class="chev">▾</span></summary>
-          <div class="body">
-            <ul>
-              <li>Observer-invariant constraints bound admissible states.</li>
-              <li>Coherence is upper-bounded by evidence.</li>
-            </ul>
-          </div>
-        </details>
-
-        <details>
-          <summary>Tier 2 — Structural <span class="chev">▾</span></summary>
-          <div class="body">
-            <ul>
-              <li>Constraints + verification define stable transitions.</li>
-              <li>Receipts gate progression and prevent drift.</li>
-            </ul>
-          </div>
-        </details>
-
-        <details>
-          <summary>Tier 3 — Signal <span class="chev">▾</span></summary>
-          <div class="body">
-            <ul>
-              <li>Misalignment, boundary collapse, and follow-through failure are observable failure patterns.</li>
-            </ul>
-          </div>
-        </details>
+    <details>
+      <summary>Tier 3 — What you notice when coherence shifts <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>Drift, boundary fade, promise decay, and confusion spikes indicate misalignment.</p>
       </div>
-    </section>
+    </details>
+  </section>
 
-    <section class="panel nav">
-      <div class="nav-grid">
-        <a class="btn" href="/home/">Home</a>
-        <a class="btn" href="/laws/">Laws</a>
-        <a class="btn" href="/geodynamics/">Geodynamics</a>
-        <a class="btn" href="/engine/">Engine</a>
-      </div>
-    </section>
+  <section class="panel nav">
+    <div class="nav-grid">
+      <a class="btn primary" href="/home/">Home</a>
+      <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/laws/">Laws</a>
+      <a class="btn" href="/geodynamics/">Geodynamics</a>
+      <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/control/">Control</a>
+      <a class="btn" href="/state/">State</a>
+      <a class="btn" href="/reference/">Reference</a>
+      <a class="btn" href="/about/">About</a>
+    </div>
+  </section>
 
-    <div class="footer">© Geodiametrics</div>
-  </main>
+  <div class="footer">© Geodiametrics</div>
 
-  <script src="/assets/lens.js"></script>
+</main>
+<script src="/assets/telemetry.js"></script>
 </body>
-</html>    
+</html>

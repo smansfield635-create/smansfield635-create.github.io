@@ -1,3 +1,4 @@
+<!-- OPTIONAL PLANETS — TNT #4 /control/index.html (FULL REPLACE: adds planet + keeps polling + no extra JS) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,53 +8,152 @@
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 
-<body class="bg-gradient">
-<main class="page">
+<body class="bg-gradient planet-c">
+  <div class="planet" aria-hidden="true"></div>
 
-  <section class="panel hero">
-    <h1>State</h1>
-    <p class="subtitle">
-      Observation only.
-    </p>
-  </section>
+  <main class="page">
 
-  <section class="panel tight">
-    <div class="kv">
-      <div class="k">Health</div>
-      <div class="v" id="healthBadge">—</div>
-      <div class="k">Updated</div>
-      <div class="v" id="lastUpdated">—</div>
-    </div>
-  </section>
+    <section class="panel hero">
+      <h1>State</h1>
+      <p class="subtitle">Observation only.</p>
+    </section>
 
-  <section class="panel">
-    <details class="drop" open>
-      <summary>Gauges</summary>
-      <div class="drop-body">
-        <div class="kv"><div class="k">Sessions</div><div class="v" id="v_sessions">—</div></div>
-        <div class="bar"><i id="b_sessions"></i></div>
-
-        <div class="spacer"></div>
-
-        <div class="kv"><div class="k">Pageviews</div><div class="v" id="v_pageviews">—</div></div>
-        <div class="bar"><i id="b_pageviews"></i></div>
+    <section class="panel tight">
+      <div class="kv">
+        <div class="k">Health</div>
+        <div class="v"><span id="healthBadge" class="badge">—</span></div>
+        <div class="k">Updated</div>
+        <div class="v" id="lastUpdated">—</div>
+        <div class="k">Age (sec)</div>
+        <div class="v" id="ageSec">—</div>
       </div>
-    </details>
-  </section>
+    </section>
 
-  <section class="panel">
-    <div class="nav-grid">
-      <a class="btn" href="/">Home</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/principles/">Principles</a>
-    </div>
-  </section>
+    <section class="panel">
+      <details class="drop" open>
+        <summary>Gauges</summary>
+        <div class="drop-body">
+          <div class="kv"><div class="k">Sessions</div><div class="v" id="v_sessions">—</div></div>
+          <div class="bar"><i id="b_sessions"></i></div>
 
-  <div class="footer">
-    <span>© Geodiametrics</span>
-  </div>
+          <div class="spacer"></div>
 
-</main>
+          <div class="kv"><div class="k">Pageviews</div><div class="v" id="v_pageviews">—</div></div>
+          <div class="bar"><i id="b_pageviews"></i></div>
+
+          <div class="spacer"></div>
+
+          <div class="kv"><div class="k">Clicks</div><div class="v" id="v_clicks">—</div></div>
+          <div class="bar"><i id="b_clicks"></i></div>
+
+          <div class="spacer"></div>
+
+          <div class="kv"><div class="k">Writes</div><div class="v" id="v_writes">—</div></div>
+          <div class="bar"><i id="b_writes"></i></div>
+
+          <p class="note">Color indicates intensity relative to the current maximum.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel">
+      <details class="drop">
+        <summary>Sources</summary>
+        <div class="drop-body">
+          <div class="kv"><div class="k">GitHub</div><div class="v" id="s_github">—</div></div>
+          <div class="bar"><i id="b_github"></i></div>
+
+          <div class="spacer"></div>
+
+          <div class="kv"><div class="k">OSF</div><div class="v" id="s_osf">—</div></div>
+          <div class="bar"><i id="b_osf"></i></div>
+
+          <div class="spacer"></div>
+
+          <div class="kv"><div class="k">Direct</div><div class="v" id="s_direct">—</div></div>
+          <div class="bar"><i id="b_direct"></i></div>
+
+          <div class="spacer"></div>
+
+          <div class="kv"><div class="k">Other</div><div class="v" id="s_other">—</div></div>
+          <div class="bar"><i id="b_other"></i></div>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel">
+      <div class="nav-grid">
+        <a class="btn" href="/home/">Home</a>
+        <a class="btn" href="/engine/">Engine</a>
+        <a class="btn" href="/laws/">Laws</a>
+        <a class="btn" href="/principles/">Principles</a>
+        <a class="btn" href="/geodynamics/">Geodynamics</a>
+      </div>
+    </section>
+
+    <div class="footer"><span>© Geodiametrics</span></div>
+
+  </main>
+
+  <script>
+    const POLL_MS = 10000;
+    const TRUTH_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
+    const METRICS_URL = TRUTH_BASE + "/metrics";
+    const el = (id)=>document.getElementById(id);
+    const num = (v)=> (typeof v==="number" && isFinite(v)) ? v : 0;
+    const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+    const pct=(v,m)=>m<=0?0:clamp((v/m)*100,0,100);
+
+    function colorFor(p){
+      if(p>=66) return "rgba(34,197,94,.85)";
+      if(p>=33) return "rgba(234,179,8,.85)";
+      return "rgba(239,68,68,.85)";
+    }
+    function setBar(id,p){
+      const b=el(id); b.style.width=p.toFixed(1)+"%"; b.style.background=colorFor(p);
+    }
+    function fmt(ms){ const d=new Date(ms); return isNaN(d)? "—" : d.toLocaleString(); }
+
+    async function tick(){
+      try{
+        const r=await fetch(METRICS_URL+"?t="+Date.now(),{cache:"no-store"});
+        const j=await r.json();
+        const m=j.metrics||{};
+        const s=m.sources||j.sources||{};
+
+        const sessions=num(m.sessions), pageviews=num(m.pageviews), clicks=num(m.clicks), writes=num(m.writes);
+        const gGit=num(s.GitHub), gOsf=num(s.OSF), gDir=num(s.Direct), gOth=num(s.Other);
+        const max=Math.max(1,sessions,pageviews,clicks,writes,gGit,gOsf,gDir,gOth);
+
+        el("v_sessions").textContent=sessions; setBar("b_sessions",pct(sessions,max));
+        el("v_pageviews").textContent=pageviews; setBar("b_pageviews",pct(pageviews,max));
+        el("v_clicks").textContent=clicks; setBar("b_clicks",pct(clicks,max));
+        el("v_writes").textContent=writes; setBar("b_writes",pct(writes,max));
+
+        el("s_github").textContent=gGit; setBar("b_github",pct(gGit,max));
+        el("s_osf").textContent=gOsf; setBar("b_osf",pct(gOsf,max));
+        el("s_direct").textContent=gDir; setBar("b_direct",pct(gDir,max));
+        el("s_other").textContent=gOth; setBar("b_other",pct(gOth,max));
+
+        const lu=num(m.lastUpdated||j.lastUpdated);
+        el("lastUpdated").textContent=fmt(lu);
+        el("ageSec").textContent=lu? Math.max(0,Math.floor((Date.now()-lu)/1000)):"—";
+
+        const status=(j.status||"").toUpperCase();
+        const errors=num(m.errors);
+        const stale=lu? (Date.now()-lu)>(POLL_MS*3):true;
+
+        const badge=el("healthBadge");
+        if(status==="OPERATIONAL" && !stale && errors===0){ badge.textContent="GREEN"; }
+        else if(status==="DEGRADED" || stale || errors>0){ badge.textContent="AMBER"; }
+        else{ badge.textContent="RED"; }
+
+      }catch(e){
+        el("healthBadge").textContent="RED";
+      }
+    }
+    tick(); setInterval(tick,POLL_MS);
+  </script>
+
 </body>
 </html>

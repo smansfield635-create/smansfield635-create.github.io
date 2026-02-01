@@ -4,65 +4,191 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Laws · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css"/>
+  <meta name="theme-color" content="#0b1224"/>
+
+  <style>
+    :root{
+      --bg0:#050814; --bg1:#0b1634;
+      --card:rgba(17,24,39,.46);
+      --stroke:rgba(255,255,255,.10);
+      --text:#eaf2ff;
+      --muted:rgba(234,242,255,.70);
+      --shadow:0 24px 70px rgba(0,0,0,.55);
+      --r:26px;
+      --btnGrad:linear-gradient(90deg,#2a74ff,#2ec7a6);
+      --mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:
+        radial-gradient(1200px 900px at 20% 10%, rgba(80,130,255,.22), transparent 55%),
+        radial-gradient(1000px 800px at 85% 25%, rgba(45,220,180,.14), transparent 55%),
+        radial-gradient(900px 700px at 55% 90%, rgba(170,95,255,.10), transparent 65%),
+        linear-gradient(180deg,var(--bg0),var(--bg1));
+      overflow-x:hidden;
+    }
+    .wrap{padding:clamp(18px,3.5vw,40px); display:flex; justify-content:center}
+    .stack{width:min(860px,100%); display:flex; flex-direction:column; gap:16px}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--stroke);
+      border-radius:var(--r);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(16px);
+      padding:clamp(16px,3vw,26px);
+    }
+    h1{margin:0 0 6px 0; font-size:clamp(30px,4.8vw,46px)}
+    h2{margin:0 0 10px 0; font-size:22px}
+    p{margin:0; color:var(--muted); line-height:1.45}
+    ul{margin:10px 0 0 18px; color:rgba(234,242,255,.88); line-height:1.55}
+    li{margin:8px 0}
+    .mono{font-family:var(--mono)}
+
+    .pills{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px}
+    .pill{
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      padding:14px 16px;
+      background:rgba(255,255,255,.06);
+      color:rgba(234,242,255,.78);
+      font-weight:900;
+      cursor:pointer;
+      user-select:none;
+      text-align:center;
+    }
+    .pill.active{
+      background:var(--btnGrad);
+      border:none;
+      color:#eaffff;
+      box-shadow:0 14px 40px rgba(0,0,0,.35);
+    }
+
+    .block{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      border-radius:18px;
+      padding:14px;
+      margin-top:12px;
+    }
+
+    details{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      border-radius:18px;
+      padding:12px;
+      margin-top:12px;
+    }
+    summary{cursor:pointer; font-weight:900}
+
+    .nav{display:grid; gap:12px; margin-top:10px}
+    @media(min-width:720px){ .nav{grid-template-columns:1fr 1fr} }
+    .btn{
+      border:none; border-radius:999px; padding:16px 18px;
+      font-size:16px; font-weight:900; color:#eaffff;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      cursor:pointer;
+      text-align:center;
+      text-decoration:none;
+      display:flex; justify-content:center; align-items:center;
+    }
+    .btn.primary{background:var(--btnGrad); border:none}
+    footer{opacity:.55; font-size:12px; text-align:center}
+  </style>
 </head>
-<body class="bg-gradient">
-<main class="page">
 
-  <section class="panel hero">
-    <h1>Laws</h1>
-    <p class="subtitle">Same meaning. Two lenses. Fact-driven.</p>
-  </section>
+<body>
+  <main class="wrap">
+    <section class="stack">
+      <div class="card">
+        <h1>Laws</h1>
+        <p>Invariant constraints. Same truth, two lenses.</p>
 
-  <section class="panel" data-lens-root data-default-lens="human">
-    <div class="pills" role="group" aria-label="Lens toggle">
-      <button class="pill active" type="button" data-lens-pill="human" aria-pressed="true">Human</button>
-      <button class="pill" type="button" data-lens-pill="scientific" aria-pressed="false">Scientific</button>
-    </div>
+        <div class="pills" role="group" aria-label="Lens toggle">
+          <button class="pill active" id="btnHuman" type="button">Human</button>
+          <button class="pill" id="btnSci" type="button">Scientific</button>
+        </div>
+      </div>
 
-    <div class="card" style="margin-top:12px" data-lens-pane="human">
-      <h2 class="section-title">Seven invariant constraints</h2>
-      <ol style="margin:0;color:rgba(233,238,252,.88);line-height:1.55">
-        <li><strong>Reality can’t be faked.</strong> You can claim anything. Reality responds to what’s true.</li>
-        <li><strong>Trust begins internally.</strong> External trust can’t exceed internal honesty.</li>
-        <li><strong>Outputs reflect inputs.</strong> Outcomes can’t be more coherent than their premises.</li>
-        <li><strong>Constraints define admissibility.</strong> What’s allowed decides what can happen.</li>
-        <li><strong>Verification gates reality.</strong> Receipts separate story from proof.</li>
-        <li><strong>Confusion accelerates failure.</strong> Once incoherence exists, confusion speeds collapse.</li>
-        <li><strong>Receipts enable convergence.</strong> Verified steps stabilize and scale.</li>
-      </ol>
-    </div>
+      <!-- HUMAN -->
+      <div class="card" id="paneHuman">
+        <h2>Human lens</h2>
 
-    <div class="card" style="margin-top:12px" data-lens-pane="scientific">
-      <h2 class="section-title">Seven invariant constraints</h2>
-      <ol style="margin:0;color:rgba(233,238,252,.88);line-height:1.55">
-        <li><strong>Coherence cannot exceed evidence.</strong></li>
-        <li><strong>External trust cannot exceed internal honesty.</strong></li>
-        <li><strong>Outcomes cannot be more coherent than inputs.</strong></li>
-        <li><strong>Constraints define admissibility.</strong></li>
-        <li><strong>Verification gates reality.</strong></li>
-        <li><strong>Confusion accelerates failure once incoherence exists.</strong></li>
-        <li><strong>Receipts enable convergence.</strong></li>
-      </ol>
-    </div>
-  </section>
+        <div class="block">
+          <ul>
+            <li><b>Reality can’t be faked.</b> You can claim anything. Reality responds to what’s true.</li>
+            <li><b>Trust begins internally.</b> External trust can’t exceed internal honesty.</li>
+            <li><b>Outputs reflect inputs.</b> Outcomes can’t be more coherent than their premises.</li>
+            <li><b>Constraints define admissibility.</b> What’s allowed decides what can happen.</li>
+            <li><b>Verification gates reality.</b> Receipts separate story from proof.</li>
+            <li><b>Confusion accelerates failure.</b> Once incoherence exists, confusion speeds collapse.</li>
+            <li><b>Receipts enable convergence.</b> Verified steps stabilize and scale.</li>
+          </ul>
+        </div>
 
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn primary" href="/home/">Home</a>
-      <a class="btn" href="/">Landing</a>
-      <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/control/">Control</a>
-      <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/about/">About</a>
-    </div>
-  </section>
+        <details open>
+          <summary>Why laws matter</summary>
+          <div class="block">
+            <p>Laws don’t tell you what to believe. They tell you what will break if ignored.</p>
+          </div>
+        </details>
+      </div>
 
-  <div class="footer">© Geodiametrics</div>
-</main>
+      <!-- SCIENTIFIC -->
+      <div class="card" id="paneSci" style="display:none">
+        <h2>Scientific lens</h2>
 
-<script src="/assets/lens.js"></script>
-</body>
-</html>
+        <div class="block mono">
+          <ul>
+            <li>Coherence ≤ Evidence</li>
+            <li>External trust ≤ internal honesty</li>
+            <li>Output coherence ≤ input coherence</li>
+            <li>Admissibility defined by constraints</li>
+            <li>Verification gates state transitions</li>
+            <li>Confusion accelerates divergence</li>
+            <li>Receipts enable convergence</li>
+          </ul>
+        </div>
+
+        <details open>
+          <summary>Formal note</summary>
+          <div class="block">
+            <p>These constraints are observer-invariant. They apply across individuals, systems, and institutions.</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- NAV -->
+      <div class="card">
+        <div class="nav">
+          <a class="btn primary" href="../home/">Home</a>
+          <a class="btn" href="../">Landing</a>
+          <a class="btn" href="../principles/">Principles</a>
+          <a class="btn" href="../geodynamics/">Geodynamics</a>
+          <a class="btn" href="../engine/">Engine</a>
+          <a class="btn" href="../control/">Control</a>
+          <a class="btn" href="../reference/">Reference</a>
+        </div>
+      </div>
+
+      <footer>© Geodiametrics</footer>
+    </section>
+  </main>
+
+  <script>
+    const btnHuman = document.getElementById("btnHuman");
+    const btnSci = document.getElementById("btnSci");
+    const paneHuman = document.getElementById("paneHuman");
+    const paneSci = document.getElementById("paneSci");
+
+    function setLens(which){
+      const human = which === "human";
+      btnHuman.classList.toggle("active", human);
+      btnSci.classList.toggle("active", !human);
+      paneHuman.style.display = human ? "" : "none";
+      paneSci.style.display = human ? "none" : "";
+    }
+
+    btnHuman.addEventListener("click", () => set

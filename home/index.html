@@ -6,36 +6,57 @@
   <title>Home · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
+<body class="bg-gradient planet-b">
+  <div class="planet" aria-hidden="true"></div>
 
-<body class="bg-gradient home">
-  <main class="page">
-
+  <main class="page narrow">
     <section class="panel hero">
-      <h1>Geodiametrics</h1>
-      <p class="subtitle">You’re not alone in the confusion. There is a clearer way to see what’s happening.</p>
+      <h1>Home</h1>
+      <p class="subtitle">Choose a path. Return here anytime.</p>
     </section>
 
-    <section class="panel nav">
+    <section class="panel tight">
+      <details class="drop" open>
+        <summary>Ground</summary>
+        <div class="drop-body">
+          <p>A divided system fails if and only if its fragmentation is not coherently integrated.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel">
       <div class="nav-grid">
-        <a class="btn primary" href="/symptoms/">Enter the Story</a>
-        <a class="btn" href="/engine/">Engine</a>
-        <a class="btn" href="/control/">Control</a>
         <a class="btn" href="/laws/">Laws</a>
+        <a class="btn" href="/principles/">Principles</a>
+        <a class="btn" href="/geodynamics/">Coherence Mechanics</a>
+        <a class="btn" href="/engine/">Execution Space</a>
+        <a class="btn" href="/control/">State</a>
         <a class="btn" href="/reference/">Reference</a>
         <a class="btn" href="/about/">About</a>
-        <a class="btn" href="/principles/">Principles</a>
-        <a class="btn" href="/geodynamics/">Geodynamics</a>
+        <a class="btn primary" href="/">Return to Landing</a>
       </div>
     </section>
 
     <section class="panel tight">
-      <div class="logo-card">
-        <img src="/assets/logo.svg" alt="Geodiametrics mark" class="logo"/>
-      </div>
+      <details class="drop">
+        <summary>Coming soon</summary>
+        <div class="drop-body">
+          <p>Future expressions will appear only after they earn coherence.</p>
+        </div>
+      </details>
     </section>
 
     <div class="footer"><span>© Geodiametrics</span></div>
-
   </main>
+
+  <script>
+    setInterval(() => {
+      const s = document.createElement("div");
+      s.className = "shooting-star";
+      s.style.top = (Math.random()*40) + "%";
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 2000);
+    }, 30000 + Math.random()*60000);
+  </script>
 </body>
 </html>

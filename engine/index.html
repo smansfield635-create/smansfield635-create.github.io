@@ -5,25 +5,23 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Engine · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script defer src="/assets/ui.js"></script>
 </head>
-<body>
-<main class="page">
+<body class="bg-gradient">
+  <main class="page">
 
-  <section class="panel hero">
-    <h1>Engine</h1>
-    <p class="subtitle">How decisions become real — safely, deliberately, and only by choice.</p>
-  </section>
+    <section class="panel hero">
+      <h1>Engine</h1>
+      <p class="subtitle">How decisions become real — safely, deliberately, and only by choice.</p>
+    </section>
 
-  <section class="panel">
-    <div class="tabs" data-tabs data-tabs-key="engine" data-default="human">
-      <div class="tabbar">
-        <button class="tab" data-tab="human" aria-selected="true">Human</button>
-        <button class="tab" data-tab="software" aria-selected="false">Software-correct</button>
+    <section class="panel" data-lens-root data-default-lens="human">
+      <div class="pills" role="group" aria-label="Lens toggle">
+        <button class="pill active" type="button" data-lens-pill="human" aria-pressed="true">Human</button>
+        <button class="pill" type="button" data-lens-pill="scientific" aria-pressed="false">Software-correct</button>
       </div>
 
-      <div class="tabpanel" data-panel="human">
-        <p><strong>What this is</strong></p>
+      <div class="card" style="margin-top:12px" data-lens-pane="human">
+        <h2 class="section-title">What this is</h2>
         <p>This is the “how” behind coherence: a repeatable loop that turns fuzzy situations into checkable reality — one step at a time.</p>
         <ul>
           <li><strong>Selection</strong> = what gets admitted (what counts).</li>
@@ -31,30 +29,31 @@
           <li><strong>Commitment</strong> = what becomes real (what you lock in).</li>
           <li><strong>Continuation</strong> = what learns and loops (what persists).</li>
         </ul>
-        <p><strong>Why this matters</strong></p>
+
+        <h2 class="section-title" style="margin-top:14px">Why this matters</h2>
         <p>Most breakdowns happen because the system keeps moving without receipts. This loop forces reality-checks so the next step is defensible.</p>
       </div>
 
-      <div class="tabpanel" data-panel="software" hidden>
-        <p><strong>Software-correct</strong></p>
-        <p>A constrained execution cycle: inputs are admitted (Selection), constraints are applied (Resolution), a decision is committed with a receipt (Commitment), and outcomes feed forward (Continuation).</p>
+      <div class="card" style="margin-top:12px" data-lens-pane="scientific">
+        <h2 class="section-title">Software-correct</h2>
+        <p>A constrained, receipt-gated transition system with deterministic state advancement and back-nav invalidation of downstream receipts.</p>
+        <div class="mono">Selection → Resolution → Commitment → Continuation</div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn" href="/">Home</a>
-      <a class="btn" href="/engine/selection/">Selection</a>
-      <a class="btn" href="/engine/resolution/">Resolution</a>
-      <a class="btn" href="/engine/commitment/">Commitment</a>
-      <a class="btn" href="/engine/continuation/">Continuation</a>
-      <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-    </div>
-  </section>
+    <section class="panel nav">
+      <div class="nav-grid">
+        <a class="btn" href="/engine/selection/">Selection</a>
+        <a class="btn" href="/engine/resolution/">Resolution</a>
+        <a class="btn" href="/engine/commitment/">Commitment</a>
+        <a class="btn" href="/engine/continuation/">Continuation</a>
+        <a class="btn" href="/home/">Home</a>
+      </div>
+    </section>
 
-</main>
+    <div class="footer">© Geodiametrics</div>
+  </main>
+
+  <script src="/assets/lens.js"></script>
 </body>
 </html>

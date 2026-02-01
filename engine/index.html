@@ -3,104 +3,99 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Execution Space · Geodiametrics</title>
+  <title>Engine · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+  <script src="/engine.js" defer></script>
 </head>
-<body class="bg-gradient planet-a">
-  <div class="planet" aria-hidden="true"></div>
+<body class="bg-gradient">
 
-  <main class="page">
-    <section class="panel hero">
-      <h1>Execution Space</h1>
-      <p class="subtitle">A bounded, addressable state space with constraint-verified transitions.</p>
-    </section>
+<main class="page">
 
-    <section class="panel">
-      <details class="drop" open>
-        <summary>What this is (software-correct)</summary>
-        <div class="drop-body">
+  <section class="panel hero">
+    <h1>Engine</h1>
+    <p class="subtitle">How decisions become real — safely, deliberately, and only by choice.</p>
+  </section>
+
+  <section class="panel" data-lens-root data-lens-default="human">
+    <div class="nav-grid">
+      <button class="btn primary" type="button" data-lens-btn="human" aria-pressed="true">Human</button>
+      <button class="btn" type="button" data-lens-btn="scientific" aria-pressed="false">Software-correct</button>
+    </div>
+
+    <div class="spacer"></div>
+
+    <!-- HUMAN -->
+    <div data-lens-panel="human">
+      <div class="acc" data-acc data-acc-default="open">
+        <button class="acc-head" data-acc-head type="button"><span>What this is</span></button>
+        <div class="acc-body" data-acc-body>
           <p>
-            Geodiametrics defines a <strong>bounded execution state space</strong> with deterministic, constraint-verified transitions.
-            This is not a microchip. It is a coherence-first execution framework.
+            This is the “how” behind coherence: a repeatable loop that turns fuzzy situations into
+            checkable reality—one step at a time.
           </p>
-          <p class="note">
-            “64” is a design bound on addressable states for interpretability and coherence—not a performance metric.
-          </p>
-        </div>
-      </details>
-    </section>
-
-    <section class="panel">
-      <details class="drop">
-        <summary>The 4 primitives</summary>
-        <div class="drop-body">
           <ul>
-            <li><strong>S</strong> — Selection</li>
-            <li><strong>R</strong> — Resolution</li>
-            <li><strong>C</strong> — Commitment</li>
-            <li><strong>N</strong> — Continuation</li>
+            <li><strong>Selection</strong> = what gets admitted (what counts).</li>
+            <li><strong>Resolution</strong> = what constraints apply (what’s allowed).</li>
+            <li><strong>Commitment</strong> = what becomes real (what you lock in).</li>
+            <li><strong>Continuation</strong> = what learns and loops (what persists).</li>
           </ul>
         </div>
-      </details>
-    </section>
-
-    <section class="panel">
-      <details class="drop" open>
-        <summary>Explore the bounded state space (64)</summary>
-        <div class="drop-body">
-          <p class="note">Choose depth. This generates states; it does not force a path.</p>
-          <div class="nav-grid">
-            <button class="btn sm" data-k="0">Null</button>
-            <button class="btn sm" data-k="1">Depth 1</button>
-            <button class="btn sm" data-k="2">Depth 2</button>
-            <button class="btn sm" data-k="3">Depth 3</button>
-            <button class="btn sm" data-k="4">Depth 4</button>
-          </div>
-          <div id="basis" class="stack" style="margin-top:12px"></div>
-        </div>
-      </details>
-    </section>
-
-    <section class="panel">
-      <div class="nav-grid">
-        <a class="btn" href="/home/">Home</a>
-        <a class="btn" href="/laws/">Laws</a>
-        <a class="btn" href="/principles/">Principles</a>
-        <a class="btn" href="/geodynamics/">Coherence Mechanics</a>
-        <a class="btn" href="/control/">State</a>
-        <a class="btn" href="/reference/">Reference</a>
       </div>
-    </section>
 
-    <div class="footer"><span>© Geodiametrics</span></div>
-  </main>
+      <div class="spacer"></div>
 
-  <script>
-    const P=["S","R","C","N"];
-    const el=document.getElementById("basis");
-    const btns=document.querySelectorAll("[data-k]");
-    function perm(k){
-      if(k===0) return [[]];
-      const out=[];
-      for(const a of P){
-        for(const b of perm(k-1)){
-          out.push([a,...b]);
-        }
-      }
-      return out;
-    }
-    function render(k){
-      el.innerHTML="";
-      const items=perm(k);
-      if(k===0){ const d=document.createElement("div"); d.textContent="∅ (null / rest state)"; el.appendChild(d); return; }
-      for(const seq of items){
-        const d=document.createElement("div");
-        d.textContent=seq.join(" → ");
-        el.appendChild(d);
-      }
-    }
-    btns.forEach(b=>b.addEventListener("click",()=>render(Number(b.dataset.k))));
-    render(1);
-  </script>
+      <div class="acc" data-acc>
+        <button class="acc-head" data-acc-head type="button"><span>Why this matters</span></button>
+        <div class="acc-body" data-acc-body>
+          <p>
+            Most breakdowns happen because the system keeps moving without receipts.
+            This loop forces reality-checks so the next step is defensible.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOFTWARE-CORRECT -->
+    <div data-lens-panel="scientific" style="display:none">
+      <div class="acc" data-acc data-acc-default="open">
+        <button class="acc-head" data-acc-head type="button"><span>Canonical cycle</span></button>
+        <div class="acc-body" data-acc-body>
+          <p class="muted">
+            The engine is a constrained, receipt-gated transition system organized into four phases:
+            Selection → Resolution → Commitment → Continuation.
+          </p>
+          <p class="muted">
+            “Receipt” is the proof primitive: advancement is valid only when a checkable record exists.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="muted">Choose a cylinder</h2>
+    <div class="stack">
+      <a class="btn" href="/engine/selection/">Selection</a>
+      <a class="btn" href="/engine/resolution/">Resolution</a>
+      <a class="btn" href="/engine/commitment/">Commitment</a>
+      <a class="btn" href="/engine/continuation/">Continuation</a>
+    </div>
+  </section>
+
+  <section class="panel nav">
+    <div class="nav-grid">
+      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/state/">State</a>
+      <a class="btn" href="/laws/">Laws</a>
+      <a class="btn" href="/principles/">Principles</a>
+    </div>
+  </section>
+
+  <section class="panel footer">
+    <div class="small muted">Build: 2026-02-01a · Canonical</div>
+  </section>
+
+</main>
+
 </body>
 </html>

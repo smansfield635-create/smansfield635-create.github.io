@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,52 +5,39 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodynamics · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+  <script defer src="/assets/telemetry.js"></script>
 </head>
-<body>
-  <main class="wrap">
-    <section class="stack">
 
-      <section class="card hero">
-        <h1>Geodynamics</h1>
-        <p>How coherence changes over time — without opinion, without pressure.</p>
-      </section>
+<body class="bg-gradient">
+<main class="page">
 
-      <section class="card" data-lens-root data-default-lens="human">
-        <div class="grid two">
-          <button class="btn primary" data-lens-pill="human" type="button">Human</button>
-          <button class="btn" data-lens-pill="scientific" type="button">Scientific</button>
-        </div>
+  <section class="panel hero">
+    <h1>Geodynamics</h1>
+    <p class="subtitle">How coherence changes over time — without opinion, without pressure.</p>
+  </section>
 
-        <div data-lens-pane="human" style="margin-top:12px">
-          <h2>Human translation</h2>
-          <p>Confusion usually means signals stopped lining up. Coherence returns when reality becomes checkable.</p>
-          <ul>
-            <li><b>Drift</b>: words/actions/outcomes stop matching.</li>
-            <li><b>Pressure</b>: reveals what’s real vs assumed.</li>
-            <li><b>Small corrections</b>: prevent collapse.</li>
-          </ul>
-        </div>
+  <section class="panel bubble">
+    <h2>Human translation</h2>
+    <p class="note">
+      When life feels confusing, it usually means signals stopped lining up.
+      Coherence returns when reality becomes checkable again: what happened, what was allowed, and what proved out.
+    </p>
+    <ul class="tight">
+      <li><strong>Drift</strong> is when what you say, do, and get stop matching.</li>
+      <li><strong>Pressure</strong> reveals what is real and what was only assumed.</li>
+      <li><strong>Small corrections</strong> early prevent large collapses later.</li>
+    </ul>
+  </section>
 
-        <div data-lens-pane="scientific" style="margin-top:12px;display:none">
-          <h2>Scientific language</h2>
-          <p class="mono">Coherence(t) = 1 / (1 + Divergence(t))</p>
-          <p>Divergence = misalignment between declared and observed state.</p>
-        </div>
-      </section>
+  <section class="panel nav">
+    <div class="nav-grid">
+      <a class="btn primary" href="/home/">Home</a>
+      <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/laws/">Laws</a>
+      <a class="btn" href="/principles/">Principles</a>
+    </div>
+  </section>
 
-      <section class="card">
-        <div class="grid two">
-          <a class="btn primary" href="/home/">Home</a>
-          <a class="btn" href="/laws/">Laws</a>
-          <a class="btn" href="/principles/">Principles</a>
-          <a class="btn" href="/engine/">Engine</a>
-        </div>
-      </section>
-
-      <footer>© Geodiametrics</footer>
-    </section>
-  </main>
-
-  <script src="/assets/lens.js"></script>
+</main>
 </body>
 </html>

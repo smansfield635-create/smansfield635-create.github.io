@@ -3,382 +3,71 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Control · Geodiametrics</title>
-
+  <title>Geodiametrics · Home</title>
+  <meta name="theme-color" content="#0b1224"/>
   <style>
     :root{
-      --bg0:#061021;
-      --bg1:#071a33;
-      --fg:#e9eefc;
-      --muted:rgba(233,238,252,.72);
-      --panel:rgba(12,20,40,.62);
-      --panel2:rgba(12,20,40,.46);
-      --stroke:rgba(233,238,252,.14);
-      --shadow:0 20px 60px rgba(0,0,0,.55);
-      --radius:22px;
-      --btn:rgba(233,238,252,.10);
-      --btn2:rgba(233,238,252,.14);
-      --accentA:#2d7cff;
-      --accentB:#24d6a5;
-      --red:#ff4d5a;
-      --yellow:#ffd54a;
-      --green:#38e07b;
-      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-      --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      --bg0:#050814; --bg1:#0b1634;
+      --card:rgba(17,24,39,.46);
+      --stroke:rgba(255,255,255,.10);
+      --text:#eaf2ff;
+      --muted:rgba(234,242,255,.70);
+      --shadow:0 24px 70px rgba(0,0,0,.55);
+      --r:26px;
+      --btn:linear-gradient(90deg,#2a74ff,#2ec7a6);
     }
-
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
-      margin:0;
-      font-family:var(--sans);
-      color:var(--fg);
+      margin:0; min-height:100vh; color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
       background:
-        radial-gradient(1200px 900px at 20% 10%,rgba(45,124,255,.20),transparent 60%),
-        radial-gradient(900px 700px at 80% 20%,rgba(36,214,165,.14),transparent 60%),
-        radial-gradient(700px 600px at 60% 85%,rgba(186,99,255,.12),transparent 60%),
+        radial-gradient(1200px 900px at 20% 10%, rgba(80,130,255,.22), transparent 55%),
+        radial-gradient(1000px 800px at 85% 25%, rgba(45,220,180,.14), transparent 55%),
         linear-gradient(180deg,var(--bg0),var(--bg1));
-      overflow-x:hidden;
     }
-
-    .wrap{max-width:760px;margin:0 auto;padding:20px 16px 34px}
+    .wrap{padding:clamp(18px,3.5vw,40px); display:flex; justify-content:center}
+    .stack{width:min(760px,100%); display:flex; flex-direction:column; gap:16px}
     .card{
-      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid var(--stroke);
-      border-radius:var(--radius);
+      border-radius:var(--r);
       box-shadow:var(--shadow);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
+      padding:clamp(16px,3vw,26px);
     }
-    .hero{padding:22px 22px 18px;margin:10px 0 14px}
-    .hero h1{margin:0;font-size:44px;letter-spacing:.2px}
-    .hero p{margin:8px 0 0;color:var(--muted);line-height:1.35}
-
-    .section{padding:18px 18px;margin:12px 0}
-    .section h2{margin:0 0 10px;font-size:22px}
-    .small{color:var(--muted);font-size:14px;line-height:1.35}
-
-    .pill{
-      display:inline-flex;align-items:center;gap:10px;
-      padding:10px 12px;border-radius:999px;
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.06);
-      font-size:13px;color:var(--muted);
-    }
-    .dot{width:10px;height:10px;border-radius:99px;background:rgba(255,255,255,.35)}
-    .dot.red{background:var(--red)}
-    .dot.yellow{background:var(--yellow)}
-    .dot.green{background:var(--green)}
-    .dot.gray{background:rgba(255,255,255,.35)}
-
-    .kv{
-      margin-top:10px;
-      font-family:var(--mono);
-      font-size:12px;
-      color:rgba(233,238,252,.82);
-      padding:12px 12px;
-      background:rgba(0,0,0,.20);
-      border:1px solid var(--stroke);
-      border-radius:16px;
-      overflow:auto;
-      max-height:220px;
-      white-space:pre;
-    }
-
-    .grid{display:grid;grid-template-columns:1fr;gap:12px}
-    .gauge{
-      padding:14px 14px;
-      border-radius:18px;
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.04);
-    }
-    .gTop{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px}
-    .gLabel{font-weight:800;letter-spacing:.2px}
-    .gValue{font-family:var(--mono);color:rgba(233,238,252,.86)}
-    .bar{
-      position:relative;
-      height:12px;
-      border-radius:999px;
-      background:rgba(233,238,252,.10);
-      border:1px solid rgba(233,238,252,.10);
-      overflow:hidden;
-    }
-    .fill{
-      height:100%;
-      width:0%;
-      border-radius:999px;
-      background:linear-gradient(90deg,var(--accentA),var(--accentB));
-      transition:width .35s ease;
-    }
-    .fill.red{background:linear-gradient(90deg,rgba(255,77,90,.95),rgba(255,77,90,.45))}
-    .fill.yellow{background:linear-gradient(90deg,rgba(255,213,74,.95),rgba(255,213,74,.45))}
-    .fill.green{background:linear-gradient(90deg,rgba(56,224,123,.95),rgba(56,224,123,.45))}
-    .hint{margin-top:8px;color:var(--muted);font-size:12px;line-height:1.35}
-
-    details{
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.04);
-      border-radius:18px;
-      padding:12px 12px;
-    }
-    summary{
-      cursor:pointer;
-      list-style:none;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      font-weight:800;
-      user-select:none;
-    }
-    summary::-webkit-details-marker{display:none}
-    .chev{opacity:.75}
-
-    .nav{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
-      margin-top:12px;
-    }
+    h1{margin:0 0 6px 0; font-size:clamp(30px,4.8vw,46px)}
+    p{margin:0; color:var(--muted); line-height:1.45}
+    .grid{display:grid; gap:12px}
     .btn{
-      display:flex;align-items:center;justify-content:center;
-      padding:16px 14px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background:rgba(233,238,252,.08);
-      color:var(--fg);
-      text-decoration:none;
-      font-weight:800;
-      letter-spacing:.2px;
+      border:none; border-radius:999px; padding:16px 18px;
+      font-size:16px; font-weight:900; color:#eaffff;
+      background:var(--btn); cursor:pointer;
+      box-shadow:0 14px 40px rgba(0,0,0,.35);
     }
-    .btn.primary{
-      background:linear-gradient(90deg,rgba(45,124,255,.55),rgba(36,214,165,.42));
-      border-color:rgba(233,238,252,.18);
-    }
-    .foot{padding:16px 18px;margin:12px 0 0;color:rgba(233,238,252,.55);font-size:12px;text-align:center}
-
-    @media (min-width:520px){
-      .hero h1{font-size:52px}
-      .grid{grid-template-columns:1fr}
-      .nav{grid-template-columns:1fr 1fr}
-    }
+    .btn.alt{background:linear-gradient(90deg,#5b6cff,#8c5bff)}
+    .btn.gray{background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04))}
+    footer{opacity:.55; font-size:12px; text-align:center}
   </style>
 </head>
-
 <body>
-  <div class="wrap">
-    <div class="card hero">
-      <h1>Control</h1>
-      <p>Live read-only gauges. <b>Truth first.</b> No actions forced.</p>
-    </div>
-
-    <div class="card section" id="statusCard">
-      <h2>Live status</h2>
-      <div class="small">
-        Truth source — <span id="truthUrl" class="gValue"></span><br/>
-        Polling — <span class="gValue">10s</span><br/>
-        Last updated — <span id="lastUpdated" class="gValue">—</span><br/>
-        Age (sec) — <span id="ageSec" class="gValue">—</span>
+  <main class="wrap">
+    <section class="stack">
+      <div class="card">
+        <h1>Home</h1>
+        <p>One domain. One authority. Multiple entry points.</p>
       </div>
 
-      <div style="margin-top:12px">
-        <span class="pill">
-          <span id="healthDot" class="dot gray"></span>
-          <span><b>HEALTH:</b> <span id="healthText">—</span></span>
-        </span>
+      <div class="card grid">
+        <button class="btn" onclick="location.href='../engine/'">Engine</button>
+        <button class="btn" onclick="location.href='../control/'">Control</button>
+        <button class="btn alt" onclick="location.href='../laws/'">Laws</button>
+        <button class="btn alt" onclick="location.href='../principles/'">Principles</button>
+        <button class="btn gray" onclick="location.href='../geodynamics/'">Geodynamics</button>
+        <button class="btn gray" onclick="location.href='../reference/'">Reference</button>
       </div>
 
-      <details style="margin-top:14px" open>
-        <summary>Activity (what’s happening) <span class="chev">▾</span></summary>
-        <div class="small" style="margin:10px 0 10px">
-          These are conservative counts. They only increase when the website explicitly reports an event.
-        </div>
-
-        <div class="grid" id="gauges"></div>
-      </details>
-
-      <details style="margin-top:12px">
-        <summary>Sources (to scale) <span class="chev">▾</span></summary>
-        <div class="grid" id="sourceGauges" style="margin-top:12px"></div>
-        <div class="hint">Bars share one scale. Color intensity reflects relative magnitude.</div>
-      </details>
-
-      <details style="margin-top:12px">
-        <summary>Raw payload (JSON) <span class="chev">▾</span></summary>
-        <div id="raw" class="kv">{}</div>
-      </details>
-
-      <div class="nav">
-        <a class="btn primary" href="/">Home</a>
-        <a class="btn" href="/landing/">Landing</a>
-        <a class="btn" href="/engine/">Engine</a>
-        <a class="btn" href="/laws/">Laws</a>
-        <a class="btn" href="/principles/">Principles</a>
-        <a class="btn" href="/geodynamics/">Geodynamics</a>
-        <a class="btn" href="/state/">State</a>
-        <a class="btn" href="/reference/">Reference</a>
-      </div>
-    </div>
-
-    <div class="card foot">© Geodiametrics</div>
-  </div>
-
-<script>
-(() => {
-  // === CONFIG ===
-  const TRUTH_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
-  const POLL_MS = 10000;
-
-  // === ELEMENTS ===
-  const truthUrlEl = document.getElementById("truthUrl");
-  const lastUpdatedEl = document.getElementById("lastUpdated");
-  const ageSecEl = document.getElementById("ageSec");
-  const healthTextEl = document.getElementById("healthText");
-  const healthDotEl = document.getElementById("healthDot");
-  const gaugesEl = document.getElementById("gauges");
-  const sourceGaugesEl = document.getElementById("sourceGauges");
-  const rawEl = document.getElementById("raw");
-
-  truthUrlEl.textContent = TRUTH_BASE;
-
-  // === HELPERS ===
-  const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
-  const safeNum = (v) => (Number.isFinite(+v) ? +v : 0);
-
-  function fmtTime(ms){
-    try{
-      const d = new Date(ms);
-      return d.toLocaleString();
-    }catch(e){
-      return "—";
-    }
-  }
-
-  function setHealth(status, ageSec, errors){
-    const s = (status || "").toUpperCase();
-    let label = s || "UNKNOWN";
-    let cls = "gray";
-
-    // Conservative health:
-    // - RED if status != OPERATIONAL OR errors>0
-    // - YELLOW if OPERATIONAL but ageSec is null/undefined or > 30
-    // - GREEN if OPERATIONAL and ageSec <= 30 and errors==0
-    const ageOk = Number.isFinite(+ageSec);
-    const e = safeNum(errors);
-
-    if (label !== "OPERATIONAL" || e > 0){
-      cls = "red";
-      label = label === "OPERATIONAL" && e>0 ? "DEGRADED" : label;
-    } else if (!ageOk || +ageSec > 30){
-      cls = "yellow";
-      label = "YELLOW";
-    } else {
-      cls = "green";
-      label = "GREEN";
-    }
-
-    healthTextEl.textContent = label;
-    healthDotEl.className = "dot " + cls;
-  }
-
-  function gaugeHTML(label, value, pct, colorClass){
-    return `
-      <div class="gauge">
-        <div class="gTop">
-          <div class="gLabel">${label}</div>
-          <div class="gValue">${value}</div>
-        </div>
-        <div class="bar"><div class="fill ${colorClass || ""}" style="width:${pct}%"></div></div>
-      </div>
-    `;
-  }
-
-  function renderGauges(metrics){
-    const m = metrics || {};
-    const items = [
-      ["Sessions", safeNum(m.sessions)],
-      ["Pageviews", safeNum(m.pageviews)],
-      ["Clicks", safeNum(m.clicks)],
-      ["Writes", safeNum(m.writes)],
-    ];
-
-    const max = Math.max(1, ...items.map(x => x[1]));
-    const html = items.map(([k,v]) => {
-      const pct = clamp((v / max) * 100, 0, 100);
-      // Color intensity rule: red->yellow->green based on pct
-      // (High value isn't "good", it's "more". This is intensity only.)
-      const cls = (pct >= 66) ? "green" : (pct >= 33 ? "yellow" : "red");
-      return gaugeHTML(k, v, pct, cls);
-    }).join("");
-
-    gaugesEl.innerHTML = html;
-  }
-
-  function renderSourceGauges(sources){
-    const s = sources || {};
-    const items = [
-      ["Direct", safeNum(s.Direct ?? s.direct)],
-      ["OSF", safeNum(s.OSF ?? s.osf)],
-      ["GitHub", safeNum(s.GitHub ?? s.github)],
-      ["Other", safeNum(s.Other ?? s.other)],
-    ];
-    const max = Math.max(1, ...items.map(x => x[1]));
-    const html = items.map(([k,v]) => {
-      const pct = clamp((v / max) * 100, 0, 100);
-      const cls = (pct >= 66) ? "green" : (pct >= 33 ? "yellow" : "red");
-      return gaugeHTML(k, v, pct, cls);
-    }).join("");
-    sourceGaugesEl.innerHTML = html;
-  }
-
-  function setRaw(obj){
-    rawEl.textContent = JSON.stringify(obj, null, 2);
-  }
-
-  async function fetchTruth(){
-    const url = TRUTH_BASE + "?t=" + Date.now();
-    try{
-      const res = await fetch(url, { cache: "no-store" });
-      const data = await res.json();
-
-      const status = data.status || "UNKNOWN";
-      const metrics = data.metrics || {};
-      const sources = data.sources || {};
-      const lastUpdated = safeNum(metrics.lastUpdated ?? data.lastUpdated);
-      const errors = safeNum(metrics.errors ?? data.errors);
-
-      // Some workers return meta.now + meta.ageSec
-      const meta = data.meta || {};
-      const now = safeNum(meta.now);
-      let ageSec = meta.ageSec;
-
-      // If ageSec missing but lastUpdated present, compute from now
-      if (!Number.isFinite(+ageSec) && lastUpdated && now){
-        ageSec = Math.floor((now - lastUpdated) / 1000);
-      }
-
-      lastUpdatedEl.textContent = lastUpdated ? fmtTime(lastUpdated) : "—";
-      ageSecEl.textContent = Number.isFinite(+ageSec) ? String(ageSec) : "—";
-
-      setHealth(status, ageSec, errors);
-      renderGauges(metrics);
-      renderSourceGauges(sources);
-      setRaw(data);
-    } catch (e){
-      // Hard fail -> red
-      lastUpdatedEl.textContent = "—";
-      ageSecEl.textContent = "—";
-      setHealth("DEGRADED", null, 1);
-      renderGauges({sessions:0,pageviews:0,clicks:0,writes:0});
-      renderSourceGauges({Direct:0,OSF:0,GitHub:0,Other:0});
-      setRaw({ ok:false, error:String(e) });
-    }
-  }
-
-  fetchTruth();
-  setInterval(fetchTruth, POLL_MS);
-})();
-</script>
-
+      <footer>© Geodiametrics</footer>
+    </section>
+  </main>
 </body>
 </html>

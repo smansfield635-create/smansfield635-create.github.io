@@ -1,34 +1,62 @@
-<!-- DEMOLITION TNT #11 — /engine/resolution/index.html (FULL REPLACE) -->
+<!-- FINAL IMPLEMENTATION — TNT #8 / ENGINE: RESOLUTION
+     Full replace of /engine/resolution/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Resolution · Engine</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
+
 <body class="bg-gradient">
 <main class="page">
-  <section class="panel hero center">
+
+  <section class="panel hero">
     <h1>Resolution</h1>
-    <p class="subtitle">What constraints apply.</p>
+    <p class="subtitle">
+      How constraints are applied.
+    </p>
   </section>
+
   <section class="panel">
-    <details class="bubble" open>
-      <summary>Core job</summary>
-      <div class="bubble-content">
-        <ul class="tight">
-          <li>Perception</li><li>Constraint</li><li>Choice</li><li>Receipt</li>
+    <details class="drop" open>
+      <summary>Role</summary>
+      <div class="drop-body">
+        <p>
+          Resolution applies constraints to what has been selected.
+          It defines what is admissible and what is not.
+        </p>
+      </div>
+    </details>
+  </section>
+
+  <section class="panel">
+    <details class="drop">
+      <summary>What breaks when this fails</summary>
+      <div class="drop-body">
+        <ul>
+          <li>Contradictions persist</li>
+          <li>Rules become optional</li>
+          <li>Decisions stall</li>
         </ul>
       </div>
     </details>
   </section>
-  <section class="panel center">
-    <div class="bubble-grid">
-      <a class="bubble nav" href="/engine/selection/">Back → Selection</a>
-      <a class="bubble nav primary" href="/engine/commitment/">Next → Commitment</a>
+
+  <section class="panel">
+    <div class="nav-grid">
+      <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/engine/commitment/">Commitment</a>
+      <a class="btn" href="/">Home</a>
+      <a class="btn" href="/control/">State</a>
     </div>
   </section>
+
+  <div class="footer">
+    <span>© Geodiametrics</span>
+  </div>
+
 </main>
 </body>
 </html>

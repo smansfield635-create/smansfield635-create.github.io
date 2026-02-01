@@ -4,37 +4,125 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Laws · Geodiametrics</title>
+
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script defer src="/assets/telemetry.js"></script>
+  <script defer src="/assets/lens.js"></script>
 </head>
 
 <body class="bg-gradient">
-<main class="page">
+<main class="page" data-lens-scope>
 
+  <!-- HERO -->
   <section class="panel hero">
     <h1>Laws</h1>
     <p class="subtitle">Same laws. Two lenses. Driven by fact, not fiction.</p>
   </section>
 
-  <section class="panel bubble">
-    <h2>Seven invariant constraints</h2>
-    <ol class="tight">
-      <li><strong>Reality can’t be faked.</strong> You can claim anything. Reality responds to what’s true.</li>
-      <li><strong>Trust begins internally.</strong> External trust can’t exceed internal honesty.</li>
-      <li><strong>Outputs reflect inputs.</strong> Outcomes can’t be more coherent than their premises.</li>
-      <li><strong>Constraints define admissibility.</strong> What’s allowed decides what can happen.</li>
-      <li><strong>Verification gates reality.</strong> Receipts separate story from proof.</li>
-      <li><strong>Confusion accelerates failure.</strong> Once incoherence exists, confusion speeds collapse.</li>
-      <li><strong>Receipts enable convergence.</strong> Verified steps stabilize and scale.</li>
-    </ol>
+  <!-- LENS TOGGLE -->
+  <section class="panel bubble lens-toggle">
+    <div class="lens-buttons">
+      <button class="btn lens is-active"
+              data-lens-btn="human"
+              aria-pressed="true">
+        Human
+      </button>
+      <button class="btn lens"
+              data-lens-btn="scientific"
+              aria-pressed="false">
+        Scientific
+      </button>
+    </div>
+    <p class="note">
+      The meaning is identical. Only the language changes.
+    </p>
   </section>
 
+  <!-- HUMAN LENS -->
+  <section class="panel bubble"
+           data-lens-pane="human">
+
+    <h2>Seven invariant constraints</h2>
+
+    <ol class="tight">
+      <li>
+        <strong>Reality can’t be faked.</strong>
+        You can claim anything. Reality responds only to what’s true.
+      </li>
+      <li>
+        <strong>Trust begins internally.</strong>
+        External trust cannot exceed internal honesty.
+      </li>
+      <li>
+        <strong>Outputs reflect inputs.</strong>
+        Outcomes cannot be more coherent than their premises.
+      </li>
+      <li>
+        <strong>Constraints define admissibility.</strong>
+        What’s allowed determines what can happen.
+      </li>
+      <li>
+        <strong>Verification gates reality.</strong>
+        Receipts separate story from proof.
+      </li>
+      <li>
+        <strong>Confusion accelerates failure.</strong>
+        Once incoherence exists, collapse speeds up.
+      </li>
+      <li>
+        <strong>Receipts enable convergence.</strong>
+        Verified steps stabilize and scale.
+      </li>
+    </ol>
+
+  </section>
+
+  <!-- SCIENTIFIC LENS -->
+  <section class="panel bubble"
+           data-lens-pane="scientific"
+           style="display:none">
+
+    <h2>Seven invariant constraints (formal)</h2>
+
+    <ol class="tight mono">
+      <li>
+        <strong>Truth invariance.</strong>
+        System response is a function of actual state, not declared state.
+      </li>
+      <li>
+        <strong>Internal coherence bound.</strong>
+        External trust ≤ internal consistency.
+      </li>
+      <li>
+        <strong>Input–output fidelity.</strong>
+        Output coherence ≤ input coherence.
+      </li>
+      <li>
+        <strong>Constraint-limited state space.</strong>
+        Admissible transitions are bounded by constraints.
+      </li>
+      <li>
+        <strong>Verification gating.</strong>
+        State transitions require observable receipts.
+      </li>
+      <li>
+        <strong>Confusion amplification.</strong>
+        Incoherence increases failure velocity.
+      </li>
+      <li>
+        <strong>Receipt-driven convergence.</strong>
+        Verified transitions enable stable scaling.
+      </li>
+    </ol>
+
+  </section>
+
+  <!-- NAV -->
   <section class="panel nav">
     <div class="nav-grid">
-      <a class="btn primary" href="/home/">Home</a>
-      <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/home/">Home</a>
       <a class="btn" href="/principles/">Principles</a>
       <a class="btn" href="/geodynamics/">Geodynamics</a>
+      <a class="btn primary" href="/control/">Control</a>
     </div>
   </section>
 

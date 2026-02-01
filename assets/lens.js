@@ -1,39 +1,51 @@
 (() => {
-  function setLens(root, lens) {
-    root.setAttribute("data-lens", lens);
+  const KEY = "geo_lens";
+  const DEFAULT_LENS = "human";
 
-    root.querySelectorAll("[data-lens-pill]").forEach((b) => {
-      const t = b.getAttribute("data-lens-pill");
-      const on = t === lens;
-      b.classList.toggle("active", on);
-      b.setAttribute("aria-pressed", on ? "true" : "false");
+  function getLens() {
+    try { return localStorage.getItem(KEY) || DEFAULT_LENS; }
+    catch { return DEFAULT_LENS; }
+  }
+  function setLens(v) {
+    try { localStorage.setItem(KEY, v); } catch {}
+  }
+
+  function applyLens(root, lens) {
+    const panes = root.querySelectorAll("[data-lens-pane]");
+    panes.forEach(p => {
+      const pLens = p.getAttribute("data-lens-pane");
+      p.style.display = (pLens === lens) ? "" : "none";
     });
 
-    root.querySelectorAll("[data-lens-pane]").forEach((p) => {
-      const t = p.getAttribute("data-lens-pane");
-      p.style.display = (t === lens) ? "" : "none";
+    const btns = root.querySelectorAll("[data-lens-btn]");
+    btns.forEach(b => {
+      const bLens = b.getAttribute("data-lens-btn");
+      b.classList.toggle("is-active", bLens === lens);
+      b.setAttribute("aria-pressed", String(bLens === lens));
     });
   }
 
-  function init(root) {
-    const def = root.getAttribute("data-default-lens") || "human";
+  function initScope(scope) {
+    const root = scope;
+    const btns = root.querySelectorAll("[data-lens-btn]");
+    if (!btns.length) return;
 
-    root.querySelectorAll("[data-lens-pill]").forEach((b) => {
+    // click handlers
+    btns.forEach(b => {
       b.addEventListener("click", () => {
-        setLens(root, b.getAttribute("data-lens-pill"));
-      }, { passive: true });
+        const lens = b.getAttribute("data-lens-btn");
+        if (!lens) return;
+        setLens(lens);
+        applyLens(root, lens);
+      });
     });
 
-    setLens(root, def);
+    // initial
+    applyLens(root, getLens());
   }
 
-  function boot() {
-    document.querySelectorAll("[data-lens-root]").forEach(init);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
+  document.addEventListener("DOMContentLoaded", () => {
+    // support multiple toggles per page (rare, but safe)
+    document.querySelectorAll("[data-lens-scope]").forEach(initScope);
+  });
 })();

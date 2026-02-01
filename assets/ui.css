@@ -1,116 +1,157 @@
-/* =========================================================
-   Geodiametrics UI · Canonical
-   ========================================================= */
-
 :root{
-  --fg:#e9eefc;
-  --muted:rgba(233,238,252,.70);
-  --panel:rgba(14,18,34,.58);
-  --stroke:rgba(233,238,252,.14);
-  --shadow:0 20px 60px rgba(0,0,0,.55);
-  --radius:22px;
-  --radius2:28px;
-  --btn:rgba(255,255,255,.07);
-  --btn2:rgba(255,255,255,.10);
+  --bg0:#070b16;
+  --bg1:#0b1230;
+  --panel:rgba(255,255,255,.06);
+  --panel2:rgba(255,255,255,.09);
+  --stroke:rgba(255,255,255,.10);
+  --fg:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.68);
+  --muted2:rgba(255,255,255,.50);
+  --radius:26px;
+  --shadow:0 24px 70px rgba(0,0,0,.55);
+  --maxw:980px;
 }
 
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
+html,body{height:100%}
 body{
+  margin:0;
   color:var(--fg);
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
   background:
-    radial-gradient(1200px 900px at 20% 10%,rgba(122,162,255,.22),transparent 60%),
-    radial-gradient(900px 700px at 80% 20%,rgba(34,211,238,.14),transparent 60%),
-    radial-gradient(900px 800px at 50% 90%,rgba(99,102,241,.18),transparent 60%),
-    #060916;
+    radial-gradient(900px 700px at 18% 12%,rgba(72,128,255,.26),transparent 60%),
+    radial-gradient(700px 650px at 78% 18%,rgba(0,220,200,.18),transparent 62%),
+    radial-gradient(1100px 900px at 50% 120%,rgba(105,56,255,.18),transparent 60%),
+    linear-gradient(180deg,var(--bg0),var(--bg1));
+  overflow-x:hidden;
 }
 
-a{color:inherit;text-decoration:none}
-.page{max-width:920px;margin:0 auto;padding:22px 14px 40px}
+a{color:inherit}
+a:visited{color:inherit}
+
+/* Layout */
+.page{
+  width:min(var(--maxw),100%);
+  margin:0 auto;
+  padding:22px 16px 44px;
+}
 
 .panel{
-  background:var(--panel);
+  background:linear-gradient(180deg,var(--panel2),var(--panel));
   border:1px solid var(--stroke);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
-  padding:18px;
+  padding:18px 18px;
   margin:14px 0;
 }
 
-.hero h1,.hero h2{margin:0 0 8px 0;font-weight:800;letter-spacing:.2px}
-.subtitle{margin:0;color:var(--muted);line-height:1.35}
+.hero h1{
+  margin:0 0 8px;
+  font-size:44px;
+  letter-spacing:.2px;
+}
+.hero .subtitle{
+  margin:0;
+  color:var(--muted);
+  font-size:16px;
+}
 
 /* Buttons / bubbles */
-.btn{
-  display:flex;align-items:center;justify-content:center;
-  padding:16px 18px;
+.btn, button.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  padding:16px 14px;
+  margin:10px 0;
   border-radius:999px;
   border:1px solid var(--stroke);
-  background:var(--btn);
+  background:rgba(255,255,255,.07);
   color:var(--fg);
-  font-weight:700;
+  text-decoration:none;
+  font-weight:650;
   letter-spacing:.2px;
   cursor:pointer;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
+  -webkit-tap-highlight-color: transparent;
 }
-.btn:hover{background:var(--btn2)}
+.btn:hover, button.btn:hover{background:rgba(255,255,255,.10)}
 .btn.primary{
-  background:linear-gradient(90deg,rgba(59,130,246,.60),rgba(16,185,129,.44));
-  border-color:rgba(233,238,252,.18);
+  background:linear-gradient(90deg,rgba(64,128,255,.70),rgba(0,210,180,.55));
+  border-color:rgba(255,255,255,.14);
 }
-.stack{display:grid;gap:12px}
+.btn.small{padding:12px 14px;font-weight:600}
 
-/* Two-column bubble grid (used on Home) */
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+/* Nav grids */
+.nav-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+@media (max-width:520px){
+  .nav-grid{grid-template-columns:1fr}
+}
 
-/* Lens switch */
-.lens-switch{
+/* Disclosure bubbles */
+details.bubble{
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  background:rgba(255,255,255,.06);
+  padding:14px 16px;
+  margin:12px 0;
+}
+details.bubble > summary{
+  list-style:none;
+  cursor:pointer;
+  font-weight:700;
+  color:var(--fg);
+}
+details.bubble > summary::-webkit-details-marker{display:none}
+details.bubble .sub{
+  margin-top:10px;
+  color:var(--muted);
+  line-height:1.45;
+}
+
+/* Tabs */
+.tabs{
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  padding:14px 14px;
+  background:rgba(255,255,255,.05);
+}
+.tabbar{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px;
-  padding:10px;
-  border-radius:var(--radius2);
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--stroke);
+  gap:10px;
+  margin-bottom:12px;
 }
-.lens-switch .lens-btn{
-  width:100%;
+.tabbar.three{grid-template-columns:1fr 1fr 1fr}
+.tab{
   border-radius:999px;
   border:1px solid var(--stroke);
   background:rgba(255,255,255,.06);
+  padding:14px 12px;
+  font-weight:750;
   color:var(--fg);
-  font-weight:800;
-  padding:14px 16px;
   cursor:pointer;
-  pointer-events:auto; /* IMPORTANT */
 }
-.lens-switch .lens-btn.active{
-  background:linear-gradient(90deg,rgba(59,130,246,.62),rgba(16,185,129,.46));
-  border-color:rgba(233,238,252,.18);
+.tab.is-active{
+  background:linear-gradient(90deg,rgba(64,128,255,.70),rgba(0,210,180,.55));
+  border-color:rgba(255,255,255,.16);
 }
-.lens-note{margin:10px 0 0;color:var(--muted);font-size:14px}
+.tab:focus{outline:2px solid rgba(120,200,255,.35); outline-offset:2px}
 
-/* Disclosure */
-details{
-  background:rgba(255,255,255,.03);
-  border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  padding:14px;
+.tabpanel{
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.14);
+  padding:14px 14px;
+  color:var(--muted);
+  line-height:1.45;
 }
-details summary{
-  cursor:pointer;
-  font-weight:800;
-  list-style:none;
+
+/* Fix ugly “purple links” by forcing bubbles when desired */
+.linklist{
+  display:grid;
+  gap:10px;
 }
-details summary::-webkit-details-marker{display:none}
-details .muted{color:var(--muted);margin-top:8px;line-height:1.45}
-
-/* Lists */
-ul,ol{margin:10px 0 0 22px}
-li{margin:6px 0}
-
-/* Small label blocks (optional) */
-.kicker{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--stroke);background:rgba(255,255,255,.04);font-size:12px;color:var(--muted)}

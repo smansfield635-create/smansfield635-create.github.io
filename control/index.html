@@ -4,8 +4,93 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Control · Geodiametrics</title>
+
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script defer src="/assets/telemetry.js"></script>
+
+  <style>
+    /* --- compact status strip --- */
+    .kv { display:grid; grid-template-columns: 1fr; gap:8px; }
+    .kv .row { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; opacity:.95; }
+    .kv .k { opacity:.7; }
+    .kv .v { font-weight:700; word-break:break-all; }
+
+    .healthBadge{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 14px; border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: inset 0 0 18px rgba(0,0,0,.45);
+      width: fit-content;
+      margin-top: 10px;
+    }
+    .dot{ width:10px;height:10px;border-radius:50%; background:#facc15; box-shadow:0 0 18px rgba(250,204,21,.55); }
+    .healthTxt{ font-weight:800; letter-spacing:.06em; }
+
+    .OPERATIONAL .dot{ background:#4ade80; box-shadow:0 0 18px rgba(74,222,128,.55); }
+    .DEGRADED   .dot{ background:#facc15; box-shadow:0 0 18px rgba(250,204,21,.55); }
+    .DOWN       .dot{ background:#f87171; box-shadow:0 0 18px rgba(248,113,113,.55); }
+
+    /* --- gauges --- */
+    .gauges {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .gauge {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,.12) 0%, rgba(0,0,0,.55) 70%),
+        conic-gradient(var(--color) var(--pct), rgba(255,255,255,.08) 0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 25px rgba(0,0,0,.6);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .gauge::after {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      background: rgba(12,16,34,.9);
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .gauge-content { position: relative; text-align: center; z-index: 1; padding: 0 10px; }
+    .gauge-value { font-size: 1.7rem; font-weight: 800; }
+    .gauge-label { font-size: .78rem; opacity: .75; margin-top: 2px; letter-spacing: .04em; }
+
+    /* --- bars --- */
+    .bars { display:grid; gap:12px; margin-top: 16px; }
+    .barRow { display:grid; grid-template-columns: 86px 1fr 56px; gap:12px; align-items:center; }
+    .barName { opacity:.8; font-weight:700; }
+    .barTrack {
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.08);
+      overflow:hidden;
+      box-shadow: inset 0 0 12px rgba(0,0,0,.55);
+    }
+    .barFill { height:100%; width: var(--w); background: var(--c); opacity:.95; }
+    .barVal { text-align:right; font-weight:800; opacity:.9; }
+
+    /* --- table --- */
+    table { width:100%; border-collapse: collapse; margin-top: 14px; }
+    th, td { padding:10px 10px; border-bottom: 1px solid rgba(255,255,255,.10); }
+    th { text-align:left; font-size:.82rem; letter-spacing:.05em; text-transform:uppercase; opacity:.7; }
+    td { font-weight:700; }
+    .path { font-weight:800; opacity:.95; }
+    .muted { opacity:.7; font-weight:600; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+
+    .smallNote{ opacity:.7; margin-top: 10px; }
+
+    /* keep your existing nav styles, but ensure spacing */
+    .nav-grid { margin-top: 22px; }
+  </style>
 </head>
 
 <body class="bg-gradient">
@@ -17,42 +102,91 @@
   </section>
 
   <section class="panel bubble">
-    <details open>
-      <summary>Live status</summary>
-      <div class="bubble-body">
-        <div id="liveText" class="mono note">Loading…</div>
+    <div class="kv">
+      <div class="row">
+        <span class="k">Truth source</span>
+        <span class="v mono" id="truthUrl">—</span>
       </div>
-    </details>
-  </section>
+      <div class="row">
+        <span class="k">Polling</span>
+        <span class="v" id="polling">10s</span>
+      </div>
+      <div class="row">
+        <span class="k">Last updated</span>
+        <span class="v" id="lastUpdated">—</span>
+      </div>
+      <div class="row">
+        <span class="k">Age (sec)</span>
+        <span class="v" id="ageSec">—</span>
+      </div>
+    </div>
 
-  <section class="panel bubble">
-    <details open>
-      <summary>Activity (what’s happening)</summary>
-      <div class="bubble-body">
-        <div class="tight">
-          <div class="row"><span>Sessions</span><strong id="m_sessions">—</strong></div>
-          <div class="row"><span>Pageviews</span><strong id="m_pageviews">—</strong></div>
-          <div class="row"><span>Clicks</span><strong id="m_clicks">—</strong></div>
-          <div class="row"><span>Writes</span><strong id="m_writes">—</strong></div>
-          <div class="row"><span>Errors</span><strong id="m_errors">—</strong></div>
+    <div id="healthWrap" class="healthBadge DEGRADED" style="margin-top:14px;">
+      <span class="dot"></span>
+      <span class="healthTxt" id="healthTxt">STATUS: LOADING</span>
+    </div>
+
+    <div class="gauges" aria-label="gauges">
+      <div class="gauge" id="g_sessions">
+        <div class="gauge-content">
+          <div class="gauge-value" id="v_sessions">—</div>
+          <div class="gauge-label">Sessions</div>
         </div>
       </div>
-    </details>
+      <div class="gauge" id="g_pageviews">
+        <div class="gauge-content">
+          <div class="gauge-value" id="v_pageviews">—</div>
+          <div class="gauge-label">Pageviews</div>
+        </div>
+      </div>
+      <div class="gauge" id="g_clicks">
+        <div class="gauge-content">
+          <div class="gauge-value" id="v_clicks">—</div>
+          <div class="gauge-label">Clicks</div>
+        </div>
+      </div>
+      <div class="gauge" id="g_errors">
+        <div class="gauge-content">
+          <div class="gauge-value" id="v_errors">—</div>
+          <div class="gauge-label">Errors</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="smallNote">
+      Color = intensity (relative). Green healthy, yellow degraded, red down. Gauges are read-only.
+    </div>
   </section>
 
   <section class="panel bubble">
-    <details>
-      <summary>Raw payload (JSON)</summary>
-      <div class="bubble-body">
-        <pre id="raw" class="mono note">—</pre>
-      </div>
-    </details>
+    <h2 style="margin:0 0 6px 0;">Sources (to scale)</h2>
+    <div class="bars" id="sourceBars"></div>
+    <div class="smallNote">Bars share one scale (max source value in this payload).</div>
+  </section>
+
+  <section class="panel bubble">
+    <h2 style="margin:0 0 6px 0;">Top pages (latest)</h2>
+    <div class="smallNote">Page-level counts are conservative. They increase only when the site reports events.</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Path</th>
+          <th>Pageviews</th>
+          <th>Clicks</th>
+          <th>Last updated</th>
+        </tr>
+      </thead>
+      <tbody id="pagesTbody">
+        <tr><td class="muted" colspan="4">Loading…</td></tr>
+      </tbody>
+    </table>
   </section>
 
   <section class="panel nav">
     <div class="nav-grid">
-      <a class="btn primary" href="/home/">Home</a>
       <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/home/">Home</a>
       <a class="btn" href="/engine/">Engine</a>
       <a class="btn" href="/state/">State</a>
       <a class="btn" href="/reference/">Reference</a>
@@ -62,52 +196,157 @@
 </main>
 
 <script>
-(() => {
-  const METRICS = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
+  // === CONFIG ===
   const POLL_MS = 10000;
+  const ENDPOINT = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
 
-  const el = (id) => document.getElementById(id);
+  // === HELPERS ===
+  const $ = (id)=>document.getElementById(id);
 
-  function setText(id, v) {
-    const n = el(id);
-    if (n) n.textContent = String(v);
+  function clampPct(v, max=100){
+    if(!Number.isFinite(v) || max<=0) return 0;
+    return Math.min(100, Math.max(0, (v/max)*100));
   }
 
-  function fmt(ts) {
-    if (!ts) return "—";
-    try { return new Date(ts).toLocaleString(); } catch { return String(ts); }
+  function setGauge(elId, value, color, pct){
+    const g = $(elId);
+    g.style.setProperty("--color", color);
+    g.style.setProperty("--pct", pct + "%");
   }
 
-  async function tick() {
-    try {
-      const r = await fetch(METRICS, { cache: "no-store" });
-      const j = await r.json();
+  function toLocal(tsMs){
+    if(!tsMs || !Number.isFinite(tsMs)) return "—";
+    try { return new Date(tsMs).toLocaleString(); } catch { return "—"; }
+  }
 
-      setText("raw", JSON.stringify(j, null, 2));
+  function healthClass(status){
+    if(status === "OPERATIONAL") return "OPERATIONAL";
+    if(status === "DEGRADED") return "DEGRADED";
+    return "DOWN";
+  }
 
-      const m = j.metrics || {};
-      setText("m_sessions", m.sessions ?? 0);
-      setText("m_pageviews", m.pageviews ?? 0);
-      setText("m_clicks", m.clicks ?? 0);
-      setText("m_writes", m.writes ?? 0);
-      setText("m_errors", m.errors ?? 0);
+  function setHealth(status){
+    const wrap = $("healthWrap");
+    const cls = healthClass(status);
+    wrap.className = "healthBadge " + cls;
+    $("healthTxt").textContent = "STATUS: " + (status || "UNKNOWN");
+  }
 
-      const meta = j.meta || {};
-      const age = meta.ageSec;
-      const health = (j.status || "DEGRADED");
+  function renderSourceBars(sources){
+    const mount = $("sourceBars");
+    const entries = [
+      ["GitHub", sources?.GitHub ?? 0, "#60a5fa"],
+      ["OSF", sources?.OSF ?? 0, "#34d399"],
+      ["Direct", sources?.Direct ?? 0, "#facc15"],
+      ["Other", sources?.Other ?? 0, "#a78bfa"]
+    ];
+    const max = Math.max(1, ...entries.map(x=>Number(x[1])||0));
 
-      setText(
-        "liveText",
-        `Truth source — ${METRICS}\nPolling — ${Math.round(POLL_MS/1000)}s\nLast updated — ${fmt(m.lastUpdated)}\nAge (sec) — ${age === null ? "—" : age}\nHEALTH — ${health}`
-      );
-    } catch (e) {
-      setText("liveText", "Live status unavailable (fetch failed).");
+    mount.innerHTML = entries.map(([name,val,color])=>{
+      const w = clampPct(Number(val)||0, max);
+      return `
+        <div class="barRow">
+          <div class="barName">${name}</div>
+          <div class="barTrack"><div class="barFill" style="--w:${w}%; --c:${color};"></div></div>
+          <div class="barVal">${Number(val)||0}</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderPages(pages){
+    const tbody = $("pagesTbody");
+    const entries = Object.entries(pages || {});
+    if(entries.length === 0){
+      tbody.innerHTML = `<tr><td class="muted" colspan="4">No page events yet.</td></tr>`;
+      return;
+    }
+
+    // sort by pageviews desc, then clicks desc
+    entries.sort((a,b)=>{
+      const av = (a[1]?.pageviews ?? 0) - (b[1]?.pageviews ?? 0);
+      if(av !== 0) return -av;
+      return (b[1]?.clicks ?? 0) - (a[1]?.clicks ?? 0);
+    });
+
+    // keep it tight: show top 10
+    const top = entries.slice(0, 10);
+
+    tbody.innerHTML = top.map(([path,obj])=>{
+      const pv = obj?.pageviews ?? 0;
+      const ck = obj?.clicks ?? 0;
+      const lu = obj?.lastUpdated ?? 0;
+      return `
+        <tr>
+          <td class="path mono">${path}</td>
+          <td>${pv}</td>
+          <td>${ck}</td>
+          <td class="muted">${toLocal(lu)}</td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  async function load(){
+    // show where we’re pulling truth from (with cache-bust for visibility)
+    $("truthUrl").textContent = ENDPOINT;
+
+    try{
+      const res = await fetch(ENDPOINT + "?t=" + Date.now(), { cache:"no-store" });
+      const data = await res.json();
+
+      const status = data.status || "DEGRADED";
+      setHealth(status);
+
+      const m = data.metrics || {};
+      const sources = data.sources || {};
+      const pages = data.pages || {};
+      const meta = data.meta || {};
+
+      // timestamps
+      const lastUpdated = m.lastUpdated ?? 0;
+      $("lastUpdated").textContent = toLocal(lastUpdated);
+
+      // age (sec): use meta.ageSec when present; otherwise compute
+      const age = (Number.isFinite(meta.ageSec) ? meta.ageSec :
+                  (lastUpdated ? Math.max(0, Math.floor((Date.now()-lastUpdated)/1000)) : null));
+      $("ageSec").textContent = (age === null ? "—" : String(age));
+
+      // values
+      $("v_sessions").textContent  = m.sessions ?? 0;
+      $("v_pageviews").textContent = m.pageviews ?? 0;
+      $("v_clicks").textContent    = m.clicks ?? 0;
+      $("v_errors").textContent    = m.errors ?? 0;
+
+      // gauge scales: deliberately bounded so movement is visible early
+      setGauge("g_sessions",  m.sessions,  "#60a5fa", clampPct(m.sessions ?? 0, 25));
+      setGauge("g_pageviews", m.pageviews, "#34d399", clampPct(m.pageviews ?? 0, 50));
+      setGauge("g_clicks",    m.clicks,    "#facc15", clampPct(m.clicks ?? 0, 50));
+
+      // errors: invert to “badness”
+      const err = m.errors ?? 0;
+      setGauge("g_errors", err, "#f87171", clampPct(err, 10));
+
+      renderSourceBars(sources);
+      renderPages(pages);
+    }catch(e){
+      setHealth("DOWN");
+      $("lastUpdated").textContent = "—";
+      $("ageSec").textContent = "—";
+
+      $("v_sessions").textContent  = "—";
+      $("v_pageviews").textContent = "—";
+      $("v_clicks").textContent    = "—";
+      $("v_errors").textContent    = "—";
+
+      renderSourceBars({GitHub:0, OSF:0, Direct:0, Other:0});
+      $("pagesTbody").innerHTML = `<tr><td class="muted" colspan="4">Disconnected from truth source.</td></tr>`;
     }
   }
 
-  tick();
-  setInterval(tick, POLL_MS);
-})();
+  load();
+  setInterval(load, POLL_MS);
 </script>
+
 </body>
 </html>

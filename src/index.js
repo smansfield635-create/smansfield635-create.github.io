@@ -1,82 +1,59 @@
-import { MetricsDO } from "./metrics-do.js";
+// src/index.js
+// Geodiametrics Metrics Worker (KV-backed, simple + safe)
+// Endpoints:
+//   GET  /metrics              -> read-only truth payload (for Control page)
+//   POST /event                -> record {type,page}  (from website)
+//   GET  /                     -> health
+//
+// Requires KV binding named: METRICS_KV
+// Optional env:
+//   ALLOW_ORIGIN = "https://smansfield635-create.github.io" (or your canonical origin)
+//   SESSION_TTL_SEC = "1800" (default 30 minutes)
+//   DEDUPE_SEC = "10"        (default 10 seconds for pageview dedupe per visitor+page)
 
 const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
-  "cache-control": "no-store",
 };
 
-const CORS_HEADERS = {
-  "access-control-allow-origin": "*",
-  "access-control-allow-methods": "GET,POST,OPTIONS",
-  "access-control-allow-headers": "content-type",
-};
-
-function withCors(res) {
-  const h = new Headers(res.headers);
-  for (const [k, v] of Object.entries(CORS_HEADERS)) h.set(k, v);
-  return new Response(res.body, { status: res.status, headers: h });
+function corsHeaders(req, env) {
+  const origin = req.headers.get("Origin") || "";
+  const allow = (env && env.ALLOW_ORIGIN) ? env.ALLOW_ORIGIN : "*";
+  // If ALLOW_ORIGIN is set, reflect only that (tighter). Otherwise wildcard.
+  const ao = (allow === "*") ? "*" : allow;
+  return {
+    "access-control-allow-origin": ao,
+    "access-control-allow-methods": "GET,POST,OPTIONS",
+    "access-control-allow-headers": "content-type",
+    "access-control-max-age": "86400",
+    "vary": "Origin",
+  };
 }
 
-function badRequest(msg) {
-  return withCors(
-    new Response(JSON.stringify({ ok: false, error: msg }), {
-      status: 400,
-      headers: { ...JSON_HEADERS },
-    })
-  );
+function resJson(obj, req, env, status = 200) {
+  return new Response(JSON.stringify(obj, null, 2), {
+    status,
+    headers: { ...JSON_HEADERS, ...corsHeaders(req, env) },
+  });
 }
 
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
-    const path = url.pathname;
+function resText(txt, req, env, status = 200) {
+  return new Response(txt, {
+    status,
+    headers: { "content-type": "text/plain; charset=utf-8", ...corsHeaders(req, env) },
+  });
+}
 
-    if (request.method === "OPTIONS") {
-      return withCors(new Response("", { status: 204, headers: { ...JSON_HEADERS } }));
-    }
+function nowMs() { return Date.now(); }
 
-    // Single DO instance (global)
-    const id = env.METRICS_DO.idFromName("global");
-    const stub = env.METRICS_DO.get(id);
+async function sha256Base64Url(input) {
+  const enc = new TextEncoder();
+  const data = enc.encode(input);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  const bytes = new Uint8Array(digest);
+  let str = "";
+  for (const b of bytes) str += String.fromCharCode(b);
+  const b64 = btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+  return b64;
+}
 
-    // Routes:
-    // GET  /metrics     -> returns payload the website reads
-    // POST /event       -> accepts receipts from the website
-    // POST /admin/reset -> optional reset (guarded by a token if you set it later)
-    if (path === "/metrics" && request.method === "GET") {
-      const res = await stub.fetch("https://do/metrics");
-      return withCors(res);
-    }
-
-    if (path === "/event" && request.method === "POST") {
-      // Expect JSON: { type: "session"|"click"|"write"|"pageview", ts, path, ref, href }
-      let body;
-      try {
-        body = await request.json();
-      } catch {
-        return badRequest("Invalid JSON body.");
-      }
-      const res = await stub.fetch("https://do/event", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      return withCors(res);
-    }
-
-    if (path === "/admin/reset" && request.method === "POST") {
-      // Optional: add ?token=... later if you want. For now, it resets.
-      const res = await stub.fetch("https://do/reset", { method: "POST" });
-      return withCors(res);
-    }
-
-    return withCors(
-      new Response(JSON.stringify({ ok: false, error: "Not found" }), {
-        status: 404,
-        headers: { ...JSON_HEADERS },
-      })
-    );
-  },
-};
-
-export { MetricsDO };
+// Visitor fingerprint (privacy-light; no cookies; used for ded

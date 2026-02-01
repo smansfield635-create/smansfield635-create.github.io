@@ -7,35 +7,103 @@
   <link rel="stylesheet" href="/assets/ui.css"/>
   <script src="/engine.js" defer></script>
 </head>
-<body class="bg-gradient">
 
+<body class="bg-gradient">
 <main class="page">
 
   <section class="panel hero">
     <h1>Laws</h1>
-    <p class="subtitle">Same laws. One meaning. No intimidation.</p>
+    <p class="subtitle">Same laws. Two lenses. Driven by fact, not fiction.</p>
   </section>
 
   <section class="panel">
-    <div class="acc" data-acc data-acc-default="open">
-      <button class="acc-head" data-acc-head type="button">
-        <span>Seven invariant constraints</span>
-      </button>
-      <div class="acc-body" data-acc-body>
-        <ol class="law-list">
-          <li><strong>Reality can’t be faked.</strong> What you claim can be anything. What is true stays true.</li>
-          <li><strong>Trust begins internally.</strong> External trust can’t exceed internal honesty.</li>
-          <li><strong>Outputs reflect inputs.</strong> Outcomes can’t be more coherent than their premises.</li>
-          <li><strong>Constraints define admissibility.</strong> What’s allowed decides what can happen.</li>
-          <li><strong>Verification gates reality.</strong> Receipts separate story from proof.</li>
-          <li><strong>Confusion accelerates failure.</strong> Once incoherence exists, confusion speeds collapse.</li>
-          <li><strong>Receipts enable convergence.</strong> Verified steps let systems stabilize and scale.</li>
-        </ol>
-        <p class="muted small">
-          These are not opinions. They are constraint statements: what holds whether acknowledged or not.
-        </p>
-      </div>
+    <div class="lens-switch" data-default="human" style="display:grid; gap:12px">
+      <button class="btn lens-btn active" data-lens="human" type="button">Human</button>
+      <button class="btn lens-btn" data-lens="scientific" type="button">Scientific</button>
     </div>
+    <p class="note muted" style="margin-top:12px">The meaning is identical. Only the language changes.</p>
+  </section>
+
+  <!-- HUMAN -->
+  <section class="panel lens-panel" data-lens-panel="human" aria-hidden="false">
+    <h2>Human language</h2>
+
+    <details open>
+      <summary><strong>Law 1 — Reality can’t be faked</strong></summary>
+      <p class="muted">You can claim anything. Reality only responds to what is true.</p>
+    </details>
+
+    <details>
+      <summary><strong>Law 2 — Trust begins internally</strong></summary>
+      <p class="muted">External trust can’t exceed internal honesty.</p>
+    </details>
+
+    <details>
+      <summary><strong>Law 3 — Outputs reflect inputs</strong></summary>
+      <p class="muted">Outcomes can’t be more coherent than the premises that produced them.</p>
+    </details>
+
+    <details>
+      <summary><strong>Law 4 — Constraints define admissibility</strong></summary>
+      <p class="muted">What’s allowed decides what can happen.</p>
+    </details>
+
+    <details>
+      <summary><strong>Law 5 — Verification gates reality</strong></summary>
+      <p class="muted">Receipts separate story from proof.</p>
+    </details>
+
+    <details>
+      <summary><strong>Law 6 — Confusion accelerates failure</strong></summary>
+      <p class="muted">Once incoherence exists, confusion speeds collapse.</p>
+    </details>
+
+    <details>
+      <summary><strong>Law 7 — Receipts enable convergence</strong></summary>
+      <p class="muted">Verified steps let systems stabilize and scale.</p>
+    </details>
+
+    <p class="note muted">These are not opinions. They are constraint statements: what holds whether acknowledged or not.</p>
+  </section>
+
+  <!-- SCIENTIFIC -->
+  <section class="panel lens-panel" data-lens-panel="scientific" aria-hidden="true" style="display:none">
+    <h2>Scientific language</h2>
+
+    <details open>
+      <summary><strong>Invariant 1 — Coherence cannot exceed evidence</strong></summary>
+      <p class="muted">Claims do not increase coherence; verifiable evidence does.</p>
+    </details>
+
+    <details>
+      <summary><strong>Invariant 2 — External trust cannot exceed internal honesty</strong></summary>
+      <p class="muted">Observable trust is bounded by self-consistency and self-report integrity.</p>
+    </details>
+
+    <details>
+      <summary><strong>Invariant 3 — Outcomes cannot be more coherent than inputs</strong></summary>
+      <p class="muted">Output coherence is bounded by premise coherence.</p>
+    </details>
+
+    <details>
+      <summary><strong>Invariant 4 — Constraints define admissibility</strong></summary>
+      <p class="muted">A transition is admissible iff it satisfies the constraint set.</p>
+    </details>
+
+    <details>
+      <summary><strong>Invariant 5 — Verification gates reality</strong></summary>
+      <p class="muted">Receipts are required for defensible state transitions.</p>
+    </details>
+
+    <details>
+      <summary><strong>Invariant 6 — Confusion accelerates failure once incoherence exists</strong></summary>
+      <p class="muted">Confusion increases collapse rate conditional on incoherence.</p>
+    </details>
+
+    <details>
+      <summary><strong>Invariant 7 — Receipts enable convergence</strong></summary>
+      <p class="muted">Receipt-gated transitions reduce drift and allow stabilization.</p>
+    </details>
   </section>
 
   <section class="panel nav">
@@ -47,11 +115,6 @@
     </div>
   </section>
 
-  <section class="panel footer">
-    <div class="small muted">Build: 2026-02-01a · Canonical</div>
-  </section>
-
 </main>
-
 </body>
 </html>

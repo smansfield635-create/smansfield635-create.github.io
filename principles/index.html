@@ -1,32 +1,31 @@
-<!doctype html>
+        <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Principles · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script defer src="/assets/ui.js"></script>
 </head>
-<body>
-<main class="page">
+<body class="bg-gradient">
+  <main class="page">
 
-  <section class="panel hero">
-    <h1>Principles</h1>
-    <p class="subtitle">How laws appear in lived reality. Same meaning, two lenses.</p>
-  </section>
+    <section class="panel hero">
+      <h1>Principles</h1>
+      <p class="subtitle">How laws appear in lived reality. Same meaning, two lenses.</p>
+    </section>
 
-  <section class="panel">
-    <div class="tabs" data-tabs data-tabs-key="principles" data-default="human">
-      <div class="tabbar">
-        <button class="tab" data-tab="human" aria-selected="true">Human</button>
-        <button class="tab" data-tab="scientific" aria-selected="false">Scientific</button>
+    <section class="panel" data-lens-root data-default-lens="human">
+      <div class="pills" role="group" aria-label="Lens toggle">
+        <button class="pill active" type="button" data-lens-pill="human" aria-pressed="true">Human</button>
+        <button class="pill" type="button" data-lens-pill="scientific" aria-pressed="false">Scientific</button>
       </div>
 
-      <div class="tabpanel" data-panel="human">
-        <p><strong>Human language</strong></p>
-        <details class="bubble" open>
-          <summary>Tier 1 — What must hold</summary>
-          <div class="sub">
+      <div class="card" style="margin-top:12px" data-lens-pane="human">
+        <h2 class="section-title">Human language</h2>
+
+        <details open>
+          <summary>Tier 1 — What must hold <span class="chev">▾</span></summary>
+          <div class="body">
             <p>What is true stays true under pressure. What isn’t eventually breaks.</p>
             <ul>
               <li>Honesty stabilizes decisions.</li>
@@ -36,65 +35,75 @@
           </div>
         </details>
 
-        <details class="bubble">
-          <summary>Tier 2 — How coherence is maintained</summary>
-          <div class="sub">
+        <details>
+          <summary>Tier 2 — How coherence is maintained <span class="chev">▾</span></summary>
+          <div class="body">
             <ul>
-              <li>Make constraints explicit.</li>
-              <li>Use receipts for decisions.</li>
-              <li>Invalidate downstream when upstream changes.</li>
+              <li>Clarify what’s allowed before acting.</li>
+              <li>Verify steps so claims stay defensible.</li>
+              <li>Make decisions produce receipts (proof of follow-through).</li>
             </ul>
           </div>
         </details>
 
-        <details class="bubble">
-          <summary>Tier 3 — What you notice when coherence shifts</summary>
-          <div class="sub">
+        <details>
+          <summary>Tier 3 — What you notice when coherence shifts <span class="chev">▾</span></summary>
+          <div class="body">
             <ul>
-              <li>Drift: what you say/do/get stop matching.</li>
-              <li>Rule fatigue: boundaries exist but don’t bind behavior.</li>
-              <li>Promise decay: decisions happen without follow-through.</li>
+              <li>Drift: what you say, do, and get stop matching.</li>
+              <li>Rule fatigue: boundaries exist but don’t constrain behavior.</li>
+              <li>Promise decay: decisions are made without follow-through.</li>
             </ul>
           </div>
         </details>
       </div>
 
-      <div class="tabpanel" data-panel="scientific" hidden>
-        <p><strong>Scientific language</strong></p>
-        <details class="bubble" open>
-          <summary>Tier 1 — Invariant</summary>
-          <div class="sub">
-            <p>Observer-invariant constraint statements. These hold independent of narrative.</p>
+      <div class="card" style="margin-top:12px" data-lens-pane="scientific">
+        <h2 class="section-title">Scientific language</h2>
+
+        <details open>
+          <summary>Tier 1 — Invariant <span class="chev">▾</span></summary>
+          <div class="body">
+            <ul>
+              <li>Observer-invariant constraints bound admissible states.</li>
+              <li>Coherence is upper-bounded by evidence.</li>
+            </ul>
           </div>
         </details>
 
-        <details class="bubble">
-          <summary>Tier 2 — Structural</summary>
-          <div class="sub">
-            <p>Mechanisms that preserve admissibility and receipt-gated transitions.</p>
+        <details>
+          <summary>Tier 2 — Structural <span class="chev">▾</span></summary>
+          <div class="body">
+            <ul>
+              <li>Constraints + verification define stable transitions.</li>
+              <li>Receipts gate progression and prevent drift.</li>
+            </ul>
           </div>
         </details>
 
-        <details class="bubble">
-          <summary>Tier 3 — Signal</summary>
-          <div class="sub">
-            <p>Observable indicators of drift, boundary collapse, and follow-through failure.</p>
+        <details>
+          <summary>Tier 3 — Signal <span class="chev">▾</span></summary>
+          <div class="body">
+            <ul>
+              <li>Misalignment, boundary collapse, and follow-through failure are observable failure patterns.</li>
+            </ul>
           </div>
         </details>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn" href="/">Home</a>
-      <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/reference/">Reference</a>
-    </div>
-  </section>
+    <section class="panel nav">
+      <div class="nav-grid">
+        <a class="btn" href="/home/">Home</a>
+        <a class="btn" href="/laws/">Laws</a>
+        <a class="btn" href="/geodynamics/">Geodynamics</a>
+        <a class="btn" href="/engine/">Engine</a>
+      </div>
+    </section>
 
-</main>
+    <div class="footer">© Geodiametrics</div>
+  </main>
+
+  <script src="/assets/lens.js"></script>
 </body>
-</html>
+</html>    

@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodynamics · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script src="/engine.js" defer></script>
+  <script defer src="/assets/ui.js"></script>
 </head>
-<body class="bg-gradient">
-
+<body>
 <main class="page">
 
   <section class="panel hero">
@@ -16,64 +15,41 @@
     <p class="subtitle">How coherence changes over time — without opinion, without pressure.</p>
   </section>
 
-  <section class="panel" data-lens-root data-lens-default="human">
-    <div class="nav-grid">
-      <button class="btn primary" type="button" data-lens-btn="human" aria-pressed="true">Human</button>
-      <button class="btn" type="button" data-lens-btn="scientific" aria-pressed="false">Scientific</button>
-    </div>
-
-    <div class="spacer"></div>
-
-    <div data-lens-panel="human">
-      <div class="acc" data-acc data-acc-default="open">
-        <button class="acc-head" data-acc-head type="button">
-          <span>Human translation</span>
-        </button>
-        <div class="acc-body" data-acc-body>
-          <p>
-            When life feels confusing, it usually means signals stopped lining up.
-            Coherence returns when reality becomes checkable again:
-            what happened, what was allowed, and what proved out.
-          </p>
-          <ul>
-            <li><strong>Drift</strong> is when what you say, do, and get stop matching.</li>
-            <li><strong>Pressure</strong> reveals what is real and what was only assumed.</li>
-            <li><strong>Small corrections</strong> early prevent large collapses later.</li>
-          </ul>
-        </div>
+  <section class="panel">
+    <div class="tabs" data-tabs data-tabs-key="geodynamics" data-default="human">
+      <div class="tabbar">
+        <button class="tab" data-tab="human" aria-selected="true">Human</button>
+        <button class="tab" data-tab="scientific" aria-selected="false">Scientific</button>
       </div>
-    </div>
 
-    <div data-lens-panel="scientific" style="display:none">
-      <div class="acc" data-acc data-acc-default="open">
-        <button class="acc-head" data-acc-head type="button">
-          <span>Mechanics</span>
-        </button>
-        <div class="acc-body" data-acc-body>
-          <p><strong>Coherence(t) = 1 / (1 + Divergence(t))</strong></p>
-          <p class="muted">
-            Divergence reflects misalignment between declared state and observed state.
-            This is structural description, not moral claim.
-          </p>
-        </div>
+      <div class="tabpanel" data-panel="human">
+        <p><strong>Human translation</strong></p>
+        <p>When life feels confusing, it usually means signals stopped lining up. Coherence returns when reality becomes checkable again: what happened, what was allowed, and what proved out.</p>
+        <ul>
+          <li><strong>Drift</strong> = what you say/do/get stop matching.</li>
+          <li><strong>Pressure</strong> reveals what’s real vs assumed.</li>
+          <li><strong>Small corrections early</strong> prevent large collapses later.</li>
+        </ul>
+      </div>
+
+      <div class="tabpanel" data-panel="scientific" hidden>
+        <p><strong>Scientific language</strong></p>
+        <p>Coherence can be expressed as the inverse of divergence between declared state and observed state. This is a structural description, not a moral claim.</p>
+        <p><strong>Example form</strong>: Coherence(t) = 1 / (1 + Divergence(t)).</p>
       </div>
     </div>
   </section>
 
   <section class="panel nav">
     <div class="nav-grid">
-      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/">Home</a>
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/principles/">Principles</a>
       <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/reference/">Reference</a>
     </div>
   </section>
 
-  <section class="panel footer">
-    <div class="small muted">Build: 2026-02-01a · Canonical</div>
-  </section>
-
 </main>
-
 </body>
 </html>

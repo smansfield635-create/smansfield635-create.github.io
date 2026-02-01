@@ -1,56 +1,58 @@
 /* =========================================================
-   Geodiametrics · Lens Controller (GLOBAL)
-   Human ⇄ Scientific / Software-correct
+   Geodiametrics · Lens Controller
+   Purpose: Toggle Human / Scientific language consistently
+   Scope: ALL pages with lens buttons
    ========================================================= */
 
 (function () {
-  "use strict";
+  'use strict';
 
-  function initLensControllers() {
-    const switches = document.querySelectorAll(".lens-switch");
+  const STORAGE_KEY = 'gd_lens'; // persist choice
 
-    switches.forEach((switchEl) => {
-      const buttons = switchEl.querySelectorAll("[data-lens]");
-      const panels = document.querySelectorAll("[data-lens-panel]");
+  function setLens(lens) {
+    // Save choice
+    try {
+      localStorage.setItem(STORAGE_KEY, lens);
+    } catch (e) {}
 
-      if (!buttons.length || !panels.length) return;
+    // Toggle buttons
+    document.querySelectorAll('.lens-switch').forEach(group => {
+      group.querySelectorAll('button[data-lens]').forEach(btn => {
+        const active = btn.dataset.lens === lens;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+    });
 
-      // Determine default
-      const defaultLens =
-        switchEl.getAttribute("data-default") ||
-        buttons[0].getAttribute("data-lens");
+    // Toggle panels
+    document.querySelectorAll('[data-lens-panel]').forEach(panel => {
+      const match = panel.getAttribute('data-lens-panel') === lens;
+      panel.style.display = match ? '' : 'none';
+      panel.setAttribute('aria-hidden', match ? 'false' : 'true');
+    });
+  }
 
-      setLens(defaultLens, buttons, panels);
+  function initLens() {
+    let lens = 'human';
 
-      buttons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const lens = btn.getAttribute("data-lens");
-          setLens(lens, buttons, panels);
-        });
+    try {
+      lens = localStorage.getItem(STORAGE_KEY) || lens;
+    } catch (e) {}
+
+    setLens(lens);
+
+    // Wire all buttons
+    document.querySelectorAll('button[data-lens]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setLens(btn.dataset.lens);
       });
     });
   }
 
-  function setLens(lens, buttons, panels) {
-    // Buttons
-    buttons.forEach((btn) => {
-      const active = btn.getAttribute("data-lens") === lens;
-      btn.classList.toggle("active", active);
-      btn.setAttribute("aria-pressed", active ? "true" : "false");
-    });
-
-    // Panels
-    panels.forEach((panel) => {
-      const match = panel.getAttribute("data-lens-panel") === lens;
-      panel.style.display = match ? "block" : "none";
-      panel.setAttribute("aria-hidden", match ? "false" : "true");
-    });
-  }
-
-  // Boot
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initLensControllers);
+  // Boot once DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLens);
   } else {
-    initLensControllers();
+    initLens();
   }
 })();

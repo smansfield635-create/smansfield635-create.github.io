@@ -1,67 +1,78 @@
-(() => {
-  // ====== CONFIG (edit ONLY these if needed) ======
-  const WORKER_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
-  const EVENT_PATH = "/event";   // Worker endpoint that increments counters
-  const TIMEOUT_MS = 2500;
+/* engine.js — canonical client behavior (no build step)
+   - Lens toggles: [data-lens-root]
+   - Accordions:   [data-acc] + [data-acc-body]
+*/
 
-  // ====== Helpers ======
-  const now = () => Date.now();
-  const safeJson = async (res) => { try { return await res.json(); } catch { return null; } };
-  const timeoutFetch = (url, opts) =>
-    Promise.race([
-      fetch(url, opts),
-      new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), TIMEOUT_MS))
-    ]);
+(function () {
+  function qsa(root, sel) { return Array.prototype.slice.call(root.querySelectorAll(sel)); }
 
-  // ====== Session model (human-simple) ======
-  // One "session" here means: first time this browser ever hits the site (until storage cleared).
-  // If you want session windows later, we can add a 30-min expiry, but this is the minimum.
-  const SID_KEY = "gd_sid_v1";
-
-  let isNewSession = false;
-  let sid = null;
-
-  try {
-    sid = localStorage.getItem(SID_KEY);
-    if (!sid) {
-      sid = `gd_${now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
-      localStorage.setItem(SID_KEY, sid);
-      isNewSession = true;
-    }
-  } catch {
-    // Storage blocked; fall back to a per-load sid (still counts pageviews)
-    sid = `gd_${now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
-    isNewSession = true;
+  function setActiveButton(btns, active) {
+    btns.forEach(b => {
+      const isOn = b === active;
+      b.classList.toggle("primary", isOn);
+      b.setAttribute("aria-pressed", isOn ? "true" : "false");
+    });
   }
 
-  // ====== Send event (non-blocking, safe) ======
-  const sendEvent = async () => {
-    const url = `${WORKER_BASE}${EVENT_PATH}`;
-    const payload = {
-      type: "pageview",
-      sid,
-      session: isNewSession ? 1 : 0,
-      path: location.pathname,
-      ref: document.referrer || "",
-      ua: navigator.userAgent || "",
-      ts: now()
-    };
+  function setLens(root, lens) {
+    const panels = qsa(root, "[data-lens-panel]");
+    panels.forEach(p => {
+      const isMatch = (p.getAttribute("data-lens-panel") === lens);
+      p.style.display = isMatch ? "" : "none";
+    });
+    root.setAttribute("data-lens", lens);
+  }
 
-    try {
-      await timeoutFetch(url, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload)
+  function initLensRoot(root) {
+    const btns = qsa(root, "[data-lens-btn]");
+    if (!btns.length) return;
+
+    // default lens
+    const initial = root.getAttribute("data-lens-default") || "human";
+    const initialBtn = btns.find(b => (b.getAttribute("data-lens-btn") === initial)) || btns[0];
+
+    // wire clicks
+    btns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const lens = btn.getAttribute("data-lens-btn");
+        setActiveButton(btns, btn);
+        setLens(root, lens);
       });
-    } catch {
-      // Silent failure by design: website must never break if telemetry is down.
-    }
-  };
+    });
 
-  // ====== Run on every page load ======
-  if (document.readyState === "complete" || document.readyState === "interactive") {
-    sendEvent();
+    // apply default
+    setActiveButton(btns, initialBtn);
+    setLens(root, initialBtn.getAttribute("data-lens-btn"));
+  }
+
+  function initAccordion(acc) {
+    const body = acc.querySelector("[data-acc-body]");
+    const head = acc.querySelector("[data-acc-head]");
+    if (!body || !head) return;
+
+    const defaultOpen = acc.getAttribute("data-acc-default") === "open";
+    body.style.display = defaultOpen ? "" : "none";
+    head.setAttribute("aria-expanded", defaultOpen ? "true" : "false");
+
+    head.addEventListener("click", () => {
+      const isOpen = body.style.display !== "none";
+      body.style.display = isOpen ? "none" : "";
+      head.setAttribute("aria-expanded", isOpen ? "false" : "true");
+      acc.classList.toggle("open", !isOpen);
+    });
+  }
+
+  function boot() {
+    // Lens roots
+    qsa(document, "[data-lens-root]").forEach(initLensRoot);
+
+    // Accordions
+    qsa(document, "[data-acc]").forEach(initAccordion);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
   } else {
-    document.addEventListener("DOMContentLoaded", sendEvent, { once: true });
+    boot();
   }
 })();

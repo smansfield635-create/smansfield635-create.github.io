@@ -3,71 +3,111 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodiametrics · Home</title>
-  <meta name="theme-color" content="#0b1224"/>
-  <style>
-    :root{
-      --bg0:#050814; --bg1:#0b1634;
-      --card:rgba(17,24,39,.46);
-      --stroke:rgba(255,255,255,.10);
-      --text:#eaf2ff;
-      --muted:rgba(234,242,255,.70);
-      --shadow:0 24px 70px rgba(0,0,0,.55);
-      --r:26px;
-      --btn:linear-gradient(90deg,#2a74ff,#2ec7a6);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; min-height:100vh; color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:
-        radial-gradient(1200px 900px at 20% 10%, rgba(80,130,255,.22), transparent 55%),
-        radial-gradient(1000px 800px at 85% 25%, rgba(45,220,180,.14), transparent 55%),
-        linear-gradient(180deg,var(--bg0),var(--bg1));
-    }
-    .wrap{padding:clamp(18px,3.5vw,40px); display:flex; justify-content:center}
-    .stack{width:min(760px,100%); display:flex; flex-direction:column; gap:16px}
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid var(--stroke);
-      border-radius:var(--r);
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(16px);
-      padding:clamp(16px,3vw,26px);
-    }
-    h1{margin:0 0 6px 0; font-size:clamp(30px,4.8vw,46px)}
-    p{margin:0; color:var(--muted); line-height:1.45}
-    .grid{display:grid; gap:12px}
-    .btn{
-      border:none; border-radius:999px; padding:16px 18px;
-      font-size:16px; font-weight:900; color:#eaffff;
-      background:var(--btn); cursor:pointer;
-      box-shadow:0 14px 40px rgba(0,0,0,.35);
-    }
-    .btn.alt{background:linear-gradient(90deg,#5b6cff,#8c5bff)}
-    .btn.gray{background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04))}
-    footer{opacity:.55; font-size:12px; text-align:center}
-  </style>
+  <title>Control · Geodiametrics</title>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+  <script defer src="/assets/telemetry.js"></script>
 </head>
-<body>
-  <main class="wrap">
-    <section class="stack">
-      <div class="card">
-        <h1>Home</h1>
-        <p>One domain. One authority. Multiple entry points.</p>
-      </div>
 
-      <div class="card grid">
-        <button class="btn" onclick="location.href='../engine/'">Engine</button>
-        <button class="btn" onclick="location.href='../control/'">Control</button>
-        <button class="btn alt" onclick="location.href='../laws/'">Laws</button>
-        <button class="btn alt" onclick="location.href='../principles/'">Principles</button>
-        <button class="btn gray" onclick="location.href='../geodynamics/'">Geodynamics</button>
-        <button class="btn gray" onclick="location.href='../reference/'">Reference</button>
-      </div>
+<body class="bg-gradient">
+<main class="page">
 
-      <footer>© Geodiametrics</footer>
-    </section>
-  </main>
+  <section class="panel hero">
+    <h1>Control</h1>
+    <p class="subtitle">Live read-only gauges. Truth first. No actions forced.</p>
+  </section>
+
+  <section class="panel bubble">
+    <details open>
+      <summary>Live status</summary>
+      <div class="bubble-body">
+        <div id="liveText" class="mono note">Loading…</div>
+      </div>
+    </details>
+  </section>
+
+  <section class="panel bubble">
+    <details open>
+      <summary>Activity (what’s happening)</summary>
+      <div class="bubble-body">
+        <div class="tight">
+          <div class="row"><span>Sessions</span><strong id="m_sessions">—</strong></div>
+          <div class="row"><span>Pageviews</span><strong id="m_pageviews">—</strong></div>
+          <div class="row"><span>Clicks</span><strong id="m_clicks">—</strong></div>
+          <div class="row"><span>Writes</span><strong id="m_writes">—</strong></div>
+          <div class="row"><span>Errors</span><strong id="m_errors">—</strong></div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section class="panel bubble">
+    <details>
+      <summary>Raw payload (JSON)</summary>
+      <div class="bubble-body">
+        <pre id="raw" class="mono note">—</pre>
+      </div>
+    </details>
+  </section>
+
+  <section class="panel nav">
+    <div class="nav-grid">
+      <a class="btn primary" href="/home/">Home</a>
+      <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/state/">State</a>
+      <a class="btn" href="/reference/">Reference</a>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(() => {
+  const METRICS = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
+  const POLL_MS = 10000;
+
+  const el = (id) => document.getElementById(id);
+
+  function setText(id, v) {
+    const n = el(id);
+    if (n) n.textContent = String(v);
+  }
+
+  function fmt(ts) {
+    if (!ts) return "—";
+    try { return new Date(ts).toLocaleString(); } catch { return String(ts); }
+  }
+
+  async function tick() {
+    try {
+      const r = await fetch(METRICS, { cache: "no-store" });
+      const j = await r.json();
+
+      setText("raw", JSON.stringify(j, null, 2));
+
+      const m = j.metrics || {};
+      setText("m_sessions", m.sessions ?? 0);
+      setText("m_pageviews", m.pageviews ?? 0);
+      setText("m_clicks", m.clicks ?? 0);
+      setText("m_writes", m.writes ?? 0);
+      setText("m_errors", m.errors ?? 0);
+
+      const meta = j.meta || {};
+      const age = meta.ageSec;
+      const health = (j.status || "DEGRADED");
+
+      setText(
+        "liveText",
+        `Truth source — ${METRICS}\nPolling — ${Math.round(POLL_MS/1000)}s\nLast updated — ${fmt(m.lastUpdated)}\nAge (sec) — ${age === null ? "—" : age}\nHEALTH — ${health}`
+      );
+    } catch (e) {
+      setText("liveText", "Live status unavailable (fetch failed).");
+    }
+  }
+
+  tick();
+  setInterval(tick, POLL_MS);
+})();
+</script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,230 +7,200 @@
   <title>State · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
-<body class="bg-gradient planet-c">
-  <div class="planet" aria-hidden="true"></div>
 
-  <main class="page">
-    <section class="panel hero">
-      <h1>State</h1>
-      <p class="subtitle">Observe first. Act only by choice (armed + receipt-gated).</p>
-    </section>
+<body class="bg-gradient">
+<main class="page">
 
-    <section class="panel tight">
-      <div class="kv">
-        <div class="k">UVCP</div><div class="v mono" id="uvcp_show">—</div>
-        <div class="k">Updated</div><div class="v" id="updated">—</div>
-        <div class="k">Last adapter</div><div class="v" id="adapter">—</div>
-        <div class="k">Last target</div><div class="v" id="target">—</div>
+  <section class="panel hero">
+    <h1>State</h1>
+    <p class="subtitle">What is happening right now. Observe first.</p>
+  </section>
+
+  <section class="panel">
+    <details class="drop" open>
+      <summary>What this is</summary>
+      <div class="accordion-body">
+        <p><strong>This interface demonstrates how decisions become real — safely, deliberately, and only by choice.</strong></p>
+        <p class="note">
+          Nothing here forces you forward. Nothing here traps you.
+          This page exists to show state, proofs (receipts), and (optionally) a safe “one-action” hatch.
+        </p>
       </div>
-    </section>
+    </details>
+  </section>
 
-    <section class="panel">
-      <details class="drop" open>
-        <summary>Snapshot</summary>
-        <div class="drop-body">
-          <pre id="snapshot" class="mono" style="white-space:pre-wrap;margin:0">{}</pre>
-        </div>
-      </details>
-    </section>
+  <section class="panel">
+    <details class="drop" open>
+      <summary>Snapshot</summary>
+      <div class="accordion-body">
+        <pre id="snapshot" class="mono" style="white-space:pre-wrap;margin:0">{}</pre>
+      </div>
+    </details>
 
-    <section class="panel">
-      <details class="drop" open>
-        <summary>Receipts</summary>
-        <div class="drop-body">
-          <pre id="receipts" class="mono" style="white-space:pre-wrap;margin:0">[]</pre>
-        </div>
-      </details>
-    </section>
+    <div style="height:10px"></div>
 
-    <section class="panel">
-      <details class="drop">
-        <summary>Operate (ARM required)</summary>
-        <div class="drop-body">
-          <p class="note">One operation only. Auto-disarms. Cooldown enforced. Receipt is the proof.</p>
+    <details class="drop">
+      <summary>Receipts (proof of what happened)</summary>
+      <div class="accordion-body">
+        <p class="note">
+          A receipt is a proof that something occurred, under constraints, with an outcome that can be checked.
+        </p>
+        <pre id="receipts" class="mono" style="white-space:pre-wrap;margin:0">[]</pre>
+      </div>
+    </details>
+  </section>
 
-          <div class="kv" style="margin-top:10px">
-            <div class="k">Adapter</div>
-            <div class="v">
-              <select id="op_adapter" style="width:100%;padding:10px;border-radius:10px">
-                <option value="kvm">kvm</option>
-                <option value="hyperv">hyperv</option>
-              </select>
-            </div>
+  <section class="panel">
+    <details class="drop">
+      <summary>Operate (ARM required)</summary>
+      <div class="accordion-body">
+        <p class="note">
+          This is a safe hatch. It is <strong>off by default</strong>.
+          It only sends <strong>one action</strong> when you:
+          (1) ARM, (2) type the confirm phrase, (3) execute once.
+          After execution it auto-disarms.
+        </p>
 
-            <div class="k">Target</div>
-            <div class="v">
-              <select id="op_target_select" style="width:100%;padding:10px;border-radius:10px"></select>
-              <input id="op_target" type="text" placeholder="or type VM name"
-                style="width:100%;padding:10px;border-radius:10px;margin-top:8px"/>
-            </div>
-
-            <div class="k">Operation</div>
-            <div class="v">
-              <select id="op_op" style="width:100%;padding:10px;border-radius:10px">
-                <option value="start">start</option>
-                <option value="stop">stop</option>
-                <option value="reboot">reboot</option>
-              </select>
-            </div>
-
-            <div class="k">Confirm</div>
-            <div class="v">
-              <input id="op_confirm" type="text" placeholder='type: EXECUTE'
-                style="width:100%;padding:10px;border-radius:10px"/>
-            </div>
-
-            <div class="k">ARM</div>
-            <div class="v">
-              <label style="display:flex;align-items:center;gap:10px">
-                <input id="op_arm" type="checkbox"/>
-                <span>Arm one operation</span>
-              </label>
-            </div>
+        <div class="kv" style="margin-top:10px">
+          <div class="k">Adapter</div>
+          <div class="v">
+            <select id="op_adapter" style="width:100%;padding:10px;border-radius:10px">
+              <option value="kvm">kvm</option>
+              <option value="hyperv">hyperv</option>
+            </select>
           </div>
 
-          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
-            <button class="btn primary" id="op_send" type="button">Execute once</button>
-            <button class="btn" id="op_refresh_targets" type="button">Refresh targets</button>
-            <button class="btn" id="op_clear" type="button">Clear</button>
+          <div class="k">Target (VM name)</div>
+          <div class="v">
+            <input id="op_target" type="text" placeholder="vm-name"
+              style="width:100%;padding:10px;border-radius:10px"/>
           </div>
 
-          <p class="note" style="margin-top:12px">Cooldown: <span id="cooldown">ready</span></p>
-          <pre id="op_result" class="mono" style="white-space:pre-wrap;margin:0;color:rgba(233,238,252,.75)">{}</pre>
+          <div class="k">Operation</div>
+          <div class="v">
+            <select id="op_op" style="width:100%;padding:10px;border-radius:10px">
+              <option value="start">start</option>
+              <option value="stop">stop</option>
+              <option value="reboot">reboot</option>
+            </select>
+          </div>
+
+          <div class="k">Confirm phrase</div>
+          <div class="v">
+            <input id="op_confirm" type="text" placeholder='type: EXECUTE'
+              style="width:100%;padding:10px;border-radius:10px"/>
+          </div>
+
+          <div class="k">ARM</div>
+          <div class="v">
+            <label style="display:flex;align-items:center;gap:10px">
+              <input id="op_arm" type="checkbox"/>
+              <span>Arm one operation</span>
+            </label>
+          </div>
         </div>
-      </details>
-    </section>
 
-    <section class="panel">
-      <div class="nav-grid">
-        <a class="btn" href="/home/">Home</a>
-        <a class="btn" href="/engine/">Execution Space</a>
-        <a class="btn" href="/laws/">Laws</a>
-        <a class="btn" href="/principles/">Principles</a>
-        <a class="btn" href="/geodynamics/">Coherence Mechanics</a>
-        <a class="btn" href="/reference/">Reference</a>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
+          <button class="btn primary" id="op_send" type="button">Execute once</button>
+          <button class="btn" id="op_clear" type="button">Clear</button>
+        </div>
+
+        <pre id="op_result" class="mono" style="white-space:pre-wrap;margin-top:12px;margin-bottom:0;color:rgba(233,238,252,.75)">{}</pre>
+
+        <p class="note" style="margin-top:12px">
+          If nothing changes, it means the backend is not connected yet. That is okay.
+          This hatch is designed to stay safe when unplugged.
+        </p>
       </div>
-    </section>
+    </details>
+  </section>
 
-    <div class="footer"><span>© Geodiametrics</span></div>
-  </main>
+  <section class="panel">
+    <div class="nav-grid two">
+      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/engine/">Execution Space</a>
+      <a class="btn" href="/laws/">Laws</a>
+      <a class="btn" href="/principles/">Principles</a>
+      <a class="btn" href="/geodynamics/">Coherence Mechanics</a>
+      <a class="btn" href="/reference/">Reference</a>
+      <a class="btn" href="/about/">About</a>
+    </div>
+  </section>
 
-  <script>
-    const UVCP_BASE = "http://127.0.0.1:8000";
-    document.getElementById("uvcp_show").textContent = UVCP_BASE;
+</main>
 
-    const COOLDOWN_MS = 8000;
-    let nextAllowed = 0;
+<script>
+  // Safe UI-only operate hatch (no assumptions). You can wire later.
+  const UVCP_BASE = "http://127.0.0.1:8000"; // set when ready
 
-    async function j(url, opts){
-      const r = await fetch(url, Object.assign({ cache:"no-store" }, opts||{}));
-      if(!r.ok) throw new Error(await r.text());
-      return await r.json();
+  async function j(url, opts){
+    const r = await fetch(url, Object.assign({ cache:"no-store" }, opts||{}));
+    if(!r.ok) throw new Error(await r.text());
+    return await r.json();
+  }
+
+  async function load(){
+    try{
+      const state = await j(UVCP_BASE + "/state?t=" + Date.now());
+      document.getElementById("snapshot").textContent = JSON.stringify(state || {}, null, 2);
+      const receipts = await j(UVCP_BASE + "/receipts?limit=20&t=" + Date.now());
+      document.getElementById("receipts").textContent = JSON.stringify(receipts || [], null, 2);
+    }catch{
+      // stay calm: unplugged is valid
+      document.getElementById("snapshot").textContent = "Unavailable";
+      document.getElementById("receipts").textContent = "Unavailable";
+    }
+  }
+
+  document.getElementById("op_send").addEventListener("click", async () => {
+    const armed = document.getElementById("op_arm").checked;
+    const confirm = (document.getElementById("op_confirm").value || "").trim();
+    if(!armed){
+      document.getElementById("op_result").textContent = "ARM is required.";
+      return;
+    }
+    if(confirm !== "EXECUTE"){
+      document.getElementById("op_result").textContent = 'Type "EXECUTE" to confirm.';
+      return;
     }
 
-    function fmtUnixSec(ts){
-      if(!ts) return "—";
-      const d = new Date(Number(ts) * 1000);
-      return isNaN(d) ? String(ts) : d.toLocaleString();
+    const adapter = document.getElementById("op_adapter").value;
+    const op = document.getElementById("op_op").value;
+    const target = (document.getElementById("op_target").value || "").trim();
+    if(!target){
+      document.getElementById("op_result").textContent = "Target is required.";
+      return;
     }
 
-    async function loadState(){
-      try{
-        const state = await j(UVCP_BASE + "/state?t=" + Date.now());
-        document.getElementById("updated").textContent = fmtUnixSec(state.updated);
-        document.getElementById("adapter").textContent = state.last_adapter || "—";
-        document.getElementById("target").textContent = state.last_target || "—";
-        document.getElementById("snapshot").textContent = JSON.stringify(state.snapshot || {}, null, 2);
-        const receipts = await j(UVCP_BASE + "/receipts?limit=20&t=" + Date.now());
-        document.getElementById("receipts").textContent = JSON.stringify(receipts || [], null, 2);
-      } catch {
-        document.getElementById("snapshot").textContent = "Unavailable";
-        document.getElementById("receipts").textContent = "Unavailable";
-      }
-    }
-
-    function cooldownLabel(){
-      const now = Date.now();
-      if(now >= nextAllowed) return "ready";
-      return Math.ceil((nextAllowed - now)/1000) + "s";
-    }
-    setInterval(()=>{ document.getElementById("cooldown").textContent = cooldownLabel(); }, 250);
-
-    async function refreshTargets(){
-      const adapter = document.getElementById("op_adapter").value;
-      const sel = document.getElementById("op_target_select");
-      sel.innerHTML = "";
-      try{
-        const data = await j(UVCP_BASE + "/inventory/targets?adapter=" + encodeURIComponent(adapter) + "&t=" + Date.now());
-        const targets = (data.targets || []);
-        const opt0 = document.createElement("option");
-        opt0.value = ""; opt0.textContent = "select a VM";
-        sel.appendChild(opt0);
-        targets.forEach(name=>{
-          const o=document.createElement("option");
-          o.value=name; o.textContent=name;
-          sel.appendChild(o);
-        });
-      }catch{
-        const o=document.createElement("option");
-        o.value=""; o.textContent="unavailable";
-        sel.appendChild(o);
-      }
-    }
-
-    document.getElementById("op_adapter").addEventListener("change", refreshTargets);
-    document.getElementById("op_refresh_targets").addEventListener("click", refreshTargets);
-    document.getElementById("op_target_select").addEventListener("change", (e)=>{
-      if(e.target.value) document.getElementById("op_target").value = e.target.value;
-    });
-
-    document.getElementById("op_send").addEventListener("click", async () => {
-      const now = Date.now();
-      if(now < nextAllowed){
-        document.getElementById("op_result").textContent = "Cooldown active.";
-        return;
-      }
-      const armed = document.getElementById("op_arm").checked;
-      const confirm = (document.getElementById("op_confirm").value || "").trim();
-      if(!armed){ document.getElementById("op_result").textContent = "ARM is required."; return; }
-      if(confirm !== "EXECUTE"){ document.getElementById("op_result").textContent = 'Type "EXECUTE" to confirm.'; return; }
-
-      const adapter = document.getElementById("op_adapter").value;
-      const op = document.getElementById("op_op").value;
-      const target = (document.getElementById("op_target").value || "").trim();
-      if(!target){ document.getElementById("op_result").textContent = "Target is required."; return; }
-
-      const payload = { adapter, op, target };
-
-      try{
-        const result = await j(UVCP_BASE + "/operate?t=" + Date.now(), {
-          method:"POST",
-          headers:{ "content-type":"application/json" },
-          body: JSON.stringify(payload)
-        });
-        document.getElementById("op_result").textContent = JSON.stringify(result, null, 2);
-        document.getElementById("op_arm").checked = false;
-        document.getElementById("op_confirm").value = "";
-        nextAllowed = Date.now() + COOLDOWN_MS;
-        setTimeout(loadState, 600);
-      }catch(e){
-        document.getElementById("op_result").textContent = String(e);
-        document.getElementById("op_arm").checked = false;
-        document.getElementById("op_confirm").value = "";
-        nextAllowed = Date.now() + COOLDOWN_MS;
-      }
-    });
-
-    document.getElementById("op_clear").addEventListener("click", () => {
-      document.getElementById("op_target").value = "";
-      document.getElementById("op_confirm").value = "";
+    try{
+      const result = await j(UVCP_BASE + "/operate?t=" + Date.now(), {
+        method:"POST",
+        headers:{ "content-type":"application/json" },
+        body: JSON.stringify({ adapter, op, target })
+      });
+      document.getElementById("op_result").textContent = JSON.stringify(result, null, 2);
+      // auto-disarm
       document.getElementById("op_arm").checked = false;
-      document.getElementById("op_result").textContent = "{}";
-    });
+      document.getElementById("op_confirm").value = "";
+      setTimeout(load, 600);
+    }catch(e){
+      document.getElementById("op_result").textContent = "Unavailable (backend not connected).";
+      document.getElementById("op_arm").checked = false;
+      document.getElementById("op_confirm").value = "";
+    }
+  });
 
-    loadState();
-    refreshTargets();
-    setInterval(loadState, 10000);
-  </script>
+  document.getElementById("op_clear").addEventListener("click", () => {
+    document.getElementById("op_target").value = "";
+    document.getElementById("op_confirm").value = "";
+    document.getElementById("op_arm").checked = false;
+    document.getElementById("op_result").textContent = "{}";
+  });
+
+  load();
+  setInterval(load, 10000);
+</script>
+
 </body>
 </html>

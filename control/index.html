@@ -3,398 +3,251 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>State · Geodiametrics</title>
+  <title>Control · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
-
-  <style>
-    .tabs{display:flex;gap:10px;flex-wrap:wrap}
-    .tabbtn{
-      display:inline-flex;align-items:center;justify-content:center;
-      height:46px;padding:0 16px;border-radius:999px;
-      border:1px solid rgba(233,238,252,.16);
-      background:rgba(255,255,255,.06);
-      color:rgba(233,238,252,.92);
-      font-weight:700;letter-spacing:.2px;cursor:pointer;
-      box-shadow:0 12px 28px rgba(0,0,0,.35);
-      -webkit-tap-highlight-color:transparent;
-    }
-    .tabbtn[aria-selected="true"]{
-      background:linear-gradient(180deg, rgba(70,140,255,.62), rgba(28,70,160,.52));
-      border-color:rgba(140,190,255,.35);
-    }
-    .tabpanel{display:none}
-    .tabpanel[data-active="true"]{display:block}
-    .leadline{color:rgba(233,238,252,.72);margin:0;line-height:1.5}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
-    .mini{font-size:14px;color:rgba(233,238,252,.55)}
-    .barrow{margin-top:12px}
-    .barhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-    .bartrack{height:12px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden;border:1px solid rgba(233,238,252,.10)}
-    .barfill{height:100%;width:0%;border-radius:999px}
-    .i-red{background:rgba(239,68,68,.85)}
-    .i-yellow{background:rgba(234,179,8,.85)}
-    .i-green{background:rgba(34,197,94,.85)}
-  </style>
 </head>
-
 <body class="bg-gradient">
+
 <main class="page">
 
   <section class="panel hero">
-    <h1>State</h1>
-    <p class="subtitle">Same truth. Two lenses. Observe first.</p>
+    <h1>Control</h1>
+    <p class="subtitle">Live read-only gauges. Color = intensity. Badge = health.</p>
   </section>
 
   <section class="panel">
-    <p class="leadline">
-      This page shows what the system currently knows, without forcing action.
+    <h2>Live gauge</h2>
+    <p class="muted">
+      The system checks a single “truth” source every 10 seconds and shows the latest results.
+      If the data is fresh, “Age” stays low.
     </p>
 
-    <div class="tabs" role="tablist" aria-label="State lenses" style="margin-top:12px">
-      <button class="tabbtn" id="tab-human" role="tab" aria-selected="true" aria-controls="panel-human" type="button">
-        Human
-      </button>
-      <button class="tabbtn" id="tab-science" role="tab" aria-selected="false" aria-controls="panel-science" type="button">
-        Scientific
-      </button>
+    <div class="kv">
+      <div><span class="k">Truth</span><span class="v mono" id="truthUrl">—</span></div>
+      <div><span class="k">Polling</span><span class="v mono" id="polling">10s</span></div>
+      <div><span class="k">Last updated</span><span class="v mono" id="lastUpdated">—</span></div>
+      <div><span class="k">Age (sec)</span><span class="v mono" id="ageSec">—</span></div>
+    </div>
+
+    <div class="badge-wrap">
+      <span class="badge" id="healthBadge">HEALTH: —</span>
     </div>
   </section>
 
-  <!-- HUMAN TAB -->
-  <section class="panel tabpanel" id="panel-human" role="tabpanel" aria-labelledby="tab-human" data-active="true">
-
-    <details class="drop" open>
-      <summary>What this is</summary>
-      <div class="drop-body">
-        <p><strong>This interface demonstrates how decisions become real — safely, deliberately, and only by choice.</strong></p>
-        <p class="mini">
-          Most of this page is read-only. If anything is unavailable, it means the system refuses to guess.
-        </p>
-      </div>
-    </details>
-
-    <div style="height:10px"></div>
-
-    <details class="drop" open>
-      <summary>Live gauge</summary>
-      <div class="drop-body">
-        <p class="mini">
-          The system checks a single “truth” source every 10 seconds and shows the latest results.
-          If the data is fresh, “Age” stays low.
-        </p>
-        <div class="kv" style="margin-top:10px">
-          <div class="k">Truth</div><div class="v mono" id="truthUrl">—</div>
-          <div class="k">Polling</div><div class="v mono">10s</div>
-          <div class="k">Last updated</div><div class="v mono" id="lastUpdated">—</div>
-          <div class="k">Age (sec)</div><div class="v mono" id="ageSec">—</div>
-        </div>
-      </div>
-    </details>
-
-    <div style="height:10px"></div>
-
-    <details class="drop" open>
+  <section class="panel">
+    <details open>
       <summary>Activity (what’s happening)</summary>
-      <div class="drop-body">
-        <p class="mini">
-          These are simple signals. If they are zero, it may mean “not wired yet,” not “nobody visited.”
-        </p>
-        <div id="gauges"></div>
+
+      <p class="muted small">
+        These are simple signals. If they are zero, it may mean “not wired yet,” not “nobody visited.”
+      </p>
+
+      <div class="metric">
+        <div class="metric-head">
+          <span>Sessions</span><span class="mono" id="valSessions">0</span>
+        </div>
+        <div class="bar"><div class="fill" id="barSessions"></div></div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-head">
+          <span>Pageviews</span><span class="mono" id="valPageviews">0</span>
+        </div>
+        <div class="bar"><div class="fill" id="barPageviews"></div></div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-head">
+          <span>Clicks</span><span class="mono" id="valClicks">0</span>
+        </div>
+        <div class="bar"><div class="fill" id="barClicks"></div></div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-head">
+          <span>Writes</span><span class="mono" id="valWrites">0</span>
+        </div>
+        <div class="bar"><div class="fill" id="barWrites"></div></div>
       </div>
     </details>
-
-    <div style="height:10px"></div>
-
-    <details class="drop">
-      <summary>Operate (optional hatch)</summary>
-      <div class="drop-body">
-        <p class="mini">
-          This is a safe hatch. It does nothing unless you deliberately arm it and confirm.
-          It executes once, produces a receipt, and then disarms itself.
-        </p>
-
-        <div class="kv" style="margin-top:10px">
-          <div class="k">Adapter</div>
-          <div class="v">
-            <select id="op_adapter" style="width:100%;padding:10px;border-radius:10px">
-              <option value="kvm">kvm</option>
-              <option value="hyperv">hyperv</option>
-            </select>
-          </div>
-
-          <div class="k">Operation</div>
-          <div class="v">
-            <select id="op_op" style="width:100%;padding:10px;border-radius:10px">
-              <option value="start">start</option>
-              <option value="stop">stop</option>
-              <option value="reboot">reboot</option>
-            </select>
-          </div>
-
-          <div class="k">Target (name)</div>
-          <div class="v">
-            <input id="op_target" type="text" placeholder="vm-name"
-              style="width:100%;padding:10px;border-radius:10px"/>
-          </div>
-
-          <div class="k">Confirm</div>
-          <div class="v">
-            <input id="op_confirm" type="text" placeholder='type: EXECUTE'
-              style="width:100%;padding:10px;border-radius:10px"/>
-          </div>
-
-          <div class="k">ARM</div>
-          <div class="v">
-            <label style="display:flex;align-items:center;gap:10px">
-              <input id="op_arm" type="checkbox"/>
-              <span>Arm one operation</span>
-            </label>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
-          <button class="btn primary" id="op_send" type="button">Execute once</button>
-          <button class="btn" id="op_clear" type="button">Clear</button>
-        </div>
-
-        <pre id="op_result" class="mono" style="white-space:pre-wrap;margin-top:12px;margin-bottom:0;color:rgba(233,238,252,.75)">{}</pre>
-
-        <p class="mini" style="margin-top:12px">
-          If it says “unavailable,” the backend is simply not connected yet. That’s fine.
-        </p>
-      </div>
-    </details>
-
   </section>
 
-  <!-- SCIENTIFIC TAB -->
-  <section class="panel tabpanel" id="panel-science" role="tabpanel" aria-labelledby="tab-science" data-active="false">
+  <section class="panel">
+    <details>
+      <summary>Sources (to scale)</summary>
 
-    <details class="drop" open>
-      <summary>Definition</summary>
-      <div class="drop-body">
-        <p>
-          This page is an observer-facing readout of system state and receipts.
-          It does not apply changes unless an explicitly armed operation is submitted.
-        </p>
-      </div>
-    </details>
-
-    <div style="height:10px"></div>
-
-    <details class="drop" open>
-      <summary>Truth source + polling</summary>
-      <div class="drop-body">
-        <p class="mini">
-          The UI polls a single truth endpoint (HTTP GET) at a fixed interval. The payload is displayed without modification.
-          Cache-busting is used to avoid stale reads.
-        </p>
-        <p class="mini">
-          “Age” = now − lastUpdated. Health is derived from status + freshness.
-        </p>
-        <div class="kv" style="margin-top:10px">
-          <div class="k">Truth</div><div class="v mono" id="truthUrl2">—</div>
-          <div class="k">Polling</div><div class="v mono">10s</div>
+      <div class="metric">
+        <div class="metric-head">
+          <span>GitHub</span><span class="mono" id="srcGitHub">0</span>
         </div>
+        <div class="bar"><div class="fill" id="barGitHub"></div></div>
       </div>
-    </details>
 
-    <div style="height:10px"></div>
-
-    <details class="drop">
-      <summary>Receipts (verification)</summary>
-      <div class="drop-body">
-        <p class="mini">
-          A receipt is a persistent record of a state transition: what was attempted, under which constraints, and what outcome was observed.
-          Receipts enable convergence and auditability.
-        </p>
+      <div class="metric">
+        <div class="metric-head">
+          <span>OSF</span><span class="mono" id="srcOSF">0</span>
+        </div>
+        <div class="bar"><div class="fill" id="barOSF"></div></div>
       </div>
-    </details>
 
-    <div style="height:10px"></div>
-
-    <details class="drop">
-      <summary>Why zeros may appear</summary>
-      <div class="drop-body">
-        <p class="mini">
-          Metrics are intentionally conservative. If sources are not wired or verified, the system prefers zero to estimation.
-          This prevents false claims.
-        </p>
+      <div class="metric">
+        <div class="metric-head">
+          <span>Direct</span><span class="mono" id="srcDirect">0</span>
+        </div>
+        <div class="bar"><div class="fill" id="barDirect"></div></div>
       </div>
+
+      <div class="metric">
+        <div class="metric-head">
+          <span>Other</span><span class="mono" id="srcOther">0</span>
+        </div>
+        <div class="bar"><div class="fill" id="barOther"></div></div>
+      </div>
+
+      <p class="muted small">Bars share one scale (max value across metrics + sources in this payload).</p>
     </details>
+  </section>
 
-    <div style="height:10px"></div>
-
-    <details class="drop">
+  <section class="panel">
+    <details>
       <summary>Raw payload (JSON)</summary>
-      <div class="drop-body">
-        <pre id="raw" class="mono" style="white-space:pre-wrap;margin:0;color:rgba(233,238,252,.75)">{}</pre>
-      </div>
+      <pre class="mono pre" id="rawJson">—</pre>
     </details>
-
   </section>
 
-  <!-- NAV -->
   <section class="panel nav">
-    <div class="nav-grid two">
+    <div class="nav-grid">
       <a class="btn" href="/home/">Home</a>
       <a class="btn" href="/">Landing</a>
-      <a class="btn" href="/engine/">Execution Space</a>
+      <a class="btn" href="/engine/">Engine</a>
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Coherence Mechanics</a>
+      <a class="btn" href="/geodynamics/">Geodynamics</a>
       <a class="btn" href="/reference/">Reference</a>
       <a class="btn" href="/about/">About</a>
     </div>
   </section>
 
-  <div class="meta">Build: 2026-02-01a · Canonical</div>
+  <section class="panel footer">
+    <div class="small muted">
+      Build: 2026-02-01a · Canonical: smansfield635-create.github.io
+    </div>
+  </section>
 
 </main>
 
 <script>
-  // Tabs
-  const tabHuman = document.getElementById("tab-human");
-  const tabSci = document.getElementById("tab-science");
-  const panelHuman = document.getElementById("panel-human");
-  const panelSci = document.getElementById("panel-science");
-  function setTab(which){
-    const human = which === "human";
-    tabHuman.setAttribute("aria-selected", human ? "true" : "false");
-    tabSci.setAttribute("aria-selected", human ? "false" : "true");
-    panelHuman.dataset.active = human ? "true" : "false";
-    panelSci.dataset.active = human ? "false" : "true";
-  }
-  tabHuman.addEventListener("click", ()=>setTab("human"));
-  tabSci.addEventListener("click", ()=>setTab("science"));
-
-  // Truth polling (read-only)
-  const TRUTH = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
+(() => {
   const POLL_MS = 10000;
+  const TRUTH = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
 
-  const $ = (id)=>document.getElementById(id);
-  const nowMs = ()=>Date.now();
-  const clamp01 = (x)=>Math.max(0, Math.min(1, x));
+  const el = (id) => document.getElementById(id);
 
-  function intensityColorClass(r){
-    if(r<=0.33) return "i-red";
-    if(r<=0.66) return "i-yellow";
-    return "i-green";
+  function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+  function fmtTime(ts){
+    try { return new Date(ts).toLocaleString(); } catch { return String(ts); }
   }
 
-  function barRow(label, value, max){
-    const v = Number(value||0);
-    const m = Number(max||1);
-    const r = m>0 ? clamp01(v/m) : 0;
-    const wrap = document.createElement("div");
-    wrap.className = "barrow";
-    wrap.innerHTML = `
-      <div class="barhead">
-        <span>${label}</span>
-        <span class="mono">${v}</span>
-      </div>
-      <div class="bartrack">
-        <div class="barfill ${intensityColorClass(r)}" style="width:${(r*100).toFixed(2)}%"></div>
-      </div>
-    `;
-    return wrap;
+  function healthFrom(payload){
+    // If worker reports status, use it; otherwise derive from age/errors.
+    const st = (payload && payload.status) ? String(payload.status).toUpperCase() : "UNKNOWN";
+    const m = (payload && payload.metrics) ? payload.metrics : {};
+    const age = typeof m.ageSec === "number" ? m.ageSec : null;
+    const errors = typeof m.errors === "number" ? m.errors : 0;
+
+    if (st === "OPERATIONAL" && errors === 0) return "GREEN";
+    if (errors > 0) return "YELLOW";
+    if (age !== null && age > 60) return "RED";
+    if (st === "DEGRADED") return "YELLOW";
+    return "YELLOW";
   }
 
-  async function tick(){
-    const url = TRUTH + "?t=" + nowMs();
-    $("truthUrl").textContent = url;
-    $("truthUrl2").textContent = url;
+  function setBadge(color){
+    const b = el("healthBadge");
+    b.textContent = "HEALTH: " + color;
+    b.classList.remove("badge-green","badge-yellow","badge-red");
+    if (color === "GREEN") b.classList.add("badge-green");
+    else if (color === "RED") b.classList.add("badge-red");
+    else b.classList.add("badge-yellow");
+  }
 
+  function setBar(barId, value, max){
+    const bar = el(barId);
+    const pct = max > 0 ? (value / max) * 100 : 0;
+    bar.style.width = clamp(pct, 0, 100).toFixed(1) + "%";
+    bar.setAttribute("data-level", value === 0 ? "zero" : (pct < 33 ? "low" : (pct < 66 ? "mid" : "high")));
+  }
+
+  function render(payload){
+    el("truthUrl").textContent = TRUTH;
+    el("rawJson").textContent = JSON.stringify(payload, null, 2);
+
+    const m = payload.metrics || {};
+    const s = payload.sources || {};
+
+    // Compute age (sec) from lastUpdated if present
+    const lastUpdated = m.lastUpdated ? Number(m.lastUpdated) : null;
+    const now = Date.now();
+    const ageSec = lastUpdated ? Math.max(0, Math.round((now - lastUpdated)/1000)) : null;
+
+    el("lastUpdated").textContent = lastUpdated ? fmtTime(lastUpdated) : "—";
+    el("ageSec").textContent = (ageSec !== null) ? String(ageSec) : "—";
+
+    const sessions = Number(m.sessions || 0);
+    const pageviews = Number(m.pageviews || 0);
+    const clicks = Number(m.clicks || 0);
+    const writes = Number(m.writes || 0);
+
+    el("valSessions").textContent = String(sessions);
+    el("valPageviews").textContent = String(pageviews);
+    el("valClicks").textContent = String(clicks);
+    el("valWrites").textContent = String(writes);
+
+    const gh = Number(s.GitHub || 0);
+    const osf = Number(s.OSF || 0);
+    const direct = Number(s.Direct || 0);
+    const other = Number(s.Other || 0);
+
+    el("srcGitHub").textContent = String(gh);
+    el("srcOSF").textContent = String(osf);
+    el("srcDirect").textContent = String(direct);
+    el("srcOther").textContent = String(other);
+
+    const max = Math.max(1, sessions, pageviews, clicks, writes, gh, osf, direct, other);
+
+    setBar("barSessions", sessions, max);
+    setBar("barPageviews", pageviews, max);
+    setBar("barClicks", clicks, max);
+    setBar("barWrites", writes, max);
+
+    setBar("barGitHub", gh, max);
+    setBar("barOSF", osf, max);
+    setBar("barDirect", direct, max);
+    setBar("barOther", other, max);
+
+    // Health badge
+    const derived = healthFrom(payload);
+    setBadge(derived);
+  }
+
+  async function poll(){
     try{
-      const res = await fetch(url, { cache: "no-store" });
-      if(!res.ok) throw new Error("http_"+res.status);
+      const res = await fetch(TRUTH, { cache: "no-store" });
       const payload = await res.json();
-      $("raw").textContent = JSON.stringify(payload, null, 2);
-
-      const last = Number(payload?.metrics?.lastUpdated || 0);
-      if(last){
-        $("lastUpdated").textContent = new Date(last).toLocaleString();
-        $("ageSec").textContent = Math.max(0, Math.floor((nowMs()-last)/1000));
-      } else {
-        $("lastUpdated").textContent = "—";
-        $("ageSec").textContent = "—";
-      }
-
-      const m = payload?.metrics || {};
-      const s = payload?.sources || {};
-
-      const pairs = [
-        ["Sessions", m.sessions],
-        ["Pageviews", m.pageviews],
-        ["Clicks", m.clicks],
-        ["Writes", m.writes],
-        ["GitHub", s.GitHub],
-        ["OSF", s.OSF],
-        ["Direct", s.Direct],
-        ["Other", s.Other],
-      ];
-      const max = Math.max(1, ...pairs.map(p=>Number(p[1]||0)));
-
-      const g = $("gauges");
-      g.innerHTML = "";
-      // only show the activity metrics here (human tab)
-      [["Sessions", m.sessions], ["Pageviews", m.pageviews], ["Clicks", m.clicks], ["Writes", m.writes]]
-        .forEach(([k,v])=>g.appendChild(barRow(k, v, max)));
-
-    }catch(e){
-      $("raw").textContent = "Unavailable";
-      $("lastUpdated").textContent = "—";
-      $("ageSec").textContent = "—";
-      $("gauges").innerHTML = "";
-      ["Sessions","Pageviews","Clicks","Writes"].forEach(k=>$("gauges").appendChild(barRow(k, 0, 1)));
+      render(payload);
+    } catch(e){
+      render({ status:"DEGRADED", scope:"GLOBAL", metrics:{ errors:1 }, sources:{} });
+      setBadge("RED");
     }
   }
 
-  tick();
-  setInterval(tick, POLL_MS);
+  el("truthUrl").textContent = TRUTH;
+  el("polling").textContent = (POLL_MS/1000) + "s";
 
-  // Operate hatch (UI-only; wire UVCP later)
-  const UVCP_BASE = "http://127.0.0.1:8000"; // set when ready
-
-  async function j(url, opts){
-    const r = await fetch(url, Object.assign({ cache:"no-store" }, opts||{}));
-    if(!r.ok) throw new Error(await r.text());
-    return await r.json();
-  }
-
-  $("op_send").addEventListener("click", async () => {
-    const armed = $("op_arm").checked;
-    const confirm = ($("op_confirm").value || "").trim();
-    if(!armed){ $("op_result").textContent = "ARM is required."; return; }
-    if(confirm !== "EXECUTE"){ $("op_result").textContent = 'Type "EXECUTE" to confirm.'; return; }
-
-    const adapter = $("op_adapter").value;
-    const op = $("op_op").value;
-    const target = ($("op_target").value || "").trim();
-    if(!target){ $("op_result").textContent = "Target is required."; return; }
-
-    try{
-      const result = await j(UVCP_BASE + "/operate?t=" + nowMs(), {
-        method:"POST",
-        headers:{ "content-type":"application/json" },
-        body: JSON.stringify({ adapter, op, target })
-      });
-      $("op_result").textContent = JSON.stringify(result, null, 2);
-      $("op_arm").checked = false;
-      $("op_confirm").value = "";
-    }catch{
-      $("op_result").textContent = "Unavailable (backend not connected).";
-      $("op_arm").checked = false;
-      $("op_confirm").value = "";
-    }
-  });
-
-  $("op_clear").addEventListener("click", () => {
-    $("op_target").value = "";
-    $("op_confirm").value = "";
-    $("op_arm").checked = false;
-    $("op_result").textContent = "{}";
-  });
+  poll();
+  setInterval(poll, POLL_MS);
+})();
 </script>
 
 </body>

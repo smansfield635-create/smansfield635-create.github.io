@@ -2,61 +2,181 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Geodynamics · Geodiametrics</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Coherence Mechanics · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+
+  <style>
+    .tabs{display:flex;gap:10px;flex-wrap:wrap}
+    .tabbtn{
+      display:inline-flex;align-items:center;justify-content:center;
+      height:46px;padding:0 16px;border-radius:999px;
+      border:1px solid rgba(233,238,252,.16);
+      background:rgba(255,255,255,.06);
+      color:rgba(233,238,252,.92);
+      font-weight:700;letter-spacing:.2px;cursor:pointer;
+      box-shadow:0 12px 28px rgba(0,0,0,.35);
+      -webkit-tap-highlight-color:transparent;
+    }
+    .tabbtn[aria-selected="true"]{
+      background:linear-gradient(180deg, rgba(70,140,255,.62), rgba(28,70,160,.52));
+      border-color:rgba(140,190,255,.35);
+    }
+    .tabpanel{display:none}
+    .tabpanel[data-active="true"]{display:block}
+    .leadline{color:rgba(233,238,252,.72);margin:0;line-height:1.5}
+    .eq{white-space:pre-wrap;line-height:1.55}
+  </style>
 </head>
 
 <body class="bg-gradient">
 <main class="page">
 
   <section class="panel hero">
-    <h1>Geodynamics</h1>
-    <p class="subtitle">
-      How coherence moves under pressure.
+    <h1>Coherence Mechanics</h1>
+    <p class="subtitle">Same concept. Two lenses. Calm and factual.</p>
+  </section>
+
+  <section class="panel">
+    <p class="leadline">
+      This page explains how coherence changes over time. Choose a lens.
     </p>
-  </section>
 
-  <section class="panel">
-    <details class="drop" open>
-      <summary>Mechanics</summary>
-      <div class="drop-body">
-        <p class="mono">
-          Coherence(t) = 1 / (1 + Divergence(t))
-        </p>
-        <p class="note">
-          Divergence reflects misalignment between intention, action, and outcome.
-        </p>
-      </div>
-    </details>
-  </section>
-
-  <section class="panel tight">
-    <details class="drop">
-      <summary>Translation</summary>
-      <div class="drop-body">
-        <p>
-          When signals align, reality becomes checkable.
-          When they don’t, confusion grows.
-        </p>
-      </div>
-    </details>
-  </section>
-
-  <section class="panel">
-    <div class="nav-grid">
-      <a class="btn" href="/">Home</a>
-      <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/control/">State</a>
+    <div class="tabs" role="tablist" aria-label="Geodynamics lenses" style="margin-top:12px">
+      <button class="tabbtn" id="tab-human" role="tab" aria-selected="true" aria-controls="panel-human" type="button">
+        Human
+      </button>
+      <button class="tabbtn" id="tab-science" role="tab" aria-selected="false" aria-controls="panel-science" type="button">
+        Scientific
+      </button>
     </div>
   </section>
 
-  <div class="footer">
-    <span>© Geodiametrics</span>
-  </div>
+  <!-- HUMAN TAB -->
+  <section class="panel tabpanel" id="panel-human" role="tabpanel" aria-labelledby="tab-human" data-active="true">
+
+    <details class="drop" open>
+      <summary>What this means</summary>
+      <div class="drop-body">
+        <p>
+          Coherence is what stays “lined up” when life applies pressure.
+          When things stop lining up, confusion grows.
+        </p>
+        <p class="note">
+          This is not about blame. It’s about what can be checked.
+        </p>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop">
+      <summary>Why this is useful</summary>
+      <div class="drop-body">
+        <ul>
+          <li>It helps you see drift before collapse.</li>
+          <li>It separates feelings from causes.</li>
+          <li>It turns vague confusion into something checkable.</li>
+        </ul>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop">
+      <summary>How it connects</summary>
+      <div class="drop-body">
+        <ul>
+          <li><strong>Laws</strong> = what cannot be violated.</li>
+          <li><strong>Principles</strong> = how those laws appear in life.</li>
+          <li><strong>Mechanics</strong> = how coherence moves between them.</li>
+          <li><strong>State</strong> = what’s true right now.</li>
+        </ul>
+      </div>
+    </details>
+
+  </section>
+
+  <!-- SCIENTIFIC TAB -->
+  <section class="panel tabpanel" id="panel-science" role="tabpanel" aria-labelledby="tab-science" data-active="false">
+
+    <details class="drop" open>
+      <summary>Formal view (minimal)</summary>
+      <div class="drop-body">
+        <pre class="eq mono">
+Let x(t) = declared/intended state
+Let y(t) = observed state
+
+D(t) = ||y(t) − x(t)|| / max(ε, ||x(t)||)
+C(t) = 1 / (1 + D(t))
+        </pre>
+        <p class="note">
+          D(t) is normalized divergence. C(t) is coherence in [0,1]. Higher divergence → lower coherence.
+        </p>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop">
+      <summary>Definition</summary>
+      <div class="drop-body">
+        <p>
+          Geodynamics is the observer-invariant study of how coherence evolves under constraints, evidence, latency, and verification.
+        </p>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop">
+      <summary>Why this is useful</summary>
+      <div class="drop-body">
+        <ul>
+          <li>Detects drift as a measurable divergence.</li>
+          <li>Connects constraints and verification to stability.</li>
+          <li>Explains why delayed feedback raises correction cost.</li>
+        </ul>
+      </div>
+    </details>
+
+  </section>
+
+  <!-- NAV -->
+  <section class="panel nav">
+    <div class="nav-grid two">
+      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/laws/">Laws</a>
+      <a class="btn" href="/principles/">Principles</a>
+      <a class="btn" href="/engine/">Execution Space</a>
+      <a class="btn" href="/control/">State</a>
+      <a class="btn" href="/reference/">Reference</a>
+      <a class="btn" href="/about/">About</a>
+    </div>
+  </section>
+
+  <div class="meta">Build: 2026-02-01a · Canonical</div>
 
 </main>
+
+<script>
+  const tabHuman = document.getElementById("tab-human");
+  const tabSci = document.getElementById("tab-science");
+  const panelHuman = document.getElementById("panel-human");
+  const panelSci = document.getElementById("panel-science");
+
+  function setTab(which){
+    const human = which === "human";
+    tabHuman.setAttribute("aria-selected", human ? "true" : "false");
+    tabSci.setAttribute("aria-selected", human ? "false" : "true");
+    panelHuman.dataset.active = human ? "true" : "false";
+    panelSci.dataset.active = human ? "false" : "true";
+  }
+
+  tabHuman.addEventListener("click", ()=>setTab("human"));
+  tabSci.addEventListener("click", ()=>setTab("science"));
+</script>
+
 </body>
 </html>

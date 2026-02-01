@@ -3,24 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Geodiametrics · Landing</title>
+  <title>Geodiametrics</title>
   <meta name="theme-color" content="#0b1224" />
-
   <style>
     :root{
-      --bg0:#050814;
-      --bg1:#0b1634;
+      --bg0:#050814; --bg1:#0b1634;
       --card:rgba(17,24,39,.44);
-      --card2:rgba(17,24,39,.30);
       --stroke:rgba(255,255,255,.10);
-      --stroke2:rgba(255,255,255,.14);
       --text:#eaf2ff;
       --muted:rgba(234,242,255,.70);
-      --muted2:rgba(234,242,255,.55);
       --shadow:0 24px 70px rgba(0,0,0,.55);
       --r:26px;
       --btnGrad:linear-gradient(90deg,#2a74ff 0%, #2ec7a6 100%);
-      --btnGrad2:linear-gradient(90deg,#2a74ff 0%, #2ec7a6 60%, #2a74ff 100%);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -28,72 +22,37 @@
       margin:0;
       color:var(--text);
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background: radial-gradient(1200px 900px at 20% 10%, rgba(80,130,255,.22), transparent 55%),
-                  radial-gradient(1000px 800px at 85% 25%, rgba(45,220,180,.14), transparent 55%),
-                  radial-gradient(900px 700px at 50% 95%, rgba(160,100,255,.10), transparent 55%),
-                  linear-gradient(180deg, var(--bg0), var(--bg1));
+      background:
+        radial-gradient(1200px 900px at 20% 10%, rgba(80,130,255,.22), transparent 55%),
+        radial-gradient(1000px 800px at 85% 25%, rgba(45,220,180,.14), transparent 55%),
+        radial-gradient(900px 700px at 55% 90%, rgba(170,95,255,.10), transparent 65%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
       overflow-x:hidden;
     }
-
-    /* star field */
     .sky{position:fixed;inset:0;pointer-events:none;z-index:0}
-    .stars,.stars2,.stars3{
+    .stars,.stars2{
       position:absolute;inset:-50%;
       background-image: radial-gradient(#ffffff 1px, transparent 1px);
-      background-size: 140px 140px;
-      opacity:.18;
-      animation: drift 120s linear infinite;
+      background-size: 160px 160px;
+      opacity:.16;
+      animation: drift 160s linear infinite;
       filter: blur(.2px);
     }
     .stars2{
-      background-size: 220px 220px;
-      opacity:.12;
-      animation-duration: 170s;
-      transform: translate3d(-5%, -8%, 0);
+      background-size: 260px 260px;
+      opacity:.10;
+      animation-duration: 240s;
+      transform: translate3d(8%,12%,0);
     }
-    .stars3{
-      background-size: 320px 320px;
-      opacity:.08;
-      animation-duration: 260s;
-      transform: translate3d(10%, 12%, 0);
-    }
-    @keyframes drift{
-      from{transform:translate3d(0,0,0)}
-      to{transform:translate3d(8%,12%,0)}
-    }
-
-    /* nebula haze */
-    .nebula{
-      position:absolute;inset:-20%;
-      background:
-        radial-gradient(800px 520px at 20% 30%, rgba(65,145,255,.18), transparent 60%),
-        radial-gradient(700px 500px at 70% 35%, rgba(40,220,190,.12), transparent 60%),
-        radial-gradient(900px 650px at 55% 75%, rgba(170,95,255,.10), transparent 65%);
-      filter: blur(18px);
-      opacity:.95;
-      animation: breathe 18s ease-in-out infinite;
-    }
-    @keyframes breathe{
-      0%,100%{transform:translate3d(0,0,0) scale(1)}
-      50%{transform:translate3d(1.5%, -1.0%, 0) scale(1.02)}
-    }
+    @keyframes drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(10%,14%,0)}}
 
     .wrap{
-      position:relative;
-      z-index:1;
+      position:relative; z-index:1;
       min-height:100%;
       padding: clamp(18px, 3.5vw, 40px);
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      display:flex; align-items:flex-start; justify-content:center;
     }
-    .stack{
-      width:min(760px, 100%);
-      display:flex;
-      flex-direction:column;
-      gap:16px;
-    }
-
+    .stack{width:min(760px, 100%); display:flex; flex-direction:column; gap:16px; padding-top:10px;}
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid var(--stroke);
@@ -103,94 +62,41 @@
       -webkit-backdrop-filter: blur(16px);
       padding: clamp(16px, 3.2vw, 26px);
     }
-
-    .hero h1{
-      margin:0 0 6px 0;
-      font-size: clamp(34px, 5.2vw, 56px);
-      letter-spacing:.3px;
-    }
-    .hero p{
-      margin:0;
-      color:var(--muted);
-      font-size: clamp(14px, 2.2vw, 18px);
-      line-height:1.35;
-    }
-
+    h1{margin:0 0 6px 0; font-size: clamp(34px, 5.2vw, 54px); letter-spacing:.3px;}
+    p{margin:0; color:var(--muted); font-size: clamp(14px, 2.2vw, 18px); line-height:1.45;}
     .quote{
+      margin:0;
+      font-size: clamp(16px, 2.4vw, 20px);
+      line-height:1.5;
+      color: rgba(234,242,255,.86);
       text-align:center;
-      font-size: clamp(16px, 2.5vw, 20px);
-      line-height:1.45;
-      color:var(--text);
     }
-    .quote .by{
-      display:block;
+    .by{
       margin-top:10px;
-      color:var(--muted2);
-      font-size: clamp(13px, 2vw, 16px);
-    }
-
-    .why h2{
-      margin:0 0 10px 0;
-      font-size: clamp(20px, 3.2vw, 28px);
-      letter-spacing:.2px;
-    }
-    .why p{
-      margin:0 0 12px 0;
-      color:var(--muted);
-      line-height:1.55;
-      font-size: clamp(14px, 2.2vw, 18px);
-    }
-    .why p:last-child{margin-bottom:0}
-
-    .cta{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      align-items:center;
+      text-align:center;
+      color: rgba(234,242,255,.55);
+      font-size: 14px;
+      font-weight: 700;
     }
     .btn{
-      width:min(520px, 100%);
+      width:100%;
       border:none;
       border-radius: 999px;
-      padding: 14px 18px;
+      padding: 16px 18px;
       font-size: 18px;
-      font-weight: 700;
-      color: #eaffff;
+      font-weight: 900;
+      color:#eaffff;
       background: var(--btnGrad);
-      box-shadow: 0 14px 40px rgba(0,0,0,.35);
       cursor:pointer;
-      transition: transform .12s ease, filter .12s ease, background .25s ease;
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+      transition: transform .12s ease, filter .12s ease;
     }
     .btn:active{transform: translateY(1px) scale(.99)}
-    .btn:hover{filter: brightness(1.05)}
-    .links{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:center;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding: 10px 14px;
-      border-radius: 999px;
-      text-decoration:none;
-      color: var(--text);
-      background: rgba(255,255,255,.06);
-      border:1px solid var(--stroke2);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      font-weight:600;
-      font-size: 14px;
-      min-width: 130px;
-    }
-    .pill:active{transform: translateY(1px)}
-    .foot{
+    .tiny{
+      margin-top:6px;
       text-align:center;
+      font-size:12px;
       color: rgba(234,242,255,.45);
-      font-size: 12px;
-      margin-top: 2px;
     }
   </style>
 </head>
@@ -199,45 +105,32 @@
   <div class="sky">
     <div class="stars"></div>
     <div class="stars2"></div>
-    <div class="stars3"></div>
-    <div class="nebula"></div>
   </div>
 
   <main class="wrap">
     <section class="stack">
-      <div class="card hero">
+      <div class="card">
         <h1>Geodiametrics</h1>
         <p>A divided system fails if and only if its fragmentation is not coherently integrated.</p>
       </div>
 
-      <div class="card quote">
-        “I love it when people say something has never been done before. Because when I do it, I’ll be the first.”
-        <span class="by">— Arnold Schwarzenegger</span>
+      <div class="card">
+        <p class="quote">“I love it when people say something has never been done before. Because when I do it, I’ll be the first.”</p>
+        <div class="by">— Arnold Schwarzenegger</div>
       </div>
 
-      <div class="card why">
-        <h2>Why this exists</h2>
-        <p>Roger Bannister broke the four-minute mile after experts warned it could not be done — some even claimed the body would fail attempting it. Once a boundary illusion breaks, progress accelerates.</p>
-        <p>The Wright brothers bent metal and flew it. Edison captured electricity. Progress begins with the willingness to imagine coherence.</p>
+      <div class="card">
+        <h1 style="font-size:clamp(26px,4.2vw,40px);margin:0 0 10px 0;">Why this exists</h1>
+        <p>Roger Bannister broke the four-minute mile after experts warned it could not be done—some even claimed the body would fail attempting it. Once a boundary illusion breaks, progress accelerates.</p>
+        <p style="margin-top:12px;">The Wright brothers bent metal and flew it. Edison captured electricity. Progress begins with the willingness to imagine coherence.</p>
       </div>
 
-      <div class="cta">
-        <button class="btn" id="enterBtn" type="button">Enter</button>
-        <div class="links">
-          <!-- Home page lives at /home/ (recommended) -->
-          <a class="pill" href="./home/">Home</a>
-          <a class="pill" href="./reference/">Reference</a>
-        </div>
-        <div class="foot">© Geodiametrics</div>
+      <div class="card">
+        <button class="btn" type="button" onclick="location.href='./home/'">Enter</button>
+        <div class="tiny">You can always return.</div>
       </div>
     </section>
   </main>
-
-  <script>
-    // HARD, SIMPLE ROUTE: Landing -> Home folder
-    document.getElementById('enterBtn').addEventListener('click', function () {
-      window.location.href = './home/';
-    });
-  </script>
 </body>
 </html>
+```0

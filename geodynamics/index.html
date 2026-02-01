@@ -5,39 +5,134 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodynamics · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script defer src="/assets/telemetry.js"></script>
+
+  <style>
+    /* Make the lens buttons visibly “alive” on mobile */
+    .lens-wrap{display:grid;gap:14px}
+    .lens-switch{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      padding:12px;
+      border-radius:18px;
+      border:1px solid rgba(233,238,252,.14);
+      background:rgba(12,16,34,.45);
+    }
+    .lens-btn{
+      display:flex;align-items:center;justify-content:center;
+      min-height:54px;
+      border-radius:999px;
+      border:1px solid rgba(233,238,252,.16);
+      background:rgba(255,255,255,.06);
+      color:rgba(233,238,252,.78);
+      font-weight:800;
+      letter-spacing:.2px;
+      text-decoration:none;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      transition:transform .08s ease, background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+    .lens-btn:active{transform:scale(.985)}
+    .lens-btn.is-active{
+      color:rgba(255,255,255,.98);
+      border-color:rgba(140,220,255,.30);
+      background:linear-gradient(90deg, rgba(44,132,255,.85), rgba(32,196,167,.75));
+      box-shadow:0 16px 40px rgba(0,0,0,.35), 0 0 0 2px rgba(120,200,255,.12) inset;
+    }
+    .lens-note{
+      color:rgba(233,238,252,.65);
+      font-size:13px;
+      line-height:1.35;
+      margin:0;
+      text-align:center;
+    }
+
+    /* Content cards */
+    .card-title{margin:0 0 8px 0;font-size:22px;font-weight:900}
+    .lead{color:rgba(233,238,252,.70);margin:0}
+    .bul{margin:10px 0 0 0;padding-left:18px}
+    .bul li{margin:8px 0;color:rgba(233,238,252,.92)}
+    .mono{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      color:rgba(233,238,252,.92);
+      font-size:13px;
+      line-height:1.35;
+    }
+  </style>
 </head>
 
 <body class="bg-gradient">
-<main class="page">
+<main class="page" data-lens-scope>
 
   <section class="panel hero">
     <h1>Geodynamics</h1>
     <p class="subtitle">How coherence changes over time — without opinion, without pressure.</p>
   </section>
 
-  <section class="panel bubble">
-    <h2>Human translation</h2>
-    <p class="note">
-      When life feels confusing, it usually means signals stopped lining up.
-      Coherence returns when reality becomes checkable again: what happened, what was allowed, and what proved out.
-    </p>
-    <ul class="tight">
+  <!-- LENS SWITCH (Human ↔ Scientific) -->
+  <section class="panel bubble lens-wrap">
+    <div class="lens-switch" role="group" aria-label="Lens toggle">
+      <button class="lens-btn" type="button" data-lens-btn="human" aria-pressed="true">Human</button>
+      <button class="lens-btn" type="button" data-lens-btn="scientific" aria-pressed="false">Scientific</button>
+    </div>
+    <p class="lens-note">Same meaning. Only the language changes.</p>
+  </section>
+
+  <!-- HUMAN PANE -->
+  <section class="panel bubble" data-lens-pane="human">
+    <h2 class="card-title">Human translation</h2>
+    <p class="lead">When life feels confusing, it usually means signals stopped lining up. Coherence returns when reality becomes checkable again: what happened, what was allowed, and what proved out.</p>
+    <ul class="bul">
       <li><strong>Drift</strong> is when what you say, do, and get stop matching.</li>
       <li><strong>Pressure</strong> reveals what is real and what was only assumed.</li>
       <li><strong>Small corrections</strong> early prevent large collapses later.</li>
     </ul>
   </section>
 
+  <!-- SCIENTIFIC PANE -->
+  <section class="panel bubble" data-lens-pane="scientific">
+    <h2 class="card-title">Scientific language</h2>
+    <p class="lead">Coherence can be expressed as the inverse of divergence between declared state and observed state. This is a structural description, not a moral claim.</p>
+
+    <details open>
+      <summary>Mechanics</summary>
+      <div class="bubble-body">
+        <div class="mono">
+          Coherence(t) = 1 / (1 + Divergence(t))<br/>
+          Divergence reflects misalignment between intention, action, and outcome.
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Interpretation</summary>
+      <div class="bubble-body">
+        <ul class="bul">
+          <li><strong>Lower divergence</strong> → higher coherence → behavior remains predictable under stress.</li>
+          <li><strong>Higher divergence</strong> → lower coherence → contradictions persist and systems destabilize.</li>
+          <li><strong>Receipts</strong> are evidence that transitions occurred as claimed.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
   <section class="panel nav">
     <div class="nav-grid">
-      <a class="btn primary" href="/home/">Home</a>
-      <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/landing/">Landing</a>
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/principles/">Principles</a>
+      <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/control/">Control</a>
+      <a class="btn" href="/state/">State</a>
+      <a class="btn" href="/reference/">Reference</a>
+      <a class="btn" href="/about/">About</a>
     </div>
   </section>
 
 </main>
+
+<!-- Lens logic (must exist at /assets/lens.js) -->
+<script src="/assets/lens.js"></script>
 </body>
 </html>

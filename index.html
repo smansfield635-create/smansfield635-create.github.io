@@ -1,136 +1,42 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Geodiametrics</title>
-  <meta name="theme-color" content="#0b1224" />
-  <style>
-    :root{
-      --bg0:#050814; --bg1:#0b1634;
-      --card:rgba(17,24,39,.44);
-      --stroke:rgba(255,255,255,.10);
-      --text:#eaf2ff;
-      --muted:rgba(234,242,255,.70);
-      --shadow:0 24px 70px rgba(0,0,0,.55);
-      --r:26px;
-      --btnGrad:linear-gradient(90deg,#2a74ff 0%, #2ec7a6 100%);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:
-        radial-gradient(1200px 900px at 20% 10%, rgba(80,130,255,.22), transparent 55%),
-        radial-gradient(1000px 800px at 85% 25%, rgba(45,220,180,.14), transparent 55%),
-        radial-gradient(900px 700px at 55% 90%, rgba(170,95,255,.10), transparent 65%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      overflow-x:hidden;
-    }
-    .sky{position:fixed;inset:0;pointer-events:none;z-index:0}
-    .stars,.stars2{
-      position:absolute;inset:-50%;
-      background-image: radial-gradient(#ffffff 1px, transparent 1px);
-      background-size: 160px 160px;
-      opacity:.16;
-      animation: drift 160s linear infinite;
-      filter: blur(.2px);
-    }
-    .stars2{
-      background-size: 260px 260px;
-      opacity:.10;
-      animation-duration: 240s;
-      transform: translate3d(8%,12%,0);
-    }
-    @keyframes drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(10%,14%,0)}}
-
-    .wrap{
-      position:relative; z-index:1;
-      min-height:100%;
-      padding: clamp(18px, 3.5vw, 40px);
-      display:flex; align-items:flex-start; justify-content:center;
-    }
-    .stack{width:min(760px, 100%); display:flex; flex-direction:column; gap:16px; padding-top:10px;}
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid var(--stroke);
-      border-radius: var(--r);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding: clamp(16px, 3.2vw, 26px);
-    }
-    h1{margin:0 0 6px 0; font-size: clamp(34px, 5.2vw, 54px); letter-spacing:.3px;}
-    p{margin:0; color:var(--muted); font-size: clamp(14px, 2.2vw, 18px); line-height:1.45;}
-    .quote{
-      margin:0;
-      font-size: clamp(16px, 2.4vw, 20px);
-      line-height:1.5;
-      color: rgba(234,242,255,.86);
-      text-align:center;
-    }
-    .by{
-      margin-top:10px;
-      text-align:center;
-      color: rgba(234,242,255,.55);
-      font-size: 14px;
-      font-weight: 700;
-    }
-    .btn{
-      width:100%;
-      border:none;
-      border-radius: 999px;
-      padding: 16px 18px;
-      font-size: 18px;
-      font-weight: 900;
-      color:#eaffff;
-      background: var(--btnGrad);
-      cursor:pointer;
-      box-shadow: 0 14px 40px rgba(0,0,0,.35);
-      transition: transform .12s ease, filter .12s ease;
-    }
-    .btn:active{transform: translateY(1px) scale(.99)}
-    .tiny{
-      margin-top:6px;
-      text-align:center;
-      font-size:12px;
-      color: rgba(234,242,255,.45);
-    }
-  </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Geodiametrics · Landing</title>
+  <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
-
 <body>
-  <div class="sky">
-    <div class="stars"></div>
-    <div class="stars2"></div>
-  </div>
-
   <main class="wrap">
     <section class="stack">
-      <div class="card">
+
+      <section class="card hero">
         <h1>Geodiametrics</h1>
         <p>A divided system fails if and only if its fragmentation is not coherently integrated.</p>
-      </div>
+      </section>
 
-      <div class="card">
-        <p class="quote">“I love it when people say something has never been done before. Because when I do it, I’ll be the first.”</p>
-        <div class="by">— Arnold Schwarzenegger</div>
-      </div>
+      <section class="card quote">
+        <p>“I love it when people say something has never been done before. Because when I do it, I’ll be the first.”</p>
+        <footer>— Arnold Schwarzenegger</footer>
+      </section>
 
-      <div class="card">
-        <h1 style="font-size:clamp(26px,4.2vw,40px);margin:0 0 10px 0;">Why this exists</h1>
+      <section class="card">
+        <h2>Why this exists</h2>
         <p>Roger Bannister broke the four-minute mile after experts warned it could not be done—some even claimed the body would fail attempting it. Once a boundary illusion breaks, progress accelerates.</p>
-        <p style="margin-top:12px;">The Wright brothers bent metal and flew it. Edison captured electricity. Progress begins with the willingness to imagine coherence.</p>
-      </div>
+        <p style="margin-top:12px">The Wright brothers bent metal and flew it. Edison captured electricity. Progress begins with the willingness to imagine coherence.</p>
+      </section>
 
-      <div class="card">
-        <button class="btn" type="button" onclick="location.href='./home/'">Enter</button>
-        <div class="tiny">You can always return.</div>
-      </div>
+      <section class="card">
+        <div class="grid two">
+          <a class="btn primary" href="/home/">Enter</a>
+          <a class="btn" href="/reference/">Reference</a>
+          <a class="btn" href="/control/">Control</a>
+          <a class="btn" href="/about/">About</a>
+        </div>
+      </section>
+
+      <footer>© Geodiametrics</footer>
     </section>
   </main>
 </body>
 </html>
-```0

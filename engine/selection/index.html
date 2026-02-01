@@ -1,12 +1,11 @@
-<!-- FINAL IMPLEMENTATION — TNT #7 / ENGINE: SELECTION
-     Full replace of /engine/selection/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Selection · Engine</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+  <script defer src="/assets/telemetry.js"></script>
 </head>
 
 <body class="bg-gradient">
@@ -14,28 +13,23 @@
 
   <section class="panel hero">
     <h1>Selection</h1>
-    <p class="subtitle">
-      What enters the system.
-    </p>
+    <p class="subtitle">What gets admitted (what counts).</p>
   </section>
 
-  <section class="panel">
-    <details class="drop" open>
+  <section class="panel bubble">
+    <details open>
       <summary>Role</summary>
-      <div class="drop-body">
-        <p>
-          Selection determines which signals, inputs, or options are admitted.
-          Not everything that appears should proceed.
-        </p>
+      <div class="bubble-body">
+        <p class="note">Selection decides which signals, inputs, or options are allowed into the system.</p>
       </div>
     </details>
   </section>
 
-  <section class="panel">
-    <details class="drop">
+  <section class="panel bubble">
+    <details>
       <summary>What breaks when this fails</summary>
-      <div class="drop-body">
-        <ul>
+      <div class="bubble-body">
+        <ul class="tight">
           <li>Noise overwhelms signal</li>
           <li>Boundaries dissolve</li>
           <li>Systems become reactive</li>
@@ -44,18 +38,15 @@
     </details>
   </section>
 
-  <section class="panel">
+  <section class="panel nav">
     <div class="nav-grid">
       <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/engine/resolution/">Resolution</a>
-      <a class="btn" href="/">Home</a>
-      <a class="btn" href="/control/">State</a>
+      <a class="btn primary" href="/engine/resolution/">Resolution</a>
+      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/state/">State</a>
+      <a class="btn" href="/reference/">Reference</a>
     </div>
   </section>
-
-  <div class="footer">
-    <span>© Geodiametrics</span>
-  </div>
 
 </main>
 </body>

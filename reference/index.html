@@ -7,55 +7,100 @@
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 <body class="bg-gradient">
+
 <main class="page">
 
+  <!-- Header -->
   <section class="panel hero">
     <h1>Reference</h1>
-    <p class="subtitle">Anchors you can verify. Two lenses.</p>
+    <p class="subtitle">
+      Anchors you can verify. Two lenses.
+    </p>
   </section>
 
+  <!-- Lens Toggle (UI only, no JS required yet) -->
   <section class="panel">
-    <div class="tabs" role="tablist" aria-label="Lens">
-      <span class="tab" aria-selected="true">Human</span>
-      <span class="tab" aria-selected="false">Scientific</span>
+    <div class="nav-grid">
+      <div class="btn primary">Human</div>
+      <div class="btn">Scientific</div>
     </div>
-    <details class="details" open style="margin-top:12px">
-      <summary>Why these links matter</summary>
-      <div class="content">
-        These are stable “return points.” You don’t have to trust claims—just check the anchors.
-      </div>
-    </details>
   </section>
 
+  <!-- Why these links matter -->
   <section class="panel">
-    <details class="details" open>
-      <summary>Canonical anchors</summary>
-      <div class="content">
-        <div class="grid two">
-          <a class="btn" href="https://smansfield635-create.github.io/control/" target="_blank" rel="noopener">Canonical Site</a>
-          <a class="btn" href="https://osf.io/g5294/" target="_blank" rel="noopener">OSF</a>
-          <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">ORCID</a>
-          <a class="btn" href="mailto:geodiametrics@gmail.com">Contact (Email)</a>
-        </div>
-      </div>
-    </details>
+    <h2>Why these links matter</h2>
+    <p class="muted">
+      These are stable return points. You don’t have to trust claims —
+      just check the anchors.
+    </p>
+    <p class="muted">
+      Nothing here depends on persuasion. Each link points to an external
+      surface you can inspect independently.
+    </p>
   </section>
 
+  <!-- Canonical anchors -->
   <section class="panel">
-    <div class="grid two">
-      <a class="btn" href="/home/">Home</a>
+    <h2>Canonical anchors</h2>
+
+    <div class="nav-grid">
+      <a class="btn primary" href="https://smansfield635-create.github.io/" target="_blank" rel="noopener">
+        Canonical Site
+      </a>
+
+      <a class="btn" href="https://osf.io/" target="_blank" rel="noopener">
+        OSF
+      </a>
+
+      <a class="btn" href="https://orcid.org/" target="_blank" rel="noopener">
+        ORCID
+      </a>
+
+      <a class="btn" href="mailto:smansfield635@gmail.com">
+        Contact (Email)
+      </a>
+    </div>
+  </section>
+
+  <!-- Internal anchors -->
+  <section class="panel">
+    <h2>Internal anchors</h2>
+
+    <div class="nav-grid">
       <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/home/">Home</a>
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
       <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/geodynamics/">Geodynamics</a>
       <a class="btn" href="/control/">Control</a>
-      <a class="btn" href="/about/">About</a>
+      <a class="btn" href="/execution-space/">Execution Space</a>
     </div>
   </section>
 
-  <div class="footer">© 2026 Geodiametrics</div>
+  <!-- Interpretation note -->
+  <section class="panel">
+    <p class="muted small">
+      If something here ever feels confusing, return to these anchors.
+      Coherence survives pressure when reference points remain stable.
+    </p>
+  </section>
+
+  <!-- Footer nav -->
+  <section class="panel nav">
+    <div class="nav-grid">
+      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/">Landing</a>
+    </div>
+  </section>
+
+  <section class="panel footer">
+    <div class="small muted">
+      Build: 2026-02-01a · Canonical: smansfield635-create.github.io
+    </div>
+  </section>
 
 </main>
+
 </body>
 </html>

@@ -2,9 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>About · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+
+  <style>
+    .tabs{display:flex;gap:10px;flex-wrap:wrap}
+    .tabbtn{
+      display:inline-flex;align-items:center;justify-content:center;
+      height:46px;padding:0 16px;border-radius:999px;
+      border:1px solid rgba(233,238,252,.16);
+      background:rgba(255,255,255,.06);
+      color:rgba(233,238,252,.92);
+      font-weight:700;letter-spacing:.2px;cursor:pointer;
+      box-shadow:0 12px 28px rgba(0,0,0,.35);
+      -webkit-tap-highlight-color:transparent;
+    }
+    .tabbtn[aria-selected="true"]{
+      background:linear-gradient(180deg, rgba(70,140,255,.62), rgba(28,70,160,.52));
+      border-color:rgba(140,190,255,.35);
+    }
+    .tabpanel{display:none}
+    .tabpanel[data-active="true"]{display:block}
+    .leadline{color:rgba(233,238,252,.72);margin:0;line-height:1.5}
+    .mini{font-size:14px;color:rgba(233,238,252,.55)}
+  </style>
 </head>
 
 <body class="bg-gradient">
@@ -12,23 +34,102 @@
 
   <section class="panel hero">
     <h1>About</h1>
-    <p class="subtitle">
-      A public, read-only instrument for coherence.
-    </p>
+    <p class="subtitle">Human clarity, scientific rigor. Two lenses.</p>
   </section>
 
   <section class="panel">
-    <div class="nav-grid">
-      <a class="btn" href="/">Home</a>
-      <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/control/">State</a>
+    <p class="leadline">
+      This site is designed to be understandable without persuasion.
+      You can explore or exit at any time.
+    </p>
+
+    <div class="tabs" role="tablist" aria-label="About lenses" style="margin-top:12px">
+      <button class="tabbtn" id="tab-human" role="tab" aria-selected="true" aria-controls="panel-human" type="button">
+        Human
+      </button>
+      <button class="tabbtn" id="tab-science" role="tab" aria-selected="false" aria-controls="panel-science" type="button">
+        Scientific
+      </button>
     </div>
   </section>
 
-  <div class="footer">
-    <span>© Geodiametrics</span>
-  </div>
+  <!-- HUMAN TAB -->
+  <section class="panel tabpanel" id="panel-human" role="tabpanel" aria-labelledby="tab-human" data-active="true">
+    <details class="drop" open>
+      <summary>What this is</summary>
+      <div class="drop-body">
+        <p>
+          A calm place to understand why systems drift, why life becomes confusing,
+          and how clarity returns when things become checkable again.
+        </p>
+        <p class="mini">
+          No ideology. No pressure. Just structure you can test in your own life.
+        </p>
+      </div>
+    </details>
+  </section>
+
+  <!-- SCIENTIFIC TAB -->
+  <section class="panel tabpanel" id="panel-science" role="tabpanel" aria-labelledby="tab-science" data-active="false">
+    <details class="drop" open>
+      <summary>What this is</summary>
+      <div class="drop-body">
+        <p>
+          A coherence-first framework: invariant constraints, tiered principles, dynamic mechanics,
+          and observable state with receipt-gated transitions.
+        </p>
+        <p class="mini">
+          Claims are intended to remain checkable under pressure and across observers.
+        </p>
+      </div>
+    </details>
+  </section>
+
+  <!-- CONTACT (bubble link, no ugly link styling) -->
+  <section class="panel">
+    <details class="drop" open>
+      <summary>Contact</summary>
+      <div class="drop-body">
+        <a class="btn row" href="mailto:geodiametrics@gmail.com">geodiametrics@gmail.com</a>
+      </div>
+    </details>
+  </section>
+
+  <!-- NAV -->
+  <section class="panel nav">
+    <div class="nav-grid two">
+      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/reference/">Reference</a>
+      <a class="btn primary" href="/control/">State</a>
+      <a class="btn" href="/engine/">Execution Space</a>
+      <a class="btn" href="/laws/">Laws</a>
+      <a class="btn" href="/principles/">Principles</a>
+      <a class="btn" href="/geodynamics/">Coherence Mechanics</a>
+    </div>
+  </section>
+
+  <div class="meta">Build: 2026-02-01a · Canonical</div>
 
 </main>
+
+<script>
+  const tabHuman = document.getElementById("tab-human");
+  const tabSci = document.getElementById("tab-science");
+  const panelHuman = document.getElementById("panel-human");
+  const panelSci = document.getElementById("panel-science");
+
+  function setTab(which){
+    const human = which === "human";
+    tabHuman.setAttribute("aria-selected", human ? "true" : "false");
+    tabSci.setAttribute("aria-selected", human ? "false" : "true");
+    panelHuman.dataset.active = human ? "true" : "false";
+    panelSci.dataset.active = human ? "false" : "true";
+  }
+
+  tabHuman.addEventListener("click", ()=>setTab("human"));
+  tabSci.addEventListener("click", ()=>setTab("science"));
+</script>
+
 </body>
 </html>

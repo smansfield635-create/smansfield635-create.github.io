@@ -10,68 +10,83 @@
 
 <main class="page">
 
+  <!-- Header -->
   <section class="panel hero">
     <h1>Control</h1>
-    <p class="subtitle">Live read-only gauges. Color = intensity. Badge = health.</p>
+    <p class="subtitle">
+      Live, read-only state. Truth first. No actions forced.
+    </p>
   </section>
 
+  <!-- What this is -->
   <section class="panel">
-    <h2>Live gauge</h2>
+    <h2>What this is</h2>
     <p class="muted">
-      The system checks a single “truth” source every 10 seconds and shows the latest results.
-      If the data is fresh, “Age” stays low.
+      This page observes the system. It does not change it.
+      Numbers move only when verified events occur.
     </p>
+    <p class="muted">
+      If something shows zero, it means “no receipt yet,” not “nothing happened.”
+    </p>
+  </section>
+
+  <!-- Live status -->
+  <section class="panel">
+    <h2>Live status</h2>
 
     <div class="kv">
-      <div><span class="k">Truth</span><span class="v mono" id="truthUrl">—</span></div>
+      <div><span class="k">Truth source</span><span class="v mono" id="truthUrl">—</span></div>
       <div><span class="k">Polling</span><span class="v mono" id="polling">10s</span></div>
       <div><span class="k">Last updated</span><span class="v mono" id="lastUpdated">—</span></div>
       <div><span class="k">Age (sec)</span><span class="v mono" id="ageSec">—</span></div>
     </div>
 
     <div class="badge-wrap">
-      <span class="badge" id="healthBadge">HEALTH: —</span>
+      <span class="badge badge-yellow" id="healthBadge">HEALTH: —</span>
     </div>
   </section>
 
+  <!-- Activity -->
   <section class="panel">
     <details open>
       <summary>Activity (what’s happening)</summary>
 
       <p class="muted small">
-        These are simple signals. If they are zero, it may mean “not wired yet,” not “nobody visited.”
+        These are conservative counts. They only increase when the website
+        explicitly reports an event.
       </p>
 
       <div class="metric">
         <div class="metric-head">
           <span>Sessions</span><span class="mono" id="valSessions">0</span>
         </div>
-        <div class="bar"><div class="fill" id="barSessions"></div></div>
+        <div class="bar"><div class="fill" id="barSessions" data-level="zero"></div></div>
       </div>
 
       <div class="metric">
         <div class="metric-head">
           <span>Pageviews</span><span class="mono" id="valPageviews">0</span>
         </div>
-        <div class="bar"><div class="fill" id="barPageviews"></div></div>
+        <div class="bar"><div class="fill" id="barPageviews" data-level="zero"></div></div>
       </div>
 
       <div class="metric">
         <div class="metric-head">
           <span>Clicks</span><span class="mono" id="valClicks">0</span>
         </div>
-        <div class="bar"><div class="fill" id="barClicks"></div></div>
+        <div class="bar"><div class="fill" id="barClicks" data-level="zero"></div></div>
       </div>
 
       <div class="metric">
         <div class="metric-head">
           <span>Writes</span><span class="mono" id="valWrites">0</span>
         </div>
-        <div class="bar"><div class="fill" id="barWrites"></div></div>
+        <div class="bar"><div class="fill" id="barWrites" data-level="zero"></div></div>
       </div>
     </details>
   </section>
 
+  <!-- Sources -->
   <section class="panel">
     <details>
       <summary>Sources (to scale)</summary>
@@ -80,41 +95,45 @@
         <div class="metric-head">
           <span>GitHub</span><span class="mono" id="srcGitHub">0</span>
         </div>
-        <div class="bar"><div class="fill" id="barGitHub"></div></div>
+        <div class="bar"><div class="fill" id="barGitHub" data-level="zero"></div></div>
       </div>
 
       <div class="metric">
         <div class="metric-head">
           <span>OSF</span><span class="mono" id="srcOSF">0</span>
         </div>
-        <div class="bar"><div class="fill" id="barOSF"></div></div>
+        <div class="bar"><div class="fill" id="barOSF" data-level="zero"></div></div>
       </div>
 
       <div class="metric">
         <div class="metric-head">
           <span>Direct</span><span class="mono" id="srcDirect">0</span>
         </div>
-        <div class="bar"><div class="fill" id="barDirect"></div></div>
+        <div class="bar"><div class="fill" id="barDirect" data-level="zero"></div></div>
       </div>
 
       <div class="metric">
         <div class="metric-head">
           <span>Other</span><span class="mono" id="srcOther">0</span>
         </div>
-        <div class="bar"><div class="fill" id="barOther"></div></div>
+        <div class="bar"><div class="fill" id="barOther" data-level="zero"></div></div>
       </div>
 
-      <p class="muted small">Bars share one scale (max value across metrics + sources in this payload).</p>
+      <p class="muted small">
+        Bars share one scale. Color intensity reflects relative magnitude.
+      </p>
     </details>
   </section>
 
+  <!-- Raw payload -->
   <section class="panel">
     <details>
       <summary>Raw payload (JSON)</summary>
-      <pre class="mono pre" id="rawJson">—</pre>
+      <pre class="pre mono" id="rawJson">—</pre>
     </details>
   </section>
 
+  <!-- Navigation -->
   <section class="panel nav">
     <div class="nav-grid">
       <a class="btn" href="/home/">Home</a>
@@ -130,7 +149,7 @@
 
   <section class="panel footer">
     <div class="small muted">
-      Build: 2026-02-01a · Canonical: smansfield635-create.github.io
+      Build: 2026-02-01a · Canonical
     </div>
   </section>
 
@@ -138,113 +157,94 @@
 
 <script>
 (() => {
-  const POLL_MS = 10000;
   const TRUTH = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
+  const POLL_MS = 10000;
 
-  const el = (id) => document.getElementById(id);
-
-  function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
-
-  function fmtTime(ts){
-    try { return new Date(ts).toLocaleString(); } catch { return String(ts); }
-  }
-
-  function healthFrom(payload){
-    // If worker reports status, use it; otherwise derive from age/errors.
-    const st = (payload && payload.status) ? String(payload.status).toUpperCase() : "UNKNOWN";
-    const m = (payload && payload.metrics) ? payload.metrics : {};
-    const age = typeof m.ageSec === "number" ? m.ageSec : null;
-    const errors = typeof m.errors === "number" ? m.errors : 0;
-
-    if (st === "OPERATIONAL" && errors === 0) return "GREEN";
-    if (errors > 0) return "YELLOW";
-    if (age !== null && age > 60) return "RED";
-    if (st === "DEGRADED") return "YELLOW";
-    return "YELLOW";
-  }
-
-  function setBadge(color){
-    const b = el("healthBadge");
-    b.textContent = "HEALTH: " + color;
-    b.classList.remove("badge-green","badge-yellow","badge-red");
-    if (color === "GREEN") b.classList.add("badge-green");
-    else if (color === "RED") b.classList.add("badge-red");
-    else b.classList.add("badge-yellow");
-  }
+  const el = id => document.getElementById(id);
+  const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
 
   function setBar(barId, value, max){
     const bar = el(barId);
     const pct = max > 0 ? (value / max) * 100 : 0;
-    bar.style.width = clamp(pct, 0, 100).toFixed(1) + "%";
-    bar.setAttribute("data-level", value === 0 ? "zero" : (pct < 33 ? "low" : (pct < 66 ? "mid" : "high")));
+    bar.style.width = clamp(pct,0,100).toFixed(1) + "%";
+    bar.dataset.level =
+      value === 0 ? "zero" :
+      pct < 33 ? "low" :
+      pct < 66 ? "mid" : "high";
   }
 
-  function render(payload){
-    el("truthUrl").textContent = TRUTH;
-    el("rawJson").textContent = JSON.stringify(payload, null, 2);
-
-    const m = payload.metrics || {};
-    const s = payload.sources || {};
-
-    // Compute age (sec) from lastUpdated if present
-    const lastUpdated = m.lastUpdated ? Number(m.lastUpdated) : null;
-    const now = Date.now();
-    const ageSec = lastUpdated ? Math.max(0, Math.round((now - lastUpdated)/1000)) : null;
-
-    el("lastUpdated").textContent = lastUpdated ? fmtTime(lastUpdated) : "—";
-    el("ageSec").textContent = (ageSec !== null) ? String(ageSec) : "—";
-
-    const sessions = Number(m.sessions || 0);
-    const pageviews = Number(m.pageviews || 0);
-    const clicks = Number(m.clicks || 0);
-    const writes = Number(m.writes || 0);
-
-    el("valSessions").textContent = String(sessions);
-    el("valPageviews").textContent = String(pageviews);
-    el("valClicks").textContent = String(clicks);
-    el("valWrites").textContent = String(writes);
-
-    const gh = Number(s.GitHub || 0);
-    const osf = Number(s.OSF || 0);
-    const direct = Number(s.Direct || 0);
-    const other = Number(s.Other || 0);
-
-    el("srcGitHub").textContent = String(gh);
-    el("srcOSF").textContent = String(osf);
-    el("srcDirect").textContent = String(direct);
-    el("srcOther").textContent = String(other);
-
-    const max = Math.max(1, sessions, pageviews, clicks, writes, gh, osf, direct, other);
-
-    setBar("barSessions", sessions, max);
-    setBar("barPageviews", pageviews, max);
-    setBar("barClicks", clicks, max);
-    setBar("barWrites", writes, max);
-
-    setBar("barGitHub", gh, max);
-    setBar("barOSF", osf, max);
-    setBar("barDirect", direct, max);
-    setBar("barOther", other, max);
-
-    // Health badge
-    const derived = healthFrom(payload);
-    setBadge(derived);
+  function setHealth(color){
+    const b = el("healthBadge");
+    b.textContent = "HEALTH: " + color;
+    b.classList.remove("badge-green","badge-yellow","badge-red");
+    b.classList.add(
+      color === "GREEN" ? "badge-green" :
+      color === "RED"   ? "badge-red"   : "badge-yellow"
+    );
   }
 
   async function poll(){
     try{
-      const res = await fetch(TRUTH, { cache: "no-store" });
-      const payload = await res.json();
-      render(payload);
-    } catch(e){
-      render({ status:"DEGRADED", scope:"GLOBAL", metrics:{ errors:1 }, sources:{} });
-      setBadge("RED");
+      const res = await fetch(TRUTH, { cache:"no-store" });
+      const data = await res.json();
+
+      el("truthUrl").textContent = TRUTH;
+
+      const m = data.metrics || {};
+      const s = data.sources || {};
+
+      const now = Date.now();
+      const last = Number(m.lastUpdated || 0);
+      const age = last ? Math.max(0, Math.floor((now-last)/1000)) : null;
+
+      el("lastUpdated").textContent = last ? new Date(last).toLocaleString() : "—";
+      el("ageSec").textContent = age !== null ? String(age) : "—";
+
+      const sessions = Number(m.sessions||0);
+      const pageviews = Number(m.pageviews||0);
+      const clicks = Number(m.clicks||0);
+      const writes = Number(m.writes||0);
+
+      el("valSessions").textContent = sessions;
+      el("valPageviews").textContent = pageviews;
+      el("valClicks").textContent = clicks;
+      el("valWrites").textContent = writes;
+
+      const gh = Number(s.GitHub||0);
+      const osf = Number(s.OSF||0);
+      const direct = Number(s.Direct||0);
+      const other = Number(s.Other||0);
+
+      el("srcGitHub").textContent = gh;
+      el("srcOSF").textContent = osf;
+      el("srcDirect").textContent = direct;
+      el("srcOther").textContent = other;
+
+      const max = Math.max(1, sessions, pageviews, clicks, writes, gh, osf, direct, other);
+
+      setBar("barSessions", sessions, max);
+      setBar("barPageviews", pageviews, max);
+      setBar("barClicks", clicks, max);
+      setBar("barWrites", writes, max);
+
+      setBar("barGitHub", gh, max);
+      setBar("barOSF", osf, max);
+      setBar("barDirect", direct, max);
+      setBar("barOther", other, max);
+
+      const status = String(data.status||"").toUpperCase();
+      if (status === "OPERATIONAL" && (m.errors||0) === 0) setHealth("GREEN");
+      else if (status === "DOWN") setHealth("RED");
+      else setHealth("YELLOW");
+
+      el("rawJson").textContent = JSON.stringify(data, null, 2);
+    } catch {
+      setHealth("RED");
+      el("rawJson").textContent = "Unavailable";
     }
   }
 
-  el("truthUrl").textContent = TRUTH;
   el("polling").textContent = (POLL_MS/1000) + "s";
-
   poll();
   setInterval(poll, POLL_MS);
 })();

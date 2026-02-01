@@ -2,122 +2,241 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Act III: Execution · Geodiametrics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>State · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 
 <body class="bg-gradient">
-  <main class="page">
+<main class="page">
 
-    <section class="panel hero">
-      <h1>Act III: Execution</h1>
-      <p class="subtitle">Execution restores coherence by making reality checkable again.</p>
-    </section>
+  <section class="panel hero">
+    <h1>State</h1>
+    <p class="subtitle">Observe first. Act only by choice (armed + receipt-gated).</p>
+  </section>
 
-    <!-- Bubble 1: Execution loop -->
-    <section class="panel">
-      <details class="disclosure" open>
-        <summary class="bubble">
-          <span class="caret">▾</span>
-          <span class="label">Execution loop</span>
-        </summary>
+  <!-- READ-ONLY STATE -->
+  <section class="panel tight">
+    <div class="kv">
+      <div class="k">Updated</div><div class="v" id="updated">—</div>
+      <div class="k">Last adapter</div><div class="v" id="adapter">—</div>
+      <div class="k">Last target</div><div class="v" id="target">—</div>
+    </div>
+  </section>
 
-        <div class="content">
-          <ul class="bullets">
-            <li><strong>Observe</strong> — use evidence, not narrative.</li>
-            <li><strong>Constrain</strong> — define what is admissible.</li>
-            <li><strong>Verify</strong> — produce receipts so claims remain defensible.</li>
-          </ul>
-        </div>
-      </details>
-    </section>
-
-    <!-- Bubble 2: Compute substrate (the missing layer) -->
-    <section class="panel">
-      <details class="disclosure">
-        <summary class="bubble">
-          <span class="caret">▸</span>
-          <span class="label">Compute substrate (model)</span>
-        </summary>
-
-        <div class="content">
-          <p class="note">
-            This site expresses the execution engine as a <strong>compute model</strong>.
-            The numbers below are <strong>declared structure</strong> (what the instrument claims it is),
-            not a hardware benchmark unless you later attach verified measurements.
-          </p>
-
-          <div class="kv">
-            <div class="row"><span>Engines (model)</span><span><strong>64</strong></span></div>
-            <div class="row"><span>Pistons per engine</span><span><strong>4</strong> (Perception · Constraint · Choice · Receipt)</span></div>
-            <div class="row"><span>Piston-roles (model)</span><span><strong>256</strong> (64 × 4)</span></div>
-            <div class="row"><span>Cylinders (execution stages)</span><span><strong>4</strong> (Selection → Resolution → Commitment → Continuation)</span></div>
-          </div>
-
-          <hr class="sep"/>
-
-          <h3 class="mini">Software reality</h3>
-          <ul class="bullets">
-            <li><strong>Pages</strong> render the interface (this site).</li>
-            <li><strong>Truth service (Worker)</strong> publishes live state and receipts.</li>
-            <li><strong>Receipts</strong> are the gate: without receipt, claims stay non-canonical.</li>
-          </ul>
-
-          <hr class="sep"/>
-
-          <h3 class="mini">Capacity (optional, declared)</h3>
-          <p class="note">
-            If you want GHz / memory / throughput listed here, we can publish them as:
-            <strong>(A)</strong> declared spec, or <strong>(B)</strong> verified measurement.
-            Until verified, they should remain marked as “declared.”
-          </p>
-
-          <div class="kv">
-            <div class="row"><span>Clock</span><span><strong>—</strong> (declared/verified TBD)</span></div>
-            <div class="row"><span>Memory</span><span><strong>—</strong> (declared/verified TBD)</span></div>
-            <div class="row"><span>Throughput</span><span><strong>—</strong> (declared/verified TBD)</span></div>
-          </div>
-        </div>
-      </details>
-    </section>
-
-    <!-- Existing quad-core expression (keep as a compact bubble) -->
-    <section class="panel">
-      <details class="disclosure" open>
-        <summary class="bubble">
-          <span class="caret">▾</span>
-          <span class="label">Quad-core expression</span>
-        </summary>
-
-        <div class="content">
-          <p class="note">
-            <strong>Selection → Resolution → Commitment → Continuation</strong><br/>
-            Mechanics live in the Engine pages.
-          </p>
-        </div>
-      </details>
-    </section>
-
-    <!-- Nav -->
-    <section class="panel nav">
-      <div class="nav-grid">
-        <a class="btn" href="/diagnosis/">Back → Act II</a>
-        <a class="btn primary" href="/engine/">Go → Engine</a>
-        <a class="btn" href="/home/">Home</a>
+  <section class="panel">
+    <details class="drop" open>
+      <summary>Snapshot</summary>
+      <div class="drop-body">
+        <pre id="snapshot" class="mono" style="white-space:pre-wrap;margin:0">{}</pre>
       </div>
-    </section>
+    </details>
+  </section>
 
-  </main>
+  <section class="panel">
+    <details class="drop" open>
+      <summary>Receipts (latest)</summary>
+      <div class="drop-body">
+        <pre id="receipts" class="mono" style="white-space:pre-wrap;margin:0">[]</pre>
+      </div>
+    </details>
+  </section>
 
-  <script>
-    // Make disclosure caret switch between ▸ and ▾ without needing new CSS
-    document.querySelectorAll('details.disclosure').forEach(d => {
-      const s = d.querySelector('summary .caret');
-      const sync = () => { if (s) s.textContent = d.open ? '▾' : '▸'; };
-      d.addEventListener('toggle', sync);
-      sync();
-    });
-  </script>
+  <!-- OPERATE HATCH (SAFE) -->
+  <section class="panel">
+    <details class="drop">
+      <summary>Operate (ARM required)</summary>
+      <div class="drop-body">
+
+        <p class="note">
+          This hatch sends exactly one operation. It auto-disarms after execution.
+        </p>
+
+        <div class="kv" style="margin-top:10px">
+          <div class="k">Adapter</div>
+          <div class="v">
+            <select id="op_adapter" style="width:100%;padding:10px;border-radius:10px">
+              <option value="kvm">kvm</option>
+              <option value="hyperv">hyperv</option>
+            </select>
+          </div>
+
+          <div class="k">Operation</div>
+          <div class="v">
+            <select id="op_op" style="width:100%;padding:10px;border-radius:10px">
+              <option value="start">start</option>
+              <option value="stop">stop</option>
+              <option value="reboot">reboot</option>
+            </select>
+          </div>
+
+          <div class="k">Target (VM name)</div>
+          <div class="v">
+            <input id="op_target" type="text" placeholder="vm-name"
+              style="width:100%;padding:10px;border-radius:10px"/>
+          </div>
+
+          <div class="k">Confirm phrase</div>
+          <div class="v">
+            <input id="op_confirm" type="text" placeholder='type: EXECUTE'
+              style="width:100%;padding:10px;border-radius:10px"/>
+          </div>
+
+          <div class="k">ARM</div>
+          <div class="v">
+            <label style="display:flex;align-items:center;gap:10px">
+              <input id="op_arm" type="checkbox"/>
+              <span>Arm one operation</span>
+            </label>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
+          <button class="btn primary" id="op_send" type="button">Execute once</button>
+          <button class="btn" id="op_clear" type="button">Clear</button>
+        </div>
+
+        <p class="note" style="margin-top:12px">
+          Cooldown: <span id="cooldown">ready</span>
+        </p>
+
+        <pre id="op_result" class="mono" style="white-space:pre-wrap;margin:0;color:rgba(233,238,252,.75)">{}</pre>
+
+        <p class="note" style="margin-top:12px">
+          Notes:
+          • KVM requires UVCP on a libvirt-capable box.
+          • Hyper-V requires UVCP env vars: HYPERV_HOST, HYPERV_USER, HYPERV_PASS.
+        </p>
+
+      </div>
+    </details>
+  </section>
+
+  <section class="panel">
+    <div class="nav-grid">
+      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/laws/">Laws</a>
+      <a class="btn" href="/principles/">Principles</a>
+      <a class="btn" href="/geodynamics/">Geodynamics</a>
+      <a class="btn" href="/reference/">Reference</a>
+      <a class="btn" href="/about/">About</a>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // Must be reachable from the browser (LAN/public). Not 127.0.0.1 on your phone.
+  const UVCP_BASE = "http://127.0.0.1:8000";
+
+  const COOLDOWN_MS = 8000;
+  let nextAllowed = 0;
+
+  async function j(url, opts){
+    const r = await fetch(url, Object.assign({ cache:"no-store" }, opts||{}));
+    if(!r.ok) throw new Error(await r.text());
+    return await r.json();
+  }
+
+  function fmtUnixSec(ts){
+    if(!ts) return "—";
+    const d = new Date(Number(ts) * 1000);
+    return isNaN(d) ? String(ts) : d.toLocaleString();
+  }
+
+  async function loadState(){
+    try{
+      const state = await j(UVCP_BASE + "/state?t=" + Date.now());
+      document.getElementById("updated").textContent = fmtUnixSec(state.updated);
+      document.getElementById("adapter").textContent = state.last_adapter || "—";
+      document.getElementById("target").textContent = state.last_target || "—";
+      document.getElementById("snapshot").textContent = JSON.stringify(state.snapshot || {}, null, 2);
+
+      const receipts = await j(UVCP_BASE + "/receipts?limit=20&t=" + Date.now());
+      document.getElementById("receipts").textContent = JSON.stringify(receipts || [], null, 2);
+    } catch {
+      document.getElementById("snapshot").textContent = "Unavailable";
+      document.getElementById("receipts").textContent = "Unavailable";
+    }
+  }
+
+  function cooldownLabel(){
+    const now = Date.now();
+    if(now >= nextAllowed) return "ready";
+    return Math.ceil((nextAllowed - now)/1000) + "s";
+  }
+
+  function tickCooldown(){
+    document.getElementById("cooldown").textContent = cooldownLabel();
+  }
+  setInterval(tickCooldown, 250);
+
+  document.getElementById("op_send").addEventListener("click", async () => {
+    const now = Date.now();
+    if(now < nextAllowed){
+      document.getElementById("op_result").textContent = "Cooldown active.";
+      return;
+    }
+
+    const armed = document.getElementById("op_arm").checked;
+    const confirm = (document.getElementById("op_confirm").value || "").trim();
+    if(!armed){
+      document.getElementById("op_result").textContent = "ARM is required.";
+      return;
+    }
+    if(confirm !== "EXECUTE"){
+      document.getElementById("op_result").textContent = 'Type "EXECUTE" to confirm.';
+      return;
+    }
+
+    const adapter = document.getElementById("op_adapter").value;
+    const op = document.getElementById("op_op").value;
+    const target = (document.getElementById("op_target").value || "").trim();
+    if(!target){
+      document.getElementById("op_result").textContent = "Target is required.";
+      return;
+    }
+
+    const payload = { adapter, op, target };
+
+    try{
+      const result = await j(UVCP_BASE + "/operate?t=" + Date.now(), {
+        method:"POST",
+        headers:{ "content-type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      document.getElementById("op_result").textContent = JSON.stringify(result, null, 2);
+
+      // auto-disarm + clear confirm
+      document.getElementById("op_arm").checked = false;
+      document.getElementById("op_confirm").value = "";
+
+      // cooldown
+      nextAllowed = Date.now() + COOLDOWN_MS;
+
+      // refresh state/receipts
+      setTimeout(loadState, 600);
+
+    } catch(e){
+      document.getElementById("op_result").textContent = String(e);
+      document.getElementById("op_arm").checked = false;
+      document.getElementById("op_confirm").value = "";
+      nextAllowed = Date.now() + COOLDOWN_MS;
+    }
+  });
+
+  document.getElementById("op_clear").addEventListener("click", () => {
+    document.getElementById("op_target").value = "";
+    document.getElementById("op_confirm").value = "";
+    document.getElementById("op_arm").checked = false;
+    document.getElementById("op_result").textContent = "{}";
+  });
+
+  loadState();
+  setInterval(loadState, 10000);
+</script>
+
 </body>
 </html>

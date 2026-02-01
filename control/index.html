@@ -1,206 +1,212 @@
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>State · Geodiametrics</title>
+  <title>Control · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
-
 <body class="bg-gradient">
 <main class="page">
 
   <section class="panel hero">
-    <h1>State</h1>
-    <p class="subtitle">What is happening right now. Observe first.</p>
+    <h1>Control</h1>
+    <p class="subtitle">Live read-only gauges. Color = intensity. Badge = health.</p>
   </section>
 
   <section class="panel">
-    <details class="drop" open>
-      <summary>What this is</summary>
-      <div class="accordion-body">
-        <p><strong>This interface demonstrates how decisions become real — safely, deliberately, and only by choice.</strong></p>
-        <p class="note">
-          Nothing here forces you forward. Nothing here traps you.
-          This page exists to show state, proofs (receipts), and (optionally) a safe “one-action” hatch.
-        </p>
-      </div>
-    </details>
+    <h2>Live gauge</h2>
+    <p class="muted">
+      Source is the Worker “Truth” endpoint. Page polls periodically and renders the latest payload.
+    </p>
+
+    <div id="liveSummary" class="panel inset">
+      <div class="row"><strong>HEALTH:</strong> <span id="healthBadge" class="badge">—</span></div>
+      <div class="row"><strong>Truth:</strong> <span id="truthUrl" class="mono">—</span></div>
+      <div class="row"><strong>Polling:</strong> <span id="polling" class="mono">—</span></div>
+      <div class="row"><strong>Last updated:</strong> <span id="lastUpdated" class="mono">—</span></div>
+      <div class="row"><strong>Age (sec):</strong> <span id="ageSec" class="mono">—</span></div>
+    </div>
   </section>
 
   <section class="panel">
-    <details class="drop" open>
-      <summary>Snapshot</summary>
-      <div class="accordion-body">
-        <pre id="snapshot" class="mono" style="white-space:pre-wrap;margin:0">{}</pre>
-      </div>
-    </details>
-
-    <div style="height:10px"></div>
-
-    <details class="drop">
-      <summary>Receipts (proof of what happened)</summary>
-      <div class="accordion-body">
-        <p class="note">
-          A receipt is a proof that something occurred, under constraints, with an outcome that can be checked.
-        </p>
-        <pre id="receipts" class="mono" style="white-space:pre-wrap;margin:0">[]</pre>
-      </div>
-    </details>
+    <h2>Gauges (to scale)</h2>
+    <div id="gauges" class="stack"></div>
+    <p class="muted small">
+      Bars share one scale (max value across metrics + sources in this payload). Color is intensity: red → yellow → green.
+    </p>
   </section>
 
   <section class="panel">
-    <details class="drop">
-      <summary>Operate (ARM required)</summary>
-      <div class="accordion-body">
-        <p class="note">
-          This is a safe hatch. It is <strong>off by default</strong>.
-          It only sends <strong>one action</strong> when you:
-          (1) ARM, (2) type the confirm phrase, (3) execute once.
-          After execution it auto-disarms.
-        </p>
-
-        <div class="kv" style="margin-top:10px">
-          <div class="k">Adapter</div>
-          <div class="v">
-            <select id="op_adapter" style="width:100%;padding:10px;border-radius:10px">
-              <option value="kvm">kvm</option>
-              <option value="hyperv">hyperv</option>
-            </select>
-          </div>
-
-          <div class="k">Target (VM name)</div>
-          <div class="v">
-            <input id="op_target" type="text" placeholder="vm-name"
-              style="width:100%;padding:10px;border-radius:10px"/>
-          </div>
-
-          <div class="k">Operation</div>
-          <div class="v">
-            <select id="op_op" style="width:100%;padding:10px;border-radius:10px">
-              <option value="start">start</option>
-              <option value="stop">stop</option>
-              <option value="reboot">reboot</option>
-            </select>
-          </div>
-
-          <div class="k">Confirm phrase</div>
-          <div class="v">
-            <input id="op_confirm" type="text" placeholder='type: EXECUTE'
-              style="width:100%;padding:10px;border-radius:10px"/>
-          </div>
-
-          <div class="k">ARM</div>
-          <div class="v">
-            <label style="display:flex;align-items:center;gap:10px">
-              <input id="op_arm" type="checkbox"/>
-              <span>Arm one operation</span>
-            </label>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
-          <button class="btn primary" id="op_send" type="button">Execute once</button>
-          <button class="btn" id="op_clear" type="button">Clear</button>
-        </div>
-
-        <pre id="op_result" class="mono" style="white-space:pre-wrap;margin-top:12px;margin-bottom:0;color:rgba(233,238,252,.75)">{}</pre>
-
-        <p class="note" style="margin-top:12px">
-          If nothing changes, it means the backend is not connected yet. That is okay.
-          This hatch is designed to stay safe when unplugged.
-        </p>
-      </div>
-    </details>
+    <h2>Sources (to scale)</h2>
+    <div id="sources" class="stack"></div>
   </section>
 
   <section class="panel">
-    <div class="nav-grid two">
+    <details class="details">
+      <summary>Raw payload (JSON)</summary>
+      <pre id="raw" class="code">—</pre>
+    </details>
+  </section>
+
+  <section class="panel nav">
+    <div class="nav-grid">
       <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/">Landing</a>
-      <a class="btn" href="/engine/">Execution Space</a>
+      <a class="btn" href="/engine/">Engine</a>
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Coherence Mechanics</a>
+      <a class="btn" href="/geodynamics/">Geodynamics</a>
       <a class="btn" href="/reference/">Reference</a>
       <a class="btn" href="/about/">About</a>
     </div>
   </section>
 
+  <section class="panel footer">
+    <div class="muted small" id="buildLine">Build: 2026-02-01a · Canonical</div>
+  </section>
+
 </main>
 
 <script>
-  // Safe UI-only operate hatch (no assumptions). You can wire later.
-  const UVCP_BASE = "http://127.0.0.1:8000"; // set when ready
+(function(){
+  // === CONFIG (edit here only if your worker path changes) ===
+  const TRUTH_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
+  const POLL_MS = 10000;
 
-  async function j(url, opts){
-    const r = await fetch(url, Object.assign({ cache:"no-store" }, opts||{}));
-    if(!r.ok) throw new Error(await r.text());
-    return await r.json();
+  // === helpers ===
+  const $ = (id)=>document.getElementById(id);
+  const nowMs = ()=>Date.now();
+  const fmtDT = (ms)=>{
+    try { return new Date(ms).toLocaleString(); } catch(e){ return String(ms); }
+  };
+  const clamp01 = (x)=>Math.max(0, Math.min(1, x));
+  const intensityColor = (ratio)=> {
+    // ratio 0..1 mapped to red->yellow->green
+    if (ratio <= 0.33) return "i-red";
+    if (ratio <= 0.66) return "i-yellow";
+    return "i-green";
+  };
+  const healthBadgeClass = (health)=> {
+    const h = String(health||"").toUpperCase();
+    if (h === "GREEN" || h === "OPERATIONAL") return "b-green";
+    if (h === "YELLOW" || h === "DEGRADED") return "b-yellow";
+    return "b-red";
+  };
+
+  function setText(id, v){ $(id).textContent = v==null ? "—" : String(v); }
+
+  function barRow(label, value, max){
+    const v = Number(value||0);
+    const m = Number(max||1);
+    const r = m>0 ? clamp01(v/m) : 0;
+    const wrap = document.createElement("div");
+    wrap.className = "barrow";
+    wrap.innerHTML = `
+      <div class="barhead">
+        <span class="label">${label}</span>
+        <span class="value mono">${v}</span>
+      </div>
+      <div class="bartrack">
+        <div class="barfill ${intensityColor(r)}" style="width:${(r*100).toFixed(2)}%"></div>
+      </div>
+    `;
+    return wrap;
   }
 
-  async function load(){
-    try{
-      const state = await j(UVCP_BASE + "/state?t=" + Date.now());
-      document.getElementById("snapshot").textContent = JSON.stringify(state || {}, null, 2);
-      const receipts = await j(UVCP_BASE + "/receipts?limit=20&t=" + Date.now());
-      document.getElementById("receipts").textContent = JSON.stringify(receipts || [], null, 2);
-    }catch{
-      // stay calm: unplugged is valid
-      document.getElementById("snapshot").textContent = "Unavailable";
-      document.getElementById("receipts").textContent = "Unavailable";
-    }
+  async function fetchTruth(){
+    const url = TRUTH_BASE + "?t=" + nowMs();
+    const res = await fetch(url, {cache:"no-store"});
+    if(!res.ok) throw new Error("truth_http_"+res.status);
+    return { url, json: await res.json() };
   }
 
-  document.getElementById("op_send").addEventListener("click", async () => {
-    const armed = document.getElementById("op_arm").checked;
-    const confirm = (document.getElementById("op_confirm").value || "").trim();
-    if(!armed){
-      document.getElementById("op_result").textContent = "ARM is required.";
-      return;
-    }
-    if(confirm !== "EXECUTE"){
-      document.getElementById("op_result").textContent = 'Type "EXECUTE" to confirm.';
-      return;
+  function computeHealth(payload){
+    // Prefer explicit status; fall back to errors; default degraded if missing.
+    const status = String(payload?.status || "").toUpperCase();
+    const errs = Number(payload?.metrics?.errors || 0);
+    if (status === "OPERATIONAL" && errs === 0) return "GREEN";
+    if (status === "DEGRADED" || errs > 0) return "YELLOW";
+    return "RED";
+  }
+
+  function render(payload, truthUrl){
+    const health = computeHealth(payload);
+    $("healthBadge").textContent = health;
+    $("healthBadge").className = "badge " + healthBadgeClass(health);
+
+    setText("truthUrl", truthUrl);
+    setText("polling", (POLL_MS/1000) + "s");
+
+    const last = payload?.metrics?.lastUpdated;
+    const lastMs = typeof last === "number" ? last : Number(last);
+    if (!Number.isFinite(lastMs)) {
+      setText("lastUpdated", "—");
+      setText("ageSec", "—");
+    } else {
+      setText("lastUpdated", fmtDT(lastMs));
+      setText("ageSec", Math.max(0, Math.floor((nowMs() - lastMs)/1000)));
     }
 
-    const adapter = document.getElementById("op_adapter").value;
-    const op = document.getElementById("op_op").value;
-    const target = (document.getElementById("op_target").value || "").trim();
-    if(!target){
-      document.getElementById("op_result").textContent = "Target is required.";
-      return;
-    }
+    // Bars share one scale across metrics+sources
+    const metrics = payload?.metrics || {};
+    const sources = payload?.sources || {};
+    const metricPairs = [
+      ["Sessions", metrics.sessions],
+      ["Pageviews", metrics.pageviews],
+      ["Clicks", metrics.clicks],
+      ["Writes", metrics.writes],
+    ];
+    const sourcePairs = [
+      ["GitHub", sources.GitHub],
+      ["OSF", sources.OSF],
+      ["Direct", sources.Direct],
+      ["Other", sources.Other],
+    ];
 
+    const values = [
+      ...metricPairs.map(p=>Number(p[1]||0)),
+      ...sourcePairs.map(p=>Number(p[1]||0)),
+    ];
+    const max = Math.max(1, ...values);
+
+    const g = $("gauges");
+    g.innerHTML = "";
+    metricPairs.forEach(([k,v])=>g.appendChild(barRow(k, v, max)));
+
+    const s = $("sources");
+    s.innerHTML = "";
+    sourcePairs.forEach(([k,v])=>s.appendChild(barRow(k, v, max)));
+
+    $("raw").textContent = JSON.stringify(payload, null, 2);
+  }
+
+  async function tick(){
     try{
-      const result = await j(UVCP_BASE + "/operate?t=" + Date.now(), {
-        method:"POST",
-        headers:{ "content-type":"application/json" },
-        body: JSON.stringify({ adapter, op, target })
-      });
-      document.getElementById("op_result").textContent = JSON.stringify(result, null, 2);
-      // auto-disarm
-      document.getElementById("op_arm").checked = false;
-      document.getElementById("op_confirm").value = "";
-      setTimeout(load, 600);
+      const {url, json} = await fetchTruth();
+      render(json, url);
     }catch(e){
-      document.getElementById("op_result").textContent = "Unavailable (backend not connected).";
-      document.getElementById("op_arm").checked = false;
-      document.getElementById("op_confirm").value = "";
+      // Degraded display but keep UI stable
+      $("healthBadge").textContent = "RED";
+      $("healthBadge").className = "badge b-red";
+      setText("truthUrl", TRUTH_BASE);
+      setText("polling", (POLL_MS/1000) + "s");
+      setText("lastUpdated", "—");
+      setText("ageSec", "—");
+      $("gauges").innerHTML = "";
+      ["Sessions","Pageviews","Clicks","Writes"].forEach(k=>{
+        $("gauges").appendChild(barRow(k, 0, 1));
+      });
+      $("sources").innerHTML = "";
+      ["GitHub","OSF","Direct","Other"].forEach(k=>{
+        $("sources").appendChild(barRow(k, 0, 1));
+      });
+      $("raw").textContent = "Unavailable";
     }
-  });
+  }
 
-  document.getElementById("op_clear").addEventListener("click", () => {
-    document.getElementById("op_target").value = "";
-    document.getElementById("op_confirm").value = "";
-    document.getElementById("op_arm").checked = false;
-    document.getElementById("op_result").textContent = "{}";
-  });
-
-  load();
-  setInterval(load, 10000);
+  tick();
+  setInterval(tick, POLL_MS);
+})();
 </script>
-
 </body>
 </html>

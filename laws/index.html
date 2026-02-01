@@ -1,4 +1,3 @@
-<!-- OPTIONAL PLANETS — TNT #1 /laws/index.html (FULL REPLACE: adds planet + no extra JS) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,47 +5,132 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Laws · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+
+  <!-- Page-local tabs styling (no global CSS changes) -->
+  <style>
+    .tabs{display:flex;gap:10px;flex-wrap:wrap}
+    .tabbtn{
+      display:inline-flex;align-items:center;justify-content:center;
+      height:46px;padding:0 16px;border-radius:999px;
+      border:1px solid rgba(233,238,252,.16);
+      background:rgba(255,255,255,.06);
+      color:rgba(233,238,252,.92);
+      font-weight:700;letter-spacing:.2px;cursor:pointer;
+      box-shadow:0 12px 28px rgba(0,0,0,.35);
+      -webkit-tap-highlight-color:transparent;
+    }
+    .tabbtn[aria-selected="true"]{
+      background:linear-gradient(180deg, rgba(70,140,255,.62), rgba(28,70,160,.52));
+      border-color:rgba(140,190,255,.35);
+    }
+    .tabpanel{display:none}
+    .tabpanel[data-active="true"]{display:block}
+    .tightlist li{margin:8px 0}
+    .leadline{color:rgba(233,238,252,.72);margin:0;line-height:1.5}
+  </style>
 </head>
 
-<body class="bg-gradient planet-c">
-  <div class="planet" aria-hidden="true"></div>
+<body class="bg-gradient">
+<main class="page">
 
-  <main class="page">
+  <section class="panel hero">
+    <h1>Laws</h1>
+    <p class="subtitle">Same seven laws. Two lenses. No bias. No pressure.</p>
+  </section>
 
-    <section class="panel hero">
-      <h1>Laws</h1>
-      <p class="subtitle">These constraints hold whether acknowledged or not.</p>
-    </section>
+  <section class="panel">
+    <p class="leadline">
+      Choose a lens. The content is identical in meaning—only the language changes.
+    </p>
 
-    <section class="panel">
-      <details class="drop" open>
-        <summary>Seven invariant constraints</summary>
-        <div class="drop-body">
-          <ol>
-            <li>Coherence cannot exceed evidence.</li>
-            <li>External trust cannot exceed internal honesty.</li>
-            <li>Outcomes cannot be more coherent than inputs.</li>
-            <li>Constraints define admissibility.</li>
-            <li>Verification gates reality.</li>
-            <li>Confusion accelerates failure once incoherence exists.</li>
-            <li>Receipts enable convergence.</li>
-          </ol>
-        </div>
-      </details>
-    </section>
+    <div class="tabs" role="tablist" aria-label="Laws lenses" style="margin-top:12px">
+      <button class="tabbtn" id="tab-human" role="tab" aria-selected="true" aria-controls="panel-human" type="button">
+        Human
+      </button>
+      <button class="tabbtn" id="tab-science" role="tab" aria-selected="false" aria-controls="panel-science" type="button">
+        Scientific
+      </button>
+    </div>
+  </section>
 
-    <section class="panel">
-      <div class="nav-grid">
-        <a class="btn" href="/home/">Home</a>
-        <a class="btn" href="/principles/">Principles</a>
-        <a class="btn" href="/geodynamics/">Geodynamics</a>
-        <a class="btn" href="/engine/">Engine</a>
-        <a class="btn" href="/control/">State</a>
+  <!-- HUMAN TAB -->
+  <section class="panel tabpanel" id="panel-human" role="tabpanel" aria-labelledby="tab-human" data-active="true">
+    <details class="drop" open>
+      <summary>Seven laws (human language)</summary>
+      <div class="drop-body">
+        <ol class="tightlist">
+          <li><strong>Reality can’t be faked.</strong> You can say anything you want, but reality only responds to what’s true.</li>
+          <li><strong>You can’t be more honest with others than you are with yourself.</strong> External trust can’t exceed internal honesty.</li>
+          <li><strong>Outcomes reflect inputs.</strong> What comes out always matches what went in, even if it takes time to see it.</li>
+          <li><strong>Rules define what’s possible.</strong> Limits don’t disappear when ignored; they show up later as failure.</li>
+          <li><strong>Proof matters more than intention.</strong> Intent doesn’t count unless it produces results that can be checked.</li>
+          <li><strong>Confusion accelerates breakdown.</strong> Once instability begins, confusion makes collapse faster.</li>
+          <li><strong>Memory prevents repetition.</strong> Systems that remember can correct; systems that don’t repeat mistakes.</li>
+        </ol>
+        <p class="note">
+          Human lens = lived experience. No ideology. No persuasion.
+        </p>
       </div>
-    </section>
+    </details>
+  </section>
 
-    <div class="footer"><span>© Geodiametrics</span></div>
+  <!-- SCIENTIFIC TAB -->
+  <section class="panel tabpanel" id="panel-science" role="tabpanel" aria-labelledby="tab-science" data-active="false">
+    <details class="drop" open>
+      <summary>Seven laws (scientific language)</summary>
+      <div class="drop-body">
+        <ol class="tightlist">
+          <li><strong>Coherence is observer-invariant.</strong> No observer can produce outcomes that contradict the underlying state.</li>
+          <li><strong>External trust is bounded by internal coherence.</strong> Inter-system trust cannot exceed intra-system alignment.</li>
+          <li><strong>Outputs are constrained by inputs.</strong> Outputs are a function of prior inputs and transformations.</li>
+          <li><strong>Constraints define admissibility.</strong> The set of possible states is bounded whether acknowledged or not.</li>
+          <li><strong>Verification gates state transition.</strong> Unverified change does not propagate reliably through a system.</li>
+          <li><strong>Confusion amplifies instability.</strong> In incoherence, uncertainty increases the rate of degradation.</li>
+          <li><strong>Receipts enable convergence.</strong> Persistent records of transition allow correction over time.</li>
+        </ol>
+        <p class="note">
+          Scientific lens = structural description. Fact-driven. Non-opinionated.
+        </p>
+      </div>
+    </details>
+  </section>
 
-  </main>
+  <!-- NAV (BUBBLES ONLY) -->
+  <section class="panel nav">
+    <div class="nav-grid two">
+      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/principles/">Principles</a>
+      <a class="btn" href="/geodynamics/">Coherence Mechanics</a>
+      <a class="btn" href="/engine/">Execution Space</a>
+      <a class="btn" href="/control/">State</a>
+      <a class="btn" href="/reference/">Reference</a>
+      <a class="btn" href="/about/">About</a>
+    </div>
+  </section>
+
+  <div class="meta">Build: 2026-02-01a · Canonical</div>
+
+</main>
+
+<script>
+  // Simple accessible tabs (no dependencies)
+  const tabHuman = document.getElementById("tab-human");
+  const tabSci = document.getElementById("tab-science");
+  const panelHuman = document.getElementById("panel-human");
+  const panelSci = document.getElementById("panel-science");
+
+  function setTab(which){
+    const human = which === "human";
+    tabHuman.setAttribute("aria-selected", human ? "true" : "false");
+    tabSci.setAttribute("aria-selected", human ? "false" : "true");
+    panelHuman.dataset.active = human ? "true" : "false";
+    panelSci.dataset.active = human ? "false" : "true";
+  }
+
+  tabHuman.addEventListener("click", ()=>setTab("human"));
+  tabSci.addEventListener("click", ()=>setTab("science"));
+</script>
+
 </body>
 </html>

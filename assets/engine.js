@@ -1,90 +1,59 @@
-/* engine.js — single source of truth for:
-   (1) accordion toggles (data-acc)
-   (2) lens toggles (data-lens-root)
-   No dependencies.
+/* engine.js — UI helpers for Geodiametrics
+   - Lens switcher (Human / Scientific)
+   Works with markup:
+     <div class="lens-switch" data-default="human">
+       <button class="lens-btn" data-lens="human">Human</button>
+       <button class="lens-btn" data-lens="scientific">Scientific</button>
+     </div>
+
+     <section class="panel lens-panel" data-lens-panel="human">...</section>
+     <section class="panel lens-panel" data-lens-panel="scientific">...</section>
 */
 
 (function () {
-  function qs(root, sel) { return Array.from((root || document).querySelectorAll(sel)); }
+  function setActiveLens(root, lens) {
+    const buttons = root.querySelectorAll(".lens-btn[data-lens]");
+    const panels = root.parentElement.querySelectorAll(".lens-panel[data-lens-panel]");
 
-  // ---------- Accordion ----------
-  function initAccordions(scope) {
-    qs(scope, '[data-acc]').forEach(acc => {
-      const head = acc.querySelector('[data-acc-head]');
-      const body = acc.querySelector('[data-acc-body]');
-      if (!head || !body) return;
+    buttons.forEach((btn) => {
+      const isActive = btn.getAttribute("data-lens") === lens;
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
 
-      // default state
-      const wantsOpen = (acc.getAttribute('data-acc-default') || '').toLowerCase() === 'open';
-      acc.dataset.accOpen = wantsOpen ? '1' : '0';
-
-      function apply() {
-        const open = acc.dataset.accOpen === '1';
-        body.style.display = open ? '' : 'none';
-        head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      }
-
-      // ensure button semantics
-      head.setAttribute('type', 'button');
-      head.setAttribute('aria-expanded', 'false');
-
-      // click
-      head.addEventListener('click', () => {
-        acc.dataset.accOpen = (acc.dataset.accOpen === '1') ? '0' : '1';
-        apply();
-      });
-
-      apply();
+    panels.forEach((p) => {
+      const show = p.getAttribute("data-lens-panel") === lens;
+      p.style.display = show ? "" : "none";
+      p.setAttribute("aria-hidden", show ? "false" : "true");
     });
   }
 
-  // ---------- Lens (Human / Scientific) ----------
-  function initLens(scope) {
-    qs(scope, '[data-lens-root]').forEach(root => {
-      const defaultLens = (root.getAttribute('data-lens-default') || 'human').toLowerCase();
+  function initLensSwitchers() {
+    const switches = document.querySelectorAll(".lens-switch");
+    switches.forEach((sw) => {
+      const defaultLens = (sw.getAttribute("data-default") || "human").toLowerCase();
 
-      const btns = qs(root, '[data-lens-btn]');
-      const panels = qs(root, '[data-lens-panel]');
+      // Guard: if no panels exist, do nothing.
+      const hasPanels =
+        sw.parentElement &&
+        sw.parentElement.querySelector(".lens-panel[data-lens-panel]");
+      if (!hasPanels) return;
 
-      if (!btns.length || !panels.length) return;
+      // Initial state
+      setActiveLens(sw, defaultLens);
 
-      function setLens(lens) {
-        const L = (lens || defaultLens).toLowerCase();
-
-        // buttons
-        btns.forEach(b => {
-          const isOn = (b.getAttribute('data-lens-btn') || '').toLowerCase() === L;
-          b.classList.toggle('primary', isOn);
-          b.setAttribute('aria-pressed', isOn ? 'true' : 'false');
-        });
-
-        // panels
-        panels.forEach(p => {
-          const isOn = (p.getAttribute('data-lens-panel') || '').toLowerCase() === L;
-          p.style.display = isOn ? '' : 'none';
-        });
-      }
-
-      // bind
-      btns.forEach(b => {
-        b.setAttribute('type', 'button');
-        b.addEventListener('click', () => setLens(b.getAttribute('data-lens-btn')));
+      // Click binding
+      sw.addEventListener("click", (e) => {
+        const btn = e.target.closest(".lens-btn[data-lens]");
+        if (!btn) return;
+        e.preventDefault();
+        const lens = (btn.getAttribute("data-lens") || defaultLens).toLowerCase();
+        setActiveLens(sw, lens);
       });
-
-      // initial
-      setLens(defaultLens);
     });
   }
 
-  // ---------- Boot ----------
-  function boot() {
-    initAccordions(document);
-    initLens(document);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
-  }
+  document.addEventListener("DOMContentLoaded", () => {
+    initLensSwitchers();
+  });
 })();

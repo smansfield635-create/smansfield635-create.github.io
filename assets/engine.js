@@ -1,107 +1,67 @@
-/* Geodiametrics — Engine Tracker (B)
-   B = Session is created only by CHOICE (first user interaction).
-   No page-load tracking. No background pings.
-*/
 (() => {
-  "use strict";
+  // ====== CONFIG (edit ONLY these if needed) ======
+  const WORKER_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
+  const EVENT_PATH = "/event";   // Worker endpoint that increments counters
+  const TIMEOUT_MS = 2500;
 
-  // === CONFIG ===
-  const TRUTH_BASE =
-    "https://geodiametrics-aggregator.smansfield635.workers.dev";
-  const METRICS_ENDPOINT = `${TRUTH_BASE}/metrics`;
+  // ====== Helpers ======
+  const now = () => Date.now();
+  const safeJson = async (res) => { try { return await res.json(); } catch { return null; } };
+  const timeoutFetch = (url, opts) =>
+    Promise.race([
+      fetch(url, opts),
+      new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), TIMEOUT_MS))
+    ]);
 
-  // local guard so one device doesn't spam
-  const LS_KEY = "gd_session_touch_v1";
-  const SESSION_WINDOW_MS = 30 * 60 * 1000; // 30 minutes
+  // ====== Session model (human-simple) ======
+  // One "session" here means: first time this browser ever hits the site (until storage cleared).
+  // If you want session windows later, we can add a 30-min expiry, but this is the minimum.
+  const SID_KEY = "gd_sid_v1";
 
-  function now() {
-    return Date.now();
-  }
+  let isNewSession = false;
+  let sid = null;
 
-  function safeJsonParse(s) {
-    try { return JSON.parse(s); } catch { return null; }
-  }
-
-  function shouldSendTouch() {
-    const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return true;
-    const obj = safeJsonParse(raw);
-    if (!obj || typeof obj.t !== "number") return true;
-    return (now() - obj.t) > SESSION_WINDOW_MS;
-  }
-
-  function markTouchSent() {
-    try {
-      localStorage.setItem(LS_KEY, JSON.stringify({ t: now() }));
-    } catch {
-      // ignore storage failures
+  try {
+    sid = localStorage.getItem(SID_KEY);
+    if (!sid) {
+      sid = `gd_${now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+      localStorage.setItem(SID_KEY, sid);
+      isNewSession = true;
     }
+  } catch {
+    // Storage blocked; fall back to a per-load sid (still counts pageviews)
+    sid = `gd_${now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+    isNewSession = true;
   }
 
-  function sendTouchReceipt() {
-    if (!shouldSendTouch()) return;
-
+  // ====== Send event (non-blocking, safe) ======
+  const sendEvent = async () => {
+    const url = `${WORKER_BASE}${EVENT_PATH}`;
     const payload = {
-      event: "session_touch",
-      ts: now(),
+      type: "pageview",
+      sid,
+      session: isNewSession ? 1 : 0,
       path: location.pathname,
       ref: document.referrer || "",
-      ua: navigator.userAgent || ""
+      ua: navigator.userAgent || "",
+      ts: now()
     };
 
-    const url = `${METRICS_ENDPOINT}?t=${payload.ts}`;
-
-    const body = JSON.stringify(payload);
-    const blob = new Blob([body], { type: "application/json" });
-
-    // Prefer beacon (mobile-safe)
-    const beaconOk = typeof navigator.sendBeacon === "function"
-      ? navigator.sendBeacon(url, blob)
-      : false;
-
-    if (!beaconOk) {
-      // Fallback fetch with keepalive (also mobile-safe)
-      fetch(url, {
+    try {
+      await timeoutFetch(url, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body,
-        keepalive: true,
-        cache: "no-store"
-      }).catch(() => {});
+        body: JSON.stringify(payload)
+      });
+    } catch {
+      // Silent failure by design: website must never break if telemetry is down.
     }
+  };
 
-    markTouchSent();
-  }
-
-  // Fire ONCE per session-window, on first real interaction only.
-  let armed = false;
-
-  function armOnce() {
-    if (armed) return;
-    armed = true;
-
-    const fire = () => {
-      disarm();
-      sendTouchReceipt();
-    };
-
-    // capture phase so we catch taps even if a link navigates immediately
-    document.addEventListener("pointerdown", fire, { capture: true, once: true });
-    document.addEventListener("keydown", fire, { capture: true, once: true });
-    document.addEventListener("touchstart", fire, { capture: true, once: true });
-  }
-
-  function disarm() {
-    // no-op because we used {once:true}; kept for clarity
-  }
-
-  // Arm when DOM is ready
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", armOnce, { once: true });
+  // ====== Run on every page load ======
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    sendEvent();
   } else {
-    armOnce();
+    document.addEventListener("DOMContentLoaded", sendEvent, { once: true });
   }
-
-  // Optional: expose a manual trigger for debugging from console
-  window.GD_TOUCH = () => sendTouchReceipt();
 })();

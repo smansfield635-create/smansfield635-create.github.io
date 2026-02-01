@@ -2,260 +2,234 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>State · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
+<body class="bg-gradient planet-c">
+  <div class="planet" aria-hidden="true"></div>
 
-<body class="bg-gradient">
-<main class="page">
+  <main class="page">
+    <section class="panel hero">
+      <h1>State</h1>
+      <p class="subtitle">Observe first. Act only by choice (armed + receipt-gated).</p>
+    </section>
 
-  <section class="panel hero">
-    <h1>State</h1>
-    <p class="subtitle">Observe first. Act only by choice (armed + receipt-gated).</p>
-  </section>
-
-  <section class="panel tight">
-    <div class="kv">
-      <div class="k">Updated</div><div class="v" id="updated">—</div>
-      <div class="k">Last adapter</div><div class="v" id="adapter">—</div>
-      <div class="k">Last target</div><div class="v" id="target">—</div>
-    </div>
-  </section>
-
-  <section class="panel">
-    <details class="drop" open>
-      <summary>Snapshot</summary>
-      <div class="drop-body">
-        <pre id="snapshot" class="mono" style="white-space:pre-wrap;margin:0">{}</pre>
+    <section class="panel tight">
+      <div class="kv">
+        <div class="k">UVCP</div><div class="v mono" id="uvcp_show">—</div>
+        <div class="k">Updated</div><div class="v" id="updated">—</div>
+        <div class="k">Last adapter</div><div class="v" id="adapter">—</div>
+        <div class="k">Last target</div><div class="v" id="target">—</div>
       </div>
-    </details>
-  </section>
+    </section>
 
-  <section class="panel">
-    <details class="drop" open>
-      <summary>Receipts (latest)</summary>
-      <div class="drop-body">
-        <pre id="receipts" class="mono" style="white-space:pre-wrap;margin:0">[]</pre>
-      </div>
-    </details>
-  </section>
-
-  <section class="panel">
-    <details class="drop">
-      <summary>Operate (ARM required)</summary>
-      <div class="drop-body">
-
-        <p class="note">One operation only. Auto-disarms. Cooldown enforced.</p>
-
-        <div class="kv" style="margin-top:10px">
-          <div class="k">UVCP Base</div>
-          <div class="v"><span class="mono" id="uvcp_show">—</span></div>
-
-          <div class="k">Adapter</div>
-          <div class="v">
-            <select id="op_adapter" style="width:100%;padding:10px;border-radius:10px">
-              <option value="kvm">kvm</option>
-              <option value="hyperv">hyperv</option>
-            </select>
-          </div>
-
-          <div class="k">Target</div>
-          <div class="v">
-            <select id="op_target_select" style="width:100%;padding:10px;border-radius:10px"></select>
-            <input id="op_target" type="text" placeholder="or type VM name"
-              style="width:100%;padding:10px;border-radius:10px;margin-top:8px"/>
-          </div>
-
-          <div class="k">Operation</div>
-          <div class="v">
-            <select id="op_op" style="width:100%;padding:10px;border-radius:10px">
-              <option value="start">start</option>
-              <option value="stop">stop</option>
-              <option value="reboot">reboot</option>
-            </select>
-          </div>
-
-          <div class="k">Confirm phrase</div>
-          <div class="v">
-            <input id="op_confirm" type="text" placeholder='type: EXECUTE'
-              style="width:100%;padding:10px;border-radius:10px"/>
-          </div>
-
-          <div class="k">ARM</div>
-          <div class="v">
-            <label style="display:flex;align-items:center;gap:10px">
-              <input id="op_arm" type="checkbox"/>
-              <span>Arm one operation</span>
-            </label>
-          </div>
+    <section class="panel">
+      <details class="drop" open>
+        <summary>Snapshot</summary>
+        <div class="drop-body">
+          <pre id="snapshot" class="mono" style="white-space:pre-wrap;margin:0">{}</pre>
         </div>
+      </details>
+    </section>
 
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
-          <button class="btn primary" id="op_send" type="button">Execute once</button>
-          <button class="btn" id="op_refresh_targets" type="button">Refresh targets</button>
-          <button class="btn" id="op_clear" type="button">Clear</button>
+    <section class="panel">
+      <details class="drop" open>
+        <summary>Receipts</summary>
+        <div class="drop-body">
+          <pre id="receipts" class="mono" style="white-space:pre-wrap;margin:0">[]</pre>
         </div>
+      </details>
+    </section>
 
-        <p class="note" style="margin-top:12px">Cooldown: <span id="cooldown">ready</span></p>
+    <section class="panel">
+      <details class="drop">
+        <summary>Operate (ARM required)</summary>
+        <div class="drop-body">
+          <p class="note">One operation only. Auto-disarms. Cooldown enforced. Receipt is the proof.</p>
 
-        <pre id="op_result" class="mono" style="white-space:pre-wrap;margin:0;color:rgba(233,238,252,.75)">{}</pre>
+          <div class="kv" style="margin-top:10px">
+            <div class="k">Adapter</div>
+            <div class="v">
+              <select id="op_adapter" style="width:100%;padding:10px;border-radius:10px">
+                <option value="kvm">kvm</option>
+                <option value="hyperv">hyperv</option>
+              </select>
+            </div>
 
+            <div class="k">Target</div>
+            <div class="v">
+              <select id="op_target_select" style="width:100%;padding:10px;border-radius:10px"></select>
+              <input id="op_target" type="text" placeholder="or type VM name"
+                style="width:100%;padding:10px;border-radius:10px;margin-top:8px"/>
+            </div>
+
+            <div class="k">Operation</div>
+            <div class="v">
+              <select id="op_op" style="width:100%;padding:10px;border-radius:10px">
+                <option value="start">start</option>
+                <option value="stop">stop</option>
+                <option value="reboot">reboot</option>
+              </select>
+            </div>
+
+            <div class="k">Confirm</div>
+            <div class="v">
+              <input id="op_confirm" type="text" placeholder='type: EXECUTE'
+                style="width:100%;padding:10px;border-radius:10px"/>
+            </div>
+
+            <div class="k">ARM</div>
+            <div class="v">
+              <label style="display:flex;align-items:center;gap:10px">
+                <input id="op_arm" type="checkbox"/>
+                <span>Arm one operation</span>
+              </label>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
+            <button class="btn primary" id="op_send" type="button">Execute once</button>
+            <button class="btn" id="op_refresh_targets" type="button">Refresh targets</button>
+            <button class="btn" id="op_clear" type="button">Clear</button>
+          </div>
+
+          <p class="note" style="margin-top:12px">Cooldown: <span id="cooldown">ready</span></p>
+          <pre id="op_result" class="mono" style="white-space:pre-wrap;margin:0;color:rgba(233,238,252,.75)">{}</pre>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel">
+      <div class="nav-grid">
+        <a class="btn" href="/home/">Home</a>
+        <a class="btn" href="/engine/">Execution Space</a>
+        <a class="btn" href="/laws/">Laws</a>
+        <a class="btn" href="/principles/">Principles</a>
+        <a class="btn" href="/geodynamics/">Coherence Mechanics</a>
+        <a class="btn" href="/reference/">Reference</a>
       </div>
-    </details>
-  </section>
+    </section>
 
-  <section class="panel">
-    <div class="nav-grid">
-      <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/about/">About</a>
-    </div>
-  </section>
+    <div class="footer"><span>© Geodiametrics</span></div>
+  </main>
 
-</main>
+  <script>
+    const UVCP_BASE = "http://127.0.0.1:8000";
+    document.getElementById("uvcp_show").textContent = UVCP_BASE;
 
-<script>
-  // IMPORTANT: must be reachable from the browser (phone needs LAN/public address).
-  const UVCP_BASE = "http://127.0.0.1:8000";
-  document.getElementById("uvcp_show").textContent = UVCP_BASE;
+    const COOLDOWN_MS = 8000;
+    let nextAllowed = 0;
 
-  const COOLDOWN_MS = 8000;
-  let nextAllowed = 0;
-
-  async function j(url, opts){
-    const r = await fetch(url, Object.assign({ cache:"no-store" }, opts||{}));
-    if(!r.ok) throw new Error(await r.text());
-    return await r.json();
-  }
-
-  function fmtUnixSec(ts){
-    if(!ts) return "—";
-    const d = new Date(Number(ts) * 1000);
-    return isNaN(d) ? String(ts) : d.toLocaleString();
-  }
-
-  async function loadState(){
-    try{
-      const state = await j(UVCP_BASE + "/state?t=" + Date.now());
-      document.getElementById("updated").textContent = fmtUnixSec(state.updated);
-      document.getElementById("adapter").textContent = state.last_adapter || "—";
-      document.getElementById("target").textContent = state.last_target || "—";
-      document.getElementById("snapshot").textContent = JSON.stringify(state.snapshot || {}, null, 2);
-
-      const receipts = await j(UVCP_BASE + "/receipts?limit=20&t=" + Date.now());
-      document.getElementById("receipts").textContent = JSON.stringify(receipts || [], null, 2);
-    } catch {
-      document.getElementById("snapshot").textContent = "Unavailable";
-      document.getElementById("receipts").textContent = "Unavailable";
+    async function j(url, opts){
+      const r = await fetch(url, Object.assign({ cache:"no-store" }, opts||{}));
+      if(!r.ok) throw new Error(await r.text());
+      return await r.json();
     }
-  }
 
-  function cooldownLabel(){
-    const now = Date.now();
-    if(now >= nextAllowed) return "ready";
-    return Math.ceil((nextAllowed - now)/1000) + "s";
-  }
-  setInterval(()=>{ document.getElementById("cooldown").textContent = cooldownLabel(); }, 250);
+    function fmtUnixSec(ts){
+      if(!ts) return "—";
+      const d = new Date(Number(ts) * 1000);
+      return isNaN(d) ? String(ts) : d.toLocaleString();
+    }
 
-  async function refreshTargets(){
-    const adapter = document.getElementById("op_adapter").value;
-    const sel = document.getElementById("op_target_select");
-    sel.innerHTML = "";
-    try{
-      const data = await j(UVCP_BASE + "/inventory/targets?adapter=" + encodeURIComponent(adapter) + "&t=" + Date.now());
-      const targets = (data.targets || []);
-      const opt0 = document.createElement("option");
-      opt0.value = "";
-      opt0.textContent = "select a VM";
-      sel.appendChild(opt0);
-      targets.forEach(name=>{
+    async function loadState(){
+      try{
+        const state = await j(UVCP_BASE + "/state?t=" + Date.now());
+        document.getElementById("updated").textContent = fmtUnixSec(state.updated);
+        document.getElementById("adapter").textContent = state.last_adapter || "—";
+        document.getElementById("target").textContent = state.last_target || "—";
+        document.getElementById("snapshot").textContent = JSON.stringify(state.snapshot || {}, null, 2);
+        const receipts = await j(UVCP_BASE + "/receipts?limit=20&t=" + Date.now());
+        document.getElementById("receipts").textContent = JSON.stringify(receipts || [], null, 2);
+      } catch {
+        document.getElementById("snapshot").textContent = "Unavailable";
+        document.getElementById("receipts").textContent = "Unavailable";
+      }
+    }
+
+    function cooldownLabel(){
+      const now = Date.now();
+      if(now >= nextAllowed) return "ready";
+      return Math.ceil((nextAllowed - now)/1000) + "s";
+    }
+    setInterval(()=>{ document.getElementById("cooldown").textContent = cooldownLabel(); }, 250);
+
+    async function refreshTargets(){
+      const adapter = document.getElementById("op_adapter").value;
+      const sel = document.getElementById("op_target_select");
+      sel.innerHTML = "";
+      try{
+        const data = await j(UVCP_BASE + "/inventory/targets?adapter=" + encodeURIComponent(adapter) + "&t=" + Date.now());
+        const targets = (data.targets || []);
+        const opt0 = document.createElement("option");
+        opt0.value = ""; opt0.textContent = "select a VM";
+        sel.appendChild(opt0);
+        targets.forEach(name=>{
+          const o=document.createElement("option");
+          o.value=name; o.textContent=name;
+          sel.appendChild(o);
+        });
+      }catch{
         const o=document.createElement("option");
-        o.value=name; o.textContent=name;
+        o.value=""; o.textContent="unavailable";
         sel.appendChild(o);
-      });
-    }catch(e){
-      const o=document.createElement("option");
-      o.value=""; o.textContent="unavailable";
-      sel.appendChild(o);
-    }
-  }
-
-  document.getElementById("op_adapter").addEventListener("change", refreshTargets);
-  document.getElementById("op_refresh_targets").addEventListener("click", refreshTargets);
-
-  document.getElementById("op_target_select").addEventListener("change", (e)=>{
-    if(e.target.value){
-      document.getElementById("op_target").value = e.target.value;
-    }
-  });
-
-  document.getElementById("op_send").addEventListener("click", async () => {
-    const now = Date.now();
-    if(now < nextAllowed){
-      document.getElementById("op_result").textContent = "Cooldown active.";
-      return;
+      }
     }
 
-    const armed = document.getElementById("op_arm").checked;
-    const confirm = (document.getElementById("op_confirm").value || "").trim();
-    if(!armed){
-      document.getElementById("op_result").textContent = "ARM is required.";
-      return;
-    }
-    if(confirm !== "EXECUTE"){
-      document.getElementById("op_result").textContent = 'Type "EXECUTE" to confirm.';
-      return;
-    }
+    document.getElementById("op_adapter").addEventListener("change", refreshTargets);
+    document.getElementById("op_refresh_targets").addEventListener("click", refreshTargets);
+    document.getElementById("op_target_select").addEventListener("change", (e)=>{
+      if(e.target.value) document.getElementById("op_target").value = e.target.value;
+    });
 
-    const adapter = document.getElementById("op_adapter").value;
-    const op = document.getElementById("op_op").value;
-    const target = (document.getElementById("op_target").value || "").trim();
-    if(!target){
-      document.getElementById("op_result").textContent = "Target is required.";
-      return;
-    }
+    document.getElementById("op_send").addEventListener("click", async () => {
+      const now = Date.now();
+      if(now < nextAllowed){
+        document.getElementById("op_result").textContent = "Cooldown active.";
+        return;
+      }
+      const armed = document.getElementById("op_arm").checked;
+      const confirm = (document.getElementById("op_confirm").value || "").trim();
+      if(!armed){ document.getElementById("op_result").textContent = "ARM is required."; return; }
+      if(confirm !== "EXECUTE"){ document.getElementById("op_result").textContent = 'Type "EXECUTE" to confirm.'; return; }
 
-    const payload = { adapter, op, target };
+      const adapter = document.getElementById("op_adapter").value;
+      const op = document.getElementById("op_op").value;
+      const target = (document.getElementById("op_target").value || "").trim();
+      if(!target){ document.getElementById("op_result").textContent = "Target is required."; return; }
 
-    try{
-      const result = await j(UVCP_BASE + "/operate?t=" + Date.now(), {
-        method:"POST",
-        headers:{ "content-type":"application/json" },
-        body: JSON.stringify(payload)
-      });
-      document.getElementById("op_result").textContent = JSON.stringify(result, null, 2);
+      const payload = { adapter, op, target };
 
-      // auto-disarm and clear confirmation
-      document.getElementById("op_arm").checked = false;
+      try{
+        const result = await j(UVCP_BASE + "/operate?t=" + Date.now(), {
+          method:"POST",
+          headers:{ "content-type":"application/json" },
+          body: JSON.stringify(payload)
+        });
+        document.getElementById("op_result").textContent = JSON.stringify(result, null, 2);
+        document.getElementById("op_arm").checked = false;
+        document.getElementById("op_confirm").value = "";
+        nextAllowed = Date.now() + COOLDOWN_MS;
+        setTimeout(loadState, 600);
+      }catch(e){
+        document.getElementById("op_result").textContent = String(e);
+        document.getElementById("op_arm").checked = false;
+        document.getElementById("op_confirm").value = "";
+        nextAllowed = Date.now() + COOLDOWN_MS;
+      }
+    });
+
+    document.getElementById("op_clear").addEventListener("click", () => {
+      document.getElementById("op_target").value = "";
       document.getElementById("op_confirm").value = "";
-
-      nextAllowed = Date.now() + COOLDOWN_MS;
-
-      setTimeout(loadState, 600);
-    }catch(e){
-      document.getElementById("op_result").textContent = String(e);
       document.getElementById("op_arm").checked = false;
-      document.getElementById("op_confirm").value = "";
-      nextAllowed = Date.now() + COOLDOWN_MS;
-    }
-  });
+      document.getElementById("op_result").textContent = "{}";
+    });
 
-  document.getElementById("op_clear").addEventListener("click", () => {
-    document.getElementById("op_target").value = "";
-    document.getElementById("op_confirm").value = "";
-    document.getElementById("op_arm").checked = false;
-    document.getElementById("op_result").textContent = "{}";
-  });
-
-  loadState();
-  refreshTargets();
-  setInterval(loadState, 10000);
-</script>
-
+    loadState();
+    refreshTargets();
+    setInterval(loadState, 10000);
+  </script>
 </body>
 </html>

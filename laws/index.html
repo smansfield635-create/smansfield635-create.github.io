@@ -1,52 +1,168 @@
-<!-- OPTIONAL PLANETS — TNT #1 /laws/index.html (FULL REPLACE: adds planet + no extra JS) -->
 <!doctype html>
 <html lang="en">
-<head> 
+<head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Laws · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
+<body class="bg-gradient">
 
-<body class="bg-gradient planet-c">
-  <div class="planet" aria-hidden="true"></div>
+<main class="page">
 
-  <main class="page">
+  <!-- Header -->
+  <section class="panel hero">
+    <h1>Laws</h1>
+    <p class="subtitle">
+      Same laws. Two lenses. Driven by fact, not fiction.
+    </p>
+  </section>
 
-    <section class="panel hero">
-      <h1>Laws</h1>
-      <p class="subtitle">These constraints hold whether acknowledged or not.</p>
-    </section>
+  <!-- Lens selector (UI-only; no JS dependency) -->
+  <section class="panel">
+    <div class="nav-grid">
+      <div class="btn primary">Human</div>
+      <div class="btn">Scientific</div>
+    </div>
+    <p class="muted small">
+      The meaning is identical. Only the language changes.
+    </p>
+  </section>
 
-    <section class="panel">
-      <details class="drop" open>
-        <summary>Seven invariant constraints</summary>
-        <div class="drop-body">
-          <ol>
-            <li>Coherence cannot exceed evidence.</li>
-            <li>External trust cannot exceed internal honesty.</li>
-            <li>Outcomes cannot be more coherent than inputs.</li>
-            <li>Constraints define admissibility.</li>
-            <li>Verification gates reality.</li>
-            <li>Confusion accelerates failure once incoherence exists.</li>
-            <li>Receipts enable convergence.</li>
-          </ol>
-        </div>
-      </details>
-    </section>
+  <!-- Human Lens -->
+  <section class="panel">
+    <h2>Human language</h2>
 
-    <section class="panel">
-      <div class="nav-grid">
-        <a class="btn" href="/home/">Home</a>
-        <a class="btn" href="/principles/">Principles</a>
-        <a class="btn" href="/geodynamics/">Geodynamics</a>
-        <a class="btn" href="/engine/">Engine</a>
-        <a class="btn" href="/control/">State</a>
-      </div>
-    </section>
+    <details open>
+      <summary>Law 1 — Reality can’t be faked</summary>
+      <p class="muted">
+        You can say anything you want, but reality only responds to what is actually true.
+      </p>
+    </details>
 
-    <div class="footer"><span>© Geodiametrics</span></div>
+    <details>
+      <summary>Law 2 — Trust begins internally</summary>
+      <p class="muted">
+        You can’t be more honest with others than you are with yourself.
+        External trust never exceeds internal honesty.
+      </p>
+    </details>
 
-  </main>
+    <details>
+      <summary>Law 3 — Outputs reflect inputs</summary>
+      <p class="muted">
+        What comes out of a system always traces back to what went in,
+        even if the delay hides the cause.
+      </p>
+    </details>
+
+    <details>
+      <summary>Law 4 — Rules define what’s possible</summary>
+      <p class="muted">
+        Limits don’t disappear when ignored.
+        They resurface later as failure or collapse.
+      </p>
+    </details>
+
+    <details>
+      <summary>Law 5 — Proof matters more than intention</summary>
+      <p class="muted">
+        Good intentions don’t count unless results can be checked.
+      </p>
+    </details>
+
+    <details>
+      <summary>Law 6 — Confusion accelerates breakdown</summary>
+      <p class="muted">
+        Once instability begins, confusion increases the speed of failure.
+      </p>
+    </details>
+
+    <details>
+      <summary>Law 7 — Memory prevents repetition</summary>
+      <p class="muted">
+        Systems that remember can correct.
+        Systems that don’t repeat the same mistakes.
+      </p>
+    </details>
+  </section>
+
+  <!-- Scientific Lens -->
+  <section class="panel">
+    <h2>Scientific language</h2>
+
+    <details>
+      <summary>Law 1 — Observer-invariant coherence</summary>
+      <p class="muted">
+        No observer can produce outcomes that contradict the underlying state of reality.
+      </p>
+    </details>
+
+    <details>
+      <summary>Law 2 — External trust is bounded by internal coherence</summary>
+      <p class="muted">
+        Inter-system trust cannot exceed intra-system alignment.
+      </p>
+    </details>
+
+    <details>
+      <summary>Law 3 — Outputs are constrained by inputs</summary>
+      <p class="muted">
+        System outputs are a function of prior inputs and transformations.
+      </p>
+    </details>
+
+    <details>
+      <summary>Law 4 — Constraints define admissibility</summary>
+      <p class="muted">
+        The set of reachable states is bounded whether acknowledged or not.
+      </p>
+    </details>
+
+    <details>
+      <summary>Law 5 — Verification gates state transition</summary>
+      <p class="muted">
+        Unverified state changes do not propagate reliably.
+      </p>
+    </details>
+
+    <details>
+      <summary>Law 6 — Confusion amplifies instability</summary>
+      <p class="muted">
+        In incoherent systems, uncertainty increases the rate of degradation.
+      </p>
+    </details>
+
+    <details>
+      <summary>Law 7 — Receipts enable convergence</summary>
+      <p class="muted">
+        Persistent records of transitions allow systems to correct trajectory over time.
+      </p>
+    </details>
+  </section>
+
+  <!-- Navigation -->
+  <section class="panel nav">
+    <div class="nav-grid">
+      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/principles/">Principles</a>
+      <a class="btn" href="/geodynamics/">Geodynamics</a>
+      <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/control/">Control</a>
+      <a class="btn" href="/reference/">Reference</a>
+      <a class="btn" href="/about/">About</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <section class="panel footer">
+    <div class="small muted">
+      Build: 2026-02-01a · Canonical
+    </div>
+  </section>
+
+</main>
+
 </body>
 </html>

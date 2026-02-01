@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>State · Geodiametrics</title>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+</head>
+
+<body class="bg-gradient">
+<main class="page">
+
+  <section class="panel hero">
+    <h1>State</h1>
+    <p class="subtitle">
+      Observation only.
+    </p>
+  </section>
+
+  <section class="panel tight">
+    <div class="kv">
+      <div class="k">Health</div>
+      <div class="v" id="healthBadge">—</div>
+      <div class="k">Updated</div>
+      <div class="v" id="lastUpdated">—</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <details class="drop" open>
+      <summary>Gauges</summary>
+      <div class="drop-body">
+        <div class="kv"><div class="k">Sessions</div><div class="v" id="v_sessions">—</div></div>
+        <div class="bar"><i id="b_sessions"></i></div>
+
+        <div class="spacer"></div>
+
+        <div class="kv"><div class="k">Pageviews</div><div class="v" id="v_pageviews">—</div></div>
+        <div class="bar"><i id="b_pageviews"></i></div>
+      </div>
+    </details>
+  </section>
+
+  <section class="panel">
+    <div class="nav-grid">
+      <a class="btn" href="/">Home</a>
+      <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/laws/">Laws</a>
+      <a class="btn" href="/principles/">Principles</a>
+    </div>
+  </section>
+
+  <div class="footer">
+    <span>© Geodiametrics</span>
+  </div>
+
+</main>
+</body>
+</html>

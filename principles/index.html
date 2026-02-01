@@ -5,72 +5,126 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Principles · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script src="/engine.js" defer></script>
 </head>
-
 <body class="bg-gradient">
+
 <main class="page">
 
+  <!-- Header -->
   <section class="panel hero">
     <h1>Principles</h1>
-    <p class="subtitle">How the laws appear in real life. Same meaning, two lenses.</p>
+    <p class="subtitle">How laws appear in lived reality. Same meaning, two lenses.</p>
   </section>
 
+  <!-- Lens switch (WORKS once /engine.js is replaced) -->
   <section class="panel">
-    <div class="lens-switch" data-default="human" style="display:grid; gap:12px">
-      <button class="btn lens-btn active" data-lens="human" type="button">Human</button>
-      <button class="btn lens-btn" data-lens="scientific" type="button">Scientific</button>
+    <div class="lens-switch" data-default="human" role="group" aria-label="Lens">
+      <button class="btn pill active" type="button" data-lens="human" aria-pressed="true">Human</button>
+      <button class="btn pill" type="button" data-lens="scientific" aria-pressed="false">Scientific</button>
     </div>
-    <p class="note muted" style="margin-top:12px">Principles describe <em>appearance</em>. Laws describe <em>constraint</em>.</p>
+
+    <p class="note">
+      Principles describe <em>appearance</em>. Laws describe <em>constraint</em>.
+    </p>
   </section>
 
-  <section class="panel lens-panel" data-lens-panel="human" aria-hidden="false">
+  <!-- HUMAN PANEL -->
+  <section class="panel" data-lens-panel="human">
     <h2>Human language</h2>
 
-    <details open>
-      <summary><strong>Tier 1 — What must hold</strong></summary>
-      <p class="muted">What is true stays true under pressure. What isn’t eventually breaks.</p>
+    <details class="drop" open>
+      <summary>Tier 1 — What must hold</summary>
+      <div class="drop-body">
+        <p>What is true stays true under pressure. What isn’t eventually breaks.</p>
+        <ul>
+          <li>Honesty stabilizes decisions.</li>
+          <li>Boundaries reduce harm.</li>
+          <li>Inputs shape outcomes.</li>
+        </ul>
+      </div>
     </details>
 
-    <details>
-      <summary><strong>Tier 2 — How coherence is maintained</strong></summary>
-      <p class="muted">Boundaries + receipts keep decisions defensible as situations evolve.</p>
+    <details class="drop">
+      <summary>Tier 2 — How coherence is maintained</summary>
+      <div class="drop-body">
+        <p>Coherence is maintained when constraints are applied consistently and verified by receipts.</p>
+        <ul>
+          <li>Rules only work when enforced.</li>
+          <li>Verification beats persuasion.</li>
+          <li>Small repairs prevent big collapses.</li>
+        </ul>
+      </div>
     </details>
 
-    <details>
-      <summary><strong>Tier 3 — What you notice when coherence shifts</strong></summary>
-      <p class="muted">Drift, rule fatigue, promise decay—signals that alignment is slipping.</p>
+    <details class="drop">
+      <summary>Tier 3 — What you notice when coherence shifts</summary>
+      <div class="drop-body">
+        <p>Signals show up when alignment starts slipping.</p>
+        <ul>
+          <li>Drift: plans, behavior, and outcomes stop matching.</li>
+          <li>Boundary fade: rules exist but don’t constrain.</li>
+          <li>Promise decay: decisions happen without follow-through.</li>
+        </ul>
+      </div>
     </details>
   </section>
 
-  <section class="panel lens-panel" data-lens-panel="scientific" aria-hidden="true" style="display:none">
+  <!-- SCIENTIFIC PANEL -->
+  <section class="panel" data-lens-panel="scientific" style="display:none" aria-hidden="true">
     <h2>Scientific language</h2>
 
-    <details open>
-      <summary><strong>Tier 1 — Invariant</strong></summary>
-      <p class="muted">Observer-invariant constraints bounding admissible states.</p>
+    <details class="drop" open>
+      <summary>Tier 1 — Invariant</summary>
+      <div class="drop-body">
+        <p>Invariant statements are observer-invariant constraints that hold under all admissible interpretations.</p>
+        <ul>
+          <li>Truth conditions remain stable across observers.</li>
+          <li>Internal consistency bounds external credibility.</li>
+          <li>Outputs are bounded by inputs.</li>
+        </ul>
+      </div>
     </details>
 
-    <details>
-      <summary><strong>Tier 2 — Structural</strong></summary>
-      <p class="muted">Mechanisms that preserve coherence under transition pressure.</p>
+    <details class="drop">
+      <summary>Tier 2 — Structural</summary>
+      <div class="drop-body">
+        <p>Structural principles describe how systems maintain coherence via constraint application and verification.</p>
+        <ul>
+          <li>Constraints define admissibility.</li>
+          <li>Verification produces receipts.</li>
+          <li>Receipts gate defensible progression.</li>
+        </ul>
+      </div>
     </details>
 
-    <details>
-      <summary><strong>Tier 3 — Observable signal</strong></summary>
-      <p class="muted">Surface indicators correlated with drift and instability.</p>
+    <details class="drop">
+      <summary>Tier 3 — Signal</summary>
+      <div class="drop-body">
+        <p>Signal principles describe observable indicators of coherence loss or restoration.</p>
+        <ul>
+          <li>Drift: divergence between declared state and observed state.</li>
+          <li>Boundary collapse: constraints stop binding behavior.</li>
+          <li>Follow-through failure: action does not produce receipts.</li>
+        </ul>
+      </div>
     </details>
   </section>
 
+  <!-- Navigation -->
   <section class="panel nav">
     <div class="nav-grid">
       <a class="btn" href="/home/">Home</a>
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/geodynamics/">Geodynamics</a>
+      <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/control/">Control</a>
       <a class="btn" href="/reference/">Reference</a>
+      <a class="btn" href="/landing/">Landing</a>
     </div>
   </section>
 
 </main>
+
+<script src="/engine.js"></script>
 </body>
 </html>

@@ -5,134 +5,72 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Principles · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+  <script src="/engine.js" defer></script>
 </head>
-<body class="bg-gradient">
 
+<body class="bg-gradient">
 <main class="page">
 
-  <!-- Header -->
   <section class="panel hero">
     <h1>Principles</h1>
-    <p class="subtitle">
-      How the laws appear in real life. Same meaning, two lenses.
-    </p>
+    <p class="subtitle">How the laws appear in real life. Same meaning, two lenses.</p>
   </section>
 
-  <!-- Lens selector -->
   <section class="panel">
-    <div class="nav-grid">
-      <div class="btn primary">Human</div>
-      <div class="btn">Scientific</div>
+    <div class="lens-switch" data-default="human" style="display:grid; gap:12px">
+      <button class="btn lens-btn active" data-lens="human" type="button">Human</button>
+      <button class="btn lens-btn" data-lens="scientific" type="button">Scientific</button>
     </div>
-    <p class="muted small">
-      Principles describe *appearance*. Laws describe *constraint*.
-    </p>
+    <p class="note muted" style="margin-top:12px">Principles describe <em>appearance</em>. Laws describe <em>constraint</em>.</p>
   </section>
 
-  <!-- Human Lens -->
-  <section class="panel">
+  <section class="panel lens-panel" data-lens-panel="human" aria-hidden="false">
     <h2>Human language</h2>
 
     <details open>
-      <summary>Tier 1 — What must hold</summary>
-      <p class="muted">
-        What is true stays true under pressure. What isn’t eventually breaks.
-      </p>
-      <ul class="list">
-        <li>Honesty stabilizes decisions.</li>
-        <li>Boundaries reduce harm.</li>
-        <li>Inputs shape outcomes.</li>
-      </ul>
+      <summary><strong>Tier 1 — What must hold</strong></summary>
+      <p class="muted">What is true stays true under pressure. What isn’t eventually breaks.</p>
     </details>
 
     <details>
-      <summary>Tier 2 — How coherence is maintained</summary>
-      <p class="muted">
-        Systems stay healthy when small corrections happen early.
-      </p>
-      <ul class="list">
-        <li>Rules are enforced consistently.</li>
-        <li>Evidence resolves conflict.</li>
-        <li>Feedback is timely.</li>
-      </ul>
+      <summary><strong>Tier 2 — How coherence is maintained</strong></summary>
+      <p class="muted">Boundaries + receipts keep decisions defensible as situations evolve.</p>
     </details>
 
     <details>
-      <summary>Tier 3 — What you notice when things drift</summary>
-      <p class="muted">
-        Confusion is not random. It’s a signal.
-      </p>
-      <ul class="list">
-        <li>Promises stop matching outcomes.</li>
-        <li>Rules exist but aren’t applied.</li>
-        <li>Decisions feel heavier than they should.</li>
-      </ul>
+      <summary><strong>Tier 3 — What you notice when coherence shifts</strong></summary>
+      <p class="muted">Drift, rule fatigue, promise decay—signals that alignment is slipping.</p>
     </details>
   </section>
 
-  <!-- Scientific Lens -->
-  <section class="panel">
+  <section class="panel lens-panel" data-lens-panel="scientific" aria-hidden="true" style="display:none">
     <h2>Scientific language</h2>
 
-    <details>
-      <summary>Tier 1 — Structural invariants</summary>
-      <p class="muted">
-        Observer-invariant constraints govern admissible system states.
-      </p>
-      <ul class="list">
-        <li>Truth persists across observers.</li>
-        <li>Trust is bounded by internal alignment.</li>
-        <li>Outputs are constrained by inputs.</li>
-      </ul>
+    <details open>
+      <summary><strong>Tier 1 — Invariant</strong></summary>
+      <p class="muted">Observer-invariant constraints bounding admissible states.</p>
     </details>
 
     <details>
-      <summary>Tier 2 — Stability mechanics</summary>
-      <p class="muted">
-        Coherence is preserved through consistent enforcement and verification.
-      </p>
-      <ul class="list">
-        <li>Constraints define admissibility.</li>
-        <li>Verification gates transitions.</li>
-        <li>Latency amplifies correction cost.</li>
-      </ul>
+      <summary><strong>Tier 2 — Structural</strong></summary>
+      <p class="muted">Mechanisms that preserve coherence under transition pressure.</p>
     </details>
 
     <details>
-      <summary>Tier 3 — Observable failure signals</summary>
-      <p class="muted">
-        Drift is measurable divergence between declared and observed state.
-      </p>
-      <ul class="list">
-        <li>Boundary failure.</li>
-        <li>Receipt absence.</li>
-        <li>Escalating uncertainty.</li>
-      </ul>
+      <summary><strong>Tier 3 — Observable signal</strong></summary>
+      <p class="muted">Surface indicators correlated with drift and instability.</p>
     </details>
   </section>
 
-  <!-- Navigation -->
   <section class="panel nav">
     <div class="nav-grid">
       <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/">Landing</a>
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/control/">Control</a>
       <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/about/">About</a>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <section class="panel footer">
-    <div class="small muted">
-      Build: 2026-02-01a · Canonical
     </div>
   </section>
 
 </main>
-
 </body>
 </html>

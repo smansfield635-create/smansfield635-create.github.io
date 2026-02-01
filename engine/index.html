@@ -3,98 +3,94 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Selection · Engine · Geodiametrics</title>
+  <title>Engine · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
   <script src="/engine.js" defer></script>
 </head>
-<body class="bg-gradient">
 
+<body class="bg-gradient">
 <main class="page">
 
   <section class="panel hero">
-    <h1>Selection</h1>
-    <p class="subtitle">What enters the system.</p>
+    <h1>Engine</h1>
+    <p class="subtitle">How decisions become real — safely, deliberately, and only by choice.</p>
   </section>
 
-  <section class="panel" data-lens-root data-lens-default="human">
-    <div class="nav-grid">
-      <button class="btn primary" type="button" data-lens-btn="human" aria-pressed="true">Human</button>
-      <button class="btn" type="button" data-lens-btn="scientific" aria-pressed="false">Software-correct</button>
+  <section class="panel">
+    <div class="lens-switch" data-default="human" style="display:grid; gap:12px">
+      <button class="btn lens-btn active" data-lens="human" type="button">Human</button>
+      <button class="btn lens-btn" data-lens="scientific" type="button">Software-correct</button>
     </div>
+  </section>
 
-    <div class="spacer"></div>
+  <!-- HUMAN -->
+  <section class="panel lens-panel" data-lens-panel="human" aria-hidden="false">
+    <h2>Human language</h2>
 
-    <!-- HUMAN -->
-    <div data-lens-panel="human">
-      <div class="acc" data-acc data-acc-default="open">
-        <button class="acc-head" data-acc-head type="button"><span>Role</span></button>
-        <div class="acc-body" data-acc-body>
-          <p>
-            Selection is the “front door.” It decides what counts and what doesn’t.
-            Not everything that appears should proceed.
-          </p>
-          <ul>
-            <li><strong>Admit</strong> signals that matter.</li>
-            <li><strong>Reject</strong> noise, bait, and irrelevant inputs.</li>
-            <li><strong>Protect</strong> attention so the system stays coherent.</li>
-          </ul>
-        </div>
-      </div>
+    <details open>
+      <summary><strong>What this is</strong></summary>
+      <p class="muted">
+        This is the “how” behind coherence: a repeatable loop that turns fuzzy situations into checkable reality—one step at a time.
+      </p>
+      <ul>
+        <li><strong>Selection</strong> = what gets admitted (what counts).</li>
+        <li><strong>Resolution</strong> = what constraints apply (what’s allowed).</li>
+        <li><strong>Commitment</strong> = what becomes real (what you lock in).</li>
+        <li><strong>Continuation</strong> = what learns and loops (what persists).</li>
+      </ul>
+    </details>
 
-      <div class="spacer"></div>
+    <details>
+      <summary><strong>Why this matters</strong></summary>
+      <p class="muted">
+        Most breakdowns happen because the system keeps moving without receipts. This loop forces reality-checks so the next step stays defensible.
+      </p>
+    </details>
 
-      <div class="acc" data-acc>
-        <button class="acc-head" data-acc-head type="button"><span>What breaks when this fails</span></button>
-        <div class="acc-body" data-acc-body>
-          <ul>
-            <li>Noise overwhelms signal.</li>
-            <li>Boundaries dissolve.</li>
-            <li>The system becomes reactive instead of deliberate.</li>
-          </ul>
-        </div>
-      </div>
+    <div class="nav-grid" style="margin-top:14px">
+      <a class="btn" href="/engine/selection/">Selection</a>
+      <a class="btn" href="/engine/resolution/">Resolution</a>
+      <a class="btn" href="/engine/commitment/">Commitment</a>
+      <a class="btn" href="/engine/continuation/">Continuation</a>
     </div>
+  </section>
 
-    <!-- SOFTWARE-CORRECT -->
-    <div data-lens-panel="scientific" style="display:none">
-      <div class="acc" data-acc data-acc-default="open">
-        <button class="acc-head" data-acc-head type="button"><span>Definition</span></button>
-        <div class="acc-body" data-acc-body>
-          <p class="muted">
-            Selection is an admissibility filter over candidate inputs/options.
-            It partitions incoming signals into {admit, reject} according to constraints and goals.
-          </p>
-        </div>
-      </div>
+  <!-- SOFTWARE-CORRECT -->
+  <section class="panel lens-panel" data-lens-panel="scientific" aria-hidden="true" style="display:none">
+    <h2>Software-correct</h2>
 
-      <div class="spacer"></div>
+    <details open>
+      <summary><strong>Definition</strong></summary>
+      <p class="muted">
+        The engine is a deterministic, receipt-gated transition system: Selection → Resolution → Commitment → Continuation.
+        Each transition is admissible only if constraints are satisfied and the receipt is produced.
+      </p>
+    </details>
 
-      <div class="acc" data-acc>
-        <button class="acc-head" data-acc-head type="button"><span>Failure mode</span></button>
-        <div class="acc-body" data-acc-body>
-          <p class="muted">
-            If the filter collapses, entropy rises: irrelevant inputs are treated as admissible,
-            driving downstream incoherence.
-          </p>
-        </div>
-      </div>
+    <details>
+      <summary><strong>Failure mode</strong></summary>
+      <p class="muted">
+        Skipping receipts creates non-defensible progression (drift). Enforcing receipts stabilizes the trajectory.
+      </p>
+    </details>
+
+    <div class="nav-grid" style="margin-top:14px">
+      <a class="btn" href="/engine/selection/">Selection</a>
+      <a class="btn" href="/engine/resolution/">Resolution</a>
+      <a class="btn" href="/engine/commitment/">Commitment</a>
+      <a class="btn" href="/engine/continuation/">Continuation</a>
     </div>
   </section>
 
   <section class="panel nav">
     <div class="nav-grid">
-      <a class="btn" href="/engine/">Back → Engine</a>
-      <a class="btn primary" href="/engine/resolution/">Next → Resolution</a>
       <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/state/">State</a>
+      <a class="btn" href="/control/">Control</a>
     </div>
   </section>
 
-  <section class="panel footer">
-    <div class="small muted">Engine · Selection · Build: 2026-02-01a</div>
-  </section>
-
 </main>
-
 </body>
 </html>

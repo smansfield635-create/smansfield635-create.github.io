@@ -4,67 +4,36 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodiametrics · Home</title>
-  <meta name="theme-color" content="#0b1224"/>
-  <style>
-    :root{
-      --bg0:#050814; --bg1:#0b1634;
-      --card:rgba(17,24,39,.46);
-      --stroke:rgba(255,255,255,.10);
-      --text:#eaf2ff;
-      --muted:rgba(234,242,255,.70);
-      --shadow:0 24px 70px rgba(0,0,0,.55);
-      --r:26px;
-      --btn:linear-gradient(90deg,#2a74ff,#2ec7a6);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; min-height:100vh; color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:
-        radial-gradient(1200px 900px at 20% 10%, rgba(80,130,255,.22), transparent 55%),
-        radial-gradient(1000px 800px at 85% 25%, rgba(45,220,180,.14), transparent 55%),
-        linear-gradient(180deg,var(--bg0),var(--bg1));
-    }
-    .wrap{padding:clamp(18px,3.5vw,40px); display:flex; justify-content:center}
-    .stack{width:min(760px,100%); display:flex; flex-direction:column; gap:16px}
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid var(--stroke);
-      border-radius:var(--r);
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(16px);
-      padding:clamp(16px,3vw,26px);
-    }
-    h1{margin:0 0 6px 0; font-size:clamp(30px,4.8vw,46px)}
-    p{margin:0; color:var(--muted); line-height:1.45}
-    .grid{display:grid; gap:12px}
-    .btn{
-      border:none; border-radius:999px; padding:16px 18px;
-      font-size:16px; font-weight:900; color:#eaffff;
-      background:var(--btn); cursor:pointer;
-      box-shadow:0 14px 40px rgba(0,0,0,.35);
-    }
-    .btn.alt{background:linear-gradient(90deg,#5b6cff,#8c5bff)}
-    .btn.gray{background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04))}
-    footer{opacity:.55; font-size:12px; text-align:center}
-  </style>
+  <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 <body>
   <main class="wrap">
     <section class="stack">
-      <div class="card">
-        <h1>Home</h1>
-        <p>One domain. One authority. Multiple entry points.</p>
-      </div>
 
-      <div class="card grid">
-        <button class="btn" onclick="location.href='../engine/'">Engine</button>
-        <button class="btn" onclick="location.href='../control/'">Control</button>
-        <button class="btn alt" onclick="location.href='../laws/'">Laws</button>
-        <button class="btn alt" onclick="location.href='../principles/'">Principles</button>
-        <button class="btn gray" onclick="location.href='../geodynamics/'">Geodynamics</button>
-        <button class="btn gray" onclick="location.href='../reference/'">Reference</button>
-      </div>
+      <section class="card hero">
+        <h1>Home</h1>
+        <p>Exploration is welcome. There is no required path.</p>
+      </section>
+
+      <section class="card">
+        <div class="grid two">
+          <a class="btn primary" href="/laws/">Laws</a>
+          <a class="btn" href="/principles/">Principles</a>
+          <a class="btn" href="/geodynamics/">Geodynamics</a>
+          <a class="btn" href="/engine/">Engine</a>
+          <a class="btn" href="/control/">Control</a>
+          <a class="btn" href="/state/">State</a>
+          <a class="btn" href="/reference/">Reference</a>
+          <a class="btn" href="/about/">About</a>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="grid two">
+          <a class="btn" href="/">Return to Landing</a>
+          <a class="btn" href="/control/">Open Gauges</a>
+        </div>
+      </section>
 
       <footer>© Geodiametrics</footer>
     </section>

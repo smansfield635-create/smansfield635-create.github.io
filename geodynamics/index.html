@@ -5,94 +5,72 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodynamics · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+  <script src="/engine.js" defer></script>
 </head>
 <body class="bg-gradient">
 
 <main class="page">
 
-  <!-- Header -->
   <section class="panel hero">
     <h1>Geodynamics</h1>
     <p class="subtitle">How coherence changes over time — without opinion, without pressure.</p>
   </section>
 
-  <!-- Human meaning -->
-  <section class="panel">
-    <h2>Human language</h2>
-    <p class="muted">
-      When life feels confusing, it usually means signals have stopped lining up.
-      Coherence returns when reality becomes checkable again: what happened, what was allowed, and what proved out.
-    </p>
-    <ul class="list">
-      <li><strong>Drift</strong> is when what you say, do, and get stop matching.</li>
-      <li><strong>Pressure</strong> reveals what is real and what was only assumed.</li>
-      <li><strong>Small corrections</strong> early prevent large collapses later.</li>
-    </ul>
+  <section class="panel" data-lens-root data-lens-default="human">
+    <div class="nav-grid">
+      <button class="btn primary" type="button" data-lens-btn="human" aria-pressed="true">Human</button>
+      <button class="btn" type="button" data-lens-btn="scientific" aria-pressed="false">Scientific</button>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div data-lens-panel="human">
+      <div class="acc" data-acc data-acc-default="open">
+        <button class="acc-head" data-acc-head type="button">
+          <span>Human translation</span>
+        </button>
+        <div class="acc-body" data-acc-body>
+          <p>
+            When life feels confusing, it usually means signals stopped lining up.
+            Coherence returns when reality becomes checkable again:
+            what happened, what was allowed, and what proved out.
+          </p>
+          <ul>
+            <li><strong>Drift</strong> is when what you say, do, and get stop matching.</li>
+            <li><strong>Pressure</strong> reveals what is real and what was only assumed.</li>
+            <li><strong>Small corrections</strong> early prevent large collapses later.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div data-lens-panel="scientific" style="display:none">
+      <div class="acc" data-acc data-acc-default="open">
+        <button class="acc-head" data-acc-head type="button">
+          <span>Mechanics</span>
+        </button>
+        <div class="acc-body" data-acc-body>
+          <p><strong>Coherence(t) = 1 / (1 + Divergence(t))</strong></p>
+          <p class="muted">
+            Divergence reflects misalignment between declared state and observed state.
+            This is structural description, not moral claim.
+          </p>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- Scientific meaning (calm, minimal) -->
-  <section class="panel">
-    <h2>Scientific language</h2>
-    <p class="muted">
-      Coherence can be expressed as the inverse of divergence between declared state and observed state.
-      This is a structural description, not a moral claim.
-    </p>
-
-    <details>
-      <summary>Minimal formulation</summary>
-      <pre class="pre mono">
-Let x(t) = declared / intended state
-Let y(t) = observed state
-
-D(t) = || y(t) − x(t) || / max(ε, ||x(t)||)
-C(t) = 1 / (1 + D(t))
-      </pre>
-      <p class="muted small">
-        D(t) is normalized divergence. C(t) is coherence in [0,1]. Higher divergence → lower coherence.
-      </p>
-    </details>
-  </section>
-
-  <!-- Why it matters -->
-  <section class="panel">
-    <h2>Why this is useful</h2>
-    <ul class="list">
-      <li>Turns vague confusion into something checkable.</li>
-      <li>Separates feelings from causes without dismissing feelings.</li>
-      <li>Helps you see drift before it becomes collapse.</li>
-    </ul>
-  </section>
-
-  <!-- Where it fits -->
-  <section class="panel">
-    <h2>Where this fits</h2>
-    <ul class="list">
-      <li><strong>Laws</strong> describe what cannot be violated.</li>
-      <li><strong>Principles</strong> describe how laws appear in real life.</li>
-      <li><strong>Geodynamics</strong> describes how coherence moves between them over time.</li>
-      <li><strong>Control</strong> shows what the system currently reports.</li>
-    </ul>
-  </section>
-
-  <!-- Navigation -->
   <section class="panel nav">
     <div class="nav-grid">
       <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/">Landing</a>
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/principles/">Principles</a>
       <a class="btn" href="/engine/">Engine</a>
-      <a class="btn primary" href="/control/">Control</a>
-      <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/about/">About</a>
     </div>
   </section>
 
-  <!-- Footer -->
   <section class="panel footer">
-    <div class="small muted">
-      Build: 2026-02-01a · Canonical
-    </div>
+    <div class="small muted">Build: 2026-02-01a · Canonical</div>
   </section>
 
 </main>

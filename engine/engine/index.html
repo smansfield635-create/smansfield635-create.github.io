@@ -3,52 +3,234 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Engine · Geodiametrics</title>
+  <title>Execution Space · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+
+  <style>
+    .tabs{display:flex;gap:10px;flex-wrap:wrap}
+    .tabbtn{
+      display:inline-flex;align-items:center;justify-content:center;
+      height:46px;padding:0 16px;border-radius:999px;
+      border:1px solid rgba(233,238,252,.16);
+      background:rgba(255,255,255,.06);
+      color:rgba(233,238,252,.92);
+      font-weight:700;letter-spacing:.2px;cursor:pointer;
+      box-shadow:0 12px 28px rgba(0,0,0,.35);
+      -webkit-tap-highlight-color:transparent;
+    }
+    .tabbtn[aria-selected="true"]{
+      background:linear-gradient(180deg, rgba(70,140,255,.62), rgba(28,70,160,.52));
+      border-color:rgba(140,190,255,.35);
+    }
+    .tabpanel{display:none}
+    .tabpanel[data-active="true"]{display:block}
+    .leadline{color:rgba(233,238,252,.72);margin:0;line-height:1.5}
+    .seq{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+    .mini{font-size:14px;color:rgba(233,238,252,.55)}
+  </style>
 </head>
+
 <body class="bg-gradient">
 <main class="page">
 
   <section class="panel hero">
-    <h1>Engine</h1>
-    <p class="subtitle">Canonical execution cycle.</p>
+    <h1>Execution Space</h1>
+    <p class="subtitle">Same model. Two lenses. Calm, readable, factual.</p>
   </section>
 
   <section class="panel">
-    <details class="details" open>
-      <summary>What this is</summary>
-      <p class="muted">
-        Selection → Resolution → Commitment → Continuation.
-        Choose a cylinder. Each page describes its role and failure mode.
-      </p>
-    </details>
-  </section>
+    <p class="leadline">
+      This page shows how decisions can unfold without forcing a path.
+      It is a map of possibilities, not a command.
+    </p>
 
-  <section class="panel">
-    <div class="nav-grid">
-      <a class="btn primary" href="/engine/selection/">Selection</a>
-      <a class="btn primary" href="/engine/resolution/">Resolution</a>
-      <a class="btn primary" href="/engine/commitment/">Commitment</a>
-      <a class="btn primary" href="/engine/continuation/">Continuation</a>
+    <div class="tabs" role="tablist" aria-label="Execution Space lenses" style="margin-top:12px">
+      <button class="tabbtn" id="tab-human" role="tab" aria-selected="true" aria-controls="panel-human" type="button">
+        Human
+      </button>
+      <button class="tabbtn" id="tab-science" role="tab" aria-selected="false" aria-controls="panel-science" type="button">
+        Scientific
+      </button>
     </div>
   </section>
 
+  <!-- HUMAN TAB -->
+  <section class="panel tabpanel" id="panel-human" role="tabpanel" aria-labelledby="tab-human" data-active="true">
+
+    <details class="drop" open>
+      <summary>What this is</summary>
+      <div class="drop-body">
+        <p>
+          Execution Space is a safe way to explore “what could happen” before anything becomes irreversible.
+        </p>
+        <p class="mini">
+          Nothing here executes by itself. You can look, explore, and leave at any time.
+        </p>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop" open>
+      <summary>The four actions (plain meaning)</summary>
+      <div class="drop-body">
+        <ul>
+          <li><strong>S — Selection:</strong> what you let in.</li>
+          <li><strong>R — Resolution:</strong> what rules apply.</li>
+          <li><strong>C — Commitment:</strong> what becomes real.</li>
+          <li><strong>N — Continuation:</strong> what repeats or learns.</li>
+        </ul>
+        <p class="mini">
+          These are not “new steps.” They describe how decisions already work in life.
+        </p>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop">
+      <summary>Why “64” shows up</summary>
+      <div class="drop-body">
+        <p>
+          If a system can take one of four actions at each moment, then looking three moments deep produces:
+        </p>
+        <p class="seq"><strong>4 × 4 × 4 = 64</strong></p>
+        <p class="mini">
+          64 is not speed or hardware. It’s a human-scale limit on patterns so the map stays understandable.
+        </p>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop">
+      <summary>Explore (optional)</summary>
+      <div class="drop-body">
+        <p class="mini">Pick a depth. This generates sequences. It does not force a path.</p>
+        <div class="nav-grid">
+          <button class="btn small" data-k="1" type="button">Depth 1</button>
+          <button class="btn small" data-k="2" type="button">Depth 2</button>
+          <button class="btn small" data-k="3" type="button">Depth 3 (64)</button>
+          <button class="btn small" data-k="4" type="button">Depth 4</button>
+        </div>
+        <div id="basis" style="margin-top:12px;display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+    </details>
+
+  </section>
+
+  <!-- SCIENTIFIC TAB -->
+  <section class="panel tabpanel" id="panel-science" role="tabpanel" aria-labelledby="tab-science" data-active="false">
+
+    <details class="drop" open>
+      <summary>Definition (bounded state space)</summary>
+      <div class="drop-body">
+        <p>
+          Let Σ = {S, R, C, N}. A depth-k execution trace is any length-k sequence over Σ.
+        </p>
+        <p class="seq"><strong>|Σ| = 4</strong></p>
+        <p>
+          Therefore the number of possible traces at depth k is:
+        </p>
+        <p class="seq"><strong>|Σ|^k = 4^k</strong></p>
+        <p class="mini">
+          When k = 3, there are 4³ = 64 traces. This is a structural enumeration, not a hardware claim.
+        </p>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop">
+      <summary>Interpretation (why bound it)</summary>
+      <div class="drop-body">
+        <ul>
+          <li>Finite enumeration keeps the model interpretable.</li>
+          <li>Bounded traces reduce ambiguity and intimidation.</li>
+          <li>Verification + receipts can be attached to transitions later.</li>
+        </ul>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop">
+      <summary>Mapping to the engine</summary>
+      <div class="drop-body">
+        <p><strong>Selection → Resolution → Commitment → Continuation</strong></p>
+        <p class="mini">
+          The engine pages describe each primitive as a role. Execution Space enumerates their combinations.
+        </p>
+      </div>
+    </details>
+
+  </section>
+
+  <!-- NAV -->
   <section class="panel nav">
-    <div class="nav-grid">
+    <div class="nav-grid two">
       <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/state/">State</a>
+      <a class="btn" href="/">Landing</a>
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
+      <a class="btn" href="/geodynamics/">Coherence Mechanics</a>
+      <a class="btn primary" href="/control/">State</a>
       <a class="btn" href="/reference/">Reference</a>
       <a class="btn" href="/about/">About</a>
     </div>
   </section>
 
-  <section class="panel footer">
-    <div class="muted small">Build: 2026-02-01a · Canonical</div>
-  </section>
+  <div class="meta">Build: 2026-02-01a · Canonical</div>
 
 </main>
+
+<script>
+  // tabs
+  const tabHuman = document.getElementById("tab-human");
+  const tabSci = document.getElementById("tab-science");
+  const panelHuman = document.getElementById("panel-human");
+  const panelSci = document.getElementById("panel-science");
+
+  function setTab(which){
+    const human = which === "human";
+    tabHuman.setAttribute("aria-selected", human ? "true" : "false");
+    tabSci.setAttribute("aria-selected", human ? "false" : "true");
+    panelHuman.dataset.active = human ? "true" : "false";
+    panelSci.dataset.active = human ? "false" : "true";
+  }
+  tabHuman.addEventListener("click", ()=>setTab("human"));
+  tabSci.addEventListener("click", ()=>setTab("science"));
+
+  // sequence generator
+  const P=["S","R","C","N"];
+  const el=document.getElementById("basis");
+  const btns=document.querySelectorAll("[data-k]");
+
+  function perm(k){
+    if(k===1) return P.map(x=>[x]);
+    const prev=perm(k-1);
+    const out=[];
+    for(const a of P){
+      for(const b of prev){
+        out.push([a,...b]);
+      }
+    }
+    return out;
+  }
+  function render(k){
+    if(!el) return;
+    el.innerHTML="";
+    const items=perm(k);
+    items.forEach(seq=>{
+      const d=document.createElement("div");
+      d.className="seq";
+      d.textContent=seq.join(" → ");
+      el.appendChild(d);
+    });
+  }
+  btns.forEach(b=>b.addEventListener("click",()=>render(Number(b.dataset.k))));
+  render(3);
+</script>
+
 </body>
 </html>

@@ -1,77 +1,89 @@
-/* engine.js — canonical client behavior (no build step)
-   - Lens toggles: [data-lens-root]
-   - Accordions:   [data-acc] + [data-acc-body]
+/* engine.js — single source of truth for:
+   (1) accordion toggles (data-acc)
+   (2) lens toggles (data-lens-root)
+   No dependencies.
 */
 
 (function () {
-  function qsa(root, sel) { return Array.prototype.slice.call(root.querySelectorAll(sel)); }
+  function qs(root, sel) { return Array.from((root || document).querySelectorAll(sel)); }
 
-  function setActiveButton(btns, active) {
-    btns.forEach(b => {
-      const isOn = b === active;
-      b.classList.toggle("primary", isOn);
-      b.setAttribute("aria-pressed", isOn ? "true" : "false");
-    });
-  }
+  // ---------- Accordion ----------
+  function initAccordions(scope) {
+    qs(scope, '[data-acc]').forEach(acc => {
+      const head = acc.querySelector('[data-acc-head]');
+      const body = acc.querySelector('[data-acc-body]');
+      if (!head || !body) return;
 
-  function setLens(root, lens) {
-    const panels = qsa(root, "[data-lens-panel]");
-    panels.forEach(p => {
-      const isMatch = (p.getAttribute("data-lens-panel") === lens);
-      p.style.display = isMatch ? "" : "none";
-    });
-    root.setAttribute("data-lens", lens);
-  }
+      // default state
+      const wantsOpen = (acc.getAttribute('data-acc-default') || '').toLowerCase() === 'open';
+      acc.dataset.accOpen = wantsOpen ? '1' : '0';
 
-  function initLensRoot(root) {
-    const btns = qsa(root, "[data-lens-btn]");
-    if (!btns.length) return;
+      function apply() {
+        const open = acc.dataset.accOpen === '1';
+        body.style.display = open ? '' : 'none';
+        head.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
 
-    // default lens
-    const initial = root.getAttribute("data-lens-default") || "human";
-    const initialBtn = btns.find(b => (b.getAttribute("data-lens-btn") === initial)) || btns[0];
+      // ensure button semantics
+      head.setAttribute('type', 'button');
+      head.setAttribute('aria-expanded', 'false');
 
-    // wire clicks
-    btns.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const lens = btn.getAttribute("data-lens-btn");
-        setActiveButton(btns, btn);
-        setLens(root, lens);
+      // click
+      head.addEventListener('click', () => {
+        acc.dataset.accOpen = (acc.dataset.accOpen === '1') ? '0' : '1';
+        apply();
       });
-    });
 
-    // apply default
-    setActiveButton(btns, initialBtn);
-    setLens(root, initialBtn.getAttribute("data-lens-btn"));
-  }
-
-  function initAccordion(acc) {
-    const body = acc.querySelector("[data-acc-body]");
-    const head = acc.querySelector("[data-acc-head]");
-    if (!body || !head) return;
-
-    const defaultOpen = acc.getAttribute("data-acc-default") === "open";
-    body.style.display = defaultOpen ? "" : "none";
-    head.setAttribute("aria-expanded", defaultOpen ? "true" : "false");
-
-    head.addEventListener("click", () => {
-      const isOpen = body.style.display !== "none";
-      body.style.display = isOpen ? "none" : "";
-      head.setAttribute("aria-expanded", isOpen ? "false" : "true");
-      acc.classList.toggle("open", !isOpen);
+      apply();
     });
   }
 
+  // ---------- Lens (Human / Scientific) ----------
+  function initLens(scope) {
+    qs(scope, '[data-lens-root]').forEach(root => {
+      const defaultLens = (root.getAttribute('data-lens-default') || 'human').toLowerCase();
+
+      const btns = qs(root, '[data-lens-btn]');
+      const panels = qs(root, '[data-lens-panel]');
+
+      if (!btns.length || !panels.length) return;
+
+      function setLens(lens) {
+        const L = (lens || defaultLens).toLowerCase();
+
+        // buttons
+        btns.forEach(b => {
+          const isOn = (b.getAttribute('data-lens-btn') || '').toLowerCase() === L;
+          b.classList.toggle('primary', isOn);
+          b.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+        });
+
+        // panels
+        panels.forEach(p => {
+          const isOn = (p.getAttribute('data-lens-panel') || '').toLowerCase() === L;
+          p.style.display = isOn ? '' : 'none';
+        });
+      }
+
+      // bind
+      btns.forEach(b => {
+        b.setAttribute('type', 'button');
+        b.addEventListener('click', () => setLens(b.getAttribute('data-lens-btn')));
+      });
+
+      // initial
+      setLens(defaultLens);
+    });
+  }
+
+  // ---------- Boot ----------
   function boot() {
-    // Lens roots
-    qsa(document, "[data-lens-root]").forEach(initLensRoot);
-
-    // Accordions
-    qsa(document, "[data-acc]").forEach(initAccordion);
+    initAccordions(document);
+    initLens(document);
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
   } else {
     boot();
   }

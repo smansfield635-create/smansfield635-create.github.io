@@ -5,125 +5,91 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Execution Space · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+  <script src="/engine.js" defer></script>
 </head>
 <body class="bg-gradient">
 
 <main class="page">
 
-  <!-- Header -->
   <section class="panel hero">
     <h1>Execution Space</h1>
-    <p class="subtitle">
-      How decisions move before anything becomes irreversible.
-    </p>
+    <p class="subtitle">A bounded, addressable state space with constraint-verified transitions.</p>
   </section>
 
-  <!-- What this is -->
-  <section class="panel">
-    <h2>What this is</h2>
-    <p class="muted">
-      Execution Space is a bounded place to explore possible paths without forcing action.
-      Nothing here commits, executes, or traps you.
-    </p>
-    <p class="muted">
-      You can look, step back, or leave at any time.
-    </p>
+  <section class="panel" data-lens-root data-lens-default="human">
+    <div class="nav-grid">
+      <button class="btn primary" type="button" data-lens-btn="human" aria-pressed="true">Human</button>
+      <button class="btn" type="button" data-lens-btn="scientific" aria-pressed="false">Scientific</button>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div data-lens-panel="human">
+      <div class="acc" data-acc data-acc-default="open">
+        <button class="acc-head" data-acc-head type="button">
+          <span>Why this is useful</span>
+        </button>
+        <div class="acc-body" data-acc-body>
+          <p>
+            This helps you keep decisions from turning into chaos.
+            You can name what’s happening, see what’s allowed, and move step-by-step without guessing.
+          </p>
+          <ul>
+            <li><strong>Bounded</strong> means: we limit the space so it stays explainable.</li>
+            <li><strong>Verified</strong> means: steps produce receipts, not stories.</li>
+            <li><strong>Addressable</strong> means: you can point to a specific state and revisit it.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="acc" data-acc>
+        <button class="acc-head" data-acc-head type="button">
+          <span>The 4 primitives</span>
+        </button>
+        <div class="acc-body" data-acc-body>
+          <ul>
+            <li><strong>S</strong> — Selection (what enters)</li>
+            <li><strong>R</strong> — Resolution (what constraints apply)</li>
+            <li><strong>C</strong> — Commitment (what becomes real)</li>
+            <li><strong>N</strong> — Continuation (what loops and learns)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div data-lens-panel="scientific" style="display:none">
+      <div class="acc" data-acc data-acc-default="open">
+        <button class="acc-head" data-acc-head type="button">
+          <span>What this is (software-correct)</span>
+        </button>
+        <div class="acc-body" data-acc-body>
+          <p class="muted">
+            Geodiametrics defines a bounded execution state space with deterministic,
+            constraint-verified transitions. This is not a microchip. It is a coherence-first
+            execution framework.
+          </p>
+          <p class="muted">
+            “64” is a design bound on addressable states for interpretability and coherence
+            — not a performance metric.
+          </p>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- Why it’s useful -->
-  <section class="panel">
-    <h2>Why this is useful</h2>
-    <ul class="list">
-      <li>It slows decisions just enough to make outcomes visible.</li>
-      <li>It separates thinking from acting.</li>
-      <li>It prevents irreversible mistakes made under pressure.</li>
-    </ul>
-  </section>
-
-  <!-- The four stages -->
-  <section class="panel">
-    <h2>The four stages every decision follows</h2>
-
-    <details open>
-      <summary>Selection</summary>
-      <p class="muted">
-        What you allow into consideration. Not everything deserves attention.
-      </p>
-    </details>
-
-    <details>
-      <summary>Resolution</summary>
-      <p class="muted">
-        The rules that apply to what was selected. Constraints reduce harm.
-      </p>
-    </details>
-
-    <details>
-      <summary>Commitment</summary>
-      <p class="muted">
-        The moment a choice becomes real. Without this step, everything remains hypothetical.
-      </p>
-    </details>
-
-    <details>
-      <summary>Continuation</summary>
-      <p class="muted">
-        What happens next and what is learned. This is how systems adapt without collapsing.
-      </p>
-    </details>
-  </section>
-
-  <!-- Bounded state space -->
-  <section class="panel">
-    <h2>Why the space is bounded</h2>
-    <p class="muted">
-      Unlimited possibilities create confusion. A bounded space preserves clarity.
-    </p>
-    <p class="muted">
-      With four stages and a limited depth of exploration, the system enumerates
-      a finite set of meaningful paths instead of infinite ambiguity.
-    </p>
-
-    <details>
-      <summary>What “64” means</summary>
-      <p class="muted">
-        When four stages are examined three steps deep, there are 4 × 4 × 4 = 64 possible sequences.
-      </p>
-      <p class="muted">
-        This is not performance, hardware, or power. It is a human-scale limit for understanding.
-      </p>
-    </details>
-  </section>
-
-  <!-- How to use -->
-  <section class="panel">
-    <h2>How to use this page</h2>
-    <ul class="list">
-      <li>Read the stages to understand how decisions move.</li>
-      <li>Notice where real-life decisions skip or repeat steps.</li>
-      <li>Use the structure to regain clarity before acting.</li>
-    </ul>
-  </section>
-
-  <!-- Navigation -->
   <section class="panel nav">
     <div class="nav-grid">
       <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/">Landing</a>
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/control/">Control</a>
-      <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/about/">About</a>
+      <a class="btn" href="/engine/">Engine</a>
     </div>
   </section>
 
-  <!-- Footer -->
   <section class="panel footer">
-    <div class="small muted">
-      Build: 2026-02-01a · Canonical
-    </div>
+    <div class="small muted">Build: 2026-02-01a · Canonical</div>
   </section>
 
 </main>

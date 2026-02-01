@@ -5,27 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Laws · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script defer src="/assets/ui.js"></script>
 </head>
-<body>
-<main class="page">
+<body class="bg-gradient">
+  <main class="page">
 
-  <section class="panel hero">
-    <h1>Laws</h1>
-    <p class="subtitle">Same laws. Two lenses. Driven by fact, not fiction.</p>
-  </section>
+    <section class="panel hero">
+      <h1>Laws</h1>
+      <p class="subtitle">Same laws. Two lenses. Driven by fact, not fiction.</p>
+    </section>
 
-  <section class="panel">
-    <div class="tabs" data-tabs data-tabs-key="laws" data-default="human">
-      <div class="tabbar">
-        <button class="tab" data-tab="human" aria-selected="true">Human</button>
-        <button class="tab" data-tab="scientific" aria-selected="false">Scientific</button>
+    <section class="panel" data-lens-root data-default-lens="human">
+      <div class="pills" role="group" aria-label="Lens toggle">
+        <button class="pill active" type="button" data-lens-pill="human" aria-pressed="true">Human</button>
+        <button class="pill" type="button" data-lens-pill="scientific" aria-pressed="false">Scientific</button>
       </div>
 
-      <div class="tabpanel" data-panel="human">
-        <p><strong>Seven invariant constraints (human)</strong></p>
-        <ol>
-          <li><strong>Reality can’t be faked.</strong> You can claim anything. What’s true stays true.</li>
+      <div class="card" style="margin-top:12px" data-lens-pane="human">
+        <h2 class="section-title">Seven invariant constraints</h2>
+        <ol style="margin:0;color:rgba(233,238,252,.88);line-height:1.55">
+          <li><strong>Reality can’t be faked.</strong> You can claim anything. Reality responds to what’s true.</li>
           <li><strong>Trust begins internally.</strong> External trust can’t exceed internal honesty.</li>
           <li><strong>Outputs reflect inputs.</strong> Outcomes can’t be more coherent than their premises.</li>
           <li><strong>Constraints define admissibility.</strong> What’s allowed decides what can happen.</li>
@@ -33,12 +31,12 @@
           <li><strong>Confusion accelerates failure.</strong> Once incoherence exists, confusion speeds collapse.</li>
           <li><strong>Receipts enable convergence.</strong> Verified steps let systems stabilize and scale.</li>
         </ol>
-        <p>These are not opinions. They hold whether acknowledged or not.</p>
+        <p style="margin-top:12px">These aren’t opinions. They’re constraint statements: what holds whether acknowledged or not.</p>
       </div>
 
-      <div class="tabpanel" data-panel="scientific" hidden>
-        <p><strong>Seven invariant constraints (scientific)</strong></p>
-        <ol>
+      <div class="card" style="margin-top:12px" data-lens-pane="scientific">
+        <h2 class="section-title">Seven invariant constraints</h2>
+        <ol style="margin:0;color:rgba(233,238,252,.88);line-height:1.55">
           <li><strong>Coherence cannot exceed evidence.</strong></li>
           <li><strong>External trust cannot exceed internal honesty.</strong></li>
           <li><strong>Outcomes cannot be more coherent than inputs.</strong></li>
@@ -47,21 +45,22 @@
           <li><strong>Confusion accelerates failure once incoherence exists.</strong></li>
           <li><strong>Receipts enable convergence.</strong></li>
         </ol>
-        <p>Lens changes language, not meaning.</p>
+        <p style="margin-top:12px">Same meaning. Different language.</p>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn" href="/">Home</a>
-      <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/reference/">Reference</a>
-    </div>
-  </section>
+    <section class="panel nav">
+      <div class="nav-grid">
+        <a class="btn" href="/home/">Home</a>
+        <a class="btn" href="/principles/">Principles</a>
+        <a class="btn" href="/engine/">Engine</a>
+        <a class="btn" href="/geodynamics/">Geodynamics</a>
+      </div>
+    </section>
 
-</main>
+    <div class="footer">© Geodiametrics</div>
+  </main>
+
+  <script src="/assets/lens.js"></script>
 </body>
 </html>

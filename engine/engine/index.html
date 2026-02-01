@@ -1,86 +1,116 @@
-<!-- FINAL IMPLEMENTATION — TNT #6 / ENGINE HUB
-     Full replace of /engine/index.html
-     No new routes. No rewiring. Choice-based, non-linear. -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Engine · Geodiametrics</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Execution Space · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 
 <body class="bg-gradient">
-
 <main class="page">
 
-  <!-- ENGINE = MECHANISM / ACTION -->
   <section class="panel hero">
-    <h1>Engine</h1>
-    <p class="subtitle">
-      How coherence becomes action.
-    </p>
+    <h1>Execution Space</h1>
+    <p class="subtitle">A simple model of how decisions become real over time.</p>
   </section>
 
-  <!-- ORIENTATION -->
-  <section class="panel tight">
-    <details class="drop">
-      <summary>What this is</summary>
-      <div class="drop-body">
+  <section class="panel">
+    <details class="drop" open>
+      <summary>What you’re seeing</summary>
+      <div class="accordion-body">
         <p>
-          The engine describes how systems move from perception to outcome.
-          It does not decide for you. It describes the cycle that already exists.
+          This is a <strong>map of possible paths</strong>, not a command.
+          It shows how a system can move across time using four basic actions.
+        </p>
+        <ul>
+          <li><strong>S</strong> = Selection (what enters)</li>
+          <li><strong>R</strong> = Resolution (how constraints apply)</li>
+          <li><strong>C</strong> = Commitment (what becomes real)</li>
+          <li><strong>N</strong> = Continuation (what feeds back)</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <section class="panel">
+    <details class="drop" open>
+      <summary>Why “64”</summary>
+      <div class="accordion-body">
+        <p>
+          If you look three steps deep and at each step you can choose one of four actions,
+          there are:
+        </p>
+        <p class="note"><strong>4 × 4 × 4 = 64 possible sequences.</strong></p>
+        <p>
+          That’s what “bounded state space (64)” means:
+          the complete set of three-step patterns in this four-action model.
         </p>
       </div>
     </details>
   </section>
 
-  <!-- FOUR CORE ENGINES (CHOICES, NOT SEQUENCE) -->
   <section class="panel">
-    <div class="nav-grid">
-      <a class="btn" href="/engine/selection/">Selection</a>
-      <a class="btn" href="/engine/resolution/">Resolution</a>
-      <a class="btn" href="/engine/commitment/">Commitment</a>
-      <a class="btn" href="/engine/continuation/">Continuation</a>
-    </div>
-  </section>
-
-  <!-- CYCLE ACKNOWLEDGMENT -->
-  <section class="panel tight">
     <details class="drop">
-      <summary>The cycle</summary>
-      <div class="drop-body">
-        <p>
-          Selection leads to resolution.  
-          Resolution leads to commitment.  
-          Commitment leads to continuation.
-        </p>
-        <p>
-          Continuation loops back to selection.
-        </p>
+      <summary>Explore the 64 sequences</summary>
+      <div class="accordion-body">
+        <p class="note">Pick a depth. This generates sequences. It does not force a path.</p>
+        <div class="nav-grid">
+          <button class="btn small" data-k="1">Depth 1</button>
+          <button class="btn small" data-k="2">Depth 2</button>
+          <button class="btn small" data-k="3">Depth 3 (64)</button>
+          <button class="btn small" data-k="4">Depth 4</button>
+        </div>
+        <div id="basis" style="margin-top:12px;display:flex;flex-direction:column;gap:6px"></div>
       </div>
     </details>
   </section>
 
-  <!-- CHOICES -->
   <section class="panel">
-    <div class="nav-grid">
-      <a class="btn" href="/">Home</a>
+    <div class="nav-grid two">
+      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/">Landing</a>
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/control/">State</a>
+      <a class="btn" href="/geodynamics/">Coherence Mechanics</a>
+      <a class="btn primary" href="/control/">State</a>
       <a class="btn" href="/reference/">Reference</a>
       <a class="btn" href="/about/">About</a>
     </div>
   </section>
 
-  <div class="footer">
-    <span>© Geodiametrics</span>
-    <span>·</span>
-    <span>Canonical</span>
-  </div>
-
 </main>
+
+<script>
+  const P=["S","R","C","N"];
+  const el=document.getElementById("basis");
+  const btns=document.querySelectorAll("[data-k]");
+
+  function perm(k){
+    if(k===1) return P.map(x=>[x]);
+    const prev=perm(k-1);
+    const out=[];
+    for(const a of P){
+      for(const b of prev){
+        out.push([a,...b]);
+      }
+    }
+    return out;
+  }
+
+  function render(k){
+    el.innerHTML="";
+    const items=perm(k);
+    items.forEach(seq=>{
+      const d=document.createElement("div");
+      d.textContent=seq.join(" → ");
+      el.appendChild(d);
+    });
+  }
+
+  btns.forEach(b=>b.addEventListener("click",()=>render(Number(b.dataset.k))));
+  render(3);
+</script>
+
 </body>
 </html>

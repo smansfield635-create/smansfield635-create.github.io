@@ -15,7 +15,6 @@
     <p class="subtitle">Observe first. Act only by choice (armed + receipt-gated).</p>
   </section>
 
-  <!-- READ-ONLY STATE -->
   <section class="panel tight">
     <div class="kv">
       <div class="k">Updated</div><div class="v" id="updated">—</div>
@@ -42,23 +41,30 @@
     </details>
   </section>
 
-  <!-- OPERATE HATCH (SAFE) -->
   <section class="panel">
     <details class="drop">
       <summary>Operate (ARM required)</summary>
       <div class="drop-body">
 
-        <p class="note">
-          This hatch sends exactly one operation. It auto-disarms after execution.
-        </p>
+        <p class="note">One operation only. Auto-disarms. Cooldown enforced.</p>
 
         <div class="kv" style="margin-top:10px">
+          <div class="k">UVCP Base</div>
+          <div class="v"><span class="mono" id="uvcp_show">—</span></div>
+
           <div class="k">Adapter</div>
           <div class="v">
             <select id="op_adapter" style="width:100%;padding:10px;border-radius:10px">
               <option value="kvm">kvm</option>
               <option value="hyperv">hyperv</option>
             </select>
+          </div>
+
+          <div class="k">Target</div>
+          <div class="v">
+            <select id="op_target_select" style="width:100%;padding:10px;border-radius:10px"></select>
+            <input id="op_target" type="text" placeholder="or type VM name"
+              style="width:100%;padding:10px;border-radius:10px;margin-top:8px"/>
           </div>
 
           <div class="k">Operation</div>
@@ -68,12 +74,6 @@
               <option value="stop">stop</option>
               <option value="reboot">reboot</option>
             </select>
-          </div>
-
-          <div class="k">Target (VM name)</div>
-          <div class="v">
-            <input id="op_target" type="text" placeholder="vm-name"
-              style="width:100%;padding:10px;border-radius:10px"/>
           </div>
 
           <div class="k">Confirm phrase</div>
@@ -93,20 +93,13 @@
 
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
           <button class="btn primary" id="op_send" type="button">Execute once</button>
+          <button class="btn" id="op_refresh_targets" type="button">Refresh targets</button>
           <button class="btn" id="op_clear" type="button">Clear</button>
         </div>
 
-        <p class="note" style="margin-top:12px">
-          Cooldown: <span id="cooldown">ready</span>
-        </p>
+        <p class="note" style="margin-top:12px">Cooldown: <span id="cooldown">ready</span></p>
 
         <pre id="op_result" class="mono" style="white-space:pre-wrap;margin:0;color:rgba(233,238,252,.75)">{}</pre>
-
-        <p class="note" style="margin-top:12px">
-          Notes:
-          • KVM requires UVCP on a libvirt-capable box.
-          • Hyper-V requires UVCP env vars: HYPERV_HOST, HYPERV_USER, HYPERV_PASS.
-        </p>
 
       </div>
     </details>
@@ -127,8 +120,9 @@
 </main>
 
 <script>
-  // Must be reachable from the browser (LAN/public). Not 127.0.0.1 on your phone.
+  // IMPORTANT: must be reachable from the browser (phone needs LAN/public address).
   const UVCP_BASE = "http://127.0.0.1:8000";
+  document.getElementById("uvcp_show").textContent = UVCP_BASE;
 
   const COOLDOWN_MS = 8000;
   let nextAllowed = 0;
@@ -166,11 +160,39 @@
     if(now >= nextAllowed) return "ready";
     return Math.ceil((nextAllowed - now)/1000) + "s";
   }
+  setInterval(()=>{ document.getElementById("cooldown").textContent = cooldownLabel(); }, 250);
 
-  function tickCooldown(){
-    document.getElementById("cooldown").textContent = cooldownLabel();
+  async function refreshTargets(){
+    const adapter = document.getElementById("op_adapter").value;
+    const sel = document.getElementById("op_target_select");
+    sel.innerHTML = "";
+    try{
+      const data = await j(UVCP_BASE + "/inventory/targets?adapter=" + encodeURIComponent(adapter) + "&t=" + Date.now());
+      const targets = (data.targets || []);
+      const opt0 = document.createElement("option");
+      opt0.value = "";
+      opt0.textContent = "select a VM";
+      sel.appendChild(opt0);
+      targets.forEach(name=>{
+        const o=document.createElement("option");
+        o.value=name; o.textContent=name;
+        sel.appendChild(o);
+      });
+    }catch(e){
+      const o=document.createElement("option");
+      o.value=""; o.textContent="unavailable";
+      sel.appendChild(o);
+    }
   }
-  setInterval(tickCooldown, 250);
+
+  document.getElementById("op_adapter").addEventListener("change", refreshTargets);
+  document.getElementById("op_refresh_targets").addEventListener("click", refreshTargets);
+
+  document.getElementById("op_target_select").addEventListener("change", (e)=>{
+    if(e.target.value){
+      document.getElementById("op_target").value = e.target.value;
+    }
+  });
 
   document.getElementById("op_send").addEventListener("click", async () => {
     const now = Date.now();
@@ -206,20 +228,16 @@
         headers:{ "content-type":"application/json" },
         body: JSON.stringify(payload)
       });
-
       document.getElementById("op_result").textContent = JSON.stringify(result, null, 2);
 
-      // auto-disarm + clear confirm
+      // auto-disarm and clear confirmation
       document.getElementById("op_arm").checked = false;
       document.getElementById("op_confirm").value = "";
 
-      // cooldown
       nextAllowed = Date.now() + COOLDOWN_MS;
 
-      // refresh state/receipts
       setTimeout(loadState, 600);
-
-    } catch(e){
+    }catch(e){
       document.getElementById("op_result").textContent = String(e);
       document.getElementById("op_arm").checked = false;
       document.getElementById("op_confirm").value = "";
@@ -235,6 +253,7 @@
   });
 
   loadState();
+  refreshTargets();
   setInterval(loadState, 10000);
 </script>
 

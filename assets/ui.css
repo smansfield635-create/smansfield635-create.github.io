@@ -1,133 +1,116 @@
+/* =========================================================
+   Geodiametrics UI · Canonical
+   ========================================================= */
+
 :root{
   --fg:#e9eefc;
-  --muted:rgba(233,238,252,.66);
-  --panel:rgba(12,16,34,.55);
+  --muted:rgba(233,238,252,.70);
+  --panel:rgba(14,18,34,.58);
   --stroke:rgba(233,238,252,.14);
   --shadow:0 20px 60px rgba(0,0,0,.55);
   --radius:22px;
-  --radius2:26px;
-  --accent1:rgba(55,140,255,.65);
-  --accent2:rgba(46,212,166,.45);
+  --radius2:28px;
+  --btn:rgba(255,255,255,.07);
+  --btn2:rgba(255,255,255,.10);
 }
 
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-
 body{
   color:var(--fg);
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
   background:
-    radial-gradient(1200px 900px at 20% 10%,rgba(122,162,255,.25),transparent 60%),
-    radial-gradient(900px 700px at 80% 20%,rgba(55,255,214,.12),transparent 60%),
-    radial-gradient(1000px 900px at 50% 95%,rgba(255,122,198,.10),transparent 60%),
-    #050816;
+    radial-gradient(1200px 900px at 20% 10%,rgba(122,162,255,.22),transparent 60%),
+    radial-gradient(900px 700px at 80% 20%,rgba(34,211,238,.14),transparent 60%),
+    radial-gradient(900px 800px at 50% 90%,rgba(99,102,241,.18),transparent 60%),
+    #060916;
 }
 
-.bg-gradient{min-height:100%}
-
-.page{
-  width:min(920px,94vw);
-  margin:22px auto 42px;
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-}
+a{color:inherit;text-decoration:none}
+.page{max-width:920px;margin:0 auto;padding:22px 14px 40px}
 
 .panel{
-  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
-  border:1px solid var(--stroke);
-  border-radius:var(--radius2);
-  box-shadow:var(--shadow);
-  padding:18px 18px;
-  backdrop-filter:blur(10px);
-}
-
-.hero{padding:22px 18px}
-h1{margin:0 0 6px;font-size:44px;letter-spacing:.2px}
-h2{margin:0 0 10px;font-size:26px}
-.subtitle{margin:0;color:var(--muted);font-size:18px;line-height:1.35}
-.muted{color:var(--muted)}
-.small{font-size:14px}
-.spacer{height:10px}
-
-.nav-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px;
-}
-@media (max-width:540px){
-  .nav-grid{grid-template-columns:1fr}
-}
-
-.btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  color:var(--fg);
-  border:1px solid var(--stroke);
-  border-radius:999px;
-  padding:14px 14px;
-  font-weight:700;
-  letter-spacing:.2px;
-  background:rgba(255,255,255,.04);
-  box-shadow:0 10px 26px rgba(0,0,0,.25);
-  user-select:none;
-}
-
-.btn.primary{
-  background:linear-gradient(90deg,var(--accent1),var(--accent2));
-  border-color:rgba(255,255,255,.18);
-}
-
-.btn:active{transform:translateY(1px)}
-.btn:focus{outline:2px solid rgba(255,255,255,.18);outline-offset:2px}
-
-/* Accordion */
-.acc{
+  background:var(--panel);
   border:1px solid var(--stroke);
   border-radius:var(--radius);
-  overflow:hidden;
-  background:rgba(255,255,255,.03);
+  box-shadow:var(--shadow);
+  padding:18px;
+  margin:14px 0;
 }
-.acc-head{
-  width:100%;
-  background:transparent;
-  color:var(--fg);
-  border:none;
-  text-align:left;
-  padding:14px 14px;
-  font-weight:800;
-  font-size:16px;
-  cursor:pointer;
-}
-.acc-body{
-  padding:0 14px 14px;
-  color:var(--fg);
-}
-.acc-body p{margin:10px 0 0}
-.acc-body ul{margin:10px 0 0 18px}
 
-/* Kill ugly default link look everywhere */
-a{color:inherit}
-a:visited{color:inherit}
-a:hover{opacity:.95}
+.hero h1,.hero h2{margin:0 0 8px 0;font-weight:800;letter-spacing:.2px}
+.subtitle{margin:0;color:var(--muted);line-height:1.35}
 
-/* Make any raw text links inside content look like bubbles (fallback) */
-.panel a:not(.btn){
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  margin:6px 8px 0 0;
-  padding:10px 14px;
+/* Buttons / bubbles */
+.btn{
+  display:flex;align-items:center;justify-content:center;
+  padding:16px 18px;
   border-radius:999px;
   border:1px solid var(--stroke);
-  background:rgba(255,255,255,.04);
-  text-decoration:none;
+  background:var(--btn);
+  color:var(--fg);
   font-weight:700;
+  letter-spacing:.2px;
+  cursor:pointer;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
 }
+.btn:hover{background:var(--btn2)}
+.btn.primary{
+  background:linear-gradient(90deg,rgba(59,130,246,.60),rgba(16,185,129,.44));
+  border-color:rgba(233,238,252,.18);
+}
+.stack{display:grid;gap:12px}
 
-/* Remove any label-like boxes (they’re not labels; they’re browser default styling) */
-label, .label, .tag, .pill{
-  all:unset;
+/* Two-column bubble grid (used on Home) */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+
+/* Lens switch */
+.lens-switch{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  padding:10px;
+  border-radius:var(--radius2);
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--stroke);
 }
+.lens-switch .lens-btn{
+  width:100%;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  color:var(--fg);
+  font-weight:800;
+  padding:14px 16px;
+  cursor:pointer;
+  pointer-events:auto; /* IMPORTANT */
+}
+.lens-switch .lens-btn.active{
+  background:linear-gradient(90deg,rgba(59,130,246,.62),rgba(16,185,129,.46));
+  border-color:rgba(233,238,252,.18);
+}
+.lens-note{margin:10px 0 0;color:var(--muted);font-size:14px}
+
+/* Disclosure */
+details{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  padding:14px;
+}
+details summary{
+  cursor:pointer;
+  font-weight:800;
+  list-style:none;
+}
+details summary::-webkit-details-marker{display:none}
+details .muted{color:var(--muted);margin-top:8px;line-height:1.45}
+
+/* Lists */
+ul,ol{margin:10px 0 0 22px}
+li{margin:6px 0}
+
+/* Small label blocks (optional) */
+.kicker{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--stroke);background:rgba(255,255,255,.04);font-size:12px;color:var(--muted)}

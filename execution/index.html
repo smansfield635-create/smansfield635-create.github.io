@@ -3,49 +3,121 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Execution · Geodiametrics</title>
+  <title>Act III: Execution · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 
 <body class="bg-gradient">
-<main class="page">
+  <main class="page">
 
-  <section class="panel hero">
-    <h1>Act III: Execution</h1>
-    <p class="subtitle">Execution restores coherence by making reality checkable again.</p>
-  </section>
+    <section class="panel hero">
+      <h1>Act III: Execution</h1>
+      <p class="subtitle">Execution restores coherence by making reality checkable again.</p>
+    </section>
 
-  <section class="panel bubble">
-    <details>
-      <summary>Execution loop</summary>
-      <div class="bubble-body">
-        <ul class="tight">
-          <li><strong>Observe</strong> — use evidence, not narrative.</li>
-          <li><strong>Constrain</strong> — define what is admissible.</li>
-          <li><strong>Verify</strong> — produce receipts so claims remain defensible.</li>
-        </ul>
+    <!-- Bubble 1: Execution loop -->
+    <section class="panel">
+      <details class="disclosure" open>
+        <summary class="bubble">
+          <span class="caret">▾</span>
+          <span class="label">Execution loop</span>
+        </summary>
+
+        <div class="content">
+          <ul class="bullets">
+            <li><strong>Observe</strong> — use evidence, not narrative.</li>
+            <li><strong>Constrain</strong> — define what is admissible.</li>
+            <li><strong>Verify</strong> — produce receipts so claims remain defensible.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <!-- Bubble 2: Compute substrate (the missing layer) -->
+    <section class="panel">
+      <details class="disclosure">
+        <summary class="bubble">
+          <span class="caret">▸</span>
+          <span class="label">Compute substrate (model)</span>
+        </summary>
+
+        <div class="content">
+          <p class="note">
+            This site expresses the execution engine as a <strong>compute model</strong>.
+            The numbers below are <strong>declared structure</strong> (what the instrument claims it is),
+            not a hardware benchmark unless you later attach verified measurements.
+          </p>
+
+          <div class="kv">
+            <div class="row"><span>Engines (model)</span><span><strong>64</strong></span></div>
+            <div class="row"><span>Pistons per engine</span><span><strong>4</strong> (Perception · Constraint · Choice · Receipt)</span></div>
+            <div class="row"><span>Piston-roles (model)</span><span><strong>256</strong> (64 × 4)</span></div>
+            <div class="row"><span>Cylinders (execution stages)</span><span><strong>4</strong> (Selection → Resolution → Commitment → Continuation)</span></div>
+          </div>
+
+          <hr class="sep"/>
+
+          <h3 class="mini">Software reality</h3>
+          <ul class="bullets">
+            <li><strong>Pages</strong> render the interface (this site).</li>
+            <li><strong>Truth service (Worker)</strong> publishes live state and receipts.</li>
+            <li><strong>Receipts</strong> are the gate: without receipt, claims stay non-canonical.</li>
+          </ul>
+
+          <hr class="sep"/>
+
+          <h3 class="mini">Capacity (optional, declared)</h3>
+          <p class="note">
+            If you want GHz / memory / throughput listed here, we can publish them as:
+            <strong>(A)</strong> declared spec, or <strong>(B)</strong> verified measurement.
+            Until verified, they should remain marked as “declared.”
+          </p>
+
+          <div class="kv">
+            <div class="row"><span>Clock</span><span><strong>—</strong> (declared/verified TBD)</span></div>
+            <div class="row"><span>Memory</span><span><strong>—</strong> (declared/verified TBD)</span></div>
+            <div class="row"><span>Throughput</span><span><strong>—</strong> (declared/verified TBD)</span></div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- Existing quad-core expression (keep as a compact bubble) -->
+    <section class="panel">
+      <details class="disclosure" open>
+        <summary class="bubble">
+          <span class="caret">▾</span>
+          <span class="label">Quad-core expression</span>
+        </summary>
+
+        <div class="content">
+          <p class="note">
+            <strong>Selection → Resolution → Commitment → Continuation</strong><br/>
+            Mechanics live in the Engine pages.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <!-- Nav -->
+    <section class="panel nav">
+      <div class="nav-grid">
+        <a class="btn" href="/diagnosis/">Back → Act II</a>
+        <a class="btn primary" href="/engine/">Go → Engine</a>
+        <a class="btn" href="/home/">Home</a>
       </div>
-    </details>
-  </section>
+    </section>
 
-  <section class="panel bubble">
-    <details>
-      <summary>Quad-core expression</summary>
-      <div class="bubble-body">
-        <p><strong>Selection → Resolution → Commitment → Continuation</strong></p>
-        <p class="note">Mechanics live in the Engine pages.</p>
-      </div>
-    </details>
-  </section>
+  </main>
 
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn" href="/diagnosis/">Back → Act II</a>
-      <a class="btn primary" href="/engine/">Go → Engine</a>
-      <a class="btn" href="/">Home</a>
-    </div>
-  </section>
-
-</main>
+  <script>
+    // Make disclosure caret switch between ▸ and ▾ without needing new CSS
+    document.querySelectorAll('details.disclosure').forEach(d => {
+      const s = d.querySelector('summary .caret');
+      const sync = () => { if (s) s.textContent = d.open ? '▾' : '▸'; };
+      d.addEventListener('toggle', sync);
+      sync();
+    });
+  </script>
 </body>
 </html>

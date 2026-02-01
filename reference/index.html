@@ -3,32 +3,9 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Reference · Geodiametrics</title>
+  <title>Geodiametrics · Reference</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
-
-  <style>
-    .tabs{display:flex;gap:10px;flex-wrap:wrap}
-    .tabbtn{
-      display:inline-flex;align-items:center;justify-content:center;
-      height:46px;padding:0 16px;border-radius:999px;
-      border:1px solid rgba(233,238,252,.16);
-      background:rgba(255,255,255,.06);
-      color:rgba(233,238,252,.92);
-      font-weight:700;letter-spacing:.2px;cursor:pointer;
-      box-shadow:0 12px 28px rgba(0,0,0,.35);
-      -webkit-tap-highlight-color:transparent;
-    }
-    .tabbtn[aria-selected="true"]{
-      background:linear-gradient(180deg, rgba(70,140,255,.62), rgba(28,70,160,.52));
-      border-color:rgba(140,190,255,.35);
-    }
-    .tabpanel{display:none}
-    .tabpanel[data-active="true"]{display:block}
-    .leadline{color:rgba(233,238,252,.72);margin:0;line-height:1.5}
-    .mini{font-size:14px;color:rgba(233,238,252,.55)}
-  </style>
 </head>
-
 <body class="bg-gradient">
 <main class="page">
 
@@ -37,116 +14,69 @@
     <p class="subtitle">Anchors you can verify. Two lenses.</p>
   </section>
 
+  <!-- Lens toggle -->
   <section class="panel">
-    <p class="leadline">
-      This page is here so nothing depends on persuasion. You can check the source surfaces yourself.
-    </p>
-
-    <div class="tabs" role="tablist" aria-label="Reference lenses" style="margin-top:12px">
-      <button class="tabbtn" id="tab-human" role="tab" aria-selected="true" aria-controls="panel-human" type="button">
-        Human
-      </button>
-      <button class="tabbtn" id="tab-science" role="tab" aria-selected="false" aria-controls="panel-science" type="button">
-        Scientific
-      </button>
+    <div class="pill-row">
+      <button class="pill active" onclick="showLens('human')">Human</button>
+      <button class="pill" onclick="showLens('scientific')">Scientific</button>
     </div>
   </section>
 
-  <!-- HUMAN TAB -->
-  <section class="panel tabpanel" id="panel-human" role="tabpanel" aria-labelledby="tab-human" data-active="true">
-    <details class="drop" open>
+  <!-- Human lens -->
+  <section class="panel lens" id="lens-human">
+    <details open class="bubble">
       <summary>Why these links matter</summary>
-      <div class="drop-body">
-        <p>
-          These are the simplest ways to verify where the work lives and how it evolves.
-          You don’t have to trust claims—just check the anchors.
-        </p>
-        <p class="mini">
-          Anchors reduce confusion because they provide stable places to return to.
-        </p>
-      </div>
-    </details>
-
-    <div style="height:10px"></div>
-
-    <details class="drop" open>
-      <summary>Canonical anchors</summary>
-      <div class="drop-body">
-        <div class="nav-grid">
-          <a class="btn row" href="https://smansfield635-create.github.io/" target="_blank" rel="noopener">Canonical Site</a>
-          <a class="btn row" href="https://osf.io/g5294/" target="_blank" rel="noopener">OSF</a>
-          <a class="btn row" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">ORCID</a>
-          <a class="btn row" href="mailto:geodiametrics@gmail.com">Contact (Email)</a>
-        </div>
-      </div>
+      <p>
+        These are the simplest ways to verify where the work lives and how it evolves.
+        You don’t have to trust claims — just check the anchors.
+      </p>
+      <p class="muted">
+        Anchors reduce confusion because they provide stable places to return to.
+      </p>
     </details>
   </section>
 
-  <!-- SCIENTIFIC TAB -->
-  <section class="panel tabpanel" id="panel-science" role="tabpanel" aria-labelledby="tab-science" data-active="false">
-    <details class="drop" open>
-      <summary>Verification discipline</summary>
-      <div class="drop-body">
-        <ul>
-          <li><strong>Anchors are primary.</strong> Claims should point to stable surfaces.</li>
-          <li><strong>Receipts beat intent.</strong> Prefer logged changes over narrative.</li>
-          <li><strong>Conservative defaults.</strong> If a signal is not verified, report “unknown” or “zero,” not estimates.</li>
-        </ul>
-        <p class="mini">
-          This is how the system stays fact-driven without intimidation or insinuation.
-        </p>
-      </div>
-    </details>
-
-    <div style="height:10px"></div>
-
-    <details class="drop">
-      <summary>Canonical anchors</summary>
-      <div class="drop-body">
-        <div class="nav-grid">
-          <a class="btn row" href="https://smansfield635-create.github.io/" target="_blank" rel="noopener">Canonical Site</a>
-          <a class="btn row" href="https://osf.io/g5294/" target="_blank" rel="noopener">OSF</a>
-          <a class="btn row" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">ORCID</a>
-          <a class="btn row" href="mailto:geodiametrics@gmail.com">Contact (Email)</a>
-        </div>
-      </div>
+  <!-- Scientific lens -->
+  <section class="panel lens hidden" id="lens-scientific">
+    <details open class="bubble">
+      <summary>Verification surfaces</summary>
+      <p>
+        These links represent canonical, independently checkable surfaces.
+        No persuasion layer is required.
+      </p>
     </details>
   </section>
 
-  <!-- NAV -->
+  <!-- Bubble links -->
   <section class="panel nav">
-    <div class="nav-grid two">
-      <a class="btn" href="/home/">Home</a>
+    <div class="nav-grid nav-2col">
       <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/home/">Home</a>
+
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/principles/">Principles</a>
+
       <a class="btn" href="/geodynamics/">Coherence Mechanics</a>
-      <a class="btn" href="/engine/">Execution Space</a>
-      <a class="btn primary" href="/control/">State</a>
-      <a class="btn" href="/about/">About</a>
+      <a class="btn" href="https://osf.io/" target="_blank">OSF</a>
+
+      <a class="btn" href="https://orcid.org/" target="_blank">ORCID</a>
+      <a class="btn" href="mailto:you@example.com">Contact</a>
     </div>
   </section>
 
-  <div class="meta">Build: 2026-02-01a · Canonical</div>
+  <section class="panel footer">
+    <div class="muted">© Geodiametrics</div>
+  </section>
 
 </main>
 
 <script>
-  const tabHuman = document.getElementById("tab-human");
-  const tabSci = document.getElementById("tab-science");
-  const panelHuman = document.getElementById("panel-human");
-  const panelSci = document.getElementById("panel-science");
-
-  function setTab(which){
-    const human = which === "human";
-    tabHuman.setAttribute("aria-selected", human ? "true" : "false");
-    tabSci.setAttribute("aria-selected", human ? "false" : "true");
-    panelHuman.dataset.active = human ? "true" : "false";
-    panelSci.dataset.active = human ? "false" : "true";
-  }
-
-  tabHuman.addEventListener("click", ()=>setTab("human"));
-  tabSci.addEventListener("click", ()=>setTab("science"));
+function showLens(which){
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.lens').forEach(l => l.classList.add('hidden'));
+  document.querySelector(`.pill[onclick*="${which}"]`).classList.add('active');
+  document.getElementById(`lens-${which}`).classList.remove('hidden');
+}
 </script>
 
 </body>

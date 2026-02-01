@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Engine · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script src="/engine.js" defer></script>
+  <script defer src="/assets/ui.js"></script>
 </head>
-
-<body class="bg-gradient">
+<body>
 <main class="page">
 
   <section class="panel hero">
@@ -17,77 +16,42 @@
   </section>
 
   <section class="panel">
-    <div class="lens-switch" data-default="human" style="display:grid; gap:12px">
-      <button class="btn lens-btn active" data-lens="human" type="button">Human</button>
-      <button class="btn lens-btn" data-lens="scientific" type="button">Software-correct</button>
-    </div>
-  </section>
+    <div class="tabs" data-tabs data-tabs-key="engine" data-default="human">
+      <div class="tabbar">
+        <button class="tab" data-tab="human" aria-selected="true">Human</button>
+        <button class="tab" data-tab="software" aria-selected="false">Software-correct</button>
+      </div>
 
-  <!-- HUMAN -->
-  <section class="panel lens-panel" data-lens-panel="human" aria-hidden="false">
-    <h2>Human language</h2>
+      <div class="tabpanel" data-panel="human">
+        <p><strong>What this is</strong></p>
+        <p>This is the “how” behind coherence: a repeatable loop that turns fuzzy situations into checkable reality — one step at a time.</p>
+        <ul>
+          <li><strong>Selection</strong> = what gets admitted (what counts).</li>
+          <li><strong>Resolution</strong> = what constraints apply (what’s allowed).</li>
+          <li><strong>Commitment</strong> = what becomes real (what you lock in).</li>
+          <li><strong>Continuation</strong> = what learns and loops (what persists).</li>
+        </ul>
+        <p><strong>Why this matters</strong></p>
+        <p>Most breakdowns happen because the system keeps moving without receipts. This loop forces reality-checks so the next step is defensible.</p>
+      </div>
 
-    <details open>
-      <summary><strong>What this is</strong></summary>
-      <p class="muted">
-        This is the “how” behind coherence: a repeatable loop that turns fuzzy situations into checkable reality—one step at a time.
-      </p>
-      <ul>
-        <li><strong>Selection</strong> = what gets admitted (what counts).</li>
-        <li><strong>Resolution</strong> = what constraints apply (what’s allowed).</li>
-        <li><strong>Commitment</strong> = what becomes real (what you lock in).</li>
-        <li><strong>Continuation</strong> = what learns and loops (what persists).</li>
-      </ul>
-    </details>
-
-    <details>
-      <summary><strong>Why this matters</strong></summary>
-      <p class="muted">
-        Most breakdowns happen because the system keeps moving without receipts. This loop forces reality-checks so the next step stays defensible.
-      </p>
-    </details>
-
-    <div class="nav-grid" style="margin-top:14px">
-      <a class="btn" href="/engine/selection/">Selection</a>
-      <a class="btn" href="/engine/resolution/">Resolution</a>
-      <a class="btn" href="/engine/commitment/">Commitment</a>
-      <a class="btn" href="/engine/continuation/">Continuation</a>
-    </div>
-  </section>
-
-  <!-- SOFTWARE-CORRECT -->
-  <section class="panel lens-panel" data-lens-panel="scientific" aria-hidden="true" style="display:none">
-    <h2>Software-correct</h2>
-
-    <details open>
-      <summary><strong>Definition</strong></summary>
-      <p class="muted">
-        The engine is a deterministic, receipt-gated transition system: Selection → Resolution → Commitment → Continuation.
-        Each transition is admissible only if constraints are satisfied and the receipt is produced.
-      </p>
-    </details>
-
-    <details>
-      <summary><strong>Failure mode</strong></summary>
-      <p class="muted">
-        Skipping receipts creates non-defensible progression (drift). Enforcing receipts stabilizes the trajectory.
-      </p>
-    </details>
-
-    <div class="nav-grid" style="margin-top:14px">
-      <a class="btn" href="/engine/selection/">Selection</a>
-      <a class="btn" href="/engine/resolution/">Resolution</a>
-      <a class="btn" href="/engine/commitment/">Commitment</a>
-      <a class="btn" href="/engine/continuation/">Continuation</a>
+      <div class="tabpanel" data-panel="software" hidden>
+        <p><strong>Software-correct</strong></p>
+        <p>A constrained execution cycle: inputs are admitted (Selection), constraints are applied (Resolution), a decision is committed with a receipt (Commitment), and outcomes feed forward (Continuation).</p>
+      </div>
     </div>
   </section>
 
   <section class="panel nav">
     <div class="nav-grid">
-      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/">Home</a>
+      <a class="btn" href="/engine/selection/">Selection</a>
+      <a class="btn" href="/engine/resolution/">Resolution</a>
+      <a class="btn" href="/engine/commitment/">Commitment</a>
+      <a class="btn" href="/engine/continuation/">Continuation</a>
       <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/state/">State</a>
-      <a class="btn" href="/control/">Control</a>
+      <a class="btn" href="/principles/">Principles</a>
+      <a class="btn" href="/geodynamics/">Geodynamics</a>
     </div>
   </section>
 

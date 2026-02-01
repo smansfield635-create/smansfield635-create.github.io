@@ -1,4 +1,4 @@
-<!-- DEMOLITION TNT #2 — /laws/index.html (FULL REPLACE: ONE BUBBLE = 7 INVARIANTS + BUBBLE NAV ONLY) -->
+<!-- OPTIONAL PLANETS — TNT #1 /laws/index.html (FULL REPLACE: adds planet + no extra JS) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,48 +8,45 @@
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 
-<body class="bg-gradient">
-<main class="page">
+<body class="bg-gradient planet-c">
+  <div class="planet" aria-hidden="true"></div>
 
-  <!-- HERO (ONE LINE) -->
-  <section class="panel hero center">
-    <h1>Laws</h1>
-    <p class="subtitle">Seven invariant constraints. Everything else is optional structure built on these.</p>
-  </section>
+  <main class="page">
 
-  <!-- ONE BUBBLE ONLY (ALL 7 INSIDE) -->
-  <section class="panel">
-    <details class="bubble" open>
-      <summary>Seven invariant constraints</summary>
-      <div class="bubble-content">
-        <ol class="tight">
-          <li><strong>Coherence cannot exceed evidence.</strong></li>
-          <li><strong>External trust cannot exceed internal honesty.</strong></li>
-          <li><strong>Outcomes cannot be more coherent than inputs.</strong></li>
-          <li><strong>Constraints define admissibility.</strong></li>
-          <li><strong>Verification gates reality.</strong></li>
-          <li><strong>Confusion accelerates failure once incoherence exists.</strong></li>
-          <li><strong>Receipts enable convergence.</strong></li>
-        </ol>
+    <section class="panel hero">
+      <h1>Laws</h1>
+      <p class="subtitle">These constraints hold whether acknowledged or not.</p>
+    </section>
+
+    <section class="panel">
+      <details class="drop" open>
+        <summary>Seven invariant constraints</summary>
+        <div class="drop-body">
+          <ol>
+            <li>Coherence cannot exceed evidence.</li>
+            <li>External trust cannot exceed internal honesty.</li>
+            <li>Outcomes cannot be more coherent than inputs.</li>
+            <li>Constraints define admissibility.</li>
+            <li>Verification gates reality.</li>
+            <li>Confusion accelerates failure once incoherence exists.</li>
+            <li>Receipts enable convergence.</li>
+          </ol>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel">
+      <div class="nav-grid">
+        <a class="btn" href="/home/">Home</a>
+        <a class="btn" href="/principles/">Principles</a>
+        <a class="btn" href="/geodynamics/">Geodynamics</a>
+        <a class="btn" href="/engine/">Engine</a>
+        <a class="btn" href="/control/">State</a>
       </div>
-    </details>
-  </section>
+    </section>
 
-  <!-- NAV (BUBBLES ONLY) -->
-  <section class="panel center">
-    <div class="bubble-grid">
-      <a class="bubble nav" href="/">Home</a>
-      <a class="bubble nav primary" href="/principles/">Principles</a>
-      <a class="bubble nav" href="/geodynamics/">Geodynamics</a>
-      <a class="bubble nav" href="/reference/">Reference</a>
-      <a class="bubble nav" href="/about/">About</a>
-    </div>
-  </section>
+    <div class="footer"><span>© Geodiametrics</span></div>
 
-  <section class="panel footer center">
-    <p class="small">Build: 2026-02-01a · Canonical: smansfield635-create.github.io</p>
-  </section>
-
-</main>
+  </main>
 </body>
 </html>

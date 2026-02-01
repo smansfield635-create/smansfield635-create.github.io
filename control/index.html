@@ -3,97 +3,284 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Control · Geodiametrics</title>
+  <title>State · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+
+  <style>
+    .tabs{display:flex;gap:10px;flex-wrap:wrap}
+    .tabbtn{
+      display:inline-flex;align-items:center;justify-content:center;
+      height:46px;padding:0 16px;border-radius:999px;
+      border:1px solid rgba(233,238,252,.16);
+      background:rgba(255,255,255,.06);
+      color:rgba(233,238,252,.92);
+      font-weight:700;letter-spacing:.2px;cursor:pointer;
+      box-shadow:0 12px 28px rgba(0,0,0,.35);
+      -webkit-tap-highlight-color:transparent;
+    }
+    .tabbtn[aria-selected="true"]{
+      background:linear-gradient(180deg, rgba(70,140,255,.62), rgba(28,70,160,.52));
+      border-color:rgba(140,190,255,.35);
+    }
+    .tabpanel{display:none}
+    .tabpanel[data-active="true"]{display:block}
+    .leadline{color:rgba(233,238,252,.72);margin:0;line-height:1.5}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+    .mini{font-size:14px;color:rgba(233,238,252,.55)}
+    .barrow{margin-top:12px}
+    .barhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+    .bartrack{height:12px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden;border:1px solid rgba(233,238,252,.10)}
+    .barfill{height:100%;width:0%;border-radius:999px}
+    .i-red{background:rgba(239,68,68,.85)}
+    .i-yellow{background:rgba(234,179,8,.85)}
+    .i-green{background:rgba(34,197,94,.85)}
+  </style>
 </head>
+
 <body class="bg-gradient">
 <main class="page">
 
   <section class="panel hero">
-    <h1>Control</h1>
-    <p class="subtitle">Live read-only gauges. Color = intensity. Badge = health.</p>
+    <h1>State</h1>
+    <p class="subtitle">Same truth. Two lenses. Observe first.</p>
   </section>
 
   <section class="panel">
-    <h2>Live gauge</h2>
-    <p class="muted">
-      Source is the Worker “Truth” endpoint. Page polls periodically and renders the latest payload.
+    <p class="leadline">
+      This page shows what the system currently knows, without forcing action.
     </p>
 
-    <div id="liveSummary" class="panel inset">
-      <div class="row"><strong>HEALTH:</strong> <span id="healthBadge" class="badge">—</span></div>
-      <div class="row"><strong>Truth:</strong> <span id="truthUrl" class="mono">—</span></div>
-      <div class="row"><strong>Polling:</strong> <span id="polling" class="mono">—</span></div>
-      <div class="row"><strong>Last updated:</strong> <span id="lastUpdated" class="mono">—</span></div>
-      <div class="row"><strong>Age (sec):</strong> <span id="ageSec" class="mono">—</span></div>
+    <div class="tabs" role="tablist" aria-label="State lenses" style="margin-top:12px">
+      <button class="tabbtn" id="tab-human" role="tab" aria-selected="true" aria-controls="panel-human" type="button">
+        Human
+      </button>
+      <button class="tabbtn" id="tab-science" role="tab" aria-selected="false" aria-controls="panel-science" type="button">
+        Scientific
+      </button>
     </div>
   </section>
 
-  <section class="panel">
-    <h2>Gauges (to scale)</h2>
-    <div id="gauges" class="stack"></div>
-    <p class="muted small">
-      Bars share one scale (max value across metrics + sources in this payload). Color is intensity: red → yellow → green.
-    </p>
-  </section>
+  <!-- HUMAN TAB -->
+  <section class="panel tabpanel" id="panel-human" role="tabpanel" aria-labelledby="tab-human" data-active="true">
 
-  <section class="panel">
-    <h2>Sources (to scale)</h2>
-    <div id="sources" class="stack"></div>
-  </section>
-
-  <section class="panel">
-    <details class="details">
-      <summary>Raw payload (JSON)</summary>
-      <pre id="raw" class="code">—</pre>
+    <details class="drop" open>
+      <summary>What this is</summary>
+      <div class="drop-body">
+        <p><strong>This interface demonstrates how decisions become real — safely, deliberately, and only by choice.</strong></p>
+        <p class="mini">
+          Most of this page is read-only. If anything is unavailable, it means the system refuses to guess.
+        </p>
+      </div>
     </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop" open>
+      <summary>Live gauge</summary>
+      <div class="drop-body">
+        <p class="mini">
+          The system checks a single “truth” source every 10 seconds and shows the latest results.
+          If the data is fresh, “Age” stays low.
+        </p>
+        <div class="kv" style="margin-top:10px">
+          <div class="k">Truth</div><div class="v mono" id="truthUrl">—</div>
+          <div class="k">Polling</div><div class="v mono">10s</div>
+          <div class="k">Last updated</div><div class="v mono" id="lastUpdated">—</div>
+          <div class="k">Age (sec)</div><div class="v mono" id="ageSec">—</div>
+        </div>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop" open>
+      <summary>Activity (what’s happening)</summary>
+      <div class="drop-body">
+        <p class="mini">
+          These are simple signals. If they are zero, it may mean “not wired yet,” not “nobody visited.”
+        </p>
+        <div id="gauges"></div>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop">
+      <summary>Operate (optional hatch)</summary>
+      <div class="drop-body">
+        <p class="mini">
+          This is a safe hatch. It does nothing unless you deliberately arm it and confirm.
+          It executes once, produces a receipt, and then disarms itself.
+        </p>
+
+        <div class="kv" style="margin-top:10px">
+          <div class="k">Adapter</div>
+          <div class="v">
+            <select id="op_adapter" style="width:100%;padding:10px;border-radius:10px">
+              <option value="kvm">kvm</option>
+              <option value="hyperv">hyperv</option>
+            </select>
+          </div>
+
+          <div class="k">Operation</div>
+          <div class="v">
+            <select id="op_op" style="width:100%;padding:10px;border-radius:10px">
+              <option value="start">start</option>
+              <option value="stop">stop</option>
+              <option value="reboot">reboot</option>
+            </select>
+          </div>
+
+          <div class="k">Target (name)</div>
+          <div class="v">
+            <input id="op_target" type="text" placeholder="vm-name"
+              style="width:100%;padding:10px;border-radius:10px"/>
+          </div>
+
+          <div class="k">Confirm</div>
+          <div class="v">
+            <input id="op_confirm" type="text" placeholder='type: EXECUTE'
+              style="width:100%;padding:10px;border-radius:10px"/>
+          </div>
+
+          <div class="k">ARM</div>
+          <div class="v">
+            <label style="display:flex;align-items:center;gap:10px">
+              <input id="op_arm" type="checkbox"/>
+              <span>Arm one operation</span>
+            </label>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
+          <button class="btn primary" id="op_send" type="button">Execute once</button>
+          <button class="btn" id="op_clear" type="button">Clear</button>
+        </div>
+
+        <pre id="op_result" class="mono" style="white-space:pre-wrap;margin-top:12px;margin-bottom:0;color:rgba(233,238,252,.75)">{}</pre>
+
+        <p class="mini" style="margin-top:12px">
+          If it says “unavailable,” the backend is simply not connected yet. That’s fine.
+        </p>
+      </div>
+    </details>
+
   </section>
 
+  <!-- SCIENTIFIC TAB -->
+  <section class="panel tabpanel" id="panel-science" role="tabpanel" aria-labelledby="tab-science" data-active="false">
+
+    <details class="drop" open>
+      <summary>Definition</summary>
+      <div class="drop-body">
+        <p>
+          This page is an observer-facing readout of system state and receipts.
+          It does not apply changes unless an explicitly armed operation is submitted.
+        </p>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop" open>
+      <summary>Truth source + polling</summary>
+      <div class="drop-body">
+        <p class="mini">
+          The UI polls a single truth endpoint (HTTP GET) at a fixed interval. The payload is displayed without modification.
+          Cache-busting is used to avoid stale reads.
+        </p>
+        <p class="mini">
+          “Age” = now − lastUpdated. Health is derived from status + freshness.
+        </p>
+        <div class="kv" style="margin-top:10px">
+          <div class="k">Truth</div><div class="v mono" id="truthUrl2">—</div>
+          <div class="k">Polling</div><div class="v mono">10s</div>
+        </div>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop">
+      <summary>Receipts (verification)</summary>
+      <div class="drop-body">
+        <p class="mini">
+          A receipt is a persistent record of a state transition: what was attempted, under which constraints, and what outcome was observed.
+          Receipts enable convergence and auditability.
+        </p>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop">
+      <summary>Why zeros may appear</summary>
+      <div class="drop-body">
+        <p class="mini">
+          Metrics are intentionally conservative. If sources are not wired or verified, the system prefers zero to estimation.
+          This prevents false claims.
+        </p>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details class="drop">
+      <summary>Raw payload (JSON)</summary>
+      <div class="drop-body">
+        <pre id="raw" class="mono" style="white-space:pre-wrap;margin:0;color:rgba(233,238,252,.75)">{}</pre>
+      </div>
+    </details>
+
+  </section>
+
+  <!-- NAV -->
   <section class="panel nav">
-    <div class="nav-grid">
+    <div class="nav-grid two">
       <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/">Landing</a>
+      <a class="btn" href="/engine/">Execution Space</a>
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
+      <a class="btn" href="/geodynamics/">Coherence Mechanics</a>
       <a class="btn" href="/reference/">Reference</a>
       <a class="btn" href="/about/">About</a>
     </div>
   </section>
 
-  <section class="panel footer">
-    <div class="muted small" id="buildLine">Build: 2026-02-01a · Canonical</div>
-  </section>
+  <div class="meta">Build: 2026-02-01a · Canonical</div>
 
 </main>
 
 <script>
-(function(){
-  // === CONFIG (edit here only if your worker path changes) ===
-  const TRUTH_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
+  // Tabs
+  const tabHuman = document.getElementById("tab-human");
+  const tabSci = document.getElementById("tab-science");
+  const panelHuman = document.getElementById("panel-human");
+  const panelSci = document.getElementById("panel-science");
+  function setTab(which){
+    const human = which === "human";
+    tabHuman.setAttribute("aria-selected", human ? "true" : "false");
+    tabSci.setAttribute("aria-selected", human ? "false" : "true");
+    panelHuman.dataset.active = human ? "true" : "false";
+    panelSci.dataset.active = human ? "false" : "true";
+  }
+  tabHuman.addEventListener("click", ()=>setTab("human"));
+  tabSci.addEventListener("click", ()=>setTab("science"));
+
+  // Truth polling (read-only)
+  const TRUTH = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
   const POLL_MS = 10000;
 
-  // === helpers ===
   const $ = (id)=>document.getElementById(id);
   const nowMs = ()=>Date.now();
-  const fmtDT = (ms)=>{
-    try { return new Date(ms).toLocaleString(); } catch(e){ return String(ms); }
-  };
   const clamp01 = (x)=>Math.max(0, Math.min(1, x));
-  const intensityColor = (ratio)=> {
-    // ratio 0..1 mapped to red->yellow->green
-    if (ratio <= 0.33) return "i-red";
-    if (ratio <= 0.66) return "i-yellow";
-    return "i-green";
-  };
-  const healthBadgeClass = (health)=> {
-    const h = String(health||"").toUpperCase();
-    if (h === "GREEN" || h === "OPERATIONAL") return "b-green";
-    if (h === "YELLOW" || h === "DEGRADED") return "b-yellow";
-    return "b-red";
-  };
 
-  function setText(id, v){ $(id).textContent = v==null ? "—" : String(v); }
+  function intensityColorClass(r){
+    if(r<=0.33) return "i-red";
+    if(r<=0.66) return "i-yellow";
+    return "i-green";
+  }
 
   function barRow(label, value, max){
     const v = Number(value||0);
@@ -103,110 +290,112 @@
     wrap.className = "barrow";
     wrap.innerHTML = `
       <div class="barhead">
-        <span class="label">${label}</span>
-        <span class="value mono">${v}</span>
+        <span>${label}</span>
+        <span class="mono">${v}</span>
       </div>
       <div class="bartrack">
-        <div class="barfill ${intensityColor(r)}" style="width:${(r*100).toFixed(2)}%"></div>
+        <div class="barfill ${intensityColorClass(r)}" style="width:${(r*100).toFixed(2)}%"></div>
       </div>
     `;
     return wrap;
   }
 
-  async function fetchTruth(){
-    const url = TRUTH_BASE + "?t=" + nowMs();
-    const res = await fetch(url, {cache:"no-store"});
-    if(!res.ok) throw new Error("truth_http_"+res.status);
-    return { url, json: await res.json() };
-  }
-
-  function computeHealth(payload){
-    // Prefer explicit status; fall back to errors; default degraded if missing.
-    const status = String(payload?.status || "").toUpperCase();
-    const errs = Number(payload?.metrics?.errors || 0);
-    if (status === "OPERATIONAL" && errs === 0) return "GREEN";
-    if (status === "DEGRADED" || errs > 0) return "YELLOW";
-    return "RED";
-  }
-
-  function render(payload, truthUrl){
-    const health = computeHealth(payload);
-    $("healthBadge").textContent = health;
-    $("healthBadge").className = "badge " + healthBadgeClass(health);
-
-    setText("truthUrl", truthUrl);
-    setText("polling", (POLL_MS/1000) + "s");
-
-    const last = payload?.metrics?.lastUpdated;
-    const lastMs = typeof last === "number" ? last : Number(last);
-    if (!Number.isFinite(lastMs)) {
-      setText("lastUpdated", "—");
-      setText("ageSec", "—");
-    } else {
-      setText("lastUpdated", fmtDT(lastMs));
-      setText("ageSec", Math.max(0, Math.floor((nowMs() - lastMs)/1000)));
-    }
-
-    // Bars share one scale across metrics+sources
-    const metrics = payload?.metrics || {};
-    const sources = payload?.sources || {};
-    const metricPairs = [
-      ["Sessions", metrics.sessions],
-      ["Pageviews", metrics.pageviews],
-      ["Clicks", metrics.clicks],
-      ["Writes", metrics.writes],
-    ];
-    const sourcePairs = [
-      ["GitHub", sources.GitHub],
-      ["OSF", sources.OSF],
-      ["Direct", sources.Direct],
-      ["Other", sources.Other],
-    ];
-
-    const values = [
-      ...metricPairs.map(p=>Number(p[1]||0)),
-      ...sourcePairs.map(p=>Number(p[1]||0)),
-    ];
-    const max = Math.max(1, ...values);
-
-    const g = $("gauges");
-    g.innerHTML = "";
-    metricPairs.forEach(([k,v])=>g.appendChild(barRow(k, v, max)));
-
-    const s = $("sources");
-    s.innerHTML = "";
-    sourcePairs.forEach(([k,v])=>s.appendChild(barRow(k, v, max)));
-
-    $("raw").textContent = JSON.stringify(payload, null, 2);
-  }
-
   async function tick(){
+    const url = TRUTH + "?t=" + nowMs();
+    $("truthUrl").textContent = url;
+    $("truthUrl2").textContent = url;
+
     try{
-      const {url, json} = await fetchTruth();
-      render(json, url);
+      const res = await fetch(url, { cache: "no-store" });
+      if(!res.ok) throw new Error("http_"+res.status);
+      const payload = await res.json();
+      $("raw").textContent = JSON.stringify(payload, null, 2);
+
+      const last = Number(payload?.metrics?.lastUpdated || 0);
+      if(last){
+        $("lastUpdated").textContent = new Date(last).toLocaleString();
+        $("ageSec").textContent = Math.max(0, Math.floor((nowMs()-last)/1000));
+      } else {
+        $("lastUpdated").textContent = "—";
+        $("ageSec").textContent = "—";
+      }
+
+      const m = payload?.metrics || {};
+      const s = payload?.sources || {};
+
+      const pairs = [
+        ["Sessions", m.sessions],
+        ["Pageviews", m.pageviews],
+        ["Clicks", m.clicks],
+        ["Writes", m.writes],
+        ["GitHub", s.GitHub],
+        ["OSF", s.OSF],
+        ["Direct", s.Direct],
+        ["Other", s.Other],
+      ];
+      const max = Math.max(1, ...pairs.map(p=>Number(p[1]||0)));
+
+      const g = $("gauges");
+      g.innerHTML = "";
+      // only show the activity metrics here (human tab)
+      [["Sessions", m.sessions], ["Pageviews", m.pageviews], ["Clicks", m.clicks], ["Writes", m.writes]]
+        .forEach(([k,v])=>g.appendChild(barRow(k, v, max)));
+
     }catch(e){
-      // Degraded display but keep UI stable
-      $("healthBadge").textContent = "RED";
-      $("healthBadge").className = "badge b-red";
-      setText("truthUrl", TRUTH_BASE);
-      setText("polling", (POLL_MS/1000) + "s");
-      setText("lastUpdated", "—");
-      setText("ageSec", "—");
-      $("gauges").innerHTML = "";
-      ["Sessions","Pageviews","Clicks","Writes"].forEach(k=>{
-        $("gauges").appendChild(barRow(k, 0, 1));
-      });
-      $("sources").innerHTML = "";
-      ["GitHub","OSF","Direct","Other"].forEach(k=>{
-        $("sources").appendChild(barRow(k, 0, 1));
-      });
       $("raw").textContent = "Unavailable";
+      $("lastUpdated").textContent = "—";
+      $("ageSec").textContent = "—";
+      $("gauges").innerHTML = "";
+      ["Sessions","Pageviews","Clicks","Writes"].forEach(k=>$("gauges").appendChild(barRow(k, 0, 1)));
     }
   }
 
   tick();
   setInterval(tick, POLL_MS);
-})();
+
+  // Operate hatch (UI-only; wire UVCP later)
+  const UVCP_BASE = "http://127.0.0.1:8000"; // set when ready
+
+  async function j(url, opts){
+    const r = await fetch(url, Object.assign({ cache:"no-store" }, opts||{}));
+    if(!r.ok) throw new Error(await r.text());
+    return await r.json();
+  }
+
+  $("op_send").addEventListener("click", async () => {
+    const armed = $("op_arm").checked;
+    const confirm = ($("op_confirm").value || "").trim();
+    if(!armed){ $("op_result").textContent = "ARM is required."; return; }
+    if(confirm !== "EXECUTE"){ $("op_result").textContent = 'Type "EXECUTE" to confirm.'; return; }
+
+    const adapter = $("op_adapter").value;
+    const op = $("op_op").value;
+    const target = ($("op_target").value || "").trim();
+    if(!target){ $("op_result").textContent = "Target is required."; return; }
+
+    try{
+      const result = await j(UVCP_BASE + "/operate?t=" + nowMs(), {
+        method:"POST",
+        headers:{ "content-type":"application/json" },
+        body: JSON.stringify({ adapter, op, target })
+      });
+      $("op_result").textContent = JSON.stringify(result, null, 2);
+      $("op_arm").checked = false;
+      $("op_confirm").value = "";
+    }catch{
+      $("op_result").textContent = "Unavailable (backend not connected).";
+      $("op_arm").checked = false;
+      $("op_confirm").value = "";
+    }
+  });
+
+  $("op_clear").addEventListener("click", () => {
+    $("op_target").value = "";
+    $("op_confirm").value = "";
+    $("op_arm").checked = false;
+    $("op_result").textContent = "{}";
+  });
 </script>
+
 </body>
 </html>

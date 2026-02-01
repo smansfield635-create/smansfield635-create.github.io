@@ -1,51 +1,102 @@
-(() => {
-  const KEY = "geo_lens";
-  const DEFAULT_LENS = "human";
+/* Geodiametrics Lens Toggle (Human ↔ Scientific)
+   Works on any page that includes:
+   - buttons: [data-lens-btn="human"] and [data-lens-btn="scientific"]
+   - panes:   [data-lens-pane="human"] and [data-lens-pane="scientific"]
+*/
 
-  function getLens() {
-    try { return localStorage.getItem(KEY) || DEFAULT_LENS; }
-    catch { return DEFAULT_LENS; }
-  }
-  function setLens(v) {
-    try { localStorage.setItem(KEY, v); } catch {}
+(function () {
+  function setPressed(btn, pressed) {
+    if (!btn) return;
+    btn.setAttribute("aria-pressed", pressed ? "true" : "false");
+    if (pressed) btn.classList.add("is-active");
+    else btn.classList.remove("is-active");
   }
 
-  function applyLens(root, lens) {
-    const panes = root.querySelectorAll("[data-lens-pane]");
-    panes.forEach(p => {
-      const pLens = p.getAttribute("data-lens-pane");
-      p.style.display = (pLens === lens) ? "" : "none";
+  function showPane(root, lens) {
+    const humanPane = root.querySelector('[data-lens-pane="human"]');
+    const sciPane = root.querySelector('[data-lens-pane="scientific"]');
+
+    if (humanPane) humanPane.style.display = lens === "human" ? "" : "none";
+    if (sciPane) sciPane.style.display = lens === "scientific" ? "" : "none";
+
+    const humanBtn = root.querySelector('[data-lens-btn="human"]');
+    const sciBtn = root.querySelector('[data-lens-btn="scientific"]');
+
+    setPressed(humanBtn, lens === "human");
+    setPressed(sciBtn, lens === "scientific");
+
+    // Persist per-page path
+    try {
+      const key = "geo_lens:" + (location.pathname || "/");
+      localStorage.setItem(key, lens);
+    } catch (_) {}
+  }
+
+  function getSavedLens() {
+    try {
+      const key = "geo_lens:" + (location.pathname || "/");
+      const v = localStorage.getItem(key);
+      if (v === "human" || v === "scientific") return v;
+    } catch (_) {}
+    return "human";
+  }
+
+  function bindOne(root) {
+    // Default lens: saved, otherwise human
+    let lens = getSavedLens();
+
+    // If page is missing panes/buttons, do nothing
+    const hasButtons =
+      root.querySelector('[data-lens-btn="human"]') &&
+      root.querySelector('[data-lens-btn="scientific"]');
+    const hasPanes =
+      root.querySelector('[data-lens-pane="human"]') &&
+      root.querySelector('[data-lens-pane="scientific"]');
+
+    if (!hasButtons || !hasPanes) return;
+
+    // Initial render
+    showPane(root, lens);
+
+    // Click handlers
+    const humanBtn = root.querySelector('[data-lens-btn="human"]');
+    const sciBtn = root.querySelector('[data-lens-btn="scientific"]');
+
+    humanBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      showPane(root, "human");
     });
 
-    const btns = root.querySelectorAll("[data-lens-btn]");
-    btns.forEach(b => {
-      const bLens = b.getAttribute("data-lens-btn");
-      b.classList.toggle("is-active", bLens === lens);
-      b.setAttribute("aria-pressed", String(bLens === lens));
+    sciBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      showPane(root, "scientific");
+    });
+
+    // Keyboard support
+    humanBtn.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        showPane(root, "human");
+      }
+    });
+    sciBtn.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        showPane(root, "scientific");
+      }
     });
   }
 
-  function initScope(scope) {
-    const root = scope;
-    const btns = root.querySelectorAll("[data-lens-btn]");
-    if (!btns.length) return;
-
-    // click handlers
-    btns.forEach(b => {
-      b.addEventListener("click", () => {
-        const lens = b.getAttribute("data-lens-btn");
-        if (!lens) return;
-        setLens(lens);
-        applyLens(root, lens);
-      });
-    });
-
-    // initial
-    applyLens(root, getLens());
+  function boot() {
+    // Support multiple roots if needed
+    const roots = document.querySelectorAll("[data-lens-scope]");
+    if (!roots.length) return;
+    roots.forEach(bindOne);
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    // support multiple toggles per page (rare, but safe)
-    document.querySelectorAll("[data-lens-scope]").forEach(initScope);
-  });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
 })();

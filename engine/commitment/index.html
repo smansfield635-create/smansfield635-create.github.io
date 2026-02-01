@@ -1,12 +1,11 @@
-<!-- FINAL IMPLEMENTATION — TNT #9 / ENGINE: COMMITMENT
-     Full replace of /engine/commitment/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Commitment · Engine</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+  <script defer src="/assets/telemetry.js"></script>
 </head>
 
 <body class="bg-gradient">
@@ -14,28 +13,23 @@
 
   <section class="panel hero">
     <h1>Commitment</h1>
-    <p class="subtitle">
-      What binds action to reality.
-    </p>
+    <p class="subtitle">What becomes real (what you lock in).</p>
   </section>
 
-  <section class="panel">
-    <details class="drop" open>
+  <section class="panel bubble">
+    <details open>
       <summary>Role</summary>
-      <div class="drop-body">
-        <p>
-          Commitment locks a resolved option into action.
-          Without commitment, decisions remain hypothetical.
-        </p>
+      <div class="bubble-body">
+        <p class="note">Commitment turns a resolved option into a real step. Without it, everything stays hypothetical.</p>
       </div>
     </details>
   </section>
 
-  <section class="panel">
-    <details class="drop">
+  <section class="panel bubble">
+    <details>
       <summary>What breaks when this fails</summary>
-      <div class="drop-body">
-        <ul>
+      <div class="bubble-body">
+        <ul class="tight">
           <li>Promises decay</li>
           <li>Trust erodes</li>
           <li>Momentum collapses</li>
@@ -44,18 +38,15 @@
     </details>
   </section>
 
-  <section class="panel">
+  <section class="panel nav">
     <div class="nav-grid">
+      <a class="btn" href="/engine/resolution/">Resolution</a>
       <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/engine/continuation/">Continuation</a>
-      <a class="btn" href="/">Home</a>
-      <a class="btn" href="/control/">State</a>
+      <a class="btn primary" href="/engine/continuation/">Continuation</a>
+      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/reference/">Reference</a>
     </div>
   </section>
-
-  <div class="footer">
-    <span>© Geodiametrics</span>
-  </div>
 
 </main>
 </body>

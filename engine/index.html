@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Engine · Geodiametrics</title>
+  <title>Selection · Engine · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
   <script src="/engine.js" defer></script>
 </head>
@@ -12,8 +12,8 @@
 <main class="page">
 
   <section class="panel hero">
-    <h1>Engine</h1>
-    <p class="subtitle">How decisions become real — safely, deliberately, and only by choice.</p>
+    <h1>Selection</h1>
+    <p class="subtitle">What enters the system.</p>
   </section>
 
   <section class="panel" data-lens-root data-lens-default="human">
@@ -27,17 +27,16 @@
     <!-- HUMAN -->
     <div data-lens-panel="human">
       <div class="acc" data-acc data-acc-default="open">
-        <button class="acc-head" data-acc-head type="button"><span>What this is</span></button>
+        <button class="acc-head" data-acc-head type="button"><span>Role</span></button>
         <div class="acc-body" data-acc-body>
           <p>
-            This is the “how” behind coherence: a repeatable loop that turns fuzzy situations into
-            checkable reality—one step at a time.
+            Selection is the “front door.” It decides what counts and what doesn’t.
+            Not everything that appears should proceed.
           </p>
           <ul>
-            <li><strong>Selection</strong> = what gets admitted (what counts).</li>
-            <li><strong>Resolution</strong> = what constraints apply (what’s allowed).</li>
-            <li><strong>Commitment</strong> = what becomes real (what you lock in).</li>
-            <li><strong>Continuation</strong> = what learns and loops (what persists).</li>
+            <li><strong>Admit</strong> signals that matter.</li>
+            <li><strong>Reject</strong> noise, bait, and irrelevant inputs.</li>
+            <li><strong>Protect</strong> attention so the system stays coherent.</li>
           </ul>
         </div>
       </div>
@@ -45,12 +44,13 @@
       <div class="spacer"></div>
 
       <div class="acc" data-acc>
-        <button class="acc-head" data-acc-head type="button"><span>Why this matters</span></button>
+        <button class="acc-head" data-acc-head type="button"><span>What breaks when this fails</span></button>
         <div class="acc-body" data-acc-body>
-          <p>
-            Most breakdowns happen because the system keeps moving without receipts.
-            This loop forces reality-checks so the next step is defensible.
-          </p>
+          <ul>
+            <li>Noise overwhelms signal.</li>
+            <li>Boundaries dissolve.</li>
+            <li>The system becomes reactive instead of deliberate.</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -58,41 +58,40 @@
     <!-- SOFTWARE-CORRECT -->
     <div data-lens-panel="scientific" style="display:none">
       <div class="acc" data-acc data-acc-default="open">
-        <button class="acc-head" data-acc-head type="button"><span>Canonical cycle</span></button>
+        <button class="acc-head" data-acc-head type="button"><span>Definition</span></button>
         <div class="acc-body" data-acc-body>
           <p class="muted">
-            The engine is a constrained, receipt-gated transition system organized into four phases:
-            Selection → Resolution → Commitment → Continuation.
+            Selection is an admissibility filter over candidate inputs/options.
+            It partitions incoming signals into {admit, reject} according to constraints and goals.
           </p>
+        </div>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="acc" data-acc>
+        <button class="acc-head" data-acc-head type="button"><span>Failure mode</span></button>
+        <div class="acc-body" data-acc-body>
           <p class="muted">
-            “Receipt” is the proof primitive: advancement is valid only when a checkable record exists.
+            If the filter collapses, entropy rises: irrelevant inputs are treated as admissible,
+            driving downstream incoherence.
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="panel">
-    <h2 class="muted">Choose a cylinder</h2>
-    <div class="stack">
-      <a class="btn" href="/engine/selection/">Selection</a>
-      <a class="btn" href="/engine/resolution/">Resolution</a>
-      <a class="btn" href="/engine/commitment/">Commitment</a>
-      <a class="btn" href="/engine/continuation/">Continuation</a>
-    </div>
-  </section>
-
   <section class="panel nav">
     <div class="nav-grid">
+      <a class="btn" href="/engine/">Back → Engine</a>
+      <a class="btn primary" href="/engine/resolution/">Next → Resolution</a>
       <a class="btn" href="/home/">Home</a>
       <a class="btn" href="/state/">State</a>
-      <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/principles/">Principles</a>
     </div>
   </section>
 
   <section class="panel footer">
-    <div class="small muted">Build: 2026-02-01a · Canonical</div>
+    <div class="small muted">Engine · Selection · Build: 2026-02-01a</div>
   </section>
 
 </main>

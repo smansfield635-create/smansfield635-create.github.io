@@ -4,203 +4,63 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Engine · Geodiametrics</title>
-  <meta name="theme-color" content="#0b1224"/>
-
-  <style>
-    :root{
-      --bg0:#050814; --bg1:#0b1634;
-      --card:rgba(17,24,39,.46);
-      --stroke:rgba(255,255,255,.10);
-      --text:#eaf2ff;
-      --muted:rgba(234,242,255,.70);
-      --shadow:0 24px 70px rgba(0,0,0,.55);
-      --r:26px;
-      --btnGrad:linear-gradient(90deg,#2a74ff,#2ec7a6);
-      --mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; min-height:100vh; color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:
-        radial-gradient(1200px 900px at 20% 10%, rgba(80,130,255,.22), transparent 55%),
-        radial-gradient(1000px 800px at 85% 25%, rgba(45,220,180,.14), transparent 55%),
-        radial-gradient(900px 700px at 55% 90%, rgba(170,95,255,.10), transparent 65%),
-        linear-gradient(180deg,var(--bg0),var(--bg1));
-      overflow-x:hidden;
-    }
-    .wrap{padding:clamp(18px,3.5vw,40px); display:flex; justify-content:center}
-    .stack{width:min(860px,100%); display:flex; flex-direction:column; gap:16px}
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid var(--stroke);
-      border-radius:var(--r);
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(16px);
-      padding:clamp(16px,3vw,26px);
-    }
-    h1{margin:0 0 6px 0; font-size:clamp(30px,4.8vw,46px)}
-    h2{margin:0 0 10px 0; font-size:22px}
-    p{margin:0; color:var(--muted); line-height:1.45}
-    .mono{font-family:var(--mono)}
-
-    /* Lens pills */
-    .pills{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px}
-    .pill{
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:999px;
-      padding:14px 16px;
-      background:rgba(255,255,255,.06);
-      color:rgba(234,242,255,.78);
-      font-weight:900;
-      cursor:pointer;
-      user-select:none;
-      text-align:center;
-    }
-    .pill.active{
-      background:var(--btnGrad);
-      border:none;
-      color:#eaffff;
-      box-shadow:0 14px 40px rgba(0,0,0,.35);
-    }
-
-    /* Content blocks */
-    .block{
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-      border-radius:18px;
-      padding:14px;
-      margin-top:12px;
-    }
-    ul{margin:10px 0 0 18px; color:rgba(234,242,255,.86); line-height:1.55}
-    li{margin:6px 0}
-
-    details{
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-      border-radius:18px;
-      padding:12px;
-      margin-top:12px;
-    }
-    summary{cursor:pointer; font-weight:900}
-    .nav{display:grid; gap:12px; margin-top:10px}
-    @media(min-width:720px){ .nav{grid-template-columns:1fr 1fr} }
-    .btn{
-      border:none; border-radius:999px; padding:16px 18px;
-      font-size:16px; font-weight:900; color:#eaffff;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.14);
-      cursor:pointer;
-      text-align:center;
-      text-decoration:none;
-      display:flex; justify-content:center; align-items:center;
-    }
-    .btn.primary{background:var(--btnGrad); border:none}
-    footer{opacity:.55; font-size:12px; text-align:center}
-  </style>
+  <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
-
 <body>
   <main class="wrap">
     <section class="stack">
-      <div class="card">
+
+      <section class="card hero">
         <h1>Engine</h1>
         <p>How decisions become real — safely, deliberately, and only by choice.</p>
+      </section>
 
-        <div class="pills" role="group" aria-label="Lens toggle">
-          <button class="pill active" id="btnHuman" type="button">Human</button>
-          <button class="pill" id="btnSci" type="button">Software-correct</button>
+      <section class="card" data-lens-root data-default-lens="human">
+        <div class="grid two">
+          <button class="btn primary" data-lens-pill="human" type="button">Human</button>
+          <button class="btn" data-lens-pill="scientific" type="button">Software-correct</button>
         </div>
-      </div>
 
-      <!-- HUMAN -->
-      <div class="card" id="paneHuman">
-        <h2>Human lens</h2>
-
-        <div class="block">
-          <p><b>This is the “how” behind coherence:</b> a repeatable loop that turns fuzzy situations into checkable reality — one step at a time.</p>
+        <div data-lens-pane="human" style="margin-top:12px">
+          <h2>Human lens</h2>
+          <p>This is the loop that restores clarity by making reality checkable.</p>
           <ul>
-            <li><b>Selection</b> — what counts / what enters.</li>
-            <li><b>Resolution</b> — what’s allowed / constraints.</li>
-            <li><b>Commitment</b> — what becomes real / locked in.</li>
-            <li><b>Continuation</b> — what persists / learns / loops.</li>
+            <li><b>Selection</b>: what counts.</li>
+            <li><b>Resolution</b>: what’s allowed.</li>
+            <li><b>Commitment</b>: what becomes real.</li>
+            <li><b>Continuation</b>: what persists and learns.</li>
           </ul>
         </div>
 
-        <details open>
-          <summary>Why this matters</summary>
-          <div class="block">
-            <p>Most breakdowns happen because a system keeps moving without receipts. This loop forces reality-checks so the next step remains defensible.</p>
-          </div>
-        </details>
-
-        <details>
-          <summary>What to do here</summary>
-          <div class="block">
-            <p>Start anywhere. If something feels confusing, your signals stopped lining up. This page shows the sequence that restores clarity.</p>
-          </div>
-        </details>
-      </div>
-
-      <!-- SOFTWARE-CORRECT -->
-      <div class="card" id="paneSci" style="display:none">
-        <h2>Software-correct lens</h2>
-
-        <div class="block">
-          <p class="mono"><b>Selection → Resolution → Commitment → Continuation</b></p>
-          <ul>
-            <li><b>Selection</b>: admissibility filter over candidate inputs/options.</li>
-            <li><b>Resolution</b>: apply constraints; define feasible set.</li>
-            <li><b>Commitment</b>: receipt-gated state transition (irreversible without rollback).</li>
-            <li><b>Continuation</b>: observe outcomes; feed forward to Selection.</li>
-          </ul>
+        <div data-lens-pane="scientific" style="margin-top:12px;display:none">
+          <h2>Software-correct lens</h2>
+          <p class="mono">Selection → Resolution → Commitment → Continuation</p>
+          <p>Receipt-gated transitions. Deterministic advancement. Backtracking invalidates downstream.</p>
         </div>
+      </section>
 
-        <details open>
-          <summary>Execution contract</summary>
-          <div class="block">
-            <ul>
-              <li>No automatic advancement without explicit choice.</li>
-              <li>No state change without a receipt.</li>
-              <li>Backtracking invalidates downstream receipts.</li>
-            </ul>
-          </div>
-        </details>
-      </div>
-
-      <!-- Navigation -->
-      <div class="card">
-        <div class="nav">
-          <a class="btn primary" href="../home/">Home</a>
-          <a class="btn" href="../">Landing</a>
-          <a class="btn" href="../laws/">Laws</a>
-          <a class="btn" href="../principles/">Principles</a>
-          <a class="btn" href="../geodynamics/">Geodynamics</a>
-          <a class="btn" href="../control/">Control</a>
-          <a class="btn" href="../reference/">Reference</a>
+      <section class="card">
+        <div class="grid two">
+          <a class="btn primary" href="/engine/selection/">Selection</a>
+          <a class="btn" href="/engine/resolution/">Resolution</a>
+          <a class="btn" href="/engine/commitment/">Commitment</a>
+          <a class="btn" href="/engine/continuation/">Continuation</a>
         </div>
-      </div>
+      </section>
+
+      <section class="card">
+        <div class="grid two">
+          <a class="btn" href="/home/">Home</a>
+          <a class="btn" href="/control/">Control</a>
+          <a class="btn" href="/laws/">Laws</a>
+          <a class="btn" href="/reference/">Reference</a>
+        </div>
+      </section>
 
       <footer>© Geodiametrics</footer>
     </section>
   </main>
 
-  <script>
-    const btnHuman = document.getElementById("btnHuman");
-    const btnSci = document.getElementById("btnSci");
-    const paneHuman = document.getElementById("paneHuman");
-    const paneSci = document.getElementById("paneSci");
-
-    function setLens(which){
-      const human = which === "human";
-      btnHuman.classList.toggle("active", human);
-      btnSci.classList.toggle("active", !human);
-      paneHuman.style.display = human ? "" : "none";
-      paneSci.style.display = human ? "none" : "";
-    }
-
-    btnHuman.addEventListener("click", () => setLens("human"));
-    btnSci.addEventListener("click", () => setLens("sci"));
-  </script>
+  <script src="/assets/lens.js"></script>
 </body>
 </html>

@@ -6,75 +6,57 @@
   <title>Principles · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
-<body class="bg-gradient">
-<main class="page">
+<body>
+  <main class="wrap">
+    <section class="stack">
 
-  <section class="panel hero">
-    <h1>Principles</h1>
-    <p class="subtitle">How laws appear in lived reality. Two lenses.</p>
-  </section>
+      <section class="card hero">
+        <h1>Principles</h1>
+        <p>How laws appear in lived reality. Two lenses.</p>
+      </section>
 
-  <section class="panel" data-lens-root data-default-lens="human">
-    <div class="pills" role="group" aria-label="Lens toggle">
-      <button class="pill active" type="button" data-lens-pill="human" aria-pressed="true">Human</button>
-      <button class="pill" type="button" data-lens-pill="scientific" aria-pressed="false">Scientific</button>
-    </div>
-
-    <div class="card" style="margin-top:12px" data-lens-pane="human">
-      <h2 class="section-title">Human language</h2>
-
-      <details open>
-        <summary>Tier 1 — What must hold <span class="chev">▾</span></summary>
-        <div class="body">
-          <p>What is true stays true under pressure. What isn’t eventually breaks.</p>
+      <section class="card" data-lens-root data-default-lens="human">
+        <div class="grid two">
+          <button class="btn primary" data-lens-pill="human" type="button">Human</button>
+          <button class="btn" data-lens-pill="scientific" type="button">Scientific</button>
         </div>
-      </details>
 
-      <details>
-        <summary>Tier 2 — How coherence is maintained <span class="chev">▾</span></summary>
-        <div class="body">
-          <p>Constraints applied consistently + verification receipts keep the system defensible.</p>
+        <div data-lens-pane="human" style="margin-top:12px">
+          <details open>
+            <summary>Tier 1 — What must hold</summary>
+            <p>What is true stays true under pressure.</p>
+          </details>
+          <details>
+            <summary>Tier 2 — How coherence is maintained</summary>
+            <p>Constraints + receipts keep progression defensible.</p>
+          </details>
+          <details>
+            <summary>Tier 3 — Signals of drift</summary>
+            <p>Misalignment, boundary fade, promise decay, confusion spikes.</p>
+          </details>
         </div>
-      </details>
 
-      <details>
-        <summary>Tier 3 — What you notice when coherence shifts <span class="chev">▾</span></summary>
-        <div class="body">
-          <p>Drift, boundary fade, promise decay, confusion spikes.</p>
+        <div data-lens-pane="scientific" style="margin-top:12px;display:none">
+          <details open>
+            <summary>Tier model</summary>
+            <p>Tier 1 invariants · Tier 2 structural maintenance · Tier 3 observable signals.</p>
+          </details>
         </div>
-      </details>
-    </div>
+      </section>
 
-    <div class="card" style="margin-top:12px" data-lens-pane="scientific">
-      <h2 class="section-title">Scientific language</h2>
-
-      <details open>
-        <summary>Tier model <span class="chev">▾</span></summary>
-        <div class="body">
-          <p><strong>Tier 1:</strong> invariants (observer-invariant constraints).</p>
-          <p><strong>Tier 2:</strong> structural maintenance (admissibility + verification).</p>
-          <p><strong>Tier 3:</strong> observable signals (measurable divergence cues).</p>
+      <section class="card">
+        <div class="grid two">
+          <a class="btn primary" href="/home/">Home</a>
+          <a class="btn" href="/laws/">Laws</a>
+          <a class="btn" href="/geodynamics/">Geodynamics</a>
+          <a class="btn" href="/engine/">Engine</a>
         </div>
-      </details>
-    </div>
-  </section>
+      </section>
 
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn primary" href="/home/">Home</a>
-      <a class="btn" href="/">Landing</a>
-      <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/control/">Control</a>
-      <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/about/">About</a>
-    </div>
-  </section>
+      <footer>© Geodiametrics</footer>
+    </section>
+  </main>
 
-  <div class="footer">© Geodiametrics</div>
-</main>
-
-<script src="/assets/lens.js"></script>
+  <script src="/assets/lens.js"></script>
 </body>
 </html>

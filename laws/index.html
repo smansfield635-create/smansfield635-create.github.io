@@ -5,161 +5,50 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Laws · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+  <script src="/engine.js" defer></script>
 </head>
 <body class="bg-gradient">
 
 <main class="page">
 
-  <!-- Header -->
   <section class="panel hero">
     <h1>Laws</h1>
-    <p class="subtitle">
-      Same laws. Two lenses. Driven by fact, not fiction.
-    </p>
+    <p class="subtitle">Same laws. One meaning. No intimidation.</p>
   </section>
 
-  <!-- Lens selector (UI-only; no JS dependency) -->
   <section class="panel">
-    <div class="nav-grid">
-      <div class="btn primary">Human</div>
-      <div class="btn">Scientific</div>
+    <div class="acc" data-acc data-acc-default="open">
+      <button class="acc-head" data-acc-head type="button">
+        <span>Seven invariant constraints</span>
+      </button>
+      <div class="acc-body" data-acc-body>
+        <ol class="law-list">
+          <li><strong>Reality can’t be faked.</strong> What you claim can be anything. What is true stays true.</li>
+          <li><strong>Trust begins internally.</strong> External trust can’t exceed internal honesty.</li>
+          <li><strong>Outputs reflect inputs.</strong> Outcomes can’t be more coherent than their premises.</li>
+          <li><strong>Constraints define admissibility.</strong> What’s allowed decides what can happen.</li>
+          <li><strong>Verification gates reality.</strong> Receipts separate story from proof.</li>
+          <li><strong>Confusion accelerates failure.</strong> Once incoherence exists, confusion speeds collapse.</li>
+          <li><strong>Receipts enable convergence.</strong> Verified steps let systems stabilize and scale.</li>
+        </ol>
+        <p class="muted small">
+          These are not opinions. They are constraint statements: what holds whether acknowledged or not.
+        </p>
+      </div>
     </div>
-    <p class="muted small">
-      The meaning is identical. Only the language changes.
-    </p>
   </section>
 
-  <!-- Human Lens -->
-  <section class="panel">
-    <h2>Human language</h2>
-
-    <details open>
-      <summary>Law 1 — Reality can’t be faked</summary>
-      <p class="muted">
-        You can say anything you want, but reality only responds to what is actually true.
-      </p>
-    </details>
-
-    <details>
-      <summary>Law 2 — Trust begins internally</summary>
-      <p class="muted">
-        You can’t be more honest with others than you are with yourself.
-        External trust never exceeds internal honesty.
-      </p>
-    </details>
-
-    <details>
-      <summary>Law 3 — Outputs reflect inputs</summary>
-      <p class="muted">
-        What comes out of a system always traces back to what went in,
-        even if the delay hides the cause.
-      </p>
-    </details>
-
-    <details>
-      <summary>Law 4 — Rules define what’s possible</summary>
-      <p class="muted">
-        Limits don’t disappear when ignored.
-        They resurface later as failure or collapse.
-      </p>
-    </details>
-
-    <details>
-      <summary>Law 5 — Proof matters more than intention</summary>
-      <p class="muted">
-        Good intentions don’t count unless results can be checked.
-      </p>
-    </details>
-
-    <details>
-      <summary>Law 6 — Confusion accelerates breakdown</summary>
-      <p class="muted">
-        Once instability begins, confusion increases the speed of failure.
-      </p>
-    </details>
-
-    <details>
-      <summary>Law 7 — Memory prevents repetition</summary>
-      <p class="muted">
-        Systems that remember can correct.
-        Systems that don’t repeat the same mistakes.
-      </p>
-    </details>
-  </section>
-
-  <!-- Scientific Lens -->
-  <section class="panel">
-    <h2>Scientific language</h2>
-
-    <details>
-      <summary>Law 1 — Observer-invariant coherence</summary>
-      <p class="muted">
-        No observer can produce outcomes that contradict the underlying state of reality.
-      </p>
-    </details>
-
-    <details>
-      <summary>Law 2 — External trust is bounded by internal coherence</summary>
-      <p class="muted">
-        Inter-system trust cannot exceed intra-system alignment.
-      </p>
-    </details>
-
-    <details>
-      <summary>Law 3 — Outputs are constrained by inputs</summary>
-      <p class="muted">
-        System outputs are a function of prior inputs and transformations.
-      </p>
-    </details>
-
-    <details>
-      <summary>Law 4 — Constraints define admissibility</summary>
-      <p class="muted">
-        The set of reachable states is bounded whether acknowledged or not.
-      </p>
-    </details>
-
-    <details>
-      <summary>Law 5 — Verification gates state transition</summary>
-      <p class="muted">
-        Unverified state changes do not propagate reliably.
-      </p>
-    </details>
-
-    <details>
-      <summary>Law 6 — Confusion amplifies instability</summary>
-      <p class="muted">
-        In incoherent systems, uncertainty increases the rate of degradation.
-      </p>
-    </details>
-
-    <details>
-      <summary>Law 7 — Receipts enable convergence</summary>
-      <p class="muted">
-        Persistent records of transitions allow systems to correct trajectory over time.
-      </p>
-    </details>
-  </section>
-
-  <!-- Navigation -->
   <section class="panel nav">
     <div class="nav-grid">
       <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/">Landing</a>
       <a class="btn" href="/principles/">Principles</a>
       <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/control/">Control</a>
       <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/about/">About</a>
     </div>
   </section>
 
-  <!-- Footer -->
   <section class="panel footer">
-    <div class="small muted">
-      Build: 2026-02-01a · Canonical
-    </div>
+    <div class="small muted">Build: 2026-02-01a · Canonical</div>
   </section>
 
 </main>

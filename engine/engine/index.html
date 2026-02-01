@@ -14,32 +14,46 @@
     <p class="subtitle">How decisions become real — safely, deliberately, and only by choice.</p>
   </section>
 
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn primary" href="/engine/selection/">Selection</a>
-      <a class="btn" href="/engine/resolution/">Resolution</a>
-      <a class="btn" href="/engine/commitment/">Commitment</a>
-      <a class="btn" href="/engine/continuation/">Continuation</a>
+  <section class="panel" data-lens-root data-default-lens="human">
+    <div class="pills" role="group" aria-label="Lens toggle">
+      <button class="pill active" type="button" data-lens-pill="human" aria-pressed="true">Human</button>
+      <button class="pill" type="button" data-lens-pill="scientific" aria-pressed="false">Software-correct</button>
+    </div>
+
+    <div class="card" style="margin-top:12px" data-lens-pane="human">
+      <h2 class="section-title">What this is</h2>
+      <p>This is the “how” behind coherence: a repeatable loop that turns fuzzy situations into checkable reality — one step at a time.</p>
+      <ul>
+        <li><strong>Selection</strong> = what counts.</li>
+        <li><strong>Resolution</strong> = what’s allowed.</li>
+        <li><strong>Commitment</strong> = what becomes real.</li>
+        <li><strong>Continuation</strong> = what persists and learns.</li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-top:12px" data-lens-pane="scientific">
+      <h2 class="section-title">Software-correct</h2>
+      <p>A constrained, receipt-gated transition system with deterministic advancement.</p>
+      <div class="mono">Selection → Resolution → Commitment → Continuation</div>
     </div>
   </section>
 
   <section class="panel nav">
     <div class="nav-grid">
-      <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/">Landing</a>
-      <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
+      <a class="btn" href="/engine/selection/">Selection</a>
+      <a class="btn" href="/engine/resolution/">Resolution</a>
+      <a class="btn" href="/engine/commitment/">Commitment</a>
+      <a class="btn" href="/engine/continuation/">Continuation</a>
+      <a class="btn primary" href="/home/">Home</a>
       <a class="btn" href="/control/">Control</a>
       <a class="btn" href="/state/">State</a>
       <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/about/">About</a>
     </div>
   </section>
 
   <div class="footer">© Geodiametrics</div>
-
 </main>
-<script src="/assets/telemetry.js"></script>
+
+<script src="/assets/lens.js"></script>
 </body>
 </html>

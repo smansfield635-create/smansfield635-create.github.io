@@ -6,23 +6,18 @@
   <title>Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
+<body class="bg-gradient landing planet-a">
+  <div class="planet" aria-hidden="true"></div>
 
-<body class="bg-gradient landing">
-
-  <main class="page">
-
+  <main class="page narrow">
     <section class="panel hero">
       <h1>Geodiametrics</h1>
-      <p class="subtitle">
-        A divided system fails if and only if its fragmentation is not coherently integrated.
-      </p>
+      <p class="subtitle">A divided system fails if and only if its fragmentation is not coherently integrated.</p>
     </section>
 
     <section class="panel">
       <blockquote class="quote">
-        <p>
-          “I love it when people say something has never been done before. Because when I do it, I’ll be the first.”
-        </p>
+        <p>“I love it when people say something has never been done before. Because when I do it, I’ll be the first.”</p>
         <footer>— Arnold Schwarzenegger</footer>
       </blockquote>
     </section>
@@ -38,12 +33,21 @@
 
     <section class="panel nav">
       <div class="nav-grid">
-        <a class="btn primary" href="/home/">Enter</a>
+        <a class="btn primary large" href="/home/">Enter</a>
       </div>
     </section>
 
-    <div class="footer"><span>Build: 2026-02-01a · Canonical: smansfield635-create.github.io</span></div>
-
+    <div class="footer"><span>© Geodiametrics</span></div>
   </main>
+
+  <script>
+    setInterval(() => {
+      const s = document.createElement("div");
+      s.className = "shooting-star";
+      s.style.top = (Math.random()*40) + "%";
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 2000);
+    }, 30000 + Math.random()*60000);
+  </script>
 </body>
 </html>

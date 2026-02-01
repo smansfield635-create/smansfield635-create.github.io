@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Laws · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script src="/engine.js" defer></script>
+  <script defer src="/assets/ui.js"></script>
 </head>
 <body>
 <main class="page">
@@ -16,74 +16,49 @@
   </section>
 
   <section class="panel">
-    <div class="lens-switch" role="group" aria-label="Lens switch">
-      <button class="lens-btn" data-lens="human" aria-pressed="false">Human</button>
-      <button class="lens-btn" data-lens="scientific" aria-pressed="false">Scientific</button>
+    <div class="tabs" data-tabs data-tabs-key="laws" data-default="human">
+      <div class="tabbar">
+        <button class="tab" data-tab="human" aria-selected="true">Human</button>
+        <button class="tab" data-tab="scientific" aria-selected="false">Scientific</button>
+      </div>
+
+      <div class="tabpanel" data-panel="human">
+        <p><strong>Seven invariant constraints (human)</strong></p>
+        <ol>
+          <li><strong>Reality can’t be faked.</strong> You can claim anything. What’s true stays true.</li>
+          <li><strong>Trust begins internally.</strong> External trust can’t exceed internal honesty.</li>
+          <li><strong>Outputs reflect inputs.</strong> Outcomes can’t be more coherent than their premises.</li>
+          <li><strong>Constraints define admissibility.</strong> What’s allowed decides what can happen.</li>
+          <li><strong>Verification gates reality.</strong> Receipts separate story from proof.</li>
+          <li><strong>Confusion accelerates failure.</strong> Once incoherence exists, confusion speeds collapse.</li>
+          <li><strong>Receipts enable convergence.</strong> Verified steps let systems stabilize and scale.</li>
+        </ol>
+        <p>These are not opinions. They hold whether acknowledged or not.</p>
+      </div>
+
+      <div class="tabpanel" data-panel="scientific" hidden>
+        <p><strong>Seven invariant constraints (scientific)</strong></p>
+        <ol>
+          <li><strong>Coherence cannot exceed evidence.</strong></li>
+          <li><strong>External trust cannot exceed internal honesty.</strong></li>
+          <li><strong>Outcomes cannot be more coherent than inputs.</strong></li>
+          <li><strong>Constraints define admissibility.</strong></li>
+          <li><strong>Verification gates reality.</strong></li>
+          <li><strong>Confusion accelerates failure once incoherence exists.</strong></li>
+          <li><strong>Receipts enable convergence.</strong></li>
+        </ol>
+        <p>Lens changes language, not meaning.</p>
+      </div>
     </div>
-    <p class="lens-note">The meaning is identical. Only the language changes.</p>
   </section>
 
-  <!-- HUMAN -->
-  <section class="panel" data-lens-panel="human">
-    <h2>Human language</h2>
-
-    <details open>
-      <summary>Law 1 — Reality can’t be faked</summary>
-      <div class="muted">You can claim anything. Reality only responds to what’s true.</div>
-    </details>
-
-    <details>
-      <summary>Law 2 — Trust begins internally</summary>
-      <div class="muted">External trust cannot exceed internal honesty.</div>
-    </details>
-
-    <details>
-      <summary>Law 3 — Outputs reflect inputs</summary>
-      <div class="muted">Outcomes cannot be more coherent than their premises.</div>
-    </details>
-
-    <details>
-      <summary>Law 4 — Constraints define admissibility</summary>
-      <div class="muted">What’s allowed decides what can happen.</div>
-    </details>
-
-    <details>
-      <summary>Law 5 — Verification gates reality</summary>
-      <div class="muted">Receipts separate story from proof.</div>
-    </details>
-
-    <details>
-      <summary>Law 6 — Confusion accelerates failure</summary>
-      <div class="muted">Once incoherence exists, confusion speeds collapse.</div>
-    </details>
-
-    <details>
-      <summary>Law 7 — Receipts enable convergence</summary>
-      <div class="muted">Verified steps stabilize systems and let them scale.</div>
-    </details>
-
-    <p class="subtitle" style="margin-top:12px;">These are constraint statements: what holds whether acknowledged or not.</p>
-  </section>
-
-  <!-- SCIENTIFIC -->
-  <section class="panel" data-lens-panel="scientific" style="display:none">
-    <h2>Scientific language</h2>
-    <ol>
-      <li><strong>Evidence bound:</strong> Coherence cannot exceed evidence.</li>
-      <li><strong>Internal bound:</strong> External trust cannot exceed internal honesty.</li>
-      <li><strong>Input bound:</strong> Outcomes cannot be more coherent than inputs.</li>
-      <li><strong>Admissibility:</strong> Constraints define admissible states/transitions.</li>
-      <li><strong>Verification:</strong> Verification gates reality.</li>
-      <li><strong>Confusion acceleration:</strong> Confusion accelerates failure once incoherence exists.</li>
-      <li><strong>Receipt convergence:</strong> Receipts enable convergence.</li>
-    </ol>
-  </section>
-
-  <section class="panel">
-    <div class="stack">
-      <a class="btn" href="/home/">Home</a>
+  <section class="panel nav">
+    <div class="nav-grid">
+      <a class="btn" href="/">Home</a>
       <a class="btn" href="/principles/">Principles</a>
       <a class="btn" href="/geodynamics/">Geodynamics</a>
+      <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/reference/">Reference</a>
     </div>
   </section>
 

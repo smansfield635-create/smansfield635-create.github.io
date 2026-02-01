@@ -1,0 +1,71 @@
+<!-- TNT — /home/index.html (FULL REPLACE: Home with planet + shooting stars script) -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Home · Geodiametrics</title>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+</head>
+
+<body class="bg-gradient planet-b">
+  <div class="planet" aria-hidden="true"></div>
+
+  <main class="page narrow">
+
+    <section class="panel hero">
+      <h1>Home</h1>
+      <p class="subtitle">Choose a path. Return here anytime.</p>
+    </section>
+
+    <section class="panel tight">
+      <details class="drop" open>
+        <summary>Ground</summary>
+        <div class="drop-body">
+          <p>
+            A divided system fails if and only if its fragmentation is not coherently integrated.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel">
+      <div class="nav-grid">
+        <a class="btn" href="/laws/">Laws</a>
+        <a class="btn" href="/principles/">Principles</a>
+        <a class="btn" href="/geodynamics/">Geodynamics</a>
+        <a class="btn" href="/engine/">Engine</a>
+        <a class="btn" href="/control/">State</a>
+        <a class="btn" href="/reference/">Reference</a>
+        <a class="btn" href="/about/">About</a>
+        <a class="btn primary" href="/">Return to Landing</a>
+      </div>
+    </section>
+
+    <section class="panel tight">
+      <details class="drop">
+        <summary>Coming soon</summary>
+        <div class="drop-body">
+          <p>Future expressions will appear only after they earn coherence.</p>
+        </div>
+      </details>
+    </section>
+
+    <footer class="panel footer">
+      <p>© Geodiametrics · Home</p>
+    </footer>
+
+  </main>
+
+  <script>
+    // Shooting stars: one every 30–90 seconds (rare, calm)
+    setInterval(() => {
+      const s = document.createElement("div");
+      s.className = "shooting-star";
+      s.style.top = (Math.random() * 40) + "%";
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 2000);
+    }, 30000 + Math.random() * 60000);
+  </script>
+</body>
+</html>

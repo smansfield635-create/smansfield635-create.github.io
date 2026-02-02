@@ -1,42 +1,37 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Control · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/core.css"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Control · Geodiametrics</title>
+<style>
+body{margin:0;font-family:system-ui;background:#0b1e2a;color:#e9eef4}
+main{max-width:820px;margin:0 auto;padding:24px}
+.card{background:#102a3a;border-radius:16px;padding:20px;margin:16px 0}
+a{color:#6fb7ff;text-decoration:none;font-weight:600}
+.small{color:#9fb3c1}
+</style>
 </head>
 <body>
 <main>
+  <div class="card">
+    <h1>Control</h1>
+    <p class="small">Live metrics. Read-only by design.</p>
+  </div>
 
-<h1>Control</h1>
+  <div class="card">
+    <strong>Truth source</strong><br/>
+    <a href="https://geodiametrics-aggregator.smansfield635.workers.dev/metrics">
+      https://geodiametrics-aggregator.smansfield635.workers.dev/metrics
+    </a>
+    <p class="small">
+      If values show zero, the system is intact but idle.
+      If values diverge, inspect event emission.
+    </p>
+  </div>
 
-<p>
-Live metrics. Read-only by design.
-</p>
-
-<p>
-<strong>Truth source:</strong><br/>
-<a href="https://geodiametrics-aggregator.smansfield635.workers.dev/metrics">
-https://geodiametrics-aggregator.smansfield635.workers.dev/metrics
-</a>
-</p>
-
-<hr/>
-
-<p>
-If values show zero, the system is intact but idle.
-If values diverge, inspect event emission.
-</p>
-
-<nav class="nav">
   <a href="/">Home</a>
-</nav>
-
-<div class="footer">
-© Geodiametrics
-</div>
-
+  <div class="small">© Geodiametrics</div>
 </main>
 </body>
 </html>

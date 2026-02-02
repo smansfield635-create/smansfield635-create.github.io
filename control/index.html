@@ -5,18 +5,118 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Control · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
+
   <style>
-    .kv { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-    .status-dot {
-      display:inline-block;
-      width:10px;height:10px;
-      border-radius:50%;
-      margin-right:8px;
-      background:#f0c000;
+    .kv { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; word-break: break-all; }
+
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    @media (max-width:720px){ .grid-2{ grid-template-columns:1fr; } }
+
+    .status-pill{ display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:999px;
+      background: rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
-    .status-ok { background:#2ecc71; }
-    .status-degraded { background:#f1c40f; }
-    .status-down { background:#e74c3c; }
+    .status-dot{ width:10px; height:10px; border-radius:50%; background:#f1c40f; box-shadow:0 0 18px rgba(241,196,15,.35); }
+    .dot-ok{ background:#2ecc71; box-shadow:0 0 18px rgba(46,204,113,.35); }
+    .dot-deg{ background:#f1c40f; box-shadow:0 0 18px rgba(241,196,15,.35); }
+    .dot-down{ background:#e74c3c; box-shadow:0 0 18px rgba(231,76,60,.35); }
+
+    /* GAUGES */
+    .gauge-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:18px;
+    }
+
+    .donut{
+      --p: 0;              /* 0..1 */
+      --fg: #2ecc71;       /* primary color */
+      --bg: rgba(0,0,0,.32);
+      width:min(520px, 100%);
+      margin: 0 auto;
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%,
+          rgba(0,0,0,.55) 0%,
+          rgba(0,0,0,.40) 45%,
+          rgba(0,0,0,.10) 70%,
+          transparent 72%),
+        conic-gradient(var(--fg) calc(var(--p)*360deg), var(--bg) 0);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 30px 90px rgba(0,0,0,.55);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .donut::after{
+      content:"";
+      position:absolute; inset: 16%;
+      border-radius:50%;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.07), rgba(0,0,0,.55) 60%);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: inset 0 30px 80px rgba(0,0,0,.55);
+    }
+
+    .donut-center{
+      position:absolute;
+      inset: 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      z-index:2;
+      text-align:center;
+      padding: 22px;
+      pointer-events:none;
+    }
+
+    .donut-value{
+      font-size: clamp(38px, 9vw, 64px);
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .donut-label{
+      opacity:.75;
+      font-size: clamp(14px, 3.6vw, 18px);
+      letter-spacing:.2px;
+    }
+
+    /* small row gauges */
+    .mini-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width:720px){ .mini-grid{ grid-template-columns:1fr; } }
+
+    .mini{
+      display:flex; align-items:center; gap:14px;
+      padding:14px;
+    }
+    .mini .ring{
+      --p: 0;
+      --fg: #5dade2;
+      --bg: rgba(0,0,0,.32);
+      width:72px; height:72px;
+      border-radius:50%;
+      background: conic-gradient(var(--fg) calc(var(--p)*360deg), var(--bg) 0);
+      border: 1px solid rgba(255,255,255,.10);
+      position:relative;
+      box-shadow: 0 18px 50px rgba(0,0,0,.45);
+    }
+    .mini .ring::after{
+      content:"";
+      position:absolute; inset: 18%;
+      border-radius:50%;
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .mini .meta{ display:flex; flex-direction:column; }
+    .mini .meta strong{ font-size: 20px; line-height: 1; }
+    .mini .meta span{ opacity:.75; margin-top:4px; }
   </style>
 </head>
 
@@ -30,11 +130,9 @@
 
   <section class="panel bubble">
     <h3>Truth source</h3>
-    <div class="kv" id="source">
-      https://geodiametrics-aggregator.smansfield635.workers.dev/metrics
-    </div>
+    <div class="kv" id="source"></div>
 
-    <div class="grid-2">
+    <div class="grid-2" style="margin-top:14px;">
       <div>
         <strong>Polling</strong><br/>
         <span id="poll">10s</span>
@@ -49,24 +147,48 @@
       </div>
       <div>
         <strong>Status</strong><br/>
-        <span class="status-dot status-degraded" id="statusDot"></span>
-        <span id="statusText">DEGRADED</span>
+        <span class="status-pill">
+          <span id="statusDot" class="status-dot dot-deg"></span>
+          <span id="statusText">DEGRADED</span>
+        </span>
       </div>
     </div>
   </section>
 
+  <!-- BIG GAUGES -->
   <section class="panel bubble">
-    <div class="gauge-wrap">
-      <div class="gauge" id="sessions">0</div>
-      <label>Sessions</label>
+    <div class="gauge-grid">
+      <div class="donut" id="gPageviews" style="--fg:#2ecc71; --p:0;">
+        <div class="donut-center">
+          <div class="donut-value" id="pageviewsVal">0</div>
+          <div class="donut-label">Pageviews</div>
+        </div>
+      </div>
+
+      <div class="donut" id="gClicks" style="--fg:#f1c40f; --p:0;">
+        <div class="donut-center">
+          <div class="donut-value" id="clicksVal">0</div>
+          <div class="donut-label">Clicks</div>
+        </div>
+      </div>
     </div>
-    <div class="gauge-wrap">
-      <div class="gauge" id="pageviews">0</div>
-      <label>Pageviews</label>
-    </div>
-    <div class="gauge-wrap">
-      <div class="gauge" id="clicks">0</div>
-      <label>Clicks</label>
+
+    <div class="mini-grid" style="margin-top:16px;">
+      <div class="panel bubble mini">
+        <div class="ring" id="gSessions" style="--fg:#5dade2; --p:0;"></div>
+        <div class="meta">
+          <strong id="sessionsVal">0</strong>
+          <span>Sessions</span>
+        </div>
+      </div>
+
+      <div class="panel bubble mini">
+        <div class="ring" id="gWrites" style="--fg:#9b59b6; --p:0;"></div>
+        <div class="meta">
+          <strong id="writesVal">0</strong>
+          <span>Writes</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -74,6 +196,7 @@
     <a class="btn" href="/home/">Home</a>
     <a class="btn" href="/engine/">Engine</a>
     <a class="btn" href="/laws/">Laws</a>
+    <a class="btn" href="/principles/">Principles</a>
   </section>
 
 </main>
@@ -82,47 +205,77 @@
 const ENDPOINT = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
 const POLL_MS = 10000;
 
-async function refresh() {
-  try {
-    const res = await fetch(ENDPOINT, { cache: "no-store" });
+const el = (id)=>document.getElementById(id);
+
+function setStatus(status){
+  const dot = el("statusDot");
+  dot.className = "status-dot";
+  if(status === "OPERATIONAL") dot.classList.add("dot-ok");
+  else if(status === "DEGRADED") dot.classList.add("dot-deg");
+  else dot.classList.add("dot-down");
+  el("statusText").textContent = status || "UNKNOWN";
+}
+
+function setGauge(id, p){
+  const clamped = Math.max(0, Math.min(1, p));
+  el(id).style.setProperty("--p", String(clamped));
+}
+
+function setDonut(id, p){
+  const clamped = Math.max(0, Math.min(1, p));
+  el(id).style.setProperty("--p", String(clamped));
+}
+
+async function refresh(){
+  try{
+    const res = await fetch(ENDPOINT, { cache:"no-store" });
     const data = await res.json();
 
-    // Metrics
-    document.getElementById("sessions").textContent = data.metrics.sessions;
-    document.getElementById("pageviews").textContent = data.metrics.pageviews;
-    document.getElementById("clicks").textContent = data.metrics.clicks;
+    // Values
+    const m = data.metrics || {};
+    const sessions = Number(m.sessions||0);
+    const pageviews = Number(m.pageviews||0);
+    const clicks = Number(m.clicks||0);
+    const writes = Number(m.writes||0);
 
-    // Time handling
+    el("sessionsVal").textContent = sessions;
+    el("pageviewsVal").textContent = pageviews;
+    el("clicksVal").textContent = clicks;
+    el("writesVal").textContent = writes;
+
+    // Scale-to-max fill (matches your "to scale" idea)
+    const max = Math.max(1, sessions, pageviews, clicks, writes);
+    setGauge("gSessions", sessions / max);
+    setDonut("gPageviews", pageviews / max);
+    setDonut("gClicks", clicks / max);
+    setGauge("gWrites", writes / max);
+
+    // Time / freshness
     const now = data.meta?.now ?? Date.now();
-    const last = data.metrics.lastUpdated || 0;
+    const last = Number(m.lastUpdated||0);
 
-    if (last > 0) {
-      const age = Math.max(0, Math.floor((now - last) / 1000));
-      document.getElementById("ageSec").textContent = age;
-      document.getElementById("lastUpdated").textContent =
-        new Date(last).toLocaleTimeString();
-    } else {
-      document.getElementById("ageSec").textContent = "—";
-      document.getElementById("lastUpdated").textContent = "—";
+    if(last > 0){
+      const age = Math.max(0, Math.floor((now - last)/1000));
+      el("ageSec").textContent = age;
+      el("lastUpdated").textContent = new Date(last).toLocaleTimeString();
+    }else{
+      el("ageSec").textContent = "—";
+      el("lastUpdated").textContent = "—";
     }
 
     // Status
-    const status = data.status || "UNKNOWN";
-    const dot = document.getElementById("statusDot");
-    dot.className = "status-dot";
+    setStatus(data.status);
 
-    if (status === "OPERATIONAL") dot.classList.add("status-ok");
-    else if (status === "DEGRADED") dot.classList.add("status-degraded");
-    else dot.classList.add("status-down");
-
-    document.getElementById("statusText").textContent = status;
-
-  } catch (e) {
-    document.getElementById("statusText").textContent = "OFFLINE";
-    document.getElementById("statusDot").className = "status-dot status-down";
+  }catch(e){
+    setStatus("OFFLINE");
+    el("ageSec").textContent = "—";
+    el("lastUpdated").textContent = "—";
   }
 }
 
+// init
+el("source").textContent = ENDPOINT;
+el("poll").textContent = (POLL_MS/1000) + "s";
 refresh();
 setInterval(refresh, POLL_MS);
 </script>

@@ -1,136 +1,138 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Reference · Geodiametrics</title>
 
 <style>
 :root{
-  --bg:#0b1620;
-  --bg-deep:#071018;
-  --card:#132738;
-  --card-soft:#162f44;
-  --text:#e9f1f7;
-  --muted:#9fb4c6;
+  --bg:#08131c;
+  --panel:#102433;
+  --panel2:#142b3d;
+  --text:#eaf2f8;
+  --muted:#9db3c6;
   --accent:#39b6ff;
-  --accent-2:#35d0c6;
+  --accent2:#35d0a1;
   --radius:22px;
-  --shadow:0 20px 50px rgba(0,0,0,.45);
+  --shadow:0 18px 48px rgba(0,0,0,.45);
+  --stroke:rgba(255,255,255,.09);
 }
 
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
+
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
   color:var(--text);
   background:
-    radial-gradient(1200px 700px at 70% -10%,rgba(57,182,255,.12),transparent 60%),
-    radial-gradient(900px 600px at 10% 10%,rgba(53,208,198,.10),transparent 55%),
-    linear-gradient(180deg,var(--bg),var(--bg-deep));
+    radial-gradient(1200px 800px at 70% -10%,rgba(57,182,255,.12),transparent 60%),
+    radial-gradient(900px 700px at 15% 10%,rgba(53,208,161,.09),transparent 55%),
+    linear-gradient(180deg,#071018,#08131c);
+}
+
+/* subtle stars */
+.stars::before,.stars::after{
+  content:"";
+  position:fixed;inset:0;
+  pointer-events:none;
+  background-repeat:repeat;
+  opacity:.18;
+}
+.stars::before{
+  background-image:
+    radial-gradient(1px 1px at 12px 18px, rgba(255,255,255,.9) 45%, transparent 46%),
+    radial-gradient(1px 1px at 44px 62px, rgba(255,255,255,.8) 45%, transparent 46%),
+    radial-gradient(1px 1px at 78px 30px, rgba(255,255,255,.7) 45%, transparent 46%),
+    radial-gradient(1px 1px at 110px 84px, rgba(255,255,255,.85) 45%, transparent 46%);
+  background-size:140px 120px;
+}
+.stars::after{
+  opacity:.10;
+  background-image:
+    radial-gradient(1px 1px at 26px 40px, rgba(255,255,255,.7) 45%, transparent 46%),
+    radial-gradient(1px 1px at 64px 16px, rgba(255,255,255,.65) 45%, transparent 46%),
+    radial-gradient(1px 1px at 98px 70px, rgba(255,255,255,.75) 45%, transparent 46%),
+    radial-gradient(1px 1px at 132px 52px, rgba(255,255,255,.6) 45%, transparent 46%);
+  background-size:180px 160px;
 }
 
 .page{
-  max-width:860px;
+  max-width:900px;
   margin:0 auto;
   padding:28px 18px 60px;
 }
 
 .card{
-  background:linear-gradient(180deg,var(--card),var(--card-soft));
+  background:linear-gradient(180deg,var(--panel),var(--panel2));
+  border:1px solid var(--stroke);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
-  padding:22px 22px;
+  padding:22px;
   margin-bottom:18px;
 }
 
-h1{
-  margin:0 0 6px 0;
-  font-size:36px;
-  letter-spacing:.2px;
-}
-.subtitle{
-  color:var(--muted);
-  font-size:16px;
-}
+h1{margin:0;font-size:36px}
+.sub{color:var(--muted);margin-top:6px}
 
-.section-title{
-  margin:0 0 10px 0;
-  font-size:16px;
-  color:var(--muted);
-  font-weight:600;
-  letter-spacing:.2px;
+details{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:16px;
 }
+details+details{margin-top:12px}
+summary{
+  cursor:pointer;
+  list-style:none;
+  font-weight:700;
+  color:var(--text);
+}
+summary::-webkit-details-marker{display:none}
+.summary-sub{display:block;color:var(--muted);font-weight:500;margin-top:6px}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:14px;
+}
+@media(max-width:720px){.grid{grid-template-columns:1fr}}
 
 .btn{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:10px;
-  width:100%;
-  padding:14px 16px;
+  padding:16px 14px;
   border-radius:18px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  color:var(--text);
   text-decoration:none;
-  font-weight:600;
-  transition:transform .08s ease, background .15s ease, border-color .15s ease;
+  color:var(--text);
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.04);
 }
-.btn:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)}
-.btn:active{transform:translateY(1px)}
+.btn:hover{filter:brightness(1.08)}
 .btn.primary{
-  background:linear-gradient(90deg,rgba(57,182,255,.75),rgba(53,208,198,.75));
-  border:none;
-  color:#071018;
+  background:linear-gradient(90deg,rgba(57,182,255,.28),rgba(53,208,161,.22));
+  border-color:rgba(57,182,255,.25);
 }
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-@media (max-width:700px){
-  .grid{grid-template-columns:1fr}
-}
-
-.note{
+.small{
   color:var(--muted);
   font-size:14px;
   line-height:1.45;
-  margin-top:10px;
+  margin-top:12px;
 }
-
-.pill{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 14px;
-  border-radius:999px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  color:var(--text);
-  text-decoration:none;
-  font-weight:600;
-  word-break:break-word;
-}
-.pill:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)}
-.pill small{color:var(--muted);font-weight:600}
 
 .nav{
   display:flex;
-  gap:16px;
   justify-content:center;
-  margin-top:10px;
+  gap:18px;
+  margin-top:18px;
 }
-.nav a{
-  color:var(--accent);
-  text-decoration:none;
-  font-weight:500;
-}
+.nav a{color:var(--accent);text-decoration:none;font-weight:600}
 .nav a:hover{text-decoration:underline}
 
 .footer{
-  margin-top:24px;
+  margin-top:26px;
   text-align:center;
   color:#7f95a8;
   font-size:13px;
@@ -138,72 +140,61 @@ h1{
 </style>
 </head>
 
-<body>
+<body class="stars">
 <div class="page">
 
-  <!-- Header -->
   <div class="card">
     <h1>Reference</h1>
-    <div class="subtitle">Anchors you can verify. No persuasion required.</div>
+    <div class="sub">Anchors you can verify. No persuasion required.</div>
   </div>
 
-  <!-- Canonical anchors -->
   <div class="card">
-    <div class="section-title">Canonical anchors</div>
-    <div class="grid">
-      <!-- Replace OSF link with your actual OSF project URL when ready -->
-      <a class="btn" href="#" target="_blank" rel="noopener">OSF</a>
+    <details open>
+      <summary>
+        Canonical anchors
+        <span class="summary-sub">Stable return points. Inspect directly.</span>
+      </summary>
 
-      <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">ORCID iD</a>
+      <div class="grid">
+        <a class="btn primary" href="https://osf.io/" target="_blank" rel="noopener">OSF</a>
+        <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">ORCID</a>
 
-      <a class="btn primary" href="mailto:geodiametrics@gmail.com">Email: geodiametrics@gmail.com</a>
+        <a class="btn" href="mailto:geodiametrics@gmail.com">Email: geodiametrics@gmail.com</a>
+        <a class="btn" href="/control/">Control</a>
+      </div>
 
-      <a class="btn" href="/control/">Control</a>
-    </div>
+      <div class="small">
+        Email is for classification, inquiry, and verification only. Not a support channel.
+      </div>
+    </details>
 
-    <div class="note">
-      Email is for classification, inquiry, and verification only. Not a support channel.
-    </div>
-  </div>
+    <details>
+      <summary>
+        Site surfaces
+        <span class="summary-sub">Navigate without implying sequence.</span>
+      </summary>
 
-  <!-- Site surfaces -->
-  <div class="card">
-    <div class="section-title">Site surfaces</div>
-    <div class="grid">
-      <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/state/">State</a>
-      <a class="btn" href="/products/">Products</a>
-      <a class="btn" href="/about/">About</a>
-      <a class="btn" href="/landing/">Return to Landing</a>
-      <a class="btn" href="/">Root (/)</a>
-    </div>
-  </div>
-
-  <!-- Quick copy block (optional, but useful) -->
-  <div class="card">
-    <div class="section-title">Copyable anchors</div>
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <a class="pill" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">
-        <small>ORCID</small> https://orcid.org/0009-0004-1293-0405
-      </a>
-      <a class="pill" href="mailto:geodiametrics@gmail.com">
-        <small>Email</small> geodiametrics@gmail.com
-      </a>
-    </div>
+      <div class="grid">
+        <a class="btn" href="/home/">Home</a>
+        <a class="btn" href="/engine/">Engine</a>
+        <a class="btn" href="/laws/">Laws</a>
+        <a class="btn" href="/principles/">Principles</a>
+        <a class="btn" href="/geodynamics/">Geodynamics</a>
+        <a class="btn" href="/state/">State</a>
+        <a class="btn" href="/products/">Products</a>
+        <a class="btn" href="/about/">About</a>
+      </div>
+    </details>
   </div>
 
   <div class="nav">
-    <a href="/landing/">Landing</a>
+    <a href="/">Landing</a>
     <a href="/home/">Home</a>
     <a href="/control/">Control</a>
   </div>
 
   <div class="footer">© Geodiametrics</div>
+
 </div>
 </body>
 </html>
-```0

@@ -1,147 +1,223 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Products · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Products · Geodiametrics</title>
+
+<style>
+:root{
+  --bg:#0b1620;
+  --bg-deep:#071018;
+  --card:#122838;
+  --card-soft:#163044;
+  --text:#e9f1f7;
+  --muted:#9fb4c6;
+  --accent:#39b6ff;
+  --accent-2:#35d0c6;
+  --radius:22px;
+  --shadow:0 18px 46px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 70% -10%,rgba(57,182,255,.10),transparent 60%),
+    radial-gradient(900px 600px at 10% 10%,rgba(53,208,198,.08),transparent 55%),
+    linear-gradient(180deg,var(--bg),var(--bg-deep));
+}
+
+.page{
+  max-width:880px;
+  margin:0 auto;
+  padding:28px 18px 60px;
+}
+
+.card{
+  background:linear-gradient(180deg,var(--card),var(--card-soft));
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:22px;
+  margin-bottom:18px;
+}
+
+h1{margin:0 0 6px 0;font-size:36px}
+.subtitle{color:var(--muted);font-size:16px}
+
+.section-title{
+  margin:0 0 10px 0;
+  font-size:15px;
+  color:var(--muted);
+  font-weight:600;
+}
+
+p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.55;
+}
+p + p{margin-top:10px}
+
+details{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:14px 16px;
+  margin-top:12px;
+}
+summary{
+  cursor:pointer;
+  font-weight:700;
+  color:var(--text);
+  list-style:none;
+}
+summary::-webkit-details-marker{display:none}
+
+ul{
+  margin:10px 0 0 18px;
+  color:var(--muted);
+  line-height:1.55;
+}
+li{margin:8px 0}
+
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  color:var(--text);
+  text-decoration:none;
+  font-weight:600;
+  word-break:break-word;
+}
+.pill:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16)}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+@media (max-width:700px){
+  .grid{grid-template-columns:1fr}
+}
+
+.nav{
+  display:flex;
+  gap:18px;
+  justify-content:center;
+  margin-top:18px;
+}
+.nav a{
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:500;
+}
+.nav a:hover{text-decoration:underline}
+
+.footer{
+  margin-top:26px;
+  text-align:center;
+  color:#7f95a8;
+  font-size:13px;
+}
+</style>
 </head>
 
-<body class="bg-gradient">
-<main class="page">
+<body>
+<div class="page">
 
-  <section class="panel hero">
+  <!-- Header -->
+  <div class="card">
     <h1>Products</h1>
-    <p class="subtitle">Coming soon. The structure is already live and inspectable.</p>
-  </section>
+    <div class="subtitle">Coming soon. The structure is already live and inspectable.</div>
+  </div>
 
-  <section class="panel bubble">
-    <details open>
-      <summary>Threshold</summary>
-      <div class="bubble-body">
-        <p><strong>This site is already live.</strong></p>
-        <p>The products are simply the next surface.</p>
-        <p>Nothing here requires trust. Everything here is inspectable.</p>
-      </div>
+  <!-- Threshold -->
+  <div class="card">
+    <div class="section-title">Threshold</div>
+    <p><strong>This site is already live.</strong></p>
+    <p>The products are simply the next surface.</p>
+    <p>Nothing here requires trust. Everything here is inspectable.</p>
+  </div>
+
+  <!-- Five angles (collapsed by default) -->
+  <div class="card">
+    <div class="section-title">One page · five angles</div>
+
+    <details>
+      <summary>1) Global Execution Authority (GEA) / Fusion Core</summary>
+      <p><strong>GEA is a supra-operating execution authority.</strong></p>
+      <p>It governs whether computation is allowed to occur at all—across engines, operating systems, servers, networks, and hardware.</p>
+      <p><strong>Fusion Core is definitive.</strong> It does not advise, optimize, or suggest. It decides admissibility.</p>
+      <p><strong>Outcome:</strong> Execution becomes legality-first, not success-after-the-fact.</p>
     </details>
-  </section>
 
-  <section class="panel bubble">
-    <details open>
-      <summary>One page · five angles</summary>
-      <div class="bubble-body">
-
-        <details>
-          <summary>1) Global Execution Authority (GEA) / Fusion Core</summary>
-          <div class="bubble-body">
-            <p><strong>GEA is a supra-operating execution authority.</strong></p>
-            <p>It governs whether computation is allowed to occur at all—across engines, operating systems, servers, networks, and hardware.</p>
-            <p><strong>Fusion Core is definitive.</strong></p>
-            <p>It does not advise, optimize, or suggest. It decides admissibility.</p>
-            <p><strong>Outcome:</strong> Execution becomes legality-first, not success-after-the-fact.</p>
-          </div>
-        </details>
-
-        <details>
-          <summary>2) Inspection Surface (read-only instrument)</summary>
-          <div class="bubble-body">
-            <p><strong>The public surface is read-only by design.</strong></p>
-            <p>It exists so structure and behavior can be inspected directly.</p>
-            <p><strong>No participation required.</strong> No “community input.” No “trust me.”</p>
-            <p class="note">
-              The inspection surface is the live site you are on right now.
-            </p>
-          </div>
-        </details>
-
-        <details>
-          <summary>3) Developers (backends / adapters)</summary>
-          <div class="bubble-body">
-            <p><strong>Fusion Core does not replace engines.</strong> It governs them.</p>
-            <p>Engines and runtimes connect via <strong>thin adapters</strong>:</p>
-            <ul class="tight">
-              <li>Backend adapters translate Fusion decisions into engine actions</li>
-              <li>Adapters contain no authority logic</li>
-              <li>Authority remains solely in Fusion Core</li>
-            </ul>
-            <p><strong>Target:</strong> Plug-in governance across multiple backends without inheritance or derivative coupling.</p>
-          </div>
-        </details>
-
-        <details>
-          <summary>4) Partners (integration without IP risk)</summary>
-          <div class="bubble-body">
-            <p><strong>This system is non-derivative by structure.</strong> Fusion Core is independent. Backends are optional.</p>
-            <p><strong>Partner value:</strong></p>
-            <ul class="tight">
-              <li>deterministic execution gating</li>
-              <li>bounded parallelism</li>
-              <li>explicit failure semantics</li>
-              <li>irreversible commitment with receipts</li>
-              <li>system-wide stability without fragile policies</li>
-            </ul>
-            <p>This is integration without internal replication.</p>
-          </div>
-        </details>
-
-        <details>
-          <summary>5) Multi-site capability (one domain, many attractions)</summary>
-          <div class="bubble-body">
-            <p><strong>One domain. One authority. Multiple entry points.</strong></p>
-            <p>Public-facing “attractions” exist as additional pages inside the same canonical site.</p>
-            <p><strong>Purpose:</strong> Let different audiences enter through different interests without fragmenting the core.</p>
-            <p><strong>Examples:</strong></p>
-            <ul class="tight">
-              <li>Mission to Mars (public-interest lens)</li>
-              <li>GEA / Fusion Core (technical authority lens)</li>
-              <li>Inspection Surface (instrument lens)</li>
-              <li>Developers / Partners (integration lens)</li>
-            </ul>
-          </div>
-        </details>
-
-      </div>
+    <details>
+      <summary>2) Inspection Surface (read-only instrument)</summary>
+      <p><strong>The public surface is read-only by design.</strong></p>
+      <p>It exists so structure and behavior can be inspected directly.</p>
+      <p>No participation required. No “trust me.”</p>
     </details>
-  </section>
 
-  <section class="panel bubble">
-    <details open>
-      <summary>Status</summary>
-      <div class="bubble-body">
-        <p><strong>Products are coming soon.</strong></p>
-        <p>The underlying structure is already live and inspectable.</p>
-      </div>
+    <details>
+      <summary>3) Developers (backends / adapters)</summary>
+      <p><strong>Fusion Core does not replace engines.</strong> It governs them.</p>
+      <ul>
+        <li>Adapters translate decisions into actions</li>
+        <li>Adapters contain no authority logic</li>
+        <li>Authority remains solely in Fusion Core</li>
+      </ul>
+      <p><strong>Target:</strong> Plug-in governance across multiple backends without derivative coupling.</p>
     </details>
-  </section>
 
-  <section class="panel bubble">
-    <details open>
-      <summary>Author & records</summary>
-      <div class="bubble-body">
-        <div class="nav-grid">
-          <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">ORCID iD</a>
-          <a class="btn primary" href="mailto:geodiametrics@gmail.com">geodiametrics@gmail.com</a>
-        </div>
-        <p class="note">(For classification, inquiry, and verification only. Not a support channel.)</p>
-      </div>
+    <details>
+      <summary>4) Partners (integration without IP risk)</summary>
+      <p><strong>This system is non-derivative by structure.</strong> Fusion Core is independent. Backends are optional.</p>
+      <ul>
+        <li>Deterministic execution gating</li>
+        <li>Bounded parallelism</li>
+        <li>Explicit failure semantics</li>
+        <li>Irreversible commitment with receipts</li>
+        <li>System-wide stability without fragile policies</li>
+      </ul>
     </details>
-  </section>
 
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/control/">Control</a>
-      <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/">Landing</a>
+    <details>
+      <summary>5) Multi-site capability (one domain, many attractions)</summary>
+      <p><strong>One domain. One authority. Multiple entry points.</strong></p>
+      <p>Different audiences can enter through different interests without fragmenting the core.</p>
+    </details>
+  </div>
+
+  <!-- Contact -->
+  <div class="card">
+    <div class="section-title">Contact</div>
+    <div class="grid">
+      <a class="pill" href="mailto:geodiametrics@gmail.com">geodiametrics@gmail.com</a>
+      <a class="pill" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">ORCID iD</a>
     </div>
-  </section>
+    <p style="margin-top:10px">
+      Email is for classification, inquiry, and verification only. Not a support channel.
+    </p>
+  </div>
 
-</main>
+  <!-- Navigation -->
+  <div class="nav">
+    <a href="/home/">Home</a>
+    <a href="/reference/">Reference</a>
+    <a href="/">Landing</a>
+  </div>
 
-<footer class="footer">
-  © Geodiametrics
-</footer>
+  <div class="footer">© Geodiametrics</div>
+
+</div>
 </body>
 </html>
 ```0

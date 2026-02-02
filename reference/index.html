@@ -7,16 +7,15 @@
 
 <style>
 :root{
-  --bg:#08131c;
-  --panel:#102433;
-  --panel2:#142b3d;
+  --bg:#07131c;
+  --panel:#0f2433;
+  --panel2:#132c3f;
   --text:#eaf2f8;
-  --muted:#9db3c6;
+  --muted:#9fb4c6;
   --accent:#39b6ff;
-  --accent2:#35d0a1;
   --radius:22px;
+  --stroke:rgba(255,255,255,.08);
   --shadow:0 18px 48px rgba(0,0,0,.45);
-  --stroke:rgba(255,255,255,.09);
 }
 
 *{box-sizing:border-box}
@@ -26,35 +25,9 @@ body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
   color:var(--text);
   background:
-    radial-gradient(1200px 800px at 70% -10%,rgba(57,182,255,.12),transparent 60%),
-    radial-gradient(900px 700px at 15% 10%,rgba(53,208,161,.09),transparent 55%),
-    linear-gradient(180deg,#071018,#08131c);
-}
-
-/* subtle stars */
-.stars::before,.stars::after{
-  content:"";
-  position:fixed;inset:0;
-  pointer-events:none;
-  background-repeat:repeat;
-  opacity:.18;
-}
-.stars::before{
-  background-image:
-    radial-gradient(1px 1px at 12px 18px, rgba(255,255,255,.9) 45%, transparent 46%),
-    radial-gradient(1px 1px at 44px 62px, rgba(255,255,255,.8) 45%, transparent 46%),
-    radial-gradient(1px 1px at 78px 30px, rgba(255,255,255,.7) 45%, transparent 46%),
-    radial-gradient(1px 1px at 110px 84px, rgba(255,255,255,.85) 45%, transparent 46%);
-  background-size:140px 120px;
-}
-.stars::after{
-  opacity:.10;
-  background-image:
-    radial-gradient(1px 1px at 26px 40px, rgba(255,255,255,.7) 45%, transparent 46%),
-    radial-gradient(1px 1px at 64px 16px, rgba(255,255,255,.65) 45%, transparent 46%),
-    radial-gradient(1px 1px at 98px 70px, rgba(255,255,255,.75) 45%, transparent 46%),
-    radial-gradient(1px 1px at 132px 52px, rgba(255,255,255,.6) 45%, transparent 46%);
-  background-size:180px 160px;
+    radial-gradient(1200px 900px at 70% -20%,rgba(57,182,255,.12),transparent 60%),
+    radial-gradient(900px 700px at 10% 10%,rgba(53,208,161,.08),transparent 55%),
+    linear-gradient(180deg,#061018,#07131c);
 }
 
 .page{
@@ -75,51 +48,41 @@ body{
 h1{margin:0;font-size:36px}
 .sub{color:var(--muted);margin-top:6px}
 
-details{
+.list{
+  display:grid;
+  gap:14px;
+  margin-top:14px;
+}
+
+.item{
   background:rgba(255,255,255,.03);
   border:1px solid var(--stroke);
   border-radius:18px;
-  padding:16px;
+  padding:18px;
 }
-details+details{margin-top:12px}
-summary{
-  cursor:pointer;
-  list-style:none;
-  font-weight:700;
-  color:var(--text);
-}
-summary::-webkit-details-marker{display:none}
-.summary-sub{display:block;color:var(--muted);font-weight:500;margin-top:6px}
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-top:14px;
+.item h3{
+  margin:0;
+  font-size:16px;
 }
-@media(max-width:720px){.grid{grid-template-columns:1fr}}
 
-.btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:16px 14px;
-  border-radius:18px;
-  text-decoration:none;
-  color:var(--text);
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.04);
-}
-.btn:hover{filter:brightness(1.08)}
-.btn.primary{
-  background:linear-gradient(90deg,rgba(57,182,255,.28),rgba(53,208,161,.22));
-  border-color:rgba(57,182,255,.25);
-}
-.small{
+.item p{
+  margin:6px 0 0;
   color:var(--muted);
-  font-size:14px;
   line-height:1.45;
+}
+
+.item a{
+  color:var(--accent);
+  font-weight:600;
+  text-decoration:none;
+}
+.item a:hover{text-decoration:underline}
+
+.note{
   margin-top:12px;
+  font-size:14px;
+  color:var(--muted);
 }
 
 .nav{
@@ -128,7 +91,11 @@ summary::-webkit-details-marker{display:none}
   gap:18px;
   margin-top:18px;
 }
-.nav a{color:var(--accent);text-decoration:none;font-weight:600}
+.nav a{
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:600;
+}
 .nav a:hover{text-decoration:underline}
 
 .footer{
@@ -140,53 +107,79 @@ summary::-webkit-details-marker{display:none}
 </style>
 </head>
 
-<body class="stars">
+<body>
 <div class="page">
 
+  <!-- Header -->
   <div class="card">
     <h1>Reference</h1>
-    <div class="sub">Anchors you can verify. No persuasion required.</div>
+    <div class="sub">
+      Anchors you can verify. No persuasion required.
+    </div>
   </div>
 
+  <!-- Canonical Anchors -->
   <div class="card">
-    <details open>
-      <summary>
-        Canonical anchors
-        <span class="summary-sub">Stable return points. Inspect directly.</span>
-      </summary>
+    <h2 style="margin:0 0 10px">Canonical anchors</h2>
 
-      <div class="grid">
-        <a class="btn primary" href="https://osf.io/" target="_blank" rel="noopener">OSF</a>
-        <a class="btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">ORCID</a>
-
-        <a class="btn" href="mailto:geodiametrics@gmail.com">Email: geodiametrics@gmail.com</a>
-        <a class="btn" href="/control/">Control</a>
+    <div class="list">
+      <div class="item">
+        <h3>Open Science Framework (OSF)</h3>
+        <p>
+          Canonical scientific record, versioned and inspectable.
+        </p>
+        <p>
+          <a href="https://osf.io/" target="_blank" rel="noopener">
+            Visit OSF
+          </a>
+        </p>
       </div>
 
-      <div class="small">
-        Email is for classification, inquiry, and verification only. Not a support channel.
+      <div class="item">
+        <h3>ORCID</h3>
+        <p>
+          Persistent researcher identity and authorship verification.
+        </p>
+        <p>
+          <a href="https://orcid.org/" target="_blank" rel="noopener">
+            Visit ORCID
+          </a>
+        </p>
       </div>
-    </details>
 
-    <details>
-      <summary>
-        Site surfaces
-        <span class="summary-sub">Navigate without implying sequence.</span>
-      </summary>
-
-      <div class="grid">
-        <a class="btn" href="/home/">Home</a>
-        <a class="btn" href="/engine/">Engine</a>
-        <a class="btn" href="/laws/">Laws</a>
-        <a class="btn" href="/principles/">Principles</a>
-        <a class="btn" href="/geodynamics/">Geodynamics</a>
-        <a class="btn" href="/state/">State</a>
-        <a class="btn" href="/products/">Products</a>
-        <a class="btn" href="/about/">About</a>
+      <div class="item">
+        <h3>Project Email</h3>
+        <p>
+          Classification, inquiry, and verification only.
+          Not a support channel.
+        </p>
+        <p>
+          <a href="mailto:geodiametrics@gmail.com">
+            geodiametrics@gmail.com
+          </a>
+        </p>
       </div>
-    </details>
+
+      <div class="item">
+        <h3>Control Surface</h3>
+        <p>
+          Live system metrics. Read-only by design.
+        </p>
+        <p>
+          <a href="/control/">
+            Open Control
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div class="note">
+      References exist to anchor claims to inspectable reality.
+      No trust is requested. Verification is sufficient.
+    </div>
   </div>
 
+  <!-- Nav -->
   <div class="nav">
     <a href="/">Landing</a>
     <a href="/home/">Home</a>
@@ -194,7 +187,6 @@ summary::-webkit-details-marker{display:none}
   </div>
 
   <div class="footer">© Geodiametrics</div>
-
 </div>
 </body>
 </html>

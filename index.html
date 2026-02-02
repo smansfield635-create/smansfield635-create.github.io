@@ -6,131 +6,146 @@
   <title>Geodiametrics</title>
 
   <style>
-    :root {
-      --bg-top: #0b1f2d;
-      --bg-bottom: #0e2a3d;
-      --card: rgba(255,255,255,0.08);
-      --text-main: #eaf3ff;
-      --text-muted: rgba(234,243,255,0.75);
-      --accent-left: #3b82f6;
-      --accent-right: #22d3ee;
-      --radius: 22px;
+    :root{
+      --bg-top:#071824;
+      --bg-bottom:#0a2233;
+      --card:rgba(255,255,255,0.07);
+      --text:#eaf3ff;
+      --muted:rgba(234,243,255,0.75);
+      --accent-left:#3b82f6;
+      --accent-right:#22d3ee;
+      --radius:26px;
     }
 
-    * { box-sizing: border-box; }
+    *{box-sizing:border-box}
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
-      color: var(--text-main);
+    html,body{
+      margin:0;
+      padding:0;
+      min-height:100vh;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.55), transparent),
+        radial-gradient(1px 1px at 80% 25%, rgba(255,255,255,.45), transparent),
+        radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,.35), transparent),
+        radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,.4), transparent),
+        radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,.35), transparent),
+        linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
+      background-size:
+        300px 300px,
+        420px 420px,
+        520px 520px,
+        640px 640px,
+        760px 760px,
+        cover;
+      background-repeat:repeat;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
     }
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
+    main{
+      width:100%;
+      max-width:820px;
+      padding:36px 18px 42px;
     }
 
-    .wrap {
-      width: 100%;
-      max-width: 720px;
-      padding: 28px 18px 40px;
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:26px 24px;
+      margin-bottom:22px;
+      backdrop-filter:blur(10px);
+      box-shadow:0 22px 44px rgba(0,0,0,.35);
     }
 
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 22px;
-      margin-bottom: 18px;
-      backdrop-filter: blur(8px);
+    h1{
+      margin:0 0 10px 0;
+      font-size:2.2rem;
+      letter-spacing:.3px;
     }
 
-    h1 {
-      margin: 0 0 8px 0;
-      font-size: 2.2rem;
-      letter-spacing: 0.3px;
+    p{
+      margin:0;
+      line-height:1.6;
+      color:var(--muted);
     }
 
-    .subtitle {
-      font-size: 1rem;
-      color: var(--text-muted);
-      line-height: 1.4;
+    blockquote{
+      margin:0;
+      font-style:italic;
+      line-height:1.6;
     }
 
-    blockquote {
-      margin: 0;
-      font-style: italic;
-      line-height: 1.45;
+    .cite{
+      margin-top:10px;
+      font-size:.9rem;
+      color:var(--muted);
     }
 
-    .cite {
-      margin-top: 8px;
-      font-size: 0.9rem;
-      color: var(--text-muted);
+    .enter{
+      display:block;
+      margin:26px auto 10px;
+      max-width:420px;
+      text-align:center;
+      padding:14px 28px;
+      border-radius:999px;
+      font-weight:600;
+      color:#fff;
+      text-decoration:none;
+      background:linear-gradient(90deg,var(--accent-left),var(--accent-right));
+      box-shadow:0 12px 26px rgba(0,0,0,.35);
     }
 
-    h2 {
-      margin: 0 0 10px 0;
-      font-size: 1.15rem;
+    .nav{
+      display:flex;
+      justify-content:center;
+      gap:14px;
+      margin-top:10px;
     }
 
-    p {
-      margin: 0 0 10px 0;
-      color: var(--text-muted);
-      line-height: 1.5;
+    .nav a{
+      padding:10px 18px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      text-decoration:none;
+      font-size:.95rem;
     }
 
-    .cta {
-      display: block;
-      text-align: center;
-      padding: 16px;
-      border-radius: 999px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: white;
-      text-decoration: none;
-      background: linear-gradient(90deg, var(--accent-left), var(--accent-right));
-      margin: 20px 0 12px;
-    }
-
-    .links {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-    }
-
-    .link-btn {
-      padding: 10px 18px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      color: var(--text-main);
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 24px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
+    footer{
+      text-align:center;
+      margin-top:28px;
+      font-size:.8rem;
+      color:var(--muted);
     }
   </style>
 </head>
 
 <body>
-  <main class="wrap">
+  <main>
 
     <!-- TITLE -->
     <section class="card">
       <h1>Geodiametrics</h1>
-      <div class="subtitle">
-        A divided system fails if and only if its fragmentation is not coherently integrated.
-      </div>
+      <p>
+        A divided system fails if and only if its fragmentation
+        is not coherently integrated.
+      </p>
     </section>
 
-    <!-- ARNOLD QUOTE -->
+    <!-- QUOTE: BANNISTER -->
+    <section class="card">
+      <blockquote>
+        Roger Bannister broke the four-minute mile after experts warned
+        it could not be done. Once a boundary illusion breaks,
+        progress accelerates.
+      </blockquote>
+      <div class="cite">— Historical record</div>
+    </section>
+
+    <!-- QUOTE: ARNOLD -->
     <section class="card">
       <blockquote>
         “I love it when people say something has never been done before.
@@ -139,27 +154,20 @@
       <div class="cite">— Arnold Schwarzenegger</div>
     </section>
 
-    <!-- WHY THIS EXISTS -->
+    <!-- PURPOSE -->
     <section class="card">
-      <h2>Why this exists</h2>
       <p>
-        Roger Bannister broke the four-minute mile after experts warned it could not be done —
-        some even claimed the body would fail attempting it. Once a boundary illusion breaks,
-        progress accelerates.
-      </p>
-      <p>
-        The Wright brothers bent metal and flew it. Edison captured electricity.
-        Progress begins with the willingness to imagine coherence.
+        Nothing here requires trust.
+        Everything here is inspectable.
       </p>
     </section>
 
     <!-- CTA -->
-    <a class="cta" href="/home/">Enter</a>
+    <a class="enter" href="/home/">Enter</a>
 
-    <!-- SECONDARY -->
-    <div class="links">
-      <a class="link-btn" href="/home/">Home</a>
-      <a class="link-btn" href="/reference/">Reference</a>
+    <div class="nav">
+      <a href="/home/">Home</a>
+      <a href="/reference/">Reference</a>
     </div>
 
     <footer>

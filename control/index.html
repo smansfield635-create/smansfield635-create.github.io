@@ -1,323 +1,73 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Control · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css"/>
-  <style>
-    .gauge-ring{--size:220px;width:var(--size);height:var(--size);border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--color) calc(var(--pct)*1%),rgba(255,255,255,.08) 0);box-shadow:inset 0 0 0 18px rgba(0,0,0,.35)}
-    .gauge-core{width:70%;height:70%;border-radius:50%;background:radial-gradient(circle at top,#0b1624,#02040a);display:grid;place-items:center;text-align:center}
-    .gauge-value{font-size:2.4rem;font-weight:700}
-    .gauge-label{opacity:.7;font-size:.9rem;margin-top:-.3rem}
-    .bar{height:12px;border-radius:8px;background:rgba(255,255,255,.12);overflow:hidden}
-    .bar>span{display:block;height:100%;width:0%;background:linear-gradient(90deg,#4da3ff,#42e6a4);transition:width .35s ease}
-    .meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.08)}
-    .dot{width:10px;height:10px;border-radius:50%;background:gold}
-    .btnrow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-    .btnx{display:inline-flex;justify-content:center;align-items:center;gap:10px;padding:12px 14px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.10);color:inherit;text-decoration:none}
-    .btnx:active{transform:translateY(1px)}
-    .btnx.primary{background:linear-gradient(90deg,rgba(77,163,255,.45),rgba(66,230,164,.45));border-color:rgba(255,255,255,.16)}
-    .copy-toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:rgba(10,18,30,.86);border:1px solid rgba(255,255,255,.12);padding:10px 14px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .18s ease}
-    .copy-toast.show{opacity:1}
-
-    .mini-wrap{display:grid;gap:12px}
-    .topcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);border-radius:22px;padding:14px}
-    .toprow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
-    .path{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.92rem;opacity:.95;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
-    .chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    .chip{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);font-size:.85rem}
-    .mini-bars{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
-    .labelrow{display:flex;justify-content:space-between;opacity:.75;font-size:.85rem;margin-bottom:6px}
-    .bar2{height:10px;border-radius:8px;background:rgba(255,255,255,.10);overflow:hidden}
-    .bar2>span{display:block;height:100%;width:0%;transition:width .35s ease}
-    .pvFill{background:linear-gradient(90deg,rgba(61,220,151,.25),rgba(61,220,151,.75))}
-    .ckFill{background:linear-gradient(90deg,rgba(244,196,48,.25),rgba(244,196,48,.75))}
-    .stale-note{opacity:.7;font-size:.9rem;margin-top:8px}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css">
+<script defer src="/assets/control.js"></script>
 </head>
 
-<body class="bg-gradient">
+<body class="control">
+
 <main class="page">
 
-  <section class="panel hero">
-    <h1>Control</h1>
-    <p class="subtitle">Live gauges. Truth first. Read-only by design.</p>
-  </section>
+<section class="panel hero">
+  <h1>Control</h1>
+  <p>Live gauges. Truth first. Read-only by design.</p>
+</section>
 
-  <section class="panel bubble">
-    <h3>Truth source</h3>
-    <code id="source"></code>
+<section class="panel">
+  <div class="truth-row">
+    <span>Truth source</span>
+    <code id="truth-url">
+      https://geodiametrics-aggregator.smansfield635.workers.dev/metrics
+    </code>
+  </div>
 
-    <div class="btnrow">
-      <button class="btnx" id="refreshBtn" type="button">Refresh now</button>
-      <button class="btnx primary" id="copyBtn" type="button">Copy truth URL</button>
-    </div>
+  <div class="meta-row">
+    <span>Polling</span><strong>10s</strong>
+    <span>Last updated</span><strong id="last-updated">—</strong>
+    <span>Status</span><strong id="status">UNKNOWN</strong>
+  </div>
+</section>
 
-    <div class="meta-grid" style="margin-top:12px">
-      <div>Polling</div><div><strong>10s</strong></div>
-      <div>Last updated</div><div id="lastUpdated">—</div>
-      <div>Age (sec)</div><div id="age">—</div>
-    </div>
+<section class="panel gauges">
+  <div class="gauge" data-key="pageviews">
+    <span class="label">Pageviews</span>
+    <span class="value">0</span>
+  </div>
 
-    <div style="margin-top:12px">
-      <span class="pill">
-        <span class="dot" id="dot"></span>
-        <strong id="status">DEGRADED</strong>
-        <span id="staleText" style="opacity:.75"></span>
-      </span>
-      <div class="stale-note" id="hint">Counts are conservative. They only increase when the site explicitly reports an event.</div>
-    </div>
-  </section>
+  <div class="gauge" data-key="clicks">
+    <span class="label">Clicks</span>
+    <span class="value">0</span>
+  </div>
 
-  <section class="panel">
-    <h3>Gauges</h3>
+  <div class="gauge" data-key="sessions">
+    <span class="label">Sessions</span>
+    <span class="value">0</span>
+  </div>
 
-    <div class="gauge-ring" id="pvGauge" style="--pct:0;--color:#3ddc97">
-      <div class="gauge-core">
-        <div>
-          <div class="gauge-value" id="pv">0</div>
-          <div class="gauge-label">Pageviews</div>
-        </div>
-      </div>
-    </div>
+  <div class="gauge" data-key="writes">
+    <span class="label">Writes</span>
+    <span class="value">0</span>
+  </div>
+</section>
 
-    <div class="gauge-ring" id="clickGauge" style="--pct:0;--color:#f4c430;margin-top:24px">
-      <div class="gauge-core">
-        <div>
-          <div class="gauge-value" id="clicks">0</div>
-          <div class="gauge-label">Clicks</div>
-        </div>
-      </div>
-    </div>
+<section class="panel">
+  <h3>Top pages (latest)</h3>
+  <div id="top-pages" class="bars">
+    <span class="muted">No page-level events reported yet.</span>
+  </div>
+</section>
 
-    <div style="margin-top:24px" class="topcard">
-      <div class="toprow">
-        <div style="font-weight:700;opacity:.9">Sessions</div>
-        <div class="chip"><strong id="sessions">0</strong></div>
-      </div>
-      <div class="bar" style="margin-top:10px"><span id="sessBar"></span></div>
-    </div>
-
-    <div style="margin-top:12px" class="topcard">
-      <div class="toprow">
-        <div style="font-weight:700;opacity:.9">Writes</div>
-        <div class="chip"><strong id="writes">0</strong></div>
-      </div>
-      <div class="bar" style="margin-top:10px"><span id="writeBar"></span></div>
-    </div>
-  </section>
-
-  <section class="panel">
-    <h3>Sources (to scale)</h3>
-
-    <div>GitHub <span id="ghVal">0</span></div>
-    <div class="bar"><span id="ghBar"></span></div>
-
-    <div style="margin-top:8px">Direct <span id="dirVal">0</span></div>
-    <div class="bar"><span id="dirBar"></span></div>
-
-    <div style="margin-top:8px">OSF <span id="osfVal">0</span></div>
-    <div class="bar"><span id="osfBar"></span></div>
-
-    <div style="margin-top:8px">Other <span id="othVal">0</span></div>
-    <div class="bar"><span id="othBar"></span></div>
-  </section>
-
-  <section class="panel">
-    <h3>Top pages (latest)</h3>
-    <p class="subtitle" style="margin-top:-6px">Page-level counts are conservative. They increase only when the site reports events.</p>
-    <div class="mini-wrap" id="topPages"></div>
-  </section>
-
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/reference/">Reference</a>
-    </div>
-  </section>
+<a href="/home/" class="back-btn">Back to Home</a>
 
 </main>
 
-<div class="copy-toast" id="toast">Copied.</div>
+<footer>
+  © Geodiametrics
+</footer>
 
-<script>
-const URL = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
-document.getElementById("source").textContent = URL;
-
-function showToast(msg){
-  const t=document.getElementById("toast");
-  t.textContent=msg;
-  t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"),900);
-}
-
-function pct(val, max){
-  if (!max) return 0;
-  return Math.min(100, Math.round((val / max) * 100));
-}
-
-function setHealth(status, age){
-  const dot = document.getElementById("dot");
-  const staleText = document.getElementById("staleText");
-  const s = String(status || "UNKNOWN").toUpperCase();
-
-  if (s === "OPERATIONAL") dot.style.background = "#3ddc97";
-  else if (s === "DEGRADED") dot.style.background = "gold";
-  else dot.style.background = "#ff4d4d";
-
-  if (typeof age === "number" && age >= 60) staleText.textContent = "Very stale.";
-  else if (typeof age === "number" && age >= 20) staleText.textContent = "Stale.";
-  else staleText.textContent = "";
-}
-
-function renderTopPages(pages){
-  const host = document.getElementById("topPages");
-  host.innerHTML = "";
-  const entries = Object.entries(pages || {}).map(([path, v]) => ({
-    path,
-    pageviews: v.pageviews || 0,
-    clicks: v.clicks || 0,
-    writes: v.writes || 0,
-    lastUpdated: v.lastUpdated || 0
-  }));
-
-  entries.sort((a,b)=> (b.pageviews+b.clicks) - (a.pageviews+a.clicks));
-  const top = entries.slice(0, 8);
-
-  const maxPv = Math.max(...top.map(x=>x.pageviews), 1);
-  const maxCk = Math.max(...top.map(x=>x.clicks), 1);
-
-  top.forEach(item=>{
-    const card = document.createElement("div");
-    card.className = "topcard";
-
-    const row = document.createElement("div");
-    row.className = "toprow";
-
-    const p = document.createElement("div");
-    p.className = "path";
-    p.textContent = item.path;
-
-    const chips = document.createElement("div");
-    chips.className = "chips";
-    chips.innerHTML = `
-      <span class="chip">PV <strong>${item.pageviews}</strong></span>
-      <span class="chip">Clicks <strong>${item.clicks}</strong></span>
-    `;
-
-    row.appendChild(p);
-    row.appendChild(chips);
-
-    const bars = document.createElement("div");
-    bars.className = "mini-bars";
-    bars.innerHTML = `
-      <div>
-        <div class="labelrow"><span>Pageviews</span><span>${pct(item.pageviews, maxPv)}%</span></div>
-        <div class="bar2"><span class="pvFill" style="width:${pct(item.pageviews, maxPv)}%"></span></div>
-      </div>
-      <div>
-        <div class="labelrow"><span>Clicks</span><span>${pct(item.clicks, maxCk)}%</span></div>
-        <div class="bar2"><span class="ckFill" style="width:${pct(item.clicks, maxCk)}%"></span></div>
-      </div>
-    `;
-
-    card.appendChild(row);
-    card.appendChild(bars);
-    host.appendChild(card);
-  });
-
-  if (!top.length){
-    const empty = document.createElement("div");
-    empty.className = "topcard";
-    empty.style.opacity = ".8";
-    empty.textContent = "No page-level events reported yet.";
-    host.appendChild(empty);
-  }
-}
-
-async function refresh(){
-  try{
-    const res = await fetch(URL, { cache: "no-store" });
-    const data = await res.json();
-
-    const now = Date.now();
-    const updated = data.meta?.now ?? null;
-
-    document.getElementById("status").textContent = String(data.status ?? "UNKNOWN").toUpperCase();
-
-    let age = null;
-    if (updated){
-      age = Math.max(0, Math.floor((now - updated) / 1000));
-      document.getElementById("lastUpdated").textContent = new Date(updated).toLocaleString();
-      document.getElementById("age").textContent = age;
-    } else {
-      document.getElementById("lastUpdated").textContent = "—";
-      document.getElementById("age").textContent = "—";
-    }
-    setHealth(data.status, age);
-
-    const m = data.metrics || {};
-    const pv = m.pageviews || 0;
-    const clicks = m.clicks || 0;
-    const sessions = m.sessions || 0;
-    const writes = m.writes || 0;
-
-    document.getElementById("pv").textContent = pv;
-    document.getElementById("clicks").textContent = clicks;
-    document.getElementById("sessions").textContent = sessions;
-    document.getElementById("writes").textContent = writes;
-
-    const maxGauge = Math.max(pv, clicks, 1);
-    document.getElementById("pvGauge").style.setProperty("--pct", pct(pv, maxGauge));
-    document.getElementById("clickGauge").style.setProperty("--pct", pct(clicks, maxGauge));
-
-    const maxSmall = Math.max(sessions, writes, 1);
-    document.getElementById("sessBar").style.width = pct(sessions, maxSmall) + "%";
-    document.getElementById("writeBar").style.width = pct(writes, maxSmall) + "%";
-
-    const sources = data.sources || {};
-    const maxSrc = Math.max(...Object.values(sources), 1);
-
-    const gh = sources.GitHub || 0;
-    const dir = sources.Direct || 0;
-    const osf = sources.OSF || 0;
-    const oth = sources.Other || 0;
-
-    document.getElementById("ghVal").textContent = gh;
-    document.getElementById("dirVal").textContent = dir;
-    document.getElementById("osfVal").textContent = osf;
-    document.getElementById("othVal").textContent = oth;
-
-    document.getElementById("ghBar").style.width = pct(gh, maxSrc) + "%";
-    document.getElementById("dirBar").style.width = pct(dir, maxSrc) + "%";
-    document.getElementById("osfBar").style.width = pct(osf, maxSrc) + "%";
-    document.getElementById("othBar").style.width = pct(oth, maxSrc) + "%";
-
-    renderTopPages(data.pages || {});
-  } catch (e){
-    console.error(e);
-  }
-}
-
-document.getElementById("refreshBtn").addEventListener("click", ()=>refresh());
-document.getElementById("copyBtn").addEventListener("click", async ()=>{
-  try{
-    await navigator.clipboard.writeText(URL);
-    showToast("Copied truth URL.");
-  } catch {
-    showToast("Copy failed.");
-  }
-});
-
-refresh();
-setInterval(refresh, 10000);
-</script>
 </body>
 </html>
-```0

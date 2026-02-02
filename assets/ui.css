@@ -1,114 +1,73 @@
-/* ================================
-   GEODIAMETRICS — DEMOLITION RESET
-   Single source of truth
-   ================================ */
+.wrap{max-width:980px;margin:0 auto;padding:18px 16px 48px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:6px 0 16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:36px;height:36px;opacity:.95}
+.brandName{font-weight:800;letter-spacing:.2px}
+.brandTag{font-size:12px;color:var(--muted);margin-top:2px}
 
-/* 1. Absolute reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+
+.pill{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(12,16,34,.55);
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
+  font-weight:700;font-size:13px;
+}
+.pill:hover{border-color:rgba(233,238,252,.22)}
+.pill.ghost{background:transparent}
+
+.card{
+  border-radius:var(--r);
+  border:1px solid var(--stroke);
+  background:var(--panel);
+  box-shadow:var(--shadow);
+  padding:18px;
 }
 
-/* 2. Root authority */
-html, body {
-  min-height: 100%;
-  background: #0b1f2a;
-  color: #eaf2f8;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+.kicker{
+  font-size:12px;
+  letter-spacing:1.1px;
+  color:var(--muted);
+  font-weight:800;
+  text-transform:uppercase;
 }
 
-/* 3. Kill ALL translucency and blur */
-* {
-  backdrop-filter: none !important;
-  filter: none !important;
-  opacity: 1 !important;
-}
+.h1{margin:10px 0 8px;font-size:28px;line-height:1.15}
+.p{margin:0;color:var(--muted);line-height:1.55}
 
-/* 4. Page container */
-.page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 32px 20px;
-}
+.hr{height:1px;background:var(--stroke2);margin:16px 0}
 
-/* 5. Card = solid, readable, final */
-.card {
-  background: #132b3a;
-  border-radius: 24px;
-  padding: 28px;
-  margin-bottom: 24px;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin-top:14px;
 }
+@media (max-width:880px){.grid{grid-template-columns:1fr}}
+.tile{
+  border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(10,14,30,.55);
+  padding:14px;
+  min-height:118px;
+}
+.tile:hover{border-color:rgba(233,238,252,.18)}
+.tileTop{font-size:11px;color:var(--muted);font-weight:900;letter-spacing:.9px}
+.tileTitle{margin-top:8px;font-size:20px;font-weight:900}
+.tileBody{margin-top:6px;color:var(--muted);line-height:1.45}
 
-/* 6. Headings */
-h1 {
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin-bottom: 12px;
+.notice{
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  padding:14px;
 }
+.noticeTitle{font-weight:900}
+.noticeBody{margin-top:6px;color:var(--muted);line-height:1.55}
 
-h2 {
-  font-size: 1.6rem;
-  margin-bottom: 10px;
-}
+.row{display:flex;gap:10px;flex-wrap:wrap}
 
-h3 {
-  font-size: 1.2rem;
-  margin-bottom: 8px;
-}
-
-/* 7. Body text */
-p, li {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #d6e7f2;
-}
-
-/* 8. Quotes — CLEAR, STRONG */
-.quote {
-  background: #1a3b52;
-  border-radius: 20px;
-  padding: 22px;
-  margin: 20px 0;
-  font-style: italic;
-  color: #ffffff;
-}
-
-.quote-author {
-  margin-top: 10px;
-  font-weight: 600;
-  color: #9bd3ff;
-}
-
-/* 9. Buttons — minimal, no bullshit */
-button, .button {
-  display: block;
-  width: 100%;
-  background: #2ea6b8;
-  color: #ffffff;
-  border: none;
-  border-radius: 999px;
-  padding: 14px;
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 12px 0;
-  cursor: pointer;
-}
-
-/* 10. Links */
-a {
-  color: #7dd3fc;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-/* 11. Footer */
-footer {
-  text-align: center;
-  margin-top: 40px;
-  color: #8aaec4;
-  font-size: 0.9rem;
-}
+.foot{display:flex;justify-content:space-between;gap:10px;margin-top:14px;flex-wrap:wrap}
+.muted{color:var(--muted);font-size:12px}

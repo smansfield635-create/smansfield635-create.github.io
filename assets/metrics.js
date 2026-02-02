@@ -1,86 +1,92 @@
+// /assets/metrics.js — FULL TNT
+// Conservative analytics: only increments when this script emits an event.
+// Durable storage lives in Cloudflare DO behind the Worker.
+
 (() => {
   const WORKER_BASE = "https://geodiametrics-aggregator.smansfield635.workers.dev";
-  const EVENT_URL = WORKER_BASE + "/event";
+  const ENDPOINT_EVENT = WORKER_BASE + "/event";
 
-  function sourceClassify(ref) {
-    if (!ref) return "Direct";
-    const r = ref.toLowerCase();
-    if (r.includes("osf.io")) return "OSF";
-    if (r.includes("github.io") || r.includes("github.com")) return "GitHub";
-    return "Other";
+  const LS_SID = "geo_session_id_v1";
+  const LS_SID_TS = "geo_session_ts_v1";
+  const SESSION_TTL_MS = 1000 * 60 * 60 * 6; // 6h rolling session
+
+  function now() { return Date.now(); }
+
+  function randId() {
+    return "s_" + Math.random().toString(16).slice(2) + "_" + Math.random().toString(16).slice(2);
   }
 
   function getSessionId() {
-    const key = "geo_session_id_v1";
-    let id = localStorage.getItem(key);
-    if (!id) {
-      id = cryptoRandomId();
-      localStorage.setItem(key, id);
-      // Mark new session so we emit a session event once
-      localStorage.setItem(key + "_new", "1");
-    }
-    return id;
+    const t = parseInt(localStorage.getItem(LS_SID_TS) || "0", 10);
+    const sid = localStorage.getItem(LS_SID) || "";
+    const fresh = sid && t && (now() - t) < SESSION_TTL_MS;
+    if (fresh) return sid;
+
+    const next = randId();
+    localStorage.setItem(LS_SID, next);
+    localStorage.setItem(LS_SID_TS, String(now()));
+    return next;
   }
 
-  function shouldEmitSessionOnce() {
-    const key = "geo_session_id_v1_new";
-    const v = localStorage.getItem(key);
-    if (v === "1") {
-      localStorage.setItem(key, "0");
-      return true;
-    }
-    return false;
-  }
-
-  function cryptoRandomId() {
-    try {
-      const a = new Uint8Array(16);
-      crypto.getRandomValues(a);
-      return [...a].map(x => x.toString(16).padStart(2, "0")).join("");
-    } catch {
-      return String(Date.now()) + "_" + Math.random().toString(16).slice(2);
-    }
-  }
-
-  function sendEvent(type, extra = {}) {
+  async function postEvent(type, meta = {}) {
     const payload = {
       type,
-      page: location.pathname || "/",
-      title: document.title || "",
+      path: location.pathname,
       sessionId: getSessionId(),
-      source: sourceClassify(document.referrer),
-      ts: Date.now(),
-      ...extra,
+      meta: {
+        ...meta,
+        href: location.href,
+        ref: document.referrer || "",
+        ua: navigator.userAgent || "",
+      },
     };
 
-    // Prefer sendBeacon for reliability on mobile / navigation
     try {
-      if (navigator.sendBeacon) {
-        const blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
-        navigator.sendBeacon(EVENT_URL, blob);
-        return;
-      }
-    } catch {}
-
-    fetch(EVENT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      mode: "cors",
-      keepalive: true,
-    }).catch(() => {});
+      await fetch(ENDPOINT_EVENT, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+        // allow firing during navigation
+        keepalive: true,
+      });
+    } catch (e) {
+      // silent by design
+    }
   }
 
-  // --- automatic events ---
-  if (shouldEmitSessionOnce()) sendEvent("session");
-  sendEvent("pageview");
+  // One session_start per TTL window
+  (function emitSessionStartOnce() {
+    const t = parseInt(localStorage.getItem(LS_SID_TS) || "0", 10);
+    const justCreated = !t || (now() - t) < 2000;
+    if (justCreated) postEvent("session_start");
+  })();
 
-  // --- optional: bubble-click tracking ---
-  document.addEventListener("click", (e) => {
-    const a = e.target && e.target.closest ? e.target.closest("a,button") : null;
-    if (!a) return;
-    const label = (a.textContent || "").trim().slice(0, 80);
-    if (!label) return;
-    sendEvent("click", { label });
+  // Pageview on load
+  window.addEventListener("DOMContentLoaded", () => {
+    postEvent("pageview");
+  });
+
+  // Click capture (anchors + buttons)
+  document.addEventListener("click", (ev) => {
+    const el = ev.target && ev.target.closest ? ev.target.closest("a,button") : null;
+    if (!el) return;
+
+    const tag = el.tagName ? el.tagName.toLowerCase() : "";
+    const text = (el.textContent || "").trim().slice(0, 80);
+
+    postEvent("click", {
+      tag,
+      text,
+      id: el.id || "",
+      href: el.getAttribute ? (el.getAttribute("href") || "") : "",
+      cls: el.className || "",
+    });
   }, { capture: true });
+
+  // Optional API for manual "write" events later
+  window.GEO_METRICS = {
+    event: postEvent,
+    sessionId: getSessionId,
+    base: WORKER_BASE,
+  };
 })();

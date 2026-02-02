@@ -1,208 +1,224 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Laws · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Laws · Geodiametrics</title>
 
-  <style>
-    .lens-wrap{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-    .lens-btn{
-      flex:1; min-width:180px;
-      padding:16px 18px;
-      border-radius:999px;
-      border:1px solid rgba(233,238,252,.14);
-      background:rgba(12,16,34,.35);
-      color:rgba(233,238,252,.85);
-      font-weight:800;
-      letter-spacing:.2px;
-      cursor:pointer;
-    }
-    .lens-btn.active{
-      background:linear-gradient(90deg, rgba(56,189,248,.55), rgba(79,209,197,.55));
-      border-color:rgba(233,238,252,.18);
-      color:rgba(233,238,252,.95);
-      box-shadow:0 10px 30px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.06);
-    }
-    [data-lens]{display:none}
-    [data-lens].show{display:block}
-    .lead{color:rgba(233,238,252,.65); margin-top:10px}
-    .lawtitle{font-weight:900}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
-  </style>
+<style>
+:root{
+  --bg:#0b1620;
+  --bg-deep:#071018;
+  --card:#122838;
+  --card-soft:#163044;
+  --text:#e9f1f7;
+  --muted:#9fb4c6;
+  --accent:#39b6ff;
+  --accent-2:#35d0c6;
+  --radius:22px;
+  --shadow:0 18px 46px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 70% -10%,rgba(57,182,255,.10),transparent 60%),
+    radial-gradient(900px 600px at 10% 10%,rgba(53,208,198,.08),transparent 55%),
+    linear-gradient(180deg,var(--bg),var(--bg-deep));
+}
+
+.page{
+  max-width:880px;
+  margin:0 auto;
+  padding:28px 18px 60px;
+}
+
+.card{
+  background:linear-gradient(180deg,var(--card),var(--card-soft));
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:22px;
+  margin-bottom:18px;
+}
+
+h1{margin:0 0 6px 0;font-size:36px}
+.subtitle{color:var(--muted);font-size:16px}
+
+.toggle{
+  display:flex;
+  gap:10px;
+  margin-top:6px;
+}
+.toggle button{
+  flex:1;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+  font-weight:600;
+  cursor:pointer;
+}
+.toggle button.active{
+  background:linear-gradient(90deg,rgba(57,182,255,.75),rgba(53,208,198,.75));
+  color:#071018;
+  border:none;
+}
+
+.law{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.law:first-child{border-top:none;padding-top:0;margin-top:0}
+
+.law h3{
+  margin:0 0 6px 0;
+  font-size:18px;
+}
+.law p{
+  margin:0;
+  line-height:1.55;
+  color:var(--muted);
+}
+
+.hidden{display:none}
+
+.nav{
+  display:flex;
+  gap:18px;
+  justify-content:center;
+  margin-top:18px;
+}
+.nav a{
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:500;
+}
+.nav a:hover{text-decoration:underline}
+
+.footer{
+  margin-top:26px;
+  text-align:center;
+  color:#7f95a8;
+  font-size:13px;
+}
+</style>
 </head>
 
-<body class="bg-gradient">
-<main class="page">
+<body>
+<div class="page">
 
-  <section class="panel hero">
+  <!-- Header -->
+  <div class="card">
     <h1>Laws</h1>
-    <p class="subtitle">Same laws. Two lenses. Driven by fact, not fiction.</p>
-  </section>
-
-  <section class="panel bubble">
-    <div class="lens-wrap" role="tablist" aria-label="Lens selector">
-      <button class="lens-btn" id="btnHuman" type="button" role="tab" aria-selected="true">Human</button>
-      <button class="lens-btn" id="btnSci" type="button" role="tab" aria-selected="false">Scientific</button>
+    <div class="subtitle">
+      Invariant constraints that hold whether believed or not.
     </div>
-    <p class="lead">The meaning is identical. Only the language changes.</p>
-  </section>
 
-  <!-- HUMAN LENS -->
-  <section class="panel bubble" data-lens="human" id="lensHuman">
-    <h2>Seven invariant constraints</h2>
-
-    <details open>
-      <summary class="lawtitle">Law 1 — Reality can’t be faked</summary>
-      <div class="bubble-body">
-        <p>You can claim anything. Reality responds only to what’s actually true.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary class="lawtitle">Law 2 — Trust begins internally</summary>
-      <div class="bubble-body">
-        <p>External trust can’t exceed internal honesty. If you won’t face yourself, others won’t reliably trust you.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary class="lawtitle">Law 3 — Outputs reflect inputs</summary>
-      <div class="bubble-body">
-        <p>Outcomes can’t be more coherent than their premises. Garbage in, garbage out—no exceptions under pressure.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary class="lawtitle">Law 4 — Constraints define admissibility</summary>
-      <div class="bubble-body">
-        <p>What’s allowed determines what can happen. Without boundaries, systems become reactive and unsafe.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary class="lawtitle">Law 5 — Verification gates reality</summary>
-      <div class="bubble-body">
-        <p>Receipts separate story from proof. If you can’t check it, you can’t defend it.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary class="lawtitle">Law 6 — Confusion accelerates failure</summary>
-      <div class="bubble-body">
-        <p>Once incoherence exists, confusion speeds collapse. When signals don’t match, errors multiply.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary class="lawtitle">Law 7 — Receipts enable convergence</summary>
-      <div class="bubble-body">
-        <p>Verified steps let systems stabilize and scale. Receipts make progress repeatable.</p>
-      </div>
-    </details>
-
-    <p class="lead">These are constraint statements: what holds whether acknowledged or not.</p>
-  </section>
-
-  <!-- SCIENTIFIC LENS -->
-  <section class="panel bubble" data-lens="scientific" id="lensSci">
-    <h2>Seven invariant constraints</h2>
-
-    <details open>
-      <summary class="lawtitle">Law 1 — Coherence cannot exceed evidence</summary>
-      <div class="bubble-body">
-        <p>System claims are bounded by verifiable evidence. Unverifiable claims do not increase admissible coherence.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary class="lawtitle">Law 2 — External trust cannot exceed internal honesty</summary>
-      <div class="bubble-body">
-        <p>Observable trust is bounded by internal self-consistency (self-report ↔ behavior ↔ outcomes).</p>
-      </div>
-    </details>
-
-    <details>
-      <summary class="lawtitle">Law 3 — Outcomes cannot be more coherent than inputs</summary>
-      <div class="bubble-body">
-        <p>Outputs are bounded by premise quality. Incoherent inputs yield incoherent outputs under pressure.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary class="lawtitle">Law 4 — Constraints define admissibility</summary>
-      <div class="bubble-body">
-        <p>Admissible state transitions are those that satisfy declared constraints. Constraint violation invalidates the transition.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary class="lawtitle">Law 5 — Verification gates reality</summary>
-      <div class="bubble-body">
-        <p>Receipts constitute verification. Receipts gate forward claims and protect defensibility.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary class="lawtitle">Law 6 — Confusion accelerates failure once incoherence exists</summary>
-      <div class="bubble-body">
-        <p>Confusion amplifies instability after incoherence is present, increasing divergence rate and failure propagation.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary class="lawtitle">Law 7 — Receipts enable convergence</summary>
-      <div class="bubble-body">
-        <p>Receipt-gated advancement supports convergence by preventing unverified drift and enabling repeatability.</p>
-      </div>
-    </details>
-
-    <p class="lead"><span class="mono">Scientific lens</span> is descriptive and observer-checkable, not persuasive.</p>
-  </section>
-
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn" href="/">Home</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/reference/">Reference</a>
+    <div class="toggle">
+      <button id="btnHuman" class="active">Human</button>
+      <button id="btnSci">Scientific</button>
     </div>
-  </section>
+  </div>
 
-</main>
+  <!-- Laws: Human -->
+  <div id="lawsHuman" class="card">
+    <div class="law">
+      <h3>Law 1 — Reality binds behavior</h3>
+      <p>What is true constrains outcomes regardless of intention.</p>
+    </div>
+    <div class="law">
+      <h3>Law 2 — Misalignment creates cost</h3>
+      <p>When values, actions, and results diverge, correction becomes unavoidable.</p>
+    </div>
+    <div class="law">
+      <h3>Law 3 — Boundaries reduce harm</h3>
+      <p>Clear limits prevent small errors from becoming systemic failure.</p>
+    </div>
+    <div class="law">
+      <h3>Law 4 — Shortcuts accumulate debt</h3>
+      <p>Unresolved compromises surface later with greater force.</p>
+    </div>
+    <div class="law">
+      <h3>Law 5 — Pressure reveals structure</h3>
+      <p>Stress does not change systems; it exposes them.</p>
+    </div>
+    <div class="law">
+      <h3>Law 6 — Execution requires follow-through</h3>
+      <p>Decisions without completion are indistinguishable from avoidance.</p>
+    </div>
+    <div class="law">
+      <h3>Law 7 — Coherence precedes scale</h3>
+      <p>Growth amplifies structure; it does not fix it.</p>
+    </div>
+  </div>
+
+  <!-- Laws: Scientific -->
+  <div id="lawsSci" class="card hidden">
+    <div class="law">
+      <h3>Law 1 — Observer-invariant constraint</h3>
+      <p>System behavior is bounded by objective state, not belief.</p>
+    </div>
+    <div class="law">
+      <h3>Law 2 — Divergence produces correction cost</h3>
+      <p>Misalignment between intent, action, and outcome increases required energy.</p>
+    </div>
+    <div class="law">
+      <h3>Law 3 — Constraint enforcement stabilizes systems</h3>
+      <p>Explicit boundaries reduce error propagation.</p>
+    </div>
+    <div class="law">
+      <h3>Law 4 — Deferred resolution compounds instability</h3>
+      <p>Unresolved violations accumulate system debt.</p>
+    </div>
+    <div class="law">
+      <h3>Law 5 — Stress is diagnostic</h3>
+      <p>External pressure reveals latent structural properties.</p>
+    </div>
+    <div class="law">
+      <h3>Law 6 — Execution requires terminal states</h3>
+      <p>Non-terminal decisions do not alter system state.</p>
+    </div>
+    <div class="law">
+      <h3>Law 7 — Coherence is prerequisite to scaling</h3>
+      <p>Scaling amplifies existing dynamics.</p>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <div class="nav">
+    <a href="/home/">Home</a>
+    <a href="/principles/">Principles</a>
+    <a href="/reference/">Reference</a>
+  </div>
+
+  <div class="footer">© Geodiametrics</div>
+
+</div>
 
 <script>
-  const KEY = "geo_lens";
-  const btnHuman = document.getElementById("btnHuman");
-  const btnSci = document.getElementById("btnSci");
-  const lensHuman = document.getElementById("lensHuman");
-  const lensSci = document.getElementById("lensSci");
+const btnHuman = document.getElementById("btnHuman");
+const btnSci = document.getElementById("btnSci");
+const human = document.getElementById("lawsHuman");
+const sci = document.getElementById("lawsSci");
 
-  function setLens(which){
-    const human = which === "human";
-    btnHuman.classList.toggle("active", human);
-    btnSci.classList.toggle("active", !human);
-
-    btnHuman.setAttribute("aria-selected", human ? "true" : "false");
-    btnSci.setAttribute("aria-selected", !human ? "true" : "false");
-
-    lensHuman.classList.toggle("show", human);
-    lensSci.classList.toggle("show", !human);
-
-    try{ localStorage.setItem(KEY, which); }catch(e){}
-  }
-
-  btnHuman.addEventListener("click", ()=>setLens("human"));
-  btnSci.addEventListener("click", ()=>setLens("scientific"));
-
-  let saved = "human";
-  try{
-    const v = localStorage.getItem(KEY);
-    if(v === "scientific" || v === "human") saved = v;
-  }catch(e){}
-  setLens(saved);
+btnHuman.onclick = () => {
+  btnHuman.classList.add("active");
+  btnSci.classList.remove("active");
+  human.classList.remove("hidden");
+  sci.classList.add("hidden");
+};
+btnSci.onclick = () => {
+  btnSci.classList.add("active");
+  btnHuman.classList.remove("active");
+  sci.classList.remove("hidden");
+  human.classList.add("hidden");
+};
 </script>
 
 </body>

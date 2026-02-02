@@ -1,38 +1,190 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Engine · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css"/>
-  <script defer src="/assets/telemetry.js"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Engine · Geodiametrics</title>
+
+<style>
+:root{
+  --bg:#0b1620;
+  --bg-deep:#071018;
+  --card:#122838;
+  --card-soft:#163044;
+  --text:#e9f1f7;
+  --muted:#9fb4c6;
+  --accent:#39b6ff;
+  --accent-2:#35d0c6;
+  --radius:22px;
+  --shadow:0 18px 46px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 70% -10%,rgba(57,182,255,.10),transparent 60%),
+    radial-gradient(900px 600px at 10% 10%,rgba(53,208,198,.08),transparent 55%),
+    linear-gradient(180deg,var(--bg),var(--bg-deep));
+}
+
+.page{
+  max-width:880px;
+  margin:0 auto;
+  padding:28px 18px 60px;
+}
+
+.card{
+  background:linear-gradient(180deg,var(--card),var(--card-soft));
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:22px;
+  margin-bottom:18px;
+}
+
+h1{margin:0 0 6px 0;font-size:36px}
+.subtitle{color:var(--muted);font-size:16px}
+
+.section-title{
+  margin:0 0 10px 0;
+  font-size:15px;
+  color:var(--muted);
+  font-weight:600;
+}
+
+p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.55;
+}
+p + p{margin-top:10px}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+@media (max-width:700px){
+  .grid{grid-template-columns:1fr}
+}
+
+.block{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:16px;
+}
+
+.block h3{
+  margin:0 0 6px 0;
+  font-size:16px;
+}
+.block p{
+  font-size:14px;
+}
+
+.nav{
+  display:flex;
+  gap:18px;
+  justify-content:center;
+  margin-top:18px;
+}
+.nav a{
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:500;
+}
+.nav a:hover{text-decoration:underline}
+
+.footer{
+  margin-top:26px;
+  text-align:center;
+  color:#7f95a8;
+  font-size:13px;
+}
+</style>
 </head>
 
-<body class="bg-gradient">
-<main class="page">
+<body>
+<div class="page">
 
-  <section class="panel hero">
+  <!-- Header -->
+  <div class="card">
     <h1>Engine</h1>
-    <p class="subtitle">How decisions become real — safely, deliberately, and only by choice.</p>
-  </section>
-
-  <section class="panel bubble">
-    <p class="note">
-      Selection → Resolution → Commitment → Continuation
-      <br/>Receipt-gated transitions. Backtracking invalidates downstream.
-    </p>
-  </section>
-
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn primary" href="/engine/selection/">Selection</a>
-      <a class="btn" href="/engine/resolution/">Resolution</a>
-      <a class="btn" href="/engine/commitment/">Commitment</a>
-      <a class="btn" href="/engine/continuation/">Continuation</a>
-      <a class="btn" href="/home/">Home</a>
+    <div class="subtitle">
+      A conceptual engine for maintaining coherence.
     </div>
-  </section>
+  </div>
 
-</main>
+  <!-- What the engine is -->
+  <div class="card">
+    <div class="section-title">What this means</div>
+    <p>
+      The engine is not software running in your browser.
+      It is a structural description of how decisions move from perception to outcome.
+    </p>
+    <p>
+      It exists to make execution legible — not to automate it.
+    </p>
+  </div>
+
+  <!-- Core stages -->
+  <div class="card">
+    <div class="section-title">Core stages</div>
+    <div class="grid">
+      <div class="block">
+        <h3>Selection</h3>
+        <p>
+          Identifying the available options without distortion or omission.
+        </p>
+      </div>
+      <div class="block">
+        <h3>Resolution</h3>
+        <p>
+          Narrowing options based on constraints that actually bind.
+        </p>
+      </div>
+      <div class="block">
+        <h3>Commitment</h3>
+        <p>
+          Converting a decision into an explicit, testable state.
+        </p>
+      </div>
+      <div class="block">
+        <h3>Continuation</h3>
+        <p>
+          Following through until a terminal condition is reached.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- What the engine is not -->
+  <div class="card">
+    <div class="section-title">What this is not</div>
+    <p>
+      This engine does not execute actions for you.
+      It does not optimize outcomes.
+      It does not replace judgment.
+    </p>
+    <p>
+      It describes structure — not intent.
+    </p>
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav">
+    <a href="/home/">Home</a>
+    <a href="/laws/">Laws</a>
+    <a href="/principles/">Principles</a>
+    <a href="/control/">Control</a>
+  </div>
+
+  <div class="footer">© Geodiametrics</div>
+
+</div>
 </body>
 </html>

@@ -1,83 +1,114 @@
-/* ============================
-   TNT-A: GLOBAL VISUAL LOCK
-   ============================ */
+/* ================================
+   GEODIAMETRICS — DEMOLITION RESET
+   Single source of truth
+   ================================ */
 
-/* 1. Absolute background authority */
-html, body {
+/* 1. Absolute reset */
+* {
   margin: 0;
   padding: 0;
-  background: linear-gradient(
-    180deg,
-    #0b1f2a 0%,
-    #0e2a3a 45%,
-    #123447 100%
-  );
-  color: #e9f1f7;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  min-height: 100%;
-}
-
-/* 2. Kill inherited transparency */
-* {
   box-sizing: border-box;
 }
 
-/* 3. Card authority — no bleed-through */
-.card,
-.section,
-.panel,
-.container {
-  background: rgba(20, 42, 58, 0.92);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 28px;
-  padding: 24px;
-  margin: 16px auto;
+/* 2. Root authority */
+html, body {
+  min-height: 100%;
+  background: #0b1f2a;
+  color: #eaf2f8;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* 3. Kill ALL translucency and blur */
+* {
+  backdrop-filter: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* 4. Page container */
+.page {
   max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 20px;
 }
 
-/* 4. Headings are always readable */
-h1, h2, h3, h4 {
-  color: #f4fbff;
-  margin-top: 0;
+/* 5. Card = solid, readable, final */
+.card {
+  background: #132b3a;
+  border-radius: 24px;
+  padding: 28px;
+  margin-bottom: 24px;
 }
 
-/* 5. Body text contrast lock */
-p, li, span {
-  color: #d6e7f2;
+/* 6. Headings */
+h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+/* 7. Body text */
+p, li {
+  font-size: 1rem;
   line-height: 1.6;
+  color: #d6e7f2;
 }
 
-/* 6. Quotes must never fade */
-blockquote,
+/* 8. Quotes — CLEAR, STRONG */
 .quote {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 22px;
-  padding: 20px;
+  background: #1a3b52;
+  border-radius: 20px;
+  padding: 22px;
+  margin: 20px 0;
+  font-style: italic;
   color: #ffffff;
 }
 
-/* 7. Links — visible but restrained */
+.quote-author {
+  margin-top: 10px;
+  font-weight: 600;
+  color: #9bd3ff;
+}
+
+/* 9. Buttons — minimal, no bullshit */
+button, .button {
+  display: block;
+  width: 100%;
+  background: #2ea6b8;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 12px 0;
+  cursor: pointer;
+}
+
+/* 10. Links */
 a {
   color: #7dd3fc;
   text-decoration: none;
 }
+
 a:hover {
   text-decoration: underline;
 }
 
-/* 8. Buttons stop inheriting page background */
-button,
-.button {
-  background: linear-gradient(135deg, #3fb6c6, #2e8fa6);
-  color: #ffffff;
-  border: none;
-  border-radius: 999px;
-  padding: 14px 28px;
-  font-weight: 600;
-}
-
-/* 9. Hard stop on page background overrides */
-body > * {
-  background-color: transparent !important;
+/* 11. Footer */
+footer {
+  text-align: center;
+  margin-top: 40px;
+  color: #8aaec4;
+  font-size: 0.9rem;
 }

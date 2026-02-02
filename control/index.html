@@ -1,73 +1,42 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Control · Geodiametrics</title>
-<link rel="stylesheet" href="/assets/ui.css">
-<script defer src="/assets/control.js"></script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Control · Geodiametrics</title>
+  <link rel="stylesheet" href="/assets/core.css"/>
 </head>
+<body>
+<main>
 
-<body class="control">
+<h1>Control</h1>
 
-<main class="page">
+<p>
+Live metrics. Read-only by design.
+</p>
 
-<section class="panel hero">
-  <h1>Control</h1>
-  <p>Live gauges. Truth first. Read-only by design.</p>
-</section>
+<p>
+<strong>Truth source:</strong><br/>
+<a href="https://geodiametrics-aggregator.smansfield635.workers.dev/metrics">
+https://geodiametrics-aggregator.smansfield635.workers.dev/metrics
+</a>
+</p>
 
-<section class="panel">
-  <div class="truth-row">
-    <span>Truth source</span>
-    <code id="truth-url">
-      https://geodiametrics-aggregator.smansfield635.workers.dev/metrics
-    </code>
-  </div>
+<hr/>
 
-  <div class="meta-row">
-    <span>Polling</span><strong>10s</strong>
-    <span>Last updated</span><strong id="last-updated">—</strong>
-    <span>Status</span><strong id="status">UNKNOWN</strong>
-  </div>
-</section>
+<p>
+If values show zero, the system is intact but idle.
+If values diverge, inspect event emission.
+</p>
 
-<section class="panel gauges">
-  <div class="gauge" data-key="pageviews">
-    <span class="label">Pageviews</span>
-    <span class="value">0</span>
-  </div>
+<nav class="nav">
+  <a href="/">Home</a>
+</nav>
 
-  <div class="gauge" data-key="clicks">
-    <span class="label">Clicks</span>
-    <span class="value">0</span>
-  </div>
-
-  <div class="gauge" data-key="sessions">
-    <span class="label">Sessions</span>
-    <span class="value">0</span>
-  </div>
-
-  <div class="gauge" data-key="writes">
-    <span class="label">Writes</span>
-    <span class="value">0</span>
-  </div>
-</section>
-
-<section class="panel">
-  <h3>Top pages (latest)</h3>
-  <div id="top-pages" class="bars">
-    <span class="muted">No page-level events reported yet.</span>
-  </div>
-</section>
-
-<a href="/home/" class="back-btn">Back to Home</a>
+<div class="footer">
+© Geodiametrics
+</div>
 
 </main>
-
-<footer>
-  © Geodiametrics
-</footer>
-
 </body>
 </html>

@@ -2,411 +2,224 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Control · Geodiametrics</title>
+
   <link rel="stylesheet" href="/assets/ui.css"/>
+
   <style>
-    /* Page table (kept minimal, matches your bubble aesthetic) */
-    .table-wrap{overflow:hidden;border-radius:18px;border:1px solid rgba(233,238,252,.10);background:rgba(12,16,34,.35)}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:12px 12px;font-size:14px;line-height:1.2;vertical-align:middle}
-    th{font-weight:700;color:rgba(233,238,252,.92);text-align:left;border-bottom:1px solid rgba(233,238,252,.10)}
-    td{color:rgba(233,238,252,.78);border-bottom:1px solid rgba(233,238,252,.06)}
-    tr:last-child td{border-bottom:none}
-    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
-    .right{text-align:right}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid rgba(233,238,252,.12);background:rgba(12,16,34,.32)}
-    .dot{width:10px;height:10px;border-radius:999px;background:#f1c40f;box-shadow:0 0 0 4px rgba(241,196,15,.12)}
-    .dot.ok{background:#2ecc71;box-shadow:0 0 0 4px rgba(46,204,113,.12)}
-    .dot.bad{background:#e74c3c;box-shadow:0 0 0 4px rgba(231,76,60,.12)}
-    .kv{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
-    .kv .k{color:rgba(233,238,252,.60)}
-    .kv .v{color:rgba(233,238,252,.92);font-weight:700}
-    .small{font-size:12px;color:rgba(233,238,252,.55)}
-    .barrow{display:grid;grid-template-columns:110px 1fr 44px;gap:10px;align-items:center}
-    .bar{height:12px;border-radius:999px;background:rgba(233,238,252,.10);overflow:hidden}
-    .bar > i{display:block;height:100%;width:0%}
-    .bar > i.blue{background:linear-gradient(90deg, rgba(64,156,255,.85), rgba(64,156,255,.25))}
-    .bar > i.gold{background:linear-gradient(90deg, rgba(241,196,15,.85), rgba(241,196,15,.20))}
-    .bar > i.green{background:linear-gradient(90deg, rgba(46,204,113,.85), rgba(46,204,113,.20))}
-    .bar > i.gray{background:linear-gradient(90deg, rgba(233,238,252,.40), rgba(233,238,252,.12))}
-    .muted{color:rgba(233,238,252,.55)}
-    .btnrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .nowrap{white-space:nowrap}
+    .gauge {
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #0b1220 55%, transparent 56%);
+    }
+
+    .gauge::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--color) calc(var(--pct) * 1%),
+        rgba(255,255,255,0.08) 0
+      );
+      mask: radial-gradient(circle, transparent 55%, black 56%);
+    }
+
+    .gauge .value {
+      text-align: center;
+      z-index: 1;
+    }
+
+    .gauge .value h2 {
+      margin: 0;
+      font-size: 2.6rem;
+    }
+
+    .gauge .value span {
+      opacity: 0.7;
+      font-size: 0.95rem;
+    }
+
+    .gauges {
+      display: grid;
+      gap: 24px;
+      justify-content: center;
+    }
+
+    .page-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    .page-table th,
+    .page-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .status-ok { background: rgba(60,200,120,0.15); color: #3cc878; }
+    .status-bad { background: rgba(255,200,60,0.15); color: #ffd24d; }
   </style>
 </head>
 
 <body class="bg-gradient">
 <main class="page">
 
+  <!-- HERO -->
   <section class="panel hero">
     <h1>Control</h1>
     <p class="subtitle">Live read-only gauges. Truth first. No actions forced.</p>
   </section>
 
+  <!-- SOURCE -->
   <section class="panel bubble">
-    <div class="bubble-body">
-      <div class="kv">
-        <div class="k">Truth source</div>
-        <div class="v mono" id="truthUrlText">—</div>
+    <h3>Truth source</h3>
+    <code id="source">—</code>
+
+    <div class="tight">
+      <div>Polling: <strong>10s</strong></div>
+      <div>Last updated: <strong id="lastUpdated">—</strong></div>
+      <div>Age (sec): <strong id="age">—</strong></div>
+    </div>
+
+    <div id="status" class="status-pill status-bad">● DEGRADED</div>
+  </section>
+
+  <!-- GAUGES -->
+  <section class="panel bubble">
+    <h3>Gauges (to scale)</h3>
+
+    <div class="gauges">
+      <div class="gauge" style="--pct:0;--color:#3cc878" id="g_pageviews">
+        <div class="value">
+          <h2 id="pv">0</h2>
+          <span>Pageviews</span>
+        </div>
       </div>
-      <div style="height:10px"></div>
-      <div class="kv">
-        <div class="k">Polling</div>
-        <div class="v" id="pollingText">10s</div>
+
+      <div class="gauge" style="--pct:0;--color:#ffd24d" id="g_clicks">
+        <div class="value">
+          <h2 id="cl">0</h2>
+          <span>Clicks</span>
+        </div>
       </div>
-      <div class="kv">
-        <div class="k">Last updated</div>
-        <div class="v" id="lastUpdatedText">—</div>
-      </div>
-      <div class="kv">
-        <div class="k">Age (sec)</div>
-        <div class="v" id="ageText">—</div>
-      </div>
-      <div style="height:12px"></div>
-      <div class="pill">
-        <span class="dot" id="statusDot"></span>
-        <strong class="nowrap" id="statusText">STATUS: —</strong>
-        <span class="small" id="statusNote"></span>
-      </div>
-      <div style="height:10px"></div>
-      <div class="small">
-        Counts are conservative. They only increase when the site explicitly reports an event.
+
+      <div class="gauge" style="--pct:0;--color:#5dade2" id="g_sessions">
+        <div class="value">
+          <h2 id="se">0</h2>
+          <span>Sessions</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Gauges -->
+  <!-- PER PAGE -->
   <section class="panel bubble">
-    <details open>
-      <summary>Gauges (to scale)</summary>
-      <div class="bubble-body">
-        <div class="barrow">
-          <div class="muted">Sessions</div>
-          <div class="bar"><i class="blue" id="barSessions"></i></div>
-          <div class="right mono" id="valSessions">0</div>
-        </div>
-        <div style="height:10px"></div>
-        <div class="barrow">
-          <div class="muted">Pageviews</div>
-          <div class="bar"><i class="green" id="barPageviews"></i></div>
-          <div class="right mono" id="valPageviews">0</div>
-        </div>
-        <div style="height:10px"></div>
-        <div class="barrow">
-          <div class="muted">Clicks</div>
-          <div class="bar"><i class="gold" id="barClicks"></i></div>
-          <div class="right mono" id="valClicks">0</div>
-        </div>
-        <div style="height:10px"></div>
-        <div class="barrow">
-          <div class="muted">Writes</div>
-          <div class="bar"><i class="gray" id="barWrites"></i></div>
-          <div class="right mono" id="valWrites">0</div>
-        </div>
-      </div>
-    </details>
+    <h3>Top pages (latest)</h3>
+    <table class="page-table">
+      <thead>
+        <tr>
+          <th>Path</th>
+          <th>Pageviews</th>
+          <th>Clicks</th>
+        </tr>
+      </thead>
+      <tbody id="pages"></tbody>
+    </table>
   </section>
 
-  <!-- Sources -->
-  <section class="panel bubble">
-    <details>
-      <summary>Sources (to scale)</summary>
-      <div class="bubble-body">
-        <div class="barrow">
-          <div class="muted">GitHub</div>
-          <div class="bar"><i class="blue" id="barSrcGitHub"></i></div>
-          <div class="right mono" id="valSrcGitHub">0</div>
-        </div>
-        <div style="height:10px"></div>
-        <div class="barrow">
-          <div class="muted">OSF</div>
-          <div class="bar"><i class="gray" id="barSrcOSF"></i></div>
-          <div class="right mono" id="valSrcOSF">0</div>
-        </div>
-        <div style="height:10px"></div>
-        <div class="barrow">
-          <div class="muted">Direct</div>
-          <div class="bar"><i class="gold" id="barSrcDirect"></i></div>
-          <div class="right mono" id="valSrcDirect">0</div>
-        </div>
-        <div style="height:10px"></div>
-        <div class="barrow">
-          <div class="muted">Other</div>
-          <div class="bar"><i class="gray" id="barSrcOther"></i></div>
-          <div class="right mono" id="valSrcOther">0</div>
-        </div>
-        <div style="height:10px"></div>
-        <div class="small">Bars share one scale (max source value in this payload).</div>
-      </div>
-    </details>
-  </section>
-
-  <!-- Top Pages (Latest) -->
-  <section class="panel bubble">
-    <details open>
-      <summary>Top pages (latest)</summary>
-      <div class="bubble-body">
-        <div class="small">Page-level counts are conservative. They only increase when the site reports events.</div>
-        <div style="height:12px"></div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:52%">Path</th>
-                <th class="right" style="width:16%">Pageviews</th>
-                <th class="right" style="width:16%">Clicks</th>
-                <th class="right" style="width:16%">Updated</th>
-              </tr>
-            </thead>
-            <tbody id="pagesTbody">
-              <tr><td class="mono">/</td><td class="right mono">0</td><td class="right mono">0</td><td class="right mono">—</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div style="height:10px"></div>
-        <div class="btnrow">
-          <button class="btn" type="button" id="btnRefresh">Refresh now</button>
-          <button class="btn primary" type="button" id="btnCopyTruth">Copy truth URL</button>
-        </div>
-      </div>
-    </details>
-  </section>
-
-  <!-- Raw Payload -->
-  <section class="panel bubble">
-    <details>
-      <summary>Raw payload (JSON)</summary>
-      <div class="bubble-body">
-        <pre class="mono" id="rawJson" style="white-space:pre-wrap;margin:0">—</pre>
-      </div>
-    </details>
-  </section>
-
-  <!-- Nav -->
+  <!-- NAV -->
   <section class="panel nav">
     <div class="nav-grid">
-      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/">Home</a>
       <a class="btn" href="/engine/">Engine</a>
       <a class="btn" href="/laws/">Laws</a>
       <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/state/">State</a>
-      <a class="btn" href="/reference/">Reference</a>
-      <a class="btn" href="/about/">About</a>
     </div>
   </section>
 
 </main>
 
 <script>
-(() => {
-  // Truth endpoint (single source of record for Control UI)
-  const TRUTH_URL = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
+const ENDPOINT = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
 
-  // Polling
-  const POLL_MS = 10000;
-  let timer = null;
-  let lastPayload = null;
+document.getElementById("source").textContent = ENDPOINT;
 
-  // Elements
-  const elTruth = document.getElementById("truthUrlText");
-  const elLast = document.getElementById("lastUpdatedText");
-  const elAge = document.getElementById("ageText");
-  const elStatus = document.getElementById("statusText");
-  const elStatusDot = document.getElementById("statusDot");
-  const elStatusNote = document.getElementById("statusNote");
-  const elRaw = document.getElementById("rawJson");
+async function tick() {
+  try {
+    const res = await fetch(ENDPOINT, { cache: "no-store" });
+    const data = await res.json();
 
-  const valSessions = document.getElementById("valSessions");
-  const valPageviews = document.getElementById("valPageviews");
-  const valClicks = document.getElementById("valClicks");
-  const valWrites = document.getElementById("valWrites");
+    const m = data.metrics || {};
+    const pages = data.pages || {};
+    const meta = data.meta || {};
 
-  const barSessions = document.getElementById("barSessions");
-  const barPageviews = document.getElementById("barPageviews");
-  const barClicks = document.getElementById("barClicks");
-  const barWrites = document.getElementById("barWrites");
+    // Numbers
+    pv.textContent = m.pageviews || 0;
+    cl.textContent = m.clicks || 0;
+    se.textContent = m.sessions || 0;
 
-  const valSrcGitHub = document.getElementById("valSrcGitHub");
-  const valSrcOSF = document.getElementById("valSrcOSF");
-  const valSrcDirect = document.getElementById("valSrcDirect");
-  const valSrcOther = document.getElementById("valSrcOther");
+    // Scale gauges (relative)
+    const max = Math.max(m.pageviews || 1, m.clicks || 1, m.sessions || 1);
+    g_pageviews.style.setProperty("--pct", (m.pageviews / max) * 100);
+    g_clicks.style.setProperty("--pct", (m.clicks / max) * 100);
+    g_sessions.style.setProperty("--pct", (m.sessions / max) * 100);
 
-  const barSrcGitHub = document.getElementById("barSrcGitHub");
-  const barSrcOSF = document.getElementById("barSrcOSF");
-  const barSrcDirect = document.getElementById("barSrcDirect");
-  const barSrcOther = document.getElementById("barSrcOther");
-
-  const pagesTbody = document.getElementById("pagesTbody");
-
-  document.getElementById("btnRefresh").addEventListener("click", () => refreshOnce(true));
-  document.getElementById("btnCopyTruth").addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(TRUTH_URL);
-      elStatusNote.textContent = "Copied.";
-      setTimeout(() => elStatusNote.textContent = "", 1500);
-    } catch {
-      elStatusNote.textContent = "Copy blocked.";
-      setTimeout(() => elStatusNote.textContent = "", 1500);
-    }
-  });
-
-  // Helpers
-  const clamp01 = (x) => Math.max(0, Math.min(1, x));
-  const fmtInt = (n) => (Number.isFinite(n) ? String(Math.trunc(n)) : "0");
-
-  function fmtLocalTimeFromMs(ms) {
-    if (!Number.isFinite(ms) || ms <= 0) return "—";
-    const d = new Date(ms);
-    return d.toLocaleString([], {year:"numeric", month:"numeric", day:"numeric", hour:"numeric", minute:"2-digit", second:"2-digit"});
-  }
-
-  function setHealth(status, ageSec) {
-    const s = String(status || "").toUpperCase();
-    elStatus.textContent = "STATUS: " + (s || "—");
-
-    // dot color mapping
-    elStatusDot.classList.remove("ok","bad");
-    if (s === "OPERATIONAL" || s === "OK" || s === "GREEN") elStatusDot.classList.add("ok");
-    else if (s === "DEGRADED" || s === "YELLOW") { /* default dot is yellow */ }
-    else if (s === "DOWN" || s === "ERROR" || s === "RED") elStatusDot.classList.add("bad");
-
-    // age note
-    if (Number.isFinite(ageSec)) {
-      if (ageSec <= 20) elStatusNote.textContent = "Fresh.";
-      else if (ageSec <= 120) elStatusNote.textContent = "Stale.";
-      else elStatusNote.textContent = "Very stale.";
+    // Status
+    const status = document.getElementById("status");
+    if (data.status === "OPERATIONAL") {
+      status.className = "status-pill status-ok";
+      status.textContent = "● OPERATIONAL";
     } else {
-      elStatusNote.textContent = "";
-    }
-  }
-
-  function setBars(values, barEls) {
-    const max = Math.max(1, ...values.map(v => (Number.isFinite(v) ? v : 0)));
-    for (let i=0;i<values.length;i++){
-      const pct = clamp01((Number.isFinite(values[i]) ? values[i] : 0) / max) * 100;
-      barEls[i].style.width = pct.toFixed(2) + "%";
-    }
-  }
-
-  function renderPagesTable(pages) {
-    const entries = Object.entries(pages || {})
-      .map(([path, v]) => ({
-        path,
-        pageviews: Number(v && v.pageviews) || 0,
-        clicks: Number(v && v.clicks) || 0,
-        lastUpdated: Number(v && v.lastUpdated) || 0
-      }))
-      .sort((a,b) => (b.pageviews - a.pageviews) || (b.clicks - a.clicks) || (b.lastUpdated - a.lastUpdated))
-      .slice(0, 25); // bounded
-
-    pagesTbody.innerHTML = "";
-
-    if (!entries.length) {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td class="mono">—</td><td class="right mono">0</td><td class="right mono">0</td><td class="right mono">—</td>`;
-      pagesTbody.appendChild(tr);
-      return;
+      status.className = "status-pill status-bad";
+      status.textContent = "● DEGRADED";
     }
 
-    for (const e of entries) {
+    // Timing
+    if (meta.now && m.lastUpdated) {
+      const age = Math.floor((meta.now - m.lastUpdated) / 1000);
+      ageEl.textContent = age;
+      lastUpdated.textContent = new Date(m.lastUpdated).toLocaleTimeString();
+    }
+
+    // Pages table
+    const tbody = document.getElementById("pages");
+    tbody.innerHTML = "";
+    Object.entries(pages).forEach(([path, p]) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td class="mono">${escapeHtml(e.path)}</td>
-        <td class="right mono">${fmtInt(e.pageviews)}</td>
-        <td class="right mono">${fmtInt(e.clicks)}</td>
-        <td class="right mono">${escapeHtml(fmtLocalTimeFromMs(e.lastUpdated))}</td>
+        <td>${path}</td>
+        <td>${p.pageviews || 0}</td>
+        <td>${p.clicks || 0}</td>
       `;
-      pagesTbody.appendChild(tr);
-    }
+      tbody.appendChild(tr);
+    });
+
+  } catch (e) {
+    console.error("Control fetch failed", e);
   }
+}
 
-  function escapeHtml(str){
-    return String(str).replace(/[&<>"']/g, (c) => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[c]));
-  }
-
-  async function refreshOnce(force) {
-    const url = TRUTH_URL + "?t=" + Date.now();
-    try {
-      const res = await fetch(url, { cache: "no-store" });
-      const data = await res.json();
-      lastPayload = data;
-
-      // meta
-      elTruth.textContent = TRUTH_URL.replace("https://","");
-
-      const now = Date.now();
-      const last = Number(data?.metrics?.lastUpdated) || Number(data?.meta?.now) || 0;
-      const ageSec = last > 0 ? Math.max(0, Math.floor((now - last)/1000)) : null;
-
-      elLast.textContent = fmtLocalTimeFromMs(last);
-      elAge.textContent = (ageSec === null ? "—" : String(ageSec));
-
-      // health
-      setHealth(data?.status, ageSec);
-
-      // main metrics
-      const m = data?.metrics || {};
-      const sessions = Number(m.sessions) || 0;
-      const pageviews = Number(m.pageviews) || 0;
-      const clicks = Number(m.clicks) || 0;
-      const writes = Number(m.writes) || 0;
-
-      valSessions.textContent = fmtInt(sessions);
-      valPageviews.textContent = fmtInt(pageviews);
-      valClicks.textContent = fmtInt(clicks);
-      valWrites.textContent = fmtInt(writes);
-
-      setBars([sessions, pageviews, clicks, writes], [barSessions, barPageviews, barClicks, barWrites]);
-
-      // sources
-      const s = data?.sources || {};
-      const gh = Number(s.GitHub) || 0;
-      const osf = Number(s.OSF) || 0;
-      const direct = Number(s.Direct) || 0;
-      const other = Number(s.Other) || 0;
-
-      valSrcGitHub.textContent = fmtInt(gh);
-      valSrcOSF.textContent = fmtInt(osf);
-      valSrcDirect.textContent = fmtInt(direct);
-      valSrcOther.textContent = fmtInt(other);
-
-      setBars([gh, osf, direct, other], [barSrcGitHub, barSrcOSF, barSrcDirect, barSrcOther]);
-
-      // pages table
-      renderPagesTable(data?.pages || {});
-
-      // raw
-      elRaw.textContent = JSON.stringify(data, null, 2);
-
-    } catch (err) {
-      // degrade but stay stable UI
-      setHealth("DEGRADED", null);
-      elLast.textContent = "—";
-      elAge.textContent = "—";
-      elRaw.textContent = String(err?.message || err || "Unknown error");
-      renderPagesTable({});
-    }
-
-    if (force) {
-      elStatusNote.textContent = "Refreshed.";
-      setTimeout(() => elStatusNote.textContent = "", 1200);
-    }
-  }
-
-  function start() {
-    elTruth.textContent = TRUTH_URL.replace("https://","");
-    refreshOnce(false);
-    timer = setInterval(() => refreshOnce(false), POLL_MS);
-  }
-
-  start();
-})();
+setInterval(tick, 10000);
+tick();
 </script>
+
 </body>
 </html>

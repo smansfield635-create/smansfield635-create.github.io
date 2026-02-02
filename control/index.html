@@ -5,118 +5,34 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Control · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
-
   <style>
-    .kv { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; word-break: break-all; }
-
-    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    @media (max-width:720px){ .grid-2{ grid-template-columns:1fr; } }
-
-    .status-pill{ display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:999px;
-      background: rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10);
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-    }
-    .status-dot{ width:10px; height:10px; border-radius:50%; background:#f1c40f; box-shadow:0 0 18px rgba(241,196,15,.35); }
-    .dot-ok{ background:#2ecc71; box-shadow:0 0 18px rgba(46,204,113,.35); }
-    .dot-deg{ background:#f1c40f; box-shadow:0 0 18px rgba(241,196,15,.35); }
-    .dot-down{ background:#e74c3c; box-shadow:0 0 18px rgba(231,76,60,.35); }
-
-    /* GAUGES */
-    .gauge-grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:18px;
-    }
-
-    .donut{
-      --p: 0;              /* 0..1 */
-      --fg: #2ecc71;       /* primary color */
-      --bg: rgba(0,0,0,.32);
-      width:min(520px, 100%);
-      margin: 0 auto;
-      aspect-ratio: 1/1;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 50% 50%,
-          rgba(0,0,0,.55) 0%,
-          rgba(0,0,0,.40) 45%,
-          rgba(0,0,0,.10) 70%,
-          transparent 72%),
-        conic-gradient(var(--fg) calc(var(--p)*360deg), var(--bg) 0);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 30px 90px rgba(0,0,0,.55);
-      position:relative;
-      overflow:hidden;
-    }
-
-    .donut::after{
-      content:"";
-      position:absolute; inset: 16%;
-      border-radius:50%;
-      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.07), rgba(0,0,0,.55) 60%);
-      border: 1px solid rgba(255,255,255,.08);
-      box-shadow: inset 0 30px 80px rgba(0,0,0,.55);
-    }
-
-    .donut-center{
-      position:absolute;
-      inset: 0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      z-index:2;
-      text-align:center;
-      padding: 22px;
-      pointer-events:none;
-    }
-
-    .donut-value{
-      font-size: clamp(38px, 9vw, 64px);
-      font-weight: 800;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-
-    .donut-label{
-      opacity:.75;
-      font-size: clamp(14px, 3.6vw, 18px);
-      letter-spacing:.2px;
-    }
-
-    /* small row gauges */
-    .mini-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    @media (max-width:720px){ .mini-grid{ grid-template-columns:1fr; } }
-
-    .mini{
-      display:flex; align-items:center; gap:14px;
-      padding:14px;
-    }
-    .mini .ring{
-      --p: 0;
-      --fg: #5dade2;
-      --bg: rgba(0,0,0,.32);
-      width:72px; height:72px;
-      border-radius:50%;
-      background: conic-gradient(var(--fg) calc(var(--p)*360deg), var(--bg) 0);
-      border: 1px solid rgba(255,255,255,.10);
-      position:relative;
-      box-shadow: 0 18px 50px rgba(0,0,0,.45);
-    }
-    .mini .ring::after{
-      content:"";
-      position:absolute; inset: 18%;
-      border-radius:50%;
-      background: rgba(0,0,0,.55);
-      border: 1px solid rgba(255,255,255,.08);
-    }
-    .mini .meta{ display:flex; flex-direction:column; }
-    .mini .meta strong{ font-size: 20px; line-height: 1; }
-    .mini .meta span{ opacity:.75; margin-top:4px; }
+    /* Page table (kept minimal, matches your bubble aesthetic) */
+    .table-wrap{overflow:hidden;border-radius:18px;border:1px solid rgba(233,238,252,.10);background:rgba(12,16,34,.35)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:12px 12px;font-size:14px;line-height:1.2;vertical-align:middle}
+    th{font-weight:700;color:rgba(233,238,252,.92);text-align:left;border-bottom:1px solid rgba(233,238,252,.10)}
+    td{color:rgba(233,238,252,.78);border-bottom:1px solid rgba(233,238,252,.06)}
+    tr:last-child td{border-bottom:none}
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .right{text-align:right}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid rgba(233,238,252,.12);background:rgba(12,16,34,.32)}
+    .dot{width:10px;height:10px;border-radius:999px;background:#f1c40f;box-shadow:0 0 0 4px rgba(241,196,15,.12)}
+    .dot.ok{background:#2ecc71;box-shadow:0 0 0 4px rgba(46,204,113,.12)}
+    .dot.bad{background:#e74c3c;box-shadow:0 0 0 4px rgba(231,76,60,.12)}
+    .kv{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+    .kv .k{color:rgba(233,238,252,.60)}
+    .kv .v{color:rgba(233,238,252,.92);font-weight:700}
+    .small{font-size:12px;color:rgba(233,238,252,.55)}
+    .barrow{display:grid;grid-template-columns:110px 1fr 44px;gap:10px;align-items:center}
+    .bar{height:12px;border-radius:999px;background:rgba(233,238,252,.10);overflow:hidden}
+    .bar > i{display:block;height:100%;width:0%}
+    .bar > i.blue{background:linear-gradient(90deg, rgba(64,156,255,.85), rgba(64,156,255,.25))}
+    .bar > i.gold{background:linear-gradient(90deg, rgba(241,196,15,.85), rgba(241,196,15,.20))}
+    .bar > i.green{background:linear-gradient(90deg, rgba(46,204,113,.85), rgba(46,204,113,.20))}
+    .bar > i.gray{background:linear-gradient(90deg, rgba(233,238,252,.40), rgba(233,238,252,.12))}
+    .muted{color:rgba(233,238,252,.55)}
+    .btnrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .nowrap{white-space:nowrap}
   </style>
 </head>
 
@@ -129,156 +45,368 @@
   </section>
 
   <section class="panel bubble">
-    <h3>Truth source</h3>
-    <div class="kv" id="source"></div>
-
-    <div class="grid-2" style="margin-top:14px;">
-      <div>
-        <strong>Polling</strong><br/>
-        <span id="poll">10s</span>
+    <div class="bubble-body">
+      <div class="kv">
+        <div class="k">Truth source</div>
+        <div class="v mono" id="truthUrlText">—</div>
       </div>
-      <div>
-        <strong>Last updated</strong><br/>
-        <span id="lastUpdated">—</span>
+      <div style="height:10px"></div>
+      <div class="kv">
+        <div class="k">Polling</div>
+        <div class="v" id="pollingText">10s</div>
       </div>
-      <div>
-        <strong>Age (sec)</strong><br/>
-        <span id="ageSec">—</span>
+      <div class="kv">
+        <div class="k">Last updated</div>
+        <div class="v" id="lastUpdatedText">—</div>
       </div>
-      <div>
-        <strong>Status</strong><br/>
-        <span class="status-pill">
-          <span id="statusDot" class="status-dot dot-deg"></span>
-          <span id="statusText">DEGRADED</span>
-        </span>
+      <div class="kv">
+        <div class="k">Age (sec)</div>
+        <div class="v" id="ageText">—</div>
+      </div>
+      <div style="height:12px"></div>
+      <div class="pill">
+        <span class="dot" id="statusDot"></span>
+        <strong class="nowrap" id="statusText">STATUS: —</strong>
+        <span class="small" id="statusNote"></span>
+      </div>
+      <div style="height:10px"></div>
+      <div class="small">
+        Counts are conservative. They only increase when the site explicitly reports an event.
       </div>
     </div>
   </section>
 
-  <!-- BIG GAUGES -->
+  <!-- Gauges -->
   <section class="panel bubble">
-    <div class="gauge-grid">
-      <div class="donut" id="gPageviews" style="--fg:#2ecc71; --p:0;">
-        <div class="donut-center">
-          <div class="donut-value" id="pageviewsVal">0</div>
-          <div class="donut-label">Pageviews</div>
+    <details open>
+      <summary>Gauges (to scale)</summary>
+      <div class="bubble-body">
+        <div class="barrow">
+          <div class="muted">Sessions</div>
+          <div class="bar"><i class="blue" id="barSessions"></i></div>
+          <div class="right mono" id="valSessions">0</div>
+        </div>
+        <div style="height:10px"></div>
+        <div class="barrow">
+          <div class="muted">Pageviews</div>
+          <div class="bar"><i class="green" id="barPageviews"></i></div>
+          <div class="right mono" id="valPageviews">0</div>
+        </div>
+        <div style="height:10px"></div>
+        <div class="barrow">
+          <div class="muted">Clicks</div>
+          <div class="bar"><i class="gold" id="barClicks"></i></div>
+          <div class="right mono" id="valClicks">0</div>
+        </div>
+        <div style="height:10px"></div>
+        <div class="barrow">
+          <div class="muted">Writes</div>
+          <div class="bar"><i class="gray" id="barWrites"></i></div>
+          <div class="right mono" id="valWrites">0</div>
         </div>
       </div>
-
-      <div class="donut" id="gClicks" style="--fg:#f1c40f; --p:0;">
-        <div class="donut-center">
-          <div class="donut-value" id="clicksVal">0</div>
-          <div class="donut-label">Clicks</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mini-grid" style="margin-top:16px;">
-      <div class="panel bubble mini">
-        <div class="ring" id="gSessions" style="--fg:#5dade2; --p:0;"></div>
-        <div class="meta">
-          <strong id="sessionsVal">0</strong>
-          <span>Sessions</span>
-        </div>
-      </div>
-
-      <div class="panel bubble mini">
-        <div class="ring" id="gWrites" style="--fg:#9b59b6; --p:0;"></div>
-        <div class="meta">
-          <strong id="writesVal">0</strong>
-          <span>Writes</span>
-        </div>
-      </div>
-    </div>
+    </details>
   </section>
 
+  <!-- Sources -->
+  <section class="panel bubble">
+    <details>
+      <summary>Sources (to scale)</summary>
+      <div class="bubble-body">
+        <div class="barrow">
+          <div class="muted">GitHub</div>
+          <div class="bar"><i class="blue" id="barSrcGitHub"></i></div>
+          <div class="right mono" id="valSrcGitHub">0</div>
+        </div>
+        <div style="height:10px"></div>
+        <div class="barrow">
+          <div class="muted">OSF</div>
+          <div class="bar"><i class="gray" id="barSrcOSF"></i></div>
+          <div class="right mono" id="valSrcOSF">0</div>
+        </div>
+        <div style="height:10px"></div>
+        <div class="barrow">
+          <div class="muted">Direct</div>
+          <div class="bar"><i class="gold" id="barSrcDirect"></i></div>
+          <div class="right mono" id="valSrcDirect">0</div>
+        </div>
+        <div style="height:10px"></div>
+        <div class="barrow">
+          <div class="muted">Other</div>
+          <div class="bar"><i class="gray" id="barSrcOther"></i></div>
+          <div class="right mono" id="valSrcOther">0</div>
+        </div>
+        <div style="height:10px"></div>
+        <div class="small">Bars share one scale (max source value in this payload).</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- Top Pages (Latest) -->
+  <section class="panel bubble">
+    <details open>
+      <summary>Top pages (latest)</summary>
+      <div class="bubble-body">
+        <div class="small">Page-level counts are conservative. They only increase when the site reports events.</div>
+        <div style="height:12px"></div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:52%">Path</th>
+                <th class="right" style="width:16%">Pageviews</th>
+                <th class="right" style="width:16%">Clicks</th>
+                <th class="right" style="width:16%">Updated</th>
+              </tr>
+            </thead>
+            <tbody id="pagesTbody">
+              <tr><td class="mono">/</td><td class="right mono">0</td><td class="right mono">0</td><td class="right mono">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="height:10px"></div>
+        <div class="btnrow">
+          <button class="btn" type="button" id="btnRefresh">Refresh now</button>
+          <button class="btn primary" type="button" id="btnCopyTruth">Copy truth URL</button>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- Raw Payload -->
+  <section class="panel bubble">
+    <details>
+      <summary>Raw payload (JSON)</summary>
+      <div class="bubble-body">
+        <pre class="mono" id="rawJson" style="white-space:pre-wrap;margin:0">—</pre>
+      </div>
+    </details>
+  </section>
+
+  <!-- Nav -->
   <section class="panel nav">
-    <a class="btn" href="/home/">Home</a>
-    <a class="btn" href="/engine/">Engine</a>
-    <a class="btn" href="/laws/">Laws</a>
-    <a class="btn" href="/principles/">Principles</a>
+    <div class="nav-grid">
+      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/engine/">Engine</a>
+      <a class="btn" href="/laws/">Laws</a>
+      <a class="btn" href="/principles/">Principles</a>
+      <a class="btn" href="/geodynamics/">Geodynamics</a>
+      <a class="btn" href="/state/">State</a>
+      <a class="btn" href="/reference/">Reference</a>
+      <a class="btn" href="/about/">About</a>
+    </div>
   </section>
 
 </main>
 
 <script>
-const ENDPOINT = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
-const POLL_MS = 10000;
+(() => {
+  // Truth endpoint (single source of record for Control UI)
+  const TRUTH_URL = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
 
-const el = (id)=>document.getElementById(id);
+  // Polling
+  const POLL_MS = 10000;
+  let timer = null;
+  let lastPayload = null;
 
-function setStatus(status){
-  const dot = el("statusDot");
-  dot.className = "status-dot";
-  if(status === "OPERATIONAL") dot.classList.add("dot-ok");
-  else if(status === "DEGRADED") dot.classList.add("dot-deg");
-  else dot.classList.add("dot-down");
-  el("statusText").textContent = status || "UNKNOWN";
-}
+  // Elements
+  const elTruth = document.getElementById("truthUrlText");
+  const elLast = document.getElementById("lastUpdatedText");
+  const elAge = document.getElementById("ageText");
+  const elStatus = document.getElementById("statusText");
+  const elStatusDot = document.getElementById("statusDot");
+  const elStatusNote = document.getElementById("statusNote");
+  const elRaw = document.getElementById("rawJson");
 
-function setGauge(id, p){
-  const clamped = Math.max(0, Math.min(1, p));
-  el(id).style.setProperty("--p", String(clamped));
-}
+  const valSessions = document.getElementById("valSessions");
+  const valPageviews = document.getElementById("valPageviews");
+  const valClicks = document.getElementById("valClicks");
+  const valWrites = document.getElementById("valWrites");
 
-function setDonut(id, p){
-  const clamped = Math.max(0, Math.min(1, p));
-  el(id).style.setProperty("--p", String(clamped));
-}
+  const barSessions = document.getElementById("barSessions");
+  const barPageviews = document.getElementById("barPageviews");
+  const barClicks = document.getElementById("barClicks");
+  const barWrites = document.getElementById("barWrites");
 
-async function refresh(){
-  try{
-    const res = await fetch(ENDPOINT, { cache:"no-store" });
-    const data = await res.json();
+  const valSrcGitHub = document.getElementById("valSrcGitHub");
+  const valSrcOSF = document.getElementById("valSrcOSF");
+  const valSrcDirect = document.getElementById("valSrcDirect");
+  const valSrcOther = document.getElementById("valSrcOther");
 
-    // Values
-    const m = data.metrics || {};
-    const sessions = Number(m.sessions||0);
-    const pageviews = Number(m.pageviews||0);
-    const clicks = Number(m.clicks||0);
-    const writes = Number(m.writes||0);
+  const barSrcGitHub = document.getElementById("barSrcGitHub");
+  const barSrcOSF = document.getElementById("barSrcOSF");
+  const barSrcDirect = document.getElementById("barSrcDirect");
+  const barSrcOther = document.getElementById("barSrcOther");
 
-    el("sessionsVal").textContent = sessions;
-    el("pageviewsVal").textContent = pageviews;
-    el("clicksVal").textContent = clicks;
-    el("writesVal").textContent = writes;
+  const pagesTbody = document.getElementById("pagesTbody");
 
-    // Scale-to-max fill (matches your "to scale" idea)
-    const max = Math.max(1, sessions, pageviews, clicks, writes);
-    setGauge("gSessions", sessions / max);
-    setDonut("gPageviews", pageviews / max);
-    setDonut("gClicks", clicks / max);
-    setGauge("gWrites", writes / max);
+  document.getElementById("btnRefresh").addEventListener("click", () => refreshOnce(true));
+  document.getElementById("btnCopyTruth").addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(TRUTH_URL);
+      elStatusNote.textContent = "Copied.";
+      setTimeout(() => elStatusNote.textContent = "", 1500);
+    } catch {
+      elStatusNote.textContent = "Copy blocked.";
+      setTimeout(() => elStatusNote.textContent = "", 1500);
+    }
+  });
 
-    // Time / freshness
-    const now = data.meta?.now ?? Date.now();
-    const last = Number(m.lastUpdated||0);
+  // Helpers
+  const clamp01 = (x) => Math.max(0, Math.min(1, x));
+  const fmtInt = (n) => (Number.isFinite(n) ? String(Math.trunc(n)) : "0");
 
-    if(last > 0){
-      const age = Math.max(0, Math.floor((now - last)/1000));
-      el("ageSec").textContent = age;
-      el("lastUpdated").textContent = new Date(last).toLocaleTimeString();
-    }else{
-      el("ageSec").textContent = "—";
-      el("lastUpdated").textContent = "—";
+  function fmtLocalTimeFromMs(ms) {
+    if (!Number.isFinite(ms) || ms <= 0) return "—";
+    const d = new Date(ms);
+    return d.toLocaleString([], {year:"numeric", month:"numeric", day:"numeric", hour:"numeric", minute:"2-digit", second:"2-digit"});
+  }
+
+  function setHealth(status, ageSec) {
+    const s = String(status || "").toUpperCase();
+    elStatus.textContent = "STATUS: " + (s || "—");
+
+    // dot color mapping
+    elStatusDot.classList.remove("ok","bad");
+    if (s === "OPERATIONAL" || s === "OK" || s === "GREEN") elStatusDot.classList.add("ok");
+    else if (s === "DEGRADED" || s === "YELLOW") { /* default dot is yellow */ }
+    else if (s === "DOWN" || s === "ERROR" || s === "RED") elStatusDot.classList.add("bad");
+
+    // age note
+    if (Number.isFinite(ageSec)) {
+      if (ageSec <= 20) elStatusNote.textContent = "Fresh.";
+      else if (ageSec <= 120) elStatusNote.textContent = "Stale.";
+      else elStatusNote.textContent = "Very stale.";
+    } else {
+      elStatusNote.textContent = "";
+    }
+  }
+
+  function setBars(values, barEls) {
+    const max = Math.max(1, ...values.map(v => (Number.isFinite(v) ? v : 0)));
+    for (let i=0;i<values.length;i++){
+      const pct = clamp01((Number.isFinite(values[i]) ? values[i] : 0) / max) * 100;
+      barEls[i].style.width = pct.toFixed(2) + "%";
+    }
+  }
+
+  function renderPagesTable(pages) {
+    const entries = Object.entries(pages || {})
+      .map(([path, v]) => ({
+        path,
+        pageviews: Number(v && v.pageviews) || 0,
+        clicks: Number(v && v.clicks) || 0,
+        lastUpdated: Number(v && v.lastUpdated) || 0
+      }))
+      .sort((a,b) => (b.pageviews - a.pageviews) || (b.clicks - a.clicks) || (b.lastUpdated - a.lastUpdated))
+      .slice(0, 25); // bounded
+
+    pagesTbody.innerHTML = "";
+
+    if (!entries.length) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td class="mono">—</td><td class="right mono">0</td><td class="right mono">0</td><td class="right mono">—</td>`;
+      pagesTbody.appendChild(tr);
+      return;
     }
 
-    // Status
-    setStatus(data.status);
-
-  }catch(e){
-    setStatus("OFFLINE");
-    el("ageSec").textContent = "—";
-    el("lastUpdated").textContent = "—";
+    for (const e of entries) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="mono">${escapeHtml(e.path)}</td>
+        <td class="right mono">${fmtInt(e.pageviews)}</td>
+        <td class="right mono">${fmtInt(e.clicks)}</td>
+        <td class="right mono">${escapeHtml(fmtLocalTimeFromMs(e.lastUpdated))}</td>
+      `;
+      pagesTbody.appendChild(tr);
+    }
   }
-}
 
-// init
-el("source").textContent = ENDPOINT;
-el("poll").textContent = (POLL_MS/1000) + "s";
-refresh();
-setInterval(refresh, POLL_MS);
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, (c) => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[c]));
+  }
+
+  async function refreshOnce(force) {
+    const url = TRUTH_URL + "?t=" + Date.now();
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      const data = await res.json();
+      lastPayload = data;
+
+      // meta
+      elTruth.textContent = TRUTH_URL.replace("https://","");
+
+      const now = Date.now();
+      const last = Number(data?.metrics?.lastUpdated) || Number(data?.meta?.now) || 0;
+      const ageSec = last > 0 ? Math.max(0, Math.floor((now - last)/1000)) : null;
+
+      elLast.textContent = fmtLocalTimeFromMs(last);
+      elAge.textContent = (ageSec === null ? "—" : String(ageSec));
+
+      // health
+      setHealth(data?.status, ageSec);
+
+      // main metrics
+      const m = data?.metrics || {};
+      const sessions = Number(m.sessions) || 0;
+      const pageviews = Number(m.pageviews) || 0;
+      const clicks = Number(m.clicks) || 0;
+      const writes = Number(m.writes) || 0;
+
+      valSessions.textContent = fmtInt(sessions);
+      valPageviews.textContent = fmtInt(pageviews);
+      valClicks.textContent = fmtInt(clicks);
+      valWrites.textContent = fmtInt(writes);
+
+      setBars([sessions, pageviews, clicks, writes], [barSessions, barPageviews, barClicks, barWrites]);
+
+      // sources
+      const s = data?.sources || {};
+      const gh = Number(s.GitHub) || 0;
+      const osf = Number(s.OSF) || 0;
+      const direct = Number(s.Direct) || 0;
+      const other = Number(s.Other) || 0;
+
+      valSrcGitHub.textContent = fmtInt(gh);
+      valSrcOSF.textContent = fmtInt(osf);
+      valSrcDirect.textContent = fmtInt(direct);
+      valSrcOther.textContent = fmtInt(other);
+
+      setBars([gh, osf, direct, other], [barSrcGitHub, barSrcOSF, barSrcDirect, barSrcOther]);
+
+      // pages table
+      renderPagesTable(data?.pages || {});
+
+      // raw
+      elRaw.textContent = JSON.stringify(data, null, 2);
+
+    } catch (err) {
+      // degrade but stay stable UI
+      setHealth("DEGRADED", null);
+      elLast.textContent = "—";
+      elAge.textContent = "—";
+      elRaw.textContent = String(err?.message || err || "Unknown error");
+      renderPagesTable({});
+    }
+
+    if (force) {
+      elStatusNote.textContent = "Refreshed.";
+      setTimeout(() => elStatusNote.textContent = "", 1200);
+    }
+  }
+
+  function start() {
+    elTruth.textContent = TRUTH_URL.replace("https://","");
+    refreshOnce(false);
+    timer = setInterval(() => refreshOnce(false), POLL_MS);
+  }
+
+  start();
+})();
 </script>
-
 </body>
 </html>

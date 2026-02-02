@@ -1,312 +1,123 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Control · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css"/>
-  <script src="/assets/metrics.js" defer></script>
-</head>
+:root{
+  --bg0:#071227;
+  --bg1:#0a1a38;
+  --card:rgba(255,255,255,.07);
+  --card2:rgba(255,255,255,.05);
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.08);
+  --text:#e9eefc;
+  --muted:rgba(233,238,252,.68);
+  --muted2:rgba(233,238,252,.50);
+  --shadow:0 20px 60px rgba(0,0,0,.55);
+  --radius:24px;
+  --radius2:18px;
+  --btnH:64px;
+  --btnGrad:linear-gradient(90deg,rgba(56,189,248,.65),rgba(79,209,197,.65));
+}
 
-<body class="bg-gradient">
-<main class="page">
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(900px 700px at 20% 10%, rgba(56,189,248,.18), transparent 60%),
+    radial-gradient(900px 700px at 80% 20%, rgba(79,209,197,.14), transparent 60%),
+    radial-gradient(1200px 900px at 50% 90%, rgba(168,85,247,.12), transparent 60%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+  overflow-x:hidden;
+}
 
-  <section class="panel hero">
-    <h1>Control</h1>
-    <p class="subtitle">Live read-only gauges. Truth first. No actions forced.</p>
-  </section>
+.page{
+  width:min(780px, 92vw);
+  margin: 28px auto 40px;
+}
 
-  <section class="panel bubble">
-    <div class="bubble-body">
+.panel{
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+  border:1px solid var(--stroke2);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 18px;
+  margin: 16px 0;
+}
 
-      <div class="row" style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
-        <button class="btn" id="btnRefresh" type="button">Refresh now</button>
-        <button class="btn primary" id="btnCopy" type="button">Copy truth URL</button>
-      </div>
+.hero{ padding: 22px 20px; }
+.hero h1{
+  margin:0 0 6px 0;
+  font-size: clamp(36px, 7vw, 58px);
+  letter-spacing:.2px;
+}
+.subtitle{
+  margin:0;
+  color:var(--muted);
+  font-size: 16px;
+  line-height:1.45;
+}
 
-      <div style="height:12px"></div>
+.bubble details{width:100%}
+.bubble summary{
+  cursor:pointer;
+  list-style:none;
+  font-weight:700;
+  color:var(--text);
+  user-select:none;
+}
+.bubble summary::-webkit-details-marker{display:none}
+.bubble details > summary{
+  background: rgba(255,255,255,.06);
+  border:1px solid var(--stroke2);
+  border-radius: 999px;
+  padding: 14px 16px;
+}
+.bubble-body{
+  margin-top:12px;
+  padding: 10px 6px 2px;
+  color:var(--muted);
+}
+.note{color:var(--muted2); font-size:13px; margin-top:10px}
 
-      <div class="panel bubble" style="margin:0;">
-        <div class="bubble-body" style="padding:16px;">
-          <div style="display:grid; gap:10px;">
-            <div style="display:grid; grid-template-columns: 120px 1fr; gap:10px; align-items:center;">
-              <div class="muted">Truth source</div>
-              <div class="mono" id="truthUrl" style="overflow:auto; white-space:nowrap;"></div>
-            </div>
+.btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height: var(--btnH);
+  padding: 0 18px;
+  border-radius: 999px;
+  border:1px solid var(--stroke);
+  background: rgba(255,255,255,.06);
+  color:var(--text);
+  text-decoration:none;
+  font-weight:700;
+  letter-spacing:.2px;
+  transition: transform .08s ease, background .18s ease, border-color .18s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select:none;
+}
+.btn:hover{border-color: rgba(255,255,255,.20)}
+.btn:active{transform: scale(.985); background: rgba(255,255,255,.09)}
+.btn.primary{
+  background: var(--btnGrad);
+  border-color: rgba(255,255,255,.18);
+}
 
-            <div style="display:grid; grid-template-columns: 120px 1fr 120px; gap:10px; align-items:center;">
-              <div class="muted">Polling</div>
-              <div class="muted">10s</div>
-              <div class="muted" style="text-align:right;">&nbsp;</div>
-            </div>
+.nav-grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 540px){
+  .nav-grid{grid-template-columns: 1fr 1fr;}
+  .nav-grid .span2{grid-column: 1 / -1;}
+}
 
-            <div style="display:grid; grid-template-columns: 120px 1fr 120px; gap:10px; align-items:center;">
-              <div class="muted">Last updated</div>
-              <div id="lastUpdated">—</div>
-              <div class="muted" style="text-align:right;">Age (sec) <span id="ageSec">—</span></div>
-            </div>
+.footer{
+  text-align:center;
+  color: rgba(233,238,252,.45);
+  font-size: 13px;
+  margin-top: 18px;
+}
 
-            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-              <div class="pill" id="statusPill"><span class="dot"></span><span id="statusText">STATUS: —</span></div>
-              <div class="muted" id="staleNote"></div>
-            </div>
-
-            <div class="muted" style="margin-top:6px;">
-              Counts are conservative. They only increase when the site explicitly reports an event.
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <section class="panel bubble">
-    <details open>
-      <summary>Gauges (to scale)</summary>
-      <div class="bubble-body">
-        <div id="gauges" style="display:grid; gap:18px;"></div>
-      </div>
-    </details>
-  </section>
-
-  <section class="panel bubble">
-    <details open>
-      <summary>Sources (to scale)</summary>
-      <div class="bubble-body">
-        <div id="sources"></div>
-        <div class="muted" style="margin-top:10px;">Bars share one scale (max source value in this payload).</div>
-      </div>
-    </details>
-  </section>
-
-  <section class="panel bubble">
-    <details open>
-      <summary>Top pages (latest)</summary>
-      <div class="bubble-body">
-        <div class="muted">Page-level counts are conservative. They increase only when the site reports events.</div>
-        <div style="height:12px"></div>
-        <div id="pagesTable"></div>
-      </div>
-    </details>
-  </section>
-
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/reference/">Reference</a>
-    </div>
-  </section>
-
-</main>
-
-<script>
-(() => {
-  const TRUTH = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
-  const POLL_MS = 10000;
-
-  const elTruth = document.getElementById("truthUrl");
-  const elLast = document.getElementById("lastUpdated");
-  const elAge = document.getElementById("ageSec");
-  const elStatus = document.getElementById("statusText");
-  const elPill = document.getElementById("statusPill");
-  const elNote = document.getElementById("staleNote");
-  const elGauges = document.getElementById("gauges");
-  const elSources = document.getElementById("sources");
-  const elPages = document.getElementById("pagesTable");
-
-  elTruth.textContent = TRUTH;
-
-  function fmtTime(ms) {
-    if (!ms || ms <= 0) return "—";
-    const d = new Date(ms);
-    return d.toLocaleString();
-  }
-
-  function setPill(status, ageSec) {
-    const s = String(status || "DEGRADED").toUpperCase();
-    elStatus.textContent = "STATUS: " + s;
-
-    // style via classes (ui.css might not have these; we handle inline)
-    let dot = "yellow";
-    let note = "";
-    if (ageSec === null) { dot = "yellow"; note = "No recent event yet."; }
-    else if (ageSec <= 30) { dot = "green"; note = ""; }
-    else if (ageSec <= 300) { dot = "yellow"; note = "Degraded. Stale: " + ageSec + "s"; }
-    else { dot = "yellow"; note = "Very stale."; }
-
-    elNote.textContent = note;
-
-    // pill visuals
-    elPill.style.display = "inline-flex";
-    elPill.style.alignItems = "center";
-    elPill.style.gap = "10px";
-    elPill.style.padding = "10px 14px";
-    elPill.style.borderRadius = "999px";
-    elPill.style.border = "1px solid rgba(255,255,255,.10)";
-    elPill.style.background = "rgba(0,0,0,.20)";
-
-    const dotEl = elPill.querySelector(".dot");
-    dotEl.style.width = "10px";
-    dotEl.style.height = "10px";
-    dotEl.style.borderRadius = "999px";
-    dotEl.style.background = dot === "green" ? "rgba(40,210,120,.95)" : "rgba(255,200,40,.95)";
-  }
-
-  function ringGauge(label, value, max, color) {
-    const pct = max > 0 ? Math.min(1, value / max) : 0;
-    const deg = Math.round(pct * 360);
-    const wrap = document.createElement("div");
-    wrap.className = "panel bubble";
-    wrap.style.margin = "0";
-    wrap.innerHTML = `
-      <div class="bubble-body" style="display:grid; grid-template-columns: 1fr; gap:12px; padding:16px;">
-        <div style="display:flex; align-items:baseline; justify-content:space-between;">
-          <div style="font-size:18px; font-weight:700;">${label}</div>
-          <div class="mono" style="opacity:.85;">${value}</div>
-        </div>
-        <div style="position:relative; width:100%; aspect-ratio: 1/1; border-radius: 999px;
-          background:
-            conic-gradient(${color} ${deg}deg, rgba(255,255,255,.10) 0deg);
-          box-shadow: inset 0 0 0 12px rgba(0,0,0,.25);
-          overflow:hidden;">
-          <div style="position:absolute; inset:18px; border-radius:999px;
-            background: rgba(0,0,0,.35);
-            display:flex; align-items:center; justify-content:center; flex-direction:column;
-            border: 1px solid rgba(255,255,255,.10);">
-            <div style="font-size:40px; font-weight:800; letter-spacing:.5px;">${value}</div>
-            <div class="muted" style="margin-top:-6px;">${label.toLowerCase()}</div>
-          </div>
-        </div>
-      </div>
-    `;
-    return wrap;
-  }
-
-  function barRow(name, value, max, tint) {
-    const pct = max > 0 ? Math.max(0, Math.min(1, value / max)) : 0;
-    const row = document.createElement("div");
-    row.style.display = "grid";
-    row.style.gridTemplateColumns = "120px 1fr 64px";
-    row.style.gap = "12px";
-    row.style.alignItems = "center";
-    row.style.margin = "10px 0";
-    row.innerHTML = `
-      <div style="font-weight:700;">${name}</div>
-      <div style="height:14px; border-radius:999px; background: rgba(255,255,255,.10); overflow:hidden;">
-        <div style="height:100%; width:${Math.round(pct*100)}%; background:${tint}; border-radius:999px;"></div>
-      </div>
-      <div class="mono" style="text-align:right;">${value}</div>
-    `;
-    return row;
-  }
-
-  function pagesTable(pages) {
-    const entries = Object.entries(pages || {});
-    entries.sort((a,b) => (b[1]?.pageviews||0) - (a[1]?.pageviews||0));
-
-    const wrap = document.createElement("div");
-    wrap.style.display = "grid";
-    wrap.style.gap = "10px";
-
-    const header = document.createElement("div");
-    header.className = "muted";
-    header.style.display = "grid";
-    header.style.gridTemplateColumns = "1fr 110px 90px";
-    header.style.gap = "10px";
-    header.innerHTML = `<div>PATH</div><div style="text-align:right;">PAGEVIEWS</div><div style="text-align:right;">CLICKS</div>`;
-    wrap.appendChild(header);
-
-    for (let i=0; i<Math.min(12, entries.length); i++) {
-      const [p, v] = entries[i];
-      const card = document.createElement("div");
-      card.className = "panel bubble";
-      card.style.margin = "0";
-      card.innerHTML = `
-        <div class="bubble-body" style="padding:14px; display:grid; grid-template-columns: 1fr 110px 90px; gap:10px; align-items:center;">
-          <div class="mono" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${p}</div>
-          <div class="mono" style="text-align:right; font-weight:800;">${v.pageviews||0}</div>
-          <div class="mono" style="text-align:right; opacity:.9;">${v.clicks||0}</div>
-        </div>
-      `;
-      wrap.appendChild(card);
-    }
-
-    return wrap;
-  }
-
-  async function fetchTruth() {
-    const res = await fetch(TRUTH + "?t=" + Date.now(), { cache: "no-store" });
-    if (!res.ok) throw new Error("truth_not_ok");
-    return await res.json();
-  }
-
-  function render(data) {
-    const meta = data && data.meta ? data.meta : {};
-    const g = data && data.metrics ? data.metrics : {};
-    const sources = data && data.sources ? data.sources : {};
-    const pages = data && data.pages ? data.pages : {};
-
-    elLast.textContent = fmtTime(g.lastUpdated);
-    elAge.textContent = (meta.ageSec === null || typeof meta.ageSec === "undefined") ? "—" : String(meta.ageSec);
-
-    setPill(data.status, meta.ageSec);
-
-    // Gauges (global scale across 4 metrics)
-    const vals = [g.sessions||0, g.pageviews||0, g.clicks||0, g.writes||0];
-    const max = Math.max(1, ...vals);
-
-    elGauges.innerHTML = "";
-    elGauges.appendChild(ringGauge("Pageviews", g.pageviews||0, max, "rgba(40,210,120,.95)"));
-    elGauges.appendChild(ringGauge("Clicks", g.clicks||0, max, "rgba(255,200,40,.95)"));
-
-    // Sessions + Writes as compact bars under rings
-    const compact = document.createElement("div");
-    compact.style.display = "grid";
-    compact.style.gridTemplateColumns = "1fr";
-    compact.style.gap = "12px";
-    compact.appendChild(barRow("Sessions", g.sessions||0, max, "rgba(120,200,255,.95)"));
-    compact.appendChild(barRow("Writes", g.writes||0, max, "rgba(180,140,255,.95)"));
-    elGauges.appendChild(compact);
-
-    // Sources
-    const sMax = Math.max(1, ...Object.values(sources).map(x => x||0));
-    elSources.innerHTML = "";
-    elSources.appendChild(barRow("GitHub", sources.GitHub||0, sMax, "rgba(120,200,255,.95)"));
-    elSources.appendChild(barRow("OSF", sources.OSF||0, sMax, "rgba(180,140,255,.95)"));
-    elSources.appendChild(barRow("Direct", sources.Direct||0, sMax, "rgba(255,200,40,.95)"));
-    elSources.appendChild(barRow("Other", sources.Other||0, sMax, "rgba(255,255,255,.45)"));
-
-    // Pages table
-    elPages.innerHTML = "";
-    elPages.appendChild(pagesTable(pages));
-  }
-
-  async function tick() {
-    try {
-      const data = await fetchTruth();
-      render(data);
-    } catch (e) {
-      // Degraded display without lying
-      setPill("DEGRADED", null);
-    }
-  }
-
-  document.getElementById("btnRefresh").addEventListener("click", () => tick());
-  document.getElementById("btnCopy").addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(TRUTH);
-    } catch (e) {}
-  });
-
-  tick();
-  setInterval(tick, POLL_MS);
-})();
-</script>
-
-</body>
-</html>
+ul.tight{margin: 8px 0 0 18px; padding:0;}
+ul.tight li{margin: 8px 0;}

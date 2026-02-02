@@ -3,31 +3,37 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Not Found · Geodiametrics</title>
+  <title>404 · Inadmissible Path</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/>
+  <link rel="stylesheet" href="/assets/core.css"/>
   <link rel="stylesheet" href="/assets/ui.css"/>
+  <meta name="robots" content="noindex,nofollow"/>
 </head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <div class="kicker">404</div>
+      <h1 class="h1">Inadmissible Path</h1>
+      <p class="p">
+        The resource you attempted to access does not resolve coherently.
+        This may indicate a deprecated reference, an invalid trajectory, or a demolition-stage removal.
+      </p>
+      <div class="hr"></div>
+      <div class="row">
+        <a class="pill" href="/">Return to Index</a>
+        <a class="pill ghost" href="/uca/">UCAQ</a>
+        <a class="pill ghost" href="/m256/">M256</a>
+        <a class="pill ghost" href="/eai/">EAI</a>
+      </div>
+    </section>
+    <footer class="foot">
+      <div class="muted">No further action is taken.</div>
+    </footer>
+  </main>
 
-<body class="bg-gradient">
-<main class="page">
-  <section class="panel hero">
-    <h1>Not Found</h1>
-    <p class="subtitle">This path is not canonical. Return to a stable anchor.</p>
-  </section>
-
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn primary span2" href="/">Landing</a>
-      <a class="btn" href="/home/">Home</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/control/">Control</a>
-      <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn" href="/reference/">Reference</a>
-    </div>
-  </section>
-
-  <div class="footer">© Geodiametrics</div>
-</main>
+  <script src="/assets/telemetry.js"></script>
+  <script>
+    window.GEO && GEO.telemetry && GEO.telemetry.event("inadmissible_path", { path: location.pathname });
+  </script>
 </body>
 </html>

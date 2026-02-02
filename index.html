@@ -7,139 +7,109 @@
 
 <style>
 :root{
-  --bg-top:#06131e;
-  --bg-bottom:#0a2233;
+  --bg1:#050d14;
+  --bg2:#081a26;
   --card:rgba(255,255,255,0.08);
   --text:#eef5ff;
   --muted:rgba(238,245,255,.75);
-  --accent-left:#3b82f6;
-  --accent-right:#22d3ee;
-  --radius:26px;
+  --accent:#22d3ee;
+  --radius:22px;
 }
 
 *{box-sizing:border-box}
 
 html,body{
   margin:0;
-  padding:0;
   min-height:100vh;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
   color:var(--text);
-  background:linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
-  overflow-x:hidden;
-}
-
-body::before,
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background-repeat:repeat;
-}
-
-body::before{
-  background-image:
-    radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,.7),transparent),
-    radial-gradient(1px 1px at 30% 80%,rgba(255,255,255,.6),transparent),
-    radial-gradient(1px 1px at 70% 40%,rgba(255,255,255,.5),transparent),
-    radial-gradient(1px 1px at 90% 70%,rgba(255,255,255,.6),transparent);
-  background-size:300px 300px;
-  animation:starsSlow 120s linear infinite;
-}
-
-body::after{
-  background-image:
-    radial-gradient(1px 1px at 20% 60%,rgba(255,255,255,.4),transparent),
-    radial-gradient(1px 1px at 50% 30%,rgba(255,255,255,.35),transparent),
-    radial-gradient(1px 1px at 80% 10%,rgba(255,255,255,.45),transparent);
-  background-size:500px 500px;
-  animation:starsFast 200s linear infinite;
-}
-
-@keyframes starsSlow{
-  from{transform:translateY(0)}
-  to{transform:translateY(-800px)}
-}
-@keyframes starsFast{
-  from{transform:translateY(0)}
-  to{transform:translateY(-1200px)}
+  background:
+    radial-gradient(1px 1px at 20% 30%, #fff 40%, transparent 41%),
+    radial-gradient(1px 1px at 70% 80%, #fff 40%, transparent 41%),
+    radial-gradient(1px 1px at 40% 60%, #fff 40%, transparent 41%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+  background-size:
+    600px 600px,
+    700px 700px,
+    800px 800px,
+    cover;
 }
 
 main{
-  width:100%;
-  max-width:820px;
-  padding:38px 18px 44px;
+  max-width:760px;
   margin:0 auto;
-  position:relative;
-  z-index:1;
+  padding:36px 18px 48px;
 }
 
 .card{
   background:var(--card);
   border-radius:var(--radius);
-  padding:26px 24px;
-  margin-bottom:22px;
-  backdrop-filter:blur(10px);
-  box-shadow:0 22px 44px rgba(0,0,0,.35);
+  padding:22px;
+  margin-bottom:18px;
 }
 
 h1{
   margin:0 0 10px 0;
-  font-size:2.2rem;
+  font-size:2.1rem;
 }
 
 p{
   margin:0;
-  line-height:1.6;
+  line-height:1.55;
   color:var(--muted);
 }
 
-blockquote{
-  margin:0;
-  font-style:italic;
-  line-height:1.6;
-}
-
-.cite{
-  margin-top:10px;
-  font-size:.9rem;
-  color:var(--muted);
-}
-
-.enter{
-  display:block;
-  margin:26px auto 10px;
-  max-width:420px;
-  text-align:center;
-  padding:14px 28px;
+details{
+  background:var(--card);
   border-radius:999px;
+  padding:14px 18px;
+  margin-bottom:14px;
+}
+
+details[open]{
+  border-radius:var(--radius);
+}
+
+summary{
+  cursor:pointer;
   font-weight:600;
-  color:#fff;
-  text-decoration:none;
-  background:linear-gradient(90deg,var(--accent-left),var(--accent-right));
-  box-shadow:0 14px 28px rgba(0,0,0,.45);
+  list-style:none;
 }
 
-.nav{
+summary::-webkit-details-marker{display:none}
+
+.story{
+  margin-top:12px;
+  color:var(--muted);
+  line-height:1.55;
+}
+
+.actions{
   display:flex;
-  justify-content:center;
-  gap:14px;
-  margin-top:10px;
+  gap:12px;
+  margin-top:18px;
 }
 
-.nav a{
-  padding:10px 18px;
+.actions a{
+  flex:1;
+  text-align:center;
+  padding:14px;
   border-radius:999px;
-  background:rgba(255,255,255,.07);
-  color:var(--text);
+  background:linear-gradient(135deg,#3b82f6,#22d3ee);
+  color:#001018;
+  font-weight:700;
   text-decoration:none;
-  font-size:.95rem;
+}
+
+.actions .secondary{
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-weight:600;
 }
 
 footer{
-  text-align:center;
   margin-top:28px;
+  text-align:center;
   font-size:.8rem;
   color:var(--muted);
 }
@@ -152,40 +122,48 @@ footer{
 <section class="card">
   <h1>Geodiametrics</h1>
   <p>
-    A divided system fails if and only if its fragmentation
-    is not coherently integrated.
+    A way to examine systems clearly — without persuasion, pressure, or belief.
   </p>
 </section>
 
-<section class="card">
-  <blockquote>
-    Roger Bannister broke the four-minute mile after experts warned
-    it could not be done. Once a boundary illusion breaks,
-    progress accelerates.
-  </blockquote>
-  <div class="cite">— Historical record</div>
-</section>
+<details>
+  <summary>Why this exists</summary>
+  <div class="story">
+    Roger Bannister broke the four-minute mile after experts warned it could not
+    be done — some claimed the body would fail attempting it.  
+    Once a boundary illusion breaks, progress accelerates.
+    <br/><br/>
+    — Historical record
+  </div>
+</details>
 
-<section class="card">
-  <blockquote>
+<details>
+  <summary>A perspective on possibility</summary>
+  <div class="story">
     “I love it when people say something has never been done before.
     Because when I do it, I’ll be the first.”
-  </blockquote>
-  <div class="cite">— Arnold Schwarzenegger</div>
-</section>
+    <br/><br/>
+    — Arnold Schwarzenegger
+  </div>
+</details>
+
+<details>
+  <summary>A perspective on expectations</summary>
+  <div class="story">
+    “When you learn to live a life without expectations,
+    you experience a life without limitations.”
+    <br/><br/>
+    — Sean Mansfield
+  </div>
+</details>
 
 <section class="card">
-  <p>
-    Nothing here requires trust.
-    Everything here is inspectable.
-  </p>
+  <p>Nothing here requires trust. Everything here is inspectable.</p>
 </section>
 
-<a class="enter" href="/home/">Enter</a>
-
-<div class="nav">
-  <a href="/home/">Home</a>
-  <a href="/reference/">Reference</a>
+<div class="actions">
+  <a href="/home/">Enter</a>
+  <a class="secondary" href="/reference/">Reference</a>
 </div>
 
 <footer>© Geodiametrics</footer>

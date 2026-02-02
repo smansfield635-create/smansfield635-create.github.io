@@ -4,131 +4,62 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodiametrics</title>
-
-  <style>
-    :root{
-      --bg0:#071227;
-      --bg1:#0a1a38;
-      --card:rgba(255,255,255,.08);
-      --stroke:rgba(255,255,255,.14);
-      --text:#e9eefc;
-      --muted:rgba(233,238,252,.7);
-      --shadow:0 20px 60px rgba(0,0,0,.55);
-      --radius:24px;
-      --btnGrad:linear-gradient(90deg,#38bdf8,#4fd1c5);
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%}
-
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      color:var(--text);
-      background:
-        radial-gradient(900px 700px at 20% 10%, rgba(56,189,248,.18), transparent 60%),
-        radial-gradient(900px 700px at 80% 20%, rgba(79,209,197,.14), transparent 60%),
-        linear-gradient(180deg,var(--bg0),var(--bg1));
-    }
-
-    .page{
-      width:min(760px,92vw);
-      margin:28px auto 40px;
-    }
-
-    .panel{
-      background:var(--card);
-      border:1px solid var(--stroke);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:20px;
-      margin:16px 0;
-    }
-
-    h1{
-      margin:0 0 10px 0;
-      font-size:clamp(36px,7vw,56px);
-    }
-
-    .subtitle{
-      color:var(--muted);
-      font-size:16px;
-      line-height:1.45;
-    }
-
-    details summary{
-      cursor:pointer;
-      font-weight:700;
-      user-select:none;
-    }
-
-    .nav{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-      margin-top:10px;
-    }
-
-    a.btn{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      height:64px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      text-decoration:none;
-      color:var(--text);
-      font-weight:700;
-      background:rgba(255,255,255,.06);
-    }
-
-    a.btn.primary{
-      background:var(--btnGrad);
-      color:#06121f;
-    }
-
-    footer{
-      text-align:center;
-      margin-top:18px;
-      font-size:13px;
-      color:rgba(233,238,252,.45);
-    }
-  </style>
+  <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 
-<body>
+<body class="bg-gradient">
 <main class="page">
 
-  <section class="panel">
+  <section class="panel hero">
     <h1>Geodiametrics</h1>
     <p class="subtitle">
       A divided system fails if and only if its fragmentation is not coherently integrated.
     </p>
   </section>
 
-  <section class="panel">
+  <section class="panel quote" aria-label="Quotes">
+    <p>
+      “I love it when people say something has never been done before. Because when I do it, I’ll be the first.”
+    </p>
+    <div class="by">— Arnold Schwarzenegger</div>
+  </section>
+
+  <section class="panel quote" aria-label="Author quote">
+    <p>
+      “When you learn to live a life without expectations, you experience a life without limitations.”
+    </p>
+    <div class="by">— Sean Mansfield</div>
+  </section>
+
+  <section class="panel bubble">
     <details open>
       <summary>Why this exists</summary>
-      <p class="subtitle">
-        Roger Bannister broke the four-minute mile after experts warned it could not be done.
-        Once a boundary illusion breaks, progress accelerates.
-      </p>
-      <p class="subtitle">
-        This site is utility-driven and inspectable. Navigation does not imply sequence.
-      </p>
+      <div class="bubble-body">
+        <p>
+          This site is utility-driven and inspectable. Navigation does not imply sequence.
+        </p>
+        <p class="note">
+          Nothing here requires trust. Everything here is checkable.
+        </p>
+      </div>
     </details>
   </section>
 
-  <section class="panel">
-    <div class="nav">
-      <a class="btn primary" href="/home/">Enter</a>
+  <section class="panel nav">
+    <div class="nav-grid">
+      <a class="btn primary span2" href="/home/">Enter</a>
       <a class="btn" href="/products/">Products</a>
       <a class="btn" href="/control/">Control</a>
       <a class="btn" href="/reference/">Reference</a>
+      <a class="btn ghost" href="/engine/">Engine</a>
+      <a class="btn ghost" href="/laws/">Laws</a>
+      <a class="btn ghost" href="/principles/">Principles</a>
+      <a class="btn ghost" href="/geodynamics/">Geodynamics</a>
+      <a class="btn ghost span2" href="/about/">About</a>
     </div>
   </section>
 
-  <footer>© Geodiametrics</footer>
+  <div class="footer">© Geodiametrics</div>
 
 </main>
 </body>

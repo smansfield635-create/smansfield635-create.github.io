@@ -1,173 +1,84 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Geodiametrics</title>
-
-<style>
-:root{
-  --bg1:#050d14;
-  --bg2:#081a26;
-  --card:rgba(255,255,255,0.08);
-  --text:#eef5ff;
-  --muted:rgba(238,245,255,.75);
-  --accent:#22d3ee;
-  --radius:22px;
-}
-
-*{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  min-height:100vh;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  color:var(--text);
-  background:
-    radial-gradient(1px 1px at 20% 30%, #fff 40%, transparent 41%),
-    radial-gradient(1px 1px at 70% 80%, #fff 40%, transparent 41%),
-    radial-gradient(1px 1px at 40% 60%, #fff 40%, transparent 41%),
-    linear-gradient(180deg,var(--bg1),var(--bg2));
-  background-size:
-    600px 600px,
-    700px 700px,
-    800px 800px,
-    cover;
-}
-
-main{
-  max-width:760px;
-  margin:0 auto;
-  padding:36px 18px 48px;
-}
-
-.card{
-  background:var(--card);
-  border-radius:var(--radius);
-  padding:22px;
-  margin-bottom:18px;
-}
-
-h1{
-  margin:0 0 10px 0;
-  font-size:2.1rem;
-}
-
-p{
-  margin:0;
-  line-height:1.55;
-  color:var(--muted);
-}
-
-details{
-  background:var(--card);
-  border-radius:999px;
-  padding:14px 18px;
-  margin-bottom:14px;
-}
-
-details[open]{
-  border-radius:var(--radius);
-}
-
-summary{
-  cursor:pointer;
-  font-weight:600;
-  list-style:none;
-}
-
-summary::-webkit-details-marker{display:none}
-
-.story{
-  margin-top:12px;
-  color:var(--muted);
-  line-height:1.55;
-}
-
-.actions{
-  display:flex;
-  gap:12px;
-  margin-top:18px;
-}
-
-.actions a{
-  flex:1;
-  text-align:center;
-  padding:14px;
-  border-radius:999px;
-  background:linear-gradient(135deg,#3b82f6,#22d3ee);
-  color:#001018;
-  font-weight:700;
-  text-decoration:none;
-}
-
-.actions .secondary{
-  background:rgba(255,255,255,.10);
-  color:var(--text);
-  font-weight:600;
-}
-
-footer{
-  margin-top:28px;
-  text-align:center;
-  font-size:.8rem;
-  color:var(--muted);
-}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Geodiametrics · Index</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/>
+  <link rel="stylesheet" href="/assets/core.css"/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+  <meta name="robots" content="index,follow"/>
 </head>
-
 <body>
-<main>
+  <main class="wrap">
+    <header class="top">
+      <div class="brand">
+        <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
+        <div class="brandText">
+          <div class="brandName">Geodiametrics</div>
+          <div class="brandTag">Coherence · Admissibility · Execution</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a class="pill" href="/uca/">UCAQ</a>
+        <a class="pill" href="/m256/">M256</a>
+        <a class="pill" href="/eai/">EAI</a>
+        <a class="pill ghost" href="/control/">Control</a>
+      </nav>
+    </header>
 
-<section class="card">
-  <h1>Geodiametrics</h1>
-  <p>
-    A way to examine systems clearly — without persuasion, pressure, or belief.
-  </p>
-</section>
+    <section class="card">
+      <div class="kicker">INDEX</div>
+      <h1 class="h1">Three Layers · One Stack</h1>
+      <p class="p">
+        This site is being rewired to a coherence-first admissibility regime.
+        Use the three canonical layers below. Legacy paths remain temporarily available during demolition.
+      </p>
 
-<details>
-  <summary>Why this exists</summary>
-  <div class="story">
-    Roger Bannister broke the four-minute mile after experts warned it could not
-    be done — some claimed the body would fail attempting it.  
-    Once a boundary illusion breaks, progress accelerates.
-    <br/><br/>
-    — Historical record
-  </div>
-</details>
+      <div class="grid">
+        <a class="tile" href="/uca/">
+          <div class="tileTop">FOUNDATIONAL SCIENCE</div>
+          <div class="tileTitle">UCAQ</div>
+          <div class="tileBody">Encyclopedia of diagnostic closure for mechanistic systems.</div>
+        </a>
 
-<details>
-  <summary>A perspective on possibility</summary>
-  <div class="story">
-    “I love it when people say something has never been done before.
-    Because when I do it, I’ll be the first.”
-    <br/><br/>
-    — Arnold Schwarzenegger
-  </div>
-</details>
+        <a class="tile" href="/m256/">
+          <div class="tileTop">APPLIED FORMALISM</div>
+          <div class="tileTitle">M256</div>
+          <div class="tileBody">Finite quotient geometry for admissible execution.</div>
+        </a>
 
-<details>
-  <summary>A perspective on expectations</summary>
-  <div class="story">
-    “When you learn to live a life without expectations,
-    you experience a life without limitations.”
-    <br/><br/>
-    — Sean Mansfield
-  </div>
-</details>
+        <a class="tile" href="/eai/">
+          <div class="tileTop">INSTRUMENT & AUTHORITY</div>
+          <div class="tileTitle">EAI</div>
+          <div class="tileBody">Executive admissibility instrument: decides, halts, closes.</div>
+        </a>
+      </div>
 
-<section class="card">
-  <p>Nothing here requires trust. Everything here is inspectable.</p>
-</section>
+      <div class="hr"></div>
 
-<div class="actions">
-  <a href="/home/">Enter</a>
-  <a class="secondary" href="/reference/">Reference</a>
-</div>
+      <div class="notice">
+        <div class="noticeTitle">System Notice</div>
+        <div class="noticeBody">
+          Execution is coherence-gated. Inadmissible trajectories do not proceed. Observation does not mutate state.
+        </div>
+      </div>
+    </section>
 
-<footer>© Geodiametrics</footer>
+    <footer class="foot">
+      <div class="muted">© <span id="year"></span> Geodiametrics</div>
+      <div class="muted">Build: stable · Mode: demolition-safe</div>
+    </footer>
+  </main>
 
-</main>
+  <script src="/assets/telemetry.js"></script>
+  <script src="/assets/ui.js"></script>
+  <script src="/assets/metrics.js"></script>
+  <script src="/assets/lens.js"></script>
+  <script src="/assets/engine.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    window.GEO && GEO.telemetry && GEO.telemetry.event("page_view", { page: "index" });
+  </script>
 </body>
 </html>

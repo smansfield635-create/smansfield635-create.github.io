@@ -1,96 +1,26 @@
-/* Geodiametrics — Core CSS (Demolition Rebuild) */
-/* Authority > Aesthetics */
-
-:root {
-  --bg: #ffffff;
-  --fg: #111111;
-  --muted: #555555;
-  --link: #1a4fff;
-  --border: #dddddd;
+:root{
+  --bg0:#070A14;
+  --bg1:#0A1022;
+  --fg:#E9EEFC;
+  --muted:rgba(233,238,252,.68);
+  --panel:rgba(12,16,34,.62);
+  --stroke:rgba(233,238,252,.14);
+  --stroke2:rgba(233,238,252,.08);
+  --shadow:0 22px 70px rgba(0,0,0,.55);
+  --r:22px;
 }
 
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--fg);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:
+    radial-gradient(1200px 900px at 20% 10%,rgba(122,162,255,.20),transparent 60%),
+    radial-gradient(900px 700px at 80% 20%,rgba(255,122,198,.14),transparent 60%),
+    linear-gradient(180deg,var(--bg0),var(--bg1));
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--fg);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-}
-
-main {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 32px 20px 64px;
-}
-
-h1 {
-  font-size: 2.4rem;
-  margin-bottom: 0.5rem;
-}
-
-h2 {
-  font-size: 1.6rem;
-  margin-top: 2.5rem;
-  margin-bottom: 0.5rem;
-}
-
-p {
-  margin: 0.75rem 0;
-  color: var(--muted);
-}
-
-strong {
-  color: var(--fg);
-}
-
-a {
-  color: var(--link);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-hr {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 3rem 0;
-}
-
-.quote {
-  border-left: 4px solid var(--border);
-  padding-left: 16px;
-  margin: 2rem 0;
-  font-style: italic;
-  color: var(--fg);
-}
-
-.quote span {
-  display: block;
-  margin-top: 0.5rem;
-  font-style: normal;
-  color: var(--muted);
-}
-
-.nav {
-  margin-top: 3rem;
-}
-
-.nav a {
-  display: inline-block;
-  margin-right: 16px;
-  margin-top: 8px;
-  font-weight: 500;
-}
-
-.footer {
-  margin-top: 4rem;
-  font-size: 0.85rem;
-  color: var(--muted);
-}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}

@@ -1,42 +1,255 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Control · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/core.css"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Control · Geodiametrics</title>
+
+<style>
+:root{
+  --bg:#0b1620;
+  --bg-deep:#071018;
+  --card:#132738;
+  --card-soft:#162f44;
+  --text:#e9f1f7;
+  --muted:#9fb4c6;
+  --accent:#39b6ff;
+  --accent-2:#35d0c6;
+  --radius:22px;
+  --shadow:0 20px 50px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 70% -10%,rgba(57,182,255,.12),transparent 60%),
+    radial-gradient(900px 600px at 10% 10%,rgba(53,208,198,.10),transparent 55%),
+    linear-gradient(180deg,var(--bg),var(--bg-deep));
+}
+
+.page{
+  max-width:860px;
+  margin:0 auto;
+  padding:28px 18px 60px;
+}
+
+.card{
+  background:linear-gradient(180deg,var(--card),var(--card-soft));
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:22px 22px;
+  margin-bottom:18px;
+}
+
+h1{
+  margin:0 0 6px 0;
+  font-size:36px;
+  letter-spacing:.2px;
+}
+.subtitle{
+  color:var(--muted);
+  font-size:16px;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+@media (max-width:700px){
+  .row{grid-template-columns:1fr}
+}
+
+.metric{
+  background:rgba(255,255,255,.04);
+  border-radius:18px;
+  padding:16px;
+}
+.metric h3{
+  margin:0 0 6px 0;
+  font-size:14px;
+  color:var(--muted);
+  font-weight:500;
+}
+.metric .value{
+  font-size:28px;
+  font-weight:600;
+}
+
+.status{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+}
+.dot{
+  width:10px;height:10px;border-radius:50%;
+  background:#9aa9b5;
+}
+.dot.ok{background:#3bd27f}
+.dot.warn{background:#f2c94c}
+.dot.bad{background:#ff6b6b}
+
+.kv{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:6px 14px;
+  font-size:14px;
+}
+.kv div:nth-child(odd){color:var(--muted)}
+
+.link{
+  color:var(--accent);
+  text-decoration:none;
+  word-break:break-all;
+}
+.link:hover{text-decoration:underline}
+
+.footer{
+  margin-top:24px;
+  text-align:center;
+  color:#7f95a8;
+  font-size:13px;
+}
+
+.nav{
+  display:flex;
+  gap:16px;
+  justify-content:center;
+  margin-top:10px;
+}
+.nav a{
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:500;
+}
+.nav a:hover{text-decoration:underline}
+</style>
 </head>
+
 <body>
-<main>
+<div class="page">
 
-<h1>Control</h1>
+  <!-- Header -->
+  <div class="card">
+    <h1>Control</h1>
+    <div class="subtitle">Live metrics. Read-only by design.</div>
+  </div>
 
-<p>
-Live metrics. Read-only by design.
-</p>
+  <!-- Truth source -->
+  <div class="card">
+    <div class="kv">
+      <div>Truth source</div>
+      <div>
+        <a class="link" id="truthUrl" href="#" target="_blank" rel="noopener">
+          https://geodiametrics-aggregator.smansfield635.workers.dev/metrics
+        </a>
+      </div>
 
-<p>
-<strong>Truth source:</strong><br/>
-<a href="https://geodiametrics-aggregator.smansfield635.workers.dev/metrics">
-https://geodiametrics-aggregator.smansfield635.workers.dev/metrics
-</a>
-</p>
+      <div>Polling</div>
+      <div>10s</div>
 
-<hr/>
+      <div>Last updated</div>
+      <div id="lastUpdated">—</div>
 
-<p>
-If values show zero, the system is intact but idle.
-If values diverge, inspect event emission.
-</p>
+      <div>Status</div>
+      <div class="status">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">UNKNOWN</span>
+      </div>
+    </div>
+  </div>
 
-<nav class="nav">
-  <a href="/">Home</a>
-</nav>
+  <!-- Metrics -->
+  <div class="row">
+    <div class="metric">
+      <h3>Pageviews</h3>
+      <div class="value" id="pageviews">0</div>
+    </div>
+    <div class="metric">
+      <h3>Sessions</h3>
+      <div class="value" id="sessions">0</div>
+    </div>
+    <div class="metric">
+      <h3>Clicks</h3>
+      <div class="value" id="clicks">0</div>
+    </div>
+    <div class="metric">
+      <h3>Writes</h3>
+      <div class="value" id="writes">0</div>
+    </div>
+  </div>
 
-<div class="footer">
-© Geodiametrics
+  <!-- Sources -->
+  <div class="card">
+    <h3 style="margin-top:0;color:var(--muted)">Sources</h3>
+    <div class="kv">
+      <div>GitHub</div><div id="srcGithub">0</div>
+      <div>OSF</div><div id="srcOsf">0</div>
+      <div>Direct</div><div id="srcDirect">0</div>
+      <div>Other</div><div id="srcOther">0</div>
+    </div>
+  </div>
+
+  <!-- Footnote -->
+  <div class="card">
+    <div class="subtitle">
+      If values are zero, the system is intact but idle.  
+      If values diverge, inspect event emission.
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <div class="nav">
+    <a href="/">Home</a>
+    <a href="/reference/">Reference</a>
+  </div>
+
+  <div class="footer">© Geodiametrics</div>
 </div>
 
-</main>
+<script>
+const ENDPOINT = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
+document.getElementById("truthUrl").href = ENDPOINT;
+
+async function refresh(){
+  try{
+    const res = await fetch(ENDPOINT,{cache:"no-store"});
+    const data = await res.json();
+
+    const m = data.metrics || {};
+    const s = data.sources || {};
+    const status = data.status || "UNKNOWN";
+
+    pageviews.textContent = m.pageviews ?? 0;
+    sessions.textContent  = m.sessions ?? 0;
+    clicks.textContent    = m.clicks ?? 0;
+    writes.textContent    = m.writes ?? 0;
+
+    srcGithub.textContent = s.GitHub ?? 0;
+    srcOsf.textContent    = s.OSF ?? 0;
+    srcDirect.textContent = s.Direct ?? 0;
+    srcOther.textContent  = s.Other ?? 0;
+
+    statusText.textContent = status;
+
+    statusDot.className = "dot";
+    if(status === "OK") statusDot.classList.add("ok");
+    else if(status === "DEGRADED") statusDot.classList.add("warn");
+    else statusDot.classList.add("bad");
+
+    lastUpdated.textContent = new Date().toLocaleTimeString();
+  }catch(e){
+    statusText.textContent = "UNAVAILABLE";
+    statusDot.className = "dot bad";
+  }
+}
+
+refresh();
+setInterval(refresh,10000);
+</script>
 </body>
 </html>

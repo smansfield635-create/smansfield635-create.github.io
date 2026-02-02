@@ -4,128 +4,159 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Principles · Geodiametrics</title>
-
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script defer src="/assets/lens.js"></script>
 
-  <!-- HARDENED TOGGLE VISIBILITY (incl. Messenger webview) -->
   <style>
-    .lens-toggle .lens-buttons{display:flex;gap:12px;align-items:center;justify-content:space-between}
-    .lens-toggle .lens-buttons .btn{flex:1;min-height:54px;border-radius:18px;font-weight:700}
-    .lens-toggle .lens-buttons .btn.lens{
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.16);
-      color:rgba(255,255,255,.92);
+    .lens-wrap{display:flex;gap:12px;flex-wrap:wrap}
+    .lens-btn{
+      flex:1;min-width:180px;
+      padding:16px 18px;border-radius:999px;
+      border:1px solid rgba(233,238,252,.14);
+      background:rgba(12,16,34,.35);
+      color:rgba(233,238,252,.85);
+      font-weight:800;cursor:pointer
     }
-    .lens-toggle .lens-buttons .btn.lens.is-active,
-    .lens-toggle .lens-buttons .btn.lens[aria-pressed="true"]{
-      background:linear-gradient(90deg, rgba(56,127,255,.95), rgba(37,209,168,.92));
-      border:1px solid rgba(255,255,255,.22);
-      color:#fff;
-      box-shadow:0 10px 28px rgba(0,0,0,.35);
+    .lens-btn.active{
+      background:linear-gradient(90deg,rgba(56,189,248,.55),rgba(79,209,197,.55));
+      border-color:rgba(233,238,252,.18);
+      box-shadow:0 10px 30px rgba(0,0,0,.25),inset 0 0 0 1px rgba(255,255,255,.06)
     }
+    [data-lens]{display:none}
+    [data-lens].show{display:block}
+    .tier{font-weight:900}
+    .lead{color:rgba(233,238,252,.65)}
   </style>
 </head>
 
 <body class="bg-gradient">
-<main class="page" data-lens-scope>
+<main class="page">
 
   <section class="panel hero">
     <h1>Principles</h1>
-    <p class="subtitle">How laws appear in lived reality. Same meaning, two lenses.</p>
+    <p class="subtitle">How laws appear in lived reality.</p>
   </section>
 
-  <section class="panel bubble lens-toggle">
-    <div class="lens-buttons">
-      <button class="btn lens is-active" data-lens-btn="human" aria-pressed="true">Human</button>
-      <button class="btn lens" data-lens-btn="scientific" aria-pressed="false">Scientific</button>
+  <section class="panel bubble">
+    <div class="lens-wrap">
+      <button id="btnHuman" class="lens-btn">Human</button>
+      <button id="btnSci" class="lens-btn">Scientific</button>
     </div>
-    <p class="note">Principles describe <em>appearance</em>. Laws describe <em>constraint</em>.</p>
+    <p class="lead">Same structure. Different compression.</p>
   </section>
 
-  <!-- HUMAN -->
-  <section class="panel bubble" data-lens-pane="human">
+  <!-- HUMAN LENS -->
+  <section class="panel bubble" data-lens="human" id="lensHuman">
+
     <details open>
-      <summary>Tier 1 — What must hold</summary>
+      <summary class="tier">Tier 1 — What must hold</summary>
       <div class="bubble-body">
-        <p>What is true stays true under pressure. What isn’t eventually breaks.</p>
-        <ul class="tight">
-          <li><strong>Honesty</strong> stabilizes decisions.</li>
-          <li><strong>Boundaries</strong> reduce harm.</li>
-          <li><strong>Inputs</strong> shape outcomes.</li>
+        <ul>
+          <li>Honesty stabilizes decisions.</li>
+          <li>Boundaries reduce harm.</li>
+          <li>Inputs shape outcomes.</li>
         </ul>
       </div>
     </details>
 
     <details>
-      <summary>Tier 2 — How coherence is maintained</summary>
+      <summary class="tier">Tier 2 — How coherence is maintained</summary>
       <div class="bubble-body">
-        <ul class="tight">
-          <li><strong>Receipts</strong> keep reality checkable.</li>
-          <li><strong>Constraints</strong> stay binding (not “optional”).</li>
-          <li><strong>Backtracking</strong> is safe when it invalidates downstream steps.</li>
+        <ul>
+          <li>Decisions require follow-through.</li>
+          <li>Constraints prevent drift.</li>
+          <li>Receipts protect integrity.</li>
         </ul>
       </div>
     </details>
 
     <details>
-      <summary>Tier 3 — What you notice when coherence shifts</summary>
+      <summary class="tier">Tier 3 — What you notice when coherence shifts</summary>
       <div class="bubble-body">
-        <ul class="tight">
-          <li><strong>Clarity</strong> returns: you can say what happened and prove it.</li>
-          <li><strong>Confusion</strong> rises: stories multiply, receipts disappear.</li>
-          <li><strong>Pressure</strong> reveals what was real vs assumed.</li>
+        <ul>
+          <li>Signals stop lining up.</li>
+          <li>Shortcuts feel tempting.</li>
+          <li>Pressure exposes weak assumptions.</li>
         </ul>
       </div>
     </details>
+
   </section>
 
-  <!-- SCIENTIFIC -->
-  <section class="panel bubble" data-lens-pane="scientific" style="display:none">
+  <!-- SCIENTIFIC LENS -->
+  <section class="panel bubble" data-lens="scientific" id="lensSci">
+
     <details open>
-      <summary>Tier 1 — Invariants (must hold)</summary>
+      <summary class="tier">Tier 1 — Invariant constraints</summary>
       <div class="bubble-body">
-        <ul class="tight mono">
-          <li><strong>State truthfulness.</strong> Observed state dominates declared state.</li>
-          <li><strong>Bounded trust.</strong> External trust ≤ internal coherence.</li>
-          <li><strong>Input–output constraint.</strong> Output coherence ≤ input coherence.</li>
+        <ul>
+          <li>System coherence is bounded by premise integrity.</li>
+          <li>Outputs cannot exceed admissible inputs.</li>
+          <li>Constraint violation invalidates downstream states.</li>
         </ul>
       </div>
     </details>
 
     <details>
-      <summary>Tier 2 — Structural maintenance</summary>
+      <summary class="tier">Tier 2 — Stability mechanisms</summary>
       <div class="bubble-body">
-        <ul class="tight mono">
-          <li><strong>Receipt gating.</strong> Transitions require observable evidence.</li>
-          <li><strong>Constraint binding.</strong> Constraints remain active under pressure.</li>
-          <li><strong>Backtrack invalidation.</strong> Downstream receipts are invalid when upstream changes.</li>
+        <ul>
+          <li>Receipt-gated transitions enforce determinism.</li>
+          <li>Explicit constraints reduce state-space explosion.</li>
+          <li>Verification prevents incoherent propagation.</li>
         </ul>
       </div>
     </details>
 
     <details>
-      <summary>Tier 3 — Signal layer (what you observe)</summary>
+      <summary class="tier">Tier 3 — Observable instability signals</summary>
       <div class="bubble-body">
-        <ul class="tight mono">
-          <li><strong>Low ambiguity.</strong> Claims map to receipts.</li>
-          <li><strong>High ambiguity.</strong> Narrative increases without verifiable state.</li>
-          <li><strong>Instability acceleration.</strong> Confusion increases failure velocity once incoherence exists.</li>
+        <ul>
+          <li>Divergence between stated and observed behavior.</li>
+          <li>Increased correction cost over time.</li>
+          <li>Acceleration of error under pressure.</li>
         </ul>
       </div>
     </details>
+
   </section>
 
   <section class="panel nav">
     <div class="nav-grid">
-      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/">Home</a>
       <a class="btn" href="/laws/">Laws</a>
+      <a class="btn" href="/engine/">Engine</a>
       <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn primary" href="/control/">Control</a>
+      <a class="btn" href="/reference/">Reference</a>
     </div>
   </section>
 
 </main>
+
+<script>
+  const KEY="geo_principles_lens";
+  const btnH=document.getElementById("btnHuman");
+  const btnS=document.getElementById("btnSci");
+  const lh=document.getElementById("lensHuman");
+  const ls=document.getElementById("lensSci");
+
+  function setLens(v){
+    btnH.classList.toggle("active",v==="human");
+    btnS.classList.toggle("active",v==="scientific");
+    lh.classList.toggle("show",v==="human");
+    ls.classList.toggle("show",v==="scientific");
+    try{localStorage.setItem(KEY,v)}catch(e){}
+  }
+
+  btnH.onclick=()=>setLens("human");
+  btnS.onclick=()=>setLens("scientific");
+
+  let saved="human";
+  try{
+    const v=localStorage.getItem(KEY);
+    if(v==="scientific")saved=v;
+  }catch(e){}
+  setLens(saved);
+</script>
+
 </body>
 </html>
-```0

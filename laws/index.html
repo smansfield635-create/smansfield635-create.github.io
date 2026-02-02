@@ -4,80 +4,206 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Laws · Geodiametrics</title>
-
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script defer src="/assets/lens.js"></script>
 
-  <!-- HARDENED TOGGLE VISIBILITY (works even in Messenger webview) -->
   <style>
-    .lens-toggle .lens-buttons{display:flex;gap:12px;align-items:center;justify-content:space-between}
-    .lens-toggle .lens-buttons .btn{flex:1;min-height:54px;border-radius:18px;font-weight:700}
-    .lens-toggle .lens-buttons .btn.lens{
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.16);
-      color:rgba(255,255,255,.92);
+    .lens-wrap{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .lens-btn{
+      flex:1; min-width:180px;
+      padding:16px 18px;
+      border-radius:999px;
+      border:1px solid rgba(233,238,252,.14);
+      background:rgba(12,16,34,.35);
+      color:rgba(233,238,252,.85);
+      font-weight:800;
+      letter-spacing:.2px;
+      cursor:pointer;
     }
-    .lens-toggle .lens-buttons .btn.lens.is-active,
-    .lens-toggle .lens-buttons .btn.lens[aria-pressed="true"]{
-      background:linear-gradient(90deg, rgba(56,127,255,.95), rgba(37,209,168,.92));
-      border:1px solid rgba(255,255,255,.22);
-      color:#fff;
-      box-shadow:0 10px 28px rgba(0,0,0,.35);
+    .lens-btn.active{
+      background:linear-gradient(90deg, rgba(56,189,248,.55), rgba(79,209,197,.55));
+      border-color:rgba(233,238,252,.18);
+      color:rgba(233,238,252,.95);
+      box-shadow:0 10px 30px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.06);
     }
+    [data-lens]{display:none}
+    [data-lens].show{display:block}
+    .lead{color:rgba(233,238,252,.65); margin-top:10px}
+    .lawtitle{font-weight:900}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
   </style>
 </head>
 
 <body class="bg-gradient">
-<main class="page" data-lens-scope>
+<main class="page">
 
   <section class="panel hero">
     <h1>Laws</h1>
     <p class="subtitle">Same laws. Two lenses. Driven by fact, not fiction.</p>
   </section>
 
-  <section class="panel bubble lens-toggle">
-    <div class="lens-buttons">
-      <button class="btn lens is-active" data-lens-btn="human" aria-pressed="true">Human</button>
-      <button class="btn lens" data-lens-btn="scientific" aria-pressed="false">Scientific</button>
+  <section class="panel bubble">
+    <div class="lens-wrap" role="tablist" aria-label="Lens selector">
+      <button class="lens-btn" id="btnHuman" type="button" role="tab" aria-selected="true">Human</button>
+      <button class="lens-btn" id="btnSci" type="button" role="tab" aria-selected="false">Scientific</button>
     </div>
-    <p class="note">The meaning is identical. Only the language changes.</p>
+    <p class="lead">The meaning is identical. Only the language changes.</p>
   </section>
 
-  <section class="panel bubble" data-lens-pane="human">
+  <!-- HUMAN LENS -->
+  <section class="panel bubble" data-lens="human" id="lensHuman">
     <h2>Seven invariant constraints</h2>
-    <ol class="tight">
-      <li><strong>Reality can’t be faked.</strong> You can claim anything. Reality responds only to what’s true.</li>
-      <li><strong>Trust begins internally.</strong> External trust cannot exceed internal honesty.</li>
-      <li><strong>Outputs reflect inputs.</strong> Outcomes cannot be more coherent than their premises.</li>
-      <li><strong>Constraints define admissibility.</strong> What’s allowed determines what can happen.</li>
-      <li><strong>Verification gates reality.</strong> Receipts separate story from proof.</li>
-      <li><strong>Confusion accelerates failure.</strong> Once incoherence exists, collapse speeds up.</li>
-      <li><strong>Receipts enable convergence.</strong> Verified steps stabilize and scale.</li>
-    </ol>
+
+    <details open>
+      <summary class="lawtitle">Law 1 — Reality can’t be faked</summary>
+      <div class="bubble-body">
+        <p>You can claim anything. Reality responds only to what’s actually true.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary class="lawtitle">Law 2 — Trust begins internally</summary>
+      <div class="bubble-body">
+        <p>External trust can’t exceed internal honesty. If you won’t face yourself, others won’t reliably trust you.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary class="lawtitle">Law 3 — Outputs reflect inputs</summary>
+      <div class="bubble-body">
+        <p>Outcomes can’t be more coherent than their premises. Garbage in, garbage out—no exceptions under pressure.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary class="lawtitle">Law 4 — Constraints define admissibility</summary>
+      <div class="bubble-body">
+        <p>What’s allowed determines what can happen. Without boundaries, systems become reactive and unsafe.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary class="lawtitle">Law 5 — Verification gates reality</summary>
+      <div class="bubble-body">
+        <p>Receipts separate story from proof. If you can’t check it, you can’t defend it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary class="lawtitle">Law 6 — Confusion accelerates failure</summary>
+      <div class="bubble-body">
+        <p>Once incoherence exists, confusion speeds collapse. When signals don’t match, errors multiply.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary class="lawtitle">Law 7 — Receipts enable convergence</summary>
+      <div class="bubble-body">
+        <p>Verified steps let systems stabilize and scale. Receipts make progress repeatable.</p>
+      </div>
+    </details>
+
+    <p class="lead">These are constraint statements: what holds whether acknowledged or not.</p>
   </section>
 
-  <section class="panel bubble" data-lens-pane="scientific" style="display:none">
-    <h2>Seven invariant constraints (formal)</h2>
-    <ol class="tight mono">
-      <li><strong>Truth invariance.</strong> System response is a function of actual state, not declared state.</li>
-      <li><strong>Internal coherence bound.</strong> External trust ≤ internal consistency.</li>
-      <li><strong>Input–output fidelity.</strong> Output coherence ≤ input coherence.</li>
-      <li><strong>Constraint-limited state space.</strong> Admissible transitions are bounded by constraints.</li>
-      <li><strong>Verification gating.</strong> State transitions require observable receipts.</li>
-      <li><strong>Confusion amplification.</strong> Incoherence increases failure velocity.</li>
-      <li><strong>Receipt-driven convergence.</strong> Verified transitions enable stable scaling.</li>
-    </ol>
+  <!-- SCIENTIFIC LENS -->
+  <section class="panel bubble" data-lens="scientific" id="lensSci">
+    <h2>Seven invariant constraints</h2>
+
+    <details open>
+      <summary class="lawtitle">Law 1 — Coherence cannot exceed evidence</summary>
+      <div class="bubble-body">
+        <p>System claims are bounded by verifiable evidence. Unverifiable claims do not increase admissible coherence.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary class="lawtitle">Law 2 — External trust cannot exceed internal honesty</summary>
+      <div class="bubble-body">
+        <p>Observable trust is bounded by internal self-consistency (self-report ↔ behavior ↔ outcomes).</p>
+      </div>
+    </details>
+
+    <details>
+      <summary class="lawtitle">Law 3 — Outcomes cannot be more coherent than inputs</summary>
+      <div class="bubble-body">
+        <p>Outputs are bounded by premise quality. Incoherent inputs yield incoherent outputs under pressure.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary class="lawtitle">Law 4 — Constraints define admissibility</summary>
+      <div class="bubble-body">
+        <p>Admissible state transitions are those that satisfy declared constraints. Constraint violation invalidates the transition.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary class="lawtitle">Law 5 — Verification gates reality</summary>
+      <div class="bubble-body">
+        <p>Receipts constitute verification. Receipts gate forward claims and protect defensibility.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary class="lawtitle">Law 6 — Confusion accelerates failure once incoherence exists</summary>
+      <div class="bubble-body">
+        <p>Confusion amplifies instability after incoherence is present, increasing divergence rate and failure propagation.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary class="lawtitle">Law 7 — Receipts enable convergence</summary>
+      <div class="bubble-body">
+        <p>Receipt-gated advancement supports convergence by preventing unverified drift and enabling repeatability.</p>
+      </div>
+    </details>
+
+    <p class="lead"><span class="mono">Scientific lens</span> is descriptive and observer-checkable, not persuasive.</p>
   </section>
 
   <section class="panel nav">
     <div class="nav-grid">
-      <a class="btn" href="/home/">Home</a>
+      <a class="btn" href="/">Home</a>
+      <a class="btn" href="/engine/">Engine</a>
       <a class="btn" href="/principles/">Principles</a>
       <a class="btn" href="/geodynamics/">Geodynamics</a>
-      <a class="btn primary" href="/control/">Control</a>
+      <a class="btn" href="/reference/">Reference</a>
     </div>
   </section>
 
 </main>
+
+<script>
+  const KEY = "geo_lens";
+  const btnHuman = document.getElementById("btnHuman");
+  const btnSci = document.getElementById("btnSci");
+  const lensHuman = document.getElementById("lensHuman");
+  const lensSci = document.getElementById("lensSci");
+
+  function setLens(which){
+    const human = which === "human";
+    btnHuman.classList.toggle("active", human);
+    btnSci.classList.toggle("active", !human);
+
+    btnHuman.setAttribute("aria-selected", human ? "true" : "false");
+    btnSci.setAttribute("aria-selected", !human ? "true" : "false");
+
+    lensHuman.classList.toggle("show", human);
+    lensSci.classList.toggle("show", !human);
+
+    try{ localStorage.setItem(KEY, which); }catch(e){}
+  }
+
+  btnHuman.addEventListener("click", ()=>setLens("human"));
+  btnSci.addEventListener("click", ()=>setLens("scientific"));
+
+  let saved = "human";
+  try{
+    const v = localStorage.getItem(KEY);
+    if(v === "scientific" || v === "human") saved = v;
+  }catch(e){}
+  setLens(saved);
+</script>
+
 </body>
 </html>

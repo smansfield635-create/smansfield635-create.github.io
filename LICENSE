@@ -1,39 +1,21 @@
-Geodiametrics License
+MIT License
 
 Copyright (c) 2026 Geodiametrics
 
-Permission is hereby granted to any person obtaining a copy of this repository
-and associated documentation files (the “Materials”) to view, fork, and
-replicate the structure of the Materials for research, educational, and
-non-commercial purposes, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-1. Attribution
-   Any replication, fork, or derivative work must provide clear attribution to:
-   - The Geodiametrics project
-   - The canonical OSF records referenced in the Materials
-   - The listed ORCID identifier where applicable
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-2. No Misrepresentation
-   The Materials may not be presented as endorsed, validated, or approved by
-   the original authors unless explicitly stated.
-
-3. No Undisclosed Execution
-   Any derivative work that enables execution, automation, or data collection
-   beyond what is described in the Materials must clearly disclose such changes
-   and may not imply equivalence with the original project.
-
-4. No Warranty
-   The Materials are provided “as is”, without warranty of any kind, express or
-   implied, including but not limited to the warranties of merchantability,
-   fitness for a particular purpose, and noninfringement.
-
-5. Limitation of Liability
-   In no event shall the authors or copyright holders be liable for any claim,
-   damages, or other liability, whether in an action of contract, tort, or
-   otherwise, arising from, out of, or in connection with the Materials or the
-   use or other dealings in the Materials.
-
-This license does not grant permission to use the Geodiametrics name, logo, or
-trademarks for promotional purposes without prior written consent.
-
-End of Terms.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

@@ -1,21 +1,7 @@
-<!-- TNT — /sitemap.xml (FULL REPLACE: add /geodynamics/ + /principles/ landing) -->
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://smansfield635-create.github.io/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/symptoms/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/diagnosis/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/execution/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/principles/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/geodynamics/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/engine/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/engine/selection/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/engine/resolution/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/engine/commitment/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/engine/continuation/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/control/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/reference/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/about/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/explore/confusion/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/explore/breaking/</loc></url>
-  <url><loc>https://smansfield635-create.github.io/explore/return/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/uca/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/m256/</loc></url>
+  <url><loc>https://smansfield635-create.github.io/eai/</loc></url>
 </urlset>

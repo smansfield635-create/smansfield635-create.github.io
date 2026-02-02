@@ -1,12 +1,5 @@
-name = "geodiametrics-aggregator"
-main = "src/index.js"
-compatibility_date = "2026-01-31"
+name = "geodiametrics"
+compatibility_date = "2026-02-02"
 
-[durable_objects]
-bindings = [
-  { name = "METRICS_DO", class_name = "MetricsDO" }
-]
-
-[[migrations]]
-tag = "v1"
-new_classes = ["MetricsDO"]
+# If you are using Cloudflare Pages, this file can remain inert.
+# If you are using Workers, you can wire routes later without affecting GitHub Pages.

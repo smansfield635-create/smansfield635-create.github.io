@@ -2,150 +2,381 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Control · Geodiametrics</title>
 
   <link rel="stylesheet" href="/assets/ui.css"/>
 
   <style>
-    .gauge {
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at center, #0b1220 55%, transparent 56%);
+    :root{
+      --good:#22c55e;
+      --warn:#facc15;
+      --bad:#ef4444;
+      --blue:#38bdf8;
+      --cyan:#4fd1c5;
+      --panel:rgba(255,255,255,.06);
+      --stroke:rgba(255,255,255,.10);
+      --text:rgba(233,238,252,.90);
+      --muted:rgba(233,238,252,.65);
     }
 
-    .gauge::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: conic-gradient(
-        var(--color) calc(var(--pct) * 1%),
-        rgba(255,255,255,0.08) 0
-      );
-      mask: radial-gradient(circle, transparent 55%, black 56%);
+    .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+    .pill{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 14px; border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color:var(--text);
+      font-weight:600;
+    }
+    .dot{ width:10px; height:10px; border-radius:50%; background:var(--warn); box-shadow:0 0 18px rgba(250,204,21,.35); }
+    .dot.good{ background:var(--good); box-shadow:0 0 18px rgba(34,197,94,.35); }
+    .dot.bad{ background:var(--bad); box-shadow:0 0 18px rgba(239,68,68,.35); }
+
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; }
+    .btn.small{ padding:10px 14px; border-radius:999px; }
+
+    .grid2{ display:grid; grid-template-columns: 1fr; gap:16px; }
+    @media(min-width:860px){ .grid2{ grid-template-columns: 1fr 1fr; } }
+
+    /* Gauge deck */
+    .gauge-deck{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap:16px;
+      align-items:stretch;
     }
 
-    .gauge .value {
-      text-align: center;
-      z-index: 1;
+    .gcard{
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      padding:16px;
+      position:relative;
+      overflow:hidden;
     }
 
-    .gauge .value h2 {
-      margin: 0;
-      font-size: 2.6rem;
+    .ghead{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+    .gtitle{ font-weight:800; letter-spacing:.2px; }
+    .gsub{ color:var(--muted); font-size:12px; margin-top:2px; }
+
+    .ring{
+      width:240px; height:240px;
+      margin:10px auto 0;
+      position:relative;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,.55) 58%, transparent 59%),
+        conic-gradient(var(--ring) calc(var(--pct) * 1%), rgba(255,255,255,.08) 0);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.10);
     }
 
-    .gauge .value span {
-      opacity: 0.7;
-      font-size: 0.95rem;
+    .ring::after{
+      content:"";
+      position:absolute; inset:18px;
+      border-radius:50%;
+      background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.10), transparent 55%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
     }
 
-    .gauges {
-      display: grid;
-      gap: 24px;
-      justify-content: center;
+    .ring .center{
+      position:relative; z-index:2;
+      text-align:center;
+    }
+    .ring .num{ font-size:44px; font-weight:900; line-height:1; }
+    .ring .lbl{ font-size:13px; color:var(--muted); margin-top:6px; }
+
+    .barline{
+      margin-top:12px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .bar{
+      flex:1;
+      height:12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(56,189,248,.9), rgba(79,209,197,.9));
+    }
+    .bval{
+      min-width:38px;
+      text-align:right;
+      font-weight:800;
+      color:rgba(233,238,252,.85);
     }
 
-    .page-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 12px;
+    /* Sources dials */
+    .sources{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap:12px;
+      margin-top:6px;
     }
 
-    .page-table th,
-    .page-table td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+    .dial{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:14px;
+    }
+    .dialtop{
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:10px;
+    }
+    .dialname{ font-weight:800; }
+    .dialnum{ font-weight:900; opacity:.9; }
+
+    .dialtrack{
+      height:10px; border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .dialtrack > div{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(56,189,248,.85), rgba(79,209,197,.85));
     }
 
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-weight: 600;
+    /* Top pages cards */
+    .pages-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
     }
+    @media(min-width:860px){ .pages-grid{ grid-template-columns: 1fr 1fr; } }
 
-    .status-ok { background: rgba(60,200,120,0.15); color: #3cc878; }
-    .status-bad { background: rgba(255,200,60,0.15); color: #ffd24d; }
+    .pcard{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:14px;
+    }
+    .ppath{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      color:rgba(233,238,252,.85);
+      opacity:.95;
+      word-break:break-all;
+      margin-bottom:10px;
+    }
+    .minirow{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .mini{
+      display:flex; gap:8px; align-items:center;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color:rgba(233,238,252,.85);
+      font-weight:800;
+    }
+    .mini span{ font-weight:700; color:var(--muted); }
+
+    details summary{
+      cursor:pointer;
+      list-style:none;
+    }
+    details summary::-webkit-details-marker{ display:none; }
+
+    .codebox{
+      margin-top:10px;
+      padding:12px;
+      border-radius:14px;
+      background:rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.10);
+      overflow:auto;
+      max-height:280px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      color:rgba(233,238,252,.85);
+      white-space:pre;
+    }
   </style>
 </head>
 
 <body class="bg-gradient">
 <main class="page">
 
-  <!-- HERO -->
   <section class="panel hero">
     <h1>Control</h1>
-    <p class="subtitle">Live read-only gauges. Truth first. No actions forced.</p>
+    <p class="subtitle">Live gauges. Truth first. Read-only by design.</p>
   </section>
 
-  <!-- SOURCE -->
   <section class="panel bubble">
-    <h3>Truth source</h3>
-    <code id="source">—</code>
+    <div class="row">
+      <div>
+        <div class="gtitle">Truth source</div>
+        <div class="gsub" id="src">—</div>
+      </div>
 
-    <div class="tight">
-      <div>Polling: <strong>10s</strong></div>
-      <div>Last updated: <strong id="lastUpdated">—</strong></div>
-      <div>Age (sec): <strong id="age">—</strong></div>
+      <div class="actions">
+        <button class="btn small" id="btnRefresh" type="button">Refresh now</button>
+        <button class="btn small primary" id="btnCopy" type="button">Copy truth URL</button>
+      </div>
     </div>
 
-    <div id="status" class="status-pill status-bad">● DEGRADED</div>
+    <div style="height:10px"></div>
+
+    <div class="row">
+      <div class="pill">
+        <span class="dot" id="dot"></span>
+        <span id="statusText">STATUS: DEGRADED</span>
+      </div>
+
+      <div class="pill">
+        <span style="opacity:.7">Polling</span>
+        <span style="font-weight:900">10s</span>
+      </div>
+
+      <div class="pill">
+        <span style="opacity:.7">Last updated</span>
+        <span id="lastUpdated" style="font-weight:900">—</span>
+      </div>
+
+      <div class="pill">
+        <span style="opacity:.7">Age (sec)</span>
+        <span id="age" style="font-weight:900">—</span>
+      </div>
+    </div>
+
+    <div style="height:12px"></div>
+
+    <div class="gsub">
+      Counts are conservative. They increase only when the site explicitly reports an event.
+    </div>
   </section>
 
-  <!-- GAUGES -->
   <section class="panel bubble">
-    <h3>Gauges (to scale)</h3>
+    <h3>Gauges</h3>
 
-    <div class="gauges">
-      <div class="gauge" style="--pct:0;--color:#3cc878" id="g_pageviews">
-        <div class="value">
-          <h2 id="pv">0</h2>
-          <span>Pageviews</span>
+    <div class="gauge-deck">
+      <div class="gcard">
+        <div class="ghead">
+          <div>
+            <div class="gtitle">Pageviews</div>
+            <div class="gsub">Total site pageviews</div>
+          </div>
+        </div>
+        <div class="ring" id="ringPV" style="--pct:0;--ring:var(--good)">
+          <div class="center">
+            <div class="num" id="pv">0</div>
+            <div class="lbl">pageviews</div>
+          </div>
+        </div>
+        <div class="barline">
+          <div class="bar"><div id="barPV"></div></div>
+          <div class="bval" id="bPV">0</div>
         </div>
       </div>
 
-      <div class="gauge" style="--pct:0;--color:#ffd24d" id="g_clicks">
-        <div class="value">
-          <h2 id="cl">0</h2>
-          <span>Clicks</span>
+      <div class="gcard">
+        <div class="ghead">
+          <div>
+            <div class="gtitle">Clicks</div>
+            <div class="gsub">Total tracked clicks</div>
+          </div>
+        </div>
+        <div class="ring" id="ringCL" style="--pct:0;--ring:var(--warn)">
+          <div class="center">
+            <div class="num" id="cl">0</div>
+            <div class="lbl">clicks</div>
+          </div>
+        </div>
+        <div class="barline">
+          <div class="bar"><div id="barCL"></div></div>
+          <div class="bval" id="bCL">0</div>
         </div>
       </div>
 
-      <div class="gauge" style="--pct:0;--color:#5dade2" id="g_sessions">
-        <div class="value">
-          <h2 id="se">0</h2>
-          <span>Sessions</span>
+      <div class="gcard">
+        <div class="ghead">
+          <div>
+            <div class="gtitle">Sessions</div>
+            <div class="gsub">Total sessions (conservative)</div>
+          </div>
+        </div>
+        <div class="ring" id="ringSE" style="--pct:0;--ring:var(--blue)">
+          <div class="center">
+            <div class="num" id="se">0</div>
+            <div class="lbl">sessions</div>
+          </div>
+        </div>
+        <div class="barline">
+          <div class="bar"><div id="barSE"></div></div>
+          <div class="bval" id="bSE">0</div>
+        </div>
+      </div>
+
+      <div class="gcard">
+        <div class="ghead">
+          <div>
+            <div class="gtitle">Writes</div>
+            <div class="gsub">Protected write events</div>
+          </div>
+        </div>
+        <div class="ring" id="ringWR" style="--pct:0;--ring:var(--cyan)">
+          <div class="center">
+            <div class="num" id="wr">0</div>
+            <div class="lbl">writes</div>
+          </div>
+        </div>
+        <div class="barline">
+          <div class="bar"><div id="barWR"></div></div>
+          <div class="bval" id="bWR">0</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PER PAGE -->
+  <section class="panel bubble">
+    <h3>Sources (to scale)</h3>
+    <div class="sources">
+      <div class="dial">
+        <div class="dialtop"><div class="dialname">GitHub</div><div class="dialnum" id="sGH">0</div></div>
+        <div class="dialtrack"><div id="tGH"></div></div>
+      </div>
+      <div class="dial">
+        <div class="dialtop"><div class="dialname">Direct</div><div class="dialnum" id="sDI">0</div></div>
+        <div class="dialtrack"><div id="tDI"></div></div>
+      </div>
+      <div class="dial">
+        <div class="dialtop"><div class="dialname">OSF</div><div class="dialnum" id="sOSF">0</div></div>
+        <div class="dialtrack"><div id="tOSF"></div></div>
+      </div>
+      <div class="dial">
+        <div class="dialtop"><div class="dialname">Other</div><div class="dialnum" id="sOT">0</div></div>
+        <div class="dialtrack"><div id="tOT"></div></div>
+      </div>
+    </div>
+  </section>
+
   <section class="panel bubble">
     <h3>Top pages (latest)</h3>
-    <table class="page-table">
-      <thead>
-        <tr>
-          <th>Path</th>
-          <th>Pageviews</th>
-          <th>Clicks</th>
-        </tr>
-      </thead>
-      <tbody id="pages"></tbody>
-    </table>
+    <div class="gsub">Card view. No text dump. Sorted by pageviews.</div>
+
+    <div style="height:10px"></div>
+
+    <div class="pages-grid" id="pages"></div>
   </section>
 
-  <!-- NAV -->
+  <section class="panel bubble">
+    <details>
+      <summary class="pill">Raw payload (inspection only)</summary>
+      <div class="codebox" id="raw">{}</div>
+    </details>
+  </section>
+
   <section class="panel nav">
     <div class="nav-grid">
       <a class="btn" href="/">Home</a>
@@ -158,67 +389,194 @@
 </main>
 
 <script>
-const ENDPOINT = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
+  const ENDPOINT = "https://geodiametrics-aggregator.smansfield635.workers.dev/metrics";
+  const POLL_MS = 10000;
 
-document.getElementById("source").textContent = ENDPOINT;
+  const $ = (id)=>document.getElementById(id);
 
-async function tick() {
-  try {
-    const res = await fetch(ENDPOINT, { cache: "no-store" });
-    const data = await res.json();
+  $("src").textContent = ENDPOINT;
 
-    const m = data.metrics || {};
-    const pages = data.pages || {};
-    const meta = data.meta || {};
-
-    // Numbers
-    pv.textContent = m.pageviews || 0;
-    cl.textContent = m.clicks || 0;
-    se.textContent = m.sessions || 0;
-
-    // Scale gauges (relative)
-    const max = Math.max(m.pageviews || 1, m.clicks || 1, m.sessions || 1);
-    g_pageviews.style.setProperty("--pct", (m.pageviews / max) * 100);
-    g_clicks.style.setProperty("--pct", (m.clicks / max) * 100);
-    g_sessions.style.setProperty("--pct", (m.sessions / max) * 100);
-
-    // Status
-    const status = document.getElementById("status");
-    if (data.status === "OPERATIONAL") {
-      status.className = "status-pill status-ok";
-      status.textContent = "● OPERATIONAL";
-    } else {
-      status.className = "status-pill status-bad";
-      status.textContent = "● DEGRADED";
+  $("btnCopy").addEventListener("click", async ()=>{
+    try{
+      await navigator.clipboard.writeText(ENDPOINT);
+      $("btnCopy").textContent = "Copied ✓";
+      setTimeout(()=> $("btnCopy").textContent="Copy truth URL", 1200);
+    }catch(e){
+      $("btnCopy").textContent = "Copy failed";
+      setTimeout(()=> $("btnCopy").textContent="Copy truth URL", 1200);
     }
+  });
 
-    // Timing
-    if (meta.now && m.lastUpdated) {
-      const age = Math.floor((meta.now - m.lastUpdated) / 1000);
-      ageEl.textContent = age;
-      lastUpdated.textContent = new Date(m.lastUpdated).toLocaleTimeString();
+  $("btnRefresh").addEventListener("click", ()=>{
+    fetchAndRender(true);
+  });
+
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+  function pct01(x){ return (clamp01(x) * 100).toFixed(1); }
+
+  function setRing(ringEl, val, max){
+    const p = max ? clamp01(val / max) : 0;
+    ringEl.style.setProperty("--pct", pct01(p));
+  }
+  function setBar(barEl, val, max){
+    const p = max ? clamp01(val / max) : 0;
+    barEl.style.width = (p * 100).toFixed(1) + "%";
+  }
+
+  function fmtTime(ms){
+    try{
+      return new Date(ms).toLocaleString();
+    }catch(e){
+      return "—";
     }
+  }
 
-    // Pages table
-    const tbody = document.getElementById("pages");
-    tbody.innerHTML = "";
-    Object.entries(pages).forEach(([path, p]) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${path}</td>
-        <td>${p.pageviews || 0}</td>
-        <td>${p.clicks || 0}</td>
+  function statusPaint(status, ageSec){
+    const dot = $("dot");
+    const st = $("statusText");
+
+    // Age-based override: if very stale, call it degraded even if status claims operational.
+    const veryStale = (typeof ageSec === "number" && ageSec >= 120);
+
+    if(status === "OPERATIONAL" && !veryStale){
+      dot.className = "dot good";
+      st.textContent = "STATUS: OPERATIONAL";
+      return;
+    }
+    if(status === "RED" || status === "DOWN"){
+      dot.className = "dot bad";
+      st.textContent = "STATUS: DOWN";
+      return;
+    }
+    dot.className = "dot";
+    st.textContent = "STATUS: DEGRADED";
+  }
+
+  function renderPages(pagesObj){
+    const entries = Object.entries(pagesObj || {});
+    entries.sort((a,b)=> (b[1]?.pageviews||0) - (a[1]?.pageviews||0));
+
+    const host = $("pages");
+    host.innerHTML = "";
+
+    // Show up to 12 cards (bounded)
+    const slice = entries.slice(0, 12);
+
+    slice.forEach(([path, p])=>{
+      const pv = p?.pageviews || 0;
+      const cl = p?.clicks || 0;
+
+      const card = document.createElement("div");
+      card.className = "pcard";
+      card.innerHTML = `
+        <div class="ppath">${path}</div>
+        <div class="minirow">
+          <div class="mini">${pv} <span>pageviews</span></div>
+          <div class="mini">${cl} <span>clicks</span></div>
+        </div>
       `;
-      tbody.appendChild(tr);
+      host.appendChild(card);
     });
 
-  } catch (e) {
-    console.error("Control fetch failed", e);
+    if(slice.length === 0){
+      const empty = document.createElement("div");
+      empty.className = "pcard";
+      empty.innerHTML = `<div class="gsub">No page-level data reported yet.</div>`;
+      host.appendChild(empty);
+    }
   }
-}
 
-setInterval(tick, 10000);
-tick();
+  async function fetchAndRender(isManual=false){
+    try{
+      const res = await fetch(ENDPOINT, { cache:"no-store" });
+      const data = await res.json();
+
+      // Always display raw in hidden inspector
+      $("raw").textContent = JSON.stringify(data, null, 2);
+
+      const m = data.metrics || {};
+      const s = data.sources || {};
+      const pages = data.pages || {};
+      const meta = data.meta || {};
+
+      // Metrics numbers
+      const sessions = m.sessions || 0;
+      const pageviews = m.pageviews || 0;
+      const clicks = m.clicks || 0;
+      const writes = m.writes || 0;
+
+      $("se").textContent = sessions;
+      $("pv").textContent = pageviews;
+      $("cl").textContent = clicks;
+      $("wr").textContent = writes;
+
+      $("bSE").textContent = sessions;
+      $("bPV").textContent = pageviews;
+      $("bCL").textContent = clicks;
+      $("bWR").textContent = writes;
+
+      // Scale for visuals (max across metrics)
+      const maxMetric = Math.max(1, sessions, pageviews, clicks, writes);
+
+      setRing($("ringSE"), sessions, maxMetric);
+      setRing($("ringPV"), pageviews, maxMetric);
+      setRing($("ringCL"), clicks, maxMetric);
+      setRing($("ringWR"), writes, maxMetric);
+
+      setBar($("barSE"), sessions, maxMetric);
+      setBar($("barPV"), pageviews, maxMetric);
+      setBar($("barCL"), clicks, maxMetric);
+      setBar($("barWR"), writes, maxMetric);
+
+      // Sources
+      const gh = s.GitHub || 0;
+      const di = s.Direct || 0;
+      const osf = s.OSF || 0;
+      const ot = s.Other || 0;
+
+      $("sGH").textContent = gh;
+      $("sDI").textContent = di;
+      $("sOSF").textContent = osf;
+      $("sOT").textContent = ot;
+
+      const maxSrc = Math.max(1, gh, di, osf, ot);
+      $("tGH").style.width = (clamp01(gh/maxSrc)*100).toFixed(1)+"%";
+      $("tDI").style.width = (clamp01(di/maxSrc)*100).toFixed(1)+"%";
+      $("tOSF").style.width = (clamp01(osf/maxSrc)*100).toFixed(1)+"%";
+      $("tOT").style.width = (clamp01(ot/maxSrc)*100).toFixed(1)+"%";
+
+      // Time / age
+      const last = m.lastUpdated || 0;
+      const now = meta.now || Date.now();
+      const ageSec = (last > 0) ? Math.floor((now - last)/1000) : null;
+
+      $("lastUpdated").textContent = (last > 0) ? fmtTime(last) : "—";
+      $("age").textContent = (typeof ageSec === "number") ? ageSec : "—";
+
+      // Status paint
+      statusPaint(data.status || "DEGRADED", ageSec);
+
+      // Pages cards
+      renderPages(pages);
+
+      // Manual refresh feedback
+      if(isManual){
+        $("btnRefresh").textContent = "Refreshed ✓";
+        setTimeout(()=> $("btnRefresh").textContent="Refresh now", 900);
+      }
+
+    } catch (e) {
+      // Keep UI stable, just mark degraded
+      statusPaint("DEGRADED", 9999);
+      if(isManual){
+        $("btnRefresh").textContent = "Refresh failed";
+        setTimeout(()=> $("btnRefresh").textContent="Refresh now", 1200);
+      }
+    }
+  }
+
+  fetchAndRender(false);
+  setInterval(()=>fetchAndRender(false), POLL_MS);
 </script>
 
 </body>

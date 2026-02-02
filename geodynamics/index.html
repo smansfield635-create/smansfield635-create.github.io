@@ -1,140 +1,191 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodynamics · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Geodynamics · Geodiametrics</title>
 
-  <style>
-    .lens-wrap{display:flex;gap:12px;flex-wrap:wrap}
-    .lens-btn{
-      flex:1;min-width:180px;
-      padding:16px 18px;border-radius:999px;
-      border:1px solid rgba(233,238,252,.14);
-      background:rgba(12,16,34,.35);
-      color:rgba(233,238,252,.85);
-      font-weight:900;cursor:pointer
-    }
-    .lens-btn.active{
-      background:linear-gradient(90deg,rgba(56,189,248,.55),rgba(79,209,197,.55));
-      border-color:rgba(233,238,252,.18);
-      box-shadow:0 10px 30px rgba(0,0,0,.25),inset 0 0 0 1px rgba(255,255,255,.06)
-    }
-    [data-lens]{display:none}
-    [data-lens].show{display:block}
-    .lead{color:rgba(233,238,252,.65)}
-  </style>
+<style>
+:root{
+  --bg:#0b1620;
+  --bg-deep:#071018;
+  --card:#122838;
+  --card-soft:#163044;
+  --text:#e9f1f7;
+  --muted:#9fb4c6;
+  --accent:#39b6ff;
+  --accent-2:#35d0c6;
+  --radius:22px;
+  --shadow:0 18px 46px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 70% -10%,rgba(57,182,255,.10),transparent 60%),
+    radial-gradient(900px 600px at 10% 10%,rgba(53,208,198,.08),transparent 55%),
+    linear-gradient(180deg,var(--bg),var(--bg-deep));
+}
+
+.page{
+  max-width:880px;
+  margin:0 auto;
+  padding:28px 18px 60px;
+}
+
+.card{
+  background:linear-gradient(180deg,var(--card),var(--card-soft));
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:22px;
+  margin-bottom:18px;
+}
+
+h1{margin:0 0 6px 0;font-size:36px}
+.subtitle{color:var(--muted);font-size:16px}
+
+.section-title{
+  margin:0 0 10px 0;
+  font-size:15px;
+  color:var(--muted);
+  font-weight:600;
+}
+
+p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.55;
+}
+p + p{margin-top:10px}
+
+details{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:14px 16px;
+  margin-top:12px;
+}
+summary{
+  cursor:pointer;
+  font-weight:700;
+  color:var(--text);
+  list-style:none;
+}
+summary::-webkit-details-marker{display:none}
+
+ul{
+  margin:10px 0 0 18px;
+  color:var(--muted);
+  line-height:1.55;
+}
+li{margin:8px 0}
+
+.nav{
+  display:flex;
+  gap:18px;
+  justify-content:center;
+  margin-top:18px;
+}
+.nav a{
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:500;
+}
+.nav a:hover{text-decoration:underline}
+
+.footer{
+  margin-top:26px;
+  text-align:center;
+  color:#7f95a8;
+  font-size:13px;
+}
+</style>
 </head>
 
-<body class="bg-gradient">
-<main class="page">
+<body>
+<div class="page">
 
-  <section class="panel hero">
+  <!-- Header -->
+  <div class="card">
     <h1>Geodynamics</h1>
-    <p class="subtitle">How coherence changes over time — without opinion, without pressure.</p>
-  </section>
-
-  <section class="panel bubble">
-    <div class="lens-wrap">
-      <button id="btnHuman" class="lens-btn">Human</button>
-      <button id="btnSci" class="lens-btn">Scientific</button>
+    <div class="subtitle">
+      How coherence shifts over time — without persuasion or pressure.
     </div>
-    <p class="lead">Same phenomenon. Two descriptions.</p>
-  </section>
+  </div>
 
-  <!-- HUMAN LENS -->
-  <section class="panel bubble" data-lens="human" id="lensHuman">
-    <h2>Human translation</h2>
+  <!-- Definition -->
+  <div class="card">
+    <div class="section-title">Purpose</div>
     <p>
-      When life feels confusing, it usually means signals stopped lining up.
-      Coherence returns when reality becomes checkable again: what happened, what was allowed, and what proved out.
+      Geodynamics describes movement: how systems drift, stabilize, and collapse under time and pressure.
+      It does not assign blame. It describes structure.
     </p>
-    <ul>
-      <li><strong>Drift</strong> is when what you say, do, and get stop matching.</li>
-      <li><strong>Pressure</strong> reveals what is real and what was only assumed.</li>
-      <li><strong>Small corrections</strong> early prevent large collapses later.</li>
-    </ul>
+  </div>
 
-    <details>
-      <summary>What to watch</summary>
-      <div class="bubble-body">
-        <ul class="tight">
-          <li>Repeated “same problem, new day” patterns.</li>
-          <li>More arguing, less verifying.</li>
-          <li>Plans changing without receipts.</li>
-        </ul>
-      </div>
-    </details>
-  </section>
-
-  <!-- SCIENTIFIC LENS -->
-  <section class="panel bubble" data-lens="scientific" id="lensSci">
-    <h2>Scientific language</h2>
-    <p>
-      Coherence can be expressed as the inverse of divergence between declared state and observed state.
-      This is a structural description, not a moral claim.
-    </p>
+  <!-- Core concepts -->
+  <div class="card">
+    <div class="section-title">Core concepts</div>
 
     <details open>
-      <summary>Minimal model</summary>
-      <div class="bubble-body">
-        <p class="note"><strong>Coherence(t)</strong> decreases as <strong>Divergence(t)</strong> increases.</p>
-        <p class="note"><strong>Divergence</strong> = misalignment between intention, action, and outcome.</p>
-      </div>
+      <summary>Drift</summary>
+      <p>
+        Drift is the growing mismatch between what is said, what is done, and what occurs.
+        Drift increases when constraints stop binding behavior.
+      </p>
     </details>
 
     <details>
-      <summary>Observable signals</summary>
-      <div class="bubble-body">
-        <ul class="tight">
-          <li>Increasing correction cost over time.</li>
-          <li>Constraint violations propagating downstream.</li>
-          <li>Instability accelerating under pressure.</li>
-        </ul>
-      </div>
+      <summary>Pressure</summary>
+      <p>
+        Pressure is not “bad.” Pressure reveals what is real.
+        Under pressure, incoherence becomes visible.
+      </p>
     </details>
-  </section>
 
-  <section class="panel nav">
-    <div class="nav-grid">
-      <a class="btn" href="/">Home</a>
-      <a class="btn" href="/laws/">Laws</a>
-      <a class="btn" href="/principles/">Principles</a>
-      <a class="btn" href="/engine/">Engine</a>
-      <a class="btn" href="/control/">Control</a>
-      <a class="btn" href="/reference/">Reference</a>
-    </div>
-  </section>
+    <details>
+      <summary>Correction cost</summary>
+      <p>
+        The longer drift persists, the more expensive correction becomes.
+        Small corrections early prevent large collapses later.
+      </p>
+    </details>
 
-</main>
+    <details>
+      <summary>Convergence</summary>
+      <p>
+        Convergence occurs when reality becomes checkable again:
+        constraints are explicit, receipts exist, and outcomes align with claims.
+      </p>
+    </details>
+  </div>
 
-<script>
-  const KEY="geo_geodynamics_lens";
-  const btnH=document.getElementById("btnHuman");
-  const btnS=document.getElementById("btnSci");
-  const lh=document.getElementById("lensHuman");
-  const ls=document.getElementById("lensSci");
+  <!-- Observable signals -->
+  <div class="card">
+    <div class="section-title">Observable signals</div>
+    <ul>
+      <li>More arguing, less verification</li>
+      <li>Rules become optional or inconsistent</li>
+      <li>Promises accumulate without completion</li>
+      <li>Effort rises while outcomes degrade</li>
+      <li>Correction cost increases over time</li>
+    </ul>
+  </div>
 
-  function setLens(v){
-    btnH.classList.toggle("active",v==="human");
-    btnS.classList.toggle("active",v==="scientific");
-    lh.classList.toggle("show",v==="human");
-    ls.classList.toggle("show",v==="scientific");
-    try{localStorage.setItem(KEY,v)}catch(e){}
-  }
+  <!-- Navigation -->
+  <div class="nav">
+    <a href="/home/">Home</a>
+    <a href="/laws/">Laws</a>
+    <a href="/principles/">Principles</a>
+    <a href="/engine/">Engine</a>
+    <a href="/reference/">Reference</a>
+  </div>
 
-  btnH.onclick=()=>setLens("human");
-  btnS.onclick=()=>setLens("scientific");
+  <div class="footer">© Geodiametrics</div>
 
-  let saved="human";
-  try{
-    const v=localStorage.getItem(KEY);
-    if(v==="scientific")saved=v;
-  }catch(e){}
-  setLens(saved);
-</script>
-
+</div>
 </body>
 </html>
-```0

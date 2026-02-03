@@ -1,150 +1,151 @@
-/* ===============================
-   GEODIAMETRICS — FRONT GATE
-   SINGLE SOURCE OF TRUTH
-   =============================== */
+/* =========================================================
+   GEODIAMETRICS — HARD RESET UI
+   Single Diamond • Single Logic • No Legacy
+   ========================================================= */
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  background: radial-gradient(ellipse at top, #0b1a33, #050914);
-  color: #e8ecf4;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  color: #e5e7eb;
 }
 
-/* LOCK RAW TEXT FROM EVER SHOWING */
-button, a {
-  all: unset;
-}
+/* ---------- Layout ---------- */
 
-.stage {
+main {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding: 3rem 1rem 2rem;
+  padding: 48px 20px 80px;
+  gap: 40px;
 }
 
-/* HERO */
+/* ---------- Headline ---------- */
+
 .hero {
   text-align: center;
-  margin-bottom: 2.5rem;
 }
 
 .hero h1 {
-  font-size: 2.6rem;
-  margin: 0;
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .hero p {
+  margin-top: 8px;
   opacity: 0.7;
-  margin-top: 0.5rem;
 }
 
-/* ===== FRONT GATE DIAMOND ===== */
+/* ---------- Diamond System ---------- */
 
-.gate {
+.diamond-stage {
   position: relative;
-  width: 300px;
-  height: 300px;
-  margin: 2rem 0;
+  width: 320px;
+  height: 320px;
 }
 
-/* OUTER DIAMOND */
+/* Outer diamond */
 .outer-diamond {
   position: absolute;
   inset: 0;
   transform: rotate(45deg);
-  border-radius: 32px;
-  background: linear-gradient(145deg, #122a55, #0a1630);
+  border-radius: 24px;
+  background: linear-gradient(145deg, #1e293b, #020617);
   box-shadow:
-    0 0 80px rgba(90,130,255,0.25),
-    inset 0 0 40px rgba(255,255,255,0.08);
+    0 0 60px rgba(59,130,246,0.15),
+    inset 0 0 40px rgba(255,255,255,0.05);
 }
 
-/* INNER DIAMOND */
+/* Inner diamond */
 .inner-diamond {
   position: absolute;
-  inset: 30%;
-  background: radial-gradient(circle at center, #1c3a66, #0b1a33);
-  border-radius: 20px;
-  box-shadow: inset 0 0 25px rgba(255,255,255,0.12);
+  inset: 70px;
+  transform: rotate(45deg);
+  border-radius: 18px;
+  background: linear-gradient(145deg, #0f172a, #020617);
+  box-shadow: inset 0 0 20px rgba(255,255,255,0.06);
 }
 
-/* ===== FACET BUTTONS (8 TOTAL) ===== */
+/* ---------- Buttons ---------- */
 
-.facet {
+.node {
   position: absolute;
-  width: 110px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transform: translate(-50%, -50%);
+  padding: 10px 18px;
   border-radius: 999px;
-  background: rgba(20,40,80,0.8);
-  border: 1px solid rgba(255,255,255,0.18);
-  color: #e8ecf4;
-  font-weight: 500;
+  background: rgba(15,23,42,0.9);
+  border: 1px solid rgba(255,255,255,0.15);
+  font-size: 0.85rem;
+  white-space: nowrap;
   cursor: pointer;
-  transform: rotate(-45deg);
-  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
 }
 
-/* OUTER 4 */
-.facet.top    { top: -22px; left: 50%; transform: translateX(-50%) rotate(-45deg); }
-.facet.bottom { bottom: -22px; left: 50%; transform: translateX(-50%) rotate(-45deg); }
-.facet.left   { left: -22px; top: 50%; transform: translateY(-50%) rotate(-45deg); }
-.facet.right  { right: -22px; top: 50%; transform: translateY(-50%) rotate(-45deg); }
+.node:hover {
+  background: rgba(30,64,175,0.8);
+  border-color: rgba(147,197,253,0.8);
+}
 
-/* INNER 4 */
-.facet.itop    { top: 20%; left: 50%; transform: translateX(-50%) rotate(-45deg); }
-.facet.ibottom { bottom: 20%; left: 50%; transform: translateX(-50%) rotate(-45deg); }
-.facet.ileft   { left: 20%; top: 50%; transform: translateY(-50%) rotate(-45deg); }
-.facet.iright  { right: 20%; top: 50%; transform: translateY(-50%) rotate(-45deg); }
+/* Outer nodes */
+.node.laws      { top: 0%;   left: 50%; }
+.node.products  { top: 50%;  left: 0%;  }
+.node.gauges    { top: 50%;  left: 100%;}
+.node.links     { top: 100%; left: 50%; }
 
-/* ===== INTEGRITY LINE ===== */
+/* Inner nodes */
+.node.wisdom    { top: 28%;  left: 50%; }
+.node.knowledge { top: 50%;  left: 28%; }
+.node.theism    { top: 50%;  left: 72%; }
+.node.law       { top: 72%;  left: 50%; }
 
-.integrity-line {
-  margin-top: 1.5rem;
+/* ---------- Integrity Line ---------- */
+
+.integrity {
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
   opacity: 0.75;
-  font-size: 0.95rem;
 }
 
-/* ===== SAYINGS ===== */
+/* ---------- Sayings ---------- */
 
 .sayings {
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  margin-top: 2rem;
+  gap: 14px;
 }
 
-.sayings-hint {
+.sayings-header {
   text-align: center;
-  opacity: 0.6;
-  font-size: 0.9rem;
+  opacity: 0.7;
+  font-size: 0.85rem;
 }
 
 .saying {
-  padding: 0.85rem 1.1rem;
+  padding: 14px 18px;
   border-radius: 999px;
-  background: rgba(20,30,55,0.8);
+  background: rgba(15,23,42,0.75);
   border: 1px solid rgba(255,255,255,0.12);
   text-align: center;
-  cursor: pointer;
+  font-size: 1rem;
 }
 
-/* FOOTER */
-.foot {
-  margin-top: auto;
-  opacity: 0.5;
-  font-size: 0.85rem;
-  padding-top: 2rem;
+/* ---------- Footer ---------- */
+
+footer {
+  position: fixed;
+  bottom: 16px;
+  width: 100%;
+  text-align: center;
+  font-size: 0.75rem;
+  opacity: 0.4;
 }

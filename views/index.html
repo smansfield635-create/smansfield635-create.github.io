@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Views</title>
+
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/>
+  <link rel="stylesheet" href="/assets/core.css"/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <header class="top">
+      <div class="brand">
+        <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
+        <div class="brandText">
+          <div class="brandName">Views</div>
+          <div class="brandTag">Projection Surfaces</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="pill" href="/">Index</a>
+        <a class="pill ghost" href="/gauges/">Live Gauges</a>
+        <a class="pill ghost" href="/gauge-registry/">Registry</a>
+        <a class="pill ghost" href="/uca/">UCAQ</a>
+        <a class="pill ghost" href="/m256/">M256</a>
+        <a class="pill ghost" href="/eai/">EAI</a>
+      </nav>
+    </header>
+
+    <section class="card">
+      <div class="kicker">VIEWS</div>
+      <h1 class="h1">Canonical Projections</h1>
+      <p class="p">
+        Views are read-only projections of canonical gauges.
+        They do not define truth, admissibility, or authority.
+      </p>
+
+      <div class="hr"></div>
+
+      <div class="grid">
+        <a class="tile" href="/views/human/">
+          <div class="tileTop">HUMAN</div>
+          <div class="tileTitle">Human View</div>
+          <div class="tileBody">
+            Alignment, trust, clarity, and consistency.
+          </div>
+        </a>
+
+        <a class="tile" href="/views/scientific/">
+          <div class="tileTop">SCIENTIFIC</div>
+          <div class="tileTitle">Scientific View</div>
+          <div class="tileBody">
+            Constraints, states, trajectories, and boundaries.
+          </div>
+        </a>
+
+        <a class="tile" href="/views/operational/">
+          <div class="tileTop">OPERATIONAL</div>
+          <div class="tileTitle">Operational View</div>
+          <div class="tileBody">
+            Readiness, momentum, risk, and finality signals.
+          </div>
+        </a>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="notice">
+        <div class="noticeTitle">Rule</div>
+        <div class="noticeBody">
+          If a view conflicts with gauges, the gauges prevail.
+          If gauges conflict with EAI, EAI prevails.
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <div class="muted">Views · Projection Layer</div>
+      <div class="muted">Canonical</div>
+    </footer>
+
+  </main>
+</body>
+</html>

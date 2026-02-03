@@ -1,29 +1,19 @@
 /* =====================================================
-   GEODIAMETRICS UI — COSMIC 4K v4
-   Stars · Bubbles · Foundational Colors
+   GEODIAMETRICS UI — COSMIC STARS v5 (VISIBLE)
 ===================================================== */
 
-/* ---------- COLOR SYSTEM ---------- */
 :root{
-  /* Background */
-  --bg-deep:#02040a;
-  --bg-mid:#0a0f22;
-
-  /* Text */
   --text-main:#f3f6ff;
   --text-muted:#b8c0f0;
 
-  /* Foundational Colors */
+  --glass:rgba(18,24,48,.78);
+  --stroke:rgba(255,255,255,.14);
+
   --blue:#7fb4ff;
   --green:#7cffb2;
   --red:#ff7a7a;
   --purple:#b58cff;
 
-  /* Glass */
-  --glass:rgba(18,24,48,.78);
-  --stroke:rgba(255,255,255,.14);
-
-  /* Glow */
   --glow-blue:rgba(127,180,255,.45);
   --glow-green:rgba(124,255,178,.35);
   --glow-red:rgba(255,122,122,.35);
@@ -32,160 +22,113 @@
   --radius:28px;
 }
 
-/* ---------- GLOBAL ---------- */
-*{box-sizing:border-box}
-html,body{height:100%}
+/* KILL DEFAULT LINK STYLES */
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+a:hover{text-decoration:none}
 
-body{
-  margin:0;
-  color:var(--text-main);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  background:
-    radial-gradient(900px 700px at 20% 25%, rgba(127,180,255,.18), transparent 55%),
-    radial-gradient(800px 650px at 80% 20%, rgba(181,140,255,.14), transparent 55%),
-    radial-gradient(900px 700px at 50% 85%, rgba(124,255,178,.10), transparent 60%),
-    linear-gradient(180deg,var(--bg-deep),var(--bg-mid));
-  overflow-x:hidden;
-}
+/* WRAP */
+.wrap{max-width:1200px;margin:0 auto;padding:32px 20px 90px}
 
-/* ---------- STARFIELD ---------- */
+/* STARFIELD (VISIBLE) */
 body::before{
   content:"";
   position:fixed;
-  inset:0;
-  background-image:
-    radial-gradient(1px 1px at 10% 20%, #fff, transparent),
-    radial-gradient(1px 1px at 30% 80%, #fff, transparent),
-    radial-gradient(1px 1px at 50% 40%, #fff, transparent),
-    radial-gradient(1px 1px at 70% 60%, #fff, transparent),
-    radial-gradient(2px 2px at 85% 25%, #fff, transparent),
-    radial-gradient(2px 2px at 15% 65%, #fff, transparent),
-    radial-gradient(1px 1px at 90% 90%, #fff, transparent);
-  background-size:1200px 1200px;
-  opacity:.18;
+  inset:-200px;
   pointer-events:none;
   z-index:-1;
+  opacity:1;
+  background:
+    radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,.9) 50%, transparent 52%),
+    radial-gradient(1px 1px at 20% 70%, rgba(255,255,255,.7) 50%, transparent 52%),
+    radial-gradient(2px 2px at 35% 40%, rgba(255,255,255,.85) 50%, transparent 52%),
+    radial-gradient(1px 1px at 45% 85%, rgba(255,255,255,.65) 50%, transparent 52%),
+    radial-gradient(2px 2px at 60% 30%, rgba(255,255,255,.9) 50%, transparent 52%),
+    radial-gradient(1px 1px at 70% 75%, rgba(255,255,255,.6) 50%, transparent 52%),
+    radial-gradient(2px 2px at 85% 55%, rgba(255,255,255,.85) 50%, transparent 52%),
+    radial-gradient(1px 1px at 92% 18%, rgba(255,255,255,.7) 50%, transparent 52%),
+    radial-gradient(3px 3px at 78% 12%, rgba(255,255,255,.85) 50%, transparent 52%),
+    radial-gradient(3px 3px at 22% 12%, rgba(255,255,255,.85) 50%, transparent 52%),
+    radial-gradient(2px 2px at 12% 92%, rgba(255,255,255,.8) 50%, transparent 52%),
+    radial-gradient(2px 2px at 92% 92%, rgba(255,255,255,.8) 50%, transparent 52%);
+
+  /* second layer of faint stars */
+  box-shadow:
+    120px 180px 0 rgba(255,255,255,.35),
+    260px 520px 0 rgba(255,255,255,.22),
+    520px 340px 0 rgba(255,255,255,.28),
+    820px 240px 0 rgba(255,255,255,.20),
+    980px 640px 0 rgba(255,255,255,.18),
+    220px 860px 0 rgba(255,255,255,.22),
+    760px 900px 0 rgba(255,255,255,.16);
+  filter: drop-shadow(0 0 6px rgba(255,255,255,.18));
 }
 
-/* ---------- LINKS ---------- */
-a{color:inherit;text-decoration:none}
-a:hover{text-decoration:none}
-
-/* ---------- LAYOUT ---------- */
-.wrap{max-width:1200px;margin:0 auto;padding:32px 20px 90px}
+/* TOP */
 .top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:12px}
 .logo{width:44px;height:44px}
 .brandName{font-weight:800}
 .brandTag{font-size:12px;color:var(--text-muted)}
 
-/* ---------- NAV ---------- */
+/* NAV */
 .nav{display:flex;gap:10px;flex-wrap:wrap}
 .pill{
-  padding:10px 18px;
-  border-radius:999px;
+  padding:10px 18px;border-radius:999px;
   background:rgba(255,255,255,.10);
   border:1px solid rgba(255,255,255,.18);
   backdrop-filter:blur(10px);
   transition:all .25s ease;
+  color:var(--text-main);
 }
 .pill:hover{
   background:rgba(255,255,255,.20);
   transform:translateY(-2px);
-  box-shadow:0 0 20px var(--glow-blue);
+  box-shadow:0 0 18px var(--glow-blue);
 }
 .pill.ghost{background:transparent}
 
-/* ---------- CARDS / BUBBLES ---------- */
+/* HERO */
+.hero{
+  margin:18px 0 22px;padding:28px;border-radius:var(--radius);
+  background:linear-gradient(135deg, rgba(127,180,255,.18), rgba(181,140,255,.12));
+  border:1px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(12px);
+  box-shadow:0 22px 55px rgba(0,0,0,.55),0 0 34px rgba(127,180,255,.18);
+}
+.heroIcon img{width:52px;height:52px;opacity:.95}
+.heroTitle{font-size:clamp(30px,5vw,48px);font-weight:900;letter-spacing:-.02em;margin:10px 0 10px}
+.heroSub{color:var(--text-muted);line-height:1.6;margin:0}
+
+/* CARDS / BUBBLES */
 .card,.tile,.notice{
   background:var(--glass);
   border:1px solid var(--stroke);
   border-radius:var(--radius);
   backdrop-filter:blur(18px);
-  box-shadow:
-    0 20px 50px rgba(0,0,0,.6),
-    0 0 40px var(--glow-blue);
-  padding:28px;
-  margin-bottom:24px;
+  box-shadow:0 20px 50px rgba(0,0,0,.6),0 0 38px rgba(127,180,255,.12);
+  padding:28px;margin-bottom:24px;
   transition:transform .3s ease, box-shadow .3s ease;
 }
-
 .tile:hover,.card:hover{
   transform:translateY(-6px);
-  box-shadow:
-    0 30px 70px rgba(0,0,0,.75),
-    0 0 60px var(--glow-blue);
+  box-shadow:0 30px 70px rgba(0,0,0,.75),0 0 60px rgba(127,180,255,.22);
 }
 
-/* ---------- COLOR VARIANTS ---------- */
-.tile.blue{box-shadow:0 0 40px var(--glow-blue)}
-.tile.green{box-shadow:0 0 40px var(--glow-green)}
-.tile.red{box-shadow:0 0 40px var(--glow-red)}
-.tile.purple{box-shadow:0 0 40px var(--glow-purple)}
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
 
-/* ---------- TYPOGRAPHY ---------- */
-.kicker{
-  font-size:12px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:var(--text-muted);
-  margin-bottom:6px;
-}
-.h1{
-  font-size:clamp(30px,5vw,46px);
-  font-weight:800;
-  margin:0 0 12px;
-}
-.h2{
-  font-size:22px;
-  font-weight:700;
-  margin:0 0 10px;
-}
-.p,.tileBody,.noticeBody{
-  color:var(--text-muted);
-  line-height:1.65;
-  font-size:16px;
-}
-.tileTitle{
-  font-size:20px;
-  font-weight:700;
-  margin-top:6px;
-}
-.tileTop{
-  font-size:11px;
-  letter-spacing:.12em;
-  font-weight:900;
-  color:var(--text-muted);
-}
+/* TEXT */
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+.h1{font-size:clamp(30px,5vw,46px);font-weight:800;margin:0 0 12px}
+.h2{font-size:22px;font-weight:700;margin:0 0 10px}
+.p,.tileBody,.noticeBody{color:var(--text-muted);line-height:1.65;font-size:16px}
+.tileTitle{font-size:20px;font-weight:700;margin-top:6px}
+.tileTop{font-size:11px;letter-spacing:.12em;font-weight:900;color:var(--text-muted)}
 
-/* ---------- GRID ---------- */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:16px;
-}
-@media(max-width:900px){
-  .grid{grid-template-columns:1fr}
-}
+/* LIST */
+.list{margin:0;padding-left:18px;color:var(--text-muted);line-height:1.7}
 
-/* ---------- EXPAND ---------- */
-.expandable{
-  max-height:0;
-  opacity:0;
-  overflow:hidden;
-  transition:max-height .6s ease, opacity .4s ease;
-}
-.expandable.open{
-  max-height:1600px;
-  opacity:1;
-}
-
-/* ---------- FOOTER ---------- */
-.foot{
-  display:flex;
-  justify-content:space-between;
-  color:var(--text-muted);
-  font-size:13px;
-  margin-top:36px;
-  flex-wrap:wrap;
-}
+/* FOOTER */
+.foot{display:flex;justify-content:space-between;color:var(--text-muted);font-size:13px;margin-top:36px;flex-wrap:wrap}

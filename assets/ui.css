@@ -1,215 +1,72 @@
-:root{
-  --bg0:#05070f;
-  --bg1:#081028;
-  --ink:#e9eeff;
-  --muted:rgba(233,238,255,.72);
-  --line:rgba(170,200,255,.22);
-  --glass:rgba(35,55,130,.18);
-  --glass2:rgba(70,105,255,.22);
-  --hot:rgba(140,170,255,.35);
-  --shadow:rgba(0,0,0,.45);
-  --ok:rgba(120,220,160,.85);
-  --warn:rgba(255,210,90,.88);
-  --bad:rgba(255,120,120,.86);
-}
+<!-- FILE: /index.html  (TNT — HOMEPAGE DIAMOND) -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Geodiametrics · Home</title>
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+</head>
+<body class="stars">
+  <main class="wrap">
+    <header class="top">
+      <div class="brand">
+        <img class="logo" src="/assets/logo.svg" alt="Geodiametrics" />
+        <div class="brandText">
+          <div class="brandName">Geodiametrics</div>
+          <div class="brandTag">Coherence · Admissibility · Execution</div>
+        </div>
+      </div>
 
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  color:var(--ink);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;
-  background:
-    radial-gradient(900px 520px at 50% 0%, rgba(90,120,255,.18) 0%, transparent 60%),
-    radial-gradient(700px 520px at 20% 20%, rgba(180,90,255,.10) 0%, transparent 65%),
-    radial-gradient(900px 700px at 80% 30%, rgba(80,210,255,.10) 0%, transparent 70%),
-    radial-gradient(circle at 50% 30%, var(--bg1) 0%, var(--bg0) 72%);
-}
+      <nav class="nav">
+        <a class="pill" href="/laws/">Laws</a>
+        <a class="pill" href="/products/">Products</a>
+        <a class="pill" href="/gauges/">Gauges</a>
+        <a class="pill" href="/links/">Links</a>
+        <a class="pill" href="/sayings/">Sayings</a>
+      </nav>
+    </header>
 
-.wrap{
-  min-height:100vh;
-  padding:18px 16px 22px;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  overflow:hidden;
-}
+    <section class="hero">
+      <h1>Be the first.</h1>
+      <p class="sub">Nothing is required until you click.</p>
+    </section>
 
-.stars{position:relative}
-.stars::before{
-  content:"";
-  position:fixed; inset:0;
-  pointer-events:none;
-  opacity:.75;
-  background-image:
-    radial-gradient(1px 1px at 10% 20%, #ffffffaa 0, transparent 45%),
-    radial-gradient(1px 1px at 18% 70%, #ffffff88 0, transparent 45%),
-    radial-gradient(1px 1px at 30% 35%, #ffffff77 0, transparent 45%),
-    radial-gradient(1px 1px at 45% 80%, #ffffff88 0, transparent 45%),
-    radial-gradient(1px 1px at 60% 25%, #ffffffaa 0, transparent 45%),
-    radial-gradient(1px 1px at 72% 65%, #ffffff99 0, transparent 45%),
-    radial-gradient(1px 1px at 84% 40%, #ffffff88 0, transparent 45%),
-    radial-gradient(1px 1px at 92% 78%, #ffffff77 0, transparent 45%);
-  background-size:220px 220px;
-  animation:tw 6.5s ease-in-out infinite;
-  filter:blur(.2px);
-}
-@keyframes tw{
-  0%,100%{opacity:.55; filter:blur(.15px)}
-  50%{opacity:.90; filter:blur(.35px)}
-}
+    <!-- HOME META-DIAMOND (4 ONLY) -->
+    <section class="diamondStage" aria-label="Home diamonds">
+      <!-- TOP -->
+      <a class="diamond dTop" href="/laws/" aria-label="Foundational Laws">
+        <span class="diamondInner">
+          <span class="diamondLabel">Foundational Laws</span>
+        </span>
+      </a>
 
-.header{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-.logo{
-  width:34px; height:34px;
-  border-radius:10px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.02);
-}
-.brand{
-  display:flex; flex-direction:column;
-  gap:2px;
-}
-.brand h1{
-  margin:0;
-  font-size:1.05rem;
-  letter-spacing:.02em;
-  font-weight:750;
-}
-.brand p{
-  margin:0;
-  font-size:.9rem;
-  color:var(--muted);
-}
+      <!-- LEFT -->
+      <a class="diamond dLeft" href="/philosophy/" aria-label="Philosophy">
+        <span class="diamondInner">
+          <span class="diamondLabel">Philosophy</span>
+        </span>
+      </a>
 
-.nav{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-left:auto;
-}
-.pill{
-  appearance:none;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.04);
-  color:var(--ink);
-  text-decoration:none;
-  padding:10px 14px;
-  border-radius:999px;
-  font-weight:650;
-  box-shadow:0 10px 30px var(--shadow);
-}
+      <!-- RIGHT -->
+      <a class="diamond dRight" href="/breakthroughs/" aria-label="Breakthroughs">
+        <span class="diamondInner">
+          <span class="diamondLabel">Breakthroughs</span>
+        </span>
+      </a>
 
-.hero{
-  margin-top:8px;
-  padding:18px 18px;
-  border:1px solid var(--line);
-  border-radius:22px;
-  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  box-shadow:0 18px 50px var(--shadow);
-}
-.hero h2{
-  margin:0;
-  font-size:clamp(1.8rem,5.2vw,2.8rem);
-  font-weight:850;
-}
-.hero .sub{
-  margin-top:10px;
-  color:var(--muted);
-  font-size:1.02rem;
-}
+      <!-- BOTTOM -->
+      <a class="diamond dBottom" href="/greatest/" aria-label="Greatest">
+        <span class="diamondInner">
+          <span class="diamondLabel">Greatest</span>
+        </span>
+      </a>
+    </section>
 
-.hub{
-  position:relative;
-  width:min(92vw,560px);
-  height:min(92vw,560px);
-  margin:10px auto 0;
-}
-
-.diamondBtn{
-  position:absolute;
-  width:168px; height:168px;
-  transform:rotate(45deg);
-  display:grid;
-  place-items:center;
-  border-radius:18px;
-  border:1px solid var(--line);
-  background:var(--glass);
-  box-shadow:0 18px 55px var(--shadow);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  text-decoration:none;
-  color:var(--ink);
-  transition:transform .18s ease, background .18s ease, border-color .18s ease;
-}
-.diamondBtn > span{
-  transform:rotate(-45deg);
-  text-align:center;
-  font-weight:800;
-  line-height:1.1;
-  padding:6px;
-}
-.diamondBtn:hover{
-  background:var(--glass2);
-  border-color:rgba(200,220,255,.35);
-  transform:rotate(45deg) scale(1.04);
-}
-.dTop{top:2%; left:50%; transform:translateX(-50%) rotate(45deg)}
-.dLeft{left:2%; top:50%; transform:translateY(-50%) rotate(45deg)}
-.dRight{right:2%; top:50%; transform:translateY(-50%) rotate(45deg)}
-.dBottom{bottom:2%; left:50%; transform:translateX(-50%) rotate(45deg)}
-
-.panel{
-  margin-top:14px;
-  padding:18px 18px;
-  border:1px solid var(--line);
-  border-radius:22px;
-  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  box-shadow:0 18px 55px var(--shadow);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  display:none;
-}
-.panel.on{display:block}
-
-.panel h3{
-  margin:0 0 8px 0;
-  font-size:1.55rem;
-  font-weight:900;
-}
-.panel p{margin:8px 0; color:var(--muted); font-size:1rem; line-height:1.45}
-
-.toggleRow{
-  display:flex;
-  gap:10px;
-  margin:12px 0 6px;
-}
-.toggle{
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.04);
-  color:var(--ink);
-  padding:10px 14px;
-  border-radius:999px;
-  font-weight:750;
-}
-.toggle.on{
-  background:rgba(100,170,255,.18);
-  border-color:rgba(200,220,255,.35);
-}
-
-.mode{display:none}
-.mode.on{display:block}
-
-.footer{
-  margin-top:auto;
-  text-align:center;
-  opacity:.65;
-  font-size:.86rem;
-  padding-top:6px;
-}
+    <footer class="foot">
+      Canonical · Stable · © Geodiametrics
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,73 +1,20 @@
-.wrap{max-width:980px;margin:0 auto;padding:18px 16px 48px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:6px 0 16px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:36px;height:36px;opacity:.95}
-.brandName{font-weight:800;letter-spacing:.2px}
-.brandTag{font-size:12px;color:var(--muted);margin-top:2px}
-
-.nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-
-.pill{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:10px 14px;border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(12,16,34,.55);
-  box-shadow:0 10px 30px rgba(0,0,0,.25);
-  font-weight:700;font-size:13px;
-}
-.pill:hover{border-color:rgba(233,238,252,.22)}
-.pill.ghost{background:transparent}
-
-.card{
-  border-radius:var(--r);
-  border:1px solid var(--stroke);
-  background:var(--panel);
-  box-shadow:var(--shadow);
-  padding:18px;
+/* === STARFIELD BACKGROUND === */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at 20% 30%, #fff8 50%, transparent 51%),
+    radial-gradient(1px 1px at 80% 40%, #fff6 50%, transparent 51%),
+    radial-gradient(1px 1px at 60% 70%, #fff7 50%, transparent 51%),
+    radial-gradient(1px 1px at 30% 80%, #fff5 50%, transparent 51%),
+    radial-gradient(1px 1px at 90% 20%, #fff6 50%, transparent 51%);
+  background-size: 300px 300px;
+  animation: starDrift 120s linear infinite;
+  z-index: -2;
 }
 
-.kicker{
-  font-size:12px;
-  letter-spacing:1.1px;
-  color:var(--muted);
-  font-weight:800;
-  text-transform:uppercase;
+@keyframes starDrift {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-1000px); }
 }
-
-.h1{margin:10px 0 8px;font-size:28px;line-height:1.15}
-.p{margin:0;color:var(--muted);line-height:1.55}
-
-.hr{height:1px;background:var(--stroke2);margin:16px 0}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:12px;
-  margin-top:14px;
-}
-@media (max-width:880px){.grid{grid-template-columns:1fr}}
-.tile{
-  border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(10,14,30,.55);
-  padding:14px;
-  min-height:118px;
-}
-.tile:hover{border-color:rgba(233,238,252,.18)}
-.tileTop{font-size:11px;color:var(--muted);font-weight:900;letter-spacing:.9px}
-.tileTitle{margin-top:8px;font-size:20px;font-weight:900}
-.tileBody{margin-top:6px;color:var(--muted);line-height:1.45}
-
-.notice{
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  padding:14px;
-}
-.noticeTitle{font-weight:900}
-.noticeBody{margin-top:6px;color:var(--muted);line-height:1.55}
-
-.row{display:flex;gap:10px;flex-wrap:wrap}
-
-.foot{display:flex;justify-content:space-between;gap:10px;margin-top:14px;flex-wrap:wrap}
-.muted{color:var(--muted);font-size:12px}

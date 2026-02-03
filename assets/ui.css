@@ -1,9 +1,9 @@
 /* FILE: /assets/ui.css  (TNT FULL REPLACEMENT)
-   PURPOSE: BEHAVIOR STABILIZER v12
-   - Fix: all click-to-reveal panels ALWAYS render when .open
-   - Fix: nested drops never block clicks
-   - Fix: toggle panes always show/hide correctly
-   - Keep: current room/cosmic look (no big redesign in this pass)
+   PURPOSE: DIAMOND LAYOUT SYSTEM v14
+   - Adds reusable diamond layout classes (no inline CSS needed)
+   - Preserves: wiring stability for drops/toggles
+   - Preserves: room + stars + bubbles
+   - Adds: diamond nodes + stage + grid placements
 */
 
 :root{
@@ -13,13 +13,14 @@
   --ink:#eef1ff;
   --muted:#9aa3d9;
 
-  /* muted semantic colors */
   --ok:#8fdcc2;
   --risk:#e6d58a;
   --bad:#e0a1a1;
 
   --stroke:rgba(255,255,255,.14);
+
   --glassA:rgba(16,20,44,.68);
+  --glassB:rgba(10,12,30,.42);
 
   --r:28px;
 }
@@ -29,6 +30,7 @@
 html,body{margin:0;padding:0}
 a{color:inherit;text-decoration:none}
 a:visited{color:inherit}
+a,button{-webkit-tap-highlight-color:transparent}
 
 /* room */
 body{
@@ -42,7 +44,7 @@ body{
   overflow-x:hidden;
 }
 
-/* stars (do not block clicks) */
+/* stars */
 body::before{
   content:"";
   position:fixed;
@@ -62,37 +64,31 @@ body::before{
 
 /* layout */
 .wrap{max-width:1100px;margin:0 auto;padding:24px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:12px}
 .logo{width:44px;filter:drop-shadow(0 0 14px rgba(176,168,255,.25))}
 .brandName{font-weight:800}
-.brandTag{display:none !important;} /* removes the fine-print subtitle only */
+.brandTag{display:none !important}
 
-/* nav / pills */
+/* nav/pills */
 .nav{display:flex;gap:10px;flex-wrap:wrap}
 .pill{
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:10px;
-
   padding:10px 18px;
   border-radius:999px;
-
   background:rgba(255,255,255,.08);
   border:1px solid var(--stroke);
   color:var(--ink);
-
   user-select:none;
-  -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-}
-a.pill{cursor:pointer}
-button.pill{
   cursor:pointer;
-  appearance:none;
-  -webkit-appearance:none;
-  border:1px solid var(--stroke);
+}
+.pill:hover{background:rgba(255,255,255,.12)}
+button.pill{
+  appearance:none;-webkit-appearance:none;
   outline:none;
 }
 
@@ -114,31 +110,37 @@ button.pill{
 .tileTitle{font-size:1.35rem;margin:6px 0}
 .tileBody{color:var(--muted);line-height:1.55}
 
-/* ----------- DROPDOWNS (CRITICAL FIX) ----------- */
+/* grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:18px;
+  margin-top:16px;
+}
+a.tile{display:block;cursor:pointer}
+a.tile:hover{transform:translateY(-2px);transition:transform .18s ease}
+
+/* --------- DROPDOWNS (wired) --------- */
 .drop{
-  display:block;            /* always in layout */
+  display:block;
   margin-top:14px;
   padding:16px;
   border-radius:22px;
   background:rgba(0,0,0,.16);
   border:1px solid var(--stroke);
-
   max-height:0;
   overflow:hidden;
   opacity:0;
-
   transition:max-height .55s ease, opacity .22s ease;
 }
 .drop.open{
-  max-height:6000px;        /* allow deep nesting */
+  max-height:6000px;
   opacity:1;
-  overflow:visible;         /* nested clicks never get clipped */
+  overflow:visible;
 }
-
-/* nested drop spacing */
 .drop .drop{margin-top:12px}
 
-/* ----------- TOGGLES (CRITICAL FIX) ----------- */
+/* --------- TOGGLES (wired) --------- */
 .toggleRow{display:flex;gap:12px;margin:18px 0;flex-wrap:wrap}
 .toggleBtn{
   flex:1;
@@ -149,23 +151,77 @@ button.pill{
   color:var(--ink);
   cursor:pointer;
   user-select:none;
-  -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
 .toggleBtn.active{
   background:rgba(143,201,220,.18);
   border-color:rgba(143,201,220,.32);
 }
-
-/* panes (JS sets display too, but CSS keeps it sane) */
 .pane{display:none}
 .pane.show{display:block}
 
 /* footer */
 .foot{
-  margin:40px 0 10px;
+  margin:36px 0 10px;
   color:var(--muted);
   font-size:.85rem;
   text-align:center;
 }
+
+/* =========================================================
+   DIAMOND SYSTEM (REUSABLE)
+========================================================= */
+
+.diamondStage{
+  position:relative;
+  margin:16px auto 10px;
+  max-width:520px;
+  aspect-ratio:1/1;
+}
+
+.diamondGrid{
+  position:absolute;
+  inset:0;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:1fr 1fr 1fr;
+  align-items:center;
+  justify-items:center;
+  gap:12px;
+}
+
+.dNode{
+  width:min(46vw, 220px);
+  max-width:220px;
+  padding:14px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.08);
+  color:var(--ink);
+  text-align:center;
+  user-select:none;
+  touch-action:manipulation;
+  cursor:pointer;
+}
+.dNode:hover{background:rgba(255,255,255,.12)}
+.dNodeSmall{width:min(40vw,180px);max-width:180px;font-size:.95rem;padding:12px 14px}
+.dCenter{
+  width:min(56vw,280px);
+  max-width:280px;
+  padding:16px 18px;
+  border:1px solid rgba(143,220,194,.26);
+  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  box-shadow:0 0 24px rgba(143,220,194,.10);
+}
+
+.dKicker{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.dTitle{display:block;font-size:1.2rem;font-weight:800}
+.dSub{display:block;margin-top:4px;font-size:.95rem;color:var(--muted)}
+
+.posTop{grid-column:2;grid-row:1}
+.posLeft{grid-column:1;grid-row:2}
+.posCenter{grid-column:2;grid-row:2}
+.posRight{grid-column:3;grid-row:2}
+.posBottom{grid-column:2;grid-row:3}
+.posBR{grid-column:3;grid-row:3;justify-self:end;align-self:end}
 ```0

@@ -2,113 +2,79 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Geodiametrics</title>
+
   <link rel="icon" href="/assets/favicon.svg"/>
   <link rel="stylesheet" href="/assets/core.css"/>
   <link rel="stylesheet" href="/assets/ui.css"/>
+
   <script defer src="/assets/ui.js"></script>
 </head>
-<body>
-<main class="wrap">
 
-<header class="top">
-  <div class="brand">
-    <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
-    <div class="brandText">
-      <div class="brandName">Geodiametrics</div>
-      <div class="brandSub">Coherence · Admissibility · Execution</div>
-    </div>
-  </div>
+<body class="preload">
 
-  <nav class="nav">
-    <a class="pill" href="/products/">Products</a>
-    <a class="pill" href="/laws/">Laws</a>
-    <a class="pill" href="/gauges/">Gauges</a>
-    <a class="pill" href="/links/">Links</a>
-  </nav>
-</header>
+<main id="app" class="wrap stars hidden">
 
-<section class="hero card">
-  <div class="kicker">LANDING</div>
-  <h1 class="h1">Be the first.</h1>
-  <p class="p">Nothing is required until you click.</p>
-</section>
-
-<section class="card">
-  <div class="kicker">SAYINGS</div>
-  <p class="p">Click a diamond. It expands outward. Medium stays unclickable.</p>
-
-  <div class="diamondStage" aria-label="Sayings Diamond">
-    <div class="diamondGrid">
-
-      <button class="dNode dNodeSmall posTop" data-drop="S_foundational">
-        <span class="dKicker">TOP</span><span class="dTitle">Foundational</span><span class="dSub">Core coherence</span>
-      </button>
-
-      <button class="dNode dNodeSmall posLeft" data-drop="S_philosophy">
-        <span class="dKicker">LEFT</span><span class="dTitle">Philosophy</span><span class="dSub">Reasoning</span>
-      </button>
-
-      <div class="dNode dCenter posCenter">
-        <span class="dKicker">CENTER</span><span class="dTitle">Russian Doll Sayings</span><span class="dSub">Expand outward</span>
-      </div>
-
-      <button class="dNode dNodeSmall posRight" data-drop="S_breakthroughs">
-        <span class="dKicker">RIGHT</span><span class="dTitle">Breakthroughs</span><span class="dSub">History</span>
-      </button>
-
-      <button class="dNode dNodeSmall posBottom" data-drop="S_greatest">
-        <span class="dKicker">BOTTOM</span><span class="dTitle">Greatest</span><span class="dSub">All-time</span>
-      </button>
-
-      <a class="dNode dNodeSmall posBR" href="/laws/">
-        <span class="dKicker">CORNER</span><span class="dTitle">→ Laws</span><span class="dSub">Decompressed</span>
-      </a>
-
-    </div>
-  </div>
-
-  <div class="childWrap">
-
-    <div id="S_foundational" class="drop">
-      <div class="childCard">
-        <div class="kicker">FOUNDATIONAL</div>
-
-        <div class="toggleRow" data-toggle-group="SF">
-          <button class="toggleBtn" data-toggle="SF" data-mode="human">Human</button>
-          <button class="toggleBtn" data-toggle="SF" data-mode="scientific">Scientific</button>
-        </div>
-
-        <div class="pane show" data-pane="SF" data-mode="human">
-          <p class="p">Start with meaning. Let reality do the persuading.</p>
-        </div>
-
-        <div class="pane" data-pane="SF" data-mode="scientific">
-          <p class="p">Start with invariants. Let constraints close interpretation.</p>
-        </div>
-
-        <button class="pill" data-drop="SF_list">Open sayings</button>
-        <div id="SF_list" class="drop">
-          <p class="p">Arnold — Be the first</p>
-          <p class="p">Bannister — Boundary illusion</p>
-          <p class="p">Wright Brothers — Flight</p>
-          <p class="p">Edison — Light</p>
-          <p class="p">Tesla — Structure</p>
-          <p class="p">Einstein — Simplicity</p>
-        </div>
+  <header class="top">
+    <div class="brand">
+      <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
+      <div class="brandText">
+        <div class="brandName">Geodiametrics</div>
+        <div class="brandTag">Coherence · Admissibility · Execution</div>
       </div>
     </div>
 
-    <div id="S_philosophy" class="drop"><div class="childCard"><div class="kicker">PHILOSOPHY</div><p class="p">Reasoning that collapses confusion.</p></div></div>
-    <div id="S_breakthroughs" class="drop"><div class="childCard"><div class="kicker">BREAKTHROUGHS</div><p class="p">Cases where constraints were respected and scale followed.</p></div></div>
-    <div id="S_greatest" class="drop"><div class="childCard"><div class="kicker">GREATEST</div><p class="p">All-time anchors. No reading required.</p></div></div>
+    <nav class="nav">
+      <a href="/products/">Products</a>
+      <a href="/laws/">Laws</a>
+      <a href="/gauges/">Gauges</a>
+      <a href="/links/">Links</a>
+    </nav>
+  </header>
 
-  </div>
-</section>
+  <section class="hero">
+    <h1>Be the first.</h1>
+    <p>Nothing is required until you click.</p>
+  </section>
 
-<footer class="foot">Canonical · Stable · © Geodiametrics</footer>
+  <!-- DIAMOND LANDING -->
+  <section class="diamondRoot">
+
+    <div class="diamond top clickable" data-open="foundational">
+      Foundational
+    </div>
+
+    <div class="diamond left clickable" data-open="philosophy">
+      Philosophy
+    </div>
+
+    <div class="diamond center locked">
+      Medium
+    </div>
+
+    <div class="diamond right clickable" data-open="breakthroughs">
+      Breakthroughs
+    </div>
+
+    <div class="diamond bottom clickable" data-open="greatest">
+      Greatest
+    </div>
+
+    <div class="diamond corner clickable" data-open="laws">
+      → Laws
+    </div>
+
+  </section>
+
+  <!-- EXPANSION PANEL -->
+  <section id="panel" class="panel hidden"></section>
+
+  <footer class="foot">
+    Canonical · Stable · © Geodiametrics
+  </footer>
 
 </main>
+
 </body>
 </html>

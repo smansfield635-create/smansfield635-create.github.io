@@ -1,3 +1,6 @@
+<!-- FILE: /index.html  (TNT FULL REPLACEMENT)
+     PURPOSE: Align with wiring (data-drop + no extra features)
+-->
 <!doctype html>
 <html lang="en">
 <head>
@@ -24,90 +27,117 @@
 
   <nav class="nav">
     <a class="pill" href="/home/">Enter</a>
-    <a class="pill ghost" href="/products/">Products</a>
-    <a class="pill ghost" href="/laws/">Laws</a>
-    <a class="pill ghost" href="/gauges/">Gauges</a>
-    <a class="pill ghost" href="/links/">Links</a>
+    <a class="pill" href="/products/">Products</a>
+    <a class="pill" href="/laws/">Laws</a>
+    <a class="pill" href="/gauges/">Gauges</a>
+    <a class="pill" href="/links/">Links</a>
   </nav>
 </header>
 
-<section class="hero">
-  <div class="heroIcon"><img src="/assets/logo.svg"/></div>
-  <h1 class="heroTitle">Be the first.</h1>
-  <p class="heroSub">Nothing is required until you click.</p>
+<section class="card">
+  <h1 class="h1">Be the first.</h1>
+  <p class="p">Nothing is required until you click.</p>
 </section>
 
-<!-- QUICK BUBBLES (VISIBLE, NO DUAL-LENS PROMPT) -->
-<section class="grid">
-  <a class="tile primary" href="/home/">
-    <div class="tileTop green">ENTER</div>
-    <div class="tileTitle">Start</div>
-    <div class="tileBody">Free will navigation. Click-only discovery.</div>
-  </a>
-
-  <a class="tile" href="/products/">
-    <div class="tileTop purple">PRODUCTS</div>
-    <div class="tileTitle">Trophy Case</div>
-    <div class="tileBody">Nested bubbles. Human/Scientific toggle inside.</div>
-  </a>
-
-  <a class="tile" href="/laws/">
-    <div class="tileTop cyan">LAWS</div>
-    <div class="tileTitle">Foundational Laws</div>
-    <div class="tileBody">Tier 1 · Tier 2 · Tier 3 (nested + toggle).</div>
-  </a>
-
-  <a class="tile" href="/gauges/">
-    <div class="tileTop red">GAUGES</div>
-    <div class="tileTitle">Live</div>
-    <div class="tileBody">Transparent snapshot. Nothing hidden.</div>
-  </a>
-</section>
-
-<!-- SAYINGS (CLICK TO REVEAL) -->
+<!-- LANDING: SAYINGS (CLICK TO REVEAL) -->
 <section class="card">
   <div class="kicker">SAYINGS</div>
-  <p class="p muted">Click to reveal.</p>
 
-  <div class="stack">
+  <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
     <button class="pill" data-drop="q_arnold">Arnold — Be the first</button>
-    <div id="q_arnold" class="drop">
-      <p class="p">“I love it when people say it’s never been done before. Because when I do it, I’ll be the first.”</p>
-    </div>
-
     <button class="pill" data-drop="q_bannister">Bannister — Boundary illusion</button>
-    <div id="q_bannister" class="drop">
-      <p class="p">Doctors claimed the four-minute mile would kill you. Bannister broke it. Within a year, many followed. Boundaries collapse when proven false.</p>
-    </div>
-
     <button class="pill" data-drop="q_wrights">Wright Brothers — Flight</button>
-    <div id="q_wrights" class="drop">
-      <p class="p">Experts focused on power. The Wrights focused on control. Mastery of constraints enabled flight.</p>
-    </div>
-
     <button class="pill" data-drop="q_edison">Edison — Light</button>
-    <div id="q_edison" class="drop">
-      <p class="p">Failure wasn’t wasted effort. It was constraint discovery. The system converged.</p>
-    </div>
-
     <button class="pill" data-drop="q_tesla">Tesla — Structure</button>
-    <div id="q_tesla" class="drop">
-      <p class="p">Reality is frequency, resonance, and structure. Ignore coherence and systems destabilize.</p>
-    </div>
-
     <button class="pill" data-drop="q_einstein">Einstein — Simplicity</button>
-    <div id="q_einstein" class="drop">
-      <p class="p">Nature is simple. Confusion signals incomplete models.</p>
+  </div>
+
+  <div id="q_arnold" class="drop">
+    <div class="tile">
+      <div class="kicker">QUOTE</div>
+      <div class="tileTitle">Arnold Schwarzenegger</div>
+      <div class="tileBody">“I love it when people say it’s never been done before. Because when I do it, I’ll be the first.”</div>
+    </div>
+  </div>
+
+  <div id="q_bannister" class="drop">
+    <div class="tile">
+      <div class="kicker">STORY</div>
+      <div class="tileTitle">Roger Bannister</div>
+      <div class="tileBody">Doctors claimed the four-minute mile would kill you. Bannister broke it. Within a year, many followed. Boundaries collapse when proven false.</div>
+    </div>
+  </div>
+
+  <div id="q_wrights" class="drop">
+    <div class="tile">
+      <div class="kicker">STORY</div>
+      <div class="tileTitle">Wright Brothers</div>
+      <div class="tileBody">Experts focused on power. The Wrights focused on control. Mastery of constraints enabled flight.</div>
+    </div>
+  </div>
+
+  <div id="q_edison" class="drop">
+    <div class="tile">
+      <div class="kicker">QUOTE</div>
+      <div class="tileTitle">Thomas Edison</div>
+      <div class="tileBody">Failure wasn’t wasted effort. It was constraint discovery. The system converged.</div>
+    </div>
+  </div>
+
+  <div id="q_tesla" class="drop">
+    <div class="tile">
+      <div class="kicker">QUOTE</div>
+      <div class="tileTitle">Nikola Tesla</div>
+      <div class="tileBody">Reality is frequency, resonance, and structure. Ignore coherence and systems destabilize.</div>
+    </div>
+  </div>
+
+  <div id="q_einstein" class="drop">
+    <div class="tile">
+      <div class="kicker">QUOTE</div>
+      <div class="tileTitle">Albert Einstein</div>
+      <div class="tileBody">Nature is simple. Confusion signals incomplete models.</div>
     </div>
   </div>
 </section>
 
+<!-- NEXT: HUB -->
+<section class="card">
+  <div class="kicker">NEXT</div>
+  <div class="tileTitle">Inspect the system</div>
+  <p class="p">Choose what to open.</p>
+
+  <div class="grid">
+    <a class="tile primary" href="/products/">
+      <div class="kicker">PRODUCTS</div>
+      <div class="tileTitle">Trophy Case</div>
+      <div class="tileBody">Nested bubbles. Human/Scientific toggles inside.</div>
+    </a>
+
+    <a class="tile" href="/laws/">
+      <div class="kicker">LAWS</div>
+      <div class="tileTitle">Foundational</div>
+      <div class="tileBody">Tiered, nested, inspectable.</div>
+    </a>
+
+    <a class="tile" href="/gauges/">
+      <div class="kicker">GAUGES</div>
+      <div class="tileTitle">Live</div>
+      <div class="tileBody">Transparent snapshot.</div>
+    </a>
+
+    <a class="tile" href="/links/">
+      <div class="kicker">LINKS</div>
+      <div class="tileTitle">Verification</div>
+      <div class="tileBody">OSF · ORCID · Contact.</div>
+    </a>
+  </div>
+</section>
+
 <footer class="foot">
-  <div>Canonical · Stable</div>
-  <div>© Geodiametrics</div>
+  Canonical · Stable · © Geodiametrics
 </footer>
 
 </main>
 </body>
 </html>
-```0

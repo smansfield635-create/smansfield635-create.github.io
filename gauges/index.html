@@ -4,96 +4,107 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Live Gauges</title>
-
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/>
+  <link rel="icon" href="/assets/favicon.svg"/>
   <link rel="stylesheet" href="/assets/core.css"/>
   <link rel="stylesheet" href="/assets/ui.css"/>
+  <script src="/assets/ui.js"></script>
 </head>
 
 <body>
-  <main class="wrap">
+<main class="wrap stars">
 
-    <header class="top">
-      <div class="brand">
-        <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
-        <div class="brandText">
-          <div class="brandName">Live Gauges</div>
-          <div class="brandTag">Read-Only Instrument Panel</div>
-        </div>
-      </div>
+<header class="top">
+  <div class="brand">
+    <img class="logo" src="/assets/logo.svg"/>
+    <div class="brandText">
+      <div class="brandName">Live Gauges</div>
+      <div class="brandTag">Layer 1 · Sources visible · Values placeholder until Layer 3 transport</div>
+    </div>
+  </div>
 
-      <nav class="nav">
-        <a class="pill" href="/">Index</a>
-        <a class="pill ghost" href="/application-layer-contract/">ALC</a>
-        <a class="pill ghost" href="/gauge-registry/">Registry</a>
-        <a class="pill ghost" href="/uca/">UCAQ</a>
-        <a class="pill ghost" href="/m256/">M256</a>
-        <a class="pill ghost" href="/eai/">EAI</a>
-      </nav>
-    </header>
+  <nav class="nav">
+    <a class="pill" href="/">Home</a>
+    <a class="pill ghost" href="/gauge-registry/">Registry</a>
+    <a class="pill ghost" href="/application/">Application</a>
+    <a class="pill ghost" href="/eai/">EAI</a>
+  </nav>
+</header>
 
-    <section class="card">
-      <div class="kicker">INSTRUMENT</div>
-      <h1 class="h1">Canonical Gauge Readouts</h1>
-      <p class="p">
-        This panel is display-only. Values shown here are placeholders until wired to live sources.
-      </p>
+<section class="card">
+  <div class="kicker">RULE</div>
+  <h1 class="h1">Nothing is hidden</h1>
+  <p class="p">Each gauge shows its source-of-truth. Computation and transport come next.</p>
+</section>
 
-      <div class="hr"></div>
+<section class="grid">
 
-      <div class="grid">
-        <div class="tile">
-          <div class="tileTop">INVARIANT</div>
-          <div class="tileTitle">Coherence</div>
-          <div class="tileBody"><b>1.00</b> (placeholder)</div>
-        </div>
+  <div class="tile primary">
+    <div class="tileTop cyan">COHERENCE (NUMERIC)</div>
+    <div class="tileTitle">1.000</div>
+    <div class="tileBody"><span class="green">VISIBLE</span> · placeholder</div>
+    <div style="margin-top:12px"><button class="pill" data-drop="src_coh">Source</button></div>
+    <div id="src_coh" class="drop">
+      <p class="p">Declared state + Observed state + Trajectory consistency</p>
+    </div>
+  </div>
 
-        <div class="tile">
-          <div class="tileTop">INVARIANT</div>
-          <div class="tileTitle">Admissibility</div>
-          <div class="tileBody"><b>ADMISSIBLE</b> (placeholder)</div>
-        </div>
+  <div class="tile">
+    <div class="tileTop green">STABILITY</div>
+    <div class="tileTitle">STABLE</div>
+    <div class="tileBody">placeholder</div>
+    <div style="margin-top:12px"><button class="pill" data-drop="src_stab">Source</button></div>
+    <div id="src_stab" class="drop">
+      <p class="p">Variance/oscillation of coherence across a defined window</p>
+    </div>
+  </div>
 
-        <div class="tile">
-          <div class="tileTop">INVARIANT</div>
-          <div class="tileTitle">Stability</div>
-          <div class="tileBody"><b>STABLE</b> (placeholder)</div>
-        </div>
+  <div class="tile">
+    <div class="tileTop cyan">DRIFT</div>
+    <div class="tileTitle">LOW</div>
+    <div class="tileBody">placeholder</div>
+    <div style="margin-top:12px"><button class="pill" data-drop="src_drift">Source</button></div>
+    <div id="src_drift" class="drop">
+      <p class="p">Declared trajectory vs observed trajectory delta</p>
+    </div>
+  </div>
 
-        <div class="tile">
-          <div class="tileTop">DERIVED</div>
-          <div class="tileTitle">Δ Coherence</div>
-          <div class="tileBody"><b>0.00</b> / cycle (placeholder)</div>
-        </div>
+  <div class="tile">
+    <div class="tileTop red">CONSTRAINT LOAD</div>
+    <div class="tileTitle">LOW</div>
+    <div class="tileBody">placeholder</div>
+    <div style="margin-top:12px"><button class="pill" data-drop="src_load">Source</button></div>
+    <div id="src_load" class="drop">
+      <p class="p">Constraint registry + saturation + interaction rate</p>
+    </div>
+  </div>
 
-        <div class="tile">
-          <div class="tileTop">DERIVED</div>
-          <div class="tileTitle">Constraint Load</div>
-          <div class="tileBody"><b>LOW</b> (placeholder)</div>
-        </div>
+  <div class="tile">
+    <div class="tileTop purple">ADMISSIBILITY</div>
+    <div class="tileTitle"><span class="green">ADMISSIBLE</span></div>
+    <div class="tileBody">placeholder</div>
+    <div style="margin-top:12px"><button class="pill" data-drop="src_adm">Source</button></div>
+    <div id="src_adm" class="drop">
+      <p class="p">Constraint satisfaction gate (binary at execution time)</p>
+    </div>
+  </div>
 
-        <div class="tile">
-          <div class="tileTop">EXECUTIVE</div>
-          <div class="tileTitle">Closure</div>
-          <div class="tileBody"><b>OPEN</b> (placeholder)</div>
-        </div>
-      </div>
+  <div class="tile">
+    <div class="tileTop purple">CLOSURE (EAI)</div>
+    <div class="tileTitle">OPEN</div>
+    <div class="tileBody">Manual only</div>
+    <div style="margin-top:12px"><button class="pill" data-drop="src_cls">Source</button></div>
+    <div id="src_cls" class="drop">
+      <p class="p">Executive state machine: OPEN / HALT / TERMINATE (manual EAI only)</p>
+    </div>
+  </div>
 
-      <div class="hr"></div>
+</section>
 
-      <div class="notice">
-        <div class="noticeTitle">Rule</div>
-        <div class="noticeBody">
-          This page must never issue decisions. It only displays canonical projections.
-        </div>
-      </div>
-    </section>
+<footer class="foot">
+  <div>Live Gauges · Layer 1</div>
+  <div>© Geodiametrics</div>
+</footer>
 
-    <footer class="foot">
-      <div class="muted">Live Gauges · Read-Only</div>
-      <div class="muted">Canonical</div>
-    </footer>
-
-  </main>
+</main>
 </body>
 </html>

@@ -1,79 +1,49 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg"/>
-  <link rel="stylesheet" href="/assets/core.css"/>
-  <style>
-    html, body {
-      margin: 0; padding: 0; height: 100%;
-      background: radial-gradient(circle at top, #0b1020 0%, #05070f 70%);
-      color: #e6ebff;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      overflow: hidden;
-    }
-    body::before {
-      content:""; position:fixed; inset:0; pointer-events:none; opacity:.35;
-      background-image:
-        radial-gradient(1px 1px at 20% 30%, #ffffff55 0, transparent 40%),
-        radial-gradient(1px 1px at 70% 60%, #ffffff44 0, transparent 40%),
-        radial-gradient(1px 1px at 40% 80%, #ffffff33 0, transparent 40%);
-    }
-    header { position:absolute; top:6vh; width:100%; text-align:center; z-index:2; }
-    h1 { font-size:clamp(2rem,4vw,3.2rem); margin:0; font-weight:700; }
-    .tagline { margin-top:.5rem; opacity:.7; font-size:1rem; }
-    main { position:relative; height:100%; display:grid; place-items:center; }
-    .field { position:relative; width:min(90vw,520px); height:min(90vw,520px); }
-    .diamond {
-      position:absolute; width:140px; height:140px; transform:rotate(45deg);
-      background:rgba(40,55,120,.18);
-      border:1px solid rgba(160,190,255,.25);
-      backdrop-filter:blur(6px);
-      display:grid; place-items:center;
-      text-decoration:none; color:inherit;
-      transition:transform .25s ease, background .25s ease;
-    }
-    .diamond span { transform:rotate(-45deg); font-weight:600; letter-spacing:.02em; text-align:center; }
-    .diamond:hover { background:rgba(90,120,255,.35); transform:rotate(45deg) scale(1.05); cursor:pointer; }
-    .top    { top:0; left:50%; transform:translateX(-50%) rotate(45deg); }
-    .bottom { bottom:0; left:50%; transform:translateX(-50%) rotate(45deg); }
-    .left   { left:0; top:50%; transform:translateY(-50%) rotate(45deg); }
-    .right  { right:0; top:50%; transform:translateY(-50%) rotate(45deg); }
-    .center { top:50%; left:50%; transform:translate(-50%,-50%) rotate(45deg); width:160px; height:160px; }
-    footer { position:absolute; bottom:3vh; width:100%; text-align:center; font-size:.85rem; opacity:.6; }
-  </style>
+
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/core.css" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <script defer src="/assets/ui.js"></script>
 </head>
+
 <body>
+  <main class="wrap stars">
 
-<header>
-  <h1>Be the first.</h1>
-  <div class="tagline">Nothing is required until you click.</div>
-</header>
+    <header class="hero">
+      <h1>Be the first.</h1>
+      <p>Nothing is required until you click.</p>
+    </header>
 
-<main>
-  <div class="field">
+    <!-- DIAMOND HUB -->
+    <section class="diamond-hub">
 
-    <!-- TOP -->
-    <a class="diamond top" href="/landing/"><span>Landing</span></a>
+      <a class="diamond top" href="/laws/">
+        <span>Foundational<br/>Laws</span>
+      </a>
 
-    <!-- LEFT -->
-    <a class="diamond left" href="/philosophy/"><span>Philosophy</span></a>
+      <a class="diamond left" href="/philosophy/">
+        <span>Philosophy</span>
+      </a>
 
-    <!-- RIGHT -->
-    <a class="diamond right" href="/breakthroughs/"><span>Breakthroughs</span></a>
+      <a class="diamond right" href="/breakthroughs/">
+        <span>Breakthroughs</span>
+      </a>
 
-    <!-- BOTTOM -->
-    <a class="diamond bottom" href="/greatest/"><span>Greatest</span></a>
+      <a class="diamond bottom" href="/greatest/">
+        <span>Greatest</span>
+      </a>
 
-    <!-- CENTER (FOUNDATIONAL LAWS) -->
-    <a class="diamond center" href="/laws/"><span>Foundational<br/>Laws</span></a>
+    </section>
 
-  </div>
-</main>
+    <footer class="footer">
+      Canonical · Stable · © Geodiametrics
+    </footer>
 
-<footer>Canonical · Stable · © Geodiametrics</footer>
-
+  </main>
 </body>
 </html>

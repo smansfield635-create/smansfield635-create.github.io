@@ -1,20 +1,118 @@
-/* === STARFIELD BACKGROUND === */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(1px 1px at 20% 30%, #fff8 50%, transparent 51%),
-    radial-gradient(1px 1px at 80% 40%, #fff6 50%, transparent 51%),
-    radial-gradient(1px 1px at 60% 70%, #fff7 50%, transparent 51%),
-    radial-gradient(1px 1px at 30% 80%, #fff5 50%, transparent 51%),
-    radial-gradient(1px 1px at 90% 20%, #fff6 50%, transparent 51%);
-  background-size: 300px 300px;
-  animation: starDrift 120s linear infinite;
-  z-index: -2;
+/* ======================================
+   GEODIAMETRICS UI — BUBBLE + FREE WILL
+====================================== */
+
+:root {
+  --bubble-bg: radial-gradient(circle at top left,
+    rgba(255,255,255,0.18),
+    rgba(255,255,255,0.06) 60%,
+    rgba(0,0,0,0.25));
+
+  --bubble-border: rgba(255,255,255,0.12);
+  --bubble-glow: rgba(120,180,255,0.35);
+
+  --text-main: #eef1ff;
+  --text-muted: #aab2e8;
 }
 
-@keyframes starDrift {
-  from { transform: translateY(0); }
-  to   { transform: translateY(-1000px); }
+/* -------------------------
+   GLOBAL
+------------------------- */
+
+body {
+  color: var(--text-main);
+}
+
+/* -------------------------
+   BUBBLE CARDS
+------------------------- */
+
+.card,
+.tile,
+.notice {
+  background: var(--bubble-bg);
+  border-radius: 28px;
+  border: 1px solid var(--bubble-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.55),
+    0 0 40px rgba(120,180,255,0.12);
+
+  padding: 28px;
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+
+.tile:hover,
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow:
+    0 30px 70px rgba(0,0,0,0.65),
+    0 0 70px var(--bubble-glow);
+}
+
+/* -------------------------
+   FREE WILL BUTTONS
+------------------------- */
+
+.pill {
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  padding: 10px 16px;
+  border: 1px solid rgba(255,255,255,0.14);
+  color: var(--text-main);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: background .25s ease, transform .25s ease;
+}
+
+.pill:hover {
+  background: rgba(255,255,255,0.18);
+  transform: translateY(-2px);
+}
+
+/* -------------------------
+   DROPDOWN / REVEAL
+------------------------- */
+
+.expandable {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height .6s ease, opacity .4s ease;
+}
+
+.expandable.open {
+  max-height: 1200px;
+  opacity: 1;
+}
+
+/* -------------------------
+   TEXT
+------------------------- */
+
+.h1 {
+  font-size: clamp(28px, 5vw, 46px);
+  font-weight: 700;
+}
+
+.tileTitle {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.tileBody,
+.noticeBody {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* -------------------------
+   FOOTER
+------------------------- */
+
+.foot {
+  color: var(--text-muted);
+  font-size: 13px;
 }

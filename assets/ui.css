@@ -28,16 +28,19 @@
     if(!groupId||!mode) return;
     var buttons=$all('[data-toggle="'+groupId+'"]');
     var panes=$all('[data-pane="'+groupId+'"]');
+
     buttons.forEach(function(b){
       var on=(b.getAttribute("data-mode")||"")===mode;
       b.classList.toggle("active",on);
       b.setAttribute("aria-pressed",on?"true":"false");
     });
+
     panes.forEach(function(p){
       var on=(p.getAttribute("data-mode")||"")===mode;
       p.classList.toggle("show",on);
       p.style.display=on?"block":"none";
     });
+
     try{ sessionStorage.setItem("GEO_TOGGLE_"+groupId,mode); }catch(e){}
   }
 
@@ -52,18 +55,26 @@
 
   function onClick(e){
     var t=e.target;
+
     var drop=t.closest && t.closest("[data-drop]");
-    if(drop){ toggleDrop(drop.getAttribute("data-drop")); return; }
+    if(drop){
+      toggleDrop(drop.getAttribute("data-drop"));
+      return;
+    }
+
     var tog=t.closest && t.closest("[data-toggle]");
-    if(tog){ setToggle(tog.getAttribute("data-toggle"), tog.getAttribute("data-mode")||"human"); return; }
+    if(tog){
+      setToggle(tog.getAttribute("data-toggle"), tog.getAttribute("data-mode")||"human");
+      return;
+    }
   }
 
   function boot(){
     setRoom();
     document.addEventListener("click",onClick,true);
     initToggleDefaults();
-    setTimeout(initToggleDefaults,40);
-    setTimeout(initToggleDefaults,200);
+    setTimeout(initToggleDefaults,50);
+    setTimeout(initToggleDefaults,250);
   }
 
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",boot);

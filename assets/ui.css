@@ -1,126 +1,128 @@
-/* =========================================================
-   GEODIAMETRICS — SINGLE INTEGRITY DIAMOND UI
-   TNT RESET — NO LEGACY RULES
-   ========================================================= */
+/* ===============================
+   GEODIAMETRICS — SINGLE UI
+   =============================== */
 
-*,
-*::before,
-*::after {
+* {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html, body {
-  height: 100%;
-  background: radial-gradient(ellipse at top, #0b1430, #05070f);
-  color: #e9edff;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(ellipse at top, #0b1a33, #050914);
+  color: #e8ecf4;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
-/* --------- HERO --------- */
-
-.hero {
-  text-align: center;
+.stage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 3rem 1rem 2rem;
 }
 
+/* HERO */
+.hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
 .hero h1 {
-  font-size: 2.4rem;
-  font-weight: 700;
+  font-size: 2.6rem;
+  margin: 0;
 }
 
 .hero p {
-  opacity: 0.75;
+  opacity: 0.7;
   margin-top: 0.5rem;
 }
 
-/* --------- DIAMOND CONTAINER --------- */
-
-.diamond-stage {
-  position: relative;
-  width: 320px;
-  height: 320px;
-  margin: 3rem auto;
-}
-
-/* --------- DIAMOND BASE --------- */
-
-.diamond {
-  position: absolute;
-  width: 180px;
-  height: 180px;
-  background: rgba(80, 110, 255, 0.12);
-  border-radius: 20px;
-  transform: rotate(45deg);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(255,255,255,0.08);
+/* GATE */
+.gate {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
 }
 
-/* --------- INNER LABEL --------- */
-
-.diamond span {
-  transform: rotate(-45deg);
-  font-weight: 600;
-  text-align: center;
+.outer-diamond {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  transform: rotate(45deg);
+  border-radius: 28px;
+  background: linear-gradient(145deg, #122a55, #0a1630);
+  box-shadow:
+    0 0 60px rgba(90,130,255,0.15),
+    inset 0 0 30px rgba(255,255,255,0.05);
 }
 
-/* --------- POSITIONS --------- */
-
-.diamond.top    { top: 0; left: 70px; }
-.diamond.left   { left: 0; top: 70px; }
-.diamond.right  { right: 0; top: 70px; }
-.diamond.bottom { bottom: 0; left: 70px; }
-
-/* --------- CENTER NODE (NOT A DIAMOND) --------- */
-
-.center-dot {
+.inner-diamond {
   position: absolute;
-  width: 22px;
-  height: 22px;
-  background: #e9edff;
-  border-radius: 50%;
-  top: 149px;
-  left: 149px;
-  opacity: 0.85;
+  inset: 28%;
+  background: radial-gradient(circle at center, #1c3a66, #0b1a33);
+  border-radius: 18px;
+  box-shadow: inset 0 0 20px rgba(255,255,255,0.08);
 }
 
-/* --------- INTEGRITY FLOW --------- */
-
-.flow {
-  text-align: center;
-  margin: 2rem 0 1rem;
+/* FACETS */
+.facet {
+  position: absolute;
+  width: 120px;
+  height: 44px;
+  border-radius: 999px;
+  background: rgba(20,40,80,0.7);
+  color: #e8ecf4;
+  border: 1px solid rgba(255,255,255,0.12);
+  cursor: pointer;
   font-weight: 500;
-  opacity: 0.9;
+  transform: rotate(-45deg);
+  backdrop-filter: blur(6px);
 }
 
-/* --------- CHINESE PHRASES --------- */
+.facet.top    { top: -22px; left: 50%; transform: translateX(-50%) rotate(-45deg); }
+.facet.bottom { bottom: -22px; left: 50%; transform: translateX(-50%) rotate(-45deg); }
+.facet.left   { left: -22px; top: 50%; transform: translateY(-50%) rotate(-45deg); }
+.facet.right  { right: -22px; top: 50%; transform: translateY(-50%) rotate(-45deg); }
 
-.phrases {
-  max-width: 360px;
-  margin: 0 auto 3rem;
+/* INTEGRITY LINE */
+.integrity-line {
+  opacity: 0.75;
+  font-size: 0.95rem;
+}
+
+/* SAYINGS */
+.sayings {
+  width: 100%;
+  max-width: 460px;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  margin-bottom: 2.5rem;
 }
 
-.phrase {
-  background: rgba(255,255,255,0.08);
+.sayings-hint {
+  text-align: center;
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+.saying {
+  background: rgba(20,30,55,0.75);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 999px;
   padding: 0.9rem 1.2rem;
-  text-align: center;
-  backdrop-filter: blur(10px);
+  color: #e8ecf4;
   font-size: 1rem;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
 }
 
-/* --------- FOOTER --------- */
-
-footer {
-  text-align: center;
+/* FOOTER */
+.foot {
+  margin-top: auto;
   opacity: 0.5;
-  padding-bottom: 1.5rem;
   font-size: 0.85rem;
 }

@@ -1,14 +1,35 @@
-<!-- FILE: /gauges/index.html  (TNT FULL REPLACEMENT) -->
+<!-- FILE: /gauges/index.html  (TNT FULL REPLACEMENT)
+     GAUGES = DIAMOND INSTRUMENT
+     - Center: Coherence (circular)
+     - Left: Drift (bar)
+     - Right: Constraint Load (bar)
+     - Top: Stability (ring)
+     - Bottom: Admissibility (spectrum)
+     - Expand outward, no scroll walls
+-->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Live Gauges · Geodiametrics</title>
+  <title>Gauges · Geodiametrics</title>
   <link rel="icon" href="/assets/favicon.svg"/>
   <link rel="stylesheet" href="/assets/core.css"/>
   <link rel="stylesheet" href="/assets/ui.css"/>
   <script src="/assets/ui.js"></script>
+
+  <style>
+    /* Gauge visuals (self-contained) */
+    .GCard{padding:18px;border-radius:28px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg, rgba(16,20,44,.68), rgba(20,28,64,.24));backdrop-filter:blur(14px);box-shadow:0 0 30px rgba(0,0,0,.30)}
+    .Gauge{display:flex;align-items:center;justify-content:center}
+    .Gauge svg{width:180px;height:180px}
+    .RingBg{stroke:rgba(255,255,255,.18);stroke-width:10;fill:none}
+    .RingFg{stroke:url(#gradGood);stroke-width:10;fill:none;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+    .BarWrap{width:220px;height:16px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);overflow:hidden}
+    .BarFill{height:100%;width:40%;background:linear-gradient(90deg,#e0a1a1,#e6d58a,#8fdcc2)}
+    .Label{margin-top:10px;text-align:center;color:var(--muted)}
+    .Small{font-size:.9rem}
+  </style>
 </head>
 
 <body>
@@ -16,138 +37,124 @@
 
 <header class="top">
   <div class="brand">
-    <img class="logo" src="/assets/logo.svg"/>
-    <div class="brandText">
-      <div class="brandName">Live Gauges</div>
-      <div class="brandTag">Transparent · Inspectable · Live snapshot</div>
-    </div>
+    <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
+    <div class="brandName">Gauges</div>
   </div>
-
   <nav class="nav">
-    <a class="pill" href="/">Home</a>
-    <a class="pill ghost" href="/gauge-registry/">Registry</a>
-    <a class="pill ghost" href="/application/">Application</a>
-    <a class="pill ghost" href="/laws/">Laws</a>
-    <a class="pill ghost" href="/products/">Products</a>
+    <a class="pill" href="/">Sayings</a>
+    <a class="pill" href="/home/">Enter</a>
+    <a class="pill" href="/products/">Products</a>
+    <a class="pill" href="/laws/">Laws</a>
+    <a class="pill" href="/links/">Links</a>
   </nav>
 </header>
 
 <section class="card">
-  <div class="kicker">RULE</div>
-  <h1 class="h1">Nothing is hidden</h1>
-  <p class="p">Every gauge is live and exposes its source-of-truth. Click “Transparency” to inspect the live snapshot.</p>
+  <h1 class="h1">Live Instrument</h1>
+  <p class="p">Visual measurements. Read-only. Transparent.</p>
+</section>
 
-  <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-    <button class="pill" data-drop="transparency">Transparency</button>
-    <button class="pill" data-drop="sources">Sources of truth</button>
-  </div>
+<!-- DIAMOND -->
+<section class="diamondStage" aria-label="Gauge Diamond">
+  <div class="diamondGrid">
 
-  <div id="transparency" class="drop">
-    <div class="tile">
-      <div class="tileTop cyan">LIVE SNAPSHOT</div>
-      <div class="tileTitle">window.GEO.live.snapshot</div>
-      <div class="tileBody">Updates automatically.</div>
-      <pre id="live_json" style="margin-top:14px; white-space:pre-wrap; word-break:break-word; color:var(--ink); background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.12); border-radius:18px; padding:14px; overflow:auto; max-height:420px;"></pre>
+    <!-- TOP: STABILITY -->
+    <div class="dNode dNodeSmall posTop">
+      <span class="dKicker">Top</span><span class="dTitle">Stability</span>
     </div>
-  </div>
 
-  <div id="sources" class="drop">
-    <div class="tile">
-      <div class="tileTop purple">SOURCE-OF-TRUTH</div>
-      <div class="tileTitle">Declared · Observed · Trajectory</div>
-      <div class="tileBody">
-        Declared state (canonical + selected toggles) · Observed state (page views + clicks) · Trajectory (rate-of-change over time windows).
-      </div>
+    <!-- LEFT: DRIFT -->
+    <div class="dNode dNodeSmall posLeft">
+      <span class="dKicker">Left</span><span class="dTitle">Drift</span>
     </div>
+
+    <!-- CENTER: COHERENCE -->
+    <div class="dNode dCenter posCenter">
+      <span class="dKicker">Center</span><span class="dTitle">Coherence</span>
+    </div>
+
+    <!-- RIGHT: LOAD -->
+    <div class="dNode dNodeSmall posRight">
+      <span class="dKicker">Right</span><span class="dTitle">Load</span>
+    </div>
+
+    <!-- BOTTOM: ADMISSIBILITY -->
+    <div class="dNode dNodeSmall posBottom">
+      <span class="dKicker">Bottom</span><span class="dTitle">Admissibility</span>
+    </div>
+
   </div>
 </section>
 
-<section class="grid">
+<!-- EXPAND OUTWARD -->
+<section class="childWrap">
 
-  <div class="tile primary">
-    <div class="tileTop cyan">COHERENCE (NUMERIC)</div>
-    <div class="tileTitle">1.000</div>
-    <div class="tileBody">VISIBLE · live</div>
-    <div style="margin-top:12px"><button class="pill" data-drop="src_coh">Source</button></div>
-    <div id="src_coh" class="drop">
-      <p class="p">Declared + Observed + Trajectory consistency</p>
+  <!-- COHERENCE -->
+  <div class="childCard">
+    <div class="kicker">COHERENCE</div>
+    <div class="GCard Gauge">
+      <svg viewBox="0 0 120 120">
+        <defs>
+          <linearGradient id="gradGood" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#e0a1a1"/>
+            <stop offset="50%" stop-color="#e6d58a"/>
+            <stop offset="100%" stop-color="#8fdcc2"/>
+          </linearGradient>
+        </defs>
+        <circle cx="60" cy="60" r="44" class="RingBg"/>
+        <circle cx="60" cy="60" r="44" class="RingFg" stroke-dasharray="138 276"/>
+        <text x="60" y="66" text-anchor="middle" fill="#eef1ff" font-size="16">0.50</text>
+      </svg>
+    </div>
+    <div class="Label Small">Alignment of declared, observed, trajectory</div>
+  </div>
+
+  <!-- DRIFT -->
+  <div class="childCard">
+    <div class="kicker">DRIFT</div>
+    <div class="GCard">
+      <div class="BarWrap"><div class="BarFill" style="width:30%"></div></div>
+      <div class="Label Small">Deviation from intended path</div>
     </div>
   </div>
 
-  <div class="tile">
-    <div class="tileTop green">STABILITY</div>
-    <div class="tileTitle">STABLE</div>
-    <div class="tileBody">live</div>
-    <div style="margin-top:12px"><button class="pill" data-drop="src_stab">Source</button></div>
-    <div id="src_stab" class="drop">
-      <p class="p">Variance/oscillation of coherence across a defined window</p>
+  <!-- LOAD -->
+  <div class="childCard">
+    <div class="kicker">CONSTRAINT LOAD</div>
+    <div class="GCard">
+      <div class="BarWrap"><div class="BarFill" style="width:55%"></div></div>
+      <div class="Label Small">Active constraints & saturation</div>
     </div>
   </div>
 
-  <div class="tile">
-    <div class="tileTop cyan">DRIFT</div>
-    <div class="tileTitle">0.000</div>
-    <div class="tileBody">live</div>
-    <div style="margin-top:12px"><button class="pill" data-drop="src_drift">Source</button></div>
-    <div id="src_drift" class="drop">
-      <p class="p">Declared trajectory vs observed trajectory delta</p>
+  <!-- STABILITY -->
+  <div class="childCard">
+    <div class="kicker">STABILITY</div>
+    <div class="GCard Gauge">
+      <svg viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="44" class="RingBg"/>
+        <circle cx="60" cy="60" r="44" class="RingFg" stroke-dasharray="200 276"/>
+        <text x="60" y="66" text-anchor="middle" fill="#eef1ff" font-size="14">STABLE</text>
+      </svg>
     </div>
+    <div class="Label Small">Persistence over time</div>
   </div>
 
-  <div class="tile">
-    <div class="tileTop red">CONSTRAINT LOAD</div>
-    <div class="tileTitle">LOW</div>
-    <div class="tileBody">live</div>
-    <div style="margin-top:12px"><button class="pill" data-drop="src_load">Source</button></div>
-    <div id="src_load" class="drop">
-      <p class="p">Constraint registry + saturation + interaction rate</p>
-    </div>
-  </div>
-
-  <div class="tile">
-    <div class="tileTop purple">ADMISSIBILITY</div>
-    <div class="tileTitle"><span class="green">ADMISSIBLE</span></div>
-    <div class="tileBody">live</div>
-    <div style="margin-top:12px"><button class="pill" data-drop="src_adm">Source</button></div>
-    <div id="src_adm" class="drop">
-      <p class="p">Constraint satisfaction gate (binary at execution time; shown as ADMISSIBLE / AT RISK / INADMISSIBLE)</p>
-    </div>
-  </div>
-
-  <div class="tile">
-    <div class="tileTop purple">CLOSURE (EAI)</div>
-    <div class="tileTitle">OPEN</div>
-    <div class="tileBody">Manual only</div>
-    <div style="margin-top:12px"><button class="pill" data-drop="src_cls">Source</button></div>
-    <div id="src_cls" class="drop">
-      <p class="p">Executive state machine: OPEN / HALT / TERMINATE (manual EAI only)</p>
+  <!-- ADMISSIBILITY -->
+  <div class="childCard">
+    <div class="kicker">ADMISSIBILITY</div>
+    <div class="GCard">
+      <div class="BarWrap"><div class="BarFill" style="width:70%"></div></div>
+      <div class="Label Small">Allowed → At Risk → Inadmissible</div>
     </div>
   </div>
 
 </section>
 
 <footer class="foot">
-  <div>Live Gauges · Transparent</div>
-  <div>© Geodiametrics</div>
+  Gauges · Diamond Instrument · © Geodiametrics
 </footer>
 
 </main>
-
-<script>
-  (function(){
-    function tick(){
-      try{
-        var s = (window.GEO && GEO.live && GEO.live.snapshot) ? GEO.live.snapshot : null;
-        document.getElementById("live_json").textContent = s ? JSON.stringify(s, null, 2) : "Waiting for live snapshot…";
-      }catch(e){
-        document.getElementById("live_json").textContent = "Snapshot unavailable.";
-      }
-    }
-    tick();
-    setInterval(tick, 1000);
-  })();
-</script>
-
 </body>
 </html>
-```0

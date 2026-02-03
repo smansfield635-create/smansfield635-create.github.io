@@ -1,13 +1,17 @@
 :root{
   --ink:#eef1ff;
-  --muted:#9aa3d9;
+  --muted:#a9b1ea;
+
   --stroke:rgba(255,255,255,.14);
-  --glassA:rgba(16,20,44,.68);
-  --glassB:rgba(20,28,64,.24);
+  --glassA:rgba(16,20,44,.72);
+  --glassB:rgba(20,28,64,.22);
+
   --r:28px;
+  --shadow:0 0 30px rgba(0,0,0,.34);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 a{color:inherit;text-decoration:none}
 a:visited{color:inherit}
 a,button{-webkit-tap-highlight-color:transparent}
+button{font:inherit}

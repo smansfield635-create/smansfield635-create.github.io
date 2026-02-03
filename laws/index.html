@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Foundational Laws · Geodiametrics</title>
-
+  <title>Foundational Laws</title>
   <link rel="icon" href="/assets/favicon.svg"/>
   <link rel="stylesheet" href="/assets/core.css"/>
   <link rel="stylesheet" href="/assets/ui.css"/>
+  <script src="/assets/ui.js"></script>
 </head>
 
 <body>
@@ -18,49 +18,180 @@
     <img class="logo" src="/assets/logo.svg"/>
     <div class="brandText">
       <div class="brandName">Foundational Laws</div>
-      <div class="brandTag">Invariant · Tiered · Inspectable</div>
+      <div class="brandTag">Trophy Case · Tiered · Inspectable</div>
     </div>
   </div>
+
   <nav class="nav">
     <a class="pill" href="/">Home</a>
+    <a class="pill ghost" href="/home/">Enter</a>
     <a class="pill ghost" href="/products/">Products</a>
     <a class="pill ghost" href="/links/">Links</a>
   </nav>
 </header>
 
 <section class="card">
-  <h1 class="h1">Tier 1 — Invariant Laws</h1>
-  <ul class="list">
-    <li>Reality cannot be faked</li>
-    <li>Truth precedes perception</li>
-    <li>Constraints define admissibility</li>
-    <li>Outputs reflect inputs</li>
-    <li>Trust begins internally</li>
-  </ul>
+  <h1 class="h1">Tier 1 · Tier 2 · Tier 3</h1>
+  <p class="p">Each law expands. Each expansion toggles Human / Scientific on the same page.</p>
 </section>
 
+<!-- =========================
+     TIER 1
+========================= -->
 <section class="card">
-  <h1 class="h1">Tier 2 — Coherence Laws</h1>
-  <ul class="list">
-    <li>Coherence precedes scale</li>
-    <li>Fragmentation increases correction cost</li>
-    <li>Stability requires constraint alignment</li>
-    <li>All relationships are projections</li>
-  </ul>
+  <div class="kicker">TIER 1</div>
+  <h2 class="h2">Invariant Laws</h2>
+
+  <!-- Law 1 -->
+  <button class="pill" data-drop="law1">Law 1 — Reality cannot be faked</button>
+  <div id="law1" class="drop">
+    <div class="toggleRow" data-toggle-group="law1m">
+      <button class="toggleBtn" data-toggle="law1m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="law1m" data-mode="scientific">Scientific</button>
+    </div>
+    <div class="pane show" data-pane="law1m" data-mode="human">
+      <p class="p">You can claim anything. Reality responds only to what is actually true.</p>
+    </div>
+    <div class="pane" data-pane="law1m" data-mode="scientific">
+      <p class="p">Observed outcomes constrain admissible claims; mismatched claims are rejected by evidence.</p>
+    </div>
+  </div>
+
+  <!-- Law 2 -->
+  <button class="pill" data-drop="law2">Law 2 — Trust begins internally</button>
+  <div id="law2" class="drop">
+    <div class="toggleRow" data-toggle-group="law2m">
+      <button class="toggleBtn" data-toggle="law2m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="law2m" data-mode="scientific">Scientific</button>
+    </div>
+    <div class="pane show" data-pane="law2m" data-mode="human">
+      <p class="p">If you don’t trust yourself, you can’t expect others to trust you.</p>
+    </div>
+    <div class="pane" data-pane="law2m" data-mode="scientific">
+      <p class="p">External trust cannot exceed internal coherence; inconsistencies cap reliable coordination.</p>
+    </div>
+  </div>
+
+  <!-- Law 3 -->
+  <button class="pill" data-drop="law3">Law 3 — Outputs reflect inputs</button>
+  <div id="law3" class="drop">
+    <div class="toggleRow" data-toggle-group="law3m">
+      <button class="toggleBtn" data-toggle="law3m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="law3m" data-mode="scientific">Scientific</button>
+    </div>
+    <div class="pane show" data-pane="law3m" data-mode="human">
+      <p class="p">What you do shows up in what you get.</p>
+    </div>
+    <div class="pane" data-pane="law3m" data-mode="scientific">
+      <p class="p">System outputs are constrained functions of inputs and constraints; mismatches indicate hidden variables or error.</p>
+    </div>
+  </div>
+
+  <!-- Law 4 -->
+  <button class="pill" data-drop="law4">Law 4 — Constraints define admissibility</button>
+  <div id="law4" class="drop">
+    <div class="toggleRow" data-toggle-group="law4m">
+      <button class="toggleBtn" data-toggle="law4m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="law4m" data-mode="scientific">Scientific</button>
+    </div>
+    <div class="pane show" data-pane="law4m" data-mode="human">
+      <p class="p">Some paths just don’t work because reality won’t allow them.</p>
+    </div>
+    <div class="pane" data-pane="law4m" data-mode="scientific">
+      <p class="p">Feasible execution exists only within constraint satisfaction; inadmissible transitions terminate.</p>
+    </div>
+  </div>
 </section>
 
+<!-- =========================
+     TIER 2
+========================= -->
 <section class="card">
-  <h1 class="h1">Tier 3 — Execution & Closure Laws</h1>
-  <ul class="list">
-    <li>Admissibility is binary at execution</li>
-    <li>Closure is final</li>
-    <li>Authority resolves ambiguity</li>
-    <li>Systems fail if and only if incoherence persists</li>
-  </ul>
+  <div class="kicker">TIER 2</div>
+  <h2 class="h2">Coherence Laws</h2>
+
+  <button class="pill" data-drop="law5">Law 5 — Coherence precedes scale</button>
+  <div id="law5" class="drop">
+    <div class="toggleRow" data-toggle-group="law5m">
+      <button class="toggleBtn" data-toggle="law5m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="law5m" data-mode="scientific">Scientific</button>
+    </div>
+    <div class="pane show" data-pane="law5m" data-mode="human">
+      <p class="p">If it isn’t stable small, it won’t be stable big.</p>
+    </div>
+    <div class="pane" data-pane="law5m" data-mode="scientific">
+      <p class="p">Scaling amplifies incoherence; admissibility must hold prior to expansion.</p>
+    </div>
+  </div>
+
+  <button class="pill" data-drop="law6">Law 6 — Fragmentation increases correction cost</button>
+  <div id="law6" class="drop">
+    <div class="toggleRow" data-toggle-group="law6m">
+      <button class="toggleBtn" data-toggle="law6m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="law6m" data-mode="scientific">Scientific</button>
+    </div>
+    <div class="pane show" data-pane="law6m" data-mode="human">
+      <p class="p">The longer you wait to fix it, the harder it gets.</p>
+    </div>
+    <div class="pane" data-pane="law6m" data-mode="scientific">
+      <p class="p">Correction effort grows with incoherent divergence; early constraints reduce repair complexity.</p>
+    </div>
+  </div>
+
+  <button class="pill" data-drop="law7">Law 7 — All relationships are projections</button>
+  <div id="law7" class="drop">
+    <div class="toggleRow" data-toggle-group="law7m">
+      <button class="toggleBtn" data-toggle="law7m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="law7m" data-mode="scientific">Scientific</button>
+    </div>
+    <div class="pane show" data-pane="law7m" data-mode="human">
+      <p class="p">How people relate reflects what’s true underneath.</p>
+    </div>
+    <div class="pane" data-pane="law7m" data-mode="scientific">
+      <p class="p">Relations are observable projections of constraint-aligned coherence between systems.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     TIER 3
+========================= -->
+<section class="card">
+  <div class="kicker">TIER 3</div>
+  <h2 class="h2">Execution & Closure Laws</h2>
+
+  <button class="pill" data-drop="law8">Law 8 — Coherence solidifies through traversal</button>
+  <div id="law8" class="drop">
+    <div class="toggleRow" data-toggle-group="law8m">
+      <button class="toggleBtn" data-toggle="law8m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="law8m" data-mode="scientific">Scientific</button>
+    </div>
+    <div class="pane show" data-pane="law8m" data-mode="human">
+      <p class="p">Pressure reveals what’s real. What holds becomes solid.</p>
+    </div>
+    <div class="pane" data-pane="law8m" data-mode="scientific">
+      <p class="p">Under constrained traversal, coherence above threshold persists; below threshold fractures.</p>
+    </div>
+  </div>
+
+  <button class="pill" data-drop="law9">Law 9 — Closure is final</button>
+  <div id="law9" class="drop">
+    <div class="toggleRow" data-toggle-group="law9m">
+      <button class="toggleBtn" data-toggle="law9m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="law9m" data-mode="scientific">Scientific</button>
+    </div>
+    <div class="pane show" data-pane="law9m" data-mode="human">
+      <p class="p">Once a decision is truly made, you stop renegotiating it.</p>
+    </div>
+    <div class="pane" data-pane="law9m" data-mode="scientific">
+      <p class="p">Executive admissibility emits terminal receipts; post-closure renegotiation is inadmissible.</p>
+    </div>
+  </div>
+
 </section>
 
 <footer class="foot">
-  <div>Canonical · Stable</div>
+  <div>Foundational Laws · Trophy Case</div>
   <div>© Geodiametrics</div>
 </footer>
 

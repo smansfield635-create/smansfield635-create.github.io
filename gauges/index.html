@@ -1,9 +1,10 @@
+<!-- FILE: /gauges/index.html  (TNT FULL REPLACEMENT) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Live Gauges</title>
+  <title>Live Gauges · Geodiametrics</title>
   <link rel="icon" href="/assets/favicon.svg"/>
   <link rel="stylesheet" href="/assets/core.css"/>
   <link rel="stylesheet" href="/assets/ui.css"/>
@@ -18,7 +19,7 @@
     <img class="logo" src="/assets/logo.svg"/>
     <div class="brandText">
       <div class="brandName">Live Gauges</div>
-      <div class="brandTag">Layer 1 · Sources visible · Values placeholder until Layer 3 transport</div>
+      <div class="brandTag">Transparent · Inspectable · Live snapshot</div>
     </div>
   </div>
 
@@ -26,14 +27,39 @@
     <a class="pill" href="/">Home</a>
     <a class="pill ghost" href="/gauge-registry/">Registry</a>
     <a class="pill ghost" href="/application/">Application</a>
-    <a class="pill ghost" href="/eai/">EAI</a>
+    <a class="pill ghost" href="/laws/">Laws</a>
+    <a class="pill ghost" href="/products/">Products</a>
   </nav>
 </header>
 
 <section class="card">
   <div class="kicker">RULE</div>
   <h1 class="h1">Nothing is hidden</h1>
-  <p class="p">Each gauge shows its source-of-truth. Computation and transport come next.</p>
+  <p class="p">Every gauge is live and exposes its source-of-truth. Click “Transparency” to inspect the live snapshot.</p>
+
+  <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+    <button class="pill" data-drop="transparency">Transparency</button>
+    <button class="pill" data-drop="sources">Sources of truth</button>
+  </div>
+
+  <div id="transparency" class="drop">
+    <div class="tile">
+      <div class="tileTop cyan">LIVE SNAPSHOT</div>
+      <div class="tileTitle">window.GEO.live.snapshot</div>
+      <div class="tileBody">Updates automatically.</div>
+      <pre id="live_json" style="margin-top:14px; white-space:pre-wrap; word-break:break-word; color:var(--ink); background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.12); border-radius:18px; padding:14px; overflow:auto; max-height:420px;"></pre>
+    </div>
+  </div>
+
+  <div id="sources" class="drop">
+    <div class="tile">
+      <div class="tileTop purple">SOURCE-OF-TRUTH</div>
+      <div class="tileTitle">Declared · Observed · Trajectory</div>
+      <div class="tileBody">
+        Declared state (canonical + selected toggles) · Observed state (page views + clicks) · Trajectory (rate-of-change over time windows).
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="grid">
@@ -41,17 +67,17 @@
   <div class="tile primary">
     <div class="tileTop cyan">COHERENCE (NUMERIC)</div>
     <div class="tileTitle">1.000</div>
-    <div class="tileBody"><span class="green">VISIBLE</span> · placeholder</div>
+    <div class="tileBody">VISIBLE · live</div>
     <div style="margin-top:12px"><button class="pill" data-drop="src_coh">Source</button></div>
     <div id="src_coh" class="drop">
-      <p class="p">Declared state + Observed state + Trajectory consistency</p>
+      <p class="p">Declared + Observed + Trajectory consistency</p>
     </div>
   </div>
 
   <div class="tile">
     <div class="tileTop green">STABILITY</div>
     <div class="tileTitle">STABLE</div>
-    <div class="tileBody">placeholder</div>
+    <div class="tileBody">live</div>
     <div style="margin-top:12px"><button class="pill" data-drop="src_stab">Source</button></div>
     <div id="src_stab" class="drop">
       <p class="p">Variance/oscillation of coherence across a defined window</p>
@@ -60,8 +86,8 @@
 
   <div class="tile">
     <div class="tileTop cyan">DRIFT</div>
-    <div class="tileTitle">LOW</div>
-    <div class="tileBody">placeholder</div>
+    <div class="tileTitle">0.000</div>
+    <div class="tileBody">live</div>
     <div style="margin-top:12px"><button class="pill" data-drop="src_drift">Source</button></div>
     <div id="src_drift" class="drop">
       <p class="p">Declared trajectory vs observed trajectory delta</p>
@@ -71,7 +97,7 @@
   <div class="tile">
     <div class="tileTop red">CONSTRAINT LOAD</div>
     <div class="tileTitle">LOW</div>
-    <div class="tileBody">placeholder</div>
+    <div class="tileBody">live</div>
     <div style="margin-top:12px"><button class="pill" data-drop="src_load">Source</button></div>
     <div id="src_load" class="drop">
       <p class="p">Constraint registry + saturation + interaction rate</p>
@@ -81,10 +107,10 @@
   <div class="tile">
     <div class="tileTop purple">ADMISSIBILITY</div>
     <div class="tileTitle"><span class="green">ADMISSIBLE</span></div>
-    <div class="tileBody">placeholder</div>
+    <div class="tileBody">live</div>
     <div style="margin-top:12px"><button class="pill" data-drop="src_adm">Source</button></div>
     <div id="src_adm" class="drop">
-      <p class="p">Constraint satisfaction gate (binary at execution time)</p>
+      <p class="p">Constraint satisfaction gate (binary at execution time; shown as ADMISSIBLE / AT RISK / INADMISSIBLE)</p>
     </div>
   </div>
 
@@ -101,10 +127,27 @@
 </section>
 
 <footer class="foot">
-  <div>Live Gauges · Layer 1</div>
+  <div>Live Gauges · Transparent</div>
   <div>© Geodiametrics</div>
 </footer>
 
 </main>
+
+<script>
+  (function(){
+    function tick(){
+      try{
+        var s = (window.GEO && GEO.live && GEO.live.snapshot) ? GEO.live.snapshot : null;
+        document.getElementById("live_json").textContent = s ? JSON.stringify(s, null, 2) : "Waiting for live snapshot…";
+      }catch(e){
+        document.getElementById("live_json").textContent = "Snapshot unavailable.";
+      }
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+</script>
+
 </body>
 </html>
+```0

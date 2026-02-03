@@ -8,58 +8,85 @@
   <link rel="icon" href="/assets/favicon.svg"/>
   <link rel="stylesheet" href="/assets/core.css"/>
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script defer src="/assets/ui.js"></script>
 </head>
 
 <body>
+  <main class="wrap stars">
 
-<main class="wrap landing">
+    <section class="hero">
+      <h1>Be the first.</h1>
+      <p>Nothing is required until you click.</p>
+    </section>
 
-  <header class="hero">
-    <h1>Be the first.</h1>
-    <p>Nothing is required until you click.</p>
-  </header>
+    <section class="diamond-field">
 
-  <!-- DIAMOND FIELD -->
-  <section class="diamond-field">
+      <!-- TOP -->
+      <a class="diamond top" href="#foundational">
+        <span>Foundational</span>
+      </a>
 
-    <!-- CENTER : MEDIUM (UNCICKABLE) -->
-    <div class="diamond center locked">
-      <span>Laws<br/>Medium</span>
-    </div>
+      <!-- LEFT -->
+      <a class="diamond left" href="#philosophy">
+        <span>Philosophy</span>
+      </a>
 
-    <!-- TOP -->
-    <a class="diamond top" href="/sayings/">
-      <span>Foundational</span>
-    </a>
+      <!-- CENTER (LOCKED MEDIUM) -->
+      <div class="diamond center locked">
+        <span>Laws<br/>Medium</span>
+      </div>
 
-    <!-- LEFT -->
-    <a class="diamond left" href="/sayings/#philosophy">
-      <span>Philosophy</span>
-    </a>
+      <!-- RIGHT -->
+      <a class="diamond right" href="#breakthroughs">
+        <span>Breakthroughs</span>
+      </a>
 
-    <!-- RIGHT -->
-    <a class="diamond right" href="/sayings/#breakthroughs">
-      <span>Breakthroughs</span>
-    </a>
+      <!-- BOTTOM -->
+      <a class="diamond bottom" href="#greatest">
+        <span>Greatest</span>
+      </a>
 
-    <!-- BOTTOM -->
-    <a class="diamond bottom" href="/sayings/#greatest">
-      <span>Greatest</span>
-    </a>
+      <!-- CORNER -->
+      <a class="diamond corner" href="#laws">
+        <span>→ Laws</span>
+      </a>
 
-    <!-- CORNER -->
-    <a class="diamond corner" href="/laws/">
-      <span>→ Laws</span>
-    </a>
+    </section>
 
-  </section>
+    <!-- TARGET SECTIONS (INLINE, NO ROUTING) -->
 
-  <footer>
-    Canonical · Stable · © Geodiametrics
-  </footer>
+    <section id="foundational" class="panel">
+      <h2>Foundational</h2>
+      <p>Core coherence anchors. No shortcuts.</p>
+    </section>
 
-</main>
+    <section id="philosophy" class="panel">
+      <h2>Philosophy</h2>
+      <p>Reasoning that collapses confusion.</p>
+    </section>
 
+    <section id="breakthroughs" class="panel">
+      <h2>Breakthroughs</h2>
+      <p>History of constraint-breaking moments.</p>
+    </section>
+
+    <section id="greatest" class="panel">
+      <h2>Greatest</h2>
+      <p>All-time reference points.</p>
+    </section>
+
+    <section id="laws" class="panel">
+      <h2>Foundational Laws</h2>
+      <p>Constraints that keep order.</p>
+      <div class="toggle">
+        <button>Human</button>
+        <button>Scientific</button>
+      </div>
+    </section>
+
+    <footer>
+      Canonical · Stable · © Geodiametrics
+    </footer>
+
+  </main>
 </body>
 </html>

@@ -1,28 +1,120 @@
-.diamond {
-  background:
-    linear-gradient(145deg,
-      rgba(140,160,255,0.35),
-      rgba(40,50,120,0.25)
-    );
-  border: 1px solid rgba(200,220,255,0.6);
-  box-shadow:
-    0 20px 50px rgba(0,0,0,0.6),
-    inset 0 0 40px rgba(255,255,255,0.08);
+/* =========================
+   GLOBAL DEPTH + STARS
+========================= */
+
+body {
+  background: radial-gradient(
+    circle at top,
+    #0b1020 0%,
+    #050812 60%,
+    #02040a 100%
+  );
+  overflow-x: hidden;
 }
 
-.diamond:hover {
-  box-shadow:
-    0 0 60px rgba(160,190,255,0.65),
-    inset 0 0 60px rgba(255,255,255,0.14);
-}
-
-.locked {
+.wrap.stars::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, #fff6, transparent),
+    radial-gradient(1px 1px at 80% 70%, #fff4, transparent),
+    radial-gradient(1px 1px at 50% 50%, #fff5, transparent);
   opacity: 0.35;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* =========================
+   DIAMOND FIELD
+========================= */
+
+.diamond-field {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  margin-top: 4rem;
+}
+
+/* =========================
+   DIAMOND BASE
+========================= */
+
+.diamond {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  transform: rotate(45deg);
+  border-radius: 14px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(120,140,255,0.35),
+      rgba(40,60,140,0.25)
+    );
+  border: 1px solid rgba(180,200,255,0.5);
+  box-shadow:
+    0 25px 60px rgba(0,0,0,0.7),
+    inset 0 0 40px rgba(255,255,255,0.08);
+  z-index: 2;
+}
+
+/* =========================
+   TEXT STRAIGHTENER
+========================= */
+
+.diamond span {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-45deg);
+  font-weight: 600;
+  color: #cfd6ff;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* =========================
+   LOCKED MEDIUM
+========================= */
+
+.diamond.locked {
+  opacity: 0.25;
   border-style: dashed;
   box-shadow:
-    0 10px 25px rgba(0,0,0,0.4);
+    0 10px 25px rgba(0,0,0,0.5);
 }
 
-body::before {
-  opacity: 0.7;
+/* =========================
+   POSITIONS
+========================= */
+
+.diamond.top    { top: 0; left: 50%; transform: translateX(-50%) rotate(45deg); }
+.diamond.left   { top: 50%; left: 20%; transform: translateY(-50%) rotate(45deg); }
+.diamond.right  { top: 50%; right: 20%; transform: translateY(-50%) rotate(45deg); }
+.diamond.bottom { bottom: 0; left: 50%; transform: translateX(-50%) rotate(45deg); }
+.diamond.center { top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(45deg); }
+.diamond.corner { bottom: 10%; right: 10%; transform: rotate(45deg); }
+
+/* =========================
+   INTERACTION
+========================= */
+
+.diamond:hover:not(.locked) {
+  box-shadow:
+    0 0 80px rgba(160,190,255,0.75),
+    inset 0 0 60px rgba(255,255,255,0.15);
+}
+
+/* =========================
+   CONTENT LAYERS
+========================= */
+
+.panel {
+  position: relative;
+  z-index: 1;
+  margin-top: 6rem;
+  max-width: 680px;
 }

@@ -1,132 +1,88 @@
-/* =========================================================
-   GEODIAMETRICS — CANONICAL UI
-   Diamond Geometry • No Scroll Traps • Readable • Stable
-   ========================================================= */
-
-/* ---------- RESET ---------- */
-* {
-  box-sizing: border-box;
+/* BASE */
+body {
   margin: 0;
-  padding: 0;
-}
-
-html, body {
-  background: radial-gradient(circle at center, #0b1022 0%, #050814 70%);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: radial-gradient(circle at top, #0b1020, #05080f);
   color: #e8ecf6;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-  min-height: 100vh;
 }
 
-/* ---------- WRAP ---------- */
 .wrap {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 48px 20px 80px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ---------- DIAMOND GRID ---------- */
-.diamond-grid {
+/* HERO */
+.hero {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.hero p {
+  opacity: 0.75;
+}
+
+/* DIAMOND FIELD */
+.diamond-field {
   position: relative;
-  width: 100%;
-  height: 420px;
-  margin: 60px auto;
+  width: 360px;
+  height: 360px;
 }
 
-/* ---------- BASE DIAMOND ---------- */
+/* DIAMOND BASE */
 .diamond {
   position: absolute;
-  width: 140px;
-  height: 140px;
-  background: rgba(25, 35, 70, 0.55);
-  border: 1px solid rgba(140, 170, 255, 0.25);
-  backdrop-filter: blur(10px);
+  width: 120px;
+  height: 120px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.15);
   transform: rotate(45deg);
-  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* ---------- TEXT ORIENTATION FIX ---------- */
-.diamond .label {
+/* TEXT STAYS UPRIGHT */
+.diamond span {
   transform: rotate(-45deg);
   text-align: center;
-  font-size: 0.95rem;
-  line-height: 1.25;
-  padding: 10px;
+  font-size: 0.9rem;
   pointer-events: none;
 }
 
-/* ---------- HOVER ---------- */
-.diamond.clickable:hover {
-  transform: rotate(45deg) scale(1.06);
-  border-color: rgba(160, 200, 255, 0.6);
-  box-shadow: 0 0 22px rgba(120, 180, 255, 0.35);
-  cursor: pointer;
+/* POSITIONS */
+.center { top: 120px; left: 120px; }
+.top { top: 0; left: 120px; }
+.bottom { bottom: 0; left: 120px; }
+.left { left: 0; top: 120px; }
+.right { right: 0; top: 120px; }
+.corner { right: 10px; bottom: 10px; width: 90px; height: 90px; }
+
+/* STATES */
+.diamond:hover {
+  border-color: #7aa2ff;
+  box-shadow: 0 0 12px rgba(122,162,255,0.4);
 }
 
-/* ---------- CENTER = MEDIUM / LAWS ---------- */
-.diamond.center {
-  opacity: 0.45;
-  pointer-events: none;
+.locked {
+  opacity: 0.4;
+  cursor: default;
   box-shadow: none;
-  border-color: rgba(120, 140, 200, 0.25);
+  border-style: dashed;
 }
 
-/* ---------- POSITIONS ---------- */
-.diamond.top {
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-}
-
-.diamond.left {
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%) rotate(45deg);
-}
-
-.diamond.right {
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%) rotate(45deg);
-}
-
-.diamond.bottom {
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-}
-
-.diamond.center {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.diamond.corner {
-  bottom: -40px;
-  right: -40px;
-  transform: rotate(45deg);
-}
-
-/* ---------- TYPOGRAPHY ---------- */
-h1 {
-  font-size: 2.6rem;
-  font-weight: 700;
-  margin-bottom: 14px;
-}
-
-.subtitle {
-  opacity: 0.75;
-  margin-bottom: 40px;
-}
-
-/* ---------- FOOTER ---------- */
-.footer {
-  margin-top: 80px;
-  text-align: center;
-  font-size: 0.85rem;
+/* FOOTER */
+footer {
+  margin-top: 4rem;
+  font-size: 0.8rem;
   opacity: 0.6;
 }

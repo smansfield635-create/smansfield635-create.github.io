@@ -1,3 +1,4 @@
+<!-- FILE: /links/index.html  (TNT FULL REPLACEMENT) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,10 +9,11 @@
   <link rel="icon" href="/assets/favicon.svg"/>
   <link rel="stylesheet" href="/assets/core.css"/>
   <link rel="stylesheet" href="/assets/ui.css"/>
+  <script src="/assets/ui.js"></script>
 </head>
 
 <body>
-<main class="wrap">
+<main class="wrap stars">
 
 <header class="top">
   <div class="brand">
@@ -21,29 +23,75 @@
       <div class="brandTag">Verification · Attribution · Reach</div>
     </div>
   </div>
+
   <nav class="nav">
     <a class="pill" href="/">Home</a>
+    <a class="pill ghost" href="/home/">Enter</a>
     <a class="pill ghost" href="/laws/">Laws</a>
     <a class="pill ghost" href="/products/">Products</a>
   </nav>
 </header>
 
 <section class="card">
-  <h1 class="h1">Research & Verification</h1>
-  <ul class="list">
-    <li><a href="https://osf.io/" target="_blank">Open Science Framework (OSF)</a></li>
-    <li><a href="https://orcid.org/0009-0004-1293-0405" target="_blank">ORCID Profile</a></li>
-  </ul>
+  <div class="kicker">RESEARCH & VERIFICATION</div>
+  <h1 class="h1">Inspectable sources</h1>
+  <p class="p">Click to reveal. Nothing is shown until you choose.</p>
+
+  <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+    <button class="pill" data-drop="osf">OSF</button>
+    <button class="pill" data-drop="orcid">ORCID</button>
+    <button class="pill" data-drop="site">Website</button>
+  </div>
+
+  <div id="osf" class="drop">
+    <div class="tile">
+      <div class="tileTop cyan">OSF</div>
+      <div class="tileTitle">Open Science Framework</div>
+      <div class="tileBody">
+        <a class="pill ghost" href="https://osf.io/" target="_blank" rel="noopener">Open OSF</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="orcid" class="drop">
+    <div class="tile">
+      <div class="tileTop cyan">ORCID</div>
+      <div class="tileTitle">ORCID iD</div>
+      <div class="tileBody">
+        <a class="pill ghost" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">Open ORCID</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="site" class="drop">
+    <div class="tile">
+      <div class="tileTop cyan">SITE</div>
+      <div class="tileTitle">Geodiametrics</div>
+      <div class="tileBody">
+        <a class="pill ghost" href="https://smansfield635-create.github.io/" target="_blank" rel="noopener">Open Website</a>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="card">
-  <h1 class="h1">Contact</h1>
-  <p class="p">
-    For collaboration, licensing, or inspection requests:
-  </p>
-  <p class="p">
-    <strong>Email:</strong> geodiametrics@gmail.com
-  </p>
+  <div class="kicker">CONTACT</div>
+  <h1 class="h1">Reach</h1>
+  <p class="p">For collaboration, licensing, or inspection requests, use the contact bubble.</p>
+
+  <div style="margin-top:14px">
+    <button class="pill" data-drop="contact">Contact</button>
+  </div>
+
+  <div id="contact" class="drop">
+    <div class="tile">
+      <div class="tileTop green">EMAIL</div>
+      <div class="tileTitle">geodiametrics@gmail.com</div>
+      <div class="tileBody">
+        <a class="pill ghost" href="mailto:geodiametrics@gmail.com">Open email</a>
+      </div>
+    </div>
+  </div>
 </section>
 
 <footer class="foot">
@@ -54,3 +102,4 @@
 </main>
 </body>
 </html>
+```0

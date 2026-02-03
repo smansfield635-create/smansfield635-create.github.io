@@ -1,21 +1,16 @@
 /* FILE: /assets/ui.css  (TNT FULL REPLACEMENT)
-   PURPOSE: DIAMOND GEOMETRY GLOBAL v15
-   - Landing sayings diamond + outward expansion support
-   - Preserves wiring: data-drop + .drop.open, toggles
-   - Preserves room + stars + bubbles
+   PURPOSE:
+   - MEDIUM LOCK: unclickable baseline field, per-room cosmic feel
+   - DIAMOND GEOMETRY GLOBAL
+   - WIRING SAFE: drops/toggles remain clickable (no overlays blocking)
 */
 
 :root{
-  --bg-deep:#050814;
-  --bg-mid:#0a1026;
-
   --ink:#eef1ff;
   --muted:#9aa3d9;
 
   --stroke:rgba(255,255,255,.14);
-
   --glassA:rgba(16,20,44,.68);
-  --glassB:rgba(10,12,30,.42);
 
   --r:28px;
 }
@@ -27,35 +22,78 @@ a{color:inherit;text-decoration:none}
 a:visited{color:inherit}
 a,button{-webkit-tap-highlight-color:transparent}
 
-/* ROOM */
+/* MEDIUM (BASE) */
 body{
   color:var(--ink);
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(143,201,220,.10), transparent 46%),
-    radial-gradient(circle at 82% 30%, rgba(143,220,194,.08), transparent 46%),
-    radial-gradient(circle at 55% 78%, rgba(176,168,255,.08), transparent 54%),
-    linear-gradient(180deg,var(--bg-deep),var(--bg-mid));
   overflow-x:hidden;
+  background:linear-gradient(180deg,#050814,#0a1026);
 }
 
-/* STARS */
-body::before{
+/* MEDIUM MUST NEVER BLOCK CLICKS */
+body::before,
+body::after{
   content:"";
   position:fixed;
   inset:0;
-  pointer-events:none;
-  z-index:-1;
+  pointer-events:none;     /* ✅ MEDIUM IS UNCLICKABLE */
+  z-index:-2;              /* ✅ ALWAYS BEHIND UI */
+}
+
+/* STARS (shared baseline) */
+body::before{
   background:
-    radial-gradient(1.6px 1.6px at 12% 24%, rgba(255,255,255,.65), transparent 60%),
-    radial-gradient(1.2px 1.2px at 28% 62%, rgba(255,255,255,.45), transparent 60%),
-    radial-gradient(1.8px 1.8px at 46% 18%, rgba(255,255,255,.7), transparent 60%),
-    radial-gradient(1.4px 1.4px at 63% 74%, rgba(255,255,255,.45), transparent 60%),
-    radial-gradient(1.6px 1.6px at 82% 34%, rgba(255,255,255,.6), transparent 60%);
-  opacity:.45;
+    radial-gradient(1.6px 1.6px at 12% 24%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(1.2px 1.2px at 28% 62%, rgba(255,255,255,.38), transparent 60%),
+    radial-gradient(1.8px 1.8px at 46% 18%, rgba(255,255,255,.58), transparent 60%),
+    radial-gradient(1.4px 1.4px at 63% 74%, rgba(255,255,255,.38), transparent 60%),
+    radial-gradient(1.6px 1.6px at 82% 34%, rgba(255,255,255,.48), transparent 60%);
+  opacity:.55;
   animation:twinkle 6s ease-in-out infinite alternate;
 }
-@keyframes twinkle{from{opacity:.25}to{opacity:.55}}
+@keyframes twinkle{from{opacity:.30}to{opacity:.65}}
+
+/* NEBULA PER ROOM (MEDIUM VARIANTS) */
+body[data-room="sayings"]{
+  background:
+    radial-gradient(circle at 18% 22%, rgba(196, 90, 255,.18), transparent 50%),
+    radial-gradient(circle at 80% 30%, rgba( 80,140,255,.16), transparent 52%),
+    radial-gradient(circle at 55% 78%, rgba(255,120,200,.12), transparent 58%),
+    linear-gradient(180deg,#050814,#0a1026);
+}
+body[data-room="laws"]{
+  background:
+    radial-gradient(circle at 20% 25%, rgba(120, 90, 255,.14), transparent 55%),
+    radial-gradient(circle at 82% 30%, rgba( 80,140,255,.10), transparent 60%),
+    radial-gradient(circle at 55% 82%, rgba( 60, 80,180,.10), transparent 62%),
+    linear-gradient(180deg,#040612,#080f22);
+}
+body[data-room="products"]{
+  background:
+    radial-gradient(circle at 18% 22%, rgba( 90,255,210,.14), transparent 52%),
+    radial-gradient(circle at 80% 30%, rgba( 90,180,255,.12), transparent 56%),
+    radial-gradient(circle at 55% 78%, rgba(120,255,180,.10), transparent 58%),
+    linear-gradient(180deg,#040914,#081226);
+}
+body[data-room="gauges"]{
+  background:
+    radial-gradient(circle at 20% 25%, rgba(255, 90, 90,.10), transparent 54%),
+    radial-gradient(circle at 55% 55%, rgba(240,200, 90,.10), transparent 56%),
+    radial-gradient(circle at 82% 30%, rgba(120,255,180,.10), transparent 58%),
+    linear-gradient(180deg,#03060f,#070f22);
+}
+body[data-room="links"]{
+  background:
+    radial-gradient(circle at 40% 30%, rgba(140,140,255,.08), transparent 62%),
+    linear-gradient(180deg,#040612,#080f22);
+}
+body[data-room="remote"]{
+  background:
+    radial-gradient(circle at 18% 22%, rgba(143,201,220,.10), transparent 54%),
+    radial-gradient(circle at 82% 30%, rgba(143,220,194,.08), transparent 56%),
+    radial-gradient(circle at 55% 78%, rgba(176,168,255,.08), transparent 58%),
+    linear-gradient(180deg,#050814,#0a1026);
+}
 
 /* WRAP */
 .wrap{max-width:1100px;margin:0 auto;padding:24px}
@@ -104,6 +142,11 @@ button.pill{appearance:none;-webkit-appearance:none;outline:none}
 .tileTitle{font-size:1.35rem;margin:6px 0}
 .tileBody{color:var(--muted);line-height:1.55}
 
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:16px}
+a.tile{display:block;cursor:pointer}
+a.tile:hover{transform:translateY(-2px);transition:transform .18s ease}
+
 /* DROPDOWNS (WIRING) */
 .drop{
   display:block;
@@ -145,38 +188,14 @@ button.pill{appearance:none;-webkit-appearance:none;outline:none}
 .pane.show{display:block}
 
 /* FOOTER */
-.foot{
-  margin:36px 0 10px;
-  color:var(--muted);
-  font-size:.85rem;
-  text-align:center;
-}
+.foot{margin:36px 0 10px;color:var(--muted);font-size:.85rem;text-align:center}
 
 /* =========================================================
-   DIAMOND GEOMETRY (GLOBAL)
+   DIAMOND GEOMETRY GLOBAL
 ========================================================= */
 
-/* Stage = square canvas */
-.diamondStage{
-  position:relative;
-  margin:10px auto 18px;
-  max-width:640px;
-  aspect-ratio:1/1;
-}
-
-/* 3x3 grid ring */
-.diamondGrid{
-  position:absolute;
-  inset:0;
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  grid-template-rows:1fr 1fr 1fr;
-  align-items:center;
-  justify-items:center;
-  gap:12px;
-}
-
-/* placements */
+.diamondStage{position:relative;margin:10px auto 18px;max-width:640px;aspect-ratio:1/1}
+.diamondGrid{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr 1fr;align-items:center;justify-items:center;gap:12px}
 .posTop{grid-column:2;grid-row:1}
 .posLeft{grid-column:1;grid-row:2}
 .posCenter{grid-column:2;grid-row:2}
@@ -184,7 +203,6 @@ button.pill{appearance:none;-webkit-appearance:none;outline:none}
 .posBottom{grid-column:2;grid-row:3}
 .posBR{grid-column:3;grid-row:3;justify-self:end;align-self:end}
 
-/* node */
 .dNode{
   width:min(52vw, 260px);
   max-width:260px;
@@ -208,61 +226,18 @@ button.pill{appearance:none;-webkit-appearance:none;outline:none}
   background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
   box-shadow:0 0 24px rgba(143,220,194,.10);
 }
-
-/* node text */
 .dKicker{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .dTitle{display:block;font-size:1.15rem;font-weight:900}
 .dSub{display:block;margin-top:4px;font-size:.95rem;color:var(--muted)}
 
-/* Outward expansion container */
-.childWrap{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:18px;
-  margin-top:18px;
-}
+.childWrap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:18px}
 @media (max-width:900px){.childWrap{grid-template-columns:1fr}}
+.childCard{border-radius:28px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg, rgba(16,20,44,.68), rgba(20,28,64,.24));backdrop-filter:blur(14px);box-shadow:0 0 30px rgba(0,0,0,.30);padding:18px}
 
-/* Child diamond card */
-.childCard{
-  border-radius:28px;
-  border:1px solid rgba(255,255,255,.14);
-  background:linear-gradient(180deg, rgba(16,20,44,.68), rgba(20,28,64,.24));
-  backdrop-filter:blur(14px);
-  box-shadow:0 0 30px rgba(0,0,0,.30);
-  padding:18px;
-}
-
-/* Mini diamond (inside child cards) */
 .miniStage{position:relative;margin:8px auto 0;max-width:520px;aspect-ratio:1/1}
-.miniGrid{
-  position:absolute;inset:0;
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  grid-template-rows:1fr 1fr 1fr;
-  align-items:center;justify-items:center;
-  gap:10px;
-}
-.miniNode{
-  width:min(46vw, 220px);
-  max-width:220px;
-  padding:12px 14px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.08);
-  text-align:center;
-  cursor:pointer;
-  user-select:none;
-  touch-action:manipulation;
-}
+.miniGrid{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr 1fr;align-items:center;justify-items:center;gap:10px}
+.miniNode{width:min(46vw, 220px);max-width:220px;padding:12px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);text-align:center;cursor:pointer;user-select:none;touch-action:manipulation}
 .miniNode:hover{background:rgba(255,255,255,.12)}
 .miniNodeSmall{width:min(40vw,180px);max-width:180px;font-size:.92rem}
-.miniCenter{
-  width:min(54vw, 260px);
-  max-width:260px;
-  padding:14px 16px;
-  border-radius:999px;
-  border:1px solid rgba(143,220,194,.18);
-  background:rgba(255,255,255,.06);
-}
+.miniCenter{width:min(54vw, 260px);max-width:260px;padding:14px 16px;border-radius:999px;border:1px solid rgba(143,220,194,.18);background:rgba(255,255,255,.06)}
 ```0

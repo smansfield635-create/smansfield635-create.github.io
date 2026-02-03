@@ -4,45 +4,76 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Geodiametrics</title>
-  <link rel="stylesheet" href="assets/ui.css"/>
+  <link rel="icon" href="/assets/favicon.svg"/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
-<body>
 
+<body>
   <main class="page">
 
-    <section class="hero">
-      <h1>Be the first.</h1>
-      <p>Nothing is required until you click.</p>
+    <!-- HERO -->
+    <section class="heroCard">
+      <h1 class="h1">Be the first.</h1>
+      <p class="sub">Nothing is required until you click.</p>
     </section>
 
-    <!-- INTEGRITY DIAMOND -->
-    <section class="diamond-wrap">
-      <div class="diamond outer">
-        <div class="diamond inner top">Wisdom</div>
-        <div class="diamond inner left">Knowledge</div>
-        <div class="diamond inner right">Theism</div>
-        <div class="diamond inner bottom">Law</div>
+    <!-- FRONT GATE (diamond-within-diamond) -->
+    <section class="gateCard" aria-label="Front Gate">
+      <div class="stage">
+        <div class="frame" aria-hidden="false">
+
+          <!-- Outer navigation (4) -->
+          <a class="node top" href="/laws/">Laws</a>
+          <a class="node left" href="/products/">Products</a>
+          <a class="node right" href="/gauges/">Gauges</a>
+          <a class="node bottom" href="/links/">Links</a>
+
+          <!-- Integrity diamond (inside) -->
+          <div class="integrity" aria-label="Integrity Set">
+            <!-- inner (4) — anchor links to the integrity section below -->
+            <a class="innerBtn top on" href="#integrity">Wisdom</a>
+            <a class="innerBtn left" href="#integrity">Knowledge</a>
+            <a class="innerBtn right" href="#integrity">Theism</a>
+            <a class="innerBtn bottom" href="#integrity">Law</a>
+          </div>
+
+        </div>
       </div>
-    </section>
 
-    <section class="principle">
-      <div class="chain">Integrity → Fortitude → Delivery → Destiny</div>
-      <div class="hint">Tap a phrase to translate.</div>
-    </section>
+      <div id="integrity" class="chain">Integrity → Fortitude → Delivery → Destiny</div>
+      <div class="tapHint">Tap a phrase to translate.</div>
 
-    <section class="sayings">
-      <button>性格决定命运</button>
-      <button>己所不欲，勿施于人</button>
-      <button>上善若水</button>
-      <button>道可道，非常道</button>
-      <button>道生一，一生二，二生三，三生万物</button>
-    </section>
+      <!-- Chinese principles (tap-to-translate) — NO JS required -->
+      <div class="principles" aria-label="Chinese principles">
+        <details class="detailsPill">
+          <summary>性格决定命运</summary>
+          <div class="eng">Character determines destiny.</div>
+        </details>
 
-    <footer>
-      Canonical · Stable · © Geodiametrics
-    </footer>
+        <details class="detailsPill">
+          <summary>己所不欲，勿施于人</summary>
+          <div class="eng">Do not impose on others what you do not want for yourself.</div>
+        </details>
+
+        <details class="detailsPill">
+          <summary>上善若水</summary>
+          <div class="eng">The highest good is like water.</div>
+        </details>
+
+        <details class="detailsPill">
+          <summary>道可道，非常道</summary>
+          <div class="eng">The Dao that can be spoken is not the constant Dao.</div>
+        </details>
+
+        <details class="detailsPill">
+          <summary>道生一，一生二，二生三，三生万物</summary>
+          <div class="eng">The Dao gives birth to One; One to Two; Two to Three; Three to all things.</div>
+        </details>
+      </div>
+
+      <footer class="foot">Canonical · Stable · © Geodiametrics</footer>
+    </section>
 
   </main>
-
 </body>
 </html>

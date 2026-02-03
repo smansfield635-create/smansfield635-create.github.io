@@ -1,22 +1,24 @@
+<!-- FILE: /index.html  (TNT — HOMEPAGE DIAMOND) -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg"/>
-  <link rel="stylesheet" href="/assets/ui.css"/>
-  <script defer src="/assets/ui.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Geodiametrics · Home</title>
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
 </head>
-<body>
-  <main class="wrap stars" data-page="home">
-
-    <div class="header">
-      <img class="logo" src="/assets/logo.svg" alt=""/>
+<body class="stars">
+  <main class="wrap">
+    <header class="top">
       <div class="brand">
-        <h1>Geodiametrics</h1>
-        <p>Coherence · Admissibility · Execution</p>
+        <img class="logo" src="/assets/logo.svg" alt="Geodiametrics" />
+        <div class="brandText">
+          <div class="brandName">Geodiametrics</div>
+          <div class="brandTag">Coherence · Admissibility · Execution</div>
+        </div>
       </div>
+
       <nav class="nav">
         <a class="pill" href="/laws/">Laws</a>
         <a class="pill" href="/products/">Products</a>
@@ -24,21 +26,47 @@
         <a class="pill" href="/links/">Links</a>
         <a class="pill" href="/sayings/">Sayings</a>
       </nav>
-    </div>
+    </header>
 
     <section class="hero">
-      <h2>Be the first.</h2>
-      <div class="sub">Nothing is required until you click.</div>
+      <h1>Be the first.</h1>
+      <p class="sub">Nothing is required until you click.</p>
     </section>
 
-    <section class="hub" aria-label="Home Diamond">
-      <a class="diamondBtn dTop" href="/laws/"><span>Foundational<br/>Laws</span></a>
-      <a class="diamondBtn dLeft" href="/philosophy/"><span>Philosophy</span></a>
-      <a class="diamondBtn dRight" href="/breakthroughs/"><span>Breakthroughs</span></a>
-      <a class="diamondBtn dBottom" href="/greatest/"><span>Greatest</span></a>
+    <!-- HOME META-DIAMOND (4 ONLY) -->
+    <section class="diamondStage" aria-label="Home diamonds">
+      <!-- TOP -->
+      <a class="diamond dTop" href="/laws/" aria-label="Foundational Laws">
+        <span class="diamondInner">
+          <span class="diamondLabel">Foundational Laws</span>
+        </span>
+      </a>
+
+      <!-- LEFT -->
+      <a class="diamond dLeft" href="/philosophy/" aria-label="Philosophy">
+        <span class="diamondInner">
+          <span class="diamondLabel">Philosophy</span>
+        </span>
+      </a>
+
+      <!-- RIGHT -->
+      <a class="diamond dRight" href="/breakthroughs/" aria-label="Breakthroughs">
+        <span class="diamondInner">
+          <span class="diamondLabel">Breakthroughs</span>
+        </span>
+      </a>
+
+      <!-- BOTTOM -->
+      <a class="diamond dBottom" href="/greatest/" aria-label="Greatest">
+        <span class="diamondInner">
+          <span class="diamondLabel">Greatest</span>
+        </span>
+      </a>
     </section>
 
-    <div class="footer">Canonical · Stable · © Geodiametrics</div>
+    <footer class="foot">
+      Canonical · Stable · © Geodiametrics
+    </footer>
   </main>
 </body>
 </html>

@@ -7,7 +7,9 @@
   <link rel="icon" href="/assets/favicon.svg"/>
   <link rel="stylesheet" href="/assets/core.css"/>
   <link rel="stylesheet" href="/assets/ui.css"/>
+  <script src="/assets/ui.js"></script>
 </head>
+
 <body>
 <main class="wrap">
 
@@ -19,10 +21,10 @@
       <div class="brandTag">Coherence · Admissibility · Execution</div>
     </div>
   </div>
+
   <nav class="nav">
     <a class="pill" href="/">Home</a>
-    <a class="pill ghost" href="/home/">Human</a>
-    <a class="pill ghost" href="/science/">Scientific</a>
+    <a class="pill ghost" href="/home/">Enter</a>
     <a class="pill ghost" href="/laws/">Laws</a>
     <a class="pill ghost" href="/products/">Products</a>
     <a class="pill ghost" href="/links/">Links</a>
@@ -31,26 +33,70 @@
 
 <section class="hero">
   <div class="heroIcon"><img src="/assets/logo.svg"/></div>
-  <h1 class="heroTitle">Choose your experience</h1>
-  <p class="heroSub">Human (common sense) or Scientific (formal).</p>
+  <h1 class="heroTitle">A divided system fails if and only if its fragmentation is not coherently integrated.</h1>
+  <p class="heroSub">Choose how you want this explained. Nothing is required until you click.</p>
 </section>
 
 <section class="grid">
-  <a class="tile" href="/home/">
-    <div class="tileTop">HUMAN</div>
-    <div class="tileTitle">Common-sense explanations</div>
-    <div class="tileBody">Story, meaning, free will, and the journey.</div>
-  </a>
-  <a class="tile" href="/science/">
-    <div class="tileTop">SCIENTIFIC</div>
-    <div class="tileTitle">Scientific explanations</div>
-    <div class="tileBody">UCAQ → M256 → EAI, formalism, and inspection.</div>
-  </a>
+
+  <section class="tile">
+    <div class="tileTop">SAYING</div>
+    <div class="tileTitle">Arnold Schwarzenegger</div>
+    <div class="tileBody">“Strength does not come from winning. Your struggles develop your strengths.”</div>
+  </section>
+
+  <section class="tile">
+    <div class="tileTop">SAYING</div>
+    <div class="tileTitle">Roger Bannister</div>
+    <div class="tileBody">Once a boundary illusion breaks, progress accelerates.</div>
+  </section>
+
 </section>
 
 <section class="card">
-  <div class="kicker">RULE</div>
-  <p class="p">Both entry planes point to the same underlying system. Only the language changes.</p>
+  <div class="kicker">CHOOSE YOUR EXPERIENCE</div>
+
+  <div class="toggleRow" data-toggle-group="entry">
+    <button class="toggleBtn" data-toggle="entry" data-mode="human">Human</button>
+    <button class="toggleBtn" data-toggle="entry" data-mode="scientific">Scientific</button>
+  </div>
+
+  <div class="pane show" data-pane="entry" data-mode="human">
+    <p class="p">
+      Common-sense explanations. Story, meaning, free will, and the journey.
+    </p>
+    <div class="grid">
+      <a class="tile" href="/home/">
+        <div class="tileTop">ENTER</div>
+        <div class="tileTitle">Human Experience</div>
+        <div class="tileBody">Start with meaning. Explore at your pace.</div>
+      </a>
+      <a class="tile" href="/laws/">
+        <div class="tileTop">TROPHY CASE</div>
+        <div class="tileTitle">Foundational Laws</div>
+        <div class="tileBody">Tier 1 · Tier 2 · Tier 3 with toggles.</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="pane" data-pane="entry" data-mode="scientific">
+    <p class="p">
+      Formal explanations. Definitions, geometry, closure, and inspection.
+    </p>
+    <div class="grid">
+      <a class="tile" href="/science/">
+        <div class="tileTop">ENTER</div>
+        <div class="tileTitle">Scientific Stack</div>
+        <div class="tileBody">UCAQ → M256 → EAI.</div>
+      </a>
+      <a class="tile" href="/application/">
+        <div class="tileTop">TOOLS</div>
+        <div class="tileTitle">Gauges & Views</div>
+        <div class="tileBody">Read-only instrument surfaces.</div>
+      </a>
+    </div>
+  </div>
+
 </section>
 
 <footer class="foot">

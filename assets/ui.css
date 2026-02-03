@@ -1,9 +1,8 @@
 /* FILE: /assets/ui.css  (TNT FULL REPLACEMENT)
-   PURPOSE: DIAMOND LAYOUT SYSTEM v14
-   - Adds reusable diamond layout classes (no inline CSS needed)
-   - Preserves: wiring stability for drops/toggles
-   - Preserves: room + stars + bubbles
-   - Adds: diamond nodes + stage + grid placements
+   PURPOSE: DIAMOND GEOMETRY GLOBAL v15
+   - Landing sayings diamond + outward expansion support
+   - Preserves wiring: data-drop + .drop.open, toggles
+   - Preserves room + stars + bubbles
 */
 
 :root{
@@ -13,10 +12,6 @@
   --ink:#eef1ff;
   --muted:#9aa3d9;
 
-  --ok:#8fdcc2;
-  --risk:#e6d58a;
-  --bad:#e0a1a1;
-
   --stroke:rgba(255,255,255,.14);
 
   --glassA:rgba(16,20,44,.68);
@@ -25,14 +20,14 @@
   --r:28px;
 }
 
-/* reset */
+/* RESET */
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 a{color:inherit;text-decoration:none}
 a:visited{color:inherit}
 a,button{-webkit-tap-highlight-color:transparent}
 
-/* room */
+/* ROOM */
 body{
   color:var(--ink);
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
@@ -44,7 +39,7 @@ body{
   overflow-x:hidden;
 }
 
-/* stars */
+/* STARS */
 body::before{
   content:"";
   position:fixed;
@@ -62,15 +57,17 @@ body::before{
 }
 @keyframes twinkle{from{opacity:.25}to{opacity:.55}}
 
-/* layout */
+/* WRAP */
 .wrap{max-width:1100px;margin:0 auto;padding:24px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+
+/* HEADER */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
 .brand{display:flex;align-items:center;gap:12px}
 .logo{width:44px;filter:drop-shadow(0 0 14px rgba(176,168,255,.25))}
 .brandName{font-weight:800}
 .brandTag{display:none !important}
 
-/* nav/pills */
+/* NAV / PILLS */
 .nav{display:flex;gap:10px;flex-wrap:wrap}
 .pill{
   display:inline-flex;
@@ -87,12 +84,9 @@ body::before{
   cursor:pointer;
 }
 .pill:hover{background:rgba(255,255,255,.12)}
-button.pill{
-  appearance:none;-webkit-appearance:none;
-  outline:none;
-}
+button.pill{appearance:none;-webkit-appearance:none;outline:none}
 
-/* bubbles */
+/* BUBBLES */
 .card,.tile{
   padding:22px;
   border-radius:var(--r);
@@ -102,7 +96,7 @@ button.pill{
   box-shadow:0 0 30px rgba(0,0,0,.30);
 }
 
-/* text */
+/* TEXT */
 .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .h1{font-size:2.1rem;margin:0 0 10px}
 .h2{margin:0 0 8px}
@@ -110,17 +104,7 @@ button.pill{
 .tileTitle{font-size:1.35rem;margin:6px 0}
 .tileBody{color:var(--muted);line-height:1.55}
 
-/* grid */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:18px;
-  margin-top:16px;
-}
-a.tile{display:block;cursor:pointer}
-a.tile:hover{transform:translateY(-2px);transition:transform .18s ease}
-
-/* --------- DROPDOWNS (wired) --------- */
+/* DROPDOWNS (WIRING) */
 .drop{
   display:block;
   margin-top:14px;
@@ -140,7 +124,7 @@ a.tile:hover{transform:translateY(-2px);transition:transform .18s ease}
 }
 .drop .drop{margin-top:12px}
 
-/* --------- TOGGLES (wired) --------- */
+/* TOGGLES (WIRING) */
 .toggleRow{display:flex;gap:12px;margin:18px 0;flex-wrap:wrap}
 .toggleBtn{
   flex:1;
@@ -160,7 +144,7 @@ a.tile:hover{transform:translateY(-2px);transition:transform .18s ease}
 .pane{display:none}
 .pane.show{display:block}
 
-/* footer */
+/* FOOTER */
 .foot{
   margin:36px 0 10px;
   color:var(--muted);
@@ -169,16 +153,18 @@ a.tile:hover{transform:translateY(-2px);transition:transform .18s ease}
 }
 
 /* =========================================================
-   DIAMOND SYSTEM (REUSABLE)
+   DIAMOND GEOMETRY (GLOBAL)
 ========================================================= */
 
+/* Stage = square canvas */
 .diamondStage{
   position:relative;
-  margin:16px auto 10px;
-  max-width:520px;
+  margin:10px auto 18px;
+  max-width:640px;
   aspect-ratio:1/1;
 }
 
+/* 3x3 grid ring */
 .diamondGrid{
   position:absolute;
   inset:0;
@@ -190,9 +176,18 @@ a.tile:hover{transform:translateY(-2px);transition:transform .18s ease}
   gap:12px;
 }
 
+/* placements */
+.posTop{grid-column:2;grid-row:1}
+.posLeft{grid-column:1;grid-row:2}
+.posCenter{grid-column:2;grid-row:2}
+.posRight{grid-column:3;grid-row:2}
+.posBottom{grid-column:2;grid-row:3}
+.posBR{grid-column:3;grid-row:3;justify-self:end;align-self:end}
+
+/* node */
 .dNode{
-  width:min(46vw, 220px);
-  max-width:220px;
+  width:min(52vw, 260px);
+  max-width:260px;
   padding:14px 16px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.14);
@@ -204,24 +199,70 @@ a.tile:hover{transform:translateY(-2px);transition:transform .18s ease}
   cursor:pointer;
 }
 .dNode:hover{background:rgba(255,255,255,.12)}
-.dNodeSmall{width:min(40vw,180px);max-width:180px;font-size:.95rem;padding:12px 14px}
+.dNodeSmall{width:min(44vw,220px);max-width:220px;font-size:.95rem;padding:12px 14px}
 .dCenter{
-  width:min(56vw,280px);
-  max-width:280px;
+  width:min(62vw, 320px);
+  max-width:320px;
   padding:16px 18px;
   border:1px solid rgba(143,220,194,.26);
   background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
   box-shadow:0 0 24px rgba(143,220,194,.10);
 }
 
+/* node text */
 .dKicker{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-.dTitle{display:block;font-size:1.2rem;font-weight:800}
+.dTitle{display:block;font-size:1.15rem;font-weight:900}
 .dSub{display:block;margin-top:4px;font-size:.95rem;color:var(--muted)}
 
-.posTop{grid-column:2;grid-row:1}
-.posLeft{grid-column:1;grid-row:2}
-.posCenter{grid-column:2;grid-row:2}
-.posRight{grid-column:3;grid-row:2}
-.posBottom{grid-column:2;grid-row:3}
-.posBR{grid-column:3;grid-row:3;justify-self:end;align-self:end}
+/* Outward expansion container */
+.childWrap{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+  margin-top:18px;
+}
+@media (max-width:900px){.childWrap{grid-template-columns:1fr}}
+
+/* Child diamond card */
+.childCard{
+  border-radius:28px;
+  border:1px solid rgba(255,255,255,.14);
+  background:linear-gradient(180deg, rgba(16,20,44,.68), rgba(20,28,64,.24));
+  backdrop-filter:blur(14px);
+  box-shadow:0 0 30px rgba(0,0,0,.30);
+  padding:18px;
+}
+
+/* Mini diamond (inside child cards) */
+.miniStage{position:relative;margin:8px auto 0;max-width:520px;aspect-ratio:1/1}
+.miniGrid{
+  position:absolute;inset:0;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:1fr 1fr 1fr;
+  align-items:center;justify-items:center;
+  gap:10px;
+}
+.miniNode{
+  width:min(46vw, 220px);
+  max-width:220px;
+  padding:12px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.08);
+  text-align:center;
+  cursor:pointer;
+  user-select:none;
+  touch-action:manipulation;
+}
+.miniNode:hover{background:rgba(255,255,255,.12)}
+.miniNodeSmall{width:min(40vw,180px);max-width:180px;font-size:.92rem}
+.miniCenter{
+  width:min(54vw, 260px);
+  max-width:260px;
+  padding:14px 16px;
+  border-radius:999px;
+  border:1px solid rgba(143,220,194,.18);
+  background:rgba(255,255,255,.06);
+}
 ```0

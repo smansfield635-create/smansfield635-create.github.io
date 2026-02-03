@@ -1,33 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodiametrics</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/core.css" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <script src="/assets/ui.js" defer></script>
+  <link rel="icon" href="/assets/favicon.svg"/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 
 <body class="stars">
-  <main class="diamond-stage">
+  <main class="wrap" data-page="gate">
 
     <header class="hero">
       <h1>Be the first.</h1>
-      <p>Nothing is required until you click.</p>
+      <p class="sub">Nothing is required until you click.</p>
     </header>
 
-    <div class="diamond outer">
-      <a class="diamond inner top" href="/laws/">Laws</a>
-      <a class="diamond inner right" href="/products/">Products</a>
-      <a class="diamond inner bottom" href="/gauges/">Gauges</a>
-      <a class="diamond inner left" href="/links/">Links</a>
-    </div>
+    <!-- PORT (outer diamond + 4 inner diamonds + back/next edges) -->
+    <section class="port">
 
-    <footer>
-      Canonical · Stable · © Geodiametrics
-    </footer>
+      <!-- BACK / NEXT (edge hits) -->
+      <a class="edge edgeLeft" href="/links/" aria-label="Back"></a>
+      <a class="edge edgeRight" href="/laws/" aria-label="Next"></a>
+
+      <!-- OUTER DIAMOND (navigation shell) -->
+      <div class="outer" aria-hidden="true"></div>
+
+      <!-- OUTER PORTS (Laws / Products / Gauges / Links) -->
+      <a class="portNode pTop" href="/laws/" aria-label="Laws"><span>Laws</span></a>
+      <a class="portNode pLeft" href="/products/" aria-label="Products"><span>Products</span></a>
+      <a class="portNode pRight" href="/gauges/" aria-label="Gauges"><span>Gauges</span></a>
+      <a class="portNode pBottom" href="/links/" aria-label="Links"><span>Links</span></a>
+
+      <!-- INNER DIAMOND (meaning core: Philosophy / Theology / Science / Coherence) -->
+      <div class="innerFrame" aria-hidden="true"></div>
+
+      <a class="innerNode iTop" href="/philosophy/" aria-label="Philosophy"><span>Philosophy</span></a>
+      <a class="innerNode iRight" href="/theology/" aria-label="Theology"><span>Theology</span></a>
+      <a class="innerNode iLeft" href="/science/" aria-label="Science"><span>Science</span></a>
+      <a class="innerNode iBottom" href="/coherence/" aria-label="Coherence"><span>Coherence</span></a>
+
+    </section>
+
+    <footer class="footer">Canonical · Stable · © Geodiametrics</footer>
 
   </main>
 </body>

@@ -1,168 +1,28 @@
-/* =========================
-   GLOBAL BASE
-   ========================= */
-
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #eef2ff;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(140,160,255,0.12), transparent 40%),
-    radial-gradient(circle at 70% 30%, rgba(180,140,255,0.10), transparent 45%),
-    radial-gradient(circle at 50% 80%, rgba(80,200,255,0.08), transparent 50%),
-    linear-gradient(#050812, #02040a);
-  overflow-x: hidden;
-}
-
-/* =========================
-   STAR DEPTH (SPATIAL)
-   ========================= */
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6), transparent),
-    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.4), transparent),
-    radial-gradient(1px 1px at 60% 40%, rgba(255,255,255,0.5), transparent),
-    radial-gradient(1px 1px at 80% 80%, rgba(255,255,255,0.35), transparent);
-  background-size: 220px 220px;
-  opacity: 0.55;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* =========================
-   LAYOUT
-   ========================= */
-
-.wrap {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-/* =========================
-   HERO
-   ========================= */
-
-.hero {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.hero h1 {
-  font-size: 2.6rem;
-  margin: 0;
-  letter-spacing: 0.04em;
-}
-
-.hero p {
-  margin-top: 0.5rem;
-  opacity: 0.7;
-}
-
-/* =========================
-   DIAMOND FIELD
-   ========================= */
-
-.diamond-field {
-  position: relative;
-  width: 380px;
-  height: 380px;
-}
-
-/* =========================
-   DIAMONDS (STRUCTURAL)
-   ========================= */
-
 .diamond {
-  position: absolute;
-  width: 135px;
-  height: 135px;
-  transform: rotate(45deg);
   background:
-    linear-gradient(
-      160deg,
-      rgba(140,160,255,0.22),
-      rgba(40,50,120,0.22)
+    linear-gradient(145deg,
+      rgba(140,160,255,0.35),
+      rgba(40,50,120,0.25)
     );
-  border: 1px solid rgba(180,200,255,0.45);
-  backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 1px solid rgba(200,220,255,0.6);
   box-shadow:
-    0 18px 40px rgba(0,0,0,0.45),
-    inset 0 0 30px rgba(255,255,255,0.06);
-  transition:
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
+    0 20px 50px rgba(0,0,0,0.6),
+    inset 0 0 40px rgba(255,255,255,0.08);
 }
-
-/* =========================
-   DIAMOND TEXT (FIXED)
-   ========================= */
-
-.diamond span {
-  transform: rotate(-45deg);
-  text-align: center;
-  font-size: 0.95rem;
-  letter-spacing: 0.04em;
-  color: #eaf0ff;
-  text-decoration: none;
-  pointer-events: none;
-}
-
-/* =========================
-   POSITIONS
-   ========================= */
-
-.center { top: 122px; left: 122px; z-index: 3; }
-.top { top: 0; left: 122px; }
-.bottom { bottom: 0; left: 122px; }
-.left { left: 0; top: 122px; }
-.right { right: 0; top: 122px; }
-.corner { right: -12px; bottom: -12px; width: 105px; height: 105px; }
-
-/* =========================
-   INTERACTION
-   ========================= */
 
 .diamond:hover {
-  border-color: #c8d6ff;
   box-shadow:
-    0 0 36px rgba(140,180,255,0.55),
-    inset 0 0 50px rgba(255,255,255,0.12);
+    0 0 60px rgba(160,190,255,0.65),
+    inset 0 0 60px rgba(255,255,255,0.14);
 }
-
-/* =========================
-   LOCKED (MEDIUM / LAWS)
-   ========================= */
 
 .locked {
-  opacity: 0.4;
+  opacity: 0.35;
   border-style: dashed;
   box-shadow:
-    0 10px 25px rgba(0,0,0,0.35);
+    0 10px 25px rgba(0,0,0,0.4);
 }
 
-.locked:hover {
-  box-shadow:
-    0 10px 25px rgba(0,0,0,0.35);
-}
-
-/* =========================
-   FOOTER
-   ========================= */
-
-footer {
-  margin-top: 4rem;
-  font-size: 0.8rem;
-  opacity: 0.6;
+body::before {
+  opacity: 0.7;
 }

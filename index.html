@@ -1,166 +1,148 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
+
+  <link rel="icon" href="/assets/favicon.svg"/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+  <script defer src="/assets/ui.js"></script>
 </head>
 
 <body class="stars">
-  <main class="wrap">
-    <header class="hero">
-      <h1 class="headline">Be the first.</h1>
-      <p class="sub">Nothing is required until you click.</p>
-    </header>
+  <main class="wrap stars" data-page="home">
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <div class="brand">
+        <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
+        <div class="brandText">
+          <div class="brandName">Geodiametrics</div>
+          <div class="brandTag">Coherence · Admissibility · Execution</div>
+        </div>
+      </div>
 
-    <!-- INTEGRITY / FORTITUDE LINE -->
-    <section class="card mini">
-      <div class="chain">Integrity → Fortitude → Delivery → Destiny</div>
-      <div class="hint">Tap a phrase to translate.</div>
+      <nav class="nav" aria-label="Primary">
+        <a class="pill" href="/laws/">Laws</a>
+        <a class="pill" href="/products/">Products</a>
+        <a class="pill" href="/gauges/">Gauges</a>
+        <a class="pill" href="/links/">Links</a>
+        <a class="pill" href="/sayings/">Sayings</a>
+      </nav>
+    </div>
+
+    <!-- HERO -->
+    <section class="card hero">
+      <h1 class="title">Be the first.</h1>
+      <p class="sub">Nothing is required until you click.</p>
     </section>
 
-    <!-- INTEGRITY DIAMOND (NO OLD WORDS) -->
-    <section class="diamondFrame" aria-label="Integrity diamond hub">
-      <div class="diamondGrid">
+    <!-- DIAMOND GATE -->
+    <section class="card stage">
+      <div class="stageTitle">
+        <div>
+          <div class="kicker">FRONT GATE</div>
+          <p class="m0">The outer diamond routes the site. The inner diamond is the integrity set.</p>
+        </div>
+        <div class="hint">Tap a node.</div>
+      </div>
 
-        <!-- OUTER (SYSTEM) -->
-        <a class="dBtn dTop" href="/laws/">
-          <span class="dTitle">Laws</span>
-        </a>
+      <div class="diamondHub" role="group" aria-label="Geodiametrics front gate">
+        <div class="outerDiamond" aria-hidden="true"></div>
+        <div class="inner" aria-hidden="true"></div>
 
-        <a class="dBtn dLeft" href="/products/">
-          <span class="dTitle">Products</span>
-        </a>
-
-        <a class="dBtn dRight" href="/gauges/">
-          <span class="dTitle">Gauges</span>
-        </a>
-
-        <a class="dBtn dBottom" href="/links/">
-          <span class="dTitle">Links</span>
-        </a>
-
-        <!-- INNER (INTEGRITY DIAMOND) -->
-        <div class="innerDiamond">
-          <button class="iBtn iTop" type="button" data-open="wisdom">
-            <span class="iTitle">Wisdom</span>
-          </button>
-
-          <button class="iBtn iLeft" type="button" data-open="knowledge">
-            <span class="iTitle">Knowledge</span>
-          </button>
-
-          <button class="iBtn iRight" type="button" data-open="theism">
-            <span class="iTitle">Theism</span>
-          </button>
-
-          <button class="iBtn iBottom" type="button" data-open="law">
-            <span class="iTitle">Law</span>
-          </button>
-
-          <!-- center point (no label) -->
-          <div class="iCore" aria-hidden="true"></div>
+        <!-- OUTER EDGE NAV (routes) -->
+        <div class="edgeNav" aria-hidden="false">
+          <a class="edgeTop" href="/laws/"><span>Laws</span></a>
+          <a class="edgeLeft" href="/products/"><span>Products</span></a>
+          <a class="edgeRight" href="/gauges/"><span>Gauges</span></a>
+          <a class="edgeBottom" href="/links/"><span>Links</span></a>
         </div>
 
+        <!-- INNER 4 (integrity diamond) -->
+        <a class="dBtn dTop" href="#wisdom"><span>Wisdom</span></a>
+        <a class="dBtn dLeft" href="#knowledge"><span>Knowledge</span></a>
+        <a class="dBtn dRight" href="#theism"><span>Theism</span></a>
+        <a class="dBtn dBottom" href="#law"><span>Law</span></a>
+
+        <div class="centerDot" aria-hidden="true"></div>
+      </div>
+
+      <!-- INTEGRITY CHAIN -->
+      <div class="strip mt16">
+        <p class="chain">Integrity → Fortitude → Delivery → Destiny</p>
+        <p class="micro">Tap a phrase to translate.</p>
+      </div>
+
+      <!-- PHRASE BUBBLES (tap-to-reveal translations) -->
+      <div class="phrases mt12">
+        <button class="phrase" type="button" data-open="p1">
+          <p class="cn m0">性格决定命运</p>
+        </button>
+
+        <button class="phrase" type="button" data-open="p2">
+          <p class="cn m0">己所不欲，勿施于人</p>
+        </button>
+
+        <button class="phrase" type="button" data-open="p3">
+          <p class="cn m0">上善若水</p>
+        </button>
+
+        <button class="phrase" type="button" data-open="p4">
+          <p class="cn m0">道可道，非常道</p>
+        </button>
+
+        <button class="phrase" type="button" data-open="p5">
+          <p class="cn m0">道生一，一生二，二生三，三生万物</p>
+        </button>
       </div>
     </section>
 
-    <!-- TRANSLATION BUBBLES (NO REPEATED “tap to translate”) -->
-    <section class="stack">
-      <button class="phrase" type="button" data-zh="性格决定命运" data-en="Character determines destiny.">
-        <span class="zh">性格决定命运</span>
-        <span class="en" aria-hidden="true">Character determines destiny.</span>
-      </button>
-
-      <button class="phrase" type="button" data-zh="己所不欲，勿施于人" data-en="Do not impose on others what you do not desire.">
-        <span class="zh">己所不欲，勿施于人</span>
-        <span class="en" aria-hidden="true">Do not impose on others what you do not desire.</span>
-      </button>
-
-      <button class="phrase" type="button" data-zh="上善若水" data-en="The highest virtue is like water.">
-        <span class="zh">上善若水</span>
-        <span class="en" aria-hidden="true">The highest virtue is like water.</span>
-      </button>
-
-      <button class="phrase" type="button" data-zh="道可道，非常道" data-en="The Tao that can be spoken is not the eternal Tao.">
-        <span class="zh">道可道，非常道</span>
-        <span class="en" aria-hidden="true">The Tao that can be spoken is not the eternal Tao.</span>
-      </button>
-
-      <button class="phrase" type="button" data-zh="道生一，一生二，二生三，三生万物" data-en="The Tao gives birth to One; One to Two; Two to Three; Three to all things.">
-        <span class="zh">道生一，一生二，二生三，三生万物</span>
-        <span class="en" aria-hidden="true">The Tao gives birth to One; One to Two; Two to Three; Three to all things.</span>
-      </button>
-    </section>
-
-    <!-- PANELS (click-only, no scrolling required) -->
-    <section class="panelRow">
-      <div class="panel" id="wisdom" aria-hidden="true">
-        <div class="panelTitle">Wisdom</div>
-        <div class="panelBody">Reasoning that collapses confusion. Clarity before force.</div>
-        <button class="panelClose" type="button" data-close>Close</button>
+    <!-- PANELS (ui.js will show/hide) -->
+    <section class="hidden">
+      <div class="panel" id="p1">
+        <div class="card">
+          <h3>性格决定命运</h3>
+          <p>Character determines destiny.</p>
+          <p class="mt12"><a class="pill" href="#" data-open="">Close</a></p>
+        </div>
       </div>
 
-      <div class="panel" id="knowledge" aria-hidden="true">
-        <div class="panelTitle">Knowledge</div>
-        <div class="panelBody">What can be checked. What holds under observation.</div>
-        <button class="panelClose" type="button" data-close>Close</button>
+      <div class="panel" id="p2">
+        <div class="card">
+          <h3>己所不欲，勿施于人</h3>
+          <p>Do not do to others what you do not want done to you.</p>
+          <p class="mt12"><a class="pill" href="#" data-open="">Close</a></p>
+        </div>
       </div>
 
-      <div class="panel" id="theism" aria-hidden="true">
-        <div class="panelTitle">Theism</div>
-        <div class="panelBody">Meaning, duty, and transcendent accountability.</div>
-        <button class="panelClose" type="button" data-close>Close</button>
+      <div class="panel" id="p3">
+        <div class="card">
+          <h3>上善若水</h3>
+          <p>The highest good is like water.</p>
+          <p class="mt12"><a class="pill" href="#" data-open="">Close</a></p>
+        </div>
       </div>
 
-      <div class="panel" id="law" aria-hidden="true">
-        <div class="panelTitle">Law</div>
-        <div class="panelBody">Constraints that keep order. The boundary that makes reality executable.</div>
-        <button class="panelClose" type="button" data-close>Close</button>
+      <div class="panel" id="p4">
+        <div class="card">
+          <h3>道可道，非常道</h3>
+          <p>The Dao that can be spoken is not the eternal Dao.</p>
+          <p class="mt12"><a class="pill" href="#" data-open="">Close</a></p>
+        </div>
+      </div>
+
+      <div class="panel" id="p5">
+        <div class="card">
+          <h3>道生一，一生二，二生三，三生万物</h3>
+          <p>The Dao gives birth to One; One gives birth to Two; Two gives birth to Three; Three gives birth to all things.</p>
+          <p class="mt12"><a class="pill" href="#" data-open="">Close</a></p>
+        </div>
       </div>
     </section>
 
-    <footer class="foot">
-      Canonical · Stable · © Geodiametrics
-    </footer>
+    <footer class="foot">Canonical · Stable · © Geodiametrics</footer>
   </main>
-
-  <script>
-    // Phrase toggle: switch between zh/en without extra labels
-    document.querySelectorAll('.phrase').forEach(btn => {
-      btn.addEventListener('click', () => {
-        btn.classList.toggle('showEn');
-      }, { passive: true });
-    });
-
-    // Inner diamond panels
-    const panels = () => Array.from(document.querySelectorAll('.panel'));
-    const closeAll = () => panels().forEach(p => { p.classList.remove('on'); p.setAttribute('aria-hidden','true'); });
-
-    document.querySelectorAll('[data-open]').forEach(b => {
-      b.addEventListener('click', () => {
-        const id = b.getAttribute('data-open');
-        if(!id) return;
-        closeAll();
-        const p = document.getElementById(id);
-        if(!p) return;
-        p.classList.add('on');
-        p.setAttribute('aria-hidden','false');
-      }, { passive: true });
-    });
-
-    document.querySelectorAll('[data-close]').forEach(b => {
-      b.addEventListener('click', () => closeAll(), { passive: true });
-    });
-
-    // Tap outside panel closes (mobile friendly)
-    document.addEventListener('click', (e) => {
-      const insidePanel = e.target.closest('.panel');
-      const isOpener = e.target.closest('[data-open]');
-      if(!insidePanel && !isOpener) closeAll();
-    }, { passive: true });
-  </script>
 </body>
 </html>
+```0

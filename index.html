@@ -5,63 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Geodiametrics</title>
 
-  <!-- ASSETS -->
-  <link rel="icon" href="assets/favicon.svg"/>
-  <link rel="stylesheet" href="assets/core.css"/>
-  <link rel="stylesheet" href="assets/ui.css"/>
-  <script defer src="assets/ui.js"></script>
+  <link rel="icon" href="/assets/favicon.svg"/>
+  <link rel="stylesheet" href="/assets/core.css"/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+  <script defer src="/assets/ui.js"></script>
 </head>
 
 <body>
 
-<main class="wrap">
+<main class="wrap landing">
 
-  <header>
+  <header class="hero">
     <h1>Be the first.</h1>
-    <div class="subtitle">Nothing is required until you click.</div>
+    <p>Nothing is required until you click.</p>
   </header>
 
-  <!-- DIAMOND CONTROLLER -->
-  <section class="diamond-grid">
+  <!-- DIAMOND FIELD -->
+  <section class="diamond-field">
 
-    <!-- TOP : FOUNDATIONAL -->
-    <div class="diamond top clickable" data-open="foundational">
-      <div class="label">Foundational</div>
+    <!-- CENTER : MEDIUM (UNCICKABLE) -->
+    <div class="diamond center locked">
+      <span>Laws<br/>Medium</span>
     </div>
 
-    <!-- LEFT : PHILOSOPHY -->
-    <div class="diamond left clickable" data-open="philosophy">
-      <div class="label">Philosophy</div>
-    </div>
+    <!-- TOP -->
+    <a class="diamond top" href="/sayings/">
+      <span>Foundational</span>
+    </a>
 
-    <!-- CENTER : MEDIUM = LAWS -->
-    <div class="diamond center">
-      <div class="label">Laws<br/>Medium</div>
-    </div>
+    <!-- LEFT -->
+    <a class="diamond left" href="/sayings/#philosophy">
+      <span>Philosophy</span>
+    </a>
 
-    <!-- RIGHT : BREAKTHROUGHS -->
-    <div class="diamond right clickable" data-open="breakthroughs">
-      <div class="label">Breakthroughs</div>
-    </div>
+    <!-- RIGHT -->
+    <a class="diamond right" href="/sayings/#breakthroughs">
+      <span>Breakthroughs</span>
+    </a>
 
-    <!-- BOTTOM : GREATEST -->
-    <div class="diamond bottom clickable" data-open="greatest">
-      <div class="label">Greatest</div>
-    </div>
+    <!-- BOTTOM -->
+    <a class="diamond bottom" href="/sayings/#greatest">
+      <span>Greatest</span>
+    </a>
 
-    <!-- CORNER : GO TO LAWS -->
-    <a class="diamond corner clickable" href="laws/">
-      <div class="label">→ Laws</div>
+    <!-- CORNER -->
+    <a class="diamond corner" href="/laws/">
+      <span>→ Laws</span>
     </a>
 
   </section>
 
-  <!-- EXPANSION PANEL -->
-  <section id="panel" class="panel hidden"></section>
-
-  <div class="footer">
+  <footer>
     Canonical · Stable · © Geodiametrics
-  </div>
+  </footer>
 
 </main>
 

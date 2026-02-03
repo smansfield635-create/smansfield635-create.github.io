@@ -1,77 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Landing · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg"/>
-  <link rel="stylesheet" href="/assets/core.css"/>
-  <style>
-    html, body {
-      margin:0; padding:0; height:100%;
-      background: radial-gradient(circle at top, #0b1020 0%, #05070f 70%);
-      color:#e6ebff;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      overflow:hidden;
-    }
-    body::before {
-      content:""; position:fixed; inset:0; pointer-events:none; opacity:.4;
-      background-image:
-        radial-gradient(1px 1px at 10% 20%, #ffffff66 0, transparent 45%),
-        radial-gradient(1px 1px at 80% 30%, #ffffff55 0, transparent 45%),
-        radial-gradient(1px 1px at 40% 70%, #ffffff44 0, transparent 45%),
-        radial-gradient(1px 1px at 65% 85%, #ffffff33 0, transparent 45%);
-      background-size:220px 220px;
-    }
-    header { position:absolute; top:6vh; width:100%; text-align:center; z-index:2; }
-    h1 { font-size:clamp(1.8rem,4vw,3rem); margin:0; font-weight:700; }
-    .tagline { margin-top:.5rem; opacity:.7; font-size:1rem; }
-    main { position:relative; height:100%; display:grid; place-items:center; }
-    .field { position:relative; width:min(90vw,520px); height:min(90vw,520px); }
-    .diamond {
-      position:absolute; width:160px; height:160px; transform:rotate(45deg);
-      background:rgba(40,55,120,.18);
-      border:1px solid rgba(160,190,255,.25);
-      backdrop-filter:blur(6px);
-      display:grid; place-items:center;
-      text-decoration:none; color:inherit;
-      transition:transform .25s ease, background .25s ease;
-    }
-    .diamond span { transform:rotate(-45deg); font-weight:700; letter-spacing:.02em; text-align:center; }
-    .diamond:hover { background:rgba(90,120,255,.35); transform:rotate(45deg) scale(1.05); cursor:pointer; }
-    .top { top:0; left:50%; transform:translateX(-50%) rotate(45deg); }
-    .left { left:0; top:50%; transform:translateY(-50%) rotate(45deg); }
-    .right { right:0; top:50%; transform:translateY(-50%) rotate(45deg); }
-    .bottom { bottom:0; left:50%; transform:translateX(-50%) rotate(45deg); }
-    footer { position:absolute; bottom:3vh; width:100%; text-align:center; font-size:.85rem; opacity:.6; }
-  </style>
+  <meta charset="UTF-8" />
+  <title>Geodiametrics · Landing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/core.css" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <script src="/assets/ui.js" defer></script>
 </head>
-<body>
 
-<header>
-  <h1>Choose your entry.</h1>
-  <div class="tagline">Nothing is required until you click.</div>
-</header>
+<body class="stars">
+  <main class="diamond-stage">
 
-<main>
-  <div class="field">
+    <div class="diamond outer">
+      <a class="diamond inner top" href="/index.html?focus=philosophy">Philosophy</a>
+      <a class="diamond inner right" href="/index.html?focus=theology">Theology</a>
+      <a class="diamond inner bottom" href="/index.html?focus=science">Science</a>
+      <a class="diamond inner left" href="/index.html?focus=coherence">Coherence</a>
+    </div>
 
-    <!-- TOP: SAYINGS -->
-    <a class="diamond top" href="/sayings/"><span>Sayings</span></a>
+    <footer>
+      Canonical · Stable · © Geodiametrics
+    </footer>
 
-    <!-- LEFT: ENTER SITE -->
-    <a class="diamond left" href="/"><span>Enter<br/>Site</span></a>
-
-    <!-- RIGHT: PRODUCTS -->
-    <a class="diamond right" href="/products/"><span>Products</span></a>
-
-    <!-- BOTTOM: LEAVE -->
-    <a class="diamond bottom" href="https://google.com"><span>Leave<br/>Site</span></a>
-
-  </div>
-</main>
-
-<footer>Landing · Canonical · © Geodiametrics</footer>
-
+  </main>
 </body>
 </html>

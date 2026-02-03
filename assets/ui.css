@@ -1,5 +1,6 @@
 /* ===============================
-   GEODIAMETRICS — SINGLE UI
+   GEODIAMETRICS — FRONT GATE
+   SINGLE SOURCE OF TRUTH
    =============================== */
 
 * {
@@ -9,9 +10,15 @@
 html, body {
   margin: 0;
   padding: 0;
+  min-height: 100%;
   background: radial-gradient(ellipse at top, #0b1a33, #050914);
   color: #e8ecf4;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+/* LOCK RAW TEXT FROM EVER SHOWING */
+button, a {
+  all: unset;
 }
 
 .stage {
@@ -19,13 +26,14 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   padding: 3rem 1rem 2rem;
 }
 
 /* HERO */
 .hero {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
 }
 
 .hero h1 {
@@ -38,69 +46,84 @@ html, body {
   margin-top: 0.5rem;
 }
 
-/* GATE */
+/* ===== FRONT GATE DIAMOND ===== */
+
 .gate {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 2rem 0;
 }
 
+/* OUTER DIAMOND */
 .outer-diamond {
-  position: relative;
-  width: 260px;
-  height: 260px;
+  position: absolute;
+  inset: 0;
   transform: rotate(45deg);
-  border-radius: 28px;
+  border-radius: 32px;
   background: linear-gradient(145deg, #122a55, #0a1630);
   box-shadow:
-    0 0 60px rgba(90,130,255,0.15),
-    inset 0 0 30px rgba(255,255,255,0.05);
+    0 0 80px rgba(90,130,255,0.25),
+    inset 0 0 40px rgba(255,255,255,0.08);
 }
 
+/* INNER DIAMOND */
 .inner-diamond {
   position: absolute;
-  inset: 28%;
+  inset: 30%;
   background: radial-gradient(circle at center, #1c3a66, #0b1a33);
-  border-radius: 18px;
-  box-shadow: inset 0 0 20px rgba(255,255,255,0.08);
+  border-radius: 20px;
+  box-shadow: inset 0 0 25px rgba(255,255,255,0.12);
 }
 
-/* FACETS */
+/* ===== FACET BUTTONS (8 TOTAL) ===== */
+
 .facet {
   position: absolute;
-  width: 120px;
-  height: 44px;
+  width: 110px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 999px;
-  background: rgba(20,40,80,0.7);
+  background: rgba(20,40,80,0.8);
+  border: 1px solid rgba(255,255,255,0.18);
   color: #e8ecf4;
-  border: 1px solid rgba(255,255,255,0.12);
-  cursor: pointer;
   font-weight: 500;
+  cursor: pointer;
   transform: rotate(-45deg);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
 }
 
+/* OUTER 4 */
 .facet.top    { top: -22px; left: 50%; transform: translateX(-50%) rotate(-45deg); }
 .facet.bottom { bottom: -22px; left: 50%; transform: translateX(-50%) rotate(-45deg); }
 .facet.left   { left: -22px; top: 50%; transform: translateY(-50%) rotate(-45deg); }
 .facet.right  { right: -22px; top: 50%; transform: translateY(-50%) rotate(-45deg); }
 
-/* INTEGRITY LINE */
+/* INNER 4 */
+.facet.itop    { top: 20%; left: 50%; transform: translateX(-50%) rotate(-45deg); }
+.facet.ibottom { bottom: 20%; left: 50%; transform: translateX(-50%) rotate(-45deg); }
+.facet.ileft   { left: 20%; top: 50%; transform: translateY(-50%) rotate(-45deg); }
+.facet.iright  { right: 20%; top: 50%; transform: translateY(-50%) rotate(-45deg); }
+
+/* ===== INTEGRITY LINE ===== */
+
 .integrity-line {
+  margin-top: 1.5rem;
   opacity: 0.75;
   font-size: 0.95rem;
 }
 
-/* SAYINGS */
+/* ===== SAYINGS ===== */
+
 .sayings {
   width: 100%;
-  max-width: 460px;
+  max-width: 480px;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 2.5rem;
+  gap: 0.6rem;
+  margin-top: 2rem;
 }
 
 .sayings-hint {
@@ -110,14 +133,12 @@ html, body {
 }
 
 .saying {
-  background: rgba(20,30,55,0.75);
-  border: 1px solid rgba(255,255,255,0.1);
+  padding: 0.85rem 1.1rem;
   border-radius: 999px;
-  padding: 0.9rem 1.2rem;
-  color: #e8ecf4;
-  font-size: 1rem;
+  background: rgba(20,30,55,0.8);
+  border: 1px solid rgba(255,255,255,0.12);
+  text-align: center;
   cursor: pointer;
-  backdrop-filter: blur(8px);
 }
 
 /* FOOTER */
@@ -125,4 +146,5 @@ html, body {
   margin-top: auto;
   opacity: 0.5;
   font-size: 0.85rem;
+  padding-top: 2rem;
 }

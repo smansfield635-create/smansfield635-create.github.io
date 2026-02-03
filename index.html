@@ -33,24 +33,39 @@
 
 <section class="hero">
   <div class="heroIcon"><img src="/assets/logo.svg"/></div>
-  <h1 class="heroTitle">A divided system fails if and only if its fragmentation is not coherently integrated.</h1>
-  <p class="heroSub">Choose how you want this explained. Nothing is required until you click.</p>
+  <h1 class="heroTitle">Be the first.</h1>
+  <p class="heroSub">Nothing is required until you click.</p>
 </section>
 
-<section class="grid">
+<section class="card">
+  <div class="kicker">SAYINGS</div>
+  <p class="p">Click to reveal. No reading until you choose it.</p>
 
-  <section class="tile">
-    <div class="tileTop">SAYING</div>
-    <div class="tileTitle">Arnold Schwarzenegger</div>
-    <div class="tileBody">“Strength does not come from winning. Your struggles develop your strengths.”</div>
-  </section>
+  <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+    <button class="pill" data-drop="q_arnold">Arnold — Be the first</button>
+    <button class="pill" data-drop="q_bannister">Bannister — Boundary illusion</button>
+  </div>
 
-  <section class="tile">
-    <div class="tileTop">SAYING</div>
-    <div class="tileTitle">Roger Bannister</div>
-    <div class="tileBody">Once a boundary illusion breaks, progress accelerates.</div>
-  </section>
+  <div id="q_arnold" class="drop">
+    <div class="tile">
+      <div class="tileTop cyan">QUOTE</div>
+      <div class="tileTitle">Arnold Schwarzenegger</div>
+      <div class="tileBody">“I love it when people say something has never been done before, because when I do it, then I will be the first.”</div>
+    </div>
+  </div>
 
+  <div id="q_bannister" class="drop">
+    <div class="tile">
+      <div class="tileTop cyan">STORY</div>
+      <div class="tileTitle">Roger Bannister</div>
+      <div class="tileBody">
+        The four-minute mile was treated as a hard boundary. Experts warned it was impossible and even dangerous.
+        When Bannister broke it, the “impossible” boundary collapsed.
+        After that, many runners broke four minutes soon after—because the limit was not physical alone; it was also belief and coordination.
+        This project exists for that same reason: once a boundary illusion breaks, progress accelerates.
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="card">
@@ -62,11 +77,9 @@
   </div>
 
   <div class="pane show" data-pane="entry" data-mode="human">
-    <p class="p">
-      Common-sense explanations. Story, meaning, free will, and the journey.
-    </p>
-    <div class="grid">
-      <a class="tile" href="/home/">
+    <p class="p">Common-sense explanations. Free will. Journey. You choose what you open.</p>
+    <div class="grid" style="margin-top:14px">
+      <a class="tile primary" href="/home/">
         <div class="tileTop">ENTER</div>
         <div class="tileTitle">Human Experience</div>
         <div class="tileBody">Start with meaning. Explore at your pace.</div>
@@ -74,16 +87,14 @@
       <a class="tile" href="/laws/">
         <div class="tileTop">TROPHY CASE</div>
         <div class="tileTitle">Foundational Laws</div>
-        <div class="tileBody">Tier 1 · Tier 2 · Tier 3 with toggles.</div>
+        <div class="tileBody">Tier 1 · Tier 2 · Tier 3 (dropdowns + toggles).</div>
       </a>
     </div>
   </div>
 
   <div class="pane" data-pane="entry" data-mode="scientific">
-    <p class="p">
-      Formal explanations. Definitions, geometry, closure, and inspection.
-    </p>
-    <div class="grid">
+    <p class="p">Formal explanations. Definitions, geometry, closure, inspection.</p>
+    <div class="grid" style="margin-top:14px">
       <a class="tile" href="/science/">
         <div class="tileTop">ENTER</div>
         <div class="tileTitle">Scientific Stack</div>
@@ -96,7 +107,6 @@
       </a>
     </div>
   </div>
-
 </section>
 
 <footer class="foot">

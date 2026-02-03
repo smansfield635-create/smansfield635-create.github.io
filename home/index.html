@@ -1,5 +1,11 @@
 <!-- FILE: /home/index.html  (TNT FULL REPLACEMENT)
-     PURPOSE: Minimal entry hub aligned with wiring
+     HOME = REMOTE / CONTROL DIAMOND (L0)
+     - CENTER: Identity / Reset
+     - TOP: Sayings (Landing) -> /
+     - LEFT: Gauges -> /gauges/
+     - RIGHT: Products -> /products/
+     - BOTTOM: Laws -> /laws/
+     - BR: Links -> /links/
 -->
 <!doctype html>
 <html lang="en">
@@ -18,15 +24,15 @@
 
 <header class="top">
   <div class="brand">
-    <img class="logo" src="/assets/logo.svg"/>
+    <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
     <div class="brandText">
       <div class="brandName">Enter</div>
-      <div class="brandTag">Click-only discovery</div>
+      <div class="brandTag"> </div>
     </div>
   </div>
 
   <nav class="nav">
-    <a class="pill" href="/">Home</a>
+    <a class="pill" href="/">Sayings</a>
     <a class="pill" href="/products/">Products</a>
     <a class="pill" href="/laws/">Laws</a>
     <a class="pill" href="/gauges/">Gauges</a>
@@ -35,38 +41,61 @@
 </header>
 
 <section class="card">
-  <h1 class="h1">Start</h1>
-  <p class="p">Choose what to inspect. Everything opens only when clicked.</p>
+  <div class="kicker">REMOTE</div>
+  <div class="tileTitle">One diamond. One choice at a time.</div>
+  <p class="p">Click a node. No scroll walls. No forced reading.</p>
 </section>
 
-<section class="grid">
-  <a class="tile primary" href="/products/">
-    <div class="kicker">PRODUCTS</div>
-    <div class="tileTitle">Trophy Case</div>
-    <div class="tileBody">Nested bubbles with toggles inside.</div>
-  </a>
+<section class="diamondStage" aria-label="Home Remote Diamond">
+  <div class="diamondGrid">
 
-  <a class="tile" href="/laws/">
-    <div class="kicker">LAWS</div>
-    <div class="tileTitle">Foundational Laws</div>
-    <div class="tileBody">Tiered, nested, inspectable.</div>
-  </a>
+    <!-- TOP -->
+    <a class="dNode dNodeSmall posTop" href="/">
+      <span class="dKicker">Top</span>
+      <span class="dTitle">Sayings</span>
+      <span class="dSub">Landing</span>
+    </a>
 
-  <a class="tile" href="/gauges/">
-    <div class="kicker">GAUGES</div>
-    <div class="tileTitle">Live Gauges</div>
-    <div class="tileBody">Transparent snapshot panel.</div>
-  </a>
+    <!-- LEFT -->
+    <a class="dNode dNodeSmall posLeft" href="/gauges/">
+      <span class="dKicker">Left</span>
+      <span class="dTitle">Gauges</span>
+      <span class="dSub">Live</span>
+    </a>
 
-  <a class="tile" href="/links/">
-    <div class="kicker">LINKS</div>
-    <div class="tileTitle">Verification</div>
-    <div class="tileBody">OSF · ORCID · Contact.</div>
-  </a>
+    <!-- CENTER -->
+    <button class="dNode dCenter posCenter" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <span class="dKicker">Center</span>
+      <span class="dTitle">Coherence · Admissibility · Execution</span>
+      <span class="dSub">Reset</span>
+    </button>
+
+    <!-- RIGHT -->
+    <a class="dNode dNodeSmall posRight" href="/products/">
+      <span class="dKicker">Right</span>
+      <span class="dTitle">Products</span>
+      <span class="dSub">Trophy Case</span>
+    </a>
+
+    <!-- BOTTOM -->
+    <a class="dNode dNodeSmall posBottom" href="/laws/">
+      <span class="dKicker">Bottom</span>
+      <span class="dTitle">Laws</span>
+      <span class="dSub">Foundation</span>
+    </a>
+
+    <!-- BOTTOM-RIGHT -->
+    <a class="dNode dNodeSmall posBR" href="/links/">
+      <span class="dKicker">Corner</span>
+      <span class="dTitle">Links</span>
+      <span class="dSub">Verify</span>
+    </a>
+
+  </div>
 </section>
 
 <footer class="foot">
-  Entry · Canonical · © Geodiametrics
+  Enter · Diamond Remote · © Geodiametrics
 </footer>
 
 </main>

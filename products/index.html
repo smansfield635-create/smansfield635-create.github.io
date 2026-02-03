@@ -1,4 +1,10 @@
-<!-- FILE: /products/index.html  (TNT FULL REPLACEMENT) -->
+<!-- FILE: /products/index.html  (TNT FULL REPLACEMENT)
+     PRODUCTS = DIAMOND CATEGORIES (ENCYCLOPEDIC, NO SCROLL WALLS)
+     - Expand outward, never replace
+     - Each product opens a child diamond
+     - Inside each product: category mini-diamond + Human/Scientific toggle
+     Uses wiring: data-drop + data-toggle-group + data-toggle + data-pane
+-->
 <!doctype html>
 <html lang="en">
 <head>
@@ -12,302 +18,242 @@
 </head>
 
 <body>
-<main class="wrap">
+<main class="wrap stars">
 
 <header class="top">
   <div class="brand">
-    <img class="logo" src="/assets/logo.svg"/>
-    <div class="brandText">
-      <div class="brandName">Products</div>
-      <div class="brandTag">Nested bubbles · Click to reveal · Human/Scientific toggle</div>
-    </div>
+    <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
+    <div class="brandName">Products</div>
   </div>
-
   <nav class="nav">
-    <a class="pill" href="/">Home</a>
-    <a class="pill ghost" href="/home/">Enter</a>
-    <a class="pill ghost" href="/laws/">Laws</a>
-    <a class="pill ghost" href="/links/">Links</a>
+    <a class="pill" href="/">Sayings</a>
+    <a class="pill" href="/home/">Enter</a>
+    <a class="pill" href="/laws/">Laws</a>
+    <a class="pill" href="/gauges/">Gauges</a>
+    <a class="pill" href="/links/">Links</a>
   </nav>
 </header>
 
 <section class="card">
-  <div class="kicker">PRODUCT SUITE</div>
-  <h1 class="h1">Click a product</h1>
-  <p class="p">Each product opens a brief. Each brief contains category bubbles. Each category bubble opens only when clicked.</p>
+  <h1 class="h1">Product Suite</h1>
+  <p class="p">One diamond. Click a product. Expand outward into categories.</p>
 </section>
 
-<!-- =====================================================
-     PRODUCT 1 — PLASMA
-===================================================== -->
-<section class="card">
-  <div class="kicker">PRODUCT 1</div>
-  <h2 class="h2">Plasma Coherence Systems</h2>
-  <p class="p">Admissibility-controlled plasma behavior for stability, safety, and scaling.</p>
-  <div style="margin-top:14px">
-    <button class="pill" data-drop="prod_plasma">Open brief</button>
-  </div>
+<!-- PRODUCT DIAMOND -->
+<section class="diamondStage" aria-label="Products Diamond">
+  <div class="diamondGrid">
 
+    <button class="dNode dNodeSmall posTop" data-drop="prod_plasma">
+      <span class="dKicker">Top</span><span class="dTitle">Plasma</span><span class="dSub">Systems</span>
+    </button>
+
+    <button class="dNode dNodeSmall posLeft" data-drop="prod_cvd">
+      <span class="dKicker">Left</span><span class="dTitle">CVD</span><span class="dSub">Deposition</span>
+    </button>
+
+    <button class="dNode dCenter posCenter">
+      <span class="dKicker">Center</span><span class="dTitle">Products</span><span class="dSub">Expand outward</span>
+    </button>
+
+    <button class="dNode dNodeSmall posRight" data-drop="prod_eai">
+      <span class="dKicker">Right</span><span class="dTitle">EAI</span><span class="dSub">Authority</span>
+    </button>
+
+    <button class="dNode dNodeSmall posBottom" data-drop="prod_platform">
+      <span class="dKicker">Bottom</span><span class="dTitle">Platform</span><span class="dSub">Diagnostics</span>
+    </button>
+
+  </div>
+</section>
+
+<!-- EXPAND OUTWARD -->
+<section class="childWrap">
+
+  <!-- ===================== PLASMA ===================== -->
   <div id="prod_plasma" class="drop">
-    <div class="toggleRow" data-toggle-group="plasmaMode">
-      <button class="toggleBtn" data-toggle="plasmaMode" data-mode="human">Human</button>
-      <button class="toggleBtn" data-toggle="plasmaMode" data-mode="scientific">Scientific</button>
-    </div>
+    <div class="childCard">
+      <div class="kicker">PLASMA COHERENCE SYSTEMS</div>
+      <p class="p">Admissibility-controlled plasma behavior for stability, safety, and scaling.</p>
 
-    <!-- HUMAN PANE -->
-    <div class="pane show" data-pane="plasmaMode" data-mode="human">
-      <section class="grid">
-        <div class="tile">
-          <div class="tileTop cyan">HEADLINE</div>
-          <div class="tileTitle">Plasma stops behaving “randomly”</div>
-          <div class="tileBody">Click to open.</div>
-          <div style="margin-top:12px"><button class="pill" data-drop="pl_h_head">Open</button></div>
-          <div id="pl_h_head" class="drop">
-            <p class="p">This product treats plasma instability as a boundary problem, not a mystery. The goal is simple: stay inside what reality allows.</p>
-          </div>
-        </div>
+      <div class="toggleRow" data-toggle-group="pl_mode">
+        <button class="toggleBtn" data-toggle="pl_mode" data-mode="human">Human</button>
+        <button class="toggleBtn" data-toggle="pl_mode" data-mode="scientific">Scientific</button>
+      </div>
 
-        <div class="tile">
-          <div class="tileTop">WHY THIS EXISTS</div>
-          <div class="tileTitle">Instability is expensive</div>
-          <div class="tileBody">Click to open.</div>
-          <div style="margin-top:12px"><button class="pill" data-drop="pl_h_why">Open</button></div>
-          <div id="pl_h_why" class="drop">
-            <p class="p">Plasma systems can look stable—until they don’t. When they fail, failure is usually expensive, dangerous, and hard to reproduce. This exists to make instability diagnosable before escalation.</p>
-          </div>
+      <!-- mini-diamond categories -->
+      <div class="miniStage">
+        <div class="miniGrid">
+          <button class="miniNode miniNodeSmall posTop" data-drop="pl_why"><span class="DT">Why</span></button>
+          <button class="miniNode miniNodeSmall posLeft" data-drop="pl_changed"><span class="DT">Changed</span></button>
+          <button class="miniNode miniCenter posCenter" data-drop="pl_center"><span class="DT">Summary</span></button>
+          <button class="miniNode miniNodeSmall posRight" data-drop="pl_market"><span class="DT">Market</span></button>
+          <button class="miniNode miniNodeSmall posBottom" data-drop="pl_stack"><span class="DT">Stack</span></button>
         </div>
+      </div>
 
-        <div class="tile">
-          <div class="tileTop">WHAT CHANGED</div>
-          <div class="tileTitle">Inadmissible motion</div>
-          <div class="tileBody">Click to open.</div>
-          <div style="margin-top:12px"><button class="pill" data-drop="pl_h_changed">Open</button></div>
-          <div id="pl_h_changed" class="drop">
-            <p class="p">The shift is treating instability as “inadmissible motion.” If the path is not allowed, it breaks. If it is allowed, it stays bounded.</p>
-          </div>
-        </div>
+      <div id="pl_center" class="drop"><p class="p">Plasma instability is treated as inadmissible motion under constraint load; coherence enforces bounded execution.</p></div>
 
-        <div class="tile">
-          <div class="tileTop">DISCOVERY PROCESS</div>
-          <div class="tileTitle">Patterns collapse</div>
-          <div class="tileBody">Click to open.</div>
-          <div style="margin-top:12px"><button class="pill" data-drop="pl_h_disc">Open</button></div>
-          <div id="pl_h_disc" class="drop">
-            <p class="p">This emerged from repeated patterns that looked different on the surface but were identical underneath. Once constraints and trajectory were primary, the signatures aligned across cases.</p>
-          </div>
-        </div>
+      <div id="pl_why" class="drop">
+        <div class="pane show" data-pane="pl_mode" data-mode="human"><p class="p">Plasma can look stable—until it fails. This makes instability diagnosable before escalation.</p></div>
+        <div class="pane" data-pane="pl_mode" data-mode="scientific"><p class="p">Instability is modeled as boundary violation; late detection amplifies risk under scale.</p></div>
+      </div>
 
-        <div class="tile">
-          <div class="tileTop">MARKET RELEVANCE</div>
-          <div class="tileTitle">Scale needs repeatability</div>
-          <div class="tileBody">Click to open.</div>
-          <div style="margin-top:12px"><button class="pill" data-drop="pl_h_market">Open</button></div>
-          <div id="pl_h_market" class="drop">
-            <p class="p">Scaling plasma requires repeatability and controllable risk. This targets stability envelopes, early warnings, and bounded execution.</p>
-          </div>
-        </div>
+      <div id="pl_changed" class="drop">
+        <div class="pane show" data-pane="pl_mode" data-mode="human"><p class="p">The shift is treating chaos as “not allowed.” Allowed paths stay bounded.</p></div>
+        <div class="pane" data-pane="pl_mode" data-mode="scientific"><p class="p">Admissible envelopes + early termination of inadmissible trajectories.</p></div>
+      </div>
 
-        <div class="tile">
-          <div class="tileTop">LAST BREAKTHROUGH</div>
-          <div class="tileTitle">Constraint signatures</div>
-          <div class="tileBody">Click to open.</div>
-          <div style="margin-top:12px"><button class="pill" data-drop="pl_h_last">Open</button></div>
-          <div id="pl_h_last" class="drop">
-            <p class="p">Most recently: collapsing “many failure stories” into a small set of constraint signatures that can be checked before escalation.</p>
-          </div>
-        </div>
+      <div id="pl_market" class="drop">
+        <div class="pane show" data-pane="pl_mode" data-mode="human"><p class="p">Scaling plasma requires repeatability and controllable risk—this product targets that.</p></div>
+        <div class="pane" data-pane="pl_mode" data-mode="scientific"><p class="p">Predictable operating regions, reduced catastrophic modes, improved repeatability.</p></div>
+      </div>
 
-        <div class="tile">
-          <div class="tileTop">CURRENT STATUS</div>
-          <div class="tileTitle">Inspectable structure</div>
-          <div class="tileBody">Click to open.</div>
-          <div style="margin-top:12px"><button class="pill" data-drop="pl_h_status">Open</button></div>
-          <div id="pl_h_status" class="drop">
-            <p class="p">Inspectable structure and stability framing. Integration depends on environment, instrumentation, and operational constraints.</p>
-          </div>
-        </div>
-
-        <div class="tile">
-          <div class="tileTop">STACK MAPPING</div>
-          <div class="tileTitle">UCAQ → M256 → EAI</div>
-          <div class="tileBody">Click to open.</div>
-          <div style="margin-top:12px"><button class="pill" data-drop="pl_h_stack">Open</button></div>
-          <div id="pl_h_stack" class="drop">
-            <p class="p">UCAQ defines admissibility → M256 makes trajectories inspectable → EAI enforces closure → plasma execution stays inside the allowed set.</p>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <!-- SCIENTIFIC PANE -->
-    <div class="pane" data-pane="plasmaMode" data-mode="scientific">
-      <section class="grid">
-        <div class="tile">
-          <div class="tileTop cyan">ABSTRACT</div>
-          <div class="tileTitle">Constraint-first plasma stability</div>
-          <div class="tileBody">Click to open.</div>
-          <div style="margin-top:12px"><button class="pill" data-drop="pl_s_abs">Open</button></div>
-          <div id="pl_s_abs" class="drop">
-            <p class="p">Plasma behavior is treated as constrained execution through admissible state regions, with early termination of inadmissible trajectories.</p>
-          </div>
-        </div>
-
-        <div class="tile">
-          <div class="tileTop">PROBLEM</div>
-          <div class="tileTitle">Late detection</div>
-          <div class="tileBody">Click to open.</div>
-          <div style="margin-top:12px"><button class="pill" data-drop="pl_s_prob">Open</button></div>
-          <div id="pl_s_prob" class="drop">
-            <p class="p">Instability is often modeled as emergent noise rather than boundary violation, delaying intervention and amplifying risk under scale.</p>
-          </div>
-        </div>
-
-        <div class="tile">
-          <div class="tileTop">METHOD</div>
-          <div class="tileTitle">Admissibility envelopes</div>
-          <div class="tileBody">Click to open.</div>
-          <div style="margin-top:12px"><button class="pill" data-drop="pl_s_method">Open</button></div>
-          <div id="pl_s_method" class="drop">
-            <p class="p">Define admissible envelopes; treat divergence as constraint violation; terminate/redirect prior to runaway execution.</p>
-          </div>
-        </div>
-
-        <div class="tile">
-          <div class="tileTop">IMPLICATIONS</div>
-          <div class="tileTitle">Predictable scaling</div>
-          <div class="tileBody">Click to open.</div>
-          <div style="margin-top:12px"><button class="pill" data-drop="pl_s_imp">Open</button></div>
-          <div id="pl_s_imp" class="drop">
-            <p class="p">Predictable operating regions under higher loads; reduced catastrophic modes; improved repeatability.</p>
-          </div>
-        </div>
-
-        <div class="tile">
-          <div class="tileTop">STACK</div>
-          <div class="tileTitle">Formal mapping</div>
-          <div class="tileBody">Click to open.</div>
-          <div style="margin-top:12px"><button class="pill" data-drop="pl_s_stack">Open</button></div>
-          <div id="pl_s_stack" class="drop">
-            <p class="p">UCAQ (admissibility) → M256 (bounded geometry) → EAI (closure) → constrained plasma execution.</p>
-          </div>
-        </div>
-      </section>
+      <div id="pl_stack" class="drop">
+        <div class="pane show" data-pane="pl_mode" data-mode="human"><p class="p">UCAQ defines admissibility → M256 bounds paths → EAI enforces closure.</p></div>
+        <div class="pane" data-pane="pl_mode" data-mode="scientific"><p class="p">UCAQ → M256 → EAI as constraint-first governance for plasma execution.</p></div>
+      </div>
     </div>
   </div>
-</section>
 
-<!-- =====================================================
-     PRODUCT 2 — CVD
-===================================================== -->
-<section class="card">
-  <div class="kicker">PRODUCT 2</div>
-  <h2 class="h2">Coherence-Driven CVD</h2>
-  <p class="p">Constraint-aligned deposition with reduced fragmentation and failure modes.</p>
-  <div style="margin-top:14px">
-    <button class="pill" data-drop="prod_cvd">Open brief</button>
-  </div>
-
+  <!-- ===================== CVD ===================== -->
   <div id="prod_cvd" class="drop">
-    <div class="toggleRow" data-toggle-group="cvdMode">
-      <button class="toggleBtn" data-toggle="cvdMode" data-mode="human">Human</button>
-      <button class="toggleBtn" data-toggle="cvdMode" data-mode="scientific">Scientific</button>
-    </div>
+    <div class="childCard">
+      <div class="kicker">COHERENCE-DRIVEN CVD</div>
+      <p class="p">Constraint-aligned deposition with reduced fragmentation and failure modes.</p>
 
-    <div class="pane show" data-pane="cvdMode" data-mode="human">
-      <section class="grid">
-        <div class="tile"><div class="tileTop cyan">HEADLINE</div><div class="tileTitle">Yield collapses when the path is incoherent</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="cv_h_head">Open</button></div><div id="cv_h_head" class="drop"><p class="p">Deposition is treated as an execution trajectory. If constraints are violated, quality degrades predictably, not mysteriously.</p></div></div>
-        <div class="tile"><div class="tileTop">WHY THIS EXISTS</div><div class="tileTitle">Prevent late surprises</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="cv_h_why">Open</button></div><div id="cv_h_why" class="drop"><p class="p">CVD failures are usually discovered late—after wasted runs and degraded output. This makes incoherent runs detectable earlier.</p></div></div>
-        <div class="tile"><div class="tileTop">WHAT CHANGED</div><div class="tileTitle">Trajectory-first</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="cv_h_changed">Open</button></div><div id="cv_h_changed" class="drop"><p class="p">Instead of local tuning, coherence is enforced across the full run. Yield becomes a consequence of admissibility.</p></div></div>
-        <div class="tile"><div class="tileTop">DISCOVERY</div><div class="tileTitle">Same signature</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="cv_h_disc">Open</button></div><div id="cv_h_disc" class="drop"><p class="p">Different “failure stories” reduced to the same constraint signatures once closure and trajectory were primary variables.</p></div></div>
-        <div class="tile"><div class="tileTop">MARKET</div><div class="tileTitle">Repeatability</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="cv_h_market">Open</button></div><div id="cv_h_market" class="drop"><p class="p">Higher reliability lowers scrap and rework. This is a scale enabler, not a lab trick.</p></div></div>
-        <div class="tile"><div class="tileTop">LAST BREAKTHROUGH</div><div class="tileTitle">Early violations</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="cv_h_last">Open</button></div><div id="cv_h_last" class="drop"><p class="p">Mapping surface defects back to early constraint violations so correction happens before yield collapses.</p></div></div>
-        <div class="tile"><div class="tileTop">STATUS</div><div class="tileTitle">Integration ready</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="cv_h_status">Open</button></div><div id="cv_h_status" class="drop"><p class="p">Applied formalism ready for integration context; deployment depends on fabrication environment and partner constraints.</p></div></div>
-        <div class="tile"><div class="tileTop">STACK</div><div class="tileTitle">UCAQ → M256 → EAI</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="cv_h_stack">Open</button></div><div id="cv_h_stack" class="drop"><p class="p">UCAQ defines what is allowed → M256 organizes run geometry → EAI halts inadmissible paths → deposition stabilizes.</p></div></div>
-      </section>
-    </div>
+      <div class="toggleRow" data-toggle-group="cv_mode">
+        <button class="toggleBtn" data-toggle="cv_mode" data-mode="human">Human</button>
+        <button class="toggleBtn" data-toggle="cv_mode" data-mode="scientific">Scientific</button>
+      </div>
 
-    <div class="pane" data-pane="cvdMode" data-mode="scientific">
-      <section class="grid">
-        <div class="tile"><div class="tileTop cyan">ABSTRACT</div><div class="tileTitle">Trajectory-level constraint coherence</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="cv_s_abs">Open</button></div><div id="cv_s_abs" class="drop"><p class="p">Deposition treated as constrained execution; defects correlate to early constraint violations along the path.</p></div></div>
-        <div class="tile"><div class="tileTop">METHOD</div><div class="tileTitle">Admissibility enforcement</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="cv_s_method">Open</button></div><div id="cv_s_method" class="drop"><p class="p">Enforce admissibility across trajectory; halt/redirect prior to defect propagation.</p></div></div>
-        <div class="tile"><div class="tileTop">IMPLICATIONS</div><div class="tileTitle">Repeatable scaling</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="cv_s_imp">Open</button></div><div id="cv_s_imp" class="drop"><p class="p">Higher repeatability, lower scrap, reduced rework, improved scaling stability.</p></div></div>
-        <div class="tile"><div class="tileTop">STACK</div><div class="tileTitle">Formal mapping</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="cv_s_stack">Open</button></div><div id="cv_s_stack" class="drop"><p class="p">UCAQ → M256 → EAI applied as constraint-first governance for deposition trajectories.</p></div></div>
-      </section>
+      <div class="miniStage">
+        <div class="miniGrid">
+          <button class="miniNode miniNodeSmall posTop" data-drop="cv_why"><span class="DT">Why</span></button>
+          <button class="miniNode miniNodeSmall posLeft" data-drop="cv_changed"><span class="DT">Changed</span></button>
+          <button class="miniNode miniCenter posCenter" data-drop="cv_center"><span class="DT">Summary</span></button>
+          <button class="miniNode miniNodeSmall posRight" data-drop="cv_market"><span class="DT">Market</span></button>
+          <button class="miniNode miniNodeSmall posBottom" data-drop="cv_stack"><span class="DT">Stack</span></button>
+        </div>
+      </div>
+
+      <div id="cv_center" class="drop"><p class="p">Deposition is treated as a trajectory; coherence across the run determines yield and defect propagation.</p></div>
+
+      <div id="cv_why" class="drop">
+        <div class="pane show" data-pane="cv_mode" data-mode="human"><p class="p">Failures are discovered late. This exposes incoherence early to reduce scrap and rework.</p></div>
+        <div class="pane" data-pane="cv_mode" data-mode="scientific"><p class="p">Local optimization masks global incoherence; late correction cost is maximal.</p></div>
+      </div>
+
+      <div id="cv_changed" class="drop">
+        <div class="pane show" data-pane="cv_mode" data-mode="human"><p class="p">Stop tuning blindly; enforce coherence across the whole execution path.</p></div>
+        <div class="pane" data-pane="cv_mode" data-mode="scientific"><p class="p">Trajectory-level admissibility enforcement; halt/redirect prior to defect propagation.</p></div>
+      </div>
+
+      <div id="cv_market" class="drop">
+        <div class="pane show" data-pane="cv_mode" data-mode="human"><p class="p">Repeatability at scale lowers cost and stabilizes manufacturing.</p></div>
+        <div class="pane" data-pane="cv_mode" data-mode="scientific"><p class="p">Higher repeatability, lower scrap, reduced rework loops, improved scaling stability.</p></div>
+      </div>
+
+      <div id="cv_stack" class="drop">
+        <div class="pane show" data-pane="cv_mode" data-mode="human"><p class="p">UCAQ defines allowed → M256 organizes run geometry → EAI halts inadmissible paths.</p></div>
+        <div class="pane" data-pane="cv_mode" data-mode="scientific"><p class="p">UCAQ → M256 → EAI as constraint-first governance for deposition trajectories.</p></div>
+      </div>
     </div>
   </div>
-</section>
 
-<!-- =====================================================
-     PRODUCT 3 — EAI
-===================================================== -->
-<section class="card">
-  <div class="kicker">PRODUCT 3</div>
-  <h2 class="h2">Executive Admissibility Instrument</h2>
-  <p class="p">Closure authority for systems, organizations, and execution pipelines.</p>
-  <div style="margin-top:14px"><button class="pill" data-drop="prod_eai">Open brief</button></div>
-
+  <!-- ===================== EAI ===================== -->
   <div id="prod_eai" class="drop">
-    <div class="toggleRow" data-toggle-group="eaiMode">
-      <button class="toggleBtn" data-toggle="eaiMode" data-mode="human">Human</button>
-      <button class="toggleBtn" data-toggle="eaiMode" data-mode="scientific">Scientific</button>
-    </div>
+    <div class="childCard">
+      <div class="kicker">EXECUTIVE ADMISSIBILITY INSTRUMENT</div>
+      <p class="p">Closure authority for systems, organizations, and execution pipelines.</p>
 
-    <div class="pane show" data-pane="eaiMode" data-mode="human">
-      <section class="grid">
-        <div class="tile"><div class="tileTop cyan">HEADLINE</div><div class="tileTitle">Most failures are closure failures</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="ea_h_head">Open</button></div><div id="ea_h_head" class="drop"><p class="p">EAI exists to stop inadmissible execution and end endless renegotiation. Closure makes decisions real.</p></div></div>
-        <div class="tile"><div class="tileTop">WHY</div><div class="tileTitle">Stop drift early</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="ea_h_why">Open</button></div><div id="ea_h_why" class="drop"><p class="p">Systems drift when no layer can halt. Optimization continues past violation, amplifying collapse.</p></div></div>
-        <div class="tile"><div class="tileTop">WHAT CHANGED</div><div class="tileTitle">Authority became structural</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="ea_h_changed">Open</button></div><div id="ea_h_changed" class="drop"><p class="p">Authority is treated as a constraint function: proceed / halt / terminate, not persuasion.</p></div></div>
-        <div class="tile"><div class="tileTop">STACK</div><div class="tileTitle">UCAQ → M256 → EAI</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="ea_h_stack">Open</button></div><div id="ea_h_stack" class="drop"><p class="p">UCAQ defines admissibility → M256 constrains paths → EAI enforces closure → execution becomes bounded and real.</p></div></div>
-      </section>
-    </div>
+      <div class="toggleRow" data-toggle-group="ea_mode">
+        <button class="toggleBtn" data-toggle="ea_mode" data-mode="human">Human</button>
+        <button class="toggleBtn" data-toggle="ea_mode" data-mode="scientific">Scientific</button>
+      </div>
 
-    <div class="pane" data-pane="eaiMode" data-mode="scientific">
-      <section class="grid">
-        <div class="tile"><div class="tileTop cyan">ABSTRACT</div><div class="tileTitle">Executive closure operator</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="ea_s_abs">Open</button></div><div id="ea_s_abs" class="drop"><p class="p">Terminal decision outcomes based on admissibility: proceed, halt, terminate; prevents post-closure renegotiation.</p></div></div>
-        <div class="tile"><div class="tileTop">METHOD</div><div class="tileTitle">Receipt-like finality</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="ea_s_method">Open</button></div><div id="ea_s_method" class="drop"><p class="p">Treat closure as constraint-bound decision function; enforce finality; invalidation triggers termination or reset.</p></div></div>
-        <div class="tile"><div class="tileTop">STACK</div><div class="tileTitle">Formal mapping</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="ea_s_stack">Open</button></div><div id="ea_s_stack" class="drop"><p class="p">UCAQ → M256 → EAI, with EAI as non-negotiable authority layer.</p></div></div>
-      </section>
+      <div class="miniStage">
+        <div class="miniGrid">
+          <button class="miniNode miniNodeSmall posTop" data-drop="ea_why"><span class="DT">Why</span></button>
+          <button class="miniNode miniNodeSmall posLeft" data-drop="ea_changed"><span class="DT">Changed</span></button>
+          <button class="miniNode miniCenter posCenter" data-drop="ea_center"><span class="DT">Summary</span></button>
+          <button class="miniNode miniNodeSmall posRight" data-drop="ea_market"><span class="DT">Market</span></button>
+          <button class="miniNode miniNodeSmall posBottom" data-drop="ea_stack"><span class="DT">Stack</span></button>
+        </div>
+      </div>
+
+      <div id="ea_center" class="drop"><p class="p">Most failures are closure failures; EAI makes proceed/halt/terminate real and non-negotiable.</p></div>
+
+      <div id="ea_why" class="drop">
+        <div class="pane show" data-pane="ea_mode" data-mode="human"><p class="p">Without closure, systems drift. Optimization continues past violation until failure forces it.</p></div>
+        <div class="pane" data-pane="ea_mode" data-mode="scientific"><p class="p">Absent terminal authority, inadmissible trajectories persist and amplify collapse magnitude.</p></div>
+      </div>
+
+      <div id="ea_changed" class="drop">
+        <div class="pane show" data-pane="ea_mode" data-mode="human"><p class="p">Authority becomes structural, not persuasive: closure as a function.</p></div>
+        <div class="pane" data-pane="ea_mode" data-mode="scientific"><p class="p">Closure operator emits terminal state; post-closure renegotiation is inadmissible.</p></div>
+      </div>
+
+      <div id="ea_market" class="drop">
+        <div class="pane show" data-pane="ea_mode" data-mode="human"><p class="p">Stops churn, prevents runaway execution, stabilizes decisions at scale.</p></div>
+        <div class="pane" data-pane="ea_mode" data-mode="scientific"><p class="p">Deterministic halt/continue/terminate reduces variance and failure propagation.</p></div>
+      </div>
+
+      <div id="ea_stack" class="drop">
+        <div class="pane show" data-pane="ea_mode" data-mode="human"><p class="p">UCAQ defines admissibility → M256 bounds options → EAI enforces closure.</p></div>
+        <div class="pane" data-pane="ea_mode" data-mode="scientific"><p class="p">UCAQ → M256 → EAI with EAI as the non-negotiable authority layer.</p></div>
+      </div>
     </div>
   </div>
-</section>
 
-<!-- =====================================================
-     PRODUCT 4 — PLATFORM
-===================================================== -->
-<section class="card">
-  <div class="kicker">PRODUCT 4</div>
-  <h2 class="h2">Coherence Diagnostics Platform</h2>
-  <p class="p">Gauges, projections, and inspectable surfaces for coherence in motion.</p>
-  <div style="margin-top:14px"><button class="pill" data-drop="prod_platform">Open brief</button></div>
-
+  <!-- ===================== PLATFORM ===================== -->
   <div id="prod_platform" class="drop">
-    <div class="toggleRow" data-toggle-group="platMode">
-      <button class="toggleBtn" data-toggle="platMode" data-mode="human">Human</button>
-      <button class="toggleBtn" data-toggle="platMode" data-mode="scientific">Scientific</button>
-    </div>
+    <div class="childCard">
+      <div class="kicker">COHERENCE DIAGNOSTICS PLATFORM</div>
+      <p class="p">Gauges, projections, and inspectable surfaces for coherence in motion.</p>
 
-    <div class="pane show" data-pane="platMode" data-mode="human">
-      <section class="grid">
-        <div class="tile"><div class="tileTop cyan">HEADLINE</div><div class="tileTitle">A dashboard that doesn’t flatter you</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="pf_h_head">Open</button></div><div id="pf_h_head" class="drop"><p class="p">This platform displays coherence: stability, drift, risk, closure—without opinion or pressure.</p></div></div>
-        <div class="tile"><div class="tileTop">WHY</div><div class="tileTitle">See drift early</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="pf_h_why">Open</button></div><div id="pf_h_why" class="drop"><p class="p">Most telemetry measures attention and performance. This measures whether the system is aligned enough to proceed.</p></div></div>
-        <div class="tile"><div class="tileTop">STATUS</div><div class="tileTitle">Live surfaces exist</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="pf_h_status">Open</button></div><div id="pf_h_status" class="drop"><p class="p">Live surfaces exist; wiring to sources is incremental and domain-dependent.</p></div></div>
-        <div class="tile"><div class="tileTop">STACK</div><div class="tileTitle">Read-only projections</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="pf_h_stack">Open</button></div><div id="pf_h_stack" class="drop"><p class="p">UCAQ defines truth → M256 defines structure → EAI defines closure → platform displays projections as read-only gauges.</p></div></div>
-      </section>
-    </div>
+      <div class="toggleRow" data-toggle-group="pf_mode">
+        <button class="toggleBtn" data-toggle="pf_mode" data-mode="human">Human</button>
+        <button class="toggleBtn" data-toggle="pf_mode" data-mode="scientific">Scientific</button>
+      </div>
 
-    <div class="pane" data-pane="platMode" data-mode="scientific">
-      <section class="grid">
-        <div class="tile"><div class="tileTop cyan">ABSTRACT</div><div class="tileTitle">Read-only gauge surfaces</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="pf_s_abs">Open</button></div><div id="pf_s_abs" class="drop"><p class="p">Renders invariant and derived projections without issuing decisions. Authority remains upstream.</p></div></div>
-        <div class="tile"><div class="tileTop">METHOD</div><div class="tileTitle">Expose canonical gauges</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="pf_s_method">Open</button></div><div id="pf_s_method" class="drop"><p class="p">Expose coherence, admissibility, stability/fracture, trajectory phase, closure status as projections of canonical structure.</p></div></div>
-        <div class="tile"><div class="tileTop">STACK</div><div class="tileTitle">Formal mapping</div><div class="tileBody">Click to open.</div><div style="margin-top:12px"><button class="pill" data-drop="pf_s_stack">Open</button></div><div id="pf_s_stack" class="drop"><p class="p">UCAQ → M256 → EAI → Application Layer (gauges, views, projections).</p></div></div>
-      </section>
+      <div class="miniStage">
+        <div class="miniGrid">
+          <button class="miniNode miniNodeSmall posTop" data-drop="pf_why"><span class="DT">Why</span></button>
+          <button class="miniNode miniNodeSmall posLeft" data-drop="pf_changed"><span class="DT">Changed</span></button>
+          <button class="miniNode miniCenter posCenter" data-drop="pf_center"><span class="DT">Summary</span></button>
+          <button class="miniNode miniNodeSmall posRight" data-drop="pf_market"><span class="DT">Market</span></button>
+          <button class="miniNode miniNodeSmall posBottom" data-drop="pf_stack"><span class="DT">Stack</span></button>
+        </div>
+      </div>
+
+      <div id="pf_center" class="drop"><p class="p">A read-only instrument surface: show coherence, stability, drift, load, admissibility, closure—no persuasion.</p></div>
+
+      <div id="pf_why" class="drop">
+        <div class="pane show" data-pane="pf_mode" data-mode="human"><p class="p">Most dashboards measure attention. This measures whether the system is aligned enough to proceed.</p></div>
+        <div class="pane" data-pane="pf_mode" data-mode="scientific"><p class="p">Telemetry for admissibility constraints prior to failure; prevents blind scaling.</p></div>
+      </div>
+
+      <div id="pf_changed" class="drop">
+        <div class="pane show" data-pane="pf_mode" data-mode="human"><p class="p">Metrics are not targets. Gauges are projections of admissibility, not goals to game.</p></div>
+        <div class="pane" data-pane="pf_mode" data-mode="scientific"><p class="p">Expose invariant/derived projections without issuing decisions; authority remains upstream.</p></div>
+      </div>
+
+      <div id="pf_market" class="drop">
+        <div class="pane show" data-pane="pf_mode" data-mode="human"><p class="p">See drift early. Fix small problems before they become big ones.</p></div>
+        <div class="pane" data-pane="pf_mode" data-mode="scientific"><p class="p">Early detection reduces correction cost; stabilizes scale by enforcing coherence-first movement.</p></div>
+      </div>
+
+      <div id="pf_stack" class="drop">
+        <div class="pane show" data-pane="pf_mode" data-mode="human"><p class="p">UCAQ truth → M256 structure → EAI closure → platform displays projections.</p></div>
+        <div class="pane" data-pane="pf_mode" data-mode="scientific"><p class="p">UCAQ → M256 → EAI → Application Layer projections (read-only).</p></div>
+      </div>
     </div>
   </div>
+
 </section>
 
 <footer class="foot">
-  <div>Products · Nested Bubbles</div>
-  <div>© Geodiametrics</div>
+  Products · Diamond Encyclopedia · © Geodiametrics
 </footer>
 
 </main>

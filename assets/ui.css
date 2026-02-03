@@ -1,12 +1,43 @@
-/* BASE */
+/* =========================
+   GLOBAL DEPTH + STARS
+   ========================= */
+
 body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: radial-gradient(circle at top, #0b1020, #05080f);
   color: #e8ecf6;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(120,140,255,0.12), transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(180,120,255,0.10), transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(80,200,255,0.08), transparent 50%),
+    linear-gradient(#060913, #02040a);
+  overflow-x: hidden;
 }
 
+/* STAR LAYER */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 80% 30%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 65% 85%, rgba(255,255,255,0.3), transparent),
+    radial-gradient(1px 1px at 25% 55%, rgba(255,255,255,0.4), transparent);
+  background-size: 200px 200px;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* =========================
+   LAYOUT
+   ========================= */
+
 .wrap {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -14,73 +45,117 @@ body {
   justify-content: center;
 }
 
-/* HERO */
+/* =========================
+   HERO
+   ========================= */
+
 .hero {
   text-align: center;
   margin-bottom: 4rem;
 }
 
 .hero h1 {
-  font-size: 2.5rem;
+  font-size: 2.6rem;
   margin: 0;
+  letter-spacing: 0.03em;
 }
 
 .hero p {
+  margin-top: 0.5rem;
   opacity: 0.75;
 }
 
-/* DIAMOND FIELD */
+/* =========================
+   DIAMOND FIELD
+   ========================= */
+
 .diamond-field {
   position: relative;
-  width: 360px;
-  height: 360px;
+  width: 380px;
+  height: 380px;
 }
 
-/* DIAMOND BASE */
+/* =========================
+   DIAMONDS
+   ========================= */
+
 .diamond {
   position: absolute;
-  width: 120px;
-  height: 120px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.15);
+  width: 130px;
+  height: 130px;
   transform: rotate(45deg);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(120,140,255,0.18),
+      rgba(40,50,120,0.18)
+    );
+  border: 1px solid rgba(160,180,255,0.25);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+  box-shadow:
+    0 0 0 rgba(0,0,0,0),
+    inset 0 0 30px rgba(255,255,255,0.04);
 }
 
-/* TEXT STAYS UPRIGHT */
+/* TEXT */
 .diamond span {
   transform: rotate(-45deg);
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
   pointer-events: none;
 }
 
-/* POSITIONS */
-.center { top: 120px; left: 120px; }
-.top { top: 0; left: 120px; }
-.bottom { bottom: 0; left: 120px; }
-.left { left: 0; top: 120px; }
-.right { right: 0; top: 120px; }
-.corner { right: 10px; bottom: 10px; width: 90px; height: 90px; }
+/* =========================
+   POSITIONS
+   ========================= */
 
-/* STATES */
+.center { top: 125px; left: 125px; z-index: 2; }
+.top { top: 0; left: 125px; }
+.bottom { bottom: 0; left: 125px; }
+.left { left: 0; top: 125px; }
+.right { right: 0; top: 125px; }
+.corner { right: -10px; bottom: -10px; width: 100px; height: 100px; }
+
+/* =========================
+   INTERACTION
+   ========================= */
+
 .diamond:hover {
-  border-color: #7aa2ff;
-  box-shadow: 0 0 12px rgba(122,162,255,0.4);
+  transform: rotate(45deg) scale(1.05);
+  border-color: #9bb4ff;
+  box-shadow:
+    0 0 24px rgba(120,160,255,0.45),
+    inset 0 0 40px rgba(255,255,255,0.08);
 }
 
+/* =========================
+   LOCKED (MEDIUM)
+   ========================= */
+
 .locked {
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: default;
   box-shadow: none;
   border-style: dashed;
 }
 
-/* FOOTER */
+.locked:hover {
+  transform: rotate(45deg);
+  box-shadow: none;
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+
 footer {
   margin-top: 4rem;
   font-size: 0.8rem;

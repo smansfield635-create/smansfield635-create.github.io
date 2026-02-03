@@ -11,7 +11,7 @@
 </head>
 
 <body>
-<main class="wrap">
+<main class="wrap stars">
 
 <header class="top">
   <div class="brand">
@@ -21,92 +21,89 @@
       <div class="brandTag">Coherence · Admissibility · Execution</div>
     </div>
   </div>
-
   <nav class="nav">
-    <a class="pill" href="/">Home</a>
-    <a class="pill ghost" href="/home/">Enter</a>
-    <a class="pill ghost" href="/laws/">Laws</a>
     <a class="pill ghost" href="/products/">Products</a>
+    <a class="pill ghost" href="/laws/">Laws</a>
     <a class="pill ghost" href="/links/">Links</a>
   </nav>
 </header>
 
-<section class="hero">
-  <div class="heroIcon"><img src="/assets/logo.svg"/></div>
-  <h1 class="heroTitle">Be the first.</h1>
-  <p class="heroSub">Nothing is required until you click.</p>
-</section>
-
+<!-- ============================= -->
+<!-- SAYINGS (CLICK TO REVEAL) -->
+<!-- ============================= -->
 <section class="card">
   <div class="kicker">SAYINGS</div>
-  <p class="p">Click to reveal. No reading until you choose it.</p>
+  <p class="p muted">Click to reveal. Nothing is shown until you choose.</p>
 
-  <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-    <button class="pill" data-drop="q_arnold">Arnold — Be the first</button>
-    <button class="pill" data-drop="q_bannister">Bannister — Boundary illusion</button>
-  </div>
-
-  <div id="q_arnold" class="drop">
-    <div class="tile">
-      <div class="tileTop cyan">QUOTE</div>
-      <div class="tileTitle">Arnold Schwarzenegger</div>
-      <div class="tileBody">“I love it when people say something has never been done before, because when I do it, then I will be the first.”</div>
+  <div class="stack">
+    <button class="pill" data-drop="arnold">Arnold — Be the first</button>
+    <div id="arnold" class="drop">
+      <p class="p">
+        “I love it when people say it’s never been done before.  
+        Because when I do it, I’ll be the first.”
+      </p>
     </div>
-  </div>
 
-  <div id="q_bannister" class="drop">
-    <div class="tile">
-      <div class="tileTop cyan">STORY</div>
-      <div class="tileTitle">Roger Bannister</div>
-      <div class="tileBody">
-        The four-minute mile was treated as a hard boundary. Experts warned it was impossible and even dangerous.
-        When Bannister broke it, the “impossible” boundary collapsed.
-        After that, many runners broke four minutes soon after—because the limit was not physical alone; it was also belief and coordination.
-        This project exists for that same reason: once a boundary illusion breaks, progress accelerates.
-      </div>
+    <button class="pill" data-drop="bannister">Bannister — Boundary illusion</button>
+    <div id="bannister" class="drop">
+      <p class="p">
+        Doctors claimed the four-minute mile would kill you.  
+        Bannister broke it. Within a year, dozens followed.  
+        Boundaries collapse when proven false.
+      </p>
+    </div>
+
+    <button class="pill" data-drop="wrights">Wright Brothers — Flight</button>
+    <div id="wrights" class="drop">
+      <p class="p">
+        Experts focused on power.  
+        The Wrights focused on control.  
+        Mastery of constraints enabled flight.
+      </p>
+    </div>
+
+    <button class="pill" data-drop="edison">Edison — Light</button>
+    <div id="edison" class="drop">
+      <p class="p">
+        Failure wasn’t wasted effort.  
+        It was constraint discovery.  
+        The system converged.
+      </p>
+    </div>
+
+    <button class="pill" data-drop="tesla">Tesla — Structure</button>
+    <div id="tesla" class="drop">
+      <p class="p">
+        Reality is frequency, resonance, and structure.  
+        Ignore coherence and systems destabilize.
+      </p>
+    </div>
+
+    <button class="pill" data-drop="einstein">Einstein — Simplicity</button>
+    <div id="einstein" class="drop">
+      <p class="p">
+        Nature is simple.  
+        Confusion signals incomplete models.
+      </p>
     </div>
   </div>
 </section>
 
+<!-- ============================= -->
+<!-- CHOOSE EXPERIENCE -->
+<!-- ============================= -->
 <section class="card">
   <div class="kicker">CHOOSE YOUR EXPERIENCE</div>
 
-  <div class="toggleRow" data-toggle-group="entry">
-    <button class="toggleBtn" data-toggle="entry" data-mode="human">Human</button>
-    <button class="toggleBtn" data-toggle="entry" data-mode="scientific">Scientific</button>
+  <div class="toggleRow">
+    <a class="pill glow" href="/home/?mode=human">Human</a>
+    <a class="pill" href="/home/?mode=scientific">Scientific</a>
   </div>
 
-  <div class="pane show" data-pane="entry" data-mode="human">
-    <p class="p">Common-sense explanations. Free will. Journey. You choose what you open.</p>
-    <div class="grid" style="margin-top:14px">
-      <a class="tile primary" href="/home/">
-        <div class="tileTop">ENTER</div>
-        <div class="tileTitle">Human Experience</div>
-        <div class="tileBody">Start with meaning. Explore at your pace.</div>
-      </a>
-      <a class="tile" href="/laws/">
-        <div class="tileTop">TROPHY CASE</div>
-        <div class="tileTitle">Foundational Laws</div>
-        <div class="tileBody">Tier 1 · Tier 2 · Tier 3 (dropdowns + toggles).</div>
-      </a>
-    </div>
-  </div>
-
-  <div class="pane" data-pane="entry" data-mode="scientific">
-    <p class="p">Formal explanations. Definitions, geometry, closure, inspection.</p>
-    <div class="grid" style="margin-top:14px">
-      <a class="tile" href="/science/">
-        <div class="tileTop">ENTER</div>
-        <div class="tileTitle">Scientific Stack</div>
-        <div class="tileBody">UCAQ → M256 → EAI.</div>
-      </a>
-      <a class="tile" href="/application/">
-        <div class="tileTop">TOOLS</div>
-        <div class="tileTitle">Gauges & Views</div>
-        <div class="tileBody">Read-only instrument surfaces.</div>
-      </a>
-    </div>
-  </div>
+  <p class="p muted">
+    Common-sense or formal explanation.  
+    Same system. Different language.
+  </p>
 </section>
 
 <footer class="foot">

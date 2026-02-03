@@ -1,8 +1,4 @@
-/* =========================================================
-   GEODIAMETRICS — HARD RESET UI
-   Single Diamond • Single Logic • No Legacy
-   ========================================================= */
-
+/* === HARD RESET === */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -11,141 +7,119 @@
 
 html, body {
   height: 100%;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: radial-gradient(circle at top, #0f172a, #020617);
-  color: #e5e7eb;
+  background: radial-gradient(circle at top, #0b1530, #050914 70%);
+  color: #e8ecff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* ---------- Layout ---------- */
-
-main {
-  min-height: 100vh;
+/* === PAGE === */
+.page {
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 48px 20px 80px;
-  gap: 40px;
+  gap: 32px;
+  padding: 48px 16px 64px;
 }
 
-/* ---------- Headline ---------- */
-
+/* === HERO === */
 .hero {
   text-align: center;
 }
 
 .hero h1 {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
 }
 
 .hero p {
-  margin-top: 8px;
-  opacity: 0.7;
-}
-
-/* ---------- Diamond System ---------- */
-
-.diamond-stage {
-  position: relative;
-  width: 320px;
-  height: 320px;
-}
-
-/* Outer diamond */
-.outer-diamond {
-  position: absolute;
-  inset: 0;
-  transform: rotate(45deg);
-  border-radius: 24px;
-  background: linear-gradient(145deg, #1e293b, #020617);
-  box-shadow:
-    0 0 60px rgba(59,130,246,0.15),
-    inset 0 0 40px rgba(255,255,255,0.05);
-}
-
-/* Inner diamond */
-.inner-diamond {
-  position: absolute;
-  inset: 70px;
-  transform: rotate(45deg);
-  border-radius: 18px;
-  background: linear-gradient(145deg, #0f172a, #020617);
-  box-shadow: inset 0 0 20px rgba(255,255,255,0.06);
-}
-
-/* ---------- Buttons ---------- */
-
-.node {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: rgba(15,23,42,0.9);
-  border: 1px solid rgba(255,255,255,0.15);
-  font-size: 0.85rem;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.node:hover {
-  background: rgba(30,64,175,0.8);
-  border-color: rgba(147,197,253,0.8);
-}
-
-/* Outer nodes */
-.node.laws      { top: 0%;   left: 50%; }
-.node.products  { top: 50%;  left: 0%;  }
-.node.gauges    { top: 50%;  left: 100%;}
-.node.links     { top: 100%; left: 50%; }
-
-/* Inner nodes */
-.node.wisdom    { top: 28%;  left: 50%; }
-.node.knowledge { top: 50%;  left: 28%; }
-.node.theism    { top: 50%;  left: 72%; }
-.node.law       { top: 72%;  left: 50%; }
-
-/* ---------- Integrity Line ---------- */
-
-.integrity {
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
   opacity: 0.75;
+  margin-top: 8px;
 }
 
-/* ---------- Sayings ---------- */
+/* === DIAMOND === */
+.diamond-wrap {
+  position: relative;
+  width: 260px;
+  height: 260px;
+}
 
+.diamond {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  transform: rotate(45deg);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.diamond.outer {
+  width: 260px;
+  height: 260px;
+  background: rgba(120,140,255,0.08);
+  box-shadow: 0 0 40px rgba(120,140,255,0.15);
+}
+
+.diamond.inner {
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(6px);
+  font-weight: 600;
+}
+
+.diamond.inner.top    { top: -20px; left: 40px; }
+.diamond.inner.left   { left: -20px; top: 40px; }
+.diamond.inner.right  { right: -20px; top: 40px; }
+.diamond.inner.bottom { bottom: -20px; left: 40px; }
+
+.diamond.inner span,
+.diamond.inner {
+  transform: rotate(-45deg);
+}
+
+/* === PRINCIPLE === */
+.principle {
+  text-align: center;
+  opacity: 0.9;
+}
+
+.chain {
+  font-weight: 600;
+}
+
+.hint {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+/* === SAYINGS === */
 .sayings {
-  width: 100%;
-  max-width: 520px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+  width: 100%;
+  max-width: 420px;
 }
 
-.sayings-header {
-  text-align: center;
-  opacity: 0.7;
-  font-size: 0.85rem;
-}
-
-.saying {
+.sayings button {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #e8ecff;
   padding: 14px 18px;
   border-radius: 999px;
-  background: rgba(15,23,42,0.75);
-  border: 1px solid rgba(255,255,255,0.12);
-  text-align: center;
   font-size: 1rem;
+  cursor: pointer;
 }
 
-/* ---------- Footer ---------- */
+.sayings button:hover {
+  background: rgba(255,255,255,0.14);
+}
 
+/* === FOOTER === */
 footer {
-  position: fixed;
-  bottom: 16px;
-  width: 100%;
-  text-align: center;
-  font-size: 0.75rem;
+  margin-top: auto;
   opacity: 0.4;
+  font-size: 0.8rem;
 }

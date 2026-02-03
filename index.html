@@ -1,5 +1,6 @@
 <!-- FILE: /index.html  (TNT FULL REPLACEMENT)
-     PURPOSE: Align with wiring (data-drop + no extra features)
+     HOME DIAMOND (L0) — locked nodes:
+     CENTER (reset), TOP (sayings drop), RIGHT (products), BOTTOM (laws), LEFT (gauges), BR (links)
 -->
 <!doctype html>
 <html lang="en">
@@ -11,133 +12,158 @@
   <link rel="stylesheet" href="/assets/core.css"/>
   <link rel="stylesheet" href="/assets/ui.css"/>
   <script src="/assets/ui.js"></script>
+
+  <!-- Diamond-only layout (self-contained; does not touch global CSS) -->
+  <style>
+    .hdWrap{max-width:1100px;margin:0 auto;padding:24px}
+    .hdHeader{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+    .hdBrand{display:flex;align-items:center;gap:12px}
+    .hdLogo{width:44px;filter:drop-shadow(0 0 14px rgba(176,168,255,.25))}
+    .hdName{font-weight:800}
+    .hdNav{display:flex;gap:10px;flex-wrap:wrap}
+    .hdHero{padding:18px 22px;border-radius:28px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg, rgba(16,20,44,.68), rgba(20,28,64,.24));backdrop-filter:blur(14px);box-shadow:0 0 30px rgba(0,0,0,.30);margin-bottom:18px}
+    .hdHero h1{margin:0 0 6px;font-size:2.15rem}
+    .hdHero p{margin:0;color:var(--muted,#9aa3d9);line-height:1.6}
+
+    .diamondStage{position:relative;margin:16px auto 10px;max-width:520px;aspect-ratio:1/1}
+    .diamondGrid{
+      position:absolute;inset:0;
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      grid-template-rows:1fr 1fr 1fr;
+      align-items:center;justify-items:center;
+      gap:12px;
+    }
+    .dNode{
+      width:min(46vw, 220px);
+      max-width:220px;
+      padding:14px 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.08);
+      color:var(--ink,#eef1ff);
+      text-align:center;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+      cursor:pointer;
+    }
+    .dNode:hover{background:rgba(255,255,255,.12)}
+    .dNodeSmall{width:min(40vw, 180px);max-width:180px;font-size:.95rem;padding:12px 14px}
+    .dCenter{
+      width:min(56vw, 280px);
+      max-width:280px;
+      padding:16px 18px;
+      border-radius:999px;
+      border:1px solid rgba(143,220,194,.26);
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      box-shadow:0 0 24px rgba(143,220,194,.10);
+    }
+    .dKicker{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted,#9aa3d9);margin-bottom:6px}
+    .dTitle{display:block;font-size:1.2rem;font-weight:800}
+    .dSub{display:block;margin-top:4px;font-size:.95rem;color:var(--muted,#9aa3d9)}
+
+    /* Grid placement to form a diamond */
+    .posTop{grid-column:2;grid-row:1}
+    .posLeft{grid-column:1;grid-row:2}
+    .posCenter{grid-column:2;grid-row:2}
+    .posRight{grid-column:3;grid-row:2}
+    .posBottom{grid-column:2;grid-row:3}
+    .posBR{grid-column:3;grid-row:3;justify-self:end;align-self:end}
+
+    .hdFoot{margin:22px 0 10px;color:var(--muted,#9aa3d9);font-size:.85rem;text-align:center}
+  </style>
 </head>
 
 <body>
-<main class="wrap stars">
+<main class="hdWrap stars">
 
-<header class="top">
-  <div class="brand">
-    <img class="logo" src="/assets/logo.svg"/>
-    <div class="brandText">
-      <div class="brandName">Geodiametrics</div>
-      <div class="brandTag">Coherence · Admissibility · Execution</div>
+  <header class="hdHeader">
+    <div class="hdBrand">
+      <img class="hdLogo" src="/assets/logo.svg" alt="Geodiametrics"/>
+      <div class="hdName">Geodiametrics</div>
+    </div>
+    <nav class="hdNav">
+      <a class="pill" href="/products/">Products</a>
+      <a class="pill" href="/laws/">Laws</a>
+      <a class="pill" href="/gauges/">Gauges</a>
+      <a class="pill" href="/links/">Links</a>
+    </nav>
+  </header>
+
+  <section class="hdHero">
+    <h1>Be the first.</h1>
+    <p>Nothing is required until you click.</p>
+  </section>
+
+  <!-- HOME DIAMOND (L0) -->
+  <section class="diamondStage" aria-label="Home Diamond">
+    <div class="diamondGrid">
+      <!-- TOP: SAYINGS (opens drop) -->
+      <button class="dNode dNodeSmall posTop" data-drop="home_sayings">
+        <span class="dKicker">Top</span>
+        <span class="dTitle">Sayings</span>
+      </button>
+
+      <!-- LEFT: GAUGES -->
+      <a class="dNode dNodeSmall posLeft" href="/gauges/">
+        <span class="dKicker">Left</span>
+        <span class="dTitle">Gauges</span>
+      </a>
+
+      <!-- CENTER: IDENTITY / RESET -->
+      <button class="dNode dCenter posCenter" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <span class="dKicker">Center</span>
+        <span class="dTitle">Coherence · Admissibility · Execution</span>
+        <span class="dSub">Identity / Reset</span>
+      </button>
+
+      <!-- RIGHT: PRODUCTS -->
+      <a class="dNode dNodeSmall posRight" href="/products/">
+        <span class="dKicker">Right</span>
+        <span class="dTitle">Products</span>
+      </a>
+
+      <!-- BOTTOM: LAWS -->
+      <a class="dNode dNodeSmall posBottom" href="/laws/">
+        <span class="dKicker">Bottom</span>
+        <span class="dTitle">Laws</span>
+      </a>
+
+      <!-- BOTTOM-RIGHT: LINKS -->
+      <a class="dNode dNodeSmall posBR" href="/links/">
+        <span class="dKicker">Corner</span>
+        <span class="dTitle">Links</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- SAYINGS DROP (opens from TOP node) -->
+  <div id="home_sayings" class="drop">
+    <div class="card">
+      <div class="kicker">SAYINGS</div>
+
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="pill" data-drop="s_arnold">Arnold — Be the first</button>
+        <button class="pill" data-drop="s_bannister">Bannister — Boundary illusion</button>
+        <button class="pill" data-drop="s_wrights">Wright Brothers — Flight</button>
+        <button class="pill" data-drop="s_edison">Edison — Light</button>
+        <button class="pill" data-drop="s_tesla">Tesla — Structure</button>
+        <button class="pill" data-drop="s_einstein">Einstein — Simplicity</button>
+      </div>
+
+      <div id="s_arnold" class="drop"><p class="p">“I love it when people say it’s never been done before. Because when I do it, I’ll be the first.”</p></div>
+      <div id="s_bannister" class="drop"><p class="p">Doctors claimed the four-minute mile would kill you. Bannister broke it. Within a year, many followed. Boundaries collapse when proven false.</p></div>
+      <div id="s_wrights" class="drop"><p class="p">Experts focused on power. The Wrights focused on control. Mastery of constraints enabled flight.</p></div>
+      <div id="s_edison" class="drop"><p class="p">Failure wasn’t wasted effort. It was constraint discovery. The system converged.</p></div>
+      <div id="s_tesla" class="drop"><p class="p">Reality is frequency, resonance, and structure. Ignore coherence and systems destabilize.</p></div>
+      <div id="s_einstein" class="drop"><p class="p">Nature is simple. Confusion signals incomplete models.</p></div>
     </div>
   </div>
 
-  <nav class="nav">
-    <a class="pill" href="/home/">Enter</a>
-    <a class="pill" href="/products/">Products</a>
-    <a class="pill" href="/laws/">Laws</a>
-    <a class="pill" href="/gauges/">Gauges</a>
-    <a class="pill" href="/links/">Links</a>
-  </nav>
-</header>
-
-<section class="card">
-  <h1 class="h1">Be the first.</h1>
-  <p class="p">Nothing is required until you click.</p>
-</section>
-
-<!-- LANDING: SAYINGS (CLICK TO REVEAL) -->
-<section class="card">
-  <div class="kicker">SAYINGS</div>
-
-  <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-    <button class="pill" data-drop="q_arnold">Arnold — Be the first</button>
-    <button class="pill" data-drop="q_bannister">Bannister — Boundary illusion</button>
-    <button class="pill" data-drop="q_wrights">Wright Brothers — Flight</button>
-    <button class="pill" data-drop="q_edison">Edison — Light</button>
-    <button class="pill" data-drop="q_tesla">Tesla — Structure</button>
-    <button class="pill" data-drop="q_einstein">Einstein — Simplicity</button>
-  </div>
-
-  <div id="q_arnold" class="drop">
-    <div class="tile">
-      <div class="kicker">QUOTE</div>
-      <div class="tileTitle">Arnold Schwarzenegger</div>
-      <div class="tileBody">“I love it when people say it’s never been done before. Because when I do it, I’ll be the first.”</div>
-    </div>
-  </div>
-
-  <div id="q_bannister" class="drop">
-    <div class="tile">
-      <div class="kicker">STORY</div>
-      <div class="tileTitle">Roger Bannister</div>
-      <div class="tileBody">Doctors claimed the four-minute mile would kill you. Bannister broke it. Within a year, many followed. Boundaries collapse when proven false.</div>
-    </div>
-  </div>
-
-  <div id="q_wrights" class="drop">
-    <div class="tile">
-      <div class="kicker">STORY</div>
-      <div class="tileTitle">Wright Brothers</div>
-      <div class="tileBody">Experts focused on power. The Wrights focused on control. Mastery of constraints enabled flight.</div>
-    </div>
-  </div>
-
-  <div id="q_edison" class="drop">
-    <div class="tile">
-      <div class="kicker">QUOTE</div>
-      <div class="tileTitle">Thomas Edison</div>
-      <div class="tileBody">Failure wasn’t wasted effort. It was constraint discovery. The system converged.</div>
-    </div>
-  </div>
-
-  <div id="q_tesla" class="drop">
-    <div class="tile">
-      <div class="kicker">QUOTE</div>
-      <div class="tileTitle">Nikola Tesla</div>
-      <div class="tileBody">Reality is frequency, resonance, and structure. Ignore coherence and systems destabilize.</div>
-    </div>
-  </div>
-
-  <div id="q_einstein" class="drop">
-    <div class="tile">
-      <div class="kicker">QUOTE</div>
-      <div class="tileTitle">Albert Einstein</div>
-      <div class="tileBody">Nature is simple. Confusion signals incomplete models.</div>
-    </div>
-  </div>
-</section>
-
-<!-- NEXT: HUB -->
-<section class="card">
-  <div class="kicker">NEXT</div>
-  <div class="tileTitle">Inspect the system</div>
-  <p class="p">Choose what to open.</p>
-
-  <div class="grid">
-    <a class="tile primary" href="/products/">
-      <div class="kicker">PRODUCTS</div>
-      <div class="tileTitle">Trophy Case</div>
-      <div class="tileBody">Nested bubbles. Human/Scientific toggles inside.</div>
-    </a>
-
-    <a class="tile" href="/laws/">
-      <div class="kicker">LAWS</div>
-      <div class="tileTitle">Foundational</div>
-      <div class="tileBody">Tiered, nested, inspectable.</div>
-    </a>
-
-    <a class="tile" href="/gauges/">
-      <div class="kicker">GAUGES</div>
-      <div class="tileTitle">Live</div>
-      <div class="tileBody">Transparent snapshot.</div>
-    </a>
-
-    <a class="tile" href="/links/">
-      <div class="kicker">LINKS</div>
-      <div class="tileTitle">Verification</div>
-      <div class="tileBody">OSF · ORCID · Contact.</div>
-    </a>
-  </div>
-</section>
-
-<footer class="foot">
-  Canonical · Stable · © Geodiametrics
-</footer>
+  <div class="hdFoot">Canonical · Stable · © Geodiametrics</div>
 
 </main>
 </body>
 </html>
+```0

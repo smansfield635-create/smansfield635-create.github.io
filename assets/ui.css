@@ -1,45 +1,159 @@
-/* =========================
-   BRAND ASSETS (LOCKED)
-   ========================= */
+/* =========================================================
+   GEODIAMETRICS — GATE CSS (HARD RESET)
+   One gate. One geometry. No legacy.
+   ========================================================= */
 
-:root{
-  --brand-glow: rgba(120,170,255,.35);
+/* --- Reset --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* Favicon safety (nothing else should style it) */
-link[rel="icon"]{
-  all: unset;
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  background: radial-gradient(circle at top, #0b1530, #050914 70%);
+  color: #e8ecff;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-/* Logo wrapper */
-.brand-logo{
-  width:48px;
-  height:48px;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background: rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.14);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,.08),
-    0 12px 32px rgba(0,0,0,.45),
-    0 0 28px var(--brand-glow);
+/* --- Page scaffold --- */
+main {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 16px 60px;
+  gap: 28px;
 }
 
-/* Logo SVG itself */
-.brand-logo img,
-.brand-logo svg{
-  width:28px;
-  height:28px;
-  display:block;
-  opacity:.95;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,.45));
+/* --- Headline --- */
+.hero {
+  text-align: center;
+}
+.hero h1 {
+  font-size: 2.6rem;
+  font-weight: 700;
+}
+.hero p {
+  margin-top: 8px;
+  opacity: 0.7;
 }
 
-/* Prevent legacy logo rules from affecting it */
-.logo,
-.header-logo,
-.site-logo{
-  all: unset !important;
+/* =========================================================
+   GATE GEOMETRY
+   ========================================================= */
+
+.gate {
+  position: relative;
+  width: 340px;
+  height: 340px;
+}
+
+/* Outer diamond */
+.gate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: rotate(45deg);
+  border-radius: 26px;
+  background: linear-gradient(145deg, rgba(20,30,70,.55), rgba(8,12,28,.85));
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 0 70px rgba(120,150,255,.25);
+}
+
+/* Inner diamond */
+.inner {
+  position: absolute;
+  inset: 90px;
+  transform: rotate(45deg);
+  border-radius: 18px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.18);
+}
+
+/* =========================================================
+   BUTTONS (8 TOTAL)
+   ========================================================= */
+
+.node {
+  position: absolute;
+  min-width: 110px;
+  height: 42px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15,25,55,.85);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  color: #e8ecff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Outer ring */
+.node.laws     { top: -22px; left: 50%; transform: translateX(-50%); }
+.node.products { left: -22px; top: 50%; transform: translateY(-50%); }
+.node.gauges   { right: -22px; top: 50%; transform: translateY(-50%); }
+.node.links    { bottom: -22px; left: 50%; transform: translateX(-50%); }
+
+/* Inner integrity */
+.node.wisdom    { top: 38px; left: 50%; transform: translateX(-50%); }
+.node.knowledge { left: 38px; top: 50%; transform: translateY(-50%); }
+.node.theism    { right: 38px; top: 50%; transform: translateY(-50%); }
+.node.law       { bottom: 38px; left: 50%; transform: translateX(-50%); }
+
+/* =========================================================
+   INTEGRITY LINE
+   ========================================================= */
+
+.integrity {
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+/* =========================================================
+   CHINESE SAYINGS
+   ========================================================= */
+
+.sayings {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sayings .hint {
+  text-align: center;
+  opacity: 0.6;
+  font-size: 0.85rem;
+}
+
+.sayings button {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 999px;
+  padding: 14px 18px;
+  font-size: 1rem;
+  color: #e8ecff;
+  cursor: pointer;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer {
+  margin-top: auto;
+  opacity: 0.45;
+  font-size: 0.8rem;
+  text-align: center;
 }

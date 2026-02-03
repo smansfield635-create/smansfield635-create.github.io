@@ -1,432 +1,126 @@
-/* =========================================================================
-   GEODIAMETRICS — UI.CSS (TNT)
-   Single visual authority. No legacy routes. Cosmic dark + stars.
-   Works without ui.js/core.css.
-   ========================================================================= */
+/* =========================================================
+   GEODIAMETRICS — SINGLE INTEGRITY DIAMOND UI
+   TNT RESET — NO LEGACY RULES
+   ========================================================= */
 
-/* ---------- Reset ---------- */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-
-/* ---------- Theme tokens ---------- */
-:root{
-  --bg0:#060913;
-  --bg1:#081028;
-  --bg2:#0b1a3a;
-
-  --ink:#eaf0ff;
-  --muted:rgba(234,240,255,.72);
-
-  --card:rgba(12,18,40,.58);
-  --card2:rgba(12,18,40,.44);
-  --stroke:rgba(255,255,255,.10);
-  --stroke2:rgba(255,255,255,.16);
-
-  --glow:rgba(120,170,255,.25);
-  --glow2:rgba(105,255,210,.16);
-
-  --shadow:0 18px 50px rgba(0,0,0,.55);
-  --shadow2:0 10px 28px rgba(0,0,0,.45);
-
-  --r:24px;
-
-  --pillBg:rgba(255,255,255,.06);
-  --pillStroke:rgba(255,255,255,.14);
-
-  --accent:rgba(120,170,255,.95);
-  --accent2:rgba(105,255,210,.85);
-
-  --safe:rgba(90,210,150,.80);
-  --warn:rgba(245,210,90,.80);
-  --bad:rgba(245,95,95,.78);
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* ---------- Cosmic background + stars (twinkle) ---------- */
-body{
-  color:var(--ink);
-  background:
-    radial-gradient(1200px 900px at 20% 20%, rgba(160,110,255,.18), transparent 55%),
-    radial-gradient(900px 700px at 80% 25%, rgba(80,200,255,.14), transparent 60%),
-    radial-gradient(1000px 900px at 50% 90%, rgba(70,255,200,.10), transparent 60%),
-    radial-gradient(1100px 900px at 60% 55%, rgba(255,90,170,.08), transparent 65%),
-    linear-gradient(180deg, var(--bg0), var(--bg1) 45%, var(--bg2));
-  overflow-x:hidden;
+html, body {
+  height: 100%;
+  background: radial-gradient(ellipse at top, #0b1430, #05070f);
+  color: #e9edff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-body.stars::before,
-body.stars::after,
-.wrap.stars::before,
-.wrap.stars::after{
-  content:"";
-  position:fixed;
-  inset:-20%;
-  pointer-events:none;
-  opacity:.55;
-  mix-blend-mode:screen;
-  transform:translateZ(0);
+/* --------- HERO --------- */
+
+.hero {
+  text-align: center;
+  padding: 3rem 1rem 2rem;
 }
 
-body.stars::before{
-  background:
-    radial-gradient(1.1px 1.1px at 12% 18%, rgba(255,255,255,.55), transparent 60%),
-    radial-gradient(1px 1px at 28% 42%, rgba(255,255,255,.45), transparent 60%),
-    radial-gradient(1.2px 1.2px at 62% 28%, rgba(255,255,255,.55), transparent 60%),
-    radial-gradient(1px 1px at 78% 62%, rgba(255,255,255,.40), transparent 60%),
-    radial-gradient(1.3px 1.3px at 88% 22%, rgba(255,255,255,.55), transparent 60%),
-    radial-gradient(1px 1px at 10% 74%, rgba(255,255,255,.35), transparent 60%),
-    radial-gradient(1.2px 1.2px at 46% 82%, rgba(255,255,255,.45), transparent 60%);
-  filter:drop-shadow(0 0 10px rgba(120,170,255,.18));
-  animation:tw1 6s ease-in-out infinite;
+.hero h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
 }
 
-body.stars::after{
-  opacity:.35;
-  background:
-    radial-gradient(1.6px 1.6px at 18% 32%, rgba(180,220,255,.55), transparent 60%),
-    radial-gradient(1.4px 1.4px at 44% 16%, rgba(255,220,250,.42), transparent 60%),
-    radial-gradient(1.8px 1.8px at 68% 44%, rgba(210,255,240,.45), transparent 60%),
-    radial-gradient(1.4px 1.4px at 84% 76%, rgba(255,255,255,.40), transparent 60%),
-    radial-gradient(1.6px 1.6px at 34% 70%, rgba(255,255,255,.35), transparent 60%);
-  filter:drop-shadow(0 0 14px rgba(105,255,210,.10));
-  animation:tw2 8s ease-in-out infinite;
+.hero p {
+  opacity: 0.75;
+  margin-top: 0.5rem;
 }
 
-@keyframes tw1{0%,100%{opacity:.45;transform:scale(1)}50%{opacity:.72;transform:scale(1.02)}}
-@keyframes tw2{0%,100%{opacity:.28;transform:scale(1)}50%{opacity:.50;transform:scale(1.03)}}
+/* --------- DIAMOND CONTAINER --------- */
 
-/* ---------- Layout ---------- */
-.wrap{
-  width:min(980px,92vw);
-  margin:0 auto;
-  padding:18px 0 70px;
-  position:relative;
+.diamond-stage {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  margin: 3rem auto;
 }
 
-.topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  margin:10px 0 12px;
+/* --------- DIAMOND BASE --------- */
+
+.diamond {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  background: rgba(80, 110, 255, 0.12);
+  border-radius: 20px;
+  transform: rotate(45deg);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  min-width:0;
+/* --------- INNER LABEL --------- */
+
+.diamond span {
+  transform: rotate(-45deg);
+  font-weight: 600;
+  text-align: center;
 }
 
-.brand img.logo{
-  width:38px;height:38px;border-radius:12px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 10px 24px rgba(0,0,0,.45);
-  background:rgba(255,255,255,.03);
+/* --------- POSITIONS --------- */
+
+.diamond.top    { top: 0; left: 70px; }
+.diamond.left   { left: 0; top: 70px; }
+.diamond.right  { right: 0; top: 70px; }
+.diamond.bottom { bottom: 0; left: 70px; }
+
+/* --------- CENTER NODE (NOT A DIAMOND) --------- */
+
+.center-dot {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background: #e9edff;
+  border-radius: 50%;
+  top: 149px;
+  left: 149px;
+  opacity: 0.85;
 }
 
-.brandText{min-width:0}
-.brandName{font-weight:800;letter-spacing:.2px;line-height:1.1}
-.brandTag{font-size:12px;color:var(--muted);margin-top:3px}
+/* --------- INTEGRITY FLOW --------- */
 
-/* ---------- Nav pills ---------- */
-.nav{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  justify-content:flex-end;
+.flow {
+  text-align: center;
+  margin: 2rem 0 1rem;
+  font-weight: 500;
+  opacity: 0.9;
 }
 
-.nav a, .pill{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:10px 16px;
-  border-radius:999px;
-  text-decoration:none;
-  color:var(--ink);
-  background:var(--pillBg);
-  border:1px solid var(--pillStroke);
-  box-shadow:0 10px 22px rgba(0,0,0,.35);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  font-weight:650;
+/* --------- CHINESE PHRASES --------- */
+
+.phrases {
+  max-width: 360px;
+  margin: 0 auto 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.nav a:active{transform:translateY(1px)}
-.nav a:hover{border-color:rgba(255,255,255,.22)}
-
-.nav a.active{
-  border-color:rgba(120,170,255,.45);
-  box-shadow:0 0 0 1px rgba(120,170,255,.25), 0 12px 30px rgba(0,0,0,.45);
+.phrase {
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  padding: 0.9rem 1.2rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  font-size: 1rem;
 }
 
-/* ---------- Cards ---------- */
-.card{
-  background:linear-gradient(180deg,var(--card),var(--card2));
-  border:1px solid var(--stroke);
-  border-radius:var(--r);
-  box-shadow:var(--shadow);
-  padding:18px 18px;
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  position:relative;
-  overflow:hidden;
+/* --------- FOOTER --------- */
+
+footer {
+  text-align: center;
+  opacity: 0.5;
+  padding-bottom: 1.5rem;
+  font-size: 0.85rem;
 }
-
-.card::before{
-  content:"";
-  position:absolute;inset:-1px;
-  background:
-    radial-gradient(700px 320px at 20% 10%, rgba(120,170,255,.12), transparent 55%),
-    radial-gradient(650px 340px at 80% 0%, rgba(105,255,210,.08), transparent 55%),
-    radial-gradient(900px 420px at 50% 110%, rgba(255,90,170,.06), transparent 60%);
-  pointer-events:none;
-}
-
-.card h1,.card h2,.card h3{margin:0 0 8px;position:relative}
-.card p{margin:0;color:var(--muted);position:relative;line-height:1.45}
-
-.hero{
-  margin:14px 0 14px;
-  padding:22px 20px;
-}
-
-.hero .title{
-  font-size:44px;
-  letter-spacing:-.8px;
-  font-weight:900;
-  line-height:1.05;
-  margin:0 0 10px;
-}
-
-.hero .sub{
-  font-size:16px;
-  color:var(--muted);
-  margin:0;
-}
-
-/* ---------- Diamond stage (outer diamond + 4 inner diamonds) ---------- */
-.stage{
-  margin:16px 0 16px;
-  padding:18px;
-}
-
-.stageTitle{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:12px;
-}
-
-.stageTitle .kicker{
-  color:rgba(160,200,255,.85);
-  font-weight:800;
-  letter-spacing:.22em;
-  font-size:12px;
-}
-
-.stageTitle .hint{
-  color:rgba(234,240,255,.55);
-  font-size:12px;
-  font-weight:650;
-}
-
-.diamondHub{
-  width:min(560px, 92vw);
-  aspect-ratio:1/1;
-  margin:0 auto;
-  position:relative;
-  display:grid;
-  place-items:center;
-}
-
-/* Outer diamond */
-.outerDiamond{
-  position:absolute;
-  width:100%;
-  height:100%;
-  transform:rotate(45deg);
-  border-radius:34px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(900px 600px at 30% 20%, rgba(120,170,255,.10), transparent 55%),
-    radial-gradient(900px 650px at 70% 70%, rgba(105,255,210,.08), transparent 58%),
-    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-  box-shadow:0 0 0 1px rgba(255,255,255,.06), 0 18px 60px rgba(0,0,0,.55);
-  filter:drop-shadow(0 0 28px rgba(120,170,255,.10));
-}
-
-/* Inner diamonds container */
-.inner{
-  position:absolute;
-  inset:16%;
-  transform:rotate(45deg);
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.10);
-  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-}
-
-/* Inner diamond buttons (rotate back text) */
-.dBtn{
-  position:absolute;
-  display:grid;
-  place-items:center;
-  text-decoration:none;
-  color:var(--ink);
-  font-weight:900;
-  letter-spacing:-.2px;
-  text-align:center;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.14);
-  background:linear-gradient(180deg, rgba(10,18,40,.62), rgba(10,18,40,.40));
-  box-shadow:var(--shadow2);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.dBtn span{
-  transform:rotate(-45deg);
-  display:block;
-  padding:0 10px;
-  line-height:1.05;
-}
-
-.dBtn:active{transform:translateY(1px)}
-.dBtn:hover{border-color:rgba(120,170,255,.28)}
-
-/* Placement inside inner container */
-.inner .dTop{top:6%;left:50%;transform:translateX(-50%);width:54%;height:18%}
-.inner .dLeft{left:6%;top:50%;transform:translateY(-50%);width:54%;height:18%}
-.inner .dRight{right:6%;top:50%;transform:translateY(-50%);width:54%;height:18%}
-.inner .dBottom{bottom:6%;left:50%;transform:translateX(-50%);width:54%;height:18%}
-
-/* Center dot (visual only, not a button) */
-.centerDot{
-  position:absolute;
-  width:26px;height:26px;
-  border-radius:999px;
-  background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.75), rgba(255,255,255,.12));
-  box-shadow:0 0 0 1px rgba(255,255,255,.10), 0 0 22px rgba(120,170,255,.22);
-  opacity:.6;
-  transform:rotate(45deg);
-}
-
-/* Outer edge navigation “tabs” (top/left/right/bottom) */
-.edgeNav{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-}
-
-.edgeNav a{
-  pointer-events:auto;
-  position:absolute;
-  width:30%;
-  height:14%;
-  display:grid;
-  place-items:center;
-  text-decoration:none;
-  color:rgba(234,240,255,.86);
-  font-weight:850;
-  letter-spacing:-.2px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  box-shadow:0 10px 26px rgba(0,0,0,.40);
-}
-
-.edgeNav a span{transform:none}
-.edgeNav a:active{transform:translateY(1px)}
-.edgeTop{top:4%;left:50%;transform:translateX(-50%)}
-.edgeLeft{left:2%;top:50%;transform:translateY(-50%) rotate(-90deg)}
-.edgeRight{right:2%;top:50%;transform:translateY(-50%) rotate(90deg)}
-.edgeBottom{bottom:4%;left:50%;transform:translateX(-50%)}
-
-/* ---------- Integrity strip ---------- */
-.strip{
-  margin-top:14px;
-  padding:14px 16px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:linear-gradient(180deg, rgba(10,18,40,.52), rgba(10,18,40,.30));
-  box-shadow:0 12px 34px rgba(0,0,0,.45);
-}
-
-.strip .chain{
-  font-weight:900;
-  letter-spacing:-.4px;
-  font-size:18px;
-  margin:0 0 6px;
-}
-
-.strip .micro{
-  margin:0;
-  color:rgba(234,240,255,.60);
-  font-weight:650;
-  font-size:12px;
-}
-
-/* ---------- Phrase bubbles (Chinese) ---------- */
-.phrases{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  margin-top:14px;
-}
-
-.phrase{
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(180deg, rgba(12,18,40,.52), rgba(12,18,40,.30));
-  box-shadow:0 12px 30px rgba(0,0,0,.40);
-  padding:14px 16px;
-  text-align:center;
-}
-
-.phrase .cn{
-  font-size:26px;
-  font-weight:900;
-  letter-spacing:.02em;
-  margin:0;
-}
-
-.phrase .tap{
-  margin:6px 0 0;
-  color:rgba(234,240,255,.55);
-  font-size:12px;
-  font-weight:650;
-}
-
-/* ---------- Utility ---------- */
-.m0{margin:0}
-.mt12{margin-top:12px}
-.mt16{margin-top:16px}
-.mt20{margin-top:20px}
-.hidden{display:none}
-
-/* ---------- Footer ---------- */
-.foot{
-  margin-top:18px;
-  color:rgba(234,240,255,.55);
-  text-align:center;
-  font-size:12px;
-  font-weight:650;
-}
-
-/* ---------- Responsive tweaks ---------- */
-@media (max-width:480px){
-  .hero .title{font-size:38px}
-  .diamondHub{width:min(520px, 92vw)}
-  .phrase .cn{font-size:24px}
-}
-
-@media (max-width:390px){
-  .hero .title{font-size:34px}
-  .phrase .cn{font-size:22px}
-}
-```0

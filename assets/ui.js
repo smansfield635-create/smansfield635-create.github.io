@@ -1,82 +1,49 @@
-(function(){
-  if(window.__GEO_UI__) return; window.__GEO_UI__=1;
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.remove("preload");
+  document.querySelector("#app").classList.remove("hidden");
 
-  function $all(sel,root){ return Array.from((root||document).querySelectorAll(sel)); }
+  const panel = document.getElementById("panel");
 
-  function setRoom(){
-    var p=(location.pathname||"/").toLowerCase();
-    var room="sayings";
-    if(p.startsWith("/laws")) room="laws";
-    else if(p.startsWith("/products")) room="products";
-    else if(p.startsWith("/gauges")) room="gauges";
-    else if(p.startsWith("/links")) room="links";
-    else if(p.startsWith("/uca")) room="uca";
-    else if(p.startsWith("/m256")) room="m256";
-    else if(p.startsWith("/eai")) room="eai";
-    document.body.setAttribute("data-room",room);
-  }
-
-  function toggleDrop(id){
-    if(!id) return;
-    var el=document.getElementById(id);
-    if(!el) return;
-    el.classList.add("drop");
-    el.classList.toggle("open");
-  }
-
-  function setToggle(groupId,mode){
-    if(!groupId||!mode) return;
-    var buttons=$all('[data-toggle="'+groupId+'"]');
-    var panes=$all('[data-pane="'+groupId+'"]');
-
-    buttons.forEach(function(b){
-      var on=(b.getAttribute("data-mode")||"")===mode;
-      b.classList.toggle("active",on);
-      b.setAttribute("aria-pressed",on?"true":"false");
+  document.querySelectorAll(".diamond.clickable").forEach(d => {
+    d.addEventListener("click", () => {
+      const key = d.dataset.open;
+      panel.innerHTML = renderPanel(key);
+      panel.classList.remove("hidden");
+      panel.scrollIntoView({behavior:"smooth",block:"start"});
     });
+  });
+});
 
-    panes.forEach(function(p){
-      var on=(p.getAttribute("data-mode")||"")===mode;
-      p.classList.toggle("show",on);
-      p.style.display=on?"block":"none";
-    });
-
-    try{ sessionStorage.setItem("GEO_TOGGLE_"+groupId,mode); }catch(e){}
-  }
-
-  function initToggleDefaults(){
-    $all("[data-toggle-group]").forEach(function(g){
-      var gid=g.getAttribute("data-toggle-group");
-      if(!gid) return;
-      var saved=null; try{ saved=sessionStorage.getItem("GEO_TOGGLE_"+gid); }catch(e){}
-      setToggle(gid,saved||"human");
-    });
-  }
-
-  function onClick(e){
-    var t=e.target;
-
-    var drop=t.closest && t.closest("[data-drop]");
-    if(drop){
-      toggleDrop(drop.getAttribute("data-drop"));
-      return;
-    }
-
-    var tog=t.closest && t.closest("[data-toggle]");
-    if(tog){
-      setToggle(tog.getAttribute("data-toggle"), tog.getAttribute("data-mode")||"human");
-      return;
-    }
-  }
-
-  function boot(){
-    setRoom();
-    document.addEventListener("click",onClick,true);
-    initToggleDefaults();
-    setTimeout(initToggleDefaults,50);
-    setTimeout(initToggleDefaults,250);
-  }
-
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",boot);
-  else boot();
-})();
+function renderPanel(key) {
+  const map = {
+    foundational: `
+      <h2>Foundational</h2>
+      <p>Core coherence anchors. No shortcuts.</p>
+    `,
+    philosophy: `
+      <h2>Philosophy</h2>
+      <p>Reasoning that collapses confusion.</p>
+    `,
+    breakthroughs: `
+      <h2>Breakthroughs</h2>
+      <p>History confirms coherence.</p>
+    `,
+    greatest: `
+      <h2>Greatest</h2>
+      <ul>
+        <li>Arnold — Be the first</li>
+        <li>Bannister — Boundary illusion</li>
+        <li>Wright Brothers — Flight</li>
+        <li>Edison — Light</li>
+        <li>Tesla — Structure</li>
+        <li>Einstein — Simplicity</li>
+      </ul>
+    `,
+    laws: `
+      <h2>Laws</h2>
+      <p>Decompressed into inspectable diamonds.</p>
+      <a href="/laws/">Open Laws</a>
+    `
+  };
+  return map[key] || "";
+}

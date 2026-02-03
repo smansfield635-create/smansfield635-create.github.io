@@ -1,20 +1,43 @@
-/* === BUBBLE CARDS === */
-.tile {
-  border-radius: 28px;
-  background: radial-gradient(circle at top left,
-    rgba(255,255,255,0.15),
-    rgba(255,255,255,0.05) 60%,
-    rgba(0,0,0,0.2));
-  backdrop-filter: blur(14px);
-  box-shadow:
-    0 0 40px rgba(0,255,255,0.08),
-    inset 0 0 20px rgba(255,255,255,0.06);
-  transition: transform .35s ease, box-shadow .35s ease;
+/* ======================================
+   GEODIAMETRICS CORE — DARK CANONICAL v3
+   Fixes: white washout, low contrast
+====================================== */
+
+:root{
+  --bg0:#03040a;
+  --bg1:#0a0f22;
+
+  --text:#f2f4ff;
+  --muted:#b4bce6;
+
+  --card:rgba(18,24,48,.74);
+  --stroke:rgba(255,255,255,.14);
+
+  --glow1:rgba(120,180,255,.18);
+  --glow2:rgba(120,180,255,.36);
+
+  --radius:26px;
 }
 
-.tile:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow:
-    0 0 60px rgba(0,255,255,0.18),
-    inset 0 0 24px rgba(255,255,255,0.12);
+*{box-sizing:border-box}
+html,body{height:100%}
+
+body{
+  margin:0;
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:
+    radial-gradient(900px 700px at 20% 25%, rgba(80,120,255,.16), transparent 55%),
+    radial-gradient(800px 650px at 80% 20%, rgba(180,80,255,.12), transparent 55%),
+    radial-gradient(900px 700px at 50% 85%, rgba(80,255,200,.08), transparent 60%),
+    linear-gradient(180deg,var(--bg0),var(--bg1));
+  overflow-x:hidden;
 }
+
+/* Kill default link look */
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+a:hover{text-decoration:none}
+
+/* Keep images from blowing out layout */
+img{max-width:100%;display:block}

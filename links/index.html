@@ -1,11 +1,14 @@
-<!-- FILE: /links/index.html  (TNT FULL REPLACEMENT) -->
+<!-- FILE: /links/index.html  (TNT FULL REPLACEMENT)
+     LINKS = VERIFICATION DIAMOND
+     - Expand outward, never replace
+     - Keeps links out of the primary landing attention
+-->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Links & Contact · Geodiametrics</title>
-
+  <title>Links · Geodiametrics</title>
   <link rel="icon" href="/assets/favicon.svg"/>
   <link rel="stylesheet" href="/assets/core.css"/>
   <link rel="stylesheet" href="/assets/ui.css"/>
@@ -17,89 +20,100 @@
 
 <header class="top">
   <div class="brand">
-    <img class="logo" src="/assets/logo.svg"/>
-    <div class="brandText">
-      <div class="brandName">Links & Contact</div>
-      <div class="brandTag">Verification · Attribution · Reach</div>
-    </div>
+    <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
+    <div class="brandName">Links</div>
   </div>
-
   <nav class="nav">
-    <a class="pill" href="/">Home</a>
-    <a class="pill ghost" href="/home/">Enter</a>
-    <a class="pill ghost" href="/laws/">Laws</a>
-    <a class="pill ghost" href="/products/">Products</a>
+    <a class="pill" href="/">Sayings</a>
+    <a class="pill" href="/home/">Enter</a>
+    <a class="pill" href="/products/">Products</a>
+    <a class="pill" href="/laws/">Laws</a>
+    <a class="pill" href="/gauges/">Gauges</a>
   </nav>
 </header>
 
 <section class="card">
-  <div class="kicker">RESEARCH & VERIFICATION</div>
-  <h1 class="h1">Inspectable sources</h1>
-  <p class="p">Click to reveal. Nothing is shown until you choose.</p>
+  <h1 class="h1">Verification & Contact</h1>
+  <p class="p">External anchors. Independent inspection.</p>
+</section>
 
-  <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-    <button class="pill" data-drop="osf">OSF</button>
-    <button class="pill" data-drop="orcid">ORCID</button>
-    <button class="pill" data-drop="site">Website</button>
-  </div>
+<!-- LINKS DIAMOND -->
+<section class="diamondStage" aria-label="Links Diamond">
+  <div class="diamondGrid">
 
-  <div id="osf" class="drop">
-    <div class="tile">
-      <div class="tileTop cyan">OSF</div>
-      <div class="tileTitle">Open Science Framework</div>
-      <div class="tileBody">
-        <a class="pill ghost" href="https://osf.io/" target="_blank" rel="noopener">Open OSF</a>
-      </div>
+    <!-- TOP: OSF -->
+    <button class="dNode dNodeSmall posTop" data-drop="lnk_osf">
+      <span class="dKicker">Top</span><span class="dTitle">OSF</span><span class="dSub">Open Science</span>
+    </button>
+
+    <!-- LEFT: ORCID -->
+    <button class="dNode dNodeSmall posLeft" data-drop="lnk_orcid">
+      <span class="dKicker">Left</span><span class="dTitle">ORCID</span><span class="dSub">Author ID</span>
+    </button>
+
+    <!-- CENTER -->
+    <div class="dNode dCenter posCenter">
+      <span class="dKicker">Center</span><span class="dTitle">Verification</span><span class="dSub">Independent anchors</span>
     </div>
-  </div>
 
-  <div id="orcid" class="drop">
-    <div class="tile">
-      <div class="tileTop cyan">ORCID</div>
-      <div class="tileTitle">ORCID iD</div>
-      <div class="tileBody">
-        <a class="pill ghost" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">Open ORCID</a>
-      </div>
-    </div>
-  </div>
+    <!-- RIGHT: SITE -->
+    <button class="dNode dNodeSmall posRight" data-drop="lnk_site">
+      <span class="dKicker">Right</span><span class="dTitle">Website</span><span class="dSub">Canonical</span>
+    </button>
 
-  <div id="site" class="drop">
-    <div class="tile">
-      <div class="tileTop cyan">SITE</div>
-      <div class="tileTitle">Geodiametrics</div>
-      <div class="tileBody">
-        <a class="pill ghost" href="https://smansfield635-create.github.io/" target="_blank" rel="noopener">Open Website</a>
-      </div>
-    </div>
+    <!-- BOTTOM: CONTACT -->
+    <button class="dNode dNodeSmall posBottom" data-drop="lnk_contact">
+      <span class="dKicker">Bottom</span><span class="dTitle">Contact</span><span class="dSub">Direct</span>
+    </button>
+
   </div>
 </section>
 
-<section class="card">
-  <div class="kicker">CONTACT</div>
-  <h1 class="h1">Reach</h1>
-  <p class="p">For collaboration, licensing, or inspection requests, use the contact bubble.</p>
+<!-- EXPAND OUTWARD -->
+<section class="childWrap">
 
-  <div style="margin-top:14px">
-    <button class="pill" data-drop="contact">Contact</button>
-  </div>
-
-  <div id="contact" class="drop">
-    <div class="tile">
-      <div class="tileTop green">EMAIL</div>
-      <div class="tileTitle">geodiametrics@gmail.com</div>
-      <div class="tileBody">
-        <a class="pill ghost" href="mailto:geodiametrics@gmail.com">Open email</a>
-      </div>
+  <div id="lnk_osf" class="drop">
+    <div class="childCard">
+      <div class="kicker">OSF</div>
+      <p class="p">Open Science Framework project space.</p>
+      <a class="pill" href="https://osf.io/" target="_blank" rel="noopener">Open OSF</a>
     </div>
   </div>
+
+  <div id="lnk_orcid" class="drop">
+    <div class="childCard">
+      <div class="kicker">ORCID</div>
+      <p class="p">Persistent researcher identifier.</p>
+      <a class="pill" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">
+        0009-0004-1293-0405
+      </a>
+    </div>
+  </div>
+
+  <div id="lnk_site" class="drop">
+    <div class="childCard">
+      <div class="kicker">WEBSITE</div>
+      <p class="p">Canonical deployment.</p>
+      <a class="pill" href="https://smansfield635-create.github.io/" target="_blank" rel="noopener">
+        smansfield635-create.github.io
+      </a>
+    </div>
+  </div>
+
+  <div id="lnk_contact" class="drop">
+    <div class="childCard">
+      <div class="kicker">CONTACT</div>
+      <p class="p">Direct communication.</p>
+      <a class="pill" href="mailto:geodiametrics@gmail.com">geodiametrics@gmail.com</a>
+    </div>
+  </div>
+
 </section>
 
 <footer class="foot">
-  <div>Links · Canonical</div>
-  <div>© Geodiametrics</div>
+  Links · Diamond Verification · © Geodiametrics
 </footer>
 
 </main>
 </body>
 </html>
-```0

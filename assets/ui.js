@@ -1,9 +1,6 @@
-(function(){
-  window.GEO = window.GEO || {};
-  GEO.ui = {
-    ready(fn){
-      if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn);
-      else fn();
-    }
-  };
-})();
+document.querySelectorAll("[data-expand]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const target = document.getElementById(btn.dataset.expand);
+    target.classList.toggle("open");
+  });
+});

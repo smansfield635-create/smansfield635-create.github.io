@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Operational View</title>
+
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/>
+  <link rel="stylesheet" href="/assets/core.css"/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <header class="top">
+      <div class="brand">
+        <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
+        <div class="brandText">
+          <div class="brandName">Operational View</div>
+          <div class="brandTag">Projection · Read-Only</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="pill" href="/">Index</a>
+        <a class="pill ghost" href="/gauges/">Live Gauges</a>
+        <a class="pill ghost" href="/gauge-registry/">Registry</a>
+        <a class="pill ghost" href="/uca/">UCAQ</a>
+        <a class="pill ghost" href="/m256/">M256</a>
+        <a class="pill ghost" href="/eai/">EAI</a>
+      </nav>
+    </header>
+
+    <section class="card">
+      <div class="kicker">VIEW</div>
+      <h1 class="h1">Operational Projection</h1>
+      <p class="p">
+        This view projects canonical gauges into operational readiness signals.
+        It does not prescribe actions or override executive closure.
+      </p>
+
+      <div class="hr"></div>
+
+      <ul class="list">
+        <li>Coherence → Alignment Readiness</li>
+        <li>Admissibility → Go / No-Go State</li>
+        <li>Stability → Sustain / Risk Flag</li>
+        <li>Trajectory → Momentum Direction</li>
+        <li>Closure → Decision Finality</li>
+      </ul>
+
+      <div class="hr"></div>
+
+      <div class="notice">
+        <div class="noticeTitle">Rule</div>
+        <div class="noticeBody">
+          This view surfaces operational signals only. All decisions remain with EAI.
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <div class="muted">Operational View · Projection Only</div>
+      <div class="muted">Canonical</div>
+    </footer>
+
+  </main>
+</body>
+</html>

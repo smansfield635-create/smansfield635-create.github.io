@@ -1,273 +1,113 @@
-<!-- FILE: /index.html  (TNT FULL REPLACEMENT)
-     LANDING = SAYINGS ONLY
-     DIAMOND GEOMETRY + EXPAND OUTWARD (no replace)
-     Uses existing wiring: data-drop + .drop.open
--->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodiametrics · Sayings</title>
+  <title>Geodiametrics</title>
   <link rel="icon" href="/assets/favicon.svg"/>
   <link rel="stylesheet" href="/assets/core.css"/>
   <link rel="stylesheet" href="/assets/ui.css"/>
-  <script src="/assets/ui.js"></script>
-
-  <style>
-    /* Landing Diamond Scaffold (self-contained) */
-    .LD{max-width:1100px;margin:0 auto;padding:24px}
-    .LDTop{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
-    .LDBrand{display:flex;align-items:center;gap:12px}
-    .LDLogo{width:44px;filter:drop-shadow(0 0 14px rgba(176,168,255,.25))}
-    .LDName{font-weight:800}
-
-    /* Primary diamond ring */
-    .DStage{position:relative;margin:10px auto 18px;max-width:640px;aspect-ratio:1/1}
-    .DGrid{
-      position:absolute;inset:0;
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      grid-template-rows:1fr 1fr 1fr;
-      align-items:center;justify-items:center;
-      gap:12px;
-    }
-
-    .DNode{
-      width:min(52vw, 260px);
-      max-width:260px;
-      padding:14px 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.08);
-      color:var(--ink,#eef1ff);
-      text-align:center;
-      user-select:none;
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
-      cursor:pointer;
-    }
-    .DNode:hover{background:rgba(255,255,255,.12)}
-    .DNodeSmall{width:min(44vw, 220px);max-width:220px;font-size:.95rem;padding:12px 14px}
-
-    .DCenter{
-      width:min(62vw, 320px);
-      max-width:320px;
-      padding:16px 18px;
-      border:1px solid rgba(143,220,194,.26);
-      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-      box-shadow:0 0 24px rgba(143,220,194,.10);
-    }
-
-    .DK{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted,#9aa3d9);margin-bottom:6px}
-    .DT{display:block;font-size:1.15rem;font-weight:900}
-    .DS{display:block;margin-top:4px;font-size:.95rem;color:var(--muted,#9aa3d9)}
-
-    .posTop{grid-column:2;grid-row:1}
-    .posLeft{grid-column:1;grid-row:2}
-    .posCenter{grid-column:2;grid-row:2}
-    .posRight{grid-column:3;grid-row:2}
-    .posBottom{grid-column:2;grid-row:3}
-    .posBR{grid-column:3;grid-row:3;justify-self:end;align-self:end}
-
-    /* Expand-outward child diamonds */
-    .ChildWrap{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:18px;
-      margin-top:18px;
-    }
-    @media (max-width:900px){.ChildWrap{grid-template-columns:1fr}}
-
-    .ChildCard{
-      border-radius:28px;
-      border:1px solid rgba(255,255,255,.14);
-      background:linear-gradient(180deg, rgba(16,20,44,.68), rgba(20,28,64,.24));
-      backdrop-filter:blur(14px);
-      box-shadow:0 0 30px rgba(0,0,0,.30);
-      padding:18px;
-    }
-
-    .MiniStage{position:relative;margin:8px auto 0;max-width:520px;aspect-ratio:1/1}
-    .MiniGrid{
-      position:absolute;inset:0;
-      display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr 1fr;
-      align-items:center;justify-items:center;gap:10px;
-    }
-    .MiniNode{width:min(46vw, 220px);max-width:220px;padding:12px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);text-align:center;cursor:pointer}
-    .MiniNode:hover{background:rgba(255,255,255,.12)}
-    .MiniNodeSmall{width:min(40vw, 180px);max-width:180px;font-size:.92rem}
-    .MiniCenter{width:min(54vw, 260px);max-width:260px;padding:14px 16px;border:1px solid rgba(143,220,194,.18);background:rgba(255,255,255,.06)}
-    .Footer{margin:22px 0 10px;color:var(--muted,#9aa3d9);font-size:.85rem;text-align:center}
-  </style>
+  <script defer src="/assets/ui.js"></script>
 </head>
-
 <body>
-<main class="LD stars">
+<main class="wrap">
 
-  <header class="LDTop">
-    <div class="LDBrand">
-      <img class="LDLogo" src="/assets/logo.svg" alt="Geodiametrics"/>
-      <div class="LDName">Sayings</div>
+<header class="top">
+  <div class="brand">
+    <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
+    <div class="brandName">Geodiametrics</div>
+  </div>
+  <nav class="nav">
+    <a class="pill" href="/products/">Products</a>
+    <a class="pill" href="/laws/">Laws</a>
+    <a class="pill" href="/gauges/">Gauges</a>
+    <a class="pill" href="/links/">Links</a>
+  </nav>
+</header>
+
+<section class="card">
+  <div class="kicker">LANDING</div>
+  <h1 class="h1">Be the first.</h1>
+  <p class="p">Nothing is required until you click.</p>
+</section>
+
+<section class="diamondStage" aria-label="Sayings Meta Diamond">
+  <div class="diamondGrid">
+
+    <button class="dNode dNodeSmall posTop" data-drop="S_foundational">
+      <span class="dKicker">Top</span><span class="dTitle">Foundational</span><span class="dSub">Core coherence</span>
+    </button>
+
+    <button class="dNode dNodeSmall posLeft" data-drop="S_philosophy">
+      <span class="dKicker">Left</span><span class="dTitle">Philosophy</span><span class="dSub">Reasoning</span>
+    </button>
+
+    <div class="dNode dCenter posCenter">
+      <span class="dKicker">Center</span><span class="dTitle">Russian Doll Sayings</span><span class="dSub">Expand outward</span>
     </div>
-    <nav class="nav">
-      <a class="pill" href="/home/">Enter</a>
-      <a class="pill" href="/products/">Products</a>
-      <a class="pill" href="/laws/">Laws</a>
-      <a class="pill" href="/gauges/">Gauges</a>
-      <a class="pill" href="/links/">Links</a>
-    </nav>
-  </header>
 
-  <!-- PRIMARY DIAMOND (Categories) -->
-  <section class="DStage" aria-label="Sayings Diamond">
-    <div class="DGrid">
+    <button class="dNode dNodeSmall posRight" data-drop="S_breakthroughs">
+      <span class="dKicker">Right</span><span class="dTitle">Breakthroughs</span><span class="dSub">History</span>
+    </button>
 
-      <button class="DNode DNodeSmall posTop" data-drop="cat_foundational">
-        <span class="DK">Top</span><span class="DT">Foundational</span><span class="DS">Core coherence</span>
-      </button>
+    <button class="dNode dNodeSmall posBottom" data-drop="S_greatest">
+      <span class="dKicker">Bottom</span><span class="dTitle">Greatest</span><span class="dSub">All-time</span>
+    </button>
 
-      <button class="DNode DNodeSmall posLeft" data-drop="cat_philosophy">
-        <span class="DK">Left</span><span class="DT">Philosophy</span><span class="DS">Reasoning</span>
-      </button>
+    <a class="dNode dNodeSmall posBR" href="/laws/">
+      <span class="dKicker">Corner</span><span class="dTitle">→ Laws</span><span class="dSub">Decompressed</span>
+    </a>
 
-      <button class="DNode DCenter posCenter" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-        <span class="DK">Center</span><span class="DT">Russian Doll Sayings</span><span class="DS">Expand outward</span>
-      </button>
+  </div>
+</section>
 
-      <button class="DNode DNodeSmall posRight" data-drop="cat_breakthroughs">
-        <span class="DK">Right</span><span class="DT">Breakthroughs</span><span class="DS">History</span>
-      </button>
+<section class="childWrap">
 
-      <button class="DNode DNodeSmall posBottom" data-drop="cat_greatest">
-        <span class="DK">Bottom</span><span class="DT">Greatest</span><span class="DS">All-time</span>
-      </button>
-
-      <button class="DNode DNodeSmall posBR" data-drop="cat_lawderived">
-        <span class="DK">Corner</span><span class="DT">→ Laws</span><span class="DS">Decompressed</span>
-      </button>
-
-    </div>
-  </section>
-
-  <!-- EXPAND OUTWARD: each category opens its own child diamond (no replace) -->
-  <section class="ChildWrap">
-
-    <!-- FOUNDATIONAL -->
-    <div id="cat_foundational" class="drop">
-      <div class="ChildCard">
-        <div class="kicker">FOUNDATIONAL</div>
-        <div class="tileTitle">Compressed coherence</div>
-        <div class="MiniStage">
-          <div class="MiniGrid">
-            <button class="MiniNode MiniNodeSmall posTop" data-drop="f_1"><span class="DK">Top</span><span class="DT">Reality</span></button>
-            <button class="MiniNode MiniNodeSmall posLeft" data-drop="f_2"><span class="DK">Left</span><span class="DT">Truth</span></button>
-            <button class="MiniNode MiniCenter posCenter" data-drop="f_center"><span class="DK">Center</span><span class="DT">Core</span></button>
-            <button class="MiniNode MiniNodeSmall posRight" data-drop="f_3"><span class="DK">Right</span><span class="DT">Trust</span></button>
-            <button class="MiniNode MiniNodeSmall posBottom" data-drop="f_4"><span class="DK">Bottom</span><span class="DT">Constraint</span></button>
-          </div>
-        </div>
-
-        <div id="f_center" class="drop"><p class="p">Foundational sayings are invariant compressions that survive time, culture, and scale.</p></div>
-        <div id="f_1" class="drop"><p class="p">Reality cannot be faked.</p></div>
-        <div id="f_2" class="drop"><p class="p">Truth precedes perception.</p></div>
-        <div id="f_3" class="drop"><p class="p">Trust begins internally.</p></div>
-        <div id="f_4" class="drop"><p class="p">Constraints define admissibility.</p></div>
+  <div id="S_foundational" class="drop">
+    <div class="childCard">
+      <div class="kicker">FOUNDATIONAL</div>
+      <div class="toggleRow" data-toggle-group="sf">
+        <button class="toggleBtn" data-toggle="sf" data-mode="human">Human</button>
+        <button class="toggleBtn" data-toggle="sf" data-mode="scientific">Scientific</button>
+      </div>
+      <div class="pane show" data-pane="sf" data-mode="human"><p class="p">Start with meaning. Let reality do the persuading.</p></div>
+      <div class="pane" data-pane="sf" data-mode="scientific"><p class="p">Start with invariants. Let constraints close interpretation.</p></div>
+      <button class="pill" data-drop="sf_list">Open list</button>
+      <div id="sf_list" class="drop">
+        <p class="p">Arnold — Be the first</p>
+        <p class="p">Bannister — Boundary illusion</p>
+        <p class="p">Reality wins</p>
       </div>
     </div>
+  </div>
 
-    <!-- BREAKTHROUGHS -->
-    <div id="cat_breakthroughs" class="drop">
-      <div class="ChildCard">
-        <div class="kicker">BREAKTHROUGHS</div>
-        <div class="tileTitle">Boundary illusions collapse</div>
-        <div class="MiniStage">
-          <div class="MiniGrid">
-            <button class="MiniNode MiniNodeSmall posTop" data-drop="b_1"><span class="DK">Top</span><span class="DT">Bannister</span></button>
-            <button class="MiniNode MiniNodeSmall posLeft" data-drop="b_2"><span class="DK">Left</span><span class="DT">Wrights</span></button>
-            <button class="MiniNode MiniCenter posCenter" data-drop="b_center"><span class="DK">Center</span><span class="DT">Pattern</span></button>
-            <button class="MiniNode MiniNodeSmall posRight" data-drop="b_3"><span class="DK">Right</span><span class="DT">Edison</span></button>
-            <button class="MiniNode MiniNodeSmall posBottom" data-drop="b_4"><span class="DK">Bottom</span><span class="DT">Tesla</span></button>
-          </div>
-        </div>
-
-        <div id="b_center" class="drop"><p class="p">Breakthroughs happen when constraints are mastered and false limits are exposed.</p></div>
-        <div id="b_1" class="drop"><p class="p">Doctors claimed the four-minute mile would kill you. Bannister broke it. Many followed soon after.</p></div>
-        <div id="b_2" class="drop"><p class="p">The Wrights won by control, not power. Flight became an admissible trajectory.</p></div>
-        <div id="b_3" class="drop"><p class="p">Edison: failure is constraint discovery, not defeat.</p></div>
-        <div id="b_4" class="drop"><p class="p">Tesla: structure precedes outcomes—coherence governs the system.</p></div>
-      </div>
+  <div id="S_philosophy" class="drop">
+    <div class="childCard">
+      <div class="kicker">PHILOSOPHY</div>
+      <p class="p">Reasoning that collapses confusion.</p>
+      <a class="pill" href="/laws/">Map to laws</a>
     </div>
+  </div>
 
-    <!-- PHILOSOPHY -->
-    <div id="cat_philosophy" class="drop">
-      <div class="ChildCard">
-        <div class="kicker">PHILOSOPHY</div>
-        <div class="tileTitle">Reasoning about coherence</div>
-        <div class="MiniStage">
-          <div class="MiniGrid">
-            <button class="MiniNode MiniNodeSmall posTop" data-drop="p_1"><span class="DK">Top</span><span class="DT">Eastern</span></button>
-            <button class="MiniNode MiniNodeSmall posLeft" data-drop="p_2"><span class="DK">Left</span><span class="DT">Western</span></button>
-            <button class="MiniNode MiniCenter posCenter" data-drop="p_center"><span class="DK">Center</span><span class="DT">Bridge</span></button>
-            <button class="MiniNode MiniNodeSmall posRight" data-drop="p_3"><span class="DK">Right</span><span class="DT">Ethics</span></button>
-            <button class="MiniNode MiniNodeSmall posBottom" data-drop="p_4"><span class="DK">Bottom</span><span class="DT">Epistemic</span></button>
-          </div>
-        </div>
-
-        <div id="p_center" class="drop"><p class="p">Philosophy supplies compressed coherence models; the system formalizes them.</p></div>
-        <div id="p_1" class="drop"><p class="p">Eastern: constraint-first wisdom (alignment, harmony, non-forcing).</p></div>
-        <div id="p_2" class="drop"><p class="p">Western: agency-first reasoning (logic, proof, causality).</p></div>
-        <div id="p_3" class="drop"><p class="p">Ethics: coherence expressed as responsibility, fairness, and trust.</p></div>
-        <div id="p_4" class="drop"><p class="p">Epistemic: how we know what’s true; what survives invariance tests.</p></div>
-      </div>
+  <div id="S_breakthroughs" class="drop">
+    <div class="childCard">
+      <div class="kicker">BREAKTHROUGHS</div>
+      <p class="p">Stories where constraints were respected and scale followed.</p>
+      <a class="pill" href="/products/">Map to products</a>
     </div>
+  </div>
 
-    <!-- GREATEST -->
-    <div id="cat_greatest" class="drop">
-      <div class="ChildCard">
-        <div class="kicker">GREATEST</div>
-        <div class="tileTitle">Highest signal compressions</div>
-        <div class="MiniStage">
-          <div class="MiniGrid">
-            <button class="MiniNode MiniNodeSmall posTop" data-drop="g_1"><span class="DK">Top</span><span class="DT">Arnold</span></button>
-            <button class="MiniNode MiniNodeSmall posLeft" data-drop="g_2"><span class="DK">Left</span><span class="DT">Einstein</span></button>
-            <button class="MiniNode MiniCenter posCenter" data-drop="g_center"><span class="DK">Center</span><span class="DT">Rule</span></button>
-            <button class="MiniNode MiniNodeSmall posRight" data-drop="g_3"><span class="DK">Right</span><span class="DT">Bannister</span></button>
-            <button class="MiniNode MiniNodeSmall posBottom" data-drop="g_4"><span class="DK">Bottom</span><span class="DT">Tesla</span></button>
-          </div>
-        </div>
-
-        <div id="g_center" class="drop"><p class="p">Greatest sayings stay valid across time because they compress invariants.</p></div>
-        <div id="g_1" class="drop"><p class="p">“When I do it, I’ll be the first.”</p></div>
-        <div id="g_2" class="drop"><p class="p">Einstein: simplicity / imagination as discovery of structure.</p></div>
-        <div id="g_3" class="drop"><p class="p">Bannister: proof collapses belief-bound limits.</p></div>
-        <div id="g_4" class="drop"><p class="p">Tesla: coherence/structure governs outcomes.</p></div>
-      </div>
+  <div id="S_greatest" class="drop">
+    <div class="childCard">
+      <div class="kicker">GREATEST</div>
+      <p class="p">All-time anchors. Click to expand. Nothing forced.</p>
     </div>
+  </div>
 
-    <!-- SAYINGS THAT BECAME LAWS -->
-    <div id="cat_lawderived" class="drop">
-      <div class="ChildCard">
-        <div class="kicker">SAYINGS → LAWS</div>
-        <div class="tileTitle">Decompression into Tier 1/2/3</div>
-        <div class="MiniStage">
-          <div class="MiniGrid">
-            <a class="MiniNode MiniNodeSmall posTop" href="/laws/"><span class="DK">Top</span><span class="DT">Tier 1</span></a>
-            <a class="MiniNode MiniNodeSmall posLeft" href="/laws/"><span class="DK">Left</span><span class="DT">Tier 2</span></a>
-            <button class="MiniNode MiniCenter posCenter" data-drop="l_center"><span class="DK">Center</span><span class="DT">Mapping</span></button>
-            <a class="MiniNode MiniNodeSmall posRight" href="/laws/"><span class="DK">Right</span><span class="DT">Tier 3</span></a>
-            <a class="MiniNode MiniNodeSmall posBottom" href="/laws/"><span class="DK">Bottom</span><span class="DT">Open Laws</span></a>
-          </div>
-        </div>
-        <div id="l_center" class="drop"><p class="p">This category contains sayings that decompose directly into your foundational laws. Click into Laws to inspect the full decompression.</p></div>
-      </div>
-    </div>
+</section>
 
-  </section>
-
-  <div class="Footer">Landing · Sayings only · Expand outward · © Geodiametrics</div>
+<footer class="foot">Landing · Sayings only · © Geodiametrics</footer>
 
 </main>
 </body>
 </html>
-```0

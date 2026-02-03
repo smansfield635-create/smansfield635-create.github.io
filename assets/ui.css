@@ -1,125 +1,350 @@
-/* === HARD RESET === */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* =====================================================================
+   GEODIAMETRICS • UI.CSS (TNT)
+   Single source of truth for ALL visuals.
+   Cosmic glass + diamond gate + Geodynamics-style buttons.
+   No dependency on any other CSS file.
+   ===================================================================== */
+
+:root{
+  --bg0:#060a14;
+  --bg1:#070f22;
+  --bg2:#081a34;
+
+  --ink:#e9efff;
+  --muted:rgba(233,239,255,.72);
+  --faint:rgba(233,239,255,.42);
+
+  --glass:rgba(14,24,48,.62);
+  --glass2:rgba(10,18,36,.52);
+  --stroke:rgba(233,239,255,.16);
+  --stroke2:rgba(233,239,255,.10);
+  --shadow:rgba(0,0,0,.48);
+
+  --teal:rgba(69, 222, 205, .90);
+  --teal2:rgba(50, 170, 220, .85);
+  --amber:rgba(255, 210, 90, .85);
+  --red:rgba(255, 95, 95, .85);
+  --violet:rgba(170, 120, 255, .80);
+
+  --r24:24px;
+  --r18:18px;
+  --r14:14px;
+
+  --pad:clamp(14px, 4vw, 22px);
+  --w: min(980px, calc(100vw - 24px));
 }
 
-html, body {
-  height: 100%;
-  background: radial-gradient(circle at top, #0b1530, #050914 70%);
-  color: #e8ecff;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 700px at 20% 15%, rgba(65, 120, 255,.22), transparent 60%),
+    radial-gradient(900px 600px at 75% 25%, rgba(255, 70, 160,.14), transparent 55%),
+    radial-gradient(900px 650px at 55% 80%, rgba(60, 240, 210,.12), transparent 55%),
+    radial-gradient(1200px 900px at 50% 50%, rgba(8, 16, 36,.85), rgba(4, 8, 18, 1) 70%),
+    linear-gradient(180deg, var(--bg1), var(--bg0));
+  overflow-x:hidden;
 }
 
-/* === PAGE === */
-.page {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 32px;
-  padding: 48px 16px 64px;
+/* --- stars layer (twinkle) --- */
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.55) 0 60%, transparent 62%),
+    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.45) 0 60%, transparent 62%),
+    radial-gradient(1px 1px at 60% 30%, rgba(255,255,255,.55) 0 60%, transparent 62%),
+    radial-gradient(1px 1px at 75% 65%, rgba(255,255,255,.50) 0 60%, transparent 62%),
+    radial-gradient(1px 1px at 85% 15%, rgba(255,255,255,.35) 0 60%, transparent 62%),
+    radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,.35) 0 60%, transparent 62%),
+    radial-gradient(2px 2px at 45% 55%, rgba(255,255,255,.25) 0 55%, transparent 58%),
+    radial-gradient(2px 2px at 55% 18%, rgba(255,255,255,.22) 0 55%, transparent 58%),
+    radial-gradient(2px 2px at 22% 42%, rgba(255,255,255,.18) 0 55%, transparent 58%);
+  filter: blur(.15px);
+  opacity:.55;
+  animation: twinkle 3.8s ease-in-out infinite alternate;
+}
+@keyframes twinkle{
+  0%{opacity:.30; transform:translateY(0)}
+  100%{opacity:.70; transform:translateY(-2px)}
 }
 
-/* === HERO === */
-.hero {
-  text-align: center;
+a{color:inherit}
+a:visited{color:inherit}
+
+.page{
+  width:var(--w);
+  margin:0 auto;
+  padding: 22px 0 42px;
 }
 
-.hero h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
+.heroCard{
+  margin: 18px auto 16px;
+  padding: clamp(18px, 4vw, 26px);
+  border-radius: var(--r24);
+  background: linear-gradient(180deg, rgba(30, 60, 120,.22), rgba(14, 24, 48,.55));
+  border:1px solid var(--stroke);
+  box-shadow: 0 24px 60px var(--shadow);
+  backdrop-filter: blur(10px);
+}
+.h1{
+  margin:0;
+  font-size: clamp(34px, 8vw, 56px);
+  letter-spacing:.3px;
+}
+.sub{
+  margin: 10px 0 0;
+  font-size: clamp(15px, 3.6vw, 18px);
+  color: var(--muted);
 }
 
-.hero p {
-  opacity: 0.75;
-  margin-top: 8px;
+/* --- section label line --- */
+.kicker{
+  margin: 18px 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
 }
 
-/* === DIAMOND === */
-.diamond-wrap {
-  position: relative;
-  width: 260px;
-  height: 260px;
+/* --- Geodynamics-style pill buttons --- */
+.pillRow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
 }
-
-.diamond {
-  position: absolute;
-  width: 180px;
-  height: 180px;
-  transform: rotate(45deg);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.diamond.outer {
-  width: 260px;
-  height: 260px;
-  background: rgba(120,140,255,0.08);
-  box-shadow: 0 0 40px rgba(120,140,255,0.15);
-}
-
-.diamond.inner {
-  background: rgba(255,255,255,0.10);
-  backdrop-filter: blur(6px);
-  font-weight: 600;
-}
-
-.diamond.inner.top    { top: -20px; left: 40px; }
-.diamond.inner.left   { left: -20px; top: 40px; }
-.diamond.inner.right  { right: -20px; top: 40px; }
-.diamond.inner.bottom { bottom: -20px; left: 40px; }
-
-.diamond.inner span,
-.diamond.inner {
-  transform: rotate(-45deg);
-}
-
-/* === PRINCIPLE === */
-.principle {
-  text-align: center;
-  opacity: 0.9;
-}
-
-.chain {
-  font-weight: 600;
-}
-
-.hint {
-  margin-top: 6px;
-  font-size: 0.85rem;
-  opacity: 0.6;
-}
-
-/* === SAYINGS === */
-.sayings {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-  max-width: 420px;
-}
-
-.sayings button {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
-  color: #e8ecff;
-  padding: 14px 18px;
+.pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height: 46px;
+  padding: 0 18px;
   border-radius: 999px;
-  font-size: 1rem;
-  cursor: pointer;
+  border:1px solid var(--stroke);
+  background: linear-gradient(180deg, rgba(12,20,40,.70), rgba(10,16,32,.50));
+  box-shadow: 0 14px 28px rgba(0,0,0,.22);
+  text-decoration:none;
+  font-weight: 700;
+  letter-spacing:.2px;
+  color: rgba(233,239,255,.92);
+  user-select:none;
+  backdrop-filter: blur(10px);
+  transition: transform .12s ease, border-color .12s ease, filter .12s ease;
+}
+.pill:active{transform: scale(.98)}
+.pill:focus{outline:none}
+.pill:focus-visible{
+  box-shadow: 0 0 0 3px rgba(69,222,205,.20), 0 14px 28px rgba(0,0,0,.22);
+  border-color: rgba(69,222,205,.45);
+}
+.pill.on{
+  border-color: rgba(69,222,205,.55);
+  background: linear-gradient(135deg, rgba(69,222,205,.20), rgba(50,170,220,.14));
+  filter: saturate(1.1);
 }
 
-.sayings button:hover {
-  background: rgba(255,255,255,0.14);
+/* --- gate / diamond assembly card --- */
+.gateCard{
+  margin: 12px auto 18px;
+  padding: clamp(14px, 4vw, 22px);
+  border-radius: var(--r24);
+  background: linear-gradient(180deg, rgba(8, 16, 34,.58), rgba(8, 16, 34,.38));
+  border:1px solid var(--stroke2);
+  box-shadow: 0 22px 52px rgba(0,0,0,.40);
+  backdrop-filter: blur(12px);
 }
 
-/* === FOOTER === */
-footer {
-  margin-top: auto;
-  opacity: 0.4;
-  font-size: 0.8rem;
+/* --- big diamond stage --- */
+.stage{
+  position:relative;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 22px 0 10px;
+}
+
+/* Outer diamond “puzzle frame” */
+.frame{
+  position:relative;
+  width: min(520px, 92vw);
+  aspect-ratio: 1 / 1;
+  transform: rotate(45deg);
+  border-radius: 28px;
+  background:
+    radial-gradient(220px 220px at 30% 25%, rgba(80, 140, 255,.16), transparent 60%),
+    radial-gradient(260px 260px at 70% 65%, rgba(255, 70, 160,.12), transparent 60%),
+    linear-gradient(180deg, rgba(12,20,40,.78), rgba(8,12,26,.58));
+  border:1px solid rgba(233,239,255,.14);
+  box-shadow: 0 28px 70px rgba(0,0,0,.55);
+  backdrop-filter: blur(12px);
+}
+
+/* inner bevel */
+.frame::before{
+  content:"";
+  position:absolute; inset: 7%;
+  border-radius: 22px;
+  border: 1px solid rgba(233,239,255,.10);
+  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,0));
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.18);
+}
+
+/* --- Outer nav nodes (Laws / Products / Gauges / Links) --- */
+.node{
+  position:absolute;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  user-select:none;
+  border:1px solid rgba(233,239,255,.16);
+  background: linear-gradient(180deg, rgba(12,20,40,.72), rgba(10,16,32,.52));
+  box-shadow: 0 18px 38px rgba(0,0,0,.35);
+  backdrop-filter: blur(10px);
+  border-radius: 999px;
+  min-height: 52px;
+  padding: 0 18px;
+  transform: rotate(-45deg);
+  font-weight: 800;
+  letter-spacing: .2px;
+  color: rgba(233,239,255,.92);
+  transition: transform .12s ease, border-color .12s ease, filter .12s ease;
+}
+.node:active{transform: rotate(-45deg) scale(.98)}
+.node:focus-visible{
+  outline:none;
+  border-color: rgba(69,222,205,.55);
+  box-shadow: 0 0 0 3px rgba(69,222,205,.16), 0 18px 38px rgba(0,0,0,.35);
+}
+
+/* Positions (relative to diamond) */
+.node.top{left:50%; top:8%; transform: translateX(-50%) rotate(-45deg)}
+.node.bottom{left:50%; bottom:8%; transform: translateX(-50%) rotate(-45deg)}
+.node.left{left:8%; top:50%; transform: translateY(-50%) rotate(-45deg)}
+.node.right{right:8%; top:50%; transform: translateY(-50%) rotate(-45deg)}
+
+/* --- Integrity diamond inside --- */
+.integrity{
+  position:absolute;
+  left:50%; top:50%;
+  width: 58%;
+  aspect-ratio: 1/1;
+  transform: translate(-50%,-50%);
+  border-radius: 22px;
+  border:1px solid rgba(233,239,255,.12);
+  background: linear-gradient(180deg, rgba(10,16,32,.58), rgba(10,16,32,.38));
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.20);
+  backdrop-filter: blur(10px);
+}
+
+/* Four inner buttons on integrity diamond */
+.innerBtn{
+  position:absolute;
+  left:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border:1px solid rgba(233,239,255,.14);
+  background: linear-gradient(180deg, rgba(12,20,40,.72), rgba(10,16,32,.52));
+  box-shadow: 0 16px 30px rgba(0,0,0,.30);
+  color: rgba(233,239,255,.92);
+  font-weight: 800;
+  letter-spacing:.2px;
+  transform: translateX(-50%);
+  text-decoration:none;
+  user-select:none;
+}
+.innerBtn:active{transform: translateX(-50%) scale(.98)}
+.innerBtn.top{top:8%}
+.innerBtn.bottom{bottom:8%}
+.innerBtn.left{left:12%; top:50%; transform: translate(-50%,-50%)}
+.innerBtn.right{left:auto; right:12%; top:50%; transform: translate(50%,-50%)}
+
+/* make inner labels slightly “Human-active” when user wants: */
+.innerBtn.on{
+  border-color: rgba(69,222,205,.55);
+  background: linear-gradient(135deg, rgba(69,222,205,.22), rgba(50,170,220,.14));
+}
+
+/* --- Integrity line --- */
+.chain{
+  margin: 14px 0 0;
+  text-align:center;
+  color: rgba(233,239,255,.82);
+  font-weight: 800;
+  letter-spacing:.2px;
+  font-size: clamp(14px, 3.6vw, 18px);
+}
+
+/* --- Chinese principles (tap-to-translate) using <details> (NO JS) --- */
+.principles{
+  margin: 12px auto 0;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+  align-items:stretch;
+}
+
+.tapHint{
+  margin: 10px 0 0;
+  text-align:center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.detailsPill{
+  border:1px solid rgba(233,239,255,.14);
+  border-radius: 999px;
+  overflow:hidden;
+  background: linear-gradient(180deg, rgba(12,20,40,.68), rgba(10,16,32,.50));
+  box-shadow: 0 16px 34px rgba(0,0,0,.28);
+  backdrop-filter: blur(10px);
+}
+
+.detailsPill summary{
+  list-style:none;
+  cursor:pointer;
+  padding: 14px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  color: rgba(233,239,255,.92);
+  font-weight: 800;
+  font-size: clamp(16px, 4vw, 20px);
+}
+.detailsPill summary::-webkit-details-marker{display:none}
+.detailsPill[open] summary{
+  border-bottom: 1px solid rgba(233,239,255,.10);
+  background: linear-gradient(135deg, rgba(69,222,205,.18), rgba(50,170,220,.12));
+}
+.detailsPill .eng{
+  padding: 12px 18px 14px;
+  text-align:center;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+/* --- footer --- */
+.foot{
+  margin: 18px 0 0;
+  text-align:center;
+  color: rgba(233,239,255,.38);
+  font-size: 13px;
+}
+
+/* --- small screens: keep labels readable, avoid overlap --- */
+@media (max-width: 380px){
+  .node{min-height: 48px; padding:0 14px; font-size: 14px}
+  .innerBtn{min-height: 42px; padding:0 14px; font-size: 14px}
 }

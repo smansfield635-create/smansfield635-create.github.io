@@ -1,43 +1,13 @@
-/* ======================================
-   GEODIAMETRICS CORE — DARK CANONICAL v3
-   Fixes: white washout, low contrast
-====================================== */
-
 :root{
-  --bg0:#03040a;
-  --bg1:#0a0f22;
-
-  --text:#f2f4ff;
-  --muted:#b4bce6;
-
-  --card:rgba(18,24,48,.74);
+  --ink:#eef1ff;
+  --muted:#9aa3d9;
   --stroke:rgba(255,255,255,.14);
-
-  --glow1:rgba(120,180,255,.18);
-  --glow2:rgba(120,180,255,.36);
-
-  --radius:26px;
+  --glassA:rgba(16,20,44,.68);
+  --glassB:rgba(20,28,64,.24);
+  --r:28px;
 }
-
 *{box-sizing:border-box}
-html,body{height:100%}
-
-body{
-  margin:0;
-  color:var(--text);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  background:
-    radial-gradient(900px 700px at 20% 25%, rgba(80,120,255,.16), transparent 55%),
-    radial-gradient(800px 650px at 80% 20%, rgba(180,80,255,.12), transparent 55%),
-    radial-gradient(900px 700px at 50% 85%, rgba(80,255,200,.08), transparent 60%),
-    linear-gradient(180deg,var(--bg0),var(--bg1));
-  overflow-x:hidden;
-}
-
-/* Kill default link look */
+html,body{margin:0;padding:0}
 a{color:inherit;text-decoration:none}
 a:visited{color:inherit}
-a:hover{text-decoration:none}
-
-/* Keep images from blowing out layout */
-img{max-width:100%;display:block}
+a,button{-webkit-tap-highlight-color:transparent}

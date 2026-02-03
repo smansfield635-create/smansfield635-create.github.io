@@ -5,74 +5,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Geodiametrics</title>
 
-  <link rel="icon" href="/assets/favicon.svg"/>
-  <link rel="stylesheet" href="/assets/core.css"/>
-  <link rel="stylesheet" href="/assets/ui.css"/>
-
-  <script defer src="/assets/ui.js"></script>
+  <!-- ASSETS -->
+  <link rel="icon" href="assets/favicon.svg"/>
+  <link rel="stylesheet" href="assets/core.css"/>
+  <link rel="stylesheet" href="assets/ui.css"/>
+  <script defer src="assets/ui.js"></script>
 </head>
 
-<body class="preload">
+<body>
 
-<main id="app" class="wrap stars hidden">
+<main class="wrap">
 
-  <header class="top">
-    <div class="brand">
-      <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
-      <div class="brandText">
-        <div class="brandName">Geodiametrics</div>
-        <div class="brandTag">Coherence · Admissibility · Execution</div>
-      </div>
-    </div>
-
-    <nav class="nav">
-      <a href="/products/">Products</a>
-      <a href="/laws/">Laws</a>
-      <a href="/gauges/">Gauges</a>
-      <a href="/links/">Links</a>
-    </nav>
+  <header>
+    <h1>Be the first.</h1>
+    <div class="subtitle">Nothing is required until you click.</div>
   </header>
 
-  <section class="hero">
-    <h1>Be the first.</h1>
-    <p>Nothing is required until you click.</p>
-  </section>
+  <!-- DIAMOND CONTROLLER -->
+  <section class="diamond-grid">
 
-  <!-- DIAMOND LANDING -->
-  <section class="diamondRoot">
-
+    <!-- TOP : FOUNDATIONAL -->
     <div class="diamond top clickable" data-open="foundational">
-      Foundational
+      <div class="label">Foundational</div>
     </div>
 
+    <!-- LEFT : PHILOSOPHY -->
     <div class="diamond left clickable" data-open="philosophy">
-      Philosophy
+      <div class="label">Philosophy</div>
     </div>
 
-    <div class="diamond center locked">
-      Medium
+    <!-- CENTER : MEDIUM = LAWS -->
+    <div class="diamond center">
+      <div class="label">Laws<br/>Medium</div>
     </div>
 
+    <!-- RIGHT : BREAKTHROUGHS -->
     <div class="diamond right clickable" data-open="breakthroughs">
-      Breakthroughs
+      <div class="label">Breakthroughs</div>
     </div>
 
+    <!-- BOTTOM : GREATEST -->
     <div class="diamond bottom clickable" data-open="greatest">
-      Greatest
+      <div class="label">Greatest</div>
     </div>
 
-    <div class="diamond corner clickable" data-open="laws">
-      → Laws
-    </div>
+    <!-- CORNER : GO TO LAWS -->
+    <a class="diamond corner clickable" href="laws/">
+      <div class="label">→ Laws</div>
+    </a>
 
   </section>
 
   <!-- EXPANSION PANEL -->
   <section id="panel" class="panel hidden"></section>
 
-  <footer class="foot">
+  <div class="footer">
     Canonical · Stable · © Geodiametrics
-  </footer>
+  </div>
 
 </main>
 

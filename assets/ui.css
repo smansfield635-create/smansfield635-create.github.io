@@ -1,120 +1,108 @@
-/* =========================
-   GLOBAL DEPTH + STARS
-========================= */
+/* ui.css — TNT VISUAL CORE */
 
-body {
-  background: radial-gradient(
-    circle at top,
-    #0b1020 0%,
-    #050812 60%,
-    #02040a 100%
-  );
-  overflow-x: hidden;
+:root{
+  --bg0:#05070f;
+  --bg1:#0b1020;
+  --ink:#e6ebff;
+  --muted:rgba(230,235,255,.72);
+  --line:rgba(160,190,255,.22);
+  --glass:rgba(40,55,120,.18);
+  --glassHot:rgba(90,120,255,.32);
 }
 
-.wrap.stars::before {
-  content: "";
-  position: fixed;
-  inset: 0;
+.wrap{
+  min-height:100vh;
+  background:radial-gradient(circle at top, var(--bg1) 0%, var(--bg0) 70%);
+  color:var(--ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:6vh 4vw 4vh;
+}
+
+.stars{
+  position:relative;
+}
+.stars::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.55;
   background-image:
-    radial-gradient(1px 1px at 20% 30%, #fff6, transparent),
-    radial-gradient(1px 1px at 80% 70%, #fff4, transparent),
-    radial-gradient(1px 1px at 50% 50%, #fff5, transparent);
-  opacity: 0.35;
-  z-index: 0;
-  pointer-events: none;
+    radial-gradient(1px 1px at 10% 20%, #ffffff88 0, transparent 45%),
+    radial-gradient(1px 1px at 20% 80%, #ffffff66 0, transparent 45%),
+    radial-gradient(1px 1px at 35% 35%, #ffffff55 0, transparent 45%),
+    radial-gradient(1px 1px at 55% 70%, #ffffff66 0, transparent 45%),
+    radial-gradient(1px 1px at 75% 30%, #ffffff77 0, transparent 45%),
+    radial-gradient(1px 1px at 90% 85%, #ffffff55 0, transparent 45%);
+  background-size:220px 220px;
+  animation:tw 6s ease-in-out infinite;
+}
+@keyframes tw{
+  0%,100%{opacity:.50; filter:blur(.0px);}
+  50%{opacity:.70; filter:blur(.2px);}
 }
 
-/* =========================
-   DIAMOND FIELD
-========================= */
-
-.diamond-field {
-  position: relative;
-  width: 100%;
-  height: 70vh;
-  margin-top: 4rem;
+.hero{
+  text-align:center;
+  margin-bottom:5vh;
+}
+.hero h1{
+  margin:0;
+  font-size:clamp(2rem,4.8vw,3.2rem);
+  font-weight:800;
+  letter-spacing:.01em;
+}
+.hero p{
+  margin:.6rem 0 0;
+  color:var(--muted);
+  font-size:1.02rem;
 }
 
-/* =========================
-   DIAMOND BASE
-========================= */
-
-.diamond {
-  position: absolute;
-  width: 160px;
-  height: 160px;
-  transform: rotate(45deg);
-  border-radius: 14px;
-  background:
-    linear-gradient(
-      145deg,
-      rgba(120,140,255,0.35),
-      rgba(40,60,140,0.25)
-    );
-  border: 1px solid rgba(180,200,255,0.5);
-  box-shadow:
-    0 25px 60px rgba(0,0,0,0.7),
-    inset 0 0 40px rgba(255,255,255,0.08);
-  z-index: 2;
+.diamondHub{
+  position:relative;
+  width:min(92vw,560px);
+  height:min(92vw,560px);
 }
 
-/* =========================
-   TEXT STRAIGHTENER
-========================= */
-
-.diamond span {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(-45deg);
-  font-weight: 600;
-  color: #cfd6ff;
-  text-align: center;
-  pointer-events: none;
+.d{
+  position:absolute;
+  width:170px;
+  height:170px;
+  transform:rotate(45deg);
+  display:grid;
+  place-items:center;
+  text-decoration:none;
+  color:var(--ink);
+  background:var(--glass);
+  border:1px solid var(--line);
+  border-radius:18px;
+  backdrop-filter:blur(8px);
+  transition:transform .22s ease, background .22s ease, border-color .22s ease;
+}
+.d span{
+  transform:rotate(-45deg);
+  text-align:center;
+  font-weight:750;
+  line-height:1.08;
+}
+.d:hover{
+  background:var(--glassHot);
+  border-color:rgba(190,210,255,.35);
+  transform:rotate(45deg) scale(1.05);
 }
 
-/* =========================
-   LOCKED MEDIUM
-========================= */
+.dTop{ top:2%; left:50%; transform:translateX(-50%) rotate(45deg); }
+.dLeft{ left:2%; top:50%; transform:translateY(-50%) rotate(45deg); }
+.dRight{ right:2%; top:50%; transform:translateY(-50%) rotate(45deg); }
+.dBottom{ bottom:2%; left:50%; transform:translateX(-50%) rotate(45deg); }
 
-.diamond.locked {
-  opacity: 0.25;
-  border-style: dashed;
-  box-shadow:
-    0 10px 25px rgba(0,0,0,0.5);
-}
-
-/* =========================
-   POSITIONS
-========================= */
-
-.diamond.top    { top: 0; left: 50%; transform: translateX(-50%) rotate(45deg); }
-.diamond.left   { top: 50%; left: 20%; transform: translateY(-50%) rotate(45deg); }
-.diamond.right  { top: 50%; right: 20%; transform: translateY(-50%) rotate(45deg); }
-.diamond.bottom { bottom: 0; left: 50%; transform: translateX(-50%) rotate(45deg); }
-.diamond.center { top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(45deg); }
-.diamond.corner { bottom: 10%; right: 10%; transform: rotate(45deg); }
-
-/* =========================
-   INTERACTION
-========================= */
-
-.diamond:hover:not(.locked) {
-  box-shadow:
-    0 0 80px rgba(160,190,255,0.75),
-    inset 0 0 60px rgba(255,255,255,0.15);
-}
-
-/* =========================
-   CONTENT LAYERS
-========================= */
-
-.panel {
-  position: relative;
-  z-index: 1;
-  margin-top: 6rem;
-  max-width: 680px;
+.footer{
+  margin-top:5vh;
+  font-size:.85rem;
+  opacity:.6;
 }

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Gauge Registry</title>
+
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/>
+  <link rel="stylesheet" href="/assets/core.css"/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <header class="top">
+      <div class="brand">
+        <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
+        <div class="brandText">
+          <div class="brandName">Gauge Registry</div>
+          <div class="brandTag">Application Layer</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="pill" href="/">Index</a>
+        <a class="pill ghost" href="/application-layer-contract/">ALC</a>
+        <a class="pill ghost" href="/uca/">UCAQ</a>
+        <a class="pill ghost" href="/m256/">M256</a>
+        <a class="pill ghost" href="/eai/">EAI</a>
+      </nav>
+    </header>
+
+    <section class="card">
+      <div class="kicker">REGISTRY</div>
+      <h1 class="h1">Canonical Gauges</h1>
+
+      <div class="hr"></div>
+
+      <h2 class="h2">Invariant Gauges</h2>
+      <ul class="list">
+        <li>Coherence Level</li>
+        <li>Admissibility State</li>
+        <li>Stability / Fracture</li>
+        <li>Trajectory Phase</li>
+        <li>Closure Status</li>
+      </ul>
+
+      <h2 class="h2">Derived Gauges</h2>
+      <ul class="list">
+        <li>Rate of Coherence Change</li>
+        <li>Constraint Load</li>
+        <li>Propagation Depth</li>
+        <li>Return Consistency</li>
+      </ul>
+
+      <h2 class="h2">View-Specific Projections</h2>
+      <ul class="list">
+        <li>Human View</li>
+        <li>Scientific View</li>
+        <li>Operational View</li>
+      </ul>
+
+      <h2 class="h2">Rules</h2>
+      <ul class="list">
+        <li>Gauges are read-only</li>
+        <li>No gauge defines truth</li>
+        <li>No gauge issues decisions</li>
+        <li>All gauges inherit from UCAQ/M256/EAI</li>
+      </ul>
+
+      <div class="hr"></div>
+
+      <div class="notice">
+        <div class="noticeTitle">Status</div>
+        <div class="noticeBody">
+          This registry enumerates all permitted gauges.
+          Any gauge not listed here is non-canonical.
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <div class="muted">Application Layer · Read-Only</div>
+      <div class="muted">Canonical</div>
+    </footer>
+
+  </main>
+</body>
+</html>

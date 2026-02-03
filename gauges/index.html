@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Live Gauges</title>
+
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/>
+  <link rel="stylesheet" href="/assets/core.css"/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <header class="top">
+      <div class="brand">
+        <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
+        <div class="brandText">
+          <div class="brandName">Live Gauges</div>
+          <div class="brandTag">Read-Only Instrument Panel</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="pill" href="/">Index</a>
+        <a class="pill ghost" href="/application-layer-contract/">ALC</a>
+        <a class="pill ghost" href="/gauge-registry/">Registry</a>
+        <a class="pill ghost" href="/uca/">UCAQ</a>
+        <a class="pill ghost" href="/m256/">M256</a>
+        <a class="pill ghost" href="/eai/">EAI</a>
+      </nav>
+    </header>
+
+    <section class="card">
+      <div class="kicker">INSTRUMENT</div>
+      <h1 class="h1">Canonical Gauge Readouts</h1>
+      <p class="p">
+        This panel is display-only. Values shown here are placeholders until wired to live sources.
+      </p>
+
+      <div class="hr"></div>
+
+      <div class="grid">
+        <div class="tile">
+          <div class="tileTop">INVARIANT</div>
+          <div class="tileTitle">Coherence</div>
+          <div class="tileBody"><b>1.00</b> (placeholder)</div>
+        </div>
+
+        <div class="tile">
+          <div class="tileTop">INVARIANT</div>
+          <div class="tileTitle">Admissibility</div>
+          <div class="tileBody"><b>ADMISSIBLE</b> (placeholder)</div>
+        </div>
+
+        <div class="tile">
+          <div class="tileTop">INVARIANT</div>
+          <div class="tileTitle">Stability</div>
+          <div class="tileBody"><b>STABLE</b> (placeholder)</div>
+        </div>
+
+        <div class="tile">
+          <div class="tileTop">DERIVED</div>
+          <div class="tileTitle">Δ Coherence</div>
+          <div class="tileBody"><b>0.00</b> / cycle (placeholder)</div>
+        </div>
+
+        <div class="tile">
+          <div class="tileTop">DERIVED</div>
+          <div class="tileTitle">Constraint Load</div>
+          <div class="tileBody"><b>LOW</b> (placeholder)</div>
+        </div>
+
+        <div class="tile">
+          <div class="tileTop">EXECUTIVE</div>
+          <div class="tileTitle">Closure</div>
+          <div class="tileBody"><b>OPEN</b> (placeholder)</div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="notice">
+        <div class="noticeTitle">Rule</div>
+        <div class="noticeBody">
+          This page must never issue decisions. It only displays canonical projections.
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <div class="muted">Live Gauges · Read-Only</div>
+      <div class="muted">Canonical</div>
+    </footer>
+
+  </main>
+</body>
+</html>

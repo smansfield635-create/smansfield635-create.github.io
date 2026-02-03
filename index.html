@@ -1,169 +1,227 @@
-<!-- FILE: /index.html  (TNT FULL REPLACEMENT)
-     HOME DIAMOND (L0) — locked nodes:
-     CENTER (reset), TOP (sayings drop), RIGHT (products), BOTTOM (laws), LEFT (gauges), BR (links)
--->
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg"/>
-  <link rel="stylesheet" href="/assets/core.css"/>
-  <link rel="stylesheet" href="/assets/ui.css"/>
-  <script src="/assets/ui.js"></script>
+/* FILE: /assets/ui.css  (TNT FULL REPLACEMENT)
+   PURPOSE: DIAMOND LAYOUT SYSTEM v14
+   - Adds reusable diamond layout classes (no inline CSS needed)
+   - Preserves: wiring stability for drops/toggles
+   - Preserves: room + stars + bubbles
+   - Adds: diamond nodes + stage + grid placements
+*/
 
-  <!-- Diamond-only layout (self-contained; does not touch global CSS) -->
-  <style>
-    .hdWrap{max-width:1100px;margin:0 auto;padding:24px}
-    .hdHeader{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
-    .hdBrand{display:flex;align-items:center;gap:12px}
-    .hdLogo{width:44px;filter:drop-shadow(0 0 14px rgba(176,168,255,.25))}
-    .hdName{font-weight:800}
-    .hdNav{display:flex;gap:10px;flex-wrap:wrap}
-    .hdHero{padding:18px 22px;border-radius:28px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg, rgba(16,20,44,.68), rgba(20,28,64,.24));backdrop-filter:blur(14px);box-shadow:0 0 30px rgba(0,0,0,.30);margin-bottom:18px}
-    .hdHero h1{margin:0 0 6px;font-size:2.15rem}
-    .hdHero p{margin:0;color:var(--muted,#9aa3d9);line-height:1.6}
+:root{
+  --bg-deep:#050814;
+  --bg-mid:#0a1026;
 
-    .diamondStage{position:relative;margin:16px auto 10px;max-width:520px;aspect-ratio:1/1}
-    .diamondGrid{
-      position:absolute;inset:0;
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      grid-template-rows:1fr 1fr 1fr;
-      align-items:center;justify-items:center;
-      gap:12px;
-    }
-    .dNode{
-      width:min(46vw, 220px);
-      max-width:220px;
-      padding:14px 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.08);
-      color:var(--ink,#eef1ff);
-      text-align:center;
-      user-select:none;
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
-      cursor:pointer;
-    }
-    .dNode:hover{background:rgba(255,255,255,.12)}
-    .dNodeSmall{width:min(40vw, 180px);max-width:180px;font-size:.95rem;padding:12px 14px}
-    .dCenter{
-      width:min(56vw, 280px);
-      max-width:280px;
-      padding:16px 18px;
-      border-radius:999px;
-      border:1px solid rgba(143,220,194,.26);
-      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-      box-shadow:0 0 24px rgba(143,220,194,.10);
-    }
-    .dKicker{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted,#9aa3d9);margin-bottom:6px}
-    .dTitle{display:block;font-size:1.2rem;font-weight:800}
-    .dSub{display:block;margin-top:4px;font-size:.95rem;color:var(--muted,#9aa3d9)}
+  --ink:#eef1ff;
+  --muted:#9aa3d9;
 
-    /* Grid placement to form a diamond */
-    .posTop{grid-column:2;grid-row:1}
-    .posLeft{grid-column:1;grid-row:2}
-    .posCenter{grid-column:2;grid-row:2}
-    .posRight{grid-column:3;grid-row:2}
-    .posBottom{grid-column:2;grid-row:3}
-    .posBR{grid-column:3;grid-row:3;justify-self:end;align-self:end}
+  --ok:#8fdcc2;
+  --risk:#e6d58a;
+  --bad:#e0a1a1;
 
-    .hdFoot{margin:22px 0 10px;color:var(--muted,#9aa3d9);font-size:.85rem;text-align:center}
-  </style>
-</head>
+  --stroke:rgba(255,255,255,.14);
 
-<body>
-<main class="hdWrap stars">
+  --glassA:rgba(16,20,44,.68);
+  --glassB:rgba(10,12,30,.42);
 
-  <header class="hdHeader">
-    <div class="hdBrand">
-      <img class="hdLogo" src="/assets/logo.svg" alt="Geodiametrics"/>
-      <div class="hdName">Geodiametrics</div>
-    </div>
-    <nav class="hdNav">
-      <a class="pill" href="/products/">Products</a>
-      <a class="pill" href="/laws/">Laws</a>
-      <a class="pill" href="/gauges/">Gauges</a>
-      <a class="pill" href="/links/">Links</a>
-    </nav>
-  </header>
+  --r:28px;
+}
 
-  <section class="hdHero">
-    <h1>Be the first.</h1>
-    <p>Nothing is required until you click.</p>
-  </section>
+/* reset */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+a,button{-webkit-tap-highlight-color:transparent}
 
-  <!-- HOME DIAMOND (L0) -->
-  <section class="diamondStage" aria-label="Home Diamond">
-    <div class="diamondGrid">
-      <!-- TOP: SAYINGS (opens drop) -->
-      <button class="dNode dNodeSmall posTop" data-drop="home_sayings">
-        <span class="dKicker">Top</span>
-        <span class="dTitle">Sayings</span>
-      </button>
+/* room */
+body{
+  color:var(--ink);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(143,201,220,.10), transparent 46%),
+    radial-gradient(circle at 82% 30%, rgba(143,220,194,.08), transparent 46%),
+    radial-gradient(circle at 55% 78%, rgba(176,168,255,.08), transparent 54%),
+    linear-gradient(180deg,var(--bg-deep),var(--bg-mid));
+  overflow-x:hidden;
+}
 
-      <!-- LEFT: GAUGES -->
-      <a class="dNode dNodeSmall posLeft" href="/gauges/">
-        <span class="dKicker">Left</span>
-        <span class="dTitle">Gauges</span>
-      </a>
+/* stars */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    radial-gradient(1.6px 1.6px at 12% 24%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(1.2px 1.2px at 28% 62%, rgba(255,255,255,.45), transparent 60%),
+    radial-gradient(1.8px 1.8px at 46% 18%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(1.4px 1.4px at 63% 74%, rgba(255,255,255,.45), transparent 60%),
+    radial-gradient(1.6px 1.6px at 82% 34%, rgba(255,255,255,.6), transparent 60%);
+  opacity:.45;
+  animation:twinkle 6s ease-in-out infinite alternate;
+}
+@keyframes twinkle{from{opacity:.25}to{opacity:.55}}
 
-      <!-- CENTER: IDENTITY / RESET -->
-      <button class="dNode dCenter posCenter" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-        <span class="dKicker">Center</span>
-        <span class="dTitle">Coherence · Admissibility · Execution</span>
-        <span class="dSub">Identity / Reset</span>
-      </button>
+/* layout */
+.wrap{max-width:1100px;margin:0 auto;padding:24px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:44px;filter:drop-shadow(0 0 14px rgba(176,168,255,.25))}
+.brandName{font-weight:800}
+.brandTag{display:none !important}
 
-      <!-- RIGHT: PRODUCTS -->
-      <a class="dNode dNodeSmall posRight" href="/products/">
-        <span class="dKicker">Right</span>
-        <span class="dTitle">Products</span>
-      </a>
+/* nav/pills */
+.nav{display:flex;gap:10px;flex-wrap:wrap}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:10px 18px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--stroke);
+  color:var(--ink);
+  user-select:none;
+  touch-action:manipulation;
+  cursor:pointer;
+}
+.pill:hover{background:rgba(255,255,255,.12)}
+button.pill{
+  appearance:none;-webkit-appearance:none;
+  outline:none;
+}
 
-      <!-- BOTTOM: LAWS -->
-      <a class="dNode dNodeSmall posBottom" href="/laws/">
-        <span class="dKicker">Bottom</span>
-        <span class="dTitle">Laws</span>
-      </a>
+/* bubbles */
+.card,.tile{
+  padding:22px;
+  border-radius:var(--r);
+  background:linear-gradient(180deg,var(--glassA),rgba(20,28,64,.24));
+  border:1px solid var(--stroke);
+  backdrop-filter:blur(14px);
+  box-shadow:0 0 30px rgba(0,0,0,.30);
+}
 
-      <!-- BOTTOM-RIGHT: LINKS -->
-      <a class="dNode dNodeSmall posBR" href="/links/">
-        <span class="dKicker">Corner</span>
-        <span class="dTitle">Links</span>
-      </a>
-    </div>
-  </section>
+/* text */
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.h1{font-size:2.1rem;margin:0 0 10px}
+.h2{margin:0 0 8px}
+.p{color:var(--muted);line-height:1.6}
+.tileTitle{font-size:1.35rem;margin:6px 0}
+.tileBody{color:var(--muted);line-height:1.55}
 
-  <!-- SAYINGS DROP (opens from TOP node) -->
-  <div id="home_sayings" class="drop">
-    <div class="card">
-      <div class="kicker">SAYINGS</div>
+/* grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:18px;
+  margin-top:16px;
+}
+a.tile{display:block;cursor:pointer}
+a.tile:hover{transform:translateY(-2px);transition:transform .18s ease}
 
-      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
-        <button class="pill" data-drop="s_arnold">Arnold — Be the first</button>
-        <button class="pill" data-drop="s_bannister">Bannister — Boundary illusion</button>
-        <button class="pill" data-drop="s_wrights">Wright Brothers — Flight</button>
-        <button class="pill" data-drop="s_edison">Edison — Light</button>
-        <button class="pill" data-drop="s_tesla">Tesla — Structure</button>
-        <button class="pill" data-drop="s_einstein">Einstein — Simplicity</button>
-      </div>
+/* --------- DROPDOWNS (wired) --------- */
+.drop{
+  display:block;
+  margin-top:14px;
+  padding:16px;
+  border-radius:22px;
+  background:rgba(0,0,0,.16);
+  border:1px solid var(--stroke);
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  transition:max-height .55s ease, opacity .22s ease;
+}
+.drop.open{
+  max-height:6000px;
+  opacity:1;
+  overflow:visible;
+}
+.drop .drop{margin-top:12px}
 
-      <div id="s_arnold" class="drop"><p class="p">“I love it when people say it’s never been done before. Because when I do it, I’ll be the first.”</p></div>
-      <div id="s_bannister" class="drop"><p class="p">Doctors claimed the four-minute mile would kill you. Bannister broke it. Within a year, many followed. Boundaries collapse when proven false.</p></div>
-      <div id="s_wrights" class="drop"><p class="p">Experts focused on power. The Wrights focused on control. Mastery of constraints enabled flight.</p></div>
-      <div id="s_edison" class="drop"><p class="p">Failure wasn’t wasted effort. It was constraint discovery. The system converged.</p></div>
-      <div id="s_tesla" class="drop"><p class="p">Reality is frequency, resonance, and structure. Ignore coherence and systems destabilize.</p></div>
-      <div id="s_einstein" class="drop"><p class="p">Nature is simple. Confusion signals incomplete models.</p></div>
-    </div>
-  </div>
+/* --------- TOGGLES (wired) --------- */
+.toggleRow{display:flex;gap:12px;margin:18px 0;flex-wrap:wrap}
+.toggleBtn{
+  flex:1;
+  padding:14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--stroke);
+  color:var(--ink);
+  cursor:pointer;
+  user-select:none;
+  touch-action:manipulation;
+}
+.toggleBtn.active{
+  background:rgba(143,201,220,.18);
+  border-color:rgba(143,201,220,.32);
+}
+.pane{display:none}
+.pane.show{display:block}
 
-  <div class="hdFoot">Canonical · Stable · © Geodiametrics</div>
+/* footer */
+.foot{
+  margin:36px 0 10px;
+  color:var(--muted);
+  font-size:.85rem;
+  text-align:center;
+}
 
-</main>
-</body>
-</html>
+/* =========================================================
+   DIAMOND SYSTEM (REUSABLE)
+========================================================= */
+
+.diamondStage{
+  position:relative;
+  margin:16px auto 10px;
+  max-width:520px;
+  aspect-ratio:1/1;
+}
+
+.diamondGrid{
+  position:absolute;
+  inset:0;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:1fr 1fr 1fr;
+  align-items:center;
+  justify-items:center;
+  gap:12px;
+}
+
+.dNode{
+  width:min(46vw, 220px);
+  max-width:220px;
+  padding:14px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.08);
+  color:var(--ink);
+  text-align:center;
+  user-select:none;
+  touch-action:manipulation;
+  cursor:pointer;
+}
+.dNode:hover{background:rgba(255,255,255,.12)}
+.dNodeSmall{width:min(40vw,180px);max-width:180px;font-size:.95rem;padding:12px 14px}
+.dCenter{
+  width:min(56vw,280px);
+  max-width:280px;
+  padding:16px 18px;
+  border:1px solid rgba(143,220,194,.26);
+  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  box-shadow:0 0 24px rgba(143,220,194,.10);
+}
+
+.dKicker{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.dTitle{display:block;font-size:1.2rem;font-weight:800}
+.dSub{display:block;margin-top:4px;font-size:.95rem;color:var(--muted)}
+
+.posTop{grid-column:2;grid-row:1}
+.posLeft{grid-column:1;grid-row:2}
+.posCenter{grid-column:2;grid-row:2}
+.posRight{grid-column:3;grid-row:2}
+.posBottom{grid-column:2;grid-row:3}
+.posBR{grid-column:3;grid-row:3;justify-self:end;align-self:end}
 ```0

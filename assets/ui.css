@@ -1,108 +1,171 @@
-/* FILE: /assets/ui.js (TNT FULL REPLACEMENT)
-   PURPOSE:
-   - Restore click-to-reveal everywhere (data-drop -> .drop.open)
-   - Restore Human/Scientific toggles everywhere (data-toggle/data-pane)
-   - Use event delegation (works even if DOM changes or loads late)
-   - No dependence on helper text / subtitles
+/* FILE: /assets/ui.css  (TNT FULL REPLACEMENT)
+   PURPOSE: BEHAVIOR STABILIZER v12
+   - Fix: all click-to-reveal panels ALWAYS render when .open
+   - Fix: nested drops never block clicks
+   - Fix: toggle panes always show/hide correctly
+   - Keep: current room/cosmic look (no big redesign in this pass)
 */
 
-(function () {
-  // Prevent double-binding if injected twice
-  if (window.__GEO_UI_V12__) return;
-  window.__GEO_UI_V12__ = true;
+:root{
+  --bg-deep:#050814;
+  --bg-mid:#0a1026;
 
-  function $(sel, root) { return (root || document).querySelector(sel); }
-  function $all(sel, root) { return Array.from((root || document).querySelectorAll(sel)); }
+  --ink:#eef1ff;
+  --muted:#9aa3d9;
 
-  // ---------- DROPDOWNS ----------
-  function toggleDrop(id) {
-    if (!id) return;
-    var panel = document.getElementById(id);
-    if (!panel) return;
+  /* muted semantic colors */
+  --ok:#8fdcc2;
+  --risk:#e6d58a;
+  --bad:#e0a1a1;
 
-    // Ensure it's a drop panel
-    if (!panel.classList.contains("drop")) panel.classList.add("drop");
+  --stroke:rgba(255,255,255,.14);
+  --glassA:rgba(16,20,44,.68);
 
-    panel.classList.toggle("open");
-  }
+  --r:28px;
+}
 
-  // ---------- TOGGLES ----------
-  function setToggleMode(groupId, mode) {
-    if (!groupId || !mode) return;
+/* reset */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
 
-    // buttons: data-toggle="groupId" data-mode="human|scientific"
-    var buttons = $all('[data-toggle="' + groupId + '"]');
-    // panes: data-pane="groupId" data-mode="human|scientific"
-    var panes = $all('[data-pane="' + groupId + '"]');
+/* room */
+body{
+  color:var(--ink);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(143,201,220,.10), transparent 46%),
+    radial-gradient(circle at 82% 30%, rgba(143,220,194,.08), transparent 46%),
+    radial-gradient(circle at 55% 78%, rgba(176,168,255,.08), transparent 54%),
+    linear-gradient(180deg,var(--bg-deep),var(--bg-mid));
+  overflow-x:hidden;
+}
 
-    if (buttons.length === 0 && panes.length === 0) return;
+/* stars (do not block clicks) */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    radial-gradient(1.6px 1.6px at 12% 24%, rgba(255,255,255,.65), transparent 60%),
+    radial-gradient(1.2px 1.2px at 28% 62%, rgba(255,255,255,.45), transparent 60%),
+    radial-gradient(1.8px 1.8px at 46% 18%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(1.4px 1.4px at 63% 74%, rgba(255,255,255,.45), transparent 60%),
+    radial-gradient(1.6px 1.6px at 82% 34%, rgba(255,255,255,.6), transparent 60%);
+  opacity:.45;
+  animation:twinkle 6s ease-in-out infinite alternate;
+}
+@keyframes twinkle{from{opacity:.25}to{opacity:.55}}
 
-    buttons.forEach(function (b) {
-      b.classList.toggle("active", (b.getAttribute("data-mode") || "") === mode);
-      // accessibility
-      b.setAttribute("aria-pressed", ((b.getAttribute("data-mode") || "") === mode) ? "true" : "false");
-    });
+/* layout */
+.wrap{max-width:1100px;margin:0 auto;padding:24px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:44px;filter:drop-shadow(0 0 14px rgba(176,168,255,.25))}
+.brandName{font-weight:800}
+.brandTag{display:none !important;} /* removes the fine-print subtitle only */
 
-    panes.forEach(function (p) {
-      p.classList.toggle("show", (p.getAttribute("data-mode") || "") === mode);
-      p.style.display = p.classList.contains("show") ? "block" : "none";
-    });
+/* nav / pills */
+.nav{display:flex;gap:10px;flex-wrap:wrap}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
 
-    // Persist per-page (optional)
-    try { sessionStorage.setItem("GEO_TOGGLE_" + groupId, mode); } catch (e) {}
-  }
+  padding:10px 18px;
+  border-radius:999px;
 
-  function ensureToggleDefaults() {
-    // Find all toggle groups declared on the page
-    $all("[data-toggle-group]").forEach(function (g) {
-      var groupId = g.getAttribute("data-toggle-group");
-      if (!groupId) return;
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--stroke);
+  color:var(--ink);
 
-      var saved = null;
-      try { saved = sessionStorage.getItem("GEO_TOGGLE_" + groupId); } catch (e) {}
-      var mode = saved || "human";
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+a.pill{cursor:pointer}
+button.pill{
+  cursor:pointer;
+  appearance:none;
+  -webkit-appearance:none;
+  border:1px solid var(--stroke);
+  outline:none;
+}
 
-      // If a matching button exists, apply; else ignore
-      setToggleMode(groupId, mode);
-    });
-  }
+/* bubbles */
+.card,.tile{
+  padding:22px;
+  border-radius:var(--r);
+  background:linear-gradient(180deg,var(--glassA),rgba(20,28,64,.24));
+  border:1px solid var(--stroke);
+  backdrop-filter:blur(14px);
+  box-shadow:0 0 30px rgba(0,0,0,.30);
+}
 
-  // ---------- EVENT DELEGATION (THE FIX) ----------
-  function onDocClick(e) {
-    // Find nearest element with data-drop
-    var el = e.target;
-    var dropBtn = el.closest ? el.closest("[data-drop]") : null;
-    if (dropBtn) {
-      var id = dropBtn.getAttribute("data-drop");
-      toggleDrop(id);
-      return; // do not block nested clicks, but stop double-handling
-    }
+/* text */
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.h1{font-size:2.1rem;margin:0 0 10px}
+.h2{margin:0 0 8px}
+.p{color:var(--muted);line-height:1.6}
+.tileTitle{font-size:1.35rem;margin:6px 0}
+.tileBody{color:var(--muted);line-height:1.55}
 
-    // Toggle buttons
-    var tBtn = el.closest ? el.closest("[data-toggle]") : null;
-    if (tBtn) {
-      var groupId = tBtn.getAttribute("data-toggle");
-      var mode = tBtn.getAttribute("data-mode") || "human";
-      setToggleMode(groupId, mode);
-      return;
-    }
-  }
+/* ----------- DROPDOWNS (CRITICAL FIX) ----------- */
+.drop{
+  display:block;            /* always in layout */
+  margin-top:14px;
+  padding:16px;
+  border-radius:22px;
+  background:rgba(0,0,0,.16);
+  border:1px solid var(--stroke);
 
-  function boot() {
-    // Bind once
-    document.addEventListener("click", onDocClick, true);
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
 
-    // Apply defaults on load
-    ensureToggleDefaults();
+  transition:max-height .55s ease, opacity .22s ease;
+}
+.drop.open{
+  max-height:6000px;        /* allow deep nesting */
+  opacity:1;
+  overflow:visible;         /* nested clicks never get clipped */
+}
 
-    // Also re-apply after a short delay (covers slow rendering)
-    setTimeout(ensureToggleDefaults, 50);
-    setTimeout(ensureToggleDefaults, 250);
-  }
+/* nested drop spacing */
+.drop .drop{margin-top:12px}
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
-})();
+/* ----------- TOGGLES (CRITICAL FIX) ----------- */
+.toggleRow{display:flex;gap:12px;margin:18px 0;flex-wrap:wrap}
+.toggleBtn{
+  flex:1;
+  padding:14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--stroke);
+  color:var(--ink);
+  cursor:pointer;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.toggleBtn.active{
+  background:rgba(143,201,220,.18);
+  border-color:rgba(143,201,220,.32);
+}
+
+/* panes (JS sets display too, but CSS keeps it sane) */
+.pane{display:none}
+.pane.show{display:block}
+
+/* footer */
+.foot{
+  margin:40px 0 10px;
+  color:var(--muted);
+  font-size:.85rem;
+  text-align:center;
+}
+```0

@@ -4,8 +4,14 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg"/>
-  <link rel="stylesheet" href="/assets/ui.css"/>
+
+  <!-- IMPORTANT: use RELATIVE paths (no leading /) + cache-bust -->
+  <link rel="icon" href="assets/favicon.svg?v=1"/>
+  <link rel="stylesheet" href="assets/core.css?v=1"/>
+  <link rel="stylesheet" href="assets/ui.css?v=1"/>
+
+  <!-- optional but fine -->
+  <script src="assets/ui.js?v=1" defer></script>
 </head>
 
 <body class="stars">
@@ -16,29 +22,29 @@
       <p class="sub">Nothing is required until you click.</p>
     </header>
 
-    <!-- PORT (outer diamond + 4 inner diamonds + back/next edges) -->
     <section class="port">
 
-      <!-- BACK / NEXT (edge hits) -->
-      <a class="edge edgeLeft" href="/links/" aria-label="Back"></a>
-      <a class="edge edgeRight" href="/laws/" aria-label="Next"></a>
+      <!-- BACK / NEXT edge hits -->
+      <a class="edge edgeLeft" href="links/" aria-label="Back"></a>
+      <a class="edge edgeRight" href="laws/" aria-label="Next"></a>
 
-      <!-- OUTER DIAMOND (navigation shell) -->
+      <!-- OUTER FRAME -->
       <div class="outer" aria-hidden="true"></div>
 
-      <!-- OUTER PORTS (Laws / Products / Gauges / Links) -->
-      <a class="portNode pTop" href="/laws/" aria-label="Laws"><span>Laws</span></a>
-      <a class="portNode pLeft" href="/products/" aria-label="Products"><span>Products</span></a>
-      <a class="portNode pRight" href="/gauges/" aria-label="Gauges"><span>Gauges</span></a>
-      <a class="portNode pBottom" href="/links/" aria-label="Links"><span>Links</span></a>
+      <!-- OUTER PORTS -->
+      <a class="portNode pTop" href="laws/" aria-label="Laws"><span>Laws</span></a>
+      <a class="portNode pLeft" href="products/" aria-label="Products"><span>Products</span></a>
+      <a class="portNode pRight" href="gauges/" aria-label="Gauges"><span>Gauges</span></a>
+      <a class="portNode pBottom" href="links/" aria-label="Links"><span>Links</span></a>
 
-      <!-- INNER DIAMOND (meaning core: Philosophy / Theology / Science / Coherence) -->
+      <!-- INNER FRAME -->
       <div class="innerFrame" aria-hidden="true"></div>
 
-      <a class="innerNode iTop" href="/philosophy/" aria-label="Philosophy"><span>Philosophy</span></a>
-      <a class="innerNode iRight" href="/theology/" aria-label="Theology"><span>Theology</span></a>
-      <a class="innerNode iLeft" href="/science/" aria-label="Science"><span>Science</span></a>
-      <a class="innerNode iBottom" href="/coherence/" aria-label="Coherence"><span>Coherence</span></a>
+      <!-- INNER 4 -->
+      <a class="innerNode iTop" href="philosophy/" aria-label="Philosophy"><span>Philosophy</span></a>
+      <a class="innerNode iRight" href="theology/" aria-label="Theology"><span>Theology</span></a>
+      <a class="innerNode iLeft" href="science/" aria-label="Science"><span>Science</span></a>
+      <a class="innerNode iBottom" href="coherence/" aria-label="Coherence"><span>Coherence</span></a>
 
     </section>
 

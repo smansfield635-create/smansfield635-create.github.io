@@ -1,148 +1,67 @@
+
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Geodiametrics</title>
-
-  <link rel="icon" href="/assets/favicon.svg"/>
-  <link rel="stylesheet" href="/assets/ui.css"/>
-  <script defer src="/assets/ui.js"></script>
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 
-<body class="stars">
-  <main class="wrap stars" data-page="home">
-    <!-- TOP BAR -->
-    <div class="topbar">
-      <div class="brand">
-        <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
-        <div class="brandText">
-          <div class="brandName">Geodiametrics</div>
-          <div class="brandTag">Coherence · Admissibility · Execution</div>
-        </div>
-      </div>
+<body>
 
-      <nav class="nav" aria-label="Primary">
-        <a class="pill" href="/laws/">Laws</a>
-        <a class="pill" href="/products/">Products</a>
-        <a class="pill" href="/gauges/">Gauges</a>
-        <a class="pill" href="/links/">Links</a>
-        <a class="pill" href="/sayings/">Sayings</a>
-      </nav>
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Be the first.</h1>
+    <p>Nothing is required until you click.</p>
+  </section>
+
+  <!-- DIAMOND GATE -->
+  <section class="diamond-stage">
+
+    <!-- Outer routing diamond -->
+    <div class="diamond top"><span>Laws</span></div>
+    <div class="diamond left"><span>Products</span></div>
+    <div class="diamond right"><span>Gauges</span></div>
+    <div class="diamond bottom"><span>Links</span></div>
+
+    <!-- Center integrity dot -->
+    <div class="center-dot"></div>
+
+    <!-- Inner integrity labels -->
+    <div class="diamond top" style="width:110px;height:110px;top:35px;left:105px;">
+      <span>Wisdom</span>
+    </div>
+    <div class="diamond left" style="width:110px;height:110px;top:105px;left:35px;">
+      <span>Knowledge</span>
+    </div>
+    <div class="diamond right" style="width:110px;height:110px;top:105px;right:35px;">
+      <span>Theism</span>
+    </div>
+    <div class="diamond bottom" style="width:110px;height:110px;bottom:35px;left:105px;">
+      <span>Law</span>
     </div>
 
-    <!-- HERO -->
-    <section class="card hero">
-      <h1 class="title">Be the first.</h1>
-      <p class="sub">Nothing is required until you click.</p>
-    </section>
+  </section>
 
-    <!-- DIAMOND GATE -->
-    <section class="card stage">
-      <div class="stageTitle">
-        <div>
-          <div class="kicker">FRONT GATE</div>
-          <p class="m0">The outer diamond routes the site. The inner diamond is the integrity set.</p>
-        </div>
-        <div class="hint">Tap a node.</div>
-      </div>
+  <!-- INTEGRITY FLOW -->
+  <div class="flow">
+    Integrity → Fortitude → Delivery → Destiny
+  </div>
 
-      <div class="diamondHub" role="group" aria-label="Geodiametrics front gate">
-        <div class="outerDiamond" aria-hidden="true"></div>
-        <div class="inner" aria-hidden="true"></div>
+  <!-- CHINESE PRINCIPLES -->
+  <section class="phrases">
+    <div class="phrase">性格决定命运</div>
+    <div class="phrase">己所不欲，勿施于人</div>
+    <div class="phrase">上善若水</div>
+    <div class="phrase">道可道，非常道</div>
+    <div class="phrase">道生一，一生二，二生三，三生万物</div>
+  </section>
 
-        <!-- OUTER EDGE NAV (routes) -->
-        <div class="edgeNav" aria-hidden="false">
-          <a class="edgeTop" href="/laws/"><span>Laws</span></a>
-          <a class="edgeLeft" href="/products/"><span>Products</span></a>
-          <a class="edgeRight" href="/gauges/"><span>Gauges</span></a>
-          <a class="edgeBottom" href="/links/"><span>Links</span></a>
-        </div>
+  <footer>
+    Canonical · Stable · © Geodiametrics
+  </footer>
 
-        <!-- INNER 4 (integrity diamond) -->
-        <a class="dBtn dTop" href="#wisdom"><span>Wisdom</span></a>
-        <a class="dBtn dLeft" href="#knowledge"><span>Knowledge</span></a>
-        <a class="dBtn dRight" href="#theism"><span>Theism</span></a>
-        <a class="dBtn dBottom" href="#law"><span>Law</span></a>
-
-        <div class="centerDot" aria-hidden="true"></div>
-      </div>
-
-      <!-- INTEGRITY CHAIN -->
-      <div class="strip mt16">
-        <p class="chain">Integrity → Fortitude → Delivery → Destiny</p>
-        <p class="micro">Tap a phrase to translate.</p>
-      </div>
-
-      <!-- PHRASE BUBBLES (tap-to-reveal translations) -->
-      <div class="phrases mt12">
-        <button class="phrase" type="button" data-open="p1">
-          <p class="cn m0">性格决定命运</p>
-        </button>
-
-        <button class="phrase" type="button" data-open="p2">
-          <p class="cn m0">己所不欲，勿施于人</p>
-        </button>
-
-        <button class="phrase" type="button" data-open="p3">
-          <p class="cn m0">上善若水</p>
-        </button>
-
-        <button class="phrase" type="button" data-open="p4">
-          <p class="cn m0">道可道，非常道</p>
-        </button>
-
-        <button class="phrase" type="button" data-open="p5">
-          <p class="cn m0">道生一，一生二，二生三，三生万物</p>
-        </button>
-      </div>
-    </section>
-
-    <!-- PANELS (ui.js will show/hide) -->
-    <section class="hidden">
-      <div class="panel" id="p1">
-        <div class="card">
-          <h3>性格决定命运</h3>
-          <p>Character determines destiny.</p>
-          <p class="mt12"><a class="pill" href="#" data-open="">Close</a></p>
-        </div>
-      </div>
-
-      <div class="panel" id="p2">
-        <div class="card">
-          <h3>己所不欲，勿施于人</h3>
-          <p>Do not do to others what you do not want done to you.</p>
-          <p class="mt12"><a class="pill" href="#" data-open="">Close</a></p>
-        </div>
-      </div>
-
-      <div class="panel" id="p3">
-        <div class="card">
-          <h3>上善若水</h3>
-          <p>The highest good is like water.</p>
-          <p class="mt12"><a class="pill" href="#" data-open="">Close</a></p>
-        </div>
-      </div>
-
-      <div class="panel" id="p4">
-        <div class="card">
-          <h3>道可道，非常道</h3>
-          <p>The Dao that can be spoken is not the eternal Dao.</p>
-          <p class="mt12"><a class="pill" href="#" data-open="">Close</a></p>
-        </div>
-      </div>
-
-      <div class="panel" id="p5">
-        <div class="card">
-          <h3>道生一，一生二，二生三，三生万物</h3>
-          <p>The Dao gives birth to One; One gives birth to Two; Two gives birth to Three; Three gives birth to all things.</p>
-          <p class="mt12"><a class="pill" href="#" data-open="">Close</a></p>
-        </div>
-      </div>
-    </section>
-
-    <footer class="foot">Canonical · Stable · © Geodiametrics</footer>
-  </main>
 </body>
 </html>
-```0

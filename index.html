@@ -5,51 +5,118 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodiametrics</title>
 
-  <!-- IMPORTANT: use RELATIVE paths (no leading /) + cache-bust -->
   <link rel="icon" href="assets/favicon.svg?v=1"/>
-  <link rel="stylesheet" href="assets/core.css?v=1"/>
   <link rel="stylesheet" href="assets/ui.css?v=1"/>
+  <script defer src="assets/ui.js?v=1"></script>
 
-  <!-- optional but fine -->
-  <script src="assets/ui.js?v=1" defer></script>
+  <style>
+    /* --- Integrity section (recessed, non-navigational) --- */
+    .integrityWrap{
+      margin-top: 14px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      opacity:.9;
+    }
+    .integrityTitle{
+      font-weight:900;
+      letter-spacing:.02em;
+      opacity:.9;
+    }
+    .mandarinBubbles{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-top:6px;
+    }
+    .bubble{
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter:blur(8px);
+      cursor:pointer;
+      text-align:center;
+      max-width:92vw;
+    }
+    .bubble small{
+      display:block;
+      margin-top:6px;
+      color:rgba(235,245,255,.75);
+      font-size:.85rem;
+    }
+  </style>
 </head>
 
 <body class="stars">
   <main class="wrap" data-page="gate">
 
-    <header class="hero">
-      <h1>Be the first.</h1>
-      <p class="sub">Nothing is required until you click.</p>
-    </header>
-
+    <!-- FRONT GATE PORT (unchanged) -->
     <section class="port">
+      <a class="edge edgeLeft" href="links/"></a>
+      <a class="edge edgeRight" href="laws/"></a>
 
-      <!-- BACK / NEXT edge hits -->
-      <a class="edge edgeLeft" href="links/" aria-label="Back"></a>
-      <a class="edge edgeRight" href="laws/" aria-label="Next"></a>
+      <div class="outer"></div>
 
-      <!-- OUTER FRAME -->
-      <div class="outer" aria-hidden="true"></div>
+      <a class="portNode pTop" href="laws/"><span>Laws</span></a>
+      <a class="portNode pLeft" href="products/"><span>Products</span></a>
+      <a class="portNode pRight" href="gauges/"><span>Gauges</span></a>
+      <a class="portNode pBottom" href="links/"><span>Links</span></a>
 
-      <!-- OUTER PORTS -->
-      <a class="portNode pTop" href="laws/" aria-label="Laws"><span>Laws</span></a>
-      <a class="portNode pLeft" href="products/" aria-label="Products"><span>Products</span></a>
-      <a class="portNode pRight" href="gauges/" aria-label="Gauges"><span>Gauges</span></a>
-      <a class="portNode pBottom" href="links/" aria-label="Links"><span>Links</span></a>
+      <div class="innerFrame"></div>
 
-      <!-- INNER FRAME -->
-      <div class="innerFrame" aria-hidden="true"></div>
+      <a class="innerNode iTop"><span>Wisdom</span></a>
+      <a class="innerNode iLeft"><span>Knowledge</span></a>
+      <a class="innerNode iRight"><span>Theism</span></a>
+      <a class="innerNode iBottom"><span>Law</span></a>
+    </section>
 
-      <!-- INNER 4 -->
-      <a class="innerNode iTop" href="philosophy/" aria-label="Philosophy"><span>Philosophy</span></a>
-      <a class="innerNode iRight" href="theology/" aria-label="Theology"><span>Theology</span></a>
-      <a class="innerNode iLeft" href="science/" aria-label="Science"><span>Science</span></a>
-      <a class="innerNode iBottom" href="coherence/" aria-label="Coherence"><span>Coherence</span></a>
+    <!-- INTEGRITY (CONTEXT ONLY) -->
+    <section class="integrityWrap">
+      <div class="integrityTitle">Integrity → Fortitude → Delivery → Destiny</div>
 
+      <div class="mandarinBubbles">
+        <div class="bubble" data-en="Character determines destiny.">
+          性格决定命运
+          <small>(tap to translate)</small>
+        </div>
+
+        <div class="bubble" data-en="Do not do to others what you would not want done to you.">
+          己所不欲，勿施于人
+          <small>(tap to translate)</small>
+        </div>
+
+        <div class="bubble" data-en="Be like water—adaptable and resilient.">
+          上善若水
+          <small>(tap to translate)</small>
+        </div>
+
+        <div class="bubble" data-en="The way that can be spoken is not the constant way.">
+          道可道，非常道
+          <small>(tap to translate)</small>
+        </div>
+
+        <div class="bubble" data-en="The Dao gives birth to one; one gives birth to two; two to three; three to all things.">
+          道生一，一生二，二生三，三生万物
+          <small>(tap to translate)</small>
+        </div>
+      </div>
     </section>
 
     <footer class="footer">Canonical · Stable · © Geodiametrics</footer>
-
   </main>
+
+  <script>
+    // click-to-translate (no navigation)
+    document.querySelectorAll('.bubble').forEach(b=>{
+      b.addEventListener('click',()=>{
+        const en=b.getAttribute('data-en');
+        if(!en) return;
+        const s=b.querySelector('small');
+        s.textContent=en;
+      });
+    });
+  </script>
 </body>
 </html>

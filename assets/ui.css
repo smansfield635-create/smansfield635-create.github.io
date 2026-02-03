@@ -1,86 +1,145 @@
 /* ======================================
-   GEODIAMETRICS UI — BUBBLE + FREE WILL
+   GEODIAMETRICS UI — COSMIC BUBBLES v2
+   High-contrast • readable • modern
 ====================================== */
 
 :root {
-  --bubble-bg: radial-gradient(circle at top left,
-    rgba(255,255,255,0.18),
-    rgba(255,255,255,0.06) 60%,
-    rgba(0,0,0,0.25));
+  --bg-deep: #03040a;
+  --bg-mid: #0a0f22;
 
-  --bubble-border: rgba(255,255,255,0.12);
-  --bubble-glow: rgba(120,180,255,0.35);
+  --bubble-bg: rgba(18, 24, 48, 0.72);
+  --bubble-border: rgba(255,255,255,0.14);
 
-  --text-main: #eef1ff;
-  --text-muted: #aab2e8;
+  --glow-soft: rgba(120,180,255,0.22);
+  --glow-strong: rgba(120,180,255,0.45);
+
+  --text-main: #f2f4ff;
+  --text-muted: #b4bce6;
+  --text-accent: #9cc8ff;
 }
 
-/* -------------------------
+/* ===============================
    GLOBAL
-------------------------- */
+=============================== */
 
 body {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(80,120,255,0.12), transparent 45%),
+    radial-gradient(circle at 80% 20%, rgba(180,80,255,0.10), transparent 50%),
+    linear-gradient(180deg, var(--bg-deep), var(--bg-mid));
   color: var(--text-main);
 }
 
-/* -------------------------
-   BUBBLE CARDS
-------------------------- */
+/* STAR FIELD */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 15% 25%, #fff, transparent),
+    radial-gradient(1px 1px at 70% 40%, #fff, transparent),
+    radial-gradient(1px 1px at 45% 75%, #fff, transparent),
+    radial-gradient(2px 2px at 85% 15%, #fff, transparent);
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ===============================
+   BUBBLES / CARDS
+=============================== */
 
 .card,
 .tile,
 .notice {
   background: var(--bubble-bg);
-  border-radius: 28px;
+  border-radius: 26px;
   border: 1px solid var(--bubble-border);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 
   box-shadow:
-    0 20px 50px rgba(0,0,0,0.55),
-    0 0 40px rgba(120,180,255,0.12);
+    0 18px 36px rgba(0,0,0,0.55),
+    0 0 30px var(--glow-soft);
 
   padding: 28px;
-  transition: transform .35s ease, box-shadow .35s ease;
+  margin-bottom: 22px;
+
+  transition: transform .28s ease, box-shadow .28s ease;
 }
 
-.tile:hover,
-.card:hover {
-  transform: translateY(-6px) scale(1.02);
+.card:hover,
+.tile:hover {
+  transform: translateY(-4px);
   box-shadow:
-    0 30px 70px rgba(0,0,0,0.65),
-    0 0 70px var(--bubble-glow);
+    0 26px 56px rgba(0,0,0,0.7),
+    0 0 48px var(--glow-strong);
 }
 
-/* -------------------------
-   FREE WILL BUTTONS
-------------------------- */
+/* ===============================
+   TYPOGRAPHY (FIXED CONTRAST)
+=============================== */
+
+.h1 {
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+}
+
+.kicker {
+  color: var(--text-muted);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.tileTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.tileBody,
+.noticeBody,
+.p {
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+/* ===============================
+   PILLS / BUTTONS
+=============================== */
 
 .pill {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.10);
   border-radius: 999px;
-  padding: 10px 16px;
-  border: 1px solid rgba(255,255,255,0.14);
+  padding: 10px 18px;
+  border: 1px solid rgba(255,255,255,0.18);
   color: var(--text-main);
   cursor: pointer;
+
   backdrop-filter: blur(10px);
-  transition: background .25s ease, transform .25s ease;
+  transition: background .22s ease, transform .22s ease;
 }
 
 .pill:hover {
-  background: rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.20);
   transform: translateY(-2px);
 }
 
-/* -------------------------
-   DROPDOWN / REVEAL
-------------------------- */
+/* ===============================
+   DROPDOWNS (FREE WILL)
+=============================== */
 
 .expandable {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition: max-height .6s ease, opacity .4s ease;
+  transition: max-height .5s ease, opacity .4s ease;
 }
 
 .expandable.open {
@@ -88,31 +147,14 @@ body {
   opacity: 1;
 }
 
-/* -------------------------
-   TEXT
-------------------------- */
-
-.h1 {
-  font-size: clamp(28px, 5vw, 46px);
-  font-weight: 700;
-}
-
-.tileTitle {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.tileBody,
-.noticeBody {
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-
-/* -------------------------
+/* ===============================
    FOOTER
-------------------------- */
+=============================== */
 
 .foot {
+  display: flex;
+  justify-content: space-between;
   color: var(--text-muted);
   font-size: 13px;
+  margin-top: 36px;
 }

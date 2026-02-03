@@ -18,7 +18,7 @@
     <img class="logo" src="/assets/logo.svg"/>
     <div class="brandText">
       <div class="brandName">Foundational Laws</div>
-      <div class="brandTag">Trophy Case · Tiered · Inspectable</div>
+      <div class="brandTag">Trophy Case · Tier 1 · Tier 2 · Tier 3</div>
     </div>
   </div>
 
@@ -31,160 +31,196 @@
 </header>
 
 <section class="card">
-  <h1 class="h1">Tier 1 · Tier 2 · Tier 3</h1>
+  <div class="kicker">RULE</div>
+  <h1 class="h1">Click a law to reveal it</h1>
   <p class="p">Each law expands. Each expansion toggles Human / Scientific on the same page.</p>
 </section>
 
-<!-- =========================
-     TIER 1
-========================= -->
+<!-- =======================
+     TIER 1 — INVARIANTS
+======================= -->
 <section class="card">
   <div class="kicker">TIER 1</div>
   <h2 class="h2">Invariant Laws</h2>
 
-  <!-- Law 1 -->
-  <button class="pill" data-drop="law1">Law 1 — Reality cannot be faked</button>
-  <div id="law1" class="drop">
-    <div class="toggleRow" data-toggle-group="law1m">
-      <button class="toggleBtn" data-toggle="law1m" data-mode="human">Human</button>
-      <button class="toggleBtn" data-toggle="law1m" data-mode="scientific">Scientific</button>
+  <!-- T1-1 -->
+  <button class="pill" data-drop="t1_1">T1.1 — Reality cannot be faked</button>
+  <div id="t1_1" class="drop">
+    <div class="toggleRow" data-toggle-group="t1_1m">
+      <button class="toggleBtn" data-toggle="t1_1m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="t1_1m" data-mode="scientific">Scientific</button>
     </div>
-    <div class="pane show" data-pane="law1m" data-mode="human">
-      <p class="p">You can claim anything. Reality responds only to what is actually true.</p>
+    <div class="pane show" data-pane="t1_1m" data-mode="human">
+      <div class="tile"><div class="tileTop cyan">HUMAN</div><div class="tileTitle">Reality wins</div><div class="tileBody">You can claim anything, but reality responds only to what’s actually true.</div></div>
     </div>
-    <div class="pane" data-pane="law1m" data-mode="scientific">
-      <p class="p">Observed outcomes constrain admissible claims; mismatched claims are rejected by evidence.</p>
-    </div>
-  </div>
-
-  <!-- Law 2 -->
-  <button class="pill" data-drop="law2">Law 2 — Trust begins internally</button>
-  <div id="law2" class="drop">
-    <div class="toggleRow" data-toggle-group="law2m">
-      <button class="toggleBtn" data-toggle="law2m" data-mode="human">Human</button>
-      <button class="toggleBtn" data-toggle="law2m" data-mode="scientific">Scientific</button>
-    </div>
-    <div class="pane show" data-pane="law2m" data-mode="human">
-      <p class="p">If you don’t trust yourself, you can’t expect others to trust you.</p>
-    </div>
-    <div class="pane" data-pane="law2m" data-mode="scientific">
-      <p class="p">External trust cannot exceed internal coherence; inconsistencies cap reliable coordination.</p>
+    <div class="pane" data-pane="t1_1m" data-mode="scientific">
+      <div class="tile"><div class="tileTop cyan">SCIENTIFIC</div><div class="tileTitle">Evidence constrains claims</div><div class="tileBody">Outcomes constrain admissible statements; mismatched claims are rejected by observation.</div></div>
     </div>
   </div>
 
-  <!-- Law 3 -->
-  <button class="pill" data-drop="law3">Law 3 — Outputs reflect inputs</button>
-  <div id="law3" class="drop">
-    <div class="toggleRow" data-toggle-group="law3m">
-      <button class="toggleBtn" data-toggle="law3m" data-mode="human">Human</button>
-      <button class="toggleBtn" data-toggle="law3m" data-mode="scientific">Scientific</button>
+  <!-- T1-2 -->
+  <button class="pill" data-drop="t1_2">T1.2 — Truth precedes perception</button>
+  <div id="t1_2" class="drop">
+    <div class="toggleRow" data-toggle-group="t1_2m">
+      <button class="toggleBtn" data-toggle="t1_2m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="t1_2m" data-mode="scientific">Scientific</button>
     </div>
-    <div class="pane show" data-pane="law3m" data-mode="human">
-      <p class="p">What you do shows up in what you get.</p>
+    <div class="pane show" data-pane="t1_2m" data-mode="human">
+      <div class="tile"><div class="tileTop cyan">HUMAN</div><div class="tileTitle">Belief doesn’t create truth</div><div class="tileBody">How you feel about something doesn’t change what it is.</div></div>
     </div>
-    <div class="pane" data-pane="law3m" data-mode="scientific">
-      <p class="p">System outputs are constrained functions of inputs and constraints; mismatches indicate hidden variables or error.</p>
+    <div class="pane" data-pane="t1_2m" data-mode="scientific">
+      <div class="tile"><div class="tileTop cyan">SCIENTIFIC</div><div class="tileTitle">Observer-invariant structure</div><div class="tileBody">Truth is defined by invariant constraints; perception is a projection, not a generator.</div></div>
     </div>
   </div>
 
-  <!-- Law 4 -->
-  <button class="pill" data-drop="law4">Law 4 — Constraints define admissibility</button>
-  <div id="law4" class="drop">
-    <div class="toggleRow" data-toggle-group="law4m">
-      <button class="toggleBtn" data-toggle="law4m" data-mode="human">Human</button>
-      <button class="toggleBtn" data-toggle="law4m" data-mode="scientific">Scientific</button>
+  <!-- T1-3 -->
+  <button class="pill" data-drop="t1_3">T1.3 — Outputs reflect inputs</button>
+  <div id="t1_3" class="drop">
+    <div class="toggleRow" data-toggle-group="t1_3m">
+      <button class="toggleBtn" data-toggle="t1_3m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="t1_3m" data-mode="scientific">Scientific</button>
     </div>
-    <div class="pane show" data-pane="law4m" data-mode="human">
-      <p class="p">Some paths just don’t work because reality won’t allow them.</p>
+    <div class="pane show" data-pane="t1_3m" data-mode="human">
+      <div class="tile"><div class="tileTop cyan">HUMAN</div><div class="tileTitle">You see what you do</div><div class="tileBody">What happens later reflects what happened earlier.</div></div>
     </div>
-    <div class="pane" data-pane="law4m" data-mode="scientific">
-      <p class="p">Feasible execution exists only within constraint satisfaction; inadmissible transitions terminate.</p>
+    <div class="pane" data-pane="t1_3m" data-mode="scientific">
+      <div class="tile"><div class="tileTop cyan">SCIENTIFIC</div><div class="tileTitle">Constraint-bounded mapping</div><div class="tileBody">Outputs are functions of inputs and constraints; divergence implies hidden variables or error.</div></div>
+    </div>
+  </div>
+
+  <!-- T1-4 -->
+  <button class="pill" data-drop="t1_4">T1.4 — Constraints define admissibility</button>
+  <div id="t1_4" class="drop">
+    <div class="toggleRow" data-toggle-group="t1_4m">
+      <button class="toggleBtn" data-toggle="t1_4m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="t1_4m" data-mode="scientific">Scientific</button>
+    </div>
+    <div class="pane show" data-pane="t1_4m" data-mode="human">
+      <div class="tile"><div class="tileTop cyan">HUMAN</div><div class="tileTitle">Some paths are not allowed</div><div class="tileBody">Reality blocks certain outcomes no matter how badly you want them.</div></div>
+    </div>
+    <div class="pane" data-pane="t1_4m" data-mode="scientific">
+      <div class="tile"><div class="tileTop cyan">SCIENTIFIC</div><div class="tileTitle">Feasibility boundary</div><div class="tileBody">Execution exists only within constraint satisfaction; inadmissible transitions terminate.</div></div>
+    </div>
+  </div>
+
+  <!-- T1-5 -->
+  <button class="pill" data-drop="t1_5">T1.5 — Trust begins internally</button>
+  <div id="t1_5" class="drop">
+    <div class="toggleRow" data-toggle-group="t1_5m">
+      <button class="toggleBtn" data-toggle="t1_5m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="t1_5m" data-mode="scientific">Scientific</button>
+    </div>
+    <div class="pane show" data-pane="t1_5m" data-mode="human">
+      <div class="tile"><div class="tileTop cyan">HUMAN</div><div class="tileTitle">Self-trust first</div><div class="tileBody">If you won’t be honest with yourself, you won’t be stable with others.</div></div>
+    </div>
+    <div class="pane" data-pane="t1_5m" data-mode="scientific">
+      <div class="tile"><div class="tileTop cyan">SCIENTIFIC</div><div class="tileTitle">Internal coherence cap</div><div class="tileBody">External trust cannot exceed internal coherence; inconsistency caps reliable coordination.</div></div>
     </div>
   </div>
 </section>
 
-<!-- =========================
-     TIER 2
-========================= -->
+<!-- =======================
+     TIER 2 — COHERENCE
+======================= -->
 <section class="card">
   <div class="kicker">TIER 2</div>
   <h2 class="h2">Coherence Laws</h2>
 
-  <button class="pill" data-drop="law5">Law 5 — Coherence precedes scale</button>
-  <div id="law5" class="drop">
-    <div class="toggleRow" data-toggle-group="law5m">
-      <button class="toggleBtn" data-toggle="law5m" data-mode="human">Human</button>
-      <button class="toggleBtn" data-toggle="law5m" data-mode="scientific">Scientific</button>
+  <!-- T2-1 -->
+  <button class="pill" data-drop="t2_1">T2.1 — Coherence precedes scale</button>
+  <div id="t2_1" class="drop">
+    <div class="toggleRow" data-toggle-group="t2_1m">
+      <button class="toggleBtn" data-toggle="t2_1m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="t2_1m" data-mode="scientific">Scientific</button>
     </div>
-    <div class="pane show" data-pane="law5m" data-mode="human">
-      <p class="p">If it isn’t stable small, it won’t be stable big.</p>
+    <div class="pane show" data-pane="t2_1m" data-mode="human">
+      <div class="tile"><div class="tileTop green">HUMAN</div><div class="tileTitle">Stable small before stable big</div><div class="tileBody">If it falls apart now, scaling only makes it worse.</div></div>
     </div>
-    <div class="pane" data-pane="law5m" data-mode="scientific">
-      <p class="p">Scaling amplifies incoherence; admissibility must hold prior to expansion.</p>
-    </div>
-  </div>
-
-  <button class="pill" data-drop="law6">Law 6 — Fragmentation increases correction cost</button>
-  <div id="law6" class="drop">
-    <div class="toggleRow" data-toggle-group="law6m">
-      <button class="toggleBtn" data-toggle="law6m" data-mode="human">Human</button>
-      <button class="toggleBtn" data-toggle="law6m" data-mode="scientific">Scientific</button>
-    </div>
-    <div class="pane show" data-pane="law6m" data-mode="human">
-      <p class="p">The longer you wait to fix it, the harder it gets.</p>
-    </div>
-    <div class="pane" data-pane="law6m" data-mode="scientific">
-      <p class="p">Correction effort grows with incoherent divergence; early constraints reduce repair complexity.</p>
+    <div class="pane" data-pane="t2_1m" data-mode="scientific">
+      <div class="tile"><div class="tileTop green">SCIENTIFIC</div><div class="tileTitle">Scale amplifies incoherence</div><div class="tileBody">Admissibility must hold prior to expansion; otherwise variance accelerates.</div></div>
     </div>
   </div>
 
-  <button class="pill" data-drop="law7">Law 7 — All relationships are projections</button>
-  <div id="law7" class="drop">
-    <div class="toggleRow" data-toggle-group="law7m">
-      <button class="toggleBtn" data-toggle="law7m" data-mode="human">Human</button>
-      <button class="toggleBtn" data-toggle="law7m" data-mode="scientific">Scientific</button>
+  <!-- T2-2 -->
+  <button class="pill" data-drop="t2_2">T2.2 — Fragmentation increases correction cost</button>
+  <div id="t2_2" class="drop">
+    <div class="toggleRow" data-toggle-group="t2_2m">
+      <button class="toggleBtn" data-toggle="t2_2m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="t2_2m" data-mode="scientific">Scientific</button>
     </div>
-    <div class="pane show" data-pane="law7m" data-mode="human">
-      <p class="p">How people relate reflects what’s true underneath.</p>
+    <div class="pane show" data-pane="t2_2m" data-mode="human">
+      <div class="tile"><div class="tileTop red">HUMAN</div><div class="tileTitle">Fix it early</div><div class="tileBody">The longer you wait, the harder and more expensive it becomes.</div></div>
     </div>
-    <div class="pane" data-pane="law7m" data-mode="scientific">
-      <p class="p">Relations are observable projections of constraint-aligned coherence between systems.</p>
+    <div class="pane" data-pane="t2_2m" data-mode="scientific">
+      <div class="tile"><div class="tileTop red">SCIENTIFIC</div><div class="tileTitle">Correction grows with divergence</div><div class="tileBody">Repair effort increases with incoherent drift; early constraint enforcement reduces complexity.</div></div>
+    </div>
+  </div>
+
+  <!-- T2-3 -->
+  <button class="pill" data-drop="t2_3">T2.3 — All relationships are projections</button>
+  <div id="t2_3" class="drop">
+    <div class="toggleRow" data-toggle-group="t2_3m">
+      <button class="toggleBtn" data-toggle="t2_3m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="t2_3m" data-mode="scientific">Scientific</button>
+    </div>
+    <div class="pane show" data-pane="t2_3m" data-mode="human">
+      <div class="tile"><div class="tileTop purple">HUMAN</div><div class="tileTitle">Relationships reveal the truth underneath</div><div class="tileBody">How things connect reflects what’s real beneath the surface.</div></div>
+    </div>
+    <div class="pane" data-pane="t2_3m" data-mode="scientific">
+      <div class="tile"><div class="tileTop purple">SCIENTIFIC</div><div class="tileTitle">Relations as constraint projections</div><div class="tileBody">Observed relations are projections of coherence constraints between systems.</div></div>
     </div>
   </div>
 </section>
 
-<!-- =========================
-     TIER 3
-========================= -->
+<!-- =======================
+     TIER 3 — EXECUTION
+======================= -->
 <section class="card">
   <div class="kicker">TIER 3</div>
   <h2 class="h2">Execution & Closure Laws</h2>
 
-  <button class="pill" data-drop="law8">Law 8 — Coherence solidifies through traversal</button>
-  <div id="law8" class="drop">
-    <div class="toggleRow" data-toggle-group="law8m">
-      <button class="toggleBtn" data-toggle="law8m" data-mode="human">Human</button>
-      <button class="toggleBtn" data-toggle="law8m" data-mode="scientific">Scientific</button>
+  <!-- T3-1 -->
+  <button class="pill" data-drop="t3_1">T3.1 — Coherence solidifies through traversal</button>
+  <div id="t3_1" class="drop">
+    <div class="toggleRow" data-toggle-group="t3_1m">
+      <button class="toggleBtn" data-toggle="t3_1m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="t3_1m" data-mode="scientific">Scientific</button>
     </div>
-    <div class="pane show" data-pane="law8m" data-mode="human">
-      <p class="p">Pressure reveals what’s real. What holds becomes solid.</p>
+    <div class="pane show" data-pane="t3_1m" data-mode="human">
+      <div class="tile"><div class="tileTop green">HUMAN</div><div class="tileTitle">Pressure makes you real</div><div class="tileBody">What can stay aligned through time becomes solid. What can’t, breaks.</div></div>
     </div>
-    <div class="pane" data-pane="law8m" data-mode="scientific">
-      <p class="p">Under constrained traversal, coherence above threshold persists; below threshold fractures.</p>
+    <div class="pane" data-pane="t3_1m" data-mode="scientific">
+      <div class="tile"><div class="tileTop green">SCIENTIFIC</div><div class="tileTitle">Formation constraint</div><div class="tileBody">Under constrained traversal, coherence above threshold persists; below threshold fractures.</div></div>
     </div>
   </div>
 
-  <button class="pill" data-drop="law9">Law 9 — Closure is final</button>
-  <div id="law9" class="drop">
-    <div class="toggleRow" data-toggle-group="law9m">
-      <button class="toggleBtn" data-toggle="law9m" data-mode="human">Human</button>
-      <button class="toggleBtn" data-toggle="law9m" data-mode="scientific">Scientific</button>
+  <!-- T3-2 -->
+  <button class="pill" data-drop="t3_2">T3.2 — Admissibility is binary at execution</button>
+  <div id="t3_2" class="drop">
+    <div class="toggleRow" data-toggle-group="t3_2m">
+      <button class="toggleBtn" data-toggle="t3_2m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="t3_2m" data-mode="scientific">Scientific</button>
     </div>
-    <div class="pane show" data-pane="law9m" data-mode="human">
-      <p class="p">Once a decision is truly made, you stop renegotiating it.</p>
+    <div class="pane show" data-pane="t3_2m" data-mode="human">
+      <div class="tile"><div class="tileTop red">HUMAN</div><div class="tileTitle">At the moment of action: yes or no</div><div class="tileBody">You can think forever, but execution is a decision.</div></div>
     </div>
-    <div class="pane" data-pane="law9m" data-mode="scientific">
-      <p class="p">Executive admissibility emits terminal receipts; post-closure renegotiation is inadmissible.</p>
+    <div class="pane" data-pane="t3_2m" data-mode="scientific">
+      <div class="tile"><div class="tileTop red">SCIENTIFIC</div><div class="tileTitle">Execution gate</div><div class="tileBody">At execution time, the system is admissible or inadmissible; ambiguous motion is halted.</div></div>
+    </div>
+  </div>
+
+  <!-- T3-3 -->
+  <button class="pill" data-drop="t3_3">T3.3 — Closure is final</button>
+  <div id="t3_3" class="drop">
+    <div class="toggleRow" data-toggle-group="t3_3m">
+      <button class="toggleBtn" data-toggle="t3_3m" data-mode="human">Human</button>
+      <button class="toggleBtn" data-toggle="t3_3m" data-mode="scientific">Scientific</button>
+    </div>
+    <div class="pane show" data-pane="t3_3m" data-mode="human">
+      <div class="tile"><div class="tileTop cyan">HUMAN</div><div class="tileTitle">A real decision stops renegotiation</div><div class="tileBody">Closure means you move forward instead of looping.</div></div>
+    </div>
+    <div class="pane" data-pane="t3_3m" data-mode="scientific">
+      <div class="tile"><div class="tileTop cyan">SCIENTIFIC</div><div class="tileTitle">Terminal receipt</div><div class="tileBody">Closure emits terminal state; post-closure renegotiation is inadmissible.</div></div>
     </div>
   </div>
 
@@ -198,3 +234,4 @@
 </main>
 </body>
 </html>
+```0

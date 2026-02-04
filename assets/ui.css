@@ -1,16 +1,19 @@
 /* =========================================================
-   CANONICAL DIAMOND UI — LOCKED
+   CANONICAL DIAMOND UI — LOCKED + MODALS (NO JS)
    Applies to ALL core diamond pages (non-leaf)
    ========================================================= */
 
 :root {
   --bg-top: #0b1a26;
   --bg-bottom: #07131d;
+
   --glass-bg: rgba(255,255,255,0.08);
   --glass-border: rgba(255,255,255,0.18);
   --glass-inner: rgba(255,255,255,0.06);
+
   --text-main: #e8eef5;
   --text-sub: #b9c6d3;
+
   --accent: #6faad6;
 }
 
@@ -32,6 +35,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* Kill default link styling */
+a, a:visited, a:hover, a:active {
+  color: inherit;
+  text-decoration: none;
 }
 
 /* =======================
@@ -95,6 +104,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  user-select: none;
 }
 
 .diamond::after {
@@ -105,16 +116,16 @@ body {
   border: 1px solid var(--glass-inner);
 }
 
-/* Diamond positions — LOCKED */
+.diamond:hover {
+  border-color: rgba(255,255,255,0.28);
+}
+
 .diamond.top    { top: 0; left: 60px; }
 .diamond.right  { top: 60px; right: 0; }
 .diamond.bottom { bottom: 0; left: 60px; }
 .diamond.left   { top: 60px; left: 0; }
 
-/* =======================
-   DIAMOND CONTENT
-   ======================= */
-
+/* content stays upright */
 .diamond span {
   transform: rotate(-45deg);
   text-align: center;
@@ -129,54 +140,6 @@ body {
 }
 
 /* =======================
-   FINAL CHECK PANEL
-   ======================= */
-
-.check {
-  margin-top: 20px;
-  padding: 18px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
-  border: 1px solid var(--glass-border);
-}
-
-.check h3 {
-  font-size: 1.1rem;
-  margin-bottom: 8px;
-}
-
-.check p {
-  font-size: 0.9rem;
-  color: var(--text-sub);
-  margin-bottom: 14px;
-}
-
-/* =======================
-   BUTTONS
-   ======================= */
-
-.buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}
-
-button {
-  padding: 10px 18px;
-  border-radius: 18px;
-  border: 1px solid var(--glass-border);
-  background: var(--glass-bg);
-  color: var(--text-main);
-  cursor: pointer;
-}
-
-button.primary {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* =======================
    FOOTER
    ======================= */
 
@@ -184,4 +147,70 @@ button.primary {
   margin-top: 18px;
   font-size: 0.75rem;
   color: var(--text-sub);
+}
+
+/* =======================
+   MODALS (NO JS) — :target
+   ======================= */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 999;
+}
+
+.modal:target {
+  display: flex;
+}
+
+.modalCard {
+  width: min(560px, 92vw);
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+  border: 1px solid rgba(255,255,255,0.16);
+  box-shadow: 0 26px 70px rgba(0,0,0,0.6);
+  padding: 18px 16px;
+}
+
+.modalCard h2 {
+  margin: 6px 4px 10px;
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
+}
+
+.modalCard p {
+  margin: 0 4px 14px;
+  color: var(--text-sub);
+  line-height: 1.45;
+}
+
+.modalButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 4px 4px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.btn.primary {
+  border-color: var(--accent);
+  color: var(--accent);
 }

@@ -4,7 +4,7 @@
   --bg2:#0a1d33;
 
   --ink:rgba(235,242,255,.86);
-  --muted:rgba(235,242,255,.66);
+  --muted:rgba(235,242,255,.60);
 
   --stroke:rgba(255,255,255,.14);
   --stroke2:rgba(255,255,255,.22);
@@ -13,17 +13,17 @@
   --glassB:rgba(255,255,255,.05);
 
   --shadow:0 18px 55px rgba(0,0,0,.55);
-  --shadow2:0 10px 30px rgba(0,0,0,.40);
-
-  --r:26px;
-  --pill:999px;
+  --inner:inset 0 1px 0 rgba(255,255,255,.12),
+          inset 0 -1px 0 rgba(0,0,0,.25);
 
   --cell:156px;
   --gap:18px;
+  --r:26px;
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
+
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   color:var(--ink);
@@ -32,13 +32,12 @@ body{
     radial-gradient(800px 600px at 75% 25%, rgba(0,255,220,.10), transparent 60%),
     radial-gradient(900px 700px at 60% 85%, rgba(255,110,220,.08), transparent 65%),
     linear-gradient(180deg,var(--bg0),var(--bg1) 45%,var(--bg2));
-  overflow-x:hidden;
+  overflow:hidden;
 }
 
 body::before{
   content:"";
-  position:fixed;inset:0;pointer-events:none;
-  opacity:.35;
+  position:fixed; inset:0; pointer-events:none;
   background:
     radial-gradient(circle at 12% 18%, rgba(255,255,255,.14) 0 1px, transparent 2px),
     radial-gradient(circle at 72% 22%, rgba(255,255,255,.12) 0 1px, transparent 2px),
@@ -49,23 +48,19 @@ body::before{
 }
 
 a{color:inherit;text-decoration:none}
-a:visited{color:inherit}
 
-/* page */
 .wrap{
+  min-height:100%;
   width:min(980px,92vw);
   margin:0 auto;
-  padding:42px 0 46px;
+  padding:44px 0 46px;
 }
 
-.hero{text-align:center;margin:10px auto 18px}
+.hero{text-align:center;margin-bottom:16px}
 .hero h1{
-  margin:0;
   font-size:clamp(34px,7vw,54px);
-  letter-spacing:-.02em;
   font-weight:800;
-  color:rgba(235,242,255,.90);
-  text-shadow:0 10px 26px rgba(0,0,0,.35);
+  letter-spacing:-.02em;
 }
 .hero p{
   margin-top:10px;
@@ -73,51 +68,47 @@ a:visited{color:inherit}
   color:var(--muted);
 }
 
-/* glass card */
-.card{
+.panel{
   width:min(820px,100%);
-  margin:16px auto 0;
+  margin:0 auto;
   padding:22px 18px;
   border-radius:var(--r);
   background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
   border:1px solid var(--stroke);
-  box-shadow:var(--shadow);
+  box-shadow:var(--shadow), var(--inner);
   backdrop-filter:blur(14px);
   -webkit-backdrop-filter:blur(14px);
 }
 
-/* 4-square layout (layout truth) */
+/* ===== 4-DIAMOND LAYOUT ===== */
 .grid4{
   display:grid;
   grid-template-columns: var(--cell) var(--cell);
   grid-template-rows: var(--cell) var(--cell);
   gap: var(--gap);
   justify-content:center;
-  align-content:center;
-  padding: 10px 0 6px;
+  padding: 8px 0 6px;
 }
 
-/* Button chassis = square hit-area (stable) */
-.btn4{
+/* Square chassis (layout truth) */
+.dbtn{
   position:relative;
   width:var(--cell);
   height:var(--cell);
-  border-radius:22px; /* square chassis */
   background:transparent;
   border:0;
-  padding:0;
   cursor:pointer;
   user-select:none;
   -webkit-tap-highlight-color:transparent;
 }
 
-/* Visual surface = diamond (presentation truth) */
-.btn4::before{
+/* Diamond glass (visual truth) */
+.dbtn::before{
   content:"";
   position:absolute;
   inset:10px;
-  border-radius:18px;
   transform:rotate(45deg);
+  border-radius:18px;
   background:
     radial-gradient(140px 110px at 30% 25%, rgba(255,255,255,.16), transparent 60%),
     radial-gradient(160px 140px at 70% 75%, rgba(55,180,255,.12), transparent 65%),
@@ -131,68 +122,75 @@ a:visited{color:inherit}
   -webkit-backdrop-filter:blur(14px) saturate(1.1);
 }
 
-/* inner rim */
-.btn4::after{
+/* Inner rim */
+.dbtn::after{
   content:"";
   position:absolute;
-  inset:20px;
-  border-radius:14px;
+  inset:22px;
   transform:rotate(45deg);
+  border-radius:14px;
   border:1px solid rgba(255,255,255,.10);
   box-shadow:inset 0 0 0 1px rgba(0,0,0,.18);
-  opacity:.9;
 }
 
-/* Label = normal orientation (not rotated) */
-.btn4 .label{
+/* Label (upright) */
+.dbtn .label{
   position:absolute;
   inset:0;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:8px;
+  gap:6px;
   text-align:center;
-  padding:18px;
+  padding:16px;
 }
 
-.btn4 .label strong{
-  font-weight:800;
+.dbtn strong{
+  font-size:14px;
   letter-spacing:.14em;
   text-transform:uppercase;
-  font-size:14px;
+  font-weight:800;
   color:rgba(235,242,255,.86);
-  text-shadow:0 1px 0 rgba(0,0,0,.28);
 }
-
-.btn4 .label small{
+.dbtn small{
   font-size:13px;
   font-weight:600;
-  color:rgba(235,242,255,.60);
+  color:rgba(235,242,255,.58);
 }
 
-/* Interaction */
-.btn4:hover::before{
-  border-color:rgba(255,255,255,.24);
-  filter:brightness(1.06);
-}
-.btn4:active{transform:scale(.99)}
-.btn4:focus-visible{
+.dbtn:hover::before{filter:brightness(1.06)}
+.dbtn:active{transform:scale(.99)}
+.dbtn:focus-visible{
   outline:2px solid rgba(55,180,255,.40);
   outline-offset:6px;
-  border-radius:22px;
 }
 
-/* “primary” (Start Quiz) accent */
-.btn4.primary::before{
+/* Selected state (visual only) */
+.dbtn.selected::before{
   border-color:rgba(55,180,255,.30);
   background:
     radial-gradient(140px 110px at 30% 25%, rgba(255,255,255,.16), transparent 60%),
-    radial-gradient(160px 140px at 70% 75%, rgba(55,180,255,.20), transparent 65%),
+    radial-gradient(160px 140px at 70% 75%, rgba(55,180,255,.22), transparent 65%),
     linear-gradient(180deg, rgba(55,180,255,.14), rgba(255,255,255,.04));
 }
 
-/* footer */
+/* Nav row */
+.nav{
+  display:flex;
+  justify-content:space-between;
+  margin-top:16px;
+}
+.nav a{
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  color:var(--ink);
+  font-weight:700;
+  font-size:13px;
+}
+
 .foot{
   text-align:center;
   margin-top:14px;
@@ -200,7 +198,6 @@ a:visited{color:inherit}
   font-size:13px;
 }
 
-/* mobile */
 @media (max-width:420px){
   :root{ --cell:138px; --gap:16px; }
   .hero h1{font-size:44px}

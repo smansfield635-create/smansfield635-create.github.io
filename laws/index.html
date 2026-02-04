@@ -9,26 +9,68 @@
 <body>
   <main class="page" data-mode="diamond" data-frozen="true">
     <div class="h1">Laws</div>
-    <div class="h2">Site content. Not the Alignment Check.</div>
+    <div class="h2">One science. Multiple depths.</div>
 
     <section class="panel">
-      <div class="cluster" aria-label="Law tiers">
-        <a class="diamond d-top primary" href="/laws/tier1/">
-          <div class="label"><div class="main">Tier 1</div><div class="sub">Foundations</div></div>
-        </a>
-        <a class="diamond d-right" href="/laws/tier2/">
-          <div class="label"><div class="main">Tier 2</div><div class="sub">Corollaries</div></div>
-        </a>
-        <a class="diamond d-bottom" href="/laws/tier3/">
-          <div class="label"><div class="main">Tier 3</div><div class="sub">Applications</div></div>
-        </a>
+      <!-- Diamond = concept -->
+      <div class="cluster" aria-label="Laws depth">
+        <button class="diamond d-top primary" data-tier="t1">
+          <div class="label"><div class="main">Foundations</div><div class="sub">Tier 1</div></div>
+        </button>
+        <button class="diamond d-right" data-tier="t2">
+          <div class="label"><div class="main">Corollaries</div><div class="sub">Tier 2</div></div>
+        </button>
+        <button class="diamond d-bottom" data-tier="t3">
+          <div class="label"><div class="main">Applications</div><div class="sub">Tier 3</div></div>
+        </button>
         <a class="diamond d-left" href="/home/">
           <div class="label"><div class="main">Back</div><div class="sub">Home</div></div>
         </a>
       </div>
 
+      <!-- Depth panes -->
+      <div class="card" id="t1">
+        <div class="title">Tier 1 — Foundational Laws</div>
+        <div class="text">
+          <b>Meta-law: Coherence</b> — admissibility under scale.<br/><br/>
+          <b>Euclidean</b>: identity, boundary, distance, topology.<br/>
+          <b>Cyclical</b>: time, feedback, drift, convergence.<br/>
+          <b>Mechanistic</b>: input, transfer, output, efficiency.<br/>
+          <b>Closure</b>: termination, receipt, reversibility, non-regress.
+        </div>
+      </div>
+
+      <div class="card" id="t2" hidden>
+        <div class="title">Tier 2 — Corollary Axes</div>
+        <div class="text">
+          Each foundational law expresses through four axes (16 total),
+          providing measurable lenses without fragmenting the law itself.
+        </div>
+      </div>
+
+      <div class="card" id="t3" hidden>
+        <div class="title">Tier 3 — Applications</div>
+        <div class="text">
+          Alignment Check · Executive Admissibility Instrument (EAI) ·
+          M256 Coherence Geometry · Coherence-driven Plasma & CVD · Live Gauges.
+        </div>
+      </div>
+
       <div class="footer">Canonical · Stable · © Geodiametrics</div>
     </section>
   </main>
+
+  <script>
+    (function(){
+      const panes = ["t1","t2","t3"];
+      document.querySelectorAll("[data-tier]").forEach(b=>{
+        b.addEventListener("click", ()=>{
+          panes.forEach(id=>{
+            document.getElementById(id).hidden = (id !== b.dataset.tier);
+          });
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

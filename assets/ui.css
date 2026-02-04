@@ -1,238 +1,252 @@
-/* /assets/ui.css  (TNT — full replacement)
-   GOAL: keep the glass-diamond win, remove competing geometry,
-   and “blend the white print” (no harsh pure-white text).
-*/
+/* =========================================================
+   GEODIAMETRICS — UI (GLASS DIAMONDS) — TNT
+   File: /assets/ui.css
+   PURPOSE
+   - One screen = FOUR actionable glass diamonds (no ghost diamonds)
+   - Diamonds are true 45° rotated squares
+   - Text looks etched (not pure white shouting)
+   - No background “extra squares” anywhere
+   ========================================================= */
 
-:root{
-  --bg0:#060b16;
-  --bg1:#0a1330;
-  --bg2:#121b3b;
-
-  --ink: rgba(235,242,255,.86);      /* blended “white print” */
-  --ink2: rgba(235,242,255,.66);
-  --ink3: rgba(235,242,255,.45);
-
-  --glass: rgba(255,255,255,.06);
-  --glass2: rgba(255,255,255,.09);
-  --stroke: rgba(255,255,255,.12);
-  --stroke2: rgba(255,255,255,.18);
-
-  --shadow: 0 18px 60px rgba(0,0,0,.55);
-  --shadow2: 0 10px 30px rgba(0,0,0,.45);
-
-  --accent: rgba(80,205,255,.75);
-  --accent2: rgba(120,255,210,.55);
-}
-
+/* ---------- Reset ---------- */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
-  color:var(--ink);
-  background:
-    radial-gradient(1200px 900px at 25% 10%, rgba(120,180,255,.14), transparent 60%),
-    radial-gradient(900px 700px at 80% 20%, rgba(170,120,255,.12), transparent 60%),
-    radial-gradient(1200px 900px at 50% 90%, rgba(60,220,255,.10), transparent 62%),
-    linear-gradient(180deg, var(--bg0), var(--bg1) 45%, var(--bg2));
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  color:rgba(232,242,255,.92);
+  background:#07101d;
   overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
 }
 
-/* subtle “stars” without extra geometry */
+/* ---------- Background (stars) ---------- */
 body::before{
   content:"";
   position:fixed; inset:0;
   pointer-events:none;
   background:
-    radial-gradient(circle at 12% 18%, rgba(255,255,255,.14) 0 1px, transparent 2px),
-    radial-gradient(circle at 72% 22%, rgba(255,255,255,.12) 0 1px, transparent 2px),
-    radial-gradient(circle at 38% 64%, rgba(255,255,255,.10) 0 1px, transparent 2px),
-    radial-gradient(circle at 82% 78%, rgba(255,255,255,.12) 0 1px, transparent 2px),
-    radial-gradient(circle at 22% 82%, rgba(255,255,255,.10) 0 1px, transparent 2px);
-  opacity:.55;
-  filter: blur(.2px);
+    radial-gradient(1200px 900px at 50% 10%, rgba(88,140,255,.22), transparent 60%),
+    radial-gradient(800px 600px at 25% 65%, rgba(90,255,220,.10), transparent 55%),
+    radial-gradient(900px 700px at 80% 75%, rgba(255,120,220,.08), transparent 60%),
+    radial-gradient(circle at 15% 25%, rgba(255,255,255,.08) 0 1px, transparent 2px),
+    radial-gradient(circle at 65% 18%, rgba(255,255,255,.06) 0 1px, transparent 2px),
+    radial-gradient(circle at 44% 52%, rgba(255,255,255,.05) 0 1px, transparent 2px),
+    radial-gradient(circle at 82% 36%, rgba(255,255,255,.04) 0 1px, transparent 2px),
+    radial-gradient(circle at 22% 78%, rgba(255,255,255,.04) 0 1px, transparent 2px);
+  filter:saturate(1.1);
+  opacity:1;
 }
 
-/* layout */
+/* ---------- Layout ---------- */
 .wrap{
-  width:min(920px, 92vw);
-  margin: 0 auto;
-  padding: 42px 0 64px;
+  position:relative;
+  min-height:100%;
+  padding:clamp(18px, 4vw, 28px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  gap:clamp(14px, 2.8vw, 22px);
 }
 
 .hero{
+  width:min(780px, 100%);
   text-align:center;
-  margin: 10px auto 18px;
+  padding-top:clamp(6px, 1vw, 10px);
 }
 .hero h1{
   margin:0;
-  font-size: clamp(34px, 7vw, 54px);
-  letter-spacing:-.02em;
-  color: var(--ink);
-  text-shadow: 0 1px 0 rgba(0,0,0,.35);
+  font-size:clamp(42px, 9vw, 64px);
+  letter-spacing:.2px;
+  font-weight:800;
+  color:rgba(236,246,255,.94);
+  text-shadow:0 12px 30px rgba(0,0,0,.38);
 }
 .hero p{
   margin:10px 0 0;
-  font-size: clamp(14px, 3.7vw, 18px);
-  color: var(--ink2);
+  font-size:clamp(14px, 3.6vw, 18px);
+  color:rgba(214,232,255,.74);
+  line-height:1.35;
 }
 
-/* glass surface */
-.glass{
-  margin: 18px auto 0;
-  border-radius: 28px;
-  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-  border: 1px solid var(--stroke);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-.glassInner{
-  padding: 22px 18px 22px;
+/* ---------- Glass Card ---------- */
+.card{
+  width:min(820px, 100%);
+  border-radius:26px;
+  padding:clamp(18px, 4vw, 26px);
+  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.14);
+  backdrop-filter:blur(14px) saturate(1.15);
+  -webkit-backdrop-filter:blur(14px) saturate(1.15);
 }
 
-/* NO background diamonds/squares here.
-   Diamonds appear ONLY as clickable nodes. */
-
-/* diamond grid (4 nodes) */
+/* ---------- DIAMOND GRID (exactly 4 diamonds) ---------- */
 .diamondGrid{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  align-items:center;
-  justify-items:center;
-  padding: 12px 10px 6px;
-}
-
-/* the actual diamond button */
-.diamondBtn{
-  width: min(260px, 38vw);
-  aspect-ratio: 1 / 1;
+  width:100%;
   display:grid;
   place-items:center;
-  text-decoration:none;
-  border-radius: 22px; /* softened corners *inside* clip path */
-  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
-  border: 1px solid var(--stroke);
-  box-shadow: var(--shadow2);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transform: rotate(45deg);
-  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-  position:relative;
-  overflow:hidden;
+  grid-template-columns:1fr 1fr;
+  gap:clamp(16px, 3.8vw, 26px);
+  padding:clamp(10px, 2vw, 14px);
 }
+
+/* Each diamond is a rotated square button */
+.diamondBtn{
+  --size:clamp(118px, 26vw, 178px);
+  width:var(--size);
+  height:var(--size);
+  border:0;
+  background:transparent;
+  padding:0;
+  cursor:pointer;
+  position:relative;
+  transform:rotate(45deg);
+  border-radius:18px; /* keep crisp-ish; not a pill */
+  outline:none;
+}
+
+/* The visible glass surface */
+.diamondBtn::before{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:18px;
+  background:
+    linear-gradient(135deg, rgba(120,170,255,.18), rgba(255,255,255,.06) 55%, rgba(80,255,220,.08)),
+    radial-gradient(120px 120px at 25% 20%, rgba(255,255,255,.16), transparent 55%),
+    radial-gradient(140px 140px at 75% 80%, rgba(70,120,255,.12), transparent 60%);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:
+    0 20px 55px rgba(0,0,0,.40),
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -1px 0 rgba(0,0,0,.25);
+  backdrop-filter:blur(16px) saturate(1.2);
+  -webkit-backdrop-filter:blur(16px) saturate(1.2);
+}
+
+/* Edge highlight (faceted rim) */
 .diamondBtn::after{
   content:"";
-  position:absolute; inset:-40%;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.18), transparent 55%),
-    radial-gradient(circle at 70% 65%, rgba(80,205,255,.10), transparent 60%);
-  transform: rotate(-45deg);
+  position:absolute; inset:8px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.18);
   opacity:.9;
 }
-.diamondBtn .label{
-  transform: rotate(-45deg);
-  text-align:center;
-  padding: 14px 12px;
-  position:relative;
-  z-index:1;
-}
-.diamondBtn .label b{
-  display:block;
-  font-size: clamp(14px, 3.6vw, 18px);
-  letter-spacing:.10em;
-  text-transform: uppercase;
-  color: var(--ink);            /* blended, not pure white */
-  text-shadow: 0 1px 0 rgba(0,0,0,.35);
-}
-.diamondBtn .label small{
-  display:block;
-  margin-top:8px;
-  font-size: clamp(12px, 3.2vw, 14px);
-  color: var(--ink2);
+
+/* Content un-rotated inside */
+.diamondBtn > .diamondContent{
+  position:absolute; inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  transform:rotate(-45deg);
+  gap:8px;
+  padding:14px;
 }
 
-.diamondBtn:active{ transform: rotate(45deg) scale(.985); }
-.diamondBtn:hover{
-  border-color: var(--stroke2);
-}
-.diamondBtn:hover::after{
-  opacity:1;
-}
-.diamondBtn:focus-visible{
-  outline: 2px solid rgba(80,205,255,.55);
-  outline-offset: 6px;
+/* Primary label (etched) */
+.diamondBtn .primary{
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-size:clamp(12px, 2.8vw, 14px);
+  color:rgba(232,246,255,.86);
+  text-shadow:0 1px 0 rgba(0,0,0,.28);
 }
 
-/* “primary” diamond (subtle accent) */
-.diamondBtn.primary{
-  border-color: rgba(80,205,255,.28);
-}
-.diamondBtn.primary::after{
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.18), transparent 55%),
-    radial-gradient(circle at 70% 65%, rgba(80,205,255,.20), transparent 60%);
+/* Secondary label */
+.diamondBtn .secondary{
+  font-size:clamp(12px, 3.2vw, 14px);
+  color:rgba(205,230,255,.62);
+  line-height:1.1;
 }
 
-/* footer */
+/* Interaction */
+.diamondBtn:hover::before{border-color:rgba(180,220,255,.22)}
+.diamondBtn:active{transform:rotate(45deg) scale(.985)}
+.diamondBtn:focus-visible::before{
+  border-color:rgba(120,255,220,.35);
+  box-shadow:
+    0 22px 60px rgba(0,0,0,.44),
+    0 0 0 3px rgba(120,255,220,.20),
+    inset 0 1px 0 rgba(255,255,255,.14);
+}
+
+/* ---------- Footer ---------- */
 .foot{
-  margin-top: 18px;
+  margin-top:auto;
+  padding:12px 0 6px;
+  font-size:13px;
+  color:rgba(200,225,255,.55);
   text-align:center;
-  color: var(--ink3);
-  font-size: 13px;
 }
 
-/* modal via :target (no JS) */
+/* ---------- Modal (glass sheet) ---------- */
 .modal{
   position:fixed; inset:0;
   display:none;
-  place-items:center;
-  background: rgba(0,0,0,.55);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  z-index: 50;
-  padding: 18px;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(2,6,12,.55);
+  backdrop-filter:blur(10px) saturate(1.05);
+  -webkit-backdrop-filter:blur(10px) saturate(1.05);
+  z-index:9999;
 }
-.modal:target{ display:grid; }
+.modal.on{display:flex}
+
 .modalCard{
-  width:min(720px, 92vw);
-  border-radius: 26px;
-  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-  border: 1px solid var(--stroke);
-  box-shadow: var(--shadow);
-  padding: 18px;
+  width:min(760px, 100%);
+  border-radius:26px;
+  padding:22px;
+  background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.07));
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 30px 90px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.12);
 }
 .modalCard h2{
-  margin:0 0 8px;
-  font-size: 22px;
-  color: var(--ink);
+  margin:0 0 10px;
+  font-size:clamp(22px, 5.4vw, 30px);
+  color:rgba(236,246,255,.94);
 }
 .modalCard p{
   margin:0 0 14px;
-  color: var(--ink2);
-  line-height:1.5;
+  color:rgba(214,232,255,.70);
+  line-height:1.45;
 }
-.modalActions{
+
+/* Modal buttons */
+.btnRow{
   display:flex;
-  gap: 12px;
+  gap:12px;
   flex-wrap:wrap;
-  margin-top: 10px;
 }
-.pill{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding: 12px 16px;
-  border-radius: 999px;
-  text-decoration:none;
-  border: 1px solid var(--stroke);
-  background: rgba(255,255,255,.06);
-  color: var(--ink);
-  box-shadow: 0 10px 26px rgba(0,0,0,.32);
+.pillBtn{
+  appearance:none;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.08);
+  color:rgba(236,246,255,.90);
+  padding:12px 16px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:700;
+  letter-spacing:.02em;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
 }
-.pill.primary{
-  border-color: rgba(80,205,255,.35);
-  background: rgba(80,205,255,.12);
+.pillBtn.primary{
+  background:linear-gradient(180deg, rgba(70,210,200,.26), rgba(255,255,255,.06));
+  border-color:rgba(120,255,220,.22);
 }
-.pill:focus-visible{ outline:2px solid rgba(80,205,255,.55); outline-offset:4px; }
+.pillBtn:hover{border-color:rgba(180,220,255,.22)}
+.pillBtn:active{transform:translateY(1px)}
+.pillBtn:focus-visible{outline:2px solid rgba(120,255,220,.35); outline-offset:2px}
+
+/* ---------- Utility (kill link styling if any) ---------- */
+a{color:rgba(120,255,220,.78); text-decoration:none}
+a:hover{text-decoration:underline}
+```0

@@ -3,109 +3,93 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Door · Geodiametrics</title>
+  <title>Door · Self-Alignment</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 <body>
+
 <a class="exit" href="about:blank">Exit</a>
 
 <main>
   <div class="wrap">
 
-    <!-- HEADER -->
     <header class="hero">
       <h1>Be the first.</h1>
       <p>Nothing is required until you click.</p>
     </header>
 
-    <!-- PART 1: SELF-HUNCH -->
     <section class="card">
-      <p style="text-align:center;color:var(--muted)">
-        Start the self-alignment quiz or enter the website.
-      </p>
 
+      <!-- PART 1: FORK -->
       <div class="stage">
-        <!-- One big diamond split into four -->
         <div class="big">
-          <svg viewBox="0 0 100 100" aria-label="Choose your starting orientation">
-            <polygon class="dOuter" points="50,3 97,50 50,97 3,50"/>
-            <!-- Top -->
-            <g class="dBtn" onclick="show('arch')">
-              <polygon class="dInner" points="50,6 68,24 50,42 32,24"/>
-              <text class="dText" x="50" y="27" text-anchor="middle" dominant-baseline="middle">Architect</text>
+          <svg viewBox="0 0 100 100" aria-label="Choose what to do">
+            <!-- frame -->
+            <polygon class="frame" points="50,3 97,50 50,97 3,50"/>
+
+            <!-- Start quiz -->
+            <g onclick="show('quiz')">
+              <polygon class="tile" points="50,6 68,24 50,42 32,24"/>
+              <text class="label" x="50" y="27" text-anchor="middle">Start Quiz</text>
             </g>
-            <!-- Right -->
-            <g class="dBtn" onclick="show('exec')">
-              <polygon class="dInner" points="94,50 76,32 58,50 76,68"/>
-              <text class="dTextSm" x="76" y="50" text-anchor="middle" dominant-baseline="middle">Executor</text>
+
+            <!-- Learn more -->
+            <g onclick="show('info')">
+              <polygon class="tile" points="94,50 76,32 58,50 76,68"/>
+              <text class="label" x="76" y="50" text-anchor="middle">Learn More</text>
             </g>
-            <!-- Bottom -->
-            <g class="dBtn" onclick="show('harm')">
-              <polygon class="dInner" points="50,94 68,76 50,58 32,76"/>
-              <text class="dTextSm" x="50" y="76" text-anchor="middle" dominant-baseline="middle">Harmonizer</text>
+
+            <!-- Enter site -->
+            <g onclick="show('enter')">
+              <polygon class="tile" points="50,94 68,76 50,58 32,76"/>
+              <text class="label" x="50" y="76" text-anchor="middle">Enter Site</text>
             </g>
-            <!-- Left -->
-            <g class="dBtn" onclick="show('disp')">
-              <polygon class="dInner" points="6,50 24,32 42,50 24,68"/>
-              <text class="dTextSm" x="24" y="50" text-anchor="middle" dominant-baseline="middle">Disruptor</text>
+
+            <!-- Exit -->
+            <g onclick="location.href='about:blank'">
+              <polygon class="tile" points="6,50 24,32 42,50 24,68"/>
+              <text class="label" x="24" y="50" text-anchor="middle">Exit</text>
             </g>
           </svg>
         </div>
       </div>
 
-      <!-- Panels -->
-      <div id="arch" class="panel">
+      <!-- PANELS -->
+      <div id="quiz" class="panel">
         <div class="visual"></div>
-        <div class="desc">You value coherence and structure before action.</div>
+        <div class="desc">
+          You’ll explore meaningful sayings and choose the ones that resonate.
+          There are no questions and no right answers. It takes about three minutes.
+        </div>
         <div class="actions">
-          <a class="btn" onclick="confirm()">Yes, this fits</a>
-          <a class="btn" onclick="clearPanels()">Compare another</a>
+          <a class="btn">Begin Self-Alignment Quiz</a>
+          <a class="btn" onclick="clearPanels()">Go back</a>
         </div>
       </div>
 
-      <div id="exec" class="panel">
-        <div class="visual"></div>
-        <div class="desc">You prioritize action and outcomes under pressure.</div>
+      <div id="info" class="panel">
+        <div class="desc">
+          This is a self-alignment instrument, not a personality test.
+          You choose what speaks to you — nothing more.
+        </div>
         <div class="actions">
-          <a class="btn" onclick="confirm()">Yes, this fits</a>
-          <a class="btn" onclick="clearPanels()">Compare another</a>
+          <a class="btn" onclick="show('quiz')">Start Quiz</a>
+          <a class="btn" onclick="clearPanels()">Go back</a>
         </div>
       </div>
 
-      <div id="harm" class="panel">
-        <div class="visual"></div>
-        <div class="desc">You preserve stability and relational continuity.</div>
+      <div id="enter" class="panel">
+        <div class="desc">
+          You can enter the site directly and explore without taking the quiz.
+        </div>
         <div class="actions">
-          <a class="btn" onclick="confirm()">Yes, this fits</a>
-          <a class="btn" onclick="clearPanels()">Compare another</a>
+          <a class="btn">Enter Website</a>
+          <a class="btn" onclick="clearPanels()">Go back</a>
         </div>
       </div>
 
-      <div id="disp" class="panel">
-        <div class="visual"></div>
-        <div class="desc">You renew systems by breaking rigid frames.</div>
-        <div class="actions">
-          <a class="btn" onclick="confirm()">Yes, this fits</a>
-          <a class="btn" onclick="clearPanels()">Compare another</a>
-        </div>
-      </div>
     </section>
 
-    <!-- PART 2: TEASER (eras/sayings come next) -->
-    <section id="phase2" class="card phase2">
-      <p class="hint">
-        Next, you’ll explore how this orientation appears across time.
-        You may skip at any time.
-      </p>
-      <div style="display:flex;justify-content:center;gap:10px;margin-top:10px">
-        <a class="btn" href="/home/">Enter Website</a>
-        <a class="btn" href="#">Continue Exploration</a>
-      </div>
-    </section>
-
-    <footer class="foot" style="text-align:center;color:var(--muted)">
-      Integrity → Fortitude → Delivery → Destiny
-    </footer>
   </div>
 </main>
 
@@ -117,9 +101,7 @@ function show(id){
   clearPanels();
   document.getElementById(id).classList.add('active');
 }
-function confirm(){
-  document.getElementById('phase2').classList.add('active');
-}
 </script>
+
 </body>
 </html>

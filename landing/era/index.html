@@ -1,43 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
   <title>Step Two · Era</title>
-  <link rel="stylesheet" href="/assets/ui.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 <body>
-  <div class="page">
-    <h1>Step Two</h1>
-    <div class="subtitle">Choose an era.</div>
+  <main class="page">
+    <div class="h1">Step Two</div>
+    <div class="h2">Choose an era.</div>
 
-    <div class="panel">
-      <div class="diamond-grid">
-        <a class="diamond top" href="/landing/country/">
-          <span>ANCIENT<br><span class="small">Earliest</span></span>
+    <section class="panel">
+      <div class="cluster" aria-label="Era choices">
+        <a class="diamond d-top primary" href="/landing/country/">
+          <div class="label"><div class="main">Ancient</div><div class="sub">Earliest</div></div>
         </a>
-
-        <a class="diamond right" href="/landing/country/">
-          <span>MEDIEVAL<br><span class="small">Middle Ages</span></span>
+        <a class="diamond d-right" href="/landing/country/">
+          <div class="label"><div class="main">Medieval</div><div class="sub">Middle ages</div></div>
         </a>
-
-        <a class="diamond left" href="/landing/country/">
-          <span>MODERN<br><span class="small">Industrial</span></span>
+        <a class="diamond d-bottom" href="/landing/country/">
+          <div class="label"><div class="main">Modern</div><div class="sub">Industrial</div></div>
         </a>
-
-        <a class="diamond bottom" href="/landing/country/">
-          <span>CONTEMPORARY<br><span class="small">Now</span></span>
+        <a class="diamond d-left" href="/landing/country/">
+          <div class="label"><div class="main">Contemporary</div><div class="sub">Now</div></div>
         </a>
       </div>
 
-      <div class="nav">
-        <a href="/landing/archetype/">Back</a>
-        <a href="/landing/country/">Forward</a>
-        <a href="/landing/exit/">Exit</a>
+      <div class="btnrow" style="justify-content:space-between;margin-top:10px;">
+        <a class="btn" href="/landing/archetype/">Back</a>
+        <a class="btn" href="/landing/exit.html">Exit</a>
       </div>
 
       <div class="footer">Canonical · Stable · © Geodiametrics</div>
-    </div>
-  </div>
+    </section>
+  </main>
 </body>
 </html>
-```0

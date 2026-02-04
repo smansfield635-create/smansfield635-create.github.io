@@ -1,59 +1,34 @@
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Start Quiz · Geodiametrics</title>
+  <title>Step Two · Continue</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 <body>
-  <main class="page">
-    <div class="h1">Start Quiz</div>
-    <div class="h2">The quiz begins when you enter the leaf model.</div>
+  <main class="page" data-mode="diamond" data-frozen="true">
+    <div class="h1">Step Two</div>
+    <div class="h2">Continue to begin measurement.</div>
 
     <section class="panel">
-      <div class="card">
-        <div class="title">Ready to begin?</div>
-        <div class="text">
-          When you tap <b>Yes</b>, you’ll browse eras and countries and choose sayings that resonate.
-          There are no right answers. Your first choices and the order you explore are part of the signal.
-        </div>
-      </div>
-
-      <div class="cluster" aria-label="Start gate">
-        <a class="diamond d-top primary" href="/landing/leaf/">
-          <div class="label"><div class="main">Yes</div><div class="sub">Begin quiz</div></div>
+      <div class="cluster" aria-label="Continue options">
+        <a class="diamond d-top primary" href="/landing/country/" aria-label="Continue">
+          <div class="label"><div class="main">Continue</div><div class="sub">Next step</div></div>
         </a>
-
-        <a class="diamond d-right" href="/home/">
+        <a class="diamond d-right" href="/home/" aria-label="Skip">
           <div class="label"><div class="main">Skip</div><div class="sub">Enter site</div></div>
         </a>
-
-        <a class="diamond d-bottom" href="/landing/info/">
-          <div class="label"><div class="main">Learn</div><div class="sub">About the quiz</div></div>
+        <a class="diamond d-bottom" href="/landing/info/" aria-label="Learn">
+          <div class="label"><div class="main">Learn</div><div class="sub">About this</div></div>
         </a>
-
-        <a class="diamond d-left" href="/landing/archetype/">
-          <div class="label"><div class="main">Back</div><div class="sub">Change type</div></div>
+        <a class="diamond d-left" href="/landing/archetype/" aria-label="Back">
+          <div class="label"><div class="main">Back</div><div class="sub">Change self</div></div>
         </a>
       </div>
 
-      <div class="btnrow" style="justify-content:space-between;margin-top:10px;">
-        <a class="btn" href="/landing/exit.html">Exit</a>
-      </div>
-
-      <div class="footer">Canonical · Stable · © Geodiametrics</div>
+      <div class="footer">Check yourself before you wreck yourself.</div>
     </section>
   </main>
-
-  <script>
-    (function(){
-      const key="gd_quiz_log";
-      const log=JSON.parse(localStorage.getItem(key)||"[]");
-      log.push({t:Date.now(),name:"quiz_start_gate_viewed",data:{}});
-      localStorage.setItem(key,JSON.stringify(log));
-    })();
-  </script>
 </body>
 </html>

@@ -1,150 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
   <title>Geodiametrics</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/ui.css" />
-
-  <style>
-    * {
-      -webkit-tap-highlight-color: transparent;
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #0c1b2a 0%, #020b14 70%);
-      color: #e6eef6;
-      overflow: hidden;
-    }
-
-    .container {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      text-align: center;
-    }
-
-    h1 {
-      font-weight: 500;
-      letter-spacing: 0.4px;
-      margin-bottom: 12px;
-    }
-
-    .subtitle {
-      opacity: 0.75;
-      margin-bottom: 48px;
-    }
-
-    .diamond-grid {
-      position: relative;
-      width: 260px;
-      height: 260px;
-      transform: rotate(45deg);
-    }
-
-    .diamond {
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: transform 0.25s ease, background 0.25s ease;
-    }
-
-    .diamond span {
-      transform: rotate(-45deg);
-      font-size: 14px;
-      letter-spacing: 0.6px;
-    }
-
-    .diamond:hover {
-      background: rgba(255,255,255,0.12);
-      transform: scale(1.04);
-    }
-
-    .top    { top: 0; left: 70px; }
-    .right  { top: 70px; right: 0; }
-    .bottom { bottom: 0; left: 70px; }
-    .left   { top: 70px; left: 0; }
-
-    .quotes {
-      margin-top: 48px;
-      display: flex;
-      gap: 12px;
-      opacity: 0.7;
-      font-size: 13px;
-    }
-
-    .quote {
-      padding: 6px 10px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.05);
-    }
-
-    .canonical {
-      position: fixed;
-      bottom: 8px;
-      right: 10px;
-      font-size: 10px;
-      opacity: 0.35;
-      letter-spacing: 0.4px;
-      pointer-events: none;
-    }
-  </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>Take a moment.</h1>
-    <div class="subtitle">
+  <main class="home">
+
+    <h1 class="headline">Take a moment.</h1>
+    <p class="subtitle">
       This explains what’s here — before you decide where to go.
-    </div>
+    </p>
 
-    <div class="diamond-grid">
-      <div class="diamond top" data-go="/ask/">
-        <span>START</span>
-      </div>
-      <div class="diamond right" data-go="/links/">
-        <span>ENTER</span>
-      </div>
-      <div class="diamond bottom" data-go="/breakthroughs/">
-        <span>LEARN</span>
-      </div>
-      <div class="diamond left" data-go="/">
-        <span>EXIT</span>
-      </div>
-    </div>
+    <!-- FUNCTIONAL, NO-JS NAVIGATION -->
+    <nav class="diamond-nav">
+      <a class="diamond" href="/ask/">ASK</a>
+      <a class="diamond" href="/breakthroughs/">LEARN</a>
+      <a class="diamond" href="/links/">ENTER</a>
+      <a class="diamond" href="/">EXIT</a>
+    </nav>
 
-    <div class="quotes">
-      <div class="quote">知行合一</div>
-      <div class="quote">大道至简</div>
-      <div class="quote">实事求是</div>
-    </div>
-  </div>
+    <footer>
+      <div class="sayings">
+        <span>知行合一</span>
+        <span>大道至简</span>
+        <span>实事求是</span>
+      </div>
 
-  <div class="canonical">Canonical · Stable · © Geodiametrics</div>
+      <div class="mark">
+        Canonical · Stable · © Geodiametrics
+      </div>
+    </footer>
 
-  <script>
-    document.querySelectorAll('.diamond').forEach(el => {
-      el.addEventListener('click', () => {
-        const target = el.getAttribute('data-go');
-        if (target) {
-          window.location.href = target;
-        }
-      });
-    });
-  </script>
+  </main>
 </body>
 </html>

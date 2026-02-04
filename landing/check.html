@@ -4,24 +4,117 @@
   <meta charset="UTF-8" />
   <title>Final Check · Geodiametrics</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/assets/ui.css" />
+  <style>
+    :root {
+      --bg-top: #0c2232;
+      --bg-bottom: #071722;
+      --text: #f1f6fb;
+      --sub: rgba(241,246,251,.72);
+      --panel-glass: rgba(255,255,255,.12);
+      --panel-border: rgba(255,255,255,.22);
+      --glass: rgba(255,255,255,0.22);
+      --blur: 18px;
+      --radius: 26px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),
+        linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+
+    .page { width: 100%; max-width: 420px; text-align: center; }
+    .title { font-size: 40px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
+    .subtitle { font-size: 17px; color: var(--sub); margin-bottom: 24px; }
+
+    .panel {
+      position: relative;
+      padding: 32px 24px 24px;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--panel-glass), rgba(255,255,255,0.05));
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+    }
+
+    .check p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      color: var(--sub);
+    }
+
+    .check strong { color: var(--text); }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 24px 0 16px;
+    }
+
+    .button {
+      display: block;
+      padding: 16px;
+      border-radius: 16px;
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .button.primary {
+      background: #f1f6fb;
+      color: #071722;
+      border-color: #ffffff;
+    }
+
+    .button.primary:hover {
+      background: #ffffff;
+      box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+    }
+
+    .footer {
+      margin-top: 16px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: rgba(241,246,251,0.3);
+      text-transform: uppercase;
+    }
+  </style>
 </head>
-
 <body>
-  <div class="page">
 
+  <div class="page">
     <div class="title">Final check</div>
     <div class="subtitle">Proceed only if you intend to complete it.</div>
 
     <div class="panel">
-
       <div class="check">
         <p>Do you have about <strong>3 minutes</strong> right now?</p>
         <p>Will you take this seriously and finish once you begin?</p>
         <p>Are you ready to see how aligned you are with yourself?</p>
 
         <div class="buttons">
-          <a class="primary button" href="/landing/archetype/">Yes, start</a>
+          <a class="button primary" href="/landing/archetype/">Yes, start</a>
           <a class="button" href="/landing/archetype/">Skip, enter site</a>
           <a class="button" href="/">Not now</a>
         </div>
@@ -30,8 +123,8 @@
       <div class="footer">
         Canonical · Stable · © Geodiametrics
       </div>
-
     </div>
   </div>
+
 </body>
 </html>

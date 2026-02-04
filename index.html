@@ -1,40 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Geodiametrics</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geodiametrics · Door</title>
+
   <link rel="stylesheet" href="/assets/ui.css" />
+
+  <!-- Kill mobile tap highlight -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
 </head>
-
 <body>
-  <main class="home">
 
+  <main class="screen">
     <h1 class="headline">Take a moment.</h1>
-    <p class="subtitle">
+    <p class="subhead">
       This explains what’s here — before you decide where to go.
     </p>
 
-    <!-- FUNCTIONAL, NO-JS NAVIGATION -->
-    <nav class="diamond-nav">
-      <a class="diamond" href="/ask/">ASK</a>
-      <a class="diamond" href="/breakthroughs/">LEARN</a>
-      <a class="diamond" href="/links/">ENTER</a>
-      <a class="diamond" href="/">EXIT</a>
-    </nav>
-
-    <footer>
-      <div class="sayings">
-        <span>知行合一</span>
-        <span>大道至简</span>
-        <span>实事求是</span>
-      </div>
-
-      <div class="mark">
-        Canonical · Stable · © Geodiametrics
-      </div>
-    </footer>
-
+    <div class="diamond-grid">
+      <button class="diamond" data-target="/landing/quiz.html">START</button>
+      <button class="diamond" data-target="/breakthroughs/">ENTER</button>
+      <button class="diamond" data-target="/links/">LEARN</button>
+      <button class="diamond exit" data-target="/">EXIT</button>
+    </div>
   </main>
+
+  <footer class="mark">
+    Canonical · Stable · © Geodiametrics
+  </footer>
+
+  <script>
+    document.querySelectorAll(".diamond").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.getAttribute("data-target");
+        if (target) window.location.href = target;
+      });
+    });
+  </script>
+
 </body>
 </html>

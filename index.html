@@ -1,41 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="icon" href="/assets/favicon.svg"/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 <body class="stars">
 <main class="wrap">
 
-  <!-- ORIENTATION -->
   <section class="hero">
     <h1>Be the first.</h1>
     <p>Nothing is required until you click.</p>
   </section>
 
-  <!-- GLOBAL GATE (DOMAIN SELECTOR) -->
+  <!-- GLOBAL GATE -->
   <section class="card gate">
     <div class="stage">
 
-      <!-- OUTER DOMAIN DIAMOND -->
       <div class="diamond outer"></div>
 
-      <!-- DOMAIN AXES (GLOBAL SCIENCE / GOVERNANCE / OBSERVABILITY / HUMAN) -->
       <div class="node outer top">Laws</div>
       <div class="node outer right">Products</div>
       <div class="node outer bottom">Gauges</div>
       <div class="node outer left">Sayings</div>
 
-      <!-- INNER INTEGRITY DIAMOND -->
       <div class="diamond inner"></div>
 
-      <!-- INTEGRITY AXES -->
-      <div class="node inner i-top">Wisdom</div>
-      <div class="node inner i-right">Knowledge</div>
-      <div class="node inner i-bottom">Theism</div>
-      <div class="node inner i-left">Law</div>
+      <a class="node inner i-top" href="#wisdom-law">Wisdom</a>
+      <a class="node inner i-right" href="#knowledge-law">Knowledge</a>
+      <a class="node inner i-bottom" href="#theism-law">Theism</a>
+      <a class="node inner i-left" href="#law-law">Law</a>
 
       <div class="center-dot"></div>
     </div>
@@ -45,13 +41,57 @@
     </div>
   </section>
 
-  <!-- LAW EXPANSION (ALL SCIENCE, GOVERNANCE, MECHANICS) -->
-  <section class="card expand">
+  <!-- WISDOM → 4 LAWS -->
+  <section class="card expand" id="wisdom-law">
+    <div class="expand-title">Wisdom (4-Law Expansion)</div>
+
+    <div class="mini-stage">
+      <div class="diamond mini"></div>
+      <div class="mini-node top">Euclidean Law</div>
+      <div class="mini-node right">Cyclical Law</div>
+      <div class="mini-node bottom">Mechanistic Law</div>
+      <div class="mini-node left">Closure Law</div>
+    </div>
+
+    <p class="small">Wisdom is governed by constraints (Euclidean), recurrence (cyclical), execution (mechanistic), and bounded finality (closure).</p>
+  </section>
+
+  <!-- KNOWLEDGE → 4 LAWS -->
+  <section class="card expand" id="knowledge-law">
+    <div class="expand-title">Knowledge (4-Law Expansion)</div>
+
+    <div class="mini-stage">
+      <div class="diamond mini"></div>
+      <div class="mini-node top">Euclidean Law</div>
+      <div class="mini-node right">Cyclical Law</div>
+      <div class="mini-node bottom">Mechanistic Law</div>
+      <div class="mini-node left">Closure Law</div>
+    </div>
+
+    <p class="small">Knowledge stabilizes when models respect geometry (Euclidean), update coherently (cyclical), predict under constraints (mechanistic), and terminate ambiguity (closure).</p>
+  </section>
+
+  <!-- THEISM → 4 LAWS -->
+  <section class="card expand" id="theism-law">
+    <div class="expand-title">Theism (4-Law Expansion)</div>
+
+    <div class="mini-stage">
+      <div class="diamond mini"></div>
+      <div class="mini-node top">Euclidean Law</div>
+      <div class="mini-node right">Cyclical Law</div>
+      <div class="mini-node bottom">Mechanistic Law</div>
+      <div class="mini-node left">Closure Law</div>
+    </div>
+
+    <p class="small">Theism expresses boundary (Euclidean), ritual/recurrence (cyclical), duty/behavior (mechanistic), and covenant/finality (closure).</p>
+  </section>
+
+  <!-- LAW → 4 LAWS -->
+  <section class="card expand" id="law-law">
     <div class="expand-title">Law (Recursive Expansion)</div>
 
     <div class="mini-stage">
       <div class="diamond mini"></div>
-
       <div class="mini-node top">Euclidean Law</div>
       <div class="mini-node right">Cyclical Law</div>
       <div class="mini-node bottom">Mechanistic Law</div>

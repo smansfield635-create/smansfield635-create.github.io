@@ -1,99 +1,43 @@
-<!doctype html>
+<!-- FILE: /products/index.html  (TNT)
+     IMPORTANT: removes /assets/core.css and /assets/ui.js and logo refs (you said you don’t have them).
+-->
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Products · Geodiametrics</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Products · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 <body>
-  <main class="page" data-mode="diamond" data-frozen="true">
-    <div class="h1">Products</div>
-    <div class="h2">One science. Multiple instantiations.</div>
+  <main class="page">
+    <header class="hero">
+      <h1 class="title">Products</h1>
+      <p class="subtitle">Suite hub.</p>
+    </header>
 
     <section class="panel">
-      <!-- Global view toggle -->
-      <div class="btnrow">
-        <button class="btn primary" data-view="human">Human</button>
-        <button class="btn" data-view="scientific">Scientific</button>
+      <div class="diamondCluster">
+        <a class="diamond top" href="/products/"><span><strong>TOP</strong><em>Plasma</em></span></a>
+        <a class="diamond right" href="/products/"><span><strong>RIGHT</strong><em>EAI</em></span></a>
+        <a class="diamond bottom" href="/products/"><span><strong>BOTTOM</strong><em>Platform</em></span></a>
+        <a class="diamond left" href="/products/"><span><strong>LEFT</strong><em>CVD</em></span></a>
+        <div class="diamondCenterDot" aria-hidden="true"></div>
+        <div class="diamondCross" aria-hidden="true"></div>
       </div>
 
-      <!-- Diamond = concept -->
-      <div class="cluster" aria-label="Products depth">
-        <button class="diamond d-top primary" data-prod="plasma">
-          <div class="label"><div class="main">Plasma</div><div class="sub">Systems</div></div>
-        </button>
-        <button class="diamond d-right" data-prod="cvd">
-          <div class="label"><div class="main">CVD</div><div class="sub">Deposition</div></div>
-        </button>
-        <button class="diamond d-bottom" data-prod="platform">
-          <div class="label"><div class="main">Platform</div><div class="sub">Diagnostics</div></div>
-        </button>
-        <a class="diamond d-left" href="/home/">
-          <div class="label"><div class="main">Back</div><div class="sub">Home</div></div>
-        </a>
-      </div>
+      <section class="card">
+        <h2 class="cardTitle">Product Suite</h2>
+        <p class="cardText">Your detailed product tree can be reintroduced after we restore stable wiring.</p>
+        <div class="btnRow">
+          <a class="btn" href="/site/">Back to Site</a>
+          <a class="btn" href="/gauges/">Open Gauges</a>
+        </div>
+      </section>
 
-      <!-- Product panes -->
-      <div class="card" id="plasma">
-        <div class="title">Plasma</div>
-        <div class="text human">
-          Plasma stabilizes when constraints are respected; coherence replaces noise.
-        </div>
-        <div class="text scientific" hidden>
-          Boundary-constrained admissibility suppresses instability under load.
-        </div>
-      </div>
-
-      <div class="card" id="cvd" hidden>
-        <div class="title">CVD</div>
-        <div class="text human">
-          Repeatable deposition emerges when the entire run stays aligned.
-        </div>
-        <div class="text scientific" hidden>
-          Trajectory-level admissibility reduces defect propagation and scrap.
-        </div>
-      </div>
-
-      <div class="card" id="platform" hidden>
-        <div class="title">Platform</div>
-        <div class="text human">
-          Diagnostics make alignment visible and actionable.
-        </div>
-        <div class="text scientific" hidden>
-          Instrumentation exposes coherence, drift, and closure in real time.
-        </div>
-      </div>
-
-      <div class="footer">Canonical · Stable · © Geodiametrics</div>
+      <footer class="footer">Canonical · Stable · © Geodiametrics</footer>
     </section>
   </main>
-
-  <script>
-    (function(){
-      const prods = ["plasma","cvd","platform"];
-      const views = ["human","scientific"];
-      let curView="human";
-
-      // product switch
-      document.querySelectorAll("[data-prod]").forEach(b=>{
-        b.addEventListener("click", ()=>{
-          prods.forEach(id=>{
-            document.getElementById(id).hidden = (id !== b.dataset.prod);
-          });
-        });
-      });
-
-      // view toggle
-      document.querySelectorAll("[data-view]").forEach(b=>{
-        b.addEventListener("click", ()=>{
-          curView = b.dataset.view;
-          document.querySelectorAll(".text.human").forEach(x=>x.hidden = curView!=="human");
-          document.querySelectorAll(".text.scientific").forEach(x=>x.hidden = curView!=="scientific");
-          document.querySelectorAll("[data-view]").forEach(x=>x.classList.toggle("primary", x.dataset.view===curView));
-        });
-      });
-    })();
-  </script>
 </body>
 </html>
+```0

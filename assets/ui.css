@@ -1,147 +1,221 @@
+/* =========================================================
+   USS (UI STYLE SHEET) — HARD RESET
+   RULE OF 1-2-3 GEOMETRY
+   1) One homepage gate
+   2) Two diamonds interlock (touch, no overlap)
+   3) Four sides per diamond (N/E/S/W)
+   No logo. No JS. No other CSS assumed.
+   ========================================================= */
+
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background: radial-gradient(circle at top, #0b1530, #050914 70%);
   color:#e9efff;
-  background:
-    radial-gradient(1200px 800px at 50% 10%, rgba(120,90,255,.22), transparent 55%),
-    radial-gradient(900px 700px at 50% 80%, rgba(60,200,210,.16), transparent 60%),
-    linear-gradient(180deg,#060a16,#08122a);
   overflow-x:hidden;
 }
+
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+summary{list-style:none}
+summary::-webkit-details-marker{display:none}
+
+/* stars */
 .stars::before{
   content:"";
-  position:fixed;inset:0;pointer-events:none;opacity:.5;
+  position:fixed;inset:0;pointer-events:none;opacity:.55;
   background:
-    radial-gradient(1px 1px at 12% 18%, #fff, transparent),
-    radial-gradient(1px 1px at 42% 28%, #fff, transparent),
-    radial-gradient(1px 1px at 72% 22%, #fff, transparent),
-    radial-gradient(1px 1px at 22% 62%, #fff, transparent),
-    radial-gradient(1px 1px at 82% 76%, #fff, transparent);
-}
-.wrap{max-width:980px;margin:0 auto;padding:36px 16px 48px}
-.hero{text-align:center;margin-bottom:22px}
-.hero h1{font-size:52px;letter-spacing:-.6px}
-.hero p{opacity:.7;font-size:18px}
-
-.card{
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.14);
-  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.05));
-  box-shadow:0 22px 70px rgba(0,0,0,.55);
-  backdrop-filter:blur(10px);
-  padding:18px;
-  margin-bottom:18px;
+    radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(1px 1px at 42% 28%, rgba(255,255,255,.45), transparent 60%),
+    radial-gradient(1px 1px at 72% 22%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(1px 1px at 22% 62%, rgba(255,255,255,.35), transparent 60%),
+    radial-gradient(1px 1px at 82% 76%, rgba(255,255,255,.35), transparent 60%);
+  filter:blur(.2px);
 }
 
-/* GATE */
-.stage{
-  position:relative;
-  width:min(92vw,520px);
-  height:min(92vw,520px);
+.page{
+  max-width:980px;
   margin:0 auto;
+  padding:38px 16px 48px;
+  display:flex;
+  flex-direction:column;
+  gap:22px;
 }
+
+.hero{
+  text-align:center;
+}
+.hero h1{
+  font-size:56px;
+  line-height:1.04;
+  letter-spacing:-.6px;
+}
+.hero p{
+  margin-top:10px;
+  font-size:18px;
+  opacity:.72;
+}
+
+/* GATE: two diamonds interlocking (touching at one point) */
+.gate{
+  position:relative;
+  width:min(860px, 96vw);
+  height:420px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0; /* IMPORTANT: no overlap, no gap */
+}
+
+/* A diamondBox contains one rotated square + four side pills */
+.diamondBox{
+  position:relative;
+  width:320px;
+  height:320px;
+}
+
+/* Interlock: touch at one point, no overlap */
+.dA{ margin-right:-28px; } /* pull together */
+.dB{ margin-left:-28px; }  /* pull together */
+
+/* Diamond shape */
 .diamond{
   position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%) rotate(45deg);
+  inset:0;
+  margin:auto;
+  width:240px;
+  height:240px;
+  transform:rotate(45deg);
   border-radius:22px;
+  background: linear-gradient(145deg, rgba(30,40,90,.45), rgba(10,14,28,.85));
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 22px 70px rgba(0,0,0,.55);
+  backdrop-filter:blur(10px);
 }
-.diamond.outer{
-  width:82%;height:82%;
-  background:rgba(16,24,48,.45);
-  border:1px solid rgba(255,255,255,.18);
-}
-.diamond.inner{
-  width:42%;height:42%;
-  background:rgba(16,24,48,.60);
-  border:1px solid rgba(255,255,255,.16);
-}
-.center-dot{
-  position:absolute;left:50%;top:50%;
-  width:20px;height:20px;border-radius:50%;
-  background:#e9efff;
-  transform:translate(-50%,-50%);
-}
-.node{
-  position:absolute;
-  padding:12px 16px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.18);
-  font-weight:700;
-  text-align:center;
-  min-width:120px;
-}
-.node a{color:inherit;text-decoration:none}
-.node.outer.top{left:50%;top:6%;transform:translate(-50%,0)}
-.node.outer.right{right:4%;top:50%;transform:translate(0,-50%)}
-.node.outer.bottom{left:50%;bottom:6%;transform:translate(-50%,0)}
-.node.outer.left{left:4%;top:50%;transform:translate(0,-50%)}
-.node.inner.i-top{left:50%;top:30%;transform:translate(-50%,0)}
-.node.inner.i-right{left:70%;top:50%;transform:translate(-50%,-50%)}
-.node.inner.i-bottom{left:50%;top:70%;transform:translate(-50%,-50%)}
-.node.inner.i-left{left:30%;top:50%;transform:translate(-50%,-50%)}
 
-.integrity-line{
-  text-align:center;
-  margin-top:14px;
+/* Center label */
+.label.center{
+  position:absolute;
+  left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  font-weight:900;
+  letter-spacing:.22em;
+  font-size:12px;
+  opacity:.65;
+}
+
+/* Side pills */
+.pill{
+  position:absolute;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-width:132px;
+  height:44px;
+  padding:0 14px;
+  border-radius:999px;
+  background: rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 10px 28px rgba(0,0,0,.45);
   font-weight:800;
   letter-spacing:.2px;
+  cursor:pointer;
+  user-select:none;
+  backdrop-filter:blur(10px);
 }
+.pill:hover{border-color:rgba(140,200,255,.28)}
+.pill:active{transform:translate(-50%,0) scale(.99)} /* overridden per-position below */
 
-/* EXPANSIONS */
-.expand-title{
+/* Position pills around each diamond */
+.pill.top{
+  left:50%; top:8px;
+  transform:translate(-50%,0);
+}
+.pill.bottom{
+  left:50%; bottom:8px;
+  transform:translate(-50%,0);
+}
+.pill.left{
+  left:8px; top:50%;
+  transform:translate(0,-50%);
+}
+.pill.right{
+  right:8px; top:50%;
+  transform:translate(0,-50%);
+}
+.pill.top:active,.pill.bottom:active{transform:translate(-50%,0) scale(.99)}
+.pill.left:active,.pill.right:active{transform:translate(0,-50%) scale(.99)}
+
+/* Axiom */
+.axiom{
   text-align:center;
-  font-weight:800;
-  margin-bottom:10px;
 }
-.mini-stage{
-  position:relative;
-  width:260px;height:260px;
-  margin:0 auto 12px;
+.chain{
+  font-weight:900;
+  font-size:14px;
+  letter-spacing:.18em;
+  opacity:.82;
 }
-.diamond.mini{
-  width:70%;height:70%;
-  background:rgba(255,255,255,.10);
-  border:1px dashed rgba(255,255,255,.22);
-}
-.mini-node{
-  position:absolute;
-  padding:10px 14px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.18);
-  font-weight:700;
-}
-.mini-node.top{left:50%;top:6%;transform:translate(-50%,0)}
-.mini-node.right{right:6%;top:50%;transform:translate(0,-50%)}
-.mini-node.bottom{left:50%;bottom:6%;transform:translate(-50%,0)}
-.mini-node.left{left:6%;top:50%;transform:translate(0,-50%)}
-.small{color:rgba(233,239,255,.72);font-size:14px;text-align:center}
 
-/* SAYINGS */
-.sayings .hint{text-align:center;opacity:.6;margin-bottom:10px}
+/* Sayings */
+.sayings{
+  max-width:720px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.hint{
+  text-align:center;
+  opacity:.65;
+  font-size:14px;
+}
+
 .cn{
   border-radius:999px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.06);
-  margin-bottom:10px;
   overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  box-shadow:0 10px 28px rgba(0,0,0,.35);
 }
 .cn summary{
-  list-style:none;cursor:pointer;
+  cursor:pointer;
   padding:14px 16px;
   text-align:center;
-  font-size:22px;font-weight:800;
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:.2px;
 }
-.cn summary::-webkit-details-marker{display:none}
+.cn[open] summary{
+  border-bottom:1px solid rgba(255,255,255,.10);
+  background: rgba(80,140,255,.10);
+}
 .cn .en{
-  padding:12px 16px;
+  padding:12px 16px 14px;
   text-align:center;
   font-size:14px;
-  opacity:.85;
+  opacity:.86;
 }
 
-.foot{text-align:center;opacity:.5;font-size:14px}
+/* Footer */
+.foot{
+  text-align:center;
+  opacity:.5;
+  font-size:14px;
+  margin-top:6px;
+}
+
+/* Mobile */
+@media (max-width:720px){
+  .gate{height:520px; flex-direction:column;}
+  .dA,.dB{margin:0}
+  .diamondBox{width:320px;height:320px}
+}
+@media (max-width:420px){
+  .hero h1{font-size:44px}
+  .pill{min-width:116px}
+  .cn summary{font-size:20px}
+}
 ```0

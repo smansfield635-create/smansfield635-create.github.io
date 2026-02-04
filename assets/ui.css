@@ -1,311 +1,74 @@
 /* =========================================================
-   GEODIAMETRICS — UI.CSS (TNT)
-   GOAL: Landing page always renders 4 glass DIAMOND buttons
-   even when HTML is fallback links.
+   Geodiametrics UI — Canonical
+   Stable • Mobile-first • No glow • No freeze
    ========================================================= */
 
-/* ---------- Reset ---------- */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:rgba(235,243,255,.92);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-a{color:inherit;text-decoration:none}
-img{max-width:100%;height:auto;display:block}
-
-/* ---------- Background (deep space + soft gradient + stars) ---------- */
-:root{
-  --bg0:#050814;
-  --bg1:#071326;
-  --bg2:#0a2140;
-
-  --glassA: rgba(255,255,255,.08);
-  --glassB: rgba(255,255,255,.05);
-  --stroke: rgba(255,255,255,.16);
-  --stroke2: rgba(255,255,255,.08);
-
-  --shadow: 0 18px 60px rgba(0,0,0,.55);
-  --shadow2: 0 10px 30px rgba(0,0,0,.35);
-
-  --accent: rgba(88,200,255,.55);
-  --accent2: rgba(88,200,255,.25);
-
-  --r: 26px;
+/* Reset / Touch */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 
-body{
-  background:
-    radial-gradient(1100px 700px at 20% 10%, rgba(72,88,170,.22), transparent 70%),
-    radial-gradient(900px 650px at 80% 30%, rgba(14,170,220,.10), transparent 70%),
-    radial-gradient(900px 900px at 50% 110%, rgba(120,80,210,.10), transparent 60%),
-    linear-gradient(180deg, var(--bg1), var(--bg0));
-  position:relative;
-  overflow-x:hidden;
+/* Body baseline */
+html, body {
+  width: 100%;
+  height: 100%;
 }
 
-body::before{
-  content:"";
-  position:fixed;
-  inset:-200px;
-  pointer-events:none;
-  opacity:.55;
-  background:
-    radial-gradient(circle at 10% 20%, rgba(255,255,255,.35) 0 1px, transparent 2px) 0 0/260px 260px,
-    radial-gradient(circle at 70% 40%, rgba(255,255,255,.25) 0 1px, transparent 2px) 0 0/340px 340px,
-    radial-gradient(circle at 35% 85%, rgba(255,255,255,.18) 0 1px, transparent 2px) 0 0/420px 420px;
-  filter: blur(.2px);
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-/* ---------- Layout wrappers ---------- */
-.wrap, main.wrap{
-  width:min(980px, 94vw);
-  margin:0 auto;
-  padding: 44px 0 56px;
+/* Diamond surfaces */
+.diamond {
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.08),
+    0 10px 30px rgba(0,0,0,0.35);
 }
 
-.hero{
-  text-align:center;
-  margin: 12px 0 26px;
+/* Active press — natural, no glow */
+.diamond:active {
+  transform: scale(0.98);
+  background: rgba(255,255,255,0.16);
 }
 
-.hero h1{
-  margin:0;
-  font-size: clamp(42px, 7.5vw, 72px);
-  letter-spacing:-.02em;
-  line-height:1.02;
-  text-shadow: 0 10px 40px rgba(0,0,0,.55);
+/* Hover (desktop only) */
+@media (hover:hover) {
+  .diamond:hover {
+    background: rgba(255,255,255,0.14);
+  }
 }
 
-.hero .sub{
-  margin:10px auto 0;
-  max-width: 42ch;
-  font-size: clamp(16px, 2.2vw, 20px);
-  color: rgba(235,243,255,.70);
+/* Typography smoothing */
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* ---------- Glass panel ---------- */
-.panel{
-  position:relative;
-  margin: 22px auto 0;
-  width:min(820px, 94vw);
-  padding: 26px 22px 30px;
-  border-radius: var(--r);
-  background: linear-gradient(180deg, var(--glassA), var(--glassB));
-  border: 1px solid var(--stroke);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+/* Quotes */
+.quote {
+  transition: background 0.25s ease, opacity 0.25s ease;
+}
+.quote:hover {
+  background: rgba(255,255,255,0.12);
+  opacity: 0.9;
 }
 
-/* Soft inner glow */
-.panel::before{
-  content:"";
-  position:absolute;
-  inset: 10px;
-  border-radius: calc(var(--r) - 10px);
-  border: 1px solid var(--stroke2);
-  pointer-events:none;
+/* Canonical mark */
+.canonical {
+  pointer-events: none;
 }
 
-/* ---------- LANDING: force 4-diamond layout from first 4 links ---------- */
-/* Put this class on <section class="panel door"> if you already have it.
-   If not, this still works on any .panel that has links. */
-.panel.door,
-.panel[data-door="1"]{}
-
-/* Anchor defaults inside panel */
-.panel a{
-  display:inline-block;
-  color: rgba(235,243,255,.92);
+/* Prevent scroll jank */
+.container {
+  overscroll-behavior: none;
 }
 
-.panel a:hover{filter: brightness(1.12)}
-.panel a:active{transform: translateY(1px)}
-
-/* If landing is fallback list-of-links, the first 4 anchors become the diamonds.
-   Everything after the first 4 is hidden (so nothing competes with the gate). */
-.panel a:nth-of-type(n+5){display:none !important}
-
-/* Diamond sizing */
-:root{
-  --d: clamp(120px, 26vw, 190px);       /* diamond width/height */
-  --gap: clamp(18px, 4vw, 36px);        /* spacing */
+/* Safety: disable accidental selection */
+h1, .subtitle, .diamond span {
+  user-select: none;
 }
-
-/* Reserve space for the diamond cluster */
-.panel{
-  padding-top: 24px;
-  padding-bottom: 28px;
-}
-.panel::after{
-  content:"";
-  display:block;
-  height: calc(var(--d)*2 + var(--gap)*1.35);
-}
-
-/* Positioning container logic: make panel a positioning context */
-.panel{position:relative}
-
-/* Diamond look */
-.panel a:nth-of-type(-n+4){
-  position:absolute;
-  width: var(--d);
-  height: var(--d);
-  left:50%;
-  top: 54%;
-  transform-origin:center;
-  border-radius: 22px;
-  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-  border: 1px solid rgba(255,255,255,.18);
-  box-shadow: var(--shadow2);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-
-  /* diamond rotation */
-  transform: translate(-50%,-50%) rotate(45deg);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding: 14px;
-
-  /* kill underline even if browser forces it */
-  text-decoration:none !important;
-}
-
-/* Inner bevel */
-.panel a:nth-of-type(-n+4)::before{
-  content:"";
-  position:absolute;
-  inset: 10px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,.10);
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
-  pointer-events:none;
-}
-
-/* Text inside diamonds: rotate back so it reads normal */
-.panel a:nth-of-type(-n+4) > *{transform: rotate(-45deg)}
-.panel a:nth-of-type(-n+4){
-  font-weight: 750;
-  letter-spacing:.08em;
-  text-transform: uppercase;
-  font-size: clamp(14px, 2.4vw, 18px);
-  line-height:1.15;
-}
-
-/* If anchor is plain text (no children), rotate it back via pseudo wrapper */
-.panel a:nth-of-type(-n+4)::after{
-  content: attr(data-label);
-  display:none;
-}
-
-/* Subtext styling if you used <small> */
-.panel a:nth-of-type(-n+4) small{
-  display:block;
-  margin-top:8px;
-  font-weight:600;
-  letter-spacing:0;
-  text-transform:none;
-  font-size: clamp(12px, 2vw, 14px);
-  color: rgba(235,243,255,.72);
-}
-
-/* Active/primary diamond (first one) */
-.panel a:nth-of-type(1){
-  box-shadow: 0 18px 60px rgba(0,0,0,.50), 0 0 0 2px rgba(88,200,255,.10);
-}
-.panel a:nth-of-type(1)::before{
-  border-color: rgba(88,200,255,.22);
-}
-
-/* Place the 4 diamonds as a “big diamond” (not a square):
-   top, right, bottom, left */
-.panel a:nth-of-type(1){ /* TOP */
-  top: calc(54% - (var(--d)/2 + var(--gap)));
-}
-.panel a:nth-of-type(2){ /* RIGHT */
-  left: calc(50% + (var(--d)/2 + var(--gap)));
-}
-.panel a:nth-of-type(3){ /* BOTTOM */
-  top: calc(54% + (var(--d)/2 + var(--gap)));
-}
-.panel a:nth-of-type(4){ /* LEFT */
-  left: calc(50% - (var(--d)/2 + var(--gap)));
-}
-
-/* On very small screens, tighten spacing */
-@media (max-width: 360px){
-  :root{ --gap: 14px; }
-}
-
-/* ---------- Footer line inside panel ---------- */
-.panel .foot, footer.foot{
-  margin-top: 14px;
-  text-align:center;
-  color: rgba(235,243,255,.45);
-  font-size: 13px;
-  letter-spacing:.02em;
-}
-
-/* If the landing page has the “Canonical…” line as plain text,
-   keep it, but push it below the diamond cluster */
-.panel{ }
-.panel{
-  /* ensure any plain text inside the panel starts above the cluster */
-}
-.panel > :not(a){
-  position:relative;
-  z-index:2;
-}
-
-/* If the panel contains only the links, center them as a group by moving text off-screen */
-.panel:has(a:nth-of-type(1)){
-  /* no-op: keeps modern browsers happy; safe if unsupported */
-}
-
-/* ---------- Modal / Card look (your quiz popups) ---------- */
-.modal, .card{
-  width:min(820px, 94vw);
-  margin: 24px auto;
-  padding: 22px 18px;
-  border-radius: var(--r);
-  background: linear-gradient(180deg, var(--glassA), var(--glassB));
-  border: 1px solid var(--stroke);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-.modal h2, .card h2{
-  margin:0 0 10px;
-  font-size: clamp(22px, 3.6vw, 30px);
-}
-.modal p, .card p{
-  margin:0 0 12px;
-  color: rgba(235,243,255,.72);
-  line-height:1.5;
-}
-
-/* Buttons */
-.btn, button, .pill{
-  appearance:none;
-  border: 1px solid rgba(255,255,255,.14);
-  background: rgba(255,255,255,.06);
-  color: rgba(235,243,255,.92);
-  padding: 12px 16px;
-  border-radius: 999px;
-  font-weight: 650;
-  letter-spacing:.01em;
-  box-shadow: 0 10px 24px rgba(0,0,0,.28);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-.btn.primary, button.primary{
-  border-color: rgba(88,200,255,.28);
-  background: linear-gradient(180deg, rgba(88,200,255,.16), rgba(88,200,255,.06));
-}
-.btnRow{display:flex;gap:12px;flex-wrap:wrap}
-.btnRow .btn{min-width: 140px;justify-content:center;text-align:center}
-
-/* Utility */
-.center{text-align:center}
-.hidden{display:none !important}

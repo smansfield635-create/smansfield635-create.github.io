@@ -1,6 +1,6 @@
 /* =========================================================
-   CANONICAL DIAMOND UI — BASELINE LOCK
-   NO DRIFT · NO DARKENING · NO OFFSET
+   CANONICAL DIAMOND UI — BASELINE LOCK (NO DRIFT)
+   NOTE: NO GLOBAL transform resets. (That breaks diamonds.)
    ========================================================= */
 
 :root{
@@ -22,18 +22,14 @@
   --radius:26px;
 }
 
-/* ==== HARD RESET ==== */
+/* ==== HARD RESET (SAFE) ==== */
 *{
   box-sizing:border-box;
   margin:0;
   padding:0;
-  transform:none !important;
 }
 
-html,body{
-  width:100%;
-  height:100%;
-}
+html,body{width:100%;height:100%;}
 
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
@@ -47,6 +43,11 @@ body{
   padding:24px;
   overflow:hidden;
 }
+
+/* kill ugly default link styling */
+a{color:inherit;text-decoration:none;}
+a:visited{color:inherit;}
+a:hover{text-decoration:none;}
 
 /* ==== PAGE ==== */
 .page{
@@ -96,15 +97,7 @@ body{
   width:130px;
   height:130px;
 
-  /* ONLY rotation allowed */
-  transform:rotate(45deg);
-
-  background:linear-gradient(
-    180deg,
-    var(--glass),
-    rgba(255,255,255,.12)
-  );
-
+  background:linear-gradient(180deg,var(--glass),rgba(255,255,255,.12));
   border:1px solid rgba(255,255,255,.28);
   border-radius:18px;
 
@@ -127,25 +120,22 @@ body{
   border:1px solid var(--glass-inner);
 }
 
-/* ==== POSITIONS (ABSOLUTE, NO FLEX, NO DRIFT) ==== */
+/* POSITION + ROTATION (ONLY HERE) */
 .diamond.top{
   top:0;
   left:50%;
   transform:translateX(-50%) rotate(45deg);
 }
-
 .diamond.right{
   right:0;
   top:50%;
   transform:translateY(-50%) rotate(45deg);
 }
-
 .diamond.bottom{
   bottom:0;
   left:50%;
   transform:translateX(-50%) rotate(45deg);
 }
-
 .diamond.left{
   left:0;
   top:50%;
@@ -158,6 +148,7 @@ body{
   text-align:center;
   font-size:15px;
   line-height:1.3;
+  color:var(--text);
 }
 
 .diamond strong{
@@ -176,16 +167,8 @@ body{
   border:1px solid rgba(255,255,255,.22);
 }
 
-.check h3{
-  font-size:20px;
-  margin-bottom:6px;
-}
-
-.check p{
-  font-size:15px;
-  color:var(--sub);
-  margin-bottom:12px;
-}
+.check h3{font-size:20px;margin-bottom:6px;}
+.check p{font-size:15px;color:var(--sub);margin-bottom:12px;}
 
 /* ==== BUTTONS ==== */
 .buttons{

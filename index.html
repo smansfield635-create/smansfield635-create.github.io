@@ -1,42 +1,51 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodiametrics · Home</title>
-  <link rel="stylesheet" href="/assets/ui.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gate · Geodiametrics</title>
+  <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 <body>
+  <main>
+    <div class="wrap">
+      <header class="hero">
+        <h1 class="h1">Home</h1>
+        <p class="sub">One gate. One diamond. One path.</p>
+      </header>
 
-<main class="page">
+      <section class="card pad">
+        <div class="stage">
+          <div class="bigDiamond" aria-label="Gate diamond">
+            <div class="tileGrid">
+              <a class="diamondTile" href="/laws/" aria-label="Go to Laws">
+                <span>Laws</span>
+              </a>
+              <a class="diamondTile" href="/products/" aria-label="Go to Products">
+                <span>Products</span>
+              </a>
+              <a class="diamondTile" href="/links/" aria-label="Go to Links">
+                <span>Links</span>
+              </a>
+              <a class="diamondTile" href="/gauges/" aria-label="Go to Gauges">
+                <span>Gauges</span>
+              </a>
+            </div>
+          </div>
+        </div>
 
-  <!-- HERO -->
-  <header class="hero">
-    <div class="title">Home</div>
-    <div class="sub">One gate. One diamond. One path.</div>
-  </header>
+        <div class="sideNav">
+          <a class="pill left" href="/landing/" aria-label="Return to Door">
+            ← Return to Door
+          </a>
+          <a class="pill right" href="/sayings/" aria-label="Sayings">
+            Sayings →
+          </a>
+        </div>
+      </section>
 
-  <!-- GATE (SINGLE DIAMOND ONLY) -->
-  <section class="card">
-    <div class="stage" aria-label="Gate">
-      <div class="ring" aria-hidden="true"></div>
-      <div class="diamondFrame" aria-hidden="true"></div>
-
-      <!-- ROUTING DIAMOND -->
-      <a class="pill pTop" href="/laws/">Laws</a>
-      <a class="pill pRight" href="/products/">Products</a>
-      <a class="pill pBottom" href="/gauges/">Gauges</a>
-      <a class="pill pLeft" href="/links/">Links</a>
+      <footer class="foot">Canonical · Stable · © Geodiametrics</footer>
     </div>
-
-    <div class="ctaRow">
-      <a class="cta" href="/landing/">Return to Door</a>
-    </div>
-  </section>
-
-  <footer class="foot">Canonical · Stable · © Geodiametrics</footer>
-
-</main>
-
+  </main>
 </body>
 </html>

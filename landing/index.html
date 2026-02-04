@@ -1,84 +1,59 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Door · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Geodiametrics · Home</title>
+  <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
-<body>
-  <main>
-    <div class="wrap">
-      <header class="hero">
-        <h1 class="h1">Be the first.</h1>
-        <p class="sub">The door explains. The gate routes.</p>
-      </header>
+<body class="stars">
+  <main class="wrap">
+    <header class="hero">
+      <h1>Home</h1>
+      <p>One gate. One diamond. One path.</p>
+    </header>
 
-      <section class="card pad">
-        <div class="stage">
-          <div class="bigDiamond" aria-label="Sayings diamond">
-            <div class="tileGrid">
-              <a class="diamondTile" href="/sayings/" aria-label="Sayings: Wisdom">
-                <span>Wisdom</span>
-              </a>
-              <a class="diamondTile" href="/sayings/" aria-label="Sayings: Knowledge">
-                <span>Knowledge</span>
-              </a>
-              <a class="diamondTile" href="/sayings/" aria-label="Sayings: Theism">
-                <span>Theism</span>
-              </a>
-              <a class="diamondTile" href="/sayings/" aria-label="Sayings: Law">
-                <span>Law</span>
-              </a>
-            </div>
-          </div>
-        </div>
+    <section class="card" aria-label="Gate Diamond">
+      <div class="diamondWrap" aria-label="Four-diamond gate">
+        <!-- ONE BIG DIAMOND, SPLIT INTO 4 EQUAL DIAMONDS -->
+        <svg viewBox="0 0 100 100" role="img" aria-label="Gate: Laws, Products, Gauges, Links">
+          <!-- outer frame diamond -->
+          <polygon class="dOuter" points="50,3 97,50 50,97 3,50"></polygon>
 
-        <div class="sideNav">
-          <a class="pill left" href="/links/" aria-label="Back / Leave">
-            ← Back (Leave)
+          <!-- TOP: LAWS -->
+          <a class="dbtn" href="/laws/">
+            <polygon class="dInner" points="50,6 68,24 50,42 32,24"></polygon>
+            <text class="dText" x="50" y="27" text-anchor="middle" dominant-baseline="middle">LAWS</text>
           </a>
-          <a class="pill right" href="/" aria-label="Next / Enter gate">
-            Next (Enter) →
-          </a>
-        </div>
 
-        <div class="integrityLine">Integrity → Fortitude → Delivery → Destiny</div>
-        <div class="phraseHelp">Tap a phrase to translate.</div>
+          <!-- RIGHT: PRODUCTS -->
+          <a class="dbtn" href="/products/">
+            <polygon class="dInner" points="94,50 76,32 58,50 76,68"></polygon>
+            <text class="dTextSmall" x="76" y="50" text-anchor="middle" dominant-baseline="middle">PRODUCTS</text>
+          </a>
 
-        <!-- invisible anchors for CSS-only translation -->
-        <div id="t1" class="anchorTarget"></div>
-        <div id="t2" class="anchorTarget"></div>
-        <div id="t3" class="anchorTarget"></div>
-        <div id="t4" class="anchorTarget"></div>
-        <div id="t5" class="anchorTarget"></div>
+          <!-- BOTTOM: GAUGES -->
+          <a class="dbtn" href="/gauges/">
+            <polygon class="dInner" points="50,94 68,76 50,58 32,76"></polygon>
+            <text class="dTextSmall" x="50" y="76" text-anchor="middle" dominant-baseline="middle">GAUGES</text>
+          </a>
 
-        <div class="phrases">
-          <a class="phraseBtn" href="#t1">
-            <span class="zh">性格决定命运</span>
-            <span class="en"> — Character determines destiny.</span>
+          <!-- LEFT: LINKS -->
+          <a class="dbtn" href="/links/">
+            <polygon class="dInner" points="6,50 24,32 42,50 24,68"></polygon>
+            <text class="dTextSmall" x="24" y="50" text-anchor="middle" dominant-baseline="middle">LINKS</text>
           </a>
-          <a class="phraseBtn" href="#t2">
-            <span class="zh">己所不欲，勿施于人</span>
-            <span class="en"> — Do not impose on others what you do not want.</span>
-          </a>
-          <a class="phraseBtn" href="#t3">
-            <span class="zh">上善若水</span>
-            <span class="en"> — The highest goodness is like water.</span>
-          </a>
-          <a class="phraseBtn" href="#t4">
-            <span class="zh">道可道，非常道</span>
-            <span class="en"> — The Way that can be spoken is not the constant Way.</span>
-          </a>
-          <a class="phraseBtn" href="#t5">
-            <span class="zh">道生一，一生二，二生三，三生万物</span>
-            <span class="en"> — The Way gives birth to one; one to two; two to three; three to all things.</span>
-          </a>
-        </div>
-      </section>
 
-      <footer class="foot">Canonical · Stable · © Geodiametrics</footer>
-    </div>
+          <circle cx="50" cy="50" r="2.2" fill="rgba(234,241,255,.55)"></circle>
+        </svg>
+      </div>
+
+      <div class="linkrow" aria-label="Return">
+        <a class="pill" href="/">Return to Door</a>
+      </div>
+
+      <div class="footer">Canonical · Stable · © Geodiametrics</div>
+    </section>
   </main>
 </body>
 </html>

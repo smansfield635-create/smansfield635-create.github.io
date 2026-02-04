@@ -1,202 +1,106 @@
+/* =========================
+   LANDING (DOOR) — TWO PHASES
+   Part 1: Self-hunch (4 types)
+   Part 2: Resonance (eras → leaves later)
+   ========================= */
+
 :root{
-  --bg0:#030716;
-  --bg1:#07122a;
-  --bg2:#0b1f3b;
-  --card:rgba(255,255,255,.06);
-  --card2:rgba(255,255,255,.085);
-  --stroke:rgba(255,255,255,.18);
-  --stroke2:rgba(255,255,255,.28);
+  --bg0:#040812;
+  --bg1:#071427;
+  --glass:rgba(255,255,255,.06);
+  --glass2:rgba(255,255,255,.10);
+  --stroke:rgba(255,255,255,.16);
   --text:#eaf1ff;
-  --muted:rgba(234,241,255,.72);
-  --shadow:0 18px 55px rgba(0,0,0,.55);
-  --r:22px;
+  --muted:rgba(234,241,255,.70);
+  --shadow:0 22px 70px rgba(0,0,0,.55);
+  --r:24px;
 }
-*{box-sizing:border-box}
+
+*{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   color:var(--text);
   background:
-    radial-gradient(1200px 900px at 50% 0%, rgba(120,120,255,.18), transparent 60%),
-    radial-gradient(900px 700px at 20% 35%, rgba(0,210,255,.10), transparent 55%),
-    radial-gradient(900px 700px at 80% 55%, rgba(255,0,180,.08), transparent 55%),
-    linear-gradient(180deg,var(--bg0),var(--bg1) 45%, var(--bg0));
+    radial-gradient(1200px 900px at 50% -10%, rgba(120,160,255,.22), transparent 55%),
+    radial-gradient(900px 700px at 20% 90%, rgba(80,220,255,.10), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg0));
   overflow-x:hidden;
 }
-.stars:before,.stars:after{
+body::before{
   content:"";
-  position:fixed;
-  inset:-20vh -20vw;
-  pointer-events:none;
+  position:fixed;inset:0;pointer-events:none;opacity:.35;
   background:
-    radial-gradient(circle at 10% 20%, rgba(255,255,255,.8) 0 1px, transparent 2px),
-    radial-gradient(circle at 30% 70%, rgba(255,255,255,.55) 0 1px, transparent 2px),
-    radial-gradient(circle at 55% 35%, rgba(255,255,255,.7) 0 1px, transparent 2px),
-    radial-gradient(circle at 80% 25%, rgba(255,255,255,.5) 0 1px, transparent 2px),
-    radial-gradient(circle at 75% 80%, rgba(255,255,255,.65) 0 1px, transparent 2px),
-    radial-gradient(circle at 15% 85%, rgba(255,255,255,.6) 0 1px, transparent 2px);
-  opacity:.35;
-  filter:blur(.2px);
-}
-.stars:after{
-  opacity:.22;
-  transform:scale(1.12);
-  filter:blur(.6px);
+    radial-gradient(1px 1px at 12% 18%, #fff, transparent 60%),
+    radial-gradient(1px 1px at 42% 28%, #fff, transparent 60%),
+    radial-gradient(1px 1px at 72% 22%, #fff, transparent 60%),
+    radial-gradient(1px 1px at 22% 62%, #fff, transparent 60%),
+    radial-gradient(1px 1px at 82% 76%, #fff, transparent 60%);
 }
 
-.wrap{
-  width:min(980px,92vw);
-  margin:0 auto;
-  padding:28px 0 40px;
-}
-.hero{
-  text-align:center;
-  margin:10px auto 18px;
-}
-.hero h1{
-  font-size:clamp(36px,7vw,62px);
-  letter-spacing:.2px;
-  margin:0 0 6px;
-}
-.hero p{
-  margin:0;
-  color:var(--muted);
-  font-size:clamp(14px,2.7vw,18px);
-}
+main{min-height:100%;display:flex;justify-content:center;padding:24px 16px}
+.wrap{width:min(980px,100%);display:flex;flex-direction:column;gap:18px}
 
+/* header */
+.hero{text-align:center}
+.hero h1{font-size:clamp(44px,7vw,84px);letter-spacing:-.02em}
+.hero p{margin-top:8px;color:var(--muted);font-size:18px}
+
+/* glass card */
 .card{
-  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
+  border:1px solid var(--stroke);
   border-radius:var(--r);
   box-shadow:var(--shadow);
-  padding:18px 16px 20px;
-  margin:14px auto;
-  position:relative;
-  overflow:hidden;
-}
-.card:before{
-  content:"";
-  position:absolute;
-  inset:-40%;
-  background:radial-gradient(circle at 40% 30%, rgba(255,255,255,.07), transparent 55%);
-  pointer-events:none;
+  backdrop-filter:blur(12px);
+  padding:18px;
 }
 
-.hintRow{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  margin-top:10px;
-  color:rgba(234,241,255,.55);
-  font-size:13px;
-}
-
-.diamondWrap{
-  width:min(520px,86vw);
-  aspect-ratio:1/1;
-  margin:10px auto 6px;
-  position:relative;
-}
-svg{display:block;width:100%;height:100%}
-
-/* click areas */
-.dbtn{
-  cursor:pointer;
-  transition:transform .12s ease, filter .12s ease;
-  transform-origin:50% 50%;
-}
-.dbtn:hover{filter:brightness(1.12)}
-.dbtn:active{transform:scale(.985)}
-
-/* shapes */
-.dOuter{
-  fill:rgba(255,255,255,.03);
-  stroke:rgba(255,255,255,.14);
-  stroke-width:2;
-}
-.dInner{
-  fill:rgba(255,255,255,.07);
-  stroke:rgba(255,255,255,.22);
-  stroke-width:2;
-}
-.dInner2{
-  fill:rgba(255,255,255,.045);
-  stroke:rgba(255,255,255,.14);
-  stroke-width:2;
-}
-
-/* labels */
-.dText{
-  font-weight:700;
-  fill:rgba(234,241,255,.92);
-  font-size:20px;
-  letter-spacing:.2px;
-}
-.dTextSmall{
-  font-weight:650;
-  fill:rgba(234,241,255,.90);
-  font-size:18px;
-}
-@media (max-width:420px){
-  .dText{font-size:18px}
-  .dTextSmall{font-size:16px}
-}
-
-.bubbleStack{
+/* ===== BIG DIAMOND (4 equal diamonds) ===== */
+.stage{display:flex;justify-content:center}
+.big{
   width:min(520px,92vw);
-  margin:14px auto 2px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+  aspect-ratio:1/1;
+  position:relative;
 }
-.bubbleHead{
-  text-align:center;
-  color:rgba(234,241,255,.70);
-  font-weight:650;
-  font-size:14px;
-  margin:6px 0 4px;
-}
-.bubble{
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:999px;
-  padding:14px 16px;
-  text-align:center;
-  font-size:18px;
-  color:rgba(234,241,255,.92);
-}
-.bubble small{
-  display:none;
-}
+svg{width:100%;height:100%;display:block}
 
-.axiom{
-  text-align:center;
-  margin:12px auto 0;
-  font-weight:750;
-  letter-spacing:.2px;
-  color:rgba(234,241,255,.80);
-}
-.footer{
-  text-align:center;
-  margin-top:18px;
-  color:rgba(234,241,255,.55);
-  font-size:13px;
-}
-a{color:inherit;text-decoration:none}
-.linkrow{
-  display:flex;
-  justify-content:center;
+.dOuter{fill:rgba(255,255,255,.04);stroke:rgba(255,255,255,.18);stroke-width:2}
+.dInner{fill:rgba(255,255,255,.08);stroke:rgba(255,255,255,.28);stroke-width:2}
+.dBtn{cursor:pointer}
+.dBtn:hover{filter:brightness(1.12)}
+.dText{fill:#eaf1ff;font-weight:750;font-size:20px}
+.dTextSm{fill:#eaf1ff;font-weight:700;font-size:18px}
+
+/* ===== PHASE PANELS ===== */
+.panel{
+  margin-top:12px;
+  display:none;
   gap:12px;
-  flex-wrap:wrap;
-  margin-top:10px;
 }
-.pill{
-  padding:10px 14px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:999px;
-  color:rgba(234,241,255,.85);
-  font-weight:650;
+.panel.active{display:grid}
+.panel .desc{color:var(--muted);font-size:16px}
+.panel .visual{
+  height:140px;border-radius:18px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.18);
 }
-.pill:active{transform:scale(.99)}
+.panel .actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{
+  padding:10px 14px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);color:var(--text);text-decoration:none;
+}
+.btn:hover{border-color:rgba(255,255,255,.28)}
+
+/* ===== PHASE 2 (teaser only) ===== */
+.phase2{margin-top:14px;display:none}
+.phase2.active{display:block}
+.phase2 .hint{color:var(--muted);text-align:center}
+
+/* exit */
+.exit{
+  position:fixed;top:14px;right:14px;
+  padding:8px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);text-decoration:none;color:var(--text)
+}

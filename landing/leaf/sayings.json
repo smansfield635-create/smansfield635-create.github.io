@@ -1,207 +1,120 @@
 {
-  "version": 2,
-  "target_total": 20,
-  "eras": [
-    {
-      "id": "ancient",
-      "label": "Ancient",
-      "countries": [
-        {
-          "id": "greece",
-          "label": "Greece",
-          "sayings": [
-            { "id": "ancient_greece_001", "text": "Know thyself." },
-            { "id": "ancient_greece_002", "text": "The unexamined life is not worth living." },
-            { "id": "ancient_greece_003", "text": "Nothing in excess." },
-            { "id": "ancient_greece_004", "text": "Excellence is a habit." },
-            { "id": "ancient_greece_005", "text": "Character is destiny." }
-          ]
-        },
-        {
-          "id": "china",
-          "label": "China",
-          "sayings": [
-            { "id": "ancient_china_001", "text": "Do not impose on others what you do not want." },
-            { "id": "ancient_china_002", "text": "The highest goodness is like water." },
-            { "id": "ancient_china_003", "text": "A journey of a thousand miles begins with a single step." },
-            { "id": "ancient_china_004", "text": "Silence is a source of great strength." },
-            { "id": "ancient_china_005", "text": "He who conquers himself is the mightiest warrior." }
-          ]
-        },
-        {
-          "id": "india",
-          "label": "India",
-          "sayings": [
-            { "id": "ancient_india_001", "text": "You are what your deep desire is." },
-            { "id": "ancient_india_002", "text": "The mind is everything. What you think you become." },
-            { "id": "ancient_india_003", "text": "Peace comes from within. Do not seek it without." },
-            { "id": "ancient_india_004", "text": "Let go, or be dragged." },
-            { "id": "ancient_india_005", "text": "Truth alone triumphs." }
-          ]
-        },
-        {
-          "id": "egypt",
-          "label": "Egypt",
-          "sayings": [
-            { "id": "ancient_egypt_001", "text": "A good name is better than riches." },
-            { "id": "ancient_egypt_002", "text": "Do right while there is time." },
-            { "id": "ancient_egypt_003", "text": "A peaceful heart leads to a long life." },
-            { "id": "ancient_egypt_004", "text": "He who listens, learns." },
-            { "id": "ancient_egypt_005", "text": "Patience is the companion of wisdom." }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "medieval",
-      "label": "Medieval",
-      "countries": [
-        {
-          "id": "europe",
-          "label": "Europe",
-          "sayings": [
-            { "id": "medieval_europe_001", "text": "Truth is the strongest shield." },
-            { "id": "medieval_europe_002", "text": "Courage is fear mastered." },
-            { "id": "medieval_europe_003", "text": "Honor binds where force cannot." },
-            { "id": "medieval_europe_004", "text": "A steady mind conquers storms." },
-            { "id": "medieval_europe_005", "text": "What is done in truth endures." }
-          ]
-        },
-        {
-          "id": "persia",
-          "label": "Persia",
-          "sayings": [
-            { "id": "medieval_persia_001", "text": "Raise your words, not your voice." },
-            { "id": "medieval_persia_002", "text": "Yesterday I was clever; today I am wise, so I change myself." },
-            { "id": "medieval_persia_003", "text": "What you seek is seeking you." },
-            { "id": "medieval_persia_004", "text": "Let your life be your message." },
-            { "id": "medieval_persia_005", "text": "Patience is bitter, but its fruit is sweet." }
-          ]
-        },
-        {
-          "id": "china",
-          "label": "China",
-          "sayings": [
-            { "id": "medieval_china_001", "text": "A man who moves a mountain begins by carrying away small stones." },
-            { "id": "medieval_china_002", "text": "Fall seven times, stand up eight." },
-            { "id": "medieval_china_003", "text": "Better a diamond with a flaw than a pebble without." },
-            { "id": "medieval_china_004", "text": "The best time to plant a tree was 20 years ago. The second best time is now." },
-            { "id": "medieval_china_005", "text": "When the winds change, some build walls; others build windmills." }
-          ]
-        },
-        {
-          "id": "india",
-          "label": "India",
-          "sayings": [
-            { "id": "medieval_india_001", "text": "If you want peace, stop fighting with reality." },
-            { "id": "medieval_india_002", "text": "What you practice grows stronger." },
-            { "id": "medieval_india_003", "text": "A disciplined mind is your greatest ally." },
-            { "id": "medieval_india_004", "text": "Serve without attachment to outcome." },
-            { "id": "medieval_india_005", "text": "Where attention goes, energy flows." }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "modern",
-      "label": "Modern",
-      "countries": [
-        {
-          "id": "usa",
-          "label": "USA",
-          "sayings": [
-            { "id": "modern_usa_001", "text": "What you do speaks so loudly I cannot hear what you say." },
-            { "id": "modern_usa_002", "text": "Discipline is choosing between what you want now and what you want most." },
-            { "id": "modern_usa_003", "text": "Do the right thing. It will gratify some and astonish the rest." },
-            { "id": "modern_usa_004", "text": "In the middle of difficulty lies opportunity." },
-            { "id": "modern_usa_005", "text": "If it isn’t repeatable, it isn’t real." }
-          ]
-        },
-        {
-          "id": "germany",
-          "label": "Germany",
-          "sayings": [
-            { "id": "modern_germany_001", "text": "He who has a why can bear almost any how." },
-            { "id": "modern_germany_002", "text": "What does not kill me makes me stronger." },
-            { "id": "modern_germany_003", "text": "Order is the shape of trust." },
-            { "id": "modern_germany_004", "text": "The limits of my language mean the limits of my world." },
-            { "id": "modern_germany_005", "text": "Precision is kindness to the future." }
-          ]
-        },
-        {
-          "id": "france",
-          "label": "France",
-          "sayings": [
-            { "id": "modern_france_001", "text": "Simplicity is the ultimate sophistication." },
-            { "id": "modern_france_002", "text": "To know is not enough; we must apply." },
-            { "id": "modern_france_003", "text": "The heart has reasons that reason does not know." },
-            { "id": "modern_france_004", "text": "Freedom is the right to do what the law permits." },
-            { "id": "modern_france_005", "text": "Clarity turns effort into progress." }
-          ]
-        },
-        {
-          "id": "japan",
-          "label": "Japan",
-          "sayings": [
-            { "id": "modern_japan_001", "text": "Vision without action is a daydream." },
-            { "id": "modern_japan_002", "text": "The bamboo that bends is stronger than the oak that resists." },
-            { "id": "modern_japan_003", "text": "One kind word can warm three winter months." },
-            { "id": "modern_japan_004", "text": "Small steps compound into destiny." },
-            { "id": "modern_japan_005", "text": "Fall down seven times, stand up eight." }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "contemporary",
-      "label": "Contemporary",
-      "countries": [
-        {
-          "id": "global",
-          "label": "Global",
-          "sayings": [
-            { "id": "contemp_global_001", "text": "Signals matter when they align." },
-            { "id": "contemp_global_002", "text": "Coherence is checkability under pressure." },
-            { "id": "contemp_global_003", "text": "You can’t scale what you can’t govern." },
-            { "id": "contemp_global_004", "text": "Truth travels best when it’s measurable." },
-            { "id": "contemp_global_005", "text": "Clarity is an exit from confusion." }
-          ]
-        },
-        {
-          "id": "usa",
-          "label": "USA",
-          "sayings": [
-            { "id": "contemp_usa_001", "text": "Friction reveals the constraint." },
-            { "id": "contemp_usa_002", "text": "The system is the product." },
-            { "id": "contemp_usa_003", "text": "Reliability beats novelty at scale." },
-            { "id": "contemp_usa_004", "text": "Measure first. Argue later." },
-            { "id": "contemp_usa_005", "text": "Make it work, then make it right." }
-          ]
-        },
-        {
-          "id": "eu",
-          "label": "EU",
-          "sayings": [
-            { "id": "contemp_eu_001", "text": "Standards create trust." },
-            { "id": "contemp_eu_002", "text": "Transparency is governance." },
-            { "id": "contemp_eu_003", "text": "Accountability is the price of power." },
-            { "id": "contemp_eu_004", "text": "Alignment precedes stability." },
-            { "id": "contemp_eu_005", "text": "A clear rule outlives a loud opinion." }
-          ]
-        },
-        {
-          "id": "china",
-          "label": "China",
-          "sayings": [
-            { "id": "contemp_china_001", "text": "The path is proven by walking." },
-            { "id": "contemp_china_002", "text": "Harmony requires boundaries." },
-            { "id": "contemp_china_003", "text": "Consistency is a form of strength." },
-            { "id": "contemp_china_004", "text": "A single thread can become a rope." },
-            { "id": "contemp_china_005", "text": "A clear mind makes a clear choice." }
-          ]
-        }
-      ]
-    }
+  "version": 1,
+  "required_categories": 16,
+  "required_per_category": 1,
+  "refine_extra_max": 4,
+  "categories": [
+    { "id": "C01", "label": "Category 01", "options": [
+      { "id": "C01_01", "text": "Category 01 — Saying 1" },
+      { "id": "C01_02", "text": "Category 01 — Saying 2" },
+      { "id": "C01_03", "text": "Category 01 — Saying 3" },
+      { "id": "C01_04", "text": "Category 01 — Saying 4" },
+      { "id": "C01_05", "text": "Category 01 — Saying 5" }
+    ]},
+    { "id": "C02", "label": "Category 02", "options": [
+      { "id": "C02_01", "text": "Category 02 — Saying 1" },
+      { "id": "C02_02", "text": "Category 02 — Saying 2" },
+      { "id": "C02_03", "text": "Category 02 — Saying 3" },
+      { "id": "C02_04", "text": "Category 02 — Saying 4" },
+      { "id": "C02_05", "text": "Category 02 — Saying 5" }
+    ]},
+    { "id": "C03", "label": "Category 03", "options": [
+      { "id": "C03_01", "text": "Category 03 — Saying 1" },
+      { "id": "C03_02", "text": "Category 03 — Saying 2" },
+      { "id": "C03_03", "text": "Category 03 — Saying 3" },
+      { "id": "C03_04", "text": "Category 03 — Saying 4" },
+      { "id": "C03_05", "text": "Category 03 — Saying 5" }
+    ]},
+    { "id": "C04", "label": "Category 04", "options": [
+      { "id": "C04_01", "text": "Category 04 — Saying 1" },
+      { "id": "C04_02", "text": "Category 04 — Saying 2" },
+      { "id": "C04_03", "text": "Category 04 — Saying 3" },
+      { "id": "C04_04", "text": "Category 04 — Saying 4" },
+      { "id": "C04_05", "text": "Category 04 — Saying 5" }
+    ]},
+    { "id": "C05", "label": "Category 05", "options": [
+      { "id": "C05_01", "text": "Category 05 — Saying 1" },
+      { "id": "C05_02", "text": "Category 05 — Saying 2" },
+      { "id": "C05_03", "text": "Category 05 — Saying 3" },
+      { "id": "C05_04", "text": "Category 05 — Saying 4" },
+      { "id": "C05_05", "text": "Category 05 — Saying 5" }
+    ]},
+    { "id": "C06", "label": "Category 06", "options": [
+      { "id": "C06_01", "text": "Category 06 — Saying 1" },
+      { "id": "C06_02", "text": "Category 06 — Saying 2" },
+      { "id": "C06_03", "text": "Category 06 — Saying 3" },
+      { "id": "C06_04", "text": "Category 06 — Saying 4" },
+      { "id": "C06_05", "text": "Category 06 — Saying 5" }
+    ]},
+    { "id": "C07", "label": "Category 07", "options": [
+      { "id": "C07_01", "text": "Category 07 — Saying 1" },
+      { "id": "C07_02", "text": "Category 07 — Saying 2" },
+      { "id": "C07_03", "text": "Category 07 — Saying 3" },
+      { "id": "C07_04", "text": "Category 07 — Saying 4" },
+      { "id": "C07_05", "text": "Category 07 — Saying 5" }
+    ]},
+    { "id": "C08", "label": "Category 08", "options": [
+      { "id": "C08_01", "text": "Category 08 — Saying 1" },
+      { "id": "C08_02", "text": "Category 08 — Saying 2" },
+      { "id": "C08_03", "text": "Category 08 — Saying 3" },
+      { "id": "C08_04", "text": "Category 08 — Saying 4" },
+      { "id": "C08_05", "text": "Category 08 — Saying 5" }
+    ]},
+    { "id": "C09", "label": "Category 09", "options": [
+      { "id": "C09_01", "text": "Category 09 — Saying 1" },
+      { "id": "C09_02", "text": "Category 09 — Saying 2" },
+      { "id": "C09_03", "text": "Category 09 — Saying 3" },
+      { "id": "C09_04", "text": "Category 09 — Saying 4" },
+      { "id": "C09_05", "text": "Category 09 — Saying 5" }
+    ]},
+    { "id": "C10", "label": "Category 10", "options": [
+      { "id": "C10_01", "text": "Category 10 — Saying 1" },
+      { "id": "C10_02", "text": "Category 10 — Saying 2" },
+      { "id": "C10_03", "text": "Category 10 — Saying 3" },
+      { "id": "C10_04", "text": "Category 10 — Saying 4" },
+      { "id": "C10_05", "text": "Category 10 — Saying 5" }
+    ]},
+    { "id": "C11", "label": "Category 11", "options": [
+      { "id": "C11_01", "text": "Category 11 — Saying 1" },
+      { "id": "C11_02", "text": "Category 11 — Saying 2" },
+      { "id": "C11_03", "text": "Category 11 — Saying 3" },
+      { "id": "C11_04", "text": "Category 11 — Saying 4" },
+      { "id": "C11_05", "text": "Category 11 — Saying 5" }
+    ]},
+    { "id": "C12", "label": "Category 12", "options": [
+      { "id": "C12_01", "text": "Category 12 — Saying 1" },
+      { "id": "C12_02", "text": "Category 12 — Saying 2" },
+      { "id": "C12_03", "text": "Category 12 — Saying 3" },
+      { "id": "C12_04", "text": "Category 12 — Saying 4" },
+      { "id": "C12_05", "text": "Category 12 — Saying 5" }
+    ]},
+    { "id": "C13", "label": "Category 13", "options": [
+      { "id": "C13_01", "text": "Category 13 — Saying 1" },
+      { "id": "C13_02", "text": "Category 13 — Saying 2" },
+      { "id": "C13_03", "text": "Category 13 — Saying 3" },
+      { "id": "C13_04", "text": "Category 13 — Saying 4" },
+      { "id": "C13_05", "text": "Category 13 — Saying 5" }
+    ]},
+    { "id": "C14", "label": "Category 14", "options": [
+      { "id": "C14_01", "text": "Category 14 — Saying 1" },
+      { "id": "C14_02", "text": "Category 14 — Saying 2" },
+      { "id": "C14_03", "text": "Category 14 — Saying 3" },
+      { "id": "C14_04", "text": "Category 14 — Saying 4" },
+      { "id": "C14_05", "text": "Category 14 — Saying 5" }
+    ]},
+    { "id": "C15", "label": "Category 15", "options": [
+      { "id": "C15_01", "text": "Category 15 — Saying 1" },
+      { "id": "C15_02", "text": "Category 15 — Saying 2" },
+      { "id": "C15_03", "text": "Category 15 — Saying 3" },
+      { "id": "C15_04", "text": "Category 15 — Saying 4" },
+      { "id": "C15_05", "text": "Category 15 — Saying 5" }
+    ]},
+    { "id": "C16", "label": "Category 16", "options": [
+      { "id": "C16_01", "text": "Category 16 — Saying 1" },
+      { "id": "C16_02", "text": "Category 16 — Saying 2" },
+      { "id": "C16_03", "text": "Category 16 — Saying 3" },
+      { "id": "C16_04", "text": "Category 16 — Saying 4" },
+      { "id": "C16_05", "text": "Category 16 — Saying 5" }
+    ]}
   ]
 }
-```0

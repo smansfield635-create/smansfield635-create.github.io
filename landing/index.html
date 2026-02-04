@@ -1,37 +1,307 @@
+<!-- /landing/leaf/index.html  (TNT — FULL REPLACEMENT) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Door · Geodiametrics</title>
+  <title>Leaf Mode · Alignment Check</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="/assets/ui.css" />
+  <style>
+    .leafwrap{max-width:900px;margin:0 auto}
+    .leafpanel{margin-top:18px;padding:18px;border-radius:26px;background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.12);box-shadow:0 18px 60px rgba(0,0,0,.35)}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .pillbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .pill{padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(238,244,251,.9);font-weight:800;cursor:pointer}
+    .pill.active{border-color:rgba(102,183,255,.55);box-shadow:0 0 0 1px rgba(102,183,255,.18) inset}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+    .card2{padding:14px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10)}
+    .card2 h3{font-size:16px;margin-bottom:8px}
+    .opt{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);cursor:pointer}
+    .opt input{margin-top:4px}
+    .opt strong{display:block}
+    .small{color:rgba(238,244,251,.68);font-size:14px;line-height:1.35}
+    .count{font-weight:900;color:rgba(102,183,255,.95)}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin-top:16px}
+    .btnwide{min-width:180px}
+    .lock{opacity:.55;pointer-events:none}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
-  <main class="page" data-mode="diamond" data-frozen="true">
-    <div class="h1">Be the first.</div>
-    <div class="h2">This is not a quiz. This is an alignment check.</div>
+  <main class="page leafwrap">
+    <div class="h1">Leaf Mode</div>
+    <div class="h2">Pick exactly 1 per category until all 16 are complete. Then refine +4 if you want.</div>
 
-    <section class="panel" aria-label="Door options">
-      <div class="cluster" role="navigation" aria-label="Four options">
-        <a class="diamond d-top primary" href="/landing/check.html" aria-label="Start check (~3 minutes)">
-          <div class="label"><div class="main">Start Check</div><div class="sub">~3 minutes</div></div>
-        </a>
-
-        <a class="diamond d-right" href="/home/" aria-label="Enter site">
-          <div class="label"><div class="main">Enter</div><div class="sub">Go to site</div></div>
-        </a>
-
-        <a class="diamond d-bottom" href="/landing/info/" aria-label="Learn more">
-          <div class="label"><div class="main">Learn More</div><div class="sub">What this is</div></div>
-        </a>
-
-        <a class="diamond d-left" href="/landing/exit.html" aria-label="Exit">
-          <div class="label"><div class="main">Exit</div><div class="sub">Leave now</div></div>
-        </a>
+    <section class="leafpanel">
+      <div class="row">
+        <div class="small" id="metaText"></div>
+        <div class="btnrow">
+          <a class="btn" href="/landing/era/">Back</a>
+          <a class="btn" href="/landing/exit.html">Exit</a>
+        </div>
       </div>
 
-      <div class="footer">Check yourself before you wreck yourself.</div>
+      <div class="pillbar" id="catBar"></div>
+
+      <div class="grid">
+        <div class="card2">
+          <h3>Category</h3>
+          <div class="small" id="catHelp"></div>
+          <div id="optionsList" style="margin-top:10px;display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
+
+        <div class="card2">
+          <h3>Status</h3>
+          <div class="small" id="statusText"></div>
+
+          <div class="actions">
+            <button class="btn btnwide" id="clearBtn" type="button">Clear all</button>
+            <a class="btn primary btnwide lock" id="finish16" href="/landing/results/">Finish at 16</a>
+          </div>
+
+          <div class="actions">
+            <a class="btn btnwide lock" id="unlockRefine" href="#refine">Refine +4</a>
+            <a class="btn primary btnwide lock" id="finish20" href="/landing/results/">Finish at 20</a>
+          </div>
+
+          <div class="small" style="margin-top:10px;">
+            Refinement unlocks only after 16/16 is complete. You may select up to 4 additional sayings.
+          </div>
+        </div>
+      </div>
+
+      <div id="refine" class="card2" style="margin-top:14px;">
+        <h3>Refine +4 (optional)</h3>
+        <div class="small">Select up to 4 additional sayings from anywhere after 16/16 is complete.</div>
+        <div id="refineList" style="margin-top:10px;display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+
+      <div class="footer">Canonical · Stable · © Geodiametrics</div>
     </section>
   </main>
+
+  <script>
+    (function(){
+      const STATE_KEY="gd_quiz_state";
+      const REQ_KEY="gd_req_picks";
+      const REF_KEY="gd_ref_picks";
+
+      function getState(){ return JSON.parse(localStorage.getItem(STATE_KEY)||"{}"); }
+      function setState(patch){
+        const st=getState(); Object.assign(st,patch);
+        localStorage.setItem(STATE_KEY,JSON.stringify(st));
+      }
+      function getReq(){ return JSON.parse(localStorage.getItem(REQ_KEY)||"{}"); }
+      function setReq(x){ localStorage.setItem(REQ_KEY,JSON.stringify(x)); }
+      function getRef(){ return JSON.parse(localStorage.getItem(REF_KEY)||"[]"); }
+      function setRef(x){ localStorage.setItem(REF_KEY,JSON.stringify(x)); }
+
+      const catBar=document.getElementById("catBar");
+      const optionsList=document.getElementById("optionsList");
+      const refineList=document.getElementById("refineList");
+      const status=document.getElementById("statusText");
+      const meta=document.getElementById("metaText");
+      const catHelp=document.getElementById("catHelp");
+      const clearBtn=document.getElementById("clearBtn");
+      const finish16=document.getElementById("finish16");
+      const unlockRefine=document.getElementById("unlockRefine");
+      const finish20=document.getElementById("finish20");
+
+      let DATA=null;
+      let activeCat=null;
+
+      function reqCount(){
+        const r=getReq();
+        return Object.keys(r).length;
+      }
+
+      function renderCats(){
+        catBar.innerHTML="";
+        DATA.categories.forEach(c=>{
+          const b=document.createElement("button");
+          b.type="button";
+          const r=getReq();
+          const done=!!r[c.id];
+          b.className="pill"+(c.id===activeCat?" active":"");
+          b.textContent = done ? (c.label+" ✓") : c.label;
+          b.onclick=()=>{
+            activeCat=c.id;
+            renderCats();
+            renderOptions();
+          };
+          catBar.appendChild(b);
+        });
+      }
+
+      function renderOptions(){
+        const cat=DATA.categories.find(x=>x.id===activeCat);
+        const r=getReq();
+        catHelp.textContent = `Pick exactly ONE in ${cat.label}. (${r[cat.id] ? "chosen" : "not chosen"})`;
+
+        optionsList.innerHTML="";
+        cat.options.forEach(opt=>{
+          const row=document.createElement("label");
+          row.className="opt";
+
+          const rb=document.createElement("input");
+          rb.type="radio";
+          rb.name="cat_"+cat.id;
+          rb.checked = (r[cat.id]===opt.id);
+
+          const text=document.createElement("div");
+          const strong=document.createElement("strong");
+          strong.textContent=opt.text;
+          const small=document.createElement("div");
+          small.className="small";
+          small.textContent=`${cat.label}`;
+
+          text.appendChild(strong);
+          text.appendChild(small);
+          row.appendChild(rb);
+          row.appendChild(text);
+
+          row.onclick=(ev)=>{
+            if(ev.target.tagName!=="INPUT"){ rb.checked=true; }
+            const cur=getReq();
+            cur[cat.id]=opt.id;
+            setReq(cur);
+
+            const st=getState();
+            if(!st.self_type) setState({self_type: st.self_type || "—"});
+
+            updateStatus();
+            renderCats();
+          };
+
+          optionsList.appendChild(row);
+        });
+      }
+
+      function renderRefine(){
+        const allow = (reqCount()>=DATA.required_categories);
+        const rref=getRef();
+        refineList.innerHTML="";
+
+        const all=[];
+        DATA.categories.forEach(c=>c.options.forEach(o=>all.push({cat:c.label,id:o.id,text:o.text})));
+
+        all.forEach(o=>{
+          const row=document.createElement("label");
+          row.className="opt"+(allow?"":" lock");
+
+          const cb=document.createElement("input");
+          cb.type="checkbox";
+          cb.checked = rref.includes(o.id);
+          cb.disabled = !allow;
+
+          const text=document.createElement("div");
+          const strong=document.createElement("strong");
+          strong.textContent=o.text;
+          const small=document.createElement("div");
+          small.className="small";
+          small.textContent=o.cat;
+
+          text.appendChild(strong);
+          text.appendChild(small);
+
+          row.appendChild(cb);
+          row.appendChild(text);
+
+          row.onclick=(ev)=>{
+            if(!allow) return;
+            if(ev.target.tagName!=="INPUT"){ cb.checked=!cb.checked; }
+
+            let cur=getRef();
+            if(cb.checked){
+              if(cur.length>=DATA.refine_extra_max){
+                cb.checked=false;
+                return;
+              }
+              if(!cur.includes(o.id)) cur.push(o.id);
+            }else{
+              cur=cur.filter(x=>x!==o.id);
+            }
+            setRef(cur);
+            updateStatus();
+          };
+
+          refineList.appendChild(row);
+        });
+      }
+
+      function updateStatus(){
+        const st=getState();
+        const r=getReq();
+        const rc=reqCount();
+        const ref=getRef().length;
+
+        const need=DATA.required_categories;
+        const allowRef = (rc>=need);
+
+        meta.innerHTML =
+          `Required: <span class="count">${need}</span> categories · `+
+          `Pick <span class="count">1</span> in each. `+
+          `Refine unlocks after completion.`;
+
+        status.innerHTML =
+          `Self-type: <b>${st.self_type||"—"}</b><br/>`+
+          `Required complete: <b>${rc}</b> / ${need}<br/>`+
+          `Refine chosen: <b>${ref}</b> / ${DATA.refine_extra_max}<br/>`;
+
+        if(allowRef){
+          finish16.classList.remove("lock");
+          unlockRefine.classList.remove("lock");
+          renderRefine();
+        }else{
+          finish16.classList.add("lock");
+          unlockRefine.classList.add("lock");
+        }
+
+        if(allowRef && ref===DATA.refine_extra_max){
+          finish20.classList.remove("lock");
+        }else{
+          finish20.classList.add("lock");
+        }
+
+        const pickSet=[];
+        Object.keys(r).forEach(catId=>{
+          const cat=DATA.categories.find(c=>c.id===catId);
+          const opt=cat.options.find(o=>o.id===r[catId]);
+          pickSet.push({id:opt.id,cat:cat.label,text:opt.text,required:true});
+        });
+        getRef().forEach(id=>{
+          const found=DATA.categories.flatMap(c=>c.options.map(o=>({cat:c.label,...o}))).find(x=>x.id===id);
+          if(found) pickSet.push({id:found.id,cat:found.cat,text:found.text,required:false});
+        });
+        localStorage.setItem("gd_quiz_picks", JSON.stringify(pickSet));
+      }
+
+      clearBtn.onclick=()=>{
+        localStorage.removeItem(REQ_KEY);
+        localStorage.removeItem(REF_KEY);
+        updateStatus();
+        renderCats();
+        renderOptions();
+        renderRefine();
+      };
+
+      async function boot(){
+        const res=await fetch("/landing/leaf/sayings.json?v="+Date.now());
+        DATA=await res.json();
+
+        activeCat=DATA.categories[0].id;
+        renderCats();
+        renderOptions();
+        renderRefine();
+        updateStatus();
+      }
+
+      boot().catch(err=>{
+        meta.textContent="Failed to load sayings.json";
+        console.error(err);
+      });
+    })();
+  </script>
 </body>
 </html>
+```0

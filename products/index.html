@@ -1,101 +1,41 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
   <title>Products · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg"/>
-  <link rel="stylesheet" href="/assets/core.css"/>
-  <link rel="stylesheet" href="/assets/ui.css"/>
-  <script defer src="/assets/ui.js"></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 <body>
-<main class="wrap">
+  <main class="page" data-mode="diamond" data-frozen="true">
+    <div class="h1">Products</div>
+    <div class="h2">Applied instantiations.</div>
 
-<header class="top">
-  <div class="brand">
-    <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
-    <div class="brandName">Products</div>
-  </div>
-  <nav class="nav">
-    <a class="pill" href="/">Sayings</a>
-    <a class="pill" href="/laws/">Laws</a>
-    <a class="pill" href="/gauges/">Gauges</a>
-    <a class="pill" href="/links/">Links</a>
-  </nav>
-</header>
-
-<section class="card">
-  <div class="kicker">SUITE</div>
-  <h1 class="h1">Product Suite</h1>
-  <p class="p">Click a product. Expand into categories. Human/Scientific inside.</p>
-</section>
-
-<section class="diamondStage">
-  <div class="diamondGrid">
-    <button class="dNode dNodeSmall posTop" data-drop="P_plasma"><span class="dKicker">Top</span><span class="dTitle">Plasma</span><span class="dSub">Systems</span></button>
-    <button class="dNode dNodeSmall posLeft" data-drop="P_cvd"><span class="dKicker">Left</span><span class="dTitle">CVD</span><span class="dSub">Deposition</span></button>
-    <div class="dNode dCenter posCenter"><span class="dKicker">Center</span><span class="dTitle">Products</span><span class="dSub">Expand outward</span></div>
-    <button class="dNode dNodeSmall posRight" data-drop="P_eai"><span class="dKicker">Right</span><span class="dTitle">EAI</span><span class="dSub">Authority</span></button>
-    <button class="dNode dNodeSmall posBottom" data-drop="P_platform"><span class="dKicker">Bottom</span><span class="dTitle">Platform</span><span class="dSub">Diagnostics</span></button>
-  </div>
-</section>
-
-<section class="childWrap">
-
-  <div id="P_plasma" class="drop">
-    <div class="childCard">
-      <div class="kicker">PLASMA COHERENCE SYSTEMS</div>
-      <div class="toggleRow" data-toggle-group="PP">
-        <button class="toggleBtn" data-toggle="PP" data-mode="human">Human</button>
-        <button class="toggleBtn" data-toggle="PP" data-mode="scientific">Scientific</button>
+    <section class="panel">
+      <div class="cluster" aria-label="Product buckets">
+        <a class="diamond d-top primary" href="/products/plasma/">
+          <div class="label"><div class="main">Plasma</div><div class="sub">Systems</div></div>
+        </a>
+        <a class="diamond d-right" href="/products/cvd/">
+          <div class="label"><div class="main">CVD</div><div class="sub">Deposition</div></div>
+        </a>
+        <a class="diamond d-bottom" href="/products/platform/">
+          <div class="label"><div class="main">Platform</div><div class="sub">Diagnostics</div></div>
+        </a>
+        <a class="diamond d-left" href="/home/">
+          <div class="label"><div class="main">Back</div><div class="sub">Home</div></div>
+        </a>
       </div>
-      <div class="pane show" data-pane="PP" data-mode="human"><p class="p">Plasma stops behaving “randomly” when constraints are respected.</p></div>
-      <div class="pane" data-pane="PP" data-mode="scientific"><p class="p">Instability is boundary violation under load; enforce admissible envelopes.</p></div>
-      <button class="pill" data-drop="PP_more">Open brief</button>
-      <div id="PP_more" class="drop"><p class="p">Why this exists · What changed · Market relevance · Last breakthrough · Current status</p></div>
-    </div>
-  </div>
 
-  <div id="P_cvd" class="drop">
-    <div class="childCard">
-      <div class="kicker">COHERENCE-DRIVEN CVD</div>
-      <div class="toggleRow" data-toggle-group="PC">
-        <button class="toggleBtn" data-toggle="PC" data-mode="human">Human</button>
-        <button class="toggleBtn" data-toggle="PC" data-mode="scientific">Scientific</button>
+      <div class="card">
+        <div class="title">Pending paste</div>
+        <div class="text">
+          Paste your existing Products code next. We will TNT-replace this page with your full suite layout.
+        </div>
       </div>
-      <div class="pane show" data-pane="PC" data-mode="human"><p class="p">Deposition becomes repeatable when the whole run stays aligned.</p></div>
-      <div class="pane" data-pane="PC" data-mode="scientific"><p class="p">Trajectory-level admissibility reduces defect propagation and scrap.</p></div>
-      <button class="pill" data-drop="PC_more">Open brief</button>
-      <div id="PC_more" class="drop"><p class="p">Why · What changed · Market · Breakthrough · Status</p></div>
-    </div>
-  </div>
 
-  <div id="P_eai" class="drop">
-    <div class="childCard">
-      <div class="kicker">EXECUTIVE ADMISSIBILITY INSTRUMENT</div>
-      <div class="toggleRow" data-toggle-group="PE">
-        <button class="toggleBtn" data-toggle="PE" data-mode="human">Human</button>
-        <button class="toggleBtn" data-toggle="PE" data-mode="scientific">Scientific</button>
-      </div>
-      <div class="pane show" data-pane="PE" data-mode="human"><p class="p">When diagnosis is validated, decisions become binding.</p></div>
-      <div class="pane" data-pane="PE" data-mode="scientific"><p class="p">Closure operator halts inadmissible execution paths.</p></div>
-      <button class="pill" data-drop="PE_more">Open brief</button>
-      <div id="PE_more" class="drop"><p class="p">Why · What changed · Market · Breakthrough · Status</p></div>
-    </div>
-  </div>
-
-  <div id="P_platform" class="drop">
-    <div class="childCard">
-      <div class="kicker">DIAGNOSTICS PLATFORM</div>
-      <p class="p">Read-only projections: coherence, stability, drift, load, admissibility, closure.</p>
-      <a class="pill" href="/gauges/">Open gauges</a>
-    </div>
-  </div>
-
-</section>
-
-<footer class="foot">Products · Diamond suite · © Geodiametrics</footer>
-</main>
+      <div class="footer">Canonical · Stable · © Geodiametrics</div>
+    </section>
+  </main>
 </body>
 </html>

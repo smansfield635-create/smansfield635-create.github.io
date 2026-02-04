@@ -3,57 +3,123 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodiametrics · Home</title>
+  <title>Door · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
-<body class="stars">
-  <main class="wrap">
+<body>
+<a class="exit" href="about:blank">Exit</a>
+
+<main>
+  <div class="wrap">
+
+    <!-- HEADER -->
     <header class="hero">
-      <h1>Home</h1>
-      <p>One gate. One diamond. One path.</p>
+      <h1>Be the first.</h1>
+      <p>Nothing is required until you click.</p>
     </header>
 
-    <section class="card" aria-label="Gate Diamond">
-      <div class="diamondWrap" aria-label="Four-diamond gate">
-        <!-- ONE BIG DIAMOND, SPLIT INTO 4 EQUAL DIAMONDS -->
-        <svg viewBox="0 0 100 100" role="img" aria-label="Gate: Laws, Products, Gauges, Links">
-          <!-- outer frame diamond -->
-          <polygon class="dOuter" points="50,3 97,50 50,97 3,50"></polygon>
+    <!-- PART 1: SELF-HUNCH -->
+    <section class="card">
+      <p style="text-align:center;color:var(--muted)">
+        Start the self-alignment quiz or enter the website.
+      </p>
 
-          <!-- TOP: LAWS -->
-          <a class="dbtn" href="/laws/">
-            <polygon class="dInner" points="50,6 68,24 50,42 32,24"></polygon>
-            <text class="dText" x="50" y="27" text-anchor="middle" dominant-baseline="middle">LAWS</text>
-          </a>
-
-          <!-- RIGHT: PRODUCTS -->
-          <a class="dbtn" href="/products/">
-            <polygon class="dInner" points="94,50 76,32 58,50 76,68"></polygon>
-            <text class="dTextSmall" x="76" y="50" text-anchor="middle" dominant-baseline="middle">PRODUCTS</text>
-          </a>
-
-          <!-- BOTTOM: GAUGES -->
-          <a class="dbtn" href="/gauges/">
-            <polygon class="dInner" points="50,94 68,76 50,58 32,76"></polygon>
-            <text class="dTextSmall" x="50" y="76" text-anchor="middle" dominant-baseline="middle">GAUGES</text>
-          </a>
-
-          <!-- LEFT: LINKS -->
-          <a class="dbtn" href="/links/">
-            <polygon class="dInner" points="6,50 24,32 42,50 24,68"></polygon>
-            <text class="dTextSmall" x="24" y="50" text-anchor="middle" dominant-baseline="middle">LINKS</text>
-          </a>
-
-          <circle cx="50" cy="50" r="2.2" fill="rgba(234,241,255,.55)"></circle>
-        </svg>
+      <div class="stage">
+        <!-- One big diamond split into four -->
+        <div class="big">
+          <svg viewBox="0 0 100 100" aria-label="Choose your starting orientation">
+            <polygon class="dOuter" points="50,3 97,50 50,97 3,50"/>
+            <!-- Top -->
+            <g class="dBtn" onclick="show('arch')">
+              <polygon class="dInner" points="50,6 68,24 50,42 32,24"/>
+              <text class="dText" x="50" y="27" text-anchor="middle" dominant-baseline="middle">Architect</text>
+            </g>
+            <!-- Right -->
+            <g class="dBtn" onclick="show('exec')">
+              <polygon class="dInner" points="94,50 76,32 58,50 76,68"/>
+              <text class="dTextSm" x="76" y="50" text-anchor="middle" dominant-baseline="middle">Executor</text>
+            </g>
+            <!-- Bottom -->
+            <g class="dBtn" onclick="show('harm')">
+              <polygon class="dInner" points="50,94 68,76 50,58 32,76"/>
+              <text class="dTextSm" x="50" y="76" text-anchor="middle" dominant-baseline="middle">Harmonizer</text>
+            </g>
+            <!-- Left -->
+            <g class="dBtn" onclick="show('disp')">
+              <polygon class="dInner" points="6,50 24,32 42,50 24,68"/>
+              <text class="dTextSm" x="24" y="50" text-anchor="middle" dominant-baseline="middle">Disruptor</text>
+            </g>
+          </svg>
+        </div>
       </div>
 
-      <div class="linkrow" aria-label="Return">
-        <a class="pill" href="/">Return to Door</a>
+      <!-- Panels -->
+      <div id="arch" class="panel">
+        <div class="visual"></div>
+        <div class="desc">You value coherence and structure before action.</div>
+        <div class="actions">
+          <a class="btn" onclick="confirm()">Yes, this fits</a>
+          <a class="btn" onclick="clearPanels()">Compare another</a>
+        </div>
       </div>
 
-      <div class="footer">Canonical · Stable · © Geodiametrics</div>
+      <div id="exec" class="panel">
+        <div class="visual"></div>
+        <div class="desc">You prioritize action and outcomes under pressure.</div>
+        <div class="actions">
+          <a class="btn" onclick="confirm()">Yes, this fits</a>
+          <a class="btn" onclick="clearPanels()">Compare another</a>
+        </div>
+      </div>
+
+      <div id="harm" class="panel">
+        <div class="visual"></div>
+        <div class="desc">You preserve stability and relational continuity.</div>
+        <div class="actions">
+          <a class="btn" onclick="confirm()">Yes, this fits</a>
+          <a class="btn" onclick="clearPanels()">Compare another</a>
+        </div>
+      </div>
+
+      <div id="disp" class="panel">
+        <div class="visual"></div>
+        <div class="desc">You renew systems by breaking rigid frames.</div>
+        <div class="actions">
+          <a class="btn" onclick="confirm()">Yes, this fits</a>
+          <a class="btn" onclick="clearPanels()">Compare another</a>
+        </div>
+      </div>
     </section>
-  </main>
+
+    <!-- PART 2: TEASER (eras/sayings come next) -->
+    <section id="phase2" class="card phase2">
+      <p class="hint">
+        Next, you’ll explore how this orientation appears across time.
+        You may skip at any time.
+      </p>
+      <div style="display:flex;justify-content:center;gap:10px;margin-top:10px">
+        <a class="btn" href="/home/">Enter Website</a>
+        <a class="btn" href="#">Continue Exploration</a>
+      </div>
+    </section>
+
+    <footer class="foot" style="text-align:center;color:var(--muted)">
+      Integrity → Fortitude → Delivery → Destiny
+    </footer>
+  </div>
+</main>
+
+<script>
+function clearPanels(){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+}
+function show(id){
+  clearPanels();
+  document.getElementById(id).classList.add('active');
+}
+function confirm(){
+  document.getElementById('phase2').classList.add('active');
+}
+</script>
 </body>
 </html>

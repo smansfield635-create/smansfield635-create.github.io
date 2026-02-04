@@ -2,44 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Geodiametrics</title>
 
+  <link rel="stylesheet" href="/assets/ui.css" />
+
   <style>
-    html, body {
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
-      background: radial-gradient(circle at top, #0b1c2d, #050b14);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: #e6edf3;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0c1b2a 0%, #020b14 70%);
+      color: #e6eef6;
       overflow: hidden;
     }
 
     .container {
-      height: 100%;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 24px;
       text-align: center;
     }
 
     h1 {
-      font-size: 2.4rem;
       font-weight: 500;
-      margin-bottom: 0.5rem;
+      letter-spacing: 0.4px;
+      margin-bottom: 12px;
     }
 
-    p.subtitle {
+    .subtitle {
       opacity: 0.75;
-      margin-bottom: 2.5rem;
+      margin-bottom: 48px;
     }
 
-    .diamond-wrap {
+    .diamond-grid {
       position: relative;
       width: 260px;
       height: 260px;
+      transform: rotate(45deg);
     }
 
     .diamond {
@@ -48,18 +55,23 @@
       height: 120px;
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.12);
-      transform: rotate(45deg);
+      backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      backdrop-filter: blur(8px);
+      transition: transform 0.25s ease, background 0.25s ease;
     }
 
     .diamond span {
       transform: rotate(-45deg);
-      font-size: 0.8rem;
-      opacity: 0.85;
+      font-size: 14px;
+      letter-spacing: 0.6px;
+    }
+
+    .diamond:hover {
+      background: rgba(255,255,255,0.12);
+      transform: scale(1.04);
     }
 
     .top    { top: 0; left: 70px; }
@@ -67,26 +79,28 @@
     .bottom { bottom: 0; left: 70px; }
     .left   { top: 70px; left: 0; }
 
-    .footer {
-      position: absolute;
-      bottom: 10px;
-      right: 12px;
-      font-size: 0.6rem;
-      opacity: 0.4;
-    }
-
     .quotes {
-      position: absolute;
-      bottom: 12px;
-      left: 12px;
+      margin-top: 48px;
       display: flex;
-      gap: 8px;
+      gap: 12px;
+      opacity: 0.7;
+      font-size: 13px;
     }
 
     .quote {
-      font-size: 0.7rem;
-      opacity: 0.55;
-      cursor: default;
+      padding: 6px 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .canonical {
+      position: fixed;
+      bottom: 8px;
+      right: 10px;
+      font-size: 10px;
+      opacity: 0.35;
+      letter-spacing: 0.4px;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -94,24 +108,43 @@
 <body>
   <div class="container">
     <h1>Take a moment.</h1>
-    <p class="subtitle">This explains what’s here — before you decide where to go.</p>
+    <div class="subtitle">
+      This explains what’s here — before you decide where to go.
+    </div>
 
-    <div class="diamond-wrap">
-      <div class="diamond top"><span>START</span></div>
-      <div class="diamond right"><span>ENTER</span></div>
-      <div class="diamond bottom"><span>LEARN</span></div>
-      <div class="diamond left"><span>EXIT</span></div>
+    <div class="diamond-grid">
+      <div class="diamond top" data-go="/ask/">
+        <span>START</span>
+      </div>
+      <div class="diamond right" data-go="/links/">
+        <span>ENTER</span>
+      </div>
+      <div class="diamond bottom" data-go="/breakthroughs/">
+        <span>LEARN</span>
+      </div>
+      <div class="diamond left" data-go="/">
+        <span>EXIT</span>
+      </div>
+    </div>
+
+    <div class="quotes">
+      <div class="quote">知行合一</div>
+      <div class="quote">大道至简</div>
+      <div class="quote">实事求是</div>
     </div>
   </div>
 
-  <div class="quotes">
-    <div class="quote">知行合一</div>
-    <div class="quote">大道至简</div>
-    <div class="quote">实事求是</div>
-  </div>
+  <div class="canonical">Canonical · Stable · © Geodiametrics</div>
 
-  <div class="footer">
-    Canonical · Stable · © Geodiametrics
-  </div>
+  <script>
+    document.querySelectorAll('.diamond').forEach(el => {
+      el.addEventListener('click', () => {
+        const target = el.getAttribute('data-go');
+        if (target) {
+          window.location.href = target;
+        }
+      });
+    });
+  </script>
 </body>
 </html>

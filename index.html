@@ -1,81 +1,102 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
 </head>
-
 <body class="stars">
-  <main class="wrap">
-    <header class="hero">
-      <div class="brand">Geodiametrics</div>
-      <p class="tag">Coherence · Admissibility · Execution</p>
+<main class="wrap">
 
-      <h1 class="h1">Be the first.</h1>
-      <p class="sub">Nothing is required until you click.</p>
-    </header>
+  <!-- ORIENTATION -->
+  <section class="hero">
+    <h1>Be the first.</h1>
+    <p>Nothing is required until you click.</p>
+  </section>
 
-    <section class="card gate">
-      <div class="cardTitle">Front gate</div>
-      <p class="small">Tap a node. The outer diamond routes. The inner diamond is the integrity set.</p>
+  <!-- GLOBAL GATE (DOMAIN SELECTOR) -->
+  <section class="card gate">
+    <div class="stage">
 
-      <div class="stage" aria-label="Gate">
-        <div class="diamondFrame" aria-hidden="true"></div>
-        <div class="diamondCore" aria-hidden="true"></div>
+      <!-- OUTER DOMAIN DIAMOND -->
+      <div class="diamond outer"></div>
 
-        <!-- OUTER ROUTES (4) -->
-        <a class="routeBtn routeTop" href="/laws/"><span>Laws</span></a>
-        <a class="routeBtn routeRight" href="/gauges/"><span>Gauges</span></a>
-        <a class="routeBtn routeBottom" href="/links/"><span>Links</span></a>
-        <a class="routeBtn routeLeft" href="/products/"><span>Products</span></a>
+      <!-- DOMAIN AXES (GLOBAL SCIENCE / GOVERNANCE / OBSERVABILITY / HUMAN) -->
+      <div class="node outer top">Laws</div>
+      <div class="node outer right">Products</div>
+      <div class="node outer bottom">Gauges</div>
+      <div class="node outer left">Sayings</div>
 
-        <!-- INNER INTEGRITY (4) -->
-        <div class="inner" aria-hidden="false">
-          <a class="innerPill primary innerTop" href="/sayings/#wisdom">Wisdom</a>
-          <a class="innerPill innerRight" href="/sayings/#theism">Theism</a>
-          <a class="innerPill innerBottom" href="/sayings/#law">Law</a>
-          <a class="innerPill innerLeft" href="/sayings/#knowledge">Knowledge</a>
-        </div>
-      </div>
+      <!-- INNER INTEGRITY DIAMOND -->
+      <div class="diamond inner"></div>
 
-      <div class="integrityLine">
-        Integrity <span class="arrow">→</span> Fortitude <span class="arrow">→</span> Delivery <span class="arrow">→</span> Destiny
-      </div>
+      <!-- INTEGRITY AXES -->
+      <div class="node inner i-top">Wisdom</div>
+      <div class="node inner i-right">Knowledge</div>
+      <div class="node inner i-bottom">Theism</div>
+      <div class="node inner i-left">Law</div>
 
-      <div class="trans">
-        <p class="transHead">Tap a phrase to translate.</p>
+      <div class="center-dot"></div>
+    </div>
 
-        <details class="cn">
-          <summary>性格决定命运 <span class="hint">tap</span></summary>
-          <div class="en">Character determines destiny.</div>
-        </details>
+    <div class="integrity-line">
+      Integrity → Fortitude → Delivery → Destiny
+    </div>
+  </section>
 
-        <details class="cn">
-          <summary>己所不欲，勿施于人 <span class="hint">tap</span></summary>
-          <div class="en">Do not impose on others what you do not desire.</div>
-        </details>
+  <!-- LAW EXPANSION (ALL SCIENCE, GOVERNANCE, MECHANICS) -->
+  <section class="card expand">
+    <div class="expand-title">Law (Recursive Expansion)</div>
 
-        <details class="cn">
-          <summary>上善若水 <span class="hint">tap</span></summary>
-          <div class="en">The highest goodness is like water.</div>
-        </details>
+    <div class="mini-stage">
+      <div class="diamond mini"></div>
 
-        <details class="cn">
-          <summary>道可道，非常道 <span class="hint">tap</span></summary>
-          <div class="en">The Dao that can be spoken is not the eternal Dao.</div>
-        </details>
+      <div class="mini-node top">Euclidean Law</div>
+      <div class="mini-node right">Cyclical Law</div>
+      <div class="mini-node bottom">Mechanistic Law</div>
+      <div class="mini-node left">Closure Law</div>
+    </div>
 
-        <details class="cn">
-          <summary>道生一，一生二，二生三，三生万物 <span class="hint">tap</span></summary>
-          <div class="en">Dao gives birth to One; One to Two; Two to Three; Three to ten thousand things.</div>
-        </details>
-      </div>
-    </section>
+    <p class="small">
+      Every scientific finding, natural law, regulatory constraint, and admissibility rule
+      resolves into one of these four governing regimes. Expansion is infinite by recursion,
+      not enumeration.
+    </p>
+  </section>
 
-    <footer class="foot">Canonical · Stable · © Geodiametrics</footer>
-  </main>
+  <!-- HUMAN COMPRESSION -->
+  <section class="card sayings">
+    <p class="hint">Tap a phrase to translate.</p>
+
+    <details class="cn">
+      <summary>性格决定命运</summary>
+      <div class="en">Character determines destiny.</div>
+    </details>
+
+    <details class="cn">
+      <summary>己所不欲，勿施于人</summary>
+      <div class="en">Do not impose on others what you do not desire.</div>
+    </details>
+
+    <details class="cn">
+      <summary>上善若水</summary>
+      <div class="en">The highest good is like water.</div>
+    </details>
+
+    <details class="cn">
+      <summary>道可道，非常道</summary>
+      <div class="en">The Dao that can be spoken is not the eternal Dao.</div>
+    </details>
+
+    <details class="cn">
+      <summary>道生一，一生二，二生三，三生万物</summary>
+      <div class="en">Dao gives birth to One; One to Two; Two to Three; Three to all things.</div>
+    </details>
+  </section>
+
+  <footer class="foot">Canonical · Stable · © Geodiametrics</footer>
+
+</main>
 </body>
 </html>

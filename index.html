@@ -1,38 +1,54 @@
-<!doctype html>
+<!-- FILE: /index.html  (TNT) -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Home · Geodiametrics</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Door · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 <body>
-  <main class="page" data-mode="diamond" data-frozen="true">
-    <div class="h1">Home</div>
-    <div class="h2">Site navigation. Alignment Check is separate.</div>
+  <main class="page">
+    <header class="hero">
+      <h1 class="title">Be the first.</h1>
+      <p class="subtitle">The door explains. The gate routes.</p>
+    </header>
 
     <section class="panel">
-      <div class="cluster" aria-label="Site routes">
-        <a class="diamond d-top primary" href="/laws/">
-          <div class="label"><div class="main">Laws</div><div class="sub">Site</div></div>
+      <div class="diamondCluster">
+        <!-- Start Quiz goes to the in-page final check (no skipping questions) -->
+        <a class="diamond top" href="#final-check" aria-label="Start quiz (go to final check)">
+          <span><strong>START QUIZ</strong><em>~3 minutes</em></span>
         </a>
-        <a class="diamond d-right" href="/products/">
-          <div class="label"><div class="main">Products</div><div class="sub">Site</div></div>
+
+        <a class="diamond right" href="/site/" aria-label="Enter site">
+          <span><strong>ENTER</strong><em>Go to site</em></span>
         </a>
-        <a class="diamond d-bottom" href="/gauges/">
-          <div class="label"><div class="main">Gauges</div><div class="sub">Site</div></div>
+
+        <a class="diamond bottom" href="/landing/info/" aria-label="Learn more">
+          <span><strong>LEARN MORE</strong><em>What this is</em></span>
         </a>
-        <a class="diamond d-left" href="/links/">
-          <div class="label"><div class="main">Links</div><div class="sub">Site</div></div>
+
+        <a class="diamond left" href="/landing/" aria-label="Exit (return)">
+          <span><strong>EXIT</strong><em>Leave now</em></span>
         </a>
+
+        <div class="diamondCenterDot" aria-hidden="true"></div>
+        <div class="diamondCross" aria-hidden="true"></div>
       </div>
 
-      <div class="btnrow" style="justify-content:space-between;margin-top:10px;">
-        <a class="btn" href="/landing/">Door</a>
-        <a class="btn" href="/landing/exit.html">Exit</a>
-      </div>
+      <section id="final-check" class="card">
+        <h2 class="cardTitle">Final check</h2>
+        <p class="cardText">Proceed only if you intend to complete it. Ready?</p>
 
-      <div class="footer">Canonical · Stable · © Geodiametrics</div>
+        <div class="btnRow">
+          <a class="btn primary" href="/landing/check.html">Yes, start</a>
+          <a class="btn" href="/site/">Skip, enter site</a>
+          <a class="btn" href="#top">Not now</a>
+        </div>
+      </section>
+
+      <footer class="footer">Canonical · Stable · © Geodiametrics</footer>
     </section>
   </main>
 </body>

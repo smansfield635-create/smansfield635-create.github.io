@@ -1,108 +1,39 @@
-<!-- /landing/index.html  (TNT — full replacement) -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Door · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geodiametrics</title>
+  <link rel="stylesheet" href="../assets/ui.css" />
 </head>
 
 <body>
-  <main class="wrap">
-    <header class="hero">
-      <h1>Be the first.</h1>
-      <p>The door explains. The gate routes.</p>
-    </header>
+  <div class="page">
+    <div class="stage">
 
-    <section class="glass">
-      <div class="glassInner">
-        <div class="diamondGrid">
-          <a class="diamondBtn primary" href="#start">
-            <div class="label">
-              <b>Start Quiz</b>
-              <small>3 minutes</small>
-            </div>
-          </a>
+      <div class="diamond-grid">
+        <a class="diamond top" href="#">
+          <span>START QUIZ<br><small>3 MINUTES</small></span>
+        </a>
 
-          <a class="diamondBtn" href="#enter">
-            <div class="label">
-              <b>Enter</b>
-              <small>Go to gate</small>
-            </div>
-          </a>
+        <a class="diamond right" href="#">
+          <span>ENTER</span>
+        </a>
 
-          <a class="diamondBtn" href="#learn">
-            <div class="label">
-              <b>Learn More</b>
-              <small>What this is</small>
-            </div>
-          </a>
+        <a class="diamond bottom" href="#">
+          <span>EXIT</span>
+        </a>
 
-          <a class="diamondBtn" href="#exit">
-            <div class="label">
-              <b>Exit</b>
-              <small>Leave now</small>
-            </div>
-          </a>
-        </div>
-
-        <div class="foot">Canonical · Stable · © Geodiametrics</div>
+        <a class="diamond left" href="#">
+          <span>LEARN MORE</span>
+        </a>
       </div>
-    </section>
-  </main>
 
-  <!-- LEARN MORE -->
-  <section id="learn" class="modal">
-    <div class="modalCard">
-      <h2>What the quiz does</h2>
-      <p>You’ll skim short sayings and pick what resonates. It’s a self-alignment taste test — no pressure, no judgement.</p>
-      <p>If you’re not in the mood, skip it and enter the website.</p>
-      <div class="modalActions">
-        <a class="pill primary" href="#start">Start Quiz</a>
-        <a class="pill" href="/">Enter Website</a>
-        <a class="pill" href="#">Close</a>
+      <div class="footer">
+        Canonical · Stable · © Geodiametrics
       </div>
+
     </div>
-  </section>
-
-  <!-- START CONFIRM -->
-  <section id="start" class="modal">
-    <div class="modalCard">
-      <h2>Start self-alignment</h2>
-      <p><b>Only start if you intend to finish.</b> It takes about <b>3 minutes</b>.</p>
-      <p>When you proceed, you’ll choose a starting lens and then select sayings that resonate.</p>
-      <div class="modalActions">
-        <!-- If your quiz page exists later, point this to it -->
-        <a class="pill primary" href="/landing/quiz/">Yes, start</a>
-        <a class="pill" href="/">Skip, enter site</a>
-        <a class="pill" href="#">Not now</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ENTER -->
-  <section id="enter" class="modal">
-    <div class="modalCard">
-      <h2>Enter the gate</h2>
-      <p>This skips the self-alignment step and goes straight to the site.</p>
-      <div class="modalActions">
-        <a class="pill primary" href="/">Enter now</a>
-        <a class="pill" href="#">Close</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- EXIT -->
-  <section id="exit" class="modal">
-    <div class="modalCard">
-      <h2>Leave now</h2>
-      <p>Thanks for stopping by. You can close this tab anytime.</p>
-      <div class="modalActions">
-        <a class="pill" href="#">Stay</a>
-        <a class="pill primary" href="about:blank">Leave</a>
-      </div>
-    </div>
-  </section>
+  </div>
 </body>
 </html>

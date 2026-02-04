@@ -1,186 +1,101 @@
 /* =========================================================
-   Geodiametrics — UI CANONICAL (FULL)
-   Purpose: fix frozen clicks, kill blue glow, stabilize mobile
+   Geodiametrics — Canonical UI (Functional Baseline)
+   Zero JS • Zero Freeze • Mobile-safe
    ========================================================= */
 
-/* ---------------------------
-   GLOBAL RESET / TOUCH
-   --------------------------- */
-*,
-*::before,
-*::after {
+* {
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent !important;
-  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
   user-select: none;
 }
 
 html, body {
-  width: 100%;
-  height: 100%;
   margin: 0;
   padding: 0;
-  overscroll-behavior: none;
-  touch-action: manipulation;
+  min-height: 100%;
+  background: radial-gradient(circle at top, #0d1b2a, #050b12);
+  color: #e6e6e6;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* ---------------------------
-   BASE
-   --------------------------- */
-body {
-  background: radial-gradient(circle at top, #0c1b2a 0%, #020b14 70%);
-  color: #e6eef6;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-               Roboto, Helvetica, Arial, sans-serif;
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-
-/* ---------------------------
-   LAYOUT
-   --------------------------- */
-.container {
-  position: relative;
+/* Layout */
+.home {
   min-height: 100vh;
-  width: 100%;
-  padding: 24px;
+  padding: 48px 20px 88px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   text-align: center;
 }
 
-/* ---------------------------
-   HEADLINE
-   --------------------------- */
-h1 {
-  margin: 0 0 12px 0;
+/* Headline */
+.headline {
+  font-size: 2.4rem;
   font-weight: 500;
-  letter-spacing: 0.4px;
+  margin: 0 0 12px 0;
 }
 
 .subtitle {
+  max-width: 560px;
   opacity: 0.75;
   margin-bottom: 48px;
 }
 
-/* ---------------------------
-   DIAMOND GRID (INTERACTIVE)
-   --------------------------- */
-.diamond-grid {
-  position: relative;
-  width: 260px;
-  height: 260px;
+/* Diamond navigation — HTML links only */
+.diamond-nav {
+  display: grid;
+  grid-template-columns: repeat(2, 120px);
+  grid-template-rows: repeat(2, 120px);
+  gap: 18px;
   transform: rotate(45deg);
-  z-index: 10;            /* ensure above any backdrop */
-  pointer-events: auto;  /* MUST receive clicks */
+  margin-bottom: 64px;
 }
 
 .diamond {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  pointer-events: auto;  /* CRITICAL */
-  will-change: transform, background;
-  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,0.08),
-    0 10px 30px rgba(0,0,0,0.35);
-}
-
-/* label */
-.diamond span {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #e6e6e6;
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   transform: rotate(-45deg);
-  font-size: 14px;
-  letter-spacing: 0.6px;
-  pointer-events: none; /* text never steals clicks */
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
-/* positions */
-.top    { top: 0; left: 70px; }
-.right  { top: 70px; right: 0; }
-.bottom { bottom: 0; left: 70px; }
-.left   { top: 70px; left: 0; }
-
-/* interaction */
 .diamond:hover {
-  background: rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.12);
 }
 
 .diamond:active {
-  transform: scale(0.98);
-  background: rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.16);
+  transform: rotate(-45deg) scale(0.97);
 }
 
-/* ---------------------------
-   QUOTES
-   --------------------------- */
-.quotes {
-  margin-top: 48px;
-  display: flex;
-  gap: 12px;
-  opacity: 0.7;
-  z-index: 5;
+/* Footer */
+footer {
+  position: absolute;
+  bottom: 16px;
+  width: 100%;
+  text-align: center;
+  font-size: 0.8rem;
+  opacity: 0.55;
 }
 
-.quote {
-  padding: 6px 10px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.15);
-  font-size: 13px;
-  cursor: default;
+.sayings {
+  margin-bottom: 6px;
 }
 
-/* ---------------------------
-   CANONICAL MARK
-   --------------------------- */
-.canonical {
+.sayings span {
+  margin: 0 6px;
+}
+
+.mark {
   position: fixed;
   right: 10px;
   bottom: 8px;
-  font-size: 10px;
-  opacity: 0.35;
-  letter-spacing: 0.4px;
-  pointer-events: none;
-  z-index: 20;
-}
-
-/* ---------------------------
-   MOBILE SAFETY
-   --------------------------- */
-@media (max-width: 420px) {
-  .diamond-grid {
-    width: 220px;
-    height: 220px;
-  }
-  .diamond {
-    width: 110px;
-    height: 110px;
-  }
-}
-
-/* ---------------------------
-   ABSOLUTE KILL SWITCHES
-   --------------------------- */
-/* no outlines / no focus rings */
-*:focus { outline: none !important; }
-
-/* no hidden overlays stealing clicks */
-.backdrop,
-.overlay,
-.glass,
-.blur,
-.layer {
-  pointer-events: none !important;
+  font-size: 0.7rem;
 }

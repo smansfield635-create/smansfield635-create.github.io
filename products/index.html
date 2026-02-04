@@ -9,33 +9,91 @@
 <body>
   <main class="page" data-mode="diamond" data-frozen="true">
     <div class="h1">Products</div>
-    <div class="h2">Applied instantiations.</div>
+    <div class="h2">One science. Multiple instantiations.</div>
 
     <section class="panel">
-      <div class="cluster" aria-label="Product buckets">
-        <a class="diamond d-top primary" href="/products/plasma/">
+      <!-- Global view toggle -->
+      <div class="btnrow">
+        <button class="btn primary" data-view="human">Human</button>
+        <button class="btn" data-view="scientific">Scientific</button>
+      </div>
+
+      <!-- Diamond = concept -->
+      <div class="cluster" aria-label="Products depth">
+        <button class="diamond d-top primary" data-prod="plasma">
           <div class="label"><div class="main">Plasma</div><div class="sub">Systems</div></div>
-        </a>
-        <a class="diamond d-right" href="/products/cvd/">
+        </button>
+        <button class="diamond d-right" data-prod="cvd">
           <div class="label"><div class="main">CVD</div><div class="sub">Deposition</div></div>
-        </a>
-        <a class="diamond d-bottom" href="/products/platform/">
+        </button>
+        <button class="diamond d-bottom" data-prod="platform">
           <div class="label"><div class="main">Platform</div><div class="sub">Diagnostics</div></div>
-        </a>
+        </button>
         <a class="diamond d-left" href="/home/">
           <div class="label"><div class="main">Back</div><div class="sub">Home</div></div>
         </a>
       </div>
 
-      <div class="card">
-        <div class="title">Note</div>
-        <div class="text">
-          This is the site. The alignment check is separate and begins at the Door.
+      <!-- Product panes -->
+      <div class="card" id="plasma">
+        <div class="title">Plasma</div>
+        <div class="text human">
+          Plasma stabilizes when constraints are respected; coherence replaces noise.
+        </div>
+        <div class="text scientific" hidden>
+          Boundary-constrained admissibility suppresses instability under load.
+        </div>
+      </div>
+
+      <div class="card" id="cvd" hidden>
+        <div class="title">CVD</div>
+        <div class="text human">
+          Repeatable deposition emerges when the entire run stays aligned.
+        </div>
+        <div class="text scientific" hidden>
+          Trajectory-level admissibility reduces defect propagation and scrap.
+        </div>
+      </div>
+
+      <div class="card" id="platform" hidden>
+        <div class="title">Platform</div>
+        <div class="text human">
+          Diagnostics make alignment visible and actionable.
+        </div>
+        <div class="text scientific" hidden>
+          Instrumentation exposes coherence, drift, and closure in real time.
         </div>
       </div>
 
       <div class="footer">Canonical · Stable · © Geodiametrics</div>
     </section>
   </main>
+
+  <script>
+    (function(){
+      const prods = ["plasma","cvd","platform"];
+      const views = ["human","scientific"];
+      let curView="human";
+
+      // product switch
+      document.querySelectorAll("[data-prod]").forEach(b=>{
+        b.addEventListener("click", ()=>{
+          prods.forEach(id=>{
+            document.getElementById(id).hidden = (id !== b.dataset.prod);
+          });
+        });
+      });
+
+      // view toggle
+      document.querySelectorAll("[data-view]").forEach(b=>{
+        b.addEventListener("click", ()=>{
+          curView = b.dataset.view;
+          document.querySelectorAll(".text.human").forEach(x=>x.hidden = curView!=="human");
+          document.querySelectorAll(".text.scientific").forEach(x=>x.hidden = curView!=="scientific");
+          document.querySelectorAll("[data-view]").forEach(x=>x.classList.toggle("primary", x.dataset.view===curView));
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

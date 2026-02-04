@@ -5,22 +5,27 @@
   <title>Exit · Geodiametrics</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="/assets/ui.css" />
+  <style>
+    .card{margin-top:14px;padding:16px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.18);text-align:left}
+    .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+    .btn{padding:10px 16px;border-radius:18px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#e8eef5;cursor:pointer}
+    .btn.primary{border-color:#6faad6;color:#6faad6}
+    .muted{color:#b9c6d3}
+  </style>
 </head>
 <body>
-  <main class="page">
-    <div class="h1">Leave now</div>
-    <div class="h2">Thanks for stopping by.</div>
+  <main class="page" data-mode="leaf">
+    <div class="title">Leave now</div>
+    <div class="subtitle">No pressure. No judgment.</div>
 
     <section class="panel">
       <div class="card">
-        <div class="title">You can leave immediately</div>
-        <div class="text">Close this tab whenever you want. You’re always welcome back.</div>
-        <div class="btnrow">
-          <a class="btn" href="/landing/">Stay</a>
-          <a class="btn primary" href="about:blank" rel="noopener">Leave</a>
+        <div class="muted">Thanks for stopping by. You can close this tab anytime.</div>
+        <div class="row">
+          <button class="btn" onclick="location.href='/landing/index.html'">Stay</button>
+          <button class="btn primary" onclick="window.open('about:blank','_self');window.close();">Leave</button>
         </div>
       </div>
-
       <div class="footer">Canonical · Stable · © Geodiametrics</div>
     </section>
   </main>

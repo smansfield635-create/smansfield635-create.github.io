@@ -1,114 +1,57 @@
-<style>
-  /* --- CSS Styles Start --- */
-  :root {
-    --bg-top: #0c2232;
-    --bg-bottom: #071722;
-    --text: #f1f6fb;
-    --sub: rgba(241,246,251,.72);
-    --panel-glass: rgba(255,255,255,.12);
-    --panel-border: rgba(255,255,255,.22);
-    --glass: rgba(255,255,255,0.22);
-    --glass-hover: rgba(255,255,255,0.35);
-    --blur: 18px;
-    --radius: 26px;
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Geodiametrics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+</head>
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: 100%; height: 100%; overflow: hidden; }
+<body>
+  <div class="page">
 
-  body {
-    font-family: system-ui, -apple-system, sans-serif;
-    color: var(--text);
-    background:
-      radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),
-      linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-  }
+    <div class="title">Geodiametrics</div>
+    <div class="subtitle">
+      A coherence-first system for diagnostics, alignment, and admissible execution.
+    </div>
 
-  .page { width: 100%; max-width: 420px; text-align: center; }
-  .title { font-size: clamp(32px, 8vw, 44px); font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
-  .subtitle { font-size: 18px; color: var(--sub); margin-bottom: 28px; }
+    <div class="panel">
 
-  .panel {
-    position: relative;
-    padding: 32px 20px 24px;
-    border-radius: var(--radius);
-    background: linear-gradient(180deg, var(--panel-glass), rgba(255,255,255,0.05));
-    border: 1px solid var(--panel-border);
-    backdrop-filter: blur(var(--blur));
-    -webkit-backdrop-filter: blur(var(--blur));
-  }
+      <div style="margin-bottom:24px;">
+        <p style="color:var(--text-sub); font-size:0.95rem; line-height:1.45;">
+          This is the live inspection surface.<br>
+          Nothing here persuades. Nothing performs.<br>
+          Everything resolves or collapses on its own.
+        </p>
+      </div>
 
-  .diamond-cluster {
-    position: relative;
-    width: 280px;
-    height: 280px;
-    margin: 0 auto 16px;
-  }
+      <div class="buttons">
+        <a href="/products/" class="button-link">
+          <button class="primary">Products</button>
+        </a>
 
-  .diamond {
-    position: absolute;
-    width: 140px;
-    height: 140px;
-    background: linear-gradient(180deg, var(--glass), rgba(255,255,255,0.10));
-    border: 1px solid rgba(255,255,255,0.25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-    cursor: pointer;
-    /* FIX ADDED HERE */
-    transform: translateZ(0); 
-  }
+        <a href="/gauges/" class="button-link">
+          <button>Live Instrument</button>
+        </a>
 
-  /* Interactive States */
-  .diamond:hover {
-    background: var(--glass-hover);
-    border-color: rgba(255,255,255,0.5);
-    /* TRANSFORM MUST INCLUDE ROTATE(45deg) AND SCALE(1.05) */
-    transform: rotate(45deg) scale(1.05) translateZ(0); 
-    z-index: 10;
-  }
+        <a href="/laws/" class="button-link">
+          <button>Laws</button>
+        </a>
 
-  .diamond:active {
-    /* TRANSFORM MUST INCLUDE ROTATE(45deg) */
-    transform: rotate(45deg) scale(0.98) translateZ(0); 
-    filter: brightness(1.2);
-  }
+        <a href="/links/" class="button-link">
+          <button>Verification</button>
+        </a>
+      </div>
 
-  /* Position Logic - These also need the fix for consistency */
-  .diamond.top    { top: 0; left: 50%; transform: translateX(-50%) rotate(45deg) translateZ(0); }
-  .diamond.right  { right: 0; top: 50%; transform: translateY(-50%) rotate(45deg) translateZ(0); }
-  .diamond.bottom { bottom: 0; left: 50%; transform: translateX(-50%) rotate(45deg) translateZ(0); }
-  .diamond.left   { left: 0; top: 50%; transform: translateY(-50%) rotate(45deg) translateZ(0); }
+      <div style="margin-top:28px; font-size:0.85rem; color:var(--text-sub);">
+        Human · Scientific · Canonical
+      </div>
 
-  /* Hover fix for translated items */
-  .diamond.top:hover    { transform: translateX(-50%) rotate(45deg) scale(1.08) translateZ(0); }
-  .diamond.right:hover  { transform: translateY(-50%) rotate(45deg) scale(1.08) translateZ(0); }
-  .diamond.bottom:hover { transform: translateX(-50%) rotate(45deg) scale(1.08) translateZ(0); }
-  .diamond.left:hover   { transform: translateY(-50%) rotate(45deg) scale(1.08) translateZ(0); }
+      <div class="footer">
+        Canonical · Stable · © Geodiametrics
+      </div>
 
-  .diamond span {
-    transform: rotate(-45deg);
-    text-align: center;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1.3;
-    color: var(--text);
-    padding: 0 10px;
-  }
-
-  .diamond strong {
-    display: block;
-    font-size: 15px;
-    margin-bottom: 2px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  /* --- CSS Styles End --- */
-</style>
+    </div>
+  </div>
+</body>
+</html>

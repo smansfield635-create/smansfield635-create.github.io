@@ -1,252 +1,121 @@
-/* =========================
-   Geodiametrics UI (Shared)
-   File: /assets/ui.css
-   TNT FULL REPLACEMENT
-   Goals:
-   - Remove blue tap highlight / glow
-   - Prevent "click but nothing happens" (pointer-events/z-index fixes)
-   - Stable layout across mobile
-   - Diamond buttons always clickable
-   - Optional quote chips that never break layout
-   ========================= */
+:root {
+  --bg-top: #0b1e2d;
+  --bg-bottom: #07131d;
 
-/* ----- Reset / Base ----- */
-*,
-*::before,
-*::after { box-sizing: border-box; }
+  --glass-bg: rgba(255,255,255,0.08);
+  --glass-border: rgba(255,255,255,0.18);
+  --glass-inner: rgba(255,255,255,0.06);
 
-html, body { height: 100%; }
+  --text-main: rgba(255,255,255,0.95);
+  --text-sub: rgba(255,255,255,0.7);
 
-html {
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
+  --accent: #5cc2ff;
 }
 
-body.gd {
+* {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color: rgba(255,255,255,0.92);
-  background: radial-gradient(1200px 800px at 50% 20%, rgba(255,255,255,0.08), rgba(0,0,0,0) 60%),
-              linear-gradient(180deg, #07121d 0%, #040a10 100%);
-  overflow-x: hidden;
-  overflow-y: auto;
-
-  /* Kill mobile tap highlight */
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-
-  /* Reduce accidental selection */
-  user-select: none;
+  padding: 0;
+  min-height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(120% 100% at 50% 0%, var(--bg-top), var(--bg-bottom));
+  color: var(--text-main);
 }
 
-a, button {
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-}
-
-a:focus, a:focus-visible,
-button:focus, button:focus-visible {
-  outline: none;
-}
-
-/* ----- Layout Shell ----- */
-.gd-shell {
+.page {
   min-height: 100vh;
-  padding: 6vh 6vw calc(7vh + env(safe-area-inset-bottom));
-  display: grid;
-  grid-template-rows: auto 1fr auto auto;
-  gap: 22px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-items: center;
+  justify-content: center;
+}
+
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.02em;
+}
+
+.subtitle {
+  color: var(--text-sub);
+  margin-bottom: 2rem;
+}
+
+.glass-frame {
   position: relative;
-}
-
-/* ----- Header ----- */
-.gd-hero {
-  text-align: center;
-  max-width: 820px;
-}
-
-.gd-title {
-  margin: 0;
-  font-weight: 750;
-  letter-spacing: -0.02em;
-  font-size: clamp(36px, 6vw, 64px);
-  line-height: 1.06;
-}
-
-.gd-subtitle {
-  margin: 12px 0 0;
-  font-size: clamp(16px, 2.4vw, 22px);
-  color: rgba(255,255,255,0.70);
-}
-
-/* ----- Stage ----- */
-.gd-stage {
-  width: min(720px, 94vw);
-  height: min(720px, 66vh);
-  display: grid;
-  place-items: center;
-  position: relative;
-}
-
-/* Soft frame behind the diamond (visual only) */
-.gd-diamondFrame {
-  position: absolute;
-  inset: 2%;
+  padding: 3rem;
   border-radius: 26px;
-  background: radial-gradient(600px 360px at 50% 40%, rgba(255,255,255,0.08), rgba(255,255,255,0.02) 40%, rgba(0,0,0,0) 70%);
-  border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: 0 18px 60px rgba(0,0,0,0.40);
-  pointer-events: none; /* critical: never blocks clicks */
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.12),
+    rgba(255,255,255,0.02)
+  );
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
-/* ----- Diamond Nav ----- */
-.gd-diamond {
-  width: min(520px, 78vw);
-  height: min(520px, 52vh);
+.diamond-grid {
   position: relative;
-  display: grid;
-  place-items: center;
+  width: 260px;
+  height: 260px;
 }
 
-/* All diamond buttons share the same base */
-.gd-diamondBtn {
+.diamond {
   position: absolute;
-  width: 52%;
-  height: 52%;
-  display: grid;
-  place-items: center;
-  text-decoration: none;
-  color: rgba(255,255,255,0.88);
-
-  /* rotated square */
+  width: 120px;
+  height: 120px;
   transform: rotate(45deg);
+  background: linear-gradient(
+    180deg,
+    var(--glass-bg),
+    rgba(255,255,255,0.02)
+  );
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
   border-radius: 18px;
-
-  /* glass look */
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.14);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.40);
-
-  /* clickability */
-  cursor: pointer;
-  pointer-events: auto;
-  z-index: 2;
-
-  /* smooth interaction (no blue glow) */
-  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease, box-shadow 140ms ease, opacity 140ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Un-rotate the text inside */
-.gd-diamondBtn > * {
+.diamond::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 14px;
+  background: var(--glass-inner);
+  z-index: -1;
+}
+
+.diamond-content {
   transform: rotate(-45deg);
   text-align: center;
+  padding: 0.5rem;
 }
 
-.gd-diamondLabel {
-  font-weight: 780;
-  letter-spacing: 0.06em;
-  font-size: clamp(14px, 2.6vw, 18px);
+.diamond h3 {
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  margin: 0;
 }
 
-.gd-diamondHint {
-  margin-top: 8px;
-  font-size: clamp(12px, 2.2vw, 14px);
-  color: rgba(255,255,255,0.62);
+.diamond span {
+  font-size: 0.75rem;
+  color: var(--text-sub);
 }
 
-/* Positioning */
-.gd-top    { top: 0; left: 24%; }
-.gd-right  { top: 24%; right: 0; }
-.gd-bottom { bottom: 0; left: 24%; }
-.gd-left   { top: 24%; left: 0; }
+/* positions */
+.d-top    { top: 0; left: 70px; }
+.d-right  { top: 70px; right: 0; }
+.d-bottom { bottom: 0; left: 70px; }
+.d-left   { top: 70px; left: 0; }
 
-/* Hover/active (desktop + mobile) */
-.gd-diamondBtn:hover {
-  background: rgba(255,255,255,0.07);
-  border-color: rgba(255,255,255,0.22);
-}
-
-.gd-diamondBtn:active {
-  /* Small press: keep it natural, no glow */
-  transform: rotate(45deg) scale(0.985);
-  background: rgba(255,255,255,0.09);
-}
-
-/* Prevent browser default "visited purple" */
-.gd-diamondBtn:visited { color: rgba(255,255,255,0.88); }
-
-/* ----- Quotes (Safe Footer Chips) ----- */
-.gd-quotes {
-  width: min(680px, 96vw);
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* One switch disables them without affecting anything else */
-.gd-quotes[data-quotes="off"] { display: none; }
-
-.gd-quoteChip {
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(255,255,255,0.04);
-  color: rgba(255,255,255,0.78);
-  padding: 10px 14px;
-  border-radius: 999px;
-  font-size: 14px;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease, opacity 140ms ease;
-}
-
-.gd-quoteChip:hover {
-  background: rgba(255,255,255,0.06);
-  border-color: rgba(255,255,255,0.22);
-}
-
-.gd-quoteChip:active { transform: scale(0.98); }
-
-/* Toast overlay: no layout shift */
-.gd-quoteToast {
-  position: absolute;
-  bottom: 48px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: rgba(0,0,0,0.55);
-  border: 1px solid rgba(255,255,255,0.14);
-  color: rgba(255,255,255,0.88);
-  font-size: 14px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 140ms ease;
-}
-
-.gd-quoteToast.is-on { opacity: 1; }
-
-/* ----- Canonical mark: bottom-right tiny ----- */
-.gd-mark {
-  position: fixed;
-  right: 12px;
-  bottom: calc(10px + env(safe-area-inset-bottom));
-  font-size: 11px;
-  color: rgba(255,255,255,0.55);
-  letter-spacing: 0.02em;
-  pointer-events: none;
-}
-
-/* ----- Mobile polish ----- */
-@media (max-width: 420px) {
-  .gd-shell { padding-top: 5vh; gap: 18px; }
-  .gd-stage { height: min(620px, 60vh); }
-  .gd-diamond { height: min(480px, 48vh); }
-  .gd-quoteChip { padding: 9px 12px; font-size: 13px; }
-}
-
-/* Accessibility: reduce motion */
-@media (prefers-reduced-motion: reduce) {
-  .gd-diamondBtn, .gd-quoteChip, .gd-quoteToast { transition: none !important; }
+/* footer */
+.footer {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  color: var(--text-sub);
 }

@@ -1,69 +1,66 @@
-/* =========================================================
-   Geodiametrics — Canonical UI (Functional Baseline)
-   Zero JS • Zero Freeze • Mobile-safe
-   ========================================================= */
-
+/* RESET */
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  user-select: none;
 }
 
 html, body {
   margin: 0;
   padding: 0;
-  min-height: 100%;
-  background: radial-gradient(circle at top, #0d1b2a, #050b12);
-  color: #e6e6e6;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  height: 100%;
+  background: radial-gradient(circle at top, #0b1d2e, #050b12);
+  color: #e8eef4;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* Layout */
-.home {
+/* LAYOUT */
+.screen {
   min-height: 100vh;
-  padding: 48px 20px 88px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
+  padding: 24px;
 }
 
-/* Headline */
 .headline {
   font-size: 2.4rem;
   font-weight: 500;
-  margin: 0 0 12px 0;
+  margin-bottom: 12px;
 }
 
-.subtitle {
-  max-width: 560px;
+.subhead {
+  font-size: 1.05rem;
   opacity: 0.75;
   margin-bottom: 48px;
+  max-width: 420px;
 }
 
-/* Diamond navigation — HTML links only */
-.diamond-nav {
-  display: grid;
-  grid-template-columns: repeat(2, 120px);
-  grid-template-rows: repeat(2, 120px);
-  gap: 18px;
-  transform: rotate(45deg);
-  margin-bottom: 64px;
+/* DIAMONDS */
+.diamond-grid {
+  position: relative;
+  width: 260px;
+  height: 260px;
 }
 
 .diamond {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  color: #e6e6e6;
-  text-decoration: none;
-  font-weight: 500;
-  letter-spacing: 0.05em;
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: #e8eef4;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transform: rotate(45deg);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.diamond span {
   transform: rotate(-45deg);
-  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .diamond:hover {
@@ -71,31 +68,26 @@ html, body {
 }
 
 .diamond:active {
-  background: rgba(255,255,255,0.16);
-  transform: rotate(-45deg) scale(0.97);
+  transform: rotate(45deg) scale(0.96);
 }
 
-/* Footer */
-footer {
-  position: absolute;
-  bottom: 16px;
-  width: 100%;
-  text-align: center;
-  font-size: 0.8rem;
-  opacity: 0.55;
+/* POSITIONS */
+.diamond:nth-child(1) { top: 0; left: 70px; }
+.diamond:nth-child(2) { top: 70px; right: 0; }
+.diamond:nth-child(3) { bottom: 0; left: 70px; }
+.diamond:nth-child(4) { top: 70px; left: 0; }
+
+/* EXIT STYLE */
+.diamond.exit {
+  opacity: 0.7;
 }
 
-.sayings {
-  margin-bottom: 6px;
-}
-
-.sayings span {
-  margin: 0 6px;
-}
-
+/* FOOTER MARK */
 .mark {
   position: fixed;
-  right: 10px;
-  bottom: 8px;
-  font-size: 0.7rem;
+  bottom: 10px;
+  right: 12px;
+  font-size: 0.65rem;
+  opacity: 0.5;
+  pointer-events: none;
 }

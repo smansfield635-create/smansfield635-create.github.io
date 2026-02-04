@@ -1,43 +1,94 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Geodiametrics · Door</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#07121d" />
 
-  <link rel="stylesheet" href="/assets/ui.css" />
+  <!-- Cache-bust guidance: keep canonical clean; this helps mobile when files "seem frozen" -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
 
-  <!-- Kill mobile tap highlight -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Geodiametrics — Door</title>
+  <link rel="stylesheet" href="/assets/ui.css?v=1" />
 </head>
-<body>
 
-  <main class="screen">
-    <h1 class="headline">Take a moment.</h1>
-    <p class="subhead">
-      This explains what’s here — before you decide where to go.
-    </p>
+<body class="gd">
+  <main class="gd-shell">
+    <header class="gd-hero" aria-label="Door header">
+      <h1 class="gd-title">Take a moment.</h1>
+      <p class="gd-subtitle">This explains what’s here — before you decide where to go.</p>
+    </header>
 
-    <div class="diamond-grid">
-      <button class="diamond" data-target="/landing/quiz.html">START</button>
-      <button class="diamond" data-target="/breakthroughs/">ENTER</button>
-      <button class="diamond" data-target="/links/">LEARN</button>
-      <button class="diamond exit" data-target="/">EXIT</button>
-    </div>
+    <!-- DIAMOND NAV -->
+    <section class="gd-stage" aria-label="Primary navigation">
+      <!-- The diamond background is purely visual; pointer-events disabled in CSS -->
+      <div class="gd-diamondFrame" aria-hidden="true"></div>
+
+      <nav class="gd-diamond" aria-label="Door options">
+        <!-- IMPORTANT: Use <a> so there’s no “click but nothing happens” JS failure. -->
+        <!-- These routes assume each folder has its own index.html -->
+        <a class="gd-diamondBtn gd-top"    href="/sayings/"      data-nav="start">
+          <span class="gd-diamondLabel">START</span>
+          <span class="gd-diamondHint">~3 minutes</span>
+        </a>
+
+        <a class="gd-diamondBtn gd-right"  href="/landing/"      data-nav="enter">
+          <span class="gd-diamondLabel">ENTER</span>
+          <span class="gd-diamondHint">Go to gate</span>
+        </a>
+
+        <a class="gd-diamondBtn gd-bottom" href="/ask/"          data-nav="learn">
+          <span class="gd-diamondLabel">LEARN</span>
+          <span class="gd-diamondHint">What this is</span>
+        </a>
+
+        <a class="gd-diamondBtn gd-left"   href="/links/"        data-nav="exit">
+          <span class="gd-diamondLabel">EXIT</span>
+          <span class="gd-diamondHint">Leave now</span>
+        </a>
+      </nav>
+    </section>
+
+    <!-- OPTIONAL QUOTES (kept SAFE: does not affect layout) -->
+    <!-- Toggle by changing data-quotes="on" to "off" -->
+    <section class="gd-quotes" data-quotes="on" aria-label="Sayings">
+      <button class="gd-quoteChip" type="button" data-quote="知行合一">知行合一</button>
+      <button class="gd-quoteChip" type="button" data-quote="大道至简">大道至简</button>
+      <button class="gd-quoteChip" type="button" data-quote="实事求是">实事求是</button>
+      <div class="gd-quoteToast" role="status" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <!-- CANONICAL MARK (bottom-right, tiny, always) -->
+    <footer class="gd-mark" aria-label="Trademark">
+      Canonical · Stable · © Geodiametrics
+    </footer>
   </main>
 
-  <footer class="mark">
-    Canonical · Stable · © Geodiametrics
-  </footer>
-
   <script>
-    document.querySelectorAll(".diamond").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const target = btn.getAttribute("data-target");
-        if (target) window.location.href = target;
-      });
-    });
-  </script>
+    // Quote chips: tap shows a subtle toast (no layout shift).
+    (function () {
+      const quotes = document.querySelector('.gd-quotes');
+      if (!quotes || quotes.getAttribute('data-quotes') !== 'on') return;
 
+      const toast = quotes.querySelector('.gd-quoteToast');
+      let t = null;
+
+      quotes.addEventListener('click', (e) => {
+        const btn = e.target.closest('.gd-quoteChip');
+        if (!btn) return;
+        const text = btn.getAttribute('data-quote') || btn.textContent || '';
+        if (!toast) return;
+
+        toast.textContent = text.trim();
+        toast.classList.add('is-on');
+
+        clearTimeout(t);
+        t = setTimeout(() => toast.classList.remove('is-on'), 1400);
+      }, { passive: true });
+    })();
+  </script>
 </body>
 </html>

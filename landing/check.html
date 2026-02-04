@@ -2,33 +2,131 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Final check · Geodiametrics</title>
+  <title>Final Check · Geodiametrics</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="/assets/ui.css" />
+  <style>
+    .card{margin-top:18px}
+    .qa{display:flex;flex-direction:column;gap:10px}
+    .q{padding:14px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.18)}
+    .q b{display:block;margin-bottom:6px}
+    .q .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+    .pillbtn{padding:10px 16px;border-radius:18px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#e8eef5;cursor:pointer}
+    .pillbtn.primary{border-color:#6faad6;color:#6faad6}
+    .pillbtn[disabled]{opacity:.45;cursor:not-allowed}
+  </style>
 </head>
 <body>
-  <main class="page" data-mode="diamond" data-frozen="true">
-    <div class="h1">Final check</div>
-    <div class="h2">Proceed only if you intend to complete it.</div>
+  <main class="page" data-mode="diamond">
+    <div class="title">Be the first.</div>
+    <div class="subtitle">The door explains. The gate routes.</div>
 
     <section class="panel">
-      <div class="card">
-        <div class="title">Before you start</div>
-        <div class="text">
-          • Do you have about <b>3 minutes</b> right now?<br/>
-          • Will you take this seriously and <b>finish once you begin</b>?<br/>
-          • Are you ready to see how aligned you are with yourself?
+      <div class="diamond-cluster" aria-label="Door options">
+        <a class="diamond top" href="/landing/check.html">
+          <span><strong>START QUIZ</strong>~3 minutes</span>
+        </a>
+        <a class="diamond right" href="/home/">
+          <span><strong>ENTER</strong>Go to gate</span>
+        </a>
+        <a class="diamond bottom" href="/landing/info/">
+          <span><strong>LEARN MORE</strong>What this is</span>
+        </a>
+        <a class="diamond left" href="/landing/exit.html">
+          <span><strong>EXIT</strong>Leave now</span>
+        </a>
+      </div>
+
+      <div class="check card" aria-label="Final check">
+        <h3>Final check</h3>
+        <p>Proceed only if you intend to complete it.</p>
+
+        <div class="qa">
+          <div class="q" data-q="q1">
+            <b>Do you have about 3 minutes right now?</b>
+            <div class="row">
+              <button class="pillbtn primary" data-ans="yes">Yes</button>
+              <button class="pillbtn" data-ans="no">No</button>
+            </div>
+          </div>
+
+          <div class="q" data-q="q2">
+            <b>Will you take this seriously and finish once you begin?</b>
+            <div class="row">
+              <button class="pillbtn primary" data-ans="yes" disabled>Yes</button>
+              <button class="pillbtn" data-ans="no" disabled>No</button>
+            </div>
+          </div>
+
+          <div class="q" data-q="q3">
+            <b>Are you ready to find out how aligned you are with yourself?</b>
+            <div class="row">
+              <button class="pillbtn primary" data-ans="yes" disabled>Yes</button>
+              <button class="pillbtn" data-ans="no" disabled>No</button>
+            </div>
+          </div>
         </div>
 
-        <div class="btnrow">
-          <a class="btn primary" href="/landing/archetype/">Yes, start</a>
-          <a class="btn" href="/home/">Skip, enter site</a>
-          <a class="btn" href="/landing/">Not now</a>
+        <div class="buttons" style="margin-top:14px">
+          <button class="primary" id="go" disabled>Yes, start</button>
+          <button id="skip">Skip, enter site</button>
+          <button id="back">Not now</button>
         </div>
       </div>
 
-      <div class="footer">Check yourself before you wreck yourself.</div>
+      <div class="footer">Canonical · Stable · © Geodiametrics</div>
     </section>
   </main>
+
+  <script>
+    (function(){
+      const state = { q1:null, q2:null, q3:null };
+
+      const q2Btns = document.querySelectorAll('[data-q="q2"] .pillbtn');
+      const q3Btns = document.querySelectorAll('[data-q="q3"] .pillbtn');
+      const go = document.getElementById('go');
+
+      function enable(btns, on){
+        btns.forEach(b=>b.disabled = !on);
+      }
+      function allYes(){
+        return state.q1==="yes" && state.q2==="yes" && state.q3==="yes";
+      }
+      function update(){
+        enable(q2Btns, state.q1==="yes");
+        enable(q3Btns, state.q1==="yes" && state.q2==="yes");
+        go.disabled = !allYes();
+      }
+
+      document.querySelectorAll('.q').forEach(q=>{
+        q.addEventListener('click', (e)=>{
+          const b = e.target.closest('button[data-ans]');
+          if(!b || b.disabled) return;
+          const qid = q.getAttribute('data-q');
+          state[qid] = b.getAttribute('data-ans');
+
+          q.querySelectorAll('button[data-ans]').forEach(x=>{
+            x.classList.toggle('primary', x === b);
+          });
+
+          // If any "no" chosen, bounce back to door
+          if(state[qid]==="no"){
+            location.href = "/landing/index.html";
+            return;
+          }
+          update();
+        });
+      });
+
+      document.getElementById('go').addEventListener('click', ()=>{
+        localStorage.setItem("alignment_check_started_at", String(Date.now()));
+        location.href = "/landing/archetype/";
+      });
+      document.getElementById('skip').addEventListener('click', ()=>location.href="/home/");
+      document.getElementById('back').addEventListener('click', ()=>location.href="/landing/index.html");
+
+      update();
+    })();
+  </script>
 </body>
 </html>

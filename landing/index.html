@@ -7,30 +7,30 @@
   <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 <body>
-  <main class="page">
+  <main class="page" data-mode="diamond" data-frozen="true">
     <div class="h1">Be the first.</div>
-    <div class="h2">The door explains. The gate routes.</div>
+    <div class="h2">This is not a quiz. This is an alignment check.</div>
 
-    <section class="panel">
-      <div class="cluster" aria-label="Door options">
-        <a class="diamond d-top primary" href="/landing/check.html">
-          <div class="label"><div class="main">Start Quiz</div><div class="sub">~3 minutes</div></div>
+    <section class="panel" aria-label="Door options">
+      <div class="cluster" role="navigation" aria-label="Four options">
+        <a class="diamond d-top primary" href="/landing/check.html" aria-label="Start check (~3 minutes)">
+          <div class="label"><div class="main">Start Check</div><div class="sub">~3 minutes</div></div>
         </a>
 
-        <a class="diamond d-right" href="/home/">
+        <a class="diamond d-right" href="/home/" aria-label="Enter site">
           <div class="label"><div class="main">Enter</div><div class="sub">Go to site</div></div>
         </a>
 
-        <a class="diamond d-bottom" href="/landing/info/">
+        <a class="diamond d-bottom" href="/landing/info/" aria-label="Learn more">
           <div class="label"><div class="main">Learn More</div><div class="sub">What this is</div></div>
         </a>
 
-        <a class="diamond d-left" href="/landing/exit.html">
+        <a class="diamond d-left" href="/landing/exit.html" aria-label="Exit">
           <div class="label"><div class="main">Exit</div><div class="sub">Leave now</div></div>
         </a>
       </div>
 
-      <div class="footer">Canonical · Stable · © Geodiametrics</div>
+      <div class="footer">Check yourself before you wreck yourself.</div>
     </section>
   </main>
 </body>

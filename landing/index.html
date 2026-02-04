@@ -1,75 +1,84 @@
-<!-- FILE: /landing/index.html  (LANDING / DOOR — TNT FULL REPLACEMENT)
-     PURPOSE: Door (explains what happens when you open/walk through)
-     STRUCTURE/APPEARANCE first; minimal content placeholders
--->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodiametrics · Door</title>
-  <link rel="icon" href="/assets/favicon.svg"/>
-  <link rel="stylesheet" href="/assets/ui.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Door · Geodiametrics</title>
+  <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 <body>
-  <main class="page">
+  <main>
+    <div class="wrap">
+      <header class="hero">
+        <h1 class="h1">Be the first.</h1>
+        <p class="sub">The door explains. The gate routes.</p>
+      </header>
 
-    <header class="hero">
-      <div class="title">Be the first.</div>
-      <div class="sub">The door explains. The gate routes.</div>
-    </header>
+      <section class="card pad">
+        <div class="stage">
+          <div class="bigDiamond" aria-label="Sayings diamond">
+            <div class="tileGrid">
+              <a class="diamondTile" href="/sayings/" aria-label="Sayings: Wisdom">
+                <span>Wisdom</span>
+              </a>
+              <a class="diamondTile" href="/sayings/" aria-label="Sayings: Knowledge">
+                <span>Knowledge</span>
+              </a>
+              <a class="diamondTile" href="/sayings/" aria-label="Sayings: Theism">
+                <span>Theism</span>
+              </a>
+              <a class="diamondTile" href="/sayings/" aria-label="Sayings: Law">
+                <span>Law</span>
+              </a>
+            </div>
+          </div>
+        </div>
 
-    <section class="card">
-      <div class="stage" aria-label="Door Diamond">
-        <div class="ring" aria-hidden="true"></div>
-        <div class="diamondFrame" aria-hidden="true"></div>
-        <div class="diamondInner" aria-hidden="true"></div>
+        <div class="sideNav">
+          <a class="pill left" href="/links/" aria-label="Back / Leave">
+            ← Back (Leave)
+          </a>
+          <a class="pill right" href="/" aria-label="Next / Enter gate">
+            Next (Enter) →
+          </a>
+        </div>
 
-        <!-- SAYINGS DIAMOND (Integrity set) -->
-        <div class="pill iTop">Wisdom</div>
-        <div class="pill iRight">Knowledge</div>
-        <div class="pill iBottom">Theism</div>
-        <div class="pill iLeft">Law</div>
-      </div>
+        <div class="integrityLine">Integrity → Fortitude → Delivery → Destiny</div>
+        <div class="phraseHelp">Tap a phrase to translate.</div>
 
-      <div class="chain">Integrity → Fortitude → Delivery → Destiny</div>
+        <!-- invisible anchors for CSS-only translation -->
+        <div id="t1" class="anchorTarget"></div>
+        <div id="t2" class="anchorTarget"></div>
+        <div id="t3" class="anchorTarget"></div>
+        <div id="t4" class="anchorTarget"></div>
+        <div id="t5" class="anchorTarget"></div>
 
-      <div class="ctaRow">
-        <a class="cta" href="/">Walk through</a>
-      </div>
-    </section>
+        <div class="phrases">
+          <a class="phraseBtn" href="#t1">
+            <span class="zh">性格决定命运</span>
+            <span class="en"> — Character determines destiny.</span>
+          </a>
+          <a class="phraseBtn" href="#t2">
+            <span class="zh">己所不欲，勿施于人</span>
+            <span class="en"> — Do not impose on others what you do not want.</span>
+          </a>
+          <a class="phraseBtn" href="#t3">
+            <span class="zh">上善若水</span>
+            <span class="en"> — The highest goodness is like water.</span>
+          </a>
+          <a class="phraseBtn" href="#t4">
+            <span class="zh">道可道，非常道</span>
+            <span class="en"> — The Way that can be spoken is not the constant Way.</span>
+          </a>
+          <a class="phraseBtn" href="#t5">
+            <span class="zh">道生一，一生二，二生三，三生万物</span>
+            <span class="en"> — The Way gives birth to one; one to two; two to three; three to all things.</span>
+          </a>
+        </div>
+      </section>
 
-    <section class="card sayings">
-      <div class="hint">Tap a phrase to translate.</div>
-
-      <details class="cn">
-        <summary>性格决定命运</summary>
-        <div class="en">Character determines destiny.</div>
-      </details>
-
-      <details class="cn">
-        <summary>己所不欲，勿施于人</summary>
-        <div class="en">Do not impose on others what you do not desire.</div>
-      </details>
-
-      <details class="cn">
-        <summary>上善若水</summary>
-        <div class="en">The highest good is like water.</div>
-      </details>
-
-      <details class="cn">
-        <summary>道可道，非常道</summary>
-        <div class="en">The Dao that can be spoken is not the constant Dao.</div>
-      </details>
-
-      <details class="cn">
-        <summary>道生一，一生二，二生三，三生万物</summary>
-        <div class="en">Dao gives birth to One; One to Two; Two to Three; Three to all things.</div>
-      </details>
-    </section>
-
-    <footer class="foot">Canonical · Stable · © Geodiametrics</footer>
+      <footer class="foot">Canonical · Stable · © Geodiametrics</footer>
+    </div>
   </main>
 </body>
 </html>
-```0

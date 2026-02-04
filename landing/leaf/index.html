@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Quiz · Leaf Model</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <style>
+    /* Leaf pages can differ. Keep it clean + readable. */
+    .leafwrap{max-width:820px;margin:0 auto}
+    .leafpanel{margin-top:18px;padding:18px;border-radius:26px;background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.12);box-shadow:0 18px 60px rgba(0,0,0,.35)}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .pillbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .pill{padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(238,244,251,.9);font-weight:700;cursor:pointer}
+    .pill.active{border-color:rgba(102,183,255,.55);box-shadow:0 0 0 1px rgba(102,183,255,.18) inset}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+    .card2{padding:14px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10)}
+    .card2 h3{font-size:16px;margin-bottom:8px}
+    .opt{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);cursor:pointer}
+    .opt input{margin-top:4px}
+    .opt strong{display:block}
+    .small{color:rgba(238,244,251,.68);font-size:14px;line-height:1.35}
+    .count{font-weight:800;color:rgba(102,183,255,.95)}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin-top:16px}
+    .btnwide{min-width:160px}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="page leafwrap">
+    <div class="h1">Leaf Quiz</div>
+    <div class="h2">Choose sayings across eras and countries. Order matters.</div>
+
+    <section class="leafpanel">
+      <div class="row">
+        <div class="small">
+          Target: choose <span class="count">20</span> sayings total (pilot).<br/>
+          Logged lenses: self-type, first era, first country, exploration order, and selections.
+        </div>
+        <div class="btnrow">
+          <a class="btn" href="/landing/era/">Back</a>
+          <a class="btn" href="/landing/exit.html">Exit</a>
+        </div>
+      </div>
+
+      <div class="pillbar" id="eraBar"></div>
+      <div class="pillbar" id="countryBar"></div>
+
+      <div class="grid">
+        <div class="card2">
+          <h3>Sayings</h3>
+          <div class="small">Tap to select. Your first picks are recorded.</div>
+          <div id="sayingsList" style="margin-top:10px;display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
+
+        <div class="card2">
+          <h3>Status</h3>
+          <div class="small" id="statusText"></div>
+          <div class="actions">
+            <button class="btn btnwide" id="clearBtn" type="button">Clear selections</button>
+            <a class="btn primary btnwide" id="finishBtn" href="/home/">Finish → Enter site</a>
+          </div>
+          <div class="small" style="margin-top:10px;">
+            Note: “Finish” just routes to Home for now. Scoring/mapping comes later.
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">Canonical · Stable · © Geodiametrics</div>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      // ====== storage helpers ======
+      const LOG_KEY="gd_quiz_log";
+      const STATE_KEY="gd_quiz_state";
+      const PICK_KEY="gd_quiz_picks";
+
+      function logEvent(name, data){
+        const log=JSON.parse(localStorage.getItem(LOG_KEY)||"[]");
+        log.push({t:Date.now(),name,data:data||{}});
+        localStorage.setItem(LOG_KEY,JSON.stringify(log));
+      }
+      function getState(){ return JSON.parse(localStorage.getItem(STATE_KEY)||"{}"); }
+      function setState(patch){
+        const st=getState();
+        Object.assign(st,patch);
+        localStorage.setItem(STATE_KEY,JSON.stringify(st));
+      }
+      function getPicks(){ return JSON.parse(localStorage.getItem(PICK_KEY)||"[]"); }
+      function setPicks(arr){ localStorage.setItem(PICK_KEY,JSON.stringify(arr)); }
+
+      // ====== PILOT DATA (100 sayings placeholder) ======
+      const eras=["Ancient","Medieval","Modern","Contemporary"];
+      const countriesByEra={
+        Ancient:["Greece","China","India","Egypt"],
+        Medieval:["England","Persia","China","Andalusia"],
+        Modern:["USA","Germany","France","Japan"],
+        Contemporary:["Global","USA","EU","China"]
+      };
+
+      // Build 100 sayings evenly: 4 eras * 4 countries = 16 buckets; ~6-7 each => 100.
+      const sayings=[];
+      let id=1;
+      const total=100;
+      const buckets=[];
+      eras.forEach(e=>countriesByEra[e].forEach(c=>buckets.push([e,c])));
+      const base=Math.floor(total/buckets.length); // 6
+      let remainder=total-(base*buckets.length); // 4
+      buckets.forEach(([e,c])=>{
+        const n=base+(remainder>0?1:0);
+        remainder=Math.max(0,remainder-1);
+        for(let i=0;i<n;i++){
+          sayings.push({
+            id:"S"+(id++),
+            era:e,
+            country:c,
+            text:`${e} / ${c} — Saying ${i+1} (placeholder)`,
+          });
+        }
+      });
+
+      // ====== UI state ======
+      let activeEra=eras[0];
+      let activeCountry=countriesByEra[activeEra][0];
+
+      // record quiz entry
+      logEvent("leaf_entered", {});
+
+      // ====== render helpers ======
+      const eraBar=document.getElementById("eraBar");
+      const countryBar=document.getElementById("countryBar");
+      const list=document.getElementById("sayingsList");
+      const status=document.getElementById("statusText");
+      const clearBtn=document.getElementById("clearBtn");
+      const finishBtn=document.getElementById("finishBtn");
+
+      function renderEras(){
+        eraBar.innerHTML="";
+        eras.forEach(e=>{
+          const b=document.createElement("button");
+          b.type="button";
+          b.className="pill"+(e===activeEra?" active":"");
+          b.textContent=e;
+          b.onclick=()=>{
+            activeEra=e;
+            activeCountry=countriesByEra[e][0];
+
+            const st=getState();
+            if(!st.first_era){ setState({first_era:e}); logEvent("first_era_selected",{era:e}); }
+            logEvent("era_clicked",{era:e});
+
+            renderEras();
+            renderCountries();
+            renderSayings();
+          };
+          eraBar.appendChild(b);
+        });
+      }
+
+      function renderCountries(){
+        countryBar.innerHTML="";
+        countriesByEra[activeEra].forEach(c=>{
+          const b=document.createElement("button");
+          b.type="button";
+          b.className="pill"+(c===activeCountry?" active":"");
+          b.textContent=c;
+          b.onclick=()=>{
+            activeCountry=c;
+
+            const st=getState();
+            if(!st.first_country){ setState({first_country:c}); logEvent("first_country_selected",{country:c}); }
+            logEvent("country_clicked",{country:c,era:activeEra});
+
+            renderCountries();
+            renderSayings();
+          };
+          countryBar.appendChild(b);
+        });
+      }
+
+      function renderSayings(){
+        const picks=getPicks();
+        const shown=sayings.filter(s=>s.era===activeEra && s.country===activeCountry);
+
+        list.innerHTML="";
+        shown.forEach(s=>{
+          const row=document.createElement("label");
+          row.className="opt";
+
+          const cb=document.createElement("input");
+          cb.type="checkbox";
+          cb.checked=picks.some(p=>p.id===s.id);
+
+          const text=document.createElement("div");
+          const strong=document.createElement("strong");
+          strong.textContent=s.text;
+          const small=document.createElement("div");
+          small.className="small";
+          small.textContent=`${s.era} · ${s.country}`;
+
+          text.appendChild(strong);
+          text.appendChild(small);
+
+          row.appendChild(cb);
+          row.appendChild(text);
+
+          row.onclick=(ev)=>{
+            // allow label click; prevent double toggle
+            if(ev.target.tagName!=="INPUT"){ cb.checked=!cb.checked; }
+
+            let p=getPicks();
+            const exists=p.find(x=>x.id===s.id);
+            if(cb.checked && !exists){
+              const entry={id:s.id,era:s.era,country:s.country,t:Date.now(),text:s.text};
+              p.push(entry);
+              setPicks(p);
+              logEvent("saying_selected", entry);
+
+              // store first saying if absent
+              const st=getState();
+              if(!st.first_saying){ setState({first_saying:s.id}); logEvent("first_saying_selected",{id:s.id}); }
+            }
+            if(!cb.checked && exists){
+              p=p.filter(x=>x.id!==s.id);
+              setPicks(p);
+              logEvent("saying_unselected",{id:s.id});
+            }
+            updateStatus();
+          };
+
+          list.appendChild(row);
+        });
+
+        updateStatus();
+      }
+
+      function updateStatus(){
+        const st=getState();
+        const picks=getPicks();
+        const remain=Math.max(0,20-picks.length);
+
+        status.innerHTML=
+          `Self-type: <b>${st.self_type||"—"}</b><br/>`+
+          `First era: <b>${st.first_era||"—"}</b><br/>`+
+          `First country: <b>${st.first_country||"—"}</b><br/>`+
+          `Selections: <b>${picks.length}</b> / 20<br/>`+
+          (remain?`Remaining: <span class="count">${remain}</span>`:`Ready: <span class="count">Finish</span>`);
+
+        // “Finish” only enabled when >=20
+        if(picks.length>=20){
+          finishBtn.classList.add("primary");
+          finishBtn.style.pointerEvents="auto";
+          finishBtn.style.opacity="1";
+        }else{
+          finishBtn.classList.remove("primary");
+          finishBtn.style.pointerEvents="none";
+          finishBtn.style.opacity=".55";
+        }
+      }
+
+      clearBtn.onclick=()=>{
+        setPicks([]);
+        logEvent("selections_cleared",{});
+        updateStatus();
+        renderSayings();
+      };
+
+      // Initialize (log first era/country on load as “viewed”, not “selected”)
+      logEvent("leaf_view", {era:activeEra,country:activeCountry});
+      renderEras();
+      renderCountries();
+      renderSayings();
+    })();
+  </script>
+</body>
+</html>

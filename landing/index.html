@@ -1,107 +1,105 @@
+<!-- =========================
+     FILE: /landing/index.html
+     TNT LANDING DOOR (FUNCTIONAL, NO JS)
+     ========================= -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Door · Self-Alignment</title>
-  <link rel="stylesheet" href="/assets/ui.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Geodiametrics · Door</title>
+  <link rel="stylesheet" href="/assets/ui.css" />
 </head>
-<body>
 
-<a class="exit" href="about:blank">Exit</a>
+<body class="stars">
+  <main class="wrap">
+    <section class="shell">
 
-<main>
-  <div class="wrap">
+      <h1 class="h1">Be the first.</h1>
+      <p class="sub">The door explains. The gate routes.</p>
 
-    <header class="hero">
-      <h1>Be the first.</h1>
-      <p>Nothing is required until you click.</p>
-    </header>
+      <div class="card">
+        <div class="diamondStage" aria-label="Door diamond">
+          <div class="diamondFrame" aria-hidden="true"></div>
 
-    <section class="card">
+          <!-- FOUR DIAMONDS = ONE BIG DIAMOND (NO CENTER DIAMOND) -->
+          <div class="diamondGrid">
+            <!-- TOP -->
+            <a class="diamondBtn q1" href="#quiz">
+              <div class="t">Start Quiz</div>
+              <div class="s">3 minutes</div>
+            </a>
 
-      <!-- PART 1: FORK -->
-      <div class="stage">
-        <div class="big">
-          <svg viewBox="0 0 100 100" aria-label="Choose what to do">
-            <!-- frame -->
-            <polygon class="frame" points="50,3 97,50 50,97 3,50"/>
+            <!-- RIGHT -->
+            <a class="diamondBtn q2" href="/">
+              <div class="t">Enter</div>
+              <div class="s">Go to gate</div>
+            </a>
 
-            <!-- Start quiz -->
-            <g onclick="show('quiz')">
-              <polygon class="tile" points="50,6 68,24 50,42 32,24"/>
-              <text class="label" x="50" y="27" text-anchor="middle">Start Quiz</text>
-            </g>
+            <!-- LEFT -->
+            <a class="diamondBtn q3" href="#about">
+              <div class="t">Learn More</div>
+              <div class="s">What this is</div>
+            </a>
 
-            <!-- Learn more -->
-            <g onclick="show('info')">
-              <polygon class="tile" points="94,50 76,32 58,50 76,68"/>
-              <text class="label" x="76" y="50" text-anchor="middle">Learn More</text>
-            </g>
-
-            <!-- Enter site -->
-            <g onclick="show('enter')">
-              <polygon class="tile" points="50,94 68,76 50,58 32,76"/>
-              <text class="label" x="50" y="76" text-anchor="middle">Enter Site</text>
-            </g>
-
-            <!-- Exit -->
-            <g onclick="location.href='about:blank'">
-              <polygon class="tile" points="6,50 24,32 42,50 24,68"/>
-              <text class="label" x="24" y="50" text-anchor="middle">Exit</text>
-            </g>
-          </svg>
+            <!-- BOTTOM -->
+            <a class="diamondBtn q4" href="#exit">
+              <div class="t">Exit</div>
+              <div class="s">Leave now</div>
+            </a>
+          </div>
         </div>
-      </div>
 
-      <!-- PANELS -->
-      <div id="quiz" class="panel">
-        <div class="visual"></div>
-        <div class="desc">
-          You’ll explore meaningful sayings and choose the ones that resonate.
-          There are no questions and no right answers. It takes about three minutes.
-        </div>
-        <div class="actions">
-          <a class="btn">Begin Self-Alignment Quiz</a>
-          <a class="btn" onclick="clearPanels()">Go back</a>
-        </div>
-      </div>
-
-      <div id="info" class="panel">
-        <div class="desc">
-          This is a self-alignment instrument, not a personality test.
-          You choose what speaks to you — nothing more.
-        </div>
-        <div class="actions">
-          <a class="btn" onclick="show('quiz')">Start Quiz</a>
-          <a class="btn" onclick="clearPanels()">Go back</a>
-        </div>
-      </div>
-
-      <div id="enter" class="panel">
-        <div class="desc">
-          You can enter the site directly and explore without taking the quiz.
-        </div>
-        <div class="actions">
-          <a class="btn">Enter Website</a>
-          <a class="btn" onclick="clearPanels()">Go back</a>
-        </div>
+        <div class="foot">Canonical · Stable · © Geodiametrics</div>
       </div>
 
     </section>
+  </main>
 
-  </div>
-</main>
+  <!-- ============ OVERLAYS (NO JS) ============ -->
 
-<script>
-function clearPanels(){
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-}
-function show(id){
-  clearPanels();
-  document.getElementById(id).classList.add('active');
-}
-</script>
+  <!-- ABOUT -->
+  <section id="about" class="overlay" aria-label="About the quiz">
+    <div class="modal">
+      <h2>What the quiz does</h2>
+      <p>You will skim short sayings and pick what resonates. It’s a self-alignment taste test—no pressure, no judgment.</p>
+      <p>If you’re not in the mood, skip it and enter the website.</p>
+      <div class="row">
+        <a class="pill primary" href="#quiz">Start Quiz</a>
+        <a class="pill" href="/">Enter Website</a>
+        <a class="pill muted" href="#">Close</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ START (confirm stack) -->
+  <section id="quiz" class="overlay" aria-label="Start quiz">
+    <div class="modal">
+      <h2>Start self-alignment</h2>
+      <p>Only start if you intend to finish. It takes about <b>3 minutes</b>.</p>
+      <p>When you proceed, you’ll choose a starting lens and then select sayings that resonate.</p>
+      <div class="row">
+        <!-- This path is a placeholder destination to build next.
+             It is still a functional “proceed” button now. -->
+        <a class="pill primary" href="/landing/quiz/">Yes, start</a>
+        <a class="pill" href="/">Skip, enter site</a>
+        <a class="pill muted" href="#">Not now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXIT -->
+  <section id="exit" class="overlay" aria-label="Exit">
+    <div class="modal">
+      <h2>Exit</h2>
+      <p>Thanks for stopping by. Come back anytime.</p>
+      <div class="row">
+        <a class="pill danger" href="https://www.google.com/">Leave now</a>
+        <a class="pill muted" href="#">Stay</a>
+      </div>
+    </div>
+  </section>
 
 </body>
 </html>
+```0

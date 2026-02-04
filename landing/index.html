@@ -14,52 +14,123 @@
 
     <div class="panel">
 
-      <div class="diamond-cluster">
-        <div class="diamond top">
+      <!-- 4 CLICKABLE DIAMONDS (ANCHORS) -->
+      <div class="diamond-cluster" aria-label="Door choices">
+        <a class="diamond top" href="#q1" aria-label="Start quiz">
           <span>
             <strong>START QUIZ</strong>
             ~3 minutes
           </span>
-        </div>
+        </a>
 
-        <div class="diamond right">
+        <a class="diamond right" href="/home/" aria-label="Enter gate">
           <span>
             <strong>ENTER</strong>
             Go to gate
           </span>
-        </div>
+        </a>
 
-        <div class="diamond bottom">
+        <a class="diamond bottom" href="#learn" aria-label="Learn more">
           <span>
             <strong>LEARN MORE</strong>
             What this is
           </span>
-        </div>
+        </a>
 
-        <div class="diamond left">
+        <a class="diamond left" href="#exit" aria-label="Exit">
           <span>
             <strong>EXIT</strong>
             Leave now
           </span>
-        </div>
-      </div>
-
-      <div class="check">
-        <h3>Final check</h3>
-        <p>Proceed only if you intend to complete it. Ready?</p>
-
-        <div class="buttons">
-          <button class="primary">Yes, start</button>
-          <button>Skip, enter site</button>
-          <button>Not now</button>
-        </div>
+        </a>
       </div>
 
       <div class="footer">
         Canonical · Stable · © Geodiametrics
       </div>
-
     </div>
   </div>
+
+  <!-- =========================
+       MODALS (NO JS) — :target
+       ========================= -->
+
+  <!-- Learn More -->
+  <section id="learn" class="modal">
+    <div class="modalCard">
+      <h2>What the quiz does</h2>
+      <p>
+        You’ll skim short sayings and choose what resonates.
+        No questions. No right answers. Most people finish in about three minutes.
+      </p>
+      <div class="modalButtons">
+        <a class="btn primary" href="#q1">Start Quiz</a>
+        <a class="btn" href="/home/">Enter Website</a>
+        <a class="btn" href="#">Close</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Exit -->
+  <section id="exit" class="modal">
+    <div class="modalCard">
+      <h2>Leave now</h2>
+      <p>Thanks for stopping by. You can close this tab anytime.</p>
+      <div class="modalButtons">
+        <a class="btn" href="#">Stay</a>
+        <a class="btn primary" href="about:blank" rel="noopener">Leave</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qualifying Q1 -->
+  <section id="q1" class="modal">
+    <div class="modalCard">
+      <h2>Before you start</h2>
+      <p>Do you have about <strong>3 minutes</strong> right now?</p>
+      <div class="modalButtons">
+        <a class="btn primary" href="#q2">Yes</a>
+        <a class="btn" href="#">No</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qualifying Q2 -->
+  <section id="q2" class="modal">
+    <div class="modalCard">
+      <h2>Before you start</h2>
+      <p>Will you take this seriously and <strong>finish</strong> once you begin?</p>
+      <div class="modalButtons">
+        <a class="btn primary" href="#q3">Yes</a>
+        <a class="btn" href="#">No</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qualifying Q3 -->
+  <section id="q3" class="modal">
+    <div class="modalCard">
+      <h2>Before you start</h2>
+      <p>Are you ready to see how aligned you are with yourself?</p>
+      <div class="modalButtons">
+        <a class="btn primary" href="#q4">Yes</a>
+        <a class="btn" href="#">No</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qualifying Q4 -->
+  <section id="q4" class="modal">
+    <div class="modalCard">
+      <h2>Final check</h2>
+      <p>Proceed only if you intend to complete it. Ready?</p>
+      <div class="modalButtons">
+        <a class="btn primary" href="/landing/archetype/">Yes, start</a>
+        <a class="btn" href="/home/">Skip, enter site</a>
+        <a class="btn" href="#">Not now</a>
+      </div>
+    </div>
+  </section>
+
 </body>
 </html>

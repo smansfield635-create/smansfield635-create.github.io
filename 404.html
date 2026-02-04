@@ -2,12 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Redirect · Geodiametrics</title>
+  <title>404 · Inadmissible Path</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta http-equiv="refresh" content="0; url=/landing/" />
-  <script>location.replace("/landing/");</script>
+  <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 <body>
-  <noscript><a href="/landing/">Go to Door</a></noscript>
+  <main class="page" data-mode="diamond" data-frozen="true">
+    <div class="h1">Inadmissible Path</div>
+    <div class="h2">That route does not exist.</div>
+
+    <section class="panel">
+      <div class="cluster" aria-label="Recovery routes">
+        <a class="diamond d-top primary" href="/home/">
+          <div class="label"><div class="main">Home</div><div class="sub">Site</div></div>
+        </a>
+        <a class="diamond d-right" href="/laws/">
+          <div class="label"><div class="main">Laws</div><div class="sub">Try again</div></div>
+        </a>
+        <a class="diamond d-bottom" href="/products/">
+          <div class="label"><div class="main">Products</div><div class="sub">Try again</div></div>
+        </a>
+        <a class="diamond d-left" href="/landing/">
+          <div class="label"><div class="main">Door</div><div class="sub">Alignment check</div></div>
+        </a>
+      </div>
+
+      <div class="footer">Canonical · Stable · © Geodiametrics</div>
+    </section>
+  </main>
 </body>
 </html>

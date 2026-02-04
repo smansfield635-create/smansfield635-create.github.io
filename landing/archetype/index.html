@@ -1,42 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
   <title>Step One · Self</title>
-  <link rel="stylesheet" href="/assets/ui.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 <body>
-  <div class="page">
-    <h1>Step One</h1>
-    <div class="subtitle">Choose the type you believe you line up with.</div>
+  <main class="page">
+    <div class="h1">Step One</div>
+    <div class="h2">Choose the type you believe you line up with.</div>
 
-    <div class="panel">
-      <div class="diamond-grid">
-        <div class="diamond top">
-          <span>ARCHITECT<br><span class="small">Structure-first</span></span>
-        </div>
+    <section class="panel">
+      <div class="cluster" role="navigation" aria-label="Archetype choices">
+        <a class="diamond d-top primary" href="/landing/era/" aria-label="Architect (structure-first)">
+          <div class="label">
+            <div class="main">Architect</div>
+            <div class="sub">Structure-first</div>
+          </div>
+        </a>
 
-        <div class="diamond right">
-          <span>EXECUTOR<br><span class="small">Action-first</span></span>
-        </div>
+        <a class="diamond d-right" href="/landing/era/" aria-label="Executor (action-first)">
+          <div class="label">
+            <div class="main">Executor</div>
+            <div class="sub">Action-first</div>
+          </div>
+        </a>
 
-        <div class="diamond left">
-          <span>HARMONIZER<br><span class="small">Stability-first</span></span>
-        </div>
+        <a class="diamond d-bottom" href="/landing/era/" aria-label="Harmonizer (stability-first)">
+          <div class="label">
+            <div class="main">Harmonizer</div>
+            <div class="sub">Stability-first</div>
+          </div>
+        </a>
 
-        <div class="diamond bottom">
-          <span>DISRUPTOR<br><span class="small">Change-first</span></span>
-        </div>
+        <a class="diamond d-left" href="/landing/era/" aria-label="Disruptor (change-first)">
+          <div class="label">
+            <div class="main">Disruptor</div>
+            <div class="sub">Change-first</div>
+          </div>
+        </a>
       </div>
 
-      <div class="nav">
-        <a href="/landing/">Back</a>
-        <a href="/landing/era/">Forward</a>
-        <a href="/landing/exit/">Exit</a>
+      <div class="btnrow" style="justify-content:space-between;margin-top:10px;">
+        <a class="btn" href="/landing/check.html">Back</a>
+        <a class="btn" href="/landing/exit.html">Exit</a>
       </div>
 
       <div class="footer">Canonical · Stable · © Geodiametrics</div>
-    </div>
-  </div>
+    </section>
+  </main>
 </body>
 </html>

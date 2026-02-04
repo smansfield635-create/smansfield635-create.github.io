@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Results · Alignment Check</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+</head>
+<body>
+  <main class="page">
+    <div class="h1">Alignment Check</div>
+    <div class="h2">Results</div>
+
+    <section class="panel">
+      <div class="card">
+        <div class="title">Your distribution</div>
+        <div class="text" id="distText"></div>
+      </div>
+
+      <div class="card">
+        <div class="title">Interpretation</div>
+        <div class="text" id="interpText"></div>
+      </div>
+
+      <div class="btnrow">
+        <a class="btn" href="/home/">Enter site</a>
+        <a class="btn" href="/landing/">Back to door</a>
+        <a class="btn" href="/landing/exit.html">Exit</a>
+      </div>
+
+      <div class="footer">Check yourself before you wreck yourself.</div>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      // ---- Load state ----
+      const STATE_KEY="gd_quiz_state";
+      const PICK_KEY="gd_quiz_picks";
+      const st = JSON.parse(localStorage.getItem(STATE_KEY)||"{}");
+      const picks = JSON.parse(localStorage.getItem(PICK_KEY)||"[]");
+
+      // ---- Type set ----
+      const TYPES=["Architect","Executor","Harmonizer","Disruptor"];
+      const score = {Architect:0, Executor:0, Harmonizer:0, Disruptor:0};
+
+      // ---- Minimal viable weighting ----
+      // Each saying should carry a weight vector; until then, infer by era/country tone
+      // (Replace this inference with explicit weights when you add them to sayings.json)
+      function inferWeights(p){
+        // soft heuristic (kept small to avoid dominance)
+        const w={Architect:0.25,Executor:0.25,Harmonizer:0.25,Disruptor:0.25};
+        const t=p.text.toLowerCase();
+        if(t.includes("order")||t.includes("measure")||t.includes("rule")) w.Architect+=0.15;
+        if(t.includes("action")||t.includes("do")||t.includes("work")) w.Executor+=0.15;
+        if(t.includes("harmony")||t.includes("peace")||t.includes("balance")) w.Harmonizer+=0.15;
+        if(t.includes("change")||t.includes("break")||t.includes("disrupt")) w.Disruptor+=0.15;
+        // normalize
+        const s=Object.values(w).reduce((a,b)=>a+b,0);
+        TYPES.forEach(k=>w[k]/=s);
+        return w;
+      }
+
+      // ---- Compute ----
+      picks.forEach((p,i)=>{
+        const mult = (i<16)?1.0:0.6; // 16 required + optional 4 refinement
+        const w = inferWeights(p);
+        TYPES.forEach(k=>score[k]+=mult*w[k]);
+      });
+
+      const total = TYPES.reduce((a,k)=>a+score[k],0)||1;
+      const P = {};
+      TYPES.forEach(k=>P[k]=Math.round((score[k]/total)*100));
+
+      // ---- Rank ----
+      const ranked = TYPES.slice().sort((a,b)=>P[b]-P[a]);
+      const primary=ranked[0], secondary=ranked[1], least=ranked[3];
+      const claim = st.self_type || "—";
+      const align = claim!=="—" ? P[claim] : null;
+      const gap = claim!=="—" ? (P[primary]-P[claim]) : null;
+      const confusion = 100 - (P[primary]-P[secondary]);
+
+      // ---- Render ----
+      document.getElementById("distText").innerHTML =
+        `Architect: <b>${P.Architect}%</b><br/>
+         Executor: <b>${P.Executor}%</b><br/>
+         Harmonizer: <b>${P.Harmonizer}%</b><br/>
+         Disruptor: <b>${P.Disruptor}%</b>`;
+
+      document.getElementById("interpText").innerHTML =
+        `Primary: <b>${primary}</b><br/>
+         Secondary: <b>${secondary}</b><br/>
+         Least: <b>${least}</b><br/><br/>
+         Self-claim: <b>${claim}</b><br/>
+         Alignment with claim: <b>${align!==null?align+"%":"—"}</b><br/>
+         Gap vs primary: <b>${gap!==null?gap+"%":"—"}</b><br/>
+         Coherence (low confusion is better): <b>${confusion}%</b><br/><br/>
+         <i>This instrument reveals alignment through choice, order, and consistency.
+         No grading. No right answers.</i>`;
+    })();
+  </script>
+</body>
+</html>

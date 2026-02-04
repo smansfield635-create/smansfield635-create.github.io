@@ -1,19 +1,42 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
   <title>Laws · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg"/>
-  <link rel="stylesheet" href="/assets/ui.css"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 <body>
-  <div class="stars"></div>
-  <main class="wrap">
-    <section class="card">
-      <div class="h1">Laws</div>
-      <p class="sub">Foundational laws live here. (Leaf template)</p>
-      <div class="pillRow"><a class="pill" href="/">Return to Gate</a></div>
+  <main class="page" data-mode="diamond" data-frozen="true">
+    <div class="h1">Laws</div>
+    <div class="h2">Foundational stack and tiers.</div>
+
+    <section class="panel">
+      <div class="cluster" aria-label="Law tiers">
+        <a class="diamond d-top primary" href="/laws/tier1/" aria-label="Tier 1">
+          <div class="label"><div class="main">Tier 1</div><div class="sub">Foundations</div></div>
+        </a>
+        <a class="diamond d-right" href="/laws/tier2/" aria-label="Tier 2">
+          <div class="label"><div class="main">Tier 2</div><div class="sub">Corollaries</div></div>
+        </a>
+        <a class="diamond d-bottom" href="/laws/tier3/" aria-label="Tier 3">
+          <div class="label"><div class="main">Tier 3</div><div class="sub">Applications</div></div>
+        </a>
+        <a class="diamond d-left" href="/home/" aria-label="Back">
+          <div class="label"><div class="main">Back</div><div class="sub">Home</div></div>
+        </a>
+      </div>
+
+      <div class="card">
+        <div class="title">Canonical stack</div>
+        <div class="text">
+          Meta-law: Coherence.<br/>
+          Foundational: Euclidean · Cyclical · Mechanistic · Closure.<br/>
+          Four corollary axes per foundational law (16 total).
+        </div>
+      </div>
+
+      <div class="footer">Canonical · Stable · © Geodiametrics</div>
     </section>
   </main>
 </body>

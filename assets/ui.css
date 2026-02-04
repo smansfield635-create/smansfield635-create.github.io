@@ -1,66 +1,85 @@
-:root {
-  --bg-top: #0b1e2d;
-  --bg-bottom: #07131d;
+/* =========================================================
+   CANONICAL DIAMOND UI — LOCKED
+   Applies to ALL core diamond pages (non-leaf)
+   ========================================================= */
 
+:root {
+  --bg-top: #0b1a26;
+  --bg-bottom: #07131d;
   --glass-bg: rgba(255,255,255,0.08);
   --glass-border: rgba(255,255,255,0.18);
   --glass-inner: rgba(255,255,255,0.06);
-
-  --text-main: rgba(255,255,255,0.95);
-  --text-sub: rgba(255,255,255,0.7);
-
-  --accent: #5cc2ff;
+  --text-main: #e8eef5;
+  --text-sub: #b9c6d3;
+  --accent: #6faad6;
 }
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: radial-gradient(120% 100% at 50% 0%, var(--bg-top), var(--bg-bottom));
+  width: 100%;
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: var(--text-main);
+  background: radial-gradient(120% 120% at 50% 0%, var(--bg-top), var(--bg-bottom));
 }
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =======================
+   CORE FRAME
+   ======================= */
 
 .page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+  text-align: center;
 }
 
-h1 {
+.title {
   font-size: 2.2rem;
-  margin-bottom: 0.3rem;
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
 .subtitle {
+  font-size: 1rem;
   color: var(--text-sub);
-  margin-bottom: 2rem;
+  margin-bottom: 24px;
 }
 
-.glass-frame {
+/* =======================
+   GLASS PANEL
+   ======================= */
+
+.panel {
   position: relative;
-  padding: 3rem;
+  padding: 36px 20px 28px;
   border-radius: 26px;
-  background: linear-gradient(
-    180deg,
-    rgba(255,255,255,0.12),
-    rgba(255,255,255,0.02)
-  );
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
 }
 
-.diamond-grid {
+/* =======================
+   DIAMOND CLUSTER
+   ======================= */
+
+.diamond-cluster {
   position: relative;
-  width: 260px;
-  height: 260px;
+  width: 240px;
+  height: 240px;
+  margin: 0 auto 28px;
 }
 
 .diamond {
@@ -68,54 +87,101 @@ h1 {
   width: 120px;
   height: 120px;
   transform: rotate(45deg);
-  background: linear-gradient(
-    180deg,
-    var(--glass-bg),
-    rgba(255,255,255,0.02)
-  );
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(12px);
-  border-radius: 18px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 14px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .diamond::after {
   content: "";
   position: absolute;
-  inset: 8px;
-  border-radius: 14px;
-  background: var(--glass-inner);
-  z-index: -1;
+  inset: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-inner);
 }
 
-.diamond-content {
-  transform: rotate(-45deg);
-  text-align: center;
-  padding: 0.5rem;
-}
+/* Diamond positions — LOCKED */
+.diamond.top    { top: 0; left: 60px; }
+.diamond.right  { top: 60px; right: 0; }
+.diamond.bottom { bottom: 0; left: 60px; }
+.diamond.left   { top: 60px; left: 0; }
 
-.diamond h3 {
-  font-size: 0.9rem;
-  letter-spacing: 0.08em;
-  margin: 0;
-}
+/* =======================
+   DIAMOND CONTENT
+   ======================= */
 
 .diamond span {
-  font-size: 0.75rem;
-  color: var(--text-sub);
+  transform: rotate(-45deg);
+  text-align: center;
+  font-size: 0.85rem;
+  line-height: 1.25;
 }
 
-/* positions */
-.d-top    { top: 0; left: 70px; }
-.d-right  { top: 70px; right: 0; }
-.d-bottom { bottom: 0; left: 70px; }
-.d-left   { top: 70px; left: 0; }
+.diamond strong {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
 
-/* footer */
+/* =======================
+   FINAL CHECK PANEL
+   ======================= */
+
+.check {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+  border: 1px solid var(--glass-border);
+}
+
+.check h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.check p {
+  font-size: 0.9rem;
+  color: var(--text-sub);
+  margin-bottom: 14px;
+}
+
+/* =======================
+   BUTTONS
+   ======================= */
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+button {
+  padding: 10px 18px;
+  border-radius: 18px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+button.primary {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* =======================
+   FOOTER
+   ======================= */
+
 .footer {
-  margin-top: 1.5rem;
+  margin-top: 18px;
   font-size: 0.75rem;
   color: var(--text-sub);
 }

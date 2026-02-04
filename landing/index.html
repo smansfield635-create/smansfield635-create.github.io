@@ -7,51 +7,38 @@
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 <body>
-  <main class="wrap">
+<a class="exitFixed" href="about:blank">Exit</a>
 
-    <header class="hero">
-      <h1>Be the first.</h1>
-      <p>The door explains. The gate routes.</p>
-    </header>
+<main class="wrap">
+  <header class="hero">
+    <h1>Be the first.</h1>
+    <p>The door explains. The gate routes.</p>
+  </header>
 
-    <section class="panel" aria-label="Door choices">
-      <div class="grid4">
-        <!-- Start Quiz -> goes to Archetype page -->
-        <a class="dbtn primary" href="/landing/archetype/" aria-label="Start quiz">
-          <div class="label">
-            <strong>Start Quiz</strong>
-            <small>~3 minutes</small>
-          </div>
-        </a>
+  <section class="panel">
+    <div class="grid4" aria-label="Door options">
+      <a class="dbtn primary" href="/landing/archetype/">
+        <div class="label"><strong>Start Quiz</strong><small>~3 minutes</small></div>
+      </a>
+      <a class="dbtn" href="/home/">
+        <div class="label"><strong>Enter</strong><small>Go to gate</small></div>
+      </a>
+      <a class="dbtn" href="/landing/info/">
+        <div class="label"><strong>Learn More</strong><small>What this is</small></div>
+      </a>
+      <a class="dbtn" href="about:blank">
+        <div class="label"><strong>Exit</strong><small>Leave now</small></div>
+      </a>
+    </div>
 
-        <!-- Enter -> goes to website gate (root index) -->
-        <a class="dbtn" href="/" aria-label="Enter website">
-          <div class="label">
-            <strong>Enter</strong>
-            <small>Go to gate</small>
-          </div>
-        </a>
+    <div class="nav3">
+      <a href="/landing/">Back</a>
+      <a href="/home/">Forward</a>
+      <a href="about:blank">Exit</a>
+    </div>
 
-        <!-- Learn More -> placeholder page (optional later) -->
-        <a class="dbtn" href="/landing/info/" aria-label="Learn more">
-          <div class="label">
-            <strong>Learn More</strong>
-            <small>What this is</small>
-          </div>
-        </a>
-
-        <!-- Exit -->
-        <a class="dbtn" href="about:blank" aria-label="Exit">
-          <div class="label">
-            <strong>Exit</strong>
-            <small>Leave now</small>
-          </div>
-        </a>
-      </div>
-
-      <div class="foot">Canonical · Stable · © Geodiametrics</div>
-    </section>
-
-  </main>
+    <div class="foot">Canonical · Stable · © Geodiametrics</div>
+  </section>
+</main>
 </body>
 </html>

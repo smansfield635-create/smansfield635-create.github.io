@@ -1,23 +1,18 @@
-/* =========================
-   LANDING (DOOR) — TWO PHASES
-   Part 1: Self-hunch (4 types)
-   Part 2: Resonance (eras → leaves later)
-   ========================= */
-
 :root{
-  --bg0:#040812;
+  --bg0:#050813;
   --bg1:#071427;
   --glass:rgba(255,255,255,.06);
   --glass2:rgba(255,255,255,.10);
   --stroke:rgba(255,255,255,.16);
   --text:#eaf1ff;
-  --muted:rgba(234,241,255,.70);
+  --muted:rgba(234,241,255,.72);
   --shadow:0 22px 70px rgba(0,0,0,.55);
-  --r:24px;
+  --r:26px;
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
+
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   color:var(--text);
@@ -25,8 +20,9 @@ body{
     radial-gradient(1200px 900px at 50% -10%, rgba(120,160,255,.22), transparent 55%),
     radial-gradient(900px 700px at 20% 90%, rgba(80,220,255,.10), transparent 60%),
     linear-gradient(180deg,var(--bg1),var(--bg0));
-  overflow-x:hidden;
+  overflow:hidden;
 }
+
 body::before{
   content:"";
   position:fixed;inset:0;pointer-events:none;opacity:.35;
@@ -38,69 +34,122 @@ body::before{
     radial-gradient(1px 1px at 82% 76%, #fff, transparent 60%);
 }
 
-main{min-height:100%;display:flex;justify-content:center;padding:24px 16px}
-.wrap{width:min(980px,100%);display:flex;flex-direction:column;gap:18px}
+main{
+  min-height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:24px;
+}
 
-/* header */
+.wrap{
+  width:min(980px,100%);
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+  align-items:center;
+}
+
 .hero{text-align:center}
-.hero h1{font-size:clamp(44px,7vw,84px);letter-spacing:-.02em}
-.hero p{margin-top:8px;color:var(--muted);font-size:18px}
+.hero h1{
+  font-size:clamp(44px,7vw,84px);
+  letter-spacing:-.02em;
+}
+.hero p{
+  margin-top:8px;
+  font-size:18px;
+  color:var(--muted);
+}
 
-/* glass card */
+/* EXIT */
+.exit{
+  position:fixed;
+  top:14px;right:14px;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  text-decoration:none;
+}
+
+/* CARD */
 .card{
+  width:100%;
   background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
   border:1px solid var(--stroke);
   border-radius:var(--r);
   box-shadow:var(--shadow);
   backdrop-filter:blur(12px);
-  padding:18px;
+  padding:22px;
 }
 
 /* ===== BIG DIAMOND (4 equal diamonds) ===== */
-.stage{display:flex;justify-content:center}
+.stage{
+  display:flex;
+  justify-content:center;
+}
+
 .big{
   width:min(520px,92vw);
   aspect-ratio:1/1;
-  position:relative;
 }
+
 svg{width:100%;height:100%;display:block}
 
-.dOuter{fill:rgba(255,255,255,.04);stroke:rgba(255,255,255,.18);stroke-width:2}
-.dInner{fill:rgba(255,255,255,.08);stroke:rgba(255,255,255,.28);stroke-width:2}
-.dBtn{cursor:pointer}
-.dBtn:hover{filter:brightness(1.12)}
-.dText{fill:#eaf1ff;font-weight:750;font-size:20px}
-.dTextSm{fill:#eaf1ff;font-weight:700;font-size:18px}
+.frame{
+  fill:rgba(255,255,255,.04);
+  stroke:rgba(255,255,255,.18);
+  stroke-width:2;
+}
 
-/* ===== PHASE PANELS ===== */
+.tile{
+  fill:rgba(255,255,255,.10);
+  stroke:rgba(255,255,255,.28);
+  stroke-width:2;
+  cursor:pointer;
+}
+.tile:hover{filter:brightness(1.12)}
+
+.label{
+  fill:#eaf1ff;
+  font-size:18px;
+  font-weight:750;
+}
+
+/* PANEL */
 .panel{
-  margin-top:12px;
   display:none;
+  margin-top:16px;
   gap:12px;
 }
 .panel.active{display:grid}
-.panel .desc{color:var(--muted);font-size:16px}
+
 .panel .visual{
-  height:140px;border-radius:18px;
+  height:140px;
+  border-radius:18px;
   background:
-    linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+    linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.04));
   border:1px solid rgba(255,255,255,.18);
 }
-.panel .actions{display:flex;gap:10px;flex-wrap:wrap}
+
+.panel .desc{
+  font-size:16px;
+  color:var(--muted);
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
 .btn{
-  padding:10px 14px;border-radius:999px;border:1px solid var(--stroke);
-  background:rgba(255,255,255,.06);color:var(--text);text-decoration:none;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  text-decoration:none;
 }
 .btn:hover{border-color:rgba(255,255,255,.28)}
-
-/* ===== PHASE 2 (teaser only) ===== */
-.phase2{margin-top:14px;display:none}
-.phase2.active{display:block}
-.phase2 .hint{color:var(--muted);text-align:center}
-
-/* exit */
-.exit{
-  position:fixed;top:14px;right:14px;
-  padding:8px 12px;border-radius:999px;border:1px solid var(--stroke);
-  background:rgba(255,255,255,.06);text-decoration:none;color:var(--text)
-}

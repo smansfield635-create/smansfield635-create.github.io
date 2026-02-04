@@ -1,76 +1,36 @@
-<!doctype html>
+<!-- FILE: /laws/index.html  (TNT) -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Laws · Geodiametrics</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Laws · Geodiametrics</title>
   <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 <body>
-  <main class="page" data-mode="diamond" data-frozen="true">
-    <div class="h1">Laws</div>
-    <div class="h2">One science. Multiple depths.</div>
+  <main class="page">
+    <header class="hero">
+      <h1 class="title">Laws</h1>
+      <p class="subtitle">Foundational structure.</p>
+    </header>
 
     <section class="panel">
-      <!-- Diamond = concept -->
-      <div class="cluster" aria-label="Laws depth">
-        <button class="diamond d-top primary" data-tier="t1">
-          <div class="label"><div class="main">Foundations</div><div class="sub">Tier 1</div></div>
-        </button>
-        <button class="diamond d-right" data-tier="t2">
-          <div class="label"><div class="main">Corollaries</div><div class="sub">Tier 2</div></div>
-        </button>
-        <button class="diamond d-bottom" data-tier="t3">
-          <div class="label"><div class="main">Applications</div><div class="sub">Tier 3</div></div>
-        </button>
-        <a class="diamond d-left" href="/home/">
-          <div class="label"><div class="main">Back</div><div class="sub">Home</div></div>
-        </a>
+      <div class="diamondCluster">
+        <a class="diamond top" href="/site/"><span><strong>BACK</strong><em>Site hub</em></span></a>
+        <a class="diamond right" href="/laws/"><span><strong>TIER 1</strong><em>Foundational</em></span></a>
+        <a class="diamond bottom" href="/laws/"><span><strong>TIER 2</strong><em>Operational</em></span></a>
+        <a class="diamond left" href="/laws/"><span><strong>TIER 3</strong><em>Applied</em></span></a>
+        <div class="diamondCenterDot" aria-hidden="true"></div>
+        <div class="diamondCross" aria-hidden="true"></div>
       </div>
 
-      <!-- Depth panes -->
-      <div class="card" id="t1">
-        <div class="title">Tier 1 — Foundational Laws</div>
-        <div class="text">
-          <b>Meta-law: Coherence</b> — admissibility under scale.<br/><br/>
-          <b>Euclidean</b>: identity, boundary, distance, topology.<br/>
-          <b>Cyclical</b>: time, feedback, drift, convergence.<br/>
-          <b>Mechanistic</b>: input, transfer, output, efficiency.<br/>
-          <b>Closure</b>: termination, receipt, reversibility, non-regress.
-        </div>
-      </div>
+      <section class="card">
+        <h2 class="cardTitle">Placeholder</h2>
+        <p class="cardText">Laws content will be written next. This page is wired and styled correctly.</p>
+      </section>
 
-      <div class="card" id="t2" hidden>
-        <div class="title">Tier 2 — Corollary Axes</div>
-        <div class="text">
-          Each foundational law expresses through four axes (16 total),
-          providing measurable lenses without fragmenting the law itself.
-        </div>
-      </div>
-
-      <div class="card" id="t3" hidden>
-        <div class="title">Tier 3 — Applications</div>
-        <div class="text">
-          Alignment Check · Executive Admissibility Instrument (EAI) ·
-          M256 Coherence Geometry · Coherence-driven Plasma & CVD · Live Gauges.
-        </div>
-      </div>
-
-      <div class="footer">Canonical · Stable · © Geodiametrics</div>
+      <footer class="footer">Canonical · Stable · © Geodiametrics</footer>
     </section>
   </main>
-
-  <script>
-    (function(){
-      const panes = ["t1","t2","t3"];
-      document.querySelectorAll("[data-tier]").forEach(b=>{
-        b.addEventListener("click", ()=>{
-          panes.forEach(id=>{
-            document.getElementById(id).hidden = (id !== b.dataset.tier);
-          });
-        });
-      });
-    })();
-  </script>
 </body>
 </html>

@@ -252,4 +252,12 @@ a:hover{filter:brightness(1.06)}
   .diamond{width:128px;height:128px}
   .diamond.top{left:60px}
   .diamond.bottom{left:60px}
-}
+}/* =========================================================
+   TNT FIX — REMOVE CROSS OVERLAY (CANONICAL)
+   Reason: causes white X artifact on diamond cluster
+   ========================================================= */
+
+/* Remove cross bars completely */
+.diamondCross,
+.diamondCross::before,
+.d

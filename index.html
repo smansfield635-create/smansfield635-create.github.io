@@ -3,64 +3,53 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodiametrics · Door</title>
+  <title>Geodiametrics · Home</title>
   <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 <body class="stars">
   <main class="wrap">
     <header class="hero">
-      <h1>Be the first.</h1>
-      <p>The door explains. The gate routes.</p>
+      <h1>Home</h1>
+      <p>One gate. One diamond. One path.</p>
     </header>
 
-    <section class="card" aria-label="Door Diamond">
-      <div class="diamondWrap" aria-label="Four-diamond door">
+    <section class="card" aria-label="Gate Diamond">
+      <div class="diamondWrap" aria-label="Four-diamond gate">
         <!-- ONE BIG DIAMOND, SPLIT INTO 4 EQUAL DIAMONDS -->
-        <svg viewBox="0 0 100 100" role="img" aria-label="Door: four choices">
+        <svg viewBox="0 0 100 100" role="img" aria-label="Gate: Laws, Products, Gauges, Links">
           <!-- outer frame diamond -->
           <polygon class="dOuter" points="50,3 97,50 50,97 3,50"></polygon>
 
-          <!-- the 4 equal inner diamonds (top/right/bottom/left) -->
-          <!-- geometry: center = (50,50), inner-radius=18, outer-radius=44 -->
-          <!-- TOP -->
-          <a class="dbtn" href="/home/">
+          <!-- TOP: LAWS -->
+          <a class="dbtn" href="/laws/">
             <polygon class="dInner" points="50,6 68,24 50,42 32,24"></polygon>
-            <text class="dText" x="50" y="27" text-anchor="middle" dominant-baseline="middle">ENTER</text>
+            <text class="dText" x="50" y="27" text-anchor="middle" dominant-baseline="middle">LAWS</text>
           </a>
 
-          <!-- RIGHT -->
-          <a class="dbtn" href="/sayings/">
-            <polygon class="dInner" points="94,50 76,32 58,50 76,68"></polygon>
-            <text class="dTextSmall" x="76" y="50" text-anchor="middle" dominant-baseline="middle">SAYINGS</text>
-          </a>
-
-          <!-- BOTTOM -->
+          <!-- RIGHT: PRODUCTS -->
           <a class="dbtn" href="/products/">
-            <polygon class="dInner" points="50,94 68,76 50,58 32,76"></polygon>
-            <text class="dTextSmall" x="50" y="76" text-anchor="middle" dominant-baseline="middle">PRODUCTS</text>
+            <polygon class="dInner" points="94,50 76,32 58,50 76,68"></polygon>
+            <text class="dTextSmall" x="76" y="50" text-anchor="middle" dominant-baseline="middle">PRODUCTS</text>
           </a>
 
-          <!-- LEFT -->
+          <!-- BOTTOM: GAUGES -->
+          <a class="dbtn" href="/gauges/">
+            <polygon class="dInner" points="50,94 68,76 50,58 32,76"></polygon>
+            <text class="dTextSmall" x="50" y="76" text-anchor="middle" dominant-baseline="middle">GAUGES</text>
+          </a>
+
+          <!-- LEFT: LINKS -->
           <a class="dbtn" href="/links/">
             <polygon class="dInner" points="6,50 24,32 42,50 24,68"></polygon>
-            <text class="dTextSmall" x="24" y="50" text-anchor="middle" dominant-baseline="middle">LEAVE</text>
+            <text class="dTextSmall" x="24" y="50" text-anchor="middle" dominant-baseline="middle">LINKS</text>
           </a>
 
-          <!-- tiny center marker (not clickable) -->
           <circle cx="50" cy="50" r="2.2" fill="rgba(234,241,255,.55)"></circle>
         </svg>
       </div>
 
-      <div class="bubbleStack" aria-label="Chinese principles">
-        <div class="bubbleHead">Tap a phrase to translate.</div>
-        <div class="axiom">Integrity → Fortitude → Delivery → Destiny</div>
-
-        <!-- phrases only on door -->
-        <a class="bubble" href="/sayings/#xingge">性格决定命运</a>
-        <a class="bubble" href="/sayings/#jisuobuyu">己所不欲，勿施于人</a>
-        <a class="bubble" href="/sayings/#shangshan">上善若水</a>
-        <a class="bubble" href="/sayings/#daoke">道可道，非常道</a>
-        <a class="bubble" href="/sayings/#daosheng">道生一，一生二，二生三，三生万物</a>
+      <div class="linkrow" aria-label="Return">
+        <a class="pill" href="/">Return to Door</a>
       </div>
 
       <div class="footer">Canonical · Stable · © Geodiametrics</div>

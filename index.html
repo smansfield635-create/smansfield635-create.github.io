@@ -1,44 +1,137 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Gate · Home</title>
-  <link rel="stylesheet" href="/assets/ui.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geodiametrics</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: radial-gradient(circle at top, #0b1d33 0%, #050b14 70%);
+      color: #e6edf3;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .page {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Headline */
+    .headline {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .headline h1 {
+      font-size: 2rem;
+      font-weight: 400;
+      margin: 0;
+      letter-spacing: 0.3px;
+    }
+
+    .headline p {
+      margin-top: 10px;
+      font-size: 1rem;
+      opacity: 0.7;
+    }
+
+    /* Diamond container */
+    .diamonds {
+      position: relative;
+      width: 260px;
+      height: 260px;
+    }
+
+    .diamond {
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(45deg);
+    }
+
+    .diamond span {
+      transform: rotate(-45deg);
+      text-align: center;
+      font-size: 0.85rem;
+      line-height: 1.3;
+    }
+
+    .top    { top: 0; left: 50%; transform: translateX(-50%) rotate(45deg); }
+    .right  { right: 0; top: 50%; transform: translateY(-50%) rotate(45deg); }
+    .bottom { bottom: 0; left: 50%; transform: translateX(-50%) rotate(45deg); }
+    .left   { left: 0; top: 50%; transform: translateY(-50%) rotate(45deg); }
+
+    /* Quote bubbles */
+    .quotes {
+      position: absolute;
+      bottom: 34px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0.7;
+    }
+
+    .quote {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      font-size: 0.75rem;
+      user-select: none;
+    }
+
+    /* Canonical mark */
+    .canonical {
+      position: fixed;
+      right: 10px;
+      bottom: 6px;
+      font-size: 10px;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+  </style>
 </head>
+
 <body>
-<a class="exitFixed" href="about:blank">Exit</a>
+  <div class="page">
 
-<main class="wrap">
-  <header class="hero">
-    <h1>Home</h1>
-    <p>One gate. Four routes.</p>
-  </header>
-
-  <section class="panel">
-    <div class="grid4">
-      <a class="dbtn primary" href="/laws/">
-        <div class="label"><strong>Laws</strong><small>Branch</small></div>
-      </a>
-      <a class="dbtn" href="/products/">
-        <div class="label"><strong>Products</strong><small>Branch</small></div>
-      </a>
-      <a class="dbtn" href="/gauges/">
-        <div class="label"><strong>Gauges</strong><small>Branch</small></div>
-      </a>
-      <a class="dbtn" href="/links/">
-        <div class="label"><strong>Links</strong><small>Branch</small></div>
-      </a>
+    <div class="headline">
+      <h1>Take a moment.</h1>
+      <p>This explains what’s here—before you decide where to go.</p>
     </div>
 
-    <div class="nav3">
-      <a href="/landing/">Back</a>
-      <a href="/home/">Forward</a>
-      <a href="about:blank">Exit</a>
+    <div class="diamonds">
+      <div class="diamond top"><span>START<br/>~3 minutes</span></div>
+      <div class="diamond right"><span>ENTER<br/>Go to gate</span></div>
+      <div class="diamond bottom"><span>LEARN<br/>What this is</span></div>
+      <div class="diamond left"><span>EXIT<br/>Leave</span></div>
     </div>
 
-    <div class="foot">Canonical · Stable · © Geodiametrics</div>
-  </section>
-</main>
+    <div class="quotes">
+      <div class="quote">知行合一</div>
+      <div class="quote">大道至简</div>
+      <div class="quote">实事求是</div>
+    </div>
+
+  </div>
+
+  <div class="canonical">Canonical · Stable · © Geodiametrics</div>
 </body>
 </html>

@@ -1,32 +1,103 @@
-/* HARD RESET */
-
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
-  background: #0b1220;
-  color: #e6ebf2;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  height: 100%;
+  background: radial-gradient(ellipse at center, #0f1b2e 0%, #05080f 70%);
+  color: #e8ecf3;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-#gate {
+.gate {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 28px;
+  padding: 48px 20px;
+}
+
+.header {
   text-align: center;
 }
 
-h1 {
-  font-size: 2.25rem;
-  margin: 0 0 0.5rem 0;
+.title {
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
-p {
-  margin: 0.25rem 0;
-  opacity: 0.8;
+.subtitle {
+  margin-top: 8px;
+  font-size: 1rem;
+  opacity: 0.75;
+}
+
+.diamond-wrap {
+  position: relative;
+  width: 260px;
+  height: 260px;
+}
+
+.diamond {
+  position: absolute;
+  inset: 0;
+  transform: rotate(45deg);
+  border-radius: 18px;
+}
+
+.diamond.outer {
+  background: linear-gradient(145deg, #2b3652, #0b1220);
+  opacity: 0.55;
+}
+
+.diamond.inner {
+  inset: 38px;
+  background: linear-gradient(145deg, #3a3f6b, #161b2f);
+  opacity: 0.85;
+}
+
+.center-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 26px;
+  height: 26px;
+  background: #e8ecf3;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.principles {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  text-align: center;
+}
+
+.sayings {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.phrase {
+  text-align: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.footer {
+  margin-top: 24px;
+  font-size: 0.75rem;
+  opacity: 0.5;
+  text-align: center;
 }

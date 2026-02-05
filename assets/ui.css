@@ -175,4 +175,10 @@ a:focus-visible, button:focus-visible{
   letter-spacing:.6px;
 }
 
-/* Small screens:
+/* Small screens: keep separation but prevent overflow */
+@media (max-width:360px){
+  :root{
+    --cluster:clamp(260px,78vw,380px);
+    --gap:calc(var(--cluster) * .16);
+  }
+}

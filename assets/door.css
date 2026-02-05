@@ -1,53 +1,59 @@
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:radial-gradient(120% 120% at 50% 0%,#0b1f33,#050c14);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#eaf2fb}
+/* ===== DOOR STAGE ===== */
 
-/* Keep content DOWN, not vertically centered */
-.door{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  text-align:center;
-  padding-top:72px;
-}
-
-h1{font-size:2.6rem;margin-bottom:.4rem;font-weight:800}
-.subtitle{opacity:.75;margin-bottom:28px}
-
-/* BIGGER stage + NO overlap */
 .diamond-wrap{
   position:relative;
-  width:360px;
-  height:360px;
-  margin-top:18px;
+  width:420px;     /* BIGGER STAGE */
+  height:420px;
+  margin-top:28px;
 }
 
-/* Slightly smaller diamonds + more separation */
+/* ===== DIAMONDS ===== */
+
 .diamond{
   position:absolute;
-  width:112px;
-  height:112px;
+  width:110px;
+  height:110px;
   transform:rotate(45deg);
-  background:rgba(255,255,255,.08);
+  background:rgba(255,255,255,.075);
   border-radius:14px;
-  backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.14);
   display:flex;
   align-items:center;
   justify-content:center;
-  text-decoration:none;
-  color:inherit;
-  transition:background .2s ease,border-color .2s ease;
 }
-.diamond:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.18)}
-.diamond span{transform:rotate(-45deg);font-size:.9rem;letter-spacing:.05em;line-height:1.25}
-.diamond span strong{display:block;font-weight:800;margin-bottom:4px}
 
-/* PULLED APART (no overlap) */
-.top{top:0;left:124px}
-.right{top:124px;right:0}
-.bottom{bottom:0;left:124px}
-.left{top:124px;left:0}
+.diamond span{
+  transform:rotate(-45deg);
+  text-align:center;
+  font-size:.9rem;
+  line-height:1.25;
+}
 
-footer{margin-top:34px;font-size:.75rem;opacity:.6}
+.diamond span strong{
+  display:block;
+  font-weight:800;
+  margin-bottom:4px;
+}
+
+/* ===== PULLED-APART POSITIONS (THIS IS THE FIX) ===== */
+
+.top{
+  top:20px;
+  left:155px;
+}
+
+.right{
+  top:155px;
+  right:20px;
+}
+
+.bottom{
+  bottom:20px;
+  left:155px;
+}
+
+.left{
+  top:155px;
+  left:20px;
+}

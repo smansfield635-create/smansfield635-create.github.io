@@ -1,0 +1,94 @@
+/* =========================================================
+   GEODIAMETRICS — CANONICAL DOOR (ORGANIC)
+   No forced X. Overlap-only emergence.
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background: radial-gradient(120% 120% at 50% 0%, #0b1f33, #050c14);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #eaf2fb;
+}
+
+.door {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.6rem;
+  margin-bottom: 0.4rem;
+  font-weight: 800;
+}
+
+.subtitle {
+  opacity: 0.75;
+  margin-bottom: 2.4rem;
+}
+
+/* ===== Diamond Cluster ===== */
+
+.diamond-wrap {
+  position: relative;
+  width: 260px;
+  height: 260px;
+}
+
+/* The diamond itself */
+.diamond {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  transform: rotate(45deg);
+  background: rgba(255,255,255,0.08);
+  border-radius: 14px;
+  backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.2s ease;
+}
+
+/* NO ::before, NO ::after, NO borders, NO helpers */
+
+.diamond:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+/* Upright text */
+.diamond span {
+  transform: rotate(-45deg);
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  line-height: 1.3;
+}
+
+.diamond span strong {
+  display: block;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+/* Positions */
+.top    { top: 0; left: 70px; }
+.right  { top: 70px; right: 0; }
+.bottom { bottom: 0; left: 70px; }
+.left   { top: 70px; left: 0; }
+
+footer {
+  margin-top: 3rem;
+  font-size: 0.75rem;
+  opacity: 0.6;
+}

@@ -1,13 +1,188 @@
-a { color: inherit; }
-.btn{
-  display:inline-flex;
+/* =========================================================
+   CANONICAL DIAMOND UI — DOOR (LOCKED)
+   Applies to ALL core diamond pages (non-leaf)
+   ========================================================= */
+
+:root{
+  --bg0:#07131d;
+  --bg1:#0b1a26;
+
+  --panelA: rgba(255,255,255,.06);
+  --panelB: rgba(255,255,255,.02);
+  --panelBorder: rgba(255,255,255,.16);
+
+  --glass: rgba(255,255,255,.08);
+  --glass2: rgba(255,255,255,.05);
+  --glassBorder: rgba(255,255,255,.18);
+  --glassInner: rgba(255,255,255,.10);
+
+  --text:#e8eef5;
+  --sub:#b9c6d3;
+
+  --btnA: rgba(255,255,255,.07);
+  --btnB: rgba(255,255,255,.03);
+  --btnBorder: rgba(255,255,255,.18);
+  --accent:#6faad6;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+
+body{
+  font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:var(--text);
+  background: radial-gradient(120% 120% at 50% 0%, var(--bg1), var(--bg0));
+  display:flex;
   align-items:center;
   justify-content:center;
-  padding:10px 18px;
-  border-radius:18px;
-  border:1px solid var(--glass-border);
-  background:var(--glass-bg);
-  color:var(--text-main);
-  text-decoration:none;
 }
-.btn.primary{ border-color:var(--accent); color:var(--accent); }
+
+/* Page */
+.page{
+  width:100%;
+  max-width: 480px;
+  padding: 28px 18px 34px;
+  text-align:center;
+}
+
+.title{
+  font-size: 3.0rem;
+  line-height:1.05;
+  font-weight: 800;
+  letter-spacing: .3px;
+  margin-bottom: 10px;
+  text-shadow: 0 10px 24px rgba(0,0,0,.35);
+}
+
+.subtitle{
+  font-size: 1.05rem;
+  color: var(--sub);
+  margin-bottom: 22px;
+}
+
+/* Panel (the rounded glass frame around the diamond cluster) */
+.panel{
+  position:relative;
+  border-radius: 28px;
+  padding: 28px 18px 18px;
+  background: linear-gradient(180deg, var(--panelA), var(--panelB));
+  border: 1px solid var(--panelBorder);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    0 28px 60px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+/* Cluster */
+.diamondCluster{
+  position:relative;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto;
+}
+
+/* Clickable diamond */
+.diamond{
+  position:absolute;
+  width: 150px;
+  height: 150px;
+  transform: rotate(45deg);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  border: 1px solid var(--glassBorder);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.14);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;          /* kill underline */
+  color: var(--text);            /* kill purple/blue link color */
+  -webkit-tap-highlight-color: transparent;
+  cursor:pointer;
+}
+
+/* Inner rim (NO X BARS) */
+.diamond::after{
+  content:"";
+  position:absolute;
+  inset: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+/* Soft highlight */
+.diamond::before{
+  content:"";
+  position:absolute;
+  inset: 0;
+  border-radius: 18px;
+  background:
+    radial-gradient(90px 90px at 22% 22%, rgba(255,255,255,.14), transparent 60%),
+    radial-gradient(110px 110px at 78% 28%, rgba(111,170,214,.10), transparent 62%);
+  pointer-events:none;
+}
+
+/* label inside diamond */
+.diamond > .label{
+  transform: rotate(-45deg);
+  text-align:center;
+  width: 86%;
+  z-index: 2;
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+}
+
+.label .main{
+  display:block;
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.label .sub{
+  display:block;
+  margin-top: 6px;
+  font-size: .92rem;
+  color: rgba(232,238,245,.82);
+  text-transform:none;
+  letter-spacing: 0;
+}
+
+/* hover/active */
+.diamond:active{
+  transform: rotate(45deg) scale(.98);
+}
+.diamond:hover{
+  border-color: rgba(111,170,214,.38);
+}
+
+/* Positions: overlapped like your canonical screenshot */
+.dTop   { top: 10px; left: 65px; }
+.dLeft  { top: 65px; left: 10px; }
+.dRight { top: 65px; right:10px; }
+.dBottom{ bottom:10px; left:65px; }
+
+/* Footer inside panel */
+.panelFooter{
+  margin-top: 18px;
+  font-size: .82rem;
+  color: rgba(185,198,211,.70);
+  letter-spacing: .8px;
+}
+
+/* Make panel content breathe on small screens */
+@media (max-width: 380px){
+  .title{font-size:2.5rem}
+  .diamondCluster{width:250px;height:250px}
+  .diamond{width:135px;height:135px}
+  .dTop{top:8px;left:57px}
+  .dLeft{top:57px;left:8px}
+  .dRight{top:57px;right:8px}
+  .dBottom{bottom:8px;left:57px}
+}

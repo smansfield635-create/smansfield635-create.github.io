@@ -1,263 +1,210 @@
-/* FILE: /assets/ui.css  (TNT)
-   CANONICAL DIAMOND UI — LOCKED (core diamond pages)
-*/
+/* =========================================================
+   CANONICAL DIAMOND UI — LOCKED
+   Core diamond pages use: .page + .panel + .diamond-cluster
+   Door-only pages must add: .doorOnly on <body>
+   ========================================================= */
 
 :root{
-  --bg0:#08131b;
-  --bg1:#0a1721;
-  --bg2:#08121a;
+  --bg-top:#0b1a26;
+  --bg-bottom:#07131d;
 
-  --panelA:rgba(255,255,255,.075);
-  --panelB:rgba(255,255,255,.03);
-  --stroke:rgba(255,255,255,.16);
-  --stroke2:rgba(255,255,255,.10);
+  --panel-bg:rgba(255,255,255,.06);
+  --panel-bg2:rgba(255,255,255,.03);
+  --panel-border:rgba(255,255,255,.16);
 
-  --glass:rgba(255,255,255,.10);
-  --glass2:rgba(255,255,255,.06);
+  --glass:rgba(255,255,255,.09);
+  --glass-border:rgba(255,255,255,.18);
+  --glass-inner:rgba(255,255,255,.08);
 
-  --text:#e8eef6;
-  --muted:#b8c6d4;
+  --text:#e8eef5;
+  --sub:#b9c6d3;
 
   --accent:#6faad6;
-  --shadow:0 18px 55px rgba(0,0,0,.45);
+  --accent2:#8bc4ea;
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
+html,body{width:100%;height:100%}
+
 body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   color:var(--text);
   background:
-    radial-gradient(900px 700px at 50% -10%, #102434 0%, transparent 60%),
-    radial-gradient(900px 800px at 50% 110%, #0a2232 0%, transparent 55%),
-    linear-gradient(180deg,var(--bg0),var(--bg2));
+    radial-gradient(120% 120% at 50% 0%, var(--bg-top), var(--bg-bottom));
   display:flex;
-  align-items:center;
   justify-content:center;
-  padding:22px;
+  align-items:flex-start;
 }
-
-a{color:inherit;text-decoration:none}
-a:visited{color:inherit}
-a:hover{filter:brightness(1.06)}
 
 .page{
   width:100%;
-  max-width:430px;
+  max-width:460px;
+  padding:28px 18px 40px;
   text-align:center;
 }
 
-.hero{margin:0 0 16px}
 .title{
-  font-size:52px;
-  line-height:1.04;
-  letter-spacing:-.02em;
+  font-size:3.1rem;
   font-weight:800;
-  text-shadow:0 10px 40px rgba(0,0,0,.35);
+  letter-spacing:.2px;
+  margin-top:18px;
 }
+
 .subtitle{
   margin-top:10px;
-  font-size:18px;
-  color:var(--muted);
+  font-size:1.15rem;
+  color:var(--sub);
 }
 
 .panel{
-  margin-top:18px;
-  position:relative;
+  margin:26px auto 0;
+  padding:26px 16px 18px;
   border-radius:28px;
-  padding:26px 18px 18px;
-  background:linear-gradient(180deg,var(--panelA),var(--panelB));
-  border:1px solid var(--stroke);
+  background:linear-gradient(180deg,var(--panel-bg),var(--panel-bg2));
+  border:1px solid var(--panel-border);
   backdrop-filter:blur(18px);
   -webkit-backdrop-filter:blur(18px);
-  box-shadow:var(--shadow);
+  position:relative;
   overflow:hidden;
 }
 
-.panel::before{
-  content:"";
-  position:absolute;
-  inset:14px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.08);
-  pointer-events:none;
+.footer{
+  margin-top:16px;
+  font-size:.85rem;
+  color:rgba(255,255,255,.55);
+  letter-spacing:.08em;
+  text-transform:uppercase;
 }
 
-.diamondCluster{
+/* =======================
+   DIAMOND CLUSTER (Door)
+   ======================= */
+
+.diamond-cluster{
   position:relative;
-  width:260px;
-  height:260px;
-  margin:6px auto 18px;
+  width:270px;
+  height:270px;
+  margin:4px auto 0;
 }
 
+/* clickable diamonds */
 .diamond{
   position:absolute;
-  width:136px;
-  height:136px;
+  width:128px;
+  height:128px;
   transform:rotate(45deg);
   border-radius:18px;
-  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.05));
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow:
-    0 16px 40px rgba(0,0,0,.28),
-    inset 0 1px 0 rgba(255,255,255,.20);
+  background:var(--glass);
+  border:1px solid var(--glass-border);
   backdrop-filter:blur(16px);
   -webkit-backdrop-filter:blur(16px);
   display:flex;
-  align-items:center;
   justify-content:center;
-  text-align:center;
-  padding:10px;
+  align-items:center;
+  text-decoration:none;
+  color:var(--text);
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
   cursor:pointer;
 }
 
+/* inner inset ONLY (NO CROSS / NO X) */
 .diamond::after{
   content:"";
   position:absolute;
   inset:12px;
   border-radius:14px;
-  border:1px solid rgba(255,255,255,.10);
-  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
-  pointer-events:none;
+  border:1px solid var(--glass-inner);
+  opacity:.95;
 }
 
 .diamond span{
   transform:rotate(-45deg);
   display:block;
-  width:100%;
-  padding:8px 6px;
+  width:110px;
+  text-align:center;
+  line-height:1.25;
+  font-size:.9rem;
 }
 
 .diamond strong{
   display:block;
-  font-size:18px;
   font-weight:800;
   letter-spacing:.08em;
+  text-transform:uppercase;
+  font-size:.95rem;
+  margin-bottom:6px;
 }
 
-.diamond em{
-  display:block;
-  margin-top:8px;
-  font-style:normal;
-  font-size:15px;
-  color:rgba(232,238,246,.78);
+/* Door positions */
+.diamond.top{top:0;left:71px}
+.diamond.right{top:71px;right:0}
+.diamond.bottom{bottom:0;left:71px}
+.diamond.left{top:71px;left:0}
+
+/* softer hover/press */
+.diamond:active{
+  transform:rotate(45deg) scale(.98);
+  border-color:rgba(111,170,214,.55);
 }
 
-.diamond.top{top:6px;left:62px}
-.diamond.right{top:62px;right:6px}
-.diamond.bottom{bottom:6px;left:62px}
-.diamond.left{top:62px;left:6px}
+/* =======================
+   BUTTONS (non-door pages)
+   ======================= */
 
-.diamondCenterDot{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:22px;
-  height:22px;
-  transform:translate(-50%,-50%);
-  border-radius:50%;
-  background:rgba(255,255,255,.55);
-  filter:blur(.1px);
-  box-shadow:0 0 22px rgba(255,255,255,.22);
-  pointer-events:none;
-}
-
-.diamondCross{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:210px;
-  height:210px;
-  transform:translate(-50%,-50%) rotate(45deg);
-  pointer-events:none;
-}
-.diamondCross::before,
-.diamondCross::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:220px;
-  height:34px;
-  transform:translate(-50%,-50%);
-  border-radius:18px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.10);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-}
-.diamondCross::after{
-  transform:translate(-50%,-50%) rotate(90deg);
-}
-
-.card{
-  margin:10px auto 10px;
-  max-width:360px;
-  text-align:left;
-  padding:18px;
-  border-radius:18px;
-  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
-  border:1px solid var(--stroke2);
-}
-
-.cardTitle{
-  font-size:22px;
-  margin-bottom:8px;
-  font-weight:800;
-}
-.cardText{
-  color:var(--muted);
-  font-size:15px;
-  line-height:1.35;
-}
-
-.btnRow{
+.buttons{
   display:flex;
+  gap:12px;
+  justify-content:center;
   flex-wrap:wrap;
-  gap:10px;
   margin-top:14px;
 }
 
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:12px 16px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.16);
+.btn,button{
+  appearance:none;
+  border:none;
+  text-decoration:none;
+  padding:14px 22px;
+  border-radius:22px;
   background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.14);
   color:var(--text);
-  min-width:140px;
+  font-size:1.02rem;
+  cursor:pointer;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
 }
 
-.btn.primary{
-  border-color:rgba(111,170,214,.55);
-  background:linear-gradient(180deg,rgba(111,170,214,.25),rgba(255,255,255,.05));
-  color:#d7ecff;
+.btn.primary,button.primary{
+  border-color:rgba(111,170,214,.7);
+  box-shadow:0 0 0 1px rgba(111,170,214,.15) inset;
 }
 
-.footer{
-  margin-top:10px;
-  font-size:13px;
-  color:rgba(232,238,246,.62);
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  padding-bottom:6px;
+.btn:active,button:active{transform:scale(.98)}
+
+.checkCard{
+  text-align:left;
+  margin:0 auto;
+  padding:18px 16px;
+  border-radius:22px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.14);
 }
 
-/* Mobile */
-@media (max-width:420px){
-  .title{font-size:46px}
-  .diamondCluster{width:248px;height:248px}
-  .diamond{width:128px;height:128px}
-  .diamond.top{left:60px}
-  .diamond.bottom{left:60px}
-}/* =========================================================
-   TNT FIX — REMOVE CROSS OVERLAY (CANONICAL)
-   Reason: causes white X artifact on diamond cluster
-   ========================================================= */
+.checkCard h2{
+  font-size:2.0rem;
+  margin-bottom:8px;
+}
 
-/* Remove cross bars completely */
-.diamondCross,
-.diamondCross::before,
-.d
+.checkCard p{
+  color:var(--sub);
+  font-size:1.02rem;
+  line-height:1.45;
+}
+
+/* =======================
+   HARD RULE: Door diamonds ONLY on /landing/
+   ======================= */
+
+/* If NOT doorOnly, force-hide any door cluster accidentally included */
+body:not(.doorOnly) .diamond-cluster{display:none !important;}

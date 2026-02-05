@@ -1,57 +1,33 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Alignment Check · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Final Check · Geodiametrics</title>
+  <link rel="stylesheet" href="/assets/ui.css" />
 </head>
+
 <body>
-  <main class="page">
+  <div class="page">
     <div class="title">Final check</div>
     <div class="subtitle">Proceed only if you intend to complete it.</div>
 
-    <section class="panel">
-      <div class="checkCard">
-        <h2>Before you start</h2>
+    <div class="panel">
+      <div class="check">
+        <h3>Before you start</h3>
         <p>Do you have about <strong>3 minutes</strong> right now?</p>
-        <div class="buttons">
-          <button class="primary" data-q="t">Yes</button>
-          <button data-q="t">No</button>
-        </div>
-      </div>
-
-      <div class="checkCard" style="margin-top:12px;">
-        <h2>Before you start</h2>
-        <p>Will you take this seriously and <strong>finish once you begin</strong>?</p>
-        <div class="buttons">
-          <button class="primary" data-q="s">Yes</button>
-          <button data-q="s">No</button>
-        </div>
-      </div>
-
-      <div class="checkCard" style="margin-top:12px;">
-        <h2>Before you start</h2>
+        <p>Will you take this seriously and <strong>finish</strong> once you begin?</p>
         <p>Are you ready to find out how aligned you are with yourself?</p>
-        <div class="buttons">
-          <button class="primary" data-q="a">Yes</button>
-          <button data-q="a">No</button>
-        </div>
-      </div>
 
-      <div class="buttons" style="margin-top:16px;">
-        <a class="btn primary" id="go" href="/landing/archetype/">Yes, start</a>
-        <a class="btn" href="/">Skip, enter site</a>
-        <a class="btn" href="/landing/">Not now</a>
+        <div class="buttons">
+          <a class="btn primary" href="/landing/archetype/" style="text-decoration:none;">Yes, start</a>
+          <a class="btn" href="/site/" style="text-decoration:none;">Skip, enter site</a>
+          <a class="btn" href="/landing/" style="text-decoration:none;">Not now</a>
+        </div>
       </div>
 
       <div class="footer">Canonical · Stable · © Geodiametrics</div>
-    </section>
-  </main>
-
-  <script>
-    // Keeps the page purely behavioral; no layout artifacts.
-    // Optional: you can later enforce "all yes" before enabling #go.
-  </script>
+    </div>
+  </div>
 </body>
 </html>

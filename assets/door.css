@@ -1,7 +1,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:radial-gradient(120% 120% at 50% 0%,#0b1f33,#050c14);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#eaf2fb}
 
-/* Move content DOWN (no more vertically-centered squeeze) */
+/* Keep content DOWN, not vertically centered */
 .door{
   min-height:100vh;
   display:flex;
@@ -15,37 +15,39 @@ html,body{height:100%;background:radial-gradient(120% 120% at 50% 0%,#0b1f33,#05
 h1{font-size:2.6rem;margin-bottom:.4rem;font-weight:800}
 .subtitle{opacity:.75;margin-bottom:28px}
 
-/* Bigger stage + bigger gaps between diamonds */
+/* BIGGER stage + NO overlap */
 .diamond-wrap{
   position:relative;
-  width:300px;
-  height:300px;
+  width:360px;
+  height:360px;
   margin-top:18px;
 }
 
+/* Slightly smaller diamonds + more separation */
 .diamond{
   position:absolute;
-  width:124px;
-  height:124px;
+  width:112px;
+  height:112px;
   transform:rotate(45deg);
   background:rgba(255,255,255,.08);
   border-radius:14px;
   backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.12);
   display:flex;
   align-items:center;
   justify-content:center;
   text-decoration:none;
   color:inherit;
-  transition:background .2s ease;
+  transition:background .2s ease,border-color .2s ease;
 }
-.diamond:hover{background:rgba(255,255,255,.14)}
-.diamond span{transform:rotate(-45deg);font-size:.9rem;letter-spacing:.05em;line-height:1.3}
+.diamond:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.18)}
+.diamond span{transform:rotate(-45deg);font-size:.9rem;letter-spacing:.05em;line-height:1.25}
 .diamond span strong{display:block;font-weight:800;margin-bottom:4px}
 
-/* Pulled apart positions (spread) */
-.top{top:0;left:88px}
-.right{top:88px;right:0}
-.bottom{bottom:0;left:88px}
-.left{top:88px;left:0}
+/* PULLED APART (no overlap) */
+.top{top:0;left:124px}
+.right{top:124px;right:0}
+.bottom{bottom:0;left:124px}
+.left{top:124px;left:0}
 
 footer{margin-top:34px;font-size:.75rem;opacity:.6}

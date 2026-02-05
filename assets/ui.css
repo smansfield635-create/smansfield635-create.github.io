@@ -1,184 +1,54 @@
-/* TNT — /assets/ui.css
-   CANONICAL DIAMOND UI (NO FORCED X)
-   Applies to ALL core diamond pages (non-leaf)
-*/
-
 :root{
   --bg0:#07131d;
   --bg1:#0b1a26;
-
-  --text:#eaf1f8;
-  --muted:#b7c3cf;
-
-  --glass:rgba(255,255,255,.08);
-  --glass2:rgba(255,255,255,.05);
-  --stroke:rgba(255,255,255,.14);
-  --stroke2:rgba(255,255,255,.10);
-
-  --glow:rgba(255,255,255,.10);
-
-  /* Diamond sizing */
-  --cluster:clamp(280px,72vw,440px);
-  --diamond:calc(var(--cluster) * .46);
-  --gap:calc(var(--cluster) * .18); /* increase to pull apart */
+  --text:#e8eef5;
+  --sub:#b9c6d3;
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
+
 html,body{height:100%}
 body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   color:var(--text);
   background:radial-gradient(120% 120% at 50% 0%, var(--bg1), var(--bg0));
 }
 
-/* Links should never look like default links */
-a, a:visited{color:inherit;text-decoration:none}
-a:focus-visible, button:focus-visible{
-  outline:2px solid rgba(111,170,214,.75);
-  outline-offset:3px;
-  border-radius:14px;
-}
-
-/* Page frame */
 .page{
-  min-height:100svh;
+  min-height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
-  padding:40px 16px 28px;
-  gap:18px;
+  padding:48px 18px 28px;
   text-align:center;
 }
 
-/* Title block */
-.title{
-  font-size:clamp(34px,7vw,52px);
-  letter-spacing:.2px;
+.hero h1{
+  font-size:clamp(2.2rem,6vw,3.2rem);
   font-weight:800;
+  letter-spacing:-0.02em;
 }
-.subtitle{
-  font-size:clamp(14px,3.6vw,18px);
-  color:var(--muted);
-}
-
-/* Panel */
-.panel{
-  width:min(520px, 100%);
-  padding:18px 16px 20px;
-  border-radius:28px;
-  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  border:1px solid var(--stroke);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  box-shadow:0 24px 70px rgba(0,0,0,.28);
-}
-
-/* Door cluster — centered + responsive */
-.doorStage{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:14px 0 8px;
-}
-.doorCluster{
-  position:relative;
-  width:var(--cluster);
-  height:var(--cluster);
-  margin:0 auto;
-}
-
-/* Diamonds */
-.doorDiamond{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:var(--diamond);
-  height:var(--diamond);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:18px;
-  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
-  border:1px solid var(--stroke);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  box-shadow:
-    0 18px 45px rgba(0,0,0,.22),
-    inset 0 1px 0 rgba(255,255,255,.18);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-}
-
-/* Inner bevel (NO X) */
-.doorDiamond::before{
-  content:"";
-  position:absolute;
-  inset:12px;
-  border-radius:14px;
-  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-  border:1px solid var(--stroke2);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
-}
-
-/* Content un-rotated */
-.doorDiamond > span{
-  position:relative;
-  transform:rotate(-45deg);
-  display:block;
-  line-height:1.12;
-  text-align:center;
-  padding:10px 10px;
-}
-.doorDiamond strong{
-  display:block;
-  font-weight:900;
-  letter-spacing:.8px;
-}
-.doorDiamond em{
-  display:block;
-  font-style:normal;
-  color:rgba(234,241,248,.72);
-  margin-top:6px;
-  font-weight:650;
-}
-
-/* Positions — pulled apart (no overlap) */
-.doorDiamond.top{
-  transform:translate(-50%, calc(-50% - var(--gap))) rotate(45deg);
-}
-.doorDiamond.right{
-  transform:translate(calc(-50% + var(--gap)), -50%) rotate(45deg);
-}
-.doorDiamond.bottom{
-  transform:translate(-50%, calc(-50% + var(--gap))) rotate(45deg);
-}
-.doorDiamond.left{
-  transform:translate(calc(-50% - var(--gap)), -50%) rotate(45deg);
-}
-
-/* Hover/press */
-.doorDiamond:hover{border-color:rgba(255,255,255,.22)}
-.doorDiamond:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
-.doorDiamond.top:active{transform:translate(-50%, calc(-50% - var(--gap))) rotate(45deg) scale(.99)}
-.doorDiamond.right:active{transform:translate(calc(-50% + var(--gap)), -50%) rotate(45deg) scale(.99)}
-.doorDiamond.bottom:active{transform:translate(-50%, calc(-50% + var(--gap))) rotate(45deg) scale(.99)}
-.doorDiamond.left:active{transform:translate(calc(-50% - var(--gap)), -50%) rotate(45deg) scale(.99)}
-
-/* Footer */
-.footer{
+.hero p{
   margin-top:10px;
-  font-size:13px;
-  color:rgba(234,241,248,.62);
-  letter-spacing:.6px;
+  font-size:clamp(1rem,3.2vw,1.15rem);
+  color:var(--sub);
 }
 
-/* Small screens: keep separation but prevent overflow */
-@media (max-width:360px){
-  :root{
-    --cluster:clamp(260px,78vw,380px);
-    --gap:calc(var(--cluster) * .16);
-  }
+.doorWrap{
+  width:min(520px, 92vw);
+  margin-top:26px;
+  padding:22px 16px 18px;
+  border-radius:26px;
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.16);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+}
+
+.canon{
+  margin-top:18px;
+  font-size:.78rem;
+  color:rgba(185,198,211,.75);
+  letter-spacing:.02em;
 }

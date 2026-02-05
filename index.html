@@ -1,55 +1,22 @@
-<!-- FILE: /index.html  (TNT) -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Door · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css" />
+  <title>Geodiametrics</title>
+  <meta http-equiv="refresh" content="0; url=/landing/" />
+  <script>
+    (function () {
+      // Preserve ?v=1 etc
+      var qs = window.location.search || "";
+      var hash = window.location.hash || "";
+      window.location.replace("/landing/" + qs + hash);
+    })();
+  </script>
 </head>
 <body>
-  <main class="page">
-    <header class="hero">
-      <h1 class="title">Be the first.</h1>
-      <p class="subtitle">The door explains. The gate routes.</p>
-    </header>
-
-    <section class="panel">
-      <div class="diamondCluster">
-        <!-- Start Quiz goes to the in-page final check (no skipping questions) -->
-        <a class="diamond top" href="#final-check" aria-label="Start quiz (go to final check)">
-          <span><strong>START QUIZ</strong><em>~3 minutes</em></span>
-        </a>
-
-        <a class="diamond right" href="/site/" aria-label="Enter site">
-          <span><strong>ENTER</strong><em>Go to site</em></span>
-        </a>
-
-        <a class="diamond bottom" href="/landing/info/" aria-label="Learn more">
-          <span><strong>LEARN MORE</strong><em>What this is</em></span>
-        </a>
-
-        <a class="diamond left" href="/landing/" aria-label="Exit (return)">
-          <span><strong>EXIT</strong><em>Leave now</em></span>
-        </a>
-
-        <div class="diamondCenterDot" aria-hidden="true"></div>
-        <div class="diamondCross" aria-hidden="true"></div>
-      </div>
-
-      <section id="final-check" class="card">
-        <h2 class="cardTitle">Final check</h2>
-        <p class="cardText">Proceed only if you intend to complete it. Ready?</p>
-
-        <div class="btnRow">
-          <a class="btn primary" href="/landing/check.html">Yes, start</a>
-          <a class="btn" href="/site/">Skip, enter site</a>
-          <a class="btn" href="#top">Not now</a>
-        </div>
-      </section>
-
-      <footer class="footer">Canonical · Stable · © Geodiametrics</footer>
-    </section>
-  </main>
+  <noscript>
+    <p><a href="/landing/">Continue to landing</a></p>
+  </noscript>
 </body>
 </html>

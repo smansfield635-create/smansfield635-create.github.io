@@ -1,60 +1,115 @@
-/* ===== DOOR STAGE ===== */
+/* =========================
+   DOOR — CANONICAL GEOMETRY
+   No overlap. No ghost layers. No X.
+   ========================= */
 
-.diamond-wrap{
-  position:relative;
-  width:460px;
-  height:460px;
-  margin:48px auto 0;   /* PUSH DOWN FROM TITLE */
+:root{
+  --glassA: rgba(255,255,255,.10);
+  --glassB: rgba(255,255,255,.06);
+  --stroke: rgba(255,255,255,.18);
+  --stroke2: rgba(255,255,255,.10);
+  --shadow: rgba(0,0,0,.28);
+
+  /* TUNE THESE TWO ONLY */
+  --d: 140px;          /* diamond size */
+  --gap: 18px;         /* space between diamonds */
 }
 
-/* ===== DIAMOND BASE ===== */
+@media (min-width: 420px){
+  :root{ --d: 154px; --gap: 22px; }
+}
+@media (min-width: 520px){
+  :root{ --d: 165px; --gap: 26px; }
+}
 
-.diamond{
+.doorCluster{
+  position:relative;
+  width:calc((var(--d) * 2) + (var(--gap) * 2));
+  height:calc((var(--d) * 2) + (var(--gap) * 2));
+  margin:18px auto 0;
+}
+
+.doorDiamond{
   position:absolute;
-  width:120px;
-  height:120px;
-  transform:rotate(45deg);
-  background:rgba(255,255,255,.065);
-  border-radius:16px;
-  backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.12);
+  width:var(--d);
+  height:var(--d);
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
+  text-decoration:none;
+  color:rgba(232,238,245,.92);
+  transform:rotate(45deg);
+  border-radius:18px;
+
+  /* single clean glass */
+  background:linear-gradient(145deg, var(--glassA), var(--glassB));
+  border:1px solid var(--stroke);
+  box-shadow:
+    0 18px 40px var(--shadow),
+    inset 0 1px 0 rgba(255,255,255,.12);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  user-select:none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* TEXT UNROTATE */
-.diamond span{
+/* subtle inner frame (NOT an X) */
+.doorDiamond::after{
+  content:"";
+  position:absolute;
+  inset:12px;
+  border-radius:14px;
+  border:1px solid var(--stroke2);
+  pointer-events:none;
+}
+
+/* rotate text back */
+.doorDiamond > *{
   transform:rotate(-45deg);
-  text-align:center;
-  font-size:.9rem;
-  line-height:1.25;
 }
 
-.diamond span strong{
+.doorDiamond strong{
   display:block;
-  font-weight:700;
-  margin-bottom:4px;
+  font-weight:800;
+  letter-spacing:.08em;
+  font-size:1rem;
+  margin-bottom:8px;
 }
 
-/* ===== FINAL SPACING (THIS IS THE FIX) ===== */
-
-.top{
-  top:16px;
-  left:170px;
+.doorDiamond span{
+  display:block;
+  font-size:.95rem;
+  color:rgba(185,198,211,.92);
 }
 
-.right{
-  top:170px;
-  right:16px;
+/* POSITIONS — GUARANTEED NO OVERLAP */
+.doorDiamond.top{
+  top:0;
+  left:50%;
+  transform:translateX(-50%) rotate(45deg);
+}
+.doorDiamond.bottom{
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%) rotate(45deg);
+}
+.doorDiamond.left{
+  left:0;
+  top:50%;
+  transform:translateY(-50%) rotate(45deg);
+}
+.doorDiamond.right{
+  right:0;
+  top:50%;
+  transform:translateY(-50%) rotate(45deg);
 }
 
-.bottom{
-  bottom:16px;
-  left:170px;
+/* hover/press */
+.doorDiamond:active{
+  transform:translateX(-50%) rotate(45deg) scale(.985);
 }
-
-.left{
-  top:170px;
-  left:16px;
+.doorDiamond.left:active,
+.doorDiamond.right:active{
+  transform:translateY(-50%) rotate(45deg) scale(.985);
 }

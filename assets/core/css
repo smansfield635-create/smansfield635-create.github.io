@@ -1,0 +1,11 @@
+:root{
+  --bg0:#07131d;
+  --bg1:#0b1a26;
+  --txt:#e8eef5;
+  --muted:#b9c6d3;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--txt)}
+a{color:inherit;text-decoration:none}

@@ -3,22 +3,56 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Geodiametrics</title>
-
-  <link rel="stylesheet" href="/assets/core.css" />
+  <title>Home · Geodiametrics</title>
+  <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
 </head>
-<body class="bg">
-  <script>
-    // Canonical entry: always go to Door
-    location.replace("/landing/");
-  </script>
-  <noscript>
-    <main class="page">
-      <h1 class="title">Geodiametrics</h1>
-      <p class="subtitle">JavaScript is required to route you to the Door.</p>
-      <p><a href="/landing/">Go to Door</a></p>
-    </main>
-  </noscript>
+<body>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Home</h1>
+      <p class="gSub">One gate. Four routes.</p>
+    </header>
+
+    <section class="gPanel" aria-label="Home routing">
+      <div class="gCluster" role="navigation" aria-label="Core routes">
+        <a class="gKey gTop" href="/laws/" aria-label="Laws">
+          <span class="gKeyText">
+            <strong>LAWS</strong>
+            Branch
+          </span>
+        </a>
+
+        <a class="gKey gRight" href="/products/" aria-label="Products">
+          <span class="gKeyText">
+            <strong>PRODUCTS</strong>
+            Branch
+          </span>
+        </a>
+
+        <a class="gKey gBottom" href="/gauges/" aria-label="Gauges">
+          <span class="gKeyText">
+            <strong>GAUGES</strong>
+            Branch
+          </span>
+        </a>
+
+        <a class="gKey gLeft" href="/links/" aria-label="Links">
+          <span class="gKeyText">
+            <strong>LINKS</strong>
+            Branch
+          </span>
+        </a>
+      </div>
+
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/landing/">Back</a>
+        <a class="gBtn" href="/landing/exit/">Exit</a>
+      </div>
+
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
 </body>
 </html>

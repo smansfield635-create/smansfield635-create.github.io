@@ -1,48 +1,50 @@
+<!-- TNT — /landing/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Door · Geodiametrics</title>
-
-  <link rel="stylesheet" href="/assets/core.css" />
-  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
-
-<body class="bg">
+<body>
   <main class="page">
-    <h1 class="title">Be the first.</h1>
-    <p class="subtitle">The door explains. The gate routes.</p>
+    <div>
+      <div class="title">Be the first.</div>
+      <div class="subtitle">The door explains. The gate routes.</div>
+    </div>
 
-    <section class="panel">
-      <div class="doorCluster" aria-label="Door options">
-        <a class="diamond dTop" href="/landing/check.html" aria-label="Run alignment diagnostic">
-          <span class="dText">
-            <strong>RUN</strong>
-            Alignment<br/>diagnostic
-          </span>
-        </a>
+    <section class="panel" aria-label="Door">
+      <div class="doorStage">
+        <div class="doorCluster" role="navigation" aria-label="Door options">
+          <a class="doorDiamond top" href="/landing/check.html">
+            <span>
+              <strong>RUN</strong>
+              <em>Alignment diagnostic</em>
+            </span>
+          </a>
 
-        <a class="diamond dLeft" href="/landing/exit/" aria-label="Exit">
-          <span class="dText">
-            <strong>EXIT</strong>
-            Leave now
-          </span>
-        </a>
+          <a class="doorDiamond right" href="/home/">
+            <span>
+              <strong>ENTER</strong>
+              <em>Go to site</em>
+            </span>
+          </a>
 
-        <a class="diamond dRight" href="/home/" aria-label="Enter site">
-          <span class="dText">
-            <strong>ENTER</strong>
-            Go to site
-          </span>
-        </a>
+          <a class="doorDiamond bottom" href="/landing/info/">
+            <span>
+              <strong>LEARN</strong>
+              <em>What this is</em>
+            </span>
+          </a>
 
-        <a class="diamond dBottom" href="/landing/info/" aria-label="Learn more">
-          <span class="dText">
-            <strong>LEARN</strong>
-            What this is
-          </span>
-        </a>
+          <a class="doorDiamond left" href="/landing/exit/">
+            <span>
+              <strong>EXIT</strong>
+              <em>Leave now</em>
+            </span>
+          </a>
+        </div>
       </div>
 
       <div class="footer">Canonical · Stable · © Geodiametrics</div>
@@ -50,3 +52,4 @@
   </main>
 </body>
 </html>
+```0

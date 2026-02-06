@@ -1,160 +1,109 @@
-<!-- TNT: /laws/tier-1/nonsub/index.html  (FULL REPLACEMENT) -->
+<!-- TNT: /laws/tier-1/nosub/index.html (FULL REPLACEMENT) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Non-Substitutability · Geodiametrics</title>
+  <title>Tier 1 · Shortcuts · Geodiametrics</title>
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
-
   <style>
-    /* Leaf rules: low load, expandable bubbles, lens updates title+subtitle+content */
-    .leafNote{max-width:520px;margin:0 auto 14px;text-align:center;opacity:.9;line-height:1.35}
-    .lensBar{display:flex;justify-content:center;margin:10px 0 18px}
-    .lensWrap{position:relative;display:flex;gap:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px;width:min(520px,100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
-    .lensBtn{flex:1;border:0;background:transparent;color:rgba(241,246,251,.78);font-weight:800;padding:12px 14px;border-radius:999px;cursor:pointer;z-index:2}
-    .lensBtn.active{color:#fff}
-    .lensIndicator{position:absolute;top:6px;bottom:6px;width:calc(50% - 6px);left:6px;border-radius:999px;background:linear-gradient(180deg,#2aa4ff,#1976d2);box-shadow:0 8px 22px rgba(30,144,255,.35);transition:transform .22s ease}
-    .lensIndicator.right{transform:translateX(100%)}
-
-    details.bubble{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);border-radius:18px;padding:14px 16px;margin:0 0 12px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
-    details.bubble summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;font-weight:900}
-    details.bubble summary::-webkit-details-marker{display:none}
-    .pillNum{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);font-weight:900}
-    .sumText{display:flex;flex-direction:column;gap:2px}
-    .sumTitle{font-size:18px;line-height:1.15}
-    .sumMicro{font-size:12px;opacity:.78;font-weight:800;letter-spacing:.02em}
-    .bodyText{margin-top:10px;line-height:1.55;opacity:.95}
-    .bodyText p{margin:0 0 10px}
-    .bodyText p:last-child{margin:0}
-
-    /* Hide inactive lens blocks */
-    .scientificBlock{display:none}
-    .humanBlock{display:block}
-
-    /* Keep within panel */
-    .gPanel{padding-top:22px}
-
-    /* Mobile tighten */
-    @media (max-width:420px){
-      .sumTitle{font-size:17px}
-      details.bubble{padding:13px 14px}
-    }
+    .lensWrap{display:flex;justify-content:center;margin:10px 0 12px}
+    .lensToggle{display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px}
+    .lensBtn{border:0;background:transparent;color:rgba(241,246,251,.75);font-weight:800;padding:10px 18px;border-radius:999px;cursor:pointer}
+    .lensBtn.isActive{color:#fff;background:linear-gradient(180deg,#2aa4ff,#1976d2);box-shadow:0 8px 20px rgba(30,144,255,.30)}
+    body[data-lens="scientific"] .lensHuman{display:none}
+    body[data-lens="human"] .lensSci{display:none}
+    .bubbles{margin-top:14px}
+    details.b{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:14px 16px;margin:0 0 12px}
+    details.b summary{cursor:pointer;font-weight:900;list-style:none}
+    details.b summary::-webkit-details-marker{display:none}
+    .bBody{margin-top:10px;line-height:1.55}
+    .pad{scroll-margin-top:120px}
+    .note{opacity:.82;text-align:center;margin-top:6px}
   </style>
 </head>
-
-<body>
+<body data-lens="human">
   <main class="gPage">
     <header class="gHeader">
-      <h1 class="gTitle" id="pageTitle">No shortcuts</h1>
-      <p class="gSub" id="pageSub">Missing requirements cannot be offset.</p>
-    </header>
+      <h1 class="gTitle">Shortcuts</h1>
+      <p class="gSub">Tier 1 · Foundational function.</p>
 
-    <section class="gPanel" aria-label="Tier 1 leaf: Non-substitutability constraints">
-      <div class="leafNote" id="leafNote">
-        Expand a bubble to read. Toggle lens to switch language (same law).
-      </div>
-
-      <!-- Lens -->
-      <div class="lensBar" aria-label="Lens toggle">
-        <div class="lensWrap">
-          <div class="lensIndicator" id="lensIndicator"></div>
-          <button class="lensBtn active" id="btnHuman" type="button" onclick="setLens('human')">Human</button>
+      <div class="lensWrap" aria-label="Lens toggle">
+        <div class="lensToggle">
+          <button class="lensBtn isActive" id="btnHuman" type="button" onclick="setLens('human')">Human</button>
           <button class="lensBtn" id="btnSci" type="button" onclick="setLens('scientific')">Scientific</button>
         </div>
       </div>
 
-      <!-- Bubble 1 -->
-      <details class="bubble" open>
-        <summary>
-          <span class="pillNum">1</span>
-          <span class="sumText">
-            <span class="sumTitle" data-human="No tradeoffs" data-sci="Non-Compensation">No tradeoffs</span>
-            <span class="sumMicro" data-human="Meaning" data-sci="Definition">Meaning</span>
+      <p class="gSub note">Diamond routes to bubbles.</p>
+    </header>
+
+    <section class="gPanel" aria-label="Shortcuts leaf diamond">
+      <div class="gCluster" role="navigation" aria-label="Shortcuts bubble routes">
+        <a class="gKey gTop" href="#l6" aria-label="L6">
+          <span class="gKeyText">
+            <strong class="lensHuman">No tradeoffs</strong><span class="lensHuman">Missing ≠ offset</span>
+            <strong class="lensSci">L6</strong><span class="lensSci">Non-compensation</span>
           </span>
-        </summary>
+        </a>
 
-        <div class="bodyText humanBlock">
-          <p><strong>Rule</strong> You can’t “make up for it” somewhere else.</p>
-          <p>When a requirement matters, failing it breaks the run—even if other parts look strong.</p>
-        </div>
-
-        <div class="bodyText scientificBlock">
-          <p><strong>Non-Compensation Law</strong></p>
-          <p>Strength in one required dimension does not compensate for violation in another required constraint.</p>
-        </div>
-      </details>
-
-      <!-- Bubble 2 -->
-      <details class="bubble">
-        <summary>
-          <span class="pillNum">2</span>
-          <span class="sumText">
-            <span class="sumTitle" data-human="No waiting" data-sci="No-Timer Gating">No waiting</span>
-            <span class="sumMicro" data-human="Meaning" data-sci="Definition">Meaning</span>
+        <a class="gKey gRight" href="#l7" aria-label="L7">
+          <span class="gKeyText">
+            <strong class="lensHuman">No time tricks</strong><span class="lensHuman">Time ≠ receipt</span>
+            <strong class="lensSci">L7</strong><span class="lensSci">No-timer gating</span>
           </span>
-        </summary>
+        </a>
 
-        <div class="bodyText humanBlock">
-          <p><strong>Rule</strong> Time doesn’t unlock permission.</p>
-          <p>Waiting is not completion. Progress requires the missing step, receipt, or constraint to be satisfied.</p>
-        </div>
+        <a class="gKey gBottom" href="#how" aria-label="How to use">
+          <span class="gKeyText"><strong>How</strong>Use</span>
+        </a>
 
-        <div class="bodyText scientificBlock">
-          <p><strong>No-Timer Gating Law</strong></p>
-          <p>Time passage cannot substitute for structural completion, receipt, or constraint satisfaction.</p>
-        </div>
-      </details>
+        <a class="gKey gLeft" href="#why" aria-label="Why it matters">
+          <span class="gKeyText"><strong>Why</strong>Meaning</span>
+        </a>
+      </div>
+
+      <div class="bubbles">
+        <div id="l6" class="pad"></div>
+        <details class="b">
+          <summary><span class="lensHuman">No tradeoffs (L6)</span><span class="lensSci">L6 · Non-Compensation Law</span></summary>
+          <div class="bBody lensHuman">Strength in one area doesn’t cancel a missing required condition.</div>
+          <div class="bBody lensSci">Strength in one dimension cannot compensate for violation in another required constraint.</div>
+        </details>
+
+        <div id="l7" class="pad"></div>
+        <details class="b">
+          <summary><span class="lensHuman">No time tricks (L7)</span><span class="lensSci">L7 · No-Timer Gating Law</span></summary>
+          <div class="bBody lensHuman">Waiting doesn’t complete structure. Time cannot replace receipt.</div>
+          <div class="bBody lensSci">Time passage cannot substitute for structural completion, receipt, or constraint satisfaction.</div>
+        </details>
+
+        <div id="how" class="pad"></div>
+        <details class="b"><summary>How</summary><div class="bBody">Switch lens. Expand the ones you need.</div></details>
+
+        <div id="why" class="pad"></div>
+        <details class="b"><summary>Why</summary><div class="bBody">Shortcuts are where systems lie to themselves. This block prevents that.</div></details>
+      </div>
 
       <div class="gActions" aria-label="Navigation controls">
         <a class="gBtn" href="/laws/tier-1/">Back</a>
         <a class="gBtn" href="/laws/">Laws</a>
       </div>
 
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      <footer class="gFooter">TIER 1 · SHORTCUTS · © GEODIAMETRICS</footer>
     </section>
   </main>
 
   <script>
-    function setLens(mode){
-      var isHuman = (mode === 'human');
-
-      // Buttons + pill
-      var btnH = document.getElementById('btnHuman');
-      var btnS = document.getElementById('btnSci');
-      var ind = document.getElementById('lensIndicator');
-      btnH.classList.toggle('active', isHuman);
-      btnS.classList.toggle('active', !isHuman);
-      ind.classList.toggle('right', !isHuman);
-
-      // Title + subtitle swap (keep it short)
-      var title = document.getElementById('pageTitle');
-      var sub = document.getElementById('pageSub');
-
-      if(isHuman){
-        title.textContent = 'No shortcuts';
-        sub.textContent = 'Missing requirements cannot be offset.';
-      } else {
-        title.textContent = 'Non-Substitutability';
-        sub.textContent = 'Non-compensation · no-timer gating.';
-      }
-
-      // Toggle blocks
-      var humanBlocks = document.querySelectorAll('.humanBlock');
-      var sciBlocks = document.querySelectorAll('.scientificBlock');
-      humanBlocks.forEach(function(el){ el.style.display = isHuman ? 'block' : 'none'; });
-      sciBlocks.forEach(function(el){ el.style.display = isHuman ? 'none' : 'block'; });
-
-      // Swap bubble titles + micro labels
-      document.querySelectorAll('[data-human][data-sci]').forEach(function(el){
-        el.textContent = isHuman ? el.getAttribute('data-human') : el.getAttribute('data-sci');
-      });
+    function setLens(next){
+      document.body.setAttribute("data-lens", next);
+      var h = document.getElementById("btnHuman");
+      var s = document.getElementById("btnSci");
+      if(next === "human"){ h.classList.add("isActive"); s.classList.remove("isActive"); }
+      else { s.classList.add("isActive"); h.classList.remove("isActive"); }
     }
-
-    // Initialize
-    setLens('human');
   </script>
 </body>
 </html>

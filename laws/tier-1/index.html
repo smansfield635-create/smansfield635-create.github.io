@@ -1,4 +1,4 @@
-<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — RESTORES TOGGLE + SWAPS HEADER + DIAMOND LABELS) -->
+<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — TWO SEPARATE DIAMONDS, TOGGLE SWAPS DIAMONDS ONLY) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,9 +11,8 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* Toggle bar */
     .lensToggle{
-      display:flex;gap:6px;justify-content:center;margin:10px auto 16px;
+      display:flex;gap:6px;justify-content:center;margin:10px auto 14px;
       background:rgba(255,255,255,.08);padding:6px;border-radius:999px;
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
       max-width:520px;
@@ -29,7 +28,6 @@
       box-shadow:0 6px 18px rgba(30,144,255,.35);
     }
 
-    /* Diamond */
     .diamondWrap{display:flex;justify-content:center;margin:22px 0 18px;}
     .diamond{position:relative;width:260px;height:260px;}
     .face{
@@ -41,7 +39,7 @@
       text-align:center;
       transform:rotate(45deg);
       cursor:pointer;
-      text-decoration:none; /* kill underline */
+      text-decoration:none;
       color:inherit;
     }
     .face:visited{color:inherit}
@@ -49,109 +47,103 @@
       transform:rotate(-45deg);
       display:block;
       padding:10px 12px;
-      line-height:1.15;
+      line-height:1.12;
       width:100%;
+      font-weight:900;
+      font-size:16px;
+      letter-spacing:-0.01em;
     }
-
-    .q{display:block;font-weight:900;font-size:16px;letter-spacing:-0.01em;}
-    .sci{display:block;margin-top:6px;font-weight:800;font-size:13px;opacity:.75;}
 
     .top{top:0;left:60px;}
     .left{left:0;top:60px;}
     .right{right:0;top:60px;}
     .bottom{bottom:0;left:60px;}
 
-    /* Mode switching */
-    body[data-lens="scientific"] .humanOnly{display:none}
-    body[data-lens="human"] .scientificOnly{display:none}
-
-    /* Header copy */
-    .subSci{display:none}
-    .subHuman{display:none}
-    body[data-lens="scientific"] .subSci{display:block}
-    body[data-lens="human"] .subHuman{display:block}
+    /* ONLY ONE DIAMOND VISIBLE AT A TIME */
+    .diamondSet{display:none}
+    .diamondSet.active{display:block}
   </style>
 
   <script>
     function setLens(lens){
-      document.body.setAttribute('data-lens', lens);
-      const bH = document.getElementById('btnHuman');
-      const bS = document.getElementById('btnSci');
+      const human = document.getElementById('setHuman');
+      const sci   = document.getElementById('setScientific');
+      const bH    = document.getElementById('btnHuman');
+      const bS    = document.getElementById('btnSci');
+
       if(lens === 'human'){
-        bH.classList.add('active'); bS.classList.remove('active');
+        human.classList.add('active');  sci.classList.remove('active');
+        bH.classList.add('active');     bS.classList.remove('active');
+        document.getElementById('subSci').style.display = 'none';
+        document.getElementById('subHuman').style.display = 'block';
       } else {
-        bS.classList.add('active'); bH.classList.remove('active');
+        sci.classList.add('active');    human.classList.remove('active');
+        bS.classList.add('active');     bH.classList.remove('active');
+        document.getElementById('subHuman').style.display = 'none';
+        document.getElementById('subSci').style.display = 'block';
       }
     }
     window.addEventListener('DOMContentLoaded', () => setLens('scientific'));
   </script>
 </head>
 
-<body data-lens="scientific">
+<body>
   <main class="gPage">
     <header class="gHeader">
       <h1 class="gTitle">Tier 1</h1>
 
-      <!-- Scientific (default) -->
-      <p class="gSub subSci">Foundational laws · Non-derivable.</p>
+      <!-- SUBTITLE SWAPS WITH TOGGLE -->
+      <p class="gSub" id="subSci">Foundational laws · Non-derivable.</p>
+      <p class="gSub" id="subHuman" style="display:none;">
+        These determine whether anything may act, be governed, be agreed upon, or be short-circuited.
+      </p>
 
-      <!-- Human (toggle) -->
-      <p class="gSub subHuman">These determine whether anything may act, be governed, be agreed upon, or be short-circuited.</p>
-
+      <!-- TOGGLE SWAPS DIAMONDS (NOT TEXT) -->
       <div class="lensToggle" aria-label="Lens toggle">
         <button class="lensBtn" id="btnHuman" onclick="setLens('human')">Human</button>
-        <button class="lensBtn" id="btnSci" onclick="setLens('scientific')">Scientific</button>
+        <button class="lensBtn active" id="btnSci" onclick="setLens('scientific')">Scientific</button>
       </div>
     </header>
 
     <section class="gPanel" aria-label="Tier 1 diamond">
-      <div class="diamondWrap">
-        <div class="diamond">
 
-          <!-- POSSIBLE / ADMISSIBILITY -->
-          <a class="face top" href="/laws/tier-1/permission/" aria-label="Permission">
-            <span>
-              <span class="q humanOnly">Possible?</span>
-              <span class="q scientificOnly">Admissibility</span>
+      <!-- HUMAN DIAMOND (QUESTIONS ONLY) -->
+      <div class="diamondSet" id="setHuman">
+        <div class="diamondWrap">
+          <div class="diamond">
+            <a class="face top" href="/laws/tier-1/permission/" aria-label="Permission">
+              <span>Possible?</span>
+            </a>
+            <a class="face left" href="/laws/tier-1/governance/" aria-label="Governance">
+              <span>Rules?</span>
+            </a>
+            <a class="face right" href="/laws/tier-1/agreement/" aria-label="Agreement">
+              <span>Agreement?</span>
+            </a>
+            <a class="face bottom" href="/laws/tier-1/nonsub/" aria-label="No shortcuts">
+              <span>Shortcuts?</span>
+            </a>
+          </div>
+        </div>
+      </div>
 
-              <span class="sci humanOnly">Admissibility</span>
-              <span class="sci scientificOnly">Possible?</span>
-            </span>
-          </a>
-
-          <!-- RULES / COHERENCE-CLOSURE -->
-          <a class="face left" href="/laws/tier-1/governance/" aria-label="Governance">
-            <span>
-              <span class="q humanOnly">Rules?</span>
-              <span class="q scientificOnly">Coherence / Closure</span>
-
-              <span class="sci humanOnly">Coherence / Closure</span>
-              <span class="sci scientificOnly">Rules?</span>
-            </span>
-          </a>
-
-          <!-- AGREEMENT / OBSERVER-INVARIANT -->
-          <a class="face right" href="/laws/tier-1/agreement/" aria-label="Agreement">
-            <span>
-              <span class="q humanOnly">Agreement?</span>
-              <span class="q scientificOnly">Observer-Invariant</span>
-
-              <span class="sci humanOnly">Observer-Invariant</span>
-              <span class="sci scientificOnly">Agreement?</span>
-            </span>
-          </a>
-
-          <!-- SHORTCUTS / NONCOMP+NOTIMER -->
-          <a class="face bottom" href="/laws/tier-1/nonsub/" aria-label="No shortcuts">
-            <span>
-              <span class="q humanOnly">Shortcuts?</span>
-              <span class="q scientificOnly">Non-Comp / No-Timer</span>
-
-              <span class="sci humanOnly">No — Non-Comp / No-Timer</span>
-              <span class="sci scientificOnly">Shortcuts?</span>
-            </span>
-          </a>
-
+      <!-- SCIENTIFIC DIAMOND (TERMS ONLY) -->
+      <div class="diamondSet active" id="setScientific">
+        <div class="diamondWrap">
+          <div class="diamond">
+            <a class="face top" href="/laws/tier-1/permission/" aria-label="Admissibility">
+              <span>Admissibility</span>
+            </a>
+            <a class="face left" href="/laws/tier-1/governance/" aria-label="Coherence and Closure">
+              <span>Coherence / Closure</span>
+            </a>
+            <a class="face right" href="/laws/tier-1/agreement/" aria-label="Observer-Invariant Classification">
+              <span>Observer-Invariant</span>
+            </a>
+            <a class="face bottom" href="/laws/tier-1/nonsub/" aria-label="Non-Compensation and No-Timer Gating">
+              <span>Non-Comp / No-Timer</span>
+            </a>
+          </div>
         </div>
       </div>
 

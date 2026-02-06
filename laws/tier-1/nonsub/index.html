@@ -1,70 +1,116 @@
-<!-- TNT: /laws/tier-1/nonsub/index.html (FULL REPLACEMENT — lens per page restored) -->
+<!-- TNT: /laws/tier-1/nonsub/index.html (FULL REPLACEMENT — BRANCH ONLY: 1–2 WORDS; NO DESCRIPTIONS; LINKS TO LEAF PAGES) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tier 1 · Group C · Geodiametrics</title>
+  <title>Tier 1 · Shortcuts · Geodiametrics</title>
+
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
   <style>
-    .lensMini{display:flex;gap:10px;justify-content:center;margin:10px 0 14px;flex-wrap:wrap}
-    .lensMini button{padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font-weight:900;cursor:pointer}
-    .lensMini button.active{background:linear-gradient(180deg,#2aa4ff,#1976d2);border:none;box-shadow:0 6px 18px rgba(30,144,255,.35)}
-    details.law{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);border-radius:18px;padding:14px 16px;margin:0 0 12px}
-    details.law summary{cursor:pointer;font-weight:900;list-style:none}
-    details.law summary::-webkit-details-marker{display:none}
-    .body{margin-top:10px;line-height:1.55}
-    .human{display:none}
-    .sub{opacity:.85;text-align:center;margin:0 0 8px}
+    .lensToggle{
+      display:flex;gap:6px;justify-content:center;margin:10px auto 14px;
+      background:rgba(255,255,255,.08);padding:6px;border-radius:999px;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+      max-width:520px;
+    }
+    .lensBtn{
+      flex:1;padding:10px 18px;border-radius:999px;border:none;
+      font-weight:900;cursor:pointer;color:#cfe4f6;background:transparent;
+      text-align:center;
+    }
+    .lensBtn.active{
+      color:#fff;background:linear-gradient(180deg,#2aa4ff,#1976d2);
+      box-shadow:0 6px 18px rgba(30,144,255,.35);
+    }
+
+    /* Title/sub toggle (SHORT ONLY) */
+    .humanOnly{display:none}
+    .sciOnly{display:block}
+    body[data-lens="human"] .humanOnly{display:block}
+    body[data-lens="human"] .sciOnly{display:none}
+
+    /* Branch list */
+    .branchList{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+    .branchItem{
+      display:flex;align-items:center;justify-content:center;
+      padding:18px 16px;border-radius:18px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.22);
+      text-decoration:none;color:#fff;
+      font-weight:900;letter-spacing:-0.01em;
+      min-height:62px;
+    }
+    .branchItem small{display:block;font-weight:800;opacity:.75;margin-top:6px}
+    .branchItem .twoLine{display:flex;flex-direction:column;align-items:center;gap:4px}
   </style>
+
+  <script>
+    function setLens(lens){
+      document.body.setAttribute('data-lens', lens);
+      const bH = document.getElementById('btnHuman');
+      const bS = document.getElementById('btnSci');
+      if(lens === 'human'){
+        bH.classList.add('active'); bS.classList.remove('active');
+      } else {
+        bS.classList.add('active'); bH.classList.remove('active');
+      }
+    }
+    window.addEventListener('DOMContentLoaded', () => setLens('scientific'));
+  </script>
 </head>
-<body>
-<main class="gPage">
-  <header class="gHeader">
-    <h1 class="gTitle">Tier 1 · Group C</h1>
-    <p class="gSub">Non-Substitutability Constraints</p>
-  </header>
 
-  <section class="gPanel">
-    <div class="sub">Lens is required. Choose lens, then expand bubbles.</div>
+<body data-lens="scientific">
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">
+        <span class="humanOnly">Shortcuts?</span>
+        <span class="sciOnly">Non-Substitutability</span>
+      </h1>
 
-    <div class="lensMini">
-      <button id="sci" type="button" onclick="setLens('scientific')">Scientific</button>
-      <button id="hum" type="button" onclick="setLens('human')">Human</button>
-    </div>
+      <p class="gSub">
+        <span class="humanOnly">No shortcuts allowed.</span>
+        <span class="sciOnly">Required constraints do not trade.</span>
+      </p>
 
-    <details class="law">
-      <summary>1 · Non-Compensation</summary>
-      <div class="body scientific">Violation in one required constraint cannot be offset by strength in another.</div>
-      <div class="body human">Being strong somewhere doesn’t cancel breaking a required rule elsewhere.</div>
-    </details>
+      <div class="lensToggle" aria-label="Lens toggle">
+        <button class="lensBtn" id="btnHuman" onclick="setLens('human')">Human</button>
+        <button class="lensBtn active" id="btnSci" onclick="setLens('scientific')">Scientific</button>
+      </div>
+    </header>
 
-    <details class="law">
-      <summary>2 · No Timer Gating</summary>
-      <div class="body scientific">Time passage cannot substitute for structural completion or receipt.</div>
-      <div class="body human">Waiting doesn’t fix structure. Only completion fixes structure.</div>
-    </details>
+    <section class="gPanel" aria-label="Tier 1 — Shortcuts branch">
+      <div class="branchList" role="navigation" aria-label="Shortcuts leaves">
 
-    <div class="gActions">
-      <a class="gBtn" href="/laws/tier-1/">Back</a>
-      <a class="gBtn" href="/laws/">Laws</a>
-    </div>
+        <!-- LEAF: L6 -->
+        <a class="branchItem" href="/laws/tier-1/nonsub/non-compensation/" aria-label="Non-compensation leaf">
+          <span class="twoLine">
+            <span class="humanOnly">No tradeoffs</span>
+            <span class="sciOnly">Non-Compensation</span>
+          </span>
+        </a>
 
-    <footer class="gFooter">TIER 1 · GROUP C · © GEODIAMETRICS</footer>
-  </section>
-</main>
+        <!-- LEAF: L7 -->
+        <a class="branchItem" href="/laws/tier-1/nonsub/no-timer/" aria-label="No-timer gating leaf">
+          <span class="twoLine">
+            <span class="humanOnly">No waiting</span>
+            <span class="sciOnly">No-Timer Gating</span>
+          </span>
+        </a>
 
-<script>
-  function applyLens(l){
-    document.querySelectorAll('.scientific').forEach(el=>el.style.display=(l==='scientific')?'block':'none');
-    document.querySelectorAll('.human').forEach(el=>el.style.display=(l==='human')?'block':'none');
-    document.getElementById('sci').classList.toggle('active', l==='scientific');
-    document.getElementById('hum').classList.toggle('active', l==='human');
-  }
-  function setLens(l){ localStorage.setItem('GD_LENS', l); applyLens(l); }
-  applyLens(localStorage.getItem('GD_LENS')||'scientific');
-</script>
+      </div>
+
+      <div class="gActions">
+        <a class="gBtn" href="/laws/tier-1/">Back</a>
+        <a class="gBtn" href="/laws/">Laws</a>
+      </div>
+
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
 </body>
 </html>
+```0

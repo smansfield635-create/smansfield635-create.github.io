@@ -1,103 +1,100 @@
-<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — lens controls the DIAMOND labels) -->
+<!-- TNT: /laws/tier1/index.html — FULL REPLACEMENT -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tier 1 · Geodiametrics</title>
-
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
-
-  <style>
-    .lensToggle{display:flex;position:relative;background:rgba(255,255,255,.08);border-radius:999px;padding:6px;gap:6px;margin:10px auto 12px;width:fit-content;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
-    .lensBtn{position:relative;z-index:2;padding:10px 22px;border-radius:999px;background:transparent;color:#cfe4f6;font-weight:900;cursor:pointer;border:none}
-    .lensBtn.active{color:#fff}
-    .lensIndicator{position:absolute;top:6px;bottom:6px;width:calc(50% - 6px);background:linear-gradient(180deg,#2aa4ff,#1976d2);border-radius:999px;transition:transform .25s ease;box-shadow:0 6px 18px rgba(30,144,255,.35)}
-    .lensIndicator.right{transform:translateX(100%)}
-    .note{opacity:.85;text-align:center;line-height:1.45;margin:0 0 14px}
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Tier 1 · Foundational Laws · Geodiametrics</title>
+<link rel="icon" href="/assets/favicon.svg"/>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<style>
+:root{
+  --glass: rgba(255,255,255,.12);
+  --edge: rgba(255,255,255,.22);
+}
+.gPage{min-height:100vh}
+.center{display:flex;justify-content:center}
+.note{opacity:.85;text-align:center;margin:10px 0 18px}
+.diamondWrap{position:relative;width:320px;height:320px;margin:10px auto 22px}
+.diamond{
+  position:absolute;width:150px;height:150px;
+  transform:rotate(45deg);
+  background:var(--glass);border:1px solid var(--edge);
+  border-radius:18px;backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:center;
+}
+.diamond .inner{
+  transform:rotate(-45deg);text-align:center;padding:10px
+}
+.diamond .h{font-weight:800;font-size:18px}
+.sci{
+  margin-top:6px;font-size:13px;opacity:.75;
+  display:inline-block;padding:6px 10px;border-radius:999px;
+  background:rgba(0,0,0,.25)
+}
+.tip{
+  display:none;position:absolute;z-index:5;max-width:220px;
+  background:#0e1c28;border:1px solid var(--edge);
+  border-radius:12px;padding:10px;font-size:13px
+}
+.sci:hover+.tip{display:block}
+#dA{top:0;left:85px}
+#dB{top:85px;right:0}
+#dC{bottom:0;left:85px}
+#dO{top:85px;left:0}
+.actions{display:flex;gap:10px;justify-content:center}
+</style>
 </head>
 <body>
 <main class="gPage">
-  <header class="gHeader">
-    <h1 class="gTitle">Tier 1</h1>
-    <p class="gSub">Foundational Laws · Non-derivable.</p>
+<header class="gHeader">
+  <h1 class="gTitle">Tier 1</h1>
+  <p class="gSub">Foundational laws · Non-derivable</p>
+</header>
 
-    <div class="lensToggle" aria-label="Lens toggle">
-      <div class="lensIndicator" id="lensIndicator"></div>
-      <button class="lensBtn active" id="btnSci" type="button" onclick="setLens('scientific')">Scientific Lens</button>
-      <button class="lensBtn" id="btnHum" type="button" onclick="setLens('human')">Human Lens</button>
+<p class="note">Each diamond face states the human question. Scientific definition is nested to reduce clutter.</p>
+
+<div class="diamondWrap" aria-label="Tier 1 diamond">
+  <!-- Group A -->
+  <div class="diamond" id="dA">
+    <div class="inner">
+      <div class="h">Can this act?</div>
+      <span class="sci">Admissibility</span>
+      <div class="tip">Execution is permitted only if all required constraints are satisfied.</div>
     </div>
-
-    <div class="note" id="noteText">
-      Tier 1 opens a diamond of groups. Each group contains expandable law bubbles.
+  </div>
+  <!-- Group B -->
+  <div class="diamond" id="dB">
+    <div class="inner">
+      <div class="h">Can we agree?</div>
+      <span class="sci">Observer-Invariant Classification</span>
+      <div class="tip">Independent observers classify the same evidence identically.</div>
     </div>
-  </header>
-
-  <section class="gPanel" aria-label="Tier 1 groups">
-    <div class="gCluster" role="navigation" aria-label="Tier 1 group routes">
-      <a class="gKey gTop" href="/laws/tier-1/admissibility/" aria-label="Group A">
-        <span class="gKeyText">
-          <strong id="gA_title"
-            data-sci="GROUP A"
-            data-hum="GROUP A">GROUP A</strong>
-          <span id="gA_sub"
-            data-sci="Admissibility"
-            data-hum="Can it run?">Admissibility</span>
-        </span>
-      </a>
-
-      <a class="gKey gRight" href="/laws/tier-1/classification/" aria-label="Group B">
-        <span class="gKeyText">
-          <strong id="gB_title"
-            data-sci="GROUP B"
-            data-hum="GROUP B">GROUP B</strong>
-          <span id="gB_sub"
-            data-sci="Classification"
-            data-hum="Can we agree?">Classification</span>
-        </span>
-      </a>
-
-      <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Group C">
-        <span class="gKeyText">
-          <strong id="gC_title"
-            data-sci="GROUP C"
-            data-hum="GROUP C">GROUP C</strong>
-          <span id="gC_sub"
-            data-sci="Non-Substitute"
-            data-hum="No shortcuts">Non-Substitute</span>
-        </span>
-      </a>
-
-      <a class="gKey gLeft" href="/laws/tier-1/overview/" aria-label="Overview">
-        <span class="gKeyText">
-          <strong id="gO_title"
-            data-sci="OVERVIEW"
-            data-hum="OVERVIEW">OVERVIEW</strong>
-          <span id="gO_sub"
-            data-sci="Index"
-            data-hum="Map">Index</span>
-        </span>
-      </a>
+  </div>
+  <!-- Group C -->
+  <div class="diamond" id="dC">
+    <div class="inner">
+      <div class="h">No shortcuts</div>
+      <span class="sci">Non-Compensation / No-Timer Gating</span>
+      <div class="tip">Strength in one dimension cannot compensate for missing constraints.</div>
     </div>
-
-    <div class="gActions">
-      <a class="gBtn" href="/laws/">Back</a>
-      <a class="gBtn" href="/home/">Home</a>
+  </div>
+  <!-- Overview -->
+  <div class="diamond" id="dO">
+    <div class="inner">
+      <div class="h">What governs this?</div>
+      <span class="sci">Coherence / Closure</span>
+      <div class="tip">External coherence cannot exceed internal coherence; open loops destabilize.</div>
     </div>
+  </div>
+</div>
 
-    <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-  </section>
+<div class="actions">
+  <a class="gBtn" href="/laws/">Back</a>
+  <a class="gBtn" href="/home/">Home</a>
+</div>
+
+<footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
 </main>
-
-<script>
-  function paintLens(l){
-    document.getElementById('lensIndicator').classList.toggle('right', l==='human');
-    document.getElementById('btnSci').classList.toggle('active', l==='scientific');
-    document.getElementById('btnHum').classList.toggle('active', l==='human');
-
-    // Diamond subtitle swaps
-    document.querySelectorAll('[data-sci]').forEach(el=>{
-      el.textContent = (l==='human
+</body>
+</html>

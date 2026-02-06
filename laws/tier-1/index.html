@@ -1,3 +1,4 @@
+<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — fixes tiny/off-screen diamond by removing CSS min() and hard-centering the cluster) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,146 +11,219 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* ===== Tier-1 LOCK: keep diamond, make text horizontal ===== */
-    .t1ToggleWrap{display:flex;justify-content:center;margin:10px 0 14px}
-    .t1Toggle{position:relative;display:flex;gap:0;background:rgba(255,255,255,.08);border-radius:999px;padding:6px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);width:min(520px,92vw)}
-    .t1Toggle button{flex:1;border:0;background:transparent;color:#cfe4f6;font-weight:800;padding:12px 0;border-radius:999px;cursor:pointer;position:relative;z-index:2}
-    .t1Toggle button.active{color:#fff}
-    .t1Pill{position:absolute;top:6px;bottom:6px;left:6px;width:calc(50% - 6px);background:linear-gradient(180deg,#2aa4ff,#1976d2);border-radius:999px;transition:transform .22s ease;box-shadow:0 10px 22px rgba(30,144,255,.35)}
+    /* Avoid CSS min() for Android/WebView compatibility */
+    .t1Copy{max-width:520px;margin:0 auto;text-align:center}
+    .t1Toggle{display:flex;justify-content:center;margin:14px 0 12px}
+
+    .t1ToggleWrap{
+      width:100%;
+      max-width:520px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      padding:8px;
+      display:flex;
+      gap:8px;
+      position:relative;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+    }
+    .t1Tab{
+      flex:1;
+      border:none;
+      border-radius:999px;
+      padding:14px 10px;
+      font-weight:800;
+      color:rgba(230,245,255,.78);
+      background:transparent;
+      cursor:pointer;
+      position:relative;
+      z-index:2;
+    }
+    .t1Tab.active{color:#fff}
+    .t1Pill{
+      position:absolute; top:8px; bottom:8px; left:8px;
+      width:calc(50% - 8px);
+      background:linear-gradient(180deg,#2aa4ff,#1976d2);
+      border-radius:999px;
+      box-shadow:0 10px 24px rgba(30,144,255,.35);
+      transition:transform .22s ease;
+      z-index:1;
+    }
     .t1Pill.right{transform:translateX(100%)}
 
-    .t1Sub{margin:0 auto 10px;max-width:28ch;text-align:center;opacity:.9}
-
-    /* --- IMPORTANT: diamond remains rotated; text is counter-rotated to read horizontal --- */
-    .gCluster .gKey{transform:rotate(45deg) !important;}
-    .gCluster .gKeyText{
-      transform:rotate(-45deg) !important; /* THIS is the fix */
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      text-align:center;line-height:1.08;
+    .t1Stage{
+      margin:14px auto 0;
       width:100%;
-      padding:10px 10px;
+      max-width:520px;
     }
-    .gCluster .gKeyText strong{
+
+    /* This is the “diamond canvas” that was collapsing */
+    .t1Cluster{
+      position:relative;
+      width:86vw;
+      height:86vw;
+      max-width:360px;
+      max-height:360px;
+      margin:0 auto;            /* hard-center */
+      display:block;
+    }
+
+    .t1View{display:none}
+    .t1View.active{display:block}
+
+    /* Diamond buttons */
+    .t1Key{
+      position:absolute;
+      width:46%;
+      height:46%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color:#fff;
+      border-radius:20px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 18px 54px rgba(0,0,0,.25);
+      transform:rotate(45deg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      left:27%;
+      top:27%;
+    }
+    .t1Key::after{
+      content:"";
+      position:absolute; inset:10px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      opacity:.9;
+    }
+    .t1Key:active{transform:rotate(45deg) scale(.985)}
+
+    /* positions */
+    .t1Top{top:4%; left:27%}
+    .t1Right{top:27%; left:50%}
+    .t1Bottom{top:50%; left:27%}
+    .t1Left{top:27%; left:4%}
+
+    /* TEXT MUST BE HORIZONTAL */
+    .t1KeyInner{
+      transform:rotate(-45deg);
+      text-align:center;
+      width:86%;
+      line-height:1.05;
+      position:relative;
+      z-index:2;
+    }
+    .t1A{
       display:block;
       font-weight:900;
-      font-size:1.05rem;
-      letter-spacing:.2px;
+      font-size:20px;
+      text-shadow:0 10px 30px rgba(0,0,0,.35);
       white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
-    .gCluster .gKeyText .sub{
+    .t1B{
       display:block;
-      margin-top:6px;
+      margin-top:10px;
       font-weight:700;
-      font-size:.85rem;
-      opacity:.78;
+      font-size:15px;
+      opacity:.75;
       white-space:nowrap;
-    }
-
-    /* Hard stop: prevent “8 words” drift from ever fitting */
-    .gCluster .gKeyText strong,
-    .gCluster .gKeyText .sub{
-      max-width:10ch;
       overflow:hidden;
       text-overflow:ellipsis;
     }
 
-    /* Show/hide the two diamonds cleanly */
-    .t1Mode{display:none;}
-    .t1Mode.active{display:block;}
-
-    /* Keep cluster spacing stable */
-    .t1ClusterPad{margin-top:6px}
+    .t1Actions{margin-top:12px}
   </style>
 </head>
 
 <body>
   <main class="gPage">
-    <header class="gHeader">
+    <header class="gHeader t1Copy">
       <h1 class="gTitle">Tier 1</h1>
+      <p class="gSub" id="t1Subtitle">These determine whether anything may act, be governed, be agreed upon, or be short-circuited.</p>
 
-      <!-- Title line swaps with toggle -->
-      <p class="gSub" id="t1TitleLine">These determine whether anything may act, be governed, be agreed upon, or be short-circuited.</p>
-
-      <div class="t1ToggleWrap" aria-label="Lens toggle">
-        <div class="t1Toggle" role="tablist" aria-label="Human vs Scientific">
+      <div class="t1Toggle" aria-label="Lens toggle">
+        <div class="t1ToggleWrap">
           <div class="t1Pill" id="t1Pill"></div>
-          <button id="btnHuman" class="active" type="button" role="tab" aria-selected="true">Human</button>
-          <button id="btnSci" type="button" role="tab" aria-selected="false">Scientific</button>
+          <button class="t1Tab active" id="t1HumanBtn" type="button" onclick="setT1('human')">Human</button>
+          <button class="t1Tab" id="t1SciBtn" type="button" onclick="setT1('scientific')">Scientific</button>
         </div>
       </div>
 
-      <!-- Sub line swaps with toggle -->
-      <p class="t1Sub" id="t1SubLine">Choose a question. Diamonds route to leaves.</p>
+      <p class="gSub" id="t1Prompt">Choose a question. Diamonds route to leaves.</p>
     </header>
 
-    <section class="gPanel" aria-label="Tier 1 diamond">
+    <section class="gPanel t1Stage" aria-label="Tier 1 routes">
       <!-- HUMAN DIAMOND -->
-      <div class="t1Mode active t1ClusterPad" id="modeHuman">
-        <div class="gCluster" role="navigation" aria-label="Tier 1 · Human">
-          <a class="gKey gTop" href="/laws/tier-1/permission/" aria-label="Possible">
-            <span class="gKeyText">
-              <strong>Possible?</strong>
-              <span class="sub">Permit</span>
+      <div class="t1View active" id="t1HumanView" role="navigation" aria-label="Tier 1 (Human)">
+        <div class="t1Cluster">
+          <a class="t1Key t1Top" href="/laws/tier-1/permission/" aria-label="Possible">
+            <span class="t1KeyInner">
+              <span class="t1A">Possible?</span>
+              <span class="t1B">Permit</span>
             </span>
           </a>
 
-          <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Rules">
-            <span class="gKeyText">
-              <strong>Rules?</strong>
-              <span class="sub">Coherence</span>
+          <a class="t1Key t1Right" href="/laws/tier-1/agreement/" aria-label="Agreement">
+            <span class="t1KeyInner">
+              <span class="t1A">Agreement?</span>
+              <span class="t1B">Consensus</span>
             </span>
           </a>
 
-          <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Agreement">
-            <span class="gKeyText">
-              <strong>Agreement?</strong>
-              <span class="sub">Consensus</span>
+          <a class="t1Key t1Bottom" href="/laws/tier-1/nonsub/" aria-label="Shortcuts">
+            <span class="t1KeyInner">
+              <span class="t1A">Shortcuts?</span>
+              <span class="t1B">No</span>
             </span>
           </a>
 
-          <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Shortcuts">
-            <span class="gKeyText">
-              <strong>Shortcuts?</strong>
-              <span class="sub">No</span>
+          <a class="t1Key t1Left" href="/laws/tier-1/governance/" aria-label="Rules">
+            <span class="t1KeyInner">
+              <span class="t1A">Rules?</span>
+              <span class="t1B">Coherence</span>
             </span>
           </a>
         </div>
       </div>
 
       <!-- SCIENTIFIC DIAMOND -->
-      <div class="t1Mode t1ClusterPad" id="modeSci">
-        <div class="gCluster" role="navigation" aria-label="Tier 1 · Scientific">
-          <a class="gKey gTop" href="/laws/tier-1/permission/" aria-label="Permit">
-            <span class="gKeyText">
-              <strong>Permit</strong>
-              <span class="sub">Admitted</span>
+      <div class="t1View" id="t1SciView" role="navigation" aria-label="Tier 1 (Scientific)">
+        <div class="t1Cluster">
+          <a class="t1Key t1Top" href="/laws/tier-1/permission/" aria-label="Admissibility">
+            <span class="t1KeyInner">
+              <span class="t1A">Admissibility</span>
+              <span class="t1B">Permission</span>
             </span>
           </a>
 
-          <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Coherence">
-            <span class="gKeyText">
-              <strong>Coherence</strong>
-              <span class="sub">Holds</span>
+          <a class="t1Key t1Right" href="/laws/tier-1/classification/" aria-label="Classification">
+            <span class="t1KeyInner">
+              <span class="t1A">Classification</span>
+              <span class="t1B">Agreement</span>
             </span>
           </a>
 
-          <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Consensus">
-            <span class="gKeyText">
-              <strong>Consensus</strong>
-              <span class="sub">Same</span>
+          <a class="t1Key t1Bottom" href="/laws/tier-1/nonsub/" aria-label="Non-sub">
+            <span class="t1KeyInner">
+              <span class="t1A">Non-Sub</span>
+              <span class="t1B">No timer</span>
             </span>
           </a>
 
-          <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="No Shortcuts">
-            <span class="gKeyText">
-              <strong>No Shortcuts</strong>
-              <span class="sub">Required</span>
+          <a class="t1Key t1Left" href="/laws/tier-1/governance/" aria-label="Coherence">
+            <span class="t1KeyInner">
+              <span class="t1A">Coherence</span>
+              <span class="t1B">Closure</span>
             </span>
           </a>
         </div>
       </div>
 
-      <div class="gActions" aria-label="Navigation controls">
+      <div class="gActions t1Actions" aria-label="Navigation controls">
         <a class="gBtn" href="/laws/">Back</a>
         <a class="gBtn" href="/home/">Home</a>
       </div>
@@ -159,47 +233,36 @@
   </main>
 
   <script>
-    (function(){
-      const btnHuman = document.getElementById('btnHuman');
-      const btnSci   = document.getElementById('btnSci');
-      const pill     = document.getElementById('t1Pill');
+    function setT1(mode){
+      var pill = document.getElementById('t1Pill');
+      var humanBtn = document.getElementById('t1HumanBtn');
+      var sciBtn = document.getElementById('t1SciBtn');
+      var humanView = document.getElementById('t1HumanView');
+      var sciView = document.getElementById('t1SciView');
+      var subtitle = document.getElementById('t1Subtitle');
+      var prompt = document.getElementById('t1Prompt');
 
-      const modeHuman = document.getElementById('modeHuman');
-      const modeSci   = document.getElementById('modeSci');
+      if(mode === 'scientific'){
+        pill.classList.add('right');
+        humanBtn.classList.remove('active');
+        sciBtn.classList.add('active');
+        humanView.classList.remove('active');
+        sciView.classList.add('active');
 
-      const titleLine = document.getElementById('t1TitleLine');
-      const subLine   = document.getElementById('t1SubLine');
+        subtitle.textContent = "Foundational laws · Non-derivable.";
+        prompt.textContent = "Choose a term. Diamonds route to leaves.";
+      } else {
+        pill.classList.remove('right');
+        sciBtn.classList.remove('active');
+        humanBtn.classList.add('active');
+        sciView.classList.remove('active');
+        humanView.classList.add('active');
 
-      function setMode(which){
-        const isHuman = (which === 'human');
-
-        btnHuman.classList.toggle('active', isHuman);
-        btnSci.classList.toggle('active', !isHuman);
-
-        btnHuman.setAttribute('aria-selected', isHuman ? 'true' : 'false');
-        btnSci.setAttribute('aria-selected', !isHuman ? 'true' : 'false');
-
-        pill.classList.toggle('right', !isHuman);
-
-        modeHuman.classList.toggle('active', isHuman);
-        modeSci.classList.toggle('active', !isHuman);
-
-        // Swap ONLY the two lines you asked for
-        if(isHuman){
-          titleLine.textContent = 'These determine whether anything may act, be governed, be agreed upon, or be short-circuited.';
-          subLine.textContent   = 'Choose a question. Diamonds route to leaves.';
-        } else {
-          titleLine.textContent = 'Foundational laws · Non-derivable.';
-          subLine.textContent   = 'Choose a term. Diamonds route to leaves.';
-        }
+        subtitle.textContent = "These determine whether anything may act, be governed, be agreed upon, or be short-circuited.";
+        prompt.textContent = "Choose a question. Diamonds route to leaves.";
       }
-
-      btnHuman.addEventListener('click', ()=>setMode('human'));
-      btnSci.addEventListener('click', ()=>setMode('sci'));
-
-      // lock default
-      setMode('human');
-    })();
+    }
   </script>
 </body>
 </html>
+```0

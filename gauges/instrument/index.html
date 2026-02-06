@@ -1,167 +1,32 @@
-<!-- TNT: /gauges/instrument/index.html (INSTRUMENT — 6 GAUGES, BUBBLES, MODAL, LIVE LOOP) -->
 <!doctype html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Instrument · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
-  <style>
-    .chip{display:inline-flex;gap:10px;align-items:center;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);font-weight:800;margin:0 auto 16px}
-    .dot{width:10px;height:10px;border-radius:999px;background:#22c55e;box-shadow:0 0 18px rgba(34,197,94,.35)}
-    .grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:8px}
-    @media(min-width:520px){.grid{grid-template-columns:1fr 1fr}}
-    .card{position:relative;border-radius:22px;padding:16px 16px 14px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.18);cursor:pointer;overflow:hidden}
-    .glow{position:absolute;inset:-60% -30% auto -30%;height:180%;filter:blur(30px);opacity:.65;pointer-events:none}
-    .row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-    .t{font-weight:900}
-    .d{opacity:.78;font-weight:650;margin-top:4px;line-height:1.35}
-    .val{font-weight:900;font-size:20px;text-align:right}
-    .lbl{opacity:.78;font-weight:800;text-align:right}
-    .meta{margin-top:10px;opacity:.78;font-weight:650}
-    .spark{margin-top:10px;height:56px;border-radius:14px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10);overflow:hidden}
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.55);z-index:9999}
-    .modal.show{display:flex}
-    .mCard{width:100%;max-width:560px;border-radius:26px;padding:18px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
-    .mHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-    .mTitle{margin:0;font-weight:900;font-size:22px}
-    .mClose{border:none;border-radius:12px;background:rgba(255,255,255,.10);color:#fff;padding:10px 12px;cursor:pointer;font-weight:900}
-    .mDesc{margin-top:6px;opacity:.82;line-height:1.45}
-    .mBox{margin-top:14px;border-radius:18px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10);padding:12px}
-    .mRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;align-items:center;justify-content:space-between}
-    .pill{padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);font-weight:900;white-space:nowrap}
-    .small{opacity:.78;font-weight:650}
-    .anchor{scroll-margin-top:110px}
-  </style>
+<meta charset="utf-8">
+<title>Instrument · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/assets/gauges.css">
 </head>
 <body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Instrument</h1>
-      <p class="gSub">Six diagnostic dimensions · Tap bubble → inspect.</p>
-    </header>
+<main class="gPage">
+<header class="gHeader">
+<h1 class="gTitle">Instrument</h1>
+<p class="gSub">Interpretation · Red → Green → Fractal</p>
+</header>
 
-    <section class="gPanel" aria-label="Instrument gauges">
-      <div class="chip"><span class="dot" id="legendDot"></span><span>Red=fragmentation/instability · Green=coherence · Deep green/blue=fractalization</span></div>
+<section class="gPanel">
+<div id="gauges"></div>
+<a class="gBtn" href="/gauges/">Back</a>
+<a class="gBtn" href="/home/">Home</a>
+</section>
+</main>
 
-      <div class="grid" id="grid"></div>
-
-      <div class="gActions">
-        <a class="gBtn" href="/gauges/">Back</a>
-        <a class="gBtn" href="/home/">Home</a>
-      </div>
-
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
-  </main>
-
-  <div class="modal" id="modal">
-    <div class="mCard">
-      <div class="mHead">
-        <div>
-          <h2 class="mTitle" id="mTitle">Gauge</h2>
-          <div class="mDesc" id="mDesc"></div>
-        </div>
-        <button class="mClose" onclick="closeModal()">Close</button>
-      </div>
-
-      <div class="mBox">
-        <div class="spark" id="mChart"></div>
-      </div>
-
-      <div class="mRow">
-        <div class="pill" id="mState">State —</div>
-        <div class="pill" id="mValue">Value —</div>
-        <div class="pill" id="mLabel">Label —</div>
-        <div class="small" id="mUpdated">Updated —</div>
-      </div>
-    </div>
+<div id="modal" class="modal" onclick="closeModal()">
+  <div class="modalContent" onclick="event.stopPropagation()">
+    <div id="modalBody"></div>
+    <button class="gBtn" onclick="closeModal()">Close</button>
   </div>
+</div>
 
-  <script src="/assets/instrument.js"></script>
-  <script>
-    const GAUGES = [
-      {key:'coherence', title:'Coherence', desc:'Alignment between declared constraints, observed actions, and produced outcomes.'},
-      {key:'admissibility', title:'Admissibility', desc:'Execution gate under current constraints.'},
-      {key:'drift', title:'Drift', desc:'Deviation from intended path / oscillation signal.'},
-      {key:'constraint_load', title:'Constraint Load', desc:'Active constraints & saturation pressure.'},
-      {key:'stability', title:'Stability', desc:'Persistence of coherence over time.'},
-      {key:'ohm', title:'Ohm', desc:'Friction / resistance in the execution path.'}
-    ];
-
-    function sparkSVG(series, stroke){
-      const w=600,h=160,p=14;
-      const xs=series.map((_,i)=>p+(i*(w-2*p)/((series.length-1)||1)));
-      const min=Math.min(...series), max=Math.max(...series), r=(max-min)||1;
-      const ys=series.map(v=>h-p-((v-min)/r)*(h-2*p));
-      let d=`M ${xs[0]} ${ys[0]}`; for(let i=1;i<xs.length;i++) d+=` L ${xs[i]} ${ys[i]}`;
-      const fill=stroke+'33';
-      return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" preserveAspectRatio="none">
-        <path d="${d}" fill="none" stroke="${stroke}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="${d} L ${xs[xs.length-1]} ${h-p} L ${xs[0]} ${h-p} Z" fill="${fill}" stroke="none"/>
-      </svg>`;
-    }
-
-    function render(){
-      const snap = window.GDInstrument.getSnapshot();
-      const grid = document.getElementById('grid');
-      grid.innerHTML = '';
-
-      document.getElementById('legendDot').style.background = snap.palette.legend;
-
-      GAUGES.forEach(g=>{
-        const x = snap.gauges[g.key];
-        const c = x.color;
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.id = g.key;
-        card.classList.add('anchor');
-        card.onclick = ()=>openModal(g, x);
-
-        card.innerHTML = `
-          <div class="glow" style="background:${c};"></div>
-          <div class="row">
-            <div>
-              <div class="t">${g.title}</div>
-              <div class="d">${g.desc}</div>
-            </div>
-            <div style="text-align:right;">
-              <div class="val">${x.displayValue}</div>
-              <div class="lbl">${x.state}</div>
-            </div>
-          </div>
-          <div class="spark">${sparkSVG(x.series, c)}</div>
-          <div class="meta">Updated ${snap.updated_at}</div>
-        `;
-        grid.appendChild(card);
-      });
-
-      // hash jump
-      if(location.hash){
-        const id = location.hash.replace('#','');
-        const el = document.getElementById(id);
-        if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-      }
-    }
-
-    function openModal(g, x){
-      document.getElementById('mTitle').textContent = g.title;
-      document.getElementById('mDesc').textContent = g.desc;
-      document.getElementById('mState').textContent = `State ${x.state}`;
-      document.getElementById('mValue').textContent = `Value ${x.displayValue}`;
-      document.getElementById('mLabel').textContent = `Label ${x.label}`;
-      document.getElementById('mUpdated').textContent = `Updated ${window.GDInstrument.getSnapshot().updated_at}`;
-      document.getElementById('mChart').innerHTML = sparkSVG(x.series, x.color);
-      document.getElementById('modal').classList.add('show');
-    }
-    function closeModal(){ document.getElementById('modal').classList.remove('show'); }
-    document.getElementById('modal').addEventListener('click', (e)=>{ if(e.target.id==='modal') closeModal(); });
-
-    // initial + live loop
-    render();
-    setInterval(render, 3000);
-  </script>
+<script src="/assets/gauges.js"></script>
 </body>
 </html>

@@ -1,136 +1,40 @@
-<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — OPTION B, minimal labels only, original diamond styling) -->
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tier 1 · Foundational · Geodiametrics</title>
+<header class="gHeader">
+  <h1 class="gTitle">Tier 1</h1>
+  <p class="gSub">Foundational laws · Non-derivable.</p>
+  <p class="gNote">
+    Each diamond represents a foundational function.
+    Select a diamond to explore the governing laws.
+  </p>
+</header>
 
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+<section class="gPanel diamondGrid">
 
-  <style>
-    /* Toggle bar (kept) */
-    .lensToggle{
-      display:flex;gap:6px;justify-content:center;margin:10px auto 16px;
-      background:rgba(255,255,255,.08);padding:6px;border-radius:999px;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)
-    }
-    .lensBtn{
-      padding:10px 20px;border-radius:999px;border:none;
-      font-weight:800;cursor:pointer;color:#cfe4f6;background:transparent
-    }
-    .lensBtn.active{
-      color:#fff;background:linear-gradient(180deg,#2aa4ff,#1976d2);
-      box-shadow:0 6px 18px rgba(30,144,255,.35)
-    }
+  <!-- PERMISSION -->
+  <a class="diamond" href="/laws/tier-1/permission/">
+    <div class="diamondInner">
+      <h2>Permission</h2>
+      <p>Is execution allowed at all?</p>
+    </div>
+  </a>
 
-    /* Minimal text inside diamonds */
-    .gCluster .gKeyText{
-      text-align:center;
-      line-height:1.12;
-    }
-    .gCluster .gKeyText strong{
-      display:block;
-      font-size:16px;
-      font-weight:900;
-      letter-spacing:-0.01em;
-    }
-    .gCluster .gKeyText em{
-      display:block;
-      margin-top:6px;
-      font-style:normal;
-      font-size:13px;
-      font-weight:800;
-      opacity:.75;
-    }
+  <!-- AGREEMENT -->
+  <a class="diamond" href="/laws/tier-1/agreement/">
+    <div class="diamondInner">
+      <h2>Agreement</h2>
+      <p>Can independent observers agree?</p>
+    </div>
+  </a>
 
-    /* Mode swap */
-    .diamond{display:none}
-    .diamond.active{display:block}
-  </style>
+  <!-- GOVERNANCE -->
+  <a class="diamond" href="/laws/tier-1/governance/">
+    <div class="diamondInner">
+      <h2>Governance</h2>
+      <p>What rules actually govern outcomes?</p>
+    </div>
+  </a>
 
-  <script>
-    function setLens(which){
-      const h=document.getElementById('diamondHuman');
-      const s=document.getElementById('diamondScientific');
-      const bh=document.getElementById('btnHuman');
-      const bs=document.getElementById('btnSci');
-      if(which==='human'){
-        h.classList.add('active'); s.classList.remove('active');
-        bh.classList.add('active'); bs.classList.remove('active');
-      }else{
-        s.classList.add('active'); h.classList.remove('active');
-        bs.classList.add('active'); bh.classList.remove('active');
-      }
-    }
-  </script>
-</head>
+</section>
 
-<body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Tier 1</h1>
-      <p class="gSub">Foundational laws · Non-derivable.</p>
-
-      <div class="lensToggle" aria-label="Lens toggle">
-        <button class="lensBtn active" id="btnHuman" onclick="setLens('human')">Human</button>
-        <button class="lensBtn" id="btnSci" onclick="setLens('scientific')">Scientific</button>
-      </div>
-    </header>
-
-    <section class="gPanel" aria-label="Tier 1 diamond">
-
-      <!-- HUMAN DIAMOND (questions) -->
-      <div class="diamond active" id="diamondHuman">
-        <div class="gCluster" role="navigation" aria-label="Tier 1 human diamond">
-          <a class="gKey gTop" href="/laws/tier-1/admissibility/">
-            <span class="gKeyText"><strong>Can this act?</strong><em>(Scientific)</em></span>
-          </a>
-
-          <a class="gKey gRight" href="/laws/tier-1/classification/">
-            <span class="gKeyText"><strong>Can we agree?</strong><em>(Scientific)</em></span>
-          </a>
-
-          <a class="gKey gBottom" href="/laws/tier-1/nonsub/">
-            <span class="gKeyText"><strong>No shortcuts</strong><em>(Scientific)</em></span>
-          </a>
-
-          <a class="gKey gLeft" href="/laws/tier-1/overview/">
-            <span class="gKeyText"><strong>What governs this?</strong><em>(Scientific)</em></span>
-          </a>
-        </div>
-      </div>
-
-      <!-- SCIENTIFIC DIAMOND (names) -->
-      <div class="diamond" id="diamondScientific">
-        <div class="gCluster" role="navigation" aria-label="Tier 1 scientific diamond">
-          <a class="gKey gTop" href="/laws/tier-1/admissibility/">
-            <span class="gKeyText"><strong>Admissibility</strong><em>(Human)</em></span>
-          </a>
-
-          <a class="gKey gRight" href="/laws/tier-1/classification/">
-            <span class="gKeyText"><strong>Classification</strong><em>(Human)</em></span>
-          </a>
-
-          <a class="gKey gBottom" href="/laws/tier-1/nonsub/">
-            <span class="gKeyText"><strong>Non-Compensation</strong><em>(Human)</em></span>
-          </a>
-
-          <a class="gKey gLeft" href="/laws/tier-1/overview/">
-            <span class="gKeyText"><strong>Coherence / Closure</strong><em>(Human)</em></span>
-          </a>
-        </div>
-      </div>
-
-      <div class="gActions">
-        <a class="gBtn" href="/laws/">Back</a>
-        <a class="gBtn" href="/home/">Home</a>
-      </div>
-
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
-  </main>
-</body>
-</html>
+<footer class="gFooter">
+  CANONICAL · STABLE · © GEODIAMETRICS
+</footer>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Diagnostic · Type · Geodiametrics</title>
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+  <style>
+    .box{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:14px 16px;margin:0 0 12px;line-height:1.5}
+    .opt{display:flex;gap:10px;align-items:flex-start;margin:10px 0}
+    input[type="radio"]{transform:scale(1.2);margin-top:2px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+  </style>
+</head>
+<body>
+<main class="gPage">
+  <header class="gHeader">
+    <h1 class="gTitle">Lock-In</h1>
+    <p class="gSub">Choose your declared type before the exam.</p>
+  </header>
+
+  <section class="gPanel" aria-label="Personality lock-in">
+    <div class="box">
+      <p><strong>Rule</strong> This is your declared baseline. The exam compares choices against this declaration.</p>
+    </div>
+
+    <div class="box" role="group" aria-label="Type options">
+      <label class="opt"><input type="radio" name="type" value="coherent"><span>Coherent / stable</span></label>
+      <label class="opt"><input type="radio" name="type" value="confused"><span>Confused / transitional</span></label>
+      <label class="opt"><input type="radio" name="type" value="fragmented"><span>Fragmented / unstable</span></label>
+    </div>
+
+    <div class="row">
+      <a class="gBtn" href="/diagnostic/ready/">Back</a>
+      <button class="gBtn" type="button" id="start">Start Exam</button>
+    </div>
+
+    <footer class="gFooter">DECLARATION-FIRST · © GEODIAMETRICS</footer>
+  </section>
+</main>
+
+<script>
+  if(localStorage.getItem('GD_DIAG_READY') !== '1') location.href = '/diagnostic/ready/';
+  document.getElementById('start').addEventListener('click', ()=>{
+    const x = document.querySelector('input[name="type"]:checked');
+    if(!x) return;
+    localStorage.setItem('GD_DIAG_TYPE', x.value);
+
+    // Create a receipt stub now (exam will append later)
+    const receipt = {
+      started_at: localStorage.getItem('GD_DIAG_STARTED_AT') || new Date().toISOString(),
+      type: x.value,
+      status: "started",
+      answers: []
+    };
+    localStorage.setItem('GD_DIAG_RECEIPT', JSON.stringify(receipt));
+    location.href = '/diagnostic/exam/';
+  });
+</script>
+</body>
+</html>

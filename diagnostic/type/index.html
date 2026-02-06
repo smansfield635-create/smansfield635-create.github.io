@@ -1,3 +1,4 @@
+<!-- TNT: /diagnostic/type/index.html (FULL REPLACEMENT — 4 archetypes, low cognitive load, lock-in) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,14 +8,17 @@
 
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    .gCard{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:14px 16px;margin:0 0 12px;line-height:1.5}
-    .opt{display:flex;gap:10px;align-items:flex-start;margin:10px 0}
-    input[type="radio"]{transform:scale(1.2);margin-top:2px}
-    .hint{opacity:.78;font-size:13px;margin-top:8px}
-    .warn{opacity:.85;font-size:13px;margin-top:10px}
-    .gActions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+    .box{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:14px 16px;line-height:1.5;margin:0 0 12px}
+    .opt{display:flex;gap:12px;align-items:flex-start;margin:12px 0}
+    input[type="radio"]{transform:scale(1.2);margin-top:3px}
+    .name{font-weight:900}
+    .desc{opacity:.86;margin-top:2px}
+    .tag{opacity:.72;font-size:13px;margin-top:6px}
+    .check{display:flex;gap:10px;align-items:flex-start;margin-top:10px}
+    input[type="checkbox"]{transform:scale(1.2);margin-top:2px}
   </style>
 </head>
 
@@ -22,53 +26,60 @@
   <main class="gPage">
     <header class="gHeader">
       <h1 class="gTitle">Type Lock-In</h1>
-      <p class="gSub">Declare your baseline before the exam.</p>
+      <p class="gSub">Choose the closest archetype. No overthinking.</p>
     </header>
 
     <section class="gPanel" aria-label="Type selection">
-      <div class="gCard">
-        <p><strong>Rule</strong> This is your declared baseline. The exam compares choices against this declaration.</p>
-        <p><strong>Free will</strong> Choose the most accurate option. No overthinking.</p>
-        <p class="warn"><strong>Note</strong> Changing this later invalidates the run.</p>
+      <div class="box">
+        <p><strong>Rule</strong> This sets your declared baseline for this run. Changing later invalidates the run.</p>
+        <p class="tag">If the fourth archetype name is not “Explorer,” tell me the correct label and I’ll TNT swap it.</p>
       </div>
 
-      <div class="gCard" role="group" aria-label="Declared type options">
+      <div class="box" role="group" aria-label="Archetype options">
         <label class="opt">
-          <input type="radio" name="dtype" value="coherent" />
+          <input type="radio" name="atype" value="harmonizer" />
           <span>
-            <strong>Coherent / Stable</strong><br />
-            Consistent alignment and closed loops.
+            <div class="name">Harmonizer</div>
+            <div class="desc">Stabilizes people and systems. Seeks coherence, closure, and shared ground.</div>
+            <div class="tag">Bias: cohesion</div>
           </span>
         </label>
 
         <label class="opt">
-          <input type="radio" name="dtype" value="confused" />
+          <input type="radio" name="atype" value="executor" />
           <span>
-            <strong>Confused / Transitional</strong><br />
-            Mixed alignment, still stabilizing.
+            <div class="name">Executor</div>
+            <div class="desc">Moves fast toward closure. Converts decisions into action and receipts.</div>
+            <div class="tag">Bias: completion</div>
           </span>
         </label>
 
         <label class="opt">
-          <input type="radio" name="dtype" value="fragmented" />
+          <input type="radio" name="atype" value="explorer" />
           <span>
-            <strong>Fragmented / Unstable</strong><br />
-            Misalignment present, loops open, drift likely.
+            <div class="name">Explorer</div>
+            <div class="desc">Tests boundaries and learns by iteration. Expands map before commitment.</div>
+            <div class="tag">Bias: discovery</div>
           </span>
         </label>
 
-        <div class="hint">This choice is recorded on your receipt.</div>
-      </div>
-
-      <div class="gCard">
         <label class="opt">
-          <input type="checkbox" id="confirm" />
+          <input type="radio" name="atype" value="disruptor" />
+          <span>
+            <div class="name">Disruptor</div>
+            <div class="desc">Challenges weak structure. Breaks false coherence to force true constraints.</div>
+            <div class="tag">Bias: correction</div>
+          </span>
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="lock" />
           <span>I understand this declaration is locked for this run.</span>
         </label>
       </div>
 
       <div class="gActions">
-        <a class="gBtn" href="/diagnostic/ready/">Back</a>
+        <a class="gBtn" href="/diagnostic/">Back</a>
         <button class="gBtn gPrimary" id="begin" type="button">Begin Exam</button>
       </div>
 
@@ -77,31 +88,28 @@
   </main>
 
   <script>
-    // Guard: user must come from readiness
-    // (If they skipped, send them back to readiness)
-    // Optional: comment out if you don’t want gating.
-    // If you want gating, keep it.
-    // NOTE: readiness page does not set storage; so we gate softly by allowing direct access.
-    // You can hard-gate later when you add receipt logic.
-
-    const beginBtn = document.getElementById('begin');
-    const confirm = document.getElementById('confirm');
-
     function getType(){
-      const el = document.querySelector('input[name="dtype"]:checked');
+      const el = document.querySelector('input[name="atype"]:checked');
       return el ? el.value : null;
     }
 
-    beginBtn.addEventListener('click', () => {
+    document.getElementById('begin').addEventListener('click', ()=>{
       const t = getType();
-      if(!t) return;
-      if(!confirm.checked) return;
+      const lock = document.getElementById('lock');
+      if(!t || !lock.checked) return;
 
-      // Store declaration locally for now (receipt can be built later)
-      localStorage.setItem('GD_DIAG_DECLARED_TYPE', t);
-      localStorage.setItem('GD_DIAG_STARTED_AT', new Date().toISOString());
+      localStorage.setItem('GD_DIAG_ARCHETYPE', t);
 
-      // Go to exam
+      // minimal receipt stub (exam page will append)
+      const started = localStorage.getItem('GD_DIAG_STARTED_AT') || new Date().toISOString();
+      localStorage.setItem('GD_DIAG_RECEIPT', JSON.stringify({
+        version: "diag_v1",
+        started_at: started,
+        archetype: t,
+        status: "started",
+        answers: []
+      }));
+
       location.href = '/diagnostic/exam/';
     });
   </script>

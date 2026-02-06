@@ -15,15 +15,23 @@
       <p class="gSub">The door explains. The gate routes.</p>
     </header>
 
-    <section class="gPanel">
-      <div class="gCluster">
-        <a class="gKey gTop" href="/pending/diagnostic/"><span class="gKeyText"><strong>RUN</strong>Alignment diagnostic</span></a>
-        <a class="gKey gRight" href="/home/"><span class="gKeyText"><strong>ENTER</strong>Go to site</span></a>
-        <a class="gKey gBottom" href="/landing/info/"><span class="gKeyText"><strong>LEARN</strong>What this is</span></a>
-        <a class="gKey gLeft" href="/landing/exit/"><span class="gKeyText"><strong>EXIT</strong>Leave now</span></a>
+    <section class="gPanel" aria-label="Gate routes">
+      <div class="gCluster" role="navigation" aria-label="Primary routes">
+        <a class="gKey gTop" href="/panding/diagnostic/" aria-label="Run diagnostic">
+          <span class="gKeyText"><strong>RUN</strong>Alignment diagnostic</span>
+        </a>
+        <a class="gKey gRight" href="/home/" aria-label="Enter site">
+          <span class="gKeyText"><strong>ENTER</strong>Go to site</span>
+        </a>
+        <a class="gKey gBottom" href="/landing/info/" aria-label="Learn more">
+          <span class="gKeyText"><strong>LEARN</strong>What this is</span>
+        </a>
+        <a class="gKey gLeft" href="/landing/exit/" aria-label="Exit">
+          <span class="gKeyText"><strong>EXIT</strong>Leave now</span>
+        </a>
       </div>
 
-      <div class="gActions">
+      <div class="gActions" aria-label="Navigation controls">
         <a class="gBtn" href="/home/">Back</a>
         <a class="gBtn" href="/landing/exit/">Exit</a>
       </div>

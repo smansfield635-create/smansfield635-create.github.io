@@ -1,4 +1,4 @@
-<!-- TNT: /laws/tier-1/index.html  (FULL REPLACEMENT — Tier 1 -> nested diamond of 4 groups) -->
+<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,64 +8,64 @@
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
-
   <style>
-    .lensBar{display:flex;justify-content:center;margin:10px 0 16px}
-    .lensWrap{position:relative;display:flex;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px;width:min(520px,100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
-    .lensBtn{flex:1;border:0;background:transparent;color:rgba(241,246,251,.78);font-weight:900;padding:12px 14px;border-radius:999px;cursor:pointer;z-index:2}
-    .lensBtn.active{color:#fff}
-    .lensIndicator{position:absolute;top:6px;bottom:6px;width:calc(50% - 6px);left:6px;border-radius:999px;background:linear-gradient(180deg,#2aa4ff,#1976d2);box-shadow:0 8px 22px rgba(30,144,255,.35);transition:transform .22s ease}
-    .lensIndicator.right{transform:translateX(100%)}
-
-    .miniNote{max-width:520px;margin:0 auto 12px;text-align:center;opacity:.9;line-height:1.35}
+    .lensWrap{display:flex;justify-content:center;margin:10px 0 14px}
+    .lensToggle{display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px}
+    .lensBtn{border:0;background:transparent;color:rgba(241,246,251,.75);font-weight:800;padding:10px 18px;border-radius:999px;cursor:pointer}
+    .lensBtn.isActive{color:#fff;background:linear-gradient(180deg,#2aa4ff,#1976d2);box-shadow:0 8px 20px rgba(30,144,255,.30)}
+    .hint{margin-top:10px}
+    .hLabel{display:inline}
+    .sLabel{display:none}
+    body[data-lens="scientific"] .hLabel{display:none}
+    body[data-lens="scientific"] .sLabel{display:inline}
   </style>
 </head>
-
-<body>
+<body data-lens="human">
   <main class="gPage">
     <header class="gHeader">
-      <h1 class="gTitle" id="tTitle">Tier 1</h1>
-      <p class="gSub" id="tSub">Foundational laws · Non-derivable.</p>
-    </header>
+      <h1 class="gTitle">Tier 1</h1>
+      <p class="gSub">Foundational laws · Non-derivable.</p>
 
-    <section class="gPanel" aria-label="Tier 1: nested diamond">
-      <div class="lensBar" aria-label="Lens toggle">
-        <div class="lensWrap">
-          <div class="lensIndicator" id="lensIndicator"></div>
-          <button class="lensBtn active" id="btnHuman" type="button" onclick="setLens('human')">Human</button>
+      <div class="lensWrap" aria-label="Lens toggle">
+        <div class="lensToggle">
+          <button class="lensBtn isActive" id="btnHuman" type="button" onclick="setLens('human')">Human</button>
           <button class="lensBtn" id="btnSci" type="button" onclick="setLens('scientific')">Scientific</button>
         </div>
       </div>
 
-      <div class="miniNote" id="tNote">Choose a diamond to enter a leaf set.</div>
+      <p class="gSub hint">
+        <span class="hLabel">Choose a question. Diamonds route to leaves.</span>
+        <span class="sLabel">Choose a term. Diamonds route to leaves.</span>
+      </p>
+    </header>
 
-      <!-- Nested diamond (Tier 1 groups) -->
-      <div class="gCluster" role="navigation" aria-label="Tier 1 group routes">
+    <section class="gPanel" aria-label="Tier 1 routes">
+      <div class="gCluster" role="navigation" aria-label="Tier 1 branch diamond">
         <a class="gKey gTop" href="/laws/tier-1/permission/" aria-label="Permission">
           <span class="gKeyText">
-            <strong id="topA">Possible?</strong>
-            <span id="topB">Admissibility</span>
+            <strong class="hLabel">Possible?</strong><span class="hLabel">Permission</span>
+            <strong class="sLabel">Admissibility</strong><span class="sLabel">Permission</span>
           </span>
         </a>
 
         <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Agreement">
           <span class="gKeyText">
-            <strong id="rightA">Agreement?</strong>
-            <span id="rightB">Classification</span>
+            <strong class="hLabel">Agreement?</strong><span class="hLabel">Shared classification</span>
+            <strong class="sLabel">Classification</strong><span class="sLabel">Observer-invariant</span>
           </span>
         </a>
 
-        <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Shortcuts">
+        <a class="gKey gBottom" href="/laws/tier-1/nosub/" aria-label="No shortcuts">
           <span class="gKeyText">
-            <strong id="bottomA">Shortcuts?</strong>
-            <span id="bottomB">No shortcuts</span>
+            <strong class="hLabel">Shortcuts?</strong><span class="hLabel">No</span>
+            <strong class="sLabel">Non-Substitutability</strong><span class="sLabel">No shortcuts</span>
           </span>
         </a>
 
         <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Rules">
           <span class="gKeyText">
-            <strong id="leftA">Rules?</strong>
-            <span id="leftB">Coherence</span>
+            <strong class="hLabel">Rules?</strong><span class="hLabel">What governs</span>
+            <strong class="sLabel">Coherence</strong><span class="sLabel">Closure</span>
           </span>
         </a>
       </div>
@@ -80,56 +80,13 @@
   </main>
 
   <script>
-    function setLens(mode){
-      var isHuman = (mode === 'human');
-
-      // pill UI
-      var btnH = document.getElementById('btnHuman');
-      var btnS = document.getElementById('btnSci');
-      var ind = document.getElementById('lensIndicator');
-      btnH.classList.toggle('active', isHuman);
-      btnS.classList.toggle('active', !isHuman);
-      ind.classList.toggle('right', !isHuman);
-
-      // header/subheader swap (title stays Tier 1, but subtext swaps)
-      document.getElementById('tSub').textContent = isHuman
-        ? 'These determine whether anything may act, be governed, be agreed upon, or be short-circuited.'
-        : 'Foundational laws · Non-derivable.';
-
-      document.getElementById('tNote').textContent = isHuman
-        ? 'Choose a question. The leaf contains expandable bubbles.'
-        : 'Choose a term. The leaf contains expandable bubbles.';
-
-      // diamond label swap (two-line: human question vs scientific noun)
-      if(isHuman){
-        document.getElementById('topA').textContent = 'Possible?';
-        document.getElementById('topB').textContent = 'Admissibility';
-
-        document.getElementById('leftA').textContent = 'Rules?';
-        document.getElementById('leftB').textContent = 'Coherence';
-
-        document.getElementById('rightA').textContent = 'Agreement?';
-        document.getElementById('rightB').textContent = 'Classification';
-
-        document.getElementById('bottomA').textContent = 'Shortcuts?';
-        document.getElementById('bottomB').textContent = 'No shortcuts';
-      } else {
-        document.getElementById('topA').textContent = 'Admissibility';
-        document.getElementById('topB').textContent = 'Permission';
-
-        document.getElementById('leftA').textContent = 'Coherence';
-        document.getElementById('leftB').textContent = 'Governance';
-
-        document.getElementById('rightA').textContent = 'Classification';
-        document.getElementById('rightB').textContent = 'Agreement';
-
-        document.getElementById('bottomA').textContent = 'Non-Substitutability';
-        document.getElementById('bottomB').textContent = 'No-timer gating';
-      }
+    function setLens(next){
+      document.body.setAttribute("data-lens", next);
+      var h = document.getElementById("btnHuman");
+      var s = document.getElementById("btnSci");
+      if(next === "human"){ h.classList.add("isActive"); s.classList.remove("isActive"); }
+      else { s.classList.add("isActive"); h.classList.remove("isActive"); }
     }
-
-    setLens('human');
   </script>
 </body>
 </html>
-```0

@@ -1,115 +1,181 @@
-/* =========================
-   DOOR — CANONICAL GEOMETRY
-   No overlap. No ghost layers. No X.
-   ========================= */
+/* =========================================================
+   GEODIAMETRICS — CANONICAL DIAMOND UI (NON-LEAF)
+   Standard: Door + Links screenshots (glass + 4 diamonds)
+   ========================================================= */
 
 :root{
-  --glassA: rgba(255,255,255,.10);
-  --glassB: rgba(255,255,255,.06);
-  --stroke: rgba(255,255,255,.18);
-  --stroke2: rgba(255,255,255,.10);
-  --shadow: rgba(0,0,0,.28);
+  --bg0:#06131d;
+  --bg1:#0a1b28;
 
-  /* TUNE THESE TWO ONLY */
-  --d: 140px;          /* diamond size */
-  --gap: 18px;         /* space between diamonds */
+  --panel0:rgba(255,255,255,.06);
+  --panel1:rgba(255,255,255,.025);
+  --stroke:rgba(255,255,255,.14);
+
+  --diamond:rgba(255,255,255,.08);
+  --diamondStroke:rgba(255,255,255,.16);
+  --diamondInner:rgba(255,255,255,.09);
+
+  --txt:#eaf1f7;
+  --sub:rgba(234,241,247,.7);
+
+  --pill:rgba(255,255,255,.06);
+  --pillStroke:rgba(255,255,255,.14);
 }
 
-@media (min-width: 420px){
-  :root{ --d: 154px; --gap: 22px; }
-}
-@media (min-width: 520px){
-  :root{ --d: 165px; --gap: 26px; }
-}
-
-.doorCluster{
-  position:relative;
-  width:calc((var(--d) * 2) + (var(--gap) * 2));
-  height:calc((var(--d) * 2) + (var(--gap) * 2));
-  margin:18px auto 0;
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--txt);
+  background:
+    radial-gradient(1200px 900px at 50% 0%, rgba(255,255,255,.06), transparent 60%),
+    radial-gradient(900px 700px at 30% 60%, rgba(255,255,255,.03), transparent 65%),
+    radial-gradient(1000px 900px at 70% 80%, rgba(255,255,255,.02), transparent 70%),
+    linear-gradient(180deg,var(--bg1),var(--bg0));
 }
 
-.doorDiamond{
-  position:absolute;
-  width:var(--d);
-  height:var(--d);
+/* kill default link styling everywhere */
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+a:active{color:inherit}
+
+/* PAGE FRAME */
+.stage{
+  min-height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  color:rgba(232,238,245,.92);
-  transform:rotate(45deg);
-  border-radius:18px;
-
-  /* single clean glass */
-  background:linear-gradient(145deg, var(--glassA), var(--glassB));
-  border:1px solid var(--stroke);
-  box-shadow:
-    0 18px 40px var(--shadow),
-    inset 0 1px 0 rgba(255,255,255,.12);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  user-select:none;
-  -webkit-tap-highlight-color: transparent;
+  justify-content:flex-start;
+  padding:64px 18px 28px;
+  text-align:center;
 }
 
-/* subtle inner frame (NOT an X) */
-.doorDiamond::after{
+/* HEADERS */
+.hero h1{
+  font-size:56px;
+  line-height:1.05;
+  letter-spacing:-.02em;
+  font-weight:800;
+  margin-bottom:10px;
+}
+.hero .subtitle{
+  font-size:18px;
+  color:var(--sub);
+  margin-bottom:26px;
+}
+
+/* GLASS PANEL */
+.glass{
+  width:min(560px,92vw);
+  border-radius:34px;
+  padding:34px 22px 24px;
+  background:linear-gradient(180deg,var(--panel0),var(--panel1));
+  border:1px solid var(--stroke);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:
+    0 28px 80px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+/* DIAMOND GRID — FIXED, NO OVERLAP, NO X ARTIFACTS */
+.diamondGrid{
+  width:min(360px,74vw);
+  height:min(360px,74vw);
+  margin:0 auto 18px;
+  position:relative;
+}
+
+.diamond{
+  position:absolute;
+  width:min(150px,34vw);
+  height:min(150px,34vw);
+  border-radius:22px;
+  transform:rotate(45deg);
+
+  background:var(--diamond);
+  border:1px solid var(--diamondStroke);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+/* inner “glass” inset (this is what you LIKE — keep) */
+.diamond::before{
   content:"";
   position:absolute;
   inset:12px;
-  border-radius:14px;
-  border:1px solid var(--stroke2);
-  pointer-events:none;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
 }
 
-/* rotate text back */
-.doorDiamond > *{
+/* text inside diamond */
+.diamond > .label{
   transform:rotate(-45deg);
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  z-index:2;
+  padding:10px;
 }
-
-.doorDiamond strong{
-  display:block;
+.diamond .title{
   font-weight:800;
   letter-spacing:.08em;
-  font-size:1rem;
-  margin-bottom:8px;
+  font-size:16px;
+}
+.diamond .sub{
+  font-size:14px;
+  color:rgba(234,241,247,.62);
 }
 
-.doorDiamond span{
-  display:block;
-  font-size:.95rem;
-  color:rgba(185,198,211,.92);
+/* POSITIONS — “PULLED APART” (no overlap) */
+.diamond.top   { left:50%; top:2%;    transform:translateX(-50%) rotate(45deg); }
+.diamond.right { top:50%;  right:2%;  transform:translateY(-50%) rotate(45deg); }
+.diamond.bottom{ left:50%; bottom:2%; transform:translateX(-50%) rotate(45deg); }
+.diamond.left  { top:50%;  left:2%;   transform:translateY(-50%) rotate(45deg); }
+
+/* FOOTER + BUTTON ROW */
+.actions{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  margin:18px 0 10px;
+}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:140px;
+  padding:14px 18px;
+  border-radius:22px;
+  background:var(--pill);
+  border:1px solid var(--pillStroke);
+  color:rgba(234,241,247,.82);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.canon{
+  font-size:13px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:rgba(234,241,247,.32);
+  margin-top:6px;
 }
 
-/* POSITIONS — GUARANTEED NO OVERLAP */
-.doorDiamond.top{
-  top:0;
-  left:50%;
-  transform:translateX(-50%) rotate(45deg);
-}
-.doorDiamond.bottom{
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%) rotate(45deg);
-}
-.doorDiamond.left{
-  left:0;
-  top:50%;
-  transform:translateY(-50%) rotate(45deg);
-}
-.doorDiamond.right{
-  right:0;
-  top:50%;
-  transform:translateY(-50%) rotate(45deg);
-}
-
-/* hover/press */
-.doorDiamond:active{
-  transform:translateX(-50%) rotate(45deg) scale(.985);
-}
-.doorDiamond.left:active,
-.doorDiamond.right:active{
-  transform:translateY(-50%) rotate(45deg) scale(.985);
+/* MOBILE TWEAKS */
+@media (max-width:420px){
+  .hero h1{font-size:50px}
+  .diamond{width:min(140px,36vw);height:min(140px,36vw)}
+  .pill{min-width:150px}
 }

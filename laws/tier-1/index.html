@@ -1,4 +1,4 @@
-<!-- TNT: /laws/tier-1/index.html (Tier 1 = Diamond of Groups · Option A) -->
+<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — lens controls the DIAMOND labels) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,12 +11,12 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    .lensToggle{display:flex;position:relative;background:rgba(255,255,255,.08);border-radius:999px;padding:6px;gap:6px;margin:10px auto 16px;width:fit-content;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+    .lensToggle{display:flex;position:relative;background:rgba(255,255,255,.08);border-radius:999px;padding:6px;gap:6px;margin:10px auto 12px;width:fit-content;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
     .lensBtn{position:relative;z-index:2;padding:10px 22px;border-radius:999px;background:transparent;color:#cfe4f6;font-weight:900;cursor:pointer;border:none}
     .lensBtn.active{color:#fff}
     .lensIndicator{position:absolute;top:6px;bottom:6px;width:calc(50% - 6px);background:linear-gradient(180deg,#2aa4ff,#1976d2);border-radius:999px;transition:transform .25s ease;box-shadow:0 6px 18px rgba(30,144,255,.35)}
     .lensIndicator.right{transform:translateX(100%)}
-    .note{opacity:.85;text-align:center;line-height:1.45;margin:0 0 10px}
+    .note{opacity:.85;text-align:center;line-height:1.45;margin:0 0 14px}
   </style>
 </head>
 <body>
@@ -31,15 +31,56 @@
       <button class="lensBtn" id="btnHum" type="button" onclick="setLens('human')">Human Lens</button>
     </div>
 
-    <div class="note">Tier 1 opens a diamond of groups. Each group contains expandable law bubbles.</div>
+    <div class="note" id="noteText">
+      Tier 1 opens a diamond of groups. Each group contains expandable law bubbles.
+    </div>
   </header>
 
   <section class="gPanel" aria-label="Tier 1 groups">
     <div class="gCluster" role="navigation" aria-label="Tier 1 group routes">
-      <a class="gKey gTop" href="/laws/tier-1/admissibility/"><span class="gKeyText"><strong>GROUP A</strong>Admissibility</span></a>
-      <a class="gKey gRight" href="/laws/tier-1/classification/"><span class="gKeyText"><strong>GROUP B</strong>Classification</span></a>
-      <a class="gKey gBottom" href="/laws/tier-1/nonsub/"><span class="gKeyText"><strong>GROUP C</strong>Non-Substitute</span></a>
-      <a class="gKey gLeft" href="/laws/tier-1/overview/"><span class="gKeyText"><strong>OVERVIEW</strong>Index</span></a>
+      <a class="gKey gTop" href="/laws/tier-1/admissibility/" aria-label="Group A">
+        <span class="gKeyText">
+          <strong id="gA_title"
+            data-sci="GROUP A"
+            data-hum="GROUP A">GROUP A</strong>
+          <span id="gA_sub"
+            data-sci="Admissibility"
+            data-hum="Can it run?">Admissibility</span>
+        </span>
+      </a>
+
+      <a class="gKey gRight" href="/laws/tier-1/classification/" aria-label="Group B">
+        <span class="gKeyText">
+          <strong id="gB_title"
+            data-sci="GROUP B"
+            data-hum="GROUP B">GROUP B</strong>
+          <span id="gB_sub"
+            data-sci="Classification"
+            data-hum="Can we agree?">Classification</span>
+        </span>
+      </a>
+
+      <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Group C">
+        <span class="gKeyText">
+          <strong id="gC_title"
+            data-sci="GROUP C"
+            data-hum="GROUP C">GROUP C</strong>
+          <span id="gC_sub"
+            data-sci="Non-Substitute"
+            data-hum="No shortcuts">Non-Substitute</span>
+        </span>
+      </a>
+
+      <a class="gKey gLeft" href="/laws/tier-1/overview/" aria-label="Overview">
+        <span class="gKeyText">
+          <strong id="gO_title"
+            data-sci="OVERVIEW"
+            data-hum="OVERVIEW">OVERVIEW</strong>
+          <span id="gO_sub"
+            data-sci="Index"
+            data-hum="Map">Index</span>
+        </span>
+      </a>
     </div>
 
     <div class="gActions">
@@ -52,16 +93,11 @@
 </main>
 
 <script>
-  function setLens(l){
-    localStorage.setItem('GD_LENS', l);
+  function paintLens(l){
     document.getElementById('lensIndicator').classList.toggle('right', l==='human');
     document.getElementById('btnSci').classList.toggle('active', l==='scientific');
     document.getElementById('btnHum').classList.toggle('active', l==='human');
-  }
-  (function init(){
-    const l = localStorage.getItem('GD_LENS') || 'scientific';
-    setLens(l);
-  })();
-</script>
-</body>
-</html>
+
+    // Diamond subtitle swaps
+    document.querySelectorAll('[data-sci]').forEach(el=>{
+      el.textContent = (l==='human

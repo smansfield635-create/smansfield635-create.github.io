@@ -1,4 +1,4 @@
-<!-- TNT: /laws/tier-1/index.html  (FULL REPLACEMENT — NO BLEND, NO ROTATED TEXT, HARD LOCK) -->
+<!-- TNT: /laws/tier-1/index.html  (FULL REPLACEMENT — HUMAN-FIT LABELS, NO SCIENCE-BLOAT ON BUTTONS) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,16 +11,16 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* HARD STOP: never rotate label text on this page (prevents the “angled box” drift) */
+    /* HARD STOP: never rotate label text on this page */
     .gKeyText, .gKeyText * { transform:none !important; }
     .gKeyText { text-align:center; }
 
-    /* HARD STOP: only one view may render at a time */
+    /* Only one view visible */
     .view { display:none !important; }
     body[data-view="human"] .view.human { display:block !important; }
     body[data-view="scientific"] .view.scientific { display:block !important; }
 
-    /* Toggle: simple, no sliding indicator to avoid visual drift */
+    /* Toggle: simple (no sliding indicator) */
     .lensBar{
       width:min(560px,92vw);
       margin:14px auto 10px;
@@ -46,7 +46,6 @@
       box-shadow:0 10px 22px rgba(30,144,255,.28);
     }
 
-    /* Instruction line swaps with the view */
     .hint { margin:10px 0 0; }
     .hint .h, .hint .s { display:none; }
     body[data-view="human"] .hint .h { display:block; }
@@ -77,40 +76,40 @@
       <div class="view human" role="navigation" aria-label="Tier 1 human questions">
         <div class="gCluster">
           <a class="gKey gTop" href="/laws/tier-1/permission/" aria-label="Possible">
-            <span class="gKeyText"><strong>Possible?</strong>Admissibility</span>
+            <span class="gKeyText"><strong>Possible?</strong>Permit</span>
           </a>
 
           <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Agreement">
-            <span class="gKeyText"><strong>Agreement?</strong>Classification</span>
+            <span class="gKeyText"><strong>Agreement?</strong>Consensus</span>
           </a>
 
-          <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Shortcuts">
-            <span class="gKeyText"><strong>Shortcuts?</strong>No shortcuts</span>
+          <a class="gKey gBottom" href="/laws/tier-1/noshortcuts/" aria-label="Shortcuts">
+            <span class="gKeyText"><strong>Shortcuts?</strong>No</span>
           </a>
 
-          <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Rules">
+          <a class="gKey gLeft" href="/laws/tier-1/rules/" aria-label="Rules">
             <span class="gKeyText"><strong>Rules?</strong>Coherence</span>
           </a>
         </div>
       </div>
 
-      <!-- SCIENTIFIC (terms) -->
+      <!-- SCIENTIFIC (terms, but still human-fit on buttons) -->
       <div class="view scientific" role="navigation" aria-label="Tier 1 scientific terms">
         <div class="gCluster">
-          <a class="gKey gTop" href="/laws/tier-1/admissibility/" aria-label="Admissibility">
-            <span class="gKeyText"><strong>Admissibility</strong>Permission</span>
+          <a class="gKey gTop" href="/laws/tier-1/permission/" aria-label="Permit">
+            <span class="gKeyText"><strong>Permit</strong>Admitted?</span>
           </a>
 
-          <a class="gKey gRight" href="/laws/tier-1/classification/" aria-label="Classification">
-            <span class="gKeyText"><strong>Classification</strong>Agreement</span>
+          <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Consensus">
+            <span class="gKeyText"><strong>Consensus</strong>Same call?</span>
           </a>
 
-          <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Non-substitutability">
-            <span class="gKeyText"><strong>Non-Substitutability</strong>No-timer gating</span>
+          <a class="gKey gBottom" href="/laws/tier-1/noshortcuts/" aria-label="No shortcuts">
+            <span class="gKeyText"><strong>No Shortcuts</strong>Required</span>
           </a>
 
-          <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Coherence">
-            <span class="gKeyText"><strong>Coherence</strong>Governance</span>
+          <a class="gKey gLeft" href="/laws/tier-1/rules/" aria-label="Coherence">
+            <span class="gKeyText"><strong>Coherence</strong>Holds up?</span>
           </a>
         </div>
       </div>
@@ -134,4 +133,3 @@
   </script>
 </body>
 </html>
-```0

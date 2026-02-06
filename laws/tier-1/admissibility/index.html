@@ -1,21 +1,23 @@
+<!-- TNT: /laws/tier-1/admissibility/index.html (FULL REPLACEMENT — lens per page restored) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Tier 1 · Group A · Geodiametrics</title>
-
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
-
   <style>
+    .lensMini{display:flex;gap:10px;justify-content:center;margin:10px 0 14px;flex-wrap:wrap}
+    .lensMini button{padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font-weight:900;cursor:pointer}
+    .lensMini button.active{background:linear-gradient(180deg,#2aa4ff,#1976d2);border:none;box-shadow:0 6px 18px rgba(30,144,255,.35)}
     details.law{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);border-radius:18px;padding:14px 16px;margin:0 0 12px}
     details.law summary{cursor:pointer;font-weight:900;list-style:none}
     details.law summary::-webkit-details-marker{display:none}
     .body{margin-top:10px;line-height:1.55}
     .human{display:none}
-    .sub{opacity:.85;text-align:center;margin:0 0 14px}
+    .sub{opacity:.85;text-align:center;margin:0 0 8px}
   </style>
 </head>
 <body>
@@ -26,7 +28,12 @@
   </header>
 
   <section class="gPanel">
-    <div class="sub">Lens is set on Tier 1 and applies here.</div>
+    <div class="sub">Lens is required. Choose lens, then expand bubbles.</div>
+
+    <div class="lensMini">
+      <button id="sci" type="button" onclick="setLens('scientific')">Scientific</button>
+      <button id="hum" type="button" onclick="setLens('human')">Human</button>
+    </div>
 
     <details class="law">
       <summary>1 · Coherence Precedence</summary>
@@ -56,11 +63,14 @@
 </main>
 
 <script>
-  (function(){
-    const l = localStorage.getItem('GD_LENS') || 'scientific';
-    document.querySelectorAll('.scientific').forEach(el=>el.style.display = (l==='scientific') ? 'block' : 'none');
-    document.querySelectorAll('.human').forEach(el=>el.style.display = (l==='human') ? 'block' : 'none');
-  })();
+  function applyLens(l){
+    document.querySelectorAll('.scientific').forEach(el=>el.style.display=(l==='scientific')?'block':'none');
+    document.querySelectorAll('.human').forEach(el=>el.style.display=(l==='human')?'block':'none');
+    document.getElementById('sci').classList.toggle('active', l==='scientific');
+    document.getElementById('hum').classList.toggle('active', l==='human');
+  }
+  function setLens(l){ localStorage.setItem('GD_LENS', l); applyLens(l); }
+  applyLens(localStorage.getItem('GD_LENS')||'scientific');
 </script>
 </body>
 </html>

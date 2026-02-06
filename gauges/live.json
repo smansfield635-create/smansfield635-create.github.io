@@ -1,25 +1,11 @@
-// TNT: /gauges/live.json (FULL REPLACEMENT — includes series for charts + green↔red spectrum support)
 {
-  "updated_at": "2026-02-05T00:00:00Z",
-  "coherence": {
-    "value": 0.72,
-    "label": "Coherent",
-    "series": [0.55, 0.60, 0.64, 0.68, 0.70, 0.74, 0.72]
-  },
-  "admissibility": {
-    "value": 1,
-    "label": "Admitted",
-    "series": [1, 1, 1, 1, 1, 1, 1]
-  },
-  "ohm": {
-    "value": 0.18,
-    "label": "Low friction",
-    "series": [0.32, 0.28, 0.25, 0.22, 0.20, 0.19, 0.18]
-  },
-  "load": {
-    "value": 0.42,
-    "label": "Moderate load",
-    "series": [0.35, 0.38, 0.40, 0.42, 0.46, 0.44, 0.42]
+  "updated": "2026-02-05T00:00:00Z",
+  "gauges": {
+    "coherence": { "value": 0.72 },
+    "admissibility": { "value": 1 },
+    "drift": { "value": 0.18 },
+    "load": { "value": 0.42 },
+    "stability": { "value": 0.81 },
+    "ohm": { "value": 0.18 }
   }
 }
-```0

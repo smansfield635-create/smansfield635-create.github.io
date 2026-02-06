@@ -3,82 +3,179 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Diagnostic · Exam · Geodiametrics</title>
+  <title>Diagnostic · Exam</title>
+
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+
   <style>
-    .box{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:14px 16px;margin:0 0 12px;line-height:1.5}
+    .gCard{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:14px 16px;margin:0 0 12px;line-height:1.5}
+    .q{margin:14px 0 10px;font-weight:900}
     .opt{display:flex;gap:10px;align-items:flex-start;margin:10px 0}
     input[type="radio"]{transform:scale(1.2);margin-top:2px}
-    .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+    .hint{opacity:.78;font-size:13px;margin-top:6px}
+    .gActions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:14px}
     pre{white-space:pre-wrap;word-break:break-word;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:12px}
   </style>
 </head>
+
 <body>
-<main class="gPage">
-  <header class="gHeader">
-    <h1 class="gTitle">Exam</h1>
-    <p class="gSub">Alignment assessment (v1).</p>
-  </header>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Exam</h1>
+      <p class="gSub">Minimal alignment check · Evidence-only.</p>
+    </header>
 
-  <section class="gPanel" aria-label="Exam">
-    <div class="box" id="banner"></div>
+    <section class="gPanel" aria-label="Diagnostic exam">
+      <div class="gCard" id="banner"></div>
 
-    <div class="box">
-      <p><strong>Question 1</strong></p>
-      <p>I close loops instead of leaving open debt.</p>
-      <label class="opt"><input type="radio" name="q1" value="agree"><span>Agree</span></label>
-      <label class="opt"><input type="radio" name="q1" value="neutral"><span>Neutral</span></label>
-      <label class="opt"><input type="radio" name="q1" value="disagree"><span>Disagree</span></label>
-    </div>
+      <div class="gCard">
+        <div class="q">Q1 · Coherence</div>
+        <div>I do what I say I value, even when it’s inconvenient.</div>
+        <label class="opt"><input type="radio" name="q1" value="agree"><span>Agree</span></label>
+        <label class="opt"><input type="radio" name="q1" value="mixed"><span>Mixed</span></label>
+        <label class="opt"><input type="radio" name="q1" value="disagree"><span>Disagree</span></label>
+      </div>
 
-    <div class="row">
-      <a class="gBtn" href="/diagnostic/type/">Back</a>
-      <button class="gBtn" type="button" id="save">Save Answer</button>
-      <a class="gBtn" href="/gauges/">Gauges</a>
-    </div>
+      <div class="gCard">
+        <div class="q">Q2 · Admissibility</div>
+        <div>If a condition is required, I do not “push through” without it.</div>
+        <label class="opt"><input type="radio" name="q2" value="agree"><span>Agree</span></label>
+        <label class="opt"><input type="radio" name="q2" value="mixed"><span>Mixed</span></label>
+        <label class="opt"><input type="radio" name="q2" value="disagree"><span>Disagree</span></label>
+      </div>
 
-    <div class="box">
-      <p><strong>Receipt (local)</strong></p>
-      <pre id="receiptOut">Loading…</pre>
-    </div>
+      <div class="gCard">
+        <div class="q">Q3 · Drift</div>
+        <div>I stay on the intended path instead of oscillating or self-contradicting.</div>
+        <label class="opt"><input type="radio" name="q3" value="agree"><span>Agree</span></label>
+        <label class="opt"><input type="radio" name="q3" value="mixed"><span>Mixed</span></label>
+        <label class="opt"><input type="radio" name="q3" value="disagree"><span>Disagree</span></label>
+      </div>
 
-    <footer class="gFooter">RECEIPT · AUDITABLE · © GEODIAMETRICS</footer>
-  </section>
-</main>
+      <div class="gCard">
+        <div class="q">Q4 · Constraint Load</div>
+        <div>I can carry multiple constraints without dropping the important ones.</div>
+        <label class="opt"><input type="radio" name="q4" value="agree"><span>Agree</span></label>
+        <label class="opt"><input type="radio" name="q4" value="mixed"><span>Mixed</span></label>
+        <label class="opt"><input type="radio" name="q4" value="disagree"><span>Disagree</span></label>
+      </div>
 
-<script>
-  const type = localStorage.getItem('GD_DIAG_TYPE');
-  const raw = localStorage.getItem('GD_DIAG_RECEIPT');
-  if(!type || !raw) location.href = '/diagnostic/type/';
+      <div class="gCard">
+        <div class="q">Q5 · Stability</div>
+        <div>I keep my commitments over time, not just in the moment.</div>
+        <label class="opt"><input type="radio" name="q5" value="agree"><span>Agree</span></label>
+        <label class="opt"><input type="radio" name="q5" value="mixed"><span>Mixed</span></label>
+        <label class="opt"><input type="radio" name="q5" value="disagree"><span>Disagree</span></label>
+      </div>
 
-  function readReceipt(){
-    try { return JSON.parse(localStorage.getItem('GD_DIAG_RECEIPT')||'{}'); }
-    catch { return {}; }
-  }
-  function writeReceipt(r){
-    localStorage.setItem('GD_DIAG_RECEIPT', JSON.stringify(r));
-    document.getElementById('receiptOut').textContent = JSON.stringify(r, null, 2);
-  }
+      <div class="gCard">
+        <div class="q">Q6 · Ohm (Friction)</div>
+        <div>I complete what I start without excessive retries, avoidance, or resistance.</div>
+        <label class="opt"><input type="radio" name="q6" value="agree"><span>Agree</span></label>
+        <label class="opt"><input type="radio" name="q6" value="mixed"><span>Mixed</span></label>
+        <label class="opt"><input type="radio" name="q6" value="disagree"><span>Disagree</span></label>
+        <div class="hint">Keep it simple. Choose the closest answer.</div>
+      </div>
 
-  document.getElementById('banner').innerHTML =
-    `<p><strong>Declared type:</strong> ${type}</p><p>Answer consistently. This exam is inspectable and non-coercive.</p>`;
+      <div class="gActions">
+        <a class="gBtn" href="/diagnostic/type/">Back</a>
+        <button class="gBtn gPrimary" id="finish" type="button">Finish</button>
+        <a class="gBtn" href="/home/">Exit</a>
+      </div>
 
-  writeReceipt(readReceipt());
+      <div class="gCard">
+        <p><strong>Receipt (local)</strong></p>
+        <p class="hint">This is the inspectable payload we bind to live gauges tomorrow.</p>
+        <pre id="receiptOut">No receipt yet.</pre>
+        <div class="gActions">
+          <a class="gBtn" href="/gauges/">View Gauges</a>
+          <a class="gBtn" href="/diagnostic/">Diagnostic Home</a>
+        </div>
+      </div>
 
-  document.getElementById('save').addEventListener('click', ()=>{
-    const x = document.querySelector('input[name="q1"]:checked');
-    if(!x) return;
-    const r = readReceipt();
-    r.status = "in_progress";
-    r.answers = r.answers || [];
-    // overwrite Q1 if exists
-    r.answers = r.answers.filter(a => a.q !== "q1");
-    r.answers.push({ q:"q1", a:x.value, t:new Date().toISOString() });
-    writeReceipt(r);
-    alert('Saved.');
-  });
-</script>
+      <footer class="gFooter">RECEIPT · AUDITABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
+
+  <script>
+    const declared = localStorage.getItem('GD_DIAG_DECLARED_TYPE');
+    const startedAt = localStorage.getItem('GD_DIAG_STARTED_AT');
+
+    // If they jumped here without lock-in, send back to type
+    if(!declared || !startedAt){
+      location.href = '/diagnostic/type/';
+    }
+
+    document.getElementById('banner').innerHTML =
+      `<p><strong>Declared type:</strong> ${declared}</p>
+       <p class="hint">This exam records choices only. No intent is inferred.</p>`;
+
+    function getAnswer(n){
+      const el = document.querySelector(`input[name="q${n}"]:checked`);
+      return el ? el.value : null;
+    }
+
+    function allAnswered(){
+      for(let i=1;i<=6;i++){
+        if(!getAnswer(i)) return false;
+      }
+      return true;
+    }
+
+    // Map agree/mixed/disagree to numeric (for tomorrow’s binding)
+    // agree=1, mixed=0.5, disagree=0
+    function asNum(v){
+      if(v==='agree') return 1;
+      if(v==='mixed') return 0.5;
+      return 0;
+    }
+
+    document.getElementById('finish').addEventListener('click', ()=>{
+      if(!allAnswered()) return;
+
+      const answers = {};
+      for(let i=1;i<=6;i++){
+        const v = getAnswer(i);
+        answers[`q${i}`] = v;
+      }
+
+      // Minimal derived signals (placeholder math, honest + inspectable)
+      // Tomorrow: replace with your calibrated rules.
+      const coherence = asNum(answers.q1);
+      const admissibility = asNum(answers.q2);
+      const drift = 1 - asNum(answers.q3);
+      const load = 1 - asNum(answers.q4);
+      const stability = asNum(answers.q5);
+      const ohm = 1 - asNum(answers.q6);
+
+      const receipt = {
+        version: "diag_v1",
+        started_at: startedAt,
+        finished_at: new Date().toISOString(),
+        declared_type: declared,
+        answers,
+        derived: {
+          coherence,
+          admissibility,
+          drift,
+          load,
+          stability,
+          ohm
+        }
+      };
+
+      localStorage.setItem('GD_DIAG_RECEIPT', JSON.stringify(receipt));
+      document.getElementById('receiptOut').textContent = JSON.stringify(receipt, null, 2);
+      alert('Receipt generated.');
+    });
+
+    // If a receipt already exists, show it
+    const existing = localStorage.getItem('GD_DIAG_RECEIPT');
+    if(existing){
+      try{ document.getElementById('receiptOut').textContent = JSON.stringify(JSON.parse(existing), null, 2); }
+      catch{}
+    }
+  </script>
 </body>
 </html>

@@ -1,17 +1,16 @@
-<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — RESTORES ORIGINAL gCluster/gKey DIAMOND; TOGGLE SWAPS DIAMONDS ONLY; NO OTHER CHANGES) -->
+<!-- TNT: /laws/tier-1/nonsub/index.html (FULL REPLACEMENT — REMOVES “GROUP C”, ADDS TITLE/SUBTITLE TOGGLE) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tier 1 · Geodiametrics</title>
+  <title>Tier 1 · No Shortcuts · Geodiametrics</title>
 
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* Toggle bar (keep as-is) */
     .lensToggle{
       display:flex;gap:6px;justify-content:center;margin:10px auto 14px;
       background:rgba(255,255,255,.08);padding:6px;border-radius:999px;
@@ -28,31 +27,43 @@
       box-shadow:0 6px 18px rgba(30,144,255,.35);
     }
 
-    /* Swap subtitles */
-    #subHuman{display:none}
-    body[data-lens="human"] #subSci{display:none}
-    body[data-lens="human"] #subHuman{display:block}
+    /* Sections */
+    .lawItem{
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:18px;
+      padding:14px 18px;
+      margin:0 0 12px;
+      text-align:center;
+    }
+    .lawItem h3{
+      margin:0;
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:-0.01em;
+    }
+    .lawItem p{
+      margin:10px 0 0;
+      line-height:1.45;
+      opacity:.9;
+    }
 
-    /* Swap DIAMONDS (not text) */
-    .diamondSet{display:none}
-    .diamondSet.active{display:block}
+    /* Toggle content */
+    .humanOnly{display:none}
+    .sciOnly{display:block}
+    body[data-lens="human"] .humanOnly{display:block}
+    body[data-lens="human"] .sciOnly{display:none}
   </style>
 
   <script>
     function setLens(lens){
       document.body.setAttribute('data-lens', lens);
-
-      const setH = document.getElementById('setHuman');
-      const setS = document.getElementById('setScientific');
-      const bH   = document.getElementById('btnHuman');
-      const bS   = document.getElementById('btnSci');
-
+      const bH = document.getElementById('btnHuman');
+      const bS = document.getElementById('btnSci');
       if(lens === 'human'){
-        setH.classList.add('active'); setS.classList.remove('active');
-        bH.classList.add('active');   bS.classList.remove('active');
+        bH.classList.add('active'); bS.classList.remove('active');
       } else {
-        setS.classList.add('active'); setH.classList.remove('active');
-        bS.classList.add('active');   bH.classList.remove('active');
+        bS.classList.add('active'); bH.classList.remove('active');
       }
     }
     window.addEventListener('DOMContentLoaded', () => setLens('scientific'));
@@ -62,13 +73,16 @@
 <body data-lens="scientific">
   <main class="gPage">
     <header class="gHeader">
-      <h1 class="gTitle">Tier 1</h1>
+      <!-- TITLE + SUBTITLE TOGGLE WITH LENS -->
+      <h1 class="gTitle">
+        <span class="sciOnly">No-Compensation / No-Timer Gating</span>
+        <span class="humanOnly">Shortcuts?</span>
+      </h1>
 
-      <!-- Scientific subtitle -->
-      <p class="gSub" id="subSci">Foundational laws · Non-derivable.</p>
-
-      <!-- Human subtitle -->
-      <p class="gSub" id="subHuman">These determine whether anything may act, be governed, be agreed upon, or be short-circuited.</p>
+      <p class="gSub">
+        <span class="sciOnly">Missing constraints cannot be offset.</span>
+        <span class="humanOnly">No shortcuts. Requirements do not trade.</span>
+      </p>
 
       <div class="lensToggle" aria-label="Lens toggle">
         <button class="lensBtn" id="btnHuman" onclick="setLens('human')">Human</button>
@@ -76,53 +90,35 @@
       </div>
     </header>
 
-    <section class="gPanel" aria-label="Tier 1">
+    <section class="gPanel" aria-label="Tier 1 — No shortcuts">
 
-      <!-- HUMAN DIAMOND (QUESTIONS ONLY) -->
-      <div class="diamondSet" id="setHuman">
-        <div class="gCluster" role="navigation" aria-label="Tier 1 (Human)">
-          <a class="gKey gTop" href="/laws/tier-1/permission/" aria-label="Possible">
-            <span class="gKeyText"><strong>Possible?</strong></span>
-          </a>
-
-          <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Rules">
-            <span class="gKeyText"><strong>Rules?</strong></span>
-          </a>
-
-          <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Agreement">
-            <span class="gKeyText"><strong>Agreement?</strong></span>
-          </a>
-
-          <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Shortcuts">
-            <span class="gKeyText"><strong>Shortcuts?</strong></span>
-          </a>
-        </div>
+      <!-- ITEM 1 -->
+      <div class="lawItem">
+        <h3>
+          <span class="sciOnly">L6 · Non-Compensation Law</span>
+          <span class="humanOnly">Non-compensation</span>
+        </h3>
+        <p>
+          <span class="sciOnly">Strength in one dimension cannot compensate for violation in another required constraint.</span>
+          <span class="humanOnly">If a requirement is missing, extra strength somewhere else doesn’t “make up” for it.</span>
+        </p>
       </div>
 
-      <!-- SCIENTIFIC DIAMOND (TERMS ONLY) -->
-      <div class="diamondSet active" id="setScientific">
-        <div class="gCluster" role="navigation" aria-label="Tier 1 (Scientific)">
-          <a class="gKey gTop" href="/laws/tier-1/permission/" aria-label="Admissibility">
-            <span class="gKeyText"><strong>Admissibility</strong></span>
-          </a>
-
-          <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Coherence and Closure">
-            <span class="gKeyText"><strong>Coherence / Closure</strong></span>
-          </a>
-
-          <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Observer-Invariant">
-            <span class="gKeyText"><strong>Observer-Invariant</strong></span>
-          </a>
-
-          <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Non-Compensation and No-Timer">
-            <span class="gKeyText"><strong>Non-Comp / No-Timer</strong></span>
-          </a>
-        </div>
+      <!-- ITEM 2 -->
+      <div class="lawItem">
+        <h3>
+          <span class="sciOnly">L7 · No-Timer Gating Law</span>
+          <span class="humanOnly">No timer gating</span>
+        </h3>
+        <p>
+          <span class="sciOnly">Time passage cannot substitute for structural completion, receipt, or constraint satisfaction.</span>
+          <span class="humanOnly">Waiting doesn’t complete the work. Completion requires the missing step.</span>
+        </p>
       </div>
 
       <div class="gActions">
-        <a class="gBtn" href="/laws/">Back</a>
-        <a class="gBtn" href="/home/">Home</a>
+        <a class="gBtn" href="/laws/tier-1/">Back</a>
+        <a class="gBtn" href="/laws/">Laws</a>
       </div>
 
       <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>

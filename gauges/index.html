@@ -1,144 +1,39 @@
-<!-- TNT: /gauges/index.html (GAUGE HUB REDESIGN — bubbles + modal + OSF-style mini charts + spectrum) -->
+<!-- TNT: /gauges/index.html (GAUGE HUB — LANDING ONLY, NO NUMBERS, NO GRAPHS) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gauges · Geodiametrics</title>
-
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
-
-  <style>
-    /* ===== Bubble Grid ===== */
-    .bubbleGrid{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:14px;
-      margin-top:6px;
-    }
-    @media (min-width:520px){
-      .bubbleGrid{grid-template-columns:1fr 1fr}
-    }
-    .bubble{
-      position:relative;
-      border-radius:22px;
-      padding:16px 16px 14px;
-      background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));
-      border:1px solid rgba(255,255,255,.18);
-      cursor:pointer;
-      overflow:hidden;
-    }
-    .bubbleTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-    .bubbleTitle{font-weight:900;letter-spacing:.02em}
-    .bubbleSub{opacity:.78;margin-top:4px;font-weight:650}
-    .bubbleVal{font-weight:900;font-size:18px;text-align:right}
-    .bubbleLbl{opacity:.78;font-weight:700;text-align:right}
-    .sparkWrap{margin-top:12px}
-    .spark{
-      width:100%;
-      height:56px;
-      border-radius:14px;
-      background:rgba(0,0,0,.18);
-      border:1px solid rgba(255,255,255,.10);
-      overflow:hidden;
-    }
-    .bubbleGlow{
-      position:absolute;inset:-40% -30% auto -30%;
-      height:160%;
-      filter:blur(28px);
-      opacity:.55;
-      pointer-events:none;
-    }
-
-    /* ===== Modal ===== */
-    .modal{
-      position:fixed;inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-      background:rgba(0,0,0,.55);
-      z-index:9999;
-    }
-    .modal.show{display:flex}
-    .modalCard{
-      width:100%;
-      max-width:560px;
-      border-radius:26px;
-      padding:18px 18px 16px;
-      background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));
-      border:1px solid rgba(255,255,255,.22);
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
-    }
-    .modalHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-    .modalTitle{font-size:22px;font-weight:900;margin:0}
-    .modalClose{
-      border:none;border-radius:12px;
-      background:rgba(255,255,255,.10);
-      color:#fff;
-      padding:10px 12px;
-      cursor:pointer;
-      font-weight:900;
-    }
-    .modalMeta{margin-top:6px;opacity:.82;line-height:1.45}
-    .modalBig{
-      margin-top:14px;
-      border-radius:18px;
-      background:rgba(0,0,0,.18);
-      border:1px solid rgba(255,255,255,.10);
-      padding:12px;
-    }
-    .modalRow{
-      display:flex;gap:12px;flex-wrap:wrap;
-      margin-top:12px;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .pill{
-      padding:10px 14px;border-radius:999px;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.18);
-      font-weight:800;
-      color:#fff;
-      white-space:nowrap;
-    }
-    .updated{opacity:.78;font-weight:650}
-
-    /* ===== Spectrum chips (green→red, with deep-blue fractal end) ===== */
-    .chip{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(255,255,255,.08);
-      font-weight:800;
-      margin:0 auto 14px;
-      width:fit-content;
-    }
-    .dot{
-      width:10px;height:10px;border-radius:999px;
-      background:rgba(255,255,255,.6);
-      box-shadow:0 0 16px rgba(255,255,255,.35);
-    }
-  </style>
 </head>
-
 <body>
   <main class="gPage">
     <header class="gHeader">
       <h1 class="gTitle">Gauges</h1>
-      <p class="gSub">Live instrument outputs · Tap bubble → expand</p>
+      <p class="gSub">Instrument vs Telemetry.</p>
     </header>
 
     <section class="gPanel" aria-label="Gauge hub">
-      <div class="chip" aria-label="Spectrum legend">
-        <span class="dot" id="legendDot"></span>
-        <span>Red = fragmentation/instability · Green = coherence · Deep Green/Blue = fractalization</span>
-      </div>
+      <div class="gCluster" role="navigation" aria-label="Gauge routes">
+        <a class="gKey gTop" href="/gauges/instrument/" aria-label="Instrument">
+          <span class="gKeyText"><strong>INSTRUMENT</strong>States</span>
+        </a>
 
-      <div class="bubbleGrid" id="grid" aria-label="Gauge bubbles"></div>
+        <a class="gKey gRight" href="/gauges/telemetry/" aria-label="Telemetry">
+          <span class="gKeyText"><strong>TELEMETRY</strong>Evidence</span>
+        </a>
+
+        <a class="gKey gBottom" href="/gauges/instrument/#ohm" aria-label="Ohm">
+          <span class="gKeyText"><strong>OHM</strong>Friction</span>
+        </a>
+
+        <a class="gKey gLeft" href="/gauges/instrument/#coherence" aria-label="Coherence">
+          <span class="gKeyText"><strong>COHERENCE</strong>Alignment</span>
+        </a>
+      </div>
 
       <div class="gActions" aria-label="Navigation controls">
         <a class="gBtn" href="/home/">Back</a>
@@ -149,173 +44,6 @@
     </section>
   </main>
 
-  <!-- Modal -->
-  <div class="modal" id="modal" aria-label="Gauge modal">
-    <div class="modalCard">
-      <div class="modalHead">
-        <div>
-          <h2 class="modalTitle" id="mTitle">Gauge</h2>
-          <div class="modalMeta" id="mDesc"></div>
-        </div>
-        <button class="modalClose" onclick="closeModal()">Close</button>
-      </div>
-
-      <div class="modalBig">
-        <div class="spark" id="mChart"></div>
-      </div>
-
-      <div class="modalRow">
-        <div class="pill" id="mValue">Value —</div>
-        <div class="pill" id="mLabel">Label —</div>
-        <div class="updated" id="mUpdated">Updated —</div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // ===== Spectrum mapping =====
-    // coherence/admissibility: higher is better (toward deep green/blue)
-    // ohm/load: higher is worse (toward red)
-    function lerp(a,b,t){return a+(b-a)*t}
-    function clamp01(x){return Math.max(0,Math.min(1,x))}
-    function hex(c){c=Math.round(c);return c.toString(16).padStart(2,'0')}
-    function rgbToHex(r,g,b){return '#'+hex(r)+hex(g)+hex(b)}
-    // 0..1 -> spectrum: red -> orange -> yellow -> green -> deep green -> blue
-    function spectrum(t){
-      t=clamp01(t);
-      // segments: [0,0.2]=red->orange, [0.2,0.4]=orange->yellow, [0.4,0.6]=yellow->green,
-      // [0.6,0.8]=green->deep green, [0.8,1]=deep green->blue
-      function seg(t,a,b, c1,c2){
-        const u=(t-a)/(b-a);
-        return rgbToHex(lerp(c1[0],c2[0],u),lerp(c1[1],c2[1],u),lerp(c1[2],c2[2],u));
-      }
-      if(t<=0.2) return seg(t,0,0.2,[220,38,38],[245,158,11]);     // red->orange
-      if(t<=0.4) return seg(t,0.2,0.4,[245,158,11],[250,204,21]);  // orange->yellow
-      if(t<=0.6) return seg(t,0.4,0.6,[250,204,21],[34,197,94]);   // yellow->green
-      if(t<=0.8) return seg(t,0.6,0.8,[34,197,94],[0,100,70]);     // green->deep green
-      return seg(t,0.8,1,[0,100,70],[59,130,246]);                 // deep green->blue
-    }
-    function colorFor(gaugeKey, value){
-      if(gaugeKey==='admissibility'){
-        return value>=1 ? '#22c55e' : '#dc2626';
-      }
-      const v = clamp01(value);
-      if(gaugeKey==='ohm' || gaugeKey==='load'){
-        // higher worse -> map high to red (t small)
-        return spectrum(1 - v);
-      }
-      // coherence higher better -> map high to blue (t high)
-      return spectrum(v);
-    }
-
-    // ===== Minimal SVG sparkline =====
-    function sparkSVG(series, stroke){
-      const w=600, h=160, pad=14;
-      const xs=series.map((_,i)=> pad + (i*(w-2*pad)/(series.length-1||1)));
-      const min=Math.min(...series), max=Math.max(...series);
-      const range=(max-min)||1;
-      const ys=series.map(v => h-pad - ((v-min)/range)*(h-2*pad));
-      let d=`M ${xs[0]} ${ys[0]}`;
-      for(let i=1;i<xs.length;i++) d+=` L ${xs[i]} ${ys[i]}`;
-      const fill = stroke + '33';
-      return `
-        <svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" preserveAspectRatio="none">
-          <path d="${d}" fill="none" stroke="${stroke}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="${d} L ${xs[xs.length-1]} ${h-pad} L ${xs[0]} ${h-pad} Z" fill="${fill}" stroke="none"/>
-        </svg>`;
-    }
-
-    // ===== Data =====
-    const GAUGES = [
-      {key:'coherence', title:'Coherence', desc:'Alignment between constraints, actions, and outcomes.', unit:'', invert:false},
-      {key:'admissibility', title:'Admissibility', desc:'Execution gate: admitted vs blocked.', unit:'', invert:false},
-      {key:'ohm', title:'Ohm', desc:'Friction / resistance in the execution path.', unit:'', invert:true},
-      {key:'load', title:'Load', desc:'System strain / throughput pressure (placeholder signal).', unit:'', invert:true}
-    ];
-
-    function safeSeries(obj){
-      if(obj && Array.isArray(obj.series) && obj.series.length>=2) return obj.series;
-      // default synthetic series around value (keeps page usable)
-      const v = (obj && typeof obj.value==='number') ? obj.value : 0.5;
-      return [v*0.85, v*0.9, v*0.95, v, v*0.98, v*1.02, v];
-    }
-
-    function render(data){
-      const grid=document.getElementById('grid');
-      grid.innerHTML='';
-      GAUGES.forEach(g=>{
-        const o=(data[g.key]||{});
-        const value=(typeof o.value==='number') ? o.value : (g.key==='admissibility'?0:0.5);
-        const label=(o.label||'—');
-        const updated=(data.updated_at||'—');
-        const col=colorFor(g.key, value);
-        const series=safeSeries(o);
-
-        const div=document.createElement('div');
-        div.className='bubble';
-        div.onclick=()=>openModal(g, value, label, updated, col, series);
-
-        div.innerHTML=`
-          <div class="bubbleGlow" style="background:${col};"></div>
-          <div class="bubbleTop">
-            <div>
-              <div class="bubbleTitle">${g.title}</div>
-              <div class="bubbleSub">${g.desc}</div>
-            </div>
-            <div style="text-align:right;">
-              <div class="bubbleVal">${(g.key==='admissibility') ? (value>=1?'1':'0') : (typeof value==='number'? value.toFixed(2):'—')}</div>
-              <div class="bubbleLbl">${label}</div>
-            </div>
-          </div>
-          <div class="sparkWrap">
-            <div class="spark">${sparkSVG(series, col)}</div>
-          </div>
-          <div style="margin-top:10px;opacity:.78;font-weight:650;">Updated ${updated}</div>
-        `;
-        grid.appendChild(div);
-      });
-
-      // legend dot uses mid-spectrum (green)
-      document.getElementById('legendDot').style.background = spectrum(0.62);
-    }
-
-    // ===== Modal =====
-    function openModal(g, value, label, updated, col, series){
-      document.getElementById('mTitle').textContent = g.title;
-      document.getElementById('mDesc').textContent = g.desc;
-      document.getElementById('mValue').textContent = `Value ${g.key==='admissibility' ? (value>=1?'1':'0') : (typeof value==='number'? value.toFixed(2):'—')}`;
-      document.getElementById('mLabel').textContent = `Label ${label}`;
-      document.getElementById('mUpdated').textContent = `Updated ${updated}`;
-      document.getElementById('mChart').innerHTML = sparkSVG(series, col);
-      document.getElementById('modal').classList.add('show');
-    }
-    function closeModal(){
-      document.getElementById('modal').classList.remove('show');
-    }
-    document.getElementById('modal').addEventListener('click', (e)=>{
-      if(e.target.id==='modal') closeModal();
-    });
-
-    // ===== Fetch live feed =====
-    fetch('/gauges/live.json?v=' + Date.now())
-      .then(r=>r.json())
-      .then(data=>{
-        // ensure load exists if not provided
-        if(!data.load){
-          data.load = {value:0.42,label:'Moderate load',series:[0.35,0.38,0.40,0.42,0.46,0.44,0.42]};
-        }
-        render(data);
-      })
-      .catch(()=>{
-        // fallback if live feed missing
-        render({
-          updated_at:'—',
-          coherence:{value:0.72,label:'Center',series:[0.55,0.60,0.65,0.70,0.72,0.74,0.72]},
-          admissibility:{value:1,label:'Admitted',series:[1,1,1,1,1,1,1]},
-          ohm:{value:0.18,label:'Low friction',series:[0.32,0.28,0.24,0.20,0.18,0.19,0.18]},
-          load:{value:0.42,label:'Moderate load',series:[0.35,0.38,0.40,0.42,0.46,0.44,0.42]}
-        });
-      });
-  </script>
+  <script src="/assets/instrument.js"></script>
 </body>
 </html>

@@ -1,4 +1,3 @@
-<!-- TNT: /landing/info/index.html (FULL REPLACEMENT — ADA explanation + canonical links) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,20 +10,38 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    .box{
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.18);
-      border-radius:18px;
-      padding:14px 16px;
-      line-height:1.55;
-      text-align:left;
-      margin:0 0 12px;
+    details.info {
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.20);
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin: 0 0 12px;
     }
-    .box h2{margin:0 0 8px;font-size:18px}
-    .box p{margin:8px 0}
-    .muted{opacity:.85}
-    .bul{margin:10px 0 0;padding-left:18px;opacity:.92}
-    .bul li{margin:6px 0}
+
+    details.info summary {
+      font-weight: 800;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    details.info summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .infoBody {
+      margin-top: 10px;
+      line-height: 1.55;
+      opacity: .95;
+    }
+
+    .infoBody ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .infoBody li {
+      margin: 6px 0;
+    }
   </style>
 </head>
 
@@ -37,52 +54,63 @@
 
     <section class="gPanel" aria-label="Learn more">
 
-      <div class="box">
-        <h2>What this is</h2>
-        <p>The Alignment Diagnostic Assessment (ADA) is not a quiz and not a personality sorter.</p>
-        <p>It records choices and produces a receipt. It does not persuade, predict, moralize, or optimize.</p>
-      </div>
+      <details class="info">
+        <summary>What this is</summary>
+        <div class="infoBody">
+          <p>The Alignment Diagnostic Assessment (ADA) is not a quiz and not a personality sorter.</p>
+          <p>It records choices and produces a receipt. It does not persuade, predict, moralize, or optimize.</p>
+        </div>
+      </details>
 
-      <div class="box">
-        <h2>Baseline first</h2>
-        <p class="muted">Before the diagnostic begins, you declare a baseline. This is your own statement of your current state.</p>
-        <ul class="bul">
-          <li>Coherent / Stable</li>
-          <li>Confused / Transitional</li>
-          <li>Fragmented / Unstable</li>
-        </ul>
-        <p class="muted">This declaration is locked for the run and recorded on the receipt.</p>
-      </div>
+      <details class="info">
+        <summary>Baseline declaration</summary>
+        <div class="infoBody">
+          <p>Before the diagnostic begins, you declare a baseline. This is your own statement of your current state.</p>
+          <ul>
+            <li>Coherent / Stable</li>
+            <li>Confused / Transitional</li>
+            <li>Fragmented / Unstable</li>
+          </ul>
+          <p>This declaration is locked for the run and recorded on the receipt.</p>
+        </div>
+      </details>
 
-      <div class="box">
-        <h2>Primary and secondary persona</h2>
-        <p class="muted">During the run, your choices form patterns. The ADA may surface:</p>
-        <ul class="bul">
-          <li><strong>Primary persona</strong> — the dominant decision posture in this run.</li>
-          <li><strong>Secondary persona</strong> — a consistent secondary mode that appears under certain conditions.</li>
-        </ul>
-        <p class="muted">These are behavioral signals derived from choice, order, and consistency—not labels.</p>
-      </div>
+      <details class="info">
+        <summary>Primary and secondary persona</summary>
+        <div class="infoBody">
+          <p>During the run, your choices form patterns. The ADA may surface:</p>
+          <ul>
+            <li><strong>Primary persona</strong> — the dominant decision posture in this run.</li>
+            <li><strong>Secondary persona</strong> — a consistent secondary mode that appears under certain conditions.</li>
+          </ul>
+          <p>These are behavioral signals derived from choice, order, and consistency — not labels.</p>
+        </div>
+      </details>
 
-      <div class="box">
-        <h2>Alignment</h2>
-        <p class="muted">Alignment is the relationship between:</p>
-        <ul class="bul">
-          <li>Declared baseline</li>
-          <li>Observed primary persona</li>
-          <li>Observed secondary variation</li>
-        </ul>
-        <p class="muted">High alignment means consistency with what you declared. Low alignment means divergence. The system records; you decide what it means.</p>
-      </div>
+      <details class="info">
+        <summary>Alignment</summary>
+        <div class="infoBody">
+          <p>Alignment is the relationship between:</p>
+          <ul>
+            <li>Declared baseline</li>
+            <li>Observed primary persona</li>
+            <li>Observed secondary variation</li>
+          </ul>
+          <p>High alignment means consistency with what you declared. Low alignment means divergence.</p>
+          <p>The system records. You decide what it means.</p>
+        </div>
+      </details>
 
-      <div class="box">
-        <h2>Rules</h2>
-        <ul class="bul">
-          <li>Exit is always valid.</li>
-          <li>Skipping or rushing invalidates the run.</li>
-          <li>No interpretation is forced on the user.</li>
-        </ul>
-      </div>
+      <details class="info">
+        <summary>Rules</summary>
+        <div class="infoBody">
+          <ul>
+            <li>Exit is always valid.</li>
+            <li>Skipping or rushing invalidates the run.</li>
+            <li>No interpretation is forced on the user.</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="gActions" aria-label="Navigation controls">
         <a class="gBtn" href="/diagnostic/">Run diagnostic</a>
@@ -95,4 +123,3 @@
   </main>
 </body>
 </html>
-```0

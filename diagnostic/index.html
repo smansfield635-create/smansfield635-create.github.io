@@ -1,4 +1,4 @@
-<!-- TNT: /diagnostic/index.html (FULL REPLACEMENT — Start Exam routes to /diagnostic/ready/) -->
+<!-- TNT: /diagnostic/index.html (FULL REPLACEMENT — merge Readiness into entry, lower cognitive load) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,6 +9,14 @@
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    .box{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:14px 16px;line-height:1.5}
+    .bul{margin:10px 0 0;padding-left:18px;opacity:.92}
+    .bul li{margin:6px 0}
+    .check{display:flex;gap:10px;align-items:flex-start;margin-top:12px}
+    input[type="checkbox"]{transform:scale(1.2);margin-top:2px}
+  </style>
 </head>
 
 <body>
@@ -19,19 +27,37 @@
     </header>
 
     <section class="gPanel" aria-label="Diagnostic entry">
-      <div class="gBody" style="text-align:center;max-width:460px;margin:0 auto 18px;">
+      <div class="box">
         <p><strong>Purpose</strong> This diagnostic records choices and produces a receipt. It does not persuade, predict, or moralize.</p>
-        <p><strong>Rule</strong> You can exit at any time.</p>
+
+        <ul class="bul">
+          <li><strong>What this is</strong> A short readiness gate, then a type lock-in, then the exam.</li>
+          <li><strong>Your control</strong> You can exit at any time.</li>
+          <li><strong>Rule</strong> Skipping or rushing invalidates the run.</li>
+        </ul>
+
+        <label class="check">
+          <input type="checkbox" id="ack" />
+          <span>I understand and choose to proceed.</span>
+        </label>
       </div>
 
-      <div class="gActions" aria-label="Primary controls">
+      <div class="gActions" aria-label="Controls">
         <a class="gBtn" href="/home/">Back</a>
-        <a class="gBtn gPrimary" href="/diagnostic/ready/">Start Exam</a>
+        <button class="gBtn gPrimary" id="continue" type="button">Continue</button>
       </div>
 
       <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
+
+  <script>
+    document.getElementById('continue').addEventListener('click', ()=>{
+      const ack = document.getElementById('ack');
+      if(!ack.checked) return;
+      localStorage.setItem('GD_DIAG_STARTED_AT', new Date().toISOString());
+      location.href = '/diagnostic/type/';
+    });
+  </script>
 </body>
 </html>
-```0

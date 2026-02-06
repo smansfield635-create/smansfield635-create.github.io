@@ -1,44 +1,124 @@
-<!-- TNT: /laws/index.html (FULL REPLACEMENT — Laws hub routes to Tier 1/2/3 + Overview) -->
+<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — lens controls the DIAMOND labels) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Laws · Geodiametrics</title>
+  <title>Tier 1 · Geodiametrics</title>
+
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    .lensToggle{display:flex;position:relative;background:rgba(255,255,255,.08);border-radius:999px;padding:6px;gap:6px;margin:10px auto 12px;width:fit-content;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+    .lensBtn{position:relative;z-index:2;padding:10px 22px;border-radius:999px;background:transparent;color:#cfe4f6;font-weight:900;cursor:pointer;border:none}
+    .lensBtn.active{color:#fff}
+    .lensIndicator{position:absolute;top:6px;bottom:6px;width:calc(50% - 6px);background:linear-gradient(180deg,#2aa4ff,#1976d2);border-radius:999px;transition:transform .25s ease;box-shadow:0 6px 18px rgba(30,144,255,.35)}
+    .lensIndicator.right{transform:translateX(100%)}
+    .note{opacity:.85;text-align:center;line-height:1.45;margin:0 0 14px}
+  </style>
 </head>
 <body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Laws</h1>
-      <p class="gSub">Foundational · Structural · Applied.</p>
-    </header>
+<main class="gPage">
+  <header class="gHeader">
+    <h1 class="gTitle">Tier 1</h1>
+    <p class="gSub">Foundational Laws · Non-derivable.</p>
 
-    <section class="gPanel" aria-label="Law tiers">
-      <div class="gCluster" role="navigation" aria-label="Law tier routes">
-        <a class="gKey gTop" href="/laws/tier-1/" aria-label="Tier 1">
-          <span class="gKeyText"><strong>TIER 1</strong>Foundational</span>
-        </a>
-        <a class="gKey gRight" href="/laws/tier-2/" aria-label="Tier 2">
-          <span class="gKeyText"><strong>TIER 2</strong>Structural</span>
-        </a>
-        <a class="gKey gBottom" href="/laws/tier-3/" aria-label="Tier 3">
-          <span class="gKeyText"><strong>TIER 3</strong>Applied</span>
-        </a>
-        <a class="gKey gLeft" href="/laws/overview/" aria-label="Overview">
-          <span class="gKeyText"><strong>OVERVIEW</strong>Index</span>
-        </a>
-      </div>
+    <div class="lensToggle" aria-label="Lens toggle">
+      <div class="lensIndicator" id="lensIndicator"></div>
+      <button class="lensBtn active" id="btnSci" type="button" onclick="setLens('scientific')">Scientific Lens</button>
+      <button class="lensBtn" id="btnHum" type="button" onclick="setLens('human')">Human Lens</button>
+    </div>
 
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/home/">Back</a>
-        <a class="gBtn" href="/landing/exit/">Exit</a>
-      </div>
+    <div class="note" id="noteText">
+      Tier 1 opens a diamond of groups. Each group contains expandable law bubbles.
+    </div>
+  </header>
 
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
-  </main>
+  <section class="gPanel" aria-label="Tier 1 groups">
+    <div class="gCluster" role="navigation" aria-label="Tier 1 group routes">
+      <a class="gKey gTop" href="/laws/tier-1/admissibility/" aria-label="Group A">
+        <span class="gKeyText">
+          <strong id="gA_title"
+            data-sci="GROUP A"
+            data-hum="GROUP A">GROUP A</strong>
+          <span id="gA_sub"
+            data-sci="Admissibility"
+            data-hum="Can it run?">Admissibility</span>
+        </span>
+      </a>
+
+      <a class="gKey gRight" href="/laws/tier-1/classification/" aria-label="Group B">
+        <span class="gKeyText">
+          <strong id="gB_title"
+            data-sci="GROUP B"
+            data-hum="GROUP B">GROUP B</strong>
+          <span id="gB_sub"
+            data-sci="Classification"
+            data-hum="Can we agree?">Classification</span>
+        </span>
+      </a>
+
+      <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Group C">
+        <span class="gKeyText">
+          <strong id="gC_title"
+            data-sci="GROUP C"
+            data-hum="GROUP C">GROUP C</strong>
+          <span id="gC_sub"
+            data-sci="Non-Substitute"
+            data-hum="No shortcuts">Non-Substitute</span>
+        </span>
+      </a>
+
+      <a class="gKey gLeft" href="/laws/tier-1/overview/" aria-label="Overview">
+        <span class="gKeyText">
+          <strong id="gO_title"
+            data-sci="OVERVIEW"
+            data-hum="OVERVIEW">OVERVIEW</strong>
+          <span id="gO_sub"
+            data-sci="Index"
+            data-hum="Map">Index</span>
+        </span>
+      </a>
+    </div>
+
+    <div class="gActions">
+      <a class="gBtn" href="/laws/">Back</a>
+      <a class="gBtn" href="/home/">Home</a>
+    </div>
+
+    <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+  </section>
+</main>
+
+<script>
+  function paintLens(l){
+    document.getElementById('lensIndicator').classList.toggle('right', l==='human');
+    document.getElementById('btnSci').classList.toggle('active', l==='scientific');
+    document.getElementById('btnHum').classList.toggle('active', l==='human');
+
+    // Diamond subtitle swaps
+    document.querySelectorAll('[data-sci]').forEach(el=>{
+      el.textContent = (l==='human') ? el.getAttribute('data-hum') : el.getAttribute('data-sci');
+    });
+
+    // Optional: note swap
+    document.getElementById('noteText').textContent =
+      (l==='human')
+        ? 'Tier 1 opens a diamond of groups. Pick the question you’re answering.'
+        : 'Tier 1 opens a diamond of groups. Each group contains expandable law bubbles.';
+  }
+
+  function setLens(l){
+    localStorage.setItem('GD_LENS', l);
+    paintLens(l);
+  }
+
+  (function init(){
+    const l = localStorage.getItem('GD_LENS') || 'scientific';
+    paintLens(l);
+  })();
+</script>
 </body>
 </html>

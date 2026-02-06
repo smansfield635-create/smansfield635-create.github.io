@@ -1,100 +1,28 @@
-      <!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Door · Gate</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    :root{
-      --bg-top:#0c2232;--bg-bottom:#071722;
-      --text:#f1f6fb;--sub:rgba(241,246,251,.72);
-      --panel-glass:rgba(255,255,255,.12);--panel-border:rgba(255,255,255,.22);
-      --glass:rgba(255,255,255,.22);--glass2:rgba(255,255,255,.14);
-      --blur:18px;--radius:26px;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{width:100%;height:100%}
-    body{
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),
-        linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
-      display:flex;justify-content:center;align-items:center;
-      padding:20px;
-    }
-    .page{width:100%;max-width:420px;text-align:center}
-    .h1{font-size:44px;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em}
-    .h2{font-size:18px;color:var(--sub);margin-bottom:24px}
-    .panel{
-      position:relative;
-      padding:32px 20px 22px;
-      border-radius:var(--radius);
-      background:linear-gradient(180deg,var(--panel-glass),rgba(255,255,255,.05));
-      border:1px solid var(--panel-border);
-      backdrop-filter:blur(var(--blur));
-      -webkit-backdrop-filter:blur(var(--blur));
-      overflow:hidden;
-    }
-    .footer{margin-top:18px;font-size:12px;color:rgba(241,246,251,.55)}
-
-    /* ===== Shared Diamond Module (used by BOTH Door + Home) ===== */
-    .diamondCluster{position:relative;width:280px;height:280px;margin:0 auto 18px}
-    .diamondNode{
-      position:absolute;
-      width:140px;height:140px;
-      left:50%;top:50%;
-      transform:translate(-50%,-50%) rotate(45deg);
-      background:linear-gradient(180deg,var(--glass),rgba(255,255,255,.10));
-      border:1px solid rgba(255,255,255,.28);
-      border-radius:20px;
-      display:flex;align-items:center;justify-content:center;
-      text-decoration:none;
-      transition:transform .22s ease, background .22s ease, box-shadow .22s ease;
-      box-shadow:0 18px 60px rgba(0,0,0,.28);
-      -webkit-tap-highlight-color:transparent;
-      user-select:none;
-    }
-    .diamondNode > span{
-      transform:rotate(-45deg);
-      display:block;
-      font-weight:800;
-      letter-spacing:.08em;
-      font-size:14px;
-      color:rgba(241,246,251,.92);
-    }
-    .diamondNode:hover{
-      transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
-      background:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,.10));
-      box-shadow:0 22px 72px rgba(0,0,0,.36);
-    }
-    .pos-top{top:22%}
-    .pos-right{left:78%}
-    .pos-bottom{top:78%}
-    .pos-left{left:22%}
-
-    /* Mobile tighten */
-    @media (max-width:420px){
-      .diamondCluster{width:260px;height:260px}
-      .diamondNode{width:132px;height:132px;border-radius:18px}
-      .h1{font-size:40px}
-    }
-  </style>
+  <title>Home · Geodiametrics</title>
+  <link rel="stylesheet" href="/assets/ui.css?v=4" />
+  <link rel="stylesheet" href="/assets/diamond.css?v=4" />
 </head>
 <body>
   <div class="page">
-    <div class="h1">Gate</div>
-    <div class="h2">Choose a door.</div>
+    <div class="hero">
+      <h1>Home</h1>
+      <p>One gate. Four routes.</p>
+    </div>
 
     <div class="panel">
-      <div class="diamondCluster" aria-label="Door choices">
-        <a class="diamondNode pos-top" href="./index.html"><span>RUN</span></a>
-        <a class="diamondNode pos-right" href="./laws.html"><span>LEARN</span></a>
-        <a class="diamondNode pos-bottom" href="./products.html"><span>ENTER</span></a>
-        <a class="diamondNode pos-left" href="./about.html"><span>EXIT</span></a>
+      <div class="diamondCluster">
+        <a class="diamondNode top" href="/laws/"><strong>LAWS</strong><span>Branch</span></a>
+        <a class="diamondNode right" href="/products/"><strong>PRODUCTS</strong><span>Branch</span></a>
+        <a class="diamondNode bottom" href="/gauges/"><strong>GAUGES</strong><span>Branch</span></a>
+        <a class="diamondNode left" href="/links/"><strong>LINKS</strong><span>Branch</span></a>
       </div>
 
-      <div class="footer">GeoDiometrics · Canonical · Inspectable</div>
+      <div class="canon">Canonical · Stable · © Geodiametrics</div>
     </div>
   </div>
 </body>

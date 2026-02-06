@@ -1,99 +1,67 @@
-<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — Tier 1 only, lens toggle) -->
+<!-- TNT: /laws/tier-1/index.html (Tier 1 = Diamond of Groups · Option A) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Laws · Tier 1 · Geodiametrics</title>
+  <title>Tier 1 · Geodiametrics</title>
 
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    .lensToggle{display:flex;position:relative;background:rgba(255,255,255,0.08);border-radius:999px;padding:6px;gap:6px;margin:10px auto 16px;width:fit-content;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+    .lensToggle{display:flex;position:relative;background:rgba(255,255,255,.08);border-radius:999px;padding:6px;gap:6px;margin:10px auto 16px;width:fit-content;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
     .lensBtn{position:relative;z-index:2;padding:10px 22px;border-radius:999px;background:transparent;color:#cfe4f6;font-weight:900;cursor:pointer;border:none}
-    .lensBtn.active{color:#ffffff}
+    .lensBtn.active{color:#fff}
     .lensIndicator{position:absolute;top:6px;bottom:6px;width:calc(50% - 6px);background:linear-gradient(180deg,#2aa4ff,#1976d2);border-radius:999px;transition:transform .25s ease;box-shadow:0 6px 18px rgba(30,144,255,.35)}
     .lensIndicator.right{transform:translateX(100%)}
-    details.law{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:14px 18px;margin:0 0 12px}
-    details.law summary{cursor:pointer;font-weight:900;list-style:none}
-    details.law summary::-webkit-details-marker{display:none}
-    .lawBody{margin-top:10px;line-height:1.55}
-    .human{display:none}
-    .scientific{display:block}
+    .note{opacity:.85;text-align:center;line-height:1.45;margin:0 0 10px}
   </style>
 </head>
-
 <body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Tier 1</h1>
-      <p class="gSub">Foundational Laws (non-derivable, observer-invariant).</p>
+<main class="gPage">
+  <header class="gHeader">
+    <h1 class="gTitle">Tier 1</h1>
+    <p class="gSub">Foundational Laws · Non-derivable.</p>
 
-      <div class="lensToggle" aria-label="Lens toggle">
-        <div class="lensIndicator" id="lensIndicator"></div>
-        <button class="lensBtn active" id="btnSci" onclick="setLens('scientific')">Scientific Lens</button>
-        <button class="lensBtn" id="btnHum" onclick="setLens('human')">Human Lens</button>
-      </div>
-    </header>
+    <div class="lensToggle" aria-label="Lens toggle">
+      <div class="lensIndicator" id="lensIndicator"></div>
+      <button class="lensBtn active" id="btnSci" type="button" onclick="setLens('scientific')">Scientific Lens</button>
+      <button class="lensBtn" id="btnHum" type="button" onclick="setLens('human')">Human Lens</button>
+    </div>
 
-    <section class="gPanel" aria-label="Tier 1 laws">
+    <div class="note">Tier 1 opens a diamond of groups. Each group contains expandable law bubbles.</div>
+  </header>
 
-      <details class="law"><summary>L1 · Coherence Constraint Law</summary>
-        <div class="lawBody scientific">External coherence cannot exceed internal self-coherence. No system can sustainably express what it does not internally satisfy.</div>
-        <div class="lawBody human">You can’t consistently project integrity you don’t actually have. Internal alignment sets the ceiling.</div>
-      </details>
+  <section class="gPanel" aria-label="Tier 1 groups">
+    <div class="gCluster" role="navigation" aria-label="Tier 1 group routes">
+      <a class="gKey gTop" href="/laws/tier-1/admissibility/"><span class="gKeyText"><strong>GROUP A</strong>Admissibility</span></a>
+      <a class="gKey gRight" href="/laws/tier-1/classification/"><span class="gKeyText"><strong>GROUP B</strong>Classification</span></a>
+      <a class="gKey gBottom" href="/laws/tier-1/nonsub/"><span class="gKeyText"><strong>GROUP C</strong>Non-Substitute</span></a>
+      <a class="gKey gLeft" href="/laws/tier-1/overview/"><span class="gKeyText"><strong>OVERVIEW</strong>Index</span></a>
+    </div>
 
-      <details class="law"><summary>L2 · Admissibility Law</summary>
-        <div class="lawBody scientific">A system either admits execution or it does not. Optimization is irrelevant if admissibility fails.</div>
-        <div class="lawBody human">If execution isn’t allowed structurally, effort and polishing don’t matter.</div>
-      </details>
+    <div class="gActions">
+      <a class="gBtn" href="/laws/">Back</a>
+      <a class="gBtn" href="/home/">Home</a>
+    </div>
 
-      <details class="law"><summary>L3 · If-and-Only-If Law</summary>
-        <div class="lawBody scientific">An outcome occurs if and only if all required constraints are simultaneously satisfied. Partial satisfaction equals non-execution.</div>
-        <div class="lawBody human">Almost doesn’t execute. If one required condition is missing, the result doesn’t count.</div>
-      </details>
+    <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+  </section>
+</main>
 
-      <details class="law"><summary>L4 · Observer-Invariant Classification Law</summary>
-        <div class="lawBody scientific">Independent observers must classify coherence, incoherence, and confusion identically from the same evidence.</div>
-        <div class="lawBody human">If honest observers can’t agree from the same facts, the rules aren’t defined yet.</div>
-      </details>
-
-      <details class="law"><summary>L5 · Closure Law</summary>
-        <div class="lawBody scientific">Systems must close operational loops to remain stable. Open loops accumulate instability.</div>
-        <div class="lawBody human">Unfinished loops stack debt and eventually force instability.</div>
-      </details>
-
-      <details class="law"><summary>L6 · Non-Compensation Law</summary>
-        <div class="lawBody scientific">Strength in one dimension cannot compensate for violation in another required constraint.</div>
-        <div class="lawBody human">Being strong somewhere doesn’t cancel breaking a required rule elsewhere.</div>
-      </details>
-
-      <details class="law"><summary>L7 · No-Timer Gating Law</summary>
-        <div class="lawBody scientific">Time passage cannot substitute for structural completion, receipt, or constraint satisfaction.</div>
-        <div class="lawBody human">Waiting doesn’t fix structure. Only completing the required step fixes structure.</div>
-      </details>
-
-      <div class="gActions">
-        <a class="gBtn" href="/laws/">Back</a>
-        <a class="gBtn" href="/home/">Home</a>
-      </div>
-
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
-  </main>
-
-  <script>
-    function setLens(lens){
-      const ind=document.getElementById('lensIndicator');
-      const btnSci=document.getElementById('btnSci');
-      const btnHum=document.getElementById('btnHum');
-      if(lens==='human'){ ind.classList.add('right'); btnSci.classList.remove('active'); btnHum.classList.add('active'); }
-      else { ind.classList.remove('right'); btnHum.classList.remove('active'); btnSci.classList.add('active'); }
-      document.querySelectorAll('.scientific').forEach(el=>el.style.display=(lens==='scientific')?'block':'none');
-      document.querySelectorAll('.human').forEach(el=>el.style.display=(lens==='human')?'block':'none');
-    }
-  </script>
+<script>
+  function setLens(l){
+    localStorage.setItem('GD_LENS', l);
+    document.getElementById('lensIndicator').classList.toggle('right', l==='human');
+    document.getElementById('btnSci').classList.toggle('active', l==='scientific');
+    document.getElementById('btnHum').classList.toggle('active', l==='human');
+  }
+  (function init(){
+    const l = localStorage.getItem('GD_LENS') || 'scientific';
+    setLens(l);
+  })();
+</script>
 </body>
 </html>

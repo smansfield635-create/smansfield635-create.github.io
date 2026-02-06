@@ -1,54 +1,95 @@
-:root{
-  --bg0:#07131d;
-  --bg1:#0b1a26;
-  --text:#e8eef5;
-  --sub:#b9c6d3;
+/* =========================
+   TNT: LANDING DIAMOND FIX
+   Paste at END of main CSS.
+   Purpose: force 4-node diamond layout (RUN / ENTER / LEARN / EXIT)
+   ========================= */
+
+/* 1) Guard rails: prevent global "uniformity" rules from flattening the module */
+:where(.landing, .door, .gate, .route, .routes, .home, .start, .intro, .hero) :where(.diamond, .diamonds, .diamondGrid, .diamond-grid, .diamondCard, .diamond-card, .diamondWrap, .diamond-wrap, .diamondContainer, .diamond-container, .nodeGrid, .node-grid, .tileGrid, .tile-grid, .choiceGrid, .choice-grid) {
+  display: block !important;
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
-
-html,body{height:100%}
-body{
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  color:var(--text);
-  background:radial-gradient(120% 120% at 50% 0%, var(--bg1), var(--bg0));
+/* 2) Core module: container */
+:where(.diamond, .diamonds, .diamondGrid, .diamond-grid, .diamondWrap, .diamond-wrap, .diamondContainer, .diamond-container, .nodeGrid, .node-grid, .tileGrid, .tile-grid, .choiceGrid, .choice-grid) {
+  position: relative !important;
+  width: min(520px, 92vw) !important;
+  aspect-ratio: 1 / 1 !important;
+  margin: 24px auto 0 !important;
+  isolation: isolate !important;
 }
 
-.page{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  padding:48px 18px 28px;
-  text-align:center;
+/* 3) Core module: the 4 diamond buttons (robust selector net) */
+:where(.diamond, .diamonds, .diamondGrid, .diamond-grid, .diamondWrap, .diamond-wrap, .diamondContainer, .diamond-container, .nodeGrid, .node-grid, .tileGrid, .tile-grid, .choiceGrid, .choice-grid)
+  :where(a, button, .tile, .node, .card, .diamondItem, .diamond-item, .diamondNode, .diamond-node, .route, .choice, .option) {
+  position: absolute !important;
+  inset: 50% auto auto 50% !important;
+  transform: translate(-50%, -50%) rotate(45deg) !important;
+
+  width: 58% !important;
+  height: 58% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+
+  border-radius: 22px !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  background: rgba(255,255,255,0.05) !important;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.35) !important;
+
+  text-decoration: none !important;
+  color: rgba(255,255,255,0.92) !important;
+  cursor: pointer !important;
+  -webkit-tap-highlight-color: transparent !important;
+  user-select: none !important;
 }
 
-.hero h1{
-  font-size:clamp(2.2rem,6vw,3.2rem);
-  font-weight:800;
-  letter-spacing:-0.02em;
-}
-.hero p{
-  margin-top:10px;
-  font-size:clamp(1rem,3.2vw,1.15rem);
-  color:var(--sub);
+/* 4) Un-rotate inner text so it reads normally */
+:where(.diamond, .diamonds, .diamondGrid, .diamond-grid, .diamondWrap, .diamond-wrap, .diamondContainer, .diamond-container, .nodeGrid, .node-grid, .tileGrid, .tile-grid, .choiceGrid, .choice-grid)
+  :where(a, button, .tile, .node, .card, .diamondItem, .diamond-item, .diamondNode, .diamond-node, .route, .choice, .option)
+  :where(*){
+  transform: rotate(-45deg);
 }
 
-.doorWrap{
-  width:min(520px, 92vw);
-  margin-top:26px;
-  padding:22px 16px 18px;
-  border-radius:26px;
-  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.16);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
+/* 5) Positioning: top / right / bottom / left
+      Works even if you don’t have explicit classes—uses nth-child. */
+:where(.diamond, .diamonds, .diamondGrid, .diamond-grid, .diamondWrap, .diamond-wrap, .diamondContainer, .diamond-container, .nodeGrid, .node-grid, .tileGrid, .tile-grid, .choiceGrid, .choice-grid)
+  :where(a, button, .tile, .node, .card, .diamondItem, .diamond-item, .diamondNode, .diamond-node, .route, .choice, .option):nth-child(1) {
+  top: 22% !important; left: 50% !important;
+}
+:where(.diamond, .diamonds, .diamondGrid, .diamond-grid, .diamondWrap, .diamond-wrap, .diamondContainer, .diamond-container, .nodeGrid, .node-grid, .tileGrid, .tile-grid, .choiceGrid, .choice-grid)
+  :where(a, button, .tile, .node, .card, .diamondItem, .diamond-item, .diamondNode, .diamond-node, .route, .choice, .option):nth-child(2) {
+  top: 50% !important; left: 78% !important;
+}
+:where(.diamond, .diamonds, .diamondGrid, .diamond-grid, .diamondWrap, .diamond-wrap, .diamondContainer, .diamond-container, .nodeGrid, .node-grid, .tileGrid, .tile-grid, .choiceGrid, .choice-grid)
+  :where(a, button, .tile, .node, .card, .diamondItem, .diamond-item, .diamondNode, .diamond-node, .route, .choice, .option):nth-child(3) {
+  top: 78% !important; left: 50% !important;
+}
+:where(.diamond, .diamonds, .diamondGrid, .diamond-grid, .diamondWrap, .diamond-wrap, .diamondContainer, .diamond-container, .nodeGrid, .node-grid, .tileGrid, .tile-grid, .choiceGrid, .choice-grid)
+  :where(a, button, .tile, .node, .card, .diamondItem, .diamond-item, .diamondNode, .diamond-node, .route, .choice, .option):nth-child(4) {
+  top: 50% !important; left: 22% !important;
 }
 
-.canon{
-  margin-top:18px;
-  font-size:.78rem;
-  color:rgba(185,198,211,.75);
-  letter-spacing:.02em;
+/* 6) Mobile tighten */
+@media (max-width: 420px){
+  :where(.diamond, .diamonds, .diamondGrid, .diamond-grid, .diamondWrap, .diamond-wrap, .diamondContainer, .diamond-container, .nodeGrid, .node-grid, .tileGrid, .tile-grid, .choiceGrid, .choice-grid){
+    width: min(420px, 92vw) !important;
+  }
+  :where(.diamond, .diamonds, .diamondGrid, .diamond-grid, .diamondWrap, .diamond-wrap, .diamondContainer, .diamond-container, .nodeGrid, .node-grid, .tileGrid, .tile-grid, .choiceGrid, .choice-grid)
+    :where(a, button, .tile, .node, .card, .diamondItem, .diamond-item, .diamondNode, .diamond-node, .route, .choice, .option){
+    width: 62% !important;
+    height: 62% !important;
+  }
 }
+
+/* 7) If something is forcing your links inline, smash it */
+:where(.diamond, .diamonds, .diamondGrid, .diamond-grid, .diamondWrap, .diamond-wrap, .diamondContainer, .diamond-container, .nodeGrid, .node-grid, .tileGrid, .tile-grid, .choiceGrid, .choice-grid)
+  :where(a, button){
+  display: flex !important;
+  white-space: normal !important;
+}
+
+/* =========================
+   END TNT
+   ========================= */

@@ -1,49 +1,23 @@
-<!-- TNT: /gauges/index.html (GAUGE HUB — LANDING ONLY, NO NUMBERS, NO GRAPHS) -->
 <!doctype html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gauges · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+<meta charset="utf-8">
+<title>Gauges · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/assets/gauges.css">
 </head>
 <body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Gauges</h1>
-      <p class="gSub">Instrument vs Telemetry.</p>
-    </header>
+<main class="gPage">
+<header class="gHeader">
+<h1 class="gTitle">Gauges</h1>
+<p class="gSub">Live instrument & raw telemetry.</p>
+</header>
 
-    <section class="gPanel" aria-label="Gauge hub">
-      <div class="gCluster" role="navigation" aria-label="Gauge routes">
-        <a class="gKey gTop" href="/gauges/instrument/" aria-label="Instrument">
-          <span class="gKeyText"><strong>INSTRUMENT</strong>States</span>
-        </a>
-
-        <a class="gKey gRight" href="/gauges/telemetry/" aria-label="Telemetry">
-          <span class="gKeyText"><strong>TELEMETRY</strong>Evidence</span>
-        </a>
-
-        <a class="gKey gBottom" href="/gauges/instrument/#ohm" aria-label="Ohm">
-          <span class="gKeyText"><strong>OHM</strong>Friction</span>
-        </a>
-
-        <a class="gKey gLeft" href="/gauges/instrument/#coherence" aria-label="Coherence">
-          <span class="gKeyText"><strong>COHERENCE</strong>Alignment</span>
-        </a>
-      </div>
-
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/home/">Back</a>
-        <a class="gBtn" href="/landing/exit/">Exit</a>
-      </div>
-
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
-  </main>
-
-  <script src="/assets/instrument.js"></script>
+<section class="gPanel">
+<a class="gBtn" href="/gauges/instrument/">Instrument</a>
+<a class="gBtn" href="/gauges/telemetry/">Telemetry</a>
+<a class="gBtn" href="/home/">Home</a>
+</section>
+</main>
 </body>
 </html>

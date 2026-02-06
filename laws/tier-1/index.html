@@ -1,47 +1,136 @@
-<!-- TNT: /laws/index.html  (FULL REPLACEMENT — restores correct Tier routes) -->
+<!-- TNT: /laws/tier-1/index.html  (FULL REPLACEMENT — fixes “angled text”, restores working Human/Scientific toggle, preserves diamond geometry) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Laws · Geodiametrics</title>
+  <title>Tier 1 · Geodiametrics</title>
+
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    /* HARD RULE: text is ALWAYS horizontal (screen-readable). Never rotate labels. */
+    .gKeyText, .gKeyText * { transform:none !important; }
+    .gKeyText { text-align:center; }
+
+    /* Toggle pill (kept self-contained to this page only) */
+    .tToggle{display:flex;position:relative;gap:6px;justify-content:center;align-items:center;
+      width: min(520px, 92vw); margin: 10px auto 12px;
+      padding:6px;border-radius:999px;background:rgba(255,255,255,.08);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+    }
+    .tToggle button{border:0;background:transparent;color:#cfe4f6;font-weight:800;
+      padding:12px 22px;border-radius:999px;cursor:pointer;position:relative;z-index:2;
+      min-width:150px;
+    }
+    .tToggle button.active{color:#fff;}
+    .tIndicator{position:absolute;top:6px;bottom:6px;width:calc(50% - 6px);
+      background:linear-gradient(180deg,#2aa4ff,#1976d2);
+      border-radius:999px;box-shadow:0 10px 22px rgba(30,144,255,.35);
+      transition:transform .22s ease;
+    }
+    .tIndicator.right{transform:translateX(100%);}
+
+    /* Mode swap */
+    .mode{display:none;}
+    .mode.active{display:block;}
+
+    /* Keep the “Tier 1” sub line behavior: scientific is short label, human is sentence */
+    .subLine{margin-top:8px;}
+    .subLine .sci{display:none;}
+    .subLine .hum{display:none;}
+    body[data-view="human"] .subLine .hum{display:block;}
+    body[data-view="scientific"] .subLine .sci{display:block;}
+  </style>
 </head>
-<body>
+
+<body data-view="human">
   <main class="gPage">
     <header class="gHeader">
-      <h1 class="gTitle">Laws</h1>
-      <p class="gSub">Canonical structure · Nested diamonds.</p>
+      <h1 class="gTitle">Tier 1</h1>
+
+      <p class="gSub subLine">
+        <span class="sci">Foundational laws · Non-derivable.</span>
+        <span class="hum">These determine whether anything may act, be governed, be agreed upon, or be short-circuited.</span>
+      </p>
+
+      <div class="tToggle" aria-label="Tier 1 lens toggle">
+        <div class="tIndicator" id="tIndicator"></div>
+        <button id="btnHuman" class="active" type="button" onclick="setView('human')">Human</button>
+        <button id="btnSci" type="button" onclick="setView('scientific')">Scientific</button>
+      </div>
+
+      <p class="gSub" style="margin-top:6px;">Choose a term. Diamonds route to leaves.</p>
     </header>
 
-    <section class="gPanel" aria-label="Law tiers">
-      <div class="gCluster" role="navigation" aria-label="Law tier routes">
-        <a class="gKey gTop" href="/laws/tier-1/" aria-label="Tier 1">
-          <span class="gKeyText"><strong>Tier 1</strong>Foundational</span>
-        </a>
+    <section class="gPanel" aria-label="Tier 1 routes">
+      <!-- HUMAN MODE (question → term) -->
+      <div class="mode active" id="modeHuman" role="navigation" aria-label="Tier 1 human questions">
+        <div class="gCluster">
+          <a class="gKey gTop" href="/laws/tier-1/permission/" aria-label="Possible - Permission">
+            <span class="gKeyText"><strong>Possible?</strong>Admissibility</span>
+          </a>
 
-        <a class="gKey gRight" href="/laws/tier-2/" aria-label="Tier 2">
-          <span class="gKeyText"><strong>Tier 2</strong>Structural</span>
-        </a>
+          <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Agreement - Agreement">
+            <span class="gKeyText"><strong>Agreement?</strong>Classification</span>
+          </a>
 
-        <a class="gKey gBottom" href="/laws/tier-3/" aria-label="Tier 3">
-          <span class="gKeyText"><strong>Tier 3</strong>Operational</span>
-        </a>
+          <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Shortcuts - No shortcuts">
+            <span class="gKeyText"><strong>Shortcuts?</strong>No shortcuts</span>
+          </a>
 
-        <a class="gKey gLeft" href="/laws/overview/" aria-label="Overview">
-          <span class="gKeyText"><strong>Overview</strong>Index</span>
-        </a>
+          <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Rules - Governance">
+            <span class="gKeyText"><strong>Rules?</strong>Coherence</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- SCIENTIFIC MODE (term → question) -->
+      <div class="mode" id="modeSci" role="navigation" aria-label="Tier 1 scientific terms">
+        <div class="gCluster">
+          <a class="gKey gTop" href="/laws/tier-1/admissibility/" aria-label="Admissibility - Permission">
+            <span class="gKeyText"><strong>Admissibility</strong>Permission</span>
+          </a>
+
+          <a class="gKey gRight" href="/laws/tier-1/classification/" aria-label="Classification - Agreement">
+            <span class="gKeyText"><strong>Classification</strong>Agreement</span>
+          </a>
+
+          <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Non-substitutability - No-timer gating">
+            <span class="gKeyText"><strong>Non-Substitutability</strong>No-timer gating</span>
+          </a>
+
+          <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Coherence - Governance">
+            <span class="gKeyText"><strong>Coherence</strong>Governance</span>
+          </a>
+        </div>
       </div>
 
       <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/laws/">Back</a>
         <a class="gBtn" href="/home/">Home</a>
-        <a class="gBtn" href="/home/">Back</a>
       </div>
 
       <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
+
+  <script>
+    function setView(view){
+      document.body.dataset.view = view;
+
+      const isHuman = (view === 'human');
+      document.getElementById('modeHuman').classList.toggle('active', isHuman);
+      document.getElementById('modeSci').classList.toggle('active', !isHuman);
+
+      document.getElementById('btnHuman').classList.toggle('active', isHuman);
+      document.getElementById('btnSci').classList.toggle('active', !isHuman);
+
+      document.getElementById('tIndicator').classList.toggle('right', !isHuman);
+    }
+  </script>
 </body>
 </html>
+```0

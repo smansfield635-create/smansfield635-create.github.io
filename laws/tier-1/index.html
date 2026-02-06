@@ -1,100 +1,80 @@
-<!-- TNT: /laws/tier1/index.html — FULL REPLACEMENT -->
+<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — original diamond design + human line + (Scientific) line, no tooltip clutter) -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Tier 1 · Foundational Laws · Geodiametrics</title>
-<link rel="icon" href="/assets/favicon.svg"/>
-<link rel="stylesheet" href="/assets/ui.css"/>
-<style>
-:root{
-  --glass: rgba(255,255,255,.12);
-  --edge: rgba(255,255,255,.22);
-}
-.gPage{min-height:100vh}
-.center{display:flex;justify-content:center}
-.note{opacity:.85;text-align:center;margin:10px 0 18px}
-.diamondWrap{position:relative;width:320px;height:320px;margin:10px auto 22px}
-.diamond{
-  position:absolute;width:150px;height:150px;
-  transform:rotate(45deg);
-  background:var(--glass);border:1px solid var(--edge);
-  border-radius:18px;backdrop-filter:blur(14px);
-  display:flex;align-items:center;justify-content:center;
-}
-.diamond .inner{
-  transform:rotate(-45deg);text-align:center;padding:10px
-}
-.diamond .h{font-weight:800;font-size:18px}
-.sci{
-  margin-top:6px;font-size:13px;opacity:.75;
-  display:inline-block;padding:6px 10px;border-radius:999px;
-  background:rgba(0,0,0,.25)
-}
-.tip{
-  display:none;position:absolute;z-index:5;max-width:220px;
-  background:#0e1c28;border:1px solid var(--edge);
-  border-radius:12px;padding:10px;font-size:13px
-}
-.sci:hover+.tip{display:block}
-#dA{top:0;left:85px}
-#dB{top:85px;right:0}
-#dC{bottom:0;left:85px}
-#dO{top:85px;left:0}
-.actions{display:flex;gap:10px;justify-content:center}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tier 1 · Geodiametrics</title>
+
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    /* Make the second line look like (Scientific) */
+    .gKeyText em{
+      display:block;
+      font-style:normal;
+      font-weight:700;
+      opacity:.70;
+      margin-top:6px;
+    }
+  </style>
 </head>
+
 <body>
-<main class="gPage">
-<header class="gHeader">
-  <h1 class="gTitle">Tier 1</h1>
-  <p class="gSub">Foundational laws · Non-derivable</p>
-</header>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Tier 1</h1>
+      <p class="gSub">Foundational laws · Non-derivable.</p>
+      <p class="gSub" style="opacity:.85">Each diamond face states the human question. Scientific name is nested beneath.</p>
+    </header>
 
-<p class="note">Each diamond face states the human question. Scientific definition is nested to reduce clutter.</p>
+    <section class="gPanel" aria-label="Tier 1 groups">
+      <div class="gCluster" role="navigation" aria-label="Tier 1 diamond of groups">
 
-<div class="diamondWrap" aria-label="Tier 1 diamond">
-  <!-- Group A -->
-  <div class="diamond" id="dA">
-    <div class="inner">
-      <div class="h">Can this act?</div>
-      <span class="sci">Admissibility</span>
-      <div class="tip">Execution is permitted only if all required constraints are satisfied.</div>
-    </div>
-  </div>
-  <!-- Group B -->
-  <div class="diamond" id="dB">
-    <div class="inner">
-      <div class="h">Can we agree?</div>
-      <span class="sci">Observer-Invariant Classification</span>
-      <div class="tip">Independent observers classify the same evidence identically.</div>
-    </div>
-  </div>
-  <!-- Group C -->
-  <div class="diamond" id="dC">
-    <div class="inner">
-      <div class="h">No shortcuts</div>
-      <span class="sci">Non-Compensation / No-Timer Gating</span>
-      <div class="tip">Strength in one dimension cannot compensate for missing constraints.</div>
-    </div>
-  </div>
-  <!-- Overview -->
-  <div class="diamond" id="dO">
-    <div class="inner">
-      <div class="h">What governs this?</div>
-      <span class="sci">Coherence / Closure</span>
-      <div class="tip">External coherence cannot exceed internal coherence; open loops destabilize.</div>
-    </div>
-  </div>
-</div>
+        <!-- TOP -->
+        <a class="gKey gTop" href="/laws/tier-1/admissibility/" aria-label="Admissibility group">
+          <span class="gKeyText">
+            <strong>Can this act?</strong>
+            <em>(Admissibility)</em>
+          </span>
+        </a>
 
-<div class="actions">
-  <a class="gBtn" href="/laws/">Back</a>
-  <a class="gBtn" href="/home/">Home</a>
-</div>
+        <!-- RIGHT -->
+        <a class="gKey gRight" href="/laws/tier-1/classification/" aria-label="Classification group">
+          <span class="gKeyText">
+            <strong>Can we agree?</strong>
+            <em>(Observer-Invariant Classification)</em>
+          </span>
+        </a>
 
-<footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-</main>
+        <!-- BOTTOM -->
+        <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Non-substitutability group">
+          <span class="gKeyText">
+            <strong>No shortcuts</strong>
+            <em>(Non-Compensation / No-Timer Gating)</em>
+          </span>
+        </a>
+
+        <!-- LEFT -->
+        <a class="gKey gLeft" href="/laws/tier-1/overview/" aria-label="Tier 1 overview">
+          <span class="gKeyText">
+            <strong>What governs this?</strong>
+            <em>(Index)</em>
+          </span>
+        </a>
+
+      </div>
+
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/laws/">Back</a>
+        <a class="gBtn" href="/home/">Home</a>
+      </div>
+
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
 </body>
 </html>
+```0

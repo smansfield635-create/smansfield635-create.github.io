@@ -1,87 +1,46 @@
-<!-- TNT: /laws/tier-1/permission/all-parts/index.html -->
+<!-- TNT: /laws/tier-1/permission/index.html (BRANCH — diamond routes to 4 leaf pages) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>All parts? · Permission · Geodiametrics</title>
-
+  <title>Permission · Tier 1 · Geodiametrics</title>
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
-
-  <style>
-    .lensWrap{display:flex;justify-content:center;margin:6px 0 14px}
-    .lens{display:flex;gap:6px;position:relative;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px}
-    .lens button{border:0;background:transparent;color:rgba(255,255,255,.75);font-weight:800;padding:10px 18px;border-radius:999px;cursor:pointer}
-    .lens button.active{color:#fff}
-    .lens .pill{position:absolute;top:6px;bottom:6px;left:6px;width:calc(50% - 6px);border-radius:999px;background:linear-gradient(180deg,#2aa4ff,#1976d2);box-shadow:0 10px 26px rgba(30,144,255,.35);transition:transform .22s ease}
-    .lens[data-mode="human"] .pill{transform:translateX(0)}
-    .lens[data-mode="scientific"] .pill{transform:translateX(100%)}
-
-    details.b{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);border-radius:18px;padding:14px 16px;margin:0 0 12px}
-    details.b summary{cursor:pointer;font-weight:900;list-style:none}
-    details.b summary::-webkit-details-marker{display:none}
-    .body{margin-top:10px;line-height:1.5;opacity:.95}
-    .body.scientific{display:none}
-    .note{margin:6px 0 14px;text-align:center;opacity:.85}
-  </style>
 </head>
 <body>
   <main class="gPage">
     <header class="gHeader">
-      <h1 class="gTitle">All parts?</h1>
-      <p class="gSub">Permission · Leaf</p>
+      <h1 class="gTitle">Permission</h1>
+      <p class="gSub">Tier 1 · Branch</p>
     </header>
 
-    <section class="gPanel" aria-label="All parts leaf bubbles">
-      <div class="lensWrap" aria-label="Lens toggle">
-        <div class="lens" id="lens" data-mode="human">
-          <div class="pill" aria-hidden="true"></div>
-          <button id="btnHuman" class="active" type="button">Human</button>
-          <button id="btnSci" type="button">Scientific</button>
-        </div>
+    <section class="gPanel" aria-label="Permission branch">
+      <p class="gSub" style="text-align:center;margin:0 0 14px;opacity:.9">Diamonds are branches. This branch routes to leaf pages.</p>
+
+      <div class="gCluster" role="navigation" aria-label="Permission leaf routes">
+        <a class="gKey gTop" href="/laws/tier-1/permission/possible/" aria-label="Possible">
+          <span class="gKeyText"><strong>Possible?</strong>Admitted / blocked</span>
+        </a>
+        <a class="gKey gRight" href="/laws/tier-1/permission/all-parts/" aria-label="All parts">
+          <span class="gKeyText"><strong>All parts?</strong>Or no run</span>
+        </a>
+        <a class="gKey gBottom" href="/laws/tier-1/permission/how/" aria-label="How">
+          <span class="gKeyText"><strong>How</strong>Use</span>
+        </a>
+        <a class="gKey gLeft" href="/laws/tier-1/permission/why/" aria-label="Why">
+          <span class="gKeyText"><strong>Why</strong>Meaning</span>
+        </a>
       </div>
 
-      <p class="note">Tap a bubble to expand.</p>
-
-      <details class="b">
-        <summary>L3 · If-and-Only-If</summary>
-        <div class="body human">If a required part is missing, the run doesn’t count. Partial = no run.</div>
-        <div class="body scientific">An outcome occurs iff all required constraints are simultaneously satisfied.</div>
-      </details>
-
-      <details class="b">
-        <summary>L6 · Non-Compensation</summary>
-        <div class="body human">Strength somewhere else can’t “pay for” a missing requirement.</div>
-        <div class="body scientific">Strength in one dimension cannot compensate for violation in another required constraint.</div>
-      </details>
-
       <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/laws/tier-1/permission/">Back</a>
+        <a class="gBtn" href="/laws/tier-1/">Back</a>
         <a class="gBtn" href="/laws/">Laws</a>
       </div>
 
       <footer class="gFooter">TIER 1 · PERMISSION · © GEODIAMETRICS</footer>
     </section>
   </main>
-
-  <script>
-    (function(){
-      const lens = document.getElementById('lens');
-      const btnH = document.getElementById('btnHuman');
-      const btnS = document.getElementById('btnSci');
-      const setMode = (mode) => {
-        lens.dataset.mode = mode;
-        btnH.classList.toggle('active', mode === 'human');
-        btnS.classList.toggle('active', mode === 'scientific');
-        document.querySelectorAll('.body.human').forEach(el => el.style.display = (mode === 'human') ? 'block' : 'none');
-        document.querySelectorAll('.body.scientific').forEach(el => el.style.display = (mode === 'scientific') ? 'block' : 'none');
-      };
-      btnH.addEventListener('click', () => setMode('human'));
-      btnS.addEventListener('click', () => setMode('scientific'));
-      setMode('human');
-    })();
-  </script>
 </body>
 </html>

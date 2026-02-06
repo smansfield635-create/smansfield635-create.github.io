@@ -1,16 +1,14 @@
-<!-- TNT: /laws/index.html (FULL REPLACEMENT — clean Laws entry, reset to canonical) -->
+<!-- TNT: /laws/index.html  (FULL REPLACEMENT — Tier links go to nested diamonds, not bubbles) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Laws · Geodiametrics</title>
-
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
 </head>
-
 <body>
   <main class="gPage">
     <header class="gHeader">
@@ -19,40 +17,23 @@
     </header>
 
     <section class="gPanel" aria-label="Law tiers">
-      <div class="gCluster" role="navigation" aria-label="Law tiers">
-
-        <!-- Tier 1 -->
-        <a class="gKey gTop" href="/laws/tier-1/">
-          <span class="gKeyText">
-            <strong>Tier 1</strong>
-            Foundational
-          </span>
+      <div class="gCluster" role="navigation" aria-label="Law tier routes">
+        <!-- IMPORTANT: these must land on the tier INDEX pages -->
+        <a class="gKey gTop" href="/laws/tier-1/" aria-label="Tier 1">
+          <span class="gKeyText"><strong>Tier 1</strong>Foundational</span>
         </a>
 
-        <!-- Tier 2 -->
-        <a class="gKey gRight" href="/laws/tier-2/">
-          <span class="gKeyText">
-            <strong>Tier 2</strong>
-            Structural
-          </span>
+        <a class="gKey gRight" href="/laws/tier-2/" aria-label="Tier 2">
+          <span class="gKeyText"><strong>Tier 2</strong>Structural</span>
         </a>
 
-        <!-- Tier 3 -->
-        <a class="gKey gBottom" href="/laws/tier-3/">
-          <span class="gKeyText">
-            <strong>Tier 3</strong>
-            Operational
-          </span>
+        <a class="gKey gBottom" href="/laws/tier-3/" aria-label="Tier 3">
+          <span class="gKeyText"><strong>Tier 3</strong>Operational</span>
         </a>
 
-        <!-- Overview -->
-        <a class="gKey gLeft" href="/laws/overview/">
-          <span class="gKeyText">
-            <strong>Overview</strong>
-            Index
-          </span>
+        <a class="gKey gLeft" href="/laws/overview/" aria-label="Overview">
+          <span class="gKeyText"><strong>Overview</strong>Index</span>
         </a>
-
       </div>
 
       <div class="gActions" aria-label="Navigation controls">
@@ -60,9 +41,7 @@
         <a class="gBtn" href="/landing/">Back</a>
       </div>
 
-      <footer class="gFooter">
-        CANONICAL · STABLE · © GEODIAMETRICS
-      </footer>
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
 </body>

@@ -1,0 +1,28 @@
+/* assets/diamond.css — CANONICAL DIAMOND (the “Products-style” module) */
+.diamondCluster{position:relative;width:280px;height:280px;margin:0 auto 18px;isolation:isolate}
+.diamondNode{
+  position:absolute;left:50%;top:50%;
+  width:140px;height:140px;
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:20px;
+  background:linear-gradient(180deg,var(--glass),rgba(255,255,255,.10));
+  border:1px solid rgba(255,255,255,.28);
+  box-shadow:var(--shadow);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;text-decoration:none;-webkit-tap-highlight-color:transparent;user-select:none;
+  transition:transform .22s ease, background .22s ease, box-shadow .22s ease;
+}
+.diamondNode strong,.diamondNode span{transform:rotate(-45deg);display:block;text-align:center}
+.diamondNode strong{font-weight:900;letter-spacing:.12em;font-size:14px;color:rgba(241,246,251,.95)}
+.diamondNode span{font-size:12px;color:rgba(241,246,251,.72);line-height:1.2;max-width:110px}
+.diamondNode.top{top:22%}
+.diamondNode.right{left:78%}
+.diamondNode.bottom{top:78%}
+.diamondNode.left{left:22%}
+.diamondNode:hover{transform:translate(-50%,-50%) rotate(45deg) scale(1.03);background:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,.10));box-shadow:0 22px 72px rgba(0,0,0,.36)}
+.diamondNode:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
+@media (max-width:420px){
+  .diamondCluster{width:260px;height:260px}
+  .diamondNode{width:132px;height:132px;border-radius:18px}
+  .diamondNode span{max-width:104px}
+}

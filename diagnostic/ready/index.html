@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Diagnostic · Ready · Geodiametrics</title>
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+  <style>
+    .box{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:14px 16px;margin:0 0 12px;line-height:1.5}
+    .q{margin:12px 0 6px;font-weight:900}
+    .opt{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+    input[type="radio"]{transform:scale(1.2);margin-top:2px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+  </style>
+</head>
+<body>
+<main class="gPage">
+  <header class="gHeader">
+    <h1 class="gTitle">Ready Check</h1>
+    <p class="gSub">Confirm scope before the exam.</p>
+  </header>
+
+  <section class="gPanel" aria-label="Readiness gate">
+    <div class="box">
+      <div class="q">Q1 · This diagnostic is primarily:</div>
+      <label class="opt"><input type="radio" name="q1" value="a"><span>A persuasion tool</span></label>
+      <label class="opt"><input type="radio" name="q1" value="b"><span>A record of choices that produces a receipt</span></label>
+      <label class="opt"><input type="radio" name="q1" value="c"><span>A prediction engine</span></label>
+
+      <div class="q">Q2 · You can exit at any time:</div>
+      <label class="opt"><input type="radio" name="q2" value="yes"><span>Yes</span></label>
+      <label class="opt"><input type="radio" name="q2" value="no"><span>No</span></label>
+
+      <div class="q">Q3 · The exam measures alignment using:</div>
+      <label class="opt"><input type="radio" name="q3" value="a"><span>Observed inputs (choices, order, consistency)</span></label>
+      <label class="opt"><input type="radio" name="q3" value="b"><span>Mind-reading / inferred intent</span></label>
+      <label class="opt"><input type="radio" name="q3" value="c"><span>Astrology</span></label>
+    </div>
+
+    <div class="row">
+      <a class="gBtn" href="/diagnostic/start/">Back</a>
+      <button class="gBtn" type="button" id="next">Next</button>
+    </div>
+
+    <footer class="gFooter">FREE WILL · SCOPE · © GEODIAMETRICS</footer>
+  </section>
+</main>
+
+<script>
+  function val(name){
+    const x = document.querySelector(`input[name="${name}"]:checked`);
+    return x ? x.value : null;
+  }
+  document.getElementById('next').addEventListener('click', ()=>{
+    const q1 = val('q1'), q2 = val('q2'), q3 = val('q3');
+    if(!q1 || !q2 || !q3) return;
+
+    // Correct answers: q1=b, q2=yes, q3=a
+    const ok = (q1==='b' && q2==='yes' && q3==='a');
+    if(!ok){
+      alert('Not ready yet. Re-read and try again.');
+      return;
+    }
+
+    localStorage.setItem('GD_DIAG_READY', '1');
+    localStorage.setItem('GD_DIAG_STARTED_AT', new Date().toISOString());
+    location.href = '/diagnostic/type/';
+  });
+</script>
+</body>
+</html>

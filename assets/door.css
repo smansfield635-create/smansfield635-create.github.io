@@ -1,181 +1,54 @@
-/* =========================================================
-   GEODIAMETRICS — CANONICAL DIAMOND UI (NON-LEAF)
-   Standard: Door + Links screenshots (glass + 4 diamonds)
-   ========================================================= */
+/* Door module only — guaranteed diamond layout */
+.doorWrap{width:100%;max-width:520px}
+.doorWrap.panel{padding:32px 20px 22px} /* safe if you use .panel on wrapper */
 
-:root{
-  --bg0:#06131d;
-  --bg1:#0a1b28;
+.doorCluster{position:relative;width:280px;height:280px;margin:0 auto 12px;isolation:isolate}
 
-  --panel0:rgba(255,255,255,.06);
-  --panel1:rgba(255,255,255,.025);
-  --stroke:rgba(255,255,255,.14);
+/* HARD OVERRIDE: prevent flattening into inline text */
+.doorDiamond{
+  position:absolute !important;
+  left:50% !important;
+  top:50% !important;
+  width:140px !important;
+  height:140px !important;
 
-  --diamond:rgba(255,255,255,.08);
-  --diamondStroke:rgba(255,255,255,.16);
-  --diamondInner:rgba(255,255,255,.09);
+  transform:translate(-50%,-50%) rotate(45deg) !important;
 
-  --txt:#eaf1f7;
-  --sub:rgba(234,241,247,.7);
+  border-radius:20px !important;
+  background:linear-gradient(180deg,var(--glass),rgba(255,255,255,.10)) !important;
+  border:1px solid rgba(255,255,255,.28) !important;
+  box-shadow:var(--shadow) !important;
 
-  --pill:rgba(255,255,255,.06);
-  --pillStroke:rgba(255,255,255,.14);
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+
+  text-decoration:none !important;
+  -webkit-tap-highlight-color:transparent !important;
+  user-select:none !important;
+
+  transition:transform .22s ease, background .22s ease, box-shadow .22s ease !important;
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  color:var(--txt);
-  background:
-    radial-gradient(1200px 900px at 50% 0%, rgba(255,255,255,.06), transparent 60%),
-    radial-gradient(900px 700px at 30% 60%, rgba(255,255,255,.03), transparent 65%),
-    radial-gradient(1000px 900px at 70% 80%, rgba(255,255,255,.02), transparent 70%),
-    linear-gradient(180deg,var(--bg1),var(--bg0));
-}
+/* Un-rotate inner text */
+.doorDiamond strong,.doorDiamond span{transform:rotate(-45deg) !important;display:block !important;text-align:center !important}
+.doorDiamond strong{font-weight:900 !important;letter-spacing:.12em !important;font-size:14px !important;color:rgba(241,246,251,.95) !important}
+.doorDiamond span{font-size:12px !important;color:rgba(241,246,251,.72) !important;line-height:1.2 !important;max-width:110px !important}
 
-/* kill default link styling everywhere */
-a{color:inherit;text-decoration:none}
-a:visited{color:inherit}
-a:active{color:inherit}
+/* Positions */
+.doorDiamond.top{top:22% !important}
+.doorDiamond.right{left:78% !important}
+.doorDiamond.bottom{top:78% !important}
+.doorDiamond.left{left:22% !important}
 
-/* PAGE FRAME */
-.stage{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  padding:64px 18px 28px;
-  text-align:center;
-}
+/* Hover/active */
+.doorDiamond:hover{transform:translate(-50%,-50%) rotate(45deg) scale(1.03) !important;background:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,.10)) !important;box-shadow:0 22px 72px rgba(0,0,0,.36) !important}
+.doorDiamond:active{transform:translate(-50%,-50%) rotate(45deg) scale(0.99) !important}
 
-/* HEADERS */
-.hero h1{
-  font-size:56px;
-  line-height:1.05;
-  letter-spacing:-.02em;
-  font-weight:800;
-  margin-bottom:10px;
-}
-.hero .subtitle{
-  font-size:18px;
-  color:var(--sub);
-  margin-bottom:26px;
-}
-
-/* GLASS PANEL */
-.glass{
-  width:min(560px,92vw);
-  border-radius:34px;
-  padding:34px 22px 24px;
-  background:linear-gradient(180deg,var(--panel0),var(--panel1));
-  border:1px solid var(--stroke);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  box-shadow:
-    0 28px 80px rgba(0,0,0,.45),
-    inset 0 1px 0 rgba(255,255,255,.06);
-}
-
-/* DIAMOND GRID — FIXED, NO OVERLAP, NO X ARTIFACTS */
-.diamondGrid{
-  width:min(360px,74vw);
-  height:min(360px,74vw);
-  margin:0 auto 18px;
-  position:relative;
-}
-
-.diamond{
-  position:absolute;
-  width:min(150px,34vw);
-  height:min(150px,34vw);
-  border-radius:22px;
-  transform:rotate(45deg);
-
-  background:var(--diamond);
-  border:1px solid var(--diamondStroke);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  box-shadow:
-    0 18px 40px rgba(0,0,0,.35),
-    inset 0 1px 0 rgba(255,255,255,.06);
-}
-
-/* inner “glass” inset (this is what you LIKE — keep) */
-.diamond::before{
-  content:"";
-  position:absolute;
-  inset:12px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-}
-
-/* text inside diamond */
-.diamond > .label{
-  transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  z-index:2;
-  padding:10px;
-}
-.diamond .title{
-  font-weight:800;
-  letter-spacing:.08em;
-  font-size:16px;
-}
-.diamond .sub{
-  font-size:14px;
-  color:rgba(234,241,247,.62);
-}
-
-/* POSITIONS — “PULLED APART” (no overlap) */
-.diamond.top   { left:50%; top:2%;    transform:translateX(-50%) rotate(45deg); }
-.diamond.right { top:50%;  right:2%;  transform:translateY(-50%) rotate(45deg); }
-.diamond.bottom{ left:50%; bottom:2%; transform:translateX(-50%) rotate(45deg); }
-.diamond.left  { top:50%;  left:2%;   transform:translateY(-50%) rotate(45deg); }
-
-/* FOOTER + BUTTON ROW */
-.actions{
-  display:flex;
-  gap:14px;
-  justify-content:center;
-  margin:18px 0 10px;
-}
-.pill{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-width:140px;
-  padding:14px 18px;
-  border-radius:22px;
-  background:var(--pill);
-  border:1px solid var(--pillStroke);
-  color:rgba(234,241,247,.82);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-}
-.canon{
-  font-size:13px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:rgba(234,241,247,.32);
-  margin-top:6px;
-}
-
-/* MOBILE TWEAKS */
 @media (max-width:420px){
-  .hero h1{font-size:50px}
-  .diamond{width:min(140px,36vw);height:min(140px,36vw)}
-  .pill{min-width:150px}
+  .doorCluster{width:260px !important;height:260px !important}
+  .doorDiamond{width:132px !important;height:132px !important;border-radius:18px !important}
+  .doorDiamond span{max-width:104px !important}
 }

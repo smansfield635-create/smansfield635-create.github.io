@@ -1,129 +1,135 @@
-<!-- TNT: /laws/tier-1/nonsub/index.html (FULL REPLACEMENT — REMOVES “GROUP C”, ADDS TITLE/SUBTITLE TOGGLE) -->
+<!-- TNT: /laws/tier-1/index.html  (FULL REPLACEMENT — Tier 1 -> nested diamond of 4 groups) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tier 1 · No Shortcuts · Geodiametrics</title>
-
+  <title>Tier 1 · Geodiametrics</title>
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    .lensToggle{
-      display:flex;gap:6px;justify-content:center;margin:10px auto 14px;
-      background:rgba(255,255,255,.08);padding:6px;border-radius:999px;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
-      max-width:520px;
-    }
-    .lensBtn{
-      flex:1;padding:10px 18px;border-radius:999px;border:none;
-      font-weight:900;cursor:pointer;color:#cfe4f6;background:transparent;
-      text-align:center;
-    }
-    .lensBtn.active{
-      color:#fff;background:linear-gradient(180deg,#2aa4ff,#1976d2);
-      box-shadow:0 6px 18px rgba(30,144,255,.35);
-    }
+    .lensBar{display:flex;justify-content:center;margin:10px 0 16px}
+    .lensWrap{position:relative;display:flex;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px;width:min(520px,100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+    .lensBtn{flex:1;border:0;background:transparent;color:rgba(241,246,251,.78);font-weight:900;padding:12px 14px;border-radius:999px;cursor:pointer;z-index:2}
+    .lensBtn.active{color:#fff}
+    .lensIndicator{position:absolute;top:6px;bottom:6px;width:calc(50% - 6px);left:6px;border-radius:999px;background:linear-gradient(180deg,#2aa4ff,#1976d2);box-shadow:0 8px 22px rgba(30,144,255,.35);transition:transform .22s ease}
+    .lensIndicator.right{transform:translateX(100%)}
 
-    /* Sections */
-    .lawItem{
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.22);
-      border-radius:18px;
-      padding:14px 18px;
-      margin:0 0 12px;
-      text-align:center;
-    }
-    .lawItem h3{
-      margin:0;
-      font-size:18px;
-      font-weight:900;
-      letter-spacing:-0.01em;
-    }
-    .lawItem p{
-      margin:10px 0 0;
-      line-height:1.45;
-      opacity:.9;
-    }
-
-    /* Toggle content */
-    .humanOnly{display:none}
-    .sciOnly{display:block}
-    body[data-lens="human"] .humanOnly{display:block}
-    body[data-lens="human"] .sciOnly{display:none}
+    .miniNote{max-width:520px;margin:0 auto 12px;text-align:center;opacity:.9;line-height:1.35}
   </style>
-
-  <script>
-    function setLens(lens){
-      document.body.setAttribute('data-lens', lens);
-      const bH = document.getElementById('btnHuman');
-      const bS = document.getElementById('btnSci');
-      if(lens === 'human'){
-        bH.classList.add('active'); bS.classList.remove('active');
-      } else {
-        bS.classList.add('active'); bH.classList.remove('active');
-      }
-    }
-    window.addEventListener('DOMContentLoaded', () => setLens('scientific'));
-  </script>
 </head>
 
-<body data-lens="scientific">
+<body>
   <main class="gPage">
     <header class="gHeader">
-      <!-- TITLE + SUBTITLE TOGGLE WITH LENS -->
-      <h1 class="gTitle">
-        <span class="sciOnly">No-Compensation / No-Timer Gating</span>
-        <span class="humanOnly">Shortcuts?</span>
-      </h1>
-
-      <p class="gSub">
-        <span class="sciOnly">Missing constraints cannot be offset.</span>
-        <span class="humanOnly">No shortcuts. Requirements do not trade.</span>
-      </p>
-
-      <div class="lensToggle" aria-label="Lens toggle">
-        <button class="lensBtn" id="btnHuman" onclick="setLens('human')">Human</button>
-        <button class="lensBtn active" id="btnSci" onclick="setLens('scientific')">Scientific</button>
-      </div>
+      <h1 class="gTitle" id="tTitle">Tier 1</h1>
+      <p class="gSub" id="tSub">Foundational laws · Non-derivable.</p>
     </header>
 
-    <section class="gPanel" aria-label="Tier 1 — No shortcuts">
-
-      <!-- ITEM 1 -->
-      <div class="lawItem">
-        <h3>
-          <span class="sciOnly">L6 · Non-Compensation Law</span>
-          <span class="humanOnly">Non-compensation</span>
-        </h3>
-        <p>
-          <span class="sciOnly">Strength in one dimension cannot compensate for violation in another required constraint.</span>
-          <span class="humanOnly">If a requirement is missing, extra strength somewhere else doesn’t “make up” for it.</span>
-        </p>
+    <section class="gPanel" aria-label="Tier 1: nested diamond">
+      <div class="lensBar" aria-label="Lens toggle">
+        <div class="lensWrap">
+          <div class="lensIndicator" id="lensIndicator"></div>
+          <button class="lensBtn active" id="btnHuman" type="button" onclick="setLens('human')">Human</button>
+          <button class="lensBtn" id="btnSci" type="button" onclick="setLens('scientific')">Scientific</button>
+        </div>
       </div>
 
-      <!-- ITEM 2 -->
-      <div class="lawItem">
-        <h3>
-          <span class="sciOnly">L7 · No-Timer Gating Law</span>
-          <span class="humanOnly">No timer gating</span>
-        </h3>
-        <p>
-          <span class="sciOnly">Time passage cannot substitute for structural completion, receipt, or constraint satisfaction.</span>
-          <span class="humanOnly">Waiting doesn’t complete the work. Completion requires the missing step.</span>
-        </p>
+      <div class="miniNote" id="tNote">Choose a diamond to enter a leaf set.</div>
+
+      <!-- Nested diamond (Tier 1 groups) -->
+      <div class="gCluster" role="navigation" aria-label="Tier 1 group routes">
+        <a class="gKey gTop" href="/laws/tier-1/permission/" aria-label="Permission">
+          <span class="gKeyText">
+            <strong id="topA">Possible?</strong>
+            <span id="topB">Admissibility</span>
+          </span>
+        </a>
+
+        <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Agreement">
+          <span class="gKeyText">
+            <strong id="rightA">Agreement?</strong>
+            <span id="rightB">Classification</span>
+          </span>
+        </a>
+
+        <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Shortcuts">
+          <span class="gKeyText">
+            <strong id="bottomA">Shortcuts?</strong>
+            <span id="bottomB">No shortcuts</span>
+          </span>
+        </a>
+
+        <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Rules">
+          <span class="gKeyText">
+            <strong id="leftA">Rules?</strong>
+            <span id="leftB">Coherence</span>
+          </span>
+        </a>
       </div>
 
-      <div class="gActions">
-        <a class="gBtn" href="/laws/tier-1/">Back</a>
-        <a class="gBtn" href="/laws/">Laws</a>
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/laws/">Back</a>
+        <a class="gBtn" href="/home/">Home</a>
       </div>
 
       <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
+
+  <script>
+    function setLens(mode){
+      var isHuman = (mode === 'human');
+
+      // pill UI
+      var btnH = document.getElementById('btnHuman');
+      var btnS = document.getElementById('btnSci');
+      var ind = document.getElementById('lensIndicator');
+      btnH.classList.toggle('active', isHuman);
+      btnS.classList.toggle('active', !isHuman);
+      ind.classList.toggle('right', !isHuman);
+
+      // header/subheader swap (title stays Tier 1, but subtext swaps)
+      document.getElementById('tSub').textContent = isHuman
+        ? 'These determine whether anything may act, be governed, be agreed upon, or be short-circuited.'
+        : 'Foundational laws · Non-derivable.';
+
+      document.getElementById('tNote').textContent = isHuman
+        ? 'Choose a question. The leaf contains expandable bubbles.'
+        : 'Choose a term. The leaf contains expandable bubbles.';
+
+      // diamond label swap (two-line: human question vs scientific noun)
+      if(isHuman){
+        document.getElementById('topA').textContent = 'Possible?';
+        document.getElementById('topB').textContent = 'Admissibility';
+
+        document.getElementById('leftA').textContent = 'Rules?';
+        document.getElementById('leftB').textContent = 'Coherence';
+
+        document.getElementById('rightA').textContent = 'Agreement?';
+        document.getElementById('rightB').textContent = 'Classification';
+
+        document.getElementById('bottomA').textContent = 'Shortcuts?';
+        document.getElementById('bottomB').textContent = 'No shortcuts';
+      } else {
+        document.getElementById('topA').textContent = 'Admissibility';
+        document.getElementById('topB').textContent = 'Permission';
+
+        document.getElementById('leftA').textContent = 'Coherence';
+        document.getElementById('leftB').textContent = 'Governance';
+
+        document.getElementById('rightA').textContent = 'Classification';
+        document.getElementById('rightB').textContent = 'Agreement';
+
+        document.getElementById('bottomA').textContent = 'Non-Substitutability';
+        document.getElementById('bottomB').textContent = 'No-timer gating';
+      }
+    }
+
+    setLens('human');
+  </script>
 </body>
 </html>
 ```0

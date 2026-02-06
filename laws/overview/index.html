@@ -1,3 +1,4 @@
+<!-- TNT: /laws/overview/index.html (FULL REPLACEMENT — rebuilt Overview index) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,40 +11,28 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    .topNav{display:flex;gap:10px;justify-content:center;margin:8px 0 14px;flex-wrap:wrap}
-    .topNav a{padding:10px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.20);background:rgba(255,255,255,.08);color:#fff;text-decoration:none;font-weight:800}
-
-    .lensToggle{display:flex;position:relative;background:rgba(255,255,255,0.08);border-radius:999px;padding:6px;gap:6px;margin:0 auto 18px;width:fit-content;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
-    .lensBtn{position:relative;z-index:2;padding:10px 22px;border-radius:999px;background:transparent;color:#cfe4f6;font-weight:800;cursor:pointer;border:none}
+    .lensToggle{display:flex;position:relative;background:rgba(255,255,255,0.08);border-radius:999px;padding:6px;gap:6px;margin:10px auto 16px;width:fit-content;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+    .lensBtn{position:relative;z-index:2;padding:10px 22px;border-radius:999px;background:transparent;color:#cfe4f6;font-weight:900;cursor:pointer;border:none}
     .lensBtn.active{color:#ffffff}
     .lensIndicator{position:absolute;top:6px;bottom:6px;width:calc(50% - 6px);background:linear-gradient(180deg,#2aa4ff,#1976d2);border-radius:999px;transition:transform .25s ease;box-shadow:0 6px 18px rgba(30,144,255,.35)}
     .lensIndicator.right{transform:translateX(100%)}
 
-    .tierHeader{margin:22px 0 12px;text-align:center}
-    .tierHeader h2{margin:0}
-    .tierHeader p{margin:6px 0 0;opacity:.85}
-    .anchorPad{scroll-margin-top:140px}
-
-    details.law{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:14px 18px;margin:0 0 12px}
-    details.law summary{cursor:pointer;font-weight:900;list-style:none}
-    details.law summary::-webkit-details-marker{display:none}
-    .lawBody{margin-top:10px;line-height:1.55}
+    .block{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:14px 16px;margin:0 0 12px}
+    .k{font-weight:900}
+    .p{opacity:.82;line-height:1.45;margin-top:6px}
     .human{display:none}
     .scientific{display:block}
+
+    .miniList{margin:10px 0 0;padding-left:18px;opacity:.9;line-height:1.5}
+    .miniList li{margin:4px 0}
   </style>
 </head>
 
 <body>
   <main class="gPage">
     <header class="gHeader">
-      <h1 class="gTitle">Laws</h1>
-      <p class="gSub">All tiers · Single file · Expand to read.</p>
-
-      <div class="topNav" aria-label="Jump to tier">
-        <a href="#tier-1">Tier 1</a>
-        <a href="#tier-2">Tier 2</a>
-        <a href="#tier-3">Tier 3</a>
-      </div>
+      <h1 class="gTitle">Laws Overview</h1>
+      <p class="gSub">Index · Scope · Navigation.</p>
 
       <div class="lensToggle" aria-label="Lens toggle">
         <div class="lensIndicator" id="lensIndicator"></div>
@@ -52,154 +41,44 @@
       </div>
     </header>
 
-    <section class="gPanel" aria-label="Canonical law catalog">
-
-      <!-- ======================== -->
-      <!-- TIER 1 -->
-      <!-- ======================== -->
-      <div id="tier-1" class="anchorPad"></div>
-      <div class="tierHeader">
-        <h2>Tier 1 — Foundational Laws</h2>
-        <p>(Non-derivable, observer-invariant)</p>
+    <section class="gPanel" aria-label="Laws overview">
+      <div class="block">
+        <div class="k">Purpose</div>
+        <div class="p scientific">This catalog defines admissible execution under constraint. Tier 1 sets invariant preconditions, Tier 2 defines universal geometry, Tier 3 defines enforceable execution principles.</div>
+        <div class="p human">These laws are the map. Tier 1 is reality’s non-negotiables, Tier 2 is the shape of stability, Tier 3 is how you execute without collapsing.</div>
       </div>
 
-      <details class="law"><summary>L1 · Coherence Constraint Law</summary>
-        <div class="lawBody scientific">External coherence cannot exceed internal self-coherence. No system can sustainably express what it does not internally satisfy.</div>
-        <div class="lawBody human">You can’t reliably project integrity you don’t actually have. If you’re fractured inside, your external stability hits a ceiling.</div>
-      </details>
-
-      <details class="law"><summary>L2 · Admissibility Law</summary>
-        <div class="lawBody scientific">A system either admits execution or it does not. Optimization is irrelevant if admissibility fails.</div>
-        <div class="lawBody human">Either execution is allowed or it isn’t. “Trying harder” doesn’t fix inadmissibility.</div>
-      </details>
-
-      <details class="law"><summary>L3 · If-and-Only-If Law</summary>
-        <div class="lawBody scientific">An outcome occurs if and only if all required constraints are simultaneously satisfied. Partial satisfaction equals non-execution.</div>
-        <div class="lawBody human">Almost doesn’t execute. Missing one required condition breaks the whole result.</div>
-      </details>
-
-      <details class="law"><summary>L4 · Observer-Invariant Classification Law</summary>
-        <div class="lawBody scientific">Independent observers must classify coherence, incoherence, and confusion identically from the same evidence.</div>
-        <div class="lawBody human">If honest observers can’t agree from the same facts, the classification rules aren’t defined yet.</div>
-      </details>
-
-      <details class="law"><summary>L5 · Closure Law</summary>
-        <div class="lawBody scientific">Systems must close operational loops to remain stable. Open loops accumulate instability.</div>
-        <div class="lawBody human">Unclosed loops stack debt and eventually force instability.</div>
-      </details>
-
-      <details class="law"><summary>L6 · Non-Compensation Law</summary>
-        <div class="lawBody scientific">Strength in one dimension cannot compensate for violation in another required constraint.</div>
-        <div class="lawBody human">Being strong somewhere doesn’t cancel breaking a required rule elsewhere.</div>
-      </details>
-
-      <details class="law"><summary>L7 · No-Timer Gating Law</summary>
-        <div class="lawBody scientific">Time passage cannot substitute for structural completion, receipt, or constraint satisfaction.</div>
-        <div class="lawBody human">Waiting doesn’t fix structure. Only completing the required step fixes structure.</div>
-      </details>
-
-      <!-- ======================== -->
-      <!-- TIER 2 -->
-      <!-- ======================== -->
-      <div id="tier-2" class="anchorPad"></div>
-      <div class="tierHeader">
-        <h2>Tier 2 — Structural / Geometric Laws</h2>
-        <p>(Derivable, universal form)</p>
+      <div class="block">
+        <div class="k">Tier Map</div>
+        <div class="p scientific">Tier 1 = foundational invariants. Tier 2 = derived structural geometry. Tier 3 = applied execution principles.</div>
+        <div class="p human">Tier 1 is the floor. Tier 2 is the frame. Tier 3 is the method.</div>
+        <ul class="miniList">
+          <li><strong>Tier 1</strong> (L1–L7): Coherence, admissibility, iff, invariance, closure, non-compensation, no-timer gating.</li>
+          <li><strong>Tier 2</strong> (L8–L14): Diamond geometry, nested cannon, condensation, scale-correlation, fragmentation, confusion amplification, conservation.</li>
+          <li><strong>Tier 3</strong> (P15–P24): SSG core, receipts, back-invalidation, continuation loop, factors only, finite code, calibration authority, evidence-only, want/need/enjoyment, energy polarity.</li>
+        </ul>
       </div>
 
-      <details class="law"><summary>L8 · Diamond Geometry Law</summary>
-        <div class="lawBody scientific">Stable systems resolve into four-vertex constraint geometry rather than linear chains.</div>
-        <div class="lawBody human">Stability isn’t a straight line. It balances four corners at once.</div>
-      </details>
+      <div class="block">
+        <div class="k">Go To Tier</div>
+        <div class="p scientific">Select a tier to view full definitions with Scientific/Human lens toggle.</div>
+        <div class="p human">Pick a tier. Expand laws. Flip the lens when you want the translation.</div>
 
-      <details class="law"><summary>L9 · Nested Cannon Law</summary>
-        <div class="lawBody scientific">Canonical systems self-compress into nested, non-contradictory layers; redundancy collapses inward under coherence pressure.</div>
-        <div class="lawBody human">If it’s coherent, it simplifies itself. Redundancy collapses into a clean core.</div>
-      </details>
-
-      <details class="law"><summary>L10 · Condensation-First Law</summary>
-        <div class="lawBody scientific">Systems must compress to their minimal stable form before expansion. Expansion without condensation causes fragmentation.</div>
-        <div class="lawBody human">Simplify first, then scale. Expansion before condensation multiplies contradictions.</div>
-      </details>
-
-      <details class="law"><summary>L11 · Scale-Correlation Law</summary>
-        <div class="lawBody scientific">Valid scaling requires correlation across the entire system, not localized growth.</div>
-        <div class="lawBody human">It’s not scale if it only works in one corner. Real scaling correlates across the system.</div>
-      </details>
-
-      <details class="law"><summary>L12 · Fragmentation Detection Law</summary>
-        <div class="lawBody scientific">Misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</div>
-        <div class="lawBody human">If what you say, do, and produce don’t line up, you’re fragmented.</div>
-      </details>
-
-      <details class="law"><summary>L13 · Confusion Amplification Law</summary>
-        <div class="lawBody scientific">Confusion does not generate instability but accelerates instability once incoherence exists.</div>
-        <div class="lawBody human">Confusion isn’t the spark, but it’s gasoline once something is already wrong.</div>
-      </details>
-
-      <details class="law"><summary>L14 · Constraint Geometry Conservation Law</summary>
-        <div class="lawBody scientific">Removing a constraint does not remove its effect; it externalizes the cost elsewhere in the system.</div>
-        <div class="lawBody human">You can’t delete consequences. Dropping a rule just moves the cost somewhere else.</div>
-      </details>
-
-      <!-- ======================== -->
-      <!-- TIER 3 -->
-      <!-- ======================== -->
-      <div id="tier-3" class="anchorPad"></div>
-      <div class="tierHeader">
-        <h2>Tier 3 — Operational / Execution Principles</h2>
-        <p>(Applied, enforceable)</p>
+        <div class="gCluster" role="navigation" aria-label="Tier routes">
+          <a class="gKey gTop" href="/laws/tier-1/" aria-label="Tier 1">
+            <span class="gKeyText"><strong>TIER 1</strong>Foundational</span>
+          </a>
+          <a class="gKey gRight" href="/laws/tier-2/" aria-label="Tier 2">
+            <span class="gKeyText"><strong>TIER 2</strong>Structural</span>
+          </a>
+          <a class="gKey gBottom" href="/laws/tier-3/" aria-label="Tier 3">
+            <span class="gKeyText"><strong>TIER 3</strong>Applied</span>
+          </a>
+          <a class="gKey gLeft" href="/laws/" aria-label="Back to Laws hub">
+            <span class="gKeyText"><strong>LAWS</strong>Hub</span>
+          </a>
+        </div>
       </div>
-
-      <details class="law"><summary>P15 · SSG Core</summary>
-        <div class="lawBody scientific">All executable systems reduce to Resources, Stores, Constraints, Goals, and Guards.</div>
-        <div class="lawBody human">Everything reduces to: what you have, what you remember, what rules you must obey, what you want, and what blocks/permits moves.</div>
-      </details>
-
-      <details class="law"><summary>P16 · Receipt-Gated Advancement</summary>
-        <div class="lawBody scientific">State advancement occurs only after verifiable receipt.</div>
-        <div class="lawBody human">No receipt, no progress. If it can’t be verified, it doesn’t advance.</div>
-      </details>
-
-      <details class="law"><summary>P17 · Back-Navigation Invalidation</summary>
-        <div class="lawBody scientific">Reversing state automatically invalidates all dependent downstream receipts.</div>
-        <div class="lawBody human">If you go back, everything depending on that step becomes invalid.</div>
-      </details>
-
-      <details class="law"><summary>P18 · Continuation Loop</summary>
-        <div class="lawBody scientific">Stable systems loop Continuation → Selection after commitment, not full restart.</div>
-        <div class="lawBody human">You continue from commitment and choose the next step—no full restart.</div>
-      </details>
-
-      <details class="law"><summary>P19 · No Factor Substitution</summary>
-        <div class="lawBody scientific">Systems operate on observable factors; agency is not assumed.</div>
-        <div class="lawBody human">Don’t guess motives. Use observable factors only.</div>
-      </details>
-
-      <details class="law"><summary>P20 · Finite Code</summary>
-        <div class="lawBody scientific">Executable artifacts must be bounded, minimal, and complete.</div>
-        <div class="lawBody human">Build minimal, complete artifacts—no sprawling dumps.</div>
-      </details>
-
-      <details class="law"><summary>P21 · Calibration Authority</summary>
-        <div class="lawBody scientific">Calibration authority is singular and non-delegable; all other inputs are non-authoritative.</div>
-        <div class="lawBody human">Only the calibrator sets the reference standard.</div>
-      </details>
-
-      <details class="law"><summary>P22 · Evidence-Only Interpretation</summary>
-        <div class="lawBody scientific">All decisions are based strictly on observed behavior, not inferred intent.</div>
-        <div class="lawBody human">Decide from observed behavior, not imagined intent.</div>
-      </details>
-
-      <details class="law"><summary>P23 · Want–Need–Enjoyment Separation</summary>
-        <div class="lawBody scientific">Want, need, and enjoyment are structurally distinct and non-interchangeable.</div>
-        <div class="lawBody human">Want is attached urgency, need is non-negotiable, enjoyment is presence without defense.</div>
-      </details>
-
-      <details class="law"><summary>P24 · Energy Polarity</summary>
-        <div class="lawBody scientific">Coherent execution aligns with long-arc energy; incoherent execution aligns with instant-gratification energy.</div>
-        <div class="lawBody human">The long game builds coherence. Instant payoff at any cost creates drift and damage.</div>
-      </details>
 
       <div class="gActions" aria-label="Navigation controls">
         <a class="gBtn" href="/laws/">Back</a>
@@ -217,20 +96,10 @@
       const btnHum=document.getElementById('btnHum');
       if(lens==='human'){ ind.classList.add('right'); btnSci.classList.remove('active'); btnHum.classList.add('active'); }
       else { ind.classList.remove('right'); btnHum.classList.remove('active'); btnSci.classList.add('active'); }
-      document.querySelectorAll('.scientific').forEach(el=>el.style.display = (lens==='scientific')?'block':'none');
-      document.querySelectorAll('.human').forEach(el=>el.style.display = (lens==='human')?'block':'none');
+      document.querySelectorAll('.scientific').forEach(el=>el.style.display=(lens==='scientific')?'block':'none');
+      document.querySelectorAll('.human').forEach(el=>el.style.display=(lens==='human')?'block':'none');
     }
-
-    function jumpToHash(){
-      const h=(location.hash||'').replace('#','');
-      if(!h) return;
-      const el=document.getElementById(h);
-      if(!el) return;
-      setTimeout(()=>{ el.scrollIntoView({behavior:'smooth',block:'start'}); },50);
-    }
-
-    window.addEventListener('hashchange', jumpToHash);
-    window.addEventListener('load', jumpToHash);
   </script>
 </body>
 </html>
+```0

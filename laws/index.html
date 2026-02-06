@@ -1,35 +1,45 @@
-<!-- FILE: /laws/index.html  (TNT) -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Laws · Geodiametrics</title>
+  <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
 </head>
 <body>
-  <main class="page">
-    <header class="hero">
-      <h1 class="title">Laws</h1>
-      <p class="subtitle">Foundational structure.</p>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Laws</h1>
+      <p class="gSub">Foundational structure.</p>
     </header>
 
-    <section class="panel">
-      <div class="diamondCluster">
-        <a class="diamond top" href="/site/"><span><strong>BACK</strong><em>Site hub</em></span></a>
-        <a class="diamond right" href="/laws/"><span><strong>TIER 1</strong><em>Foundational</em></span></a>
-        <a class="diamond bottom" href="/laws/"><span><strong>TIER 2</strong><em>Operational</em></span></a>
-        <a class="diamond left" href="/laws/"><span><strong>TIER 3</strong><em>Applied</em></span></a>
-        <div class="diamondCenterDot" aria-hidden="true"></div>
-        <div class="diamondCross" aria-hidden="true"></div>
+    <section class="gPanel" aria-label="Law tiers">
+      <div class="gCluster" role="navigation" aria-label="Law tier routes">
+        <a class="gKey gTop" href="/laws/tier-1/" aria-label="Tier 1">
+          <span class="gKeyText"><strong>TIER 1</strong>Foundational</span>
+        </a>
+
+        <a class="gKey gRight" href="/laws/tier-2/" aria-label="Tier 2">
+          <span class="gKeyText"><strong>TIER 2</strong>Operational</span>
+        </a>
+
+        <a class="gKey gBottom" href="/laws/tier-3/" aria-label="Tier 3">
+          <span class="gKeyText"><strong>TIER 3</strong>Applied</span>
+        </a>
+
+        <a class="gKey gLeft" href="/laws/overview/" aria-label="Overview">
+          <span class="gKeyText"><strong>OVERVIEW</strong>Index</span>
+        </a>
       </div>
 
-      <section class="card">
-        <h2 class="cardTitle">Placeholder</h2>
-        <p class="cardText">Laws content will be written next. This page is wired and styled correctly.</p>
-      </section>
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/home/">Back</a>
+        <a class="gBtn" href="/landing/exit/">Exit</a>
+      </div>
 
-      <footer class="footer">Canonical · Stable · © Geodiametrics</footer>
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
 </body>

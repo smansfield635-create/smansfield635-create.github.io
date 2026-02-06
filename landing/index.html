@@ -4,9 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Door · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css?v=4" />
-  <link rel="stylesheet" href="/assets/diamond.css?v=4" />
+
+  <!-- ONLY use your canonical site styles -->
+  <link rel="stylesheet" href="/assets/ui.css?v=100" />
+  <link rel="stylesheet" href="/assets/diamond.css?v=100" />
 </head>
+
 <body>
   <div class="page">
     <div class="hero">
@@ -15,12 +18,30 @@
     </div>
 
     <div class="panel">
+      <!-- Canonical 4-diamond (matches your good pages) -->
       <div class="diamondCluster">
-        <a class="diamondNode top" href="/pending/diagnostic/"><strong>RUN</strong><span>Alignment diagnostic</span></a>
-        <a class="diamondNode right" href="/home/"><strong>ENTER</strong><span>Go to site</span></a>
-        <a class="diamondNode bottom" href="/landing/info/"><strong>LEARN</strong><span>What this is</span></a>
-        <a class="diamondNode left" href="/landing/exit/"><strong>EXIT</strong><span>Leave now</span></a>
+        <a class="diamondNode top" href="/pending/diagnostic/">
+          <strong>RUN</strong><span>Alignment diagnostic</span>
+        </a>
+
+        <a class="diamondNode right" href="/home/">
+          <strong>ENTER</strong><span>Go to site</span>
+        </a>
+
+        <a class="diamondNode bottom" href="/landing/info/">
+          <strong>LEARN</strong><span>What this is</span>
+        </a>
+
+        <a class="diamondNode left" href="/landing/exit/">
+          <strong>EXIT</strong><span>Leave now</span>
+        </a>
       </div>
+
+      <div class="navRow">
+        <a class="btn" href="/home/">Back</a>
+        <a class="btn" href="/landing/exit/">Exit</a>
+      </div>
+
       <div class="canon">Canonical · Stable · © Geodiametrics</div>
     </div>
   </div>

@@ -1,4 +1,3 @@
-<!-- TNT: /laws/tier-1/index.html  (FULL REPLACEMENT — HUMAN-FIT LABELS, NO SCIENCE-BLOAT ON BUTTONS) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,105 +10,141 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* HARD STOP: never rotate label text on this page */
-    .gKeyText, .gKeyText * { transform:none !important; }
-    .gKeyText { text-align:center; }
+    /* ===== Tier-1 LOCK: keep diamond, make text horizontal ===== */
+    .t1ToggleWrap{display:flex;justify-content:center;margin:10px 0 14px}
+    .t1Toggle{position:relative;display:flex;gap:0;background:rgba(255,255,255,.08);border-radius:999px;padding:6px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);width:min(520px,92vw)}
+    .t1Toggle button{flex:1;border:0;background:transparent;color:#cfe4f6;font-weight:800;padding:12px 0;border-radius:999px;cursor:pointer;position:relative;z-index:2}
+    .t1Toggle button.active{color:#fff}
+    .t1Pill{position:absolute;top:6px;bottom:6px;left:6px;width:calc(50% - 6px);background:linear-gradient(180deg,#2aa4ff,#1976d2);border-radius:999px;transition:transform .22s ease;box-shadow:0 10px 22px rgba(30,144,255,.35)}
+    .t1Pill.right{transform:translateX(100%)}
 
-    /* Only one view visible */
-    .view { display:none !important; }
-    body[data-view="human"] .view.human { display:block !important; }
-    body[data-view="scientific"] .view.scientific { display:block !important; }
+    .t1Sub{margin:0 auto 10px;max-width:28ch;text-align:center;opacity:.9}
 
-    /* Toggle: simple (no sliding indicator) */
-    .lensBar{
-      width:min(560px,92vw);
-      margin:14px auto 10px;
-      display:flex; gap:10px; justify-content:center; align-items:center;
-      padding:10px; border-radius:999px;
-      background:rgba(255,255,255,.08);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+    /* --- IMPORTANT: diamond remains rotated; text is counter-rotated to read horizontal --- */
+    .gCluster .gKey{transform:rotate(45deg) !important;}
+    .gCluster .gKeyText{
+      transform:rotate(-45deg) !important; /* THIS is the fix */
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;line-height:1.08;
+      width:100%;
+      padding:10px 10px;
     }
-    .lensBtn{
-      flex:1;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(255,255,255,.06);
-      color:#cfe4f6;
+    .gCluster .gKeyText strong{
+      display:block;
       font-weight:900;
-      padding:14px 18px;
-      border-radius:999px;
-      cursor:pointer;
+      font-size:1.05rem;
+      letter-spacing:.2px;
+      white-space:nowrap;
     }
-    .lensBtn.active{
-      color:#fff;
-      border-color:rgba(255,255,255,.22);
-      background:linear-gradient(180deg,#2aa4ff,#1976d2);
-      box-shadow:0 10px 22px rgba(30,144,255,.28);
+    .gCluster .gKeyText .sub{
+      display:block;
+      margin-top:6px;
+      font-weight:700;
+      font-size:.85rem;
+      opacity:.78;
+      white-space:nowrap;
     }
 
-    .hint { margin:10px 0 0; }
-    .hint .h, .hint .s { display:none; }
-    body[data-view="human"] .hint .h { display:block; }
-    body[data-view="scientific"] .hint .s { display:block; }
+    /* Hard stop: prevent “8 words” drift from ever fitting */
+    .gCluster .gKeyText strong,
+    .gCluster .gKeyText .sub{
+      max-width:10ch;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    /* Show/hide the two diamonds cleanly */
+    .t1Mode{display:none;}
+    .t1Mode.active{display:block;}
+
+    /* Keep cluster spacing stable */
+    .t1ClusterPad{margin-top:6px}
   </style>
 </head>
 
-<body data-view="human">
+<body>
   <main class="gPage">
     <header class="gHeader">
       <h1 class="gTitle">Tier 1</h1>
-      <p class="gSub">Foundational laws · Non-derivable.</p>
 
-      <div class="lensBar" aria-label="Lens toggle">
-        <button id="btnHuman" class="lensBtn active" type="button" onclick="setView('human')">Human</button>
-        <button id="btnSci" class="lensBtn" type="button" onclick="setView('scientific')">Scientific</button>
+      <!-- Title line swaps with toggle -->
+      <p class="gSub" id="t1TitleLine">These determine whether anything may act, be governed, be agreed upon, or be short-circuited.</p>
+
+      <div class="t1ToggleWrap" aria-label="Lens toggle">
+        <div class="t1Toggle" role="tablist" aria-label="Human vs Scientific">
+          <div class="t1Pill" id="t1Pill"></div>
+          <button id="btnHuman" class="active" type="button" role="tab" aria-selected="true">Human</button>
+          <button id="btnSci" type="button" role="tab" aria-selected="false">Scientific</button>
+        </div>
       </div>
 
-      <p class="gSub hint">
-        <span class="h">Choose a question. Diamonds route to leaves.</span>
-        <span class="s">Choose a term. Diamonds route to leaves.</span>
-      </p>
+      <!-- Sub line swaps with toggle -->
+      <p class="t1Sub" id="t1SubLine">Choose a question. Diamonds route to leaves.</p>
     </header>
 
-    <section class="gPanel" aria-label="Tier 1 routes">
-
-      <!-- HUMAN (questions) -->
-      <div class="view human" role="navigation" aria-label="Tier 1 human questions">
-        <div class="gCluster">
+    <section class="gPanel" aria-label="Tier 1 diamond">
+      <!-- HUMAN DIAMOND -->
+      <div class="t1Mode active t1ClusterPad" id="modeHuman">
+        <div class="gCluster" role="navigation" aria-label="Tier 1 · Human">
           <a class="gKey gTop" href="/laws/tier-1/permission/" aria-label="Possible">
-            <span class="gKeyText"><strong>Possible?</strong>Permit</span>
+            <span class="gKeyText">
+              <strong>Possible?</strong>
+              <span class="sub">Permit</span>
+            </span>
+          </a>
+
+          <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Rules">
+            <span class="gKeyText">
+              <strong>Rules?</strong>
+              <span class="sub">Coherence</span>
+            </span>
           </a>
 
           <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Agreement">
-            <span class="gKeyText"><strong>Agreement?</strong>Consensus</span>
+            <span class="gKeyText">
+              <strong>Agreement?</strong>
+              <span class="sub">Consensus</span>
+            </span>
           </a>
 
-          <a class="gKey gBottom" href="/laws/tier-1/noshortcuts/" aria-label="Shortcuts">
-            <span class="gKeyText"><strong>Shortcuts?</strong>No</span>
-          </a>
-
-          <a class="gKey gLeft" href="/laws/tier-1/rules/" aria-label="Rules">
-            <span class="gKeyText"><strong>Rules?</strong>Coherence</span>
+          <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Shortcuts">
+            <span class="gKeyText">
+              <strong>Shortcuts?</strong>
+              <span class="sub">No</span>
+            </span>
           </a>
         </div>
       </div>
 
-      <!-- SCIENTIFIC (terms, but still human-fit on buttons) -->
-      <div class="view scientific" role="navigation" aria-label="Tier 1 scientific terms">
-        <div class="gCluster">
+      <!-- SCIENTIFIC DIAMOND -->
+      <div class="t1Mode t1ClusterPad" id="modeSci">
+        <div class="gCluster" role="navigation" aria-label="Tier 1 · Scientific">
           <a class="gKey gTop" href="/laws/tier-1/permission/" aria-label="Permit">
-            <span class="gKeyText"><strong>Permit</strong>Admitted?</span>
+            <span class="gKeyText">
+              <strong>Permit</strong>
+              <span class="sub">Admitted</span>
+            </span>
+          </a>
+
+          <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Coherence">
+            <span class="gKeyText">
+              <strong>Coherence</strong>
+              <span class="sub">Holds</span>
+            </span>
           </a>
 
           <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Consensus">
-            <span class="gKeyText"><strong>Consensus</strong>Same call?</span>
+            <span class="gKeyText">
+              <strong>Consensus</strong>
+              <span class="sub">Same</span>
+            </span>
           </a>
 
-          <a class="gKey gBottom" href="/laws/tier-1/noshortcuts/" aria-label="No shortcuts">
-            <span class="gKeyText"><strong>No Shortcuts</strong>Required</span>
-          </a>
-
-          <a class="gKey gLeft" href="/laws/tier-1/rules/" aria-label="Coherence">
-            <span class="gKeyText"><strong>Coherence</strong>Holds up?</span>
+          <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="No Shortcuts">
+            <span class="gKeyText">
+              <strong>No Shortcuts</strong>
+              <span class="sub">Required</span>
+            </span>
           </a>
         </div>
       </div>
@@ -124,12 +159,47 @@
   </main>
 
   <script>
-    function setView(view){
-      document.body.dataset.view = view;
-      const h = (view === 'human');
-      document.getElementById('btnHuman').classList.toggle('active', h);
-      document.getElementById('btnSci').classList.toggle('active', !h);
-    }
+    (function(){
+      const btnHuman = document.getElementById('btnHuman');
+      const btnSci   = document.getElementById('btnSci');
+      const pill     = document.getElementById('t1Pill');
+
+      const modeHuman = document.getElementById('modeHuman');
+      const modeSci   = document.getElementById('modeSci');
+
+      const titleLine = document.getElementById('t1TitleLine');
+      const subLine   = document.getElementById('t1SubLine');
+
+      function setMode(which){
+        const isHuman = (which === 'human');
+
+        btnHuman.classList.toggle('active', isHuman);
+        btnSci.classList.toggle('active', !isHuman);
+
+        btnHuman.setAttribute('aria-selected', isHuman ? 'true' : 'false');
+        btnSci.setAttribute('aria-selected', !isHuman ? 'true' : 'false');
+
+        pill.classList.toggle('right', !isHuman);
+
+        modeHuman.classList.toggle('active', isHuman);
+        modeSci.classList.toggle('active', !isHuman);
+
+        // Swap ONLY the two lines you asked for
+        if(isHuman){
+          titleLine.textContent = 'These determine whether anything may act, be governed, be agreed upon, or be short-circuited.';
+          subLine.textContent   = 'Choose a question. Diamonds route to leaves.';
+        } else {
+          titleLine.textContent = 'Foundational laws · Non-derivable.';
+          subLine.textContent   = 'Choose a term. Diamonds route to leaves.';
+        }
+      }
+
+      btnHuman.addEventListener('click', ()=>setMode('human'));
+      btnSci.addEventListener('click', ()=>setMode('sci'));
+
+      // lock default
+      setMode('human');
+    })();
   </script>
 </body>
 </html>

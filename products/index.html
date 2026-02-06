@@ -1,43 +1,46 @@
-<!-- FILE: /products/index.html  (TNT)
-     IMPORTANT: removes /assets/core.css and /assets/ui.js and logo refs (you said you don’t have them).
--->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Products · Geodiametrics</title>
+  <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
 </head>
 <body>
-  <main class="page">
-    <header class="hero">
-      <h1 class="title">Products</h1>
-      <p class="subtitle">Suite hub.</p>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Products</h1>
+      <p class="gSub">Suite hub.</p>
     </header>
 
-    <section class="panel">
-      <div class="diamondCluster">
-        <a class="diamond top" href="/products/"><span><strong>TOP</strong><em>Plasma</em></span></a>
-        <a class="diamond right" href="/products/"><span><strong>RIGHT</strong><em>EAI</em></span></a>
-        <a class="diamond bottom" href="/products/"><span><strong>BOTTOM</strong><em>Platform</em></span></a>
-        <a class="diamond left" href="/products/"><span><strong>LEFT</strong><em>CVD</em></span></a>
-        <div class="diamondCenterDot" aria-hidden="true"></div>
-        <div class="diamondCross" aria-hidden="true"></div>
+    <section class="gPanel" aria-label="Product routes">
+      <div class="gCluster" role="navigation" aria-label="Product routes">
+        <a class="gKey gTop" href="/products/#plasma" aria-label="Plasma Systems">
+          <span class="gKeyText"><strong>PLASMA</strong>Top</span>
+        </a>
+
+        <a class="gKey gRight" href="/products/#eai" aria-label="EAI Authority">
+          <span class="gKeyText"><strong>EAI</strong>Right</span>
+        </a>
+
+        <a class="gKey gBottom" href="/products/#platform" aria-label="Platform Diagnostics">
+          <span class="gKeyText"><strong>PLATFORM</strong>Bottom</span>
+        </a>
+
+        <a class="gKey gLeft" href="/products/#cvd" aria-label="CVD Deposition">
+          <span class="gKeyText"><strong>CVD</strong>Left</span>
+        </a>
       </div>
 
-      <section class="card">
-        <h2 class="cardTitle">Product Suite</h2>
-        <p class="cardText">Your detailed product tree can be reintroduced after we restore stable wiring.</p>
-        <div class="btnRow">
-          <a class="btn" href="/site/">Back to Site</a>
-          <a class="btn" href="/gauges/">Open Gauges</a>
-        </div>
-      </section>
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/home/">Back</a>
+        <a class="gBtn" href="/landing/exit/">Exit</a>
+      </div>
 
-      <footer class="footer">Canonical · Stable · © Geodiametrics</footer>
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
 </body>
 </html>
-```0

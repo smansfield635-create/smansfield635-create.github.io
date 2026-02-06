@@ -1,4 +1,3 @@
-<!-- TNT: /gauges/ohm/index.html (FULL REPLACEMENT) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,13 +12,12 @@
   <main class="gPage">
     <header class="gHeader">
       <h1 class="gTitle">Ohm</h1>
-      <p class="gSub">Friction / resistance gauge (placeholder).</p>
+      <p class="gSub">Friction / resistance (live).</p>
     </header>
 
     <section class="gPanel" aria-label="Ohm gauge">
-      <div class="gBody">
-        <p><strong>Definition</strong> Ohm represents measured friction in the system path.</p>
-        <p><strong>Output</strong> Pending diagnostic integration.</p>
+      <div class="gBody" id="out">
+        <p><strong>Status</strong> Loading…</p>
       </div>
 
       <div class="gActions">
@@ -30,6 +28,21 @@
       <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
+
+  <script>
+    fetch('/gauges/live.json?v=' + Date.now())
+      .then(r => r.json())
+      .then(data => {
+        const g = data.ohm || {};
+        document.getElementById('out').innerHTML =
+          `<p><strong>Value</strong> ${(g.value ?? '—')}</p>` +
+          `<p><strong>Label</strong> ${(g.label ?? '—')}</p>` +
+          `<p><strong>Updated</strong> ${(data.updated_at ?? '—')}</p>`;
+      })
+      .catch(() => {
+        document.getElementById('out').innerHTML =
+          `<p><strong>Status</strong> Live feed not available.</p>`;
+      });
+  </script>
 </body>
 </html>
-```0

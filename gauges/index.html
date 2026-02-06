@@ -1,160 +1,46 @@
-<!-- FILE: /gauges/index.html  (TNT FULL REPLACEMENT)
-     GAUGES = DIAMOND INSTRUMENT
-     - Center: Coherence (circular)
-     - Left: Drift (bar)
-     - Right: Constraint Load (bar)
-     - Top: Stability (ring)
-     - Bottom: Admissibility (spectrum)
-     - Expand outward, no scroll walls
--->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gauges · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg"/>
-  <link rel="stylesheet" href="/assets/core.css"/>
-  <link rel="stylesheet" href="/assets/ui.css"/>
-  <script src="/assets/ui.js"></script>
-
-  <style>
-    /* Gauge visuals (self-contained) */
-    .GCard{padding:18px;border-radius:28px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg, rgba(16,20,44,.68), rgba(20,28,64,.24));backdrop-filter:blur(14px);box-shadow:0 0 30px rgba(0,0,0,.30)}
-    .Gauge{display:flex;align-items:center;justify-content:center}
-    .Gauge svg{width:180px;height:180px}
-    .RingBg{stroke:rgba(255,255,255,.18);stroke-width:10;fill:none}
-    .RingFg{stroke:url(#gradGood);stroke-width:10;fill:none;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
-    .BarWrap{width:220px;height:16px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);overflow:hidden}
-    .BarFill{height:100%;width:40%;background:linear-gradient(90deg,#e0a1a1,#e6d58a,#8fdcc2)}
-    .Label{margin-top:10px;text-align:center;color:var(--muted)}
-    .Small{font-size:.9rem}
-  </style>
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
 </head>
-
 <body>
-<main class="wrap stars">
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Gauges</h1>
+      <p class="gSub">Live instrument. Read-only. Transparent.</p>
+    </header>
 
-<header class="top">
-  <div class="brand">
-    <img class="logo" src="/assets/logo.svg" alt="Geodiametrics"/>
-    <div class="brandName">Gauges</div>
-  </div>
-  <nav class="nav">
-    <a class="pill" href="/">Sayings</a>
-    <a class="pill" href="/home/">Enter</a>
-    <a class="pill" href="/products/">Products</a>
-    <a class="pill" href="/laws/">Laws</a>
-    <a class="pill" href="/links/">Links</a>
-  </nav>
-</header>
+    <section class="gPanel" aria-label="Gauges routes">
+      <div class="gCluster" role="navigation" aria-label="Gauge routes">
+        <a class="gKey gTop" href="/gauges/#coherence" aria-label="Coherence">
+          <span class="gKeyText"><strong>COHERENCE</strong>Center</span>
+        </a>
 
-<section class="card">
-  <h1 class="h1">Live Instrument</h1>
-  <p class="p">Visual measurements. Read-only. Transparent.</p>
-</section>
+        <a class="gKey gRight" href="/gauges/#load" aria-label="Constraint Load">
+          <span class="gKeyText"><strong>LOAD</strong>Right</span>
+        </a>
 
-<!-- DIAMOND -->
-<section class="diamondStage" aria-label="Gauge Diamond">
-  <div class="diamondGrid">
+        <a class="gKey gBottom" href="/gauges/#stability" aria-label="Stability">
+          <span class="gKeyText"><strong>STABILITY</strong>Top</span>
+        </a>
 
-    <!-- TOP: STABILITY -->
-    <div class="dNode dNodeSmall posTop">
-      <span class="dKicker">Top</span><span class="dTitle">Stability</span>
-    </div>
+        <a class="gKey gLeft" href="/gauges/#drift" aria-label="Drift">
+          <span class="gKeyText"><strong>DRIFT</strong>Left</span>
+        </a>
+      </div>
 
-    <!-- LEFT: DRIFT -->
-    <div class="dNode dNodeSmall posLeft">
-      <span class="dKicker">Left</span><span class="dTitle">Drift</span>
-    </div>
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/home/">Back</a>
+        <a class="gBtn" href="/landing/exit/">Exit</a>
+      </div>
 
-    <!-- CENTER: COHERENCE -->
-    <div class="dNode dCenter posCenter">
-      <span class="dKicker">Center</span><span class="dTitle">Coherence</span>
-    </div>
-
-    <!-- RIGHT: LOAD -->
-    <div class="dNode dNodeSmall posRight">
-      <span class="dKicker">Right</span><span class="dTitle">Load</span>
-    </div>
-
-    <!-- BOTTOM: ADMISSIBILITY -->
-    <div class="dNode dNodeSmall posBottom">
-      <span class="dKicker">Bottom</span><span class="dTitle">Admissibility</span>
-    </div>
-
-  </div>
-</section>
-
-<!-- EXPAND OUTWARD -->
-<section class="childWrap">
-
-  <!-- COHERENCE -->
-  <div class="childCard">
-    <div class="kicker">COHERENCE</div>
-    <div class="GCard Gauge">
-      <svg viewBox="0 0 120 120">
-        <defs>
-          <linearGradient id="gradGood" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#e0a1a1"/>
-            <stop offset="50%" stop-color="#e6d58a"/>
-            <stop offset="100%" stop-color="#8fdcc2"/>
-          </linearGradient>
-        </defs>
-        <circle cx="60" cy="60" r="44" class="RingBg"/>
-        <circle cx="60" cy="60" r="44" class="RingFg" stroke-dasharray="138 276"/>
-        <text x="60" y="66" text-anchor="middle" fill="#eef1ff" font-size="16">0.50</text>
-      </svg>
-    </div>
-    <div class="Label Small">Alignment of declared, observed, trajectory</div>
-  </div>
-
-  <!-- DRIFT -->
-  <div class="childCard">
-    <div class="kicker">DRIFT</div>
-    <div class="GCard">
-      <div class="BarWrap"><div class="BarFill" style="width:30%"></div></div>
-      <div class="Label Small">Deviation from intended path</div>
-    </div>
-  </div>
-
-  <!-- LOAD -->
-  <div class="childCard">
-    <div class="kicker">CONSTRAINT LOAD</div>
-    <div class="GCard">
-      <div class="BarWrap"><div class="BarFill" style="width:55%"></div></div>
-      <div class="Label Small">Active constraints & saturation</div>
-    </div>
-  </div>
-
-  <!-- STABILITY -->
-  <div class="childCard">
-    <div class="kicker">STABILITY</div>
-    <div class="GCard Gauge">
-      <svg viewBox="0 0 120 120">
-        <circle cx="60" cy="60" r="44" class="RingBg"/>
-        <circle cx="60" cy="60" r="44" class="RingFg" stroke-dasharray="200 276"/>
-        <text x="60" y="66" text-anchor="middle" fill="#eef1ff" font-size="14">STABLE</text>
-      </svg>
-    </div>
-    <div class="Label Small">Persistence over time</div>
-  </div>
-
-  <!-- ADMISSIBILITY -->
-  <div class="childCard">
-    <div class="kicker">ADMISSIBILITY</div>
-    <div class="GCard">
-      <div class="BarWrap"><div class="BarFill" style="width:70%"></div></div>
-      <div class="Label Small">Allowed → At Risk → Inadmissible</div>
-    </div>
-  </div>
-
-</section>
-
-<footer class="foot">
-  Gauges · Diamond Instrument · © Geodiametrics
-</footer>
-
-</main>
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
 </body>
 </html>

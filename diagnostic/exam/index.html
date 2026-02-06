@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Diagnostic · Exam · Geodiametrics</title>
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+  <style>
+    .box{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:14px 16px;margin:0 0 12px;line-height:1.5}
+    .opt{display:flex;gap:10px;align-items:flex-start;margin:10px 0}
+    input[type="radio"]{transform:scale(1.2);margin-top:2px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+    pre{white-space:pre-wrap;word-break:break-word;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:12px}
+  </style>
+</head>
+<body>
+<main class="gPage">
+  <header class="gHeader">
+    <h1 class="gTitle">Exam</h1>
+    <p class="gSub">Alignment assessment (v1).</p>
+  </header>
+
+  <section class="gPanel" aria-label="Exam">
+    <div class="box" id="banner"></div>
+
+    <div class="box">
+      <p><strong>Question 1</strong></p>
+      <p>I close loops instead of leaving open debt.</p>
+      <label class="opt"><input type="radio" name="q1" value="agree"><span>Agree</span></label>
+      <label class="opt"><input type="radio" name="q1" value="neutral"><span>Neutral</span></label>
+      <label class="opt"><input type="radio" name="q1" value="disagree"><span>Disagree</span></label>
+    </div>
+
+    <div class="row">
+      <a class="gBtn" href="/diagnostic/type/">Back</a>
+      <button class="gBtn" type="button" id="save">Save Answer</button>
+      <a class="gBtn" href="/gauges/">Gauges</a>
+    </div>
+
+    <div class="box">
+      <p><strong>Receipt (local)</strong></p>
+      <pre id="receiptOut">Loading…</pre>
+    </div>
+
+    <footer class="gFooter">RECEIPT · AUDITABLE · © GEODIAMETRICS</footer>
+  </section>
+</main>
+
+<script>
+  const type = localStorage.getItem('GD_DIAG_TYPE');
+  const raw = localStorage.getItem('GD_DIAG_RECEIPT');
+  if(!type || !raw) location.href = '/diagnostic/type/';
+
+  function readReceipt(){
+    try { return JSON.parse(localStorage.getItem('GD_DIAG_RECEIPT')||'{}'); }
+    catch { return {}; }
+  }
+  function writeReceipt(r){
+    localStorage.setItem('GD_DIAG_RECEIPT', JSON.stringify(r));
+    document.getElementById('receiptOut').textContent = JSON.stringify(r, null, 2);
+  }
+
+  document.getElementById('banner').innerHTML =
+    `<p><strong>Declared type:</strong> ${type}</p><p>Answer consistently. This exam is inspectable and non-coercive.</p>`;
+
+  writeReceipt(readReceipt());
+
+  document.getElementById('save').addEventListener('click', ()=>{
+    const x = document.querySelector('input[name="q1"]:checked');
+    if(!x) return;
+    const r = readReceipt();
+    r.status = "in_progress";
+    r.answers = r.answers || [];
+    // overwrite Q1 if exists
+    r.answers = r.answers.filter(a => a.q !== "q1");
+    r.answers.push({ q:"q1", a:x.value, t:new Date().toISOString() });
+    writeReceipt(r);
+    alert('Saved.');
+  });
+</script>
+</body>
+</html>

@@ -1,23 +1,21 @@
-<!-- TNT: /laws/tier-1/admissibility/index.html (Tier 1 Group A · Expandable bubbles · Lens-aware) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Tier 1 · Group A · Geodiametrics</title>
+
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
   <style>
     details.law{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);border-radius:18px;padding:14px 16px;margin:0 0 12px}
     details.law summary{cursor:pointer;font-weight:900;list-style:none}
     details.law summary::-webkit-details-marker{display:none}
     .body{margin-top:10px;line-height:1.55}
     .human{display:none}
-    .lensMini{display:flex;gap:10px;justify-content:center;margin:10px 0 14px;flex-wrap:wrap}
-    .lensMini button{padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font-weight:900;cursor:pointer}
-    .lensMini button.active{background:linear-gradient(180deg,#2aa4ff,#1976d2);border:none;box-shadow:0 6px 18px rgba(30,144,255,.35)}
-    .sub{opacity:.85;text-align:center;margin:0 0 12px}
+    .sub{opacity:.85;text-align:center;margin:0 0 14px}
   </style>
 </head>
 <body>
@@ -28,12 +26,7 @@
   </header>
 
   <section class="gPanel">
-    <div class="sub">Open any law bubble. Lens applies to all bubbles.</div>
-
-    <div class="lensMini" aria-label="Lens toggle">
-      <button id="sci" type="button" onclick="setLens('scientific')">Scientific</button>
-      <button id="hum" type="button" onclick="setLens('human')">Human</button>
-    </div>
+    <div class="sub">Lens is set on Tier 1 and applies here.</div>
 
     <details class="law">
       <summary>1 · Coherence Precedence</summary>
@@ -44,7 +37,7 @@
     <details class="law">
       <summary>2 · Admissibility</summary>
       <div class="body scientific">A system either admits execution or it does not.</div>
-      <div class="body human">If execution isn’t allowed structurally, effort doesn’t matter.</div>
+      <div class="body human">If execution isn’t structurally allowed, effort doesn’t matter.</div>
     </details>
 
     <details class="law">
@@ -63,14 +56,11 @@
 </main>
 
 <script>
-  function applyLens(l){
-    document.querySelectorAll('.scientific').forEach(el=>el.style.display=(l==='scientific')?'block':'none');
-    document.querySelectorAll('.human').forEach(el=>el.style.display=(l==='human')?'block':'none');
-    document.getElementById('sci').classList.toggle('active', l==='scientific');
-    document.getElementById('hum').classList.toggle('active', l==='human');
-  }
-  function setLens(l){ localStorage.setItem('GD_LENS', l); applyLens(l); }
-  applyLens(localStorage.getItem('GD_LENS')||'scientific');
+  (function(){
+    const l = localStorage.getItem('GD_LENS') || 'scientific';
+    document.querySelectorAll('.scientific').forEach(el=>el.style.display = (l==='scientific') ? 'block' : 'none');
+    document.querySelectorAll('.human').forEach(el=>el.style.display = (l==='human') ? 'block' : 'none');
+  })();
 </script>
 </body>
 </html>

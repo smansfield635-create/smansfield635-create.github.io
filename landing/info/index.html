@@ -1,31 +1,91 @@
-<!-- TNT: /landing/info/index.html -->
+<!-- TNT: /landing/info/index.html (FULL REPLACEMENT — ADA explanation + canonical links) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Learn more · Geodiametrics</title>
+
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    .box{
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:18px;
+      padding:14px 16px;
+      line-height:1.55;
+      text-align:left;
+      margin:0 0 12px;
+    }
+    .box h2{margin:0 0 8px;font-size:18px}
+    .box p{margin:8px 0}
+    .muted{opacity:.85}
+    .bul{margin:10px 0 0;padding-left:18px;opacity:.92}
+    .bul li{margin:6px 0}
+  </style>
 </head>
+
 <body>
   <main class="gPage">
     <header class="gHeader">
       <h1 class="gTitle">Learn more</h1>
-      <p class="gSub">This is not a quiz. It is an alignment diagnostic.</p>
+      <p class="gSub">What this is · How it works · What it is not.</p>
     </header>
 
     <section class="gPanel" aria-label="Learn more">
-      <div style="text-align:center; line-height:1.45;">
-        <p><strong>What it does</strong></p>
-        <p>You will read short lines and choose what resonates. The instrument measures alignment through choice, order, and consistency.</p>
-        <p>It becomes a “test” only because you declare who you think you are before you begin.</p>
-        <p><strong>Rule</strong> Check yourself before you wreck yourself.</p>
+
+      <div class="box">
+        <h2>What this is</h2>
+        <p>The Alignment Diagnostic Assessment (ADA) is not a quiz and not a personality sorter.</p>
+        <p>It records choices and produces a receipt. It does not persuade, predict, moralize, or optimize.</p>
+      </div>
+
+      <div class="box">
+        <h2>Baseline first</h2>
+        <p class="muted">Before the diagnostic begins, you declare a baseline. This is your own statement of your current state.</p>
+        <ul class="bul">
+          <li>Coherent / Stable</li>
+          <li>Confused / Transitional</li>
+          <li>Fragmented / Unstable</li>
+        </ul>
+        <p class="muted">This declaration is locked for the run and recorded on the receipt.</p>
+      </div>
+
+      <div class="box">
+        <h2>Primary and secondary persona</h2>
+        <p class="muted">During the run, your choices form patterns. The ADA may surface:</p>
+        <ul class="bul">
+          <li><strong>Primary persona</strong> — the dominant decision posture in this run.</li>
+          <li><strong>Secondary persona</strong> — a consistent secondary mode that appears under certain conditions.</li>
+        </ul>
+        <p class="muted">These are behavioral signals derived from choice, order, and consistency—not labels.</p>
+      </div>
+
+      <div class="box">
+        <h2>Alignment</h2>
+        <p class="muted">Alignment is the relationship between:</p>
+        <ul class="bul">
+          <li>Declared baseline</li>
+          <li>Observed primary persona</li>
+          <li>Observed secondary variation</li>
+        </ul>
+        <p class="muted">High alignment means consistency with what you declared. Low alignment means divergence. The system records; you decide what it means.</p>
+      </div>
+
+      <div class="box">
+        <h2>Rules</h2>
+        <ul class="bul">
+          <li>Exit is always valid.</li>
+          <li>Skipping or rushing invalidates the run.</li>
+          <li>No interpretation is forced on the user.</li>
+        </ul>
       </div>
 
       <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/pending/diagnostic/">Run diagnostic</a>
+        <a class="gBtn" href="/diagnostic/">Run diagnostic</a>
         <a class="gBtn" href="/home/">Enter site</a>
         <a class="gBtn" href="/landing/">Back</a>
       </div>
@@ -35,3 +95,4 @@
   </main>
 </body>
 </html>
+```0

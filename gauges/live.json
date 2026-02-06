@@ -1,0 +1,6 @@
+{
+  "updated_at":"2026-02-05T00:00:00Z",
+  "coherence":{"value":0.72,"label":"Center"},
+  "admissibility":{"value":1,"label":"Admitted"},
+  "ohm":{"value":0.18,"label":"Low friction"}
+}

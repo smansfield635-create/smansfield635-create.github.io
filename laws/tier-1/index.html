@@ -1,3 +1,4 @@
+<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — Tier 1 FINAL, LOCKED COPY) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,62 +9,113 @@
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    .diamondWrap{
+      display:flex;
+      justify-content:center;
+      margin:28px 0 20px;
+    }
+    .diamond{
+      position:relative;
+      width:260px;
+      height:260px;
+    }
+    .face{
+      position:absolute;
+      width:140px;
+      height:140px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:22px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-weight:700;
+      line-height:1.25;
+      transform:rotate(45deg);
+      cursor:pointer;
+    }
+    .face span{
+      transform:rotate(-45deg);
+      display:block;
+      padding:10px;
+    }
+    .face small{
+      display:block;
+      font-weight:600;
+      opacity:.75;
+      margin-top:6px;
+    }
+
+    .top{top:0;left:60px;}
+    .left{left:0;top:60px;}
+    .right{right:0;top:60px;}
+    .bottom{bottom:0;left:60px;}
+  </style>
 </head>
 
 <body>
-<main class="gPage">
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Tier 1</h1>
+      <p class="gSub">
+        Foundational laws · Non-derivable.<br/>
+        These determine whether anything may act, be governed, be agreed upon, or be short-circuited.
+      </p>
+    </header>
 
-  <header class="gHeader">
-    <h1 class="gTitle">Tier 1</h1>
-    <p class="gSub">Foundational laws · Non-derivable.</p>
-    <p class="gNote">
-      These laws determine whether anything may act, be classified, or remain stable.
-    </p>
-  </header>
+    <section class="gPanel" aria-label="Tier 1 diamond">
 
-  <!-- DIAMOND NAVIGATION -->
-  <section class="gPanel diamondGrid" aria-label="Tier 1 functions">
+      <div class="diamondWrap">
+        <div class="diamond">
 
-    <!-- PERMISSION -->
-    <a class="diamond" href="/laws/tier-1/permission/">
-      <div class="diamondInner">
-        <h2>Can this act?</h2>
-        <p>Permission & admissibility</p>
+          <!-- POSSIBLE -->
+          <a class="face top" href="/laws/tier-1/permission/">
+            <span>
+              Possible?
+              <small>Admissibility</small>
+            </span>
+          </a>
+
+          <!-- RULES -->
+          <a class="face left" href="/laws/tier-1/governance/">
+            <span>
+              Rules?
+              <small>Coherence &amp; Closure</small>
+            </span>
+          </a>
+
+          <!-- AGREEMENT -->
+          <a class="face right" href="/laws/tier-1/agreement/">
+            <span>
+              Agreement?
+              <small>Observer-Invariant Classification</small>
+            </span>
+          </a>
+
+          <!-- SHORTCUTS -->
+          <a class="face bottom" href="/laws/tier-1/nonsub/">
+            <span>
+              Shortcuts?
+              <small>No — Non-Compensation / No-Timer Gating</small>
+            </span>
+          </a>
+
+        </div>
       </div>
-    </a>
 
-    <!-- GOVERNANCE -->
-    <a class="diamond" href="/laws/tier-1/governance/">
-      <div class="diamondInner">
-        <h2>What governs this?</h2>
-        <p>Coherence & closure</p>
+      <div class="gActions">
+        <a class="gBtn" href="/laws/">Back</a>
+        <a class="gBtn" href="/home/">Home</a>
       </div>
-    </a>
 
-    <!-- AGREEMENT -->
-    <a class="diamond" href="/laws/tier-1/agreement/">
-      <div class="diamondInner">
-        <h2>Can we agree?</h2>
-        <p>Observer-invariant classification</p>
-      </div>
-    </a>
+      <footer class="gFooter">
+        CANONICAL · STABLE · © GEODIAMETRICS
+      </footer>
 
-    <!-- NO SUBSTITUTION -->
-    <a class="diamond" href="/laws/tier-1/nonsub/">
-      <div class="diamondInner">
-        <h2>No shortcuts</h2>
-        <p>No compensation or timer gating</p>
-      </div>
-    </a>
-
-  </section>
-
-  <footer class="gFooter">
-    <a class="gBtn" href="/laws/">Back</a>
-    <a class="gBtn" href="/home/">Home</a>
-    <div class="gFootNote">CANONICAL · STABLE · © GEODIAMETRICS</div>
-  </footer>
-
-</main>
+    </section>
+  </main>
 </body>
 </html>

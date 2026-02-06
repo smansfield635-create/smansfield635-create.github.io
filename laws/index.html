@@ -1,4 +1,3 @@
-<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — lens controls the DIAMOND labels) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,76 +10,69 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    .lensToggle{display:flex;position:relative;background:rgba(255,255,255,.08);border-radius:999px;padding:6px;gap:6px;margin:10px auto 12px;width:fit-content;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
-    .lensBtn{position:relative;z-index:2;padding:10px 22px;border-radius:999px;background:transparent;color:#cfe4f6;font-weight:900;cursor:pointer;border:none}
-    .lensBtn.active{color:#fff}
-    .lensIndicator{position:absolute;top:6px;bottom:6px;width:calc(50% - 6px);background:linear-gradient(180deg,#2aa4ff,#1976d2);border-radius:999px;transition:transform .25s ease;box-shadow:0 6px 18px rgba(30,144,255,.35)}
-    .lensIndicator.right{transform:translateX(100%)}
-    .note{opacity:.85;text-align:center;line-height:1.45;margin:0 0 14px}
+    .tierNote{
+      text-align:center;
+      opacity:.9;
+      line-height:1.45;
+      margin:6px 0 16px;
+    }
+    .diamondSub{
+      display:block;
+      font-size:14px;
+      opacity:.75;
+      margin-top:4px;
+      font-weight:600;
+    }
   </style>
 </head>
+
 <body>
 <main class="gPage">
   <header class="gHeader">
     <h1 class="gTitle">Tier 1</h1>
     <p class="gSub">Foundational Laws · Non-derivable.</p>
 
-    <div class="lensToggle" aria-label="Lens toggle">
-      <div class="lensIndicator" id="lensIndicator"></div>
-      <button class="lensBtn active" id="btnSci" type="button" onclick="setLens('scientific')">Scientific Lens</button>
-      <button class="lensBtn" id="btnHum" type="button" onclick="setLens('human')">Human Lens</button>
-    </div>
-
-    <div class="note" id="noteText">
-      Tier 1 opens a diamond of groups. Each group contains expandable law bubbles.
+    <div class="tierNote">
+      Tier 1 opens a foundational diamond.  
+      Human meaning leads. Scientific form follows in brackets.
     </div>
   </header>
 
-  <section class="gPanel" aria-label="Tier 1 groups">
-    <div class="gCluster" role="navigation" aria-label="Tier 1 group routes">
-      <a class="gKey gTop" href="/laws/tier-1/admissibility/" aria-label="Group A">
+  <section class="gPanel" aria-label="Tier 1 foundational groups">
+    <div class="gCluster" role="navigation" aria-label="Tier 1 diamond">
+
+      <!-- GROUP A -->
+      <a class="gKey gTop" href="/laws/tier-1/admissibility/">
         <span class="gKeyText">
-          <strong id="gA_title"
-            data-sci="GROUP A"
-            data-hum="GROUP A">GROUP A</strong>
-          <span id="gA_sub"
-            data-sci="Admissibility"
-            data-hum="Can it run?">Admissibility</span>
+          <strong>Can this act?</strong>
+          <span class="diamondSub">[Admissibility]</span>
         </span>
       </a>
 
-      <a class="gKey gRight" href="/laws/tier-1/classification/" aria-label="Group B">
+      <!-- GROUP B -->
+      <a class="gKey gRight" href="/laws/tier-1/classification/">
         <span class="gKeyText">
-          <strong id="gB_title"
-            data-sci="GROUP B"
-            data-hum="GROUP B">GROUP B</strong>
-          <span id="gB_sub"
-            data-sci="Classification"
-            data-hum="Can we agree?">Classification</span>
+          <strong>Can we agree?</strong>
+          <span class="diamondSub">[Observer-Invariant Classification]</span>
         </span>
       </a>
 
-      <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Group C">
+      <!-- GROUP C -->
+      <a class="gKey gBottom" href="/laws/tier-1/nonsub/">
         <span class="gKeyText">
-          <strong id="gC_title"
-            data-sci="GROUP C"
-            data-hum="GROUP C">GROUP C</strong>
-          <span id="gC_sub"
-            data-sci="Non-Substitute"
-            data-hum="No shortcuts">Non-Substitute</span>
+          <strong>No shortcuts</strong>
+          <span class="diamondSub">[Non-Compensation / No-Timer Gating]</span>
         </span>
       </a>
 
-      <a class="gKey gLeft" href="/laws/tier-1/overview/" aria-label="Overview">
+      <!-- OVERVIEW -->
+      <a class="gKey gLeft" href="/laws/tier-1/overview/">
         <span class="gKeyText">
-          <strong id="gO_title"
-            data-sci="OVERVIEW"
-            data-hum="OVERVIEW">OVERVIEW</strong>
-          <span id="gO_sub"
-            data-sci="Index"
-            data-hum="Map">Index</span>
+          <strong>What governs all of this?</strong>
+          <span class="diamondSub">[Index]</span>
         </span>
       </a>
+
     </div>
 
     <div class="gActions">
@@ -91,34 +83,5 @@
     <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
   </section>
 </main>
-
-<script>
-  function paintLens(l){
-    document.getElementById('lensIndicator').classList.toggle('right', l==='human');
-    document.getElementById('btnSci').classList.toggle('active', l==='scientific');
-    document.getElementById('btnHum').classList.toggle('active', l==='human');
-
-    // Diamond subtitle swaps
-    document.querySelectorAll('[data-sci]').forEach(el=>{
-      el.textContent = (l==='human') ? el.getAttribute('data-hum') : el.getAttribute('data-sci');
-    });
-
-    // Optional: note swap
-    document.getElementById('noteText').textContent =
-      (l==='human')
-        ? 'Tier 1 opens a diamond of groups. Pick the question you’re answering.'
-        : 'Tier 1 opens a diamond of groups. Each group contains expandable law bubbles.';
-  }
-
-  function setLens(l){
-    localStorage.setItem('GD_LENS', l);
-    paintLens(l);
-  }
-
-  (function init(){
-    const l = localStorage.getItem('GD_LENS') || 'scientific';
-    paintLens(l);
-  })();
-</script>
 </body>
 </html>

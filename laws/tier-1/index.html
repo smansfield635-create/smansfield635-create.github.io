@@ -1,4 +1,4 @@
-<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — original diamond design + human line + (Scientific) line, no tooltip clutter) -->
+<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — human question + small "(Scientific)" bubble that expands on tap) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,15 +11,37 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* Make the second line look like (Scientific) */
-    .gKeyText em{
-      display:block;
-      font-style:normal;
+    /* Compact scientific bubble */
+    .sciWrap{margin-top:6px}
+    .sciToggle{
+      display:inline-block;
+      font-size:12px;
       font-weight:700;
-      opacity:.70;
-      margin-top:6px;
+      opacity:.65;
+      cursor:pointer;
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.06);
     }
+    .sciDef{
+      display:none;
+      margin-top:6px;
+      font-size:13px;
+      opacity:.85;
+      padding:8px 12px;
+      border-radius:12px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+    }
+    .sciWrap.open .sciDef{display:block}
   </style>
+
+  <script>
+    function toggleSci(el){
+      el.parentElement.classList.toggle('open');
+    }
+  </script>
 </head>
 
 <body>
@@ -27,47 +49,61 @@
     <header class="gHeader">
       <h1 class="gTitle">Tier 1</h1>
       <p class="gSub">Foundational laws · Non-derivable.</p>
-      <p class="gSub" style="opacity:.85">Each diamond face states the human question. Scientific name is nested beneath.</p>
+      <p class="gSub" style="opacity:.85">
+        Each diamond face states the human question. Scientific definition is hidden beneath.
+      </p>
     </header>
 
-    <section class="gPanel" aria-label="Tier 1 groups">
-      <div class="gCluster" role="navigation" aria-label="Tier 1 diamond of groups">
+    <section class="gPanel" aria-label="Tier 1 diamond">
+      <div class="gCluster" role="navigation" aria-label="Tier 1 diamond">
 
         <!-- TOP -->
-        <a class="gKey gTop" href="/laws/tier-1/admissibility/" aria-label="Admissibility group">
+        <div class="gKey gTop">
           <span class="gKeyText">
             <strong>Can this act?</strong>
-            <em>(Admissibility)</em>
+            <div class="sciWrap">
+              <span class="sciToggle" onclick="toggleSci(this)">(Scientific)</span>
+              <div class="sciDef">Admissibility</div>
+            </div>
           </span>
-        </a>
+        </div>
 
         <!-- RIGHT -->
-        <a class="gKey gRight" href="/laws/tier-1/classification/" aria-label="Classification group">
+        <div class="gKey gRight">
           <span class="gKeyText">
             <strong>Can we agree?</strong>
-            <em>(Observer-Invariant Classification)</em>
+            <div class="sciWrap">
+              <span class="sciToggle" onclick="toggleSci(this)">(Scientific)</span>
+              <div class="sciDef">Classification</div>
+            </div>
           </span>
-        </a>
+        </div>
 
         <!-- BOTTOM -->
-        <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Non-substitutability group">
+        <div class="gKey gBottom">
           <span class="gKeyText">
             <strong>No shortcuts</strong>
-            <em>(Non-Compensation / No-Timer Gating)</em>
+            <div class="sciWrap">
+              <span class="sciToggle" onclick="toggleSci(this)">(Scientific)</span>
+              <div class="sciDef">Non-Compensation</div>
+            </div>
           </span>
-        </a>
+        </div>
 
         <!-- LEFT -->
-        <a class="gKey gLeft" href="/laws/tier-1/overview/" aria-label="Tier 1 overview">
+        <div class="gKey gLeft">
           <span class="gKeyText">
             <strong>What governs this?</strong>
-            <em>(Index)</em>
+            <div class="sciWrap">
+              <span class="sciToggle" onclick="toggleSci(this)">(Scientific)</span>
+              <div class="sciDef">Coherence</div>
+            </div>
           </span>
-        </a>
+        </div>
 
       </div>
 
-      <div class="gActions" aria-label="Navigation controls">
+      <div class="gActions">
         <a class="gBtn" href="/laws/">Back</a>
         <a class="gBtn" href="/home/">Home</a>
       </div>
@@ -77,4 +113,3 @@
   </main>
 </body>
 </html>
-```0

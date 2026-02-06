@@ -2,40 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>404 · Not Found</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>404 · Geodiametrics</title>
+  <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
 </head>
 <body>
-  <main class="page" data-mode="diamond" data-frozen="true">
-    <div class="h1">Not Found</div>
-    <div class="h2">This route does not exist.</div>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Not Found</h1>
+      <p class="gSub">This route does not exist.</p>
+    </header>
 
-    <section class="panel">
-      <div class="cluster" aria-label="Recovery">
-        <a class="diamond d-top primary" href="/home/">
-          <div class="label"><div class="main">Home</div><div class="sub">Site</div></div>
+    <section class="gPanel" aria-label="Recovery routes">
+      <div class="gCluster" role="navigation" aria-label="Recovery routes">
+        <a class="gKey gTop" href="/home/" aria-label="Home">
+          <span class="gKeyText"><strong>HOME</strong>Go</span>
         </a>
-        <a class="diamond d-right" href="/laws/">
-          <div class="label"><div class="main">Laws</div><div class="sub">Site</div></div>
+
+        <a class="gKey gRight" href="/products/" aria-label="Products">
+          <span class="gKeyText"><strong>PRODUCTS</strong>Go</span>
         </a>
-        <a class="diamond d-bottom" href="/products/">
-          <div class="label"><div class="main">Products</div><div class="sub">Site</div></div>
+
+        <a class="gKey gBottom" href="/landing/" aria-label="Door">
+          <span class="gKeyText"><strong>DOOR</strong>Start</span>
         </a>
-        <a class="diamond d-left" href="/links/">
-          <div class="label"><div class="main">Links</div><div class="sub">Site</div></div>
+
+        <a class="gKey gLeft" href="/laws/" aria-label="Laws">
+          <span class="gKeyText"><strong>LAWS</strong>Go</span>
         </a>
       </div>
 
-      <div class="card">
-        <div class="title">Alignment Check</div>
-        <div class="text">If you want the Alignment Check, start at the Door.</div>
-        <div class="btnrow">
-          <a class="btn" href="/landing/">Door</a>
-        </div>
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/links/">Links</a>
+        <a class="gBtn" href="/gauges/">Gauges</a>
       </div>
 
-      <div class="footer">Canonical · Stable · © Geodiametrics</div>
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
 </body>

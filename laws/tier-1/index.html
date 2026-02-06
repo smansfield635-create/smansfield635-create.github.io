@@ -1,92 +1,106 @@
-<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Tier 1 · Geodiametrics</title>
+
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
   <style>
-    .lensWrap{display:flex;justify-content:center;margin:10px 0 14px}
-    .lensToggle{display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px}
-    .lensBtn{border:0;background:transparent;color:rgba(241,246,251,.75);font-weight:800;padding:10px 18px;border-radius:999px;cursor:pointer}
-    .lensBtn.isActive{color:#fff;background:linear-gradient(180deg,#2aa4ff,#1976d2);box-shadow:0 8px 20px rgba(30,144,255,.30)}
-    .hint{margin-top:10px}
-    .hLabel{display:inline}
-    .sLabel{display:none}
-    body[data-lens="scientific"] .hLabel{display:none}
-    body[data-lens="scientific"] .sLabel{display:inline}
+    /* Lens control */
+    .lensWrap{display:flex;justify-content:center;margin:12px 0}
+    .lensToggle{display:flex;gap:6px;background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px}
+    .lensBtn{border:0;background:transparent;color:rgba(241,246,251,.7);
+      font-weight:800;padding:10px 18px;border-radius:999px;cursor:pointer}
+    .lensBtn.isActive{color:#fff;
+      background:linear-gradient(180deg,#2aa4ff,#1976d2);
+      box-shadow:0 8px 20px rgba(30,144,255,.3)}
+
+    /* Lens swap */
+    body[data-lens="human"] .scientific{display:none}
+    body[data-lens="scientific"] .human{display:none}
   </style>
 </head>
+
 <body data-lens="human">
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Tier 1</h1>
-      <p class="gSub">Foundational laws · Non-derivable.</p>
+<main class="gPage">
 
-      <div class="lensWrap" aria-label="Lens toggle">
-        <div class="lensToggle">
-          <button class="lensBtn isActive" id="btnHuman" type="button" onclick="setLens('human')">Human</button>
-          <button class="lensBtn" id="btnSci" type="button" onclick="setLens('scientific')">Scientific</button>
-        </div>
+  <header class="gHeader">
+    <h1 class="gTitle">Tier 1</h1>
+
+    <p class="gSub scientific">
+      Foundational laws · Non-derivable.
+    </p>
+
+    <p class="gSub human">
+      These determine whether anything may act, be governed,
+      be agreed upon, or be short-circuited.
+    </p>
+
+    <div class="lensWrap">
+      <div class="lensToggle">
+        <button id="hBtn" class="lensBtn isActive"
+          onclick="setLens('human')">Human</button>
+        <button id="sBtn" class="lensBtn"
+          onclick="setLens('scientific')">Scientific</button>
       </div>
+    </div>
 
-      <p class="gSub hint">
-        <span class="hLabel">Choose a question. Diamonds route to leaves.</span>
-        <span class="sLabel">Choose a term. Diamonds route to leaves.</span>
-      </p>
-    </header>
+    <p class="gSub human">Choose a question. Diamonds route to leaves.</p>
+    <p class="gSub scientific">Choose a term. Diamonds route to leaves.</p>
+  </header>
 
-    <section class="gPanel" aria-label="Tier 1 routes">
-      <div class="gCluster" role="navigation" aria-label="Tier 1 branch diamond">
-        <a class="gKey gTop" href="/laws/tier-1/permission/" aria-label="Permission">
-          <span class="gKeyText">
-            <strong class="hLabel">Possible?</strong><span class="hLabel">Permission</span>
-            <strong class="sLabel">Admissibility</strong><span class="sLabel">Permission</span>
-          </span>
-        </a>
+  <!-- DIAMOND = BRANCH (LOCKED) -->
+  <section class="gPanel">
+    <div class="gCluster" role="navigation" aria-label="Tier 1 diamond">
 
-        <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Agreement">
-          <span class="gKeyText">
-            <strong class="hLabel">Agreement?</strong><span class="hLabel">Shared classification</span>
-            <strong class="sLabel">Classification</strong><span class="sLabel">Observer-invariant</span>
-          </span>
-        </a>
+      <!-- TOP -->
+      <a class="gKey gTop" href="/laws/tier-1/permission/">
+        <span class="human"><strong>Possible?</strong></span>
+        <span class="scientific"><strong>Admissibility</strong></span>
+      </a>
 
-        <a class="gKey gBottom" href="/laws/tier-1/nosub/" aria-label="No shortcuts">
-          <span class="gKeyText">
-            <strong class="hLabel">Shortcuts?</strong><span class="hLabel">No</span>
-            <strong class="sLabel">Non-Substitutability</strong><span class="sLabel">No shortcuts</span>
-          </span>
-        </a>
+      <!-- RIGHT -->
+      <a class="gKey gRight" href="/laws/tier-1/agreement/">
+        <span class="human"><strong>Agreement?</strong></span>
+        <span class="scientific"><strong>Classification</strong></span>
+      </a>
 
-        <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Rules">
-          <span class="gKeyText">
-            <strong class="hLabel">Rules?</strong><span class="hLabel">What governs</span>
-            <strong class="sLabel">Coherence</strong><span class="sLabel">Closure</span>
-          </span>
-        </a>
-      </div>
+      <!-- BOTTOM -->
+      <a class="gKey gBottom" href="/laws/tier-1/nosub/">
+        <span class="human"><strong>Shortcuts?</strong></span>
+        <span class="scientific"><strong>Non-Substitutability</strong></span>
+      </a>
 
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/laws/">Back</a>
-        <a class="gBtn" href="/home/">Home</a>
-      </div>
+      <!-- LEFT -->
+      <a class="gKey gLeft" href="/laws/tier-1/governance/">
+        <span class="human"><strong>Rules?</strong></span>
+        <span class="scientific"><strong>Coherence</strong></span>
+      </a>
 
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
-  </main>
+    </div>
 
-  <script>
-    function setLens(next){
-      document.body.setAttribute("data-lens", next);
-      var h = document.getElementById("btnHuman");
-      var s = document.getElementById("btnSci");
-      if(next === "human"){ h.classList.add("isActive"); s.classList.remove("isActive"); }
-      else { s.classList.add("isActive"); h.classList.remove("isActive"); }
-    }
-  </script>
+    <div class="gActions">
+      <a class="gBtn" href="/laws/">Back</a>
+      <a class="gBtn" href="/home/">Home</a>
+    </div>
+
+    <footer class="gFooter">
+      CANONICAL · STABLE · © GEODIAMETRICS
+    </footer>
+  </section>
+</main>
+
+<script>
+function setLens(mode){
+  document.body.setAttribute("data-lens", mode);
+  document.getElementById("hBtn").classList.toggle("isActive", mode==="human");
+  document.getElementById("sBtn").classList.toggle("isActive", mode==="scientific");
+}
+</script>
 </body>
 </html>

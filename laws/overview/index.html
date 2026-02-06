@@ -1,3 +1,4 @@
+<!-- TNT: /laws/overview/index.html (FULL REPLACEMENT — anchor targets + jump buttons + lens toggle) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,192 +11,236 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* ===== Lens Toggle ===== */
-    .lensToggle {
-      display: flex;
-      position: relative;
-      background: rgba(255,255,255,0.08);
-      border-radius: 999px;
-      padding: 6px;
-      gap: 6px;
-      margin: 12px auto 28px;
-      width: fit-content;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
-    }
+    .topNav{display:flex;gap:10px;justify-content:center;margin:8px 0 16px;flex-wrap:wrap}
+    .topNav a{padding:10px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.20);background:rgba(255,255,255,.08);color:#fff;text-decoration:none;font-weight:700}
 
-    .lensBtn {
-      position: relative;
-      z-index: 2;
-      padding: 10px 22px;
-      border-radius: 999px;
-      background: transparent;
-      color: #cfe4f6;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-    }
+    .lensToggle{display:flex;position:relative;background:rgba(255,255,255,0.08);border-radius:999px;padding:6px;gap:6px;margin:0 auto 18px;width:fit-content;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+    .lensBtn{position:relative;z-index:2;padding:10px 22px;border-radius:999px;background:transparent;color:#cfe4f6;font-weight:700;cursor:pointer;border:none}
+    .lensBtn.active{color:#ffffff}
+    .lensIndicator{position:absolute;top:6px;bottom:6px;width:calc(50% - 6px);background:linear-gradient(180deg,#2aa4ff,#1976d2);border-radius:999px;transition:transform .25s ease;box-shadow:0 6px 18px rgba(30,144,255,.35)}
+    .lensIndicator.right{transform:translateX(100%)}
 
-    .lensBtn.active {
-      color: #ffffff;
-    }
+    details.law{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:14px 18px;margin:0 0 12px}
+    details.law summary{cursor:pointer;font-weight:800;list-style:none}
+    details.law summary::-webkit-details-marker{display:none}
+    .lawBody{margin-top:10px;line-height:1.55}
+    .human{display:none}
+    .scientific{display:block}
 
-    .lensIndicator {
-      position: absolute;
-      top: 6px;
-      bottom: 6px;
-      width: calc(50% - 6px);
-      background: linear-gradient(180deg,#2aa4ff,#1976d2);
-      border-radius: 999px;
-      transition: transform .25s ease;
-      box-shadow: 0 6px 18px rgba(30,144,255,.35);
-    }
-
-    .lensIndicator.right {
-      transform: translateX(100%);
-    }
-
-    /* ===== Law Bubbles ===== */
-    .lawBubble {
-      margin: 14px 0;
-      padding: 18px 20px;
-      border-radius: 20px;
-      background: linear-gradient(
-        180deg,
-        rgba(255,255,255,.14),
-        rgba(255,255,255,.05)
-      );
-      border: 1px solid rgba(255,255,255,.18);
-      backdrop-filter: blur(14px);
-      cursor: pointer;
-    }
-
-    .lawTitle {
-      font-weight: 700;
-      font-size: 16px;
-    }
-
-    .lawBody {
-      margin-top: 10px;
-      font-size: 15px;
-      line-height: 1.45;
-      color: rgba(230,240,250,.9);
-      display: none;
-    }
-
-    .lawBubble.open .lawBody {
-      display: block;
-    }
-
-    .lensContent {
-      display: none;
-    }
-
-    .lensContent.active {
-      display: block;
-    }
+    .tierHeader{margin:22px 0 12px;text-align:center}
+    .tierHeader h2{margin:0}
+    .tierHeader p{margin:6px 0 0;opacity:.85}
+    .anchorPad{scroll-margin-top:120px}
   </style>
 </head>
 
 <body>
-<main class="gPage">
-  <header class="gHeader">
-    <h1 class="gTitle">Laws</h1>
-    <p class="gSub">All tiers · Single instrument · Expand to read.</p>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Laws</h1>
+      <p class="gSub">All tiers · Single file · Expand to read.</p>
 
-    <!-- Lens Toggle -->
-    <div class="lensToggle">
-      <div class="lensIndicator" id="lensIndicator"></div>
-      <button class="lensBtn active" onclick="setLens('scientific')">Scientific Lens</button>
-      <button class="lensBtn" onclick="setLens('human')">Human Lens</button>
-    </div>
-  </header>
-
-  <section class="gPanel">
-
-    <!-- SCIENTIFIC LENS -->
-    <div class="lensContent active" id="scientific">
-      <h2>Tier 1 — Foundational</h2>
-
-      <div class="lawBubble" onclick="this.classList.toggle('open')">
-        <div class="lawTitle">L1 · Coherence Constraint Law</div>
-        <div class="lawBody">
-          External coherence cannot exceed internal self-coherence.  
-          No system can sustainably express what it does not internally satisfy.
-        </div>
+      <!-- Jump buttons -->
+      <div class="topNav" aria-label="Jump to tier">
+        <a href="#tier-1">Tier 1</a>
+        <a href="#tier-2">Tier 2</a>
+        <a href="#tier-3">Tier 3</a>
       </div>
 
-      <div class="lawBubble" onclick="this.classList.toggle('open')">
-        <div class="lawTitle">L2 · Admissibility Law</div>
-        <div class="lawBody">
-          A system either admits execution or it does not.  
-          Optimization is irrelevant if admissibility fails.
-        </div>
+      <!-- Lens Toggle -->
+      <div class="lensToggle" aria-label="Lens toggle">
+        <div class="lensIndicator" id="lensIndicator"></div>
+        <button class="lensBtn active" onclick="setLens('scientific')">Scientific Lens</button>
+        <button class="lensBtn" onclick="setLens('human')">Human Lens</button>
+      </div>
+    </header>
+
+    <section class="gPanel" aria-label="Canonical law catalog">
+
+      <!-- TIER 1 ANCHOR -->
+      <div id="tier-1" class="anchorPad"></div>
+      <div class="tierHeader">
+        <h2>Tier 1 — Foundational Laws</h2>
+        <p>(Non-derivable, observer-invariant)</p>
       </div>
 
-      <h2>Tier 2 — Structural</h2>
+      <details class="law">
+        <summary>L1 · Coherence Constraint Law</summary>
+        <div class="lawBody scientific">External coherence cannot exceed internal self-coherence. No system can sustainably express what it does not internally satisfy.</div>
+        <div class="lawBody human">You can’t consistently show the world what you don’t actually have inside. If you’re not aligned internally, external trust has a ceiling.</div>
+      </details>
 
-      <div class="lawBubble" onclick="this.classList.toggle('open')">
-        <div class="lawTitle">L8 · Diamond Geometry Law</div>
-        <div class="lawBody">
-          Stable systems resolve into four-vertex constraint geometry,
-          not linear chains.
-        </div>
+      <details class="law">
+        <summary>L2 · Admissibility Law</summary>
+        <div class="lawBody scientific">A system either admits execution or it does not. Optimization is irrelevant if admissibility fails.</div>
+        <div class="lawBody human">Either it runs or it doesn’t. Improving a system that isn’t structurally allowed to run is wasted motion.</div>
+      </details>
+
+      <details class="law">
+        <summary>L3 · If-and-Only-If Law</summary>
+        <div class="lawBody scientific">An outcome occurs if and only if all required constraints are simultaneously satisfied. Partial satisfaction equals non-execution.</div>
+        <div class="lawBody human">“Almost” doesn’t execute. If a required condition is missing, the result doesn’t count.</div>
+      </details>
+
+      <details class="law">
+        <summary>L4 · Observer-Invariant Classification Law</summary>
+        <div class="lawBody scientific">Independent observers must classify coherence, incoherence, and confusion identically from the same evidence.</div>
+        <div class="lawBody human">Two honest people with the same facts should reach the same classification. If not, the rules aren’t defined yet.</div>
+      </details>
+
+      <details class="law">
+        <summary>L5 · Closure Law</summary>
+        <div class="lawBody scientific">Systems must close operational loops to remain stable. Open loops accumulate instability.</div>
+        <div class="lawBody human">Unfinished loops stack problems. Stability requires closure.</div>
+      </details>
+
+      <details class="law">
+        <summary>L6 · Non-Compensation Law</summary>
+        <div class="lawBody scientific">Strength in one dimension cannot compensate for violation in another required constraint.</div>
+        <div class="lawBody human">Being great in one area doesn’t cancel breaking a required rule somewhere else.</div>
+      </details>
+
+      <details class="law">
+        <summary>L7 · No-Timer Gating Law</summary>
+        <div class="lawBody scientific">Time passage cannot substitute for structural completion, receipt, or constraint satisfaction.</div>
+        <div class="lawBody human">Waiting doesn’t fix structure. Completion fixes structure.</div>
+      </details>
+
+      <!-- TIER 2 ANCHOR -->
+      <div id="tier-2" class="anchorPad"></div>
+      <div class="tierHeader">
+        <h2>Tier 2 — Structural / Geometric Laws</h2>
+        <p>(Derivable, universal form)</p>
       </div>
 
-      <h2>Tier 3 — Applied</h2>
+      <details class="law">
+        <summary>L8 · Diamond Geometry Law</summary>
+        <div class="lawBody scientific">Stable systems resolve into four-vertex constraint geometry rather than linear chains.</div>
+        <div class="lawBody human">Stability isn’t a straight line. It balances four corners at once.</div>
+      </details>
 
-      <div class="lawBubble" onclick="this.classList.toggle('open')">
-        <div class="lawTitle">P16 · Receipt-Gated Advancement</div>
-        <div class="lawBody">
-          State advancement occurs only after verifiable receipt.
-        </div>
+      <details class="law">
+        <summary>L9 · Nested Cannon Law</summary>
+        <div class="lawBody scientific">Canonical systems self-compress into nested, non-contradictory layers; redundancy collapses inward under coherence pressure.</div>
+        <div class="lawBody human">If it’s coherent, it simplifies itself. Redundancy collapses into a cleaner core.</div>
+      </details>
+
+      <details class="law">
+        <summary>L10 · Condensation-First Law</summary>
+        <div class="lawBody scientific">Systems must compress to their minimal stable form before expansion. Expansion without condensation causes fragmentation.</div>
+        <div class="lawBody human">Simplify first, then scale. Expansion before condensation multiplies confusion.</div>
+      </details>
+
+      <details class="law">
+        <summary>L11 · Scale-Correlation Law</summary>
+        <div class="lawBody scientific">Valid scaling requires correlation across the entire system, not localized growth.</div>
+        <div class="lawBody human">It’s not scale if it only works in one corner. Real scaling shows up everywhere it should.</div>
+      </details>
+
+      <details class="law">
+        <summary>L12 · Fragmentation Detection Law</summary>
+        <div class="lawBody scientific">Misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</div>
+        <div class="lawBody human">If what you say, do, and produce don’t line up, you’re fragmented.</div>
+      </details>
+
+      <details class="law">
+        <summary>L13 · Confusion Amplification Law</summary>
+        <div class="lawBody scientific">Confusion does not generate instability but accelerates instability once incoherence exists.</div>
+        <div class="lawBody human">Confusion isn’t the spark, but it’s gasoline once something is already wrong.</div>
+      </details>
+
+      <details class="law">
+        <summary>L14 · Constraint Geometry Conservation Law</summary>
+        <div class="lawBody scientific">Removing a constraint does not remove its effect; it externalizes the cost elsewhere in the system.</div>
+        <div class="lawBody human">You can’t cheat reality. If you drop a rule, you still pay—later, somewhere else.</div>
+      </details>
+
+      <!-- TIER 3 ANCHOR -->
+      <div id="tier-3" class="anchorPad"></div>
+      <div class="tierHeader">
+        <h2>Tier 3 — Operational / Execution Principles</h2>
+        <p>(Applied, enforceable)</p>
       </div>
-    </div>
 
-    <!-- HUMAN LENS -->
-    <div class="lensContent" id="human">
-      <h2>Human Translation</h2>
+      <details class="law">
+        <summary>P15 · SSG Core</summary>
+        <div class="lawBody scientific">All executable systems reduce to Resources, Stores, Constraints, Goals, and Guards.</div>
+        <div class="lawBody human">Everything reduces to: what you have, what you remember, what rules you must obey, what you want, and what blocks/permits moves.</div>
+      </details>
 
-      <div class="lawBubble" onclick="this.classList.toggle('open')">
-        <div class="lawTitle">Coherence First</div>
-        <div class="lawBody">
-          If you’re lying to yourself, nothing else works.
-        </div>
+      <details class="law">
+        <summary>P16 · Receipt-Gated Advancement</summary>
+        <div class="lawBody scientific">State advancement occurs only after verifiable receipt.</div>
+        <div class="lawBody human">No receipt, no progress. If it can’t be verified, it doesn’t advance.</div>
+      </details>
+
+      <details class="law">
+        <summary>P17 · Back-Navigation Invalidation</summary>
+        <div class="lawBody scientific">Reversing state automatically invalidates all dependent downstream receipts.</div>
+        <div class="lawBody human">If you go back, everything depending on that step is no longer valid.</div>
+      </details>
+
+      <details class="law">
+        <summary>P18 · Continuation Loop</summary>
+        <div class="lawBody scientific">Stable systems loop Continuation → Selection after commitment, not full restart.</div>
+        <div class="lawBody human">You don’t restart every time you commit. You continue and choose the next step.</div>
+      </details>
+
+      <details class="law">
+        <summary>P19 · No Factor Substitution</summary>
+        <div class="lawBody scientific">Systems operate on observable factors; agency is not assumed.</div>
+        <div class="lawBody human">Don’t guess motives. Use what you can observe and measure.</div>
+      </details>
+
+      <details class="law">
+        <summary>P20 · Finite Code</summary>
+        <div class="lawBody scientific">Executable artifacts must be bounded, minimal, and complete.</div>
+        <div class="lawBody human">Build small, complete units that actually run—no sprawling mess.</div>
+      </details>
+
+      <details class="law">
+        <summary>P21 · Calibration Authority</summary>
+        <div class="lawBody scientific">Calibration authority is singular and non-delegable; all other inputs are non-authoritative.</div>
+        <div class="lawBody human">Only the calibrator sets the reference. Everyone else provides data, not authority.</div>
+      </details>
+
+      <details class="law">
+        <summary>P22 · Evidence-Only Interpretation</summary>
+        <div class="lawBody scientific">All decisions are based strictly on observed behavior, not inferred intent.</div>
+        <div class="lawBody human">Judge by what happened, not what you think someone meant.</div>
+      </details>
+
+      <details class="law">
+        <summary>P23 · Want–Need–Enjoyment Separation</summary>
+        <div class="lawBody scientific">Want, need, and enjoyment are structurally distinct and non-interchangeable.</div>
+        <div class="lawBody human">Want is attachment, need is non-negotiable, enjoyment is presence without defense.</div>
+      </details>
+
+      <details class="law">
+        <summary>P24 · Energy Polarity</summary>
+        <div class="lawBody scientific">Coherent execution aligns with long-arc energy; incoherent execution aligns with instant-gratification energy.</div>
+        <div class="lawBody human">The long game is coherence. Instant payoff at any cost is incoherence.</div>
+      </details>
+
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/laws/">Back</a>
+        <a class="gBtn" href="/home/">Home</a>
       </div>
 
-      <div class="lawBubble" onclick="this.classList.toggle('open')">
-        <div class="lawTitle">No Shortcuts</div>
-        <div class="lawBody">
-          Waiting doesn’t fix broken structure.  
-          Only finishing the work does.
-        </div>
-      </div>
-    </div>
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
 
-    <div class="gActions">
-      <a class="gBtn" href="/home/">Home</a>
-      <a class="gBtn" href="/landing/exit/">Exit</a>
-    </div>
-
-    <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-  </section>
-</main>
-
-<script>
-  function setLens(lens) {
-    document.querySelectorAll('.lensBtn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.lensContent').forEach(c => c.classList.remove('active'));
-
-    if (lens === 'human') {
-      document.getElementById('lensIndicator').classList.add('right');
-      document.querySelectorAll('.lensBtn')[1].classList.add('active');
-      document.getElementById('human').classList.add('active');
-    } else {
-      document.getElementById('lensIndicator').classList.remove('right');
-      document.querySelectorAll('.lensBtn')[0].classList.add('active');
-      document.getElementById('scientific').classList.add('active');
+  <script>
+    function setLens(lens){
+      const ind=document.getElementById('lensIndicator');
+      const btns=document.querySelectorAll('.lensBtn');
+      if(lens==='human'){ ind.classList.add('right'); btns[0].classList.remove('active'); btns[1].classList.add('active'); }
+      else { ind.classList.remove('right'); btns[1].classList.remove('active'); btns[0].classList.add('active'); }
+      document.querySelectorAll('.scientific').forEach(el=>el.style.display = (lens==='scientific')?'block':'none');
+      document.querySelectorAll('.human').forEach(el=>el.style.display = (lens==='human')?'block':'none');
     }
-  }
-</script>
+  </script>
 </body>
 </html>
+```0

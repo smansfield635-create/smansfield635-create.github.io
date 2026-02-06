@@ -3,71 +3,57 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Diagnostic · Ready · Geodiametrics</title>
+  <title>Diagnostic · Readiness</title>
+
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
-  <style>
-    .box{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:14px 16px;margin:0 0 12px;line-height:1.5}
-    .q{margin:12px 0 6px;font-weight:900}
-    .opt{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
-    input[type="radio"]{transform:scale(1.2);margin-top:2px}
-    .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
-  </style>
+
 </head>
 <body>
-<main class="gPage">
-  <header class="gHeader">
-    <h1 class="gTitle">Ready Check</h1>
-    <p class="gSub">Confirm scope before the exam.</p>
-  </header>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Readiness Check</h1>
+      <p class="gSub">Before we begin.</p>
+    </header>
 
-  <section class="gPanel" aria-label="Readiness gate">
-    <div class="box">
-      <div class="q">Q1 · This diagnostic is primarily:</div>
-      <label class="opt"><input type="radio" name="q1" value="a"><span>A persuasion tool</span></label>
-      <label class="opt"><input type="radio" name="q1" value="b"><span>A record of choices that produces a receipt</span></label>
-      <label class="opt"><input type="radio" name="q1" value="c"><span>A prediction engine</span></label>
+    <section class="gPanel">
 
-      <div class="q">Q2 · You can exit at any time:</div>
-      <label class="opt"><input type="radio" name="q2" value="yes"><span>Yes</span></label>
-      <label class="opt"><input type="radio" name="q2" value="no"><span>No</span></label>
+      <div class="gCard">
+        <p><strong>What this is</strong></p>
+        <p>
+          This diagnostic records choices and produces a receipt.
+          It does not persuade, predict, moralize, or optimize.
+        </p>
 
-      <div class="q">Q3 · The exam measures alignment using:</div>
-      <label class="opt"><input type="radio" name="q3" value="a"><span>Observed inputs (choices, order, consistency)</span></label>
-      <label class="opt"><input type="radio" name="q3" value="b"><span>Mind-reading / inferred intent</span></label>
-      <label class="opt"><input type="radio" name="q3" value="c"><span>Astrology</span></label>
-    </div>
+        <p><strong>What this is not</strong></p>
+        <p>
+          This is not a quiz, test, or personality sorter.
+          There are no right answers.
+        </p>
 
-    <div class="row">
-      <a class="gBtn" href="/diagnostic/start/">Back</a>
-      <button class="gBtn" type="button" id="next">Next</button>
-    </div>
+        <p><strong>Your control</strong></p>
+        <p>
+          You may exit at any time.
+          You are not required to complete the diagnostic.
+        </p>
 
-    <footer class="gFooter">FREE WILL · SCOPE · © GEODIAMETRICS</footer>
-  </section>
-</main>
+        <p><strong>Requirement</strong></p>
+        <p>
+          Advancement requires deliberate choice.
+          Skipping or rushing invalidates the result.
+        </p>
+      </div>
 
-<script>
-  function val(name){
-    const x = document.querySelector(`input[name="${name}"]:checked`);
-    return x ? x.value : null;
-  }
-  document.getElementById('next').addEventListener('click', ()=>{
-    const q1 = val('q1'), q2 = val('q2'), q3 = val('q3');
-    if(!q1 || !q2 || !q3) return;
+      <div class="gActions">
+        <a class="gBtn" href="/diagnostic/">Back</a>
+        <a class="gBtn gPrimary" href="/diagnostic/type/">I’m Ready</a>
+      </div>
 
-    // Correct answers: q1=b, q2=yes, q3=a
-    const ok = (q1==='b' && q2==='yes' && q3==='a');
-    if(!ok){
-      alert('Not ready yet. Re-read and try again.');
-      return;
-    }
+      <footer class="gFooter">
+        CANONICAL · STABLE · © GEODIAMETRICS
+      </footer>
 
-    localStorage.setItem('GD_DIAG_READY', '1');
-    localStorage.setItem('GD_DIAG_STARTED_AT', new Date().toISOString());
-    location.href = '/diagnostic/type/';
-  });
-</script>
+    </section>
+  </main>
 </body>
 </html>

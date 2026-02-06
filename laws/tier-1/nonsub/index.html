@@ -1,109 +1,114 @@
-<!-- TNT: /laws/tier-1/nonsub/index.html (FULL REPLACEMENT — BRANCH ONLY: 1–2 WORDS; NO DESCRIPTIONS; LINKS TO LEAF PAGES) -->
+<!-- TNT: /laws/tier-1/nonsub/index.html  (FULL REPLACEMENT) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tier 1 · Shortcuts · Geodiametrics</title>
-
+  <title>Non-Substitutability · Geodiametrics</title>
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    .lensToggle{
-      display:flex;gap:6px;justify-content:center;margin:10px auto 14px;
-      background:rgba(255,255,255,.08);padding:6px;border-radius:999px;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
-      max-width:520px;
-    }
-    .lensBtn{
-      flex:1;padding:10px 18px;border-radius:999px;border:none;
-      font-weight:900;cursor:pointer;color:#cfe4f6;background:transparent;
-      text-align:center;
-    }
-    .lensBtn.active{
-      color:#fff;background:linear-gradient(180deg,#2aa4ff,#1976d2);
-      box-shadow:0 6px 18px rgba(30,144,255,.35);
-    }
+    /* Leaf rules: low load, expandable bubbles, lens updates title+subtitle+content */
+    .leafNote{max-width:520px;margin:0 auto 14px;text-align:center;opacity:.9;line-height:1.35}
+    .lensBar{display:flex;justify-content:center;margin:10px 0 18px}
+    .lensWrap{position:relative;display:flex;gap:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px;width:min(520px,100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+    .lensBtn{flex:1;border:0;background:transparent;color:rgba(241,246,251,.78);font-weight:800;padding:12px 14px;border-radius:999px;cursor:pointer;z-index:2}
+    .lensBtn.active{color:#fff}
+    .lensIndicator{position:absolute;top:6px;bottom:6px;width:calc(50% - 6px);left:6px;border-radius:999px;background:linear-gradient(180deg,#2aa4ff,#1976d2);box-shadow:0 8px 22px rgba(30,144,255,.35);transition:transform .22s ease}
+    .lensIndicator.right{transform:translateX(100%)}
 
-    /* Title/sub toggle (SHORT ONLY) */
-    .humanOnly{display:none}
-    .sciOnly{display:block}
-    body[data-lens="human"] .humanOnly{display:block}
-    body[data-lens="human"] .sciOnly{display:none}
+    details.bubble{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);border-radius:18px;padding:14px 16px;margin:0 0 12px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
+    details.bubble summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;font-weight:900}
+    details.bubble summary::-webkit-details-marker{display:none}
+    .pillNum{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);font-weight:900}
+    .sumText{display:flex;flex-direction:column;gap:2px}
+    .sumTitle{font-size:18px;line-height:1.15}
+    .sumMicro{font-size:12px;opacity:.78;font-weight:800;letter-spacing:.02em}
+    .bodyText{margin-top:10px;line-height:1.55;opacity:.95}
+    .bodyText p{margin:0 0 10px}
+    .bodyText p:last-child{margin:0}
 
-    /* Branch list */
-    .branchList{display:flex;flex-direction:column;gap:12px;margin-top:8px}
-    .branchItem{
-      display:flex;align-items:center;justify-content:center;
-      padding:18px 16px;border-radius:18px;
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.22);
-      text-decoration:none;color:#fff;
-      font-weight:900;letter-spacing:-0.01em;
-      min-height:62px;
+    /* Hide inactive lens blocks */
+    .scientificBlock{display:none}
+    .humanBlock{display:block}
+
+    /* Keep within panel */
+    .gPanel{padding-top:22px}
+
+    /* Mobile tighten */
+    @media (max-width:420px){
+      .sumTitle{font-size:17px}
+      details.bubble{padding:13px 14px}
     }
-    .branchItem small{display:block;font-weight:800;opacity:.75;margin-top:6px}
-    .branchItem .twoLine{display:flex;flex-direction:column;align-items:center;gap:4px}
   </style>
-
-  <script>
-    function setLens(lens){
-      document.body.setAttribute('data-lens', lens);
-      const bH = document.getElementById('btnHuman');
-      const bS = document.getElementById('btnSci');
-      if(lens === 'human'){
-        bH.classList.add('active'); bS.classList.remove('active');
-      } else {
-        bS.classList.add('active'); bH.classList.remove('active');
-      }
-    }
-    window.addEventListener('DOMContentLoaded', () => setLens('scientific'));
-  </script>
 </head>
 
-<body data-lens="scientific">
+<body>
   <main class="gPage">
     <header class="gHeader">
-      <h1 class="gTitle">
-        <span class="humanOnly">Shortcuts?</span>
-        <span class="sciOnly">Non-Substitutability</span>
-      </h1>
-
-      <p class="gSub">
-        <span class="humanOnly">No shortcuts allowed.</span>
-        <span class="sciOnly">Required constraints do not trade.</span>
-      </p>
-
-      <div class="lensToggle" aria-label="Lens toggle">
-        <button class="lensBtn" id="btnHuman" onclick="setLens('human')">Human</button>
-        <button class="lensBtn active" id="btnSci" onclick="setLens('scientific')">Scientific</button>
-      </div>
+      <h1 class="gTitle" id="pageTitle">No shortcuts</h1>
+      <p class="gSub" id="pageSub">Missing requirements cannot be offset.</p>
     </header>
 
-    <section class="gPanel" aria-label="Tier 1 — Shortcuts branch">
-      <div class="branchList" role="navigation" aria-label="Shortcuts leaves">
-
-        <!-- LEAF: L6 -->
-        <a class="branchItem" href="/laws/tier-1/nonsub/non-compensation/" aria-label="Non-compensation leaf">
-          <span class="twoLine">
-            <span class="humanOnly">No tradeoffs</span>
-            <span class="sciOnly">Non-Compensation</span>
-          </span>
-        </a>
-
-        <!-- LEAF: L7 -->
-        <a class="branchItem" href="/laws/tier-1/nonsub/no-timer/" aria-label="No-timer gating leaf">
-          <span class="twoLine">
-            <span class="humanOnly">No waiting</span>
-            <span class="sciOnly">No-Timer Gating</span>
-          </span>
-        </a>
-
+    <section class="gPanel" aria-label="Tier 1 leaf: Non-substitutability constraints">
+      <div class="leafNote" id="leafNote">
+        Expand a bubble to read. Toggle lens to switch language (same law).
       </div>
 
-      <div class="gActions">
+      <!-- Lens -->
+      <div class="lensBar" aria-label="Lens toggle">
+        <div class="lensWrap">
+          <div class="lensIndicator" id="lensIndicator"></div>
+          <button class="lensBtn active" id="btnHuman" type="button" onclick="setLens('human')">Human</button>
+          <button class="lensBtn" id="btnSci" type="button" onclick="setLens('scientific')">Scientific</button>
+        </div>
+      </div>
+
+      <!-- Bubble 1 -->
+      <details class="bubble" open>
+        <summary>
+          <span class="pillNum">1</span>
+          <span class="sumText">
+            <span class="sumTitle" data-human="No tradeoffs" data-sci="Non-Compensation">No tradeoffs</span>
+            <span class="sumMicro" data-human="Meaning" data-sci="Definition">Meaning</span>
+          </span>
+        </summary>
+
+        <div class="bodyText humanBlock">
+          <p><strong>Rule</strong> You can’t “make up for it” somewhere else.</p>
+          <p>When a requirement matters, failing it breaks the run—even if other parts look strong.</p>
+        </div>
+
+        <div class="bodyText scientificBlock">
+          <p><strong>Non-Compensation Law</strong></p>
+          <p>Strength in one required dimension does not compensate for violation in another required constraint.</p>
+        </div>
+      </details>
+
+      <!-- Bubble 2 -->
+      <details class="bubble">
+        <summary>
+          <span class="pillNum">2</span>
+          <span class="sumText">
+            <span class="sumTitle" data-human="No waiting" data-sci="No-Timer Gating">No waiting</span>
+            <span class="sumMicro" data-human="Meaning" data-sci="Definition">Meaning</span>
+          </span>
+        </summary>
+
+        <div class="bodyText humanBlock">
+          <p><strong>Rule</strong> Time doesn’t unlock permission.</p>
+          <p>Waiting is not completion. Progress requires the missing step, receipt, or constraint to be satisfied.</p>
+        </div>
+
+        <div class="bodyText scientificBlock">
+          <p><strong>No-Timer Gating Law</strong></p>
+          <p>Time passage cannot substitute for structural completion, receipt, or constraint satisfaction.</p>
+        </div>
+      </details>
+
+      <div class="gActions" aria-label="Navigation controls">
         <a class="gBtn" href="/laws/tier-1/">Back</a>
         <a class="gBtn" href="/laws/">Laws</a>
       </div>
@@ -111,6 +116,46 @@
       <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
+
+  <script>
+    function setLens(mode){
+      var isHuman = (mode === 'human');
+
+      // Buttons + pill
+      var btnH = document.getElementById('btnHuman');
+      var btnS = document.getElementById('btnSci');
+      var ind = document.getElementById('lensIndicator');
+      btnH.classList.toggle('active', isHuman);
+      btnS.classList.toggle('active', !isHuman);
+      ind.classList.toggle('right', !isHuman);
+
+      // Title + subtitle swap (keep it short)
+      var title = document.getElementById('pageTitle');
+      var sub = document.getElementById('pageSub');
+
+      if(isHuman){
+        title.textContent = 'No shortcuts';
+        sub.textContent = 'Missing requirements cannot be offset.';
+      } else {
+        title.textContent = 'Non-Substitutability';
+        sub.textContent = 'Non-compensation · no-timer gating.';
+      }
+
+      // Toggle blocks
+      var humanBlocks = document.querySelectorAll('.humanBlock');
+      var sciBlocks = document.querySelectorAll('.scientificBlock');
+      humanBlocks.forEach(function(el){ el.style.display = isHuman ? 'block' : 'none'; });
+      sciBlocks.forEach(function(el){ el.style.display = isHuman ? 'none' : 'block'; });
+
+      // Swap bubble titles + micro labels
+      document.querySelectorAll('[data-human][data-sci]').forEach(function(el){
+        el.textContent = isHuman ? el.getAttribute('data-human') : el.getAttribute('data-sci');
+      });
+    }
+
+    // Initialize
+    setLens('human');
+  </script>
 </body>
 </html>
 ```0

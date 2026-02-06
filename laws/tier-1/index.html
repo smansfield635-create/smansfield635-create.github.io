@@ -1,150 +1,136 @@
-<!-- TNT: /laws/tier-1/index.html  (FULL REPLACEMENT — OPTION B: TWO DIAMONDS, GLOBAL TOGGLE) -->
+<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — OPTION B, minimal labels only, original diamond styling) -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Tier 1 · Foundational Laws · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg"/>
-  <link rel="stylesheet" href="/assets/ui.css"/>
-  <link rel="stylesheet" href="/assets/branch.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tier 1 · Foundational · Geodiametrics</title>
+
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+
   <style>
-    .lensToggle{display:flex;gap:6px;justify-content:center;margin:10px auto 18px;
+    /* Toggle bar (kept) */
+    .lensToggle{
+      display:flex;gap:6px;justify-content:center;margin:10px auto 16px;
       background:rgba(255,255,255,.08);padding:6px;border-radius:999px;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
-    .lensBtn{padding:10px 20px;border-radius:999px;border:none;
-      font-weight:800;cursor:pointer;color:#cfe4f6;background:transparent}
-    .lensBtn.active{color:#fff;background:linear-gradient(180deg,#2aa4ff,#1976d2);
-      box-shadow:0 6px 18px rgba(30,144,255,.35)}
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)
+    }
+    .lensBtn{
+      padding:10px 20px;border-radius:999px;border:none;
+      font-weight:800;cursor:pointer;color:#cfe4f6;background:transparent
+    }
+    .lensBtn.active{
+      color:#fff;background:linear-gradient(180deg,#2aa4ff,#1976d2);
+      box-shadow:0 6px 18px rgba(30,144,255,.35)
+    }
 
-    .diamondWrap{position:relative;max-width:420px;margin:0 auto}
-    .diamond{display:none;position:relative;padding:26px;border-radius:26px;
-      background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22)}
+    /* Minimal text inside diamonds */
+    .gCluster .gKeyText{
+      text-align:center;
+      line-height:1.12;
+    }
+    .gCluster .gKeyText strong{
+      display:block;
+      font-size:16px;
+      font-weight:900;
+      letter-spacing:-0.01em;
+    }
+    .gCluster .gKeyText em{
+      display:block;
+      margin-top:6px;
+      font-style:normal;
+      font-size:13px;
+      font-weight:800;
+      opacity:.75;
+    }
+
+    /* Mode swap */
+    .diamond{display:none}
     .diamond.active{display:block}
-
-    .grid{position:relative;height:320px}
-    .cell{position:absolute;width:170px;height:170px;left:50%;top:50%;
-      transform:translate(-50%,-50%) rotate(45deg);
-      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);
-      border-radius:18px;display:flex;align-items:center;justify-content:center;
-      text-align:center;padding:14px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
-    .cell .inner{transform:rotate(-45deg)}
-    .cell h3{margin:0 0 6px;font-size:16px}
-    .cell p{margin:0;font-size:13px;opacity:.9}
-
-    .top{top:18%}
-    .right{left:82%}
-    .bottom{top:82%}
-    .left{left:18%}
-
-    .actions{display:flex;gap:12px;justify-content:center;margin-top:18px}
   </style>
+
+  <script>
+    function setLens(which){
+      const h=document.getElementById('diamondHuman');
+      const s=document.getElementById('diamondScientific');
+      const bh=document.getElementById('btnHuman');
+      const bs=document.getElementById('btnSci');
+      if(which==='human'){
+        h.classList.add('active'); s.classList.remove('active');
+        bh.classList.add('active'); bs.classList.remove('active');
+      }else{
+        s.classList.add('active'); h.classList.remove('active');
+        bs.classList.add('active'); bh.classList.remove('active');
+      }
+    }
+  </script>
 </head>
 
 <body>
-<main class="gPage">
-  <header class="gHeader">
-    <h1 class="gTitle">Tier 1</h1>
-    <p class="gSub">Foundational laws · Non-derivable.</p>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Tier 1</h1>
+      <p class="gSub">Foundational laws · Non-derivable.</p>
 
-    <!-- GLOBAL LENS TOGGLE (switches entire diamond) -->
-    <div class="lensToggle" aria-label="Lens toggle">
-      <button class="lensBtn active" id="btnHuman" onclick="setLens('human')">Human</button>
-      <button class="lensBtn" id="btnSci" onclick="setLens('scientific')">Scientific</button>
-    </div>
+      <div class="lensToggle" aria-label="Lens toggle">
+        <button class="lensBtn active" id="btnHuman" onclick="setLens('human')">Human</button>
+        <button class="lensBtn" id="btnSci" onclick="setLens('scientific')">Scientific</button>
+      </div>
+    </header>
 
-    <p class="gSub" style="opacity:.85">
-      Toggle to switch the entire diamond between human questions and scientific definitions.
-    </p>
-  </header>
+    <section class="gPanel" aria-label="Tier 1 diamond">
 
-  <section class="gPanel">
-
-    <!-- HUMAN DIAMOND -->
-    <div class="diamondWrap">
+      <!-- HUMAN DIAMOND (questions) -->
       <div class="diamond active" id="diamondHuman">
-        <div class="grid">
-          <div class="cell top">
-            <div class="inner">
-              <h3>Can this act?</h3>
-              <p>Is execution permitted at all?</p>
-            </div>
-          </div>
-          <div class="cell right">
-            <div class="inner">
-              <h3>Can we agree?</h3>
-              <p>Do independent observers classify this the same way?</p>
-            </div>
-          </div>
-          <div class="cell bottom">
-            <div class="inner">
-              <h3>No shortcuts</h3>
-              <p>Nothing compensates for a missing requirement.</p>
-            </div>
-          </div>
-          <div class="cell left">
-            <div class="inner">
-              <h3>What governs this?</h3>
-              <p>What internally constrains and closes it?</p>
-            </div>
-          </div>
+        <div class="gCluster" role="navigation" aria-label="Tier 1 human diamond">
+          <a class="gKey gTop" href="/laws/tier-1/admissibility/">
+            <span class="gKeyText"><strong>Can this act?</strong><em>(Scientific)</em></span>
+          </a>
+
+          <a class="gKey gRight" href="/laws/tier-1/classification/">
+            <span class="gKeyText"><strong>Can we agree?</strong><em>(Scientific)</em></span>
+          </a>
+
+          <a class="gKey gBottom" href="/laws/tier-1/nonsub/">
+            <span class="gKeyText"><strong>No shortcuts</strong><em>(Scientific)</em></span>
+          </a>
+
+          <a class="gKey gLeft" href="/laws/tier-1/overview/">
+            <span class="gKeyText"><strong>What governs this?</strong><em>(Scientific)</em></span>
+          </a>
         </div>
       </div>
 
-      <!-- SCIENTIFIC DIAMOND -->
+      <!-- SCIENTIFIC DIAMOND (names) -->
       <div class="diamond" id="diamondScientific">
-        <div class="grid">
-          <div class="cell top">
-            <div class="inner">
-              <h3>Admissibility</h3>
-              <p>Execution allowed or blocked.</p>
-            </div>
-          </div>
-          <div class="cell right">
-            <div class="inner">
-              <h3>Observer-Invariant Classification</h3>
-              <p>Identical classification from identical evidence.</p>
-            </div>
-          </div>
-          <div class="cell bottom">
-            <div class="inner">
-              <h3>Non-Compensation / No-Timer Gating</h3>
-              <p>Missing constraints cannot be offset.</p>
-            </div>
-          </div>
-          <div class="cell left">
-            <div class="inner">
-              <h3>Coherence / Closure</h3>
-              <p>Internal alignment and closed loops.</p>
-            </div>
-          </div>
+        <div class="gCluster" role="navigation" aria-label="Tier 1 scientific diamond">
+          <a class="gKey gTop" href="/laws/tier-1/admissibility/">
+            <span class="gKeyText"><strong>Admissibility</strong><em>(Human)</em></span>
+          </a>
+
+          <a class="gKey gRight" href="/laws/tier-1/classification/">
+            <span class="gKeyText"><strong>Classification</strong><em>(Human)</em></span>
+          </a>
+
+          <a class="gKey gBottom" href="/laws/tier-1/nonsub/">
+            <span class="gKeyText"><strong>Non-Compensation</strong><em>(Human)</em></span>
+          </a>
+
+          <a class="gKey gLeft" href="/laws/tier-1/overview/">
+            <span class="gKeyText"><strong>Coherence / Closure</strong><em>(Human)</em></span>
+          </a>
         </div>
       </div>
-    </div>
 
-    <div class="actions">
-      <a class="gBtn" href="/laws/">Back</a>
-      <a class="gBtn" href="/home/">Home</a>
-    </div>
+      <div class="gActions">
+        <a class="gBtn" href="/laws/">Back</a>
+        <a class="gBtn" href="/home/">Home</a>
+      </div>
 
-    <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-  </section>
-</main>
-
-<script>
-  function setLens(which){
-    const h=document.getElementById('diamondHuman');
-    const s=document.getElementById('diamondScientific');
-    const bh=document.getElementById('btnHuman');
-    const bs=document.getElementById('btnSci');
-    if(which==='human'){
-      h.classList.add('active'); s.classList.remove('active');
-      bh.classList.add('active'); bs.classList.remove('active');
-    }else{
-      s.classList.add('active'); h.classList.remove('active');
-      bs.classList.add('active'); bh.classList.remove('active');
-    }
-  }
-</script>
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
 </body>
 </html>

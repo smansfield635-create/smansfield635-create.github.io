@@ -1,0 +1,87 @@
+<!-- TNT: /laws/tier-1/permission/possible/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Possible? · Permission · Geodiametrics</title>
+
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    .lensWrap{display:flex;justify-content:center;margin:6px 0 14px}
+    .lens{display:flex;gap:6px;position:relative;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px}
+    .lens button{border:0;background:transparent;color:rgba(255,255,255,.75);font-weight:800;padding:10px 18px;border-radius:999px;cursor:pointer}
+    .lens button.active{color:#fff}
+    .lens .pill{position:absolute;top:6px;bottom:6px;left:6px;width:calc(50% - 6px);border-radius:999px;background:linear-gradient(180deg,#2aa4ff,#1976d2);box-shadow:0 10px 26px rgba(30,144,255,.35);transition:transform .22s ease}
+    .lens[data-mode="human"] .pill{transform:translateX(0)}
+    .lens[data-mode="scientific"] .pill{transform:translateX(100%)}
+
+    details.b{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);border-radius:18px;padding:14px 16px;margin:0 0 12px}
+    details.b summary{cursor:pointer;font-weight:900;list-style:none}
+    details.b summary::-webkit-details-marker{display:none}
+    .body{margin-top:10px;line-height:1.5;opacity:.95}
+    .body.scientific{display:none}
+    .note{margin:6px 0 14px;text-align:center;opacity:.85}
+  </style>
+</head>
+<body>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Possible?</h1>
+      <p class="gSub">Permission · Leaf</p>
+    </header>
+
+    <section class="gPanel" aria-label="Possible leaf bubbles">
+      <div class="lensWrap" aria-label="Lens toggle">
+        <div class="lens" id="lens" data-mode="human">
+          <div class="pill" aria-hidden="true"></div>
+          <button id="btnHuman" class="active" type="button">Human</button>
+          <button id="btnSci" type="button">Scientific</button>
+        </div>
+      </div>
+
+      <p class="note">Tap a bubble to expand.</p>
+
+      <details class="b">
+        <summary>L2 · Admissibility</summary>
+        <div class="body human">Either it’s allowed to run, or it’s blocked. If it’s blocked, optimization is irrelevant.</div>
+        <div class="body scientific">Execution is admitted or not admitted. Optimization is irrelevant if admissibility fails.</div>
+      </details>
+
+      <details class="b">
+        <summary>L7 · No-Timer Gating</summary>
+        <div class="body human">Time doesn’t “fix” missing structure. Completion must happen.</div>
+        <div class="body scientific">Time passage cannot substitute for structural completion, receipt, or constraint satisfaction.</div>
+      </details>
+
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/laws/tier-1/permission/">Back</a>
+        <a class="gBtn" href="/laws/">Laws</a>
+      </div>
+
+      <footer class="gFooter">TIER 1 · PERMISSION · © GEODIAMETRICS</footer>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const lens = document.getElementById('lens');
+      const btnH = document.getElementById('btnHuman');
+      const btnS = document.getElementById('btnSci');
+      const setMode = (mode) => {
+        lens.dataset.mode = mode;
+        btnH.classList.toggle('active', mode === 'human');
+        btnS.classList.toggle('active', mode === 'scientific');
+        document.querySelectorAll('.body.human').forEach(el => el.style.display = (mode === 'human') ? 'block' : 'none');
+        document.querySelectorAll('.body.scientific').forEach(el => el.style.display = (mode === 'scientific') ? 'block' : 'none');
+      };
+      btnH.addEventListener('click', () => setMode('human'));
+      btnS.addEventListener('click', () => setMode('scientific'));
+      setMode('human');
+    })();
+  </script>
+</body>
+</html>

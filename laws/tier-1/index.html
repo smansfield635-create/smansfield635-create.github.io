@@ -1,4 +1,4 @@
-<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — human question + small "(Scientific)" bubble that expands on tap) -->
+<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — single-toggle per diamond face, Human ↔ Scientific swap) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,35 +11,46 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* Compact scientific bubble */
-    .sciWrap{margin-top:6px}
-    .sciToggle{
+    /* Toggle pill */
+    .toggleBtn{
       display:inline-block;
+      margin-top:8px;
+      padding:6px 14px;
       font-size:12px;
       font-weight:700;
-      opacity:.65;
-      cursor:pointer;
-      padding:4px 10px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(255,255,255,.06);
-    }
-    .sciDef{
-      display:none;
-      margin-top:6px;
-      font-size:13px;
-      opacity:.85;
-      padding:8px 12px;
-      border-radius:12px;
+      border:1px solid rgba(255,255,255,.22);
       background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.18);
+      color:#cfe4f6;
+      cursor:pointer;
+      transition:all .2s ease;
     }
-    .sciWrap.open .sciDef{display:block}
+    .toggleBtn.active{
+      background:linear-gradient(180deg,#2aa4ff,#1976d2);
+      color:#fff;
+      box-shadow:0 6px 18px rgba(30,144,255,.35);
+    }
+
+    /* Text swap */
+    .humanText{display:block}
+    .sciText{display:none;font-size:13px;opacity:.85;margin-top:6px}
+
+    .face.scientific .humanText{display:none}
+    .face.scientific .sciText{display:block}
   </style>
 
   <script>
-    function toggleSci(el){
-      el.parentElement.classList.toggle('open');
+    function toggleFace(btn){
+      const face = btn.closest('.face');
+      face.classList.toggle('scientific');
+
+      if(face.classList.contains('scientific')){
+        btn.textContent = 'Human';
+        btn.classList.add('active');
+      } else {
+        btn.textContent = 'Scientific';
+        btn.classList.remove('active');
+      }
     }
   </script>
 </head>
@@ -50,54 +61,46 @@
       <h1 class="gTitle">Tier 1</h1>
       <p class="gSub">Foundational laws · Non-derivable.</p>
       <p class="gSub" style="opacity:.85">
-        Each diamond face states the human question. Scientific definition is hidden beneath.
+        Each diamond face shows the human question. Tap to replace it with the scientific definition.
       </p>
     </header>
 
     <section class="gPanel" aria-label="Tier 1 diamond">
-      <div class="gCluster" role="navigation" aria-label="Tier 1 diamond">
+      <div class="gCluster">
 
         <!-- TOP -->
-        <div class="gKey gTop">
+        <div class="gKey gTop face">
           <span class="gKeyText">
-            <strong>Can this act?</strong>
-            <div class="sciWrap">
-              <span class="sciToggle" onclick="toggleSci(this)">(Scientific)</span>
-              <div class="sciDef">Admissibility</div>
-            </div>
+            <div class="humanText"><strong>Can this act?</strong></div>
+            <div class="sciText">Admissibility</div>
+            <span class="toggleBtn" onclick="toggleFace(this)">Scientific</span>
           </span>
         </div>
 
         <!-- RIGHT -->
-        <div class="gKey gRight">
+        <div class="gKey gRight face">
           <span class="gKeyText">
-            <strong>Can we agree?</strong>
-            <div class="sciWrap">
-              <span class="sciToggle" onclick="toggleSci(this)">(Scientific)</span>
-              <div class="sciDef">Classification</div>
-            </div>
+            <div class="humanText"><strong>Can we agree?</strong></div>
+            <div class="sciText">Observer-Invariant Classification</div>
+            <span class="toggleBtn" onclick="toggleFace(this)">Scientific</span>
           </span>
         </div>
 
         <!-- BOTTOM -->
-        <div class="gKey gBottom">
+        <div class="gKey gBottom face">
           <span class="gKeyText">
-            <strong>No shortcuts</strong>
-            <div class="sciWrap">
-              <span class="sciToggle" onclick="toggleSci(this)">(Scientific)</span>
-              <div class="sciDef">Non-Compensation</div>
-            </div>
+            <div class="humanText"><strong>No shortcuts</strong></div>
+            <div class="sciText">Non-Compensation / No-Timer Gating</div>
+            <span class="toggleBtn" onclick="toggleFace(this)">Scientific</span>
           </span>
         </div>
 
         <!-- LEFT -->
-        <div class="gKey gLeft">
+        <div class="gKey gLeft face">
           <span class="gKeyText">
-            <strong>What governs this?</strong>
-            <div class="sciWrap">
-              <span class="sciToggle" onclick="toggleSci(this)">(Scientific)</span>
-              <div class="sciDef">Coherence</div>
-            </div>
+            <div class="humanText"><strong>What governs this?</strong></div>
+            <div class="sciText">Coherence & Closure</div>
+            <span class="toggleBtn" onclick="toggleFace(this)">Scientific</span>
           </span>
         </div>
 

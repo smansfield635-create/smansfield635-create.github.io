@@ -1,57 +1,171 @@
-<!-- TNT: /laws/overview/index.html (FULL REPLACEMENT) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Laws · Overview · Geodiametrics</title>
+
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    /* ---------- Lens Toggle ---------- */
+    .lensToggle {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .lensBtn {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .lensBtn.active {
+      background: rgba(255,255,255,.22);
+    }
+
+    /* ---------- Tiers ---------- */
+    .tier {
+      margin-bottom: 28px;
+    }
+    .tierTitle {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    /* ---------- Law Bubbles ---------- */
+    details.law {
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 18px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+    }
+    details.law summary {
+      cursor: pointer;
+      font-weight: 700;
+      list-style: none;
+    }
+    details.law summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .lawBody {
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    .human { display: none; }
+    .scientific { display: block; }
+  </style>
 </head>
+
 <body>
   <main class="gPage">
+
     <header class="gHeader">
       <h1 class="gTitle">Laws</h1>
-      <p class="gSub">All tiers (single file).</p>
+      <p class="gSub">All tiers · Single instrument · Expand to read.</p>
     </header>
 
-    <section class="gPanel" aria-label="Laws overview">
-      <div style="margin-bottom:28px;">
-        <h2 style="text-align:center;">Tier 1 — Foundational</h2>
-        <ul style="line-height:1.6;">
-          <li><strong>L1</strong> Coherence precedes optimization.</li>
-          <li><strong>L2</strong> External coherence cannot exceed internal coherence.</li>
-          <li><strong>L3</strong> Confusion amplifies instability once present.</li>
-        </ul>
+    <section class="gPanel">
+
+      <!-- Lens Toggle -->
+      <div class="lensToggle">
+        <button class="lensBtn active" onclick="setLens('scientific')">Scientific Lens</button>
+        <button class="lensBtn" onclick="setLens('human')">Human Lens</button>
       </div>
 
-      <div style="margin-bottom:28px;">
-        <h2 style="text-align:center;">Tier 2 — Operational</h2>
-        <ul style="line-height:1.6;">
-          <li><strong>L4</strong> Navigation precedes execution.</li>
-          <li><strong>L5</strong> Back-navigation invalidates downstream receipts.</li>
-          <li><strong>L6</strong> Receipts gate forward motion.</li>
-        </ul>
+      <!-- Tier 1 -->
+      <div class="tier">
+        <div class="tierTitle">Tier 1 — Foundational</div>
+
+        <details class="law">
+          <summary>L1 · Coherence precedes optimization</summary>
+          <div class="lawBody scientific">
+            A system must maintain internal coherence before optimization has meaning.
+          </div>
+          <div class="lawBody human">
+            Fix what contradicts itself before trying to improve performance.
+          </div>
+        </details>
+
+        <details class="law">
+          <summary>L2 · External coherence cannot exceed internal coherence</summary>
+          <div class="lawBody scientific">
+            Observable trust metrics are bounded by internal alignment.
+          </div>
+          <div class="lawBody human">
+            You can’t be trusted more than you trust yourself.
+          </div>
+        </details>
       </div>
 
-      <div style="margin-bottom:18px;">
-        <h2 style="text-align:center;">Tier 3 — Applied</h2>
-        <ul style="line-height:1.6;">
-          <li><strong>L7</strong> Kill conditions are explicit and observable.</li>
-          <li><strong>L8</strong> Upgrades require new admissible evidence.</li>
-          <li><strong>L9</strong> Sharing is default unless explicitly excluded.</li>
-        </ul>
+      <!-- Tier 2 -->
+      <div class="tier">
+        <div class="tierTitle">Tier 2 — Operational</div>
+
+        <details class="law">
+          <summary>L4 · Navigation precedes execution</summary>
+          <div class="lawBody scientific">
+            Directional resolution is a prerequisite for admissible execution.
+          </div>
+          <div class="lawBody human">
+            Know where you’re going before you start moving.
+          </div>
+        </details>
+
+        <details class="law">
+          <summary>L5 · Back-navigation invalidates downstream receipts</summary>
+          <div class="lawBody scientific">
+            Reversals negate dependent state commitments.
+          </div>
+          <div class="lawBody human">
+            Walking something back breaks what came after it.
+          </div>
+        </details>
       </div>
 
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/laws/">Back</a>
+      <!-- Tier 3 -->
+      <div class="tier">
+        <div class="tierTitle">Tier 3 — Applied</div>
+
+        <details class="law">
+          <summary>L7 · Kill conditions are explicit and observable</summary>
+          <div class="lawBody scientific">
+            Termination criteria must be detectable by independent observers.
+          </div>
+          <div class="lawBody human">
+            If you can’t tell when something is over, it isn’t defined.
+          </div>
+        </details>
+      </div>
+
+      <!-- Actions -->
+      <div class="gActions">
         <a class="gBtn" href="/home/">Home</a>
+        <a class="gBtn" href="/landing/exit/">Exit</a>
       </div>
 
       <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
+
+  <script>
+    function setLens(type) {
+      document.querySelectorAll('.lensBtn').forEach(b => b.classList.remove('active'));
+      document.querySelector(`.lensBtn[onclick*="${type}"]`).classList.add('active');
+
+      document.querySelectorAll('.scientific').forEach(el => el.style.display = type === 'scientific' ? 'block' : 'none');
+      document.querySelectorAll('.human').forEach(el => el.style.display = type === 'human' ? 'block' : 'none');
+    }
+  </script>
 </body>
 </html>
-```0

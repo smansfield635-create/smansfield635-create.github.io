@@ -1,0 +1,61 @@
+:root{
+  --red:#c0392b;
+  --yellow:#f1c40f;
+  --green:#27ae60;
+  --deep:#1abc9c;
+  --blue:#2980b9;
+  --panel:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.18);
+}
+
+.gaugeCard{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:16px;
+  cursor:pointer;
+}
+
+.gaugeTitle{
+  font-size:18px;
+  font-weight:700;
+}
+
+.gaugeValue{
+  font-size:26px;
+  font-weight:800;
+}
+
+.bar{
+  height:10px;
+  border-radius:6px;
+  background:linear-gradient(90deg,var(--red),var(--yellow),var(--green),var(--deep),var(--blue));
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.fill{
+  height:100%;
+  background:white;
+  mix-blend-mode:overlay;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  justify-content:center;
+  align-items:center;
+}
+
+.modalContent{
+  background:#0c2232;
+  padding:24px;
+  border-radius:24px;
+  max-width:420px;
+  width:90%;
+}
+
+.modal.show{display:flex;}

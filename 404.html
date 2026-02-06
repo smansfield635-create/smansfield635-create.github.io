@@ -4,34 +4,84 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Not Found · Geodiametrics</title>
+
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    .nfWrap{
+      max-width:420px;
+      margin:0 auto;
+      text-align:center;
+    }
+    .nfWrap h1{
+      font-size:44px;
+      margin-bottom:10px;
+    }
+    .nfWrap p{
+      opacity:.85;
+      margin-bottom:22px;
+    }
+    .nfBox{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:22px;
+      padding:22px;
+      backdrop-filter:blur(16px);
+    }
+    .nfActions{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      margin-top:18px;
+      flex-wrap:wrap;
+    }
+    .nfActions a{
+      padding:12px 22px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      color:#fff;
+      text-decoration:none;
+      font-weight:700;
+    }
+    .nfActions a.primary{
+      background:linear-gradient(180deg,#2aa4ff,#1976d2);
+      box-shadow:0 8px 22px rgba(30,144,255,.35);
+      border:none;
+    }
+    footer{
+      margin-top:18px;
+      font-size:12px;
+      opacity:.65;
+    }
+  </style>
 </head>
+
 <body>
   <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Not Found</h1>
-      <p class="gSub">This route does not exist.</p>
-    </header>
+    <section class="gPanel nfWrap" aria-label="Not found">
 
-    <section class="gPanel" aria-label="Not found">
-      <div style="text-align:center; line-height:1.5;">
-        <p><strong>Requested URL</strong></p>
-        <p id="u" style="word-break:break-all;"></p>
+      <h1>Not Found</h1>
+      <p>This route does not exist.</p>
+
+      <div class="nfBox">
+        <p>
+          The page you tried to reach isn’t part of the canonical structure.
+        </p>
+
+        <div class="nfActions">
+          <a class="primary" href="/diagnostic/">Start Diagnostic</a>
+          <a href="/home/">Home</a>
+          <a href="/landing/">Gate</a>
+        </div>
       </div>
 
-      <div class="gActions">
-        <a class="gBtn" href="/landing/">Gate</a>
-        <a class="gBtn" href="/home/">Home</a>
-      </div>
+      <footer>
+        CANONICAL · STABLE · © GEODIAMETRICS
+      </footer>
 
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
-
-  <script>
-    document.getElementById("u").textContent = window.location.href;
-  </script>
 </body>
 </html>

@@ -1,106 +1,157 @@
+<!-- TNT: /laws/tier-1/index.html (FULL REPLACEMENT — FIXES ROTATED TEXT; DIAMOND STAYS DIAMOND; TOGGLE SWAPS WHOLE DIAMOND) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Tier 1 · Geodiametrics</title>
-
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* Lens control */
-    .lensWrap{display:flex;justify-content:center;margin:12px 0}
-    .lensToggle{display:flex;gap:6px;background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px}
-    .lensBtn{border:0;background:transparent;color:rgba(241,246,251,.7);
-      font-weight:800;padding:10px 18px;border-radius:999px;cursor:pointer}
-    .lensBtn.isActive{color:#fff;
-      background:linear-gradient(180deg,#2aa4ff,#1976d2);
-      box-shadow:0 8px 20px rgba(30,144,255,.3)}
+    /* Keep the diamond geometry. Force text INSIDE to read horizontally. */
+    .t1ToggleWrap{display:flex;justify-content:center;margin:10px 0 14px}
+    .t1Toggle{position:relative;display:flex;gap:8px;padding:8px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+    .t1Toggle button{border:0;background:transparent;color:rgba(241,246,251,.75);font-weight:800;padding:12px 26px;border-radius:999px;cursor:pointer}
+    .t1Toggle button[aria-pressed="true"]{color:#fff}
+    .t1Pill{position:absolute;top:8px;bottom:8px;width:calc(50% - 8px);border-radius:999px;background:linear-gradient(180deg,#2aa4ff,#1976d2);box-shadow:0 10px 26px rgba(30,144,255,.32);transition:transform .22s ease}
+    body.mode-scientific .t1Pill{transform:translateX(100%)}
 
-    /* Lens swap */
-    body[data-lens="human"] .scientific{display:none}
-    body[data-lens="scientific"] .human{display:none}
+    .t1Hint{margin:0 auto 16px;max-width:520px;text-align:center;color:rgba(241,246,251,.75);line-height:1.35}
+
+    /* Two whole diamonds, swapped by toggle */
+    .t1Deck{position:relative}
+    .t1Diamond{display:none}
+    body.mode-human .t1Diamond.human{display:block}
+    body.mode-scientific .t1Diamond.scientific{display:block}
+
+    /* Ensure any rotated/angled text is overridden */
+    .gKeyText{
+      /* If branch.css already rotates text, this keeps it stable; if not, harmless */
+      transform:rotate(0deg) !important;
+      display:flex;flex-direction:column;gap:6px;
+      text-align:center;
+      line-height:1.05;
+      padding:0 10px;
+    }
+    .gKeyText strong{
+      font-size:22px;
+      letter-spacing:-0.01em;
+      text-transform:none;
+    }
+    .gKeyText em{
+      font-style:normal;
+      font-weight:700;
+      font-size:15px;
+      color:rgba(241,246,251,.70);
+    }
+
+    /* Make sure the diamond remains clickable and centered */
+    .gCluster{margin:0 auto 18px}
+
+    /* Mobile tighten */
+    @media (max-width:420px){
+      .gKeyText strong{font-size:20px}
+      .gKeyText em{font-size:14px}
+      .t1Hint{padding:0 8px}
+    }
   </style>
 </head>
 
-<body data-lens="human">
-<main class="gPage">
+<body class="mode-human">
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Tier 1</h1>
+      <p class="gSub" id="t1Sub">These determine whether anything may act, be governed, be agreed upon, or be short-circuited.</p>
 
-  <header class="gHeader">
-    <h1 class="gTitle">Tier 1</h1>
-
-    <p class="gSub scientific">
-      Foundational laws · Non-derivable.
-    </p>
-
-    <p class="gSub human">
-      These determine whether anything may act, be governed,
-      be agreed upon, or be short-circuited.
-    </p>
-
-    <div class="lensWrap">
-      <div class="lensToggle">
-        <button id="hBtn" class="lensBtn isActive"
-          onclick="setLens('human')">Human</button>
-        <button id="sBtn" class="lensBtn"
-          onclick="setLens('scientific')">Scientific</button>
+      <div class="t1ToggleWrap" aria-label="Lens toggle">
+        <div class="t1Toggle" role="group" aria-label="Human vs Scientific">
+          <div class="t1Pill" aria-hidden="true"></div>
+          <button id="btnHuman" type="button" aria-pressed="true" onclick="setMode('human')">Human</button>
+          <button id="btnSci" type="button" aria-pressed="false" onclick="setMode('scientific')">Scientific</button>
+        </div>
       </div>
-    </div>
 
-    <p class="gSub human">Choose a question. Diamonds route to leaves.</p>
-    <p class="gSub scientific">Choose a term. Diamonds route to leaves.</p>
-  </header>
+      <p class="t1Hint" id="t1Hint">Choose a question. Diamonds route to leaves.</p>
+    </header>
 
-  <!-- DIAMOND = BRANCH (LOCKED) -->
-  <section class="gPanel">
-    <div class="gCluster" role="navigation" aria-label="Tier 1 diamond">
+    <section class="gPanel" aria-label="Tier 1 diamond">
+      <div class="t1Deck">
+        <!-- HUMAN DIAMOND -->
+        <div class="t1Diamond human">
+          <div class="gCluster" role="navigation" aria-label="Tier 1 (Human) routes">
+            <a class="gKey gTop" href="/laws/tier-1/admissibility/" aria-label="Possible">
+              <span class="gKeyText"><strong>Possible?</strong><em>Admissibility</em></span>
+            </a>
 
-      <!-- TOP -->
-      <a class="gKey gTop" href="/laws/tier-1/permission/">
-        <span class="human"><strong>Possible?</strong></span>
-        <span class="scientific"><strong>Admissibility</strong></span>
-      </a>
+            <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Agreement">
+              <span class="gKeyText"><strong>Agreement?</strong><em>Classification</em></span>
+            </a>
 
-      <!-- RIGHT -->
-      <a class="gKey gRight" href="/laws/tier-1/agreement/">
-        <span class="human"><strong>Agreement?</strong></span>
-        <span class="scientific"><strong>Classification</strong></span>
-      </a>
+            <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Shortcuts">
+              <span class="gKeyText"><strong>Shortcuts?</strong><em>No shortcuts</em></span>
+            </a>
 
-      <!-- BOTTOM -->
-      <a class="gKey gBottom" href="/laws/tier-1/nosub/">
-        <span class="human"><strong>Shortcuts?</strong></span>
-        <span class="scientific"><strong>Non-Substitutability</strong></span>
-      </a>
+            <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Rules">
+              <span class="gKeyText"><strong>Rules?</strong><em>Coherence</em></span>
+            </a>
+          </div>
+        </div>
 
-      <!-- LEFT -->
-      <a class="gKey gLeft" href="/laws/tier-1/governance/">
-        <span class="human"><strong>Rules?</strong></span>
-        <span class="scientific"><strong>Coherence</strong></span>
-      </a>
+        <!-- SCIENTIFIC DIAMOND -->
+        <div class="t1Diamond scientific">
+          <div class="gCluster" role="navigation" aria-label="Tier 1 (Scientific) routes">
+            <a class="gKey gTop" href="/laws/tier-1/admissibility/" aria-label="Admissibility">
+              <span class="gKeyText"><strong>Admissibility</strong><em>Permission</em></span>
+            </a>
 
-    </div>
+            <a class="gKey gRight" href="/laws/tier-1/agreement/" aria-label="Classification">
+              <span class="gKeyText"><strong>Classification</strong><em>Agreement</em></span>
+            </a>
 
-    <div class="gActions">
-      <a class="gBtn" href="/laws/">Back</a>
-      <a class="gBtn" href="/home/">Home</a>
-    </div>
+            <a class="gKey gBottom" href="/laws/tier-1/nonsub/" aria-label="Non-Substitutability">
+              <span class="gKeyText"><strong>Non-Substitutability</strong><em>No-timer gating</em></span>
+            </a>
 
-    <footer class="gFooter">
-      CANONICAL · STABLE · © GEODIAMETRICS
-    </footer>
-  </section>
-</main>
+            <a class="gKey gLeft" href="/laws/tier-1/governance/" aria-label="Coherence">
+              <span class="gKeyText"><strong>Coherence</strong><em>Governance</em></span>
+            </a>
+          </div>
+        </div>
+      </div>
 
-<script>
-function setLens(mode){
-  document.body.setAttribute("data-lens", mode);
-  document.getElementById("hBtn").classList.toggle("isActive", mode==="human");
-  document.getElementById("sBtn").classList.toggle("isActive", mode==="scientific");
-}
-</script>
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/laws/">Back</a>
+        <a class="gBtn" href="/home/">Home</a>
+      </div>
+
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
+
+  <script>
+    function setMode(mode){
+      document.body.classList.toggle('mode-human', mode === 'human');
+      document.body.classList.toggle('mode-scientific', mode === 'scientific');
+
+      var bH = document.getElementById('btnHuman');
+      var bS = document.getElementById('btnSci');
+      bH.setAttribute('aria-pressed', mode === 'human' ? 'true' : 'false');
+      bS.setAttribute('aria-pressed', mode === 'scientific' ? 'true' : 'false');
+
+      // Keep copy minimal. Two explanations only.
+      var sub = document.getElementById('t1Sub');
+      var hint = document.getElementById('t1Hint');
+      if(mode === 'human'){
+        sub.textContent = 'These determine whether anything may act, be governed, be agreed upon, or be short-circuited.';
+        hint.textContent = 'Choose a question. Diamonds route to leaves.';
+      } else {
+        sub.textContent = 'Foundational laws · Non-derivable.';
+        hint.textContent = 'Choose a term. Diamonds route to leaves.';
+      }
+    }
+  </script>
 </body>
 </html>
+```0

@@ -1,109 +1,182 @@
-/* =========================
-   BRANCH GEOMETRY — PRECISE LOCK (CREASES VIA DOUBLE LAYER)
-   ========================= */
+/* TNT: /assets/branch.css  (FULL REPLACEMENT — ONLY place where diamond geometry is defined) */
 
-:root{
-  --cluster:260px;
-  --diamond:140px;
-  --inset:8px;
-
-  --r:18px;
-  --bg1:rgba(255,255,255,.12);
-  --bg2:rgba(255,255,255,.06);
-  --b1:rgba(255,255,255,.18);
-  --b2:rgba(255,255,255,.10);
-  --shadow:0 10px 30px rgba(0,0,0,.18);
-}
-
-/* KILL any legacy X / dot overlays */
-.gCluster::before,.gCluster::after,
-.gCross,.gX,.gCenter,.gCenterDot,.gDot,
-.centerDot,.cross,.xmark{
-  content:none!important;
-  display:none!important;
-  background:none!important;
-}
-
-/* Cluster */
+/* ===== Diamond cluster (4 only) ===== */
 .gCluster{
+  --size:320px;          /* overall cluster box */
+  --key:188px;           /* diamond size */
+  --gap:56px;            /* how close diamonds are to center */
+  --r:22px;              /* diamond corner radius */
+  width:var(--size);
+  height:var(--size);
+  margin:12px auto 0;
   position:relative;
-  width:var(--cluster);
-  height:var(--cluster);
-  margin:2rem auto 1rem;
 }
 
-/* Base diamond (outer layer) */
+/* One diamond button */
 .gKey{
   position:absolute;
-  width:var(--diamond);
-  height:var(--diamond);
+  width:var(--key);
+  height:var(--key);
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
   border-radius:var(--r);
-  transform:rotate(45deg);
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 20px 50px rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
   display:flex;
   align-items:center;
   justify-content:center;
   text-decoration:none;
-  color:#fff;
   overflow:hidden;
-  background:var(--bg1);
-  border:1px solid var(--b1);
-  box-shadow:var(--shadow);
 }
 
-/* Inner “crease” layer (second diamond) */
-.gKey::after{
+/* Inner “glass” edge */
+.gKey::before{
   content:"";
   position:absolute;
   inset:10px;
   border-radius:calc(var(--r) - 6px);
-  background:var(--bg2);
-  border:1px solid var(--b2);
-  transform:rotate(0deg);
-  pointer-events:none;
+  border:1px solid rgba(255,255,255,.14);
+  opacity:.9;
 }
 
-/* Positions (no overlap required) */
-.gTop{
-  top:var(--inset);
-  left:50%;
-  transform:translateX(-50%) rotate(45deg);
-}
-.gBottom{
-  bottom:var(--inset);
-  left:50%;
-  transform:translateX(-50%) rotate(45deg);
-}
-.gLeft{
-  left:var(--inset);
-  top:50%;
-  transform:translateY(-50%) rotate(45deg);
-}
-.gRight{
-  right:var(--inset);
-  top:50%;
-  transform:translateY(-50%) rotate(45deg);
-}
-
-/* Text */
+/* Text upright inside rotated diamond */
 .gKeyText{
-  position:relative;
-  z-index:1;
   transform:rotate(-45deg);
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  align-items:center;
+  justify-content:center;
+  padding:16px 18px;
+  line-height:1.05;
   text-align:center;
-  line-height:1.15;
-  padding:10px;
 }
 
 .gKeyText strong{
-  display:block;
-  font-size:1rem;
-  font-weight:800;
+  font-size:22px;
+  font-weight:900;
   letter-spacing:.01em;
+  color:rgba(241,246,251,.96);
 }
 
 .gKeyText small{
-  display:block;
-  margin-top:4px;
-  font-size:.8rem;
-  color:rgba(255,255,255,.72);
+  font-size:14px;
+  font-weight:700;
+  color:rgba(241,246,251,.72);
+}
+
+/* Hover */
+.gKey:hover{background:rgba(255,255,255,.10)}
+.gKey:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
+
+/* Positions (4-only) */
+.gTop   { transform:translate(-50%,-50%) translateY(calc(-1 * var(--gap))) rotate(45deg) }
+.gRight { transform:translate(-50%,-50%) translateX(var(--gap)) rotate(45deg) }
+.gBottom{ transform:translate(-50%,-50%) translateY(var(--gap)) rotate(45deg) }
+.gLeft  { transform:translate(-50%,-50%) translateX(calc(-1 * var(--gap))) rotate(45deg) }
+
+/* ===== IMPORTANT: NO hidden extra diamonds / NO X by default =====
+   If you want a thin X later, add class gX to gCluster.
+*/
+.gCluster.gX::before,
+.gCluster.gX::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:78%;
+  height:2px; /* VERY thin */
+  background:rgba(255,255,255,.10);
+  border-radius:999px;
+  transform-origin:center;
+  pointer-events:none;
+}
+.gCluster.gX::before{ transform:translate(-50%,-50%) rotate(45deg) }
+.gCluster.gX::after { transform:translate(-50%,-50%) rotate(-45deg) }
+
+/* ===== Stacked opaque “bubbles” list ===== */
+.gStack{
+  margin:18px auto 0;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  max-width:520px;
+}
+
+.gBubble{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:18px 18px;
+  border-radius:22px;
+  background:rgba(20,30,40,.88); /* OPAQUE */
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 18px 48px rgba(0,0,0,.24);
+  text-decoration:none;
+}
+.gBubble strong{
+  font-size:18px;
+  font-weight:900;
+  color:rgba(241,246,251,.98);
+}
+.gBubble span{
+  font-size:16px;
+  font-weight:700;
+  color:rgba(241,246,251,.72);
+}
+
+/* ===== Modal preview (tap diamond to preview) ===== */
+.gModal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:999;
+}
+.gModal.isOpen{display:flex}
+.gModalBackdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.42);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+}
+.gModalCard{
+  position:relative;
+  width:100%;
+  max-width:520px;
+  padding:22px 20px;
+  border-radius:24px;
+  background:rgba(20,30,40,.92); /* OPAQUE */
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 26px 70px rgba(0,0,0,.35);
+}
+.gModalCard h2{
+  font-size:24px;
+  font-weight:900;
+  margin-bottom:10px;
+}
+.gModalCard p{
+  font-size:18px;
+  line-height:1.45;
+  color:rgba(241,246,251,.82);
+}
+.gModalHint{
+  margin-top:14px;
+  font-size:14px;
+  color:rgba(241,246,251,.55);
+}
+
+/* ===== Responsive tuning ===== */
+@media (max-width:420px){
+  .gCluster{ --size:300px; --key:176px; --gap:52px; --r:22px; }
+  .gKeyText strong{font-size:20px}
+  .gKeyText small{font-size:13px}
 }

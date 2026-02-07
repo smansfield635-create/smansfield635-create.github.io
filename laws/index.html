@@ -2,56 +2,70 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Laws · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css" />
+
+  <!-- IMPORTANT: relative paths (this is what broke before) -->
+  <link rel="icon" href="../assets/favicon.svg" />
+  <link rel="stylesheet" href="../assets/ui.css" />
+  <link rel="stylesheet" href="../assets/branch.css" />
 </head>
 
 <body>
-<main class="gPage">
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Laws</h1>
+      <p class="gSub">Foundational structure of the system.</p>
+    </header>
 
-  <header class="gHeader">
-    <h1>Laws</h1>
-    <p class="gSub">Foundational structure of the system.</p>
-  </header>
+    <section class="gPanel">
 
-  <section class="gPanel">
+      <!-- Central diamond -->
+      <div class="gCluster">
+        <a class="gKey gCenter" href="/laws/categories/" aria-label="Enter law categories">
+          <span class="gKeyText">
+            <strong>Categories</strong>
+            Tap to enter
+          </span>
+        </a>
+      </div>
 
-    <!-- CORNER BUBBLES (OPAQUE, STATIC) -->
-    <a class="gBubble gTop" href="/laws/categories/reality/">
-      Reality
-    </a>
+      <!-- OPAQUE category bubbles -->
+      <div class="gStack">
 
-    <a class="gBubble gLeft" href="/laws/categories/integrity/">
-      Integrity
-    </a>
+        <a class="gPill solid" href="/laws/categories/reality/">
+          <strong>Reality</strong>
+          <span>what is</span>
+        </a>
 
-    <a class="gBubble gRight" href="/laws/categories/structure/">
-      Structure
-    </a>
+        <a class="gPill solid" href="/laws/categories/integrity/">
+          <strong>Integrity</strong>
+          <span>what stays true</span>
+        </a>
 
-    <a class="gBubble gBottom" href="/laws/categories/flow/">
-      Flow
-    </a>
+        <a class="gPill solid" href="/laws/categories/structure/">
+          <strong>Structure</strong>
+          <span>what holds</span>
+        </a>
 
-    <!-- CENTER DIAMOND -->
-    <a class="gDiamondCenter" href="/laws/categories/">
-      <span class="gDiamondTitle">Categories</span>
-      <span class="gDiamondSub">Tap to enter</span>
-    </a>
+        <a class="gPill solid" href="/laws/categories/flow/">
+          <strong>Flow</strong>
+          <span>what moves</span>
+        </a>
 
-    <!-- NAV -->
-    <div class="gActions">
-      <a class="gBtn" href="/home/">Home</a>
-      <a class="gBtn" href="/home/">Back</a>
-    </div>
+      </div>
 
-    <footer class="gFooter">
-      CANONICAL · STABLE · © GEODIAMETRICS
-    </footer>
+      <!-- Navigation -->
+      <div class="gActions">
+        <a class="gBtn" href="/home/">Home</a>
+        <a class="gBtn" href="/home/">Back</a>
+      </div>
 
-  </section>
+      <footer class="gFooter">
+        CANONICAL · STABLE · © GEODIAMETRICS
+      </footer>
 
-</main>
+    </section>
+  </main>
 </body>
 </html>

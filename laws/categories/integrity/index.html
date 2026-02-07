@@ -6,273 +6,142 @@
 <title>Integrity</title>
 
 <style>
-:root{
-  --bg1:#0b1f2a; --bg2:#143243;
-  --panel:rgba(255,255,255,.06);
-  --panel2:rgba(255,255,255,.09);
-  --stroke:rgba(255,255,255,.14);
-  --text:#eaf2f6;
-  --muted:rgba(234,242,246,.72);
-  --btn:rgba(255,255,255,.08);
-  --btn2:rgba(255,255,255,.14);
-}
-
-*{box-sizing:border-box;margin:0;padding:0}
 body{
+  margin:0;
   min-height:100vh;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;
-  background:radial-gradient(circle at top,var(--bg2),var(--bg1));
-  color:var(--text);
+  background:radial-gradient(circle at top,#1b3340,#0b1c26);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:#eaf3f8;
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
-.wrap{
-  width:min(440px,92vw);
-  padding:26px 20px 20px;
-  border-radius:22px;
-  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
-  box-shadow:0 22px 70px rgba(0,0,0,.48);
+.panel{
+  width:min(92vw,420px);
+  padding:28px 22px 26px;
+  border-radius:28px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(14px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.35);
   text-align:center;
 }
 
-h1{font-size:38px;font-weight:800;letter-spacing:.2px}
-.sub{margin-top:6px;margin-bottom:18px;color:var(--muted);font-size:18px}
-
-.stage{
-  position:relative;
-  width:260px;height:260px;
-  margin:0 auto 18px;
+h1{
+  margin:0;
+  font-size:2.1rem;
+  letter-spacing:0.4px;
 }
 
-.axis{
-  position:absolute;top:50%;left:50%;
-  width:240px;height:2px;
-  background:var(--stroke);
-  transform-origin:center;
-}
-.axis.a{transform:translate(-50%,-50%) rotate(45deg);}
-.axis.b{transform:translate(-50%,-50%) rotate(-45deg);}
-
-.d{
-  position:absolute;
-  width:116px;height:116px;
-  border-radius:16px;
-  background:var(--panel);
-  border:1px solid rgba(255,255,255,.10);
-  transform:rotate(45deg);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  transition:transform .12s ease, background .12s ease;
-}
-.d:hover{background:var(--panel2)}
-.d:active{transform:rotate(45deg) scale(.98)}
-
-.d .t{
-  transform:rotate(-45deg);
-  font-weight:900;
-  font-size:16px;
-  line-height:1.2;
-  padding:0 10px;
-}
-.d .s{
-  display:block;
+.subtitle{
   margin-top:6px;
-  font-weight:650;
-  font-size:13px;
-  color:var(--muted);
+  opacity:.75;
 }
 
-.top{top:0;left:50%;transform:translateX(-50%) rotate(45deg);}
-.right{right:0;top:50%;transform:translateY(-50%) rotate(45deg);}
-.bottom{bottom:0;left:50%;transform:translateX(-50%) rotate(45deg);}
-.left{left:0;top:50%;transform:translateY(-50%) rotate(45deg);}
+.diamond-wrap{
+  position:relative;
+  width:260px;
+  height:260px;
+  margin:28px auto 22px;
+  transform:rotate(45deg);
+}
+
+.diamond{
+  position:absolute;
+  inset:0;
+  border-radius:18px;
+  background:rgba(255,255,255,0.08);
+}
+
+.node{
+  position:absolute;
+  width:50%;
+  height:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:#eaf3f8;
+  font-weight:600;
+  letter-spacing:.3px;
+  transform:rotate(-45deg);
+}
+
+.top{top:0;left:25%;}
+.right{right:0;top:25%;}
+.bottom{bottom:0;left:25%;}
+.left{left:0;top:25%;}
+
+.node span{
+  display:block;
+  padding:10px 14px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.12);
+  transition:background .2s, transform .2s;
+}
+
+.node:hover span{
+  background:rgba(255,255,255,0.22);
+  transform:scale(1.04);
+}
 
 .nav{
   display:flex;
-  gap:12px;
-  justify-content:center;
-  margin-top:10px;
-}
-.nav a{
-  text-decoration:none;
-  color:var(--text);
-  background:var(--btn);
-  border:1px solid rgba(255,255,255,.10);
-  padding:12px 16px;
-  border-radius:16px;
-  font-weight:800;
-}
-
-.footer{
-  margin-top:14px;
-  font-size:12px;
-  opacity:.62;
-  letter-spacing:2px;
-}
-
-/* Modal bubble */
-.modal{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.42);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-  z-index:9999;
-}
-.modal.open{display:flex}
-
-.bubble{
-  width:min(520px,92vw);
-  background:rgba(18,36,48,.96);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:18px;
-  box-shadow:0 30px 90px rgba(0,0,0,.55);
-  padding:18px 18px 14px;
-  text-align:left;
-}
-
-.bubble h2{
-  font-size:22px;
-  margin-bottom:10px;
-}
-.bubble p{
-  color:var(--muted);
-  line-height:1.45;
-  font-size:16px;
-  margin-bottom:12px;
-}
-
-.bubble .actions{
-  display:flex;
   gap:10px;
-  justify-content:flex-end;
-  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:8px;
 }
-.bubble .actions a,
-.bubble .actions button{
-  border:none;
-  cursor:pointer;
+
+.nav a{
+  padding:10px 18px;
+  border-radius:18px;
   text-decoration:none;
-  color:var(--text);
-  background:var(--btn);
-  border:1px solid rgba(255,255,255,.10);
-  padding:11px 14px;
-  border-radius:14px;
-  font-weight:850;
+  color:#eaf3f8;
+  background:rgba(255,255,255,0.12);
+  font-weight:500;
 }
-.bubble .actions a.primary{
-  background:var(--btn2);
-}
-.bubble .hint{
-  margin-top:10px;
-  font-size:12px;
-  opacity:.65;
-  text-align:center;
+
+footer{
+  margin-top:14px;
+  font-size:.72rem;
+  opacity:.5;
+  letter-spacing:1px;
 }
 </style>
 </head>
 
 <body>
-  <main class="wrap">
-    <h1>Integrity</h1>
-    <div class="sub">What stays true.</div>
+<div class="panel">
+  <h1>Integrity</h1>
+  <div class="subtitle">What stays true.</div>
 
-    <section class="stage" aria-label="Integrity diamond">
-      <div class="axis a"></div>
-      <div class="axis b"></div>
+  <div class="diamond-wrap">
+    <div class="diamond"></div>
 
-      <!-- Each diamond opens a bubble; “Go deeper” routes to the exhibit page -->
-      <button class="d top" type="button"
-        data-title="Consistency"
-        data-sub="Alignment across time"
-        data-body="Consistency means your inputs and outputs stay aligned. Values don’t shift to justify behavior, and behavior doesn’t shift just because the audience or pressure changes."
-        data-link="consistency/">
-        <div class="t">Consistency<span class="s">Alignment across time</span></div>
-      </button>
+    <a class="node top" href="./consistency/">
+      <span>Consistency</span>
+    </a>
 
-      <button class="d right" type="button"
-        data-title="Accountability"
-        data-sub="Ownership of outcome"
-        data-body="Accountability means you own the outcome of your choices. You don’t outsource responsibility, and you don’t rewrite the story to escape the result."
-        data-link="accountability/">
-        <div class="t">Accountability<span class="s">Ownership of outcome</span></div>
-      </button>
+    <a class="node right" href="./accountability/">
+      <span>Accountability</span>
+    </a>
 
-      <button class="d bottom" type="button"
-        data-title="Continuity"
-        data-sub="No convenient breaks"
-        data-body="Continuity means no ‘state breaks’ where standards conveniently pause. The same rules apply across time, setting, and difficulty."
-        data-link="continuity/">
-        <div class="t">Continuity<span class="s">No convenient breaks</span></div>
-      </button>
+    <a class="node bottom" href="./continuity/">
+      <span>Continuity</span>
+    </a>
 
-      <button class="d left" type="button"
-        data-title="Coherence"
-        data-sub="No internal contradiction"
-        data-body="Coherence means there’s no internal contradiction between what you claim, what you do, and what you produce. One system, one story, one alignment."
-        data-link="coherence/">
-        <div class="t">Coherence<span class="s">No internal contradiction</span></div>
-      </button>
-    </section>
-
-    <div class="nav">
-      <a href="../">Categories</a>
-      <a href="../../">Laws</a>
-      <a href="/">Home</a>
-    </div>
-
-    <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
-  </main>
-
-  <!-- Opaque bubble modal -->
-  <div id="modal" class="modal" aria-hidden="true">
-    <div class="bubble" role="dialog" aria-modal="true" aria-label="Definition">
-      <h2 id="mTitle">Title</h2>
-      <p id="mBody">Body</p>
-      <div class="actions">
-        <button id="mClose" type="button">Close</button>
-        <a id="mGo" class="primary" href="#">Go deeper</a>
-      </div>
-      <div class="hint">Tap outside to close.</div>
-    </div>
+    <a class="node left" href="./coherence/">
+      <span>Coherence</span>
+    </a>
   </div>
 
-<script>
-(function(){
-  const modal = document.getElementById('modal');
-  const mTitle = document.getElementById('mTitle');
-  const mBody  = document.getElementById('mBody');
-  const mGo    = document.getElementById('mGo');
-  const mClose = document.getElementById('mClose');
+  <div class="nav">
+    <a href="../">Categories</a>
+    <a href="/laws/">Laws</a>
+    <a href="/home/">Home</a>
+  </div>
 
-  function openModal(title, body, link){
-    mTitle.textContent = title;
-    mBody.textContent  = body;
-    mGo.setAttribute('href', link);
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden', 'false');
-  }
-  function closeModal(){
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden', 'true');
-  }
-
-  document.querySelectorAll('.stage .d').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const title = btn.dataset.title || '—';
-      const body  = btn.dataset.body  || '';
-      const link  = btn.dataset.link  || '#';
-      openModal(title, body, link);
-    });
-  });
-
-  mClose.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
-  window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
-})();
-</script>
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+</div>
 </body>
 </html>

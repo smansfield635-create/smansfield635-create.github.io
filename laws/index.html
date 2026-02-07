@@ -1,4 +1,4 @@
-<!-- TNT: /laws/index.html  (FULL REPLACEMENT — 9-diamond “flower” geometry + preview modal) -->
+<!-- TNT: /laws/index.html (FULL REPLACEMENT — restores 4-diamond symmetry, center Categories, opaque previews) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,124 +11,82 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* Page-local geometry lock (prevents CSS drift from other pages) */
-    .lawFlowerWrap{display:flex;justify-content:center;align-items:center;padding:10px 0 6px}
-    .lawFlower{
-      position:relative;
-      width:min(420px, 92vw);
-      height:min(420px, 92vw);
-      margin:0 auto;
-      pointer-events:auto;
-    }
-
-    /* Diamond button base (uses your glass system, but locks size + overlap) */
-    .dBtn{
-      position:absolute;
-      width:46%;
-      height:46%;
-      border-radius:22px;
-      transform:rotate(45deg);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-decoration:none;
-      color:inherit;
-
-      background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
-      border:1px solid rgba(255,255,255,.20);
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
-      box-shadow:0 18px 60px rgba(0,0,0,.25);
-
-      transition:transform .12s ease, filter .12s ease;
-      -webkit-tap-highlight-color: transparent;
-      user-select:none;
-    }
-    .dBtn:active{transform:rotate(45deg) scale(.985)}
-    .dBtn .dTxt{
-      transform:rotate(-45deg);
-      text-align:center;
-      font-weight:800;
-      letter-spacing:.01em;
-      font-size:18px;
-      line-height:1.05;
-      padding:10px 12px;
-      opacity:.95;
-      white-space:nowrap;
-    }
-
-    /* Core diamond (smaller, anchor-only) */
-    .dCore{
-      width:28%;
-      height:28%;
-      left:36%;
-      top:36%;
-      background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
-      border-color:rgba(255,255,255,.18);
-      box-shadow:0 18px 60px rgba(0,0,0,.18);
-      pointer-events:none;
-    }
-    .dCore .dTxt{font-size:14px;font-weight:900;opacity:.85}
-
-    /* Four primary petals (larger) */
-    .dTop   {left:27%; top:0%;}
-    .dRight {left:54%; top:27%;}
-    .dBottom{left:27%; top:54%;}
-    .dLeft  {left:0%;  top:27%;}
-
-    /* Four secondary inner supports (smaller, between petals) */
-    .dS{
-      width:26%;
-      height:26%;
-      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.035));
-      border-color:rgba(255,255,255,.14);
-      box-shadow:0 18px 60px rgba(0,0,0,.16);
-      filter:saturate(.9);
-      pointer-events:none; /* lock: supports are not interactive yet */
-      opacity:.78;
-    }
-    .dTR{left:56%; top:8%;}
-    .dBR{left:66%; top:56%;}
-    .dBL{left:8%;  top:66%;}
-    .dTL{left:8%;  top:8%;}
-    .dS .dTxt{font-size:12px;font-weight:800;opacity:.8}
-
-    /* Preview modal (opaque + readable; sits above everything) */
-    .mBack{
+    /* Page-local (minimal) — ensures previews are opaque + never block links when closed */
+    .gModalBackdrop{
       position:fixed; inset:0;
       background:rgba(0,0,0,.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       display:none;
       align-items:center;
       justify-content:center;
-      padding:20px;
+      padding:18px;
       z-index:9999;
     }
-    .mCard{
-      width:min(520px, 92vw);
-      border-radius:24px;
-      background:linear-gradient(180deg, rgba(20,32,44,.92), rgba(16,26,36,.92));
+    .gModalBackdrop.isOpen{ display:flex; }
+
+    .gModalCard{
+      width:min(520px, 100%);
+      border-radius:26px;
+      background:rgba(25,35,45,.96); /* OPAQUE */
       border:1px solid rgba(255,255,255,.18);
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
-      box-shadow:0 22px 70px rgba(0,0,0,.35);
+      box-shadow:0 18px 60px rgba(0,0,0,.45);
       padding:22px 18px 16px;
       text-align:left;
     }
-    .mTitle{font-size:22px;font-weight:900;margin:0 0 10px}
-    .mBody{font-size:16px;line-height:1.45;color:rgba(241,246,251,.86);margin:0 0 14px}
-    .mHint{font-size:12px;color:rgba(241,246,251,.55);margin:0 0 14px;text-align:center}
-    .mRow{display:flex;gap:12px;justify-content:center}
-    .mBtn{
-      display:inline-flex;align-items:center;justify-content:center;
-      min-width:140px;
-      padding:14px 16px;
-      border-radius:999px;
-      text-decoration:none;
-      color:inherit;
-      background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow:0 18px 60px rgba(0,0,0,.22);
+    .gModalTitle{
+      font-size:24px;
       font-weight:800;
+      letter-spacing:-0.02em;
+      margin-bottom:10px;
+      color:rgba(241,246,251,.98);
+    }
+    .gModalBody{
+      font-size:16px;
+      line-height:1.45;
+      color:rgba(241,246,251,.84);
+      margin-bottom:14px;
+    }
+    .gModalHint{
+      font-size:13px;
+      color:rgba(241,246,251,.62);
+      text-align:center;
+      margin:10px 0 0;
+    }
+    .gModalActions{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      margin-top:10px;
+      flex-wrap:wrap;
+    }
+    .gBtnMini{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:12px 16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.10);
+      color:rgba(241,246,251,.92);
+      text-decoration:none;
+      font-weight:700;
+      min-width:140px;
+    }
+    .gBtnMini:active{ transform: translateY(1px); }
+    .gBtnMiniPrimary{
+      background:rgba(64,160,255,.28);
+      border-color:rgba(120,190,255,.35);
+    }
+
+    /* Important: keep diamonds clean — no subtext */
+    .gKeyText small{ display:none !important; }
+
+    /* Keep center label readable */
+    .gKey.gCenter .gKeyText strong{
+      display:block;
+      font-size:20px;
+      line-height:1.05;
     }
   </style>
 </head>
@@ -140,39 +98,33 @@
       <p class="gSub">Tap a diamond to preview. Enter when ready.</p>
     </header>
 
-    <section class="gPanel" aria-label="Law categories">
-      <div class="lawFlowerWrap">
-        <div class="lawFlower" role="navigation" aria-label="Law category diamonds">
+    <section class="gPanel" aria-label="Laws entry">
+      <!-- 4 diamonds + center (no extra layers) -->
+      <div class="gCluster" role="navigation" aria-label="Law category preview and entry">
+        <!-- TOP -->
+        <a class="gKey gTop jsPreview" href="/laws/categories/reality/" data-title="Reality" data-body="Reality defines what is. It separates what exists from what is assumed.">
+          <span class="gKeyText"><strong>Reality</strong></span>
+        </a>
 
-          <!-- Secondary supports (non-interactive for now; locks the 9-diamond flower geometry) -->
-          <div class="dBtn dS dTL" aria-hidden="true"><div class="dTxt">Evidence</div></div>
-          <div class="dBtn dS dTR" aria-hidden="true"><div class="dTxt">Constraints</div></div>
-          <div class="dBtn dS dBR" aria-hidden="true"><div class="dTxt">Diagnostics</div></div>
-          <div class="dBtn dS dBL" aria-hidden="true"><div class="dTxt">Applications</div></div>
+        <!-- RIGHT -->
+        <a class="gKey gRight jsPreview" href="/laws/categories/structure/" data-title="Structure" data-body="Structure defines what holds. Constraints preserve form and prevent collapse.">
+          <span class="gKeyText"><strong>Structure</strong></span>
+        </a>
 
-          <!-- Core anchor (non-interactive) -->
-          <div class="dBtn dCore" aria-hidden="true">
-            <div class="dTxt">Laws</div>
-          </div>
+        <!-- BOTTOM -->
+        <a class="gKey gBottom jsPreview" href="/laws/categories/flow/" data-title="Flow" data-body="Flow defines what moves. Change has direction, cost, and consequence.">
+          <span class="gKeyText"><strong>Flow</strong></span>
+        </a>
 
-          <!-- Primary petals (interactive: preview modal + optional Enter) -->
-          <a class="dBtn dTop" href="/laws/categories/reality/" data-title="Reality" data-body="Reality defines what is. It separates what exists from what is assumed.">
-            <div class="dTxt">Reality</div>
-          </a>
+        <!-- LEFT -->
+        <a class="gKey gLeft jsPreview" href="/laws/categories/integrity/" data-title="Integrity" data-body="Integrity defines what stays true. Alignment holds across time, pressure, and audience.">
+          <span class="gKeyText"><strong>Integrity</strong></span>
+        </a>
 
-          <a class="dBtn dRight" href="/laws/categories/structure/" data-title="Structure" data-body="Structure defines what holds. Constraints preserve form and prevent collapse.">
-            <div class="dTxt">Structure</div>
-          </a>
-
-          <a class="dBtn dBottom" href="/laws/categories/flow/" data-title="Flow" data-body="Flow defines what moves. Change propagates through channels, costs, and constraints.">
-            <div class="dTxt">Flow</div>
-          </a>
-
-          <a class="dBtn dLeft" href="/laws/categories/integrity/" data-title="Integrity" data-body="Integrity defines what stays true. Alignment holds across time, pressure, and audience.">
-            <div class="dTxt">Integrity</div>
-          </a>
-
-        </div>
+        <!-- CENTER: direct route -->
+        <a class="gKey gCenter" href="/laws/categories/" aria-label="Enter categories">
+          <span class="gKeyText"><strong>Categories</strong></span>
+        </a>
       </div>
 
       <div class="gActions" aria-label="Navigation controls">
@@ -184,59 +136,61 @@
     </section>
   </main>
 
-  <!-- Preview Modal -->
-  <div class="mBack" id="mBack" role="dialog" aria-modal="true" aria-label="Preview">
-    <div class="mCard">
-      <h2 class="mTitle" id="mTitle">Title</h2>
-      <p class="mBody" id="mBody">Body</p>
-      <p class="mHint">Tap anywhere outside to close.</p>
-      <div class="mRow">
-        <a class="mBtn" id="mEnter" href="#">Enter</a>
-        <button class="mBtn" type="button" id="mClose" style="cursor:pointer">Close</button>
+  <!-- OPAQUE PREVIEW MODAL -->
+  <div class="gModalBackdrop" id="gModal" aria-hidden="true">
+    <div class="gModalCard" role="dialog" aria-modal="true" aria-labelledby="gModalTitle">
+      <div class="gModalTitle" id="gModalTitle">Title</div>
+      <div class="gModalBody" id="gModalBody">Body</div>
+
+      <div class="gModalActions">
+        <a class="gBtnMini gBtnMiniPrimary" id="gModalEnter" href="/laws/categories/">Enter</a>
+        <button class="gBtnMini" id="gModalClose" type="button">Close</button>
       </div>
+
+      <div class="gModalHint">Tap anywhere to close</div>
     </div>
   </div>
 
   <script>
     (function(){
-      const back = document.getElementById('mBack');
-      const t = document.getElementById('mTitle');
-      const b = document.getElementById('mBody');
-      const enter = document.getElementById('mEnter');
-      const close = document.getElementById('mClose');
+      const modal = document.getElementById('gModal');
+      const t = document.getElementById('gModalTitle');
+      const b = document.getElementById('gModalBody');
+      const enter = document.getElementById('gModalEnter');
+      const closeBtn = document.getElementById('gModalClose');
 
       function openModal(title, body, href){
-        t.textContent = title;
-        b.textContent = body;
-        enter.setAttribute('href', href);
-        back.style.display = 'flex';
+        t.textContent = title || '';
+        b.textContent = body || '';
+        enter.setAttribute('href', href || '/laws/categories/');
+        modal.classList.add('isOpen');
+        modal.setAttribute('aria-hidden','false');
       }
-      function shut(){
-        back.style.display = 'none';
+      function closeModal(){
+        modal.classList.remove('isOpen');
+        modal.setAttribute('aria-hidden','true');
       }
 
-      // Preview on tap; prevent immediate navigation.
-      document.querySelectorAll('.lawFlower a.dBtn').forEach(a=>{
-        a.addEventListener('click', (e)=>{
+      // Close on backdrop tap (but not when tapping the card)
+      modal.addEventListener('click', (e) => {
+        if(e.target === modal) closeModal();
+      });
+      // Close on explicit button
+      closeBtn.addEventListener('click', closeModal);
+      // Close on ESC
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && modal.classList.contains('isOpen')) closeModal();
+      });
+
+      // Preview links
+      document.querySelectorAll('.jsPreview').forEach(a => {
+        a.addEventListener('click', (e) => {
+          // preview only (do not navigate)
           e.preventDefault();
-          const title = a.getAttribute('data-title') || a.textContent.trim();
-          const body  = a.getAttribute('data-body')  || '';
-          const href  = a.getAttribute('href')       || '#';
-          openModal(title, body, href);
-        }, {passive:false});
-      });
-
-      close.addEventListener('click', shut);
-      back.addEventListener('click', (e)=>{
-        if(e.target === back) shut();
-      });
-
-      // Esc closes (desktop-safe)
-      document.addEventListener('keydown', (e)=>{
-        if(e.key === 'Escape') shut();
+          openModal(a.dataset.title, a.dataset.body, a.getAttribute('href'));
+        });
       });
     })();
   </script>
 </body>
 </html>
-```0

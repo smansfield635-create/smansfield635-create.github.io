@@ -1,57 +1,129 @@
+<!-- 🔥 TNT — /home/index.html (FULL REPLACEMENT) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Geodiametrics</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<title>Home · Geodiametrics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),
-                  linear-gradient(180deg, #0c2232, #071722);
-      color: #f1f6fb;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      cursor: pointer;
-    }
+<style>
+  :root{
+    --bg-top:#0c2232;
+    --bg-bottom:#071722;
+    --text:#f1f6fb;
+    --sub:rgba(241,246,251,.65);
+    --glass:rgba(255,255,255,.12);
+    --border:rgba(255,255,255,.22);
+    --blur:18px;
+    --radius:26px;
+    --shadow:0 18px 60px rgba(0,0,0,.28);
+  }
 
-    .wrap {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 24px;
-    }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    width:100%;height:100%;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),
+      linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
+  }
 
-    h1 {
-      font-size: 42px;
-      margin-bottom: 12px;
-      letter-spacing: -0.02em;
-    }
+  .page{
+    min-height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    text-align:center;
+  }
 
-    p {
-      color: rgba(241,246,251,.75);
-      font-size: 18px;
-      line-height: 1.4;
-    }
+  h1{
+    font-size:44px;
+    font-weight:800;
+    letter-spacing:-0.02em;
+    margin-bottom:8px;
+  }
 
-    .hint {
-      margin-top: 40px;
-      font-size: 14px;
-      opacity: .6;
-    }
-  </style>
+  p{
+    font-size:18px;
+    color:var(--sub);
+    margin-bottom:24px;
+  }
+
+  .panel{
+    width:100%;
+    max-width:520px;
+    padding:32px 20px 22px;
+    border-radius:var(--radius);
+    background:linear-gradient(180deg,var(--glass),rgba(255,255,255,.04));
+    border:1px solid var(--border);
+    backdrop-filter:blur(var(--blur));
+    box-shadow:var(--shadow);
+  }
+
+  /* Diamond hub */
+  .wrap{
+    position:relative;
+    width:220px;height:220px;
+    margin:0 auto 18px;
+  }
+
+  .diamond{
+    position:absolute;
+    width:110px;height:110px;
+    left:50%;top:50%;
+    transform:translate(-50%,-50%) rotate(45deg);
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:18px;
+    display:flex;align-items:center;justify-content:center;
+    text-decoration:none;color:var(--text);
+    cursor:pointer;
+  }
+
+  .diamond span{
+    transform:rotate(-45deg);
+    font-weight:700;letter-spacing:.04em;font-size:14px;
+  }
+
+  .top{transform:translate(-50%,-140%) rotate(45deg)}
+  .right{transform:translate(40%,-50%) rotate(45deg)}
+  .bottom{transform:translate(-50%,40%) rotate(45deg)}
+  .left{transform:translate(-140%,-50%) rotate(45deg)}
+
+  .actions{
+    display:flex;gap:12px;justify-content:center;margin-top:10px;
+  }
+  .btn{
+    padding:12px 20px;border-radius:20px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.25);
+    color:var(--text);text-decoration:none;font-size:14px;
+  }
+
+  .canon{margin-top:14px;font-size:12px;color:rgba(241,246,251,.4)}
+</style>
 </head>
 
-<body onclick="location.href='/door/'">
-  <div class="wrap">
-    <div>
-      <h1>Geodiametrics</h1>
-      <p>A diamond-governed map for free-will exploration.</p>
-      <p class="hint">Click anywhere to enter</p>
+<body>
+  <div class="page">
+    <div class="panel">
+      <h1>Home</h1>
+      <p>One gate. Four routes.</p>
+
+      <div class="wrap">
+        <a class="diamond top" href="../laws/"><span>LAWS</span></a>
+        <a class="diamond right" href="../products/"><span>PRODUCTS</span></a>
+        <a class="diamond bottom" href="../gauges/"><span>GAUGES</span></a>
+        <a class="diamond left" href="../links/"><span>LINKS</span></a>
+      </div>
+
+      <div class="actions">
+        <a class="btn" href="../door/">Back</a>
+      </div>
+
+      <div class="canon">CANONICAL · STABLE · © GEODIAMETRICS</div>
     </div>
   </div>
 </body>

@@ -1,82 +1,164 @@
-/* =========================
-   UI CORE — NO GEOMETRY
-   ========================= */
+/* TNT: /assets/ui.css  (FULL REPLACEMENT — global base + stars + falling phrases; NO diamond geometry here) */
+:root{
+  --bg-top:#0c2232;
+  --bg-bottom:#071722;
 
-:root {
-  --bg-1: #0b1c27;
-  --bg-2: #122733;
-  --panel: rgba(255,255,255,0.08);
-  --panel-border: rgba(255,255,255,0.12);
-  --text-main: #ffffff;
-  --text-sub: rgba(255,255,255,0.7);
+  --text:#f1f6fb;
+  --sub:rgba(241,246,251,.72);
+
+  --panel-glass:rgba(255,255,255,.12);
+  --panel-border:rgba(255,255,255,.22);
+  --shadow:0 18px 60px rgba(0,0,0,.28);
+
+  --blur:18px;
+  --radius:26px;
+
+  --btn-bg:rgba(255,255,255,.10);
+  --btn-border:rgba(255,255,255,.18);
+  --btn-hover:rgba(255,255,255,.14);
+
+  --z-sky:0;
+  --z-fall:1;
+  --z-content:10;
 }
 
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),
+    linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
+  overflow-x:hidden;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  background: radial-gradient(circle at top, var(--bg-2), var(--bg-1));
-  color: var(--text-main);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+/* ----- Star field (always behind everything) ----- */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:var(--z-sky);
+  pointer-events:none;
+  background:
+    radial-gradient(2px 2px at 15% 25%, rgba(255,255,255,.30), transparent 60%),
+    radial-gradient(1px 1px at 22% 70%, rgba(255,255,255,.22), transparent 60%),
+    radial-gradient(1px 1px at 40% 18%, rgba(255,255,255,.20), transparent 60%),
+    radial-gradient(2px 2px at 55% 55%, rgba(255,255,255,.24), transparent 60%),
+    radial-gradient(1px 1px at 68% 32%, rgba(255,255,255,.18), transparent 60%),
+    radial-gradient(2px 2px at 76% 78%, rgba(255,255,255,.22), transparent 60%),
+    radial-gradient(1px 1px at 88% 40%, rgba(255,255,255,.18), transparent 60%),
+    radial-gradient(1px 1px at 92% 20%, rgba(255,255,255,.16), transparent 60%),
+    radial-gradient(1px 1px at 10% 85%, rgba(255,255,255,.16), transparent 60%);
+  opacity:.75;
 }
 
-.gPage {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 3rem 1rem;
+/* ----- Falling phrases (vertical DOWN; behind content) ----- */
+.skyfall{
+  position:fixed;
+  inset:0;
+  z-index:var(--z-fall);
+  pointer-events:none;
+  overflow:hidden;
+  opacity:.55;
 }
 
-.gHeader {
-  text-align: center;
-  margin-bottom: 1.5rem;
+.skyfall .line{
+  position:absolute;
+  left:var(--x,50%);
+  top:-25%;
+  width:max-content;
+  white-space:nowrap;
+  color:rgba(241,246,251,.20); /* bright enough to see, but background-only */
+  font-weight:700;
+  letter-spacing:.01em;
+  text-shadow:0 0 18px rgba(255,255,255,.10);
+  transform:translateX(-50%);
+  animation:fallDown var(--dur,22s) linear infinite;
 }
 
-.gTitle {
-  font-size: 2.4rem;
-  margin: 0;
+@keyframes fallDown{
+  0%{ transform:translateX(-50%) translateY(-40vh); opacity:0; }
+  8%{ opacity:.9; }
+  92%{ opacity:.9; }
+  100%{ transform:translateX(-50%) translateY(140vh); opacity:0; }
 }
 
-.gSub {
-  font-size: 1rem;
-  color: var(--text-sub);
-  margin-top: 0.5rem;
+/* ----- App layout ----- */
+.gPage{
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  text-align:center;
+  position:relative;
+  z-index:var(--z-content);
 }
 
-.gPanel {
-  width: 100%;
-  max-width: 420px;
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: 22px;
-  padding: 2rem 1.5rem;
-  text-align: center;
+.gHeader{width:100%;max-width:560px;margin-bottom:16px}
+.gTitle{font-size:44px;font-weight:800;letter-spacing:-0.02em;line-height:1.05;margin-bottom:8px}
+.gSub{font-size:18px;color:var(--sub);line-height:1.35}
+
+.gPanel{
+  width:100%;
+  max-width:560px;
+  position:relative;
+  padding:28px 18px 18px;
+  border-radius:var(--radius);
+  background:linear-gradient(180deg,var(--panel-glass),rgba(255,255,255,.05));
+  border:1px solid var(--panel-border);
+  backdrop-filter:blur(var(--blur));
+  -webkit-backdrop-filter:blur(var(--blur));
+  box-shadow:var(--shadow);
+  overflow:hidden;
 }
 
-.gActions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
+.gFooter{
+  margin-top:14px;
+  font-size:12px;
+  letter-spacing:.18em;
+  color:rgba(241,246,251,.50);
 }
 
-.gBtn {
-  padding: 0.75rem 1.25rem;
-  border-radius: 999px;
-  border: 1px solid var(--panel-border);
-  background: rgba(255,255,255,0.06);
-  color: var(--text-main);
-  text-decoration: none;
-  font-weight: 600;
+.gActions{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:16px;
+  flex-wrap:wrap;
 }
 
-.gFooter {
-  margin-top: 2rem;
-  font-size: 0.75rem;
-  color: var(--text-sub);
-  text-align: center;
+.gBtn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:120px;
+  padding:14px 18px;
+  border-radius:999px;
+  background:var(--btn-bg);
+  border:1px solid var(--btn-border);
+  color:var(--text);
+  text-decoration:none;
+  font-weight:700;
+  letter-spacing:.02em;
+  box-shadow:0 12px 28px rgba(0,0,0,.18);
+}
+
+.gBtn:hover{background:var(--btn-hover)}
+.gBtn:active{transform:translateY(1px)}
+.gBtn:focus{outline:2px solid rgba(241,246,251,.25);outline-offset:4px}
+
+/* Kill purple/underline defaults globally */
+a{color:inherit}
+a:link,a:visited{text-decoration:none}
+a:hover{text-decoration:none}
+
+/* Mobile */
+@media (max-width:420px){
+  .gTitle{font-size:40px}
+  .gSub{font-size:17px}
+  .gPanel{padding:24px 16px 16px}
+  .gBtn{min-width:110px}
 }

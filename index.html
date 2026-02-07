@@ -1,39 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Geodiametrics</title>
-<link rel="stylesheet" href="/assets/style.css"/>
-<style>
-html,body{margin:0;height:100%}
-body{cursor:pointer}
-</style>
-<script>
-document.addEventListener("click",()=>{window.location.href="/door/";});
-</script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geodiametrics</title>
+  <style>
+    :root{
+      --bg-top:#0c2232;
+      --bg-bottom:#071722;
+      --text:#f1f6fb;
+      --sub:rgba(241,246,251,.75);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{width:100%;height:100%}
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),
+        linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      cursor:pointer;
+    }
+    .wrap{
+      max-width:520px;
+      padding:28px;
+    }
+    h1{
+      font-size:42px;
+      font-weight:800;
+      letter-spacing:-0.02em;
+      margin-bottom:10px;
+    }
+    p{
+      font-size:18px;
+      line-height:1.4;
+      color:var(--sub);
+    }
+    .small{
+      margin-top:22px;
+      font-size:14px;
+      color:rgba(241,246,251,.55);
+    }
+  </style>
 </head>
-<body>
-  <div class="page">
-    <div class="hero">
-      <h1>Geodiametrics</h1>
-      <p>A diamond-governed map for free-will exploration.</p>
+<body onclick="window.location.href='/door/'">
+  <div class="wrap">
+    <h1>Geodiametrics</h1>
+    <p>
+      A diamond-governed map for free-will exploration.
+      <br><br>
+      Under construction — safe to explore.
+    </p>
+    <div class="small">
+      Click anywhere to enter
     </div>
-
-    <div class="panel">
-      <p style="font-size:15px;opacity:.8">
-        This site is a live proof-of-concept built from a phone.<br>
-        No accounts. No purchases. No personal data entry.
-      </p>
-      <p style="margin-top:14px;font-size:14px;opacity:.6">
-        Under construction — safe to explore.
-      </p>
-      <p style="margin-top:18px;font-size:13px;opacity:.5">
-        Click anywhere to enter.
-      </p>
-    </div>
-
-    <div class="canon">CANONICAL · STABLE · © GEODIAMETRICS</div>
   </div>
 </body>
 </html>

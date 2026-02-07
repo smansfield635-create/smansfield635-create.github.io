@@ -1,4 +1,4 @@
-<!-- TNT: /index.html (FULL REPLACEMENT — Landing / Gate) -->
+<!-- TNT: /landing/index.html  (FIX BACK BEHAVIOR: Back => /door/ , not Home) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -16,9 +16,9 @@
       <p class="gSub">Each portal is a gate to exploration. Create your own path. Enjoy the journey.</p>
     </header>
 
-    <section class="gPanel" aria-label="Diamond Diagnostic Portals">
+    <section class="gPanel" aria-label="Portal routes">
       <div class="gCluster" role="navigation" aria-label="Portal routes">
-        <a class="gKey gTop" href="/diagnostic/" aria-label="Run alignment diagnostic">
+        <a class="gKey gTop" href="/diagnostic/" aria-label="Run diagnostic">
           <span class="gKeyText"><strong>RUN</strong>Alignment diagnostic</span>
         </a>
 
@@ -26,17 +26,18 @@
           <span class="gKeyText"><strong>ENTER</strong>Go to site</span>
         </a>
 
-        <a class="gKey gBottom" href="/landing/info/" aria-label="Learn what this is">
+        <a class="gKey gBottom" href="/landing/info/" aria-label="Learn">
           <span class="gKeyText"><strong>LEARN</strong>What this is</span>
         </a>
 
-        <a class="gKey gLeft" href="/landing/exit/" aria-label="Exit">
+        <a class="gKey gLeft" href="/landing/exit/" aria-label="Exit now">
           <span class="gKeyText"><strong>EXIT</strong>Leave now</span>
         </a>
       </div>
 
       <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/home/">Back</a>
+        <!-- IMPORTANT: Back goes to the NEW pre-pre page -->
+        <a class="gBtn" href="/door/">Back</a>
         <a class="gBtn" href="/landing/exit/">Exit</a>
       </div>
 

@@ -7,201 +7,216 @@
 
 <style>
 :root{
-  --bg1:#0b1f2a;
-  --bg2:#142f3d;
-  --card:#1f3f50;
-  --card-hover:#285a70;
-  --line:rgba(255,255,255,0.14);
+  --bg1:#0b1f2a; --bg2:#143243;
+  --panel:rgba(255,255,255,.06);
+  --panel2:rgba(255,255,255,.09);
+  --stroke:rgba(255,255,255,.14);
   --text:#eaf2f6;
+  --muted:rgba(234,242,246,.72);
+  --btn:rgba(255,255,255,.08);
+  --btn2:rgba(255,255,255,.14);
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
-
 body{
   min-height:100vh;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;
   background:radial-gradient(circle at top,var(--bg2),var(--bg1));
   color:var(--text);
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
 }
 
-.frame{
-  width:92%;
-  max-width:420px;
-  padding:28px 22px 30px;
+.wrap{
+  width:min(440px,92vw);
+  padding:26px 20px 20px;
   border-radius:22px;
-  background:linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02));
-  box-shadow:0 20px 60px rgba(0,0,0,0.45);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  box-shadow:0 22px 70px rgba(0,0,0,.48);
   text-align:center;
 }
 
-h1{
-  font-size:36px;
-  font-weight:700;
-  margin-bottom:6px;
-}
+h1{font-size:38px;font-weight:800;letter-spacing:.2px}
+.sub{margin-top:6px;margin-bottom:18px;color:var(--muted);font-size:18px}
 
-.subtitle{
-  opacity:.75;
-  margin-bottom:18px;
-}
-
-.lenses{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  margin-bottom:22px;
-}
-
-.lens{
-  flex:1;
-  padding:10px 12px;
-  border-radius:14px;
-  background:rgba(255,255,255,0.06);
-  font-weight:700;
-  cursor:pointer;
-  user-select:none;
-}
-
-.lens.active{
-  background:rgba(255,255,255,0.14);
-}
-
-.diamond-wrap{
+.stage{
   position:relative;
-  width:240px;
-  height:240px;
-  margin:0 auto 26px;
+  width:260px;height:260px;
+  margin:0 auto 18px;
 }
 
 .axis{
-  position:absolute;
-  top:50%;
-  left:50%;
-  width:220px;
-  height:2px;
-  background:var(--line);
+  position:absolute;top:50%;left:50%;
+  width:240px;height:2px;
+  background:var(--stroke);
   transform-origin:center;
 }
-
 .axis.a{transform:translate(-50%,-50%) rotate(45deg);}
 .axis.b{transform:translate(-50%,-50%) rotate(-45deg);}
 
-.diamond{
+.d{
   position:absolute;
-  width:110px;
-  height:110px;
-  background:var(--card);
+  width:116px;height:116px;
+  border-radius:16px;
+  background:var(--panel);
+  border:1px solid rgba(255,255,255,.10);
   transform:rotate(45deg);
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display:flex;align-items:center;justify-content:center;
   cursor:pointer;
-  transition:.2s;
-  text-decoration:none;
+  transition:transform .12s ease, background .12s ease;
 }
+.d:hover{background:var(--panel2)}
+.d:active{transform:rotate(45deg) scale(.98)}
 
-.diamond:hover{background:var(--card-hover);}
-
-.diamond .label{
+.d .t{
   transform:rotate(-45deg);
-  text-align:center;
-  font-weight:800;
-  line-height:1.25;
-  color:var(--text);
-  padding:0 8px;
+  font-weight:900;
+  font-size:16px;
+  line-height:1.2;
+  padding:0 10px;
 }
-
-.diamond .label span{
+.d .s{
   display:block;
-  font-weight:600;
-  opacity:.78;
+  margin-top:6px;
+  font-weight:650;
   font-size:13px;
+  color:var(--muted);
 }
 
-.top   {top:0;left:50%;transform:translateX(-50%) rotate(45deg);}
-.right {right:0;top:50%;transform:translateY(-50%) rotate(45deg);}
+.top{top:0;left:50%;transform:translateX(-50%) rotate(45deg);}
+.right{right:0;top:50%;transform:translateY(-50%) rotate(45deg);}
 .bottom{bottom:0;left:50%;transform:translateX(-50%) rotate(45deg);}
-.left  {left:0;top:50%;transform:translateY(-50%) rotate(45deg);}
+.left{left:0;top:50%;transform:translateY(-50%) rotate(45deg);}
 
 .nav{
   display:flex;
   gap:12px;
   justify-content:center;
+  margin-top:10px;
 }
-
 .nav a{
   text-decoration:none;
   color:var(--text);
+  background:var(--btn);
+  border:1px solid rgba(255,255,255,.10);
   padding:12px 16px;
   border-radius:16px;
-  background:rgba(255,255,255,0.06);
-  font-weight:700;
+  font-weight:800;
 }
 
 .footer{
   margin-top:14px;
   font-size:12px;
-  opacity:.6;
+  opacity:.62;
   letter-spacing:2px;
+}
+
+/* Modal bubble */
+.modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.42);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  z-index:9999;
+}
+.modal.open{display:flex}
+
+.bubble{
+  width:min(520px,92vw);
+  background:rgba(18,36,48,.96);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  box-shadow:0 30px 90px rgba(0,0,0,.55);
+  padding:18px 18px 14px;
+  text-align:left;
+}
+
+.bubble h2{
+  font-size:22px;
+  margin-bottom:10px;
+}
+.bubble p{
+  color:var(--muted);
+  line-height:1.45;
+  font-size:16px;
+  margin-bottom:12px;
+}
+
+.bubble .actions{
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+}
+.bubble .actions a,
+.bubble .actions button{
+  border:none;
+  cursor:pointer;
+  text-decoration:none;
+  color:var(--text);
+  background:var(--btn);
+  border:1px solid rgba(255,255,255,.10);
+  padding:11px 14px;
+  border-radius:14px;
+  font-weight:850;
+}
+.bubble .actions a.primary{
+  background:var(--btn2);
+}
+.bubble .hint{
+  margin-top:10px;
+  font-size:12px;
+  opacity:.65;
+  text-align:center;
 }
 </style>
 </head>
 
 <body>
-  <div class="frame">
+  <main class="wrap">
     <h1>Integrity</h1>
-    <div class="subtitle">What stays true.</div>
+    <div class="sub">What stays true.</div>
 
-    <div class="lenses" aria-label="Lens toggle">
-      <div id="lensSci" class="lens active" role="button" tabindex="0">Scientific Lens</div>
-      <div id="lensHum" class="lens" role="button" tabindex="0">Human Lens</div>
-    </div>
-
-    <div class="diamond-wrap" aria-label="Integrity diamond">
+    <section class="stage" aria-label="Integrity diamond">
       <div class="axis a"></div>
       <div class="axis b"></div>
 
-      <!-- Each diamond stores BOTH lens versions in data-* -->
-      <a class="diamond top" href="consistency/">
-        <div class="label"
-          data-sci-title="Consistency" data-sci-sub="Same inputs → same outputs"
-          data-hum-title="Consistency" data-hum-sub="You stay the same">
-          <span class="t">Consistency</span>
-          <span class="s">Same inputs → same outputs</span>
-        </div>
-      </a>
+      <!-- Each diamond opens a bubble; “Go deeper” routes to the exhibit page -->
+      <button class="d top" type="button"
+        data-title="Consistency"
+        data-sub="Alignment across time"
+        data-body="Consistency means your inputs and outputs stay aligned. Values don’t shift to justify behavior, and behavior doesn’t shift just because the audience or pressure changes."
+        data-link="consistency/">
+        <div class="t">Consistency<span class="s">Alignment across time</span></div>
+      </button>
 
-      <a class="diamond right" href="accountability/">
-        <div class="label"
-          data-sci-title="Accountability" data-sci-sub="Causal ownership"
-          data-hum-title="Accountability" data-hum-sub="Own your outcome">
-          <span class="t">Accountability</span>
-          <span class="s">Causal ownership</span>
-        </div>
-      </a>
+      <button class="d right" type="button"
+        data-title="Accountability"
+        data-sub="Ownership of outcome"
+        data-body="Accountability means you own the outcome of your choices. You don’t outsource responsibility, and you don’t rewrite the story to escape the result."
+        data-link="accountability/">
+        <div class="t">Accountability<span class="s">Ownership of outcome</span></div>
+      </button>
 
-      <a class="diamond bottom" href="continuity/">
-        <div class="label"
-          data-sci-title="Continuity" data-sci-sub="No state breaks"
-          data-hum-title="Continuity" data-hum-sub="No convenient breaks">
-          <span class="t">Continuity</span>
-          <span class="s">No state breaks</span>
-        </div>
-      </a>
+      <button class="d bottom" type="button"
+        data-title="Continuity"
+        data-sub="No convenient breaks"
+        data-body="Continuity means no ‘state breaks’ where standards conveniently pause. The same rules apply across time, setting, and difficulty."
+        data-link="continuity/">
+        <div class="t">Continuity<span class="s">No convenient breaks</span></div>
+      </button>
 
-      <a class="diamond left" href="coherence/">
-        <div class="label"
-          data-sci-title="Coherence" data-sci-sub="No internal contradiction"
-          data-hum-title="Coherence" data-hum-sub="No double-speak">
-          <span class="t">Coherence</span>
-          <span class="s">No internal contradiction</span>
-        </div>
-      </a>
-    </div>
+      <button class="d left" type="button"
+        data-title="Coherence"
+        data-sub="No internal contradiction"
+        data-body="Coherence means there’s no internal contradiction between what you claim, what you do, and what you produce. One system, one story, one alignment."
+        data-link="coherence/">
+        <div class="t">Coherence<span class="s">No internal contradiction</span></div>
+      </button>
+    </section>
 
     <div class="nav">
       <a href="../">Categories</a>
@@ -210,46 +225,53 @@ h1{
     </div>
 
     <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
+  </main>
+
+  <!-- Opaque bubble modal -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="bubble" role="dialog" aria-modal="true" aria-label="Definition">
+      <h2 id="mTitle">Title</h2>
+      <p id="mBody">Body</p>
+      <div class="actions">
+        <button id="mClose" type="button">Close</button>
+        <a id="mGo" class="primary" href="#">Go deeper</a>
+      </div>
+      <div class="hint">Tap outside to close.</div>
+    </div>
   </div>
 
 <script>
 (function(){
-  const lensSci = document.getElementById('lensSci');
-  const lensHum = document.getElementById('lensHum');
-  const labels = Array.from(document.querySelectorAll('.label'));
+  const modal = document.getElementById('modal');
+  const mTitle = document.getElementById('mTitle');
+  const mBody  = document.getElementById('mBody');
+  const mGo    = document.getElementById('mGo');
+  const mClose = document.getElementById('mClose');
 
-  function applyLens(mode){
-    // mode: 'sci' | 'hum'
-    lensSci.classList.toggle('active', mode === 'sci');
-    lensHum.classList.toggle('active', mode === 'hum');
-
-    labels.forEach(lbl => {
-      const t = lbl.querySelector('.t');
-      const s = lbl.querySelector('.s');
-      if(!t || !s) return;
-
-      if(mode === 'sci'){
-        t.textContent = lbl.dataset.sciTitle || t.textContent;
-        s.textContent = lbl.dataset.sciSub || s.textContent;
-      }else{
-        t.textContent = lbl.dataset.humTitle || t.textContent;
-        s.textContent = lbl.dataset.humSub || s.textContent;
-      }
-    });
+  function openModal(title, body, link){
+    mTitle.textContent = title;
+    mBody.textContent  = body;
+    mGo.setAttribute('href', link);
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+  function closeModal(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
   }
 
-  function wire(el, mode){
-    el.addEventListener('click', () => applyLens(mode));
-    el.addEventListener('keydown', (e) => {
-      if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); applyLens(mode); }
+  document.querySelectorAll('.stage .d').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const title = btn.dataset.title || '—';
+      const body  = btn.dataset.body  || '';
+      const link  = btn.dataset.link  || '#';
+      openModal(title, body, link);
     });
-  }
+  });
 
-  wire(lensSci, 'sci');
-  wire(lensHum, 'hum');
-
-  // default
-  applyLens('sci');
+  mClose.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+  window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
 })();
 </script>
 </body>

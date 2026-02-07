@@ -1,0 +1,265 @@
+<!-- TNT: /map/index.html (FULL REPLACEMENT — literal museum map page, non-interactive diamonds, Enter/Skip only) -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Map · Geodiametrics</title>
+
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    /* This page is VIEW-ONLY. No routing except Enter/Skip. */
+    .mapPage{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;position:relative;z-index:1}
+    .mapHeader{width:100%;max-width:860px;text-align:center;margin-bottom:10px}
+    .mapHeader h1{font-size:34px;font-weight:800;letter-spacing:-0.02em;line-height:1.1;margin-bottom:6px}
+    .mapHeader p{color:rgba(241,246,251,.72);line-height:1.35;margin:0}
+
+    .mapPanel{
+      width:100%;
+      max-width:860px;
+      position:relative;
+      padding:22px 18px 18px;
+      border-radius:26px;
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      box-shadow:0 18px 60px rgba(0,0,0,.30);
+      overflow:hidden;
+    }
+
+    /* Canvas */
+    .canvas{
+      position:relative;
+      width:100%;
+      height:520px;
+      margin:10px auto 0;
+    }
+
+    /* Diamond primitive (view-only) */
+    .d{
+      position:absolute;
+      width:160px;height:160px;
+      left:50%;top:50%;
+      transform:translate(-50%,-50%) rotate(45deg);
+      border-radius:24px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 18px 54px rgba(0,0,0,.24);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      display:flex;align-items:center;justify-content:center;
+      pointer-events:none; /* NOT CLICKABLE */
+    }
+    .d::after{
+      content:"";
+      position:absolute;inset:10px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      opacity:.9;
+    }
+    .d .in{
+      transform:rotate(-45deg);
+      text-align:center;
+      width:86%;
+      line-height:1.1;
+      font-weight:900;
+      letter-spacing:.02em;
+    }
+    .d .sub{
+      display:block;
+      margin-top:8px;
+      font-size:12px;
+      font-weight:700;
+      opacity:.72;
+      letter-spacing:.08em;
+    }
+
+    /* Sizes */
+    .d.entry{width:190px;height:190px}
+    .d.primary{width:170px;height:170px}
+    .d.mini{width:96px;height:96px;opacity:.55}
+    .d.primary .in{font-size:16px}
+    .d.entry .in{font-size:14px}
+    .d.mini .in{font-size:11px;font-weight:800;opacity:.9}
+
+    /* Positions (literal) */
+    .entry{top:18%}
+    .p1{left:20%;top:45%}
+    .p2{left:50%;top:45%}
+    .p3{left:80%;top:45%}
+
+    /* Mini diamond clusters under each primary */
+    .miniA1{left:20%;top:66%}
+    .miniA2{left:28%;top:74%}
+    .miniA3{left:12%;top:74%}
+    .miniA4{left:20%;top:82%}
+
+    .miniB1{left:50%;top:66%}
+    .miniB2{left:58%;top:74%}
+    .miniB3{left:42%;top:74%}
+    .miniB4{left:50%;top:82%}
+
+    .miniC1{left:80%;top:66%}
+    .miniC2{left:88%;top:74%}
+    .miniC3{left:72%;top:74%}
+    .miniC4{left:80%;top:82%}
+
+    /* Connection lines (non-directional) */
+    .line{
+      position:absolute;
+      height:2px;
+      background:rgba(255,255,255,.16);
+      border-radius:999px;
+      box-shadow:0 0 18px rgba(255,255,255,.08);
+      pointer-events:none;
+    }
+    .line.l1{left:50%;top:29%;width:1px;height:90px;background:rgba(255,255,255,.14)}
+    .line.l2{left:34%;top:35%;width:32%}
+    .line.l3{left:50%;top:35%;width:30%;transform:translateX(-50%)}
+    .line.l4{left:66%;top:35%;width:32%}
+
+    /* Bubble field (view-only) */
+    .bubbles{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:.35;
+    }
+    .bubbles i{
+      position:absolute;
+      width:8px;height:8px;border-radius:50%;
+      background:rgba(255,255,255,.30);
+      box-shadow:0 0 18px rgba(255,255,255,.12);
+    }
+    .bubbles i:nth-child(1){left:8%;top:10%;width:6px;height:6px;opacity:.28}
+    .bubbles i:nth-child(2){left:14%;top:90%;width:10px;height:10px;opacity:.22}
+    .bubbles i:nth-child(3){left:92%;top:12%;width:7px;height:7px;opacity:.26}
+    .bubbles i:nth-child(4){left:86%;top:92%;width:9px;height:9px;opacity:.20}
+    .bubbles i:nth-child(5){left:5%;top:55%;width:5px;height:5px;opacity:.18}
+    .bubbles i:nth-child(6){left:95%;top:58%;width:6px;height:6px;opacity:.18}
+    .bubbles i:nth-child(7){left:32%;top:14%;width:5px;height:5px;opacity:.16}
+    .bubbles i:nth-child(8){left:68%;top:16%;width:5px;height:5px;opacity:.16}
+    .bubbles i:nth-child(9){left:38%;top:92%;width:6px;height:6px;opacity:.14}
+    .bubbles i:nth-child(10){left:62%;top:92%;width:6px;height:6px;opacity:.14}
+
+    /* Footer controls: Enter / Skip only */
+    .mapNav{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      margin-top:16px;
+    }
+    .mapNav a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:12px 18px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.22);
+      background:rgba(255,255,255,.08);
+      text-decoration:none;
+      font-weight:800;
+      color:rgba(241,246,251,.92);
+      min-width:140px;
+    }
+
+    .mapFoot{
+      margin-top:14px;
+      font-size:12px;
+      color:rgba(241,246,251,.55);
+      letter-spacing:.12em;
+      text-align:center;
+    }
+
+    @media (max-width:520px){
+      .canvas{height:560px}
+      .d.entry{width:176px;height:176px}
+      .d.primary{width:154px;height:154px}
+      .d{width:150px;height:150px}
+      .d.primary .in{font-size:15px}
+      .entry{top:16%}
+      .p1{left:50%;top:38%}
+      .p2{left:50%;top:58%}
+      .p3{left:50%;top:78%}
+      .miniA1,.miniA2,.miniA3,.miniA4,
+      .miniB1,.miniB2,.miniB3,.miniB4,
+      .miniC1,.miniC2,.miniC3,.miniC4{display:none} /* keep literal map readable on small screens */
+      .line{display:none}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- background motion layer (if your ui.css supports it) -->
+  <div class="shooting-stars"><i></i><i></i><i></i><i></i></div>
+
+  <main class="mapPage">
+    <div class="mapHeader">
+      <h1>Map</h1>
+      <p>This is the landscape.</p>
+    </div>
+
+    <section class="mapPanel" aria-label="Map canvas">
+      <div class="canvas">
+        <!-- bubble field -->
+        <div class="bubbles" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+
+        <!-- connection lines -->
+        <div class="line l1"></div>
+        <div class="line l2"></div>
+        <div class="line l3"></div>
+        <div class="line l4"></div>
+
+        <!-- entry diamond -->
+        <div class="d entry" style="top:18%">
+          <div class="in">
+            Diamond Diagnostic Portals
+            <span class="sub">ENTRY</span>
+          </div>
+        </div>
+
+        <!-- primary diamonds -->
+        <div class="d primary p1">
+          <div class="in">Admissibility</div>
+        </div>
+        <div class="d primary p2">
+          <div class="in">Coherence</div>
+        </div>
+        <div class="d primary p3">
+          <div class="in">Execution</div>
+        </div>
+
+        <!-- mini clusters (literal depth markers, unlabeled) -->
+        <div class="d mini miniA1"><div class="in"></div></div>
+        <div class="d mini miniA2"><div class="in"></div></div>
+        <div class="d mini miniA3"><div class="in"></div></div>
+        <div class="d mini miniA4"><div class="in"></div></div>
+
+        <div class="d mini miniB1"><div class="in"></div></div>
+        <div class="d mini miniB2"><div class="in"></div></div>
+        <div class="d mini miniB3"><div class="in"></div></div>
+        <div class="d mini miniB4"><div class="in"></div></div>
+
+        <div class="d mini miniC1"><div class="in"></div></div>
+        <div class="d mini miniC2"><div class="in"></div></div>
+        <div class="d mini miniC3"><div class="in"></div></div>
+        <div class="d mini miniC4"><div class="in"></div></div>
+
+      </div>
+
+      <div class="mapNav" aria-label="Map navigation">
+        <a href="/landing/">Enter</a>
+        <a href="/landing/">Skip</a>
+      </div>
+
+      <div class="mapFoot">CANONICAL · STABLE · © GEODIAMETRICS</div>
+    </section>
+  </main>
+</body>
+</html>

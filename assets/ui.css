@@ -1,247 +1,258 @@
-/* =========================================================
-   UI.CSS — CANONICAL GEOMETRY LOCK
-   Authority: Four-Diamond System
-   ========================================================= */
+/* TNT — /assets/ui.css (FULL REPLACEMENT)
+   UI ONLY: background, typography, panels, buttons, overlays.
+   NO diamond geometry / positioning in this file. */
 
-/* ---------- ROOT VARIABLES ---------- */
+:root{
+  --bg-top:#0c2232;
+  --bg-bottom:#071722;
 
-:root {
-  --bg-deep: #0b1a24;
-  --panel: rgba(255,255,255,0.06);
-  --glass: rgba(255,255,255,0.08);
-  --glass-strong: rgba(255,255,255,0.14);
-  --border-soft: rgba(255,255,255,0.18);
-  --text-main: #ffffff;
-  --text-dim: rgba(255,255,255,0.7);
+  --text:#f1f6fb;
+  --sub:rgba(241,246,251,.72);
+
+  --panel-glass:rgba(255,255,255,.10);
+  --panel-border:rgba(255,255,255,.20);
+
+  --btn-glass:rgba(255,255,255,.10);
+  --btn-border:rgba(255,255,255,.18);
+
+  --shadow:0 18px 60px rgba(0,0,0,.28);
+  --blur:18px;
+  --radius:26px;
+
+  --safe-pad:20px;
 }
 
-/* ---------- GLOBAL RESET ---------- */
-
-* {
-  box-sizing: border-box;
+/* Reset */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),
+    linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
+  overflow-x:hidden;
+  position:relative;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  background: radial-gradient(circle at top, #132b3a, var(--bg-deep));
-  color: var(--text-main);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  overflow-x: hidden;
+/* Links (kill purple/underline drift) */
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+a:focus{outline:2px solid rgba(241,246,251,.25);outline-offset:4px;border-radius:14px}
+
+/* --- Background layers (behind everything) --- */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-3;
+  opacity:.65;
+  background:
+    radial-gradient(2px 2px at 15% 20%, rgba(255,255,255,.9), transparent 60%),
+    radial-gradient(1px 1px at 65% 30%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(2px 2px at 80% 70%, rgba(255,255,255,.85), transparent 60%),
+    radial-gradient(1px 1px at 35% 75%, rgba(255,255,255,.6), transparent 60%),
+    radial-gradient(1px 1px at 55% 55%, rgba(255,255,255,.6), transparent 60%),
+    radial-gradient(2px 2px at 25% 45%, rgba(255,255,255,.75), transparent 60%),
+    radial-gradient(1px 1px at 90% 15%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(1px 1px at 10% 85%, rgba(255,255,255,.55), transparent 60%);
+  filter:blur(.2px);
 }
 
-/* ---------- PAGE WRAPPER ---------- */
-
-.gPage {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  position: relative;
-  z-index: 1;
+/* Slow twinkle */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-2;
+  opacity:.22;
+  background:
+    radial-gradient(1200px 900px at 30% 10%, rgba(255,255,255,.18), transparent 55%),
+    radial-gradient(900px 700px at 70% 30%, rgba(255,255,255,.12), transparent 60%);
+  animation:twinkle 6.5s ease-in-out infinite alternate;
+}
+@keyframes twinkle{
+  from{opacity:.16}
+  to{opacity:.28}
 }
 
-/* ---------- HEADER ---------- */
-
-.gHeader {
-  margin-top: 2.5rem;
-  text-align: center;
+/* Falling mantra text (TOP -> DOWN) */
+.bg-mantra{
+  position:fixed;
+  inset:-20% 0 0 0;
+  pointer-events:none;
+  z-index:-1;
+  opacity:.14; /* visible but behind panels */
+  filter:blur(.2px);
+}
+.bg-mantra span{
+  position:absolute;
+  left:var(--x);
+  top:var(--y);
+  white-space:nowrap;
+  font-weight:700;
+  letter-spacing:.02em;
+  color:rgba(241,246,251,.95);
+  text-shadow:0 8px 24px rgba(0,0,0,.35);
+  transform:translateY(-40vh);
+  animation:mantraFall var(--d) linear infinite;
+}
+@keyframes mantraFall{
+  from{transform:translateY(-45vh)}
+  to{transform:translateY(145vh)}
 }
 
-.gTitle {
-  font-size: 2.4rem;
-  font-weight: 700;
-  margin: 0;
+/* --- Layout --- */
+.gPage{
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:var(--safe-pad);
+  text-align:center;
+  position:relative;
 }
 
-.gSub {
-  margin-top: 0.5rem;
-  font-size: 1rem;
-  color: var(--text-dim);
+.gHeader{
+  width:100%;
+  max-width:520px;
+  margin-bottom:18px;
 }
 
-/* ---------- PANEL ---------- */
-
-.gPanel {
-  width: min(92vw, 420px);
-  margin: 2.5rem auto;
-  padding: 2.5rem 1.5rem;
-  background: var(--panel);
-  border-radius: 26px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
-  position: relative;
+.gTitle{
+  font-size:44px;
+  font-weight:800;
+  letter-spacing:-0.02em;
+  line-height:1.05;
+  margin-bottom:8px;
+}
+.gSub{
+  font-size:18px;
+  color:var(--sub);
+  line-height:1.35;
 }
 
-/* =========================================================
-   DIAMOND CLUSTER — HARD LOCK
-   ========================================================= */
-
-/*
- RULES:
- - Exactly ONE .gCluster per page
- - Contains ONLY four .gDiamond elements
- - No nested clusters allowed
-*/
-
-.gCluster {
-  position: relative;
-  width: 260px;
-  height: 260px;
-  margin: 0 auto 2rem auto;
-  isolation: isolate;
+.gPanel{
+  width:100%;
+  max-width:520px;
+  position:relative;
+  padding:32px 20px 22px;
+  border-radius:var(--radius);
+  background:linear-gradient(180deg,var(--panel-glass),rgba(255,255,255,.05));
+  border:1px solid var(--panel-border);
+  backdrop-filter:blur(var(--blur));
+  -webkit-backdrop-filter:blur(var(--blur));
+  box-shadow:var(--shadow);
+  overflow:hidden;
 }
 
-/* PREVENT NESTING */
-.gCluster .gCluster {
-  display: none !important;
+.gActions{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  align-items:center;
+  margin-top:20px;
+  flex-wrap:wrap;
 }
 
-/* ---------- BASE DIAMOND ---------- */
-
-.gDiamond {
-  position: absolute;
-  width: 140px;
-  height: 140px;
-  background: var(--glass);
-  border-radius: 18px;
-  transform: rotate(45deg);
-  border: 1px solid var(--border-soft);
-  backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  z-index: 2;
+.gBtn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:150px;
+  padding:14px 18px;
+  border-radius:18px;
+  background:linear-gradient(180deg,var(--btn-glass),rgba(255,255,255,.06));
+  border:1px solid var(--btn-border);
+  box-shadow:0 16px 40px rgba(0,0,0,.20);
+  font-weight:700;
+  letter-spacing:.01em;
 }
 
-.gDiamond:hover {
-  background: var(--glass-strong);
-  transform: rotate(45deg) scale(1.05);
+.gFooter{
+  margin-top:16px;
+  font-size:12px;
+  color:rgba(241,246,251,.55);
+  letter-spacing:.22em;
+  text-transform:uppercase;
 }
 
-/* ---------- DIAMOND CONTENT ---------- */
+/* Stack “bubble list” layout */
+.gStack{
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.gBubble{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+  padding:18px 18px;
+  border-radius:22px;
+  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 14px 34px rgba(0,0,0,.18);
+  text-align:left;
+}
+.gBubble strong{
+  font-size:18px;
+  line-height:1.15;
+}
+.gBubble span{
+  color:rgba(241,246,251,.70);
+  font-weight:600;
+}
+.gBubble.solid{
+  background:rgba(16,26,36,.92); /* OPAQUE */
+  border:1px solid rgba(255,255,255,.14);
+}
+.gBubble.solid span{color:rgba(241,246,251,.78)}
 
-.gDiamond span {
-  transform: rotate(-45deg);
-  display: block;
-  pointer-events: none;
+/* Modal (opaque, readable, centered) */
+.gModalBackdrop{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+  background:rgba(0,0,0,.45);
+  z-index:999;
+}
+.gModalBackdrop.is-open{display:flex}
+.gModal{
+  width:min(520px, 92vw);
+  border-radius:24px;
+  background:rgba(16,26,36,.94); /* OPAQUE */
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 22px 80px rgba(0,0,0,.45);
+  padding:22px 20px 18px;
+  text-align:left;
+}
+.gModal h3{
+  font-size:22px;
+  margin-bottom:10px;
+}
+.gModal p{
+  color:rgba(241,246,251,.78);
+  line-height:1.45;
+  font-weight:600;
+}
+.gModal .hint{
+  margin-top:14px;
+  text-align:center;
+  font-size:13px;
+  color:rgba(241,246,251,.55);
 }
 
-.gDiamond strong {
-  display: block;
-  font-size: 1.05rem;
-}
-
-.gDiamond small {
-  display: block;
-  margin-top: 0.2rem;
-  font-size: 0.75rem;
-  color: var(--text-dim);
-}
-
-/* ---------- FOUR POSITIONS (LOCKED) ---------- */
-
-.gNorth { top: 0; left: 50%; transform: translateX(-50%) rotate(45deg); }
-.gEast  { right: 0; top: 50%; transform: translateY(-50%) rotate(45deg); }
-.gSouth { bottom: 0; left: 50%; transform: translateX(-50%) rotate(45deg); }
-.gWest  { left: 0; top: 50%; transform: translateY(-50%) rotate(45deg); }
-
-/* ---------- OPTIONAL CENTER (OFF BY DEFAULT) ---------- */
-
-.gCenter {
-  display: none; /* MUST BE ENABLED EXPLICITLY */
-}
-
-.gCluster.has-center .gCenter {
-  display: flex;
-  width: 110px;
-  height: 110px;
-  background: rgba(255,255,255,0.18);
-  z-index: 3;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-/* =========================================================
-   MODAL / PREVIEW OVERLAY (NOT STRUCTURAL)
-   ========================================================= */
-
-.gOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-}
-
-.gOverlay.hidden {
-  display: none;
-}
-
-.gModal {
-  width: min(86vw, 420px);
-  padding: 1.8rem;
-  background: #2a3b48;
-  border-radius: 22px;
-  text-align: center;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
-}
-
-.gModal h2 {
-  margin-top: 0;
-}
-
-.gModal p {
-  color: var(--text-dim);
-}
-
-/* =========================================================
-   ACTION BUTTONS
-   ========================================================= */
-
-.gActions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.gBtn {
-  padding: 0.7rem 1.3rem;
-  border-radius: 999px;
-  background: var(--glass);
-  border: 1px solid var(--border-soft);
-  color: var(--text-main);
-  text-decoration: none;
-  transition: background 0.2s ease;
-}
-
-.gBtn:hover {
-  background: var(--glass-strong);
-}
-
-/* ---------- FOOTER ---------- */
-
-.gFooter {
-  margin-top: 1.5rem;
-  font-size: 0.7rem;
-  color: rgba(255,255,255,0.45);
-  text-align: center;
-}
-
-/* =========================================================
-   BACKGROUND EFFECTS (BEHIND EVERYTHING)
-   ========================================================= */
-
-.bgLayer {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
+/* Mobile typography */
+@media (max-width:420px){
+  .gTitle{font-size:40px}
+  .gSub{font-size:17px}
+  .gBtn{min-width:140px}
 }

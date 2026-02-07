@@ -1,4 +1,4 @@
-<!-- TNT: /laws/index.html  (FULL REPLACEMENT) -->
+<!-- TNT: /laws/index.html  (FULL REPLACEMENT — corner bubbles preview, center diamond routes) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,47 +11,41 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    .lawStage {
-      position: relative;
-      width: 100%;
-      max-width: 520px;
-      height: 520px;
-      margin: 0 auto;
+    .lawStage{position:relative;width:100%;max-width:520px;height:520px;margin:0 auto}
+    .lawCenter{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(45deg);width:170px;height:170px;z-index:2}
+    .lawCenter .gKeyText{transform:rotate(-45deg)}
+    .lawBubble{
+      position:absolute;width:150px;height:46px;border-radius:999px;display:flex;align-items:center;justify-content:center;
+      font-weight:700;font-size:1rem;color:#fff;text-decoration:none;cursor:pointer;user-select:none;
+      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)
     }
+    .lawBubble:active{transform:translate(-50%,-50%) scale(.98)}
+    .lawTop{top:34px;left:50%;transform:translateX(-50%)}
+    .lawBottom{bottom:34px;left:50%;transform:translateX(-50%)}
+    .lawLeft{left:34px;top:50%;transform:translateY(-50%)}
+    .lawRight{right:34px;top:50%;transform:translateY(-50%)}
 
-    .lawCenter {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(45deg);
-      width: 160px;
-      height: 160px;
+    /* Center message popup */
+    .lawMsg{
+      position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+      width:min(92%, 360px);z-index:5;display:none;
+      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.20);
+      border-radius:22px;padding:16px 16px 14px;
+      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+      box-shadow:0 18px 60px rgba(0,0,0,.32);
     }
+    .lawMsg.show{display:block}
+    .lawMsgTitle{font-size:18px;font-weight:800;margin:0 0 6px}
+    .lawMsgBody{margin:0;color:rgba(241,246,251,.78);line-height:1.35;font-size:14.5px}
+    .lawMsgHint{margin:10px 0 0;color:rgba(241,246,251,.55);font-size:12px}
 
-    .lawCenter .gKeyText {
-      transform: rotate(-45deg);
+    /* Dim overlay (inside panel only) */
+    .lawDim{
+      position:absolute;inset:0;border-radius:22px;
+      background:rgba(0,0,0,.22);
+      display:none;z-index:4;
     }
-
-    .lawBubble {
-      position: absolute;
-      width: 130px;
-      height: 44px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: #fff;
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.18);
-    }
-
-    .lawTop    { top: 10px; left: 50%; transform: translateX(-50%); }
-    .lawBottom { bottom: 10px; left: 50%; transform: translateX(-50%); }
-    .lawLeft   { left: 10px; top: 50%; transform: translateY(-50%); }
-    .lawRight  { right: 10px; top: 50%; transform: translateY(-50%); }
+    .lawDim.show{display:block}
   </style>
 </head>
 
@@ -62,40 +56,93 @@
       <p class="gSub">Foundational structure of the system.</p>
     </header>
 
-    <section class="gPanel">
-      <div class="lawStage">
+    <section class="gPanel" aria-label="Laws preview + route to categories">
+      <div class="lawStage" id="lawStage">
 
-        <!-- TOP -->
-        <div class="lawBubble lawTop">Reality</div>
+        <!-- bubbles (preview only) -->
+        <div class="lawBubble lawTop"    data-key="Reality"   role="button" tabindex="0" aria-label="Reality">Reality</div>
+        <div class="lawBubble lawLeft"   data-key="Integrity" role="button" tabindex="0" aria-label="Integrity">Integrity</div>
+        <div class="lawBubble lawRight"  data-key="Structure" role="button" tabindex="0" aria-label="Structure">Structure</div>
+        <div class="lawBubble lawBottom" data-key="Flow"      role="button" tabindex="0" aria-label="Flow">Flow</div>
 
-        <!-- LEFT -->
-        <div class="lawBubble lawLeft">Integrity</div>
-
-        <!-- RIGHT -->
-        <div class="lawBubble lawRight">Structure</div>
-
-        <!-- BOTTOM -->
-        <div class="lawBubble lawBottom">Flow</div>
-
-        <!-- CENTER DIAMOND -->
-        <a href="/laws/categories/" class="gKey lawCenter" aria-label="Law Categories">
+        <!-- center diamond routes forward -->
+        <a href="/laws/categories/" class="gKey lawCenter" aria-label="Enter Categories">
           <span class="gKeyText">
             <strong>Categories</strong>
             <span style="opacity:.8">Tap to enter</span>
           </span>
         </a>
 
+        <!-- overlay + message -->
+        <div class="lawDim" id="lawDim" aria-hidden="true"></div>
+        <div class="lawMsg" id="lawMsg" role="dialog" aria-modal="false" aria-live="polite">
+          <div class="lawMsgTitle" id="lawMsgTitle">Category</div>
+          <p class="lawMsgBody" id="lawMsgBody">Description.</p>
+          <div class="lawMsgHint">Tap anywhere to close.</div>
+        </div>
       </div>
 
-      <div class="gActions">
+      <div class="gActions" aria-label="Navigation controls">
         <a class="gBtn" href="/home/">Home</a>
         <a class="gBtn" href="/home/">Back</a>
       </div>
 
-      <footer class="gFooter">
-        CANONICAL · STABLE · © GEODIAMETRICS
-      </footer>
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
+
+  <script>
+    (function(){
+      const defs = {
+        "Reality":   "Reality defines what is actually the case. It separates what exists from what is assumed.",
+        "Integrity": "Integrity defines what stays true. It governs consistency, coherence, and whether claims hold up.",
+        "Structure": "Structure defines what holds. It governs constraints, stability, and what makes a system admissible.",
+        "Flow":      "Flow defines what moves. It governs execution, propagation, and how dynamics proceed over time."
+      };
+
+      const stage = document.getElementById("lawStage");
+      const dim = document.getElementById("lawDim");
+      const msg = document.getElementById("lawMsg");
+      const t = document.getElementById("lawMsgTitle");
+      const b = document.getElementById("lawMsgBody");
+
+      function openMsg(key){
+        t.textContent = key;
+        b.textContent = defs[key] || "";
+        dim.classList.add("show");
+        msg.classList.add("show");
+      }
+      function closeMsg(){
+        dim.classList.remove("show");
+        msg.classList.remove("show");
+      }
+
+      stage.addEventListener("click", (e)=>{
+        const bubble = e.target.closest(".lawBubble");
+        const center = e.target.closest(".lawCenter");
+        if(center) return; // let navigation happen
+        if(bubble){
+          openMsg(bubble.dataset.key);
+          return;
+        }
+        // click anywhere else inside stage closes
+        closeMsg();
+      });
+
+      // keyboard accessibility
+      stage.addEventListener("keydown", (e)=>{
+        const bubble = e.target.closest(".lawBubble");
+        if(!bubble) return;
+        if(e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          openMsg(bubble.dataset.key);
+        }
+      });
+
+      // clicking dim closes
+      dim.addEventListener("click", closeMsg);
+    })();
+  </script>
 </body>
 </html>
+```0

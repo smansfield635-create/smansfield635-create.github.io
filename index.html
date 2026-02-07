@@ -1,130 +1,66 @@
-<!-- 🔥 TNT — /home/index.html (FULL REPLACEMENT) -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Home · Geodiametrics</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<style>
-  :root{
-    --bg-top:#0c2232;
-    --bg-bottom:#071722;
-    --text:#f1f6fb;
-    --sub:rgba(241,246,251,.65);
-    --glass:rgba(255,255,255,.12);
-    --border:rgba(255,255,255,.22);
-    --blur:18px;
-    --radius:26px;
-    --shadow:0 18px 60px rgba(0,0,0,.28);
-  }
-
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{
-    width:100%;height:100%;
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    color:var(--text);
-    background:
-      radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),
-      linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
-  }
-
-  .page{
-    min-height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:24px;
-    text-align:center;
-  }
-
-  h1{
-    font-size:44px;
-    font-weight:800;
-    letter-spacing:-0.02em;
-    margin-bottom:8px;
-  }
-
-  p{
-    font-size:18px;
-    color:var(--sub);
-    margin-bottom:24px;
-  }
-
-  .panel{
-    width:100%;
-    max-width:520px;
-    padding:32px 20px 22px;
-    border-radius:var(--radius);
-    background:linear-gradient(180deg,var(--glass),rgba(255,255,255,.04));
-    border:1px solid var(--border);
-    backdrop-filter:blur(var(--blur));
-    box-shadow:var(--shadow);
-  }
-
-  /* Diamond hub */
-  .wrap{
-    position:relative;
-    width:220px;height:220px;
-    margin:0 auto 18px;
-  }
-
-  .diamond{
-    position:absolute;
-    width:110px;height:110px;
-    left:50%;top:50%;
-    transform:translate(-50%,-50%) rotate(45deg);
-    background:rgba(255,255,255,.14);
-    border:1px solid rgba(255,255,255,.25);
-    border-radius:18px;
-    display:flex;align-items:center;justify-content:center;
-    text-decoration:none;color:var(--text);
-    cursor:pointer;
-  }
-
-  .diamond span{
-    transform:rotate(-45deg);
-    font-weight:700;letter-spacing:.04em;font-size:14px;
-  }
-
-  .top{transform:translate(-50%,-140%) rotate(45deg)}
-  .right{transform:translate(40%,-50%) rotate(45deg)}
-  .bottom{transform:translate(-50%,40%) rotate(45deg)}
-  .left{transform:translate(-140%,-50%) rotate(45deg)}
-
-  .actions{
-    display:flex;gap:12px;justify-content:center;margin-top:10px;
-  }
-  .btn{
-    padding:12px 20px;border-radius:20px;
-    background:rgba(255,255,255,.14);
-    border:1px solid rgba(255,255,255,.25);
-    color:var(--text);text-decoration:none;font-size:14px;
-  }
-
-  .canon{margin-top:14px;font-size:12px;color:rgba(241,246,251,.4)}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Home · Geodiametrics</title>
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
 </head>
 
 <body>
-  <div class="page">
-    <div class="panel">
-      <h1>Home</h1>
-      <p>One gate. Four routes.</p>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Home</h1>
+      <p class="gSub">One gate · Four routes.</p>
+    </header>
 
-      <div class="wrap">
-        <a class="diamond top" href="../laws/"><span>LAWS</span></a>
-        <a class="diamond right" href="../products/"><span>PRODUCTS</span></a>
-        <a class="diamond bottom" href="../gauges/"><span>GAUGES</span></a>
-        <a class="diamond left" href="../links/"><span>LINKS</span></a>
+    <section class="gPanel" aria-label="Home routes">
+      <div class="gCluster" role="navigation" aria-label="Primary branches">
+
+        <!-- TOP -->
+        <a class="gKey gTop" href="/laws/" aria-label="Laws">
+          <span class="gKeyText">
+            <strong>Laws</strong>
+            Canonical
+          </span>
+        </a>
+
+        <!-- RIGHT -->
+        <a class="gKey gRight" href="/links/" aria-label="Links">
+          <span class="gKeyText">
+            <strong>Links</strong>
+            Reference
+          </span>
+        </a>
+
+        <!-- BOTTOM -->
+        <a class="gKey gBottom" href="/gauges/" aria-label="Gauges">
+          <span class="gKeyText">
+            <strong>Gauges</strong>
+            Diagnostics
+          </span>
+        </a>
+
+        <!-- LEFT -->
+        <a class="gKey gLeft" href="/products/" aria-label="Products">
+          <span class="gKeyText">
+            <strong>Products</strong>
+            Systems
+          </span>
+        </a>
+
       </div>
 
-      <div class="actions">
-        <a class="btn" href="../door/">Back</a>
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/door/">Back</a>
       </div>
 
-      <div class="canon">CANONICAL · STABLE · © GEODIAMETRICS</div>
-    </div>
-  </div>
+      <footer class="gFooter">
+        CANONICAL · STABLE · © GEODIAMETRICS
+      </footer>
+    </section>
+  </main>
 </body>
 </html>

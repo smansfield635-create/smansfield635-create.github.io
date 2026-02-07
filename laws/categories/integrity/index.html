@@ -3,29 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Integrity · Laws</title>
+  <title>Integrity · Geodiametrics</title>
 
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
-
-  <style>
-    /* Local hard overrides to stop transparency + layout drift */
-    .solid {
-      background: rgba(40,55,65,0.95) !important;
-      backdrop-filter: none !important;
-    }
-    .stack {
-      display: grid;
-      gap: 14px;
-      margin-top: 24px;
-    }
-    .centerDiamond {
-      margin: 18px auto 10px auto;
-      width: 160px;
-      height: 160px;
-    }
-  </style>
 </head>
 
 <body>
@@ -35,53 +17,34 @@
       <p class="gSub">What stays true.</p>
     </header>
 
-    <section class="gPanel">
+    <section class="gPanel" aria-label="Integrity core">
+      <!-- ONE DIAMOND: four leaves -->
+      <div class="gCluster" role="navigation" aria-label="Integrity leaves">
+        <a class="gKey gTop" href="/laws/categories/integrity/consistency/" aria-label="Consistency">
+          <span class="gKeyText"><strong>Consistency</strong>Alignment across time</span>
+        </a>
 
-      <!-- Center diamond -->
-      <div class="gCluster">
-        <div class="gKey centerDiamond solid">
-          <span class="gKeyText">
-            <strong>Integrity</strong>
-            Core principle
-          </span>
-        </div>
+        <a class="gKey gRight" href="/laws/categories/integrity/accountability/" aria-label="Accountability">
+          <span class="gKeyText"><strong>Accountability</strong>Ownership of outcome</span>
+        </a>
+
+        <a class="gKey gBottom" href="/laws/categories/integrity/continuity/" aria-label="Continuity">
+          <span class="gKeyText"><strong>Continuity</strong>No convenient breaks</span>
+        </a>
+
+        <a class="gKey gLeft" href="/laws/categories/integrity/coherence/" aria-label="Coherence">
+          <span class="gKeyText"><strong>Coherence</strong>No internal contradiction</span>
+        </a>
       </div>
 
-      <!-- Explanation bubbles (solid, readable) -->
-      <div class="stack">
-
-        <a class="gBtn solid" href="/laws/categories/integrity/consistency/">
-          <strong>Consistency</strong><br/>
-          Alignment across time
-        </a>
-
-        <a class="gBtn solid" href="/laws/categories/integrity/accountability/">
-          <strong>Accountability</strong><br/>
-          Ownership of outcome
-        </a>
-
-        <a class="gBtn solid" href="/laws/categories/integrity/continuity/">
-          <strong>Continuity</strong><br/>
-          No convenient breaks
-        </a>
-
-        <a class="gBtn solid" href="/laws/categories/integrity/coherence/">
-          <strong>Coherence</strong><br/>
-          No internal contradiction
-        </a>
-
-      </div>
-
-      <!-- Navigation -->
-      <div class="gActions">
+      <!-- NAV -->
+      <div class="gActions" aria-label="Navigation">
         <a class="gBtn" href="/laws/categories/">Categories</a>
         <a class="gBtn" href="/laws/">Laws</a>
+        <a class="gBtn" href="/home/">Home</a>
       </div>
 
-      <footer class="gFooter">
-        CANONICAL · STABLE · © GEODIAMETRICS
-      </footer>
-
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
 </body>

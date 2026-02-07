@@ -8,6 +8,14 @@
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    /* Click-fix, local to this page */
+    .gCluster { position: relative; z-index: 5; }
+    .gKey.gCenter { position: relative; z-index: 10; pointer-events: auto; }
+    .gPanel::before, .gPanel::after,
+    .gCluster::before, .gCluster::after { pointer-events: none; }
+  </style>
 </head>
 
 <body>
@@ -21,13 +29,8 @@
   <section class="gPanel">
 
     <!-- CENTRAL DIAMOND -->
-    <div class="gCluster">
-      <a
-        class="gKey gCenter"
-        href="/laws/categories/"
-        onclick="window.location.href='/laws/categories/'; return true;"
-        aria-label="Enter law categories"
-      >
+    <div class="gCluster" aria-label="Categories entry">
+      <a class="gKey gCenter" href="/laws/categories/" aria-label="Enter law categories">
         <span class="gKeyText">
           <strong>Categories</strong>
           <small>Tap to explore</small>
@@ -35,42 +38,23 @@
       </a>
     </div>
 
-    <!-- CATEGORY BUBBLES (OPAQUE, WORKING) -->
-    <div class="gStack">
-
-      <a class="gBubble solid" href="/laws/categories/reality/">
-        <strong>Reality</strong>
-        <span>What is</span>
-      </a>
-
-      <a class="gBubble solid" href="/laws/categories/integrity/">
-        <strong>Integrity</strong>
-        <span>What stays true</span>
-      </a>
-
-      <a class="gBubble solid" href="/laws/categories/structure/">
-        <strong>Structure</strong>
-        <span>What holds</span>
-      </a>
-
-      <a class="gBubble solid" href="/laws/categories/flow/">
-        <strong>Flow</strong>
-        <span>What moves</span>
-      </a>
-
+    <!-- CATEGORY BUBBLES -->
+    <div class="gStack" aria-label="Category list">
+      <a class="gBubble solid" href="/laws/categories/reality/"><strong>Reality</strong><span>What is</span></a>
+      <a class="gBubble solid" href="/laws/categories/integrity/"><strong>Integrity</strong><span>What stays true</span></a>
+      <a class="gBubble solid" href="/laws/categories/structure/"><strong>Structure</strong><span>What holds</span></a>
+      <a class="gBubble solid" href="/laws/categories/flow/"><strong>Flow</strong><span>What moves</span></a>
     </div>
 
-    <!-- NAV -->
     <div class="gActions">
       <a class="gBtn" href="/home/">Home</a>
       <a class="gBtn" href="/home/">Back</a>
     </div>
 
-    <footer class="gFooter">
-      CANONICAL · STABLE · © GEODIAMETRICS
-    </footer>
+    <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
 
   </section>
 </main>
 </body>
 </html>
+```0

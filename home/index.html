@@ -1,48 +1,55 @@
-<!-- TNT #3: /home/index.html  (FULL REPLACEMENT — fixes Laws routing + keeps 4-diamond home geometry) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Home · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg" />
+
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
 </head>
+
 <body>
   <main class="gPage">
+
     <header class="gHeader">
       <h1 class="gTitle">Home</h1>
       <p class="gSub">One gate · Four routes.</p>
     </header>
 
-    <section class="gPanel" aria-label="Home routes">
-      <div class="gCluster" role="navigation" aria-label="Primary routes">
-        <a class="gKey gTop" href="/laws/" aria-label="Laws">
-          <span class="gKeyText"><strong>Laws</strong><small>Canonical</small></span>
+    <section class="gPanel">
+
+      <div class="gCluster">
+
+        <a class="gDiamond top" href="/laws/">
+          <span class="gLabel">Laws</span>
         </a>
 
-        <a class="gKey gLeft" href="/links/" aria-label="Links">
-          <span class="gKeyText"><strong>Links</strong><small>Reference</small></span>
+        <a class="gDiamond right" href="/products/">
+          <span class="gLabel">Products</span>
         </a>
 
-        <a class="gKey gRight" href="/products/" aria-label="Products">
-          <span class="gKeyText"><strong>Products</strong><small>Systems</small></span>
+        <a class="gDiamond bottom" href="/gauges/">
+          <span class="gLabel">Gauges</span>
         </a>
 
-        <a class="gKey gBottom" href="/gauges/" aria-label="Gauges">
-          <span class="gKeyText"><strong>Gauges</strong><small>Diagnostics</small></span>
+        <a class="gDiamond left" href="/links/">
+          <span class="gLabel">Links</span>
         </a>
+
       </div>
 
-      <div class="gActions" aria-label="Navigation controls">
+      <div class="gActions">
         <a class="gBtn" href="/door/">Door</a>
         <a class="gBtn" href="/">Root</a>
       </div>
 
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
+
+    <footer class="gFooter">
+      CANONICAL · STABLE · © GEODIAMETRICS
+    </footer>
+
   </main>
 </body>
 </html>
-```0

@@ -1,162 +1,66 @@
 /* =========================
-   TNT: /assets/branch.css
-   Diamond geometry (single source of truth)
+   BRANCH GEOMETRY — LOCKED
    ========================= */
 
-/* Cluster canvas */
-.gCluster{
-  position:relative;
-  width:clamp(280px, 72vw, 400px);
-  aspect-ratio:1;
-  margin:14px auto 0;
+.gCluster {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin: 2rem auto 1rem auto;
 }
 
-/* Thin X axes (very thin, behind everything) */
-.gCluster::before,
-.gCluster::after{
-  content:"";
-  position:absolute;
-  inset:10%;
-  margin:auto;
-  width:70%;
-  height:6px;                 /* thin bar */
-  border-radius:999px;
-  background:rgba(255,255,255,.10);
-  filter:blur(.2px);
-  z-index:1;
-}
-.gCluster::before{transform:rotate(45deg)}
-.gCluster::after{transform:rotate(-45deg)}
-
-/* Diamond key base */
-.gKey{
-  position:absolute;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:56%;
-  aspect-ratio:1;
-  border-radius:28px;
-  background:linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05));
-  border:1px solid rgba(255,255,255,.16);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  box-shadow:0 16px 40px rgba(0,0,0,.22);
-  text-decoration:none;
-  color:inherit;
-  transform:rotate(45deg);
-  z-index:2;
+.gKey {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 18px;
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #fff;
 }
 
-/* Inner outline (glass rim) */
-.gKey::before{
-  content:"";
-  position:absolute;
-  inset:10px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
+/* ---- Positions (ABSOLUTE, FINAL) ---- */
+
+.gTop    { top: 0; left: 50%; transform: translateX(-50%) rotate(45deg); }
+.gBottom { bottom: 0; left: 50%; transform: translateX(-50%) rotate(45deg); }
+.gLeft   { left: 0; top: 50%; transform: translateY(-50%) rotate(45deg); }
+.gRight  { right: 0; top: 50%; transform: translateY(-50%) rotate(45deg); }
+
+/* ---- Text inside diamonds ---- */
+
+.gKeyText {
+  transform: rotate(-45deg);
+  text-align: center;
+  line-height: 1.2;
 }
 
-/* Text inside diamonds (counter-rotate) */
-.gKeyText{
-  transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  line-height:1.1;
-  padding:10px;
-}
-.gKeyText strong{
-  font-size:22px;
-  font-weight:800;
-  letter-spacing:-.01em;
-}
-.gKeyText small{
-  font-size:15px;
-  color:rgba(241,246,251,.70);
-  font-weight:600;
+.gKeyText strong {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
-/* Positions: EXACT 4-per-page (locked) */
-.gTop{left:50%; top:7%; transform:translate(-50%,0) rotate(45deg)}
-.gRight{top:50%; right:7%; transform:translate(0,-50%) rotate(45deg)}
-.gBottom{left:50%; bottom:7%; transform:translate(-50%,0) rotate(45deg)}
-.gLeft{top:50%; left:7%; transform:translate(0,-50%) rotate(45deg)}
-
-/* Optional center diamond (use only when needed) */
-.gCenter{left:50%; top:50%; width:34%; transform:translate(-50%,-50%) rotate(45deg)}
-.gCenter .gKeyText strong{font-size:18px}
-.gCenter .gKeyText small{font-size:13px}
-
-/* Tap feedback */
-.gKey:active{filter:brightness(1.06)}
-
-/* Stack layout for “bubble lists” under diamonds (if used) */
-.gStack{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  margin-top:18px;
+.gKeyText small {
+  display: block;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.7);
 }
 
-/* Opaque “bubble buttons” */
-.gBubble{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  padding:18px 18px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(18,33,45,.92);  /* OPAQUE (readable) */
-  text-decoration:none;
-  box-shadow:0 14px 40px rgba(0,0,0,.25);
-}
-.gBubble strong{font-size:18px;font-weight:850}
-.gBubble span{color:rgba(241,246,251,.72);font-weight:650}
+/* ---- Center node (PURE INTERSECTION, NO LABEL) ---- */
 
-/* Preview modal overlay (if your page uses it) */
-.gModal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.55);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-  z-index:999;
-}
-.gModal.isOpen{display:flex}
-.gModalCard{
-  width:min(520px, 92vw);
-  border-radius:24px;
-  border:1px solid rgba(255,255,255,.16);
-  background:rgba(18,33,45,.94); /* OPAQUE */
-  padding:22px 18px 16px;
-  box-shadow:0 22px 70px rgba(0,0,0,.35);
-}
-.gModalCard h3{
-  font-size:22px;
-  text-align:left;
-  margin-bottom:10px;
-}
-.gModalCard p{
-  text-align:left;
-  color:rgba(241,246,251,.78);
-  line-height:1.45;
-}
-.gModalHint{
-  margin-top:12px;
-  font-size:13px;
-  color:rgba(241,246,251,.55);
-  letter-spacing:.02em;
-}
-
-/* Mobile tuning */
-@media (max-width:420px){
-  .gCluster{width:clamp(260px, 86vw, 360px)}
-  .gKey{width:58%}
-  .gKeyText strong{font-size:20px}
-  .gKeyText small{font-size:14px}
-  .gCluster::before,.gCluster::after{height:5px}
+.gCluster::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

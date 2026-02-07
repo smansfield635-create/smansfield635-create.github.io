@@ -8,6 +8,48 @@
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+  <link rel="stylesheet" href="/assets/diamond.css" />
+
+  <style>
+    /* Page-specific: preview modal (opaque), always behind UI until opened */
+    .pModalBg{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.55);
+      display:none; align-items:center; justify-content:center;
+      padding:18px;
+      z-index:999;
+    }
+    .pModal{
+      width:min(560px, 92vw);
+      background:rgba(18,32,44,.96);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:22px;
+      box-shadow:0 18px 70px rgba(0,0,0,.45);
+      padding:18px 18px 14px;
+      text-align:left;
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+    }
+    .pModal h2{
+      margin:2px 0 10px;
+      font-size:26px;
+      letter-spacing:-.01em;
+    }
+    .pModal p{
+      margin:0;
+      color:rgba(241,246,251,.78);
+      line-height:1.45;
+      font-size:16px;
+    }
+    .pHint{
+      margin-top:12px;
+      color:rgba(241,246,251,.55);
+      font-size:13px;
+      text-align:center;
+    }
+    /* Prevent any accidental stacked clusters from CSS drift */
+    .gPanel .gCluster + .gCluster{display:none !important;}
+  </style>
 </head>
 
 <body>
@@ -17,38 +59,72 @@
       <p class="gSub">Tap a diamond to preview. Enter when ready.</p>
     </header>
 
-    <section class="gPanel" aria-label="Laws entry">
-      <div class="gCluster" role="navigation" aria-label="Laws preview">
+    <section class="gPanel" aria-label="Laws preview and entry">
 
-        <a class="gKey gTop" href="/laws/categories/reality/" aria-label="Reality">
-          <span class="gKeyText"><strong>Reality</strong><small>What is</small></span>
-        </a>
+      <!-- SINGLE CLUSTER ONLY (4 DIAMONDS) -->
+      <div class="gCluster" role="navigation" aria-label="Law category previews">
+        <button class="gKey gTop" type="button" data-title="Reality" data-body="Reality defines what is. It separates what exists from what is assumed.">
+          <span class="gKeyText"><strong>Reality</strong>What is</span>
+        </button>
 
-        <a class="gKey gRight" href="/laws/categories/structure/" aria-label="Structure">
-          <span class="gKeyText"><strong>Structure</strong><small>What holds</small></span>
-        </a>
+        <button class="gKey gRight" type="button" data-title="Structure" data-body="Structure defines what holds. Constraints preserve form and prevent collapse.">
+          <span class="gKeyText"><strong>Structure</strong>What holds</span>
+        </button>
 
-        <a class="gKey gBottom" href="/laws/categories/flow/" aria-label="Flow">
-          <span class="gKeyText"><strong>Flow</strong><small>What moves</small></span>
-        </a>
+        <button class="gKey gBottom" type="button" data-title="Flow" data-body="Flow defines what moves. Change has direction, rate, and consequence.">
+          <span class="gKeyText"><strong>Flow</strong>What moves</span>
+        </button>
 
-        <a class="gKey gLeft" href="/laws/categories/integrity/" aria-label="Integrity">
-          <span class="gKeyText"><strong>Integrity</strong><small>What stays true</small></span>
-        </a>
-
-        <a class="gKey gCenter" href="/laws/categories/" aria-label="Enter categories">
-          <span class="gKeyText"><strong>Categories</strong><small>Enter</small></span>
-        </a>
-
+        <button class="gKey gLeft" type="button" data-title="Integrity" data-body="Integrity defines what stays true. Alignment holds across time, pressure, and audience.">
+          <span class="gKeyText"><strong>Integrity</strong>What stays true</span>
+        </button>
       </div>
 
-      <div class="gActions">
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/laws/categories/" aria-label="Enter categories">Enter</a>
         <a class="gBtn" href="/home/">Home</a>
-        <a class="gBtn" href="/door/">Back</a>
+        <a class="gBtn" href="/home/">Back</a>
       </div>
 
       <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
+
+  <!-- OPAQUE PREVIEW MODAL -->
+  <div class="pModalBg" id="pModalBg" aria-hidden="true">
+    <div class="pModal" role="dialog" aria-modal="true" aria-labelledby="pModalTitle">
+      <h2 id="pModalTitle">Title</h2>
+      <p id="pModalBody">Body</p>
+      <div class="pHint">Tap anywhere to close</div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const bg = document.getElementById('pModalBg');
+      const t  = document.getElementById('pModalTitle');
+      const b  = document.getElementById('pModalBody');
+
+      function openModal(title, body){
+        t.textContent = title || '';
+        b.textContent = body || '';
+        bg.style.display = 'flex';
+        bg.setAttribute('aria-hidden','false');
+      }
+      function closeModal(){
+        bg.style.display = 'none';
+        bg.setAttribute('aria-hidden','true');
+      }
+
+      document.querySelectorAll('.gCluster .gKey[data-title]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          openModal(btn.getAttribute('data-title'), btn.getAttribute('data-body'));
+        });
+      });
+
+      bg.addEventListener('click', closeModal);
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+    })();
+  </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-          <!-- TNT: /laws/index.html  (FULL REPLACEMENT — 4 diamonds open opaque explanations; center routes forward) -->
+<!-- TNT: /laws/index.html  (FULL REPLACEMENT — GEOMETRY LOCKED) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* Opaque center explanation overlay */
+    /* Geometry lock: exactly 4 diamonds, no center diamond. */
     .lawOverlay{
       position:absolute; inset:0;
       display:none; align-items:center; justify-content:center;
@@ -21,7 +21,6 @@
       pointer-events:auto;
     }
     .lawOverlay.active{display:flex}
-
     .lawCard{
       width:min(92%, 420px);
       background:rgba(38,48,58,.98);
@@ -29,15 +28,14 @@
       border-radius:18px;
       padding:18px 18px 16px;
       box-shadow:0 22px 70px rgba(0,0,0,.6);
-      text-align:left;
       color:#fff;
+      text-align:left;
     }
     .lawCard h3{margin:0 0 8px;font-size:18px;font-weight:900}
     .lawCard p{margin:0;line-height:1.45;color:rgba(255,255,255,.88)}
     .lawHint{margin-top:12px;font-size:12px;color:rgba(255,255,255,.65);text-align:center}
-
-    /* Make the four diamonds act as triggers (not links) */
-    .lawTrigger{cursor:pointer}
+    /* Ensure taps always reach the diamonds */
+    .gKey{pointer-events:auto}
   </style>
 </head>
 
@@ -45,56 +43,46 @@
   <main class="gPage">
     <header class="gHeader">
       <h1 class="gTitle">Laws</h1>
-      <p class="gSub">Tap a diamond to preview. Enter when ready.</p>
+      <p class="gSub">Tap a diamond to preview. Use Next to enter categories.</p>
     </header>
 
     <section class="gPanel" aria-label="Laws preview" style="position:relative;">
 
-      <!-- 4-diamond preview cluster -->
-      <div class="gCluster" aria-label="Category previews">
+      <!-- 4-diamond geometry ONLY -->
+      <div class="gCluster" role="navigation" aria-label="Law previews">
 
-        <a class="gKey gTop lawTrigger" href="#" data-title="Reality"
-           data-text="Reality defines what is actually the case. It separates what exists from what is assumed."
-           aria-label="Reality preview">
-          <span class="gKeyText"><strong>Reality</strong><small>What is</small></span>
+        <a class="gKey gTop lawTrigger" href="#" data-key="Reality" aria-label="Reality">
+          <span class="gKeyText"><strong>Reality</strong></span>
         </a>
 
-        <a class="gKey gLeft lawTrigger" href="#" data-title="Integrity"
-           data-text="Integrity defines what stays true. Alignment holds across time, pressure, and audience."
-           aria-label="Integrity preview">
-          <span class="gKeyText"><strong>Integrity</strong><small>What stays true</small></span>
+        <a class="gKey gRight lawTrigger" href="#" data-key="Structure" aria-label="Structure">
+          <span class="gKeyText"><strong>Structure</strong></span>
         </a>
 
-        <a class="gKey gRight lawTrigger" href="#" data-title="Structure"
-           data-text="Structure defines what holds. Constraints preserve form and prevent collapse."
-           aria-label="Structure preview">
-          <span class="gKeyText"><strong>Structure</strong><small>What holds</small></span>
+        <a class="gKey gBottom lawTrigger" href="#" data-key="Flow" aria-label="Flow">
+          <span class="gKeyText"><strong>Flow</strong></span>
         </a>
 
-        <a class="gKey gBottom lawTrigger" href="#" data-title="Flow"
-           data-text="Flow defines what moves. Change proceeds through constraint rather than chaos."
-           aria-label="Flow preview">
-          <span class="gKeyText"><strong>Flow</strong><small>What moves</small></span>
+        <a class="gKey gLeft lawTrigger" href="#" data-key="Integrity" aria-label="Integrity">
+          <span class="gKeyText"><strong>Integrity</strong></span>
         </a>
 
-        <!-- Center diamond routes forward -->
-        <a class="gKey gCenter" href="/laws/categories/" aria-label="Enter Categories">
-          <span class="gKeyText"><strong>Categories</strong><small>Tap to enter</small></span>
-        </a>
       </div>
 
-      <!-- Overlay -->
+      <!-- Opaque preview overlay (centered) -->
       <div class="lawOverlay" id="lawOverlay" aria-hidden="true">
         <div class="lawCard">
-          <h3 id="lawTitle">Title</h3>
-          <p id="lawText">Text</p>
+          <h3 id="lawTitle"></h3>
+          <p id="lawBody"></p>
           <div class="lawHint">Tap anywhere to close</div>
         </div>
       </div>
 
-      <div class="gActions">
+      <!-- Navigation (separate from diamonds) -->
+      <div class="gActions" aria-label="Navigation controls">
         <a class="gBtn" href="/home/">Home</a>
         <a class="gBtn" href="/door/">Back</a>
+        <a class="gBtn" href="/laws/categories/">Next</a>
       </div>
 
       <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
@@ -103,13 +91,20 @@
 
   <script>
     (function(){
+      const defs = {
+        Reality:   "Reality defines what is actually the case. It separates what exists from what is assumed.",
+        Integrity: "Integrity defines what stays true. Alignment holds across time, pressure, and audience.",
+        Structure: "Structure defines what holds. Constraints preserve form and prevent collapse.",
+        Flow:      "Flow defines what moves. Change proceeds through constraint rather than chaos."
+      };
+
       const overlay = document.getElementById('lawOverlay');
       const titleEl = document.getElementById('lawTitle');
-      const textEl  = document.getElementById('lawText');
+      const bodyEl  = document.getElementById('lawBody');
 
-      function openCard(t, x){
-        titleEl.textContent = t;
-        textEl.textContent  = x;
+      function openCard(key){
+        titleEl.textContent = key;
+        bodyEl.textContent  = defs[key] || "";
         overlay.classList.add('active');
         overlay.setAttribute('aria-hidden','false');
       }
@@ -118,16 +113,17 @@
         overlay.setAttribute('aria-hidden','true');
       }
 
-      document.querySelectorAll('.lawTrigger').forEach(a=>{
-        a.addEventListener('click', (e)=>{
+      document.querySelectorAll('.lawTrigger').forEach(el=>{
+        el.addEventListener('click', (e)=>{
           e.preventDefault();
-          openCard(a.dataset.title || '', a.dataset.text || '');
+          openCard(el.dataset.key);
         });
       });
 
       overlay.addEventListener('click', closeCard);
-      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeCard(); });
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeCard(); });
     })();
   </script>
 </body>
 </html>
+```0

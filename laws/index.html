@@ -1,4 +1,4 @@
-<!-- TNT: /laws/index.html  (FULL REPLACEMENT — GEOMETRY LOCKED) -->
+<!-- TNT: /laws/index.html  (FULL REPLACEMENT — 9-diamond “flower” geometry + preview modal) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,31 +11,125 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* Geometry lock: exactly 4 diamonds, no center diamond. */
-    .lawOverlay{
-      position:absolute; inset:0;
-      display:none; align-items:center; justify-content:center;
-      background:rgba(0,0,0,.55);
-      border-radius:var(--radius);
-      z-index:50;
+    /* Page-local geometry lock (prevents CSS drift from other pages) */
+    .lawFlowerWrap{display:flex;justify-content:center;align-items:center;padding:10px 0 6px}
+    .lawFlower{
+      position:relative;
+      width:min(420px, 92vw);
+      height:min(420px, 92vw);
+      margin:0 auto;
       pointer-events:auto;
     }
-    .lawOverlay.active{display:flex}
-    .lawCard{
-      width:min(92%, 420px);
-      background:rgba(38,48,58,.98);
+
+    /* Diamond button base (uses your glass system, but locks size + overlap) */
+    .dBtn{
+      position:absolute;
+      width:46%;
+      height:46%;
+      border-radius:22px;
+      transform:rotate(45deg);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color:inherit;
+
+      background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.20);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      box-shadow:0 18px 60px rgba(0,0,0,.25);
+
+      transition:transform .12s ease, filter .12s ease;
+      -webkit-tap-highlight-color: transparent;
+      user-select:none;
+    }
+    .dBtn:active{transform:rotate(45deg) scale(.985)}
+    .dBtn .dTxt{
+      transform:rotate(-45deg);
+      text-align:center;
+      font-weight:800;
+      letter-spacing:.01em;
+      font-size:18px;
+      line-height:1.05;
+      padding:10px 12px;
+      opacity:.95;
+      white-space:nowrap;
+    }
+
+    /* Core diamond (smaller, anchor-only) */
+    .dCore{
+      width:28%;
+      height:28%;
+      left:36%;
+      top:36%;
+      background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
+      border-color:rgba(255,255,255,.18);
+      box-shadow:0 18px 60px rgba(0,0,0,.18);
+      pointer-events:none;
+    }
+    .dCore .dTxt{font-size:14px;font-weight:900;opacity:.85}
+
+    /* Four primary petals (larger) */
+    .dTop   {left:27%; top:0%;}
+    .dRight {left:54%; top:27%;}
+    .dBottom{left:27%; top:54%;}
+    .dLeft  {left:0%;  top:27%;}
+
+    /* Four secondary inner supports (smaller, between petals) */
+    .dS{
+      width:26%;
+      height:26%;
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.035));
+      border-color:rgba(255,255,255,.14);
+      box-shadow:0 18px 60px rgba(0,0,0,.16);
+      filter:saturate(.9);
+      pointer-events:none; /* lock: supports are not interactive yet */
+      opacity:.78;
+    }
+    .dTR{left:56%; top:8%;}
+    .dBR{left:66%; top:56%;}
+    .dBL{left:8%;  top:66%;}
+    .dTL{left:8%;  top:8%;}
+    .dS .dTxt{font-size:12px;font-weight:800;opacity:.8}
+
+    /* Preview modal (opaque + readable; sits above everything) */
+    .mBack{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:9999;
+    }
+    .mCard{
+      width:min(520px, 92vw);
+      border-radius:24px;
+      background:linear-gradient(180deg, rgba(20,32,44,.92), rgba(16,26,36,.92));
       border:1px solid rgba(255,255,255,.18);
-      border-radius:18px;
-      padding:18px 18px 16px;
-      box-shadow:0 22px 70px rgba(0,0,0,.6);
-      color:#fff;
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      box-shadow:0 22px 70px rgba(0,0,0,.35);
+      padding:22px 18px 16px;
       text-align:left;
     }
-    .lawCard h3{margin:0 0 8px;font-size:18px;font-weight:900}
-    .lawCard p{margin:0;line-height:1.45;color:rgba(255,255,255,.88)}
-    .lawHint{margin-top:12px;font-size:12px;color:rgba(255,255,255,.65);text-align:center}
-    /* Ensure taps always reach the diamonds */
-    .gKey{pointer-events:auto}
+    .mTitle{font-size:22px;font-weight:900;margin:0 0 10px}
+    .mBody{font-size:16px;line-height:1.45;color:rgba(241,246,251,.86);margin:0 0 14px}
+    .mHint{font-size:12px;color:rgba(241,246,251,.55);margin:0 0 14px;text-align:center}
+    .mRow{display:flex;gap:12px;justify-content:center}
+    .mBtn{
+      display:inline-flex;align-items:center;justify-content:center;
+      min-width:140px;
+      padding:14px 16px;
+      border-radius:999px;
+      text-decoration:none;
+      color:inherit;
+      background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 18px 60px rgba(0,0,0,.22);
+      font-weight:800;
+    }
   </style>
 </head>
 
@@ -43,85 +137,104 @@
   <main class="gPage">
     <header class="gHeader">
       <h1 class="gTitle">Laws</h1>
-      <p class="gSub">Tap a diamond to preview. Use Next to enter categories.</p>
+      <p class="gSub">Tap a diamond to preview. Enter when ready.</p>
     </header>
 
-    <section class="gPanel" aria-label="Laws preview" style="position:relative;">
+    <section class="gPanel" aria-label="Law categories">
+      <div class="lawFlowerWrap">
+        <div class="lawFlower" role="navigation" aria-label="Law category diamonds">
 
-      <!-- 4-diamond geometry ONLY -->
-      <div class="gCluster" role="navigation" aria-label="Law previews">
+          <!-- Secondary supports (non-interactive for now; locks the 9-diamond flower geometry) -->
+          <div class="dBtn dS dTL" aria-hidden="true"><div class="dTxt">Evidence</div></div>
+          <div class="dBtn dS dTR" aria-hidden="true"><div class="dTxt">Constraints</div></div>
+          <div class="dBtn dS dBR" aria-hidden="true"><div class="dTxt">Diagnostics</div></div>
+          <div class="dBtn dS dBL" aria-hidden="true"><div class="dTxt">Applications</div></div>
 
-        <a class="gKey gTop lawTrigger" href="#" data-key="Reality" aria-label="Reality">
-          <span class="gKeyText"><strong>Reality</strong></span>
-        </a>
+          <!-- Core anchor (non-interactive) -->
+          <div class="dBtn dCore" aria-hidden="true">
+            <div class="dTxt">Laws</div>
+          </div>
 
-        <a class="gKey gRight lawTrigger" href="#" data-key="Structure" aria-label="Structure">
-          <span class="gKeyText"><strong>Structure</strong></span>
-        </a>
+          <!-- Primary petals (interactive: preview modal + optional Enter) -->
+          <a class="dBtn dTop" href="/laws/categories/reality/" data-title="Reality" data-body="Reality defines what is. It separates what exists from what is assumed.">
+            <div class="dTxt">Reality</div>
+          </a>
 
-        <a class="gKey gBottom lawTrigger" href="#" data-key="Flow" aria-label="Flow">
-          <span class="gKeyText"><strong>Flow</strong></span>
-        </a>
+          <a class="dBtn dRight" href="/laws/categories/structure/" data-title="Structure" data-body="Structure defines what holds. Constraints preserve form and prevent collapse.">
+            <div class="dTxt">Structure</div>
+          </a>
 
-        <a class="gKey gLeft lawTrigger" href="#" data-key="Integrity" aria-label="Integrity">
-          <span class="gKeyText"><strong>Integrity</strong></span>
-        </a>
+          <a class="dBtn dBottom" href="/laws/categories/flow/" data-title="Flow" data-body="Flow defines what moves. Change propagates through channels, costs, and constraints.">
+            <div class="dTxt">Flow</div>
+          </a>
 
-      </div>
+          <a class="dBtn dLeft" href="/laws/categories/integrity/" data-title="Integrity" data-body="Integrity defines what stays true. Alignment holds across time, pressure, and audience.">
+            <div class="dTxt">Integrity</div>
+          </a>
 
-      <!-- Opaque preview overlay (centered) -->
-      <div class="lawOverlay" id="lawOverlay" aria-hidden="true">
-        <div class="lawCard">
-          <h3 id="lawTitle"></h3>
-          <p id="lawBody"></p>
-          <div class="lawHint">Tap anywhere to close</div>
         </div>
       </div>
 
-      <!-- Navigation (separate from diamonds) -->
       <div class="gActions" aria-label="Navigation controls">
         <a class="gBtn" href="/home/">Home</a>
-        <a class="gBtn" href="/door/">Back</a>
-        <a class="gBtn" href="/laws/categories/">Next</a>
+        <a class="gBtn" href="/home/">Back</a>
       </div>
 
       <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
 
+  <!-- Preview Modal -->
+  <div class="mBack" id="mBack" role="dialog" aria-modal="true" aria-label="Preview">
+    <div class="mCard">
+      <h2 class="mTitle" id="mTitle">Title</h2>
+      <p class="mBody" id="mBody">Body</p>
+      <p class="mHint">Tap anywhere outside to close.</p>
+      <div class="mRow">
+        <a class="mBtn" id="mEnter" href="#">Enter</a>
+        <button class="mBtn" type="button" id="mClose" style="cursor:pointer">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     (function(){
-      const defs = {
-        Reality:   "Reality defines what is actually the case. It separates what exists from what is assumed.",
-        Integrity: "Integrity defines what stays true. Alignment holds across time, pressure, and audience.",
-        Structure: "Structure defines what holds. Constraints preserve form and prevent collapse.",
-        Flow:      "Flow defines what moves. Change proceeds through constraint rather than chaos."
-      };
+      const back = document.getElementById('mBack');
+      const t = document.getElementById('mTitle');
+      const b = document.getElementById('mBody');
+      const enter = document.getElementById('mEnter');
+      const close = document.getElementById('mClose');
 
-      const overlay = document.getElementById('lawOverlay');
-      const titleEl = document.getElementById('lawTitle');
-      const bodyEl  = document.getElementById('lawBody');
-
-      function openCard(key){
-        titleEl.textContent = key;
-        bodyEl.textContent  = defs[key] || "";
-        overlay.classList.add('active');
-        overlay.setAttribute('aria-hidden','false');
+      function openModal(title, body, href){
+        t.textContent = title;
+        b.textContent = body;
+        enter.setAttribute('href', href);
+        back.style.display = 'flex';
       }
-      function closeCard(){
-        overlay.classList.remove('active');
-        overlay.setAttribute('aria-hidden','true');
+      function shut(){
+        back.style.display = 'none';
       }
 
-      document.querySelectorAll('.lawTrigger').forEach(el=>{
-        el.addEventListener('click', (e)=>{
+      // Preview on tap; prevent immediate navigation.
+      document.querySelectorAll('.lawFlower a.dBtn').forEach(a=>{
+        a.addEventListener('click', (e)=>{
           e.preventDefault();
-          openCard(el.dataset.key);
-        });
+          const title = a.getAttribute('data-title') || a.textContent.trim();
+          const body  = a.getAttribute('data-body')  || '';
+          const href  = a.getAttribute('href')       || '#';
+          openModal(title, body, href);
+        }, {passive:false});
       });
 
-      overlay.addEventListener('click', closeCard);
-      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeCard(); });
+      close.addEventListener('click', shut);
+      back.addEventListener('click', (e)=>{
+        if(e.target === back) shut();
+      });
+
+      // Esc closes (desktop-safe)
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 'Escape') shut();
+      });
     })();
   </script>
 </body>

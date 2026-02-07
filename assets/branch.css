@@ -1,119 +1,117 @@
-/* /assets/branch.css — TNT (diamond sizing + cluster layout only) */
+/* /assets/branch.css — FULL TNT REPLACEMENT
+   Purpose: The 4-diamond "branch" geometry (no extra stacking, no X, no center circle).
+   Works with anchors using:
+     .gCluster + .gKey + positional classes: .gTop .gRight .gBottom .gLeft
+   Optional center diamond: .gCenter
+*/
 
-/* Size knobs */
 :root{
-  /* Overall diamond cluster box (controls how “big” the 4-diamond graphic feels) */
-  --clusterSize: clamp(220px, 62vw, 360px);
+  /* cluster sizing */
+  --clusterSize: min(72vw, 360px);
+  --keySize: min(44vw, 230px);
+  --keyRadius: 22px;
 
-  /* Individual diamond tile size (each of the 4 diamonds) */
-  --diamondSize: calc(var(--clusterSize) * 0.58);
-
-  /* Spacing between diamonds (smaller = tighter overlap) */
-  --diamondGap: calc(var(--clusterSize) * 0.08);
-
-  /* X / center treatment (make thinner/less loud) */
-  --xThickness: 10px;
-  --xOpacity: 0.16;
-  --centerDot: 18px;
-  --centerOpacity: 0.22;
+  /* overlap control (smaller number = tighter overlap) */
+  --offset: 62%;
+  /* diamond look */
+  --glassA: rgba(255,255,255,.08);
+  --glassB: rgba(255,255,255,.06);
+  --keyStroke: rgba(255,255,255,.14);
+  --keyStroke2: rgba(255,255,255,.10);
 }
 
-/* The diamond cluster container */
+/* container that holds the diamonds */
 .gCluster{
-  position: relative;
-  width: var(--clusterSize);
-  height: var(--clusterSize);
-  margin: 0 auto;
-  display: block;
+  position:relative;
+  width:var(--clusterSize);
+  aspect-ratio: 1 / 1;
+  margin: 6px auto 0;
+  display:block;
 }
 
-/* Base diamond tile */
+/* a single diamond button */
 .gKey{
-  position: absolute;
-  width: var(--diamondSize);
-  height: var(--diamondSize);
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%) rotate(45deg);
-  border-radius: 22px;
-  text-decoration: none;
-  display: grid;
-  place-items: center;
-  /* keep visuals consistent with ui.css */
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: 0 18px 50px rgba(0,0,0,0.25);
-}
-
-/* Put text upright inside rotated diamond */
-.gKeyText{
-  transform: rotate(-45deg);
-  text-align: center;
-  color: rgba(255,255,255,0.92);
-  line-height: 1.1;
-  padding: 10px 12px;
-}
-.gKeyText strong{
-  display: block;
-  font-weight: 800;
-  letter-spacing: 0.2px;
-  margin-bottom: 6px;
-}
-.gKeyText small,
-.gKeyText span{
-  display: block;
-  font-size: 0.95rem;
-  color: rgba(255,255,255,0.60);
-}
-
-/* Positions (tight, symmetric) */
-.gTop{    transform: translate(-50%, calc(-50% - var(--diamondGap))) rotate(45deg); }
-.gBottom{ transform: translate(-50%, calc(-50% + var(--diamondGap))) rotate(45deg); }
-.gLeft{   transform: translate(calc(-50% - var(--diamondGap)), -50%) rotate(45deg); }
-.gRight{  transform: translate(calc(-50% + var(--diamondGap)), -50%) rotate(45deg); }
-
-/* OPTIONAL: center key if you use it */
-.gCenter{
-  width: calc(var(--diamondSize) * 0.62);
-  height: calc(var(--diamondSize) * 0.62);
-  background: rgba(255,255,255,0.04);
-  border-color: rgba(255,255,255,0.08);
-}
-
-/* Thin X overlay (kept subtle) */
-.gCluster::before,
-.gCluster::after{
-  content:"";
-  position:absolute;
-  left: 50%;
-  top: 50%;
-  width: calc(var(--clusterSize) * 0.92);
-  height: var(--xThickness);
-  background: rgba(255,255,255,var(--xOpacity));
-  border-radius: 999px;
-  transform-origin: center;
-}
-.gCluster::before{ transform: translate(-50%,-50%) rotate(45deg); }
-.gCluster::after{  transform: translate(-50%,-50%) rotate(-45deg); }
-
-/* Center dot (subtle) */
-.gCluster .gCenterDot{
   position:absolute;
   left:50%;
   top:50%;
-  width: var(--centerDot);
-  height: var(--centerDot);
-  border-radius: 999px;
-  background: rgba(255,255,255,var(--centerOpacity));
-  transform: translate(-50%,-50%);
-  pointer-events: none;
+  width:var(--keySize);
+  height:var(--keySize);
+  border-radius:var(--keyRadius);
+  transform: translate(-50%,-50%) rotate(45deg);
+  background: linear-gradient(180deg, var(--glassA), var(--glassB));
+  border:1px solid var(--keyStroke);
+  box-shadow: 0 16px 45px rgba(0,0,0,.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  cursor:pointer;
 }
 
-/* Mobile: shrink a bit more */
+/* inner text counter-rotated */
+.gKeyText{
+  transform: rotate(-45deg);
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  padding:14px;
+  line-height:1.05;
+  color:rgba(233,241,246,.95);
+}
+
+.gKeyText strong{
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:.2px;
+}
+
+.gKeyText small,
+.gKeyText span{
+  font-size:16px;
+  font-weight:600;
+  color:rgba(233,241,246,.70);
+}
+
+/* positions (ONLY ONE SET — prevents multi-stack “double diamonds”) */
+.gTop{   transform: translate(-50%, calc(-50% - var(--offset))) rotate(45deg); }
+.gRight{ transform: translate(calc(-50% + var(--offset)), -50%) rotate(45deg); }
+.gBottom{transform: translate(-50%, calc(-50% + var(--offset))) rotate(45deg); }
+.gLeft{  transform: translate(calc(-50% - var(--offset)), -50%) rotate(45deg); }
+
+/* optional center button */
+.gCenter{
+  width: calc(var(--keySize) * .64);
+  height: calc(var(--keySize) * .64);
+  border-radius:18px;
+  border:1px solid var(--keyStroke2);
+  box-shadow: 0 10px 34px rgba(0,0,0,.25);
+}
+
+/* tighten for small screens */
 @media (max-width: 420px){
   :root{
-    --clusterSize: clamp(210px, 64vw, 320px);
-    --xThickness: 9px;
-    --centerDot: 16px;
+    --clusterSize: min(86vw, 360px);
+    --keySize: min(54vw, 240px);
+    --offset: 58%;
   }
+  .gKeyText strong{font-size:22px}
+  .gKeyText small,
+  .gKeyText span{font-size:15px}
 }
+
+/* hover/active */
+.gKey:hover{ border-color: rgba(255,255,255,.20); }
+.gKey:active{ transform: translate(-50%,-50%) rotate(45deg) scale(.99); }
+.gTop:active{ transform: translate(-50%, calc(-50% - var(--offset))) rotate(45deg) scale(.99); }
+.gRight:active{ transform: translate(calc(-50% + var(--offset)), -50%) rotate(45deg) scale(.99); }
+.gBottom:active{ transform: translate(-50%, calc(-50% + var(--offset))) rotate(45deg) scale(.99); }
+.gLeft:active{ transform: translate(calc(-50% - var(--offset)), -50%) rotate(45deg) scale(.99); }
+
+/* hard-kill any accidental “X / center dot” artifacts if old HTML left them behind */
+.gCluster .x,
+.gCluster .centerDot,
+.gCluster .cross,
+.gCluster svg,
+.gCluster canvas{ display:none !important; }

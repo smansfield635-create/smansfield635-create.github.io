@@ -1,3 +1,4 @@
+<!-- 🔥 TNT — /laws/index.html (FULL REPLACEMENT · LAW CATEGORIES) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,34 +9,52 @@
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
-
-  <style>
-    .catGrid{display:grid;gap:12px}
-    .catGrid a{display:flex;align-items:center;justify-content:center;text-align:center}
-  </style>
 </head>
 
 <body>
   <main class="gPage">
     <header class="gHeader">
-      <h1 class="gTitle">Laws</h1>
-      <p class="gSub">Canonical structure · Categories.</p>
+      <h1 class="gTitle">Law Categories</h1>
+      <p class="gSub">Choose a branch.</p>
     </header>
 
     <section class="gPanel" aria-label="Law categories">
-      <div class="catGrid" role="navigation" aria-label="Category routes">
-        <a class="gBtn" href="/laws/category-1/">What’s Real</a>
-        <a class="gBtn" href="/laws/category-2/">What Holds</a>
-        <a class="gBtn" href="/laws/category-3/">What Moves</a>
+      <div class="gCluster" role="navigation" aria-label="Law category routes">
+
+        <!-- TOP (raised) -->
+        <a class="gKey gTop" href="/laws/reality/" aria-label="Reality">
+          <span class="gKeyText">
+            <strong>Reality</strong>
+            <span>what is</span>
+          </span>
+        </a>
+
+        <!-- BOTTOM-LEFT -->
+        <a class="gKey gLeft" href="/laws/structure/" aria-label="Structure">
+          <span class="gKeyText">
+            <strong>Structure</strong>
+            <span>what holds</span>
+          </span>
+        </a>
+
+        <!-- BOTTOM-RIGHT -->
+        <a class="gKey gRight" href="/laws/flow/" aria-label="Flow">
+          <span class="gKeyText">
+            <strong>Flow</strong>
+            <span>what moves</span>
+          </span>
+        </a>
+
       </div>
 
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/laws/">Diamond</a>
+      <div class="gActions">
         <a class="gBtn" href="/home/">Home</a>
         <a class="gBtn" href="/door/">Back</a>
       </div>
 
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      <footer class="gFooter">
+        CANONICAL · STABLE · © GEODIAMETRICS
+      </footer>
     </section>
   </main>
 </body>

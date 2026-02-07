@@ -8,123 +8,43 @@
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
-  <link rel="stylesheet" href="/assets/diamond.css" />
 </head>
 
 <body>
-<main class="gPage">
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Law Categories</h1>
+      <p class="gSub">Choose a branch.</p>
+    </header>
 
-  <header class="gHeader">
-    <h1 class="gTitle">Law Categories</h1>
-    <p class="gSub">Tap a diamond to preview. Enter when ready.</p>
-  </header>
+    <section class="gPanel" aria-label="Law categories">
+      <div class="gCluster" role="navigation" aria-label="Category routes">
 
-  <section class="gPanel">
+        <a class="gKey gTop" href="/laws/categories/reality/" aria-label="Reality">
+          <span class="gKeyText"><strong>Reality</strong><small>What is</small></span>
+        </a>
 
-    <!-- DIAMOND GEOMETRY (LOCKED) -->
-    <div class="gCluster">
+        <a class="gKey gLeft" href="/laws/categories/integrity/" aria-label="Integrity">
+          <span class="gKeyText"><strong>Integrity</strong><small>What stays true</small></span>
+        </a>
 
-      <button class="gKey gTop" data-modal="reality">
-        <span class="gKeyText">
-          <strong>Reality</strong>
-        </span>
-      </button>
+        <a class="gKey gRight" href="/laws/categories/structure/" aria-label="Structure">
+          <span class="gKeyText"><strong>Structure</strong><small>What holds</small></span>
+        </a>
 
-      <button class="gKey gRight" data-modal="structure">
-        <span class="gKeyText">
-          <strong>Structure</strong>
-        </span>
-      </button>
+        <a class="gKey gBottom" href="/laws/categories/flow/" aria-label="Flow">
+          <span class="gKeyText"><strong>Flow</strong><small>What moves</small></span>
+        </a>
 
-      <button class="gKey gBottom" data-modal="flow">
-        <span class="gKeyText">
-          <strong>Flow</strong>
-        </span>
-      </button>
+      </div>
 
-      <button class="gKey gLeft" data-modal="integrity">
-        <span class="gKeyText">
-          <strong>Integrity</strong>
-        </span>
-      </button>
+      <div class="gActions">
+        <a class="gBtn" href="/laws/">Back</a>
+        <a class="gBtn" href="/home/">Home</a>
+      </div>
 
-    </div>
-
-    <!-- ACTIONS -->
-    <div class="gActions">
-      <a class="gBtn" href="/laws/">Back</a>
-      <a class="gBtn" href="/home/">Home</a>
-    </div>
-
-    <footer class="gFooter">
-      CANONICAL · STABLE · © GEODIAMETRICS
-    </footer>
-
-  </section>
-</main>
-
-<!-- MODALS -->
-
-<div class="gModal" id="reality">
-  <div class="gModalBox">
-    <h2>Reality</h2>
-    <p>
-      Reality defines what exists.
-      It separates what is observed from what is assumed.
-      All laws must anchor to reality or collapse into fiction.
-    </p>
-    <span class="gModalHint">Tap anywhere to close</span>
-  </div>
-</div>
-
-<div class="gModal" id="structure">
-  <div class="gModalBox">
-    <h2>Structure</h2>
-    <p>
-      Structure defines what holds.
-      Constraints preserve form and prevent collapse.
-      Without structure, systems fragment under load.
-    </p>
-    <span class="gModalHint">Tap anywhere to close</span>
-  </div>
-</div>
-
-<div class="gModal" id="flow">
-  <div class="gModalBox">
-    <h2>Flow</h2>
-    <p>
-      Flow defines what moves.
-      It governs transfer, change, and propagation.
-      Blocked flow creates pressure and eventual failure.
-    </p>
-    <span class="gModalHint">Tap anywhere to close</span>
-  </div>
-</div>
-
-<div class="gModal" id="integrity">
-  <div class="gModalBox">
-    <h2>Integrity</h2>
-    <p>
-      Integrity defines what stays true.
-      Alignment must hold across time, pressure, and audience.
-      When values shift to justify behavior, integrity collapses.
-    </p>
-    <span class="gModalHint">Tap anywhere to close</span>
-  </div>
-</div>
-
-<script>
-  // Modal control (geometry-safe, no routing)
-  document.querySelectorAll("[data-modal]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.getElementById(btn.dataset.modal).classList.add("open");
-    });
-  });
-
-  document.querySelectorAll(".gModal").forEach(modal => {
-    modal.addEventListener("click", () => modal.classList.remove("open"));
-  });
-</script>
-
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
 </body>
 </html>

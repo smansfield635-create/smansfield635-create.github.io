@@ -1,134 +1,39 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Geodiametrics</title>
-
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
-
-  <style>
-    /* FULL-PAGE CANVAS */
-    body{
-      margin:0;
-      cursor:pointer;
-    }
-
-    .cover{
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:relative;
-      overflow:hidden;
-    }
-
-    /* CENTERFOLD TREE */
-    .tree{
-      position:relative;
-      width:100%;
-      max-width:640px;
-      height:560px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      pointer-events:none; /* STRUCTURE ONLY */
-    }
-
-    /* DIAMOND PRIMITIVE (VIEW-ONLY) */
-    .diamond{
-      position:absolute;
-      width:150px;
-      height:150px;
-      transform:rotate(45deg);
-      border-radius:24px;
-      background:linear-gradient(
-        180deg,
-        rgba(255,255,255,.18),
-        rgba(255,255,255,.06)
-      );
-      border:1px solid rgba(255,255,255,.22);
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
-      box-shadow:0 18px 60px rgba(0,0,0,.32);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .diamond span{
-      transform:rotate(-45deg);
-      font-weight:800;
-      letter-spacing:.08em;
-      opacity:.9;
-      text-align:center;
-    }
-
-    /* ROOTS (IMPLIED BASE) */
-    .roots{
-      position:absolute;
-      bottom:0;
-      width:100%;
-      text-align:center;
-      font-size:12px;
-      color:rgba(241,246,251,.45);
-      letter-spacing:.12em;
-    }
-
-    /* TRUNK */
-    .trunk{
-      top:50%;
-      transform:translate(-50%,-50%) rotate(45deg);
-    }
-
-    /* BRANCHES */
-    .b1{ top:20%; left:20%; }
-    .b2{ top:20%; right:20%; }
-    .b3{ top:20%; left:50%; transform:translateX(-50%) rotate(45deg); }
-
-    /* LABEL TUNING */
-    .small{ font-size:13px; opacity:.75 }
-
-    /* MOBILE */
-    @media(max-width:480px){
-      .tree{ height:500px }
-      .diamond{ width:132px; height:132px }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Geodiametrics</title>
+<link rel="stylesheet" href="/assets/style.css"/>
+<style>
+html,body{margin:0;height:100%}
+body{cursor:pointer}
+</style>
+<script>
+document.addEventListener("click",()=>{window.location.href="/door/";});
+</script>
 </head>
-
-<body onclick="location.href='/portals/'">
-
-  <main class="cover">
-    <div class="tree">
-
-      <!-- BRANCHES -->
-      <div class="diamond b1">
-        <span>LAWS</span>
-      </div>
-
-      <div class="diamond b3">
-        <span>PRODUCTS</span>
-      </div>
-
-      <div class="diamond b2">
-        <span>GAUGES</span>
-      </div>
-
-      <!-- TRUNK -->
-      <div class="diamond trunk">
-        <span class="small">DIAMOND<br>DIAGNOSTIC<br>PORTALS</span>
-      </div>
-
-      <!-- ROOTS (IMPLIED) -->
-      <div class="roots">
-        CANONICAL · STABLE · PROOF OF CONCEPT
-      </div>
-
+<body>
+  <div class="page">
+    <div class="hero">
+      <h1>Geodiametrics</h1>
+      <p>A diamond-governed map for free-will exploration.</p>
     </div>
-  </main>
 
+    <div class="panel">
+      <p style="font-size:15px;opacity:.8">
+        This site is a live proof-of-concept built from a phone.<br>
+        No accounts. No purchases. No personal data entry.
+      </p>
+      <p style="margin-top:14px;font-size:14px;opacity:.6">
+        Under construction — safe to explore.
+      </p>
+      <p style="margin-top:18px;font-size:13px;opacity:.5">
+        Click anywhere to enter.
+      </p>
+    </div>
+
+    <div class="canon">CANONICAL · STABLE · © GEODIAMETRICS</div>
+  </div>
 </body>
 </html>

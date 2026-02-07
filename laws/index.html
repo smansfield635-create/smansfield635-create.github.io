@@ -1,4 +1,4 @@
-<!-- TNT: /laws/index.html  (FULL REPLACEMENT — corner bubbles preview, center diamond routes) -->
+<!-- TNT: /laws/index.html  (FULL REPLACEMENT — small diamond moved up + stacked category bubbles) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,41 +11,55 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    .lawStage{position:relative;width:100%;max-width:520px;height:520px;margin:0 auto}
-    .lawCenter{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(45deg);width:170px;height:170px;z-index:2}
-    .lawCenter .gKeyText{transform:rotate(-45deg)}
-    .lawBubble{
-      position:absolute;width:150px;height:46px;border-radius:999px;display:flex;align-items:center;justify-content:center;
-      font-weight:700;font-size:1rem;color:#fff;text-decoration:none;cursor:pointer;user-select:none;
-      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)
+    /* keep everything inside panel predictable */
+    .lawsWrap{width:100%;max-width:520px;margin:0 auto}
+    .miniZone{position:relative;height:210px;margin:0 auto 10px}
+    .miniDiamond{
+      position:absolute;left:50%;top:12px;transform:translateX(-50%);
+      width:240px;height:200px;display:flex;align-items:center;justify-content:center;
+      pointer-events:auto;
     }
-    .lawBubble:active{transform:translate(-50%,-50%) scale(.98)}
-    .lawTop{top:34px;left:50%;transform:translateX(-50%)}
-    .lawBottom{bottom:34px;left:50%;transform:translateX(-50%)}
-    .lawLeft{left:34px;top:50%;transform:translateY(-50%)}
-    .lawRight{right:34px;top:50%;transform:translateY(-50%)}
+    .miniDiamond .gKey{
+      position:absolute;top:50%;left:50%;
+      transform:translate(-50%,-50%) rotate(45deg);
+      width:150px;height:150px;
+    }
+    .miniDiamond .gKeyText{transform:rotate(-45deg);text-align:center}
 
-    /* Center message popup */
-    .lawMsg{
+    .stack{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+    .stackBtn{
+      display:flex;align-items:center;justify-content:center;
+      padding:14px 16px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.20);
+      background:rgba(255,255,255,.10);
+      color:#fff;text-decoration:none;font-weight:800;
+      backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+      cursor:pointer;
+    }
+    .stackBtn span{opacity:.78;font-weight:700;margin-left:10px}
+    .stackBtn:active{transform:scale(.99)}
+
+    /* modal */
+    .dim{
+      position:absolute;inset:0;border-radius:var(--radius);
+      background:rgba(0,0,0,.28);display:none;z-index:10;
+    }
+    .dim.show{display:block}
+    .msg{
       position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-      width:min(92%, 360px);z-index:5;display:none;
-      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.20);
-      border-radius:22px;padding:16px 16px 14px;
+      width:min(92%, 380px);
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.20);
+      border-radius:22px;
+      padding:16px 16px 14px;
       backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
       box-shadow:0 18px 60px rgba(0,0,0,.32);
+      display:none;z-index:11;
     }
-    .lawMsg.show{display:block}
-    .lawMsgTitle{font-size:18px;font-weight:800;margin:0 0 6px}
-    .lawMsgBody{margin:0;color:rgba(241,246,251,.78);line-height:1.35;font-size:14.5px}
-    .lawMsgHint{margin:10px 0 0;color:rgba(241,246,251,.55);font-size:12px}
-
-    /* Dim overlay (inside panel only) */
-    .lawDim{
-      position:absolute;inset:0;border-radius:22px;
-      background:rgba(0,0,0,.22);
-      display:none;z-index:4;
-    }
-    .lawDim.show{display:block}
+    .msg.show{display:block}
+    .msg h3{margin:0 0 6px;font-size:18px;font-weight:900}
+    .msg p{margin:0;color:rgba(241,246,251,.80);line-height:1.35;font-size:14.5px}
+    .msg .hint{margin-top:10px;font-size:12px;color:rgba(241,246,251,.55)}
   </style>
 </head>
 
@@ -56,55 +70,68 @@
       <p class="gSub">Foundational structure of the system.</p>
     </header>
 
-    <section class="gPanel" aria-label="Laws preview + route to categories">
-      <div class="lawStage" id="lawStage">
+    <section class="gPanel" aria-label="Laws entry">
+      <div class="lawsWrap">
 
-        <!-- bubbles (preview only) -->
-        <div class="lawBubble lawTop"    data-key="Reality"   role="button" tabindex="0" aria-label="Reality">Reality</div>
-        <div class="lawBubble lawLeft"   data-key="Integrity" role="button" tabindex="0" aria-label="Integrity">Integrity</div>
-        <div class="lawBubble lawRight"  data-key="Structure" role="button" tabindex="0" aria-label="Structure">Structure</div>
-        <div class="lawBubble lawBottom" data-key="Flow"      role="button" tabindex="0" aria-label="Flow">Flow</div>
-
-        <!-- center diamond routes forward -->
-        <a href="/laws/categories/" class="gKey lawCenter" aria-label="Enter Categories">
-          <span class="gKeyText">
-            <strong>Categories</strong>
-            <span style="opacity:.8">Tap to enter</span>
-          </span>
-        </a>
-
-        <!-- overlay + message -->
-        <div class="lawDim" id="lawDim" aria-hidden="true"></div>
-        <div class="lawMsg" id="lawMsg" role="dialog" aria-modal="false" aria-live="polite">
-          <div class="lawMsgTitle" id="lawMsgTitle">Category</div>
-          <p class="lawMsgBody" id="lawMsgBody">Description.</p>
-          <div class="lawMsgHint">Tap anywhere to close.</div>
+        <!-- SMALL DIAMOND UP TOP -->
+        <div class="miniZone">
+          <div class="miniDiamond" aria-label="Categories">
+            <a class="gKey" href="/laws/categories/" aria-label="Enter Categories">
+              <span class="gKeyText">
+                <strong>Categories</strong>
+                <span style="opacity:.78">Tap to enter</span>
+              </span>
+            </a>
+          </div>
         </div>
+
+        <!-- STACKED BUBBLES (no overlap / no UI conflict) -->
+        <div class="stack" role="navigation" aria-label="Category previews">
+          <button class="stackBtn" type="button" data-key="Reality">
+            Reality <span>what is</span>
+          </button>
+          <button class="stackBtn" type="button" data-key="Integrity">
+            Integrity <span>what stays true</span>
+          </button>
+          <button class="stackBtn" type="button" data-key="Structure">
+            Structure <span>what holds</span>
+          </button>
+          <button class="stackBtn" type="button" data-key="Flow">
+            Flow <span>what moves</span>
+          </button>
+        </div>
+
+        <div class="gActions" aria-label="Navigation controls" style="margin-top:16px">
+          <a class="gBtn" href="/home/">Home</a>
+          <a class="gBtn" href="/home/">Back</a>
+        </div>
+
+        <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
       </div>
 
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/home/">Home</a>
-        <a class="gBtn" href="/home/">Back</a>
+      <!-- modal lives inside panel so it always centers correctly -->
+      <div class="dim" id="dim" aria-hidden="true"></div>
+      <div class="msg" id="msg" role="dialog" aria-live="polite">
+        <h3 id="msgTitle">Title</h3>
+        <p id="msgBody">Body</p>
+        <div class="hint">Tap anywhere to close.</div>
       </div>
-
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
 
   <script>
     (function(){
       const defs = {
-        "Reality":   "Reality defines what is actually the case. It separates what exists from what is assumed.",
-        "Integrity": "Integrity defines what stays true. It governs consistency, coherence, and whether claims hold up.",
-        "Structure": "Structure defines what holds. It governs constraints, stability, and what makes a system admissible.",
-        "Flow":      "Flow defines what moves. It governs execution, propagation, and how dynamics proceed over time."
+        Reality:   "Reality defines what is actually the case. It separates what exists from what is assumed.",
+        Integrity: "Integrity defines what stays true. It governs consistency, coherence, and whether claims hold up.",
+        Structure: "Structure defines what holds. It governs constraints, stability, and what makes a system admissible.",
+        Flow:      "Flow defines what moves. It governs execution, propagation, and how dynamics proceed."
       };
 
-      const stage = document.getElementById("lawStage");
-      const dim = document.getElementById("lawDim");
-      const msg = document.getElementById("lawMsg");
-      const t = document.getElementById("lawMsgTitle");
-      const b = document.getElementById("lawMsgBody");
+      const dim = document.getElementById("dim");
+      const msg = document.getElementById("msg");
+      const t = document.getElementById("msgTitle");
+      const b = document.getElementById("msgBody");
 
       function openMsg(key){
         t.textContent = key;
@@ -117,30 +144,14 @@
         msg.classList.remove("show");
       }
 
-      stage.addEventListener("click", (e)=>{
-        const bubble = e.target.closest(".lawBubble");
-        const center = e.target.closest(".lawCenter");
-        if(center) return; // let navigation happen
-        if(bubble){
-          openMsg(bubble.dataset.key);
-          return;
-        }
-        // click anywhere else inside stage closes
-        closeMsg();
+      document.querySelectorAll(".stackBtn").forEach(btn=>{
+        btn.addEventListener("click", ()=>openMsg(btn.dataset.key));
       });
 
-      // keyboard accessibility
-      stage.addEventListener("keydown", (e)=>{
-        const bubble = e.target.closest(".lawBubble");
-        if(!bubble) return;
-        if(e.key === "Enter" || e.key === " "){
-          e.preventDefault();
-          openMsg(bubble.dataset.key);
-        }
-      });
-
-      // clicking dim closes
+      // close on any click outside the buttons (including dim/msg)
       dim.addEventListener("click", closeMsg);
+      msg.addEventListener("click", closeMsg);
+      document.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeMsg(); });
     })();
   </script>
 </body>

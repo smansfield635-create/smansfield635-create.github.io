@@ -1,9 +1,8 @@
-<!-- TNT: /laws/index.html  (FULL REPLACEMENT — opaque bubbles for readability) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Laws · Geodiametrics</title>
 
   <link rel="icon" href="/assets/favicon.svg" />
@@ -11,172 +10,154 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    .lawsWrap{width:100%;max-width:520px;margin:0 auto}
-
-    .miniZone{position:relative;height:210px;margin:0 auto 10px}
-    .miniDiamond{
-      position:absolute;left:50%;top:12px;transform:translateX(-50%);
-      width:240px;height:200px;display:flex;align-items:center;justify-content:center;
-    }
-    .miniDiamond .gKey{
-      position:absolute;top:50%;left:50%;
-      transform:translate(-50%,-50%) rotate(45deg);
-      width:150px;height:150px;
-      background:rgba(255,255,255,.18);
-    }
-    .miniDiamond .gKeyText{
-      transform:rotate(-45deg);
-      text-align:center;
-      color:#fff;
+    .lawStage {
+      position: relative;
+      height: 520px;
     }
 
-    /* STACKED CATEGORY BUBBLES — NOW OPAQUE */
-    .stack{display:flex;flex-direction:column;gap:12px;margin-top:6px}
-    .stackBtn{
-      display:flex;align-items:center;justify-content:center;
-      padding:14px 16px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.35);
-      background:rgba(20,30,38,.92); /* OPAQUE */
-      color:#ffffff;text-decoration:none;
-      font-weight:900;font-size:16px;
-      cursor:pointer;
+    .lawBubble {
+      position: absolute;
+      padding: 14px 22px;
+      border-radius: 999px;
+      background: #2e3a44; /* OPAQUE */
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,0,0,.35);
+      z-index: 5;
     }
-    .stackBtn span{
-      opacity:.75;
-      font-weight:700;
-      margin-left:10px;
-      font-size:14px;
-    }
-    .stackBtn:active{transform:scale(.99)}
 
-    /* MODAL OVERLAY */
-    .dim{
-      position:absolute;inset:0;border-radius:var(--radius);
-      background:rgba(0,0,0,.55);
-      display:none;z-index:10;
-    }
-    .dim.show{display:block}
+    .lawBubble.top    { top: 20px; left: 50%; transform: translateX(-50%); }
+    .lawBubble.left   { top: 50%; left: 20px; transform: translateY(-50%); }
+    .lawBubble.right  { top: 50%; right: 20px; transform: translateY(-50%); }
+    .lawBubble.bottom { bottom: 20px; left: 50%; transform: translateX(-50%); }
 
-    /* MODAL MESSAGE — FULLY OPAQUE */
-    .msg{
-      position:absolute;left:50%;top:50%;
-      transform:translate(-50%,-50%);
-      width:min(92%, 380px);
-      background:rgba(18,26,32,.96); /* OPAQUE */
-      border:1px solid rgba(255,255,255,.35);
-      border-radius:22px;
-      padding:18px 18px 16px;
-      display:none;z-index:11;
-      box-shadow:0 24px 70px rgba(0,0,0,.6);
+    .lawCenter {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
     }
-    .msg.show{display:block}
-    .msg h3{
-      margin:0 0 6px;
-      font-size:18px;
-      font-weight:900;
-      color:#ffffff;
+
+    .lawDiamond {
+      width: 220px;
+      height: 220px;
+      background: rgba(255,255,255,0.08);
+      transform: rotate(45deg);
+      border-radius: 18px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
     }
-    .msg p{
-      margin:0;
-      color:#e6edf3;
-      line-height:1.4;
-      font-size:15px;
+
+    .lawDiamond span {
+      transform: rotate(-45deg);
+      text-align: center;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
     }
-    .msg .hint{
-      margin-top:12px;
-      font-size:12px;
-      color:rgba(255,255,255,.6);
-      text-align:center;
+
+    .lawOverlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10,15,20,.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .lawOverlay.active { display: flex; }
+
+    .lawOverlayCard {
+      background: #1f2a33;
+      padding: 28px;
+      max-width: 420px;
+      border-radius: 18px;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 16px 40px rgba(0,0,0,.5);
+    }
+
+    .lawOverlayCard h3 {
+      margin: 0 0 10px;
+    }
+
+    .lawOverlayCard p {
+      margin: 0;
+      opacity: .9;
     }
   </style>
 </head>
 
 <body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Laws</h1>
-      <p class="gSub">Foundational structure of the system.</p>
-    </header>
+<main class="gPage">
+  <header class="gHeader">
+    <h1 class="gTitle">Laws</h1>
+    <p class="gSub">Foundational structure of the system.</p>
+  </header>
 
-    <section class="gPanel">
-      <div class="lawsWrap">
+  <section class="gPanel">
+    <div class="lawStage" id="lawStage">
 
-        <!-- SMALL DIAMOND -->
-        <div class="miniZone">
-          <div class="miniDiamond">
-            <a class="gKey" href="/laws/categories/">
-              <span class="gKeyText">
-                <strong>Categories</strong><br/>
-                <span style="opacity:.7">Tap to enter</span>
-              </span>
-            </a>
-          </div>
-        </div>
+      <!-- BUBBLES -->
+      <div class="lawBubble top"    data-title="Reality"   data-text="Reality defines what is actually the case. It separates what exists from what is assumed.">Reality</div>
+      <div class="lawBubble left"   data-title="Integrity" data-text="Integrity is what stays true over time. No internal contradiction. No selective honesty.">Integrity</div>
+      <div class="lawBubble right"  data-title="Structure" data-text="Structure is what holds. It defines constraint, boundary, and form.">Structure</div>
+      <div class="lawBubble bottom" data-title="Flow"      data-text="Flow is what moves. Change, motion, causation, and progression.">Flow</div>
 
-        <!-- STACKED BUBBLES -->
-        <div class="stack">
-          <button class="stackBtn" data-key="Reality">
-            Reality <span>what is</span>
-          </button>
-          <button class="stackBtn" data-key="Integrity">
-            Integrity <span>what stays true</span>
-          </button>
-          <button class="stackBtn" data-key="Structure">
-            Structure <span>what holds</span>
-          </button>
-          <button class="stackBtn" data-key="Flow">
-            Flow <span>what moves</span>
-          </button>
-        </div>
-
-        <div class="gActions" style="margin-top:16px">
-          <a class="gBtn" href="/home/">Home</a>
-          <a class="gBtn" href="/home/">Back</a>
-        </div>
-
-        <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      <!-- CENTER DIAMOND -->
+      <div class="lawCenter">
+        <a href="/laws/categories/" class="lawDiamond">
+          <span>
+            Categories<br/>
+            <small style="opacity:.75;font-weight:500;">Tap to enter</small>
+          </span>
+        </a>
       </div>
 
-      <!-- MODAL -->
-      <div class="dim" id="dim"></div>
-      <div class="msg" id="msg">
-        <h3 id="msgTitle"></h3>
-        <p id="msgBody"></p>
-        <div class="hint">Tap anywhere to close.</div>
+      <!-- OVERLAY -->
+      <div class="lawOverlay" id="lawOverlay">
+        <div class="lawOverlayCard">
+          <h3 id="overlayTitle"></h3>
+          <p id="overlayText"></p>
+          <p style="margin-top:14px;opacity:.6;font-size:.9em;">Tap anywhere to close</p>
+        </div>
       </div>
-    </section>
-  </main>
 
-  <script>
-    const defs = {
-      Reality:   "Reality defines what is actually the case. It separates what exists from what is assumed.",
-      Integrity: "Integrity defines what stays true. It governs consistency, coherence, and reliability.",
-      Structure: "Structure defines what holds. It governs constraints, stability, and admissibility.",
-      Flow:      "Flow defines what moves. It governs execution, change, and propagation."
-    };
+    </div>
 
-    const dim = document.getElementById("dim");
-    const msg = document.getElementById("msg");
-    const title = document.getElementById("msgTitle");
-    const body = document.getElementById("msgBody");
+    <div class="gActions">
+      <a class="gBtn" href="/home/">Home</a>
+      <a class="gBtn" href="/home/">Back</a>
+    </div>
 
-    function openMsg(key){
-      title.textContent = key;
-      body.textContent = defs[key];
-      dim.classList.add("show");
-      msg.classList.add("show");
-    }
-    function closeMsg(){
-      dim.classList.remove("show");
-      msg.classList.remove("show");
-    }
+    <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+  </section>
+</main>
 
-    document.querySelectorAll(".stackBtn").forEach(btn=>{
-      btn.onclick = ()=>openMsg(btn.dataset.key);
+<script>
+  const overlay = document.getElementById('lawOverlay');
+  const oTitle  = document.getElementById('overlayTitle');
+  const oText   = document.getElementById('overlayText');
+
+  document.querySelectorAll('.lawBubble').forEach(bubble => {
+    bubble.addEventListener('click', e => {
+      e.stopPropagation();
+      oTitle.textContent = bubble.dataset.title;
+      oText.textContent  = bubble.dataset.text;
+      overlay.classList.add('active');
     });
-    dim.onclick = closeMsg;
-    msg.onclick = closeMsg;
-    document.onkeydown = e => e.key==="Escape" && closeMsg();
-  </script>
+  });
+
+  overlay.addEventListener('click', () => {
+    overlay.classList.remove('active');
+  });
+</script>
 </body>
 </html>

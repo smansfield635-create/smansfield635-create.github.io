@@ -1,4 +1,4 @@
-<!-- TNT: /laws/index.html  (FULL REPLACEMENT — small diamond moved up + stacked category bubbles) -->
+<!-- TNT: /laws/index.html  (FULL REPLACEMENT — opaque bubbles for readability) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,55 +11,83 @@
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* keep everything inside panel predictable */
     .lawsWrap{width:100%;max-width:520px;margin:0 auto}
+
     .miniZone{position:relative;height:210px;margin:0 auto 10px}
     .miniDiamond{
       position:absolute;left:50%;top:12px;transform:translateX(-50%);
       width:240px;height:200px;display:flex;align-items:center;justify-content:center;
-      pointer-events:auto;
     }
     .miniDiamond .gKey{
       position:absolute;top:50%;left:50%;
       transform:translate(-50%,-50%) rotate(45deg);
       width:150px;height:150px;
+      background:rgba(255,255,255,.18);
     }
-    .miniDiamond .gKeyText{transform:rotate(-45deg);text-align:center}
+    .miniDiamond .gKeyText{
+      transform:rotate(-45deg);
+      text-align:center;
+      color:#fff;
+    }
 
+    /* STACKED CATEGORY BUBBLES — NOW OPAQUE */
     .stack{display:flex;flex-direction:column;gap:12px;margin-top:6px}
     .stackBtn{
       display:flex;align-items:center;justify-content:center;
       padding:14px 16px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.20);
-      background:rgba(255,255,255,.10);
-      color:#fff;text-decoration:none;font-weight:800;
-      backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,.35);
+      background:rgba(20,30,38,.92); /* OPAQUE */
+      color:#ffffff;text-decoration:none;
+      font-weight:900;font-size:16px;
       cursor:pointer;
     }
-    .stackBtn span{opacity:.78;font-weight:700;margin-left:10px}
+    .stackBtn span{
+      opacity:.75;
+      font-weight:700;
+      margin-left:10px;
+      font-size:14px;
+    }
     .stackBtn:active{transform:scale(.99)}
 
-    /* modal */
+    /* MODAL OVERLAY */
     .dim{
       position:absolute;inset:0;border-radius:var(--radius);
-      background:rgba(0,0,0,.28);display:none;z-index:10;
+      background:rgba(0,0,0,.55);
+      display:none;z-index:10;
     }
     .dim.show{display:block}
+
+    /* MODAL MESSAGE — FULLY OPAQUE */
     .msg{
-      position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+      position:absolute;left:50%;top:50%;
+      transform:translate(-50%,-50%);
       width:min(92%, 380px);
-      background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.20);
+      background:rgba(18,26,32,.96); /* OPAQUE */
+      border:1px solid rgba(255,255,255,.35);
       border-radius:22px;
-      padding:16px 16px 14px;
-      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-      box-shadow:0 18px 60px rgba(0,0,0,.32);
+      padding:18px 18px 16px;
       display:none;z-index:11;
+      box-shadow:0 24px 70px rgba(0,0,0,.6);
     }
     .msg.show{display:block}
-    .msg h3{margin:0 0 6px;font-size:18px;font-weight:900}
-    .msg p{margin:0;color:rgba(241,246,251,.80);line-height:1.35;font-size:14.5px}
-    .msg .hint{margin-top:10px;font-size:12px;color:rgba(241,246,251,.55)}
+    .msg h3{
+      margin:0 0 6px;
+      font-size:18px;
+      font-weight:900;
+      color:#ffffff;
+    }
+    .msg p{
+      margin:0;
+      color:#e6edf3;
+      line-height:1.4;
+      font-size:15px;
+    }
+    .msg .hint{
+      margin-top:12px;
+      font-size:12px;
+      color:rgba(255,255,255,.6);
+      text-align:center;
+    }
   </style>
 </head>
 
@@ -70,38 +98,38 @@
       <p class="gSub">Foundational structure of the system.</p>
     </header>
 
-    <section class="gPanel" aria-label="Laws entry">
+    <section class="gPanel">
       <div class="lawsWrap">
 
-        <!-- SMALL DIAMOND UP TOP -->
+        <!-- SMALL DIAMOND -->
         <div class="miniZone">
-          <div class="miniDiamond" aria-label="Categories">
-            <a class="gKey" href="/laws/categories/" aria-label="Enter Categories">
+          <div class="miniDiamond">
+            <a class="gKey" href="/laws/categories/">
               <span class="gKeyText">
-                <strong>Categories</strong>
-                <span style="opacity:.78">Tap to enter</span>
+                <strong>Categories</strong><br/>
+                <span style="opacity:.7">Tap to enter</span>
               </span>
             </a>
           </div>
         </div>
 
-        <!-- STACKED BUBBLES (no overlap / no UI conflict) -->
-        <div class="stack" role="navigation" aria-label="Category previews">
-          <button class="stackBtn" type="button" data-key="Reality">
+        <!-- STACKED BUBBLES -->
+        <div class="stack">
+          <button class="stackBtn" data-key="Reality">
             Reality <span>what is</span>
           </button>
-          <button class="stackBtn" type="button" data-key="Integrity">
+          <button class="stackBtn" data-key="Integrity">
             Integrity <span>what stays true</span>
           </button>
-          <button class="stackBtn" type="button" data-key="Structure">
+          <button class="stackBtn" data-key="Structure">
             Structure <span>what holds</span>
           </button>
-          <button class="stackBtn" type="button" data-key="Flow">
+          <button class="stackBtn" data-key="Flow">
             Flow <span>what moves</span>
           </button>
         </div>
 
-        <div class="gActions" aria-label="Navigation controls" style="margin-top:16px">
+        <div class="gActions" style="margin-top:16px">
           <a class="gBtn" href="/home/">Home</a>
           <a class="gBtn" href="/home/">Back</a>
         </div>
@@ -109,51 +137,46 @@
         <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
       </div>
 
-      <!-- modal lives inside panel so it always centers correctly -->
-      <div class="dim" id="dim" aria-hidden="true"></div>
-      <div class="msg" id="msg" role="dialog" aria-live="polite">
-        <h3 id="msgTitle">Title</h3>
-        <p id="msgBody">Body</p>
+      <!-- MODAL -->
+      <div class="dim" id="dim"></div>
+      <div class="msg" id="msg">
+        <h3 id="msgTitle"></h3>
+        <p id="msgBody"></p>
         <div class="hint">Tap anywhere to close.</div>
       </div>
     </section>
   </main>
 
   <script>
-    (function(){
-      const defs = {
-        Reality:   "Reality defines what is actually the case. It separates what exists from what is assumed.",
-        Integrity: "Integrity defines what stays true. It governs consistency, coherence, and whether claims hold up.",
-        Structure: "Structure defines what holds. It governs constraints, stability, and what makes a system admissible.",
-        Flow:      "Flow defines what moves. It governs execution, propagation, and how dynamics proceed."
-      };
+    const defs = {
+      Reality:   "Reality defines what is actually the case. It separates what exists from what is assumed.",
+      Integrity: "Integrity defines what stays true. It governs consistency, coherence, and reliability.",
+      Structure: "Structure defines what holds. It governs constraints, stability, and admissibility.",
+      Flow:      "Flow defines what moves. It governs execution, change, and propagation."
+    };
 
-      const dim = document.getElementById("dim");
-      const msg = document.getElementById("msg");
-      const t = document.getElementById("msgTitle");
-      const b = document.getElementById("msgBody");
+    const dim = document.getElementById("dim");
+    const msg = document.getElementById("msg");
+    const title = document.getElementById("msgTitle");
+    const body = document.getElementById("msgBody");
 
-      function openMsg(key){
-        t.textContent = key;
-        b.textContent = defs[key] || "";
-        dim.classList.add("show");
-        msg.classList.add("show");
-      }
-      function closeMsg(){
-        dim.classList.remove("show");
-        msg.classList.remove("show");
-      }
+    function openMsg(key){
+      title.textContent = key;
+      body.textContent = defs[key];
+      dim.classList.add("show");
+      msg.classList.add("show");
+    }
+    function closeMsg(){
+      dim.classList.remove("show");
+      msg.classList.remove("show");
+    }
 
-      document.querySelectorAll(".stackBtn").forEach(btn=>{
-        btn.addEventListener("click", ()=>openMsg(btn.dataset.key));
-      });
-
-      // close on any click outside the buttons (including dim/msg)
-      dim.addEventListener("click", closeMsg);
-      msg.addEventListener("click", closeMsg);
-      document.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeMsg(); });
-    })();
+    document.querySelectorAll(".stackBtn").forEach(btn=>{
+      btn.onclick = ()=>openMsg(btn.dataset.key);
+    });
+    dim.onclick = closeMsg;
+    msg.onclick = closeMsg;
+    document.onkeydown = e => e.key==="Escape" && closeMsg();
   </script>
 </body>
 </html>
-```0

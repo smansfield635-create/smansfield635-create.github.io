@@ -1,15 +1,14 @@
+<!-- TNT: /door/index.html  (FULL REPLACEMENT — removes Laws from Door, keeps Door as entry selector) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Door · Geodiametrics</title>
-
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
 </head>
-
 <body>
   <main class="gPage">
     <header class="gHeader">
@@ -17,25 +16,27 @@
       <p class="gSub">Choose how you want to enter.</p>
     </header>
 
-    <section class="gPanel" aria-label="Door entry options">
-      <div class="gCluster" role="navigation" aria-label="Entry options">
-
+    <section class="gPanel" aria-label="Entry options">
+      <div class="gCluster" role="navigation" aria-label="Entry routes">
+        <!-- TOP: Diagnostic -->
         <a class="gKey gTop" href="/diagnostic/" aria-label="Run diagnostic">
           <span class="gKeyText"><strong>Run</strong><small>Diagnostic</small></span>
         </a>
 
+        <!-- LEFT: Home (replaces Laws) -->
+        <a class="gKey gLeft" href="/home/" aria-label="Enter via home">
+          <span class="gKeyText"><strong>Home</strong><small>Site hub</small></span>
+        </a>
+
+        <!-- RIGHT: Enter (also goes to Home) -->
         <a class="gKey gRight" href="/home/" aria-label="Enter website">
           <span class="gKeyText"><strong>Enter</strong><small>Website</small></span>
         </a>
 
-        <a class="gKey gBottom" href="/" aria-label="Root">
+        <!-- BOTTOM: Root -->
+        <a class="gKey gBottom" href="/" aria-label="Go to root">
           <span class="gKeyText"><strong>Root</strong><small>Start</small></span>
         </a>
-
-        <a class="gKey gLeft" href="/laws/" aria-label="Go to Laws">
-          <span class="gKeyText"><strong>Laws</strong><small>Canonical</small></span>
-        </a>
-
       </div>
 
       <div class="gActions" aria-label="Navigation controls">
@@ -48,3 +49,4 @@
   </main>
 </body>
 </html>
+```0

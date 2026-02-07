@@ -1,110 +1,78 @@
-<!-- TNT #1: /laws/index.html  (FULL REPLACEMENT — 4 diamonds only + opaque preview modal + Enter routes to /laws/categories/) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Laws · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
-  <style>
-    /* Page-local: modal only (keeps geometry in branch.css) */
-    .gModal{
-      position:fixed; inset:0; display:none; align-items:center; justify-content:center;
-      padding:22px; z-index:9999;
-      background:rgba(0,0,0,.45);
-      backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-    }
-    .gModal.isOpen{display:flex;}
-    .gModalCard{
-      width:min(560px, 92vw);
-      border-radius:24px;
-      background:rgba(18,32,45,.95); /* OPAQUE */
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow:0 22px 80px rgba(0,0,0,.55);
-      padding:18px 18px 14px;
-      text-align:left;
-    }
-    .gModalCard h2{margin:4px 0 10px; font-size:22px; letter-spacing:-.01em;}
-    .gModalCard p{margin:0 0 12px; color:rgba(241,246,251,.82); line-height:1.4;}
-    .gModalHint{margin:10px 0 0; text-align:center; font-size:12px; color:rgba(241,246,251,.55);}
-    .gKey.isPreview strong{pointer-events:none;}
-    .gKey.isPreview small{pointer-events:none;}
-  </style>
 </head>
+
 <body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Laws</h1>
-      <p class="gSub">Tap a diamond to preview. Enter when ready.</p>
-    </header>
+<main class="gPage">
+  <header class="gHeader">
+    <h1 class="gTitle">Laws</h1>
+    <p class="gSub">Tap a diamond to preview. Enter when ready.</p>
+  </header>
 
-    <section class="gPanel" aria-label="Law preview">
-      <!-- EXACTLY 4 DIAMONDS -->
-      <div class="gCluster" role="navigation" aria-label="Law category preview diamonds">
-        <button class="gKey gTop isPreview" type="button" data-title="Reality" data-body="Reality defines what is actually the case. It separates what exists from what is assumed.">
-          <span class="gKeyText"><strong>Reality</strong><small>What is</small></span>
-        </button>
+  <section class="gPanel">
 
-        <button class="gKey gLeft isPreview" type="button" data-title="Integrity" data-body="Integrity defines what stays true. Alignment holds across time, pressure, and audience.">
-          <span class="gKeyText"><strong>Integrity</strong><small>What stays true</small></span>
-        </button>
+    <!-- PREVIEW DIAMONDS (BUTTONS, NOT LINKS) -->
+    <div class="gCluster" aria-label="Law previews">
+      <button class="gKey gTop" type="button" data-t="Reality"
+        data-b="Reality defines what is actually the case. It separates what exists from what is assumed.">
+        <span class="gKeyText"><strong>Reality</strong></span>
+      </button>
 
-        <button class="gKey gRight isPreview" type="button" data-title="Structure" data-body="Structure defines what holds. Constraints preserve form and prevent collapse.">
-          <span class="gKeyText"><strong>Structure</strong><small>What holds</small></span>
-        </button>
+      <button class="gKey gRight" type="button" data-t="Structure"
+        data-b="Structure defines what holds. Constraints preserve form and prevent collapse.">
+        <span class="gKeyText"><strong>Structure</strong></span>
+      </button>
 
-        <button class="gKey gBottom isPreview" type="button" data-title="Flow" data-body="Flow defines what moves. Change travels through systems via pathways and friction.">
-          <span class="gKeyText"><strong>Flow</strong><small>What moves</small></span>
-        </button>
-      </div>
+      <button class="gKey gBottom" type="button" data-t="Flow"
+        data-b="Flow defines what moves. Change proceeds through constraint rather than chaos.">
+        <span class="gKeyText"><strong>Flow</strong></span>
+      </button>
 
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/laws/categories/">Enter</a>
-        <a class="gBtn" href="/home/">Home</a>
-        <a class="gBtn" href="/home/">Back</a>
-      </div>
-
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
-  </main>
-
-  <!-- OPAQUE PREVIEW MODAL -->
-  <div class="gModal" id="modal" aria-hidden="true">
-    <div class="gModalCard" role="dialog" aria-modal="true" aria-labelledby="mTitle">
-      <h2 id="mTitle"></h2>
-      <p id="mBody"></p>
-      <div class="gModalHint">Tap anywhere to close</div>
+      <button class="gKey gLeft" type="button" data-t="Integrity"
+        data-b="Integrity defines what stays true. Alignment holds across time, pressure, and audience.">
+        <span class="gKeyText"><strong>Integrity</strong></span>
+      </button>
     </div>
+
+    <!-- ONLY FORWARD ACTION -->
+    <div class="gActions">
+      <a class="gBtn" href="/laws/categories/">Enter</a>
+      <a class="gBtn" href="/home/">Home</a>
+      <a class="gBtn" href="/home/">Back</a>
+    </div>
+
+    <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+  </section>
+</main>
+
+<!-- MODAL -->
+<div class="gModal" id="m">
+  <div class="gModalBackdrop"></div>
+  <div class="gModalCard">
+    <h3 id="mt"></h3>
+    <p id="mb"></p>
+    <div class="gModalHint">Tap anywhere to close</div>
   </div>
+</div>
 
-  <script>
-    (function(){
-      const modal = document.getElementById('modal');
-      const mTitle = document.getElementById('mTitle');
-      const mBody  = document.getElementById('mBody');
+<script>
+(()=> {
+  const m=document.getElementById('m'), mt=document.getElementById('mt'), mb=document.getElementById('mb');
+  const open=(t,b)=>{mt.textContent=t; mb.textContent=b; m.classList.add('isOpen');};
+  const close=()=>m.classList.remove('isOpen');
 
-      function openModal(title, body){
-        mTitle.textContent = title;
-        mBody.textContent  = body;
-        modal.classList.add('isOpen');
-        modal.setAttribute('aria-hidden','false');
-      }
-      function closeModal(){
-        modal.classList.remove('isOpen');
-        modal.setAttribute('aria-hidden','true');
-      }
+  document.querySelectorAll('button.gKey[data-t]').forEach(btn=>{
+    btn.addEventListener('click', ()=>open(btn.dataset.t, btn.dataset.b));
+  });
 
-      document.querySelectorAll('.gKey.isPreview').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-          openModal(btn.dataset.title || '', btn.dataset.body || '');
-        });
-      });
-
-      modal.addEventListener('click', closeModal);
-      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
-    })();
-  </script>
+  m.addEventListener('click', close);
+})();
+</script>
 </body>
 </html>

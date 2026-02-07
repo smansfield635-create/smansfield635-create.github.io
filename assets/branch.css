@@ -1,38 +1,88 @@
-/* ==========================
-   BRANCH PAGE LAYOUT CONTROL
-   ========================== */
+/* TNT — /assets/branch.css (FULL REPLACEMENT)
+   GEOMETRY ONLY: canonical 4 diamonds per page (N/E/S/W), center is implicit (not rendered).
+   No stacking. No center diamond. No subtitles enforcement here (content decides). */
 
-.gPage {
-  text-align: center;
-  padding: 32px 16px;
+:root{
+  --cluster: min(360px, 78vw);
+  --d: calc(var(--cluster) * .52);
+  --gap: calc(var(--cluster) * .26);
+  --round: 22px;
 }
 
-.gTitle {
-  font-size: 34px;
-  font-weight: 700;
-  margin-bottom: 6px;
+/* Cluster stage */
+.gCluster{
+  position:relative;
+  width:var(--cluster);
+  height:var(--cluster);
+  margin:20px auto 0;
+  isolation:isolate;
 }
 
-.gSub {
-  font-size: 15px;
-  color: var(--text-sub);
-  margin-bottom: 18px;
+/* Hard stop: no nested clusters */
+.gCluster .gCluster{display:none!important}
+
+/* Diamond key */
+.gKey{
+  position:absolute;
+  width:calc(var(--d) * .92);
+  height:calc(var(--d) * .92);
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:var(--round);
+  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 18px 46px rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  overflow:hidden;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  z-index:2;
+}
+.gKey:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
+
+/* Keep text horizontal */
+.gKeyText{
+  position:absolute; inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  transform:rotate(-45deg);
+  padding:16px;
+  text-align:center;
+  gap:6px;
+  pointer-events:none;
+}
+.gKeyText strong{
+  font-size:22px;
+  line-height:1.05;
+  font-weight:800;
+}
+.gKeyText small{
+  font-size:15px;
+  color:rgba(241,246,251,.68);
+  font-weight:700;
+  line-height:1.2;
 }
 
-/* Force single cluster per page */
-.gCluster {
-  transform: none !important;
-}
+/* Canonical positions (4 only) */
+.gTop{transform:translate(-50%,-50%) translateY(calc(-1 * var(--gap))) rotate(45deg)}
+.gRight{transform:translate(-50%,-50%) translateX(var(--gap)) rotate(45deg)}
+.gBottom{transform:translate(-50%,-50%) translateY(var(--gap)) rotate(45deg)}
+.gLeft{transform:translate(-50%,-50%) translateX(calc(-1 * var(--gap))) rotate(45deg)}
 
-/* Button row */
-.gActions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 20px;
-}
+/* Center is implicit: never render center diamond */
+.gCenter{display:none!important}
 
-/* Prevent accidental inherited transforms */
-.gPage * {
-  transform-style: flat;
+/* Prevent pseudo-layer click theft */
+.gCluster::before,.gCluster::after{content:none!important;pointer-events:none!important}
+
+@media (max-width:420px){
+  :root{--cluster:min(340px, 82vw)}
+  .gKeyText strong{font-size:20px}
+  .gKeyText small{font-size:14px}
 }
+```0

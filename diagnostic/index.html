@@ -1,63 +1,40 @@
-<!-- TNT: /diagnostic/index.html (FULL REPLACEMENT — merge Readiness into entry, lower cognitive load) -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Alignment Diagnostic · Geodiametrics</title>
-
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
-
-  <style>
-    .box{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:14px 16px;line-height:1.5}
-    .bul{margin:10px 0 0;padding-left:18px;opacity:.92}
-    .bul li{margin:6px 0}
-    .check{display:flex;gap:10px;align-items:flex-start;margin-top:12px}
-    input[type="checkbox"]{transform:scale(1.2);margin-top:2px}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Diamond Diagnostic Portals</title>
+<link rel="stylesheet" href="/assets/style.css"/>
 </head>
-
 <body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Alignment Diagnostic</h1>
-      <p class="gSub">Free will · Receipt-gated · Inspectable.</p>
-    </header>
+<div class="page">
+  <div class="hero">
+    <h1>Diamond Diagnostic Portals</h1>
+    <p>Each portal is a gate to exploration. Create your own path.</p>
+  </div>
 
-    <section class="gPanel" aria-label="Diagnostic entry">
-      <div class="box">
-        <p><strong>Purpose</strong> This diagnostic records choices and produces a receipt. It does not persuade, predict, or moralize.</p>
+  <div class="panel">
+    <div class="diamond-grid">
+      <a class="diamond" href="/pending/diagnostic/">
+        <strong>RUN</strong>
+        <span>Alignment diagnostic</span>
+      </a>
+      <a class="diamond" href="/home/">
+        <strong>ENTER</strong>
+        <span>Go to site</span>
+      </a>
+      <a class="diamond" href="/links/">
+        <strong>LEARN</strong>
+        <span>What this is</span>
+      </a>
+      <a class="diamond" href="https://google.com">
+        <strong>EXIT</strong>
+        <span>Leave now</span>
+      </a>
+    </div>
+  </div>
 
-        <ul class="bul">
-          <li><strong>What this is</strong> A short readiness gate, then a type lock-in, then the exam.</li>
-          <li><strong>Your control</strong> You can exit at any time.</li>
-          <li><strong>Rule</strong> Skipping or rushing invalidates the run.</li>
-        </ul>
-
-        <label class="check">
-          <input type="checkbox" id="ack" />
-          <span>I understand and choose to proceed.</span>
-        </label>
-      </div>
-
-      <div class="gActions" aria-label="Controls">
-        <a class="gBtn" href="/home/">Back</a>
-        <button class="gBtn gPrimary" id="continue" type="button">Continue</button>
-      </div>
-
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
-  </main>
-
-  <script>
-    document.getElementById('continue').addEventListener('click', ()=>{
-      const ack = document.getElementById('ack');
-      if(!ack.checked) return;
-      localStorage.setItem('GD_DIAG_STARTED_AT', new Date().toISOString());
-      location.href = '/diagnostic/type/';
-    });
-  </script>
+  <div class="canon">CANONICAL · STABLE · © GEODIAMETRICS</div>
+</div>
 </body>
 </html>

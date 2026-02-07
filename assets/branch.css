@@ -1,105 +1,38 @@
-/* TNT — /assets/branch.css (FULL REPLACEMENT)
-   GEOMETRY ONLY: diamonds + 4-diamond layout + safe overlap limits.
-   This file is the single source of truth for diamond geometry. */
+/* ==========================
+   BRANCH PAGE LAYOUT CONTROL
+   ========================== */
 
-:root{
-  --cluster-size: min(360px, 78vw);
-  --diamond-size: calc(var(--cluster-size) * .52); /* main diamond */
-  --diamond-gap: calc(var(--cluster-size) * .26);  /* distance from center */
-  --diamond-round: 22px;
+.gPage {
+  text-align: center;
+  padding: 32px 16px;
 }
 
-/* Cluster container (square stage for positioning) */
-.gCluster{
-  position:relative;
-  width:var(--cluster-size);
-  height:var(--cluster-size);
-  margin:20px auto 0;
+.gTitle {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
-/* Diamond key */
-.gKey{
-  position:absolute;
-  width:var(--diamond-size);
-  height:var(--diamond-size);
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:var(--diamond-round);
-  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow:0 18px 46px rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  overflow:hidden;
+.gSub {
+  font-size: 15px;
+  color: var(--text-sub);
+  margin-bottom: 18px;
 }
 
-/* Inner text stays horizontal */
-.gKeyText{
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  transform:rotate(-45deg);
-  padding:16px;
-  text-align:center;
-  gap:6px;
-}
-.gKeyText strong{
-  font-size:22px;
-  line-height:1.05;
-  font-weight:800;
-}
-.gKeyText small{
-  font-size:15px;
-  color:rgba(241,246,251,.68);
-  font-weight:700;
-  line-height:1.2;
+/* Force single cluster per page */
+.gCluster {
+  transform: none !important;
 }
 
-/* Hover/active without changing geometry */
-.gKey:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
-.gKey:focus{outline:none}
-
-/* Positions: exactly 4 diamonds per page */
-.gTop{ transform:translate(-50%,-50%) translateY(calc(-1 * var(--diamond-gap))) rotate(45deg) }
-.gRight{ transform:translate(-50%,-50%) translateX(var(--diamond-gap)) rotate(45deg) }
-.gBottom{ transform:translate(-50%,-50%) translateY(var(--diamond-gap)) rotate(45deg) }
-.gLeft{ transform:translate(-50%,-50%) translateX(calc(-1 * var(--diamond-gap))) rotate(45deg) }
-
-/* Optional center diamond (use only when page truly needs it) */
-.gCenter{
-  transform:translate(-50%,-50%) rotate(45deg);
-  width:calc(var(--diamond-size) * .62);
-  height:calc(var(--diamond-size) * .62);
-  border-radius:18px;
-  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+/* Button row */
+.gActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-/* Keep overlaps modest and consistent with your “good pages” */
-.gTop,.gRight,.gBottom,.gLeft{
-  width:calc(var(--diamond-size) * .92);
-  height:calc(var(--diamond-size) * .92);
-}
-
-/* Ensure text never bleeds outside on small screens */
-@media (max-width:420px){
-  :root{
-    --cluster-size: min(340px, 82vw);
-  }
-  .gKeyText strong{font-size:20px}
-  .gKeyText small{font-size:14px}
-}
-
-/* Utility: “diamond row” pages that don’t use diamonds (rare) */
-.gCluster.no-diamonds{height:auto}
-
-/* If any legacy CSS still tries to rotate .gKeyText, force lock */
-.gKeyText, .gKeyText *{
-  transform:none;
-}
-.gKeyText{
-  transform:rotate(-45deg) !important;
+/* Prevent accidental inherited transforms */
+.gPage * {
+  transform-style: flat;
 }

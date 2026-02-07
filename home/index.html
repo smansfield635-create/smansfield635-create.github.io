@@ -20,20 +20,21 @@
     <section class="gPanel" aria-label="Home routes">
       <div class="gCluster" role="navigation" aria-label="Primary routes">
 
-        <a class="gKey gTop" href="/laws/" aria-label="Laws">
+        <!-- ORDER + Z-INDEX LOCK: prevents overlap taps routing wrong -->
+        <a class="gKey gTop" href="/laws/" aria-label="Laws" style="z-index:5">
           <span class="gKeyText"><strong>Laws</strong><small>Canonical</small></span>
         </a>
 
-        <a class="gKey gRight" href="/products/" aria-label="Products">
+        <a class="gKey gLeft" href="/links/" aria-label="Links" style="z-index:4">
+          <span class="gKeyText"><strong>Links</strong><small>Reference</small></span>
+        </a>
+
+        <a class="gKey gRight" href="/products/" aria-label="Products" style="z-index:4">
           <span class="gKeyText"><strong>Products</strong><small>Systems</small></span>
         </a>
 
-        <a class="gKey gBottom" href="/gauges/" aria-label="Gauges">
+        <a class="gKey gBottom" href="/gauges/" aria-label="Gauges" style="z-index:3">
           <span class="gKeyText"><strong>Gauges</strong><small>Diagnostics</small></span>
-        </a>
-
-        <a class="gKey gLeft" href="/links/" aria-label="Links">
-          <span class="gKeyText"><strong>Links</strong><small>Reference</small></span>
         </a>
 
       </div>

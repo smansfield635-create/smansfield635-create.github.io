@@ -1,87 +1,38 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Not Found · Geodiametrics</title>
-
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-
+  <meta charset="UTF-8" />
+  <title>Not Found</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    .nfWrap{
-      max-width:420px;
-      margin:0 auto;
+    body{
+      margin:0;
+      background:#071722;
+      color:#f1f6fb;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:100vh;
       text-align:center;
     }
-    .nfWrap h1{
-      font-size:44px;
-      margin-bottom:10px;
-    }
-    .nfWrap p{
-      opacity:.85;
-      margin-bottom:22px;
-    }
-    .nfBox{
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.18);
-      border-radius:22px;
-      padding:22px;
-      backdrop-filter:blur(16px);
-    }
-    .nfActions{
-      display:flex;
-      gap:14px;
-      justify-content:center;
-      margin-top:18px;
-      flex-wrap:wrap;
-    }
-    .nfActions a{
-      padding:12px 22px;
-      border-radius:999px;
-      background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.22);
-      color:#fff;
-      text-decoration:none;
-      font-weight:700;
-    }
-    .nfActions a.primary{
-      background:linear-gradient(180deg,#2aa4ff,#1976d2);
-      box-shadow:0 8px 22px rgba(30,144,255,.35);
+    button{
+      margin-top:20px;
+      padding:14px 22px;
+      border-radius:20px;
       border:none;
-    }
-    footer{
-      margin-top:18px;
-      font-size:12px;
-      opacity:.65;
+      background:#1e88ff;
+      color:white;
+      font-size:16px;
+      cursor:pointer;
     }
   </style>
 </head>
-
 <body>
-  <main class="gPage">
-    <section class="gPanel nfWrap" aria-label="Not found">
-
-      <h1>Not Found</h1>
-      <p>This route does not exist.</p>
-
-      <div class="nfBox">
-        <p>
-          The page you tried to reach isn’t part of the canonical structure.
-        </p>
-
-        <div class="nfActions">
-          <a class="primary" href="/diagnostic/">Start Diagnostic</a>
-          <a href="/home/">Home</a>
-          <a href="/landing/">Gate</a>
-        </div>
-      </div>
-
-      <footer>
-        CANONICAL · STABLE · © GEODIAMETRICS
-      </footer>
-
-    </section>
-  </main>
+  <div>
+    <h1>Not Found</h1>
+    <p>This route is not part of the canonical structure.</p>
+    <button onclick="location.href='/'">Return to Root</button>
+  </div>
 </body>
 </html>

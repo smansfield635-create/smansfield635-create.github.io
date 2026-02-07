@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{
+      margin:0;
+      background:#071722;
+      color:#f1f6fb;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:100vh;
+      text-align:center;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,140px);
+      grid-gap:18px;
+    }
+    .btn{
+      padding:20px;
+      border-radius:22px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.25);
+      cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h1>Home</h1>
+    <p>One gate. Four routes.</p>
+    <div class="grid">
+      <div class="btn" onclick="location.href='../laws/'">LAWS</div>
+      <div class="btn" onclick="location.href='../links/'">LINKS</div>
+      <div class="btn" onclick="location.href='../products/'">PRODUCTS</div>
+      <div class="btn" onclick="location.href='../gauges/'">GAUGES</div>
+    </div>
+    <br/>
+    <div class="btn" onclick="location.href='../door/'">BACK</div>
+  </div>
+</body>
+</html>

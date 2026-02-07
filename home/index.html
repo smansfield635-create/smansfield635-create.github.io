@@ -1,117 +1,42 @@
-/* /assets/branch.css — FULL TNT REPLACEMENT
-   Purpose: The 4-diamond "branch" geometry (no extra stacking, no X, no center circle).
-   Works with anchors using:
-     .gCluster + .gKey + positional classes: .gTop .gRight .gBottom .gLeft
-   Optional center diamond: .gCenter
-*/
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Home · Geodiametrics</title>
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+</head>
+<body>
+<main class="gPage">
+  <header class="gHeader">
+    <h1 class="gTitle">Home</h1>
+    <p class="gSub">One gate · Four routes.</p>
+  </header>
 
-:root{
-  /* cluster sizing */
-  --clusterSize: min(72vw, 360px);
-  --keySize: min(44vw, 230px);
-  --keyRadius: 22px;
+  <section class="gPanel">
+    <div class="gCluster" role="navigation" aria-label="Home routes">
+      <a class="gKey gTop" href="/laws/" aria-label="Laws">
+        <span class="gKeyText"><strong>Laws</strong></span>
+      </a>
+      <a class="gKey gRight" href="/products/" aria-label="Products">
+        <span class="gKeyText"><strong>Products</strong></span>
+      </a>
+      <a class="gKey gBottom" href="/gauges/" aria-label="Gauges">
+        <span class="gKeyText"><strong>Gauges</strong></span>
+      </a>
+      <a class="gKey gLeft" href="/links/" aria-label="Links">
+        <span class="gKeyText"><strong>Links</strong></span>
+      </a>
+    </div>
 
-  /* overlap control (smaller number = tighter overlap) */
-  --offset: 62%;
-  /* diamond look */
-  --glassA: rgba(255,255,255,.08);
-  --glassB: rgba(255,255,255,.06);
-  --keyStroke: rgba(255,255,255,.14);
-  --keyStroke2: rgba(255,255,255,.10);
-}
+    <div class="gActions">
+      <a class="gBtn" href="/door/">Door</a>
+      <a class="gBtn" href="/">Root</a>
+    </div>
 
-/* container that holds the diamonds */
-.gCluster{
-  position:relative;
-  width:var(--clusterSize);
-  aspect-ratio: 1 / 1;
-  margin: 6px auto 0;
-  display:block;
-}
-
-/* a single diamond button */
-.gKey{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:var(--keySize);
-  height:var(--keySize);
-  border-radius:var(--keyRadius);
-  transform: translate(-50%,-50%) rotate(45deg);
-  background: linear-gradient(180deg, var(--glassA), var(--glassB));
-  border:1px solid var(--keyStroke);
-  box-shadow: 0 16px 45px rgba(0,0,0,.35);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  cursor:pointer;
-}
-
-/* inner text counter-rotated */
-.gKeyText{
-  transform: rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  padding:14px;
-  line-height:1.05;
-  color:rgba(233,241,246,.95);
-}
-
-.gKeyText strong{
-  font-size:24px;
-  font-weight:800;
-  letter-spacing:.2px;
-}
-
-.gKeyText small,
-.gKeyText span{
-  font-size:16px;
-  font-weight:600;
-  color:rgba(233,241,246,.70);
-}
-
-/* positions (ONLY ONE SET — prevents multi-stack “double diamonds”) */
-.gTop{   transform: translate(-50%, calc(-50% - var(--offset))) rotate(45deg); }
-.gRight{ transform: translate(calc(-50% + var(--offset)), -50%) rotate(45deg); }
-.gBottom{transform: translate(-50%, calc(-50% + var(--offset))) rotate(45deg); }
-.gLeft{  transform: translate(calc(-50% - var(--offset)), -50%) rotate(45deg); }
-
-/* optional center button */
-.gCenter{
-  width: calc(var(--keySize) * .64);
-  height: calc(var(--keySize) * .64);
-  border-radius:18px;
-  border:1px solid var(--keyStroke2);
-  box-shadow: 0 10px 34px rgba(0,0,0,.25);
-}
-
-/* tighten for small screens */
-@media (max-width: 420px){
-  :root{
-    --clusterSize: min(86vw, 360px);
-    --keySize: min(54vw, 240px);
-    --offset: 58%;
-  }
-  .gKeyText strong{font-size:22px}
-  .gKeyText small,
-  .gKeyText span{font-size:15px}
-}
-
-/* hover/active */
-.gKey:hover{ border-color: rgba(255,255,255,.20); }
-.gKey:active{ transform: translate(-50%,-50%) rotate(45deg) scale(.99); }
-.gTop:active{ transform: translate(-50%, calc(-50% - var(--offset))) rotate(45deg) scale(.99); }
-.gRight:active{ transform: translate(calc(-50% + var(--offset)), -50%) rotate(45deg) scale(.99); }
-.gBottom:active{ transform: translate(-50%, calc(-50% + var(--offset))) rotate(45deg) scale(.99); }
-.gLeft:active{ transform: translate(calc(-50% - var(--offset)), -50%) rotate(45deg) scale(.99); }
-
-/* hard-kill any accidental “X / center dot” artifacts if old HTML left them behind */
-.gCluster .x,
-.gCluster .centerDot,
-.gCluster .cross,
-.gCluster svg,
-.gCluster canvas{ display:none !important; }
+    <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+  </section>
+</main>
+</body>
+</html>

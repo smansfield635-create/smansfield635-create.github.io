@@ -1,13 +1,251 @@
-:root{--bg-top:#0c2232;--bg-bottom:#071722;--text:#f1f6fb;--sub:rgba(241,246,251,.72);--panel-glass:rgba(255,255,255,.12);--panel-border:rgba(255,255,255,.22);--glass:rgba(255,255,255,.22);--glass2:rgba(255,255,255,.14);--blur:18px;--radius:26px;--shadow:0 18px 60px rgba(0,0,0,.28)}
+/* TNT: /assets/ui.css (FULL REPLACEMENT — same layout, upgraded “diamond-glass”, twilight stars + twinkle + shooting stars) */
+
+:root{
+  --bg-top:#0b1f30;
+  --bg-bottom:#06121c;
+
+  --text:#f1f6fb;
+  --sub:rgba(241,246,251,.72);
+
+  /* glass */
+  --panel-glass:rgba(255,255,255,.10);
+  --panel-border:rgba(255,255,255,.18);
+  --glass:rgba(255,255,255,.18);
+  --glass2:rgba(255,255,255,.10);
+  --blur:18px;
+  --radius:26px;
+  --shadow:0 18px 60px rgba(0,0,0,.32);
+
+  /* starfield */
+  --stars-1:rgba(255,255,255,.60);
+  --stars-2:rgba(255,255,255,.35);
+  --stars-3:rgba(255,255,255,.22);
+  --twinkle-a:6.5s;
+  --twinkle-b:9.0s;
+  --shoot-a:7.0s;
+  --shoot-b:11.0s;
+}
+
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%}
-body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text);background:radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),linear-gradient(180deg,var(--bg-top),var(--bg-bottom))}
-.page{min-height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;text-align:center}
-.hero{width:100%;max-width:520px;margin-bottom:18px}
-.hero h1{font-size:44px;font-weight:800;letter-spacing:-0.02em;line-height:1.05;margin-bottom:8px}
-.hero p{font-size:18px;color:var(--sub);line-height:1.35}
-.panel{width:100%;max-width:520px;position:relative;padding:32px 20px 22px;border-radius:var(--radius);background:linear-gradient(180deg,var(--panel-glass),rgba(255,255,255,.05));border:1px solid var(--panel-border);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));box-shadow:var(--shadow);overflow:hidden}
-.canon{margin-top:18px;font-size:12px;color:rgba(241,246,251,.55)}
+
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--text);
+
+  /* twilight base (no bright colors) */
+  background:
+    radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.07), transparent 55%),
+    radial-gradient(900px 700px at 18% 12%, rgba(120,170,255,.05), transparent 60%),
+    radial-gradient(800px 650px at 84% 22%, rgba(140,120,255,.04), transparent 62%),
+    linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* --- STARFIELD LAYERS --- */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+
+  /* star speckles (3 densities) */
+  background:
+    radial-gradient(1px 1px at 8% 18%, var(--stars-1) 98%, transparent 100%),
+    radial-gradient(1px 1px at 14% 72%, var(--stars-2) 98%, transparent 100%),
+    radial-gradient(1px 1px at 22% 34%, var(--stars-3) 98%, transparent 100%),
+    radial-gradient(1px 1px at 28% 58%, var(--stars-2) 98%, transparent 100%),
+    radial-gradient(1px 1px at 33% 22%, var(--stars-1) 98%, transparent 100%),
+    radial-gradient(1px 1px at 41% 66%, var(--stars-3) 98%, transparent 100%),
+    radial-gradient(1px 1px at 46% 14%, var(--stars-2) 98%, transparent 100%),
+    radial-gradient(1px 1px at 52% 46%, var(--stars-3) 98%, transparent 100%),
+    radial-gradient(1px 1px at 58% 28%, var(--stars-2) 98%, transparent 100%),
+    radial-gradient(1px 1px at 64% 76%, var(--stars-3) 98%, transparent 100%),
+    radial-gradient(1px 1px at 70% 18%, var(--stars-1) 98%, transparent 100%),
+    radial-gradient(1px 1px at 76% 52%, var(--stars-2) 98%, transparent 100%),
+    radial-gradient(1px 1px at 82% 34%, var(--stars-3) 98%, transparent 100%),
+    radial-gradient(1px 1px at 88% 68%, var(--stars-2) 98%, transparent 100%),
+    radial-gradient(1px 1px at 94% 26%, var(--stars-1) 98%, transparent 100%),
+
+    /* denser micro-stars via repeating pattern */
+    radial-gradient(circle at 12% 24%, rgba(255,255,255,.10), transparent 18%),
+    radial-gradient(circle at 58% 38%, rgba(255,255,255,.08), transparent 20%),
+    radial-gradient(circle at 82% 18%, rgba(255,255,255,.07), transparent 22%);
+
+  opacity:.9;
+  filter:drop-shadow(0 0 6px rgba(255,255,255,.10));
+  animation:twinkleA var(--twinkle-a) ease-in-out infinite alternate;
+}
+
+/* second twinkle layer (subtle parallax feel) */
+body::after{
+  content:"";
+  position:fixed;
+  inset:-10%;
+  pointer-events:none;
+  z-index:0;
+
+  background:
+    radial-gradient(1px 1px at 10% 40%, rgba(255,255,255,.22) 98%, transparent 100%),
+    radial-gradient(1px 1px at 30% 10%, rgba(255,255,255,.18) 98%, transparent 100%),
+    radial-gradient(1px 1px at 55% 70%, rgba(255,255,255,.16) 98%, transparent 100%),
+    radial-gradient(1px 1px at 78% 42%, rgba(255,255,255,.20) 98%, transparent 100%),
+    radial-gradient(1px 1px at 92% 16%, rgba(255,255,255,.18) 98%, transparent 100%);
+  opacity:.55;
+  animation:twinkleB var(--twinkle-b) ease-in-out infinite alternate;
+}
+
+/* shooting stars: lightweight elements via background-position animation on a helper */
+.shooting-stars{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+.shooting-stars i{
+  position:absolute;
+  width:140px;
+  height:2px;
+  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.55), rgba(255,255,255,0));
+  filter:drop-shadow(0 0 10px rgba(255,255,255,.18));
+  opacity:0;
+  transform:rotate(-18deg);
+  animation:shoot var(--shoot-a) linear infinite;
+}
+.shooting-stars i:nth-child(1){top:18%;left:-20%;animation-delay:1.2s;animation-duration:var(--shoot-a)}
+.shooting-stars i:nth-child(2){top:42%;left:-25%;animation-delay:3.8s;animation-duration:var(--shoot-b)}
+.shooting-stars i:nth-child(3){top:64%;left:-30%;animation-delay:6.6s;animation-duration:9.5s}
+.shooting-stars i:nth-child(4){top:28%;left:-35%;animation-delay:9.2s;animation-duration:12.0s}
+
+@keyframes twinkleA{
+  0%{opacity:.75;filter:drop-shadow(0 0 6px rgba(255,255,255,.08))}
+  100%{opacity:.95;filter:drop-shadow(0 0 9px rgba(255,255,255,.14))}
+}
+@keyframes twinkleB{
+  0%{opacity:.40;transform:translateY(0)}
+  100%{opacity:.60;transform:translateY(-0.6%)}
+}
+@keyframes shoot{
+  0%{opacity:0;transform:translateX(0) rotate(-18deg)}
+  10%{opacity:.85}
+  35%{opacity:0}
+  100%{opacity:0;transform:translateX(160vw) rotate(-18deg)}
+}
+
+/* Motion safety */
+@media (prefers-reduced-motion: reduce){
+  body::before, body::after{animation:none}
+  .shooting-stars{display:none}
+}
+
+/* --- LAYOUT --- */
+.page{
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  text-align:center;
+  position:relative;
+  z-index:1; /* above stars */
+}
+
+.hero{
+  width:100%;
+  max-width:520px;
+  margin-bottom:18px;
+}
+
+.hero h1{
+  font-size:44px;
+  font-weight:800;
+  letter-spacing:-0.02em;
+  line-height:1.05;
+  margin-bottom:8px;
+}
+
+.hero p{
+  font-size:18px;
+  color:var(--sub);
+  line-height:1.35;
+}
+
+/* --- PANELS / GLASS UPGRADE (no bright color, more diamond-glass) --- */
+.panel{
+  width:100%;
+  max-width:520px;
+  position:relative;
+  padding:32px 20px 22px;
+  border-radius:var(--radius);
+
+  /* layered glass: specular + depth + subtle vignette */
+  background:
+    radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,.18), transparent 55%),
+    radial-gradient(90% 70% at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(180deg, var(--panel-glass), rgba(255,255,255,.04));
+
+  border:1px solid var(--panel-border);
+  box-shadow:var(--shadow);
+
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  overflow:hidden;
+  z-index:1;
+}
+
+/* internal “diamond-glass” sheen (subtle, no color) */
+.panel::before{
+  content:"";
+  position:absolute;
+  inset:-30%;
+  background:
+    radial-gradient(45% 35% at 30% 20%, rgba(255,255,255,.14), transparent 60%),
+    radial-gradient(35% 30% at 70% 55%, rgba(255,255,255,.08), transparent 65%);
+  transform:rotate(12deg);
+  opacity:.85;
+  pointer-events:none;
+}
+
+/* micro sparkle grain (very subtle) */
+.panel::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(1px 1px at 12% 22%, rgba(255,255,255,.10), transparent 60%),
+    radial-gradient(1px 1px at 38% 64%, rgba(255,255,255,.08), transparent 60%),
+    radial-gradient(1px 1px at 72% 28%, rgba(255,255,255,.07), transparent 60%),
+    radial-gradient(1px 1px at 86% 70%, rgba(255,255,255,.06), transparent 60%);
+  opacity:.35;
+  pointer-events:none;
+}
+
+.canon{
+  margin-top:18px;
+  font-size:12px;
+  color:rgba(241,246,251,.55);
+  position:relative;
+  z-index:1;
+}
+
 a{color:inherit}
-a:focus{outline:2px solid rgba(241,246,251,.25);outline-offset:4px;border-radius:14px}
-@media (max-width:420px){.hero h1{font-size:40px}}
+a:focus{
+  outline:2px solid rgba(241,246,251,.25);
+  outline-offset:4px;
+  border-radius:14px
+}
+
+/* Small screens */
+@media (max-width:420px){
+  .hero h1{font-size:40px}
+}
+
+/* Add this single div anywhere in your HTML just inside <body>:
+   <div class="shooting-stars"><i></i><i></i><i></i><i></i></div>
+   (No design changes; it only paints behind everything.) */
+```0

@@ -1,76 +1,138 @@
-<style>
-/* ===== DIAMOND PLATFORM ===== */
-.diamond-platform{
-  position:relative;
-  width:min(78vw,320px);
-  aspect-ratio:1/1;
-  margin:32px auto;
-}
-.diamond-platform::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(255,255,255,.06);
-  border-radius:22px;
-  transform:rotate(45deg);
-  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
-}
+<!-- TNT: /laws/categories/integrity/index.html  (FULL REPLACEMENT) -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Integrity · Geodiametrics</title>
 
-/* ===== DIAMOND BUTTONS ===== */
-.diamond-btn{
-  position:absolute;
-  width:42%;
-  height:42%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  color:#eef6fb;
-  font-weight:800;
-  border-radius:16px;
-  background:rgba(255,255,255,.14);
-  box-shadow:0 0 0 1px rgba(255,255,255,.18) inset;
-  transform:rotate(45deg);
-}
-.diamond-btn span{
-  transform:rotate(-45deg);
-  text-align:center;
-  line-height:1.1;
-}
-.diamond-btn small{
-  display:block;
-  font-weight:600;
-  opacity:.75;
-  margin-top:6px;
-}
+  <!-- If these files exist, they will carry the global look -->
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
 
-/* ===== POSITIONS (ALIGNED TO PLATFORM) ===== */
-.btn-top{left:29%;top:2%;}
-.btn-right{right:2%;top:29%;}
-.btn-bottom{left:29%;bottom:2%;}
-.btn-left{left:2%;top:29%;}
+  <!-- HARD FAILSAFE so the page is NEVER white even if CSS links break -->
+  <style>
+    html,body{height:100%;margin:0}
+    body{
+      background: radial-gradient(1200px 700px at 50% 15%, rgba(255,255,255,.08), rgba(0,0,0,0) 55%),
+                  linear-gradient(180deg,#081b24,#06141c 40%,#040d13);
+      color:#eaf4fb;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+    .gPage{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px}
+    .gPanel{
+      width:min(560px,92vw);
+      border-radius:28px;
+      background:rgba(255,255,255,.06);
+      box-shadow:0 0 0 1px rgba(255,255,255,.10) inset, 0 18px 60px rgba(0,0,0,.35);
+      padding:26px 18px 18px;
+      text-align:center;
+    }
+    .gTitle{margin:10px 0 6px;font-size:52px;line-height:1.05;letter-spacing:.4px}
+    .gSub{margin:0 0 18px;font-size:20px;opacity:.75}
+    .gFooter{margin-top:14px;font-size:12px;letter-spacing:.28em;opacity:.55}
 
-.diamond-btn:active{
-  background:rgba(255,255,255,.22);
-}
-</style>
+    .gActions{display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+    .gBtn{
+      display:inline-flex;align-items:center;justify-content:center;
+      min-width:120px;height:52px;padding:0 18px;
+      border-radius:18px;
+      background:rgba(255,255,255,.10);
+      box-shadow:0 0 0 1px rgba(255,255,255,.14) inset;
+      color:#eaf4fb;text-decoration:none;font-weight:700;
+    }
+    .gBtn:active{background:rgba(255,255,255,.16)}
 
-<div class="diamond-platform">
+    /* ===== ONE DIAMOND PLATFORM + FOUR DIAMOND BUTTONS (NO X, NO DOT) ===== */
+    .diamondWrap{display:flex;justify-content:center;margin:10px 0 6px}
+    .diamondPlatform{
+      position:relative;
+      width:min(78vw,340px);
+      aspect-ratio:1/1;
+    }
+    .diamondPlatform::before{
+      content:"";
+      position:absolute;inset:0;
+      background:rgba(255,255,255,.06);
+      border-radius:22px;
+      transform:rotate(45deg);
+      box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
+    }
 
-  <a class="diamond-btn btn-top" href="./consistency/">
-    <span>Consistency<small>Across time</small></span>
-  </a>
+    .dBtn{
+      position:absolute;
+      width:42%;
+      height:42%;
+      display:flex;align-items:center;justify-content:center;
+      text-decoration:none;
+      color:#eef6fb;
+      font-weight:800;
+      border-radius:16px;
+      background:rgba(255,255,255,.14);
+      box-shadow:0 0 0 1px rgba(255,255,255,.18) inset;
+      transform:rotate(45deg);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .dBtn span{
+      transform:rotate(-45deg);
+      text-align:center;
+      line-height:1.05;
+      padding:0 10px;
+    }
+    .dBtn small{
+      display:block;
+      font-weight:650;
+      opacity:.74;
+      margin-top:6px;
+      font-size:12px;
+      letter-spacing:.02em;
+    }
+    .dBtn:active{background:rgba(255,255,255,.22)}
 
-  <a class="diamond-btn btn-right" href="./accountability/">
-    <span>Accountability<small>Ownership</small></span>
-  </a>
+    /* positions aligned to the platform (one structure, four paths) */
+    .top{left:29%;top:2%}
+    .right{right:2%;top:29%}
+    .bottom{left:29%;bottom:2%}
+    .left{left:2%;top:29%}
+  </style>
+</head>
 
-  <a class="diamond-btn btn-bottom" href="./continuity/">
-    <span>Continuity<small>No breaks</small></span>
-  </a>
+<body>
+  <main class="gPage">
+    <section class="gPanel" aria-label="Integrity">
+      <h1 class="gTitle">Integrity</h1>
+      <p class="gSub">What stays true.</p>
 
-  <a class="diamond-btn btn-left" href="./coherence/">
-    <span>Coherence<small>No contradiction</small></span>
-  </a>
+      <!-- ONE PLATFORM, FOUR DIAMOND BUTTONS -->
+      <div class="diamondWrap">
+        <div class="diamondPlatform" role="navigation" aria-label="Integrity core paths">
+          <a class="dBtn top" href="/laws/categories/integrity/consistency/" aria-label="Consistency">
+            <span>Consistency<small>Across time</small></span>
+          </a>
 
-</div>
+          <a class="dBtn right" href="/laws/categories/integrity/accountability/" aria-label="Accountability">
+            <span>Accountability<small>Ownership</small></span>
+          </a>
+
+          <a class="dBtn bottom" href="/laws/categories/integrity/continuity/" aria-label="Continuity">
+            <span>Continuity<small>No breaks</small></span>
+          </a>
+
+          <a class="dBtn left" href="/laws/categories/integrity/coherence/" aria-label="Coherence">
+            <span>Coherence<small>No contradiction</small></span>
+          </a>
+        </div>
+      </div>
+
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/laws/categories/">Categories</a>
+        <a class="gBtn" href="/laws/">Laws</a>
+        <a class="gBtn" href="/home/">Home</a>
+      </div>
+
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
+</body>
+</html>
+```0

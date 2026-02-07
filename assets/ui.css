@@ -1,42 +1,63 @@
-.snowflake {
-  position: relative;
-  width: 240px;
-  height: 240px;
-  margin: 0 auto 28px;
+/* ===== GLOBAL COSMIC WORD-SNOW (BEHIND UI) ===== */
+html,body{height:100%}
+body{position:relative}
+
+/* ensure all your main content sits above the word-snow */
+.page,.gPage,.panel,.gPanel{position:relative;z-index:2}
+
+/* 4 drifting lines using pseudo-elements (no HTML needed) */
+body::before,
+body::after,
+.page::before,
+.page::after{
+  content:"";
+  position:fixed;
+  left:50%;
+  top:-35vh;
+  transform:translateX(-50%);
+  white-space:nowrap;
+  pointer-events:none;
+  z-index:1;                 /* behind panels (z=2), above background */
+  font-weight:700;
+  letter-spacing:.02em;
+  font-size:clamp(16px,3vw,30px);
+  color:rgba(255,255,255,.22);       /* BRIGHT but still background */
+  text-shadow:0 0 18px rgba(255,255,255,.25);
+  opacity:1;
+  animation:cosmicFall linear infinite;
 }
 
-.diamond {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) rotate(45deg);
-  background: rgba(255,255,255,.14);
-  border: 1px solid rgba(255,255,255,.28);
-  border-radius: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  color: var(--text);
-  transition: transform .15s ease, background .15s ease;
+/* different phrases + different horizontal offsets + different speeds */
+body::before{
+  content:"learn to live to love";
+  left:18%;
+  animation-duration:68s;
+}
+body::after{
+  content:"learn to love to laugh";
+  left:74%;
+  animation-duration:82s;
+}
+.page::before{
+  content:"learn to live to listen";
+  left:36%;
+  animation-duration:95s;
+}
+.page::after{
+  content:"learn to love to live";
+  left:58%;
+  animation-duration:110s;
 }
 
-.diamond span {
-  transform: rotate(-45deg);
-  font-weight: 700;
-  letter-spacing: .04em;
-  font-size: 14px;
+@keyframes cosmicFall{
+  from{transform:translate(-50%,-35vh)}
+  to{transform:translate(-50%,135vh)}
 }
 
-.diamond:hover {
-  background: rgba(255,255,255,.22);
-  transform: translate(-50%, -50%) rotate(45deg) scale(1.05);
+/* Optional: tone it down on very small screens if needed */
+@media (max-width:420px){
+  body::before,body::after,.page::before,.page::after{
+    color:rgba(255,255,255,.18);
+    text-shadow:0 0 14px rgba(255,255,255,.22);
+  }
 }
-
-/* directional offsets */
-.top    { transform: translate(-50%, -140%) rotate(45deg); }
-.right  { transform: translate(40%, -50%) rotate(45deg); }
-.bottom { transform: translate(-50%, 40%) rotate(45deg); }
-.left   { transform: translate(-140%, -50%) rotate(45deg); }

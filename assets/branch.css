@@ -1,174 +1,120 @@
-/* =========================================================
-   BRANCH PAGES — CANONICAL 4-KEY DIAMOND CLUSTER (NO FORCED X)
-   Used by /home and all branch index pages.
-   ========================================================= */
+/* =========================
+   BRANCH LAYOUT ONLY
+   (Diamonds / clusters / nav)
+   No global background. No word-snow.
+   ========================= */
 
-:root{
-  --bgA:#0b1a26;
-  --bgB:#07131d;
+/* Page scaffolding helpers */
+.gRow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
 
-  --panelA:rgba(255,255,255,0.06);
-  --panelB:rgba(255,255,255,0.02);
-  --stroke:rgba(255,255,255,0.16);
-
-  --keyFill:rgba(255,255,255,0.08);
-  --keyStroke:rgba(255,255,255,0.16);
-  --keyInner:rgba(255,255,255,0.08);
-
-  --txt:#e8eef5;
-  --sub:#b9c6d3;
-
-  /* cluster tuning */
-  --clusterSize: clamp(240px, 70vw, 360px);
-  --keySize: clamp(116px, 28vw, 168px);
-  --keyOffset: calc(var(--clusterSize) * 0.28); /* distance from center */
-}
-
-*{ box-sizing:border-box; }
-html,body{ height:100%; }
-
-body{
-  margin:0;
-  font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  color:var(--txt);
-  background: radial-gradient(120% 120% at 50% 0%, var(--bgA), var(--bgB));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-/* page */
-.gPage{
-  width:100%;
-  max-width: 520px;
-  padding: 28px 22px 34px;
-  text-align:center;
-}
-
-.gHeader{ margin-bottom: 18px; }
-
-.gTitle{
-  margin:0;
-  font-size: clamp(2.2rem, 8vw, 3.2rem);
-  letter-spacing: 0.2px;
-  font-weight: 750;
-}
-
-.gSub{
-  margin: 8px 0 0;
-  color: var(--sub);
-  font-size: 1.05rem;
-}
-
-/* glass panel */
-.gPanel{
-  margin: 22px auto 0;
-  padding: 26px 18px 18px;
-  border-radius: 28px;
-  border: 1px solid var(--stroke);
-  background: linear-gradient(180deg, var(--panelA), var(--panelB));
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-}
-
-/* cluster */
+/* Diamond cluster (4-way) */
 .gCluster{
-  position: relative;
-  width: var(--clusterSize);
-  height: var(--clusterSize);
-  margin: 10px auto 18px;
+  position:relative;
+  width:min(340px,78vw);
+  aspect-ratio:1/1;
+  margin:18px auto 6px;
+  z-index:3;
 }
 
-/* key */
-.gKey{
+/* Center diamond support (single key in center) */
+.gCenter{
   position:absolute;
   left:50%;
   top:50%;
-  width: var(--keySize);
-  height: var(--keySize);
-  transform: translate(-50%,-50%) rotate(45deg);
-  border-radius: 18px;
-  background: var(--keyFill);
-  border: 1px solid var(--keyStroke);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  text-decoration:none;
-  color:inherit;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+
+/* Base diamond key */
+.gKey{
+  position:absolute;
+  width:56%;
+  height:56%;
+  left:22%;
+  top:22%;
+
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.25);
-  overflow:hidden; /* ensures inner outline stays clean */
+
+  transform:rotate(45deg);
+  border-radius:22px;
+
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 18px 60px rgba(0,0,0,.28);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+
+  text-decoration:none;
+  color:inherit;
+
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  cursor:pointer;
 }
 
-.gKey::after{
-  content:"";
-  position:absolute;
-  inset: 10px;
-  border-radius: 14px;
-  border: 1px solid var(--keyInner);
-  pointer-events:none;
-}
+/* 4 positions */
+.gTop{left:22%; top:0%}
+.gRight{left:44%; top:22%}
+.gBottom{left:22%; top:44%}
+.gLeft{left:0%; top:22%}
 
-/* readable text */
+/* Keep text horizontal always */
 .gKeyText{
-  transform: rotate(-45deg);
+  transform:rotate(-45deg);
+  -webkit-transform:rotate(-45deg);
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
-  line-height: 1.2;
-  font-size: 0.95rem;
-  color: var(--sub);
+
+  width:78%;
+  line-height:1.08;
+
+  font-size:14px;
+  font-weight:700;
+  color:rgba(241,246,255,.92);
 }
 
 .gKeyText strong{
   display:block;
-  color: var(--txt);
-  letter-spacing: 0.8px;
-  font-size: 1.05rem;
-  margin-bottom: 6px;
+  font-size:clamp(18px,4.2vw,22px);
+  letter-spacing:.06em;
+  font-weight:900;
+  color:#f7fbff;
+  margin-bottom:6px;
 }
 
-/* positions (NO FORCED X — pure diamond offsets) */
-.gTop    { transform: translate(-50%, calc(-50% - var(--keyOffset))) rotate(45deg); }
-.gRight  { transform: translate(calc(-50% + var(--keyOffset)), -50%) rotate(45deg); }
-.gBottom { transform: translate(-50%, calc(-50% + var(--keyOffset))) rotate(45deg); }
-.gLeft   { transform: translate(calc(-50% - var(--keyOffset)), -50%) rotate(45deg); }
-
-/* interactions */
-.gKey:active{ transform: translate(var(--tx, -50%), var(--ty, -50%)) rotate(45deg) scale(0.985); }
-.gKey:hover{ filter: brightness(1.06); }
-
-.gKey.gTop:active    { transform: translate(-50%, calc(-50% - var(--keyOffset))) rotate(45deg) scale(0.985); }
-.gKey.gRight:active  { transform: translate(calc(-50% + var(--keyOffset)), -50%) rotate(45deg) scale(0.985); }
-.gKey.gBottom:active { transform: translate(-50%, calc(-50% + var(--keyOffset))) rotate(45deg) scale(0.985); }
-.gKey.gLeft:active   { transform: translate(calc(-50% - var(--keyOffset)), -50%) rotate(45deg) scale(0.985); }
-
-/* buttons */
-.gActions{
-  display:flex;
-  gap: 12px;
-  justify-content: space-between;
-  margin: 10px 6px 8px;
+.gKeyText small{
+  opacity:.78;
+  font-weight:700;
+  font-size:13px;
 }
 
-.gBtn{
-  flex:1;
-  text-decoration:none;
-  color: var(--txt);
-  border: 1px solid var(--stroke);
-  background: rgba(255,255,255,0.06);
-  padding: 12px 14px;
-  border-radius: 18px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  font-weight: 650;
-}
+/* Hover/active */
+.gKey:hover{border-color:rgba(255,255,255,.26)}
+.gKey:active{transform:rotate(45deg) scale(.985)}
 
-.gBtn:active{ transform: translateY(1px); }
+/* Single cluster helper: use one diamond only */
+.gSingle .gKey{position:absolute}
+.gSingle .gKey.gCenter{width:56%;height:56%}
 
-/* footer */
-.gFooter{
-  margin-top: 8px;
-  font-size: 0.78rem;
-  letter-spacing: 1.4px;
-  color: rgba(185,198,211,0.72);
+/* Stack helpers already defined in ui.css; keep here only if missing */
+.gStack{display:grid;gap:12px;margin-top:18px}
+
+/* Solid bubble helper (ui.css sets base; this ensures consistent) */
+.solid{background:rgba(38,48,58,.95) !important}
+
+/* Click-safety: no pseudo-layers steal taps */
+.gCluster::before,
+.gCluster::after{pointer-events:none !important}
+
+/* Mobile tightening */
+@media (max-width:420px){
+  .gCluster{width:min(320px,86vw)}
+  .gKey{border-radius:20px}
+  .gKeyText{font-size:13px}
+  .gKeyText strong{font-size:clamp(17px,4.6vw,21px)}
 }

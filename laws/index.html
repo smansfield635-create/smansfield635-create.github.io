@@ -1,148 +1,80 @@
-<!-- 🔥 TNT — /laws/index.html (FULL REPLACEMENT)
-     Categories (not tiers). Category 1 has TWO diamonds (8 claims total).
-     Uses the SAME gCluster / gKey system as your working pages.
--->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Laws · Geodiametrics</title>
+
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
-  <style>
-    /* lightweight toggles only; geometry untouched */
-    .lawToggles{display:flex;gap:10px;justify-content:center;margin:8px 0 16px;flex-wrap:wrap}
-    .lawToggles .gBtn{cursor:pointer}
-    .hidden{display:none}
-  </style>
 </head>
 
 <body>
   <main class="gPage">
+
     <header class="gHeader">
       <h1 class="gTitle">Laws</h1>
-      <p class="gSub">Canonical structure · Categories</p>
-
-      <!-- CATEGORY SELECTOR -->
-      <div class="lawToggles" aria-label="Category selector">
-        <a class="gBtn" onclick="showCat(1)">Category 1</a>
-        <a class="gBtn" onclick="showCat(2)">Category 2</a>
-        <a class="gBtn" onclick="showCat(3)">Category 3</a>
-      </div>
-
-      <!-- DIAMOND SELECTOR (only for Category 1) -->
-      <div id="cat1Diamonds" class="lawToggles">
-        <a class="gBtn" onclick="showCat1Diamond('A')">Diamond A</a>
-        <a class="gBtn" onclick="showCat1Diamond('B')">Diamond B</a>
-      </div>
+      <p class="gSub">Canonical structure · Categories.</p>
     </header>
 
     <section class="gPanel" aria-label="Law categories">
 
-      <!-- ===================== CATEGORY 1 — DIAMOND A ===================== -->
-      <div id="cat1A">
-        <div class="gCluster" role="navigation" aria-label="Category 1 · Diamond A">
-          <a class="gKey gTop" href="/laws/cat-1/a/1/">
-            <span class="gKeyText"><strong>Claim 1</strong>Foundational</span>
-          </a>
-          <a class="gKey gRight" href="/laws/cat-1/a/2/">
-            <span class="gKeyText"><strong>Claim 2</strong>Foundational</span>
-          </a>
-          <a class="gKey gBottom" href="/laws/cat-1/a/3/">
-            <span class="gKeyText"><strong>Claim 3</strong>Foundational</span>
-          </a>
-          <a class="gKey gLeft" href="/laws/cat-1/a/4/">
-            <span class="gKeyText"><strong>Claim 4</strong>Foundational</span>
-          </a>
-        </div>
+      <!-- CATEGORY SELECTION -->
+      <div class="gRow" role="navigation" aria-label="Law categories">
+        <a class="gBtn" href="/laws/category-1/">What’s Real</a>
+        <a class="gBtn" href="/laws/category-2/">What Holds</a>
+        <a class="gBtn" href="/laws/category-3/">What Moves</a>
       </div>
 
-      <!-- ===================== CATEGORY 1 — DIAMOND B ===================== -->
-      <div id="cat1B" class="hidden">
-        <div class="gCluster" role="navigation" aria-label="Category 1 · Diamond B">
-          <a class="gKey gTop" href="/laws/cat-1/b/5/">
-            <span class="gKeyText"><strong>Claim 5</strong>Foundational</span>
-          </a>
-          <a class="gKey gRight" href="/laws/cat-1/b/6/">
-            <span class="gKeyText"><strong>Claim 6</strong>Foundational</span>
-          </a>
-          <a class="gKey gBottom" href="/laws/cat-1/b/7/">
-            <span class="gKeyText"><strong>Claim 7</strong>Foundational</span>
-          </a>
-          <a class="gKey gLeft" href="/laws/cat-1/b/8/">
-            <span class="gKeyText"><strong>Claim 8</strong>Foundational</span>
-          </a>
-        </div>
+      <!-- DIAMOND CLUSTER -->
+      <div class="gCluster" role="navigation" aria-label="Primary law diamonds">
+
+        <!-- TOP -->
+        <a class="gKey gTop" href="/laws/category-1/">
+          <span class="gKeyText">
+            <strong>Reality</strong>
+            What exists
+          </span>
+        </a>
+
+        <!-- RIGHT -->
+        <a class="gKey gRight" href="/laws/category-2/">
+          <span class="gKeyText">
+            <strong>Structure</strong>
+            What holds
+          </span>
+        </a>
+
+        <!-- BOTTOM -->
+        <a class="gKey gBottom" href="/laws/category-3/">
+          <span class="gKeyText">
+            <strong>Flow</strong>
+            What moves
+          </span>
+        </a>
+
+        <!-- LEFT -->
+        <a class="gKey gLeft" href="/laws/category-1/">
+          <span class="gKeyText">
+            <strong>Integrity</strong>
+            What stays true
+          </span>
+        </a>
+
       </div>
 
-      <!-- ===================== CATEGORY 2 (single diamond placeholder) ===================== -->
-      <div id="cat2" class="hidden">
-        <div class="gCluster" role="navigation" aria-label="Category 2">
-          <a class="gKey gTop" href="/laws/cat-2/1/">
-            <span class="gKeyText"><strong>Claim 1</strong>Structural</span>
-          </a>
-          <a class="gKey gRight" href="/laws/cat-2/2/">
-            <span class="gKeyText"><strong>Claim 2</strong>Structural</span>
-          </a>
-          <a class="gKey gBottom" href="/laws/cat-2/3/">
-            <span class="gKeyText"><strong>Claim 3</strong>Structural</span>
-          </a>
-          <a class="gKey gLeft" href="/laws/cat-2/4/">
-            <span class="gKeyText"><strong>Claim 4</strong>Structural</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- ===================== CATEGORY 3 (single diamond placeholder) ===================== -->
-      <div id="cat3" class="hidden">
-        <div class="gCluster" role="navigation" aria-label="Category 3">
-          <a class="gKey gTop" href="/laws/cat-3/1/">
-            <span class="gKeyText"><strong>Claim 1</strong>Operational</span>
-          </a>
-          <a class="gKey gRight" href="/laws/cat-3/2/">
-            <span class="gKeyText"><strong>Claim 2</strong>Operational</span>
-          </a>
-          <a class="gKey gBottom" href="/laws/cat-3/3/">
-            <span class="gKeyText"><strong>Claim 3</strong>Operational</span>
-          </a>
-          <a class="gKey gLeft" href="/laws/cat-3/4/">
-            <span class="gKeyText"><strong>Claim 4</strong>Operational</span>
-          </a>
-        </div>
-      </div>
-
+      <!-- NAV -->
       <div class="gActions">
-        <a class="gBtn" href="/home/">Back</a>
+        <a class="gBtn" href="/home/">Home</a>
+        <a class="gBtn" href="/door/">Back</a>
       </div>
 
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      <footer class="gFooter">
+        CANONICAL · STABLE · © GEODIAMETRICS
+      </footer>
+
     </section>
   </main>
-
-  <script>
-    function hideAll(){
-      ['cat1A','cat1B','cat2','cat3'].forEach(id=>{
-        const el=document.getElementById(id); if(el) el.classList.add('hidden');
-      });
-      document.getElementById('cat1Diamonds').classList.add('hidden');
-    }
-    function showCat(n){
-      hideAll();
-      if(n===1){
-        document.getElementById('cat1Diamonds').classList.remove('hidden');
-        showCat1Diamond('A');
-      }
-      if(n===2){ document.getElementById('cat2').classList.remove('hidden'); }
-      if(n===3){ document.getElementById('cat3').classList.remove('hidden'); }
-    }
-    function showCat1Diamond(which){
-      document.getElementById('cat1A').classList.toggle('hidden', which!=='A');
-      document.getElementById('cat1B').classList.toggle('hidden', which!=='B');
-    }
-    // default
-    showCat(1);
-  </script>
 </body>
 </html>

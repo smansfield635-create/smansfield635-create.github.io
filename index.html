@@ -4,70 +4,131 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Geodiametrics</title>
+
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
   <style>
-    /* whole screen is the button */
-    .coverHit{
-      position:fixed; inset:0;
-      background:transparent;
-      border:0; padding:0; margin:0;
+    /* FULL-PAGE CANVAS */
+    body{
+      margin:0;
       cursor:pointer;
     }
-    /* prevents accidental “double” focus outline */
-    .coverHit:focus{ outline:none }
-    .coverHint{
-      margin:14px auto 0;
-      display:inline-block;
-      padding:10px 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(255,255,255,.08);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,.22);
-      font-weight:700;
-      color:rgba(241,246,251,.92);
+
+    .cover{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
     }
-    /* keep panel above the hit layer */
-    .gPage, .gPanel, .gHeader { position:relative; z-index:2; }
-    /* hit layer under the panel so buttons still work */
-    .coverHit { z-index:1; }
+
+    /* CENTERFOLD TREE */
+    .tree{
+      position:relative;
+      width:100%;
+      max-width:640px;
+      height:560px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      pointer-events:none; /* STRUCTURE ONLY */
+    }
+
+    /* DIAMOND PRIMITIVE (VIEW-ONLY) */
+    .diamond{
+      position:absolute;
+      width:150px;
+      height:150px;
+      transform:rotate(45deg);
+      border-radius:24px;
+      background:linear-gradient(
+        180deg,
+        rgba(255,255,255,.18),
+        rgba(255,255,255,.06)
+      );
+      border:1px solid rgba(255,255,255,.22);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      box-shadow:0 18px 60px rgba(0,0,0,.32);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .diamond span{
+      transform:rotate(-45deg);
+      font-weight:800;
+      letter-spacing:.08em;
+      opacity:.9;
+      text-align:center;
+    }
+
+    /* ROOTS (IMPLIED BASE) */
+    .roots{
+      position:absolute;
+      bottom:0;
+      width:100%;
+      text-align:center;
+      font-size:12px;
+      color:rgba(241,246,251,.45);
+      letter-spacing:.12em;
+    }
+
+    /* TRUNK */
+    .trunk{
+      top:50%;
+      transform:translate(-50%,-50%) rotate(45deg);
+    }
+
+    /* BRANCHES */
+    .b1{ top:20%; left:20%; }
+    .b2{ top:20%; right:20%; }
+    .b3{ top:20%; left:50%; transform:translateX(-50%) rotate(45deg); }
+
+    /* LABEL TUNING */
+    .small{ font-size:13px; opacity:.75 }
+
+    /* MOBILE */
+    @media(max-width:480px){
+      .tree{ height:500px }
+      .diamond{ width:132px; height:132px }
+    }
   </style>
 </head>
 
-<body>
-  <!-- click anywhere (behind the panel) -->
-  <button class="coverHit" aria-label="Continue" onclick="location.href='/landing/'"></button>
+<body onclick="location.href='/portals/'">
 
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Geodiametrics</h1>
-      <p class="gSub">A diamond-governed map for free-will exploration.</p>
-    </header>
+  <main class="cover">
+    <div class="tree">
 
-    <section class="gPanel" aria-label="Cover">
-      <div style="text-align:center; line-height:1.5; max-width:36ch; margin:0 auto;">
-        <p style="margin-bottom:10px;"><strong>Cover</strong></p>
-        <p style="opacity:.9;">
-          This site is a live proof-of-concept built from a phone.
-          No accounts. No purchases. No personal data entry.
-        </p>
-        <p style="opacity:.9; margin-top:10px;">
-          Enter through the portals. Create your own path.
-        </p>
-
-        <div class="coverHint">Tap anywhere to continue</div>
+      <!-- BRANCHES -->
+      <div class="diamond b1">
+        <span>LAWS</span>
       </div>
 
-      <div class="gActions" aria-label="Continue">
-        <a class="gBtn" href="/landing/">Continue</a>
-        <a class="gBtn" href="/landing/exit/">Exit</a>
+      <div class="diamond b3">
+        <span>PRODUCTS</span>
       </div>
 
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
+      <div class="diamond b2">
+        <span>GAUGES</span>
+      </div>
+
+      <!-- TRUNK -->
+      <div class="diamond trunk">
+        <span class="small">DIAMOND<br>DIAGNOSTIC<br>PORTALS</span>
+      </div>
+
+      <!-- ROOTS (IMPLIED) -->
+      <div class="roots">
+        CANONICAL · STABLE · PROOF OF CONCEPT
+      </div>
+
+    </div>
   </main>
+
 </body>
 </html>

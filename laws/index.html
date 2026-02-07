@@ -9,75 +9,130 @@
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
 
-  <!-- FORCE OPAQUE BUBBLES -->
   <style>
-    .gBubble {
-      background: rgba(40,55,65,0.95) !important;
-      border: 1px solid rgba(255,255,255,0.18);
-      color: #ffffff;
+    /* OPAQUE CATEGORY BUBBLES */
+    .lawBubble {
+      display:block;
+      width:100%;
+      margin:12px 0;
+      padding:16px 18px;
+      border-radius:18px;
+      background:#2a3640;
+      color:#ffffff;
+      text-align:left;
+      font-weight:600;
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,.15);
     }
-    .gBubble span {
-      color: rgba(255,255,255,0.75);
+    .lawBubble span {
+      display:block;
+      font-weight:400;
+      opacity:.8;
+      margin-top:4px;
     }
+
+    /* CENTER OVERLAY */
+    .lawOverlay {
+      position:absolute;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(10,16,22,.85);
+      z-index:10;
+    }
+    .lawOverlay.active { display:flex; }
+
+    .lawCard {
+      max-width:420px;
+      background:#2f3d48;
+      color:#fff;
+      padding:28px;
+      border-radius:22px;
+      text-align:center;
+      box-shadow:0 20px 60px rgba(0,0,0,.6);
+    }
+    .lawCard h2 { margin:0 0 12px; }
+    .lawCard p { opacity:.9; }
+    .lawHint { margin-top:14px; font-size:13px; opacity:.6; }
   </style>
 </head>
 
 <body>
-  <main class="gPage">
+<main class="gPage">
 
-    <header class="gHeader">
-      <h1 class="gTitle">Laws</h1>
-      <p class="gSub">Foundational structure of the system.</p>
-    </header>
+  <header class="gHeader">
+    <h1 class="gTitle">Laws</h1>
+    <p class="gSub">Foundational structure of the system.</p>
+  </header>
 
-    <section class="gPanel">
+  <section class="gPanel" style="position:relative;">
 
-      <!-- CENTRAL DIAMOND -->
-      <div class="gCluster">
-        <a class="gKey gCenter" href="/laws/categories/">
-          <span class="gKeyText">
-            <strong>Categories</strong>
-            <small>Tap to enter</small>
-          </span>
-        </a>
+    <!-- CENTRAL DIAMOND -->
+    <div class="gCluster">
+      <div class="gKey gCenter">
+        <span class="gKeyText">
+          <strong>Categories</strong>
+          <small>Tap to explore</small>
+        </span>
+      </div>
+    </div>
+
+    <!-- CATEGORY BUBBLES -->
+    <div class="gStack">
+      <div class="lawBubble" onclick="openLaw('Reality','What exists','Reality separates what is from what is assumed. It defines the boundary between truth and belief.')">
+        Reality
+        <span>What is</span>
       </div>
 
-      <!-- CATEGORY BUBBLES -->
-      <div class="gStack">
-
-        <a class="gBubble" href="/laws/categories/reality/">
-          <strong>Reality</strong>
-          <span>What is</span>
-        </a>
-
-        <a class="gBubble" href="/laws/categories/integrity/">
-          <strong>Integrity</strong>
-          <span>What stays true</span>
-        </a>
-
-        <a class="gBubble" href="/laws/categories/structure/">
-          <strong>Structure</strong>
-          <span>What holds</span>
-        </a>
-
-        <a class="gBubble" href="/laws/categories/flow/">
-          <strong>Flow</strong>
-          <span>What moves</span>
-        </a>
-
+      <div class="lawBubble" onclick="openLaw('Integrity','What stays true','Integrity is alignment across time. When values shift to justify behavior, integrity collapses.')">
+        Integrity
+        <span>What stays true</span>
       </div>
 
-      <!-- NAV -->
-      <div class="gActions">
-        <a class="gBtn" href="/home/">Home</a>
-        <a class="gBtn" href="/home/">Back</a>
+      <div class="lawBubble" onclick="openLaw('Structure','What holds','Structure is what allows systems to persist. Without structure, motion collapses into noise.')">
+        Structure
+        <span>What holds</span>
       </div>
 
-      <footer class="gFooter">
-        CANONICAL · STABLE · © GEODIAMETRICS
-      </footer>
+      <div class="lawBubble" onclick="openLaw('Flow','What moves','Flow describes change under constraint. Without flow, systems stagnate.')">
+        Flow
+        <span>What moves</span>
+      </div>
+    </div>
 
-    </section>
-  </main>
+    <!-- OVERLAY -->
+    <div class="lawOverlay" id="lawOverlay" onclick="closeLaw()">
+      <div class="lawCard">
+        <h2 id="lawTitle"></h2>
+        <p id="lawText"></p>
+        <div class="lawHint">Tap anywhere to close</div>
+      </div>
+    </div>
+
+    <!-- NAV -->
+    <div class="gActions">
+      <a class="gBtn" href="/home/">Home</a>
+      <a class="gBtn" href="/home/">Back</a>
+    </div>
+
+    <footer class="gFooter">
+      CANONICAL · STABLE · © GEODIAMETRICS
+    </footer>
+
+  </section>
+</main>
+
+<script>
+  function openLaw(title, subtitle, text) {
+    document.getElementById('lawTitle').innerText = title;
+    document.getElementById('lawText').innerText = text;
+    document.getElementById('lawOverlay').classList.add('active');
+  }
+  function closeLaw() {
+    document.getElementById('lawOverlay').classList.remove('active');
+  }
+</script>
+
 </body>
 </html>

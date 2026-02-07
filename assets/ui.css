@@ -1,189 +1,82 @@
 /* =========================
-   TNT: /assets/ui.css
-   Global UI (typography, panels, buttons, background)
+   UI CORE — NO GEOMETRY
    ========================= */
 
-:root{
-  --bg-top:#0c2232;
-  --bg-bottom:#071722;
-
-  --text:#f1f6fb;
-  --sub:rgba(241,246,251,.72);
-
-  --panel-glass:rgba(255,255,255,.10);
-  --panel-border:rgba(255,255,255,.18);
-
-  --glass:rgba(255,255,255,.18);
-  --glass2:rgba(255,255,255,.10);
-
-  --blur:18px;
-  --radius:26px;
-  --shadow:0 18px 60px rgba(0,0,0,.28);
-
-  --star-opacity:.55;
-  --words-opacity:.18;
+:root {
+  --bg-1: #0b1c27;
+  --bg-2: #122733;
+  --panel: rgba(255,255,255,0.08);
+  --panel-border: rgba(255,255,255,0.12);
+  --text-main: #ffffff;
+  --text-sub: rgba(255,255,255,0.7);
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%}
-
-body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:var(--text);
-  background:
-    radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),
-    linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
-  overflow-x:hidden;
-  position:relative;
+* {
+  box-sizing: border-box;
 }
 
-/* Stars layer */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-  opacity:var(--star-opacity);
-  background:
-    radial-gradient(2px 2px at 12% 18%, rgba(255,255,255,.8), transparent 60%),
-    radial-gradient(1px 1px at 32% 42%, rgba(255,255,255,.7), transparent 60%),
-    radial-gradient(2px 2px at 64% 26%, rgba(255,255,255,.75), transparent 60%),
-    radial-gradient(1px 1px at 78% 58%, rgba(255,255,255,.65), transparent 60%),
-    radial-gradient(2px 2px at 90% 34%, rgba(255,255,255,.7), transparent 60%),
-    radial-gradient(1px 1px at 18% 70%, rgba(255,255,255,.6), transparent 60%),
-    radial-gradient(1px 1px at 52% 78%, rgba(255,255,255,.55), transparent 60%),
-    radial-gradient(2px 2px at 40% 16%, rgba(255,255,255,.6), transparent 60%);
-  filter:blur(.2px);
+html, body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at top, var(--bg-2), var(--bg-1));
+  color: var(--text-main);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* Falling “cosmic phrases” layer (top -> down) */
-body::after{
-  content:
-    "learn to live to love  ·  learn to love to laugh  ·  learn to live to listen  ·  "
-    "learn to love to live  ·  learn to listen to love, live, and laugh  ·  "
-    "learn to live to laugh  ·  learn to live to love  ·  learn to love to listen  ·  "
-    "learn to love to live  ·  learn to live to learn  ·  ";
-  position:fixed;
-  left:-10%;
-  top:-60%;
-  width:120%;
-  height:220%;
-  pointer-events:none;
-  z-index:0;
-  opacity:var(--words-opacity);
-  color:rgba(241,246,251,.85);
-  font-weight:700;
-  letter-spacing:.06em;
-  text-transform:lowercase;
-  font-size:16px;
-  line-height:2.2;
-  white-space:pre-wrap;
-  transform:rotate(-6deg);
-  animation:fallWords 26s linear infinite;
-  filter:blur(.2px);
+.gPage {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3rem 1rem;
 }
 
-@keyframes fallWords{
-  0%{transform:translateY(-12%) rotate(-6deg)}
-  100%{transform:translateY(12%) rotate(-6deg)}
+.gHeader {
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
-.page,
-.gPage{
-  min-height:100%;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-  text-align:center;
-  position:relative;
-  z-index:1; /* above background layers */
+.gTitle {
+  font-size: 2.4rem;
+  margin: 0;
 }
 
-.hero,
-.gHeader{
-  width:100%;
-  max-width:520px;
-  margin-bottom:18px;
+.gSub {
+  font-size: 1rem;
+  color: var(--text-sub);
+  margin-top: 0.5rem;
 }
 
-.hero h1,
-.gTitle{
-  font-size:44px;
-  font-weight:800;
-  letter-spacing:-0.02em;
-  line-height:1.05;
-  margin-bottom:8px;
+.gPanel {
+  width: 100%;
+  max-width: 420px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 22px;
+  padding: 2rem 1.5rem;
+  text-align: center;
 }
 
-.hero p,
-.gSub{
-  font-size:18px;
-  color:var(--sub);
-  line-height:1.35;
+.gActions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
-.panel,
-.gPanel{
-  width:100%;
-  max-width:520px;
-  position:relative;
-  padding:32px 20px 22px;
-  border-radius:var(--radius);
-  background:linear-gradient(180deg,var(--panel-glass),rgba(255,255,255,.05));
-  border:1px solid var(--panel-border);
-  backdrop-filter:blur(var(--blur));
-  -webkit-backdrop-filter:blur(var(--blur));
-  box-shadow:var(--shadow);
-  overflow:hidden;
+.gBtn {
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid var(--panel-border);
+  background: rgba(255,255,255,0.06);
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 600;
 }
 
-.gFooter,
-.canon{
-  margin-top:18px;
-  font-size:12px;
-  color:rgba(241,246,251,.55);
-  letter-spacing:.22em;
-}
-
-/* Buttons */
-.gActions{
-  display:flex;
-  gap:14px;
-  justify-content:center;
-  margin-top:18px;
-  flex-wrap:wrap;
-}
-
-.gBtn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-width:140px;
-  padding:14px 18px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.16);
-  background:rgba(255,255,255,.10);
-  color:var(--text);
-  text-decoration:none;
-  font-weight:700;
-  backdrop-filter:blur(var(--blur));
-  -webkit-backdrop-filter:blur(var(--blur));
-  box-shadow:0 10px 30px rgba(0,0,0,.22);
-}
-
-.gBtn:active{transform:translateY(1px)}
-
-a{color:inherit}
-a:focus{
-  outline:2px solid rgba(241,246,251,.22);
-  outline-offset:4px;
-  border-radius:14px;
-}
-
-@media (max-width:420px){
-  .hero h1,.gTitle{font-size:40px}
-  body::after{font-size:14px;line-height:2.0}
+.gFooter {
+  margin-top: 2rem;
+  font-size: 0.75rem;
+  color: var(--text-sub);
+  text-align: center;
 }

@@ -2,70 +2,87 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Laws · Geodiametrics</title>
 
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    /* --- COSMIC TEXT BACKGROUND --- */
+    .cosmic {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cosmic span {
+      position: absolute;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.08);
+      animation: drift 40s linear infinite;
+      white-space: nowrap;
+    }
+
+    .cosmic span:nth-child(1) { top: 10%; left: 5%; animation-duration: 50s; }
+    .cosmic span:nth-child(2) { top: 30%; left: 70%; animation-duration: 45s; }
+    .cosmic span:nth-child(3) { top: 55%; left: 20%; animation-duration: 60s; }
+    .cosmic span:nth-child(4) { top: 75%; left: 60%; animation-duration: 55s; }
+    .cosmic span:nth-child(5) { top: 90%; left: 10%; animation-duration: 70s; }
+
+    @keyframes drift {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-120vh); }
+    }
+
+    /* Ensure main content stays above background */
+    .gPage, .gPanel {
+      position: relative;
+      z-index: 1;
+    }
+  </style>
 </head>
 
 <body>
-<main class="gPage">
+  <!-- COSMIC BACKGROUND TEXT -->
+  <div class="cosmic">
+    <span>learn to live to love</span>
+    <span>learn to live to laugh</span>
+    <span>learn to love to listen</span>
+    <span>learn to listen to love, live, and laugh</span>
+    <span>love to live to learn</span>
+  </div>
 
-  <header class="gHeader">
-    <h1 class="gTitle">Laws</h1>
-    <p class="gSub">Foundational structure of the system.</p>
-  </header>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Laws</h1>
+      <p class="gSub">Foundational structure of the system.</p>
+    </header>
 
-  <section class="gPanel">
+    <section class="gPanel" aria-label="Laws entry">
+      <!-- CENTRAL DIAMOND -->
+      <div class="gCluster" role="navigation">
+        <a class="gKey gCenter" href="/laws/categories/">
+          <span class="gKeyText">
+            <strong>Categories</strong>
+            <small>Tap to explore</small>
+          </span>
+        </a>
+      </div>
 
-    <!-- CENTRAL DIAMOND -->
-    <div class="gCluster">
-      <a class="gKey gCenter" href="/laws/categories/">
-        <span class="gKeyText">
-          <strong>Categories</strong>
-          <small>Tap to explore</small>
-        </span>
-      </a>
-    </div>
+      <!-- NAV BUTTONS -->
+      <div class="gActions">
+        <a class="gBtn" href="/home/">Home</a>
+        <a class="gBtn" href="/home/">Back</a>
+      </div>
 
-    <!-- OPAQUE CATEGORY BUBBLES -->
-    <div class="gStack">
-
-      <a class="gBubble solid" href="/laws/categories/reality/">
-        <strong>Reality</strong>
-        <span>What is</span>
-      </a>
-
-      <a class="gBubble solid" href="/laws/categories/integrity/">
-        <strong>Integrity</strong>
-        <span>What stays true</span>
-      </a>
-
-      <a class="gBubble solid" href="/laws/categories/structure/">
-        <strong>Structure</strong>
-        <span>What holds</span>
-      </a>
-
-      <a class="gBubble solid" href="/laws/categories/flow/">
-        <strong>Flow</strong>
-        <span>What moves</span>
-      </a>
-
-    </div>
-
-    <!-- NAV -->
-    <div class="gActions">
-      <a class="gBtn" href="/home/">Home</a>
-      <a class="gBtn" href="/home/">Back</a>
-    </div>
-
-    <footer class="gFooter">
-      CANONICAL · STABLE · © GEODIAMETRICS
-    </footer>
-
-  </section>
-</main>
+      <footer class="gFooter">
+        CANONICAL · STABLE · © GEODIAMETRICS
+      </footer>
+    </section>
+  </main>
 </body>
 </html>

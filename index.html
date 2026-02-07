@@ -4,15 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Geodiametrics</title>
+
   <style>
     :root{
       --bg-top:#0c2232;
       --bg-bottom:#071722;
       --text:#f1f6fb;
-      --sub:rgba(241,246,251,.75);
+      --sub:rgba(241,246,251,.70);
+      --line:rgba(241,246,251,.18);
     }
+
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{width:100%;height:100%}
+
     body{
       font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
       color:var(--text);
@@ -25,39 +29,86 @@
       text-align:center;
       cursor:pointer;
     }
+
     .wrap{
       max-width:520px;
       padding:28px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:18px;
     }
+
     h1{
       font-size:42px;
       font-weight:800;
       letter-spacing:-0.02em;
-      margin-bottom:10px;
     }
-    p{
+
+    .tagline{
       font-size:18px;
-      line-height:1.4;
       color:var(--sub);
+      line-height:1.4;
     }
-    .small{
-      margin-top:22px;
+
+    /* Snowflake bracket */
+    .snowflake{
+      width:260px;
+      height:260px;
+      margin:18px 0;
+      opacity:.55;
+    }
+
+    .snowflake line{
+      stroke:var(--line);
+      stroke-width:2;
+      stroke-linecap:round;
+    }
+
+    .labels{
+      font-size:11px;
+      color:rgba(241,246,251,.45);
+      letter-spacing:.04em;
+      margin-top:-6px;
+    }
+
+    .enter{
+      margin-top:16px;
       font-size:14px;
       color:rgba(241,246,251,.55);
     }
   </style>
 </head>
+
 <body onclick="window.location.href='/door/'">
   <div class="wrap">
+
     <h1>Geodiametrics</h1>
-    <p>
+
+    <div class="tagline">
       A diamond-governed map for free-will exploration.
-      <br><br>
-      Under construction — safe to explore.
-    </p>
-    <div class="small">
+    </div>
+
+    <!-- Snowflake / bracket structure -->
+    <svg class="snowflake" viewBox="0 0 260 260" aria-hidden="true">
+      <!-- vertical -->
+      <line x1="130" y1="20"  x2="130" y2="240"/>
+      <!-- horizontal -->
+      <line x1="20"  y1="130" x2="240" y2="130"/>
+      <!-- diag 1 -->
+      <line x1="40"  y1="40"  x2="220" y2="220"/>
+      <!-- diag 2 -->
+      <line x1="220" y1="40"  x2="40"  y2="220"/>
+    </svg>
+
+    <div class="labels">
+      structure • branches • paths
+    </div>
+
+    <div class="enter">
       Click anywhere to enter
     </div>
+
   </div>
 </body>
 </html>

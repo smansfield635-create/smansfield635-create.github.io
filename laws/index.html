@@ -4,160 +4,54 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Laws · Geodiametrics</title>
-
-  <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
-
-  <style>
-    .lawStage {
-      position: relative;
-      height: 520px;
-    }
-
-    .lawBubble {
-      position: absolute;
-      padding: 14px 22px;
-      border-radius: 999px;
-      background: #2e3a44; /* OPAQUE */
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0,0,0,.35);
-      z-index: 5;
-    }
-
-    .lawBubble.top    { top: 20px; left: 50%; transform: translateX(-50%); }
-    .lawBubble.left   { top: 50%; left: 20px; transform: translateY(-50%); }
-    .lawBubble.right  { top: 50%; right: 20px; transform: translateY(-50%); }
-    .lawBubble.bottom { bottom: 20px; left: 50%; transform: translateX(-50%); }
-
-    .lawCenter {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1;
-    }
-
-    .lawDiamond {
-      width: 220px;
-      height: 220px;
-      background: rgba(255,255,255,0.08);
-      transform: rotate(45deg);
-      border-radius: 18px;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .lawDiamond span {
-      transform: rotate(-45deg);
-      text-align: center;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1.3;
-    }
-
-    .lawOverlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(10,15,20,.75);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-    }
-
-    .lawOverlay.active { display: flex; }
-
-    .lawOverlayCard {
-      background: #1f2a33;
-      padding: 28px;
-      max-width: 420px;
-      border-radius: 18px;
-      text-align: center;
-      color: #fff;
-      box-shadow: 0 16px 40px rgba(0,0,0,.5);
-    }
-
-    .lawOverlayCard h3 {
-      margin: 0 0 10px;
-    }
-
-    .lawOverlayCard p {
-      margin: 0;
-      opacity: .9;
-    }
-  </style>
 </head>
 
 <body>
 <main class="gPage">
+
   <header class="gHeader">
-    <h1 class="gTitle">Laws</h1>
+    <h1>Laws</h1>
     <p class="gSub">Foundational structure of the system.</p>
   </header>
 
   <section class="gPanel">
-    <div class="lawStage" id="lawStage">
 
-      <!-- BUBBLES -->
-      <div class="lawBubble top"    data-title="Reality"   data-text="Reality defines what is actually the case. It separates what exists from what is assumed.">Reality</div>
-      <div class="lawBubble left"   data-title="Integrity" data-text="Integrity is what stays true over time. No internal contradiction. No selective honesty.">Integrity</div>
-      <div class="lawBubble right"  data-title="Structure" data-text="Structure is what holds. It defines constraint, boundary, and form.">Structure</div>
-      <div class="lawBubble bottom" data-title="Flow"      data-text="Flow is what moves. Change, motion, causation, and progression.">Flow</div>
+    <!-- CORNER BUBBLES (OPAQUE, STATIC) -->
+    <a class="gBubble gTop" href="/laws/categories/reality/">
+      Reality
+    </a>
 
-      <!-- CENTER DIAMOND -->
-      <div class="lawCenter">
-        <a href="/laws/categories/" class="lawDiamond">
-          <span>
-            Categories<br/>
-            <small style="opacity:.75;font-weight:500;">Tap to enter</small>
-          </span>
-        </a>
-      </div>
+    <a class="gBubble gLeft" href="/laws/categories/integrity/">
+      Integrity
+    </a>
 
-      <!-- OVERLAY -->
-      <div class="lawOverlay" id="lawOverlay">
-        <div class="lawOverlayCard">
-          <h3 id="overlayTitle"></h3>
-          <p id="overlayText"></p>
-          <p style="margin-top:14px;opacity:.6;font-size:.9em;">Tap anywhere to close</p>
-        </div>
-      </div>
+    <a class="gBubble gRight" href="/laws/categories/structure/">
+      Structure
+    </a>
 
-    </div>
+    <a class="gBubble gBottom" href="/laws/categories/flow/">
+      Flow
+    </a>
 
+    <!-- CENTER DIAMOND -->
+    <a class="gDiamondCenter" href="/laws/categories/">
+      <span class="gDiamondTitle">Categories</span>
+      <span class="gDiamondSub">Tap to enter</span>
+    </a>
+
+    <!-- NAV -->
     <div class="gActions">
       <a class="gBtn" href="/home/">Home</a>
       <a class="gBtn" href="/home/">Back</a>
     </div>
 
-    <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    <footer class="gFooter">
+      CANONICAL · STABLE · © GEODIAMETRICS
+    </footer>
+
   </section>
+
 </main>
-
-<script>
-  const overlay = document.getElementById('lawOverlay');
-  const oTitle  = document.getElementById('overlayTitle');
-  const oText   = document.getElementById('overlayText');
-
-  document.querySelectorAll('.lawBubble').forEach(bubble => {
-    bubble.addEventListener('click', e => {
-      e.stopPropagation();
-      oTitle.textContent = bubble.dataset.title;
-      oText.textContent  = bubble.dataset.text;
-      overlay.classList.add('active');
-    });
-  });
-
-  overlay.addEventListener('click', () => {
-    overlay.classList.remove('active');
-  });
-</script>
 </body>
 </html>

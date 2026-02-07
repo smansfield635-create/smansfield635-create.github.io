@@ -1,207 +1,140 @@
-/* TNT: /assets/ui.css  (FULL REPLACEMENT — UI ONLY, NO DIAMOND GEOMETRY)
-   IMPORTANT: This file intentionally does NOT define .gCluster / .gKey sizing/positioning.
-   Diamond size MUST come from /assets/branch.css. */
+/* /assets/ui.css — FULL TNT REPLACEMENT
+   Purpose: Global page layout + background + buttons.
+   NOTE: This file does NOT draw diamonds. Diamonds are in /assets/branch.css.
+*/
 
 :root{
-  --bg-top:#0c2232;
-  --bg-bottom:#071722;
+  --bg0:#071821;
+  --bg1:#0b2230;
+  --panel:rgba(255,255,255,.10);
+  --panel2:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.14);
+  --stroke2:rgba(255,255,255,.10);
+  --text:#e9f1f6;
+  --muted:rgba(233,241,246,.72);
 
-  --text:#f1f6fb;
-  --sub:rgba(241,246,251,.72);
+  --r:28px;
+  --shadow:0 18px 55px rgba(0,0,0,.45);
 
-  --panel-glass:rgba(255,255,255,.10);
-  --panel-border:rgba(255,255,255,.18);
-  --shadow:0 18px 60px rgba(0,0,0,.28);
+  --btn:rgba(255,255,255,.12);
+  --btnStroke:rgba(255,255,255,.14);
+  --btnHover:rgba(255,255,255,.16);
 
-  --blur:18px;
-  --radius:26px;
-
-  --btn-bg:rgba(255,255,255,.10);
-  --btn-border:rgba(255,255,255,.18);
-  --btn-hover:rgba(255,255,255,.14);
+  --maxw:520px;
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%}
+*{box-sizing:border-box}
+html,body{height:100%}
 body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  margin:0;
   color:var(--text);
+  font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
   background:
-    radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),
-    linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
+    radial-gradient(1100px 600px at 50% 0%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(800px 500px at 20% 10%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(180deg, var(--bg1), var(--bg0));
   overflow-x:hidden;
-  position:relative;
 }
 
-/* kill purple / underline drift */
-a,a:visited{color:inherit;text-decoration:none}
-a:hover{text-decoration:none}
-a:focus{outline:2px solid rgba(241,246,251,.25);outline-offset:4px;border-radius:14px}
-
-/* background stars (behind everything) */
+/* subtle star field */
 body::before{
   content:"";
-  position:fixed; inset:0;
+  position:fixed;
+  inset:0;
   pointer-events:none;
-  z-index:-2;
-  opacity:.8;
+  z-index:0;
   background:
-    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.55) 99%, transparent),
-    radial-gradient(1px 1px at 32% 42%, rgba(255,255,255,.35) 99%, transparent),
-    radial-gradient(1px 1px at 70% 25%, rgba(255,255,255,.45) 99%, transparent),
-    radial-gradient(1px 1px at 85% 40%, rgba(255,255,255,.30) 99%, transparent),
-    radial-gradient(1px 1px at 20% 65%, rgba(255,255,255,.40) 99%, transparent),
-    radial-gradient(1px 1px at 55% 75%, rgba(255,255,255,.35) 99%, transparent),
-    radial-gradient(1px 1px at 78% 78%, rgba(255,255,255,.30) 99%, transparent);
-}
-
-/* falling phrases (TOP → DOWN), behind panels */
-.skyfall{
-  position:fixed; inset:0;
-  pointer-events:none;
-  z-index:-1;
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,.35) 0 1px, transparent 2px),
+    radial-gradient(circle at 30% 70%, rgba(255,255,255,.28) 0 1px, transparent 2px),
+    radial-gradient(circle at 60% 30%, rgba(255,255,255,.25) 0 1px, transparent 2px),
+    radial-gradient(circle at 80% 60%, rgba(255,255,255,.22) 0 1px, transparent 2px),
+    radial-gradient(circle at 90% 15%, rgba(255,255,255,.18) 0 1px, transparent 2px),
+    radial-gradient(circle at 15% 85%, rgba(255,255,255,.20) 0 1px, transparent 2px);
   opacity:.55;
-  overflow:hidden;
-}
-.skyfall .line{
-  position:absolute;
-  left:var(--x,50%);
-  top:-25%;
-  transform:translateX(-50%);
-  white-space:nowrap;
-  font-weight:700;
-  letter-spacing:.01em;
-  color:rgba(241,246,251,.20);
-  text-shadow:0 0 18px rgba(255,255,255,.10);
-  animation:fallDown var(--dur,22s) linear infinite;
-}
-@keyframes fallDown{
-  0%{transform:translateX(-50%) translateY(-40vh); opacity:0;}
-  8%{opacity:1;}
-  92%{opacity:1;}
-  100%{transform:translateX(-50%) translateY(140vh); opacity:0;}
 }
 
-/* layout primitives */
+a{color:inherit; text-decoration:none}
+a:focus{outline:none}
+button{font:inherit}
+
+/* page shell */
 .gPage{
-  min-height:100%;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-  text-align:center;
   position:relative;
   z-index:1;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:48px 16px 40px;
+  gap:18px;
 }
 
-.gHeader{width:100%;max-width:560px;margin-bottom:16px}
-.gTitle{font-size:44px;font-weight:800;letter-spacing:-0.02em;line-height:1.05;margin-bottom:8px}
-.gSub{font-size:18px;color:var(--sub);line-height:1.35}
+.gHeader{
+  width:100%;
+  max-width:var(--maxw);
+  text-align:center;
+  margin-top:6px;
+}
+.gTitle{
+  margin:0;
+  font-size:52px;
+  letter-spacing:.2px;
+  line-height:1.05;
+}
+.gSub{
+  margin:10px 0 0;
+  font-size:22px;
+  color:var(--muted);
+}
 
-/* panel */
+/* main glass card */
 .gPanel{
   width:100%;
-  max-width:560px;
-  position:relative;
+  max-width:var(--maxw);
+  border-radius:var(--r);
   padding:28px 18px 18px;
-  border-radius:var(--radius);
-  background:linear-gradient(180deg,var(--panel-glass),rgba(255,255,255,.05));
-  border:1px solid var(--panel-border);
-  backdrop-filter:blur(var(--blur));
-  -webkit-backdrop-filter:blur(var(--blur));
+  background:linear-gradient(180deg, var(--panel), var(--panel2));
+  border:1px solid var(--stroke);
   box-shadow:var(--shadow);
-  overflow:hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
-.gPanel::before,.gPanel::after{pointer-events:none}
 
-/* actions/buttons */
+/* action buttons row */
 .gActions{
   display:flex;
+  gap:14px;
   justify-content:center;
-  gap:12px;
-  margin-top:16px;
   flex-wrap:wrap;
+  margin-top:18px;
 }
+
 .gBtn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-width:120px;
-  padding:14px 18px;
-  border-radius:999px;
-  background:var(--btn-bg);
-  border:1px solid var(--btn-border);
+  min-width:140px;
+  padding:16px 22px;
+  border-radius:22px;
+  background:var(--btn);
+  border:1px solid var(--btnStroke);
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
   color:var(--text);
-  font-weight:700;
-  letter-spacing:.02em;
-  box-shadow:0 12px 28px rgba(0,0,0,.18);
+  font-weight:650;
+  letter-spacing:.2px;
 }
-.gBtn:hover{background:var(--btn-hover)}
 .gBtn:active{transform:translateY(1px)}
+.gBtn:hover{background:var(--btnHover)}
 
 /* footer */
 .gFooter{
   margin-top:14px;
-  font-size:12px;
-  letter-spacing:.18em;
-  color:rgba(241,246,251,.50);
+  text-align:center;
+  font-size:14px;
+  letter-spacing:.22em;
+  color:rgba(233,241,246,.58);
 }
 
-/* bubble lists (no geometry here) */
-.gStack{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  margin-top:18px;
-}
-.gBubble{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  padding:18px 18px;
-  border-radius:22px;
-  background:rgba(20,30,40,.88);
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:0 18px 48px rgba(0,0,0,.24);
-}
-.gBubble strong{font-size:18px;font-weight:900}
-.gBubble span{font-size:16px;font-weight:700;color:rgba(241,246,251,.72)}
-
-/* modal (UI only) */
-.gModal{
-  position:fixed; inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  z-index:999;
-}
-.gModal.isOpen{display:flex}
-.gModalBackdrop{
-  position:absolute; inset:0;
-  background:rgba(0,0,0,.42);
-  backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
-}
-.gModalCard{
-  position:relative;
-  width:100%;
-  max-width:520px;
-  padding:22px 20px;
-  border-radius:24px;
-  background:rgba(20,30,40,.92);
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow:0 26px 70px rgba(0,0,0,.35);
-}
-.gModalCard h2{font-size:24px;font-weight:900;margin-bottom:10px}
-.gModalCard p{font-size:18px;line-height:1.45;color:rgba(241,246,251,.82)}
-.gModalHint{margin-top:14px;font-size:14px;color:rgba(241,246,251,.55)}
-
-/* responsive */
-@media (max-width:420px){
-  .gTitle{font-size:40px}
-  .gSub{font-size:17px}
-  .gBtn{min-width:110px}
-}
+/* safe defaults for tiny weird glyphs */
+.gFooter *{font-variant-ligatures:none}

@@ -9,8 +9,9 @@
 :root{
   --bg1:#0b1f2a;
   --bg2:#142f3d;
-  --card:#1e3a49;
-  --line:rgba(255,255,255,0.15);
+  --card:#1f3f50;
+  --card-hover:#285a70;
+  --line:rgba(255,255,255,0.14);
   --text:#eaf2f6;
 }
 
@@ -61,7 +62,6 @@ h1{
   background:rgba(255,255,255,0.06);
   font-weight:600;
   cursor:pointer;
-  transition:.2s;
 }
 
 .lens.active{
@@ -90,8 +90,8 @@ h1{
 
 .diamond{
   position:absolute;
-  width:120px;
-  height:120px;
+  width:110px;
+  height:110px;
   background:var(--card);
   transform:rotate(45deg);
   border-radius:14px;
@@ -100,16 +100,26 @@ h1{
   justify-content:center;
   cursor:pointer;
   transition:.2s;
-}
-
-.diamond span{
-  transform:rotate(-45deg);
-  font-weight:700;
-  letter-spacing:.4px;
+  text-decoration:none;
 }
 
 .diamond:hover{
-  background:#255063;
+  background:var(--card-hover);
+}
+
+.diamond .label{
+  transform:rotate(-45deg);
+  text-align:center;
+  font-weight:700;
+  line-height:1.25;
+  color:var(--text);
+}
+
+.diamond .label span{
+  display:block;
+  font-weight:500;
+  opacity:.75;
+  font-size:13px;
 }
 
 .top   {top:0;left:50%;transform:translateX(-50%) rotate(45deg);}
@@ -155,10 +165,21 @@ h1{
       <div class="axis a"></div>
       <div class="axis b"></div>
 
-      <a class="diamond top" href="consistency/"><span>Consistency</span></a>
-      <a class="diamond right" href="accountability/"><span>Accountability</span></a>
-      <a class="diamond bottom" href="continuity/"><span>Continuity</span></a>
-      <a class="diamond left" href="coherence/"><span>Coherence</span></a>
+      <a class="diamond top" href="consistency/">
+        <div class="label">Consistency<span>Alignment across time</span></div>
+      </a>
+
+      <a class="diamond right" href="accountability/">
+        <div class="label">Accountability<span>Ownership of outcome</span></div>
+      </a>
+
+      <a class="diamond bottom" href="continuity/">
+        <div class="label">Continuity<span>No state breaks</span></div>
+      </a>
+
+      <a class="diamond left" href="coherence/">
+        <div class="label">Coherence<span>No contradiction</span></div>
+      </a>
     </div>
 
     <div class="nav">

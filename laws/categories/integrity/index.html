@@ -1,104 +1,76 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Integrity · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+<style>
+/* ===== DIAMOND PLATFORM ===== */
+.diamond-platform{
+  position:relative;
+  width:min(78vw,320px);
+  aspect-ratio:1/1;
+  margin:32px auto;
+}
+.diamond-platform::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(255,255,255,.06);
+  border-radius:22px;
+  transform:rotate(45deg);
+  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
+}
 
-  <!-- HARD OVERRIDES (remote-control geometry) -->
-  <style>
-    /* Kill any accidental "X" overlays / center dots from inherited styles */
-    .gCluster::before,.gCluster::after,
-    .gPanel::before,.gPanel::after{content:none !important;display:none !important;}
-    .gCluster *::before,.gCluster *::after{content:none !important;}
+/* ===== DIAMOND BUTTONS ===== */
+.diamond-btn{
+  position:absolute;
+  width:42%;
+  height:42%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:#eef6fb;
+  font-weight:800;
+  border-radius:16px;
+  background:rgba(255,255,255,.14);
+  box-shadow:0 0 0 1px rgba(255,255,255,.18) inset;
+  transform:rotate(45deg);
+}
+.diamond-btn span{
+  transform:rotate(-45deg);
+  text-align:center;
+  line-height:1.1;
+}
+.diamond-btn small{
+  display:block;
+  font-weight:600;
+  opacity:.75;
+  margin-top:6px;
+}
 
-    /* Remote: one piece with 4 buttons */
-    .remote{position:relative;width:min(78vw,320px);aspect-ratio:1/1;margin:22px auto 10px;}
-    .remoteBase{
-      position:absolute;inset:0;
-      border-radius:22px;
-      background:rgba(255,255,255,.06);
-      box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
-      transform:rotate(45deg);
-    }
+/* ===== POSITIONS (ALIGNED TO PLATFORM) ===== */
+.btn-top{left:29%;top:2%;}
+.btn-right{right:2%;top:29%;}
+.btn-bottom{left:29%;bottom:2%;}
+.btn-left{left:2%;top:29%;}
 
-    .rBtn{
-      position:absolute;
-      width:44%;
-      height:44%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-decoration:none;
-      color:#eaf3f8;
-      font-weight:800;
-      letter-spacing:.2px;
-      transform:rotate(45deg); /* keep button diamonds aligned to base */
-      border-radius:18px;
-      background:rgba(255,255,255,.10);
-      box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .rBtn:active{background:rgba(255,255,255,.16);}
+.diamond-btn:active{
+  background:rgba(255,255,255,.22);
+}
+</style>
 
-    /* Place the 4 buttons on the same plane */
-    .rTop{left:28%;top:2%;}
-    .rRight{right:2%;top:28%;}
-    .rBottom{left:28%;bottom:2%;}
-    .rLeft{left:2%;top:28%;}
+<div class="diamond-platform">
 
-    /* Rotate text back so it’s readable */
-    .rBtn > .txt{transform:rotate(-45deg);text-align:center;line-height:1.05;}
-    .rBtn > .txt small{
-      display:block;
-      margin-top:6px;
-      font-weight:600;
-      opacity:.72;
-      letter-spacing:0;
-    }
-  </style>
-</head>
+  <a class="diamond-btn btn-top" href="./consistency/">
+    <span>Consistency<small>Across time</small></span>
+  </a>
 
-<body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Integrity</h1>
-      <p class="gSub">What stays true.</p>
-    </header>
+  <a class="diamond-btn btn-right" href="./accountability/">
+    <span>Accountability<small>Ownership</small></span>
+  </a>
 
-    <section class="gPanel" aria-label="Integrity">
-      <!-- ONE REMOTE (one piece) -->
-      <div class="remote" role="navigation" aria-label="Integrity branches">
-        <div class="remoteBase" aria-hidden="true"></div>
+  <a class="diamond-btn btn-bottom" href="./continuity/">
+    <span>Continuity<small>No breaks</small></span>
+  </a>
 
-        <a class="rBtn rTop" href="./consistency/" aria-label="Consistency">
-          <span class="txt">Consistency<small>Across time</small></span>
-        </a>
+  <a class="diamond-btn btn-left" href="./coherence/">
+    <span>Coherence<small>No contradiction</small></span>
+  </a>
 
-        <a class="rBtn rRight" href="./accountability/" aria-label="Accountability">
-          <span class="txt">Accountability<small>Ownership</small></span>
-        </a>
-
-        <a class="rBtn rBottom" href="./continuity/" aria-label="Continuity">
-          <span class="txt">Continuity<small>No breaks</small></span>
-        </a>
-
-        <a class="rBtn rLeft" href="./coherence/" aria-label="Coherence">
-          <span class="txt">Coherence<small>No contradiction</small></span>
-        </a>
-      </div>
-
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="../">Categories</a>
-        <a class="gBtn" href="/laws/">Laws</a>
-        <a class="gBtn" href="/home/">Home</a>
-      </div>
-
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
-  </main>
-</body>
-</html>
+</div>

@@ -3,41 +3,54 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gate · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg" />
+  <title>Diamond Diagnostic Portals</title>
+
+  <!-- keep your existing styles exactly -->
   <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+  <link rel="stylesheet" href="/assets/door.css" />
 </head>
+
 <body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Be the first.</h1>
-      <p class="gSub">The door explains. The gate routes.</p>
-    </header>
+  <div class="page">
+    <div class="hero">
+      <h1>Diamond Diagnostic Portals</h1>
+      <p>Be the first.</p>
+      <p style="margin-top:6px; opacity:.8;">
+        The door explains. The gate routes.
+      </p>
+    </div>
 
-    <section class="gPanel" aria-label="Gate routes">
-      <div class="gCluster" role="navigation" aria-label="Primary routes">
-        <a class="gKey gTop" href="/panding/diagnostic/" aria-label="Run diagnostic">
-          <span class="gKeyText"><strong>RUN</strong>Alignment diagnostic</span>
+    <div class="doorWrap">
+      <div class="doorCluster">
+        <!-- TOP -->
+        <a class="doorDiamond top" href="/diagnostic/">
+          <strong>RUN</strong>
+          <span>Alignment diagnostic</span>
         </a>
-        <a class="gKey gRight" href="/home/" aria-label="Enter site">
-          <span class="gKeyText"><strong>ENTER</strong>Go to site</span>
+
+        <!-- RIGHT -->
+        <a class="doorDiamond right" href="/home/">
+          <strong>ENTER</strong>
+          <span>Go to site</span>
         </a>
-        <a class="gKey gBottom" href="/landing/info/" aria-label="Learn more">
-          <span class="gKeyText"><strong>LEARN</strong>What this is</span>
+
+        <!-- BOTTOM -->
+        <a class="doorDiamond bottom" href="/learn/">
+          <strong>LEARN</strong>
+          <span>What this is</span>
         </a>
-        <a class="gKey gLeft" href="/landing/exit/" aria-label="Exit">
-          <span class="gKeyText"><strong>EXIT</strong>Leave now</span>
+
+        <!-- LEFT -->
+        <a class="doorDiamond left" href="/exit/">
+          <strong>EXIT</strong>
+          <span>Leave now</span>
         </a>
       </div>
 
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/home/">Back</a>
-        <a class="gBtn" href="/landing/exit/">Exit</a>
+      <div class="canon">
+        CANONICAL · STABLE · © GEODIAMETRICS
       </div>
-
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
-  </main>
+    </div>
+  </div>
 </body>
 </html>

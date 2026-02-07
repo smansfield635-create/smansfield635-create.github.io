@@ -8,6 +8,67 @@
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    /* 4 corner info bubbles around the center diamond */
+    .lawHandoff{position:relative; min-height:420px; display:flex; align-items:center; justify-content:center}
+    .lawHandoff .gCluster{transform:scale(.98)}
+    .infoPill{
+      position:absolute; z-index:5;
+      border-radius:999px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.22);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      padding:10px 14px;
+      font-weight:800;
+      color:#fff;
+      text-decoration:none;
+      user-select:none;
+      cursor:pointer;
+      box-shadow:0 14px 40px rgba(0,0,0,.22);
+      white-space:nowrap;
+    }
+    .infoPill small{display:block; opacity:.78; font-weight:700}
+    .pill-top{top:16px; left:50%; transform:translateX(-50%)}
+    .pill-right{right:16px; top:50%; transform:translateY(-50%)}
+    .pill-bottom{bottom:16px; left:50%; transform:translateX(-50%)}
+    .pill-left{left:16px; top:50%; transform:translateY(-50%)}
+
+    /* details pop bubble */
+    details.infoBox{position:absolute; z-index:10}
+    details.infoBox summary{list-style:none}
+    details.infoBox summary::-webkit-details-marker{display:none}
+    .pop{
+      margin-top:10px;
+      max-width:260px;
+      text-align:left;
+      line-height:1.35;
+      padding:14px 14px 12px;
+      border-radius:18px;
+      background:rgba(10,20,30,.72);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+      box-shadow:0 18px 60px rgba(0,0,0,.28);
+    }
+    .pop b{display:block; margin-bottom:6px}
+    .pop .hint{margin-top:10px; opacity:.75; font-size:12px}
+
+    /* place the popovers so they don't cover the center diamond */
+    details.infoBox.top{top:16px; left:50%; transform:translateX(-50%)}
+    details.infoBox.right{right:16px; top:50%; transform:translateY(-50%)}
+    details.infoBox.bottom{bottom:16px; left:50%; transform:translateX(-50%)}
+    details.infoBox.left{left:16px; top:50%; transform:translateY(-50%)}
+
+    /* keep center diamond clickable and obvious */
+    .centerKey strong{font-size:18px}
+    .centerKey .sub{display:block; margin-top:6px; opacity:.82; font-weight:700}
+
+    @media (max-width:420px){
+      .lawHandoff{min-height:390px}
+      .infoPill{padding:9px 12px}
+      .pop{max-width:240px}
+    }
+  </style>
 </head>
 
 <body>
@@ -17,29 +78,80 @@
       <p class="gSub">Foundational structure of the system.</p>
     </header>
 
-    <section class="gPanel" aria-label="Enter law categories">
-      <div class="gCluster gSingle" role="navigation">
-        <a
-          class="gKey gCenter"
-          href="/laws/categories/"
-          aria-label="Enter law categories"
-        >
-          <span class="gKeyText">
-            <strong>Categories</strong>
-            Reality · Integrity · Structure · Flow
-          </span>
-        </a>
+    <section class="gPanel" aria-label="Laws handoff">
+      <div class="lawHandoff" aria-label="Categories handoff">
+
+        <!-- TOP bubble -->
+        <details class="infoBox top">
+          <summary class="infoPill pill-top">Reality</summary>
+          <div class="pop">
+            <b>Reality</b>
+            <div>What exists. What is true regardless of preference.</div>
+            <div class="hint">Tap pill again to close.</div>
+          </div>
+        </details>
+
+        <!-- RIGHT bubble -->
+        <details class="infoBox right">
+          <summary class="infoPill pill-right">Structure</summary>
+          <div class="pop">
+            <b>Structure</b>
+            <div>What holds. Constraints, geometry, and stable form.</div>
+            <div class="hint">Tap pill again to close.</div>
+          </div>
+        </details>
+
+        <!-- BOTTOM bubble -->
+        <details class="infoBox bottom">
+          <summary class="infoPill pill-bottom">Flow</summary>
+          <div class="pop">
+            <b>Flow</b>
+            <div>What moves. Paths, dynamics, propagation, execution.</div>
+            <div class="hint">Tap pill again to close.</div>
+          </div>
+        </details>
+
+        <!-- LEFT bubble -->
+        <details class="infoBox left">
+          <summary class="infoPill pill-left">Integrity</summary>
+          <div class="pop">
+            <b>Integrity</b>
+            <div>What stays true. Coherence, closure, non-substitution.</div>
+            <div class="hint">Tap pill again to close.</div>
+          </div>
+        </details>
+
+        <!-- CENTER diamond (handoff) -->
+        <div class="gCluster gSingle" role="navigation" aria-label="Enter categories">
+          <a class="gKey gCenter centerKey" href="/laws/categories/" aria-label="Enter law categories">
+            <span class="gKeyText">
+              <strong>Categories</strong>
+              <span class="sub">Tap to enter</span>
+            </span>
+          </a>
+        </div>
+
       </div>
 
-      <div class="gActions">
+      <div class="gActions" aria-label="Navigation controls">
         <a class="gBtn" href="/home/">Home</a>
         <a class="gBtn" href="/home/">Back</a>
       </div>
 
-      <footer class="gFooter">
-        CANONICAL · STABLE · © GEODIAMETRICS
-      </footer>
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
+
+  <script>
+    // Close other bubbles when one opens (reduces clutter on mobile)
+    (function(){
+      const boxes = Array.from(document.querySelectorAll('details.infoBox'));
+      boxes.forEach(d => d.addEventListener('toggle', () => {
+        if(!d.open) return;
+        boxes.forEach(o => { if(o!==d) o.open = false; });
+      }));
+    })();
+  </script>
 </body>
 </html>
+```0

@@ -1,147 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Integrity</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Integrity · Geodiametrics</title>
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
 
-<style>
-body{
-  margin:0;
-  min-height:100vh;
-  background:radial-gradient(circle at top,#1b3340,#0b1c26);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:#eaf3f8;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
+  <!-- HARD OVERRIDES (remote-control geometry) -->
+  <style>
+    /* Kill any accidental "X" overlays / center dots from inherited styles */
+    .gCluster::before,.gCluster::after,
+    .gPanel::before,.gPanel::after{content:none !important;display:none !important;}
+    .gCluster *::before,.gCluster *::after{content:none !important;}
 
-.panel{
-  width:min(92vw,420px);
-  padding:28px 22px 26px;
-  border-radius:28px;
-  background:rgba(255,255,255,0.06);
-  backdrop-filter:blur(14px);
-  box-shadow:0 20px 60px rgba(0,0,0,0.35);
-  text-align:center;
-}
+    /* Remote: one piece with 4 buttons */
+    .remote{position:relative;width:min(78vw,320px);aspect-ratio:1/1;margin:22px auto 10px;}
+    .remoteBase{
+      position:absolute;inset:0;
+      border-radius:22px;
+      background:rgba(255,255,255,.06);
+      box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
+      transform:rotate(45deg);
+    }
 
-h1{
-  margin:0;
-  font-size:2.1rem;
-  letter-spacing:0.4px;
-}
+    .rBtn{
+      position:absolute;
+      width:44%;
+      height:44%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color:#eaf3f8;
+      font-weight:800;
+      letter-spacing:.2px;
+      transform:rotate(45deg); /* keep button diamonds aligned to base */
+      border-radius:18px;
+      background:rgba(255,255,255,.10);
+      box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .rBtn:active{background:rgba(255,255,255,.16);}
 
-.subtitle{
-  margin-top:6px;
-  opacity:.75;
-}
+    /* Place the 4 buttons on the same plane */
+    .rTop{left:28%;top:2%;}
+    .rRight{right:2%;top:28%;}
+    .rBottom{left:28%;bottom:2%;}
+    .rLeft{left:2%;top:28%;}
 
-.diamond-wrap{
-  position:relative;
-  width:260px;
-  height:260px;
-  margin:28px auto 22px;
-  transform:rotate(45deg);
-}
-
-.diamond{
-  position:absolute;
-  inset:0;
-  border-radius:18px;
-  background:rgba(255,255,255,0.08);
-}
-
-.node{
-  position:absolute;
-  width:50%;
-  height:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  color:#eaf3f8;
-  font-weight:600;
-  letter-spacing:.3px;
-  transform:rotate(-45deg);
-}
-
-.top{top:0;left:25%;}
-.right{right:0;top:25%;}
-.bottom{bottom:0;left:25%;}
-.left{left:0;top:25%;}
-
-.node span{
-  display:block;
-  padding:10px 14px;
-  border-radius:14px;
-  background:rgba(255,255,255,0.12);
-  transition:background .2s, transform .2s;
-}
-
-.node:hover span{
-  background:rgba(255,255,255,0.22);
-  transform:scale(1.04);
-}
-
-.nav{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  margin-top:8px;
-}
-
-.nav a{
-  padding:10px 18px;
-  border-radius:18px;
-  text-decoration:none;
-  color:#eaf3f8;
-  background:rgba(255,255,255,0.12);
-  font-weight:500;
-}
-
-footer{
-  margin-top:14px;
-  font-size:.72rem;
-  opacity:.5;
-  letter-spacing:1px;
-}
-</style>
+    /* Rotate text back so it’s readable */
+    .rBtn > .txt{transform:rotate(-45deg);text-align:center;line-height:1.05;}
+    .rBtn > .txt small{
+      display:block;
+      margin-top:6px;
+      font-weight:600;
+      opacity:.72;
+      letter-spacing:0;
+    }
+  </style>
 </head>
 
 <body>
-<div class="panel">
-  <h1>Integrity</h1>
-  <div class="subtitle">What stays true.</div>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Integrity</h1>
+      <p class="gSub">What stays true.</p>
+    </header>
 
-  <div class="diamond-wrap">
-    <div class="diamond"></div>
+    <section class="gPanel" aria-label="Integrity">
+      <!-- ONE REMOTE (one piece) -->
+      <div class="remote" role="navigation" aria-label="Integrity branches">
+        <div class="remoteBase" aria-hidden="true"></div>
 
-    <a class="node top" href="./consistency/">
-      <span>Consistency</span>
-    </a>
+        <a class="rBtn rTop" href="./consistency/" aria-label="Consistency">
+          <span class="txt">Consistency<small>Across time</small></span>
+        </a>
 
-    <a class="node right" href="./accountability/">
-      <span>Accountability</span>
-    </a>
+        <a class="rBtn rRight" href="./accountability/" aria-label="Accountability">
+          <span class="txt">Accountability<small>Ownership</small></span>
+        </a>
 
-    <a class="node bottom" href="./continuity/">
-      <span>Continuity</span>
-    </a>
+        <a class="rBtn rBottom" href="./continuity/" aria-label="Continuity">
+          <span class="txt">Continuity<small>No breaks</small></span>
+        </a>
 
-    <a class="node left" href="./coherence/">
-      <span>Coherence</span>
-    </a>
-  </div>
+        <a class="rBtn rLeft" href="./coherence/" aria-label="Coherence">
+          <span class="txt">Coherence<small>No contradiction</small></span>
+        </a>
+      </div>
 
-  <div class="nav">
-    <a href="../">Categories</a>
-    <a href="/laws/">Laws</a>
-    <a href="/home/">Home</a>
-  </div>
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="../">Categories</a>
+        <a class="gBtn" href="/laws/">Laws</a>
+        <a class="gBtn" href="/home/">Home</a>
+      </div>
 
-  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-</div>
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
 </body>
 </html>

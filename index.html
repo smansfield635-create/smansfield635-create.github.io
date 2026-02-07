@@ -3,59 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Home · Geodiametrics</title>
+  <title>Geodiametrics</title>
 
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+  <!-- Hard redirect (works even if CSS breaks) -->
+  <meta http-equiv="refresh" content="0; url=/landing/" />
+  <link rel="canonical" href="/landing/" />
+
+  <style>
+    html,body{height:100%;margin:0}
+    body{display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#071722;color:#f1f6fb}
+    a{color:#8bd3ff}
+  </style>
 </head>
-
 <body>
-  <main class="page">
-
-    <!-- HEADER -->
-    <section class="hero">
-      <h1>Home</h1>
-      <p>One gate. Four routes.</p>
-    </section>
-
-    <!-- FIXED DIAMOND STAGE -->
-    <section class="panel">
-
-      <!-- DIAMOND GRID (LOCKED POSITION) -->
-      <div class="diamond-stage">
-
-        <a class="diamond d-top" href="/laws/">
-          <span class="d-title">LAWS</span>
-          <span class="d-sub">Branch</span>
-        </a>
-
-        <a class="diamond d-left" href="/links/">
-          <span class="d-title">LINKS</span>
-          <span class="d-sub">Branch</span>
-        </a>
-
-        <a class="diamond d-right" href="/products/">
-          <span class="d-title">PRODUCTS</span>
-          <span class="d-sub">Branch</span>
-        </a>
-
-        <a class="diamond d-bottom" href="/gauges/">
-          <span class="d-title">GAUGES</span>
-          <span class="d-sub">Branch</span>
-        </a>
-
-      </div>
-
-      <!-- NAV -->
-      <div class="nav-row">
-        <a class="nav-btn" href="/landing/">Back</a>
-        <a class="nav-btn" href="/exit/">Exit</a>
-      </div>
-
-      <div class="canon">CANONICAL · STABLE · © GEODIAMETRICS</div>
-
-    </section>
-  </main>
+  <div>
+    Redirecting to <a href="/landing/">/landing/</a>…
+  </div>
+  <script>
+    location.replace("/landing/");
+  </script>
 </body>
 </html>

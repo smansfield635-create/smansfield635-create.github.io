@@ -1,182 +1,99 @@
-/* TNT: /assets/branch.css  (FULL REPLACEMENT — ONLY place where diamond geometry is defined) */
+/* Diamond cluster geometry (NO X, NO center dot, NO extra layers) */
 
-/* ===== Diamond cluster (4 only) ===== */
 .gCluster{
-  --size:320px;          /* overall cluster box */
-  --key:188px;           /* diamond size */
-  --gap:56px;            /* how close diamonds are to center */
-  --r:22px;              /* diamond corner radius */
-  width:var(--size);
-  height:var(--size);
-  margin:12px auto 0;
   position:relative;
+  width:360px;
+  height:360px;
+  margin:10px auto 0;
 }
 
-/* One diamond button */
+/* responsive */
+@media (max-width:420px){
+  .gCluster{width:320px;height:320px}
+}
+@media (max-width:360px){
+  .gCluster{width:300px;height:300px}
+}
+
+/* A single diamond button */
 .gKey{
   position:absolute;
-  width:var(--key);
-  height:var(--key);
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:var(--r);
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:0 20px 50px rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
+  width:180px;
+  height:180px;
+
   display:flex;
   align-items:center;
   justify-content:center;
+
   text-decoration:none;
-  overflow:hidden;
+  color:rgba(241,246,251,.95);
+
+  border-radius:26px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.20);
+
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  box-shadow:0 18px 50px rgba(0,0,0,.22);
+
+  transform:rotate(45deg);
 }
 
-/* Inner “glass” edge */
-.gKey::before{
-  content:"";
-  position:absolute;
-  inset:10px;
-  border-radius:calc(var(--r) - 6px);
-  border:1px solid rgba(255,255,255,.14);
-  opacity:.9;
-}
-
-/* Text upright inside rotated diamond */
+/* Text inside diamond */
 .gKeyText{
   transform:rotate(-45deg);
   display:flex;
   flex-direction:column;
   gap:6px;
-  align-items:center;
-  justify-content:center;
-  padding:16px 18px;
   line-height:1.05;
-  text-align:center;
 }
-
 .gKeyText strong{
   font-size:22px;
-  font-weight:900;
-  letter-spacing:.01em;
-  color:rgba(241,246,251,.96);
+  font-weight:800;
 }
-
 .gKeyText small{
   font-size:14px;
-  font-weight:700;
-  color:rgba(241,246,251,.72);
+  color:rgba(241,246,251,.68);
 }
 
-/* Hover */
-.gKey:hover{background:rgba(255,255,255,.10)}
-.gKey:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
+/* Diamond positions (4 only) */
+.gTop{
+  left:50%;
+  top:8%;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+.gRight{
+  left:92%;
+  top:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+.gBottom{
+  left:50%;
+  top:92%;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+.gLeft{
+  left:8%;
+  top:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
 
-/* Positions (4-only) */
-.gTop   { transform:translate(-50%,-50%) translateY(calc(-1 * var(--gap))) rotate(45deg) }
-.gRight { transform:translate(-50%,-50%) translateX(var(--gap)) rotate(45deg) }
-.gBottom{ transform:translate(-50%,-50%) translateY(var(--gap)) rotate(45deg) }
-.gLeft  { transform:translate(-50%,-50%) translateX(calc(-1 * var(--gap))) rotate(45deg) }
-
-/* ===== IMPORTANT: NO hidden extra diamonds / NO X by default =====
-   If you want a thin X later, add class gX to gCluster.
-*/
-.gCluster.gX::before,
-.gCluster.gX::after{
-  content:"";
-  position:absolute;
+/* Optional center diamond (only if your HTML uses it) */
+.gCenter{
   left:50%;
   top:50%;
-  width:78%;
-  height:2px; /* VERY thin */
-  background:rgba(255,255,255,.10);
-  border-radius:999px;
-  transform-origin:center;
-  pointer-events:none;
-}
-.gCluster.gX::before{ transform:translate(-50%,-50%) rotate(45deg) }
-.gCluster.gX::after { transform:translate(-50%,-50%) rotate(-45deg) }
-
-/* ===== Stacked opaque “bubbles” list ===== */
-.gStack{
-  margin:18px auto 0;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  max-width:520px;
+  width:140px;
+  height:140px;
+  transform:translate(-50%,-50%) rotate(45deg);
+  opacity:.85;
 }
 
-.gBubble{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  padding:18px 18px;
-  border-radius:22px;
-  background:rgba(20,30,40,.88); /* OPAQUE */
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:0 18px 48px rgba(0,0,0,.24);
-  text-decoration:none;
-}
-.gBubble strong{
-  font-size:18px;
-  font-weight:900;
-  color:rgba(241,246,251,.98);
-}
-.gBubble span{
-  font-size:16px;
-  font-weight:700;
-  color:rgba(241,246,251,.72);
-}
+/* Press feedback */
+.gKey:active{transform:translate(-50%,-50%) rotate(45deg) scale(.985)}
+.gRight:active{transform:translate(-50%,-50%) rotate(45deg) scale(.985)}
+.gBottom:active{transform:translate(-50%,-50%) rotate(45deg) scale(.985)}
+.gLeft:active{transform:translate(-50%,-50%) rotate(45deg) scale(.985)}
 
-/* ===== Modal preview (tap diamond to preview) ===== */
-.gModal{
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  z-index:999;
-}
-.gModal.isOpen{display:flex}
-.gModalBackdrop{
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.42);
-  backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
-}
-.gModalCard{
-  position:relative;
-  width:100%;
-  max-width:520px;
-  padding:22px 20px;
-  border-radius:24px;
-  background:rgba(20,30,40,.92); /* OPAQUE */
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow:0 26px 70px rgba(0,0,0,.35);
-}
-.gModalCard h2{
-  font-size:24px;
-  font-weight:900;
-  margin-bottom:10px;
-}
-.gModalCard p{
-  font-size:18px;
-  line-height:1.45;
-  color:rgba(241,246,251,.82);
-}
-.gModalHint{
-  margin-top:14px;
-  font-size:14px;
-  color:rgba(241,246,251,.55);
-}
-
-/* ===== Responsive tuning ===== */
-@media (max-width:420px){
-  .gCluster{ --size:300px; --key:176px; --gap:52px; --r:22px; }
-  .gKeyText strong{font-size:20px}
-  .gKeyText small{font-size:13px}
-}
+/* If your browser applies visited styling */
+.gKey:visited{color:rgba(241,246,251,.95)}

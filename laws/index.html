@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Laws · Geodiametrics</title>
+  <title>Laws · Diamond · Geodiametrics</title>
 
   <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
@@ -12,68 +12,38 @@
 
 <body>
   <main class="gPage">
-
     <header class="gHeader">
       <h1 class="gTitle">Laws</h1>
-      <p class="gSub">Canonical structure · Categories.</p>
+      <p class="gSub">Canonical structure · Diamond.</p>
     </header>
 
-    <section class="gPanel" aria-label="Law categories">
+    <section class="gPanel" aria-label="Law diamond">
 
-      <!-- CATEGORY SELECTION -->
-      <div class="gRow" role="navigation" aria-label="Law categories">
-        <a class="gBtn" href="/laws/category-1/">What’s Real</a>
-        <a class="gBtn" href="/laws/category-2/">What Holds</a>
-        <a class="gBtn" href="/laws/category-3/">What Moves</a>
+      <div class="gCluster" role="navigation" aria-label="Law category diamond">
+        <a class="gKey gTop" href="/laws/category-1/" aria-label="Reality">
+          <span class="gKeyText"><strong>Reality</strong>What exists</span>
+        </a>
+
+        <a class="gKey gRight" href="/laws/category-2/" aria-label="Structure">
+          <span class="gKeyText"><strong>Structure</strong>What holds</span>
+        </a>
+
+        <a class="gKey gBottom" href="/laws/category-3/" aria-label="Flow">
+          <span class="gKeyText"><strong>Flow</strong>What moves</span>
+        </a>
+
+        <a class="gKey gLeft" href="/laws/category-1/" aria-label="Integrity">
+          <span class="gKeyText"><strong>Integrity</strong>What stays true</span>
+        </a>
       </div>
 
-      <!-- DIAMOND CLUSTER -->
-      <div class="gCluster" role="navigation" aria-label="Primary law diamonds">
-
-        <!-- TOP -->
-        <a class="gKey gTop" href="/laws/category-1/">
-          <span class="gKeyText">
-            <strong>Reality</strong>
-            What exists
-          </span>
-        </a>
-
-        <!-- RIGHT -->
-        <a class="gKey gRight" href="/laws/category-2/">
-          <span class="gKeyText">
-            <strong>Structure</strong>
-            What holds
-          </span>
-        </a>
-
-        <!-- BOTTOM -->
-        <a class="gKey gBottom" href="/laws/category-3/">
-          <span class="gKeyText">
-            <strong>Flow</strong>
-            What moves
-          </span>
-        </a>
-
-        <!-- LEFT -->
-        <a class="gKey gLeft" href="/laws/category-1/">
-          <span class="gKeyText">
-            <strong>Integrity</strong>
-            What stays true
-          </span>
-        </a>
-
-      </div>
-
-      <!-- NAV -->
-      <div class="gActions">
+      <div class="gActions" aria-label="Navigation controls">
+        <a class="gBtn" href="/laws/categories/">Categories</a>
         <a class="gBtn" href="/home/">Home</a>
         <a class="gBtn" href="/door/">Back</a>
       </div>
 
-      <footer class="gFooter">
-        CANONICAL · STABLE · © GEODIAMETRICS
-      </footer>
-
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
 </body>

@@ -60,8 +60,9 @@ h1{
   padding:10px 12px;
   border-radius:14px;
   background:rgba(255,255,255,0.06);
-  font-weight:600;
+  font-weight:700;
   cursor:pointer;
+  user-select:none;
 }
 
 .lens.active{
@@ -103,22 +104,21 @@ h1{
   text-decoration:none;
 }
 
-.diamond:hover{
-  background:var(--card-hover);
-}
+.diamond:hover{background:var(--card-hover);}
 
 .diamond .label{
   transform:rotate(-45deg);
   text-align:center;
-  font-weight:700;
+  font-weight:800;
   line-height:1.25;
   color:var(--text);
+  padding:0 8px;
 }
 
 .diamond .label span{
   display:block;
-  font-weight:500;
-  opacity:.75;
+  font-weight:600;
+  opacity:.78;
   font-size:13px;
 }
 
@@ -139,7 +139,7 @@ h1{
   padding:12px 16px;
   border-radius:16px;
   background:rgba(255,255,255,0.06);
-  font-weight:600;
+  font-weight:700;
 }
 
 .footer{
@@ -156,29 +156,50 @@ h1{
     <h1>Integrity</h1>
     <div class="subtitle">What stays true.</div>
 
-    <div class="lenses">
-      <div class="lens active">Scientific Lens</div>
-      <div class="lens">Human Lens</div>
+    <div class="lenses" aria-label="Lens toggle">
+      <div id="lensSci" class="lens active" role="button" tabindex="0">Scientific Lens</div>
+      <div id="lensHum" class="lens" role="button" tabindex="0">Human Lens</div>
     </div>
 
-    <div class="diamond-wrap">
+    <div class="diamond-wrap" aria-label="Integrity diamond">
       <div class="axis a"></div>
       <div class="axis b"></div>
 
+      <!-- Each diamond stores BOTH lens versions in data-* -->
       <a class="diamond top" href="consistency/">
-        <div class="label">Consistency<span>Alignment across time</span></div>
+        <div class="label"
+          data-sci-title="Consistency" data-sci-sub="Same inputs → same outputs"
+          data-hum-title="Consistency" data-hum-sub="You stay the same">
+          <span class="t">Consistency</span>
+          <span class="s">Same inputs → same outputs</span>
+        </div>
       </a>
 
       <a class="diamond right" href="accountability/">
-        <div class="label">Accountability<span>Ownership of outcome</span></div>
+        <div class="label"
+          data-sci-title="Accountability" data-sci-sub="Causal ownership"
+          data-hum-title="Accountability" data-hum-sub="Own your outcome">
+          <span class="t">Accountability</span>
+          <span class="s">Causal ownership</span>
+        </div>
       </a>
 
       <a class="diamond bottom" href="continuity/">
-        <div class="label">Continuity<span>No state breaks</span></div>
+        <div class="label"
+          data-sci-title="Continuity" data-sci-sub="No state breaks"
+          data-hum-title="Continuity" data-hum-sub="No convenient breaks">
+          <span class="t">Continuity</span>
+          <span class="s">No state breaks</span>
+        </div>
       </a>
 
       <a class="diamond left" href="coherence/">
-        <div class="label">Coherence<span>No contradiction</span></div>
+        <div class="label"
+          data-sci-title="Coherence" data-sci-sub="No internal contradiction"
+          data-hum-title="Coherence" data-hum-sub="No double-speak">
+          <span class="t">Coherence</span>
+          <span class="s">No internal contradiction</span>
+        </div>
       </a>
     </div>
 
@@ -190,5 +211,46 @@ h1{
 
     <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
   </div>
+
+<script>
+(function(){
+  const lensSci = document.getElementById('lensSci');
+  const lensHum = document.getElementById('lensHum');
+  const labels = Array.from(document.querySelectorAll('.label'));
+
+  function applyLens(mode){
+    // mode: 'sci' | 'hum'
+    lensSci.classList.toggle('active', mode === 'sci');
+    lensHum.classList.toggle('active', mode === 'hum');
+
+    labels.forEach(lbl => {
+      const t = lbl.querySelector('.t');
+      const s = lbl.querySelector('.s');
+      if(!t || !s) return;
+
+      if(mode === 'sci'){
+        t.textContent = lbl.dataset.sciTitle || t.textContent;
+        s.textContent = lbl.dataset.sciSub || s.textContent;
+      }else{
+        t.textContent = lbl.dataset.humTitle || t.textContent;
+        s.textContent = lbl.dataset.humSub || s.textContent;
+      }
+    });
+  }
+
+  function wire(el, mode){
+    el.addEventListener('click', () => applyLens(mode));
+    el.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); applyLens(mode); }
+    });
+  }
+
+  wire(lensSci, 'sci');
+  wire(lensHum, 'hum');
+
+  // default
+  applyLens('sci');
+})();
+</script>
 </body>
 </html>

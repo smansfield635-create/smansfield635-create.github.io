@@ -1,120 +1,116 @@
-/* =========================
-   BRANCH LAYOUT ONLY
-   (Diamonds / clusters / nav)
-   No global background. No word-snow.
-   ========================= */
+/* =========================================================
+   branch.css — DIAMOND GEOMETRY (BRANCH PAGES)
+   Purpose: renders the 4-diamond (and optional center) cluster
+   Works with existing markup: .gCluster .gKey .gTop/.gRight/.gBottom/.gLeft/.gCenter
+   ========================================================= */
 
-/* Page scaffolding helpers */
-.gRow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+/* Kill default link styling that shows as little white boxes */
+.gPanel a,
+.gCluster a,
+.gKey {
+  text-decoration: none;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
 
-/* Diamond cluster (4-way) */
+/* ---------- CLUSTER WRAPPER ---------- */
 .gCluster{
   position:relative;
-  width:min(340px,78vw);
+  width:min(300px,72vw);
   aspect-ratio:1/1;
-  margin:18px auto 6px;
-  z-index:3;
+  margin: 0 auto 22px auto;
+  display:block;
+  isolation:isolate;
 }
 
-/* Center diamond support (single key in center) */
-.gCenter{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%) rotate(45deg);
-}
+/* Prevent accidental nested clusters / diamond-on-diamond drift */
+.gCluster .gCluster{display:none!important}
 
-/* Base diamond key */
+/* ---------- DIAMOND (ANCHOR) ---------- */
 .gKey{
   position:absolute;
-  width:56%;
-  height:56%;
-  left:22%;
-  top:22%;
-
+  width:44%;
+  height:44%;
   display:flex;
   align-items:center;
   justify-content:center;
-
-  transform:rotate(45deg);
-  border-radius:22px;
-
-  background:rgba(255,255,255,.08);
+  border-radius:18px;
+  transform: rotate(45deg);
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
   border:1px solid rgba(255,255,255,.18);
-  box-shadow:0 18px 60px rgba(0,0,0,.28);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-
-  text-decoration:none;
-  color:inherit;
-
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+  box-shadow: 0 18px 45px rgba(0,0,0,.28);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform .18s ease, background .18s ease, border-color .18s ease;
   cursor:pointer;
+  z-index:2;
 }
 
-/* 4 positions */
-.gTop{left:22%; top:0%}
-.gRight{left:44%; top:22%}
-.gBottom{left:22%; top:44%}
-.gLeft{left:0%; top:22%}
+.gKey:active{transform:rotate(45deg) scale(.98)}
+.gKey:hover{
+  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
+  border-color: rgba(255,255,255,.24);
+}
 
-/* Keep text horizontal always */
+/* ---------- TEXT INSIDE DIAMOND (HORIZONTAL) ---------- */
 .gKeyText{
-  transform:rotate(-45deg);
-  -webkit-transform:rotate(-45deg);
-
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  transform: rotate(-45deg);
+  display:block;
   text-align:center;
-
-  width:78%;
-  line-height:1.08;
-
-  font-size:14px;
-  font-weight:700;
-  color:rgba(241,246,255,.92);
+  line-height:1.1;
+  padding: 10px 12px;
+  pointer-events:none;
 }
 
 .gKeyText strong{
   display:block;
-  font-size:clamp(18px,4.2vw,22px);
-  letter-spacing:.06em;
-  font-weight:900;
-  color:#f7fbff;
-  margin-bottom:6px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -.02em;
 }
 
 .gKeyText small{
-  opacity:.78;
-  font-weight:700;
-  font-size:13px;
+  display:block;
+  margin-top:6px;
+  font-size: 12px;
+  color: rgba(255,255,255,.70);
 }
 
-/* Hover/active */
-.gKey:hover{border-color:rgba(255,255,255,.26)}
-.gKey:active{transform:rotate(45deg) scale(.985)}
+/* ---------- POSITIONS (LOCKED 4-DIAMOND) ---------- */
+.gTop   { top:6%;   left:50%; transform: translateX(-50%) rotate(45deg); }
+.gRight { right:6%; top:50%;  transform: translateY(-50%) rotate(45deg); }
+.gBottom{ bottom:6%;left:50%; transform: translateX(-50%) rotate(45deg); }
+.gLeft  { left:6%;  top:50%;  transform: translateY(-50%) rotate(45deg); }
 
-/* Single cluster helper: use one diamond only */
-.gSingle .gKey{position:absolute}
-.gSingle .gKey.gCenter{width:56%;height:56%}
+/* ---------- OPTIONAL CENTER (ONLY IF USED) ---------- */
+.gCenter{
+  top:50%;
+  left:50%;
+  width:34%;
+  height:34%;
+  transform: translate(-50%,-50%) rotate(45deg);
+  background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.08));
+  border-color: rgba(255,255,255,.26);
+  z-index:3;
+}
 
-/* Stack helpers already defined in ui.css; keep here only if missing */
-.gStack{display:grid;gap:12px;margin-top:18px}
+/* If you ever want center OFF universally, uncomment:
+.gCenter{display:none!important}
+*/
 
-/* Solid bubble helper (ui.css sets base; this ensures consistent) */
-.solid{background:rgba(38,48,58,.95) !important}
-
-/* Click-safety: no pseudo-layers steal taps */
-.gCluster::before,
-.gCluster::after{pointer-events:none !important}
-
-/* Mobile tightening */
+/* ---------- MOBILE TUNING ---------- */
 @media (max-width:420px){
-  .gCluster{width:min(320px,86vw)}
-  .gKey{border-radius:20px}
-  .gKeyText{font-size:13px}
-  .gKeyText strong{font-size:clamp(17px,4.6vw,21px)}
+  .gCluster{width:min(280px,78vw)}
+  .gKeyText strong{font-size:16px}
+  .gKeyText small{font-size:11px}
+}
+
+/* ---------- ACCESSIBILITY FOCUS ---------- */
+.gKey:focus{
+  outline: none;
+}
+.gKey:focus-visible{
+  outline: 2px solid rgba(255,255,255,.35);
+  outline-offset: 6px;
+  border-radius: 22px;
 }

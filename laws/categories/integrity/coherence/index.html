@@ -1,33 +1,116 @@
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Coherence · Integrity · Geodiametrics</title>
-<link rel="stylesheet" href="/assets/ui.css"/><link rel="stylesheet" href="/assets/branch.css"/>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
 <style>
-html,body{height:100%;margin:0}body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow-x:hidden}
-.page{width:100vw;min-height:100vh;padding:22px 12px 26px}
-.h{text-align:center;margin:6px 0 10px}.h h1{margin:0;font-size:48px;font-weight:900;letter-spacing:.3px}.h p{margin:8px 0 0;opacity:.72;font-size:18px}
-.stage{width:100%;display:flex;justify-content:center;align-items:center;padding:10px 0 16px}
-.pw{position:relative;width:min(520px,96vw);aspect-ratio:1/1}
-.pw:before{content:"";position:absolute;inset:0;transform:rotate(45deg);border-radius:26px;background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.10) inset,0 22px 90px rgba(0,0,0,.35);pointer-events:none}
-.db{position:absolute;width:42%;height:42%;transform:rotate(45deg);border-radius:18px;background:rgba(255,255,255,.14);box-shadow:0 0 0 1px rgba(255,255,255,.16) inset,0 16px 55px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#eaf2f6;-webkit-tap-highlight-color:transparent}
-.db:active{transform:rotate(45deg) scale(.98);background:rgba(255,255,255,.20)}
-.t{transform:rotate(-45deg);text-align:center;line-height:1.05;padding:0 10px}
-.t strong{display:block;font-size:22px;font-weight:900}.t span{display:block;margin-top:6px;font-size:14px;opacity:.72;font-weight:700}
-.top{left:29%;top:2%}.right{right:2%;top:29%}.bottom{left:29%;bottom:2%}.left{left:2%;top:29%}
-.nav{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:14px}
-.nav a{min-width:140px;height:52px;border-radius:18px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);color:#eaf2f6;text-decoration:none;font-weight:900;display:flex;align-items:center;justify-content:center}
-.f{margin-top:14px;text-align:center;font-size:12px;opacity:.55;letter-spacing:3px}
-</style></head><body>
+html,body{height:100%;margin:0}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+.page{min-height:100vh;padding:24px 12px}
+.h{text-align:center}
+.h h1{font-size:48px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px}
+
+.stage{display:flex;justify-content:center;margin:24px 0}
+.platform{
+  position:relative;
+  width:min(520px,96vw);
+  aspect-ratio:1/1;
+}
+.platform::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
+  border-radius:28px;
+  background:rgba(255,255,255,.06);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
+}
+
+.diamond{
+  position:absolute;
+  width:42%;
+  height:42%;
+  transform:rotate(45deg);
+  border-radius:18px;
+  background:rgba(255,255,255,.16);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:#eaf2f6;
+}
+.diamond span{
+  transform:rotate(-45deg);
+  text-align:center;
+  font-weight:900;
+}
+.top{top:2%;left:29%}
+.right{top:29%;right:2%}
+.bottom{bottom:2%;left:29%}
+.left{top:29%;left:2%}
+
+.nav{display:flex;justify-content:center;gap:12px}
+.nav a{
+  padding:14px 22px;
+  border-radius:18px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;
+  color:#eaf2f6;
+  font-weight:900;
+}
+footer{text-align:center;opacity:.55;margin-top:16px;letter-spacing:3px;font-size:12px}
+</style>
+</head>
+
+<body>
 <div class="page">
-  <div class="h"><h1>Coherence</h1><p>Integrity · No internal contradiction.</p></div>
-  <div class="stage"><div class="pw" role="navigation" aria-label="Coherence branches">
-    <a class="db top" href="./history/"><div class="t"><strong>History</strong><span>Origins</span></div></a>
-    <a class="db right" href="./known/"><div class="t"><strong>Known</strong><span>What it is</span></div></a>
-    <a class="db bottom" href="./learned/"><div class="t"><strong>Learned</strong><span>What changed</span></div></a>
-    <a class="db left" href="./impact/"><div class="t"><strong>Impact</strong><span>Why it matters</span></div></a>
-  </div></div>
-  <div class="nav">
-    <a href="../">Back to Integrity</a><a href="/laws/categories/">Categories</a><a href="/home/">Home</a>
+
+  <div class="h">
+    <h1>Coherence</h1>
+    <p>Integrity · No internal contradiction.</p>
   </div>
-  <div class="f">CANONICAL · STABLE · © GEODIAMETRICS</div>
-</div></body></html>
+
+  <div class="stage">
+    <div class="platform">
+
+      <!-- FIXED: FILE LINKS -->
+      <a class="diamond top" href="./history.html">
+        <span>History<br><small>Origins</small></span>
+      </a>
+
+      <a class="diamond right" href="./known.html">
+        <span>Known<br><small>What it is</small></span>
+      </a>
+
+      <a class="diamond bottom" href="./learned.html">
+        <span>Learned<br><small>What changed</small></span>
+      </a>
+
+      <a class="diamond left" href="./impact.html">
+        <span>Impact<br><small>Why it matters</small></span>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="nav">
+    <a href="../">Back to Integrity</a>
+    <a href="/laws/categories/">Categories</a>
+    <a href="/home/">Home</a>
+  </div>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
+</div>
+</body>
+</html>

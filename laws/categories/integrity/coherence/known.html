@@ -1,0 +1,72 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Coherence · Known · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css"/><link rel="stylesheet" href="/assets/branch.css"/>
+<style>
+html,body{height:100%;margin:0}body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.page{min-height:100vh;padding:24px 12px}.h{text-align:center;margin:6px 0 12px}.h h1{margin:0;font-size:46px;font-weight:900}.h p{margin:8px 0 0;opacity:.72}
+.panel{max-width:860px;margin:0 auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:16px 16px 14px;box-shadow:0 18px 60px rgba(0,0,0,.35)}
+.lens{display:flex;gap:10px;justify-content:center;margin:6px 0 12px}
+.lbtn{flex:1;max-width:240px;padding:12px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:#eaf2f6;font-weight:900;cursor:pointer}
+.lbtn.on{background:rgba(255,255,255,.14)}
+.card{background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:14px;margin-top:12px}
+.card h2{margin:0 0 8px;font-size:18px}.p{margin:0 0 10px;line-height:1.55;opacity:.92}
+.laws{margin-top:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:12px 14px}
+.laws h3{margin:0 0 8px;font-size:16px}.laws ul{margin:0;padding-left:18px;line-height:1.45;opacity:.92}
+.nav{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.nav a{padding:12px 18px;border-radius:18px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);text-decoration:none;color:#eaf2f6;font-weight:900}
+.f{margin-top:14px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
+.human{display:block}.sci{display:none}
+</style></head><body>
+<div class="page">
+  <div class="h"><h1>Known</h1><p>Coherence · what it is.</p></div>
+  <div class="panel">
+    <div class="lens">
+      <button class="lbtn on" id="hBtn" type="button">Human lens</button>
+      <button class="lbtn" id="sBtn" type="button">Scientific lens</button>
+    </div>
+
+    <div class="card human">
+      <h2>Intro</h2>
+      <p class="p">Coherence means you are one person in every room. Your rules don’t change when pressure changes.</p>
+      <h2>Four paragraphs</h2>
+      <p class="p">Definition: your values, actions, and outcomes match.</p>
+      <p class="p">Mechanism: you close gaps fast instead of defending contradictions.</p>
+      <p class="p">Measurement: others can predict your behavior from your stated standards.</p>
+      <p class="p">Examples: trust grows; drama shrinks; decisions stay clean under stress.</p>
+      <h2>Close</h2>
+      <p class="p">Known matters because coherence is how trust becomes structural.</p>
+    </div>
+
+    <div class="card sci">
+      <h2>Intro</h2>
+      <p class="p">Coherence is cross-time invariance: outputs remain compatible with declared constraints under perturbation.</p>
+      <h2>Four paragraphs</h2>
+      <p class="p">Definition: reduced contradiction across observed states.</p>
+      <p class="p">Mechanism: constraint consistency + stable feedback.</p>
+      <p class="p">Measurement: low variance under repeated inputs; observer-invariant classification.</p>
+      <p class="p">Examples: reproducibility; reliable execution; predictable trajectories.</p>
+      <h2>Close</h2>
+      <p class="p">Known matters because coherence is the basis for scalable reliability.</p>
+    </div>
+
+    <div class="laws">
+      <h3>Canonical laws (Coherence)</h3>
+      <ul>
+        <li><b>Coherence Constraint Law</b> — external coherence cannot exceed internal self-coherence.</li>
+        <li><b>Fragmentation Detection Law</b> — misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</li>
+      </ul>
+    </div>
+
+    <div class="nav">
+      <a href="./index.html">Back to Coherence</a><a href="/laws/categories/integrity/">Integrity</a><a href="/laws/categories/">Categories</a><a href="/home/">Home</a>
+    </div>
+    <div class="f">CANONICAL · STABLE · © GEODIAMETRICS</div>
+  </div>
+</div>
+<script>
+(()=>{const h=document.querySelector('.human'),s=document.querySelector('.sci'),hb=document.getElementById('hBtn'),sb=document.getElementById('sBtn');
+const set=(x)=>{const isH=x==='h';h.style.display=isH?'block':'none';s.style.display=isH?'none':'block';hb.classList.toggle('on',isH);sb.classList.toggle('on',!isH);};
+hb.onclick=()=>set('h');sb.onclick=()=>set('s');})();
+</script>
+</body></html>

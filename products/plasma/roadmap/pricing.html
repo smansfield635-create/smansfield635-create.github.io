@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PLASMA · Pricing · Products · Geodiametrics</title>
+
+<style>
+html,body{margin:0;height:100%}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  overflow-x:hidden;
+}
+.page{max-width:980px;margin:0 auto;padding:44px 18px 72px}
+h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
+.sub{margin:0 0 26px;opacity:.72;font-size:18px}
+
+.lensRow{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 30px}
+.lensBtn{
+  padding:12px 18px;border-radius:16px;
+  background:rgba(255,255,255,.10);
+  color:#eaf2f6;font-weight:900;
+  border:1px solid rgba(255,255,255,.10);
+}
+.lensBtn[aria-pressed="true"]{
+  background:rgba(80,170,255,.18);
+  box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16);
+}
+.mode{display:none}
+body[data-lens="human"] .mode-human{display:block}
+body[data-lens="scientific"] .mode-scientific{display:block}
+
+p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+ul{margin:12px 0 0;padding-left:20px}
+li{margin:10px 0;font-size:18px;line-height:1.55;opacity:.92}
+
+.bubble{
+  margin:18px 0;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+}
+.bubble summary{
+  padding:18px 20px;
+  font-size:20px;
+  font-weight:900;
+  cursor:pointer;
+  list-style:none;
+}
+.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{padding:0 20px 20px}
+.bubbleContent p{font-size:19px;margin:14px 0}
+
+.nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:44px}
+.nav a{
+  padding:12px 18px;border-radius:16px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;color:#eaf2f6;font-weight:900;
+}
+footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
+</style>
+</head>
+
+<body data-lens="human">
+<div class="page">
+
+<h1>Pricing</h1>
+<p class="sub">PLASMA · Commercial posture.</p>
+
+<div class="lensRow">
+  <button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button>
+  <button class="lensBtn" id="btnSci" aria-pressed="false" type="button">Scientific lens</button>
+</div>
+
+<div class="mode mode-human">
+  <p>Pricing is scope-based. PLASMA is offered as an execution engagement or a licensed workflow package.</p>
+
+  <ul>
+    <li><strong>Explore</strong> — prove value quickly with one branch and a minimal receipt set.</li>
+    <li><strong>Build</strong> — implement receipt schemas, invalidation rules, and exportable audit format.</li>
+    <li><strong>Scale</strong> — multi-branch execution, observer agreement, and partner-ready delivery packs.</li>
+  </ul>
+
+  <details class="bubble">
+    <summary>What changes the price</summary>
+    <div class="bubbleContent">
+      <p>Branch count, receipt complexity, number of stakeholders/observers, and integration/export requirements.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>What stays constant</summary>
+    <div class="bubbleContent">
+      <p>Receipts remain required. No receipts means no advancement, regardless of scope.</p>
+    </div>
+  </details>
+</div>
+
+<div class="mode mode-scientific">
+  <p>Pricing scales with measurable complexity units:</p>
+
+  <ul>
+    <li><strong>Topology:</strong> number of branches and dependencies.</li>
+    <li><strong>Receipts:</strong> schema count, falsifiability requirements, invalidation graph.</li>
+    <li><strong>Observers:</strong> review roles, auditability demands, agreement targets.</li>
+    <li><strong>Interfaces:</strong> integration surfaces and export formats.</li>
+  </ul>
+
+  <details class="bubble">
+    <summary>Scope unit (practical)</summary>
+    <div class="bubbleContent">
+      <p>A “branch set” with defined receipts and a validated export trail.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Outcome coupling</summary>
+    <div class="bubbleContent">
+      <p>As scope rises, acceptance thresholds should be tied to recurrence reduction and correction latency reduction.</p>
+    </div>
+  </details>
+</div>
+
+<div class="nav">
+  <a href="/products/plasma/roadmap/">Back to Roadmap Hub</a>
+  <a href="/products/plasma/">Back to PLASMA</a>
+  <a href="/products/">Products</a>
+  <a href="/home/">Home</a>
+</div>
+
+<footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+</div>
+
+<script>
+(()=>{const b=document.body,h=document.getElementById("btnHuman"),s=document.getElementById("btnSci");
+function set(v){b.dataset.lens=v;h.setAttribute("aria-pressed",String(v==="human"));s.setAttribute("aria-pressed",String(v==="scientific"))}
+h.onclick=()=>set("human");s.onclick=()=>set("scientific")})();
+</script>
+
+</body>
+</html>

@@ -186,3 +186,190 @@
 </body>
 </html>
 ```0
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Law Categories · Geodiametrics</title>
+
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    :root{
+      --catDiamondSize: min(78vw, 380px);
+      --catDiamondGap: 10px;
+    }
+
+    .pageWrap{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      padding:48px 16px 24px;
+    }
+
+    .header{
+      text-align:center;
+      margin-bottom:18px;
+    }
+    .title{
+      margin:0;
+      font-size:54px;
+      line-height:1.05;
+      font-weight:900;
+      letter-spacing:.5px;
+      color:rgba(240,245,250,.95);
+      text-shadow:0 8px 24px rgba(0,0,0,.35);
+    }
+    .sub{
+      margin:10px 0 0;
+      font-size:20px;
+      color:rgba(220,230,238,.75);
+    }
+
+    .panel{
+      width:min(92vw, 560px);
+      margin-top:18px;
+      padding:22px 18px 18px;
+      border-radius:28px;
+      background:rgba(30,44,54,.55);
+      box-shadow:0 20px 60px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border:1px solid rgba(255,255,255,.10);
+    }
+
+    .diamondStage{
+      position:relative;
+      width: var(--catDiamondSize);
+      height: var(--catDiamondSize);
+      margin: 10px auto 16px;
+    }
+
+    .dBtn{
+      position:absolute;
+      width:64%;
+      height:64%;
+      left:18%;
+      top:18%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      text-align:center;
+      text-decoration:none;
+      color:rgba(240,245,250,.92);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      border-radius:18px;
+      background:rgba(60,78,92,.35);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 18px 40px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.10);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: transform .12s ease;
+    }
+    .dBtn:active{ transform: scale(.985); }
+
+    .dTop{ transform: translateY(calc(-34% - var(--catDiamondGap))); }
+    .dLeft{ transform: translateX(calc(-34% - var(--catDiamondGap))); }
+    .dRight{ transform: translateX(calc( 34% + var(--catDiamondGap))); }
+    .dBottom{ transform: translateY(calc( 34% + var(--catDiamondGap))); }
+
+    .dLabel{
+      font-size:28px;
+      font-weight:900;
+      line-height:1.05;
+      margin:0;
+    }
+    .dSmall{
+      margin-top:6px;
+      font-size:16px;
+      color:rgba(220,230,238,.68);
+      font-weight:600;
+    }
+
+    .actions{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      margin-top:10px;
+      flex-wrap:wrap;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width: 150px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      text-decoration:none;
+      color:rgba(240,245,250,.92);
+      background:rgba(60,78,92,.32);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 18px 40px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.10);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      font-size:20px;
+      font-weight:900;
+    }
+    .pill:active{ transform: scale(.985); }
+
+    .footer{
+      text-align:center;
+      margin-top:16px;
+      font-size:14px;
+      letter-spacing:3px;
+      color:rgba(210,220,228,.55);
+    }
+
+    @media (max-width:380px){
+      .title{ font-size:46px; }
+      .dLabel{ font-size:24px; }
+      .pill{ min-width: 135px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="pageWrap">
+    <header class="header">
+      <h1 class="title">Law Categories</h1>
+      <p class="sub">Choose a branch.</p>
+    </header>
+
+    <section class="panel" aria-label="Law category branches">
+      <div class="diamondStage" aria-label="Category diamond">
+        <a class="dBtn dTop" href="/laws/categories/reality/">
+          <div class="dLabel">Reality</div>
+          <div class="dSmall">What is</div>
+        </a>
+
+        <a class="dBtn dLeft" href="/laws/categories/integrity/">
+          <div class="dLabel">Integrity</div>
+          <div class="dSmall">What stays true</div>
+        </a>
+
+        <a class="dBtn dRight" href="/laws/categories/structure/">
+          <div class="dLabel">Structure</div>
+          <div class="dSmall">What holds</div>
+        </a>
+
+        <a class="dBtn dBottom" href="/laws/categories/flow/">
+          <div class="dLabel">Flow</div>
+          <div class="dSmall">What moves</div>
+        </a>
+      </div>
+
+      <div class="actions" aria-label="Navigation">
+        <a class="pill" href="/laws/">Back</a>
+        <a class="pill" href="/home/">Home</a>
+      </div>
+
+      <footer class="footer">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
+</body>
+</html>

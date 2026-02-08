@@ -3,46 +3,40 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Learned · Coherence · Integrity · Laws · Geodiametrics</title>
+<title>Learned · History · Coherence · Geodiametrics</title>
 
 <style>
 html,body{margin:0;height:100%}
-body{
-  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
-  color:#eaf2f6;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  overflow-x:hidden;
-}
+body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 .page{max-width:980px;margin:0 auto;padding:44px 18px 72px}
-h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
-.sub{margin:0 0 26px;opacity:.72;font-size:18px}
+h1{font-size:48px;font-weight:900;margin:0 0 18px}
+.sub{opacity:.72;font-size:18px;margin-bottom:26px}
+p{font-size:20px;line-height:1.7;margin:18px 0;opacity:.94}
+ul{padding-left:20px;margin-top:10px}
+li{margin:10px 0;font-size:18px;opacity:.92}
+
 .lensRow{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 30px}
-.lensBtn{
-  padding:12px 18px;border-radius:16px;
-  background:rgba(255,255,255,.10);
-  color:#eaf2f6;font-weight:900;
-  border:1px solid rgba(255,255,255,.10);
-}
-.lensBtn[aria-pressed="true"]{
-  background:rgba(80,170,255,.18);
-  box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16);
-}
+.lensBtn{padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.10);color:#eaf2f6;font-weight:900}
+.lensBtn[aria-pressed="true"]{background:rgba(80,170,255,.18);box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16)}
+
 .mode{display:none}
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
-h2{margin:34px 0 10px;font-size:22px;font-weight:900;letter-spacing:.02em}
-p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
-ul{margin:14px 0 0;padding-left:20px}
-li{margin:12px 0;font-size:18px;line-height:1.55;opacity:.92}
+
+.bubble{margin:18px 0;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.bubble summary{padding:18px 20px;font-size:20px;font-weight:900;cursor:pointer;list-style:none}
+.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{padding:0 20px 20px}
+.bubbleContent p{font-size:19px;margin:14px 0;opacity:.94}
+.bubbleContent ul{margin-top:10px}
+
 .laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
-.laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
-.nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:44px}
-.nav a{
-  padding:12px 18px;border-radius:16px;
-  background:rgba(255,255,255,.10);
-  text-decoration:none;color:#eaf2f6;font-weight:900
-}
-footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
+.laws h2{font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9;margin:0 0 14px}
+.laws li{font-size:18px}
+
+.nav{margin-top:44px;display:flex;gap:12px;flex-wrap:wrap}
+.nav a{padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
+footer{margin-top:44px;text-align:center;opacity:.55;font-size:12px;letter-spacing:3px}
 </style>
 </head>
 
@@ -50,64 +44,156 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 <div class="page">
 
 <h1>Learned</h1>
-<p class="sub">Coherence · What pressure taught you and evidence confirmed.</p>
+<p class="sub">History · What coherence teaches through failure.</p>
 
 <div class="lensRow">
-  <button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button>
-  <button class="lensBtn" id="btnSci" aria-pressed="false" type="button">Scientific lens</button>
+  <button class="lensBtn" id="h" aria-pressed="true" type="button">Human lens</button>
+  <button class="lensBtn" id="s" aria-pressed="false" type="button">Scientific lens</button>
 </div>
 
 <div class="mode mode-human">
-  <p>Learned is the set of lessons that became rules because reality forced the issue.</p>
-  <p>You learned it when the old behavior produced pain, loss, or repeat failure—until you stopped calling it “bad luck.”</p>
-  <p>Learned coherence is not moral perfection. It is fewer repeats of the same mistake.</p>
+<p>Learned is what becomes obvious after you pay the price.</p>
 
-  <h2>Learned signals</h2>
-  <ul>
-    <li>You recognize your triggers earlier.</li>
-    <li>You recover faster and repair without defensiveness.</li>
-    <li>You stop bargaining for “one exception.”</li>
-    <li>You choose standards over comfort more often than not.</li>
-  </ul>
+<ul>
+  <li>Clarity feels slow until collapse proves it was fast.</li>
+  <li>Intentions do not protect outcomes.</li>
+  <li>Unspoken rules create endless conflict.</li>
+  <li>“One exception” becomes a new identity.</li>
+</ul>
 
-  <h2>Learned failure modes</h2>
-  <ul>
-    <li>You can describe the lesson but still repeat the pattern.</li>
-    <li>You fix symptoms instead of constraints.</li>
-    <li>You blame people when the system is the problem.</li>
-  </ul>
+<details class="bubble">
+  <summary>Lesson 1 — Fake progress is expensive</summary>
+  <div class="bubbleContent">
+    <p>The most dangerous pattern is progress that looks real until inspection.</p>
+    <ul>
+      <li>Teams celebrate movement without receipts.</li>
+      <li>Assumptions drift silently.</li>
+      <li>The bill arrives late, when rewinding hurts most.</li>
+    </ul>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>Lesson 2 — The fight is about admissibility</summary>
+  <div class="bubbleContent">
+    <p>Most “personality conflict” is actually a rules conflict.</p>
+    <ul>
+      <li>One side thinks a step is allowed.</li>
+      <li>The other side thinks it violates a constraint.</li>
+      <li>No shared rule → infinite argument.</li>
+    </ul>
+    <p>When admissibility is formalized, the fight ends quickly—because the rule becomes visible.</p>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>Lesson 3 — Repair beats explanation</summary>
+  <div class="bubbleContent">
+    <p>Explanation is cheap. Repair is coherence.</p>
+    <ul>
+      <li>Coherent people correct quickly.</li>
+      <li>Incoherent people narrate longer.</li>
+      <li>Trust grows where repair is normal.</li>
+    </ul>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>Lesson 4 — Pressure reveals the real standard</summary>
+  <div class="bubbleContent">
+    <p>Comfort can fake coherence. Pressure cannot.</p>
+    <ul>
+      <li>Money tests integrity.</li>
+      <li>Audience tests identity.</li>
+      <li>Fear tests truthfulness.</li>
+      <li>Ego tests humility.</li>
+    </ul>
+    <p>If the standard changes when pressure rises, the standard was never real.</p>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>Lesson 5 — Invalidation is mercy</summary>
+  <div class="bubbleContent">
+    <p>When an upstream assumption changes, downstream work must be rechecked.</p>
+    <ul>
+      <li>Ignoring invalidation creates hidden debt.</li>
+      <li>Honoring invalidation feels painful early.</li>
+      <li>Honoring invalidation prevents catastrophic collapse later.</li>
+    </ul>
+  </div>
+</details>
 </div>
 
 <div class="mode mode-scientific">
-  <p>Learned coherence is an updated control policy produced by feedback and constrained by invariants.</p>
-  <p>Learning is not information; learning is behavioral change that reduces future error under the same stressors.</p>
+<p>Learned patterns are the recurring signatures of instability and recovery.</p>
 
-  <h2>Learned signals</h2>
-  <ul>
-    <li>Reduced recurrence of the same failure class.</li>
-    <li>Lower latency from deviation to correction.</li>
-    <li>Improved stability under increasing load.</li>
-    <li>Better generalization across contexts without breaking constraints.</li>
-  </ul>
+<ul>
+  <li>Unbounded variance precedes failure.</li>
+  <li>Correction latency predicts collapse speed.</li>
+  <li>Drift hides inside redefinitions and special cases.</li>
+  <li>Observer disagreement signals missing invariants.</li>
+</ul>
 
-  <h2>Learned failure modes</h2>
-  <ul>
-    <li>Overfitting to one incident (policy too narrow).</li>
-    <li>Shifting measurement rules to “pass” without improving outcomes.</li>
-    <li>Incentive drift that reintroduces the old failure mode.</li>
-  </ul>
+<details class="bubble">
+  <summary>Learning = reduced recurrence</summary>
+  <div class="bubbleContent">
+    <p>Information is not learning. Learning is when the same failure class stops repeating.</p>
+    <ul>
+      <li>Recurrence ↓</li>
+      <li>Correction latency ↓</li>
+      <li>Variance ↓</li>
+    </ul>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>Drift mechanisms (common)</summary>
+  <div class="bubbleContent">
+    <ul>
+      <li><strong>Definition drift:</strong> words shift while claims stay “true.”</li>
+      <li><strong>Incentive drift:</strong> rewards invert without anyone admitting it.</li>
+      <li><strong>Measurement drift:</strong> metrics change and comparability dies.</li>
+      <li><strong>Narrative substitution:</strong> story replaces evidence.</li>
+    </ul>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>Admissibility formalization effect</summary>
+  <div class="bubbleContent">
+    <p>Formal rules compress conflict into a checkable boundary.</p>
+    <ul>
+      <li>Fewer cycles spent arguing.</li>
+      <li>Faster convergence to the next valid step.</li>
+      <li>Higher observer agreement.</li>
+    </ul>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>Failure threshold (rule-of-thumb)</summary>
+  <div class="bubbleContent">
+    <p>Systems fail when correction can’t keep up with error accumulation.</p>
+    <ul>
+      <li>Error rate × time &gt; repair bandwidth</li>
+      <li>Latency increases → amplification increases</li>
+      <li>Collapse appears sudden only because drift was quiet</li>
+    </ul>
+  </div>
+</details>
 </div>
 
 <div class="laws">
-  <h2>CANONICAL LAWS (COHERENCE)</h2>
+  <h2>CANONICAL LAWS</h2>
   <ul>
-    <li><strong>Coherence Constraint Law</strong> — external coherence cannot exceed internal self-coherence.</li>
-    <li><strong>Fragmentation Detection Law</strong> — misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</li>
+    <li>Coherence Constraint Law</li>
+    <li>Fragmentation Detection Law</li>
   </ul>
 </div>
 
 <div class="nav">
-  <a href="./index.html">Back to Coherence</a>
+  <a href="./index.html">Back to History</a>
   <a href="/home/">Home</a>
 </div>
 
@@ -115,9 +201,10 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 </div>
 
 <script>
-(()=>{const b=document.body,h=document.getElementById("btnHuman"),s=document.getElementById("btnSci");
-function set(v){b.dataset.lens=v;h.setAttribute("aria-pressed",String(v==="human"));s.setAttribute("aria-pressed",String(v==="scientific"))}
-h.onclick=()=>set("human");s.onclick=()=>set("scientific")})();
+(()=>{const b=document.body;
+h.onclick=()=>{b.dataset.lens="human";h.setAttribute("aria-pressed","true");s.setAttribute("aria-pressed","false")};
+s.onclick=()=>{b.dataset.lens="scientific";s.setAttribute("aria-pressed","true");h.setAttribute("aria-pressed","false")};
+})();
 </script>
 
 </body>

@@ -1,4 +1,6 @@
-<!-- TNT: /products/index.html (FULL REPLACEMENT — Products hub routes to Product Diamonds) -->
+<!-- =========================
+TNT — FILE: /products/index.html
+========================= -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,34 +13,41 @@
 </head>
 <body>
   <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Products</h1>
-      <p class="gSub">Suite hub · Each product is a diamond.</p>
-    </header>
+    <div>
+      <header class="gHeader">
+        <h1 class="gTitle">Products</h1>
+        <p class="gSub">Suite hub · Each product is a diamond.</p>
+      </header>
 
-    <section class="gPanel" aria-label="Product routes">
-      <div class="gCluster" role="navigation" aria-label="Product routes">
-        <a class="gKey gTop" href="/products/plasma/" aria-label="Plasma">
-          <span class="gKeyText"><strong>PLASMA</strong>Frontier execution</span>
-        </a>
-        <a class="gKey gRight" href="/products/eai/" aria-label="EAI">
-          <span class="gKeyText"><strong>EAI</strong>Admissibility instrument</span>
-        </a>
-        <a class="gKey gBottom" href="/products/platform/" aria-label="Platform">
-          <span class="gKeyText"><strong>PLATFORM</strong>Unified environment</span>
-        </a>
-        <a class="gKey gLeft" href="/products/cvd/" aria-label="CVD">
-          <span class="gKeyText"><strong>CVD</strong>Deployment layer</span>
-        </a>
-      </div>
+      <section class="gPanel" aria-label="Products routes">
+        <div class="gDiamondStage" role="navigation" aria-label="Product routes">
+          <div class="gDiamondPlatform" aria-hidden="true"></div>
 
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/home/">Back</a>
-        <a class="gBtn" href="/landing/exit/">Exit</a>
-      </div>
+          <a class="gDiamondBtn gTop" href="/products/plasma/" aria-label="Plasma">
+            <div class="gDiamondText"><strong>Plasma</strong><span>Frontier</span></div>
+          </a>
 
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
+          <a class="gDiamondBtn gRight" href="/products/eai/" aria-label="EAI">
+            <div class="gDiamondText"><strong>EAI</strong><span>Instrument</span></div>
+          </a>
+
+          <a class="gDiamondBtn gBottom" href="/products/platform/" aria-label="Platform">
+            <div class="gDiamondText"><strong>Platform</strong><span>Unified</span></div>
+          </a>
+
+          <a class="gDiamondBtn gLeft" href="/products/cvd/" aria-label="CVD">
+            <div class="gDiamondText"><strong>CVD</strong><span>Layer</span></div>
+          </a>
+        </div>
+
+        <div class="gActions" aria-label="Navigation">
+          <a class="gBtn" href="/home/">Home</a>
+          <a class="gBtn" href="/home/">Back</a>
+        </div>
+
+        <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      </section>
+    </div>
   </main>
 </body>
 </html>

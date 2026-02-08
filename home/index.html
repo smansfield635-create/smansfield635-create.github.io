@@ -1,4 +1,6 @@
-<!-- TNT: /home/index.html  (FULL REPLACEMENT) -->
+<!-- =========================
+     TNT4 — FILE 2/4: /home/index.html
+     ========================= -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,37 +13,41 @@
 </head>
 <body>
   <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Home</h1>
-      <p class="gSub">One gate · Four routes.</p>
-    </header>
+    <div>
+      <header class="gHeader">
+        <h1 class="gTitle">Home</h1>
+        <p class="gSub">One gate · Four routes.</p>
+      </header>
 
-    <section class="gPanel" aria-label="Home routes">
-      <div class="gCluster" role="navigation" aria-label="Home diamond routes">
-        <a class="gKey gTop" href="/laws/" aria-label="Laws">
-          <span class="gKeyText"><strong>Laws</strong>Canonical</span>
-        </a>
+      <section class="gPanel" aria-label="Home routes">
+        <div class="gDiamondStage" role="navigation" aria-label="Primary routes">
+          <div class="gDiamondPlatform" aria-hidden="true"></div>
 
-        <a class="gKey gLeft" href="/links/" aria-label="Links">
-          <span class="gKeyText"><strong>Links</strong>Reference</span>
-        </a>
+          <a class="gDiamondBtn gTop" href="/laws/" aria-label="Laws">
+            <div class="gDiamondText"><strong>Laws</strong><span>Canonical</span></div>
+          </a>
 
-        <a class="gKey gRight" href="/products/" aria-label="Products">
-          <span class="gKeyText"><strong>Products</strong>Systems</span>
-        </a>
+          <a class="gDiamondBtn gRight" href="/products/" aria-label="Products">
+            <div class="gDiamondText"><strong>Products</strong><span>Systems</span></div>
+          </a>
 
-        <a class="gKey gBottom" href="/gauges/" aria-label="Gauges">
-          <span class="gKeyText"><strong>Gauges</strong>Diagnostics</span>
-        </a>
-      </div>
+          <a class="gDiamondBtn gBottom" href="/gauges/" aria-label="Gauges">
+            <div class="gDiamondText"><strong>Gauges</strong><span>Diagnostics</span></div>
+          </a>
 
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/door/">Door</a>
-        <a class="gBtn" href="/root/">Root</a>
-      </div>
+          <a class="gDiamondBtn gLeft" href="/links/" aria-label="Links">
+            <div class="gDiamondText"><strong>Links</strong><span>Reference</span></div>
+          </a>
+        </div>
 
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
+        <div class="gActions" aria-label="Navigation">
+          <a class="gBtn" href="/door/">Door</a>
+          <a class="gBtn" href="/door/root/">Root</a>
+        </div>
+
+        <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      </section>
+    </div>
   </main>
 </body>
 </html>

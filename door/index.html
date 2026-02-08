@@ -1,4 +1,6 @@
-<!-- TNT: /door/index.html  (FULL REPLACEMENT) -->
+<!-- =========================
+     TNT4 — FILE 3/4: /door/index.html
+     ========================= -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,38 +13,41 @@
 </head>
 <body>
   <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Door</h1>
-      <p class="gSub">Choose how you want to enter.</p>
-    </header>
+    <div>
+      <header class="gHeader">
+        <h1 class="gTitle">Door</h1>
+        <p class="gSub">Choose how you want to enter.</p>
+      </header>
 
-    <section class="gPanel" aria-label="Door routes">
-      <div class="gCluster" role="navigation" aria-label="Door diamond routes">
-        <a class="gKey gTop" href="/diagnostic/" aria-label="Run diagnostic">
-          <span class="gKeyText"><strong>Run</strong>Diagnostic</span>
-        </a>
+      <section class="gPanel" aria-label="Door routes">
+        <div class="gDiamondStage" role="navigation" aria-label="Entry routes">
+          <div class="gDiamondPlatform" aria-hidden="true"></div>
 
-        <a class="gKey gLeft" href="/home/" aria-label="Home">
-          <span class="gKeyText"><strong>Home</strong>Site hub</span>
-        </a>
+          <a class="gDiamondBtn gTop" href="/diagnostic/" aria-label="Run diagnostic">
+            <div class="gDiamondText"><strong>Run</strong><span>Diagnostic</span></div>
+          </a>
 
-        <a class="gKey gRight" href="/enter/" aria-label="Enter website">
-          <span class="gKeyText"><strong>Enter</strong>Website</span>
-        </a>
+          <a class="gDiamondBtn gRight" href="/home/" aria-label="Enter site hub">
+            <div class="gDiamondText"><strong>Enter</strong><span>Site hub</span></div>
+          </a>
 
-        <a class="gKey gBottom" href="/root/" aria-label="Root">
-          <span class="gKeyText"><strong>Root</strong>Start</span>
-        </a>
-      </div>
+          <a class="gDiamondBtn gBottom" href="/door/root/" aria-label="Root">
+            <div class="gDiamondText"><strong>Root</strong><span>Start</span></div>
+          </a>
 
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/home/">Back</a>
-        <a class="gBtn" href="/root/">Root</a>
-      </div>
+          <a class="gDiamondBtn gLeft" href="/laws/" aria-label="Laws">
+            <div class="gDiamondText"><strong>Laws</strong><span>Canonical</span></div>
+          </a>
+        </div>
 
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
+        <div class="gActions" aria-label="Navigation">
+          <a class="gBtn" href="/home/">Back</a>
+          <a class="gBtn" href="/door/root/">Root</a>
+        </div>
+
+        <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      </section>
+    </div>
   </main>
 </body>
 </html>
-```0

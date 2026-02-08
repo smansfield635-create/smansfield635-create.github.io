@@ -9,23 +9,57 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-html,body{height:100%;margin:0}
+html,body{
+  height:100%;
+  margin:0;
+}
+
 body{
   background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
   color:#eaf2f6;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
-.page{min-height:100vh;padding:24px 12px}
-.h{text-align:center}
-.h h1{font-size:48px;font-weight:900;margin:0}
-.h p{opacity:.7;margin-top:8px}
 
-.stage{display:flex;justify-content:center;margin:24px 0}
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:24px 12px;
+}
+
+.h{
+  text-align:center;
+  margin-bottom:12px;
+}
+
+.h h1{
+  font-size:48px;
+  font-weight:900;
+  margin:0;
+}
+
+.h p{
+  opacity:.7;
+  margin-top:8px;
+}
+
+/* === STAGE FIX === */
+.stage{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+}
+
 .platform{
   position:relative;
-  width:min(520px,96vw);
+  width:min(420px,88vw); /* HARD CAP */
   aspect-ratio:1/1;
 }
+
 .platform::before{
   content:"";
   position:absolute;
@@ -36,6 +70,7 @@ body{
   box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
 }
 
+/* === DIAMONDS === */
 .diamond{
   position:absolute;
   width:42%;
@@ -49,17 +84,26 @@ body{
   text-decoration:none;
   color:#eaf2f6;
 }
+
 .diamond span{
   transform:rotate(-45deg);
   text-align:center;
   font-weight:900;
 }
+
+/* POSITIONS */
 .top{top:2%;left:29%}
 .right{top:29%;right:2%}
 .bottom{bottom:2%;left:29%}
 .left{top:29%;left:2%}
 
-.nav{display:flex;justify-content:center;gap:12px}
+/* NAV */
+.nav{
+  display:flex;
+  gap:12px;
+  margin-top:16px;
+}
+
 .nav a{
   padding:14px 22px;
   border-radius:18px;
@@ -68,7 +112,14 @@ body{
   color:#eaf2f6;
   font-weight:900;
 }
-footer{text-align:center;opacity:.55;margin-top:16px;letter-spacing:3px;font-size:12px}
+
+footer{
+  text-align:center;
+  opacity:.55;
+  margin-top:12px;
+  letter-spacing:3px;
+  font-size:12px;
+}
 </style>
 </head>
 
@@ -84,19 +135,19 @@ footer{text-align:center;opacity:.55;margin-top:16px;letter-spacing:3px;font-siz
     <div class="platform">
 
       <a class="diamond top" href="/laws/">
-        <span>Laws<br><small>Canonical</small></span>
+        <span>Laws</span>
       </a>
 
       <a class="diamond right" href="/products/">
-        <span>Products<br><small>Systems</small></span>
+        <span>Products</span>
       </a>
 
       <a class="diamond bottom" href="/gauges/">
-        <span>Gauges<br><small>Diagnostics</small></span>
+        <span>Gauges</span>
       </a>
 
       <a class="diamond left" href="/links/">
-        <span>Links<br><small>Reference</small></span>
+        <span>Links</span>
       </a>
 
     </div>

@@ -1,59 +1,33 @@
-/* TNT: /assets/instrument.js  (FULL REPLACEMENT — disables route blocking; preserves safe tap-to-enter) */
+/* TNT: /assets/instrument.js
+   Purpose: disable canonical routing logic on leaf pages.
+   Rule: only run "route enforcement" on HUB pages. Everywhere else: NO-OP.
+*/
 (() => {
-  "use strict";
+  const path = (location.pathname || "/").toLowerCase();
 
-  // --- DO NOT BLOCK ROUTES ---
-  // Old behavior likely replaced pages with a "Not Found / not canonical" screen.
-  // This replacement never overwrites page content based on pathname.
+  // Normalize: treat /x as /x/
+  const norm = path.endsWith("/") ? path : path + "/";
 
-  // --- OPTIONAL: tap-anywhere-to-enter helper (only when explicitly marked) ---
-  // Add: <body data-tap-enter="/home/">  (or any path) to enable.
-  document.addEventListener(
-    "click",
-    (e) => {
-      const body = document.body;
-      if (!body) return;
+  // HUB allowlist (ONLY these pages may run route enforcement)
+  const HUBS = new Set([
+    "/",               // root landing
+    "/home/",
+    "/door/",
+    "/laws/",
+    "/laws/categories/",
+    "/products/",
+    "/links/",
+    "/gauges/",
+    "/diagnostic/"
+  ]);
 
-      const tapEnter = body.getAttribute("data-tap-enter");
-      if (!tapEnter) return;
+  // If not a hub, do NOTHING (prevents "Not Found / canonical structure" blocks on leaf pages)
+  if (!HUBS.has(norm)) return;
 
-      // ignore clicks on links/buttons/inputs
-      const interactive = e.target.closest("a,button,input,textarea,select,label");
-      if (interactive) return;
-
-      // perform navigation
-      window.location.href = tapEnter;
-    },
-    { capture: true }
-  );
-
-  // --- OPTIONAL: force real navigation even if other scripts try to hijack links ---
-  // (Only matters if some leftover router script exists elsewhere.)
-  document.addEventListener(
-    "click",
-    (e) => {
-      const a = e.target.closest("a[href]");
-      if (!a) return;
-
-      const href = a.getAttribute("href") || "";
-      if (!href) return;
-
-      // allow normal external/hash/mail/tel
-      if (
-        href.startsWith("#") ||
-        href.startsWith("http://") ||
-        href.startsWith("https://") ||
-        href.startsWith("mailto:") ||
-        href.startsWith("tel:")
-      ) {
-        return;
-      }
-
-      // force hard navigation
-      e.stopImmediatePropagation();
-      window.location.href = href;
-    },
-    { capture: true }
-  );
+  // =========================
+  // HUB-ONLY ROUTE ENFORCEMENT
+  // =========================
+  // If you previously had canonical enforcement here, keep it HERE ONLY.
+  // Minimal safe behavior: do not block anything by default.
+  // (If you want strict enforcement later, we add a hub-only allowlist here.)
 })();
-```0

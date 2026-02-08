@@ -7,12 +7,7 @@
 
 <style>
 html,body{margin:0;height:100%}
-body{
-  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
-  color:#eaf2f6;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  overflow-x:hidden;
-}
+body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow-x:hidden}
 .page{max-width:980px;margin:0 auto;padding:44px 18px 72px}
 h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
 .sub{margin:0 0 26px;opacity:.72;font-size:18px}
@@ -23,6 +18,14 @@ h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
 p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+
+/* bubbles */
+.bubble{margin:18px 0;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.bubble summary{padding:18px 20px;font-size:20px;font-weight:900;cursor:pointer;list-style:none}
+.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{padding:0 20px 20px}
+.bubbleContent p{font-size:19px;margin:14px 0}
+
 .laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
 .laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
 .laws ul{margin:0;padding-left:20px}
@@ -46,18 +49,73 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 
 <div class="mode mode-human">
   <p>Memory is what persists after explanation fades.</p>
-  <p>In people, memory shows up as habits, reflexes, and expectations built from repeated experience.</p>
-  <p>In organizations, memory lives in culture: what gets rewarded, punished, ignored, and repeated.</p>
-  <p>Continuity requires memory. Without it, growth resets and trust never compounds.</p>
-  <p>False memory is narrative without structure: the story changes, but the pattern repeats.</p>
+
+  <details class="bubble">
+    <summary>Personal memory</summary>
+    <div class="bubbleContent">
+      <p>Personal memory shows up as habits, reflexes, and expectations built through repetition.</p>
+      <p>Continuity rises when your defaults get cleaner over time.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Relational memory</summary>
+    <div class="bubbleContent">
+      <p>Relationships remember patterns more than promises.</p>
+      <p>Trust compounds when the pattern stays stable across conflict and calm.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Organizational memory</summary>
+    <div class="bubbleContent">
+      <p>Organizations remember through incentives, norms, and what gets tolerated.</p>
+      <p>If bad behavior is repeatedly “explained,” it becomes the real rule.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>False memory</summary>
+    <div class="bubbleContent">
+      <p>False memory is narrative without structure: the story changes, the pattern repeats.</p>
+      <p>Repair creates real memory; excuses create repetition.</p>
+    </div>
+  </details>
 </div>
 
 <div class="mode mode-scientific">
   <p>Memory is retained state that constrains future behavior.</p>
-  <p>In systems, memory is stored as parameters, defaults, logs, policies, and feedback traces.</p>
-  <p>Continuity requires stable state retention across time boundaries and context changes.</p>
-  <p>Failure occurs when retention is lossy, overwritten, or non-authoritative across observers.</p>
-  <p>Signature: consistent state-dependent outputs under repeated inputs.</p>
+
+  <details class="bubble">
+    <summary>State retention</summary>
+    <div class="bubbleContent">
+      <p>Memory exists when prior state persists across time boundaries.</p>
+      <p>Without retention, systems reset and cannot compound improvement.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Where systems store memory</summary>
+    <div class="bubbleContent">
+      <p>Parameters, defaults, logs, policies, and feedback traces are memory structures.</p>
+      <p>Stable continuity requires these to be authoritative and durable.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Measurement drift</summary>
+    <div class="bubbleContent">
+      <p>Memory fails when measurement rules change and old evidence becomes incomparable.</p>
+      <p>Signature: rising observer disagreement and rising exceptions.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Signature</summary>
+    <div class="bubbleContent">
+      <p>Signature: consistent state-dependent outputs under repeated inputs.</p>
+    </div>
+  </details>
 </div>
 
 <div class="laws">

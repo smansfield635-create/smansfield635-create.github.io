@@ -16,7 +16,6 @@ body{
 .page{max-width:980px;margin:0 auto;padding:44px 18px 72px}
 h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
 .sub{margin:0 0 26px;opacity:.72;font-size:18px}
-p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
 
 .lensRow{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 30px}
 .lensBtn{
@@ -32,6 +31,28 @@ p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
 .mode{display:none}
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
+
+p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+ul{margin:12px 0 0;padding-left:20px}
+li{margin:10px 0;font-size:18px;line-height:1.55;opacity:.92}
+
+/* Bubbles */
+.bubble{
+  margin:18px 0;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+}
+.bubble summary{
+  padding:18px 20px;
+  font-size:20px;
+  font-weight:900;
+  cursor:pointer;
+  list-style:none;
+}
+.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{padding:0 20px 20px}
+.bubbleContent p{font-size:19px;margin:14px 0}
 
 .laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
 .laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
@@ -60,31 +81,101 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 </div>
 
 <div class="mode mode-human">
-  <p>Coherence rarely begins with a motivational speech. It begins with a collision: a moment where the old pattern becomes too expensive to maintain.</p>
+  <p>Origins is the moment you stop negotiating with yourself.</p>
+  <p>It usually doesn’t feel like “motivation.” It feels like a collision—when the old way becomes too expensive to keep defending.</p>
 
-  <p>Sometimes the collision is public—being exposed, being caught, losing trust. Sometimes it is private—waking up tired of your own excuses. Either way, origins start when you stop negotiating with yourself.</p>
+  <details class="bubble">
+    <summary>The collision</summary>
+    <div class="bubbleContent">
+      <p>The collision can be public (exposure, consequences, loss of trust) or private (fatigue, shame, clarity, responsibility).</p>
+      <p>Either way, the same thing happens: your excuses stop working on you.</p>
+      <p>You stop asking, “How do I get away with this?” and start asking, “What would be coherent here?”</p>
+    </div>
+  </details>
 
-  <p>Origins is the shift from “what I want to be true” to “what I will enforce as true.” It is the birth of non-optional standards.</p>
+  <details class="bubble">
+    <summary>The line</summary>
+    <div class="bubbleContent">
+      <p>Origins is not perfection. Origins is a line you stop crossing.</p>
+      <p>You choose one non-negotiable standard and you enforce it even when it costs you something.</p>
+      <p>Once one line becomes real, the system begins to stabilize. Decisions get simpler because you already decided what you will not do.</p>
+    </div>
+  </details>
 
-  <p>For many people, the origin moment arrives through pain: failure that repeats until it becomes undeniable. For others, it arrives through responsibility: realizing that your inconsistency is costing people you care about.</p>
+  <details class="bubble">
+    <summary>The receipt</summary>
+    <div class="bubbleContent">
+      <p>Origins becomes real when you can point to a receipt: an observable change that proves you didn’t just “feel inspired.”</p>
+      <p>Examples: you tell the truth when lying would be easier; you repair damage without defensiveness; you remove the incentive that keeps pulling you back.</p>
+      <p>A receipt is not a promise. It’s behavior that survived a test.</p>
+    </div>
+  </details>
 
-  <p>Origin signature: your inner voice changes. You stop asking, “How do I get away with this?” and start asking, “What would be coherent here?”</p>
+  <details class="bubble">
+    <summary>The first tests</summary>
+    <div class="bubbleContent">
+      <p>Right after origins, the first tests show up fast: comfort, fear, ego, money, audience.</p>
+      <p>Coherence grows when you pass small tests repeatedly. It dies when you treat “one exception” as harmless.</p>
+      <p>Origins signature: fewer internal debates, faster decisions, and fewer explanations needed to justify your actions.</p>
+    </div>
+  </details>
 
-  <p>From that point on, coherence grows the same way strength grows: through repeated decisions under load. The origin is not perfection. The origin is a line you stop crossing.</p>
+  <details class="bubble">
+    <summary>Why it’s rare</summary>
+    <div class="bubbleContent">
+      <p>Most people try to change outcomes without changing standards.</p>
+      <p>Origins requires something harder: you accept that your standard is the cause—and you replace it.</p>
+      <p>That is why origins feels like an identity shift. It isn’t a new mood. It’s a new constraint.</p>
+    </div>
+  </details>
 </div>
 
 <div class="mode mode-scientific">
   <p>Origin coherence occurs when a system stabilizes a constraint set and begins enforcing it across decision cycles.</p>
 
-  <p>Before origin, behavior is optimized locally: short-term payoff dominates, and constraint violations are tolerated or rationalized. After origin, constraints become global: they govern action even when local reward conflicts.</p>
+  <details class="bubble">
+    <summary>Constraint-set lock</summary>
+    <div class="bubbleContent">
+      <p>Before origin, behavior is optimized locally: short-term reward dominates and constraint violations are tolerated or rationalized.</p>
+      <p>After origin, constraints become global: they govern action even when local reward conflicts.</p>
+      <p>Origin is the first stable lock of the constraint set—distinguishable from temporary intention.</p>
+    </div>
+  </details>
 
-  <p>Origins often follow a threshold event: accumulated error, loss, or instability forces a policy update. The system re-weights costs and transitions to invariant enforcement.</p>
+  <details class="bubble">
+    <summary>State transition</summary>
+    <div class="bubbleContent">
+      <p>Origin is a state transition: the system re-weights costs, rejects exception pathways, and adopts an invariant enforcement policy.</p>
+      <p>Observable effect: decision outputs become more consistent under comparable inputs.</p>
+    </div>
+  </details>
 
-  <p>Origin is measurable: variance in outputs decreases under comparable inputs, correction latency shortens, and observer classification becomes more consistent.</p>
+  <details class="bubble">
+    <summary>Receipt and falsifiability</summary>
+    <div class="bubbleContent">
+      <p>A receipt is an inspectable condition that marks the transition as valid.</p>
+      <p>Receipts must be falsifiable: independent observers can check whether the claimed change occurred.</p>
+      <p>If the “origin” cannot be independently observed, it is not yet a stable origin—only an internal intention.</p>
+    </div>
+  </details>
 
-  <p>Origin signature: reduced entropy in decision outputs and fewer “exception pathways” used to justify violations.</p>
+  <details class="bubble">
+    <summary>Measurable signatures</summary>
+    <div class="bubbleContent">
+      <p><strong>Variance reduction:</strong> less spread in outputs across contexts.</p>
+      <p><strong>Correction latency:</strong> faster repair after deviation.</p>
+      <p><strong>Recurrence reduction:</strong> fewer repeats of the same failure class.</p>
+      <p><strong>Observer agreement:</strong> higher consistency in classification across observers.</p>
+    </div>
+  </details>
 
-  <p>In short: origin is the first stable lock of the constraint set—repeatable enough to be distinguished from a temporary intention.</p>
+  <details class="bubble">
+    <summary>Origin failure mode</summary>
+    <div class="bubbleContent">
+      <p>False origin occurs when narrative changes but constraints do not.</p>
+      <p>Signature: the same exception pathways remain available, so the same failures recur under the same pressures.</p>
+    </div>
+  </details>
 </div>
 
 <div class="laws">

@@ -9,32 +9,38 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
+/* FORCE FULL-PAGE, SINGLE-COLUMN, LEGIBLE */
 html,body{margin:0;height:100%}
 body{
   background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
   color:#eaf2f6;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  overflow-x:hidden;
+}
+
+/* kill any inherited columns/grids from assets */
+body,*{
+  column-count:1!important;
+  column-gap:0!important;
+  column-width:auto!important;
 }
 .page{
-  max-width:920px;
-  margin:0 auto;
-  padding:48px 18px 72px;
+  width:100%;
+  max-width:none;
+  margin:0;
+  padding:44px 18px 72px;
 }
 h1{
-  font-size:52px;
+  font-size:56px;
   font-weight:900;
   margin:0 0 18px;
-}
-p{
-  font-size:20px;
-  line-height:1.6;
-  opacity:.92;
-  margin:18px 0;
+  letter-spacing:.02em;
 }
 .lensRow{
   display:flex;
   gap:14px;
-  margin:24px 0 32px;
+  margin:18px 0 28px;
+  flex-wrap:wrap;
 }
 .lensBtn{
   padding:14px 22px;
@@ -46,34 +52,48 @@ p{
 }
 .lensBtn[aria-pressed="true"]{
   background:rgba(80,170,255,.18);
-  box-shadow:0 0 0 1px rgba(80,170,255,.35) inset;
+  box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 24px rgba(80,170,255,.18);
 }
 .mode{display:none}
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
+
+p{
+  font-size:24px;
+  line-height:1.75;
+  opacity:.94;
+  margin:20px 0;
+  max-width:none;
+}
+
+/* Laws: full-width block, big and readable */
 .laws{
   margin-top:56px;
-  padding-top:28px;
+  padding:28px 0 0;
   border-top:1px solid rgba(255,255,255,.18);
 }
 .laws h2{
-  font-size:22px;
+  font-size:26px;
   font-weight:900;
-  letter-spacing:.12em;
+  letter-spacing:.14em;
+  margin:0 0 14px;
 }
 .laws ul{
-  margin:18px 0 0;
-  padding-left:18px;
+  margin:0;
+  padding-left:22px;
 }
 .laws li{
-  font-size:18px;
-  margin:14px 0;
-  opacity:.9;
+  font-size:22px;
+  line-height:1.6;
+  margin:16px 0;
+  opacity:.92;
 }
+
 .nav{
   display:flex;
   gap:12px;
-  margin-top:42px;
+  margin-top:44px;
+  flex-wrap:wrap;
 }
 .nav a{
   padding:14px 22px;
@@ -99,8 +119,8 @@ footer{
 <h1>Lineage</h1>
 
 <div class="lensRow">
-  <button class="lensBtn" id="btnHuman" aria-pressed="true">Human lens</button>
-  <button class="lensBtn" id="btnSci" aria-pressed="false">Scientific lens</button>
+  <button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button>
+  <button class="lensBtn" id="btnSci" aria-pressed="false" type="button">Scientific lens</button>
 </div>
 
 <div class="mode mode-human">
@@ -135,8 +155,8 @@ footer{
 </div>
 
 <script>
-(()=>{const b=document.body,h=btnHuman,s=btnSci;
-function set(v){b.dataset.lens=v;h.setAttribute("aria-pressed",v==="human");s.setAttribute("aria-pressed",v==="scientific")}
+(()=>{const b=document.body,h=document.getElementById("btnHuman"),s=document.getElementById("btnSci");
+function set(v){b.dataset.lens=v;h.setAttribute("aria-pressed",String(v==="human"));s.setAttribute("aria-pressed",String(v==="scientific"))}
 h.onclick=()=>set("human");s.onclick=()=>set("scientific")})();
 </script>
 </body>

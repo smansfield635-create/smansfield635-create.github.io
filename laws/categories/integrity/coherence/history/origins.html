@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Origins · History · Coherence · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<style>
+html,body{height:100%;margin:0}
+body{background:radial-gradient(1200px 800px at 50% 18%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.page{min-height:100vh;padding:22px 12px 18px}
+.h{text-align:center}
+.h h1{font-size:52px;font-weight:900;margin:0}
+.h p{opacity:.7;margin:10px 0 0}
+.lensRow{display:flex;justify-content:center;gap:14px;margin:18px 0 14px;flex-wrap:wrap}
+.lensBtn{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);color:#eaf2f6;font-weight:900;border:1px solid rgba(255,255,255,.10)}
+.lensBtn[aria-pressed="true"]{background:rgba(80,170,255,.18);box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 24px rgba(80,170,255,.18)}
+.card{width:min(760px,94vw);margin:0 auto;border-radius:26px;background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;padding:18px 18px 6px}
+.card p{margin:10px 0;line-height:1.45;opacity:.9;font-size:18px}
+.sectionTitle{margin:18px 0 8px;font-size:22px;font-weight:900}
+.laws{margin-top:14px;padding:14px 14px 10px;border-radius:20px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset}
+.laws ul{margin:10px 0 0;padding-left:18px}
+.laws li{margin:10px 0;opacity:.9}
+.nav{display:flex;justify-content:center;gap:12px;margin:18px 0 0;flex-wrap:wrap}
+.nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
+footer{text-align:center;opacity:.55;margin-top:14px;letter-spacing:3px;font-size:12px}
+.mode{display:none}
+body[data-lens="human"] .mode-human{display:block}
+body[data-lens="scientific"] .mode-scientific{display:block}
+</style>
+</head>
+
+<body data-lens="human">
+<div class="page">
+<div class="h">
+<h1>Origins</h1>
+<p>History · Where coherence begins.</p>
+</div>
+
+<div class="lensRow">
+<button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button>
+<button class="lensBtn" id="btnSci" aria-pressed="false" type="button">Scientific lens</button>
+</div>
+
+<div class="card">
+<div class="mode mode-human">
+<p>Coherence originates when internal rules become non-negotiable.</p>
+<p>Contradictions stop being explained away and start being corrected.</p>
+<p>Origin coherence is private, quiet, and easily broken if not protected.</p>
+<p>Origin signature: reduced internal conflict and faster decision closure.</p>
+</div>
+
+<div class="mode mode-scientific">
+<p>Origin coherence occurs when constraint sets first stabilize under repeatable measurement.</p>
+<p>The system stops optimizing locally and begins enforcing global invariants.</p>
+<p>Early coherence is fragile due to limited feedback bandwidth and weak enforcement.</p>
+<p>Origin signature: reduced entropy in decision outputs across similar inputs.</p>
+</div>
+
+<div class="laws">
+<div class="sectionTitle">Canonical laws (Coherence)</div>
+<ul>
+<li><strong>Coherence Constraint Law</strong> — external coherence cannot exceed internal self-coherence.</li>
+<li><strong>Fragmentation Detection Law</strong> — misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</li>
+</ul>
+</div>
+</div>
+
+<div class="nav">
+<a href="./index.html">Back to History</a>
+<a href="/laws/categories/">Categories</a>
+<a href="/home/">Home</a>
+</div>
+
+<footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+</div>
+
+<script>
+(function(){
+  const body=document.body,bH=document.getElementById("btnHuman"),bS=document.getElementById("btnSci");
+  function setLens(v){
+    body.setAttribute("data-lens",v);
+    const isH=v==="human";
+    bH.setAttribute("aria-pressed",String(isH));
+    bS.setAttribute("aria-pressed",String(!isH));
+  }
+  bH.addEventListener("click",()=>setLens("human"));
+  bS.addEventListener("click",()=>setLens("scientific"));
+})();
+</script>
+</body>
+</html>

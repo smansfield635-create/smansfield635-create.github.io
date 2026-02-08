@@ -18,6 +18,11 @@ h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
 p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+.bubble{margin:18px 0;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.bubble summary{padding:18px 20px;font-size:20px;font-weight:900;cursor:pointer;list-style:none}
+.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{padding:0 20px 20px}
+.bubbleContent p{font-size:19px;margin:14px 0}
 .laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
 .laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
 .laws ul{margin:0;padding-left:20px}
@@ -40,18 +45,73 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 </div>
 
 <div class="mode mode-human">
-  <p>Transfer measures whether integrity survives environment change.</p>
-  <p>If your standards only apply in familiar settings, continuity is an illusion.</p>
-  <p>True continuity transfers across roles, incentives, and pressure.</p>
-  <p>Breakdown in transfer exposes compartmentalized integrity.</p>
-  <p>Strong transfer reduces the need for oversight because behavior remains stable.</p>
+  <p>Transfer is whether your standards survive environment change.</p>
+
+  <details class="bubble">
+    <summary>Role change</summary>
+    <div class="bubbleContent">
+      <p>Who are you when your role changes—employee, leader, spouse, friend?</p>
+      <p>Continuity exists when the same constraints remain active.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Incentive change</summary>
+    <div class="bubbleContent">
+      <p>Money, attention, and status test transfer.</p>
+      <p>Weak transfer buys exceptions. Strong transfer holds the line.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Audience change</summary>
+    <div class="bubbleContent">
+      <p>Some people are coherent in private and fragment in public.</p>
+      <p>Transfer means: same person in every room.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Signature</summary>
+    <div class="bubbleContent">
+      <p>Signature: stable behavior across contexts with fewer explanations and fewer exceptions.</p>
+    </div>
+  </details>
 </div>
 
 <div class="mode mode-scientific">
-  <p>Transfer is generalization under invariants: the same constraint set holds across contexts.</p>
-  <p>Robust transfer preserves behavior under distribution shift and interface change.</p>
-  <p>Transfer failure appears as context-dependent policy substitution.</p>
-  <p>Signature: stable performance without violating constraints across environments.</p>
+  <p>Transfer is generalization under invariants: the constraint set holds across contexts.</p>
+
+  <details class="bubble">
+    <summary>Distribution shift</summary>
+    <div class="bubbleContent">
+      <p>Contexts change the input distribution.</p>
+      <p>Robust transfer preserves constraints while adapting policy.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Interface stability</summary>
+    <div class="bubbleContent">
+      <p>Transfer is confirmed when interfaces change but behavior remains classifiable.</p>
+      <p>Failure appears as context-dependent substitution.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Measurement invariance</summary>
+    <div class="bubbleContent">
+      <p>Transfer requires invariant measurement rules.</p>
+      <p>If measurement changes, “transfer” becomes unverifiable.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Signature</summary>
+    <div class="bubbleContent">
+      <p>Signature: stable performance without constraint violation across environments.</p>
+    </div>
+  </details>
 </div>
 
 <div class="laws">

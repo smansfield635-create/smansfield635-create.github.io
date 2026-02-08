@@ -5,58 +5,76 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Coherence · History · Geodiametrics</title>
+
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
   <style>
     html,body{height:100%;margin:0}
-    body{background:radial-gradient(1200px 800px at 50% 18%,rgba(255,255,255,.08),rgba(255,255,255,0) 60%),linear-gradient(180deg,#0a2230,#06141c 55%,#040d13);color:#eaf4fb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-    .page{width:100vw;min-height:100vh;padding:28px 16px 36px}
-    .wrap{max-width:860px;margin:0 auto}
-    h1{font-size:52px;font-weight:900;letter-spacing:.4px;margin:0 0 8px}
-    .sub{font-size:20px;opacity:.75;margin-bottom:22px}
-    .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);border-radius:26px;padding:20px 20px 18px;margin-bottom:18px;box-shadow:0 18px 60px rgba(0,0,0,.35)}
-    .card h2{font-size:22px;margin:0 0 10px}
-    .card p{font-size:17px;line-height:1.5;color:rgba(234,244,251,.86);margin:0 0 10px}
-    .card ul{margin:8px 0 0 18px;color:rgba(234,244,251,.86);line-height:1.45}
-    .nav{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px}
-    .nav a{min-width:150px;height:52px;border-radius:18px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);color:#eaf4fb;text-decoration:none;font-weight:900;display:flex;align-items:center;justify-content:center;letter-spacing:.2px}
-    .footer{margin-top:16px;text-align:center;font-size:12px;opacity:.55;letter-spacing:3px}
+    body{
+      min-height:100%;
+      background:
+        radial-gradient(1200px 800px at 50% 18%, rgba(255,255,255,.08), rgba(255,255,255,0) 60%),
+        linear-gradient(180deg,#0a2230,#06141c 55%,#040d13);
+      color:#eaf4fb;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+    .page{width:100vw;min-height:100vh;padding:22px 12px 26px}
+    .titleBox{text-align:center;margin:6px 0 10px}
+    .titleBox h1{margin:0;font-size:46px;line-height:1.05;font-weight:900}
+    .titleBox p{margin:8px 0 0;opacity:.72;font-size:18px}
+
+    .panel{
+      width:min(920px,96vw);
+      margin:12px auto 0;
+      border-radius:26px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      padding:16px 16px 14px;
+      box-shadow:0 22px 90px rgba(0,0,0,.35);
+    }
+    .panel h2{margin:0 0 10px;font-size:18px;letter-spacing:.2px}
+    .panel p{margin:10px 0;color:rgba(234,244,251,.86);line-height:1.45}
+    .panel ul{margin:10px 0 0;padding-left:18px;color:rgba(234,244,251,.84);line-height:1.45}
+    .panel li{margin:10px 0}
+
+    .navRow{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+    .navBtn{
+      min-width:150px;height:52px;border-radius:18px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
+      color:#eaf4fb;text-decoration:none;font-weight:900;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .footer{margin-top:14px;text-align:center;font-size:12px;opacity:.55;letter-spacing:3px}
   </style>
 </head>
 <body>
   <div class="page">
-    <div class="wrap">
+    <div class="titleBox">
       <h1>History</h1>
-      <div class="sub">Coherence · Where it appears across time.</div>
-
-      <div class="card">
-        <h2>Core idea</h2>
-        <p>Coherence shows up anywhere a system must remain stable under pressure. It is the shared pattern behind reliable behavior, repeatable outcomes, and trust that compounds.</p>
-      </div>
-
-      <div class="card">
-        <h2>Where it appears</h2>
-        <ul>
-          <li>Science: reproducibility and consistency across experiments.</li>
-          <li>Institutions: rules that remain the same regardless of who is watching.</li>
-          <li>People: alignment between words, actions, and outcomes over time.</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h2>Why it matters</h2>
-        <p>When coherence exists, systems can scale without force. When it collapses, systems require control, enforcement, and narrative patching.</p>
-      </div>
-
-      <div class="nav">
-        <a href="../">Back to Coherence</a>
-        <a href="/laws/categories/integrity/">Integrity</a>
-        <a href="/laws/categories/">Categories</a>
-        <a href="/home/">Home</a>
-      </div>
-
-      <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
+      <p>Coherence · Where it appears.</p>
     </div>
+
+    <div class="panel">
+      <h2>Where coherence shows up</h2>
+      <p>Coherence shows up anywhere a system stays aligned under pressure.</p>
+      <ul>
+        <li><strong>Nature</strong> — stable ecosystems hold relationships without collapsing.</li>
+        <li><strong>People</strong> — trust forms when words, actions, and outcomes match over time.</li>
+        <li><strong>Groups</strong> — organizations stabilize when standards don’t change to excuse behavior.</li>
+        <li><strong>Science</strong> — models stay coherent when assumptions and outputs don’t contradict.</li>
+      </ul>
+    </div>
+
+    <div class="navRow">
+      <a class="navBtn" href="../">Back to Coherence</a>
+      <a class="navBtn" href="/laws/categories/integrity/">Back to Integrity</a>
+      <a class="navBtn" href="/laws/categories/">Categories</a>
+      <a class="navBtn" href="/home/">Home</a>
+    </div>
+
+    <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
   </div>
 </body>
 </html>

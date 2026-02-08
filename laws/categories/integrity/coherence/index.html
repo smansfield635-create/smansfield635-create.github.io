@@ -9,21 +9,34 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
+*{box-sizing:border-box}
 html,body{height:100%;margin:0}
 body{
   background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
   color:#eaf2f6;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  overflow-x:hidden;
 }
-.page{min-height:100vh;padding:24px 12px}
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:24px 12px 28px;
+}
 .h{text-align:center}
-.h h1{font-size:48px;font-weight:900;margin:0}
-.h p{opacity:.7;margin-top:8px}
+.h h1{font-size:52px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px;font-size:18px}
 
-.stage{display:flex;justify-content:center;margin:24px 0}
+.stage{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  margin:26px 0 18px;
+}
 .platform{
   position:relative;
-  width:min(520px,96vw);
+  width:min(520px,92vw);
   aspect-ratio:1/1;
 }
 .platform::before{
@@ -43,6 +56,7 @@ body{
   transform:rotate(45deg);
   border-radius:18px;
   background:rgba(255,255,255,.16);
+  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -53,22 +67,38 @@ body{
   transform:rotate(-45deg);
   text-align:center;
   font-weight:900;
+  font-size:22px;
+  line-height:1.2;
 }
+
 .top{top:2%;left:29%}
 .right{top:29%;right:2%}
 .bottom{bottom:2%;left:29%}
 .left{top:29%;left:2%}
 
-.nav{display:flex;justify-content:center;gap:12px}
+.nav{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:6px;
+}
 .nav a{
   padding:14px 22px;
   border-radius:18px;
   background:rgba(255,255,255,.10);
+  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
   text-decoration:none;
   color:#eaf2f6;
   font-weight:900;
 }
-footer{text-align:center;opacity:.55;margin-top:16px;letter-spacing:3px;font-size:12px}
+
+footer{
+  margin-top:14px;
+  text-align:center;
+  opacity:.55;
+  letter-spacing:3px;
+  font-size:12px;
+}
 </style>
 </head>
 
@@ -83,21 +113,21 @@ footer{text-align:center;opacity:.55;margin-top:16px;letter-spacing:3px;font-siz
   <div class="stage">
     <div class="platform">
 
-      <!-- FIXED: FILE LINKS -->
-      <a class="diamond top" href="./history.html">
-        <span>History<br><small>Origins</small></span>
+      <!-- DOWNSTREAM COHERENCE BRANCH -->
+      <a class="diamond top" href="./history/">
+        <span>History</span>
       </a>
 
-      <a class="diamond right" href="./known.html">
-        <span>Known<br><small>What it is</small></span>
+      <a class="diamond right" href="./known/">
+        <span>Known</span>
       </a>
 
-      <a class="diamond bottom" href="./learned.html">
-        <span>Learned<br><small>What changed</small></span>
+      <a class="diamond bottom" href="./learned/">
+        <span>Learned</span>
       </a>
 
-      <a class="diamond left" href="./impact.html">
-        <span>Impact<br><small>Why it matters</small></span>
+      <a class="diamond left" href="./impact/">
+        <span>Impact</span>
       </a>
 
     </div>

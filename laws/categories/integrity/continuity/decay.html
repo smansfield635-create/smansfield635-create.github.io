@@ -18,6 +18,11 @@ h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
 p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+.bubble{margin:18px 0;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.bubble summary{padding:18px 20px;font-size:20px;font-weight:900;cursor:pointer;list-style:none}
+.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{padding:0 20px 20px}
+.bubbleContent p{font-size:19px;margin:14px 0}
 .laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
 .laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
 .laws ul{margin:0;padding-left:20px}
@@ -40,18 +45,73 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 </div>
 
 <div class="mode mode-human">
-  <p>Decay begins when small exceptions go uncorrected.</p>
-  <p>It accelerates when explanation replaces repair.</p>
-  <p>Decay hides behind urgency, busyness, and rationalization.</p>
-  <p>Unchecked decay produces brittleness: systems fail suddenly after long periods of apparent stability.</p>
-  <p>Integrity does not collapse all at once. It decays quietly.</p>
+  <p>Decay is the quiet accumulation of uncorrected exceptions.</p>
+
+  <details class="bubble">
+    <summary>Exception creep</summary>
+    <div class="bubbleContent">
+      <p>One exception becomes “just this once.” Then it becomes a pattern.</p>
+      <p>Decay begins when the line moves and no one admits it moved.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Excuse replaces repair</summary>
+    <div class="bubbleContent">
+      <p>When explanation replaces correction, continuity breaks.</p>
+      <p>People learn that words are the currency, not outcomes.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Pressure accelerators</summary>
+    <div class="bubbleContent">
+      <p>Urgency, fear, ego, and profit accelerate decay by buying exceptions.</p>
+      <p>The system becomes brittle while pretending it is stable.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Signature</summary>
+    <div class="bubbleContent">
+      <p>Signature: rising defensiveness, rising negotiation, slower repair, and widening collateral damage.</p>
+    </div>
+  </details>
 </div>
 
 <div class="mode mode-scientific">
   <p>Decay is the accumulation of uncorrected error in a system with finite maintenance bandwidth.</p>
-  <p>When correction latency increases, variance spreads and failures amplify across layers.</p>
-  <p>Decay accelerates under incentive misalignment and measurement drift.</p>
-  <p>Signature: rising entropy, rising exceptions, and delayed repair until brittle collapse.</p>
+
+  <details class="bubble">
+    <summary>Correction latency</summary>
+    <div class="bubbleContent">
+      <p>As correction latency increases, variance spreads and failures amplify across layers.</p>
+      <p>Eventually the system experiences brittle collapse after a long quiet drift.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Incentive inversion</summary>
+    <div class="bubbleContent">
+      <p>Decay accelerates when incentives reward exceptions and punish truth.</p>
+      <p>Then measurement becomes performative rather than corrective.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Measurement drift</summary>
+    <div class="bubbleContent">
+      <p>Changing measurement rules hides decay by redefining “success.”</p>
+      <p>Signature: observer disagreement and unstable classification across time.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Signature</summary>
+    <div class="bubbleContent">
+      <p>Signature: rising entropy, rising exceptions, delayed repair, and amplified downstream failures.</p>
+    </div>
+  </details>
 </div>
 
 <div class="laws">

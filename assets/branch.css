@@ -1,20 +1,88 @@
-/* =========================
-   TNT — FILE: /assets/branch.css
-   Branch-level polish (ONLY).
-   Does NOT define geometry model.
-   ========================= */
+/* =========================================================
+   BRANCH DIAMOND STANDARD
+   Canonical four-diamond geometry (no overlap)
+   ========================================================= */
 
-/* tighten panel spacing on branch pages */
-.gPanel{ padding:18px 16px 14px; }
+:root{
+  --diamond-size: min(72vw, 360px);
+  --diamond-inner: 58%;
+  --diamond-offset: 42%;
+}
 
-/* make diamond stage feel centered within panel */
-.gDiamondStage{ margin-top:22px; }
+/* stage */
+.diamondStage{
+  position: relative;
+  width: var(--diamond-size);
+  height: var(--diamond-size);
+  margin: 0 auto;
+}
 
-/* optional: make subtitle slightly tighter on branch pages */
-.gSub{ letter-spacing:.02em; }
+/* base diamond button */
+.dBtn{
+  position: absolute;
+  width: var(--diamond-inner);
+  height: var(--diamond-inner);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  clip-path: polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 
-/* nav button row */
-.gActions{ margin-top:18px; }
+  background: rgba(70,90,105,.38);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 18px;
 
-/* keep everything inside panel (no accidental overflow) */
-.gPanel{ overflow:hidden; }
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 22px 50px rgba(0,0,0,.32),
+    inset 0 1px 0 rgba(255,255,255,.12);
+
+  transition: transform .15s ease;
+}
+
+.dBtn:active{
+  transform: translate(-50%, -50%) scale(.985);
+}
+
+/* cardinal placement — ZERO overlap */
+.dTop{
+  transform: translate(-50%, calc(-50% - var(--diamond-offset)));
+}
+.dBottom{
+  transform: translate(-50%, calc(-50% + var(--diamond-offset)));
+}
+.dLeft{
+  transform: translate(calc(-50% - var(--diamond-offset)), -50%);
+}
+.dRight{
+  transform: translate(calc(-50% + var(--diamond-offset)), -50%);
+}
+
+/* text */
+.dLabel{
+  font-size: 26px;
+  font-weight: 900;
+  color: rgba(245,248,250,.96);
+  line-height: 1.05;
+}
+.dSmall{
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(220,230,238,.72);
+}
+
+/* mobile tuning */
+@media (max-width:420px){
+  :root{
+    --diamond-size: 78vw;
+    --diamond-offset: 40%;
+  }
+  .dLabel{ font-size: 24px; }
+}

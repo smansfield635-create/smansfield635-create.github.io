@@ -16,6 +16,7 @@ body{
 .page{max-width:980px;margin:0 auto;padding:44px 18px 72px}
 h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
 .sub{margin:0 0 26px;opacity:.72;font-size:18px}
+
 .lensRow{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 30px}
 .lensBtn{
   padding:12px 18px;border-radius:16px;
@@ -30,11 +31,37 @@ h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
 .mode{display:none}
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
+
 p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+
+/* Bubble accordion */
+.bubble{
+  margin:18px 0;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+}
+.bubble summary{
+  padding:18px 20px;
+  font-size:20px;
+  font-weight:900;
+  cursor:pointer;
+  list-style:none;
+}
+.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{
+  padding:0 20px 20px;
+}
+.bubbleContent p{
+  font-size:19px;
+  margin:14px 0;
+}
+
 .laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
 .laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
 .laws ul{margin:0;padding-left:20px}
 .laws li{margin:12px 0;font-size:18px;line-height:1.55;opacity:.92}
+
 .nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:44px}
 .nav a{
   padding:12px 18px;border-radius:16px;
@@ -52,23 +79,90 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 <p class="sub">History · How coherence changes with scale.</p>
 
 <div class="lensRow">
-  <button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button>
-  <button class="lensBtn" id="btnSci" aria-pressed="false" type="button">Scientific lens</button>
+  <button class="lensBtn" id="btnHuman" aria-pressed="true">Human lens</button>
+  <button class="lensBtn" id="btnSci" aria-pressed="false">Scientific lens</button>
 </div>
 
 <div class="mode mode-human">
-  <p>Coherence evolves when your rules stay stable while your environment changes.</p>
-  <p>First you become consistent privately. Then you become consistent publicly. Then you become dependable under pressure.</p>
-  <p>As coherence grows, relationships stabilize: people don’t have to guess which “version” of you is showing up today.</p>
-  <p>At organizational scale, coherence becomes culture: shared standards that do not change depending on who is watching.</p>
-  <p>Evolution signature: fewer exceptions, faster repair, and less collateral damage when mistakes happen.</p>
+  <p>Evolution is not improvement. Evolution is persistence under pressure.</p>
+  <p>Across every domain, what survives is not what is strongest or smartest — it is what remains coherent long enough to adapt.</p>
+
+  <details class="bubble">
+    <summary>Human evolution</summary>
+    <div class="bubbleContent">
+      <p>Humans evolve through standards before they evolve through strength.</p>
+      <p>Tools, language, cooperation, and moral codes are all coherence technologies — ways of stabilizing behavior across generations.</p>
+      <p>Civilizations collapse not from ignorance, but from incoherence: values drift faster than behavior can correct.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Animal evolution</summary>
+    <div class="bubbleContent">
+      <p>Animals evolve through consistency of instinct and environment fit.</p>
+      <p>Species that cannot maintain stable responses to recurring stimuli disappear.</p>
+      <p>Evolution favors coherence between perception, reaction, and survival outcome.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Planetary evolution</summary>
+    <div class="bubbleContent">
+      <p>The planet evolves through balance: tectonics, atmosphere, oceans, and biospheres maintaining long-term equilibrium.</p>
+      <p>Mass extinction events occur when coherence between systems collapses faster than adaptation can occur.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Weather and climate</summary>
+    <div class="bubbleContent">
+      <p>Weather is short-term variance. Climate is long-term coherence.</p>
+      <p>When feedback loops destabilize, extreme patterns emerge.</p>
+      <p>Stability returns only when energy flows re-align across scales.</p>
+    </div>
+  </details>
+
+  <p>Human evolution is unique only in speed — not in principle. The same rule applies everywhere: coherence first, adaptation second.</p>
 </div>
 
 <div class="mode mode-scientific">
-  <p>Coherence evolution is constraint-preserving adaptation: the constraint set remains stable while the system learns improved control policies.</p>
-  <p>At scale, coherence requires consistent measurement and enforcement. Without invariant measurement rules, drift appears as hidden substitutions, incentive misalignment, or policy mutation.</p>
-  <p>Systems evolve toward coherence by tightening feedback, reducing latency to correction, and preventing error amplification across layers.</p>
-  <p>Evolution signature: bounded variance across contexts with stable observer classification.</p>
+  <p>Evolution is the long-term behavior of systems under selective pressure.</p>
+  <p>Across domains, evolution favors configurations that minimize energy loss while preserving functional constraints.</p>
+
+  <details class="bubble">
+    <summary>Human systems</summary>
+    <div class="bubbleContent">
+      <p>Human evolution occurs via cultural, technological, and institutional selection.</p>
+      <p>Coherent systems stabilize norms and correct deviations faster than incoherent ones.</p>
+      <p>Collapse occurs when corrective latency exceeds environmental change rate.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Biological species</summary>
+    <div class="bubbleContent">
+      <p>Natural selection rewards trait sets that produce repeatable survival outcomes.</p>
+      <p>Evolutionary success correlates with constraint alignment between metabolism, environment, and reproduction.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Planetary systems</summary>
+    <div class="bubbleContent">
+      <p>Earth’s evolution reflects coupled dynamic systems seeking metastable equilibrium.</p>
+      <p>Phase shifts occur when feedback amplification overwhelms damping mechanisms.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Atmospheric dynamics</summary>
+    <div class="bubbleContent">
+      <p>Weather exhibits chaotic variance; climate reflects averaged coherence across time.</p>
+      <p>Loss of coherence increases volatility and reduces predictability.</p>
+    </div>
+  </details>
+
+  <p>Evolution is therefore not linear progress, but constraint-stable adaptation across time scales.</p>
 </div>
 
 <div class="laws">

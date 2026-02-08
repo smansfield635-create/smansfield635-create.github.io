@@ -7,35 +7,58 @@
 
 <style>
 html,body{margin:0;height:100%}
-body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  overflow-x:hidden;
+}
 .page{max-width:980px;margin:0 auto;padding:44px 18px 72px}
-h1{font-size:48px;font-weight:900;margin:0 0 18px}
-.sub{opacity:.72;font-size:18px;margin-bottom:26px}
-p{font-size:20px;line-height:1.7;margin:18px 0;opacity:.94}
+h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
+.sub{margin:0 0 26px;opacity:.72;font-size:18px}
+.lensRow{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 30px}
+.lensBtn{padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.10);color:#eaf2f6;font-weight:900;border:1px solid rgba(255,255,255,.10)}
+.lensBtn[aria-pressed="true"]{background:rgba(80,170,255,.18);box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16)}
+.mode{display:none}
+body[data-lens="human"] .mode-human{display:block}
+body[data-lens="scientific"] .mode-scientific{display:block}
+p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
 .laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
-.laws h2{font-size:18px;font-weight:900;letter-spacing:.16em;margin-bottom:14px}
-.laws li{font-size:18px;line-height:1.55;margin:12px 0}
-.nav{margin-top:44px;display:flex;gap:12px}
-.nav a{padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.10);color:#eaf2f6;text-decoration:none;font-weight:900}
+.laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
+.laws ul{margin:0;padding-left:20px}
+.laws li{margin:12px 0;font-size:18px;line-height:1.55;opacity:.92}
+.nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:44px}
+.nav a{padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
 footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
 </style>
 </head>
 
-<body>
+<body data-lens="human">
 <div class="page">
 
 <h1>Memory</h1>
 <p class="sub">Continuity · What the system remembers.</p>
 
-<p>Memory is what persists after explanation fades.</p>
+<div class="lensRow">
+  <button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button>
+  <button class="lensBtn" id="btnSci" aria-pressed="false" type="button">Scientific lens</button>
+</div>
 
-<p>In people, memory shows up as habits, reflexes, and expectations formed by repeated exposure to the same constraints.</p>
+<div class="mode mode-human">
+  <p>Memory is what persists after explanation fades.</p>
+  <p>In people, memory shows up as habits, reflexes, and expectations built from repeated experience.</p>
+  <p>In organizations, memory lives in culture: what gets rewarded, punished, ignored, and repeated.</p>
+  <p>Continuity requires memory. Without it, growth resets and trust never compounds.</p>
+  <p>False memory is narrative without structure: the story changes, but the pattern repeats.</p>
+</div>
 
-<p>In systems, memory is stored in structure: defaults, processes, incentives, and unspoken rules.</p>
-
-<p>Continuity requires memory. Without it, behavior resets with each moment, and nothing accumulates.</p>
-
-<p>False memory occurs when stories replace evidence and revision replaces repair.</p>
+<div class="mode mode-scientific">
+  <p>Memory is retained state that constrains future behavior.</p>
+  <p>In systems, memory is stored as parameters, defaults, logs, policies, and feedback traces.</p>
+  <p>Continuity requires stable state retention across time boundaries and context changes.</p>
+  <p>Failure occurs when retention is lossy, overwritten, or non-authoritative across observers.</p>
+  <p>Signature: consistent state-dependent outputs under repeated inputs.</p>
+</div>
 
 <div class="laws">
   <h2>CANONICAL LAWS (CONTINUITY)</h2>
@@ -52,5 +75,12 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 
 <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 </div>
+
+<script>
+(()=>{const b=document.body,h=document.getElementById("btnHuman"),s=document.getElementById("btnSci");
+function set(v){b.dataset.lens=v;h.setAttribute("aria-pressed",String(v==="human"));s.setAttribute("aria-pressed",String(v==="scientific"))}
+h.onclick=()=>set("human");s.onclick=()=>set("scientific")})();
+</script>
+
 </body>
 </html>

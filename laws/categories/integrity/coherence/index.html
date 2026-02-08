@@ -1,4 +1,4 @@
-<!-- TNT: /laws/categories/integrity/coherence/index.html  (FOUR-CATEGORY HUB — History / Known / Learned / Impact) -->
+<!-- TNT: /laws/categories/integrity/coherence/index.html  (FOUR-DIAMOND HUB — restores diamond geometry) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,6 +8,51 @@
 
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
+  <!-- HARD LOCK (fallback) — forces the 4-diamond geometry even if branch.css drifted -->
+  <style>
+    .gPanel{max-width:720px}
+    .gCluster{
+      position:relative;
+      width:min(520px, 92vw);
+      height:min(520px, 92vw);
+      margin:18px auto 10px;
+    }
+    .gKey{
+      position:absolute;
+      width:56%;
+      height:56%;
+      left:22%;
+      top:22%;
+      border-radius:22px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      text-decoration:none;
+      color:inherit;
+      transform:rotate(45deg);
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 16px 50px rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .gKey:hover{background:rgba(255,255,255,.08)}
+    .gKey:active{transform:rotate(45deg) scale(.985)}
+    .gKeyText{transform:rotate(-45deg); display:flex; flex-direction:column; gap:6px; line-height:1.1}
+    .gKeyText strong{font-size:1.35rem; letter-spacing:.2px}
+    .gKeyText small{opacity:.78; font-size:1rem}
+
+    /* positions */
+    .gTop{top:-4%; left:22%}
+    .gRight{left:48%; top:22%}
+    .gBottom{top:48%; left:22%}
+    .gLeft{left:-4%; top:22%}
+
+    /* keep actions clean */
+    .gActions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
+  </style>
 </head>
 
 <body>
@@ -18,7 +63,6 @@
     </header>
 
     <section class="gPanel" aria-label="Coherence hub">
-      <!-- Four categories (this is the page you asked for) -->
       <div class="gCluster" role="navigation" aria-label="Coherence sections">
         <a class="gKey gTop" href="./history/" aria-label="History">
           <span class="gKeyText"><strong>History</strong><small>Where it appears</small></span>
@@ -48,4 +92,3 @@
   </main>
 </body>
 </html>
-```0

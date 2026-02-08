@@ -3,46 +3,38 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Known · Coherence · Integrity · Laws · Geodiametrics</title>
+<title>Known · History · Coherence · Geodiametrics</title>
 
 <style>
 html,body{margin:0;height:100%}
-body{
-  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
-  color:#eaf2f6;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  overflow-x:hidden;
-}
+body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 .page{max-width:980px;margin:0 auto;padding:44px 18px 72px}
-h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
-.sub{margin:0 0 26px;opacity:.72;font-size:18px}
-.lensRow{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 30px}
-.lensBtn{
-  padding:12px 18px;border-radius:16px;
-  background:rgba(255,255,255,.10);
-  color:#eaf2f6;font-weight:900;
-  border:1px solid rgba(255,255,255,.10);
-}
-.lensBtn[aria-pressed="true"]{
-  background:rgba(80,170,255,.18);
-  box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16);
-}
+h1{font-size:48px;font-weight:900;margin:0 0 18px}
+.sub{opacity:.72;font-size:18px;margin-bottom:26px}
+p{font-size:20px;line-height:1.7;margin:18px 0;opacity:.94}
+ul{padding-left:20px;margin-top:10px}
+li{margin:10px 0;font-size:18px;opacity:.92}
+
+.lensRow{display:flex;gap:12px;margin-bottom:30px}
+.lensBtn{padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.10);color:#eaf2f6;font-weight:900}
+.lensBtn[aria-pressed="true"]{background:rgba(80,170,255,.18);box-shadow:0 0 0 1px rgba(80,170,255,.35) inset}
+
 .mode{display:none}
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
-h2{margin:34px 0 10px;font-size:22px;font-weight:900;letter-spacing:.02em}
-p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
-ul{margin:14px 0 0;padding-left:20px}
-li{margin:12px 0;font-size:18px;line-height:1.55;opacity:.92}
+
+.bubble{margin:18px 0;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.bubble summary{padding:18px 20px;font-size:20px;font-weight:900;cursor:pointer;list-style:none}
+.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{padding:0 20px 20px}
+
 .laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
-.laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
-.nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:44px}
-.nav a{
-  padding:12px 18px;border-radius:16px;
-  background:rgba(255,255,255,.10);
-  text-decoration:none;color:#eaf2f6;font-weight:900
-}
-footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
+.laws h2{font-size:18px;font-weight:900;letter-spacing:.16em}
+.laws li{font-size:18px}
+
+.nav{margin-top:44px;display:flex;gap:12px}
+.nav a{padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
+footer{margin-top:44px;text-align:center;opacity:.55;font-size:12px;letter-spacing:3px}
 </style>
 </head>
 
@@ -50,64 +42,78 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 <div class="page">
 
 <h1>Known</h1>
-<p class="sub">Coherence · What is established and inspectable.</p>
+<p class="sub">History · What coherence has already established.</p>
 
 <div class="lensRow">
-  <button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button>
-  <button class="lensBtn" id="btnSci" aria-pressed="false" type="button">Scientific lens</button>
+  <button class="lensBtn" id="h" aria-pressed="true">Human lens</button>
+  <button class="lensBtn" id="s" aria-pressed="false">Scientific lens</button>
 </div>
 
 <div class="mode mode-human">
-  <p>Known is what you no longer debate. It is what you can show, repeat, and defend without becoming reactive.</p>
-  <p>Known coherence is visible in daily behavior: your standards do not change when the situation changes.</p>
-  <p>Known is not your intentions. Known is your track record under normal conditions.</p>
+<p>Some things about coherence are no longer philosophical. They are settled by experience.</p>
 
-  <h2>Known signals</h2>
-  <ul>
-    <li>Same rules at home and in public.</li>
-    <li>Less explaining, more consistency.</li>
-    <li>Faster repair when mistakes happen.</li>
-    <li>Lower collateral damage to others.</li>
-  </ul>
+<ul>
+  <li>People trust consistency more than charisma.</li>
+  <li>Hidden exceptions eventually surface.</li>
+  <li>Progress that can’t be explained collapses under pressure.</li>
+</ul>
 
-  <h2>Known failure modes</h2>
-  <ul>
-    <li>“I’m different with different people” becomes the default excuse.</li>
-    <li>Standards collapse under comfort, profit, or approval.</li>
-    <li>Words outrun execution.</li>
-  </ul>
+<details class="bubble">
+  <summary>Consistency beats intensity</summary>
+  <div class="bubbleContent">
+    <p>Short bursts of effort don’t create coherence. Repeated alignment does.</p>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>Truth emerges under stress</summary>
+  <div class="bubbleContent">
+    <p>Pressure reveals which standards are real and which are cosmetic.</p>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>Repair matters more than perfection</summary>
+  <div class="bubbleContent">
+    <p>Coherent systems don’t avoid error. They correct it quickly and visibly.</p>
+  </div>
+</details>
 </div>
 
 <div class="mode mode-scientific">
-  <p>Known coherence is the portion of the system state that can be classified invariantly by independent observers from shared evidence.</p>
-  <p>Known is not a claim. Known is a stable mapping from inputs to outputs under a defined constraint set.</p>
+<p>Empirical coherence properties observed across domains:</p>
 
-  <h2>Known signals</h2>
-  <ul>
-    <li>Bounded variance across contexts with stable classification.</li>
-    <li>Short correction latency after deviation.</li>
-    <li>Low error amplification across layers.</li>
-    <li>Repeatable outcomes under similar conditions.</li>
-  </ul>
+<ul>
+  <li>Lower variance under comparable inputs</li>
+  <li>Faster correction latency</li>
+  <li>Higher observer agreement</li>
+</ul>
 
-  <h2>Known failure modes</h2>
-  <ul>
-    <li>Observer disagreement due to missing or shifting measurement rules.</li>
-    <li>Hidden substitutions (incentives, definitions, policy drift).</li>
-    <li>Constraint violations justified post-hoc by narrative.</li>
-  </ul>
+<details class="bubble">
+  <summary>Invariant enforcement</summary>
+  <div class="bubbleContent">
+    <p>Systems that preserve constraints outperform systems that renegotiate them.</p>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>Drift detection</summary>
+  <div class="bubbleContent">
+    <p>Misalignment between stated rules and observed behavior predicts instability.</p>
+  </div>
+</details>
 </div>
 
 <div class="laws">
-  <h2>CANONICAL LAWS (COHERENCE)</h2>
+  <h2>CANONICAL LAWS</h2>
   <ul>
-    <li><strong>Coherence Constraint Law</strong> — external coherence cannot exceed internal self-coherence.</li>
-    <li><strong>Fragmentation Detection Law</strong> — misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</li>
+    <li>Coherence Constraint Law</li>
+    <li>Fragmentation Detection Law</li>
   </ul>
 </div>
 
 <div class="nav">
-  <a href="./index.html">Back to Coherence</a>
+  <a href="./index.html">Back to History</a>
   <a href="/home/">Home</a>
 </div>
 
@@ -115,10 +121,8 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 </div>
 
 <script>
-(()=>{const b=document.body,h=document.getElementById("btnHuman"),s=document.getElementById("btnSci");
-function set(v){b.dataset.lens=v;h.setAttribute("aria-pressed",String(v==="human"));s.setAttribute("aria-pressed",String(v==="scientific"))}
-h.onclick=()=>set("human");s.onclick=()=>set("scientific")})();
+(()=>{const b=document.body;h.onclick=()=>{b.dataset.lens="human";h.setAttribute("aria-pressed","true");s.setAttribute("aria-pressed","false")};
+s.onclick=()=>{b.dataset.lens="scientific";s.setAttribute("aria-pressed","true");h.setAttribute("aria-pressed","false")} })();
 </script>
-
 </body>
 </html>

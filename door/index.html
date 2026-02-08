@@ -1,53 +1,119 @@
-<!-- =========================
-     TNT4 — FILE 3/4: /door/index.html
-     ========================= -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Door · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Door · Geodiametrics</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+html,body{height:100%;margin:0}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:24px 12px;
+}
+.h{text-align:center;margin-bottom:12px}
+.h h1{font-size:48px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px;font-size:18px}
+
+.panel{
+  width:min(900px,94vw);
+  margin-top:18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  padding:18px 18px;
+}
+.panel h2{margin:0 0 10px;font-size:20px;font-weight:900;letter-spacing:.06em}
+.panel p{margin:10px 0;font-size:18px;line-height:1.6;opacity:.92}
+
+.actions{
+  width:min(900px,94vw);
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:16px;
+}
+.actions a{
+  padding:14px 22px;
+  border-radius:18px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;
+  color:#eaf2f6;
+  font-weight:900;
+}
+.actions a.primary{
+  background:rgba(80,170,255,.18);
+  box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16);
+}
+
+.nav{
+  display:flex;
+  gap:12px;
+  margin-top:16px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.nav a{
+  padding:14px 22px;
+  border-radius:18px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;
+  color:#eaf2f6;
+  font-weight:900;
+}
+footer{
+  text-align:center;
+  opacity:.55;
+  margin-top:14px;
+  letter-spacing:3px;
+  font-size:12px;
+}
+</style>
 </head>
+
 <body>
-  <main class="gPage">
-    <div>
-      <header class="gHeader">
-        <h1 class="gTitle">Door</h1>
-        <p class="gSub">Choose how you want to enter.</p>
-      </header>
+<div class="page">
 
-      <section class="gPanel" aria-label="Door routes">
-        <div class="gDiamondStage" role="navigation" aria-label="Entry routes">
-          <div class="gDiamondPlatform" aria-hidden="true"></div>
+  <div class="h">
+    <h1>Door</h1>
+    <p>Choose how you want to enter.</p>
+  </div>
 
-          <a class="gDiamondBtn gTop" href="/diagnostic/" aria-label="Run diagnostic">
-            <div class="gDiamondText"><strong>Run</strong><span>Diagnostic</span></div>
-          </a>
+  <div class="panel">
+    <h2>ENTRY MODES</h2>
+    <p><strong>Enter</strong> opens the site hub (recommended).</p>
+    <p><strong>Run Diagnostic</strong> launches the Diamond Diagnostic Portals.</p>
+    <p><strong>Root</strong> returns to the site root page.</p>
+    <p><strong>Laws</strong> jumps directly into Law Categories.</p>
+  </div>
 
-          <a class="gDiamondBtn gRight" href="/home/" aria-label="Enter site hub">
-            <div class="gDiamondText"><strong>Enter</strong><span>Site hub</span></div>
-          </a>
+  <div class="actions">
+    <a class="primary" href="/home/">Enter</a>
+    <a href="/diagnostic/">Run Diagnostic</a>
+    <a href="/laws/categories/">Laws</a>
+    <a href="/">Root</a>
+  </div>
 
-          <a class="gDiamondBtn gBottom" href="/door/root/" aria-label="Root">
-            <div class="gDiamondText"><strong>Root</strong><span>Start</span></div>
-          </a>
+  <div class="nav">
+    <a href="/home/">Home</a>
+    <a href="/laws/categories/">Categories</a>
+  </div>
 
-          <a class="gDiamondBtn gLeft" href="/laws/" aria-label="Laws">
-            <div class="gDiamondText"><strong>Laws</strong><span>Canonical</span></div>
-          </a>
-        </div>
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 
-        <div class="gActions" aria-label="Navigation">
-          <a class="gBtn" href="/home/">Back</a>
-          <a class="gBtn" href="/door/root/">Root</a>
-        </div>
-
-        <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-      </section>
-    </div>
-  </main>
+</div>
 </body>
 </html>

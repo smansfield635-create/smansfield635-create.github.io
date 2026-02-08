@@ -1,89 +1,78 @@
-/* =========================================================
-   GEODIAMETRICS — DIAMOND UI (GLOBAL)
-   RULE: ONE WORD PER MINI-DIAMOND
-   ========================================================= */
+/* ================================
+   GLOBAL UI LAYOUT (TNT)
+   FILE: assets/ui.css
+================================ */
 
-/* ---- ROOT VARIABLES ---- */
-:root {
-  --diamond-size: 180px;
-  --diamond-gap: 26px;
-  --diamond-radius: 22px;
-
-  --glass-bg: rgba(255,255,255,0.06);
-  --glass-bg-strong: rgba(255,255,255,0.10);
-  --glass-border: rgba(255,255,255,0.18);
-
-  --text-main: #eef3f7;
-  --text-muted: rgba(238,243,247,0.72);
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #e9f1f4;
+  background:
+    radial-gradient(1200px 800px at 50% 30%, #1e3946 0%, #0b1e27 55%, #08151c 100%);
+  overflow-x: hidden;
 }
 
-/* ---- DIAMOND CONTAINER ---- */
-.diamond-cluster {
-  position: relative;
-  width: calc(var(--diamond-size) * 2 + var(--diamond-gap));
-  height: calc(var(--diamond-size) * 2 + var(--diamond-gap));
-  margin: 0 auto;
-}
-
-/* ---- BASE DIAMOND ---- */
-.diamond {
-  position: absolute;
-  width: var(--diamond-size);
-  height: var(--diamond-size);
-  background: linear-gradient(
-    180deg,
-    var(--glass-bg-strong),
-    var(--glass-bg)
-  );
-  border: 1px solid var(--glass-border);
-  border-radius: var(--diamond-radius);
-  transform: rotate(45deg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 14px 36px rgba(0,0,0,0.35);
+.page {
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* ---- DIAMOND POSITIONS ---- */
-.diamond.top    { top: 0; left: 50%; transform: translateX(-50%) rotate(45deg); }
-.diamond.left   { left: 0; top: 50%; transform: translateY(-50%) rotate(45deg); }
-.diamond.right  { right: 0; top: 50%; transform: translateY(-50%) rotate(45deg); }
-.diamond.bottom { bottom: 0; left: 50%; transform: translateX(-50%) rotate(45deg); }
-
-/* ---- INNER CONTENT (ANTI-ROTATION) ---- */
-.diamond > .label {
-  transform: rotate(-45deg);
+.panel {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 56px 32px 40px;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.08),
+    0 30px 80px rgba(0,0,0,0.45);
   text-align: center;
-  font-weight: 800;
-  letter-spacing: 0.6px;
-  color: var(--text-main);
-
-  /* HARD CONSTRAINT: ONE WORD */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: clip;
-
-  font-size: 22px;
-  line-height: 1;
 }
 
-/* ---- DISABLE SUBTEXT EVERYWHERE ---- */
-.diamond .subtitle,
-.diamond small,
-.diamond span.secondary {
-  display: none !important;
+h1 {
+  font-size: clamp(40px, 6vw, 64px);
+  margin: 0 0 8px;
 }
 
-/* ---- RESPONSIVE SCALE (MOBILE) ---- */
-@media (max-width: 520px) {
-  :root {
-    --diamond-size: 150px;
-    --diamond-gap: 22px;
-  }
+.subtitle {
+  font-size: 18px;
+  opacity: 0.75;
+  margin-bottom: 40px;
+}
 
-  .diamond > .label {
-    font-size: 20px;
-  }
+.nav-row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 36px;
+}
+
+.nav-btn {
+  padding: 14px 26px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.nav-btn:hover {
+  background: rgba(255,255,255,0.16);
+  transform: translateY(-1px);
+}
+
+.footer {
+  margin-top: 28px;
+  font-size: 12px;
+  opacity: 0.5;
+  letter-spacing: 0.18em;
 }

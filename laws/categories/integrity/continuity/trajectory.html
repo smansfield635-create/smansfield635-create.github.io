@@ -18,6 +18,11 @@ h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
 p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+.bubble{margin:18px 0;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.bubble summary{padding:18px 20px;font-size:20px;font-weight:900;cursor:pointer;list-style:none}
+.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{padding:0 20px 20px}
+.bubbleContent p{font-size:19px;margin:14px 0}
 .laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
 .laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
 .laws ul{margin:0;padding-left:20px}
@@ -41,18 +46,72 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 
 <div class="mode mode-human">
   <p>Trajectory is the direction implied by repeated decisions.</p>
-  <p>Small choices matter because continuity compounds direction.</p>
-  <p>A coherent trajectory narrows uncertainty: others can plan around you.</p>
-  <p>An incoherent trajectory widens uncertainty: people brace for variance.</p>
-  <p>Trajectory is visible before outcomes arrive through trend, drift, and correction speed.</p>
+
+  <details class="bubble">
+    <summary>Trend vs event</summary>
+    <div class="bubbleContent">
+      <p>Events are spikes. Trajectory is the pattern underneath.</p>
+      <p>Continuity is judged by direction, not by a single day.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Drift</summary>
+    <div class="bubbleContent">
+      <p>Drift is when small exceptions become a new normal.</p>
+      <p>Trajectories can look “fine” until the drift compounds.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Correction speed</summary>
+    <div class="bubbleContent">
+      <p>Coherent people correct faster.</p>
+      <p>Incoherent people explain longer.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Signature</summary>
+    <div class="bubbleContent">
+      <p>Signature: narrowing uncertainty, fewer exceptions, faster repair, cleaner outcomes.</p>
+    </div>
+  </details>
 </div>
 
 <div class="mode mode-scientific">
   <p>Trajectory is the time-ordered path of system state under a control policy.</p>
-  <p>Direction is estimated from repeated outputs under comparable inputs and constraints.</p>
-  <p>Coherent trajectories exhibit bounded drift and rapid return after perturbation.</p>
-  <p>Incoherent trajectories exhibit uncontrolled variance and delayed correction.</p>
-  <p>Signature: stable gradient toward target constraints across time windows.</p>
+
+  <details class="bubble">
+    <summary>Bounded variance</summary>
+    <div class="bubbleContent">
+      <p>Coherent trajectories exhibit bounded variance across comparable conditions.</p>
+      <p>Incoherent trajectories exhibit uncontrolled variance and delayed correction.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Perturbation response</summary>
+    <div class="bubbleContent">
+      <p>Stable systems return quickly after disturbance.</p>
+      <p>Signature: short correction latency + preserved constraints.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Feedback and latency</summary>
+    <div class="bubbleContent">
+      <p>Trajectory quality depends on feedback quality and correction latency.</p>
+      <p>If latency grows, drift compounds.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Signature</summary>
+    <div class="bubbleContent">
+      <p>Signature: stable gradient toward target constraints across time windows.</p>
+    </div>
+  </details>
 </div>
 
 <div class="laws">

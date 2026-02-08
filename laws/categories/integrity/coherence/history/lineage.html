@@ -5,11 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Lineage · History · Coherence · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-
 <style>
-/* FORCE FULL-PAGE, SINGLE-COLUMN, LEGIBLE */
 html,body{margin:0;height:100%}
 body{
   background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
@@ -17,34 +13,31 @@ body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   overflow-x:hidden;
 }
-
-/* kill any inherited columns/grids from assets */
-body,*{
-  column-count:1!important;
-  column-gap:0!important;
-  column-width:auto!important;
-}
 .page{
-  width:100%;
-  max-width:none;
-  margin:0;
+  max-width:980px;
+  margin:0 auto;
   padding:44px 18px 72px;
 }
 h1{
-  font-size:56px;
-  font-weight:900;
   margin:0 0 18px;
+  font-size:48px;
+  font-weight:900;
   letter-spacing:.02em;
+}
+.sub{
+  margin:0 0 26px;
+  opacity:.72;
+  font-size:18px;
 }
 .lensRow{
   display:flex;
-  gap:14px;
-  margin:18px 0 28px;
+  gap:12px;
   flex-wrap:wrap;
+  margin:0 0 30px;
 }
 .lensBtn{
-  padding:14px 22px;
-  border-radius:18px;
+  padding:12px 18px;
+  border-radius:16px;
   background:rgba(255,255,255,.10);
   color:#eaf2f6;
   font-weight:900;
@@ -52,59 +45,55 @@ h1{
 }
 .lensBtn[aria-pressed="true"]{
   background:rgba(80,170,255,.18);
-  box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 24px rgba(80,170,255,.18);
+  box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16);
 }
 .mode{display:none}
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
 
 p{
-  font-size:24px;
-  line-height:1.75;
+  margin:18px 0;
+  font-size:20px;
+  line-height:1.7;
   opacity:.94;
-  margin:20px 0;
-  max-width:none;
 }
 
-/* Laws: full-width block, big and readable */
 .laws{
   margin-top:56px;
-  padding:28px 0 0;
+  padding-top:26px;
   border-top:1px solid rgba(255,255,255,.18);
 }
 .laws h2{
-  font-size:26px;
-  font-weight:900;
-  letter-spacing:.14em;
   margin:0 0 14px;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.16em;
+  opacity:.9;
 }
-.laws ul{
-  margin:0;
-  padding-left:22px;
-}
+.laws ul{margin:0;padding-left:20px}
 .laws li{
-  font-size:22px;
-  line-height:1.6;
-  margin:16px 0;
+  margin:12px 0;
+  font-size:18px;
+  line-height:1.55;
   opacity:.92;
 }
 
 .nav{
   display:flex;
   gap:12px;
-  margin-top:44px;
   flex-wrap:wrap;
+  margin-top:44px;
 }
 .nav a{
-  padding:14px 22px;
-  border-radius:18px;
+  padding:12px 18px;
+  border-radius:16px;
   background:rgba(255,255,255,.10);
   text-decoration:none;
   color:#eaf2f6;
   font-weight:900;
 }
 footer{
-  margin-top:48px;
+  margin-top:44px;
   text-align:center;
   opacity:.55;
   letter-spacing:3px;
@@ -117,6 +106,7 @@ footer{
 <div class="page">
 
 <h1>Lineage</h1>
+<p class="sub">History · How coherence stays traceable over time.</p>
 
 <div class="lensRow">
   <button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button>
@@ -159,5 +149,6 @@ footer{
 function set(v){b.dataset.lens=v;h.setAttribute("aria-pressed",String(v==="human"));s.setAttribute("aria-pressed",String(v==="scientific"))}
 h.onclick=()=>set("human");s.onclick=()=>set("scientific")})();
 </script>
+
 </body>
 </html>

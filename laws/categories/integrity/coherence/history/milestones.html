@@ -16,7 +16,6 @@ body{
 .page{max-width:980px;margin:0 auto;padding:44px 18px 72px}
 h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
 .sub{margin:0 0 26px;opacity:.72;font-size:18px}
-p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
 
 .lensRow{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 30px}
 .lensBtn{
@@ -32,6 +31,29 @@ p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
 .mode{display:none}
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
+
+p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+ul{margin:12px 0 0;padding-left:20px}
+li{margin:10px 0;font-size:18px;line-height:1.55;opacity:.92}
+
+/* Bubbles */
+.bubble{
+  margin:18px 0;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+}
+.bubble summary{
+  padding:18px 20px;
+  font-size:20px;
+  font-weight:900;
+  cursor:pointer;
+  list-style:none;
+}
+.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{padding:0 20px 20px}
+.bubbleContent p{font-size:19px;margin:14px 0}
+.bubbleContent ul{margin-top:10px}
 
 .laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
 .laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
@@ -62,27 +84,164 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 <div class="mode mode-human">
   <p>Milestones are not emotional moments. Milestones are behavioral locks—when a new standard becomes real because it becomes repeatable.</p>
 
-  <p>Roger Bannister did not just run a fast mile. He made a boundary psychologically collapsible. Once the “four-minute mile” broke, others followed—not because physics changed, but because a coherent proof-of-possibility existed.</p>
+  <details class="bubble">
+    <summary>What a coherence milestone is</summary>
+    <div class="bubbleContent">
+      <ul>
+        <li><strong>Repeatable:</strong> the outcome can be reproduced, not just claimed.</li>
+        <li><strong>Inspectable:</strong> a third party can audit the “why,” not just the “what.”</li>
+        <li><strong>Stable under pressure:</strong> the standard holds when stakes, ego, and money show up.</li>
+        <li><strong>Transferable:</strong> others can follow the path without you being present.</li>
+      </ul>
+    </div>
+  </details>
 
-  <p>The Wright brothers did not just fly. They made controlled flight coherent: repeatable lift, repeatable control, repeatable landing. They turned an impossible story into an inspectable method.</p>
+  <details class="bubble">
+    <summary>Roger Bannister — boundary collapse</summary>
+    <div class="bubbleContent">
+      <p>On May 6, 1954, Bannister ran the first sub-4-minute mile (3:59.4). 0</p>
+      <ul>
+        <li>Physics didn’t change. Permission did.</li>
+        <li>The “impossible” became inspectable—then repeatable.</li>
+        <li>Milestone pattern: proof → belief shift → rapid follow-on attempts.</li>
+      </ul>
+    </div>
+  </details>
 
-  <p>Edison and Tesla are a paired lesson. Edison shows the milestone of execution at scale: turning messy experiments into durable systems people can use. Tesla shows the milestone of deep structure: seeing the architecture underneath the noise. Different styles—same requirement: coherence that survives pressure.</p>
+  <details class="bubble">
+    <summary>Wright brothers — controlled repeatability</summary>
+    <div class="bubbleContent">
+      <p>On Dec 17, 1903, the Wrights achieved the first sustained powered, controlled flight. 1</p>
+      <ul>
+        <li>Not “flight” as a miracle—flight as a controllable system.</li>
+        <li>Milestone is control + repeatability + survivable method.</li>
+        <li>They turned a story into a procedure.</li>
+      </ul>
+    </div>
+  </details>
 
-  <p>Milestone signature: the standard holds when the crowd shows up. It holds when money shows up. It holds when fear shows up. It holds when ego shows up.</p>
+  <details class="bubble">
+    <summary>Edison & Tesla — system coherence vs idea brilliance</summary>
+    <div class="bubbleContent">
+      <p>Edison’s incandescent demonstrations in 1879 show the shift from idea to deployable system. 2</p>
+      <p>Tesla/Westinghouse AC showcased at the 1893 Chicago World’s Fair illustrates coherent scaling. 3</p>
+      <ul>
+        <li>Edison milestone: reliable repeatability in the real world.</li>
+        <li>Tesla milestone: architecture that scales across contexts.</li>
+        <li>Milestone pattern: invention → systemization → public reliability.</li>
+      </ul>
+    </div>
+  </details>
 
-  <p>In plain terms: a milestone is when you stop needing exceptions to stay aligned. You become reliable under stress.</p>
+  <details class="bubble">
+    <summary>Apollo 11 — execution under existential stakes</summary>
+    <div class="bubbleContent">
+      <p>Apollo 11 landed humans on the Moon in July 1969. 4</p>
+      <ul>
+        <li>Milestone is not courage. Milestone is coordinated coherence at scale.</li>
+        <li>Thousands of interfaces. One outcome. Minimal tolerance for drift.</li>
+        <li>Milestone pattern: constraints → receipts → disciplined progression.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Medical milestone — polio vaccine announcement</summary>
+    <div class="bubbleContent">
+      <p>In April 1955, Salk’s polio vaccine was announced as safe/effective, and licensed that day. 5</p>
+      <ul>
+        <li>Milestone is verified safety + deployability.</li>
+        <li>Coherence milestone pattern: trial design → evaluation → public trust lock.</li>
+        <li>Outcome: massive downstream stabilization.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Modern science milestone — Higgs & CRISPR</summary>
+    <div class="bubbleContent">
+      <p>ATLAS/CMS announced a Higgs-like particle on July 4, 2012. 6</p>
+      <p>The 2012 CRISPR-Cas9 programmable endonuclease work (Jinek et al.) is a key early foundation for modern gene editing. 7</p>
+      <ul>
+        <li>Milestone pattern: independent confirmation + stable classification.</li>
+        <li>Not “a claim,” but a community-lock of evidence.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Questions this framework is designed to answer (without requiring belief)</summary>
+    <div class="bubbleContent">
+      <ul>
+        <li>What exactly is “valid progress” right now?</li>
+        <li>Which assumptions, if changed, would invalidate downstream work?</li>
+        <li>What is the smallest receipt that earns the next step?</li>
+        <li>Where is drift occurring (definitions, incentives, measurements, narratives)?</li>
+        <li>What would an independent observer agree is true from the same evidence?</li>
+      </ul>
+    </div>
+  </details>
 </div>
 
 <div class="mode mode-scientific">
-  <p>Milestones are phase transitions in coherence: a qualitative shift where a constraint set becomes stable under repeated trials and independent observation.</p>
+  <p>Milestones are phase transitions in coherence: a shift where a constraint set becomes stable under repeated trials and independent observation.</p>
 
-  <p>Bannister is a boundary-collapse event: once a feasible trajectory is demonstrated, adoption accelerates because the hypothesis space shrinks and the cost of belief drops. The environment didn’t change; the evidence threshold did.</p>
+  <details class="bubble">
+    <summary>Milestone criteria (instrument form)</summary>
+    <div class="bubbleContent">
+      <ul>
+        <li><strong>Receipt:</strong> explicit, inspectable condition for advancement.</li>
+        <li><strong>Repeatability:</strong> reproduces under comparable inputs.</li>
+        <li><strong>Observer agreement:</strong> independent classification converges.</li>
+        <li><strong>Bounded variance:</strong> outputs stabilize across contexts.</li>
+        <li><strong>Correction latency:</strong> deviation → repair time decreases.</li>
+      </ul>
+    </div>
+  </details>
 
-  <p>The Wrights demonstrate controllability: a milestone occurs when a system can be driven to a target region repeatedly, not merely reached once. Repeatability converts an anecdote into a regime.</p>
+  <details class="bubble">
+    <summary>Bannister as boundary-collapse event</summary>
+    <div class="bubbleContent">
+      <p>Demonstration reduces hypothesis space; adoption accelerates because cost of belief drops. 8</p>
+      <ul>
+        <li>Evidence threshold crossed → rapid follow-on attempts.</li>
+        <li>Milestone is social-technical coherence: proof becomes shared permission.</li>
+      </ul>
+    </div>
+  </details>
 
-  <p>Edison illustrates engineering closure: the milestone is not “a bright idea” but a stable pipeline from trial to product to reliability. Tesla illustrates structural compression: a milestone is reached when the governing structure is identified and predictions become simpler.</p>
+  <details class="bubble">
+    <summary>Wrights as controllability milestone</summary>
+    <div class="bubbleContent">
+      <p>Milestone is a controllable, repeatable system, not a one-off reach. 9</p>
+      <ul>
+        <li>Control policy + hardware constraints → repeatable flight behavior.</li>
+        <li>Transition from anecdote to regime.</li>
+      </ul>
+    </div>
+  </details>
 
-  <p>Milestone signature: bounded variance under stress, faster correction after deviation, and stable observer classification across contexts.</p>
+  <details class="bubble">
+    <summary>Independent confirmation milestone (Higgs)</summary>
+    <div class="bubbleContent">
+      <p>ATLAS and CMS independently observed a new particle consistent with the Higgs boson. 10</p>
+      <ul>
+        <li>Milestone is independent agreement in classification.</li>
+        <li>Locks a shared model update.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Deployment milestone (polio vaccine)</summary>
+    <div class="bubbleContent">
+      <p>Milestone is verified efficacy + licensing + ability to scale safely. 11</p>
+      <ul>
+        <li>Receipts are trial results under evaluation protocols.</li>
+        <li>Deployment locks the standard as real-world stable.</li>
+      </ul>
+    </div>
+  </details>
 </div>
 
 <div class="laws">

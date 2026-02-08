@@ -3,46 +3,40 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Impact · Coherence · Integrity · Laws · Geodiametrics</title>
+<title>Impact · History · Coherence · Geodiametrics</title>
 
 <style>
 html,body{margin:0;height:100%}
-body{
-  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
-  color:#eaf2f6;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  overflow-x:hidden;
-}
+body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 .page{max-width:980px;margin:0 auto;padding:44px 18px 72px}
-h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
-.sub{margin:0 0 26px;opacity:.72;font-size:18px}
+h1{font-size:48px;font-weight:900;margin:0 0 18px}
+.sub{opacity:.72;font-size:18px;margin-bottom:26px}
+p{font-size:20px;line-height:1.7;margin:18px 0;opacity:.94}
+ul{padding-left:20px;margin-top:10px}
+li{margin:10px 0;font-size:18px;opacity:.92}
+
 .lensRow{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 30px}
-.lensBtn{
-  padding:12px 18px;border-radius:16px;
-  background:rgba(255,255,255,.10);
-  color:#eaf2f6;font-weight:900;
-  border:1px solid rgba(255,255,255,.10);
-}
-.lensBtn[aria-pressed="true"]{
-  background:rgba(80,170,255,.18);
-  box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16);
-}
+.lensBtn{padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.10);color:#eaf2f6;font-weight:900}
+.lensBtn[aria-pressed="true"]{background:rgba(80,170,255,.18);box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16)}
+
 .mode{display:none}
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
-h2{margin:34px 0 10px;font-size:22px;font-weight:900;letter-spacing:.02em}
-p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
-ul{margin:14px 0 0;padding-left:20px}
-li{margin:12px 0;font-size:18px;line-height:1.55;opacity:.92}
+
+.bubble{margin:18px 0;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.bubble summary{padding:18px 20px;font-size:20px;font-weight:900;cursor:pointer;list-style:none}
+.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{padding:0 20px 20px}
+.bubbleContent p{font-size:19px;margin:14px 0;opacity:.94}
+.bubbleContent ul{margin-top:10px}
+
 .laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
-.laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
-.nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:44px}
-.nav a{
-  padding:12px 18px;border-radius:16px;
-  background:rgba(255,255,255,.10);
-  text-decoration:none;color:#eaf2f6;font-weight:900
-}
-footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
+.laws h2{font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9;margin:0 0 14px}
+.laws li{font-size:18px}
+
+.nav{margin-top:44px;display:flex;gap:12px;flex-wrap:wrap}
+.nav a{padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
+footer{margin-top:44px;text-align:center;opacity:.55;font-size:12px;letter-spacing:3px}
 </style>
 </head>
 
@@ -50,66 +44,128 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 <div class="page">
 
 <h1>Impact</h1>
-<p class="sub">Coherence · What your coherence does to others and the system.</p>
+<p class="sub">History · What coherence changes once enforced.</p>
 
 <div class="lensRow">
-  <button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button>
-  <button class="lensBtn" id="btnSci" aria-pressed="false" type="button">Scientific lens</button>
+  <button class="lensBtn" id="h" aria-pressed="true" type="button">Human lens</button>
+  <button class="lensBtn" id="s" aria-pressed="false" type="button">Scientific lens</button>
 </div>
 
 <div class="mode mode-human">
-  <p>Impact is where coherence stops being personal and becomes collective.</p>
-  <p>Your coherence affects the people around you whether you intend it or not.</p>
-  <p>When you are coherent, others spend less energy compensating, guessing, or defending.</p>
+<p>Coherence changes the environment around you. People feel it even when they can’t name it.</p>
 
-  <h2>Positive impact signals</h2>
-  <ul>
-    <li>Others know what to expect from you.</li>
-    <li>Trust compounds without constant maintenance.</li>
-    <li>Conflicts resolve faster and with less collateral damage.</li>
-    <li>People take responsibility instead of covering themselves.</li>
-  </ul>
+<ul>
+  <li>Less confusion</li>
+  <li>Less negotiation</li>
+  <li>Less defensive behavior</li>
+  <li>More trust with fewer words</li>
+</ul>
 
-  <h2>Negative impact signals</h2>
-  <ul>
-    <li>Others walk on eggshells or over-document interactions.</li>
-    <li>Energy is spent managing you instead of the work.</li>
-    <li>Blame travels downward while credit travels upward.</li>
-    <li>Good people disengage quietly.</li>
-  </ul>
+<details class="bubble">
+  <summary>Personal impact</summary>
+  <div class="bubbleContent">
+    <ul>
+      <li>Fewer internal arguments</li>
+      <li>Faster decisions</li>
+      <li>Less shame and less justification</li>
+      <li>More peace because standards are already chosen</li>
+    </ul>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>Relational impact</summary>
+  <div class="bubbleContent">
+    <ul>
+      <li>People stop guessing which “version” they’ll get</li>
+      <li>Trust compounds without maintenance</li>
+      <li>Conflict resolves faster because rules are clearer</li>
+      <li>Repair becomes normal instead of dramatic</li>
+    </ul>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>Organizational impact</summary>
+  <div class="bubbleContent">
+    <ul>
+      <li>Fewer meetings spent “aligning”</li>
+      <li>Faster convergence to the next admissible step</li>
+      <li>Fewer catastrophic reversals late in execution</li>
+      <li>Lower collateral damage radius when errors occur</li>
+    </ul>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>The hidden impact</summary>
+  <div class="bubbleContent">
+    <p>Coherence removes the need for politics as a navigation tool.</p>
+    <ul>
+      <li>Less narrative manipulation</li>
+      <li>Less blame-shifting</li>
+      <li>More explicit permission structure</li>
+    </ul>
+  </div>
+</details>
 </div>
 
 <div class="mode mode-scientific">
-  <p>Impact is the downstream effect of a system’s coherence on adjacent systems.</p>
-  <p>Coherent systems reduce entropy in their environment; incoherent systems export entropy.</p>
+<p>Impact is measurable downstream stabilization.</p>
 
-  <h2>Positive impact signals</h2>
-  <ul>
-    <li>Lower variance in dependent systems.</li>
-    <li>Reduced need for redundant safeguards.</li>
-    <li>Improved throughput without increased error rates.</li>
-    <li>Stability propagates across interfaces.</li>
-  </ul>
+<ul>
+  <li>Recurrence of failure classes decreases</li>
+  <li>Correction latency decreases</li>
+  <li>Observer agreement increases</li>
+  <li>Variance bounds tighten under comparable inputs</li>
+</ul>
 
-  <h2>Negative impact signals</h2>
-  <ul>
-    <li>Error amplification across layers.</li>
-    <li>Increased monitoring, logging, and approval gates.</li>
-    <li>Compensatory processes that mask root causes.</li>
-    <li>System-wide brittleness under stress.</li>
-  </ul>
+<details class="bubble">
+  <summary>Entropy export vs entropy reduction</summary>
+  <div class="bubbleContent">
+    <p>Incoherent systems export entropy to neighbors. Coherent systems reduce it.</p>
+    <ul>
+      <li>Incoherence → more monitoring, more logging, more approvals</li>
+      <li>Coherence → fewer safeguards needed because behavior is stable</li>
+    </ul>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>Interface stability</summary>
+  <div class="bubbleContent">
+    <p>Stable systems stabilize neighbors.</p>
+    <ul>
+      <li>Interfaces become predictable</li>
+      <li>Handoffs become reliable</li>
+      <li>Execution becomes auditable</li>
+    </ul>
+  </div>
+</details>
+
+<details class="bubble">
+  <summary>System-wide brittleness reduction</summary>
+  <div class="bubbleContent">
+    <p>Coherence reduces brittle collapse risk by forcing early correction and preventing drift.</p>
+    <ul>
+      <li>Early repair bandwidth increases</li>
+      <li>Error amplification decreases</li>
+      <li>Late-stage surprises decrease</li>
+    </ul>
+  </div>
+</details>
 </div>
 
 <div class="laws">
-  <h2>CANONICAL LAWS (COHERENCE)</h2>
+  <h2>CANONICAL LAWS</h2>
   <ul>
-    <li><strong>Coherence Constraint Law</strong> — external coherence cannot exceed internal self-coherence.</li>
-    <li><strong>Fragmentation Detection Law</strong> — misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</li>
+    <li>Coherence Constraint Law</li>
+    <li>Fragmentation Detection Law</li>
   </ul>
 </div>
 
 <div class="nav">
-  <a href="./index.html">Back to Coherence</a>
+  <a href="./index.html">Back to History</a>
   <a href="/home/">Home</a>
 </div>
 
@@ -117,10 +173,12 @@ footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 </div>
 
 <script>
-(()=>{const b=document.body,h=document.getElementById("btnHuman"),s=document.getElementById("btnSci");
-function set(v){b.dataset.lens=v;h.setAttribute("aria-pressed",String(v==="human"));s.setAttribute("aria-pressed",String(v==="scientific"))}
-h.onclick=()=>set("human");s.onclick=()=>set("scientific")})();
+(()=>{const b=document.body;
+h.onclick=()=>{b.dataset.lens="human";h.setAttribute("aria-pressed","true");s.setAttribute("aria-pressed","false")};
+s.onclick=()=>{b.dataset.lens="scientific";s.setAttribute("aria-pressed","true");h.setAttribute("aria-pressed","false")};
+})();
 </script>
 
 </body>
 </html>
+```0

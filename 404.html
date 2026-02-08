@@ -1,38 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Not Found</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body{
-      margin:0;
-      background:#071722;
-      color:#f1f6fb;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      height:100vh;
-      text-align:center;
-    }
-    button{
-      margin-top:20px;
-      padding:14px 22px;
-      border-radius:20px;
-      border:none;
-      background:#1e88ff;
-      color:white;
-      font-size:16px;
-      cursor:pointer;
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>404 · Not Found</title>
+  <link rel="stylesheet" href="/assets/ui.css" />
 </head>
 <body>
-  <div>
-    <h1>Not Found</h1>
-    <p>This route is not part of the canonical structure.</p>
-    <button onclick="location.href='/'">Return to Root</button>
-  </div>
+  <main class="gPage">
+    <section class="gPanel">
+      <h1 class="gTitle">404</h1>
+      <p class="gSub">Not Found.</p>
+
+      <div class="gActions">
+        <a class="gBtn" href="/home/">Home</a>
+        <a class="gBtn" href="/laws/">Laws</a>
+        <a class="gBtn" href="/laws/categories/">Categories</a>
+      </div>
+
+      <footer class="gFooter">© GEODIAMETRICS</footer>
+    </section>
+  </main>
 </body>
 </html>

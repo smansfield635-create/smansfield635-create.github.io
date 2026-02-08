@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Learned · Coherence · Integrity · Laws · Geodiametrics</title>
+
+<style>
+html,body{margin:0;height:100%}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  overflow-x:hidden;
+}
+.page{max-width:980px;margin:0 auto;padding:44px 18px 72px}
+h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
+.sub{margin:0 0 26px;opacity:.72;font-size:18px}
+.lensRow{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 30px}
+.lensBtn{
+  padding:12px 18px;border-radius:16px;
+  background:rgba(255,255,255,.10);
+  color:#eaf2f6;font-weight:900;
+  border:1px solid rgba(255,255,255,.10);
+}
+.lensBtn[aria-pressed="true"]{
+  background:rgba(80,170,255,.18);
+  box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16);
+}
+.mode{display:none}
+body[data-lens="human"] .mode-human{display:block}
+body[data-lens="scientific"] .mode-scientific{display:block}
+h2{margin:34px 0 10px;font-size:22px;font-weight:900;letter-spacing:.02em}
+p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+ul{margin:14px 0 0;padding-left:20px}
+li{margin:12px 0;font-size:18px;line-height:1.55;opacity:.92}
+.laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
+.laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
+.nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:44px}
+.nav a{
+  padding:12px 18px;border-radius:16px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;color:#eaf2f6;font-weight:900
+}
+footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
+</style>
+</head>
+
+<body data-lens="human">
+<div class="page">
+
+<h1>Learned</h1>
+<p class="sub">Coherence · What pressure taught you and evidence confirmed.</p>
+
+<div class="lensRow">
+  <button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button>
+  <button class="lensBtn" id="btnSci" aria-pressed="false" type="button">Scientific lens</button>
+</div>
+
+<div class="mode mode-human">
+  <p>Learned is the set of lessons that became rules because reality forced the issue.</p>
+  <p>You learned it when the old behavior produced pain, loss, or repeat failure—until you stopped calling it “bad luck.”</p>
+  <p>Learned coherence is not moral perfection. It is fewer repeats of the same mistake.</p>
+
+  <h2>Learned signals</h2>
+  <ul>
+    <li>You recognize your triggers earlier.</li>
+    <li>You recover faster and repair without defensiveness.</li>
+    <li>You stop bargaining for “one exception.”</li>
+    <li>You choose standards over comfort more often than not.</li>
+  </ul>
+
+  <h2>Learned failure modes</h2>
+  <ul>
+    <li>You can describe the lesson but still repeat the pattern.</li>
+    <li>You fix symptoms instead of constraints.</li>
+    <li>You blame people when the system is the problem.</li>
+  </ul>
+</div>
+
+<div class="mode mode-scientific">
+  <p>Learned coherence is an updated control policy produced by feedback and constrained by invariants.</p>
+  <p>Learning is not information; learning is behavioral change that reduces future error under the same stressors.</p>
+
+  <h2>Learned signals</h2>
+  <ul>
+    <li>Reduced recurrence of the same failure class.</li>
+    <li>Lower latency from deviation to correction.</li>
+    <li>Improved stability under increasing load.</li>
+    <li>Better generalization across contexts without breaking constraints.</li>
+  </ul>
+
+  <h2>Learned failure modes</h2>
+  <ul>
+    <li>Overfitting to one incident (policy too narrow).</li>
+    <li>Shifting measurement rules to “pass” without improving outcomes.</li>
+    <li>Incentive drift that reintroduces the old failure mode.</li>
+  </ul>
+</div>
+
+<div class="laws">
+  <h2>CANONICAL LAWS (COHERENCE)</h2>
+  <ul>
+    <li><strong>Coherence Constraint Law</strong> — external coherence cannot exceed internal self-coherence.</li>
+    <li><strong>Fragmentation Detection Law</strong> — misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</li>
+  </ul>
+</div>
+
+<div class="nav">
+  <a href="./index.html">Back to Coherence</a>
+  <a href="/home/">Home</a>
+</div>
+
+<footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+</div>
+
+<script>
+(()=>{const b=document.body,h=document.getElementById("btnHuman"),s=document.getElementById("btnSci");
+function set(v){b.dataset.lens=v;h.setAttribute("aria-pressed",String(v==="human"));s.setAttribute("aria-pressed",String(v==="scientific"))}
+h.onclick=()=>set("human");s.onclick=()=>set("scientific")})();
+</script>
+
+</body>
+</html>

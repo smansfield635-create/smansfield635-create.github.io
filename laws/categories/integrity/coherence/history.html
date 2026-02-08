@@ -1,44 +1,196 @@
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Coherence · History · Geodiametrics</title>
-<link rel="stylesheet" href="/assets/ui.css"/><link rel="stylesheet" href="/assets/branch.css"/>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
 <style>
-html,body{height:100%;margin:0}body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow-x:hidden}
-.page{width:100vw;min-height:100vh;padding:22px 12px 26px}
-.h{text-align:center;margin:6px 0 10px}.h h1{margin:0;font-size:48px;font-weight:900;letter-spacing:.3px}.h p{margin:8px 0 0;opacity:.72;font-size:18px}
-.stage{width:100%;display:flex;justify-content:center;align-items:center;padding:10px 0 16px}
-.pw{position:relative;width:min(520px,96vw);aspect-ratio:1/1}
-.pw:before{content:"";position:absolute;inset:0;transform:rotate(45deg);border-radius:26px;background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.10) inset,0 22px 90px rgba(0,0,0,.35);pointer-events:none}
-.db{position:absolute;width:42%;height:42%;transform:rotate(45deg);border-radius:18px;background:rgba(255,255,255,.14);box-shadow:0 0 0 1px rgba(255,255,255,.16) inset,0 16px 55px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#eaf2f6;-webkit-tap-highlight-color:transparent}
-.db:active{transform:rotate(45deg) scale(.98);background:rgba(255,255,255,.20)}
-.t{transform:rotate(-45deg);text-align:center;line-height:1.05;padding:0 10px}
-.t strong{display:block;font-size:22px;font-weight:900}.t span{display:block;margin-top:6px;font-size:14px;opacity:.72;font-weight:700}
-.top{left:29%;top:2%}.right{right:2%;top:29%}.bottom{left:29%;bottom:2%}.left{left:2%;top:29%}
-.laws{width:min(920px,96vw);margin:10px auto 0;padding:14px;border-radius:22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);text-align:left}
-.laws h2{margin:0 0 10px;font-size:18px}.laws ul{margin:0;padding-left:18px;line-height:1.45;opacity:.92}.laws li{margin:10px 0}
-.nav{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:14px}
-.nav a{min-width:140px;height:52px;border-radius:18px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);color:#eaf2f6;text-decoration:none;font-weight:900;display:flex;align-items:center;justify-content:center}
-.f{margin-top:14px;text-align:center;font-size:12px;opacity:.55;letter-spacing:3px}
-</style></head><body>
+html,body{height:100%;margin:0}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+.page{min-height:100vh;padding:24px 12px}
+.h{text-align:center}
+.h h1{font-size:48px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px}
+.panel{
+  max-width:760px;margin:22px auto 0;
+  background:rgba(255,255,255,.06);
+  border-radius:22px;
+  padding:18px 18px 8px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
+}
+.stage{display:flex;justify-content:center;margin:18px 0 10px}
+.platform{
+  position:relative;
+  width:min(520px,96vw);
+  aspect-ratio:1/1;
+}
+.platform::before{
+  content:"";
+  position:absolute;inset:0;
+  transform:rotate(45deg);
+  border-radius:28px;
+  background:rgba(255,255,255,.05);
+  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
+}
+.d{
+  position:absolute;width:42%;height:42%;
+  transform:rotate(45deg);
+  border-radius:18px;
+  background:rgba(255,255,255,.14);
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;color:#eaf2f6;
+  cursor:pointer;
+}
+.d span{transform:rotate(-45deg);text-align:center;font-weight:900}
+.top{top:2%;left:29%}
+.right{top:29%;right:2%}
+.bottom{bottom:2%;left:29%}
+.left{top:29%;left:2%}
+
+/* Opaque modal */
+.overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;align-items:center;justify-content:center;
+  padding:18px;
+  z-index:999;
+}
+.overlay.show{display:flex}
+.modal{
+  width:min(720px,96vw);
+  background:rgba(18,34,45,.96);
+  border-radius:22px;
+  padding:18px 18px 14px;
+  box-shadow:0 18px 60px rgba(0,0,0,.5);
+  border:1px solid rgba(255,255,255,.10);
+}
+.modal h2{margin:0 0 8px;font-size:22px}
+.modal p{margin:0 0 10px;line-height:1.45;opacity:.92}
+.modal small{opacity:.65;display:block;margin-top:10px}
+
+.laws{
+  margin-top:12px;
+  background:rgba(255,255,255,.05);
+  border-radius:18px;
+  padding:12px 14px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;
+}
+.laws h3{margin:0 0 8px;font-size:16px;opacity:.9}
+.laws ul{margin:0;padding-left:18px;opacity:.9}
+.laws li{margin:6px 0}
+
+.nav{display:flex;justify-content:center;gap:12px;margin-top:14px;flex-wrap:wrap}
+.nav a{
+  padding:14px 22px;border-radius:18px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;color:#eaf2f6;font-weight:900;
+}
+footer{text-align:center;opacity:.55;margin-top:16px;letter-spacing:3px;font-size:12px}
+</style>
+</head>
+
+<body>
 <div class="page">
-  <div class="h"><h1>History</h1><p>Coherence · Four lenses.</p></div>
-  <div class="stage"><div class="pw" role="navigation" aria-label="History sub-branches">
-    <a class="db top" href="./origins/"><div class="t"><strong>Origins</strong><span>First appearance</span></div></a>
-    <a class="db right" href="./evolution/"><div class="t"><strong>Evolution</strong><span>How it changed</span></div></a>
-    <a class="db bottom" href="./milestones/"><div class="t"><strong>Milestones</strong><span>Key moments</span></div></a>
-    <a class="db left" href="./lineage/"><div class="t"><strong>Lineage</strong><span>Related ideas</span></div></a>
-  </div></div>
 
-  <div class="laws">
-    <h2>Canonical laws (Coherence)</h2>
-    <ul>
-      <li><strong>Coherence Constraint Law</strong> — external coherence cannot exceed internal self-coherence.</li>
-      <li><strong>Fragmentation Detection Law</strong> — misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</li>
-    </ul>
+  <div class="h">
+    <h1>Coherence</h1>
+    <p>History · Where it appears.</p>
   </div>
 
-  <div class="nav">
-    <a href="../">Back to Coherence</a><a href="/laws/categories/integrity/">Integrity</a><a href="/laws/categories/">Categories</a><a href="/home/">Home</a>
+  <div class="panel">
+
+    <div class="stage">
+      <div class="platform">
+        <!-- Four diamond buttons (modal triggers) -->
+        <a class="d top" href="#" data-k="personal"><span>Personal<br><small>Self</small></span></a>
+        <a class="d right" href="#" data-k="relational"><span>Relational<br><small>Pairs</small></span></a>
+        <a class="d bottom" href="#" data-k="organizational"><span>Organizational<br><small>Teams</small></span></a>
+        <a class="d left" href="#" data-k="societal"><span>Societal<br><small>Systems</small></span></a>
+      </div>
+    </div>
+
+    <!-- Canonical laws (2) for this leaf -->
+    <div class="laws">
+      <h3>Canonical laws in this leaf</h3>
+      <ul>
+        <li><strong>Coherence Constraint Law</strong> — external coherence cannot exceed internal self-coherence.</li>
+        <li><strong>Fragmentation Detection Law</strong> — misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</li>
+      </ul>
+    </div>
+
+    <div class="nav">
+      <a href="./index.html">Back to Coherence</a>
+      <a href="../">Back to Integrity</a>
+      <a href="/laws/categories/">Categories</a>
+      <a href="/home/">Home</a>
+    </div>
+
   </div>
-  <div class="f">CANONICAL · STABLE · © GEODIAMETRICS</div>
-</div></body></html>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
+</div>
+
+<!-- Opaque modal -->
+<div class="overlay" id="overlay" aria-hidden="true">
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <h2 id="mTitle">Title</h2>
+    <p id="mBody">Body</p>
+    <small>Tap anywhere outside this card to close.</small>
+  </div>
+</div>
+
+<script>
+const copy = {
+  personal: {
+    t: "Personal · Where coherence appears",
+    b: "Coherence shows up when your words, actions, and outcomes line up across time. You can see it in habit loops, self-control under stress, and decisions that remain stable when nobody is watching."
+  },
+  relational: {
+    t: "Relational · Where coherence appears",
+    b: "Coherence shows up when two people share expectations and reality matches them. You can see it in trust formation, clean conflict repair, and consistent follow-through."
+  },
+  organizational: {
+    t: "Organizational · Where coherence appears",
+    b: "Coherence shows up when a team’s stated values match its incentives and execution. You can see it in aligned roles, predictable accountability, and low internal friction."
+  },
+  societal: {
+    t: "Societal · Where coherence appears",
+    b: "Coherence shows up when institutions reward what they claim to value. You can see it in stable norms, enforcement consistency, and systems that don’t collapse under load."
+  }
+};
+
+const overlay = document.getElementById("overlay");
+const mTitle = document.getElementById("mTitle");
+const mBody  = document.getElementById("mBody");
+
+document.querySelectorAll(".d").forEach(a=>{
+  a.addEventListener("click",(e)=>{
+    e.preventDefault();
+    const k = a.getAttribute("data-k");
+    mTitle.textContent = copy[k].t;
+    mBody.textContent  = copy[k].b;
+    overlay.classList.add("show");
+    overlay.setAttribute("aria-hidden","false");
+  });
+});
+
+overlay.addEventListener("click",(e)=>{
+  // close if tap outside modal card
+  if(e.target === overlay){
+    overlay.classList.remove("show");
+    overlay.setAttribute("aria-hidden","true");
+  }
+});
+</script>
+
+</body>
+</html>

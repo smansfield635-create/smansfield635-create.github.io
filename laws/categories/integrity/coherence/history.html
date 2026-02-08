@@ -1,149 +1,44 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Coherence · History</title>
-
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Coherence · History · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css"/><link rel="stylesheet" href="/assets/branch.css"/>
 <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(1200px 800px at center, #0f2a33, #07161d);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  color: #e8f2f5;
-}
-
-.page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-h1 {
-  margin: 0 0 6px 0;
-  font-size: 48px;
-  font-weight: 700;
-}
-
-.subtitle {
-  opacity: .7;
-  margin-bottom: 40px;
-}
-
-.diamond-stage {
-  position: relative;
-  width: 320px;
-  height: 320px;
-}
-
-.base-diamond {
-  position: absolute;
-  inset: 0;
-  transform: rotate(45deg);
-  background: rgba(255,255,255,0.06);
-  border-radius: 18px;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset;
-}
-
-/* diamond buttons */
-.diamond {
-  position: absolute;
-  width: 140px;
-  height: 140px;
-  background: rgba(255,255,255,0.12);
-  border-radius: 14px;
-  transform: rotate(45deg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  cursor: pointer;
-  transition: background .2s ease;
-}
-
-.diamond:hover {
-  background: rgba(255,255,255,0.18);
-}
-
-.diamond span {
-  transform: rotate(-45deg);
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-/* positions */
-.top    { top: -10px; left: 90px; }
-.right  { top: 90px; right: -10px; }
-.bottom { bottom: -10px; left: 90px; }
-.left   { top: 90px; left: -10px; }
-
-.nav {
-  margin-top: 40px;
-  display: flex;
-  gap: 16px;
-}
-
-.nav a {
-  padding: 14px 22px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.1);
-  color: inherit;
-  text-decoration: none;
-}
-
-.footer {
-  margin-top: 18px;
-  font-size: 12px;
-  opacity: .5;
-}
-</style>
-</head>
-
-<body>
+html,body{height:100%;margin:0}body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow-x:hidden}
+.page{width:100vw;min-height:100vh;padding:22px 12px 26px}
+.h{text-align:center;margin:6px 0 10px}.h h1{margin:0;font-size:48px;font-weight:900;letter-spacing:.3px}.h p{margin:8px 0 0;opacity:.72;font-size:18px}
+.stage{width:100%;display:flex;justify-content:center;align-items:center;padding:10px 0 16px}
+.pw{position:relative;width:min(520px,96vw);aspect-ratio:1/1}
+.pw:before{content:"";position:absolute;inset:0;transform:rotate(45deg);border-radius:26px;background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.10) inset,0 22px 90px rgba(0,0,0,.35);pointer-events:none}
+.db{position:absolute;width:42%;height:42%;transform:rotate(45deg);border-radius:18px;background:rgba(255,255,255,.14);box-shadow:0 0 0 1px rgba(255,255,255,.16) inset,0 16px 55px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#eaf2f6;-webkit-tap-highlight-color:transparent}
+.db:active{transform:rotate(45deg) scale(.98);background:rgba(255,255,255,.20)}
+.t{transform:rotate(-45deg);text-align:center;line-height:1.05;padding:0 10px}
+.t strong{display:block;font-size:22px;font-weight:900}.t span{display:block;margin-top:6px;font-size:14px;opacity:.72;font-weight:700}
+.top{left:29%;top:2%}.right{right:2%;top:29%}.bottom{left:29%;bottom:2%}.left{left:2%;top:29%}
+.laws{width:min(920px,96vw);margin:10px auto 0;padding:14px;border-radius:22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);text-align:left}
+.laws h2{margin:0 0 10px;font-size:18px}.laws ul{margin:0;padding-left:18px;line-height:1.45;opacity:.92}.laws li{margin:10px 0}
+.nav{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+.nav a{min-width:140px;height:52px;border-radius:18px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);color:#eaf2f6;text-decoration:none;font-weight:900;display:flex;align-items:center;justify-content:center}
+.f{margin-top:14px;text-align:center;font-size:12px;opacity:.55;letter-spacing:3px}
+</style></head><body>
 <div class="page">
+  <div class="h"><h1>History</h1><p>Coherence · Four lenses.</p></div>
+  <div class="stage"><div class="pw" role="navigation" aria-label="History sub-branches">
+    <a class="db top" href="./origins/"><div class="t"><strong>Origins</strong><span>First appearance</span></div></a>
+    <a class="db right" href="./evolution/"><div class="t"><strong>Evolution</strong><span>How it changed</span></div></a>
+    <a class="db bottom" href="./milestones/"><div class="t"><strong>Milestones</strong><span>Key moments</span></div></a>
+    <a class="db left" href="./lineage/"><div class="t"><strong>Lineage</strong><span>Related ideas</span></div></a>
+  </div></div>
 
-  <h1>Coherence</h1>
-  <div class="subtitle">History · Where it appears</div>
-
-  <div class="diamond-stage">
-
-    <div class="base-diamond"></div>
-
-    <div class="diamond top">
-      <span>History<br><small>Origins</small></span>
-    </div>
-
-    <div class="diamond right">
-      <span>Known<br><small>What it is</small></span>
-    </div>
-
-    <div class="diamond bottom">
-      <span>Learned<br><small>What changed</small></span>
-    </div>
-
-    <div class="diamond left">
-      <span>Impact<br><small>Why it matters</small></span>
-    </div>
-
+  <div class="laws">
+    <h2>Canonical laws (Coherence)</h2>
+    <ul>
+      <li><strong>Coherence Constraint Law</strong> — external coherence cannot exceed internal self-coherence.</li>
+      <li><strong>Fragmentation Detection Law</strong> — misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</li>
+    </ul>
   </div>
 
   <div class="nav">
-    <a href="../">Back to Coherence</a>
-    <a href="../../">Integrity</a>
-    <a href="../../../">Categories</a>
-    <a href="/">Home</a>
+    <a href="../">Back to Coherence</a><a href="/laws/categories/integrity/">Integrity</a><a href="/laws/categories/">Categories</a><a href="/home/">Home</a>
   </div>
-
-  <div class="footer">
-    CANONICAL · STABLE · © GEODIAMETRICS
-  </div>
-
-</div>
-</body>
-</html>
+  <div class="f">CANONICAL · STABLE · © GEODIAMETRICS</div>
+</div></body></html>

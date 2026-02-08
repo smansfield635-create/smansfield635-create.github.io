@@ -15,49 +15,52 @@ body{
   color:#eaf2f6;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
-.page{
-  min-height:100vh;
-  padding:28px 16px 22px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-.h{text-align:center;max-width:900px}
-.h h1{font-size:52px;font-weight:900;margin:0}
-.h p{opacity:.72;margin:10px 0 0;font-size:18px}
+.page{min-height:100vh;padding:24px 12px}
+.h{text-align:center}
+.h h1{font-size:48px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px}
 
-.lenses{
-  display:flex;
-  gap:12px;
-  margin:22px 0 14px;
+.stage{display:flex;justify-content:center;margin:28px 0}
+.platform{
+  position:relative;
+  width:min(520px,96vw);
+  aspect-ratio:1/1;
 }
-.lenses button{
-  padding:12px 18px;
-  border-radius:16px;
-  border:none;
-  background:rgba(255,255,255,.12);
+.platform::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
+  border-radius:28px;
+  background:rgba(255,255,255,.06);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
+}
+
+.diamond{
+  position:absolute;
+  width:42%;
+  height:42%;
+  transform:rotate(45deg);
+  border-radius:18px;
+  background:rgba(255,255,255,.16);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
   color:#eaf2f6;
+}
+.diamond span{
+  transform:rotate(-45deg);
+  text-align:center;
   font-weight:900;
 }
 
-.card{
-  max-width:900px;
-  width:100%;
-  background:rgba(255,255,255,.08);
-  border-radius:22px;
-  padding:22px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
-}
-.card h2{margin:0 0 10px;font-size:26px}
-.card p{line-height:1.6;opacity:.9}
+.top{top:2%;left:29%}
+.right{top:29%;right:2%}
+.bottom{bottom:2%;left:29%}
+.left{top:29%;left:2%}
 
-.nav{
-  margin-top:22px;
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
+.nav{display:flex;justify-content:center;gap:12px}
 .nav a{
   padding:14px 22px;
   border-radius:18px;
@@ -66,13 +69,7 @@ body{
   color:#eaf2f6;
   font-weight:900;
 }
-
-footer{
-  margin-top:16px;
-  opacity:.55;
-  font-size:12px;
-  letter-spacing:3px;
-}
+footer{text-align:center;opacity:.55;margin-top:18px;letter-spacing:3px;font-size:12px}
 </style>
 </head>
 
@@ -81,40 +78,33 @@ footer{
 
   <div class="h">
     <h1>History</h1>
-    <p>Coherence · Where it appears.</p>
+    <p>Coherence · Four lenses.</p>
   </div>
 
-  <div class="lenses">
-    <button>Human lens</button>
-    <button>Scientific lens</button>
-  </div>
+  <div class="stage">
+    <div class="platform">
 
-  <div class="card">
-    <h2>Origins</h2>
-    <p>
-      Coherence appears wherever parts stop competing and begin operating as a
-      single system. Historically, it shows up first as internal consistency:
-      fewer contradictions, tighter feedback, and predictable outcomes across time.
-    </p>
+      <a class="diamond top" href="./origins.html">
+        <span>Origins</span>
+      </a>
 
-    <p>
-      In human systems, this manifests as alignment between belief, action,
-      and consequence. In scientific systems, it appears as reproducibility
-      across observers and conditions.
-    </p>
+      <a class="diamond right" href="./evolution.html">
+        <span>Evolution</span>
+      </a>
 
-    <p>
-      Early coherence is fragile. It collapses when rules drift, incentives
-      misalign, or hidden substitutions are introduced into the system.
-    </p>
+      <a class="diamond bottom" href="./milestones.html">
+        <span>Milestones</span>
+      </a>
 
-    <p>
-      Sustained coherence marks the transition from noise to structure.
-    </p>
+      <a class="diamond left" href="./lineage.html">
+        <span>Lineage</span>
+      </a>
+
+    </div>
   </div>
 
   <div class="nav">
-    <a href="./index.html">Back to Coherence</a>
+    <a href="../">Back to Coherence</a>
     <a href="/laws/categories/">Categories</a>
     <a href="/home/">Home</a>
   </div>

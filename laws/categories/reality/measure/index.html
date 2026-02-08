@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Measure · Reality · Geodiametrics</title>
+
+<style>
+html,body{margin:0;height:100%}
+body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow-x:hidden}
+.page{max-width:980px;margin:0 auto;padding:44px 18px 72px}
+h1{margin:0 0 18px;font-size:48px;font-weight:900}
+.sub{margin:0 0 26px;opacity:.72;font-size:18px}
+p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+ul{padding-left:20px;margin-top:10px}
+li{margin:10px 0;font-size:18px;opacity:.92}
+.lensRow{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 30px}
+.lensBtn{padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.10);color:#eaf2f6;font-weight:900}
+.lensBtn[aria-pressed="true"]{background:rgba(80,170,255,.18);box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16)}
+.mode{display:none}
+body[data-lens="human"] .mode-human{display:block}
+body[data-lens="scientific"] .mode-scientific{display:block}
+.bubble{margin:18px 0;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.bubble summary{padding:18px 20px;font-size:20px;font-weight:900;cursor:pointer;list-style:none}
+.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{padding:0 20px 20px}
+.laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
+.laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
+.laws li{font-size:18px;margin:12px 0}
+.nav{margin-top:44px;display:flex;gap:12px;flex-wrap:wrap}
+.nav a{padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
+footer{margin-top:44px;text-align:center;opacity:.55;font-size:12px;letter-spacing:3px}
+</style>
+</head>
+
+<body data-lens="human">
+<div class="page">
+<h1>Measure</h1>
+<p class="sub">Reality · Turning observation into coordinates.</p>
+
+<div class="lensRow">
+  <button class="lensBtn" id="h" aria-pressed="true" type="button">Human lens</button>
+  <button class="lensBtn" id="s" aria-pressed="false" type="button">Scientific lens</button>
+</div>
+
+<div class="mode mode-human">
+  <p>Measurement is agreement.</p>
+  <ul>
+    <li>If people can’t measure it the same way, they can’t coordinate.</li>
+    <li>Bad measurement makes good people fight.</li>
+    <li>Good measurement ends arguments by moving them into evidence.</li>
+  </ul>
+
+  <details class="bubble"><summary>What measurement must include</summary><div class="bubbleContent">
+    <ul>
+      <li>What you are measuring</li>
+      <li>How you measure it</li>
+      <li>When you measure it</li>
+      <li>What counts as “enough”</li>
+    </ul>
+  </div></details>
+</div>
+
+<div class="mode mode-scientific">
+  <p>Measurement requires coordinate definitions and error bounds.</p>
+  <ul>
+    <li>Units</li>
+    <li>Calibration</li>
+    <li>Sampling frame</li>
+    <li>Uncertainty</li>
+  </ul>
+
+  <details class="bubble"><summary>Why calibration matters</summary><div class="bubbleContent">
+    <p>Without calibration, different observers produce different “realities” from the same world.</p>
+  </div></details>
+</div>
+
+<div class="laws">
+  <h2>CANONICAL LAWS (REALITY)</h2>
+  <ul>
+    <li><strong>Measurement Contract Law</strong> — measurement is a shared contract, not a personal interpretation.</li>
+    <li><strong>Observer Invariance Law</strong> — the same evidence yields the same classification across observers.</li>
+  </ul>
+</div>
+
+<div class="nav">
+  <a href="./index.html">Back to Reality</a>
+  <a href="/laws/categories/">Categories</a>
+  <a href="/home/">Home</a>
+</div>
+
+<footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+</div>
+
+<script>
+(()=>{const b=document.body;
+h.onclick=()=>{b.dataset.lens="human";h.setAttribute("aria-pressed","true");s.setAttribute("aria-pressed","false")};
+s.onclick=()=>{b.dataset.lens="scientific";s.setAttribute("aria-pressed","true");h.setAttribute("aria-pressed","false")};
+})();
+</script>
+</body>
+</html>

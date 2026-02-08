@@ -1,40 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Diamond Diagnostic Portals</title>
-<link rel="stylesheet" href="/assets/style.css"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Diamond Diagnostic Portals · Geodiametrics</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+html,body{height:100%;margin:0}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:24px 12px;
+}
+.h{text-align:center;margin-bottom:12px}
+.h h1{font-size:48px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px;font-size:18px}
+
+.panel{
+  width:min(900px,94vw);
+  margin-top:18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  padding:18px 18px;
+}
+.panel p{margin:10px 0;font-size:18px;line-height:1.6;opacity:.92}
+
+.actions{
+  width:min(900px,94vw);
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:16px;
+}
+.actions a{
+  padding:14px 22px;
+  border-radius:18px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;
+  color:#eaf2f6;
+  font-weight:900;
+}
+.actions a.primary{
+  background:rgba(80,170,255,.18);
+  box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16);
+}
+
+.nav{
+  display:flex;
+  gap:12px;
+  margin-top:16px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.nav a{
+  padding:14px 22px;
+  border-radius:18px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;
+  color:#eaf2f6;
+  font-weight:900;
+}
+footer{
+  text-align:center;
+  opacity:.55;
+  margin-top:14px;
+  letter-spacing:3px;
+  font-size:12px;
+}
+</style>
 </head>
+
 <body>
 <div class="page">
-  <div class="hero">
+
+  <div class="h">
     <h1>Diamond Diagnostic Portals</h1>
     <p>Each portal is a gate to exploration. Create your own path.</p>
   </div>
 
   <div class="panel">
-    <div class="diamond-grid">
-      <a class="diamond" href="/pending/diagnostic/">
-        <strong>RUN</strong>
-        <span>Alignment diagnostic</span>
-      </a>
-      <a class="diamond" href="/home/">
-        <strong>ENTER</strong>
-        <span>Go to site</span>
-      </a>
-      <a class="diamond" href="/links/">
-        <strong>LEARN</strong>
-        <span>What this is</span>
-      </a>
-      <a class="diamond" href="https://google.com">
-        <strong>EXIT</strong>
-        <span>Leave now</span>
-      </a>
-    </div>
+    <p><strong>RUN</strong> starts the alignment diagnostic flow.</p>
+    <p><strong>ENTER</strong> returns to the site hub.</p>
+    <p><strong>LEARN</strong> explains what this diagnostic is.</p>
+    <p><strong>EXIT</strong> returns to the Door.</p>
   </div>
 
-  <div class="canon">CANONICAL · STABLE · © GEODIAMETRICS</div>
+  <div class="actions">
+    <a class="primary" href="/diagnostic/run/">RUN</a>
+    <a href="/home/">ENTER</a>
+    <a href="/diagnostic/learn/">LEARN</a>
+    <a href="/door/">EXIT</a>
+  </div>
+
+  <div class="nav">
+    <a href="/laws/categories/">Law Categories</a>
+    <a href="/home/">Home</a>
+    <a href="/door/">Door</a>
+  </div>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
 </div>
 </body>
 </html>

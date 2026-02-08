@@ -1,68 +1,47 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Coherence · Integrity · Geodiametrics</title>
-<link rel="stylesheet" href="/assets/ui.css" />
-<link rel="stylesheet" href="/assets/branch.css" />
-<style>
-html,body{margin:0;height:100%}
-body{display:flex;align-items:center;justify-content:center;background:radial-gradient(1200px 800px at center,#1b2c36,#0a1620);color:#eaf2f6;font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif}
-.page{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px 12px}
-.header{text-align:center;margin-bottom:24px}
-.header h1{font-size:3rem;margin:0}
-.header p{opacity:.7;margin-top:6px}
-.diamond-field{position:relative;width:min(520px,90vw);height:min(520px,90vw)}
-.base-diamond{position:absolute;inset:0;transform:rotate(45deg);border-radius:28px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(10px)}
-.diamond-btn{position:absolute;width:46%;height:46%;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(45deg);border-radius:22px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);text-decoration:none;color:inherit;transition:transform .15s ease,background .15s ease}
-.diamond-btn:hover{background:rgba(255,255,255,.16);transform:rotate(45deg) scale(1.03)}
-.diamond-btn span{transform:rotate(-45deg);display:block}
-.diamond-btn strong{display:block;font-size:1.35rem}
-.diamond-btn small{display:block;opacity:.75;margin-top:4px}
-.top{top:-2%;left:27%}
-.right{top:27%;right:-2%}
-.bottom{bottom:-2%;left:27%}
-.left{top:27%;left:-2%}
-.nav{margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-.nav a{padding:12px 20px;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);text-decoration:none;color:inherit}
-.footer{margin-top:18px;opacity:.4;font-size:.85rem}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Coherence · Geodiametrics</title>
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
 </head>
 <body>
-<div class="page">
-  <div class="header">
-    <h1>Coherence</h1>
-    <p>No internal contradiction.</p>
-  </div>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Coherence</h1>
+      <p class="gSub">No internal contradiction.</p>
+    </header>
 
-  <div class="diamond-field">
-    <div class="base-diamond"></div>
+    <section class="gPanel" aria-label="Coherence hub">
+      <div class="gCluster" role="navigation" aria-label="Coherence sections">
+        <a class="gKey gTop" href="/laws/categories/integrity/coherence/history/" aria-label="History">
+          <span class="gKeyText"><strong>History</strong>Where it appears</span>
+        </a>
 
-    <a class="diamond-btn top" href="/laws/categories/integrity/coherence/history.html">
-      <span><strong>History</strong><small>Where it appears</small></span>
-    </a>
+        <a class="gKey gRight" href="/laws/categories/integrity/coherence/known/" aria-label="Known">
+          <span class="gKeyText"><strong>Known</strong>What it is</span>
+        </a>
 
-    <a class="diamond-btn right" href="/laws/categories/integrity/coherence/known.html">
-      <span><strong>Known</strong><small>What it is</small></span>
-    </a>
+        <a class="gKey gBottom" href="/laws/categories/integrity/coherence/learned/" aria-label="Learned">
+          <span class="gKeyText"><strong>Learned</strong>What changed</span>
+        </a>
 
-    <a class="diamond-btn bottom" href="/laws/categories/integrity/coherence/learned.html">
-      <span><strong>Learned</strong><small>What changed</small></span>
-    </a>
+        <a class="gKey gLeft" href="/laws/categories/integrity/coherence/impact/" aria-label="Impact">
+          <span class="gKeyText"><strong>Impact</strong>Why it matters</span>
+        </a>
+      </div>
 
-    <a class="diamond-btn left" href="/laws/categories/integrity/coherence/impact.html">
-      <span><strong>Impact</strong><small>Why it matters</small></span>
-    </a>
-  </div>
+      <div class="gActions" aria-label="Navigation">
+        <a class="gBtn" href="/laws/categories/integrity/">Back to Integrity</a>
+        <a class="gBtn" href="/laws/categories/">Categories</a>
+        <a class="gBtn" href="/home/">Home</a>
+      </div>
 
-  <div class="nav">
-    <a href="/laws/categories/integrity/">Back to Integrity</a>
-    <a href="/laws/categories/">Categories</a>
-    <a href="/home/">Home</a>
-  </div>
-
-  <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
-</div>
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
 </body>
 </html>

@@ -1,470 +1,353 @@
+<!-- TNT: /laws/categories/integrity/coherence/index.html  (FULL REPLACEMENT — FULL-WIDTH + 1 PLATFORM + 4 DIAMOND BUTTONS + LAW LENS TOGGLE) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Coherence · Integrity · Geodiametrics</title>
+  <title>Coherence · Geodiametrics</title>
 
-  <link rel="icon" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
 
   <style>
-    /* ---------- Page-local hard-lock (does not require other CSS to work) ---------- */
-    :root{
-      --bg0:#07131a;
-      --bg1:#0a1a23;
-      --panel:rgba(26,41,51,.82);
-      --panel2:rgba(34,52,64,.86);
-      --stroke:rgba(255,255,255,.12);
-      --stroke2:rgba(255,255,255,.18);
-      --text:#e8f0f6;
-      --muted:rgba(232,240,246,.68);
-      --btn:rgba(55,74,88,.60);
-      --btn2:rgba(70,92,108,.65);
-      --shadow:0 18px 60px rgba(0,0,0,.45);
-      --r:26px;
-    }
-
+    /* ===== FULL-WIDTH CANVAS (no side gutters) ===== */
+    html,body{height:100%;margin:0}
     body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      color:var(--text);
+      min-height:100%;
       background:
         radial-gradient(1200px 800px at 50% 18%, rgba(255,255,255,.08), rgba(255,255,255,0) 60%),
-        radial-gradient(900px 700px at 30% 45%, rgba(255,255,255,.06), rgba(255,255,255,0) 60%),
-        linear-gradient(180deg, var(--bg1), var(--bg0));
+        linear-gradient(180deg,#0a2230,#06141c 55%,#040d13);
+      color:#eaf4fb;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      overflow-x:hidden;
+    }
+    .page{
+      width:100vw;
       min-height:100vh;
+      padding:22px 12px 26px;
     }
 
-    /* Page frame */
-    .gPage{max-width:760px;margin:0 auto;padding:34px 18px 40px;}
-    .gHeader{text-align:center;margin:10px 0 18px;}
-    .gTitle{font-size:52px;letter-spacing:.5px;margin:0;font-weight:800;}
-    .gSub{margin:8px 0 0;color:var(--muted);font-size:20px;line-height:1.25}
+    /* ===== Header ===== */
+    .titleBox{width:100%;text-align:center;margin:6px 0 10px}
+    .titleBox h1{margin:0;font-size:48px;letter-spacing:.4px;line-height:1.05;font-weight:900}
+    .titleBox p{margin:8px 0 0;opacity:.72;font-size:18px}
 
-    .gPanel{
-      position:relative;
-      border-radius:var(--r);
-      padding:22px 18px 18px;
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid var(--stroke);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-
-    /* Lens pills */
+    /* ===== Lens toggle (LAWS ONLY) ===== */
     .lensRow{
+      position:relative;
+      width:100%;
       display:flex;
       justify-content:space-between;
-      gap:12px;
-      margin:6px 8px 14px;
+      gap:10px;
+      margin:10px 0 14px;
+      padding:0 6px;
     }
-    .lensPill{
-      flex:1;
+    .lensBtn{
+      flex:0 0 auto;
+      width:140px;
+      height:44px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.08);
+      color:#eaf4fb;
+      font-weight:800;
+      letter-spacing:.2px;
+      cursor:pointer;
+      user-select:none;
       display:flex;
       align-items:center;
       justify-content:center;
-      height:44px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background:rgba(45,62,74,.55);
-      color:rgba(232,240,246,.86);
-      font-weight:700;
-      cursor:pointer;
-      user-select:none;
-      transition:transform .08s ease, background .15s ease, border-color .15s ease;
     }
-    .lensPill:active{transform:scale(.98)}
-    .lensPill[aria-pressed="true"]{
-      background:rgba(70,98,116,.72);
+    .lensBtn.active{
+      background:rgba(255,255,255,.16);
       border-color:rgba(255,255,255,.20);
-      color:rgba(232,240,246,.96);
     }
 
-    /* Diamond stage */
+    /* ===== Main stage (one platform diamond, four diamond buttons) ===== */
     .stage{
-      position:relative;
-      display:grid;
-      place-items:center;
-      padding:10px 0 8px;
+      width:100%;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:8px 0 14px;
     }
-
-    /* Big platform diamond (back plate) */
-    .platform{
-      position:absolute;
-      width:min(520px, 92vw);
+    .platformWrap{
+      position:relative;
+      width:min(520px, 96vw);
       aspect-ratio:1/1;
+    }
+    /* platform diamond (visual only) */
+    .platformWrap::before{
+      content:"";
+      position:absolute;
+      inset:0;
       transform:rotate(45deg);
-      border-radius:28px;
-      background:rgba(90,110,125,.18);
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:0 26px 90px rgba(0,0,0,.35);
-      filter:blur(.0px);
+      border-radius:26px;
+      background:rgba(255,255,255,.06);
+      box-shadow:0 0 0 1px rgba(255,255,255,.10) inset, 0 22px 90px rgba(0,0,0,.35);
       pointer-events:none;
     }
 
-    /* Four diamond buttons (real controls) */
-    .dGrid{
-      position:relative;
-      width:min(520px, 92vw);
-      aspect-ratio:1/1;
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      grid-template-rows:1fr 1fr 1fr;
-      gap:0;
-      place-items:center;
-    }
-
+    /* four diamond buttons on top of platform */
     .dBtn{
-      width:170px;
-      height:170px;
-      border-radius:22px;
+      position:absolute;
+      width:42%;
+      height:42%;
       transform:rotate(45deg);
-      display:grid;
-      place-items:center;
-      border:1px solid var(--stroke2);
-      background:rgba(56,76,90,.38);
-      backdrop-filter: blur(4px);
-      box-shadow: 0 16px 46px rgba(0,0,0,.22);
+      border-radius:18px;
+      background:rgba(255,255,255,.14);
+      box-shadow:0 0 0 1px rgba(255,255,255,.16) inset, 0 16px 55px rgba(0,0,0,.28);
+      display:flex;
+      align-items:center;
+      justify-content:center;
       text-decoration:none;
-      color:var(--text);
+      color:#eaf4fb;
       cursor:pointer;
-      transition:transform .08s ease, background .15s ease, border-color .15s ease;
-      position:relative;
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
+      transition:background .15s ease, transform .08s ease;
     }
-    .dBtn:active{transform:rotate(45deg) scale(.98)}
-    .dBtn:hover{background:rgba(72,95,112,.44);border-color:rgba(255,255,255,.22)}
-
-    .dBtn .inner{
+    .dBtn:active{transform:rotate(45deg) scale(.98);background:rgba(255,255,255,.20)}
+    .dBtn .txt{
       transform:rotate(-45deg);
       text-align:center;
-      padding:14px 16px;
-      max-width:140px;
+      line-height:1.05;
+      padding:0 10px;
     }
-    .dBtn .h{
-      font-size:26px;
+    .dBtn .txt strong{
+      display:block;
+      font-size:22px;
       font-weight:900;
       letter-spacing:.2px;
-      margin:0;
-      line-height:1.05;
-      color:rgba(232,240,246,.96);
     }
-    .dBtn .s{
+    .dBtn .txt span{
+      display:block;
       margin-top:6px;
-      font-size:15px;
-      line-height:1.1;
-      color:rgba(232,240,246,.68);
-      font-weight:600;
+      font-size:14px;
+      opacity:.72;
+      font-weight:700;
     }
 
-    /* Positioning: N / W / E / S */
-    .posTop{grid-column:2;grid-row:1}
-    .posLeft{grid-column:1;grid-row:2}
-    .posRight{grid-column:3;grid-row:2}
-    .posBottom{grid-column:2;grid-row:3}
+    .top{left:29%;top:2%}
+    .right{right:2%;top:29%}
+    .bottom{left:29%;bottom:2%}
+    .left{left:2%;top:29%}
 
-    /* Canonical laws card */
-    .lawsCard{
-      margin:12px 10px 14px;
+    /* ===== Laws (two laws, lens toggles copy only here) ===== */
+    .lawsBox{
+      width:100%;
+      max-width:920px;
+      margin:10px auto 0;
+      padding:14px 14px 12px;
       border-radius:22px;
-      padding:16px 16px 14px;
-      background:rgba(26,41,51,.68);
+      background:rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.10);
+      text-align:left;
     }
-    .lawsCard h3{
-      margin:0 0 10px;
-      font-size:20px;
-      letter-spacing:.2px;
+    .lawsBox h2{margin:0 0 10px;font-size:18px;letter-spacing:.2px}
+    .law{
+      padding:12px 12px 10px;
+      border-radius:16px;
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.08);
+      margin-bottom:10px;
     }
-    .lawsCard ul{margin:0;padding-left:18px;color:rgba(232,240,246,.84)}
-    .lawsCard li{margin:10px 0;line-height:1.35}
-    .lawsCard strong{color:rgba(232,240,246,.96)}
+    .law:last-child{margin-bottom:0}
+    .lawTitle{font-weight:900;font-size:16px;margin:0 0 6px}
+    .lawBody{margin:0;color:rgba(234,244,251,.82);line-height:1.45;font-size:15px;white-space:pre-wrap}
 
-    /* Actions */
-    .actions{
+    /* ===== Bottom nav ===== */
+    .navRow{
+      width:100%;
       display:flex;
+      justify-content:center;
       gap:12px;
-      justify-content:center;
-      align-items:center;
-      margin:8px 0 0;
       flex-wrap:wrap;
+      margin-top:16px;
     }
-    .btn{
-      min-width:150px;
-      height:54px;
-      border-radius:999px;
+    .navBtn{
+      min-width:140px;
+      height:52px;
+      border-radius:18px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
+      color:#eaf4fb;
+      text-decoration:none;
+      font-weight:900;
       display:flex;
       align-items:center;
       justify-content:center;
-      background:rgba(55,74,88,.60);
-      border:1px solid rgba(255,255,255,.14);
-      color:rgba(232,240,246,.92);
-      text-decoration:none;
-      font-weight:800;
       letter-spacing:.2px;
-      box-shadow: 0 18px 48px rgba(0,0,0,.22);
-      transition:transform .08s ease, background .15s ease;
-    }
-    .btn:active{transform:scale(.98)}
-    .btn:hover{background:rgba(75,98,115,.70)}
-    .footer{
-      text-align:center;
-      margin-top:12px;
-      color:rgba(232,240,246,.52);
-      letter-spacing:3px;
-      font-size:13px;
     }
 
-    /* ---------- Modal (opaque bubble) ---------- */
-    .modalBackdrop{
-      position:fixed;
-      inset:0;
+    .footer{
+      margin-top:14px;
+      text-align:center;
+      font-size:12px;
+      opacity:.55;
+      letter-spacing:3px;
+    }
+
+    /* ===== Modal (opaque bubble) ===== */
+    .modalBg{
+      position:fixed;inset:0;
       background:rgba(0,0,0,.55);
       display:none;
       align-items:center;
       justify-content:center;
-      padding:22px 14px;
+      padding:18px 12px;
       z-index:9999;
     }
-    .modalBackdrop[data-open="true"]{display:flex}
-
+    .modalBg.open{display:flex}
     .modal{
-      width:min(560px, 92vw);
-      border-radius:26px;
-      background:rgba(38,56,68,.96); /* OPAQUE */
-      border:1px solid rgba(255,255,255,.16);
-      box-shadow:0 28px 90px rgba(0,0,0,.55);
+      width:min(640px, 96vw);
+      border-radius:24px;
+      background:rgba(28,46,58,.96);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 30px 100px rgba(0,0,0,.65);
       padding:18px 18px 14px;
-      position:relative;
+      text-align:left;
     }
-    .modalTitle{
-      margin:0;
-      font-size:26px;
-      font-weight:900;
-      letter-spacing:.2px;
-    }
-    .modalBody{
-      margin-top:10px;
-      color:rgba(232,240,246,.88);
-      line-height:1.45;
-      font-size:16px;
-      white-space:pre-wrap;
-    }
-    .modalHint{
-      margin-top:14px;
-      text-align:center;
-      color:rgba(232,240,246,.55);
-      font-weight:700;
-      font-size:13px;
-      letter-spacing:.6px;
-      user-select:none;
-    }
+    .modal h3{margin:0 0 10px;font-size:22px;font-weight:900}
+    .modal p{margin:0;color:rgba(234,244,251,.84);line-height:1.45;white-space:pre-wrap}
+    .hint{margin-top:12px;text-align:center;font-size:12px;opacity:.6;letter-spacing:2px}
   </style>
 </head>
 
 <body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Coherence</h1>
-      <p class="gSub">Integrity · Coherence branch.</p>
-    </header>
+  <div class="page">
+    <div class="titleBox">
+      <h1>Coherence</h1>
+      <p>Integrity · Coherence branch.</p>
+    </div>
 
-    <section class="gPanel" aria-label="Coherence hub">
+    <!-- Law lens toggle (only affects the two law blocks below, not the diamond buttons) -->
+    <div class="lensRow" aria-label="Law lens toggle">
+      <button class="lensBtn active" id="lensHuman" type="button">Human</button>
+      <button class="lensBtn" id="lensSci" type="button">Scientific</button>
+    </div>
 
-      <!-- Lens filter (ONLY affects the law text + modal copy) -->
-      <div class="lensRow" role="group" aria-label="Lens filter">
-        <div class="lensPill" id="lensHuman" role="button" tabindex="0" aria-pressed="true">Human</div>
-        <div class="lensPill" id="lensSci" role="button" tabindex="0" aria-pressed="false">Scientific</div>
+    <!-- One platform + four diamond buttons -->
+    <div class="stage">
+      <div class="platformWrap" aria-label="Coherence remote control">
+        <button class="dBtn top" type="button" data-topic="history">
+          <div class="txt"><strong>History</strong><span>Where it appears</span></div>
+        </button>
+        <button class="dBtn right" type="button" data-topic="known">
+          <div class="txt"><strong>Known</strong><span>What it is</span></div>
+        </button>
+        <button class="dBtn bottom" type="button" data-topic="learned">
+          <div class="txt"><strong>Learned</strong><span>What changed</span></div>
+        </button>
+        <button class="dBtn left" type="button" data-topic="impact">
+          <div class="txt"><strong>Impact</strong><span>Why it matters</span></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Two laws + lens filter (only here) -->
+    <div class="lawsBox" aria-label="Canonical laws for coherence">
+      <h2>Canonical laws in this branch</h2>
+
+      <div class="law">
+        <div class="lawTitle">Coherence Constraint Law</div>
+        <div class="lawBody" id="law1"></div>
       </div>
 
-      <!-- Diamond platform + four diamond buttons -->
-      <div class="stage" aria-label="Diamond navigation">
-        <div class="platform" aria-hidden="true"></div>
-
-        <div class="dGrid" role="navigation" aria-label="Coherence routes">
-          <a class="dBtn posTop" href="#history" data-topic="history" aria-label="History">
-            <div class="inner">
-              <div class="h">History</div>
-              <div class="s">Where it appears</div>
-            </div>
-          </a>
-
-          <a class="dBtn posRight" href="#known" data-topic="known" aria-label="Known">
-            <div class="inner">
-              <div class="h">Known</div>
-              <div class="s">What it is</div>
-            </div>
-          </a>
-
-          <a class="dBtn posBottom" href="#learned" data-topic="learned" aria-label="Learned">
-            <div class="inner">
-              <div class="h">Learned</div>
-              <div class="s">What changed</div>
-            </div>
-          </a>
-
-          <a class="dBtn posLeft" href="#impact" data-topic="impact" aria-label="Impact">
-            <div class="inner">
-              <div class="h">Impact</div>
-              <div class="s">Why it matters</div>
-            </div>
-          </a>
-        </div>
+      <div class="law">
+        <div class="lawTitle">Fragmentation Detection Law</div>
+        <div class="lawBody" id="law2"></div>
       </div>
+    </div>
 
-      <!-- Canonical laws in this branch (changes with lens) -->
-      <div class="lawsCard" aria-label="Canonical laws in this branch">
-        <h3>Canonical laws in this branch</h3>
-        <ul id="lawList"></ul>
-      </div>
+    <div class="navRow" aria-label="Navigation">
+      <a class="navBtn" href="/laws/categories/integrity/">Integrity</a>
+      <a class="navBtn" href="/laws/categories/">Categories</a>
+      <a class="navBtn" href="/home/">Home</a>
+    </div>
 
-      <!-- Nav -->
-      <div class="actions" aria-label="Navigation controls">
-        <a class="btn" href="/laws/categories/integrity/">Integrity</a>
-        <a class="btn" href="/laws/categories/">Categories</a>
-        <a class="btn" href="/home/">Home</a>
-      </div>
+    <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
+  </div>
 
-      <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
-    </section>
-  </main>
-
-  <!-- Opaque modal bubble -->
-  <div class="modalBackdrop" id="modalBackdrop" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <h2 class="modalTitle" id="modalTitle">Title</h2>
-      <div class="modalBody" id="modalBody"></div>
-      <div class="modalHint">TAP ANYWHERE TO CLOSE</div>
+  <!-- Modal (opaque bubble) -->
+  <div class="modalBg" id="modalBg" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Detail">
+      <h3 id="mTitle">Title</h3>
+      <p id="mBody"></p>
+      <div class="hint">TAP ANYWHERE TO CLOSE</div>
     </div>
   </div>
 
-  <script>
-    // -------- Lens state --------
-    const lensHuman = document.getElementById('lensHuman');
-    const lensSci = document.getElementById('lensSci');
-    const lawList = document.getElementById('lawList');
+<script>
+(function(){
+  // ----- Modal content for 4 diamond buttons -----
+  const TOPICS = {
+    history: "Coherence shows up wherever systems must remain stable under pressure.\nIt appears in science (consistency of results), in teams (reliable coordination), and in individuals (one story across time).",
+    known: "Coherence is cross-time alignment between what is declared, what is done, and what is produced.\nA coherent system can be audited without contradiction.",
+    learned: "Confusion is an accelerator, not a prerequisite.\nOnce incoherence exists, ambiguity increases variance and speeds breakdown.\nSmall contradictions compound.",
+    impact: "Coherence reduces enforcement cost and increases trust.\nIt stabilizes relationships, improves institutions, and makes systems scalable without coercion."
+  };
 
-    const LENS_KEY = 'geo_lens_coherence';
-    let lens = (localStorage.getItem(LENS_KEY) || 'human');
+  const modalBg = document.getElementById('modalBg');
+  const mTitle = document.getElementById('mTitle');
+  const mBody = document.getElementById('mBody');
 
-    function setLens(next){
-      lens = next;
-      localStorage.setItem(LENS_KEY, lens);
-      lensHuman.setAttribute('aria-pressed', lens === 'human' ? 'true' : 'false');
-      lensSci.setAttribute('aria-pressed', lens === 'sci' ? 'true' : 'false');
-      renderLawList();
-    }
+  function openModal(title, body){
+    mTitle.textContent = title;
+    mBody.textContent = body;
+    modalBg.classList.add('open');
+    modalBg.setAttribute('aria-hidden','false');
+  }
+  function closeModal(){
+    modalBg.classList.remove('open');
+    modalBg.setAttribute('aria-hidden','true');
+  }
 
-    lensHuman.addEventListener('click', () => setLens('human'));
-    lensSci.addEventListener('click', () => setLens('sci'));
-    lensHuman.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' ') setLens('human'); });
-    lensSci.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' ') setLens('sci'); });
-
-    // -------- Content (Human vs Scientific) --------
-    const CONTENT = {
-      human: {
-        laws: [
-          {
-            name: "Coherence Constraint Law",
-            text: "External trust can’t exceed internal self-truth. What you show can’t outrun what you are."
-          },
-          {
-            name: "Fragmentation Detection Law",
-            text: "When values, actions, and outcomes stop matching, coherence is breaking."
-          }
-        ],
-        topics: {
-          history:
-`Coherence shows up wherever people try to stay consistent under pressure.
-You see it in families, teams, faith, science, and law—anywhere integrity has consequences.`,
-          known:
-`Coherence is “one story across time.”
-Your words, choices, and results stay aligned so others can predict you—and trust forms.`,
-          learned:
-`Coherence isn’t a vibe. It’s observable.
-Small contradictions compound. Confusion accelerates instability once misalignment starts.`,
-          impact:
-`Coherence turns friction into progress.
-It stabilizes relationships, strengthens leadership, and makes systems governable without force.`
-        }
-      },
-      sci: {
-        laws: [
-          {
-            name: "Coherence Constraint Law",
-            text: "Maximum external coherence is upper-bounded by internal self-coherence (observer-invariant constraint)."
-          },
-          {
-            name: "Fragmentation Detection Law",
-            text: "Misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence."
-          }
-        ],
-        topics: {
-          history:
-`Coherence appears as a stability condition in physical, biological, and social systems.
-It is the shared pattern behind predictable behavior and reliable trajectories.`,
-          known:
-`Coherence is cross-time invariance of constraints.
-A system is coherent when its observable outputs remain consistent with its declared rules under perturbation.`,
-          learned:
-`Confusion is an accelerator, not a prerequisite.
-Once incoherence is present, ambiguity increases variance and speeds breakdown (trajectory contraction).`,
-          impact:
-`Coherence increases forecastability and reduces control overhead.
-It improves coordination, lowers enforcement costs, and enables scalable trust in institutions.`
-        }
-      }
-    };
-
-    function renderLawList(){
-      const data = CONTENT[lens].laws;
-      lawList.innerHTML = data.map(x =>
-        `<li><strong>${escapeHtml(x.name)}</strong> — ${escapeHtml(x.text)}</li>`
-      ).join('');
-    }
-
-    function escapeHtml(s){
-      return String(s)
-        .replaceAll('&','&amp;')
-        .replaceAll('<','&lt;')
-        .replaceAll('>','&gt;')
-        .replaceAll('"','&quot;')
-        .replaceAll("'",'&#039;');
-    }
-
-    // -------- Modal --------
-    const modalBackdrop = document.getElementById('modalBackdrop');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-
-    function openModal(title, body){
-      modalTitle.textContent = title;
-      modalBody.textContent = body;
-      modalBackdrop.dataset.open = "true";
-      modalBackdrop.setAttribute('aria-hidden','false');
-    }
-    function closeModal(){
-      modalBackdrop.dataset.open = "false";
-      modalBackdrop.setAttribute('aria-hidden','true');
-    }
-
-    modalBackdrop.addEventListener('click', closeModal);
-    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
-
-    // Diamond click -> modal (no navigation)
-    document.querySelectorAll('.dBtn').forEach(btn=>{
-      btn.addEventListener('click', (e)=>{
-        e.preventDefault();
-        const topic = btn.dataset.topic;
-        const label = btn.querySelector('.h')?.textContent?.trim() || 'Detail';
-        const body = CONTENT[lens].topics[topic] || '';
-        openModal(label, body);
-      });
+  document.querySelectorAll('.dBtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const topic = btn.dataset.topic;
+      const label = btn.querySelector('strong')?.textContent || 'Detail';
+      openModal(label, TOPICS[topic] || '');
     });
+  });
 
-    // Init
-    setLens(lens);
-  </script>
+  modalBg.addEventListener('click', closeModal);
+  window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+
+  // ----- Law lens toggle (two laws only) -----
+  const lensHuman = document.getElementById('lensHuman');
+  const lensSci = document.getElementById('lensSci');
+
+  const law1 = document.getElementById('law1');
+  const law2 = document.getElementById('law2');
+
+  const LAW = {
+    human: {
+      l1: "You can’t show the world what you don’t have inside.\nExternal trust has a ceiling set by internal honesty and alignment.",
+      l2: "When your words, actions, and outcomes stop matching, coherence is breaking.\nThat misalignment is the earliest detectable signal of fragmentation."
+    },
+    sci: {
+      l1: "External coherence is upper-bounded by internal self-coherence.\n(No system can sustainably express what it does not internally satisfy.)",
+      l2: "Misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.\n(Observer-invariant fragmentation signal.)"
+    }
+  };
+
+  function setLens(which){
+    const isHuman = (which === 'human');
+    lensHuman.classList.toggle('active', isHuman);
+    lensSci.classList.toggle('active', !isHuman);
+    law1.textContent = LAW[which].l1;
+    law2.textContent = LAW[which].l2;
+    localStorage.setItem('geo_law_lens', which);
+  }
+
+  lensHuman.addEventListener('click', ()=>setLens('human'));
+  lensSci.addEventListener('click', ()=>setLens('sci'));
+
+  // init
+  const saved = localStorage.getItem('geo_law_lens') || 'human';
+  setLens(saved);
+})();
+</script>
 </body>
 </html>

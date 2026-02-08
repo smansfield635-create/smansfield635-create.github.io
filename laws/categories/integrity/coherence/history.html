@@ -1,44 +1,149 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Coherence · History · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Coherence · History</title>
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(1200px 800px at center, #0f2a33, #07161d);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: #e8f2f5;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 {
+  margin: 0 0 6px 0;
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.subtitle {
+  opacity: .7;
+  margin-bottom: 40px;
+}
+
+.diamond-stage {
+  position: relative;
+  width: 320px;
+  height: 320px;
+}
+
+.base-diamond {
+  position: absolute;
+  inset: 0;
+  transform: rotate(45deg);
+  background: rgba(255,255,255,0.06);
+  border-radius: 18px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset;
+}
+
+/* diamond buttons */
+.diamond {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 14px;
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+
+.diamond:hover {
+  background: rgba(255,255,255,0.18);
+}
+
+.diamond span {
+  transform: rotate(-45deg);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* positions */
+.top    { top: -10px; left: 90px; }
+.right  { top: 90px; right: -10px; }
+.bottom { bottom: -10px; left: 90px; }
+.left   { top: 90px; left: -10px; }
+
+.nav {
+  margin-top: 40px;
+  display: flex;
+  gap: 16px;
+}
+
+.nav a {
+  padding: 14px 22px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer {
+  margin-top: 18px;
+  font-size: 12px;
+  opacity: .5;
+}
+</style>
 </head>
+
 <body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Coherence</h1>
-      <p class="gSub">History · Where it appears.</p>
-    </header>
+<div class="page">
 
-    <section class="gPanel">
-      <div class="gPanelInner">
-        <h2 class="gH2">Where it appears</h2>
-        <p class="gBody">
-          Coherence shows up anywhere parts act like one system instead of fighting each other.
-          You can spot it in physics, biology, teams, institutions, and personal decision-making.
-        </p>
+  <h1>Coherence</h1>
+  <div class="subtitle">History · Where it appears</div>
 
-        <h3 class="gH3">Fast examples</h3>
-        <ul class="gList">
-          <li><strong>Nature:</strong> stable ecosystems, feedback loops, homeostasis.</li>
-          <li><strong>Systems:</strong> reliable outputs under stress and change.</li>
-          <li><strong>People:</strong> values, actions, and outcomes staying aligned over time.</li>
-        </ul>
+  <div class="diamond-stage">
 
-        <div class="gActions">
-          <a class="gBtn" href="/laws/categories/integrity/coherence/">Back to Coherence</a>
-          <a class="gBtn" href="/laws/categories/integrity/">Back to Integrity</a>
-          <a class="gBtn" href="/laws/categories/">Categories</a>
-          <a class="gBtn" href="/home/">Home</a>
-        </div>
-      </div>
+    <div class="base-diamond"></div>
 
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
-  </main>
+    <div class="diamond top">
+      <span>History<br><small>Origins</small></span>
+    </div>
+
+    <div class="diamond right">
+      <span>Known<br><small>What it is</small></span>
+    </div>
+
+    <div class="diamond bottom">
+      <span>Learned<br><small>What changed</small></span>
+    </div>
+
+    <div class="diamond left">
+      <span>Impact<br><small>Why it matters</small></span>
+    </div>
+
+  </div>
+
+  <div class="nav">
+    <a href="../">Back to Coherence</a>
+    <a href="../../">Integrity</a>
+    <a href="../../../">Categories</a>
+    <a href="/">Home</a>
+  </div>
+
+  <div class="footer">
+    CANONICAL · STABLE · © GEODIAMETRICS
+  </div>
+
+</div>
 </body>
 </html>

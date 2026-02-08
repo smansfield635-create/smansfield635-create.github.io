@@ -1,54 +1,79 @@
-<!-- =========================
-TNT — FILE: /gauges/index.html
-========================= -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gauges · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Gauges · Geodiametrics</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+html,body{height:100%;margin:0}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 12px}
+.h{text-align:center;margin-bottom:12px}
+.h h1{font-size:48px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px;font-size:18px}
+
+.panel{
+  width:min(900px,94vw);
+  margin-top:18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  padding:18px 18px;
+}
+.panel h2{margin:0 0 10px;font-size:20px;font-weight:900;letter-spacing:.06em}
+.panel p{margin:10px 0;font-size:18px;line-height:1.6;opacity:.92}
+
+.actions{
+  width:min(900px,94vw);
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:16px;
+}
+.actions a{
+  padding:14px 22px;
+  border-radius:18px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;
+  color:#eaf2f6;
+  font-weight:900;
+}
+
+footer{text-align:center;opacity:.55;margin-top:14px;letter-spacing:3px;font-size:12px}
+</style>
 </head>
+
 <body>
-  <main class="gPage">
-    <div>
-      <header class="gHeader">
-        <h1 class="gTitle">Gauges</h1>
-        <p class="gSub">Diagnostics · Readouts · Status checks.</p>
-      </header>
+<div class="page">
 
-      <section class="gPanel" aria-label="Gauges routes">
-        <div class="gDiamondStage" role="navigation" aria-label="Gauge routes">
-          <div class="gDiamondPlatform" aria-hidden="true"></div>
+  <div class="h">
+    <h1>Gauges</h1>
+    <p>Measurements and diagnostics (in progress).</p>
+  </div>
 
-          <a class="gDiamondBtn gTop" href="/gauges/overview/" aria-label="Overview">
-            <div class="gDiamondText"><strong>Overview</strong><span>Index</span></div>
-          </a>
+  <div class="panel">
+    <h2>STATUS</h2>
+    <p>This section is under construction. Gauges will host inspectable metrics, diagnostics, and tracking tools aligned to the Laws framework.</p>
+    <p>For a finished example of structure and depth, explore <strong>Laws → Categories → Integrity → Coherence</strong> to the end.</p>
+  </div>
 
-          <a class="gDiamondBtn gRight" href="/gauges/health/" aria-label="Health">
-            <div class="gDiamondText"><strong>Health</strong><span>System</span></div>
-          </a>
+  <div class="actions">
+    <a href="/laws/categories/">Law Categories</a>
+    <a href="/home/">Home</a>
+    <a href="/door/">Door</a>
+  </div>
 
-          <a class="gDiamondBtn gBottom" href="/gauges/signals/" aria-label="Signals">
-            <div class="gDiamondText"><strong>Signals</strong><span>Telemetry</span></div>
-          </a>
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 
-          <a class="gDiamondBtn gLeft" href="/diagnostic/" aria-label="Diagnostic">
-            <div class="gDiamondText"><strong>Diagnostic</strong><span>Run</span></div>
-          </a>
-        </div>
-
-        <div class="gActions" aria-label="Navigation">
-          <a class="gBtn" href="/home/">Home</a>
-          <a class="gBtn" href="/home/">Back</a>
-        </div>
-
-        <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-      </section>
-    </div>
-  </main>
+</div>
 </body>
 </html>
-```0

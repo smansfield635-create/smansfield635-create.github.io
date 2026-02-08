@@ -1,53 +1,85 @@
-<!-- =========================
-TNT — FILE: /links/index.html
-========================= -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Links · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Links · Geodiametrics</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+html,body{height:100%;margin:0}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 12px}
+.h{text-align:center;margin-bottom:12px}
+.h h1{font-size:48px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px;font-size:18px}
+
+.panel{
+  width:min(900px,94vw);
+  margin-top:18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  padding:18px 18px;
+}
+.panel h2{margin:0 0 10px;font-size:20px;font-weight:900;letter-spacing:.06em}
+.panel a{
+  display:block;
+  padding:14px 16px;
+  border-radius:16px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;
+  color:#eaf2f6;
+  font-weight:900;
+  margin:10px 0;
+}
+.panel a span{display:block;font-size:14px;opacity:.75;font-weight:600;margin-top:4px}
+
+.nav{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+.nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
+
+footer{text-align:center;opacity:.55;margin-top:14px;letter-spacing:3px;font-size:12px}
+</style>
 </head>
+
 <body>
-  <main class="gPage">
-    <div>
-      <header class="gHeader">
-        <h1 class="gTitle">Links</h1>
-        <p class="gSub">Verification · Reference · External access.</p>
-      </header>
+<div class="page">
 
-      <section class="gPanel" aria-label="Links routes">
-        <div class="gDiamondStage" role="navigation" aria-label="Link routes">
-          <div class="gDiamondPlatform" aria-hidden="true"></div>
+  <div class="h">
+    <h1>Links</h1>
+    <p>External references and project access.</p>
+  </div>
 
-          <a class="gDiamondBtn gTop" href="/links/osf/" aria-label="OSF">
-            <div class="gDiamondText"><strong>OSF</strong><span>Reference</span></div>
-          </a>
+  <div class="panel">
+    <h2>PRIMARY</h2>
+    <a href="/laws/categories/">
+      Law Categories
+      <span>Start with Integrity → Coherence (complete branch).</span>
+    </a>
+    <a href="/home/">
+      Home
+      <span>Site hub.</span>
+    </a>
+    <a href="/door/">
+      Door
+      <span>Entry modes.</span>
+    </a>
+  </div>
 
-          <a class="gDiamondBtn gRight" href="/links/orcid/" aria-label="ORCID">
-            <div class="gDiamondText"><strong>ORCID</strong><span>Identity</span></div>
-          </a>
+  <div class="nav">
+    <a href="/home/">Home</a>
+    <a href="/door/">Door</a>
+    <a href="/laws/categories/">Categories</a>
+  </div>
 
-          <a class="gDiamondBtn gBottom" href="/links/site/" aria-label="Site">
-            <div class="gDiamondText"><strong>Site</strong><span>Public</span></div>
-          </a>
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 
-          <a class="gDiamondBtn gLeft" href="/links/email/" aria-label="Email">
-            <div class="gDiamondText"><strong>Email</strong><span>Contact</span></div>
-          </a>
-        </div>
-
-        <div class="gActions" aria-label="Navigation">
-          <a class="gBtn" href="/home/">Home</a>
-          <a class="gBtn" href="/home/">Back</a>
-        </div>
-
-        <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-      </section>
-    </div>
-  </main>
+</div>
 </body>
 </html>

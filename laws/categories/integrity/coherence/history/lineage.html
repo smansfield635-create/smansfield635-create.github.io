@@ -13,34 +13,15 @@ body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   overflow-x:hidden;
 }
-.page{
-  max-width:980px;
-  margin:0 auto;
-  padding:44px 18px 72px;
-}
-h1{
-  margin:0 0 18px;
-  font-size:48px;
-  font-weight:900;
-  letter-spacing:.02em;
-}
-.sub{
-  margin:0 0 26px;
-  opacity:.72;
-  font-size:18px;
-}
-.lensRow{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin:0 0 30px;
-}
+.page{max-width:980px;margin:0 auto;padding:44px 18px 72px}
+h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
+.sub{margin:0 0 26px;opacity:.72;font-size:18px}
+
+.lensRow{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 30px}
 .lensBtn{
-  padding:12px 18px;
-  border-radius:16px;
+  padding:12px 18px;border-radius:16px;
   background:rgba(255,255,255,.10);
-  color:#eaf2f6;
-  font-weight:900;
+  color:#eaf2f6;font-weight:900;
   border:1px solid rgba(255,255,255,.10);
 }
 .lensBtn[aria-pressed="true"]{
@@ -51,54 +32,38 @@ h1{
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
 
-p{
+p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+
+/* Bubble accordion */
+.bubble{
   margin:18px 0;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+}
+.bubble summary{
+  padding:18px 20px;
   font-size:20px;
-  line-height:1.7;
-  opacity:.94;
-}
-
-.laws{
-  margin-top:56px;
-  padding-top:26px;
-  border-top:1px solid rgba(255,255,255,.18);
-}
-.laws h2{
-  margin:0 0 14px;
-  font-size:18px;
   font-weight:900;
-  letter-spacing:.16em;
-  opacity:.9;
+  cursor:pointer;
+  list-style:none;
 }
+.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{padding:0 20px 20px}
+.bubbleContent p{font-size:19px;margin:14px 0}
+
+.laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
+.laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
 .laws ul{margin:0;padding-left:20px}
-.laws li{
-  margin:12px 0;
-  font-size:18px;
-  line-height:1.55;
-  opacity:.92;
-}
+.laws li{margin:12px 0;font-size:18px;line-height:1.55;opacity:.92}
 
-.nav{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-top:44px;
-}
+.nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:44px}
 .nav a{
-  padding:12px 18px;
-  border-radius:16px;
+  padding:12px 18px;border-radius:16px;
   background:rgba(255,255,255,.10);
-  text-decoration:none;
-  color:#eaf2f6;
-  font-weight:900;
+  text-decoration:none;color:#eaf2f6;font-weight:900
 }
-footer{
-  margin-top:44px;
-  text-align:center;
-  opacity:.55;
-  letter-spacing:3px;
-  font-size:12px;
-}
+footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
 </style>
 </head>
 
@@ -106,25 +71,87 @@ footer{
 <div class="page">
 
 <h1>Lineage</h1>
-<p class="sub">History · How coherence stays traceable over time.</p>
+<p class="sub">History · What stays traceable across time.</p>
 
 <div class="lensRow">
-  <button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button>
-  <button class="lensBtn" id="btnSci" aria-pressed="false" type="button">Scientific lens</button>
+  <button class="lensBtn" id="btnHuman" aria-pressed="true">Human lens</button>
+  <button class="lensBtn" id="btnSci" aria-pressed="false">Scientific lens</button>
 </div>
 
 <div class="mode mode-human">
-  <p>Lineage is the traceable continuity of your standards across time, pressure, and audience.</p>
-  <p>It shows up when people can predict your behavior without negotiating for exceptions.</p>
-  <p>Lineage is not reputation. It is pattern memory formed by repeated exposure to the same constraints.</p>
-  <p>Lineage breaks when you become a different person depending on who benefits, who is watching, or what is at stake.</p>
-  <p>Lineage signature: fewer explanations, faster repair, and consistent boundaries across contexts.</p>
+  <p>Lineage is the traceable continuity of standards across seasons, pressure, and audience.</p>
+  <p>It is what people can verify about you over time — not what you claim in one moment.</p>
+
+  <details class="bubble">
+    <summary>Family lineage (behavioral)</summary>
+    <div class="bubbleContent">
+      <p>In families, lineage is visible as repeated patterns: how conflict is handled, how truth is treated, how repair happens.</p>
+      <p>Healthy lineage passes down standards. Broken lineage passes down exceptions.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Culture lineage (social)</summary>
+    <div class="bubbleContent">
+      <p>Cultures have lineage: customs, taboos, and shared expectations that persist across generations.</p>
+      <p>When cultural lineage fractures, people lose a shared “default,” and coherence becomes costly.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Institution lineage (organizational)</summary>
+    <div class="bubbleContent">
+      <p>Organizations inherit lineage through policies, incentives, and leadership norms.</p>
+      <p>Lineage is confirmed when standards survive leadership changes and revenue pressure.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Personal lineage (identity)</summary>
+    <div class="bubbleContent">
+      <p>Personal lineage is the same person in every room.</p>
+      <p>It breaks when you become a different person depending on who benefits, who is watching, or what is at stake.</p>
+    </div>
+  </details>
+
+  <p>Lineage signature: fewer explanations, faster repair, and stable boundaries across contexts.</p>
 </div>
 
 <div class="mode mode-scientific">
-  <p>Lineage is invariant classification across time: independent observers map the same evidence into the same structure.</p>
-  <p>It requires stable measurement rules. Without invariants, drift hides behind redefinitions and narrative substitutions.</p>
-  <p>Lineage breaks when control policy diverges from declared constraints under incentive pressure.</p>
+  <p>Lineage is invariant classification across time: independent observers map shared evidence into the same structure.</p>
+
+  <details class="bubble">
+    <summary>Genetic lineage</summary>
+    <div class="bubbleContent">
+      <p>Genetic lineage is the transmission of traits through reproduction and selection.</p>
+      <p>It is traceable because it is encoded, inherited, and constrained by biology.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Behavioral lineage</summary>
+    <div class="bubbleContent">
+      <p>Behavioral lineage is transmitted through repetition, reinforcement, and environmental conditioning.</p>
+      <p>It persists when feedback loops are stable and correction is consistent.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Institutional lineage</summary>
+    <div class="bubbleContent">
+      <p>Institutional lineage is stored in structure: incentives, rules, processes, and measurement systems.</p>
+      <p>It is stable when the measurement rules are invariant across observers and time.</p>
+    </div>
+  </details>
+
+  <details class="bubble">
+    <summary>Lineage failure modes</summary>
+    <div class="bubbleContent">
+      <p>Lineage breaks when measurement drifts, incentives invert, or narratives replace evidence.</p>
+      <p>Signature: observer disagreement, rising exceptions, and unstable classification across contexts.</p>
+    </div>
+  </details>
+
   <p>Lineage signature: bounded variance across contexts with stable observer agreement.</p>
 </div>
 

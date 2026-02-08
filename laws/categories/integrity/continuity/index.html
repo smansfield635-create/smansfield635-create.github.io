@@ -1,36 +1,144 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Continuity · Integrity</title>
-<link rel="stylesheet" href="/assets/ui.css">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Continuity · Integrity · Laws · Geodiametrics</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+html,body{height:100%;margin:0}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:24px 12px;
+}
+.h{
+  text-align:center;
+  margin-bottom:12px;
+}
+.h h1{
+  font-size:48px;
+  font-weight:900;
+  margin:0;
+}
+.h p{
+  opacity:.7;
+  margin-top:8px;
+}
+.stage{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+}
+.platform{
+  position:relative;
+  width:min(420px,88vw);
+  aspect-ratio:1/1;
+}
+.platform::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
+  border-radius:28px;
+  background:rgba(255,255,255,.06);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
+}
+.diamond{
+  position:absolute;
+  width:42%;
+  height:42%;
+  transform:rotate(45deg);
+  border-radius:18px;
+  background:rgba(255,255,255,.16);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:#eaf2f6;
+}
+.diamond span{
+  transform:rotate(-45deg);
+  text-align:center;
+  font-weight:900;
+}
+.top{top:2%;left:29%}
+.right{top:29%;right:2%}
+.bottom{bottom:2%;left:29%}
+.left{top:29%;left:2%}
+.nav{
+  display:flex;
+  gap:12px;
+  margin-top:16px;
+}
+.nav a{
+  padding:14px 22px;
+  border-radius:18px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;
+  color:#eaf2f6;
+  font-weight:900;
+}
+footer{
+  text-align:center;
+  opacity:.55;
+  margin-top:12px;
+  letter-spacing:3px;
+  font-size:12px;
+}
+</style>
 </head>
 
 <body>
-<main class="gPage">
-<header class="gHeader">
-  <h1 class="gTitle">Continuity</h1>
-  <p class="gSub">No convenient breaks.</p>
-</header>
+<div class="page">
 
-<section class="gPanel">
-  <div class="diamond">
-    <span>Continuity<br>No resets</span>
+  <div class="h">
+    <h1>Continuity</h1>
+    <p>Integrity · What persists across time.</p>
   </div>
 
-  <p class="gText">
-    Integrity cannot be paused.
-    Exceptions, loopholes, and resets indicate structural failure.
-  </p>
+  <div class="stage">
+    <div class="platform">
+
+      <a class="diamond top" href="./memory.html">
+        <span>Memory</span>
+      </a>
+
+      <a class="diamond right" href="./transfer.html">
+        <span>Transfer</span>
+      </a>
+
+      <a class="diamond bottom" href="./trajectory.html">
+        <span>Trajectory</span>
+      </a>
+
+      <a class="diamond left" href="./decay.html">
+        <span>Decay</span>
+      </a>
+
+    </div>
+  </div>
 
   <div class="nav">
-    <a class="gBtn" href="/laws/categories/integrity/">Back</a>
-    <a class="gBtn" href="/laws/">Laws</a>
+    <a href="../">Back to Integrity</a>
+    <a href="/home/">Home</a>
   </div>
 
-  <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-</section>
-</main>
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
+</div>
 </body>
 </html>

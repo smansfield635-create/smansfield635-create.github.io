@@ -1,12 +1,130 @@
+<!-- TNT: /laws/categories/integrity/coherence/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Coherence · Geodiametrics</title>
+  <title>Coherence · Branch End · Geodiametrics</title>
 
+  <!-- Keep your two canonical stylesheets -->
   <link rel="stylesheet" href="/assets/ui.css" />
   <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    /* Page-local only: do NOT break global geometry */
+    .gPanel { position: relative; overflow: hidden; }
+
+    /* Diamond platform + 4 diamond buttons */
+    .diamondStage{
+      position: relative;
+      width: min(520px, 88vw);
+      height: min(520px, 88vw);
+      margin: 18px auto 10px;
+    }
+
+    /* Base diamond platform */
+    .dBase{
+      position:absolute; inset: 6%;
+      transform: rotate(45deg);
+      border-radius: 26px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.10),
+        inset 0 -1px 0 rgba(0,0,0,.35),
+        0 18px 60px rgba(0,0,0,.35);
+      filter: saturate(1.05);
+      pointer-events:none;
+    }
+
+    /* Optional subtle inner lip */
+    .dBase::after{
+      content:"";
+      position:absolute; inset: 8%;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+    }
+
+    /* 4 diamond buttons laid on top of the platform */
+    .dBtn{
+      position:absolute;
+      width: 44%;
+      height: 44%;
+      transform: rotate(45deg);
+      border-radius: 22px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.12),
+        inset 0 -1px 0 rgba(0,0,0,.35),
+        0 10px 30px rgba(0,0,0,.25);
+      cursor: pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .dBtn:active{ transform: rotate(45deg) scale(.985); }
+
+    /* Un-rotate text inside the diamond */
+    .dBtn > .dLabel{
+      transform: rotate(-45deg);
+      text-align:center;
+      padding: 10px;
+      line-height: 1.1;
+      user-select:none;
+    }
+    .dLabel strong{ display:block; font-size: 18px; letter-spacing:.2px; }
+    .dLabel small{ display:block; opacity:.78; margin-top: 6px; font-size: 13px; }
+
+    /* Placement */
+    .dTop{ left: 28%; top: 4%; }
+    .dRight{ right: 4%; top: 28%; }
+    .dBottom{ left: 28%; bottom: 4%; }
+    .dLeft{ left: 4%; top: 28%; }
+
+    /* Opaque modal bubble */
+    .modalScrim{
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      z-index: 999;
+    }
+    .modalScrim.show{ display:block; }
+
+    .modalCard{
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%,-50%);
+      width: min(560px, 88vw);
+      background: rgba(15,22,30,.96); /* opaque */
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 22px;
+      box-shadow: 0 22px 70px rgba(0,0,0,.55);
+      padding: 18px 18px 14px;
+      color: rgba(255,255,255,.92);
+    }
+    .modalTitle{
+      font-size: 22px;
+      font-weight: 800;
+      margin: 0 0 10px 0;
+    }
+    .modalBody{
+      margin: 0;
+      line-height: 1.45;
+      font-size: 15px;
+      opacity: .92;
+    }
+    .modalHint{
+      margin-top: 12px;
+      font-size: 12px;
+      opacity: .70;
+      text-align:center;
+    }
+  </style>
 </head>
 
 <body>
@@ -17,37 +135,102 @@
     </header>
 
     <section class="gPanel">
-      <div class="gPanelInner">
 
-        <!-- COHERENCE: 4-diamond navigation (FILES, NOT FOLDERS) -->
-        <div class="gCluster" aria-label="Coherence branch">
-          <a class="gKey gTop" href="./history.html">
-            <span class="gKeyText"><strong>History</strong><small>Where it appears</small></span>
-          </a>
+      <!-- DIAMOND PLATFORM + 4 DIAMOND BUTTONS -->
+      <div class="diamondStage" aria-label="Coherence branch end">
+        <div class="dBase" aria-hidden="true"></div>
 
-          <a class="gKey gRight" href="./known.html">
-            <span class="gKeyText"><strong>Known</strong><small>What it is</small></span>
-          </a>
+        <button class="dBtn dTop" type="button"
+          data-title="History"
+          data-sub="Origins"
+          data-body="Coherence shows up anywhere parts act like one system instead of fighting each other. You can spot it in physics, biology, teams, institutions, and personal decision-making.">
+          <span class="dLabel">
+            <strong>History</strong>
+            <small>Origins</small>
+          </span>
+        </button>
 
-          <a class="gKey gBottom" href="./learned.html">
-            <span class="gKeyText"><strong>Learned</strong><small>What changed</small></span>
-          </a>
+        <button class="dBtn dRight" type="button"
+          data-title="Known"
+          data-sub="What it is"
+          data-body="Coherence is alignment between stated values, internal constraints, and observed outcomes. It is the condition where the system’s pieces reinforce—rather than contradict—each other.">
+          <span class="dLabel">
+            <strong>Known</strong>
+            <small>What it is</small>
+          </span>
+        </button>
 
-          <a class="gKey gLeft" href="./impact.html">
-            <span class="gKeyText"><strong>Impact</strong><small>Why it matters</small></span>
-          </a>
-        </div>
+        <button class="dBtn dBottom" type="button"
+          data-title="Learned"
+          data-sub="What changed"
+          data-body="What changed is that coherence is not a vibe or opinion—it's detectable. Misalignment creates measurable drift: instability, fragmentation, and correction pressure.">
+          <span class="dLabel">
+            <strong>Learned</strong>
+            <small>What changed</small>
+          </span>
+        </button>
 
-        <div class="gActions">
-          <a class="gBtn" href="/laws/categories/integrity/">Back to Integrity</a>
-          <a class="gBtn" href="/laws/categories/">Categories</a>
-          <a class="gBtn" href="/home/">Home</a>
-        </div>
+        <button class="dBtn dLeft" type="button"
+          data-title="Impact"
+          data-sub="Why it matters"
+          data-body="Coherence is the cheapest form of power. It reduces waste, friction, and conflict—while increasing trust, speed, and scale. It is the base requirement for stable growth.">
+          <span class="dLabel">
+            <strong>Impact</strong>
+            <small>Why it matters</small>
+          </span>
+        </button>
+      </div>
 
+      <!-- NAV -->
+      <div class="gActions">
+        <a class="gBtn" href="/laws/categories/integrity/">Integrity</a>
+        <a class="gBtn" href="/laws/categories/">Categories</a>
+        <a class="gBtn" href="/home/">Home</a>
       </div>
 
       <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </section>
   </main>
+
+  <!-- OPAQUE MODAL -->
+  <div class="modalScrim" id="modal" role="dialog" aria-modal="true" aria-label="Coherence detail">
+    <div class="modalCard">
+      <div class="modalTitle" id="mTitle">Title</div>
+      <p class="modalBody" id="mBody">Body</p>
+      <div class="modalHint">Tap anywhere to close</div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const modal = document.getElementById('modal');
+      const mTitle = document.getElementById('mTitle');
+      const mBody  = document.getElementById('mBody');
+
+      function openModal(title, sub, body){
+        mTitle.textContent = sub ? (title + " · " + sub) : title;
+        mBody.textContent = body || "";
+        modal.classList.add('show');
+      }
+      function closeModal(){
+        modal.classList.remove('show');
+      }
+
+      document.querySelectorAll('.dBtn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          openModal(
+            btn.getAttribute('data-title'),
+            btn.getAttribute('data-sub'),
+            btn.getAttribute('data-body')
+          );
+        });
+      });
+
+      modal.addEventListener('click', closeModal);
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 'Escape') closeModal();
+      });
+    })();
+  </script>
 </body>
 </html>

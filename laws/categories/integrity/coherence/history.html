@@ -1,196 +1,81 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Coherence · History · Geodiametrics</title>
-
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-
+<link rel="stylesheet" href="/assets/ui.css"/><link rel="stylesheet" href="/assets/branch.css"/>
 <style>
-html,body{height:100%;margin:0}
-body{
-  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
-  color:#eaf2f6;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-}
+html,body{height:100%;margin:0}body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 .page{min-height:100vh;padding:24px 12px}
-.h{text-align:center}
-.h h1{font-size:48px;font-weight:900;margin:0}
-.h p{opacity:.7;margin-top:8px}
-.panel{
-  max-width:760px;margin:22px auto 0;
-  background:rgba(255,255,255,.06);
-  border-radius:22px;
-  padding:18px 18px 8px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
-}
-.stage{display:flex;justify-content:center;margin:18px 0 10px}
-.platform{
-  position:relative;
-  width:min(520px,96vw);
-  aspect-ratio:1/1;
-}
-.platform::before{
-  content:"";
-  position:absolute;inset:0;
-  transform:rotate(45deg);
-  border-radius:28px;
-  background:rgba(255,255,255,.05);
-  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
-}
-.d{
-  position:absolute;width:42%;height:42%;
-  transform:rotate(45deg);
-  border-radius:18px;
-  background:rgba(255,255,255,.14);
-  display:flex;align-items:center;justify-content:center;
-  text-decoration:none;color:#eaf2f6;
-  cursor:pointer;
-}
-.d span{transform:rotate(-45deg);text-align:center;font-weight:900}
-.top{top:2%;left:29%}
-.right{top:29%;right:2%}
-.bottom{bottom:2%;left:29%}
-.left{top:29%;left:2%}
-
-/* Opaque modal */
-.overlay{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.55);
-  display:none;align-items:center;justify-content:center;
-  padding:18px;
-  z-index:999;
-}
-.overlay.show{display:flex}
-.modal{
-  width:min(720px,96vw);
-  background:rgba(18,34,45,.96);
-  border-radius:22px;
-  padding:18px 18px 14px;
-  box-shadow:0 18px 60px rgba(0,0,0,.5);
-  border:1px solid rgba(255,255,255,.10);
-}
-.modal h2{margin:0 0 8px;font-size:22px}
-.modal p{margin:0 0 10px;line-height:1.45;opacity:.92}
-.modal small{opacity:.65;display:block;margin-top:10px}
-
-.laws{
-  margin-top:12px;
-  background:rgba(255,255,255,.05);
-  border-radius:18px;
-  padding:12px 14px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;
-}
-.laws h3{margin:0 0 8px;font-size:16px;opacity:.9}
-.laws ul{margin:0;padding-left:18px;opacity:.9}
-.laws li{margin:6px 0}
-
-.nav{display:flex;justify-content:center;gap:12px;margin-top:14px;flex-wrap:wrap}
-.nav a{
-  padding:14px 22px;border-radius:18px;
-  background:rgba(255,255,255,.10);
-  text-decoration:none;color:#eaf2f6;font-weight:900;
-}
-footer{text-align:center;opacity:.55;margin-top:16px;letter-spacing:3px;font-size:12px}
-</style>
-</head>
-
-<body>
+.h{text-align:center;margin:6px 0 12px}.h h1{margin:0;font-size:46px;font-weight:900}.h p{margin:8px 0 0;opacity:.72}
+.panel{max-width:860px;margin:0 auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:16px 16px 14px;box-shadow:0 18px 60px rgba(0,0,0,.35)}
+.lens{display:flex;gap:10px;justify-content:center;margin:6px 0 12px}
+.lbtn{flex:1;max-width:240px;padding:12px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:#eaf2f6;font-weight:900;cursor:pointer}
+.lbtn.on{background:rgba(255,255,255,.14)}
+.card{background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:14px;margin-top:12px}
+.card h2{margin:0 0 8px;font-size:18px}
+.p{margin:0 0 10px;line-height:1.55;opacity:.92}
+.laws{margin-top:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:12px 14px}
+.laws h3{margin:0 0 8px;font-size:16px}
+.laws ul{margin:0;padding-left:18px;line-height:1.45;opacity:.92}
+.nav{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.nav a{padding:12px 18px;border-radius:18px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);text-decoration:none;color:#eaf2f6;font-weight:900}
+.f{margin-top:14px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
+.human{display:block}.sci{display:none}
+</style></head><body>
 <div class="page">
-
-  <div class="h">
-    <h1>Coherence</h1>
-    <p>History · Where it appears.</p>
-  </div>
+  <div class="h"><h1>History</h1><p>Coherence · where it appears.</p></div>
 
   <div class="panel">
-
-    <div class="stage">
-      <div class="platform">
-        <!-- Four diamond buttons (modal triggers) -->
-        <a class="d top" href="#" data-k="personal"><span>Personal<br><small>Self</small></span></a>
-        <a class="d right" href="#" data-k="relational"><span>Relational<br><small>Pairs</small></span></a>
-        <a class="d bottom" href="#" data-k="organizational"><span>Organizational<br><small>Teams</small></span></a>
-        <a class="d left" href="#" data-k="societal"><span>Societal<br><small>Systems</small></span></a>
-      </div>
+    <div class="lens">
+      <button class="lbtn on" id="hBtn" type="button">Human lens</button>
+      <button class="lbtn" id="sBtn" type="button">Scientific lens</button>
     </div>
 
-    <!-- Canonical laws (2) for this leaf -->
+    <div class="card human">
+      <h2>Intro</h2>
+      <p class="p">Coherence shows up wherever parts stop fighting and start behaving like one system. In people, it looks like alignment across time: what you say, do, and produce stays consistent.</p>
+      <h2>Four paragraphs</h2>
+      <p class="p">Coherence appears early as small honesty loops: choosing truth when it costs, and closing gaps before they widen.</p>
+      <p class="p">It becomes visible socially when others can predict you without controlling you. Trust forms because the rule-set doesn’t drift.</p>
+      <p class="p">It fails historically through rationalization and exceptions: changing standards to protect identity instead of protecting alignment.</p>
+      <p class="p">It scales through repetition: one aligned person → one aligned relationship → one aligned team → stable institutions.</p>
+      <h2>Close</h2>
+      <p class="p">History matters because coherence is trackable. You can see it accumulate, and you can see it collapse.</p>
+    </div>
+
+    <div class="card sci">
+      <h2>Intro</h2>
+      <p class="p">Coherence appears when constraints dominate noise and a system exhibits consistent behavior across perturbations. It is a stability signature: outputs remain compatible with declared constraints.</p>
+      <h2>Four paragraphs</h2>
+      <p class="p">Early coherence emerges as internal consistency: fewer contradictions, tighter feedback, and reduced variance under repeated inputs.</p>
+      <p class="p">It becomes observable as reproducibility: independent observers converge on the same classification from the same evidence.</p>
+      <p class="p">It collapses through constraint drift: changing rules, hidden substitutions, and unstable feedback amplify divergence.</p>
+      <p class="p">It scales when invariants hold across levels: unit → coupling → network → institution, without violating core constraints.</p>
+      <h2>Close</h2>
+      <p class="p">History matters because coherence leaves artifacts. If coherence is real, it remains detectable across time and conditions.</p>
+    </div>
+
     <div class="laws">
-      <h3>Canonical laws in this leaf</h3>
+      <h3>Canonical laws (Coherence)</h3>
       <ul>
-        <li><strong>Coherence Constraint Law</strong> — external coherence cannot exceed internal self-coherence.</li>
-        <li><strong>Fragmentation Detection Law</strong> — misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</li>
+        <li><b>Coherence Constraint Law</b> — external coherence cannot exceed internal self-coherence.</li>
+        <li><b>Fragmentation Detection Law</b> — misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</li>
       </ul>
     </div>
 
     <div class="nav">
       <a href="./index.html">Back to Coherence</a>
-      <a href="../">Back to Integrity</a>
+      <a href="/laws/categories/integrity/">Integrity</a>
       <a href="/laws/categories/">Categories</a>
       <a href="/home/">Home</a>
     </div>
 
-  </div>
-
-  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
-</div>
-
-<!-- Opaque modal -->
-<div class="overlay" id="overlay" aria-hidden="true">
-  <div class="modal" id="modal" role="dialog" aria-modal="true">
-    <h2 id="mTitle">Title</h2>
-    <p id="mBody">Body</p>
-    <small>Tap anywhere outside this card to close.</small>
+    <div class="f">CANONICAL · STABLE · © GEODIAMETRICS</div>
   </div>
 </div>
 
 <script>
-const copy = {
-  personal: {
-    t: "Personal · Where coherence appears",
-    b: "Coherence shows up when your words, actions, and outcomes line up across time. You can see it in habit loops, self-control under stress, and decisions that remain stable when nobody is watching."
-  },
-  relational: {
-    t: "Relational · Where coherence appears",
-    b: "Coherence shows up when two people share expectations and reality matches them. You can see it in trust formation, clean conflict repair, and consistent follow-through."
-  },
-  organizational: {
-    t: "Organizational · Where coherence appears",
-    b: "Coherence shows up when a team’s stated values match its incentives and execution. You can see it in aligned roles, predictable accountability, and low internal friction."
-  },
-  societal: {
-    t: "Societal · Where coherence appears",
-    b: "Coherence shows up when institutions reward what they claim to value. You can see it in stable norms, enforcement consistency, and systems that don’t collapse under load."
-  }
-};
-
-const overlay = document.getElementById("overlay");
-const mTitle = document.getElementById("mTitle");
-const mBody  = document.getElementById("mBody");
-
-document.querySelectorAll(".d").forEach(a=>{
-  a.addEventListener("click",(e)=>{
-    e.preventDefault();
-    const k = a.getAttribute("data-k");
-    mTitle.textContent = copy[k].t;
-    mBody.textContent  = copy[k].b;
-    overlay.classList.add("show");
-    overlay.setAttribute("aria-hidden","false");
-  });
-});
-
-overlay.addEventListener("click",(e)=>{
-  // close if tap outside modal card
-  if(e.target === overlay){
-    overlay.classList.remove("show");
-    overlay.setAttribute("aria-hidden","true");
-  }
-});
+(()=>{const h=document.querySelector('.human'),s=document.querySelector('.sci'),hb=document.getElementById('hBtn'),sb=document.getElementById('sBtn');
+const set=(x)=>{const isH=x==='h';h.style.display=isH?'block':'none';s.style.display=isH?'none':'block';hb.classList.toggle('on',isH);sb.classList.toggle('on',!isH);};
+hb.onclick=()=>set('h');sb.onclick=()=>set('s');})();
 </script>
-
-</body>
-</html>
+</body></html>

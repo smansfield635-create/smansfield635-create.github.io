@@ -14,17 +14,29 @@ body{
   background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
   color:#eaf2f6;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  overflow-x:hidden; /* hard-stop horizontal drift */
 }
-.page{min-height:100vh;padding:24px 12px}
+.page{
+  min-height:100vh;
+  padding:22px 12px 18px;
+  overflow-x:hidden; /* hard-stop horizontal drift */
+}
 .h{text-align:center}
 .h h1{font-size:48px;font-weight:900;margin:0}
 .h p{opacity:.7;margin-top:8px}
 
-.stage{display:flex;justify-content:center;margin:28px 0}
+.stage{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:22px 0 18px;
+}
 .platform{
   position:relative;
-  width:min(520px,96vw);
+  width:min(460px,92vw); /* smaller so it never clips */
   aspect-ratio:1/1;
+  margin:0 auto;
 }
 .platform::before{
   content:"";
@@ -53,6 +65,7 @@ body{
   transform:rotate(-45deg);
   text-align:center;
   font-weight:900;
+  letter-spacing:.2px;
 }
 
 .top{top:2%;left:29%}
@@ -60,7 +73,15 @@ body{
 .bottom{bottom:2%;left:29%}
 .left{top:29%;left:2%}
 
-.nav{display:flex;justify-content:center;gap:12px}
+.nav{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;            /* prevent off-screen buttons */
+  padding:0 6px;
+  box-sizing:border-box;
+}
 .nav a{
   padding:14px 22px;
   border-radius:18px;
@@ -68,8 +89,16 @@ body{
   text-decoration:none;
   color:#eaf2f6;
   font-weight:900;
+  white-space:nowrap;
 }
-footer{text-align:center;opacity:.55;margin-top:18px;letter-spacing:3px;font-size:12px}
+
+footer{
+  text-align:center;
+  opacity:.55;
+  margin-top:16px;
+  letter-spacing:3px;
+  font-size:12px;
+}
 </style>
 </head>
 
@@ -84,21 +113,10 @@ footer{text-align:center;opacity:.55;margin-top:18px;letter-spacing:3px;font-siz
   <div class="stage">
     <div class="platform">
 
-      <a class="diamond top" href="./origins.html">
-        <span>Origins</span>
-      </a>
-
-      <a class="diamond right" href="./evolution.html">
-        <span>Evolution</span>
-      </a>
-
-      <a class="diamond bottom" href="./milestones.html">
-        <span>Milestones</span>
-      </a>
-
-      <a class="diamond left" href="./lineage.html">
-        <span>Lineage</span>
-      </a>
+      <a class="diamond top" href="./origins.html"><span>Origins</span></a>
+      <a class="diamond right" href="./evolution.html"><span>Evolution</span></a>
+      <a class="diamond bottom" href="./milestones.html"><span>Milestones</span></a>
+      <a class="diamond left" href="./lineage.html"><span>Lineage</span></a>
 
     </div>
   </div>
@@ -114,3 +132,4 @@ footer{text-align:center;opacity:.55;margin-top:18px;letter-spacing:3px;font-siz
 </div>
 </body>
 </html>
+```0

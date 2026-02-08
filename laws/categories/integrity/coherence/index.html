@@ -1,36 +1,85 @@
+<!-- TNT: /laws/categories/integrity/coherence/index.html  (FULL REPLACEMENT) -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Coherence · Integrity</title>
-<link rel="stylesheet" href="/assets/ui.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Coherence · Integrity · Geodiametrics</title>
+
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    /* Page-local: simple readable list blocks (no new geometry) */
+    .block{
+      margin-top:18px;
+      text-align:left;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      padding:14px 14px 12px;
+    }
+    .block h2{
+      margin:0 0 10px;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    .block ul{margin:0;padding-left:18px;color:rgba(233,240,246,.82);line-height:1.45}
+    .block li{margin:8px 0}
+    .muted{color:rgba(233,240,246,.62)}
+  </style>
 </head>
 
 <body>
-<main class="gPage">
-<header class="gHeader">
-  <h1 class="gTitle">Coherence</h1>
-  <p class="gSub">No internal contradiction.</p>
-</header>
+  <main class="gPage">
+    <div>
+      <header class="gHeader">
+        <h1 class="gTitle">Coherence</h1>
+        <p class="gSub">No internal contradiction.</p>
+      </header>
 
-<section class="gPanel">
-  <div class="diamond">
-    <span>Coherence<br>One structure</span>
-  </div>
+      <section class="gPanel" aria-label="Coherence hub">
 
-  <p class="gText">
-    Integrity collapses when beliefs, words, and actions diverge.
-    Coherence is structural alignment across all layers.
-  </p>
+        <!-- FINAL DIAMOND (the “brass tacks” diamond) -->
+        <div class="gDiamondStage" role="navigation" aria-label="Coherence deep-dive diamond">
+          <div class="gDiamondPlatform" aria-hidden="true"></div>
 
-  <div class="nav">
-    <a class="gBtn" href="/laws/categories/integrity/">Back</a>
-    <a class="gBtn" href="/laws/">Laws</a>
-  </div>
+          <a class="gDiamondBtn gTop" href="/laws/categories/integrity/coherence/history/" aria-label="History">
+            <div class="gDiamondText"><strong>History</strong><span>Where it appears</span></div>
+          </a>
 
-  <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-</section>
-</main>
+          <a class="gDiamondBtn gRight" href="/laws/categories/integrity/coherence/known/" aria-label="What we know">
+            <div class="gDiamondText"><strong>Known</strong><span>What it is</span></div>
+          </a>
+
+          <a class="gDiamondBtn gBottom" href="/laws/categories/integrity/coherence/learned/" aria-label="What we learned">
+            <div class="gDiamondText"><strong>Learned</strong><span>What changed</span></div>
+          </a>
+
+          <a class="gDiamondBtn gLeft" href="/laws/categories/integrity/coherence/impact/" aria-label="Impact">
+            <div class="gDiamondText"><strong>Impact</strong><span>Why it matters</span></div>
+          </a>
+        </div>
+
+        <!-- CANONICAL LAWS (Coherence) -->
+        <div class="block" aria-label="Canonical laws for coherence">
+          <h2>Canonical laws in this branch</h2>
+          <ul>
+            <li><strong>Coherence Constraint Law</strong> <span class="muted">— external coherence cannot exceed internal self-coherence.</span></li>
+            <li><strong>Fragmentation Detection Law</strong> <span class="muted">— misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</span></li>
+          </ul>
+        </div>
+
+        <!-- NAV -->
+        <div class="gActions" aria-label="Navigation controls">
+          <a class="gBtn" href="/laws/categories/integrity/">Integrity</a>
+          <a class="gBtn" href="/laws/categories/">Categories</a>
+          <a class="gBtn" href="/home/">Home</a>
+        </div>
+
+        <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      </section>
+    </div>
+  </main>
 </body>
 </html>

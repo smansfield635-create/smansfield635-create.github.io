@@ -30,4 +30,95 @@ h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
 .mode{display:none}
 body[data-lens="human"] .mode-human{display:block}
 body[data-lens="scientific"] .mode-scientific{display:block}
-h2{margin:34px 0 10px
+h2{margin:34px 0 10px;font-size:22px;font-weight:900;letter-spacing:.02em}
+p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+ul{margin:14px 0 0;padding-left:20px}
+li{margin:12px 0;font-size:18px;line-height:1.55;opacity:.92}
+.laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
+.laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
+.nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:44px}
+.nav a{
+  padding:12px 18px;border-radius:16px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;color:#eaf2f6;font-weight:900
+}
+footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
+</style>
+</head>
+
+<body data-lens="human">
+<div class="page">
+
+<h1>Known</h1>
+<p class="sub">Coherence · What is established and inspectable.</p>
+
+<div class="lensRow">
+  <button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button>
+  <button class="lensBtn" id="btnSci" aria-pressed="false" type="button">Scientific lens</button>
+</div>
+
+<div class="mode mode-human">
+  <p>Known is what you no longer debate. It is what you can show, repeat, and defend without becoming reactive.</p>
+  <p>Known coherence is visible in daily behavior: your standards do not change when the situation changes.</p>
+  <p>Known is not your intentions. Known is your track record under normal conditions.</p>
+
+  <h2>Known signals</h2>
+  <ul>
+    <li>Same rules at home and in public.</li>
+    <li>Less explaining, more consistency.</li>
+    <li>Faster repair when mistakes happen.</li>
+    <li>Lower collateral damage to others.</li>
+  </ul>
+
+  <h2>Known failure modes</h2>
+  <ul>
+    <li>“I’m different with different people” becomes the default excuse.</li>
+    <li>Standards collapse under comfort, profit, or approval.</li>
+    <li>Words outrun execution.</li>
+  </ul>
+</div>
+
+<div class="mode mode-scientific">
+  <p>Known coherence is the portion of the system state that can be classified invariantly by independent observers from shared evidence.</p>
+  <p>Known is not a claim. Known is a stable mapping from inputs to outputs under a defined constraint set.</p>
+
+  <h2>Known signals</h2>
+  <ul>
+    <li>Bounded variance across contexts with stable classification.</li>
+    <li>Short correction latency after deviation.</li>
+    <li>Low error amplification across layers.</li>
+    <li>Repeatable outcomes under similar conditions.</li>
+  </ul>
+
+  <h2>Known failure modes</h2>
+  <ul>
+    <li>Observer disagreement due to missing or shifting measurement rules.</li>
+    <li>Hidden substitutions (incentives, definitions, policy drift).</li>
+    <li>Constraint violations justified post-hoc by narrative.</li>
+  </ul>
+</div>
+
+<div class="laws">
+  <h2>CANONICAL LAWS (COHERENCE)</h2>
+  <ul>
+    <li><strong>Coherence Constraint Law</strong> — external coherence cannot exceed internal self-coherence.</li>
+    <li><strong>Fragmentation Detection Law</strong> — misalignment between stated values, executed actions, and produced outcomes indicates loss of coherence.</li>
+  </ul>
+</div>
+
+<div class="nav">
+  <a href="./index.html">Back to Coherence</a>
+  <a href="/home/">Home</a>
+</div>
+
+<footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+</div>
+
+<script>
+(()=>{const b=document.body,h=document.getElementById("btnHuman"),s=document.getElementById("btnSci");
+function set(v){b.dataset.lens=v;h.setAttribute("aria-pressed",String(v==="human"));s.setAttribute("aria-pressed",String(v==="scientific"))}
+h.onclick=()=>set("human");s.onclick=()=>set("scientific")})();
+</script>
+
+</body>
+</html>

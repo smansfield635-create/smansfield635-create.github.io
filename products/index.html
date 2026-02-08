@@ -15,60 +15,50 @@ body{
   color:#eaf2f6;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
-.page{min-height:100vh;padding:24px 12px}
-.h{text-align:center}
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 12px}
+.h{text-align:center;margin-bottom:12px}
 .h h1{font-size:48px;font-weight:900;margin:0}
 .h p{opacity:.7;margin-top:8px}
 
-.stage{display:flex;justify-content:center;margin:24px 0}
-.platform{
-  position:relative;
-  width:min(520px,96vw);
-  aspect-ratio:1/1;
-}
+.stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
+.platform{position:relative;width:min(420px,88vw);aspect-ratio:1/1}
 .platform::before{
   content:"";
-  position:absolute;
-  inset:0;
+  position:absolute;inset:0;
   transform:rotate(45deg);
   border-radius:28px;
   background:rgba(255,255,255,.06);
   box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
 }
-
 .diamond{
   position:absolute;
-  width:42%;
-  height:42%;
+  width:42%;height:42%;
   transform:rotate(45deg);
   border-radius:18px;
   background:rgba(255,255,255,.16);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  color:#eaf2f6;
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;color:#eaf2f6;
 }
 .diamond span{
   transform:rotate(-45deg);
   text-align:center;
   font-weight:900;
+  line-height:1.15;
 }
+.diamond small{display:block;opacity:.7;font-weight:700;font-size:12px;margin-top:6px}
+
 .top{top:2%;left:29%}
 .right{top:29%;right:2%}
 .bottom{bottom:2%;left:29%}
 .left{top:29%;left:2%}
 
-.nav{display:flex;justify-content:center;gap:12px}
+.nav{display:flex;justify-content:center;gap:12px;margin-top:16px}
 .nav a{
-  padding:14px 22px;
-  border-radius:18px;
+  padding:14px 22px;border-radius:18px;
   background:rgba(255,255,255,.10);
-  text-decoration:none;
-  color:#eaf2f6;
-  font-weight:900;
+  text-decoration:none;color:#eaf2f6;font-weight:900;
 }
-footer{text-align:center;opacity:.55;margin-top:16px;letter-spacing:3px;font-size:12px}
+footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
 </style>
 </head>
 
@@ -84,19 +74,19 @@ footer{text-align:center;opacity:.55;margin-top:16px;letter-spacing:3px;font-siz
     <div class="platform">
 
       <a class="diamond top" href="./plasma/">
-        <span>PLASMA<br><small>Frontier execution</small></span>
+        <span>PLASMA<small>Frontier execution</small></span>
       </a>
 
       <a class="diamond right" href="./eai/">
-        <span>EAI<br><small>Admissibility instrument</small></span>
+        <span>EAI<small>Admissibility instrument</small></span>
       </a>
 
       <a class="diamond bottom" href="./platform/">
-        <span>PLATFORM<br><small>Unified environment</small></span>
+        <span>PLATFORM<small>Unified environment</small></span>
       </a>
 
       <a class="diamond left" href="./cvd/">
-        <span>CVD<br><small>Deployment layer</small></span>
+        <span>CVD<small>Deployment layer</small></span>
       </a>
 
     </div>
@@ -104,7 +94,7 @@ footer{text-align:center;opacity:.55;margin-top:16px;letter-spacing:3px;font-siz
 
   <div class="nav">
     <a href="/home/">Back</a>
-    <a href="/">Exit</a>
+    <a href="/door/">Exit</a>
   </div>
 
   <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>

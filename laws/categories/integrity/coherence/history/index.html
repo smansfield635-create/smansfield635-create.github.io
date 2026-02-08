@@ -3,23 +3,71 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>History · Coherence · Geodiametrics</title>
+<title>History · Coherence · Integrity · Laws · Geodiametrics</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
 <style>
 html,body{height:100%;margin:0}
-body{background:radial-gradient(1200px 800px at 50% 18%,#152532,#0a141b);display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-.platform{position:relative;width:min(520px,96vw);aspect-ratio:1/1}
-.platform::before{content:"";position:absolute;inset:0;transform:rotate(45deg);background:linear-gradient(135deg,#1a1f2a,#0e1320);border:1px solid rgba(120,160,255,.35);border-radius:12px}
-.d{position:absolute;width:42%;aspect-ratio:1/1;transform:rotate(45deg);background:linear-gradient(135deg,#1a1f2a,#0e1320);border:1px solid rgba(120,160,255,.35);display:flex;align-items:center;justify-content:center;color:#eaf2f6;text-decoration:none}
-.d span{transform:rotate(-45deg);letter-spacing:.14em;font-weight:900}
-.t{top:2%;left:29%}.r{top:29%;right:2%}.b{bottom:2%;left:29%}.l{top:29%;left:2%}
+body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 12px}
+.h{text-align:center;margin-bottom:12px}
+.h h1{font-size:48px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px}
+.stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
+.platform{position:relative;width:min(420px,88vw);aspect-ratio:1/1}
+.platform::before{content:"";position:absolute;inset:0;transform:rotate(45deg);border-radius:28px;background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}
+.diamond{position:absolute;width:42%;height:42%;transform:rotate(45deg);border-radius:18px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#eaf2f6}
+.diamond span{transform:rotate(-45deg);text-align:center;font-weight:900}
+.top{top:2%;left:29%}
+.right{top:29%;right:2%}
+.bottom{bottom:2%;left:29%}
+.left{top:29%;left:2%}
+.nav{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+.nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
+footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
 </style>
 </head>
+
 <body>
-<div class="platform">
-<a class="d t" href="./origins.html"><span>ORIGINS</span></a>
-<a class="d r" href="./lineage.html"><span>LINEAGE</span></a>
-<a class="d b" href="./evolution.html"><span>EVOLUTION</span></a>
-<a class="d l" href="./milestones.html"><span>MILESTONES</span></a>
+<div class="page">
+
+  <div class="h">
+    <h1>History</h1>
+    <p>Coherence · End of branch.</p>
+  </div>
+
+  <div class="stage">
+    <div class="platform">
+
+      <a class="diamond top" href="./origins.html">
+        <span>Origins</span>
+      </a>
+
+      <a class="diamond right" href="./lineage.html">
+        <span>Lineage</span>
+      </a>
+
+      <a class="diamond bottom" href="./evolution.html">
+        <span>Evolution</span>
+      </a>
+
+      <a class="diamond left" href="./milestones.html">
+        <span>Milestones</span>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="nav">
+    <a href="../">Back to Coherence</a>
+    <a href="/laws/categories/">Categories</a>
+    <a href="/home/">Home</a>
+  </div>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
 </div>
 </body>
 </html>

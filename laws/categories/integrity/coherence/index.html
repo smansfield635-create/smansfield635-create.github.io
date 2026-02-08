@@ -1,180 +1,33 @@
-<!-- TNT: /laws/categories/integrity/coherence/index.html -->
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Coherence · Geodiametrics</title>
-
-  <!-- keep your canonical styles -->
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
-
-  <style>
-    /* HARD FIX: kill sideways layouts + any overflow-based “right rail” */
-    html,body{height:100%;margin:0}
-    body{overflow-x:hidden}
-
-    /* Center the whole page content */
-    .gPage{min-height:100vh;display:flex;flex-direction:column;align-items:center}
-    .gHeader{width:100%;max-width:760px}
-    .gPanel{
-      width:min(760px,92vw);
-      margin:0 auto;
-      overflow:hidden;              /* prevents any “panel hanging off the right” */
-      position:relative;
-    }
-
-    /* Diamond stage (centered) */
-    .diamondStage{
-      position:relative;
-      width:min(560px,88vw);
-      height:min(560px,88vw);
-      margin:18px auto 10px;
-    }
-    .dBase{
-      position:absolute; inset:6%;
-      transform:rotate(45deg);
-      border-radius:26px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.10),
-        inset 0 -1px 0 rgba(0,0,0,.35),
-        0 18px 60px rgba(0,0,0,.35);
-      pointer-events:none;
-    }
-    .dBase::after{
-      content:"";
-      position:absolute; inset:8%;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.03);
-    }
-
-    /* 4 diamond buttons */
-    .dBtn{
-      position:absolute;
-      width:44%;
-      height:44%;
-      transform:rotate(45deg);
-      border-radius:22px;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.14);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.12),
-        inset 0 -1px 0 rgba(0,0,0,.35),
-        0 10px 30px rgba(0,0,0,.25);
-      display:flex;align-items:center;justify-content:center;
-      cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .dBtn:active{transform:rotate(45deg) scale(.985)}
-    .dBtn .dLabel{transform:rotate(-45deg);text-align:center;padding:10px;line-height:1.1;user-select:none}
-    .dLabel strong{display:block;font-size:18px;letter-spacing:.2px}
-    .dLabel small{display:block;opacity:.78;margin-top:6px;font-size:13px}
-
-    .dTop{left:28%;top:4%}
-    .dRight{right:4%;top:28%}
-    .dBottom{left:28%;bottom:4%}
-    .dLeft{left:4%;top:28%}
-
-    /* Opaque modal */
-    .modalScrim{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:999}
-    .modalScrim.show{display:block}
-    .modalCard{
-      position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-      width:min(560px,88vw);
-      background:rgba(15,22,30,.96);
-      border:1px solid rgba(255,255,255,.16);
-      border-radius:22px;
-      box-shadow:0 22px 70px rgba(0,0,0,.55);
-      padding:18px 18px 14px;
-      color:rgba(255,255,255,.92);
-    }
-    .modalTitle{font-size:22px;font-weight:800;margin:0 0 10px}
-    .modalBody{margin:0;line-height:1.45;font-size:15px;opacity:.92}
-    .modalHint{margin-top:12px;font-size:12px;opacity:.70;text-align:center}
-  </style>
-</head>
-
-<body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Coherence</h1>
-      <p class="gSub">No internal contradiction.</p>
-    </header>
-
-    <section class="gPanel">
-      <div class="diamondStage" aria-label="Coherence branch end">
-        <div class="dBase" aria-hidden="true"></div>
-
-        <button class="dBtn dTop" type="button"
-          data-title="History" data-sub="Origins"
-          data-body="Coherence shows up anywhere parts act like one system instead of fighting each other. You can spot it in physics, biology, teams, institutions, and personal decision-making.">
-          <span class="dLabel"><strong>History</strong><small>Origins</small></span>
-        </button>
-
-        <button class="dBtn dRight" type="button"
-          data-title="Known" data-sub="What it is"
-          data-body="Coherence is alignment between stated values, internal constraints, and observed outcomes. It is the condition where the system’s pieces reinforce—rather than contradict—each other.">
-          <span class="dLabel"><strong>Known</strong><small>What it is</small></span>
-        </button>
-
-        <button class="dBtn dBottom" type="button"
-          data-title="Learned" data-sub="What changed"
-          data-body="Coherence is not a vibe. Misalignment creates drift: instability, fragmentation, and correction pressure. Coherence is detectable by consistent outputs under changing conditions.">
-          <span class="dLabel"><strong>Learned</strong><small>What changed</small></span>
-        </button>
-
-        <button class="dBtn dLeft" type="button"
-          data-title="Impact" data-sub="Why it matters"
-          data-body="Coherence reduces waste, friction, and conflict—while increasing trust, speed, and scale. It is a base requirement for stable growth.">
-          <span class="dLabel"><strong>Impact</strong><small>Why it matters</small></span>
-        </button>
-      </div>
-
-      <div class="gActions">
-        <a class="gBtn" href="/laws/categories/integrity/">Integrity</a>
-        <a class="gBtn" href="/laws/categories/">Categories</a>
-        <a class="gBtn" href="/home/">Home</a>
-      </div>
-
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
-  </main>
-
-  <div class="modalScrim" id="modal" role="dialog" aria-modal="true" aria-label="Coherence detail">
-    <div class="modalCard">
-      <div class="modalTitle" id="mTitle">Title</div>
-      <p class="modalBody" id="mBody">Body</p>
-      <div class="modalHint">Tap anywhere to close</div>
-    </div>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Coherence · Integrity · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css"/><link rel="stylesheet" href="/assets/branch.css"/>
+<style>
+html,body{height:100%;margin:0}body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow-x:hidden}
+.page{width:100vw;min-height:100vh;padding:22px 12px 26px}
+.h{text-align:center;margin:6px 0 10px}.h h1{margin:0;font-size:48px;font-weight:900;letter-spacing:.3px}.h p{margin:8px 0 0;opacity:.72;font-size:18px}
+.stage{width:100%;display:flex;justify-content:center;align-items:center;padding:10px 0 16px}
+.pw{position:relative;width:min(520px,96vw);aspect-ratio:1/1}
+.pw:before{content:"";position:absolute;inset:0;transform:rotate(45deg);border-radius:26px;background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.10) inset,0 22px 90px rgba(0,0,0,.35);pointer-events:none}
+.db{position:absolute;width:42%;height:42%;transform:rotate(45deg);border-radius:18px;background:rgba(255,255,255,.14);box-shadow:0 0 0 1px rgba(255,255,255,.16) inset,0 16px 55px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#eaf2f6;-webkit-tap-highlight-color:transparent}
+.db:active{transform:rotate(45deg) scale(.98);background:rgba(255,255,255,.20)}
+.t{transform:rotate(-45deg);text-align:center;line-height:1.05;padding:0 10px}
+.t strong{display:block;font-size:22px;font-weight:900}.t span{display:block;margin-top:6px;font-size:14px;opacity:.72;font-weight:700}
+.top{left:29%;top:2%}.right{right:2%;top:29%}.bottom{left:29%;bottom:2%}.left{left:2%;top:29%}
+.nav{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+.nav a{min-width:140px;height:52px;border-radius:18px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);color:#eaf2f6;text-decoration:none;font-weight:900;display:flex;align-items:center;justify-content:center}
+.f{margin-top:14px;text-align:center;font-size:12px;opacity:.55;letter-spacing:3px}
+</style></head><body>
+<div class="page">
+  <div class="h"><h1>Coherence</h1><p>Integrity · No internal contradiction.</p></div>
+  <div class="stage"><div class="pw" role="navigation" aria-label="Coherence branches">
+    <a class="db top" href="./history/"><div class="t"><strong>History</strong><span>Origins</span></div></a>
+    <a class="db right" href="./known/"><div class="t"><strong>Known</strong><span>What it is</span></div></a>
+    <a class="db bottom" href="./learned/"><div class="t"><strong>Learned</strong><span>What changed</span></div></a>
+    <a class="db left" href="./impact/"><div class="t"><strong>Impact</strong><span>Why it matters</span></div></a>
+  </div></div>
+  <div class="nav">
+    <a href="../">Back to Integrity</a><a href="/laws/categories/">Categories</a><a href="/home/">Home</a>
   </div>
-
-  <script>
-    (function(){
-      const modal = document.getElementById('modal');
-      const mTitle = document.getElementById('mTitle');
-      const mBody  = document.getElementById('mBody');
-
-      function openModal(title, sub, body){
-        mTitle.textContent = sub ? (title + " · " + sub) : title;
-        mBody.textContent = body || "";
-        modal.classList.add('show');
-      }
-      function closeModal(){ modal.classList.remove('show'); }
-
-      document.querySelectorAll('.dBtn').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-          openModal(btn.dataset.title, btn.dataset.sub, btn.dataset.body);
-        });
-      });
-
-      modal.addEventListener('click', closeModal);
-      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
-    })();
-  </script>
-</body>
-</html>
-```0
+  <div class="f">CANONICAL · STABLE · © GEODIAMETRICS</div>
+</div></body></html>

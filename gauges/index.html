@@ -1,4 +1,6 @@
-<!-- TNT: /gauges/index.html (FULL REPLACEMENT — DIAMOND NAV, CANONICAL UI) -->
+<!-- =========================
+TNT — FILE: /gauges/index.html
+========================= -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,39 +13,41 @@
 </head>
 <body>
   <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Gauges</h1>
-      <p class="gSub">Live instrument · Raw telemetry · Read-only.</p>
-    </header>
+    <div>
+      <header class="gHeader">
+        <h1 class="gTitle">Gauges</h1>
+        <p class="gSub">Diagnostics · Readouts · Status checks.</p>
+      </header>
 
-    <section class="gPanel" aria-label="Gauge routes">
-      <div class="gCluster" role="navigation" aria-label="Gauge routes">
+      <section class="gPanel" aria-label="Gauges routes">
+        <div class="gDiamondStage" role="navigation" aria-label="Gauge routes">
+          <div class="gDiamondPlatform" aria-hidden="true"></div>
 
-        <a class="gKey gTop" href="/gauges/instrument/" aria-label="Instrument">
-          <span class="gKeyText"><strong>INSTRUMENT</strong>States</span>
-        </a>
+          <a class="gDiamondBtn gTop" href="/gauges/overview/" aria-label="Overview">
+            <div class="gDiamondText"><strong>Overview</strong><span>Index</span></div>
+          </a>
 
-        <a class="gKey gRight" href="/gauges/telemetry/" aria-label="Telemetry">
-          <span class="gKeyText"><strong>TELEMETRY</strong>Evidence</span>
-        </a>
+          <a class="gDiamondBtn gRight" href="/gauges/health/" aria-label="Health">
+            <div class="gDiamondText"><strong>Health</strong><span>System</span></div>
+          </a>
 
-        <a class="gKey gBottom" href="/gauges/instrument/#coherence" aria-label="Coherence">
-          <span class="gKeyText"><strong>COHERENCE</strong>Inspect</span>
-        </a>
+          <a class="gDiamondBtn gBottom" href="/gauges/signals/" aria-label="Signals">
+            <div class="gDiamondText"><strong>Signals</strong><span>Telemetry</span></div>
+          </a>
 
-        <a class="gKey gLeft" href="/gauges/instrument/#admissibility" aria-label="Admissibility">
-          <span class="gKeyText"><strong>ADMISSIBLE</strong>Inspect</span>
-        </a>
+          <a class="gDiamondBtn gLeft" href="/diagnostic/" aria-label="Diagnostic">
+            <div class="gDiamondText"><strong>Diagnostic</strong><span>Run</span></div>
+          </a>
+        </div>
 
-      </div>
+        <div class="gActions" aria-label="Navigation">
+          <a class="gBtn" href="/home/">Home</a>
+          <a class="gBtn" href="/home/">Back</a>
+        </div>
 
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/home/">Back</a>
-        <a class="gBtn" href="/landing/exit/">Exit</a>
-      </div>
-
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
+        <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      </section>
+    </div>
   </main>
 </body>
 </html>

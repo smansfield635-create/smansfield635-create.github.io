@@ -13,82 +13,77 @@ body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   overflow-x:hidden;
 }
-.page{
-  max-width:980px;
-  margin:0 auto;
-  padding:44px 18px 72px;
-}
-h1{
-  margin:0 0 18px;
-  font-size:48px;
-  font-weight:900;
-  letter-spacing:.02em;
-}
-.sub{
-  margin:0 0 26px;
-  opacity:.72;
-  font-size:18px;
-}
-p{
-  margin:18px 0;
-  font-size:20px;
-  line-height:1.7;
-  opacity:.94;
-}
-.laws{
-  margin-top:56px;
-  padding-top:26px;
-  border-top:1px solid rgba(255,255,255,.18);
-}
-.laws h2{
-  margin:0 0 14px;
-  font-size:18px;
-  font-weight:900;
-  letter-spacing:.16em;
-  opacity:.9;
-}
-.laws ul{margin:0;padding-left:20px}
-.laws li{
-  margin:12px 0;
-  font-size:18px;
-  line-height:1.55;
-  opacity:.92;
-}
-.nav{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-top:44px;
-}
-.nav a{
-  padding:12px 18px;
-  border-radius:16px;
+.page{max-width:980px;margin:0 auto;padding:44px 18px 72px}
+h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}
+.sub{margin:0 0 26px;opacity:.72;font-size:18px}
+p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+
+.lensRow{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 30px}
+.lensBtn{
+  padding:12px 18px;border-radius:16px;
   background:rgba(255,255,255,.10);
-  text-decoration:none;
-  color:#eaf2f6;
-  font-weight:900;
+  color:#eaf2f6;font-weight:900;
+  border:1px solid rgba(255,255,255,.10);
 }
-footer{
-  margin-top:44px;
-  text-align:center;
-  opacity:.55;
-  letter-spacing:3px;
-  font-size:12px;
+.lensBtn[aria-pressed="true"]{
+  background:rgba(80,170,255,.18);
+  box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16);
 }
+.mode{display:none}
+body[data-lens="human"] .mode-human{display:block}
+body[data-lens="scientific"] .mode-scientific{display:block}
+
+.laws{margin-top:56px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
+.laws h2{margin:0 0 14px;font-size:18px;font-weight:900;letter-spacing:.16em;opacity:.9}
+.laws ul{margin:0;padding-left:20px}
+.laws li{margin:12px 0;font-size:18px;line-height:1.55;opacity:.92}
+
+.nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:44px}
+.nav a{
+  padding:12px 18px;border-radius:16px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;color:#eaf2f6;font-weight:900
+}
+footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
 </style>
 </head>
 
-<body>
+<body data-lens="human">
 <div class="page">
 
 <h1>Milestones</h1>
 <p class="sub">History · Observable thresholds of coherence.</p>
 
-<p>Milestones are behavioral locks, not emotional moments.</p>
-<p>A milestone occurs when fewer exceptions are required to maintain trust.</p>
-<p>A milestone occurs when repair happens quickly and publicly, without blame-shifting.</p>
-<p>A milestone occurs when standards remain stable under profit pressure and social pressure.</p>
-<p>Milestones are visible because they reduce negotiation, explanation, and corrective overhead.</p>
+<div class="lensRow">
+  <button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button>
+  <button class="lensBtn" id="btnSci" aria-pressed="false" type="button">Scientific lens</button>
+</div>
+
+<div class="mode mode-human">
+  <p>Milestones are not emotional moments. Milestones are behavioral locks—when a new standard becomes real because it becomes repeatable.</p>
+
+  <p>Roger Bannister did not just run a fast mile. He made a boundary psychologically collapsible. Once the “four-minute mile” broke, others followed—not because physics changed, but because a coherent proof-of-possibility existed.</p>
+
+  <p>The Wright brothers did not just fly. They made controlled flight coherent: repeatable lift, repeatable control, repeatable landing. They turned an impossible story into an inspectable method.</p>
+
+  <p>Edison and Tesla are a paired lesson. Edison shows the milestone of execution at scale: turning messy experiments into durable systems people can use. Tesla shows the milestone of deep structure: seeing the architecture underneath the noise. Different styles—same requirement: coherence that survives pressure.</p>
+
+  <p>Milestone signature: the standard holds when the crowd shows up. It holds when money shows up. It holds when fear shows up. It holds when ego shows up.</p>
+
+  <p>In plain terms: a milestone is when you stop needing exceptions to stay aligned. You become reliable under stress.</p>
+</div>
+
+<div class="mode mode-scientific">
+  <p>Milestones are phase transitions in coherence: a qualitative shift where a constraint set becomes stable under repeated trials and independent observation.</p>
+
+  <p>Bannister is a boundary-collapse event: once a feasible trajectory is demonstrated, adoption accelerates because the hypothesis space shrinks and the cost of belief drops. The environment didn’t change; the evidence threshold did.</p>
+
+  <p>The Wrights demonstrate controllability: a milestone occurs when a system can be driven to a target region repeatedly, not merely reached once. Repeatability converts an anecdote into a regime.</p>
+
+  <p>Edison illustrates engineering closure: the milestone is not “a bright idea” but a stable pipeline from trial to product to reliability. Tesla illustrates structural compression: a milestone is reached when the governing structure is identified and predictions become simpler.</p>
+
+  <p>Milestone signature: bounded variance under stress, faster correction after deviation, and stable observer classification across contexts.</p>
+</div>
 
 <div class="laws">
   <h2>CANONICAL LAWS (COHERENCE)</h2>
@@ -105,5 +100,12 @@ footer{
 
 <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 </div>
+
+<script>
+(()=>{const b=document.body,h=document.getElementById("btnHuman"),s=document.getElementById("btnSci");
+function set(v){b.dataset.lens=v;h.setAttribute("aria-pressed",String(v==="human"));s.setAttribute("aria-pressed",String(v==="scientific"))}
+h.onclick=()=>set("human");s.onclick=()=>set("scientific")})();
+</script>
+
 </body>
 </html>

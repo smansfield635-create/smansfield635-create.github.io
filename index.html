@@ -1,24 +1,120 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Geodiametrics · Under Construction</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+html,body{height:100%;margin:0}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:24px 12px;
+}
+.h{
+  text-align:center;
+  margin-bottom:12px;
+}
+.h h1{
+  font-size:48px;
+  font-weight:900;
+  margin:0;
+}
+.h p{
+  opacity:.7;
+  margin-top:8px;
+  font-size:18px;
+}
+.copy{
+  width:min(900px,94vw);
+  margin-top:10px;
+  font-size:20px;
+  line-height:1.7;
+  opacity:.94;
+}
+.panel{
+  width:min(900px,94vw);
+  margin-top:18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  padding:18px 18px;
+}
+.panel h2{
+  margin:0 0 8px;
+  font-size:20px;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+.panel p{
+  margin:10px 0;
+  font-size:18px;
+  line-height:1.6;
+  opacity:.92;
+}
+.nav{
+  display:flex;
+  gap:12px;
+  margin-top:16px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.nav a{
+  padding:14px 22px;
+  border-radius:18px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;
+  color:#eaf2f6;
+  font-weight:900;
+}
+footer{
+  text-align:center;
+  opacity:.55;
+  margin-top:14px;
+  letter-spacing:3px;
+  font-size:12px;
+}
+</style>
 </head>
+
 <body>
-  <main class="gPage">
-    <section class="gPanel">
-      <h1 class="gTitle">Geodiametrics</h1>
-      <p class="gSub">Static file routing.</p>
+<div class="page">
 
-      <div class="gActions">
-        <a class="gBtn" href="/home/">Enter</a>
-      </div>
+  <div class="h">
+    <h1>Geodiametrics</h1>
+    <p>Under construction · Safe to explore.</p>
+  </div>
 
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
-  </main>
+  <div class="copy">
+    Welcome. This site is actively being built in public. It is safe to enter, browse, and explore. Pages may shift as branches are completed, but the navigation rules and structure are stable.
+  </div>
+
+  <div class="panel">
+    <h2>START HERE</h2>
+    <p>The first complete branch is <strong>Laws → Categories → Integrity</strong>, centered on <strong>Coherence</strong>.</p>
+    <p>If you want to see what finished branches will look like across all categories, open <strong>Laws</strong>, select <strong>Categories</strong>, enter <strong>Integrity</strong>, then follow <strong>Coherence</strong> all the way to the end.</p>
+  </div>
+
+  <div class="nav">
+    <a href="/door/">Enter</a>
+    <a href="/home/">Home</a>
+    <a href="/laws/categories/">Law Categories</a>
+  </div>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
+</div>
 </body>
 </html>

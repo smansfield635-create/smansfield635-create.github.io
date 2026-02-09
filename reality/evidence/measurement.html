@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Evidence · Measurement</title>
+<style>
+body{margin:0;background:#0b1220;color:#e8eefc;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;line-height:1.55}
+.page{max-width:980px;margin:0 auto;padding:48px 20px 96px}
+h1{font-size:42px;margin:0 0 12px;font-weight:800}
+.subtitle{color:#9aa4ff;margin:0 0 28px;max-width:900px}
+details{background:#121a33;border:1px solid #1e2a55;border-radius:12px;padding:16px 18px;margin:14px 0}
+details details{background:#0e141d;margin-top:12px}
+summary{cursor:pointer;font-weight:700;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"▸";float:right;transition:transform .15s ease}
+details[open]>summary:after{transform:rotate(90deg)}
+.bul{margin:10px 0 0 18px}
+hr{border:0;border-top:1px solid #1e2a55;margin:28px 0}
+.nav{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+.nav a{text-decoration:none;padding:10px 16px;border-radius:10px;background:#1e2a55;color:#e8eefc}
+.nav a:hover{background:#2a3a77}
+.note{color:#aab4cf}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>Evidence · Measurement</h1>
+<div class="subtitle">
+Measurement is evidence that survives comparison. It turns “I think” into “we can check.”  
+This page defines measurement as a governed contract: units, calibration, uncertainty, and comparability.
+</div>
+
+<details>
+  <summary>I. Units & Definitions</summary>
+  <div class="note">Four sides: what is measured, in what units, under what definition, and what counts as “the same.”</div>
+
+  <details>
+    <summary>1) What is being measured</summary>
+    <div class="bul">
+      - Define the observable (signal, marker, output, behavior)  
+      - Separate *phenomenon* from *interpretation*  
+      - Make the measurement target explicit (avoid “proxy drift”)
+    </div>
+  </details>
+
+  <details>
+    <summary>2) Units & scales</summary>
+    <div class="bul">
+      - Use explicit units (time, amplitude, concentration, error rate, etc.)  
+      - State scale (micro/macro), resolution, and sampling rate  
+      - If unit is qualitative, define the mapping rule
+    </div>
+  </details>
+
+  <details>
+    <summary>3) Operational definition</summary>
+    <div class="bul">
+      - “What counts” must be checkable  
+      - Definitions cannot move mid-stream  
+      - If definition changes, comparability resets
+    </div>
+  </details>
+
+  <details>
+    <summary>4) Thresholds & decision boundaries</summary>
+    <div class="bul">
+      - What value triggers action?  
+      - What value invalidates the claim?  
+      - What range is “uncertain” (no forced classification)?
+    </div>
+  </details>
+</details>
+
+<details>
+  <summary>II. Calibration & Instrument Integrity</summary>
+  <div class="note">Four sides: calibration, drift control, provenance, and tamper resistance.</div>
+
+  <details>
+    <summary>1) Calibration</summary>
+    <div class="bul">
+      - Calibrate instruments against known references  
+      - Document calibration method and frequency  
+      - Separate calibration error from outcome signal
+    </div>
+  </details>
+
+  <details>
+    <summary>2) Drift detection</summary>
+    <div class="bul">
+      - Monitor instrument drift over time  
+      - Detect silent changes (software updates, sensor aging)  
+      - If drift occurs, mark affected windows as non-comparable
+    </div>
+  </details>
+
+  <details>
+    <summary>3) Provenance</summary>
+    <div class="bul">
+      - Preserve raw readings, not just summaries  
+      - Record who/what/when/how  
+      - Ensure reproducible extraction from raw to metric
+    </div>
+  </details>
+
+  <details>
+    <summary>4) Tamper resistance</summary>
+    <div class="bul">
+      - Prevent post-hoc metric reshaping  
+      - Make metric computation inspectable  
+      - Lock rules before outcomes are known (prevents narrative optimization)
+    </div>
+  </details>
+</details>
+
+<details>
+  <summary>III. Comparability & Baselines</summary>
+  <div class="note">Four sides: baseline, controls, context matching, and normalization discipline.</div>
+
+  <details>
+    <summary>1) Baseline selection</summary>
+    <div class="bul">
+      - Define a reference state (pre-intervention, pre-change, prior version)  
+      - Baseline must be recorded, not remembered  
+      - Baseline is a comparison anchor, not a moral judgment
+    </div>
+  </details>
+
+  <details>
+    <summary>2) Controls</summary>
+    <div class="bul">
+      - Use controls to isolate signal from noise  
+      - Controls must share measurement rules with treated cases  
+      - If controls differ, inference weakens
+    </div>
+  </details>
+
+  <details>
+    <summary>3) Context matching</summary>
+    <div class="bul">
+      - Compare like-with-like conditions  
+      - If context changes, note it explicitly  
+      - Avoid “apples vs oranges” comparisons
+    </div>
+  </details>
+
+  <details>
+    <summary>4) Normalization discipline</summary>
+    <div class="bul">
+      - Normalize only by pre-declared rules  
+      - No retroactive normalization to preserve conclusions  
+      - Keep raw and normalized side-by-side where possible
+    </div>
+  </details>
+</details>
+
+<details>
+  <summary>IV. Uncertainty & Error Bars</summary>
+  <div class="note">Four sides: uncertainty, sensitivity, error propagation, and decision safety.</div>
+
+  <details>
+    <summary>1) Uncertainty statement</summary>
+    <div class="bul">
+      - Every measurement carries uncertainty  
+      - State it explicitly (± bounds, confidence intervals, detection limits)  
+      - Claims without bounds are narrative, not measurement
+    </div>
+  </details>
+
+  <details>
+    <summary>2) Sensitivity and specificity</summary>
+    <div class="bul">
+      - Sensitivity: detect true signal  
+      - Specificity: reject noise  
+      - Tradeoffs must be stated, not hidden
+    </div>
+  </details>
+
+  <details>
+    <summary>3) Error propagation</summary>
+    <div class="bul">
+      - Track how measurement errors compound  
+      - Identify which steps amplify error  
+      - Prevent false precision from chained computations
+    </div>
+  </details>
+
+  <details>
+    <summary>4) Decision safety</summary>
+    <div class="bul">
+      - Define “uncertain zone” where action pauses  
+      - Avoid forced certainty  
+      - When stakes rise, tighten procedures, not rhetoric
+    </div>
+  </details>
+</details>
+
+<hr/>
+
+<details>
+  <summary>Historical Cases (Measurement Discipline)</summary>
+  <div class="note">Examples where measurement rules (or measurement failure) changed outcomes.</div>
+
+  <details>
+    <summary>Case A — Challenger O-ring risk communication</summary>
+    <div class="bul">
+      - Lesson: measurements and context must stay coupled (temperature context mattered).  
+      - Failure mode: decision-making outran the measurement reality.
+    </div>
+  </details>
+
+  <details>
+    <summary>Case B — Therac-25 style software/instrument mismatch</summary>
+    <div class="bul">
+      - Lesson: instrument integrity includes software states and interlocks.  
+      - Failure mode: hidden state transitions produced catastrophic outcomes.
+    </div>
+  </details>
+
+  <details>
+    <summary>Case C — “P-hacking” and retroactive thresholds</summary>
+    <div class="bul">
+      - Lesson: post-hoc threshold selection invalidates evidence.  
+      - Failure mode: conclusions optimized after outcomes were known.
+    </div>
+  </details>
+
+  <details>
+    <summary>Case D — Metrology and calibration as civilization infrastructure</summary>
+    <div class="bul">
+      - Lesson: shared units and calibration enable coordination.  
+      - Failure mode: without measurement contracts, people fight about reality itself.
+    </div>
+  </details>
+</details>
+
+<div class="nav">
+  <a href="./index.html">← Evidence (Diamond)</a>
+  <a href="./observation.html">← Observation</a>
+  <a href="./replication.html">Replication →</a>
+  <a href="../index.html">Reality →</a>
+</div>
+
+</div>
+</body>
+</html>

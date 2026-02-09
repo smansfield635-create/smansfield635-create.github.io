@@ -1,33 +1,149 @@
-<!-- TNT — /laws/categories/structure/index.html -->
-
-<!DOCTYPE html>
+<!-- TNT — /laws/categories/structure/index.html  (DIAMOND HUB RESTORE) -->
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>Structure · Geodiametrics</title>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Structure · Laws · Geodiametrics</title>
+
 <link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+html,body{height:100%;margin:0}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:24px 12px;
+}
+.h{text-align:center;margin-bottom:12px}
+.h h1{font-size:48px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px}
+
+/* STAGE */
+.stage{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+}
+.platform{
+  position:relative;
+  width:min(420px,88vw);
+  aspect-ratio:1/1;
+}
+.platform::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
+  border-radius:28px;
+  background:rgba(255,255,255,.06);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
+}
+
+/* DIAMONDS */
+.diamond{
+  position:absolute;
+  width:42%;
+  height:42%;
+  transform:rotate(45deg);
+  border-radius:18px;
+  background:rgba(255,255,255,.16);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:#eaf2f6;
+  -webkit-tap-highlight-color:transparent;
+}
+.diamond:active{transform:rotate(45deg) scale(.985)}
+.diamond span{
+  transform:rotate(-45deg);
+  text-align:center;
+  font-weight:900;
+  font-size:22px;
+}
+
+/* POSITIONS */
+.top{top:2%;left:29%}
+.right{top:29%;right:2%}
+.bottom{bottom:2%;left:29%}
+.left{top:29%;left:2%}
+
+/* NAV */
+.nav{
+  display:flex;
+  gap:12px;
+  margin-top:16px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.nav a{
+  padding:14px 22px;
+  border-radius:18px;
+  background:rgba(255,255,255,.10);
+  text-decoration:none;
+  color:#eaf2f6;
+  font-weight:900;
+}
+footer{
+  text-align:center;
+  opacity:.55;
+  margin-top:12px;
+  letter-spacing:3px;
+  font-size:12px;
+}
+</style>
 </head>
+
 <body>
+<div class="page">
 
-<h1>Structure</h1>
-<p>What holds because it must.</p>
+  <div class="h">
+    <h1>Structure</h1>
+    <p>What holds.</p>
+  </div>
 
-<nav class="inline-links">
-  <a href="/laws/categories/structure/a/one/">Capacity</a>
-  <a href="/laws/categories/structure/a/two/">Resources</a>
-  <a href="/laws/categories/structure/a/three/">Incentives</a>
-  <a href="/laws/categories/structure/a/four/">Discipline</a>
-</nav>
+  <div class="stage">
+    <div class="platform">
 
-<nav class="footer-links">
-  <a href="/laws/categories/">Categories</a> ·
-  <a href="/">Home</a>
-</nav>
+      <a class="diamond top" href="./constraints.html">
+        <span>Constraints</span>
+      </a>
 
-<footer>
-  CANONICAL · STABLE · © GEODIAMETRICS
-</footer>
+      <a class="diamond right" href="./interfaces.html">
+        <span>Interfaces</span>
+      </a>
 
+      <a class="diamond bottom" href="./boundaries.html">
+        <span>Boundaries</span>
+      </a>
+
+      <a class="diamond left" href="./governance.html">
+        <span>Governance</span>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="nav">
+    <a href="/laws/categories/">Categories</a>
+    <a href="/home/">Home</a>
+  </div>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
+</div>
 </body>
 </html>
+```0

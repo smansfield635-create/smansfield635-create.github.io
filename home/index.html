@@ -9,16 +9,8 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-html,body{
-  height:100%;
-  margin:0;
-}
-
-body{
-  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
-  color:#eaf2f6;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-}
+/* Keep the same layout grammar; let /assets/ui.css own the cosmic background */
+html,body{height:100%;margin:0}
 
 .page{
   min-height:100vh;
@@ -33,13 +25,11 @@ body{
   text-align:center;
   margin-bottom:12px;
 }
-
 .h h1{
   font-size:48px;
   font-weight:900;
   margin:0;
 }
-
 .h p{
   opacity:.7;
   margin-top:8px;
@@ -59,7 +49,6 @@ body{
   width:min(420px,88vw); /* HARD CAP */
   aspect-ratio:1/1;
 }
-
 .platform::before{
   content:"";
   position:absolute;
@@ -68,9 +57,10 @@ body{
   border-radius:28px;
   background:rgba(255,255,255,.06);
   box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
+  backdrop-filter: blur(10px);
 }
 
-/* === DIAMONDS === */
+/* === DIAMONDS (same geometry) === */
 .diamond{
   position:absolute;
   width:42%;
@@ -83,12 +73,21 @@ body{
   justify-content:center;
   text-decoration:none;
   color:#eaf2f6;
+  backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.14),
+    0 12px 28px rgba(0,0,0,.45);
+  transition: filter .15s ease, transform .15s ease;
 }
-
+.diamond:active{
+  filter:brightness(1.08);
+  transform:rotate(45deg) translateY(1px);
+}
 .diamond span{
   transform:rotate(-45deg);
   text-align:center;
   font-weight:900;
+  letter-spacing:.04em;
 }
 
 /* POSITIONS */
@@ -97,13 +96,40 @@ body{
 .bottom{bottom:2%;left:29%}
 .left{top:29%;left:2%}
 
+/* Color accents (match branch.css accent concept, applied locally here too) */
+.diamond.c-blue{
+  box-shadow:
+    inset 0 0 0 1px rgba(120,190,255,.22),
+    0 12px 28px rgba(0,0,0,.45),
+    0 0 22px rgba(72,166,255,.14);
+}
+.diamond.c-green{
+  box-shadow:
+    inset 0 0 0 1px rgba(90,255,190,.20),
+    0 12px 28px rgba(0,0,0,.45),
+    0 0 22px rgba(42,255,186,.12);
+}
+.diamond.c-amber{
+  box-shadow:
+    inset 0 0 0 1px rgba(255,200,110,.22),
+    0 12px 28px rgba(0,0,0,.45),
+    0 0 22px rgba(255,170,70,.12);
+}
+.diamond.c-purple{
+  box-shadow:
+    inset 0 0 0 1px rgba(210,140,255,.20),
+    0 12px 28px rgba(0,0,0,.45),
+    0 0 22px rgba(190,91,255,.12);
+}
+
 /* NAV */
 .nav{
   display:flex;
   gap:12px;
   margin-top:16px;
+  flex-wrap:wrap;
+  justify-content:center;
 }
-
 .nav a{
   padding:14px 22px;
   border-radius:18px;
@@ -124,30 +150,36 @@ footer{
 </head>
 
 <body>
+<div class="shooting-stars"></div>
+
 <div class="page">
 
   <div class="h">
     <h1>Home</h1>
-    <p>One gate · Four routes.</p>
+    <p>One gate · Four colors.</p>
   </div>
 
   <div class="stage">
     <div class="platform">
 
-      <a class="diamond top" href="/laws/">
-        <span>Laws</span>
+      <!-- BLUE -->
+      <a class="diamond top c-blue" href="/laws/">
+        <span>Blue</span>
       </a>
 
-      <a class="diamond right" href="/products/">
-        <span>Products</span>
+      <!-- GREEN -->
+      <a class="diamond right c-green" href="/products/">
+        <span>Green</span>
       </a>
 
-      <a class="diamond bottom" href="/gauges/">
-        <span>Gauges</span>
+      <!-- AMBER -->
+      <a class="diamond bottom c-amber" href="/gauges/">
+        <span>Amber</span>
       </a>
 
-      <a class="diamond left" href="/links/">
-        <span>Links</span>
+      <!-- PURPLE -->
+      <a class="diamond left c-purple" href="/links/">
+        <span>Purple</span>
       </a>
 
     </div>

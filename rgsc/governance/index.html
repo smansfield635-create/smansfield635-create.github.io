@@ -15,12 +15,13 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#
 .h{text-align:center;margin-bottom:14px}
 .h h1{font-size:40px;font-weight:900;margin:0}
 .h p{opacity:.7;margin-top:8px}
-.card{width:min(720px,94vw);background:rgba(255,255,255,.06);border-radius:18px;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;padding:14px}
+.card{width:min(760px,94vw);background:rgba(255,255,255,.06);border-radius:18px;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;padding:14px}
 .field label{display:block;font-weight:900;font-size:12px;letter-spacing:.8px;opacity:.8;margin:0 0 6px 2px}
 .field input,.field select{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:14px;border:0;outline:none;background:rgba(255,255,255,.10);color:#eaf2f6;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row .field{flex:1;min-width:220px}
-.btn{width:100%;padding:12px 14px;border-radius:16px;border:0;font-weight:900;letter-spacing:.6px;cursor:pointer;background:rgba(0,255,136,.22);color:#eaf2f6;box-shadow:0 0 0 1px rgba(0,255,136,.28) inset;margin-top:10px}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.btn{flex:1;min-width:170px;padding:12px 14px;border-radius:16px;border:0;font-weight:900;letter-spacing:.6px;cursor:pointer;background:rgba(0,255,136,.22);color:#eaf2f6;box-shadow:0 0 0 1px rgba(0,255,136,.28) inset}
 .btn.secondary{background:rgba(255,255,255,.10);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}
 .items{margin-top:12px;max-height:320px;overflow:auto;border-radius:14px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;padding:8px}
 .item{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.35;opacity:.9;padding:8px;border-radius:12px;background:rgba(255,255,255,.04);box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;margin-bottom:8px;white-space:pre-wrap;word-break:break-word}
@@ -28,6 +29,10 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#
 .nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
 footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
 .badge{font-weight:900;letter-spacing:.8px;opacity:.85;font-size:12px;margin-top:6px}
+.qrwrap{margin-top:10px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.qrbox{background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;border-radius:16px;padding:10px;display:flex;align-items:center;justify-content:center}
+.qrbox img{width:140px;height:140px;border-radius:10px}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;opacity:.9}
 </style>
 </head>
 
@@ -35,7 +40,7 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
 <div class="page">
   <div class="h">
     <h1>RGSC · Governance</h1>
-    <p>Signed receipts · Per-subject chains · 256-state routing.</p>
+    <p>Signed receipts · Per-subject chains · 256-state routing · QR case IDs.</p>
   </div>
 
   <div class="card">
@@ -46,8 +51,18 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
       </div>
       <div class="field">
         <label>SUBJECT ID (CASE)</label>
-        <input id="subject" placeholder="CASE-0001">
+        <input id="subject" placeholder="(leave blank for random)">
       </div>
+    </div>
+
+    <div class="btnrow">
+      <button class="btn secondary" onclick="newRandomCase()">NEW CASE (RANDOM)</button>
+      <button class="btn secondary" onclick="copyCaseLink()">COPY CASE LINK</button>
+    </div>
+
+    <div class="qrwrap">
+      <div class="mono" id="caseInfo">Case: (none)</div>
+      <div class="qrbox"><img id="qr" alt="QR"/></div>
     </div>
 
     <div class="row" style="margin-top:10px;">
@@ -70,7 +85,6 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
     </div>
 
     <button class="btn" onclick="createReceipt()">CREATE RECEIPT (SIGNED)</button>
-    <button class="btn secondary" onclick="exportLog()">EXPORT LOG (JSON)</button>
 
     <div class="items" id="log"></div>
   </div>
@@ -89,34 +103,107 @@ const STORAGE_KEY="rgsc_log", SECRET_KEY="rgsc_device_secret", SCHEMA_VERSION="1
 let log = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 function saveLog(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(log)); }
 function esc(s){ return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+
 function canonicalPayload(obj){ const keys=Object.keys(obj).sort(); const out={}; for(const k of keys){ out[k]=obj[k]; } return JSON.stringify(out); }
 async function sha256Hex(str){ const buf=new TextEncoder().encode(str); const digest=await crypto.subtle.digest("SHA-256", buf); return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
 function getOrCreateDeviceSecret(){ let secret=localStorage.getItem(SECRET_KEY); if(!secret){ const arr=new Uint8Array(32); crypto.getRandomValues(arr); secret=btoa(String.fromCharCode(...arr)); localStorage.setItem(SECRET_KEY, secret);} return secret; }
 async function hmacHex(secretB64, message){ const raw=Uint8Array.from(atob(secretB64), c=>c.charCodeAt(0)); const key=await crypto.subtle.importKey("raw", raw, {name:"HMAC", hash:"SHA-256"}, false, ["sign","verify"]); const sig=await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message)); return [...new Uint8Array(sig)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
+
 function getAxis(id){ return parseInt(document.getElementById(id).value,10) || 0; }
 function computeStateId(A,B,C,D){ return (A*64)+(B*16)+(C*4)+D; }
-function updateState(){ const A=getAxis("A"),B=getAxis("B"),C=getAxis("C"),D=getAxis("D"); const state_id=computeStateId(A,B,C,D); document.getElementById("stateBadge").textContent=`STATE: ${state_id}  (A${A} B${B} C${C} D${D})`; }
-function lastPayloadHashForSubject(subject_id){ for(let i=log.length-1;i>=0;i--){ const r=log[i]; if(r && r.subject_id===subject_id && r.payload_hash){ return r.payload_hash; } } return null; }
-function renderLog(){ const el=document.getElementById("log"); el.innerHTML=""; if(!log.length){ el.innerHTML='<div class="item">No receipts yet.</div>'; return; } for(let i=log.length-1;i>=0;i--){ el.innerHTML+='<div class="item">'+esc(JSON.stringify(log[i], null, 2))+'</div>'; } }
+function updateState(){ const A=getAxis("A"),B=getAxis("B"),C=getAxis("C"),D=getAxis("D"); const state_id=computeStateId(A,B,C,D); document.getElementById("stateBadge").textContent=`STATE: ${state_id} (A${A} B${B} C${C} D${D})`; }
+
+function lastPayloadHashForSubject(subject_id){
+  for(let i=log.length-1;i>=0;i--){
+    const r=log[i];
+    if(r && r.subject_id===subject_id && r.payload_hash){ return r.payload_hash; }
+  }
+  return null;
+}
+
+function renderLog(){
+  const el=document.getElementById("log"); el.innerHTML="";
+  if(!log.length){ el.innerHTML='<div class="item">No receipts yet.</div>'; return; }
+  for(let i=log.length-1;i>=0;i--){ el.innerHTML+='<div class="item">'+esc(JSON.stringify(log[i], null, 2))+'</div>'; }
+}
+
+/* ===== Random subject id ===== */
+function randomHex(bytes){
+  const arr=new Uint8Array(bytes);
+  crypto.getRandomValues(arr);
+  return [...arr].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+function ensureSubject(){
+  let s=document.getElementById("subject").value.trim();
+  if(!s){
+    s="s_"+randomHex(8); // 64-bit random + prefix
+    document.getElementById("subject").value=s;
+  }
+  updateQR(s);
+  return s;
+}
+
+/* ===== QR (barcode) ===== */
+function updateQR(subject){
+  const url = new URL(window.location.href);
+  url.searchParams.set("subject", subject);
+  const link = url.toString();
+  document.getElementById("caseInfo").textContent = `Case: ${subject}`;
+  // Generate QR via public image endpoint (no secrets included)
+  document.getElementById("qr").src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(link);
+}
+function newRandomCase(){
+  const s="s_"+randomHex(8);
+  document.getElementById("subject").value=s;
+  updateQR(s);
+}
+function copyCaseLink(){
+  const subject=document.getElementById("subject").value.trim();
+  if(!subject){ alert("Create or enter a Subject ID first."); return; }
+  const url = new URL(window.location.href);
+  url.searchParams.set("subject", subject);
+  navigator.clipboard.writeText(url.toString()).then(()=>alert("Case link copied."));
+}
+
+/* ===== Auto-fill from URL param ===== */
+(function initFromURL(){
+  const url = new URL(window.location.href);
+  const subject = url.searchParams.get("subject");
+  if(subject){
+    document.getElementById("subject").value = subject;
+    updateQR(subject);
+  }else{
+    document.getElementById("qr").src = "";
+    document.getElementById("caseInfo").textContent = "Case: (none)";
+  }
+})();
+
 async function createReceipt(){
   const issuer=document.getElementById("issuer").value.trim();
-  const subject=document.getElementById("subject").value.trim();
   const constraint=document.getElementById("constraint").value.trim();
   const outcome=document.getElementById("outcome").value.trim();
-  if(!issuer||!subject||!constraint||!outcome){ alert("All fields required."); return; }
+  if(!issuer||!constraint||!outcome){ alert("Issuer, constraint, outcome required."); return; }
+
+  const subject = ensureSubject();
+
   const A=getAxis("A"),B=getAxis("B"),C=getAxis("C"),D=getAxis("D");
   const state_id=computeStateId(A,B,C,D);
   const prev_hash=lastPayloadHashForSubject(subject);
+
   const base={schema_version:SCHEMA_VERSION,sig_alg:SIG_ALG,issuer_id:issuer,subject_id:subject,domain:DOMAIN,state_id:state_id,A:A,B:B,C:C,D:D,constraint_hash:constraint,outcome_code:outcome,ts:new Date().toISOString(),prev_hash:prev_hash};
+
   const payload=canonicalPayload(base);
   const payload_hash=await sha256Hex(payload);
+
   const secret=getOrCreateDeviceSecret();
   const signature=await hmacHex(secret, payload_hash);
+
   const receipt={receipt_id:"r_"+Date.now(),...base,payload_hash,signature,verify_status:"VALID_LOCAL"};
   log.push(receipt); saveLog(); renderLog();
 }
-function exportLog(){ const dataStr="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(log, null, 2)); const a=document.createElement("a"); a.href=dataStr; a.download="rgsc_log.json"; document.body.appendChild(a); a.click(); a.remove(); }
-updateState(); renderLog();
+
+updateState();
+renderLog();
 </script>
 </body>
 </html>

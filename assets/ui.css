@@ -1,8 +1,10 @@
 /* ================================
    GLOBAL UI LAYOUT (TNT)
    FILE: assets/ui.css
+   COSMIC THEME UPGRADE (STARS + NEBULA + TWINKLE + SHOOTING STARS)
 ================================ */
 
+/* ---------- Base ---------- */
 html, body {
   margin: 0;
   padding: 0;
@@ -10,11 +12,116 @@ html, body {
   height: 100%;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #e9f1f4;
-  background:
-    radial-gradient(1200px 800px at 50% 30%, #1e3946 0%, #0b1e27 55%, #08151c 100%);
+  background: #05070c;
   overflow-x: hidden;
 }
 
+/* ---------- Cosmic Scene (global backdrop) ---------- */
+/* Cosmic layer: nebulas + deep space gradient */
+body {
+  position: relative;
+  background:
+    radial-gradient(1400px 900px at 20% 20%, rgba(72, 166, 255, 0.22) 0%, rgba(0,0,0,0) 55%),
+    radial-gradient(1200px 800px at 75% 25%, rgba(190, 91, 255, 0.18) 0%, rgba(0,0,0,0) 60%),
+    radial-gradient(1100px 900px at 40% 75%, rgba(42, 255, 186, 0.10) 0%, rgba(0,0,0,0) 58%),
+    radial-gradient(1200px 900px at 50% 35%, #0b1e27 0%, #06121a 55%, #05070c 100%);
+}
+
+/* Starfield (two layers) */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+body::before {
+  /* small stars */
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.75) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.55) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,0.65) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 80% 60%, rgba(255,255,255,0.50) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 90% 15%, rgba(255,255,255,0.60) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 15% 90%, rgba(255,255,255,0.50) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 45% 10%, rgba(255,255,255,0.55) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 65% 85%, rgba(255,255,255,0.60) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 5% 55%, rgba(255,255,255,0.55) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 72% 8%, rgba(255,255,255,0.55) 0, rgba(255,255,255,0) 60%);
+  opacity: 0.9;
+  animation: twinkleA 4.8s ease-in-out infinite alternate;
+}
+
+body::after {
+  /* larger stars + faint dust */
+  background-image:
+    radial-gradient(2px 2px at 22% 28%, rgba(255,255,255,0.65) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(2px 2px at 62% 22%, rgba(255,255,255,0.55) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,0.50) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(2px 2px at 35% 55%, rgba(255,255,255,0.55) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(3px 3px at 12% 62%, rgba(255,255,255,0.40) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 50% 50%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 60%);
+  opacity: 0.65;
+  animation: twinkleB 6.2s ease-in-out infinite alternate;
+}
+
+/* Shooting stars (pure CSS, multiple streaks) */
+@keyframes shoot {
+  0%   { transform: translate3d(-20vw, -20vh, 0) rotate(20deg); opacity: 0; }
+  8%   { opacity: 1; }
+  35%  { opacity: 1; }
+  55%  { opacity: 0; }
+  100% { transform: translate3d(120vw, 120vh, 0) rotate(20deg); opacity: 0; }
+}
+
+.shooting-stars,
+.shooting-stars::before,
+.shooting-stars::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.shooting-stars::before,
+.shooting-stars::after {
+  position: absolute;
+  width: 220px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.85), rgba(255,255,255,0));
+  border-radius: 999px;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.35));
+  opacity: 0;
+}
+
+.shooting-stars::before {
+  top: 10%;
+  left: -30%;
+  animation: shoot 9.5s linear infinite;
+  animation-delay: 1.5s;
+}
+
+.shooting-stars::after {
+  top: 35%;
+  left: -35%;
+  animation: shoot 12.5s linear infinite;
+  animation-delay: 5.2s;
+}
+
+@keyframes twinkleA {
+  0%   { opacity: 0.65; filter: brightness(0.95); }
+  100% { opacity: 0.95; filter: brightness(1.15); }
+}
+
+@keyframes twinkleB {
+  0%   { opacity: 0.45; filter: brightness(0.95); }
+  100% { opacity: 0.75; filter: brightness(1.10); }
+}
+
+/* ---------- Layout ---------- */
 .page {
   min-height: 100vh;
   display: flex;
@@ -22,6 +129,7 @@ html, body {
   justify-content: center;
 }
 
+/* Panel: “glass” over cosmic background */
 .panel {
   width: 100%;
   max-width: 920px;
@@ -36,6 +144,7 @@ html, body {
   text-align: center;
 }
 
+/* Headings */
 h1 {
   font-size: clamp(40px, 6vw, 64px);
   margin: 0 0 8px;
@@ -47,11 +156,13 @@ h1 {
   margin-bottom: 40px;
 }
 
+/* Nav buttons */
 .nav-row {
   display: flex;
   gap: 16px;
   justify-content: center;
   margin-top: 36px;
+  flex-wrap: wrap;
 }
 
 .nav-btn {
@@ -70,9 +181,16 @@ h1 {
   transform: translateY(-1px);
 }
 
+/* Footer */
 .footer {
   margin-top: 28px;
   font-size: 12px;
   opacity: 0.5;
   letter-spacing: 0.18em;
 }
+
+/* ---------- Optional: add this class to <body> via HTML once ----------
+   <body class="cosmic">
+   <div class="shooting-stars"></div>
+   This file supports it automatically; the class isn't required.
+--------------------------------------------------------------------- */

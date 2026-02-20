@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>RGSC · Receipt Log · Geodiametrics</title>
+<title>RGSC · Door</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -15,7 +15,6 @@ body{
   color:#eaf2f6;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
-
 .page{
   min-height:100vh;
   display:flex;
@@ -24,30 +23,16 @@ body{
   justify-content:flex-start;
   padding:24px 12px;
 }
-
 .h{text-align:center;margin-bottom:12px}
-.h h1{font-size:44px;font-weight:900;margin:0}
+.h h1{font-size:48px;font-weight:900;margin:0}
 .h p{opacity:.7;margin-top:8px}
 
 /* stage */
-.stage{
-  flex:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-}
-
-.platform{
-  position:relative;
-  width:min(520px,92vw);
-  aspect-ratio:1/1;
-}
-
+.stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
+.platform{position:relative;width:min(420px,88vw);aspect-ratio:1/1}
 .platform::before{
   content:"";
-  position:absolute;
-  inset:0;
+  position:absolute;inset:0;
   transform:rotate(45deg);
   border-radius:28px;
   background:rgba(255,255,255,.06);
@@ -57,230 +42,50 @@ body{
 /* diamonds */
 .diamond{
   position:absolute;
-  width:42%;
-  height:42%;
+  width:42%;height:42%;
   transform:rotate(45deg);
   border-radius:18px;
   background:rgba(255,255,255,.16);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  color:#eaf2f6;
-  user-select:none;
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;color:#eaf2f6;
 }
-
-.diamond:active{filter:brightness(1.08)}
 .diamond span{
   transform:rotate(-45deg);
   text-align:center;
   font-weight:900;
-  line-height:1.15;
-  padding:10px;
 }
 
+/* positions */
 .top{top:2%;left:29%}
 .right{top:29%;right:2%}
 .bottom{bottom:2%;left:29%}
 .left{top:29%;left:2%}
 
-/* center panel */
-.center{
-  position:absolute;
-  inset:18%;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  align-items:stretch;
-  justify-content:center;
-  background:rgba(0,0,0,.16);
-  border-radius:18px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
-  padding:14px;
-}
-
-.field label{
-  display:block;
-  font-weight:800;
-  font-size:12px;
-  letter-spacing:.8px;
-  opacity:.8;
-  margin:0 0 6px 2px;
-}
-
-.field input{
-  width:100%;
-  box-sizing:border-box;
-  padding:10px 12px;
-  border-radius:14px;
-  border:0;
-  outline:none;
-  background:rgba(255,255,255,.10);
-  color:#eaf2f6;
-  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
-}
-
-.row{display:flex;gap:10px}
-.row .field{flex:1}
-
-.btn{
-  width:100%;
-  padding:12px 14px;
-  border-radius:16px;
-  border:0;
-  font-weight:900;
-  letter-spacing:.6px;
-  cursor:pointer;
-  background:rgba(0,255,136,.22);
-  color:#eaf2f6;
-  box-shadow:0 0 0 1px rgba(0,255,136,.28) inset;
-}
-.btn:active{filter:brightness(1.08)}
-
-.btn.secondary{
-  background:rgba(255,255,255,.10);
-  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
-}
-
-.log{
-  width:min(680px,92vw);
-  margin-top:14px;
-  background:rgba(255,255,255,.06);
-  border-radius:18px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
-  padding:12px;
-}
-
-.loghead{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:8px;
-}
-
-.badge{
-  font-size:12px;
-  font-weight:900;
-  opacity:.85;
-  letter-spacing:.8px;
-}
-
-.smallbtn{
-  padding:10px 12px;
-  border-radius:14px;
-  border:0;
-  font-weight:900;
-  background:rgba(255,255,255,.10);
-  color:#eaf2f6;
-  cursor:pointer;
-}
-
-.items{
-  max-height:320px;
-  overflow:auto;
-  border-radius:14px;
-  background:rgba(0,0,0,.18);
-  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;
-  padding:8px;
-}
-
-.item{
-  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-  font-size:12px;
-  line-height:1.35;
-  opacity:.9;
-  padding:8px;
-  border-radius:12px;
-  background:rgba(255,255,255,.04);
-  box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;
-  margin-bottom:8px;
-  white-space:pre-wrap;
-  word-break:break-word;
-}
-
-.muted{opacity:.65;font-size:12px;margin-top:6px}
-
-.nav{
-  display:flex;
-  gap:12px;
-  margin-top:16px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
+/* nav */
+.nav{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;justify-content:center}
 .nav a{
-  padding:14px 22px;
-  border-radius:18px;
+  padding:14px 22px;border-radius:18px;
   background:rgba(255,255,255,.10);
-  text-decoration:none;
-  color:#eaf2f6;
-  font-weight:900;
+  text-decoration:none;color:#eaf2f6;font-weight:900;
 }
-
-footer{
-  text-align:center;
-  opacity:.55;
-  margin-top:12px;
-  letter-spacing:3px;
-  font-size:12px;
-}
+footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
 </style>
 </head>
 
 <body>
 <div class="page">
-
   <div class="h">
     <h1>RGSC</h1>
-    <p>Receipt log · Local-first · Exportable.</p>
+    <p>One gate · Four routes.</p>
   </div>
 
   <div class="stage">
     <div class="platform">
-
-      <!-- ROUTE DIAMONDS (use these as quick-fill presets) -->
-      <a class="diamond top" href="#" onclick="preset('FINANCE')"><span>Preset<br>Finance</span></a>
-      <a class="diamond right" href="#" onclick="preset('ICE')"><span>Preset<br>ICE / Closure</span></a>
-      <a class="diamond bottom" href="#" onclick="preset('GOV')"><span>Preset<br>Governance</span></a>
-      <a class="diamond left" href="#" onclick="clearAll()"><span>Clear<br>Fields</span></a>
-
-      <!-- CENTER FORM -->
-      <div class="center">
-        <div class="row">
-          <div class="field">
-            <label>ISSUER ID</label>
-            <input id="issuer" placeholder="your_name_or_key">
-          </div>
-          <div class="field">
-            <label>SUBJECT ID</label>
-            <input id="subject" placeholder="decision_001">
-          </div>
-        </div>
-
-        <div class="field">
-          <label>CONSTRAINT HASH</label>
-          <input id="constraint" placeholder="hash_or_rule_id">
-        </div>
-
-        <div class="field">
-          <label>OUTCOME CODE</label>
-          <input id="outcome" placeholder="PASS / FAIL / COMPLETE">
-        </div>
-
-        <button class="btn" onclick="createReceipt()">CREATE RECEIPT</button>
-        <button class="btn secondary" onclick="exportLog()">EXPORT LOG (JSON)</button>
-      </div>
-
+      <a class="diamond top" href="/rgsc/finance/"><span>Finance</span></a>
+      <a class="diamond right" href="/rgsc/ice/"><span>ICE / Closure</span></a>
+      <a class="diamond bottom" href="/rgsc/governance/"><span>Governance</span></a>
+      <a class="diamond left" href="/rgsc/log/"><span>Log</span></a>
     </div>
-  </div>
-
-  <div class="log">
-    <div class="loghead">
-      <div class="badge">APPEND-ONLY LOG</div>
-      <button class="smallbtn" onclick="wipeLocal()">WIPE LOCAL</button>
-    </div>
-    <div class="items" id="log"></div>
-    <div class="muted">Local storage only. Export JSON for sweeps.</div>
   </div>
 
   <div class="nav">
@@ -290,99 +95,6 @@ footer{
   </div>
 
   <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
 </div>
-
-<script>
-let log = JSON.parse(localStorage.getItem("rgsc_log") || "[]");
-
-function saveLog(){ localStorage.setItem("rgsc_log", JSON.stringify(log)); }
-
-function renderLog(){
-  const container = document.getElementById("log");
-  container.innerHTML = "";
-  if(!log.length){
-    container.innerHTML = '<div class="item">No receipts yet.</div>';
-    return;
-  }
-  for(let i=log.length-1;i>=0;i--){
-    container.innerHTML += '<div class="item">' + escapeHtml(JSON.stringify(log[i], null, 2)) + '</div>';
-  }
-}
-
-function escapeHtml(s){
-  return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
-}
-
-function preset(kind){
-  if(kind==="FINANCE"){
-    setVal("constraint","FINANCE_LAG_v1");
-    setVal("outcome","PASS");
-  }
-  if(kind==="ICE"){
-    setVal("constraint","ICE_CLOSURE_v1");
-    setVal("outcome","PASS");
-  }
-  if(kind==="GOV"){
-    setVal("constraint","GOV_RECEIPT_v1");
-    setVal("outcome","COMPLETE");
-  }
-}
-
-function setVal(id,v){ document.getElementById(id).value = v; }
-
-function clearAll(){
-  setVal("issuer","");
-  setVal("subject","");
-  setVal("constraint","");
-  setVal("outcome","");
-}
-
-function createReceipt(){
-  const issuer = document.getElementById("issuer").value.trim();
-  const subject = document.getElementById("subject").value.trim();
-  const constraint = document.getElementById("constraint").value.trim();
-  const outcome = document.getElementById("outcome").value.trim();
-
-  if(!issuer || !subject || !constraint || !outcome){
-    alert("All fields required.");
-    return;
-  }
-
-  const receipt = {
-    receipt_id: "r_" + Date.now(),
-    issuer_id: issuer,
-    subject_id: subject,
-    constraint_hash: constraint,
-    outcome_code: outcome,
-    ts: new Date().toISOString(),
-    prev_hash: log.length ? (log[log.length - 1].receipt_id) : null
-  };
-
-  log.push(receipt);
-  saveLog();
-  renderLog();
-}
-
-function exportLog(){
-  const dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(log, null, 2));
-  const a = document.createElement("a");
-  a.setAttribute("href", dataStr);
-  a.setAttribute("download", "rgsc_log.json");
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-}
-
-function wipeLocal(){
-  if(!confirm("Wipe local RGSC log on this device?")) return;
-  log = [];
-  saveLog();
-  renderLog();
-}
-
-renderLog();
-</script>
-
 </body>
 </html>

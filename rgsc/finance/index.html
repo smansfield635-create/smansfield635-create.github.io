@@ -48,10 +48,10 @@ body{
   background:rgba(255,255,255,.10);
   box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
 }
-.nav{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;justify-content:center}
-.nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
 .items{margin-top:12px;max-height:320px;overflow:auto;border-radius:14px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;padding:8px}
 .item{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.35;opacity:.9;padding:8px;border-radius:12px;background:rgba(255,255,255,.04);box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;margin-bottom:8px;white-space:pre-wrap;word-break:break-word}
+.nav{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;justify-content:center}
+.nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
 footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
 </style>
 </head>
@@ -60,7 +60,7 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
 <div class="page">
   <div class="h">
     <h1>RGSC · Finance</h1>
-    <p>Leaf route · Linear UI · Receipt issuance.</p>
+    <p>Leaf route · Linear UI · Signed receipts.</p>
   </div>
 
   <div class="card">
@@ -85,7 +85,7 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
       <input id="outcome" placeholder="PASS / FAIL / COMPLETE">
     </div>
 
-    <button class="btn" onclick="createReceipt()">CREATE RECEIPT</button>
+    <button class="btn" onclick="createReceipt()">CREATE RECEIPT (SIGNED)</button>
     <button class="btn secondary" onclick="exportLog()">EXPORT LOG (JSON)</button>
 
     <div class="items" id="log"></div>
@@ -93,19 +93,54 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
 
   <div class="nav">
     <a href="/rgsc/">RGSC Door</a>
+    <a href="/rgsc/log/">Log</a>
     <a href="/home/">Home</a>
-    <a href="/links/">Links</a>
   </div>
 
   <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 </div>
 
 <script>
+/* ===== Storage ===== */
 let log = JSON.parse(localStorage.getItem("rgsc_log") || "[]");
-
 function saveLog(){ localStorage.setItem("rgsc_log", JSON.stringify(log)); }
 function esc(s){ return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
 
+/* ===== Canonicalization / Hash ===== */
+function canonicalPayload(obj){
+  const keys = Object.keys(obj).sort();
+  const out = {};
+  for(const k of keys){ out[k] = obj[k]; }
+  return JSON.stringify(out);
+}
+async function sha256Hex(str){
+  const buf = new TextEncoder().encode(str);
+  const digest = await crypto.subtle.digest("SHA-256", buf);
+  return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+/* ===== Device Key (HMAC) =====
+   Simple + strong enough for local-first integrity.
+   (Later we can upgrade to public-key signing without changing receipt shape.)
+*/
+function getOrCreateDeviceSecret(){
+  let secret = localStorage.getItem("rgsc_device_secret");
+  if(!secret){
+    const arr = new Uint8Array(32);
+    crypto.getRandomValues(arr);
+    secret = btoa(String.fromCharCode(...arr));
+    localStorage.setItem("rgsc_device_secret", secret);
+  }
+  return secret;
+}
+async function hmacHex(secretB64, message){
+  const raw = Uint8Array.from(atob(secretB64), c=>c.charCodeAt(0));
+  const key = await crypto.subtle.importKey("raw", raw, {name:"HMAC", hash:"SHA-256"}, false, ["sign","verify"]);
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message));
+  return [...new Uint8Array(sig)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+/* ===== Render ===== */
 function renderLog(){
   const el = document.getElementById("log");
   el.innerHTML = "";
@@ -115,21 +150,35 @@ function renderLog(){
   }
 }
 
-function createReceipt(){
+/* ===== Create Signed Receipt ===== */
+async function createReceipt(){
   const issuer = document.getElementById("issuer").value.trim();
   const subject = document.getElementById("subject").value.trim();
   const constraint = document.getElementById("constraint").value.trim();
   const outcome = document.getElementById("outcome").value.trim();
   if(!issuer || !subject || !constraint || !outcome){ alert("All fields required."); return; }
 
-  const receipt = {
-    receipt_id: "r_" + Date.now(),
+  const base = {
     issuer_id: issuer,
     subject_id: subject,
     constraint_hash: constraint,
     outcome_code: outcome,
     ts: new Date().toISOString(),
-    prev_hash: log.length ? log[log.length - 1].receipt_id : null
+    prev_hash: log.length ? (log[log.length - 1].payload_hash || log[log.length - 1].receipt_id) : null
+  };
+
+  const payload = canonicalPayload(base);
+  const payload_hash = await sha256Hex(payload);
+
+  const secret = getOrCreateDeviceSecret();
+  const signature = await hmacHex(secret, payload_hash);
+
+  const receipt = {
+    receipt_id: "r_" + Date.now(),
+    ...base,
+    payload_hash,
+    signature,
+    verify_status: "VALID_LOCAL"
   };
 
   log.push(receipt);
@@ -137,6 +186,7 @@ function createReceipt(){
   renderLog();
 }
 
+/* ===== Export ===== */
 function exportLog(){
   const dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(log, null, 2));
   const a = document.createElement("a");

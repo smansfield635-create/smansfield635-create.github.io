@@ -1,4 +1,3 @@
-<!-- FILE: rgsc/log/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -29,8 +28,7 @@ body{
 }
 .btnrow{display:flex;gap:10px;flex-wrap:wrap}
 .btn{
-  flex:1;
-  min-width:160px;
+  flex:1;min-width:160px;
   padding:12px 14px;border-radius:16px;border:0;
   font-weight:900;letter-spacing:.6px;
   cursor:pointer;
@@ -53,12 +51,13 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
 <div class="page">
   <div class="h">
     <h1>RGSC · Log</h1>
-    <p>View · Export · Wipe (local only).</p>
+    <p>View · Verify · Export · Wipe (local only).</p>
   </div>
 
   <div class="card">
     <div class="btnrow">
-      <button class="btn" onclick="exportLog()">EXPORT LOG (JSON)</button>
+      <button class="btn" onclick="verifyAll()">VERIFY ALL</button>
+      <button class="btn secondary" onclick="exportLog()">EXPORT LOG (JSON)</button>
       <button class="btn secondary" onclick="wipeLocal()">WIPE LOCAL</button>
     </div>
     <div class="items" id="log"></div>
@@ -75,7 +74,38 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
 
 <script>
 let log = JSON.parse(localStorage.getItem("rgsc_log") || "[]");
+
 function esc(s){ return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+function saveLog(){ localStorage.setItem("rgsc_log", JSON.stringify(log)); }
+
+function canonicalPayload(obj){
+  const keys = Object.keys(obj).sort();
+  const out = {};
+  for(const k of keys){ out[k] = obj[k]; }
+  return JSON.stringify(out);
+}
+async function sha256Hex(str){
+  const buf = new TextEncoder().encode(str);
+  const digest = await crypto.subtle.digest("SHA-256", buf);
+  return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+function getOrCreateDeviceSecret(){
+  let secret = localStorage.getItem("rgsc_device_secret");
+  if(!secret){
+    const arr = new Uint8Array(32);
+    crypto.getRandomValues(arr);
+    secret = btoa(String.fromCharCode(...arr));
+    localStorage.setItem("rgsc_device_secret", secret);
+  }
+  return secret;
+}
+async function hmacHex(secretB64, message){
+  const raw = Uint8Array.from(atob(secretB64), c=>c.charCodeAt(0));
+  const key = await crypto.subtle.importKey("raw", raw, {name:"HMAC", hash:"SHA-256"}, false, ["sign","verify"]);
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message));
+  return [...new Uint8Array(sig)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
 function renderLog(){
   const el = document.getElementById("log");
   el.innerHTML = "";
@@ -84,6 +114,36 @@ function renderLog(){
     el.innerHTML += '<div class="item">' + esc(JSON.stringify(log[i], null, 2)) + '</div>';
   }
 }
+
+async function verifyAll(){
+  if(!log.length){ alert("No receipts to verify."); return; }
+  const secret = getOrCreateDeviceSecret();
+
+  for(let i=0;i<log.length;i++){
+    const r = log[i];
+    // Reconstruct base payload (exact fields we signed)
+    const base = {
+      issuer_id: r.issuer_id,
+      subject_id: r.subject_id,
+      constraint_hash: r.constraint_hash,
+      outcome_code: r.outcome_code,
+      ts: r.ts,
+      prev_hash: r.prev_hash
+    };
+
+    const payload = canonicalPayload(base);
+    const hash = await sha256Hex(payload);
+    const sig = await hmacHex(secret, hash);
+
+    const ok = (r.payload_hash === hash) && (r.signature === sig);
+    r.verify_status = ok ? "VALID_LOCAL" : "INVALID_LOCAL";
+  }
+
+  saveLog();
+  renderLog();
+  alert("Verify complete.");
+}
+
 function exportLog(){
   const dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(log, null, 2));
   const a = document.createElement("a");
@@ -93,12 +153,14 @@ function exportLog(){
   a.click();
   a.remove();
 }
+
 function wipeLocal(){
   if(!confirm("Wipe local RGSC log on this device?")) return;
   localStorage.setItem("rgsc_log","[]");
   log = [];
   renderLog();
 }
+
 renderLog();
 </script>
 </body>

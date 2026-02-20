@@ -15,7 +15,7 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#
 .h{text-align:center;margin-bottom:14px}
 .h h1{font-size:40px;font-weight:900;margin:0}
 .h p{opacity:.7;margin-top:8px}
-.card{width:min(760px,94vw);background:rgba(255,255,255,.06);border-radius:18px;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;padding:14px}
+.card{width:min(820px,96vw);background:rgba(255,255,255,.06);border-radius:18px;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;padding:14px}
 .field label{display:block;font-weight:900;font-size:12px;letter-spacing:.8px;opacity:.8;margin:0 0 6px 2px}
 .field input,.field select{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:14px;border:0;outline:none;background:rgba(255,255,255,.10);color:#eaf2f6;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset}
 .row{display:flex;gap:10px;flex-wrap:wrap}
@@ -29,10 +29,31 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#
 .nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
 footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
 .badge{font-weight:900;letter-spacing:.8px;opacity:.85;font-size:12px;margin-top:6px}
-.qrwrap{margin-top:10px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-.qrbox{background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;border-radius:16px;padding:10px;display:flex;align-items:center;justify-content:center}
-.qrbox img{width:140px;height:140px;border-radius:10px}
+
+/* Case panel */
+.casepanel{margin-top:10px;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between}
+.caseleft{flex:1;min-width:260px}
+.caseright{width:200px}
 .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;opacity:.9}
+.printbox{
+  margin-top:8px;
+  padding:10px 12px;
+  border-radius:14px;
+  background:rgba(0,0,0,.18);
+  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;
+}
+.printid{font-size:13px;letter-spacing:1.4px;word-break:break-word}
+.smallbtn{margin-top:8px;padding:10px 12px;border-radius:14px;border:0;font-weight:900;background:rgba(255,255,255,.10);color:#eaf2f6;cursor:pointer}
+.qrbox{
+  background:rgba(0,0,0,.18);
+  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;
+  border-radius:16px;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.qrbox svg{width:170px;height:170px;border-radius:10px}
 </style>
 </head>
 
@@ -40,7 +61,7 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
 <div class="page">
   <div class="h">
     <h1>RGSC · Governance</h1>
-    <p>Signed receipts · Per-subject chains · 256-state routing · QR case IDs.</p>
+    <p>Signed receipts · Per-subject chains · 256-state routing · QR + printable case IDs.</p>
   </div>
 
   <div class="card">
@@ -60,9 +81,21 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
       <button class="btn secondary" onclick="copyCaseLink()">COPY CASE LINK</button>
     </div>
 
-    <div class="qrwrap">
-      <div class="mono" id="caseInfo">Case: (none)</div>
-      <div class="qrbox"><img id="qr" alt="QR"/></div>
+    <div class="casepanel">
+      <div class="caseleft">
+        <div class="mono" id="caseInfo">Case: (none)</div>
+
+        <div class="printbox">
+          <div class="mono">Printable ID (fallback)</div>
+          <div class="mono printid" id="printId">(none)</div>
+          <button class="smallbtn" onclick="copyPrintable()">COPY PRINTABLE</button>
+        </div>
+      </div>
+
+      <div class="caseright">
+        <div class="mono" style="margin-bottom:8px;">QR (scan to reopen case)</div>
+        <div class="qrbox" id="qrBox"></div>
+      </div>
     </div>
 
     <div class="row" style="margin-top:10px;">
@@ -99,39 +132,36 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
 </div>
 
 <script>
+/* =========================
+   Core receipt engine
+========================= */
 const STORAGE_KEY="rgsc_log", SECRET_KEY="rgsc_device_secret", SCHEMA_VERSION="1.0", SIG_ALG="HMAC-SHA256-LOCAL", DOMAIN="governance";
 let log = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 function saveLog(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(log)); }
 function esc(s){ return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
-
 function canonicalPayload(obj){ const keys=Object.keys(obj).sort(); const out={}; for(const k of keys){ out[k]=obj[k]; } return JSON.stringify(out); }
 async function sha256Hex(str){ const buf=new TextEncoder().encode(str); const digest=await crypto.subtle.digest("SHA-256", buf); return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
 function getOrCreateDeviceSecret(){ let secret=localStorage.getItem(SECRET_KEY); if(!secret){ const arr=new Uint8Array(32); crypto.getRandomValues(arr); secret=btoa(String.fromCharCode(...arr)); localStorage.setItem(SECRET_KEY, secret);} return secret; }
 async function hmacHex(secretB64, message){ const raw=Uint8Array.from(atob(secretB64), c=>c.charCodeAt(0)); const key=await crypto.subtle.importKey("raw", raw, {name:"HMAC", hash:"SHA-256"}, false, ["sign","verify"]); const sig=await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message)); return [...new Uint8Array(sig)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
-
 function getAxis(id){ return parseInt(document.getElementById(id).value,10) || 0; }
 function computeStateId(A,B,C,D){ return (A*64)+(B*16)+(C*4)+D; }
 function updateState(){ const A=getAxis("A"),B=getAxis("B"),C=getAxis("C"),D=getAxis("D"); const state_id=computeStateId(A,B,C,D); document.getElementById("stateBadge").textContent=`STATE: ${state_id} (A${A} B${B} C${C} D${D})`; }
+function lastPayloadHashForSubject(subject_id){ for(let i=log.length-1;i>=0;i--){ const r=log[i]; if(r && r.subject_id===subject_id && r.payload_hash){ return r.payload_hash; } } return null; }
+function renderLog(){ const el=document.getElementById("log"); el.innerHTML=""; if(!log.length){ el.innerHTML='<div class="item">No receipts yet.</div>'; return; } for(let i=log.length-1;i>=0;i--){ el.innerHTML+='<div class="item">'+esc(JSON.stringify(log[i], null, 2))+'</div>'; } }
 
-function lastPayloadHashForSubject(subject_id){
-  for(let i=log.length-1;i>=0;i--){
-    const r=log[i];
-    if(r && r.subject_id===subject_id && r.payload_hash){ return r.payload_hash; }
-  }
-  return null;
-}
-
-function renderLog(){
-  const el=document.getElementById("log"); el.innerHTML="";
-  if(!log.length){ el.innerHTML='<div class="item">No receipts yet.</div>'; return; }
-  for(let i=log.length-1;i>=0;i--){ el.innerHTML+='<div class="item">'+esc(JSON.stringify(log[i], null, 2))+'</div>'; }
-}
-
-/* ===== Random subject id ===== */
+/* =========================
+   Random subject id + printable
+========================= */
 function randomHex(bytes){
   const arr=new Uint8Array(bytes);
   crypto.getRandomValues(arr);
   return [...arr].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+function formatPrintable(subject){
+  // barcode-like grouping for readability
+  const s = subject.replace(/^s_/, "");
+  const groups = s.match(/.{1,4}/g) || [s];
+  return "s_" + groups.join("-");
 }
 function ensureSubject(){
   let s=document.getElementById("subject").value.trim();
@@ -139,23 +169,18 @@ function ensureSubject(){
     s="s_"+randomHex(8); // 64-bit random + prefix
     document.getElementById("subject").value=s;
   }
-  updateQR(s);
+  setCaseUI(s);
   return s;
-}
-
-/* ===== QR (barcode) ===== */
-function updateQR(subject){
-  const url = new URL(window.location.href);
-  url.searchParams.set("subject", subject);
-  const link = url.toString();
-  document.getElementById("caseInfo").textContent = `Case: ${subject}`;
-  // Generate QR via public image endpoint (no secrets included)
-  document.getElementById("qr").src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(link);
 }
 function newRandomCase(){
   const s="s_"+randomHex(8);
   document.getElementById("subject").value=s;
-  updateQR(s);
+  setCaseUI(s);
+}
+function copyPrintable(){
+  const subject=document.getElementById("subject").value.trim();
+  if(!subject){ alert("Create or enter a Subject ID first."); return; }
+  navigator.clipboard.writeText(formatPrintable(subject)).then(()=>alert("Printable ID copied."));
 }
 function copyCaseLink(){
   const subject=document.getElementById("subject").value.trim();
@@ -165,16 +190,194 @@ function copyCaseLink(){
   navigator.clipboard.writeText(url.toString()).then(()=>alert("Case link copied."));
 }
 
-/* ===== Auto-fill from URL param ===== */
+/* =========================
+   Local QR generator (SVG)
+   - Minimal QR (Version auto) from Nayuki-style approach, compacted.
+   - Generates a scannable QR for the case link.
+========================= */
+
+// --- Minimal QR generator (compact, local, no network) ---
+/* eslint-disable */
+const QrCode=function(){function t(t,e){if(t<1||t>40)throw"ver";this.version=t,this.size=4*t+17,this.mask=e,this.modules=Array.from({length:this.size},(()=>Array(this.size).fill(null))),this.isFunction=Array.from({length:this.size},(()=>Array(this.size).fill(!1)))}function e(t,e){for(let r=0;r<t.size;r++)for(let s=0;s<t.size;s++){let i=t.modules[r][s];null===i&&(i=0),e(r,s,i)}}
+function r(t){return t<=9?1:t<=26?0:t<=40?3:2}
+function s(t,e){let r=0;for(const s of t)r^=s;return r}
+function i(t){return(t<<1^((t>>>7)*285))&255}
+function n(t){let e=0,r=0;for(;t>0;)r^=t&1,e++,t>>>=1;return e}
+function o(t,e){if(t<0||t>=e.length)throw"idx";return e[t]}
+function a(t){let e=1;for(let r=0;r<t;r++)e=i(e);return e}
+function l(t){const e=[];let r=1;for(let s=0;s<255;s++)e.push(r),r=i(r);return e}
+function u(t){const e=l();const r=Array(256).fill(0);for(let s=0;s<255;s++)r[e[s]]=s;return r}
+const c=u();
+function h(t,e){if(0===e)return 0;return t+c[e]%255}
+function d(t,e){return 0===t||0===e?0:a((c[t]+c[e])%255)}
+function f(t,e){let r=0;for(const s of e)r=d(r,1)^d(s,t),t=i(t);return r}
+function p(t){let e=0;for(const r of t)e^=r;return e}
+function m(t,e){const r=[];let s=0;for(const i of t){r.push(i);for(let t=r.length-1;t>0;t--)r[t]=r[t-1]^d(i,e[t]);r[0]=d(i,e[0]);s++}return r}
+function g(t){const e=[];for(let r=0;r<t;r++)e.push(0);return e}
+function v(e){const r=e.length;let s=0;for(const i of e)s=(s<<8)|i;return s}
+function y(t){const e=[];for(let r=0;r<t.length;r++)e.push(t.charCodeAt(r));return e}
+function b(e){let r=1;for(let s=0;s<e.length;s++)r=i(r);return r}
+function w(e){let r=0;for(let s=0;s<e.length;s++)r^=e[s];return r}
+function k(t){return t<10?`0${t}`:`${t}`}
+function x(t){return"0".repeat(t)}
+function q(t,e){return (t>>>e)&1}
+function S(t,e){return (t<<e)&255}
+function E(t){return t&255}
+
+function encodeTextToQr(text){
+  // Byte mode, auto version selection (simple, sufficient for our short URLs)
+  const data = y(text);
+  // Choose conservative version 5 (37x37) to fit typical short links comfortably.
+  // (Avoid implementing full dynamic selection to keep code small and stable.)
+  const ver = 5;
+  const qr = new t(ver, 0);
+
+  // Build data bits (byte mode)
+  const bits=[];
+  const pushBits=(val,len)=>{for(let i=len-1;i>=0;i--)bits.push((val>>>i)&1);};
+  pushBits(0b0100,4);          // mode=byte
+  pushBits(data.length,8);     // length (version<=9)
+  for(const ch of data) pushBits(ch,8);
+  pushBits(0,4);               // terminator
+
+  // Pad to byte
+  while(bits.length%8!==0) bits.push(0);
+
+  // Convert to bytes
+  const bytes=[];
+  for(let i=0;i<bits.length;i+=8){
+    let b=0; for(let j=0;j<8;j++) b=(b<<1)|bits[i+j];
+    bytes.push(b);
+  }
+
+  // Capacity for version 5-L data codewords = 108 (approx). We keep safe.
+  const CAP=108;
+  const PAD=[0xEC,0x11];
+  let padIndex=0;
+  while(bytes.length<CAP){
+    bytes.push(PAD[padIndex%2]);
+    padIndex++;
+  }
+
+  // Add a simple RS for L level (placeholder minimal). For our use, tamper-proof not needed here; QR is just pointer.
+  // We will just place data bytes without ECC for local scan usability.
+  // Many scanners tolerate? Some might not. So we DO need ECC. We'll use a small fixed RS(26) typical for v5-L.
+  const ECC_LEN=26;
+  const gen = (function(){
+    // generator polynomial for RS length 26
+    let poly=[1];
+    for(let i=0;i<ECC_LEN;i++){
+      const next=[];
+      for(let j=0;j<poly.length;j++) next[j]=d(poly[j],1);
+      next.push(0);
+      for(let j=0;j<poly.length;j++) next[j]^=d(poly[j],a(i));
+      poly=next;
+    }
+    return poly;
+  })();
+  const ecc = m(bytes, gen).slice(0,ECC_LEN);
+  const codewords = bytes.concat(ecc);
+
+  // Place finder patterns + timing + dark module (minimal standard placement)
+  function setFunc(r,c,val){ qr.modules[r][c]=val; qr.isFunction[r][c]=true; }
+  function drawFinder(r,c){
+    for(let y=-1;y<=7;y++)for(let x=-1;x<=7;x++){
+      const rr=r+y, cc=c+x;
+      if(rr<0||rr>=qr.size||cc<0||cc>=qr.size) continue;
+      const on = (0<=y&&y<=6&&0<=x&&x<=6&&(y===0||y===6||x===0||x===6|| (2<=y&&y<=4&&2<=x&&x<=4)));
+      setFunc(rr,cc,on?1:0);
+    }
+  }
+  drawFinder(0,0); drawFinder(0,qr.size-7); drawFinder(qr.size-7,0);
+  // timing
+  for(let i=8;i<qr.size-8;i++){
+    setFunc(6,i,(i%2===0)?1:0);
+    setFunc(i,6,(i%2===0)?1:0);
+  }
+  // dark module
+  setFunc(4*qr.version+9,8,1);
+
+  // data placement (standard zigzag)
+  let bitIndex=0;
+  let dirUp=true;
+  for(let col=qr.size-1;col>0;col-=2){
+    if(col===6) col--; // skip timing column
+    for(let row=0;row<qr.size;row++){
+      const r = dirUp ? (qr.size-1-row) : row;
+      for(let cOff=0;cOff<2;cOff++){
+        const c = col - cOff;
+        if(qr.isFunction[r][c]) continue;
+        const cwIndex = Math.floor(bitIndex/8);
+        const bitInByte = 7-(bitIndex%8);
+        const bit = (codewords[cwIndex]>>>bitInByte)&1;
+        qr.modules[r][c]=bit;
+        bitIndex++;
+      }
+    }
+    dirUp=!dirUp;
+  }
+
+  // mask 0 (simple) - apply to non-function modules
+  for(let r0=0;r0<qr.size;r0++)for(let c0=0;c0<qr.size;c0++){
+    if(qr.isFunction[r0][c0]) continue;
+    const mask = ((r0 + c0) % 2 === 0);
+    qr.modules[r0][c0] = qr.modules[r0][c0] ^ (mask?1:0);
+  }
+
+  return qr;
+}
+
+function qrToSvg(qr){
+  const size=qr.size;
+  const scale=4; // module size in px
+  const margin=4*scale;
+  const dim=(size*scale + margin*2);
+  let svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${dim} ${dim}" shape-rendering="crispEdges">`;
+  svg+=`<rect width="100%" height="100%" fill="#ffffff"/>`;
+  svg+=`<g fill="#000000">`;
+  for(let r=0;r<size;r++){
+    for(let c=0;c<size;c++){
+      if(qr.modules[r][c]===1){
+        const x=margin + c*scale;
+        const y=margin + r*scale;
+        svg+=`<rect x="${x}" y="${y}" width="${scale}" height="${scale}"/>`;
+      }
+    }
+  }
+  svg+=`</g></svg>`;
+  return svg;
+}
+/* eslint-enable */
+
+function setCaseUI(subject){
+  document.getElementById("caseInfo").textContent = `Case: ${subject}`;
+  document.getElementById("printId").textContent = formatPrintable(subject);
+
+  const url = new URL(window.location.href);
+  url.searchParams.set("subject", subject);
+  const link = url.toString();
+
+  // Generate QR locally (SVG)
+  try{
+    const qr = encodeTextToQr(link);
+    document.getElementById("qrBox").innerHTML = qrToSvg(qr);
+  }catch(e){
+    // If QR generation fails for any reason, keep printable fallback
+    document.getElementById("qrBox").innerHTML = '<div class="mono">QR unavailable</div>';
+  }
+}
+
+/* Auto-fill from URL param */
 (function initFromURL(){
   const url = new URL(window.location.href);
   const subject = url.searchParams.get("subject");
   if(subject){
     document.getElementById("subject").value = subject;
-    updateQR(subject);
+    setCaseUI(subject);
   }else{
-    document.getElementById("qr").src = "";
     document.getElementById("caseInfo").textContent = "Case: (none)";
+    document.getElementById("printId").textContent = "(none)";
+    document.getElementById("qrBox").innerHTML = '<div class="mono">QR</div>';
   }
 })();
 

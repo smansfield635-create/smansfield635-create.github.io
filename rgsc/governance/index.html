@@ -1,9 +1,10 @@
+<!-- FILE: rgsc/governance/index.html  (TNT REPLACEMENT) -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>RGSC · Governance</title>
+<title>RGSC · Governance · Scope Panel</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -15,45 +16,51 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#
 .h{text-align:center;margin-bottom:14px}
 .h h1{font-size:40px;font-weight:900;margin:0}
 .h p{opacity:.7;margin-top:8px}
-.card{width:min(820px,96vw);background:rgba(255,255,255,.06);border-radius:18px;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;padding:14px}
+.card{width:min(900px,96vw);background:rgba(255,255,255,.06);border-radius:18px;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;padding:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.field{flex:1;min-width:240px}
 .field label{display:block;font-weight:900;font-size:12px;letter-spacing:.8px;opacity:.8;margin:0 0 6px 2px}
-.field input,.field select{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:14px;border:0;outline:none;background:rgba(255,255,255,.10);color:#eaf2f6;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.row .field{flex:1;min-width:220px}
+.field input{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:14px;border:0;outline:none;background:rgba(255,255,255,.10);color:#eaf2f6;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset}
 .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.btn{flex:1;min-width:170px;padding:12px 14px;border-radius:16px;border:0;font-weight:900;letter-spacing:.6px;cursor:pointer;background:rgba(0,255,136,.22);color:#eaf2f6;box-shadow:0 0 0 1px rgba(0,255,136,.28) inset}
+.btn{flex:1;min-width:160px;padding:12px 14px;border-radius:16px;border:0;font-weight:900;letter-spacing:.6px;cursor:pointer;background:rgba(0,255,136,.22);color:#eaf2f6;box-shadow:0 0 0 1px rgba(0,255,136,.28) inset}
 .btn.secondary{background:rgba(255,255,255,.10);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}
-.items{margin-top:12px;max-height:320px;overflow:auto;border-radius:14px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;padding:8px}
+.btn.small{padding:10px 12px;border-radius:14px;min-width:140px}
+.badge{font-weight:900;letter-spacing:.8px;opacity:.85;font-size:12px;margin-top:8px}
+.panel{margin-top:10px;padding:12px;border-radius:16px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset}
+.scopeRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.scopeLabel{min-width:90px;font-weight:900;letter-spacing:.8px;opacity:.85}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{
+  padding:10px 12px;border-radius:999px;border:0;cursor:pointer;
+  background:rgba(255,255,255,.10);color:#eaf2f6;font-weight:900;letter-spacing:.6px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
+}
+.pill.active{
+  background:rgba(0,255,136,.22);
+  box-shadow:0 0 0 1px rgba(0,255,136,.28) inset;
+}
+.pill.neutral.active{
+  background:rgba(255,255,255,.14);
+  box-shadow:0 0 0 1px rgba(255,255,255,.18) inset;
+}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.actionBtn{
+  padding:10px 12px;border-radius:999px;border:0;cursor:pointer;
+  background:rgba(255,255,255,.10);color:#eaf2f6;font-weight:900;letter-spacing:.6px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
+}
+.actionBtn.active{
+  background:rgba(0,255,136,.22);
+  box-shadow:0 0 0 1px rgba(0,255,136,.28) inset;
+}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;opacity:.9}
+.printbox{margin-top:10px;padding:10px 12px;border-radius:14px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset}
+.items{margin-top:12px;max-height:300px;overflow:auto;border-radius:14px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;padding:8px}
 .item{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.35;opacity:.9;padding:8px;border-radius:12px;background:rgba(255,255,255,.04);box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;margin-bottom:8px;white-space:pre-wrap;word-break:break-word}
 .nav{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;justify-content:center}
 .nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
 footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
-.badge{font-weight:900;letter-spacing:.8px;opacity:.85;font-size:12px;margin-top:6px}
-
-/* Case panel */
-.casepanel{margin-top:10px;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between}
-.caseleft{flex:1;min-width:260px}
-.caseright{width:200px}
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;opacity:.9}
-.printbox{
-  margin-top:8px;
-  padding:10px 12px;
-  border-radius:14px;
-  background:rgba(0,0,0,.18);
-  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;
-}
-.printid{font-size:13px;letter-spacing:1.4px;word-break:break-word}
-.smallbtn{margin-top:8px;padding:10px 12px;border-radius:14px;border:0;font-weight:900;background:rgba(255,255,255,.10);color:#eaf2f6;cursor:pointer}
-.qrbox{
-  background:rgba(0,0,0,.18);
-  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;
-  border-radius:16px;
-  padding:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.qrbox svg{width:170px;height:170px;border-radius:10px}
+.hr{height:1px;background:rgba(255,255,255,.10);margin:12px 0}
 </style>
 </head>
 
@@ -61,65 +68,97 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
 <div class="page">
   <div class="h">
     <h1>RGSC · Governance</h1>
-    <p>Signed receipts · Per-subject chains · 256-state routing · QR + printable case IDs.</p>
+    <p>Tap-only scope panel · Hybrid compression · Per-subject chains · Replay-safe.</p>
   </div>
 
   <div class="card">
-    <div class="row">
-      <div class="field">
-        <label>ISSUER ID</label>
-        <input id="issuer" placeholder="SM635">
+
+    <!-- ISSUER (set once, then auto) -->
+    <div class="panel" id="issuerPanel">
+      <div class="row">
+        <div class="field">
+          <label>ISSUER (set once)</label>
+          <input id="issuerInput" placeholder="SM635">
+        </div>
+        <button class="btn small" onclick="saveIssuer()">SAVE ISSUER</button>
+        <button class="btn small secondary" onclick="clearIssuer()">CLEAR</button>
       </div>
-      <div class="field">
-        <label>SUBJECT ID (CASE)</label>
-        <input id="subject" placeholder="(leave blank for random)">
-      </div>
+      <div class="badge" id="issuerStatus">Issuer: (not set)</div>
     </div>
 
-    <div class="btnrow">
-      <button class="btn secondary" onclick="newRandomCase()">NEW CASE (RANDOM)</button>
-      <button class="btn secondary" onclick="copyCaseLink()">COPY CASE LINK</button>
-    </div>
+    <div class="hr"></div>
 
-    <div class="casepanel">
-      <div class="caseleft">
-        <div class="mono" id="caseInfo">Case: (none)</div>
+    <!-- CASE -->
+    <div class="panel">
+      <div class="row">
+        <div class="field">
+          <label>CASE (auto)</label>
+          <input id="subjectInput" placeholder="(auto)" readonly>
+        </div>
+        <button class="btn small secondary" onclick="newCase()">NEW CASE</button>
+        <button class="btn small secondary" onclick="copyCaseLink()">COPY LINK</button>
+      </div>
 
-        <div class="printbox">
-          <div class="mono">Printable ID (fallback)</div>
-          <div class="mono printid" id="printId">(none)</div>
-          <button class="smallbtn" onclick="copyPrintable()">COPY PRINTABLE</button>
+      <div class="printbox">
+        <div class="mono">Printable (fallback)</div>
+        <div class="mono" id="printId">(none)</div>
+        <div class="btnrow" style="margin-top:8px;">
+          <button class="btn small secondary" onclick="copyPrintable()">COPY PRINTABLE</button>
         </div>
       </div>
+    </div>
 
-      <div class="caseright">
-        <div class="mono" style="margin-bottom:8px;">QR (scan to reopen case)</div>
-        <div class="qrbox" id="qrBox"></div>
+    <div class="hr"></div>
+
+    <!-- ACTION (no typing) -->
+    <div class="panel">
+      <div class="badge">ACTION</div>
+      <div class="actions" id="actions">
+        <button class="actionBtn" onclick="setAction('DETECT')">DETECT</button>
+        <button class="actionBtn" onclick="setAction('ACK')">ACK</button>
+        <button class="actionBtn" onclick="setAction('ADJUST')">ADJUST</button>
+        <button class="actionBtn" onclick="setAction('RESOLVE')">RESOLVE</button>
+        <button class="actionBtn" onclick="setAction('CLOSE')">CLOSE</button>
+      </div>
+      <div class="badge" id="actionStatus">Selected: ACK</div>
+    </div>
+
+    <div class="hr"></div>
+
+    <!-- SCOPE (7 dispositions per lens) -->
+    <div class="panel">
+      <div class="badge">SCOPE (each lens: -3 -2 -1 0 +1 +2 +3)</div>
+
+      <div class="scopeRow">
+        <div class="scopeLabel">N</div>
+        <div class="pills" id="N_pills"></div>
+      </div>
+
+      <div class="scopeRow">
+        <div class="scopeLabel">S</div>
+        <div class="pills" id="S_pills"></div>
+      </div>
+
+      <div class="scopeRow">
+        <div class="scopeLabel">E</div>
+        <div class="pills" id="E_pills"></div>
+      </div>
+
+      <div class="scopeRow">
+        <div class="scopeLabel">W</div>
+        <div class="pills" id="W_pills"></div>
+      </div>
+
+      <div class="badge" id="stateStatus">state_id_256: 0</div>
+      <div class="mono" id="detailStatus">N_raw=0 S_raw=0 E_raw=0 W_raw=0 · N_lvl=0 S_lvl=0 E_lvl=0 W_lvl=0</div>
+
+      <div class="btnrow" style="margin-top:10px;">
+        <button class="btn" onclick="createReceipt()">CREATE RECEIPT</button>
       </div>
     </div>
 
-    <div class="row" style="margin-top:10px;">
-      <div class="field"><label>AXIS A (0–3)</label><select id="A" onchange="updateState()"><option value="0">A0</option><option value="1">A1</option><option value="2">A2</option><option value="3">A3</option></select></div>
-      <div class="field"><label>AXIS B (0–3)</label><select id="B" onchange="updateState()"><option value="0">B0</option><option value="1">B1</option><option value="2">B2</option><option value="3">B3</option></select></div>
-      <div class="field"><label>AXIS C (0–3)</label><select id="C" onchange="updateState()"><option value="0">C0</option><option value="1">C1</option><option value="2">C2</option><option value="3">C3</option></select></div>
-      <div class="field"><label>AXIS D (0–3)</label><select id="D" onchange="updateState()"><option value="0">D0</option><option value="1">D1</option><option value="2">D2</option><option value="3">D3</option></select></div>
-    </div>
+    <div class="items" id="recent"></div>
 
-    <div class="badge" id="stateBadge">STATE: 0</div>
-
-    <div class="field" style="margin-top:10px;">
-      <label>CONSTRAINT HASH</label>
-      <input id="constraint" value="GOV_RECEIPT_v1">
-    </div>
-
-    <div class="field" style="margin-top:10px;">
-      <label>OUTCOME CODE</label>
-      <input id="outcome" placeholder="ACK / RESOLVE / REJECT / AMEND">
-    </div>
-
-    <button class="btn" onclick="createReceipt()">CREATE RECEIPT (SIGNED)</button>
-
-    <div class="items" id="log"></div>
   </div>
 
   <div class="nav">
@@ -133,280 +172,321 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
 
 <script>
 /* =========================
-   Core receipt engine
+   Constants
 ========================= */
-const STORAGE_KEY="rgsc_log", SECRET_KEY="rgsc_device_secret", SCHEMA_VERSION="1.0", SIG_ALG="HMAC-SHA256-LOCAL", DOMAIN="governance";
+const STORAGE_KEY = "rgsc_log";
+const SECRET_KEY  = "rgsc_device_secret";
+const ISSUER_KEY  = "rgsc_issuer_id";
+const SCHEMA_VERSION = "1.0";
+const SIG_ALG = "HMAC-SHA256-LOCAL";
+const DOMAIN = "governance";
+const CONSTRAINT_HASH = "GOV_RECEIPT_v1";
+
+/* =========================
+   Local log
+========================= */
 let log = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 function saveLog(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(log)); }
 function esc(s){ return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
-function canonicalPayload(obj){ const keys=Object.keys(obj).sort(); const out={}; for(const k of keys){ out[k]=obj[k]; } return JSON.stringify(out); }
-async function sha256Hex(str){ const buf=new TextEncoder().encode(str); const digest=await crypto.subtle.digest("SHA-256", buf); return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
-function getOrCreateDeviceSecret(){ let secret=localStorage.getItem(SECRET_KEY); if(!secret){ const arr=new Uint8Array(32); crypto.getRandomValues(arr); secret=btoa(String.fromCharCode(...arr)); localStorage.setItem(SECRET_KEY, secret);} return secret; }
-async function hmacHex(secretB64, message){ const raw=Uint8Array.from(atob(secretB64), c=>c.charCodeAt(0)); const key=await crypto.subtle.importKey("raw", raw, {name:"HMAC", hash:"SHA-256"}, false, ["sign","verify"]); const sig=await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message)); return [...new Uint8Array(sig)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
-function getAxis(id){ return parseInt(document.getElementById(id).value,10) || 0; }
-function computeStateId(A,B,C,D){ return (A*64)+(B*16)+(C*4)+D; }
-function updateState(){ const A=getAxis("A"),B=getAxis("B"),C=getAxis("C"),D=getAxis("D"); const state_id=computeStateId(A,B,C,D); document.getElementById("stateBadge").textContent=`STATE: ${state_id} (A${A} B${B} C${C} D${D})`; }
-function lastPayloadHashForSubject(subject_id){ for(let i=log.length-1;i>=0;i--){ const r=log[i]; if(r && r.subject_id===subject_id && r.payload_hash){ return r.payload_hash; } } return null; }
-function renderLog(){ const el=document.getElementById("log"); el.innerHTML=""; if(!log.length){ el.innerHTML='<div class="item">No receipts yet.</div>'; return; } for(let i=log.length-1;i>=0;i--){ el.innerHTML+='<div class="item">'+esc(JSON.stringify(log[i], null, 2))+'</div>'; } }
 
 /* =========================
-   Random subject id + printable
+   Crypto helpers
+========================= */
+function canonicalPayload(obj){
+  const keys = Object.keys(obj).sort();
+  const out = {};
+  for(const k of keys){ out[k] = obj[k]; }
+  return JSON.stringify(out);
+}
+async function sha256Hex(str){
+  const buf = new TextEncoder().encode(str);
+  const digest = await crypto.subtle.digest("SHA-256", buf);
+  return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+function getOrCreateDeviceSecret(){
+  let secret = localStorage.getItem(SECRET_KEY);
+  if(!secret){
+    const arr = new Uint8Array(32);
+    crypto.getRandomValues(arr);
+    secret = btoa(String.fromCharCode(...arr));
+    localStorage.setItem(SECRET_KEY, secret);
+  }
+  return secret;
+}
+async function hmacHex(secretB64, message){
+  const raw = Uint8Array.from(atob(secretB64), c=>c.charCodeAt(0));
+  const key = await crypto.subtle.importKey("raw", raw, {name:"HMAC", hash:"SHA-256"}, false, ["sign","verify"]);
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message));
+  return [...new Uint8Array(sig)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+/* =========================
+   Issuer (set once)
+========================= */
+function loadIssuer(){
+  const issuer = localStorage.getItem(ISSUER_KEY) || "";
+  document.getElementById("issuerInput").value = issuer;
+  document.getElementById("issuerStatus").textContent = issuer ? `Issuer: ${issuer}` : "Issuer: (not set)";
+}
+function saveIssuer(){
+  const v = document.getElementById("issuerInput").value.trim();
+  if(!v){ alert("Enter an issuer id once, then save."); return; }
+  localStorage.setItem(ISSUER_KEY, v);
+  loadIssuer();
+  alert("Issuer saved.");
+}
+function clearIssuer(){
+  if(!confirm("Clear issuer on this device?")) return;
+  localStorage.removeItem(ISSUER_KEY);
+  loadIssuer();
+}
+
+/* =========================
+   Case ID (auto, random)
 ========================= */
 function randomHex(bytes){
-  const arr=new Uint8Array(bytes);
+  const arr = new Uint8Array(bytes);
   crypto.getRandomValues(arr);
   return [...arr].map(b=>b.toString(16).padStart(2,"0")).join("");
 }
 function formatPrintable(subject){
-  // barcode-like grouping for readability
   const s = subject.replace(/^s_/, "");
   const groups = s.match(/.{1,4}/g) || [s];
   return "s_" + groups.join("-");
 }
-function ensureSubject(){
-  let s=document.getElementById("subject").value.trim();
-  if(!s){
-    s="s_"+randomHex(8); // 64-bit random + prefix
-    document.getElementById("subject").value=s;
-  }
-  setCaseUI(s);
-  return s;
+function setCase(subject){
+  document.getElementById("subjectInput").value = subject;
+  document.getElementById("printId").textContent = formatPrintable(subject);
+
+  // also maintain a deep-link for copy/share
+  const url = new URL(window.location.href);
+  url.searchParams.set("subject", subject);
+  window.history.replaceState({}, "", url.toString());
 }
-function newRandomCase(){
-  const s="s_"+randomHex(8);
-  document.getElementById("subject").value=s;
-  setCaseUI(s);
+function newCase(){
+  const s = "s_" + randomHex(8);
+  setCase(s);
+}
+function initCaseFromURL(){
+  const url = new URL(window.location.href);
+  const s = url.searchParams.get("subject");
+  if(s){ setCase(s); }
+  else { newCase(); }
 }
 function copyPrintable(){
-  const subject=document.getElementById("subject").value.trim();
-  if(!subject){ alert("Create or enter a Subject ID first."); return; }
-  navigator.clipboard.writeText(formatPrintable(subject)).then(()=>alert("Printable ID copied."));
+  const subject = document.getElementById("subjectInput").value.trim();
+  navigator.clipboard.writeText(formatPrintable(subject)).then(()=>alert("Printable copied."));
 }
 function copyCaseLink(){
-  const subject=document.getElementById("subject").value.trim();
-  if(!subject){ alert("Create or enter a Subject ID first."); return; }
+  const subject = document.getElementById("subjectInput").value.trim();
   const url = new URL(window.location.href);
   url.searchParams.set("subject", subject);
   navigator.clipboard.writeText(url.toString()).then(()=>alert("Case link copied."));
 }
 
 /* =========================
-   Local QR generator (SVG)
-   - Minimal QR (Version auto) from Nayuki-style approach, compacted.
-   - Generates a scannable QR for the case link.
+   Action buttons (tap-only)
 ========================= */
-
-// --- Minimal QR generator (compact, local, no network) ---
-/* eslint-disable */
-const QrCode=function(){function t(t,e){if(t<1||t>40)throw"ver";this.version=t,this.size=4*t+17,this.mask=e,this.modules=Array.from({length:this.size},(()=>Array(this.size).fill(null))),this.isFunction=Array.from({length:this.size},(()=>Array(this.size).fill(!1)))}function e(t,e){for(let r=0;r<t.size;r++)for(let s=0;s<t.size;s++){let i=t.modules[r][s];null===i&&(i=0),e(r,s,i)}}
-function r(t){return t<=9?1:t<=26?0:t<=40?3:2}
-function s(t,e){let r=0;for(const s of t)r^=s;return r}
-function i(t){return(t<<1^((t>>>7)*285))&255}
-function n(t){let e=0,r=0;for(;t>0;)r^=t&1,e++,t>>>=1;return e}
-function o(t,e){if(t<0||t>=e.length)throw"idx";return e[t]}
-function a(t){let e=1;for(let r=0;r<t;r++)e=i(e);return e}
-function l(t){const e=[];let r=1;for(let s=0;s<255;s++)e.push(r),r=i(r);return e}
-function u(t){const e=l();const r=Array(256).fill(0);for(let s=0;s<255;s++)r[e[s]]=s;return r}
-const c=u();
-function h(t,e){if(0===e)return 0;return t+c[e]%255}
-function d(t,e){return 0===t||0===e?0:a((c[t]+c[e])%255)}
-function f(t,e){let r=0;for(const s of e)r=d(r,1)^d(s,t),t=i(t);return r}
-function p(t){let e=0;for(const r of t)e^=r;return e}
-function m(t,e){const r=[];let s=0;for(const i of t){r.push(i);for(let t=r.length-1;t>0;t--)r[t]=r[t-1]^d(i,e[t]);r[0]=d(i,e[0]);s++}return r}
-function g(t){const e=[];for(let r=0;r<t;r++)e.push(0);return e}
-function v(e){const r=e.length;let s=0;for(const i of e)s=(s<<8)|i;return s}
-function y(t){const e=[];for(let r=0;r<t.length;r++)e.push(t.charCodeAt(r));return e}
-function b(e){let r=1;for(let s=0;s<e.length;s++)r=i(r);return r}
-function w(e){let r=0;for(let s=0;s<e.length;s++)r^=e[s];return r}
-function k(t){return t<10?`0${t}`:`${t}`}
-function x(t){return"0".repeat(t)}
-function q(t,e){return (t>>>e)&1}
-function S(t,e){return (t<<e)&255}
-function E(t){return t&255}
-
-function encodeTextToQr(text){
-  // Byte mode, auto version selection (simple, sufficient for our short URLs)
-  const data = y(text);
-  // Choose conservative version 5 (37x37) to fit typical short links comfortably.
-  // (Avoid implementing full dynamic selection to keep code small and stable.)
-  const ver = 5;
-  const qr = new t(ver, 0);
-
-  // Build data bits (byte mode)
-  const bits=[];
-  const pushBits=(val,len)=>{for(let i=len-1;i>=0;i--)bits.push((val>>>i)&1);};
-  pushBits(0b0100,4);          // mode=byte
-  pushBits(data.length,8);     // length (version<=9)
-  for(const ch of data) pushBits(ch,8);
-  pushBits(0,4);               // terminator
-
-  // Pad to byte
-  while(bits.length%8!==0) bits.push(0);
-
-  // Convert to bytes
-  const bytes=[];
-  for(let i=0;i<bits.length;i+=8){
-    let b=0; for(let j=0;j<8;j++) b=(b<<1)|bits[i+j];
-    bytes.push(b);
+let selectedAction = "ACK";
+function setAction(a){
+  selectedAction = a;
+  document.getElementById("actionStatus").textContent = `Selected: ${a}`;
+  // highlight
+  const btns = document.querySelectorAll(".actionBtn");
+  btns.forEach(b=>{
+    b.classList.toggle("active", b.textContent === a);
+  });
+  // optional: set a default E_raw based on action if user hasn't touched E yet
+  if(!userTouchedE){
+    const map = {DETECT:0, ACK:1, ADJUST:2, RESOLVE:3, CLOSE:3};
+    const target = map[a] ?? 0;
+    setLensRaw("E", target); // 0..3 as positive side default (still editable)
   }
-
-  // Capacity for version 5-L data codewords = 108 (approx). We keep safe.
-  const CAP=108;
-  const PAD=[0xEC,0x11];
-  let padIndex=0;
-  while(bytes.length<CAP){
-    bytes.push(PAD[padIndex%2]);
-    padIndex++;
-  }
-
-  // Add a simple RS for L level (placeholder minimal). For our use, tamper-proof not needed here; QR is just pointer.
-  // We will just place data bytes without ECC for local scan usability.
-  // Many scanners tolerate? Some might not. So we DO need ECC. We'll use a small fixed RS(26) typical for v5-L.
-  const ECC_LEN=26;
-  const gen = (function(){
-    // generator polynomial for RS length 26
-    let poly=[1];
-    for(let i=0;i<ECC_LEN;i++){
-      const next=[];
-      for(let j=0;j<poly.length;j++) next[j]=d(poly[j],1);
-      next.push(0);
-      for(let j=0;j<poly.length;j++) next[j]^=d(poly[j],a(i));
-      poly=next;
-    }
-    return poly;
-  })();
-  const ecc = m(bytes, gen).slice(0,ECC_LEN);
-  const codewords = bytes.concat(ecc);
-
-  // Place finder patterns + timing + dark module (minimal standard placement)
-  function setFunc(r,c,val){ qr.modules[r][c]=val; qr.isFunction[r][c]=true; }
-  function drawFinder(r,c){
-    for(let y=-1;y<=7;y++)for(let x=-1;x<=7;x++){
-      const rr=r+y, cc=c+x;
-      if(rr<0||rr>=qr.size||cc<0||cc>=qr.size) continue;
-      const on = (0<=y&&y<=6&&0<=x&&x<=6&&(y===0||y===6||x===0||x===6|| (2<=y&&y<=4&&2<=x&&x<=4)));
-      setFunc(rr,cc,on?1:0);
-    }
-  }
-  drawFinder(0,0); drawFinder(0,qr.size-7); drawFinder(qr.size-7,0);
-  // timing
-  for(let i=8;i<qr.size-8;i++){
-    setFunc(6,i,(i%2===0)?1:0);
-    setFunc(i,6,(i%2===0)?1:0);
-  }
-  // dark module
-  setFunc(4*qr.version+9,8,1);
-
-  // data placement (standard zigzag)
-  let bitIndex=0;
-  let dirUp=true;
-  for(let col=qr.size-1;col>0;col-=2){
-    if(col===6) col--; // skip timing column
-    for(let row=0;row<qr.size;row++){
-      const r = dirUp ? (qr.size-1-row) : row;
-      for(let cOff=0;cOff<2;cOff++){
-        const c = col - cOff;
-        if(qr.isFunction[r][c]) continue;
-        const cwIndex = Math.floor(bitIndex/8);
-        const bitInByte = 7-(bitIndex%8);
-        const bit = (codewords[cwIndex]>>>bitInByte)&1;
-        qr.modules[r][c]=bit;
-        bitIndex++;
-      }
-    }
-    dirUp=!dirUp;
-  }
-
-  // mask 0 (simple) - apply to non-function modules
-  for(let r0=0;r0<qr.size;r0++)for(let c0=0;c0<qr.size;c0++){
-    if(qr.isFunction[r0][c0]) continue;
-    const mask = ((r0 + c0) % 2 === 0);
-    qr.modules[r0][c0] = qr.modules[r0][c0] ^ (mask?1:0);
-  }
-
-  return qr;
+  updateComputed();
 }
 
-function qrToSvg(qr){
-  const size=qr.size;
-  const scale=4; // module size in px
-  const margin=4*scale;
-  const dim=(size*scale + margin*2);
-  let svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${dim} ${dim}" shape-rendering="crispEdges">`;
-  svg+=`<rect width="100%" height="100%" fill="#ffffff"/>`;
-  svg+=`<g fill="#000000">`;
-  for(let r=0;r<size;r++){
-    for(let c=0;c<size;c++){
-      if(qr.modules[r][c]===1){
-        const x=margin + c*scale;
-        const y=margin + r*scale;
-        svg+=`<rect x="${x}" y="${y}" width="${scale}" height="${scale}"/>`;
-      }
+/* =========================
+   Hybrid scope: raw (-3..+3) + compressed lvl (0..3)
+========================= */
+const lens = {
+  N: {raw:0},
+  S: {raw:0},
+  E: {raw:0},
+  W: {raw:0},
+};
+let userTouchedE = false;
+
+function signOf(x){
+  if(x===0) return "NEU";
+  return x>0 ? "POS" : "NEG";
+}
+function lvlOf(x){
+  const a = Math.abs(x);
+  return a>3 ? 3 : a; // 0..3
+}
+function encode256(Nlvl, Slvl, Elvl, Wlvl){
+  return (Nlvl*64) + (Slvl*16) + (Elvl*4) + (Wlvl);
+}
+
+function makePills(targetId, axis){
+  const holder = document.getElementById(targetId);
+  holder.innerHTML = "";
+  const values = [-3,-2,-1,0,1,2,3];
+  values.forEach(v=>{
+    const b = document.createElement("button");
+    b.className = "pill" + (v===0 ? " neutral" : "");
+    b.textContent = (v===0 ? "0" : (v>0 ? `+${v}` : `${v}`));
+    b.onclick = ()=> {
+      if(axis==="E") userTouchedE = true;
+      setLensRaw(axis, v);
+      updateComputed();
+    };
+    holder.appendChild(b);
+  });
+}
+function setLensRaw(axis, v){
+  lens[axis].raw = v;
+  // update active highlight
+  const holder = document.getElementById(axis+"_pills");
+  [...holder.children].forEach(btn=>{
+    const t = btn.textContent;
+    const parsed = (t==="0") ? 0 : parseInt(t.replace("+",""),10);
+    btn.classList.toggle("active", parsed === v);
+  });
+}
+
+function updateComputed(){
+  const N_raw = lens.N.raw, S_raw = lens.S.raw, E_raw = lens.E.raw, W_raw = lens.W.raw;
+  const N_lvl = lvlOf(N_raw), S_lvl = lvlOf(S_raw), E_lvl = lvlOf(E_raw), W_lvl = lvlOf(W_raw);
+  const state_id = encode256(N_lvl, S_lvl, E_lvl, W_lvl);
+
+  document.getElementById("stateStatus").textContent = `state_id_256: ${state_id}`;
+  document.getElementById("detailStatus").textContent =
+    `N_raw=${N_raw} S_raw=${S_raw} E_raw=${E_raw} W_raw=${W_raw} · `+
+    `N_lvl=${N_lvl} S_lvl=${S_lvl} E_lvl=${E_lvl} W_lvl=${W_lvl}`;
+}
+
+/* =========================
+   Per-subject chaining
+========================= */
+function lastPayloadHashForSubject(subject_id){
+  for(let i=log.length-1;i>=0;i--){
+    const r = log[i];
+    if(r && r.subject_id === subject_id && r.payload_hash){
+      return r.payload_hash;
     }
   }
-  svg+=`</g></svg>`;
-  return svg;
-}
-/* eslint-enable */
-
-function setCaseUI(subject){
-  document.getElementById("caseInfo").textContent = `Case: ${subject}`;
-  document.getElementById("printId").textContent = formatPrintable(subject);
-
-  const url = new URL(window.location.href);
-  url.searchParams.set("subject", subject);
-  const link = url.toString();
-
-  // Generate QR locally (SVG)
-  try{
-    const qr = encodeTextToQr(link);
-    document.getElementById("qrBox").innerHTML = qrToSvg(qr);
-  }catch(e){
-    // If QR generation fails for any reason, keep printable fallback
-    document.getElementById("qrBox").innerHTML = '<div class="mono">QR unavailable</div>';
-  }
+  return null;
 }
 
-/* Auto-fill from URL param */
-(function initFromURL(){
-  const url = new URL(window.location.href);
-  const subject = url.searchParams.get("subject");
-  if(subject){
-    document.getElementById("subject").value = subject;
-    setCaseUI(subject);
-  }else{
-    document.getElementById("caseInfo").textContent = "Case: (none)";
-    document.getElementById("printId").textContent = "(none)";
-    document.getElementById("qrBox").innerHTML = '<div class="mono">QR</div>';
-  }
-})();
-
+/* =========================
+   Create receipt (tap-only)
+========================= */
 async function createReceipt(){
-  const issuer=document.getElementById("issuer").value.trim();
-  const constraint=document.getElementById("constraint").value.trim();
-  const outcome=document.getElementById("outcome").value.trim();
-  if(!issuer||!constraint||!outcome){ alert("Issuer, constraint, outcome required."); return; }
+  const issuer = (localStorage.getItem(ISSUER_KEY) || "").trim();
+  if(!issuer){
+    alert("Set ISSUER once, then try again.");
+    return;
+  }
+  const subject = document.getElementById("subjectInput").value.trim();
+  if(!subject){
+    alert("Case missing. Tap NEW CASE.");
+    return;
+  }
 
-  const subject = ensureSubject();
+  const N_raw = lens.N.raw, S_raw = lens.S.raw, E_raw = lens.E.raw, W_raw = lens.W.raw;
+  const N_lvl = lvlOf(N_raw), S_lvl = lvlOf(S_raw), E_lvl = lvlOf(E_raw), W_lvl = lvlOf(W_raw);
+  const N_sign = signOf(N_raw), S_sign = signOf(S_raw), E_sign = signOf(E_raw), W_sign = signOf(W_raw);
 
-  const A=getAxis("A"),B=getAxis("B"),C=getAxis("C"),D=getAxis("D");
-  const state_id=computeStateId(A,B,C,D);
-  const prev_hash=lastPayloadHashForSubject(subject);
+  const state_id = encode256(N_lvl, S_lvl, E_lvl, W_lvl);
 
-  const base={schema_version:SCHEMA_VERSION,sig_alg:SIG_ALG,issuer_id:issuer,subject_id:subject,domain:DOMAIN,state_id:state_id,A:A,B:B,C:C,D:D,constraint_hash:constraint,outcome_code:outcome,ts:new Date().toISOString(),prev_hash:prev_hash};
+  // IMPORTANT: keep A/B/C/D as lvl so Log verification stays consistent.
+  const A = N_lvl, B = S_lvl, C = E_lvl, D = W_lvl;
 
-  const payload=canonicalPayload(base);
-  const payload_hash=await sha256Hex(payload);
+  const prev_hash = lastPayloadHashForSubject(subject);
 
-  const secret=getOrCreateDeviceSecret();
-  const signature=await hmacHex(secret, payload_hash);
+  const base = {
+    schema_version: SCHEMA_VERSION,
+    sig_alg: SIG_ALG,
+    issuer_id: issuer,
+    subject_id: subject,
+    domain: DOMAIN,
 
-  const receipt={receipt_id:"r_"+Date.now(),...base,payload_hash,signature,verify_status:"VALID_LOCAL"};
-  log.push(receipt); saveLog(); renderLog();
+    // hybrid scope (signed)
+    N_raw, S_raw, E_raw, W_raw,
+    N_sign, S_sign, E_sign, W_sign,
+    N_lvl, S_lvl, E_lvl, W_lvl,
+
+    // compatibility for existing verifier
+    state_id: state_id,
+    A, B, C, D,
+
+    constraint_hash: CONSTRAINT_HASH,
+    outcome_code: selectedAction,
+    ts: new Date().toISOString(),
+    prev_hash: prev_hash
+  };
+
+  const payload = canonicalPayload(base);
+  const payload_hash = await sha256Hex(payload);
+
+  const secret = getOrCreateDeviceSecret();
+  const signature = await hmacHex(secret, payload_hash);
+
+  const receipt = {
+    receipt_id: "r_" + Date.now(),
+    ...base,
+    payload_hash,
+    signature,
+    verify_status: "VALID_LOCAL"
+  };
+
+  log.push(receipt);
+  saveLog();
+  renderRecentForSubject(subject);
 }
 
-updateState();
-renderLog();
+/* =========================
+   Recent view (current subject only)
+========================= */
+function renderRecentForSubject(subject){
+  const el = document.getElementById("recent");
+  const items = [];
+  for(let i=log.length-1;i>=0 && items.length<12;i--){
+    const r = log[i];
+    if(r && r.subject_id === subject) items.push(r);
+  }
+  if(!items.length){
+    el.innerHTML = '<div class="item">No receipts for this case yet.</div>';
+    return;
+  }
+  el.innerHTML = items.map(r=>'<div class="item">'+esc(JSON.stringify(r, null, 2))+'</div>').join("");
+}
+
+/* =========================
+   Init
+========================= */
+function init(){
+  // Build scope pill rows
+  makePills("N_pills", "N");
+  makePills("S_pills", "S");
+  makePills("E_pills", "E");
+  makePills("W_pills", "W");
+
+  // Default action
+  setAction("ACK");
+
+  // Default all lenses to 0 (baseline)
+  setLensRaw("N",0); setLensRaw("S",0); setLensRaw("E",0); setLensRaw("W",0);
+
+  loadIssuer();
+  initCaseFromURL();
+  updateComputed();
+
+  const subject = document.getElementById("subjectInput").value.trim();
+  renderRecentForSubject(subject);
+}
+init();
 </script>
 </body>
 </html>

@@ -1,4 +1,3 @@
-<!-- FILE: rgsc/ice/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,49 +10,24 @@
 
 <style>
 html,body{height:100%;margin:0}
-body{
-  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
-  color:#eaf2f6;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-}
+body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 .page{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 12px}
 .h{text-align:center;margin-bottom:14px}
 .h h1{font-size:40px;font-weight:900;margin:0}
 .h p{opacity:.7;margin-top:8px}
-.card{
-  width:min(680px,92vw);
-  background:rgba(255,255,255,.06);
-  border-radius:18px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
-  padding:14px;
-}
+.card{width:min(720px,94vw);background:rgba(255,255,255,.06);border-radius:18px;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;padding:14px}
 .field label{display:block;font-weight:900;font-size:12px;letter-spacing:.8px;opacity:.8;margin:0 0 6px 2px}
-.field input{
-  width:100%;box-sizing:border-box;
-  padding:10px 12px;border-radius:14px;border:0;outline:none;
-  background:rgba(255,255,255,.10);color:#eaf2f6;
-  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
-}
-.row{display:flex;gap:10px}
-.row .field{flex:1}
-.btn{
-  width:100%;
-  padding:12px 14px;border-radius:16px;border:0;
-  font-weight:900;letter-spacing:.6px;
-  cursor:pointer;
-  background:rgba(0,255,136,.22);color:#eaf2f6;
-  box-shadow:0 0 0 1px rgba(0,255,136,.28) inset;
-  margin-top:10px;
-}
-.btn.secondary{
-  background:rgba(255,255,255,.10);
-  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
-}
+.field input,.field select{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:14px;border:0;outline:none;background:rgba(255,255,255,.10);color:#eaf2f6;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row .field{flex:1;min-width:220px}
+.btn{width:100%;padding:12px 14px;border-radius:16px;border:0;font-weight:900;letter-spacing:.6px;cursor:pointer;background:rgba(0,255,136,.22);color:#eaf2f6;box-shadow:0 0 0 1px rgba(0,255,136,.28) inset;margin-top:10px}
+.btn.secondary{background:rgba(255,255,255,.10);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}
 .items{margin-top:12px;max-height:320px;overflow:auto;border-radius:14px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;padding:8px}
 .item{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.35;opacity:.9;padding:8px;border-radius:12px;background:rgba(255,255,255,.04);box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;margin-bottom:8px;white-space:pre-wrap;word-break:break-word}
 .nav{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;justify-content:center}
 .nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
 footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
+.badge{font-weight:900;letter-spacing:.8px;opacity:.85;font-size:12px;margin-top:6px}
 </style>
 </head>
 
@@ -61,20 +35,29 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
 <div class="page">
   <div class="h">
     <h1>RGSC · ICE / Closure</h1>
-    <p>Leaf route · Linear UI · Receipt issuance.</p>
+    <p>Signed receipts · Per-subject chains · 256-state routing.</p>
   </div>
 
   <div class="card">
     <div class="row">
       <div class="field">
         <label>ISSUER ID</label>
-        <input id="issuer" placeholder="your_name_or_key">
+        <input id="issuer" placeholder="SM635">
       </div>
       <div class="field">
-        <label>SUBJECT ID</label>
-        <input id="subject" placeholder="run_001">
+        <label>SUBJECT ID (RUN)</label>
+        <input id="subject" placeholder="RUN-0001">
       </div>
     </div>
+
+    <div class="row" style="margin-top:10px;">
+      <div class="field"><label>AXIS A (0–3)</label><select id="A" onchange="updateState()"><option value="0">A0</option><option value="1">A1</option><option value="2">A2</option><option value="3">A3</option></select></div>
+      <div class="field"><label>AXIS B (0–3)</label><select id="B" onchange="updateState()"><option value="0">B0</option><option value="1">B1</option><option value="2">B2</option><option value="3">B3</option></select></div>
+      <div class="field"><label>AXIS C (0–3)</label><select id="C" onchange="updateState()"><option value="0">C0</option><option value="1">C1</option><option value="2">C2</option><option value="3">C3</option></select></div>
+      <div class="field"><label>AXIS D (0–3)</label><select id="D" onchange="updateState()"><option value="0">D0</option><option value="1">D1</option><option value="2">D2</option><option value="3">D3</option></select></div>
+    </div>
+
+    <div class="badge" id="stateBadge">STATE: 0</div>
 
     <div class="field" style="margin-top:10px;">
       <label>CONSTRAINT HASH</label>
@@ -83,10 +66,10 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
 
     <div class="field" style="margin-top:10px;">
       <label>OUTCOME CODE</label>
-      <input id="outcome" placeholder="PASS / FAIL / COMPLETE">
+      <input id="outcome" placeholder="PASS / FAIL / OPEN / CLOSED">
     </div>
 
-    <button class="btn" onclick="createReceipt()">CREATE RECEIPT</button>
+    <button class="btn" onclick="createReceipt()">CREATE RECEIPT (SIGNED)</button>
     <button class="btn secondary" onclick="exportLog()">EXPORT LOG (JSON)</button>
 
     <div class="items" id="log"></div>
@@ -102,46 +85,38 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
 </div>
 
 <script>
-let log = JSON.parse(localStorage.getItem("rgsc_log") || "[]");
-function saveLog(){ localStorage.setItem("rgsc_log", JSON.stringify(log)); }
+const STORAGE_KEY="rgsc_log", SECRET_KEY="rgsc_device_secret", SCHEMA_VERSION="1.0", SIG_ALG="HMAC-SHA256-LOCAL", DOMAIN="ice";
+let log = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+function saveLog(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(log)); }
 function esc(s){ return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
-function renderLog(){
-  const el = document.getElementById("log");
-  el.innerHTML = "";
-  if(!log.length){ el.innerHTML = '<div class="item">No receipts yet.</div>'; return; }
-  for(let i=log.length-1;i>=0;i--){
-    el.innerHTML += '<div class="item">' + esc(JSON.stringify(log[i], null, 2)) + '</div>';
-  }
+function canonicalPayload(obj){ const keys=Object.keys(obj).sort(); const out={}; for(const k of keys){ out[k]=obj[k]; } return JSON.stringify(out); }
+async function sha256Hex(str){ const buf=new TextEncoder().encode(str); const digest=await crypto.subtle.digest("SHA-256", buf); return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
+function getOrCreateDeviceSecret(){ let secret=localStorage.getItem(SECRET_KEY); if(!secret){ const arr=new Uint8Array(32); crypto.getRandomValues(arr); secret=btoa(String.fromCharCode(...arr)); localStorage.setItem(SECRET_KEY, secret);} return secret; }
+async function hmacHex(secretB64, message){ const raw=Uint8Array.from(atob(secretB64), c=>c.charCodeAt(0)); const key=await crypto.subtle.importKey("raw", raw, {name:"HMAC", hash:"SHA-256"}, false, ["sign","verify"]); const sig=await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message)); return [...new Uint8Array(sig)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
+function getAxis(id){ return parseInt(document.getElementById(id).value,10) || 0; }
+function computeStateId(A,B,C,D){ return (A*64)+(B*16)+(C*4)+D; }
+function updateState(){ const A=getAxis("A"),B=getAxis("B"),C=getAxis("C"),D=getAxis("D"); const state_id=computeStateId(A,B,C,D); document.getElementById("stateBadge").textContent=`STATE: ${state_id}  (A${A} B${B} C${C} D${D})`; }
+function lastPayloadHashForSubject(subject_id){ for(let i=log.length-1;i>=0;i--){ const r=log[i]; if(r && r.subject_id===subject_id && r.payload_hash){ return r.payload_hash; } } return null; }
+function renderLog(){ const el=document.getElementById("log"); el.innerHTML=""; if(!log.length){ el.innerHTML='<div class="item">No receipts yet.</div>'; return; } for(let i=log.length-1;i>=0;i--){ el.innerHTML+='<div class="item">'+esc(JSON.stringify(log[i], null, 2))+'</div>'; } }
+async function createReceipt(){
+  const issuer=document.getElementById("issuer").value.trim();
+  const subject=document.getElementById("subject").value.trim();
+  const constraint=document.getElementById("constraint").value.trim();
+  const outcome=document.getElementById("outcome").value.trim();
+  if(!issuer||!subject||!constraint||!outcome){ alert("All fields required."); return; }
+  const A=getAxis("A"),B=getAxis("B"),C=getAxis("C"),D=getAxis("D");
+  const state_id=computeStateId(A,B,C,D);
+  const prev_hash=lastPayloadHashForSubject(subject);
+  const base={schema_version:SCHEMA_VERSION,sig_alg:SIG_ALG,issuer_id:issuer,subject_id:subject,domain:DOMAIN,state_id:state_id,A:A,B:B,C:C,D:D,constraint_hash:constraint,outcome_code:outcome,ts:new Date().toISOString(),prev_hash:prev_hash};
+  const payload=canonicalPayload(base);
+  const payload_hash=await sha256Hex(payload);
+  const secret=getOrCreateDeviceSecret();
+  const signature=await hmacHex(secret, payload_hash);
+  const receipt={receipt_id:"r_"+Date.now(),...base,payload_hash,signature,verify_status:"VALID_LOCAL"};
+  log.push(receipt); saveLog(); renderLog();
 }
-function createReceipt(){
-  const issuer = document.getElementById("issuer").value.trim();
-  const subject = document.getElementById("subject").value.trim();
-  const constraint = document.getElementById("constraint").value.trim();
-  const outcome = document.getElementById("outcome").value.trim();
-  if(!issuer || !subject || !constraint || !outcome){ alert("All fields required."); return; }
-  const receipt = {
-    receipt_id: "r_" + Date.now(),
-    issuer_id: issuer,
-    subject_id: subject,
-    constraint_hash: constraint,
-    outcome_code: outcome,
-    ts: new Date().toISOString(),
-    prev_hash: log.length ? log[log.length - 1].receipt_id : null
-  };
-  log.push(receipt);
-  saveLog();
-  renderLog();
-}
-function exportLog(){
-  const dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(log, null, 2));
-  const a = document.createElement("a");
-  a.setAttribute("href", dataStr);
-  a.setAttribute("download", "rgsc_log.json");
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-}
-renderLog();
+function exportLog(){ const dataStr="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(log, null, 2)); const a=document.createElement("a"); a.href=dataStr; a.download="rgsc_log.json"; document.body.appendChild(a); a.click(); a.remove(); }
+updateState(); renderLog();
 </script>
 </body>
 </html>

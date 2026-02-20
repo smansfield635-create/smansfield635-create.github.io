@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RGSC v1 – Receipt Log</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #111;
+  color: #fff;
+}
+input, button, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: none;
+}
+button {
+  background: #00ff88;
+  font-weight: bold;
+}
+.log {
+  margin-top: 20px;
+  background: #222;
+  padding: 10px;
+  border-radius: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+small {
+  color: #aaa;
+}
+</style>
+</head>
+
+<body>
+
+<h2>RGSC v1 – Receipt Log</h2>
+
+<label>Issuer ID</label>
+<input id="issuer" placeholder="your_name_or_key">
+
+<label>Subject ID</label>
+<input id="subject" placeholder="decision_001">
+
+<label>Constraint Hash</label>
+<input id="constraint" placeholder="hash_or_rule_id">
+
+<label>Outcome Code</label>
+<input id="outcome" placeholder="PASS / FAIL / COMPLETE">
+
+<button onclick="createReceipt()">Create Receipt</button>
+<button onclick="exportLog()">Export Log</button>
+
+<div class="log" id="log"></div>
+
+<script>
+let log = JSON.parse(localStorage.getItem("rgsc_log") || "[]");
+
+function saveLog() {
+  localStorage.setItem("rgsc_log", JSON.stringify(log));
+}
+
+function renderLog() {
+  const container = document.getElementById("log");
+  container.innerHTML = "";
+  log.forEach((r, i) => {
+    container.innerHTML += "<small>" + JSON.stringify(r) + "</small><hr>";
+  });
+}
+
+function createReceipt() {
+  const receipt = {
+    receipt_id: "r_" + Date.now(),
+    issuer_id: document.getElementById("issuer").value,
+    subject_id: document.getElementById("subject").value,
+    constraint_hash: document.getElementById("constraint").value,
+    outcome_code: document.getElementById("outcome").value,
+    ts: new Date().toISOString(),
+    prev_hash: log.length ? log[log.length - 1].receipt_id : null
+  };
+
+  log.push(receipt);
+  saveLog();
+  renderLog();
+}
+
+function exportLog() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(log, null, 2));
+  const dlAnchor = document.createElement("a");
+  dlAnchor.setAttribute("href", dataStr);
+  dlAnchor.setAttribute("download", "rgsc_log.json");
+  document.body.appendChild(dlAnchor);
+  dlAnchor.click();
+  dlAnchor.remove();
+}
+
+renderLog();
+</script>
+
+</body>
+</html>

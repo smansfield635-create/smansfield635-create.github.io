@@ -1,0 +1,105 @@
+<!-- FILE: rgsc/log/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>RGSC · Log</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+html,body{height:100%;margin:0}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 12px}
+.h{text-align:center;margin-bottom:14px}
+.h h1{font-size:40px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px}
+.card{
+  width:min(680px,92vw);
+  background:rgba(255,255,255,.06);
+  border-radius:18px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
+  padding:14px;
+}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap}
+.btn{
+  flex:1;
+  min-width:160px;
+  padding:12px 14px;border-radius:16px;border:0;
+  font-weight:900;letter-spacing:.6px;
+  cursor:pointer;
+  background:rgba(0,255,136,.22);color:#eaf2f6;
+  box-shadow:0 0 0 1px rgba(0,255,136,.28) inset;
+}
+.btn.secondary{
+  background:rgba(255,255,255,.10);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
+}
+.items{margin-top:12px;max-height:520px;overflow:auto;border-radius:14px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;padding:8px}
+.item{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.35;opacity:.9;padding:8px;border-radius:12px;background:rgba(255,255,255,.04);box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;margin-bottom:8px;white-space:pre-wrap;word-break:break-word}
+.nav{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;justify-content:center}
+.nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
+footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
+</style>
+</head>
+
+<body>
+<div class="page">
+  <div class="h">
+    <h1>RGSC · Log</h1>
+    <p>View · Export · Wipe (local only).</p>
+  </div>
+
+  <div class="card">
+    <div class="btnrow">
+      <button class="btn" onclick="exportLog()">EXPORT LOG (JSON)</button>
+      <button class="btn secondary" onclick="wipeLocal()">WIPE LOCAL</button>
+    </div>
+    <div class="items" id="log"></div>
+  </div>
+
+  <div class="nav">
+    <a href="/rgsc/">RGSC Door</a>
+    <a href="/home/">Home</a>
+    <a href="/links/">Links</a>
+  </div>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+</div>
+
+<script>
+let log = JSON.parse(localStorage.getItem("rgsc_log") || "[]");
+function esc(s){ return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+function renderLog(){
+  const el = document.getElementById("log");
+  el.innerHTML = "";
+  if(!log.length){ el.innerHTML = '<div class="item">No receipts yet.</div>'; return; }
+  for(let i=log.length-1;i>=0;i--){
+    el.innerHTML += '<div class="item">' + esc(JSON.stringify(log[i], null, 2)) + '</div>';
+  }
+}
+function exportLog(){
+  const dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(log, null, 2));
+  const a = document.createElement("a");
+  a.setAttribute("href", dataStr);
+  a.setAttribute("download", "rgsc_log.json");
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+function wipeLocal(){
+  if(!confirm("Wipe local RGSC log on this device?")) return;
+  localStorage.setItem("rgsc_log","[]");
+  log = [];
+  renderLog();
+}
+renderLog();
+</script>
+</body>
+</html>

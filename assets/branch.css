@@ -127,3 +127,68 @@
   0%   { filter: brightness(0.98); }
   100% { filter: brightness(1.05); }
 }
+/* ================================
+   COMPASS LABELS (NO GEOMETRY CHANGE)
+   Adds N / E / S / W outside diamond
+================================ */
+
+.compass-label {
+  position: absolute;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  opacity: 0.6;
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+.compass-label span {
+  display: inline-block;
+  transform: rotate(0deg);
+}
+
+/* Position labels outside the diamond-stage */
+
+.compass-n {
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.compass-e {
+  right: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.compass-s {
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.compass-w {
+  left: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Optional subtle arrows */
+
+.compass-label::after {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: 6px auto 0;
+  border-top: 2px solid rgba(255,255,255,0.35);
+  border-right: 2px solid rgba(255,255,255,0.35);
+  transform: rotate(45deg);
+  opacity: 0.6;
+}
+
+/* Adjust arrow directions */
+.compass-n::after { transform: rotate(-45deg); }
+.compass-e::after { transform: rotate(45deg); }
+.compass-s::after { transform: rotate(135deg); }
+.compass-w::after { transform: rotate(-135deg); }

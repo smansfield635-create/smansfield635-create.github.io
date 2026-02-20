@@ -1,9 +1,11 @@
 /* ================================
    DIAMOND GEOMETRY SYSTEM (TNT)
    FILE: assets/branch.css
-   COSMIC + COLOR ACCENT UPGRADE (NO GEOMETRY CHANGES)
+   COSMIC + COLOR ACCENT + COMPASS LABELS
+   (NO GEOMETRY CHANGES)
 ================================ */
 
+/* Stage wrapper */
 .diamond-stage {
   position: relative;
   width: 420px;
@@ -19,7 +21,7 @@
   transform: rotate(45deg);
   border-radius: 22px;
 
-  /* Stronger cosmic glass for readability */
+  /* cosmic glass */
   background: rgba(255,255,255,0.05);
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,0.14),
@@ -28,7 +30,7 @@
   backdrop-filter: blur(10px);
 }
 
-/* Mini diamonds: default glass */
+/* Mini diamonds (routing) */
 .mini-diamond {
   position: absolute;
   width: 46%;
@@ -112,7 +114,7 @@
     0 0 22px rgba(190, 91, 255, 0.12);
 }
 
-/* Optional: subtle twinkle glow (very light) */
+/* Optional: subtle twinkle glow */
 @media (prefers-reduced-motion: no-preference) {
   .diamond,
   .mini-diamond.c-blue,
@@ -127,54 +129,39 @@
   0%   { filter: brightness(0.98); }
   100% { filter: brightness(1.05); }
 }
+
 /* ================================
-   COMPASS LABELS (NO GEOMETRY CHANGE)
-   Adds N / E / S / W outside diamond
+   COMPASS LABELS (N / E / S / W)
+   Add to HTML inside .diamond-stage:
+     <div class="compass-label compass-n"><span>N</span></div>
+     <div class="compass-label compass-e"><span>E</span></div>
+     <div class="compass-label compass-s"><span>S</span></div>
+     <div class="compass-label compass-w"><span>W</span></div>
 ================================ */
 
 .compass-label {
   position: absolute;
-  font-weight: 800;
+  font-weight: 900;
   font-size: 14px;
-  letter-spacing: 0.2em;
-  opacity: 0.6;
+  letter-spacing: 0.22em;
+  opacity: 0.60;
   pointer-events: none;
   text-transform: uppercase;
+  color: rgba(233,241,244,0.85);
+  text-shadow: 0 0 10px rgba(255,255,255,0.12);
 }
 
 .compass-label span {
   display: inline-block;
-  transform: rotate(0deg);
 }
 
-/* Position labels outside the diamond-stage */
+/* Outside positions */
+.compass-n { top: -28px; left: 50%; transform: translateX(-50%); }
+.compass-e { right: -28px; top: 50%; transform: translateY(-50%); }
+.compass-s { bottom: -28px; left: 50%; transform: translateX(-50%); }
+.compass-w { left: -28px; top: 50%; transform: translateY(-50%); }
 
-.compass-n {
-  top: -28px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.compass-e {
-  right: -28px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.compass-s {
-  bottom: -28px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.compass-w {
-  left: -28px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-/* Optional subtle arrows */
-
+/* Subtle arrows */
 .compass-label::after {
   content: "";
   display: block;
@@ -183,11 +170,10 @@
   margin: 6px auto 0;
   border-top: 2px solid rgba(255,255,255,0.35);
   border-right: 2px solid rgba(255,255,255,0.35);
-  transform: rotate(45deg);
-  opacity: 0.6;
+  opacity: 0.60;
 }
 
-/* Adjust arrow directions */
+/* Arrow directions */
 .compass-n::after { transform: rotate(-45deg); }
 .compass-e::after { transform: rotate(45deg); }
 .compass-s::after { transform: rotate(135deg); }

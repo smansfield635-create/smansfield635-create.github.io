@@ -1,382 +1,127 @@
-<!-- TNT: /door/index.html (FULL FILE REPLACEMENT)
-     Purpose: Unified structural hub.
-     Geometry:
-       - Quadrant routes (NW/NE/SW/SE) = accordion routes (content)
-       - Cardinal plate (N/E/S/W)      = destination surface (navigation)
-     Lenses:
-       - Language (EN/中文) = global, single toggle
-       - Mode (Learn/Shop) = depth toggle
+<!-- TNT: /door/index.html
+     COMPLETE REWRITE (HANDOFF)
+     - Reads language + depth from localStorage.
+     - No jargon.
+     - One button: Enter.
+     - One button: Change language/depth (go back to /).
+     - Shows a small preview line of what “Shop” vs “Learn” means.
 -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodiametrics · Door</title>
-  <link rel="stylesheet" href="/assets/ui.css?v=2000"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=2000"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Door · Geodiametrics</title>
+
+<link rel="stylesheet" href="/assets/ui.css?v=6000"/>
+<link rel="stylesheet" href="/assets/branch.css?v=6000"/>
+
+<style>
+html,body{height:100%}
+body{
+  background:
+    radial-gradient(1200px 800px at 50% 10%, rgba(160,20,20,.55) 0%, rgba(30,0,0,.55) 35%, rgba(5,7,12,1) 100%);
+}
+.wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:16px}
+.panel{
+  width:min(860px,94vw);
+  border-radius:26px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 26px 70px rgba(0,0,0,.60);
+  padding:18px;
+}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-start;margin-top:10px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:12px 16px;border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  font-weight:900;letter-spacing:.08em;
+  text-decoration:none;color:inherit;
+  cursor:pointer;user-select:none;
+}
+.btn.primary{
+  background:rgba(255,255,255,.12);
+  box-shadow:0 0 0 1px rgba(255,120,130,.16) inset, 0 18px 50px rgba(0,0,0,.55);
+}
+.badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:6px 10px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  font-weight:900;letter-spacing:.12em;font-size:12px;opacity:.92;
+}
+</style>
 </head>
 
 <body class="theme-red">
-  <div class="shooting-stars"></div>
+<div class="shooting-stars"></div>
 
-  <div class="page hub-page">
+<div class="page">
+  <div class="wrap">
 
     <div class="h">
-      <h1 id="t_title">Geodiametrics</h1>
-      <p id="t_sub">Unified structural hub · Quadrant routes + Cardinal plate.</p>
+      <h1 id="ttl">Door</h1>
+      <p id="sub">One step before the hub.</p>
     </div>
 
-    <!-- GLOBAL TOGGLES (NO DUPLICATION) -->
-    <div class="hub-toggles" role="group" aria-label="Global toggles">
-      <button class="pill" id="btn_lang_en" type="button">EN</button>
-      <button class="pill" id="btn_lang_zh" type="button">中文</button>
-      <span class="pill-sep"></span>
-      <button class="pill" id="btn_mode_learn" type="button">Learn</button>
-      <button class="pill" id="btn_mode_shop" type="button">Shop</button>
-    </div>
+    <div class="panel">
+      <div id="statusLine" style="opacity:.88;line-height:1.6"></div>
 
-    <!-- QUADRANT ROUTES -->
-    <div class="section-title" id="t_qhdr">Quadrant routes (NW / NE / SW / SE)</div>
-
-    <div class="quad">
-      <details class="dd" id="dd_nw">
-        <summary class="dd-sum">
-          <span class="dd-badge">NW</span>
-          <span class="dd-name" id="t_nw_name">Northwest</span>
-          <span class="dd-desc" id="t_nw_desc">Definitions · language · structure</span>
-        </summary>
-        <div class="dd-body" data-q="nw"></div>
-      </details>
-
-      <details class="dd" id="dd_ne">
-        <summary class="dd-sum">
-          <span class="dd-badge">NE</span>
-          <span class="dd-name" id="t_ne_name">Northeast</span>
-          <span class="dd-desc" id="t_ne_desc">Execution · surfaces · examples</span>
-        </summary>
-        <div class="dd-body" data-q="ne"></div>
-      </details>
-
-      <details class="dd" id="dd_sw">
-        <summary class="dd-sum">
-          <span class="dd-badge">SW</span>
-          <span class="dd-name" id="t_sw_name">Southwest</span>
-          <span class="dd-desc" id="t_sw_desc">Measurement · diagnostics · rules</span>
-        </summary>
-        <div class="dd-body" data-q="sw"></div>
-      </details>
-
-      <details class="dd" id="dd_se">
-        <summary class="dd-sum">
-          <span class="dd-badge">SE</span>
-          <span class="dd-name" id="t_se_name">Southeast</span>
-          <span class="dd-desc" id="t_se_desc">Identity · references · links</span>
-        </summary>
-        <div class="dd-body" data-q="se"></div>
-      </details>
-    </div>
-
-    <!-- CARDINAL PLATE -->
-    <div class="section-title" id="t_phdr">Cardinal plate (N / E / S / W)</div>
-
-    <div class="stage">
-      <div class="platform">
-
-        <!-- Corner compass markers: locked to plate corners (CSS positions) -->
-        <div class="compass-marker compass-n" aria-hidden="true">
-          <div class="compass-icon">✶</div><div class="compass-letter">N</div>
-        </div>
-        <div class="compass-marker compass-e" aria-hidden="true">
-          <div class="compass-icon">◉</div><div class="compass-letter">E</div>
-        </div>
-        <div class="compass-marker compass-s" aria-hidden="true">
-          <div class="compass-icon">✦</div><div class="compass-letter">S</div>
-        </div>
-        <div class="compass-marker compass-w" aria-hidden="true">
-          <div class="compass-icon">☾</div><div class="compass-letter">W</div>
-        </div>
-
-        <a class="diamond top" href="/laws/"><span id="t_plate_n">Laws<small id="t_plate_n2">Categories</small></span></a>
-        <a class="diamond right" href="/products/"><span id="t_plate_e">Products<small id="t_plate_e2">Suite</small></span></a>
-        <a class="diamond bottom" href="/gauges/"><span id="t_plate_s">Gauges<small id="t_plate_s2">Instruments</small></span></a>
-        <a class="diamond left" href="/links/"><span id="t_plate_w">Links<small id="t_plate_w2">Identity</small></span></a>
-
-        <!-- Pocket minis -->
-        <a class="diamond mini mini-left" href="/"><span><small id="t_mini_left">ROOT</small></span></a>
-        <a class="diamond mini mini-right" href="/rgsc/"><span><small id="t_mini_right">RGSC</small></span></a>
-
+      <div class="row">
+        <a class="btn primary" href="/home/" id="enterBtn">Enter</a>
+        <a class="btn" href="/" id="changeBtn">Change</a>
       </div>
+
+      <div style="margin-top:12px;opacity:.75;line-height:1.6" id="hintLine"></div>
     </div>
 
     <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
   </div>
+</div>
 
-  <script>
-    (function () {
-      // -------------------------
-      // State (single source)
-      // -------------------------
-      const qs = new URLSearchParams(location.search);
-      const state = {
-        lang: qs.get("lang") || (safeGet("GD_LANG") || "en"),
-        mode: qs.get("mode") || (safeGet("GD_MODE") || "learn")
-      };
-      safeSet("GD_LANG", state.lang);
-      safeSet("GD_MODE", state.mode);
+<script>
+(() => {
+  const lang = (localStorage.getItem("GD_LANG") || "en").toLowerCase();
+  const depth = (localStorage.getItem("GD_DEPTH") || "shop").toLowerCase();
 
-      // -------------------------
-      // Copy dictionaries
-      // -------------------------
-      const COPY = {
-        en: {
-          title: "Geodiametrics",
-          sub: "Unified structural hub · Quadrant routes (NW/NE/SW/SE) + Cardinal plate (N/E/S/W).",
-          qhdr: "Quadrant routes (NW / NE / SW / SE)",
-          phdr: "Cardinal plate (N / E / S / W)",
-          nw_name: "Northwest",
-          nw_desc: "Definitions · language · structure",
-          ne_name: "Northeast",
-          ne_desc: "Execution · surfaces · examples",
-          sw_name: "Southwest",
-          sw_desc: "Measurement · diagnostics · rules",
-          se_name: "Southeast",
-          se_desc: "Identity · references · links",
-          plate_n: ["Laws","Categories"],
-          plate_e: ["Products","Suite"],
-          plate_s: ["Gauges","Instruments"],
-          plate_w: ["Links","Identity"],
-          mini_left: "ROOT",
-          mini_right: "RGSC"
-        },
-        zh: {
-          title: "Geodiametrics",
-          sub: "统一结构中枢 · 象限路线（西北/东北/西南/东南）+ 方位盘（北/东/南/西）。",
-          qhdr: "象限路线（NW / NE / SW / SE）",
-          phdr: "方位盘（N / E / S / W）",
-          nw_name: "西北",
-          nw_desc: "定义 · 语言 · 结构",
-          ne_name: "东北",
-          ne_desc: "执行 · 界面 · 示例",
-          sw_name: "西南",
-          sw_desc: "测量 · 诊断 · 规则",
-          se_name: "东南",
-          se_desc: "身份 · 参考 · 链接",
-          plate_n: ["法律","分类"],
-          plate_e: ["产品","套件"],
-          plate_s: ["量表","工具"],
-          plate_w: ["链接","身份"],
-          mini_left: "ROOT",
-          mini_right: "RGSC"
-        }
-      };
+  const zh = (lang === "zh");
+  document.documentElement.lang = zh ? "zh-Hans" : "en";
 
-      // -------------------------
-      // Learn vs Shop content
-      //   - Learn = structure depth
-      //   - Shop  = surface catalog
-      // -------------------------
-      const QUAD = {
-        en: {
-          learn: {
-            nw: [
-              { h:"SSG (Simplified Syntax Geometry)", p:"Constraint language for structure, execution, and state transitions." },
-              { h:"Diamond grammar", p:"Four routes · one choice at a time · hub-first traversal." },
-              { h:"DOT.GRID", p:"256-state indexing for repeatable classification and routing." },
-              { h:"Acronyms & glossary", p:"Definitions, consistent terms, and naming stability." }
-            ],
-            ne: [
-              { h:"Execution surfaces", p:"Apps / portals / pages that run the system." },
-              { h:"Workflows & receipts", p:"Audit-safe logs, verification, replay, and traceability." },
-              { h:"Examples", p:"How to use the system end-to-end." },
-              { h:"Packaged outputs", p:"Downloadables, templates, and public artifacts." }
-            ],
-            sw: [
-              { h:"Gauges", p:"Measurement instruments and structured readings." },
-              { h:"Diagnostics", p:"Classification under constraint (what fails / what holds)." },
-              { h:"Rules", p:"Navigation + integrity rules; return protocol; invariants." },
-              { h:"Return protocol", p:"If incomplete, return to hub and choose another route." }
-            ],
-            se: [
-              { h:"OSF", p:"Project registry / preprints / public records." },
-              { h:"ORCID", p:"Researcher identity anchor." },
-              { h:"Contact", p:"Direct communication channel." },
-              { h:"Reference links", p:"External anchors and provenance." }
-            ]
-          },
-          shop: {
-            nw: [
-              { h:"Language (SSG)", p:"Specs, syntax, and canonical statements." },
-              { h:"Grammar", p:"Navigation rules and structural templates." },
-              { h:"DOT.GRID", p:"State index maps and tooling." },
-              { h:"Glossary", p:"Quick reference terms." }
-            ],
-            ne: [
-              { h:"Apps & portals", p:"RGSC, governance pages, and execution UIs." },
-              { h:"Receipts", p:"Signed outputs and audit trails." },
-              { h:"Downloadables", p:"PDF packs, templates, and materials." },
-              { h:"Demos", p:"Clickable examples." }
-            ],
-            sw: [
-              { h:"Diagnostics", p:"Alignment / integrity / failure detection surfaces." },
-              { h:"Instruments", p:"Gauge panels and measurement logic." },
-              { h:"Standards", p:"Rulesets used across projects." },
-              { h:"Checklists", p:"Operational quick-starts." }
-            ],
-            se: [
-              { h:"OSF", p:"Public project access." },
-              { h:"ORCID", p:"Identity link." },
-              { h:"Contact", p:"Reach out." },
-              { h:"Links", p:"External references." }
-            ]
-          }
-        },
-        zh: {
-          learn: {
-            nw: [
-              { h:"SSG（简化语法几何）", p:"用于表达结构、执行与状态转换的约束语言。" },
-              { h:"菱形语法", p:"四路线 · 一次一选 · 先回中枢再深入。" },
-              { h:"DOT.GRID", p:"256 状态索引，用于可复现的分类与路由。" },
-              { h:"缩略词与术语", p:"统一定义与命名稳定。" }
-            ],
-            ne: [
-              { h:"执行界面", p:"运行系统的页面 / 门户 / 工具。" },
-              { h:"流程与回执", p:"可审计日志、验证与回放。" },
-              { h:"示例", p:"端到端使用方式。" },
-              { h:"打包输出", p:"可下载材料、模板与公开工件。" }
-            ],
-            sw: [
-              { h:"量表", p:"测量工具与结构化读数。" },
-              { h:"诊断", p:"约束下分类（什么崩、什么稳）。" },
-              { h:"规则", p:"导航与完整性规则；返回协议；不变量。" },
-              { h:"返回协议", p:"不完整就回中枢，换路线。" }
-            ],
-            se: [
-              { h:"OSF", p:"项目注册 / 预印本 / 公共记录。" },
-              { h:"ORCID", p:"研究者身份锚点。" },
-              { h:"联系", p:"直接沟通渠道。" },
-              { h:"参考链接", p:"外部锚点与溯源。" }
-            ]
-          },
-          shop: {
-            nw: [
-              { h:"语言（SSG）", p:"规范、语法、标准陈述。" },
-              { h:"语法", p:"导航规则与结构模板。" },
-              { h:"DOT.GRID", p:"状态索引与工具。" },
-              { h:"术语表", p:"快速查阅。" }
-            ],
-            ne: [
-              { h:"应用与门户", p:"RGSC、治理页面、执行界面。" },
-              { h:"回执", p:"签名输出与审计轨迹。" },
-              { h:"可下载", p:"PDF 包、模板与材料。" },
-              { h:"演示", p:"可点击示例。" }
-            ],
-            sw: [
-              { h:"诊断", p:"对齐/完整性/失稳检测界面。" },
-              { h:"工具", p:"量表面板与测量逻辑。" },
-              { h:"标准", p:"跨项目规则集。" },
-              { h:"清单", p:"操作快速开始。" }
-            ],
-            se: [
-              { h:"OSF", p:"公开项目入口。" },
-              { h:"ORCID", p:"身份链接。" },
-              { h:"联系", p:"联系通道。" },
-              { h:"链接", p:"外部参考。" }
-            ]
-          }
-        }
-      };
+  const ttl = document.getElementById("ttl");
+  const sub = document.getElementById("sub");
+  const statusLine = document.getElementById("statusLine");
+  const hintLine = document.getElementById("hintLine");
+  const enterBtn = document.getElementById("enterBtn");
+  const changeBtn = document.getElementById("changeBtn");
 
-      // -------------------------
-      // Apply copy + render bodies
-      // -------------------------
-      function applyCopy() {
-        const c = COPY[state.lang] || COPY.en;
+  if (zh){
+    ttl.textContent = "入口";
+    sub.textContent = "进入主枢纽前的一步。";
+    statusLine.innerHTML = `语言：<span class="badge">中文</span>　深度：<span class="badge">${depth === "learn" ? "学习" : "浏览"}</span>`;
+    hintLine.textContent = (depth === "learn")
+      ? "学习：显示更多层级与解释。"
+      : "浏览：只显示表层概要与入口。";
+    enterBtn.textContent = "进入";
+    changeBtn.textContent = "更改";
+  } else {
+    ttl.textContent = "Door";
+    sub.textContent = "One step before the hub.";
+    statusLine.innerHTML = `Language: <span class="badge">EN</span>　Depth: <span class="badge">${depth.toUpperCase()}</span>`;
+    hintLine.textContent = (depth === "learn")
+      ? "Learn: shows deeper nested bubbles and explanations."
+      : "Shop: shows surface-level summaries and entry points.";
+    enterBtn.textContent = "Enter";
+    changeBtn.textContent = "Change";
+  }
 
-        setText("t_title", c.title);
-        setText("t_sub", c.sub);
-        setText("t_qhdr", c.qhdr);
-        setText("t_phdr", c.phdr);
-
-        setText("t_nw_name", c.nw_name);
-        setText("t_nw_desc", c.nw_desc);
-        setText("t_ne_name", c.ne_name);
-        setText("t_ne_desc", c.ne_desc);
-        setText("t_sw_name", c.sw_name);
-        setText("t_sw_desc", c.sw_desc);
-        setText("t_se_name", c.se_name);
-        setText("t_se_desc", c.se_desc);
-
-        setHTML("t_plate_n", c.plate_n[0] + "<small>" + c.plate_n[1] + "</small>");
-        setHTML("t_plate_e", c.plate_e[0] + "<small>" + c.plate_e[1] + "</small>");
-        setHTML("t_plate_s", c.plate_s[0] + "<small>" + c.plate_s[1] + "</small>");
-        setHTML("t_plate_w", c.plate_w[0] + "<small>" + c.plate_w[1] + "</small>");
-
-        setText("t_mini_left", c.mini_left);
-        setText("t_mini_right", c.mini_right);
-
-        // Render quadrant bodies
-        document.querySelectorAll(".dd-body").forEach(el => {
-          const q = el.getAttribute("data-q");
-          const items = (((QUAD[state.lang]||QUAD.en)[state.mode]||QUAD.en.learn)[q]) || [];
-          el.innerHTML = renderItems(items);
-        });
-
-        // Toggle button state
-        setActive("btn_lang_en", state.lang === "en");
-        setActive("btn_lang_zh", state.lang === "zh");
-        setActive("btn_mode_learn", state.mode === "learn");
-        setActive("btn_mode_shop", state.mode === "shop");
-      }
-
-      function renderItems(items) {
-        // simple, stable, readable blocks
-        return `
-          <div class="dd-box">
-            <div class="dd-kicker">${state.mode === "learn" ? (state.lang==="zh"?"本象限":"IN THIS QUADRANT") : (state.lang==="zh"?"此处内容":"IN THIS QUADRANT")}</div>
-            <ul class="dd-list">
-              ${items.map(x => `<li><div class="dd-h">${escapeHtml(x.h)}</div><div class="dd-p">${escapeHtml(x.p)}</div></li>`).join("")}
-            </ul>
-          </div>
-        `;
-      }
-
-      // -------------------------
-      // Actions
-      // -------------------------
-      document.getElementById("btn_lang_en").addEventListener("click", () => {
-        state.lang = "en"; safeSet("GD_LANG","en"); applyCopy();
-      });
-      document.getElementById("btn_lang_zh").addEventListener("click", () => {
-        state.lang = "zh"; safeSet("GD_LANG","zh"); applyCopy();
-      });
-      document.getElementById("btn_mode_learn").addEventListener("click", () => {
-        state.mode = "learn"; safeSet("GD_MODE","learn"); applyCopy();
-      });
-      document.getElementById("btn_mode_shop").addEventListener("click", () => {
-        state.mode = "shop"; safeSet("GD_MODE","shop"); applyCopy();
-      });
-
-      // Close all accordions on load (symmetry)
-      ["dd_nw","dd_ne","dd_sw","dd_se"].forEach(id => {
-        const d = document.getElementById(id);
-        if (d) d.open = false;
-      });
-
-      // -------------------------
-      // Helpers
-      // -------------------------
-      function setText(id, v){ const el=document.getElementById(id); if(el) el.textContent=v; }
-      function setHTML(id, v){ const el=document.getElementById(id); if(el) el.innerHTML=v; }
-      function setActive(id, on){ const el=document.getElementById(id); if(el) el.classList.toggle("is-active", !!on); }
-      function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
-      function safeSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
-      function escapeHtml(s){
-        return String(s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-      }
-
-      applyCopy();
-    })();
-  </script>
+  // Ensure Home reads the same state
+  try{
+    localStorage.setItem("GD_LANG", lang);
+    localStorage.setItem("GD_DEPTH", depth);
+  }catch(e){}
+})();
+</script>
 </body>
 </html>

@@ -1,241 +1,107 @@
+<!-- TNT FILE: /index.html -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Welcome · Geodiametrics</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Welcome · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=2001"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=2001"/>
 
-<style>
-/* ==========================================
-   INDEX — LANGUAGE ONLY (ONE TIME)
-   Sets:
-     localStorage.gd_lang = "en" | "zh"
-     localStorage.gd_depth default = "explore"
-   Then routes to /door/
-========================================== */
-
-:root{
-  --ink: rgba(234,242,246,.92);
-  --muted: rgba(234,242,246,.72);
-  --glass: rgba(255,255,255,.07);
-  --stroke: rgba(255,255,255,.14);
-}
-
-html,body{height:100%;margin:0}
-body{
-  min-height:100vh;
-  color:var(--ink);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:
-    radial-gradient(1100px 760px at 50% 12%, rgba(190,10,18,.52) 0%, rgba(90,10,14,.34) 40%, rgba(6,10,14,1) 100%);
-}
-
-.page{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:34px 14px 90px;
-  position:relative;
-}
-
-.hero{
-  width:min(820px,94vw);
-  text-align:center;
-  margin-bottom:16px;
-}
-
-.hero h1{
-  margin:0;
-  font-size:clamp(48px,10vw,78px);
-  font-weight:900;
-  letter-spacing:.01em;
-}
-
-.hero p{
-  margin:10px 0 0;
-  font-size:18px;
-  color:var(--muted);
-}
-
-.card{
-  width:min(820px,94vw);
-  border-radius:28px;
-  background:rgba(0,0,0,.24);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.06),
-    0 30px 90px rgba(0,0,0,.70);
-  padding:18px;
-  backdrop-filter:blur(10px);
-}
-
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.lang{
-  padding:18px 14px;
-  border-radius:22px;
-  background:var(--glass);
-  border:1px solid var(--stroke);
-  text-align:left;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.lang .t{
-  font-size:20px;
-  font-weight:900;
-  letter-spacing:.06em;
-}
-
-.lang .d{
-  margin-top:6px;
-  font-size:14px;
-  color:rgba(234,242,246,.72);
-  line-height:1.45;
-}
-
-.lang.active{
-  background:rgba(255,255,255,.11);
-  border-color:rgba(255,255,255,.20);
-  box-shadow:0 20px 60px rgba(0,0,0,.45);
-}
-
-.actions{
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-top:14px;
-}
-
-.btn{
-  padding:14px 18px;
-  border-radius:18px;
-  background:rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.12);
-  color:var(--ink);
-  font-weight:900;
-  text-decoration:none;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.btn.primary{
-  background:rgba(255,255,255,.14);
-}
-
-.note{
-  margin:12px auto 0;
-  padding:12px 14px;
-  border-radius:18px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  color:rgba(234,242,246,.78);
-  font-size:14px;
-  line-height:1.45;
-  text-align:left;
-}
-
-.note b{color:rgba(234,242,246,.92);}
-
-.footer{
-  position:absolute;
-  left:0; right:0;
-  bottom:18px;
-  text-align:center;
-  letter-spacing:3px;
-  font-size:12px;
-  opacity:.55;
-}
-</style>
+  <style>
+    /* INDEX (China-red + cosmic) — self-contained (no other file edits required) */
+    body{
+      background:
+        radial-gradient(1200px 900px at 50% 10%, rgba(150,0,0,.55) 0%, rgba(20,0,0,.35) 35%, rgba(5,7,12,1) 100%),
+        radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
+    }
+    .index-wrap{width:min(920px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:18px}
+    .hero{padding-top:18px}
+    .hero h1{font-size:clamp(44px,7vw,72px);margin:0;font-weight:900;letter-spacing:.01em}
+    .hero p{margin:10px 0 0;opacity:.78;font-size:18px}
+    .card{
+      border-radius:22px;
+      background:rgba(255,255,255,.05);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 30px 80px rgba(0,0,0,.55);
+      padding:18px;
+      backdrop-filter:blur(12px);
+    }
+    .grid2{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:640px){.grid2{grid-template-columns:1fr 1fr}}
+    .pick{
+      border-radius:20px;
+      padding:18px 16px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .pick strong{font-size:18px}
+    .pick span{opacity:.75}
+    .pick:hover{background:rgba(255,255,255,.08)}
+    .hint{opacity:.7;font-size:14px;line-height:1.5;margin:0}
+    .tiny{opacity:.55;font-size:12px;letter-spacing:.18em;margin-top:10px}
+  </style>
 </head>
 
 <body>
 <div class="shooting-stars"></div>
 
 <div class="page">
+  <div class="index-wrap">
 
-  <div class="hero">
-    <h1 id="t_welcome">Welcome</h1>
-    <p id="t_pick">Choose your language once. Everything after this stays in that language.</p>
-  </div>
+    <div class="hero">
+      <h1 id="t_title">Welcome</h1>
+      <p id="t_sub">Choose your language once. Everything after this stays in that language.</p>
+    </div>
 
-  <div class="card">
-    <div class="row" role="group" aria-label="Language selection">
-      <div class="lang" id="pickEN" data-lang="en">
-        <div class="t">English</div>
-        <div class="d">Proceed in English.</div>
+    <div class="card">
+      <div class="grid2">
+        <div class="pick" role="button" tabindex="0" onclick="setLang('en')" onkeypress="if(event.key==='Enter'){setLang('en')}">
+          <div>
+            <strong>English</strong><br/>
+            <span>Proceed in English.</span>
+          </div>
+          <div>EN</div>
+        </div>
+
+        <div class="pick" role="button" tabindex="0" onclick="setLang('zh')" onkeypress="if(event.key==='Enter'){setLang('zh')}">
+          <div>
+            <strong>中文</strong><br/>
+            <span>使用简体中文继续。</span>
+          </div>
+          <div>中文</div>
+        </div>
       </div>
 
-      <div class="lang" id="pickZH" data-lang="zh">
-        <div class="t">中文</div>
-        <div class="d">使用简体中文进入。</div>
-      </div>
+      <p class="hint" id="t_hint" style="margin-top:14px;">
+        After you choose, you’ll set your depth (Shop vs Learn) one time, then enter the hub.
+      </p>
+
+      <div class="tiny">CANONICAL · STABLE · © GEODIAMETRICS</div>
     </div>
 
-    <div class="actions">
-      <button class="btn primary" id="btnContinue" type="button">Continue</button>
-    </div>
-
-    <div class="note" id="t_note">
-      <b>Next:</b> you’ll pick depth (Explore vs Learn) once, then enter the hub.
-    </div>
   </div>
-
-  <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
 </div>
 
 <script>
-(function(){
-  const $ = (id)=>document.getElementById(id);
-
-  function setLang(lang){
-    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
-  }
-  function setDefaultDepth(){
-    try{
-      const existing = (localStorage.getItem("gd_depth") || "").toLowerCase();
-      if(!existing) localStorage.setItem("gd_depth", "explore");
-      if(existing === "shop") localStorage.setItem("gd_depth", "explore");
-    }catch(e){}
-  }
-
-  let chosen = null;
-
-  function activate(lang){
-    chosen = lang;
-    $("pickEN").classList.toggle("active", lang==="en");
-    $("pickZH").classList.toggle("active", lang==="zh");
-    $("btnContinue").textContent = (lang==="zh") ? "继续" : "Continue";
-    $("t_note").innerHTML = (lang==="zh")
-      ? "<b>下一步：</b>选择深度（浏览 / 学习），然后进入枢纽。"
-      : "<b>Next:</b> you’ll pick depth (Explore vs Learn) once, then enter the hub.";
-  }
-
-  $("pickEN").addEventListener("click", ()=>activate("en"));
-  $("pickZH").addEventListener("click", ()=>activate("zh"));
-
-  $("btnContinue").addEventListener("click", ()=>{
-    if(!chosen){
-      // force a choice (no drift)
-      activate("en");
+  (function boot(){
+    // If already chosen, skip index.
+    const lang = localStorage.getItem('gd_lang');
+    if(lang === 'en' || lang === 'zh'){
+      location.href = '/door/';
       return;
     }
-    setLang(chosen);
-    setDefaultDepth();
-    location.href = "/door/";
-  });
-})();
-</script>
+  })();
 
+  function setLang(lang){
+    localStorage.setItem('gd_lang', lang);
+    // default depth if unset
+    if(!localStorage.getItem('gd_depth')) localStorage.setItem('gd_depth','shop');
+    location.href = '/door/';
+  }
+</script>
 </body>
 </html>

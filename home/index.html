@@ -1,527 +1,514 @@
+<!-- TNT FILE: /home/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Home · Geodiametrics</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Home · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=2001"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=2001"/>
 
-<style>
-/* ==========================================
-   HOME — HUB
-   - NO language choice here (language chosen once on /index.html)
-   - Depth toggle (Explore/Learn) changes how much expands
-   - Quadrant routes: NW/NE/SW/SE (dropdowns)
-   - Cardinal plate: N/E/S/W (diamond hub)
-========================================== */
+  <style>
+    /* HOME (China-red accent, but readable) */
+    body{
+      background:
+        radial-gradient(1400px 900px at 50% 12%, rgba(150,0,0,.40) 0%, rgba(20,0,0,.22) 40%, rgba(5,7,12,1) 100%),
+        radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
+    }
+    .wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
+    .hero{position:relative;z-index:10}
+    .hero h1{font-size:clamp(44px,7vw,72px);margin:0;font-weight:900}
+    .hero p{margin:10px 0 0;opacity:.78;font-size:18px}
+    .topbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .pill{
+      border-radius:999px;
+      padding:10px 14px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      font-weight:900;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      font-size:12px;
+      opacity:.9;
+    }
+    .pill.btn{cursor:pointer}
+    .pill.btn:hover{background:rgba(255,255,255,.08)}
+    .section-title{
+      margin-top:10px;
+      font-weight:900;
+      letter-spacing:.18em;
+      opacity:.7;
+      font-size:12px;
+      text-transform:uppercase;
+    }
 
-:root{
-  --glass: rgba(255,255,255,.07);
-  --stroke: rgba(255,255,255,.14);
-  --ink: rgba(234,242,246,.92);
-  --muted: rgba(234,242,246,.70);
-}
+    /* Quadrant list */
+    .quad{
+      border-radius:22px;
+      background:rgba(255,255,255,.05);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 20px 60px rgba(0,0,0,.45);
+      backdrop-filter:blur(12px);
+      overflow:hidden;
+    }
+    .quad summary{
+      list-style:none;
+      cursor:pointer;
+      padding:16px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .quad summary::-webkit-details-marker{display:none}
+    .q-left{display:flex;align-items:center;gap:12px;min-width:0}
+    .q-badge{
+      width:56px;height:40px;border-radius:16px;
+      background:rgba(150,0,0,.22);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;letter-spacing:.10em;
+      flex:0 0 auto;
+    }
+    .q-text{min-width:0}
+    .q-text b{display:block;font-size:18px}
+    .q-text span{display:block;opacity:.72;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .q-arrow{
+      width:42px;height:42px;border-radius:999px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      display:flex;align-items:center;justify-content:center;
+      opacity:.9;
+      flex:0 0 auto;
+    }
+    .quad .inside{padding:0 16px 16px}
+    .inside .grid2{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:720px){.inside .grid2{grid-template-columns:1fr 1fr}}
+    .bubble{
+      border-radius:18px;
+      background:rgba(0,0,0,.20);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+      padding:12px 12px;
+    }
+    .bubble summary{padding:10px 10px}
+    .bubble summary{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .bubble summary b{font-size:14px;letter-spacing:.12em;text-transform:uppercase}
+    .bubble summary i{opacity:.7;font-style:normal}
+    .bubble ul{margin:10px 0 0 18px;opacity:.90}
+    .jump-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .jump{
+      border-radius:18px;
+      padding:12px 14px;
+      background:rgba(255,255,255,.08);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      font-weight:900;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      font-size:12px;
+      text-decoration:none;
+      color:#eaf2f6;
+    }
+    .jump:hover{background:rgba(255,255,255,.10)}
+    .muted{opacity:.72}
 
-/* Chinese red/black theme */
-html,body{height:100%;margin:0}
-body{
-  min-height:100vh;
-  color:var(--ink);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:
-    radial-gradient(1100px 760px at 50% 12%, rgba(190,10,18,.52) 0%, rgba(90,10,14,.34) 40%, rgba(6,10,14,1) 100%);
-}
-
-.page{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  padding:34px 14px 90px;
-  position:relative;
-}
-
-.h{
-  text-align:center;
-  margin-bottom:14px;
-  position:relative;
-  z-index:10;
-}
-
-.h h1{
-  margin:0;
-  font-size:clamp(44px,9vw,70px);
-  font-weight:900;
-  letter-spacing:.01em;
-}
-
-.h p{
-  margin:10px 0 0;
-  font-size:18px;
-  color:var(--muted);
-}
-
-.topbar{
-  width:min(860px,94vw);
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin:14px auto 8px;
-  position:relative;
-  z-index:10;
-}
-
-.pill{
-  padding:10px 14px;
-  border-radius:999px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  color:rgba(234,242,246,.78);
-  font-weight:900;
-  letter-spacing:.10em;
-  font-size:12px;
-  text-decoration:none;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.pill.active{
-  background:rgba(255,255,255,.10);
-  border-color:rgba(255,255,255,.18);
-  color:rgba(234,242,246,.92);
-}
-
-.stack{
-  width:min(860px,94vw);
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  margin-top:10px;
-  position:relative;
-  z-index:5;
-}
-
-/* Quadrant dropdown cards */
-.qcard{
-  border-radius:22px;
-  background:rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.06),
-    0 22px 60px rgba(0,0,0,.55);
-  overflow:hidden;
-  backdrop-filter:blur(10px);
-}
-
-.qhead{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:14px 14px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.qleft{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.qtag{
-  min-width:56px;
-  height:40px;
-  border-radius:16px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  font-weight:900;
-  letter-spacing:.12em;
-  color:rgba(234,242,246,.88);
-}
-
-.qtitle{
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-
-.qtitle b{
-  font-size:16px;
-  letter-spacing:.14em;
-}
-
-.qtitle span{
-  font-size:13px;
-  color:rgba(234,242,246,.68);
-}
-
-.qchev{
-  width:40px;
-  height:40px;
-  border-radius:999px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  color:rgba(234,242,246,.85);
-  font-weight:900;
-}
-
-.qbody{
-  padding:0 14px 14px;
-  display:none;
-}
-
-.qbody.open{display:block;}
-
-.qbody .bullets{
-  margin:10px 0 0;
-  padding-left:18px;
-  color:rgba(234,242,246,.82);
-  line-height:1.6;
-}
-
-.jumpRow{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:12px;
-}
-
-.jump{
-  padding:12px 14px;
-  border-radius:16px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
-  color:rgba(234,242,246,.92);
-  font-weight:900;
-  letter-spacing:.10em;
-  text-decoration:none;
-}
-
-/* Cardinal plate region */
-.stage{
-  width:100%;
-  display:flex;
-  justify-content:center;
-  margin-top:16px;
-  position:relative;
-  z-index:3;
-}
-
-/* Ensure footer always visible */
-footer{
-  text-align:center;
-  letter-spacing:3px;
-  font-size:12px;
-  opacity:.55;
-  margin-top:18px;
-  position:relative;
-  z-index:10;
-}
-</style>
+    /* Cardinal plate block (uses your existing diamond system classes) */
+    .plate-wrap{margin-top:10px}
+    .plate-note{opacity:.65;font-size:12px;letter-spacing:.18em;text-transform:uppercase;text-align:center;margin:10px 0 0}
+    .footer{margin-top:18px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px;position:relative;z-index:10}
+  </style>
 </head>
 
 <body>
 <div class="shooting-stars"></div>
 
 <div class="page">
+  <div class="wrap">
 
-  <div class="h">
-    <h1 id="t_home">Home</h1>
-    <p id="t_tagline">Unified hub · choose a route.</p>
-  </div>
+    <div class="hero">
+      <h1 id="t_title">Home</h1>
+      <p id="t_sub">Quadrant routes (NW/NE/SW/SE) + Cardinal plate (N/E/S/W).</p>
 
-  <div class="topbar">
-    <span class="pill" id="pillLang">LANG · EN</span>
-    <span class="pill active" id="pillExplore">EXPLORE</span>
-    <span class="pill" id="pillLearn">LEARN</span>
-    <a class="pill" href="/door/" id="pillBackToDoor">DOOR</a>
-  </div>
+      <div class="topbar">
+        <div class="pill" id="t_lang">LANG: —</div>
+        <div class="pill" id="t_depth">DEPTH: —</div>
+        <div class="pill btn" onclick="goDoor()" id="t_change">CHANGE</div>
+      </div>
+    </div>
 
-  <!-- Quadrant routes (NW/NE/SW/SE) -->
-  <div class="stack" id="quadStack">
+    <div class="section-title" id="t_quads">Quadrant routes (NW / NE / SW / SE)</div>
 
-    <div class="qcard" data-q="nw">
-      <div class="qhead">
-        <div class="qleft">
-          <div class="qtag">NW</div>
-          <div class="qtitle">
-            <b id="t_nw">NORTHWEST</b>
-            <span id="t_nw_sub">Definitions · language · structure</span>
+    <!-- NW -->
+    <details class="quad" id="q_nw">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge">NW</div>
+          <div class="q-text">
+            <b id="nw_title">Northwest</b>
+            <span id="nw_sub" class="muted">Definitions · language · structure</span>
           </div>
         </div>
-        <div class="qchev">▾</div>
-      </div>
-      <div class="qbody">
-        <ul class="bullets" id="nw_bullets"></ul>
-        <div class="jumpRow">
-          <a class="jump" href="/laws/" id="nw_jump1">JUMP · LAWS</a>
-          <a class="jump" href="/laws/categories/" id="nw_jump2">JUMP · CATEGORIES</a>
-        </div>
-      </div>
-    </div>
+        <div class="q-arrow">▼</div>
+      </summary>
+      <div class="inside" id="nw_inside"></div>
+    </details>
 
-    <div class="qcard" data-q="ne">
-      <div class="qhead">
-        <div class="qleft">
-          <div class="qtag">NE</div>
-          <div class="qtitle">
-            <b id="t_ne">NORTHEAST</b>
-            <span id="t_ne_sub">Execution · surfaces · examples</span>
+    <!-- NE -->
+    <details class="quad" id="q_ne">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge">NE</div>
+          <div class="q-text">
+            <b id="ne_title">Northeast</b>
+            <span id="ne_sub" class="muted">Execution · surfaces · examples</span>
           </div>
         </div>
-        <div class="qchev">▾</div>
-      </div>
-      <div class="qbody">
-        <ul class="bullets" id="ne_bullets"></ul>
-        <div class="jumpRow">
-          <a class="jump" href="/products/" id="ne_jump1">JUMP · PRODUCTS</a>
-          <a class="jump" href="/rgsc/" id="ne_jump2">JUMP · RGSC</a>
-        </div>
-      </div>
-    </div>
+        <div class="q-arrow">▼</div>
+      </summary>
+      <div class="inside" id="ne_inside"></div>
+    </details>
 
-    <div class="qcard" data-q="sw">
-      <div class="qhead">
-        <div class="qleft">
-          <div class="qtag">SW</div>
-          <div class="qtitle">
-            <b id="t_sw">SOUTHWEST</b>
-            <span id="t_sw_sub">Measurement · diagnostics · rules</span>
+    <!-- SW -->
+    <details class="quad" id="q_sw">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge">SW</div>
+          <div class="q-text">
+            <b id="sw_title">Southwest</b>
+            <span id="sw_sub" class="muted">Measurement · diagnostics · rules</span>
           </div>
         </div>
-        <div class="qchev">▾</div>
-      </div>
-      <div class="qbody">
-        <ul class="bullets" id="sw_bullets"></ul>
-        <div class="jumpRow">
-          <a class="jump" href="/gauges/" id="sw_jump1">JUMP · GAUGES</a>
-          <a class="jump" href="/diagnostic/" id="sw_jump2">JUMP · DIAGNOSTIC</a>
-        </div>
-      </div>
-    </div>
+        <div class="q-arrow">▼</div>
+      </summary>
+      <div class="inside" id="sw_inside"></div>
+    </details>
 
-    <div class="qcard" data-q="se">
-      <div class="qhead">
-        <div class="qleft">
-          <div class="qtag">SE</div>
-          <div class="qtitle">
-            <b id="t_se">SOUTHEAST</b>
-            <span id="t_se_sub">Identity · references · links</span>
+    <!-- SE -->
+    <details class="quad" id="q_se">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge">SE</div>
+          <div class="q-text">
+            <b id="se_title">Southeast</b>
+            <span id="se_sub" class="muted">Identity · references · links</span>
           </div>
         </div>
-        <div class="qchev">▾</div>
-      </div>
-      <div class="qbody">
-        <ul class="bullets" id="se_bullets"></ul>
-        <div class="jumpRow">
-          <a class="jump" href="/links/" id="se_jump1">JUMP · LINKS</a>
-          <a class="jump" href="/contact/" id="se_jump2">JUMP · CONTACT</a>
+        <div class="q-arrow">▼</div>
+      </summary>
+      <div class="inside" id="se_inside"></div>
+    </details>
+
+    <div class="section-title" id="t_plate">Cardinal plate (N / E / S / W)</div>
+
+    <div class="plate-wrap">
+      <div class="stage">
+        <div class="platform">
+          <!-- N/E/S/W plate uses your diamond grammar; no duplicated words like North/South here -->
+          <a class="diamond top" href="/laws/"><span>N<small id="t_nsmall">Laws</small></span></a>
+          <a class="diamond right" href="/products/"><span>E<small id="t_esmall">Products</small></span></a>
+          <a class="diamond bottom" href="/gauges/"><span>S<small id="t_ssmall">Gauges</small></span></a>
+          <a class="diamond left" href="/links/"><span>W<small id="t_wsmall">Links</small></span></a>
+
+          <a class="diamond mini mini-left" href="/"><span><small id="t_root">ROOT</small></span></a>
+          <a class="diamond mini mini-right" href="/rgsc/"><span><small id="t_rgsc">RGSC</small></span></a>
         </div>
       </div>
+
+      <div class="plate-note" id="t_note">Cardinal plate is navigation. Quadrants are meaning.</div>
     </div>
+
+    <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
 
   </div>
-
-  <!-- Cardinal plate (N/E/S/W) -->
-  <div class="stage">
-    <div class="platform">
-      <a class="diamond top" href="/laws/"><span>N<small id="t_card_n">Laws</small></span></a>
-      <a class="diamond right" href="/products/"><span>E<small id="t_card_e">Products</small></span></a>
-      <a class="diamond bottom" href="/gauges/"><span>S<small id="t_card_s">Gauges</small></span></a>
-      <a class="diamond left" href="/links/"><span>W<small id="t_card_w">Links</small></span></a>
-
-      <a class="diamond mini mini-left" href="/"><span><small id="t_root">ROOT</small></span></a>
-      <a class="diamond mini mini-right" href="/rgsc/"><span><small id="t_rgsc">RGSC</small></span></a>
-    </div>
-  </div>
-
-  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 </div>
 
 <script>
-(function(){
-  const $ = (id)=>document.getElementById(id);
-
-  function getLang(){
-    try{ return (localStorage.getItem("gd_lang") || "en").toLowerCase(); }catch(e){ return "en"; }
-  }
-  function getDepth(){
-    let d="explore";
-    try{ d=(localStorage.getItem("gd_depth") || "explore").toLowerCase(); }catch(e){}
-    if(d==="shop") d="explore";
-    if(d!=="explore" && d!=="learn") d="explore";
-    return d;
-  }
-  function setDepth(d){
-    try{ localStorage.setItem("gd_depth", d); }catch(e){}
-  }
-
-  function bulletsFor(depth, lang){
-    const isZH = (lang==="zh");
-
-    // EXPLORE = short. LEARN = deeper.
-    const pack = {
-      nw: isZH
-        ? (depth==="learn"
-            ? ["SSG（简化语法几何）", "钻石导航语法（四路一选）", "DOT.GRID（256态索引）", "缩略语/术语（按柱分类）"]
-            : ["SSG", "钻石导航语法", "DOT.GRID", "缩略语/术语"])
-        : (depth==="learn"
-            ? ["SSG (Simplified Syntax Geometry)", "Diamond grammar (4 routes, one choice)", "DOT.GRID (256-state indexing)", "Acronyms & glossary (pillarized)"]
-            : ["SSG", "Diamond grammar", "DOT.GRID", "Acronyms & glossary"]),
-
-      ne: isZH
-        ? (depth==="learn"
-            ? ["执行界面（应用/门户）", "流程与回执（审计链）", "示例（如何使用系统）", "打包输出（下载/材料）"]
-            : ["执行界面", "回执/审计链", "示例", "打包输出"])
-        : (depth==="learn"
-            ? ["Execution surfaces (apps / portals)", "Workflows & receipts (audit trails)", "Examples (how to use the system)", "Packaged outputs (downloadables)"]
-            : ["Execution surfaces", "Receipts / audit trails", "Examples", "Packaged outputs"]),
-
-      sw: isZH
-        ? (depth==="learn"
-            ? ["量表/仪表（测量工具）", "诊断（约束下分类）", "规则（导航 + 完整性）", "返回协议（先回枢纽）"]
-            : ["量表/仪表", "诊断", "规则", "返回协议"])
-        : (depth==="learn"
-            ? ["Gauges (measurement instruments)", "Diagnostics (classification under constraint)", "Rules (navigation + integrity)", "Return protocol (hub-first)"]
-            : ["Gauges", "Diagnostics", "Rules", "Return protocol"]),
-
-      se: isZH
-        ? (depth==="learn"
-            ? ["ORCID（研究者身份）", "OSF（项目/预印本）", "联系方式（直接）", "对外链接（索引）"]
-            : ["ORCID", "OSF", "联系", "对外链接"])
-        : (depth==="learn"
-            ? ["ORCID (researcher identity)", "OSF (project registry / preprints)", "Contact (direct)", "External links (index)"]
-            : ["ORCID", "OSF", "Contact", "External links"])
-    };
-    return pack;
-  }
-
-  function applyI18n(lang){
-    const isZH = (lang==="zh");
-    document.documentElement.lang = isZH ? "zh" : "en";
-    $("pillLang").textContent = "LANG · " + (isZH ? "中文" : "EN");
-
-    if(isZH){
-      $("t_home").textContent = "首页";
-      $("t_tagline").textContent = "统一枢纽 · 选择路线。";
-      $("pillBackToDoor").textContent = "入口";
-      $("pillExplore").textContent = "浏览";
-      $("pillLearn").textContent = "学习";
-
-      $("t_nw").textContent = "西北";
-      $("t_nw_sub").textContent = "定义 · 语言 · 结构";
-      $("t_ne").textContent = "东北";
-      $("t_ne_sub").textContent = "执行 · 界面 · 示例";
-      $("t_sw").textContent = "西南";
-      $("t_sw_sub").textContent = "测量 · 诊断 · 规则";
-      $("t_se").textContent = "东南";
-      $("t_se_sub").textContent = "身份 · 引用 · 链接";
-
-      $("nw_jump1").textContent = "跳转 · 法则";
-      $("nw_jump2").textContent = "跳转 · 分类";
-      $("ne_jump1").textContent = "跳转 · 产品";
-      $("ne_jump2").textContent = "跳转 · RGSC";
-      $("sw_jump1").textContent = "跳转 · 仪表";
-      $("sw_jump2").textContent = "跳转 · 诊断";
-      $("se_jump1").textContent = "跳转 · 链接";
-      $("se_jump2").textContent = "跳转 · 联系";
-
-      $("t_card_n").textContent = "法则";
-      $("t_card_e").textContent = "产品";
-      $("t_card_s").textContent = "仪表";
-      $("t_card_w").textContent = "链接";
-      $("t_root").textContent = "根";
-      $("t_rgsc").textContent = "RGSC";
-    }else{
-      $("t_home").textContent = "Home";
-      $("t_tagline").textContent = "Unified hub · choose a route.";
-      $("pillBackToDoor").textContent = "DOOR";
-      $("pillExplore").textContent = "EXPLORE";
-      $("pillLearn").textContent = "LEARN";
-
-      $("t_nw").textContent = "NORTHWEST";
-      $("t_nw_sub").textContent = "Definitions · language · structure";
-      $("t_ne").textContent = "NORTHEAST";
-      $("t_ne_sub").textContent = "Execution · surfaces · examples";
-      $("t_sw").textContent = "SOUTHWEST";
-      $("t_sw_sub").textContent = "Measurement · diagnostics · rules";
-      $("t_se").textContent = "SOUTHEAST";
-      $("t_se_sub").textContent = "Identity · references · links";
-
-      $("nw_jump1").textContent = "JUMP · LAWS";
-      $("nw_jump2").textContent = "JUMP · CATEGORIES";
-      $("ne_jump1").textContent = "JUMP · PRODUCTS";
-      $("ne_jump2").textContent = "JUMP · RGSC";
-      $("sw_jump1").textContent = "JUMP · GAUGES";
-      $("sw_jump2").textContent = "JUMP · DIAGNOSTIC";
-      $("se_jump1").textContent = "JUMP · LINKS";
-      $("se_jump2").textContent = "JUMP · CONTACT";
-
-      $("t_card_n").textContent = "Laws";
-      $("t_card_e").textContent = "Products";
-      $("t_card_s").textContent = "Gauges";
-      $("t_card_w").textContent = "Links";
-      $("t_root").textContent = "ROOT";
-      $("t_rgsc").textContent = "RGSC";
+  const I18N = {
+    en:{
+      Home:"Home",
+      sub:"Quadrant routes (NW/NE/SW/SE) + Cardinal plate (N/E/S/W).",
+      quads:"Quadrant routes (NW / NE / SW / SE)",
+      plate:"Cardinal plate (N / E / S / W)",
+      change:"CHANGE",
+      note:"Cardinal plate is navigation. Quadrants are meaning.",
+      Laws:"Laws", Products:"Products", Gauges:"Gauges", Links:"Links",
+      NW:"Northwest", NE:"Northeast", SW:"Southwest", SE:"Southeast",
+      nwSub:"Definitions · language · structure",
+      neSub:"Execution · surfaces · examples",
+      swSub:"Measurement · diagnostics · rules",
+      seSub:"Identity · references · links",
+      lang:"LANG",
+      depth:"DEPTH",
+      SHOP:"SHOP",
+      LEARN:"LEARN",
+      // shop summaries
+      shopJumpLaws:"Jump · Laws",
+      shopJumpCategories:"Jump · Categories",
+      shopJumpProducts:"Jump · Products",
+      shopJumpRGSC:"Jump · RGSC",
+      shopJumpGauges:"Jump · Gauges",
+      shopJumpDiagnostic:"Jump · Diagnostic",
+      shopJumpLinks:"Jump · Links",
+      shopJumpContact:"Jump · Contact"
+    },
+    zh:{
+      Home:"主页",
+      sub:"象限路线（NW/NE/SW/SE）+ 方位面板（N/E/S/W）。",
+      quads:"象限路线（NW / NE / SW / SE）",
+      plate:"方位面板（N / E / S / W）",
+      change:"更改",
+      note:"方位面板用于导航；象限用于理解。",
+      Laws:"法律", Products:"产品", Gauges:"量表", Links:"链接",
+      NW:"西北", NE:"东北", SW:"西南", SE:"东南",
+      nwSub:"定义 · 语言 · 结构",
+      neSub:"执行 · 界面 · 示例",
+      swSub:"测量 · 诊断 · 规则",
+      seSub:"身份 · 参考 · 链接",
+      lang:"语言",
+      depth:"深度",
+      SHOP:"浏览",
+      LEARN:"学习",
+      shopJumpLaws:"跳转 · 法律",
+      shopJumpCategories:"跳转 · 分类",
+      shopJumpProducts:"跳转 · 产品",
+      shopJumpRGSC:"跳转 · RGSC",
+      shopJumpGauges:"跳转 · 量表",
+      shopJumpDiagnostic:"跳转 · 诊断",
+      shopJumpLinks:"跳转 · 链接",
+      shopJumpContact:"跳转 · 联系"
     }
+  };
+
+  function goDoor(){ location.href = '/door/'; }
+
+  function boot(){
+    const lang = localStorage.getItem('gd_lang');
+    const depth = localStorage.getItem('gd_depth') || 'shop';
+    if(lang !== 'en' && lang !== 'zh'){ location.href = '/'; return; }
+    document.documentElement.lang = (lang==='zh') ? 'zh' : 'en';
+
+    const t = I18N[lang];
+
+    document.getElementById('t_title').textContent = t.Home;
+    document.getElementById('t_sub').textContent = t.sub;
+    document.getElementById('t_quads').textContent = t.quads;
+    document.getElementById('t_plate').textContent = t.plate;
+    document.getElementById('t_change').textContent = t.change;
+    document.getElementById('t_note').textContent = t.note;
+
+    document.getElementById('t_lang').textContent = `${t.lang}: ${lang==='zh'?'中文':'EN'}`;
+    document.getElementById('t_depth').textContent = `${t.depth}: ${depth.toUpperCase()}`;
+
+    // plate labels
+    document.getElementById('t_nsmall').textContent = t.Laws;
+    document.getElementById('t_esmall').textContent = t.Products;
+    document.getElementById('t_ssmall').textContent = t.Gauges;
+    document.getElementById('t_wsmall').textContent = t.Links;
+
+    // quadrant headers
+    document.getElementById('nw_title').textContent = t.NW;
+    document.getElementById('ne_title').textContent = t.NE;
+    document.getElementById('sw_title').textContent = t.SW;
+    document.getElementById('se_title').textContent = t.SE;
+
+    document.getElementById('nw_sub').textContent = t.nwSub;
+    document.getElementById('ne_sub').textContent = t.neSub;
+    document.getElementById('sw_sub').textContent = t.swSub;
+    document.getElementById('se_sub').textContent = t.seSub;
+
+    // render interiors based on depth
+    renderQuadrants(lang, depth);
   }
 
-  function render(depth, lang){
-    // pills
-    $("pillExplore").classList.toggle("active", depth==="explore");
-    $("pillLearn").classList.toggle("active", depth==="learn");
+  function renderQuadrants(lang, depth){
+    const t = I18N[lang];
 
-    const b = bulletsFor(depth, lang);
-    function fill(id, arr){
-      const ul = $(id);
-      ul.innerHTML = "";
-      arr.forEach(t=>{
-        const li = document.createElement("li");
-        li.textContent = t;
-        ul.appendChild(li);
-      });
+    if(depth === 'shop'){
+      document.getElementById('nw_inside').innerHTML = `
+        <div class="jump-row">
+          <a class="jump" href="/laws/">${t.shopJumpLaws}</a>
+          <a class="jump" href="/laws/categories/">${t.shopJumpCategories}</a>
+        </div>`;
+      document.getElementById('ne_inside').innerHTML = `
+        <div class="jump-row">
+          <a class="jump" href="/products/">${t.shopJumpProducts}</a>
+          <a class="jump" href="/rgsc/">${t.shopJumpRGSC}</a>
+        </div>`;
+      document.getElementById('sw_inside').innerHTML = `
+        <div class="jump-row">
+          <a class="jump" href="/gauges/">${t.shopJumpGauges}</a>
+          <a class="jump" href="/diagnostic/">${t.shopJumpDiagnostic}</a>
+        </div>`;
+      document.getElementById('se_inside').innerHTML = `
+        <div class="jump-row">
+          <a class="jump" href="/links/">${t.shopJumpLinks}</a>
+          <a class="jump" href="/contact/">${t.shopJumpContact}</a>
+        </div>`;
+      return;
     }
-    fill("nw_bullets", b.nw);
-    fill("ne_bullets", b.ne);
-    fill("sw_bullets", b.sw);
-    fill("se_bullets", b.se);
+
+    // LEARN depth = 4 primary bubbles per quadrant (expandable)
+    document.getElementById('nw_inside').innerHTML = `
+      <div class="grid2">
+        <details class="bubble"><summary><b>1. SSG</b><i>Language</i></summary>
+          <ul>
+            <li>Resources · Stores · Constraints · Goals · Guards</li>
+            <li>Receipt-gated advancement</li>
+            <li>Navigation-first invariants</li>
+            <li>Finite, replay-safe execution</li>
+          </ul>
+        </details>
+        <details class="bubble"><summary><b>2. Diamond grammar</b><i>Navigation</i></summary>
+          <ul>
+            <li>Four routes, one choice at a time</li>
+            <li>Return-to-hub protocol</li>
+            <li>Leaf pages do not enforce routes</li>
+            <li>Structure stays stable while content grows</li>
+          </ul>
+        </details>
+        <details class="bubble"><summary><b>3. DOT.GRID</b><i>Indexing</i></summary>
+          <ul>
+            <li>256-state indexing surface</li>
+            <li>Observer-invariant labeling goal</li>
+            <li>Replay streams compatible</li>
+            <li>State → receipt mapping</li>
+          </ul>
+        </details>
+        <details class="bubble"><summary><b>4. Acronyms & glossary</b><i>Reference</i></summary>
+          <ul>
+            <li>ORCID · OSF · RGSC · DOT.GRID</li>
+            <li>SSG · Compass · Quadrants</li>
+            <li>Governance terms</li>
+            <li>Human layer terms</li>
+          </ul>
+        </details>
+      </div>
+      <div class="jump-row">
+        <a class="jump" href="/laws/">Jump · Laws</a>
+        <a class="jump" href="/laws/categories/">Jump · Categories</a>
+      </div>`;
+
+    document.getElementById('ne_inside').innerHTML = `
+      <div class="grid2">
+        <details class="bubble"><summary><b>1. Execution surfaces</b><i>Apps</i></summary>
+          <ul>
+            <li>PLASMA / PLATFORM layers</li>
+            <li>Portals & hubs</li>
+            <li>Replay-safe flows</li>
+            <li>One-choice UX primitives</li>
+          </ul>
+        </details>
+        <details class="bubble"><summary><b>2. Workflows</b><i>Paths</i></summary>
+          <ul>
+            <li>Selection → Resolution → Commitment → Continuation</li>
+            <li>Back-nav invalidates downstream receipts</li>
+            <li>Exit emits terminal + return token</li>
+            <li>No timers as gates</li>
+          </ul>
+        </details>
+        <details class="bubble"><summary><b>3. Examples</b><i>How-to</i></summary>
+          <ul>
+            <li>Choose a route</li>
+            <li>Take one action</li>
+            <li>Create receipt</li>
+            <li>Return or continue</li>
+          </ul>
+        </details>
+        <details class="bubble"><summary><b>4. Packaged outputs</b><i>Downloads</i></summary>
+          <ul>
+            <li>Packs</li>
+            <li>PDFs</li>
+            <li>Checklists</li>
+            <li>Templates</li>
+          </ul>
+        </details>
+      </div>
+      <div class="jump-row">
+        <a class="jump" href="/products/">Jump · Products</a>
+        <a class="jump" href="/rgsc/">Jump · RGSC</a>
+      </div>`;
+
+    document.getElementById('sw_inside').innerHTML = `
+      <div class="grid2">
+        <details class="bubble"><summary><b>1. Gauges</b><i>Measurement</i></summary>
+          <ul>
+            <li>Instrument panels</li>
+            <li>Consistency checks</li>
+            <li>Signal integrity</li>
+            <li>Threshold rules</li>
+          </ul>
+        </details>
+        <details class="bubble"><summary><b>2. Diagnostics</b><i>Classification</i></summary>
+          <ul>
+            <li>Classification under constraint</li>
+            <li>Coherence / drift / confusion categories</li>
+            <li>Observer-invariant targets</li>
+            <li>Replay-driven audits</li>
+          </ul>
+        </details>
+        <details class="bubble"><summary><b>3. Rules</b><i>Navigation</i></summary>
+          <ul>
+            <li>Hub-first return</li>
+            <li>One-choice rule</li>
+            <li>Receipt gating</li>
+            <li>Kill/exit conditions</li>
+          </ul>
+        </details>
+        <details class="bubble"><summary><b>4. Protocols</b><i>Operational</i></summary>
+          <ul>
+            <li>Local-first</li>
+            <li>Audit trails</li>
+            <li>Verification loops</li>
+            <li>Publishing gates</li>
+          </ul>
+        </details>
+      </div>
+      <div class="jump-row">
+        <a class="jump" href="/gauges/">Jump · Gauges</a>
+        <a class="jump" href="/diagnostic/">Jump · Diagnostic</a>
+      </div>`;
+
+    document.getElementById('se_inside').innerHTML = `
+      <div class="grid2">
+        <details class="bubble"><summary><b>1. ORCID</b><i>Identity</i></summary>
+          <ul>
+            <li>Research identity</li>
+            <li>Publication trace</li>
+            <li>Attribution</li>
+            <li>External index</li>
+          </ul>
+        </details>
+        <details class="bubble"><summary><b>2. OSF</b><i>Registry</i></summary>
+          <ul>
+            <li>Project registry</li>
+            <li>Preprints</li>
+            <li>Artifacts</li>
+            <li>Public anchors</li>
+          </ul>
+        </details>
+        <details class="bubble"><summary><b>3. Contact</b><i>Direct</i></summary>
+          <ul>
+            <li>Contact channel</li>
+            <li>Partnership</li>
+            <li>Licensing</li>
+            <li>Press</li>
+          </ul>
+        </details>
+        <details class="bubble"><summary><b>4. Links</b><i>Index</i></summary>
+          <ul>
+            <li>Hub links</li>
+            <li>Reference links</li>
+            <li>Downloads</li>
+            <li>Navigation map</li>
+          </ul>
+        </details>
+      </div>
+      <div class="jump-row">
+        <a class="jump" href="/links/">Jump · Links</a>
+        <a class="jump" href="/contact/">Jump · Contact</a>
+      </div>`;
   }
 
-  // accordion behavior (per quadrant)
-  document.querySelectorAll(".qcard").forEach(card=>{
-    const head = card.querySelector(".qhead");
-    const body = card.querySelector(".qbody");
-    const chev = card.querySelector(".qchev");
-    head.addEventListener("click", ()=>{
-      const open = body.classList.toggle("open");
-      chev.textContent = open ? "▴" : "▾";
-    });
-  });
-
-  const lang = getLang();
-  applyI18n(lang);
-
-  let depth = getDepth();
-  render(depth, lang);
-
-  $("pillExplore").addEventListener("click", ()=>{ depth="explore"; setDepth(depth); render(depth, lang); });
-  $("pillLearn").addEventListener("click", ()=>{ depth="learn"; setDepth(depth); render(depth, lang); });
-
-  // If user wants to change language, they must go back to / (index) (language chosen once)
-  $("pillLang").addEventListener("click", ()=>{ location.href="/"; });
-})();
+  boot();
 </script>
-
 </body>
 </html>

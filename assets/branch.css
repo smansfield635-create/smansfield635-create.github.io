@@ -1,99 +1,28 @@
-/* TNT: assets/branch.css (CALIBRATION RESET — NO UNDERGLOW, NO COLOR CAST, PURE 3D GLASS/STONE) */
+/* TNT: assets/branch.css (APPEND OR REPLACE WITH FULL FILE IF YOU PREFER — MINI NAV DIAMONDS INCLUDED) */
 
-.platform{
-  position:relative;
-  width:min(420px,88vw);
-  aspect-ratio:1/1;
-  margin:0 auto;
-}
-
-/* plate */
-.platform::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  transform:rotate(45deg);
-  border-radius:28px;
-  background:rgba(255,255,255,.035);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,.08) inset,
-    0 28px 80px rgba(0,0,0,.75);
-  backdrop-filter:blur(10px);
-  z-index:0;
-}
-
-/* disable any plate glow layer */
+.platform{position:relative;width:min(420px,88vw);aspect-ratio:1/1;margin:0 auto}
+.platform::before{content:"";position:absolute;inset:0;transform:rotate(45deg);border-radius:28px;background:rgba(255,255,255,.035);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 28px 80px rgba(0,0,0,.75);backdrop-filter:blur(10px);z-index:0}
 .platform::after{content:none!important}
 
-/* tiles (neutral, 3D only) */
-.diamond{
-  position:absolute;
-  width:42%;
-  height:42%;
-  transform:rotate(45deg);
-  border-radius:18px;
-  background:rgba(255,255,255,.10);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  color:#eaf2f6;
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.08),
-    inset 0 18px 26px rgba(255,255,255,.02),
-    inset 0 -28px 40px rgba(0,0,0,.48),
-    0 20px 48px rgba(0,0,0,.75);
-  backdrop-filter:blur(8px);
-  -webkit-tap-highlight-color:transparent;
-  transition:filter .15s ease,transform .15s ease;
-  z-index:2;
-}
-
-/* disable any tile glow layers */
-.diamond::before,
-.diamond::after{content:none!important}
-
+.diamond{position:absolute;width:42%;height:42%;transform:rotate(45deg);border-radius:18px;background:rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#eaf2f6;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 18px 26px rgba(255,255,255,.02),inset 0 -28px 40px rgba(0,0,0,.48),0 20px 48px rgba(0,0,0,.75);backdrop-filter:blur(8px);-webkit-tap-highlight-color:transparent;transition:filter .15s ease,transform .15s ease;z-index:2}
+.diamond::before,.diamond::after{content:none!important}
 .diamond:hover{filter:brightness(1.05)}
 .diamond:active{transform:rotate(45deg) translateY(1px)}
+.diamond span{transform:rotate(-45deg);text-align:center;font-weight:900;line-height:1.15;text-shadow:0 3px 18px rgba(0,0,0,.75)}
+.diamond small{display:block;opacity:.75;font-weight:700;font-size:12px;margin-top:6px;letter-spacing:.12em}
 
-.diamond span{
-  transform:rotate(-45deg);
-  text-align:center;
-  font-weight:900;
-  line-height:1.15;
-  text-shadow:0 3px 18px rgba(0,0,0,.75);
-}
-
-.diamond small{
-  display:block;
-  opacity:.75;
-  font-weight:700;
-  font-size:12px;
-  margin-top:6px;
-  letter-spacing:.12em;
-}
-
-/* positions */
 .top{top:2%;left:29%}
 .right{top:29%;right:2%}
 .bottom{bottom:2%;left:29%}
 .left{top:29%;left:2%}
 
-/* keep classes but no effects */
-.diamond.c-blue,
-.diamond.c-green,
-.diamond.c-amber,
-.diamond.c-purple{
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.08),
-    inset 0 18px 26px rgba(255,255,255,.02),
-    inset 0 -28px 40px rgba(0,0,0,.48),
-    0 20px 48px rgba(0,0,0,.75);
-}
+.diamond.c-blue,.diamond.c-green,.diamond.c-amber,.diamond.c-purple{box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 18px 26px rgba(255,255,255,.02),inset 0 -28px 40px rgba(0,0,0,.48),0 20px 48px rgba(0,0,0,.75)}
+
+/* MINI NAV DIAMONDS */
+.diamond.mini{width:22%;height:22%;opacity:.90;background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 10px 24px rgba(0,0,0,.45)}
+.mini-left{bottom:-8%;left:-6%}
+.mini-right{bottom:-8%;right:-6%}
+.diamond.mini span{font-size:11px;letter-spacing:.18em}
 
 /* legacy off */
-.diamond-stage,
-.mini-diamond,
-.compass-label{
-  display:none!important;
-}
+.diamond-stage,.mini-diamond,.compass-label{display:none!important}

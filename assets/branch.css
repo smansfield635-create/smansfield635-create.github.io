@@ -1,112 +1,79 @@
-/* TNT: assets/branch.css
-   RESTORE DARK COSMIC + STONE GLASS (NO WHITE FOG)
-   FULL REPLACEMENT
-*/
+/* TNT: assets/branch.css (LIGHT STONE TILES + BLACK PRINT, ORGANIZED, NO GLOW/FOD)
+   This makes tiles light, and text on tiles dark. */
 
-/* === PLATFORM (OUTER PLATE) === */
-.platform{
-  position:relative;
-  width:min(420px,88vw);
-  aspect-ratio:1/1;
-  margin:0 auto;
-}
-
+.platform{position:relative;width:min(420px,88vw);aspect-ratio:1/1;margin:0 auto}
 .platform::before{
   content:"";
   position:absolute;
   inset:0;
   transform:rotate(45deg);
   border-radius:28px;
-
-  /* DARK STONE BASE (NOT WHITE) */
-  background:
-    radial-gradient(120% 120% at 30% 20%, rgba(255,255,255,.05), rgba(0,0,0,0) 60%),
-    linear-gradient(145deg, #0f1820, #0b141a);
-
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.05),
-    inset 0 30px 60px rgba(255,255,255,.02),
-    inset 0 -40px 80px rgba(0,0,0,.65),
-    0 40px 90px rgba(0,0,0,.85);
-
-  backdrop-filter:blur(6px);
+  background:rgba(255,255,255,.05);
+  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset,0 28px 80px rgba(0,0,0,.75);
+  backdrop-filter:blur(10px);
   z-index:0;
 }
+.platform::after{content:none!important}
 
-/* === MAIN DIAMONDS (STONE + GLASS MIX) === */
+/* tiles: LIGHT stone */
 .diamond{
   position:absolute;
   width:42%;
   height:42%;
   transform:rotate(45deg);
   border-radius:18px;
-
-  /* STONE GLASS (NO WHITE FOG) */
-  background:
-    radial-gradient(100% 100% at 30% 25%, rgba(255,255,255,.06), rgba(0,0,0,0) 60%),
-    linear-gradient(145deg, #1b252d, #121b22);
-
+  background:rgba(255,255,255,.82);
   display:flex;
   align-items:center;
   justify-content:center;
-
   text-decoration:none;
-  color:#f2f6f9;
-
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.06),
-    inset 0 25px 35px rgba(255,255,255,.02),
-    inset 0 -35px 60px rgba(0,0,0,.75),
-    0 25px 55px rgba(0,0,0,.8);
-
-  backdrop-filter:blur(6px);
-  transition:transform .15s ease, filter .15s ease;
+    inset 0 0 0 1px rgba(0,0,0,.10),
+    inset 0 18px 26px rgba(255,255,255,.35),
+    inset 0 -28px 40px rgba(0,0,0,.18),
+    0 18px 44px rgba(0,0,0,.45);
+  backdrop-filter:blur(2px);
+  -webkit-tap-highlight-color:transparent;
+  transition:filter .15s ease,transform .15s ease;
   z-index:2;
 }
+.diamond::before,.diamond::after{content:none!important}
+.diamond:hover{filter:brightness(1.03)}
+.diamond:active{transform:rotate(45deg) translateY(1px)}
 
-.diamond:hover{
-  filter:brightness(1.08);
-}
-
+/* BLACK PRINT ON TILE */
 .diamond span{
   transform:rotate(-45deg);
   text-align:center;
   font-weight:900;
   line-height:1.15;
-  letter-spacing:.03em;
-  text-shadow:0 3px 18px rgba(0,0,0,.9);
+  color:rgba(10,12,14,.92);
+  text-shadow:none;
 }
-
 .diamond small{
   display:block;
   margin-top:6px;
   font-size:12px;
-  font-weight:700;
+  font-weight:800;
+  letter-spacing:.14em;
   opacity:.75;
-  letter-spacing:.18em;
+  color:rgba(10,12,14,.78);
 }
 
-/* === POSITIONING === */
+/* positions */
 .top{top:2%;left:29%}
 .right{top:29%;right:2%}
 .bottom{bottom:2%;left:29%}
 .left{top:29%;left:2%}
 
-/* === REMOVE ALL COLOR BLEED / FOG === */
-.diamond.c-blue,
-.diamond.c-green,
-.diamond.c-amber,
-.diamond.c-purple{
+/* keep semantic classes but no effects */
+.diamond.c-blue,.diamond.c-green,.diamond.c-amber,.diamond.c-purple{
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.06),
-    inset 0 25px 35px rgba(255,255,255,.02),
-    inset 0 -35px 60px rgba(0,0,0,.75),
-    0 25px 55px rgba(0,0,0,.8);
+    inset 0 0 0 1px rgba(0,0,0,.10),
+    inset 0 18px 26px rgba(255,255,255,.35),
+    inset 0 -28px 40px rgba(0,0,0,.18),
+    0 18px 44px rgba(0,0,0,.45);
 }
 
-/* === DISABLE OLD SYSTEMS === */
-.diamond-stage,
-.mini-diamond,
-.compass-label{
-  display:none!important;
-}
+/* legacy off */
+.diamond-stage,.mini-diamond,.compass-label{display:none!important}

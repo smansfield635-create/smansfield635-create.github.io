@@ -1,10 +1,7 @@
 <!-- TNT: /door/index.html
-     COMPLETE REWRITE (HANDOFF)
-     - Reads language + depth from localStorage.
-     - No jargon.
-     - One button: Enter.
-     - One button: Change language/depth (go back to /).
-     - Shows a small preview line of what “Shop” vs “Learn” means.
+     COMPLETE REWRITE (ADD 1 CLEAR PARAGRAPH + KEEP DESIGN)
+     - Same structure + buttons.
+     - Adds a single “what you’re choosing” paragraph (human, non-jargon).
 -->
 <!doctype html>
 <html lang="en">
@@ -13,8 +10,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Door · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=6000"/>
-<link rel="stylesheet" href="/assets/branch.css?v=6000"/>
+<link rel="stylesheet" href="/assets/ui.css?v=6001"/>
+<link rel="stylesheet" href="/assets/branch.css?v=6001"/>
 
 <style>
 html,body{height:100%}
@@ -52,6 +49,17 @@ body{
   border:1px solid rgba(255,255,255,.10);
   font-weight:900;letter-spacing:.12em;font-size:12px;opacity:.92;
 }
+.explain{
+  margin-top:12px;
+  opacity:.90;
+  line-height:1.65;
+  font-size:18px;
+}
+.smallhint{
+  margin-top:10px;
+  opacity:.75;
+  line-height:1.6;
+}
 </style>
 </head>
 
@@ -69,12 +77,15 @@ body{
     <div class="panel">
       <div id="statusLine" style="opacity:.88;line-height:1.6"></div>
 
+      <!-- NEW: what you're choosing (1 paragraph) -->
+      <div class="explain" id="explainLine"></div>
+
       <div class="row">
         <a class="btn primary" href="/home/" id="enterBtn">Enter</a>
         <a class="btn" href="/" id="changeBtn">Change</a>
       </div>
 
-      <div style="margin-top:12px;opacity:.75;line-height:1.6" id="hintLine"></div>
+      <div class="smallhint" id="hintLine"></div>
     </div>
 
     <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
@@ -85,13 +96,13 @@ body{
 (() => {
   const lang = (localStorage.getItem("GD_LANG") || "en").toLowerCase();
   const depth = (localStorage.getItem("GD_DEPTH") || "shop").toLowerCase();
-
   const zh = (lang === "zh");
   document.documentElement.lang = zh ? "zh-Hans" : "en";
 
   const ttl = document.getElementById("ttl");
   const sub = document.getElementById("sub");
   const statusLine = document.getElementById("statusLine");
+  const explainLine = document.getElementById("explainLine");
   const hintLine = document.getElementById("hintLine");
   const enterBtn = document.getElementById("enterBtn");
   const changeBtn = document.getElementById("changeBtn");
@@ -100,23 +111,35 @@ body{
     ttl.textContent = "入口";
     sub.textContent = "进入主枢纽前的一步。";
     statusLine.innerHTML = `语言：<span class="badge">中文</span>　深度：<span class="badge">${depth === "learn" ? "学习" : "浏览"}</span>`;
+
+    // 1 paragraph, plain guidance
+    explainLine.textContent =
+      "你刚才选择了“语言 + 深度”。语言决定页面文字显示为中文还是英文；深度决定你看到的是“概览（浏览）”还是“详细解释（学习）”。点击“进入”继续；点击“更改”返回重新选择。";
+
     hintLine.textContent = (depth === "learn")
       ? "学习：显示更多层级与解释。"
       : "浏览：只显示表层概要与入口。";
+
     enterBtn.textContent = "进入";
     changeBtn.textContent = "更改";
   } else {
     ttl.textContent = "Door";
     sub.textContent = "One step before the hub.";
     statusLine.innerHTML = `Language: <span class="badge">EN</span>　Depth: <span class="badge">${depth.toUpperCase()}</span>`;
+
+    // 1 paragraph, plain guidance
+    explainLine.textContent =
+      "You already chose “language + depth.” Language controls whether pages read in English or Chinese. Depth controls whether you see a quick surface view (Shop) or a deeper explanation view (Learn). Tap Enter to continue, or Change to pick again.";
+
     hintLine.textContent = (depth === "learn")
       ? "Learn: shows deeper nested bubbles and explanations."
       : "Shop: shows surface-level summaries and entry points.";
+
     enterBtn.textContent = "Enter";
     changeBtn.textContent = "Change";
   }
 
-  // Ensure Home reads the same state
+  // persist (defensive)
   try{
     localStorage.setItem("GD_LANG", lang);
     localStorage.setItem("GD_DEPTH", depth);

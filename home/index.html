@@ -5,9 +5,63 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Home · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=999"/>
-<link rel="stylesheet" href="/assets/branch.css?v=999"/>
+<link rel="stylesheet" href="/assets/ui.css?v=101"/>
+<link rel="stylesheet" href="/assets/branch.css?v=101"/>
 
+<style>
+
+/* ==========================================
+   HOME PAGE STRUCTURE FIX
+========================================== */
+
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:40px 12px 120px; /* extra bottom space */
+}
+
+.h{
+  text-align:center;
+  margin-bottom:40px; /* prevent overlap */
+  z-index:5;
+}
+
+.stage{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  margin-top:20px;
+  margin-bottom:60px;
+}
+
+/* Mini controls moved OUTSIDE stack */
+
+.control-bar{
+  position:absolute;
+  bottom:-90px; /* clear of diamonds */
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  z-index:4;
+}
+
+/* Footer pushed further down */
+
+footer{
+  margin-top:120px;
+  opacity:.55;
+  letter-spacing:3px;
+  font-size:12px;
+  text-align:center;
+}
+
+</style>
 </head>
 
 <body>
@@ -40,19 +94,23 @@
         <span>West<small>ORIGIN</small></span>
       </a>
 
-      <!-- MINI CONTROL GEMS (BOTTOM CENTERED) -->
-      <a class="diamond mini mini-left" href="/door/">
-        <span><small>EXIT</small></span>
-      </a>
+      <!-- CONTROL BAR (NOT STACKED) -->
+      <div class="control-bar">
+        <a class="diamond mini" href="/door/">
+          <span><small>EXIT</small></span>
+        </a>
 
-      <a class="diamond mini mini-right" href="/">
-        <span><small>ROOT</small></span>
-      </a>
+        <a class="diamond mini" href="/">
+          <span><small>ROOT</small></span>
+        </a>
+      </div>
 
     </div>
   </div>
 
-  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+  <footer>
+    CANONICAL · STABLE · © GEODIAMETRICS
+  </footer>
 
 </div>
 </body>

@@ -1,17 +1,28 @@
-<!-- TNT 1/3: assets/ui.css (CANONICAL THEME) -->
-/* GLOBAL UI (COSMIC THEME) */
-html,body{margin:0;padding:0;width:100%;height:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#e9f1f4;background:#05070c;overflow-x:hidden}
-body{position:relative;background:
-radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b)}
-.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 12px}
-.h{text-align:center;margin-bottom:12px}
-.h h1{font-size:48px;font-weight:900;margin:0}
-.h p{opacity:.7;margin-top:8px}
-.stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
-a{color:inherit;text-decoration:none}
+/* TNT: assets/ui.css (ADD ONLY WHAT’S MISSING: WHITE TYPE + OPTIONAL UNDERGLOW SUPPORT) */
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#05070c;
+  overflow-x:hidden;
+}
+
+/* FIX: GLOBAL TYPE SHOULD BE LIGHT */
+body{color:#eaf2f6}
+h1,h2,h3,h4,h5,h6{color:#eaf2f6}
+a{color:inherit}
 a:visited{color:inherit}
-a:hover{text-decoration:none}
-a:active{text-decoration:none}
-.nav{display:flex;justify-content:center;gap:12px;margin-top:16px;flex-wrap:wrap}
-.nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);color:#eaf2f6;font-weight:900}
-footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
+
+/* (optional) keep subtitles softer */
+.h p,.subtitle{color:rgba(234,242,246,.72)}
+footer,.footer{color:rgba(234,242,246,.55)}
+
+/* COSMIC BACKDROP (leave if already present; safe override) */
+body{
+  position:relative;
+  background:
+    radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+}

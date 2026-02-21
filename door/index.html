@@ -1,4 +1,3 @@
-<!-- TNT FILE: /door/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,11 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Door · Geodiametrics</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=2001"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=2001"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=8000"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=8000"/>
 
   <style>
-    /* DOOR (same China-red accent) */
     body{
       background:
         radial-gradient(1200px 900px at 50% 10%, rgba(150,0,0,.45) 0%, rgba(20,0,0,.30) 38%, rgba(5,7,12,1) 100%),
@@ -32,8 +30,8 @@
       padding:10px 14px;
       background:rgba(255,255,255,.06);
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-      font-weight:800;
-      letter-spacing:.08em;
+      font-weight:900;
+      letter-spacing:.10em;
       text-transform:uppercase;
       font-size:12px;
       opacity:.9;
@@ -46,6 +44,7 @@
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
       cursor:pointer;
       user-select:none;
+      -webkit-tap-highlight-color:transparent;
     }
     .pick strong{font-size:18px}
     .pick p{margin:8px 0 0;opacity:.75}
@@ -79,35 +78,33 @@
 
     <div class="hero">
       <h1 id="t_title">Door</h1>
-      <p id="t_sub">Choose how much detail you want, then enter the hub.</p>
+      <p id="t_sub">Choose depth. Then enter the hub.</p>
     </div>
 
     <div class="card">
-
       <div class="row" style="margin-bottom:14px">
         <div class="pill" id="t_langpill">LANG: —</div>
         <div class="pill" id="t_depthpill">DEPTH: —</div>
       </div>
 
       <div class="row">
-        <div id="pick_shop" class="pick" role="button" tabindex="0" onclick="setDepth('shop')" onkeypress="if(event.key==='Enter'){setDepth('shop')}">
-          <strong id="t_shop">Shop</strong>
-          <p id="t_shop_desc">Surface view. Fast scan. Jump links only.</p>
+        <div id="pick_explore" class="pick" role="button" tabindex="0" onclick="setDepth('explore')" onkeypress="if(event.key==='Enter'){setDepth('explore')}">
+          <strong id="t_explore">Explore</strong>
+          <p id="t_explore_desc">Surface bubbles · fast orientation · jump later</p>
         </div>
 
         <div id="pick_learn" class="pick" role="button" tabindex="0" onclick="setDepth('learn')" onkeypress="if(event.key==='Enter'){setDepth('learn')}">
           <strong id="t_learn">Learn</strong>
-          <p id="t_learn_desc">Deep view. Nested bubbles. Full breakdown.</p>
+          <p id="t_learn_desc">Deep bubbles · nested expansion · full breakdown</p>
         </div>
       </div>
 
       <div class="actions">
         <button class="btn primary" onclick="enterHub()" id="t_enter">Enter</button>
-        <button class="btn" onclick="changeLanguage()" id="t_change">Change language</button>
+        <button class="btn" onclick="backToIndex()" id="t_change">Change language</button>
       </div>
 
       <div class="tiny">CANONICAL · STABLE · © GEODIAMETRICS</div>
-
     </div>
 
   </div>
@@ -117,11 +114,11 @@
   const I18N = {
     en:{
       Door:"Door",
-      sub:"Choose how much detail you want, then enter the hub.",
-      shop:"Shop",
-      shopDesc:"Surface view. Fast scan. Jump links only.",
+      sub:"Choose depth. Then enter the hub.",
+      explore:"Explore",
+      exploreDesc:"Surface bubbles · fast orientation · jump later",
       learn:"Learn",
-      learnDesc:"Deep view. Nested bubbles. Full breakdown.",
+      learnDesc:"Deep bubbles · nested expansion · full breakdown",
       enter:"Enter",
       change:"Change language",
       lang:"LANG",
@@ -129,11 +126,11 @@
     },
     zh:{
       Door:"入口",
-      sub:"选择你想要的深度，然后进入主枢纽。",
-      shop:"浏览",
-      shopDesc:"表层视图 · 快速查看 · 只有跳转入口。",
+      sub:"选择深度，然后进入枢纽。",
+      explore:"浏览",
+      exploreDesc:"表层气泡 · 快速理解 · 稍后跳转",
       learn:"学习",
-      learnDesc:"深度视图 · 多层气泡 · 完整拆解。",
+      learnDesc:"深度气泡 · 多层展开 · 完整拆解",
       enter:"进入",
       change:"更改语言",
       lang:"语言",
@@ -146,41 +143,39 @@
     if(lang !== 'en' && lang !== 'zh'){ location.href = '/'; return; }
 
     document.documentElement.lang = (lang === 'zh') ? 'zh' : 'en';
-
     const t = I18N[lang];
+
     document.getElementById('t_title').textContent = t.Door;
     document.getElementById('t_sub').textContent = t.sub;
-    document.getElementById('t_shop').textContent = t.shop;
-    document.getElementById('t_shop_desc').textContent = t.shopDesc;
+    document.getElementById('t_explore').textContent = t.explore;
+    document.getElementById('t_explore_desc').textContent = t.exploreDesc;
     document.getElementById('t_learn').textContent = t.learn;
     document.getElementById('t_learn_desc').textContent = t.learnDesc;
     document.getElementById('t_enter').textContent = t.enter;
     document.getElementById('t_change').textContent = t.change;
 
-    const depth = localStorage.getItem('gd_depth') || 'shop';
+    const depth = (localStorage.getItem('gd_depth') || 'explore').toLowerCase();
     setDepth(depth, true);
 
     document.getElementById('t_langpill').textContent = `${t.lang}: ${(lang==='zh')?'中文':'EN'}`;
   }
 
   function setDepth(depth, silent){
+    if(depth !== 'explore' && depth !== 'learn') depth = 'explore';
     localStorage.setItem('gd_depth', depth);
+
     const lang = localStorage.getItem('gd_lang') || 'en';
     const t = I18N[lang];
 
     document.getElementById('t_depthpill').textContent = `${t.depth}: ${depth.toUpperCase()}`;
-    document.getElementById('pick_shop').classList.toggle('active', depth==='shop');
+    document.getElementById('pick_explore').classList.toggle('active', depth==='explore');
     document.getElementById('pick_learn').classList.toggle('active', depth==='learn');
 
     if(!silent) navigator.vibrate && navigator.vibrate(10);
   }
 
-  function enterHub(){
-    location.href = '/home/';
-  }
-
-  function changeLanguage(){
-    // language is chosen ONCE at index; we go back there to change it
+  function enterHub(){ location.href = '/home/'; }
+  function backToIndex(){
     localStorage.removeItem('gd_lang');
     location.href = '/';
   }

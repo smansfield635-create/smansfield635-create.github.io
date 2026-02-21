@@ -22,6 +22,25 @@ a:active{text-decoration:none}
 .nav{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;justify-content:center}
 .nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);font-weight:900}
 footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
+
+/* HOME-SAFE PLATFORM GEOMETRY (OVERRIDES ANY LEFTOVER DIAMOND-STAGE RULES) */
+.platform{position:relative;width:min(420px,88vw);aspect-ratio:1/1;margin:0 auto}
+.platform::before{content:"";position:absolute;inset:0;transform:rotate(45deg);border-radius:28px;background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}
+
+.platform .diamond{position:absolute;width:42%;height:42%;transform:rotate(45deg);border-radius:18px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#eaf2f6;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 14px 34px rgba(0,0,0,.35);backdrop-filter:blur(8px);-webkit-tap-highlight-color:transparent;transition:filter .15s ease,transform .15s ease,box-shadow .15s ease}
+.platform .diamond:hover{filter:brightness(1.06)}
+.platform .diamond:active{filter:brightness(1.08);transform:rotate(45deg) translateY(1px)}
+.platform .diamond span{transform:rotate(-45deg);text-align:center;font-weight:900;line-height:1.15;letter-spacing:.02em;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+
+.platform .top{top:2%;left:29%}
+.platform .right{top:29%;right:2%}
+.platform .bottom{bottom:2%;left:29%}
+.platform .left{top:29%;left:2%}
+
+.platform .diamond.c-blue{box-shadow:inset 0 0 0 1px rgba(120,190,255,.32),0 14px 34px rgba(0,0,0,.35),0 0 18px rgba(72,166,255,.14)}
+.platform .diamond.c-green{box-shadow:inset 0 0 0 1px rgba(90,255,190,.28),0 14px 34px rgba(0,0,0,.35),0 0 18px rgba(42,255,186,.12)}
+.platform .diamond.c-amber{box-shadow:inset 0 0 0 1px rgba(255,200,110,.32),0 14px 34px rgba(0,0,0,.35),0 0 18px rgba(255,170,70,.12)}
+.platform .diamond.c-purple{box-shadow:inset 0 0 0 1px rgba(210,140,255,.28),0 14px 34px rgba(0,0,0,.35),0 0 18px rgba(190,91,255,.12)}
 </style>
 </head>
 

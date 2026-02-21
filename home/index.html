@@ -10,60 +10,11 @@
 
 <style>
 html,body{height:100%;margin:0}
-body{
-  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
-  color:#eaf2f6;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-}
 .page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 12px}
 .h{text-align:center;margin-bottom:12px}
 .h h1{font-size:48px;font-weight:900;margin:0}
 .h p{opacity:.7;margin-top:8px}
 .stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
-
-a{color:inherit;text-decoration:none}
-a:visited{color:inherit}
-a:hover{text-decoration:none}
-a:active{text-decoration:none}
-
-/* HOME PLATFORM (MATCH PRODUCTS) */
-.home-platform{position:relative;width:min(420px,88vw);aspect-ratio:1/1}
-.home-platform::before{
-  content:"";
-  position:absolute;inset:0;
-  transform:rotate(45deg);
-  border-radius:28px;
-  background:rgba(255,255,255,.06);
-  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
-}
-.home-diamond{
-  position:absolute;
-  width:42%;height:42%;
-  transform:rotate(45deg);
-  border-radius:18px;
-  background:rgba(255,255,255,.16);
-  display:flex;align-items:center;justify-content:center;
-  text-decoration:none;color:#eaf2f6;
-  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
-}
-.home-diamond span{
-  transform:rotate(-45deg);
-  text-align:center;
-  font-weight:900;
-  line-height:1.15;
-}
-.home-top{top:2%;left:29%}
-.home-right{top:29%;right:2%}
-.home-bottom{bottom:2%;left:29%}
-.home-left{top:29%;left:2%}
-
-.nav{display:flex;justify-content:center;gap:12px;margin-top:16px;flex-wrap:wrap}
-.nav a{
-  padding:14px 22px;border-radius:18px;
-  background:rgba(255,255,255,.10);
-  text-decoration:none;color:#eaf2f6;font-weight:900;
-}
-footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
 </style>
 </head>
 
@@ -78,21 +29,21 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
   </div>
 
   <div class="stage">
-    <div class="home-platform">
+    <div class="platform">
 
-      <a class="home-diamond home-top" href="/laws/">
+      <a class="diamond top c-blue" href="/laws/">
         <span>Position</span>
       </a>
 
-      <a class="home-diamond home-right" href="/products/">
+      <a class="diamond right c-green" href="/products/">
         <span>Outcome</span>
       </a>
 
-      <a class="home-diamond home-bottom" href="/gauges/">
+      <a class="diamond bottom c-amber" href="/gauges/">
         <span>Trajectory</span>
       </a>
 
-      <a class="home-diamond home-left" href="/links/">
+      <a class="diamond left c-purple" href="/links/">
         <span>Origin</span>
       </a>
 

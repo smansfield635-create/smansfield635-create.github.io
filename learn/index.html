@@ -1,0 +1,136 @@
+<!-- =====================================================
+     TNT: /learn/index.html
+     NO LANGUAGE TOGGLE HERE (reads saved language)
+     Learn page = N/E/S/W accordions
+===================================================== -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Geodiametrics · Learn</title>
+
+<link rel="stylesheet" href="/assets/ui.css?v=20260221_0116"/>
+</head>
+
+<body>
+<div class="shooting-stars"></div>
+
+<div class="page">
+  <div class="h">
+    <h1 id="title">Geodiametrics</h1>
+    <p id="subtitle">Study mode · definitions, systems, methods.</p>
+  </div>
+
+  <!-- Only mode navigation (language is permanent + already chosen) -->
+  <div class="pills">
+    <a class="pill ghost" href="/">Back to Selector</a>
+    <a class="pill" href="/shop/">Switch to Shop</a>
+    <a class="pill" href="/home/">Home</a>
+  </div>
+
+  <div class="acc">
+    <details>
+      <summary>
+        <div class="sum-left">
+          <div class="badge">N</div>
+          <div class="sum-title">
+            <b id="n-title">NORTH</b>
+            <span id="n-sub">Definitions · language · structure</span>
+          </div>
+        </div>
+        <div class="chev"></div>
+      </summary>
+      <div class="panel">
+        <p id="n-desc">Core terms, naming rules, and the navigation grammar.</p>
+        <div class="subacc">
+          <details><summary><div class="sum-left"><div class="badge">SSG</div><div class="sum-title"><b class="subtag" id="n1">Simplified Syntax Geometry</b><span class="subhint" id="n1h">Constraint language</span></div></div><div class="chev"></div></summary><div class="panel"><p id="n1d">Express resources, stores, constraints, goals, guards.</p></div></details>
+          <details><summary><div class="sum-left"><div class="badge">GRAM</div><div class="sum-title"><b class="subtag" id="n2">Diamond Grammar</b><span class="subhint" id="n2h">Four routes</span></div></div><div class="chev"></div></summary><div class="panel"><p id="n2d">One choice at a time. N/E/S/W encode domains.</p></div></details>
+          <details><summary><div class="sum-left"><div class="badge">DOT</div><div class="sum-title"><b class="subtag" id="n3">DOT.GRID</b><span class="subhint" id="n3h">256-state indexing</span></div></div><div class="chev"></div></summary><div class="panel"><p id="n3d">State routing for classification under constraint.</p></div></details>
+          <details><summary><div class="sum-left"><div class="badge">ABC</div><div class="sum-title"><b class="subtag" id="n4">Acronyms & Glossary</b><span class="subhint" id="n4h">Index</span></div></div><div class="chev"></div></summary><div class="panel"><p id="n4d">Canonical meanings for repeated terms.</p></div></details>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        <div class="sum-left">
+          <div class="badge">E</div>
+          <div class="sum-title">
+            <b id="e-title">EAST</b>
+            <span id="e-sub">Execution · surfaces · examples</span>
+          </div>
+        </div>
+        <div class="chev"></div>
+      </summary>
+      <div class="panel">
+        <p id="e-desc">Where you run tools and interact with live surfaces.</p>
+        <div class="subacc">
+          <details><summary><div class="sum-left"><div class="badge">APP</div><div class="sum-title"><b class="subtag" id="e1">Execution Surfaces</b><span class="subhint" id="e1h">PLASMA / PLATFORM</span></div></div><div class="chev"></div></summary><div class="panel"><p id="e1d">App-like pages and instruments.</p></div></details>
+          <details><summary><div class="sum-left"><div class="badge">EX</div><div class="sum-title"><b class="subtag" id="e2">Examples</b><span class="subhint" id="e2h">Walkthroughs</span></div></div><div class="chev"></div></summary><div class="panel"><p id="e2d">Concrete flows for learning the system.</p></div></details>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        <div class="sum-left">
+          <div class="badge">S</div>
+          <div class="sum-title">
+            <b id="s-title">SOUTH</b>
+            <span id="s-sub">Measurement · diagnostics · rules</span>
+          </div>
+        </div>
+        <div class="chev"></div>
+      </summary>
+      <div class="panel">
+        <p id="s-desc">Instruments, thresholds, and integrity checks.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        <div class="sum-left">
+          <div class="badge">W</div>
+          <div class="sum-title">
+            <b id="w-title">WEST</b>
+            <span id="w-sub">Identity · references · links</span>
+          </div>
+        </div>
+        <div class="chev"></div>
+      </summary>
+      <div class="panel">
+        <p id="w-desc">External identity anchors (OSF, ORCID) and contact paths.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="cta-row">
+    <a class="cta" href="/">Back to Selector</a>
+    <a class="cta gold" href="/shop/">Switch to Shop</a>
+  </div>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+</div>
+
+<script>
+(function(){
+  const lang = localStorage.getItem("gd_lang") || "en";
+  const isZH = (lang==="zh");
+  function set(id, en, zh){ const el=document.getElementById(id); if(el) el.textContent = isZH ? zh : en; }
+
+  set("subtitle",
+    "Study mode · definitions, systems, methods.",
+    "学习模式 · 定义 · 系统 · 方法。"
+  );
+
+  set("n-desc","Core terms, naming rules, and the navigation grammar.","核心术语、命名规则与导航语法。");
+  set("e-desc","Where you run tools and interact with live surfaces.","运行工具与交互执行页面。");
+  set("s-desc","Instruments, thresholds, and integrity checks.","仪表、阈值与一致性检查。");
+  set("w-desc","External identity anchors (OSF, ORCID) and contact paths.","外部身份锚点（OSF、ORCID）与联系入口。");
+
+  // Keep the rest English for now unless you want full translation pass across all nodes.
+})();
+</script>
+</body>
+</html>

@@ -1,10 +1,9 @@
 /* =========================================================
-   GLOBAL TNT: assets/branch.css
-   DARK OPAL GEM SYSTEM + COMPASS EDGE STAMPS (N/E/S/W)
-   - No HTML changes required
-   - Works across Home + all hubs
-   - Minis in bottom side pockets
-   - Prevents overlap
+   GLOBAL TNT — DARK OPAL SYSTEM (FINAL STABLE)
+   - Perfect compass alignment
+   - Removes written North/South/East/West
+   - N/E/S/W letters only
+   - Minis in bottom pockets
 ========================================================= */
 
 /* ---------- PLATFORM ---------- */
@@ -25,12 +24,12 @@
   background:rgba(255,255,255,.04);
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.08),
-    0 32px 90px rgba(0,0,0,.85);
+    0 36px 90px rgba(0,0,0,.85);
   backdrop-filter:blur(10px);
   z-index:0;
 }
 
-/* ---------- MAIN OPAL GEMS ---------- */
+/* ---------- MAIN GEMS ---------- */
 
 .diamond{
   position:absolute;
@@ -41,9 +40,9 @@
 
   background:
     radial-gradient(circle at 50% 38%,
-      rgba(65,75,85,.85) 0%,
-      rgba(25,30,35,.96) 60%,
-      rgba(10,12,16,1) 100%);
+      rgba(60,70,80,.85) 0%,
+      rgba(20,24,30,.96) 60%,
+      rgba(8,10,14,1) 100%);
 
   display:flex;
   align-items:center;
@@ -52,25 +51,26 @@
 
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.05),
-    inset 0 18px 30px rgba(255,255,255,.04),
-    inset 0 -32px 48px rgba(0,0,0,.85),
-    0 28px 60px rgba(0,0,0,.85);
+    inset 0 20px 32px rgba(255,255,255,.04),
+    inset 0 -32px 48px rgba(0,0,0,.9),
+    0 28px 70px rgba(0,0,0,.9);
 
-  transition:transform .15s ease, filter .15s ease;
   z-index:2;
+  transition:filter .15s ease, transform .15s ease;
 }
 
-.diamond:hover{ filter:brightness(1.08); }
+.diamond:hover{ filter:brightness(1.1); }
 .diamond:active{ transform:rotate(45deg) translateY(2px); }
 
-/* Text glow */
+/* TEXT */
+
 .diamond span{
   transform:rotate(-45deg);
   text-align:center;
   font-weight:900;
-  color:#f4f8ff;
+  color:#f2f6ff;
   text-shadow:
-    0 0 8px rgba(160,210,255,.5),
+    0 0 8px rgba(150,210,255,.5),
     0 0 20px rgba(90,170,255,.35);
 }
 
@@ -82,16 +82,76 @@
   letter-spacing:.14em;
   opacity:.85;
   color:#cfd8e4;
-  text-shadow:0 0 6px rgba(160,210,255,.30);
+  text-shadow:0 0 6px rgba(150,210,255,.25);
 }
 
-/* Compass positions */
-.top{top:8%;left:32%}
-.right{top:32%;right:8%}
-.bottom{bottom:8%;left:32%}
-.left{top:32%;left:8%}
+/* ---------- COMPASS POSITIONS ---------- */
 
-/* ---------- MINI CONTROL GEMS (BOTTOM POCKETS) ---------- */
+.top{ top:8%; left:32%; }
+.right{ top:32%; right:8%; }
+.bottom{ bottom:8%; left:32%; }
+.left{ top:32%; left:8%; }
+
+/* ---------- REMOVE WRITTEN NORTH/SOUTH/EAST/WEST ---------- */
+
+.diamond.top span::before,
+.diamond.right span::before,
+.diamond.bottom span::before,
+.diamond.left span::before{
+  content:none !important;
+}
+
+/* ---------- COMPASS LETTERS (PERFECTLY CENTERED) ---------- */
+
+.diamond.top::after,
+.diamond.right::after,
+.diamond.bottom::after,
+.diamond.left::after{
+  position:absolute;
+  font-weight:900;
+  font-size:16px;
+  letter-spacing:.25em;
+  color:rgba(230,240,255,.85);
+  text-shadow:
+    0 0 10px rgba(120,200,255,.5),
+    0 0 22px rgba(80,170,255,.35);
+  pointer-events:none;
+  transform:rotate(-45deg);
+}
+
+/* N centered above */
+.diamond.top::after{
+  content:"N";
+  left:50%;
+  top:-26px;
+  transform:translateX(-50%) rotate(-45deg);
+}
+
+/* E centered right */
+.diamond.right::after{
+  content:"E";
+  top:50%;
+  right:-26px;
+  transform:translateY(-50%) rotate(-45deg);
+}
+
+/* S centered below */
+.diamond.bottom::after{
+  content:"S";
+  left:50%;
+  bottom:-26px;
+  transform:translateX(-50%) rotate(-45deg);
+}
+
+/* W centered left */
+.diamond.left::after{
+  content:"W";
+  top:50%;
+  left:-26px;
+  transform:translateY(-50%) rotate(-45deg);
+}
+
+/* ---------- MINI GEMS (BOTTOM POCKETS) ---------- */
 
 .diamond.mini{
   width:16%;
@@ -100,89 +160,32 @@
 
   background:
     radial-gradient(circle at 50% 35%,
-      rgba(60,70,80,.9) 0%,
-      rgba(18,22,26,1) 80%);
+      rgba(70,80,90,.9) 0%,
+      rgba(16,20,26,1) 80%);
 
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.05),
     inset 0 12px 20px rgba(255,255,255,.04),
-    inset 0 -22px 30px rgba(0,0,0,.9),
-    0 18px 36px rgba(0,0,0,.95);
+    inset 0 -22px 30px rgba(0,0,0,.95),
+    0 20px 40px rgba(0,0,0,.95);
 
   z-index:3;
 }
 
+/* Perfect side pockets */
 .mini-left{
-  position:absolute;
   bottom:-8%;
   left:8%;
+  position:absolute;
 }
 
 .mini-right{
-  position:absolute;
   bottom:-8%;
   right:8%;
-}
-
-/* =========================================================
-   COMPASS EDGE STAMPS (N/E/S/W)
-   Instrument mode: subtle glow, not intrusive
-   - Works on any page using .top/.right/.bottom/.left
-========================================================= */
-
-.diamond.top::after,
-.diamond.right::after,
-.diamond.bottom::after,
-.diamond.left::after{
   position:absolute;
-  content:"";
-  transform:rotate(-45deg); /* keep letters upright */
-  font-weight:900;
-  font-size:14px;
-  letter-spacing:.22em;
-  color:rgba(235,245,255,.85);
-  opacity:.85;
-  pointer-events:none;
-  text-shadow:
-    0 0 8px rgba(150,210,255,.45),
-    0 0 18px rgba(80,170,255,.25);
 }
 
-/* N above */
-.diamond.top::after{
-  content:"N";
-  top:-18px;
-  left:50%;
-  transform:translateX(-50%) rotate(-45deg);
-}
-
-/* E right */
-.diamond.right::after{
-  content:"E";
-  right:-18px;
-  top:50%;
-  transform:translateY(-50%) rotate(-45deg);
-}
-
-/* S below */
-.diamond.bottom::after{
-  content:"S";
-  bottom:-18px;
-  left:50%;
-  transform:translateX(-50%) rotate(-45deg);
-}
-
-/* W left */
-.diamond.left::after{
-  content:"W";
-  left:-18px;
-  top:50%;
-  transform:translateY(-50%) rotate(-45deg);
-}
-
-/* =========================================================
-   CLEANUP — disable legacy systems
-========================================================= */
+/* ---------- REMOVE LEGACY SYSTEMS ---------- */
 
 .diamond-stage,
 .mini-diamond,

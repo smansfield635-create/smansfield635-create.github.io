@@ -1,10 +1,8 @@
 <!-- TNT: /index.html
-     ONE PAGE. NO REDUNDANCY.
-     - ONE language selector (EN / 中文) at top ONLY.
-     - ONE mode selector (LEARN / SHOP) at top ONLY (same structure; copy shifts).
-     - DROPDOWNS = QUADRANTS ONLY (NW / NE / SW / SE).
-     - PLATE = CARDINAL ONLY (N / E / S / W).
-     - CHINESE THEME (red + black) restored at PAGE LEVEL (no other files required).
+     FIX: NO DUPLICATE LANGUAGE CONTROLS.
+     - TOP BAR shows ONLY TWO buttons: EN + 中文
+     - MODE controls remain (LEARN / SHOP)
+     - When EN/中文 is selected, ALL copy swaps (including quadrant labels/subtitle)
 -->
 <!doctype html>
 <html lang="en">
@@ -13,11 +11,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Geodiametrics · Root</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=3001"/>
-<link rel="stylesheet" href="/assets/branch.css?v=3001"/>
+<link rel="stylesheet" href="/assets/ui.css?v=3002"/>
+<link rel="stylesheet" href="/assets/branch.css?v=3002"/>
 
 <style>
-/* ===== ROOT THEME OVERRIDE (Chinese red/black) ===== */
 html,body{height:100%}
 body{
   background:
@@ -26,12 +23,10 @@ body{
     radial-gradient(900px 700px at 80% 70%, rgba(255,140,80,.06) 0%, rgba(0,0,0,0) 70%);
 }
 
-/* Keep header/footer above everything */
 .page{padding:42px 16px 84px;position:relative;z-index:1}
 .h{position:relative;z-index:10;text-align:left;width:min(980px,94vw);margin:0 auto 18px}
 .h h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
 .h p{margin:10px 0 0;font-size:20px;opacity:.78}
-
 footer{
   width:min(980px,94vw);
   margin:18px auto 0;
@@ -43,7 +38,7 @@ footer{
   font-size:12px;
 }
 
-/* ===== Top controls (ONE place only) ===== */
+/* TOP CONTROLS: ONLY EN/中文 + MODE */
 .topbar{
   width:min(980px,94vw);
   margin:0 auto 18px;
@@ -59,6 +54,7 @@ footer{
 .pill{
   display:inline-flex;
   align-items:center;
+  justify-content:center;
   gap:10px;
   padding:10px 14px;
   border-radius:999px;
@@ -68,7 +64,6 @@ footer{
   font-weight:900;
   letter-spacing:.08em;
 }
-.pill small{opacity:.70;font-weight:900;letter-spacing:.14em}
 .pill-btn{cursor:pointer;user-select:none}
 .pill-btn:active{transform:translateY(1px)}
 .pill.on{
@@ -76,7 +71,7 @@ footer{
   border-color:rgba(255,255,255,.14);
 }
 
-/* ===== Sections ===== */
+/* SECTION TITLES */
 .sectionTitle{
   width:min(980px,94vw);
   margin:16px auto 10px;
@@ -86,7 +81,7 @@ footer{
   opacity:.72;
 }
 
-/* ===== Quadrant dropdowns (NW/NE/SW/SE only) ===== */
+/* QUADRANT DROPDOWNS (NW/NE/SW/SE) */
 .routeList{
   width:min(980px,94vw);
   margin:0 auto;
@@ -104,12 +99,7 @@ footer{
   overflow:hidden;
 }
 
-.routeHead{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  padding:14px 14px;
-}
+.routeHead{display:flex;align-items:center;gap:14px;padding:14px 14px}
 
 .badge{
   flex:0 0 auto;
@@ -145,10 +135,7 @@ footer{
 .toggle::before{content:"▾";font-size:18px;opacity:.85;transform:translateY(-1px)}
 .routeRow[aria-expanded="true"] .toggle::before{content:"▴"}
 
-.routeBody{
-  display:none;
-  padding:0 14px 14px 14px;
-}
+.routeBody{display:none;padding:0 14px 14px 14px}
 .routeRow[aria-expanded="true"] .routeBody{display:block}
 
 .card{
@@ -161,15 +148,9 @@ footer{
 .card ul{margin:0;padding-left:18px;opacity:.90;line-height:1.55}
 .card li{margin:6px 0}
 
-/* ===== Cardinal plate (N/E/S/W only) ===== */
-.plateWrap{
-  width:min(980px,94vw);
-  margin:10px auto 0;
-}
+/* CARDINAL PLATE (N/E/S/W) */
+.plateWrap{width:min(980px,94vw);margin:10px auto 0}
 .plateWrap .platform{width:min(420px,88vw)}
-
-/* ensure plate never covers header */
-.plateWrap{padding-top:10px}
 </style>
 </head>
 
@@ -179,19 +160,18 @@ footer{
 <div class="page">
 
   <div class="h">
-    <h1>Geodiametrics</h1>
+    <h1 id="title">Geodiametrics</h1>
     <p id="subtitle">Unified structural hub.</p>
   </div>
 
-  <!-- ONE AND ONLY ONE place for language + mode -->
+  <!-- ONLY TWO language buttons + mode buttons -->
   <div class="topbar">
-    <div class="pill"><small>LANG</small> <span id="langLabel">EN</span></div>
-    <div class="pill pill-btn on" id="langEN"><small>SET</small> EN</div>
-    <div class="pill pill-btn" id="langZH"><small>SET</small> 中文</div>
+    <div class="pill pill-btn on" id="langEN">EN</div>
+    <div class="pill pill-btn" id="langZH">中文</div>
 
-    <div class="pill"><small>MODE</small> <span id="modeLabel">LEARN</span></div>
-    <div class="pill pill-btn on" id="modeLearn"><small>SET</small> LEARN</div>
-    <div class="pill pill-btn" id="modeShop"><small>SET</small> SHOP</div>
+    <div class="pill" id="modeChip">MODE: <span id="modeLabel">LEARN</span></div>
+    <div class="pill pill-btn on" id="modeLearn">LEARN</div>
+    <div class="pill pill-btn" id="modeShop">SHOP</div>
   </div>
 
   <div class="sectionTitle" id="qtTitle">QUADRANT ROUTES (NW / NE / SW / SE)</div>
@@ -312,7 +292,7 @@ footer{
 
 <script>
 (() => {
-  // ---- dropdown toggles (all closed by default) ----
+  // Dropdown toggles (all closed by default)
   const rows = [...document.querySelectorAll(".routeRow")];
   const toggleRow = (row) => {
     const isOpen = row.getAttribute("aria-expanded") === "true";
@@ -326,45 +306,51 @@ footer{
     });
   });
 
-  // ---- language + mode (single source of truth) ----
-  const langLabel = document.getElementById("langLabel");
-  const modeLabel = document.getElementById("modeLabel");
+  // Single language selector (NO duplicates)
   const langEN = document.getElementById("langEN");
   const langZH = document.getElementById("langZH");
-  const modeLearn = document.getElementById("modeLearn");
-  const modeShop = document.getElementById("modeShop");
+  const subtitle = document.getElementById("subtitle");
+  const qtTitle = document.getElementById("qtTitle");
+  const cpTitle = document.getElementById("cpTitle");
 
-  const setActive = (elOn, elOff) => { elOn.classList.add("on"); elOff.classList.remove("on"); };
+  const modeLabel = document.getElementById("modeLabel");
+  const modeLearn = document.getElementById("modeLearn");
+  const modeShop  = document.getElementById("modeShop");
+
+  const setOn = (onEl, offEl) => { onEl.classList.add("on"); offEl.classList.remove("on"); };
 
   const applyLang = (lang) => {
     localStorage.setItem("geo_lang", lang);
-    langLabel.textContent = lang;
-    if (lang === "中文") setActive(langZH, langEN); else setActive(langEN, langZH);
+
+    if (lang === "ZH") setOn(langZH, langEN);
+    else setOn(langEN, langZH);
+
+    const isZH = (lang === "ZH");
+
+    subtitle.textContent = isZH
+      ? "统一结构枢纽 · 象限路由（NW/NE/SW/SE）+ 方位面板（N/E/S/W）。"
+      : "Unified structural hub · Quadrant routes (NW/NE/SW/SE) + Cardinal plate (N/E/S/W).";
+
+    qtTitle.textContent = isZH ? "象限路由（NW / NE / SW / SE）" : "QUADRANT ROUTES (NW / NE / SW / SE)";
+    cpTitle.textContent = isZH ? "方位面板（N / E / S / W）" : "CARDINAL PLATE (N / E / S / W)";
 
     document.querySelectorAll("[data-en]").forEach(el => {
-      const zh = el.getAttribute("data-zh");
       const en = el.getAttribute("data-en");
-      el.textContent = (lang === "中文") ? (zh || en || el.textContent) : (en || zh || el.textContent);
+      const zh = el.getAttribute("data-zh");
+      el.textContent = isZH ? (zh || en || el.textContent) : (en || zh || el.textContent);
     });
-
-    // subtitle language
-    const sub = document.getElementById("subtitle");
-    sub.textContent = (lang === "中文")
-      ? "统一结构枢纽 · 象限路由（NW/NE/SW/SE）+ 基本方位（N/E/S/W）。"
-      : "Unified structural hub · Quadrant routes (NW/NE/SW/SE) + Cardinal plate (N/E/S/W).";
   };
 
+  // Mode (structure stays identical; later you can swap copy blocks by mode)
   const applyMode = (mode) => {
     localStorage.setItem("geo_mode", mode);
     modeLabel.textContent = mode;
-    if (mode === "SHOP") setActive(modeShop, modeLearn); else setActive(modeLearn, modeShop);
-
-    // Mode only changes small phrasing (structure stays identical)
-    // You can swap these later without creating new sections/pages.
+    if (mode === "SHOP") setOn(modeShop, modeLearn);
+    else setOn(modeLearn, modeShop);
   };
 
   langEN.addEventListener("click", () => applyLang("EN"));
-  langZH.addEventListener("click", () => applyLang("中文"));
+  langZH.addEventListener("click", () => applyLang("ZH"));
   modeLearn.addEventListener("click", () => applyMode("LEARN"));
   modeShop.addEventListener("click", () => applyMode("SHOP"));
 

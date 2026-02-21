@@ -3,43 +3,127 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>AZ Branch Template · Geodiametrics</title>
+<title>Geodiametrics · Root</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=7000"/>
-<link rel="stylesheet" href="/assets/branch.css?v=7000"/>
+<link rel="stylesheet" href="/assets/ui.css?v=9000"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9000"/>
 
 <style>
 /* =========================================================
-   AZ BRANCH ARCHITECTURE (CANONICAL)
-   - Every category must contain 26 points (A–Z)
-   - Every point is a bubble (details/summary)
-   - All closed by default (tap opens, tap closes)
-   - This file is a TNT template: copy, rename, edit titles + bodies
+   ROOT MASTER HUB — HARD GATES (TNT)
+   1) Language Gate (EN / 中文) — blocks everything
+   2) Intent Gate (Learn / Shop) — blocks content
+   3) Root Content — quad lenses + deep bubbles (all closed)
 ========================================================= */
 
-.wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.root-wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
 
-.block{
+/* Gates: full screen */
+.gate{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.gate-inner{
+  width:min(760px,92vw);
+  border-radius:26px;
+  background:rgba(255,255,255,.05);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 40px 110px rgba(0,0,0,.70);
+  backdrop-filter:blur(16px);
+  padding:22px;
+}
+.gate-title{
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  margin:0 0 8px;
+}
+.gate-sub{
+  margin:0 0 18px;
+  opacity:.78;
+  font-size:16px;
+  line-height:1.55;
+}
+.gate-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+@media (min-width:720px){.gate-grid{grid-template-columns:1fr 1fr}}
+.gate-btn{
+  border:0;
+  cursor:pointer;
+  padding:18px 16px;
   border-radius:22px;
-  background:rgba(255,255,255,.04);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.45);
-  overflow:hidden;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 20px 60px rgba(0,0,0,.35);
+  color:#eaf2f6;
+  text-align:left;
+}
+.gate-btn strong{
+  display:block;
+  font-weight:900;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  font-size:16px;
+}
+.gate-btn span{
+  display:block;
+  margin-top:6px;
+  opacity:.78;
+  font-size:14px;
+  line-height:1.5;
+}
+.gate-btn:active{transform:translateY(1px)}
+.gate-note{
+  margin-top:14px;
+  opacity:.62;
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
 }
 
-.block > summary{
+/* Root content hidden until gates complete */
+.root-hidden{display:none}
+
+/* Quad lenses (Problem / R&D / Strategy / Learned) */
+details.lens{
+  border-radius:22px;
+  background:rgba(255,255,255,.04);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 28px 70px rgba(0,0,0,.40);
+  overflow:hidden;
+}
+summary.lsum{
   list-style:none;cursor:pointer;user-select:none;
   padding:18px 18px;
   display:flex;align-items:center;justify-content:space-between;gap:12px;
   font-weight:900;letter-spacing:.12em;text-transform:uppercase;
 }
-.block > summary::-webkit-details-marker{display:none}
-
+summary.lsum::-webkit-details-marker{display:none}
+.lleft{display:flex;align-items:center;gap:12px;min-width:0}
+.lbadge{
+  width:48px;height:48px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  font-weight:900;letter-spacing:.10em;
+  flex:0 0 auto;
+}
+.ltext{min-width:0}
+.ltext b{display:block;font-size:16px;letter-spacing:.14em}
+.ltext span{display:block;margin-top:3px;font-size:14px;opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chev{
   width:42px;height:42px;border-radius:999px;
   display:flex;align-items:center;justify-content:center;
   background:rgba(255,255,255,.06);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-  opacity:.9;flex:0 0 auto;
+  opacity:.9;
+  flex:0 0 auto;
 }
 .chev::before{
   content:"";
@@ -49,251 +133,413 @@
   transform:rotate(45deg);
 }
 details[open] > summary .chev::before{transform:rotate(-135deg)}
+.lbody{padding:0 18px 18px;display:flex;flex-direction:column;gap:10px;opacity:.95;line-height:1.6}
 
-.body{padding:0 18px 18px;display:flex;flex-direction:column;gap:10px;opacity:.95;line-height:1.6}
-
-/* A–Z bubbles */
-.az{
+/* N/E/S/W branches inside each lens */
+details.axis{
   border-radius:18px;
   background:rgba(255,255,255,.03);
   border:1px solid rgba(255,255,255,.07);
   overflow:hidden;
 }
-.az > summary{
+summary.asum{
   list-style:none;cursor:pointer;user-select:none;
   padding:14px 14px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:14px;
+}
+summary.asum::-webkit-details-marker{display:none}
+.abody{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px;opacity:.95}
+
+/* Deep bubbles (category guides under each axis) */
+details.bub{
+  border-radius:16px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  overflow:hidden;
+}
+summary.bsum{
+  list-style:none;cursor:pointer;user-select:none;
+  padding:12px 12px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
   font-weight:900;letter-spacing:.10em;text-transform:uppercase;font-size:13px;
 }
-.az > summary::-webkit-details-marker{display:none}
+summary.bsum::-webkit-details-marker{display:none}
+.bbody{padding:0 12px 12px;font-size:15px;line-height:1.65;opacity:.92}
 
-.azkey{
-  width:40px;height:40px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.08);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  font-weight:900;letter-spacing:.10em;
-  flex:0 0 auto;
-}
-.azlabel{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.95}
-.azbody{padding:0 14px 14px;font-size:15px;opacity:.92;line-height:1.65}
-.note{opacity:.72;font-size:14px;line-height:1.55}
-.sep{border:0;height:1px;background:rgba(255,255,255,.10);margin:10px 0}
+/* Root compass plate */
+.root-controls{display:flex;justify-content:center;margin-top:10px}
+.root-controls .platform{width:min(420px,88vw)}
+footer{margin-top:18px}
 </style>
 </head>
 
-<body>
+<body data-lang="en" data-mode="learn">
 <div class="shooting-stars"></div>
 
-<div class="page">
-  <div class="wrap">
+<!-- ===================== LANGUAGE GATE (HARD) ===================== -->
+<div class="gate" id="gateLang">
+  <div class="gate-inner">
+    <h2 class="gate-title" data-en="Choose Language" data-zh="选择语言">Choose Language</h2>
+    <p class="gate-sub" data-en="Select a language to enter. This choice applies to the entire site surface."
+       data-zh="选择语言进入。此选择会应用到整个网站界面。">
+      Select a language to enter. This choice applies to the entire site surface.
+    </p>
+
+    <div class="gate-grid">
+      <button class="gate-btn" id="chooseEN" type="button">
+        <strong>English</strong>
+        <span data-en="Proceed in English." data-zh="用英文进入。">Proceed in English.</span>
+      </button>
+
+      <button class="gate-btn" id="chooseZH" type="button">
+        <strong>中文</strong>
+        <span data-en="Proceed in Chinese (Simplified)." data-zh="用简体中文进入。">Proceed in Chinese (Simplified).</span>
+      </button>
+    </div>
+
+    <div class="gate-note" data-en="Tap once to enter" data-zh="点击进入">Tap once to enter</div>
+  </div>
+</div>
+
+<!-- ===================== MODE GATE (HARD) ===================== -->
+<div class="gate root-hidden" id="gateMode">
+  <div class="gate-inner">
+    <h2 class="gate-title" data-en="Choose Intent" data-zh="选择目的">Choose Intent</h2>
+    <p class="gate-sub" data-en="Are you here to learn, or are you ready to shop?"
+       data-zh="你是来学习，还是准备购买/了解产品？">
+      Are you here to learn, or are you ready to shop?
+    </p>
+
+    <div class="gate-grid">
+      <button class="gate-btn" id="chooseLearn" type="button">
+        <strong data-en="Learn" data-zh="学习">Learn</strong>
+        <span data-en="Understand the system, the language, and the structure." data-zh="理解系统、语言与结构。">
+          Understand the system, the language, and the structure.
+        </span>
+      </button>
+
+      <button class="gate-btn" id="chooseShop" type="button">
+        <strong data-en="Shop" data-zh="产品">Shop</strong>
+        <span data-en="Explore products, programs, certifications, and how to deploy." data-zh="查看产品、项目、认证与部署方式。">
+          Explore products, programs, certifications, and how to deploy.
+        </span>
+      </button>
+    </div>
+
+    <div class="gate-note" data-en="This sets your default lens" data-zh="这将设置默认视角">This sets your default lens</div>
+  </div>
+</div>
+
+<!-- ===================== ROOT CONTENT ===================== -->
+<div class="page root-hidden" id="rootContent">
+  <div class="root-wrap">
 
     <div class="h">
-      <h1>AZ Branch Template</h1>
-      <p>Canonical architecture · Every category = 26 points (A–Z).</p>
+      <h1 data-en="Geodiametrics" data-zh="Geodiametrics">Geodiametrics</h1>
+      <p data-en="Root Master Hub · Tap bubbles to go deeper" data-zh="根枢纽 · 点击气泡逐层深入">Root Master Hub · Tap bubbles to go deeper</p>
     </div>
 
-    <div class="note">
-      This is the website build rule going forward:
-      <strong>Every branch page</strong> is expressed through the same four lenses:
-      <strong>Problem</strong>, <strong>R&amp;D</strong>, <strong>Strategy</strong>, <strong>What We’ve Learned</strong>.
-      Each lens contains exactly <strong>26 bubbles</strong> labeled <strong>A–Z</strong>.
-      Tap any bubble to open; tap again to close.
-    </div>
+    <!-- QUAD LENSES (applies to both Learn and Shop; content differs by mode) -->
 
-    <hr class="sep"/>
-
-    <!-- =====================================================
-         1) PROBLEM (A–Z)
-    ====================================================== -->
-    <details class="block">
-      <summary>
-        <span>1 · Problem (A–Z)</span>
-        <span class="chev"></span>
+    <!-- 1 PROBLEM -->
+    <details class="lens">
+      <summary class="lsum">
+        <div class="lleft">
+          <div class="lbadge">1</div>
+          <div class="ltext">
+            <b data-en="Problem" data-zh="问题">Problem</b>
+            <span data-en="What is broken and why it matters" data-zh="问题在哪里，为什么重要">What is broken and why it matters</span>
+          </div>
+        </div>
+        <div class="chev"></div>
       </summary>
-      <div class="body">
 
-        <!-- A–Z -->
-        <details class="az"><summary><span class="azkey">A</span><span class="azlabel">A — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the A-to-Z “Problem” description here.]</div></details>
-        <details class="az"><summary><span class="azkey">B</span><span class="azlabel">B — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the B description.]</div></details>
-        <details class="az"><summary><span class="azkey">C</span><span class="azlabel">C — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the C description.]</div></details>
-        <details class="az"><summary><span class="azkey">D</span><span class="azlabel">D — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the D description.]</div></details>
-        <details class="az"><summary><span class="azkey">E</span><span class="azlabel">E — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the E description.]</div></details>
-        <details class="az"><summary><span class="azkey">F</span><span class="azlabel">F — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the F description.]</div></details>
-        <details class="az"><summary><span class="azkey">G</span><span class="azlabel">G — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the G description.]</div></details>
-        <details class="az"><summary><span class="azkey">H</span><span class="azlabel">H — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the H description.]</div></details>
-        <details class="az"><summary><span class="azkey">I</span><span class="azlabel">I — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the I description.]</div></details>
-        <details class="az"><summary><span class="azkey">J</span><span class="azlabel">J — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the J description.]</div></details>
-        <details class="az"><summary><span class="azkey">K</span><span class="azlabel">K — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the K description.]</div></details>
-        <details class="az"><summary><span class="azkey">L</span><span class="azlabel">L — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the L description.]</div></details>
-        <details class="az"><summary><span class="azkey">M</span><span class="azlabel">M — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the M description.]</div></details>
-        <details class="az"><summary><span class="azkey">N</span><span class="azlabel">N — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the N description.]</div></details>
-        <details class="az"><summary><span class="azkey">O</span><span class="azlabel">O — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the O description.]</div></details>
-        <details class="az"><summary><span class="azkey">P</span><span class="azlabel">P — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the P description.]</div></details>
-        <details class="az"><summary><span class="azkey">Q</span><span class="azlabel">Q — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the Q description.]</div></details>
-        <details class="az"><summary><span class="azkey">R</span><span class="azlabel">R — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the R description.]</div></details>
-        <details class="az"><summary><span class="azkey">S</span><span class="azlabel">S — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the S description.]</div></details>
-        <details class="az"><summary><span class="azkey">T</span><span class="azlabel">T — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the T description.]</div></details>
-        <details class="az"><summary><span class="azkey">U</span><span class="azlabel">U — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the U description.]</div></details>
-        <details class="az"><summary><span class="azkey">V</span><span class="azlabel">V — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the V description.]</div></details>
-        <details class="az"><summary><span class="azkey">W</span><span class="azlabel">W — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the W description.]</div></details>
-        <details class="az"><summary><span class="azkey">X</span><span class="azlabel">X — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the X description.]</div></details>
-        <details class="az"><summary><span class="azkey">Y</span><span class="azlabel">Y — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the Y description.]</div></details>
-        <details class="az"><summary><span class="azkey">Z</span><span class="azlabel">Z — [Problem point]</span><span class="chev"></span></summary><div class="azbody">[Write the Z description.]</div></details>
+      <div class="lbody">
+
+        <!-- N -->
+        <details class="axis">
+          <summary class="asum"><span data-en="N · Language Drift" data-zh="N · 语言漂移">N · Language Drift</span><div class="chev"></div></summary>
+          <div class="abody">
+            <details class="bub">
+              <summary class="bsum"><span data-en="Category Guide" data-zh="分类指引">Category Guide</span><div class="chev"></div></summary>
+              <div class="bbody" data-en="Definitions drift, acronyms explode, and meaning collapses. This destroys reproducibility."
+                   data-zh="定义漂移、缩写爆炸、意义塌陷，破坏可复现性。">
+                Definitions drift, acronyms explode, and meaning collapses. This destroys reproducibility.
+              </div>
+            </details>
+            <details class="bub">
+              <summary class="bsum"><span data-en="Flower → Fruit" data-zh="花 → 果">Flower → Fruit</span><div class="chev"></div></summary>
+              <div class="bbody" data-en="Flower: a stable glossary. Fruit: consistent communication across domains."
+                   data-zh="花：稳定术语表。果：跨领域一致沟通。">
+                Flower: a stable glossary. Fruit: consistent communication across domains.
+              </div>
+            </details>
+          </div>
+        </details>
+
+        <!-- E -->
+        <details class="axis">
+          <summary class="asum"><span data-en="E · Products Without Grammar" data-zh="E · 产品缺少语法">E · Products Without Grammar</span><div class="chev"></div></summary>
+          <div class="abody">
+            <details class="bub">
+              <summary class="bsum"><span data-en="Category Guide" data-zh="分类指引">Category Guide</span><div class="chev"></div></summary>
+              <div class="bbody" data-en="Tools ship without a governing structure, so adoption is chaotic and outcomes vary."
+                   data-zh="工具没有治理结构就发布，导致采用混乱、结果波动。">
+                Tools ship without a governing structure, so adoption is chaotic and outcomes vary.
+              </div>
+            </details>
+          </div>
+        </details>
+
+        <!-- S -->
+        <details class="axis">
+          <summary class="asum"><span data-en="S · Measurement Gaps" data-zh="S · 测量缺口">S · Measurement Gaps</span><div class="chev"></div></summary>
+          <div class="abody">
+            <details class="bub">
+              <summary class="bsum"><span data-en="Category Guide" data-zh="分类指引">Category Guide</span><div class="chev"></div></summary>
+              <div class="bbody" data-en="Without shared metrics, systems can’t be compared, audited, or trusted."
+                   data-zh="没有共享指标，就无法对比、审计或建立信任。">
+                Without shared metrics, systems can’t be compared, audited, or trusted.
+              </div>
+            </details>
+          </div>
+        </details>
+
+        <!-- W -->
+        <details class="axis">
+          <summary class="asum"><span data-en="W · Identity & Reference Loss" data-zh="W · 身份与引用缺失">W · Identity & Reference Loss</span><div class="chev"></div></summary>
+          <div class="abody">
+            <details class="bub">
+              <summary class="bsum"><span data-en="Category Guide" data-zh="分类指引">Category Guide</span><div class="chev"></div></summary>
+              <div class="bbody" data-en="If identity anchors vanish, credit and verification collapse."
+                   data-zh="身份锚点缺失，署名与验证崩塌。">
+                If identity anchors vanish, credit and verification collapse.
+              </div>
+            </details>
+          </div>
+        </details>
 
       </div>
     </details>
 
-    <!-- =====================================================
-         2) R&D (A–Z)
-    ====================================================== -->
-    <details class="block">
-      <summary><span>2 · R&amp;D (A–Z)</span><span class="chev"></span></summary>
-      <div class="body">
-        <!-- A–Z (placeholders) -->
-        <!-- Repeat pattern; fill with R&D points -->
-        <details class="az"><summary><span class="azkey">A</span><span class="azlabel">A — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D A]</div></details>
-        <details class="az"><summary><span class="azkey">B</span><span class="azlabel">B — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D B]</div></details>
-        <details class="az"><summary><span class="azkey">C</span><span class="azlabel">C — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D C]</div></details>
-        <details class="az"><summary><span class="azkey">D</span><span class="azlabel">D — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D D]</div></details>
-        <details class="az"><summary><span class="azkey">E</span><span class="azlabel">E — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D E]</div></details>
-        <details class="az"><summary><span class="azkey">F</span><span class="azlabel">F — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D F]</div></details>
-        <details class="az"><summary><span class="azkey">G</span><span class="azlabel">G — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D G]</div></details>
-        <details class="az"><summary><span class="azkey">H</span><span class="azlabel">H — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D H]</div></details>
-        <details class="az"><summary><span class="azkey">I</span><span class="azlabel">I — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D I]</div></details>
-        <details class="az"><summary><span class="azkey">J</span><span class="azlabel">J — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D J]</div></details>
-        <details class="az"><summary><span class="azkey">K</span><span class="azlabel">K — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D K]</div></details>
-        <details class="az"><summary><span class="azkey">L</span><span class="azlabel">L — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D L]</div></details>
-        <details class="az"><summary><span class="azkey">M</span><span class="azlabel">M — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D M]</div></details>
-        <details class="az"><summary><span class="azkey">N</span><span class="azlabel">N — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D N]</div></details>
-        <details class="az"><summary><span class="azkey">O</span><span class="azlabel">O — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D O]</div></details>
-        <details class="az"><summary><span class="azkey">P</span><span class="azlabel">P — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D P]</div></details>
-        <details class="az"><summary><span class="azkey">Q</span><span class="azlabel">Q — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D Q]</div></details>
-        <details class="az"><summary><span class="azkey">R</span><span class="azlabel">R — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D R]</div></details>
-        <details class="az"><summary><span class="azkey">S</span><span class="azlabel">S — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D S]</div></details>
-        <details class="az"><summary><span class="azkey">T</span><span class="azlabel">T — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D T]</div></details>
-        <details class="az"><summary><span class="azkey">U</span><span class="azlabel">U — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D U]</div></details>
-        <details class="az"><summary><span class="azkey">V</span><span class="azlabel">V — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D V]</div></details>
-        <details class="az"><summary><span class="azkey">W</span><span class="azlabel">W — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D W]</div></details>
-        <details class="az"><summary><span class="azkey">X</span><span class="azlabel">X — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D X]</div></details>
-        <details class="az"><summary><span class="azkey">Y</span><span class="azlabel">Y — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D Y]</div></details>
-        <details class="az"><summary><span class="azkey">Z</span><span class="azlabel">Z — [R&amp;D point]</span><span class="chev"></span></summary><div class="azbody">[R&amp;D Z]</div></details>
+    <!-- 2 R&D -->
+    <details class="lens">
+      <summary class="lsum">
+        <div class="lleft">
+          <div class="lbadge">2</div>
+          <div class="ltext">
+            <b data-en="R&D" data-zh="研发">R&amp;D</b>
+            <span data-en="What was built to solve it" data-zh="为解决问题构建了什么">What was built to solve it</span>
+          </div>
+        </div>
+        <div class="chev"></div>
+      </summary>
+
+      <div class="lbody">
+
+        <details class="axis">
+          <summary class="asum"><span data-en="N · SSG / DOT.GRID / Acronyms" data-zh="N · SSG / DOT.GRID / 缩写">N · SSG / DOT.GRID / Acronyms</span><div class="chev"></div></summary>
+          <div class="abody">
+            <details class="bub">
+              <summary class="bsum"><span data-en="SSG" data-zh="SSG">SSG</span><div class="chev"></div></summary>
+              <div class="bbody" data-en="Constraint-based execution language: Resources, Stores, Constraints, Goals, Guards."
+                   data-zh="约束执行语言：资源、存储、约束、目标、守卫。">
+                Constraint-based execution language: Resources, Stores, Constraints, Goals, Guards.
+              </div>
+            </details>
+            <details class="bub">
+              <summary class="bsum"><span data-en="DOT.GRID" data-zh="DOT.GRID">DOT.GRID</span><div class="chev"></div></summary>
+              <div class="bbody" data-en="256-state indexing: consistent routing and classification."
+                   data-zh="256 状态索引：一致路由与分类。">
+                256-state indexing: consistent routing and classification.
+              </div>
+            </details>
+          </div>
+        </details>
+
+        <details class="axis">
+          <summary class="asum"><span data-en="E · Products (Execution Surfaces)" data-zh="E · 产品（执行界面）">E · Products (Execution Surfaces)</span><div class="chev"></div></summary>
+          <div class="abody">
+            <details class="bub">
+              <summary class="bsum"><span data-en="PLASMA / EAI / PLATFORM / CVD" data-zh="PLASMA / EAI / PLATFORM / CVD">PLASMA / EAI / PLATFORM / CVD</span><div class="chev"></div></summary>
+              <div class="bbody" data-en="Product surfaces that package the system into usable tools."
+                   data-zh="把系统打包为可用工具的产品界面。">
+                Product surfaces that package the system into usable tools.
+              </div>
+            </details>
+          </div>
+        </details>
+
+        <details class="axis">
+          <summary class="asum"><span data-en="S · Gauges / Receipts" data-zh="S · 量规/回执">S · Gauges / Receipts</span><div class="chev"></div></summary>
+          <div class="abody">
+            <details class="bub">
+              <summary class="bsum"><span data-en="Measurement-first" data-zh="测量优先">Measurement-first</span><div class="chev"></div></summary>
+              <div class="bbody" data-en="Gauges and replayable outputs to create trust."
+                   data-zh="量规与可回放输出，用于建立信任。">
+                Gauges and replayable outputs to create trust.
+              </div>
+            </details>
+          </div>
+        </details>
+
+        <details class="axis">
+          <summary class="asum"><span data-en="W · OSF / ORCID" data-zh="W · OSF / ORCID">W · OSF / ORCID</span><div class="chev"></div></summary>
+          <div class="abody">
+            <details class="bub">
+              <summary class="bsum"><span data-en="Identity anchors" data-zh="身份锚点">Identity anchors</span><div class="chev"></div></summary>
+              <div class="bbody" data-en="OSF + ORCID preserve attribution and verification."
+                   data-zh="OSF + ORCID 用于保持署名与验证。">
+                OSF + ORCID preserve attribution and verification.
+              </div>
+            </details>
+          </div>
+        </details>
+
       </div>
     </details>
 
-    <!-- =====================================================
-         3) STRATEGY (A–Z)
-    ====================================================== -->
-    <details class="block">
-      <summary><span>3 · Strategy (A–Z)</span><span class="chev"></span></summary>
-      <div class="body">
-        <div class="note">Fill Strategy A–Z with the execution path: canon → surfaces → measurement → anchors.</div>
-        <!-- A–Z placeholders -->
-        <details class="az"><summary><span class="azkey">A</span><span class="azlabel">A — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy A]</div></details>
-        <details class="az"><summary><span class="azkey">B</span><span class="azlabel">B — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy B]</div></details>
-        <details class="az"><summary><span class="azkey">C</span><span class="azlabel">C — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy C]</div></details>
-        <details class="az"><summary><span class="azkey">D</span><span class="azlabel">D — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy D]</div></details>
-        <details class="az"><summary><span class="azkey">E</span><span class="azlabel">E — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy E]</div></details>
-        <details class="az"><summary><span class="azkey">F</span><span class="azlabel">F — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy F]</div></details>
-        <details class="az"><summary><span class="azkey">G</span><span class="azlabel">G — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy G]</div></details>
-        <details class="az"><summary><span class="azkey">H</span><span class="azlabel">H — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy H]</div></details>
-        <details class="az"><summary><span class="azkey">I</span><span class="azlabel">I — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy I]</div></details>
-        <details class="az"><summary><span class="azkey">J</span><span class="azlabel">J — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy J]</div></details>
-        <details class="az"><summary><span class="azkey">K</span><span class="azlabel">K — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy K]</div></details>
-        <details class="az"><summary><span class="azkey">L</span><span class="azlabel">L — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy L]</div></details>
-        <details class="az"><summary><span class="azkey">M</span><span class="azlabel">M — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy M]</div></details>
-        <details class="az"><summary><span class="azkey">N</span><span class="azlabel">N — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy N]</div></details>
-        <details class="az"><summary><span class="azkey">O</span><span class="azlabel">O — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy O]</div></details>
-        <details class="az"><summary><span class="azkey">P</span><span class="azlabel">P — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy P]</div></details>
-        <details class="az"><summary><span class="azkey">Q</span><span class="azlabel">Q — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy Q]</div></details>
-        <details class="az"><summary><span class="azkey">R</span><span class="azlabel">R — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy R]</div></details>
-        <details class="az"><summary><span class="azkey">S</span><span class="azlabel">S — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy S]</div></details>
-        <details class="az"><summary><span class="azkey">T</span><span class="azlabel">T — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy T]</div></details>
-        <details class="az"><summary><span class="azkey">U</span><span class="azlabel">U — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy U]</div></details>
-        <details class="az"><summary><span class="azkey">V</span><span class="azlabel">V — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy V]</div></details>
-        <details class="az"><summary><span class="azkey">W</span><span class="azlabel">W — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy W]</div></details>
-        <details class="az"><summary><span class="azkey">X</span><span class="azlabel">X — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy X]</div></details>
-        <details class="az"><summary><span class="azkey">Y</span><span class="azlabel">Y — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy Y]</div></details>
-        <details class="az"><summary><span class="azkey">Z</span><span class="azlabel">Z — [Strategy point]</span><span class="chev"></span></summary><div class="azbody">[Strategy Z]</div></details>
+    <!-- 3 STRATEGY -->
+    <details class="lens">
+      <summary class="lsum">
+        <div class="lleft">
+          <div class="lbadge">3</div>
+          <div class="ltext">
+            <b data-en="Strategy" data-zh="策略">Strategy</b>
+            <span data-en="How it scales without drift" data-zh="如何扩展而不漂移">How it scales without drift</span>
+          </div>
+        </div>
+        <div class="chev"></div>
+      </summary>
+
+      <div class="lbody">
+
+        <details class="axis">
+          <summary class="asum"><span data-en="N · Canon First" data-zh="N · 先规范">N · Canon First</span><div class="chev"></div></summary>
+          <div class="abody">
+            <details class="bub"><summary class="bsum"><span data-en="Glossary" data-zh="术语表">Glossary</span><div class="chev"></div></summary><div class="bbody" data-en="Define once. Reuse everywhere. Prevent drift." data-zh="一次定义，全站复用，防漂移。">Define once. Reuse everywhere. Prevent drift.</div></details>
+          </div>
+        </details>
+
+        <details class="axis">
+          <summary class="asum"><span data-en="E · Ship Surfaces" data-zh="E · 交付界面">E · Ship Surfaces</span><div class="chev"></div></summary>
+          <div class="abody">
+            <details class="bub"><summary class="bsum"><span data-en="Fruit first" data-zh="果实优先">Fruit first</span><div class="chev"></div></summary><div class="bbody" data-en="People adopt what they can use. Ship tools." data-zh="人采用能用的东西；交付工具。">People adopt what they can use. Ship tools.</div></details>
+          </div>
+        </details>
+
+        <details class="axis">
+          <summary class="asum"><span data-en="S · Measure Everything" data-zh="S · 全部可测">S · Measure Everything</span><div class="chev"></div></summary>
+          <div class="abody">
+            <details class="bub"><summary class="bsum"><span data-en="Gauges" data-zh="量规">Gauges</span><div class="chev"></div></summary><div class="bbody" data-en="If it can’t be measured, it can’t be scaled." data-zh="不可测，就不可扩展。">If it can’t be measured, it can’t be scaled.</div></details>
+          </div>
+        </details>
+
+        <details class="axis">
+          <summary class="asum"><span data-en="W · Preserve Identity" data-zh="W · 保留身份">W · Preserve Identity</span><div class="chev"></div></summary>
+          <div class="abody">
+            <details class="bub"><summary class="bsum"><span data-en="OSF/ORCID" data-zh="OSF/ORCID">OSF/ORCID</span><div class="chev"></div></summary><div class="bbody" data-en="Credit and references remain intact." data-zh="署名与引用保持完整。">Credit and references remain intact.</div></details>
+          </div>
+        </details>
+
       </div>
     </details>
 
-    <!-- =====================================================
-         4) WHAT WE'VE LEARNED (A–Z)
-    ====================================================== -->
-    <details class="block">
-      <summary><span>4 · What We’ve Learned (A–Z)</span><span class="chev"></span></summary>
-      <div class="body">
-        <div class="note">Fill Learnings A–Z with stable insights, limits, and current state outputs.</div>
-        <!-- A–Z placeholders -->
-        <details class="az"><summary><span class="azkey">A</span><span class="azlabel">A — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning A]</div></details>
-        <details class="az"><summary><span class="azkey">B</span><span class="azlabel">B — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning B]</div></details>
-        <details class="az"><summary><span class="azkey">C</span><span class="azlabel">C — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning C]</div></details>
-        <details class="az"><summary><span class="azkey">D</span><span class="azlabel">D — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning D]</div></details>
-        <details class="az"><summary><span class="azkey">E</span><span class="azlabel">E — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning E]</div></details>
-        <details class="az"><summary><span class="azkey">F</span><span class="azlabel">F — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning F]</div></details>
-        <details class="az"><summary><span class="azkey">G</span><span class="azlabel">G — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning G]</div></details>
-        <details class="az"><summary><span class="azkey">H</span><span class="azlabel">H — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning H]</div></details>
-        <details class="az"><summary><span class="azkey">I</span><span class="azlabel">I — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning I]</div></details>
-        <details class="az"><summary><span class="azkey">J</span><span class="azlabel">J — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning J]</div></details>
-        <details class="az"><summary><span class="azkey">K</span><span class="azlabel">K — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning K]</div></details>
-        <details class="az"><summary><span class="azkey">L</span><span class="azlabel">L — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning L]</div></details>
-        <details class="az"><summary><span class="azkey">M</span><span class="azlabel">M — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning M]</div></details>
-        <details class="az"><summary><span class="azkey">N</span><span class="azlabel">N — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning N]</div></details>
-        <details class="az"><summary><span class="azkey">O</span><span class="azlabel">O — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning O]</div></details>
-        <details class="az"><summary><span class="azkey">P</span><span class="azlabel">P — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning P]</div></details>
-        <details class="az"><summary><span class="azkey">Q</span><span class="azlabel">Q — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning Q]</div></details>
-        <details class="az"><summary><span class="azkey">R</span><span class="azlabel">R — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning R]</div></details>
-        <details class="az"><summary><span class="azkey">S</span><span class="azlabel">S — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning S]</div></details>
-        <details class="az"><summary><span class="azkey">T</span><span class="azlabel">T — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning T]</div></details>
-        <details class="az"><summary><span class="azkey">U</span><span class="azlabel">U — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning U]</div></details>
-        <details class="az"><summary><span class="azkey">V</span><span class="azlabel">V — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning V]</div></details>
-        <details class="az"><summary><span class="azkey">W</span><span class="azlabel">W — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning W]</div></details>
-        <details class="az"><summary><span class="azkey">X</span><span class="azlabel">X — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning X]</div></details>
-        <details class="az"><summary><span class="azkey">Y</span><span class="azlabel">Y — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning Y]</div></details>
-        <details class="az"><summary><span class="azkey">Z</span><span class="azlabel">Z — [Learning]</span><span class="chev"></span></summary><div class="azbody">[Learning Z]</div></details>
+    <!-- 4 WHAT WE’VE LEARNED -->
+    <details class="lens">
+      <summary class="lsum">
+        <div class="lleft">
+          <div class="lbadge">4</div>
+          <div class="ltext">
+            <b data-en="What We’ve Learned" data-zh="我们学到的">What We’ve Learned</b>
+            <span data-en="Current stable insights" data-zh="当前稳定结论">Current stable insights</span>
+          </div>
+        </div>
+        <div class="chev"></div>
+      </summary>
+
+      <div class="lbody">
+        <details class="axis"><summary class="asum"><span data-en="N · Language is structure" data-zh="N · 语言就是结构">N · Language is structure</span><div class="chev"></div></summary><div class="abody"><details class="bub"><summary class="bsum"><span data-en="Compression" data-zh="压缩">Compression</span><div class="chev"></div></summary><div class="bbody" data-en="Compression-first language accelerates clarity." data-zh="压缩优先语言加速清晰。">Compression-first language accelerates clarity.</div></details></div></details>
+        <details class="axis"><summary class="asum"><span data-en="E · Surfaces win" data-zh="E · 界面赢">E · Surfaces win</span><div class="chev"></div></summary><div class="abody"><details class="bub"><summary class="bsum"><span data-en="Adoption" data-zh="采用">Adoption</span><div class="chev"></div></summary><div class="bbody" data-en="Ship usable surfaces, not stories." data-zh="交付可用界面，不讲故事。">Ship usable surfaces, not stories.</div></details></div></details>
+        <details class="axis"><summary class="asum"><span data-en="S · Measurement builds trust" data-zh="S · 测量建立信任">S · Measurement builds trust</span><div class="chev"></div></summary><div class="abody"><details class="bub"><summary class="bsum"><span data-en="Repeatability" data-zh="可重复">Repeatability</span><div class="chev"></div></summary><div class="bbody" data-en="Repeatable outputs convert ideas into credibility." data-zh="可重复输出把想法变成可信度。">Repeatable outputs convert ideas into credibility.</div></details></div></details>
+        <details class="axis"><summary class="asum"><span data-en="W · Anchors preserve credit" data-zh="W · 锚点保署名">W · Anchors preserve credit</span><div class="chev"></div></summary><div class="abody"><details class="bub"><summary class="bsum"><span data-en="References" data-zh="引用">References</span><div class="chev"></div></summary><div class="bbody" data-en="OSF/ORCID/links keep the chain intact." data-zh="OSF/ORCID/链接维持链条完整。">OSF/ORCID/links keep the chain intact.</div></details></div></details>
       </div>
     </details>
 
-  <!-- NOTE: ALL CLOSED BY DEFAULT (no open attr) -->
-
-  <!-- Root compass plate -->
-  <div class="root-controls">
-    <div class="platform">
-      <a class="diamond top" href="/laws/categories/"><span data-en="Laws" data-zh="法则">Laws<small data-en="Categories" data-zh="分类">Categories</small></span></a>
-      <a class="diamond right" href="/products/"><span data-en="Products" data-zh="产品">Products<small data-en="Suite" data-zh="套件">Suite</small></span></a>
-      <a class="diamond bottom" href="/gauges/"><span data-en="Gauges" data-zh="量规">Gauges<small data-en="Instruments" data-zh="仪表">Instruments</small></span></a>
-      <a class="diamond left" href="/links/"><span data-en="Links" data-zh="链接">Links<small data-en="References" data-zh="参考">References</small></span></a>
-      <a class="diamond mini mini-left" href="/door/"><span><small data-en="DOOR" data-zh="入口">DOOR</small></span></a>
-      <a class="diamond mini mini-right" href="/home/"><span><small data-en="HOME" data-zh="主页">HOME</small></span></a>
+    <!-- Root compass plate -->
+    <div class="root-controls">
+      <div class="platform">
+        <a class="diamond top" href="/laws/categories/"><span data-en="Laws" data-zh="法则">Laws<small data-en="Categories" data-zh="分类">Categories</small></span></a>
+        <a class="diamond right" href="/products/"><span data-en="Products" data-zh="产品">Products<small data-en="Suite" data-zh="套件">Suite</small></span></a>
+        <a class="diamond bottom" href="/gauges/"><span data-en="Gauges" data-zh="量规">Gauges<small data-en="Instruments" data-zh="仪表">Instruments</small></span></a>
+        <a class="diamond left" href="/links/"><span data-en="Links" data-zh="链接">Links<small data-en="References" data-zh="参考">References</small></span></a>
+        <a class="diamond mini mini-left" href="/door/"><span><small data-en="DOOR" data-zh="入口">DOOR</small></span></a>
+        <a class="diamond mini mini-right" href="/home/"><span><small data-en="HOME" data-zh="主页">HOME</small></span></a>
+      </div>
     </div>
+
+    <footer data-en="CANONICAL · STABLE · © GEODIAMETRICS" data-zh="规范 · 稳定 · © GEODIAMETRICS">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
   </div>
-
-  <footer data-en="CANONICAL · STABLE · © GEODIAMETRICS" data-zh="规范 · 稳定 · © GEODIAMETRICS">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
-</div>
 </div>
 
 <script>
 (() => {
-  const btnEN = document.getElementById("btnEN");
-  const btnZH = document.getElementById("btnZH");
-  const nodes = Array.from(document.querySelectorAll("[data-en][data-zh]"));
+  const btnEN = document.getElementById("chooseEN");
+  const btnZH = document.getElementById("chooseZH");
+  const chooseLearn = document.getElementById("chooseLearn");
+  const chooseShop = document.getElementById("chooseShop");
+  const gateLang = document.getElementById("gateLang");
+  const gateMode = document.getElementById("gateMode");
+  const rootContent = document.getElementById("rootContent");
+
+  const tnodes = Array.from(document.querySelectorAll("[data-en][data-zh]"));
 
   function setLang(lang){
+    document.body.setAttribute("data-lang", lang);
     localStorage.setItem("geo_lang", lang);
-    btnEN.classList.toggle("active", lang === "en");
-    btnZH.classList.toggle("active", lang === "zh");
-    nodes.forEach(el => { el.textContent = (lang === "zh") ? el.getAttribute("data-zh") : el.getAttribute("data-en"); });
+    tnodes.forEach(n => n.textContent = (lang === "zh") ? n.getAttribute("data-zh") : n.getAttribute("data-en"));
     document.documentElement.lang = (lang === "zh") ? "zh-Hans" : "en";
   }
 
-  btnEN.addEventListener("click", () => setLang("en"));
-  btnZH.addEventListener("click", () => setLang("zh"));
+  function showModeGate(){
+    gateLang.classList.add("root-hidden");
+    gateMode.classList.remove("root-hidden");
+  }
 
-  // Closed by default + language restore
-  document.querySelectorAll("details").forEach(d => d.open = false);
-  setLang(localStorage.getItem("geo_lang") || "en");
+  function showContent(mode){
+    document.body.setAttribute("data-mode", mode);
+    localStorage.setItem("geo_mode", mode);
+    gateMode.classList.add("root-hidden");
+    rootContent.classList.remove("root-hidden");
+    // all closed by default
+    document.querySelectorAll("details").forEach(d => d.open = false);
+  }
+
+  // Wire gates
+  document.getElementById("chooseEN").addEventListener("click", () => { setLang("en"); showModeGate(); });
+  document.getElementById("chooseZH").addEventListener("click", () => { setLang("zh"); showModeGate(); });
+  document.getElementById("chooseLearn").addEventListener("click", () => showContent("learn"));
+  document.getElementById("chooseShop").addEventListener("click", () => showContent("shop"));
+
+  // Restore if previously set
+  const savedLang = localStorage.getItem("geo_lang");
+  const savedMode = localStorage.getItem("geo_mode");
+
+  if(savedLang && savedMode){
+    setLang(savedLang);
+    gateLang.classList.add("root-hidden");
+    gateMode.classList.add("root-hidden");
+    rootContent.classList.remove("root-hidden");
+    document.body.setAttribute("data-mode", savedMode);
+    document.querySelectorAll("details").forEach(d => d.open = false);
+  }else if(savedLang && !savedMode){
+    setLang(savedLang);
+    showModeGate();
+  }else{
+    setLang("en");
+  }
 })();
 </script>
 

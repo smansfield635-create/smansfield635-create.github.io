@@ -1,8 +1,12 @@
-/* ==========================================
-   GEODIAMETRICS OPAL SYSTEM — GLOBAL STABLE TNT
-========================================== */
+/* =========================================================
+   GEODIAMETRICS GLOBAL BRANCH.CSS
+   Dark Opal System + Plate Cardinal Markers
+   FULL TNT REPLACEMENT
+========================================================= */
 
-/* ---------- PLATFORM ---------- */
+/* =========================
+   PLATFORM
+========================= */
 
 .platform{
   position:relative;
@@ -11,7 +15,6 @@
   margin:0 auto;
 }
 
-/* Main rotated plate */
 .platform::before{
   content:"";
   position:absolute;
@@ -20,21 +23,22 @@
   border-radius:30px;
 
   background:
-    radial-gradient(circle at 50% 40%,
+    radial-gradient(circle at 50% 35%,
       rgba(60,70,80,.35) 0%,
       rgba(20,25,30,.85) 70%,
-      rgba(10,12,16,1) 100%);
+      rgba(12,14,18,1) 100%);
 
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.06),
     0 40px 100px rgba(0,0,0,.85);
 
+  backdrop-filter:blur(10px);
   z-index:0;
 }
 
-/* ==========================================
+/* =========================
    MAIN DIAMONDS
-========================================== */
+========================= */
 
 .diamond{
   position:absolute;
@@ -45,8 +49,8 @@
 
   background:
     radial-gradient(circle at 50% 40%,
-      rgba(45,55,65,.8) 0%,
-      rgba(18,22,28,.95) 75%);
+      rgba(55,65,75,.85) 0%,
+      rgba(18,22,28,.95) 65%);
 
   display:flex;
   align-items:center;
@@ -56,12 +60,15 @@
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.05),
     inset 0 20px 35px rgba(255,255,255,.04),
-    inset 0 -35px 60px rgba(0,0,0,.9),
-    0 25px 70px rgba(0,0,0,.9);
+    inset 0 -35px 55px rgba(0,0,0,.9),
+    0 30px 70px rgba(0,0,0,.9);
 
-  transition:transform .15s ease, filter .15s ease;
   z-index:2;
+  transition:transform .15s ease, filter .15s ease;
 }
+
+.diamond:hover{ filter:brightness(1.08); }
+.diamond:active{ transform:rotate(45deg) translateY(1px); }
 
 .diamond span{
   transform:rotate(-45deg);
@@ -77,18 +84,18 @@
   font-size:12px;
   font-weight:800;
   letter-spacing:.12em;
-  opacity:.8;
+  opacity:.85;
 }
 
-/* Main diamond positions */
+/* Compass diamond positions */
 .top{top:6%;left:31%}
 .right{top:31%;right:6%}
 .bottom{bottom:6%;left:31%}
 .left{top:31%;left:6%}
 
-/* ==========================================
-   MINI CONTROLS (BOTTOM POCKETS)
-========================================== */
+/* =========================
+   MINI CONTROLS
+========================= */
 
 .diamond.mini{
   width:18%;
@@ -97,85 +104,37 @@
   z-index:3;
 }
 
-.mini-left{
-  bottom:-6%;
-  left:8%;
-}
+.mini-left{ bottom:-6%; left:8%; }
+.mini-right{ bottom:-6%; right:8%; }
 
-.mini-right{
-  bottom:-6%;
-  right:8%;
-}
+/* =========================================================
+   PLATE CARDINAL MARKERS (GLOBAL)
+   N / E / S / W anchored to rotated plate tips
+========================================================= */
 
-/* ==========================================
-   COMPASS MARKERS — CORNER ANCHORED
-========================================== */
-
-.compass{
+.platform::after{
+  content:"";
   position:absolute;
-  width:46px;
-  height:46px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  font-weight:700;
-  font-size:14px;
-  color:#eaf2f6;
-
-  background:rgba(255,255,255,.05);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.08),
-    0 0 25px rgba(120,180,255,.25);
-
-  backdrop-filter:blur(6px);
+  inset:-8%;
+  pointer-events:none;
   z-index:4;
+
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 1000'%3E%3Cstyle%3Etext%7Bfont-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-weight:900;letter-spacing:.08em;%7D%3C/style%3E%3Ctext x='500' y='85' text-anchor='middle' font-size='48' fill='%23EAF2F6' opacity='.95'%3EN%3C/text%3E%3Ctext x='925' y='520' text-anchor='middle' font-size='44' fill='%23EAF2F6' opacity='.85'%3EE%3C/text%3E%3Ctext x='500' y='965' text-anchor='middle' font-size='44' fill='%23EAF2F6' opacity='.85'%3ES%3C/text%3E%3Ctext x='75' y='520' text-anchor='middle' font-size='44' fill='%23EAF2F6' opacity='.85'%3EW%3C/text%3E%3Cpolygon points='500,115 520,155 565,160 530,190 540,235 500,210 460,235 470,190 435,160 480,155' fill='%23FFFFFF' opacity='.98'/%3E%3Cpolygon points='500,115 520,155 565,160 530,190 540,235 500,210 460,235 470,190 435,160 480,155' fill='%2390C8FF' opacity='.35'/%3E%3C/svg%3E");
+
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+
+  filter:
+    drop-shadow(0 0 14px rgba(120,180,255,.35))
+    drop-shadow(0 0 28px rgba(80,170,255,.25));
 }
 
-/* Properly aligned to rotated plate corners */
-
-.compass-n{
-  top:-6%;
-  left:50%;
-  transform:translateX(-50%);
-}
-
-.compass-s{
-  bottom:-6%;
-  left:50%;
-  transform:translateX(-50%);
-}
-
-.compass-e{
-  right:-6%;
-  top:50%;
-  transform:translateY(-50%);
-}
-
-.compass-w{
-  left:-6%;
-  top:50%;
-  transform:translateY(-50%);
-}
-
-/* optional icon spacing */
-.compass span{
-  font-size:18px;
-  line-height:1;
-}
-
-.compass small{
-  font-size:11px;
-  opacity:.7;
-  margin-top:2px;
-}
-
-/* ==========================================
-   REMOVE LEGACY
-========================================== */
+/* =========================================================
+   CLEANUP
+========================================================= */
 
 .diamond-stage,
-.mini-diamond{
+.mini-diamond,
+.compass-label{
   display:none !important;
 }

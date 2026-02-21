@@ -1,3 +1,10 @@
+<!-- TNT FILE: /index.html  (FULL REPLACEMENT)
+     PURPOSE: Arrival + Language select ONCE + Multi-portal terminal (enabled after language)
+     RULES:
+       - Sets localStorage.gd_lang = en|zh
+       - Never shows mixed English/Chinese after selection (single-language rendering)
+       - Does NOT set depth (that’s Door)
+-->
 <!doctype html>
 <html lang="en">
 <head>
@@ -5,15 +12,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Coherent Resolution Platform · Terminal</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=9300"/>
-<link rel="stylesheet" href="/assets/branch.css?v=9300"/>
+<link rel="stylesheet" href="/assets/ui.css?v=9500"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9500"/>
 
 <style>
-/* MULTI-PORTAL ACCESS TERMINAL (NO DELETION)
-   - Parallel ramps into /home/
-   - Door kept as fallback
-*/
-
 body{
   background:
     radial-gradient(1400px 900px at 50% 12%, rgba(150,0,0,.42) 0%, rgba(20,0,0,.24) 42%, rgba(5,7,12,1) 100%),
@@ -22,138 +24,79 @@ body{
 
 .wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px;padding:38px 16px 88px}
 .hero{position:relative;z-index:10;text-align:left}
-.hero h1{font-size:clamp(44px,7vw,72px);margin:0;font-weight:950;letter-spacing:.02em}
-.hero p{margin:10px 0 0;opacity:.80;font-size:16px;line-height:1.4;max-width:58ch}
+.hero h1{font-size:clamp(44px,7vw,72px);margin:0;font-weight:950;letter-spacing:.02em;text-transform:uppercase}
+.hero h2{margin:10px 0 0;opacity:.85;font-size:14px;letter-spacing:.22em;text-transform:uppercase}
+.hero p{margin:12px 0 0;opacity:.80;font-size:16px;line-height:1.45;max-width:70ch}
 
-.terminal{
-  margin-top:10px;
+.card{
   border-radius:24px;
   background:rgba(255,255,255,.05);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 26px 70px rgba(0,0,0,.55);
-  padding:16px;
   backdrop-filter:blur(12px);
+  overflow:hidden;
 }
 
-.platform{
-  position:relative;
-  width:min(480px,92vw);
-  aspect-ratio:1/1;
-  margin:10px auto 0;
+.card-h{
+  padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
 }
-.platform::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  transform:rotate(45deg);
-  border-radius:28px;
-  background:rgba(255,255,255,.04);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 32px 80px rgba(0,0,0,.75);
-  backdrop-filter:blur(10px);
-  z-index:0;
+.card-h b{
+  display:block;font-size:12px;letter-spacing:.22em;text-transform:uppercase;opacity:.85;
+}
+.card-h span{
+  display:block;margin-top:6px;opacity:.78;font-size:14px;line-height:1.4;
 }
 
-.diamond{
-  position:absolute;
-  width:38%;
-  height:38%;
-  transform:rotate(45deg);
-  border-radius:24px;
-  background:
-    radial-gradient(circle at 50% 40%,
-      rgba(60,70,80,.70) 0%,
-      rgba(25,30,35,.92) 60%,
-      rgba(12,14,18,1) 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.06),
-    inset 0 18px 30px rgba(255,255,255,.05),
-    inset 0 -30px 45px rgba(0,0,0,.85),
-    0 24px 60px rgba(0,0,0,.80);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-  z-index:2;
-}
-
-.diamond:active{transform:rotate(45deg) translateY(1px)}
-.diamond span{
-  transform:rotate(-45deg);
-  text-align:center;
-  font-weight:900;
-  color:#eaf2f6;
-  letter-spacing:.10em;
-  line-height:1.12;
-}
-.diamond small{
-  display:block;
-  margin-top:6px;
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.14em;
-  opacity:.78;
-}
-
-.top{top:6%;left:31%}
-.right{top:31%;right:6%}
-.bottom{bottom:6%;left:31%}
-.left{top:31%;left:6%}
-
-/* status row */
-.status{
-  width:min(720px,94vw);
-  margin:14px auto 0;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
-.pill{
-  border-radius:999px;
-  padding:10px 14px;
-  background:rgba(255,255,255,.06);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  font-weight:900;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-  font-size:12px;
-  opacity:.92;
-}
-
-.actions{
-  width:min(720px,94vw);
-  margin:12px auto 0;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
+.langRow{
+  padding:14px 16px 6px;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 .btn{
   border-radius:18px;
   padding:12px 16px;
-  background:rgba(255,255,255,.08);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
   font-weight:900;
-  letter-spacing:.12em;
+  letter-spacing:.14em;
   text-transform:uppercase;
   font-size:12px;
   color:#eaf2f6;
-  text-decoration:none;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
 }
-.btn.primary{
+.btn.active{
   background:rgba(150,0,0,.25);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 18px 50px rgba(0,0,0,.35);
 }
+.btn:active{transform:translateY(1px)}
 
-footer{
-  margin-top:18px;
-  text-align:center;
-  opacity:.40;
-  letter-spacing:.22em;
-  font-weight:900;
-  font-size:12px;
+.grid{
+  padding:14px 16px 16px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
 }
+@media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+
+.portal{
+  border-radius:18px;
+  background:rgba(0,0,0,.22);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  padding:14px 14px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  text-decoration:none;color:inherit;
+  -webkit-tap-highlight-color:transparent;
+}
+.portal .t{min-width:0}
+.portal .t b{display:block;font-size:14px;letter-spacing:.14em;text-transform:uppercase}
+.portal .t i{display:block;margin-top:6px;font-style:normal;opacity:.72;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.portal .go{width:40px;height:40px;border-radius:999px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;opacity:.9;font-weight:900;flex:0 0 auto}
+.portal:hover{background:rgba(0,0,0,.26)}
+.portal.disabled{opacity:.45;pointer-events:none;filter:grayscale(1)}
+
+.ink{margin-top:14px;text-align:center;letter-spacing:.22em;font-weight:900;opacity:.35;font-size:12px;text-transform:uppercase}
+footer{margin-top:10px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
 </style>
 </head>
 
@@ -162,98 +105,110 @@ footer{
 
 <div class="page">
   <div class="wrap">
-
     <div class="hero">
-      <h1>COHERENT RESOLUTION PLATFORM</h1>
-      <p>
-        Multi-portal access terminal. Choose any ramp. Everything converges into SCOPE256.
-      </p>
+      <h1 id="H1">COHERENT RESOLUTION PLATFORM</h1>
+      <h2 id="H2">SCOPE256 · MULTI-PORTAL ACCESS TERMINAL</h2>
+      <p id="H3">Select language once. Then enter through any portal.</p>
     </div>
 
-    <div class="terminal">
-
-      <div class="platform">
-
-        <!-- RAMP 1: Language EN -->
-        <div class="diamond top" id="ramp-en">
-          <span>ENGLISH<small>LANG</small></span>
+    <div class="card">
+      <div class="card-h">
+        <div>
+          <b id="T0">LANGUAGE</b>
+          <span id="T1">Choose once. You won’t see the other language after selection.</span>
         </div>
-
-        <!-- RAMP 2: Depth Learn -->
-        <div class="diamond right" id="ramp-learn">
-          <span>LEARN<small>DEPTH</small></span>
-        </div>
-
-        <!-- RAMP 3: Language ZH -->
-        <div class="diamond bottom" id="ramp-zh">
-          <span>中文<small>语言</small></span>
-        </div>
-
-        <!-- RAMP 4: Depth Explore -->
-        <div class="diamond left" id="ramp-explore">
-          <span>EXPLORE<small>DEPTH</small></span>
-        </div>
-
       </div>
 
-      <div class="status">
-        <div class="pill" id="s_lang">LANG: EN</div>
-        <div class="pill" id="s_depth">DEPTH: EXPLORE</div>
-        <div class="pill" id="s_scope">SCOPE256: NOW</div>
+      <div class="langRow">
+        <button class="btn" id="L_EN" type="button">ENGLISH</button>
+        <button class="btn" id="L_ZH" type="button">中文</button>
       </div>
 
-      <div class="actions">
-        <a class="btn primary" href="/home/" id="enter">ENTER</a>
-        <a class="btn" href="/door/" id="door">DOOR</a>
-        <a class="btn" href="/home/" id="home">HOME</a>
+      <div class="grid" id="portalGrid">
+        <a class="portal disabled" id="P_DOOR" href="/door/">
+          <div class="t"><b id="P1T">ENTER</b><i id="P1S">Lens select → Engine</i></div><div class="go">▸</div>
+        </a>
+        <a class="portal disabled" id="P_HOME" href="/home/">
+          <div class="t"><b id="P2T">ENGINE</b><i id="P2S">Explore/Learn (from your lens)</i></div><div class="go">▸</div>
+        </a>
+        <a class="portal disabled" id="P_RGSC" href="/rgsc/">
+          <div class="t"><b id="P3T">RGSC</b><i id="P3S">Receipts · verify · replay</i></div><div class="go">▸</div>
+        </a>
+        <a class="portal disabled" id="P_LINKS" href="/links/">
+          <div class="t"><b id="P4T">REFERENCES</b><i id="P4S">Identity anchors</i></div><div class="go">▸</div>
+        </a>
       </div>
-
     </div>
 
-    <footer>GEODIAMETRICS</footer>
-
+    <div class="ink">GEODIAMETRICS</div>
+    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
   </div>
 </div>
 
 <script>
 (function(){
-  // Storage keys
-  const K_LANG  = "gd_lang";   // en | zh
-  const K_DEPTH = "gd_depth";  // explore | learn
-  const K_SCOPE = "gd_scope";  // origin | now | trajectory
+  const K_LANG="gd_lang";
+  const portals = ["P_DOOR","P_HOME","P_RGSC","P_LINKS"].map(id=>document.getElementById(id));
 
-  const state = {
-    lang: (localStorage.getItem(K_LANG) || "en").toLowerCase(),
-    depth: (localStorage.getItem(K_DEPTH) || "explore").toLowerCase(),
-    scope: (localStorage.getItem(K_SCOPE) || "now").toLowerCase()
+  const I18N = {
+    en:{
+      T0:"LANGUAGE",
+      T1:"Choose once. You won’t see the other language after selection.",
+      P1T:"ENTER", P1S:"Lens select → Engine",
+      P2T:"ENGINE", P2S:"Explore/Learn (from your lens)",
+      P3T:"RGSC", P3S:"Receipts · verify · replay",
+      P4T:"REFERENCES", P4S:"Identity anchors",
+      H3:"Select language once. Then enter through any portal."
+    },
+    zh:{
+      T0:"语言",
+      T1:"只选一次。选择后不再显示另一种语言。",
+      P1T:"进入", P1S:"镜头选择 → 引擎",
+      P2T:"引擎", P2S:"浏览/深挖（由镜头决定）",
+      P3T:"RGSC", P3S:"回执 · 验证 · 回放",
+      P4T:"引用", P4S:"身份锚点",
+      H3:"选择语言一次，然后通过任一入口进入。"
+    }
   };
 
-  function norm(){
-    if(state.lang !== "en" && state.lang !== "zh") state.lang = "en";
-    if(state.depth !== "explore" && state.depth !== "learn") state.depth = "explore";
-    if(state.scope !== "origin" && state.scope !== "now" && state.scope !== "trajectory") state.scope = "now";
+  function applyLang(lang){
+    document.documentElement.lang = (lang==="zh") ? "zh-Hans" : "en";
+    const t = I18N[lang];
+
+    document.getElementById("T0").textContent = t.T0;
+    document.getElementById("T1").textContent = t.T1;
+    document.getElementById("P1T").textContent = t.P1T;
+    document.getElementById("P1S").textContent = t.P1S;
+    document.getElementById("P2T").textContent = t.P2T;
+    document.getElementById("P2S").textContent = t.P2S;
+    document.getElementById("P3T").textContent = t.P3T;
+    document.getElementById("P3S").textContent = t.P3S;
+    document.getElementById("P4T").textContent = t.P4T;
+    document.getElementById("P4S").textContent = t.P4S;
+    document.getElementById("H3").textContent = t.H3;
+
+    // Enable portals
+    portals.forEach(a=>a.classList.remove("disabled"));
   }
 
-  function save(){
-    localStorage.setItem(K_LANG, state.lang);
-    localStorage.setItem(K_DEPTH, state.depth);
-    localStorage.setItem(K_SCOPE, state.scope);
+  function setLang(lang){
+    localStorage.setItem(K_LANG, lang);
+    // Default depth if unset
+    if(!localStorage.getItem("gd_depth")) localStorage.setItem("gd_depth","explore");
+    if(!localStorage.getItem("gd_scope")) localStorage.setItem("gd_scope","now");
+    if(!localStorage.getItem("gd_expr")) localStorage.setItem("gd_expr","formal");
+    if(!localStorage.getItem("gd_contrast")) localStorage.setItem("gd_contrast","standard");
+    applyLang(lang);
+    document.getElementById("L_EN").classList.toggle("active", lang==="en");
+    document.getElementById("L_ZH").classList.toggle("active", lang==="zh");
   }
 
-  function paint(){
-    document.getElementById("s_lang").textContent  = "LANG: " + (state.lang === "zh" ? "中文" : "EN");
-    document.getElementById("s_depth").textContent = "DEPTH: " + state.depth.toUpperCase();
-    document.getElementById("s_scope").textContent = "SCOPE256: " + state.scope.toUpperCase();
-  }
+  document.getElementById("L_EN").addEventListener("click", ()=>setLang("en"));
+  document.getElementById("L_ZH").addEventListener("click", ()=>setLang("zh"));
 
-  // Ramps
-  document.getElementById("ramp-en").addEventListener("click", ()=>{ state.lang="en"; norm(); save(); paint(); });
-  document.getElementById("ramp-zh").addEventListener("click", ()=>{ state.lang="zh"; norm(); save(); paint(); });
-  document.getElementById("ramp-explore").addEventListener("click", ()=>{ state.depth="explore"; norm(); save(); paint(); });
-  document.getElementById("ramp-learn").addEventListener("click", ()=>{ state.depth="learn"; norm(); save(); paint(); });
-
-  // Initialize with defaults
-  norm(); save(); paint();
+  // If language already chosen, apply and enable immediately (still no mixing)
+  const existing = (localStorage.getItem(K_LANG)||"").toLowerCase();
+  if(existing==="en"||existing==="zh") setLang(existing);
 })();
 </script>
 </body>

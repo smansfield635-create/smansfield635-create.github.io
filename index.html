@@ -1,74 +1,137 @@
-<!-- TNT: /index.html (FULL FILE REPLACEMENT)
-     Purpose: Single entry fork with ZERO redundancy.
-     Rule: User chooses ONE language + ONE mode once, then enters /door/ hub.
+<!-- TNT: /index.html
+     COMPLETE REWRITE (ENTRY)
+     - No geometry jargon.
+     - Choose language + depth (Shop=surface, Learn=depth).
+     - Writes state, then routes to /door/.
 -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodiametrics · Entry</title>
-  <link rel="stylesheet" href="/assets/ui.css?v=2000"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=2000"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Geodiametrics</title>
+
+<link rel="stylesheet" href="/assets/ui.css?v=6000"/>
+<link rel="stylesheet" href="/assets/branch.css?v=6000"/>
+
+<style>
+/* Entry page: clean, human, red/black theme */
+html,body{height:100%}
+body{
+  background:
+    radial-gradient(1200px 800px at 50% 10%, rgba(160,20,20,.55) 0%, rgba(30,0,0,.55) 35%, rgba(5,7,12,1) 100%);
+}
+.entry-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:18px}
+.hero{text-align:left}
+.hero h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
+.hero p{margin:10px 0 0;font-size:20px;opacity:.78;line-height:1.4}
+
+.grid{
+  width:min(860px,94vw);
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+@media (max-width:720px){.grid{grid-template-columns:1fr}}
+
+.card{
+  border-radius:22px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 22px 60px rgba(0,0,0,.55);
+  padding:18px 18px;
+  cursor:pointer;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.card:hover{filter:brightness(1.05)}
+.card:active{transform:translateY(1px)}
+.card .t{font-size:22px;font-weight:900;letter-spacing:.06em}
+.card .s{margin-top:6px;font-size:14px;opacity:.78;letter-spacing:.04em}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  font-weight:900;
+  letter-spacing:.12em;
+  font-size:12px;
+  opacity:.92;
+  margin-left:10px;
+}
+
+.note{
+  width:min(860px,94vw);
+  border-radius:22px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  padding:14px 16px;
+  opacity:.88;
+  line-height:1.6;
+}
+.note strong{font-weight:900}
+</style>
 </head>
 
 <body class="theme-red">
-  <div class="shooting-stars"></div>
+<div class="shooting-stars"></div>
 
-  <div class="page entry-page">
-    <div class="h">
+<div class="page">
+  <div class="entry-wrap">
+
+    <div class="h hero">
       <h1>Geodiametrics</h1>
-      <p>Choose what you understand. No setup.</p>
+      <p>Choose a language. Choose a depth. Then enter.</p>
     </div>
 
-    <div class="entry-grid">
+    <div class="grid" role="group" aria-label="Entry choices">
+      <div class="card" data-lang="en" data-depth="shop">
+        <div class="t">Shop <span class="badge">EN</span></div>
+        <div class="s">Surface view · quick browse</div>
+      </div>
 
-      <!-- EN / LEARN -->
-      <a class="entry-card" href="/door/?lang=en&mode=learn" data-lang="en" data-mode="learn">
-        <div class="entry-title">Learn</div>
-        <div class="entry-sub">EN</div>
-        <div class="entry-desc">Definitions · systems · methods</div>
-      </a>
+      <div class="card" data-lang="en" data-depth="learn">
+        <div class="t">Learn <span class="badge">EN</span></div>
+        <div class="s">Deep view · full breakdown</div>
+      </div>
 
-      <!-- EN / SHOP -->
-      <a class="entry-card" href="/door/?lang=en&mode=shop" data-lang="en" data-mode="shop">
-        <div class="entry-title">Shop</div>
-        <div class="entry-sub">EN</div>
-        <div class="entry-desc">Products · programs · services</div>
-      </a>
+      <div class="card" data-lang="zh" data-depth="shop">
+        <div class="t">浏览 <span class="badge">中文</span></div>
+        <div class="s">表层浏览 · 快速查看</div>
+      </div>
 
-      <!-- ZH / LEARN -->
-      <a class="entry-card" href="/door/?lang=zh&mode=learn" data-lang="zh" data-mode="learn">
-        <div class="entry-title">学习</div>
-        <div class="entry-sub">中文</div>
-        <div class="entry-desc">定义 · 系统 · 方法</div>
-      </a>
+      <div class="card" data-lang="zh" data-depth="learn">
+        <div class="t">学习 <span class="badge">中文</span></div>
+        <div class="s">深入学习 · 完整拆解</div>
+      </div>
+    </div>
 
-      <!-- ZH / SHOP -->
-      <a class="entry-card" href="/door/?lang=zh&mode=shop" data-lang="zh" data-mode="shop">
-        <div class="entry-title">浏览</div>
-        <div class="entry-sub">中文</div>
-        <div class="entry-desc">产品 · 项目 · 服务</div>
-      </a>
-
+    <div class="note">
+      <strong>Shop</strong> means surface-level browsing. <strong>Learn</strong> means deep explanation.
+      You are not being marketed to. You can switch depth later.
     </div>
 
     <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
   </div>
+</div>
 
-  <script>
-    // Persist selection ONCE, then door runs the hub.
-    (function () {
-      const cards = document.querySelectorAll(".entry-card");
-      cards.forEach(a => {
-        a.addEventListener("click", () => {
-          try {
-            localStorage.setItem("GD_LANG", a.getAttribute("data-lang") || "en");
-            localStorage.setItem("GD_MODE", a.getAttribute("data-mode") || "learn");
-          } catch (e) {}
-        }, { passive:true });
-      });
-    })();
-  </script>
+<script>
+(() => {
+  const go = (lang, depth) => {
+    try{
+      localStorage.setItem("GD_LANG", lang);   // en | zh
+      localStorage.setItem("GD_DEPTH", depth); // shop | learn
+    }catch(e){}
+    location.href = "/door/";
+  };
+
+  document.querySelectorAll(".card").forEach(c => {
+    c.addEventListener("click", () => go(c.dataset.lang, c.dataset.depth));
+  });
+})();
+</script>
 </body>
 </html>

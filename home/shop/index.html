@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Geodiametrics · Shop</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+/* SHOP MODE — red/coal premium */
+html,body{margin:0;height:100%}
+body{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#eaf2f6;
+  background:
+    radial-gradient(1200px 900px at 50% 18%, rgba(255,60,60,.18) 0%, rgba(0,0,0,0) 55%),
+    radial-gradient(1200px 900px at 50% 20%, #2a0b0b 0%, #120607 55%, #05070c 100%);
+}
+.page{max-width:980px;margin:0 auto;padding:40px 18px 120px}
+.topbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.brand{margin:0;font-size:42px;font-weight:900}
+.sub{margin:10px 0 18px;opacity:.78;font-size:16px}
+
+.pills{display:flex;gap:10px;flex-wrap:wrap}
+.pill{
+  padding:10px 14px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  color:#eaf2f6;text-decoration:none;font-weight:800;font-size:14px
+}
+.pill.active{box-shadow:0 0 0 1px rgba(255,120,120,.22) inset, 0 0 20px rgba(255,120,120,.10)}
+
+.section{margin-top:14px}
+.section summary{
+  cursor:pointer;
+  padding:18px 20px;
+  border-radius:22px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.10);
+  font-weight:900;
+  letter-spacing:.05em;
+}
+.section[open] summary{background:rgba(255,255,255,.12)}
+
+.inner{padding:14px 14px 4px}
+.node{margin:10px 0}
+.node summary{
+  cursor:pointer;
+  padding:14px 14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+.node p{margin:10px 6px 14px;opacity:.88;line-height:1.6}
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin:8px 6px 14px}
+.badge{
+  padding:8px 12px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  font-weight:800;opacity:.9;font-size:12px;letter-spacing:.08em
+}
+
+.cta{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:14px
+}
+.cta a{
+  padding:12px 14px;border-radius:18px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  color:#eaf2f6;text-decoration:none;font-weight:900
+}
+.cta a.primary{
+  box-shadow:0 0 0 1px rgba(255,120,120,.22) inset, 0 0 26px rgba(255,120,120,.10);
+}
+
+.footer{margin-top:34px;opacity:.5;letter-spacing:3px;font-size:12px;text-align:center}
+</style>
+
+<script>
+(function(){
+  function qp(name){
+    const u=new URL(location.href);
+    return (u.searchParams.get(name)||"").toLowerCase();
+  }
+  const lang = (qp("lang")==="zh") ? "zh" : "en";
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+
+  const dict = {
+    en: {
+      title:"Shop",
+      subtitle:"Commercial mode · offers, programs, deployment.",
+      north:"NORTH · Specs · Definitions · Terms",
+      east:"EAST · Products · Programs · Packages",
+      south:"SOUTH · Proof · Governance · Receipts",
+      west:"WEST · Contact · Identity · References"
+    },
+    zh: {
+      title:"购买",
+      subtitle:"商业模式 · 产品、项目、交付。",
+      north:"北 · 规格 · 定义 · 术语",
+      east:"东 · 产品 · 项目 · 套餐",
+      south:"南 · 证明 · 治理 · 凭证",
+      west:"西 · 联系 · 身份 · 引用"
+    }
+  };
+  window.__S = dict[lang];
+})();
+</script>
+</head>
+
+<body>
+<div class="page">
+
+  <div class="topbar">
+    <div>
+      <div class="brand">Geodiametrics</div>
+      <div class="sub" id="subline"></div>
+    </div>
+    <div class="pills">
+      <a class="pill" id="btnEN" href="/home/shop/?lang=en">EN</a>
+      <a class="pill" id="btnZH" href="/home/shop/?lang=zh">中文</a>
+      <a class="pill" href="/home/">Home</a>
+      <a class="pill" href="/home/learn/?lang=en">Learn</a>
+    </div>
+  </div>
+
+  <!-- NORTH -->
+  <details class="section">
+    <summary id="sNorth"></summary>
+    <div class="inner">
+
+      <details class="node">
+        <summary>Commercial terms</summary>
+        <p>What is being sold: scope, deliverables, receipt format, verification, and support boundaries.</p>
+      </details>
+
+      <details class="node">
+        <summary>Packaging standard</summary>
+        <div class="badges">
+          <div class="badge">Pack</div><div class="badge">Program</div><div class="badge">License</div><div class="badge">Service</div>
+        </div>
+        <p>Unified packaging language so every offering is comparable and auditable.</p>
+      </details>
+
+    </div>
+  </details>
+
+  <!-- EAST -->
+  <details class="section">
+    <summary id="sEast"></summary>
+    <div class="inner">
+
+      <details class="node">
+        <summary>Energy products</summary>
+        <p>Solar → Plasma conversion modeling surfaces. Productized as plans, toolchains, and deployments.</p>
+      </details>
+
+      <details class="node">
+        <summary>Execution surfaces</summary>
+        <p>PLASMA / PLATFORM layers. Interfaces and deployment surfaces.</p>
+      </details>
+
+      <details class="node">
+        <summary>Human programs</summary>
+        <p>1,001-word mastery system: PDFs, drills, lesson plans, structured progression.</p>
+      </details>
+
+    </div>
+  </details>
+
+  <!-- SOUTH -->
+  <details class="section">
+    <summary id="sSouth"></summary>
+    <div class="inner">
+
+      <details class="node">
+        <summary>Receipts & verification</summary>
+        <p>Proof surfaces: signed receipts, audit trails, replay-safe logs.</p>
+      </details>
+
+      <details class="node">
+        <summary>Governance & controls</summary>
+        <p>Operational rules for stability, measurement integrity, and publish-intentional policy.</p>
+      </details>
+
+    </div>
+  </details>
+
+  <!-- WEST -->
+  <details class="section">
+    <summary id="sWest"></summary>
+    <div class="inner">
+
+      <details class="node">
+        <summary>Contact</summary>
+        <p>Direct channel for pricing, licensing, and integration requests.</p>
+      </details>
+
+      <details class="node">
+        <summary>ORCID / OSF</summary>
+        <p>Identity and research anchors supporting legitimacy and traceability.</p>
+      </details>
+
+    </div>
+  </details>
+
+  <div class="cta">
+    <a class="primary" href="/contact/">Contact / Pricing</a>
+    <a href="/links/">Links</a>
+    <a href="/products/">Products page</a>
+  </div>
+
+  <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
+</div>
+
+<script>
+(function(){
+  const S = window.__S || {title:"Shop",subtitle:"",north:"NORTH",east:"EAST",south:"SOUTH",west:"WEST"};
+  document.title = "Geodiametrics · " + S.title;
+  document.getElementById("subline").textContent = S.subtitle;
+  document.getElementById("sNorth").textContent = S.north;
+  document.getElementById("sEast").textContent  = S.east;
+  document.getElementById("sSouth").textContent = S.south;
+  document.getElementById("sWest").textContent  = S.west;
+
+  const u = new URL(location.href);
+  const lang = (u.searchParams.get("lang")||"en").toLowerCase();
+  if(lang==="zh"){ document.getElementById("btnZH").classList.add("active"); }
+  else{ document.getElementById("btnEN").classList.add("active"); }
+})();
+</script>
+
+</body>
+</html>

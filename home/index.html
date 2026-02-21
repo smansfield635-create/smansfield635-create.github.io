@@ -1,4 +1,3 @@
-<!-- TNT: /home/index.html (USE BRANCH DIAMOND-STAGE SYSTEM, NOT PLATFORM) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,6 +10,11 @@
 
 <style>
 html,body{height:100%;margin:0}
+body{
+  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
+  color:#eaf2f6;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
 .page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 12px}
 .h{text-align:center;margin-bottom:12px}
 .h h1{font-size:48px;font-weight:900;margin:0}
@@ -20,7 +24,7 @@ a{color:inherit;text-decoration:none}
 a:visited{color:inherit}
 a:hover{text-decoration:none}
 a:active{text-decoration:none}
-.nav{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+.nav{display:flex;justify-content:center;gap:12px;margin-top:16px;flex-wrap:wrap}
 .nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);font-weight:900}
 footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
 </style>
@@ -37,19 +41,12 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
   </div>
 
   <div class="stage">
-    <div class="diamond-stage">
+    <div class="platform">
 
-      <div class="compass-label compass-n"><span>N</span></div>
-      <div class="compass-label compass-e"><span>E</span></div>
-      <div class="compass-label compass-s"><span>S</span></div>
-      <div class="compass-label compass-w"><span>W</span></div>
-
-      <div class="diamond"></div>
-
-      <a class="mini-diamond mini-top c-blue" href="/laws/"><span>Position</span></a>
-      <a class="mini-diamond mini-right c-green" href="/products/"><span>Outcome</span></a>
-      <a class="mini-diamond mini-bottom c-amber" href="/gauges/"><span>Trajectory</span></a>
-      <a class="mini-diamond mini-left c-purple" href="/links/"><span>Origin</span></a>
+      <a class="diamond top c-blue" href="/laws/"><span>Position</span></a>
+      <a class="diamond right c-green" href="/products/"><span>Outcome</span></a>
+      <a class="diamond bottom c-amber" href="/gauges/"><span>Trajectory</span></a>
+      <a class="diamond left c-purple" href="/links/"><span>Origin</span></a>
 
     </div>
   </div>

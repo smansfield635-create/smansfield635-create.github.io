@@ -5,160 +5,114 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Geodiametrics · Root</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=1020"/>
-<link rel="stylesheet" href="/assets/branch.css?v=1020"/>
+<link rel="stylesheet" href="/assets/ui.css?v=3000"/>
+<link rel="stylesheet" href="/assets/branch.css?v=3000"/>
 
 <style>
-/* =========================
-   ROOT: COMPASS DROPDOWNS
-   TNT FULL FILE
-========================= */
+/* ================================
+   ROOT · LENS ARCHITECTURE
+   TNT FULL REPLACEMENT
+================================ */
 
-.root-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:16px}
-
-/* Accordions */
-.grid{display:grid;grid-template-columns:1fr;gap:12px}
-@media (min-width:860px){.grid{grid-template-columns:1fr 1fr}}
-
-.drop{
-  border-radius:22px;
-  background:rgba(255,255,255,.04);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.45);
-  overflow:hidden;
-}
-.drop summary{
-  list-style:none;
-  cursor:pointer;
-  padding:16px 16px;
+/* Layout */
+.root-wrap{
+  width:min(1000px,94vw);
   display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
+  flex-direction:column;
+  gap:24px;
 }
-.drop summary::-webkit-details-marker{display:none}
 
-.hdr{
+/* Lens Bar */
+.lens-bar{
   display:flex;
-  align-items:center;
+  flex-wrap:wrap;
   gap:12px;
-  min-width:0;
+  justify-content:center;
 }
-.badge{
-  width:38px;height:38px;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:900;letter-spacing:.08em;
+
+.lens{
+  padding:10px 18px;
+  border-radius:999px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 40px rgba(0,0,0,.35);
-  flex:0 0 auto;
-}
-.titles{display:flex;flex-direction:column;min-width:0}
-.titles .t{
   font-weight:900;
-  letter-spacing:.10em;
+  letter-spacing:.08em;
   text-transform:uppercase;
-  font-size:14px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.titles .s{
-  margin-top:4px;
-  opacity:.70;
-  font-size:14px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  text-decoration:none;
+  color:inherit;
+  font-size:13px;
 }
 
-.chev{
-  width:12px;height:12px;
-  border-right:2px solid rgba(234,242,246,.60);
-  border-bottom:2px solid rgba(234,242,246,.60);
-  transform:rotate(45deg);
-  transition:.15s;
-  flex:0 0 auto;
+/* Content Sections */
+.lens-section{
+  padding:18px;
+  border-radius:22px;
+  background:rgba(255,255,255,.04);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    0 30px 80px rgba(0,0,0,.45);
 }
-.drop[open]>summary .chev{transform:rotate(-135deg)}
 
-.content{padding:0 16px 16px;font-size:16px;line-height:1.65;opacity:.92}
+.lens-section h2{
+  margin:0 0 12px;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
 
-/* Nested items */
-.nest{margin-top:12px;display:flex;flex-direction:column;gap:10px}
-.mini{
+.lens-section p{
+  margin:8px 0;
+  font-size:16px;
+  line-height:1.6;
+  opacity:.9;
+}
+
+/* Grid blocks */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+  margin-top:14px;
+}
+
+.card{
+  padding:14px;
   border-radius:18px;
   background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.07);
-  overflow:hidden;
+  border:1px solid rgba(255,255,255,.06);
 }
-.mini summary{
-  list-style:none;
-  cursor:pointer;
-  padding:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
+
+.card h3{
+  margin:0 0 6px;
   font-size:13px;
-  font-weight:900;
-  letter-spacing:.10em;
+  letter-spacing:.12em;
   text-transform:uppercase;
 }
-.mini summary::-webkit-details-marker{display:none}
-.mchev{
-  width:10px;height:10px;
-  border-right:2px solid rgba(234,242,246,.55);
-  border-bottom:2px solid rgba(234,242,246,.55);
-  transform:rotate(45deg);
-  transition:.15s;
-}
-.mini[open]>summary .mchev{transform:rotate(-135deg)}
-.mini .mc{padding:0 12px 12px;font-size:15px;line-height:1.65;opacity:.95}
 
-.tag{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.10);
-  font-weight:800;
-  letter-spacing:.06em;
-  margin-right:8px;
-  margin-bottom:6px;
+.card p{
+  margin:0;
+  font-size:14px;
+  opacity:.85;
 }
 
-.kv{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-.kv .pill{
-  display:inline-flex;
-  gap:10px;
-  align-items:center;
-  padding:10px 12px;
-  border-radius:16px;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.07);
-  font-weight:800;
-  letter-spacing:.06em;
-}
-.kv .pill code{
-  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-  font-size:12px;
-  opacity:.95;
-  background:rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.10);
-  padding:4px 8px;
-  border-radius:999px;
+.sep{
+  border:0;
+  height:1px;
+  background:rgba(255,255,255,.10);
+  margin:12px 0;
 }
 
-.sep{border:0;height:1px;background:rgba(255,255,255,.10);margin:14px 0}
-.sat{display:flex;justify-content:center;margin-top:6px}
-.sat .platform{width:min(360px,86vw)}
-footer{margin-top:22px}
+/* Bottom diamond */
+.root-controls{
+  display:flex;
+  justify-content:center;
+  margin-top:12px;
+}
 
-/* Color cues (subtle, not category-heavy) */
-.bN{box-shadow:0 0 0 1px rgba(180,220,255,.20) inset, 0 0 18px rgba(120,180,255,.10)}
-.bE{box-shadow:0 0 0 1px rgba(255,220,150,.16) inset, 0 0 18px rgba(255,200,120,.08)}
-.bS{box-shadow:0 0 0 1px rgba(150,255,220,.14) inset, 0 0 18px rgba(120,255,200,.07)}
-.bW{box-shadow:0 0 0 1px rgba(210,190,255,.16) inset, 0 0 18px rgba(190,160,255,.08)}
+.root-controls .platform{
+  width:min(380px,88vw);
+}
 </style>
 </head>
 
@@ -170,204 +124,133 @@ footer{margin-top:22px}
 
   <div class="h">
     <h1>Geodiametrics</h1>
-    <p>Under construction · Safe to explore.</p>
+    <p>Structure · Language · Energy · Human Systems</p>
   </div>
 
-  <!-- COMPASS DROPDOWNS (NO REDUNDANCY) -->
-  <div class="grid">
-
-    <!-- N -->
-    <details class="drop" open>
-      <summary>
-        <div class="hdr">
-          <div class="badge bN">N</div>
-          <div class="titles">
-            <div class="t">Laws & Definitions</div>
-            <div class="s">What stays true · Rules · Categories</div>
-          </div>
-        </div>
-        <span class="chev"></span>
-      </summary>
-      <div class="content">
-
-        <details class="mini" open>
-          <summary>Start Path<span class="mchev"></span></summary>
-          <div class="mc">
-            <span class="tag">Path</span>
-            Laws → Categories → Integrity → Coherence (follow to the end).
-          </div>
-        </details>
-
-        <details class="mini">
-          <summary>Navigation Rule<span class="mchev"></span></summary>
-          <div class="mc">
-            <span class="tag">Rule</span>
-            Choose one route at a time. Don’t multi-tab inside a branch.
-          </div>
-        </details>
-
-        <details class="mini">
-          <summary>What Stays Stable<span class="mchev"></span></summary>
-          <div class="mc">
-            <span class="tag">Stable</span>
-            The navigation grammar stays stable while content expands.
-          </div>
-        </details>
-
-      </div>
-    </details>
-
-    <!-- E -->
-    <details class="drop">
-      <summary>
-        <div class="hdr">
-          <div class="badge bE">E</div>
-          <div class="titles">
-            <div class="t">Products & Surfaces</div>
-            <div class="s">Tools · Programs · Packaged outputs</div>
-          </div>
-        </div>
-        <span class="chev"></span>
-      </summary>
-      <div class="content">
-
-        <div class="nest">
-
-          <details class="mini" open>
-            <summary>Coming Soon<span class="mchev"></span></summary>
-            <div class="mc">
-              <span class="tag">Focus</span>
-              New tools, instruments, and packaged outputs ship continuously.
-              <div class="kv">
-                <div class="pill"><code>Packs</code> Downloadables</div>
-                <div class="pill"><code>Programs</code> Training</div>
-                <div class="pill"><code>Surfaces</code> UIs</div>
-              </div>
-            </div>
-          </details>
-
-          <details class="mini">
-            <summary>Diagnostics & Gauges<span class="mchev"></span></summary>
-            <div class="mc">
-              <span class="tag">Product</span>
-              Measurement surfaces that output structured results.
-            </div>
-          </details>
-
-          <details class="mini">
-            <summary>Business & Certification<span class="mchev"></span></summary>
-            <div class="mc">
-              <span class="tag">Program</span>
-              Certification tracks for operational literacy and applied deployment.
-            </div>
-          </details>
-
-          <details class="mini">
-            <summary>Environmental Work<span class="mchev"></span></summary>
-            <div class="mc">
-              <span class="tag">Environment</span>
-              Signal-based monitoring using standardized gauges and constraint models.
-            </div>
-          </details>
-
-        </div>
-
-      </div>
-    </details>
-
-    <!-- S -->
-    <details class="drop">
-      <summary>
-        <div class="hdr">
-          <div class="badge bS">S</div>
-          <div class="titles">
-            <div class="t">Gauges & Measurement</div>
-            <div class="s">Diagnostics · Integrity · Outputs</div>
-          </div>
-        </div>
-        <span class="chev"></span>
-      </summary>
-      <div class="content">
-
-        <details class="mini" open>
-          <summary>Local-First Principle<span class="mchev"></span></summary>
-          <div class="mc">
-            <span class="tag">Control</span>
-            Outputs remain local until intentionally published.
-          </div>
-        </details>
-
-        <details class="mini">
-          <summary>Measurement Integrity<span class="mchev"></span></summary>
-          <div class="mc">
-            <span class="tag">Standard</span>
-            All gauges follow consistent classification and constraint rules.
-          </div>
-        </details>
-
-        <details class="mini">
-          <summary>Return Protocol<span class="mchev"></span></summary>
-          <div class="mc">
-            <span class="tag">Rule</span>
-            If a page looks unfinished, return to a hub and choose another route.
-          </div>
-        </details>
-
-      </div>
-    </details>
-
-    <!-- W -->
-    <details class="drop">
-      <summary>
-        <div class="hdr">
-          <div class="badge bW">W</div>
-          <div class="titles">
-            <div class="t">Links & Identity</div>
-            <div class="s">External references · Anchors · Contact</div>
-          </div>
-        </div>
-        <span class="chev"></span>
-      </summary>
-      <div class="content">
-
-        <details class="mini" open>
-          <summary>Identity Anchors<span class="mchev"></span></summary>
-          <div class="mc">
-            <div class="kv">
-              <div class="pill"><code>ORCID</code> Researcher identity</div>
-              <div class="pill"><code>OSF</code> Project registry / preprints</div>
-            </div>
-          </div>
-        </details>
-
-        <details class="mini">
-          <summary>Language & Acronyms<span class="mchev"></span></summary>
-          <div class="mc">
-            <span class="tag">SSG</span>
-            Simplified Syntax Geometry + site vocabulary.
-          </div>
-        </details>
-
-        <details class="mini">
-          <summary>Contact<span class="mchev"></span></summary>
-          <div class="mc">
-            <span class="tag">Direct</span>
-            Contact information and external access points live in Links.
-          </div>
-        </details>
-
-      </div>
-    </details>
-
+  <!-- LENS BAR -->
+  <div class="lens-bar">
+    <a class="lens" href="#human">Human</a>
+    <a class="lens" href="#language">Language</a>
+    <a class="lens" href="#energy">Energy</a>
+    <a class="lens" href="#governance">Governance</a>
+    <a class="lens" href="#measurement">Measurement</a>
   </div>
+
+  <!-- HUMAN LENS -->
+  <section id="human" class="lens-section">
+    <h2>Human Lens</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>1,001 Words</h3>
+        <p>Finite lexicon English mastery system.</p>
+      </div>
+      <div class="card">
+        <h3>Four Levels</h3>
+        <p>Structured progression for fluency.</p>
+      </div>
+      <div class="card">
+        <h3>Downloadables</h3>
+        <p>PDFs, drills, lesson plans.</p>
+      </div>
+      <div class="card">
+        <h3>Mandarin Bridge</h3>
+        <p>Common Mandarin integration layer.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANGUAGE LENS -->
+  <section id="language" class="lens-section">
+    <h2>Language Lens</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>SSG</h3>
+        <p>Simplified Syntax Geometry system.</p>
+      </div>
+      <div class="card">
+        <h3>Diamond Grammar</h3>
+        <p>Four-route structural navigation.</p>
+      </div>
+      <div class="card">
+        <h3>DOT.GRID</h3>
+        <p>256-state indexing system.</p>
+      </div>
+      <div class="card">
+        <h3>Acronyms</h3>
+        <p>256 categorized by pillars.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENERGY LENS -->
+  <section id="energy" class="lens-section">
+    <h2>Energy Lens</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Solar → Plasma</h3>
+        <p>Energy conversion modeling.</p>
+      </div>
+      <div class="card">
+        <h3>Execution Surfaces</h3>
+        <p>PLASMA / PLATFORM layers.</p>
+      </div>
+      <div class="card">
+        <h3>Environmental Systems</h3>
+        <p>Measurement + signal architecture.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOVERNANCE LENS -->
+  <section id="governance" class="lens-section">
+    <h2>Governance Lens</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Certification</h3>
+        <p>Business & structural certification tracks.</p>
+      </div>
+      <div class="card">
+        <h3>Integrity</h3>
+        <p>Alignment diagnostic surfaces.</p>
+      </div>
+      <div class="card">
+        <h3>Receipts</h3>
+        <p>Verification & audit layers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEASUREMENT LENS -->
+  <section id="measurement" class="lens-section">
+    <h2>Measurement Lens</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Gauges</h3>
+        <p>Operational instruments.</p>
+      </div>
+      <div class="card">
+        <h3>Diagnostics</h3>
+        <p>Signal-based assessment tools.</p>
+      </div>
+      <div class="card">
+        <h3>Indexing</h3>
+        <p>DOT.GRID categorization.</p>
+      </div>
+    </div>
+  </section>
 
   <hr class="sep"/>
 
-  <!-- NAV DIAMOND (SURFACES) -->
-  <div class="sat">
+  <!-- DIAMOND NAVIGATION -->
+  <div class="root-controls">
     <div class="platform">
 
-      <a class="diamond top" href="/laws/categories/">
+      <a class="diamond top" href="/laws/">
         <span>Laws<small>Categories</small></span>
       </a>
 

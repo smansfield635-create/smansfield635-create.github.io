@@ -4,29 +4,188 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Welcome · Geodiametrics</title>
+
 <link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+/* ==========================================
+   INDEX (LANGUAGE GATE) — CLEAR TNT
+   Purpose: choose language ONCE, then go /door/
+========================================== */
+
+:root{
+  --glass: rgba(255,255,255,.07);
+  --stroke: rgba(255,255,255,.14);
+  --ink: rgba(234,242,246,.92);
+  --muted: rgba(234,242,246,.70);
+  --shadow: rgba(0,0,0,.55);
+}
+
+/* Chinese red/black theme */
+html,body{height:100%;margin:0}
+body{
+  min-height:100vh;
+  color:var(--ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(1100px 760px at 50% 12%, rgba(190,10,18,.55) 0%, rgba(90,10,14,.35) 40%, rgba(6,10,14,1) 100%);
+}
+
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:30px 14px 90px;
+  position:relative;
+}
+
+.card{
+  width:min(640px,94vw);
+  border-radius:28px;
+  background:rgba(0,0,0,.26);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 30px 90px rgba(0,0,0,.70);
+  padding:26px 18px 18px;
+  text-align:center;
+  backdrop-filter:blur(10px);
+}
+
+h1{
+  margin:0;
+  font-size:clamp(44px,9vw,70px);
+  font-weight:900;
+  letter-spacing:.01em;
+}
+
+.sub{
+  margin:12px auto 0;
+  font-size:18px;
+  color:var(--muted);
+  line-height:1.4;
+}
+
+.sub strong{color:var(--ink);}
+
+.btnrow{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:18px;
+}
+
+.langbtn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:18px 14px;
+  border-radius:20px;
+  background:var(--glass);
+  border:1px solid var(--stroke);
+  box-shadow:0 20px 60px rgba(0,0,0,.40);
+  color:var(--ink);
+  text-decoration:none;
+  font-weight:900;
+}
+
+.langbtn:active{
+  transform:translateY(1px);
+}
+
+.langbtn .big{
+  font-size:22px;
+  letter-spacing:.08em;
+}
+
+.langbtn .small{
+  font-size:12px;
+  letter-spacing:.18em;
+  opacity:.70;
+  font-weight:800;
+}
+
+/* Stronger visual “this is clickable” */
+.langbtn{
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.hint{
+  margin:16px auto 0;
+  padding:12px 14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  color:rgba(234,242,246,.78);
+  font-size:14px;
+  line-height:1.45;
+}
+
+.hint b{color:rgba(234,242,246,.92);}
+
+.footer{
+  position:absolute;
+  left:0; right:0;
+  bottom:18px;
+  text-align:center;
+  letter-spacing:3px;
+  font-size:12px;
+  opacity:.55;
+}
+</style>
 </head>
 
-<body class="theme-red">
+<body>
+<div class="shooting-stars"></div>
 
-<div class="page center">
+<div class="page">
+  <div class="card">
+    <h1>Welcome</h1>
+    <div class="sub">
+      Choose your language <strong>once</strong>.<br/>
+      Next: pick depth (Explore / Learn).
+    </div>
 
-  <h1>Welcome</h1>
-  <p>Choose your language.</p>
+    <div class="btnrow">
+      <a class="langbtn" href="/door/" data-lang="en" aria-label="Enter in English">
+        <div class="big">English</div>
+        <div class="small">ENTER</div>
+      </a>
 
-  <div class="gate">
+      <a class="langbtn" href="/door/" data-lang="zh" aria-label="使用中文进入">
+        <div class="big">中文</div>
+        <div class="small">进入</div>
+      </a>
+    </div>
 
-    <a class="gate-btn" href="/door/?lang=en">
-      English
-    </a>
-
-    <a class="gate-btn" href="/door/?lang=zh">
-      中文
-    </a>
-
+    <div class="hint">
+      <b>Explore</b> = quick surface view.<br/>
+      <b>Learn</b> = deep bubble expansion.
+    </div>
   </div>
 
+  <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
 </div>
+
+<script>
+(function(){
+  function setLang(lang){
+    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
+  }
+  document.querySelectorAll("[data-lang]").forEach(a=>{
+    a.addEventListener("click", (e)=>{
+      setLang(a.getAttribute("data-lang") || "en");
+      // allow normal navigation to /door/
+    });
+  });
+})();
+</script>
 
 </body>
 </html>

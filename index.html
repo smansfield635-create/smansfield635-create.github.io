@@ -1,4 +1,10 @@
-<!-- TNT: /index.html (ONE FORK ONLY: LANGUAGE. NO LEARN/SHOP HERE. COMPASS MARKERS ARE DECORATION ONLY.) -->
+<!-- TNT: /index.html
+     ROOT ROUTE HUB (DROPDOWNS = NW/NE/SW/SE) + PLATE (N/E/S/W)
+     - Dropdown rows are QUADRANTS only (NW/NE/SW/SE)
+     - Plate diamonds are CARDINALS only (N/E/S/W)
+     - All dropdowns CLOSED by default
+     - No external dependencies
+-->
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,117 +12,100 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Geodiametrics · Root</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=3000"/>
-<link rel="stylesheet" href="/assets/branch.css?v=3000"/>
+<link rel="stylesheet" href="/assets/ui.css?v=2001"/>
+<link rel="stylesheet" href="/assets/branch.css?v=2001"/>
 
 <style>
-/* ROOT = CHINA THEME (red/black), without changing site routing */
-:root{
-  --china-red-1:#4a0006;
-  --china-red-2:#170003;
-  --china-ink:#05070c;
-  --glass:rgba(255,255,255,.06);
-  --stroke:rgba(255,255,255,.10);
-  --txt:#eaf2f6;
-}
-body{
-  background:
-    radial-gradient(1100px 720px at 50% 18%, rgba(140,0,16,.55) 0%, rgba(0,0,0,0) 60%),
-    radial-gradient(1400px 900px at 50% 18%, var(--china-red-1) 0%, var(--china-red-2) 52%, var(--china-ink) 100%);
-}
+/* ROOT-SPECIFIC (keeps your global ui.css background) */
+.root-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:18px}
+.root-hero{text-align:left}
+.root-hero h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
+.root-hero p{margin:10px 0 0;font-size:20px;opacity:.75}
 
-/* Page */
-.page{padding:44px 16px 72px}
-.h{position:relative;z-index:20;text-align:center;margin-bottom:18px}
-.h h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
-.h p{margin:10px 0 0;font-size:18px;opacity:.75}
+.root-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);box-shadow:0 18px 42px rgba(0,0,0,.35);font-weight:800}
+.pill small{opacity:.75;font-weight:800;letter-spacing:.12em}
+.pill-btn{cursor:pointer;user-select:none}
+.pill-btn:active{transform:translateY(1px)}
 
-/* Selector plate */
-.pick-wrap{
-  width:min(860px,94vw);
-  margin:0 auto;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:16px;
-}
-.pick-plate{
-  width:min(760px,94vw);
-  border-radius:28px;
-  background:rgba(0,0,0,.22);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), 0 28px 80px rgba(0,0,0,.65);
-  padding:16px;
-}
+.sectionTitle{margin-top:4px;font-size:14px;letter-spacing:.16em;font-weight:900;opacity:.75}
 
-/* Compass markers (DECORATION ONLY) */
-.compass{
+/* DROPDOWNS (quadrants) */
+.routeList{display:flex;flex-direction:column;gap:12px}
+.routeRow{
   position:relative;
-  width:100%;
-  height:54px;
-  margin-bottom:8px;
-}
-.cm{
-  position:absolute;
-  width:46px;height:46px;border-radius:999px;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 10px 24px rgba(0,0,0,.55);
-  font-weight:900;
-  opacity:.85;
-  user-select:none;
-  pointer-events:none;
-}
-.cm.n{top:0;left:50%;transform:translateX(-50%)}
-.cm.s{bottom:0;left:50%;transform:translateX(-50%)}
-.cm.w{top:50%;left:0;transform:translateY(-50%)}
-.cm.e{top:50%;right:0;transform:translateY(-50%)}
-.cm.n::after{
-  content:"★";
-  font-size:12px;
-  margin-left:6px;
-  opacity:.9;
-}
-
-/* Language cards (ONLY TWO) */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  display:flex;
+  align-items:center;
   gap:14px;
+  padding:14px 14px;
+  border-radius:20px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 22px 60px rgba(0,0,0,.42);
 }
-@media (max-width:720px){ .grid{grid-template-columns:1fr;} }
+.routeBadge{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:66px;
+  height:44px;
+  padding:0 12px;
+  border-radius:999px;
+  background:rgba(0,0,0,.24);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 12px 28px rgba(0,0,0,.55);
+  font-weight:900;
+  letter-spacing:.10em;
+}
+.routeBadge .ic{font-size:12px;opacity:.9;margin-right:8px}
+.routeBadge .tx{font-size:14px;opacity:.92}
 
-.lang-card{
-  border-radius:22px;
+.routeText{flex:1;min-width:0}
+.routeText .t{font-size:18px;font-weight:900;letter-spacing:.06em}
+.routeText .s{margin-top:4px;font-size:14px;opacity:.72}
+
+.routeToggle{
+  flex:0 0 auto;
+  width:44px;height:44px;border-radius:999px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 44px rgba(0,0,0,.55);
-  padding:18px 16px;
+  box-shadow:0 12px 28px rgba(0,0,0,.38);
+  display:grid;place-items:center;
   cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
 }
-.lang-card:hover{filter:brightness(1.06)}
-.lang-card:active{transform:translateY(1px)}
-.lang-card .t{font-size:22px;font-weight:900}
-.lang-card .s{margin-top:8px;opacity:.75;font-weight:800;letter-spacing:.06em}
-.badge{
-  display:inline-block;
-  margin-left:10px;
-  padding:6px 10px;
-  border-radius:999px;
-  background:rgba(0,0,0,.25);
-  border:1px solid rgba(255,255,255,.10);
-  font-weight:900;
-  font-size:12px;
-  letter-spacing:.14em;
-  opacity:.9;
+.routeToggle::before{
+  content:"▾";
+  font-size:18px;
+  opacity:.85;
+  transform:translateY(-1px);
 }
-.note{
-  margin-top:10px;
-  font-size:14px;
-  opacity:.70;
-  text-align:center;
+.routeRow[aria-expanded="true"] .routeToggle::before{content:"▴"}
+
+.routeBody{
+  display:none;
+  padding:12px 10px 0 10px;
 }
+.routeRow[aria-expanded="true"] .routeBody{display:block}
+
+.routeCard{
+  padding:14px 14px;
+  border-radius:18px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.08);
+}
+.routeCard h3{margin:0 0 10px;font-size:14px;letter-spacing:.14em;font-weight:900;opacity:.86}
+.routeCard ul{margin:0;padding-left:18px;opacity:.88;line-height:1.55}
+.routeCard li{margin:6px 0}
+
+/* PLATE area */
+.plateWrap{margin-top:10px}
+.plateWrap .platform{width:min(420px,88vw)}
+/* push the plate DOWN so headers/subtitles never get covered */
+.plateWrap{padding-top:10px}
+
+/* Footer spacing */
+footer{margin-top:10px}
 </style>
 </head>
 
@@ -124,54 +113,175 @@ body{
 <div class="shooting-stars"></div>
 
 <div class="page">
-  <div class="h">
-    <h1>Geodiametrics</h1>
-    <p>Choose language. One fork. No repeats.</p>
-  </div>
+  <div class="root-wrap">
 
-  <div class="pick-wrap">
-    <div class="pick-plate">
+    <div class="root-hero">
+      <h1>Geodiametrics</h1>
+      <p>Unified structural hub · Quadrant routes (NW/NE/SW/SE) + Cardinal plate (N/E/S/W).</p>
+    </div>
 
-      <div class="compass" aria-hidden="true">
-        <div class="cm n">N</div>
-        <div class="cm e">E</div>
-        <div class="cm s">S</div>
-        <div class="cm w">W</div>
+    <div class="root-toolbar">
+      <div class="pill"><small>LANG</small> <span id="langLabel">EN</span></div>
+      <div class="pill pill-btn" id="langEN"><small>SET</small> EN</div>
+      <div class="pill pill-btn" id="langZH"><small>SET</small> 中文</div>
+      <div class="pill"><small>MODE</small> <span id="modeLabel">LEARN</span></div>
+      <div class="pill pill-btn" id="modeLearn"><small>SET</small> LEARN</div>
+      <div class="pill pill-btn" id="modeShop"><small>SET</small> SHOP</div>
+    </div>
+
+    <div class="sectionTitle">QUADRANT ROUTES (NW / NE / SW / SE)</div>
+
+    <div class="routeList" id="routeList">
+
+      <!-- NW -->
+      <div class="routeRow" data-q="NW" aria-expanded="false">
+        <div class="routeBadge qNW"><span class="ic">✦</span><span class="tx">NW</span></div>
+        <div class="routeText">
+          <div class="t" data-en="NORTHWEST" data-zh="西北">NORTHWEST</div>
+          <div class="s" data-en="Definitions · language · structure" data-zh="定义 · 语言 · 结构">Definitions · language · structure</div>
+        </div>
+        <div class="routeToggle" role="button" tabindex="0" aria-label="Toggle NW"></div>
+        <div class="routeBody">
+          <div class="routeCard">
+            <h3 data-en="WHAT LIVES HERE" data-zh="这里包含">WHAT LIVES HERE</h3>
+            <ul>
+              <li data-en="SSG (Simplified Syntax Geometry)" data-zh="SSG（简化语法几何）">SSG (Simplified Syntax Geometry)</li>
+              <li data-en="Diamond grammar (4 routes, one choice)" data-zh="钻石语法（四路·单选）">Diamond grammar (4 routes, one choice)</li>
+              <li data-en="DOT.GRID (256-state indexing)" data-zh="DOT.GRID（256态索引）">DOT.GRID (256-state indexing)</li>
+              <li data-en="Acronyms & glossary (organized)" data-zh="缩略语与术语表（归类）">Acronyms & glossary (organized)</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
-      <div class="grid" role="group" aria-label="Language selection">
-        <div class="lang-card" data-lang="en">
-          <div class="t">English <span class="badge">EN</span></div>
-          <div class="s">Proceed in English.</div>
+      <!-- NE -->
+      <div class="routeRow" data-q="NE" aria-expanded="false">
+        <div class="routeBadge qNE"><span class="ic">☼</span><span class="tx">NE</span></div>
+        <div class="routeText">
+          <div class="t" data-en="NORTHEAST" data-zh="东北">NORTHEAST</div>
+          <div class="s" data-en="Execution · surfaces · examples" data-zh="执行 · 界面 · 示例">Execution · surfaces · examples</div>
         </div>
-
-        <div class="lang-card" data-lang="zh">
-          <div class="t">中文 <span class="badge">ZH</span></div>
-          <div class="s">使用简体中文进入。</div>
+        <div class="routeToggle" role="button" tabindex="0" aria-label="Toggle NE"></div>
+        <div class="routeBody">
+          <div class="routeCard">
+            <h3 data-en="WHAT LIVES HERE" data-zh="这里包含">WHAT LIVES HERE</h3>
+            <ul>
+              <li data-en="Execution surfaces (apps / portals)" data-zh="执行界面（应用/门户）">Execution surfaces (apps / portals)</li>
+              <li data-en="Workflows & receipts (audit trails)" data-zh="流程与回执（审计链）">Workflows & receipts (audit trails)</li>
+              <li data-en="Examples (how to use the system)" data-zh="示例（如何使用系统）">Examples (how to use the system)</li>
+              <li data-en="Packaged outputs (downloadables)" data-zh="打包输出（可下载）">Packaged outputs (downloadables)</li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      <div class="note">Language is set once here. Switch later only by returning to Root.</div>
+      <!-- SW -->
+      <div class="routeRow" data-q="SW" aria-expanded="false">
+        <div class="routeBadge qSW"><span class="ic">✧</span><span class="tx">SW</span></div>
+        <div class="routeText">
+          <div class="t" data-en="SOUTHWEST" data-zh="西南">SOUTHWEST</div>
+          <div class="s" data-en="Measurement · diagnostics · rules" data-zh="测量 · 诊断 · 规则">Measurement · diagnostics · rules</div>
+        </div>
+        <div class="routeToggle" role="button" tabindex="0" aria-label="Toggle SW"></div>
+        <div class="routeBody">
+          <div class="routeCard">
+            <h3 data-en="WHAT LIVES HERE" data-zh="这里包含">WHAT LIVES HERE</h3>
+            <ul>
+              <li data-en="Gauges (measurement instruments)" data-zh="量表（测量工具）">Gauges (measurement instruments)</li>
+              <li data-en="Diagnostics (classification under constraint)" data-zh="诊断（约束下分类）">Diagnostics (classification under constraint)</li>
+              <li data-en="Rules (navigation + integrity)" data-zh="规则（导航+完整性）">Rules (navigation + integrity)</li>
+              <li data-en="Return protocol (hub-first)" data-zh="返回协议（回到枢纽）">Return protocol (hub-first)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SE -->
+      <div class="routeRow" data-q="SE" aria-expanded="false">
+        <div class="routeBadge qSE"><span class="ic">◍</span><span class="tx">SE</span></div>
+        <div class="routeText">
+          <div class="t" data-en="SOUTHEAST" data-zh="东南">SOUTHEAST</div>
+          <div class="s" data-en="Identity · references · links" data-zh="身份 · 引用 · 链接">Identity · references · links</div>
+        </div>
+        <div class="routeToggle" role="button" tabindex="0" aria-label="Toggle SE"></div>
+        <div class="routeBody">
+          <div class="routeCard">
+            <h3 data-en="WHAT LIVES HERE" data-zh="这里包含">WHAT LIVES HERE</h3>
+            <ul>
+              <li data-en="OSF projects" data-zh="OSF 项目">OSF projects</li>
+              <li data-en="ORCID identity" data-zh="ORCID 身份">ORCID identity</li>
+              <li data-en="Contact & direct channels" data-zh="联系与直达通道">Contact & direct channels</li>
+              <li data-en="External references" data-zh="外部引用">External references</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sectionTitle">CARDINAL PLATE (N / E / S / W)</div>
+
+    <div class="plateWrap">
+      <div class="platform">
+        <a class="diamond top" href="/laws/"><span>N<small data-en="Laws" data-zh="法则">Laws</small></span></a>
+        <a class="diamond right" href="/products/"><span>E<small data-en="Products" data-zh="产品">Products</small></span></a>
+        <a class="diamond bottom" href="/gauges/"><span>S<small data-en="Gauges" data-zh="量表">Gauges</small></span></a>
+        <a class="diamond left" href="/links/"><span>W<small data-en="Links" data-zh="链接">Links</small></span></a>
+
+        <a class="diamond mini mini-left" href="/"><span><small data-en="ROOT" data-zh="根">ROOT</small></span></a>
+        <a class="diamond mini mini-right" href="/rgsc/"><span><small data-en="RGSC" data-zh="RGSC">RGSC</small></span></a>
+      </div>
     </div>
 
     <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
   </div>
 </div>
 
 <script>
 (() => {
+  // --- dropdown toggles ---
+  const rows = [...document.querySelectorAll(".routeRow")];
+  const toggleRow = (row) => {
+    const isOpen = row.getAttribute("aria-expanded") === "true";
+    row.setAttribute("aria-expanded", isOpen ? "false" : "true");
+  };
+  rows.forEach(row => {
+    const btn = row.querySelector(".routeToggle");
+    btn.addEventListener("click", () => toggleRow(row));
+    btn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleRow(row); }
+    });
+  });
+
+  // --- language + mode (local-only, no backend) ---
+  const langLabel = document.getElementById("langLabel");
+  const modeLabel = document.getElementById("modeLabel");
+
   const setLang = (lang) => {
-    try{
-      localStorage.setItem("geo.lang", lang);     // "en" | "zh"
-      localStorage.setItem("geo.lang_set", String(Date.now()));
-    }catch(e){}
-    location.href = "/home/";
+    localStorage.setItem("geo_lang", lang);
+    langLabel.textContent = lang;
+    // swap any data-en/data-zh
+    document.querySelectorAll("[data-en]").forEach(el => {
+      el.textContent = (lang === "中文") ? (el.getAttribute("data-zh") || el.textContent) : (el.getAttribute("data-en") || el.textContent);
+    });
   };
 
-  document.querySelectorAll(".lang-card").forEach(card => {
-    card.addEventListener("click", () => setLang(card.dataset.lang));
-  });
+  const setMode = (mode) => {
+    localStorage.setItem("geo_mode", mode);
+    modeLabel.textContent = mode;
+  };
+
+  document.getElementById("langEN").addEventListener("click", () => setLang("EN"));
+  document.getElementById("langZH").addEventListener("click", () => setLang("中文"));
+  document.getElementById("modeLearn").addEventListener("click", () => setMode("LEARN"));
+  document.getElementById("modeShop").addEventListener("click", () => setMode("SHOP"));
+
+  // init
+  setLang(localStorage.getItem("geo_lang") || "EN");
+  setMode(localStorage.getItem("geo_mode") || "LEARN");
 })();
 </script>
+
 </body>
 </html>

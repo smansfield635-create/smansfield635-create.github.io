@@ -1,163 +1,235 @@
+<!-- ============================
+TNT: /door/index.html
+REPLACE ENTIRE FILE
+Purpose: ONE-TIME depth fork only.
+Reads localStorage.geo_lang (fallback en)
+Sets localStorage.geo_depth = "explore" | "learn" | "try"
+Then routes to /home/
+============================ -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Door</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Door · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=9001"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=2001"/>
 
-<style>
-body{
-  background:
-    radial-gradient(1200px 800px at 50% 0%, rgba(160,20,20,.55) 0%, rgba(40,0,0,.65) 40%, #05070c 100%);
-}
-.panel{
-  width:min(860px,94vw);
-  border-radius:28px;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 26px 70px rgba(0,0,0,.60);
-  padding:24px;
-}
-.modeRow{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-top:14px;
-  margin-bottom:18px;
-}
-.pill{
-  padding:14px 18px;
-  border-radius:999px;
-  font-weight:900;
-  letter-spacing:.06em;
-  cursor:pointer;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.14);
-}
-.pill.active{
-  background:rgba(255,255,255,.18);
-  border-color:rgba(255,255,255,.25);
-}
-.actions{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-top:18px;
-}
-.btn{
-  padding:14px 20px;
-  border-radius:18px;
-  font-weight:900;
-  cursor:pointer;
-  background:rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.14);
-}
-.btn.primary{
-  background:rgba(255,255,255,.18);
-  border-color:rgba(255,255,255,.25);
-}
-.small{
-  opacity:.78;
-  line-height:1.6;
-}
-</style>
+  <style>
+    :root{
+      --bg0:#05070c;
+      --bg1:#24060a;
+      --bg2:#4a0a10;
+      --glass:rgba(255,255,255,.06);
+      --line:rgba(255,255,255,.10);
+      --text:#eaf2f6;
+      --muted:rgba(234,242,246,.70);
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(1200px 800px at 50% 18%, rgba(140,20,30,.55) 0%, rgba(0,0,0,0) 55%),
+        radial-gradient(1200px 900px at 50% 18%, var(--bg2) 0%, var(--bg1) 45%, var(--bg0) 100%);
+      overflow-x:hidden;
+    }
+    .page{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      padding:40px 16px 36px;
+      gap:18px;
+      position:relative;
+      z-index:1;
+    }
+    .hero{
+      width:min(980px,94vw);
+      text-align:left;
+    }
+    .hero h1{
+      margin:0;
+      font-size:clamp(40px,7vw,64px);
+      font-weight:950;
+      letter-spacing:.01em;
+    }
+    .hero p{
+      margin:10px 0 0;
+      font-size:clamp(16px,3.2vw,20px);
+      color:var(--muted);
+      line-height:1.4;
+    }
+    .panel{
+      width:min(980px,94vw);
+      border-radius:26px;
+      background:var(--glass);
+      box-shadow:inset 0 0 0 1px var(--line), 0 28px 90px rgba(0,0,0,.65);
+      padding:18px;
+      backdrop-filter: blur(14px);
+    }
+    .panel h2{
+      margin:0 0 10px;
+      font-size:14px;
+      letter-spacing:.22em;
+      opacity:.85;
+    }
+    .choices{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+    .btn{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      width:100%;
+      border-radius:20px;
+      padding:18px 18px;
+      background:rgba(0,0,0,.22);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      color:var(--text);
+      text-decoration:none;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .btn:active{transform:translateY(1px); filter:brightness(1.05)}
+    .left{display:flex; flex-direction:column; gap:6px;}
+    .title{font-size:20px; font-weight:900; letter-spacing:.04em;}
+    .sub{font-size:14px; color:rgba(234,242,246,.68); line-height:1.35;}
+    .pill{
+      min-width:92px;
+      text-align:center;
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      font-weight:850;
+      letter-spacing:.14em;
+      opacity:.95;
+    }
+    .row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-top:14px;
+      flex-wrap:wrap;
+      color:rgba(234,242,246,.78);
+      font-size:13px;
+      letter-spacing:.08em;
+      opacity:.9;
+    }
+    .tag{
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      font-weight:850;
+      letter-spacing:.14em;
+    }
+    footer{
+      width:min(980px,94vw);
+      margin-top:auto;
+      text-align:center;
+      letter-spacing:3px;
+      font-size:12px;
+      opacity:.55;
+    }
+  </style>
 </head>
 
 <body>
-<div class="shooting-stars"></div>
+  <div class="page">
+    <div class="hero">
+      <h1 id="t1">Door</h1>
+      <p id="t2">Choose how deep you want the hub to be. You can change this later.</p>
+    </div>
 
-<div class="page">
-  <div class="h" id="hdr">
-    <h1 id="tDoor">Door</h1>
-    <p id="tSub">Choose how deep you want to go.</p>
+    <div class="panel">
+      <h2 id="t3">DEPTH · ONE TIME</h2>
+
+      <div class="choices">
+        <a class="btn" href="/home/" data-depth="explore">
+          <div class="left">
+            <div class="title" id="d1">Explore</div>
+            <div class="sub" id="d1s">Surface scan. Quick orientation. Minimal expansion.</div>
+          </div>
+          <div class="pill" id="p1">EXPLORE</div>
+        </a>
+
+        <a class="btn" href="/home/" data-depth="learn">
+          <div class="left">
+            <div class="title" id="d2">Learn</div>
+            <div class="sub" id="d2s">Deep breakdown. Bubble trees. Full detail.</div>
+          </div>
+          <div class="pill" id="p2">LEARN</div>
+        </a>
+
+        <a class="btn" href="/home/" data-depth="try">
+          <div class="left">
+            <div class="title" id="d3">Try</div>
+            <div class="sub" id="d3s">Jump into live surfaces and working portals.</div>
+          </div>
+          <div class="pill" id="p3">TRY</div>
+        </a>
+      </div>
+
+      <div class="row">
+        <div id="langLabel">LANG:</div>
+        <div class="tag" id="langTag">EN</div>
+      </div>
+    </div>
+
+    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
   </div>
 
-  <div class="panel">
-    <div class="small" id="tExpl">
-      Depth controls whether you see quick summaries (Shop) or expanded detail (Learn).
-    </div>
+  <script>
+    (function(){
+      function getLang(){
+        try{
+          return localStorage.getItem('geo_lang') || 'en';
+        }catch(_){
+          return 'en';
+        }
+      }
 
-    <div class="modeRow">
-      <div class="pill" id="shopBtn">Shop</div>
-      <div class="pill" id="learnBtn">Learn</div>
-    </div>
+      function setTextZH(){
+        document.documentElement.lang = "zh";
+        document.getElementById('t1').textContent = "入口";
+        document.getElementById('t2').textContent = "选择你要看的深度。你可以之后再切换。";
+        document.getElementById('t3').textContent = "深度 · 一次选择";
 
-    <div class="small" id="tDesc"></div>
+        document.getElementById('d1').textContent = "浏览";
+        document.getElementById('d1s').textContent = "快速概览。最少展开。";
+        document.getElementById('p1').textContent = "BROWSE";
 
-    <div class="actions">
-      <div class="btn primary" id="enterBtn">Enter</div>
-      <div class="btn" id="backBtn">Back</div>
-    </div>
-  </div>
+        document.getElementById('d2').textContent = "学习";
+        document.getElementById('d2s').textContent = "深度拆解。多层气泡树。";
+        document.getElementById('p2').textContent = "LEARN";
 
-  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-</div>
+        document.getElementById('d3').textContent = "试用";
+        document.getElementById('d3s').textContent = "直接进入可用界面与入口。";
+        document.getElementById('p3').textContent = "TRY";
 
-<script>
-(function(){
-  const lang = localStorage.getItem("GD_LANG") || "en";   // set on /index.html
-  const T = {
-    en:{
-      door:"Door",
-      sub:"Choose how deep you want to go.",
-      expl:"Depth controls whether you see quick summaries (Shop) or expanded detail (Learn).",
-      shop:"Shop",
-      learn:"Learn",
-      shopDesc:"Shop: surface view · quick browse · entry points.",
-      learnDesc:"Learn: deep view · full breakdown · nested detail.",
-      enter:"Enter",
-      back:"Back"
-    },
-    zh:{
-      door:"入口",
-      sub:"选择你想要的深度。",
-      expl:"深度决定你看到的是快速概览（浏览）还是深入细节（学习）。",
-      shop:"浏览",
-      learn:"学习",
-      shopDesc:"浏览：表层视图 · 快速查看 · 入口点。",
-      learnDesc:"学习：深度视图 · 完整拆解 · 多层细节。",
-      enter:"进入",
-      back:"返回"
-    }
-  }[lang];
+        document.getElementById('langLabel').textContent = "语言:";
+        document.getElementById('langTag').textContent = "中文";
+      }
 
-  // Apply language once, everywhere
-  document.documentElement.lang = (lang === "zh") ? "zh-CN" : "en";
-  document.title = T.door;
+      const lang = getLang();
+      if(lang === 'zh') setTextZH();
 
-  document.getElementById("tDoor").textContent = T.door;
-  document.getElementById("tSub").textContent = T.sub;
-  document.getElementById("tExpl").textContent = T.expl;
-
-  const shopBtn = document.getElementById("shopBtn");
-  const learnBtn = document.getElementById("learnBtn");
-  const desc = document.getElementById("tDesc");
-  const enterBtn = document.getElementById("enterBtn");
-  const backBtn = document.getElementById("backBtn");
-
-  shopBtn.textContent = T.shop;
-  learnBtn.textContent = T.learn;
-  enterBtn.textContent = T.enter;
-  backBtn.textContent = T.back;
-
-  let depth = localStorage.getItem("GD_DEPTH") || "shop";
-  function render(){
-    shopBtn.classList.toggle("active", depth === "shop");
-    learnBtn.classList.toggle("active", depth === "learn");
-    desc.textContent = (depth === "shop") ? T.shopDesc : T.learnDesc;
-    localStorage.setItem("GD_DEPTH", depth);
-  }
-  shopBtn.onclick = () => { depth = "shop"; render(); };
-  learnBtn.onclick = () => { depth = "learn"; render(); };
-
-  enterBtn.onclick = () => { window.location.href = "/home/"; };
-  backBtn.onclick = () => { window.location.href = "/"; };
-
-  render();
-})();
-</script>
-
+      const links = document.querySelectorAll('[data-depth]');
+      links.forEach(a=>{
+        a.addEventListener('click', ()=>{
+          const depth = a.getAttribute('data-depth');
+          try{ localStorage.setItem('geo_depth', depth); }catch(_){}
+        }, {passive:true});
+      });
+    })();
+  </script>
 </body>
 </html>

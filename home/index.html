@@ -5,22 +5,30 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Home · Geodiametrics</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=8000"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=8000"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=9000"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=9000"/>
 
   <style>
+    /* =====================================================
+       HOME HUB (NW/NE/SW/SE) + CARDINAL PLATE (N/E/S/W)
+       TNT FULL FILE
+    ===================================================== */
+
     body{
       background:
-        radial-gradient(1400px 900px at 50% 12%, rgba(150,0,0,.40) 0%, rgba(20,0,0,.22) 40%, rgba(5,7,12,1) 100%),
+        radial-gradient(1400px 900px at 50% 12%, rgba(150,0,0,.40) 0%, rgba(20,0,0,.22) 42%, rgba(5,7,12,1) 100%),
         radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
     }
 
+    .page{padding:40px 16px 88px}
+
     .wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
-    .hero{position:relative;z-index:10}
-    .hero h1{font-size:clamp(44px,7vw,72px);margin:0;font-weight:900}
+
+    .hero{position:relative;z-index:20;text-align:left}
+    .hero h1{font-size:clamp(44px,7vw,72px);margin:0;font-weight:900;letter-spacing:-.01em}
     .hero p{margin:10px 0 0;opacity:.78;font-size:18px}
 
-    .topbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .topbar{position:relative;z-index:20;display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
     .pill{
       border-radius:999px;
       padding:10px 14px;
@@ -30,22 +38,29 @@
       letter-spacing:.10em;
       text-transform:uppercase;
       font-size:12px;
-      opacity:.9;
+      opacity:.92;
+      color:inherit;
+      text-decoration:none;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
     }
-    .pill.btn{cursor:pointer;text-decoration:none;color:inherit}
+    .pill.btn{cursor:pointer}
     .pill.btn:hover{background:rgba(255,255,255,.08)}
-    .pill.active{background:rgba(255,255,255,.10);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
+    .pill.active{background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
+    .pill.group{display:flex;gap:8px;align-items:center}
+    .pill.group .label{opacity:.72;font-weight:900;letter-spacing:.14em}
+    .pill.group .mini{padding:10px 12px}
 
     .section-title{
       margin-top:10px;
       font-weight:900;
       letter-spacing:.18em;
-      opacity:.7;
+      opacity:.72;
       font-size:12px;
       text-transform:uppercase;
     }
 
-    /* Quadrant cards */
+    /* ---------- Quadrant cards ---------- */
     details.quad{
       border-radius:22px;
       background:rgba(255,255,255,.05);
@@ -69,15 +84,16 @@
 
     .q-left{display:flex;align-items:center;gap:12px;min-width:0}
     .q-badge{
-      width:56px;height:40px;border-radius:16px;
+      width:64px;height:44px;border-radius:18px;
       background:rgba(150,0,0,.22);
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
       display:flex;align-items:center;justify-content:center;
-      font-weight:900;letter-spacing:.10em;
+      font-weight:900;letter-spacing:.12em;
       flex:0 0 auto;
     }
+    .q-badge .sym{opacity:.9;margin-right:6px}
     .q-text{min-width:0}
-    .q-text b{display:block;font-size:18px;letter-spacing:.12em}
+    .q-text b{display:block;font-size:18px;letter-spacing:.14em;text-transform:uppercase}
     .q-text span{display:block;opacity:.72;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .q-arrow{
       width:42px;height:42px;border-radius:999px;
@@ -86,535 +102,788 @@
       display:flex;align-items:center;justify-content:center;
       opacity:.9;
       flex:0 0 auto;
+      font-weight:900;
     }
 
     .inside{padding:0 16px 16px}
-    .grid2{display:grid;grid-template-columns:1fr;gap:10px}
-    @media(min-width:720px){.grid2{grid-template-columns:1fr 1fr}}
 
-    /* Primary bubbles */
-    details.bubble{
+    /* ---------- Bubble inside quadrant ---------- */
+    .bubble-row{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:4px;
+    }
+    @media(min-width:720px){.bubble-row{grid-template-columns:1fr 1fr}}
+
+    .bubble-btn{
       border-radius:18px;
-      background:rgba(0,0,0,.20);
+      background:rgba(0,0,0,.22);
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
       padding:12px 12px;
-    }
-    details.bubble summary{
-      padding:10px 10px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
+      gap:12px;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
     }
-    details.bubble summary b{font-size:14px;letter-spacing:.12em;text-transform:uppercase}
-    details.bubble summary i{opacity:.7;font-style:normal}
-
-    details.bubble ul{margin:10px 0 0 18px;opacity:.90;line-height:1.55}
-
-    /* Nested sub-bubbles (learn only) */
-    .subgrid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
-    details.subbubble{
-      border-radius:16px;
-      background:rgba(255,255,255,.05);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-      padding:10px 10px;
+    .bubble-btn .t{min-width:0}
+    .bubble-btn b{
+      display:block;
+      font-size:13px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
-    details.subbubble summary{padding:8px 8px}
-    details.subbubble summary b{font-size:12px;letter-spacing:.14em;text-transform:uppercase}
-    details.subbubble ul{margin:8px 0 0 18px;opacity:.88}
-
-    /* Jump row always last */
-    .jump-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .jump{
-      border-radius:18px;
-      padding:12px 14px;
-      background:rgba(255,255,255,.08);
+    .bubble-btn i{
+      display:block;
+      font-style:normal;
+      opacity:.72;
+      font-size:12px;
+      margin-top:2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .bubble-btn .go{
+      width:40px;height:40px;border-radius:999px;
+      background:rgba(255,255,255,.06);
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      display:flex;align-items:center;justify-content:center;
+      opacity:.9;
+      flex:0 0 auto;
       font-weight:900;
+    }
+    .bubble-btn:hover{background:rgba(0,0,0,.28)}
+
+    /* ---------- Block map (bubble -> block -> sub-bubbles) ---------- */
+    .blockmap{
+      margin-top:12px;
+      border-radius:20px;
+      background:rgba(255,255,255,.04);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+      padding:14px 14px;
+    }
+    .blockmap .bm-title{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin-bottom:10px;
+    }
+    .blockmap .bm-title b{
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      opacity:.85;
+    }
+    .blockmap .bm-title span{
+      font-size:12px;opacity:.65;letter-spacing:.10em;text-transform:uppercase;
+    }
+
+    .block{
+      display:none;
+      border-radius:18px;
+      background:rgba(0,0,0,.22);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+      padding:14px 14px;
+    }
+    .block.active{display:block}
+
+    .block h3{
+      margin:0;
+      font-size:16px;
       letter-spacing:.10em;
       text-transform:uppercase;
-      font-size:12px;
-      text-decoration:none;
-      color:#eaf2f6;
     }
-    .jump:hover{background:rgba(255,255,255,.10)}
-    .muted{opacity:.72}
+    .block p{
+      margin:10px 0 0;
+      opacity:.78;
+      line-height:1.55;
+    }
 
-    .plate-wrap{margin-top:10px}
-    .plate-note{opacity:.65;font-size:12px;letter-spacing:.18em;text-transform:uppercase;text-align:center;margin:10px 0 0}
-    .footer{margin-top:18px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px;position:relative;z-index:10}
+    .subgrid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:12px;
+    }
+    @media(min-width:720px){.subgrid{grid-template-columns:1fr 1fr}}
+
+    details.sub{
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+    details.sub summary{
+      list-style:none;
+      cursor:pointer;
+      padding:12px 12px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      -webkit-tap-highlight-color:transparent;
+    }
+    details.sub summary::-webkit-details-marker{display:none}
+    details.sub summary b{
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    details.sub summary span{
+      opacity:.7;
+      font-size:12px;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .sub .content{
+      padding:0 12px 12px;
+      opacity:.82;
+      line-height:1.55;
+      font-size:14px;
+    }
+    .sub .content ul{margin:10px 0 0 18px}
+    .sub .content li{margin:6px 0}
+
+    .jump-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .jump{
+      border-radius:999px;
+      padding:12px 16px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-size:12px;
+      color:inherit;
+      text-decoration:none;
+    }
+    .jump:hover{background:rgba(255,255,255,.08)}
+
+    /* ---------- Depth gating ---------- */
+    body[data-depth="shop"] .deep{display:none!important}
+    body[data-depth="learn"] .surface{display:none!important}
+
+    /* ---------- Cardinal plate section ---------- */
+    .plate-wrap{
+      margin-top:16px;
+      position:relative;
+      z-index:2;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+    }
+    .plate-title{
+      width:min(980px,94vw);
+      margin:0 auto;
+      font-weight:900;
+      letter-spacing:.18em;
+      opacity:.72;
+      font-size:12px;
+      text-transform:uppercase;
+      text-align:center;
+    }
+
+    /* Make branch.css platform sit under header correctly */
+    .stage{z-index:2}
+    footer{position:relative;z-index:20;margin-top:18px}
+
+    /* Ensure subtitles are always above plate/overlays */
+    .hero p, .section-title, .topbar{position:relative;z-index:20}
+
+    /* Minor: platform a little smaller on this page */
+    .platform{width:min(420px,88vw)}
   </style>
 </head>
 
-<body>
-<div class="shooting-stars"></div>
+<body data-lang="en" data-depth="learn">
+  <div class="shooting-stars"></div>
 
-<div class="page">
-  <div class="wrap">
+  <div class="page">
+    <div class="wrap">
 
-    <div class="hero">
-      <h1 id="t_title">Home</h1>
-      <p id="t_sub">Expand bubbles first. Jump later.</p>
+      <div class="hero">
+        <h1 data-en="Geodiametrics" data-zh="几何度量">Geodiametrics</h1>
+        <p data-en="Unified structural hub. Choose a quadrant route (NW/NE/SW/SE) or jump by cardinal plate (N/E/S/W)."
+           data-zh="统一结构枢纽。选择象限路线（NW/NE/SW/SE），或用主罗盘板（N/E/S/W）跳转。">
+          Unified structural hub. Choose a quadrant route (NW/NE/SW/SE) or jump by cardinal plate (N/E/S/W).
+        </p>
 
-      <div class="topbar">
-        <div class="pill" id="t_lang">LANG: —</div>
-        <div class="pill" id="t_depth">DEPTH: —</div>
-        <a class="pill btn" href="/door/" id="t_change">DOOR</a>
-      </div>
-    </div>
+        <div class="topbar">
+          <span class="pill group">
+            <span class="label" data-en="LANG" data-zh="语言">LANG</span>
+            <button class="pill mini btn active" type="button" data-lang-set="en">EN</button>
+            <button class="pill mini btn" type="button" data-lang-set="zh">中文</button>
+          </span>
 
-    <div class="section-title" id="t_quads">Quadrant routes (NW / NE / SW / SE)</div>
+          <span class="pill group">
+            <span class="label" data-en="DEPTH" data-zh="深度">DEPTH</span>
+            <button class="pill mini btn" type="button" data-depth-set="shop" data-en="SHOP" data-zh="概览">SHOP</button>
+            <button class="pill mini btn active" type="button" data-depth-set="learn" data-en="LEARN" data-zh="深挖">LEARN</button>
+          </span>
 
-    <!-- NW -->
-    <details class="quad" id="q_nw">
-      <summary>
-        <div class="q-left">
-          <div class="q-badge">NW</div>
-          <div class="q-text">
-            <b id="nw_title">NORTHWEST</b>
-            <span id="nw_sub" class="muted">Definitions · language · structure</span>
-          </div>
-        </div>
-        <div class="q-arrow">▼</div>
-      </summary>
-      <div class="inside" id="nw_inside"></div>
-    </details>
-
-    <!-- NE -->
-    <details class="quad" id="q_ne">
-      <summary>
-        <div class="q-left">
-          <div class="q-badge">NE</div>
-          <div class="q-text">
-            <b id="ne_title">NORTHEAST</b>
-            <span id="ne_sub" class="muted">Execution · surfaces · examples</span>
-          </div>
-        </div>
-        <div class="q-arrow">▼</div>
-      </summary>
-      <div class="inside" id="ne_inside"></div>
-    </details>
-
-    <!-- SW -->
-    <details class="quad" id="q_sw">
-      <summary>
-        <div class="q-left">
-          <div class="q-badge">SW</div>
-          <div class="q-text">
-            <b id="sw_title">SOUTHWEST</b>
-            <span id="sw_sub" class="muted">Measurement · diagnostics · rules</span>
-          </div>
-        </div>
-        <div class="q-arrow">▼</div>
-      </summary>
-      <div class="inside" id="sw_inside"></div>
-    </details>
-
-    <!-- SE -->
-    <details class="quad" id="q_se">
-      <summary>
-        <div class="q-left">
-          <div class="q-badge">SE</div>
-          <div class="q-text">
-            <b id="se_title">SOUTHEAST</b>
-            <span id="se_sub" class="muted">Identity · references · links</span>
-          </div>
-        </div>
-        <div class="q-arrow">▼</div>
-      </summary>
-      <div class="inside" id="se_inside"></div>
-    </details>
-
-    <div class="section-title" id="t_plate">Cardinal plate (N / E / S / W)</div>
-
-    <div class="plate-wrap">
-      <div class="stage">
-        <div class="platform">
-          <a class="diamond top" href="/laws/"><span>N<small id="t_nsmall">Laws</small></span></a>
-          <a class="diamond right" href="/products/"><span>E<small id="t_esmall">Products</small></span></a>
-          <a class="diamond bottom" href="/gauges/"><span>S<small id="t_ssmall">Gauges</small></span></a>
-          <a class="diamond left" href="/links/"><span>W<small id="t_wsmall">Links</small></span></a>
-
-          <a class="diamond mini mini-left" href="/"><span><small id="t_root">ROOT</small></span></a>
-          <a class="diamond mini mini-right" href="/rgsc/"><span><small id="t_rgsc">RGSC</small></span></a>
+          <a class="pill btn" href="/" data-en="ROOT" data-zh="根">ROOT</a>
+          <a class="pill btn" href="/rgsc/" data-en="RGSC" data-zh="RGSC">RGSC</a>
         </div>
       </div>
 
-      <div class="plate-note" id="t_note">Plate jumps into the site. Quadrants explain meaning.</div>
+      <div class="section-title" data-en="Quadrant Routes (NW / NE / SW / SE)" data-zh="象限路线（NW / NE / SW / SE）">
+        Quadrant Routes (NW / NE / SW / SE)
+      </div>
+
+      <!-- ===================== NW ===================== -->
+      <details class="quad" open>
+        <summary>
+          <div class="q-left">
+            <div class="q-badge"><span class="sym">⭐</span><span>NW</span></div>
+            <div class="q-text">
+              <b data-en="Northwest" data-zh="西北">Northwest</b>
+              <span data-en="Definitions · language · structure" data-zh="定义 · 语言 · 结构">Definitions · language · structure</span>
+            </div>
+          </div>
+          <div class="q-arrow">▾</div>
+        </summary>
+
+        <div class="inside">
+          <div class="bubble-row">
+            <div class="bubble-btn" data-block="nw-ssg">
+              <div class="t">
+                <b data-en="SSG" data-zh="SSG">SSG</b>
+                <i class="surface" data-en="Constraint language for structure + state." data-zh="用于结构与状态的约束语言。">Constraint language for structure + state.</i>
+                <i class="deep" data-en="Resources · Stores · Constraints · Goals · Guards." data-zh="资源·存储·约束·目标·守卫。">Resources · Stores · Constraints · Goals · Guards.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+
+            <div class="bubble-btn" data-block="nw-gram">
+              <div class="t">
+                <b data-en="Diamond Grammar" data-zh="菱形语法">Diamond Grammar</b>
+                <i class="surface" data-en="Four routes, one choice at a time." data-zh="四路一选。">Four routes, one choice at a time.</i>
+                <i class="deep" data-en="Navigation-first invariants + receipt-gated advancement." data-zh="导航优先不变式 + 回执门控推进。">Navigation-first invariants + receipt-gated advancement.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+
+            <div class="bubble-btn" data-block="nw-dot">
+              <div class="t">
+                <b data-en="DOT.GRID" data-zh="DOT.GRID">DOT.GRID</b>
+                <i class="surface" data-en="256-state indexing system." data-zh="256状态索引。">256-state indexing system.</i>
+                <i class="deep" data-en="Replayable evidence streams + state-class audit." data-zh="可回放证据流 + 状态审计。">Replayable evidence streams + state-class audit.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+
+            <div class="bubble-btn" data-block="nw-abc">
+              <div class="t">
+                <b data-en="Acronyms & Glossary" data-zh="缩写与词汇">Acronyms & Glossary</b>
+                <i class="surface" data-en="Key terms, consistently defined." data-zh="一致定义关键术语。">Key terms, consistently defined.</i>
+                <i class="deep" data-en="Pillar-indexed acronym map + usage notes." data-zh="按支柱索引的缩写图谱 + 用法说明。">Pillar-indexed acronym map + usage notes.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+          </div>
+
+          <div class="blockmap">
+            <div class="bm-title">
+              <b data-en="Block Map" data-zh="信息块">Block Map</b>
+              <span data-en="Tap a bubble to load details" data-zh="点气泡加载详情">Tap a bubble to load details</span>
+            </div>
+
+            <div class="block active" id="nw-ssg">
+              <h3 data-en="SSG — Simplified Syntax Geometry" data-zh="SSG — 简化语法几何">SSG — Simplified Syntax Geometry</h3>
+              <p class="surface" data-en="Surface: a compact constraint language for describing systems."
+                 data-zh="概览：用于描述系统的紧凑约束语言。">Surface: a compact constraint language for describing systems.</p>
+              <p class="deep" data-en="Deep: express app behavior via Resources, Stores, Constraints, Goals, Guards; enforce receipt-gated advancement and replay-safe execution."
+                 data-zh="深挖：用资源/存储/约束/目标/守卫表达行为；回执门控推进；可回放执行。">Deep: express app behavior via Resources, Stores, Constraints, Goals, Guards; enforce receipt-gated advancement and replay-safe execution.</p>
+
+              <div class="subgrid deep">
+                <details class="sub">
+                  <summary><b data-en="Primitives" data-zh="原语">Primitives</b><span data-en="R/S/C/G/G" data-zh="资/存/约/目/守">R/S/C/G/G</span></summary>
+                  <div class="content">
+                    <ul>
+                      <li data-en="Resource: what is acted on" data-zh="资源：被作用对象">Resource: what is acted on</li>
+                      <li data-en="Store: where state lives" data-zh="存储：状态所在">Store: where state lives</li>
+                      <li data-en="Constraint: invariants" data-zh="约束：不变式">Constraint: invariants</li>
+                      <li data-en="Goal: success condition" data-zh="目标：成功条件">Goal: success condition</li>
+                      <li data-en="Guard: admissibility check" data-zh="守卫：可采纳性检查">Guard: admissibility check</li>
+                    </ul>
+                  </div>
+                </details>
+
+                <details class="sub">
+                  <summary><b data-en="Receipts" data-zh="回执">Receipts</b><span data-en="gated flow" data-zh="门控流">gated flow</span></summary>
+                  <div class="content">
+                    <ul>
+                      <li data-en="Advance only after receipt" data-zh="仅在回执后推进">Advance only after receipt</li>
+                      <li data-en="Back-nav invalidates downstream receipts" data-zh="后退使下游回执失效">Back-nav invalidates downstream receipts</li>
+                    </ul>
+                  </div>
+                </details>
+              </div>
+
+              <div class="jump-row">
+                <a class="jump" href="/laws/" data-en="JUMP · LAWS" data-zh="跳转·法律">JUMP · LAWS</a>
+                <a class="jump" href="/laws/categories/" data-en="JUMP · CATEGORIES" data-zh="跳转·分类">JUMP · CATEGORIES</a>
+              </div>
+            </div>
+
+            <div class="block" id="nw-gram">
+              <h3 data-en="Diamond Grammar — Navigation" data-zh="菱形语法 — 导航">Diamond Grammar — Navigation</h3>
+              <p class="surface" data-en="Surface: four routes, one choice at a time."
+                 data-zh="概览：四路一选。">Surface: four routes, one choice at a time.</p>
+              <p class="deep" data-en="Deep: hub-first traversal; return-to-hub is the default recovery; avoid multi-tab inside a branch."
+                 data-zh="深挖：枢纽优先；默认回到枢纽恢复；避免分支内多标签。">Deep: hub-first traversal; return-to-hub is the default recovery; avoid multi-tab inside a branch.</p>
+
+              <div class="subgrid deep">
+                <details class="sub">
+                  <summary><b data-en="Rule of One Choice" data-zh="一选规则">Rule of One Choice</b><span data-en="no drift" data-zh="不漂移">no drift</span></summary>
+                  <div class="content">
+                    <ul>
+                      <li data-en="Choose one route; finish or return" data-zh="选一路；完成或返回">Choose one route; finish or return</li>
+                      <li data-en="Do not stack unresolved branches" data-zh="不叠加未解决分支">Do not stack unresolved branches</li>
+                    </ul>
+                  </div>
+                </details>
+              </div>
+
+              <div class="jump-row">
+                <a class="jump" href="/home/" data-en="JUMP · HOME" data-zh="跳转·主页">JUMP · HOME</a>
+              </div>
+            </div>
+
+            <div class="block" id="nw-dot">
+              <h3 data-en="DOT.GRID — 256-state Indexing" data-zh="DOT.GRID — 256状态索引">DOT.GRID — 256-state Indexing</h3>
+              <p class="surface" data-en="Surface: label evidence with a state for audit and replay."
+                 data-zh="概览：用状态标注证据以审计与回放。">Surface: label evidence with a state for audit and replay.</p>
+              <p class="deep" data-en="Deep: sweep a replayable evidence stream across a full state lattice to measure stability under constraint."
+                 data-zh="深挖：对可回放证据流做全格点扫描，测量约束下稳定性。">Deep: sweep a replayable evidence stream across a full state lattice to measure stability under constraint.</p>
+
+              <div class="jump-row">
+                <a class="jump" href="/rgsc/" data-en="JUMP · RGSC" data-zh="跳转·RGSC">JUMP · RGSC</a>
+              </div>
+            </div>
+
+            <div class="block" id="nw-abc">
+              <h3 data-en="Acronyms & Glossary" data-zh="缩写与词汇">Acronyms & Glossary</h3>
+              <p class="surface" data-en="Surface: quick definitions for navigation."
+                 data-zh="概览：用于导航的快速定义。">Surface: quick definitions for navigation.</p>
+              <p class="deep" data-en="Deep: categorized acronym sets by pillar; each entry includes definition, scope, and usage."
+                 data-zh="深挖：按支柱分类缩写；含定义/范围/用法。">Deep: categorized acronym sets by pillar; each entry includes definition, scope, and usage.</p>
+
+              <div class="subgrid deep">
+                <details class="sub">
+                  <summary><b data-en="Examples" data-zh="示例">Examples</b><span data-en="ORCID / OSF / SSG" data-zh="ORCID / OSF / SSG">ORCID / OSF / SSG</span></summary>
+                  <div class="content">
+                    <ul>
+                      <li data-en="ORCID: researcher identity" data-zh="ORCID：研究者身份">ORCID: researcher identity</li>
+                      <li data-en="OSF: project registry / preprints" data-zh="OSF：项目注册/预印本">OSF: project registry / preprints</li>
+                      <li data-en="SSG: constraint language system" data-zh="SSG：约束语言系统">SSG: constraint language system</li>
+                    </ul>
+                  </div>
+                </details>
+              </div>
+
+              <div class="jump-row">
+                <a class="jump" href="/links/" data-en="JUMP · LINKS" data-zh="跳转·链接">JUMP · LINKS</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- ===================== NE ===================== -->
+      <details class="quad">
+        <summary>
+          <div class="q-left">
+            <div class="q-badge"><span class="sym">☀️</span><span>NE</span></div>
+            <div class="q-text">
+              <b data-en="Northeast" data-zh="东北">Northeast</b>
+              <span data-en="Execution · surfaces · examples" data-zh="执行 · 界面 · 示例">Execution · surfaces · examples</span>
+            </div>
+          </div>
+          <div class="q-arrow">▾</div>
+        </summary>
+
+        <div class="inside">
+          <div class="bubble-row">
+            <div class="bubble-btn" data-block="ne-surfaces">
+              <div class="t">
+                <b data-en="Execution Surfaces" data-zh="执行界面">Execution Surfaces</b>
+                <i class="surface" data-en="Apps / portals entry points." data-zh="应用/门户入口。">Apps / portals entry points.</i>
+                <i class="deep" data-en="PLASMA / PLATFORM layers; workflows + receipts." data-zh="PLASMA/PLATFORM层；流程+回执。">PLASMA / PLATFORM layers; workflows + receipts.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+
+            <div class="bubble-btn" data-block="ne-examples">
+              <div class="t">
+                <b data-en="Examples" data-zh="示例">Examples</b>
+                <i class="surface" data-en="How to use the system." data-zh="如何使用系统。">How to use the system.</i>
+                <i class="deep" data-en="Guided paths; replay + verify." data-zh="引导路径；回放+验证。">Guided paths; replay + verify.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+
+            <div class="bubble-btn" data-block="ne-pack">
+              <div class="t">
+                <b data-en="Packaged Outputs" data-zh="打包输出">Packaged Outputs</b>
+                <i class="surface" data-en="Downloadables." data-zh="可下载。">Downloadables.</i>
+                <i class="deep" data-en="PDFs, drills, templates, datasets." data-zh="PDF、练习、模板、数据集。">PDFs, drills, templates, datasets.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+
+            <div class="bubble-btn" data-block="ne-rgsc">
+              <div class="t">
+                <b data-en="RGSC" data-zh="RGSC">RGSC</b>
+                <i class="surface" data-en="Receipts, verify, replay." data-zh="回执、验证、回放。">Receipts, verify, replay.</i>
+                <i class="deep" data-en="Audit trails + admissibility control." data-zh="审计轨迹 + 可采纳控制。">Audit trails + admissibility control.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+          </div>
+
+          <div class="blockmap">
+            <div class="bm-title">
+              <b data-en="Block Map" data-zh="信息块">Block Map</b>
+              <span data-en="Tap a bubble to load details" data-zh="点气泡加载详情">Tap a bubble to load details</span>
+            </div>
+
+            <div class="block active" id="ne-surfaces">
+              <h3 data-en="Execution Surfaces" data-zh="执行界面">Execution Surfaces</h3>
+              <p class="surface" data-en="Surface: jump into a product or portal."
+                 data-zh="概览：跳转到产品或门户。">Surface: jump into a product or portal.</p>
+              <p class="deep" data-en="Deep: surfaces are receipt-aware; each action emits a receipt token for replay and verification."
+                 data-zh="深挖：界面具回执意识；每次动作产生回执令牌用于回放与验证。">Deep: surfaces are receipt-aware; each action emits a receipt token for replay and verification.</p>
+
+              <div class="jump-row">
+                <a class="jump" href="/products/" data-en="JUMP · PRODUCTS" data-zh="跳转·产品">JUMP · PRODUCTS</a>
+                <a class="jump" href="/rgsc/" data-en="JUMP · RGSC" data-zh="跳转·RGSC">JUMP · RGSC</a>
+              </div>
+            </div>
+
+            <div class="block" id="ne-examples">
+              <h3 data-en="Examples" data-zh="示例">Examples</h3>
+              <p class="surface" data-en="Surface: short example paths."
+                 data-zh="概览：短路径示例。">Surface: short example paths.</p>
+              <p class="deep" data-en="Deep: step-by-step traces; each step has a receipt; replay validates the same classification from the same evidence."
+                 data-zh="深挖：逐步轨迹；每步回执；回放用同证据得到同分类。">Deep: step-by-step traces; each step has a receipt; replay validates the same classification from the same evidence.</p>
+            </div>
+
+            <div class="block" id="ne-pack">
+              <h3 data-en="Packaged Outputs" data-zh="打包输出">Packaged Outputs</h3>
+              <p class="surface" data-en="Surface: downloadable material."
+                 data-zh="概览：可下载材料。">Surface: downloadable material.</p>
+              <p class="deep" data-en="Deep: structured packs by route; each pack includes a map, definitions, and a replay protocol."
+                 data-zh="深挖：按路线打包；含地图/定义/回放协议。">Deep: structured packs by route; each pack includes a map, definitions, and a replay protocol.</p>
+            </div>
+
+            <div class="block" id="ne-rgsc">
+              <h3 data-en="RGSC — Receipt Governance" data-zh="RGSC — 回执治理">RGSC — Receipt Governance</h3>
+              <p class="surface" data-en="Surface: verify what happened."
+                 data-zh="概览：验证发生了什么。">Surface: verify what happened.</p>
+              <p class="deep" data-en="Deep: receipts encode admissibility and allow audit replay; governance is enforced at transitions."
+                 data-zh="深挖：回执编码可采纳性并支持审计回放；治理在状态转换处执行。">Deep: receipts encode admissibility and allow audit replay; governance is enforced at transitions.</p>
+
+              <div class="jump-row">
+                <a class="jump" href="/rgsc/" data-en="OPEN · RGSC" data-zh="打开·RGSC">OPEN · RGSC</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- ===================== SW ===================== -->
+      <details class="quad">
+        <summary>
+          <div class="q-left">
+            <div class="q-badge"><span class="sym">🌅</span><span>SW</span></div>
+            <div class="q-text">
+              <b data-en="Southwest" data-zh="西南">Southwest</b>
+              <span data-en="Measurement · diagnostics · rules" data-zh="测量 · 诊断 · 规则">Measurement · diagnostics · rules</span>
+            </div>
+          </div>
+          <div class="q-arrow">▾</div>
+        </summary>
+
+        <div class="inside">
+          <div class="bubble-row">
+            <div class="bubble-btn" data-block="sw-gauges">
+              <div class="t">
+                <b data-en="Gauges" data-zh="量表">Gauges</b>
+                <i class="surface" data-en="Panels + thresholds." data-zh="面板+阈值。">Panels + thresholds.</i>
+                <i class="deep" data-en="Instrument panels; consistency checks; signal integrity." data-zh="仪表面板；一致性检查；信号完整性。">Instrument panels; consistency checks; signal integrity.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+
+            <div class="bubble-btn" data-block="sw-diagnostics">
+              <div class="t">
+                <b data-en="Diagnostics" data-zh="诊断">Diagnostics</b>
+                <i class="surface" data-en="Classification under constraint." data-zh="约束下分类。">Classification under constraint.</i>
+                <i class="deep" data-en="Coherence / drift / confusion categories; replay audits." data-zh="一致/漂移/混乱分类；回放审计。">Coherence / drift / confusion categories; replay audits.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+
+            <div class="bubble-btn" data-block="sw-rules">
+              <div class="t">
+                <b data-en="Rules" data-zh="规则">Rules</b>
+                <i class="surface" data-en="Navigation + integrity." data-zh="导航+完整性。">Navigation + integrity.</i>
+                <i class="deep" data-en="Return-to-hub protocol; avoid multi-tab drift." data-zh="回枢纽协议；避免多标签漂移。">Return-to-hub protocol; avoid multi-tab drift.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+
+            <div class="bubble-btn" data-block="sw-protocols">
+              <div class="t">
+                <b data-en="Protocols" data-zh="协议">Protocols</b>
+                <i class="surface" data-en="Operational playbooks." data-zh="操作手册。">Operational playbooks.</i>
+                <i class="deep" data-en="Evidence stream export; replay; audit; decision receipts." data-zh="证据流导出；回放；审计；决策回执。">Evidence stream export; replay; audit; decision receipts.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+          </div>
+
+          <div class="blockmap">
+            <div class="bm-title">
+              <b data-en="Block Map" data-zh="信息块">Block Map</b>
+              <span data-en="Tap a bubble to load details" data-zh="点气泡加载详情">Tap a bubble to load details</span>
+            </div>
+
+            <div class="block active" id="sw-gauges">
+              <h3 data-en="Gauges" data-zh="量表">Gauges</h3>
+              <p class="surface" data-en="Surface: quick visibility."
+                 data-zh="概览：快速可视化。">Surface: quick visibility.</p>
+              <p class="deep" data-en="Deep: define thresholds, trend windows, and stability indicators; publish panels that match the same instrument rules."
+                 data-zh="深挖：定义阈值/趋势窗口/稳定指标；发布一致规则面板。">Deep: define thresholds, trend windows, and stability indicators; publish panels that match the same instrument rules.</p>
+
+              <div class="jump-row">
+                <a class="jump" href="/gauges/" data-en="JUMP · GAUGES" data-zh="跳转·量表">JUMP · GAUGES</a>
+              </div>
+            </div>
+
+            <div class="block" id="sw-diagnostics">
+              <h3 data-en="Diagnostics" data-zh="诊断">Diagnostics</h3>
+              <p class="surface" data-en="Surface: classify quickly."
+                 data-zh="概览：快速分类。">Surface: classify quickly.</p>
+              <p class="deep" data-en="Deep: observer-invariant targets; replay-driven audits; drift amplification under confusion."
+                 data-zh="深挖：观察者不变目标；回放审计；混乱放大漂移。">Deep: observer-invariant targets; replay-driven audits; drift amplification under confusion.</p>
+
+              <div class="jump-row">
+                <a class="jump" href="/diagnostic/" data-en="JUMP · DIAGNOSTIC" data-zh="跳转·诊断">JUMP · DIAGNOSTIC</a>
+              </div>
+            </div>
+
+            <div class="block" id="sw-rules">
+              <h3 data-en="Rules" data-zh="规则">Rules</h3>
+              <p class="surface" data-en="Surface: rules keep the system stable."
+                 data-zh="概览：规则保持系统稳定。">Surface: rules keep the system stable.</p>
+              <p class="deep" data-en="Deep: return protocol is hub-first; receipts gate advancement; avoid tightening without a new event class."
+                 data-zh="深挖：枢纽优先返回；回执门控推进；无新事件类不收紧。">Deep: return protocol is hub-first; receipts gate advancement; avoid tightening without a new event class.</p>
+            </div>
+
+            <div class="block" id="sw-protocols">
+              <h3 data-en="Protocols" data-zh="协议">Protocols</h3>
+              <p class="surface" data-en="Surface: operational checklists."
+                 data-zh="概览：操作清单。">Surface: operational checklists.</p>
+              <p class="deep" data-en="Deep: export evidence streams; run 256-state sweeps; record receipts; publish an audit report."
+                 data-zh="深挖：导出证据流；跑256扫描；记录回执；发布审计报告。">Deep: export evidence streams; run 256-state sweeps; record receipts; publish an audit report.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- ===================== SE ===================== -->
+      <details class="quad">
+        <summary>
+          <div class="q-left">
+            <div class="q-badge"><span class="sym">🌇</span><span>SE</span></div>
+            <div class="q-text">
+              <b data-en="Southeast" data-zh="东南">Southeast</b>
+              <span data-en="Identity · references · links" data-zh="身份 · 引用 · 链接">Identity · references · links</span>
+            </div>
+          </div>
+          <div class="q-arrow">▾</div>
+        </summary>
+
+        <div class="inside">
+          <div class="bubble-row">
+            <div class="bubble-btn" data-block="se-osf">
+              <div class="t">
+                <b data-en="OSF" data-zh="OSF">OSF</b>
+                <i class="surface" data-en="Project registry / preprints." data-zh="项目注册/预印本。">Project registry / preprints.</i>
+                <i class="deep" data-en="Canonical anchors for public work streams." data-zh="公共工作流的规范锚点。">Canonical anchors for public work streams.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+
+            <div class="bubble-btn" data-block="se-orcid">
+              <div class="t">
+                <b data-en="ORCID" data-zh="ORCID">ORCID</b>
+                <i class="surface" data-en="Researcher identity." data-zh="研究者身份。">Researcher identity.</i>
+                <i class="deep" data-en="Attribution + publication linkage." data-zh="署名与发表关联。">Attribution + publication linkage.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+
+            <div class="bubble-btn" data-block="se-contact">
+              <div class="t">
+                <b data-en="Contact" data-zh="联系">Contact</b>
+                <i class="surface" data-en="Direct channel." data-zh="直接通道。">Direct channel.</i>
+                <i class="deep" data-en="Intake + collaboration routing." data-zh="接入+协作路由。">Intake + collaboration routing.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+
+            <div class="bubble-btn" data-block="se-ref">
+              <div class="t">
+                <b data-en="References" data-zh="参考">References</b>
+                <i class="surface" data-en="External anchors." data-zh="外部锚点。">External anchors.</i>
+                <i class="deep" data-en="Project mapping + identity anchors." data-zh="项目映射+身份锚点。">Project mapping + identity anchors.</i>
+              </div>
+              <div class="go">▸</div>
+            </div>
+          </div>
+
+          <div class="blockmap">
+            <div class="bm-title">
+              <b data-en="Block Map" data-zh="信息块">Block Map</b>
+              <span data-en="Tap a bubble to load details" data-zh="点气泡加载详情">Tap a bubble to load details</span>
+            </div>
+
+            <div class="block active" id="se-osf">
+              <h3 data-en="OSF" data-zh="OSF">OSF</h3>
+              <p class="surface" data-en="Surface: open the public registry."
+                 data-zh="概览：打开公共注册。">Surface: open the public registry.</p>
+              <p class="deep" data-en="Deep: OSF nodes provide durable anchors for canonical releases and project structure."
+                 data-zh="深挖：OSF节点为规范发布与结构提供持久锚点。">Deep: OSF nodes provide durable anchors for canonical releases and project structure.</p>
+
+              <div class="jump-row">
+                <a class="jump" href="/links/" data-en="OPEN · LINKS" data-zh="打开·链接">OPEN · LINKS</a>
+              </div>
+            </div>
+
+            <div class="block" id="se-orcid">
+              <h3 data-en="ORCID" data-zh="ORCID">ORCID</h3>
+              <p class="surface" data-en="Surface: identity reference."
+                 data-zh="概览：身份引用。">Surface: identity reference.</p>
+              <p class="deep" data-en="Deep: ORCID binds outputs to author identity across registries."
+                 data-zh="深挖：ORCID将输出与作者身份跨注册库绑定。">Deep: ORCID binds outputs to author identity across registries.</p>
+            </div>
+
+            <div class="block" id="se-contact">
+              <h3 data-en="Contact" data-zh="联系">Contact</h3>
+              <p class="surface" data-en="Surface: reach out."
+                 data-zh="概览：联系。">Surface: reach out.</p>
+              <p class="deep" data-en="Deep: route inquiries to the correct branch and capture collaboration context."
+                 data-zh="深挖：将询问路由到正确分支并捕获协作上下文。">Deep: route inquiries to the correct branch and capture collaboration context.</p>
+
+              <div class="jump-row">
+                <a class="jump" href="/contact/" data-en="OPEN · CONTACT" data-zh="打开·联系">OPEN · CONTACT</a>
+              </div>
+            </div>
+
+            <div class="block" id="se-ref">
+              <h3 data-en="References" data-zh="参考">References</h3>
+              <p class="surface" data-en="Surface: external anchors."
+                 data-zh="概览：外部锚点。">Surface: external anchors.</p>
+              <p class="deep" data-en="Deep: curated links for identity, registry, and canonical references."
+                 data-zh="深挖：身份/注册/规范引用的精选链接。">Deep: curated links for identity, registry, and canonical references.</p>
+
+              <div class="jump-row">
+                <a class="jump" href="/links/" data-en="JUMP · LINKS" data-zh="跳转·链接">JUMP · LINKS</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <div class="plate-wrap">
+        <div class="plate-title" data-en="Cardinal Plate (N / E / S / W)" data-zh="主罗盘板（N / E / S / W）">
+          Cardinal Plate (N / E / S / W)
+        </div>
+
+        <div class="stage">
+          <div class="platform">
+            <a class="diamond top" href="/laws/"><span><span data-en="N" data-zh="N">N</span><small data-en="LAWS" data-zh="法律">LAWS</small></span></a>
+            <a class="diamond right" href="/products/"><span><span data-en="E" data-zh="E">E</span><small data-en="PRODUCTS" data-zh="产品">PRODUCTS</small></span></a>
+            <a class="diamond bottom" href="/gauges/"><span><span data-en="S" data-zh="S">S</span><small data-en="GAUGES" data-zh="量表">GAUGES</small></span></a>
+            <a class="diamond left" href="/links/"><span><span data-en="W" data-zh="W">W</span><small data-en="LINKS" data-zh="链接">LINKS</small></span></a>
+
+            <a class="diamond mini mini-left" href="/"><span><small data-en="ROOT" data-zh="根">ROOT</small></span></a>
+            <a class="diamond mini mini-right" href="/rgsc/"><span><small data-en="RGSC" data-zh="RGSC">RGSC</small></span></a>
+          </div>
+        </div>
+      </div>
+
+      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
     </div>
-
-    <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
-
   </div>
-</div>
 
-<script>
-  const I18N = {
-    en:{
-      Home:"Home",
-      sub:"Expand bubbles first. Jump later.",
-      quads:"Quadrant routes (NW / NE / SW / SE)",
-      plate:"Cardinal plate (N / E / S / W)",
-      note:"Plate jumps into the site. Quadrants explain meaning.",
-      Laws:"Laws", Products:"Products", Gauges:"Gauges", Links:"Links",
-      NW:"NORTHWEST", NE:"NORTHEAST", SW:"SOUTHWEST", SE:"SOUTHEAST",
-      nwSub:"Definitions · language · structure",
-      neSub:"Execution · surfaces · examples",
-      swSub:"Measurement · diagnostics · rules",
-      seSub:"Identity · references · links",
-      lang:"LANG",
-      depth:"DEPTH",
-      shop:"SHOP",
-      learn:"LEARN",
-      door:"DOOR",
-      jumpLaws:"Jump · Laws",
-      jumpCategories:"Jump · Categories",
-      jumpProducts:"Jump · Products",
-      jumpRGSC:"Jump · RGSC",
-      jumpGauges:"Jump · Gauges",
-      jumpDiagnostic:"Jump · Diagnostic",
-      jumpLinks:"Jump · Links",
-      jumpContact:"Jump · Contact"
-    },
-    zh:{
-      Home:"主页",
-      sub:"先展开气泡，再跳转。",
-      quads:"象限路线（NW / NE / SW / SE）",
-      plate:"方位面板（N / E / S / W）",
-      note:"方位面板用于跳转；象限用于理解。",
-      Laws:"法律", Products:"产品", Gauges:"量表", Links:"链接",
-      NW:"西北", NE:"东北", SW:"西南", SE:"东南",
-      nwSub:"定义 · 语言 · 结构",
-      neSub:"执行 · 界面 · 示例",
-      swSub:"测量 · 诊断 · 规则",
-      seSub:"身份 · 引用 · 链接",
-      lang:"语言",
-      depth:"深度",
-      shop:"浏览",
-      learn:"学习",
-      door:"入口",
-      jumpLaws:"跳转 · 法律",
-      jumpCategories:"跳转 · 分类",
-      jumpProducts:"跳转 · 产品",
-      jumpRGSC:"跳转 · RGSC",
-      jumpGauges:"跳转 · 量表",
-      jumpDiagnostic:"跳转 · 诊断",
-      jumpLinks:"跳转 · 链接",
-      jumpContact:"跳转 · 联系"
-    }
-  };
+  <script>
+    (function(){
+      const root = document.body;
 
-  function goDoor(){ location.href='/door/'; }
+      function setLang(lang){
+        root.setAttribute("data-lang", lang);
+        document.querySelectorAll("[data-lang-set]").forEach(b=>{
+          b.classList.toggle("active", b.getAttribute("data-lang-set") === lang);
+        });
+        document.querySelectorAll("[data-en][data-zh]").forEach(el=>{
+          el.textContent = (lang === "zh") ? el.getAttribute("data-zh") : el.getAttribute("data-en");
+        });
+        document.documentElement.lang = (lang === "zh") ? "zh-Hans" : "en";
+      }
 
-  function bubble4(primary){
-    // primary = [{title, hint, bullets, subs:[{title,hint,bullets}]}]
-    return `
-      <div class="grid2">
-        ${primary.map((b, idx)=>`
-          <details class="bubble">
-            <summary><b>${idx+1}. ${b.title}</b><i>${b.hint}</i></summary>
-            <ul>${b.bullets.map(x=>`<li>${x}</li>`).join('')}</ul>
-            ${b.subs && b.subs.length ? `
-              <div class="subgrid">
-                ${b.subs.map(s=>`
-                  <details class="subbubble">
-                    <summary><b>${s.title}</b><i>${s.hint}</i></summary>
-                    <ul>${s.bullets.map(x=>`<li>${x}</li>`).join('')}</ul>
-                  </details>
-                `).join('')}
-              </div>
-            `:''}
-          </details>
-        `).join('')}
-      </div>
-    `;
-  }
+      function setDepth(depth){
+        root.setAttribute("data-depth", depth);
+        document.querySelectorAll("[data-depth-set]").forEach(b=>{
+          b.classList.toggle("active", b.getAttribute("data-depth-set") === depth);
+        });
+      }
 
-  function render(){
-    const lang = localStorage.getItem('gd_lang');
-    const depth = (localStorage.getItem('gd_depth') || 'shop').toLowerCase();
-    if(lang !== 'en' && lang !== 'zh'){ location.href='/'; return; }
+      document.querySelectorAll("[data-lang-set]").forEach(btn=>{
+        btn.addEventListener("click", ()=> setLang(btn.getAttribute("data-lang-set")));
+      });
 
-    const t = I18N[lang];
-    document.documentElement.lang = (lang==='zh') ? 'zh' : 'en';
+      document.querySelectorAll("[data-depth-set]").forEach(btn=>{
+        btn.addEventListener("click", ()=> setDepth(btn.getAttribute("data-depth-set")));
+      });
 
-    document.getElementById('t_title').textContent = t.Home;
-    document.getElementById('t_sub').textContent = t.sub;
-    document.getElementById('t_quads').textContent = t.quads;
-    document.getElementById('t_plate').textContent = t.plate;
-    document.getElementById('t_note').textContent = t.note;
-    document.getElementById('t_change').textContent = t.door;
+      // Bubble -> block map
+      document.querySelectorAll(".bubble-btn").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const id = btn.getAttribute("data-block");
+          const quad = btn.closest("details.quad");
+          if(!quad) return;
+          const map = quad.querySelector(".blockmap");
+          if(!map) return;
 
-    document.getElementById('t_lang').textContent = `${t.lang}: ${lang==='zh'?'中文':'EN'}`;
-    document.getElementById('t_depth').textContent = `${t.depth}: ${depth.toUpperCase()}`;
+          map.querySelectorAll(".block").forEach(b=> b.classList.remove("active"));
+          const target = map.querySelector("#"+CSS.escape(id));
+          if(target) target.classList.add("active");
 
-    document.getElementById('t_nsmall').textContent = t.Laws;
-    document.getElementById('t_esmall').textContent = t.Products;
-    document.getElementById('t_ssmall').textContent = t.Gauges;
-    document.getElementById('t_wsmall').textContent = t.Links;
+          // Ensure quadrant is open
+          quad.open = true;
 
-    document.getElementById('nw_title').textContent = t.NW;
-    document.getElementById('ne_title').textContent = t.NE;
-    document.getElementById('sw_title').textContent = t.SW;
-    document.getElementById('se_title').textContent = t.SE;
+          // Soft scroll into map on small screens
+          if(window.innerWidth < 720){
+            map.scrollIntoView({behavior:"smooth", block:"start"});
+          }
+        });
+      });
 
-    document.getElementById('nw_sub').textContent = t.nwSub;
-    document.getElementById('ne_sub').textContent = t.neSub;
-    document.getElementById('sw_sub').textContent = t.swSub;
-    document.getElementById('se_sub').textContent = t.seSub;
-
-    // EXPLORE/SHOP: still 4 bubbles, but no nested sub-bubbles and shorter bullets.
-    const surface = (depth === 'shop');
-
-    const NW = surface ? [
-      {title: (lang==='zh'?'语言':'Language'), hint:'SSG', bullets:[
-        (lang==='zh'?'SSG（简化语法几何）':'SSG (Simplified Syntax Geometry)'),
-        (lang==='zh'?'资源/约束/目标':'Resources / Constraints / Goals')
-      ]},
-      {title:(lang==='zh'?'语法':'Grammar'), hint:'4 routes', bullets:[
-        (lang==='zh'?'四路一选':'Four routes, one choice'),
-        (lang==='zh'?'枢纽优先返回':'Hub-first return')
-      ]},
-      {title:(lang==='zh'?'索引':'Index'), hint:'256', bullets:[
-        (lang==='zh'?'DOT.GRID（256态）':'DOT.GRID (256-state)'),
-        (lang==='zh'?'可回放':'Replay-safe')
-      ]},
-      {title:(lang==='zh'?'术语':'Glossary'), hint:'ABC', bullets:[
-        (lang==='zh'?'缩略语表':'Acronyms list'),
-        (lang==='zh'?'定义一致':'Stable meanings')
-      ]}
-    ] : [
-      {title:(lang==='zh'?'语言系统':'Language System'), hint:'SSG', bullets:[
-        (lang==='zh'?'SSG：资源/存储/约束/目标/守卫':'SSG: Resources/Stores/Constraints/Goals/Guards'),
-        (lang==='zh'?'回执门控推进':'Receipt-gated advancement'),
-        (lang==='zh'?'禁止计时器作为门':'No timers as gates'),
-        (lang==='zh'?'有限、可复现结构输出':'Finite, replay-safe outputs')
-      ], subs:[
-        {title:(lang==='zh'?'原语':'Primitives'), hint:'R/S/C/G/Gd', bullets:[
-          (lang==='zh'?'Resources':'Resources'),
-          (lang==='zh'?'Stores':'Stores'),
-          (lang==='zh'?'Constraints':'Constraints'),
-          (lang==='zh'?'Goals':'Goals'),
-          (lang==='zh'?'Guards':'Guards')
-        ]},
-        {title:(lang==='zh'?'约束':'Constraints'), hint:'C1–C5', bullets:[
-          (lang==='zh'?'导航优先':'Navigation-first'),
-          (lang==='zh'?'统一按键原语':'Unified press primitive'),
-          (lang==='zh'?'原子交付':'Atomic delivery')
-        ]}
-      ]},
-      {title:(lang==='zh'?'导航语法':'Navigation Grammar'), hint:'Diamond', bullets:[
-        (lang==='zh'?'四路一选':'Four routes, one choice'),
-        (lang==='zh'?'先回枢纽再切换':'Return to hub before switching'),
-        (lang==='zh'?'叶子页不强制路由':'Leaf pages do not enforce routing'),
-        (lang==='zh'?'结构稳定，内容可扩展':'Structure stable, content expandable')
-      ], subs:[
-        {title:(lang==='zh'?'象限':'Quadrants'), hint:'NW/NE/SW/SE', bullets:[
-          (lang==='zh'?'象限解释含义':'Quadrants explain meaning'),
-          (lang==='zh'?'跳转前先展开':'Expand before jumping')
-        ]},
-        {title:(lang==='zh'?'方位盘':'Cardinal Plate'), hint:'N/E/S/W', bullets:[
-          (lang==='zh'?'方位盘用于导航':'Plate is navigation'),
-          (lang==='zh'?'象限用于理解':'Quadrants are understanding')
-        ]}
-      ]},
-      {title:(lang==='zh'?'索引系统':'Index System'), hint:'DOT.GRID', bullets:[
-        (lang==='zh'?'256态确定索引':'Deterministic 256-state indexing'),
-        (lang==='zh'?'证据流回放':'Evidence stream replay'),
-        (lang==='zh'?'审计友好':'Audit-friendly'),
-        (lang==='zh'?'状态→回执映射':'State→receipt mapping')
-      ]},
-      {title:(lang==='zh'?'缩略语与术语':'Acronyms & Glossary'), hint:'Pillars', bullets:[
-        (lang==='zh'?'按四柱分类':'Bucketed by four pillars'),
-        (lang==='zh'?'定义固定':'Definitions fixed'),
-        (lang==='zh'?'跨页一致':'Cross-page consistency'),
-        (lang==='zh'?'可扩展至256':'Expandable to 256')
-      ], subs:[
-        {title:'P1', hint:(lang==='zh'?'身份':'Identity'), bullets:['ORCID','OSF','CONTACT']},
-        {title:'P2', hint:(lang==='zh'?'执行':'Execution'), bullets:['RGSC','RECEIPT','PORTAL']},
-        {title:'P3', hint:(lang==='zh'?'语言':'Language'), bullets:['SSG','DOT.GRID','GRAMMAR']},
-        {title:'P4', hint:(lang==='zh'?'测量':'Measurement'), bullets:['GAUGE','DIAGNOSTIC','DRIFT']}
-      ]}
-    ];
-
-    const NE = surface ? [
-      {title:(lang==='zh'?'界面':'Surfaces'), hint:'Apps', bullets:[
-        (lang==='zh'?'门户/工具':'Portals / tools'),
-        (lang==='zh'?'入口点':'Entry points')
-      ]},
-      {title:(lang==='zh'?'回执':'Receipts'), hint:'RGSC', bullets:[
-        (lang==='zh'?'验证日志':'Verification log'),
-        (lang==='zh'?'回放':'Replay')
-      ]},
-      {title:(lang==='zh'?'示例':'Examples'), hint:'How-to', bullets:[
-        (lang==='zh'?'快速路径':'Fast paths'),
-        (lang==='zh'?'最小步骤':'Minimal steps')
-      ]},
-      {title:(lang==='zh'?'产品':'Products'), hint:'Suites', bullets:[
-        'PLASMA','PLATFORM'
-      ]}
-    ] : [
-      {title:(lang==='zh'?'执行界面':'Execution Surfaces'), hint:'Apps/Portals', bullets:[
-        (lang==='zh'?'界面映射选择→回执→下一步':'Surfaces map choice→receipt→next'),
-        (lang==='zh'?'结构稳定，内容可迭代':'Stable structure, iterating content'),
-        (lang==='zh'?'统一交互原语':'Unified press primitives'),
-        (lang==='zh'?'无计时门控':'No timer gates')
-      ]},
-      {title:(lang==='zh'?'工作流':'Workflows'), hint:'Engine Sync', bullets:[
-        (lang==='zh'?'选择/解析/承诺/延续':'Selection/Resolution/Commitment/Continuation'),
-        (lang==='zh'?'退回使下游回执失效':'Back invalidates downstream receipts'),
-        (lang==='zh'?'退出发终止+返回令牌':'Exit emits terminal+token'),
-        (lang==='zh'?'回执门控推进':'Receipt-gated advancement')
-      ]},
-      {title:(lang==='zh'?'示例库':'Examples Library'), hint:'Use', bullets:[
-        (lang==='zh'?'端到端演示':'End-to-end demos'),
-        (lang==='zh'?'如何使用跳转节点':'How to use jump nodes'),
-        (lang==='zh'?'如何回枢纽':'How to return to hub'),
-        (lang==='zh'?'如何避免漂移':'How to avoid drift')
-      ]},
-      {title:(lang==='zh'?'产品拆解':'Product Breakdown'), hint:'Suites', bullets:[
-        'PLASMA','EAI','PLATFORM','CVD'
-      ]}
-    ];
-
-    const SW = surface ? [
-      {title:(lang==='zh'?'量表':'Gauges'), hint:'Read', bullets:[
-        (lang==='zh'?'读数':'Readouts'),
-        (lang==='zh'?'阈值':'Thresholds')
-      ]},
-      {title:(lang==='zh'?'诊断':'Diagnostics'), hint:'Classify', bullets:[
-        (lang==='zh'?'分类':'Classification'),
-        (lang==='zh'?'稳定/漂移':'Stable/drift')
-      ]},
-      {title:(lang==='zh'?'规则':'Rules'), hint:'Hub-first', bullets:[
-        (lang==='zh'?'一次一选':'One choice'),
-        (lang==='zh'?'回枢纽':'Return')
-      ]},
-      {title:(lang==='zh'?'协议':'Protocols'), hint:'Check', bullets:[
-        'VERIFY','REPLAY'
-      ]}
-    ] : [
-      {title:(lang==='zh'?'量表系统':'Gauges'), hint:'Measurement', bullets:[
-        (lang==='zh'?'测量=约束下分类':'Measurement=classification under constraint'),
-        (lang==='zh'?'信号/漂移分离':'Signal vs drift separation'),
-        (lang==='zh'?'一致性检查':'Consistency checks'),
-        (lang==='zh'?'阈值触发':'Threshold triggers')
-      ]},
-      {title:(lang==='zh'?'诊断系统':'Diagnostics'), hint:'Admissibility', bullets:[
-        (lang==='zh'?'可采纳性判断':'Admissibility gating'),
-        (lang==='zh'?'失败类别':'Failure classes'),
-        (lang==='zh'?'返回路径':'Return paths'),
-        (lang==='zh'?'压缩与加速同步':'Compression/acceleration sync')
-      ]},
-      {title:(lang==='zh'?'规则集':'Rules'), hint:'Integrity', bullets:[
-        (lang==='zh'?'一次一选':'One choice at a time'),
-        (lang==='zh'?'回枢纽再切换':'Return before switching'),
-        (lang==='zh'?'回执推进':'Receipts advance state'),
-        (lang==='zh'?'无计时门控':'No timer gates')
-      ]},
-      {title:(lang==='zh'?'返回协议':'Return Protocol'), hint:'Hub-first', bullets:[
-        (lang==='zh'?'不完整→回枢纽':'Incomplete→hub'),
-        (lang==='zh'?'切换轴必须回枢纽':'Axis switch requires hub'),
-        (lang==='zh'?'对角必须显式链接':'Diagonal requires explicit link'),
-        (lang==='zh'?'保持结构稳定':'Keep structure stable')
-      ]}
-    ];
-
-    const SE = surface ? [
-      {title:'OSF', hint:'Registry', bullets:[
-        (lang==='zh'?'项目入口':'Project entry'),
-        (lang==='zh'?'预印本':'Preprints')
-      ]},
-      {title:'ORCID', hint:'Identity', bullets:[
-        (lang==='zh'?'身份锚点':'Identity anchor')
-      ]},
-      {title:(lang==='zh'?'链接':'Links'), hint:'Refs', bullets:[
-        (lang==='zh'?'参考':'References')
-      ]},
-      {title:(lang==='zh'?'联系':'Contact'), hint:'Direct', bullets:[
-        (lang==='zh'?'通道':'Channel')
-      ]}
-    ] : [
-      {title:'OSF', hint:(lang==='zh'?'注册':'Registry'), bullets:[
-        (lang==='zh'?'项目注册':'Project registry'),
-        (lang==='zh'?'预印本与工件':'Preprints & artifacts'),
-        (lang==='zh'?'规范锚点':'Canonical anchors'),
-        (lang==='zh'?'对外可验证':'Externally verifiable')
-      ]},
-      {title:'ORCID', hint:(lang==='zh'?'身份':'Identity'), bullets:[
-        (lang==='zh'?'研究者身份锚点':'Researcher identity anchor'),
-        (lang==='zh'?'署名与索引':'Attribution & indexing'),
-        (lang==='zh'?'长期稳定':'Long-term stable')
-      ]},
-      {title:(lang==='zh'?'引用层':'Reference Layer'), hint:'Anchors', bullets:[
-        (lang==='zh'?'引用结构':'Reference structure'),
-        (lang==='zh'?'归属与溯源':'Attribution & provenance'),
-        (lang==='zh'?'交叉链接':'Cross-linking'),
-        (lang==='zh'?'版本一致':'Version consistency')
-      ]},
-      {title:(lang==='zh'?'联系层':'Contact Layer'), hint:'Channel', bullets:[
-        (lang==='zh'?'合作入口':'Collaboration entry'),
-        (lang==='zh'?'问题反馈':'Issue reporting'),
-        (lang==='zh'?'对接请求':'Integration requests')
-      ]}
-    ];
-
-    const html = (arr)=>bubble4(arr);
-
-    document.getElementById('nw_inside').innerHTML = html(NW) + `
-      <div class="jump-row">
-        <a class="jump" href="/laws/">${t.jumpLaws}</a>
-        <a class="jump" href="/laws/categories/">${t.jumpCategories}</a>
-      </div>`;
-
-    document.getElementById('ne_inside').innerHTML = html(NE) + `
-      <div class="jump-row">
-        <a class="jump" href="/products/">${t.jumpProducts}</a>
-        <a class="jump" href="/rgsc/">${t.jumpRGSC}</a>
-      </div>`;
-
-    document.getElementById('sw_inside').innerHTML = html(SW) + `
-      <div class="jump-row">
-        <a class="jump" href="/gauges/">${t.jumpGauges}</a>
-        <a class="jump" href="/diagnostic/">${t.jumpDiagnostic}</a>
-      </div>`;
-
-    document.getElementById('se_inside').innerHTML = html(SE) + `
-      <div class="jump-row">
-        <a class="jump" href="/links/">${t.jumpLinks}</a>
-        <a class="jump" href="/contact/">${t.jumpContact}</a>
-      </div>`;
-
-    // close everything on load (no auto-open)
-    ['q_nw','q_ne','q_sw','q_se'].forEach(id=>{
-      const d=document.getElementById(id); if(d) d.open=false;
-    });
-    document.querySelectorAll('details.bubble, details.subbubble').forEach(d=>d.open=false);
-  }
-
-  function bubble4(arr){
-    return `
-      <div class="grid2">
-        ${arr.map((b, idx)=>`
-          <details class="bubble">
-            <summary><b>${idx+1}. ${b.title}</b><i>${b.hint}</i></summary>
-            <ul>${b.bullets.map(x=>`<li>${x}</li>`).join('')}</ul>
-            ${b.subs && b.subs.length ? `
-              <div class="subgrid">
-                ${b.subs.map(s=>`
-                  <details class="subbubble">
-                    <summary><b>${s.title}</b><i>${s.hint}</i></summary>
-                    <ul>${s.bullets.map(x=>`<li>${x}</li>`).join('')}</ul>
-                  </details>
-                `).join('')}
-              </div>
-            `:''}
-          </details>
-        `).join('')}
-      </div>`;
-  }
-
-  boot();
-</script>
+      // Default state
+      setLang("en");
+      setDepth("learn");
+    })();
+  </script>
 </body>
 </html>

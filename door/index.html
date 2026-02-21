@@ -1,53 +1,206 @@
-<!-- TNT FILE: /door/index.html  (DEPTH FORK ONLY; LANGUAGE IS ENTIRE PAGE) -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Door</title>
+<title>Door · Coherent Resolution Platform</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=12000"/>
+<link rel="stylesheet" href="/assets/ui.css?v=9001"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9001"/>
+
+<style>
+  /* Door-only light layout tweaks (no language chooser here) */
+  .wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
+  .hero{position:relative;z-index:10}
+  .hero h1{font-size:clamp(44px,7vw,76px);margin:0;font-weight:900;letter-spacing:.01em}
+  .hero p{margin:10px 0 0;opacity:.78;font-size:18px;max-width:52ch}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+  .pill{
+    border-radius:999px;
+    padding:10px 14px;
+    background:rgba(255,255,255,.06);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+    font-weight:900;
+    letter-spacing:.10em;
+    text-transform:uppercase;
+    font-size:12px;
+    opacity:.9;
+  }
+  .pill strong{letter-spacing:.14em}
+
+  /* Make stage breathe */
+  .stage{padding-top:6px}
+  .platform{margin-top:4px}
+
+  /* Door diamond labels tighter */
+  .diamond span{padding:0 8px}
+  .diamond b{display:block;font-size:18px;letter-spacing:.08em}
+  .diamond small{margin-top:6px}
+
+  /* Bottom actions (optional) */
+  .dock{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+  .dock a{
+    border-radius:999px;
+    padding:12px 18px;
+    background:rgba(255,255,255,.06);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+    font-weight:900;
+    letter-spacing:.10em;
+    text-transform:uppercase;
+    font-size:12px;
+    opacity:.92;
+    text-decoration:none;
+    color:inherit;
+  }
+  .dock a:hover{background:rgba(255,255,255,.08)}
+</style>
 </head>
 
 <body>
-<div class="page" style="justify-content:center;text-align:center;gap:18px;">
-  <div style="width:min(900px,94vw);">
-    <h1 id="H1">DOOR</h1>
-    <p id="H2" style="margin-top:14px;">Choose how you want to enter.</p>
+<div class="shooting-stars"></div>
 
-    <div style="margin-top:34px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-      <button class="btn" style="min-width:240px;" onclick="setDepth('explore')" id="B1">EXPLORE</button>
-      <button class="btn primary" style="min-width:240px;" onclick="setDepth('learn')" id="B2">LEARN</button>
+<div class="page">
+  <div class="wrap">
+
+    <div class="hero">
+      <h1 id="t_title">Door</h1>
+      <p id="t_sub">Pick a lane. Then enter the hub.</p>
+
+      <!-- LANGUAGE IS ALREADY SET AT INDEX (read-only display) -->
+      <div class="meta">
+        <div class="pill" id="t_langpill">LANG: <strong id="t_lang">EN</strong></div>
+      </div>
     </div>
 
-    <div class="ink" style="margin-top:72px;">GEODIAMETRICS</div>
+    <div class="stage">
+      <div class="platform">
+
+        <!-- TOP: EXPLORE -->
+        <a class="diamond top" href="/home/" data-depth="explore">
+          <span>
+            <b id="t_explore">Explore</b>
+            <small id="t_explore_sub">Surface map · jump points</small>
+          </span>
+        </a>
+
+        <!-- RIGHT: LEARN -->
+        <a class="diamond right" href="/home/" data-depth="learn">
+          <span>
+            <b id="t_learn">Learn</b>
+            <small id="t_learn_sub">Deep map · nested bubbles</small>
+          </span>
+        </a>
+
+        <!-- BOTTOM: HOME (default EXPLORE) -->
+        <a class="diamond bottom" href="/home/" data-depth="explore">
+          <span>
+            <b id="t_home">Home</b>
+            <small id="t_home_sub">Enter hub now</small>
+          </span>
+        </a>
+
+        <!-- LEFT: LINKS / ABOUT -->
+        <a class="diamond left" href="/links/">
+          <span>
+            <b id="t_links">Links</b>
+            <small id="t_links_sub">Identity · references</small>
+          </span>
+        </a>
+
+        <!-- minis: back to index + terminal -->
+        <a class="diamond mini mini-left" href="/">
+          <span><small id="t_back">BACK</small></span>
+        </a>
+
+        <a class="diamond mini mini-right" href="/rgsc/">
+          <span><small id="t_terminal">TERMINAL</small></span>
+        </a>
+
+      </div>
+    </div>
+
+    <div class="dock">
+      <a href="/" id="t_change">Change Language</a>
+      <a href="/home/" data-depth="explore" id="t_enter">Enter Hub</a>
+    </div>
+
     <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
   </div>
 </div>
 
 <script>
-(function(){
-  const lang = (localStorage.getItem("gd_lang") || "en").toLowerCase();
-  document.documentElement.lang = (lang === "zh") ? "zh-Hans" : "en";
+(() => {
+  const K_LANG = "gd_lang";
+  const K_DEPTH = "gd_depth";
 
-  // Entire page in one language (no mixing)
-  if(lang === "zh"){
-    document.getElementById("H1").textContent = "入口";
-    document.getElementById("H2").textContent = "选择进入方式。";
-    document.getElementById("B1").textContent = "浏览";
-    document.getElementById("B2").textContent = "深挖";
-  }else{
-    document.getElementById("H1").textContent = "DOOR";
-    document.getElementById("H2").textContent = "Choose how you want to enter.";
-    document.getElementById("B1").textContent = "EXPLORE";
-    document.getElementById("B2").textContent = "LEARN";
+  const lang = (localStorage.getItem(K_LANG) || "en").toLowerCase();
+  const isZH = (lang === "zh");
+
+  // Read-only language pill
+  document.getElementById("t_lang").textContent = isZH ? "中文" : "EN";
+
+  // Copy (hard split: EN page = EN only, ZH page = ZH only)
+  const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+
+  if (isZH) {
+    set("t_title", "入口");
+    set("t_sub", "选择路线，然后进入中枢。");
+    set("t_explore", "浏览");
+    set("t_explore_sub", "表层地图 · 跳转入口");
+    set("t_learn", "学习");
+    set("t_learn_sub", "深度地图 · 嵌套气泡");
+    set("t_home", "中枢");
+    set("t_home_sub", "直接进入");
+    set("t_links", "链接");
+    set("t_links_sub", "身份 · 引用");
+    set("t_back", "返回");
+    set("t_terminal", "终端");
+    set("t_change", "更换语言");
+    set("t_enter", "进入中枢");
+  } else {
+    set("t_title", "Door");
+    set("t_sub", "Pick a lane. Then enter the hub.");
+    set("t_explore", "Explore");
+    set("t_explore_sub", "Surface map · jump points");
+    set("t_learn", "Learn");
+    set("t_learn_sub", "Deep map · nested bubbles");
+    set("t_home", "Home");
+    set("t_home_sub", "Enter hub now");
+    set("t_links", "Links");
+    set("t_links_sub", "Identity · references");
+    set("t_back", "BACK");
+    set("t_terminal", "TERMINAL");
+    set("t_change", "Change Language");
+    set("t_enter", "Enter Hub");
+  }
+
+  // Depth setter (Explore/Learn/Home/Enter)
+  function bindDepthLinks(root = document) {
+    root.querySelectorAll("a[data-depth]").forEach(a => {
+      a.addEventListener("click", (e) => {
+        const d = (a.getAttribute("data-depth") || "").toLowerCase();
+        if (d) localStorage.setItem(K_DEPTH, d);
+      }, { passive: true });
+    });
+  }
+  bindDepthLinks();
+
+  // Change Language goes back to index and clears lang+depth
+  const change = document.getElementById("t_change");
+  if (change) {
+    change.addEventListener("click", () => {
+      localStorage.removeItem(K_LANG);
+      localStorage.removeItem(K_DEPTH);
+    }, { passive: true });
   }
 })();
-
-function setDepth(depth){
-  localStorage.setItem("gd_depth", depth);
-  window.location.href="/home/";
-}
 </script>
 </body>
 </html>

@@ -1,363 +1,74 @@
-<!-- TNT: /index.html
-     FIX: NO DUPLICATE LANGUAGE CONTROLS.
-     - TOP BAR shows ONLY TWO buttons: EN + 中文
-     - MODE controls remain (LEARN / SHOP)
-     - When EN/中文 is selected, ALL copy swaps (including quadrant labels/subtitle)
+<!-- TNT: /index.html (FULL FILE REPLACEMENT)
+     Purpose: Single entry fork with ZERO redundancy.
+     Rule: User chooses ONE language + ONE mode once, then enters /door/ hub.
 -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Geodiametrics · Root</title>
-
-<link rel="stylesheet" href="/assets/ui.css?v=3002"/>
-<link rel="stylesheet" href="/assets/branch.css?v=3002"/>
-
-<style>
-html,body{height:100%}
-body{
-  background:
-    radial-gradient(1200px 800px at 50% 10%, rgba(160,20,20,.55) 0%, rgba(30,0,0,.55) 35%, rgba(5,7,12,1) 100%),
-    radial-gradient(900px 700px at 20% 80%, rgba(255,60,60,.10) 0%, rgba(0,0,0,0) 65%),
-    radial-gradient(900px 700px at 80% 70%, rgba(255,140,80,.06) 0%, rgba(0,0,0,0) 70%);
-}
-
-.page{padding:42px 16px 84px;position:relative;z-index:1}
-.h{position:relative;z-index:10;text-align:left;width:min(980px,94vw);margin:0 auto 18px}
-.h h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
-.h p{margin:10px 0 0;font-size:20px;opacity:.78}
-footer{
-  width:min(980px,94vw);
-  margin:18px auto 0;
-  position:relative;
-  z-index:10;
-  text-align:center;
-  opacity:.55;
-  letter-spacing:3px;
-  font-size:12px;
-}
-
-/* TOP CONTROLS: ONLY EN/中文 + MODE */
-.topbar{
-  width:min(980px,94vw);
-  margin:0 auto 18px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:flex-start;
-  position:relative;
-  z-index:10;
-}
-
-.pill{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  padding:10px 14px;
-  border-radius:999px;
-  background:rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 46px rgba(0,0,0,.45);
-  font-weight:900;
-  letter-spacing:.08em;
-}
-.pill-btn{cursor:pointer;user-select:none}
-.pill-btn:active{transform:translateY(1px)}
-.pill.on{
-  background:rgba(255,255,255,.10);
-  border-color:rgba(255,255,255,.14);
-}
-
-/* SECTION TITLES */
-.sectionTitle{
-  width:min(980px,94vw);
-  margin:16px auto 10px;
-  font-size:14px;
-  letter-spacing:.18em;
-  font-weight:900;
-  opacity:.72;
-}
-
-/* QUADRANT DROPDOWNS (NW/NE/SW/SE) */
-.routeList{
-  width:min(980px,94vw);
-  margin:0 auto;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-.routeRow{
-  position:relative;
-  border-radius:22px;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 26px 70px rgba(0,0,0,.55);
-  overflow:hidden;
-}
-
-.routeHead{display:flex;align-items:center;gap:14px;padding:14px 14px}
-
-.badge{
-  flex:0 0 auto;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-width:74px;
-  height:46px;
-  padding:0 14px;
-  border-radius:999px;
-  background:rgba(120,0,0,.20);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 34px rgba(0,0,0,.55);
-  font-weight:900;
-  letter-spacing:.14em;
-}
-.badge .ic{font-size:12px;opacity:.9;margin-right:10px}
-.badge .tx{font-size:14px;opacity:.92}
-
-.routeText{flex:1;min-width:0}
-.routeText .t{font-size:18px;font-weight:900;letter-spacing:.06em}
-.routeText .s{margin-top:4px;font-size:14px;opacity:.72}
-
-.toggle{
-  flex:0 0 auto;
-  width:46px;height:46px;border-radius:999px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 34px rgba(0,0,0,.45);
-  display:grid;place-items:center;
-  cursor:pointer;
-}
-.toggle::before{content:"▾";font-size:18px;opacity:.85;transform:translateY(-1px)}
-.routeRow[aria-expanded="true"] .toggle::before{content:"▴"}
-
-.routeBody{display:none;padding:0 14px 14px 14px}
-.routeRow[aria-expanded="true"] .routeBody{display:block}
-
-.card{
-  border-radius:18px;
-  background:rgba(0,0,0,.20);
-  border:1px solid rgba(255,255,255,.08);
-  padding:14px 14px;
-}
-.card h3{margin:0 0 10px;font-size:14px;letter-spacing:.14em;font-weight:900;opacity:.86}
-.card ul{margin:0;padding-left:18px;opacity:.90;line-height:1.55}
-.card li{margin:6px 0}
-
-/* CARDINAL PLATE (N/E/S/W) */
-.plateWrap{width:min(980px,94vw);margin:10px auto 0}
-.plateWrap .platform{width:min(420px,88vw)}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Geodiametrics · Entry</title>
+  <link rel="stylesheet" href="/assets/ui.css?v=2000"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=2000"/>
 </head>
 
-<body>
-<div class="shooting-stars"></div>
+<body class="theme-red">
+  <div class="shooting-stars"></div>
 
-<div class="page">
+  <div class="page entry-page">
+    <div class="h">
+      <h1>Geodiametrics</h1>
+      <p>Choose what you understand. No setup.</p>
+    </div>
 
-  <div class="h">
-    <h1 id="title">Geodiametrics</h1>
-    <p id="subtitle">Unified structural hub.</p>
+    <div class="entry-grid">
+
+      <!-- EN / LEARN -->
+      <a class="entry-card" href="/door/?lang=en&mode=learn" data-lang="en" data-mode="learn">
+        <div class="entry-title">Learn</div>
+        <div class="entry-sub">EN</div>
+        <div class="entry-desc">Definitions · systems · methods</div>
+      </a>
+
+      <!-- EN / SHOP -->
+      <a class="entry-card" href="/door/?lang=en&mode=shop" data-lang="en" data-mode="shop">
+        <div class="entry-title">Shop</div>
+        <div class="entry-sub">EN</div>
+        <div class="entry-desc">Products · programs · services</div>
+      </a>
+
+      <!-- ZH / LEARN -->
+      <a class="entry-card" href="/door/?lang=zh&mode=learn" data-lang="zh" data-mode="learn">
+        <div class="entry-title">学习</div>
+        <div class="entry-sub">中文</div>
+        <div class="entry-desc">定义 · 系统 · 方法</div>
+      </a>
+
+      <!-- ZH / SHOP -->
+      <a class="entry-card" href="/door/?lang=zh&mode=shop" data-lang="zh" data-mode="shop">
+        <div class="entry-title">浏览</div>
+        <div class="entry-sub">中文</div>
+        <div class="entry-desc">产品 · 项目 · 服务</div>
+      </a>
+
+    </div>
+
+    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
   </div>
 
-  <!-- ONLY TWO language buttons + mode buttons -->
-  <div class="topbar">
-    <div class="pill pill-btn on" id="langEN">EN</div>
-    <div class="pill pill-btn" id="langZH">中文</div>
-
-    <div class="pill" id="modeChip">MODE: <span id="modeLabel">LEARN</span></div>
-    <div class="pill pill-btn on" id="modeLearn">LEARN</div>
-    <div class="pill pill-btn" id="modeShop">SHOP</div>
-  </div>
-
-  <div class="sectionTitle" id="qtTitle">QUADRANT ROUTES (NW / NE / SW / SE)</div>
-
-  <div class="routeList" id="routeList">
-
-    <!-- NW -->
-    <div class="routeRow" data-q="NW" aria-expanded="false">
-      <div class="routeHead">
-        <div class="badge"><span class="ic">✦</span><span class="tx">NW</span></div>
-        <div class="routeText">
-          <div class="t" data-en="NORTHWEST" data-zh="西北">NORTHWEST</div>
-          <div class="s" data-en="Definitions · language · structure" data-zh="定义 · 语言 · 结构">Definitions · language · structure</div>
-        </div>
-        <div class="toggle" role="button" tabindex="0" aria-label="Toggle NW"></div>
-      </div>
-      <div class="routeBody">
-        <div class="card">
-          <h3 data-en="IN THIS QUADRANT" data-zh="本象限内容">IN THIS QUADRANT</h3>
-          <ul>
-            <li data-en="SSG (Simplified Syntax Geometry)" data-zh="SSG（简化语法几何）">SSG (Simplified Syntax Geometry)</li>
-            <li data-en="Diamond grammar (4 routes, one choice)" data-zh="钻石语法（四路·单选）">Diamond grammar (4 routes, one choice)</li>
-            <li data-en="DOT.GRID (256-state indexing)" data-zh="DOT.GRID（256态索引）">DOT.GRID (256-state indexing)</li>
-            <li data-en="Acronyms & glossary (organized)" data-zh="缩略语与术语表（归类）">Acronyms & glossary (organized)</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- NE -->
-    <div class="routeRow" data-q="NE" aria-expanded="false">
-      <div class="routeHead">
-        <div class="badge"><span class="ic">☼</span><span class="tx">NE</span></div>
-        <div class="routeText">
-          <div class="t" data-en="NORTHEAST" data-zh="东北">NORTHEAST</div>
-          <div class="s" data-en="Execution · surfaces · examples" data-zh="执行 · 界面 · 示例">Execution · surfaces · examples</div>
-        </div>
-        <div class="toggle" role="button" tabindex="0" aria-label="Toggle NE"></div>
-      </div>
-      <div class="routeBody">
-        <div class="card">
-          <h3 data-en="IN THIS QUADRANT" data-zh="本象限内容">IN THIS QUADRANT</h3>
-          <ul>
-            <li data-en="Execution surfaces (apps / portals)" data-zh="执行界面（应用/门户）">Execution surfaces (apps / portals)</li>
-            <li data-en="Workflows & receipts (audit trails)" data-zh="流程与回执（审计链）">Workflows & receipts (audit trails)</li>
-            <li data-en="Examples (how to use the system)" data-zh="示例（如何使用系统）">Examples (how to use the system)</li>
-            <li data-en="Packaged outputs (downloadables)" data-zh="打包输出（可下载）">Packaged outputs (downloadables)</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- SW -->
-    <div class="routeRow" data-q="SW" aria-expanded="false">
-      <div class="routeHead">
-        <div class="badge"><span class="ic">✧</span><span class="tx">SW</span></div>
-        <div class="routeText">
-          <div class="t" data-en="SOUTHWEST" data-zh="西南">SOUTHWEST</div>
-          <div class="s" data-en="Measurement · diagnostics · rules" data-zh="测量 · 诊断 · 规则">Measurement · diagnostics · rules</div>
-        </div>
-        <div class="toggle" role="button" tabindex="0" aria-label="Toggle SW"></div>
-      </div>
-      <div class="routeBody">
-        <div class="card">
-          <h3 data-en="IN THIS QUADRANT" data-zh="本象限内容">IN THIS QUADRANT</h3>
-          <ul>
-            <li data-en="Gauges (measurement instruments)" data-zh="量表（测量工具）">Gauges (measurement instruments)</li>
-            <li data-en="Diagnostics (classification under constraint)" data-zh="诊断（约束下分类）">Diagnostics (classification under constraint)</li>
-            <li data-en="Rules (navigation + integrity)" data-zh="规则（导航+完整性）">Rules (navigation + integrity)</li>
-            <li data-en="Return protocol (hub-first)" data-zh="返回协议（回到枢纽）">Return protocol (hub-first)</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- SE -->
-    <div class="routeRow" data-q="SE" aria-expanded="false">
-      <div class="routeHead">
-        <div class="badge"><span class="ic">◍</span><span class="tx">SE</span></div>
-        <div class="routeText">
-          <div class="t" data-en="SOUTHEAST" data-zh="东南">SOUTHEAST</div>
-          <div class="s" data-en="Identity · references · links" data-zh="身份 · 引用 · 链接">Identity · references · links</div>
-        </div>
-        <div class="toggle" role="button" tabindex="0" aria-label="Toggle SE"></div>
-      </div>
-      <div class="routeBody">
-        <div class="card">
-          <h3 data-en="IN THIS QUADRANT" data-zh="本象限内容">IN THIS QUADRANT</h3>
-          <ul>
-            <li data-en="OSF projects" data-zh="OSF 项目">OSF projects</li>
-            <li data-en="ORCID identity" data-zh="ORCID 身份">ORCID identity</li>
-            <li data-en="Contact & direct channels" data-zh="联系与直达通道">Contact & direct channels</li>
-            <li data-en="External references" data-zh="外部引用">External references</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="sectionTitle" id="cpTitle">CARDINAL PLATE (N / E / S / W)</div>
-
-  <div class="plateWrap">
-    <div class="platform">
-      <a class="diamond top" href="/laws/"><span>N<small data-en="Laws" data-zh="法则">Laws</small></span></a>
-      <a class="diamond right" href="/products/"><span>E<small data-en="Products" data-zh="产品">Products</small></span></a>
-      <a class="diamond bottom" href="/gauges/"><span>S<small data-en="Gauges" data-zh="量表">Gauges</small></span></a>
-      <a class="diamond left" href="/links/"><span>W<small data-en="Links" data-zh="链接">Links</small></span></a>
-
-      <a class="diamond mini mini-left" href="/"><span><small data-en="ROOT" data-zh="根">ROOT</small></span></a>
-      <a class="diamond mini mini-right" href="/rgsc/"><span><small data-en="RGSC" data-zh="RGSC">RGSC</small></span></a>
-    </div>
-  </div>
-
-  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
-</div>
-
-<script>
-(() => {
-  // Dropdown toggles (all closed by default)
-  const rows = [...document.querySelectorAll(".routeRow")];
-  const toggleRow = (row) => {
-    const isOpen = row.getAttribute("aria-expanded") === "true";
-    row.setAttribute("aria-expanded", isOpen ? "false" : "true");
-  };
-  rows.forEach(row => {
-    const btn = row.querySelector(".toggle");
-    btn.addEventListener("click", () => toggleRow(row));
-    btn.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleRow(row); }
-    });
-  });
-
-  // Single language selector (NO duplicates)
-  const langEN = document.getElementById("langEN");
-  const langZH = document.getElementById("langZH");
-  const subtitle = document.getElementById("subtitle");
-  const qtTitle = document.getElementById("qtTitle");
-  const cpTitle = document.getElementById("cpTitle");
-
-  const modeLabel = document.getElementById("modeLabel");
-  const modeLearn = document.getElementById("modeLearn");
-  const modeShop  = document.getElementById("modeShop");
-
-  const setOn = (onEl, offEl) => { onEl.classList.add("on"); offEl.classList.remove("on"); };
-
-  const applyLang = (lang) => {
-    localStorage.setItem("geo_lang", lang);
-
-    if (lang === "ZH") setOn(langZH, langEN);
-    else setOn(langEN, langZH);
-
-    const isZH = (lang === "ZH");
-
-    subtitle.textContent = isZH
-      ? "统一结构枢纽 · 象限路由（NW/NE/SW/SE）+ 方位面板（N/E/S/W）。"
-      : "Unified structural hub · Quadrant routes (NW/NE/SW/SE) + Cardinal plate (N/E/S/W).";
-
-    qtTitle.textContent = isZH ? "象限路由（NW / NE / SW / SE）" : "QUADRANT ROUTES (NW / NE / SW / SE)";
-    cpTitle.textContent = isZH ? "方位面板（N / E / S / W）" : "CARDINAL PLATE (N / E / S / W)";
-
-    document.querySelectorAll("[data-en]").forEach(el => {
-      const en = el.getAttribute("data-en");
-      const zh = el.getAttribute("data-zh");
-      el.textContent = isZH ? (zh || en || el.textContent) : (en || zh || el.textContent);
-    });
-  };
-
-  // Mode (structure stays identical; later you can swap copy blocks by mode)
-  const applyMode = (mode) => {
-    localStorage.setItem("geo_mode", mode);
-    modeLabel.textContent = mode;
-    if (mode === "SHOP") setOn(modeShop, modeLearn);
-    else setOn(modeLearn, modeShop);
-  };
-
-  langEN.addEventListener("click", () => applyLang("EN"));
-  langZH.addEventListener("click", () => applyLang("ZH"));
-  modeLearn.addEventListener("click", () => applyMode("LEARN"));
-  modeShop.addEventListener("click", () => applyMode("SHOP"));
-
-  applyLang(localStorage.getItem("geo_lang") || "EN");
-  applyMode(localStorage.getItem("geo_mode") || "LEARN");
-})();
-</script>
-
+  <script>
+    // Persist selection ONCE, then door runs the hub.
+    (function () {
+      const cards = document.querySelectorAll(".entry-card");
+      cards.forEach(a => {
+        a.addEventListener("click", () => {
+          try {
+            localStorage.setItem("GD_LANG", a.getAttribute("data-lang") || "en");
+            localStorage.setItem("GD_MODE", a.getAttribute("data-mode") || "learn");
+          } catch (e) {}
+        }, { passive:true });
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -5,19 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Geodiametrics · Root</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=1013"/>
-<link rel="stylesheet" href="/assets/branch.css?v=1013"/>
+<link rel="stylesheet" href="/assets/ui.css?v=1014"/>
+<link rel="stylesheet" href="/assets/branch.css?v=1014"/>
 
 <style>
-/* ROOT: expandable “info hub” with unlimited dropdown depth (TNT) */
-
 .root-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:18px}
 
-/* Collapsible grid */
 .dropgrid{display:grid;grid-template-columns:1fr;gap:12px}
 @media (min-width:860px){.dropgrid{grid-template-columns:1fr 1fr}}
 
-/* Outer bubble */
 .drop{
   border-radius:22px;
   background:rgba(255,255,255,.04);
@@ -27,29 +23,19 @@
 .drop summary{
   list-style:none;
   cursor:pointer;
-  padding:16px 16px;
+  padding:16px;
   font-size:16px;
   font-weight:900;
   letter-spacing:.10em;
   text-transform:uppercase;
-  opacity:.92;
   display:flex;
-  align-items:center;
   justify-content:space-between;
 }
 .drop summary::-webkit-details-marker{display:none}
-.chev{
-  width:12px;height:12px;
-  border-right:2px solid rgba(234,242,246,.6);
-  border-bottom:2px solid rgba(234,242,246,.6);
-  transform:rotate(45deg);
-  transition:transform .15s ease;
-  margin-left:10px;
-}
-.drop[open] > summary .chev{transform:rotate(-135deg)}
-.drop .content{padding:0 16px 16px 16px;font-size:16px;line-height:1.6;opacity:.92}
+.chev{width:12px;height:12px;border-right:2px solid rgba(234,242,246,.6);border-bottom:2px solid rgba(234,242,246,.6);transform:rotate(45deg);transition:.15s}
+.drop[open]>summary .chev{transform:rotate(-135deg)}
+.drop .content{padding:0 16px 16px;font-size:16px;line-height:1.6;opacity:.92}
 
-/* Nest level 1 */
 .nest{margin-top:12px;display:flex;flex-direction:column;gap:10px}
 .mini{
   border-radius:18px;
@@ -60,62 +46,19 @@
 .mini summary{
   list-style:none;
   cursor:pointer;
-  padding:12px 12px;
+  padding:12px;
   font-size:13px;
   font-weight:900;
   letter-spacing:.10em;
   text-transform:uppercase;
-  opacity:.92;
   display:flex;
-  align-items:center;
   justify-content:space-between;
 }
 .mini summary::-webkit-details-marker{display:none}
-.mchev{
-  width:10px;height:10px;
-  border-right:2px solid rgba(234,242,246,.55);
-  border-bottom:2px solid rgba(234,242,246,.55);
-  transform:rotate(45deg);
-  transition:transform .15s ease;
-  margin-left:10px;
-}
-.mini[open] > summary .mchev{transform:rotate(-135deg)}
-.mini .mc{padding:0 12px 12px 12px;font-size:15px;line-height:1.65;opacity:.92}
+.mchev{width:10px;height:10px;border-right:2px solid rgba(234,242,246,.55);border-bottom:2px solid rgba(234,242,246,.55);transform:rotate(45deg);transition:.15s}
+.mini[open]>summary .mchev{transform:rotate(-135deg)}
+.mini .mc{padding:0 12px 12px;font-size:15px;line-height:1.65}
 
-/* Nest level 2 (optional extra depth) */
-.mini2{
-  margin-top:10px;
-  border-radius:16px;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.06);
-  overflow:hidden;
-}
-.mini2 summary{
-  list-style:none;
-  cursor:pointer;
-  padding:10px 10px;
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-  opacity:.9;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.mini2 summary::-webkit-details-marker{display:none}
-.schev{
-  width:9px;height:9px;
-  border-right:2px solid rgba(234,242,246,.45);
-  border-bottom:2px solid rgba(234,242,246,.45);
-  transform:rotate(45deg);
-  transition:transform .15s ease;
-  margin-left:10px;
-}
-.mini2[open] > summary .schev{transform:rotate(-135deg)}
-.mini2 .sc{padding:0 10px 10px 10px;font-size:14px;line-height:1.65;opacity:.92}
-
-/* Pills / tags */
 .tag{
   display:inline-block;
   padding:6px 10px;
@@ -126,16 +69,10 @@
   letter-spacing:.06em;
   margin-right:8px;
 }
-.k{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);font-weight:900;letter-spacing:.08em;margin-right:8px}
 
-/* Divider */
-.sep{border:0;height:1px;background:rgba(255,255,255,.10);margin:10px 0 0}
-
-/* Satellite nav */
+.sep{border:0;height:1px;background:rgba(255,255,255,.10);margin:14px 0}
 .sat{display:flex;justify-content:center;margin-top:10px}
 .sat .platform{width:min(360px,86vw)}
-
-/* Footer spacing */
 footer{margin-top:26px}
 </style>
 </head>
@@ -144,251 +81,191 @@ footer{margin-top:26px}
 <div class="shooting-stars"></div>
 
 <div class="page">
-  <div class="root-wrap">
+<div class="root-wrap">
 
-    <div class="h">
-      <h1>Geodiametrics</h1>
-      <p>Under construction · Safe to explore.</p>
-    </div>
+<div class="h">
+  <h1>Geodiametrics</h1>
+  <p>Under construction · Safe to explore.</p>
+</div>
 
-    <!-- 4 OUTER DROPDOWNS (each contains 4 inner dropdowns; inner dropdowns may contain deeper dropdowns) -->
-    <div class="dropgrid">
+<div class="dropgrid">
 
-      <!-- 1) PRODUCTS & RELEASES -->
-      <details class="drop" open>
-        <summary>Products & Releases<span class="chev"></span></summary>
-        <div class="content">
+<!-- LANGUAGE SYSTEM -->
+<details class="drop" open>
+<summary>Language System<span class="chev"></span></summary>
+<div class="content">
+<div class="nest">
 
-          <div class="nest">
+<details class="mini" open>
+<summary>Simplified Syntax Geometry (SSG)<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Language</span>
+A constraint-based language for expressing structure, execution, and state transitions.
+Built for compression, clarity, and reproducibility.
+</div>
+</details>
 
-            <details class="mini" open>
-              <summary>Alignment Diagnostic<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Product</span> A quick diagnostic surface that turns inputs into a clean, repeatable alignment readout.
-                <details class="mini2">
-                  <summary>What You Get<span class="schev"></span></summary>
-                  <div class="sc">
-                    <span class="k">Output</span> A compact result + clear next route (N/E/S/W) from the current hub.
-                  </div>
-                </details>
-                <details class="mini2">
-                  <summary>Status<span class="schev"></span></summary>
-                  <div class="sc">
-                    <span class="k">Now</span> Early surfaces ship first; polish and breadth follow.
-                  </div>
-                </details>
-              </div>
-            </details>
+<details class="mini">
+<summary>Diamond Grammar<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Navigation</span>
+Four routes, one choice at a time.  
+N / E / S / W encode functional domains, not directions.
+</div>
+</details>
 
-            <details class="mini">
-              <summary>Integrity Notebook<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Tool</span> Local-first logging + receipts for repeatable accountability and verification.
-                <details class="mini2">
-                  <summary>Use Case<span class="schev"></span></summary>
-                  <div class="sc">
-                    <span class="k">Track</span> Create → verify → export → replay (local), then publish later when desired.
-                  </div>
-                </details>
-              </div>
-            </details>
+<details class="mini">
+<summary>Certification Tracks<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Certification</span>
+Operational literacy in SSG, navigation grammar, and applied constraint modeling.
+</div>
+</details>
 
-            <details class="mini">
-              <summary>Measurement Gauges<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Instruments</span> Scorecards and gauges that standardize measurement and comparison across domains.
-                <details class="mini2">
-                  <summary>Where<span class="schev"></span></summary>
-                  <div class="sc"><span class="k">S</span> Gauges / instruments / measurements.</div>
-                </details>
-              </div>
-            </details>
+<details class="mini">
+<summary>Use Cases<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Deploy</span>
+Engineering systems, business modeling, diagnostics, measurement protocols.
+</div>
+</details>
 
-            <details class="mini">
-              <summary>Release Notes<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Updates</span> New usable surfaces arrive continuously; structure stays stable while content expands.
-                <details class="mini2">
-                  <summary>Rule<span class="schev"></span></summary>
-                  <div class="sc"><span class="k">Focus</span> Look for new usable outputs, not structural churn.</div>
-                </details>
-              </div>
-            </details>
+</div>
+</div>
+</details>
 
-          </div>
+<!-- PRODUCTS & PROGRAMS -->
+<details class="drop">
+<summary>Products & Programs<span class="chev"></span></summary>
+<div class="content">
+<div class="nest">
 
-        </div>
-      </details>
+<details class="mini">
+<summary>Alignment Diagnostic<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Product</span>
+Operational coherence assessment with clear next-route output.
+</div>
+</details>
 
-      <!-- 2) BUSINESS & OPERATIONS -->
-      <details class="drop">
-        <summary>Business & Operations<span class="chev"></span></summary>
-        <div class="content">
+<details class="mini">
+<summary>Business Certification<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Program</span>
+Structure certification for decision-making, execution integrity, and measurable outcomes.
+</div>
+</details>
 
-          <div class="nest">
+<details class="mini">
+<summary>Environmental Monitoring<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Environment</span>
+Signal-based monitoring using standardized gauges and constraint models.
+</div>
+</details>
 
-            <details class="mini">
-              <summary>Execution Surfaces<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Deliver</span> Each surface is built to be used, not admired: clear routes, clear outcomes.
-                <details class="mini2">
-                  <summary>Rule<span class="schev"></span></summary>
-                  <div class="sc"><span class="k">One</span> One choice at a time; return to hubs to pivot.</div>
-                </details>
-              </div>
-            </details>
+<details class="mini">
+<summary>Instrument Packs<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Output</span>
+Downloadable templates, gauges, and structured reporting modules.
+</div>
+</details>
 
-            <details class="mini">
-              <summary>Partner Access<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Access</span> Contact channels and references live under Links for fast handoffs.
-                <details class="mini2">
-                  <summary>Where<span class="schev"></span></summary>
-                  <div class="sc"><span class="k">W</span> Links / external references / identity anchors.</div>
-                </details>
-              </div>
-            </details>
+</div>
+</div>
+</details>
 
-            <details class="mini">
-              <summary>Packaging<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Ship</span> Outputs are packaged as templates, checklists, and deployable modules.
-              </div>
-            </details>
+<!-- OPERATIONS & GOVERNANCE -->
+<details class="drop">
+<summary>Operations & Governance<span class="chev"></span></summary>
+<div class="content">
+<div class="nest">
 
-            <details class="mini">
-              <summary>Quality Gate<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Rule</span> Navigation stays stable; improvements must not break the grammar.
-              </div>
-            </details>
+<details class="mini">
+<summary>Execution Model<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Rule</span>
+Navigation stays stable while surfaces expand.
+</div>
+</details>
 
-          </div>
+<details class="mini">
+<summary>Return Protocol<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Rule</span>
+If incomplete, return to a hub and select a different route.
+</div>
+</details>
 
-        </div>
-      </details>
+<details class="mini">
+<summary>Local-First Principle<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Control</span>
+Outputs remain local until intentionally published.
+</div>
+</details>
 
-      <!-- 3) ENVIRONMENT & SAFETY -->
-      <details class="drop">
-        <summary>Environment & Safety<span class="chev"></span></summary>
-        <div class="content">
+<details class="mini">
+<summary>Measurement Integrity<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Standard</span>
+All gauges follow consistent classification and constraint rules.
+</div>
+</details>
 
-          <div class="nest">
+</div>
+</div>
+</details>
 
-            <details class="mini">
-              <summary>Environment Monitoring<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Track</span> Environmental indicators and exposures are treated as measurable signals.
-              </div>
-            </details>
+<!-- COMPASS KEY -->
+<details class="drop">
+<summary>Compass Key<span class="chev"></span></summary>
+<div class="content">
+<div><span class="tag">N</span> Laws / definitions / structure</div>
+<div><span class="tag">E</span> Products / execution surfaces</div>
+<div><span class="tag">S</span> Gauges / instruments / measurement</div>
+<div><span class="tag">W</span> Links / identity / references</div>
+</div>
+</details>
 
-            <details class="mini">
-              <summary>Risk & Readiness<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Assess</span> Use gauges to standardize risk measurement across contexts.
-              </div>
-            </details>
+</div>
 
-            <details class="mini">
-              <summary>Early Warning<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Detect</span> Detect → log → verify. Escalate only when evidence crosses the gate.
-              </div>
-            </details>
+<hr class="sep"/>
 
-            <details class="mini">
-              <summary>Public vs Local<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Control</span> Local-first by default; publish when you choose (not by accident).
-              </div>
-            </details>
+<div class="sat">
+<div class="platform">
 
-          </div>
+<a class="diamond top" href="/laws/categories/">
+<span>Laws<small>Categories</small></span>
+</a>
 
-        </div>
-      </details>
+<a class="diamond right" href="/products/">
+<span>Products<small>Suite</small></span>
+</a>
 
-      <!-- 4) HOW TO USE THIS SITE -->
-      <details class="drop">
-        <summary>How To Use This Site<span class="chev"></span></summary>
-        <div class="content">
+<a class="diamond bottom" href="/gauges/">
+<span>Gauges<small>Instruments</small></span>
+</a>
 
-          <div class="nest">
+<a class="diamond left" href="/links/">
+<span>Links<small>References</small></span>
+</a>
 
-            <details class="mini">
-              <summary>Start Here (Fast Path)<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Path</span> Laws → Categories → Integrity → Coherence (follow to the end).
-              </div>
-            </details>
+<a class="diamond mini mini-left" href="/door/">
+<span><small>DOOR</small></span>
+</a>
 
-            <details class="mini">
-              <summary>Compass Key (N/E/S/W)<span class="mchev"></span></summary>
-              <div class="mc">
-                <div><span class="k">N</span> Laws / categories / definitions.</div>
-                <div><span class="k">E</span> Products / tools / execution surfaces.</div>
-                <div><span class="k">S</span> Gauges / instruments / measurements.</div>
-                <div><span class="k">W</span> Links / references / identity anchors.</div>
-              </div>
-            </details>
+<a class="diamond mini mini-right" href="/home/">
+<span><small>HOME</small></span>
+</a>
 
-            <details class="mini">
-              <summary>Rule of One Choice<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Rule</span> Choose one route at a time. Don’t multi-tab inside a branch.
-              </div>
-            </details>
+</div>
+</div>
 
-            <details class="mini">
-              <summary>Return Point<span class="mchev"></span></summary>
-              <div class="mc">
-                <span class="tag">Return</span> Home is the compass hub. Root is the info hub.
-              </div>
-            </details>
+<footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 
-          </div>
-
-        </div>
-      </details>
-
-    </div>
-
-    <hr class="sep"/>
-
-    <!-- SATELLITE NAV (diamond grammar) -->
-    <div class="sat">
-      <div class="platform">
-
-        <a class="diamond top" href="/laws/categories/">
-          <span>Laws<small>Categories</small></span>
-        </a>
-
-        <a class="diamond right" href="/products/">
-          <span>Products<small>Suite</small></span>
-        </a>
-
-        <a class="diamond bottom" href="/gauges/">
-          <span>Gauges<small>Instruments</small></span>
-        </a>
-
-        <a class="diamond left" href="/links/">
-          <span>Links<small>References</small></span>
-        </a>
-
-        <a class="diamond mini mini-left" href="/door/">
-          <span><small>DOOR</small></span>
-        </a>
-
-        <a class="diamond mini mini-right" href="/home/">
-          <span><small>HOME</small></span>
-        </a>
-
-      </div>
-    </div>
-
-    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
-  </div>
+</div>
 </div>
 </body>
 </html>

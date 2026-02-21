@@ -5,20 +5,80 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Geodiametrics · Root</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=1001"/>
-<link rel="stylesheet" href="/assets/branch.css?v=1001"/>
+<link rel="stylesheet" href="/assets/ui.css?v=1006"/>
+<link rel="stylesheet" href="/assets/branch.css?v=1006"/>
 
 <style>
-.root-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:18px;}
-.root-hero{text-align:left;}
-.root-hero h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em;}
-.root-hero p{margin:10px 0 0;font-size:20px;opacity:.75;}
-.root-body{font-size:22px;line-height:1.65;opacity:.92;}
-.panel{border-radius:22px;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.45);padding:18px 18px;}
-.panel h2{margin:0 0 10px;font-size:18px;font-weight:900;letter-spacing:.10em;opacity:.9;}
-.panel p{margin:10px 0;font-size:18px;line-height:1.6;opacity:.9;}
-.root-controls{width:100%;display:flex;justify-content:center;margin-top:6px;}
-.root-controls .platform{width:min(360px,86vw);}
+/* ROOT: bubbles + satellite navigation (root-only) */
+
+.root-wrap{
+  width:min(980px,94vw);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.bubbles{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+}
+@media (min-width:860px){
+  .bubbles{ grid-template-columns:1fr 1fr; }
+}
+
+.bubble{
+  border-radius:22px;
+  background:rgba(255,255,255,.04);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    0 30px 80px rgba(0,0,0,.45);
+  padding:16px 16px;
+}
+
+.bubble h2{
+  margin:0 0 8px;
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:.10em;
+  opacity:.92;
+  text-transform:uppercase;
+}
+.bubble p{
+  margin:8px 0;
+  font-size:16px;
+  line-height:1.6;
+  opacity:.9;
+}
+.tag{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
+  font-weight:800;
+  letter-spacing:.06em;
+}
+
+.sep{
+  border:0;
+  height:1px;
+  background:rgba(255,255,255,.10);
+  margin:6px 0 0;
+}
+
+/* Satellite strip: smaller platform + diamonds */
+.sat{
+  display:flex;
+  justify-content:center;
+  margin-top:10px;
+}
+.sat .platform{
+  width:min(360px,86vw);
+}
+
+/* Make root footer breathe */
+footer{ margin-top:26px; }
 </style>
 </head>
 
@@ -28,32 +88,70 @@
 <div class="page">
   <div class="root-wrap">
 
-    <div class="root-hero">
+    <div class="h">
       <h1>Geodiametrics</h1>
       <p>Under construction · Safe to explore.</p>
     </div>
 
-    <div class="root-body">
-      Welcome. This site is actively being built in public. It is safe to enter, browse, and explore.
-      Pages may shift as branches are completed, but the navigation rules and structure are stable.
+    <div class="bubbles">
+
+      <div class="bubble">
+        <h2>Coming Soon</h2>
+        <p>New instruments, branches, and content are being added continuously.</p>
+        <p><span class="tag">Rule</span> Navigation stays stable while content evolves.</p>
+      </div>
+
+      <div class="bubble">
+        <h2>How To Navigate</h2>
+        <p>Each hub uses the same diamond grammar: four routes, one choice at a time.</p>
+        <p><span class="tag">Tip</span> If a branch looks incomplete, return to a hub and choose another route.</p>
+      </div>
+
+      <div class="bubble">
+        <h2>Compass Key</h2>
+        <p><span class="tag">N</span> Laws / categories / definitions.</p>
+        <p><span class="tag">E</span> Products / tools / execution surfaces.</p>
+        <p><span class="tag">S</span> Gauges / instruments / measurements.</p>
+        <p><span class="tag">W</span> Links / references / identity anchors.</p>
+      </div>
+
+      <div class="bubble">
+        <h2>What’s Stable</h2>
+        <p>The structure and navigation are stable. Content may change while branches are completed.</p>
+        <p>If you want a finished example path, start at <span class="tag">Laws → Categories</span> and follow a branch to the end.</p>
+      </div>
+
     </div>
 
-    <div class="panel">
-      <h2>START HERE</h2>
-      <p>The first complete branch is <strong>Laws → Categories → Integrity</strong>, centered on <strong>Coherence</strong>.</p>
-      <p>If you want to see what finished branches will look like across all categories, open <strong>Laws</strong>, select <strong>Categories</strong>, enter <strong>Integrity</strong>, then follow <strong>Coherence</strong> all the way to the end.</p>
-    </div>
+    <hr class="sep"/>
 
-    <div class="root-controls">
+    <!-- Satellite navigation (proceed) -->
+    <div class="sat">
       <div class="platform">
 
-        <a class="diamond top" href="/door/"><span>Enter<small>Door</small></span></a>
-        <a class="diamond right" href="/home/"><span>Home<small>Compass</small></span></a>
-        <a class="diamond bottom" href="/laws/categories/"><span>Categories<small>Laws</small></span></a>
-        <a class="diamond left" href="/products/"><span>Products<small>Suite</small></span></a>
+        <a class="diamond top" href="/laws/categories/">
+          <span>Laws<small>Categories</small></span>
+        </a>
 
-        <a class="diamond mini mini-left" href="/home/"><span><small>HOME</small></span></a>
-        <a class="diamond mini mini-right" href="/door/"><span><small>DOOR</small></span></a>
+        <a class="diamond right" href="/products/">
+          <span>Products<small>Suite</small></span>
+        </a>
+
+        <a class="diamond bottom" href="/gauges/">
+          <span>Gauges<small>Instruments</small></span>
+        </a>
+
+        <a class="diamond left" href="/links/">
+          <span>Links<small>References</small></span>
+        </a>
+
+        <a class="diamond mini mini-left" href="/door/">
+          <span><small>DOOR</small></span>
+        </a>
+
+        <a class="diamond mini mini-right" href="/home/">
+          <span><small>HOME</small></span>
+        </a>
 
       </div>
     </div>

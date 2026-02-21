@@ -7,20 +7,18 @@
 
 <style>
 :root{
-  --red-deep:#4a0000;
-  --red-lacquer:#7a0c0c;
-  --gold:#d4af37;
-  --gold-glow:rgba(212,175,55,.45);
+  --red1:#8d0b0b;        /* lacquer */
+  --red2:#4a0000;        /* deep */
+  --ink:#070a0f;         /* black */
+  --gold:#d4af37;        /* gold */
+  --goldA:rgba(212,175,55,.45);
   --silver:#cfd3da;
-  --silver-glow:rgba(207,211,218,.35);
-  --ink:#0a0f14;
-
-  --line:rgba(255,255,255,.10);
+  --line:rgba(255,255,255,.12);
   --soft:rgba(255,255,255,.06);
-
   --text:rgba(255,255,255,.92);
-  --muted:rgba(255,255,255,.70);
+  --muted:rgba(255,255,255,.72);
 }
+
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -28,32 +26,40 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   color:var(--text);
   background:
-    radial-gradient(1200px 700px at 50% 0%, var(--red-lacquer) 0%, var(--red-deep) 55%, var(--ink) 100%);
+    radial-gradient(1200px 720px at 50% 0%, rgba(141,11,11,.62) 0%, rgba(74,0,0,.52) 45%, rgba(7,10,15,1) 100%);
   overflow-x:hidden;
 }
+
+/* hard reset vs any inherited site CSS */
+a,button{font:inherit}
+button{border:0;background:none;color:inherit}
+h1,p{margin:0}
+img{max-width:100%}
+
+/* layout */
 .page{
   width:min(980px,94vw);
   margin:0 auto;
-  padding:26px 14px 70px;
+  padding:28px 14px 84px; /* extra bottom so NOTHING overlaps */
 }
 
-.hero{position:relative;z-index:2;text-align:left}
+.hero{position:relative;z-index:2}
 .hero h1{
-  margin:0;
   font-size:44px;
   font-weight:900;
-  letter-spacing:.12em;
+  letter-spacing:.14em;
   text-transform:uppercase;
 }
 .hero p{
-  margin:10px 0 0;
-  opacity:.78;
+  margin-top:10px;
   font-size:16px;
-  line-height:1.4;
+  opacity:.78;
+  line-height:1.45;
 }
 
+/* top controls */
 .topbar{
-  margin-top:14px;
+  margin-top:16px;
   display:flex;
   gap:10px;
   flex-wrap:wrap;
@@ -64,88 +70,95 @@ body{
   padding:10px 14px;
   background:rgba(255,255,255,.06);
   border:1px solid var(--line);
-  box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.14);
   font-weight:900;
   letter-spacing:.12em;
   text-transform:uppercase;
   font-size:12px;
-  color:var(--text);
-  text-decoration:none;
   user-select:none;
+  -webkit-tap-highlight-color:transparent;
 }
-.pill:hover{background:rgba(255,255,255,.08)}
-.pill.gold{border-color:rgba(212,175,55,.40); box-shadow:0 0 18px var(--gold-glow) inset}
-.pill.silver{border-color:rgba(207,211,218,.34); box-shadow:0 0 18px var(--silver-glow) inset}
+.pill.btn{cursor:pointer}
+.pill.btn:hover{background:rgba(255,255,255,.08)}
 .pill.active{
-  background:rgba(255,255,255,.10);
-  border-color:rgba(212,175,55,.42);
-  box-shadow:0 0 16px rgba(212,175,55,.18) inset;
+  border-color:rgba(212,175,55,.48);
+  box-shadow:0 0 18px rgba(212,175,55,.18) inset;
+}
+.pill.gold{
+  border-color:rgba(212,175,55,.50);
+  box-shadow:0 0 20px rgba(212,175,55,.16) inset;
 }
 
+/* section */
 .section-title{
   margin-top:18px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  opacity:.7;
   font-size:12px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  opacity:.70;
 }
 
-/* Quadrant cards */
-details.quad{
+/* quadrant cards (no details/dropdowns = no competing UI) */
+.quad{
   margin-top:12px;
   border-radius:22px;
-  background:linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.18));
+  background:linear-gradient(180deg, rgba(0,0,0,.34), rgba(0,0,0,.18));
   border:1px solid var(--line);
-  box-shadow:0 22px 70px rgba(0,0,0,.55);
+  box-shadow:0 26px 80px rgba(0,0,0,.60);
   backdrop-filter:blur(12px);
   overflow:hidden;
 }
-details.quad summary{
-  list-style:none;
-  cursor:pointer;
-  padding:16px 16px;
+.qhead{
+  padding:16px 16px 12px;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:12px;
-  -webkit-tap-highlight-color:transparent;
 }
-details.quad summary::-webkit-details-marker{display:none}
-.q-left{display:flex;align-items:center;gap:12px;min-width:0}
-.q-badge{
-  width:56px;height:40px;border-radius:16px;
+.qleft{display:flex;align-items:center;gap:12px;min-width:0}
+.qbadge{
+  width:62px;height:42px;border-radius:16px;
   background:rgba(0,0,0,.22);
   border:1px solid rgba(255,255,255,.12);
   display:flex;align-items:center;justify-content:center;
-  font-weight:900;letter-spacing:.10em;
+  font-weight:900;
+  letter-spacing:.10em;
   flex:0 0 auto;
 }
-.q-badge.gold{border-color:rgba(212,175,55,.50); box-shadow:0 0 14px var(--gold-glow) inset}
-.q-badge.sun{border-color:rgba(212,175,55,.26); box-shadow:0 0 10px rgba(212,175,55,.18) inset}
-.q-badge.city{border-color:rgba(207,211,218,.24); box-shadow:0 0 10px rgba(207,211,218,.16) inset}
-.q-badge.set{border-color:rgba(207,211,218,.20); box-shadow:0 0 10px rgba(207,211,218,.14) inset}
+.qbadge.gold{border-color:rgba(212,175,55,.55); box-shadow:0 0 14px rgba(212,175,55,.18) inset}
+.qbadge.sun{border-color:rgba(212,175,55,.28); box-shadow:0 0 12px rgba(212,175,55,.14) inset}
+.qbadge.lantern{border-color:rgba(207,211,218,.22); box-shadow:0 0 12px rgba(207,211,218,.12) inset}
+.qbadge.set{border-color:rgba(207,211,218,.18); box-shadow:0 0 12px rgba(207,211,218,.10) inset}
 
-.q-text{min-width:0}
-.q-text b{display:block;font-size:18px;letter-spacing:.12em;text-transform:uppercase}
-.q-text span{display:block;opacity:.72;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.q-arrow{
-  width:42px;height:42px;border-radius:999px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  display:flex;align-items:center;justify-content:center;
-  opacity:.9;
-  flex:0 0 auto;
+.qtxt{min-width:0}
+.qtxt b{
+  display:block;
+  font-size:18px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
 }
-.inside{padding:0 16px 16px}
+.qtxt span{
+  display:block;
+  margin-top:2px;
+  opacity:.72;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.qhint{
+  font-size:12px;
+  opacity:.68;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  padding:10px 16px 0;
+}
 
-/* Bubble grid */
+.qbody{padding:12px 16px 16px}
 .grid2{
   display:grid;
   grid-template-columns:1fr;
   gap:10px;
-  margin-top:8px;
 }
 @media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+
 .bubble{
   border-radius:18px;
   background:rgba(255,255,255,.05);
@@ -184,28 +197,44 @@ details.quad summary::-webkit-details-marker{display:none}
   flex:0 0 auto;
 }
 
-/* ===== MODAL OVERLAY (NO SCROLL-JUMP) ===== */
-.modal-backdrop{
+/* footer */
+.brand{
+  margin-top:22px;
+  opacity:.26;
+  letter-spacing:.35em;
+  text-transform:uppercase;
+  font-size:12px;
+  text-align:center;
+}
+.footer{
+  margin-top:8px;
+  opacity:.32;
+  font-size:12px;
+  letter-spacing:.2em;
+  text-align:center;
+}
+
+/* ===== MODAL (opaque pop-over, zero scroll-jump) ===== */
+.backdrop{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.55);
-  backdrop-filter:blur(10px);
   z-index:999;
   display:none;
   align-items:center;
   justify-content:center;
   padding:14px;
+  background:rgba(0,0,0,.62);
+  backdrop-filter:blur(12px);
 }
-.modal-backdrop.open{display:flex}
-
+.backdrop.open{display:flex}
 .modal{
-  width:min(880px,96vw);
-  max-height:min(82vh,860px);
+  width:min(900px,96vw);
+  max-height:min(84vh,900px);
   overflow:auto;
   border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(180deg, rgba(20,0,0,.78), rgba(0,0,0,.55));
-  box-shadow:0 30px 120px rgba(0,0,0,.70);
+  border:1px solid rgba(255,255,255,.14);
+  background:linear-gradient(180deg, rgba(30,0,0,.86), rgba(0,0,0,.62));
+  box-shadow:0 34px 140px rgba(0,0,0,.75);
   position:relative;
 }
 .modal::before{
@@ -215,48 +244,48 @@ details.quad summary::-webkit-details-marker{display:none}
   pointer-events:none;
   box-shadow:0 0 0 1px rgba(212,175,55,.10) inset;
 }
-.modal-top{
-  padding:14px 14px 10px;
+.mtop{
+  padding:14px;
   display:flex;
   align-items:flex-start;
   justify-content:space-between;
   gap:12px;
 }
-.modal-top .meta{
+.mmeta{
   opacity:.70;
   letter-spacing:.18em;
   text-transform:uppercase;
   font-size:12px;
 }
-.modal-title{
+.mclose{
+  width:44px;height:44px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  user-select:none;
+}
+.mclose:hover{background:rgba(255,255,255,.10)}
+.mtitle{
   padding:0 14px;
   font-weight:900;
   letter-spacing:.08em;
   font-size:20px;
 }
-.modal-desc{
-  padding:8px 14px 0;
-  color:rgba(255,255,255,.78);
-  line-height:1.55;
+.mdesc{
+  padding:10px 14px 0;
+  color:rgba(255,255,255,.80);
+  line-height:1.6;
 }
-.modal-close{
-  width:44px;height:44px;border-radius:999px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  user-select:none;
-}
-.modal-close:hover{background:rgba(255,255,255,.10)}
 
-/* modal lens chips reflect the GLOBAL lens */
-.modal-lensrow{
+/* global lens chips */
+.mchips{
   padding:12px 14px 0;
   display:flex;
   gap:10px;
   flex-wrap:wrap;
 }
-.lenschip{
+.chip{
   border-radius:999px;
   padding:8px 12px;
   border:1px solid rgba(255,255,255,.10);
@@ -264,24 +293,24 @@ details.quad summary::-webkit-details-marker{display:none}
   letter-spacing:.14em;
   text-transform:uppercase;
   font-size:11px;
-  opacity:.9;
+  user-select:none;
 }
-.lenschip.on{
-  border-color:rgba(212,175,55,.45);
-  box-shadow:0 0 16px rgba(212,175,55,.18) inset;
+.chip.on{
+  border-color:rgba(212,175,55,.48);
+  box-shadow:0 0 16px rgba(212,175,55,.16) inset;
 }
 
-/* nested bubbles inside modal */
-.modal-bubbles{
-  padding:12px 14px 14px;
+/* modal: level-1 sub bubbles */
+.mgrid{
+  padding:12px 14px 0;
   display:grid;
   grid-template-columns:1fr;
   gap:10px;
 }
-@media(min-width:760px){.modal-bubbles{grid-template-columns:1fr 1fr}}
+@media(min-width:760px){.mgrid{grid-template-columns:1fr 1fr}}
 .subbubble{
   border-radius:18px;
-  background:rgba(0,0,0,.22);
+  background:rgba(0,0,0,.24);
   border:1px solid rgba(255,255,255,.10);
   padding:12px 12px;
   display:flex;
@@ -290,13 +319,15 @@ details.quad summary::-webkit-details-marker{display:none}
   gap:12px;
   cursor:pointer;
 }
-.subbubble:hover{background:rgba(0,0,0,.28)}
-.subbubble b{
+.subbubble:hover{background:rgba(0,0,0,.30)}
+.subbubble .t{min-width:0}
+.subbubble .t b{
+  display:block;
   font-size:12px;
   letter-spacing:.14em;
   text-transform:uppercase;
 }
-.subbubble i{
+.subbubble .t i{
   display:block;
   margin-top:3px;
   opacity:.72;
@@ -311,12 +342,14 @@ details.quad summary::-webkit-details-marker{display:none}
   display:flex;align-items:center;justify-content:center;
   flex:0 0 auto;
 }
+
+/* modal: subpanel (deep) */
 .subpanel{
-  margin:0 14px 14px;
+  margin:12px 14px 14px;
   border-radius:18px;
   background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.10);
-  padding:12px 12px;
+  border:1px solid rgba(255,255,255,.12);
+  padding:14px 14px;
   display:none;
 }
 .subpanel.open{display:block}
@@ -326,24 +359,45 @@ details.quad summary::-webkit-details-marker{display:none}
   letter-spacing:.16em;
   text-transform:uppercase;
 }
-.subpanel p{
-  margin:8px 0 0;
+.subpanel .blurb{
+  margin-top:10px;
+  opacity:.82;
+  line-height:1.6;
+}
+.subpanel ul{
+  margin:10px 0 0 18px;
+  padding:0;
   opacity:.78;
-  line-height:1.55;
+  line-height:1.6;
+}
+.subpanel .mini{
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.minichip{
+  border-radius:999px;
+  padding:8px 12px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.06);
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  opacity:.9;
 }
 
-/* modal footer (single jump only) */
-.modal-footer{
+/* modal footer: single jump only */
+.mfoot{
   padding:12px 14px 16px;
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  justify-content:flex-start;
 }
 .jump{
   border-radius:18px;
   padding:12px 14px;
-  border:1px solid rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.14);
   background:rgba(255,255,255,.06);
   text-decoration:none;
   color:var(--text);
@@ -353,22 +407,9 @@ details.quad summary::-webkit-details-marker{display:none}
   font-size:12px;
 }
 .jump:hover{background:rgba(255,255,255,.08)}
-.jump.gold{border-color:rgba(212,175,55,.45); box-shadow:0 0 16px var(--gold-glow) inset}
-
-.brand{
-  margin-top:22px;
-  opacity:.30;
-  letter-spacing:.35em;
-  text-transform:uppercase;
-  font-size:12px;
-  text-align:center;
-}
-.footer{
-  margin-top:8px;
-  opacity:.35;
-  font-size:12px;
-  letter-spacing:.2em;
-  text-align:center;
+.jump.gold{
+  border-color:rgba(212,175,55,.50);
+  box-shadow:0 0 16px rgba(212,175,55,.16) inset;
 }
 </style>
 </head>
@@ -378,37 +419,37 @@ details.quad summary::-webkit-details-marker{display:none}
 
   <div class="hero">
     <h1>HOME</h1>
-    <p id="desc">Tap any bubble. Details pop over (no scroll jump). Origin / Now / Trajectory filters everything.</p>
+    <p>Tap any bubble. Details pop over (no scroll jump). Origin / Now / Trajectory filters everything.</p>
 
     <div class="topbar">
-      <span class="pill silver" id="langPill">LANG: EN</span>
+      <span class="pill" id="langPill">LANG: EN</span>
       <span class="pill gold" id="depthPill">DEPTH: EXPLORE</span>
 
-      <span class="pill" id="lensOrigin" role="button">ORIGIN</span>
-      <span class="pill active" id="lensNow" role="button">NOW</span>
-      <span class="pill" id="lensTrajectory" role="button">TRAJECTORY</span>
+      <span class="pill btn" id="lensOrigin">ORIGIN</span>
+      <span class="pill btn active" id="lensNow">NOW</span>
+      <span class="pill btn" id="lensTrajectory">TRAJECTORY</span>
 
-      <a class="pill" href="/door/">CHANGE DEPTH</a>
-      <a class="pill" href="/">CHANGE LANGUAGE</a>
-      <a class="pill gold" href="/door/" id="jumpHomeTop">JUMP HOME</a>
+      <a class="pill btn" href="/door/">CHANGE DEPTH</a>
+      <a class="pill btn" href="/">CHANGE LANGUAGE</a>
+      <a class="pill btn gold" href="/door/">JUMP HOME</a>
     </div>
 
     <div class="section-title">Quadrant routes (NW / NE / SW / SE)</div>
   </div>
 
   <!-- NW -->
-  <details class="quad" open>
-    <summary>
-      <div class="q-left">
-        <div class="q-badge gold">⭐ NW</div>
-        <div class="q-text">
+  <div class="quad">
+    <div class="qhead">
+      <div class="qleft">
+        <div class="qbadge gold">⭐ NW</div>
+        <div class="qtxt">
           <b>Northwest</b>
           <span>Definition · language · structure</span>
         </div>
       </div>
-      <div class="q-arrow">▾</div>
-    </summary>
-    <div class="inside">
+    </div>
+    <div class="qhint">Tap a bubble → pop-over details → nested bubbles → deep panel</div>
+    <div class="qbody">
       <div class="grid2">
         <div class="bubble" data-block="ssg">
           <div class="t"><b>SSG</b><i>Resources · Stores · Constraints · Goals · Guards</i></div>
@@ -423,26 +464,26 @@ details.quad summary::-webkit-details-marker{display:none}
           <div class="go">▶</div>
         </div>
         <div class="bubble" data-block="acronyms">
-          <div class="t"><b>Acronyms</b><i>Pillar map + usage</i></div>
+          <div class="t"><b>Acronyms</b><i>Pillars · usage map · examples</i></div>
           <div class="go">▶</div>
         </div>
       </div>
     </div>
-  </details>
+  </div>
 
   <!-- NE -->
-  <details class="quad">
-    <summary>
-      <div class="q-left">
-        <div class="q-badge sun">🌞 NE</div>
-        <div class="q-text">
+  <div class="quad">
+    <div class="qhead">
+      <div class="qleft">
+        <div class="qbadge sun">🌞 NE</div>
+        <div class="qtxt">
           <b>Northeast</b>
           <span>Execution · surfaces · examples</span>
         </div>
       </div>
-      <div class="q-arrow">▾</div>
-    </summary>
-    <div class="inside">
+    </div>
+    <div class="qhint">Surfaces: apps, portals, workflows, outputs</div>
+    <div class="qbody">
       <div class="grid2">
         <div class="bubble" data-block="surfaces">
           <div class="t"><b>Execution Surfaces</b><i>Apps · portals · interfaces</i></div>
@@ -462,21 +503,21 @@ details.quad summary::-webkit-details-marker{display:none}
         </div>
       </div>
     </div>
-  </details>
+  </div>
 
   <!-- SW -->
-  <details class="quad">
-    <summary>
-      <div class="q-left">
-        <div class="q-badge city">🏮 SW</div>
-        <div class="q-text">
+  <div class="quad">
+    <div class="qhead">
+      <div class="qleft">
+        <div class="qbadge lantern">🏮 SW</div>
+        <div class="qtxt">
           <b>Southwest</b>
           <span>Measurement · diagnostics · rules</span>
         </div>
       </div>
-      <div class="q-arrow">▾</div>
-    </summary>
-    <div class="inside">
+    </div>
+    <div class="qhint">Gauges + diagnostics + rules + protocols</div>
+    <div class="qbody">
       <div class="grid2">
         <div class="bubble" data-block="gauges">
           <div class="t"><b>Gauges</b><i>Instrument panels · thresholds</i></div>
@@ -496,21 +537,21 @@ details.quad summary::-webkit-details-marker{display:none}
         </div>
       </div>
     </div>
-  </details>
+  </div>
 
   <!-- SE -->
-  <details class="quad">
-    <summary>
-      <div class="q-left">
-        <div class="q-badge set">🌇 SE</div>
-        <div class="q-text">
+  <div class="quad">
+    <div class="qhead">
+      <div class="qleft">
+        <div class="qbadge set">🌇 SE</div>
+        <div class="qtxt">
           <b>Southeast</b>
           <span>Identity · references · links</span>
         </div>
       </div>
-      <div class="q-arrow">▾</div>
-    </summary>
-    <div class="inside">
+    </div>
+    <div class="qhint">Anchors: ORCID, OSF, references, contact</div>
+    <div class="qbody">
       <div class="grid2">
         <div class="bubble" data-block="orcid">
           <div class="t"><b>ORCID</b><i>Research identity anchor</i></div>
@@ -530,36 +571,39 @@ details.quad summary::-webkit-details-marker{display:none}
         </div>
       </div>
     </div>
-  </details>
+  </div>
 
   <div class="brand">GEODIAMETRICS</div>
   <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
 </div>
 
 <!-- MODAL -->
-<div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-top">
-      <div class="meta" id="modalMeta">DETAIL</div>
-      <div class="modal-close" id="modalClose" aria-label="Close">✕</div>
-    </div>
-    <div class="modal-title" id="modalTitle">—</div>
-    <div class="modal-desc" id="modalDesc">—</div>
-
-    <div class="modal-lensrow">
-      <span class="lenschip" data-chip="origin">Origin</span>
-      <span class="lenschip on" data-chip="now">Now</span>
-      <span class="lenschip" data-chip="trajectory">Trajectory</span>
+<div class="backdrop" id="backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle">
+    <div class="mtop">
+      <div class="mmeta" id="mmeta">DETAIL</div>
+      <div class="mclose" id="mclose" aria-label="Close">✕</div>
     </div>
 
-    <div class="modal-bubbles" id="modalBubbles"></div>
+    <div class="mtitle" id="mtitle">—</div>
+    <div class="mdesc" id="mdesc">—</div>
+
+    <div class="mchips">
+      <span class="chip" data-chip="origin">Origin</span>
+      <span class="chip on" data-chip="now">Now</span>
+      <span class="chip" data-chip="trajectory">Trajectory</span>
+    </div>
+
+    <div class="mgrid" id="mgrid"></div>
 
     <div class="subpanel" id="subpanel">
-      <h3 id="subpanelTitle">—</h3>
-      <p id="subpanelText">—</p>
+      <h3 id="subTitle">—</h3>
+      <div class="blurb" id="subBlurb">—</div>
+      <ul id="subBullets"></ul>
+      <div class="mini" id="subMini"></div>
     </div>
 
-    <div class="modal-footer">
+    <div class="mfoot">
       <a class="jump gold" href="/door/">JUMP HOME</a>
     </div>
   </div>
@@ -568,353 +612,788 @@ details.quad summary::-webkit-details-marker{display:none}
 <script>
 (function(){
   const lang = (localStorage.getItem('crp_lang') || 'en').toLowerCase();
-  const depth = (localStorage.getItem('crp_depth') || 'explore').toLowerCase();
+  const depth = (localStorage.getItem('crp_depth') || 'explore').toLowerCase(); // explore | learn
   let lens = (localStorage.getItem('crp_lens') || 'now').toLowerCase(); // origin | now | trajectory
 
   const langPill = document.getElementById('langPill');
   const depthPill = document.getElementById('depthPill');
+
   langPill.textContent = 'LANG: ' + (lang === 'zh' ? '中文' : 'EN');
   depthPill.textContent = 'DEPTH: ' + (depth === 'learn' ? 'LEARN' : 'EXPLORE');
 
-  const lensBtns = {
+  const lensBtn = {
     origin: document.getElementById('lensOrigin'),
     now: document.getElementById('lensNow'),
     trajectory: document.getElementById('lensTrajectory')
   };
 
-  // ---- BLOCKS (each has origin/now/trajectory + nested sub-bubbles) ----
+  function setLens(next){
+    lens = next;
+    localStorage.setItem('crp_lens', lens);
+    Object.keys(lensBtn).forEach(k => lensBtn[k].classList.toggle('active', k === lens));
+    updateChips();
+    if(state.openKey) renderModal(state.openKey);
+  }
+  lensBtn.origin.addEventListener('click',()=>setLens('origin'));
+  lensBtn.now.addEventListener('click',()=>setLens('now'));
+  lensBtn.trajectory.addEventListener('click',()=>setLens('trajectory'));
+
+  /* ====== DEEPER CONTENT (Explore vs Learn) ====== */
   const blocks = {
-    // NW
     ssg:{
       meta:'NW · SSG',
       title:'SSG — Simplified Syntax Geometry',
-      origin:'Created to compress app behavior into a constraint-native spec vocabulary (minimum executable structure).',
-      now:'Used to express Resources / Stores / Constraints / Goals / Guards with receipt-gated advancement.',
-      trajectory:'Evolves into replay-safe execution contracts across products and institutions.',
+      origin_ex:'Compressed app behavior into a constraint-native vocabulary (minimum executable structure).',
+      now_ex:'Use R/S/C/G/Guards to keep execution replay-safe and receipt-gated.',
+      traj_ex:'Scale into portable execution contracts across domains.',
+      origin_ln:'Origin: SSG formed to eliminate ambiguity in execution by expressing structure as constraints first—before code, before UI.',
+      now_ln:'Now: SSG is the compact execution spec: Resources/Stores/Constraints/Goals/Guards, with receipts that verify progression and prevent drift.',
+      traj_ln:'Trajectory: SSG becomes a portable contract layer—replayable, auditable, and interoperable across products, orgs, and institutions.',
       subs:[
-        {k:'primitives', t:'Primitives', s:'R / S / C / G / Guards', p:'Resource (what is acted on). Store (where state lives). Constraint (invariants). Goal (success condition). Guard (admissibility check).'},
-        {k:'receipts', t:'Receipts', s:'Gated flow', p:'Advance only after receipt. Back-nav invalidates downstream receipts. Each step is replayable and auditable.'},
-        {k:'invariants', t:'Invariants', s:'Navigation-first', p:'No timers as gates. Unified press primitives. Atomic handoff with receipt.'},
-        {k:'mapping', t:'Mapping', s:'How to read', p:'Use Explore for surface summaries. Use Learn for deep nested bubbles and full breakdowns.'}
+        {k:'primitives', t:'Primitives', s:'R / S / C / G / Guards',
+          blurb:'This is the minimum set that makes “execution” formally expressible.',
+          bullets:[
+            'Resource: what is acted on (entity / target).',
+            'Store: where state lives (memory / ledger).',
+            'Constraint: invariants (must-hold).',
+            'Goal: success condition (finish state).',
+            'Guard: admissibility check (allowed / blocked).'
+          ],
+          mini:['MINIMUM SET','EXECUTABLE','OBSERVER-SAFE']
+        },
+        {k:'receipts', t:'Receipts', s:'Gated flow',
+          blurb:'Receipts make progress verifiable and replay-safe.',
+          bullets:[
+            'Advance only after receipt (no invisible progress).',
+            'Back-nav invalidates downstream receipts.',
+            'Every step can be replayed and audited.'
+          ],
+          mini:['VERIFY','REPLAY','AUDIT']
+        },
+        {k:'invariants', t:'Invariants', s:'Navigation-first',
+          blurb:'These keep the UI and engine from drifting as complexity grows.',
+          bullets:[
+            'No timers as gates (time never decides).',
+            'Unified press primitives (consistent interaction).',
+            'Atomic handoff with receipt (no partial states).'
+          ],
+          mini:['NO TIMERS','ATOMIC','CONSISTENT']
+        },
+        {k:'mapping', t:'Mapping', s:'How to read',
+          blurb:'Explore vs Learn changes depth only (structure stays the same).',
+          bullets:[
+            'Explore: surface summary + where it lives in the system.',
+            'Learn: nested bubbles + full breakdown in blocks.',
+            'Lens (Origin/Now/Trajectory) filters meaning across the whole page.'
+          ],
+          mini:['EXPLORE','LEARN','LENS']
+        }
       ]
     },
+
     grammar:{
       meta:'NW · Grammar',
       title:'Diamond Grammar',
-      origin:'Designed to eliminate ambiguity by forcing one coherent choice at a time.',
-      now:'Hub-first traversal + receipt gating keeps navigation stable as content grows.',
-      trajectory:'Scales into multi-portal routing without semantic drift.',
+      origin_ex:'One choice at a time—so meaning can’t drift.',
+      now_ex:'Hub-first traversal + receipt gating.',
+      traj_ex:'Multi-portal routing without confusion.',
+      origin_ln:'Origin: the grammar was designed to compress decision pathways into stable routes—so readers cannot “half choose” and drift.',
+      now_ln:'Now: it’s the navigation skeleton: hub-first traversal, one choice at a time, receipts verifying progression.',
+      traj_ln:'Trajectory: scales to multi-portal access without adding friction, because structure stays invariant as depth expands.',
       subs:[
-        {k:'rule', t:'Rule', s:'One choice', p:'Choose one route at a time. Complete the route. Return to hub.'},
-        {k:'return', t:'Return protocol', s:'Hub-first', p:'Return to hub when uncertain. Don’t multi-tab inside a branch.'},
-        {k:'receipt', t:'Receipt gating', s:'Proof', p:'Progress is verified. Backtracking invalidates downstream receipts.'},
-        {k:'why', t:'Why it works', s:'Anti-drift', p:'It prevents compounding incoherence by constraining traversal structure.'}
+        {k:'one', t:'One choice', s:'Anti-drift',
+          blurb:'A coherent system forbids simultaneous competing commitments.',
+          bullets:[
+            'Choose one route at a time.',
+            'Finish or return—don’t multi-tab inside a branch.',
+            'Structure stays stable even as content evolves.'
+          ],
+          mini:['CHOICE','FINISH','RETURN']
+        },
+        {k:'hub', t:'Hub-first', s:'Return protocol',
+          blurb:'When uncertain, return to the hub to re-orient.',
+          bullets:[
+            'Hub is the stable surface.',
+            'Branches are exploration.',
+            'Return prevents “getting lost” under depth.'
+          ],
+          mini:['HUB','ORIENT','STABLE']
+        },
+        {k:'gate', t:'Receipt gating', s:'Proof layer',
+          blurb:'Receipts prevent false progress and enforce coherence.',
+          bullets:[
+            'Receipts are proof of completion.',
+            'Backtracking invalidates downstream.',
+            'Replay confirms consistency.'
+          ],
+          mini:['PROOF','INVALIDATE','REPLAY']
+        },
+        {k:'why', t:'Why it works', s:'Coherence',
+          blurb:'Because external trust cannot exceed internal coherence.',
+          bullets:[
+            'Misalignment shows up immediately.',
+            'Structure forces clarity.',
+            'Clarity increases execution reliability.'
+          ],
+          mini:['ALIGN','CLARITY','RELIABLE']
+        }
       ]
     },
+
     dotgrid:{
       meta:'NW · DOT.GRID',
       title:'DOT.GRID',
-      origin:'Created to index decisions and evidence under consistent constraints.',
-      now:'256-state indexing lattice for replay, audit, and observer-consistent classification.',
-      trajectory:'Becomes a universal coordinate layer for cross-domain stability measurement.',
+      origin_ex:'Index decisions under constraint.',
+      now_ex:'256-state lattice for replay + audit.',
+      traj_ex:'Universal coordinate layer for stability.',
+      origin_ln:'Origin: DOT.GRID created to classify evidence streams consistently under constraint—so different observers converge on the same output.',
+      now_ln:'Now: a 256-state indexing lattice that supports replay, audit, and observer-consistent classification.',
+      traj_ln:'Trajectory: becomes a universal coordinate layer for cross-domain stability measurement and calibration.',
       subs:[
-        {k:'what', t:'What it is', s:'256 states', p:'A compact indexing scheme for classifying system state under constraint.'},
-        {k:'replay', t:'Replay', s:'Audit', p:'Evidence streams can be replayed to reproduce classifications.'},
-        {k:'observer', t:'Observer-consistent', s:'Shared coordinates', p:'Independent observers should converge on the same classification from the same evidence.'},
-        {k:'use', t:'Use', s:'When', p:'Use when you need repeatable scoring, auditing, and stability tracking.'}
+        {k:'what', t:'What it is', s:'256 states',
+          blurb:'A compact coordinate system for system-state classification.',
+          bullets:[
+            '256 states (discrete lattice).',
+            'Supports consistent labeling.',
+            'Pairs with replay and audit.'
+          ],
+          mini:['256','LATTICE','LABEL']
+        },
+        {k:'replay', t:'Replay', s:'Reproduce',
+          blurb:'Same evidence → same classification.',
+          bullets:[
+            'Replay evidence streams.',
+            'Verify identical outputs.',
+            'Detect drift when outputs diverge.'
+          ],
+          mini:['REPLAY','VERIFY','DRIFT']
+        },
+        {k:'audit', t:'Audit', s:'Accountable',
+          blurb:'Auditability is structural, not “trust me.”',
+          bullets:[
+            'Trace evidence to output.',
+            'Expose threshold rules.',
+            'Keep history of changes.'
+          ],
+          mini:['TRACE','THRESHOLD','HISTORY']
+        },
+        {k:'use', t:'Use cases', s:'When to use',
+          blurb:'When you need consistent scoring and stability tracking.',
+          bullets:[
+            'Governance and compliance.',
+            'Diagnostics under load.',
+            'Network-scale calibration.'
+          ],
+          mini:['GOV','DIAG','SCALE']
+        }
       ]
     },
+
     acronyms:{
       meta:'NW · Glossary',
       title:'Acronyms & Glossary',
-      origin:'Introduced to prevent meaning collapse as the system scales.',
-      now:'Pillarized map + usage notes.',
-      trajectory:'Becomes a shared vocabulary layer for teams and institutions.',
+      origin_ex:'Prevent meaning collapse as the system scales.',
+      now_ex:'Pillars + usage map.',
+      traj_ex:'Shared vocabulary layer for teams.',
+      origin_ln:'Origin: acronyms become dangerous without stable definitions—this section locks meaning to prevent drift.',
+      now_ln:'Now: acronyms are grouped by pillar (language, execution, measurement, identity) and tied to usage examples.',
+      traj_ln:'Trajectory: becomes a shared vocabulary layer for teams, certifications, and institutional adoption.',
       subs:[
-        {k:'pillars', t:'Pillars', s:'Categories', p:'Acronyms grouped by domain pillars (language, execution, measurement, identity).'},
-        {k:'usage', t:'Usage', s:'Rules', p:'Each acronym includes a short use-case and where it lives in the geometry.'},
-        {k:'naming', t:'Naming', s:'Anti-drift', p:'Names are treated as stable interface contracts.'},
-        {k:'list', t:'List', s:'Expandable', p:'In Learn mode, show deeper lists per pillar.'}
+        {k:'pillar', t:'Pillars', s:'Group',
+          blurb:'Acronyms are organized so you can find them fast.',
+          bullets:[
+            'Language pillar (SSG, Grammar, DOT).',
+            'Execution pillar (surfaces, receipts, outputs).',
+            'Measurement pillar (gauges, diagnostics, rules).',
+            'Identity pillar (ORCID, OSF, references).'
+          ],
+          mini:['LANG','EXEC','MEASURE','ID']
+        },
+        {k:'usage', t:'Usage notes', s:'How to apply',
+          blurb:'Each acronym includes “what it is” and “where it lives.”',
+          bullets:[
+            'One-line definition.',
+            'Where in geometry it belongs.',
+            'A simple example or typical use.'
+          ],
+          mini:['DEFINE','PLACE','EXAMPLE']
+        },
+        {k:'expand', t:'Expand lists', s:'Depth',
+          blurb:'Learn mode expands deeper lists per pillar.',
+          bullets:[
+            'Explore: summaries only.',
+            'Learn: nested lists + examples per acronym.'
+          ],
+          mini:['EXPLORE','LEARN']
+        },
+        {k:'lock', t:'Lock meaning', s:'Anti-drift',
+          blurb:'Names are treated as stable interface contracts.',
+          bullets:[
+            'Avoid renaming without receipts.',
+            'Keep canonical mapping.',
+            'Document changes explicitly.'
+          ],
+          mini:['CANON','MAP','CHANGELOG']
+        }
       ]
     },
 
-    // NE
+    /* NE */
     surfaces:{
       meta:'NE · Surfaces',
       title:'Execution Surfaces',
-      origin:'Interfaces keep complexity inside the engine, not on the UI.',
-      now:'Apps / portals / interfaces expose the engine as usable workflow.',
-      trajectory:'Standardized portals across products and teams.',
+      origin_ex:'Expose the engine without exposing complexity.',
+      now_ex:'Apps / portals / interfaces.',
+      traj_ex:'Standard surfaces across products.',
+      origin_ln:'Origin: surfaces exist to make the engine usable without forcing users to learn the internals first.',
+      now_ln:'Now: apps, portals, and interfaces that route into receipt-gated workflows.',
+      traj_ln:'Trajectory: standard surfaces that teams can share without losing coherence.',
       subs:[
-        {k:'apps', t:'Apps', s:'Portals', p:'User-facing surfaces that route to the underlying engine safely.'},
-        {k:'ux', t:'UX rule', s:'No jump-scroll', p:'Tap should always produce local, visible response (modal).'},
-        {k:'handoff', t:'Handoffs', s:'Receipts', p:'Surfaces emit receipts for verified progression.'},
-        {k:'layers', t:'Layers', s:'Explore vs Learn', p:'Explore = summary. Learn = nested bubbles and full breakdown.'}
+        {k:'apps', t:'Apps & portals', s:'Entry points',
+          blurb:'Surfaces are the “handles” on the engine.',
+          bullets:[
+            'Fast entry points.',
+            'Stable navigation.',
+            'Receipts behind the scenes.'
+          ],
+          mini:['HANDLE','STABLE','RECEIPT']
+        },
+        {k:'ux', t:'UX rule', s:'No jump-scroll',
+          blurb:'Tap must produce local feedback immediately.',
+          bullets:[
+            'Modal pop-over (opaque).',
+            'No hidden response far down the page.',
+            'Same gesture = same behavior everywhere.'
+          ],
+          mini:['LOCAL','IMMEDIATE','CONSISTENT']
+        },
+        {k:'handoff', t:'Handoffs', s:'Atomic',
+          blurb:'Handoffs move you between states without partial transitions.',
+          bullets:[
+            'Atomic step transitions.',
+            'Receipt emitted.',
+            'Back invalidates downstream.'
+          ],
+          mini:['ATOMIC','RECEIPT','INVALIDATE']
+        },
+        {k:'layers', t:'Explore vs Learn', s:'Depth only',
+          blurb:'Explore/Learn changes depth, not structure.',
+          bullets:[
+            'Explore: surface map.',
+            'Learn: nested bubbles + blocks.',
+            'Same geometry either way.'
+          ],
+          mini:['DEPTH','SAME STRUCTURE']
+        }
       ]
     },
+
     receipts:{
       meta:'NE · Receipts',
       title:'Workflows & Receipts',
-      origin:'Receipts make progress verifiable.',
-      now:'Audit trails and verification tokens make execution replay-safe.',
-      trajectory:'Receipts become portable across systems (interoperable state).',
+      origin_ex:'Make execution verifiable.',
+      now_ex:'Audit trails + replay safety.',
+      traj_ex:'Portable receipts across systems.',
+      origin_ln:'Origin: receipts were introduced to eliminate “trust me” execution and make progress provable.',
+      now_ln:'Now: workflows emit receipts; audits replay them to verify consistency.',
+      traj_ln:'Trajectory: receipts become portable across products, enabling cross-system resolution.',
       subs:[
-        {k:'token', t:'Token', s:'Verification', p:'A receipt is a verifiable record that a step was completed.'},
-        {k:'audit', t:'Audit trail', s:'Replay', p:'Re-run the same evidence path and confirm identical output.'},
-        {k:'back', t:'Back-nav', s:'Invalidate', p:'Backtracking invalidates downstream receipts to prevent drift.'},
-        {k:'why', t:'Why', s:'Integrity', p:'It forces coherence: external trust cannot exceed internal coherence.'}
+        {k:'token', t:'Receipt tokens', s:'Proof',
+          blurb:'A receipt is a verifiable record that a step occurred.',
+          bullets:[
+            'Proof of completion.',
+            'Evidence link.',
+            'Replay reference.'
+          ],
+          mini:['PROOF','EVIDENCE','REPLAY']
+        },
+        {k:'audit', t:'Audit trails', s:'Trace',
+          blurb:'Audits follow receipts backward and forward.',
+          bullets:[
+            'Trace decisions.',
+            'Verify constraints.',
+            'Detect drift.'
+          ],
+          mini:['TRACE','VERIFY','DRIFT']
+        },
+        {k:'back', t:'Back-nav', s:'Invalidate',
+          blurb:'Backtracking invalidates downstream receipts.',
+          bullets:[
+            'Prevents false continuity.',
+            'Forces re-commitment.',
+            'Keeps path coherent.'
+          ],
+          mini:['INVALIDATE','RECOMMIT','COHERENT']
+        },
+        {k:'why', t:'Why', s:'Integrity',
+          blurb:'Receipts enforce coherence structurally.',
+          bullets:[
+            'External trust cannot exceed internal coherence.',
+            'Verification beats narrative.',
+            'Replay beats impression.'
+          ],
+          mini:['TRUST','VERIFY','REPLAY']
+        }
       ]
     },
+
     examples:{
       meta:'NE · Examples',
       title:'Examples',
-      origin:'Examples anchor abstract structure into action.',
-      now:'How to use the system with real routes and decisions.',
-      trajectory:'Examples become templates for teams and institutions.',
+      origin_ex:'Anchor abstract structure into action.',
+      now_ex:'Templates and routes.',
+      traj_ex:'Institution-ready playbooks.',
+      origin_ln:'Origin: examples were built to make the system learnable without persuasion.',
+      now_ln:'Now: examples mirror routes and end in receipts.',
+      traj_ln:'Trajectory: examples become certified playbooks for adoption.',
       subs:[
-        {k:'quick', t:'Quick', s:'Explore', p:'Explore mode gives short examples without deep theory.'},
-        {k:'deep', t:'Deep', s:'Learn', p:'Learn mode expands into nested steps + rationale.'},
-        {k:'routes', t:'Routes', s:'NW/NE/SW/SE', p:'Examples mirror the quadrant system: definition, execution, measurement, identity.'},
-        {k:'check', t:'Checks', s:'Receipts', p:'Each example ends in a receipt or verification step.'}
-      ]
-    },
-    packs:{
-      meta:'NE · Packs',
-      title:'Packs & Outputs',
-      origin:'Built to ship utility fast.',
-      now:'Downloadables and packaged artifacts.',
-      trajectory:'Outputs become certified tracks and reusable kits.',
-      subs:[
-        {k:'pdf', t:'PDFs', s:'Materials', p:'Printable guides, drills, and structured references.'},
-        {k:'kits', t:'Kits', s:'Reuse', p:'Composable packs that map to routes and receipts.'},
-        {k:'release', t:'Releases', s:'What ships', p:'Explore shows what exists. Learn explains how it works.'},
-        {k:'future', t:'Roadmap', s:'Trajectory', p:'Trajectory lens shows what expands next.'}
+        {k:'quick', t:'Explore examples', s:'Short',
+          blurb:'Explore mode examples are short and concrete.',
+          bullets:['One route. One outcome. One takeaway.'],
+          mini:['SHORT','CONCRETE']
+        },
+        {k:'deep', t:'Learn examples', s:'Nested',
+          blurb:'Learn mode expands into nested bubbles and blocks.',
+          bullets:['Step-by-step', 'Receipts included', 'Replay-ready'],
+          mini:['NESTED','RECEIPTS','REPLAY']
+        },
+        {k:'routes', t:'Routes', s:'NW/NE/SW/SE',
+          blurb:'Each example maps to a quadrant route.',
+          bullets:['NW defines', 'NE executes', 'SW measures', 'SE anchors'],
+          mini:['MAP','ROUTES']
+        },
+        {k:'end', t:'Ends with receipt', s:'Always',
+          blurb:'Every example ends in verification.',
+          bullets:['Receipt emitted', 'Audit possible', 'Drift detectable'],
+          mini:['VERIFY','AUDIT']
+        }
       ]
     },
 
-    // SW
+    packs:{
+      meta:'NE · Outputs',
+      title:'Packs & Outputs',
+      origin_ex:'Ship utility fast.',
+      now_ex:'Downloadables + packaged artifacts.',
+      traj_ex:'Reusable certified kits.',
+      origin_ln:'Origin: outputs were packaged so people can use the system immediately.',
+      now_ln:'Now: packs include materials, templates, and tools.',
+      traj_ln:'Trajectory: outputs become certification kits and deployment bundles.',
+      subs:[
+        {k:'pdf', t:'PDFs', s:'Materials',
+          blurb:'Printable guides and structured references.',
+          bullets:['Guides', 'Checklists', 'Drills'],
+          mini:['GUIDE','CHECKLIST','DRILL']
+        },
+        {k:'kits', t:'Kits', s:'Reusable',
+          blurb:'Composable packs mapped to routes and receipts.',
+          bullets:['Reusable templates', 'Route-mapped', 'Receipt-ready'],
+          mini:['REUSE','ROUTE','RECEIPT']
+        },
+        {k:'release', t:'Releases', s:'What ships',
+          blurb:'Explore shows what exists; Learn shows how it works.',
+          bullets:['Explore = catalog', 'Learn = anatomy'],
+          mini:['CATALOG','ANATOMY']
+        },
+        {k:'road', t:'Roadmap', s:'Trajectory',
+          blurb:'Trajectory lens shows what expands next.',
+          bullets:['Next surfaces', 'Next instruments', 'Next packs'],
+          mini:['NEXT','EXPAND']
+        }
+      ]
+    },
+
+    /* SW */
     gauges:{
       meta:'SW · Gauges',
       title:'Gauges',
-      origin:'Built to measure coherence under load.',
-      now:'Instrument panels, consistency checks, thresholds.',
-      trajectory:'Real-time stability monitoring.',
+      origin_ex:'Measure coherence under load.',
+      now_ex:'Panels + thresholds.',
+      traj_ex:'Real-time monitoring.',
+      origin_ln:'Origin: gauges were created to make “coherence” measurable and operational.',
+      now_ln:'Now: dashboards, consistency checks, and threshold rules.',
+      traj_ln:'Trajectory: continuous stability monitoring across systems.',
       subs:[
-        {k:'panel', t:'Panels', s:'Dashboards', p:'Visualize coherence and drift with stable metrics.'},
-        {k:'threshold', t:'Thresholds', s:'Rules', p:'Rules that define pass/fail under constraint.'},
-        {k:'signal', t:'Signal', s:'Integrity', p:'Detect noise vs meaningful movement.'},
-        {k:'trend', t:'Trends', s:'Trajectory', p:'Trajectory lens focuses on where it’s heading.'}
-      ]
-    },
-    diagnostics:{
-      meta:'SW · Diagnostics',
-      title:'Diagnostics',
-      origin:'Classify systems under constraint.',
-      now:'Coherence / drift / confusion categories with observer-consistent targets.',
-      trajectory:'Universal early-warning systems.',
-      subs:[
-        {k:'class', t:'Classification', s:'Under constraint', p:'Same evidence should produce same class for independent observers.'},
-        {k:'drift', t:'Drift', s:'Detection', p:'Detect fragmentation vs stabilization direction.'},
-        {k:'conf', t:'Confusion', s:'Amplifier', p:'Confusion amplifies instability once present.'},
-        {k:'audit', t:'Audit', s:'Replay', p:'Replay evidence streams and verify stability of classification.'}
-      ]
-    },
-    rules:{
-      meta:'SW · Rules',
-      title:'Rules',
-      origin:'Defined to keep traversal stable.',
-      now:'Navigation + integrity rules.',
-      trajectory:'Governance standards.',
-      subs:[
-        {k:'nav', t:'Navigation', s:'Hub-first', p:'Return to hub when uncertain; one route at a time.'},
-        {k:'guard', t:'Guards', s:'Admissibility', p:'Block actions that violate constraints.'},
-        {k:'cons', t:'Consistency', s:'Integrity', p:'Values, actions, outcomes must align.'},
-        {k:'scale', t:'Scale', s:'System-wide', p:'Scale-and-correlation standard across the network.'}
-      ]
-    },
-    protocols:{
-      meta:'SW · Protocols',
-      title:'Protocols',
-      origin:'Convert principles into repeatable actions.',
-      now:'Operational handoffs, verification, replay.',
-      trajectory:'Certified operating procedures.',
-      subs:[
-        {k:'handoff', t:'Handoff', s:'Atomic', p:'Atomic handoff with receipt. No partial transitions.'},
-        {k:'return', t:'Return', s:'Exit', p:'Exit emits terminal + return token.'},
-        {k:'loop', t:'Loop', s:'Continuation', p:'Continuation loops back with memory token after receipt.'},
-        {k:'kill', t:'Kill', s:'Exit criteria', p:'Define kill/exit conditions to prevent runaway drift.'}
+        {k:'panel', t:'Panels', s:'Dashboards',
+          blurb:'Panels show coherence and drift at a glance.',
+          bullets:['Signal integrity', 'Consistency checks', 'Thresholds'],
+          mini:['SIGNAL','CONSISTENT','THRESHOLD']
+        },
+        {k:'thresh', t:'Thresholds', s:'Rules',
+          blurb:'Thresholds define pass/fail under constraint.',
+          bullets:['Observer-consistent', 'Defined rules', 'Repeatable'],
+          mini:['PASS/FAIL','RULED','REPEAT']
+        },
+        {k:'trend', t:'Trends', s:'Trajectory',
+          blurb:'Trajectory lens focuses on where it’s going.',
+          bullets:['Direction compounds', 'Small drift grows', 'Return protocols matter'],
+          mini:['DIRECTION','DRIFT','RETURN']
+        },
+        {k:'use', t:'Use', s:'When',
+          blurb:'Use gauges when performance must be verified under stress.',
+          bullets:['Ops', 'Compliance', 'Safety'],
+          mini:['OPS','COMPLIANCE','SAFETY']
+        }
       ]
     },
 
-    // SE
+    diagnostics:{
+      meta:'SW · Diagnostics',
+      title:'Diagnostics',
+      origin_ex:'Classify under constraint.',
+      now_ex:'Coherence / drift / confusion.',
+      traj_ex:'Universal early-warning.',
+      origin_ln:'Origin: diagnostics were built to classify systems the same way from the same evidence.',
+      now_ln:'Now: coherence/drift/confusion categories with replay-driven audits.',
+      traj_ln:'Trajectory: early-warning systems across domains.',
+      subs:[
+        {k:'class', t:'Classification', s:'Observer-consistent',
+          blurb:'Independent observers converge from the same evidence.',
+          bullets:['Same evidence', 'Same class', 'Repeatable output'],
+          mini:['OBSERVER','CONSISTENT']
+        },
+        {k:'drift', t:'Drift', s:'Direction',
+          blurb:'Drift reveals structural truth.',
+          bullets:['Stabilizing vs destabilizing', 'Compounding effects', 'Detect early'],
+          mini:['DIRECTION','COMPOUND','EARLY']
+        },
+        {k:'conf', t:'Confusion', s:'Amplifier',
+          blurb:'Confusion amplifies instability once present.',
+          bullets:['Speeds collapse', 'Obscures signals', 'Increases variance'],
+          mini:['AMPLIFY','OBSCURE','VARIANCE']
+        },
+        {k:'audit', t:'Audit', s:'Replay',
+          blurb:'Replay evidence streams to verify classifications.',
+          bullets:['Replay', 'Verify', 'Compare'],
+          mini:['REPLAY','VERIFY','COMPARE']
+        }
+      ]
+    },
+
+    rules:{
+      meta:'SW · Rules',
+      title:'Rules',
+      origin_ex:'Keep traversal stable.',
+      now_ex:'Navigation + integrity.',
+      traj_ex:'Governance standard.',
+      origin_ln:'Origin: rules were defined to prevent drift and preserve canonicity.',
+      now_ln:'Now: navigation and integrity rules that constrain execution.',
+      traj_ln:'Trajectory: governance standards for adoption.',
+      subs:[
+        {k:'nav', t:'Navigation', s:'Hub-first',
+          blurb:'Return to hub when uncertain; one route at a time.',
+          bullets:['Hub-first', 'One choice', 'Finish/return'],
+          mini:['HUB','ONE CHOICE','RETURN']
+        },
+        {k:'guard', t:'Guards', s:'Admissibility',
+          blurb:'Guards block inadmissible actions.',
+          bullets:['Constraint checks', 'Receipt gating', 'Safety first'],
+          mini:['CHECK','GATE','SAFE']
+        },
+        {k:'cons', t:'Consistency', s:'Integrity',
+          blurb:'Values, actions, outcomes align.',
+          bullets:['No fragmentation', 'Coherent execution', 'Stable outcomes'],
+          mini:['ALIGN','COHERENT','STABLE']
+        },
+        {k:'scale', t:'Scale', s:'Correlation',
+          blurb:'Scale-and-correlation governs projections.',
+          bullets:['System-wide trajectory', 'Not attention-only', 'Correlation across network'],
+          mini:['SCALE','CORRELATE']
+        }
+      ]
+    },
+
+    protocols:{
+      meta:'SW · Protocols',
+      title:'Protocols',
+      origin_ex:'Repeatable actions.',
+      now_ex:'Return / replay / verification.',
+      traj_ex:'Certified SOPs.',
+      origin_ln:'Origin: protocols convert principles into repeatable execution.',
+      now_ln:'Now: atomic handoffs, exits, returns, and receipts.',
+      traj_ln:'Trajectory: certified operating procedures across orgs.',
+      subs:[
+        {k:'handoff', t:'Atomic handoff', s:'Receipt',
+          blurb:'Atomic handoff with receipt; no partial transitions.',
+          bullets:['Atomic', 'Verified', 'Replay-safe'],
+          mini:['ATOMIC','VERIFY','REPLAY']
+        },
+        {k:'exit', t:'Exit', s:'Return token',
+          blurb:'Exit emits terminal + return token.',
+          bullets:['Terminal state', 'Return token', 'Re-entry safe'],
+          mini:['EXIT','TOKEN','REENTER']
+        },
+        {k:'loop', t:'Continuation loop', s:'Memory token',
+          blurb:'Continuation loops back after receipt with memory token.',
+          bullets:['Receipt gate', 'Loop', 'Memory'],
+          mini:['GATE','LOOP','MEMORY']
+        },
+        {k:'kill', t:'Kill conditions', s:'Stop',
+          blurb:'Define stop conditions to prevent runaway drift.',
+          bullets:['Stop', 'Reset', 'Recalibrate'],
+          mini:['STOP','RESET','RECAL']
+        }
+      ]
+    },
+
+    /* SE */
     orcid:{
       meta:'SE · ORCID',
       title:'ORCID',
-      origin:'Identity anchors attribution and continuity.',
-      now:'Researcher identity reference point.',
-      trajectory:'Stable identity improves traceability long-term.',
+      origin_ex:'Identity anchor.',
+      now_ex:'Researcher iD reference.',
+      traj_ex:'Long-term traceability.',
+      origin_ln:'Origin: identity anchors keep attribution stable across time.',
+      now_ln:'Now: ORCID ties work to a consistent researcher identity.',
+      traj_ln:'Trajectory: long-term traceability and provenance.',
       subs:[
-        {k:'id', t:'iD', s:'Anchor', p:'Use ORCID as the stable researcher identity anchor.'},
-        {k:'cite', t:'Citations', s:'Provenance', p:'Tie outputs to identity for provenance stability.'},
-        {k:'share', t:'Sharing', s:'Continuity', p:'Continuity across publications and archives.'},
-        {k:'use', t:'Use', s:'When', p:'Use whenever formal attribution matters.'}
+        {k:'id', t:'Identity', s:'Anchor',
+          blurb:'Stable researcher identity reference.',
+          bullets:['Persistent iD', 'Attribution', 'Continuity'],
+          mini:['ID','ATTR','CONT']
+        },
+        {k:'cite', t:'Citations', s:'Provenance',
+          blurb:'Tie outputs to identity for provenance stability.',
+          bullets:['Cite', 'Link', 'Trace'],
+          mini:['CITE','LINK','TRACE']
+        },
+        {k:'use', t:'When to use', s:'Anytime',
+          blurb:'Use whenever formal attribution matters.',
+          bullets:['Preprints', 'Reports', 'Datasets'],
+          mini:['FORMAL','PUBLIC']
+        },
+        {k:'share', t:'Sharing', s:'Continuity',
+          blurb:'Continuity across publications and archives.',
+          bullets:['Archive', 'Reuse', 'Public reference'],
+          mini:['ARCHIVE','REUSE']
+        }
       ]
     },
+
     osf:{
       meta:'SE · OSF',
       title:'OSF',
-      origin:'Registry creates a public research spine.',
-      now:'Project registry / preprints / canonical references.',
-      trajectory:'Continuity ledger for the system.',
+      origin_ex:'Public research spine.',
+      now_ex:'Registry + canonical references.',
+      traj_ex:'Continuity ledger.',
+      origin_ln:'Origin: OSF provides persistent project registry and canonical linking.',
+      now_ln:'Now: stable identifiers for projects, preprints, and artifacts.',
+      traj_ln:'Trajectory: continuity ledger for system evolution.',
       subs:[
-        {k:'reg', t:'Registry', s:'Spine', p:'OSF organizes projects and keeps canonical references stable.'},
-        {k:'pre', t:'Preprints', s:'Release', p:'Publish artifacts with stable identifiers.'},
-        {k:'map', t:'Mapping', s:'Crosslinks', p:'Map branches to hubs without forcing navigation drift.'},
-        {k:'use', t:'Use', s:'When', p:'Use when you need persistent public reference.'}
+        {k:'reg', t:'Registry', s:'Canonical',
+          blurb:'OSF organizes projects and keeps canonical references stable.',
+          bullets:['Project IDs', 'Stable links', 'Public spine'],
+          mini:['CANON','STABLE','PUBLIC']
+        },
+        {k:'pre', t:'Preprints', s:'Release',
+          blurb:'Publish artifacts with stable identifiers.',
+          bullets:['Preprint', 'Working paper', 'Supplement'],
+          mini:['RELEASE','ID']
+        },
+        {k:'map', t:'Mapping', s:'Crosslinks',
+          blurb:'Map branches to hubs without navigation drift.',
+          bullets:['Crosslink', 'Anchor', 'Navigate'],
+          mini:['MAP','ANCHOR']
+        },
+        {k:'use', t:'When', s:'Reference',
+          blurb:'Use when you need persistent public reference.',
+          bullets:['Public proof', 'Collab', 'Share'],
+          mini:['PROOF','SHARE']
+        }
       ]
     },
+
     refs:{
       meta:'SE · References',
       title:'References',
-      origin:'References prevent semantic drift.',
-      now:'Core citations and anchors.',
-      trajectory:'Shared coordinates across readers.',
+      origin_ex:'Prevent semantic drift.',
+      now_ex:'Core anchors + citations.',
+      traj_ex:'Shared coordinates.',
+      origin_ln:'Origin: references prevent meaning collapse when systems grow.',
+      now_ln:'Now: core citations, anchors, and mapping for shared understanding.',
+      traj_ln:'Trajectory: shared coordinates across audiences.',
       subs:[
-        {k:'core', t:'Core', s:'Anchors', p:'Core anchors keep meaning stable across time.'},
-        {k:'link', t:'Links', s:'Identity', p:'Links connect evidence, identity, and outputs.'},
-        {k:'scope', t:'Scope', s:'256', p:'References scale into the 256 geometry.'},
-        {k:'use', t:'Use', s:'When', p:'Use whenever you need alignment across audiences.'}
+        {k:'core', t:'Core anchors', s:'Stability',
+          blurb:'Anchors keep meaning stable across time.',
+          bullets:['Canonical terms', 'Stable mapping', 'Clear definitions'],
+          mini:['STABLE','CLEAR']
+        },
+        {k:'link', t:'Links', s:'Identity',
+          blurb:'Links connect evidence, identity, and outputs.',
+          bullets:['Evidence', 'Identity', 'Outputs'],
+          mini:['EVIDENCE','ID','OUTPUT']
+        },
+        {k:'scope', t:'Scope', s:'256',
+          blurb:'References scale into the 256 geometry.',
+          bullets:['State indexing', 'Auditability', 'Replay'],
+          mini:['256','AUDIT','REPLAY']
+        },
+        {k:'use', t:'Use', s:'Alignment',
+          blurb:'Use whenever you need alignment across audiences.',
+          bullets:['Teams', 'Readers', 'Institutions'],
+          mini:['ALIGN','SHARE']
+        }
       ]
     },
+
     contact:{
       meta:'SE · Contact',
       title:'Contact',
-      origin:'Direct channel exists to restore alignment quickly.',
-      now:'Communication line for access and collaboration.',
-      trajectory:'Intake for adoption and certification.',
+      origin_ex:'Restore alignment quickly.',
+      now_ex:'Direct channel.',
+      traj_ex:'Intake for adoption.',
+      origin_ln:'Origin: direct communication reduces friction and speeds resolution.',
+      now_ln:'Now: contact channel for access, questions, and collaboration.',
+      traj_ln:'Trajectory: intake pipeline for certification and adoption.',
       subs:[
-        {k:'in', t:'Intake', s:'Requests', p:'Use for collaboration, questions, and access.'},
-        {k:'ops', t:'Ops', s:'Governance', p:'Operational coordination and structure.'},
-        {k:'cert', t:'Certification', s:'Tracks', p:'Certification and training coordination.'},
-        {k:'use', t:'Use', s:'When', p:'Use when you need resolution or alignment.'}
+        {k:'in', t:'Intake', s:'Requests',
+          blurb:'Use for collaboration, questions, and access.',
+          bullets:['Question', 'Collab', 'Access'],
+          mini:['ASK','COLLAB','ACCESS']
+        },
+        {k:'ops', t:'Ops', s:'Coordination',
+          blurb:'Operational coordination and structure.',
+          bullets:['Schedule', 'Scope', 'Delivery'],
+          mini:['OPS','SCOPE','DELIVER']
+        },
+        {k:'cert', t:'Certification', s:'Tracks',
+          blurb:'Training and certification coordination.',
+          bullets:['Track', 'Verify', 'Certify'],
+          mini:['TRAIN','VERIFY','CERT']
+        },
+        {k:'use', t:'When', s:'Resolution',
+          blurb:'Use when you need resolution or alignment.',
+          bullets:['Misalignment', 'Drift', 'Uncertainty'],
+          mini:['RESOLVE','ALIGN']
+        }
       ]
     }
   };
 
-  // ---- GLOBAL LENS ----
-  function setLens(next){
-    lens = next;
-    localStorage.setItem('crp_lens', lens);
-    Object.keys(lensBtns).forEach(k => lensBtns[k].classList.toggle('active', k === lens));
-    updateModalLensChips();
-    if(modalState.openKey){
-      renderModal(modalState.openKey);
-    }
-  }
-  lensBtns.origin.addEventListener('click',()=>setLens('origin'));
-  lensBtns.now.addEventListener('click',()=>setLens('now'));
-  lensBtns.trajectory.addEventListener('click',()=>setLens('trajectory'));
+  /* ====== MODAL WIRING ====== */
+  const backdrop = document.getElementById('backdrop');
+  const mclose = document.getElementById('mclose');
+  const mmeta = document.getElementById('mmeta');
+  const mtitle = document.getElementById('mtitle');
+  const mdesc = document.getElementById('mdesc');
+  const mgrid = document.getElementById('mgrid');
 
-  // ---- MODAL ----
-  const backdrop = document.getElementById('modalBackdrop');
-  const closeBtn = document.getElementById('modalClose');
-  const mMeta = document.getElementById('modalMeta');
-  const mTitle = document.getElementById('modalTitle');
-  const mDesc = document.getElementById('modalDesc');
-  const mBubbles = document.getElementById('modalBubbles');
   const subpanel = document.getElementById('subpanel');
-  const subTitle = document.getElementById('subpanelTitle');
-  const subText = document.getElementById('subpanelText');
+  const subTitle = document.getElementById('subTitle');
+  const subBlurb = document.getElementById('subBlurb');
+  const subBullets = document.getElementById('subBullets');
+  const subMini = document.getElementById('subMini');
 
-  const modalState = { openKey:null, openSub:null };
+  const state = { openKey:null };
 
-  function openModal(){
-    backdrop.classList.add('open');
-    backdrop.setAttribute('aria-hidden','false');
-    document.body.style.overflow='hidden';
-  }
+  function openModal(){ backdrop.classList.add('open'); document.body.style.overflow='hidden'; }
   function closeModal(){
     backdrop.classList.remove('open');
-    backdrop.setAttribute('aria-hidden','true');
     document.body.style.overflow='';
-    modalState.openKey=null;
-    modalState.openSub=null;
+    state.openKey=null;
     subpanel.classList.remove('open');
   }
-  closeBtn.addEventListener('click', closeModal);
-  backdrop.addEventListener('click', (e)=>{ if(e.target === backdrop) closeModal(); });
-  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && backdrop.classList.contains('open')) closeModal(); });
+  mclose.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', (e)=>{ if(e.target===backdrop) closeModal(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && backdrop.classList.contains('open')) closeModal(); });
 
-  function updateModalLensChips(){
-    document.querySelectorAll('.lenschip').forEach(ch=>{
-      const k = ch.getAttribute('data-chip');
-      ch.classList.toggle('on', k === lens);
+  function chipText(){
+    document.querySelectorAll('.chip').forEach(c=>{
+      const k=c.getAttribute('data-chip');
+      c.classList.toggle('on', k===lens);
     });
   }
 
   function renderModal(key){
     const b = blocks[key];
     if(!b) return;
+    state.openKey = key;
 
-    modalState.openKey = key;
+    mmeta.textContent = b.meta || 'DETAIL';
+    mtitle.textContent = b.title || '—';
 
-    mMeta.textContent = b.meta || 'DETAIL';
-    mTitle.textContent = b.title || '—';
-    mDesc.textContent = (b[lens] || b.now || '').trim();
+    // Explore vs Learn changes which description is used (depth only)
+    const descKey =
+      (lens==='origin' ? (depth==='learn' ? 'origin_ln' : 'origin_ex')
+      : lens==='trajectory' ? (depth==='learn' ? 'traj_ln' : 'traj_ex')
+      : (depth==='learn' ? 'now_ln' : 'now_ex'));
 
-    // Build sub-bubbles (always), and in LEARN show subpanel auto-open first item
-    mBubbles.innerHTML = '';
-    (b.subs || []).forEach((s, idx)=>{
-      const el = document.createElement('div');
-      el.className = 'subbubble';
-      el.setAttribute('data-sub', s.k);
+    mdesc.textContent = (b[descKey] || '').trim();
+
+    // build nested bubbles
+    mgrid.innerHTML='';
+    (b.subs||[]).forEach((s, idx)=>{
+      const el=document.createElement('div');
+      el.className='subbubble';
       el.innerHTML =
-        '<div class="t"><b>'+escapeHtml(s.t)+'</b><i>'+escapeHtml(s.s || '')+'</i></div>' +
+        '<div class="t"><b>'+esc(s.t)+'</b><i>'+esc(s.s||'')+'</i></div>' +
         '<div class="go">▶</div>';
       el.addEventListener('click', ()=>{
-        modalState.openSub = s.k;
         subTitle.textContent = s.t;
-        subText.textContent = s.p || '';
+        subBlurb.textContent = s.blurb || '';
+        subBullets.innerHTML = '';
+        (s.bullets||[]).forEach(x=>{
+          const li=document.createElement('li');
+          li.textContent=x;
+          subBullets.appendChild(li);
+        });
+        subMini.innerHTML='';
+        (s.mini||[]).forEach(x=>{
+          const d=document.createElement('div');
+          d.className='minichip';
+          d.textContent=x;
+          subMini.appendChild(d);
+        });
         subpanel.classList.add('open');
       });
-      mBubbles.appendChild(el);
+      mgrid.appendChild(el);
 
-      if(depth === 'learn' && idx === 0 && !modalState.openSub){
-        // open first sub automatically in learn
-        modalState.openSub = s.k;
-        subTitle.textContent = s.t;
-        subText.textContent = s.p || '';
-        subpanel.classList.add('open');
+      // Learn mode: auto-open first subpanel
+      if(depth==='learn' && idx===0){
+        setTimeout(()=>el.click(), 0);
       }
     });
 
-    if(depth !== 'learn'){
+    if(depth!=='learn'){
       subpanel.classList.remove('open');
-      modalState.openSub = null;
     }
 
-    updateModalLensChips();
+    chipText();
   }
 
-  function escapeHtml(str){
+  function esc(str){
     return String(str).replace(/[&<>"']/g, s => ({
       '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
     }[s]));
   }
 
-  // bubble clicks => modal
-  document.querySelectorAll('.bubble').forEach(el=>{
-    el.addEventListener('click', ()=>{
-      const key = el.getAttribute('data-block');
-      modalState.openSub = null;
+  document.querySelectorAll('.bubble').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const key=b.getAttribute('data-block');
       renderModal(key);
       openModal();
     });
   });
 
-  // initialize lens active
-  if(!lensBtns[lens]) lens = 'now';
-  setLens(lens);
+  // lens handlers
+  function setLens(next){
+    lens = next;
+    localStorage.setItem('crp_lens', lens);
+    setActiveLensUI();
+    if(state.openKey) renderModal(state.openKey);
+  }
+  function setActiveLensUI(){
+    Object.keys(lensBtn).forEach(k=>lensBtn[k].classList.toggle('active', k===lens));
+    chipText();
+  }
+
+  lensBtn.origin.addEventListener('click',()=>setLens('origin'));
+  lensBtn.now.addEventListener('click',()=>setLens('now'));
+  lensBtn.trajectory.addEventListener('click',()=>setLens('trajectory'));
+
+  // init
+  if(!lensBtn[lens]) lens='now';
+  setActiveLensUI();
 })();
 </script>
 

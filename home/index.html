@@ -10,8 +10,6 @@
 
 <style>
 html,body{height:100%;margin:0}
-
-/* FORCE COSMIC BACKDROP + UI COLOR (FIXES WHITE PAGE) */
 body{
   background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
   color:#eaf2f6;
@@ -23,22 +21,26 @@ body{
 .h h1{font-size:48px;font-weight:900;margin:0;color:#eaf2f6}
 .h p{opacity:.7;margin-top:8px;color:#eaf2f6}
 .stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
+
 a{color:inherit;text-decoration:none}
 a:visited{color:inherit}
 a:hover{text-decoration:none}
 a:active{text-decoration:none}
+
 .nav{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;justify-content:center}
 .nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);font-weight:900;color:#eaf2f6}
 footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px;color:#eaf2f6}
 
-/* HOME PLATFORM GEOMETRY (LOCAL, SINGLE SYSTEM) */
-.platform{position:relative;width:min(420px,88vw);aspect-ratio:1/1;margin:0 auto}
+/* HOME PLATFORM (SLIGHTLY SMALLER FOR DECORATIVE CONTEXT) */
+.platform{position:relative;width:min(380px,84vw);aspect-ratio:1/1;margin:0 auto}
 .platform::before{content:"";position:absolute;inset:0;transform:rotate(45deg);border-radius:28px;background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}
 
 .platform .diamond{position:absolute;width:42%;height:42%;transform:rotate(45deg);border-radius:18px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#eaf2f6;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 14px 34px rgba(0,0,0,.35);backdrop-filter:blur(8px);-webkit-tap-highlight-color:transparent;transition:filter .15s ease,transform .15s ease,box-shadow .15s ease}
 .platform .diamond:hover{filter:brightness(1.06)}
 .platform .diamond:active{filter:brightness(1.08);transform:rotate(45deg) translateY(1px)}
-.platform .diamond span{transform:rotate(-45deg);text-align:center;font-weight:900;line-height:1.15;letter-spacing:.02em;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+
+.platform .diamond span{transform:rotate(-45deg);text-align:center;font-weight:900;line-height:1.12;letter-spacing:.02em;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.platform .diamond small{display:block;opacity:.70;font-weight:800;font-size:12px;margin-top:6px;letter-spacing:.22em}
 
 .platform .top{top:2%;left:29%}
 .platform .right{top:29%;right:2%}
@@ -64,10 +66,23 @@ footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-siz
 
   <div class="stage">
     <div class="platform">
-      <a class="diamond top c-blue" href="/laws/"><span>Position</span></a>
-      <a class="diamond right c-green" href="/products/"><span>Outcome</span></a>
-      <a class="diamond bottom c-amber" href="/gauges/"><span>Trajectory</span></a>
-      <a class="diamond left c-purple" href="/links/"><span>Origin</span></a>
+
+      <a class="diamond top c-blue" href="/laws/">
+        <span>North<small>LAWS</small></span>
+      </a>
+
+      <a class="diamond right c-green" href="/products/">
+        <span>East<small>PRODUCTS</small></span>
+      </a>
+
+      <a class="diamond bottom c-amber" href="/gauges/">
+        <span>South<small>GAUGES</small></span>
+      </a>
+
+      <a class="diamond left c-purple" href="/links/">
+        <span>West<small>ORIGIN</small></span>
+      </a>
+
     </div>
   </div>
 

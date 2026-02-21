@@ -1,93 +1,44 @@
-/* TNT: assets/branch.css (UNDERGLOW ONLY — COLOR CASTS ON PLATE, NOT THROUGH TILE)
-   Replace ONLY the color/diamond shadow section with this block.
-   Keeps your geometry. Moves glow to plate beneath. */
+/* TNT: assets/ui.css (RESTORE COSMIC DARK + WHITE SITE TYPE)
+   This fixes the WHITE PAGE + SERIF DEFAULT issue. */
 
-/* --- BASE TILE: NEUTRAL GLASS (NO COLOR IN FACE) --- */
-.diamond{
-  position:absolute;
-  width:42%;
-  height:42%;
-  transform:rotate(45deg);
-  border-radius:18px;
-  background:rgba(255,255,255,.14); /* neutral face */
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  color:#eaf2f6;
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.10),
-    0 14px 34px rgba(0,0,0,.35); /* depth only */
-  backdrop-filter:blur(8px);
-  -webkit-tap-highlight-color:transparent;
-  transition:filter .15s ease,transform .15s ease;
-}
+html,body{margin:0;padding:0;width:100%;height:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#eaf2f6;background:#05070c;overflow-x:hidden}
+body{position:relative;color:#eaf2f6;background:radial-gradient(1200px 800px at 50% 20%,#152532 0%,#0a141b 100%)}
 
-.diamond:hover{filter:brightness(1.05)}
-.diamond:active{filter:brightness(1.08);transform:rotate(45deg) translateY(1px)}
+/* Layout */
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 12px}
+.h{text-align:center;margin-bottom:12px}
+.h h1{font-size:48px;font-weight:900;margin:0;color:#eaf2f6}
+.h p{opacity:.72;margin-top:8px;color:rgba(234,242,246,.72)}
+.stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+a:hover{text-decoration:none}
+a:active{text-decoration:none}
+.nav{display:flex;justify-content:center;gap:12px;margin-top:16px;flex-wrap:wrap}
+.nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);font-weight:900;color:#eaf2f6}
+footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px;color:rgba(234,242,246,.55)}
 
-.diamond span{
-  transform:rotate(-45deg);
-  text-align:center;
-  font-weight:900;
-  line-height:1.12;
-  letter-spacing:.02em;
-  text-shadow:0 2px 14px rgba(0,0,0,.55);
-}
+/* Optional motion (safe, subtle) */
+body::before{content:"";position:fixed;inset:-18%;pointer-events:none;z-index:-3;background:
+radial-gradient(900px 700px at 18% 22%, rgba(72,166,255,.18) 0%, rgba(0,0,0,0) 62%),
+radial-gradient(980px 780px at 78% 28%, rgba(190,91,255,.15) 0%, rgba(0,0,0,0) 64%),
+radial-gradient(1050px 820px at 45% 78%, rgba(42,255,186,.10) 0%, rgba(0,0,0,0) 66%),
+radial-gradient(1100px 900px at 55% 45%, rgba(255,170,70,.07) 0%, rgba(0,0,0,0) 68%);
+filter:blur(12px);opacity:.92;animation:nebulaDrift 18s ease-in-out infinite alternate;transform:translateZ(0)}
+@keyframes nebulaDrift{0%{transform:translate3d(-1.2%,-0.8%,0) scale(1.02)}100%{transform:translate3d(1.2%,0.9%,0) scale(1.06)}}
 
-/* --- REMOVE COLORED RIM GLOW FROM TILE --- */
-.diamond.c-blue,
-.diamond.c-green,
-.diamond.c-amber,
-.diamond.c-purple{
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.10),
-    0 14px 34px rgba(0,0,0,.35);
-}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;background-image:
+radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.70) 0, rgba(255,255,255,0) 60%),
+radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.48) 0, rgba(255,255,255,0) 60%),
+radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.58) 0, rgba(255,255,255,0) 60%),
+radial-gradient(2px 2px at 22% 28%, rgba(255,255,255,.30) 0, rgba(255,255,255,0) 60%),
+radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,.24) 0, rgba(255,255,255,0) 60%);
+opacity:.70;animation:starTwinkle 6.2s ease-in-out infinite alternate}
+@keyframes starTwinkle{0%{opacity:.50;filter:brightness(.95)}100%{opacity:.82;filter:brightness(1.16)}}
 
-/* --- COLORED UNDERGLOW CAST ON PLATE BENEATH --- */
-/* This glow is BELOW the tile (z-index) and diffused outward */
-
-.diamond::after{
-  content:"";
-  position:absolute;
-  inset:-18%;
-  border-radius:26px;
-  transform:rotate(0deg); /* already rotated by parent */
-  z-index:-1; /* beneath tile */
-  opacity:.75;
-  filter:blur(28px);
-  pointer-events:none;
-}
-
-/* NORTH (blue-purple) */
-.diamond.c-blue::after{
-  background:radial-gradient(circle at 50% 50%,
-    rgba(120,160,255,.45) 0%,
-    rgba(90,120,255,.35) 30%,
-    rgba(0,0,0,0) 70%);
-}
-
-/* EAST (sunrise) */
-.diamond.c-green::after{
-  background:radial-gradient(circle at 50% 50%,
-    rgba(255,190,90,.45) 0%,
-    rgba(255,140,60,.35) 30%,
-    rgba(0,0,0,0) 70%);
-}
-
-/* SOUTH (green energy) */
-.diamond.c-amber::after{
-  background:radial-gradient(circle at 50% 50%,
-    rgba(70,255,170,.40) 0%,
-    rgba(40,200,140,.30) 30%,
-    rgba(0,0,0,0) 70%);
-}
-
-/* WEST (sunset violet) */
-.diamond.c-purple::after{
-  background:radial-gradient(circle at 50% 50%,
-    rgba(200,90,255,.45) 0%,
-    rgba(255,120,140,.35) 30%,
-    rgba(0,0,0,0) 70%);
-}
+/* shooting stars */
+.shooting-stars,.shooting-stars::before,.shooting-stars::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1}
+@keyframes shoot{0%{transform:translate3d(-25vw,-25vh,0) rotate(20deg);opacity:0}8%{opacity:1}35%{opacity:1}55%{opacity:0}100%{transform:translate3d(120vw,120vh,0) rotate(20deg);opacity:0}}
+.shooting-stars::before,.shooting-stars::after{position:absolute;width:240px;height:2px;background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.85), rgba(255,255,255,0));border-radius:999px;filter:drop-shadow(0 0 8px rgba(255,255,255,.35));opacity:0}
+.shooting-stars::before{top:12%;left:-35%;animation:shoot 10.5s linear infinite;animation-delay:1.2s}
+.shooting-stars::after{top:38%;left:-45%;animation:shoot 13.5s linear infinite;animation-delay:4.8s}

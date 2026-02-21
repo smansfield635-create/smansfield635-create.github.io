@@ -5,329 +5,549 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Home · Coherent Resolution Platform</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=13000"/>
-<link rel="stylesheet" href="/assets/branch.css?v=13000"/>
-
 <style>
-  /* Home: Dual Compression (Diamond → Panels) */
+:root{
+  --red-deep:#4a0000;
+  --red-lacquer:#7a0c0c;
+  --gold:#d4af37;
+  --gold-glow:rgba(212,175,55,.45);
+  --silver:#cfd3da;
+  --silver-glow:rgba(207,211,218,.35);
+  --ink:#0a0f14;
 
-  .wrap{
-    width:min(980px,94vw);
-    margin:0 auto;
-    padding:56px 0 92px;
-  }
+  --line:rgba(255,255,255,.10);
+  --soft:rgba(255,255,255,.06);
+  --panel:rgba(0,0,0,.28);
 
-  .top{
-    text-align:center;
-    margin-bottom:26px;
-  }
+  --text:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.70);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 50% 0%, var(--red-lacquer) 0%, var(--red-deep) 55%, var(--ink) 100%);
+  overflow-x:hidden;
+}
 
-  .quote{
-    font-style:italic;
-    opacity:.78;
-    font-size:18px;
-    line-height:1.45;
-  }
+.page{
+  width:min(980px,94vw);
+  margin:0 auto;
+  padding:26px 14px 70px;
+}
 
-  .source{
-    opacity:.55;
-    font-size:13px;
-    margin-top:6px;
-    letter-spacing:.10em;
-    text-transform:uppercase;
-  }
+.hero{
+  position:relative;
+  z-index:5;
+  text-align:left;
+}
+.hero h1{
+  margin:0;
+  font-size:44px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.hero p{
+  margin:10px 0 0;
+  opacity:.78;
+  font-size:16px;
+  line-height:1.4;
+}
 
-  .statement{
-    margin-top:22px;
-    font-size:30px;
-    font-weight:950;
-    letter-spacing:.10em;
-    text-transform:uppercase;
-  }
+.topbar{
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.pill{
+  border-radius:999px;
+  padding:10px 14px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-size:12px;
+  color:var(--text);
+  text-decoration:none;
+}
+.pill:hover{background:rgba(255,255,255,.08)}
+.pill.gold{border-color:rgba(212,175,55,.40); box-shadow:0 0 18px var(--gold-glow) inset}
+.pill.silver{border-color:rgba(207,211,218,.34); box-shadow:0 0 18px var(--silver-glow) inset}
 
-  /* -----------------------------
-     DIAMOND HUB (default on wide)
-  ----------------------------- */
+.section-title{
+  margin-top:18px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  opacity:.7;
+  font-size:12px;
+}
 
-  .diamondHub{
-    margin:34px auto 0;
-    width:min(460px,92vw);
-    aspect-ratio:1/1;
-    position:relative;
-    display:block;
-  }
+details.quad{
+  margin-top:12px;
+  border-radius:22px;
+  background:linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.18));
+  border:1px solid var(--line);
+  box-shadow:0 22px 70px rgba(0,0,0,.55);
+  backdrop-filter:blur(12px);
+  overflow:hidden;
+}
+details.quad summary{
+  list-style:none;
+  cursor:pointer;
+  padding:16px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  -webkit-tap-highlight-color:transparent;
+}
+details.quad summary::-webkit-details-marker{display:none}
 
-  .diamondHub::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    transform:rotate(45deg);
-    border-radius:40px;
-    background:rgba(255,255,255,.04);
-    box-shadow:
-      inset 0 0 0 1px rgba(255,255,255,.10),
-      0 30px 90px rgba(0,0,0,.55);
-  }
+.q-left{display:flex;align-items:center;gap:12px;min-width:0}
+.q-badge{
+  width:56px;height:40px;border-radius:16px;
+  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;letter-spacing:.10em;
+  flex:0 0 auto;
+}
+.q-badge.gold{border-color:rgba(212,175,55,.50); box-shadow:0 0 14px var(--gold-glow) inset}
+.q-badge.sun{border-color:rgba(212,175,55,.26); box-shadow:0 0 10px rgba(212,175,55,.18) inset}
+.q-badge.city{border-color:rgba(207,211,218,.24); box-shadow:0 0 10px rgba(207,211,218,.16) inset}
+.q-badge.set{border-color:rgba(207,211,218,.20); box-shadow:0 0 10px rgba(207,211,218,.14) inset}
 
-  .node{
-    position:absolute;
-    width:42%;
-    height:42%;
-    transform:rotate(45deg);
-    border-radius:26px;
-    background:rgba(0,0,0,.26);
-    box-shadow:
-      inset 0 0 0 1px rgba(255,255,255,.12),
-      0 18px 50px rgba(0,0,0,.40);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-decoration:none;
-    color:inherit;
-    cursor:pointer;
-    -webkit-tap-highlight-color:transparent;
-    user-select:none;
-    transition:filter .15s ease, transform .15s ease;
-  }
+.q-text{min-width:0}
+.q-text b{display:block;font-size:18px;letter-spacing:.12em;text-transform:uppercase}
+.q-text span{display:block;opacity:.72;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-  .node:hover{filter:brightness(1.06)}
-  .node:active{transform:rotate(45deg) translateY(1px)}
+.q-arrow{
+  width:42px;height:42px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  display:flex;align-items:center;justify-content:center;
+  opacity:.9;
+  flex:0 0 auto;
+}
 
-  .node span{
-    transform:rotate(-45deg);
-    text-align:center;
-    font-weight:950;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    line-height:1.1;
-  }
+.inside{padding:0 16px 16px}
 
-  .node small{
-    display:block;
-    margin-top:8px;
-    opacity:.72;
-    font-weight:800;
-    font-size:12px;
-    letter-spacing:.14em;
-  }
+.grid2{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  margin-top:8px;
+}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
 
-  .n-top{top:2%;left:29%}
-  .n-right{top:29%;right:2%}
-  .n-bottom{bottom:2%;left:29%}
-  .n-left{top:29%;left:2%}
+.bubble{
+  border-radius:18px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.10);
+  padding:12px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  cursor:pointer;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.bubble:hover{background:rgba(255,255,255,.07)}
+.bubble .t{
+  min-width:0;
+}
+.bubble .t b{
+  display:block;
+  font-size:13px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.bubble .t i{
+  display:block;
+  font-style:normal;
+  opacity:.72;
+  font-size:12px;
+  margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.bubble .go{
+  width:40px;height:40px;border-radius:999px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.10);
+  display:flex;align-items:center;justify-content:center;
+  opacity:.9;
+  flex:0 0 auto;
+}
 
-  /* -----------------------------
-     PANEL HUB (mobile / condensed)
-  ----------------------------- */
+.blockmap{
+  margin-top:14px;
+  border-radius:22px;
+  background:linear-gradient(180deg, rgba(0,0,0,.34), rgba(0,0,0,.22));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  padding:14px 14px;
+}
+.blockhead{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  opacity:.75;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  font-size:12px;
+}
+.blocktitle{
+  margin-top:10px;
+  font-weight:900;
+  letter-spacing:.08em;
+  font-size:18px;
+}
+.blockp{
+  margin-top:8px;
+  color:rgba(255,255,255,.78);
+  line-height:1.55;
+}
+.tagrow{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.tag{
+  border-radius:999px;
+  padding:8px 12px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.06);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-size:11px;
+  opacity:.9;
+}
 
-  .panelHub{
-    display:none;
-    margin-top:22px;
-  }
+.jumprow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.jump{
+  border-radius:18px;
+  padding:12px 14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);
+  text-decoration:none;
+  color:var(--text);
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-size:12px;
+}
+.jump:hover{background:rgba(255,255,255,.08)}
+.jump.gold{border-color:rgba(212,175,55,.45); box-shadow:0 0 16px var(--gold-glow) inset}
 
-  details.panel{
-    border-radius:22px;
-    background:rgba(255,255,255,.05);
-    box-shadow:
-      inset 0 0 0 1px rgba(255,255,255,.10),
-      0 18px 50px rgba(0,0,0,.45);
-    backdrop-filter:blur(12px);
-    overflow:hidden;
-  }
-  details.panel + details.panel{margin-top:12px}
-
-  details.panel summary{
-    list-style:none;
-    cursor:pointer;
-    padding:16px 16px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    -webkit-tap-highlight-color:transparent;
-  }
-  details.panel summary::-webkit-details-marker{display:none}
-
-  .p-left{
-    min-width:0;
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-  }
-
-  .p-left b{
-    font-size:16px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    font-weight:950;
-  }
-
-  .p-left span{
-    opacity:.72;
-    font-size:14px;
-    line-height:1.35;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-
-  .chev{
-    width:42px;height:42px;border-radius:999px;
-    background:rgba(255,255,255,.06);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    opacity:.9;
-    flex:0 0 auto;
-    font-weight:900;
-  }
-
-  .panelBody{
-    padding:0 16px 16px;
-  }
-
-  .panelBody p{
-    margin:10px 0 0;
-    opacity:.84;
-    line-height:1.55;
-  }
-
-  .panelBody .go{
-    margin-top:12px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    padding:12px 16px;
-    border-radius:999px;
-    background:rgba(255,255,255,.08);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
-    font-weight:950;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    font-size:12px;
-    text-decoration:none;
-    color:inherit;
-  }
-
-  .panelBody .go:hover{background:rgba(255,255,255,.10)}
-
-  /* -----------------------------
-     Switch rule (compression)
-     If screen is narrow OR height is short, use panels.
-  ----------------------------- */
-  @media (max-width: 680px), (max-height: 740px){
-    .diamondHub{display:none}
-    .panelHub{display:block}
-  }
-
-  /* bottom ink */
-  .ink{
-    margin-top:46px;
-    text-align:center;
-    letter-spacing:.22em;
-    font-weight:900;
-    opacity:.40;
-    font-size:12px;
-    text-transform:uppercase;
-  }
-
+.footer{
+  margin-top:26px;
+  opacity:.35;
+  font-size:12px;
+  letter-spacing:.2em;
+  text-align:center;
+}
+.brand{
+  margin-top:8px;
+  opacity:.30;
+  letter-spacing:.35em;
+  text-transform:uppercase;
+  font-size:12px;
+  text-align:center;
+}
 </style>
 </head>
 
 <body>
 <div class="page">
-  <div class="wrap">
 
-    <div class="top">
-      <div class="quote">“You cannot solve a problem with the same thinking that created it.”</div>
-      <div class="source">— Albert Einstein</div>
-      <div class="statement">Coherence precedes resolution.</div>
+  <div class="hero">
+    <h1>HOME</h1>
+    <p id="desc">Explore the system. Expand bubbles → load blocks → expand sub-bubbles → then jump.</p>
+
+    <div class="topbar">
+      <span class="pill silver" id="langPill">LANG: EN</span>
+      <span class="pill gold" id="depthPill">DEPTH: EXPLORE</span>
+
+      <a class="pill" href="/door/">CHANGE DEPTH</a>
+      <a class="pill" href="/">CHANGE LANGUAGE</a>
+
+      <a class="pill gold" href="/door/" id="jumpHome">JUMP HOME</a>
     </div>
 
-    <!-- DIAMOND HUB (when it fits) -->
-    <div class="diamondHub" aria-label="Home diamond hub">
-      <a class="node n-top" href="/products/"><span>Products<small>Tools & systems</small></span></a>
-      <a class="node n-right" href="/laws/"><span>Laws<small>Rules & geometry</small></span></a>
-      <a class="node n-bottom" href="/about/"><span>About<small>Chronicle & proof</small></span></a>
-      <a class="node n-left" href="/links/"><span>Links<small>Identity anchors</small></span></a>
-    </div>
-
-    <!-- PANEL HUB (when too condensed) -->
-    <div class="panelHub" aria-label="Home panel hub">
-
-      <details class="panel">
-        <summary>
-          <div class="p-left">
-            <b>Products</b>
-            <span>Tools, systems, deployment surfaces</span>
-          </div>
-          <div class="chev">▾</div>
-        </summary>
-        <div class="panelBody">
-          <p>Products are the applied surfaces: portals, instruments, and deployable systems.</p>
-          <a class="go" href="/products/">Open Products</a>
-        </div>
-      </details>
-
-      <details class="panel">
-        <summary>
-          <div class="p-left">
-            <b>Laws</b>
-            <span>Geometry, language, constraints</span>
-          </div>
-          <div class="chev">▾</div>
-        </summary>
-        <div class="panelBody">
-          <p>Laws contain the structural rules: SSG, DOT.GRID, traversal grammar, and invariants.</p>
-          <a class="go" href="/laws/">Open Laws</a>
-        </div>
-      </details>
-
-      <details class="panel">
-        <summary>
-          <div class="p-left">
-            <b>About</b>
-            <span>History, OSF, analytics, underdog chronicle</span>
-          </div>
-          <div class="chev">▾</div>
-        </summary>
-        <div class="panelBody">
-          <p>About contains the hybrid structured chronicle: origin, current state, trajectory, and evidence.</p>
-          <a class="go" href="/about/">Open About</a>
-        </div>
-      </details>
-
-      <details class="panel">
-        <summary>
-          <div class="p-left">
-            <b>Links</b>
-            <span>ORCID, OSF registry, contact, anchors</span>
-          </div>
-          <div class="chev">▾</div>
-        </summary>
-        <div class="panelBody">
-          <p>Links contains the identity and verification anchors: ORCID, OSF, references, contact.</p>
-          <a class="go" href="/links/">Open Links</a>
-        </div>
-      </details>
-
-    </div>
-
-    <div class="ink">GEODIAMETRICS</div>
-    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
+    <div class="section-title">Quadrant routes (NW / NE / SW / SE)</div>
   </div>
+
+  <!-- NW -->
+  <details class="quad" open>
+    <summary>
+      <div class="q-left">
+        <div class="q-badge gold">⭐ NW</div>
+        <div class="q-text">
+          <b>Northwest</b>
+          <span>Definition · language · structure</span>
+        </div>
+      </div>
+      <div class="q-arrow">▾</div>
+    </summary>
+    <div class="inside">
+      <div class="grid2">
+        <div class="bubble" data-block="ssg">
+          <div class="t"><b>SSG</b><i>Resources · Stores · Constraints · Goals · Guards</i></div>
+          <div class="go">▶</div>
+        </div>
+        <div class="bubble" data-block="grammar">
+          <div class="t"><b>Diamond Grammar</b><i>Hub-first traversal · receipt gating</i></div>
+          <div class="go">▶</div>
+        </div>
+        <div class="bubble" data-block="dotgrid">
+          <div class="t"><b>DOT.GRID</b><i>256-state indexing · replay + audit</i></div>
+          <div class="go">▶</div>
+        </div>
+        <div class="bubble" data-block="acronyms">
+          <div class="t"><b>Acronyms</b><i>Pillar map + usage</i></div>
+          <div class="go">▶</div>
+        </div>
+      </div>
+
+      <div class="blockmap" id="blockmap">
+        <div class="blockhead">
+          <div>BLOCK</div>
+          <div>TAP A BUBBLE TO LOAD DETAILS</div>
+        </div>
+        <div class="blocktitle" id="bt">SSG — Simplified Syntax Geometry</div>
+        <div class="blockp" id="bp">
+          Constraint-native specs become replay-safe execution contracts. This is the minimum language for executable structure.
+        </div>
+        <div class="tagrow">
+          <span class="tag">Origin</span>
+          <span class="tag">Now</span>
+          <span class="tag">Trajectory</span>
+        </div>
+
+        <div class="blockp" id="bp2" style="margin-top:12px">
+          <b>Primitives:</b> Resource, Store, Constraint, Goal, Guard.<br/>
+          <b>Receipts:</b> Advance only after receipt. Back-nav invalidates downstream receipts.<br/>
+          <b>Invariants:</b> Navigation-first; no timers as gates; atomic handoff with receipt.
+        </div>
+
+        <div class="jumprow">
+          <a class="jump" href="/laws/">JUMP · LAWS</a>
+          <a class="jump gold" href="/laws/categories/">JUMP · CATEGORIES</a>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <!-- NE -->
+  <details class="quad">
+    <summary>
+      <div class="q-left">
+        <div class="q-badge sun">🌞 NE</div>
+        <div class="q-text">
+          <b>Northeast</b>
+          <span>Execution · surfaces · examples</span>
+        </div>
+      </div>
+      <div class="q-arrow">▾</div>
+    </summary>
+    <div class="inside">
+      <div class="grid2">
+        <div class="bubble" data-block="surfaces">
+          <div class="t"><b>Execution Surfaces</b><i>Apps · portals · interfaces</i></div>
+          <div class="go">▶</div>
+        </div>
+        <div class="bubble" data-block="receipts">
+          <div class="t"><b>Workflows & Receipts</b><i>Audit trails · replay safety</i></div>
+          <div class="go">▶</div>
+        </div>
+        <div class="bubble" data-block="examples">
+          <div class="t"><b>Examples</b><i>How to use the system</i></div>
+          <div class="go">▶</div>
+        </div>
+        <div class="bubble" data-block="packs">
+          <div class="t"><b>Packs & Outputs</b><i>Downloadables · packaged artifacts</i></div>
+          <div class="go">▶</div>
+        </div>
+      </div>
+      <div class="jumprow">
+        <a class="jump" href="/products/">JUMP · PRODUCTS</a>
+        <a class="jump gold" href="/rgsc/">JUMP · RGSC</a>
+      </div>
+    </div>
+  </details>
+
+  <!-- SW -->
+  <details class="quad">
+    <summary>
+      <div class="q-left">
+        <div class="q-badge city">🏮 SW</div>
+        <div class="q-text">
+          <b>Southwest</b>
+          <span>Measurement · diagnostics · rules</span>
+        </div>
+      </div>
+      <div class="q-arrow">▾</div>
+    </summary>
+    <div class="inside">
+      <div class="grid2">
+        <div class="bubble" data-block="gauges">
+          <div class="t"><b>Gauges</b><i>Instrument panels · thresholds</i></div>
+          <div class="go">▶</div>
+        </div>
+        <div class="bubble" data-block="diagnostics">
+          <div class="t"><b>Diagnostics</b><i>Classification under constraint</i></div>
+          <div class="go">▶</div>
+        </div>
+        <div class="bubble" data-block="rules">
+          <div class="t"><b>Rules</b><i>Navigation + integrity</i></div>
+          <div class="go">▶</div>
+        </div>
+        <div class="bubble" data-block="protocols">
+          <div class="t"><b>Protocols</b><i>Return / replay / audit</i></div>
+          <div class="go">▶</div>
+        </div>
+      </div>
+      <div class="jumprow">
+        <a class="jump" href="/gauges/">JUMP · GAUGES</a>
+        <a class="jump gold" href="/diagnostic/">JUMP · DIAGNOSTIC</a>
+      </div>
+    </div>
+  </details>
+
+  <!-- SE -->
+  <details class="quad">
+    <summary>
+      <div class="q-left">
+        <div class="q-badge set">🌇 SE</div>
+        <div class="q-text">
+          <b>Southeast</b>
+          <span>Identity · references · links</span>
+        </div>
+      </div>
+      <div class="q-arrow">▾</div>
+    </summary>
+    <div class="inside">
+      <div class="grid2">
+        <div class="bubble" data-block="orcid">
+          <div class="t"><b>ORCID</b><i>Research identity anchor</i></div>
+          <div class="go">▶</div>
+        </div>
+        <div class="bubble" data-block="osf">
+          <div class="t"><b>OSF</b><i>Project registry / preprints</i></div>
+          <div class="go">▶</div>
+        </div>
+        <div class="bubble" data-block="refs">
+          <div class="t"><b>References</b><i>Core citations / anchors</i></div>
+          <div class="go">▶</div>
+        </div>
+        <div class="bubble" data-block="contact">
+          <div class="t"><b>Contact</b><i>Direct channel</i></div>
+          <div class="go">▶</div>
+        </div>
+      </div>
+      <div class="jumprow">
+        <a class="jump gold" href="/links/">JUMP · LINKS</a>
+      </div>
+    </div>
+  </details>
+
+  <div class="brand">GEODIAMETRICS</div>
+  <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
 </div>
 
 <script>
-  // Keep chevrons visually coherent
-  document.querySelectorAll("details.panel").forEach(d=>{
-    const chev = d.querySelector(".chev");
-    const sync = ()=>{ chev.textContent = d.open ? "▾" : "▸"; };
-    sync();
-    d.addEventListener("toggle", sync);
+(function(){
+  const lang = (localStorage.getItem('crp_lang') || 'en').toLowerCase();
+  const depth = (localStorage.getItem('crp_depth') || 'explore').toLowerCase();
+
+  const langPill = document.getElementById('langPill');
+  const depthPill = document.getElementById('depthPill');
+  langPill.textContent = 'LANG: ' + (lang === 'zh' ? '中文' : 'EN');
+  depthPill.textContent = 'DEPTH: ' + (depth === 'learn' ? 'LEARN' : 'EXPLORE');
+
+  // Depth behavior: EXPLORE = short; LEARN = longer
+  if(depth !== 'learn'){
+    // keep blockmap minimal
+    const bp2 = document.getElementById('bp2');
+    bp2.style.display = 'none';
+  }
+
+  const blocks = {
+    ssg:{
+      t:'SSG — Simplified Syntax Geometry',
+      p:'Constraint-native specs become replay-safe execution contracts. This is the minimum language for executable structure.',
+      p2:'Primitives: Resource, Store, Constraint, Goal, Guard. Receipts gate advancement. Navigation-first invariants prevent drift.'
+    },
+    grammar:{
+      t:'Diamond Grammar',
+      p:'Four-route structural navigation. One choice at a time. Hub-first traversal reduces confusion and preserves receipts.',
+      p2:'Rule: choose one route, complete it, return to hub. Back-nav invalidates downstream receipts.'
+    },
+    dotgrid:{
+      t:'DOT.GRID',
+      p:'A 256-state indexing lattice for replay, audit, and observer-consistent classification.',
+      p2:'Use it to log evidence, score admissibility, and compare trajectories under identical constraints.'
+    },
+    acronyms:{
+      t:'Acronyms & Glossary',
+      p:'Pillarized map of terms with consistent definitions.',
+      p2:'Goal: reduce semantic drift across teams, domains, and time.'
+    },
+
+    surfaces:{t:'Execution Surfaces',p:'Apps, portals, and interfaces that expose the engine as usable workflow.',p2:'Surfaces stay simple; depth moves into blocks and nested bubbles.'},
+    receipts:{t:'Workflows & Receipts',p:'Audit trails and verification tokens that make execution replay-safe.',p2:'Receipts are the handoff: proof of state completion.'},
+    examples:{t:'Examples',p:'How to use the system in real routes and decisions.',p2:'Start small: one route, one receipt, one return.'},
+    packs:{t:'Packs & Outputs',p:'Downloadables, packaged tools, and structured materials.',p2:'Everything is designed to be reusable and composable.'},
+
+    gauges:{t:'Gauges',p:'Instrument panels, consistency checks, signal integrity, and thresholds.',p2:'Gauges measure coherence under load.'},
+    diagnostics:{t:'Diagnostics',p:'Classification under constraint: coherence / drift / confusion categories.',p2:'Observer-consistent targets, replay-driven audits.'},
+    rules:{t:'Rules',p:'Navigation and integrity rules that keep systems stable as they scale.',p2:'Return protocol prevents runaway drift.'},
+    protocols:{t:'Protocols',p:'Operational handoffs, verification, and replay mechanics.',p2:'Protocol = repeatable action under constraint.'},
+
+    orcid:{t:'ORCID',p:'Research identity anchor for attribution and continuity.',p2:'Stable identity improves traceability of artifacts.'},
+    osf:{t:'OSF',p:'Project registry, preprints, and canonical references.',p2:'OSF is the public ledger of the research spine.'},
+    refs:{t:'References',p:'Core citations and anchors used across the system.',p2:'Reference stability prevents semantic collapse.'},
+    contact:{t:'Contact',p:'Direct communication channel.',p2:'Use this when you need alignment or access.'}
+  };
+
+  const bt = document.getElementById('bt');
+  const bp = document.getElementById('bp');
+  const bp2 = document.getElementById('bp2');
+
+  document.querySelectorAll('.bubble').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const k = el.getAttribute('data-block');
+      const b = blocks[k];
+      if(!b) return;
+      bt.textContent = b.t;
+      bp.textContent = b.p;
+      if(bp2){
+        bp2.textContent = b.p2;
+        if(depth === 'learn') bp2.style.display = 'block';
+      }
+      // scroll blockmap into view for mobile clarity
+      const bm = document.getElementById('blockmap');
+      if(bm) bm.scrollIntoView({behavior:'smooth',block:'center'});
+    });
   });
+})();
 </script>
+
 </body>
 </html>

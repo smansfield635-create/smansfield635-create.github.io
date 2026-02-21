@@ -1,71 +1,266 @@
+<!-- TNT: /home/index.html (HUB — NO language/mode selection; reads root choice; SHOP=default B) -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Geodiametrics · Home</title>
+<title>Home · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
+<link rel="stylesheet" href="/assets/ui.css?v=2001"/>
+<link rel="stylesheet" href="/assets/branch.css?v=2001"/>
 
 <style>
-/* HOME SELECTOR — neutral */
-html,body{margin:0;height:100%}
-body{
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:#eaf2f6;
-  background:radial-gradient(1200px 900px at 50% 18%, #1a2a33 0%, #0b1620 55%, #05070c 100%);
-}
-.page{max-width:980px;margin:0 auto;padding:44px 18px 90px}
-.hero{position:relative;z-index:5}
-.hero h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
-.hero p{margin:10px 0 0;opacity:.75;font-size:18px}
+/* Fix: subtitle/header must ALWAYS sit above plate */
+.h{position:relative;z-index:20}
+.h h1,.h p{position:relative;z-index:20}
 
-.mode-row{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 26px}
-.mode-btn{
-  flex:1 1 180px;
-  padding:14px 16px;
-  border-radius:22px;
-  background:rgba(255,255,255,.06);
+/* Hub controls row */
+.hub-controls{
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.pill{
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
   border:1px solid rgba(255,255,255,.10);
-  text-decoration:none;color:#eaf2f6;font-weight:800;
+  font-weight:900;
+  letter-spacing:.06em;
+  opacity:.95;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
 }
-.mode-btn small{display:block;margin-top:6px;opacity:.75;font-weight:700}
-.mode-btn:hover{background:rgba(255,255,255,.10)}
-.mode-btn.learn{box-shadow:0 0 0 1px rgba(120,180,255,.18) inset, 0 0 26px rgba(120,180,255,.08)}
-.mode-btn.shop{box-shadow:0 0 0 1px rgba(255,120,120,.18) inset, 0 0 26px rgba(255,120,120,.08)}
+.pill:active{transform:translateY(1px)}
+.pill.on{background:rgba(255,255,255,.14)}
+.pill.small{font-weight:800;letter-spacing:.12em;font-size:12px}
 
-.footer{margin-top:30px;opacity:.5;letter-spacing:3px;font-size:12px;text-align:center}
+/* Accordion */
+.stack{
+  width:min(860px,94vw);
+  margin-top:16px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.acc{
+  border-radius:22px;
+  background:rgba(255,255,255,.05);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), 0 18px 44px rgba(0,0,0,.45);
+  overflow:hidden;
+}
+.acc > button{
+  width:100%;
+  background:transparent;
+  border:0;
+  color:inherit;
+  padding:16px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.acc > button span{opacity:.95}
+.acc > button em{font-style:normal;opacity:.7;font-weight:800;letter-spacing:.06em;text-transform:none}
+.acc .body{
+  display:none;
+  padding:0 16px 16px;
+  opacity:.92;
+  line-height:1.6;
+}
+.acc.open .body{display:block}
+
+.row2{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:12px;
+}
+@media (max-width:680px){.row2{grid-template-columns:1fr}}
+
+.card{
+  border-radius:18px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.08);
+  padding:12px 12px;
+}
+.card b{display:block;font-weight:900}
+.card p{margin:6px 0 0;opacity:.78}
+
+.links{
+  margin-top:10px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.links a{
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
+  font-weight:900;
+}
 </style>
 </head>
 
 <body>
+<div class="shooting-stars"></div>
+
 <div class="page">
-  <div class="hero">
-    <h1>Geodiametrics</h1>
-    <p>Choose what you understand. No setup.</p>
+
+  <div class="h">
+    <h1 id="ttl">Home</h1>
+    <p id="sub">Unified structural hub.</p>
+
+    <div class="hub-controls" aria-label="Hub controls">
+      <button class="pill small" id="langEN">EN</button>
+      <button class="pill small" id="langZH">中文</button>
+      <button class="pill" id="modeLearn">Learn</button>
+      <button class="pill" id="modeShop">Shop</button>
+      <a class="pill" href="/">Root</a>
+      <a class="pill" href="/links/">Links</a>
+    </div>
   </div>
 
-  <div class="mode-row">
-    <a class="mode-btn learn" href="/home/learn/?lang=en">
-      Learn · EN
-      <small>Definitions · systems · methods</small>
-    </a>
-    <a class="mode-btn shop" href="/home/shop/?lang=en">
-      Shop · EN
-      <small>Products · programs · services</small>
-    </a>
-    <a class="mode-btn learn" href="/home/learn/?lang=zh">
-      学习 · 中文
-      <small>定义 · 系统 · 方法</small>
-    </a>
-    <a class="mode-btn shop" href="/home/shop/?lang=zh">
-      购买 · 中文
-      <small>产品 · 项目 · 服务</small>
-    </a>
+  <div class="stack" id="stack">
+
+    <!-- NORTH -->
+    <div class="acc" data-k="N">
+      <button type="button"><span>NORTH</span><em id="n_tag">Definitions · language · structure</em></button>
+      <div class="body" id="n_body">
+        <div class="row2">
+          <div class="card"><b>SSG</b><p>Simplified Syntax Geometry reference + primitives.</p></div>
+          <div class="card"><b>Diamond Grammar</b><p>Four routes · one choice at a time · hub/leaf separation.</p></div>
+          <div class="card"><b>DOT.GRID</b><p>256-state indexing and routing surface.</p></div>
+          <div class="card"><b>Acronyms</b><p>Catalog grouped by pillars (expandable registry).</p></div>
+        </div>
+        <div class="links">
+          <a href="/laws/">Laws</a>
+          <a href="/laws/categories/">Categories</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- EAST -->
+    <div class="acc" data-k="E">
+      <button type="button"><span>EAST</span><em id="e_tag">Products · execution · surfaces</em></button>
+      <div class="body" id="e_body">
+        <div class="row2">
+          <div class="card"><b>Energy Products</b><p>Solar → plasma conversion workstream and artifacts.</p></div>
+          <div class="card"><b>Execution Surfaces</b><p>PLASMA / PLATFORM / supporting layers.</p></div>
+          <div class="card"><b>ESL Program</b><p>1,001-word mastery + four levels + downloads.</p></div>
+          <div class="card"><b>Packs & Outputs</b><p>PDFs, drills, tools, and packaged releases.</p></div>
+        </div>
+        <div class="links">
+          <a href="/products/">Products</a>
+          <a href="/rgsc/">RGSC</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOUTH -->
+    <div class="acc" data-k="S">
+      <button type="button"><span>SOUTH</span><em id="s_tag">Measurement · diagnostics · rules</em></button>
+      <div class="body" id="s_body">
+        <div class="row2">
+          <div class="card"><b>Gauges</b><p>Measurement surfaces and stability checks.</p></div>
+          <div class="card"><b>Diagnostics</b><p>Ports, replay checks, verification outputs.</p></div>
+          <div class="card"><b>Governance</b><p>Receipts, audit layers, local-first principle.</p></div>
+          <div class="card"><b>Standards</b><p>Canonical structure + stable navigation invariants.</p></div>
+        </div>
+        <div class="links">
+          <a href="/gauges/">Gauges</a>
+          <a href="/diagnostic/">Diagnostic</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEST -->
+    <div class="acc" data-k="W">
+      <button type="button"><span>WEST</span><em id="w_tag">Identity · references · links</em></button>
+      <div class="body" id="w_body">
+        <div class="row2">
+          <div class="card"><b>OSF</b><p>Project registry and preprints.</p></div>
+          <div class="card"><b>ORCID</b><p>Researcher identity.</p></div>
+          <div class="card"><b>Contact</b><p>Direct communication channel.</p></div>
+          <div class="card"><b>Reference Index</b><p>External anchors and verified pointers.</p></div>
+        </div>
+        <div class="links">
+          <a href="/links/">Links</a>
+          <a href="/contact/">Contact</a>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
 </div>
+
+<script>
+(() => {
+  const LS = (k, d) => { try { return localStorage.getItem(k) ?? d; } catch(e){ return d; } };
+  const setLS = (k, v) => { try { localStorage.setItem(k, v); } catch(e){} };
+
+  // B = SHOP default if missing
+  let lang = LS("geo.lang", "en");      // en | zh
+  let mode = LS("geo.mode", "shop");    // learn | shop
+
+  const ttl = document.getElementById("ttl");
+  const sub = document.getElementById("sub");
+
+  const langEN = document.getElementById("langEN");
+  const langZH = document.getElementById("langZH");
+  const modeLearn = document.getElementById("modeLearn");
+  const modeShop = document.getElementById("modeShop");
+
+  const applyUI = () => {
+    // Toggle pills
+    langEN.classList.toggle("on", lang === "en");
+    langZH.classList.toggle("on", lang === "zh");
+    modeLearn.classList.toggle("on", mode === "learn");
+    modeShop.classList.toggle("on", mode === "shop");
+
+    // Header
+    if(lang === "zh"){
+      ttl.textContent = "主页";
+      sub.textContent = (mode === "shop")
+        ? "购买模式 · 产品、项目、服务"
+        : "学习模式 · 定义、系统、方法";
+    }else{
+      ttl.textContent = "Home";
+      sub.textContent = (mode === "shop")
+        ? "Shop mode · products, programs, services."
+        : "Study mode · definitions, systems, methods.";
+    }
+
+    // NOTE: content stays structurally identical; delivery tone can be expanded later.
+  };
+
+  // Accordions
+  document.querySelectorAll(".acc > button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const box = btn.parentElement;
+      box.classList.toggle("open");
+    });
+  });
+
+  // Controls
+  langEN.addEventListener("click", () => { lang="en"; setLS("geo.lang", "en"); applyUI(); });
+  langZH.addEventListener("click", () => { lang="zh"; setLS("geo.lang", "zh"); applyUI(); });
+
+  modeLearn.addEventListener("click", () => { mode="learn"; setLS("geo.mode", "learn"); applyUI(); });
+  modeShop.addEventListener("click", () => { mode="shop"; setLS("geo.mode", "shop"); applyUI(); });
+
+  applyUI();
+})();
+</script>
 </body>
 </html>

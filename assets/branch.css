@@ -1,9 +1,9 @@
 /* =========================================================
-   GLOBAL TNT — DARK OPAL SYSTEM (FINAL STABLE)
-   - Perfect compass alignment
-   - Removes written North/South/East/West
-   - N/E/S/W letters only
-   - Minis in bottom pockets
+   GLOBAL TNT: assets/branch.css
+   DARK OPAL GEM SYSTEM + COMPASS BADGES (SYMBOL + N/E/S/W)
+   - No HTML changes required
+   - Perfect alignment (fixed-size badges)
+   - Symbols are glyphs (not emoji)
 ========================================================= */
 
 /* ---------- PLATFORM ---------- */
@@ -92,66 +92,7 @@
 .bottom{ bottom:8%; left:32%; }
 .left{ top:32%; left:8%; }
 
-/* ---------- REMOVE WRITTEN NORTH/SOUTH/EAST/WEST ---------- */
-
-.diamond.top span::before,
-.diamond.right span::before,
-.diamond.bottom span::before,
-.diamond.left span::before{
-  content:none !important;
-}
-
-/* ---------- COMPASS LETTERS (PERFECTLY CENTERED) ---------- */
-
-.diamond.top::after,
-.diamond.right::after,
-.diamond.bottom::after,
-.diamond.left::after{
-  position:absolute;
-  font-weight:900;
-  font-size:16px;
-  letter-spacing:.25em;
-  color:rgba(230,240,255,.85);
-  text-shadow:
-    0 0 10px rgba(120,200,255,.5),
-    0 0 22px rgba(80,170,255,.35);
-  pointer-events:none;
-  transform:rotate(-45deg);
-}
-
-/* N centered above */
-.diamond.top::after{
-  content:"N";
-  left:50%;
-  top:-26px;
-  transform:translateX(-50%) rotate(-45deg);
-}
-
-/* E centered right */
-.diamond.right::after{
-  content:"E";
-  top:50%;
-  right:-26px;
-  transform:translateY(-50%) rotate(-45deg);
-}
-
-/* S centered below */
-.diamond.bottom::after{
-  content:"S";
-  left:50%;
-  bottom:-26px;
-  transform:translateX(-50%) rotate(-45deg);
-}
-
-/* W centered left */
-.diamond.left::after{
-  content:"W";
-  top:50%;
-  left:-26px;
-  transform:translateY(-50%) rotate(-45deg);
-}
-
-/* ---------- MINI GEMS (BOTTOM POCKETS) ---------- */
+/* ---------- MINI GEMS ---------- */
 
 .diamond.mini{
   width:16%;
@@ -172,20 +113,104 @@
   z-index:3;
 }
 
-/* Perfect side pockets */
 .mini-left{
+  position:absolute;
   bottom:-8%;
   left:8%;
-  position:absolute;
 }
 
 .mini-right{
+  position:absolute;
   bottom:-8%;
   right:8%;
-  position:absolute;
 }
 
-/* ---------- REMOVE LEGACY SYSTEMS ---------- */
+/* =========================================================
+   COMPASS BADGES (SYMBOL + LETTER)
+   - Fixed-size badge -> perfectly centered
+   - Two-line layout: symbol then letter
+   - Not emoji: rendered as glyph, styled like UI
+========================================================= */
+
+.diamond.top::after,
+.diamond.right::after,
+.diamond.bottom::after,
+.diamond.left::after{
+  position:absolute;
+  width:30px;
+  height:34px;
+  border-radius:999px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+
+  background:rgba(0,0,0,.35);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    0 10px 22px rgba(0,0,0,.55);
+
+  color:rgba(235,245,255,.92);
+  font-weight:900;
+  line-height:1;
+  letter-spacing:0;
+
+  text-shadow:
+    0 0 10px rgba(120,200,255,.50),
+    0 0 22px rgba(80,170,255,.35);
+
+  pointer-events:none;
+  transform:rotate(-45deg);
+}
+
+/* Use pseudo "content" with newline via two spans emulation:
+   We'll render both symbol+letter with a single string and size tricks.
+   (Stable across browsers, no HTML changes.)
+*/
+.diamond.top::after{
+  content:"✦\A N";
+  white-space:pre;
+  left:50%;
+  top:-46px;
+  transform:translateX(-50%) rotate(-45deg);
+  font-size:14px;
+  text-align:center;
+}
+
+.diamond.right::after{
+  content:"☉\A E";
+  white-space:pre;
+  top:50%;
+  right:-46px;
+  transform:translateY(-50%) rotate(-45deg);
+  font-size:14px;
+  text-align:center;
+}
+
+.diamond.bottom::after{
+  content:"✦\A S";
+  white-space:pre;
+  left:50%;
+  bottom:-46px;
+  transform:translateX(-50%) rotate(-45deg);
+  font-size:13px; /* slightly smaller south star */
+  opacity:.88;
+  text-align:center;
+}
+
+.diamond.left::after{
+  content:"☾\A W";
+  white-space:pre;
+  top:50%;
+  left:-46px;
+  transform:translateY(-50%) rotate(-45deg);
+  font-size:14px;
+  text-align:center;
+}
+
+/* ---------- CLEANUP ---------- */
 
 .diamond-stage,
 .mini-diamond,

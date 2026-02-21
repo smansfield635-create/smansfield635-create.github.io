@@ -1,481 +1,489 @@
-<!-- TNT: /index.html  (ROOT) -->
 <!doctype html>
-<html lang="en" data-lang="en">
+<html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodiametrics · Root</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Geodiametrics · Root</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=2000"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=2000"/>
+<link rel="stylesheet" href="/assets/ui.css?v=6000"/>
+<link rel="stylesheet" href="/assets/branch.css?v=6000"/>
 
-  <style>
-    /* ROOT: quad-lens index (accordion), EN/中文 toggle, all-closed default */
+<style>
+/* =========================================================
+   ROOT MASTER HUB — QUAD LENSES (STACKED) + BUBBLE TREE
+   TNT FULL FILE
+   - Four primary lenses: Problem / R&D / Strategy / What We’ve Learned
+   - Each lens expands into N/E/S/W branches (tree)
+   - Deep nested bubbles (tap to open/close)
+   - All closed by default
+========================================================= */
 
-    .root-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:18px}
-    .root-hero{text-align:left}
-    .root-hero h1{margin:0;font-size:clamp(44px,8vw,72px);font-weight:900;letter-spacing:.01em}
-    .root-hero p{margin:10px 0 0;font-size:20px;opacity:.75}
+.root-wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
 
-    /* top-right language toggle */
-    .lang-toggle{
-      position:fixed;top:14px;right:14px;z-index:50;
-      display:flex;gap:10px;align-items:center;
-      padding:10px 12px;border-radius:999px;
-      background:rgba(255,255,255,.06);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 18px 44px rgba(0,0,0,.45);
-      backdrop-filter:blur(10px);
-    }
-    .lang-btn{
-      border:0;cursor:pointer;
-      padding:10px 14px;border-radius:999px;
-      background:rgba(255,255,255,.08);
-      color:#eaf2f6;font-weight:900;letter-spacing:.06em;
-    }
-    .lang-btn[aria-pressed="true"]{
-      background:rgba(255,255,255,.14);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
-    }
+/* Top language toggle */
+.langbar{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:-6px;
+}
+.langbtn{
+  border:0;cursor:pointer;
+  padding:10px 14px;border-radius:999px;
+  background:rgba(255,255,255,.08);
+  color:#eaf2f6;font-weight:900;letter-spacing:.08em;
+}
+.langbtn.active{
+  background:rgba(255,255,255,.16);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 0 22px rgba(120,180,255,.10);
+}
 
-    /* QUAD LENS layout */
-    .lens-grid{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:14px;
-    }
+/* Bubble (details) */
+details.bubble{
+  border-radius:22px;
+  background:rgba(255,255,255,.04);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 28px 70px rgba(0,0,0,.40);
+  overflow:hidden;
+}
+summary.bsum{
+  list-style:none;
+  cursor:pointer;
+  user-select:none;
+  padding:18px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+summary.bsum::-webkit-details-marker{display:none}
 
-    details.lens{
-      border-radius:22px;
-      background:rgba(255,255,255,.04);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.45);
-      overflow:hidden;
-    }
+.left{display:flex;gap:12px;align-items:center;min-width:0}
+.pill{
+  width:48px;height:48px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  font-weight:900;letter-spacing:.10em;
+  flex:0 0 auto;
+}
+.twrap{min-width:0}
+.twrap b{display:block;font-size:16px;letter-spacing:.14em}
+.twrap span{display:block;margin-top:3px;font-size:14px;opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-    summary.lens-sum{
-      list-style:none;
-      display:flex;align-items:center;justify-content:space-between;
-      padding:16px 18px;
-      cursor:pointer;
-      user-select:none;
-    }
-    summary.lens-sum::-webkit-details-marker{display:none}
+.chev{
+  width:42px;height:42px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  opacity:.9;
+  flex:0 0 auto;
+}
+.chev::before{
+  content:"";
+  width:10px;height:10px;
+  border-right:2px solid rgba(234,242,246,.65);
+  border-bottom:2px solid rgba(234,242,246,.65);
+  transform:rotate(45deg);
+}
+details[open] > summary .chev::before{transform:rotate(-135deg)}
 
-    .lens-left{display:flex;gap:12px;align-items:center;min-width:0}
-    .lens-badge{
-      width:40px;height:40px;border-radius:999px;
-      display:flex;align-items:center;justify-content:center;
-      background:rgba(255,255,255,.08);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-      font-weight:900;letter-spacing:.08em;
-      flex:0 0 auto;
-    }
-    .lens-title{display:flex;flex-direction:column;min-width:0}
-    .lens-title b{font-size:16px;letter-spacing:.14em}
-    .lens-title span{opacity:.72;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.body{padding:0 18px 18px;display:flex;flex-direction:column;gap:10px;opacity:.96;line-height:1.6}
 
-    .chev{
-      width:42px;height:42px;border-radius:999px;
-      display:flex;align-items:center;justify-content:center;
-      background:rgba(255,255,255,.06);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-      font-weight:900;opacity:.75;
-      flex:0 0 auto;
-    }
-    details[open] .chev{opacity:1}
+/* Nested bubble levels */
+details.sub{
+  border-radius:18px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  overflow:hidden;
+}
+summary.ssum{
+  list-style:none;
+  cursor:pointer;
+  user-select:none;
+  padding:14px 14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+summary.ssum::-webkit-details-marker{display:none}
+.sbody{padding:0 14px 14px;font-size:15px;opacity:.92;line-height:1.65}
 
-    .lens-body{padding:0 18px 18px;display:flex;flex-direction:column;gap:10px}
+/* Tag chips */
+.tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.tag{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
+  font-weight:900;letter-spacing:.08em;
+}
+.tag small{opacity:.70;font-weight:800;letter-spacing:.10em}
 
-    /* nested sections */
-    details.sub{
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-    summary.sub-sum{
-      list-style:none;
-      display:flex;align-items:center;justify-content:space-between;
-      padding:14px 14px;
-      cursor:pointer;
-      user-select:none;
-      gap:10px;
-    }
-    summary.sub-sum::-webkit-details-marker{display:none}
-
-    .sub-left{display:flex;gap:10px;align-items:center;min-width:0}
-    .pill{
-      padding:8px 10px;border-radius:999px;
-      background:rgba(255,255,255,.06);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-      font-weight:900;letter-spacing:.10em;font-size:12px;
-      opacity:.95;flex:0 0 auto;
-    }
-    .sub-label{min-width:0}
-    .sub-label b{display:block;font-size:13px;letter-spacing:.12em}
-    .sub-label span{display:block;font-size:13px;opacity:.72;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .sub-body{padding:0 14px 14px;opacity:.92;line-height:1.6}
-
-    /* platform region */
-    .root-controls{margin-top:6px;display:flex;justify-content:center}
-    .root-controls .platform{width:min(420px,88vw)}
-
-    /* ensure header + footer always above any plate visuals */
-    .h, .root-hero, footer{position:relative;z-index:10}
-  </style>
+/* Root compass plate */
+.root-controls{display:flex;justify-content:center;margin-top:10px}
+.root-controls .platform{width:min(420px,88vw)}
+footer{margin-top:18px}
+</style>
 </head>
 
-<body>
+<body data-lang="en">
 <div class="shooting-stars"></div>
 
-<!-- language toggle -->
-<div class="lang-toggle" role="group" aria-label="Language">
-  <button class="lang-btn" id="btnEN" aria-pressed="true" type="button">EN</button>
-  <button class="lang-btn" id="btnZH" aria-pressed="false" type="button">中文</button>
-</div>
-
 <div class="page">
-  <div class="root-wrap">
+<div class="root-wrap">
 
-    <div class="root-hero">
-      <h1 data-en="Geodiametrics" data-zh="几何度量学">Geodiametrics</h1>
-      <p data-en="Under construction · Safe to explore." data-zh="建设中 · 可安全浏览。">Under construction · Safe to explore.</p>
-    </div>
-
-    <!-- QUAD LENS INDEX -->
-    <div class="lens-grid">
-
-      <!-- NORTH -->
-      <details class="lens">
-        <summary class="lens-sum">
-          <div class="lens-left">
-            <div class="lens-badge">N</div>
-            <div class="lens-title">
-              <b data-en="NORTH" data-zh="北">NORTH</b>
-              <span data-en="Definitions · language · structure" data-zh="定义 · 语言 · 结构">Definitions · language · structure</span>
-            </div>
-          </div>
-          <div class="chev">⌄</div>
-        </summary>
-
-        <div class="lens-body">
-
-          <details class="sub">
-            <summary class="sub-sum">
-              <div class="sub-left">
-                <div class="pill">SSG</div>
-                <div class="sub-label">
-                  <b data-en="Simplified Syntax Geometry" data-zh="简化语法几何">Simplified Syntax Geometry</b>
-                  <span data-en="Constraint language for structure + execution" data-zh="用于结构与执行的约束语言">Constraint language for structure + execution</span>
-                </div>
-              </div>
-              <div class="chev">⌄</div>
-            </summary>
-            <div class="sub-body" data-en="A constraint-based language for expressing resources, stores, constraints, goals, and guards. Built for compression, clarity, and reproducibility."
-                 data-zh="一种以约束为核心的语言，用于表达资源、存储、约束、目标与守卫。强调压缩、清晰与可复现。">
-              A constraint-based language for expressing resources, stores, constraints, goals, and guards. Built for compression, clarity, and reproducibility.
-            </div>
-          </details>
-
-          <details class="sub">
-            <summary class="sub-sum">
-              <div class="sub-left">
-                <div class="pill">GRAM</div>
-                <div class="sub-label">
-                  <b data-en="Diamond Grammar" data-zh="钻石语法">Diamond Grammar</b>
-                  <span data-en="Four routes · one choice at a time" data-zh="四条路径 · 一次一选">Four routes · one choice at a time</span>
-                </div>
-              </div>
-              <div class="chev">⌄</div>
-            </summary>
-            <div class="sub-body" data-en="Navigation rule: N/E/S/W encode functional domains (not directions). Stay single-route inside a branch; return to a hub to switch."
-                 data-zh="导航规则：N/E/S/W 表示功能域（不是方向）。分支内保持单路径；需要切换时返回枢纽。">
-              Navigation rule: N/E/S/W encode functional domains (not directions). Stay single-route inside a branch; return to a hub to switch.
-            </div>
-          </details>
-
-          <details class="sub">
-            <summary class="sub-sum">
-              <div class="sub-left">
-                <div class="pill">DOT</div>
-                <div class="sub-label">
-                  <b data-en="DOT.GRID" data-zh="DOT.GRID">DOT.GRID</b>
-                  <span data-en="256-state indexing system" data-zh="256 状态索引系统">256-state indexing system</span>
-                </div>
-              </div>
-              <div class="chev">⌄</div>
-            </summary>
-            <div class="sub-body" data-en="A compact 256-state lattice used for consistent classification, routing, and replay-safe logs across domains."
-                 data-zh="一个紧凑的 256 状态格，用于跨领域的一致分类、路由与可回放日志。">
-              A compact 256-state lattice used for consistent classification, routing, and replay-safe logs across domains.
-            </div>
-          </details>
-
-          <details class="sub">
-            <summary class="sub-sum">
-              <div class="sub-left">
-                <div class="pill">ABC</div>
-                <div class="sub-label">
-                  <b data-en="Acronyms & Glossary" data-zh="缩写与术语">Acronyms & Glossary</b>
-                  <span data-en="Key terms, consistently defined" data-zh="关键术语的一致定义">Key terms, consistently defined</span>
-                </div>
-              </div>
-              <div class="chev">⌄</div>
-            </summary>
-            <div class="sub-body" data-en="A structured glossary and acronym index (organized by pillars) so terms never drift."
-                 data-zh="结构化术语表与缩写索引（按支柱分类），防止概念漂移。">
-              A structured glossary and acronym index (organized by pillars) so terms never drift.
-            </div>
-          </details>
-
-        </div>
-      </details>
-
-      <!-- EAST -->
-      <details class="lens">
-        <summary class="lens-sum">
-          <div class="lens-left">
-            <div class="lens-badge">E</div>
-            <div class="lens-title">
-              <b data-en="EAST" data-zh="东">EAST</b>
-              <span data-en="Products · execution · surfaces" data-zh="产品 · 执行 · 界面">Products · execution · surfaces</span>
-            </div>
-          </div>
-          <div class="chev">⌄</div>
-        </summary>
-
-        <div class="lens-body">
-
-          <details class="sub">
-            <summary class="sub-sum">
-              <div class="sub-left">
-                <div class="pill">ENGY</div>
-                <div class="sub-label">
-                  <b data-en="Energy products" data-zh="能源产品">Energy products</b>
-                  <span data-en="Solar → Plasma conversion modeling" data-zh="太阳能 → 等离子体 转化建模">Solar → Plasma conversion modeling</span>
-                </div>
-              </div>
-              <div class="chev">⌄</div>
-            </summary>
-            <div class="sub-body" data-en="Energy conversion pathways and execution surfaces for modeling, validation, and deployment."
-                 data-zh="能源转化路径与执行界面，用于建模、验证与部署。">
-              Energy conversion pathways and execution surfaces for modeling, validation, and deployment.
-            </div>
-          </details>
-
-          <details class="sub">
-            <summary class="sub-sum">
-              <div class="sub-left">
-                <div class="pill">APP</div>
-                <div class="sub-label">
-                  <b data-en="Execution surfaces" data-zh="执行界面">Execution surfaces</b>
-                  <span data-en="PLASMA / PLATFORM layers" data-zh="PLASMA / PLATFORM 层">PLASMA / PLATFORM layers</span>
-                </div>
-              </div>
-              <div class="chev">⌄</div>
-            </summary>
-            <div class="sub-body" data-en="Productized interfaces that package instruments into usable workflows."
-                 data-zh="将仪器打包为可用工作流的产品化界面。">
-              Productized interfaces that package instruments into usable workflows.
-            </div>
-          </details>
-
-          <details class="sub">
-            <summary class="sub-sum">
-              <div class="sub-left">
-                <div class="pill">ESL</div>
-                <div class="sub-label">
-                  <b data-en="1,001-word mastery" data-zh="1001 词掌握">1,001-word mastery</b>
-                  <span data-en="Structured fluency system" data-zh="结构化流利系统">Structured fluency system</span>
-                </div>
-              </div>
-              <div class="chev">⌄</div>
-            </summary>
-            <div class="sub-body" data-en="A compact vocabulary + skills framework designed to produce fast, practical communication gains with measurable progression."
-                 data-zh="紧凑的词汇+技能框架，用于快速、实用的沟通提升，并可量化进步。">
-              A compact vocabulary + skills framework designed to produce fast, practical communication gains with measurable progression.
-            </div>
-          </details>
-
-        </div>
-      </details>
-
-      <!-- SOUTH -->
-      <details class="lens">
-        <summary class="lens-sum">
-          <div class="lens-left">
-            <div class="lens-badge">S</div>
-            <div class="lens-title">
-              <b data-en="SOUTH" data-zh="南">SOUTH</b>
-              <span data-en="Gauges · measurement · diagnostics" data-zh="仪表 · 测量 · 诊断">Gauges · measurement · diagnostics</span>
-            </div>
-          </div>
-          <div class="chev">⌄</div>
-        </summary>
-
-        <div class="lens-body">
-
-          <details class="sub">
-            <summary class="sub-sum">
-              <div class="sub-left">
-                <div class="pill">DIAG</div>
-                <div class="sub-label">
-                  <b data-en="Diagnostics" data-zh="诊断">Diagnostics</b>
-                  <span data-en="Detect / classify / replay" data-zh="检测 / 分类 / 回放">Detect / classify / replay</span>
-                </div>
-              </div>
-              <div class="chev">⌄</div>
-            </summary>
-            <div class="sub-body" data-en="Measurement-first surfaces for early warning, classification under constraint, and consistent audit trails."
-                 data-zh="以测量为先的界面，用于早期预警、约束下分类与一致审计轨迹。">
-              Measurement-first surfaces for early warning, classification under constraint, and consistent audit trails.
-            </div>
-          </details>
-
-          <details class="sub">
-            <summary class="sub-sum">
-              <div class="sub-left">
-                <div class="pill">REC</div>
-                <div class="sub-label">
-                  <b data-en="Receipts & audit" data-zh="回执与审计">Receipts & audit</b>
-                  <span data-en="Verification layers" data-zh="验证层">Verification layers</span>
-                </div>
-              </div>
-              <div class="chev">⌄</div>
-            </summary>
-            <div class="sub-body" data-en="Replay-safe logs that bind evidence to outcomes with verifiable continuity."
-                 data-zh="可回放的日志，将证据与结果绑定，并提供可验证的连续性。">
-              Replay-safe logs that bind evidence to outcomes with verifiable continuity.
-            </div>
-          </details>
-
-        </div>
-      </details>
-
-      <!-- WEST -->
-      <details class="lens">
-        <summary class="lens-sum">
-          <div class="lens-left">
-            <div class="lens-badge">W</div>
-            <div class="lens-title">
-              <b data-en="WEST" data-zh="西">WEST</b>
-              <span data-en="Links · identity · references" data-zh="链接 · 身份 · 引用">Links · identity · references</span>
-            </div>
-          </div>
-          <div class="chev">⌄</div>
-        </summary>
-
-        <div class="lens-body">
-
-          <details class="sub">
-            <summary class="sub-sum">
-              <div class="sub-left">
-                <div class="pill">OSF</div>
-                <div class="sub-label">
-                  <b data-en="OSF registry" data-zh="OSF 注册">OSF registry</b>
-                  <span data-en="Projects / preprints" data-zh="项目 / 预印本">Projects / preprints</span>
-                </div>
-              </div>
-              <div class="chev">⌄</div>
-            </summary>
-            <div class="sub-body">
-              <a href="https://osf.io/" target="_blank" rel="noopener noreferrer"
-                 data-en="Open OSF"
-                 data-zh="打开 OSF">Open OSF</a>
-            </div>
-          </details>
-
-          <details class="sub">
-            <summary class="sub-sum">
-              <div class="sub-left">
-                <div class="pill">ORCID</div>
-                <div class="sub-label">
-                  <b data-en="ORCID iD" data-zh="ORCID">ORCID iD</b>
-                  <span data-en="Research identity" data-zh="研究身份">Research identity</span>
-                </div>
-              </div>
-              <div class="chev">⌄</div>
-            </summary>
-            <div class="sub-body">
-              <a href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener noreferrer">
-                0009-0004-1293-0405
-              </a>
-            </div>
-          </details>
-
-          <details class="sub">
-            <summary class="sub-sum">
-              <div class="sub-left">
-                <div class="pill">CN</div>
-                <div class="sub-label">
-                  <b data-en="Mandarin bridge" data-zh="中文桥接">Mandarin bridge</b>
-                  <span data-en="Common Mandarin integration" data-zh="面向通用中文">Common Mandarin integration</span>
-                </div>
-              </div>
-              <div class="chev">⌄</div>
-            </summary>
-            <div class="sub-body" data-en="This site supports an English/Chinese surface so the same structure can be read across audiences."
-                 data-zh="本站支持英文/中文切换，使同一结构可跨受众阅读。">
-              This site supports an English/Chinese surface so the same structure can be read across audiences.
-            </div>
-          </details>
-
-        </div>
-      </details>
-
-    </div>
-
-    <!-- ROOT NAV DIAMOND (satellite hub) -->
-    <div class="root-controls">
-      <div class="platform">
-
-        <a class="diamond top" href="/home/">
-          <span data-en="Home" data-zh="主页">Home<small data-en="Compass" data-zh="罗盘">Compass</small></span>
-        </a>
-
-        <a class="diamond right" href="/products/">
-          <span data-en="Products" data-zh="产品">Products<small data-en="Suite" data-zh="套件">Suite</small></span>
-        </a>
-
-        <a class="diamond bottom" href="/gauges/">
-          <span data-en="Gauges" data-zh="仪表">Gauges<small data-en="Instruments" data-zh="仪器">Instruments</small></span>
-        </a>
-
-        <a class="diamond left" href="/links/">
-          <span data-en="Links" data-zh="链接">Links<small data-en="References" data-zh="引用">References</small></span>
-        </a>
-
-        <a class="diamond mini mini-left" href="/door/"><span><small data-en="DOOR" data-zh="入口">DOOR</small></span></a>
-        <a class="diamond mini mini-right" href="/home/"><span><small data-en="HOME" data-zh="主页">HOME</small></span></a>
-
-      </div>
-    </div>
-
-    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
+  <!-- Language toggle -->
+  <div class="langbar">
+    <button class="langbtn active" id="btnEN" type="button">EN</button>
+    <button class="langbtn" id="btnZH" type="button">中文</button>
   </div>
+
+  <div class="h">
+    <h1 data-en="Geodiametrics" data-zh="Geodiametrics">Geodiametrics</h1>
+    <p data-en="Master hub · Four lenses · Tap to open/close" data-zh="主枢纽 · 四镜头 · 点击展开/收起">Master hub · Four lenses · Tap to open/close</p>
+  </div>
+
+  <!-- =====================================================
+       1) PROBLEM
+  ====================================================== -->
+  <details class="bubble">
+    <summary class="bsum">
+      <div class="left">
+        <div class="pill">1</div>
+        <div class="twrap">
+          <b data-en="Problem" data-zh="问题">Problem</b>
+          <span data-en="What is broken in the world" data-zh="世界哪里出了问题">What is broken in the world</span>
+        </div>
+      </div>
+      <div class="chev"></div>
+    </summary>
+
+    <div class="body">
+
+      <!-- N -->
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="N · Laws / Language Drift" data-zh="N · 法则/语言漂移">N · Laws / Language Drift</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody">
+          <div data-en="Undefined terms, synonym inflation, and drifting definitions break trust and reproducibility."
+               data-zh="术语不统一、同义词膨胀与定义漂移会破坏信任与可复现性。">
+            Undefined terms, synonym inflation, and drifting definitions break trust and reproducibility.
+          </div>
+          <div class="tags">
+            <div class="tag"><span data-en="Acronym chaos" data-zh="缩写混乱">Acronym chaos</span><small>N</small></div>
+            <div class="tag"><span data-en="No canon glossary" data-zh="缺少规范术语表">No canon glossary</span><small>N</small></div>
+          </div>
+        </div>
+      </details>
+
+      <!-- E -->
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="E · Products Without Structure" data-zh="E · 产品缺少结构">E · Products Without Structure</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody">
+          <div data-en="Tools ship without a governing grammar, so adoption is chaotic and outcomes are inconsistent."
+               data-zh="工具没有统一语法与治理结构，导致采用混乱、结果不稳定。">
+            Tools ship without a governing grammar, so adoption is chaotic and outcomes are inconsistent.
+          </div>
+        </div>
+      </details>
+
+      <!-- S -->
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="S · Measurement Without Standards" data-zh="S · 测量缺少标准">S · Measurement Without Standards</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody">
+          <div data-en="Without shared measurement and audit rules, systems can’t be compared or trusted."
+               data-zh="没有共享的测量与审计规则，系统无法对比也无法建立信任。">
+            Without shared measurement and audit rules, systems can’t be compared or trusted.
+          </div>
+        </div>
+      </details>
+
+      <!-- W -->
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="W · Identity & Reference Gaps" data-zh="W · 身份与引用缺口">W · Identity & Reference Gaps</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody">
+          <div data-en="When identity anchors and references are missing, credit and verification collapse."
+               data-zh="缺少身份锚点与引用时，署名与验证会崩塌。">
+            When identity anchors and references are missing, credit and verification collapse.
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </details>
+
+  <!-- =====================================================
+       2) R&D
+  ====================================================== -->
+  <details class="bubble">
+    <summary class="bsum">
+      <div class="left">
+        <div class="pill">2</div>
+        <div class="twrap">
+          <b data-en="R&D" data-zh="研发">R&amp;D</b>
+          <span data-en="What we built to solve it" data-zh="我们为解决它构建了什么">What we built to solve it</span>
+        </div>
+      </div>
+      <div class="chev"></div>
+    </summary>
+
+    <div class="body">
+
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="N · SSG / DOT.GRID / Acronyms" data-zh="N · SSG / DOT.GRID / 缩写">N · SSG / DOT.GRID / Acronyms</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody">
+          <div data-en="SSG expresses execution under constraint. DOT.GRID provides 256-state indexing. Acronyms are grouped for stability."
+               data-zh="SSG 用约束表达执行；DOT.GRID 提供 256 状态索引；缩写按结构分组以保持稳定。">
+            SSG expresses execution under constraint. DOT.GRID provides 256-state indexing. Acronyms are grouped for stability.
+          </div>
+        </div>
+      </details>
+
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="E · Products (PLASMA/EAI/PLATFORM/CVD)" data-zh="E · 产品（PLASMA/EAI/PLATFORM/CVD）">E · Products (PLASMA/EAI/PLATFORM/CVD)</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody">
+          <div data-en="Execution surfaces that package the system into usable tools."
+               data-zh="将系统打包成可用工具的执行界面。">
+            Execution surfaces that package the system into usable tools.
+          </div>
+        </div>
+      </details>
+
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="S · Gauges / Diagnostics / Receipts" data-zh="S · 量规/诊断/回执">S · Gauges / Diagnostics / Receipts</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody">
+          <div data-en="Measurement-first instruments, replay checks, and audit-ready outputs."
+               data-zh="以测量为先的仪器、可回放检查与可审计输出。">
+            Measurement-first instruments, replay checks, and audit-ready outputs.
+          </div>
+        </div>
+      </details>
+
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="W · OSF / ORCID / Contact" data-zh="W · OSF / ORCID / 联系">W · OSF / ORCID / Contact</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody">
+          <div data-en="Identity anchors and reference surfaces to preserve credit and verification."
+               data-zh="身份锚点与引用界面，用于保持署名与验证。">
+            Identity anchors and reference surfaces to preserve credit and verification.
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </details>
+
+  <!-- =====================================================
+       3) STRATEGY
+  ====================================================== -->
+  <details class="bubble">
+    <summary class="bsum">
+      <div class="left">
+        <div class="pill">3</div>
+        <div class="twrap">
+          <b data-en="Strategy" data-zh="策略">Strategy</b>
+          <span data-en="How it scales and stays stable" data-zh="如何扩展并保持稳定">How it scales and stays stable</span>
+        </div>
+      </div>
+      <div class="chev"></div>
+    </summary>
+
+    <div class="body">
+
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="N · Canon First" data-zh="N · 先规范">N · Canon First</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody">
+          <div data-en="Define terms once. Keep a stable glossary. Prevent drift."
+               data-zh="术语只定义一次；保持稳定术语表；防止漂移。">
+            Define terms once. Keep a stable glossary. Prevent drift.
+          </div>
+        </div>
+      </details>
+
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="E · Ship Surfaces (Fruit)" data-zh="E · 输出界面（果实）">E · Ship Surfaces (Fruit)</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody">
+          <div data-en="Products are fruit. Branches are structure. Focus on what ships."
+               data-zh="产品是果实；分支是结构；重点是能交付的东西。">
+            Products are fruit. Branches are structure. Focus on what ships.
+          </div>
+        </div>
+      </details>
+
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="S · Measure Everything" data-zh="S · 全部可测">S · Measure Everything</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody">
+          <div data-en="If it can’t be measured, it can’t be scaled."
+               data-zh="不可测，就不可扩展。">
+            If it can’t be measured, it can’t be scaled.
+          </div>
+        </div>
+      </details>
+
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="W · Anchor Identity" data-zh="W · 身份锚点">W · Anchor Identity</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody">
+          <div data-en="Preserve credit, references, and verification surfaces."
+               data-zh="保留署名、引用与验证界面。">
+            Preserve credit, references, and verification surfaces.
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </details>
+
+  <!-- =====================================================
+       4) WHAT WE’VE LEARNED
+  ====================================================== -->
+  <details class="bubble">
+    <summary class="bsum">
+      <div class="left">
+        <div class="pill">4</div>
+        <div class="twrap">
+          <b data-en="What We’ve Learned" data-zh="我们学到的">What We’ve Learned</b>
+          <span data-en="Where we are now (current state)" data-zh="当前状态（现在在哪里）">Where we are now (current state)</span>
+        </div>
+      </div>
+      <div class="chev"></div>
+    </summary>
+
+    <div class="body">
+
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="N · Language is structure" data-zh="N · 语言就是结构">N · Language is structure</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody" data-en="Compression-first language prevents drift and accelerates understanding."
+             data-zh="压缩优先的语言能防止漂移并加速理解。">
+          Compression-first language prevents drift and accelerates understanding.
+        </div>
+      </details>
+
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="E · Surfaces sell" data-zh="E · 界面能卖">E · Surfaces sell</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody" data-en="People adopt what they can use. Ship surfaces."
+             data-zh="人会采用能用的东西；要交付界面。">
+          People adopt what they can use. Ship surfaces.
+        </div>
+      </details>
+
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="S · Measurement creates trust" data-zh="S · 测量带来信任">S · Measurement creates trust</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody" data-en="Gauges and repeatable outputs turn ideas into credibility."
+             data-zh="量规与可重复输出把想法变成可信度。">
+          Gauges and repeatable outputs turn ideas into credibility.
+        </div>
+      </details>
+
+      <details class="sub">
+        <summary class="ssum">
+          <span data-en="W · Identity preserves credit" data-zh="W · 身份保留署名">W · Identity preserves credit</span>
+          <div class="chev"></div>
+        </summary>
+        <div class="sbody" data-en="OSF/ORCID/links are not decoration—they keep verification and credit intact."
+             data-zh="OSF/ORCID/链接不是装饰；它们维持验证与署名。">
+          OSF/ORCID/links are not decoration—they keep verification and credit intact.
+        </div>
+      </details>
+
+      <div class="tags">
+        <a class="tag" href="https://osf.io/g5294/" target="_blank" rel="noopener"><span data-en="OSF" data-zh="OSF">OSF</span><small>g5294</small></a>
+        <a class="tag" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener"><span data-en="ORCID" data-zh="ORCID">ORCID</span><small>0009-0004-1293-0405</small></a>
+      </div>
+
+    </div>
+  </details>
+
+  <!-- Root compass plate (still present as a “key”) -->
+  <div class="root-controls">
+    <div class="platform">
+      <a class="diamond top" href="/laws/categories/"><span data-en="Laws" data-zh="法则">Laws<small data-en="Categories" data-zh="分类">Categories</small></span></a>
+      <a class="diamond right" href="/products/"><span data-en="Products" data-zh="产品">Products<small data-en="Suite" data-zh="套件">Suite</small></span></a>
+      <a class="diamond bottom" href="/gauges/"><span data-en="Gauges" data-zh="量规">Gauges<small data-en="Instruments" data-zh="仪表">Instruments</small></span></a>
+      <a class="diamond left" href="/links/"><span data-en="Links" data-zh="链接">Links<small data-en="References" data-zh="参考">References</small></span></a>
+      <a class="diamond mini mini-left" href="/door/"><span><small data-en="DOOR" data-zh="入口">DOOR</small></span></a>
+      <a class="diamond mini mini-right" href="/home/"><span><small data-en="HOME" data-zh="主页">HOME</small></span></a>
+    </div>
+  </div>
+
+  <footer data-en="CANONICAL · STABLE · © GEODIAMETRICS" data-zh="规范 · 稳定 · © GEODIAMETRICS">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
+</div>
 </div>
 
 <script>
-  (function(){
-    const root = document.documentElement;
+(() => {
+  const btnEN = document.getElementById("btnEN");
+  const btnZH = document.getElementById("btnZH");
+  const nodes = Array.from(document.querySelectorAll("[data-en][data-zh]"));
 
-    function applyLang(lang){
-      root.setAttribute("data-lang", lang);
-      const en = (lang === "en");
-      document.getElementById("btnEN").setAttribute("aria-pressed", en ? "true" : "false");
-      document.getElementById("btnZH").setAttribute("aria-pressed", en ? "false" : "true");
+  function setLang(lang){
+    localStorage.setItem("geo_lang", lang);
+    btnEN.classList.toggle("active", lang === "en");
+    btnZH.classList.toggle("active", lang === "zh");
+    nodes.forEach(el => { el.textContent = (lang === "zh") ? el.getAttribute("data-zh") : el.getAttribute("data-en"); });
+    document.documentElement.lang = (lang === "zh") ? "zh-Hans" : "en";
+  }
 
-      // swap any element with data-en / data-zh
-      document.querySelectorAll("[data-en][data-zh]").forEach(el=>{
-        el.textContent = en ? el.getAttribute("data-en") : el.getAttribute("data-zh");
-      });
-    }
+  btnEN.addEventListener("click", () => setLang("en"));
+  btnZH.addEventListener("click", () => setLang("zh"));
 
-    document.getElementById("btnEN").addEventListener("click", ()=>applyLang("en"));
-    document.getElementById("btnZH").addEventListener("click", ()=>applyLang("zh"));
+  // All closed by default
+  document.querySelectorAll("details").forEach(d => d.open = false);
 
-    applyLang("en");
-  })();
+  setLang(localStorage.getItem("geo_lang") || "en");
+})();
 </script>
+
 </body>
 </html>

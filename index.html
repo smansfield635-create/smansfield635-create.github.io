@@ -5,247 +5,88 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Geodiametrics · Gate</title>
 
-<style>
-/* =====================================================
-   TNT: index.html (LEVEL 0 GATE — PURE ROUTER)
-   EN/中文 → Learn/Shop
-   No JS. No overlays blocking taps.
-===================================================== */
-
-:root{
-  --bg0:#020305;
-  --bg1:#0b141d;
-  --bg2:#121f2c;
-  --text:#eaf2f6;
-  --muted:rgba(234,242,246,.68);
-  --glass:rgba(255,255,255,.06);
-  --glass2:rgba(255,255,255,.08);
-  --stroke:rgba(255,255,255,.10);
-  --shadow:rgba(0,0,0,.65);
-  --red0:rgba(130,20,30,.22);
-  --red1:rgba(130,20,30,.10);
-}
-
-html,body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text);
-  background:var(--bg0);
-}
-
-body{
-  position:relative;
-  overflow-x:hidden;
-  background:
-    radial-gradient(1200px 800px at 50% 18%, var(--bg2) 0%, var(--bg1) 55%, var(--bg0) 100%);
-}
-
-/* background layers must NEVER block taps */
-body::before{
-  content:"";
-  position:fixed;
-  inset:-25%;
-  z-index:-3;
-  pointer-events:none;
-  background:
-    radial-gradient(900px 700px at 18% 24%, rgba(72,166,255,.16) 0%, rgba(0,0,0,0) 66%),
-    radial-gradient(980px 780px at 78% 28%, rgba(190,91,255,.13) 0%, rgba(0,0,0,0) 68%),
-    radial-gradient(1050px 820px at 50% 78%, rgba(42,255,186,.09) 0%, rgba(0,0,0,0) 70%),
-    radial-gradient(1200px 900px at 55% 45%, rgba(255,170,70,.06) 0%, rgba(0,0,0,0) 70%);
-  filter:blur(18px);
-  opacity:.95;
-}
-
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:-2;
-  pointer-events:none;
-  background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.70) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.42) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.55) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(2px 2px at 22% 28%, rgba(255,255,255,.26) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,.22) 0, rgba(255,255,255,0) 60%);
-  opacity:.65;
-}
-
-.page{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:28px 16px 34px;
-  box-sizing:border-box;
-}
-
-.panel{
-  width:min(760px,94vw);
-  border-radius:26px;
-  background:
-    linear-gradient(180deg, var(--red0) 0%, rgba(0,0,0,0) 55%),
-    rgba(255,255,255,.04);
-  box-shadow:
-    inset 0 0 0 1px var(--stroke),
-    0 34px 90px rgba(0,0,0,.55);
-  backdrop-filter:blur(12px);
-  padding:22px 18px 18px;
-}
-
-.h1{
-  font-size:clamp(32px,6.5vw,56px);
-  font-weight:900;
-  margin:0;
-  letter-spacing:.01em;
-}
-
-.sub{
-  margin:10px 0 0;
-  font-size:18px;
-  color:var(--muted);
-  line-height:1.4;
-}
-
-.grid{
-  margin-top:18px;
-  display:grid;
-  gap:14px;
-}
-
-.block{
-  border-radius:22px;
-  background:rgba(255,255,255,.05);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-  padding:14px;
-}
-
-.block-title{
-  font-size:14px;
-  letter-spacing:.18em;
-  font-weight:900;
-  opacity:.85;
-  margin:0 0 10px;
-}
-
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.btn{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:4px;
-  padding:14px 14px;
-  border-radius:18px;
-  background:var(--glass);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.10),
-    0 18px 40px rgba(0,0,0,.35);
-  text-decoration:none;
-  color:var(--text);
-  -webkit-tap-highlight-color:transparent;
-}
-
-.btn:active{
-  transform:translateY(1px);
-  filter:brightness(1.06);
-}
-
-.btn strong{
-  font-size:16px;
-  letter-spacing:.08em;
-}
-
-.btn span{
-  font-size:13px;
-  opacity:.70;
-}
-
-.btn.primary{
-  background:rgba(255,255,255,.07);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.12),
-    0 0 0 1px rgba(180,40,60,.12),
-    0 22px 55px rgba(0,0,0,.45);
-}
-
-.footer{
-  margin-top:14px;
-  font-size:12px;
-  letter-spacing:.22em;
-  opacity:.55;
-  text-align:center;
-  user-select:none;
-}
-
-.note{
-  margin-top:10px;
-  font-size:12px;
-  opacity:.55;
-  letter-spacing:.08em;
-}
-</style>
+<link rel="stylesheet" href="/assets/ui.css?v=2001"/>
+<link rel="stylesheet" href="/assets/branch.css?v=2001"/>
 </head>
 
 <body>
+<div class="shooting-stars"></div>
+
 <div class="page">
-  <div class="panel">
-    <h1 class="h1">Geodiametrics</h1>
-    <div class="sub">Choose language, then choose mode.</div>
 
-    <div class="grid">
+  <div class="h">
+    <h1>Geodiametrics</h1>
+    <p>Choose what you understand. No setup.</p>
+  </div>
 
-      <div class="block">
-        <div class="block-title">LANGUAGE</div>
-        <div class="row">
-          <a class="btn primary" href="/en/learn/">
-            <strong>ENGLISH</strong>
-            <span>Proceed in English.</span>
-          </a>
-          <a class="btn primary" href="/zh/learn/">
-            <strong>中文</strong>
-            <span>使用简体中文进入。</span>
-          </a>
-        </div>
-        <div class="note">Selecting language routes into Learn by default.</div>
-      </div>
+  <div class="stage">
+    <div class="platform">
 
-      <div class="block">
-        <div class="block-title">MODE</div>
-        <div class="row">
-          <a class="btn" href="/en/learn/">
-            <strong>LEARN</strong>
-            <span>Informal + technical.</span>
-          </a>
-          <a class="btn" href="/en/shop/">
-            <strong>SHOP</strong>
-            <span>Offer + packages.</span>
-          </a>
-        </div>
-        <div class="row" style="margin-top:12px;">
-          <a class="btn" href="/zh/learn/">
-            <strong>学习</strong>
-            <span>非营销路径。</span>
-          </a>
-          <a class="btn" href="/zh/shop/">
-            <strong>选购</strong>
-            <span>产品与服务。</span>
-          </a>
-        </div>
-      </div>
+      <!-- N -->
+      <a class="diamond top" href="/en/learn/">
+        <span>Learn<small>EN</small></span>
+      </a>
+
+      <!-- E -->
+      <a class="diamond right" href="/en/shop/">
+        <span>Shop<small>EN</small></span>
+      </a>
+
+      <!-- S -->
+      <a class="diamond bottom" href="/zh/learn/">
+        <span>学习<small>中文</small></span>
+      </a>
+
+      <!-- W -->
+      <a class="diamond left" href="/zh/shop/">
+        <span>购买<small>中文</small></span>
+      </a>
+
+      <!-- Pocket minis -->
+      <a class="diamond mini mini-left" href="/home/">
+        <span><small>HOME</small></span>
+      </a>
+
+      <a class="diamond mini mini-right" href="/door/">
+        <span><small>DOOR</small></span>
+      </a>
+
+      <!-- Compass markers (corner-anchored) -->
+      <div class="compass-marker compass-n"><span class="icon">✦</span><span class="txt">N</span></div>
+      <div class="compass-marker compass-e"><span class="icon">◉</span><span class="txt">E</span></div>
+      <div class="compass-marker compass-s"><span class="icon">✧</span><span class="txt">S</span></div>
+      <div class="compass-marker compass-w"><span class="icon">☾</span><span class="txt">W</span></div>
 
     </div>
-
-    <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
   </div>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
 </div>
+
+<style>
+/* Gate-only: ensure markers render even if branch.css changes */
+.compass-marker{
+  position:absolute;
+  width:46px;height:46px;
+  border-radius:50%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:2px;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10), 0 10px 26px rgba(0,0,0,.55);
+  backdrop-filter:blur(10px);
+  color:#eaf2f6;
+  z-index:6;
+  pointer-events:none;
+}
+.compass-marker .icon{font-size:11px;opacity:.85;line-height:1}
+.compass-marker .txt{font-size:12px;font-weight:900;letter-spacing:.10em;opacity:.92;line-height:1}
+.compass-n{top:-6%;left:50%;transform:translateX(-50%)}
+.compass-e{right:-6%;top:50%;transform:translateY(-50%)}
+.compass-s{bottom:-6%;left:50%;transform:translateX(-50%)}
+.compass-w{left:-6%;top:50%;transform:translateY(-50%)}
+</style>
+
 </body>
 </html>

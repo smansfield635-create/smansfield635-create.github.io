@@ -1,107 +1,280 @@
-<!-- TNT FILE: /index.html -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Welcome · Geodiametrics</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Door · Geodiametrics</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=2001"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=2001"/>
+<link rel="stylesheet" href="/assets/ui.css?v=9001"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9001"/>
 
-  <style>
-    /* INDEX (China-red + cosmic) — self-contained (no other file edits required) */
-    body{
-      background:
-        radial-gradient(1200px 900px at 50% 10%, rgba(150,0,0,.55) 0%, rgba(20,0,0,.35) 35%, rgba(5,7,12,1) 100%),
-        radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
-    }
-    .index-wrap{width:min(920px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:18px}
-    .hero{padding-top:18px}
-    .hero h1{font-size:clamp(44px,7vw,72px);margin:0;font-weight:900;letter-spacing:.01em}
-    .hero p{margin:10px 0 0;opacity:.78;font-size:18px}
-    .card{
-      border-radius:22px;
-      background:rgba(255,255,255,.05);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 30px 80px rgba(0,0,0,.55);
-      padding:18px;
-      backdrop-filter:blur(12px);
-    }
-    .grid2{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:640px){.grid2{grid-template-columns:1fr 1fr}}
-    .pick{
-      border-radius:20px;
-      padding:18px 16px;
-      background:rgba(255,255,255,.06);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .pick strong{font-size:18px}
-    .pick span{opacity:.75}
-    .pick:hover{background:rgba(255,255,255,.08)}
-    .hint{opacity:.7;font-size:14px;line-height:1.5;margin:0}
-    .tiny{opacity:.55;font-size:12px;letter-spacing:.18em;margin-top:10px}
-  </style>
+<style>
+/* DOOR = Lens Select Only (4-lens diamond) */
+
+body{
+  background:
+    radial-gradient(1400px 900px at 50% 12%, rgba(150,0,0,.42) 0%, rgba(20,0,0,.24) 42%, rgba(5,7,12,1) 100%),
+    radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
+}
+
+.wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.hero{position:relative;z-index:10;text-align:left}
+.hero h1{font-size:clamp(40px,7vw,68px);margin:0;font-weight:900}
+.hero p{margin:10px 0 0;opacity:.78;font-size:18px;max-width:46ch}
+
+.hint{
+  margin-top:8px;
+  opacity:.65;
+  font-size:14px;
+  letter-spacing:.06em;
+}
+
+.stage{display:flex;align-items:center;justify-content:center;width:100%}
+.platform{
+  position:relative;
+  width:min(460px,92vw);
+  aspect-ratio:1/1;
+  margin:10px auto 0;
+}
+
+.platform::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
+  border-radius:28px;
+  background:rgba(255,255,255,.04);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    0 32px 80px rgba(0,0,0,.75);
+  backdrop-filter:blur(10px);
+  z-index:0;
+}
+
+/* lens keys (use the same gem stack language as your site) */
+.diamond{
+  position:absolute;
+  width:38%;
+  height:38%;
+  transform:rotate(45deg);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 50% 40%,
+      rgba(60,70,80,.70) 0%,
+      rgba(25,30,35,.92) 60%,
+      rgba(12,14,18,1) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    inset 0 18px 30px rgba(255,255,255,.05),
+    inset 0 -30px 45px rgba(0,0,0,.85),
+    0 24px 60px rgba(0,0,0,.8);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  cursor:pointer;
+  z-index:2;
+}
+
+.diamond span{
+  transform:rotate(-45deg);
+  text-align:center;
+  font-weight:900;
+  color:#eaf2f6;
+  text-shadow:0 0 10px rgba(160,210,255,.25);
+  line-height:1.12;
+}
+
+.diamond small{
+  display:block;
+  margin-top:6px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.14em;
+  opacity:.80;
+}
+
+.top{top:6%;left:31%}
+.right{top:31%;right:6%}
+.bottom{bottom:6%;left:31%}
+.left{top:31%;left:6%}
+
+.diamond.active{
+  filter:brightness(1.10);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    inset 0 18px 30px rgba(255,255,255,.07),
+    inset 0 -30px 45px rgba(0,0,0,.85),
+    0 24px 60px rgba(0,0,0,.85),
+    0 0 0 2px rgba(255,255,255,.06);
+}
+
+.cta{
+  width:min(520px,94vw);
+  margin:12px auto 0;
+  border-radius:22px;
+  background:rgba(255,255,255,.05);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 20px 60px rgba(0,0,0,.45);
+  padding:14px 14px;
+}
+
+.cta-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.badges{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  opacity:.85;
+  font-weight:900;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  font-size:12px;
+}
+
+.pill{
+  border-radius:999px;
+  padding:10px 14px;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+}
+
+.btn{
+  border-radius:16px;
+  padding:12px 16px;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+  font-weight:900;
+  text-decoration:none;
+  color:#eaf2f6;
+}
+
+.btn.primary{
+  background:rgba(150,0,0,.25);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 18px 50px rgba(0,0,0,.35);
+}
+
+.note{
+  margin-top:10px;
+  opacity:.78;
+  font-size:14px;
+  line-height:1.5;
+}
+
+footer{
+  text-align:center;
+  letter-spacing:3px;
+  font-size:12px;
+  opacity:.55;
+  margin:18px 0 0;
+}
+</style>
 </head>
 
 <body>
 <div class="shooting-stars"></div>
 
 <div class="page">
-  <div class="index-wrap">
+  <div class="wrap">
 
     <div class="hero">
-      <h1 id="t_title">Welcome</h1>
-      <p id="t_sub">Choose your language once. Everything after this stays in that language.</p>
+      <h1>Door</h1>
+      <p>Select your lenses. Then enter the hub.</p>
+      <div class="hint">4 lenses only: Language (EN/中文) + Depth (Explore/Learn).</div>
     </div>
 
-    <div class="card">
-      <div class="grid2">
-        <div class="pick" role="button" tabindex="0" onclick="setLang('en')" onkeypress="if(event.key==='Enter'){setLang('en')}">
-          <div>
-            <strong>English</strong><br/>
-            <span>Proceed in English.</span>
-          </div>
-          <div>EN</div>
-        </div>
+    <div class="stage">
+      <div class="platform" id="platform">
 
-        <div class="pick" role="button" tabindex="0" onclick="setLang('zh')" onkeypress="if(event.key==='Enter'){setLang('zh')}">
-          <div>
-            <strong>中文</strong><br/>
-            <span>使用简体中文继续。</span>
-          </div>
-          <div>中文</div>
+        <!-- Language -->
+        <button class="diamond top" id="lang-en" type="button">
+          <span>English<small>EN</small></span>
+        </button>
+
+        <button class="diamond bottom" id="lang-zh" type="button">
+          <span>中文<small>简体</small></span>
+        </button>
+
+        <!-- Depth -->
+        <button class="diamond left" id="depth-explore" type="button">
+          <span>Explore<small>Surface</small></span>
+        </button>
+
+        <button class="diamond right" id="depth-learn" type="button">
+          <span>Learn<small>Deep</small></span>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="cta">
+      <div class="cta-row">
+        <div class="badges" aria-live="polite">
+          <span class="pill" id="badge-lang">LANG: EN</span>
+          <span class="pill" id="badge-depth">DEPTH: EXPLORE</span>
+        </div>
+        <div class="actions">
+          <a class="btn" href="/home/" id="enter">Enter</a>
+          <a class="btn primary" href="/" id="reset">Reset</a>
         </div>
       </div>
-
-      <p class="hint" id="t_hint" style="margin-top:14px;">
-        After you choose, you’ll set your depth (Shop vs Learn) one time, then enter the hub.
-      </p>
-
-      <div class="tiny">CANONICAL · STABLE · © GEODIAMETRICS</div>
+      <div class="note" id="note">
+        Explore = quick overview + jump points. Learn = nested bubbles + full breakdown.
+      </div>
     </div>
+
+    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 
   </div>
 </div>
 
 <script>
-  (function boot(){
-    // If already chosen, skip index.
-    const lang = localStorage.getItem('gd_lang');
-    if(lang === 'en' || lang === 'zh'){
-      location.href = '/door/';
-      return;
-    }
-  })();
+(function(){
+  const state = {
+    lang: localStorage.getItem("gd_lang") || "en",
+    depth: localStorage.getItem("gd_depth") || "explore",
+  };
 
-  function setLang(lang){
-    localStorage.setItem('gd_lang', lang);
-    // default depth if unset
-    if(!localStorage.getItem('gd_depth')) localStorage.setItem('gd_depth','shop');
-    location.href = '/door/';
+  const els = {
+    langEn: document.getElementById("lang-en"),
+    langZh: document.getElementById("lang-zh"),
+    depthExplore: document.getElementById("depth-explore"),
+    depthLearn: document.getElementById("depth-learn"),
+    badgeLang: document.getElementById("badge-lang"),
+    badgeDepth: document.getElementById("badge-depth"),
+  };
+
+  function apply(){
+    els.langEn.classList.toggle("active", state.lang === "en");
+    els.langZh.classList.toggle("active", state.lang === "zh");
+    els.depthExplore.classList.toggle("active", state.depth === "explore");
+    els.depthLearn.classList.toggle("active", state.depth === "learn");
+
+    els.badgeLang.textContent = "LANG: " + (state.lang === "en" ? "EN" : "中文");
+    els.badgeDepth.textContent = "DEPTH: " + (state.depth === "explore" ? "EXPLORE" : "LEARN");
+
+    localStorage.setItem("gd_lang", state.lang);
+    localStorage.setItem("gd_depth", state.depth);
   }
+
+  els.langEn.addEventListener("click", ()=>{ state.lang="en"; apply(); });
+  els.langZh.addEventListener("click", ()=>{ state.lang="zh"; apply(); });
+  els.depthExplore.addEventListener("click", ()=>{ state.depth="explore"; apply(); });
+  els.depthLearn.addEventListener("click", ()=>{ state.depth="learn"; apply(); });
+
+  apply();
+})();
 </script>
+
 </body>
 </html>

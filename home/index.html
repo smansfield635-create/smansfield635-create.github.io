@@ -162,9 +162,7 @@ details.quad summary::-webkit-details-marker{display:none}
   -webkit-tap-highlight-color:transparent;
 }
 .bubble:hover{background:rgba(255,255,255,.07)}
-.bubble .t{
-  min-width:0;
-}
+.bubble .t{min-width:0}
 .bubble .t b{
   display:block;
   font-size:13px;
@@ -187,16 +185,23 @@ details.quad summary::-webkit-details-marker{display:none}
   opacity:.9;
   flex:0 0 auto;
 }
+.bubble.active{
+  border-color:rgba(212,175,55,.45);
+  box-shadow:0 0 14px rgba(212,175,55,.18) inset;
+}
 
-.blockmap{
-  margin-top:14px;
+/* LOCAL INLINE DETAIL (no scrolling) */
+.detail{
+  margin-top:10px;
   border-radius:22px;
   background:linear-gradient(180deg, rgba(0,0,0,.34), rgba(0,0,0,.22));
   border:1px solid rgba(255,255,255,.10);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
   padding:14px 14px;
+  display:none;
 }
-.blockhead{
+.detail.open{display:block}
+.detailhead{
   display:flex;
   justify-content:space-between;
   gap:12px;
@@ -206,13 +211,13 @@ details.quad summary::-webkit-details-marker{display:none}
   text-transform:uppercase;
   font-size:12px;
 }
-.blocktitle{
+.detailtitle{
   margin-top:10px;
   font-weight:900;
   letter-spacing:.08em;
   font-size:18px;
 }
-.blockp{
+.detailp{
   margin-top:8px;
   color:rgba(255,255,255,.78);
   line-height:1.55;
@@ -278,7 +283,7 @@ details.quad summary::-webkit-details-marker{display:none}
 
   <div class="hero">
     <h1>HOME</h1>
-    <p id="desc">Explore the system. Expand bubbles → load blocks → expand sub-bubbles → then jump.</p>
+    <p id="desc">Explore the system. Tap a bubble to expand details in-place. No page-jumps while you’re reading.</p>
 
     <div class="topbar">
       <span class="pill silver" id="langPill">LANG: EN</span>
@@ -305,6 +310,7 @@ details.quad summary::-webkit-details-marker{display:none}
       </div>
       <div class="q-arrow">▾</div>
     </summary>
+
     <div class="inside">
       <div class="grid2">
         <div class="bubble" data-block="ssg">
@@ -325,26 +331,19 @@ details.quad summary::-webkit-details-marker{display:none}
         </div>
       </div>
 
-      <div class="blockmap" id="blockmap">
-        <div class="blockhead">
-          <div>BLOCK</div>
-          <div>TAP A BUBBLE TO LOAD DETAILS</div>
+      <div class="detail" data-detail>
+        <div class="detailhead">
+          <div>DETAIL</div>
+          <div>EXPANDS HERE (NO SCROLL)</div>
         </div>
-        <div class="blocktitle" id="bt">SSG — Simplified Syntax Geometry</div>
-        <div class="blockp" id="bp">
-          Constraint-native specs become replay-safe execution contracts. This is the minimum language for executable structure.
-        </div>
+        <div class="detailtitle" data-title>Tap a bubble</div>
+        <div class="detailp" data-p>Details will appear directly under the bubble row you used.</div>
         <div class="tagrow">
-          <span class="tag">Origin</span>
-          <span class="tag">Now</span>
-          <span class="tag">Trajectory</span>
+          <span class="tag" data-tag1>Origin</span>
+          <span class="tag" data-tag2>Now</span>
+          <span class="tag" data-tag3>Trajectory</span>
         </div>
-
-        <div class="blockp" id="bp2" style="margin-top:12px">
-          <b>Primitives:</b> Resource, Store, Constraint, Goal, Guard.<br/>
-          <b>Receipts:</b> Advance only after receipt. Back-nav invalidates downstream receipts.<br/>
-          <b>Invariants:</b> Navigation-first; no timers as gates; atomic handoff with receipt.
-        </div>
+        <div class="detailp" data-p2 style="margin-top:12px"></div>
 
         <div class="jumprow">
           <a class="jump" href="/laws/">JUMP · LAWS</a>
@@ -366,6 +365,7 @@ details.quad summary::-webkit-details-marker{display:none}
       </div>
       <div class="q-arrow">▾</div>
     </summary>
+
     <div class="inside">
       <div class="grid2">
         <div class="bubble" data-block="surfaces">
@@ -385,9 +385,25 @@ details.quad summary::-webkit-details-marker{display:none}
           <div class="go">▶</div>
         </div>
       </div>
-      <div class="jumprow">
-        <a class="jump" href="/products/">JUMP · PRODUCTS</a>
-        <a class="jump gold" href="/rgsc/">JUMP · RGSC</a>
+
+      <div class="detail" data-detail>
+        <div class="detailhead">
+          <div>DETAIL</div>
+          <div>EXPANDS HERE (NO SCROLL)</div>
+        </div>
+        <div class="detailtitle" data-title>Tap a bubble</div>
+        <div class="detailp" data-p>Details will appear directly under the bubble row you used.</div>
+        <div class="tagrow">
+          <span class="tag" data-tag1>Origin</span>
+          <span class="tag" data-tag2>Now</span>
+          <span class="tag" data-tag3>Trajectory</span>
+        </div>
+        <div class="detailp" data-p2 style="margin-top:12px"></div>
+
+        <div class="jumprow">
+          <a class="jump" href="/products/">JUMP · PRODUCTS</a>
+          <a class="jump gold" href="/rgsc/">JUMP · RGSC</a>
+        </div>
       </div>
     </div>
   </details>
@@ -404,6 +420,7 @@ details.quad summary::-webkit-details-marker{display:none}
       </div>
       <div class="q-arrow">▾</div>
     </summary>
+
     <div class="inside">
       <div class="grid2">
         <div class="bubble" data-block="gauges">
@@ -423,9 +440,25 @@ details.quad summary::-webkit-details-marker{display:none}
           <div class="go">▶</div>
         </div>
       </div>
-      <div class="jumprow">
-        <a class="jump" href="/gauges/">JUMP · GAUGES</a>
-        <a class="jump gold" href="/diagnostic/">JUMP · DIAGNOSTIC</a>
+
+      <div class="detail" data-detail>
+        <div class="detailhead">
+          <div>DETAIL</div>
+          <div>EXPANDS HERE (NO SCROLL)</div>
+        </div>
+        <div class="detailtitle" data-title>Tap a bubble</div>
+        <div class="detailp" data-p>Details will appear directly under the bubble row you used.</div>
+        <div class="tagrow">
+          <span class="tag" data-tag1>Origin</span>
+          <span class="tag" data-tag2>Now</span>
+          <span class="tag" data-tag3>Trajectory</span>
+        </div>
+        <div class="detailp" data-p2 style="margin-top:12px"></div>
+
+        <div class="jumprow">
+          <a class="jump" href="/gauges/">JUMP · GAUGES</a>
+          <a class="jump gold" href="/diagnostic/">JUMP · DIAGNOSTIC</a>
+        </div>
       </div>
     </div>
   </details>
@@ -442,6 +475,7 @@ details.quad summary::-webkit-details-marker{display:none}
       </div>
       <div class="q-arrow">▾</div>
     </summary>
+
     <div class="inside">
       <div class="grid2">
         <div class="bubble" data-block="orcid">
@@ -461,8 +495,24 @@ details.quad summary::-webkit-details-marker{display:none}
           <div class="go">▶</div>
         </div>
       </div>
-      <div class="jumprow">
-        <a class="jump gold" href="/links/">JUMP · LINKS</a>
+
+      <div class="detail" data-detail>
+        <div class="detailhead">
+          <div>DETAIL</div>
+          <div>EXPANDS HERE (NO SCROLL)</div>
+        </div>
+        <div class="detailtitle" data-title>Tap a bubble</div>
+        <div class="detailp" data-p>Details will appear directly under the bubble row you used.</div>
+        <div class="tagrow">
+          <span class="tag" data-tag1>Origin</span>
+          <span class="tag" data-tag2>Now</span>
+          <span class="tag" data-tag3>Trajectory</span>
+        </div>
+        <div class="detailp" data-p2 style="margin-top:12px"></div>
+
+        <div class="jumprow">
+          <a class="jump gold" href="/links/">JUMP · LINKS</a>
+        </div>
       </div>
     </div>
   </details>
@@ -478,15 +528,9 @@ details.quad summary::-webkit-details-marker{display:none}
 
   const langPill = document.getElementById('langPill');
   const depthPill = document.getElementById('depthPill');
+
   langPill.textContent = 'LANG: ' + (lang === 'zh' ? '中文' : 'EN');
   depthPill.textContent = 'DEPTH: ' + (depth === 'learn' ? 'LEARN' : 'EXPLORE');
-
-  // Depth behavior: EXPLORE = short; LEARN = longer
-  if(depth !== 'learn'){
-    // keep blockmap minimal
-    const bp2 = document.getElementById('bp2');
-    bp2.style.display = 'none';
-  }
 
   const blocks = {
     ssg:{
@@ -526,26 +570,40 @@ details.quad summary::-webkit-details-marker{display:none}
     contact:{t:'Contact',p:'Direct communication channel.',p2:'Use this when you need alignment or access.'}
   };
 
-  const bt = document.getElementById('bt');
-  const bp = document.getElementById('bp');
-  const bp2 = document.getElementById('bp2');
+  // In EXPLORE, hide the second paragraph (keeps it surface-level).
+  function setDetailText(detailEl, b){
+    detailEl.querySelector('[data-title]').textContent = b.t;
+    detailEl.querySelector('[data-p]').textContent = b.p;
+    const p2 = detailEl.querySelector('[data-p2]');
+    if(depth === 'learn'){
+      p2.style.display = 'block';
+      p2.textContent = b.p2 || '';
+    }else{
+      p2.style.display = 'none';
+      p2.textContent = '';
+    }
+  }
 
-  document.querySelectorAll('.bubble').forEach(el=>{
-    el.addEventListener('click', ()=>{
-      const k = el.getAttribute('data-block');
+  // Click bubble -> expand local detail within same quadrant, no scrolling.
+  document.querySelectorAll('.bubble').forEach(bub=>{
+    bub.addEventListener('click', ()=>{
+      const k = bub.getAttribute('data-block');
       const b = blocks[k];
       if(!b) return;
-      bt.textContent = b.t;
-      bp.textContent = b.p;
-      if(bp2){
-        bp2.textContent = b.p2;
-        if(depth === 'learn') bp2.style.display = 'block';
-      }
-      // scroll blockmap into view for mobile clarity
-      const bm = document.getElementById('blockmap');
-      if(bm) bm.scrollIntoView({behavior:'smooth',block:'center'});
+
+      const inside = bub.closest('.inside');
+      const detail = inside.querySelector('[data-detail]');
+      if(!detail) return;
+
+      // active highlight within this quadrant only
+      inside.querySelectorAll('.bubble').forEach(x=>x.classList.remove('active'));
+      bub.classList.add('active');
+
+      setDetailText(detail, b);
+      detail.classList.add('open');
     });
   });
+
 })();
 </script>
 

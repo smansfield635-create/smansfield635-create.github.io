@@ -1,10 +1,10 @@
 <!-- TNT: /door/index.html
-     PURPOSE: single handoff page between HOME and the rest.
-     RULES:
-       - NO language picker here (language set ONLY at /).
-       - NO redundancy: door = quick choose (Learn / Shop) + enter Home hub.
-       - If no lang is set, redirect to /.
-       - Writes mode to localStorage: geo.mode = learn|shop (optional).
+     PURPOSE:
+     - Door = single handoff after Root.
+     - NO language selector here (language is chosen once on Root).
+     - Only two choices: LEARN or SHOP.
+     - Fixes routing by writing geo_mode then redirecting to /home/.
+     - Includes "Change language" = go back to / (Root).
 -->
 <!doctype html>
 <html lang="en">
@@ -13,121 +13,100 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Door · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=4001"/>
-<link rel="stylesheet" href="/assets/branch.css?v=4001"/>
+<link rel="stylesheet" href="/assets/ui.css?v=4002"/>
+<link rel="stylesheet" href="/assets/branch.css?v=4002"/>
 
 <style>
-/* Chinese theme accent (red/ink), consistent with Root */
+html,body{height:100%}
 body{
   background:
-    radial-gradient(1100px 720px at 50% 14%, rgba(160,0,18,.42) 0%, rgba(0,0,0,0) 58%),
-    radial-gradient(1400px 900px at 50% 18%, #3f0006 0%, #140003 55%, #05070c 100%);
+    radial-gradient(1200px 800px at 50% 10%, rgba(160,20,20,.55) 0%, rgba(30,0,0,.55) 35%, rgba(5,7,12,1) 100%),
+    radial-gradient(900px 700px at 20% 80%, rgba(255,60,60,.10) 0%, rgba(0,0,0,0) 65%),
+    radial-gradient(900px 700px at 80% 70%, rgba(255,140,80,.06) 0%, rgba(0,0,0,0) 70%);
 }
-.page{padding:44px 16px 84px}
-.h{position:relative;z-index:30;text-align:center;margin-bottom:18px}
-.h h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
-.h p{margin:10px 0 0;font-size:18px;opacity:.78}
 
-/* Center plate for the 4-choice door */
-.door-wrap{
-  width:min(920px,94vw);
-  margin:10px auto 0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:14px;
-  position:relative;
-  z-index:10;
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:48px 16px 90px;position:relative;z-index:1}
+.h{width:min(980px,94vw);margin:0 auto 18px;position:relative;z-index:10}
+.h h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
+.h p{margin:10px 0 0;font-size:20px;opacity:.80}
+
+.panel{
+  width:min(980px,94vw);
+  margin:12px auto 0;
+  border-radius:26px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 28px 80px rgba(0,0,0,.65);
+  padding:18px;
 }
-.note{
-  width:min(820px,94vw);
+
+.row{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.cardBtn{
+  flex:1 1 320px;
+  min-height:96px;
   border-radius:22px;
+  padding:16px 16px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 22px 56px rgba(0,0,0,.60);
-  padding:14px 16px;
-  text-align:center;
-  opacity:.92;
-}
-.note strong{font-weight:900}
-.note .muted{opacity:.74}
-
-/* Primary action row */
-.actions{
+  box-shadow:0 18px 52px rgba(0,0,0,.55);
+  cursor:pointer;
+  user-select:none;
+  text-align:left;
   display:flex;
-  flex-wrap:wrap;
-  gap:10px;
+  flex-direction:column;
   justify-content:center;
-  width:min(820px,94vw);
 }
-.btn{
+
+.cardBtn:active{transform:translateY(1px)}
+.cardBtn .t{font-size:22px;font-weight:900;letter-spacing:.06em}
+.cardBtn .s{margin-top:6px;font-size:14px;opacity:.75;letter-spacing:.04em}
+
+.meta{
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.pill{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  padding:12px 16px;
+  gap:10px;
+  padding:10px 14px;
   border-radius:999px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 16px 44px rgba(0,0,0,.60);
+  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 16px 44px rgba(0,0,0,.45);
   font-weight:900;
-  letter-spacing:.08em;
+  letter-spacing:.10em;
+  opacity:.88;
+}
+
+.linkBtn{
   text-decoration:none;
   color:inherit;
-  -webkit-tap-highlight-color:transparent;
-}
-.btn.primary{
-  background:rgba(180,20,34,.20);
-  border:1px solid rgba(255,120,130,.22);
-  box-shadow:0 0 0 1px rgba(255,120,130,.16) inset, 0 18px 52px rgba(0,0,0,.70);
+  cursor:pointer;
+  user-select:none;
 }
 
-/* Door diamond plate */
-.stage{margin-top:8px}
-.platform{margin:0 auto}
-.platform::before{background:rgba(255,255,255,.035)} /* slightly lighter plate */
-
-/* Make the door diamonds larger and readable */
-.diamond{
-  width:40%;
-  height:40%;
-  border-radius:26px;
-}
-.diamond span{
-  font-size:20px;
-}
-.diamond small{
+footer{
+  width:min(980px,94vw);
+  margin:18px auto 0;
+  position:relative;
+  z-index:10;
+  text-align:center;
+  opacity:.55;
+  letter-spacing:3px;
   font-size:12px;
-  letter-spacing:.16em;
 }
-
-/* Reposition minis to bottom corners (pockets) */
-.diamond.mini{width:18%;height:18%;border-radius:18px}
-.mini-left{bottom:-6%;left:8%}
-.mini-right{bottom:-6%;right:8%}
-
-/* Compass markers at plate corners (N/E/S/W + North star only) */
-.compass{
-  position:absolute;
-  width:46px;height:46px;border-radius:999px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 14px 34px rgba(0,0,0,.70);
-  color:#eaf2f6;
-  font-weight:900;
-  letter-spacing:.06em;
-  z-index:6;
-  pointer-events:none;
-}
-.compass .ic{font-size:11px;opacity:.92;margin-bottom:2px}
-.compass .tx{font-size:14px;opacity:.92}
-.cN{top:-6%;left:50%;transform:translateX(-50%)}
-.cE{right:-6%;top:50%;transform:translateY(-50%)}
-.cS{bottom:-6%;left:50%;transform:translateX(-50%)}
-.cW{left:-6%;top:50%;transform:translateY(-50%)}
-
-/* Footer always visible */
-footer{position:relative;z-index:30;margin-top:18px}
 </style>
 </head>
 
@@ -137,58 +116,29 @@ footer{position:relative;z-index:30;margin-top:18px}
 <div class="page">
 
   <div class="h">
-    <h1 id="ttl">Door</h1>
-    <p id="sub">Choose your mode, then enter the hub.</p>
+    <h1 id="h1">Door</h1>
+    <p id="sub">Choose delivery mode. Language stays fixed from Root.</p>
   </div>
 
-  <div class="door-wrap">
+  <div class="panel">
+    <div class="row">
 
-    <div class="note" id="note">
-      <strong id="noteA">Language is set at Root.</strong>
-      <span class="muted" id="noteB">Use Root if you need to switch EN/中文.</span>
-    </div>
-
-    <div class="actions">
-      <a class="btn" href="/" id="goRoot">Root</a>
-      <a class="btn primary" href="/home/" id="goHome">Enter Home</a>
-    </div>
-
-    <div class="stage">
-      <div class="platform">
-
-        <!-- Compass markers (aligned) -->
-        <div class="compass cN"><div class="ic">★</div><div class="tx">N</div></div>
-        <div class="compass cE"><div class="ic"></div><div class="tx">E</div></div>
-        <div class="compass cS"><div class="ic"></div><div class="tx">S</div></div>
-        <div class="compass cW"><div class="ic"></div><div class="tx">W</div></div>
-
-        <!-- TOP: LEARN -->
-        <a class="diamond top" href="/home/" id="learnLink">
-          <span id="learnT">Learn<small id="learnS">Definitions · systems · methods</small></span>
-        </a>
-
-        <!-- RIGHT: SHOP -->
-        <a class="diamond right" href="/home/" id="shopLink">
-          <span id="shopT">Shop<small id="shopS">Products · programs · services</small></span>
-        </a>
-
-        <!-- BOTTOM: DIRECT HOME -->
-        <a class="diamond bottom" href="/home/" id="homeLink">
-          <span id="homeT">Home<small id="homeS">Unified hub</small></span>
-        </a>
-
-        <!-- LEFT: LINKS (quick west) -->
-        <a class="diamond left" href="/links/" id="linksLink">
-          <span id="linksT">Links<small id="linksS">Identity · references</small></span>
-        </a>
-
-        <!-- Minis -->
-        <a class="diamond mini mini-left" href="/"><span><small id="miniRoot">ROOT</small></span></a>
-        <a class="diamond mini mini-right" href="/home/"><span><small id="miniEnter">ENTER</small></span></a>
-
+      <div class="cardBtn" id="btnLearn" role="button" tabindex="0">
+        <div class="t" id="learnTitle">Learn</div>
+        <div class="s" id="learnSub">Definitions · systems · methods</div>
       </div>
+
+      <div class="cardBtn" id="btnShop" role="button" tabindex="0">
+        <div class="t" id="shopTitle">Shop</div>
+        <div class="s" id="shopSub">Products · programs · services</div>
+      </div>
+
     </div>
 
+    <div class="meta">
+      <div class="pill" id="langBadge">LANG: EN</div>
+      <a class="pill linkBtn" href="/" id="changeLang">Change language</a>
+    </div>
   </div>
 
   <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
@@ -197,55 +147,63 @@ footer{position:relative;z-index:30;margin-top:18px}
 
 <script>
 (() => {
-  const get = (k) => { try { return localStorage.getItem(k); } catch(e){ return null; } };
-  const set = (k,v) => { try { localStorage.setItem(k,v); } catch(e){} };
+  // Read the ONE language choice set at Root
+  const LANG = (localStorage.getItem("geo_lang") || "EN").toUpperCase(); // EN | ZH
+  const langBadge = document.getElementById("langBadge");
 
-  const lang = get("geo.lang");
-  if(!lang){ location.replace("/"); return; }
+  // Minimal bilingual strings (Door only)
+  const STR = {
+    EN: {
+      h1:"Door",
+      sub:"Choose delivery mode. Language stays fixed from Root.",
+      learnTitle:"Learn",
+      learnSub:"Definitions · systems · methods",
+      shopTitle:"Shop",
+      shopSub:"Products · programs · services",
+      changeLang:"Change language",
+      badge:"LANG: EN"
+    },
+    ZH: {
+      h1:"入口",
+      sub:"选择呈现方式。语言只在 Root 选择一次。",
+      learnTitle:"学习",
+      learnSub:"定义 · 系统 · 方法",
+      shopTitle:"购买",
+      shopSub:"产品 · 项目 · 服务",
+      changeLang:"返回选择语言",
+      badge:"LANG: 中文"
+    }
+  };
 
-  const zh = (lang === "zh");
+  const S = STR[LANG === "ZH" ? "ZH" : "EN"];
 
-  // Set mode when clicking Learn/Shop (home still routes through /home/)
-  const learn = document.getElementById("learnLink");
-  const shop  = document.getElementById("shopLink");
-  learn.addEventListener("click", () => set("geo.mode","learn"));
-  shop.addEventListener("click", () => set("geo.mode","shop"));
+  document.getElementById("h1").textContent = S.h1;
+  document.getElementById("sub").textContent = S.sub;
+  document.getElementById("learnTitle").textContent = S.learnTitle;
+  document.getElementById("learnSub").textContent = S.learnSub;
+  document.getElementById("shopTitle").textContent = S.shopTitle;
+  document.getElementById("shopSub").textContent = S.shopSub;
+  document.getElementById("changeLang").textContent = S.changeLang;
+  langBadge.textContent = S.badge;
 
-  // Also set mode when clicking the diamond text areas (same anchors)
-  document.getElementById("goHome").addEventListener("click", () => {
-    // default if unset
-    if(!get("geo.mode")) set("geo.mode","learn");
-  });
+  // Apply mode + route to Home
+  const go = (mode) => {
+    localStorage.setItem("geo_mode", mode); // LEARN | SHOP
+    location.href = "/home/";
+  };
 
-  if(zh){
-    document.getElementById("ttl").textContent = "入口";
-    document.getElementById("sub").textContent = "选择模式，然后进入主枢纽。";
+  const wire = (id, mode) => {
+    const el = document.getElementById(id);
+    el.addEventListener("click", () => go(mode));
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(mode); }
+    });
+  };
 
-    document.getElementById("noteA").textContent = "语言在 Root 设置。";
-    document.getElementById("noteB").textContent = "需要切换 EN/中文时，返回 Root。";
-
-    document.getElementById("goRoot").textContent = "Root";
-    document.getElementById("goHome").textContent = "进入 Home";
-
-    document.getElementById("learnT").firstChild.textContent = "学习";
-    document.getElementById("learnS").textContent = "定义 · 系统 · 方法";
-
-    document.getElementById("shopT").firstChild.textContent = "购物";
-    document.getElementById("shopS").textContent = "产品 · 项目 · 服务";
-
-    document.getElementById("homeT").firstChild.textContent = "Home";
-    document.getElementById("homeS").textContent = "统一枢纽";
-
-    document.getElementById("linksT").firstChild.textContent = "链接";
-    document.getElementById("linksS").textContent = "身份 · 参考";
-
-    document.getElementById("miniRoot").textContent = "ROOT";
-    document.getElementById("miniEnter").textContent = "ENTER";
-  }else{
-    // English defaults already in markup
-    if(!get("geo.mode")) set("geo.mode","learn");
-  }
+  wire("btnLearn","LEARN");
+  wire("btnShop","SHOP");
 })();
 </script>
+
 </body>
 </html>

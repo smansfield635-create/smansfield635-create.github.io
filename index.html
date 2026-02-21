@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Geodiametrics · Root</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=1008"/>
-<link rel="stylesheet" href="/assets/branch.css?v=1008"/>
+<link rel="stylesheet" href="/assets/ui.css?v=1012"/>
+<link rel="stylesheet" href="/assets/branch.css?v=1012"/>
 
 <style>
-/* ROOT: 4 dropdown bubbles (fruit-first) + satellite nav (root-only) */
+/* ROOT: 4 top dropdowns + 4 nested dropdowns inside each (fruit-first) */
 
 .root-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:18px}
 
@@ -17,7 +17,7 @@
 .dropgrid{display:grid;grid-template-columns:1fr;gap:12px}
 @media (min-width:860px){.dropgrid{grid-template-columns:1fr 1fr}}
 
-/* <details> bubble */
+/* Outer <details> bubble */
 .drop{
   border-radius:22px;
   background:rgba(255,255,255,.04);
@@ -50,15 +50,50 @@
   margin-left:10px;
 }
 
-.drop[open] .chev{transform:rotate(-135deg)}
+.drop[open] > summary .chev{transform:rotate(-135deg)}
 
-.drop .content{
-  padding:0 16px 16px 16px;
-  font-size:16px;
-  line-height:1.6;
-  opacity:.9;
+.drop .content{padding:0 16px 16px 16px;font-size:16px;line-height:1.6;opacity:.9}
+
+/* Nested accordion */
+.nest{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+
+.mini{
+  border-radius:18px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  overflow:hidden;
 }
 
+.mini summary{
+  list-style:none;
+  cursor:pointer;
+  padding:12px 12px;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  opacity:.9;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.mini summary::-webkit-details-marker{display:none}
+
+.mchev{
+  width:10px;height:10px;
+  border-right:2px solid rgba(234,242,246,.55);
+  border-bottom:2px solid rgba(234,242,246,.55);
+  transform:rotate(45deg);
+  transition:transform .15s ease;
+  margin-left:10px;
+}
+
+.mini[open] > summary .mchev{transform:rotate(-135deg)}
+
+.mini .mc{padding:0 12px 12px 12px;font-size:15px;line-height:1.6;opacity:.9}
+
+/* Chips */
 .tag{
   display:inline-block;
   padding:6px 10px;
@@ -67,9 +102,11 @@
   border:1px solid rgba(255,255,255,.10);
   font-weight:800;
   letter-spacing:.06em;
+  margin-right:8px;
 }
 
-.sep{border:0;height:1px;background:rgba(255,255,255,.10);margin:8px 0 0}
+/* Divider */
+.sep{border:0;height:1px;background:rgba(255,255,255,.10);margin:10px 0 0}
 
 /* Satellite nav */
 .sat{display:flex;justify-content:center;margin-top:10px}
@@ -91,39 +128,134 @@ footer{margin-top:26px}
       <p>Under construction · Safe to explore.</p>
     </div>
 
-    <!-- 4 DROPDOWNS (FRUIT-FIRST) -->
+    <!-- 4 OUTER DROPDOWNS -->
     <div class="dropgrid">
 
+      <!-- 1) COMING SOON -->
       <details class="drop">
         <summary>Coming Soon<span class="chev"></span></summary>
         <div class="content">
-          New tools, instruments, and packaged outputs are being added continuously.<br>
-          <span class="tag">Focus</span> Look for new usable surfaces, not structure changes.
+
+          <div class="nest">
+
+            <details class="mini">
+              <summary>Tools & Surfaces<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">Add</span> New usable tools, interfaces, and execution surfaces ship continuously.</div>
+            </details>
+
+            <details class="mini">
+              <summary>Packs & Outputs<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">Ship</span> Packaged outputs: PDFs, checklists, templates, and runnable modules.</div>
+            </details>
+
+            <details class="mini">
+              <summary>Diagnostics & Gauges<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">Expand</span> More instruments and scorecards appear under Gauges as they harden.</div>
+            </details>
+
+            <details class="mini">
+              <summary>Content Refreshes<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">Refresh</span> Existing pages get clearer wording and better navigability (no structure churn).</div>
+            </details>
+
+          </div>
+
         </div>
       </details>
 
+      <!-- 2) START HERE -->
       <details class="drop">
         <summary>Start Here<span class="chev"></span></summary>
         <div class="content">
-          <span class="tag">Path</span> Open <strong>Laws</strong> → <strong>Categories</strong> → <strong>Integrity</strong>, then follow <strong>Coherence</strong> to the end.
+
+          <div class="nest">
+
+            <details class="mini">
+              <summary>Fast Path<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">Path</span> Laws → Categories → Integrity → Coherence (follow to the end).</div>
+            </details>
+
+            <details class="mini">
+              <summary>Explore Path<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">Explore</span> If a branch looks unfinished, return to a hub and pick another route.</div>
+            </details>
+
+            <details class="mini">
+              <summary>Rule of One Choice<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">Rule</span> Choose one route at a time. Don’t multi-tab inside a branch.</div>
+            </details>
+
+            <details class="mini">
+              <summary>Return Point<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">Return</span> Home is the compass hub. Root is the observation hub.</div>
+            </details>
+
+          </div>
+
         </div>
       </details>
 
+      <!-- 3) COMPASS KEY -->
       <details class="drop">
         <summary>Compass Key<span class="chev"></span></summary>
         <div class="content">
-          <span class="tag">N</span> Laws / categories / definitions.<br>
-          <span class="tag">E</span> Products / tools / execution surfaces.<br>
-          <span class="tag">S</span> Gauges / instruments / measurements.<br>
-          <span class="tag">W</span> Links / external references.
+
+          <div class="nest">
+
+            <details class="mini">
+              <summary>N — Laws<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">N</span> Laws / categories / definitions.</div>
+            </details>
+
+            <details class="mini">
+              <summary>E — Products<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">E</span> Products / tools / execution surfaces.</div>
+            </details>
+
+            <details class="mini">
+              <summary>S — Gauges<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">S</span> Gauges / instruments / measurements.</div>
+            </details>
+
+            <details class="mini">
+              <summary>W — Links<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">W</span> Links / external references / identity anchors.</div>
+            </details>
+
+          </div>
+
         </div>
       </details>
 
+      <!-- 4) WHAT STAYS STABLE -->
       <details class="drop">
         <summary>What Stays Stable<span class="chev"></span></summary>
         <div class="content">
-          Navigation grammar stays stable: four routes, one choice at a time.<br>
-          <span class="tag">Rule</span> If a page looks unfinished, return to a hub and choose another route.
+
+          <div class="nest">
+
+            <details class="mini">
+              <summary>Navigation Grammar<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">Stable</span> Four routes, one choice at a time.</div>
+            </details>
+
+            <details class="mini">
+              <summary>Pathing Discipline<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">Stable</span> Hubs route; leaves explain; minis return.</div>
+            </details>
+
+            <details class="mini">
+              <summary>Visual System<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">Stable</span> Dark opal tiles + consistent diamond grammar across pages.</div>
+            </details>
+
+            <details class="mini">
+              <summary>What Changes<span class="mchev"></span></summary>
+              <div class="mc"><span class="tag">Evolves</span> Content, tools, and packaged outputs expand over time.</div>
+            </details>
+
+          </div>
+
         </div>
       </details>
 

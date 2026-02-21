@@ -1,605 +1,485 @@
+<!-- ============================
+TNT: /home/index.html
+REPLACE ENTIRE FILE
+Purpose: Hub.
+Reads localStorage.geo_lang + geo_depth.
+Renders: Quadrant routes (NW/NE/SW/SE) + Cardinal plate (N/E/S/W).
+No repeated language choice.
+“Jump to Site” appears everywhere.
+Depth controls density:
+- explore: summaries only
+- learn: deeper detail bubbles (still tappable)
+- try: more “Open” links surfaced
+============================ -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Home</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Home · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=9002"/>
-<link rel="stylesheet" href="/assets/branch.css?v=9002"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=2001"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=2001"/>
 
-<style>
-body{
-  background:
-    radial-gradient(1200px 800px at 50% 0%, rgba(160,20,20,.40) 0%, rgba(40,0,0,.55) 38%, #05070c 100%);
-}
-.h{ position:relative; z-index:10; }
-.stage{ position:relative; z-index:2; }
+  <style>
+    :root{
+      --bg0:#05070c;
+      --bg1:#24060a;
+      --bg2:#4a0a10;
+      --glass:rgba(255,255,255,.06);
+      --glass2:rgba(255,255,255,.09);
+      --line:rgba(255,255,255,.10);
+      --text:#eaf2f6;
+      --muted:rgba(234,242,246,.72);
+      --chip:rgba(0,0,0,.28);
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(1200px 800px at 50% 18%, rgba(140,20,30,.55) 0%, rgba(0,0,0,0) 55%),
+        radial-gradient(1200px 900px at 50% 18%, var(--bg2) 0%, var(--bg1) 45%, var(--bg0) 100%);
+      overflow-x:hidden;
+    }
+    .page{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      padding:36px 16px 36px;
+      gap:16px;
+      position:relative;
+      z-index:1;
+    }
+    .h{
+      width:min(980px,94vw);
+      text-align:left;
+      position:relative;
+      z-index:10;
+    }
+    .h h1{
+      margin:0;
+      font-size:clamp(40px,7vw,64px);
+      font-weight:950;
+    }
+    .h p{
+      margin:10px 0 0;
+      font-size:clamp(14px,3vw,18px);
+      color:var(--muted);
+      line-height:1.35;
+    }
+    .meta{
+      width:min(980px,94vw);
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-start;
+      margin-top:4px;
+    }
+    .chip{
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      letter-spacing:.10em;
+      font-weight:850;
+      font-size:12px;
+      opacity:.92;
+    }
+    .stage{
+      width:min(980px,94vw);
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+      align-items:start;
+      justify-content:center;
+      margin-top:4px;
+    }
+    .panel{
+      border-radius:24px;
+      background:var(--glass);
+      box-shadow:inset 0 0 0 1px var(--line), 0 28px 90px rgba(0,0,0,.65);
+      padding:14px;
+      backdrop-filter: blur(14px);
+    }
+    .panel h2{
+      margin:0 0 10px;
+      font-size:13px;
+      letter-spacing:.22em;
+      opacity:.85;
+    }
 
-.topPanel{
-  width:min(900px,94vw);
-  border-radius:24px;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 26px 70px rgba(0,0,0,.60);
-  padding:14px 14px;
-  margin-bottom:14px;
-}
-.bar{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-}
-.badge{
-  padding:10px 14px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
-  font-weight:900;
-  letter-spacing:.08em;
-}
-.actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.action{
-  padding:10px 14px;
-  border-radius:999px;
-  background:rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.12);
-  font-weight:900;
-  cursor:pointer;
-}
+    /* Bubble accordion */
+    details{
+      border-radius:18px;
+      background:rgba(0,0,0,.20);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+      padding:10px 12px;
+      margin:10px 0;
+    }
+    summary{
+      cursor:pointer;
+      list-style:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+    summary::-webkit-details-marker{display:none}
+    .sumL{
+      display:flex; align-items:center; gap:10px;
+    }
+    .badge{
+      min-width:44px;
+      text-align:center;
+      padding:10px 10px;
+      border-radius:14px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      font-weight:900;
+      letter-spacing:.14em;
+      opacity:.95;
+    }
+    .sumTxt{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .tMain{
+      font-weight:950;
+      letter-spacing:.06em;
+    }
+    .tSub{
+      font-size:13px;
+      color:rgba(234,242,246,.70);
+    }
+    .caret{
+      width:44px;
+      height:44px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      opacity:.9;
+      flex:0 0 auto;
+    }
+    .body{
+      margin-top:10px;
+      color:rgba(234,242,246,.86);
+      line-height:1.55;
+      font-size:15px;
+    }
+    .body ul{margin:10px 0 0 20px}
+    .jumpRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .jump{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(255,255,255,.08);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:900;
+      letter-spacing:.08em;
+      font-size:12px;
+      opacity:.95;
+    }
+    .jump:active{transform:translateY(1px); filter:brightness(1.05)}
 
-details.route{
-  margin-top:10px;
-  border-radius:18px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  overflow:hidden;
-}
-details.route > summary{
-  list-style:none;
-  cursor:pointer;
-  padding:14px 14px;
-  font-weight:900;
-  letter-spacing:.06em;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-details.route > summary::-webkit-details-marker{display:none;}
+    /* Cardinal plate container (uses branch.css diamonds) */
+    .plateWrap{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 0 0;
+    }
+    .platform{
+      margin:6px auto 0;
+    }
 
-.routeBody{
-  padding:12px 14px 16px;
-  opacity:.92;
-  line-height:1.55;
-}
-
-.gridBtns{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
-.qbtn{
-  padding:10px 12px;
-  border-radius:14px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
-  font-weight:900;
-  cursor:pointer;
-  text-decoration:none;
-  color:inherit;
-  display:inline-flex;
-  gap:8px;
-  align-items:center;
-}
-.qbtn:hover{ background:rgba(255,255,255,.12); }
-
-.kv{
-  margin-top:10px;
-  border-radius:14px;
-  padding:12px;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.08);
-}
-.kv .k{ font-weight:900; letter-spacing:.06em; opacity:.9; }
-.kv .v{ opacity:.85; margin-top:6px; }
-
-.ul{
-  margin:10px 0 0 18px;
-}
-.ul li{ margin:6px 0; }
-.ul li ul{ margin-top:6px; margin-left:18px; opacity:.92; }
-.ul li ul li{ margin:4px 0; }
-
-.hr{
-  height:1px;
-  background:rgba(255,255,255,.08);
-  margin:14px 0;
-}
-</style>
+    footer{
+      width:min(980px,94vw);
+      margin-top:8px;
+      text-align:center;
+      letter-spacing:3px;
+      font-size:12px;
+      opacity:.55;
+      position:relative;
+      z-index:10;
+    }
+  </style>
 </head>
 
 <body>
 <div class="shooting-stars"></div>
 
 <div class="page">
-
   <div class="h">
-    <h1 id="hTitle">Home</h1>
-    <p id="hSub">Compass hub · choose a route.</p>
+    <h1 id="H1">Home</h1>
+    <p id="H2">Unified hub. Expand to explore. Tap “Jump to Site” when ready.</p>
   </div>
 
-  <!-- Quadrant routes (NW/NE/SW/SE) -->
-  <div class="topPanel" id="routesPanel">
-    <div class="bar">
-      <div class="badge" id="modeBadge">MODE</div>
-      <div class="actions">
-        <div class="action" id="toDoor">Door</div>
-        <div class="action" id="toRoot">Root</div>
+  <div class="meta">
+    <div class="chip" id="CH_LANG">LANG · EN</div>
+    <div class="chip" id="CH_DEPTH">DEPTH · EXPLORE</div>
+    <a class="chip" href="/" id="CH_RESET" style="text-decoration:none;color:inherit;">RESET</a>
+  </div>
+
+  <div class="stage">
+
+    <div class="panel">
+      <h2 id="QH">QUADRANT ROUTES (NW / NE / SW / SE)</h2>
+
+      <!-- NW -->
+      <details id="Q_NW">
+        <summary>
+          <div class="sumL">
+            <div class="badge">NW</div>
+            <div class="sumTxt">
+              <div class="tMain" id="NW_T">Northwest</div>
+              <div class="tSub" id="NW_S">Definitions · language · structure</div>
+            </div>
+          </div>
+          <div class="caret">▾</div>
+        </summary>
+        <div class="body" id="NW_B">
+          <ul id="NW_LIST">
+            <li>SSG (Simplified Syntax Geometry)</li>
+            <li>Diamond grammar (4 routes, one choice)</li>
+            <li>DOT.GRID (256-state indexing)</li>
+            <li>Acronyms & glossary (organized)</li>
+          </ul>
+          <div class="jumpRow">
+            <a class="jump" href="/laws/">JUMP · LAWS</a>
+            <a class="jump" href="/laws/categories/">JUMP · CATEGORIES</a>
+          </div>
+        </div>
+      </details>
+
+      <!-- NE -->
+      <details id="Q_NE">
+        <summary>
+          <div class="sumL">
+            <div class="badge">NE</div>
+            <div class="sumTxt">
+              <div class="tMain" id="NE_T">Northeast</div>
+              <div class="tSub" id="NE_S">Execution · surfaces · examples</div>
+            </div>
+          </div>
+          <div class="caret">▾</div>
+        </summary>
+        <div class="body" id="NE_B">
+          <ul id="NE_LIST">
+            <li>Execution surfaces (apps / portals)</li>
+            <li>Workflows & receipts (audit trails)</li>
+            <li>Examples (how to use the system)</li>
+            <li>Packaged outputs (downloadables)</li>
+          </ul>
+          <div class="jumpRow">
+            <a class="jump" href="/products/">JUMP · PRODUCTS</a>
+            <a class="jump" href="/rgsc/">JUMP · RGSC</a>
+          </div>
+        </div>
+      </details>
+
+      <!-- SW -->
+      <details id="Q_SW">
+        <summary>
+          <div class="sumL">
+            <div class="badge">SW</div>
+            <div class="sumTxt">
+              <div class="tMain" id="SW_T">Southwest</div>
+              <div class="tSub" id="SW_S">Measurement · diagnostics · rules</div>
+            </div>
+          </div>
+          <div class="caret">▾</div>
+        </summary>
+        <div class="body" id="SW_B">
+          <ul id="SW_LIST">
+            <li>Gauges (measurement instruments)</li>
+            <li>Diagnostics (classification under constraint)</li>
+            <li>Rules (navigation + integrity)</li>
+            <li>Return protocol (hub-first)</li>
+          </ul>
+          <div class="jumpRow">
+            <a class="jump" href="/gauges/">JUMP · GAUGES</a>
+            <a class="jump" href="/diagnostic/">JUMP · DIAGNOSTIC</a>
+          </div>
+        </div>
+      </details>
+
+      <!-- SE -->
+      <details id="Q_SE">
+        <summary>
+          <div class="sumL">
+            <div class="badge">SE</div>
+            <div class="sumTxt">
+              <div class="tMain" id="SE_T">Southeast</div>
+              <div class="tSub" id="SE_S">Identity · references · links</div>
+            </div>
+          </div>
+          <div class="caret">▾</div>
+        </summary>
+        <div class="body" id="SE_B">
+          <ul id="SE_LIST">
+            <li>OSF project registry</li>
+            <li>ORCID identity</li>
+            <li>Contact</li>
+            <li>Reference anchors</li>
+          </ul>
+          <div class="jumpRow">
+            <a class="jump" href="/links/">JUMP · LINKS</a>
+            <a class="jump" href="/contact/">JUMP · CONTACT</a>
+          </div>
+        </div>
+      </details>
+
+    </div>
+
+    <div class="panel">
+      <h2 id="PH">CARDINAL PLATE (N / E / S / W)</h2>
+      <div class="plateWrap">
+        <div class="platform">
+          <a class="diamond top" href="/laws/"><span>N<small id="P_N">Laws</small></span></a>
+          <a class="diamond right" href="/products/"><span>E<small id="P_E">Products</small></span></a>
+          <a class="diamond bottom" href="/gauges/"><span>S<small id="P_S">Gauges</small></span></a>
+          <a class="diamond left" href="/links/"><span>W<small id="P_W">Links</small></span></a>
+
+          <a class="diamond mini mini-left" href="/"><span><small id="P_BACK">ROOT</small></span></a>
+          <a class="diamond mini mini-right" href="/rgsc/"><span><small id="P_R">RGSC</small></span></a>
+        </div>
       </div>
     </div>
 
-    <details class="route" id="rNW">
-      <summary><span id="rNWt">NORTHWEST</span><span>▾</span></summary>
-      <div class="routeBody" id="rNWb"></div>
-    </details>
-
-    <details class="route" id="rNE">
-      <summary><span id="rNEt">NORTHEAST</span><span>▾</span></summary>
-      <div class="routeBody" id="rNEb"></div>
-    </details>
-
-    <details class="route" id="rSW">
-      <summary><span id="rSWt">SOUTHWEST</span><span>▾</span></summary>
-      <div class="routeBody" id="rSWb"></div>
-    </details>
-
-    <details class="route" id="rSE">
-      <summary><span id="rSEt">SOUTHEAST</span><span>▾</span></summary>
-      <div class="routeBody" id="rSEb"></div>
-    </details>
-  </div>
-
-  <!-- Cardinal plate (N/E/S/W) -->
-  <div class="stage">
-    <div class="platform">
-
-      <a class="diamond top" href="/laws/"><span id="pN">N<small id="pN2">Laws</small></span></a>
-      <a class="diamond right" href="/products/"><span id="pE">E<small id="pE2">Products</small></span></a>
-      <a class="diamond bottom" href="/gauges/"><span id="pS">S<small id="pS2">Gauges</small></span></a>
-      <a class="diamond left" href="/links/"><span id="pW">W<small id="pW2">Links</small></span></a>
-
-      <a class="diamond mini mini-left" href="/"><span><small id="miniL">ROOT</small></span></a>
-      <a class="diamond mini mini-right" href="/rgsc/"><span><small id="miniR">RGSC</small></span></a>
-
-    </div>
   </div>
 
   <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 </div>
 
 <script>
-(function(){
-  const lang = localStorage.getItem("GD_LANG") || "en";
-  const depth = localStorage.getItem("GD_DEPTH") || "shop"; // shop | learn
-
-  const copy = {
-    en:{
-      home:"Home",
-      sub:"Compass hub · choose a route.",
-      mode:"MODE: " + (depth === "shop" ? "SHOP (surface)" : "LEARN (deep)"),
-      door:"Door",
-      root:"Root",
-
-      nw:"NORTHWEST",
-      ne:"NORTHEAST",
-      sw:"SOUTHWEST",
-      se:"SOUTHEAST",
-
-      plate:{ n:"N", n2:"Laws", e:"E", e2:"Products", s:"S", s2:"Gauges", w:"W", w2:"Links" },
-      miniL:"ROOT",
-      miniR:"RGSC",
-
-      // ROUTE CONTENT (links only to existing pages)
-      routes:{
-        nw:{
-          shop:{
-            lead:"Definitions · language · structure.",
-            buttons:[
-              ["Open Laws","/laws/"],
-              ["Open Categories","/laws/categories/"],
-              ["Open Links (glossary/IDs)","/links/"],
-              ["Open RGSC","/rgsc/"]
-            ]
-          },
-          learn:{
-            lead:"Definitions · language · structure.",
-            blocks:[
-              ["SSG / Grammar / DOT.GRID",[
-                "SSG: constraint-based structure language (spec + examples).",
-                "Diamond grammar: four routes, one choice at a time.",
-                "DOT.GRID: 256-state indexing & replay-safe routing."
-              ]],
-              ["Acronyms & glossary",[
-                "Core acronyms (OSF, ORCID, RGSC, DOT.GRID, SSG).",
-                "Operational terms (route, hub, return protocol, receipt).",
-                "Consistency rules: same word, same meaning across the site."
-              ]],
-              ["Where this lives",[
-                "Laws → Categories (definitions & branch grammar).",
-                "Links (identity anchors, OSF/ORCID, references).",
-                "RGSC (governance receipts & signed routing surfaces)."
-              ]]
-            ],
-            buttons:[
-              ["Go: Laws","/laws/"],
-              ["Go: Categories","/laws/categories/"],
-              ["Go: Links","/links/"],
-              ["Go: RGSC","/rgsc/"]
-            ]
-          }
-        },
-
-        ne:{
-          shop:{
-            lead:"Execution · surfaces · examples.",
-            buttons:[
-              ["Open Products","/products/"],
-              ["Open Diagnostic","/diagnostic/"],
-              ["Open Gauges","/gauges/"],
-              ["Open RGSC","/rgsc/"]
-            ]
-          },
-          learn:{
-            lead:"Execution · surfaces · examples.",
-            blocks:[
-              ["Execution surfaces",[
-                "Apps / portals are the user-facing instruments.",
-                "Each surface maps to a route and emits receipts/logs.",
-                "Surfaces stay navigable even while content evolves."
-              ]],
-              ["Workflows & receipts",[
-                "Receipts prove what happened (ack/resolve/reject).",
-                "Replay-safe: same inputs reproduce the same outputs.",
-                "Return protocol: hub-first navigation prevents drift."
-              ]],
-              ["Examples & outputs",[
-                "Examples show how to use the system end-to-end.",
-                "Packaged outputs: PDFs, drills, checklists, exports.",
-                "Diagnostics are demonstrations of the rules in action."
-              ]]
-            ],
-            buttons:[
-              ["Go: Products","/products/"],
-              ["Go: Diagnostic","/diagnostic/"],
-              ["Go: Gauges","/gauges/"],
-              ["Go: RGSC","/rgsc/"]
-            ]
-          }
-        },
-
-        sw:{
-          shop:{
-            lead:"Measurement · diagnostics · rules.",
-            buttons:[
-              ["Open Gauges","/gauges/"],
-              ["Open Diagnostic","/diagnostic/"],
-              ["Open Laws","/laws/"],
-              ["Open Categories","/laws/categories/"]
-            ]
-          },
-          learn:{
-            lead:"Measurement · diagnostics · rules.",
-            blocks:[
-              ["Gauges (measurement instruments)",[
-                "Measurement is classification under constraint.",
-                "Gauges align language → evidence → outcome.",
-                "Stable rules; evolving content."
-              ]],
-              ["Diagnostics (how to verify)",[
-                "Diagnostics are quick audits of structure & coherence.",
-                "They surface conflicts, gaps, and return paths.",
-                "They prevent ‘multi-tab drift’ inside a branch."
-              ]],
-              ["Rules (navigation integrity)",[
-                "One choice at a time.",
-                "Return to hub if incomplete.",
-                "Same grammar everywhere: predictable traversal."
-              ]]
-            ],
-            buttons:[
-              ["Go: Gauges","/gauges/"],
-              ["Go: Diagnostic","/diagnostic/"],
-              ["Go: Laws","/laws/"],
-              ["Go: Categories","/laws/categories/"]
-            ]
-          }
-        },
-
-        se:{
-          shop:{
-            lead:"Identity · references · links.",
-            buttons:[
-              ["Open Links","/links/"],
-              ["Open Contact","/contact/"],
-              ["Open Root","/"],
-              ["Open Home","/home/"]
-            ]
-          },
-          learn:{
-            lead:"Identity · references · links.",
-            blocks:[
-              ["Identity anchors",[
-                "ORCID: researcher identity anchor.",
-                "OSF: project registry & public research surface.",
-                "Contact: direct channel."
-              ]],
-              ["Reference map",[
-                "Links page holds external references (stable).",
-                "Use it to verify identity & provenance.",
-                "Use it to find canonical entry points."
-              ]],
-              ["Operational note",[
-                "Identity anchors are not marketing—just verification.",
-                "Everything is navigated with the same route grammar.",
-                "If uncertain: return to Home and choose again."
-              ]]
-            ],
-            buttons:[
-              ["Go: Links","/links/"],
-              ["Go: Contact","/contact/"],
-              ["Go: Root","/"],
-              ["Go: Home","/home/"]
-            ]
-          }
-        }
-      }
-    },
-
-    zh:{
-      home:"主页",
-      sub:"罗盘枢纽 · 选择一条路径。",
-      mode:"模式：" + (depth === "shop" ? "浏览（表层）" : "学习（深入）"),
-      door:"入口",
-      root:"根页",
-
-      nw:"西北",
-      ne:"东北",
-      sw:"西南",
-      se:"东南",
-
-      plate:{ n:"N", n2:"法则", e:"E", e2:"产品", s:"S", s2:"量表", w:"W", w2:"链接" },
-      miniL:"根页",
-      miniR:"RGSC",
-
-      routes:{
-        nw:{
-          shop:{
-            lead:"定义 · 语言 · 结构。",
-            buttons:[
-              ["进入：法则","/laws/"],
-              ["进入：分类","/laws/categories/"],
-              ["进入：链接（术语/身份）","/links/"],
-              ["进入：RGSC","/rgsc/"]
-            ]
-          },
-          learn:{
-            lead:"定义 · 语言 · 结构。",
-            blocks:[
-              ["SSG / 语法 / DOT.GRID",[
-                "SSG：用于表达结构与约束的语言（规范+示例）。",
-                "菱形语法：四条路线，一次只选一条。",
-                "DOT.GRID：256态索引与可回放路由。"
-              ]],
-              ["缩略词与术语",[
-                "核心缩略词（OSF、ORCID、RGSC、DOT.GRID、SSG）。",
-                "操作术语（路线、枢纽、返回协议、回执）。",
-                "一致性规则：同一词在全站含义不变。"
-              ]],
-              ["内容位置",[
-                "法则→分类（定义与分支语法）。",
-                "链接（身份锚点、OSF/ORCID、参考）。",
-                "RGSC（治理回执与签名路由）。"
-              ]]
-            ],
-            buttons:[
-              ["去：法则","/laws/"],
-              ["去：分类","/laws/categories/"],
-              ["去：链接","/links/"],
-              ["去：RGSC","/rgsc/"]
-            ]
-          }
-        },
-
-        ne:{
-          shop:{
-            lead:"执行 · 界面 · 示例。",
-            buttons:[
-              ["进入：产品","/products/"],
-              ["进入：诊断","/diagnostic/"],
-              ["进入：量表","/gauges/"],
-              ["进入：RGSC","/rgsc/"]
-            ]
-          },
-          learn:{
-            lead:"执行 · 界面 · 示例。",
-            blocks:[
-              ["执行界面",[
-                "应用/门户是用户可操作的工具面。",
-                "界面映射到路线，并生成回执/日志。",
-                "内容更新不影响导航稳定。"
-              ]],
-              ["流程与回执",[
-                "回执证明发生了什么（确认/解决/拒绝）。",
-                "可回放：同输入→同输出。",
-                "返回协议：枢纽优先，防止漂移。"
-              ]],
-              ["示例与输出",[
-                "示例展示从头到尾怎么用。",
-                "打包输出：PDF、练习、清单、导出。",
-                "诊断是规则的现场演示。"
-              ]]
-            ],
-            buttons:[
-              ["去：产品","/products/"],
-              ["去：诊断","/diagnostic/"],
-              ["去：量表","/gauges/"],
-              ["去：RGSC","/rgsc/"]
-            ]
-          }
-        },
-
-        sw:{
-          shop:{
-            lead:"测量 · 诊断 · 规则。",
-            buttons:[
-              ["进入：量表","/gauges/"],
-              ["进入：诊断","/diagnostic/"],
-              ["进入：法则","/laws/"],
-              ["进入：分类","/laws/categories/"]
-            ]
-          },
-          learn:{
-            lead:"测量 · 诊断 · 规则。",
-            blocks:[
-              ["量表（测量工具）",[
-                "测量＝在约束下做分类。",
-                "量表把语言→证据→结果对齐。",
-                "规则稳定，内容可迭代。"
-              ]],
-              ["诊断（如何验证）",[
-                "诊断是结构与一致性的快速审计。",
-                "暴露冲突、缺口与返回路径。",
-                "防止在分支内多标签漂移。"
-              ]],
-              ["规则（导航完整性）",[
-                "一次只选一个。",
-                "不完整就回到枢纽。",
-                "全站同语法：可预测 traversal。"
-              ]]
-            ],
-            buttons:[
-              ["去：量表","/gauges/"],
-              ["去：诊断","/diagnostic/"],
-              ["去：法则","/laws/"],
-              ["去：分类","/laws/categories/"]
-            ]
-          }
-        },
-
-        se:{
-          shop:{
-            lead:"身份 · 参考 · 链接。",
-            buttons:[
-              ["进入：链接","/links/"],
-              ["进入：联系","/contact/"],
-              ["进入：根页","/"],
-              ["进入：主页","/home/"]
-            ]
-          },
-          learn:{
-            lead:"身份 · 参考 · 链接。",
-            blocks:[
-              ["身份锚点",[
-                "ORCID：研究者身份锚点。",
-                "OSF：项目注册与公开研究面。",
-                "联系：直达渠道。"
-              ]],
-              ["参考地图",[
-                "链接页保存外部参考（稳定）。",
-                "用于验证身份与来源。",
-                "用于找到规范入口。"
-              ]],
-              ["操作说明",[
-                "身份锚点不是营销，只是验证。",
-                "全站同路线语法。",
-                "不确定就回主页重新选择。"
-              ]]
-            ],
-            buttons:[
-              ["去：链接","/links/"],
-              ["去：联系","/contact/"],
-              ["去：根页","/"],
-              ["去：主页","/home/"]
-            ]
-          }
-        }
-      }
+  (function(){
+    function safeGet(k, fallback){
+      try{ return localStorage.getItem(k) || fallback; }catch(_){ return fallback; }
     }
-  }[lang];
+    function safeSet(k,v){ try{ localStorage.setItem(k,v); }catch(_){ } }
 
-  document.documentElement.lang = (lang === "zh") ? "zh-CN" : "en";
-  document.title = copy.home;
+    // Ensure lang chosen once: if missing, send to /
+    const lang = safeGet('geo_lang', '');
+    if(!lang){ location.replace('/'); return; }
 
-  document.getElementById("hTitle").textContent = copy.home;
-  document.getElementById("hSub").textContent = copy.sub;
-  document.getElementById("modeBadge").textContent = copy.mode;
+    const depth = safeGet('geo_depth', 'explore'); // explore | learn | try
+    document.getElementById('CH_LANG').textContent = (lang === 'zh') ? 'LANG · 中文' : 'LANG · EN';
+    document.getElementById('CH_DEPTH').textContent =
+      'DEPTH · ' + (depth || 'explore').toUpperCase();
 
-  document.getElementById("toDoor").textContent = copy.door;
-  document.getElementById("toRoot").textContent = copy.root;
-  document.getElementById("toDoor").onclick = () => window.location.href="/door/";
-  document.getElementById("toRoot").onclick = () => window.location.href="/";
+    document.getElementById('CH_RESET').addEventListener('click', ()=>{
+      try{
+        localStorage.removeItem('geo_lang');
+        localStorage.removeItem('geo_depth');
+      }catch(_){}
+    }, {passive:true});
 
-  document.getElementById("rNWt").textContent = copy.nw;
-  document.getElementById("rNEt").textContent = copy.ne;
-  document.getElementById("rSWt").textContent = copy.sw;
-  document.getElementById("rSEt").textContent = copy.se;
-
-  // Build route bodies
-  function btnRow(btns){
-    return '<div class="gridBtns">' + btns.map(b=>{
-      const label=b[0], href=b[1];
-      return '<a class="qbtn" href="'+href+'">➜ '+label+'</a>';
-    }).join('') + '</div>';
-  }
-  function learnBlocks(blocks){
-    return blocks.map(bl=>{
-      const title=bl[0], items=bl[1];
-      return '<div class="kv"><div class="k">'+title+'</div><div class="v"><ul class="ul">'+
-        items.map(x=>'<li>'+x+'</li>').join('')+
-      '</ul></div></div>';
-    }).join('<div class="hr"></div>');
-  }
-
-  const modeKey = (depth === "shop") ? "shop" : "learn";
-
-  function routeHTML(q){
-    const data = copy.routes[q][modeKey];
-    if(modeKey === "shop"){
-      return '<div class="kv"><div class="k">'+data.lead+'</div><div class="v"></div></div>' + btnRow(data.buttons);
+    // Density control:
+    // explore: keep quadrant lists short, close all by default
+    // learn: keep as-is, still closed by default
+    // try: emphasize jump rows by opening jump-heavy quadrants slightly (but not auto-open details)
+    function trimList(id, n){
+      const ul = document.getElementById(id);
+      if(!ul) return;
+      const items = Array.from(ul.querySelectorAll('li'));
+      items.forEach((li, idx)=>{ if(idx >= n) li.style.display='none'; });
     }
-    return '<div class="kv"><div class="k">'+data.lead+'</div><div class="v"></div></div>' +
-           '<div class="hr"></div>' +
-           learnBlocks(data.blocks) +
-           '<div class="hr"></div>' +
-           btnRow(data.buttons);
-  }
 
-  document.getElementById("rNWb").innerHTML = routeHTML("nw");
-  document.getElementById("rNEb").innerHTML = routeHTML("ne");
-  document.getElementById("rSWb").innerHTML = routeHTML("sw");
-  document.getElementById("rSEb").innerHTML = routeHTML("se");
+    // default: keep all details closed
+    // We do NOT auto-open anything (per your rule).
+    if(depth === 'explore'){
+      trimList('NW_LIST', 2);
+      trimList('NE_LIST', 2);
+      trimList('SW_LIST', 2);
+      trimList('SE_LIST', 2);
+    }
 
-  // Plate
-  document.getElementById("pN").childNodes[0].textContent = copy.plate.n;
-  document.getElementById("pN2").textContent = copy.plate.n2;
-  document.getElementById("pE").childNodes[0].textContent = copy.plate.e;
-  document.getElementById("pE2").textContent = copy.plate.e2;
-  document.getElementById("pS").childNodes[0].textContent = copy.plate.s;
-  document.getElementById("pS2").textContent = copy.plate.s2;
-  document.getElementById("pW").childNodes[0].textContent = copy.plate.w;
-  document.getElementById("pW2").textContent = copy.plate.w2;
+    // Language swap of surface text (full-page, no second prompt)
+    if(lang === 'zh'){
+      document.documentElement.lang = "zh";
+      document.getElementById('H1').textContent = "主页";
+      document.getElementById('H2').textContent = "统一枢纽。展开浏览；准备好后点“跳转”。";
 
-  document.getElementById("miniL").textContent = copy.miniL;
-  document.getElementById("miniR").textContent = copy.miniR;
-})();
+      document.getElementById('QH').textContent = "象限路线（NW / NE / SW / SE）";
+      document.getElementById('PH').textContent = "主盘（N / E / S / W）";
+
+      document.getElementById('NW_T').textContent = "西北";
+      document.getElementById('NW_S').textContent = "定义 · 语言 · 结构";
+      document.getElementById('NE_T').textContent = "东北";
+      document.getElementById('NE_S').textContent = "执行 · 界面 · 示例";
+      document.getElementById('SW_T').textContent = "西南";
+      document.getElementById('SW_S').textContent = "测量 · 诊断 · 规则";
+      document.getElementById('SE_T').textContent = "东南";
+      document.getElementById('SE_S').textContent = "身份 · 引用 · 链接";
+
+      document.getElementById('P_N').textContent = "法则";
+      document.getElementById('P_E').textContent = "产品";
+      document.getElementById('P_S').textContent = "量表";
+      document.getElementById('P_W').textContent = "链接";
+      document.getElementById('P_BACK').textContent = "根";
+      document.getElementById('P_R').textContent = "RGSC";
+
+      // Update some bullet labels (keep short; details pages can go deep)
+      document.getElementById('NW_LIST').innerHTML =
+        "<li>SSG（简化语法几何）</li><li>钻石语法（四路一选）</li><li>DOT.GRID（256态索引）</li><li>缩写与术语（整理）</li>";
+      document.getElementById('NE_LIST').innerHTML =
+        "<li>执行界面（应用/入口）</li><li>流程与回执（审计）</li><li>示例（如何使用）</li><li>打包输出（下载）</li>";
+      document.getElementById('SW_LIST').innerHTML =
+        "<li>量表（测量工具）</li><li>诊断（约束分类）</li><li>规则（导航/一致性）</li><li>返回协议（枢纽优先）</li>";
+      document.getElementById('SE_LIST').innerHTML =
+        "<li>OSF 项目</li><li>ORCID 身份</li><li>联系方式</li><li>参考锚点</li>";
+
+      // Trim for explore mode in Chinese too
+      if(depth === 'explore'){
+        trimList('NW_LIST', 2);
+        trimList('NE_LIST', 2);
+        trimList('SW_LIST', 2);
+        trimList('SE_LIST', 2);
+      }
+
+      // Replace jump labels (routes remain same)
+      const jumps = document.querySelectorAll('.jump');
+      jumps.forEach(a=>{
+        if(a.textContent.includes('JUMP · LAWS')) a.textContent = '跳转 · 法则';
+        if(a.textContent.includes('JUMP · CATEGORIES')) a.textContent = '跳转 · 分类';
+        if(a.textContent.includes('JUMP · PRODUCTS')) a.textContent = '跳转 · 产品';
+        if(a.textContent.includes('JUMP · RGSC')) a.textContent = '跳转 · RGSC';
+        if(a.textContent.includes('JUMP · GAUGES')) a.textContent = '跳转 · 量表';
+        if(a.textContent.includes('JUMP · DIAGNOSTIC')) a.textContent = '跳转 · 诊断';
+        if(a.textContent.includes('JUMP · LINKS')) a.textContent = '跳转 · 链接';
+        if(a.textContent.includes('JUMP · CONTACT')) a.textContent = '跳转 · 联系';
+      });
+    }
+
+    // “Try” mode: make jump buttons more visually obvious (no auto-open)
+    if(depth === 'try'){
+      const jumps = document.querySelectorAll('.jump');
+      jumps.forEach(a=>{
+        a.style.background = "rgba(255,255,255,.12)";
+        a.style.boxShadow = "inset 0 0 0 1px rgba(255,255,255,.16), 0 0 22px rgba(255,120,120,.10)";
+      });
+    }
+
+  })();
 </script>
-
 </body>
 </html>

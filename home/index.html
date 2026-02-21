@@ -1,4 +1,8 @@
-<!-- TNT: /home/index.html (NO EN/中文 OPTIONS. READS geo.lang ONLY. IF NOT SET -> ROOT.) -->
+<!-- TNT: /home/index.html
+     HOME IS NOW THE “DOOR / UNDER CONSTRUCTION” HUB.
+     NO EN/中文 PICKER HERE (language is set ONLY at /).
+     ROUTE IS N/E/S/W (four accordions + direct links).
+-->
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,32 +10,165 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Home · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=3000"/>
-<link rel="stylesheet" href="/assets/branch.css?v=3000"/>
+<link rel="stylesheet" href="/assets/ui.css?v=4000"/>
+<link rel="stylesheet" href="/assets/branch.css?v=4000"/>
 
 <style>
-/* Ensure header/subtitle always above plate */
-.h{position:relative;z-index:20;text-align:center;margin-bottom:14px}
-.h h1{margin:0;font-size:56px;font-weight:900}
-.h p{margin:10px 0 0;opacity:.75;font-size:18px}
-.lang-pill{
-  display:inline-flex;align-items:center;gap:10px;
-  margin-top:12px;
+/* CHINESE THEME OVERLAY (red/ink), without breaking global CSS */
+body{
+  background:
+    radial-gradient(1100px 720px at 50% 14%, rgba(160,0,18,.45) 0%, rgba(0,0,0,0) 58%),
+    radial-gradient(1400px 900px at 50% 18%, #3f0006 0%, #140003 55%, #05070c 100%);
+}
+
+/* Ensure header/subtitle always ABOVE everything */
+.page{padding:44px 16px 84px}
+.h{position:relative;z-index:30;text-align:center;margin-bottom:18px}
+.h h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
+.h p{margin:10px 0 0;font-size:18px;opacity:.78}
+
+/* Mode + Root controls */
+.top-controls{
+  margin-top:14px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+}
+.pill{
+  display:inline-flex;align-items:center;justify-content:center;
   padding:10px 14px;
   border-radius:999px;
   background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 14px 34px rgba(0,0,0,.55);
   font-weight:900;
   letter-spacing:.08em;
   opacity:.95;
+  -webkit-tap-highlight-color:transparent;
+  cursor:pointer;
+  user-select:none;
+  text-decoration:none;
 }
-.lang-pill a{
-  padding:6px 10px;
-  border-radius:999px;
+.pill.active{
+  background:rgba(180,20,34,.22);
+  border:1px solid rgba(255,120,130,.22);
+  box-shadow:0 0 0 1px rgba(255,120,130,.18) inset, 0 18px 44px rgba(0,0,0,.65);
+}
+.pill small{margin-left:8px;opacity:.8;font-weight:900;letter-spacing:.14em}
+
+/* Hub cards (accordions) */
+.hub{
+  width:min(920px,94vw);
+  margin:16px auto 0;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+  z-index:10;
+}
+details.hub-card{
+  border-radius:22px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 22px 56px rgba(0,0,0,.60);
+  overflow:hidden;
+}
+summary.hub-head{
+  list-style:none;
+  cursor:pointer;
+  padding:16px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  -webkit-tap-highlight-color:transparent;
+}
+summary.hub-head::-webkit-details-marker{display:none}
+
+.leftpack{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+.badge{
+  width:44px;height:44px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 12px 28px rgba(0,0,0,.55);
+  font-weight:900;
+  letter-spacing:.06em;
+  flex:0 0 auto;
+}
+.badge .star{margin-left:6px;font-size:12px;opacity:.92}
+.titlepack{min-width:0}
+.titlepack .k{
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  opacity:.95;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.titlepack .d{
+  margin-top:6px;
+  font-size:15px;
+  opacity:.72;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.chev{
+  width:42px;height:42px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  opacity:.85;
+  flex:0 0 auto;
+}
+
+/* Open state */
+details[open] summary.hub-head{
+  background:rgba(0,0,0,.14);
+}
+details[open] .chev{transform:rotate(180deg)}
+
+/* Body */
+.hub-body{
+  padding:14px 16px 18px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+@media (max-width:720px){ .grid{grid-template-columns:1fr;} }
+.linkbtn{
+  display:block;
+  padding:14px 14px;
+  border-radius:18px;
   background:rgba(0,0,0,.20);
   border:1px solid rgba(255,255,255,.10);
-  font-weight:900;
+  box-shadow:0 16px 40px rgba(0,0,0,.55);
+  text-decoration:none;
+  color:inherit;
 }
+.linkbtn .t{font-weight:900}
+.linkbtn .s{margin-top:6px;opacity:.75;font-weight:800;letter-spacing:.08em}
+
+/* Bottom mini-plate (optional quick nav, keeps diamond language alive) */
+.bottom-stage{
+  margin-top:18px;
+  width:min(420px,88vw);
+}
+
+/* Footer always visible */
+footer{position:relative;z-index:30;margin-top:18px}
 </style>
 </head>
 
@@ -41,33 +178,107 @@
 <div class="page">
 
   <div class="h">
-    <h1 id="ttl">Home</h1>
-    <p id="sub">Compass · Directional navigation</p>
-    <div class="lang-pill" id="lp">
-      <span id="langtxt">EN</span>
-      <a href="/">Switch language</a>
+    <h1 id="ttl">Geodiametrics</h1>
+    <p id="sub">Under construction · Safe to explore.</p>
+
+    <!-- MODE (learn/shop) DOES NOT CHANGE ROUTES; it changes wording only -->
+    <div class="top-controls" role="group" aria-label="Mode and utilities">
+      <div class="pill active" id="modeLearn" title="Learn mode"><span id="learnLbl">Learn</span><small id="learnTag">LEARN</small></div>
+      <div class="pill" id="modeShop" title="Shop mode"><span id="shopLbl">Shop</span><small id="shopTag">SHOP</small></div>
+      <a class="pill" href="/" title="Return to Root to switch language"><span id="rootLbl">Root</span><small id="rootTag">LANG</small></a>
     </div>
   </div>
 
-  <div class="stage">
+  <!-- FOUR ROUTES (N/E/S/W) -->
+  <div class="hub" id="hub">
+
+    <details class="hub-card">
+      <summary class="hub-head">
+        <div class="leftpack">
+          <div class="badge" aria-hidden="true"><span>N</span><span class="star">★</span></div>
+          <div class="titlepack">
+            <div class="k" id="nK">NORTH</div>
+            <div class="d" id="nD">Definitions · language · structure</div>
+          </div>
+        </div>
+        <div class="chev" aria-hidden="true">▾</div>
+      </summary>
+      <div class="hub-body">
+        <div class="grid">
+          <a class="linkbtn" href="/laws/"><div class="t" id="n1t">Laws</div><div class="s" id="n1s">Categories, definitions</div></a>
+          <a class="linkbtn" href="/laws/categories/"><div class="t" id="n2t">Categories</div><div class="s" id="n2s">Reality · Structure · Flow · Integrity</div></a>
+        </div>
+      </div>
+    </details>
+
+    <details class="hub-card">
+      <summary class="hub-head">
+        <div class="leftpack">
+          <div class="badge" aria-hidden="true"><span>E</span></div>
+          <div class="titlepack">
+            <div class="k" id="eK">EAST</div>
+            <div class="d" id="eD">Products · execution · surfaces</div>
+          </div>
+        </div>
+        <div class="chev" aria-hidden="true">▾</div>
+      </summary>
+      <div class="hub-body">
+        <div class="grid">
+          <a class="linkbtn" href="/products/"><div class="t" id="e1t">Products</div><div class="s" id="e1s">Suites & tools</div></a>
+          <a class="linkbtn" href="/products/plasma/"><div class="t" id="e2t">PLASMA</div><div class="s" id="e2s">Frontier execution</div></a>
+        </div>
+      </div>
+    </details>
+
+    <details class="hub-card">
+      <summary class="hub-head">
+        <div class="leftpack">
+          <div class="badge" aria-hidden="true"><span>S</span></div>
+          <div class="titlepack">
+            <div class="k" id="sK">SOUTH</div>
+            <div class="d" id="sD">Gauges · measurement · diagnostics</div>
+          </div>
+        </div>
+        <div class="chev" aria-hidden="true">▾</div>
+      </summary>
+      <div class="hub-body">
+        <div class="grid">
+          <a class="linkbtn" href="/gauges/"><div class="t" id="s1t">Gauges</div><div class="s" id="s1s">Instruments & measures</div></a>
+          <a class="linkbtn" href="/rgsc/"><div class="t" id="s2t">RGSC</div><div class="s" id="s2s">Receipts · verification log</div></a>
+        </div>
+      </div>
+    </details>
+
+    <details class="hub-card">
+      <summary class="hub-head">
+        <div class="leftpack">
+          <div class="badge" aria-hidden="true"><span>W</span></div>
+          <div class="titlepack">
+            <div class="k" id="wK">WEST</div>
+            <div class="d" id="wD">Links · identity · references</div>
+          </div>
+        </div>
+        <div class="chev" aria-hidden="true">▾</div>
+      </summary>
+      <div class="hub-body">
+        <div class="grid">
+          <a class="linkbtn" href="/links/"><div class="t" id="w1t">Links</div><div class="s" id="w1s">OSF · ORCID · contact</div></a>
+          <a class="linkbtn" href="/contact/"><div class="t" id="w2t">Contact</div><div class="s" id="w2s">Direct channel</div></a>
+        </div>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- Optional: keep a compact diamond plate as a “visual anchor” under the accordions -->
+  <div class="stage bottom-stage" aria-hidden="true">
     <div class="platform">
-
-      <!-- N/E/S/W are ROUTES (no language choice here) -->
-      <a class="diamond top" href="/laws/"><span id="n1">Laws<small id="n2">Categories</small></span></a>
-      <a class="diamond right" href="/products/"><span id="e1">Products<small id="e2">Suite</small></span></a>
-      <a class="diamond bottom" href="/gauges/"><span id="s1">Gauges<small id="s2">Instruments</small></span></a>
-      <a class="diamond left" href="/links/"><span id="w1">Links<small id="w2">References</small></span></a>
-
-      <!-- Pocket minis -->
-      <a class="diamond mini mini-left" href="/"><span><small id="m1">ROOT</small></span></a>
-      <a class="diamond mini mini-right" href="/rgsc/"><span><small id="m2">RGSC</small></span></a>
-
-      <!-- Corner compass markers (if your branch.css supports them; harmless if not) -->
-      <div class="compass-marker compass-n"><span>★</span><b>N</b></div>
-      <div class="compass-marker compass-e"><span>☼</span><b>E</b></div>
-      <div class="compass-marker compass-s"><span>✦</span><b>S</b></div>
-      <div class="compass-marker compass-w"><span>☾</span><b>W</b></div>
-
+      <a class="diamond top" href="/laws/"><span>N<small>Laws</small></span></a>
+      <a class="diamond right" href="/products/"><span>E<small>Products</small></span></a>
+      <a class="diamond bottom" href="/gauges/"><span>S<small>Gauges</small></span></a>
+      <a class="diamond left" href="/links/"><span>W<small>Links</small></span></a>
+      <a class="diamond mini mini-left" href="/"><span><small>ROOT</small></span></a>
+      <a class="diamond mini mini-right" href="/rgsc/"><span><small>RGSC</small></span></a>
     </div>
   </div>
 
@@ -80,30 +291,104 @@
   const get = (k) => { try { return localStorage.getItem(k); } catch(e){ return null; } };
   const lang = get("geo.lang");
 
-  // If language not set, enforce ROOT as the only fork
+  // Language must be set ONLY at Root.
   if(!lang){ location.replace("/"); return; }
 
   const zh = (lang === "zh");
 
-  document.getElementById("langtxt").textContent = zh ? "中文" : "EN";
-  document.getElementById("ttl").textContent = zh ? "主页" : "Home";
-  document.getElementById("sub").textContent = zh ? "指南针 · 方向导航" : "Compass · Directional navigation";
+  // Defaults: Learn mode
+  let mode = "learn";
+  const setMode = (m) => {
+    mode = m;
+    document.getElementById("modeLearn").classList.toggle("active", m==="learn");
+    document.getElementById("modeShop").classList.toggle("active", m==="shop");
 
-  // Route labels (not N/E/S/W words)
-  document.getElementById("n1").childNodes[0].nodeValue = zh ? "法则" : "Laws";
-  document.getElementById("n2").textContent = zh ? "分类" : "Categories";
+    // Mode only changes wording, NOT routes.
+    if(zh){
+      document.getElementById("sub").textContent = (m==="learn")
+        ? "学习模式 · 定义、系统、方法。"
+        : "购物模式 · 产品、项目、服务。";
+      document.getElementById("nD").textContent = (m==="learn")
+        ? "定义 · 语言 · 结构"
+        : "术语 · 标准 · 结构";
+      document.getElementById("eD").textContent = (m==="learn")
+        ? "执行 · 表面 · 示例"
+        : "产品 · 执行 · 套件";
+      document.getElementById("sD").textContent = (m==="learn")
+        ? "测量 · 诊断 · 规则"
+        : "量表 · 审计 · 保障";
+      document.getElementById("wD").textContent = (m==="learn")
+        ? "链接 · 身份 · 参考"
+        : "联系 · 资料 · 入口";
+    }else{
+      document.getElementById("sub").textContent = (m==="learn")
+        ? "Study mode · definitions, systems, methods."
+        : "Shop mode · products, programs, services.";
+      document.getElementById("nD").textContent = (m==="learn")
+        ? "Definitions · language · structure"
+        : "Terms · standards · structure";
+      document.getElementById("eD").textContent = (m==="learn")
+        ? "Execution · surfaces · examples"
+        : "Products · execution · suites";
+      document.getElementById("sD").textContent = (m==="learn")
+        ? "Measurement · diagnostics · rules"
+        : "Gauges · audit · assurance";
+      document.getElementById("wD").textContent = (m==="learn")
+        ? "Links · identity · references"
+        : "Contact · identity · access";
+    }
+  };
 
-  document.getElementById("e1").childNodes[0].nodeValue = zh ? "产品" : "Products";
-  document.getElementById("e2").textContent = zh ? "套件" : "Suite";
+  // Language text (no picker here)
+  if(zh){
+    document.getElementById("ttl").textContent = "几何度量";
+    document.getElementById("learnLbl").textContent = "学习";
+    document.getElementById("shopLbl").textContent = "购物";
+    document.getElementById("rootLbl").textContent = "根";
+    document.getElementById("learnTag").textContent = "学习";
+    document.getElementById("shopTag").textContent = "购物";
+    document.getElementById("rootTag").textContent = "语言";
 
-  document.getElementById("s1").childNodes[0].nodeValue = zh ? "量表" : "Gauges";
-  document.getElementById("s2").textContent = zh ? "仪器" : "Instruments";
+    document.getElementById("nK").textContent = "NORTH";
+    document.getElementById("eK").textContent = "EAST";
+    document.getElementById("sK").textContent = "SOUTH";
+    document.getElementById("wK").textContent = "WEST";
 
-  document.getElementById("w1").childNodes[0].nodeValue = zh ? "链接" : "Links";
-  document.getElementById("w2").textContent = zh ? "参考" : "References";
+    document.getElementById("n1t").textContent = "法则";
+    document.getElementById("n1s").textContent = "分类与定义";
+    document.getElementById("n2t").textContent = "分类";
+    document.getElementById("n2s").textContent = "现实 · 结构 · 流动 · 诚信";
 
-  document.getElementById("m1").textContent = zh ? "根" : "ROOT";
-  document.getElementById("m2").textContent = "RGSC";
+    document.getElementById("e1t").textContent = "产品";
+    document.getElementById("e1s").textContent = "套件与工具";
+    document.getElementById("e2t").textContent = "PLASMA";
+    document.getElementById("e2s").textContent = "前沿执行";
+
+    document.getElementById("s1t").textContent = "量表";
+    document.getElementById("s1s").textContent = "仪器与测量";
+    document.getElementById("s2t").textContent = "RGSC";
+    document.getElementById("s2s").textContent = "凭证 · 验证日志";
+
+    document.getElementById("w1t").textContent = "链接";
+    document.getElementById("w1s").textContent = "OSF · ORCID · 联系";
+    document.getElementById("w2t").textContent = "联系";
+    document.getElementById("w2s").textContent = "直接通道";
+  }else{
+    document.getElementById("ttl").textContent = "Geodiametrics";
+    document.getElementById("learnLbl").textContent = "Learn";
+    document.getElementById("shopLbl").textContent = "Shop";
+    document.getElementById("rootLbl").textContent = "Root";
+    document.getElementById("learnTag").textContent = "LEARN";
+    document.getElementById("shopTag").textContent = "SHOP";
+    document.getElementById("rootTag").textContent = "LANG";
+  }
+
+  // Bind mode buttons
+  document.getElementById("modeLearn").addEventListener("click", () => setMode("learn"));
+  document.getElementById("modeShop").addEventListener("click", () => setMode("shop"));
+
+  // Initialize
+  setMode("learn");
 })();
 </script>
 </body>

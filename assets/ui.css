@@ -1,127 +1,154 @@
-/* TNT FILE: /assets/ui.css
-   CRP UI FOUNDATION v1.0
-   Theme: Ink Black + Lacquer Red + Antique Gold (Autumn Lantern)
-   Removes: cosmic / stars / nebula / shooting stars (kept as NO-OP)
-*/
+/* =====================================================
+   TNT FILE: /assets/ui.css
+   CRP AUTUMN FIELD v3 — Ink Black + Lacquer Red + Antique Gold
+   Subtle distant fireworks (peripheral only). No cosmic residue.
+===================================================== */
 
 :root{
-  /* Core palette */
   --ink:#05070c;
   --ink2:#070b12;
-  --red:#7a0b14;          /* lacquer red */
-  --red2:#a10d1c;         /* brighter red accent */
-  --gold:#caa04a;         /* antique gold */
-  --gold2:#e2c06b;        /* highlight gold */
 
-  /* Text */
+  --red:#7a0b14;
+  --red2:#3a060a;
+
+  --gold:#caa04a;
+  --gold2:#9a7a2f;
+
   --text:#eaf2f6;
   --muted:rgba(234,242,246,.72);
 
-  /* Glass */
   --glass:rgba(255,255,255,.06);
-  --glass2:rgba(255,255,255,.09);
+  --glass2:rgba(0,0,0,.20);
   --stroke:rgba(255,255,255,.10);
   --stroke2:rgba(255,255,255,.14);
 
-  /* Shadows */
-  --shadow:rgba(0,0,0,.65);
+  --shadow:rgba(0,0,0,.55);
   --shadow2:rgba(0,0,0,.85);
 
-  /* Radius */
-  --r-lg:28px;
-  --r-md:18px;
-  --r-sm:14px;
+  --r:22px;
 }
 
-/* Base */
+*{box-sizing:border-box}
 html,body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
+  margin:0;padding:0;width:100%;height:100%;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text);
   background:var(--ink);
   overflow-x:hidden;
 }
 
-/* Autumn Lantern Field (no images) */
+/* Kill browser default link styling (purple/underline) */
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+button{font-family:inherit}
+
+/* =====================================================
+   FIELD
+===================================================== */
+
 body{
   background:
-    radial-gradient(1100px 820px at 20% 18%, rgba(202,160,74,.10) 0%, rgba(0,0,0,0) 60%),
-    radial-gradient(1100px 820px at 80% 22%, rgba(161,13,28,.12) 0%, rgba(0,0,0,0) 62%),
-    radial-gradient(1400px 900px at 50% 10%, rgba(122,11,20,.18) 0%, rgba(0,0,0,0) 55%),
-    radial-gradient(1400px 900px at 50% 50%, var(--ink2) 0%, var(--ink) 75%);
+    radial-gradient(1200px 900px at 12% 16%, rgba(202,160,74,.22) 0%, transparent 62%),
+    radial-gradient(1400px 1000px at 86% 18%, rgba(122,11,20,.28) 0%, transparent 66%),
+    radial-gradient(1800px 1200px at 50% 0%, rgba(122,11,20,.18) 0%, transparent 72%),
+    linear-gradient(to bottom, var(--ink2), var(--ink));
 }
 
-/* No cosmic effects — keep element harmless if present */
+body::before{
+  content:"";
+  position:fixed;
+  inset:-12%;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    radial-gradient(520px 520px at 18% 10%, rgba(202,160,74,.16) 0%, transparent 68%),
+    radial-gradient(650px 650px at 82% 12%, rgba(122,11,20,.20) 0%, transparent 72%),
+    radial-gradient(780px 780px at 50% 6%, rgba(202,160,74,.10) 0%, transparent 78%);
+  opacity:.65;
+  filter:blur(8px);
+  animation:crpPulse 7s ease-in-out infinite alternate;
+}
+@keyframes crpPulse{
+  0%{opacity:.45; filter:blur(8px) brightness(.98)}
+  100%{opacity:.78; filter:blur(8px) brightness(1.08)}
+}
+
+/* Disable any legacy cosmic layer class if it exists */
 .shooting-stars{display:none !important}
 
-/* Layout helpers */
+/* =====================================================
+   LAYOUT
+===================================================== */
+
 .page{
   min-height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
-  padding:40px 16px 88px;
+  padding:44px 16px 96px;
+  position:relative;
+  z-index:1;
 }
 
-.stage{
-  width:100%;
+.wrap{
+  width:min(980px,94vw);
   display:flex;
-  align-items:center;
-  justify-content:center;
+  flex-direction:column;
+  gap:14px;
 }
 
-/* Headings */
-h1{
+.hero{position:relative;z-index:5}
+.hero h1{
   margin:0;
   font-weight:950;
-  letter-spacing:.02em;
+  letter-spacing:.06em;
   text-transform:uppercase;
+  font-size:clamp(44px,7vw,78px);
+  line-height:1.0;
 }
-
-h2,h3{
-  margin:0;
-  font-weight:900;
-}
-
-p{
-  margin:0;
+.hero p{
+  margin:10px 0 0;
   color:var(--muted);
+  font-size:18px;
+  line-height:1.35;
 }
 
-/* Links */
-a{color:inherit;text-decoration:none}
-a:hover{text-decoration:none}
-a:visited{color:inherit}
+/* =====================================================
+   UI PRIMITIVES
+===================================================== */
 
-/* Pills / chips */
+.panel{
+  border-radius:var(--r);
+  background:var(--glass);
+  box-shadow:
+    inset 0 0 0 1px var(--stroke),
+    0 24px 64px var(--shadow);
+  backdrop-filter:blur(12px);
+}
+
+.pills{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
 .pill{
   border-radius:999px;
   padding:10px 14px;
   background:var(--glass);
   box-shadow:inset 0 0 0 1px var(--stroke);
   font-weight:900;
-  letter-spacing:.10em;
+  letter-spacing:.12em;
   text-transform:uppercase;
   font-size:12px;
   opacity:.92;
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  -webkit-tap-highlight-color:transparent;
+  user-select:none;
 }
-.pill .label{opacity:.70;letter-spacing:.14em}
+
 .pill.btn{cursor:pointer}
 .pill.btn:hover{background:rgba(255,255,255,.08)}
 .pill.active{
-  background:rgba(255,255,255,.12);
-  box-shadow:inset 0 0 0 1px var(--stroke2);
+  background:rgba(202,160,74,.18);
+  box-shadow:inset 0 0 0 1px rgba(202,160,74,.55);
 }
 
-/* Buttons */
 .btn{
   border:0;
   cursor:pointer;
@@ -130,49 +157,119 @@ a:visited{color:inherit}
   background:rgba(255,255,255,.08);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
   color:var(--text);
-  font-weight:900;
-  letter-spacing:.12em;
+  font-weight:950;
+  letter-spacing:.14em;
   text-transform:uppercase;
   font-size:12px;
-  -webkit-tap-highlight-color:transparent;
 }
-.btn:active{transform:translateY(1px)}
-.btn.primary{
-  background:rgba(122,11,20,.30);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.14),
-    0 18px 50px rgba(0,0,0,.35);
-}
+
+.btn:hover{background:rgba(255,255,255,.10)}
 .btn.gold{
-  background:rgba(202,160,74,.18);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.14),
-    0 18px 50px rgba(0,0,0,.35);
+  background:rgba(202,160,74,.20);
+  box-shadow:inset 0 0 0 1px rgba(202,160,74,.55), 0 18px 50px rgba(0,0,0,.40);
+}
+.btn.red{
+  background:rgba(122,11,20,.34);
+  box-shadow:inset 0 0 0 1px rgba(202,160,74,.28), 0 18px 50px rgba(0,0,0,.40);
 }
 
-/* Cards */
-.card{
-  border-radius:var(--r-lg);
-  background:var(--glass);
-  box-shadow:inset 0 0 0 1px var(--stroke), 0 26px 70px rgba(0,0,0,.55);
-  backdrop-filter:blur(12px);
-  padding:16px;
+hr.sep{
+  border:0;
+  height:1px;
+  width:100%;
+  background:rgba(255,255,255,.08);
+  margin:8px 0 6px;
 }
 
-/* Footer / ink */
-footer{
-  margin-top:18px;
+.footer{
+  margin-top:16px;
   text-align:center;
   opacity:.55;
   letter-spacing:3px;
   font-size:12px;
 }
+
 .ink{
   margin-top:10px;
   text-align:center;
-  letter-spacing:.22em;
-  font-weight:900;
-  opacity:.38;
+  font-weight:950;
+  letter-spacing:.24em;
+  opacity:.42;
   font-size:12px;
   text-transform:uppercase;
 }
+
+/* =====================================================
+   MODAL (NO SCROLL JUMP)
+===================================================== */
+
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  z-index:9999;
+}
+
+.modal.on{display:block}
+
+.modal .backdrop{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.68);
+  backdrop-filter:blur(8px);
+}
+
+.modal .sheet{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(980px,94vw);
+  max-height:min(84vh,780px);
+  overflow:auto;
+  border-radius:26px;
+  background:
+    radial-gradient(900px 600px at 50% 0%, rgba(122,11,20,.22) 0%, transparent 70%),
+    rgba(0,0,0,.34);
+  box-shadow:
+    inset 0 0 0 1px rgba(202,160,74,.18),
+    0 40px 120px rgba(0,0,0,.80);
+}
+
+.modal .sheet::-webkit-scrollbar{width:10px}
+.modal .sheet::-webkit-scrollbar-thumb{background:rgba(255,255,255,.10);border-radius:999px}
+
+.modal .sheetHead{
+  position:sticky;top:0;z-index:2;
+  padding:14px 14px;
+  background:rgba(0,0,0,.35);
+  backdrop-filter:blur(10px);
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.08);
+  display:flex;gap:12px;align-items:center;justify-content:space-between;
+}
+
+.modal .title{
+  display:flex;flex-direction:column;gap:4px;min-width:0;
+}
+.modal .title b{
+  font-size:14px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.modal .title span{
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.modal .sheetBody{padding:14px 14px 18px}
+
+.card{
+  border-radius:22px;
+  background:rgba(255,255,255,.05

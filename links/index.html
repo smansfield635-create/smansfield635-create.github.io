@@ -1,181 +1,56 @@
-/* ==========================================
-   GEODIAMETRICS OPAL SYSTEM — GLOBAL STABLE TNT
-========================================== */
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Links · Geodiametrics</title>
 
-/* ---------- PLATFORM ---------- */
+<link rel="stylesheet" href="/assets/ui.css?v=1001"/>
+<link rel="stylesheet" href="/assets/branch.css?v=1001"/>
+</head>
 
-.platform{
-  position:relative;
-  width:min(420px,88vw);
-  aspect-ratio:1/1;
-  margin:0 auto;
-}
+<body>
+<div class="shooting-stars"></div>
 
-/* Main rotated plate */
-.platform::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  transform:rotate(45deg);
-  border-radius:30px;
+<div class="page">
 
-  background:
-    radial-gradient(circle at 50% 40%,
-      rgba(60,70,80,.35) 0%,
-      rgba(20,25,30,.85) 70%,
-      rgba(10,12,16,1) 100%);
+  <div class="h">
+    <h1>Links</h1>
+    <p>Index · Access points.</p>
+  </div>
 
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.06),
-    0 40px 100px rgba(0,0,0,.85);
+  <div class="stage products-stage">
+    <div class="platform">
 
-  z-index:0;
-}
+      <a class="diamond top" href="/laws/categories/">
+        <span>Laws<small>Categories</small></span>
+      </a>
 
-/* ==========================================
-   MAIN DIAMONDS
-========================================== */
+      <a class="diamond right" href="/contact/">
+        <span>Contact<small>Direct</small></span>
+      </a>
 
-.diamond{
-  position:absolute;
-  width:38%;
-  height:38%;
-  transform:rotate(45deg);
-  border-radius:24px;
+      <a class="diamond bottom" href="/home/">
+        <span>Home<small>Compass</small></span>
+      </a>
 
-  background:
-    radial-gradient(circle at 50% 40%,
-      rgba(45,55,65,.8) 0%,
-      rgba(18,22,28,.95) 75%);
+      <a class="diamond left" href="/door/">
+        <span>Door<small>Entry</small></span>
+      </a>
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
+      <a class="diamond mini mini-left" href="/home/">
+        <span><small>BACK</small></span>
+      </a>
 
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.05),
-    inset 0 20px 35px rgba(255,255,255,.04),
-    inset 0 -35px 60px rgba(0,0,0,.9),
-    0 25px 70px rgba(0,0,0,.9);
+      <a class="diamond mini mini-right" href="/door/">
+        <span><small>EXIT</small></span>
+      </a>
 
-  transition:transform .15s ease, filter .15s ease;
-  z-index:2;
-}
+    </div>
+  </div>
 
-.diamond span{
-  transform:rotate(-45deg);
-  text-align:center;
-  font-weight:900;
-  color:#eaf2f6;
-  text-shadow:0 0 18px rgba(120,180,255,.45);
-}
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 
-.diamond small{
-  display:block;
-  margin-top:6px;
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.12em;
-  opacity:.8;
-}
-
-/* Main diamond positions */
-.top{top:6%;left:31%}
-.right{top:31%;right:6%}
-.bottom{bottom:6%;left:31%}
-.left{top:31%;left:6%}
-
-/* ==========================================
-   MINI CONTROLS (BOTTOM POCKETS)
-========================================== */
-
-.diamond.mini{
-  width:18%;
-  height:18%;
-  border-radius:20px;
-  z-index:3;
-}
-
-.mini-left{
-  bottom:-6%;
-  left:8%;
-}
-
-.mini-right{
-  bottom:-6%;
-  right:8%;
-}
-
-/* ==========================================
-   COMPASS MARKERS — CORNER ANCHORED
-========================================== */
-
-.compass{
-  position:absolute;
-  width:46px;
-  height:46px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  font-weight:700;
-  font-size:14px;
-  color:#eaf2f6;
-
-  background:rgba(255,255,255,.05);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.08),
-    0 0 25px rgba(120,180,255,.25);
-
-  backdrop-filter:blur(6px);
-  z-index:4;
-}
-
-/* Properly aligned to rotated plate corners */
-
-.compass-n{
-  top:-6%;
-  left:50%;
-  transform:translateX(-50%);
-}
-
-.compass-s{
-  bottom:-6%;
-  left:50%;
-  transform:translateX(-50%);
-}
-
-.compass-e{
-  right:-6%;
-  top:50%;
-  transform:translateY(-50%);
-}
-
-.compass-w{
-  left:-6%;
-  top:50%;
-  transform:translateY(-50%);
-}
-
-/* optional icon spacing */
-.compass span{
-  font-size:18px;
-  line-height:1;
-}
-
-.compass small{
-  font-size:11px;
-  opacity:.7;
-  margin-top:2px;
-}
-
-/* ==========================================
-   REMOVE LEGACY
-========================================== */
-
-.diamond-stage,
-.mini-diamond{
-  display:none !important;
-}
+</div>
+</body>
+</html>

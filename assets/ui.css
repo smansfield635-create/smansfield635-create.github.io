@@ -1,8 +1,7 @@
-/* =====================================================
-   GEODIAMETRICS COSMIC SYSTEM
-   HEADER ALWAYS ABOVE STAGE (FIX)
-   FULL TNT REPLACEMENT: /assets/ui.css
-===================================================== */
+/* TNT: /assets/ui.css
+   CHINESE TOUCH THEME (RED + BLACK) · ANCIENT HISTORIC ACCENT
+   FULL FILE REPLACEMENT
+*/
 
 html,body{
   margin:0;
@@ -10,37 +9,51 @@ html,body{
   width:100%;
   height:100%;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:#eaf2f6;
+  color:#f2f2f2;
   overflow-x:hidden;
-  background:#05070c;
+  background:#050307;
   position:relative;
 }
 
-/* =====================================================
-   BACKGROUND BASE
-===================================================== */
-
+/* ===== Base lacquer black + deep red nebula ===== */
 body{
+  position:relative;
   background:
-    radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
+    radial-gradient(1400px 900px at 50% 16%, rgba(140,0,24,.42) 0%, rgba(0,0,0,0) 58%),
+    radial-gradient(1200px 900px at 18% 28%, rgba(255,200,60,.10) 0%, rgba(0,0,0,0) 62%),
+    radial-gradient(1200px 900px at 82% 30%, rgba(180,20,40,.24) 0%, rgba(0,0,0,0) 64%),
+    radial-gradient(1400px 900px at 50% 40%, #12020a 0%, #050307 65%, #030206 100%);
 }
 
-/* Nebula drift (behind everything) */
+/* ===== Ancient “brocade / key pattern” whisper (very low opacity) ===== */
 body::before{
   content:"";
   position:fixed;
-  inset:-20%;
+  inset:0;
   z-index:-3;
   pointer-events:none;
 
   background:
-    radial-gradient(900px 700px at 15% 25%, rgba(72,166,255,.18) 0%, transparent 65%),
-    radial-gradient(1100px 800px at 80% 30%, rgba(190,91,255,.14) 0%, transparent 70%),
-    radial-gradient(1000px 850px at 50% 80%, rgba(42,255,186,.10) 0%, transparent 70%);
+    /* subtle meander-like pattern */
+    repeating-linear-gradient(90deg,
+      rgba(255,215,120,.035) 0px,
+      rgba(255,215,120,.035) 1px,
+      rgba(0,0,0,0) 1px,
+      rgba(0,0,0,0) 22px
+    ),
+    repeating-linear-gradient(0deg,
+      rgba(255,215,120,.02) 0px,
+      rgba(255,215,120,.02) 1px,
+      rgba(0,0,0,0) 1px,
+      rgba(0,0,0,0) 28px
+    ),
+    /* drifting red haze */
+    radial-gradient(900px 700px at 20% 22%, rgba(180,20,40,.18) 0%, rgba(0,0,0,0) 68%),
+    radial-gradient(1100px 800px at 78% 28%, rgba(140,0,24,.16) 0%, rgba(0,0,0,0) 70%);
 
-  filter:blur(18px);
-  opacity:.9;
-  animation:nebulaDrift 22s ease-in-out infinite alternate;
+  filter:blur(12px);
+  opacity:.95;
+  animation:nebulaDrift 26s ease-in-out infinite alternate;
 }
 
 @keyframes nebulaDrift{
@@ -48,7 +61,7 @@ body::before{
   100%{ transform:translate3d(2%,1%,0) scale(1.06); }
 }
 
-/* Star field (behind everything) */
+/* ===== Stars (brighter) ===== */
 body::after{
   content:"";
   position:fixed;
@@ -57,20 +70,22 @@ body::after{
   pointer-events:none;
 
   background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.75) 0, transparent 60%),
-    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.45) 0, transparent 60%),
-    radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,.24) 0, transparent 60%);
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.75) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.45) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.60) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(2px 2px at 22% 28%, rgba(255,255,255,.30) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,.24) 0, rgba(255,255,255,0) 60%);
 
-  opacity:.75;
-  animation:starTwinkle 6.5s ease-in-out infinite alternate;
+  opacity:.80;
+  animation:starTwinkle 7.2s ease-in-out infinite alternate;
 }
 
 @keyframes starTwinkle{
   0%{ opacity:.55; filter:brightness(.95); }
-  100%{ opacity:.85; filter:brightness(1.15); }
+  100%{ opacity:.92; filter:brightness(1.20); }
 }
 
-/* Shooting stars (still behind content) */
+/* ===== Shooting stars ===== */
 .shooting-stars,
 .shooting-stars::before,
 .shooting-stars::after{
@@ -80,7 +95,6 @@ body::after{
   pointer-events:none;
   z-index:-1;
 }
-
 @keyframes shoot{
   0%{ transform:translate3d(-25vw,-25vh,0) rotate(20deg); opacity:0; }
   10%{ opacity:1; }
@@ -88,137 +102,82 @@ body::after{
   60%{ opacity:0; }
   100%{ transform:translate3d(120vw,120vh,0) rotate(20deg); opacity:0; }
 }
-
 .shooting-stars::before,
 .shooting-stars::after{
   position:absolute;
   width:260px;
   height:2px;
-  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.9), rgba(255,255,255,0));
+  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,235,200,.90), rgba(255,255,255,0));
   border-radius:999px;
-  filter:drop-shadow(0 0 8px rgba(255,255,255,.35));
+  filter:drop-shadow(0 0 10px rgba(255,200,120,.22));
   opacity:0;
 }
+.shooting-stars::before{ top:12%; left:-35%; animation:shoot 12s linear infinite; animation-delay:1.5s; }
+.shooting-stars::after{ top:40%; left:-45%; animation:shoot 16s linear infinite; animation-delay:5s; }
 
-.shooting-stars::before{
-  top:12%;
-  left:-35%;
-  animation:shoot 11s linear infinite;
-  animation-delay:1.5s;
-}
-
-.shooting-stars::after{
-  top:40%;
-  left:-45%;
-  animation:shoot 14s linear infinite;
-  animation-delay:5s;
-}
-
-/* =====================================================
-   GLOBAL LAYOUT
-===================================================== */
-
+/* ===== Global layout ===== */
 .page{
   min-height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
-
-  /* give the header guaranteed air */
   padding:56px 16px 96px;
-
   position:relative;
   z-index:1;
 }
 
-/* =====================================================
-   HEADER: ALWAYS ABOVE THE DIAMOND/STAGE
-===================================================== */
-
+/* Header always above stage */
 .h{
   text-align:center;
-  margin:0 0 22px;
-
+  margin-bottom:22px;
   position:relative;
-  z-index:1000;              /* FIX: always above stage */
-  pointer-events:auto;
+  z-index:1000;
 }
-
-.h *{
-  position:relative;
-  z-index:1001;              /* FIX: keep title/subtitle above */
-}
-
 .h h1{
   font-size:48px;
   font-weight:900;
   margin:0;
-  color:#eaf2f6;
+  color:#f4f4f4;
+  text-shadow:0 0 18px rgba(255,120,140,.18);
 }
-
 .h p{
   margin-top:10px;
-  opacity:.72;
-  color:rgba(234,242,246,.75);
-  font-size:18px;
+  opacity:.78;
+  color:rgba(242,242,242,.78);
 }
 
-/* =====================================================
-   STAGE: BELOW HEADER, NEVER OVER IT
-===================================================== */
-
+/* Stage under header */
 .stage{
   flex:1;
   display:flex;
   align-items:center;
   justify-content:center;
   width:100%;
-
-  /* FIX: ensure stage doesn't climb into header space */
   margin-top:6px;
-
   position:relative;
-  z-index:10;                /* below header (1000) */
+  z-index:10;
 }
 
-/* This prevents any branch.css z-index from eclipsing header */
-.platform,
-.platform::before,
-.platform::after,
-.diamond,
-.diamond::before,
-.diamond::after{
-  position:relative;
-  z-index:1;
-}
-
-/* =====================================================
-   FOOTER: VISIBLE ABOVE STAGE
-===================================================== */
-
+/* Footer always above plate */
 footer{
   text-align:center;
   letter-spacing:3px;
   font-size:12px;
-  opacity:.55;
+  opacity:.58;
   margin-top:26px;
-
   position:relative;
-  z-index:900;               /* below header, above stage */
-  color:rgba(234,242,246,.55);
+  z-index:900;
+  color:rgba(242,242,242,.70);
 }
 
-/* =====================================================
-   LINKS / BUTTON BASE
-===================================================== */
-
+/* Links */
 a{ color:inherit; text-decoration:none; }
 a:visited{ color:inherit; }
 a:hover{ text-decoration:none; }
 a:active{ text-decoration:none; }
 
-/* legacy nav (if any pages still have it) */
+/* Legacy nav buttons (if any page still has it) */
 .nav{
   display:flex;
   justify-content:center;
@@ -231,7 +190,7 @@ a:active{ text-decoration:none; }
 .nav a{
   padding:14px 22px;
   border-radius:18px;
-  background:rgba(255,255,255,.10);
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
   font-weight:900;
-  color:#eaf2f6;
 }

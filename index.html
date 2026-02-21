@@ -1,125 +1,206 @@
 <!-- =====================================================
      TNT: /index.html
-     ONE-TIME LANGUAGE CHOICE (PERMANENT)
-     Then choose LEARN or SHOP.
+     GEODIAMETRICS · ROOT SELECTOR (LANGUAGE + MODE ONCE)
+     Eliminates redundancy: language+mode chosen here, stored, then routed.
 ===================================================== -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Geodiametrics</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=20260221_0116"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=2001"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=2001"/>
+
+  <style>
+    body{ background:#05070c; }
+    body.theme-red{ }
+    .root-wrap{
+      width:min(980px,94vw);
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      align-items:center;
+    }
+    .root-hero{
+      text-align:center;
+      position:relative;
+      z-index:10;
+    }
+    .root-hero h1{
+      margin:0;
+      font-size:clamp(48px, 9vw, 84px);
+      font-weight:900;
+      letter-spacing:.01em;
+    }
+    .root-hero p{
+      margin:10px 0 0;
+      font-size:18px;
+      opacity:.75;
+    }
+
+    .selector{
+      width:min(720px,94vw);
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-top:8px;
+      position:relative;
+      z-index:10;
+    }
+
+    .sel{
+      display:block;
+      border-radius:22px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:0 24px 70px rgba(0,0,0,.45);
+      padding:18px 18px;
+      font-weight:900;
+      transition:transform .12s ease, filter .12s ease;
+    }
+    .sel:hover{ filter:brightness(1.05); }
+    .sel:active{ transform:translateY(1px); }
+
+    .sel .t{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:10px;
+      font-size:20px;
+      letter-spacing:.02em;
+    }
+    .sel .k{
+      font-size:12px;
+      letter-spacing:.14em;
+      opacity:.75;
+      font-weight:900;
+    }
+    .sel .d{
+      margin-top:8px;
+      font-size:14px;
+      line-height:1.45;
+      opacity:.78;
+      font-weight:700;
+    }
+
+    .sel.learn{ box-shadow:0 24px 70px rgba(0,0,0,.45), 0 0 26px rgba(72,166,255,.10); }
+    .sel.shop{ box-shadow:0 24px 70px rgba(0,0,0,.45), 0 0 26px rgba(245,210,120,.10); }
+    .sel.cn{   box-shadow:0 24px 70px rgba(0,0,0,.45), 0 0 28px rgba(210,46,60,.12); }
+
+    .helper{
+      width:min(720px,94vw);
+      border-radius:22px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;
+      opacity:.86;
+      font-size:14px;
+      line-height:1.55;
+      position:relative;
+      z-index:10;
+    }
+
+    .plate-wrap{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-top:8px;
+    }
+    .plate-wrap .platform{ width:min(420px,88vw); }
+
+    .note-row{
+      width:min(720px,94vw);
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      position:relative;
+      z-index:10;
+    }
+
+    /* Keep diamond plate behind content */
+    .stage{ margin-top:10px; }
+  </style>
 </head>
 
-<body>
-<div class="shooting-stars"></div>
+<body class="theme-red">
+  <div class="shooting-stars"></div>
 
-<div class="page">
-  <div class="h">
-    <h1>Geodiametrics</h1>
-    <p>Choose language once. Then choose learn or shop.</p>
-  </div>
+  <div class="page">
+    <div class="root-wrap">
 
-  <!-- Permanent language choice (stored) -->
-  <div class="pills">
-    <button class="pill red" id="lang-en" type="button">EN</button>
-    <button class="pill red" id="lang-zh" type="button">中文</button>
-    <span class="pill ghost" id="lang-status">Language: not set</span>
-  </div>
+      <div class="root-hero">
+        <h1>Geodiametrics</h1>
+        <p>Choose what you understand. No setup.</p>
+      </div>
 
-  <!-- Mode choice (intermittent) -->
-  <div class="acc">
-    <details>
-      <summary>
-        <div class="sum-left">
-          <div class="badge">L</div>
-          <div class="sum-title">
-            <b id="learn-title">LEARN</b>
-            <span id="learn-sub">Definitions · systems · methods</span>
-          </div>
-        </div>
-        <div class="chev"></div>
-      </summary>
-      <div class="panel">
-        <p id="learn-desc">Study mode uses formal structure and clear definitions.</p>
-        <div class="cta-row">
-          <a class="cta gold" id="go-learn" href="/learn/">Enter Learn</a>
-          <a class="cta" href="/home/">Go to Home</a>
+      <!-- ONE-TIME CHOICE: MODE + LANGUAGE -->
+      <div class="selector">
+        <a class="sel learn" href="/home/" data-mode="learn" data-lang="en">
+          <div class="t"><span>Learn</span><span class="k">EN</span></div>
+          <div class="d">Definitions · systems · methods</div>
+        </a>
+
+        <a class="sel shop" href="/home/" data-mode="shop" data-lang="en">
+          <div class="t"><span>Shop</span><span class="k">EN</span></div>
+          <div class="d">Products · programs · services</div>
+        </a>
+
+        <a class="sel learn cn" href="/home/" data-mode="learn" data-lang="zh">
+          <div class="t"><span>学习</span><span class="k">中文</span></div>
+          <div class="d">定义 · 系统 · 方法</div>
+        </a>
+
+        <a class="sel shop cn" href="/home/" data-mode="shop" data-lang="zh">
+          <div class="t"><span>购买</span><span class="k">中文</span></div>
+          <div class="d">产品 · 项目 · 服务</div>
+        </a>
+      </div>
+
+      <div class="helper">
+        This choice sets your default <strong>Language</strong> and <strong>Mode</strong>. You can switch later from the hub.
+      </div>
+
+      <!-- Optional: visual plate (non-interactive) -->
+      <div class="stage">
+        <div class="platform" aria-hidden="true">
+          <div class="diamond top" style="pointer-events:none;"><span>North<small>Language</small></span></div>
+          <div class="diamond right" style="pointer-events:none;"><span>East<small>Products</small></span></div>
+          <div class="diamond bottom" style="pointer-events:none;"><span>South<small>Gauges</small></span></div>
+          <div class="diamond left" style="pointer-events:none;"><span>West<small>Links</small></span></div>
         </div>
       </div>
-    </details>
 
-    <details>
-      <summary>
-        <div class="sum-left">
-          <div class="badge">S</div>
-          <div class="sum-title">
-            <b id="shop-title">SHOP</b>
-            <span id="shop-sub">Products · programs · services</span>
-          </div>
-        </div>
-        <div class="chev"></div>
-      </summary>
-      <div class="panel">
-        <p id="shop-desc">Shop mode uses outcome language and packaged offers.</p>
-        <div class="cta-row">
-          <a class="cta gold" id="go-shop" href="/shop/">Enter Shop</a>
-          <a class="cta" href="/home/">Go to Home</a>
-        </div>
+      <div class="note-row">
+        <a class="pill" href="/home/">Continue without setting</a>
+        <a class="pill" href="/links/">Links</a>
       </div>
-    </details>
+
+      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
+    </div>
   </div>
 
-  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-</div>
+  <script>
+    (function(){
+      // ONE-TIME selection stored here. Other pages can read it if needed.
+      function setPref(mode, lang){
+        try{
+          localStorage.setItem("geo.mode", mode);
+          localStorage.setItem("geo.lang", lang);
+          localStorage.setItem("geo.pref_set", "1");
+        }catch(e){}
+      }
 
-<script>
-(function(){
-  const KEY = "gd_lang"; // "en" | "zh"
-  const $ = (id)=>document.getElementById(id);
-
-  function setLang(lang){
-    localStorage.setItem(KEY, lang);
-    render();
-  }
-
-  function t(en, zh){
-    return (localStorage.getItem(KEY)==="zh") ? zh : en;
-  }
-
-  function render(){
-    const lang = localStorage.getItem(KEY);
-    $("lang-status").textContent = "Language: " + (lang ? (lang==="zh" ? "中文" : "EN") : "not set");
-
-    // Button emphasis
-    $("lang-en").style.opacity = (lang==="en") ? "1" : ".75";
-    $("lang-zh").style.opacity = (lang==="zh") ? "1" : ".75";
-
-    // Surface copy
-    document.querySelector(".h p").textContent =
-      t("Choose language once. Then choose learn or shop.",
-        "先选择语言（一次）。再选择学习或购买。");
-
-    $("learn-title").textContent = t("LEARN", "学习");
-    $("learn-sub").textContent   = t("Definitions · systems · methods", "定义 · 系统 · 方法");
-    $("learn-desc").textContent  = t("Study mode uses formal structure and clear definitions.",
-                                    "学习模式使用更正式的结构与清晰定义。");
-    $("go-learn").textContent    = t("Enter Learn", "进入学习");
-
-    $("shop-title").textContent  = t("SHOP", "购买");
-    $("shop-sub").textContent    = t("Products · programs · services", "产品 · 项目 · 服务");
-    $("shop-desc").textContent   = t("Shop mode uses outcome language and packaged offers.",
-                                    "购买模式使用结果导向与打包产品表达。");
-    $("go-shop").textContent     = t("Enter Shop", "进入购买");
-  }
-
-  $("lang-en").addEventListener("click", ()=>setLang("en"));
-  $("lang-zh").addEventListener("click", ()=>setLang("zh"));
-
-  render();
-})();
-</script>
+      document.querySelectorAll('a[data-mode][data-lang]').forEach(function(a){
+        a.addEventListener("click", function(){
+          setPref(a.getAttribute("data-mode"), a.getAttribute("data-lang"));
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

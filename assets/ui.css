@@ -1,93 +1,93 @@
-/* TNT: assets/ui.css (COSMIC BACKGROUND vFINAL — NEBULA MOTION + STAR GLISTEN + SHOOTING STARS)
-   NOTE: Requires <div class="shooting-stars"></div> in each page body (you already have it on Home; add to others). */
+/* TNT: assets/branch.css (UNDERGLOW ONLY — COLOR CASTS ON PLATE, NOT THROUGH TILE)
+   Replace ONLY the color/diamond shadow section with this block.
+   Keeps your geometry. Moves glow to plate beneath. */
 
-html,body{margin:0;padding:0;width:100%;height:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#eaf2f6;background:#05070c;overflow-x:hidden}
-body{position:relative;background:radial-gradient(1200px 800px at 50% 20%,#152532 0%,#0a141b 100%)}
-
-/* shared layout */
-.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 12px}
-.h{text-align:center;margin-bottom:12px}
-.h h1{font-size:48px;font-weight:900;margin:0}
-.h p{opacity:.72;margin-top:8px}
-.stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
-a{color:inherit;text-decoration:none}
-a:visited{color:inherit}
-a:hover{text-decoration:none}
-a:active{text-decoration:none}
-.nav{display:flex;justify-content:center;gap:12px;margin-top:16px;flex-wrap:wrap}
-.nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);font-weight:900}
-footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
-
-/* moving nebula layer */
-body::before{
-  content:"";
-  position:fixed;
-  inset:-22%;
-  pointer-events:none;
-  z-index:-3;
-  background:
-    radial-gradient(900px 700px at 18% 22%, rgba(72,166,255,.22) 0%, rgba(0,0,0,0) 62%),
-    radial-gradient(980px 780px at 78% 28%, rgba(190,91,255,.18) 0%, rgba(0,0,0,0) 64%),
-    radial-gradient(1050px 820px at 45% 78%, rgba(42,255,186,.12) 0%, rgba(0,0,0,0) 66%),
-    radial-gradient(1100px 900px at 55% 45%, rgba(255,170,70,.09) 0%, rgba(0,0,0,0) 68%);
-  filter:blur(14px);
-  opacity:.92;
-  animation:nebulaDrift 20s ease-in-out infinite alternate;
-  transform:translateZ(0);
-}
-@keyframes nebulaDrift{
-  0%{transform:translate3d(-1.6%,-1.0%,0) scale(1.02)}
-  100%{transform:translate3d(1.6%,1.1%,0) scale(1.07)}
-}
-
-/* starfield glisten (two layers via multi-gradients + twinkle) */
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:-2;
-  background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.75) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.50) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.62) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 80% 60%, rgba(255,255,255,.42) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 90% 15%, rgba(255,255,255,.58) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 15% 90%, rgba(255,255,255,.46) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(2px 2px at 22% 28%, rgba(255,255,255,.34) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(2px 2px at 62% 22%, rgba(255,255,255,.28) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,.26) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(3px 3px at 12% 62%, rgba(255,255,255,.20) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 48% 12%, rgba(255,255,255,.40) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 66% 86%, rgba(255,255,255,.44) 0, rgba(255,255,255,0) 60%);
-  opacity:.80;
-  animation:starTwinkle 6.4s ease-in-out infinite alternate;
-}
-@keyframes starTwinkle{
-  0%{opacity:.55;filter:brightness(.95)}
-  100%{opacity:.88;filter:brightness(1.20)}
-}
-
-/* shooting stars (two streaks) */
-.shooting-stars,.shooting-stars::before,.shooting-stars::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1}
-@keyframes shoot{
-  0%{transform:translate3d(-25vw,-25vh,0) rotate(20deg);opacity:0}
-  8%{opacity:1}
-  35%{opacity:1}
-  55%{opacity:0}
-  100%{transform:translate3d(120vw,120vh,0) rotate(20deg);opacity:0}
-}
-.shooting-stars::before,.shooting-stars::after{
+/* --- BASE TILE: NEUTRAL GLASS (NO COLOR IN FACE) --- */
+.diamond{
   position:absolute;
-  width:240px;
-  height:2px;
-  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.90), rgba(255,255,255,0));
-  border-radius:999px;
-  filter:drop-shadow(0 0 10px rgba(255,255,255,.35));
-  opacity:0;
+  width:42%;
+  height:42%;
+  transform:rotate(45deg);
+  border-radius:18px;
+  background:rgba(255,255,255,.14); /* neutral face */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:#eaf2f6;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    0 14px 34px rgba(0,0,0,.35); /* depth only */
+  backdrop-filter:blur(8px);
+  -webkit-tap-highlight-color:transparent;
+  transition:filter .15s ease,transform .15s ease;
 }
-.shooting-stars::before{top:12%;left:-35%;animation:shoot 10.5s linear infinite;animation-delay:1.0s}
-.shooting-stars::after{top:38%;left:-45%;animation:shoot 13.5s linear infinite;animation-delay:4.6s}
 
-/* ensure diamonds read cleanly over bright stars */
-.platform,.diamond{isolation:isolate}
+.diamond:hover{filter:brightness(1.05)}
+.diamond:active{filter:brightness(1.08);transform:rotate(45deg) translateY(1px)}
+
+.diamond span{
+  transform:rotate(-45deg);
+  text-align:center;
+  font-weight:900;
+  line-height:1.12;
+  letter-spacing:.02em;
+  text-shadow:0 2px 14px rgba(0,0,0,.55);
+}
+
+/* --- REMOVE COLORED RIM GLOW FROM TILE --- */
+.diamond.c-blue,
+.diamond.c-green,
+.diamond.c-amber,
+.diamond.c-purple{
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    0 14px 34px rgba(0,0,0,.35);
+}
+
+/* --- COLORED UNDERGLOW CAST ON PLATE BENEATH --- */
+/* This glow is BELOW the tile (z-index) and diffused outward */
+
+.diamond::after{
+  content:"";
+  position:absolute;
+  inset:-18%;
+  border-radius:26px;
+  transform:rotate(0deg); /* already rotated by parent */
+  z-index:-1; /* beneath tile */
+  opacity:.75;
+  filter:blur(28px);
+  pointer-events:none;
+}
+
+/* NORTH (blue-purple) */
+.diamond.c-blue::after{
+  background:radial-gradient(circle at 50% 50%,
+    rgba(120,160,255,.45) 0%,
+    rgba(90,120,255,.35) 30%,
+    rgba(0,0,0,0) 70%);
+}
+
+/* EAST (sunrise) */
+.diamond.c-green::after{
+  background:radial-gradient(circle at 50% 50%,
+    rgba(255,190,90,.45) 0%,
+    rgba(255,140,60,.35) 30%,
+    rgba(0,0,0,0) 70%);
+}
+
+/* SOUTH (green energy) */
+.diamond.c-amber::after{
+  background:radial-gradient(circle at 50% 50%,
+    rgba(70,255,170,.40) 0%,
+    rgba(40,200,140,.30) 30%,
+    rgba(0,0,0,0) 70%);
+}
+
+/* WEST (sunset violet) */
+.diamond.c-purple::after{
+  background:radial-gradient(circle at 50% 50%,
+    rgba(200,90,255,.45) 0%,
+    rgba(255,120,140,.35) 30%,
+    rgba(0,0,0,0) 70%);
+}

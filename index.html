@@ -1,206 +1,112 @@
-<!-- =====================================================
-     TNT: /index.html
-     GEODIAMETRICS · ROOT SELECTOR (LANGUAGE + MODE ONCE)
-     Eliminates redundancy: language+mode chosen here, stored, then routed.
-===================================================== -->
+<!-- TNT: /index.html (ROOT SELECTOR ONLY — language + mode chosen ONCE) -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Geodiametrics</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Geodiametrics · Root</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=2001"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=2001"/>
+<link rel="stylesheet" href="/assets/ui.css?v=2001"/>
+<link rel="stylesheet" href="/assets/branch.css?v=2001"/>
 
-  <style>
-    body{ background:#05070c; }
-    body.theme-red{ }
-    .root-wrap{
-      width:min(980px,94vw);
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-      align-items:center;
-    }
-    .root-hero{
-      text-align:center;
-      position:relative;
-      z-index:10;
-    }
-    .root-hero h1{
-      margin:0;
-      font-size:clamp(48px, 9vw, 84px);
-      font-weight:900;
-      letter-spacing:.01em;
-    }
-    .root-hero p{
-      margin:10px 0 0;
-      font-size:18px;
-      opacity:.75;
-    }
+<style>
+/* Root-only: no redundant nav, no door, no extra lenses */
+.root-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:18px}
+.root-hero{text-align:left}
+.root-hero h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
+.root-hero p{margin:10px 0 0;font-size:20px;opacity:.75}
+.root-note{font-size:18px;line-height:1.6;opacity:.85}
 
-    .selector{
-      width:min(720px,94vw);
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-      margin-top:8px;
-      position:relative;
-      z-index:10;
-    }
+.select-grid{
+  width:min(780px,94vw);
+  margin-top:6px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+@media (max-width:640px){
+  .select-grid{grid-template-columns:1fr}
+}
+.sel{
+  border-radius:22px;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), 0 18px 44px rgba(0,0,0,.45);
+  padding:18px 18px;
+  cursor:pointer;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.sel:hover{filter:brightness(1.05)}
+.sel:active{transform:translateY(1px)}
+.sel .t{font-weight:900;font-size:20px}
+.sel .s{margin-top:6px;opacity:.75;font-size:15px;letter-spacing:.06em}
+.sel.learn{background:rgba(255,255,255,.06)}
+.sel.shop{background:rgba(255,255,255,.06)}
+.badge{display:inline-block;margin-left:10px;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.10);font-weight:800;font-size:12px;letter-spacing:.12em;opacity:.9}
 
-    .sel{
-      display:block;
-      border-radius:22px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:0 24px 70px rgba(0,0,0,.45);
-      padding:18px 18px;
-      font-weight:900;
-      transition:transform .12s ease, filter .12s ease;
-    }
-    .sel:hover{ filter:brightness(1.05); }
-    .sel:active{ transform:translateY(1px); }
-
-    .sel .t{
-      display:flex;
-      align-items:baseline;
-      justify-content:space-between;
-      gap:10px;
-      font-size:20px;
-      letter-spacing:.02em;
-    }
-    .sel .k{
-      font-size:12px;
-      letter-spacing:.14em;
-      opacity:.75;
-      font-weight:900;
-    }
-    .sel .d{
-      margin-top:8px;
-      font-size:14px;
-      line-height:1.45;
-      opacity:.78;
-      font-weight:700;
-    }
-
-    .sel.learn{ box-shadow:0 24px 70px rgba(0,0,0,.45), 0 0 26px rgba(72,166,255,.10); }
-    .sel.shop{ box-shadow:0 24px 70px rgba(0,0,0,.45), 0 0 26px rgba(245,210,120,.10); }
-    .sel.cn{   box-shadow:0 24px 70px rgba(0,0,0,.45), 0 0 28px rgba(210,46,60,.12); }
-
-    .helper{
-      width:min(720px,94vw);
-      border-radius:22px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      padding:14px 16px;
-      opacity:.86;
-      font-size:14px;
-      line-height:1.55;
-      position:relative;
-      z-index:10;
-    }
-
-    .plate-wrap{
-      width:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      margin-top:8px;
-    }
-    .plate-wrap .platform{ width:min(420px,88vw); }
-
-    .note-row{
-      width:min(720px,94vw);
-      display:flex;
-      gap:10px;
-      justify-content:center;
-      flex-wrap:wrap;
-      position:relative;
-      z-index:10;
-    }
-
-    /* Keep diamond plate behind content */
-    .stage{ margin-top:10px; }
-  </style>
+.footer-pad{margin-top:12px}
+</style>
 </head>
 
-<body class="theme-red">
-  <div class="shooting-stars"></div>
+<body>
+<div class="shooting-stars"></div>
 
-  <div class="page">
-    <div class="root-wrap">
+<div class="page">
+  <div class="root-wrap">
 
-      <div class="root-hero">
-        <h1>Geodiametrics</h1>
-        <p>Choose what you understand. No setup.</p>
-      </div>
-
-      <!-- ONE-TIME CHOICE: MODE + LANGUAGE -->
-      <div class="selector">
-        <a class="sel learn" href="/home/" data-mode="learn" data-lang="en">
-          <div class="t"><span>Learn</span><span class="k">EN</span></div>
-          <div class="d">Definitions · systems · methods</div>
-        </a>
-
-        <a class="sel shop" href="/home/" data-mode="shop" data-lang="en">
-          <div class="t"><span>Shop</span><span class="k">EN</span></div>
-          <div class="d">Products · programs · services</div>
-        </a>
-
-        <a class="sel learn cn" href="/home/" data-mode="learn" data-lang="zh">
-          <div class="t"><span>学习</span><span class="k">中文</span></div>
-          <div class="d">定义 · 系统 · 方法</div>
-        </a>
-
-        <a class="sel shop cn" href="/home/" data-mode="shop" data-lang="zh">
-          <div class="t"><span>购买</span><span class="k">中文</span></div>
-          <div class="d">产品 · 项目 · 服务</div>
-        </a>
-      </div>
-
-      <div class="helper">
-        This choice sets your default <strong>Language</strong> and <strong>Mode</strong>. You can switch later from the hub.
-      </div>
-
-      <!-- Optional: visual plate (non-interactive) -->
-      <div class="stage">
-        <div class="platform" aria-hidden="true">
-          <div class="diamond top" style="pointer-events:none;"><span>North<small>Language</small></span></div>
-          <div class="diamond right" style="pointer-events:none;"><span>East<small>Products</small></span></div>
-          <div class="diamond bottom" style="pointer-events:none;"><span>South<small>Gauges</small></span></div>
-          <div class="diamond left" style="pointer-events:none;"><span>West<small>Links</small></span></div>
-        </div>
-      </div>
-
-      <div class="note-row">
-        <a class="pill" href="/home/">Continue without setting</a>
-        <a class="pill" href="/links/">Links</a>
-      </div>
-
-      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
+    <div class="root-hero">
+      <h1>Geodiametrics</h1>
+      <p>Choose what you understand. No setup.</p>
     </div>
+
+    <div class="root-note">
+      One choice sets the surface language and delivery style. You can switch later inside the hub.
+    </div>
+
+    <div class="select-grid" role="group" aria-label="Entry selection">
+      <div class="sel learn" data-lang="en" data-mode="learn">
+        <div class="t">Learn <span class="badge">EN</span></div>
+        <div class="s">Definitions · systems · methods</div>
+      </div>
+
+      <div class="sel shop" data-lang="en" data-mode="shop">
+        <div class="t">Shop <span class="badge">EN</span></div>
+        <div class="s">Products · programs · services</div>
+      </div>
+
+      <div class="sel learn" data-lang="zh" data-mode="learn">
+        <div class="t">学习 <span class="badge">中文</span></div>
+        <div class="s">定义 · 系统 · 方法</div>
+      </div>
+
+      <div class="sel shop" data-lang="zh" data-mode="shop">
+        <div class="t">购买 <span class="badge">中文</span></div>
+        <div class="s">产品 · 项目 · 服务</div>
+      </div>
+    </div>
+
+    <div class="footer-pad">
+      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </div>
+
   </div>
+</div>
 
-  <script>
-    (function(){
-      // ONE-TIME selection stored here. Other pages can read it if needed.
-      function setPref(mode, lang){
-        try{
-          localStorage.setItem("geo.mode", mode);
-          localStorage.setItem("geo.lang", lang);
-          localStorage.setItem("geo.pref_set", "1");
-        }catch(e){}
-      }
+<script>
+(() => {
+  const go = (lang, mode) => {
+    try{
+      localStorage.setItem("geo.lang", lang);   // "en" | "zh"
+      localStorage.setItem("geo.mode", mode);   // "learn" | "shop"
+      localStorage.setItem("geo.root_set", String(Date.now()));
+    }catch(e){}
+    location.href = "/home/";
+  };
 
-      document.querySelectorAll('a[data-mode][data-lang]').forEach(function(a){
-        a.addEventListener("click", function(){
-          setPref(a.getAttribute("data-mode"), a.getAttribute("data-lang"));
-        });
-      });
-    })();
-  </script>
+  document.querySelectorAll(".sel").forEach(el => {
+    el.addEventListener("click", () => go(el.dataset.lang, el.dataset.mode));
+  });
+})();
+</script>
 </body>
 </html>

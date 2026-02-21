@@ -1,133 +1,204 @@
+<!-- ============================
+TNT: /index.html
+REPLACE ENTIRE FILE
+Purpose: ONE-TIME language fork only.
+Sets localStorage.lang = "en" | "zh"
+Then routes to /door/
+============================ -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Geodiametrics</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Welcome · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=9001"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=2001"/>
 
-<style>
-/* Root: single-question language chooser */
-body{
-  background:
-    radial-gradient(1200px 800px at 50% 0%, rgba(160,20,20,.55) 0%, rgba(40,0,0,.65) 40%, #05070c 100%);
-}
-.shell{
-  width:min(920px,94vw);
-  margin:0 auto;
-}
-.hero{
-  text-align:left;
-  margin-top:10px;
-}
-.hero h1{
-  margin:0;
-  font-size: clamp(44px, 10vw, 74px);
-  font-weight:900;
-  letter-spacing:.01em;
-}
-.hero p{
-  margin:12px 0 0;
-  opacity:.78;
-  font-size:18px;
-}
-.card{
-  margin-top:22px;
-  border-radius:28px;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 26px 70px rgba(0,0,0,.60);
-  padding:22px;
-}
-.q{
-  font-size:20px;
-  font-weight:900;
-  letter-spacing:.10em;
-  opacity:.9;
-  margin:0 0 14px;
-}
-.row{
-  display:flex;
-  gap:14px;
-  flex-wrap:wrap;
-}
-.pick{
-  flex:1;
-  min-width:240px;
-  border-radius:22px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.14);
-  padding:18px 18px;
-  cursor:pointer;
-  user-select:none;
-}
-.pick:hover{ background:rgba(255,255,255,.12); }
-.pick .t{
-  font-weight:900;
-  font-size:22px;
-  letter-spacing:.06em;
-}
-.pick .s{
-  margin-top:8px;
-  opacity:.78;
-}
-.note{
-  margin-top:16px;
-  opacity:.72;
-  font-size:14px;
-  line-height:1.5;
-}
-</style>
+  <style>
+    :root{
+      --bg0:#05070c;
+      --bg1:#24060a;
+      --bg2:#4a0a10;
+      --glass:rgba(255,255,255,.06);
+      --glass2:rgba(255,255,255,.09);
+      --line:rgba(255,255,255,.10);
+      --text:#eaf2f6;
+      --muted:rgba(234,242,246,.72);
+      --gold:rgba(255,210,120,.55);
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(1200px 800px at 50% 18%, rgba(140,20,30,.55) 0%, rgba(0,0,0,0) 55%),
+        radial-gradient(1200px 900px at 50% 18%, var(--bg2) 0%, var(--bg1) 45%, var(--bg0) 100%);
+      overflow-x:hidden;
+    }
+    .page{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      padding:40px 16px 36px;
+      gap:18px;
+      position:relative;
+      z-index:1;
+    }
+    .hero{
+      width:min(980px,94vw);
+      text-align:left;
+    }
+    .hero h1{
+      margin:0;
+      font-size:clamp(44px,8vw,72px);
+      font-weight:950;
+      letter-spacing:.01em;
+    }
+    .hero p{
+      margin:10px 0 0;
+      font-size:clamp(16px,3.2vw,22px);
+      color:var(--muted);
+      line-height:1.35;
+    }
+    .panel{
+      width:min(980px,94vw);
+      border-radius:26px;
+      background:var(--glass);
+      box-shadow:inset 0 0 0 1px var(--line), 0 28px 90px rgba(0,0,0,.65);
+      padding:18px;
+      backdrop-filter: blur(14px);
+    }
+    .panel h2{
+      margin:0 0 10px;
+      font-size:14px;
+      letter-spacing:.22em;
+      opacity:.85;
+    }
+    .choices{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+    .btn{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      width:100%;
+      border-radius:20px;
+      padding:18px 18px;
+      background:rgba(0,0,0,.22);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      color:var(--text);
+      text-decoration:none;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .btn:active{transform:translateY(1px); filter:brightness(1.05)}
+    .left{
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .title{
+      font-size:20px;
+      font-weight:900;
+      letter-spacing:.06em;
+    }
+    .sub{
+      font-size:14px;
+      color:rgba(234,242,246,.68);
+    }
+    .pill{
+      min-width:64px;
+      text-align:center;
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      font-weight:850;
+      letter-spacing:.14em;
+      opacity:.95;
+    }
+    .note{
+      margin-top:12px;
+      font-size:14px;
+      color:rgba(234,242,246,.70);
+      line-height:1.45;
+    }
+    footer{
+      width:min(980px,94vw);
+      margin-top:auto;
+      text-align:center;
+      letter-spacing:3px;
+      font-size:12px;
+      opacity:.55;
+    }
+    /* subtle star specks */
+    body::after{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:0;
+      background-image:
+        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.55) 0, rgba(255,255,255,0) 60%),
+        radial-gradient(1px 1px at 72% 26%, rgba(255,255,255,.35) 0, rgba(255,255,255,0) 60%),
+        radial-gradient(2px 2px at 42% 72%, rgba(255,255,255,.20) 0, rgba(255,255,255,0) 60%);
+      opacity:.55;
+    }
+  </style>
 </head>
 
 <body>
-<div class="shooting-stars"></div>
-
-<div class="page">
-  <div class="shell">
-
+  <div class="page">
     <div class="hero">
       <h1>Welcome</h1>
-      <p>Choose a language. This choice applies to the entire site.</p>
+      <p>Choose your language once. Everything after this stays in that language.</p>
     </div>
 
-    <div class="card">
-      <div class="q">CHOOSE LANGUAGE</div>
+    <div class="panel">
+      <h2>LANGUAGE · ONE TIME</h2>
 
-      <div class="row">
-        <div class="pick" id="pickEn" role="button" tabindex="0">
-          <div class="t">English</div>
-          <div class="s">Proceed in English.</div>
-        </div>
+      <div class="choices">
+        <a class="btn" href="/door/" data-lang="en" aria-label="Enter in English">
+          <div class="left">
+            <div class="title">English</div>
+            <div class="sub">Proceed in English.</div>
+          </div>
+          <div class="pill">EN</div>
+        </a>
 
-        <div class="pick" id="pickZh" role="button" tabindex="0">
-          <div class="t">中文</div>
-          <div class="s">使用简体中文进入。</div>
-        </div>
+        <a class="btn" href="/door/" data-lang="zh" aria-label="使用中文进入">
+          <div class="left">
+            <div class="title">中文</div>
+            <div class="sub">使用简体中文进入。</div>
+          </div>
+          <div class="pill">中文</div>
+        </a>
       </div>
 
       <div class="note">
-        One-time choice. You won’t be asked again.
+        No setup. No account. No repeated prompts.
       </div>
     </div>
 
-    <footer style="margin-top:22px;">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
+    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
   </div>
-</div>
 
-<script>
-(function(){
-  function setLang(lang){
-    localStorage.setItem("GD_LANG", lang);   // "en" | "zh"
-    if(!localStorage.getItem("GD_DEPTH")) localStorage.setItem("GD_DEPTH","shop");
-    window.location.href = "/door/";
-  }
-  document.getElementById("pickEn").onclick = () => setLang("en");
-  document.getElementById("pickZh").onclick = () => setLang("zh");
-})();
-</script>
-
+  <script>
+    (function(){
+      const links = document.querySelectorAll('[data-lang]');
+      links.forEach(a=>{
+        a.addEventListener('click', (e)=>{
+          const lang = a.getAttribute('data-lang');
+          try{
+            localStorage.setItem('geo_lang', lang);
+          }catch(_){}
+          // allow normal navigation to /door/
+        }, {passive:true});
+      });
+    })();
+  </script>
 </body>
 </html>

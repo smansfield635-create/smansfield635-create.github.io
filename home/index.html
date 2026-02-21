@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Home</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=9001"/>
-<link rel="stylesheet" href="/assets/branch.css?v=9001"/>
+<link rel="stylesheet" href="/assets/ui.css?v=9002"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9002"/>
 
 <style>
 body{
@@ -15,6 +15,7 @@ body{
 }
 .h{ position:relative; z-index:10; }
 .stage{ position:relative; z-index:2; }
+
 .topPanel{
   width:min(900px,94vw);
   border-radius:24px;
@@ -71,13 +72,56 @@ details.route > summary{
   justify-content:space-between;
 }
 details.route > summary::-webkit-details-marker{display:none;}
+
 .routeBody{
   padding:12px 14px 16px;
-  opacity:.86;
+  opacity:.92;
   line-height:1.55;
 }
-.routeBody ul{ margin:10px 0 0 18px; }
-.routeBody li{ margin:6px 0; }
+
+.gridBtns{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.qbtn{
+  padding:10px 12px;
+  border-radius:14px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  font-weight:900;
+  cursor:pointer;
+  text-decoration:none;
+  color:inherit;
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+}
+.qbtn:hover{ background:rgba(255,255,255,.12); }
+
+.kv{
+  margin-top:10px;
+  border-radius:14px;
+  padding:12px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.08);
+}
+.kv .k{ font-weight:900; letter-spacing:.06em; opacity:.9; }
+.kv .v{ opacity:.85; margin-top:6px; }
+
+.ul{
+  margin:10px 0 0 18px;
+}
+.ul li{ margin:6px 0; }
+.ul li ul{ margin-top:6px; margin-left:18px; opacity:.92; }
+.ul li ul li{ margin:4px 0; }
+
+.hr{
+  height:1px;
+  background:rgba(255,255,255,.08);
+  margin:14px 0;
+}
 </style>
 </head>
 
@@ -88,7 +132,7 @@ details.route > summary::-webkit-details-marker{display:none;}
 
   <div class="h">
     <h1 id="hTitle">Home</h1>
-    <p id="hSub">Compass hub.</p>
+    <p id="hSub">Compass hub · choose a route.</p>
   </div>
 
   <!-- Quadrant routes (NW/NE/SW/SE) -->
@@ -143,7 +187,7 @@ details.route > summary::-webkit-details-marker{display:none;}
 <script>
 (function(){
   const lang = localStorage.getItem("GD_LANG") || "en";
-  const depth = localStorage.getItem("GD_DEPTH") || "shop";
+  const depth = localStorage.getItem("GD_DEPTH") || "shop"; // shop | learn
 
   const copy = {
     en:{
@@ -152,46 +196,340 @@ details.route > summary::-webkit-details-marker{display:none;}
       mode:"MODE: " + (depth === "shop" ? "SHOP (surface)" : "LEARN (deep)"),
       door:"Door",
       root:"Root",
+
       nw:"NORTHWEST",
       ne:"NORTHEAST",
       sw:"SOUTHWEST",
       se:"SOUTHEAST",
+
       plate:{ n:"N", n2:"Laws", e:"E", e2:"Products", s:"S", s2:"Gauges", w:"W", w2:"Links" },
       miniL:"ROOT",
       miniR:"RGSC",
+
+      // ROUTE CONTENT (links only to existing pages)
       routes:{
-        nw_shop:["SSG + Grammar","DOT.GRID index","Acronyms overview","Definitions index"],
-        nw_learn:["SSG (full spec)","Diamond grammar (rules)","DOT.GRID (256-state)","Acronyms & glossary (pillars)","Certification tracks"],
-        ne_shop:["Execution surfaces list","Example gallery","Downloadables index","Portals list"],
-        ne_learn:["Execution surfaces (apps/portals)","Workflows + receipts","Examples (how to use)","Packaged outputs (PDFs)","Replay & verification"],
-        sw_shop:["Gauges list","Diagnostics list","Rules summary","Return protocol"],
-        sw_learn:["Gauges (measurement)","Diagnostics (classification)","Rules (navigation + integrity)","Return protocol (hub-first)","Audit + falsification"],
-        se_shop:["OSF","ORCID","Contact","External references"],
-        se_learn:["OSF (projects + preprints)","ORCID (identity)","Contact (direct)","Reference map","Attribution + licenses"]
+        nw:{
+          shop:{
+            lead:"Definitions · language · structure.",
+            buttons:[
+              ["Open Laws","/laws/"],
+              ["Open Categories","/laws/categories/"],
+              ["Open Links (glossary/IDs)","/links/"],
+              ["Open RGSC","/rgsc/"]
+            ]
+          },
+          learn:{
+            lead:"Definitions · language · structure.",
+            blocks:[
+              ["SSG / Grammar / DOT.GRID",[
+                "SSG: constraint-based structure language (spec + examples).",
+                "Diamond grammar: four routes, one choice at a time.",
+                "DOT.GRID: 256-state indexing & replay-safe routing."
+              ]],
+              ["Acronyms & glossary",[
+                "Core acronyms (OSF, ORCID, RGSC, DOT.GRID, SSG).",
+                "Operational terms (route, hub, return protocol, receipt).",
+                "Consistency rules: same word, same meaning across the site."
+              ]],
+              ["Where this lives",[
+                "Laws → Categories (definitions & branch grammar).",
+                "Links (identity anchors, OSF/ORCID, references).",
+                "RGSC (governance receipts & signed routing surfaces)."
+              ]]
+            ],
+            buttons:[
+              ["Go: Laws","/laws/"],
+              ["Go: Categories","/laws/categories/"],
+              ["Go: Links","/links/"],
+              ["Go: RGSC","/rgsc/"]
+            ]
+          }
+        },
+
+        ne:{
+          shop:{
+            lead:"Execution · surfaces · examples.",
+            buttons:[
+              ["Open Products","/products/"],
+              ["Open Diagnostic","/diagnostic/"],
+              ["Open Gauges","/gauges/"],
+              ["Open RGSC","/rgsc/"]
+            ]
+          },
+          learn:{
+            lead:"Execution · surfaces · examples.",
+            blocks:[
+              ["Execution surfaces",[
+                "Apps / portals are the user-facing instruments.",
+                "Each surface maps to a route and emits receipts/logs.",
+                "Surfaces stay navigable even while content evolves."
+              ]],
+              ["Workflows & receipts",[
+                "Receipts prove what happened (ack/resolve/reject).",
+                "Replay-safe: same inputs reproduce the same outputs.",
+                "Return protocol: hub-first navigation prevents drift."
+              ]],
+              ["Examples & outputs",[
+                "Examples show how to use the system end-to-end.",
+                "Packaged outputs: PDFs, drills, checklists, exports.",
+                "Diagnostics are demonstrations of the rules in action."
+              ]]
+            ],
+            buttons:[
+              ["Go: Products","/products/"],
+              ["Go: Diagnostic","/diagnostic/"],
+              ["Go: Gauges","/gauges/"],
+              ["Go: RGSC","/rgsc/"]
+            ]
+          }
+        },
+
+        sw:{
+          shop:{
+            lead:"Measurement · diagnostics · rules.",
+            buttons:[
+              ["Open Gauges","/gauges/"],
+              ["Open Diagnostic","/diagnostic/"],
+              ["Open Laws","/laws/"],
+              ["Open Categories","/laws/categories/"]
+            ]
+          },
+          learn:{
+            lead:"Measurement · diagnostics · rules.",
+            blocks:[
+              ["Gauges (measurement instruments)",[
+                "Measurement is classification under constraint.",
+                "Gauges align language → evidence → outcome.",
+                "Stable rules; evolving content."
+              ]],
+              ["Diagnostics (how to verify)",[
+                "Diagnostics are quick audits of structure & coherence.",
+                "They surface conflicts, gaps, and return paths.",
+                "They prevent ‘multi-tab drift’ inside a branch."
+              ]],
+              ["Rules (navigation integrity)",[
+                "One choice at a time.",
+                "Return to hub if incomplete.",
+                "Same grammar everywhere: predictable traversal."
+              ]]
+            ],
+            buttons:[
+              ["Go: Gauges","/gauges/"],
+              ["Go: Diagnostic","/diagnostic/"],
+              ["Go: Laws","/laws/"],
+              ["Go: Categories","/laws/categories/"]
+            ]
+          }
+        },
+
+        se:{
+          shop:{
+            lead:"Identity · references · links.",
+            buttons:[
+              ["Open Links","/links/"],
+              ["Open Contact","/contact/"],
+              ["Open Root","/"],
+              ["Open Home","/home/"]
+            ]
+          },
+          learn:{
+            lead:"Identity · references · links.",
+            blocks:[
+              ["Identity anchors",[
+                "ORCID: researcher identity anchor.",
+                "OSF: project registry & public research surface.",
+                "Contact: direct channel."
+              ]],
+              ["Reference map",[
+                "Links page holds external references (stable).",
+                "Use it to verify identity & provenance.",
+                "Use it to find canonical entry points."
+              ]],
+              ["Operational note",[
+                "Identity anchors are not marketing—just verification.",
+                "Everything is navigated with the same route grammar.",
+                "If uncertain: return to Home and choose again."
+              ]]
+            ],
+            buttons:[
+              ["Go: Links","/links/"],
+              ["Go: Contact","/contact/"],
+              ["Go: Root","/"],
+              ["Go: Home","/home/"]
+            ]
+          }
+        }
       }
     },
+
     zh:{
       home:"主页",
       sub:"罗盘枢纽 · 选择一条路径。",
       mode:"模式：" + (depth === "shop" ? "浏览（表层）" : "学习（深入）"),
       door:"入口",
       root:"根页",
+
       nw:"西北",
       ne:"东北",
       sw:"西南",
       se:"东南",
+
       plate:{ n:"N", n2:"法则", e:"E", e2:"产品", s:"S", s2:"量表", w:"W", w2:"链接" },
       miniL:"根页",
       miniR:"RGSC",
+
       routes:{
-        nw_shop:["SSG + 语法","DOT.GRID 索引","缩略词概览","定义索引"],
-        nw_learn:["SSG（完整规范）","菱形语法（规则）","DOT.GRID（256态）","缩略词与术语（分柱）","认证路径"],
-        ne_shop:["执行界面列表","示例库","可下载目录","入口列表"],
-        ne_learn:["执行界面（应用/门户）","流程 + 回执","示例（怎么用）","打包输出（PDF）","回放与验证"],
-        sw_shop:["量表列表","诊断列表","规则摘要","返回协议"],
-        sw_learn:["量表（测量）","诊断（分类）","规则（导航+完整性）","返回协议（枢纽优先）","审计与证伪"],
-        se_shop:["OSF","ORCID","联系","外部参考"],
-        se_learn:["OSF（项目+预印本）","ORCID（身份）","联系（直达）","参考地图","署名与许可"]
+        nw:{
+          shop:{
+            lead:"定义 · 语言 · 结构。",
+            buttons:[
+              ["进入：法则","/laws/"],
+              ["进入：分类","/laws/categories/"],
+              ["进入：链接（术语/身份）","/links/"],
+              ["进入：RGSC","/rgsc/"]
+            ]
+          },
+          learn:{
+            lead:"定义 · 语言 · 结构。",
+            blocks:[
+              ["SSG / 语法 / DOT.GRID",[
+                "SSG：用于表达结构与约束的语言（规范+示例）。",
+                "菱形语法：四条路线，一次只选一条。",
+                "DOT.GRID：256态索引与可回放路由。"
+              ]],
+              ["缩略词与术语",[
+                "核心缩略词（OSF、ORCID、RGSC、DOT.GRID、SSG）。",
+                "操作术语（路线、枢纽、返回协议、回执）。",
+                "一致性规则：同一词在全站含义不变。"
+              ]],
+              ["内容位置",[
+                "法则→分类（定义与分支语法）。",
+                "链接（身份锚点、OSF/ORCID、参考）。",
+                "RGSC（治理回执与签名路由）。"
+              ]]
+            ],
+            buttons:[
+              ["去：法则","/laws/"],
+              ["去：分类","/laws/categories/"],
+              ["去：链接","/links/"],
+              ["去：RGSC","/rgsc/"]
+            ]
+          }
+        },
+
+        ne:{
+          shop:{
+            lead:"执行 · 界面 · 示例。",
+            buttons:[
+              ["进入：产品","/products/"],
+              ["进入：诊断","/diagnostic/"],
+              ["进入：量表","/gauges/"],
+              ["进入：RGSC","/rgsc/"]
+            ]
+          },
+          learn:{
+            lead:"执行 · 界面 · 示例。",
+            blocks:[
+              ["执行界面",[
+                "应用/门户是用户可操作的工具面。",
+                "界面映射到路线，并生成回执/日志。",
+                "内容更新不影响导航稳定。"
+              ]],
+              ["流程与回执",[
+                "回执证明发生了什么（确认/解决/拒绝）。",
+                "可回放：同输入→同输出。",
+                "返回协议：枢纽优先，防止漂移。"
+              ]],
+              ["示例与输出",[
+                "示例展示从头到尾怎么用。",
+                "打包输出：PDF、练习、清单、导出。",
+                "诊断是规则的现场演示。"
+              ]]
+            ],
+            buttons:[
+              ["去：产品","/products/"],
+              ["去：诊断","/diagnostic/"],
+              ["去：量表","/gauges/"],
+              ["去：RGSC","/rgsc/"]
+            ]
+          }
+        },
+
+        sw:{
+          shop:{
+            lead:"测量 · 诊断 · 规则。",
+            buttons:[
+              ["进入：量表","/gauges/"],
+              ["进入：诊断","/diagnostic/"],
+              ["进入：法则","/laws/"],
+              ["进入：分类","/laws/categories/"]
+            ]
+          },
+          learn:{
+            lead:"测量 · 诊断 · 规则。",
+            blocks:[
+              ["量表（测量工具）",[
+                "测量＝在约束下做分类。",
+                "量表把语言→证据→结果对齐。",
+                "规则稳定，内容可迭代。"
+              ]],
+              ["诊断（如何验证）",[
+                "诊断是结构与一致性的快速审计。",
+                "暴露冲突、缺口与返回路径。",
+                "防止在分支内多标签漂移。"
+              ]],
+              ["规则（导航完整性）",[
+                "一次只选一个。",
+                "不完整就回到枢纽。",
+                "全站同语法：可预测 traversal。"
+              ]]
+            ],
+            buttons:[
+              ["去：量表","/gauges/"],
+              ["去：诊断","/diagnostic/"],
+              ["去：法则","/laws/"],
+              ["去：分类","/laws/categories/"]
+            ]
+          }
+        },
+
+        se:{
+          shop:{
+            lead:"身份 · 参考 · 链接。",
+            buttons:[
+              ["进入：链接","/links/"],
+              ["进入：联系","/contact/"],
+              ["进入：根页","/"],
+              ["进入：主页","/home/"]
+            ]
+          },
+          learn:{
+            lead:"身份 · 参考 · 链接。",
+            blocks:[
+              ["身份锚点",[
+                "ORCID：研究者身份锚点。",
+                "OSF：项目注册与公开研究面。",
+                "联系：直达渠道。"
+              ]],
+              ["参考地图",[
+                "链接页保存外部参考（稳定）。",
+                "用于验证身份与来源。",
+                "用于找到规范入口。"
+              ]],
+              ["操作说明",[
+                "身份锚点不是营销，只是验证。",
+                "全站同路线语法。",
+                "不确定就回主页重新选择。"
+              ]]
+            ],
+            buttons:[
+              ["去：链接","/links/"],
+              ["去：联系","/contact/"],
+              ["去：根页","/"],
+              ["去：主页","/home/"]
+            ]
+          }
+        }
       }
     }
   }[lang];
@@ -213,13 +551,40 @@ details.route > summary::-webkit-details-marker{display:none;}
   document.getElementById("rSWt").textContent = copy.sw;
   document.getElementById("rSEt").textContent = copy.se;
 
-  const listHtml = (items)=> "<ul>" + items.map(x=>"<li>"+x+"</li>").join("") + "</ul>";
-  const depthKey = (depth === "shop") ? "shop" : "learn";
+  // Build route bodies
+  function btnRow(btns){
+    return '<div class="gridBtns">' + btns.map(b=>{
+      const label=b[0], href=b[1];
+      return '<a class="qbtn" href="'+href+'">➜ '+label+'</a>';
+    }).join('') + '</div>';
+  }
+  function learnBlocks(blocks){
+    return blocks.map(bl=>{
+      const title=bl[0], items=bl[1];
+      return '<div class="kv"><div class="k">'+title+'</div><div class="v"><ul class="ul">'+
+        items.map(x=>'<li>'+x+'</li>').join('')+
+      '</ul></div></div>';
+    }).join('<div class="hr"></div>');
+  }
 
-  document.getElementById("rNWb").innerHTML = listHtml(copy.routes["nw_"+depthKey]);
-  document.getElementById("rNEb").innerHTML = listHtml(copy.routes["ne_"+depthKey]);
-  document.getElementById("rSWb").innerHTML = listHtml(copy.routes["sw_"+depthKey]);
-  document.getElementById("rSEb").innerHTML = listHtml(copy.routes["se_"+depthKey]);
+  const modeKey = (depth === "shop") ? "shop" : "learn";
+
+  function routeHTML(q){
+    const data = copy.routes[q][modeKey];
+    if(modeKey === "shop"){
+      return '<div class="kv"><div class="k">'+data.lead+'</div><div class="v"></div></div>' + btnRow(data.buttons);
+    }
+    return '<div class="kv"><div class="k">'+data.lead+'</div><div class="v"></div></div>' +
+           '<div class="hr"></div>' +
+           learnBlocks(data.blocks) +
+           '<div class="hr"></div>' +
+           btnRow(data.buttons);
+  }
+
+  document.getElementById("rNWb").innerHTML = routeHTML("nw");
+  document.getElementById("rNEb").innerHTML = routeHTML("ne");
+  document.getElementById("rSWb").innerHTML = routeHTML("sw");
+  document.getElementById("rSEb").innerHTML = routeHTML("se");
 
   // Plate
   document.getElementById("pN").childNodes[0].textContent = copy.plate.n;

@@ -1,455 +1,481 @@
+<!-- TNT: /index.html  (ROOT) -->
 <!doctype html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Geodiametrics · Root</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Geodiametrics · Root</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=2001"/>
-<link rel="stylesheet" href="/assets/branch.css?v=2001"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=2000"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=2000"/>
 
-<style>
-/* ROOT: dropdown system + language toggle (page-local) */
-.root-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:14px}
-.root-hero{text-align:left}
-.root-hero h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
-.root-hero p{margin:10px 0 0;font-size:20px;opacity:.75}
+  <style>
+    /* ROOT: quad-lens index (accordion), EN/中文 toggle, all-closed default */
 
-.lang-toggle{
-  position:fixed;top:14px;right:14px;z-index:9999;
-  display:flex;gap:8px;align-items:center;
-  padding:10px 12px;border-radius:999px;
-  background:rgba(255,255,255,.06);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 18px 50px rgba(0,0,0,.35);
-  backdrop-filter:blur(12px);
-}
-.lang-toggle button{
-  border:0;cursor:pointer;
-  padding:8px 12px;border-radius:999px;
-  background:rgba(255,255,255,.08);
-  color:#eaf2f6;font-weight:900;letter-spacing:.06em;
-}
-.lang-toggle button[aria-pressed="true"]{
-  background:rgba(255,255,255,.16);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
-}
+    .root-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:18px}
+    .root-hero{text-align:left}
+    .root-hero h1{margin:0;font-size:clamp(44px,8vw,72px);font-weight:900;letter-spacing:.01em}
+    .root-hero p{margin:10px 0 0;font-size:20px;opacity:.75}
 
-.dd-stack{display:flex;flex-direction:column;gap:12px;margin-top:6px}
-details.dd{
-  border-radius:22px;
-  background:rgba(255,255,255,.04);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.40);
-  overflow:hidden;
-}
-details.dd > summary{
-  list-style:none;
-  cursor:pointer;
-  padding:18px 18px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  font-size:18px;
-  font-weight:900;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  user-select:none;
-}
-details.dd > summary::-webkit-details-marker{display:none}
-.dd-caret{
-  width:34px;height:34px;border-radius:999px;
-  display:grid;place-items:center;
-  background:rgba(255,255,255,.06);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-  opacity:.9;
-}
-details.dd[open] .dd-caret{transform:rotate(180deg)}
-.dd-body{padding:0 18px 18px;opacity:.92;font-size:18px;line-height:1.6}
+    /* top-right language toggle */
+    .lang-toggle{
+      position:fixed;top:14px;right:14px;z-index:50;
+      display:flex;gap:10px;align-items:center;
+      padding:10px 12px;border-radius:999px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 18px 44px rgba(0,0,0,.45);
+      backdrop-filter:blur(10px);
+    }
+    .lang-btn{
+      border:0;cursor:pointer;
+      padding:10px 14px;border-radius:999px;
+      background:rgba(255,255,255,.08);
+      color:#eaf2f6;font-weight:900;letter-spacing:.06em;
+    }
+    .lang-btn[aria-pressed="true"]{
+      background:rgba(255,255,255,.14);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
+    }
 
-details.dd2{
-  margin-top:12px;
-  border-radius:18px;
-  background:rgba(255,255,255,.03);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
-  overflow:hidden;
-}
-details.dd2 > summary{
-  list-style:none;cursor:pointer;user-select:none;
-  padding:14px 14px;
-  display:flex;align-items:center;justify-content:space-between;
-  font-size:14px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;
-  opacity:.92;
-}
-details.dd2 > summary::-webkit-details-marker{display:none}
-.dd2-body{padding:0 14px 14px;opacity:.9;font-size:16px;line-height:1.6}
+    /* QUAD LENS layout */
+    .lens-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+    }
 
-.pill{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:10px 12px;border-radius:999px;
-  background:rgba(255,255,255,.06);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-  margin:10px 0 0;
-}
-.badge{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-width:52px;height:34px;padding:0 12px;border-radius:999px;
-  background:rgba(255,255,255,.07);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-  font-weight:900;letter-spacing:.10em;
-}
+    details.lens{
+      border-radius:22px;
+      background:rgba(255,255,255,.04);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.45);
+      overflow:hidden;
+    }
 
-.root-controls{width:100%;display:flex;justify-content:center;margin-top:10px}
-.root-controls .platform{width:min(380px,86vw)}
-/* give the root plate breathing room below dropdowns */
-.footer-pad{margin-top:18px}
-</style>
+    summary.lens-sum{
+      list-style:none;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:16px 18px;
+      cursor:pointer;
+      user-select:none;
+    }
+    summary.lens-sum::-webkit-details-marker{display:none}
+
+    .lens-left{display:flex;gap:12px;align-items:center;min-width:0}
+    .lens-badge{
+      width:40px;height:40px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(255,255,255,.08);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      font-weight:900;letter-spacing:.08em;
+      flex:0 0 auto;
+    }
+    .lens-title{display:flex;flex-direction:column;min-width:0}
+    .lens-title b{font-size:16px;letter-spacing:.14em}
+    .lens-title span{opacity:.72;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    .chev{
+      width:42px;height:42px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+      font-weight:900;opacity:.75;
+      flex:0 0 auto;
+    }
+    details[open] .chev{opacity:1}
+
+    .lens-body{padding:0 18px 18px;display:flex;flex-direction:column;gap:10px}
+
+    /* nested sections */
+    details.sub{
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+    summary.sub-sum{
+      list-style:none;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 14px;
+      cursor:pointer;
+      user-select:none;
+      gap:10px;
+    }
+    summary.sub-sum::-webkit-details-marker{display:none}
+
+    .sub-left{display:flex;gap:10px;align-items:center;min-width:0}
+    .pill{
+      padding:8px 10px;border-radius:999px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+      font-weight:900;letter-spacing:.10em;font-size:12px;
+      opacity:.95;flex:0 0 auto;
+    }
+    .sub-label{min-width:0}
+    .sub-label b{display:block;font-size:13px;letter-spacing:.12em}
+    .sub-label span{display:block;font-size:13px;opacity:.72;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sub-body{padding:0 14px 14px;opacity:.92;line-height:1.6}
+
+    /* platform region */
+    .root-controls{margin-top:6px;display:flex;justify-content:center}
+    .root-controls .platform{width:min(420px,88vw)}
+
+    /* ensure header + footer always above any plate visuals */
+    .h, .root-hero, footer{position:relative;z-index:10}
+  </style>
 </head>
 
 <body>
 <div class="shooting-stars"></div>
 
-<!-- LANGUAGE LENS (EN / 中文) -->
+<!-- language toggle -->
 <div class="lang-toggle" role="group" aria-label="Language">
-  <button id="btnEN" type="button" aria-pressed="true">EN</button>
-  <button id="btnZH" type="button" aria-pressed="false">中文</button>
+  <button class="lang-btn" id="btnEN" aria-pressed="true" type="button">EN</button>
+  <button class="lang-btn" id="btnZH" aria-pressed="false" type="button">中文</button>
 </div>
 
 <div class="page">
   <div class="root-wrap">
 
     <div class="root-hero">
-      <h1 data-i18n="hero_title">Geodiametrics</h1>
-      <p data-i18n="hero_sub">Under construction · Safe to explore.</p>
+      <h1 data-en="Geodiametrics" data-zh="几何度量学">Geodiametrics</h1>
+      <p data-en="Under construction · Safe to explore." data-zh="建设中 · 可安全浏览。">Under construction · Safe to explore.</p>
     </div>
 
-    <!-- FOUR TOP-LEVEL DROPDOWNS (CLOSED BY DEFAULT) -->
-    <div class="dd-stack">
+    <!-- QUAD LENS INDEX -->
+    <div class="lens-grid">
 
-      <!-- N: COMING SOON -->
-      <details class="dd" id="dd_soon">
-        <summary>
-          <span data-i18n="soon_title">COMING SOON</span>
-          <span class="dd-caret">⌄</span>
+      <!-- NORTH -->
+      <details class="lens">
+        <summary class="lens-sum">
+          <div class="lens-left">
+            <div class="lens-badge">N</div>
+            <div class="lens-title">
+              <b data-en="NORTH" data-zh="北">NORTH</b>
+              <span data-en="Definitions · language · structure" data-zh="定义 · 语言 · 结构">Definitions · language · structure</span>
+            </div>
+          </div>
+          <div class="chev">⌄</div>
         </summary>
-        <div class="dd-body">
-          <div class="pill"><span class="badge" data-i18n="n_badge">N</span><span data-i18n="soon_line">New usable surfaces ship continuously.</span></div>
 
-          <details class="dd2">
-            <summary><span data-i18n="soon_tools_title">Tools & Surfaces</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="soon_tools_body">New interfaces, tools, and execution surfaces.</div>
-          </details>
+        <div class="lens-body">
 
-          <details class="dd2">
-            <summary><span data-i18n="soon_packs_title">Packs & Outputs</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="soon_packs_body">Downloadable materials, PDFs, and packaged outputs.</div>
-          </details>
-
-          <details class="dd2">
-            <summary><span data-i18n="soon_diag_title">Diagnostics & Gauges</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="soon_diag_body">Measurement instruments, audits, and integrity checks.</div>
-          </details>
-
-          <details class="dd2">
-            <summary><span data-i18n="soon_refresh_title">Content Refreshes</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="soon_refresh_body">Clarity passes, edits, and structured upgrades.</div>
-          </details>
-        </div>
-      </details>
-
-      <!-- E: START HERE -->
-      <details class="dd" id="dd_start">
-        <summary>
-          <span data-i18n="start_title">START HERE</span>
-          <span class="dd-caret">⌄</span>
-        </summary>
-        <div class="dd-body">
-          <div class="pill"><span class="badge" data-i18n="e_badge">E</span><span data-i18n="start_line">Pick one route at a time. Return to a hub if needed.</span></div>
-
-          <details class="dd2">
-            <summary><span data-i18n="start_fast_title">Fast Path</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body">
-              <span class="badge" data-i18n="path_badge">PATH</span>
-              <span data-i18n="start_fast_body">Laws → Categories → Integrity → Coherence (follow to the end).</span>
+          <details class="sub">
+            <summary class="sub-sum">
+              <div class="sub-left">
+                <div class="pill">SSG</div>
+                <div class="sub-label">
+                  <b data-en="Simplified Syntax Geometry" data-zh="简化语法几何">Simplified Syntax Geometry</b>
+                  <span data-en="Constraint language for structure + execution" data-zh="用于结构与执行的约束语言">Constraint language for structure + execution</span>
+                </div>
+              </div>
+              <div class="chev">⌄</div>
+            </summary>
+            <div class="sub-body" data-en="A constraint-based language for expressing resources, stores, constraints, goals, and guards. Built for compression, clarity, and reproducibility."
+                 data-zh="一种以约束为核心的语言，用于表达资源、存储、约束、目标与守卫。强调压缩、清晰与可复现。">
+              A constraint-based language for expressing resources, stores, constraints, goals, and guards. Built for compression, clarity, and reproducibility.
             </div>
           </details>
 
-          <details class="dd2">
-            <summary><span data-i18n="start_explore_title">Explore Path</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="start_explore_body">Use Home to move N/E/S/W, then dive one level deeper.</div>
+          <details class="sub">
+            <summary class="sub-sum">
+              <div class="sub-left">
+                <div class="pill">GRAM</div>
+                <div class="sub-label">
+                  <b data-en="Diamond Grammar" data-zh="钻石语法">Diamond Grammar</b>
+                  <span data-en="Four routes · one choice at a time" data-zh="四条路径 · 一次一选">Four routes · one choice at a time</span>
+                </div>
+              </div>
+              <div class="chev">⌄</div>
+            </summary>
+            <div class="sub-body" data-en="Navigation rule: N/E/S/W encode functional domains (not directions). Stay single-route inside a branch; return to a hub to switch."
+                 data-zh="导航规则：N/E/S/W 表示功能域（不是方向）。分支内保持单路径；需要切换时返回枢纽。">
+              Navigation rule: N/E/S/W encode functional domains (not directions). Stay single-route inside a branch; return to a hub to switch.
+            </div>
           </details>
 
-          <details class="dd2">
-            <summary><span data-i18n="start_rule_title">Rule of One Choice</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="start_rule_body">Choose one route. Don’t multi-tab inside a branch.</div>
+          <details class="sub">
+            <summary class="sub-sum">
+              <div class="sub-left">
+                <div class="pill">DOT</div>
+                <div class="sub-label">
+                  <b data-en="DOT.GRID" data-zh="DOT.GRID">DOT.GRID</b>
+                  <span data-en="256-state indexing system" data-zh="256 状态索引系统">256-state indexing system</span>
+                </div>
+              </div>
+              <div class="chev">⌄</div>
+            </summary>
+            <div class="sub-body" data-en="A compact 256-state lattice used for consistent classification, routing, and replay-safe logs across domains."
+                 data-zh="一个紧凑的 256 状态格，用于跨领域的一致分类、路由与可回放日志。">
+              A compact 256-state lattice used for consistent classification, routing, and replay-safe logs across domains.
+            </div>
           </details>
 
-          <details class="dd2">
-            <summary><span data-i18n="start_return_title">Return Point</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="start_return_body">If incomplete, return to Home or the current hub.</div>
+          <details class="sub">
+            <summary class="sub-sum">
+              <div class="sub-left">
+                <div class="pill">ABC</div>
+                <div class="sub-label">
+                  <b data-en="Acronyms & Glossary" data-zh="缩写与术语">Acronyms & Glossary</b>
+                  <span data-en="Key terms, consistently defined" data-zh="关键术语的一致定义">Key terms, consistently defined</span>
+                </div>
+              </div>
+              <div class="chev">⌄</div>
+            </summary>
+            <div class="sub-body" data-en="A structured glossary and acronym index (organized by pillars) so terms never drift."
+                 data-zh="结构化术语表与缩写索引（按支柱分类），防止概念漂移。">
+              A structured glossary and acronym index (organized by pillars) so terms never drift.
+            </div>
           </details>
+
         </div>
       </details>
 
-      <!-- S: COMPASS KEY -->
-      <details class="dd" id="dd_compass">
-        <summary>
-          <span data-i18n="compass_title">COMPASS KEY</span>
-          <span class="dd-caret">⌄</span>
+      <!-- EAST -->
+      <details class="lens">
+        <summary class="lens-sum">
+          <div class="lens-left">
+            <div class="lens-badge">E</div>
+            <div class="lens-title">
+              <b data-en="EAST" data-zh="东">EAST</b>
+              <span data-en="Products · execution · surfaces" data-zh="产品 · 执行 · 界面">Products · execution · surfaces</span>
+            </div>
+          </div>
+          <div class="chev">⌄</div>
         </summary>
-        <div class="dd-body">
-          <div class="pill"><span class="badge" data-i18n="s_badge">S</span><span data-i18n="compass_line">N/E/S/W encode functional domains (not directions).</span></div>
 
-          <details class="dd2">
-            <summary><span data-i18n="comp_n_title">N — Laws</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="comp_n_body">Definitions, categories, and stable rules.</div>
+        <div class="lens-body">
+
+          <details class="sub">
+            <summary class="sub-sum">
+              <div class="sub-left">
+                <div class="pill">ENGY</div>
+                <div class="sub-label">
+                  <b data-en="Energy products" data-zh="能源产品">Energy products</b>
+                  <span data-en="Solar → Plasma conversion modeling" data-zh="太阳能 → 等离子体 转化建模">Solar → Plasma conversion modeling</span>
+                </div>
+              </div>
+              <div class="chev">⌄</div>
+            </summary>
+            <div class="sub-body" data-en="Energy conversion pathways and execution surfaces for modeling, validation, and deployment."
+                 data-zh="能源转化路径与执行界面，用于建模、验证与部署。">
+              Energy conversion pathways and execution surfaces for modeling, validation, and deployment.
+            </div>
           </details>
 
-          <details class="dd2">
-            <summary><span data-i18n="comp_e_title">E — Products</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="comp_e_body">Tools, execution surfaces, and applied systems.</div>
+          <details class="sub">
+            <summary class="sub-sum">
+              <div class="sub-left">
+                <div class="pill">APP</div>
+                <div class="sub-label">
+                  <b data-en="Execution surfaces" data-zh="执行界面">Execution surfaces</b>
+                  <span data-en="PLASMA / PLATFORM layers" data-zh="PLASMA / PLATFORM 层">PLASMA / PLATFORM layers</span>
+                </div>
+              </div>
+              <div class="chev">⌄</div>
+            </summary>
+            <div class="sub-body" data-en="Productized interfaces that package instruments into usable workflows."
+                 data-zh="将仪器打包为可用工作流的产品化界面。">
+              Productized interfaces that package instruments into usable workflows.
+            </div>
           </details>
 
-          <details class="dd2">
-            <summary><span data-i18n="comp_s_title">S — Gauges</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="comp_s_body">Measurement, diagnostics, and integrity checks.</div>
+          <details class="sub">
+            <summary class="sub-sum">
+              <div class="sub-left">
+                <div class="pill">ESL</div>
+                <div class="sub-label">
+                  <b data-en="1,001-word mastery" data-zh="1001 词掌握">1,001-word mastery</b>
+                  <span data-en="Structured fluency system" data-zh="结构化流利系统">Structured fluency system</span>
+                </div>
+              </div>
+              <div class="chev">⌄</div>
+            </summary>
+            <div class="sub-body" data-en="A compact vocabulary + skills framework designed to produce fast, practical communication gains with measurable progression."
+                 data-zh="紧凑的词汇+技能框架，用于快速、实用的沟通提升，并可量化进步。">
+              A compact vocabulary + skills framework designed to produce fast, practical communication gains with measurable progression.
+            </div>
           </details>
 
-          <details class="dd2">
-            <summary><span data-i18n="comp_w_title">W — Links</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="comp_w_body">External identity, references, and contact anchors.</div>
-          </details>
         </div>
       </details>
 
-      <!-- W: WHAT STAYS STABLE -->
-      <details class="dd" id="dd_stable">
-        <summary>
-          <span data-i18n="stable_title">WHAT STAYS STABLE</span>
-          <span class="dd-caret">⌄</span>
+      <!-- SOUTH -->
+      <details class="lens">
+        <summary class="lens-sum">
+          <div class="lens-left">
+            <div class="lens-badge">S</div>
+            <div class="lens-title">
+              <b data-en="SOUTH" data-zh="南">SOUTH</b>
+              <span data-en="Gauges · measurement · diagnostics" data-zh="仪表 · 测量 · 诊断">Gauges · measurement · diagnostics</span>
+            </div>
+          </div>
+          <div class="chev">⌄</div>
         </summary>
-        <div class="dd-body">
-          <div class="pill"><span class="badge" data-i18n="w_badge">W</span><span data-i18n="stable_line">Navigation grammar stays stable while content evolves.</span></div>
 
-          <details class="dd2">
-            <summary><span data-i18n="stable_nav_title">Navigation</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="stable_nav_body">Four routes. One choice at a time. Hub return always works.</div>
+        <div class="lens-body">
+
+          <details class="sub">
+            <summary class="sub-sum">
+              <div class="sub-left">
+                <div class="pill">DIAG</div>
+                <div class="sub-label">
+                  <b data-en="Diagnostics" data-zh="诊断">Diagnostics</b>
+                  <span data-en="Detect / classify / replay" data-zh="检测 / 分类 / 回放">Detect / classify / replay</span>
+                </div>
+              </div>
+              <div class="chev">⌄</div>
+            </summary>
+            <div class="sub-body" data-en="Measurement-first surfaces for early warning, classification under constraint, and consistent audit trails."
+                 data-zh="以测量为先的界面，用于早期预警、约束下分类与一致审计轨迹。">
+              Measurement-first surfaces for early warning, classification under constraint, and consistent audit trails.
+            </div>
           </details>
 
-          <details class="dd2">
-            <summary><span data-i18n="stable_outputs_title">Outputs</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="stable_outputs_body">Public releases are additive; local work stays local unless published.</div>
+          <details class="sub">
+            <summary class="sub-sum">
+              <div class="sub-left">
+                <div class="pill">REC</div>
+                <div class="sub-label">
+                  <b data-en="Receipts & audit" data-zh="回执与审计">Receipts & audit</b>
+                  <span data-en="Verification layers" data-zh="验证层">Verification layers</span>
+                </div>
+              </div>
+              <div class="chev">⌄</div>
+            </summary>
+            <div class="sub-body" data-en="Replay-safe logs that bind evidence to outcomes with verifiable continuity."
+                 data-zh="可回放的日志，将证据与结果绑定，并提供可验证的连续性。">
+              Replay-safe logs that bind evidence to outcomes with verifiable continuity.
+            </div>
           </details>
 
-          <details class="dd2">
-            <summary><span data-i18n="stable_language_title">Language</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="stable_language_body">English/中文 view is a lens switch: same structure, different surface text.</div>
+        </div>
+      </details>
+
+      <!-- WEST -->
+      <details class="lens">
+        <summary class="lens-sum">
+          <div class="lens-left">
+            <div class="lens-badge">W</div>
+            <div class="lens-title">
+              <b data-en="WEST" data-zh="西">WEST</b>
+              <span data-en="Links · identity · references" data-zh="链接 · 身份 · 引用">Links · identity · references</span>
+            </div>
+          </div>
+          <div class="chev">⌄</div>
+        </summary>
+
+        <div class="lens-body">
+
+          <details class="sub">
+            <summary class="sub-sum">
+              <div class="sub-left">
+                <div class="pill">OSF</div>
+                <div class="sub-label">
+                  <b data-en="OSF registry" data-zh="OSF 注册">OSF registry</b>
+                  <span data-en="Projects / preprints" data-zh="项目 / 预印本">Projects / preprints</span>
+                </div>
+              </div>
+              <div class="chev">⌄</div>
+            </summary>
+            <div class="sub-body">
+              <a href="https://osf.io/" target="_blank" rel="noopener noreferrer"
+                 data-en="Open OSF"
+                 data-zh="打开 OSF">Open OSF</a>
+            </div>
           </details>
 
-          <details class="dd2">
-            <summary><span data-i18n="stable_credit_title">Credit</span><span class="dd-caret">⌄</span></summary>
-            <div class="dd2-body" data-i18n="stable_credit_body">Citations and references live under Links; products reference their sources.</div>
+          <details class="sub">
+            <summary class="sub-sum">
+              <div class="sub-left">
+                <div class="pill">ORCID</div>
+                <div class="sub-label">
+                  <b data-en="ORCID iD" data-zh="ORCID">ORCID iD</b>
+                  <span data-en="Research identity" data-zh="研究身份">Research identity</span>
+                </div>
+              </div>
+              <div class="chev">⌄</div>
+            </summary>
+            <div class="sub-body">
+              <a href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener noreferrer">
+                0009-0004-1293-0405
+              </a>
+            </div>
           </details>
+
+          <details class="sub">
+            <summary class="sub-sum">
+              <div class="sub-left">
+                <div class="pill">CN</div>
+                <div class="sub-label">
+                  <b data-en="Mandarin bridge" data-zh="中文桥接">Mandarin bridge</b>
+                  <span data-en="Common Mandarin integration" data-zh="面向通用中文">Common Mandarin integration</span>
+                </div>
+              </div>
+              <div class="chev">⌄</div>
+            </summary>
+            <div class="sub-body" data-en="This site supports an English/Chinese surface so the same structure can be read across audiences."
+                 data-zh="本站支持英文/中文切换，使同一结构可跨受众阅读。">
+              This site supports an English/Chinese surface so the same structure can be read across audiences.
+            </div>
+          </details>
+
         </div>
       </details>
 
     </div>
 
-    <!-- DIAMOND NAV (ROOT CONTROL PLATE) -->
+    <!-- ROOT NAV DIAMOND (satellite hub) -->
     <div class="root-controls">
       <div class="platform">
 
-        <a class="diamond top" href="/door/">
-          <span data-i18n="tile_enter">Enter<small data-i18n="tile_enter_sub">Door</small></span>
+        <a class="diamond top" href="/home/">
+          <span data-en="Home" data-zh="主页">Home<small data-en="Compass" data-zh="罗盘">Compass</small></span>
         </a>
 
-        <a class="diamond right" href="/home/">
-          <span data-i18n="tile_home">Home<small data-i18n="tile_home_sub">Compass</small></span>
+        <a class="diamond right" href="/products/">
+          <span data-en="Products" data-zh="产品">Products<small data-en="Suite" data-zh="套件">Suite</small></span>
         </a>
 
-        <a class="diamond bottom" href="/laws/categories/">
-          <span data-i18n="tile_categories">Categories<small data-i18n="tile_categories_sub">Laws</small></span>
+        <a class="diamond bottom" href="/gauges/">
+          <span data-en="Gauges" data-zh="仪表">Gauges<small data-en="Instruments" data-zh="仪器">Instruments</small></span>
         </a>
 
-        <a class="diamond left" href="/products/">
-          <span data-i18n="tile_products">Products<small data-i18n="tile_products_sub">Suite</small></span>
+        <a class="diamond left" href="/links/">
+          <span data-en="Links" data-zh="链接">Links<small data-en="References" data-zh="引用">References</small></span>
         </a>
 
-        <a class="diamond mini mini-left" href="/home/">
-          <span><small data-i18n="mini_home">HOME</small></span>
-        </a>
-
-        <a class="diamond mini mini-right" href="/door/">
-          <span><small data-i18n="mini_door">DOOR</small></span>
-        </a>
+        <a class="diamond mini mini-left" href="/door/"><span><small data-en="DOOR" data-zh="入口">DOOR</small></span></a>
+        <a class="diamond mini mini-right" href="/home/"><span><small data-en="HOME" data-zh="主页">HOME</small></span></a>
 
       </div>
     </div>
 
-    <footer class="footer-pad">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 
   </div>
 </div>
 
 <script>
-(() => {
-  const dict = {
-    en: {
-      hero_title:"Geodiametrics",
-      hero_sub:"Under construction · Safe to explore.",
+  (function(){
+    const root = document.documentElement;
 
-      soon_title:"COMING SOON",
-      n_badge:"N",
-      soon_line:"New usable surfaces ship continuously.",
-      soon_tools_title:"Tools & Surfaces",
-      soon_tools_body:"New interfaces, tools, and execution surfaces.",
-      soon_packs_title:"Packs & Outputs",
-      soon_packs_body:"Downloadable materials, PDFs, and packaged outputs.",
-      soon_diag_title:"Diagnostics & Gauges",
-      soon_diag_body:"Measurement instruments, audits, and integrity checks.",
-      soon_refresh_title:"Content Refreshes",
-      soon_refresh_body:"Clarity passes, edits, and structured upgrades.",
+    function applyLang(lang){
+      root.setAttribute("data-lang", lang);
+      const en = (lang === "en");
+      document.getElementById("btnEN").setAttribute("aria-pressed", en ? "true" : "false");
+      document.getElementById("btnZH").setAttribute("aria-pressed", en ? "false" : "true");
 
-      start_title:"START HERE",
-      e_badge:"E",
-      start_line:"Pick one route at a time. Return to a hub if needed.",
-      start_fast_title:"Fast Path",
-      path_badge:"PATH",
-      start_fast_body:"Laws → Categories → Integrity → Coherence (follow to the end).",
-      start_explore_title:"Explore Path",
-      start_explore_body:"Use Home to move N/E/S/W, then dive one level deeper.",
-      start_rule_title:"Rule of One Choice",
-      start_rule_body:"Choose one route. Don’t multi-tab inside a branch.",
-      start_return_title:"Return Point",
-      start_return_body:"If incomplete, return to Home or the current hub.",
-
-      compass_title:"COMPASS KEY",
-      s_badge:"S",
-      compass_line:"N/E/S/W encode functional domains (not directions).",
-      comp_n_title:"N — Laws",
-      comp_n_body:"Definitions, categories, and stable rules.",
-      comp_e_title:"E — Products",
-      comp_e_body:"Tools, execution surfaces, and applied systems.",
-      comp_s_title:"S — Gauges",
-      comp_s_body:"Measurement, diagnostics, and integrity checks.",
-      comp_w_title:"W — Links",
-      comp_w_body:"External identity, references, and contact anchors.",
-
-      stable_title:"WHAT STAYS STABLE",
-      w_badge:"W",
-      stable_line:"Navigation grammar stays stable while content evolves.",
-      stable_nav_title:"Navigation",
-      stable_nav_body:"Four routes. One choice at a time. Hub return always works.",
-      stable_outputs_title:"Outputs",
-      stable_outputs_body:"Public releases are additive; local work stays local unless published.",
-      stable_language_title:"Language",
-      stable_language_body:"English/中文 view is a lens switch: same structure, different surface text.",
-      stable_credit_title:"Credit",
-      stable_credit_body:"Citations and references live under Links; products reference their sources.",
-
-      tile_enter:"Enter",
-      tile_enter_sub:"Door",
-      tile_home:"Home",
-      tile_home_sub:"Compass",
-      tile_categories:"Categories",
-      tile_categories_sub:"Laws",
-      tile_products:"Products",
-      tile_products_sub:"Suite",
-      mini_home:"HOME",
-      mini_door:"DOOR"
-    },
-    zh: {
-      hero_title:"Geodiametrics",
-      hero_sub:"建设中 · 可安全浏览。",
-
-      soon_title:"即将上线",
-      n_badge:"N",
-      soon_line:"可用的工具与界面会持续上线。",
-      soon_tools_title:"工具与界面",
-      soon_tools_body:"新的交互界面、工具与执行入口。",
-      soon_packs_title:"资料包与输出",
-      soon_packs_body:"可下载资料、PDF 与打包输出。",
-      soon_diag_title:"诊断与量表",
-      soon_diag_body:"测量工具、审计与完整性检查。",
-      soon_refresh_title:"内容更新",
-      soon_refresh_body:"清晰度压缩、修订与结构升级。",
-
-      start_title:"从这里开始",
-      e_badge:"E",
-      start_line:"一次只选一条路线；需要时回到枢纽页。",
-      start_fast_title:"快速路径",
-      path_badge:"路径",
-      start_fast_body:"Laws → Categories → Integrity → Coherence（一路跟到底）。",
-      start_explore_title:"探索路径",
-      start_explore_body:"从 Home 用 N/E/S/W 选择方向，再进入下一层。",
-      start_rule_title:"单选规则",
-      start_rule_body:"一次只选一条路线；不要在分支内多开标签页。",
-      start_return_title:"返回点",
-      start_return_body:"若内容未完成，返回 Home 或当前枢纽页。",
-
-      compass_title:"指南针键",
-      s_badge:"S",
-      compass_line:"N/E/S/W 表示功能域（不是方向）。",
-      comp_n_title:"N — Laws",
-      comp_n_body:"定义、分类与稳定规则。",
-      comp_e_title:"E — Products",
-      comp_e_body:"工具、执行入口与应用系统。",
-      comp_s_title:"S — Gauges",
-      comp_s_body:"测量、诊断与完整性检查。",
-      comp_w_title:"W — Links",
-      comp_w_body:"外部身份、引用与联系锚点。",
-
-      stable_title:"哪些保持稳定",
-      w_badge:"W",
-      stable_line:"导航语法稳定，内容持续演进。",
-      stable_nav_title:"导航",
-      stable_nav_body:"四条路线；一次一选；随时可回到枢纽页。",
-      stable_outputs_title:"输出",
-      stable_outputs_body:"公开发布是增量叠加；本地内容默认保持本地，除非主动发布。",
-      stable_language_title:"语言",
-      stable_language_body:"英语/中文是“镜头切换”：结构不变，表层文字变化。",
-      stable_credit_title:"署名",
-      stable_credit_body:"引用与身份在 Links；产品页会指向其来源。",
-
-      tile_enter:"进入",
-      tile_enter_sub:"Door",
-      tile_home:"主页",
-      tile_home_sub:"Compass",
-      tile_categories:"分类",
-      tile_categories_sub:"Laws",
-      tile_products:"产品",
-      tile_products_sub:"Suite",
-      mini_home:"HOME",
-      mini_door:"DOOR"
+      // swap any element with data-en / data-zh
+      document.querySelectorAll("[data-en][data-zh]").forEach(el=>{
+        el.textContent = en ? el.getAttribute("data-en") : el.getAttribute("data-zh");
+      });
     }
-  };
 
-  const btnEN = document.getElementById("btnEN");
-  const btnZH = document.getElementById("btnZH");
-  const els = () => Array.from(document.querySelectorAll("[data-i18n]"));
+    document.getElementById("btnEN").addEventListener("click", ()=>applyLang("en"));
+    document.getElementById("btnZH").addEventListener("click", ()=>applyLang("zh"));
 
-  function apply(lang){
-    const d = dict[lang] || dict.en;
-    els().forEach(el => {
-      const k = el.getAttribute("data-i18n");
-      if (d[k] != null) el.textContent = d[k];
-    });
-    btnEN.setAttribute("aria-pressed", lang === "en" ? "true" : "false");
-    btnZH.setAttribute("aria-pressed", lang === "zh" ? "true" : "false");
-    document.documentElement.lang = (lang === "zh") ? "zh-Hans" : "en";
-    localStorage.setItem("geo_lang", lang);
-  }
-
-  btnEN.addEventListener("click", () => apply("en"));
-  btnZH.addEventListener("click", () => apply("zh"));
-
-  // default: all dropdowns CLOSED
-  ["dd_soon","dd_start","dd_compass","dd_stable"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.removeAttribute("open");
-  });
-
-  apply(localStorage.getItem("geo_lang") || "en");
-})();
+    applyLang("en");
+  })();
 </script>
-
 </body>
 </html>

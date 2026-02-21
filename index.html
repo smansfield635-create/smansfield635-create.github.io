@@ -1,215 +1,38 @@
-<!-- TNT FILE: /index.html  (FULL REPLACEMENT)
-     PURPOSE: Arrival + Language select ONCE + Multi-portal terminal (enabled after language)
-     RULES:
-       - Sets localStorage.gd_lang = en|zh
-       - Never shows mixed English/Chinese after selection (single-language rendering)
-       - Does NOT set depth (that’s Door)
--->
+<!-- TNT FILE: /index.html  (LANGUAGE FORK ONLY) -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Coherent Resolution Platform · Terminal</title>
+<title>Coherent Resolution Platform</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=9500"/>
-<link rel="stylesheet" href="/assets/branch.css?v=9500"/>
-
-<style>
-body{
-  background:
-    radial-gradient(1400px 900px at 50% 12%, rgba(150,0,0,.42) 0%, rgba(20,0,0,.24) 42%, rgba(5,7,12,1) 100%),
-    radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
-}
-
-.wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px;padding:38px 16px 88px}
-.hero{position:relative;z-index:10;text-align:left}
-.hero h1{font-size:clamp(44px,7vw,72px);margin:0;font-weight:950;letter-spacing:.02em;text-transform:uppercase}
-.hero h2{margin:10px 0 0;opacity:.85;font-size:14px;letter-spacing:.22em;text-transform:uppercase}
-.hero p{margin:12px 0 0;opacity:.80;font-size:16px;line-height:1.45;max-width:70ch}
-
-.card{
-  border-radius:24px;
-  background:rgba(255,255,255,.05);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 26px 70px rgba(0,0,0,.55);
-  backdrop-filter:blur(12px);
-  overflow:hidden;
-}
-
-.card-h{
-  padding:14px 16px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
-}
-.card-h b{
-  display:block;font-size:12px;letter-spacing:.22em;text-transform:uppercase;opacity:.85;
-}
-.card-h span{
-  display:block;margin-top:6px;opacity:.78;font-size:14px;line-height:1.4;
-}
-
-.langRow{
-  padding:14px 16px 6px;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-.btn{
-  border-radius:18px;
-  padding:12px 16px;
-  background:rgba(0,0,0,.22);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  font-weight:900;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  font-size:12px;
-  color:#eaf2f6;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.btn.active{
-  background:rgba(150,0,0,.25);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 18px 50px rgba(0,0,0,.35);
-}
-.btn:active{transform:translateY(1px)}
-
-.grid{
-  padding:14px 16px 16px;
-  display:grid;
-  grid-template-columns:1fr;
-  gap:10px;
-}
-@media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
-
-.portal{
-  border-radius:18px;
-  background:rgba(0,0,0,.22);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-  padding:14px 14px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  text-decoration:none;color:inherit;
-  -webkit-tap-highlight-color:transparent;
-}
-.portal .t{min-width:0}
-.portal .t b{display:block;font-size:14px;letter-spacing:.14em;text-transform:uppercase}
-.portal .t i{display:block;margin-top:6px;font-style:normal;opacity:.72;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.portal .go{width:40px;height:40px;border-radius:999px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;opacity:.9;font-weight:900;flex:0 0 auto}
-.portal:hover{background:rgba(0,0,0,.26)}
-.portal.disabled{opacity:.45;pointer-events:none;filter:grayscale(1)}
-
-.ink{margin-top:14px;text-align:center;letter-spacing:.22em;font-weight:900;opacity:.35;font-size:12px;text-transform:uppercase}
-footer{margin-top:10px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
-</style>
+<link rel="stylesheet" href="/assets/ui.css?v=12000"/>
 </head>
 
 <body>
-<div class="shooting-stars"></div>
+<div class="page" style="justify-content:center;text-align:center;gap:18px;">
+  <div style="width:min(900px,94vw);">
+    <h1>COHERENT RESOLUTION PLATFORM</h1>
+    <p style="margin-top:14px;">Select language to begin.</p>
 
-<div class="page">
-  <div class="wrap">
-    <div class="hero">
-      <h1 id="H1">COHERENT RESOLUTION PLATFORM</h1>
-      <h2 id="H2">SCOPE256 · MULTI-PORTAL ACCESS TERMINAL</h2>
-      <p id="H3">Select language once. Then enter through any portal.</p>
+    <div style="margin-top:34px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn" style="min-width:220px;" onclick="setLang('en')">ENGLISH</button>
+      <button class="btn" style="min-width:220px;" onclick="setLang('zh')">中文</button>
     </div>
 
-    <div class="card">
-      <div class="card-h">
-        <div>
-          <b id="T0">LANGUAGE</b>
-          <span id="T1">Choose once. You won’t see the other language after selection.</span>
-        </div>
-      </div>
-
-      <div class="langRow">
-        <button class="btn" id="L_EN" type="button">ENGLISH</button>
-        <button class="btn" id="L_ZH" type="button">中文</button>
-      </div>
-
-      <div class="grid" id="portalGrid">
-        <a class="portal disabled" id="P_DOOR" href="/door/">
-          <div class="t"><b id="P1T">ENTER</b><i id="P1S">Lens select → Engine</i></div><div class="go">▸</div>
-        </a>
-        <a class="portal disabled" id="P_HOME" href="/home/">
-          <div class="t"><b id="P2T">ENGINE</b><i id="P2S">Explore/Learn (from your lens)</i></div><div class="go">▸</div>
-        </a>
-        <a class="portal disabled" id="P_RGSC" href="/rgsc/">
-          <div class="t"><b id="P3T">RGSC</b><i id="P3S">Receipts · verify · replay</i></div><div class="go">▸</div>
-        </a>
-        <a class="portal disabled" id="P_LINKS" href="/links/">
-          <div class="t"><b id="P4T">REFERENCES</b><i id="P4S">Identity anchors</i></div><div class="go">▸</div>
-        </a>
-      </div>
-    </div>
-
-    <div class="ink">GEODIAMETRICS</div>
+    <div class="ink" style="margin-top:72px;">GEODIAMETRICS</div>
     <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
   </div>
 </div>
 
 <script>
-(function(){
-  const K_LANG="gd_lang";
-  const portals = ["P_DOOR","P_HOME","P_RGSC","P_LINKS"].map(id=>document.getElementById(id));
-
-  const I18N = {
-    en:{
-      T0:"LANGUAGE",
-      T1:"Choose once. You won’t see the other language after selection.",
-      P1T:"ENTER", P1S:"Lens select → Engine",
-      P2T:"ENGINE", P2S:"Explore/Learn (from your lens)",
-      P3T:"RGSC", P3S:"Receipts · verify · replay",
-      P4T:"REFERENCES", P4S:"Identity anchors",
-      H3:"Select language once. Then enter through any portal."
-    },
-    zh:{
-      T0:"语言",
-      T1:"只选一次。选择后不再显示另一种语言。",
-      P1T:"进入", P1S:"镜头选择 → 引擎",
-      P2T:"引擎", P2S:"浏览/深挖（由镜头决定）",
-      P3T:"RGSC", P3S:"回执 · 验证 · 回放",
-      P4T:"引用", P4S:"身份锚点",
-      H3:"选择语言一次，然后通过任一入口进入。"
-    }
-  };
-
-  function applyLang(lang){
-    document.documentElement.lang = (lang==="zh") ? "zh-Hans" : "en";
-    const t = I18N[lang];
-
-    document.getElementById("T0").textContent = t.T0;
-    document.getElementById("T1").textContent = t.T1;
-    document.getElementById("P1T").textContent = t.P1T;
-    document.getElementById("P1S").textContent = t.P1S;
-    document.getElementById("P2T").textContent = t.P2T;
-    document.getElementById("P2S").textContent = t.P2S;
-    document.getElementById("P3T").textContent = t.P3T;
-    document.getElementById("P3S").textContent = t.P3S;
-    document.getElementById("P4T").textContent = t.P4T;
-    document.getElementById("P4S").textContent = t.P4S;
-    document.getElementById("H3").textContent = t.H3;
-
-    // Enable portals
-    portals.forEach(a=>a.classList.remove("disabled"));
-  }
-
-  function setLang(lang){
-    localStorage.setItem(K_LANG, lang);
-    // Default depth if unset
-    if(!localStorage.getItem("gd_depth")) localStorage.setItem("gd_depth","explore");
-    if(!localStorage.getItem("gd_scope")) localStorage.setItem("gd_scope","now");
-    if(!localStorage.getItem("gd_expr")) localStorage.setItem("gd_expr","formal");
-    if(!localStorage.getItem("gd_contrast")) localStorage.setItem("gd_contrast","standard");
-    applyLang(lang);
-    document.getElementById("L_EN").classList.toggle("active", lang==="en");
-    document.getElementById("L_ZH").classList.toggle("active", lang==="zh");
-  }
-
-  document.getElementById("L_EN").addEventListener("click", ()=>setLang("en"));
-  document.getElementById("L_ZH").addEventListener("click", ()=>setLang("zh"));
-
-  // If language already chosen, apply and enable immediately (still no mixing)
-  const existing = (localStorage.getItem(K_LANG)||"").toLowerCase();
-  if(existing==="en"||existing==="zh") setLang(existing);
-})();
+function setLang(lang){
+  localStorage.setItem("gd_lang", lang);
+  // defaults
+  if(!localStorage.getItem("gd_depth")) localStorage.setItem("gd_depth","explore");
+  // route
+  window.location.href="/door/";
+}
 </script>
 </body>
 </html>

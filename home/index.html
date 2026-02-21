@@ -10,9 +10,9 @@
 
 <style>
 
-/* ==========================================
-   HOME PAGE STRUCTURE FIX
-========================================== */
+/* =========================
+   HOME STRUCTURE ALIGNMENT
+========================= */
 
 .page{
   min-height:100vh;
@@ -20,12 +20,12 @@
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
-  padding:40px 12px 120px; /* extra bottom space */
+  padding:40px 12px 140px;
 }
 
 .h{
   text-align:center;
-  margin-bottom:40px; /* prevent overlap */
+  margin-bottom:40px;
   z-index:5;
 }
 
@@ -36,25 +36,31 @@
   justify-content:center;
   width:100%;
   margin-top:20px;
-  margin-bottom:60px;
 }
 
-/* Mini controls moved OUTSIDE stack */
+/* =========================
+   MINI GEMS — POCKET LOCK
+========================= */
 
-.control-bar{
+.pocket-left,
+.pocket-right{
   position:absolute;
-  bottom:-90px; /* clear of diamonds */
-  width:100%;
-  display:flex;
-  justify-content:center;
-  gap:40px;
-  z-index:4;
+  bottom:6%;
+  z-index:3;
 }
 
-/* Footer pushed further down */
+.pocket-left{
+  left:6%;
+}
+
+.pocket-right{
+  right:6%;
+}
+
+/* Footer separation */
 
 footer{
-  margin-top:120px;
+  margin-top:140px;
   opacity:.55;
   letter-spacing:3px;
   font-size:12px;
@@ -94,12 +100,14 @@ footer{
         <span>West<small>ORIGIN</small></span>
       </a>
 
-      <!-- CONTROL BAR (NOT STACKED) -->
-      <div class="control-bar">
+      <!-- MINI GEMS IN POCKETS -->
+      <div class="pocket-left">
         <a class="diamond mini" href="/door/">
           <span><small>EXIT</small></span>
         </a>
+      </div>
 
+      <div class="pocket-right">
         <a class="diamond mini" href="/">
           <span><small>ROOT</small></span>
         </a>

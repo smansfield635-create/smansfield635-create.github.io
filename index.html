@@ -1,204 +1,32 @@
-<!-- ============================
-TNT: /index.html
-REPLACE ENTIRE FILE
-Purpose: ONE-TIME language fork only.
-Sets localStorage.lang = "en" | "zh"
-Then routes to /door/
-============================ -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Welcome · Geodiametrics</title>
-
-  <link rel="stylesheet" href="/assets/ui.css?v=2001"/>
-
-  <style>
-    :root{
-      --bg0:#05070c;
-      --bg1:#24060a;
-      --bg2:#4a0a10;
-      --glass:rgba(255,255,255,.06);
-      --glass2:rgba(255,255,255,.09);
-      --line:rgba(255,255,255,.10);
-      --text:#eaf2f6;
-      --muted:rgba(234,242,246,.72);
-      --gold:rgba(255,210,120,.55);
-    }
-    html,body{height:100%}
-    body{
-      margin:0;
-      color:var(--text);
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:
-        radial-gradient(1200px 800px at 50% 18%, rgba(140,20,30,.55) 0%, rgba(0,0,0,0) 55%),
-        radial-gradient(1200px 900px at 50% 18%, var(--bg2) 0%, var(--bg1) 45%, var(--bg0) 100%);
-      overflow-x:hidden;
-    }
-    .page{
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:flex-start;
-      padding:40px 16px 36px;
-      gap:18px;
-      position:relative;
-      z-index:1;
-    }
-    .hero{
-      width:min(980px,94vw);
-      text-align:left;
-    }
-    .hero h1{
-      margin:0;
-      font-size:clamp(44px,8vw,72px);
-      font-weight:950;
-      letter-spacing:.01em;
-    }
-    .hero p{
-      margin:10px 0 0;
-      font-size:clamp(16px,3.2vw,22px);
-      color:var(--muted);
-      line-height:1.35;
-    }
-    .panel{
-      width:min(980px,94vw);
-      border-radius:26px;
-      background:var(--glass);
-      box-shadow:inset 0 0 0 1px var(--line), 0 28px 90px rgba(0,0,0,.65);
-      padding:18px;
-      backdrop-filter: blur(14px);
-    }
-    .panel h2{
-      margin:0 0 10px;
-      font-size:14px;
-      letter-spacing:.22em;
-      opacity:.85;
-    }
-    .choices{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-    }
-    .btn{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      width:100%;
-      border-radius:20px;
-      padding:18px 18px;
-      background:rgba(0,0,0,.22);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-      color:var(--text);
-      text-decoration:none;
-      user-select:none;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .btn:active{transform:translateY(1px); filter:brightness(1.05)}
-    .left{
-      display:flex; flex-direction:column; gap:6px;
-    }
-    .title{
-      font-size:20px;
-      font-weight:900;
-      letter-spacing:.06em;
-    }
-    .sub{
-      font-size:14px;
-      color:rgba(234,242,246,.68);
-    }
-    .pill{
-      min-width:64px;
-      text-align:center;
-      padding:10px 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.06);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-      font-weight:850;
-      letter-spacing:.14em;
-      opacity:.95;
-    }
-    .note{
-      margin-top:12px;
-      font-size:14px;
-      color:rgba(234,242,246,.70);
-      line-height:1.45;
-    }
-    footer{
-      width:min(980px,94vw);
-      margin-top:auto;
-      text-align:center;
-      letter-spacing:3px;
-      font-size:12px;
-      opacity:.55;
-    }
-    /* subtle star specks */
-    body::after{
-      content:"";
-      position:fixed; inset:0;
-      pointer-events:none;
-      z-index:0;
-      background-image:
-        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.55) 0, rgba(255,255,255,0) 60%),
-        radial-gradient(1px 1px at 72% 26%, rgba(255,255,255,.35) 0, rgba(255,255,255,0) 60%),
-        radial-gradient(2px 2px at 42% 72%, rgba(255,255,255,.20) 0, rgba(255,255,255,0) 60%);
-      opacity:.55;
-    }
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Welcome · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css"/>
 </head>
 
-<body>
-  <div class="page">
-    <div class="hero">
-      <h1>Welcome</h1>
-      <p>Choose your language once. Everything after this stays in that language.</p>
-    </div>
+<body class="theme-red">
 
-    <div class="panel">
-      <h2>LANGUAGE · ONE TIME</h2>
+<div class="page center">
 
-      <div class="choices">
-        <a class="btn" href="/door/" data-lang="en" aria-label="Enter in English">
-          <div class="left">
-            <div class="title">English</div>
-            <div class="sub">Proceed in English.</div>
-          </div>
-          <div class="pill">EN</div>
-        </a>
+  <h1>Welcome</h1>
+  <p>Choose your language.</p>
 
-        <a class="btn" href="/door/" data-lang="zh" aria-label="使用中文进入">
-          <div class="left">
-            <div class="title">中文</div>
-            <div class="sub">使用简体中文进入。</div>
-          </div>
-          <div class="pill">中文</div>
-        </a>
-      </div>
+  <div class="gate">
 
-      <div class="note">
-        No setup. No account. No repeated prompts.
-      </div>
-    </div>
+    <a class="gate-btn" href="/door/?lang=en">
+      English
+    </a>
 
-    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    <a class="gate-btn" href="/door/?lang=zh">
+      中文
+    </a>
+
   </div>
 
-  <script>
-    (function(){
-      const links = document.querySelectorAll('[data-lang]');
-      links.forEach(a=>{
-        a.addEventListener('click', (e)=>{
-          const lang = a.getAttribute('data-lang');
-          try{
-            localStorage.setItem('geo_lang', lang);
-          }catch(_){}
-          // allow normal navigation to /door/
-        }, {passive:true});
-      });
-    })();
-  </script>
+</div>
+
 </body>
 </html>

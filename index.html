@@ -10,26 +10,27 @@
 
 <style>
 /* ==========================================
-   INDEX (LANGUAGE GATE) — CLEAR TNT
-   Purpose: choose language ONCE, then go /door/
+   INDEX — LANGUAGE ONLY (ONE TIME)
+   Sets:
+     localStorage.gd_lang = "en" | "zh"
+     localStorage.gd_depth default = "explore"
+   Then routes to /door/
 ========================================== */
 
 :root{
+  --ink: rgba(234,242,246,.92);
+  --muted: rgba(234,242,246,.72);
   --glass: rgba(255,255,255,.07);
   --stroke: rgba(255,255,255,.14);
-  --ink: rgba(234,242,246,.92);
-  --muted: rgba(234,242,246,.70);
-  --shadow: rgba(0,0,0,.55);
 }
 
-/* Chinese red/black theme */
 html,body{height:100%;margin:0}
 body{
   min-height:100vh;
   color:var(--ink);
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:
-    radial-gradient(1100px 760px at 50% 12%, rgba(190,10,18,.55) 0%, rgba(90,10,14,.35) 40%, rgba(6,10,14,1) 100%);
+    radial-gradient(1100px 760px at 50% 12%, rgba(190,10,18,.52) 0%, rgba(90,10,14,.34) 40%, rgba(6,10,14,1) 100%);
 }
 
 .page{
@@ -38,86 +39,102 @@ body{
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  padding:30px 14px 90px;
+  padding:34px 14px 90px;
   position:relative;
 }
 
-.card{
-  width:min(640px,94vw);
-  border-radius:28px;
-  background:rgba(0,0,0,.26);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.06),
-    0 30px 90px rgba(0,0,0,.70);
-  padding:26px 18px 18px;
+.hero{
+  width:min(820px,94vw);
   text-align:center;
-  backdrop-filter:blur(10px);
+  margin-bottom:16px;
 }
 
-h1{
+.hero h1{
   margin:0;
-  font-size:clamp(44px,9vw,70px);
+  font-size:clamp(48px,10vw,78px);
   font-weight:900;
   letter-spacing:.01em;
 }
 
-.sub{
-  margin:12px auto 0;
+.hero p{
+  margin:10px 0 0;
   font-size:18px;
   color:var(--muted);
-  line-height:1.4;
 }
 
-.sub strong{color:var(--ink);}
+.card{
+  width:min(820px,94vw);
+  border-radius:28px;
+  background:rgba(0,0,0,.24);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 30px 90px rgba(0,0,0,.70);
+  padding:18px;
+  backdrop-filter:blur(10px);
+}
 
-.btnrow{
+.row{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
-  margin-top:18px;
 }
 
-.langbtn{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
+.lang{
   padding:18px 14px;
-  border-radius:20px;
+  border-radius:22px;
   background:var(--glass);
   border:1px solid var(--stroke);
-  box-shadow:0 20px 60px rgba(0,0,0,.40);
-  color:var(--ink);
-  text-decoration:none;
-  font-weight:900;
-}
-
-.langbtn:active{
-  transform:translateY(1px);
-}
-
-.langbtn .big{
-  font-size:22px;
-  letter-spacing:.08em;
-}
-
-.langbtn .small{
-  font-size:12px;
-  letter-spacing:.18em;
-  opacity:.70;
-  font-weight:800;
-}
-
-/* Stronger visual “this is clickable” */
-.langbtn{
+  text-align:left;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 }
 
-.hint{
-  margin:16px auto 0;
+.lang .t{
+  font-size:20px;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+
+.lang .d{
+  margin-top:6px;
+  font-size:14px;
+  color:rgba(234,242,246,.72);
+  line-height:1.45;
+}
+
+.lang.active{
+  background:rgba(255,255,255,.11);
+  border-color:rgba(255,255,255,.20);
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+
+.actions{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+.btn{
+  padding:14px 18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.12);
+  color:var(--ink);
+  font-weight:900;
+  text-decoration:none;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.btn.primary{
+  background:rgba(255,255,255,.14);
+}
+
+.note{
+  margin:12px auto 0;
   padding:12px 14px;
   border-radius:18px;
   background:rgba(255,255,255,.06);
@@ -125,9 +142,10 @@ h1{
   color:rgba(234,242,246,.78);
   font-size:14px;
   line-height:1.45;
+  text-align:left;
 }
 
-.hint b{color:rgba(234,242,246,.92);}
+.note b{color:rgba(234,242,246,.92);}
 
 .footer{
   position:absolute;
@@ -145,28 +163,31 @@ h1{
 <div class="shooting-stars"></div>
 
 <div class="page">
+
+  <div class="hero">
+    <h1 id="t_welcome">Welcome</h1>
+    <p id="t_pick">Choose your language once. Everything after this stays in that language.</p>
+  </div>
+
   <div class="card">
-    <h1>Welcome</h1>
-    <div class="sub">
-      Choose your language <strong>once</strong>.<br/>
-      Next: pick depth (Explore / Learn).
+    <div class="row" role="group" aria-label="Language selection">
+      <div class="lang" id="pickEN" data-lang="en">
+        <div class="t">English</div>
+        <div class="d">Proceed in English.</div>
+      </div>
+
+      <div class="lang" id="pickZH" data-lang="zh">
+        <div class="t">中文</div>
+        <div class="d">使用简体中文进入。</div>
+      </div>
     </div>
 
-    <div class="btnrow">
-      <a class="langbtn" href="/door/" data-lang="en" aria-label="Enter in English">
-        <div class="big">English</div>
-        <div class="small">ENTER</div>
-      </a>
-
-      <a class="langbtn" href="/door/" data-lang="zh" aria-label="使用中文进入">
-        <div class="big">中文</div>
-        <div class="small">进入</div>
-      </a>
+    <div class="actions">
+      <button class="btn primary" id="btnContinue" type="button">Continue</button>
     </div>
 
-    <div class="hint">
-      <b>Explore</b> = quick surface view.<br/>
-      <b>Learn</b> = deep bubble expansion.
+    <div class="note" id="t_note">
+      <b>Next:</b> you’ll pick depth (Explore vs Learn) once, then enter the hub.
     </div>
   </div>
 
@@ -175,14 +196,43 @@ h1{
 
 <script>
 (function(){
+  const $ = (id)=>document.getElementById(id);
+
   function setLang(lang){
     try{ localStorage.setItem("gd_lang", lang); }catch(e){}
   }
-  document.querySelectorAll("[data-lang]").forEach(a=>{
-    a.addEventListener("click", (e)=>{
-      setLang(a.getAttribute("data-lang") || "en");
-      // allow normal navigation to /door/
-    });
+  function setDefaultDepth(){
+    try{
+      const existing = (localStorage.getItem("gd_depth") || "").toLowerCase();
+      if(!existing) localStorage.setItem("gd_depth", "explore");
+      if(existing === "shop") localStorage.setItem("gd_depth", "explore");
+    }catch(e){}
+  }
+
+  let chosen = null;
+
+  function activate(lang){
+    chosen = lang;
+    $("pickEN").classList.toggle("active", lang==="en");
+    $("pickZH").classList.toggle("active", lang==="zh");
+    $("btnContinue").textContent = (lang==="zh") ? "继续" : "Continue";
+    $("t_note").innerHTML = (lang==="zh")
+      ? "<b>下一步：</b>选择深度（浏览 / 学习），然后进入枢纽。"
+      : "<b>Next:</b> you’ll pick depth (Explore vs Learn) once, then enter the hub.";
+  }
+
+  $("pickEN").addEventListener("click", ()=>activate("en"));
+  $("pickZH").addEventListener("click", ()=>activate("zh"));
+
+  $("btnContinue").addEventListener("click", ()=>{
+    if(!chosen){
+      // force a choice (no drift)
+      activate("en");
+      return;
+    }
+    setLang(chosen);
+    setDefaultDepth();
+    location.href = "/door/";
   });
 })();
 </script>

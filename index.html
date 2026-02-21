@@ -5,281 +5,451 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Geodiametrics · Root</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=3000"/>
-<link rel="stylesheet" href="/assets/branch.css?v=3000"/>
+<link rel="stylesheet" href="/assets/ui.css?v=2001"/>
+<link rel="stylesheet" href="/assets/branch.css?v=2001"/>
 
 <style>
-/* ================================
-   ROOT · LENS ARCHITECTURE
-   TNT FULL REPLACEMENT
-================================ */
+/* ROOT: dropdown system + language toggle (page-local) */
+.root-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:14px}
+.root-hero{text-align:left}
+.root-hero h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
+.root-hero p{margin:10px 0 0;font-size:20px;opacity:.75}
 
-/* Layout */
-.root-wrap{
-  width:min(1000px,94vw);
-  display:flex;
-  flex-direction:column;
-  gap:24px;
-}
-
-/* Lens Bar */
-.lens-bar{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  justify-content:center;
-}
-
-.lens{
-  padding:10px 18px;
-  border-radius:999px;
+.lang-toggle{
+  position:fixed;top:14px;right:14px;z-index:9999;
+  display:flex;gap:8px;align-items:center;
+  padding:10px 12px;border-radius:999px;
   background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  font-weight:900;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  text-decoration:none;
-  color:inherit;
-  font-size:13px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 18px 50px rgba(0,0,0,.35);
+  backdrop-filter:blur(12px);
+}
+.lang-toggle button{
+  border:0;cursor:pointer;
+  padding:8px 12px;border-radius:999px;
+  background:rgba(255,255,255,.08);
+  color:#eaf2f6;font-weight:900;letter-spacing:.06em;
+}
+.lang-toggle button[aria-pressed="true"]{
+  background:rgba(255,255,255,.16);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
 }
 
-/* Content Sections */
-.lens-section{
-  padding:18px;
+.dd-stack{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+details.dd{
   border-radius:22px;
   background:rgba(255,255,255,.04);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.08),
-    0 30px 80px rgba(0,0,0,.45);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.40);
+  overflow:hidden;
 }
-
-.lens-section h2{
-  margin:0 0 12px;
+details.dd > summary{
+  list-style:none;
+  cursor:pointer;
+  padding:18px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
   font-size:18px;
   font-weight:900;
   letter-spacing:.12em;
   text-transform:uppercase;
+  user-select:none;
 }
-
-.lens-section p{
-  margin:8px 0;
-  font-size:16px;
-  line-height:1.6;
+details.dd > summary::-webkit-details-marker{display:none}
+.dd-caret{
+  width:34px;height:34px;border-radius:999px;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
   opacity:.9;
 }
+details.dd[open] .dd-caret{transform:rotate(180deg)}
+.dd-body{padding:0 18px 18px;opacity:.92;font-size:18px;line-height:1.6}
 
-/* Grid blocks */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:12px;
-  margin-top:14px;
-}
-
-.card{
-  padding:14px;
+details.dd2{
+  margin-top:12px;
   border-radius:18px;
   background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+  overflow:hidden;
+}
+details.dd2 > summary{
+  list-style:none;cursor:pointer;user-select:none;
+  padding:14px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:14px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;
+  opacity:.92;
+}
+details.dd2 > summary::-webkit-details-marker{display:none}
+.dd2-body{padding:0 14px 14px;opacity:.9;font-size:16px;line-height:1.6}
+
+.pill{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  margin:10px 0 0;
+}
+.badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:52px;height:34px;padding:0 12px;border-radius:999px;
+  background:rgba(255,255,255,.07);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  font-weight:900;letter-spacing:.10em;
 }
 
-.card h3{
-  margin:0 0 6px;
-  font-size:13px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-}
-
-.card p{
-  margin:0;
-  font-size:14px;
-  opacity:.85;
-}
-
-.sep{
-  border:0;
-  height:1px;
-  background:rgba(255,255,255,.10);
-  margin:12px 0;
-}
-
-/* Bottom diamond */
-.root-controls{
-  display:flex;
-  justify-content:center;
-  margin-top:12px;
-}
-
-.root-controls .platform{
-  width:min(380px,88vw);
-}
+.root-controls{width:100%;display:flex;justify-content:center;margin-top:10px}
+.root-controls .platform{width:min(380px,86vw)}
+/* give the root plate breathing room below dropdowns */
+.footer-pad{margin-top:18px}
 </style>
 </head>
 
 <body>
 <div class="shooting-stars"></div>
 
+<!-- LANGUAGE LENS (EN / 中文) -->
+<div class="lang-toggle" role="group" aria-label="Language">
+  <button id="btnEN" type="button" aria-pressed="true">EN</button>
+  <button id="btnZH" type="button" aria-pressed="false">中文</button>
+</div>
+
 <div class="page">
-<div class="root-wrap">
+  <div class="root-wrap">
 
-  <div class="h">
-    <h1>Geodiametrics</h1>
-    <p>Structure · Language · Energy · Human Systems</p>
+    <div class="root-hero">
+      <h1 data-i18n="hero_title">Geodiametrics</h1>
+      <p data-i18n="hero_sub">Under construction · Safe to explore.</p>
+    </div>
+
+    <!-- FOUR TOP-LEVEL DROPDOWNS (CLOSED BY DEFAULT) -->
+    <div class="dd-stack">
+
+      <!-- N: COMING SOON -->
+      <details class="dd" id="dd_soon">
+        <summary>
+          <span data-i18n="soon_title">COMING SOON</span>
+          <span class="dd-caret">⌄</span>
+        </summary>
+        <div class="dd-body">
+          <div class="pill"><span class="badge" data-i18n="n_badge">N</span><span data-i18n="soon_line">New usable surfaces ship continuously.</span></div>
+
+          <details class="dd2">
+            <summary><span data-i18n="soon_tools_title">Tools & Surfaces</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="soon_tools_body">New interfaces, tools, and execution surfaces.</div>
+          </details>
+
+          <details class="dd2">
+            <summary><span data-i18n="soon_packs_title">Packs & Outputs</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="soon_packs_body">Downloadable materials, PDFs, and packaged outputs.</div>
+          </details>
+
+          <details class="dd2">
+            <summary><span data-i18n="soon_diag_title">Diagnostics & Gauges</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="soon_diag_body">Measurement instruments, audits, and integrity checks.</div>
+          </details>
+
+          <details class="dd2">
+            <summary><span data-i18n="soon_refresh_title">Content Refreshes</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="soon_refresh_body">Clarity passes, edits, and structured upgrades.</div>
+          </details>
+        </div>
+      </details>
+
+      <!-- E: START HERE -->
+      <details class="dd" id="dd_start">
+        <summary>
+          <span data-i18n="start_title">START HERE</span>
+          <span class="dd-caret">⌄</span>
+        </summary>
+        <div class="dd-body">
+          <div class="pill"><span class="badge" data-i18n="e_badge">E</span><span data-i18n="start_line">Pick one route at a time. Return to a hub if needed.</span></div>
+
+          <details class="dd2">
+            <summary><span data-i18n="start_fast_title">Fast Path</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body">
+              <span class="badge" data-i18n="path_badge">PATH</span>
+              <span data-i18n="start_fast_body">Laws → Categories → Integrity → Coherence (follow to the end).</span>
+            </div>
+          </details>
+
+          <details class="dd2">
+            <summary><span data-i18n="start_explore_title">Explore Path</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="start_explore_body">Use Home to move N/E/S/W, then dive one level deeper.</div>
+          </details>
+
+          <details class="dd2">
+            <summary><span data-i18n="start_rule_title">Rule of One Choice</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="start_rule_body">Choose one route. Don’t multi-tab inside a branch.</div>
+          </details>
+
+          <details class="dd2">
+            <summary><span data-i18n="start_return_title">Return Point</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="start_return_body">If incomplete, return to Home or the current hub.</div>
+          </details>
+        </div>
+      </details>
+
+      <!-- S: COMPASS KEY -->
+      <details class="dd" id="dd_compass">
+        <summary>
+          <span data-i18n="compass_title">COMPASS KEY</span>
+          <span class="dd-caret">⌄</span>
+        </summary>
+        <div class="dd-body">
+          <div class="pill"><span class="badge" data-i18n="s_badge">S</span><span data-i18n="compass_line">N/E/S/W encode functional domains (not directions).</span></div>
+
+          <details class="dd2">
+            <summary><span data-i18n="comp_n_title">N — Laws</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="comp_n_body">Definitions, categories, and stable rules.</div>
+          </details>
+
+          <details class="dd2">
+            <summary><span data-i18n="comp_e_title">E — Products</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="comp_e_body">Tools, execution surfaces, and applied systems.</div>
+          </details>
+
+          <details class="dd2">
+            <summary><span data-i18n="comp_s_title">S — Gauges</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="comp_s_body">Measurement, diagnostics, and integrity checks.</div>
+          </details>
+
+          <details class="dd2">
+            <summary><span data-i18n="comp_w_title">W — Links</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="comp_w_body">External identity, references, and contact anchors.</div>
+          </details>
+        </div>
+      </details>
+
+      <!-- W: WHAT STAYS STABLE -->
+      <details class="dd" id="dd_stable">
+        <summary>
+          <span data-i18n="stable_title">WHAT STAYS STABLE</span>
+          <span class="dd-caret">⌄</span>
+        </summary>
+        <div class="dd-body">
+          <div class="pill"><span class="badge" data-i18n="w_badge">W</span><span data-i18n="stable_line">Navigation grammar stays stable while content evolves.</span></div>
+
+          <details class="dd2">
+            <summary><span data-i18n="stable_nav_title">Navigation</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="stable_nav_body">Four routes. One choice at a time. Hub return always works.</div>
+          </details>
+
+          <details class="dd2">
+            <summary><span data-i18n="stable_outputs_title">Outputs</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="stable_outputs_body">Public releases are additive; local work stays local unless published.</div>
+          </details>
+
+          <details class="dd2">
+            <summary><span data-i18n="stable_language_title">Language</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="stable_language_body">English/中文 view is a lens switch: same structure, different surface text.</div>
+          </details>
+
+          <details class="dd2">
+            <summary><span data-i18n="stable_credit_title">Credit</span><span class="dd-caret">⌄</span></summary>
+            <div class="dd2-body" data-i18n="stable_credit_body">Citations and references live under Links; products reference their sources.</div>
+          </details>
+        </div>
+      </details>
+
+    </div>
+
+    <!-- DIAMOND NAV (ROOT CONTROL PLATE) -->
+    <div class="root-controls">
+      <div class="platform">
+
+        <a class="diamond top" href="/door/">
+          <span data-i18n="tile_enter">Enter<small data-i18n="tile_enter_sub">Door</small></span>
+        </a>
+
+        <a class="diamond right" href="/home/">
+          <span data-i18n="tile_home">Home<small data-i18n="tile_home_sub">Compass</small></span>
+        </a>
+
+        <a class="diamond bottom" href="/laws/categories/">
+          <span data-i18n="tile_categories">Categories<small data-i18n="tile_categories_sub">Laws</small></span>
+        </a>
+
+        <a class="diamond left" href="/products/">
+          <span data-i18n="tile_products">Products<small data-i18n="tile_products_sub">Suite</small></span>
+        </a>
+
+        <a class="diamond mini mini-left" href="/home/">
+          <span><small data-i18n="mini_home">HOME</small></span>
+        </a>
+
+        <a class="diamond mini mini-right" href="/door/">
+          <span><small data-i18n="mini_door">DOOR</small></span>
+        </a>
+
+      </div>
+    </div>
+
+    <footer class="footer-pad">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
   </div>
-
-  <!-- LENS BAR -->
-  <div class="lens-bar">
-    <a class="lens" href="#human">Human</a>
-    <a class="lens" href="#language">Language</a>
-    <a class="lens" href="#energy">Energy</a>
-    <a class="lens" href="#governance">Governance</a>
-    <a class="lens" href="#measurement">Measurement</a>
-  </div>
-
-  <!-- HUMAN LENS -->
-  <section id="human" class="lens-section">
-    <h2>Human Lens</h2>
-
-    <div class="grid">
-      <div class="card">
-        <h3>1,001 Words</h3>
-        <p>Finite lexicon English mastery system.</p>
-      </div>
-      <div class="card">
-        <h3>Four Levels</h3>
-        <p>Structured progression for fluency.</p>
-      </div>
-      <div class="card">
-        <h3>Downloadables</h3>
-        <p>PDFs, drills, lesson plans.</p>
-      </div>
-      <div class="card">
-        <h3>Mandarin Bridge</h3>
-        <p>Common Mandarin integration layer.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- LANGUAGE LENS -->
-  <section id="language" class="lens-section">
-    <h2>Language Lens</h2>
-
-    <div class="grid">
-      <div class="card">
-        <h3>SSG</h3>
-        <p>Simplified Syntax Geometry system.</p>
-      </div>
-      <div class="card">
-        <h3>Diamond Grammar</h3>
-        <p>Four-route structural navigation.</p>
-      </div>
-      <div class="card">
-        <h3>DOT.GRID</h3>
-        <p>256-state indexing system.</p>
-      </div>
-      <div class="card">
-        <h3>Acronyms</h3>
-        <p>256 categorized by pillars.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ENERGY LENS -->
-  <section id="energy" class="lens-section">
-    <h2>Energy Lens</h2>
-
-    <div class="grid">
-      <div class="card">
-        <h3>Solar → Plasma</h3>
-        <p>Energy conversion modeling.</p>
-      </div>
-      <div class="card">
-        <h3>Execution Surfaces</h3>
-        <p>PLASMA / PLATFORM layers.</p>
-      </div>
-      <div class="card">
-        <h3>Environmental Systems</h3>
-        <p>Measurement + signal architecture.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- GOVERNANCE LENS -->
-  <section id="governance" class="lens-section">
-    <h2>Governance Lens</h2>
-
-    <div class="grid">
-      <div class="card">
-        <h3>Certification</h3>
-        <p>Business & structural certification tracks.</p>
-      </div>
-      <div class="card">
-        <h3>Integrity</h3>
-        <p>Alignment diagnostic surfaces.</p>
-      </div>
-      <div class="card">
-        <h3>Receipts</h3>
-        <p>Verification & audit layers.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- MEASUREMENT LENS -->
-  <section id="measurement" class="lens-section">
-    <h2>Measurement Lens</h2>
-
-    <div class="grid">
-      <div class="card">
-        <h3>Gauges</h3>
-        <p>Operational instruments.</p>
-      </div>
-      <div class="card">
-        <h3>Diagnostics</h3>
-        <p>Signal-based assessment tools.</p>
-      </div>
-      <div class="card">
-        <h3>Indexing</h3>
-        <p>DOT.GRID categorization.</p>
-      </div>
-    </div>
-  </section>
-
-  <hr class="sep"/>
-
-  <!-- DIAMOND NAVIGATION -->
-  <div class="root-controls">
-    <div class="platform">
-
-      <a class="diamond top" href="/laws/">
-        <span>Laws<small>Categories</small></span>
-      </a>
-
-      <a class="diamond right" href="/products/">
-        <span>Products<small>Suite</small></span>
-      </a>
-
-      <a class="diamond bottom" href="/gauges/">
-        <span>Gauges<small>Instruments</small></span>
-      </a>
-
-      <a class="diamond left" href="/links/">
-        <span>Links<small>References</small></span>
-      </a>
-
-      <a class="diamond mini mini-left" href="/door/">
-        <span><small>DOOR</small></span>
-      </a>
-
-      <a class="diamond mini mini-right" href="/home/">
-        <span><small>HOME</small></span>
-      </a>
-
-    </div>
-  </div>
-
-  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
 </div>
-</div>
+
+<script>
+(() => {
+  const dict = {
+    en: {
+      hero_title:"Geodiametrics",
+      hero_sub:"Under construction · Safe to explore.",
+
+      soon_title:"COMING SOON",
+      n_badge:"N",
+      soon_line:"New usable surfaces ship continuously.",
+      soon_tools_title:"Tools & Surfaces",
+      soon_tools_body:"New interfaces, tools, and execution surfaces.",
+      soon_packs_title:"Packs & Outputs",
+      soon_packs_body:"Downloadable materials, PDFs, and packaged outputs.",
+      soon_diag_title:"Diagnostics & Gauges",
+      soon_diag_body:"Measurement instruments, audits, and integrity checks.",
+      soon_refresh_title:"Content Refreshes",
+      soon_refresh_body:"Clarity passes, edits, and structured upgrades.",
+
+      start_title:"START HERE",
+      e_badge:"E",
+      start_line:"Pick one route at a time. Return to a hub if needed.",
+      start_fast_title:"Fast Path",
+      path_badge:"PATH",
+      start_fast_body:"Laws → Categories → Integrity → Coherence (follow to the end).",
+      start_explore_title:"Explore Path",
+      start_explore_body:"Use Home to move N/E/S/W, then dive one level deeper.",
+      start_rule_title:"Rule of One Choice",
+      start_rule_body:"Choose one route. Don’t multi-tab inside a branch.",
+      start_return_title:"Return Point",
+      start_return_body:"If incomplete, return to Home or the current hub.",
+
+      compass_title:"COMPASS KEY",
+      s_badge:"S",
+      compass_line:"N/E/S/W encode functional domains (not directions).",
+      comp_n_title:"N — Laws",
+      comp_n_body:"Definitions, categories, and stable rules.",
+      comp_e_title:"E — Products",
+      comp_e_body:"Tools, execution surfaces, and applied systems.",
+      comp_s_title:"S — Gauges",
+      comp_s_body:"Measurement, diagnostics, and integrity checks.",
+      comp_w_title:"W — Links",
+      comp_w_body:"External identity, references, and contact anchors.",
+
+      stable_title:"WHAT STAYS STABLE",
+      w_badge:"W",
+      stable_line:"Navigation grammar stays stable while content evolves.",
+      stable_nav_title:"Navigation",
+      stable_nav_body:"Four routes. One choice at a time. Hub return always works.",
+      stable_outputs_title:"Outputs",
+      stable_outputs_body:"Public releases are additive; local work stays local unless published.",
+      stable_language_title:"Language",
+      stable_language_body:"English/中文 view is a lens switch: same structure, different surface text.",
+      stable_credit_title:"Credit",
+      stable_credit_body:"Citations and references live under Links; products reference their sources.",
+
+      tile_enter:"Enter",
+      tile_enter_sub:"Door",
+      tile_home:"Home",
+      tile_home_sub:"Compass",
+      tile_categories:"Categories",
+      tile_categories_sub:"Laws",
+      tile_products:"Products",
+      tile_products_sub:"Suite",
+      mini_home:"HOME",
+      mini_door:"DOOR"
+    },
+    zh: {
+      hero_title:"Geodiametrics",
+      hero_sub:"建设中 · 可安全浏览。",
+
+      soon_title:"即将上线",
+      n_badge:"N",
+      soon_line:"可用的工具与界面会持续上线。",
+      soon_tools_title:"工具与界面",
+      soon_tools_body:"新的交互界面、工具与执行入口。",
+      soon_packs_title:"资料包与输出",
+      soon_packs_body:"可下载资料、PDF 与打包输出。",
+      soon_diag_title:"诊断与量表",
+      soon_diag_body:"测量工具、审计与完整性检查。",
+      soon_refresh_title:"内容更新",
+      soon_refresh_body:"清晰度压缩、修订与结构升级。",
+
+      start_title:"从这里开始",
+      e_badge:"E",
+      start_line:"一次只选一条路线；需要时回到枢纽页。",
+      start_fast_title:"快速路径",
+      path_badge:"路径",
+      start_fast_body:"Laws → Categories → Integrity → Coherence（一路跟到底）。",
+      start_explore_title:"探索路径",
+      start_explore_body:"从 Home 用 N/E/S/W 选择方向，再进入下一层。",
+      start_rule_title:"单选规则",
+      start_rule_body:"一次只选一条路线；不要在分支内多开标签页。",
+      start_return_title:"返回点",
+      start_return_body:"若内容未完成，返回 Home 或当前枢纽页。",
+
+      compass_title:"指南针键",
+      s_badge:"S",
+      compass_line:"N/E/S/W 表示功能域（不是方向）。",
+      comp_n_title:"N — Laws",
+      comp_n_body:"定义、分类与稳定规则。",
+      comp_e_title:"E — Products",
+      comp_e_body:"工具、执行入口与应用系统。",
+      comp_s_title:"S — Gauges",
+      comp_s_body:"测量、诊断与完整性检查。",
+      comp_w_title:"W — Links",
+      comp_w_body:"外部身份、引用与联系锚点。",
+
+      stable_title:"哪些保持稳定",
+      w_badge:"W",
+      stable_line:"导航语法稳定，内容持续演进。",
+      stable_nav_title:"导航",
+      stable_nav_body:"四条路线；一次一选；随时可回到枢纽页。",
+      stable_outputs_title:"输出",
+      stable_outputs_body:"公开发布是增量叠加；本地内容默认保持本地，除非主动发布。",
+      stable_language_title:"语言",
+      stable_language_body:"英语/中文是“镜头切换”：结构不变，表层文字变化。",
+      stable_credit_title:"署名",
+      stable_credit_body:"引用与身份在 Links；产品页会指向其来源。",
+
+      tile_enter:"进入",
+      tile_enter_sub:"Door",
+      tile_home:"主页",
+      tile_home_sub:"Compass",
+      tile_categories:"分类",
+      tile_categories_sub:"Laws",
+      tile_products:"产品",
+      tile_products_sub:"Suite",
+      mini_home:"HOME",
+      mini_door:"DOOR"
+    }
+  };
+
+  const btnEN = document.getElementById("btnEN");
+  const btnZH = document.getElementById("btnZH");
+  const els = () => Array.from(document.querySelectorAll("[data-i18n]"));
+
+  function apply(lang){
+    const d = dict[lang] || dict.en;
+    els().forEach(el => {
+      const k = el.getAttribute("data-i18n");
+      if (d[k] != null) el.textContent = d[k];
+    });
+    btnEN.setAttribute("aria-pressed", lang === "en" ? "true" : "false");
+    btnZH.setAttribute("aria-pressed", lang === "zh" ? "true" : "false");
+    document.documentElement.lang = (lang === "zh") ? "zh-Hans" : "en";
+    localStorage.setItem("geo_lang", lang);
+  }
+
+  btnEN.addEventListener("click", () => apply("en"));
+  btnZH.addEventListener("click", () => apply("zh"));
+
+  // default: all dropdowns CLOSED
+  ["dd_soon","dd_start","dd_compass","dd_stable"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.removeAttribute("open");
+  });
+
+  apply(localStorage.getItem("geo_lang") || "en");
+})();
+</script>
+
 </body>
 </html>

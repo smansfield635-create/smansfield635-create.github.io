@@ -1,831 +1,280 @@
-<!-- TNT FILE: /home/index.html  (FULL TMT/TNT REPLACEMENT)
-     SCOPE256 header + 3 lenses:
-       1) LANG (read-only, chosen at Index once)
-       2) DEPTH (Explore / Learn)
-       3) SCOPE (Origin / Now / Trajectory)  // never “past/present/future”
-     Engine:
-       Quadrant dropdowns (NW/NE/SW/SE)
-       Each quadrant: 4 bubbles → bubble selects a block → block has bubble sub-map
-       Each quadrant ends with exactly 2 jumps
-     Branding:
-       SCOPE256 at top
-       GEODIAMETRICS as bottom “ink”
--->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>SCOPE256 · Home</title>
+<title>Door · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=9100"/>
-<link rel="stylesheet" href="/assets/branch.css?v=9100"/>
+<link rel="stylesheet" href="/assets/ui.css?v=9001"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9001"/>
 
 <style>
-  body{
-    background:
-      radial-gradient(1400px 900px at 50% 12%, rgba(150,0,0,.38) 0%, rgba(20,0,0,.20) 42%, rgba(5,7,12,1) 100%),
-      radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
-  }
+/* DOOR = Lens Select Only (4-lens diamond) */
 
-  .wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
-  .hero{position:relative;z-index:20;text-align:left}
-  .hero h1{font-size:clamp(44px,7vw,72px);margin:0;font-weight:950;letter-spacing:.02em}
-  .hero p{margin:10px 0 0;opacity:.80;font-size:16px;line-height:1.4}
+body{
+  background:
+    radial-gradient(1400px 900px at 50% 12%, rgba(150,0,0,.42) 0%, rgba(20,0,0,.24) 42%, rgba(5,7,12,1) 100%),
+    radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
+}
 
-  /* Lens bar */
-  .lensbar{position:relative;z-index:20;display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
-  .pill{
-    border-radius:999px;
-    padding:10px 14px;
-    background:rgba(255,255,255,.06);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-    font-weight:900;
-    letter-spacing:.10em;
-    text-transform:uppercase;
-    font-size:12px;
-    opacity:.92;
-    color:inherit;
-    text-decoration:none;
-    user-select:none;
-    -webkit-tap-highlight-color:transparent;
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-  }
-  .pill .label{opacity:.70;font-weight:900;letter-spacing:.14em}
-  .pill.btn{cursor:pointer}
-  .pill.btn:hover{background:rgba(255,255,255,.08)}
-  .pill.active{background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
-  .pill.readonly{cursor:default; opacity:.88}
+.wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.hero{position:relative;z-index:10;text-align:left}
+.hero h1{font-size:clamp(40px,7vw,68px);margin:0;font-weight:900}
+.hero p{margin:10px 0 0;opacity:.78;font-size:18px;max-width:46ch}
 
-  .section-title{
-    margin-top:10px;
-    font-weight:900;
-    letter-spacing:.18em;
-    opacity:.72;
-    font-size:12px;
-    text-transform:uppercase;
-  }
+.hint{
+  margin-top:8px;
+  opacity:.65;
+  font-size:14px;
+  letter-spacing:.06em;
+}
 
-  /* Quadrant cards */
-  details.quad{
-    border-radius:22px;
-    background:rgba(255,255,255,.05);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 20px 60px rgba(0,0,0,.45);
-    backdrop-filter:blur(12px);
-    overflow:hidden;
-  }
-  details.quad + details.quad{margin-top:12px}
+.stage{display:flex;align-items:center;justify-content:center;width:100%}
+.platform{
+  position:relative;
+  width:min(460px,92vw);
+  aspect-ratio:1/1;
+  margin:10px auto 0;
+}
 
-  details.quad summary{
-    list-style:none;
-    cursor:pointer;
-    padding:16px 16px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    -webkit-tap-highlight-color:transparent;
-  }
-  details.quad summary::-webkit-details-marker{display:none}
+.platform::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
+  border-radius:28px;
+  background:rgba(255,255,255,.04);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    0 32px 80px rgba(0,0,0,.75);
+  backdrop-filter:blur(10px);
+  z-index:0;
+}
 
-  .q-left{display:flex;align-items:center;gap:12px;min-width:0}
-  .q-badge{
-    width:64px;height:44px;border-radius:18px;
-    background:rgba(150,0,0,.22);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-    display:flex;align-items:center;justify-content:center;
-    font-weight:950;letter-spacing:.12em;
-    flex:0 0 auto;
-  }
-  .q-badge .sym{opacity:.9;margin-right:6px}
-  .q-text{min-width:0}
-  .q-text b{display:block;font-size:18px;letter-spacing:.14em;text-transform:uppercase}
-  .q-text span{display:block;opacity:.72;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .q-arrow{
-    width:42px;height:42px;border-radius:999px;
-    background:rgba(255,255,255,.06);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-    display:flex;align-items:center;justify-content:center;
-    opacity:.9;
-    flex:0 0 auto;
-    font-weight:900;
-  }
+/* lens keys (use the same gem stack language as your site) */
+.diamond{
+  position:absolute;
+  width:38%;
+  height:38%;
+  transform:rotate(45deg);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 50% 40%,
+      rgba(60,70,80,.70) 0%,
+      rgba(25,30,35,.92) 60%,
+      rgba(12,14,18,1) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    inset 0 18px 30px rgba(255,255,255,.05),
+    inset 0 -30px 45px rgba(0,0,0,.85),
+    0 24px 60px rgba(0,0,0,.8);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  cursor:pointer;
+  z-index:2;
+}
 
-  .inside{padding:0 16px 16px}
+.diamond span{
+  transform:rotate(-45deg);
+  text-align:center;
+  font-weight:900;
+  color:#eaf2f6;
+  text-shadow:0 0 10px rgba(160,210,255,.25);
+  line-height:1.12;
+}
 
-  /* Bubble row (inside quadrant) */
-  .bubble-row{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:10px;
-    margin-top:4px;
-  }
-  @media(min-width:720px){.bubble-row{grid-template-columns:1fr 1fr}}
+.diamond small{
+  display:block;
+  margin-top:6px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.14em;
+  opacity:.80;
+}
 
-  .bubble-btn{
-    border-radius:18px;
-    background:rgba(0,0,0,.22);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-    padding:12px 12px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    cursor:pointer;
-    user-select:none;
-    -webkit-tap-highlight-color:transparent;
-  }
-  .bubble-btn .t{min-width:0}
-  .bubble-btn b{
-    display:block;
-    font-size:13px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .bubble-btn i{
-    display:block;
-    font-style:normal;
-    opacity:.72;
-    font-size:12px;
-    margin-top:2px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .bubble-btn .go{
-    width:40px;height:40px;border-radius:999px;
-    background:rgba(255,255,255,.06);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-    display:flex;align-items:center;justify-content:center;
-    opacity:.9;
-    flex:0 0 auto;
-    font-weight:900;
-  }
-  .bubble-btn:hover{background:rgba(0,0,0,.28)}
+.top{top:6%;left:31%}
+.right{top:31%;right:6%}
+.bottom{bottom:6%;left:31%}
+.left{top:31%;left:6%}
 
-  /* Block map */
-  .blockmap{
-    margin-top:12px;
-    border-radius:20px;
-    background:rgba(255,255,255,.04);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-    padding:14px 14px;
-  }
-  .bm-title{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
-    margin-bottom:10px;
-  }
-  .bm-title b{
-    font-size:12px;
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    opacity:.85;
-  }
-  .bm-title span{
-    font-size:12px;opacity:.65;letter-spacing:.10em;text-transform:uppercase;
-  }
+.diamond.active{
+  filter:brightness(1.10);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    inset 0 18px 30px rgba(255,255,255,.07),
+    inset 0 -30px 45px rgba(0,0,0,.85),
+    0 24px 60px rgba(0,0,0,.85),
+    0 0 0 2px rgba(255,255,255,.06);
+}
 
-  .block{
-    display:none;
-    border-radius:18px;
-    background:rgba(0,0,0,.22);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-    padding:14px 14px;
-  }
-  .block.active{display:block}
+.cta{
+  width:min(520px,94vw);
+  margin:12px auto 0;
+  border-radius:22px;
+  background:rgba(255,255,255,.05);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 20px 60px rgba(0,0,0,.45);
+  padding:14px 14px;
+}
 
-  .block h3{
-    margin:0;
-    font-size:16px;
-    letter-spacing:.10em;
-    text-transform:uppercase;
-  }
-  .block p{
-    margin:10px 0 0;
-    opacity:.80;
-    line-height:1.55;
-  }
+.cta-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+}
 
-  /* Scope selector chips inside blocks (not titled past/present/future) */
-  .scopechips{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:12px;
-  }
-  .chip{
-    padding:8px 10px;
-    border-radius:999px;
-    background:rgba(255,255,255,.06);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-    font-weight:900;
-    letter-spacing:.10em;
-    text-transform:uppercase;
-    font-size:11px;
-    opacity:.88;
-  }
+.badges{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  opacity:.85;
+  font-weight:900;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  font-size:12px;
+}
 
-  .scopePane{display:none;margin-top:10px}
-  .scopePane.active{display:block}
+.pill{
+  border-radius:999px;
+  padding:10px 14px;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+}
 
-  /* Sub-bubbles inside blocks (learn only) */
-  .subgrid{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:10px;
-    margin-top:12px;
-  }
-  @media(min-width:720px){.subgrid{grid-template-columns:1fr 1fr}}
+.actions{
+  display:flex;
+  gap:10px;
+}
 
-  details.sub{
-    border-radius:16px;
-    background:rgba(255,255,255,.04);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-    overflow:hidden;
-  }
-  details.sub summary{
-    list-style:none;
-    cursor:pointer;
-    padding:12px 12px;
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
-    -webkit-tap-highlight-color:transparent;
-  }
-  details.sub summary::-webkit-details-marker{display:none}
-  details.sub summary b{
-    font-size:12px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-  }
-  details.sub summary span{
-    opacity:.7;
-    font-size:12px;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  }
-  .sub .content{
-    padding:0 12px 12px;
-    opacity:.84;
-    line-height:1.55;
-    font-size:14px;
-  }
-  .sub .content ul{margin:10px 0 0 18px}
-  .sub .content li{margin:6px 0}
+.btn{
+  border-radius:16px;
+  padding:12px 16px;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+  font-weight:900;
+  text-decoration:none;
+  color:#eaf2f6;
+}
 
-  /* Exactly two jumps per quadrant */
-  .jump-row{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-top:12px;
-  }
-  .jump{
-    border-radius:999px;
-    padding:12px 16px;
-    background:rgba(255,255,255,.06);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-    font-weight:900;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    font-size:12px;
-    color:inherit;
-    text-decoration:none;
-  }
-  .jump:hover{background:rgba(255,255,255,.08)}
+.btn.primary{
+  background:rgba(150,0,0,.25);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 18px 50px rgba(0,0,0,.35);
+}
 
-  /* Depth gating */
-  body[data-depth="explore"] .deepOnly{display:none!important}
-  body[data-depth="learn"] .surfaceOnly{display:none!important}
+.note{
+  margin-top:10px;
+  opacity:.78;
+  font-size:14px;
+  line-height:1.5;
+}
 
-  /* Plate section */
-  .plate-wrap{
-    margin-top:16px;
-    position:relative;
-    z-index:2;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:10px;
-  }
-  .plate-title{
-    width:min(980px,94vw);
-    margin:0 auto;
-    font-weight:900;
-    letter-spacing:.18em;
-    opacity:.72;
-    font-size:12px;
-    text-transform:uppercase;
-    text-align:center;
-  }
-
-  footer{
-    position:relative;
-    z-index:20;
-    margin-top:18px;
-    text-align:center;
-    opacity:.55;
-    letter-spacing:3px;
-    font-size:12px;
-  }
-
-  /* Bottom ink */
-  .ink{
-    margin-top:10px;
-    text-align:center;
-    letter-spacing:.22em;
-    font-weight:900;
-    opacity:.38;
-    font-size:12px;
-    text-transform:uppercase;
-  }
+footer{
+  text-align:center;
+  letter-spacing:3px;
+  font-size:12px;
+  opacity:.55;
+  margin:18px 0 0;
+}
 </style>
 </head>
 
-<body data-lang="en" data-depth="learn" data-scope="now">
-  <div class="shooting-stars"></div>
+<body>
+<div class="shooting-stars"></div>
 
-  <div class="page">
-    <div class="wrap">
+<div class="page">
+  <div class="wrap">
 
-      <div class="hero">
-        <h1>SCOPE256</h1>
-        <p data-en="Expand bubbles → load blocks → expand sub-bubbles → then jump."
-           data-zh="展开气泡 → 加载信息块 → 展开子气泡 → 然后跳转。">
-          Expand bubbles → load blocks → expand sub-bubbles → then jump.
-        </p>
-
-        <div class="lensbar">
-          <span class="pill readonly"><span class="label" data-en="LANG" data-zh="语言">LANG</span> <span id="langRead">EN</span></span>
-
-          <span class="pill group">
-            <span class="label" data-en="DEPTH" data-zh="深度">DEPTH</span>
-            <button class="pill mini btn" type="button" data-depth-set="explore" data-en="EXPLORE" data-zh="浏览">EXPLORE</button>
-            <button class="pill mini btn active" type="button" data-depth-set="learn" data-en="LEARN" data-zh="深挖">LEARN</button>
-          </span>
-
-          <span class="pill group">
-            <span class="label" data-en="SCOPE256" data-zh="SCOPE256">SCOPE256</span>
-            <button class="pill mini btn" type="button" data-scope-set="origin" data-en="ORIGIN" data-zh="源">ORIGIN</button>
-            <button class="pill mini btn active" type="button" data-scope-set="now" data-en="NOW" data-zh="现">NOW</button>
-            <button class="pill mini btn" type="button" data-scope-set="trajectory" data-en="TRAJECTORY" data-zh="向">TRAJECTORY</button>
-          </span>
-
-          <a class="pill btn" href="/door/" data-en="DOOR" data-zh="入口">DOOR</a>
-          <a class="pill btn" href="/rgsc/" data-en="RGSC" data-zh="RGSC">RGSC</a>
-        </div>
-      </div>
-
-      <div class="section-title" data-en="Quadrant Routes (NW / NE / SW / SE)" data-zh="象限路线（NW / NE / SW / SE）">
-        Quadrant Routes (NW / NE / SW / SE)
-      </div>
-
-      <!-- ===================== NW ===================== -->
-      <details class="quad" id="quad-nw">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge"><span class="sym">⭐</span><span>NW</span></div>
-            <div class="q-text">
-              <b data-en="Northwest" data-zh="西北">Northwest</b>
-              <span data-en="Definition · language · structure" data-zh="定义 · 语言 · 结构">Definition · language · structure</span>
-            </div>
-          </div>
-          <div class="q-arrow">▾</div>
-        </summary>
-
-        <div class="inside">
-          <div class="bubble-row">
-            <div class="bubble-btn" data-block="nw-ssg">
-              <div class="t">
-                <b>SSG</b>
-                <i class="surfaceOnly" data-en="Constraint language overview." data-zh="约束语言概览。">Constraint language overview.</i>
-                <i class="deepOnly" data-en="Resources · Stores · Constraints · Goals · Guards." data-zh="资源·存储·约束·目标·守卫。">Resources · Stores · Constraints · Goals · Guards.</i>
-              </div>
-              <div class="go">▸</div>
-            </div>
-
-            <div class="bubble-btn" data-block="nw-grammar">
-              <div class="t">
-                <b data-en="Diamond Grammar" data-zh="菱形语法">Diamond Grammar</b>
-                <i class="surfaceOnly" data-en="Four routes, one choice." data-zh="四路一选。">Four routes, one choice.</i>
-                <i class="deepOnly" data-en="Hub-first traversal + receipt gating." data-zh="枢纽优先 + 回执门控。">Hub-first traversal + receipt gating.</i>
-              </div>
-              <div class="go">▸</div>
-            </div>
-
-            <div class="bubble-btn" data-block="nw-dot">
-              <div class="t">
-                <b>DOT.GRID</b>
-                <i class="surfaceOnly" data-en="256-state indexing." data-zh="256态索引。">256-state indexing.</i>
-                <i class="deepOnly" data-en="Replay + audit indexing across lattice." data-zh="格点回放与审计索引。">Replay + audit indexing across lattice.</i>
-              </div>
-              <div class="go">▸</div>
-            </div>
-
-            <div class="bubble-btn" data-block="nw-abc">
-              <div class="t">
-                <b data-en="Acronyms" data-zh="缩写">Acronyms</b>
-                <i class="surfaceOnly" data-en="Key terms list." data-zh="关键术语列表。">Key terms list.</i>
-                <i class="deepOnly" data-en="Pillarized map + usage notes." data-zh="支柱化图谱 + 用法说明。">Pillarized map + usage notes.</i>
-              </div>
-              <div class="go">▸</div>
-            </div>
-          </div>
-
-          <div class="blockmap">
-            <div class="bm-title">
-              <b data-en="Block" data-zh="信息块">Block</b>
-              <span data-en="Tap a bubble to load" data-zh="点气泡加载">Tap a bubble to load</span>
-            </div>
-
-            <div class="block active" id="nw-ssg">
-              <h3>SSG</h3>
-              <p class="surfaceOnly" data-en="A compact constraint language for describing systems."
-                 data-zh="用于描述系统的紧凑约束语言。">A compact constraint language for describing systems.</p>
-
-              <div class="scopechips">
-                <div class="chip">ORIGIN</div><div class="chip">NOW</div><div class="chip">TRAJECTORY</div>
-              </div>
-
-              <div class="scopePane" data-scope="origin">
-                <p data-en="Before constraint-first specs, behavior drifted into ad-hoc code and ambiguous terms."
-                   data-zh="在约束优先规范之前，行为常漂移为临时代码与模糊术语。">Before constraint-first specs, behavior drifted into ad-hoc code and ambiguous terms.</p>
-              </div>
-              <div class="scopePane active" data-scope="now">
-                <p data-en="SSG compresses behavior into five primitives and gates advancement by receipts."
-                   data-zh="SSG将行为压缩为五原语，并以回执门控推进。">SSG compresses behavior into five primitives and gates advancement by receipts.</p>
-              </div>
-              <div class="scopePane" data-scope="trajectory">
-                <p data-en="Constraint-native specs become replay-safe execution contracts across domains."
-                   data-zh="约束原生规范将成为跨域可回放执行契约。">Constraint-native specs become replay-safe execution contracts across domains.</p>
-              </div>
-
-              <div class="subgrid deepOnly">
-                <details class="sub">
-                  <summary><b data-en="Primitives" data-zh="原语">Primitives</b><span data-en="R/S/C/G/Guards" data-zh="资/存/约/目/守">R/S/C/G/Guards</span></summary>
-                  <div class="content">
-                    <ul>
-                      <li data-en="Resources: what is acted on" data-zh="资源：被作用对象">Resources: what is acted on</li>
-                      <li data-en="Stores: where state lives" data-zh="存储：状态所在">Stores: where state lives</li>
-                      <li data-en="Constraints: invariants" data-zh="约束：不变式">Constraints: invariants</li>
-                      <li data-en="Goals: success conditions" data-zh="目标：成功条件">Goals: success conditions</li>
-                      <li data-en="Guards: admissibility checks" data-zh="守卫：可采纳性检查">Guards: admissibility checks</li>
-                    </ul>
-                  </div>
-                </details>
-
-                <details class="sub">
-                  <summary><b data-en="Receipts" data-zh="回执">Receipts</b><span data-en="gated flow" data-zh="门控流">gated flow</span></summary>
-                  <div class="content">
-                    <ul>
-                      <li data-en="Advance only after receipt" data-zh="仅在回执后推进">Advance only after receipt</li>
-                      <li data-en="Back invalidates downstream receipts" data-zh="后退使下游回执失效">Back invalidates downstream receipts</li>
-                      <li data-en="Replay reproduces the same classification" data-zh="回放复现同一分类">Replay reproduces the same classification</li>
-                    </ul>
-                  </div>
-                </details>
-              </div>
-            </div>
-
-            <div class="block" id="nw-grammar">
-              <h3 data-en="Diamond Grammar" data-zh="菱形语法">Diamond Grammar</h3>
-              <p class="surfaceOnly" data-en="Four routes. One choice at a time."
-                 data-zh="四路。一选一次。">Four routes. One choice at a time.</p>
-
-              <div class="scopechips">
-                <div class="chip">ORIGIN</div><div class="chip">NOW</div><div class="chip">TRAJECTORY</div>
-              </div>
-
-              <div class="scopePane" data-scope="origin">
-                <p data-en="Without a return protocol, users stack decisions and drift."
-                   data-zh="没有返回协议，用户会叠加决策并漂移。">Without a return protocol, users stack decisions and drift.</p>
-              </div>
-              <div class="scopePane active" data-scope="now">
-                <p data-en="Grammar enforces hub-first traversal: choose → commit → measure → return."
-                   data-zh="语法强制枢纽优先：选择→承诺→测量→返回。">Grammar enforces hub-first traversal: choose → commit → measure → return.</p>
-              </div>
-              <div class="scopePane" data-scope="trajectory">
-                <p data-en="Stable navigation becomes an execution standard under load."
-                   data-zh="稳定导航将成为负载下的执行标准。">Stable navigation becomes an execution standard under load.</p>
-              </div>
-            </div>
-
-            <div class="block" id="nw-dot">
-              <h3>DOT.GRID</h3>
-              <p class="surfaceOnly" data-en="Deterministic indexing across a fixed state lattice."
-                 data-zh="固定状态格点上的确定性索引。">Deterministic indexing across a fixed state lattice.</p>
-
-              <div class="scopechips">
-                <div class="chip">ORIGIN</div><div class="chip">NOW</div><div class="chip">TRAJECTORY</div>
-              </div>
-
-              <div class="scopePane" data-scope="origin">
-                <p data-en="Ambiguous labels prevent independent reproduction."
-                   data-zh="模糊标签阻止独立复现。">Ambiguous labels prevent independent reproduction.</p>
-              </div>
-              <div class="scopePane active" data-scope="now">
-                <p data-en="DOT.GRID assigns stable state IDs so evidence streams can be replayed and audited."
-                   data-zh="DOT.GRID分配稳定状态ID，使证据流可回放与审计。">DOT.GRID assigns stable state IDs so evidence streams can be replayed and audited.</p>
-              </div>
-              <div class="scopePane" data-scope="trajectory">
-                <p data-en="State-indexed receipts enable scale without interpretive drift."
-                   data-zh="状态索引回执使规模化不产生解释漂移。">State-indexed receipts enable scale without interpretive drift.</p>
-              </div>
-            </div>
-
-            <div class="block" id="nw-abc">
-              <h3 data-en="Acronyms & Glossary" data-zh="缩写与词汇">Acronyms & Glossary</h3>
-              <p class="surfaceOnly" data-en="A stable term map for navigation and reading."
-                 data-zh="用于导航与阅读的稳定术语图谱。">A stable term map for navigation and reading.</p>
-
-              <div class="scopechips">
-                <div class="chip">ORIGIN</div><div class="chip">NOW</div><div class="chip">TRAJECTORY</div>
-              </div>
-
-              <div class="scopePane" data-scope="origin">
-                <p data-en="Multiple meanings per term creates fragmentation."
-                   data-zh="一词多义会造成碎片化。">Multiple meanings per term creates fragmentation.</p>
-              </div>
-              <div class="scopePane active" data-scope="now">
-                <p data-en="Pillarized acronyms keep definitions consistent across the entire system."
-                   data-zh="支柱化缩写让全系统定义一致。">Pillarized acronyms keep definitions consistent across the entire system.</p>
-              </div>
-              <div class="scopePane" data-scope="trajectory">
-                <p data-en="Canonical term maps support cross-domain transfer without rewriting."
-                   data-zh="规范术语图谱支持跨域迁移无需重写。">Canonical term maps support cross-domain transfer without rewriting.</p>
-              </div>
-
-              <div class="subgrid deepOnly">
-                <details class="sub">
-                  <summary><b data-en="P1 Identity" data-zh="P1 身份">P1 Identity</b><span>ORCID · OSF</span></summary>
-                  <div class="content"><ul><li>ORCID</li><li>OSF</li><li>CONTACT</li></ul></div>
-                </details>
-                <details class="sub">
-                  <summary><b data-en="P2 Execution" data-zh="P2 执行">P2 Execution</b><span>RGSC · RECEIPT</span></summary>
-                  <div class="content"><ul><li>RGSC</li><li>RECEIPT</li><li>PORTAL</li></ul></div>
-                </details>
-                <details class="sub">
-                  <summary><b data-en="P3 Language" data-zh="P3 语言">P3 Language</b><span>SSG · DOT</span></summary>
-                  <div class="content"><ul><li>SSG</li><li>DOT.GRID</li><li>GRAMMAR</li></ul></div>
-                </details>
-                <details class="sub">
-                  <summary><b data-en="P4 Measurement" data-zh="P4 测量">P4 Measurement</b><span>GAUGE · DIAG</span></summary>
-                  <div class="content"><ul><li>GAUGE</li><li>DIAGNOSTIC</li><li>DRIFT</li></ul></div>
-                </details>
-              </div>
-            </div>
-          </div>
-
-          <!-- exactly two jumps -->
-          <div class="jump-row">
-            <a class="jump" href="/laws/" data-en="JUMP · LAWS" data-zh="跳转·法律">JUMP · LAWS</a>
-            <a class="jump" href="/laws/categories/" data-en="JUMP · CATEGORIES" data-zh="跳转·分类">JUMP · CATEGORIES</a>
-          </div>
-        </div>
-      </details>
-
-      <!-- ===================== NE ===================== -->
-      <details class="quad" id="quad-ne">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge"><span class="sym">☀️</span><span>NE</span></div>
-            <div class="q-text">
-              <b data-en="Northeast" data-zh="东北">Northeast</b>
-              <span data-en="Execution · surfaces · examples" data-zh="执行 · 界面 · 示例">Execution · surfaces · examples</span>
-            </div>
-          </div>
-          <div class="q-arrow">▾</div>
-        </summary>
-        <div class="inside">
-          <div class="bubble-row">
-            <div class="bubble-btn" data-block="ne-surfaces"><div class="t"><b data-en="Surfaces" data-zh="界面">Surfaces</b><i data-en="Apps / portals." data-zh="应用/门户。">Apps / portals.</i></div><div class="go">▸</div></div>
-            <div class="bubble-btn" data-block="ne-workflows"><div class="t"><b data-en="Workflows" data-zh="流程">Workflows</b><i data-en="Receipt-driven." data-zh="回执驱动。">Receipt-driven.</i></div><div class="go">▸</div></div>
-            <div class="bubble-btn" data-block="ne-examples"><div class="t"><b data-en="Examples" data-zh="示例">Examples</b><i data-en="How-to paths." data-zh="使用路径。">How-to paths.</i></div><div class="go">▸</div></div>
-            <div class="bubble-btn" data-block="ne-outputs"><div class="t"><b data-en="Outputs" data-zh="输出">Outputs</b><i data-en="Packs & exports." data-zh="包与导出。">Packs & exports.</i></div><div class="go">▸</div></div>
-          </div>
-
-          <div class="blockmap">
-            <div class="bm-title"><b>Block</b><span>Tap a bubble to load</span></div>
-            <div class="block active" id="ne-surfaces"><h3>Surfaces</h3><p class="surfaceOnly">Entry points into execution layers.</p><p class="deepOnly">Surfaces emit receipts and support replay validation.</p></div>
-            <div class="block" id="ne-workflows"><h3>Workflows</h3><p class="surfaceOnly">Structured steps under constraint.</p><p class="deepOnly">Engine Sync model: selection→resolution→commitment→continuation.</p></div>
-            <div class="block" id="ne-examples"><h3>Examples</h3><p class="surfaceOnly">Short guided paths.</p><p class="deepOnly">Each step yields a receipt; replay reproduces classification.</p></div>
-            <div class="block" id="ne-outputs"><h3>Outputs</h3><p class="surfaceOnly">Downloadables and exports.</p><p class="deepOnly">Packs: PDFs, templates, datasets, checklists (route-aligned).</p></div>
-          </div>
-
-          <div class="jump-row">
-            <a class="jump" href="/products/" data-en="JUMP · PRODUCTS" data-zh="跳转·产品">JUMP · PRODUCTS</a>
-            <a class="jump" href="/rgsc/" data-en="JUMP · RGSC" data-zh="跳转·RGSC">JUMP · RGSC</a>
-          </div>
-        </div>
-      </details>
-
-      <!-- ===================== SW ===================== -->
-      <details class="quad" id="quad-sw">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge"><span class="sym">🌅</span><span>SW</span></div>
-            <div class="q-text">
-              <b data-en="Southwest" data-zh="西南">Southwest</b>
-              <span data-en="Measurement · diagnostics · rules" data-zh="测量 · 诊断 · 规则">Measurement · diagnostics · rules</span>
-            </div>
-          </div>
-          <div class="q-arrow">▾</div>
-        </summary>
-        <div class="inside">
-          <div class="bubble-row">
-            <div class="bubble-btn" data-block="sw-gauges"><div class="t"><b data-en="Gauges" data-zh="量表">Gauges</b><i data-en="Readouts." data-zh="读数。">Readouts.</i></div><div class="go">▸</div></div>
-            <div class="bubble-btn" data-block="sw-diagnostic"><div class="t"><b data-en="Diagnostics" data-zh="诊断">Diagnostics</b><i data-en="Classification." data-zh="分类。">Classification.</i></div><div class="go">▸</div></div>
-            <div class="bubble-btn" data-block="sw-rules"><div class="t"><b data-en="Rules" data-zh="规则">Rules</b><i data-en="Hub-first." data-zh="枢纽优先。">Hub-first.</i></div><div class="go">▸</div></div>
-            <div class="bubble-btn" data-block="sw-drift"><div class="t"><b data-en="Drift" data-zh="漂移">Drift</b><i data-en="Direction under load." data-zh="负载下方向。">Direction under load.</i></div><div class="go">▸</div></div>
-          </div>
-
-          <div class="blockmap">
-            <div class="bm-title"><b>Block</b><span>Tap a bubble to load</span></div>
-            <div class="block active" id="sw-gauges"><h3>Gauges</h3><p class="surfaceOnly">Surface readouts.</p><p class="deepOnly">Thresholds, trend windows, stability indicators.</p></div>
-            <div class="block" id="sw-diagnostic"><h3>Diagnostics</h3><p class="surfaceOnly">Quick classification.</p><p class="deepOnly">Constraint-based classification; replay audits.</p></div>
-            <div class="block" id="sw-rules"><h3>Rules</h3><p class="surfaceOnly">Stability rules.</p><p class="deepOnly">One choice; hub-first return; receipt gating.</p></div>
-            <div class="block" id="sw-drift"><h3>Drift</h3><p class="surfaceOnly">Direction shift.</p><p class="deepOnly">Drift compounding; stability vs collapse dynamics.</p></div>
-          </div>
-
-          <div class="jump-row">
-            <a class="jump" href="/gauges/" data-en="JUMP · GAUGES" data-zh="跳转·量表">JUMP · GAUGES</a>
-            <a class="jump" href="/diagnostic/" data-en="JUMP · DIAGNOSTIC" data-zh="跳转·诊断">JUMP · DIAGNOSTIC</a>
-          </div>
-        </div>
-      </details>
-
-      <!-- ===================== SE ===================== -->
-      <details class="quad" id="quad-se">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge"><span class="sym">🌇</span><span>SE</span></div>
-            <div class="q-text">
-              <b data-en="Southeast" data-zh="东南">Southeast</b>
-              <span data-en="Identity · references · links" data-zh="身份 · 引用 · 链接">Identity · references · links</span>
-            </div>
-          </div>
-          <div class="q-arrow">▾</div>
-        </summary>
-        <div class="inside">
-          <div class="bubble-row">
-            <div class="bubble-btn" data-block="se-orcid"><div class="t"><b>ORCID</b><i data-en="Identity anchor." data-zh="身份锚点。">Identity anchor.</i></div><div class="go">▸</div></div>
-            <div class="bubble-btn" data-block="se-osf"><div class="t"><b>OSF</b><i data-en="Registry anchor." data-zh="注册锚点。">Registry anchor.</i></div><div class="go">▸</div></div>
-            <div class="bubble-btn" data-block="se-links"><div class="t"><b data-en="References" data-zh="引用">References</b><i data-en="External anchors." data-zh="外部锚点。">External anchors.</i></div><div class="go">▸</div></div>
-            <div class="bubble-btn" data-block="se-contact"><div class="t"><b data-en="Contact" data-zh="联系">Contact</b><i data-en="Direct channel." data-zh="直接通道。">Direct channel.</i></div><div class="go">▸</div></div>
-          </div>
-
-          <div class="blockmap">
-            <div class="bm-title"><b>Block</b><span>Tap a bubble to load</span></div>
-            <div class="block active" id="se-orcid"><h3>ORCID</h3><p class="surfaceOnly">Identity anchor.</p><p class="deepOnly">Attribution + indexing across registries.</p></div>
-            <div class="block" id="se-osf"><h3>OSF</h3><p class="surfaceOnly">Registry surface.</p><p class="deepOnly">Canonical anchors for projects and artifacts.</p></div>
-            <div class="block" id="se-links"><h3 data-en="References" data-zh="引用">References</h3><p class="surfaceOnly">External anchor list.</p><p class="deepOnly">Provenance + traceability mapping.</p></div>
-            <div class="block" id="se-contact"><h3 data-en="Contact" data-zh="联系">Contact</h3><p class="surfaceOnly">Reach out.</p><p class="deepOnly">Intake routing by axis + context capture.</p></div>
-          </div>
-
-          <div class="jump-row">
-            <a class="jump" href="/links/" data-en="JUMP · LINKS" data-zh="跳转·链接">JUMP · LINKS</a>
-            <a class="jump" href="/contact/" data-en="JUMP · CONTACT" data-zh="跳转·联系">JUMP · CONTACT</a>
-          </div>
-        </div>
-      </details>
-
-      <div class="plate-wrap">
-        <div class="plate-title" data-en="Cardinal Plate (N / E / S / W)" data-zh="主罗盘板（N / E / S / W）">
-          Cardinal Plate (N / E / S / W)
-        </div>
-
-        <div class="stage">
-          <div class="platform">
-            <a class="diamond top" href="/laws/"><span>N<small data-en="LAWS" data-zh="法律">LAWS</small></span></a>
-            <a class="diamond right" href="/products/"><span>E<small data-en="PRODUCTS" data-zh="产品">PRODUCTS</small></span></a>
-            <a class="diamond bottom" href="/gauges/"><span>S<small data-en="GAUGES" data-zh="量表">GAUGES</small></span></a>
-            <a class="diamond left" href="/links/"><span>W<small data-en="LINKS" data-zh="链接">LINKS</small></span></a>
-            <a class="diamond mini mini-left" href="/"><span><small data-en="ROOT" data-zh="根">ROOT</small></span></a>
-            <a class="diamond mini mini-right" href="/rgsc/"><span><small data-en="RGSC" data-zh="RGSC">RGSC</small></span></a>
-          </div>
-        </div>
-
-        <div class="ink">GEODIAMETRICS</div>
-      </div>
-
-      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    <div class="hero">
+      <h1>Door</h1>
+      <p>Select your lenses. Then enter the hub.</p>
+      <div class="hint">4 lenses only: Language (EN/中文) + Depth (Explore/Learn).</div>
     </div>
+
+    <div class="stage">
+      <div class="platform" id="platform">
+
+        <!-- Language -->
+        <button class="diamond top" id="lang-en" type="button">
+          <span>English<small>EN</small></span>
+        </button>
+
+        <button class="diamond bottom" id="lang-zh" type="button">
+          <span>中文<small>简体</small></span>
+        </button>
+
+        <!-- Depth -->
+        <button class="diamond left" id="depth-explore" type="button">
+          <span>Explore<small>Surface</small></span>
+        </button>
+
+        <button class="diamond right" id="depth-learn" type="button">
+          <span>Learn<small>Deep</small></span>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="cta">
+      <div class="cta-row">
+        <div class="badges" aria-live="polite">
+          <span class="pill" id="badge-lang">LANG: EN</span>
+          <span class="pill" id="badge-depth">DEPTH: EXPLORE</span>
+        </div>
+        <div class="actions">
+          <a class="btn" href="/home/" id="enter">Enter</a>
+          <a class="btn primary" href="/" id="reset">Reset</a>
+        </div>
+      </div>
+      <div class="note" id="note">
+        Explore = quick overview + jump points. Learn = nested bubbles + full breakdown.
+      </div>
+    </div>
+
+    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
   </div>
+</div>
 
-  <script>
-    (function(){
-      const root = document.body;
+<script>
+(function(){
+  const state = {
+    lang: localStorage.getItem("gd_lang") || "en",
+    depth: localStorage.getItem("gd_depth") || "explore",
+  };
 
-      function readLang(){
-        const v = (localStorage.getItem('gd_lang') || 'en').toLowerCase();
-        return (v === 'zh') ? 'zh' : 'en';
-      }
-      function readDepth(){
-        let v = (localStorage.getItem('gd_depth') || 'learn').toLowerCase();
-        if(v === 'shop') v = 'explore';
-        if(v !== 'explore' && v !== 'learn') v = 'learn';
-        return v;
-      }
-      function readScope(){
-        const v = (localStorage.getItem('gd_scope') || 'now').toLowerCase();
-        if(v !== 'origin' && v !== 'now' && v !== 'trajectory') return 'now';
-        return v;
-      }
+  const els = {
+    langEn: document.getElementById("lang-en"),
+    langZh: document.getElementById("lang-zh"),
+    depthExplore: document.getElementById("depth-explore"),
+    depthLearn: document.getElementById("depth-learn"),
+    badgeLang: document.getElementById("badge-lang"),
+    badgeDepth: document.getElementById("badge-depth"),
+  };
 
-      function setLang(lang){
-        localStorage.setItem('gd_lang', lang);
-        root.setAttribute('data-lang', lang);
-        document.getElementById('langRead').textContent = (lang === 'zh') ? '中文' : 'EN';
-        document.documentElement.lang = (lang === 'zh') ? 'zh-Hans' : 'en';
+  function apply(){
+    els.langEn.classList.toggle("active", state.lang === "en");
+    els.langZh.classList.toggle("active", state.lang === "zh");
+    els.depthExplore.classList.toggle("active", state.depth === "explore");
+    els.depthLearn.classList.toggle("active", state.depth === "learn");
 
-        document.querySelectorAll('[data-en][data-zh]').forEach(el=>{
-          el.textContent = (lang === 'zh') ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-        });
+    els.badgeLang.textContent = "LANG: " + (state.lang === "en" ? "EN" : "中文");
+    els.badgeDepth.textContent = "DEPTH: " + (state.depth === "explore" ? "EXPLORE" : "LEARN");
 
-        // Update lens buttons state
-        document.querySelectorAll('[data-lang-set]').forEach(b=>{
-          b.classList.toggle('active', b.getAttribute('data-lang-set') === lang);
-        });
-      }
+    localStorage.setItem("gd_lang", state.lang);
+    localStorage.setItem("gd_depth", state.depth);
+  }
 
-      function setDepth(depth){
-        localStorage.setItem('gd_depth', depth === 'explore' ? 'explore' : 'learn');
-        root.setAttribute('data-depth', depth);
-        document.querySelectorAll('[data-depth-set]').forEach(b=>{
-          b.classList.toggle('active', b.getAttribute('data-depth-set') === depth);
-        });
-      }
+  els.langEn.addEventListener("click", ()=>{ state.lang="en"; apply(); });
+  els.langZh.addEventListener("click", ()=>{ state.lang="zh"; apply(); });
+  els.depthExplore.addEventListener("click", ()=>{ state.depth="explore"; apply(); });
+  els.depthLearn.addEventListener("click", ()=>{ state.depth="learn"; apply(); });
 
-      function setScope(scope){
-        localStorage.setItem('gd_scope', scope);
-        root.setAttribute('data-scope', scope);
-        document.querySelectorAll('[data-scope-set]').forEach(b=>{
-          b.classList.toggle('active', b.getAttribute('data-scope-set') === scope);
-        });
+  apply();
+})();
+</script>
 
-        // For every active block, switch visible pane
-        document.querySelectorAll('.block.active').forEach(block=>{
-          block.querySelectorAll('.scopePane').forEach(p=>{
-            p.classList.toggle('active', p.getAttribute('data-scope') === scope);
-          });
-        });
-      }
-
-      // Wire depth/scope buttons
-      document.querySelectorAll('[data-depth-set]').forEach(btn=>{
-        btn.addEventListener('click', ()=> setDepth(btn.getAttribute('data-depth-set')));
-      });
-      document.querySelectorAll('[data-scope-set]').forEach(btn=>{
-        btn.addEventListener('click', ()=> setScope(btn.getAttribute('data-scope-set')));
-      });
-
-      // Bubble -> block map
-      document.querySelectorAll('.bubble-btn').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-          const id = btn.getAttribute('data-block');
-          const quad = btn.closest('details.quad');
-          if(!quad) return;
-          const map = quad.querySelector('.blockmap');
-          if(!map) return;
-
-          map.querySelectorAll('.block').forEach(b=> b.classList.remove('active'));
-          const target = map.querySelector('#'+CSS.escape(id));
-          if(target) target.classList.add('active');
-
-          // Apply current scope pane visibility inside this block
-          const scope = readScope();
-          target && target.querySelectorAll('.scopePane').forEach(p=>{
-            p.classList.toggle('active', p.getAttribute('data-scope') === scope);
-          });
-
-          // Close all sub details on block change (no auto-open)
-          target && target.querySelectorAll('details').forEach(d=> d.open=false);
-
-          // Ensure quadrant open
-          quad.open = true;
-
-          // Smooth scroll on small screens
-          if(window.innerWidth < 720){
-            map.scrollIntoView({behavior:'smooth', block:'start'});
-          }
-        });
-      });
-
-      // Initial state
-      const lang = readLang();
-      const depth = readDepth();
-      const scope = readScope();
-
-      setLang(lang);
-      setDepth(depth);
-      setScope(scope);
-
-      // Close all big dropdowns by default (no auto-open)
-      document.querySelectorAll('details.quad').forEach(d=> d.open=false);
-
-    })();
-  </script>
 </body>
 </html>

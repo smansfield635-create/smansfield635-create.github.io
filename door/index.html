@@ -1,290 +1,107 @@
+<!-- TNT FILE: /index.html -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Door · Geodiametrics</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Welcome · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=2001"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=2001"/>
 
-<style>
-/* ==========================================
-   DOOR — DEPTH ONLY (NO LANGUAGE REDUNDANCY)
-   Reads gd_lang from localStorage (set on /index.html)
-   Sets gd_depth and routes to /home/
-========================================== */
-
-:root{
-  --glass: rgba(255,255,255,.07);
-  --stroke: rgba(255,255,255,.14);
-  --ink: rgba(234,242,246,.92);
-  --muted: rgba(234,242,246,.70);
-}
-
-/* Chinese red/black theme */
-html,body{height:100%;margin:0}
-body{
-  min-height:100vh;
-  color:var(--ink);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:
-    radial-gradient(1100px 760px at 50% 12%, rgba(190,10,18,.52) 0%, rgba(90,10,14,.34) 40%, rgba(6,10,14,1) 100%);
-}
-
-.page{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:30px 14px 90px;
-  position:relative;
-}
-
-.card{
-  width:min(740px,94vw);
-  border-radius:28px;
-  background:rgba(0,0,0,.26);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.06),
-    0 30px 90px rgba(0,0,0,.70);
-  padding:26px 18px 18px;
-  text-align:center;
-  backdrop-filter:blur(10px);
-}
-
-h1{
-  margin:0;
-  font-size:clamp(44px,9vw,70px);
-  font-weight:900;
-  letter-spacing:.01em;
-}
-
-.sub{
-  margin:12px auto 0;
-  font-size:18px;
-  color:var(--muted);
-  line-height:1.4;
-}
-
-.badges{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-top:14px;
-}
-
-.badge{
-  padding:10px 14px;
-  border-radius:999px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  color:rgba(234,242,246,.78);
-  font-weight:800;
-  letter-spacing:.12em;
-  font-size:12px;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-top:16px;
-}
-
-.pick{
-  padding:18px 14px;
-  border-radius:20px;
-  background:var(--glass);
-  border:1px solid var(--stroke);
-  box-shadow:0 20px 60px rgba(0,0,0,.40);
-  text-align:left;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.pick .title{
-  font-size:20px;
-  font-weight:900;
-  letter-spacing:.04em;
-}
-
-.pick .desc{
-  margin-top:6px;
-  font-size:14px;
-  color:rgba(234,242,246,.72);
-  line-height:1.45;
-}
-
-.pick.active{
-  background:rgba(255,255,255,.10);
-  border-color:rgba(255,255,255,.20);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,.10) inset,
-    0 24px 70px rgba(0,0,0,.45);
-}
-
-.actions{
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-top:16px;
-}
-
-.btn{
-  padding:14px 18px;
-  border-radius:18px;
-  background:rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.12);
-  color:var(--ink);
-  font-weight:900;
-  text-decoration:none;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.btn.primary{
-  background:rgba(255,255,255,.14);
-}
-
-.help{
-  margin:14px auto 0;
-  padding:12px 14px;
-  border-radius:18px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  color:rgba(234,242,246,.78);
-  font-size:14px;
-  line-height:1.45;
-  text-align:left;
-}
-
-.help b{color:rgba(234,242,246,.92);}
-
-.footer{
-  position:absolute;
-  left:0; right:0;
-  bottom:18px;
-  text-align:center;
-  letter-spacing:3px;
-  font-size:12px;
-  opacity:.55;
-}
-</style>
+  <style>
+    /* INDEX (China-red + cosmic) — self-contained (no other file edits required) */
+    body{
+      background:
+        radial-gradient(1200px 900px at 50% 10%, rgba(150,0,0,.55) 0%, rgba(20,0,0,.35) 35%, rgba(5,7,12,1) 100%),
+        radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
+    }
+    .index-wrap{width:min(920px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:18px}
+    .hero{padding-top:18px}
+    .hero h1{font-size:clamp(44px,7vw,72px);margin:0;font-weight:900;letter-spacing:.01em}
+    .hero p{margin:10px 0 0;opacity:.78;font-size:18px}
+    .card{
+      border-radius:22px;
+      background:rgba(255,255,255,.05);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 30px 80px rgba(0,0,0,.55);
+      padding:18px;
+      backdrop-filter:blur(12px);
+    }
+    .grid2{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:640px){.grid2{grid-template-columns:1fr 1fr}}
+    .pick{
+      border-radius:20px;
+      padding:18px 16px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .pick strong{font-size:18px}
+    .pick span{opacity:.75}
+    .pick:hover{background:rgba(255,255,255,.08)}
+    .hint{opacity:.7;font-size:14px;line-height:1.5;margin:0}
+    .tiny{opacity:.55;font-size:12px;letter-spacing:.18em;margin-top:10px}
+  </style>
 </head>
 
 <body>
 <div class="shooting-stars"></div>
 
 <div class="page">
-  <div class="card">
-    <h1 id="t_title">Door</h1>
-    <div class="sub" id="t_sub">Pick depth. Then enter.</div>
+  <div class="index-wrap">
 
-    <div class="badges">
-      <div class="badge" id="t_langBadge">LANG · EN</div>
-      <div class="badge" id="t_depthBadge">DEPTH · EXPLORE</div>
+    <div class="hero">
+      <h1 id="t_title">Welcome</h1>
+      <p id="t_sub">Choose your language once. Everything after this stays in that language.</p>
     </div>
 
-    <div class="grid" role="group" aria-label="Depth selection">
-      <div class="pick" id="pickExplore" data-depth="explore">
-        <div class="title" id="t_exploreTitle">Explore</div>
-        <div class="desc" id="t_exploreDesc">Surface view · quick orientation · jump links</div>
+    <div class="card">
+      <div class="grid2">
+        <div class="pick" role="button" tabindex="0" onclick="setLang('en')" onkeypress="if(event.key==='Enter'){setLang('en')}">
+          <div>
+            <strong>English</strong><br/>
+            <span>Proceed in English.</span>
+          </div>
+          <div>EN</div>
+        </div>
+
+        <div class="pick" role="button" tabindex="0" onclick="setLang('zh')" onkeypress="if(event.key==='Enter'){setLang('zh')}">
+          <div>
+            <strong>中文</strong><br/>
+            <span>使用简体中文继续。</span>
+          </div>
+          <div>中文</div>
+        </div>
       </div>
 
-      <div class="pick" id="pickLearn" data-depth="learn">
-        <div class="title" id="t_learnTitle">Learn</div>
-        <div class="desc" id="t_learnDesc">Deep view · bubble expansion · full breakdown</div>
-      </div>
+      <p class="hint" id="t_hint" style="margin-top:14px;">
+        After you choose, you’ll set your depth (Shop vs Learn) one time, then enter the hub.
+      </p>
+
+      <div class="tiny">CANONICAL · STABLE · © GEODIAMETRICS</div>
     </div>
 
-    <div class="actions">
-      <button class="btn primary" id="btnEnter" type="button">Enter</button>
-      <a class="btn" id="btnBack" href="/">Back</a>
-    </div>
-
-    <div class="help" id="t_help">
-      <b>Explore</b> shows short summaries and direct jumps into the site.<br/>
-      <b>Learn</b expands each quadrant into deeper structure and examples.
-    </div>
   </div>
-
-  <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
 </div>
 
 <script>
-(function(){
-  const $ = (id)=>document.getElementById(id);
-
-  function getLang(){
-    try{ return (localStorage.getItem("gd_lang") || "en").toLowerCase(); }catch(e){ return "en"; }
-  }
-
-  function getDepth(){
-    let d = "explore";
-    try{ d = (localStorage.getItem("gd_depth") || "explore").toLowerCase(); }catch(e){}
-    if(d === "shop") d = "explore";     // legacy mapping
-    if(d !== "explore" && d !== "learn") d = "explore";
-    return d;
-  }
-
-  function setDepth(d){
-    try{ localStorage.setItem("gd_depth", d); }catch(e){}
-  }
-
-  function applyI18n(lang){
-    document.documentElement.lang = (lang === "zh") ? "zh" : "en";
-
-    if(lang === "zh"){
-      $("t_title").textContent = "入口";
-      $("t_sub").textContent = "选择深度，然后进入。";
-      $("btnEnter").textContent = "进入";
-      $("btnBack").textContent = "返回";
-      $("t_exploreTitle").textContent = "浏览";
-      $("t_exploreDesc").textContent = "表层视图 · 快速理解 · 直接跳转";
-      $("t_learnTitle").textContent = "学习";
-      $("t_learnDesc").textContent = "深度视图 · 气泡展开 · 完整拆解";
-      $("t_help").innerHTML = "<b>浏览</b>：短摘要 + 直接跳转。<br/><b>学习</b>：按象限展开更深结构与示例。";
-    }else{
-      $("t_title").textContent = "Door";
-      $("t_sub").textContent = "Pick depth. Then enter.";
-      $("btnEnter").textContent = "Enter";
-      $("btnBack").textContent = "Back";
-      $("t_exploreTitle").textContent = "Explore";
-      $("t_exploreDesc").textContent = "Surface view · quick orientation · jump links";
-      $("t_learnTitle").textContent = "Learn";
-      $("t_learnDesc").textContent = "Deep view · bubble expansion · full breakdown";
-      $("t_help").innerHTML = "<b>Explore</b> shows short summaries and direct jumps into the site.<br/><b>Learn</b expands each quadrant into deeper structure and examples.";
+  (function boot(){
+    // If already chosen, skip index.
+    const lang = localStorage.getItem('gd_lang');
+    if(lang === 'en' || lang === 'zh'){
+      location.href = '/door/';
+      return;
     }
+  })();
 
-    $("t_langBadge").textContent = "LANG · " + (lang === "zh" ? "中文" : "EN");
+  function setLang(lang){
+    localStorage.setItem('gd_lang', lang);
+    // default depth if unset
+    if(!localStorage.getItem('gd_depth')) localStorage.setItem('gd_depth','shop');
+    location.href = '/door/';
   }
-
-  function paintDepth(d){
-    $("t_depthBadge").textContent = "DEPTH · " + (d === "learn" ? "LEARN" : "EXPLORE");
-    $("pickExplore").classList.toggle("active", d === "explore");
-    $("pickLearn").classList.toggle("active", d === "learn");
-  }
-
-  const lang = getLang();
-  applyI18n(lang);
-
-  let depth = getDepth();
-  paintDepth(depth);
-
-  $("pickExplore").addEventListener("click", ()=>{ depth="explore"; setDepth(depth); paintDepth(depth); });
-  $("pickLearn").addEventListener("click", ()=>{ depth="learn"; setDepth(depth); paintDepth(depth); });
-
-  $("btnEnter").addEventListener("click", ()=>{
-    // one forward handoff
-    location.href = "/home/";
-  });
-})();
 </script>
-
 </body>
 </html>

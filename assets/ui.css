@@ -1,71 +1,17 @@
-/* ================================
-   GLOBAL UI LAYOUT (COSMIC THEME)
-   FILE: assets/ui.css
-================================ */
-
-/* Base */
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #e9f1f4;
-  background: #05070c;
-  overflow-x: hidden;
-}
-
-/* Cosmic Background */
-body {
-  position: relative;
-  background:
-    radial-gradient(1400px 900px at 20% 20%, rgba(72,166,255,0.22) 0%, rgba(0,0,0,0) 55%),
-    radial-gradient(1200px 800px at 75% 25%, rgba(190,91,255,0.18) 0%, rgba(0,0,0,0) 60%),
-    radial-gradient(1100px 900px at 40% 75%, rgba(42,255,186,0.10) 0%, rgba(0,0,0,0) 58%),
-    radial-gradient(1200px 900px at 50% 35%, #0b1e27 0%, #06121a 55%, #05070c 100%);
-}
-
-/* Starfield */
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-}
-
-body::before {
-  background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.75) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.55) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,0.65) 0, rgba(255,255,255,0) 60%);
-  opacity: 0.9;
-  animation: twinkleA 4.8s ease-in-out infinite alternate;
-}
-
-body::after {
-  background-image:
-    radial-gradient(2px 2px at 22% 28%, rgba(255,255,255,0.65) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(2px 2px at 62% 22%, rgba(255,255,255,0.55) 0, rgba(255,255,255,0) 60%);
-  opacity: 0.65;
-  animation: twinkleB 6.2s ease-in-out infinite alternate;
-}
-
-@keyframes twinkleA {
-  0% { opacity: 0.65; filter: brightness(0.95); }
-  100% { opacity: 0.95; filter: brightness(1.15); }
-}
-
-@keyframes twinkleB {
-  0% { opacity: 0.45; filter: brightness(0.95); }
-  100% { opacity: 0.75; filter: brightness(1.10); }
-}
-
-/* Layout Base */
-.page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+<!-- TNT 1/3: assets/ui.css (CANONICAL THEME) -->
+/* GLOBAL UI (COSMIC THEME) */
+html,body{margin:0;padding:0;width:100%;height:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#e9f1f4;background:#05070c;overflow-x:hidden}
+body{position:relative;background:
+radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b)}
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 12px}
+.h{text-align:center;margin-bottom:12px}
+.h h1{font-size:48px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px}
+.stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+a:hover{text-decoration:none}
+a:active{text-decoration:none}
+.nav{display:flex;justify-content:center;gap:12px;margin-top:16px;flex-wrap:wrap}
+.nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);color:#eaf2f6;font-weight:900}
+footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}

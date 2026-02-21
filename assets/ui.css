@@ -1,183 +1,172 @@
-/* ================================
-   TNT: assets/ui.css
-   COSMIC DARK FOUNDATION
-   Clean contrast, subtle nebula, stable typography
-================================ */
+/* =====================================================
+   GEODIAMETRICS COSMIC SYSTEM
+   UNIFIED BACKGROUND + DEPTH
+   TNT REPLACEMENT
+===================================================== */
 
-/* ---------- Base ---------- */
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #eaf2f6;
-  background: #05070c;
-  overflow-x: hidden;
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#eaf2f6;
+  overflow-x:hidden;
+  background:#05070c;
+  position:relative;
 }
 
-/* ---------- Cosmic Background ---------- */
-body {
-  position: relative;
+/* =====================================================
+   DEEP COSMIC GRADIENT BASE
+===================================================== */
+
+body{
   background:
-    radial-gradient(1200px 800px at 50% 20%, #152532 0%, #0a141b 100%);
+    radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
 }
 
-/* Subtle nebula drift (low opacity so it doesn’t wash tiles) */
-body::before {
-  content: "";
-  position: fixed;
-  inset: -18%;
-  pointer-events: none;
-  z-index: -3;
+/* =====================================================
+   NEBULA LAYERS (SLOW DRIFT)
+===================================================== */
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:-20%;
+  z-index:-3;
+  pointer-events:none;
 
   background:
-    radial-gradient(900px 700px at 18% 22%, rgba(72,166,255,.14) 0%, rgba(0,0,0,0) 62%),
-    radial-gradient(980px 780px at 78% 28%, rgba(190,91,255,.12) 0%, rgba(0,0,0,0) 64%),
-    radial-gradient(1050px 820px at 45% 78%, rgba(42,255,186,.08) 0%, rgba(0,0,0,0) 66%);
+    radial-gradient(900px 700px at 15% 25%, rgba(72,166,255,.18) 0%, rgba(0,0,0,0) 65%),
+    radial-gradient(1100px 800px at 80% 30%, rgba(190,91,255,.14) 0%, rgba(0,0,0,0) 70%),
+    radial-gradient(1000px 850px at 50% 80%, rgba(42,255,186,.10) 0%, rgba(0,0,0,0) 70%),
+    radial-gradient(900px 750px at 60% 50%, rgba(255,170,70,.07) 0%, rgba(0,0,0,0) 70%);
 
-  filter: blur(14px);
-  opacity: .85;
-  animation: nebulaDrift 22s ease-in-out infinite alternate;
-  transform: translateZ(0);
+  filter:blur(18px);
+  opacity:.9;
+  animation:nebulaDrift 22s ease-in-out infinite alternate;
 }
 
-@keyframes nebulaDrift {
-  0%   { transform: translate3d(-1%, -0.6%, 0) scale(1.02); }
-  100% { transform: translate3d(1%, 0.8%, 0) scale(1.05); }
+@keyframes nebulaDrift{
+  0%{ transform:translate3d(-2%,-1%,0) scale(1.02); }
+  100%{ transform:translate3d(2%,1%,0) scale(1.06); }
 }
 
-/* ---------- Starfield ---------- */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -2;
+/* =====================================================
+   STAR FIELD
+===================================================== */
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
 
   background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.65) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.75) 0, rgba(255,255,255,0) 60%),
     radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.45) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.55) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.60) 0, rgba(255,255,255,0) 60%),
     radial-gradient(2px 2px at 22% 28%, rgba(255,255,255,.28) 0, rgba(255,255,255,0) 60%),
     radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,.24) 0, rgba(255,255,255,0) 60%);
 
-  opacity: .65;
-  animation: starTwinkle 7s ease-in-out infinite alternate;
+  opacity:.75;
+  animation:starTwinkle 6.5s ease-in-out infinite alternate;
 }
 
-@keyframes starTwinkle {
-  0%   { opacity: .50; filter: brightness(.95); }
-  100% { opacity: .78; filter: brightness(1.12); }
+@keyframes starTwinkle{
+  0%{ opacity:.55; filter:brightness(.95); }
+  100%{ opacity:.85; filter:brightness(1.15); }
 }
 
-/* ---------- Shooting Stars ---------- */
-@keyframes shoot {
-  0%   { transform: translate3d(-25vw,-25vh,0) rotate(20deg); opacity: 0; }
-  8%   { opacity: .85; }
-  30%  { opacity: .85; }
-  50%  { opacity: 0; }
-  100% { transform: translate3d(120vw,120vh,0) rotate(20deg); opacity: 0; }
-}
+/* =====================================================
+   SHOOTING STARS
+===================================================== */
 
 .shooting-stars,
 .shooting-stars::before,
-.shooting-stars::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
+.shooting-stars::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+}
+
+@keyframes shoot{
+  0%{ transform:translate3d(-25vw,-25vh,0) rotate(20deg); opacity:0; }
+  10%{ opacity:1; }
+  40%{ opacity:1; }
+  60%{ opacity:0; }
+  100%{ transform:translate3d(120vw,120vh,0) rotate(20deg); opacity:0; }
 }
 
 .shooting-stars::before,
-.shooting-stars::after {
-  position: absolute;
-  width: 220px;
-  height: 2px;
-  background: linear-gradient(90deg,
-    rgba(255,255,255,0),
-    rgba(255,255,255,.85),
-    rgba(255,255,255,0));
-  border-radius: 999px;
-  filter: drop-shadow(0 0 6px rgba(255,255,255,.35));
-  opacity: 0;
+.shooting-stars::after{
+  position:absolute;
+  width:260px;
+  height:2px;
+  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.9), rgba(255,255,255,0));
+  border-radius:999px;
+  filter:drop-shadow(0 0 8px rgba(255,255,255,.35));
+  opacity:0;
 }
 
-.shooting-stars::before {
-  top: 12%;
-  left: -35%;
-  animation: shoot 16s linear infinite;
-  animation-delay: 3s;
+.shooting-stars::before{
+  top:12%;
+  left:-35%;
+  animation:shoot 11s linear infinite;
+  animation-delay:1.5s;
 }
 
-.shooting-stars::after {
-  top: 38%;
-  left: -45%;
-  animation: shoot 20s linear infinite;
-  animation-delay: 9s;
+.shooting-stars::after{
+  top:40%;
+  left:-45%;
+  animation:shoot 14s linear infinite;
+  animation-delay:5s;
 }
 
-/* ---------- Layout ---------- */
-.page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 24px 12px;
+/* =====================================================
+   TYPOGRAPHY + LAYOUT
+===================================================== */
+
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:24px 12px;
 }
 
-.h {
-  text-align: center;
-  margin-bottom: 12px;
+.h{
+  text-align:center;
+  margin-bottom:12px;
 }
 
-.h h1 {
-  font-size: clamp(40px, 6vw, 64px);
-  margin: 0 0 8px;
-  color: #eaf2f6;
+.h h1{
+  font-size:48px;
+  font-weight:900;
+  margin:0;
+  color:#eaf2f6;
 }
 
-.h p {
-  opacity: .75;
-  margin-top: 8px;
-  color: rgba(234,242,246,.75);
+.h p{
+  opacity:.72;
+  margin-top:8px;
+  color:rgba(234,242,246,.75);
 }
 
-/* Navigation */
-.nav {
-  display: flex;
-  gap: 12px;
-  margin-top: 16px;
-  flex-wrap: wrap;
-  justify-content: center;
+footer{
+  text-align:center;
+  opacity:.55;
+  margin-top:12px;
+  letter-spacing:3px;
+  font-size:12px;
+  color:rgba(234,242,246,.55);
 }
 
-.nav a {
-  padding: 14px 22px;
-  border-radius: 18px;
-  background: rgba(255,255,255,.10);
-  font-weight: 900;
-  color: #eaf2f6;
-  text-decoration: none;
-}
-
-footer {
-  text-align: center;
-  opacity: .55;
-  margin-top: 12px;
-  letter-spacing: 3px;
-  font-size: 12px;
-  color: rgba(234,242,246,.55);
-}
-
-/* Motion safety */
-@media (prefers-reduced-motion: reduce) {
-  body::before,
-  body::after,
-  .shooting-stars::before,
-  .shooting-stars::after {
-    animation: none !important;
-  }
-}
+a{ color:inherit; text-decoration:none; }
+a:visited{ color:inherit; }
+a:hover{ text-decoration:none; }
+a:active{ text-decoration:none; }

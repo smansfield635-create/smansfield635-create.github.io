@@ -3,58 +3,208 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Home · Geodiametrics</title>
+<title>Geodiametrics · Home</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=9100"/>
-<link rel="stylesheet" href="/assets/branch.css?v=9100"/>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#eaf2f6;
+  background:
+    radial-gradient(1400px 900px at 50% 20%, #7a0000 0%, #300000 35%, #05070c 100%);
+}
+
+.page{
+  max-width:900px;
+  margin:auto;
+  padding:40px 20px 120px;
+}
+
+h1{
+  font-size:56px;
+  font-weight:900;
+  margin:0 0 12px;
+}
+
+.sub{
+  opacity:.75;
+  margin-bottom:30px;
+  font-size:18px;
+}
+
+.lens-toggle{
+  display:flex;
+  gap:12px;
+  margin-bottom:30px;
+}
+
+.lens-toggle a{
+  padding:10px 18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.06);
+  text-decoration:none;
+  color:#eaf2f6;
+  font-weight:700;
+  font-size:14px;
+}
+
+.section{
+  margin-bottom:24px;
+}
+
+.section summary{
+  cursor:pointer;
+  padding:18px 22px;
+  border-radius:22px;
+  background:rgba(255,255,255,.06);
+  font-weight:800;
+  font-size:18px;
+  letter-spacing:.06em;
+}
+
+.section[open] summary{
+  background:rgba(255,255,255,.12);
+}
+
+.inner{
+  padding:18px 18px 8px 18px;
+}
+
+.inner details{
+  margin-bottom:14px;
+}
+
+.inner summary{
+  font-size:15px;
+  font-weight:700;
+  padding:14px 16px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+}
+
+.inner p{
+  padding:10px 6px 16px 6px;
+  font-size:14px;
+  opacity:.85;
+  line-height:1.6;
+}
+
+footer{
+  margin-top:60px;
+  font-size:12px;
+  letter-spacing:3px;
+  opacity:.5;
+}
+</style>
 </head>
 
 <body>
-<div class="shooting-stars"></div>
 
 <div class="page">
 
-  <div class="h">
-    <h1>Home</h1>
-    <p>Compass · Primary Navigation</p>
-  </div>
+<h1>Geodiametrics</h1>
+<div class="sub">Unified structural hub.</div>
 
-  <div class="stage">
-    <div class="platform">
+<!-- MODE + LANGUAGE DISPLAY -->
+<div class="lens-toggle">
+  <a href="/home/?mode=learn&lang=en">Learn · EN</a>
+  <a href="/home/?mode=shop&lang=en">Shop · EN</a>
+  <a href="/home/?mode=learn&lang=zh">学习 · 中文</a>
+  <a href="/home/?mode=shop&lang=zh">购买 · 中文</a>
+</div>
 
-      <!-- NORTH -->
-      <a class="diamond top" href="/laws/">
-        <span>Laws<small>Structure</small></span>
-      </a>
+<!-- NORTH -->
+<details class="section">
+<summary>NORTH · Definitions · Language · Structure</summary>
+<div class="inner">
 
-      <!-- EAST -->
-      <a class="diamond right" href="/products/">
-        <span>Products<small>Execution</small></span>
-      </a>
+  <details>
+    <summary>Simplified Syntax Geometry (SSG)</summary>
+    <p>Constraint-based structural language for execution, state transitions, and modeling clarity.</p>
+  </details>
 
-      <!-- SOUTH -->
-      <a class="diamond bottom" href="/gauges/">
-        <span>Gauges<small>Measurement</small></span>
-      </a>
+  <details>
+    <summary>Diamond Grammar</summary>
+    <p>Four-route navigation system. N/E/S/W encode functional domains, not direction.</p>
+  </details>
 
-      <!-- WEST -->
-      <a class="diamond left" href="/links/">
-        <span>Links<small>Identity</small></span>
-      </a>
+  <details>
+    <summary>DOT.GRID</summary>
+    <p>256-state indexed architecture for structured classification and pillar grouping.</p>
+  </details>
 
-      <!-- MINI POCKETS -->
-      <a class="diamond mini mini-left" href="/index.html">
-        <span><small>ROOT</small></span>
-      </a>
+  <details>
+    <summary>Acronyms & Glossary</summary>
+    <p>Full acronym index categorized by structural pillars. Standardized definitions.</p>
+  </details>
 
-      <a class="diamond mini mini-right" href="/en/learn/">
-        <span><small>LEARN</small></span>
-      </a>
+</div>
+</details>
 
-    </div>
-  </div>
+<!-- EAST -->
+<details class="section">
+<summary>EAST · Products · Execution · Surfaces</summary>
+<div class="inner">
 
-  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+  <details>
+    <summary>Energy Products</summary>
+    <p>Solar → Plasma conversion modeling. Engineering + systems execution surfaces.</p>
+  </details>
+
+  <details>
+    <summary>Execution Surfaces</summary>
+    <p>PLASMA / PLATFORM layered deployment models.</p>
+  </details>
+
+  <details>
+    <summary>1,001 Word Mastery System</summary>
+    <p>Finite lexicon ESL framework. 10 categories · 4 levels · structured progression.</p>
+  </details>
+
+</div>
+</details>
+
+<!-- SOUTH -->
+<details class="section">
+<summary>SOUTH · Gauges · Measurement · Diagnostics</summary>
+<div class="inner">
+
+  <details>
+    <summary>Alignment Diagnostic</summary>
+    <p>Decision integrity and structural coherence measurement tool.</p>
+  </details>
+
+  <details>
+    <summary>Measurement Instruments</summary>
+    <p>Classification systems, scoring frameworks, structured evaluation layers.</p>
+  </details>
+
+</div>
+</details>
+
+<!-- WEST -->
+<details class="section">
+<summary>WEST · Identity · Links · Anchors</summary>
+<div class="inner">
+
+  <details>
+    <summary>ORCID</summary>
+    <p>Researcher identity registry.</p>
+  </details>
+
+  <details>
+    <summary>OSF Project</summary>
+    <p>Preprints, technical documentation, structured research artifacts.</p>
+  </details>
+
+</div>
+</details>
+
+<footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 
 </div>
 </body>

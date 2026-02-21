@@ -1,33 +1,79 @@
-/* TNT: /assets/instrument.js
-   Purpose: disable canonical routing logic on leaf pages.
-   Rule: only run "route enforcement" on HUB pages. Everywhere else: NO-OP.
-*/
-(() => {
-  const path = (location.pathname || "/").toLowerCase();
+/* =====================================================
+   CRP INSTRUMENT ENGINE v2 — FULL TNT
+   Purpose: state validation only (no routing enforcement)
+   Rules:
+     - Language must exist before Door/Home
+     - Depth must exist before Home
+     - No blocking on leaf pages
+===================================================== */
 
-  // Normalize: treat /x as /x/
+(() => {
+
+  const path = (location.pathname || "/").toLowerCase();
   const norm = path.endsWith("/") ? path : path + "/";
 
-  // HUB allowlist (ONLY these pages may run route enforcement)
-  const HUBS = new Set([
-    "/",               // root landing
-    "/home/",
-    "/door/",
-    "/laws/",
-    "/laws/categories/",
-    "/products/",
-    "/links/",
-    "/gauges/",
-    "/diagnostic/"
-  ]);
+  const K_LANG = "gd_lang";
+  const K_DEPTH = "gd_depth";
 
-  // If not a hub, do NOTHING (prevents "Not Found / canonical structure" blocks on leaf pages)
-  if (!HUBS.has(norm)) return;
+  const VALID_LANG = ["en","zh"];
+  const VALID_DEPTH = ["explore","learn"];
 
-  // =========================
-  // HUB-ONLY ROUTE ENFORCEMENT
-  // =========================
-  // If you previously had canonical enforcement here, keep it HERE ONLY.
-  // Minimal safe behavior: do not block anything by default.
-  // (If you want strict enforcement later, we add a hub-only allowlist here.)
+  function normalize() {
+    let lang = localStorage.getItem(K_LANG);
+    let depth = localStorage.getItem(K_DEPTH);
+
+    if (!VALID_LANG.includes(lang)) {
+      localStorage.removeItem(K_LANG);
+      lang = null;
+    }
+
+    if (!VALID_DEPTH.includes(depth)) {
+      localStorage.removeItem(K_DEPTH);
+      depth = null;
+    }
+
+    return { lang, depth };
+  }
+
+  const { lang, depth } = normalize();
+
+  /* -----------------------------------------------------
+     INDEX: no requirements
+  ----------------------------------------------------- */
+  if (norm === "/") {
+    return;
+  }
+
+  /* -----------------------------------------------------
+     DOOR: requires language
+  ----------------------------------------------------- */
+  if (norm === "/door/") {
+    if (!lang) {
+      window.location.replace("/");
+    }
+    return;
+  }
+
+  /* -----------------------------------------------------
+     HOME: requires language + depth
+  ----------------------------------------------------- */
+  if (norm === "/home/") {
+    if (!lang) {
+      window.location.replace("/");
+      return;
+    }
+
+    if (!depth) {
+      window.location.replace("/door/");
+      return;
+    }
+
+    return;
+  }
+
+  /* -----------------------------------------------------
+     LEAF PAGES: do nothing
+  ----------------------------------------------------- */
+  return;
+
 })();

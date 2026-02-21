@@ -1,235 +1,290 @@
-<!-- ============================
-TNT: /door/index.html
-REPLACE ENTIRE FILE
-Purpose: ONE-TIME depth fork only.
-Reads localStorage.geo_lang (fallback en)
-Sets localStorage.geo_depth = "explore" | "learn" | "try"
-Then routes to /home/
-============================ -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Door · Geodiametrics</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Door · Geodiametrics</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=2001"/>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 
-  <style>
-    :root{
-      --bg0:#05070c;
-      --bg1:#24060a;
-      --bg2:#4a0a10;
-      --glass:rgba(255,255,255,.06);
-      --line:rgba(255,255,255,.10);
-      --text:#eaf2f6;
-      --muted:rgba(234,242,246,.70);
-    }
-    html,body{height:100%}
-    body{
-      margin:0;
-      color:var(--text);
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:
-        radial-gradient(1200px 800px at 50% 18%, rgba(140,20,30,.55) 0%, rgba(0,0,0,0) 55%),
-        radial-gradient(1200px 900px at 50% 18%, var(--bg2) 0%, var(--bg1) 45%, var(--bg0) 100%);
-      overflow-x:hidden;
-    }
-    .page{
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:flex-start;
-      padding:40px 16px 36px;
-      gap:18px;
-      position:relative;
-      z-index:1;
-    }
-    .hero{
-      width:min(980px,94vw);
-      text-align:left;
-    }
-    .hero h1{
-      margin:0;
-      font-size:clamp(40px,7vw,64px);
-      font-weight:950;
-      letter-spacing:.01em;
-    }
-    .hero p{
-      margin:10px 0 0;
-      font-size:clamp(16px,3.2vw,20px);
-      color:var(--muted);
-      line-height:1.4;
-    }
-    .panel{
-      width:min(980px,94vw);
-      border-radius:26px;
-      background:var(--glass);
-      box-shadow:inset 0 0 0 1px var(--line), 0 28px 90px rgba(0,0,0,.65);
-      padding:18px;
-      backdrop-filter: blur(14px);
-    }
-    .panel h2{
-      margin:0 0 10px;
-      font-size:14px;
-      letter-spacing:.22em;
-      opacity:.85;
-    }
-    .choices{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-    }
-    .btn{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      width:100%;
-      border-radius:20px;
-      padding:18px 18px;
-      background:rgba(0,0,0,.22);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-      color:var(--text);
-      text-decoration:none;
-      user-select:none;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .btn:active{transform:translateY(1px); filter:brightness(1.05)}
-    .left{display:flex; flex-direction:column; gap:6px;}
-    .title{font-size:20px; font-weight:900; letter-spacing:.04em;}
-    .sub{font-size:14px; color:rgba(234,242,246,.68); line-height:1.35;}
-    .pill{
-      min-width:92px;
-      text-align:center;
-      padding:10px 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.06);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-      font-weight:850;
-      letter-spacing:.14em;
-      opacity:.95;
-    }
-    .row{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      margin-top:14px;
-      flex-wrap:wrap;
-      color:rgba(234,242,246,.78);
-      font-size:13px;
-      letter-spacing:.08em;
-      opacity:.9;
-    }
-    .tag{
-      padding:10px 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.06);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-      font-weight:850;
-      letter-spacing:.14em;
-    }
-    footer{
-      width:min(980px,94vw);
-      margin-top:auto;
-      text-align:center;
-      letter-spacing:3px;
-      font-size:12px;
-      opacity:.55;
-    }
-  </style>
+<style>
+/* ==========================================
+   DOOR — DEPTH ONLY (NO LANGUAGE REDUNDANCY)
+   Reads gd_lang from localStorage (set on /index.html)
+   Sets gd_depth and routes to /home/
+========================================== */
+
+:root{
+  --glass: rgba(255,255,255,.07);
+  --stroke: rgba(255,255,255,.14);
+  --ink: rgba(234,242,246,.92);
+  --muted: rgba(234,242,246,.70);
+}
+
+/* Chinese red/black theme */
+html,body{height:100%;margin:0}
+body{
+  min-height:100vh;
+  color:var(--ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(1100px 760px at 50% 12%, rgba(190,10,18,.52) 0%, rgba(90,10,14,.34) 40%, rgba(6,10,14,1) 100%);
+}
+
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:30px 14px 90px;
+  position:relative;
+}
+
+.card{
+  width:min(740px,94vw);
+  border-radius:28px;
+  background:rgba(0,0,0,.26);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 30px 90px rgba(0,0,0,.70);
+  padding:26px 18px 18px;
+  text-align:center;
+  backdrop-filter:blur(10px);
+}
+
+h1{
+  margin:0;
+  font-size:clamp(44px,9vw,70px);
+  font-weight:900;
+  letter-spacing:.01em;
+}
+
+.sub{
+  margin:12px auto 0;
+  font-size:18px;
+  color:var(--muted);
+  line-height:1.4;
+}
+
+.badges{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+.badge{
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  color:rgba(234,242,246,.78);
+  font-weight:800;
+  letter-spacing:.12em;
+  font-size:12px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:16px;
+}
+
+.pick{
+  padding:18px 14px;
+  border-radius:20px;
+  background:var(--glass);
+  border:1px solid var(--stroke);
+  box-shadow:0 20px 60px rgba(0,0,0,.40);
+  text-align:left;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.pick .title{
+  font-size:20px;
+  font-weight:900;
+  letter-spacing:.04em;
+}
+
+.pick .desc{
+  margin-top:6px;
+  font-size:14px;
+  color:rgba(234,242,246,.72);
+  line-height:1.45;
+}
+
+.pick.active{
+  background:rgba(255,255,255,.10);
+  border-color:rgba(255,255,255,.20);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.10) inset,
+    0 24px 70px rgba(0,0,0,.45);
+}
+
+.actions{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.btn{
+  padding:14px 18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.12);
+  color:var(--ink);
+  font-weight:900;
+  text-decoration:none;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.btn.primary{
+  background:rgba(255,255,255,.14);
+}
+
+.help{
+  margin:14px auto 0;
+  padding:12px 14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  color:rgba(234,242,246,.78);
+  font-size:14px;
+  line-height:1.45;
+  text-align:left;
+}
+
+.help b{color:rgba(234,242,246,.92);}
+
+.footer{
+  position:absolute;
+  left:0; right:0;
+  bottom:18px;
+  text-align:center;
+  letter-spacing:3px;
+  font-size:12px;
+  opacity:.55;
+}
+</style>
 </head>
 
 <body>
-  <div class="page">
-    <div class="hero">
-      <h1 id="t1">Door</h1>
-      <p id="t2">Choose how deep you want the hub to be. You can change this later.</p>
+<div class="shooting-stars"></div>
+
+<div class="page">
+  <div class="card">
+    <h1 id="t_title">Door</h1>
+    <div class="sub" id="t_sub">Pick depth. Then enter.</div>
+
+    <div class="badges">
+      <div class="badge" id="t_langBadge">LANG · EN</div>
+      <div class="badge" id="t_depthBadge">DEPTH · EXPLORE</div>
     </div>
 
-    <div class="panel">
-      <h2 id="t3">DEPTH · ONE TIME</h2>
-
-      <div class="choices">
-        <a class="btn" href="/home/" data-depth="explore">
-          <div class="left">
-            <div class="title" id="d1">Explore</div>
-            <div class="sub" id="d1s">Surface scan. Quick orientation. Minimal expansion.</div>
-          </div>
-          <div class="pill" id="p1">EXPLORE</div>
-        </a>
-
-        <a class="btn" href="/home/" data-depth="learn">
-          <div class="left">
-            <div class="title" id="d2">Learn</div>
-            <div class="sub" id="d2s">Deep breakdown. Bubble trees. Full detail.</div>
-          </div>
-          <div class="pill" id="p2">LEARN</div>
-        </a>
-
-        <a class="btn" href="/home/" data-depth="try">
-          <div class="left">
-            <div class="title" id="d3">Try</div>
-            <div class="sub" id="d3s">Jump into live surfaces and working portals.</div>
-          </div>
-          <div class="pill" id="p3">TRY</div>
-        </a>
+    <div class="grid" role="group" aria-label="Depth selection">
+      <div class="pick" id="pickExplore" data-depth="explore">
+        <div class="title" id="t_exploreTitle">Explore</div>
+        <div class="desc" id="t_exploreDesc">Surface view · quick orientation · jump links</div>
       </div>
 
-      <div class="row">
-        <div id="langLabel">LANG:</div>
-        <div class="tag" id="langTag">EN</div>
+      <div class="pick" id="pickLearn" data-depth="learn">
+        <div class="title" id="t_learnTitle">Learn</div>
+        <div class="desc" id="t_learnDesc">Deep view · bubble expansion · full breakdown</div>
       </div>
     </div>
 
-    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    <div class="actions">
+      <button class="btn primary" id="btnEnter" type="button">Enter</button>
+      <a class="btn" id="btnBack" href="/">Back</a>
+    </div>
+
+    <div class="help" id="t_help">
+      <b>Explore</b> shows short summaries and direct jumps into the site.<br/>
+      <b>Learn</b expands each quadrant into deeper structure and examples.
+    </div>
   </div>
 
-  <script>
-    (function(){
-      function getLang(){
-        try{
-          return localStorage.getItem('geo_lang') || 'en';
-        }catch(_){
-          return 'en';
-        }
-      }
+  <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
+</div>
 
-      function setTextZH(){
-        document.documentElement.lang = "zh";
-        document.getElementById('t1').textContent = "入口";
-        document.getElementById('t2').textContent = "选择你要看的深度。你可以之后再切换。";
-        document.getElementById('t3').textContent = "深度 · 一次选择";
+<script>
+(function(){
+  const $ = (id)=>document.getElementById(id);
 
-        document.getElementById('d1').textContent = "浏览";
-        document.getElementById('d1s').textContent = "快速概览。最少展开。";
-        document.getElementById('p1').textContent = "BROWSE";
+  function getLang(){
+    try{ return (localStorage.getItem("gd_lang") || "en").toLowerCase(); }catch(e){ return "en"; }
+  }
 
-        document.getElementById('d2').textContent = "学习";
-        document.getElementById('d2s').textContent = "深度拆解。多层气泡树。";
-        document.getElementById('p2').textContent = "LEARN";
+  function getDepth(){
+    let d = "explore";
+    try{ d = (localStorage.getItem("gd_depth") || "explore").toLowerCase(); }catch(e){}
+    if(d === "shop") d = "explore";     // legacy mapping
+    if(d !== "explore" && d !== "learn") d = "explore";
+    return d;
+  }
 
-        document.getElementById('d3').textContent = "试用";
-        document.getElementById('d3s').textContent = "直接进入可用界面与入口。";
-        document.getElementById('p3').textContent = "TRY";
+  function setDepth(d){
+    try{ localStorage.setItem("gd_depth", d); }catch(e){}
+  }
 
-        document.getElementById('langLabel').textContent = "语言:";
-        document.getElementById('langTag').textContent = "中文";
-      }
+  function applyI18n(lang){
+    document.documentElement.lang = (lang === "zh") ? "zh" : "en";
 
-      const lang = getLang();
-      if(lang === 'zh') setTextZH();
+    if(lang === "zh"){
+      $("t_title").textContent = "入口";
+      $("t_sub").textContent = "选择深度，然后进入。";
+      $("btnEnter").textContent = "进入";
+      $("btnBack").textContent = "返回";
+      $("t_exploreTitle").textContent = "浏览";
+      $("t_exploreDesc").textContent = "表层视图 · 快速理解 · 直接跳转";
+      $("t_learnTitle").textContent = "学习";
+      $("t_learnDesc").textContent = "深度视图 · 气泡展开 · 完整拆解";
+      $("t_help").innerHTML = "<b>浏览</b>：短摘要 + 直接跳转。<br/><b>学习</b>：按象限展开更深结构与示例。";
+    }else{
+      $("t_title").textContent = "Door";
+      $("t_sub").textContent = "Pick depth. Then enter.";
+      $("btnEnter").textContent = "Enter";
+      $("btnBack").textContent = "Back";
+      $("t_exploreTitle").textContent = "Explore";
+      $("t_exploreDesc").textContent = "Surface view · quick orientation · jump links";
+      $("t_learnTitle").textContent = "Learn";
+      $("t_learnDesc").textContent = "Deep view · bubble expansion · full breakdown";
+      $("t_help").innerHTML = "<b>Explore</b> shows short summaries and direct jumps into the site.<br/><b>Learn</b expands each quadrant into deeper structure and examples.";
+    }
 
-      const links = document.querySelectorAll('[data-depth]');
-      links.forEach(a=>{
-        a.addEventListener('click', ()=>{
-          const depth = a.getAttribute('data-depth');
-          try{ localStorage.setItem('geo_depth', depth); }catch(_){}
-        }, {passive:true});
-      });
-    })();
-  </script>
+    $("t_langBadge").textContent = "LANG · " + (lang === "zh" ? "中文" : "EN");
+  }
+
+  function paintDepth(d){
+    $("t_depthBadge").textContent = "DEPTH · " + (d === "learn" ? "LEARN" : "EXPLORE");
+    $("pickExplore").classList.toggle("active", d === "explore");
+    $("pickLearn").classList.toggle("active", d === "learn");
+  }
+
+  const lang = getLang();
+  applyI18n(lang);
+
+  let depth = getDepth();
+  paintDepth(depth);
+
+  $("pickExplore").addEventListener("click", ()=>{ depth="explore"; setDepth(depth); paintDepth(depth); });
+  $("pickLearn").addEventListener("click", ()=>{ depth="learn"; setDepth(depth); paintDepth(depth); });
+
+  $("btnEnter").addEventListener("click", ()=>{
+    // one forward handoff
+    location.href = "/home/";
+  });
+})();
+</script>
+
 </body>
 </html>

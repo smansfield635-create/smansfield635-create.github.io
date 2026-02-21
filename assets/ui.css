@@ -1,79 +1,45 @@
-/* =====================================================
-   TNT: /assets/ui.css
-   GEODIAMETRICS — RED/BLACK/WHITE/GOLD THEME
-   Global UI + accordions + buttons + safe stacking
-===================================================== */
+/* TNT: /assets/ui.css (FULL FILE REPLACEMENT)
+   Purpose: Global background, typography, stacking, and red/black “Chinese lacquer” theme.
+   Fixes:
+     - Header/subtitle always above plate
+     - Footer always readable
+     - No random serif fallback
+*/
 
-/* ---------- Base ---------- */
-:root{
-  --bg0:#05070c;
-  --bg1:#0b1218;
-  --bg2:#152532;
-
-  --ink:#eaf2f6;
-  --muted:rgba(234,242,246,.74);
-  --dim:rgba(234,242,246,.55);
-
-  --glass:rgba(255,255,255,.06);
-  --glass2:rgba(255,255,255,.08);
-  --stroke:rgba(255,255,255,.10);
-
-  --red1:#2a0608;
-  --red2:#6b0f14;
-  --redGlow:rgba(210,46,60,.22);
-
-  --gold:rgba(245,210,120,.35);
-  --gold2:rgba(245,210,120,.18);
-
-  --shadow:0 24px 70px rgba(0,0,0,.45);
-  --shadow2:0 30px 90px rgba(0,0,0,.60);
-
-  --r16:16px;
-  --r18:18px;
-  --r22:22px;
-  --r28:28px;
-}
-
-/* Prevent iOS tap highlight */
-*{ -webkit-tap-highlight-color:transparent; }
 html,body{
-  margin:0; padding:0;
-  width:100%; height:100%;
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--ink);
-  background:var(--bg0);
+  color:#eaf2f6;
   overflow-x:hidden;
+  background:#05070c;
 }
 
-/* ---------- Cosmic + Red overlay ---------- */
 body{
   position:relative;
-  background:
-    radial-gradient(1400px 900px at 50% 18%, var(--bg2) 0%, var(--bg1) 52%, var(--bg0) 100%);
+  background:radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
 }
 
 /* Nebula drift */
 body::before{
   content:"";
   position:fixed;
-  inset:-22%;
+  inset:-20%;
   pointer-events:none;
   z-index:-3;
   background:
-    radial-gradient(900px 700px at 15% 25%, rgba(72,166,255,.14) 0%, transparent 65%),
-    radial-gradient(1100px 800px at 80% 30%, rgba(190,91,255,.12) 0%, transparent 70%),
-    radial-gradient(1000px 850px at 50% 80%, rgba(42,255,186,.08) 0%, transparent 70%),
-    radial-gradient(1200px 900px at 50% 35%, var(--redGlow) 0%, transparent 64%);
+    radial-gradient(900px 700px at 15% 25%, rgba(72,166,255,.18) 0%, rgba(0,0,0,0) 65%),
+    radial-gradient(1100px 800px at 80% 30%, rgba(190,91,255,.14) 0%, rgba(0,0,0,0) 70%),
+    radial-gradient(1000px 850px at 50% 80%, rgba(42,255,186,.10) 0%, rgba(0,0,0,0) 70%);
   filter:blur(18px);
-  opacity:.92;
+  opacity:.85;
   animation:nebulaDrift 22s ease-in-out infinite alternate;
 }
-@keyframes nebulaDrift{
-  0%{ transform:translate3d(-2%,-1%,0) scale(1.02); }
-  100%{ transform:translate3d(2%,1%,0) scale(1.06); }
-}
+@keyframes nebulaDrift{0%{transform:translate3d(-2%,-1%,0) scale(1.02)}100%{transform:translate3d(2%,1%,0) scale(1.06)}}
 
-/* Star field */
+/* Stars */
 body::after{
   content:"";
   position:fixed;
@@ -81,23 +47,17 @@ body::after{
   pointer-events:none;
   z-index:-2;
   background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.75) 0, transparent 60%),
-    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.45) 0, transparent 60%),
-    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.60) 0, transparent 60%),
-    radial-gradient(2px 2px at 22% 28%, rgba(255,255,255,.26) 0, transparent 60%),
-    radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,.22) 0, transparent 60%);
-  opacity:.72;
-  animation:starTwinkle 6.6s ease-in-out infinite alternate;
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.75) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.45) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.60) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,.24) 0, rgba(255,255,255,0) 60%);
+  opacity:.70;
+  animation:starTwinkle 6.8s ease-in-out infinite alternate;
 }
-@keyframes starTwinkle{
-  0%{ opacity:.50; filter:brightness(.95); }
-  100%{ opacity:.85; filter:brightness(1.15); }
-}
+@keyframes starTwinkle{0%{opacity:.50;filter:brightness(.95)}100%{opacity:.82;filter:brightness(1.14)}}
 
 /* Shooting stars */
-.shooting-stars,
-.shooting-stars::before,
-.shooting-stars::after{
+.shooting-stars,.shooting-stars::before,.shooting-stars::after{
   content:"";
   position:fixed;
   inset:0;
@@ -105,191 +65,198 @@ body::after{
   z-index:-1;
 }
 @keyframes shoot{
-  0%{ transform:translate3d(-25vw,-25vh,0) rotate(20deg); opacity:0; }
-  10%{ opacity:1; }
-  40%{ opacity:1; }
-  60%{ opacity:0; }
-  100%{ transform:translate3d(120vw,120vh,0) rotate(20deg); opacity:0; }
+  0%{transform:translate3d(-25vw,-25vh,0) rotate(20deg);opacity:0}
+  10%{opacity:1}
+  40%{opacity:1}
+  60%{opacity:0}
+  100%{transform:translate3d(120vw,120vh,0) rotate(20deg);opacity:0}
 }
-.shooting-stars::before,
-.shooting-stars::after{
+.shooting-stars::before,.shooting-stars::after{
   position:absolute;
-  width:260px;
-  height:2px;
+  width:260px;height:2px;
   background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.9), rgba(255,255,255,0));
   border-radius:999px;
   filter:drop-shadow(0 0 8px rgba(255,255,255,.35));
   opacity:0;
 }
-.shooting-stars::before{ top:12%; left:-35%; animation:shoot 11s linear infinite; animation-delay:1.5s; }
-.shooting-stars::after { top:40%; left:-45%; animation:shoot 14s linear infinite; animation-delay:5s; }
+.shooting-stars::before{top:12%;left:-35%;animation:shoot 11s linear infinite;animation-delay:1.5s}
+.shooting-stars::after{top:40%;left:-45%;animation:shoot 14s linear infinite;animation-delay:5s}
 
-/* ---------- Layout ---------- */
+/* Chinese lacquer overlay (opt-in) */
+body.theme-red{
+  background:
+    radial-gradient(1200px 900px at 50% 0%, rgba(160,20,20,.55) 0%, rgba(0,0,0,0) 55%),
+    radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
+}
+body.theme-red::before{
+  opacity:.78;
+}
+
+/* Layout */
 .page{
   min-height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
-  padding:48px 16px 96px;
+  padding:44px 16px 84px;
   position:relative;
   z-index:1;
 }
-
+.entry-page{justify-content:flex-start}
 .h{
   text-align:center;
-  margin-bottom:18px;
+  margin-bottom:20px;
   position:relative;
-  z-index:10; /* always above plates */
+  z-index:10; /* ALWAYS above plate */
 }
 .h h1{
-  margin:0;
-  font-size:clamp(44px, 8vw, 72px);
+  font-size:56px;
   font-weight:900;
+  margin:0;
   letter-spacing:.01em;
+  position:relative;
+  z-index:10;
 }
 .h p{
-  margin:10px 0 0;
-  font-size:18px;
+  margin:12px 0 0;
+  font-size:20px;
   opacity:.72;
-  color:var(--muted);
-}
-
-.stage{
-  flex:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
   position:relative;
-  z-index:2;
+  z-index:10;
 }
 
+/* Section title */
+.section-title{
+  width:min(920px,94vw);
+  margin:18px auto 10px;
+  font-size:12px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  opacity:.55;
+  text-align:left;
+}
+
+/* Footer always readable */
 footer{
   text-align:center;
   letter-spacing:3px;
   font-size:12px;
-  opacity:.58;
-  margin-top:24px;
-  color:var(--dim);
+  opacity:.55;
+  margin-top:22px;
   position:relative;
-  z-index:10; /* always above plates */
+  z-index:10;
 }
 
-/* ---------- Links ---------- */
-a{ color:inherit; text-decoration:none; }
-a:visited{ color:inherit; }
-a:hover{ text-decoration:none; }
-a:active{ text-decoration:none; }
-
-/* ---------- Pills / Buttons ---------- */
-.pill,
-.nav a,
-.actions a{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  padding:12px 16px;
-  border-radius:999px;
-  background:var(--glass);
-  border:1px solid var(--stroke);
-  font-weight:900;
-  color:var(--ink);
-  cursor:pointer;
-  user-select:none;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
-  transition:transform .12s ease, filter .12s ease, background .12s ease;
-}
-.pill:hover,
-.nav a:hover,
-.actions a:hover{ filter:brightness(1.05); }
-.pill:active,
-.nav a:active,
-.actions a:active{ transform:translateY(1px); }
-
-.pill.primary,
-.actions a.primary{
-  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.12),
-    0 18px 50px rgba(0,0,0,.35),
-    0 0 22px rgba(210,46,60,.14);
-}
-
-/* ---------- Cards / Panels ---------- */
-.panel{
-  width:min(980px,94vw);
-  border-radius:var(--r28);
-  background:rgba(255,255,255,.05);
+/* Buttons / pills */
+.pill{
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:var(--shadow);
-  padding:18px 18px;
+  background:rgba(255,255,255,.06);
+  color:#eaf2f6;
+  padding:10px 14px;
+  border-radius:999px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
 }
-.panel h2{
-  margin:0 0 10px;
-  font-size:18px;
-  font-weight:900;
-  letter-spacing:.10em;
-  opacity:.9;
+.pill.is-active{
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.22);
 }
-.panel p{
-  margin:10px 0;
-  font-size:18px;
-  line-height:1.6;
-  opacity:.92;
+.pill-sep{display:inline-block;width:10px}
+
+/* Hub toggle row */
+.hub-toggles{
+  width:min(920px,94vw);
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin:6px 0 10px;
 }
 
-/* ---------- Accordion (details/summary) ---------- */
-details{
+/* Entry selector */
+.entry-grid{
+  width:min(920px,94vw);
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:14px;
+  margin-top:12px;
+}
+@media (max-width:560px){ .entry-grid{grid-template-columns:1fr} }
+.entry-card{
+  display:block;
+  padding:18px 18px;
   border-radius:22px;
   background:rgba(255,255,255,.05);
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:var(--shadow);
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+}
+.entry-title{font-size:24px;font-weight:900}
+.entry-sub{margin-top:2px;opacity:.8;font-weight:900;letter-spacing:.12em}
+.entry-desc{margin-top:10px;opacity:.70;font-size:14px;letter-spacing:.06em}
+
+/* Quadrant accordions */
+.quad{width:min(920px,94vw);display:flex;flex-direction:column;gap:12px}
+.dd{
+  border-radius:22px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.10);
   overflow:hidden;
 }
-summary{
+.dd-sum{
   list-style:none;
-  cursor:pointer;
-  padding:18px 18px;
-  font-weight:900;
   display:flex;
-  align-items:center;
-  justify-content:space-between;
   gap:12px;
-}
-summary::-webkit-details-marker{ display:none; }
-details[open]{
-  box-shadow:var(--shadow2);
-}
-.details-inner{
-  padding:0 18px 18px;
-  opacity:.92;
-  font-size:16px;
-  line-height:1.6;
-}
-.details-mini{
-  margin-top:12px;
+  align-items:center;
   padding:14px 14px;
-  border-radius:18px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
+  cursor:pointer;
 }
-.badge{
-  width:42px;height:42px;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
+.dd-sum::-webkit-details-marker{display:none}
+.dd-badge{
+  min-width:46px;
+  height:30px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.10);
   font-weight:900;
+  letter-spacing:.10em;
+}
+.dd-name{font-weight:900}
+.dd-desc{opacity:.70; margin-left:auto; text-align:right}
+.dd-body{padding:0 14px 14px}
+.dd-box{
+  border-radius:18px;
+  background:rgba(0,0,0,.28);
+  border:1px solid rgba(255,255,255,.08);
+  padding:14px 14px;
+}
+.dd-kicker{
+  font-size:11px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  opacity:.55;
+  margin-bottom:10px;
+}
+.dd-list{margin:0;padding-left:18px}
+.dd-list li{margin:10px 0}
+.dd-h{font-weight:900}
+.dd-p{opacity:.78; margin-top:2px}
+
+/* Stage container */
+.stage{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  z-index:2;
+  margin-top:6px;
 }
 
-/* ---------- Red theme helper (optional body class) ---------- */
-body.theme-red{
-  background:
-    radial-gradient(1200px 900px at 50% 14%, rgba(120,0,10,.55) 0%, rgba(15,10,12,.80) 45%, var(--bg0) 100%),
-    radial-gradient(1400px 900px at 50% 18%, var(--bg2) 0%, var(--bg1) 52%, var(--bg0) 100%);
-}
-
-/* ---------- Safety: keep header/footer above big rotated plates ---------- */
-.platform, .platform::before, .platform::after{ z-index:2; }
-.h, footer{ z-index:10; position:relative; }
+/* Links reset */
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}

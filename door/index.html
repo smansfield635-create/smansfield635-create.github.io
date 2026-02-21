@@ -1,20 +1,19 @@
 <!-- TNT FILE: /door/index.html  (FULL REPLACEMENT)
-     DOOR = FALLBACK LENS SELECT (4 lenses)
-     - Language: EN / 中文
-     - Depth: EXPLORE / LEARN
+     DOOR = Lens Select (4 diamonds)
+     - Language (EN / 中文)
+     - Depth (Explore / Learn)
      - Stores: gd_lang, gd_depth
-     - Enters: /home/
-     (Index is now the multi-portal terminal; Door remains as optional fallback.)
+     - Routes: /home/
 -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Door · CRP</title>
+<title>Door · Lens Select</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=9301"/>
-<link rel="stylesheet" href="/assets/branch.css?v=9301"/>
+<link rel="stylesheet" href="/assets/ui.css?v=9500"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9500"/>
 
 <style>
 body{
@@ -23,10 +22,10 @@ body{
     radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
 }
 
-.wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px;padding:38px 16px 88px}
 .hero{position:relative;z-index:10;text-align:left}
 .hero h1{font-size:clamp(40px,7vw,68px);margin:0;font-weight:950;letter-spacing:.02em}
-.hero p{margin:10px 0 0;opacity:.80;font-size:16px;line-height:1.4;max-width:58ch}
+.hero p{margin:10px 0 0;opacity:.80;font-size:16px;line-height:1.4;max-width:70ch}
 
 .stage{display:flex;align-items:center;justify-content:center;width:100%}
 .platform{
@@ -46,6 +45,7 @@ body{
   backdrop-filter:blur(10px);
   z-index:0;
 }
+
 .diamond{
   position:absolute;
   width:38%;
@@ -62,90 +62,34 @@ body{
     inset 0 18px 30px rgba(255,255,255,.05),
     inset 0 -30px 45px rgba(0,0,0,.85),
     0 24px 60px rgba(0,0,0,.80);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-  z-index:2;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;z-index:2;
 }
-.diamond span{
-  transform:rotate(-45deg);
-  text-align:center;
-  font-weight:900;
-  color:#eaf2f6;
-  letter-spacing:.10em;
-  line-height:1.12;
-}
-.diamond small{
-  display:block;
-  margin-top:6px;
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.14em;
-  opacity:.78;
-}
-.diamond.active{filter:brightness(1.10)}
 .diamond:active{transform:rotate(45deg) translateY(1px)}
+.diamond span{transform:rotate(-45deg);text-align:center;font-weight:900;color:#eaf2f6;letter-spacing:.10em;line-height:1.12}
+.diamond small{display:block;margin-top:6px;font-size:12px;font-weight:800;letter-spacing:.14em;opacity:.78}
+
+.diamond.active{filter:brightness(1.10);box-shadow:
+  inset 0 0 0 1px rgba(255,255,255,.10),
+  inset 0 18px 30px rgba(255,255,255,.07),
+  inset 0 -30px 45px rgba(0,0,0,.85),
+  0 24px 60px rgba(0,0,0,.85),
+  0 0 0 2px rgba(255,255,255,.06);
+}
 
 .top{top:6%;left:31%}
 .right{top:31%;right:6%}
 .bottom{bottom:6%;left:31%}
 .left{top:31%;left:6%}
 
-.status{
-  width:min(720px,94vw);
-  margin:14px auto 0;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
-.pill{
-  border-radius:999px;
-  padding:10px 14px;
-  background:rgba(255,255,255,.06);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  font-weight:900;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-  font-size:12px;
-  opacity:.92;
-}
+.status{width:min(720px,94vw);margin:14px auto 0;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.pill{border-radius:999px;padding:10px 14px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);font-weight:900;letter-spacing:.10em;text-transform:uppercase;font-size:12px;opacity:.92}
 
-.actions{
-  width:min(720px,94vw);
-  margin:12px auto 0;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
-.btn{
-  border-radius:18px;
-  padding:12px 16px;
-  background:rgba(255,255,255,.08);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
-  font-weight:900;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  font-size:12px;
-  color:#eaf2f6;
-  text-decoration:none;
-}
-.btn.primary{
-  background:rgba(150,0,0,.25);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 18px 50px rgba(0,0,0,.35);
-}
-footer{
-  margin-top:18px;
-  text-align:center;
-  opacity:.40;
-  letter-spacing:.22em;
-  font-weight:900;
-  font-size:12px;
-}
+.actions{width:min(720px,94vw);margin:12px auto 0;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn{border-radius:18px;padding:12px 16px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:12px;color:#eaf2f6;text-decoration:none}
+.btn.primary{background:rgba(150,0,0,.25);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 18px 50px rgba(0,0,0,.35)}
+
+footer{margin-top:18px;text-align:center;opacity:.40;letter-spacing:.22em;font-weight:900;font-size:12px}
 </style>
 </head>
 
@@ -154,35 +98,31 @@ footer{
 
 <div class="page">
   <div class="wrap">
-
     <div class="hero">
-      <h1>Door</h1>
-      <p>Lens select (fallback). Four keys only: Language + Depth. Then enter.</p>
+      <h1 id="H1">Door</h1>
+      <p id="H2">Select language and depth. Then enter the engine.</p>
     </div>
 
     <div class="stage">
       <div class="platform">
-
-        <button class="diamond top" id="lang-en" type="button"><span>ENGLISH<small>LANG</small></span></button>
-        <button class="diamond bottom" id="lang-zh" type="button"><span>中文<small>语言</small></span></button>
-        <button class="diamond left" id="depth-explore" type="button"><span>EXPLORE<small>DEPTH</small></span></button>
-        <button class="diamond right" id="depth-learn" type="button"><span>LEARN<small>DEPTH</small></span></button>
-
+        <button class="diamond top" id="LANG_EN" type="button"><span>ENGLISH<small>LANG</small></span></button>
+        <button class="diamond bottom" id="LANG_ZH" type="button"><span>中文<small>语言</small></span></button>
+        <button class="diamond left" id="DEPTH_EXP" type="button"><span>EXPLORE<small>DEPTH</small></span></button>
+        <button class="diamond right" id="DEPTH_LRN" type="button"><span>LEARN<small>DEPTH</small></span></button>
       </div>
     </div>
 
     <div class="status">
-      <div class="pill" id="badge-lang">LANG: EN</div>
-      <div class="pill" id="badge-depth">DEPTH: EXPLORE</div>
+      <div class="pill" id="S_LANG">LANG: EN</div>
+      <div class="pill" id="S_DEPTH">DEPTH: EXPLORE</div>
     </div>
 
     <div class="actions">
-      <a class="btn primary" href="/home/" id="enter">ENTER</a>
-      <a class="btn" href="/" id="terminal">TERMINAL</a>
+      <a class="btn primary" href="/home/" id="ENTER">ENTER</a>
+      <a class="btn" href="/" id="BACK">TERMINAL</a>
     </div>
 
     <footer>GEODIAMETRICS</footer>
-
   </div>
 </div>
 
@@ -191,7 +131,7 @@ footer{
   const K_LANG="gd_lang", K_DEPTH="gd_depth";
   const state={
     lang:(localStorage.getItem(K_LANG)||"en").toLowerCase(),
-    depth:(localStorage.getItem(K_DEPTH)||"explore").toLowerCase(),
+    depth:(localStorage.getItem(K_DEPTH)||"explore").toLowerCase()
   };
   function norm(){
     if(state.lang!=="en"&&state.lang!=="zh") state.lang="en";
@@ -200,19 +140,37 @@ footer{
   function save(){
     localStorage.setItem(K_LANG,state.lang);
     localStorage.setItem(K_DEPTH,state.depth);
+    if(!localStorage.getItem("gd_scope")) localStorage.setItem("gd_scope","now");
+    if(!localStorage.getItem("gd_expr")) localStorage.setItem("gd_expr","formal");
+    if(!localStorage.getItem("gd_contrast")) localStorage.setItem("gd_contrast","standard");
   }
   function paint(){
-    document.getElementById("lang-en").classList.toggle("active",state.lang==="en");
-    document.getElementById("lang-zh").classList.toggle("active",state.lang==="zh");
-    document.getElementById("depth-explore").classList.toggle("active",state.depth==="explore");
-    document.getElementById("depth-learn").classList.toggle("active",state.depth==="learn");
-    document.getElementById("badge-lang").textContent="LANG: "+(state.lang==="zh"?"中文":"EN");
-    document.getElementById("badge-depth").textContent="DEPTH: "+state.depth.toUpperCase();
+    document.documentElement.lang = (state.lang==="zh") ? "zh-Hans" : "en";
+    document.getElementById("LANG_EN").classList.toggle("active",state.lang==="en");
+    document.getElementById("LANG_ZH").classList.toggle("active",state.lang==="zh");
+    document.getElementById("DEPTH_EXP").classList.toggle("active",state.depth==="explore");
+    document.getElementById("DEPTH_LRN").classList.toggle("active",state.depth==="learn");
+    document.getElementById("S_LANG").textContent="LANG: "+(state.lang==="zh"?"中文":"EN");
+    document.getElementById("S_DEPTH").textContent="DEPTH: "+state.depth.toUpperCase();
+
+    // Single-language UI here (no mixed): replace headline text fully
+    if(state.lang==="zh"){
+      document.getElementById("H1").textContent="入口";
+      document.getElementById("H2").textContent="选择语言与深度，然后进入引擎。";
+      document.getElementById("ENTER").textContent="进入";
+      document.getElementById("BACK").textContent="终端";
+    }else{
+      document.getElementById("H1").textContent="Door";
+      document.getElementById("H2").textContent="Select language and depth. Then enter the engine.";
+      document.getElementById("ENTER").textContent="ENTER";
+      document.getElementById("BACK").textContent="TERMINAL";
+    }
   }
-  document.getElementById("lang-en").addEventListener("click",()=>{state.lang="en";norm();save();paint();});
-  document.getElementById("lang-zh").addEventListener("click",()=>{state.lang="zh";norm();save();paint();});
-  document.getElementById("depth-explore").addEventListener("click",()=>{state.depth="explore";norm();save();paint();});
-  document.getElementById("depth-learn").addEventListener("click",()=>{state.depth="learn";norm();save();paint();});
+
+  document.getElementById("LANG_EN").addEventListener("click",()=>{state.lang="en";norm();save();paint();});
+  document.getElementById("LANG_ZH").addEventListener("click",()=>{state.lang="zh";norm();save();paint();});
+  document.getElementById("DEPTH_EXP").addEventListener("click",()=>{state.depth="explore";norm();save();paint();});
+  document.getElementById("DEPTH_LRN").addEventListener("click",()=>{state.depth="learn";norm();save();paint();});
 
   norm();save();paint();
 })();

@@ -15,6 +15,14 @@ html,body{height:100%;margin:0}
 .h h1{font-size:48px;font-weight:900;margin:0}
 .h p{opacity:.7;margin-top:8px}
 .stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
+
+/* WIPE “NEW THEME” IMPACT ON HOME ONLY (FORCE OLD THEME PATH) */
+.diamond-stage,.home-platform,.home-diamond{all:unset !important;display:none !important}
+
+/* ENSURE HOME USES PLATFORM/DIAMOND ONLY (OLD THEME CLASSES) */
+.platform{all:revert !important}
+.diamond{all:revert !important}
+.platform::before{all:revert !important}
 </style>
 </head>
 
@@ -31,21 +39,10 @@ html,body{height:100%;margin:0}
   <div class="stage">
     <div class="platform">
 
-      <a class="diamond top c-blue" href="/laws/">
-        <span>Position</span>
-      </a>
-
-      <a class="diamond right c-green" href="/products/">
-        <span>Outcome</span>
-      </a>
-
-      <a class="diamond bottom c-amber" href="/gauges/">
-        <span>Trajectory</span>
-      </a>
-
-      <a class="diamond left c-purple" href="/links/">
-        <span>Origin</span>
-      </a>
+      <a class="diamond top c-blue" href="/laws/"><span>Position</span></a>
+      <a class="diamond right c-green" href="/products/"><span>Outcome</span></a>
+      <a class="diamond bottom c-amber" href="/gauges/"><span>Trajectory</span></a>
+      <a class="diamond left c-purple" href="/links/"><span>Origin</span></a>
 
     </div>
   </div>

@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Geodiametrics · Root</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=1014"/>
-<link rel="stylesheet" href="/assets/branch.css?v=1014"/>
+<link rel="stylesheet" href="/assets/ui.css?v=1015"/>
+<link rel="stylesheet" href="/assets/branch.css?v=1015"/>
 
 <style>
 .root-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:18px}
@@ -30,6 +30,7 @@
   text-transform:uppercase;
   display:flex;
   justify-content:space-between;
+  align-items:center;
 }
 .drop summary::-webkit-details-marker{display:none}
 .chev{width:12px;height:12px;border-right:2px solid rgba(234,242,246,.6);border-bottom:2px solid rgba(234,242,246,.6);transform:rotate(45deg);transition:.15s}
@@ -53,6 +54,7 @@
   text-transform:uppercase;
   display:flex;
   justify-content:space-between;
+  align-items:center;
 }
 .mini summary::-webkit-details-marker{display:none}
 .mchev{width:10px;height:10px;border-right:2px solid rgba(234,242,246,.55);border-bottom:2px solid rgba(234,242,246,.55);transform:rotate(45deg);transition:.15s}
@@ -68,6 +70,29 @@
   font-weight:800;
   letter-spacing:.06em;
   margin-right:8px;
+  margin-bottom:6px;
+}
+
+.kv{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.kv .pill{
+  display:inline-flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 12px;
+  border-radius:16px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  font-weight:800;
+  letter-spacing:.06em;
+}
+.kv .pill code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  font-size:12px;
+  opacity:.95;
+  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.10);
+  padding:4px 8px;
+  border-radius:999px;
 }
 
 .sep{border:0;height:1px;background:rgba(255,255,255,.10);margin:14px 0}
@@ -90,8 +115,60 @@ footer{margin-top:26px}
 
 <div class="dropgrid">
 
-<!-- LANGUAGE SYSTEM -->
+<!-- HUMAN LAYER -->
 <details class="drop" open>
+<summary>Human Layer<span class="chev"></span></summary>
+<div class="content">
+
+<div class="nest">
+
+<details class="mini" open>
+<summary>1,001-Word Mastery<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Human</span>
+A compact vocabulary + skills framework designed to produce fast, practical communication gains.
+Built for clarity, repeatability, and measurable progression.
+<div class="kv">
+  <div class="pill"><code>Scope</code> 10 categories · 4 levels</div>
+  <div class="pill"><code>Output</code> PDFs + lessons + drills</div>
+  <div class="pill"><code>Rule</code> One skill at a time</div>
+</div>
+</div>
+</details>
+
+<details class="mini">
+<summary>How To Read The Site<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Human</span>
+This site is navigated like a compass. The same geometry repeats.
+If a page looks unfinished, return to a hub and choose a different route.
+</div>
+</details>
+
+<details class="mini">
+<summary>Teaching & Certification (Human Track)<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Certification</span>
+Human-track certification covers communication outcomes, clarity routines, and reproducible teaching delivery.
+</div>
+</details>
+
+<details class="mini">
+<summary>What You Can Use Today<span class="mchev"></span></summary>
+<div class="mc">
+<span class="tag">Now</span>
+Use the hubs, the navigation grammar, and the tools that export structured outputs.
+More packaged materials ship continuously.
+</div>
+</details>
+
+</div>
+
+</div>
+</details>
+
+<!-- LANGUAGE SYSTEM -->
+<details class="drop">
 <summary>Language System<span class="chev"></span></summary>
 <div class="content">
 <div class="nest">
@@ -109,8 +186,7 @@ Built for compression, clarity, and reproducibility.
 <summary>Diamond Grammar<span class="mchev"></span></summary>
 <div class="mc">
 <span class="tag">Navigation</span>
-Four routes, one choice at a time.  
-N / E / S / W encode functional domains, not directions.
+Four routes, one choice at a time. N / E / S / W encode functional domains.
 </div>
 </details>
 
@@ -126,7 +202,62 @@ Operational literacy in SSG, navigation grammar, and applied constraint modeling
 <summary>Use Cases<span class="mchev"></span></summary>
 <div class="mc">
 <span class="tag">Deploy</span>
-Engineering systems, business modeling, diagnostics, measurement protocols.
+Engineering systems, business modeling, diagnostics, and measurement protocols.
+</div>
+</details>
+
+</div>
+</div>
+</details>
+
+<!-- ACRONYMS / GLOSSARY -->
+<details class="drop">
+<summary>Acronyms & Glossary<span class="chev"></span></summary>
+<div class="content">
+<div class="nest">
+
+<details class="mini" open>
+<summary>Core Identity & Research<span class="mchev"></span></summary>
+<div class="mc">
+<div class="kv">
+  <div class="pill"><code>ORCID</code> Researcher identity</div>
+  <div class="pill"><code>OSF</code> Project registry / preprints</div>
+  <div class="pill"><code>SSG</code> Simplified Syntax Geometry</div>
+</div>
+</div>
+</details>
+
+<details class="mini">
+<summary>Site Surfaces<span class="mchev"></span></summary>
+<div class="mc">
+<div class="kv">
+  <div class="pill"><code>N</code> Laws / definitions</div>
+  <div class="pill"><code>E</code> Products / execution</div>
+  <div class="pill"><code>S</code> Gauges / measurement</div>
+  <div class="pill"><code>W</code> Links / references</div>
+</div>
+</div>
+</details>
+
+<details class="mini">
+<summary>Programs & Outputs<span class="mchev"></span></summary>
+<div class="mc">
+<div class="kv">
+  <div class="pill"><code>1001</code> 1,001-word mastery system</div>
+  <div class="pill"><code>Packs</code> Downloadable materials</div>
+  <div class="pill"><code>Gauges</code> Measurement instruments</div>
+</div>
+</div>
+</details>
+
+<details class="mini">
+<summary>Operational Terms<span class="mchev"></span></summary>
+<div class="mc">
+<div class="kv">
+  <div class="pill"><code>Local-first</code> Stays on device unless published</div>
+  <div class="pill"><code>One choice</code> Avoid multi-tab inside a branch</div>
+  <div class="pill"><code>Return</code> Go back to hub if incomplete</div>
+</div>
 </div>
 </details>
 
@@ -144,7 +275,7 @@ Engineering systems, business modeling, diagnostics, measurement protocols.
 <summary>Alignment Diagnostic<span class="mchev"></span></summary>
 <div class="mc">
 <span class="tag">Product</span>
-Operational coherence assessment with clear next-route output.
+Operational assessment with clear next-route output.
 </div>
 </details>
 
@@ -152,12 +283,12 @@ Operational coherence assessment with clear next-route output.
 <summary>Business Certification<span class="mchev"></span></summary>
 <div class="mc">
 <span class="tag">Program</span>
-Structure certification for decision-making, execution integrity, and measurable outcomes.
+Structure certification for decisions, execution integrity, and measurable outcomes.
 </div>
 </details>
 
 <details class="mini">
-<summary>Environmental Monitoring<span class="mchev"></span></summary>
+<summary>Environmental Work<span class="mchev"></span></summary>
 <div class="mc">
 <span class="tag">Environment</span>
 Signal-based monitoring using standardized gauges and constraint models.
@@ -165,10 +296,10 @@ Signal-based monitoring using standardized gauges and constraint models.
 </details>
 
 <details class="mini">
-<summary>Instrument Packs<span class="mchev"></span></summary>
+<summary>Releases (What Ships)<span class="mchev"></span></summary>
 <div class="mc">
 <span class="tag">Output</span>
-Downloadable templates, gauges, and structured reporting modules.
+New tools, instruments, and packaged outputs ship continuously.
 </div>
 </details>
 
@@ -182,7 +313,7 @@ Downloadable templates, gauges, and structured reporting modules.
 <div class="content">
 <div class="nest">
 
-<details class="mini">
+<details class="mini" open>
 <summary>Execution Model<span class="mchev"></span></summary>
 <div class="mc">
 <span class="tag">Rule</span>
@@ -215,17 +346,6 @@ All gauges follow consistent classification and constraint rules.
 </details>
 
 </div>
-</div>
-</details>
-
-<!-- COMPASS KEY -->
-<details class="drop">
-<summary>Compass Key<span class="chev"></span></summary>
-<div class="content">
-<div><span class="tag">N</span> Laws / definitions / structure</div>
-<div><span class="tag">E</span> Products / execution surfaces</div>
-<div><span class="tag">S</span> Gauges / instruments / measurement</div>
-<div><span class="tag">W</span> Links / identity / references</div>
 </div>
 </details>
 

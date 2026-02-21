@@ -5,51 +5,60 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Geodiametrics · Root</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=1006"/>
-<link rel="stylesheet" href="/assets/branch.css?v=1006"/>
+<link rel="stylesheet" href="/assets/ui.css?v=1007"/>
+<link rel="stylesheet" href="/assets/branch.css?v=1007"/>
 
 <style>
-/* ROOT: bubbles + satellite navigation (root-only) */
+/* ROOT: collapsible info bubbles + satellite nav (root-only) */
 
-.root-wrap{
-  width:min(980px,94vw);
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-}
+.root-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:18px}
 
-.bubbles{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:14px;
-}
-@media (min-width:860px){
-  .bubbles{ grid-template-columns:1fr 1fr; }
-}
+/* Collapsible grid */
+.dropgrid{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:860px){.dropgrid{grid-template-columns:1fr 1fr}}
 
-.bubble{
+/* <details> bubble */
+.drop{
   border-radius:22px;
   background:rgba(255,255,255,.04);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.08),
-    0 30px 80px rgba(0,0,0,.45);
-  padding:16px 16px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.45);
+  overflow:hidden;
 }
 
-.bubble h2{
-  margin:0 0 8px;
+.drop summary{
+  list-style:none;
+  cursor:pointer;
+  padding:16px 16px;
   font-size:16px;
   font-weight:900;
   letter-spacing:.10em;
-  opacity:.92;
   text-transform:uppercase;
+  opacity:.92;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
-.bubble p{
-  margin:8px 0;
+
+.drop summary::-webkit-details-marker{display:none}
+
+.chev{
+  width:12px;height:12px;
+  border-right:2px solid rgba(234,242,246,.6);
+  border-bottom:2px solid rgba(234,242,246,.6);
+  transform:rotate(45deg);
+  transition:transform .15s ease;
+  margin-left:10px;
+}
+
+.drop[open] .chev{transform:rotate(-135deg)}
+
+.drop .content{
+  padding:0 16px 16px 16px;
   font-size:16px;
   line-height:1.6;
   opacity:.9;
 }
+
 .tag{
   display:inline-block;
   padding:6px 10px;
@@ -60,25 +69,14 @@
   letter-spacing:.06em;
 }
 
-.sep{
-  border:0;
-  height:1px;
-  background:rgba(255,255,255,.10);
-  margin:6px 0 0;
-}
+.sep{border:0;height:1px;background:rgba(255,255,255,.10);margin:8px 0 0}
 
-/* Satellite strip: smaller platform + diamonds */
-.sat{
-  display:flex;
-  justify-content:center;
-  margin-top:10px;
-}
-.sat .platform{
-  width:min(360px,86vw);
-}
+/* Satellite nav */
+.sat{display:flex;justify-content:center;margin-top:10px}
+.sat .platform{width:min(360px,86vw)}
 
-/* Make root footer breathe */
-footer{ margin-top:26px; }
+/* Footer spacing */
+footer{margin-top:26px}
 </style>
 </head>
 
@@ -93,39 +91,46 @@ footer{ margin-top:26px; }
       <p>Under construction · Safe to explore.</p>
     </div>
 
-    <div class="bubbles">
+    <div class="dropgrid">
 
-      <div class="bubble">
-        <h2>Coming Soon</h2>
-        <p>New instruments, branches, and content are being added continuously.</p>
-        <p><span class="tag">Rule</span> Navigation stays stable while content evolves.</p>
-      </div>
+      <details class="drop">
+        <summary>Coming Soon<span class="chev"></span></summary>
+        <div class="content">
+          New instruments, branches, and content are being added continuously.<br>
+          <span class="tag">Rule</span> Navigation stays stable while content evolves.
+        </div>
+      </details>
 
-      <div class="bubble">
-        <h2>How To Navigate</h2>
-        <p>Each hub uses the same diamond grammar: four routes, one choice at a time.</p>
-        <p><span class="tag">Tip</span> If a branch looks incomplete, return to a hub and choose another route.</p>
-      </div>
+      <details class="drop">
+        <summary>How To Navigate<span class="chev"></span></summary>
+        <div class="content">
+          Each hub uses the same diamond grammar: four routes, one choice at a time.<br>
+          <span class="tag">Tip</span> If a branch looks incomplete, return to a hub and choose another route.
+        </div>
+      </details>
 
-      <div class="bubble">
-        <h2>Compass Key</h2>
-        <p><span class="tag">N</span> Laws / categories / definitions.</p>
-        <p><span class="tag">E</span> Products / tools / execution surfaces.</p>
-        <p><span class="tag">S</span> Gauges / instruments / measurements.</p>
-        <p><span class="tag">W</span> Links / references / identity anchors.</p>
-      </div>
+      <details class="drop">
+        <summary>Compass Key<span class="chev"></span></summary>
+        <div class="content">
+          <span class="tag">N</span> Laws / categories / definitions.<br>
+          <span class="tag">E</span> Products / tools / execution surfaces.<br>
+          <span class="tag">S</span> Gauges / instruments / measurements.<br>
+          <span class="tag">W</span> Links / references / identity anchors.
+        </div>
+      </details>
 
-      <div class="bubble">
-        <h2>What’s Stable</h2>
-        <p>The structure and navigation are stable. Content may change while branches are completed.</p>
-        <p>If you want a finished example path, start at <span class="tag">Laws → Categories</span> and follow a branch to the end.</p>
-      </div>
+      <details class="drop">
+        <summary>What’s Stable<span class="chev"></span></summary>
+        <div class="content">
+          Structure and navigation are stable. Content may change while branches are completed.<br>
+          <span class="tag">Path</span> Start at <span class="tag">Laws → Categories</span> and follow a branch to the end.
+        </div>
+      </details>
 
     </div>
 
     <hr class="sep"/>
 
-    <!-- Satellite navigation (proceed) -->
     <div class="sat">
       <div class="platform">
 

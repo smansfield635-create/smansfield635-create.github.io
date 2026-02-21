@@ -1,7 +1,7 @@
 <!-- TNT: /door/index.html
-     COMPLETE REWRITE (ADD 1 CLEAR PARAGRAPH + KEEP DESIGN)
-     - Same structure + buttons.
-     - Adds a single “what you’re choosing” paragraph (human, non-jargon).
+     FIX: THIS *IS* THE FIRST PAGE → choose language + depth here (no “already chose”)
+     - Buttons now SET choices (localStorage) + route.
+     - No duplication. One fork here. Everything else reads stored settings.
 -->
 <!doctype html>
 <html lang="en">
@@ -10,8 +10,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Door · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=6001"/>
-<link rel="stylesheet" href="/assets/branch.css?v=6001"/>
+<link rel="stylesheet" href="/assets/ui.css?v=6002"/>
+<link rel="stylesheet" href="/assets/branch.css?v=6002"/>
 
 <style>
 html,body{height:100%}
@@ -60,6 +60,27 @@ body{
   opacity:.75;
   line-height:1.6;
 }
+.sep{height:1px;background:rgba(255,255,255,.10);margin:14px 0}
+.pickline{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+}
+.pill strong{letter-spacing:.10em}
+.choice{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 14px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  font-weight:900;letter-spacing:.10em;
+  cursor:pointer;
+}
+.choice.on{
+  background:rgba(255,255,255,.14);
+  border-color:rgba(255,255,255,.18);
+}
 </style>
 </head>
 
@@ -71,18 +92,42 @@ body{
 
     <div class="h">
       <h1 id="ttl">Door</h1>
-      <p id="sub">One step before the hub.</p>
+      <p id="sub">Choose language and depth, then enter.</p>
     </div>
 
     <div class="panel">
-      <div id="statusLine" style="opacity:.88;line-height:1.6"></div>
 
-      <!-- NEW: what you're choosing (1 paragraph) -->
+      <!-- CURRENT SELECTION (this page sets it) -->
+      <div class="pickline" style="opacity:.90">
+        <span>Language:</span>
+        <span class="badge" id="langBadge">EN</span>
+        <span style="opacity:.7">·</span>
+        <span>Depth:</span>
+        <span class="badge" id="depthBadge">SHOP</span>
+      </div>
+
+      <div class="sep"></div>
+
+      <!-- LANGUAGE PICK -->
+      <div class="pill">
+        <strong id="langLabel">LANG</strong>
+        <div class="choice on" id="langEN">EN</div>
+        <div class="choice" id="langZH">中文</div>
+      </div>
+
+      <!-- DEPTH PICK -->
+      <div class="pill" style="margin-top:10px">
+        <strong id="depthLabel">DEPTH</strong>
+        <div class="choice on" id="depthShop">SHOP</div>
+        <div class="choice" id="depthLearn">LEARN</div>
+      </div>
+
+      <!-- ONE PARAGRAPH EXPLAINER (human) -->
       <div class="explain" id="explainLine"></div>
 
       <div class="row">
-        <a class="btn primary" href="/home/" id="enterBtn">Enter</a>
-        <a class="btn" href="/" id="changeBtn">Change</a>
+        <button class="btn primary" id="enterBtn" type="button">Enter</button>
+        <a class="btn" href="/" id="backBtn">Back</a>
       </div>
 
       <div class="smallhint" id="hintLine"></div>
@@ -94,56 +139,85 @@ body{
 
 <script>
 (() => {
-  const lang = (localStorage.getItem("GD_LANG") || "en").toLowerCase();
-  const depth = (localStorage.getItem("GD_DEPTH") || "shop").toLowerCase();
-  const zh = (lang === "zh");
-  document.documentElement.lang = zh ? "zh-Hans" : "en";
+  const $ = (id)=>document.getElementById(id);
 
-  const ttl = document.getElementById("ttl");
-  const sub = document.getElementById("sub");
-  const statusLine = document.getElementById("statusLine");
-  const explainLine = document.getElementById("explainLine");
-  const hintLine = document.getElementById("hintLine");
-  const enterBtn = document.getElementById("enterBtn");
-  const changeBtn = document.getElementById("changeBtn");
+  // DEFAULTS FOR FIRST PAGE
+  let lang  = (localStorage.getItem("GD_LANG")  || "en").toLowerCase();   // en | zh
+  let depth = (localStorage.getItem("GD_DEPTH") || "shop").toLowerCase(); // shop | learn
+  if (lang !== "en" && lang !== "zh") lang = "en";
+  if (depth !== "shop" && depth !== "learn") depth = "shop";
 
-  if (zh){
-    ttl.textContent = "入口";
-    sub.textContent = "进入主枢纽前的一步。";
-    statusLine.innerHTML = `语言：<span class="badge">中文</span>　深度：<span class="badge">${depth === "learn" ? "学习" : "浏览"}</span>`;
+  const langBadge = $("langBadge");
+  const depthBadge = $("depthBadge");
 
-    // 1 paragraph, plain guidance
-    explainLine.textContent =
-      "你刚才选择了“语言 + 深度”。语言决定页面文字显示为中文还是英文；深度决定你看到的是“概览（浏览）”还是“详细解释（学习）”。点击“进入”继续；点击“更改”返回重新选择。";
+  const langEN = $("langEN");
+  const langZH = $("langZH");
+  const depthShop = $("depthShop");
+  const depthLearn = $("depthLearn");
 
-    hintLine.textContent = (depth === "learn")
-      ? "学习：显示更多层级与解释。"
-      : "浏览：只显示表层概要与入口。";
+  const ttl = $("ttl");
+  const sub = $("sub");
+  const explainLine = $("explainLine");
+  const hintLine = $("hintLine");
+  const enterBtn = $("enterBtn");
 
-    enterBtn.textContent = "进入";
-    changeBtn.textContent = "更改";
-  } else {
-    ttl.textContent = "Door";
-    sub.textContent = "One step before the hub.";
-    statusLine.innerHTML = `Language: <span class="badge">EN</span>　Depth: <span class="badge">${depth.toUpperCase()}</span>`;
+  function setOn(el, on){ el.classList.toggle("on", !!on); }
 
-    // 1 paragraph, plain guidance
-    explainLine.textContent =
-      "You already chose “language + depth.” Language controls whether pages read in English or Chinese. Depth controls whether you see a quick surface view (Shop) or a deeper explanation view (Learn). Tap Enter to continue, or Change to pick again.";
+  function renderText(){
+    const zh = (lang === "zh");
+    document.documentElement.lang = zh ? "zh-Hans" : "en";
 
-    hintLine.textContent = (depth === "learn")
-      ? "Learn: shows deeper nested bubbles and explanations."
-      : "Shop: shows surface-level summaries and entry points.";
+    langBadge.textContent = zh ? "中文" : "EN";
+    depthBadge.textContent = depth.toUpperCase();
 
-    enterBtn.textContent = "Enter";
-    changeBtn.textContent = "Change";
+    setOn(langEN, !zh);
+    setOn(langZH, zh);
+    setOn(depthShop, depth === "shop");
+    setOn(depthLearn, depth === "learn");
+
+    if (zh){
+      ttl.textContent = "入口";
+      sub.textContent = "选择语言与深度，然后进入。";
+      explainLine.textContent =
+        "语言决定页面文字显示为中文还是英文；深度决定你看到的是“概览（Shop）”还是“详细解释（Learn）”。选好后点击“进入”。";
+      hintLine.textContent = (depth === "learn")
+        ? "Learn：更多层级与解释。"
+        : "Shop：表层概要与入口点。";
+      enterBtn.textContent = "进入";
+    } else {
+      ttl.textContent = "Door";
+      sub.textContent = "Choose language and depth, then enter.";
+      explainLine.textContent =
+        "Language controls whether pages read in English or Chinese. Depth controls whether you see a quick surface view (Shop) or a deeper explanation view (Learn). Pick both, then tap Enter.";
+      hintLine.textContent = (depth === "learn")
+        ? "Learn: deeper nested bubbles and explanations."
+        : "Shop: surface-level summaries and entry points.";
+      enterBtn.textContent = "Enter";
+    }
   }
 
-  // persist (defensive)
-  try{
-    localStorage.setItem("GD_LANG", lang);
-    localStorage.setItem("GD_DEPTH", depth);
-  }catch(e){}
+  function persist(){
+    try{
+      localStorage.setItem("GD_LANG", lang);
+      localStorage.setItem("GD_DEPTH", depth);
+    }catch(e){}
+  }
+
+  // Click handlers
+  langEN.addEventListener("click", ()=>{ lang="en"; persist(); renderText(); });
+  langZH.addEventListener("click", ()=>{ lang="zh"; persist(); renderText(); });
+  depthShop.addEventListener("click", ()=>{ depth="shop"; persist(); renderText(); });
+  depthLearn.addEventListener("click", ()=>{ depth="learn"; persist(); renderText(); });
+
+  enterBtn.addEventListener("click", ()=>{
+    // Door hands off to Home hub (single place to continue)
+    // Home (and every other page) reads GD_LANG + GD_DEPTH.
+    persist();
+    location.href = "/home/";
+  });
+
+  // First paint
+  renderText();
 })();
 </script>
 </body>

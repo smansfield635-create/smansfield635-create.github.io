@@ -1,50 +1,143 @@
-/* TNT: assets/branch.css (CAST LIGHT: NORTH=VIOLET/BLUE, EAST=SUNRISE, SOUTH=GREEN, WEST=SUNSET) */
+/* TNT: assets/branch.css (PLATE-ONLY CAST LIGHT — NO GLOW ON/THROUGH TILES, NO FOG)
+   - Glow is rendered ONLY on the outer plate (platform::after).
+   - Tiles are fully neutral (no color spill on tiles).
+   - Sunrise/Sunset mapping preserved:
+     North = violet/blue
+     East  = sunrise (gold/peach)
+     South = green
+     West  = sunset (orange/magenta)
+*/
 
-.platform{position:relative;width:min(420px,88vw);aspect-ratio:1/1;margin:0 auto}
-.platform::before{content:"";position:absolute;inset:0;transform:rotate(45deg);border-radius:28px;background:rgba(255,255,255,.035);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 28px 80px rgba(0,0,0,.75);backdrop-filter:blur(8px)}
+.platform{
+  position:relative;
+  width:min(420px,88vw);
+  aspect-ratio:1/1;
+  margin:0 auto;
+}
 
-.diamond{position:absolute;width:42%;height:42%;transform:rotate(45deg);border-radius:18px;background:rgba(255,255,255,.085);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#eaf2f6;backdrop-filter:blur(6px);-webkit-tap-highlight-color:transparent;transition:filter .15s ease,transform .15s ease;z-index:2;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),inset 0 20px 28px rgba(255,255,255,.015),inset 0 -30px 44px rgba(0,0,0,.55),0 20px 48px rgba(0,0,0,.75)}
+/* Outer plate */
+.platform::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
+  border-radius:28px;
+  background:rgba(255,255,255,.035);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.08) inset,
+    0 28px 80px rgba(0,0,0,.75);
+  backdrop-filter:blur(8px);
+  z-index:0;
+}
+
+/* PLATE-ONLY CAST LIGHT (between plate and tiles) */
+.platform::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
+  border-radius:28px;
+  pointer-events:none;
+
+  /* IMPORTANT: keep it under tiles, over plate */
+  z-index:1;
+
+  /* NO FOG: smaller radii + lower blur + lower opacity */
+  opacity:.38;
+  filter:blur(14px);
+
+  /* Cast positions match the 4 tiles on the plate:
+     Top tile center ~ (50%,18%)
+     Right tile center ~ (82%,50%)
+     Bottom tile center ~ (50%,82%)
+     Left tile center ~ (18%,50%) */
+  background:
+    /* NORTH: violet/blue */
+    radial-gradient(circle at 50% 18%, rgba(140,110,255,.55) 0%, rgba(140,110,255,0) 55%),
+    radial-gradient(circle at 50% 24%, rgba(72,166,255,.42) 0%, rgba(72,166,255,0) 58%),
+
+    /* EAST: sunrise gold/peach */
+    radial-gradient(circle at 82% 50%, rgba(255,200,110,.55) 0%, rgba(255,200,110,0) 56%),
+    radial-gradient(circle at 76% 50%, rgba(255,120,120,.30) 0%, rgba(255,120,120,0) 60%),
+
+    /* SOUTH: green */
+    radial-gradient(circle at 50% 82%, rgba(42,255,186,.48) 0%, rgba(42,255,186,0) 56%),
+    radial-gradient(circle at 50% 76%, rgba(60,200,140,.22) 0%, rgba(60,200,140,0) 60%),
+
+    /* WEST: sunset orange/magenta */
+    radial-gradient(circle at 18% 50%, rgba(255,120,60,.52) 0%, rgba(255,120,60,0) 56%),
+    radial-gradient(circle at 24% 50%, rgba(210,70,140,.30) 0%, rgba(210,70,140,0) 60%);
+
+  /* Makes the cast read like light on stone, not fog */
+  mix-blend-mode:screen;
+}
+
+/* TILES (neutral; sit ABOVE plate glow so glow does not appear “on” them) */
+.diamond{
+  position:absolute;
+  width:42%;
+  height:42%;
+  transform:rotate(45deg);
+  border-radius:18px;
+
+  /* neutral face */
+  background:rgba(255,255,255,.085);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:#eaf2f6;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    inset 0 20px 28px rgba(255,255,255,.015),
+    inset 0 -30px 44px rgba(0,0,0,.55),
+    0 20px 48px rgba(0,0,0,.75);
+
+  backdrop-filter:blur(6px);
+  -webkit-tap-highlight-color:transparent;
+  transition:filter .15s ease,transform .15s ease;
+  z-index:2; /* ABOVE platform::after */
+}
+
+/* prevent any per-tile glow layers */
+.diamond::before,
+.diamond::after{content:none!important}
+
 .diamond:hover{filter:brightness(1.05)}
 .diamond:active{transform:rotate(45deg) translateY(1px)}
 
-.diamond span{transform:rotate(-45deg);text-align:center;font-weight:900;line-height:1.15;text-shadow:0 3px 18px rgba(0,0,0,.75)}
+.diamond span{
+  transform:rotate(-45deg);
+  text-align:center;
+  font-weight:900;
+  line-height:1.15;
+  text-shadow:0 3px 18px rgba(0,0,0,.75);
+}
 .diamond small{display:block;opacity:.75;font-weight:700;font-size:12px;margin-top:6px;letter-spacing:.12em}
 
+/* positions */
 .top{top:2%;left:29%}
 .right{top:29%;right:2%}
 .bottom{bottom:2%;left:29%}
 .left{top:29%;left:2%}
 
-/* cast light */
-.diamond::before{content:"";position:absolute;inset:-18%;border-radius:26px;z-index:-1;filter:blur(18px);opacity:.52}
-
-/* NORTH (violet + blue crown/aurora) */
-.diamond.top::before{
-  background:
-    radial-gradient(circle at 50% 0%, rgba(140,110,255,.46), rgba(140,110,255,0) 70%),
-    radial-gradient(circle at 50% 18%, rgba(72,166,255,.34), rgba(72,166,255,0) 72%);
-}
-
-/* EAST (sunrise: gold → peach) */
-.diamond.right::before{
-  background:
-    radial-gradient(circle at 100% 50%, rgba(255,200,110,.44), rgba(255,200,110,0) 70%),
-    radial-gradient(circle at 82% 50%, rgba(255,120,120,.26), rgba(255,120,120,0) 72%);
-}
-
-/* SOUTH (green: ground/growth) */
-.diamond.bottom::before{
-  background:
-    radial-gradient(circle at 50% 100%, rgba(42,255,186,.38), rgba(42,255,186,0) 70%),
-    radial-gradient(circle at 50% 82%, rgba(60,200,140,.20), rgba(60,200,140,0) 72%);
-}
-
-/* WEST (sunset: orange → crimson/magenta) */
-.diamond.left::before{
-  background:
-    radial-gradient(circle at 0% 50%, rgba(255,120,60,.42), rgba(255,120,60,0) 70%),
-    radial-gradient(circle at 18% 50%, rgba(210,70,140,.26), rgba(210,70,140,0) 72%);
+/* keep classes for semantics, but NO colored glow on tiles */
+.diamond.c-blue,
+.diamond.c-green,
+.diamond.c-amber,
+.diamond.c-purple{
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    inset 0 20px 28px rgba(255,255,255,.015),
+    inset 0 -30px 44px rgba(0,0,0,.55),
+    0 20px 48px rgba(0,0,0,.75);
 }
 
 /* legacy off */
-.diamond-stage,.mini-diamond,.compass-label{display:none!important}
+.diamond-stage,
+.mini-diamond,
+.compass-label{
+  display:none!important;
+}

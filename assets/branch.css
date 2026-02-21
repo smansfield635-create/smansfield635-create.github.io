@@ -1,14 +1,91 @@
-/* TNT 2/3: assets/branch.css (CANONICAL PLATFORM GEOMETRY + PRODUCTS MATERIAL) */
-.platform{position:relative;width:min(420px,88vw);aspect-ratio:1/1;margin:0 auto}
-.platform::before{content:"";position:absolute;inset:0;transform:rotate(45deg);border-radius:28px;background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}
-.diamond{position:absolute;width:42%;height:42%;transform:rotate(45deg);border-radius:18px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#eaf2f6;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 14px 34px rgba(0,0,0,.35);backdrop-filter:blur(8px);-webkit-tap-highlight-color:transparent;transition:filter .15s ease,transform .15s ease,box-shadow .15s ease}
+/* TNT: assets/branch.css (CANONICAL — MATCH PRODUCTS DENSITY) */
+
+.platform{
+  position:relative;
+  width:min(420px,88vw);
+  aspect-ratio:1/1;
+  margin:0 auto;
+}
+
+.platform::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
+  border-radius:28px;
+  background:rgba(255,255,255,.045);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.10) inset,
+    0 24px 70px rgba(0,0,0,.65);
+  backdrop-filter:blur(8px);
+}
+
+.diamond{
+  position:absolute;
+  width:42%;
+  height:42%;
+  transform:rotate(45deg);
+  border-radius:18px;
+
+  /* DARKER STONE-GLASS BASE (MATCH PRODUCTS) */
+  background:rgba(255,255,255,.10);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:#eaf2f6;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    inset 0 18px 26px rgba(255,255,255,.02),
+    inset 0 -26px 36px rgba(0,0,0,.38),
+    0 18px 40px rgba(0,0,0,.60);
+
+  backdrop-filter:blur(8px);
+  -webkit-tap-highlight-color:transparent;
+  transition:filter .15s ease,transform .15s ease,box-shadow .15s ease;
+}
+
 .diamond:hover{filter:brightness(1.06)}
 .diamond:active{filter:brightness(1.08);transform:rotate(45deg) translateY(1px)}
-.diamond span{transform:rotate(-45deg);text-align:center;font-weight:900;line-height:1.15;text-shadow:0 2px 14px rgba(0,0,0,.55)}
-.diamond small{display:block;opacity:.7;font-weight:700;font-size:12px;margin-top:6px}
+
+.diamond span{
+  transform:rotate(-45deg);
+  text-align:center;
+  font-weight:900;
+  line-height:1.15;
+  text-shadow:0 2px 14px rgba(0,0,0,.55);
+}
+
+.diamond small{
+  display:block;
+  opacity:.70;
+  font-weight:700;
+  font-size:12px;
+  margin-top:6px;
+}
+
 .top{top:2%;left:29%}
 .right{top:29%;right:2%}
 .bottom{bottom:2%;left:29%}
 .left{top:29%;left:2%}
-/* legacy off */
-.diamond-stage,.mini-diamond,.compass-label{display:none!important}
+
+/* Subtle rim accents only */
+.diamond.c-blue,
+.diamond.c-green,
+.diamond.c-amber,
+.diamond.c-purple{
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    inset 0 18px 26px rgba(255,255,255,.02),
+    inset 0 -26px 36px rgba(0,0,0,.38),
+    0 18px 40px rgba(0,0,0,.60);
+}
+
+/* Disable legacy */
+.diamond-stage,
+.mini-diamond,
+.compass-label{
+  display:none!important;
+}

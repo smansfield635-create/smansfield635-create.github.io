@@ -1,209 +1,74 @@
-<!-- TNT: /door/index.html
-     PURPOSE:
-     - Door = single handoff after Root.
-     - NO language selector here (language is chosen once on Root).
-     - Only two choices: LEARN or SHOP.
-     - Fixes routing by writing geo_mode then redirecting to /home/.
-     - Includes "Change language" = go back to / (Root).
+<!-- TNT: /index.html (FULL FILE REPLACEMENT)
+     Purpose: Single entry fork with ZERO redundancy.
+     Rule: User chooses ONE language + ONE mode once, then enters /door/ hub.
 -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Door · Geodiametrics</title>
-
-<link rel="stylesheet" href="/assets/ui.css?v=4002"/>
-<link rel="stylesheet" href="/assets/branch.css?v=4002"/>
-
-<style>
-html,body{height:100%}
-body{
-  background:
-    radial-gradient(1200px 800px at 50% 10%, rgba(160,20,20,.55) 0%, rgba(30,0,0,.55) 35%, rgba(5,7,12,1) 100%),
-    radial-gradient(900px 700px at 20% 80%, rgba(255,60,60,.10) 0%, rgba(0,0,0,0) 65%),
-    radial-gradient(900px 700px at 80% 70%, rgba(255,140,80,.06) 0%, rgba(0,0,0,0) 70%);
-}
-
-.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:48px 16px 90px;position:relative;z-index:1}
-.h{width:min(980px,94vw);margin:0 auto 18px;position:relative;z-index:10}
-.h h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
-.h p{margin:10px 0 0;font-size:20px;opacity:.80}
-
-.panel{
-  width:min(980px,94vw);
-  margin:12px auto 0;
-  border-radius:26px;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 28px 80px rgba(0,0,0,.65);
-  padding:18px;
-}
-
-.row{
-  display:flex;
-  gap:14px;
-  flex-wrap:wrap;
-}
-
-.cardBtn{
-  flex:1 1 320px;
-  min-height:96px;
-  border-radius:22px;
-  padding:16px 16px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 52px rgba(0,0,0,.55);
-  cursor:pointer;
-  user-select:none;
-  text-align:left;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-
-.cardBtn:active{transform:translateY(1px)}
-.cardBtn .t{font-size:22px;font-weight:900;letter-spacing:.06em}
-.cardBtn .s{margin-top:6px;font-size:14px;opacity:.75;letter-spacing:.04em}
-
-.meta{
-  margin-top:14px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.pill{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  padding:10px 14px;
-  border-radius:999px;
-  background:rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 16px 44px rgba(0,0,0,.45);
-  font-weight:900;
-  letter-spacing:.10em;
-  opacity:.88;
-}
-
-.linkBtn{
-  text-decoration:none;
-  color:inherit;
-  cursor:pointer;
-  user-select:none;
-}
-
-footer{
-  width:min(980px,94vw);
-  margin:18px auto 0;
-  position:relative;
-  z-index:10;
-  text-align:center;
-  opacity:.55;
-  letter-spacing:3px;
-  font-size:12px;
-}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Geodiametrics · Entry</title>
+  <link rel="stylesheet" href="/assets/ui.css?v=2000"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=2000"/>
 </head>
 
-<body>
-<div class="shooting-stars"></div>
+<body class="theme-red">
+  <div class="shooting-stars"></div>
 
-<div class="page">
+  <div class="page entry-page">
+    <div class="h">
+      <h1>Geodiametrics</h1>
+      <p>Choose what you understand. No setup.</p>
+    </div>
 
-  <div class="h">
-    <h1 id="h1">Door</h1>
-    <p id="sub">Choose delivery mode. Language stays fixed from Root.</p>
-  </div>
+    <div class="entry-grid">
 
-  <div class="panel">
-    <div class="row">
+      <!-- EN / LEARN -->
+      <a class="entry-card" href="/door/?lang=en&mode=learn" data-lang="en" data-mode="learn">
+        <div class="entry-title">Learn</div>
+        <div class="entry-sub">EN</div>
+        <div class="entry-desc">Definitions · systems · methods</div>
+      </a>
 
-      <div class="cardBtn" id="btnLearn" role="button" tabindex="0">
-        <div class="t" id="learnTitle">Learn</div>
-        <div class="s" id="learnSub">Definitions · systems · methods</div>
-      </div>
+      <!-- EN / SHOP -->
+      <a class="entry-card" href="/door/?lang=en&mode=shop" data-lang="en" data-mode="shop">
+        <div class="entry-title">Shop</div>
+        <div class="entry-sub">EN</div>
+        <div class="entry-desc">Products · programs · services</div>
+      </a>
 
-      <div class="cardBtn" id="btnShop" role="button" tabindex="0">
-        <div class="t" id="shopTitle">Shop</div>
-        <div class="s" id="shopSub">Products · programs · services</div>
-      </div>
+      <!-- ZH / LEARN -->
+      <a class="entry-card" href="/door/?lang=zh&mode=learn" data-lang="zh" data-mode="learn">
+        <div class="entry-title">学习</div>
+        <div class="entry-sub">中文</div>
+        <div class="entry-desc">定义 · 系统 · 方法</div>
+      </a>
+
+      <!-- ZH / SHOP -->
+      <a class="entry-card" href="/door/?lang=zh&mode=shop" data-lang="zh" data-mode="shop">
+        <div class="entry-title">浏览</div>
+        <div class="entry-sub">中文</div>
+        <div class="entry-desc">产品 · 项目 · 服务</div>
+      </a>
 
     </div>
 
-    <div class="meta">
-      <div class="pill" id="langBadge">LANG: EN</div>
-      <a class="pill linkBtn" href="/" id="changeLang">Change language</a>
-    </div>
+    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
   </div>
 
-  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
-</div>
-
-<script>
-(() => {
-  // Read the ONE language choice set at Root
-  const LANG = (localStorage.getItem("geo_lang") || "EN").toUpperCase(); // EN | ZH
-  const langBadge = document.getElementById("langBadge");
-
-  // Minimal bilingual strings (Door only)
-  const STR = {
-    EN: {
-      h1:"Door",
-      sub:"Choose delivery mode. Language stays fixed from Root.",
-      learnTitle:"Learn",
-      learnSub:"Definitions · systems · methods",
-      shopTitle:"Shop",
-      shopSub:"Products · programs · services",
-      changeLang:"Change language",
-      badge:"LANG: EN"
-    },
-    ZH: {
-      h1:"入口",
-      sub:"选择呈现方式。语言只在 Root 选择一次。",
-      learnTitle:"学习",
-      learnSub:"定义 · 系统 · 方法",
-      shopTitle:"购买",
-      shopSub:"产品 · 项目 · 服务",
-      changeLang:"返回选择语言",
-      badge:"LANG: 中文"
-    }
-  };
-
-  const S = STR[LANG === "ZH" ? "ZH" : "EN"];
-
-  document.getElementById("h1").textContent = S.h1;
-  document.getElementById("sub").textContent = S.sub;
-  document.getElementById("learnTitle").textContent = S.learnTitle;
-  document.getElementById("learnSub").textContent = S.learnSub;
-  document.getElementById("shopTitle").textContent = S.shopTitle;
-  document.getElementById("shopSub").textContent = S.shopSub;
-  document.getElementById("changeLang").textContent = S.changeLang;
-  langBadge.textContent = S.badge;
-
-  // Apply mode + route to Home
-  const go = (mode) => {
-    localStorage.setItem("geo_mode", mode); // LEARN | SHOP
-    location.href = "/home/";
-  };
-
-  const wire = (id, mode) => {
-    const el = document.getElementById(id);
-    el.addEventListener("click", () => go(mode));
-    el.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(mode); }
-    });
-  };
-
-  wire("btnLearn","LEARN");
-  wire("btnShop","SHOP");
-})();
-</script>
-
+  <script>
+    // Persist selection ONCE, then door runs the hub.
+    (function () {
+      const cards = document.querySelectorAll(".entry-card");
+      cards.forEach(a => {
+        a.addEventListener("click", () => {
+          try {
+            localStorage.setItem("GD_LANG", a.getAttribute("data-lang") || "en");
+            localStorage.setItem("GD_MODE", a.getAttribute("data-mode") || "learn");
+          } catch (e) {}
+        }, { passive:true });
+      });
+    })();
+  </script>
 </body>
 </html>

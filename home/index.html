@@ -17,7 +17,6 @@
 
   --line:rgba(255,255,255,.10);
   --soft:rgba(255,255,255,.06);
-  --panel:rgba(0,0,0,.28);
 
   --text:rgba(255,255,255,.92);
   --muted:rgba(255,255,255,.70);
@@ -39,11 +38,7 @@ body{
   padding:26px 14px 70px;
 }
 
-.hero{
-  position:relative;
-  z-index:5;
-  text-align:left;
-}
+.hero{position:relative;z-index:5;text-align:left}
 .hero h1{
   margin:0;
   font-size:44px;
@@ -77,10 +72,16 @@ body{
   font-size:12px;
   color:var(--text);
   text-decoration:none;
+  user-select:none;
 }
 .pill:hover{background:rgba(255,255,255,.08)}
 .pill.gold{border-color:rgba(212,175,55,.40); box-shadow:0 0 18px var(--gold-glow) inset}
 .pill.silver{border-color:rgba(207,211,218,.34); box-shadow:0 0 18px var(--silver-glow) inset}
+.pill.active{
+  background:rgba(255,255,255,.10);
+  border-color:rgba(212,175,55,.42);
+  box-shadow:0 0 16px rgba(212,175,55,.18) inset;
+}
 
 .section-title{
   margin-top:18px;
@@ -222,13 +223,14 @@ details.quad summary::-webkit-details-marker{display:none}
   color:rgba(255,255,255,.78);
   line-height:1.55;
 }
-.tagrow{
+
+.lensrow{
   display:flex;
-  gap:8px;
+  gap:10px;
   flex-wrap:wrap;
   margin-top:10px;
 }
-.tag{
+.lenschip{
   border-radius:999px;
   padding:8px 12px;
   border:1px solid rgba(255,255,255,.10);
@@ -237,6 +239,10 @@ details.quad summary::-webkit-details-marker{display:none}
   text-transform:uppercase;
   font-size:11px;
   opacity:.9;
+}
+.lenschip.on{
+  border-color:rgba(212,175,55,.45);
+  box-shadow:0 0 16px rgba(212,175,55,.18) inset;
 }
 
 .jumprow{
@@ -260,19 +266,19 @@ details.quad summary::-webkit-details-marker{display:none}
 .jump:hover{background:rgba(255,255,255,.08)}
 .jump.gold{border-color:rgba(212,175,55,.45); box-shadow:0 0 16px var(--gold-glow) inset}
 
-.footer{
-  margin-top:26px;
-  opacity:.35;
-  font-size:12px;
-  letter-spacing:.2em;
-  text-align:center;
-}
 .brand{
-  margin-top:8px;
+  margin-top:22px;
   opacity:.30;
   letter-spacing:.35em;
   text-transform:uppercase;
   font-size:12px;
+  text-align:center;
+}
+.footer{
+  margin-top:8px;
+  opacity:.35;
+  font-size:12px;
+  letter-spacing:.2em;
   text-align:center;
 }
 </style>
@@ -283,15 +289,21 @@ details.quad summary::-webkit-details-marker{display:none}
 
   <div class="hero">
     <h1>HOME</h1>
-    <p id="desc">Explore the system. Tap a bubble to expand details in-place. No page-jumps while you’re reading.</p>
+    <p id="desc">Explore the system. Tap a bubble to expand details in-place. Your lens (Origin / Now / Trajectory) filters everything.</p>
 
     <div class="topbar">
       <span class="pill silver" id="langPill">LANG: EN</span>
       <span class="pill gold" id="depthPill">DEPTH: EXPLORE</span>
 
+      <!-- GLOBAL TIMELINE LENS (top-of-page, applies everywhere) -->
+      <span class="pill" id="lensOrigin" role="button">ORIGIN</span>
+      <span class="pill active" id="lensNow" role="button">NOW</span>
+      <span class="pill" id="lensTrajectory" role="button">TRAJECTORY</span>
+
       <a class="pill" href="/door/">CHANGE DEPTH</a>
       <a class="pill" href="/">CHANGE LANGUAGE</a>
 
+      <!-- SINGLE GLOBAL JUMP -->
       <a class="pill gold" href="/door/" id="jumpHome">JUMP HOME</a>
     </div>
 
@@ -337,17 +349,20 @@ details.quad summary::-webkit-details-marker{display:none}
           <div>EXPANDS HERE (NO SCROLL)</div>
         </div>
         <div class="detailtitle" data-title>Tap a bubble</div>
-        <div class="detailp" data-p>Details will appear directly under the bubble row you used.</div>
-        <div class="tagrow">
-          <span class="tag" data-tag1>Origin</span>
-          <span class="tag" data-tag2>Now</span>
-          <span class="tag" data-tag3>Trajectory</span>
+        <div class="detailp" data-p>Details render in-place under the quadrant where you tapped.</div>
+
+        <!-- Shows which global lens is active -->
+        <div class="lensrow">
+          <span class="lenschip" data-chip="origin">Origin</span>
+          <span class="lenschip on" data-chip="now">Now</span>
+          <span class="lenschip" data-chip="trajectory">Trajectory</span>
         </div>
+
         <div class="detailp" data-p2 style="margin-top:12px"></div>
 
+        <!-- SINGLE JUMP ONLY -->
         <div class="jumprow">
-          <a class="jump" href="/laws/">JUMP · LAWS</a>
-          <a class="jump gold" href="/laws/categories/">JUMP · CATEGORIES</a>
+          <a class="jump gold" href="/door/">JUMP HOME</a>
         </div>
       </div>
     </div>
@@ -392,17 +407,18 @@ details.quad summary::-webkit-details-marker{display:none}
           <div>EXPANDS HERE (NO SCROLL)</div>
         </div>
         <div class="detailtitle" data-title>Tap a bubble</div>
-        <div class="detailp" data-p>Details will appear directly under the bubble row you used.</div>
-        <div class="tagrow">
-          <span class="tag" data-tag1>Origin</span>
-          <span class="tag" data-tag2>Now</span>
-          <span class="tag" data-tag3>Trajectory</span>
+        <div class="detailp" data-p>Details render in-place under the quadrant where you tapped.</div>
+
+        <div class="lensrow">
+          <span class="lenschip" data-chip="origin">Origin</span>
+          <span class="lenschip on" data-chip="now">Now</span>
+          <span class="lenschip" data-chip="trajectory">Trajectory</span>
         </div>
+
         <div class="detailp" data-p2 style="margin-top:12px"></div>
 
         <div class="jumprow">
-          <a class="jump" href="/products/">JUMP · PRODUCTS</a>
-          <a class="jump gold" href="/rgsc/">JUMP · RGSC</a>
+          <a class="jump gold" href="/door/">JUMP HOME</a>
         </div>
       </div>
     </div>
@@ -447,17 +463,18 @@ details.quad summary::-webkit-details-marker{display:none}
           <div>EXPANDS HERE (NO SCROLL)</div>
         </div>
         <div class="detailtitle" data-title>Tap a bubble</div>
-        <div class="detailp" data-p>Details will appear directly under the bubble row you used.</div>
-        <div class="tagrow">
-          <span class="tag" data-tag1>Origin</span>
-          <span class="tag" data-tag2>Now</span>
-          <span class="tag" data-tag3>Trajectory</span>
+        <div class="detailp" data-p>Details render in-place under the quadrant where you tapped.</div>
+
+        <div class="lensrow">
+          <span class="lenschip" data-chip="origin">Origin</span>
+          <span class="lenschip on" data-chip="now">Now</span>
+          <span class="lenschip" data-chip="trajectory">Trajectory</span>
         </div>
+
         <div class="detailp" data-p2 style="margin-top:12px"></div>
 
         <div class="jumprow">
-          <a class="jump" href="/gauges/">JUMP · GAUGES</a>
-          <a class="jump gold" href="/diagnostic/">JUMP · DIAGNOSTIC</a>
+          <a class="jump gold" href="/door/">JUMP HOME</a>
         </div>
       </div>
     </div>
@@ -502,16 +519,18 @@ details.quad summary::-webkit-details-marker{display:none}
           <div>EXPANDS HERE (NO SCROLL)</div>
         </div>
         <div class="detailtitle" data-title>Tap a bubble</div>
-        <div class="detailp" data-p>Details will appear directly under the bubble row you used.</div>
-        <div class="tagrow">
-          <span class="tag" data-tag1>Origin</span>
-          <span class="tag" data-tag2>Now</span>
-          <span class="tag" data-tag3>Trajectory</span>
+        <div class="detailp" data-p>Details render in-place under the quadrant where you tapped.</div>
+
+        <div class="lensrow">
+          <span class="lenschip" data-chip="origin">Origin</span>
+          <span class="lenschip on" data-chip="now">Now</span>
+          <span class="lenschip" data-chip="trajectory">Trajectory</span>
         </div>
+
         <div class="detailp" data-p2 style="margin-top:12px"></div>
 
         <div class="jumprow">
-          <a class="jump gold" href="/links/">JUMP · LINKS</a>
+          <a class="jump gold" href="/door/">JUMP HOME</a>
         </div>
       </div>
     </div>
@@ -525,66 +544,116 @@ details.quad summary::-webkit-details-marker{display:none}
 (function(){
   const lang = (localStorage.getItem('crp_lang') || 'en').toLowerCase();
   const depth = (localStorage.getItem('crp_depth') || 'explore').toLowerCase();
+  let lens = (localStorage.getItem('crp_lens') || 'now').toLowerCase(); // origin | now | trajectory
 
   const langPill = document.getElementById('langPill');
   const depthPill = document.getElementById('depthPill');
-
   langPill.textContent = 'LANG: ' + (lang === 'zh' ? '中文' : 'EN');
   depthPill.textContent = 'DEPTH: ' + (depth === 'learn' ? 'LEARN' : 'EXPLORE');
 
+  const lensBtns = {
+    origin: document.getElementById('lensOrigin'),
+    now: document.getElementById('lensNow'),
+    trajectory: document.getElementById('lensTrajectory')
+  };
+
+  function setLens(next){
+    lens = next;
+    localStorage.setItem('crp_lens', lens);
+    Object.keys(lensBtns).forEach(k => lensBtns[k].classList.toggle('active', k === lens));
+    // Update any open detail panel copy to match current lens
+    document.querySelectorAll('.detail.open').forEach(detail=>{
+      const blockKey = detail.getAttribute('data-open-block');
+      if(!blockKey) return;
+      const b = blocks[blockKey];
+      if(!b) return;
+      writeDetail(detail, b);
+    });
+  }
+
+  lensBtns.origin.addEventListener('click',()=>setLens('origin'));
+  lensBtns.now.addEventListener('click',()=>setLens('now'));
+  lensBtns.trajectory.addEventListener('click',()=>setLens('trajectory'));
+
   const blocks = {
+    // NW
     ssg:{
       t:'SSG — Simplified Syntax Geometry',
-      p:'Constraint-native specs become replay-safe execution contracts. This is the minimum language for executable structure.',
-      p2:'Primitives: Resource, Store, Constraint, Goal, Guard. Receipts gate advancement. Navigation-first invariants prevent drift.'
+      origin:'Built to compress app behavior into constraint-native specs (the minimal executable vocabulary).',
+      now:'Used to express Resources / Stores / Constraints / Goals / Guards, with receipt-gated flow.',
+      trajectory:'Becomes a replay-safe execution contract standard across domains and teams.',
+      learn:'Primitives: Resource, Store, Constraint, Goal, Guard. Receipts gate advancement. Navigation-first invariants prevent drift.'
     },
     grammar:{
       t:'Diamond Grammar',
-      p:'Four-route structural navigation. One choice at a time. Hub-first traversal reduces confusion and preserves receipts.',
-      p2:'Rule: choose one route, complete it, return to hub. Back-nav invalidates downstream receipts.'
+      origin:'Designed to eliminate ambiguity by forcing one coherent choice at a time.',
+      now:'Runs hub-first traversal + receipt gating so navigation stays stable as content grows.',
+      trajectory:'Scales into multi-portal routing without semantic drift.',
+      learn:'Rule: choose one route, complete it, return to hub. Back-nav invalidates downstream receipts.'
     },
     dotgrid:{
       t:'DOT.GRID',
-      p:'A 256-state indexing lattice for replay, audit, and observer-consistent classification.',
-      p2:'Use it to log evidence, score admissibility, and compare trajectories under identical constraints.'
+      origin:'Created to index evidence and decisions under consistent constraint rules.',
+      now:'Provides 256-state indexing for replay and audit.',
+      trajectory:'Enables observer-consistent classification across domains (shared coordinates).',
+      learn:'Use it to log evidence streams, score admissibility, compare trajectories under identical constraints.'
     },
     acronyms:{
       t:'Acronyms & Glossary',
-      p:'Pillarized map of terms with consistent definitions.',
-      p2:'Goal: reduce semantic drift across teams, domains, and time.'
+      origin:'Introduced to prevent meaning collapse as the system scales.',
+      now:'Pillarized map + usage notes.',
+      trajectory:'Becomes a shared vocabulary layer for teams and institutions.',
+      learn:'Goal: reduce semantic drift across time, domains, and collaborators.'
     },
 
-    surfaces:{t:'Execution Surfaces',p:'Apps, portals, and interfaces that expose the engine as usable workflow.',p2:'Surfaces stay simple; depth moves into blocks and nested bubbles.'},
-    receipts:{t:'Workflows & Receipts',p:'Audit trails and verification tokens that make execution replay-safe.',p2:'Receipts are the handoff: proof of state completion.'},
-    examples:{t:'Examples',p:'How to use the system in real routes and decisions.',p2:'Start small: one route, one receipt, one return.'},
-    packs:{t:'Packs & Outputs',p:'Downloadables, packaged tools, and structured materials.',p2:'Everything is designed to be reusable and composable.'},
+    // NE
+    surfaces:{t:'Execution Surfaces',origin:'Interfaces were built to keep complexity inside the engine, not on the UI.',now:'Apps / portals / interfaces expose the engine as usable workflow.',trajectory:'Surfaces become standardized portals across products.',learn:'Surfaces stay simple; depth lives in blocks and nested bubbles.'},
+    receipts:{t:'Workflows & Receipts',origin:'Receipts were created to make progress verifiable.',now:'Audit trails + replay safety. Proof of completion and handoff.',trajectory:'Receipts become portable across systems (interoperable state).',learn:'Advance only after receipt. Back-nav invalidates downstream receipts.'},
+    examples:{t:'Examples',origin:'Examples anchor abstract structure into action.',now:'How to use the system with real routes and decisions.',trajectory:'Examples become templates for institutions and teams.',learn:'Start small: one route, one receipt, one return.'},
+    packs:{t:'Packs & Outputs',origin:'Packaged outputs were built to ship utility fast.',now:'Downloadables + structured materials.',trajectory:'Outputs become certified tracks and reusable kits.',learn:'Everything is designed to be reusable and composable.'},
 
-    gauges:{t:'Gauges',p:'Instrument panels, consistency checks, signal integrity, and thresholds.',p2:'Gauges measure coherence under load.'},
-    diagnostics:{t:'Diagnostics',p:'Classification under constraint: coherence / drift / confusion categories.',p2:'Observer-consistent targets, replay-driven audits.'},
-    rules:{t:'Rules',p:'Navigation and integrity rules that keep systems stable as they scale.',p2:'Return protocol prevents runaway drift.'},
-    protocols:{t:'Protocols',p:'Operational handoffs, verification, and replay mechanics.',p2:'Protocol = repeatable action under constraint.'},
+    // SW
+    gauges:{t:'Gauges',origin:'Gauges were built to measure coherence under load.',now:'Instrument panels, consistency checks, thresholds.',trajectory:'Gauges evolve into real-time stability monitoring.',learn:'Gauges measure signal integrity and rule adherence.'},
+    diagnostics:{t:'Diagnostics',origin:'Diagnostics classify systems under constraint.',now:'Coherence / drift / confusion categories; observer-consistent targets.',trajectory:'Diagnostics become universal early-warning systems.',learn:'Replay-driven audits; identical evidence → identical classification.'},
+    rules:{t:'Rules',origin:'Rules were defined to keep traversal stable.',now:'Navigation + integrity rules to prevent runaway drift.',trajectory:'Rules become governance standards.',learn:'Return protocol prevents compounding incoherence.'},
+    protocols:{t:'Protocols',origin:'Protocols convert principles into repeatable actions.',now:'Operational handoffs, verification, replay.',trajectory:'Protocols scale into certified operating procedures.',learn:'Protocol = repeatable action under constraint.'},
 
-    orcid:{t:'ORCID',p:'Research identity anchor for attribution and continuity.',p2:'Stable identity improves traceability of artifacts.'},
-    osf:{t:'OSF',p:'Project registry, preprints, and canonical references.',p2:'OSF is the public ledger of the research spine.'},
-    refs:{t:'References',p:'Core citations and anchors used across the system.',p2:'Reference stability prevents semantic collapse.'},
-    contact:{t:'Contact',p:'Direct communication channel.',p2:'Use this when you need alignment or access.'}
+    // SE
+    orcid:{t:'ORCID',origin:'Identity anchors attribution and continuity.',now:'Researcher identity reference point.',trajectory:'Stable identity improves traceability of artifacts long-term.',learn:'Use for attribution and continuity across publications.'},
+    osf:{t:'OSF',origin:'Registry creates a public research spine.',now:'Project registry / preprints / canonical references.',trajectory:'OSF becomes the continuity ledger for the system.',learn:'Keeps provenance stable as branches expand.'},
+    refs:{t:'References',origin:'References prevent semantic drift.',now:'Core citations and anchors.',trajectory:'Anchors become shared coordinates across readers.',learn:'Reference stability prevents meaning collapse.'},
+    contact:{t:'Contact',origin:'Direct channel exists to restore alignment quickly.',now:'Communication line for access and collaboration.',trajectory:'Contact becomes intake for certification / adoption.',learn:'Use this when you need alignment or access.'}
   };
 
-  // In EXPLORE, hide the second paragraph (keeps it surface-level).
-  function setDetailText(detailEl, b){
+  function updateLensChips(detailEl){
+    const chips = detailEl.querySelectorAll('.lenschip');
+    chips.forEach(ch=>{
+      const k = ch.getAttribute('data-chip');
+      ch.classList.toggle('on', k === lens);
+    });
+  }
+
+  function writeDetail(detailEl, b){
     detailEl.querySelector('[data-title]').textContent = b.t;
-    detailEl.querySelector('[data-p]').textContent = b.p;
+
+    // Base text = chosen lens (global)
+    const base = b[lens] || b.now || '';
+    detailEl.querySelector('[data-p]').textContent = base;
+
+    // Learn adds extra depth line
     const p2 = detailEl.querySelector('[data-p2]');
     if(depth === 'learn'){
       p2.style.display = 'block';
-      p2.textContent = b.p2 || '';
+      p2.textContent = b.learn || '';
     }else{
       p2.style.display = 'none';
       p2.textContent = '';
     }
+
+    updateLensChips(detailEl);
   }
 
-  // Click bubble -> expand local detail within same quadrant, no scrolling.
+  // Bubble click: open local detail, store which block is open there (for lens updates)
   document.querySelectorAll('.bubble').forEach(bub=>{
     bub.addEventListener('click', ()=>{
       const k = bub.getAttribute('data-block');
@@ -595,15 +664,18 @@ details.quad summary::-webkit-details-marker{display:none}
       const detail = inside.querySelector('[data-detail]');
       if(!detail) return;
 
-      // active highlight within this quadrant only
       inside.querySelectorAll('.bubble').forEach(x=>x.classList.remove('active'));
       bub.classList.add('active');
 
-      setDetailText(detail, b);
+      detail.setAttribute('data-open-block', k);
+      writeDetail(detail, b);
       detail.classList.add('open');
     });
   });
 
+  // Initialize lens buttons
+  if(!lensBtns[lens]) lens = 'now';
+  setLens(lens);
 })();
 </script>
 

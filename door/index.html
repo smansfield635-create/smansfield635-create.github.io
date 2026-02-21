@@ -1,24 +1,23 @@
-<!-- TNT FILE: /index.html -->
+<!-- TNT FILE: /door/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Welcome · Geodiametrics</title>
+  <title>Door · Geodiametrics</title>
 
   <link rel="stylesheet" href="/assets/ui.css?v=2001"/>
   <link rel="stylesheet" href="/assets/branch.css?v=2001"/>
 
   <style>
-    /* INDEX (China-red + cosmic) — self-contained (no other file edits required) */
+    /* DOOR (same China-red accent) */
     body{
       background:
-        radial-gradient(1200px 900px at 50% 10%, rgba(150,0,0,.55) 0%, rgba(20,0,0,.35) 35%, rgba(5,7,12,1) 100%),
+        radial-gradient(1200px 900px at 50% 10%, rgba(150,0,0,.45) 0%, rgba(20,0,0,.30) 38%, rgba(5,7,12,1) 100%),
         radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
     }
-    .index-wrap{width:min(920px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:18px}
-    .hero{padding-top:18px}
-    .hero h1{font-size:clamp(44px,7vw,72px);margin:0;font-weight:900;letter-spacing:.01em}
+    .wrap{width:min(920px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:16px}
+    .hero h1{font-size:clamp(44px,7vw,68px);margin:0;font-weight:900}
     .hero p{margin:10px 0 0;opacity:.78;font-size:18px}
     .card{
       border-radius:22px;
@@ -27,22 +26,48 @@
       padding:18px;
       backdrop-filter:blur(12px);
     }
-    .grid2{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:640px){.grid2{grid-template-columns:1fr 1fr}}
-    .pick{
-      border-radius:20px;
-      padding:18px 16px;
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .pill{
+      border-radius:999px;
+      padding:10px 14px;
       background:rgba(255,255,255,.06);
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-size:12px;
+      opacity:.9;
+    }
+    .pick{
+      flex:1 1 260px;
+      border-radius:20px;
+      padding:16px 14px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
       cursor:pointer;
       user-select:none;
     }
     .pick strong{font-size:18px}
-    .pick span{opacity:.75}
-    .pick:hover{background:rgba(255,255,255,.08)}
-    .hint{opacity:.7;font-size:14px;line-height:1.5;margin:0}
-    .tiny{opacity:.55;font-size:12px;letter-spacing:.18em;margin-top:10px}
+    .pick p{margin:8px 0 0;opacity:.75}
+    .pick.active{
+      background:rgba(255,255,255,.10);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 0 30px rgba(255,80,80,.10);
+    }
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+    .btn{
+      border:0;
+      border-radius:18px;
+      padding:14px 18px;
+      background:rgba(255,255,255,.10);
+      color:#eaf2f6;
+      font-weight:900;
+      cursor:pointer;
+    }
+    .btn.primary{
+      background:rgba(255,255,255,.14);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 0 24px rgba(255,80,80,.12);
+    }
+    .tiny{opacity:.55;font-size:12px;letter-spacing:.18em;margin-top:14px;text-align:center}
   </style>
 </head>
 
@@ -50,58 +75,117 @@
 <div class="shooting-stars"></div>
 
 <div class="page">
-  <div class="index-wrap">
+  <div class="wrap">
 
     <div class="hero">
-      <h1 id="t_title">Welcome</h1>
-      <p id="t_sub">Choose your language once. Everything after this stays in that language.</p>
+      <h1 id="t_title">Door</h1>
+      <p id="t_sub">Choose how much detail you want, then enter the hub.</p>
     </div>
 
     <div class="card">
-      <div class="grid2">
-        <div class="pick" role="button" tabindex="0" onclick="setLang('en')" onkeypress="if(event.key==='Enter'){setLang('en')}">
-          <div>
-            <strong>English</strong><br/>
-            <span>Proceed in English.</span>
-          </div>
-          <div>EN</div>
+
+      <div class="row" style="margin-bottom:14px">
+        <div class="pill" id="t_langpill">LANG: —</div>
+        <div class="pill" id="t_depthpill">DEPTH: —</div>
+      </div>
+
+      <div class="row">
+        <div id="pick_shop" class="pick" role="button" tabindex="0" onclick="setDepth('shop')" onkeypress="if(event.key==='Enter'){setDepth('shop')}">
+          <strong id="t_shop">Shop</strong>
+          <p id="t_shop_desc">Surface view. Fast scan. Jump links only.</p>
         </div>
 
-        <div class="pick" role="button" tabindex="0" onclick="setLang('zh')" onkeypress="if(event.key==='Enter'){setLang('zh')}">
-          <div>
-            <strong>中文</strong><br/>
-            <span>使用简体中文继续。</span>
-          </div>
-          <div>中文</div>
+        <div id="pick_learn" class="pick" role="button" tabindex="0" onclick="setDepth('learn')" onkeypress="if(event.key==='Enter'){setDepth('learn')}">
+          <strong id="t_learn">Learn</strong>
+          <p id="t_learn_desc">Deep view. Nested bubbles. Full breakdown.</p>
         </div>
       </div>
 
-      <p class="hint" id="t_hint" style="margin-top:14px;">
-        After you choose, you’ll set your depth (Shop vs Learn) one time, then enter the hub.
-      </p>
+      <div class="actions">
+        <button class="btn primary" onclick="enterHub()" id="t_enter">Enter</button>
+        <button class="btn" onclick="changeLanguage()" id="t_change">Change language</button>
+      </div>
 
       <div class="tiny">CANONICAL · STABLE · © GEODIAMETRICS</div>
+
     </div>
 
   </div>
 </div>
 
 <script>
-  (function boot(){
-    // If already chosen, skip index.
-    const lang = localStorage.getItem('gd_lang');
-    if(lang === 'en' || lang === 'zh'){
-      location.href = '/door/';
-      return;
+  const I18N = {
+    en:{
+      Door:"Door",
+      sub:"Choose how much detail you want, then enter the hub.",
+      shop:"Shop",
+      shopDesc:"Surface view. Fast scan. Jump links only.",
+      learn:"Learn",
+      learnDesc:"Deep view. Nested bubbles. Full breakdown.",
+      enter:"Enter",
+      change:"Change language",
+      lang:"LANG",
+      depth:"DEPTH"
+    },
+    zh:{
+      Door:"入口",
+      sub:"选择你想要的深度，然后进入主枢纽。",
+      shop:"浏览",
+      shopDesc:"表层视图 · 快速查看 · 只有跳转入口。",
+      learn:"学习",
+      learnDesc:"深度视图 · 多层气泡 · 完整拆解。",
+      enter:"进入",
+      change:"更改语言",
+      lang:"语言",
+      depth:"深度"
     }
-  })();
+  };
 
-  function setLang(lang){
-    localStorage.setItem('gd_lang', lang);
-    // default depth if unset
-    if(!localStorage.getItem('gd_depth')) localStorage.setItem('gd_depth','shop');
-    location.href = '/door/';
+  function boot(){
+    const lang = localStorage.getItem('gd_lang');
+    if(lang !== 'en' && lang !== 'zh'){ location.href = '/'; return; }
+
+    document.documentElement.lang = (lang === 'zh') ? 'zh' : 'en';
+
+    const t = I18N[lang];
+    document.getElementById('t_title').textContent = t.Door;
+    document.getElementById('t_sub').textContent = t.sub;
+    document.getElementById('t_shop').textContent = t.shop;
+    document.getElementById('t_shop_desc').textContent = t.shopDesc;
+    document.getElementById('t_learn').textContent = t.learn;
+    document.getElementById('t_learn_desc').textContent = t.learnDesc;
+    document.getElementById('t_enter').textContent = t.enter;
+    document.getElementById('t_change').textContent = t.change;
+
+    const depth = localStorage.getItem('gd_depth') || 'shop';
+    setDepth(depth, true);
+
+    document.getElementById('t_langpill').textContent = `${t.lang}: ${(lang==='zh')?'中文':'EN'}`;
   }
+
+  function setDepth(depth, silent){
+    localStorage.setItem('gd_depth', depth);
+    const lang = localStorage.getItem('gd_lang') || 'en';
+    const t = I18N[lang];
+
+    document.getElementById('t_depthpill').textContent = `${t.depth}: ${depth.toUpperCase()}`;
+    document.getElementById('pick_shop').classList.toggle('active', depth==='shop');
+    document.getElementById('pick_learn').classList.toggle('active', depth==='learn');
+
+    if(!silent) navigator.vibrate && navigator.vibrate(10);
+  }
+
+  function enterHub(){
+    location.href = '/home/';
+  }
+
+  function changeLanguage(){
+    // language is chosen ONCE at index; we go back there to change it
+    localStorage.removeItem('gd_lang');
+    location.href = '/';
+  }
+
+  boot();
 </script>
 </body>
 </html>

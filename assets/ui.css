@@ -1,4 +1,4 @@
-/* TNT: assets/ui.css (COSMIC BACKGROUND: NEBULA MOTION + TWINKLE STARS + SHOOTING STARS) */
+/* TNT: assets/ui.css (COSMIC BACKGROUND: MOVING NEBULA + TWINKLE STARS + SHOOTING STARS) */
 
 html,body{margin:0;padding:0;width:100%;height:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#eaf2f6;background:#05070c;overflow-x:hidden}
 body{position:relative;background:radial-gradient(1200px 800px at 50% 20%,#152532 0%,#0a141b 100%)}
@@ -11,11 +11,13 @@ body{position:relative;background:radial-gradient(1200px 800px at 50% 20%,#15253
 .stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
 a{color:inherit;text-decoration:none}
 a:visited{color:inherit}
+a:hover{text-decoration:none}
+a:active{text-decoration:none}
 .nav{display:flex;justify-content:center;gap:12px;margin-top:16px;flex-wrap:wrap}
 .nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);font-weight:900}
 footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
 
-/* moving nebula (under everything) */
+/* moving nebula */
 body::before{
   content:"";
   position:fixed;
@@ -57,17 +59,9 @@ body::after{
 }
 @keyframes starTwinkle{0%{opacity:.52;filter:brightness(.95)}100%{opacity:.88;filter:brightness(1.18)}}
 
-/* shooting stars layer */
+/* shooting stars */
 .shooting-stars,.shooting-stars::before,.shooting-stars::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1}
 @keyframes shoot{0%{transform:translate3d(-25vw,-25vh,0) rotate(20deg);opacity:0}8%{opacity:1}35%{opacity:1}55%{opacity:0}100%{transform:translate3d(120vw,120vh,0) rotate(20deg);opacity:0}}
-.shooting-stars::before,.shooting-stars::after{
-  position:absolute;
-  width:240px;
-  height:2px;
-  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.85), rgba(255,255,255,0));
-  border-radius:999px;
-  filter:drop-shadow(0 0 8px rgba(255,255,255,.35));
-  opacity:0;
-}
+.shooting-stars::before,.shooting-stars::after{position:absolute;width:240px;height:2px;background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.85), rgba(255,255,255,0));border-radius:999px;filter:drop-shadow(0 0 8px rgba(255,255,255,.35));opacity:0}
 .shooting-stars::before{top:12%;left:-35%;animation:shoot 10.5s linear infinite;animation-delay:1.2s}
 .shooting-stars::after{top:38%;left:-45%;animation:shoot 13.5s linear infinite;animation-delay:4.8s}

@@ -3,52 +3,118 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Geodiametrics</title>
+<title>Geodiametrics · Root</title>
 
-<!-- Hard redirect root → home -->
-<meta http-equiv="refresh" content="0; url=/home/"/>
-
-<link rel="stylesheet" href="/assets/ui.css?v=2001"/>
-<link rel="stylesheet" href="/assets/branch.css?v=2001"/>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-html,body{height:100%;margin:0}
 body{
+  margin:0;
+  min-height:100vh;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#eaf2f6;
+  background:
+    radial-gradient(1200px 800px at 50% 20%, #7a0000 0%, #300000 40%, #05070c 100%);
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:100vh;
-  color:#eaf2f6;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
-.panel{
-  width:min(760px,92vw);
-  padding:28px 22px;
-  border-radius:18px;
-  background:rgba(255,255,255,.05);
-  box-shadow:0 30px 80px rgba(0,0,0,.6);
+
+.root-wrap{
   text-align:center;
+  max-width:680px;
+  padding:32px;
 }
-a{
-  display:inline-block;
-  margin-top:14px;
-  padding:12px 18px;
-  border-radius:12px;
+
+.root-wrap h1{
+  font-size:56px;
+  font-weight:900;
+  margin:0 0 12px;
+}
+
+.root-wrap p{
+  opacity:.75;
+  margin-bottom:40px;
+  font-size:20px;
+}
+
+.platform{
+  width:min(420px,90vw);
+  aspect-ratio:1/1;
+  margin:auto;
+  position:relative;
+  transform:rotate(45deg);
+}
+
+.diamond{
+  position:absolute;
+  width:48%;
+  height:48%;
+  background:rgba(18,22,28,.95);
+  border-radius:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
   text-decoration:none;
   color:#eaf2f6;
-  background:rgba(255,255,255,.10);
   font-weight:800;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.05),
+    0 25px 60px rgba(0,0,0,.6);
+  transform:rotate(-45deg);
+}
+
+.diamond span{
+  display:block;
+}
+
+.top{ top:0; left:26%; }
+.right{ right:0; top:26%; }
+.bottom{ bottom:0; left:26%; }
+.left{ left:0; top:26%; }
+
+footer{
+  margin-top:60px;
+  font-size:12px;
+  letter-spacing:3px;
+  opacity:.5;
 }
 </style>
 </head>
 
 <body>
-<div class="shooting-stars"></div>
 
-<div class="panel">
+<div class="root-wrap">
   <h1>Geodiametrics</h1>
-  <p>Redirecting to Home…</p>
-  <a href="/home/">Enter Home</a>
+  <p>Choose what you understand. No setup.</p>
+
+  <div class="platform">
+
+    <!-- LEARN EN -->
+    <a class="diamond top" href="/home/">
+      <span>Learn<br/>EN</span>
+    </a>
+
+    <!-- SHOP EN -->
+    <a class="diamond right" href="/home/?mode=shop">
+      <span>Shop<br/>EN</span>
+    </a>
+
+    <!-- LEARN 中文 -->
+    <a class="diamond bottom" href="/home/?lang=zh">
+      <span>学习<br/>中文</span>
+    </a>
+
+    <!-- SHOP 中文 -->
+    <a class="diamond left" href="/home/?lang=zh&mode=shop">
+      <span>购买<br/>中文</span>
+    </a>
+
+  </div>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 </div>
 
 </body>

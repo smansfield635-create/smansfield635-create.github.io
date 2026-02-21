@@ -11,31 +11,28 @@
 <style>
 html,body{height:100%;margin:0}
 
-/* Layout */
 .page{
   min-height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:flex-start;
-  padding:24px 12px;
+  padding:32px 16px;
 }
 
 .h{
   text-align:center;
-  margin-bottom:12px;
+  margin-bottom:20px;
 }
 .h h1{
-  font-size:48px;
+  font-size:56px;
   font-weight:900;
   margin:0;
 }
 .h p{
   opacity:.7;
-  margin-top:8px;
+  margin-top:10px;
 }
 
-/* Stage */
 .stage{
   flex:1;
   display:flex;
@@ -44,92 +41,81 @@ html,body{height:100%;margin:0}
   width:100%;
 }
 
-/* Diamond System (Hybrid Symmetry Reset) */
+/* SYMMETRIC COMPASS SYSTEM */
 .diamond-stage{
+  --stage: min(92vw, 680px);
+  --plate: calc(var(--stage) * .86);
+  --mini:  calc(var(--stage) * .40);
+  --offset: calc(var(--stage) * .27);
+
   position:relative;
-  width:640px;
-  height:640px;
+  width:var(--stage);
+  height:var(--stage);
 }
 
 .diamond,
 .mini-diamond{
   position:absolute;
-  width:240px;
-  height:240px;
+  left:50%;
+  top:50%;
+  width:var(--mini);
+  height:var(--mini);
   aspect-ratio:1/1;
-  transform:rotate(45deg);
+  border-radius:0;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:0;
+  transform-origin:center;
 }
 
 .diamond{
-  top:50%;
-  left:50%;
+  width:var(--plate);
+  height:var(--plate);
   transform:translate(-50%,-50%) rotate(45deg);
-  background:rgba(255,255,255,.06);
+  background:linear-gradient(145deg,#1e2a3a,#13202d);
   border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 0 60px rgba(0,0,0,.45);
+  z-index:1;
+}
+
+.mini-diamond{
+  transform:translate(-50%,-50%) rotate(45deg);
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 0 30px rgba(0,0,0,.35);
+  z-index:3;
+  transition:.25s ease;
+}
+
+.mini-diamond:hover{
+  background:rgba(255,255,255,.15);
+  box-shadow:0 0 40px rgba(0,0,0,.55);
 }
 
 .mini-diamond span{
   transform:rotate(-45deg);
   font-weight:900;
-  letter-spacing:1px;
+  font-size:clamp(18px,2.2vw,24px);
+  text-align:center;
 }
 
-.mini-top{
-  top:0;
-  left:50%;
-  transform:translateX(-50%) rotate(45deg);
-}
+.mini-top{ top:calc(50% - var(--offset)); left:50% }
+.mini-right{ top:50%; left:calc(50% + var(--offset)) }
+.mini-bottom{ top:calc(50% + var(--offset)); left:50% }
+.mini-left{ top:50%; left:calc(50% - var(--offset)) }
 
-.mini-right{
-  top:50%;
-  right:0;
-  transform:translateY(-50%) rotate(45deg);
-}
-
-.mini-bottom{
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%) rotate(45deg);
-}
-
-.mini-left{
-  top:50%;
-  left:0;
-  transform:translateY(-50%) rotate(45deg);
-}
-
-/* Compass Labels */
-.compass-label{
-  position:absolute;
-  font-weight:900;
-  opacity:.25;
-}
-.compass-n{top:-28px;left:50%;transform:translateX(-50%)}
-.compass-e{right:-28px;top:50%;transform:translateY(-50%)}
-.compass-s{bottom:-28px;left:50%;transform:translateX(-50%)}
-.compass-w{left:-28px;top:50%;transform:translateY(-50%)}
-
-/* Global link hygiene */
 a{color:inherit;text-decoration:none}
-a:visited{color:inherit}
-a:hover{text-decoration:none}
-a:active{text-decoration:none}
 
-/* Nav + footer */
 .nav{
   display:flex;
-  gap:12px;
-  margin-top:16px;
-  flex-wrap:wrap;
+  gap:14px;
+  margin-top:20px;
   justify-content:center;
+  flex-wrap:wrap;
 }
 .nav a{
-  padding:14px 22px;
-  border-radius:18px;
+  padding:14px 24px;
+  border-radius:20px;
   background:rgba(255,255,255,.10);
   font-weight:900;
 }
@@ -137,9 +123,14 @@ a:active{text-decoration:none}
 footer{
   text-align:center;
   opacity:.55;
-  margin-top:12px;
+  margin-top:18px;
   letter-spacing:3px;
   font-size:12px;
+}
+
+@media (max-width:420px){
+  .h h1{font-size:44px}
+  .diamond-stage{--stage:min(95vw,560px)}
 }
 </style>
 </head>
@@ -157,26 +148,21 @@ footer{
   <div class="stage">
     <div class="diamond-stage">
 
-      <div class="compass-label compass-n"><span>N</span></div>
-      <div class="compass-label compass-e"><span>E</span></div>
-      <div class="compass-label compass-s"><span>S</span></div>
-      <div class="compass-label compass-w"><span>W</span></div>
-
       <div class="diamond"></div>
 
-      <a class="mini-diamond mini-top c-blue" href="/laws/">
+      <a class="mini-diamond mini-top" href="/laws/">
         <span>Position</span>
       </a>
 
-      <a class="mini-diamond mini-right c-green" href="/products/">
+      <a class="mini-diamond mini-right" href="/products/">
         <span>Outcome</span>
       </a>
 
-      <a class="mini-diamond mini-bottom c-amber" href="/gauges/">
+      <a class="mini-diamond mini-bottom" href="/gauges/">
         <span>Trajectory</span>
       </a>
 
-      <a class="mini-diamond mini-left c-purple" href="/links/">
+      <a class="mini-diamond mini-left" href="/links/">
         <span>Origin</span>
       </a>
 

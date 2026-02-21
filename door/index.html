@@ -1,73 +1,152 @@
+<!-- TNT FILE: /door/index.html  (FULL REPLACEMENT)
+     DOOR = FALLBACK LENS SELECT (4 lenses)
+     - Language: EN / 中文
+     - Depth: EXPLORE / LEARN
+     - Stores: gd_lang, gd_depth
+     - Enters: /home/
+     (Index is now the multi-portal terminal; Door remains as optional fallback.)
+-->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Door · Geodiametrics</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Door · CRP</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=8000"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=8000"/>
+<link rel="stylesheet" href="/assets/ui.css?v=9301"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9301"/>
 
-  <style>
-    body{
-      background:
-        radial-gradient(1200px 900px at 50% 10%, rgba(150,0,0,.45) 0%, rgba(20,0,0,.30) 38%, rgba(5,7,12,1) 100%),
-        radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
-    }
-    .wrap{width:min(920px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:16px}
-    .hero h1{font-size:clamp(44px,7vw,68px);margin:0;font-weight:900}
-    .hero p{margin:10px 0 0;opacity:.78;font-size:18px}
-    .card{
-      border-radius:22px;
-      background:rgba(255,255,255,.05);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 30px 80px rgba(0,0,0,.55);
-      padding:18px;
-      backdrop-filter:blur(12px);
-    }
-    .row{display:flex;gap:12px;flex-wrap:wrap}
-    .pill{
-      border-radius:999px;
-      padding:10px 14px;
-      background:rgba(255,255,255,.06);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-      font-weight:900;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      font-size:12px;
-      opacity:.9;
-    }
-    .pick{
-      flex:1 1 260px;
-      border-radius:20px;
-      padding:16px 14px;
-      background:rgba(255,255,255,.06);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .pick strong{font-size:18px}
-    .pick p{margin:8px 0 0;opacity:.75}
-    .pick.active{
-      background:rgba(255,255,255,.10);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 0 30px rgba(255,80,80,.10);
-    }
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
-    .btn{
-      border:0;
-      border-radius:18px;
-      padding:14px 18px;
-      background:rgba(255,255,255,.10);
-      color:#eaf2f6;
-      font-weight:900;
-      cursor:pointer;
-    }
-    .btn.primary{
-      background:rgba(255,255,255,.14);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 0 24px rgba(255,80,80,.12);
-    }
-    .tiny{opacity:.55;font-size:12px;letter-spacing:.18em;margin-top:14px;text-align:center}
-  </style>
+<style>
+body{
+  background:
+    radial-gradient(1400px 900px at 50% 12%, rgba(150,0,0,.40) 0%, rgba(20,0,0,.22) 42%, rgba(5,7,12,1) 100%),
+    radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
+}
+
+.wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.hero{position:relative;z-index:10;text-align:left}
+.hero h1{font-size:clamp(40px,7vw,68px);margin:0;font-weight:950;letter-spacing:.02em}
+.hero p{margin:10px 0 0;opacity:.80;font-size:16px;line-height:1.4;max-width:58ch}
+
+.stage{display:flex;align-items:center;justify-content:center;width:100%}
+.platform{
+  position:relative;
+  width:min(480px,92vw);
+  aspect-ratio:1/1;
+  margin:10px auto 0;
+}
+.platform::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
+  border-radius:28px;
+  background:rgba(255,255,255,.04);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 32px 80px rgba(0,0,0,.75);
+  backdrop-filter:blur(10px);
+  z-index:0;
+}
+.diamond{
+  position:absolute;
+  width:38%;
+  height:38%;
+  transform:rotate(45deg);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 50% 40%,
+      rgba(60,70,80,.70) 0%,
+      rgba(25,30,35,.92) 60%,
+      rgba(12,14,18,1) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    inset 0 18px 30px rgba(255,255,255,.05),
+    inset 0 -30px 45px rgba(0,0,0,.85),
+    0 24px 60px rgba(0,0,0,.80);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  z-index:2;
+}
+.diamond span{
+  transform:rotate(-45deg);
+  text-align:center;
+  font-weight:900;
+  color:#eaf2f6;
+  letter-spacing:.10em;
+  line-height:1.12;
+}
+.diamond small{
+  display:block;
+  margin-top:6px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.14em;
+  opacity:.78;
+}
+.diamond.active{filter:brightness(1.10)}
+.diamond:active{transform:rotate(45deg) translateY(1px)}
+
+.top{top:6%;left:31%}
+.right{top:31%;right:6%}
+.bottom{bottom:6%;left:31%}
+.left{top:31%;left:6%}
+
+.status{
+  width:min(720px,94vw);
+  margin:14px auto 0;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.pill{
+  border-radius:999px;
+  padding:10px 14px;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  font-weight:900;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  font-size:12px;
+  opacity:.92;
+}
+
+.actions{
+  width:min(720px,94vw);
+  margin:12px auto 0;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.btn{
+  border-radius:18px;
+  padding:12px 16px;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-size:12px;
+  color:#eaf2f6;
+  text-decoration:none;
+}
+.btn.primary{
+  background:rgba(150,0,0,.25);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 18px 50px rgba(0,0,0,.35);
+}
+footer{
+  margin-top:18px;
+  text-align:center;
+  opacity:.40;
+  letter-spacing:.22em;
+  font-weight:900;
+  font-size:12px;
+}
+</style>
 </head>
 
 <body>
@@ -77,110 +156,66 @@
   <div class="wrap">
 
     <div class="hero">
-      <h1 id="t_title">Door</h1>
-      <p id="t_sub">Choose depth. Then enter the hub.</p>
+      <h1>Door</h1>
+      <p>Lens select (fallback). Four keys only: Language + Depth. Then enter.</p>
     </div>
 
-    <div class="card">
-      <div class="row" style="margin-bottom:14px">
-        <div class="pill" id="t_langpill">LANG: —</div>
-        <div class="pill" id="t_depthpill">DEPTH: —</div>
+    <div class="stage">
+      <div class="platform">
+
+        <button class="diamond top" id="lang-en" type="button"><span>ENGLISH<small>LANG</small></span></button>
+        <button class="diamond bottom" id="lang-zh" type="button"><span>中文<small>语言</small></span></button>
+        <button class="diamond left" id="depth-explore" type="button"><span>EXPLORE<small>DEPTH</small></span></button>
+        <button class="diamond right" id="depth-learn" type="button"><span>LEARN<small>DEPTH</small></span></button>
+
       </div>
-
-      <div class="row">
-        <div id="pick_explore" class="pick" role="button" tabindex="0" onclick="setDepth('explore')" onkeypress="if(event.key==='Enter'){setDepth('explore')}">
-          <strong id="t_explore">Explore</strong>
-          <p id="t_explore_desc">Surface bubbles · fast orientation · jump later</p>
-        </div>
-
-        <div id="pick_learn" class="pick" role="button" tabindex="0" onclick="setDepth('learn')" onkeypress="if(event.key==='Enter'){setDepth('learn')}">
-          <strong id="t_learn">Learn</strong>
-          <p id="t_learn_desc">Deep bubbles · nested expansion · full breakdown</p>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button class="btn primary" onclick="enterHub()" id="t_enter">Enter</button>
-        <button class="btn" onclick="backToIndex()" id="t_change">Change language</button>
-      </div>
-
-      <div class="tiny">CANONICAL · STABLE · © GEODIAMETRICS</div>
     </div>
+
+    <div class="status">
+      <div class="pill" id="badge-lang">LANG: EN</div>
+      <div class="pill" id="badge-depth">DEPTH: EXPLORE</div>
+    </div>
+
+    <div class="actions">
+      <a class="btn primary" href="/home/" id="enter">ENTER</a>
+      <a class="btn" href="/" id="terminal">TERMINAL</a>
+    </div>
+
+    <footer>GEODIAMETRICS</footer>
 
   </div>
 </div>
 
 <script>
-  const I18N = {
-    en:{
-      Door:"Door",
-      sub:"Choose depth. Then enter the hub.",
-      explore:"Explore",
-      exploreDesc:"Surface bubbles · fast orientation · jump later",
-      learn:"Learn",
-      learnDesc:"Deep bubbles · nested expansion · full breakdown",
-      enter:"Enter",
-      change:"Change language",
-      lang:"LANG",
-      depth:"DEPTH"
-    },
-    zh:{
-      Door:"入口",
-      sub:"选择深度，然后进入枢纽。",
-      explore:"浏览",
-      exploreDesc:"表层气泡 · 快速理解 · 稍后跳转",
-      learn:"学习",
-      learnDesc:"深度气泡 · 多层展开 · 完整拆解",
-      enter:"进入",
-      change:"更改语言",
-      lang:"语言",
-      depth:"深度"
-    }
+(function(){
+  const K_LANG="gd_lang", K_DEPTH="gd_depth";
+  const state={
+    lang:(localStorage.getItem(K_LANG)||"en").toLowerCase(),
+    depth:(localStorage.getItem(K_DEPTH)||"explore").toLowerCase(),
   };
-
-  function boot(){
-    const lang = localStorage.getItem('gd_lang');
-    if(lang !== 'en' && lang !== 'zh'){ location.href = '/'; return; }
-
-    document.documentElement.lang = (lang === 'zh') ? 'zh' : 'en';
-    const t = I18N[lang];
-
-    document.getElementById('t_title').textContent = t.Door;
-    document.getElementById('t_sub').textContent = t.sub;
-    document.getElementById('t_explore').textContent = t.explore;
-    document.getElementById('t_explore_desc').textContent = t.exploreDesc;
-    document.getElementById('t_learn').textContent = t.learn;
-    document.getElementById('t_learn_desc').textContent = t.learnDesc;
-    document.getElementById('t_enter').textContent = t.enter;
-    document.getElementById('t_change').textContent = t.change;
-
-    const depth = (localStorage.getItem('gd_depth') || 'explore').toLowerCase();
-    setDepth(depth, true);
-
-    document.getElementById('t_langpill').textContent = `${t.lang}: ${(lang==='zh')?'中文':'EN'}`;
+  function norm(){
+    if(state.lang!=="en"&&state.lang!=="zh") state.lang="en";
+    if(state.depth!=="explore"&&state.depth!=="learn") state.depth="explore";
   }
-
-  function setDepth(depth, silent){
-    if(depth !== 'explore' && depth !== 'learn') depth = 'explore';
-    localStorage.setItem('gd_depth', depth);
-
-    const lang = localStorage.getItem('gd_lang') || 'en';
-    const t = I18N[lang];
-
-    document.getElementById('t_depthpill').textContent = `${t.depth}: ${depth.toUpperCase()}`;
-    document.getElementById('pick_explore').classList.toggle('active', depth==='explore');
-    document.getElementById('pick_learn').classList.toggle('active', depth==='learn');
-
-    if(!silent) navigator.vibrate && navigator.vibrate(10);
+  function save(){
+    localStorage.setItem(K_LANG,state.lang);
+    localStorage.setItem(K_DEPTH,state.depth);
   }
-
-  function enterHub(){ location.href = '/home/'; }
-  function backToIndex(){
-    localStorage.removeItem('gd_lang');
-    location.href = '/';
+  function paint(){
+    document.getElementById("lang-en").classList.toggle("active",state.lang==="en");
+    document.getElementById("lang-zh").classList.toggle("active",state.lang==="zh");
+    document.getElementById("depth-explore").classList.toggle("active",state.depth==="explore");
+    document.getElementById("depth-learn").classList.toggle("active",state.depth==="learn");
+    document.getElementById("badge-lang").textContent="LANG: "+(state.lang==="zh"?"中文":"EN");
+    document.getElementById("badge-depth").textContent="DEPTH: "+state.depth.toUpperCase();
   }
+  document.getElementById("lang-en").addEventListener("click",()=>{state.lang="en";norm();save();paint();});
+  document.getElementById("lang-zh").addEventListener("click",()=>{state.lang="zh";norm();save();paint();});
+  document.getElementById("depth-explore").addEventListener("click",()=>{state.depth="explore";norm();save();paint();});
+  document.getElementById("depth-learn").addEventListener("click",()=>{state.depth="learn";norm();save();paint();});
 
-  boot();
+  norm();save();paint();
+})();
 </script>
 </body>
 </html>

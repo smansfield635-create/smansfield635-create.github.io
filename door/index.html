@@ -1,206 +1,354 @@
+<!-- TNT: /door/index.html
+     CRP DOOR (Lens Select)
+     PURPOSE: 4-key diamond ONLY (Explore / Learn / Home / Links).
+     RULES:
+       - Door shows ONE language only (from index selection).
+       - No bilingual mixing (ZH is 90% Chinese + 10% basic English anchors).
+       - Depth sets global lens: explore (surface) vs learn (deep).
+       - Enter routes to /home/ with lens preserved via localStorage.
+-->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Door · Coherent Resolution Platform</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Door · Coherent Resolution Platform</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=9001"/>
-<link rel="stylesheet" href="/assets/branch.css?v=9001"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=9100"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=9100"/>
 
-<style>
-  /* Door-only light layout tweaks (no language chooser here) */
-  .wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
-  .hero{position:relative;z-index:10}
-  .hero h1{font-size:clamp(44px,7vw,76px);margin:0;font-weight:900;letter-spacing:.01em}
-  .hero p{margin:10px 0 0;opacity:.78;font-size:18px;max-width:52ch}
-  .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
-  .pill{
-    border-radius:999px;
-    padding:10px 14px;
-    background:rgba(255,255,255,.06);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-    font-weight:900;
-    letter-spacing:.10em;
-    text-transform:uppercase;
-    font-size:12px;
-    opacity:.9;
-  }
-  .pill strong{letter-spacing:.14em}
+  <style>
+    /* Same festival palette: Red · Gold · Black */
+    body{
+      background:
+        radial-gradient(1400px 900px at 50% 10%, rgba(140,0,0,.44) 0%, rgba(30,0,0,.20) 42%, rgba(5,7,12,1) 100%),
+        radial-gradient(1200px 900px at 20% 24%, rgba(210,160,60,.08) 0%, rgba(0,0,0,0) 60%),
+        radial-gradient(1200px 900px at 80% 24%, rgba(210,160,60,.06) 0%, rgba(0,0,0,0) 60%);
+    }
 
-  /* Make stage breathe */
-  .stage{padding-top:6px}
-  .platform{margin-top:4px}
+    .wrap{width:min(980px,94vw);margin:0 auto;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:28px 14px 88px;gap:12px;position:relative;z-index:2}
+    .hero{width:100%;max-width:860px;position:relative;z-index:10}
+    .hero h1{margin:0;font-weight:900;letter-spacing:.02em;font-size:clamp(44px,9vw,72px);line-height:1.02}
+    .hero p{margin:12px 0 0;opacity:.78;font-size:18px;line-height:1.45;max-width:740px}
 
-  /* Door diamond labels tighter */
-  .diamond span{padding:0 8px}
-  .diamond b{display:block;font-size:18px;letter-spacing:.08em}
-  .diamond small{margin-top:6px}
+    .status{
+      width:100%;
+      max-width:860px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:6px;
+      position:relative;
+      z-index:12;
+    }
+    .pill{
+      border-radius:999px;
+      padding:10px 14px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-size:12px;
+      opacity:.9;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+    }
+    .pill .v{
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(210,160,60,.10);
+      box-shadow:inset 0 0 0 1px rgba(210,160,60,.22);
+      color:rgba(255,235,185,.92);
+      letter-spacing:.14em;
+      font-size:12px;
+    }
+    .pill.btn{
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+      text-decoration:none;
+      color:inherit;
+    }
+    .pill.btn:hover{background:rgba(255,255,255,.08)}
+    .pill.btn:active{transform:translateY(1px)}
 
-  /* Bottom actions (optional) */
-  .dock{
-    display:flex;
-    gap:12px;
-    justify-content:center;
-    flex-wrap:wrap;
-    margin-top:10px;
-  }
-  .dock a{
-    border-radius:999px;
-    padding:12px 18px;
-    background:rgba(255,255,255,.06);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-    font-weight:900;
-    letter-spacing:.10em;
-    text-transform:uppercase;
-    font-size:12px;
-    opacity:.92;
-    text-decoration:none;
-    color:inherit;
-  }
-  .dock a:hover{background:rgba(255,255,255,.08)}
-</style>
+    /* Diamond platform (restores geometry) */
+    .stage{width:100%;display:flex;align-items:center;justify-content:center;margin-top:10px;position:relative;z-index:6}
+    .platform{
+      position:relative;
+      width:min(400px,88vw); /* slightly smaller to avoid compression */
+      aspect-ratio:1/1;
+      margin:0 auto;
+    }
+    .platform::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      transform:rotate(45deg);
+      border-radius:28px;
+      background:rgba(255,255,255,.04);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.08),
+        0 28px 80px rgba(0,0,0,.80);
+      backdrop-filter:blur(10px);
+      z-index:0;
+    }
+
+    .diamond{
+      position:absolute;
+      width:38%;
+      height:38%;
+      transform:rotate(45deg);
+      border-radius:24px;
+
+      background:
+        radial-gradient(circle at 50% 40%,
+          rgba(60,70,80,.85) 0%,
+          rgba(25,30,35,.95) 60%,
+          rgba(12,14,18,1) 100%);
+
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.06),
+        inset 0 18px 30px rgba(255,255,255,.05),
+        inset 0 -30px 45px rgba(0,0,0,.85),
+        0 24px 60px rgba(0,0,0,.8);
+
+      transition:transform .15s ease, filter .15s ease;
+      z-index:2;
+      cursor:pointer;
+    }
+    .diamond:hover{filter:brightness(1.06)}
+    .diamond:active{transform:rotate(45deg) translateY(1px)}
+
+    .diamond span{
+      transform:rotate(-45deg);
+      text-align:center;
+      font-weight:900;
+      color:#eaf2f6;
+      text-shadow:
+        0 0 6px rgba(180,220,255,.35),
+        0 0 14px rgba(120,180,255,.22);
+      line-height:1.15;
+      padding:0 10px;
+    }
+    .diamond small{
+      display:block;
+      margin-top:6px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.14em;
+      opacity:.80;
+      color:rgba(220,230,240,.85);
+      text-shadow:0 0 6px rgba(180,220,255,.18);
+    }
+
+    /* 4-point door diamond */
+    .top{top:6%;left:31%}
+    .right{top:31%;right:6%}
+    .bottom{bottom:6%;left:31%}
+    .left{top:31%;left:6%}
+
+    /* action bar */
+    .actions{
+      width:100%;
+      max-width:860px;
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:14px;
+      position:relative;
+      z-index:12;
+    }
+    .action-btn{
+      border-radius:999px;
+      padding:14px 22px;
+      background:rgba(255,255,255,.07);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+      color:inherit;
+      font-weight:900;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-size:12px;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      border:0;
+      min-width:160px;
+    }
+    .action-btn.primary{
+      background:rgba(140,0,0,.28);
+      box-shadow:
+        inset 0 0 0 1px rgba(210,160,60,.22),
+        0 0 28px rgba(140,0,0,.22);
+    }
+    .action-btn:hover{filter:brightness(1.05)}
+    .action-btn:active{transform:translateY(1px)}
+
+    footer{
+      position:fixed;
+      left:0; right:0;
+      bottom:18px;
+      text-align:center;
+      opacity:.55;
+      letter-spacing:3px;
+      font-size:12px;
+      z-index:3;
+      pointer-events:none;
+    }
+
+    .shooting-stars{opacity:.20}
+  </style>
 </head>
 
 <body>
-<div class="shooting-stars"></div>
+  <div class="shooting-stars"></div>
 
-<div class="page">
   <div class="wrap">
-
     <div class="hero">
-      <h1 id="t_title">Door</h1>
-      <p id="t_sub">Pick a lane. Then enter the hub.</p>
+      <h1 id="t-title">DOOR</h1>
+      <p id="t-sub">Pick a lane. Then enter the hub.</p>
+    </div>
 
-      <!-- LANGUAGE IS ALREADY SET AT INDEX (read-only display) -->
-      <div class="meta">
-        <div class="pill" id="t_langpill">LANG: <strong id="t_lang">EN</strong></div>
-      </div>
+    <div class="status" aria-label="Door status">
+      <span class="pill" id="pill-lang">LANG <span class="v" id="v-lang">EN</span></span>
+      <span class="pill" id="pill-depth">DEPTH <span class="v" id="v-depth">EXPLORE</span></span>
+      <a class="pill btn" href="/" id="btn-change-lang">CHANGE LANGUAGE</a>
     </div>
 
     <div class="stage">
-      <div class="platform">
+      <div class="platform" role="navigation" aria-label="Door diamond">
 
-        <!-- TOP: EXPLORE -->
-        <a class="diamond top" href="/home/" data-depth="explore">
-          <span>
-            <b id="t_explore">Explore</b>
-            <small id="t_explore_sub">Surface map · jump points</small>
-          </span>
-        </a>
+        <!-- Explore -->
+        <div class="diamond top" id="pick-explore" role="button" tabindex="0" aria-label="Explore">
+          <span id="t-explore">Explore<small id="t-explore-sub">Surface</small></span>
+        </div>
 
-        <!-- RIGHT: LEARN -->
-        <a class="diamond right" href="/home/" data-depth="learn">
-          <span>
-            <b id="t_learn">Learn</b>
-            <small id="t_learn_sub">Deep map · nested bubbles</small>
-          </span>
-        </a>
+        <!-- Learn -->
+        <div class="diamond right" id="pick-learn" role="button" tabindex="0" aria-label="Learn">
+          <span id="t-learn">Learn<small id="t-learn-sub">Deep</small></span>
+        </div>
 
-        <!-- BOTTOM: HOME (default EXPLORE) -->
-        <a class="diamond bottom" href="/home/" data-depth="explore">
-          <span>
-            <b id="t_home">Home</b>
-            <small id="t_home_sub">Enter hub now</small>
-          </span>
-        </a>
+        <!-- Home -->
+        <div class="diamond bottom" id="pick-home" role="button" tabindex="0" aria-label="Home">
+          <span id="t-home">Home<small id="t-home-sub">Enter hub</small></span>
+        </div>
 
-        <!-- LEFT: LINKS / ABOUT -->
-        <a class="diamond left" href="/links/">
-          <span>
-            <b id="t_links">Links</b>
-            <small id="t_links_sub">Identity · references</small>
-          </span>
-        </a>
-
-        <!-- minis: back to index + terminal -->
-        <a class="diamond mini mini-left" href="/">
-          <span><small id="t_back">BACK</small></span>
-        </a>
-
-        <a class="diamond mini mini-right" href="/rgsc/">
-          <span><small id="t_terminal">TERMINAL</small></span>
-        </a>
+        <!-- Links -->
+        <div class="diamond left" id="pick-links" role="button" tabindex="0" aria-label="Links">
+          <span id="t-links">Links<small id="t-links-sub">Identity</small></span>
+        </div>
 
       </div>
     </div>
 
-    <div class="dock">
-      <a href="/" id="t_change">Change Language</a>
-      <a href="/home/" data-depth="explore" id="t_enter">Enter Hub</a>
+    <div class="actions">
+      <button class="action-btn primary" id="btn-enter">ENTER HUB</button>
+      <button class="action-btn" id="btn-reset">RESET DEPTH</button>
     </div>
-
-    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
   </div>
-</div>
 
-<script>
-(() => {
-  const K_LANG = "gd_lang";
-  const K_DEPTH = "gd_depth";
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 
-  const lang = (localStorage.getItem(K_LANG) || "en").toLowerCase();
-  const isZH = (lang === "zh");
+  <script>
+    (function(){
+      const KEY_LANG = "crp_lang";     // "en" | "zh"
+      const KEY_DEPTH = "crp_depth";   // "explore" | "learn"
 
-  // Read-only language pill
-  document.getElementById("t_lang").textContent = isZH ? "中文" : "EN";
+      const lang = (localStorage.getItem(KEY_LANG) || "en").toLowerCase();
+      let depth = (localStorage.getItem(KEY_DEPTH) || "explore").toLowerCase();
 
-  // Copy (hard split: EN page = EN only, ZH page = ZH only)
-  const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+      const $ = (id) => document.getElementById(id);
 
-  if (isZH) {
-    set("t_title", "入口");
-    set("t_sub", "选择路线，然后进入中枢。");
-    set("t_explore", "浏览");
-    set("t_explore_sub", "表层地图 · 跳转入口");
-    set("t_learn", "学习");
-    set("t_learn_sub", "深度地图 · 嵌套气泡");
-    set("t_home", "中枢");
-    set("t_home_sub", "直接进入");
-    set("t_links", "链接");
-    set("t_links_sub", "身份 · 引用");
-    set("t_back", "返回");
-    set("t_terminal", "终端");
-    set("t_change", "更换语言");
-    set("t_enter", "进入中枢");
-  } else {
-    set("t_title", "Door");
-    set("t_sub", "Pick a lane. Then enter the hub.");
-    set("t_explore", "Explore");
-    set("t_explore_sub", "Surface map · jump points");
-    set("t_learn", "Learn");
-    set("t_learn_sub", "Deep map · nested bubbles");
-    set("t_home", "Home");
-    set("t_home_sub", "Enter hub now");
-    set("t_links", "Links");
-    set("t_links_sub", "Identity · references");
-    set("t_back", "BACK");
-    set("t_terminal", "TERMINAL");
-    set("t_change", "Change Language");
-    set("t_enter", "Enter Hub");
-  }
+      const TEXT = {
+        en: {
+          title: "DOOR",
+          sub: "Pick a lane. Then enter the hub.",
+          explore: "Explore", exploreSub: "Surface",
+          learn: "Learn", learnSub: "Deep",
+          home: "Home", homeSub: "Enter hub",
+          links: "Links", linksSub: "Identity",
+          depthExplore: "EXPLORE",
+          depthLearn: "LEARN",
+          langTag: "EN"
+        },
+        zh: {
+          // 90% Chinese + 10% basic English anchors (foundation words)
+          title: "入口",
+          sub: "选一条路。然后进入中枢。",
+          explore: "浏览", exploreSub: "Surface",
+          learn: "学习", learnSub: "Deep",
+          home: "中枢", homeSub: "Enter",
+          links: "链接", linksSub: "Identity",
+          depthExplore: "浏览",
+          depthLearn: "学习",
+          langTag: "中文"
+        }
+      };
 
-  // Depth setter (Explore/Learn/Home/Enter)
-  function bindDepthLinks(root = document) {
-    root.querySelectorAll("a[data-depth]").forEach(a => {
-      a.addEventListener("click", (e) => {
-        const d = (a.getAttribute("data-depth") || "").toLowerCase();
-        if (d) localStorage.setItem(K_DEPTH, d);
-      }, { passive: true });
-    });
-  }
-  bindDepthLinks();
+      const T = TEXT[lang] || TEXT.en;
 
-  // Change Language goes back to index and clears lang+depth
-  const change = document.getElementById("t_change");
-  if (change) {
-    change.addEventListener("click", () => {
-      localStorage.removeItem(K_LANG);
-      localStorage.removeItem(K_DEPTH);
-    }, { passive: true });
-  }
-})();
-</script>
+      // render language-only page (no bilingual mixing)
+      $("t-title").textContent = T.title;
+      $("t-sub").textContent = T.sub;
+
+      $("t-explore").childNodes[0].nodeValue = T.explore;
+      $("t-explore-sub").textContent = T.exploreSub;
+
+      $("t-learn").childNodes[0].nodeValue = T.learn;
+      $("t-learn-sub").textContent = T.learnSub;
+
+      $("t-home").childNodes[0].nodeValue = T.home;
+      $("t-home-sub").textContent = T.homeSub;
+
+      $("t-links").childNodes[0].nodeValue = T.links;
+      $("t-links-sub").textContent = T.linksSub;
+
+      $("v-lang").textContent = T.langTag;
+
+      function setDepth(next){
+        depth = next;
+        localStorage.setItem(KEY_DEPTH, depth);
+        $("v-depth").textContent = (depth === "learn") ? T.depthLearn : T.depthExplore;
+      }
+
+      // init depth pill
+      setDepth(depth === "learn" ? "learn" : "explore");
+
+      function goHome(){ location.href = "/home/"; }
+      function goLinks(){ location.href = "/links/"; }
+
+      // diamond picks
+      $("pick-explore").addEventListener("click", () => setDepth("explore"));
+      $("pick-learn").addEventListener("click", () => setDepth("learn"));
+      $("pick-home").addEventListener("click", () => goHome());
+      $("pick-links").addEventListener("click", () => goLinks());
+
+      // keyboard accessibility
+      ["pick-explore","pick-learn","pick-home","pick-links"].forEach(id=>{
+        $(id).addEventListener("keydown",(e)=>{
+          if(e.key==="Enter"||e.key===" "){ e.preventDefault(); $(id).click(); }
+        });
+      });
+
+      // actions
+      $("btn-enter").addEventListener("click", goHome);
+      $("btn-reset").addEventListener("click", () => setDepth("explore"));
+
+      // If language missing (direct hit), return to index
+      if(!localStorage.getItem(KEY_LANG)){
+        location.replace("/");
+      }
+    })();
+  </script>
 </body>
 </html>

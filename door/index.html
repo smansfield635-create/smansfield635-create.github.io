@@ -9,17 +9,7 @@
 <link rel="stylesheet" href="/assets/branch.css?v=999"/>
 
 <style>
-/* ROOT: content panel + opal control gems (no legacy buttons) */
-
-.page{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  padding:40px 16px 80px;
-}
-
+/* Root-only layout (no background overrides) */
 .root-wrap{
   width:min(980px,94vw);
   display:flex;
@@ -74,19 +64,16 @@
   opacity:.9;
 }
 
+/* Make the root control platform smaller than the main site hubs */
 .root-controls{
-  margin-top:12px;
+  width:100%;
   display:flex;
   justify-content:center;
+  margin-top:6px;
 }
 
-.platform{
-  margin:0 auto;
-}
-
-/* Use platform pockets for controls */
 .root-controls .platform{
-  width:min(420px,88vw);
+  width:min(360px,86vw);
 }
 </style>
 </head>
@@ -117,7 +104,6 @@
     <div class="root-controls">
       <div class="platform">
 
-        <!-- MAIN GEMS -->
         <a class="diamond top" href="/door/">
           <span>Enter<small>Door</small></span>
         </a>
@@ -134,7 +120,7 @@
           <span>Products<small>Suite</small></span>
         </a>
 
-        <!-- POCKET CONTROLS -->
+        <!-- pocket minis -->
         <a class="diamond mini mini-left" href="/home/">
           <span><small>HOME</small></span>
         </a>

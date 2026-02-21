@@ -9,21 +9,29 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-/* ===========================
-   HOME HUB: DEPTH ENGINE (TNT)
-   - mode=explore (surface)
-   - mode=learn (deep)
-=========================== */
+/* ==========================================
+   HOME — HUB
+   - NO language choice here (language chosen once on /index.html)
+   - Depth toggle (Explore/Learn) changes how much expands
+   - Quadrant routes: NW/NE/SW/SE (dropdowns)
+   - Cardinal plate: N/E/S/W (diamond hub)
+========================================== */
 
 :root{
-  --glass: rgba(255,255,255,.06);
-  --glass2: rgba(255,255,255,.08);
-  --stroke: rgba(255,255,255,.10);
-  --stroke2: rgba(255,255,255,.14);
+  --glass: rgba(255,255,255,.07);
+  --stroke: rgba(255,255,255,.14);
   --ink: rgba(234,242,246,.92);
-  --muted: rgba(234,242,246,.68);
-  --chip: rgba(255,255,255,.08);
-  --shadow: rgba(0,0,0,.55);
+  --muted: rgba(234,242,246,.70);
+}
+
+/* Chinese red/black theme */
+html,body{height:100%;margin:0}
+body{
+  min-height:100vh;
+  color:var(--ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(1100px 760px at 50% 12%, rgba(190,10,18,.52) 0%, rgba(90,10,14,.34) 40%, rgba(6,10,14,1) 100%);
 }
 
 .page{
@@ -32,249 +40,193 @@
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
-  padding:40px 14px 84px;
+  padding:34px 14px 90px;
   position:relative;
 }
 
 .h{
   text-align:center;
-  margin-bottom:18px;
+  margin-bottom:14px;
   position:relative;
   z-index:10;
 }
+
 .h h1{
   margin:0;
-  font-size:clamp(40px,8vw,64px);
+  font-size:clamp(44px,9vw,70px);
   font-weight:900;
+  letter-spacing:.01em;
 }
+
 .h p{
   margin:10px 0 0;
   font-size:18px;
   color:var(--muted);
 }
 
-/* Top micro-controls (NOT language chooser; only “Change language” link) */
 .topbar{
-  width:min(980px,96vw);
+  width:min(860px,94vw);
   display:flex;
   gap:10px;
   justify-content:center;
-  align-items:center;
   flex-wrap:wrap;
-  margin:10px 0 18px;
+  margin:14px auto 8px;
   position:relative;
   z-index:10;
 }
+
 .pill{
-  display:inline-flex;
-  gap:10px;
-  align-items:center;
-  padding:12px 16px;
+  padding:10px 14px;
   border-radius:999px;
-  background:var(--glass);
-  border:1px solid var(--stroke);
-  color:var(--ink);
-  font-weight:800;
-  letter-spacing:.06em;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  color:rgba(234,242,246,.78);
+  font-weight:900;
+  letter-spacing:.10em;
+  font-size:12px;
   text-decoration:none;
-}
-.pill small{
-  font-weight:800;
-  opacity:.75;
-  letter-spacing:.12em;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
 }
 
-/* Layout: bubbles (top) + plate (bottom) */
-.hub{
-  width:min(980px,96vw);
+.pill.active{
+  background:rgba(255,255,255,.10);
+  border-color:rgba(255,255,255,.18);
+  color:rgba(234,242,246,.92);
+}
+
+.stack{
+  width:min(860px,94vw);
   display:flex;
   flex-direction:column;
-  gap:18px;
+  gap:12px;
+  margin-top:10px;
   position:relative;
   z-index:5;
 }
 
-/* Bubble block */
-.block{
-  border-radius:26px;
-  background:var(--glass);
-  border:1px solid var(--stroke);
-  box-shadow:0 26px 80px rgba(0,0,0,.45);
-  overflow:hidden;
-}
-.block-h{
-  padding:16px 16px 14px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-}
-.block-h .t{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-.block-h .t .k{
-  font-weight:900;
-  letter-spacing:.18em;
-  opacity:.9;
-  font-size:14px;
-}
-.block-h .t .s{
-  color:var(--muted);
-  font-size:15px;
-  line-height:1.3;
-}
-.block-h .mode{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 12px;
-  border-radius:999px;
+/* Quadrant dropdown cards */
+.qcard{
+  border-radius:22px;
   background:rgba(0,0,0,.22);
   border:1px solid rgba(255,255,255,.10);
-  font-weight:900;
-  letter-spacing:.12em;
-  opacity:.9;
-  white-space:nowrap;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 22px 60px rgba(0,0,0,.55);
+  overflow:hidden;
+  backdrop-filter:blur(10px);
 }
 
-/* Accordion bubbles */
-details{
-  border-top:1px solid rgba(255,255,255,.06);
-}
-summary{
-  list-style:none;
-  cursor:pointer;
-  padding:16px;
+.qhead{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:14px;
-}
-summary::-webkit-details-marker{display:none;}
-.sum-left{
-  display:flex;
   gap:12px;
-  align-items:center;
-  min-width:0;
+  padding:14px 14px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
 }
-.badge{
-  width:42px;
-  height:42px;
-  border-radius:14px;
-  display:grid;
-  place-items:center;
+
+.qleft{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.qtag{
+  min-width:56px;
+  height:40px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.10);
   font-weight:900;
-  letter-spacing:.10em;
-  flex:0 0 auto;
-}
-.sum-text{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  min-width:0;
-}
-.sum-text .h{
-  margin:0;
-  text-align:left;
-  font-weight:900;
-  font-size:18px;
-  color:var(--ink);
-}
-.sum-text .d{
-  color:var(--muted);
-  font-size:14px;
-  line-height:1.3;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.chev{
-  width:44px;
-  height:44px;
-  border-radius:999px;
-  display:grid;
-  place-items:center;
-  background:rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.10);
-  opacity:.9;
-  flex:0 0 auto;
-}
-details[open] summary .chev{
-  transform:rotate(180deg);
+  letter-spacing:.12em;
+  color:rgba(234,242,246,.88);
 }
 
-/* Content inside accordion */
-.content{
-  padding:0 16px 16px;
-  color:var(--ink);
+.qtitle{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
 }
-.bullets{
+
+.qtitle b{
+  font-size:16px;
+  letter-spacing:.14em;
+}
+
+.qtitle span{
+  font-size:13px;
+  color:rgba(234,242,246,.68);
+}
+
+.qchev{
+  width:40px;
+  height:40px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  color:rgba(234,242,246,.85);
+  font-weight:900;
+}
+
+.qbody{
+  padding:0 14px 14px;
+  display:none;
+}
+
+.qbody.open{display:block;}
+
+.qbody .bullets{
   margin:10px 0 0;
   padding-left:18px;
-  line-height:1.7;
-  color:rgba(234,242,246,.86);
+  color:rgba(234,242,246,.82);
+  line-height:1.6;
 }
-.actions{
-  margin-top:14px;
+
+.jumpRow{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
+  margin-top:12px;
 }
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
+
+.jump{
   padding:12px 14px;
-  border-radius:999px;
+  border-radius:16px;
   background:rgba(255,255,255,.08);
   border:1px solid rgba(255,255,255,.12);
-  text-decoration:none;
-  color:var(--ink);
+  color:rgba(234,242,246,.92);
   font-weight:900;
   letter-spacing:.10em;
+  text-decoration:none;
 }
 
-/* Nested bubbles (deep mode) */
-.nest{
-  margin-top:12px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  overflow:hidden;
-}
-.nest details{border-top:1px solid rgba(255,255,255,.08);}
-.nest summary{padding:14px;}
-.nest .badge{width:38px;height:38px;border-radius:12px;}
-.nest .sum-text .h{font-size:16px;}
-.nest .sum-text .d{font-size:13px;}
-.nest .content{padding:0 14px 14px;}
-
-/* Plate container */
-.plate{
-  margin-top:2px;
+/* Cardinal plate region */
+.stage{
+  width:100%;
   display:flex;
-  align-items:center;
   justify-content:center;
+  margin-top:16px;
+  position:relative;
+  z-index:3;
 }
 
-/* Footer */
+/* Ensure footer always visible */
 footer{
-  margin-top:18px;
+  text-align:center;
   letter-spacing:3px;
   font-size:12px;
   opacity:.55;
+  margin-top:18px;
   position:relative;
   z-index:10;
-}
-
-/* Keep plate visible below bubbles on small screens */
-@media (max-width:520px){
-  .page{padding-top:34px;}
 }
 </style>
 </head>
@@ -285,490 +237,289 @@ footer{
 <div class="page">
 
   <div class="h">
-    <h1 id="ttl">Home</h1>
-    <p id="sub">Quadrant routes + cardinal plate.</p>
+    <h1 id="t_home">Home</h1>
+    <p id="t_tagline">Unified hub · choose a route.</p>
   </div>
 
   <div class="topbar">
-    <a class="pill" href="/" id="chgLang"><span id="chgLangTxt">Change language</span></a>
-    <a class="pill" href="/door/" id="chgDepth"><span id="chgDepthTxt">Change depth</span></a>
-    <span class="pill"><span id="langTag">EN</span><small id="modeTag">MODE</small><span id="modeVal">EXPLORE</span></span>
+    <span class="pill" id="pillLang">LANG · EN</span>
+    <span class="pill active" id="pillExplore">EXPLORE</span>
+    <span class="pill" id="pillLearn">LEARN</span>
+    <a class="pill" href="/door/" id="pillBackToDoor">DOOR</a>
   </div>
 
-  <div class="hub">
+  <!-- Quadrant routes (NW/NE/SW/SE) -->
+  <div class="stack" id="quadStack">
 
-    <!-- QUADRANT ROUTES (NW/NE/SW/SE) -->
-    <div class="block">
-      <div class="block-h">
-        <div class="t">
-          <div class="k" id="qTitle">QUADRANT ROUTES</div>
-          <div class="s" id="qSub">NW / NE / SW / SE · Expand for map + jump points.</div>
+    <div class="qcard" data-q="nw">
+      <div class="qhead">
+        <div class="qleft">
+          <div class="qtag">NW</div>
+          <div class="qtitle">
+            <b id="t_nw">NORTHWEST</b>
+            <span id="t_nw_sub">Definitions · language · structure</span>
+          </div>
         </div>
-        <div class="mode" id="depthChip">DEPTH</div>
+        <div class="qchev">▾</div>
       </div>
-
-      <!-- NW -->
-      <details id="nw">
-        <summary>
-          <div class="sum-left">
-            <div class="badge">NW</div>
-            <div class="sum-text">
-              <div class="h" id="nwH">Northwest</div>
-              <div class="d" id="nwD">Definitions · language · structure</div>
-            </div>
-          </div>
-          <div class="chev">▾</div>
-        </summary>
-        <div class="content" id="nwC"></div>
-      </details>
-
-      <!-- NE -->
-      <details id="ne">
-        <summary>
-          <div class="sum-left">
-            <div class="badge">NE</div>
-            <div class="sum-text">
-              <div class="h" id="neH">Northeast</div>
-              <div class="d" id="neD">Execution · surfaces · examples</div>
-            </div>
-          </div>
-          <div class="chev">▾</div>
-        </summary>
-        <div class="content" id="neC"></div>
-      </details>
-
-      <!-- SW -->
-      <details id="sw">
-        <summary>
-          <div class="sum-left">
-            <div class="badge">SW</div>
-            <div class="sum-text">
-              <div class="h" id="swH">Southwest</div>
-              <div class="d" id="swD">Measurement · diagnostics · rules</div>
-            </div>
-          </div>
-          <div class="chev">▾</div>
-        </summary>
-        <div class="content" id="swC"></div>
-      </details>
-
-      <!-- SE -->
-      <details id="se">
-        <summary>
-          <div class="sum-left">
-            <div class="badge">SE</div>
-            <div class="sum-text">
-              <div class="h" id="seH">Southeast</div>
-              <div class="d" id="seD">Identity · references · links</div>
-            </div>
-          </div>
-          <div class="chev">▾</div>
-        </summary>
-        <div class="content" id="seC"></div>
-      </details>
-
+      <div class="qbody">
+        <ul class="bullets" id="nw_bullets"></ul>
+        <div class="jumpRow">
+          <a class="jump" href="/laws/" id="nw_jump1">JUMP · LAWS</a>
+          <a class="jump" href="/laws/categories/" id="nw_jump2">JUMP · CATEGORIES</a>
+        </div>
+      </div>
     </div>
 
-    <!-- CARDINAL PLATE (N/E/S/W) -->
-    <div class="block">
-      <div class="block-h">
-        <div class="t">
-          <div class="k" id="pTitle">CARDINAL PLATE</div>
-          <div class="s" id="pSub">N / E / S / W · Jump into the site.</div>
+    <div class="qcard" data-q="ne">
+      <div class="qhead">
+        <div class="qleft">
+          <div class="qtag">NE</div>
+          <div class="qtitle">
+            <b id="t_ne">NORTHEAST</b>
+            <span id="t_ne_sub">Execution · surfaces · examples</span>
+          </div>
         </div>
-        <div class="mode" id="plateChip">SITE</div>
+        <div class="qchev">▾</div>
       </div>
-
-      <div class="plate">
-        <div class="platform">
-
-          <a class="diamond top" href="/laws/"><span id="pN">N<small id="pN2">Laws</small></span></a>
-          <a class="diamond right" href="/products/"><span id="pE">E<small id="pE2">Products</small></span></a>
-          <a class="diamond bottom" href="/gauges/"><span id="pS">S<small id="pS2">Gauges</small></span></a>
-          <a class="diamond left" href="/links/"><span id="pW">W<small id="pW2">Links</small></span></a>
-
-          <a class="diamond mini mini-left" href="/"><span><small id="pRoot">ROOT</small></span></a>
-          <a class="diamond mini mini-right" href="/rgsc/"><span><small id="pRGSC">RGSC</small></span></a>
-
+      <div class="qbody">
+        <ul class="bullets" id="ne_bullets"></ul>
+        <div class="jumpRow">
+          <a class="jump" href="/products/" id="ne_jump1">JUMP · PRODUCTS</a>
+          <a class="jump" href="/rgsc/" id="ne_jump2">JUMP · RGSC</a>
         </div>
       </div>
-
     </div>
 
+    <div class="qcard" data-q="sw">
+      <div class="qhead">
+        <div class="qleft">
+          <div class="qtag">SW</div>
+          <div class="qtitle">
+            <b id="t_sw">SOUTHWEST</b>
+            <span id="t_sw_sub">Measurement · diagnostics · rules</span>
+          </div>
+        </div>
+        <div class="qchev">▾</div>
+      </div>
+      <div class="qbody">
+        <ul class="bullets" id="sw_bullets"></ul>
+        <div class="jumpRow">
+          <a class="jump" href="/gauges/" id="sw_jump1">JUMP · GAUGES</a>
+          <a class="jump" href="/diagnostic/" id="sw_jump2">JUMP · DIAGNOSTIC</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="qcard" data-q="se">
+      <div class="qhead">
+        <div class="qleft">
+          <div class="qtag">SE</div>
+          <div class="qtitle">
+            <b id="t_se">SOUTHEAST</b>
+            <span id="t_se_sub">Identity · references · links</span>
+          </div>
+        </div>
+        <div class="qchev">▾</div>
+      </div>
+      <div class="qbody">
+        <ul class="bullets" id="se_bullets"></ul>
+        <div class="jumpRow">
+          <a class="jump" href="/links/" id="se_jump1">JUMP · LINKS</a>
+          <a class="jump" href="/contact/" id="se_jump2">JUMP · CONTACT</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Cardinal plate (N/E/S/W) -->
+  <div class="stage">
+    <div class="platform">
+      <a class="diamond top" href="/laws/"><span>N<small id="t_card_n">Laws</small></span></a>
+      <a class="diamond right" href="/products/"><span>E<small id="t_card_e">Products</small></span></a>
+      <a class="diamond bottom" href="/gauges/"><span>S<small id="t_card_s">Gauges</small></span></a>
+      <a class="diamond left" href="/links/"><span>W<small id="t_card_w">Links</small></span></a>
+
+      <a class="diamond mini mini-left" href="/"><span><small id="t_root">ROOT</small></span></a>
+      <a class="diamond mini mini-right" href="/rgsc/"><span><small id="t_rgsc">RGSC</small></span></a>
+    </div>
   </div>
 
   <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
 </div>
 
 <script>
-/* ===========================
-   HOME HUB: MODE + LANGUAGE
-   - lang: localStorage.gd_lang (en|zh)
-   - mode: query ?mode=explore|learn (default explore)
-=========================== */
-
 (function(){
-  const qs = new URLSearchParams(location.search);
-  const mode = (qs.get("mode") || "explore").toLowerCase();
-  const storedLang = (localStorage.getItem("gd_lang") || "en").toLowerCase();
-  const lang = (storedLang === "zh") ? "zh" : "en";
+  const $ = (id)=>document.getElementById(id);
 
-  // chips
-  document.getElementById("langTag").textContent = (lang === "zh") ? "中文" : "EN";
-  document.getElementById("modeVal").textContent = (mode === "learn") ? "LEARN" : "EXPLORE";
-  document.getElementById("depthChip").textContent = (mode === "learn") ? "DEEP" : "SURFACE";
+  function getLang(){
+    try{ return (localStorage.getItem("gd_lang") || "en").toLowerCase(); }catch(e){ return "en"; }
+  }
+  function getDepth(){
+    let d="explore";
+    try{ d=(localStorage.getItem("gd_depth") || "explore").toLowerCase(); }catch(e){}
+    if(d==="shop") d="explore";
+    if(d!=="explore" && d!=="learn") d="explore";
+    return d;
+  }
+  function setDepth(d){
+    try{ localStorage.setItem("gd_depth", d); }catch(e){}
+  }
 
-  // bilingual copy dictionary (tight, no fluff)
-  const T = {
-    en: {
-      ttl: "Home",
-      sub: "Quadrant routes + cardinal plate.",
-      chgLang: "Change language",
-      chgDepth: "Change depth",
-      qTitle: "QUADRANT ROUTES",
-      qSub: "NW / NE / SW / SE · Expand for map + jump points.",
-      pTitle: "CARDINAL PLATE",
-      pSub: "N / E / S / W · Jump into the site.",
-      nwH:"Northwest", nwD:"Definitions · language · structure",
-      neH:"Northeast", neD:"Execution · surfaces · examples",
-      swH:"Southwest", swD:"Measurement · diagnostics · rules",
-      seH:"Southeast", seD:"Identity · references · links",
-      pN2:"Laws", pE2:"Products", pS2:"Gauges", pW2:"Links",
-      root:"ROOT", rgsc:"RGSC"
-    },
-    zh: {
-      ttl: "主页",
-      sub: "象限路线 + 方位入口。",
-      chgLang: "切换语言",
-      chgDepth: "切换深度",
-      qTitle: "象限路线",
-      qSub: "西北/东北/西南/东南 · 展开查看结构与跳转。",
-      pTitle: "方位入口",
-      pSub: "北/东/南/西 · 直接进入站点。",
-      nwH:"西北", nwD:"定义 · 语言 · 结构",
-      neH:"东北", neD:"执行 · 界面 · 示例",
-      swH:"西南", swD:"测量 · 诊断 · 规则",
-      seH:"东南", seD:"身份 · 引用 · 链接",
-      pN2:"法则", pE2:"产品", pS2:"量表", pW2:"链接",
-      root:"根", rgsc:"RGSC"
+  function bulletsFor(depth, lang){
+    const isZH = (lang==="zh");
+
+    // EXPLORE = short. LEARN = deeper.
+    const pack = {
+      nw: isZH
+        ? (depth==="learn"
+            ? ["SSG（简化语法几何）", "钻石导航语法（四路一选）", "DOT.GRID（256态索引）", "缩略语/术语（按柱分类）"]
+            : ["SSG", "钻石导航语法", "DOT.GRID", "缩略语/术语"])
+        : (depth==="learn"
+            ? ["SSG (Simplified Syntax Geometry)", "Diamond grammar (4 routes, one choice)", "DOT.GRID (256-state indexing)", "Acronyms & glossary (pillarized)"]
+            : ["SSG", "Diamond grammar", "DOT.GRID", "Acronyms & glossary"]),
+
+      ne: isZH
+        ? (depth==="learn"
+            ? ["执行界面（应用/门户）", "流程与回执（审计链）", "示例（如何使用系统）", "打包输出（下载/材料）"]
+            : ["执行界面", "回执/审计链", "示例", "打包输出"])
+        : (depth==="learn"
+            ? ["Execution surfaces (apps / portals)", "Workflows & receipts (audit trails)", "Examples (how to use the system)", "Packaged outputs (downloadables)"]
+            : ["Execution surfaces", "Receipts / audit trails", "Examples", "Packaged outputs"]),
+
+      sw: isZH
+        ? (depth==="learn"
+            ? ["量表/仪表（测量工具）", "诊断（约束下分类）", "规则（导航 + 完整性）", "返回协议（先回枢纽）"]
+            : ["量表/仪表", "诊断", "规则", "返回协议"])
+        : (depth==="learn"
+            ? ["Gauges (measurement instruments)", "Diagnostics (classification under constraint)", "Rules (navigation + integrity)", "Return protocol (hub-first)"]
+            : ["Gauges", "Diagnostics", "Rules", "Return protocol"]),
+
+      se: isZH
+        ? (depth==="learn"
+            ? ["ORCID（研究者身份）", "OSF（项目/预印本）", "联系方式（直接）", "对外链接（索引）"]
+            : ["ORCID", "OSF", "联系", "对外链接"])
+        : (depth==="learn"
+            ? ["ORCID (researcher identity)", "OSF (project registry / preprints)", "Contact (direct)", "External links (index)"]
+            : ["ORCID", "OSF", "Contact", "External links"])
+    };
+    return pack;
+  }
+
+  function applyI18n(lang){
+    const isZH = (lang==="zh");
+    document.documentElement.lang = isZH ? "zh" : "en";
+    $("pillLang").textContent = "LANG · " + (isZH ? "中文" : "EN");
+
+    if(isZH){
+      $("t_home").textContent = "首页";
+      $("t_tagline").textContent = "统一枢纽 · 选择路线。";
+      $("pillBackToDoor").textContent = "入口";
+      $("pillExplore").textContent = "浏览";
+      $("pillLearn").textContent = "学习";
+
+      $("t_nw").textContent = "西北";
+      $("t_nw_sub").textContent = "定义 · 语言 · 结构";
+      $("t_ne").textContent = "东北";
+      $("t_ne_sub").textContent = "执行 · 界面 · 示例";
+      $("t_sw").textContent = "西南";
+      $("t_sw_sub").textContent = "测量 · 诊断 · 规则";
+      $("t_se").textContent = "东南";
+      $("t_se_sub").textContent = "身份 · 引用 · 链接";
+
+      $("nw_jump1").textContent = "跳转 · 法则";
+      $("nw_jump2").textContent = "跳转 · 分类";
+      $("ne_jump1").textContent = "跳转 · 产品";
+      $("ne_jump2").textContent = "跳转 · RGSC";
+      $("sw_jump1").textContent = "跳转 · 仪表";
+      $("sw_jump2").textContent = "跳转 · 诊断";
+      $("se_jump1").textContent = "跳转 · 链接";
+      $("se_jump2").textContent = "跳转 · 联系";
+
+      $("t_card_n").textContent = "法则";
+      $("t_card_e").textContent = "产品";
+      $("t_card_s").textContent = "仪表";
+      $("t_card_w").textContent = "链接";
+      $("t_root").textContent = "根";
+      $("t_rgsc").textContent = "RGSC";
+    }else{
+      $("t_home").textContent = "Home";
+      $("t_tagline").textContent = "Unified hub · choose a route.";
+      $("pillBackToDoor").textContent = "DOOR";
+      $("pillExplore").textContent = "EXPLORE";
+      $("pillLearn").textContent = "LEARN";
+
+      $("t_nw").textContent = "NORTHWEST";
+      $("t_nw_sub").textContent = "Definitions · language · structure";
+      $("t_ne").textContent = "NORTHEAST";
+      $("t_ne_sub").textContent = "Execution · surfaces · examples";
+      $("t_sw").textContent = "SOUTHWEST";
+      $("t_sw_sub").textContent = "Measurement · diagnostics · rules";
+      $("t_se").textContent = "SOUTHEAST";
+      $("t_se_sub").textContent = "Identity · references · links";
+
+      $("nw_jump1").textContent = "JUMP · LAWS";
+      $("nw_jump2").textContent = "JUMP · CATEGORIES";
+      $("ne_jump1").textContent = "JUMP · PRODUCTS";
+      $("ne_jump2").textContent = "JUMP · RGSC";
+      $("sw_jump1").textContent = "JUMP · GAUGES";
+      $("sw_jump2").textContent = "JUMP · DIAGNOSTIC";
+      $("se_jump1").textContent = "JUMP · LINKS";
+      $("se_jump2").textContent = "JUMP · CONTACT";
+
+      $("t_card_n").textContent = "Laws";
+      $("t_card_e").textContent = "Products";
+      $("t_card_s").textContent = "Gauges";
+      $("t_card_w").textContent = "Links";
+      $("t_root").textContent = "ROOT";
+      $("t_rgsc").textContent = "RGSC";
     }
-  }[lang];
-
-  // apply top labels
-  document.getElementById("ttl").textContent = T.ttl;
-  document.getElementById("sub").textContent = T.sub;
-  document.getElementById("chgLangTxt").textContent = T.chgLang;
-  document.getElementById("chgDepthTxt").textContent = T.chgDepth;
-  document.getElementById("qTitle").textContent = T.qTitle;
-  document.getElementById("qSub").textContent = T.qSub;
-  document.getElementById("pTitle").textContent = T.pTitle;
-  document.getElementById("pSub").textContent = T.pSub;
-
-  document.getElementById("nwH").textContent = T.nwH;
-  document.getElementById("nwD").textContent = T.nwD;
-  document.getElementById("neH").textContent = T.neH;
-  document.getElementById("neD").textContent = T.neD;
-  document.getElementById("swH").textContent = T.swH;
-  document.getElementById("swD").textContent = T.swD;
-  document.getElementById("seH").textContent = T.seH;
-  document.getElementById("seD").textContent = T.seD;
-
-  document.getElementById("pN2").textContent = T.pN2;
-  document.getElementById("pE2").textContent = T.pE2;
-  document.getElementById("pS2").textContent = T.pS2;
-  document.getElementById("pW2").textContent = T.pW2;
-  document.getElementById("pRoot").textContent = T.root;
-  document.getElementById("pRGSC").textContent = T.rgsc;
-
-  // Build content for each quadrant based on mode
-  function renderExplore(id, bullets, jumps){
-    const el = document.getElementById(id);
-    el.innerHTML = `
-      <div class="content">
-        <div class="sumText"></div>
-        <ul class="bullets">${bullets.map(x=>`<li>${x}</li>`).join("")}</ul>
-        <div class="actions">${jumps.map(j=>`<a class="btn" href="${j.href}">${j.txt}</a>`).join("")}</div>
-      </div>
-    `;
   }
 
-  function renderLearn(id, sections, jumps){
-    const el = document.getElementById(id);
-    el.innerHTML = `
-      <div class="content">
-        <div class="nest">
-          ${sections.map(s=>`
-            <details>
-              <summary>
-                <div class="sum-left">
-                  <div class="badge">${s.badge}</div>
-                  <div class="sum-text">
-                    <div class="h">${s.title}</div>
-                    <div class="d">${s.desc}</div>
-                  </div>
-                </div>
-                <div class="chev">▾</div>
-              </summary>
-              <div class="content">
-                <ul class="bullets">${s.items.map(x=>`<li>${x}</li>`).join("")}</ul>
-              </div>
-            </details>
-          `).join("")}
-        </div>
-        <div class="actions">${jumps.map(j=>`<a class="btn" href="${j.href}">${j.txt}</a>`).join("")}</div>
-      </div>
-    `;
-  }
+  function render(depth, lang){
+    // pills
+    $("pillExplore").classList.toggle("active", depth==="explore");
+    $("pillLearn").classList.toggle("active", depth==="learn");
 
-  // Copy payloads
-  const COPY = {
-    en: {
-      explore: {
-        nw: {
-          bullets: [
-            "SSG language + constraints",
-            "Diamond grammar (4 routes, one choice)",
-            "DOT.GRID (256-state indexing)",
-            "Acronyms & glossary (organized)"
-          ],
-          jumps: [
-            {txt:"JUMP · LAWS", href:"/laws/"},
-            {txt:"JUMP · CATEGORIES", href:"/laws/categories/"}
-          ]
-        },
-        ne: {
-          bullets: [
-            "Execution surfaces (apps / portals)",
-            "Workflows & receipts (audit trails)",
-            "Examples (how to use the system)",
-            "Packaged outputs (downloadables)"
-          ],
-          jumps: [
-            {txt:"JUMP · PRODUCTS", href:"/products/"},
-            {txt:"JUMP · RGSC", href:"/rgsc/"}
-          ]
-        },
-        sw: {
-          bullets: [
-            "Gauges (measurement instruments)",
-            "Diagnostics (classification under constraint)",
-            "Rules (navigation + integrity)",
-            "Return protocol (hub-first)"
-          ],
-          jumps: [
-            {txt:"JUMP · GAUGES", href:"/gauges/"},
-            {txt:"JUMP · DIAGNOSTIC", href:"/diagnostic/"}
-          ]
-        },
-        se: {
-          bullets: [
-            "ORCID identity",
-            "OSF project registry",
-            "Contact channel",
-            "External references"
-          ],
-          jumps: [
-            {txt:"JUMP · LINKS", href:"/links/"},
-            {txt:"JUMP · CONTACT", href:"/contact/"}
-          ]
-        }
-      },
-      learn: {
-        nw: {
-          sections: [
-            {badge:"SSG", title:"Simplified Syntax Geometry", desc:"Constraint-first language", items:[
-              "Resources / Stores / Constraints / Goals / Guards",
-              "Receipt-gated advancement (no timer gates)",
-              "Finite, replay-safe execution traces"
-            ]},
-            {badge:"GRAM", title:"Diamond Grammar", desc:"Four routes, one choice", items:[
-              "Hub → 4 routes → return protocol",
-              "Confusion sits at center; clarity at edges",
-              "Navigation expresses structure, not marketing"
-            ]},
-            {badge:"DOT", title:"DOT.GRID", desc:"256-state indexing", items:[
-              "State encoding across N/E/S/W axes",
-              "Replay-safe evidence streams",
-              "Audit-friendly compression"
-            ]},
-            {badge:"ABC", title:"Acronyms & Glossary", desc:"Consistent terms", items:[
-              "Acronyms grouped by pillars",
-              "Definitions pinned to usage rules",
-              "Cross-links to examples"
-            ]}
-          ],
-          jumps: [
-            {txt:"OPEN · LAWS", href:"/laws/"},
-            {txt:"OPEN · CATEGORIES", href:"/laws/categories/"}
-          ]
-        },
-        ne: {
-          sections: [
-            {badge:"APP", title:"Execution Surfaces", desc:"Apps / portals", items:[
-              "Governance interfaces",
-              "Instrument panels",
-              "Operator workflows"
-            ]},
-            {badge:"RCPT", title:"Receipts", desc:"Verification & audit", items:[
-              "Signed receipt generation",
-              "Case replay + verification",
-              "Non-repudiation surfaces"
-            ]},
-            {badge:"EX", title:"Examples", desc:"How to use", items:[
-              "Walkthroughs from door → hub → branch",
-              "State selection by purpose (not mechanics)",
-              "Return protocol when incomplete"
-            ]},
-            {badge:"PACK", title:"Outputs", desc:"Downloadables", items:[
-              "PDF packs / drill packs",
-              "Templates / schemas",
-              "Operational checklists"
-            ]}
-          ],
-          jumps: [
-            {txt:"OPEN · PRODUCTS", href:"/products/"},
-            {txt:"OPEN · RGSC", href:"/rgsc/"}
-          ]
-        },
-        sw: {
-          sections: [
-            {badge:"GAU", title:"Gauges", desc:"Measurement instruments", items:[
-              "Integrity / coherence readouts",
-              "Constraint checking",
-              "Drift detection signals"
-            ]},
-            {badge:"DIAG", title:"Diagnostics", desc:"Classification under constraint", items:[
-              "Stability vs instability patterns",
-              "Admissibility conditions",
-              "Error class isolation"
-            ]},
-            {badge:"RULE", title:"Rules", desc:"Navigation + integrity", items:[
-              "One choice at a time",
-              "Hub-first return",
-              "Receipt-gated progression"
-            ]},
-            {badge:"RET", title:"Return Protocol", desc:"If incomplete", items:[
-              "Return to hub",
-              "Select a different route",
-              "Do not multi-tab inside a branch"
-            ]}
-          ],
-          jumps: [
-            {txt:"OPEN · GAUGES", href:"/gauges/"},
-            {txt:"OPEN · DIAGNOSTIC", href:"/diagnostic/"}
-          ]
-        },
-        se: {
-          sections: [
-            {badge:"ID", title:"Identity", desc:"External anchors", items:[
-              "ORCID researcher identity",
-              "OSF project registry",
-              "Public reference anchors"
-            ]},
-            {badge:"REF", title:"References", desc:"Where to verify", items:[
-              "Project links",
-              "Docs + preprints",
-              "Versioned artifacts"
-            ]},
-            {badge:"LINK", title:"Links", desc:"Navigation shortcuts", items:[
-              "Hub pages",
-              "Key branches",
-              "Contact endpoints"
-            ]},
-            {badge:"CTC", title:"Contact", desc:"Direct channel", items:[
-              "Contact form / email",
-              "Collaboration requests",
-              "Issue reporting"
-            ]}
-          ],
-          jumps: [
-            {txt:"OPEN · LINKS", href:"/links/"},
-            {txt:"OPEN · CONTACT", href:"/contact/"}
-          ]
-        }
-      }
-    },
-    zh: {
-      explore: {
-        nw: {
-          bullets: ["SSG 语言与约束","菱形语法（四路一选）","DOT.GRID（256态索引）","缩写与术语表"],
-          jumps: [{txt:"跳转 · 法则", href:"/laws/"},{txt:"跳转 · 分类", href:"/laws/categories/"}]
-        },
-        ne: {
-          bullets: ["执行界面（应用/入口）","流程与回执（审计）","示例（怎么用）","打包输出（可下载）"],
-          jumps: [{txt:"跳转 · 产品", href:"/products/"},{txt:"跳转 · RGSC", href:"/rgsc/"}]
-        },
-        sw: {
-          bullets: ["量表（测量工具）","诊断（约束分类）","规则（导航+完整性）","回到枢纽（hub-first）"],
-          jumps: [{txt:"跳转 · 量表", href:"/gauges/"},{txt:"跳转 · 诊断", href:"/diagnostic/"}]
-        },
-        se: {
-          bullets: ["ORCID 身份","OSF 项目","联系通道","外部引用"],
-          jumps: [{txt:"跳转 · 链接", href:"/links/"},{txt:"跳转 · 联系", href:"/contact/"}]
-        }
-      },
-      learn: {
-        nw: {
-          sections: [
-            {badge:"SSG", title:"简化语法几何", desc:"约束优先语言", items:["资源/存储/约束/目标/守卫","回执门控推进（无计时门）","可复现实验轨迹"]},
-            {badge:"GRAM", title:"菱形语法", desc:"四路一选", items:["枢纽→四路→回程协议","中心是困惑，边缘是清晰","导航表达结构，而非营销"]},
-            {badge:"DOT", title:"DOT.GRID", desc:"256态索引", items:["N/E/S/W 轴编码","证据流可回放","审计友好压缩"]},
-            {badge:"ABC", title:"缩写与术语", desc:"一致定义", items:["按支柱分类","定义绑定规则","关联示例"]},
-          ],
-          jumps: [{txt:"打开 · 法则", href:"/laws/"},{txt:"打开 · 分类", href:"/laws/categories/"}]
-        },
-        ne: {
-          sections: [
-            {badge:"APP", title:"执行界面", desc:"应用/入口", items:["治理界面","仪表面板","操作流程"]},
-            {badge:"RCPT", title:"回执", desc:"验证与审计", items:["签名回执","案例回放","不可抵赖"]},
-            {badge:"EX", title:"示例", desc:"使用路径", items:["door→hub→branch","按目的选态（非机械）","不完整则回枢纽"]},
-            {badge:"PACK", title:"输出包", desc:"可下载", items:["PDF 包/训练包","模板/Schema","检查清单"]},
-          ],
-          jumps: [{txt:"打开 · 产品", href:"/products/"},{txt:"打开 · RGSC", href:"/rgsc/"}]
-        },
-        sw: {
-          sections: [
-            {badge:"GAU", title:"量表", desc:"测量工具", items:["完整性/一致性读数","约束检查","漂移信号"]},
-            {badge:"DIAG", title:"诊断", desc:"约束分类", items:["稳定/不稳定模式","可采纳条件","错误类隔离"]},
-            {badge:"RULE", title:"规则", desc:"导航+完整性", items:["一次只选一条路","枢纽优先回程","回执门控"]},
-            {badge:"RET", title:"回程协议", desc:"不完整时", items:["回到枢纽","换一条路","不要在分支内多标签"]},
-          ],
-          jumps: [{txt:"打开 · 量表", href:"/gauges/"},{txt:"打开 · 诊断", href:"/diagnostic/"}]
-        },
-        se: {
-          sections: [
-            {badge:"ID", title:"身份", desc:"外部锚点", items:["ORCID 研究者身份","OSF 项目注册","公开引用锚点"]},
-            {badge:"REF", title:"引用", desc:"如何核验", items:["项目链接","文档/预印本","版本化产物"]},
-            {badge:"LINK", title:"链接", desc:"导航快捷", items:["枢纽页","关键分支","联系入口"]},
-            {badge:"CTC", title:"联系", desc:"直接通道", items:["联系表/邮箱","合作请求","问题反馈"]},
-          ],
-          jumps: [{txt:"打开 · 链接", href:"/links/"},{txt:"打开 · 联系", href:"/contact/"}]
-        }
-      }
+    const b = bulletsFor(depth, lang);
+    function fill(id, arr){
+      const ul = $(id);
+      ul.innerHTML = "";
+      arr.forEach(t=>{
+        const li = document.createElement("li");
+        li.textContent = t;
+        ul.appendChild(li);
+      });
     }
-  };
-
-  const C = COPY[lang][(mode === "learn") ? "learn" : "explore"];
-
-  if (mode === "learn"){
-    renderLearn("nwC", C.nw.sections, C.nw.jumps);
-    renderLearn("neC", C.ne.sections, C.ne.jumps);
-    renderLearn("swC", C.sw.sections, C.sw.jumps);
-    renderLearn("seC", C.se.sections, C.se.jumps);
-  } else {
-    renderExplore("nwC", C.nw.bullets, C.nw.jumps);
-    renderExplore("neC", C.ne.bullets, C.ne.jumps);
-    renderExplore("swC", C.sw.bullets, C.sw.jumps);
-    renderExplore("seC", C.se.bullets, C.se.jumps);
+    fill("nw_bullets", b.nw);
+    fill("ne_bullets", b.ne);
+    fill("sw_bullets", b.sw);
+    fill("se_bullets", b.se);
   }
 
-  // Default: everything closed (user requirement)
-  ["nw","ne","sw","se"].forEach(id=>{
-    const d = document.getElementById(id);
-    if (d) d.open = false;
+  // accordion behavior (per quadrant)
+  document.querySelectorAll(".qcard").forEach(card=>{
+    const head = card.querySelector(".qhead");
+    const body = card.querySelector(".qbody");
+    const chev = card.querySelector(".qchev");
+    head.addEventListener("click", ()=>{
+      const open = body.classList.toggle("open");
+      chev.textContent = open ? "▴" : "▾";
+    });
   });
 
+  const lang = getLang();
+  applyI18n(lang);
+
+  let depth = getDepth();
+  render(depth, lang);
+
+  $("pillExplore").addEventListener("click", ()=>{ depth="explore"; setDepth(depth); render(depth, lang); });
+  $("pillLearn").addEventListener("click", ()=>{ depth="learn"; setDepth(depth); render(depth, lang); });
+
+  // If user wants to change language, they must go back to / (index) (language chosen once)
+  $("pillLang").addEventListener("click", ()=>{ location.href="/"; });
 })();
 </script>
 

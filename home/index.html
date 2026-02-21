@@ -1,3 +1,11 @@
+<!-- TNT: /home/index.html
+     FIXES:
+     1) Removes “washed/pink overlay” look by FULLY isolating Home from ui.css/branch.css bleed.
+     2) Forces link/button styling (no purple underlines, no default link colors).
+     3) Replaces “drop-down scroll-jump” with an OPAQUE POP-OVER MODAL (opens in place, no page jump).
+     4) Removes per-card “Origin/Now/Trajectory” chips from inside details; the 3-lens lives ONLY at top and filters everything.
+     5) SINGLE jump inside detail = JUMP HOME (per your rule).
+-->
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,44 +14,62 @@
 <title>Home · Coherent Resolution Platform</title>
 
 <style>
+/* =====================================================
+   HARD RESET (prevents ui.css/branch.css bleed)
+===================================================== */
 :root{
-  --red1:#8d0b0b;        /* lacquer */
-  --red2:#4a0000;        /* deep */
-  --ink:#070a0f;         /* black */
-  --gold:#d4af37;        /* gold */
+  --ink:#070a0f;
+  --lacquer:#8d0b0b;
+  --deep:#3f0000;
+  --gold:#d4af37;
   --goldA:rgba(212,175,55,.45);
   --silver:#cfd3da;
-  --line:rgba(255,255,255,.12);
-  --soft:rgba(255,255,255,.06);
+
   --text:rgba(255,255,255,.92);
   --muted:rgba(255,255,255,.72);
+  --line:rgba(255,255,255,.12);
+  --soft:rgba(255,255,255,.06);
+  --glass:rgba(0,0,0,.22);
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  color:var(--text);
+  margin:0 !important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif !important;
+  color:var(--text) !important;
+  overflow-x:hidden !important;
   background:
-    radial-gradient(1200px 720px at 50% 0%, rgba(141,11,11,.62) 0%, rgba(74,0,0,.52) 45%, rgba(7,10,15,1) 100%);
-  overflow-x:hidden;
+    radial-gradient(1200px 720px at 50% 0%, rgba(141,11,11,.62) 0%, rgba(63,0,0,.52) 45%, rgba(7,10,15,1) 100%) !important;
 }
 
-/* hard reset vs any inherited site CSS */
-a,button{font:inherit}
-button{border:0;background:none;color:inherit}
+/* kill default link styling everywhere */
+a, a:visited, a:hover, a:active{
+  color:inherit !important;
+  text-decoration:none !important;
+}
+
+/* buttons */
+button{
+  border:0;
+  background:none;
+  color:inherit;
+  font:inherit;
+}
+
 h1,p{margin:0}
 img{max-width:100%}
 
-/* layout */
+/* =====================================================
+   PAGE LAYOUT
+===================================================== */
 .page{
   width:min(980px,94vw);
   margin:0 auto;
-  padding:28px 14px 84px; /* extra bottom so NOTHING overlaps */
+  padding:28px 14px 92px;
 }
 
-.hero{position:relative;z-index:2}
+.hero{position:relative; z-index:2}
 .hero h1{
   font-size:44px;
   font-weight:900;
@@ -57,7 +83,9 @@ img{max-width:100%}
   line-height:1.45;
 }
 
-/* top controls */
+/* =====================================================
+   TOP CONTROL PILLS
+===================================================== */
 .topbar{
   margin-top:16px;
   display:flex;
@@ -81,15 +109,17 @@ img{max-width:100%}
 .pill.btn{cursor:pointer}
 .pill.btn:hover{background:rgba(255,255,255,.08)}
 .pill.active{
-  border-color:rgba(212,175,55,.48);
+  border-color:rgba(212,175,55,.50);
   box-shadow:0 0 18px rgba(212,175,55,.18) inset;
 }
 .pill.gold{
-  border-color:rgba(212,175,55,.50);
-  box-shadow:0 0 20px rgba(212,175,55,.16) inset;
+  border-color:rgba(212,175,55,.55);
+  box-shadow:0 0 18px rgba(212,175,55,.20) inset;
 }
 
-/* section */
+/* =====================================================
+   SECTION TITLE
+===================================================== */
 .section-title{
   margin-top:18px;
   font-size:12px;
@@ -98,7 +128,9 @@ img{max-width:100%}
   opacity:.70;
 }
 
-/* quadrant cards (no details/dropdowns = no competing UI) */
+/* =====================================================
+   QUADRANT CARDS
+===================================================== */
 .quad{
   margin-top:12px;
   border-radius:22px;
@@ -108,6 +140,7 @@ img{max-width:100%}
   backdrop-filter:blur(12px);
   overflow:hidden;
 }
+
 .qhead{
   padding:16px 16px 12px;
   display:flex;
@@ -116,6 +149,7 @@ img{max-width:100%}
   gap:12px;
 }
 .qleft{display:flex;align-items:center;gap:12px;min-width:0}
+
 .qbadge{
   width:62px;height:42px;border-radius:16px;
   background:rgba(0,0,0,.22);
@@ -143,6 +177,7 @@ img{max-width:100%}
   opacity:.72;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
+
 .qhint{
   font-size:12px;
   opacity:.68;
@@ -152,6 +187,7 @@ img{max-width:100%}
 }
 
 .qbody{padding:12px 16px 16px}
+
 .grid2{
   display:grid;
   grid-template-columns:1fr;
@@ -197,7 +233,9 @@ img{max-width:100%}
   flex:0 0 auto;
 }
 
-/* footer */
+/* =====================================================
+   FOOTER (no overlay issues)
+===================================================== */
 .brand{
   margin-top:22px;
   opacity:.26;
@@ -214,7 +252,9 @@ img{max-width:100%}
   text-align:center;
 }
 
-/* ===== MODAL (opaque pop-over, zero scroll-jump) ===== */
+/* =====================================================
+   MODAL (POP-OVER, NO SCROLL-JUMP)
+===================================================== */
 .backdrop{
   position:fixed;
   inset:0;
@@ -227,6 +267,7 @@ img{max-width:100%}
   backdrop-filter:blur(12px);
 }
 .backdrop.open{display:flex}
+
 .modal{
   width:min(900px,96vw);
   max-height:min(84vh,900px);
@@ -266,6 +307,7 @@ img{max-width:100%}
   user-select:none;
 }
 .mclose:hover{background:rgba(255,255,255,.10)}
+
 .mtitle{
   padding:0 14px;
   font-weight:900;
@@ -278,7 +320,7 @@ img{max-width:100%}
   line-height:1.6;
 }
 
-/* global lens chips */
+/* top lens chips inside modal reflect the GLOBAL lens (but are not per-card) */
 .mchips{
   padding:12px 14px 0;
   display:flex;
@@ -300,7 +342,7 @@ img{max-width:100%}
   box-shadow:0 0 16px rgba(212,175,55,.16) inset;
 }
 
-/* modal: level-1 sub bubbles */
+/* nested bubbles */
 .mgrid{
   padding:12px 14px 0;
   display:grid;
@@ -308,6 +350,7 @@ img{max-width:100%}
   gap:10px;
 }
 @media(min-width:760px){.mgrid{grid-template-columns:1fr 1fr}}
+
 .subbubble{
   border-radius:18px;
   background:rgba(0,0,0,.24);
@@ -343,7 +386,7 @@ img{max-width:100%}
   flex:0 0 auto;
 }
 
-/* modal: subpanel (deep) */
+/* deep block panel (Learn shows more; Explore stays lighter) */
 .subpanel{
   margin:12px 14px 14px;
   border-radius:18px;
@@ -387,7 +430,7 @@ img{max-width:100%}
   opacity:.9;
 }
 
-/* modal footer: single jump only */
+/* single jump rule */
 .mfoot{
   padding:12px 14px 16px;
   display:flex;
@@ -399,8 +442,6 @@ img{max-width:100%}
   padding:12px 14px;
   border:1px solid rgba(255,255,255,.14);
   background:rgba(255,255,255,.06);
-  text-decoration:none;
-  color:var(--text);
   font-weight:900;
   letter-spacing:.12em;
   text-transform:uppercase;
@@ -448,7 +489,7 @@ img{max-width:100%}
         </div>
       </div>
     </div>
-    <div class="qhint">Tap a bubble → pop-over details → nested bubbles → deep panel</div>
+    <div class="qhint">Tap a bubble → pop-over details → nested bubbles → deep block</div>
     <div class="qbody">
       <div class="grid2">
         <div class="bubble" data-block="ssg">
@@ -610,11 +651,13 @@ img{max-width:100%}
 </div>
 
 <script>
-(function(){
-  const lang = (localStorage.getItem('crp_lang') || 'en').toLowerCase();
+(() => {
+  /* ========= GLOBAL STATE (from index/door) ========= */
+  const lang = (localStorage.getItem('crp_lang') || 'en').toLowerCase();     // en | zh
   const depth = (localStorage.getItem('crp_depth') || 'explore').toLowerCase(); // explore | learn
-  let lens = (localStorage.getItem('crp_lens') || 'now').toLowerCase(); // origin | now | trajectory
+  let lens = (localStorage.getItem('crp_lens') || 'now').toLowerCase();      // origin | now | trajectory
 
+  /* ========= TOP UI ========= */
   const langPill = document.getElementById('langPill');
   const depthPill = document.getElementById('depthPill');
 
@@ -631,210 +674,168 @@ img{max-width:100%}
     lens = next;
     localStorage.setItem('crp_lens', lens);
     Object.keys(lensBtn).forEach(k => lensBtn[k].classList.toggle('active', k === lens));
-    updateChips();
+    updateModalChips();
     if(state.openKey) renderModal(state.openKey);
   }
+
   lensBtn.origin.addEventListener('click',()=>setLens('origin'));
   lensBtn.now.addEventListener('click',()=>setLens('now'));
   lensBtn.trajectory.addEventListener('click',()=>setLens('trajectory'));
 
-  /* ====== DEEPER CONTENT (Explore vs Learn) ====== */
+  if(!lensBtn[lens]) lens = 'now';
+  Object.keys(lensBtn).forEach(k => lensBtn[k].classList.toggle('active', k === lens));
+
+  /* ========= CONTENT (MORE DEPTH) =========
+     Explore = shorter summaries
+     Learn   = deeper narrative + more sub-bubbles + deeper panels
+  */
   const blocks = {
     ssg:{
       meta:'NW · SSG',
       title:'SSG — Simplified Syntax Geometry',
-      origin_ex:'Compressed app behavior into a constraint-native vocabulary (minimum executable structure).',
-      now_ex:'Use R/S/C/G/Guards to keep execution replay-safe and receipt-gated.',
-      traj_ex:'Scale into portable execution contracts across domains.',
-      origin_ln:'Origin: SSG formed to eliminate ambiguity in execution by expressing structure as constraints first—before code, before UI.',
-      now_ln:'Now: SSG is the compact execution spec: Resources/Stores/Constraints/Goals/Guards, with receipts that verify progression and prevent drift.',
-      traj_ln:'Trajectory: SSG becomes a portable contract layer—replayable, auditable, and interoperable across products, orgs, and institutions.',
+      ex:{
+        origin:'Born from the need to express execution as constraints first.',
+        now:'Use R/S/C/G/Guards + receipts to keep execution replay-safe.',
+        trajectory:'Scales into portable execution contracts across domains.'
+      },
+      ln:{
+        origin:'Origin: SSG was designed to eliminate ambiguity by expressing structure before implementation—constraints first, execution second.',
+        now:'Now: SSG is the compact execution spec. Resources/Stores/Constraints/Goals/Guards define admissible behavior; receipts verify progression.',
+        trajectory:'Trajectory: SSG becomes a portable contract layer—replayable, auditable, and interoperable across products, teams, and institutions.'
+      },
       subs:[
-        {k:'primitives', t:'Primitives', s:'R / S / C / G / Guards',
-          blurb:'This is the minimum set that makes “execution” formally expressible.',
-          bullets:[
-            'Resource: what is acted on (entity / target).',
-            'Store: where state lives (memory / ledger).',
-            'Constraint: invariants (must-hold).',
-            'Goal: success condition (finish state).',
-            'Guard: admissibility check (allowed / blocked).'
-          ],
-          mini:['MINIMUM SET','EXECUTABLE','OBSERVER-SAFE']
-        },
-        {k:'receipts', t:'Receipts', s:'Gated flow',
-          blurb:'Receipts make progress verifiable and replay-safe.',
-          bullets:[
-            'Advance only after receipt (no invisible progress).',
-            'Back-nav invalidates downstream receipts.',
-            'Every step can be replayed and audited.'
-          ],
-          mini:['VERIFY','REPLAY','AUDIT']
-        },
-        {k:'invariants', t:'Invariants', s:'Navigation-first',
-          blurb:'These keep the UI and engine from drifting as complexity grows.',
-          bullets:[
-            'No timers as gates (time never decides).',
-            'Unified press primitives (consistent interaction).',
-            'Atomic handoff with receipt (no partial states).'
-          ],
-          mini:['NO TIMERS','ATOMIC','CONSISTENT']
-        },
-        {k:'mapping', t:'Mapping', s:'How to read',
-          blurb:'Explore vs Learn changes depth only (structure stays the same).',
-          bullets:[
-            'Explore: surface summary + where it lives in the system.',
-            'Learn: nested bubbles + full breakdown in blocks.',
-            'Lens (Origin/Now/Trajectory) filters meaning across the whole page.'
-          ],
-          mini:['EXPLORE','LEARN','LENS']
-        }
+        {t:'Primitives', s:'R / S / C / G / Guards', blurb:'Minimum set for executable structure.', bullets:[
+          'Resource: what is acted on (entity/target).',
+          'Store: where state lives (memory/ledger).',
+          'Constraint: invariants (must-hold).',
+          'Goal: success condition (finish state).',
+          'Guard: admissibility check (allowed/blocked).'
+        ], mini:['MINIMUM','EXECUTABLE','OBSERVER-SAFE']},
+        {t:'Receipts', s:'Gated flow', blurb:'Receipts make progress verifiable and replay-safe.', bullets:[
+          'Advance only after receipt.',
+          'Back-nav invalidates downstream receipts.',
+          'Replay confirms identical outputs from identical evidence.'
+        ], mini:['VERIFY','REPLAY','AUDIT']},
+        {t:'Invariants', s:'Navigation-first', blurb:'Anti-drift rules that keep UI + engine coherent.', bullets:[
+          'No timers as gates.',
+          'Unified press primitives.',
+          'Atomic handoff with receipt.'
+        ], mini:['NO TIMERS','ATOMIC','CONSISTENT']},
+        {t:'Bilingual layer', s:'EN / 中文', blurb:'Chinese reader gets 90% 中文 + 10% core EN words (foundational).', bullets:[
+          'Use basic EN anchors (up/down/left/right, 1–10, core verbs).',
+          'Keep formal definitions mirrored to prevent ambiguity.'
+        ], mini:['中文+EN','FOUNDATIONAL','MIRRORED']}
       ]
     },
 
     grammar:{
       meta:'NW · Grammar',
       title:'Diamond Grammar',
-      origin_ex:'One choice at a time—so meaning can’t drift.',
-      now_ex:'Hub-first traversal + receipt gating.',
-      traj_ex:'Multi-portal routing without confusion.',
-      origin_ln:'Origin: the grammar was designed to compress decision pathways into stable routes—so readers cannot “half choose” and drift.',
-      now_ln:'Now: it’s the navigation skeleton: hub-first traversal, one choice at a time, receipts verifying progression.',
-      traj_ln:'Trajectory: scales to multi-portal access without adding friction, because structure stays invariant as depth expands.',
+      ex:{
+        origin:'One choice at a time—so meaning can’t drift.',
+        now:'Hub-first traversal + receipt gating.',
+        trajectory:'Multi-portal routing without confusion.'
+      },
+      ln:{
+        origin:'Origin: the grammar compresses decision paths into stable routes, forcing clarity.',
+        now:'Now: hub-first traversal; one choice at a time; receipts verify progress.',
+        trajectory:'Trajectory: scales to many portals without adding friction because the structure stays invariant.'
+      },
       subs:[
-        {k:'one', t:'One choice', s:'Anti-drift',
-          blurb:'A coherent system forbids simultaneous competing commitments.',
-          bullets:[
-            'Choose one route at a time.',
-            'Finish or return—don’t multi-tab inside a branch.',
-            'Structure stays stable even as content evolves.'
-          ],
-          mini:['CHOICE','FINISH','RETURN']
-        },
-        {k:'hub', t:'Hub-first', s:'Return protocol',
-          blurb:'When uncertain, return to the hub to re-orient.',
-          bullets:[
-            'Hub is the stable surface.',
-            'Branches are exploration.',
-            'Return prevents “getting lost” under depth.'
-          ],
-          mini:['HUB','ORIENT','STABLE']
-        },
-        {k:'gate', t:'Receipt gating', s:'Proof layer',
-          blurb:'Receipts prevent false progress and enforce coherence.',
-          bullets:[
-            'Receipts are proof of completion.',
-            'Backtracking invalidates downstream.',
-            'Replay confirms consistency.'
-          ],
-          mini:['PROOF','INVALIDATE','REPLAY']
-        },
-        {k:'why', t:'Why it works', s:'Coherence',
-          blurb:'Because external trust cannot exceed internal coherence.',
-          bullets:[
-            'Misalignment shows up immediately.',
-            'Structure forces clarity.',
-            'Clarity increases execution reliability.'
-          ],
-          mini:['ALIGN','CLARITY','RELIABLE']
-        }
+        {t:'One choice', s:'Anti-drift', blurb:'Prevent “half-commits.”', bullets:[
+          'Pick one route.',
+          'Finish or return.',
+          'Don’t multi-tab inside a branch.'
+        ], mini:['CHOICE','FINISH','RETURN']},
+        {t:'Return protocol', s:'Hub-first', blurb:'When uncertain, return to the hub.', bullets:[
+          'Hub is stable surface.',
+          'Branches are exploration.',
+          'Return prevents getting lost under depth.'
+        ], mini:['HUB','ORIENT','STABLE']},
+        {t:'Receipt gating', s:'Proof layer', blurb:'Progress requires verifiable completion.', bullets:[
+          'Receipt to advance.',
+          'Back invalidates downstream.',
+          'Replay confirms integrity.'
+        ], mini:['PROOF','INVALIDATE','REPLAY']},
+        {t:'Why it works', s:'Coherence', blurb:'Structure forces clarity, clarity improves execution.', bullets:[
+          'Misalignment shows early.',
+          'Verification beats narrative.',
+          'Replay beats impression.'
+        ], mini:['ALIGN','VERIFY','REPLAY']}
       ]
     },
 
     dotgrid:{
       meta:'NW · DOT.GRID',
       title:'DOT.GRID',
-      origin_ex:'Index decisions under constraint.',
-      now_ex:'256-state lattice for replay + audit.',
-      traj_ex:'Universal coordinate layer for stability.',
-      origin_ln:'Origin: DOT.GRID created to classify evidence streams consistently under constraint—so different observers converge on the same output.',
-      now_ln:'Now: a 256-state indexing lattice that supports replay, audit, and observer-consistent classification.',
-      traj_ln:'Trajectory: becomes a universal coordinate layer for cross-domain stability measurement and calibration.',
+      ex:{
+        origin:'Index decisions under constraint.',
+        now:'256-state lattice for replay + audit.',
+        trajectory:'Universal coordinate layer for stability.'
+      },
+      ln:{
+        origin:'Origin: DOT.GRID classifies evidence streams consistently under constraint—so observers converge.',
+        now:'Now: a 256-state indexing lattice supporting replay, audit, and observer-consistent classification.',
+        trajectory:'Trajectory: a universal coordinate layer for cross-domain stability measurement and calibration.'
+      },
       subs:[
-        {k:'what', t:'What it is', s:'256 states',
-          blurb:'A compact coordinate system for system-state classification.',
-          bullets:[
-            '256 states (discrete lattice).',
-            'Supports consistent labeling.',
-            'Pairs with replay and audit.'
-          ],
-          mini:['256','LATTICE','LABEL']
-        },
-        {k:'replay', t:'Replay', s:'Reproduce',
-          blurb:'Same evidence → same classification.',
-          bullets:[
-            'Replay evidence streams.',
-            'Verify identical outputs.',
-            'Detect drift when outputs diverge.'
-          ],
-          mini:['REPLAY','VERIFY','DRIFT']
-        },
-        {k:'audit', t:'Audit', s:'Accountable',
-          blurb:'Auditability is structural, not “trust me.”',
-          bullets:[
-            'Trace evidence to output.',
-            'Expose threshold rules.',
-            'Keep history of changes.'
-          ],
-          mini:['TRACE','THRESHOLD','HISTORY']
-        },
-        {k:'use', t:'Use cases', s:'When to use',
-          blurb:'When you need consistent scoring and stability tracking.',
-          bullets:[
-            'Governance and compliance.',
-            'Diagnostics under load.',
-            'Network-scale calibration.'
-          ],
-          mini:['GOV','DIAG','SCALE']
-        }
+        {t:'256 states', s:'Lattice', blurb:'Discrete coordinate space for classification.', bullets:[
+          'Compact indexing.',
+          'Observer-consistent labeling.',
+          'Pairs with replay/audit.'
+        ], mini:['256','LATTICE','LABEL']},
+        {t:'Replay', s:'Reproduce', blurb:'Same evidence → same classification.', bullets:[
+          'Replay streams.',
+          'Verify identical outputs.',
+          'Detect drift when outputs diverge.'
+        ], mini:['REPLAY','VERIFY','DRIFT']},
+        {t:'Audit', s:'Trace', blurb:'Auditability is structural.', bullets:[
+          'Trace evidence → output.',
+          'Expose threshold rules.',
+          'Keep history of changes.'
+        ], mini:['TRACE','THRESHOLD','HISTORY']},
+        {t:'Where it lands', s:'Calibration', blurb:'Calibration platform behavior emerges from replay + invariants.', bullets:[
+          'Reveal misalignment.',
+          'Provide reference.',
+          'Enable correction and resolution.'
+        ], mini:['ALIGN','REFERENCE','RESOLVE']}
       ]
     },
 
     acronyms:{
-      meta:'NW · Glossary',
+      meta:'NW · Acronyms',
       title:'Acronyms & Glossary',
-      origin_ex:'Prevent meaning collapse as the system scales.',
-      now_ex:'Pillars + usage map.',
-      traj_ex:'Shared vocabulary layer for teams.',
-      origin_ln:'Origin: acronyms become dangerous without stable definitions—this section locks meaning to prevent drift.',
-      now_ln:'Now: acronyms are grouped by pillar (language, execution, measurement, identity) and tied to usage examples.',
-      traj_ln:'Trajectory: becomes a shared vocabulary layer for teams, certifications, and institutional adoption.',
+      ex:{
+        origin:'Prevent meaning collapse as the system scales.',
+        now:'Pillars + usage map.',
+        trajectory:'Shared vocabulary layer for teams.'
+      },
+      ln:{
+        origin:'Origin: acronyms drift without stable definitions; this section locks meaning.',
+        now:'Now: acronyms grouped by pillar (language/execution/measurement/identity) with examples.',
+        trajectory:'Trajectory: shared vocabulary for certifications, teams, and institutions.'
+      },
       subs:[
-        {k:'pillar', t:'Pillars', s:'Group',
-          blurb:'Acronyms are organized so you can find them fast.',
-          bullets:[
-            'Language pillar (SSG, Grammar, DOT).',
-            'Execution pillar (surfaces, receipts, outputs).',
-            'Measurement pillar (gauges, diagnostics, rules).',
-            'Identity pillar (ORCID, OSF, references).'
-          ],
-          mini:['LANG','EXEC','MEASURE','ID']
-        },
-        {k:'usage', t:'Usage notes', s:'How to apply',
-          blurb:'Each acronym includes “what it is” and “where it lives.”',
-          bullets:[
-            'One-line definition.',
-            'Where in geometry it belongs.',
-            'A simple example or typical use.'
-          ],
-          mini:['DEFINE','PLACE','EXAMPLE']
-        },
-        {k:'expand', t:'Expand lists', s:'Depth',
-          blurb:'Learn mode expands deeper lists per pillar.',
-          bullets:[
-            'Explore: summaries only.',
-            'Learn: nested lists + examples per acronym.'
-          ],
-          mini:['EXPLORE','LEARN']
-        },
-        {k:'lock', t:'Lock meaning', s:'Anti-drift',
-          blurb:'Names are treated as stable interface contracts.',
-          bullets:[
-            'Avoid renaming without receipts.',
-            'Keep canonical mapping.',
-            'Document changes explicitly.'
-          ],
-          mini:['CANON','MAP','CHANGELOG']
-        }
+        {t:'Pillars', s:'Group', blurb:'Find terms fast by pillar.', bullets:[
+          'Language (SSG, Grammar, DOT.GRID).',
+          'Execution (surfaces, receipts, outputs).',
+          'Measurement (gauges, diagnostics, rules).',
+          'Identity (ORCID, OSF, references).'
+        ], mini:['LANG','EXEC','MEASURE','ID']},
+        {t:'Usage', s:'Examples', blurb:'Each acronym has “what it is” + “where it lives.”', bullets:[
+          'One-line definition.',
+          'Where in geometry it belongs.',
+          'Simple usage example.'
+        ], mini:['DEFINE','PLACE','EXAMPLE']},
+        {t:'Learn mode', s:'Deeper lists', blurb:'Learn mode expands nested lists per pillar.', bullets:[
+          'Explore = summary.',
+          'Learn = nested + examples.'
+        ], mini:['EXPLORE','LEARN']},
+        {t:'Lock meaning', s:'Anti-drift', blurb:'Names are stable interface contracts.', bullets:[
+          'Avoid renaming without receipts.',
+          'Maintain canonical mapping.',
+          'Document changes explicitly.'
+        ], mini:['CANON','MAP','CHANGELOG']}
       ]
     },
 
@@ -842,435 +843,171 @@ img{max-width:100%}
     surfaces:{
       meta:'NE · Surfaces',
       title:'Execution Surfaces',
-      origin_ex:'Expose the engine without exposing complexity.',
-      now_ex:'Apps / portals / interfaces.',
-      traj_ex:'Standard surfaces across products.',
-      origin_ln:'Origin: surfaces exist to make the engine usable without forcing users to learn the internals first.',
-      now_ln:'Now: apps, portals, and interfaces that route into receipt-gated workflows.',
-      traj_ln:'Trajectory: standard surfaces that teams can share without losing coherence.',
+      ex:{origin:'Expose the engine without exposing complexity.', now:'Apps / portals / interfaces.', trajectory:'Standard surfaces across products.'},
+      ln:{origin:'Origin: surfaces make the engine usable without forcing internals first.',
+          now:'Now: apps, portals, and interfaces route into receipt-gated workflows.',
+          trajectory:'Trajectory: standard surfaces shared by teams without losing coherence.'},
       subs:[
-        {k:'apps', t:'Apps & portals', s:'Entry points',
-          blurb:'Surfaces are the “handles” on the engine.',
-          bullets:[
-            'Fast entry points.',
-            'Stable navigation.',
-            'Receipts behind the scenes.'
-          ],
-          mini:['HANDLE','STABLE','RECEIPT']
-        },
-        {k:'ux', t:'UX rule', s:'No jump-scroll',
-          blurb:'Tap must produce local feedback immediately.',
-          bullets:[
-            'Modal pop-over (opaque).',
-            'No hidden response far down the page.',
-            'Same gesture = same behavior everywhere.'
-          ],
-          mini:['LOCAL','IMMEDIATE','CONSISTENT']
-        },
-        {k:'handoff', t:'Handoffs', s:'Atomic',
-          blurb:'Handoffs move you between states without partial transitions.',
-          bullets:[
-            'Atomic step transitions.',
-            'Receipt emitted.',
-            'Back invalidates downstream.'
-          ],
-          mini:['ATOMIC','RECEIPT','INVALIDATE']
-        },
-        {k:'layers', t:'Explore vs Learn', s:'Depth only',
-          blurb:'Explore/Learn changes depth, not structure.',
-          bullets:[
-            'Explore: surface map.',
-            'Learn: nested bubbles + blocks.',
-            'Same geometry either way.'
-          ],
-          mini:['DEPTH','SAME STRUCTURE']
-        }
+        {t:'Apps & portals', s:'Entry points', blurb:'Surfaces are handles on the engine.', bullets:['Fast entry points.','Stable navigation.','Receipts behind the scenes.'], mini:['HANDLE','STABLE','RECEIPT']},
+        {t:'UX rule', s:'No jump-scroll', blurb:'Tap must produce local feedback immediately.', bullets:['Opaque pop-over.','No response far down page.','Same gesture everywhere.'], mini:['LOCAL','IMMEDIATE','CONSISTENT']},
+        {t:'Atomic handoffs', s:'Receipt', blurb:'Move between states without partial transitions.', bullets:['Atomic step.','Receipt emitted.','Back invalidates downstream.'], mini:['ATOMIC','RECEIPT','INVALIDATE']},
+        {t:'Explore vs Learn', s:'Depth only', blurb:'Depth changes, structure stays.', bullets:['Explore = surface map.','Learn = nested bubbles + blocks.','Same geometry both.'], mini:['DEPTH','STRUCTURE']}
       ]
     },
 
     receipts:{
       meta:'NE · Receipts',
       title:'Workflows & Receipts',
-      origin_ex:'Make execution verifiable.',
-      now_ex:'Audit trails + replay safety.',
-      traj_ex:'Portable receipts across systems.',
-      origin_ln:'Origin: receipts were introduced to eliminate “trust me” execution and make progress provable.',
-      now_ln:'Now: workflows emit receipts; audits replay them to verify consistency.',
-      traj_ln:'Trajectory: receipts become portable across products, enabling cross-system resolution.',
+      ex:{origin:'Make execution verifiable.', now:'Audit trails + replay safety.', trajectory:'Portable receipts across systems.'},
+      ln:{origin:'Origin: receipts eliminate “trust me” execution with provable progress.',
+          now:'Now: workflows emit receipts; audits replay them to verify consistency.',
+          trajectory:'Trajectory: receipts portable across products enabling cross-system resolution.'},
       subs:[
-        {k:'token', t:'Receipt tokens', s:'Proof',
-          blurb:'A receipt is a verifiable record that a step occurred.',
-          bullets:[
-            'Proof of completion.',
-            'Evidence link.',
-            'Replay reference.'
-          ],
-          mini:['PROOF','EVIDENCE','REPLAY']
-        },
-        {k:'audit', t:'Audit trails', s:'Trace',
-          blurb:'Audits follow receipts backward and forward.',
-          bullets:[
-            'Trace decisions.',
-            'Verify constraints.',
-            'Detect drift.'
-          ],
-          mini:['TRACE','VERIFY','DRIFT']
-        },
-        {k:'back', t:'Back-nav', s:'Invalidate',
-          blurb:'Backtracking invalidates downstream receipts.',
-          bullets:[
-            'Prevents false continuity.',
-            'Forces re-commitment.',
-            'Keeps path coherent.'
-          ],
-          mini:['INVALIDATE','RECOMMIT','COHERENT']
-        },
-        {k:'why', t:'Why', s:'Integrity',
-          blurb:'Receipts enforce coherence structurally.',
-          bullets:[
-            'External trust cannot exceed internal coherence.',
-            'Verification beats narrative.',
-            'Replay beats impression.'
-          ],
-          mini:['TRUST','VERIFY','REPLAY']
-        }
+        {t:'Receipt tokens', s:'Proof', blurb:'A receipt is verifiable record of completion.', bullets:['Proof of step.','Evidence link.','Replay reference.'], mini:['PROOF','EVIDENCE','REPLAY']},
+        {t:'Audit trails', s:'Trace', blurb:'Audits follow receipts backward and forward.', bullets:['Trace decisions.','Verify constraints.','Detect drift.'], mini:['TRACE','VERIFY','DRIFT']},
+        {t:'Back-nav', s:'Invalidate', blurb:'Backtracking invalidates downstream receipts.', bullets:['Prevents false continuity.','Forces re-commitment.','Keeps path coherent.'], mini:['INVALIDATE','RECOMMIT','COHERENT']},
+        {t:'Why', s:'Integrity', blurb:'Receipts enforce coherence structurally.', bullets:['External trust ≤ internal coherence.','Verification beats narrative.','Replay beats impression.'], mini:['TRUST','VERIFY','REPLAY']}
       ]
     },
 
     examples:{
       meta:'NE · Examples',
       title:'Examples',
-      origin_ex:'Anchor abstract structure into action.',
-      now_ex:'Templates and routes.',
-      traj_ex:'Institution-ready playbooks.',
-      origin_ln:'Origin: examples were built to make the system learnable without persuasion.',
-      now_ln:'Now: examples mirror routes and end in receipts.',
-      traj_ln:'Trajectory: examples become certified playbooks for adoption.',
+      ex:{origin:'Anchor abstract structure into action.', now:'Templates and routes.', trajectory:'Institution-ready playbooks.'},
+      ln:{origin:'Origin: examples make the system learnable without persuasion.',
+          now:'Now: examples mirror routes and end in receipts.',
+          trajectory:'Trajectory: examples become certified playbooks for adoption.'},
       subs:[
-        {k:'quick', t:'Explore examples', s:'Short',
-          blurb:'Explore mode examples are short and concrete.',
-          bullets:['One route. One outcome. One takeaway.'],
-          mini:['SHORT','CONCRETE']
-        },
-        {k:'deep', t:'Learn examples', s:'Nested',
-          blurb:'Learn mode expands into nested bubbles and blocks.',
-          bullets:['Step-by-step', 'Receipts included', 'Replay-ready'],
-          mini:['NESTED','RECEIPTS','REPLAY']
-        },
-        {k:'routes', t:'Routes', s:'NW/NE/SW/SE',
-          blurb:'Each example maps to a quadrant route.',
-          bullets:['NW defines', 'NE executes', 'SW measures', 'SE anchors'],
-          mini:['MAP','ROUTES']
-        },
-        {k:'end', t:'Ends with receipt', s:'Always',
-          blurb:'Every example ends in verification.',
-          bullets:['Receipt emitted', 'Audit possible', 'Drift detectable'],
-          mini:['VERIFY','AUDIT']
-        }
+        {t:'Explore examples', s:'Short', blurb:'Explore examples are short and concrete.', bullets:['One route. One outcome. One takeaway.'], mini:['SHORT','CONCRETE']},
+        {t:'Learn examples', s:'Nested', blurb:'Learn expands into nested bubbles and blocks.', bullets:['Step-by-step.','Receipts included.','Replay-ready.'], mini:['NESTED','RECEIPTS','REPLAY']},
+        {t:'Routes', s:'NW/NE/SW/SE', blurb:'Each example maps to a quadrant.', bullets:['NW defines.','NE executes.','SW measures.','SE anchors.'], mini:['MAP','ROUTES']},
+        {t:'Ends with receipt', s:'Always', blurb:'Every example ends in verification.', bullets:['Receipt emitted.','Audit possible.','Drift detectable.'], mini:['VERIFY','AUDIT']}
       ]
     },
 
     packs:{
       meta:'NE · Outputs',
       title:'Packs & Outputs',
-      origin_ex:'Ship utility fast.',
-      now_ex:'Downloadables + packaged artifacts.',
-      traj_ex:'Reusable certified kits.',
-      origin_ln:'Origin: outputs were packaged so people can use the system immediately.',
-      now_ln:'Now: packs include materials, templates, and tools.',
-      traj_ln:'Trajectory: outputs become certification kits and deployment bundles.',
+      ex:{origin:'Ship utility fast.', now:'Downloadables + packaged artifacts.', trajectory:'Reusable certified kits.'},
+      ln:{origin:'Origin: outputs packaged so people can use immediately.',
+          now:'Now: packs include materials, templates, and tools.',
+          trajectory:'Trajectory: kits for certification and deployment bundles.'},
       subs:[
-        {k:'pdf', t:'PDFs', s:'Materials',
-          blurb:'Printable guides and structured references.',
-          bullets:['Guides', 'Checklists', 'Drills'],
-          mini:['GUIDE','CHECKLIST','DRILL']
-        },
-        {k:'kits', t:'Kits', s:'Reusable',
-          blurb:'Composable packs mapped to routes and receipts.',
-          bullets:['Reusable templates', 'Route-mapped', 'Receipt-ready'],
-          mini:['REUSE','ROUTE','RECEIPT']
-        },
-        {k:'release', t:'Releases', s:'What ships',
-          blurb:'Explore shows what exists; Learn shows how it works.',
-          bullets:['Explore = catalog', 'Learn = anatomy'],
-          mini:['CATALOG','ANATOMY']
-        },
-        {k:'road', t:'Roadmap', s:'Trajectory',
-          blurb:'Trajectory lens shows what expands next.',
-          bullets:['Next surfaces', 'Next instruments', 'Next packs'],
-          mini:['NEXT','EXPAND']
-        }
+        {t:'PDFs', s:'Materials', blurb:'Printable guides and references.', bullets:['Guides.','Checklists.','Drills.'], mini:['GUIDE','CHECKLIST','DRILL']},
+        {t:'Kits', s:'Reusable', blurb:'Composable packs mapped to routes and receipts.', bullets:['Reusable templates.','Route-mapped.','Receipt-ready.'], mini:['REUSE','ROUTE','RECEIPT']},
+        {t:'Releases', s:'What ships', blurb:'Explore shows what exists; Learn shows how it works.', bullets:['Explore = catalog.','Learn = anatomy.'], mini:['CATALOG','ANATOMY']},
+        {t:'Roadmap', s:'Trajectory', blurb:'Trajectory lens shows what expands next.', bullets:['Next surfaces.','Next instruments.','Next packs.'], mini:['NEXT','EXPAND']}
       ]
     },
 
     /* SW */
-    gauges:{
-      meta:'SW · Gauges',
-      title:'Gauges',
-      origin_ex:'Measure coherence under load.',
-      now_ex:'Panels + thresholds.',
-      traj_ex:'Real-time monitoring.',
-      origin_ln:'Origin: gauges were created to make “coherence” measurable and operational.',
-      now_ln:'Now: dashboards, consistency checks, and threshold rules.',
-      traj_ln:'Trajectory: continuous stability monitoring across systems.',
+    gauges:{meta:'SW · Gauges', title:'Gauges',
+      ex:{origin:'Measure coherence under load.', now:'Panels + thresholds.', trajectory:'Real-time monitoring.'},
+      ln:{origin:'Origin: gauges make coherence measurable and operational.',
+          now:'Now: dashboards, consistency checks, and threshold rules.',
+          trajectory:'Trajectory: continuous monitoring across systems.'},
       subs:[
-        {k:'panel', t:'Panels', s:'Dashboards',
-          blurb:'Panels show coherence and drift at a glance.',
-          bullets:['Signal integrity', 'Consistency checks', 'Thresholds'],
-          mini:['SIGNAL','CONSISTENT','THRESHOLD']
-        },
-        {k:'thresh', t:'Thresholds', s:'Rules',
-          blurb:'Thresholds define pass/fail under constraint.',
-          bullets:['Observer-consistent', 'Defined rules', 'Repeatable'],
-          mini:['PASS/FAIL','RULED','REPEAT']
-        },
-        {k:'trend', t:'Trends', s:'Trajectory',
-          blurb:'Trajectory lens focuses on where it’s going.',
-          bullets:['Direction compounds', 'Small drift grows', 'Return protocols matter'],
-          mini:['DIRECTION','DRIFT','RETURN']
-        },
-        {k:'use', t:'Use', s:'When',
-          blurb:'Use gauges when performance must be verified under stress.',
-          bullets:['Ops', 'Compliance', 'Safety'],
-          mini:['OPS','COMPLIANCE','SAFETY']
-        }
+        {t:'Panels', s:'Dashboards', blurb:'Panels show coherence and drift quickly.', bullets:['Signal integrity.','Consistency checks.','Thresholds.'], mini:['SIGNAL','CONSISTENT','THRESHOLD']},
+        {t:'Thresholds', s:'Rules', blurb:'Define pass/fail under constraint.', bullets:['Observer-consistent.','Defined rules.','Repeatable.'], mini:['PASS/FAIL','RULED','REPEAT']},
+        {t:'Trends', s:'Trajectory', blurb:'Direction compounds through repetition.', bullets:['Small drift grows.','Return protocols matter.','Detect early.'], mini:['DIRECTION','DRIFT','RETURN']},
+        {t:'Use', s:'When', blurb:'Use when performance must be verified under stress.', bullets:['Ops.','Compliance.','Safety.'], mini:['OPS','COMPLIANCE','SAFETY']}
       ]
     },
 
-    diagnostics:{
-      meta:'SW · Diagnostics',
-      title:'Diagnostics',
-      origin_ex:'Classify under constraint.',
-      now_ex:'Coherence / drift / confusion.',
-      traj_ex:'Universal early-warning.',
-      origin_ln:'Origin: diagnostics were built to classify systems the same way from the same evidence.',
-      now_ln:'Now: coherence/drift/confusion categories with replay-driven audits.',
-      traj_ln:'Trajectory: early-warning systems across domains.',
+    diagnostics:{meta:'SW · Diagnostics', title:'Diagnostics',
+      ex:{origin:'Classify under constraint.', now:'Coherence / drift / confusion.', trajectory:'Universal early-warning.'},
+      ln:{origin:'Origin: classify systems the same way from the same evidence.',
+          now:'Now: coherence/drift/confusion categories with replay-driven audits.',
+          trajectory:'Trajectory: early-warning systems across domains.'},
       subs:[
-        {k:'class', t:'Classification', s:'Observer-consistent',
-          blurb:'Independent observers converge from the same evidence.',
-          bullets:['Same evidence', 'Same class', 'Repeatable output'],
-          mini:['OBSERVER','CONSISTENT']
-        },
-        {k:'drift', t:'Drift', s:'Direction',
-          blurb:'Drift reveals structural truth.',
-          bullets:['Stabilizing vs destabilizing', 'Compounding effects', 'Detect early'],
-          mini:['DIRECTION','COMPOUND','EARLY']
-        },
-        {k:'conf', t:'Confusion', s:'Amplifier',
-          blurb:'Confusion amplifies instability once present.',
-          bullets:['Speeds collapse', 'Obscures signals', 'Increases variance'],
-          mini:['AMPLIFY','OBSCURE','VARIANCE']
-        },
-        {k:'audit', t:'Audit', s:'Replay',
-          blurb:'Replay evidence streams to verify classifications.',
-          bullets:['Replay', 'Verify', 'Compare'],
-          mini:['REPLAY','VERIFY','COMPARE']
-        }
+        {t:'Classification', s:'Observer-consistent', blurb:'Independent observers converge on same class.', bullets:['Same evidence.','Same class.','Repeatable output.'], mini:['OBSERVER','CONSISTENT']},
+        {t:'Drift', s:'Direction', blurb:'Drift reveals structural truth.', bullets:['Stabilizing vs destabilizing.','Compounding.','Detect early.'], mini:['DIRECTION','COMPOUND','EARLY']},
+        {t:'Confusion', s:'Amplifier', blurb:'Confusion amplifies instability once present.', bullets:['Speeds collapse.','Obscures signals.','Increases variance.'], mini:['AMPLIFY','OBSCURE','VARIANCE']},
+        {t:'Audit', s:'Replay', blurb:'Replay evidence streams to verify.', bullets:['Replay.','Verify.','Compare.'], mini:['REPLAY','VERIFY','COMPARE']}
       ]
     },
 
-    rules:{
-      meta:'SW · Rules',
-      title:'Rules',
-      origin_ex:'Keep traversal stable.',
-      now_ex:'Navigation + integrity.',
-      traj_ex:'Governance standard.',
-      origin_ln:'Origin: rules were defined to prevent drift and preserve canonicity.',
-      now_ln:'Now: navigation and integrity rules that constrain execution.',
-      traj_ln:'Trajectory: governance standards for adoption.',
+    rules:{meta:'SW · Rules', title:'Rules',
+      ex:{origin:'Keep traversal stable.', now:'Navigation + integrity.', trajectory:'Governance standard.'},
+      ln:{origin:'Origin: rules prevent drift and preserve canonicity.',
+          now:'Now: navigation and integrity rules constrain execution.',
+          trajectory:'Trajectory: governance standards for adoption.'},
       subs:[
-        {k:'nav', t:'Navigation', s:'Hub-first',
-          blurb:'Return to hub when uncertain; one route at a time.',
-          bullets:['Hub-first', 'One choice', 'Finish/return'],
-          mini:['HUB','ONE CHOICE','RETURN']
-        },
-        {k:'guard', t:'Guards', s:'Admissibility',
-          blurb:'Guards block inadmissible actions.',
-          bullets:['Constraint checks', 'Receipt gating', 'Safety first'],
-          mini:['CHECK','GATE','SAFE']
-        },
-        {k:'cons', t:'Consistency', s:'Integrity',
-          blurb:'Values, actions, outcomes align.',
-          bullets:['No fragmentation', 'Coherent execution', 'Stable outcomes'],
-          mini:['ALIGN','COHERENT','STABLE']
-        },
-        {k:'scale', t:'Scale', s:'Correlation',
-          blurb:'Scale-and-correlation governs projections.',
-          bullets:['System-wide trajectory', 'Not attention-only', 'Correlation across network'],
-          mini:['SCALE','CORRELATE']
-        }
+        {t:'Navigation', s:'Hub-first', blurb:'Return to hub; one route at a time.', bullets:['Hub-first.','One choice.','Finish/return.'], mini:['HUB','ONE','RETURN']},
+        {t:'Guards', s:'Admissibility', blurb:'Guards block inadmissible actions.', bullets:['Constraint checks.','Receipt gating.','Safety first.'], mini:['CHECK','GATE','SAFE']},
+        {t:'Consistency', s:'Integrity', blurb:'Values, actions, outcomes align.', bullets:['No fragmentation.','Coherent execution.','Stable outcomes.'], mini:['ALIGN','COHERENT','STABLE']},
+        {t:'Scale', s:'Correlation', blurb:'Scale-and-correlation governs projections.', bullets:['System-wide trajectory.','Not attention-only.','Correlation across network.'], mini:['SCALE','CORRELATE']}
       ]
     },
 
-    protocols:{
-      meta:'SW · Protocols',
-      title:'Protocols',
-      origin_ex:'Repeatable actions.',
-      now_ex:'Return / replay / verification.',
-      traj_ex:'Certified SOPs.',
-      origin_ln:'Origin: protocols convert principles into repeatable execution.',
-      now_ln:'Now: atomic handoffs, exits, returns, and receipts.',
-      traj_ln:'Trajectory: certified operating procedures across orgs.',
+    protocols:{meta:'SW · Protocols', title:'Protocols',
+      ex:{origin:'Repeatable actions.', now:'Return / replay / verification.', trajectory:'Certified SOPs.'},
+      ln:{origin:'Origin: protocols convert principles into repeatable execution.',
+          now:'Now: atomic handoffs, exits, returns, and receipts.',
+          trajectory:'Trajectory: certified operating procedures across orgs.'},
       subs:[
-        {k:'handoff', t:'Atomic handoff', s:'Receipt',
-          blurb:'Atomic handoff with receipt; no partial transitions.',
-          bullets:['Atomic', 'Verified', 'Replay-safe'],
-          mini:['ATOMIC','VERIFY','REPLAY']
-        },
-        {k:'exit', t:'Exit', s:'Return token',
-          blurb:'Exit emits terminal + return token.',
-          bullets:['Terminal state', 'Return token', 'Re-entry safe'],
-          mini:['EXIT','TOKEN','REENTER']
-        },
-        {k:'loop', t:'Continuation loop', s:'Memory token',
-          blurb:'Continuation loops back after receipt with memory token.',
-          bullets:['Receipt gate', 'Loop', 'Memory'],
-          mini:['GATE','LOOP','MEMORY']
-        },
-        {k:'kill', t:'Kill conditions', s:'Stop',
-          blurb:'Define stop conditions to prevent runaway drift.',
-          bullets:['Stop', 'Reset', 'Recalibrate'],
-          mini:['STOP','RESET','RECAL']
-        }
+        {t:'Atomic handoff', s:'Receipt', blurb:'No partial transitions.', bullets:['Atomic.','Verified.','Replay-safe.'], mini:['ATOMIC','VERIFY','REPLAY']},
+        {t:'Exit', s:'Return token', blurb:'Exit emits terminal + return token.', bullets:['Terminal state.','Return token.','Re-entry safe.'], mini:['EXIT','TOKEN','REENTER']},
+        {t:'Continuation', s:'Memory token', blurb:'Loop after receipt with memory token.', bullets:['Receipt gate.','Loop.','Memory.'], mini:['GATE','LOOP','MEMORY']},
+        {t:'Kill conditions', s:'Stop', blurb:'Define stop conditions to prevent runaway drift.', bullets:['Stop.','Reset.','Recalibrate.'], mini:['STOP','RESET','RECAL']}
       ]
     },
 
     /* SE */
-    orcid:{
-      meta:'SE · ORCID',
-      title:'ORCID',
-      origin_ex:'Identity anchor.',
-      now_ex:'Researcher iD reference.',
-      traj_ex:'Long-term traceability.',
-      origin_ln:'Origin: identity anchors keep attribution stable across time.',
-      now_ln:'Now: ORCID ties work to a consistent researcher identity.',
-      traj_ln:'Trajectory: long-term traceability and provenance.',
+    orcid:{meta:'SE · ORCID', title:'ORCID',
+      ex:{origin:'Identity anchor.', now:'Researcher iD reference.', trajectory:'Long-term traceability.'},
+      ln:{origin:'Origin: identity anchors keep attribution stable across time.',
+          now:'Now: ORCID ties work to consistent researcher identity.',
+          trajectory:'Trajectory: traceability and provenance.'},
       subs:[
-        {k:'id', t:'Identity', s:'Anchor',
-          blurb:'Stable researcher identity reference.',
-          bullets:['Persistent iD', 'Attribution', 'Continuity'],
-          mini:['ID','ATTR','CONT']
-        },
-        {k:'cite', t:'Citations', s:'Provenance',
-          blurb:'Tie outputs to identity for provenance stability.',
-          bullets:['Cite', 'Link', 'Trace'],
-          mini:['CITE','LINK','TRACE']
-        },
-        {k:'use', t:'When to use', s:'Anytime',
-          blurb:'Use whenever formal attribution matters.',
-          bullets:['Preprints', 'Reports', 'Datasets'],
-          mini:['FORMAL','PUBLIC']
-        },
-        {k:'share', t:'Sharing', s:'Continuity',
-          blurb:'Continuity across publications and archives.',
-          bullets:['Archive', 'Reuse', 'Public reference'],
-          mini:['ARCHIVE','REUSE']
-        }
+        {t:'Identity', s:'Anchor', blurb:'Stable researcher identity reference.', bullets:['Persistent iD.','Attribution.','Continuity.'], mini:['ID','ATTR','CONT']},
+        {t:'Citations', s:'Provenance', blurb:'Tie outputs to identity for provenance.', bullets:['Cite.','Link.','Trace.'], mini:['CITE','LINK','TRACE']},
+        {t:'When', s:'Anytime', blurb:'Use whenever formal attribution matters.', bullets:['Preprints.','Reports.','Datasets.'], mini:['FORMAL','PUBLIC']},
+        {t:'Sharing', s:'Continuity', blurb:'Continuity across archives.', bullets:['Archive.','Reuse.','Public reference.'], mini:['ARCHIVE','REUSE']}
       ]
     },
 
-    osf:{
-      meta:'SE · OSF',
-      title:'OSF',
-      origin_ex:'Public research spine.',
-      now_ex:'Registry + canonical references.',
-      traj_ex:'Continuity ledger.',
-      origin_ln:'Origin: OSF provides persistent project registry and canonical linking.',
-      now_ln:'Now: stable identifiers for projects, preprints, and artifacts.',
-      traj_ln:'Trajectory: continuity ledger for system evolution.',
+    osf:{meta:'SE · OSF', title:'OSF',
+      ex:{origin:'Public research spine.', now:'Registry + canonical references.', trajectory:'Continuity ledger.'},
+      ln:{origin:'Origin: OSF provides persistent registry and canonical linking.',
+          now:'Now: stable identifiers for projects and artifacts.',
+          trajectory:'Trajectory: continuity ledger for evolution.'},
       subs:[
-        {k:'reg', t:'Registry', s:'Canonical',
-          blurb:'OSF organizes projects and keeps canonical references stable.',
-          bullets:['Project IDs', 'Stable links', 'Public spine'],
-          mini:['CANON','STABLE','PUBLIC']
-        },
-        {k:'pre', t:'Preprints', s:'Release',
-          blurb:'Publish artifacts with stable identifiers.',
-          bullets:['Preprint', 'Working paper', 'Supplement'],
-          mini:['RELEASE','ID']
-        },
-        {k:'map', t:'Mapping', s:'Crosslinks',
-          blurb:'Map branches to hubs without navigation drift.',
-          bullets:['Crosslink', 'Anchor', 'Navigate'],
-          mini:['MAP','ANCHOR']
-        },
-        {k:'use', t:'When', s:'Reference',
-          blurb:'Use when you need persistent public reference.',
-          bullets:['Public proof', 'Collab', 'Share'],
-          mini:['PROOF','SHARE']
-        }
+        {t:'Registry', s:'Canonical', blurb:'OSF keeps canonical references stable.', bullets:['Project IDs.','Stable links.','Public spine.'], mini:['CANON','STABLE','PUBLIC']},
+        {t:'Preprints', s:'Release', blurb:'Publish artifacts with stable identifiers.', bullets:['Preprints.','Working papers.','Supplements.'], mini:['RELEASE','ID']},
+        {t:'Mapping', s:'Crosslinks', blurb:'Map branches to hubs without drift.', bullets:['Crosslink.','Anchor.','Navigate.'], mini:['MAP','ANCHOR']},
+        {t:'When', s:'Reference', blurb:'Use when you need persistent public reference.', bullets:['Public proof.','Collab.','Share.'], mini:['PROOF','SHARE']}
       ]
     },
 
-    refs:{
-      meta:'SE · References',
-      title:'References',
-      origin_ex:'Prevent semantic drift.',
-      now_ex:'Core anchors + citations.',
-      traj_ex:'Shared coordinates.',
-      origin_ln:'Origin: references prevent meaning collapse when systems grow.',
-      now_ln:'Now: core citations, anchors, and mapping for shared understanding.',
-      traj_ln:'Trajectory: shared coordinates across audiences.',
+    refs:{meta:'SE · References', title:'References',
+      ex:{origin:'Prevent semantic drift.', now:'Core anchors + citations.', trajectory:'Shared coordinates.'},
+      ln:{origin:'Origin: references prevent meaning collapse when systems grow.',
+          now:'Now: core citations, anchors, and mapping for shared understanding.',
+          trajectory:'Trajectory: shared coordinates across audiences.'},
       subs:[
-        {k:'core', t:'Core anchors', s:'Stability',
-          blurb:'Anchors keep meaning stable across time.',
-          bullets:['Canonical terms', 'Stable mapping', 'Clear definitions'],
-          mini:['STABLE','CLEAR']
-        },
-        {k:'link', t:'Links', s:'Identity',
-          blurb:'Links connect evidence, identity, and outputs.',
-          bullets:['Evidence', 'Identity', 'Outputs'],
-          mini:['EVIDENCE','ID','OUTPUT']
-        },
-        {k:'scope', t:'Scope', s:'256',
-          blurb:'References scale into the 256 geometry.',
-          bullets:['State indexing', 'Auditability', 'Replay'],
-          mini:['256','AUDIT','REPLAY']
-        },
-        {k:'use', t:'Use', s:'Alignment',
-          blurb:'Use whenever you need alignment across audiences.',
-          bullets:['Teams', 'Readers', 'Institutions'],
-          mini:['ALIGN','SHARE']
-        }
+        {t:'Core anchors', s:'Stability', blurb:'Anchors keep meaning stable.', bullets:['Canonical terms.','Stable mapping.','Clear definitions.'], mini:['STABLE','CLEAR']},
+        {t:'Links', s:'Identity', blurb:'Links connect evidence, identity, and outputs.', bullets:['Evidence.','Identity.','Outputs.'], mini:['EVIDENCE','ID','OUTPUT']},
+        {t:'Scope', s:'256', blurb:'References scale into the 256 geometry.', bullets:['State indexing.','Auditability.','Replay.'], mini:['256','AUDIT','REPLAY']},
+        {t:'Use', s:'Alignment', blurb:'Use whenever you need alignment across audiences.', bullets:['Teams.','Readers.','Institutions.'], mini:['ALIGN','SHARE']}
       ]
     },
 
-    contact:{
-      meta:'SE · Contact',
-      title:'Contact',
-      origin_ex:'Restore alignment quickly.',
-      now_ex:'Direct channel.',
-      traj_ex:'Intake for adoption.',
-      origin_ln:'Origin: direct communication reduces friction and speeds resolution.',
-      now_ln:'Now: contact channel for access, questions, and collaboration.',
-      traj_ln:'Trajectory: intake pipeline for certification and adoption.',
+    contact:{meta:'SE · Contact', title:'Contact',
+      ex:{origin:'Restore alignment quickly.', now:'Direct channel.', trajectory:'Intake for adoption.'},
+      ln:{origin:'Origin: direct communication reduces friction and speeds resolution.',
+          now:'Now: contact channel for access, questions, and collaboration.',
+          trajectory:'Trajectory: intake pipeline for certification and adoption.'},
       subs:[
-        {k:'in', t:'Intake', s:'Requests',
-          blurb:'Use for collaboration, questions, and access.',
-          bullets:['Question', 'Collab', 'Access'],
-          mini:['ASK','COLLAB','ACCESS']
-        },
-        {k:'ops', t:'Ops', s:'Coordination',
-          blurb:'Operational coordination and structure.',
-          bullets:['Schedule', 'Scope', 'Delivery'],
-          mini:['OPS','SCOPE','DELIVER']
-        },
-        {k:'cert', t:'Certification', s:'Tracks',
-          blurb:'Training and certification coordination.',
-          bullets:['Track', 'Verify', 'Certify'],
-          mini:['TRAIN','VERIFY','CERT']
-        },
-        {k:'use', t:'When', s:'Resolution',
-          blurb:'Use when you need resolution or alignment.',
-          bullets:['Misalignment', 'Drift', 'Uncertainty'],
-          mini:['RESOLVE','ALIGN']
-        }
+        {t:'Intake', s:'Requests', blurb:'Use for collaboration, questions, and access.', bullets:['Questions.','Collab.','Access.'], mini:['ASK','COLLAB','ACCESS']},
+        {t:'Ops', s:'Coordination', blurb:'Operational coordination and structure.', bullets:['Schedule.','Scope.','Delivery.'], mini:['OPS','SCOPE','DELIVER']},
+        {t:'Certification', s:'Tracks', blurb:'Training and certification coordination.', bullets:['Track.','Verify.','Certify.'], mini:['TRAIN','VERIFY','CERT']},
+        {t:'When', s:'Resolution', blurb:'Use when you need resolution or alignment.', bullets:['Misalignment.','Drift.','Uncertainty.'], mini:['RESOLVE','ALIGN']}
       ]
     }
   };
 
-  /* ====== MODAL WIRING ====== */
+  /* ========= MODAL WIRING ========= */
   const backdrop = document.getElementById('backdrop');
   const mclose = document.getElementById('mclose');
   const mmeta = document.getElementById('mmeta');
@@ -1297,11 +1034,18 @@ img{max-width:100%}
   backdrop.addEventListener('click', (e)=>{ if(e.target===backdrop) closeModal(); });
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && backdrop.classList.contains('open')) closeModal(); });
 
-  function chipText(){
+  function updateModalChips(){
     document.querySelectorAll('.chip').forEach(c=>{
       const k=c.getAttribute('data-chip');
       c.classList.toggle('on', k===lens);
     });
+  }
+  updateModalChips();
+
+  function esc(str){
+    return String(str).replace(/[&<>"']/g, s => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[s]));
   }
 
   function renderModal(key){
@@ -1312,15 +1056,10 @@ img{max-width:100%}
     mmeta.textContent = b.meta || 'DETAIL';
     mtitle.textContent = b.title || '—';
 
-    // Explore vs Learn changes which description is used (depth only)
-    const descKey =
-      (lens==='origin' ? (depth==='learn' ? 'origin_ln' : 'origin_ex')
-      : lens==='trajectory' ? (depth==='learn' ? 'traj_ln' : 'traj_ex')
-      : (depth==='learn' ? 'now_ln' : 'now_ex'));
+    const mode = (depth === 'learn') ? 'ln' : 'ex';
+    const desc = (b[mode] && b[mode][lens]) ? b[mode][lens] : '';
+    mdesc.textContent = desc;
 
-    mdesc.textContent = (b[descKey] || '').trim();
-
-    // build nested bubbles
     mgrid.innerHTML='';
     (b.subs||[]).forEach((s, idx)=>{
       const el=document.createElement('div');
@@ -1348,7 +1087,6 @@ img{max-width:100%}
       });
       mgrid.appendChild(el);
 
-      // Learn mode: auto-open first subpanel
       if(depth==='learn' && idx===0){
         setTimeout(()=>el.click(), 0);
       }
@@ -1357,14 +1095,7 @@ img{max-width:100%}
     if(depth!=='learn'){
       subpanel.classList.remove('open');
     }
-
-    chipText();
-  }
-
-  function esc(str){
-    return String(str).replace(/[&<>"']/g, s => ({
-      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-    }[s]));
+    updateModalChips();
   }
 
   document.querySelectorAll('.bubble').forEach(b=>{
@@ -1375,27 +1106,20 @@ img{max-width:100%}
     });
   });
 
-  // lens handlers
+  /* ========= LENS (GLOBAL) ========= */
   function setLens(next){
     lens = next;
     localStorage.setItem('crp_lens', lens);
-    setActiveLensUI();
+    Object.keys(lensBtn).forEach(k => lensBtn[k].classList.toggle('active', k === lens));
+    updateModalChips();
     if(state.openKey) renderModal(state.openKey);
-  }
-  function setActiveLensUI(){
-    Object.keys(lensBtn).forEach(k=>lensBtn[k].classList.toggle('active', k===lens));
-    chipText();
   }
 
   lensBtn.origin.addEventListener('click',()=>setLens('origin'));
   lensBtn.now.addEventListener('click',()=>setLens('now'));
   lensBtn.trajectory.addEventListener('click',()=>setLens('trajectory'));
 
-  // init
-  if(!lensBtn[lens]) lens='now';
-  setActiveLensUI();
 })();
 </script>
-
 </body>
 </html>

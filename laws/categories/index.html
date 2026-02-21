@@ -5,161 +5,52 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Law Categories · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-
-<style>
-/* HARD RESET (prevents drift from inherited/stacked styles) */
-*{box-sizing:border-box}
-html,body{height:100%;width:100%;margin:0;padding:0}
-body{
-  min-height:100vh;
-  background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);
-  color:#eaf2f6;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  overflow-x:hidden; /* kills sideways slide on mobile */
-}
-
-/* LOCKED CENTER COLUMN */
-.page{
-  min-height:100vh;
-  width:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:24px 12px 28px;
-}
-
-.h{
-  width:100%;
-  text-align:center;
-}
-.h h1{
-  margin:0;
-  font-size:52px;
-  font-weight:900;
-  letter-spacing:.3px;
-}
-.h p{
-  margin:10px 0 0;
-  opacity:.7;
-  font-size:18px;
-}
-
-/* STAGE ALWAYS CENTERED */
-.stage{
-  width:100%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin:22px 0 18px;
-}
-
-/* PLATFORM SIZE CLAMPED (prevents off-screen drift) */
-.platform{
-  position:relative;
-  width:min(520px,92vw);
-  aspect-ratio:1/1;
-}
-
-/* OUTER DIAMOND PLATE */
-.platform::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  transform:rotate(45deg);
-  border-radius:28px;
-  background:rgba(255,255,255,.06);
-  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
-}
-
-/* MINI DIAMONDS (4 buttons) */
-.diamond{
-  position:absolute;
-  width:42%;
-  height:42%;
-  transform:rotate(45deg);
-  border-radius:18px;
-  background:rgba(255,255,255,.16);
-  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  color:#eaf2f6;
-  -webkit-tap-highlight-color:transparent;
-}
-.diamond:active{transform:rotate(45deg) scale(.985)}
-
-.diamond span{
-  transform:rotate(-45deg);
-  text-align:center;
-  font-weight:900;
-  font-size:22px;
-  letter-spacing:.2px;
-}
-
-/* POSITIONS */
-.top{top:2%;left:29%}
-.right{top:29%;right:2%}
-.bottom{bottom:2%;left:29%}
-.left{top:29%;left:2%}
-
-/* NAV BUTTONS */
-.nav{
-  width:100%;
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  margin-top:4px;
-}
-.nav a{
-  padding:14px 22px;
-  border-radius:18px;
-  background:rgba(255,255,255,.10);
-  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
-  text-decoration:none;
-  color:#eaf2f6;
-  font-weight:900;
-}
-
-/* FOOTER */
-footer{
-  margin-top:14px;
-  text-align:center;
-  opacity:.55;
-  letter-spacing:3px;
-  font-size:12px;
-}
-</style>
+<link rel="stylesheet" href="/assets/ui.css?v=1001"/>
+<link rel="stylesheet" href="/assets/branch.css?v=1001"/>
 </head>
 
 <body>
-  <div class="page">
+<div class="shooting-stars"></div>
 
-    <div class="h">
-      <h1>Law Categories</h1>
-      <p>Choose a branch.</p>
-    </div>
+<div class="page">
 
-    <div class="stage">
-      <div class="platform">
-
-        <a class="diamond top" href="./reality/"><span>Reality</span></a>
-        <a class="diamond right" href="./structure/"><span>Structure</span></a>
-        <a class="diamond bottom" href="./flow/"><span>Flow</span></a>
-        <a class="diamond left" href="./integrity/"><span>Integrity</span></a>
-
-      </div>
-    </div>
-
-    <div class="nav">
-      <a href="/laws/">Back</a>
-      <a href="/home/">Home</a>
-    </div>
-
-    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
+  <div class="h">
+    <h1>Law Categories</h1>
+    <p>Choose a branch.</p>
   </div>
+
+  <div class="stage">
+    <div class="platform">
+
+      <a class="diamond top" href="./reality/">
+        <span>Reality<small>What is</small></span>
+      </a>
+
+      <a class="diamond right" href="./structure/">
+        <span>Structure<small>How it holds</small></span>
+      </a>
+
+      <a class="diamond bottom" href="./flow/">
+        <span>Flow<small>How it moves</small></span>
+      </a>
+
+      <a class="diamond left" href="./integrity/">
+        <span>Integrity<small>What stays true</small></span>
+      </a>
+
+      <a class="diamond mini mini-left" href="/laws/">
+        <span><small>BACK</small></span>
+      </a>
+
+      <a class="diamond mini mini-right" href="/home/">
+        <span><small>HOME</small></span>
+      </a>
+
+    </div>
+  </div>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
+</div>
 </body>
 </html>

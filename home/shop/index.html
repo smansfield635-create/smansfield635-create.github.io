@@ -9,60 +9,129 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-/* HOME SELECTOR — neutral */
+/* HOME (SELECTOR) — CHINESE RED/BLACK THEME, DIAMOND-ONLY, NO SQUARE CARDS */
 html,body{margin:0;height:100%}
 body{
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:#eaf2f6;
-  background:radial-gradient(1200px 900px at 50% 18%, #1a2a33 0%, #0b1620 55%, #05070c 100%);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(1200px 900px at 50% 18%, rgba(190,40,40,.40) 0%, rgba(0,0,0,0) 58%),
+    radial-gradient(1400px 900px at 50% 18%, #1b0a0a 0%, #0b0708 55%, #05070c 100%);
 }
-.page{max-width:980px;margin:0 auto;padding:44px 18px 90px}
-.hero{position:relative;z-index:5}
-.hero h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
-.hero p{margin:10px 0 0;opacity:.75;font-size:18px}
 
-.mode-row{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 26px}
-.mode-btn{
-  flex:1 1 180px;
-  padding:14px 16px;
-  border-radius:22px;
+/* keep header ABOVE plate */
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:46px 16px 92px;position:relative;z-index:2}
+.h{position:relative;z-index:20;text-align:center;margin-bottom:18px}
+.h h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
+.h p{margin:10px 0 0;opacity:.75;font-size:18px}
+
+/* slightly smaller plate for selector */
+.stage{width:100%;display:flex;justify-content:center;align-items:center;position:relative;z-index:3}
+.platform{width:min(420px,88vw);aspect-ratio:1/1;margin:0 auto;position:relative}
+
+/* HARD OVERRIDE: make sure selector never becomes “square cards” */
+.mode-row,.mode-btn{display:none !important;}
+
+/* COMPASS MARKERS — pinned to plate corners */
+.compass{
+  position:absolute;
+  width:46px;height:46px;border-radius:999px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.10);
-  text-decoration:none;color:#eaf2f6;font-weight:800;
+  box-shadow:0 0 22px rgba(255,255,255,.06);
+  color:#eaf2f6;
+  font-weight:900;
+  letter-spacing:.10em;
+  z-index:9;
+  pointer-events:none;
 }
-.mode-btn small{display:block;margin-top:6px;opacity:.75;font-weight:700}
-.mode-btn:hover{background:rgba(255,255,255,.10)}
-.mode-btn.learn{box-shadow:0 0 0 1px rgba(120,180,255,.18) inset, 0 0 26px rgba(120,180,255,.08)}
-.mode-btn.shop{box-shadow:0 0 0 1px rgba(255,120,120,.18) inset, 0 0 26px rgba(255,120,120,.08)}
+.compass b{font-size:14px;line-height:1}
+.compass i{font-style:normal;font-size:10px;opacity:.85;line-height:1}
 
-.footer{margin-top:30px;opacity:.5;letter-spacing:3px;font-size:12px;text-align:center}
+/* corners (relative to plate) */
+.cN{top:-10px;left:50%;transform:translateX(-50%)}
+.cE{right:-10px;top:50%;transform:translateY(-50%)}
+.cS{bottom:-10px;left:50%;transform:translateX(-50%)}
+.cW{left:-10px;top:50%;transform:translateY(-50%)}
+
+/* North star accent (subtle) */
+.cN i{color:rgba(255,235,170,.95);text-shadow:0 0 10px rgba(255,200,80,.35)}
+
+/* make subtitle/footer above plate */
+.footer{margin-top:26px;opacity:.55;letter-spacing:3px;font-size:12px;text-align:center;position:relative;z-index:20}
+
+/* Selector diamonds: label legibility */
+.diamond span{
+  text-shadow:
+    0 0 6px rgba(180,220,255,.40),
+    0 0 16px rgba(120,180,255,.25);
+}
+.diamond small{
+  opacity:.85;
+}
+
+/* Ensure the four selector tiles stay compact */
+.top{top:10%;left:31%}
+.right{top:31%;right:10%}
+.bottom{bottom:10%;left:31%}
+.left{top:31%;left:10%}
+
+/* Mini controls: bottom pockets (not covering the main diamonds) */
+.diamond.mini{width:18%;height:18%}
+.mini-left{bottom:6%;left:8%}
+.mini-right{bottom:6%;right:8%}
 </style>
 </head>
 
 <body>
+<div class="shooting-stars"></div>
+
 <div class="page">
-  <div class="hero">
+  <div class="h">
     <h1>Geodiametrics</h1>
     <p>Choose what you understand. No setup.</p>
   </div>
 
-  <div class="mode-row">
-    <a class="mode-btn learn" href="/home/learn/?lang=en">
-      Learn · EN
-      <small>Definitions · systems · methods</small>
-    </a>
-    <a class="mode-btn shop" href="/home/shop/?lang=en">
-      Shop · EN
-      <small>Products · programs · services</small>
-    </a>
-    <a class="mode-btn learn" href="/home/learn/?lang=zh">
-      学习 · 中文
-      <small>定义 · 系统 · 方法</small>
-    </a>
-    <a class="mode-btn shop" href="/home/shop/?lang=zh">
-      购买 · 中文
-      <small>产品 · 项目 · 服务</small>
-    </a>
+  <div class="stage">
+    <div class="platform">
+
+      <!-- Compass markers on plate -->
+      <div class="compass cN"><b>N</b><i>✦</i></div>
+      <div class="compass cE"><b>E</b><i>•</i></div>
+      <div class="compass cS"><b>S</b><i>•</i></div>
+      <div class="compass cW"><b>W</b><i>•</i></div>
+
+      <!-- N = Learn EN -->
+      <a class="diamond top" href="/home/learn/?lang=en">
+        <span>Learn<small>EN</small></span>
+      </a>
+
+      <!-- E = Shop EN -->
+      <a class="diamond right" href="/home/shop/?lang=en">
+        <span>Shop<small>EN</small></span>
+      </a>
+
+      <!-- S = Learn 中文 -->
+      <a class="diamond bottom" href="/home/learn/?lang=zh">
+        <span>学习<small>中文</small></span>
+      </a>
+
+      <!-- W = Shop 中文 -->
+      <a class="diamond left" href="/home/shop/?lang=zh">
+        <span>购买<small>中文</small></span>
+      </a>
+
+      <!-- Mini controls -->
+      <a class="diamond mini mini-left" href="/home/">
+        <span><small>HOME</small></span>
+      </a>
+      <a class="diamond mini mini-right" href="/links/">
+        <span><small>LINKS</small></span>
+      </a>
+
+    </div>
   </div>
 
   <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>

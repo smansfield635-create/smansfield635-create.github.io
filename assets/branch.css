@@ -1,79 +1,112 @@
-/* TNT: assets/branch.css (LIGHT STONE TILES + BLACK PRINT, ORGANIZED, NO GLOW/FOD)
-   This makes tiles light, and text on tiles dark. */
+/* ================================
+   TNT: assets/branch.css
+   GEM MATERIAL SYSTEM (OPAL / DEPTH)
+   Uniform across ALL pages
+================================ */
 
-.platform{position:relative;width:min(420px,88vw);aspect-ratio:1/1;margin:0 auto}
+.platform{
+  position:relative;
+  width:min(420px,88vw);
+  aspect-ratio:1/1;
+  margin:0 auto;
+}
+
+/* Base plate */
 .platform::before{
   content:"";
   position:absolute;
   inset:0;
   transform:rotate(45deg);
-  border-radius:28px;
-  background:rgba(255,255,255,.05);
-  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset,0 28px 80px rgba(0,0,0,.75);
-  backdrop-filter:blur(10px);
+  border-radius:32px;
+
+  background:
+    radial-gradient(120% 120% at 30% 25%, rgba(255,255,255,.08), rgba(0,0,0,.15)),
+    linear-gradient(145deg, rgba(255,255,255,.05), rgba(0,0,0,.25));
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    0 40px 90px rgba(0,0,0,.75);
+
+  backdrop-filter: blur(8px);
   z-index:0;
 }
-.platform::after{content:none!important}
 
-/* tiles: LIGHT stone */
+/* ================================
+   GEM TILE (Opal Depth)
+================================ */
+
 .diamond{
   position:absolute;
   width:42%;
   height:42%;
   transform:rotate(45deg);
-  border-radius:18px;
-  background:rgba(255,255,255,.82);
+
+  /* Curvier edges */
+  border-radius:34px;
+
+  /* Opal-like surface */
+  background:
+    radial-gradient(140% 120% at 30% 25%, rgba(255,255,255,.55), rgba(200,200,200,.35) 40%, rgba(80,80,80,.25) 70%),
+    linear-gradient(160deg, rgba(255,255,255,.45), rgba(0,0,0,.15));
+
   display:flex;
   align-items:center;
   justify-content:center;
   text-decoration:none;
+
+  /* TRUE 3D */
   box-shadow:
-    inset 0 0 0 1px rgba(0,0,0,.10),
-    inset 0 18px 26px rgba(255,255,255,.35),
-    inset 0 -28px 40px rgba(0,0,0,.18),
-    0 18px 44px rgba(0,0,0,.45);
-  backdrop-filter:blur(2px);
-  -webkit-tap-highlight-color:transparent;
-  transition:filter .15s ease,transform .15s ease;
+    inset 0 8px 14px rgba(255,255,255,.55),
+    inset 0 -18px 28px rgba(0,0,0,.25),
+    0 25px 50px rgba(0,0,0,.6);
+
+  transition: transform .15s ease, filter .15s ease;
   z-index:2;
 }
-.diamond::before,.diamond::after{content:none!important}
-.diamond:hover{filter:brightness(1.03)}
-.diamond:active{transform:rotate(45deg) translateY(1px)}
 
-/* BLACK PRINT ON TILE */
+/* Hover = subtle lift */
+.diamond:hover{
+  transform:rotate(45deg) translateY(-3px);
+}
+
+/* Active press */
+.diamond:active{
+  transform:rotate(45deg) translateY(1px);
+}
+
+/* TEXT */
 .diamond span{
   transform:rotate(-45deg);
   text-align:center;
   font-weight:900;
-  line-height:1.15;
-  color:rgba(10,12,14,.92);
-  text-shadow:none;
+  color:rgba(15,18,22,.92);
+  letter-spacing:.04em;
+  text-shadow:0 1px 0 rgba(255,255,255,.4);
 }
+
 .diamond small{
   display:block;
   margin-top:6px;
   font-size:12px;
-  font-weight:800;
-  letter-spacing:.14em;
+  letter-spacing:.12em;
   opacity:.75;
-  color:rgba(10,12,14,.78);
 }
 
-/* positions */
+/* ================================
+   Positions (unchanged geometry)
+================================ */
+
 .top{top:2%;left:29%}
 .right{top:29%;right:2%}
 .bottom{bottom:2%;left:29%}
 .left{top:29%;left:2%}
 
-/* keep semantic classes but no effects */
-.diamond.c-blue,.diamond.c-green,.diamond.c-amber,.diamond.c-purple{
-  box-shadow:
-    inset 0 0 0 1px rgba(0,0,0,.10),
-    inset 0 18px 26px rgba(255,255,255,.35),
-    inset 0 -28px 40px rgba(0,0,0,.18),
-    0 18px 44px rgba(0,0,0,.45);
-}
+/* ================================
+   Disable old systems completely
+================================ */
 
-/* legacy off */
-.diamond-stage,.mini-diamond,.compass-label{display:none!important}
+.mini-diamond,
+.diamond-stage,
+.compass-label{
+  display:none!important;
+}

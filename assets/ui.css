@@ -1,44 +1,183 @@
-/* TNT: assets/ui.css (RESTORE COSMIC DARK + WHITE SITE TYPE)
-   This fixes the WHITE PAGE + SERIF DEFAULT issue. */
+/* ================================
+   TNT: assets/ui.css
+   COSMIC DARK FOUNDATION
+   Clean contrast, subtle nebula, stable typography
+================================ */
 
-html,body{margin:0;padding:0;width:100%;height:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#eaf2f6;background:#05070c;overflow-x:hidden}
-body{position:relative;color:#eaf2f6;background:radial-gradient(1200px 800px at 50% 20%,#152532 0%,#0a141b 100%)}
+/* ---------- Base ---------- */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #eaf2f6;
+  background: #05070c;
+  overflow-x: hidden;
+}
 
-/* Layout */
-.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 12px}
-.h{text-align:center;margin-bottom:12px}
-.h h1{font-size:48px;font-weight:900;margin:0;color:#eaf2f6}
-.h p{opacity:.72;margin-top:8px;color:rgba(234,242,246,.72)}
-.stage{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
-a{color:inherit;text-decoration:none}
-a:visited{color:inherit}
-a:hover{text-decoration:none}
-a:active{text-decoration:none}
-.nav{display:flex;justify-content:center;gap:12px;margin-top:16px;flex-wrap:wrap}
-.nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);font-weight:900;color:#eaf2f6}
-footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px;color:rgba(234,242,246,.55)}
+/* ---------- Cosmic Background ---------- */
+body {
+  position: relative;
+  background:
+    radial-gradient(1200px 800px at 50% 20%, #152532 0%, #0a141b 100%);
+}
 
-/* Optional motion (safe, subtle) */
-body::before{content:"";position:fixed;inset:-18%;pointer-events:none;z-index:-3;background:
-radial-gradient(900px 700px at 18% 22%, rgba(72,166,255,.18) 0%, rgba(0,0,0,0) 62%),
-radial-gradient(980px 780px at 78% 28%, rgba(190,91,255,.15) 0%, rgba(0,0,0,0) 64%),
-radial-gradient(1050px 820px at 45% 78%, rgba(42,255,186,.10) 0%, rgba(0,0,0,0) 66%),
-radial-gradient(1100px 900px at 55% 45%, rgba(255,170,70,.07) 0%, rgba(0,0,0,0) 68%);
-filter:blur(12px);opacity:.92;animation:nebulaDrift 18s ease-in-out infinite alternate;transform:translateZ(0)}
-@keyframes nebulaDrift{0%{transform:translate3d(-1.2%,-0.8%,0) scale(1.02)}100%{transform:translate3d(1.2%,0.9%,0) scale(1.06)}}
+/* Subtle nebula drift (low opacity so it doesn’t wash tiles) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -18%;
+  pointer-events: none;
+  z-index: -3;
 
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;background-image:
-radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.70) 0, rgba(255,255,255,0) 60%),
-radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.48) 0, rgba(255,255,255,0) 60%),
-radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.58) 0, rgba(255,255,255,0) 60%),
-radial-gradient(2px 2px at 22% 28%, rgba(255,255,255,.30) 0, rgba(255,255,255,0) 60%),
-radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,.24) 0, rgba(255,255,255,0) 60%);
-opacity:.70;animation:starTwinkle 6.2s ease-in-out infinite alternate}
-@keyframes starTwinkle{0%{opacity:.50;filter:brightness(.95)}100%{opacity:.82;filter:brightness(1.16)}}
+  background:
+    radial-gradient(900px 700px at 18% 22%, rgba(72,166,255,.14) 0%, rgba(0,0,0,0) 62%),
+    radial-gradient(980px 780px at 78% 28%, rgba(190,91,255,.12) 0%, rgba(0,0,0,0) 64%),
+    radial-gradient(1050px 820px at 45% 78%, rgba(42,255,186,.08) 0%, rgba(0,0,0,0) 66%);
 
-/* shooting stars */
-.shooting-stars,.shooting-stars::before,.shooting-stars::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1}
-@keyframes shoot{0%{transform:translate3d(-25vw,-25vh,0) rotate(20deg);opacity:0}8%{opacity:1}35%{opacity:1}55%{opacity:0}100%{transform:translate3d(120vw,120vh,0) rotate(20deg);opacity:0}}
-.shooting-stars::before,.shooting-stars::after{position:absolute;width:240px;height:2px;background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.85), rgba(255,255,255,0));border-radius:999px;filter:drop-shadow(0 0 8px rgba(255,255,255,.35));opacity:0}
-.shooting-stars::before{top:12%;left:-35%;animation:shoot 10.5s linear infinite;animation-delay:1.2s}
-.shooting-stars::after{top:38%;left:-45%;animation:shoot 13.5s linear infinite;animation-delay:4.8s}
+  filter: blur(14px);
+  opacity: .85;
+  animation: nebulaDrift 22s ease-in-out infinite alternate;
+  transform: translateZ(0);
+}
+
+@keyframes nebulaDrift {
+  0%   { transform: translate3d(-1%, -0.6%, 0) scale(1.02); }
+  100% { transform: translate3d(1%, 0.8%, 0) scale(1.05); }
+}
+
+/* ---------- Starfield ---------- */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.65) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.45) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.55) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(2px 2px at 22% 28%, rgba(255,255,255,.28) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,.24) 0, rgba(255,255,255,0) 60%);
+
+  opacity: .65;
+  animation: starTwinkle 7s ease-in-out infinite alternate;
+}
+
+@keyframes starTwinkle {
+  0%   { opacity: .50; filter: brightness(.95); }
+  100% { opacity: .78; filter: brightness(1.12); }
+}
+
+/* ---------- Shooting Stars ---------- */
+@keyframes shoot {
+  0%   { transform: translate3d(-25vw,-25vh,0) rotate(20deg); opacity: 0; }
+  8%   { opacity: .85; }
+  30%  { opacity: .85; }
+  50%  { opacity: 0; }
+  100% { transform: translate3d(120vw,120vh,0) rotate(20deg); opacity: 0; }
+}
+
+.shooting-stars,
+.shooting-stars::before,
+.shooting-stars::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.shooting-stars::before,
+.shooting-stars::after {
+  position: absolute;
+  width: 220px;
+  height: 2px;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0),
+    rgba(255,255,255,.85),
+    rgba(255,255,255,0));
+  border-radius: 999px;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,.35));
+  opacity: 0;
+}
+
+.shooting-stars::before {
+  top: 12%;
+  left: -35%;
+  animation: shoot 16s linear infinite;
+  animation-delay: 3s;
+}
+
+.shooting-stars::after {
+  top: 38%;
+  left: -45%;
+  animation: shoot 20s linear infinite;
+  animation-delay: 9s;
+}
+
+/* ---------- Layout ---------- */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 24px 12px;
+}
+
+.h {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.h h1 {
+  font-size: clamp(40px, 6vw, 64px);
+  margin: 0 0 8px;
+  color: #eaf2f6;
+}
+
+.h p {
+  opacity: .75;
+  margin-top: 8px;
+  color: rgba(234,242,246,.75);
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nav a {
+  padding: 14px 22px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.10);
+  font-weight: 900;
+  color: #eaf2f6;
+  text-decoration: none;
+}
+
+footer {
+  text-align: center;
+  opacity: .55;
+  margin-top: 12px;
+  letter-spacing: 3px;
+  font-size: 12px;
+  color: rgba(234,242,246,.55);
+}
+
+/* Motion safety */
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after,
+  .shooting-stars::before,
+  .shooting-stars::after {
+    animation: none !important;
+  }
+}

@@ -1,7 +1,34 @@
-/* TNT: /assets/ui.css
-   CHINESE TOUCH THEME (RED + BLACK) · ANCIENT HISTORIC ACCENT
-   FULL FILE REPLACEMENT
-*/
+/* =====================================================
+   TNT: /assets/ui.css
+   GEODIAMETRICS — RED/BLACK/WHITE/GOLD THEME
+   Global UI + accordions + buttons + safe stacking
+===================================================== */
+
+:root{
+  --bg0:#05070c;
+  --bg1:#0b1218;
+  --bg2:#0d1a22;
+
+  --red0:#1a0708;
+  --red1:#3a0b0e;
+  --red2:#6a1016;
+
+  --ink:#eaf2f6;
+  --muted:rgba(234,242,246,.72);
+
+  --gold0:#b98a2b;
+  --gold1:#f0c874;
+
+  --glass:rgba(255,255,255,.05);
+  --glass2:rgba(255,255,255,.07);
+  --stroke:rgba(255,255,255,.10);
+  --stroke2:rgba(255,255,255,.14);
+
+  --shadow:rgba(0,0,0,.70);
+
+  --r:22px;
+  --r2:28px;
+}
 
 html,body{
   margin:0;
@@ -9,83 +36,49 @@ html,body{
   width:100%;
   height:100%;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:#f2f2f2;
+  color:var(--ink);
   overflow-x:hidden;
-  background:#050307;
-  position:relative;
+  background:var(--bg0);
 }
 
-/* ===== Base lacquer black + deep red nebula ===== */
+/* ============== Cosmic + Red/Gold accent ============== */
 body{
   position:relative;
   background:
-    radial-gradient(1400px 900px at 50% 16%, rgba(140,0,24,.42) 0%, rgba(0,0,0,0) 58%),
-    radial-gradient(1200px 900px at 18% 28%, rgba(255,200,60,.10) 0%, rgba(0,0,0,0) 62%),
-    radial-gradient(1200px 900px at 82% 30%, rgba(180,20,40,.24) 0%, rgba(0,0,0,0) 64%),
-    radial-gradient(1400px 900px at 50% 40%, #12020a 0%, #050307 65%, #030206 100%);
+    radial-gradient(1400px 900px at 50% 18%, #142735 0%, #0b1620 55%, #05070c 100%);
 }
 
-/* ===== Ancient “brocade / key pattern” whisper (very low opacity) ===== */
+/* Red canopy (top) */
 body::before{
   content:"";
   position:fixed;
-  inset:0;
-  z-index:-3;
+  inset:-18%;
   pointer-events:none;
-
+  z-index:-3;
   background:
-    /* subtle meander-like pattern */
-    repeating-linear-gradient(90deg,
-      rgba(255,215,120,.035) 0px,
-      rgba(255,215,120,.035) 1px,
-      rgba(0,0,0,0) 1px,
-      rgba(0,0,0,0) 22px
-    ),
-    repeating-linear-gradient(0deg,
-      rgba(255,215,120,.02) 0px,
-      rgba(255,215,120,.02) 1px,
-      rgba(0,0,0,0) 1px,
-      rgba(0,0,0,0) 28px
-    ),
-    /* drifting red haze */
-    radial-gradient(900px 700px at 20% 22%, rgba(180,20,40,.18) 0%, rgba(0,0,0,0) 68%),
-    radial-gradient(1100px 800px at 78% 28%, rgba(140,0,24,.16) 0%, rgba(0,0,0,0) 70%);
-
-  filter:blur(12px);
+    radial-gradient(1200px 900px at 50% 6%, rgba(140,18,26,.55) 0%, rgba(70,10,14,.35) 40%, rgba(0,0,0,0) 72%),
+    radial-gradient(900px 700px at 18% 26%, rgba(72,166,255,.10) 0%, rgba(0,0,0,0) 62%),
+    radial-gradient(980px 780px at 78% 28%, rgba(190,91,255,.08) 0%, rgba(0,0,0,0) 64%);
+  filter:blur(18px);
   opacity:.95;
-  animation:nebulaDrift 26s ease-in-out infinite alternate;
 }
 
-@keyframes nebulaDrift{
-  0%{ transform:translate3d(-2%,-1%,0) scale(1.02); }
-  100%{ transform:translate3d(2%,1%,0) scale(1.06); }
-}
-
-/* ===== Stars (brighter) ===== */
+/* Stars */
 body::after{
   content:"";
   position:fixed;
   inset:0;
-  z-index:-2;
   pointer-events:none;
-
+  z-index:-2;
   background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.75) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.45) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.60) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(2px 2px at 22% 28%, rgba(255,255,255,.30) 0, rgba(255,255,255,0) 60%),
-    radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,.24) 0, rgba(255,255,255,0) 60%);
-
-  opacity:.80;
-  animation:starTwinkle 7.2s ease-in-out infinite alternate;
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.70) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.42) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.55) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,.22) 0, rgba(255,255,255,0) 60%);
+  opacity:.72;
 }
 
-@keyframes starTwinkle{
-  0%{ opacity:.55; filter:brightness(.95); }
-  100%{ opacity:.92; filter:brightness(1.20); }
-}
-
-/* ===== Shooting stars ===== */
+/* Shooting stars (optional, safe) */
 .shooting-stars,
 .shooting-stars::before,
 .shooting-stars::after{
@@ -96,101 +89,292 @@ body::after{
   z-index:-1;
 }
 @keyframes shoot{
-  0%{ transform:translate3d(-25vw,-25vh,0) rotate(20deg); opacity:0; }
-  10%{ opacity:1; }
-  40%{ opacity:1; }
-  60%{ opacity:0; }
-  100%{ transform:translate3d(120vw,120vh,0) rotate(20deg); opacity:0; }
+  0%{transform:translate3d(-25vw,-25vh,0) rotate(20deg);opacity:0}
+  10%{opacity:1}
+  40%{opacity:1}
+  60%{opacity:0}
+  100%{transform:translate3d(120vw,120vh,0) rotate(20deg);opacity:0}
 }
 .shooting-stars::before,
 .shooting-stars::after{
   position:absolute;
   width:260px;
   height:2px;
-  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,235,200,.90), rgba(255,255,255,0));
+  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.85), rgba(255,255,255,0));
   border-radius:999px;
-  filter:drop-shadow(0 0 10px rgba(255,200,120,.22));
+  filter:drop-shadow(0 0 8px rgba(240,200,116,.22));
   opacity:0;
 }
-.shooting-stars::before{ top:12%; left:-35%; animation:shoot 12s linear infinite; animation-delay:1.5s; }
-.shooting-stars::after{ top:40%; left:-45%; animation:shoot 16s linear infinite; animation-delay:5s; }
+.shooting-stars::before{top:12%;left:-35%;animation:shoot 11.5s linear infinite;animation-delay:1.3s}
+.shooting-stars::after{top:40%;left:-45%;animation:shoot 14.2s linear infinite;animation-delay:5.2s}
 
-/* ===== Global layout ===== */
+/* ===================== Layout ===================== */
 .page{
   min-height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
-  padding:56px 16px 96px;
+  padding:56px 16px 90px;
   position:relative;
   z-index:1;
 }
 
-/* Header always above stage */
 .h{
-  text-align:center;
-  margin-bottom:22px;
+  text-align:left;
+  width:min(980px,94vw);
+  margin:0 auto 18px;
   position:relative;
-  z-index:1000;
-}
-.h h1{
-  font-size:48px;
-  font-weight:900;
-  margin:0;
-  color:#f4f4f4;
-  text-shadow:0 0 18px rgba(255,120,140,.18);
-}
-.h p{
-  margin-top:10px;
-  opacity:.78;
-  color:rgba(242,242,242,.78);
+  z-index:10; /* always above plate */
 }
 
-/* Stage under header */
+.h h1{
+  margin:0;
+  font-size:56px;
+  font-weight:900;
+  letter-spacing:.01em;
+  text-shadow:0 10px 30px rgba(0,0,0,.55);
+}
+
+.h p{
+  margin:10px 0 0;
+  font-size:20px;
+  opacity:.75;
+  color:var(--muted);
+  text-shadow:0 10px 30px rgba(0,0,0,.55);
+}
+
 .stage{
-  flex:1;
+  width:100%;
   display:flex;
   align-items:center;
   justify-content:center;
-  width:100%;
-  margin-top:6px;
+  position:relative;
+  z-index:2;
+}
+
+footer{
+  width:min(980px,94vw);
+  margin:18px auto 0;
+  text-align:center;
+  letter-spacing:3px;
+  font-size:12px;
+  opacity:.55;
+  position:relative;
+  z-index:10; /* always above plate */
+}
+
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+a:hover{text-decoration:none}
+a:active{text-decoration:none}
+
+/* ===================== Pills / Top controls ===================== */
+.pills{
+  width:min(980px,94vw);
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-start;
+  margin:14px auto 16px;
   position:relative;
   z-index:10;
 }
 
-/* Footer always above plate */
-footer{
-  text-align:center;
-  letter-spacing:3px;
-  font-size:12px;
-  opacity:.58;
-  margin-top:26px;
-  position:relative;
-  z-index:900;
-  color:rgba(242,242,242,.70);
-}
-
-/* Links */
-a{ color:inherit; text-decoration:none; }
-a:visited{ color:inherit; }
-a:hover{ text-decoration:none; }
-a:active{ text-decoration:none; }
-
-/* Legacy nav buttons (if any page still has it) */
-.nav{
-  display:flex;
+.pill{
+  display:inline-flex;
+  align-items:center;
   justify-content:center;
-  gap:12px;
-  margin-top:16px;
-  flex-wrap:wrap;
-  position:relative;
-  z-index:900;
+  gap:10px;
+  padding:12px 16px;
+  border-radius:999px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 38px rgba(0,0,0,.35);
+  font-weight:800;
+  letter-spacing:.02em;
+  user-select:none;
 }
-.nav a{
-  padding:14px 22px;
+
+.pill.red{
+  background:linear-gradient(180deg, rgba(185,24,34,.22), rgba(0,0,0,0));
+  border:1px solid rgba(240,200,116,.18);
+  box-shadow:0 0 0 1px rgba(240,200,116,.10) inset, 0 18px 42px rgba(0,0,0,.45);
+}
+
+.pill.ghost{
+  background:rgba(255,255,255,.06);
+}
+
+/* ===================== Accordions ===================== */
+.acc{
+  width:min(980px,94vw);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  margin:0 auto;
+  position:relative;
+  z-index:2;
+}
+
+details{
+  border-radius:var(--r2);
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 24px 70px rgba(0,0,0,.55);
+  overflow:hidden;
+}
+
+summary{
+  list-style:none;
+  cursor:pointer;
+  padding:18px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  user-select:none;
+}
+
+summary::-webkit-details-marker{display:none}
+
+.sum-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+
+.badge{
+  width:46px;height:46px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  background:rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 0 0 1px rgba(240,200,116,.10) inset;
+  flex:0 0 auto;
+}
+
+.sum-title{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-width:0;
+}
+
+.sum-title b{
+  font-size:18px;
+  letter-spacing:.06em;
+}
+
+.sum-title span{
+  font-size:14px;
+  opacity:.72;
+  color:var(--muted);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.chev{
+  width:44px;height:44px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+}
+
+.chev:before{
+  content:"▾";
+  font-size:18px;
+  opacity:.9;
+}
+
+details[open] summary{
+  background:linear-gradient(180deg, rgba(185,24,34,.14), rgba(0,0,0,0));
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+details[open] .chev:before{content:"▴"}
+
+.panel{
+  padding:16px 18px 18px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+
+.panel p{
+  margin:0;
+  font-size:18px;
+  line-height:1.6;
+  opacity:.92;
+}
+
+.subacc{
+  margin-top:14px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.subacc details{
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:none;
+}
+
+.subacc summary{
+  padding:14px 14px;
+}
+
+.subtag{
+  font-weight:900;
+  opacity:.9;
+  letter-spacing:.06em;
+}
+
+.subhint{
+  font-size:14px;
+  opacity:.70;
+  color:var(--muted);
+}
+
+/* ===================== CTA row ===================== */
+.cta-row{
+  width:min(980px,94vw);
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  margin:16px auto 0;
+  position:relative;
+  z-index:10;
+}
+
+.cta{
+  flex:1 1 220px;
+  padding:16px 18px;
   border-radius:18px;
   background:rgba(255,255,255,.08);
   border:1px solid rgba(255,255,255,.10);
   font-weight:900;
+  text-align:center;
+}
+
+.cta.gold{
+  background:linear-gradient(180deg, rgba(240,200,116,.18), rgba(0,0,0,0));
+  border:1px solid rgba(240,200,116,.22);
+  box-shadow:0 0 0 1px rgba(240,200,116,.10) inset, 0 22px 60px rgba(0,0,0,.55);
+}
+
+/* ===================== Mobile safety ===================== */
+@media (max-width:420px){
+  .h h1{font-size:44px}
+  .h p{font-size:18px}
 }

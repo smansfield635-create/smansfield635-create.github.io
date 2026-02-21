@@ -1,224 +1,163 @@
-<!-- TNT: /door/index.html
-     FIX: THIS *IS* THE FIRST PAGE → choose language + depth here (no “already chose”)
-     - Buttons now SET choices (localStorage) + route.
-     - No duplication. One fork here. Everything else reads stored settings.
--->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Door · Geodiametrics</title>
+<title>Door</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=6002"/>
-<link rel="stylesheet" href="/assets/branch.css?v=6002"/>
+<link rel="stylesheet" href="/assets/ui.css?v=9001"/>
 
 <style>
-html,body{height:100%}
 body{
   background:
-    radial-gradient(1200px 800px at 50% 10%, rgba(160,20,20,.55) 0%, rgba(30,0,0,.55) 35%, rgba(5,7,12,1) 100%);
+    radial-gradient(1200px 800px at 50% 0%, rgba(160,20,20,.55) 0%, rgba(40,0,0,.65) 40%, #05070c 100%);
 }
-.wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:16px}
 .panel{
   width:min(860px,94vw);
-  border-radius:26px;
+  border-radius:28px;
   background:rgba(0,0,0,.18);
   border:1px solid rgba(255,255,255,.10);
   box-shadow:0 26px 70px rgba(0,0,0,.60);
-  padding:18px;
+  padding:24px;
 }
-.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-start;margin-top:10px}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:12px 16px;border-radius:999px;
+.modeRow{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:14px;
+  margin-bottom:18px;
+}
+.pill{
+  padding:14px 18px;
+  border-radius:999px;
+  font-weight:900;
+  letter-spacing:.06em;
+  cursor:pointer;
   background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
-  font-weight:900;letter-spacing:.08em;
-  text-decoration:none;color:inherit;
-  cursor:pointer;user-select:none;
+  border:1px solid rgba(255,255,255,.14);
+}
+.pill.active{
+  background:rgba(255,255,255,.18);
+  border-color:rgba(255,255,255,.25);
+}
+.actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+.btn{
+  padding:14px 20px;
+  border-radius:18px;
+  font-weight:900;
+  cursor:pointer;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.14);
 }
 .btn.primary{
-  background:rgba(255,255,255,.12);
-  box-shadow:0 0 0 1px rgba(255,120,130,.16) inset, 0 18px 50px rgba(0,0,0,.55);
+  background:rgba(255,255,255,.18);
+  border-color:rgba(255,255,255,.25);
 }
-.badge{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:6px 10px;border-radius:999px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  font-weight:900;letter-spacing:.12em;font-size:12px;opacity:.92;
-}
-.explain{
-  margin-top:12px;
-  opacity:.90;
-  line-height:1.65;
-  font-size:18px;
-}
-.smallhint{
-  margin-top:10px;
-  opacity:.75;
+.small{
+  opacity:.78;
   line-height:1.6;
-}
-.sep{height:1px;background:rgba(255,255,255,.10);margin:14px 0}
-.pickline{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.pill{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:10px 12px;border-radius:999px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-}
-.pill strong{letter-spacing:.10em}
-.choice{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:10px 14px;border-radius:999px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  font-weight:900;letter-spacing:.10em;
-  cursor:pointer;
-}
-.choice.on{
-  background:rgba(255,255,255,.14);
-  border-color:rgba(255,255,255,.18);
 }
 </style>
 </head>
 
-<body class="theme-red">
+<body>
 <div class="shooting-stars"></div>
 
 <div class="page">
-  <div class="wrap">
-
-    <div class="h">
-      <h1 id="ttl">Door</h1>
-      <p id="sub">Choose language and depth, then enter.</p>
-    </div>
-
-    <div class="panel">
-
-      <!-- CURRENT SELECTION (this page sets it) -->
-      <div class="pickline" style="opacity:.90">
-        <span>Language:</span>
-        <span class="badge" id="langBadge">EN</span>
-        <span style="opacity:.7">·</span>
-        <span>Depth:</span>
-        <span class="badge" id="depthBadge">SHOP</span>
-      </div>
-
-      <div class="sep"></div>
-
-      <!-- LANGUAGE PICK -->
-      <div class="pill">
-        <strong id="langLabel">LANG</strong>
-        <div class="choice on" id="langEN">EN</div>
-        <div class="choice" id="langZH">中文</div>
-      </div>
-
-      <!-- DEPTH PICK -->
-      <div class="pill" style="margin-top:10px">
-        <strong id="depthLabel">DEPTH</strong>
-        <div class="choice on" id="depthShop">SHOP</div>
-        <div class="choice" id="depthLearn">LEARN</div>
-      </div>
-
-      <!-- ONE PARAGRAPH EXPLAINER (human) -->
-      <div class="explain" id="explainLine"></div>
-
-      <div class="row">
-        <button class="btn primary" id="enterBtn" type="button">Enter</button>
-        <a class="btn" href="/" id="backBtn">Back</a>
-      </div>
-
-      <div class="smallhint" id="hintLine"></div>
-    </div>
-
-    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+  <div class="h" id="hdr">
+    <h1 id="tDoor">Door</h1>
+    <p id="tSub">Choose how deep you want to go.</p>
   </div>
+
+  <div class="panel">
+    <div class="small" id="tExpl">
+      Depth controls whether you see quick summaries (Shop) or expanded detail (Learn).
+    </div>
+
+    <div class="modeRow">
+      <div class="pill" id="shopBtn">Shop</div>
+      <div class="pill" id="learnBtn">Learn</div>
+    </div>
+
+    <div class="small" id="tDesc"></div>
+
+    <div class="actions">
+      <div class="btn primary" id="enterBtn">Enter</div>
+      <div class="btn" id="backBtn">Back</div>
+    </div>
+  </div>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
 </div>
 
 <script>
-(() => {
-  const $ = (id)=>document.getElementById(id);
-
-  // DEFAULTS FOR FIRST PAGE
-  let lang  = (localStorage.getItem("GD_LANG")  || "en").toLowerCase();   // en | zh
-  let depth = (localStorage.getItem("GD_DEPTH") || "shop").toLowerCase(); // shop | learn
-  if (lang !== "en" && lang !== "zh") lang = "en";
-  if (depth !== "shop" && depth !== "learn") depth = "shop";
-
-  const langBadge = $("langBadge");
-  const depthBadge = $("depthBadge");
-
-  const langEN = $("langEN");
-  const langZH = $("langZH");
-  const depthShop = $("depthShop");
-  const depthLearn = $("depthLearn");
-
-  const ttl = $("ttl");
-  const sub = $("sub");
-  const explainLine = $("explainLine");
-  const hintLine = $("hintLine");
-  const enterBtn = $("enterBtn");
-
-  function setOn(el, on){ el.classList.toggle("on", !!on); }
-
-  function renderText(){
-    const zh = (lang === "zh");
-    document.documentElement.lang = zh ? "zh-Hans" : "en";
-
-    langBadge.textContent = zh ? "中文" : "EN";
-    depthBadge.textContent = depth.toUpperCase();
-
-    setOn(langEN, !zh);
-    setOn(langZH, zh);
-    setOn(depthShop, depth === "shop");
-    setOn(depthLearn, depth === "learn");
-
-    if (zh){
-      ttl.textContent = "入口";
-      sub.textContent = "选择语言与深度，然后进入。";
-      explainLine.textContent =
-        "语言决定页面文字显示为中文还是英文；深度决定你看到的是“概览（Shop）”还是“详细解释（Learn）”。选好后点击“进入”。";
-      hintLine.textContent = (depth === "learn")
-        ? "Learn：更多层级与解释。"
-        : "Shop：表层概要与入口点。";
-      enterBtn.textContent = "进入";
-    } else {
-      ttl.textContent = "Door";
-      sub.textContent = "Choose language and depth, then enter.";
-      explainLine.textContent =
-        "Language controls whether pages read in English or Chinese. Depth controls whether you see a quick surface view (Shop) or a deeper explanation view (Learn). Pick both, then tap Enter.";
-      hintLine.textContent = (depth === "learn")
-        ? "Learn: deeper nested bubbles and explanations."
-        : "Shop: surface-level summaries and entry points.";
-      enterBtn.textContent = "Enter";
+(function(){
+  const lang = localStorage.getItem("GD_LANG") || "en";   // set on /index.html
+  const T = {
+    en:{
+      door:"Door",
+      sub:"Choose how deep you want to go.",
+      expl:"Depth controls whether you see quick summaries (Shop) or expanded detail (Learn).",
+      shop:"Shop",
+      learn:"Learn",
+      shopDesc:"Shop: surface view · quick browse · entry points.",
+      learnDesc:"Learn: deep view · full breakdown · nested detail.",
+      enter:"Enter",
+      back:"Back"
+    },
+    zh:{
+      door:"入口",
+      sub:"选择你想要的深度。",
+      expl:"深度决定你看到的是快速概览（浏览）还是深入细节（学习）。",
+      shop:"浏览",
+      learn:"学习",
+      shopDesc:"浏览：表层视图 · 快速查看 · 入口点。",
+      learnDesc:"学习：深度视图 · 完整拆解 · 多层细节。",
+      enter:"进入",
+      back:"返回"
     }
+  }[lang];
+
+  // Apply language once, everywhere
+  document.documentElement.lang = (lang === "zh") ? "zh-CN" : "en";
+  document.title = T.door;
+
+  document.getElementById("tDoor").textContent = T.door;
+  document.getElementById("tSub").textContent = T.sub;
+  document.getElementById("tExpl").textContent = T.expl;
+
+  const shopBtn = document.getElementById("shopBtn");
+  const learnBtn = document.getElementById("learnBtn");
+  const desc = document.getElementById("tDesc");
+  const enterBtn = document.getElementById("enterBtn");
+  const backBtn = document.getElementById("backBtn");
+
+  shopBtn.textContent = T.shop;
+  learnBtn.textContent = T.learn;
+  enterBtn.textContent = T.enter;
+  backBtn.textContent = T.back;
+
+  let depth = localStorage.getItem("GD_DEPTH") || "shop";
+  function render(){
+    shopBtn.classList.toggle("active", depth === "shop");
+    learnBtn.classList.toggle("active", depth === "learn");
+    desc.textContent = (depth === "shop") ? T.shopDesc : T.learnDesc;
+    localStorage.setItem("GD_DEPTH", depth);
   }
+  shopBtn.onclick = () => { depth = "shop"; render(); };
+  learnBtn.onclick = () => { depth = "learn"; render(); };
 
-  function persist(){
-    try{
-      localStorage.setItem("GD_LANG", lang);
-      localStorage.setItem("GD_DEPTH", depth);
-    }catch(e){}
-  }
+  enterBtn.onclick = () => { window.location.href = "/home/"; };
+  backBtn.onclick = () => { window.location.href = "/"; };
 
-  // Click handlers
-  langEN.addEventListener("click", ()=>{ lang="en"; persist(); renderText(); });
-  langZH.addEventListener("click", ()=>{ lang="zh"; persist(); renderText(); });
-  depthShop.addEventListener("click", ()=>{ depth="shop"; persist(); renderText(); });
-  depthLearn.addEventListener("click", ()=>{ depth="learn"; persist(); renderText(); });
-
-  enterBtn.addEventListener("click", ()=>{
-    // Door hands off to Home hub (single place to continue)
-    // Home (and every other page) reads GD_LANG + GD_DEPTH.
-    persist();
-    location.href = "/home/";
-  });
-
-  // First paint
-  renderText();
+  render();
 })();
 </script>
+
 </body>
 </html>

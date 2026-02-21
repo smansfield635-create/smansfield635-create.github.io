@@ -3,897 +3,249 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Geodiametrics · Root</title>
-
-<link rel="stylesheet" href="/assets/ui.css?v=9001"/>
-<link rel="stylesheet" href="/assets/branch.css?v=9001"/>
+<title>Geodiametrics · Gate</title>
 
 <style>
-/* =========================================================
-   ROOT — HARD GATE STABILIZED (TNT)
-   Order is forced every visit:
-     1) Language (EN / 中文)
-     2) Mode (LEARN / SHOP)
-     3) Content (single structure; copy switches)
-========================================================= */
+/* =====================================================
+   TNT: index.html (LEVEL 0 GATE — PURE ROUTER)
+   EN/中文 → Learn/Shop
+   No JS. No overlays blocking taps.
+===================================================== */
 
-.root-wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
+:root{
+  --bg0:#020305;
+  --bg1:#0b141d;
+  --bg2:#121f2c;
+  --text:#eaf2f6;
+  --muted:rgba(234,242,246,.68);
+  --glass:rgba(255,255,255,.06);
+  --glass2:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.10);
+  --shadow:rgba(0,0,0,.65);
+  --red0:rgba(130,20,30,.22);
+  --red1:rgba(130,20,30,.10);
+}
 
-/* HARD GATES */
-.gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px}
-.gate-card{
-  width:min(760px,92vw);
-  border-radius:26px;
-  background:rgba(255,255,255,.06);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 40px 110px rgba(0,0,0,.70);
-  backdrop-filter:blur(16px);
-  padding:22px;
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);
+  background:var(--bg0);
 }
-.g-title{margin:0;font-size:26px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
-.g-sub{margin:10px 0 18px;opacity:.78;font-size:16px;line-height:1.55}
-.g-grid{display:grid;grid-template-columns:1fr;gap:12px}
-@media (min-width:720px){.g-grid{grid-template-columns:1fr 1fr}}
-.g-btn{
-  border:0;cursor:pointer;
-  padding:18px 16px;border-radius:22px;
-  background:rgba(255,255,255,.06);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 20px 60px rgba(0,0,0,.35);
-  color:#eaf2f6;text-align:left;
-}
-.g-btn strong{display:block;font-weight:900;letter-spacing:.10em;text-transform:uppercase;font-size:16px}
-.g-btn span{display:block;margin-top:6px;opacity:.78;font-size:14px;line-height:1.5}
-.g-btn:active{transform:translateY(1px)}
-.hidden{display:none!important}
 
-/* CONTENT */
-.hero h1{margin:0;font-size:clamp(44px,8vw,72px);font-weight:900;letter-spacing:.01em}
-.hero p{margin:10px 0 0;font-size:20px;opacity:.75}
+body{
+  position:relative;
+  overflow-x:hidden;
+  background:
+    radial-gradient(1200px 800px at 50% 18%, var(--bg2) 0%, var(--bg1) 55%, var(--bg0) 100%);
+}
 
-/* Lenses */
-details.lens{
-  border-radius:22px;
-  background:rgba(255,255,255,.04);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 28px 70px rgba(0,0,0,.40);
-  overflow:hidden;
-}
-summary.lsum{
-  list-style:none;cursor:pointer;user-select:none;
-  padding:18px 18px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  font-weight:900;letter-spacing:.12em;text-transform:uppercase;
-}
-summary.lsum::-webkit-details-marker{display:none}
-.lleft{display:flex;gap:12px;align-items:center;min-width:0}
-.lnum{
-  width:48px;height:48px;border-radius:16px;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.08);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  flex:0 0 auto;
-  font-weight:900;letter-spacing:.10em;
-}
-.ltext{min-width:0}
-.ltext b{display:block;font-size:16px;letter-spacing:.14em}
-.ltext span{display:block;margin-top:3px;font-size:14px;opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-.chev{
-  width:42px;height:42px;border-radius:999px;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.06);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-  opacity:.9;flex:0 0 auto;
-}
-.chev::before{
+/* background layers must NEVER block taps */
+body::before{
   content:"";
-  width:10px;height:10px;
-  border-right:2px solid rgba(234,242,246,.65);
-  border-bottom:2px solid rgba(234,242,246,.65);
-  transform:rotate(45deg);
+  position:fixed;
+  inset:-25%;
+  z-index:-3;
+  pointer-events:none;
+  background:
+    radial-gradient(900px 700px at 18% 24%, rgba(72,166,255,.16) 0%, rgba(0,0,0,0) 66%),
+    radial-gradient(980px 780px at 78% 28%, rgba(190,91,255,.13) 0%, rgba(0,0,0,0) 68%),
+    radial-gradient(1050px 820px at 50% 78%, rgba(42,255,186,.09) 0%, rgba(0,0,0,0) 70%),
+    radial-gradient(1200px 900px at 55% 45%, rgba(255,170,70,.06) 0%, rgba(0,0,0,0) 70%);
+  filter:blur(18px);
+  opacity:.95;
 }
-details[open] > summary .chev::before{transform:rotate(-135deg)}
-.lbody{padding:0 18px 18px;display:flex;flex-direction:column;gap:10px;opacity:.95;line-height:1.6}
 
-/* Axes N/E/S/W */
-details.axis{
-  border-radius:18px;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.07);
-  overflow:hidden;
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.70) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.42) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.55) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(2px 2px at 22% 28%, rgba(255,255,255,.26) 0, rgba(255,255,255,0) 60%),
+    radial-gradient(2px 2px at 78% 78%, rgba(255,255,255,.22) 0, rgba(255,255,255,0) 60%);
+  opacity:.65;
 }
-summary.asum{
-  list-style:none;cursor:pointer;user-select:none;
+
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:28px 16px 34px;
+  box-sizing:border-box;
+}
+
+.panel{
+  width:min(760px,94vw);
+  border-radius:26px;
+  background:
+    linear-gradient(180deg, var(--red0) 0%, rgba(0,0,0,0) 55%),
+    rgba(255,255,255,.04);
+  box-shadow:
+    inset 0 0 0 1px var(--stroke),
+    0 34px 90px rgba(0,0,0,.55);
+  backdrop-filter:blur(12px);
+  padding:22px 18px 18px;
+}
+
+.h1{
+  font-size:clamp(32px,6.5vw,56px);
+  font-weight:900;
+  margin:0;
+  letter-spacing:.01em;
+}
+
+.sub{
+  margin:10px 0 0;
+  font-size:18px;
+  color:var(--muted);
+  line-height:1.4;
+}
+
+.grid{
+  margin-top:18px;
+  display:grid;
+  gap:14px;
+}
+
+.block{
+  border-radius:22px;
+  background:rgba(255,255,255,.05);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  padding:14px;
+}
+
+.block-title{
+  font-size:14px;
+  letter-spacing:.18em;
+  font-weight:900;
+  opacity:.85;
+  margin:0 0 10px;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.btn{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:4px;
   padding:14px 14px;
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:14px;
+  border-radius:18px;
+  background:var(--glass);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    0 18px 40px rgba(0,0,0,.35);
+  text-decoration:none;
+  color:var(--text);
+  -webkit-tap-highlight-color:transparent;
 }
-summary.asum::-webkit-details-marker{display:none}
-.abody{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px;opacity:.95}
 
-/* 4 category bubbles per axis */
-details.cat{
-  border-radius:16px;
-  background:rgba(0,0,0,.14);
-  border:1px solid rgba(255,255,255,.06);
-  overflow:hidden;
+.btn:active{
+  transform:translateY(1px);
+  filter:brightness(1.06);
 }
-summary.csum{
-  list-style:none;cursor:pointer;user-select:none;
-  padding:12px 12px;
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  font-weight:900;letter-spacing:.10em;text-transform:uppercase;font-size:12px;
-  opacity:.92;
+
+.btn strong{
+  font-size:16px;
+  letter-spacing:.08em;
 }
-summary.csum::-webkit-details-marker{display:none}
-.cbody{padding:0 12px 12px;font-size:14px;line-height:1.6;opacity:.92}
 
-/* Bottom compass */
-.root-controls{display:flex;justify-content:center;margin-top:10px}
-.root-controls .platform{width:min(420px,88vw)}
-footer{margin-top:18px;text-align:center;opacity:.6;letter-spacing:3px;font-size:12px}
+.btn span{
+  font-size:13px;
+  opacity:.70;
+}
 
-/* Safety: keep header above any plate visuals */
-.h, .hero, footer{position:relative;z-index:10}
+.btn.primary{
+  background:rgba(255,255,255,.07);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.12),
+    0 0 0 1px rgba(180,40,60,.12),
+    0 22px 55px rgba(0,0,0,.45);
+}
+
+.footer{
+  margin-top:14px;
+  font-size:12px;
+  letter-spacing:.22em;
+  opacity:.55;
+  text-align:center;
+  user-select:none;
+}
+
+.note{
+  margin-top:10px;
+  font-size:12px;
+  opacity:.55;
+  letter-spacing:.08em;
+}
 </style>
 </head>
 
 <body>
-<div class="shooting-stars"></div>
+<div class="page">
+  <div class="panel">
+    <h1 class="h1">Geodiametrics</h1>
+    <div class="sub">Choose language, then choose mode.</div>
 
-<!-- ===================== GATE 1: LANGUAGE (ALWAYS FIRST) ===================== -->
-<div class="gate" id="gateLang">
-  <div class="gate-card">
-    <h2 class="g-title">Choose Language</h2>
-    <p class="g-sub">Select a language to enter. This choice sets the surface text.</p>
-    <div class="g-grid">
-      <button class="g-btn" id="pickEN" type="button">
-        <strong>English</strong>
-        <span>Proceed in English.</span>
-      </button>
-      <button class="g-btn" id="pickZH" type="button">
-        <strong>中文</strong>
-        <span>使用简体中文进入。</span>
-      </button>
+    <div class="grid">
+
+      <div class="block">
+        <div class="block-title">LANGUAGE</div>
+        <div class="row">
+          <a class="btn primary" href="/en/learn/">
+            <strong>ENGLISH</strong>
+            <span>Proceed in English.</span>
+          </a>
+          <a class="btn primary" href="/zh/learn/">
+            <strong>中文</strong>
+            <span>使用简体中文进入。</span>
+          </a>
+        </div>
+        <div class="note">Selecting language routes into Learn by default.</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">MODE</div>
+        <div class="row">
+          <a class="btn" href="/en/learn/">
+            <strong>LEARN</strong>
+            <span>Informal + technical.</span>
+          </a>
+          <a class="btn" href="/en/shop/">
+            <strong>SHOP</strong>
+            <span>Offer + packages.</span>
+          </a>
+        </div>
+        <div class="row" style="margin-top:12px;">
+          <a class="btn" href="/zh/learn/">
+            <strong>学习</strong>
+            <span>非营销路径。</span>
+          </a>
+          <a class="btn" href="/zh/shop/">
+            <strong>选购</strong>
+            <span>产品与服务。</span>
+          </a>
+        </div>
+      </div>
+
     </div>
-    <div class="g-sub" style="margin-top:14px;opacity:.62;font-size:12px;letter-spacing:.12em;text-transform:uppercase">Tap once to enter</div>
+
+    <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
   </div>
 </div>
-
-<!-- ===================== GATE 2: MODE (ALWAYS SECOND) ===================== -->
-<div class="gate hidden" id="gateMode">
-  <div class="gate-card">
-    <h2 class="g-title" data-key="gate_mode_title">Choose Intent</h2>
-    <p class="g-sub" data-key="gate_mode_sub">Are you here to learn, or are you ready to shop?</p>
-    <div class="g-grid">
-      <button class="g-btn" id="pickLearn" type="button">
-        <strong data-key="gate_learn">Learn</strong>
-        <span data-key="gate_learn_sub">Understand the system and how it works.</span>
-      </button>
-      <button class="g-btn" id="pickShop" type="button">
-        <strong data-key="gate_shop">Shop</strong>
-        <span data-key="gate_shop_sub">Explore products, programs, and deployment.</span>
-      </button>
-    </div>
-    <div class="g-sub" style="margin-top:14px;opacity:.62;font-size:12px;letter-spacing:.12em;text-transform:uppercase" data-key="gate_mode_note">This sets the voice, not the structure</div>
-  </div>
-</div>
-
-<!-- ===================== ROOT CONTENT ===================== -->
-<div class="page hidden" id="rootContent">
-  <div class="root-wrap">
-
-    <div class="hero">
-      <h1 data-key="hero_title">Geodiametrics</h1>
-      <p data-key="hero_sub">Master hub · Same structure · Two voices</p>
-    </div>
-
-    <!-- 1 PROBLEM -->
-    <details class="lens">
-      <summary class="lsum">
-        <div class="lleft">
-          <div class="lnum">1</div>
-          <div class="ltext">
-            <b data-key="l1_title">Problem</b>
-            <span data-key="l1_sub">What is broken and why it matters</span>
-          </div>
-        </div>
-        <div class="chev"></div>
-      </summary>
-
-      <div class="lbody">
-        <!-- N -->
-        <details class="axis">
-          <summary class="asum"><span data-key="l1_n">N · Language drift</span><div class="chev"></div></summary>
-          <div class="abody">
-            <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l1_n_meaning"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l1_n_get"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l1_n_where"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l1_n_examples"></div></details>
-          </div>
-        </details>
-        <!-- E -->
-        <details class="axis">
-          <summary class="asum"><span data-key="l1_e">E · Products without grammar</span><div class="chev"></div></summary>
-          <div class="abody">
-            <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l1_e_meaning"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l1_e_get"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l1_e_where"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l1_e_examples"></div></details>
-          </div>
-        </details>
-        <!-- S -->
-        <details class="axis">
-          <summary class="asum"><span data-key="l1_s">S · Measurement gaps</span><div class="chev"></div></summary>
-          <div class="abody">
-            <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l1_s_meaning"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l1_s_get"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l1_s_where"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l1_s_examples"></div></details>
-          </div>
-        </details>
-        <!-- W -->
-        <details class="axis">
-          <summary class="asum"><span data-key="l1_w">W · Identity & references</span><div class="chev"></div></summary>
-          <div class="abody">
-            <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l1_w_meaning"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l1_w_get"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l1_w_where"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l1_w_examples"></div></details>
-          </div>
-        </details>
-      </div>
-    </details>
-
-    <!-- 2 R&D -->
-    <details class="lens">
-      <summary class="lsum">
-        <div class="lleft">
-          <div class="lnum">2</div>
-          <div class="ltext">
-            <b data-key="l2_title">R&amp;D</b>
-            <span data-key="l2_sub">What exists and how it’s built</span>
-          </div>
-        </div>
-        <div class="chev"></div>
-      </summary>
-
-      <div class="lbody">
-        <details class="axis">
-          <summary class="asum"><span data-key="l2_n">N · Formal core</span><div class="chev"></div></summary>
-          <div class="abody">
-            <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l2_n_meaning"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l2_n_get"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l2_n_where"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l2_n_examples"></div></details>
-          </div>
-        </details>
-        <details class="axis">
-          <summary class="asum"><span data-key="l2_e">E · Product surfaces</span><div class="chev"></div></summary>
-          <div class="abody">
-            <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l2_e_meaning"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l2_e_get"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l2_e_where"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l2_e_examples"></div></details>
-          </div>
-        </details>
-        <details class="axis">
-          <summary class="asum"><span data-key="l2_s">S · Gauges & receipts</span><div class="chev"></div></summary>
-          <div class="abody">
-            <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l2_s_meaning"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l2_s_get"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l2_s_where"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l2_s_examples"></div></details>
-          </div>
-        </details>
-        <details class="axis">
-          <summary class="asum"><span data-key="l2_w">W · Anchors</span><div class="chev"></div></summary>
-          <div class="abody">
-            <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l2_w_meaning"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l2_w_get"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l2_w_where"></div></details>
-            <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l2_w_examples"></div></details>
-          </div>
-        </details>
-      </div>
-    </details>
-
-    <!-- 3 STRATEGY -->
-    <details class="lens">
-      <summary class="lsum">
-        <div class="lleft">
-          <div class="lnum">3</div>
-          <div class="ltext">
-            <b data-key="l3_title">Strategy</b>
-            <span data-key="l3_sub">How it scales without drift</span>
-          </div>
-        </div>
-        <div class="chev"></div>
-      </summary>
-
-      <div class="lbody">
-        <details class="axis"><summary class="asum"><span data-key="l3_n">N · Canon first</span><div class="chev"></div></summary><div class="abody">
-          <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l3_n_meaning"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l3_n_get"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l3_n_where"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l3_n_examples"></div></details>
-        </div></details>
-
-        <details class="axis"><summary class="asum"><span data-key="l3_e">E · Ship surfaces</span><div class="chev"></div></summary><div class="abody">
-          <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l3_e_meaning"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l3_e_get"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l3_e_where"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l3_e_examples"></div></details>
-        </div></details>
-
-        <details class="axis"><summary class="asum"><span data-key="l3_s">S · Measure everything</span><div class="chev"></div></summary><div class="abody">
-          <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l3_s_meaning"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l3_s_get"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l3_s_where"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l3_s_examples"></div></details>
-        </div></details>
-
-        <details class="axis"><summary class="asum"><span data-key="l3_w">W · Anchor credit</span><div class="chev"></div></summary><div class="abody">
-          <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l3_w_meaning"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l3_w_get"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l3_w_where"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l3_w_examples"></div></details>
-        </div></details>
-      </div>
-    </details>
-
-    <!-- 4 LEARNED -->
-    <details class="lens">
-      <summary class="lsum">
-        <div class="lleft">
-          <div class="lnum">4</div>
-          <div class="ltext">
-            <b data-key="l4_title">What we’ve learned</b>
-            <span data-key="l4_sub">Current stable insights</span>
-          </div>
-        </div>
-        <div class="chev"></div>
-      </summary>
-
-      <div class="lbody">
-        <details class="axis"><summary class="asum"><span data-key="l4_n">N · Language is structure</span><div class="chev"></div></summary><div class="abody">
-          <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l4_n_meaning"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l4_n_get"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l4_n_where"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l4_n_examples"></div></details>
-        </div></details>
-
-        <details class="axis"><summary class="asum"><span data-key="l4_e">E · Surfaces win</span><div class="chev"></div></summary><div class="abody">
-          <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l4_e_meaning"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l4_e_get"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l4_e_where"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l4_e_examples"></div></details>
-        </div></details>
-
-        <details class="axis"><summary class="asum"><span data-key="l4_s">S · Measurement creates trust</span><div class="chev"></div></summary><div class="abody">
-          <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l4_s_meaning"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l4_s_get"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l4_s_where"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l4_s_examples"></div></details>
-        </div></details>
-
-        <details class="axis"><summary class="asum"><span data-key="l4_w">W · Anchors preserve credit</span><div class="chev"></div></summary><div class="abody">
-          <details class="cat"><summary class="csum"><span data-key="c_meaning">Meaning</span><div class="chev"></div></summary><div class="cbody" data-key="l4_w_meaning"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_get">What you get</span><div class="chev"></div></summary><div class="cbody" data-key="l4_w_get"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_where">Where it lives</span><div class="chev"></div></summary><div class="cbody" data-key="l4_w_where"></div></details>
-          <details class="cat"><summary class="csum"><span data-key="c_examples">Examples</span><div class="chev"></div></summary><div class="cbody" data-key="l4_w_examples"></div></details>
-        </div></details>
-      </div>
-    </details>
-
-    <!-- Compass plate -->
-    <div class="root-controls">
-      <div class="platform">
-        <a class="diamond top" href="/laws/categories/"><span data-en="Laws" data-zh="法则">Laws<small data-en="Categories" data-zh="分类">Categories</small></span></a>
-        <a class="diamond right" href="/products/"><span data-en="Products" data-zh="产品">Products<small data-en="Suite" data-zh="套件">Suite</small></span></a>
-        <a class="diamond bottom" href="/gauges/"><span data-en="Gauges" data-zh="量规">Gauges<small data-en="Instruments" data-zh="仪表">Instruments</small></span></a>
-        <a class="diamond left" href="/links/"><span data-en="Links" data-zh="链接">Links<small data-en="References" data-zh="参考">References</small></span></a>
-        <a class="diamond mini mini-left" href="/door/"><span><small data-en="DOOR" data-zh="入口">DOOR</small></span></a>
-        <a class="diamond mini mini-right" href="/home/"><span><small data-en="HOME" data-zh="主页">HOME</small></span></a>
-      </div>
-    </div>
-
-    <footer data-key="footer">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-
-  </div>
-</div>
-
-<script>
-(() => {
-  // ===========================
-  // HARD GATE: Language first
-  // Then Mode
-  // ===========================
-  const gateLang = document.getElementById("gateLang");
-  const gateMode = document.getElementById("gateMode");
-  const rootContent = document.getElementById("rootContent");
-
-  // ---------- Copy dictionary ----------
-  // Same structure; different delivery tone per mode.
-  // (mode: learn/shop) + (lang: en/zh)
-  const COPY = {
-    en: {
-      common:{
-        gate_mode_title:"Choose Intent",
-        gate_mode_sub:"Are you here to learn, or are you ready to shop?",
-        gate_learn:"Learn",
-        gate_learn_sub:"Understand the system and how it works.",
-        gate_shop:"Shop",
-        gate_shop_sub:"Explore products, programs, and deployment.",
-        gate_mode_note:"This sets the voice, not the structure",
-        hero_title:"Geodiametrics",
-        hero_sub:"Master hub · Same structure · Two voices",
-        c_meaning:"Meaning",
-        c_get:"What you get",
-        c_where:"Where it lives",
-        c_examples:"Examples",
-        l1_title:"Problem",
-        l1_sub:"What is broken and why it matters",
-        l1_n:"N · Language drift",
-        l1_e:"E · Products without grammar",
-        l1_s:"S · Measurement gaps",
-        l1_w:"W · Identity & references",
-        l2_title:"R&D",
-        l2_sub:"What exists and how it’s built",
-        l2_n:"N · Formal core",
-        l2_e:"E · Product surfaces",
-        l2_s:"S · Gauges & receipts",
-        l2_w:"W · Anchors",
-        l3_title:"Strategy",
-        l3_sub:"How it scales without drift",
-        l3_n:"N · Canon first",
-        l3_e:"E · Ship surfaces",
-        l3_s:"S · Measure everything",
-        l3_w:"W · Anchor credit",
-        l4_title:"What we’ve learned",
-        l4_sub:"Current stable insights",
-        l4_n:"N · Language is structure",
-        l4_e:"E · Surfaces win",
-        l4_s:"S · Measurement creates trust",
-        l4_w:"W · Anchors preserve credit",
-        footer:"CANONICAL · STABLE · © GEODIAMETRICS"
-      },
-
-      learn:{
-        l1_n_meaning:"Undefined terms and acronym sprawl cause disagreement and destroy reproducibility.",
-        l1_n_get:"A stable canon: glossary + acronym registry + consistent definitions.",
-        l1_n_where:"Root + Laws/Categories + Links (identity anchors).",
-        l1_n_examples:"Same word, different meaning: coherence / integrity / admissibility.",
-
-        l1_e_meaning:"Tools without a governing grammar produce chaotic adoption and inconsistent outcomes.",
-        l1_e_get:"Execution surfaces (PLASMA/EAI/PLATFORM/CVD) with consistent interaction rules.",
-        l1_e_where:"Products hub + product pages.",
-        l1_e_examples:"One choice → clear output → return path.",
-
-        l1_s_meaning:"Without shared metrics, systems can’t be compared, audited, or trusted.",
-        l1_s_get:"Gauges + diagnostics + replayable exports.",
-        l1_s_where:"Gauges hub + diagnostic surfaces.",
-        l1_s_examples:"Same claim, different measurement → no agreement.",
-
-        l1_w_meaning:"Without anchors, credit and verification collapse.",
-        l1_w_get:"OSF/ORCID/Links as a stable attribution plane.",
-        l1_w_where:"Links hub (W).",
-        l1_w_examples:"OSF project + ORCID iD persists through distribution.",
-
-        l2_n_meaning:"Formal primitives: SSG + DOT.GRID define structure and indexing.",
-        l2_n_get:"A language (SSG) + a 256-state address system (DOT.GRID).",
-        l2_n_where:"Root/Laws for definitions; Links for anchors.",
-        l2_n_examples:"Same evidence + same rules → same classification.",
-
-        l2_e_meaning:"Product surfaces implement the grammar and produce outputs.",
-        l2_e_get:"Tools people can use: choose → compute → export → return.",
-        l2_e_where:"Products hub.",
-        l2_e_examples:"PLASMA (energy) / EAI (admissibility) / PLATFORM (environment) / CVD (deployment).",
-
-        l2_s_meaning:"Measurement-first instruments create trust through repeatability.",
-        l2_s_get:"Gauges, receipts, and exportable logs.",
-        l2_s_where:"Gauges hub.",
-        l2_s_examples:"Alignment diagnostic output + replayable evidence stream.",
-
-        l2_w_meaning:"Anchors preserve verification and derivative credit.",
-        l2_w_get:"Stable external references (OSF/ORCID).",
-        l2_w_where:"Links hub.",
-        l2_w_examples:"Attribution survives even when content is copied.",
-
-        l3_n_meaning:"Lock the canon before you scale.",
-        l3_n_get:"One glossary; one acronym registry; one rule set.",
-        l3_n_where:"Root + Laws.",
-        l3_n_examples:"No redefinition across pages.",
-
-        l3_e_meaning:"Ship surfaces (fruit) not narratives (branches).",
-        l3_e_get:"Executable interfaces that guide users forward.",
-        l3_e_where:"Products.",
-        l3_e_examples:"A tool page that outputs measurable results.",
-
-        l3_s_meaning:"If it can’t be measured, it can’t be scaled.",
-        l3_s_get:"Metrics, audits, and replay checks.",
-        l3_s_where:"Gauges.",
-        l3_s_examples:"Standard scorecards across domains.",
-
-        l3_w_meaning:"Identity and references keep the chain intact.",
-        l3_w_get:"Stable anchors for credit and verification.",
-        l3_w_where:"Links.",
-        l3_w_examples:"ORCID + OSF used everywhere.",
-
-        l4_n_meaning:"Compression-first language accelerates clarity.",
-        l4_n_get:"Less argument; more execution.",
-        l4_n_where:"Root/Laws.",
-        l4_n_examples:"Same term, same meaning across the site.",
-
-        l4_e_meaning:"Adoption follows usability.",
-        l4_e_get:"Surfaces become the product.",
-        l4_e_where:"Products.",
-        l4_e_examples:"Users self-route without confusion.",
-
-        l4_s_meaning:"Repeatable outputs create credibility.",
-        l4_s_get:"Trust grows from consistent measurement.",
-        l4_s_where:"Gauges.",
-        l4_s_examples:"Evidence streams can be replayed.",
-
-        l4_w_meaning:"Anchors prevent loss and misattribution.",
-        l4_w_get:"Credit survives scale.",
-        l4_w_where:"Links.",
-        l4_w_examples:"OSF/ORCID referenced across distributions."
-      },
-
-      shop:{
-        l1_n_meaning:"When language is inconsistent, buyers can’t trust claims.",
-        l1_n_get:"Clear definitions and an acronym index that remove confusion.",
-        l1_n_where:"Root + Laws + Links.",
-        l1_n_examples:"No sales fog. Terms mean one thing.",
-
-        l1_e_meaning:"Without a clear product grammar, customers drop off.",
-        l1_e_get:"Guided surfaces that tell you what to click next.",
-        l1_e_where:"Products hub.",
-        l1_e_examples:"Pick → see result → export → next step.",
-
-        l1_s_meaning:"No measurement = no confidence.",
-        l1_s_get:"Gauges and diagnostics that prove performance.",
-        l1_s_where:"Gauges hub.",
-        l1_s_examples:"Outputs you can compare and show.",
-
-        l1_w_meaning:"No identity = no credibility.",
-        l1_w_get:"Public anchors (OSF/ORCID) that protect legitimacy.",
-        l1_w_where:"Links.",
-        l1_w_examples:"Your stakeholders can verify.",
-
-        l2_n_meaning:"Formal backbone that keeps products consistent.",
-        l2_n_get:"A stable system: SSG + DOT.GRID.",
-        l2_n_where:"Root/Laws.",
-        l2_n_examples:"Same rules everywhere.",
-
-        l2_e_meaning:"Products are packaged execution.",
-        l2_e_get:"PLASMA/EAI/PLATFORM/CVD surfaces.",
-        l2_e_where:"Products.",
-        l2_e_examples:"Energy, governance, environment, deployment.",
-
-        l2_s_meaning:"Measurements turn features into proof.",
-        l2_s_get:"Reports, exports, and replayable evidence.",
-        l2_s_where:"Gauges.",
-        l2_s_examples:"Audit-ready outputs.",
-
-        l2_w_meaning:"Anchors protect reputation.",
-        l2_w_get:"Stable public references.",
-        l2_w_where:"Links.",
-        l2_w_examples:"Verification is one click away.",
-
-        l3_n_meaning:"Canon prevents confusion during adoption.",
-        l3_n_get:"Clear terms and a clean index.",
-        l3_n_where:"Root/Laws.",
-        l3_n_examples:"Less sales friction.",
-
-        l3_e_meaning:"Ship the interface. Users buy the surface.",
-        l3_e_get:"Clickable product surfaces.",
-        l3_e_where:"Products.",
-        l3_e_examples:"Fast onboarding.",
-
-        l3_s_meaning:"Measurement drives confidence and conversion.",
-        l3_s_get:"Gauges + diagnostics.",
-        l3_s_where:"Gauges.",
-        l3_s_examples:"Before/after comparisons.",
-
-        l3_w_meaning:"Credibility is an asset.",
-        l3_w_get:"Public identity anchors.",
-        l3_w_where:"Links.",
-        l3_w_examples:"Trust at scale.",
-
-        l4_n_meaning:"Clear language increases conversion.",
-        l4_n_get:"Buyers understand instantly.",
-        l4_n_where:"Root/Laws.",
-        l4_n_examples:"No confusion.",
-
-        l4_e_meaning:"Usable surfaces reduce churn.",
-        l4_e_get:"Repeatable user journeys.",
-        l4_e_where:"Products.",
-        l4_e_examples:"Self-guided navigation.",
-
-        l4_s_meaning:"Proof closes deals.",
-        l4_s_get:"Measurable outputs.",
-        l4_s_where:"Gauges.",
-        l4_s_examples:"Evidence you can share.",
-
-        l4_w_meaning:"Anchors preserve reputation.",
-        l4_w_get:"Verification stays intact.",
-        l4_w_where:"Links.",
-        l4_w_examples:"OSF/ORCID visible."
-      }
-    },
-
-    zh: {
-      common:{
-        gate_mode_title:"选择目的",
-        gate_mode_sub:"你是来学习，还是准备了解/购买？",
-        gate_learn:"学习",
-        gate_learn_sub:"理解系统与工作方式。",
-        gate_shop:"产品",
-        gate_shop_sub:"查看产品、项目、认证与部署。",
-        gate_mode_note:"切换的是表达方式，不是结构",
-        hero_title:"Geodiametrics",
-        hero_sub:"主枢纽 · 同一结构 · 两种表达",
-        c_meaning:"含义",
-        c_get:"你得到什么",
-        c_where:"位置",
-        c_examples:"示例",
-        l1_title:"问题",
-        l1_sub:"哪里出了问题，为什么重要",
-        l1_n:"N · 语言漂移",
-        l1_e:"E · 产品缺少语法",
-        l1_s:"S · 测量缺口",
-        l1_w:"W · 身份与引用",
-        l2_title:"研发",
-        l2_sub:"现在有什么、如何构建",
-        l2_n:"N · 形式核心",
-        l2_e:"E · 产品界面",
-        l2_s:"S · 量规与回执",
-        l2_w:"W · 锚点",
-        l3_title:"策略",
-        l3_sub:"如何扩展而不漂移",
-        l3_n:"N · 先规范",
-        l3_e:"E · 交付界面",
-        l3_s:"S · 全部可测",
-        l3_w:"W · 锚定署名",
-        l4_title:"我们学到的",
-        l4_sub:"当前稳定结论",
-        l4_n:"N · 语言即结构",
-        l4_e:"E · 界面制胜",
-        l4_s:"S · 测量建立信任",
-        l4_w:"W · 锚点保署名",
-        footer:"规范 · 稳定 · © GEODIAMETRICS"
-      },
-
-      learn:{
-        l1_n_meaning:"术语不统一、缩写膨胀会破坏可复现与信任。",
-        l1_n_get:"规范术语表 + 缩写索引 + 稳定定义。",
-        l1_n_where:"Root + Laws/分类 + Links（身份锚点）。",
-        l1_n_examples:"同一词不同义：连贯性/完整性/可采纳性。",
-
-        l1_e_meaning:"没有统一语法的工具会导致采用混乱、结果不稳定。",
-        l1_e_get:"执行界面（PLASMA/EAI/PLATFORM/CVD）按同一规则产出结果。",
-        l1_e_where:"Products 枢纽 + 产品页。",
-        l1_e_examples:"一次一选 → 输出 → 返回路径。",
-
-        l1_s_meaning:"没有共享指标，无法对比、审计或建立信任。",
-        l1_s_get:"量规 + 诊断 + 可回放导出。",
-        l1_s_where:"Gauges 枢纽 + 诊断界面。",
-        l1_s_examples:"同主张不同测量 → 无法一致。",
-
-        l1_w_meaning:"缺少锚点会导致署名与验证崩塌。",
-        l1_w_get:"OSF/ORCID/Links 作为稳定署名平面。",
-        l1_w_where:"Links 枢纽（W）。",
-        l1_w_examples:"OSF 项目 + ORCID 在传播中仍可追溯。",
-
-        l2_n_meaning:"形式基础：SSG + DOT.GRID 定义结构与索引。",
-        l2_n_get:"语言（SSG）+ 256 状态地址（DOT.GRID）。",
-        l2_n_where:"Root/Laws 定义；Links 锚点。",
-        l2_n_examples:"同证据+同规则→同分类。",
-
-        l2_e_meaning:"产品界面实现语法并产出可用结果。",
-        l2_e_get:"选择→计算→导出→返回 的可用工具链。",
-        l2_e_where:"Products。",
-        l2_e_examples:"PLASMA（能源）/EAI（可采纳）/PLATFORM（环境）/CVD（部署）。",
-
-        l2_s_meaning:"测量优先使输出可重复、可对比。",
-        l2_s_get:"量规、回执、可导出日志。",
-        l2_s_where:"Gauges。",
-        l2_s_examples:"对齐诊断输出 + 可回放证据流。",
-
-        l2_w_meaning:"锚点保护验证与衍生署名。",
-        l2_w_get:"稳定外部引用（OSF/ORCID）。",
-        l2_w_where:"Links。",
-        l2_w_examples:"内容被复制，署名仍在。",
-
-        l3_n_meaning:"扩展前先锁定规范。",
-        l3_n_get:"一套术语表、一套缩写索引、一套规则。",
-        l3_n_where:"Root + Laws。",
-        l3_n_examples:"全站不重复定义。",
-
-        l3_e_meaning:"交付界面（果实），不要只讲结构（枝）。",
-        l3_e_get:"可执行界面，引导用户前进。",
-        l3_e_where:"Products。",
-        l3_e_examples:"工具页产出可测结果。",
-
-        l3_s_meaning:"不可测就不可扩展。",
-        l3_s_get:"指标、审计、回放检查。",
-        l3_s_where:"Gauges。",
-        l3_s_examples:"跨领域标准量表。",
-
-        l3_w_meaning:"身份与引用保持链条完整。",
-        l3_w_get:"稳定锚点用于署名与验证。",
-        l3_w_where:"Links。",
-        l3_w_examples:"ORCID + OSF 全站引用。",
-
-        l4_n_meaning:"压缩优先语言加速清晰。",
-        l4_n_get:"少争论，多执行。",
-        l4_n_where:"Root/Laws。",
-        l4_n_examples:"同术语同含义。",
-
-        l4_e_meaning:"采用跟随可用性。",
-        l4_e_get:"界面就是产品。",
-        l4_e_where:"Products。",
-        l4_e_examples:"用户自路由不迷路。",
-
-        l4_s_meaning:"可重复输出产生可信度。",
-        l4_s_get:"信任来自一致测量。",
-        l4_s_where:"Gauges。",
-        l4_s_examples:"证据流可回放。",
-
-        l4_w_meaning:"锚点防丢失、防误署名。",
-        l4_w_get:"署名可随规模保留。",
-        l4_w_where:"Links。",
-        l4_w_examples:"OSF/ORCID 跨传播存在。"
-      },
-
-      shop:{
-        l1_n_meaning:"语言不清会让购买者无法信任主张。",
-        l1_n_get:"清晰定义与缩写索引，减少理解成本。",
-        l1_n_where:"Root + Laws + Links。",
-        l1_n_examples:"没有销售迷雾，术语只有一种含义。",
-
-        l1_e_meaning:"没有清晰产品语法会导致转化流失。",
-        l1_e_get:"引导式界面：告诉你下一步点什么。",
-        l1_e_where:"Products。",
-        l1_e_examples:"选择→结果→导出→下一步。",
-
-        l1_s_meaning:"没有测量就没有信心。",
-        l1_s_get:"量规与诊断把性能变成证据。",
-        l1_s_where:"Gauges。",
-        l1_s_examples:"输出可对比、可展示。",
-
-        l1_w_meaning:"没有身份就没有可信度。",
-        l1_w_get:"公开锚点（OSF/ORCID）保护合法性。",
-        l1_w_where:"Links。",
-        l1_w_examples:"利益相关方可验证。",
-
-        l2_n_meaning:"形式骨架保证产品一致。",
-        l2_n_get:"SSG + DOT.GRID 的稳定体系。",
-        l2_n_where:"Root/Laws。",
-        l2_n_examples:"同规则贯穿全站。",
-
-        l2_e_meaning:"产品是打包的执行。",
-        l2_e_get:"PLASMA/EAI/PLATFORM/CVD 界面。",
-        l2_e_where:"Products。",
-        l2_e_examples:"能源/治理/环境/部署。",
-
-        l2_s_meaning:"测量把功能变成证明。",
-        l2_s_get:"报告、导出、可回放证据。",
-        l2_s_where:"Gauges。",
-        l2_s_examples:"审计就绪输出。",
-
-        l2_w_meaning:"锚点保护信誉。",
-        l2_w_get:"稳定外部引用。",
-        l2_w_where:"Links。",
-        l2_w_examples:"验证一键完成。",
-
-        l3_n_meaning:"规范减少采用摩擦。",
-        l3_n_get:"清晰术语与索引。",
-        l3_n_where:"Root/Laws。",
-        l3_n_examples:"更少沟通摩擦。",
-
-        l3_e_meaning:"交付界面，用户购买可用性。",
-        l3_e_get:"可点击产品界面。",
-        l3_e_where:"Products。",
-        l3_e_examples:"快速上手。",
-
-        l3_s_meaning:"测量驱动转化。",
-        l3_s_get:"量规 + 诊断。",
-        l3_s_where:"Gauges。",
-        l3_s_examples:"前后对比。",
-
-        l3_w_meaning:"可信度是资产。",
-        l3_w_get:"公开身份锚点。",
-        l3_w_where:"Links。",
-        l3_w_examples:"规模化信任。",
-
-        l4_n_meaning:"清晰语言提高转化。",
-        l4_n_get:"买家立刻理解。",
-        l4_n_where:"Root/Laws。",
-        l4_n_examples:"不困惑。",
-
-        l4_e_meaning:"可用界面降低流失。",
-        l4_e_get:"可重复用户路径。",
-        l4_e_where:"Products。",
-        l4_e_examples:"自引导导航。",
-
-        l4_s_meaning:"证据促成成交。",
-        l4_s_get:"可测输出。",
-        l4_s_where:"Gauges。",
-        l4_s_examples:"可分享证据。",
-
-        l4_w_meaning:"锚点保护信誉与署名。",
-        l4_w_get:"验证保持完整。",
-        l4_w_where:"Links。",
-        l4_w_examples:"OSF/ORCID 可见。"
-      }
-    }
-  };
-
-  const state = { lang:"en", mode:"learn" };
-
-  function applyCopy(){
-    const c = COPY[state.lang];
-    const common = c.common;
-    const modeObj = c[state.mode];
-
-    document.querySelectorAll("[data-key]").forEach(el=>{
-      const k = el.getAttribute("data-key");
-      if (modeObj && modeObj[k] != null) { el.textContent = modeObj[k]; return; }
-      if (common && common[k] != null) { el.textContent = common[k]; return; }
-    });
-
-    document.body.setAttribute("data-lang", state.lang);
-    document.documentElement.lang = (state.lang === "zh") ? "zh-Hans" : "en";
-  }
-
-  function closeAllDetails(){
-    document.querySelectorAll("#rootContent details").forEach(d=>d.open=false);
-  }
-
-  // Gates (always first / second)
-  const gateLang = document.getElementById("gateLang");
-  const gateMode = document.getElementById("gateMode");
-  const rootContent = document.getElementById("rootContent");
-
-  document.getElementById("pickEN").addEventListener("click", ()=>{
-    state.lang = "en";
-    gateLang.classList.add("hidden");
-    gateMode.classList.remove("hidden");
-    applyCopy();
-  });
-
-  document.getElementById("pickZH").addEventListener("click", ()=>{
-    state.lang = "zh";
-    gateLang.classList.add("hidden");
-    gateMode.classList.remove("hidden");
-    applyCopy();
-  });
-
-  document.getElementById("pickLearn").addEventListener("click", ()=>{
-    state.mode = "learn";
-    gateMode.classList.add("hidden");
-    rootContent.classList.remove("hidden");
-    applyCopy();
-    closeAllDetails();
-  });
-
-  document.getElementById("pickShop").addEventListener("click", ()=>{
-    state.mode = "shop";
-    gateMode.classList.add("hidden");
-    rootContent.classList.remove("hidden");
-    applyCopy();
-    closeAllDetails();
-  });
-
-  // Ensure hard order every visit:
-  // show language gate; hide everything else; no persistence bypass.
-  gateLang.classList.remove("hidden");
-  gateMode.classList.add("hidden");
-  rootContent.classList.add("hidden");
-  applyCopy();
-})();
-</script>
-
 </body>
 </html>

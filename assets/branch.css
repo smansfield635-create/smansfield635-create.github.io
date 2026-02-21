@@ -1,10 +1,6 @@
-/* =========================================================
-   GLOBAL TNT: assets/branch.css
-   DARK OPAL GEM SYSTEM + COMPASS BADGES (SYMBOL + N/E/S/W)
-   - No HTML changes required
-   - Perfect alignment (fixed-size badges)
-   - Symbols are glyphs (not emoji)
-========================================================= */
+/* ==========================================
+   GEODIAMETRICS OPAL SYSTEM — GLOBAL STABLE TNT
+========================================== */
 
 /* ---------- PLATFORM ---------- */
 
@@ -15,34 +11,42 @@
   margin:0 auto;
 }
 
+/* Main rotated plate */
 .platform::before{
   content:"";
   position:absolute;
   inset:0;
   transform:rotate(45deg);
-  border-radius:28px;
-  background:rgba(255,255,255,.04);
+  border-radius:30px;
+
+  background:
+    radial-gradient(circle at 50% 40%,
+      rgba(60,70,80,.35) 0%,
+      rgba(20,25,30,.85) 70%,
+      rgba(10,12,16,1) 100%);
+
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.08),
-    0 36px 90px rgba(0,0,0,.85);
-  backdrop-filter:blur(10px);
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 40px 100px rgba(0,0,0,.85);
+
   z-index:0;
 }
 
-/* ---------- MAIN GEMS ---------- */
+/* ==========================================
+   MAIN DIAMONDS
+========================================== */
 
 .diamond{
   position:absolute;
-  width:36%;
-  height:36%;
+  width:38%;
+  height:38%;
   transform:rotate(45deg);
-  border-radius:26px;
+  border-radius:24px;
 
   background:
-    radial-gradient(circle at 50% 38%,
-      rgba(60,70,80,.85) 0%,
-      rgba(20,24,30,.96) 60%,
-      rgba(8,10,14,1) 100%);
+    radial-gradient(circle at 50% 40%,
+      rgba(45,55,65,.8) 0%,
+      rgba(18,22,28,.95) 75%);
 
   display:flex;
   align-items:center;
@@ -51,27 +55,20 @@
 
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.05),
-    inset 0 20px 32px rgba(255,255,255,.04),
-    inset 0 -32px 48px rgba(0,0,0,.9),
-    0 28px 70px rgba(0,0,0,.9);
+    inset 0 20px 35px rgba(255,255,255,.04),
+    inset 0 -35px 60px rgba(0,0,0,.9),
+    0 25px 70px rgba(0,0,0,.9);
 
+  transition:transform .15s ease, filter .15s ease;
   z-index:2;
-  transition:filter .15s ease, transform .15s ease;
 }
-
-.diamond:hover{ filter:brightness(1.1); }
-.diamond:active{ transform:rotate(45deg) translateY(2px); }
-
-/* TEXT */
 
 .diamond span{
   transform:rotate(-45deg);
   text-align:center;
   font-weight:900;
-  color:#f2f6ff;
-  text-shadow:
-    0 0 8px rgba(150,210,255,.5),
-    0 0 20px rgba(90,170,255,.35);
+  color:#eaf2f6;
+  text-shadow:0 0 18px rgba(120,180,255,.45);
 }
 
 .diamond small{
@@ -79,141 +76,106 @@
   margin-top:6px;
   font-size:12px;
   font-weight:800;
-  letter-spacing:.14em;
-  opacity:.85;
-  color:#cfd8e4;
-  text-shadow:0 0 6px rgba(150,210,255,.25);
+  letter-spacing:.12em;
+  opacity:.8;
 }
 
-/* ---------- COMPASS POSITIONS ---------- */
+/* Main diamond positions */
+.top{top:6%;left:31%}
+.right{top:31%;right:6%}
+.bottom{bottom:6%;left:31%}
+.left{top:31%;left:6%}
 
-.top{ top:8%; left:32%; }
-.right{ top:32%; right:8%; }
-.bottom{ bottom:8%; left:32%; }
-.left{ top:32%; left:8%; }
-
-/* ---------- MINI GEMS ---------- */
+/* ==========================================
+   MINI CONTROLS (BOTTOM POCKETS)
+========================================== */
 
 .diamond.mini{
-  width:16%;
-  height:16%;
-  border-radius:18px;
-
-  background:
-    radial-gradient(circle at 50% 35%,
-      rgba(70,80,90,.9) 0%,
-      rgba(16,20,26,1) 80%);
-
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.05),
-    inset 0 12px 20px rgba(255,255,255,.04),
-    inset 0 -22px 30px rgba(0,0,0,.95),
-    0 20px 40px rgba(0,0,0,.95);
-
+  width:18%;
+  height:18%;
+  border-radius:20px;
   z-index:3;
 }
 
 .mini-left{
-  position:absolute;
-  bottom:-8%;
+  bottom:-6%;
   left:8%;
 }
 
 .mini-right{
-  position:absolute;
-  bottom:-8%;
+  bottom:-6%;
   right:8%;
 }
 
-/* =========================================================
-   COMPASS BADGES (SYMBOL + LETTER)
-   - Fixed-size badge -> perfectly centered
-   - Two-line layout: symbol then letter
-   - Not emoji: rendered as glyph, styled like UI
-========================================================= */
+/* ==========================================
+   COMPASS MARKERS — CORNER ANCHORED
+========================================== */
 
-.diamond.top::after,
-.diamond.right::after,
-.diamond.bottom::after,
-.diamond.left::after{
+.compass{
   position:absolute;
-  width:30px;
-  height:34px;
-  border-radius:999px;
-
+  width:46px;
+  height:46px;
+  border-radius:50%;
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:2px;
+  flex-direction:column;
+  font-weight:700;
+  font-size:14px;
+  color:#eaf2f6;
 
-  background:rgba(0,0,0,.35);
+  background:rgba(255,255,255,.05);
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.08),
-    0 10px 22px rgba(0,0,0,.55);
+    0 0 25px rgba(120,180,255,.25);
 
-  color:rgba(235,245,255,.92);
-  font-weight:900;
+  backdrop-filter:blur(6px);
+  z-index:4;
+}
+
+/* Properly aligned to rotated plate corners */
+
+.compass-n{
+  top:-6%;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+.compass-s{
+  bottom:-6%;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+.compass-e{
+  right:-6%;
+  top:50%;
+  transform:translateY(-50%);
+}
+
+.compass-w{
+  left:-6%;
+  top:50%;
+  transform:translateY(-50%);
+}
+
+/* optional icon spacing */
+.compass span{
+  font-size:18px;
   line-height:1;
-  letter-spacing:0;
-
-  text-shadow:
-    0 0 10px rgba(120,200,255,.50),
-    0 0 22px rgba(80,170,255,.35);
-
-  pointer-events:none;
-  transform:rotate(-45deg);
 }
 
-/* Use pseudo "content" with newline via two spans emulation:
-   We'll render both symbol+letter with a single string and size tricks.
-   (Stable across browsers, no HTML changes.)
-*/
-.diamond.top::after{
-  content:"✦\A N";
-  white-space:pre;
-  left:50%;
-  top:-46px;
-  transform:translateX(-50%) rotate(-45deg);
-  font-size:14px;
-  text-align:center;
+.compass small{
+  font-size:11px;
+  opacity:.7;
+  margin-top:2px;
 }
 
-.diamond.right::after{
-  content:"☉\A E";
-  white-space:pre;
-  top:50%;
-  right:-46px;
-  transform:translateY(-50%) rotate(-45deg);
-  font-size:14px;
-  text-align:center;
-}
-
-.diamond.bottom::after{
-  content:"✦\A S";
-  white-space:pre;
-  left:50%;
-  bottom:-46px;
-  transform:translateX(-50%) rotate(-45deg);
-  font-size:13px; /* slightly smaller south star */
-  opacity:.88;
-  text-align:center;
-}
-
-.diamond.left::after{
-  content:"☾\A W";
-  white-space:pre;
-  top:50%;
-  left:-46px;
-  transform:translateY(-50%) rotate(-45deg);
-  font-size:14px;
-  text-align:center;
-}
-
-/* ---------- CLEANUP ---------- */
+/* ==========================================
+   REMOVE LEGACY
+========================================== */
 
 .diamond-stage,
-.mini-diamond,
-.compass-label{
+.mini-diamond{
   display:none !important;
 }

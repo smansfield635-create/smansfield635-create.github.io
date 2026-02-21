@@ -1,4 +1,4 @@
-<!-- TNT: /index.html (ROOT SELECTOR ONLY — language + mode chosen ONCE) -->
+<!-- TNT: /index.html (ONE FORK ONLY: LANGUAGE. NO LEARN/SHOP HERE. COMPASS MARKERS ARE DECORATION ONLY.) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,45 +6,117 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Geodiametrics · Root</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=2001"/>
-<link rel="stylesheet" href="/assets/branch.css?v=2001"/>
+<link rel="stylesheet" href="/assets/ui.css?v=3000"/>
+<link rel="stylesheet" href="/assets/branch.css?v=3000"/>
 
 <style>
-/* Root-only: no redundant nav, no door, no extra lenses */
-.root-wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:18px}
-.root-hero{text-align:left}
-.root-hero h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
-.root-hero p{margin:10px 0 0;font-size:20px;opacity:.75}
-.root-note{font-size:18px;line-height:1.6;opacity:.85}
+/* ROOT = CHINA THEME (red/black), without changing site routing */
+:root{
+  --china-red-1:#4a0006;
+  --china-red-2:#170003;
+  --china-ink:#05070c;
+  --glass:rgba(255,255,255,.06);
+  --stroke:rgba(255,255,255,.10);
+  --txt:#eaf2f6;
+}
+body{
+  background:
+    radial-gradient(1100px 720px at 50% 18%, rgba(140,0,16,.55) 0%, rgba(0,0,0,0) 60%),
+    radial-gradient(1400px 900px at 50% 18%, var(--china-red-1) 0%, var(--china-red-2) 52%, var(--china-ink) 100%);
+}
 
-.select-grid{
-  width:min(780px,94vw);
-  margin-top:6px;
+/* Page */
+.page{padding:44px 16px 72px}
+.h{position:relative;z-index:20;text-align:center;margin-bottom:18px}
+.h h1{margin:0;font-size:56px;font-weight:900;letter-spacing:.01em}
+.h p{margin:10px 0 0;font-size:18px;opacity:.75}
+
+/* Selector plate */
+.pick-wrap{
+  width:min(860px,94vw);
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+}
+.pick-plate{
+  width:min(760px,94vw);
+  border-radius:28px;
+  background:rgba(0,0,0,.22);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), 0 28px 80px rgba(0,0,0,.65);
+  padding:16px;
+}
+
+/* Compass markers (DECORATION ONLY) */
+.compass{
+  position:relative;
+  width:100%;
+  height:54px;
+  margin-bottom:8px;
+}
+.cm{
+  position:absolute;
+  width:46px;height:46px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 10px 24px rgba(0,0,0,.55);
+  font-weight:900;
+  opacity:.85;
+  user-select:none;
+  pointer-events:none;
+}
+.cm.n{top:0;left:50%;transform:translateX(-50%)}
+.cm.s{bottom:0;left:50%;transform:translateX(-50%)}
+.cm.w{top:50%;left:0;transform:translateY(-50%)}
+.cm.e{top:50%;right:0;transform:translateY(-50%)}
+.cm.n::after{
+  content:"★";
+  font-size:12px;
+  margin-left:6px;
+  opacity:.9;
+}
+
+/* Language cards (ONLY TWO) */
+.grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:14px;
 }
-@media (max-width:640px){
-  .select-grid{grid-template-columns:1fr}
-}
-.sel{
+@media (max-width:720px){ .grid{grid-template-columns:1fr;} }
+
+.lang-card{
   border-radius:22px;
   background:rgba(255,255,255,.06);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), 0 18px 44px rgba(0,0,0,.45);
-  padding:18px 18px;
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 44px rgba(0,0,0,.55);
+  padding:18px 16px;
   cursor:pointer;
-  user-select:none;
   -webkit-tap-highlight-color:transparent;
 }
-.sel:hover{filter:brightness(1.05)}
-.sel:active{transform:translateY(1px)}
-.sel .t{font-weight:900;font-size:20px}
-.sel .s{margin-top:6px;opacity:.75;font-size:15px;letter-spacing:.06em}
-.sel.learn{background:rgba(255,255,255,.06)}
-.sel.shop{background:rgba(255,255,255,.06)}
-.badge{display:inline-block;margin-left:10px;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.10);font-weight:800;font-size:12px;letter-spacing:.12em;opacity:.9}
-
-.footer-pad{margin-top:12px}
+.lang-card:hover{filter:brightness(1.06)}
+.lang-card:active{transform:translateY(1px)}
+.lang-card .t{font-size:22px;font-weight:900}
+.lang-card .s{margin-top:8px;opacity:.75;font-weight:800;letter-spacing:.06em}
+.badge{
+  display:inline-block;
+  margin-left:10px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.10);
+  font-weight:900;
+  font-size:12px;
+  letter-spacing:.14em;
+  opacity:.9;
+}
+.note{
+  margin-top:10px;
+  font-size:14px;
+  opacity:.70;
+  text-align:center;
+}
 </style>
 </head>
 
@@ -52,59 +124,52 @@
 <div class="shooting-stars"></div>
 
 <div class="page">
-  <div class="root-wrap">
+  <div class="h">
+    <h1>Geodiametrics</h1>
+    <p>Choose language. One fork. No repeats.</p>
+  </div>
 
-    <div class="root-hero">
-      <h1>Geodiametrics</h1>
-      <p>Choose what you understand. No setup.</p>
-    </div>
+  <div class="pick-wrap">
+    <div class="pick-plate">
 
-    <div class="root-note">
-      One choice sets the surface language and delivery style. You can switch later inside the hub.
-    </div>
-
-    <div class="select-grid" role="group" aria-label="Entry selection">
-      <div class="sel learn" data-lang="en" data-mode="learn">
-        <div class="t">Learn <span class="badge">EN</span></div>
-        <div class="s">Definitions · systems · methods</div>
+      <div class="compass" aria-hidden="true">
+        <div class="cm n">N</div>
+        <div class="cm e">E</div>
+        <div class="cm s">S</div>
+        <div class="cm w">W</div>
       </div>
 
-      <div class="sel shop" data-lang="en" data-mode="shop">
-        <div class="t">Shop <span class="badge">EN</span></div>
-        <div class="s">Products · programs · services</div>
+      <div class="grid" role="group" aria-label="Language selection">
+        <div class="lang-card" data-lang="en">
+          <div class="t">English <span class="badge">EN</span></div>
+          <div class="s">Proceed in English.</div>
+        </div>
+
+        <div class="lang-card" data-lang="zh">
+          <div class="t">中文 <span class="badge">ZH</span></div>
+          <div class="s">使用简体中文进入。</div>
+        </div>
       </div>
 
-      <div class="sel learn" data-lang="zh" data-mode="learn">
-        <div class="t">学习 <span class="badge">中文</span></div>
-        <div class="s">定义 · 系统 · 方法</div>
-      </div>
-
-      <div class="sel shop" data-lang="zh" data-mode="shop">
-        <div class="t">购买 <span class="badge">中文</span></div>
-        <div class="s">产品 · 项目 · 服务</div>
-      </div>
+      <div class="note">Language is set once here. Switch later only by returning to Root.</div>
     </div>
 
-    <div class="footer-pad">
-      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </div>
-
+    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
   </div>
 </div>
 
 <script>
 (() => {
-  const go = (lang, mode) => {
+  const setLang = (lang) => {
     try{
-      localStorage.setItem("geo.lang", lang);   // "en" | "zh"
-      localStorage.setItem("geo.mode", mode);   // "learn" | "shop"
-      localStorage.setItem("geo.root_set", String(Date.now()));
+      localStorage.setItem("geo.lang", lang);     // "en" | "zh"
+      localStorage.setItem("geo.lang_set", String(Date.now()));
     }catch(e){}
     location.href = "/home/";
   };
 
-  document.querySelectorAll(".sel").forEach(el => {
-    el.addEventListener("click", () => go(el.dataset.lang, el.dataset.mode));
+  document.querySelectorAll(".lang-card").forEach(card => {
+    card.addEventListener("click", () => setLang(card.dataset.lang));
   });
 })();
 </script>

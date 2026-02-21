@@ -31,14 +31,13 @@ body{
     radial-gradient(1200px 700px at 50% 0%, var(--red-lacquer) 0%, var(--red-deep) 55%, var(--ink) 100%);
   overflow-x:hidden;
 }
-
 .page{
   width:min(980px,94vw);
   margin:0 auto;
   padding:26px 14px 70px;
 }
 
-.hero{position:relative;z-index:5;text-align:left}
+.hero{position:relative;z-index:2;text-align:left}
 .hero h1{
   margin:0;
   font-size:44px;
@@ -91,6 +90,7 @@ body{
   font-size:12px;
 }
 
+/* Quadrant cards */
 details.quad{
   margin-top:12px;
   border-radius:22px;
@@ -111,7 +111,6 @@ details.quad summary{
   -webkit-tap-highlight-color:transparent;
 }
 details.quad summary::-webkit-details-marker{display:none}
-
 .q-left{display:flex;align-items:center;gap:12px;min-width:0}
 .q-badge{
   width:56px;height:40px;border-radius:16px;
@@ -129,7 +128,6 @@ details.quad summary::-webkit-details-marker{display:none}
 .q-text{min-width:0}
 .q-text b{display:block;font-size:18px;letter-spacing:.12em;text-transform:uppercase}
 .q-text span{display:block;opacity:.72;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
 .q-arrow{
   width:42px;height:42px;border-radius:999px;
   background:rgba(255,255,255,.06);
@@ -138,9 +136,9 @@ details.quad summary::-webkit-details-marker{display:none}
   opacity:.9;
   flex:0 0 auto;
 }
-
 .inside{padding:0 16px 16px}
 
+/* Bubble grid */
 .grid2{
   display:grid;
   grid-template-columns:1fr;
@@ -148,7 +146,6 @@ details.quad summary::-webkit-details-marker{display:none}
   margin-top:8px;
 }
 @media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
-
 .bubble{
   border-radius:18px;
   background:rgba(255,255,255,.05);
@@ -186,49 +183,78 @@ details.quad summary::-webkit-details-marker{display:none}
   opacity:.9;
   flex:0 0 auto;
 }
-.bubble.active{
-  border-color:rgba(212,175,55,.45);
-  box-shadow:0 0 14px rgba(212,175,55,.18) inset;
-}
 
-/* LOCAL INLINE DETAIL (no scrolling) */
-.detail{
-  margin-top:10px;
-  border-radius:22px;
-  background:linear-gradient(180deg, rgba(0,0,0,.34), rgba(0,0,0,.22));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  padding:14px 14px;
+/* ===== MODAL OVERLAY (NO SCROLL-JUMP) ===== */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(10px);
+  z-index:999;
   display:none;
+  align-items:center;
+  justify-content:center;
+  padding:14px;
 }
-.detail.open{display:block}
-.detailhead{
+.modal-backdrop.open{display:flex}
+
+.modal{
+  width:min(880px,96vw);
+  max-height:min(82vh,860px);
+  overflow:auto;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(180deg, rgba(20,0,0,.78), rgba(0,0,0,.55));
+  box-shadow:0 30px 120px rgba(0,0,0,.70);
+  position:relative;
+}
+.modal::before{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:22px;
+  pointer-events:none;
+  box-shadow:0 0 0 1px rgba(212,175,55,.10) inset;
+}
+.modal-top{
+  padding:14px 14px 10px;
   display:flex;
+  align-items:flex-start;
   justify-content:space-between;
   gap:12px;
-  align-items:center;
-  opacity:.75;
+}
+.modal-top .meta{
+  opacity:.70;
   letter-spacing:.18em;
   text-transform:uppercase;
   font-size:12px;
 }
-.detailtitle{
-  margin-top:10px;
+.modal-title{
+  padding:0 14px;
   font-weight:900;
   letter-spacing:.08em;
-  font-size:18px;
+  font-size:20px;
 }
-.detailp{
-  margin-top:8px;
+.modal-desc{
+  padding:8px 14px 0;
   color:rgba(255,255,255,.78);
   line-height:1.55;
 }
+.modal-close{
+  width:44px;height:44px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  user-select:none;
+}
+.modal-close:hover{background:rgba(255,255,255,.10)}
 
-.lensrow{
+/* modal lens chips reflect the GLOBAL lens */
+.modal-lensrow{
+  padding:12px 14px 0;
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  margin-top:10px;
 }
 .lenschip{
   border-radius:999px;
@@ -245,11 +271,74 @@ details.quad summary::-webkit-details-marker{display:none}
   box-shadow:0 0 16px rgba(212,175,55,.18) inset;
 }
 
-.jumprow{
+/* nested bubbles inside modal */
+.modal-bubbles{
+  padding:12px 14px 14px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+@media(min-width:760px){.modal-bubbles{grid-template-columns:1fr 1fr}}
+.subbubble{
+  border-radius:18px;
+  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.10);
+  padding:12px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  cursor:pointer;
+}
+.subbubble:hover{background:rgba(0,0,0,.28)}
+.subbubble b{
+  font-size:12px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.subbubble i{
+  display:block;
+  margin-top:3px;
+  opacity:.72;
+  font-style:normal;
+  font-size:12px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.subbubble .go{
+  width:40px;height:40px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  display:flex;align-items:center;justify-content:center;
+  flex:0 0 auto;
+}
+.subpanel{
+  margin:0 14px 14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.10);
+  padding:12px 12px;
+  display:none;
+}
+.subpanel.open{display:block}
+.subpanel h3{
+  margin:0;
+  font-size:13px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.subpanel p{
+  margin:8px 0 0;
+  opacity:.78;
+  line-height:1.55;
+}
+
+/* modal footer (single jump only) */
+.modal-footer{
+  padding:12px 14px 16px;
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  margin-top:12px;
+  justify-content:flex-start;
 }
 .jump{
   border-radius:18px;
@@ -289,22 +378,19 @@ details.quad summary::-webkit-details-marker{display:none}
 
   <div class="hero">
     <h1>HOME</h1>
-    <p id="desc">Explore the system. Tap a bubble to expand details in-place. Your lens (Origin / Now / Trajectory) filters everything.</p>
+    <p id="desc">Tap any bubble. Details pop over (no scroll jump). Origin / Now / Trajectory filters everything.</p>
 
     <div class="topbar">
       <span class="pill silver" id="langPill">LANG: EN</span>
       <span class="pill gold" id="depthPill">DEPTH: EXPLORE</span>
 
-      <!-- GLOBAL TIMELINE LENS (top-of-page, applies everywhere) -->
       <span class="pill" id="lensOrigin" role="button">ORIGIN</span>
       <span class="pill active" id="lensNow" role="button">NOW</span>
       <span class="pill" id="lensTrajectory" role="button">TRAJECTORY</span>
 
       <a class="pill" href="/door/">CHANGE DEPTH</a>
       <a class="pill" href="/">CHANGE LANGUAGE</a>
-
-      <!-- SINGLE GLOBAL JUMP -->
-      <a class="pill gold" href="/door/" id="jumpHome">JUMP HOME</a>
+      <a class="pill gold" href="/door/" id="jumpHomeTop">JUMP HOME</a>
     </div>
 
     <div class="section-title">Quadrant routes (NW / NE / SW / SE)</div>
@@ -322,7 +408,6 @@ details.quad summary::-webkit-details-marker{display:none}
       </div>
       <div class="q-arrow">▾</div>
     </summary>
-
     <div class="inside">
       <div class="grid2">
         <div class="bubble" data-block="ssg">
@@ -342,29 +427,6 @@ details.quad summary::-webkit-details-marker{display:none}
           <div class="go">▶</div>
         </div>
       </div>
-
-      <div class="detail" data-detail>
-        <div class="detailhead">
-          <div>DETAIL</div>
-          <div>EXPANDS HERE (NO SCROLL)</div>
-        </div>
-        <div class="detailtitle" data-title>Tap a bubble</div>
-        <div class="detailp" data-p>Details render in-place under the quadrant where you tapped.</div>
-
-        <!-- Shows which global lens is active -->
-        <div class="lensrow">
-          <span class="lenschip" data-chip="origin">Origin</span>
-          <span class="lenschip on" data-chip="now">Now</span>
-          <span class="lenschip" data-chip="trajectory">Trajectory</span>
-        </div>
-
-        <div class="detailp" data-p2 style="margin-top:12px"></div>
-
-        <!-- SINGLE JUMP ONLY -->
-        <div class="jumprow">
-          <a class="jump gold" href="/door/">JUMP HOME</a>
-        </div>
-      </div>
     </div>
   </details>
 
@@ -380,7 +442,6 @@ details.quad summary::-webkit-details-marker{display:none}
       </div>
       <div class="q-arrow">▾</div>
     </summary>
-
     <div class="inside">
       <div class="grid2">
         <div class="bubble" data-block="surfaces">
@@ -400,27 +461,6 @@ details.quad summary::-webkit-details-marker{display:none}
           <div class="go">▶</div>
         </div>
       </div>
-
-      <div class="detail" data-detail>
-        <div class="detailhead">
-          <div>DETAIL</div>
-          <div>EXPANDS HERE (NO SCROLL)</div>
-        </div>
-        <div class="detailtitle" data-title>Tap a bubble</div>
-        <div class="detailp" data-p>Details render in-place under the quadrant where you tapped.</div>
-
-        <div class="lensrow">
-          <span class="lenschip" data-chip="origin">Origin</span>
-          <span class="lenschip on" data-chip="now">Now</span>
-          <span class="lenschip" data-chip="trajectory">Trajectory</span>
-        </div>
-
-        <div class="detailp" data-p2 style="margin-top:12px"></div>
-
-        <div class="jumprow">
-          <a class="jump gold" href="/door/">JUMP HOME</a>
-        </div>
-      </div>
     </div>
   </details>
 
@@ -436,7 +476,6 @@ details.quad summary::-webkit-details-marker{display:none}
       </div>
       <div class="q-arrow">▾</div>
     </summary>
-
     <div class="inside">
       <div class="grid2">
         <div class="bubble" data-block="gauges">
@@ -456,27 +495,6 @@ details.quad summary::-webkit-details-marker{display:none}
           <div class="go">▶</div>
         </div>
       </div>
-
-      <div class="detail" data-detail>
-        <div class="detailhead">
-          <div>DETAIL</div>
-          <div>EXPANDS HERE (NO SCROLL)</div>
-        </div>
-        <div class="detailtitle" data-title>Tap a bubble</div>
-        <div class="detailp" data-p>Details render in-place under the quadrant where you tapped.</div>
-
-        <div class="lensrow">
-          <span class="lenschip" data-chip="origin">Origin</span>
-          <span class="lenschip on" data-chip="now">Now</span>
-          <span class="lenschip" data-chip="trajectory">Trajectory</span>
-        </div>
-
-        <div class="detailp" data-p2 style="margin-top:12px"></div>
-
-        <div class="jumprow">
-          <a class="jump gold" href="/door/">JUMP HOME</a>
-        </div>
-      </div>
     </div>
   </details>
 
@@ -492,7 +510,6 @@ details.quad summary::-webkit-details-marker{display:none}
       </div>
       <div class="q-arrow">▾</div>
     </summary>
-
     <div class="inside">
       <div class="grid2">
         <div class="bubble" data-block="orcid">
@@ -512,32 +529,40 @@ details.quad summary::-webkit-details-marker{display:none}
           <div class="go">▶</div>
         </div>
       </div>
-
-      <div class="detail" data-detail>
-        <div class="detailhead">
-          <div>DETAIL</div>
-          <div>EXPANDS HERE (NO SCROLL)</div>
-        </div>
-        <div class="detailtitle" data-title>Tap a bubble</div>
-        <div class="detailp" data-p>Details render in-place under the quadrant where you tapped.</div>
-
-        <div class="lensrow">
-          <span class="lenschip" data-chip="origin">Origin</span>
-          <span class="lenschip on" data-chip="now">Now</span>
-          <span class="lenschip" data-chip="trajectory">Trajectory</span>
-        </div>
-
-        <div class="detailp" data-p2 style="margin-top:12px"></div>
-
-        <div class="jumprow">
-          <a class="jump gold" href="/door/">JUMP HOME</a>
-        </div>
-      </div>
     </div>
   </details>
 
   <div class="brand">GEODIAMETRICS</div>
   <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-top">
+      <div class="meta" id="modalMeta">DETAIL</div>
+      <div class="modal-close" id="modalClose" aria-label="Close">✕</div>
+    </div>
+    <div class="modal-title" id="modalTitle">—</div>
+    <div class="modal-desc" id="modalDesc">—</div>
+
+    <div class="modal-lensrow">
+      <span class="lenschip" data-chip="origin">Origin</span>
+      <span class="lenschip on" data-chip="now">Now</span>
+      <span class="lenschip" data-chip="trajectory">Trajectory</span>
+    </div>
+
+    <div class="modal-bubbles" id="modalBubbles"></div>
+
+    <div class="subpanel" id="subpanel">
+      <h3 id="subpanelTitle">—</h3>
+      <p id="subpanelText">—</p>
+    </div>
+
+    <div class="modal-footer">
+      <a class="jump gold" href="/door/">JUMP HOME</a>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -557,123 +582,337 @@ details.quad summary::-webkit-details-marker{display:none}
     trajectory: document.getElementById('lensTrajectory')
   };
 
+  // ---- BLOCKS (each has origin/now/trajectory + nested sub-bubbles) ----
+  const blocks = {
+    // NW
+    ssg:{
+      meta:'NW · SSG',
+      title:'SSG — Simplified Syntax Geometry',
+      origin:'Created to compress app behavior into a constraint-native spec vocabulary (minimum executable structure).',
+      now:'Used to express Resources / Stores / Constraints / Goals / Guards with receipt-gated advancement.',
+      trajectory:'Evolves into replay-safe execution contracts across products and institutions.',
+      subs:[
+        {k:'primitives', t:'Primitives', s:'R / S / C / G / Guards', p:'Resource (what is acted on). Store (where state lives). Constraint (invariants). Goal (success condition). Guard (admissibility check).'},
+        {k:'receipts', t:'Receipts', s:'Gated flow', p:'Advance only after receipt. Back-nav invalidates downstream receipts. Each step is replayable and auditable.'},
+        {k:'invariants', t:'Invariants', s:'Navigation-first', p:'No timers as gates. Unified press primitives. Atomic handoff with receipt.'},
+        {k:'mapping', t:'Mapping', s:'How to read', p:'Use Explore for surface summaries. Use Learn for deep nested bubbles and full breakdowns.'}
+      ]
+    },
+    grammar:{
+      meta:'NW · Grammar',
+      title:'Diamond Grammar',
+      origin:'Designed to eliminate ambiguity by forcing one coherent choice at a time.',
+      now:'Hub-first traversal + receipt gating keeps navigation stable as content grows.',
+      trajectory:'Scales into multi-portal routing without semantic drift.',
+      subs:[
+        {k:'rule', t:'Rule', s:'One choice', p:'Choose one route at a time. Complete the route. Return to hub.'},
+        {k:'return', t:'Return protocol', s:'Hub-first', p:'Return to hub when uncertain. Don’t multi-tab inside a branch.'},
+        {k:'receipt', t:'Receipt gating', s:'Proof', p:'Progress is verified. Backtracking invalidates downstream receipts.'},
+        {k:'why', t:'Why it works', s:'Anti-drift', p:'It prevents compounding incoherence by constraining traversal structure.'}
+      ]
+    },
+    dotgrid:{
+      meta:'NW · DOT.GRID',
+      title:'DOT.GRID',
+      origin:'Created to index decisions and evidence under consistent constraints.',
+      now:'256-state indexing lattice for replay, audit, and observer-consistent classification.',
+      trajectory:'Becomes a universal coordinate layer for cross-domain stability measurement.',
+      subs:[
+        {k:'what', t:'What it is', s:'256 states', p:'A compact indexing scheme for classifying system state under constraint.'},
+        {k:'replay', t:'Replay', s:'Audit', p:'Evidence streams can be replayed to reproduce classifications.'},
+        {k:'observer', t:'Observer-consistent', s:'Shared coordinates', p:'Independent observers should converge on the same classification from the same evidence.'},
+        {k:'use', t:'Use', s:'When', p:'Use when you need repeatable scoring, auditing, and stability tracking.'}
+      ]
+    },
+    acronyms:{
+      meta:'NW · Glossary',
+      title:'Acronyms & Glossary',
+      origin:'Introduced to prevent meaning collapse as the system scales.',
+      now:'Pillarized map + usage notes.',
+      trajectory:'Becomes a shared vocabulary layer for teams and institutions.',
+      subs:[
+        {k:'pillars', t:'Pillars', s:'Categories', p:'Acronyms grouped by domain pillars (language, execution, measurement, identity).'},
+        {k:'usage', t:'Usage', s:'Rules', p:'Each acronym includes a short use-case and where it lives in the geometry.'},
+        {k:'naming', t:'Naming', s:'Anti-drift', p:'Names are treated as stable interface contracts.'},
+        {k:'list', t:'List', s:'Expandable', p:'In Learn mode, show deeper lists per pillar.'}
+      ]
+    },
+
+    // NE
+    surfaces:{
+      meta:'NE · Surfaces',
+      title:'Execution Surfaces',
+      origin:'Interfaces keep complexity inside the engine, not on the UI.',
+      now:'Apps / portals / interfaces expose the engine as usable workflow.',
+      trajectory:'Standardized portals across products and teams.',
+      subs:[
+        {k:'apps', t:'Apps', s:'Portals', p:'User-facing surfaces that route to the underlying engine safely.'},
+        {k:'ux', t:'UX rule', s:'No jump-scroll', p:'Tap should always produce local, visible response (modal).'},
+        {k:'handoff', t:'Handoffs', s:'Receipts', p:'Surfaces emit receipts for verified progression.'},
+        {k:'layers', t:'Layers', s:'Explore vs Learn', p:'Explore = summary. Learn = nested bubbles and full breakdown.'}
+      ]
+    },
+    receipts:{
+      meta:'NE · Receipts',
+      title:'Workflows & Receipts',
+      origin:'Receipts make progress verifiable.',
+      now:'Audit trails and verification tokens make execution replay-safe.',
+      trajectory:'Receipts become portable across systems (interoperable state).',
+      subs:[
+        {k:'token', t:'Token', s:'Verification', p:'A receipt is a verifiable record that a step was completed.'},
+        {k:'audit', t:'Audit trail', s:'Replay', p:'Re-run the same evidence path and confirm identical output.'},
+        {k:'back', t:'Back-nav', s:'Invalidate', p:'Backtracking invalidates downstream receipts to prevent drift.'},
+        {k:'why', t:'Why', s:'Integrity', p:'It forces coherence: external trust cannot exceed internal coherence.'}
+      ]
+    },
+    examples:{
+      meta:'NE · Examples',
+      title:'Examples',
+      origin:'Examples anchor abstract structure into action.',
+      now:'How to use the system with real routes and decisions.',
+      trajectory:'Examples become templates for teams and institutions.',
+      subs:[
+        {k:'quick', t:'Quick', s:'Explore', p:'Explore mode gives short examples without deep theory.'},
+        {k:'deep', t:'Deep', s:'Learn', p:'Learn mode expands into nested steps + rationale.'},
+        {k:'routes', t:'Routes', s:'NW/NE/SW/SE', p:'Examples mirror the quadrant system: definition, execution, measurement, identity.'},
+        {k:'check', t:'Checks', s:'Receipts', p:'Each example ends in a receipt or verification step.'}
+      ]
+    },
+    packs:{
+      meta:'NE · Packs',
+      title:'Packs & Outputs',
+      origin:'Built to ship utility fast.',
+      now:'Downloadables and packaged artifacts.',
+      trajectory:'Outputs become certified tracks and reusable kits.',
+      subs:[
+        {k:'pdf', t:'PDFs', s:'Materials', p:'Printable guides, drills, and structured references.'},
+        {k:'kits', t:'Kits', s:'Reuse', p:'Composable packs that map to routes and receipts.'},
+        {k:'release', t:'Releases', s:'What ships', p:'Explore shows what exists. Learn explains how it works.'},
+        {k:'future', t:'Roadmap', s:'Trajectory', p:'Trajectory lens shows what expands next.'}
+      ]
+    },
+
+    // SW
+    gauges:{
+      meta:'SW · Gauges',
+      title:'Gauges',
+      origin:'Built to measure coherence under load.',
+      now:'Instrument panels, consistency checks, thresholds.',
+      trajectory:'Real-time stability monitoring.',
+      subs:[
+        {k:'panel', t:'Panels', s:'Dashboards', p:'Visualize coherence and drift with stable metrics.'},
+        {k:'threshold', t:'Thresholds', s:'Rules', p:'Rules that define pass/fail under constraint.'},
+        {k:'signal', t:'Signal', s:'Integrity', p:'Detect noise vs meaningful movement.'},
+        {k:'trend', t:'Trends', s:'Trajectory', p:'Trajectory lens focuses on where it’s heading.'}
+      ]
+    },
+    diagnostics:{
+      meta:'SW · Diagnostics',
+      title:'Diagnostics',
+      origin:'Classify systems under constraint.',
+      now:'Coherence / drift / confusion categories with observer-consistent targets.',
+      trajectory:'Universal early-warning systems.',
+      subs:[
+        {k:'class', t:'Classification', s:'Under constraint', p:'Same evidence should produce same class for independent observers.'},
+        {k:'drift', t:'Drift', s:'Detection', p:'Detect fragmentation vs stabilization direction.'},
+        {k:'conf', t:'Confusion', s:'Amplifier', p:'Confusion amplifies instability once present.'},
+        {k:'audit', t:'Audit', s:'Replay', p:'Replay evidence streams and verify stability of classification.'}
+      ]
+    },
+    rules:{
+      meta:'SW · Rules',
+      title:'Rules',
+      origin:'Defined to keep traversal stable.',
+      now:'Navigation + integrity rules.',
+      trajectory:'Governance standards.',
+      subs:[
+        {k:'nav', t:'Navigation', s:'Hub-first', p:'Return to hub when uncertain; one route at a time.'},
+        {k:'guard', t:'Guards', s:'Admissibility', p:'Block actions that violate constraints.'},
+        {k:'cons', t:'Consistency', s:'Integrity', p:'Values, actions, outcomes must align.'},
+        {k:'scale', t:'Scale', s:'System-wide', p:'Scale-and-correlation standard across the network.'}
+      ]
+    },
+    protocols:{
+      meta:'SW · Protocols',
+      title:'Protocols',
+      origin:'Convert principles into repeatable actions.',
+      now:'Operational handoffs, verification, replay.',
+      trajectory:'Certified operating procedures.',
+      subs:[
+        {k:'handoff', t:'Handoff', s:'Atomic', p:'Atomic handoff with receipt. No partial transitions.'},
+        {k:'return', t:'Return', s:'Exit', p:'Exit emits terminal + return token.'},
+        {k:'loop', t:'Loop', s:'Continuation', p:'Continuation loops back with memory token after receipt.'},
+        {k:'kill', t:'Kill', s:'Exit criteria', p:'Define kill/exit conditions to prevent runaway drift.'}
+      ]
+    },
+
+    // SE
+    orcid:{
+      meta:'SE · ORCID',
+      title:'ORCID',
+      origin:'Identity anchors attribution and continuity.',
+      now:'Researcher identity reference point.',
+      trajectory:'Stable identity improves traceability long-term.',
+      subs:[
+        {k:'id', t:'iD', s:'Anchor', p:'Use ORCID as the stable researcher identity anchor.'},
+        {k:'cite', t:'Citations', s:'Provenance', p:'Tie outputs to identity for provenance stability.'},
+        {k:'share', t:'Sharing', s:'Continuity', p:'Continuity across publications and archives.'},
+        {k:'use', t:'Use', s:'When', p:'Use whenever formal attribution matters.'}
+      ]
+    },
+    osf:{
+      meta:'SE · OSF',
+      title:'OSF',
+      origin:'Registry creates a public research spine.',
+      now:'Project registry / preprints / canonical references.',
+      trajectory:'Continuity ledger for the system.',
+      subs:[
+        {k:'reg', t:'Registry', s:'Spine', p:'OSF organizes projects and keeps canonical references stable.'},
+        {k:'pre', t:'Preprints', s:'Release', p:'Publish artifacts with stable identifiers.'},
+        {k:'map', t:'Mapping', s:'Crosslinks', p:'Map branches to hubs without forcing navigation drift.'},
+        {k:'use', t:'Use', s:'When', p:'Use when you need persistent public reference.'}
+      ]
+    },
+    refs:{
+      meta:'SE · References',
+      title:'References',
+      origin:'References prevent semantic drift.',
+      now:'Core citations and anchors.',
+      trajectory:'Shared coordinates across readers.',
+      subs:[
+        {k:'core', t:'Core', s:'Anchors', p:'Core anchors keep meaning stable across time.'},
+        {k:'link', t:'Links', s:'Identity', p:'Links connect evidence, identity, and outputs.'},
+        {k:'scope', t:'Scope', s:'256', p:'References scale into the 256 geometry.'},
+        {k:'use', t:'Use', s:'When', p:'Use whenever you need alignment across audiences.'}
+      ]
+    },
+    contact:{
+      meta:'SE · Contact',
+      title:'Contact',
+      origin:'Direct channel exists to restore alignment quickly.',
+      now:'Communication line for access and collaboration.',
+      trajectory:'Intake for adoption and certification.',
+      subs:[
+        {k:'in', t:'Intake', s:'Requests', p:'Use for collaboration, questions, and access.'},
+        {k:'ops', t:'Ops', s:'Governance', p:'Operational coordination and structure.'},
+        {k:'cert', t:'Certification', s:'Tracks', p:'Certification and training coordination.'},
+        {k:'use', t:'Use', s:'When', p:'Use when you need resolution or alignment.'}
+      ]
+    }
+  };
+
+  // ---- GLOBAL LENS ----
   function setLens(next){
     lens = next;
     localStorage.setItem('crp_lens', lens);
     Object.keys(lensBtns).forEach(k => lensBtns[k].classList.toggle('active', k === lens));
-    // Update any open detail panel copy to match current lens
-    document.querySelectorAll('.detail.open').forEach(detail=>{
-      const blockKey = detail.getAttribute('data-open-block');
-      if(!blockKey) return;
-      const b = blocks[blockKey];
-      if(!b) return;
-      writeDetail(detail, b);
-    });
+    updateModalLensChips();
+    if(modalState.openKey){
+      renderModal(modalState.openKey);
+    }
   }
-
   lensBtns.origin.addEventListener('click',()=>setLens('origin'));
   lensBtns.now.addEventListener('click',()=>setLens('now'));
   lensBtns.trajectory.addEventListener('click',()=>setLens('trajectory'));
 
-  const blocks = {
-    // NW
-    ssg:{
-      t:'SSG — Simplified Syntax Geometry',
-      origin:'Built to compress app behavior into constraint-native specs (the minimal executable vocabulary).',
-      now:'Used to express Resources / Stores / Constraints / Goals / Guards, with receipt-gated flow.',
-      trajectory:'Becomes a replay-safe execution contract standard across domains and teams.',
-      learn:'Primitives: Resource, Store, Constraint, Goal, Guard. Receipts gate advancement. Navigation-first invariants prevent drift.'
-    },
-    grammar:{
-      t:'Diamond Grammar',
-      origin:'Designed to eliminate ambiguity by forcing one coherent choice at a time.',
-      now:'Runs hub-first traversal + receipt gating so navigation stays stable as content grows.',
-      trajectory:'Scales into multi-portal routing without semantic drift.',
-      learn:'Rule: choose one route, complete it, return to hub. Back-nav invalidates downstream receipts.'
-    },
-    dotgrid:{
-      t:'DOT.GRID',
-      origin:'Created to index evidence and decisions under consistent constraint rules.',
-      now:'Provides 256-state indexing for replay and audit.',
-      trajectory:'Enables observer-consistent classification across domains (shared coordinates).',
-      learn:'Use it to log evidence streams, score admissibility, compare trajectories under identical constraints.'
-    },
-    acronyms:{
-      t:'Acronyms & Glossary',
-      origin:'Introduced to prevent meaning collapse as the system scales.',
-      now:'Pillarized map + usage notes.',
-      trajectory:'Becomes a shared vocabulary layer for teams and institutions.',
-      learn:'Goal: reduce semantic drift across time, domains, and collaborators.'
-    },
+  // ---- MODAL ----
+  const backdrop = document.getElementById('modalBackdrop');
+  const closeBtn = document.getElementById('modalClose');
+  const mMeta = document.getElementById('modalMeta');
+  const mTitle = document.getElementById('modalTitle');
+  const mDesc = document.getElementById('modalDesc');
+  const mBubbles = document.getElementById('modalBubbles');
+  const subpanel = document.getElementById('subpanel');
+  const subTitle = document.getElementById('subpanelTitle');
+  const subText = document.getElementById('subpanelText');
 
-    // NE
-    surfaces:{t:'Execution Surfaces',origin:'Interfaces were built to keep complexity inside the engine, not on the UI.',now:'Apps / portals / interfaces expose the engine as usable workflow.',trajectory:'Surfaces become standardized portals across products.',learn:'Surfaces stay simple; depth lives in blocks and nested bubbles.'},
-    receipts:{t:'Workflows & Receipts',origin:'Receipts were created to make progress verifiable.',now:'Audit trails + replay safety. Proof of completion and handoff.',trajectory:'Receipts become portable across systems (interoperable state).',learn:'Advance only after receipt. Back-nav invalidates downstream receipts.'},
-    examples:{t:'Examples',origin:'Examples anchor abstract structure into action.',now:'How to use the system with real routes and decisions.',trajectory:'Examples become templates for institutions and teams.',learn:'Start small: one route, one receipt, one return.'},
-    packs:{t:'Packs & Outputs',origin:'Packaged outputs were built to ship utility fast.',now:'Downloadables + structured materials.',trajectory:'Outputs become certified tracks and reusable kits.',learn:'Everything is designed to be reusable and composable.'},
+  const modalState = { openKey:null, openSub:null };
 
-    // SW
-    gauges:{t:'Gauges',origin:'Gauges were built to measure coherence under load.',now:'Instrument panels, consistency checks, thresholds.',trajectory:'Gauges evolve into real-time stability monitoring.',learn:'Gauges measure signal integrity and rule adherence.'},
-    diagnostics:{t:'Diagnostics',origin:'Diagnostics classify systems under constraint.',now:'Coherence / drift / confusion categories; observer-consistent targets.',trajectory:'Diagnostics become universal early-warning systems.',learn:'Replay-driven audits; identical evidence → identical classification.'},
-    rules:{t:'Rules',origin:'Rules were defined to keep traversal stable.',now:'Navigation + integrity rules to prevent runaway drift.',trajectory:'Rules become governance standards.',learn:'Return protocol prevents compounding incoherence.'},
-    protocols:{t:'Protocols',origin:'Protocols convert principles into repeatable actions.',now:'Operational handoffs, verification, replay.',trajectory:'Protocols scale into certified operating procedures.',learn:'Protocol = repeatable action under constraint.'},
+  function openModal(){
+    backdrop.classList.add('open');
+    backdrop.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+  function closeModal(){
+    backdrop.classList.remove('open');
+    backdrop.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+    modalState.openKey=null;
+    modalState.openSub=null;
+    subpanel.classList.remove('open');
+  }
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', (e)=>{ if(e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && backdrop.classList.contains('open')) closeModal(); });
 
-    // SE
-    orcid:{t:'ORCID',origin:'Identity anchors attribution and continuity.',now:'Researcher identity reference point.',trajectory:'Stable identity improves traceability of artifacts long-term.',learn:'Use for attribution and continuity across publications.'},
-    osf:{t:'OSF',origin:'Registry creates a public research spine.',now:'Project registry / preprints / canonical references.',trajectory:'OSF becomes the continuity ledger for the system.',learn:'Keeps provenance stable as branches expand.'},
-    refs:{t:'References',origin:'References prevent semantic drift.',now:'Core citations and anchors.',trajectory:'Anchors become shared coordinates across readers.',learn:'Reference stability prevents meaning collapse.'},
-    contact:{t:'Contact',origin:'Direct channel exists to restore alignment quickly.',now:'Communication line for access and collaboration.',trajectory:'Contact becomes intake for certification / adoption.',learn:'Use this when you need alignment or access.'}
-  };
-
-  function updateLensChips(detailEl){
-    const chips = detailEl.querySelectorAll('.lenschip');
-    chips.forEach(ch=>{
+  function updateModalLensChips(){
+    document.querySelectorAll('.lenschip').forEach(ch=>{
       const k = ch.getAttribute('data-chip');
       ch.classList.toggle('on', k === lens);
     });
   }
 
-  function writeDetail(detailEl, b){
-    detailEl.querySelector('[data-title]').textContent = b.t;
+  function renderModal(key){
+    const b = blocks[key];
+    if(!b) return;
 
-    // Base text = chosen lens (global)
-    const base = b[lens] || b.now || '';
-    detailEl.querySelector('[data-p]').textContent = base;
+    modalState.openKey = key;
 
-    // Learn adds extra depth line
-    const p2 = detailEl.querySelector('[data-p2]');
-    if(depth === 'learn'){
-      p2.style.display = 'block';
-      p2.textContent = b.learn || '';
-    }else{
-      p2.style.display = 'none';
-      p2.textContent = '';
+    mMeta.textContent = b.meta || 'DETAIL';
+    mTitle.textContent = b.title || '—';
+    mDesc.textContent = (b[lens] || b.now || '').trim();
+
+    // Build sub-bubbles (always), and in LEARN show subpanel auto-open first item
+    mBubbles.innerHTML = '';
+    (b.subs || []).forEach((s, idx)=>{
+      const el = document.createElement('div');
+      el.className = 'subbubble';
+      el.setAttribute('data-sub', s.k);
+      el.innerHTML =
+        '<div class="t"><b>'+escapeHtml(s.t)+'</b><i>'+escapeHtml(s.s || '')+'</i></div>' +
+        '<div class="go">▶</div>';
+      el.addEventListener('click', ()=>{
+        modalState.openSub = s.k;
+        subTitle.textContent = s.t;
+        subText.textContent = s.p || '';
+        subpanel.classList.add('open');
+      });
+      mBubbles.appendChild(el);
+
+      if(depth === 'learn' && idx === 0 && !modalState.openSub){
+        // open first sub automatically in learn
+        modalState.openSub = s.k;
+        subTitle.textContent = s.t;
+        subText.textContent = s.p || '';
+        subpanel.classList.add('open');
+      }
+    });
+
+    if(depth !== 'learn'){
+      subpanel.classList.remove('open');
+      modalState.openSub = null;
     }
 
-    updateLensChips(detailEl);
+    updateModalLensChips();
   }
 
-  // Bubble click: open local detail, store which block is open there (for lens updates)
-  document.querySelectorAll('.bubble').forEach(bub=>{
-    bub.addEventListener('click', ()=>{
-      const k = bub.getAttribute('data-block');
-      const b = blocks[k];
-      if(!b) return;
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, s => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[s]));
+  }
 
-      const inside = bub.closest('.inside');
-      const detail = inside.querySelector('[data-detail]');
-      if(!detail) return;
-
-      inside.querySelectorAll('.bubble').forEach(x=>x.classList.remove('active'));
-      bub.classList.add('active');
-
-      detail.setAttribute('data-open-block', k);
-      writeDetail(detail, b);
-      detail.classList.add('open');
+  // bubble clicks => modal
+  document.querySelectorAll('.bubble').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const key = el.getAttribute('data-block');
+      modalState.openSub = null;
+      renderModal(key);
+      openModal();
     });
   });
 
-  // Initialize lens buttons
+  // initialize lens active
   if(!lensBtns[lens]) lens = 'now';
   setLens(lens);
 })();

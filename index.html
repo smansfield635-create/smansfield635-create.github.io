@@ -3,13 +3,16 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Door · Geodiametrics</title>
+<title>Coherent Resolution Platform · Terminal</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=9001"/>
-<link rel="stylesheet" href="/assets/branch.css?v=9001"/>
+<link rel="stylesheet" href="/assets/ui.css?v=9300"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9300"/>
 
 <style>
-/* DOOR = Lens Select Only (4-lens diamond) */
+/* MULTI-PORTAL ACCESS TERMINAL (NO DELETION)
+   - Parallel ramps into /home/
+   - Door kept as fallback
+*/
 
 body{
   background:
@@ -17,26 +20,26 @@ body{
     radial-gradient(1400px 900px at 50% 18%, #152532 0%, #0b1620 50%, #05070c 100%);
 }
 
-.wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.wrap{width:min(980px,94vw);margin:0 auto;display:flex;flex-direction:column;gap:14px;padding:38px 16px 88px}
 .hero{position:relative;z-index:10;text-align:left}
-.hero h1{font-size:clamp(40px,7vw,68px);margin:0;font-weight:900}
-.hero p{margin:10px 0 0;opacity:.78;font-size:18px;max-width:46ch}
+.hero h1{font-size:clamp(44px,7vw,72px);margin:0;font-weight:950;letter-spacing:.02em}
+.hero p{margin:10px 0 0;opacity:.80;font-size:16px;line-height:1.4;max-width:58ch}
 
-.hint{
-  margin-top:8px;
-  opacity:.65;
-  font-size:14px;
-  letter-spacing:.06em;
+.terminal{
+  margin-top:10px;
+  border-radius:24px;
+  background:rgba(255,255,255,.05);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 26px 70px rgba(0,0,0,.55);
+  padding:16px;
+  backdrop-filter:blur(12px);
 }
 
-.stage{display:flex;align-items:center;justify-content:center;width:100%}
 .platform{
   position:relative;
-  width:min(460px,92vw);
+  width:min(480px,92vw);
   aspect-ratio:1/1;
   margin:10px auto 0;
 }
-
 .platform::before{
   content:"";
   position:absolute;
@@ -44,14 +47,11 @@ body{
   transform:rotate(45deg);
   border-radius:28px;
   background:rgba(255,255,255,.04);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.08),
-    0 32px 80px rgba(0,0,0,.75);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 32px 80px rgba(0,0,0,.75);
   backdrop-filter:blur(10px);
   z-index:0;
 }
 
-/* lens keys (use the same gem stack language as your site) */
 .diamond{
   position:absolute;
   width:38%;
@@ -67,31 +67,32 @@ body{
     inset 0 0 0 1px rgba(255,255,255,.06),
     inset 0 18px 30px rgba(255,255,255,.05),
     inset 0 -30px 45px rgba(0,0,0,.85),
-    0 24px 60px rgba(0,0,0,.8);
+    0 24px 60px rgba(0,0,0,.80);
   display:flex;
   align-items:center;
   justify-content:center;
-  text-decoration:none;
   cursor:pointer;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
   z-index:2;
 }
 
+.diamond:active{transform:rotate(45deg) translateY(1px)}
 .diamond span{
   transform:rotate(-45deg);
   text-align:center;
   font-weight:900;
   color:#eaf2f6;
-  text-shadow:0 0 10px rgba(160,210,255,.25);
+  letter-spacing:.10em;
   line-height:1.12;
 }
-
 .diamond small{
   display:block;
   margin-top:6px;
   font-size:12px;
   font-weight:800;
   letter-spacing:.14em;
-  opacity:.80;
+  opacity:.78;
 }
 
 .top{top:6%;left:31%}
@@ -99,84 +100,59 @@ body{
 .bottom{bottom:6%;left:31%}
 .left{top:31%;left:6%}
 
-.diamond.active{
-  filter:brightness(1.10);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.10),
-    inset 0 18px 30px rgba(255,255,255,.07),
-    inset 0 -30px 45px rgba(0,0,0,.85),
-    0 24px 60px rgba(0,0,0,.85),
-    0 0 0 2px rgba(255,255,255,.06);
-}
-
-.cta{
-  width:min(520px,94vw);
-  margin:12px auto 0;
-  border-radius:22px;
-  background:rgba(255,255,255,.05);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 20px 60px rgba(0,0,0,.45);
-  padding:14px 14px;
-}
-
-.cta-row{
+/* status row */
+.status{
+  width:min(720px,94vw);
+  margin:14px auto 0;
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  justify-content:space-between;
-  align-items:center;
+  justify-content:center;
 }
-
-.badges{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  opacity:.85;
-  font-weight:900;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-  font-size:12px;
-}
-
 .pill{
   border-radius:999px;
   padding:10px 14px;
   background:rgba(255,255,255,.06);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  font-weight:900;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  font-size:12px;
+  opacity:.92;
 }
 
 .actions{
+  width:min(720px,94vw);
+  margin:12px auto 0;
   display:flex;
   gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
 }
-
 .btn{
-  border-radius:16px;
+  border-radius:18px;
   padding:12px 16px;
   background:rgba(255,255,255,.08);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
   font-weight:900;
-  text-decoration:none;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-size:12px;
   color:#eaf2f6;
+  text-decoration:none;
 }
-
 .btn.primary{
   background:rgba(150,0,0,.25);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 18px 50px rgba(0,0,0,.35);
 }
 
-.note{
-  margin-top:10px;
-  opacity:.78;
-  font-size:14px;
-  line-height:1.5;
-}
-
 footer{
+  margin-top:18px;
   text-align:center;
-  letter-spacing:3px;
+  opacity:.40;
+  letter-spacing:.22em;
+  font-weight:900;
   font-size:12px;
-  opacity:.55;
-  margin:18px 0 0;
 }
 </style>
 </head>
@@ -188,93 +164,97 @@ footer{
   <div class="wrap">
 
     <div class="hero">
-      <h1>Door</h1>
-      <p>Select your lenses. Then enter the hub.</p>
-      <div class="hint">4 lenses only: Language (EN/中文) + Depth (Explore/Learn).</div>
+      <h1>COHERENT RESOLUTION PLATFORM</h1>
+      <p>
+        Multi-portal access terminal. Choose any ramp. Everything converges into SCOPE256.
+      </p>
     </div>
 
-    <div class="stage">
-      <div class="platform" id="platform">
+    <div class="terminal">
 
-        <!-- Language -->
-        <button class="diamond top" id="lang-en" type="button">
-          <span>English<small>EN</small></span>
-        </button>
+      <div class="platform">
 
-        <button class="diamond bottom" id="lang-zh" type="button">
-          <span>中文<small>简体</small></span>
-        </button>
-
-        <!-- Depth -->
-        <button class="diamond left" id="depth-explore" type="button">
-          <span>Explore<small>Surface</small></span>
-        </button>
-
-        <button class="diamond right" id="depth-learn" type="button">
-          <span>Learn<small>Deep</small></span>
-        </button>
-
-      </div>
-    </div>
-
-    <div class="cta">
-      <div class="cta-row">
-        <div class="badges" aria-live="polite">
-          <span class="pill" id="badge-lang">LANG: EN</span>
-          <span class="pill" id="badge-depth">DEPTH: EXPLORE</span>
+        <!-- RAMP 1: Language EN -->
+        <div class="diamond top" id="ramp-en">
+          <span>ENGLISH<small>LANG</small></span>
         </div>
-        <div class="actions">
-          <a class="btn" href="/home/" id="enter">Enter</a>
-          <a class="btn primary" href="/" id="reset">Reset</a>
+
+        <!-- RAMP 2: Depth Learn -->
+        <div class="diamond right" id="ramp-learn">
+          <span>LEARN<small>DEPTH</small></span>
         </div>
+
+        <!-- RAMP 3: Language ZH -->
+        <div class="diamond bottom" id="ramp-zh">
+          <span>中文<small>语言</small></span>
+        </div>
+
+        <!-- RAMP 4: Depth Explore -->
+        <div class="diamond left" id="ramp-explore">
+          <span>EXPLORE<small>DEPTH</small></span>
+        </div>
+
       </div>
-      <div class="note" id="note">
-        Explore = quick overview + jump points. Learn = nested bubbles + full breakdown.
+
+      <div class="status">
+        <div class="pill" id="s_lang">LANG: EN</div>
+        <div class="pill" id="s_depth">DEPTH: EXPLORE</div>
+        <div class="pill" id="s_scope">SCOPE256: NOW</div>
       </div>
+
+      <div class="actions">
+        <a class="btn primary" href="/home/" id="enter">ENTER</a>
+        <a class="btn" href="/door/" id="door">DOOR</a>
+        <a class="btn" href="/home/" id="home">HOME</a>
+      </div>
+
     </div>
 
-    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    <footer>GEODIAMETRICS</footer>
 
   </div>
 </div>
 
 <script>
 (function(){
+  // Storage keys
+  const K_LANG  = "gd_lang";   // en | zh
+  const K_DEPTH = "gd_depth";  // explore | learn
+  const K_SCOPE = "gd_scope";  // origin | now | trajectory
+
   const state = {
-    lang: localStorage.getItem("gd_lang") || "en",
-    depth: localStorage.getItem("gd_depth") || "explore",
+    lang: (localStorage.getItem(K_LANG) || "en").toLowerCase(),
+    depth: (localStorage.getItem(K_DEPTH) || "explore").toLowerCase(),
+    scope: (localStorage.getItem(K_SCOPE) || "now").toLowerCase()
   };
 
-  const els = {
-    langEn: document.getElementById("lang-en"),
-    langZh: document.getElementById("lang-zh"),
-    depthExplore: document.getElementById("depth-explore"),
-    depthLearn: document.getElementById("depth-learn"),
-    badgeLang: document.getElementById("badge-lang"),
-    badgeDepth: document.getElementById("badge-depth"),
-  };
-
-  function apply(){
-    els.langEn.classList.toggle("active", state.lang === "en");
-    els.langZh.classList.toggle("active", state.lang === "zh");
-    els.depthExplore.classList.toggle("active", state.depth === "explore");
-    els.depthLearn.classList.toggle("active", state.depth === "learn");
-
-    els.badgeLang.textContent = "LANG: " + (state.lang === "en" ? "EN" : "中文");
-    els.badgeDepth.textContent = "DEPTH: " + (state.depth === "explore" ? "EXPLORE" : "LEARN");
-
-    localStorage.setItem("gd_lang", state.lang);
-    localStorage.setItem("gd_depth", state.depth);
+  function norm(){
+    if(state.lang !== "en" && state.lang !== "zh") state.lang = "en";
+    if(state.depth !== "explore" && state.depth !== "learn") state.depth = "explore";
+    if(state.scope !== "origin" && state.scope !== "now" && state.scope !== "trajectory") state.scope = "now";
   }
 
-  els.langEn.addEventListener("click", ()=>{ state.lang="en"; apply(); });
-  els.langZh.addEventListener("click", ()=>{ state.lang="zh"; apply(); });
-  els.depthExplore.addEventListener("click", ()=>{ state.depth="explore"; apply(); });
-  els.depthLearn.addEventListener("click", ()=>{ state.depth="learn"; apply(); });
+  function save(){
+    localStorage.setItem(K_LANG, state.lang);
+    localStorage.setItem(K_DEPTH, state.depth);
+    localStorage.setItem(K_SCOPE, state.scope);
+  }
 
-  apply();
+  function paint(){
+    document.getElementById("s_lang").textContent  = "LANG: " + (state.lang === "zh" ? "中文" : "EN");
+    document.getElementById("s_depth").textContent = "DEPTH: " + state.depth.toUpperCase();
+    document.getElementById("s_scope").textContent = "SCOPE256: " + state.scope.toUpperCase();
+  }
+
+  // Ramps
+  document.getElementById("ramp-en").addEventListener("click", ()=>{ state.lang="en"; norm(); save(); paint(); });
+  document.getElementById("ramp-zh").addEventListener("click", ()=>{ state.lang="zh"; norm(); save(); paint(); });
+  document.getElementById("ramp-explore").addEventListener("click", ()=>{ state.depth="explore"; norm(); save(); paint(); });
+  document.getElementById("ramp-learn").addEventListener("click", ()=>{ state.depth="learn"; norm(); save(); paint(); });
+
+  // Initialize with defaults
+  norm(); save(); paint();
 })();
 </script>
-
 </body>
 </html>

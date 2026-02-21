@@ -1,102 +1,771 @@
-<!-- TNT FILE: /home/index.html  (ENGINE; EXPLORE vs LEARN) -->
+<!-- TNT: /home/index.html
+     HOME (Hub)
+     PURPOSE:
+       - Reads lang+depth from localStorage (set by / and /door/)
+       - EXPLORE = surface bubbles + quick “jump” buttons
+       - LEARN   = deep nested bubbles (bubble→block→sub-bubbles), plus jump buttons
+     NOTE:
+       - Door sets crp_depth = "explore" | "learn"
+       - Index sets crp_lang = "en" | "zh"
+-->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>SCOPE256</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Home · Coherent Resolution Platform</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=12000"/>
-<link rel="stylesheet" href="/assets/branch.css?v=12000"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=9101"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=9101"/>
+
+  <style>
+    /* Festival palette (Red · Gold · Black) */
+    body{
+      background:
+        radial-gradient(1400px 900px at 50% 10%, rgba(140,0,0,.44) 0%, rgba(30,0,0,.20) 42%, rgba(5,7,12,1) 100%),
+        radial-gradient(1200px 900px at 20% 24%, rgba(210,160,60,.08) 0%, rgba(0,0,0,0) 60%),
+        radial-gradient(1200px 900px at 80% 24%, rgba(210,160,60,.06) 0%, rgba(0,0,0,0) 60%);
+    }
+
+    .wrap{width:min(980px,94vw);margin:0 auto;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:28px 14px 96px;gap:14px;position:relative;z-index:2}
+    .hero{width:100%;max-width:900px;position:relative;z-index:10}
+    .hero h1{margin:0;font-weight:900;letter-spacing:.02em;font-size:clamp(42px,9vw,70px);line-height:1.02}
+    .hero p{margin:12px 0 0;opacity:.78;font-size:18px;line-height:1.45;max-width:760px}
+
+    /* top pills */
+    .topbar{width:100%;max-width:900px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;position:relative;z-index:12}
+    .pill{
+      border-radius:999px;
+      padding:10px 14px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-size:12px;
+      opacity:.92;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .pill .v{
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(210,160,60,.10);
+      box-shadow:inset 0 0 0 1px rgba(210,160,60,.22);
+      color:rgba(255,235,185,.92);
+      letter-spacing:.14em;
+      font-size:12px;
+    }
+    .pill.btn{cursor:pointer;text-decoration:none;color:inherit}
+    .pill.btn:hover{background:rgba(255,255,255,.08)}
+    .pill.btn:active{transform:translateY(1px)}
+
+    .section-title{
+      width:100%;
+      max-width:900px;
+      margin-top:8px;
+      font-weight:900;
+      letter-spacing:.18em;
+      opacity:.70;
+      font-size:12px;
+      text-transform:uppercase;
+    }
+
+    /* Quadrant details card */
+    details.quad{
+      width:100%;
+      max-width:900px;
+      border-radius:22px;
+      background:rgba(255,255,255,.05);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 20px 60px rgba(0,0,0,.45);
+      backdrop-filter:blur(12px);
+      overflow:hidden;
+    }
+    details.quad + details.quad{margin-top:12px}
+    details.quad summary{list-style:none;cursor:pointer;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;-webkit-tap-highlight-color:transparent}
+    details.quad summary::-webkit-details-marker{display:none}
+
+    .q-left{display:flex;align-items:center;gap:12px;min-width:0}
+    .q-badge{
+      width:62px;height:42px;border-radius:18px;
+      background:rgba(140,0,0,.20);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;letter-spacing:.10em;
+      flex:0 0 auto;
+      position:relative;
+      color:rgba(255,235,185,.92);
+      text-shadow:0 0 10px rgba(210,160,60,.18);
+    }
+    .q-badge .ico{position:absolute;left:10px;opacity:.9}
+    .q-badge .code{opacity:.95;margin-left:14px}
+    .q-text{min-width:0}
+    .q-text b{display:block;font-size:18px;letter-spacing:.12em;text-transform:uppercase}
+    .q-text span{display:block;opacity:.72;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    .q-arrow{
+      width:42px;height:42px;border-radius:999px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      display:flex;align-items:center;justify-content:center;
+      opacity:.9;
+      flex:0 0 auto;
+    }
+
+    .inside{padding:0 16px 16px}
+
+    /* Bubble row (inside quadrant) */
+    .bubble-row{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:6px;
+    }
+    @media(min-width:760px){.bubble-row{grid-template-columns:1fr 1fr}}
+
+    .bubble-btn{
+      border-radius:18px;
+      background:rgba(0,0,0,.22);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+      padding:12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .bubble-btn:hover{background:rgba(0,0,0,.28)}
+    .bubble-btn:active{transform:translateY(1px)}
+    .bubble-btn .left{min-width:0}
+    .bubble-btn b{display:block;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:900}
+    .bubble-btn i{display:block;font-style:normal;opacity:.72;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+    .bubble-btn .go{
+      width:40px;height:40px;border-radius:999px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      display:flex;align-items:center;justify-content:center;
+      opacity:.9;
+      flex:0 0 auto;
+    }
+
+    /* Block map (loaded after bubble click) */
+    .blockmap{
+      margin-top:12px;
+      border-radius:20px;
+      background:rgba(0,0,0,.18);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+    .blockmap .hdr{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 14px;
+      background:rgba(255,255,255,.04);
+      box-shadow:inset 0 -1px 0 rgba(255,255,255,.06);
+    }
+    .blockmap .hdr b{
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-size:12px;
+      opacity:.85;
+    }
+    .blockmap .hdr span{
+      font-size:12px;
+      opacity:.68;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      text-align:right;
+    }
+    .blockmap .body{padding:14px}
+    .blockmap h3{margin:0 0 10px;font-size:18px;font-weight:900;letter-spacing:.08em}
+    .blockmap p{margin:0 0 12px;opacity:.86;line-height:1.6}
+    .chips{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 2px}
+    .chip{
+      border-radius:999px;
+      padding:9px 12px;
+      background:rgba(255,255,255,.06);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-size:11px;
+      opacity:.9;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
+    }
+    .chip:hover{background:rgba(255,255,255,.08)}
+    .chip:active{transform:translateY(1px)}
+
+    .subblocks{margin-top:12px;display:grid;gap:10px}
+    .subcard{
+      border-radius:18px;
+      background:rgba(0,0,0,.20);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+      padding:12px;
+    }
+    .subcard b{display:flex;justify-content:space-between;gap:10px;letter-spacing:.12em;text-transform:uppercase;font-size:12px}
+    .subcard p{margin:8px 0 0;opacity:.85;line-height:1.55;font-size:14px}
+
+    .jumps{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-top:14px;
+    }
+    .jumpbtn{
+      border-radius:999px;
+      padding:12px 18px;
+      background:rgba(255,255,255,.07);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+      color:inherit;
+      font-weight:900;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-size:12px;
+      text-decoration:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .jumpbtn:hover{filter:brightness(1.05)}
+    .jumpbtn:active{transform:translateY(1px)}
+
+    /* Cardinal plate section */
+    .cardinal-title{width:100%;max-width:900px;margin-top:4px;font-weight:900;letter-spacing:.18em;opacity:.70;font-size:12px;text-transform:uppercase}
+    .stage{width:100%;display:flex;align-items:center;justify-content:center;margin-top:8px}
+
+    /* Use branch.css diamonds */
+    .platform{width:min(420px,88vw)}
+    .diamond{cursor:pointer}
+
+    footer{
+      position:fixed;
+      left:0; right:0;
+      bottom:18px;
+      text-align:center;
+      opacity:.55;
+      letter-spacing:3px;
+      font-size:12px;
+      z-index:3;
+      pointer-events:none;
+    }
+
+    .shooting-stars{opacity:.20}
+  </style>
 </head>
 
 <body>
-<div class="page">
-  <div style="width:min(980px,94vw);text-align:left;">
-    <h1 id="T1">SCOPE256</h1>
-    <p id="T2" style="margin-top:12px;">Compass field.</p>
+  <div class="shooting-stars"></div>
 
-    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
-      <span class="pill" id="P_LANG">LANG: EN</span>
-      <span class="pill" id="P_DEPTH">DEPTH: EXPLORE</span>
-      <a class="pill btn" href="/" id="P_RESET" style="cursor:pointer;">RESET</a>
+  <div class="wrap">
+    <div class="hero">
+      <h1 id="t-title">HOME</h1>
+      <p id="t-sub">Explore the system. Expand bubbles → load blocks → expand sub-bubbles → then jump.</p>
     </div>
-  </div>
 
-  <!-- EXPLORE MODE (Compass Field) -->
-  <div id="EXPLORE" style="width:min(980px,94vw);margin-top:18px;">
-    <div class="card">
-      <div style="display:grid;grid-template-columns:1fr;gap:12px;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <div class="card"><b>⭐ NORTH</b><p style="margin-top:8px;">Anchor</p></div>
-          <div class="card"><b>☀ EAST</b><p style="margin-top:8px;">Action</p></div>
-          <div class="card"><b>🌅 SOUTH</b><p style="margin-top:8px;">Measure</p></div>
-          <div class="card"><b>🌇 WEST</b><p style="margin-top:8px;">Memory</p></div>
+    <div class="topbar" aria-label="Home controls">
+      <span class="pill" id="pill-lang">LANG <span class="v" id="v-lang">EN</span></span>
+      <span class="pill" id="pill-depth">DEPTH <span class="v" id="v-depth">EXPLORE</span></span>
+
+      <a class="pill btn" href="/door/" id="btn-depth">CHANGE DEPTH</a>
+      <a class="pill btn" href="/" id="btn-lang">CHANGE LANGUAGE</a>
+
+      <span class="pill" id="pill-scope">SCOPE <span class="v">256</span></span>
+    </div>
+
+    <div class="section-title" id="t-qtitle">Quadrant routes (NW / NE / SW / SE)</div>
+
+    <!-- NW -->
+    <details class="quad" id="q-nw">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge"><span class="ico">⭐</span><span class="code">NW</span></div>
+          <div class="q-text">
+            <b id="t-nw-h">NORTHWEST</b>
+            <span id="t-nw-s">Definitions · language · structure</span>
+          </div>
+        </div>
+        <div class="q-arrow">▾</div>
+      </summary>
+
+      <div class="inside">
+        <div class="bubble-row" id="brow-nw"></div>
+        <div class="blockmap" id="block-nw" hidden>
+          <div class="hdr"><b>BLOCK</b><span>TAP A BUBBLE TO LOAD DETAILS</span></div>
+          <div class="body" id="block-nw-body"></div>
         </div>
 
-        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-start;">
-          <button class="btn primary" id="GO_DEEP" onclick="goDeep()">GO DEEPER</button>
-          <a class="btn" href="/rgsc/" id="TRY_RGSC" style="display:inline-flex;align-items:center;justify-content:center;">TRY RGSC</a>
+        <div class="jumps">
+          <a class="jumpbtn" href="/laws/">JUMP · LAWS</a>
+          <a class="jumpbtn" href="/laws/categories/">JUMP · CATEGORIES</a>
         </div>
+      </div>
+    </details>
+
+    <!-- NE -->
+    <details class="quad" id="q-ne">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge"><span class="ico">☀</span><span class="code">NE</span></div>
+          <div class="q-text">
+            <b id="t-ne-h">NORTHEAST</b>
+            <span id="t-ne-s">Execution · surfaces · examples</span>
+          </div>
+        </div>
+        <div class="q-arrow">▾</div>
+      </summary>
+
+      <div class="inside">
+        <div class="bubble-row" id="brow-ne"></div>
+        <div class="blockmap" id="block-ne" hidden>
+          <div class="hdr"><b>BLOCK</b><span>TAP A BUBBLE TO LOAD DETAILS</span></div>
+          <div class="body" id="block-ne-body"></div>
+        </div>
+
+        <div class="jumps">
+          <a class="jumpbtn" href="/products/">JUMP · PRODUCTS</a>
+          <a class="jumpbtn" href="/rgsc/">JUMP · RGSC</a>
+        </div>
+      </div>
+    </details>
+
+    <!-- SW -->
+    <details class="quad" id="q-sw">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge"><span class="ico">🌇</span><span class="code">SW</span></div>
+          <div class="q-text">
+            <b id="t-sw-h">SOUTHWEST</b>
+            <span id="t-sw-s">Measurement · diagnostics · rules</span>
+          </div>
+        </div>
+        <div class="q-arrow">▾</div>
+      </summary>
+
+      <div class="inside">
+        <div class="bubble-row" id="brow-sw"></div>
+        <div class="blockmap" id="block-sw" hidden>
+          <div class="hdr"><b>BLOCK</b><span>TAP A BUBBLE TO LOAD DETAILS</span></div>
+          <div class="body" id="block-sw-body"></div>
+        </div>
+
+        <div class="jumps">
+          <a class="jumpbtn" href="/gauges/">JUMP · GAUGES</a>
+          <a class="jumpbtn" href="/diagnostic/">JUMP · DIAGNOSTIC</a>
+        </div>
+      </div>
+    </details>
+
+    <!-- SE -->
+    <details class="quad" id="q-se">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge"><span class="ico">🌅</span><span class="code">SE</span></div>
+          <div class="q-text">
+            <b id="t-se-h">SOUTHEAST</b>
+            <span id="t-se-s">Identity · references · links</span>
+          </div>
+        </div>
+        <div class="q-arrow">▾</div>
+      </summary>
+
+      <div class="inside">
+        <div class="bubble-row" id="brow-se"></div>
+        <div class="blockmap" id="block-se" hidden>
+          <div class="hdr"><b>BLOCK</b><span>TAP A BUBBLE TO LOAD DETAILS</span></div>
+          <div class="body" id="block-se-body"></div>
+        </div>
+
+        <div class="jumps">
+          <a class="jumpbtn" href="/links/">JUMP · LINKS</a>
+          <a class="jumpbtn" href="/contact/">JUMP · CONTACT</a>
+        </div>
+      </div>
+    </details>
+
+    <div class="cardinal-title" id="t-ctitle">Cardinal plate (N / E / S / W)</div>
+
+    <div class="stage" aria-label="Cardinal plate">
+      <div class="platform">
+        <a class="diamond top" href="/laws/"><span>N<small id="t-card-n">Laws</small></span></a>
+        <a class="diamond right" href="/products/"><span>E<small id="t-card-e">Products</small></span></a>
+        <a class="diamond bottom" href="/gauges/"><span>S<small id="t-card-s">Gauges</small></span></a>
+        <a class="diamond left" href="/links/"><span>W<small id="t-card-w">Links</small></span></a>
+
+        <a class="diamond mini mini-left" href="/door/"><span><small id="t-mini-left">DOOR</small></span></a>
+        <a class="diamond mini mini-right" href="/"><span><small id="t-mini-right">LANG</small></span></a>
       </div>
     </div>
   </div>
 
-  <!-- LEARN MODE (Hub Placeholder — expanded next) -->
-  <div id="LEARN" style="width:min(980px,94vw);margin-top:18px;display:none;">
-    <div class="card">
-      <b style="letter-spacing:.14em;text-transform:uppercase;">Compass Hub</b>
-      <p style="margin-top:10px;">
-        This is the structured hub. Next step: add bubbles → blocks → sub-bubbles per quadrant.
-      </p>
-
-      <div class="stage" style="margin-top:18px;">
-        <div class="platform">
-          <a class="diamond top a-north" href="/laws/"><span>N<small>LAWS</small></span></a>
-          <a class="diamond right a-east" href="/products/"><span>E<small>PRODUCTS</small></span></a>
-          <a class="diamond bottom a-south" href="/gauges/"><span>S<small>GAUGES</small></span></a>
-          <a class="diamond left a-west" href="/links/"><span>W<small>LINKS</small></span></a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="ink">GEODIAMETRICS</div>
   <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-</div>
 
-<script>
-(function(){
-  const lang = (localStorage.getItem("gd_lang") || "en").toLowerCase();
-  const depth = (localStorage.getItem("gd_depth") || "explore").toLowerCase();
+  <script>
+    (function(){
+      const KEY_LANG = "crp_lang";     // "en" | "zh"
+      const KEY_DEPTH = "crp_depth";   // "explore" | "learn"
 
-  document.documentElement.lang = (lang === "zh") ? "zh-Hans" : "en";
+      const lang = (localStorage.getItem(KEY_LANG) || "en").toLowerCase();
+      const depth = (localStorage.getItem(KEY_DEPTH) || "explore").toLowerCase();
 
-  document.getElementById("P_LANG").textContent = "LANG: " + (lang === "zh" ? "中文" : "EN");
-  document.getElementById("P_DEPTH").textContent = "DEPTH: " + depth.toUpperCase();
+      // Redirect safety: Home requires language chosen at index
+      if(!localStorage.getItem(KEY_LANG)){
+        location.replace("/");
+        return;
+      }
 
-  // Single-language (no mixing)
-  if(lang === "zh"){
-    document.getElementById("T2").textContent = depth === "learn" ? "罗盘枢纽。" : "罗盘场。";
-    document.getElementById("GO_DEEP").textContent = "去深挖";
-    document.getElementById("TRY_RGSC").textContent = "试用 RGSC";
-  }else{
-    document.getElementById("T2").textContent = depth === "learn" ? "Compass hub." : "Compass field.";
-    document.getElementById("GO_DEEP").textContent = "GO DEEPER";
-    document.getElementById("TRY_RGSC").textContent = "TRY RGSC";
-  }
+      // UI pills
+      document.getElementById("v-lang").textContent = (lang === "zh") ? "中文" : "EN";
+      document.getElementById("v-depth").textContent = (depth === "learn") ? (lang === "zh" ? "学习" : "LEARN") : (lang === "zh" ? "浏览" : "EXPLORE");
 
-  // Show correct mode
-  if(depth === "learn"){
-    document.getElementById("EXPLORE").style.display = "none";
-    document.getElementById("LEARN").style.display = "block";
-  }
-})();
+      // Copy (EN / ZH)
+      const COPY = {
+        en: {
+          title:"HOME",
+          sub:"Explore the system. Expand bubbles → load blocks → expand sub-bubbles → then jump.",
+          qtitle:"Quadrant routes (NW / NE / SW / SE)",
+          ctitle:"Cardinal plate (N / E / S / W)",
+          nwH:"NORTHWEST", nwS:"Definitions · language · structure",
+          neH:"NORTHEAST", neS:"Execution · surfaces · examples",
+          swH:"SOUTHWEST", swS:"Measurement · diagnostics · rules",
+          seH:"SOUTHEAST", seS:"Identity · references · links",
+          cardN:"Laws", cardE:"Products", cardS:"Gauges", cardW:"Links",
+          miniL:"DOOR", miniR:"LANG"
+        },
+        zh: {
+          // 90% Chinese + 10% basic English anchors (foundation)
+          title:"中枢",
+          sub:"浏览系统：展开 bubbles → 加载 block → 展开 sub-bubbles → 再 jump。",
+          qtitle:"象限路线 (NW / NE / SW / SE)",
+          ctitle:"基座方位 (N / E / S / W)",
+          nwH:"西北", nwS:"定义 · 语言 · 结构",
+          neH:"东北", neS:"执行 · 界面 · 示例",
+          swH:"西南", swS:"测量 · 诊断 · 规则",
+          seH:"东南", seS:"身份 · 引用 · 链接",
+          cardN:"法则", cardE:"产品", cardS:"量表", cardW:"链接",
+          miniL:"入口", miniR:"语言"
+        }
+      };
 
-function goDeep(){
-  localStorage.setItem("gd_depth","learn");
-  window.location.reload();
-}
-</script>
+      const T = COPY[lang] || COPY.en;
+
+      document.getElementById("t-title").textContent = T.title;
+      document.getElementById("t-sub").textContent = T.sub;
+      document.getElementById("t-qtitle").textContent = T.qtitle;
+      document.getElementById("t-ctitle").textContent = T.ctitle;
+
+      document.getElementById("t-nw-h").textContent = T.nwH;
+      document.getElementById("t-nw-s").textContent = T.nwS;
+      document.getElementById("t-ne-h").textContent = T.neH;
+      document.getElementById("t-ne-s").textContent = T.neS;
+      document.getElementById("t-sw-h").textContent = T.swH;
+      document.getElementById("t-sw-s").textContent = T.swS;
+      document.getElementById("t-se-h").textContent = T.seH;
+      document.getElementById("t-se-s").textContent = T.seS;
+
+      document.getElementById("t-card-n").textContent = T.cardN;
+      document.getElementById("t-card-e").textContent = T.cardE;
+      document.getElementById("t-card-s").textContent = T.cardS;
+      document.getElementById("t-card-w").textContent = T.cardW;
+      document.getElementById("t-mini-left").textContent = T.miniL;
+      document.getElementById("t-mini-right").textContent = T.miniR;
+
+      // Data model (4 bubbles per quadrant + deep block)
+      // EXPLORE = shorter blurbs, LEARN = longer blocks + subcards
+      const DATA = {
+        nw: [
+          {
+            key:"SSG",
+            brief:{
+              en:"Constraint language overview.",
+              zh:"约束语言概览 (Language)."
+            },
+            deep:{
+              en:{
+                title:"SSG — Simplified Syntax Geometry",
+                p:"A constraint language for expressing structure, execution, and state transitions. Built for compression, clarity, and replay-safe contracts.",
+                chips:["Origin","Now","Trajectory"],
+                sub:[
+                  {h:"Primitives", r:"R/S/C/G/Guards", p:"Resource, Store, Constraint, Goal, Guard — the minimum set for executable structure."},
+                  {h:"Receipts", r:"gated flow", p:"Advance only after receipt. Back-nav invalidates downstream receipts."},
+                  {h:"Invariants", r:"navigation-first", p:"No timers as gates. Unified press primitives. Atomic handoff with receipt."}
+                ]
+              },
+              zh:{
+                title:"SSG — 简化语法几何",
+                p:"一种约束语言，用来表达结构、执行与状态迁移。目标：压缩、清晰、可复现 (replay-safe)。",
+                chips:["起点","现在","轨迹"],
+                sub:[
+                  {h:"原语", r:"R/S/C/G/Guard", p:"资源、存储、约束、目标、守卫：可执行结构的最小集合。"},
+                  {h:"回执", r:"门控", p:"有回执才推进；返回会使下游回执失效。"},
+                  {h:"不变量", r:"先导航", p:"不使用定时器作为门；统一点击；原子交接。"}
+                ]
+              }
+            }
+          },
+          {
+            key:"Diamond Grammar",
+            brief:{en:"Four routes, one choice.", zh:"四路语法：一次一选。"},
+            deep:{
+              en:{
+                title:"Diamond Grammar",
+                p:"A hub-first traversal rule: choose one route, complete it, return to hub. This prevents drift and preserves coherence under load.",
+                chips:["Rule","Return","Proof"],
+                sub:[
+                  {h:"One choice", r:"anti-drift", p:"Pick one branch at a time. Don’t multi-tab inside a branch."},
+                  {h:"Return", r:"hub-first", p:"If incomplete, return to a hub and choose a different route."}
+                ]
+              },
+              zh:{
+                title:"钻石语法",
+                p:"以 Hub 为中心：一次只走一条路，走完再返回。这样避免漂移，保持一致性。",
+                chips:["规则","返回","验证"],
+                sub:[
+                  {h:"一次一选", r:"防漂移", p:"同一时间只选一条分支，不在分支内多线并行。"},
+                  {h:"返回", r:"hub-first", p:"未完成就回到 Hub，改选其他路线。"}
+                ]
+              }
+            }
+          },
+          {
+            key:"DOT.GRID",
+            brief:{en:"256-state indexing.", zh:"DOT.GRID：256 状态索引。"},
+            deep:{
+              en:{
+                title:"DOT.GRID",
+                p:"A 256-state lattice for indexing evidence, decisions, and outcomes. Designed for replay + audit across domains.",
+                chips:["State","Replay","Audit"],
+                sub:[
+                  {h:"State", r:"256", p:"Encode a situation into a bounded state so independent observers can agree."},
+                  {h:"Replay", r:"evidence stream", p:"Re-run the same evidence stream across states to compare stability."}
+                ]
+              },
+              zh:{
+                title:"DOT.GRID",
+                p:"256 状态格，用于索引证据、决策与结果。支持回放与审计。",
+                chips:["状态","回放","审计"],
+                sub:[
+                  {h:"状态", r:"256", p:"把情境编码为有限状态，便于不同观察者一致判断。"},
+                  {h:"回放", r:"证据流", p:"用同一证据流重复运行，对比不同状态下的稳定性。"}
+                ]
+              }
+            }
+          },
+          {
+            key:"Acronyms",
+            brief:{en:"Pillar map + usage.", zh:"缩写：分柱分类 + 用法。"},
+            deep:{
+              en:{
+                title:"Acronyms & Glossary",
+                p:"A categorized map of terms so the system remains readable while scaling. (Full 256 list lives on the Glossary page.)",
+                chips:["Core","Pillars","Link"],
+                sub:[
+                  {h:"Core set", r:"first", p:"SSG, DOT.GRID, RGSC, EAI — the minimum shared vocabulary."},
+                  {h:"Pillars", r:"organized", p:"Group acronyms by function so you can search by intent, not memory."}
+                ]
+              },
+              zh:{
+                title:"缩写与术语表",
+                p:"把术语按柱分类，规模增大也能保持可读性。（完整 256 列表在 Glossary 页。）",
+                chips:["核心","分柱","链接"],
+                sub:[
+                  {h:"核心集", r:"优先", p:"SSG、DOT.GRID、RGSC、EAI：最小共享词表。"},
+                  {h:"分柱", r:"组织", p:"按功能分类，按目的查找，而不是靠记忆。"}
+                ]
+              }
+            }
+          }
+        ],
+        ne: [
+          { key:"Execution surfaces", brief:{en:"Apps / portals.", zh:"执行界面 (apps/portals)。"},
+            deep:{
+              en:{title:"Execution Surfaces", p:"Interactive portals that let you apply the system, not just read it.", chips:["Portal","Workflow","Receipt"],
+                sub:[{h:"Portals", r:"UI", p:"Guided entry points to run diagnostics, routes, and captures."},
+                     {h:"Workflows", r:"steps", p:"A structured sequence with receipts and replay logs."}]},
+              zh:{title:"执行界面", p:"可交互入口：让你使用系统，而不只是阅读。", chips:["入口","流程","回执"],
+                sub:[{h:"入口", r:"UI", p:"引导式入口：诊断、路线、记录。"},
+                     {h:"流程", r:"步骤", p:"带回执与回放日志的结构化步骤。"}]}
+            }
+          },
+          { key:"Receipts & trails", brief:{en:"Verify, replay.", zh:"回执与轨迹：验证/回放。"},
+            deep:{
+              en:{title:"Receipts & Audit Trails", p:"Every step produces a receipt so outcomes can be verified and replayed.", chips:["Receipt","Replay","Proof"],
+                sub:[{h:"Receipt", r:"proof", p:"A minimal record that the step occurred under constraints."},
+                     {h:"Replay", r:"compare", p:"Re-run the same path with the same evidence stream."}]},
+              zh:{title:"回执与审计轨迹", p:"每一步产生回执，便于验证与回放。", chips:["回执","回放","证明"],
+                sub:[{h:"回执", r:"证明", p:"在约束下发生过该步骤的最小记录。"},
+                     {h:"回放", r:"对比", p:"用同一路径与证据流重复运行进行对比。"}]}
+            }
+          },
+          { key:"Examples", brief:{en:"How to use.", zh:"示例：怎么用。"},
+            deep:{
+              en:{title:"Examples", p:"Short examples show how the hub routes combine under real constraints.", chips:["Quick","Deep","Case"],
+                sub:[{h:"Quick", r:"surface", p:"One screen, one choice."},
+                     {h:"Deep", r:"nested", p:"Bubble → block → sub-bubbles."}]},
+              zh:{title:"示例", p:"用短示例展示在真实约束下如何组合路线。", chips:["快速","深入","案例"],
+                sub:[{h:"快速", r:"表层", p:"一屏一选。"},
+                     {h:"深入", r:"嵌套", p:"bubble → block → sub-bubbles。"}]}
+            }
+          },
+          { key:"Packaged outputs", brief:{en:"Downloadables.", zh:"打包输出 (downloadables)。"},
+            deep:{
+              en:{title:"Packaged Outputs", p:"Materials you can reuse: templates, checklists, playbooks.", chips:["Templates","Checklists","Packs"],
+                sub:[{h:"Templates", r:"reuse", p:"Structured artifacts that reduce ambiguity."}]},
+              zh:{title:"打包输出", p:"可复用材料：模板、清单、手册。", chips:["模板","清单","包"],
+                sub:[{h:"模板", r:"复用", p:"结构化产物，减少歧义。"}]}
+            }
+          }
+        ],
+        sw: [
+          { key:"Gauges", brief:{en:"Panels & thresholds.", zh:"量表：面板与阈值。"},
+            deep:{
+              en:{title:"Gauges", p:"Measurement panels that track consistency, signal integrity, and thresholds.", chips:["Panel","Threshold","Signal"],
+                sub:[{h:"Panels", r:"instruments", p:"Instrument panels for repeatable checks."},
+                     {h:"Thresholds", r:"rules", p:"Clear thresholds for pass/fail states."}]},
+              zh:{title:"量表", p:"测量面板：一致性、信号完整性、阈值。", chips:["面板","阈值","信号"],
+                sub:[{h:"面板", r:"仪表", p:"用于可重复检查的仪表面板。"},
+                     {h:"阈值", r:"规则", p:"明确阈值，用于通过/失败判断。"}]}
+            }
+          },
+          { key:"Diagnostics", brief:{en:"Coherence / drift.", zh:"诊断：一致性/漂移。"},
+            deep:{
+              en:{title:"Diagnostics", p:"Classification under constraint: coherence, drift, confusion categories.", chips:["Classify","Compare","Resolve"],
+                sub:[{h:"Categories", r:"signals", p:"Coherence / drift / confusion categories from observed behavior."},
+                     {h:"Observer-invariant", r:"targets", p:"Same evidence → same classification across observers."}]},
+              zh:{title:"诊断", p:"约束下分类：一致性、漂移、困惑。", chips:["分类","对比","修正"],
+                sub:[{h:"类别", r:"信号", p:"从可观察行为得到一致性/漂移/困惑分类。"},
+                     {h:"观察者不变", r:"目标", p:"同一证据 → 不同观察者一致判断。"}]}
+            }
+          },
+          { key:"Rules", brief:{en:"Navigation integrity.", zh:"规则：导航完整性。"},
+            deep:{
+              en:{title:"Rules", p:"Navigation + integrity rules keep the system stable while it scales.", chips:["One choice","Return","Receipts"],
+                sub:[{h:"Return protocol", r:"hub-first", p:"If incomplete, return to a hub and choose another route."}]},
+              zh:{title:"规则", p:"导航与完整性规则：规模增大仍保持稳定。", chips:["一次一选","返回","回执"],
+                sub:[{h:"返回协议", r:"hub-first", p:"未完成就回到 Hub，改选路线。"}]}
+            }
+          },
+          { key:"Protocols", brief:{en:"Operational playbook.", zh:"协议：操作手册。"},
+            deep:{
+              en:{title:"Protocols", p:"Operational patterns for using the system safely and repeatably.", chips:["Operate","Audit","Scale"],
+                sub:[{h:"Operate", r:"repeat", p:"Repeatable sequences with clear receipts."}]},
+              zh:{title:"协议", p:"安全、可重复使用的操作模式。", chips:["操作","审计","扩展"],
+                sub:[{h:"操作", r:"重复", p:"带清晰回执的可重复序列。"}]}
+            }
+          }
+        ],
+        se: [
+          { key:"OSF", brief:{en:"Project registry.", zh:"OSF：项目注册。"},
+            deep:{
+              en:{title:"OSF", p:"Project registry, preprints, and public artifacts.", chips:["Registry","Docs","Cite"],
+                sub:[{h:"Registry", r:"anchor", p:"Stable public anchoring for the project history."}]},
+              zh:{title:"OSF", p:"项目注册、预印本与公开材料。", chips:["注册","文档","引用"],
+                sub:[{h:"注册", r:"锚定", p:"稳定公共锚点，用于项目历史。"}]}
+            }
+          },
+          { key:"ORCID", brief:{en:"Researcher identity.", zh:"ORCID：研究者身份。"},
+            deep:{
+              en:{title:"ORCID", p:"Researcher identity anchor and attribution.", chips:["ID","Attribution","Link"],
+                sub:[{h:"Attribution", r:"identity", p:"Connect outputs to a stable identity anchor."}]},
+              zh:{title:"ORCID", p:"研究者身份锚点与署名。", chips:["身份","署名","链接"],
+                sub:[{h:"署名", r:"身份", p:"把产出连接到稳定身份锚点。"}]}
+            }
+          },
+          { key:"Contact", brief:{en:"Direct channel.", zh:"联系：直接通道。"},
+            deep:{
+              en:{title:"Contact", p:"Direct communication channel for collaboration and verification.", chips:["Email","Signal","Ops"],
+                sub:[{h:"Channel", r:"direct", p:"A simple, direct path for contact and requests."}]},
+              zh:{title:"联系", p:"协作与验证的直接沟通通道。", chips:["邮件","信号","流程"],
+                sub:[{h:"通道", r:"直接", p:"简洁直接的联系与请求入口。"}]}
+            }
+          },
+          { key:"References", brief:{en:"Anchors & citations.", zh:"引用：锚点与引用。"},
+            deep:{
+              en:{title:"References", p:"Reference anchors that keep the system verifiable.", chips:["Anchor","Cite","Verify"],
+                sub:[{h:"Anchor", r:"stable", p:"Stable anchors reduce ambiguity across versions."}]},
+              zh:{title:"引用", p:"让系统可验证的引用锚点。", chips:["锚点","引用","验证"],
+                sub:[{h:"锚点", r:"稳定", p:"稳定锚点减少版本间歧义。"}]}
+            }
+          }
+        ]
+      };
+
+      function bubbleRowHtml(items, quadrant){
+        const useShort = (depth !== "learn");
+        return items.map((it, idx) => {
+          const blurb = useShort ? (it.brief[lang] || it.brief.en) : (it.brief[lang] || it.brief.en);
+          return `
+            <div class="bubble-btn" data-q="${quadrant}" data-i="${idx}" role="button" tabindex="0">
+              <div class="left">
+                <b>${it.key}</b>
+                <i>${blurb}</i>
+              </div>
+              <div class="go">▶</div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function renderQuadrant(q){
+        document.getElementById(`brow-${q}`).innerHTML = bubbleRowHtml(DATA[q], q);
+
+        const row = document.getElementById(`brow-${q}`);
+        row.querySelectorAll(".bubble-btn").forEach(btn => {
+          btn.addEventListener("click", () => openBlock(btn.dataset.q, parseInt(btn.dataset.i,10)));
+          btn.addEventListener("keydown",(e)=>{
+            if(e.key==="Enter"||e.key===" "){ e.preventDefault(); btn.click(); }
+          });
+        });
+      }
+
+      function openBlock(q, i){
+        // EXPLORE mode: keep block hidden (surface only) but still allow “jump” usage.
+        if(depth !== "learn") return;
+
+        const item = DATA[q][i];
+        const d = item.deep[lang] || item.deep.en;
+
+        const subHtml = (d.sub || []).map(s => `
+          <div class="subcard">
+            <b>${s.h}<span style="opacity:.65;letter-spacing:.14em;text-transform:uppercase">${s.r}</span></b>
+            <p>${s.p}</p>
+          </div>
+        `).join("");
+
+        const chipsHtml = (d.chips || []).map(c => `<span class="chip">${c}</span>`).join("");
+
+        const html = `
+          <h3>${d.title}</h3>
+          <p>${d.p}</p>
+
+          <div class="chips">${chipsHtml}</div>
+
+          <div class="subblocks">${subHtml}</div>
+        `;
+
+        const box = document.getElementById(`block-${q}`);
+        document.getElementById(`block-${q}-body`).innerHTML = html;
+        box.hidden = false;
+
+        // scroll block into view gently
+        box.scrollIntoView({behavior:"smooth", block:"nearest"});
+      }
+
+      // Render 4 quadrants
+      ["nw","ne","sw","se"].forEach(renderQuadrant);
+
+      // In EXPLORE, keep block map collapsed by default
+      if(depth !== "learn"){
+        ["nw","ne","sw","se"].forEach(q => { document.getElementById(`block-${q}`).hidden = true; });
+      }
+    })();
+  </script>
 </body>
 </html>

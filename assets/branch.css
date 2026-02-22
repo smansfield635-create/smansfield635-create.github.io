@@ -1,186 +1,176 @@
-/* ============================================================
-   BRANCH GEOMETRY OWNER
-   MID-AUTUMN EDITION
-   Snowflake field + Diamond compass
-   No html/body overrides
-   ============================================================ */
+/* ==========================================
+   GEODIAMETRICS MATERIAL SYSTEM
+   Canonical: Red + Black + Gold
+   ========================================== */
 
-/* =============================
-   COMPASS CONTAINER
-   ============================= */
+:root {
+  --red-deep: #5a0000;
+  --red-core: #8c0000;
+  --gold: #d4af37;
+  --gold-soft: rgba(212,175,55,0.45);
+  --black-matte: #0c0c0f;
+  --black-soft: #151519;
+}
 
-.crp-snowflake{
-  width:100%;
-  max-width:760px;
-  margin:0 auto;
-  padding:16px 12px 32px;
+/* ===== BACKGROUND ===== */
 
-  position:relative;
-  display:grid;
-  place-items:center;
-
-  --sf-size: min(720px, 90vw, 85vh);
-  --sf-radius: calc(var(--sf-size) * 0.33);
-  --sf-node: clamp(90px, 16vw, 140px);
-  --sf-core: clamp(130px, 22vw, 180px);
-
-  width:var(--sf-size);
-  height:var(--sf-size);
-
-  border-radius:999px;
-
-  /* Deep night panel */
+body {
   background:
-    radial-gradient(circle at center, rgba(255,223,120,0.06), transparent 45%),
-    radial-gradient(circle at center, rgba(255,255,255,0.04), transparent 70%),
-    rgba(5,8,18,0.65);
-
-  border:1px solid rgba(255,255,255,0.08);
-  box-shadow:0 20px 60px rgba(0,0,0,0.45);
-
-  overflow:hidden;
+    radial-gradient(circle at center,
+      rgba(255,180,60,0.05) 0%,
+      rgba(255,120,0,0.04) 30%,
+      transparent 60%),
+    linear-gradient(180deg,
+      var(--red-core) 0%,
+      var(--red-deep) 60%,
+      #200000 100%);
+  background-attachment: fixed;
+  color: #ffffff;
 }
 
-/* Snowflake lattice (subtle) */
-.crp-snowflake::before{
-  content:"";
-  position:absolute;
-  inset:8%;
-  border-radius:999px;
-  border:1px dashed rgba(255,255,255,0.08);
-  pointer-events:none;
+/* ===== CENTERING FIX ===== */
+
+.page,
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.crp-snowflake::after{
-  content:"";
-  position:absolute;
-  inset:20%;
-  border-radius:999px;
-  border:1px dashed rgba(255,255,255,0.05);
-  pointer-events:none;
+/* ==========================================
+   DIAMOND CORE SYSTEM
+   ========================================== */
+
+.diamond-container {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  margin: 60px auto;
 }
 
-/* =============================
-   NUCLEUS — DIAMOND (MOON CORE)
-   ============================= */
-
-.crp-nucleus{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-
-  width:var(--sf-core);
-  height:var(--sf-core);
-  border-radius:28px;
-
-  display:grid;
-  place-items:center;
-  text-align:center;
-
-  font-weight:950;
-  letter-spacing:.4px;
-
-  /* Moon glow */
-  background:
-    radial-gradient(circle at center, rgba(255,236,150,0.85), rgba(255,190,80,0.25) 60%, rgba(255,180,60,0.08) 80%, transparent 100%),
-    rgba(20,22,40,0.9);
-
-  color:#fdf6d3;
-
-  border:1px solid rgba(255,230,140,0.6);
-
+/* smaller diamonds */
+.diamond {
+  width: 120px;
+  height: 120px;
+  background: var(--black-matte);
+  border-radius: 18px;
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  cursor: pointer;
+  transition: all 0.25s ease;
   box-shadow:
-    0 0 30px rgba(255,210,120,0.35),
-    0 12px 40px rgba(0,0,0,0.4);
-
-  cursor:pointer;
-  z-index:3;
+    0 10px 30px rgba(0,0,0,0.6),
+    inset 0 0 12px rgba(255,255,255,0.02);
 }
 
-.crp-nucleus:hover{
+/* text inside diamond */
+.diamond span {
+  transform: rotate(-45deg);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* gold activation */
+.diamond:hover,
+.diamond.active {
   box-shadow:
-    0 0 45px rgba(255,220,150,0.5),
-    0 16px 60px rgba(0,0,0,0.5);
+    0 0 25px var(--gold-soft),
+    0 15px 40px rgba(0,0,0,0.8);
+  border: 1px solid var(--gold);
 }
 
-/* =============================
-   AXIS NODES — DIAMOND COMPASS
-   ============================= */
+/* ===== Compass Positions ===== */
 
-.crp-axis{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:var(--sf-node);
-  height:var(--sf-node);
+.diamond.north { top: 0; left: 100px; }
+.diamond.south { bottom: 0; left: 100px; }
+.diamond.west  { left: 0; top: 100px; }
+.diamond.east  { right: 0; top: 100px; }
 
-  transform-origin:center;
-
-  /* Diamond shape */
-  transform:
-    translate(-50%,-50%)
-    rotate(45deg)
-    translate(var(--dx), var(--dy));
-
-  display:grid;
-  place-items:center;
-  text-align:center;
-
-  background:
-    linear-gradient(145deg, rgba(255,215,120,0.18), rgba(255,150,60,0.05));
-
-  border:1px solid rgba(255,210,120,0.35);
-
+/* Center nucleus */
+.diamond.core {
+  top: 100px;
+  left: 100px;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(145deg, #1a1a1f, #0a0a0d);
+  border-radius: 16px;
   box-shadow:
-    0 8px 24px rgba(0,0,0,0.35),
-    inset 0 0 0 1px rgba(255,240,180,0.12);
-
-  cursor:pointer;
-  z-index:2;
+    0 0 30px rgba(212,175,55,0.3),
+    0 0 60px rgba(212,175,55,0.15);
 }
 
-/* counter-rotate text inside diamond */
-.crp-axis > *{
-  transform:rotate(-45deg);
+/* ==========================================
+   BUTTON SYSTEM (Black → Gold)
+   ========================================== */
+
+button,
+.btn {
+  background: var(--black-matte);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 30px;
+  padding: 10px 22px;
+  color: white;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.6);
 }
 
-.crp-axis:hover{
+button:hover,
+.btn:hover {
+  border-color: var(--gold);
   box-shadow:
-    0 0 20px rgba(255,200,120,0.45),
-    0 10px 28px rgba(0,0,0,0.45);
+    0 0 15px var(--gold-soft),
+    0 4px 18px rgba(0,0,0,0.7);
 }
 
-/* =============================
-   HEX POSITIONING
-   ============================= */
-
-.crp-axis[data-axis="rho"]{
-  --dx: 0px;
-  --dy: calc(var(--sf-radius) * -1);
+button.active,
+.btn.active {
+  border-color: var(--gold);
+  box-shadow:
+    0 0 20px var(--gold-soft),
+    0 6px 25px rgba(0,0,0,0.8);
 }
 
-.crp-axis[data-axis="tc"]{
-  --dx: calc(var(--sf-radius) * 0.866);
-  --dy: calc(var(--sf-radius) * -0.5);
+/* ==========================================
+   BUBBLE OVERLAY
+   ========================================== */
+
+.bubble-overlay {
+  background: rgba(0,0,0,0.92);
+  border-radius: 22px;
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow:
+    0 0 40px rgba(0,0,0,0.8),
+    0 0 25px rgba(212,175,55,0.15);
 }
 
-.crp-axis[data-axis="delta"]{
-  --dx: calc(var(--sf-radius) * 0.866);
-  --dy: calc(var(--sf-radius) * 0.5);
-}
+/* ==========================================
+   MOBILE SCALING
+   ========================================== */
 
-.crp-axis[data-axis="hip"]{
-  --dx: 0px;
-  --dy: var(--sf-radius);
-}
+@media (max-width: 480px) {
+  .diamond-container {
+    width: 260px;
+    height: 260px;
+  }
 
-.crp-axis[data-axis="lambda"]{
-  --dx: calc(var(--sf-radius) * -0.866);
-  --dy: calc(var(--sf-radius) * 0.5);
-}
+  .diamond {
+    width: 95px;
+    height: 95px;
+  }
 
-.crp-axis[data-axis="cert"]{
-  --dx: calc(var(--sf-radius) * -0.866);
-  --dy: calc(var(--sf-radius) * -0.5);
+  .diamond.north { left: 82px; }
+  .diamond.south { left: 82px; }
+  .diamond.west  { top: 82px; }
+  .diamond.east  { top: 82px; }
+
+  .diamond.core {
+    width: 60px;
+    height: 60px;
+    top: 82px;
+    left: 82px;
+  }
 }

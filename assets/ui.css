@@ -1,10 +1,11 @@
 /* ============================================================
-   CRP UI FOUNDATION — MID-AUTUMN LANTERN RED (CANONICAL)
+   GEODIAMETRICS UI — CANONICAL MATERIAL SYSTEM
+   RED FIELD · BLACK STRUCTURE · GOLD ENERGY
    FILE: /assets/ui.css
    OWNERSHIP:
-   - ONLY file allowed to define html/body background/field
+   - ONLY file allowed to style html/body background/field
    - Owns: shell, cards, typography, buttons/links, chips, dividers, topbar
-   - MUST NOT define: geometry layouts (branch.css owns snowflake/diamonds/modal visuals)
+   - MUST NOT define geometry layouts (branch.css owns those)
    ============================================================ */
 
 /* ---------- FIELD (SINGLE OWNER) ---------- */
@@ -13,19 +14,42 @@ html, body{
   padding:0;
   min-height:100%;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  color:#f2f2f2;
+  color:#f5f5f5;
 
-  /* Lantern red field + warm moon glow (no purple bias) */
+  /* Door-style lantern red field */
   background:
-    radial-gradient(circle at 50% 10%, rgba(255,220,140,.22) 0%, rgba(255,220,140,0) 42%),
-    radial-gradient(circle at 20% 30%, rgba(255,120,80,.14) 0%, rgba(255,120,80,0) 55%),
+    radial-gradient(circle at 50% 18%, rgba(212,175,55,.10) 0%, rgba(212,175,55,0) 46%),
+    radial-gradient(circle at 20% 30%, rgba(255,140,90,.14) 0%, rgba(255,140,90,0) 55%),
     radial-gradient(circle at 85% 70%, rgba(255,170,90,.10) 0%, rgba(255,170,90,0) 58%),
-    linear-gradient(180deg, #3b0d0d 0%, #1b0606 55%, #070203 100%);
+    linear-gradient(180deg, #990000 0%, #5b0000 55%, #200000 100%);
   background-attachment:fixed;
 }
 
 *{ box-sizing:border-box; }
 a{ color:inherit; }
+
+/* Subtle diamond grid (structural, not loud) */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(212,175,55,0.035) 0px,
+      rgba(212,175,55,0.035) 1px,
+      transparent 1px,
+      transparent 140px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(212,175,55,0.035) 0px,
+      rgba(212,175,55,0.035) 1px,
+      transparent 1px,
+      transparent 140px
+    );
+}
 
 /* ---------- LAYOUT SHELL ---------- */
 .crp-shell{
@@ -43,22 +67,20 @@ a{ color:inherit; }
   padding-top:46px;
 }
 
-/* ---------- CARD PRIMITIVE (TAP-SAFE) ---------- */
+/* ---------- CARD (BLACK GLASS) ---------- */
 .crp-card{
   width:100%;
-  max-width:860px;
+  max-width:900px;
   padding:28px;
   border-radius:22px;
 
-  /* warm glass */
-  background:rgba(12,6,6,.42);
-  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.92));
+  border:1px solid rgba(255,255,255,.09);
 
   box-shadow:
-    0 22px 70px rgba(0,0,0,.55),
-    inset 0 0 0 1px rgba(255,255,255,.06);
+    0 22px 70px rgba(0,0,0,.60),
+    inset 0 1px 0 rgba(255,255,255,.06);
 
-  overflow:visible;
   position:relative;
   z-index:1;
   pointer-events:auto;
@@ -67,10 +89,6 @@ a{ color:inherit; }
 @media (max-width:520px){
   .crp-card{ padding:20px; }
 }
-
-/* prevent pseudo elements from stealing taps */
-.crp-card::before,
-.crp-card::after{ pointer-events:none !important; }
 
 /* ---------- TYPOGRAPHY ---------- */
 .crp-header{ margin-bottom:10px; }
@@ -105,7 +123,7 @@ a{ color:inherit; }
   letter-spacing:.2px;
 }
 
-/* ---------- DIVIDER / FOOTER ---------- */
+/* ---------- DIVIDERS / FOOTER ---------- */
 .crp-divider{
   border:0;
   height:1px;
@@ -122,7 +140,7 @@ a{ color:inherit; }
 
 .crp-footnote code{ opacity:.95; }
 
-/* ---------- BUTTONS / LINK-BUTTONS ---------- */
+/* ---------- BUTTONS (BLACK → GOLD ACTIVE) ---------- */
 .crp-actions{
   display:flex;
   gap:12px;
@@ -137,8 +155,8 @@ a{ color:inherit; }
   padding:12px 18px;
   border-radius:14px;
 
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
   color:#fff;
 
   font-weight:850;
@@ -156,25 +174,20 @@ a{ color:inherit; }
 }
 
 .crp-btn:hover{
-  background:rgba(0,0,0,.26);
-  border-color:rgba(255,255,255,.28);
-  box-shadow:0 0 18px rgba(255,210,140,.10);
+  border-color:rgba(212,175,55,.35);
+  box-shadow:
+    0 0 16px rgba(212,175,55,.20),
+    0 10px 26px rgba(0,0,0,.55);
 }
 
 .crp-btn:active{ transform:scale(.98); }
 
 .crp-btn-primary{
-  /* lantern gold */
-  background:linear-gradient(135deg, rgba(255,210,120,.22), rgba(255,150,60,.10));
-  border-color:rgba(255,210,120,.40);
-  box-shadow:0 0 22px rgba(255,200,120,.12);
-}
-
-.crp-btn:focus{ outline:none; }
-.crp-btn:focus-visible{
+  border-color:rgba(212,175,55,.70);
   box-shadow:
-    0 0 0 3px rgba(255,230,160,.18),
-    0 0 22px rgba(255,200,120,.14);
+    0 0 22px rgba(212,175,55,.35),
+    0 12px 28px rgba(0,0,0,.60),
+    inset 0 0 18px rgba(212,175,55,.10);
 }
 
 /* ---------- CHIPS (LENSES) ---------- */
@@ -192,8 +205,8 @@ a{ color:inherit; }
   padding:8px 12px;
   border-radius:12px;
 
-  border:1px solid rgba(255,255,255,.16);
-  background:rgba(0,0,0,.16);
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
   color:#fff;
 
   cursor:pointer;
@@ -209,14 +222,20 @@ a{ color:inherit; }
 }
 
 .crp-chip:hover{
-  background:rgba(0,0,0,.22);
-  border-color:rgba(255,255,255,.24);
+  border-color:rgba(212,175,55,.28);
+  box-shadow:0 0 14px rgba(212,175,55,.16);
 }
 
 .crp-chip[aria-pressed="true"]{
-  background:linear-gradient(135deg, rgba(255,210,120,.18), rgba(255,150,60,.08));
-  border-color:rgba(255,210,120,.34);
-  box-shadow:0 0 18px rgba(255,200,120,.10);
+  border-color:rgba(212,175,55,.70);
+  box-shadow:0 0 18px rgba(212,175,55,.30);
+}
+
+/* Optional disabled state */
+.crp-chip[aria-disabled="true"]{
+  opacity:.35;
+  pointer-events:none;
+  filter:grayscale(1);
 }
 
 /* ---------- TOPBAR ---------- */
@@ -236,5 +255,5 @@ a{ color:inherit; }
   align-items:center;
 }
 
-/* ---------- TAP SAFETY (LAST RESORT) ---------- */
+/* ---------- TAP SAFETY ---------- */
 main, section, header, footer, nav, article, div{ pointer-events:auto; }

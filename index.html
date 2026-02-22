@@ -7,12 +7,12 @@
   <title>CRP</title>
 
   <!-- CSS ORDER (CANON): ui.css FIRST, branch.css SECOND -->
-  <!-- CACHE-BUST: prevents GitHub Pages/mobile cache from serving stale CSS -->
-  <link rel="stylesheet" href="/assets/ui.css?v=20260221a" />
-  <link rel="stylesheet" href="/assets/branch.css?v=20260221a" />
+  <!-- CACHE-BUST: forces fresh assets on mobile + GitHub Pages -->
+  <link rel="stylesheet" href="/assets/ui.css?v=CRP_20260221b" />
+  <link rel="stylesheet" href="/assets/branch.css?v=CRP_20260221b" />
 
-  <!-- INSTRUMENT (state normalization) -->
-  <script defer src="/assets/instrument.js?v=20260221a"></script>
+  <!-- INSTRUMENT -->
+  <script defer src="/assets/instrument.js?v=CRP_20260221b"></script>
 </head>
 
 <body>
@@ -22,21 +22,36 @@
         <div class="crp-mark" aria-hidden="true">CRP</div>
         <h1 class="crp-title">Select Language</h1>
         <p class="crp-subtitle">Choose one to continue.</p>
+
+        <!-- DEPLOY-PROOF BANNER (if you do not see this exact ID, you are NOT editing the live file) -->
+        <p class="crp-subtitle" style="margin-top:12px;opacity:.9">
+          BUILD ID: <strong>CRP_20260221b</strong>
+        </p>
       </header>
 
       <div class="crp-actions" role="group" aria-label="Language options">
-        <button id="btn-en" class="crp-btn crp-btn-primary" type="button">
-          ENGLISH
-        </button>
-
-        <button id="btn-zh" class="crp-btn" type="button">
-          中文
-        </button>
+        <button id="btn-en" class="crp-btn crp-btn-primary" type="button">ENGLISH</button>
+        <button id="btn-zh" class="crp-btn" type="button">中文</button>
       </div>
+
+      <hr class="crp-divider" />
+
+      <!-- SELF-DIAG (no speculation): quick links to confirm what the live site is serving -->
+      <section aria-label="Diagnostics" style="margin-top:6px">
+        <p class="crp-subtitle" style="margin:0 0 10px;opacity:.85;font-size:16px">
+          Diagnostics (tap to confirm live assets):
+        </p>
+        <div class="crp-actions" style="gap:10px">
+          <a class="crp-btn" href="/assets/ui.css?v=CRP_20260221b">Open ui.css</a>
+          <a class="crp-btn" href="/assets/branch.css?v=CRP_20260221b">Open branch.css</a>
+          <a class="crp-btn" href="/assets/instrument.js?v=CRP_20260221b">Open instrument.js</a>
+        </div>
+      </section>
 
       <footer class="crp-footer">
         <small class="crp-footnote">
-          Language sets <code>gd_lang</code> and routes forward.
+          Language sets <code>gd_lang</code> and routes to <code>/door/?lang=…</code>.
+          If you do not see <strong>CRP_20260221b</strong>, GitHub Pages is serving a different <code>/index.html</code>.
         </small>
       </footer>
     </section>
@@ -46,7 +61,6 @@
     (function () {
       "use strict";
 
-      // INDEX OWNER: gd_lang only
       var KEY_LANG = "gd_lang";
 
       function setLangAndGo(lang) {

@@ -1,3 +1,4 @@
+<!-- TNT FILE: /index.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -5,62 +6,44 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Coherent Resolution Platform</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=9004"/>
-<link rel="stylesheet" href="/assets/branch.css?v=9004"/>
+<link rel="stylesheet" href="/assets/ui.css?v=9005"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9005"/>
+<script defer src="/assets/instrument.js?v=9005"></script>
 </head>
 
 <body>
 <div class="page">
-  <div class="wrap" style="max-width:640px; width:100%; align-items:center; text-align:center; position:relative;">
-
-    <!-- diamond silhouette (uniform construct) -->
-    <div aria-hidden="true" style="
-      position:absolute;
-      width:520px; height:520px;
-      transform:rotate(45deg);
-      border-radius:46px;
-      background:rgba(122,11,20,.18);
-      box-shadow:inset 0 0 0 1px rgba(202,160,74,.22), 0 40px 110px rgba(0,0,0,.70);
-      opacity:.38;
-      z-index:0;
-    "></div>
-
-    <div class="hero" style="z-index:1;">
+  <div class="wrap" style="max-width:720px; align-items:center; text-align:center;">
+    <div class="hero">
       <h1>COHERENT<br/>RESOLUTION<br/>PLATFORM</h1>
-      <p style="margin-top:14px;">Choose your language once. Everything adapts from there.</p>
+      <p style="margin-top:12px;">Choose your language once. Everything adapts from there.</p>
     </div>
 
-    <div class="panel" style="z-index:2; width:100%; padding:22px; background:rgba(5,7,12,.92); box-shadow:inset 0 0 0 1px rgba(255,255,255,.10), 0 40px 80px rgba(0,0,0,.65);">
-      <div style="letter-spacing:.2em; opacity:.6; font-size:12px; margin-bottom:16px;">LANGUAGE</div>
+    <div class="panel" style="width:100%; padding:22px; background:rgba(0,0,0,.22);">
+      <div class="section-title" style="margin-top:0;">Language</div>
 
-      <button type="button" id="btnEN" class="btn gold" style="width:100%; text-align:left; padding:16px 18px; border-radius:18px; font-size:14px;">
-        ENGLISH
-      </button>
-
+      <button class="btn gold" id="pickEN" style="width:100%; border-radius:20px; text-align:left; padding:16px 18px;">ENGLISH</button>
       <div style="height:12px;"></div>
+      <button class="btn" id="pickZH" style="width:100%; border-radius:20px; text-align:left; padding:16px 18px;">中文</button>
 
-      <button type="button" id="btnZH" class="btn" style="width:100%; text-align:left; padding:16px 18px; border-radius:18px; font-size:14px;">
-        中文
-      </button>
-
-      <div style="margin-top:14px; opacity:.6; font-size:13px;">
-        Language can be adjusted later from the Door.
+      <div style="margin-top:14px; color:rgba(234,242,246,.65); line-height:1.5;">
+        You can switch language later from the Door.
       </div>
     </div>
 
     <div class="ink">GEODIAMETRICS</div>
-    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
   </div>
 </div>
 
 <script>
 (() => {
-  const go = (lang) => {
-    try { localStorage.setItem("crp_lang", lang); } catch(e){}
+  const setLang = (lang) => {
+    try { localStorage.setItem("gd_lang", lang); } catch(e){}
     location.href = "/door/?lang=" + encodeURIComponent(lang);
   };
-  document.getElementById("btnEN").addEventListener("click", () => go("en"));
-  document.getElementById("btnZH").addEventListener("click", () => go("zh"));
+  document.getElementById("pickEN").addEventListener("click", () => setLang("en"));
+  document.getElementById("pickZH").addEventListener("click", () => setLang("zh"));
 })();
 </script>
 </body>

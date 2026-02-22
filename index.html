@@ -3,185 +3,107 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cardinal Axis</title>
+<title>Cardinal Axis · Language</title>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
+<link rel="stylesheet" href="/assets/ui.css?v=DOOR_AXIS_1"/>
+<link rel="stylesheet" href="/assets/branch.css?v=DOOR_AXIS_1"/>
 
 <style>
 body{
   margin:0;
   min-height:100vh;
-  background:
-    radial-gradient(circle at 50% 40%, rgba(255,215,120,.05), transparent 60%),
-    repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 1px, transparent 1px 90px),
-    linear-gradient(180deg,#a80000 0%,#7b0000 60%,#5a0000 100%);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:white;
-}
-
-.page{
-  min-height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
-  padding-top:120px;
+  justify-content:center;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(20,40,90,.35), transparent 60%),
+    linear-gradient(180deg,#8a0000 0%,#b30000 50%,#8a0000 100%);
+  color:#fff;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
 
-/* ===== HEADER ===== */
-
 .title{
-  font-size:46px;
+  font-size:clamp(40px,8vw,72px);
+  font-weight:900;
   letter-spacing:2px;
-  margin-bottom:10px;
+  text-align:center;
 }
 
 .subtitle{
-  opacity:.85;
-  margin-bottom:50px;
+  opacity:.8;
+  margin-top:12px;
+  font-size:18px;
 }
 
-/* ===== GEM DIAMONDS ===== */
-
-.stage{
-  position:relative;
-  width:min(520px,90vw);
-  height:min(520px,90vw);
+.lang-wrap{
+  margin-top:60px;
+  display:flex;
+  flex-direction:column;
+  gap:40px;
+  align-items:center;
 }
 
-.gem{
-  width:150px;
-  height:150px;
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform-origin:center;
-  border-radius:22px;
-  cursor:pointer;
-
+.lang-btn{
+  width:200px;
+  height:200px;
+  border-radius:28px;
+  border:1px solid rgba(255,255,255,.12);
   background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.15), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, #0a0f18 0%, #05070c 40%, #0b1424 100%);
-
+    radial-gradient(circle at 40% 35%, rgba(80,120,255,.18), transparent 60%),
+    linear-gradient(145deg,#0b0f15,#10151c);
+  backdrop-filter:blur(10px);
   box-shadow:
-    0 25px 70px rgba(0,0,0,.8),
-    inset 0 2px 0 rgba(255,255,255,.2),
-    inset 0 -25px 35px rgba(0,0,0,.6);
-
-  border:1px solid rgba(255,255,255,.08);
-  transition:all 260ms ease;
-}
-
-.gem::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  background:
-    repeating-conic-gradient(
-      from 0deg,
-      rgba(255,255,255,.04) 0deg 5deg,
-      transparent 5deg 15deg
-    );
-  mix-blend-mode:overlay;
-  opacity:.25;
-}
-
-.gem:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.05);
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.9),
-    0 0 22px rgba(212,175,55,.45);
-}
-
-.gem-inner{
-  width:100%;
-  height:100%;
-  transform:rotate(-45deg);
+    0 30px 90px rgba(0,0,0,.8),
+    inset 0 3px 0 rgba(255,255,255,.15),
+    inset 0 -25px 40px rgba(0,0,0,.5);
   display:flex;
   align-items:center;
   justify-content:center;
-  text-align:center;
-  font-weight:900;
-  letter-spacing:.5px;
-  pointer-events:none;
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:all .25s ease;
+  user-select:none;
 }
 
-/* Placement */
+.lang-btn:hover{
+  transform:scale(1.04);
+  box-shadow:
+    0 35px 100px rgba(0,0,0,.9),
+    0 0 20px rgba(212,175,55,.3),
+    inset 0 3px 0 rgba(255,255,255,.2),
+    inset 0 -30px 50px rgba(0,0,0,.6);
+}
 
-.explore{ transform:translate(-50%,-50%) translate(0,-120px) rotate(45deg); }
-.links{ transform:translate(-50%,-50%) translate(-120px,0) rotate(45deg); }
-.learn{ transform:translate(-50%,-50%) translate(120px,0) rotate(45deg); }
-.home{ transform:translate(-50%,-50%) translate(0,120px) rotate(45deg); }
-
+.footer{
+  position:fixed;
+  bottom:20px;
+  opacity:.6;
+  font-size:12px;
+  letter-spacing:2px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="page">
+<div class="title">CARDINAL AXIS</div>
+<div class="subtitle">Select your language.</div>
 
-  <div class="title" id="title"></div>
-  <div class="subtitle" id="subtitle"></div>
-
-  <div class="stage">
-    <a href="/home/" class="gem explore">
-      <div class="gem-inner" id="btnExplore"></div>
-    </a>
-    <a href="/links/" class="gem links">
-      <div class="gem-inner" id="btnLinks"></div>
-    </a>
-    <a href="/home/?depth=learn" class="gem learn">
-      <div class="gem-inner" id="btnLearn"></div>
-    </a>
-    <a href="/home/" class="gem home">
-      <div class="gem-inner" id="btnHome"></div>
-    </a>
-  </div>
-
+<div class="lang-wrap">
+  <div class="lang-btn" onclick="goLang('en')">ENGLISH</div>
+  <div class="lang-btn" onclick="goLang('zh')">中文</div>
 </div>
 
+<div class="footer">© GEODIAMETRICS</div>
+
 <script>
-
-/* ===== LANGUAGE STATE ===== */
-
-const lang = localStorage.getItem("gd_lang") || "en";
-
-/* ===== DICTIONARY ===== */
-
-const i18n = {
-  en:{
-    title:"CARDINAL AXIS",
-    subtitle:"Choose your route.",
-    explore:"EXPLORE",
-    links:"LINKS",
-    learn:"LEARN",
-    home:"HOME"
-  },
-  zh:{
-    title:"四向轴",
-    subtitle:"选择路径。",
-    explore:"浏览",
-    links:"链接",
-    learn:"深入",
-    home:"主页"
-  }
-};
-
-/* ===== RENDER ===== */
-
-const t = i18n[lang] || i18n.en;
-
-document.getElementById("title").textContent = t.title;
-document.getElementById("subtitle").textContent = t.subtitle;
-document.getElementById("btnExplore").textContent = t.explore;
-document.getElementById("btnLinks").textContent = t.links;
-document.getElementById("btnLearn").textContent = t.learn;
-document.getElementById("btnHome").textContent = t.home;
-
-document.documentElement.lang = lang;
-
+function goLang(lang){
+  try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+  window.location.href="/index/";
+}
 </script>
 
 </body>

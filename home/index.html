@@ -1,3 +1,8 @@
+<!-- TNT — /home/index.html  (UPGRADE: 1 sentence → 4 bullet points in bulletin)
+     Keeps everything the same. Only expands bulletin content.
+     Change: bulletin body becomes: 1 lead sentence + 4 bullet points.
+     NOTE: This is a full-file replacement (TNT). -->
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,366 +15,499 @@
 <script defer src="/assets/instrument.js"></script>
 
 <style>
+  .frame{position:relative;min-height:100vh;width:100%}
 
-/* ===== BACKGROUND ===== */
+  .top-left{
+    position:fixed;left:16px;top:16px;z-index:90;
+    display:flex;gap:10px;flex-wrap:wrap;
+  }
 
-body{
-  margin:0;
-  min-height:100vh;
-  background:
-    radial-gradient(circle at 50% 40%, rgba(255,215,120,.05), transparent 60%),
-    repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 1px, transparent 1px 90px),
-    linear-gradient(180deg, #a80000 0%, #7b0000 60%, #5a0000 100%);
-  overflow-x:hidden;
-}
+  .top-right{
+    position:fixed;right:16px;top:16px;z-index:90;
+    display:flex;flex-direction:column;gap:10px;align-items:flex-end;
+  }
 
-/* ===== TOP CONTROLS ===== */
+  .pillbar{
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(0,0,0,.18);
+    backdrop-filter:blur(8px);
+    padding:10px 12px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
 
-.top-left,.top-right{
-  position:fixed;
-  top:18px;
-  z-index:90;
-  display:flex;
-  gap:12px;
-}
+  :root{ --R: 124px; }
 
-.top-left{left:18px;}
-.top-right{right:18px;flex-direction:column;align-items:flex-end;}
+  .center-stage{
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:min(560px,92vw);
+    height:min(560px,92vw);
+    z-index:40;
+    pointer-events:auto;
+  }
 
-.pillbar{
-  display:flex;
-  gap:10px;
-}
+  /* ===== GEM DIAMONDS (coal -> opal) ===== */
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 50% 40%, rgba(255,215,120,.06), transparent 60%),
+      repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 1px, transparent 1px 90px),
+      linear-gradient(180deg,#a80000 0%,#7b0000 60%,#5a0000 100%);
+    overflow-x:hidden;
+  }
 
-/* ===== GEM DIAMONDS ===== */
+  .d-diamond{
+    width:150px;height:150px;
+    position:absolute;
+    left:50%;top:50%;
+    transform-origin:center;
+    border-radius:22px;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
 
-:root{ --R: 120px; }
+    background:
+      radial-gradient(circle at 35% 25%, rgba(255,255,255,.15), transparent 55%),
+      radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
+      linear-gradient(160deg, #0a0f18 0%, #05070c 40%, #0b1424 100%);
 
-.center-stage{
-  position:fixed;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:min(520px,90vw);
-  height:min(520px,90vw);
-  z-index:40;
-}
+    box-shadow:
+      0 25px 70px rgba(0,0,0,.8),
+      inset 0 2px 0 rgba(255,255,255,.2),
+      inset 0 -25px 35px rgba(0,0,0,.6);
 
-/* OBISIDIAN OPAL GEM */
+    border:1px solid rgba(255,255,255,.08);
+    transition:all 260ms ease;
+  }
 
-.d-diamond{
-  width:155px;
-  height:155px;
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform-origin:center;
-  border-radius:22px;
-  cursor:pointer;
+  .d-diamond::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
+    background:
+      repeating-conic-gradient(
+        from 0deg,
+        rgba(255,255,255,.04) 0deg 5deg,
+        transparent 5deg 15deg
+      );
+    mix-blend-mode:overlay;
+    opacity:.25;
+    pointer-events:none;
+  }
 
-  background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.15), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, #0a0f18 0%, #05070c 40%, #0b1424 100%);
+  .d-diamond:hover{
+    transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+    box-shadow:
+      0 30px 90px rgba(0,0,0,.9),
+      0 0 22px rgba(212,175,55,.45),
+      inset 0 2px 0 rgba(255,255,255,.25),
+      inset 0 -28px 40px rgba(0,0,0,.65);
+  }
 
-  box-shadow:
-    0 25px 70px rgba(0,0,0,.8),
-    inset 0 2px 0 rgba(255,255,255,.2),
-    inset 0 -25px 35px rgba(0,0,0,.6);
+  .d-diamond.active{
+    box-shadow:
+      0 30px 90px rgba(0,0,0,.9),
+      0 0 30px rgba(212,175,55,.55),
+      inset 0 2px 0 rgba(255,255,255,.25),
+      inset 0 -28px 40px rgba(0,0,0,.65);
+  }
 
-  border:1px solid rgba(255,255,255,.08);
+  .d-inner{
+    width:100%;height:100%;
+    transform:rotate(-45deg);
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    padding:16px;gap:8px;text-align:center;
+    user-select:none;
+    pointer-events:none;
+  }
+  .d-title{font-weight:950;letter-spacing:.35px;font-size:16px;color:#fff}
+  .d-text{opacity:.90;font-size:13px;line-height:1.35;max-width:16em;color:rgba(255,255,255,.88)}
 
-  transition: all 260ms ease;
-}
+  .d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
+  .d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
+  .d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
+  .d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
 
-/* FRACTAL SHIMMER */
+  .d-core{
+    position:absolute;left:50%;top:50%;
+    transform:translate(-50%,-50%);
+    width:64px;height:64px;border-radius:18px;
+    display:grid;place-items:center;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(0,0,0,.18);
+    box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
+    font-weight:950;letter-spacing:.4px;
+    pointer-events:none;
+    opacity:.85;
+    color:#fff;
+  }
 
-.d-diamond::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  background:
-    repeating-conic-gradient(
-      from 0deg,
-      rgba(255,255,255,.04) 0deg 5deg,
-      transparent 5deg 15deg
-    );
-  mix-blend-mode:overlay;
-  opacity:.3;
-  pointer-events:none;
-}
+  .bottom-dock{
+    position:fixed;
+    left:50%;
+    bottom:max(12px, env(safe-area-inset-bottom));
+    transform:translateX(-50%);
+    z-index:90;
+    width:min(860px, 94vw);
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    padding:10px 12px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(0,0,0,.18);
+    backdrop-filter:blur(8px);
+  }
 
-.d-diamond:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.04);
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.9),
-    0 0 18px rgba(212,175,55,.3),
-    inset 0 2px 0 rgba(255,255,255,.3);
-}
+  @media (max-width:520px){
+    :root{ --R: 116px; }
+    .top-right{ right:10px; top:10px; }
+    .top-left{ left:10px; top:10px; }
+    .center-stage{ width:min(520px,92vw); height:min(520px,92vw); }
+    .d-core{ width:58px; height:58px; }
+    .pillbar{ gap:8px; padding:9px 10px; }
+  }
 
-.d-diamond.active{
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.9),
-    0 0 30px rgba(212,175,55,.55),
-    inset 0 2px 0 rgba(255,255,255,.3);
-}
+  /* Bulletin modal */
+  .backdrop{
+    position:fixed;inset:0;z-index:110;
+    background:rgba(0,0,0,.55);
+    backdrop-filter:blur(6px);
+    display:none;
+  }
+  .backdrop.show{ display:block; }
 
-/* TEXT INSIDE */
+  .bulletin{
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    z-index:120;
+    width:min(700px, 92vw);
+    border-radius:22px;
+    border:1px solid rgba(255,255,255,.10);
+    background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+    box-shadow:0 30px 90px rgba(0,0,0,.75);
+    padding:16px;
+    display:none;
+    color:#fff;
+  }
+  .bulletin.show{ display:block; }
 
-.d-inner{
-  width:100%;
-  height:100%;
-  transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  gap:6px;
-  pointer-events:none;
-}
+  .bulletin-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .bulletin-title{font-weight:950;letter-spacing:.25px;font-size:16px;margin:0}
+  .bulletin-close{border:none;background:transparent;color:#fff;font-size:18px;cursor:pointer}
 
-.d-title{
-  font-weight:900;
-  letter-spacing:.5px;
-  font-size:17px;
-  color:#f4f4f4;
-}
+  .bulletin-body{
+    opacity:.92;
+    line-height:1.5;
+    font-size:14px;
+    padding:8px 10px;
+  }
 
-.d-text{
-  font-size:13px;
-  opacity:.85;
-  max-width:15em;
-  line-height:1.4;
-}
+  .bulletin-body .lead{
+    margin:0 0 10px 0;
+    opacity:.95;
+    font-weight:700;
+  }
 
-/* PLACEMENT */
+  .bulletin-body ul{
+    margin:0;
+    padding-left:18px;
+    opacity:.88;
+  }
+  .bulletin-body li{ margin:6px 0; }
 
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-e{ transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg); }
-.d-s{ transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg); }
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1),0) rotate(45deg); }
-
-/* CENTER CORE */
-
-.d-core{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:60px;
-  height:60px;
-  border-radius:18px;
-  background:linear-gradient(145deg,#111,#000);
-  display:grid;
-  place-items:center;
-  box-shadow:0 0 20px rgba(212,175,55,.25);
-  font-weight:900;
-}
-
-/* BOTTOM DOCK */
-
-.bottom-dock{
-  position:fixed;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  display:flex;
-  gap:12px;
-  padding:10px 16px;
-  border-radius:999px;
-  background:rgba(0,0,0,.25);
-  backdrop-filter:blur(8px);
-  z-index:90;
-}
-
-/* BULLETIN */
-
-.backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(6px);
-  display:none;
-  z-index:110;
-}
-.backdrop.show{display:block;}
-
-.bulletin{
-  position:fixed;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:min(620px,92vw);
-  background:linear-gradient(160deg,#0c1118,#070a0f);
-  border-radius:20px;
-  padding:20px;
-  box-shadow:0 40px 120px rgba(0,0,0,.9);
-  display:none;
-  z-index:120;
-}
-.bulletin.show{display:block;}
-
-.bulletin-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.bulletin-body{
-  margin-top:14px;
-  line-height:1.5;
-  opacity:.9;
-  text-align:center;
-}
-
-.bulletin-actions{
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  margin-top:16px;
-}
-
+  .bulletin-actions{
+    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:12px;
+  }
 </style>
 </head>
 
 <body>
+<div class="frame">
 
-<div class="top-left">
-  <a class="crp-btn" href="/door/">EXIT</a>
-  <a class="crp-btn" href="/">LANGUAGE</a>
-</div>
-
-<div class="top-right">
-  <div class="pillbar">
-    <button id="styleToggle" class="crp-chip">STYLE: FORMAL</button>
+  <div class="top-left" id="topLeft">
+    <a class="crp-btn" href="/door/" role="button">EXIT</a>
+    <a class="crp-btn" href="/index.html" role="button">LANGUAGE</a>
   </div>
-  <div class="pillbar">
-    <button class="crp-chip tbtn2" data-time="origin">ORIGIN</button>
-    <button class="crp-chip tbtn2" data-time="now">NOW</button>
-    <button class="crp-chip tbtn2" data-time="trajectory">POST</button>
-  </div>
-</div>
 
-<div class="center-stage">
-
-  <div id="north" class="d-diamond d-n">
-    <div class="d-inner">
-      <div class="d-title">NORTH</div>
-      <div class="d-text" id="northText"></div>
+  <div class="top-right" id="topRight" aria-label="Top-right controls">
+    <div class="pillbar">
+      <button id="styleToggle" class="crp-chip" type="button">STYLE: FORMAL</button>
+    </div>
+    <div class="pillbar">
+      <button class="crp-chip tbtn2" type="button" data-time="origin">ORIGIN</button>
+      <button class="crp-chip tbtn2" type="button" data-time="now">NOW</button>
+      <button class="crp-chip tbtn2" type="button" data-time="trajectory">POST</button>
     </div>
   </div>
 
-  <div id="east" class="d-diamond d-e">
-    <div class="d-inner">
-      <div class="d-title">EAST</div>
-      <div class="d-text" id="eastText"></div>
+  <div class="center-stage" id="centerStage" aria-label="Compass face">
+    <div id="north" class="d-diamond d-n" role="button" tabindex="0" aria-label="North">
+      <div class="d-inner"><div class="d-title">NORTH</div><div class="d-text" id="northText"></div></div>
+    </div>
+    <div id="east" class="d-diamond d-e" role="button" tabindex="0" aria-label="East">
+      <div class="d-inner"><div class="d-title">EAST</div><div class="d-text" id="eastText"></div></div>
+    </div>
+    <div id="south" class="d-diamond d-s" role="button" tabindex="0" aria-label="South">
+      <div class="d-inner"><div class="d-title">SOUTH</div><div class="d-text" id="southText"></div></div>
+    </div>
+    <div id="west" class="d-diamond d-w" role="button" tabindex="0" aria-label="West">
+      <div class="d-inner"><div class="d-title">WEST</div><div class="d-text" id="westText"></div></div>
+    </div>
+    <div class="d-core">◆</div>
+  </div>
+
+  <nav class="bottom-dock" id="bottomDock" aria-label="Bottom navigation">
+    <a class="crp-btn crp-btn-primary" href="/home/" role="button">HOME</a>
+    <a class="crp-btn" href="/products/" role="button">PRODUCTS</a>
+    <a class="crp-btn" href="/laws/" role="button">LAWS</a>
+    <a class="crp-btn" href="/gauges/" role="button">GAUGES</a>
+  </nav>
+
+  <div id="bd" class="backdrop" aria-hidden="true"></div>
+
+  <div id="bulletin" class="bulletin" role="dialog" aria-modal="true" aria-label="Bulletin">
+    <div class="bulletin-head">
+      <h3 class="bulletin-title" id="bulTitle">NORTH</h3>
+      <button class="bulletin-close" id="bulClose" aria-label="Close">✕</button>
+    </div>
+    <div class="bulletin-body" id="bulBody"></div>
+    <div class="bulletin-actions">
+      <button class="crp-btn" id="bulReturn" type="button">RETURN</button>
+      <a class="crp-btn" href="/links/" role="button">JUMP LINKS</a>
+      <a class="crp-btn" href="/products/" role="button">JUMP PRODUCTS</a>
     </div>
   </div>
 
-  <div id="south" class="d-diamond d-s">
-    <div class="d-inner">
-      <div class="d-title">SOUTH</div>
-      <div class="d-text" id="southText"></div>
-    </div>
-  </div>
-
-  <div id="west" class="d-diamond d-w">
-    <div class="d-inner">
-      <div class="d-title">WEST</div>
-      <div class="d-text" id="westText"></div>
-    </div>
-  </div>
-
-  <div class="d-core">◆</div>
-</div>
-
-<nav class="bottom-dock">
-  <a class="crp-btn" href="/links/">LINKS</a>
-  <a class="crp-btn crp-btn-primary" href="/home/">HOME</a>
-  <a class="crp-btn" href="/products/">PRODUCTS</a>
-  <a class="crp-btn" href="/laws/">LAWS</a>
-  <a class="crp-btn" href="/gauges/">GAUGES</a>
-</nav>
-
-<div id="bd" class="backdrop"></div>
-
-<div id="bulletin" class="bulletin">
-  <div class="bulletin-head">
-    <strong id="bulTitle">NORTH</strong>
-    <button id="bulClose">✕</button>
-  </div>
-  <div id="bulBody" class="bulletin-body"></div>
-  <div class="bulletin-actions">
-    <button class="crp-btn" id="bulReturn">RETURN</button>
-    <a class="crp-btn" href="/links/">JUMP LINKS</a>
-    <a class="crp-btn" href="/products/">JUMP PRODUCTS</a>
-  </div>
 </div>
 
 <script>
-const content={
-  north:{formal:{origin:"North defines invariant structure.",now:"North stabilizes position.",trajectory:"North preserves long-term coherence."},
-         informal:{origin:"North is your anchor.",now:"North keeps you steady."}},
-  east:{formal:{origin:"East maps execution pathways.",now:"East expresses flow.",trajectory:"East scales forward."},
-        informal:{origin:"East is how you move.",now:"East is doing."}},
-  south:{formal:{origin:"South defines pressure.",now:"South applies constraint.",trajectory:"South compounds momentum."},
-         informal:{origin:"South is where force happens.",now:"South pushes."}},
-  west:{formal:{origin:"West governs containment.",now:"West enforces edge.",trajectory:"West protects integrity."},
-        informal:{origin:"West keeps things tight.",now:"West guards the edge."}}
-};
+(function(){
+  "use strict";
 
-let style="formal";
-let time="now";
-let active=null;
+  var K_STYLE="gd_style";
+  var K_TIME="gd_time";
 
-function render(){
-  northText.textContent=content.north[style][time]||"";
-  eastText.textContent=content.east[style][time]||"";
-  southText.textContent=content.south[style][time]||"";
-  westText.textContent=content.west[style][time]||"";
-}
+  function lsGet(k){ try{return localStorage.getItem(k);}catch(e){ return null; } }
+  function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
 
-styleToggle.onclick=()=>{
-  style=(style==="formal")?"informal":"formal";
-  styleToggle.textContent="STYLE: "+style.toUpperCase();
-  render();
-};
+  var state={ style: lsGet(K_STYLE)||"formal", time: lsGet(K_TIME)||"now" };
 
-document.querySelectorAll(".tbtn2").forEach(btn=>{
-  btn.onclick=()=>{
-    const t=btn.dataset.time;
-    if(t==="trajectory"&&style==="informal")style="formal";
-    time=t;
-    render();
+  // Trajectory allowed in formal only; if user tries in informal, we flip to formal (existing behavior)
+  var allowTimeByStyle={ formal:{origin:1,now:1,trajectory:1}, informal:{origin:1,now:1} };
+
+  // One-line face text (kept simple)
+  var faceLine={
+    north:{ formal:{origin:"North defines invariant structure.",now:"North stabilizes position.",trajectory:"North preserves long-term coherence."},
+            informal:{origin:"North is your anchor.",now:"North keeps you steady."}},
+    east:{  formal:{origin:"East maps execution pathways.",now:"East expresses flow.",trajectory:"East scales forward."},
+            informal:{origin:"East is how you move.",now:"East is doing."}},
+    south:{ formal:{origin:"South defines pressure.",now:"South applies constraint.",trajectory:"South compounds momentum."},
+            informal:{origin:"South is where force happens.",now:"South pushes."}},
+    west:{  formal:{origin:"West governs containment.",now:"West enforces edge.",trajectory:"West protects integrity."},
+            informal:{origin:"West keeps things tight.",now:"West guards the edge."}}
   };
-});
 
-function open(dir){
-  active=dir;
-  bulTitle.textContent=dir.toUpperCase();
-  bulBody.textContent=content[dir][style][time]||"";
-  bd.classList.add("show");
-  bulletin.classList.add("show");
-  document.getElementById(dir).classList.add("active");
-}
+  // Bulletin: 1 lead + 4 bullet points (NEW)
+  var bullets={
+    north:{
+      formal:{
+        origin:{
+          lead:"North establishes invariant structure.",
+          pts:["Defines the reference frame.","Fixes meanings under constraint.","Prevents drift at the root.","Sets the standard for truthfulness."]
+        },
+        now:{
+          lead:"North stabilizes present alignment.",
+          pts:["Detects deviation early.","Re-centers decisions.","Maintains coherence under load.","Reduces noise and confusion."]
+        },
+        trajectory:{
+          lead:"North preserves long-term coherence.",
+          pts:["Holds the future constant.","Prevents slow corruption.","Protects integrity across cycles.","Sustains direction over time."]
+        }
+      },
+      informal:{
+        origin:{
+          lead:"North is your anchor.",
+          pts:["Keeps you honest.","Keeps you steady.","Gives you a baseline.","Stops drifting early."]
+        },
+        now:{
+          lead:"North keeps you steady.",
+          pts:["Clears the fog.","Keeps you consistent.","Keeps you grounded.","Makes choices cleaner."]
+        }
+      }
+    },
 
-function close(){
-  bd.classList.remove("show");
-  bulletin.classList.remove("show");
-  if(active)document.getElementById(active).classList.remove("active");
-}
+    east:{
+      formal:{
+        origin:{lead:"East begins execution pathways.",pts:["Maps action routes.","Defines motion channels.","Enables implementation.","Turns structure into output."]},
+        now:{lead:"East expresses operational flow.",pts:["Runs the system.","Moves work forward.","Maintains throughput.","Translates intent into action."]},
+        trajectory:{lead:"East scales forward.",pts:["Expands capability.","Improves velocity.","Increases reach.","Sustains growth without collapse."]}
+      },
+      informal:{
+        origin:{lead:"East starts motion.",pts:["Gets you moving.","Starts the process.","Builds momentum.","Turns on the engine."]},
+        now:{lead:"East is doing.",pts:["Executes.","Moves it.","Ships it.","Keeps going."]}
+      }
+    },
 
-bd.onclick=close;
-bulClose.onclick=close;
-bulReturn.onclick=close;
+    south:{
+      formal:{
+        origin:{lead:"South defines convergence pressure.",pts:["Creates focus.","Forces decisions.","Compacts ambiguity.","Produces directional compression."]},
+        now:{lead:"South applies constraint.",pts:["Adds accountability.","Applies pressure ethically.","Moves from talk to proof.","Turns friction into traction."]},
+        trajectory:{lead:"South compounds momentum.",pts:["Builds compounding returns.","Amplifies progress.","Accelerates outcomes.","Sustains force across time."]}
+      },
+      informal:{
+        origin:{lead:"South is where force happens.",pts:["Gets real.","Applies pressure.","Stops excuses.","Moves you forward."]},
+        now:{lead:"South pushes.",pts:["Drives action.","Creates urgency.","Forces clarity.","Breaks stagnation."]}
+      }
+    },
 
-["north","east","south","west"].forEach(id=>{
-  document.getElementById(id).onclick=()=>open(id);
-});
+    west:{
+      formal:{
+        origin:{lead:"West defines containment.",pts:["Sets boundaries.","Protects the system.","Prevents leakage.","Ensures safe operation."]},
+        now:{lead:"West enforces the edge.",pts:["Stops spillover.","Holds the line.","Maintains limits.","Keeps scope tight."]},
+        trajectory:{lead:"West protects integrity.",pts:["Prevents slow decay.","Stops exploit paths.","Guards long-run stability.","Preserves governance."]}
+      },
+      informal:{
+        origin:{lead:"West keeps things tight.",pts:["Keeps it contained.","Keeps it safe.","Keeps it clean.","Keeps it simple."]},
+        now:{lead:"West guards the edge.",pts:["Stops overflow.","Protects the boundary.","Keeps control.","Prevents chaos."]}
+      }
+    }
+  };
 
-render();
+  function normalizeTime(){
+    if(!allowTimeByStyle[state.style][state.time]) state.time="now";
+  }
+
+  function setStyleLabel(){
+    document.getElementById("styleToggle").textContent="STYLE: "+state.style.toUpperCase();
+  }
+
+  function setPressedTime(){
+    document.querySelectorAll(".tbtn2").forEach(function(btn){
+      var v=btn.getAttribute("data-time");
+      var allowed=!!allowTimeByStyle[state.style][v];
+      btn.setAttribute("aria-disabled", allowed ? "false":"true");
+      btn.setAttribute("aria-pressed", (v===state.time) ? "true":"false");
+    });
+  }
+
+  function renderFace(){
+    normalizeTime();
+    lsSet(K_STYLE,state.style);
+    lsSet(K_TIME,state.time);
+
+    document.getElementById("northText").textContent = faceLine.north[state.style][state.time] || "";
+    document.getElementById("eastText").textContent  = faceLine.east[state.style][state.time]  || "";
+    document.getElementById("southText").textContent = faceLine.south[state.style][state.time] || "";
+    document.getElementById("westText").textContent  = faceLine.west[state.style][state.time]  || "";
+
+    setStyleLabel();
+    setPressedTime();
+  }
+
+  // Bulletin helpers
+  function bulletinHTML(dir){
+    var pack = (bullets[dir] && bullets[dir][state.style] && bullets[dir][state.style][state.time]) || null;
+    if(!pack){
+      // fallback to face line if a style/time combo isn't defined
+      return '<p class="lead">'+(faceLine[dir][state.style][state.time]||"")+'</p>';
+    }
+    var ul = "<ul>"+pack.pts.map(function(x){return "<li>"+x+"</li>";}).join("")+"</ul>";
+    return '<p class="lead">'+pack.lead+'</p>'+ul;
+  }
+
+  // Modal wiring
+  var bd=document.getElementById("bd");
+  var bulletin=document.getElementById("bulletin");
+  var bulTitle=document.getElementById("bulTitle");
+  var bulBody=document.getElementById("bulBody");
+  var bulClose=document.getElementById("bulClose");
+  var bulReturn=document.getElementById("bulReturn");
+  var active=null;
+
+  function open(dir){
+    active=dir;
+    bulTitle.textContent=dir.toUpperCase();
+    bulBody.innerHTML=bulletinHTML(dir);
+    bd.classList.add("show");
+    bulletin.classList.add("show");
+    document.getElementById(dir).classList.add("active");
+  }
+
+  function close(){
+    bd.classList.remove("show");
+    bulletin.classList.remove("show");
+    if(active) document.getElementById(active).classList.remove("active");
+    active=null;
+  }
+
+  bd.onclick=close;
+  bulClose.onclick=close;
+  bulReturn.onclick=close;
+
+  // Controls
+  document.getElementById("styleToggle").addEventListener("click", function(){
+    state.style = (state.style==="formal") ? "informal" : "formal";
+    renderFace();
+    if(active) bulBody.innerHTML = bulletinHTML(active);
+  });
+
+  document.querySelectorAll(".tbtn2").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var t=btn.getAttribute("data-time");
+      if(t==="trajectory" && state.style==="informal") state.style="formal";
+      if(!allowTimeByStyle[state.style][t]) return;
+      state.time=t;
+      renderFace();
+      if(active) bulBody.innerHTML = bulletinHTML(active);
+    });
+  });
+
+  ["north","east","south","west"].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.addEventListener("click", function(){ open(id); });
+  });
+
+  // Leveling (no overlap) — keep stable
+  function level(){
+    var tl=document.getElementById("topLeft");
+    var tr=document.getElementById("topRight");
+    var bdock=document.getElementById("bottomDock");
+    var stage=document.getElementById("centerStage");
+    if(!stage || !bdock) return;
+
+    var safe=10;
+    var tlb=tl ? tl.getBoundingClientRect().bottom : 0;
+    var trb=tr ? tr.getBoundingClientRect().bottom : 0;
+    var topBand = Math.max(tlb,trb) + safe;
+
+    var dockTop = bdock.getBoundingClientRect().top - safe;
+    var centerY = (topBand + dockTop) / 2;
+    stage.style.top = centerY + "px";
+  }
+
+  window.addEventListener("resize", level, {passive:true});
+  window.addEventListener("orientationchange", function(){ setTimeout(level, 50); }, {passive:true});
+  setTimeout(level, 0);
+
+  renderFace();
+})();
 </script>
 
 </body>

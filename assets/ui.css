@@ -1,220 +1,212 @@
-/* ============================================================
-   CRP UI FOUNDATION (FIELD + CORE PRIMITIVES) — SINGLE OWNER
-   FILE: /assets/ui.css
-   OWNERSHIP:
-   - ONLY file allowed to define html/body background/field
-   - Owns: shell, cards, typography, buttons/links, chips, dividers, topbar
-   - MUST NOT define: diamonds/quadrants/modal (branch.css owns those)
-   ============================================================ */
+/* =====================================================
+   TNT FILE: /assets/ui.css
+   CRP AUTUMN FIELD v3 — Ink Black + Lacquer Red + Antique Gold
+   SINGLE SOURCE OF TRUTH FOR BODY BACKGROUND
+   COPY/PASTE ENTIRE FILE AS-IS
+===================================================== */
 
-/* ---------- FIELD (SINGLE OWNER) ---------- */
-html, body{
-  margin:0;
-  padding:0;
-  min-height:100%;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  color:#f2f2f2;
+:root{
+  --ink:#05070c;
+  --ink2:#070b12;
 
-  /* CRP AUTUMN FIELD */
+  --red:#7a0b14;
+  --red2:#3a060a;
+
+  --gold:#caa04a;
+  --gold2:#9a7a2f;
+
+  --text:#eaf2f6;
+  --muted:rgba(234,242,246,.72);
+
+  --glass:rgba(255,255,255,.06);
+  --glass2:rgba(0,0,0,.20);
+  --stroke:rgba(255,255,255,.10);
+  --stroke2:rgba(255,255,255,.14);
+
+  --shadow:rgba(0,0,0,.55);
+  --shadow2:rgba(0,0,0,.85);
+
+  --r:22px;
+}
+
+*{box-sizing:border-box}
+html,body{
+  margin:0;padding:0;width:100%;height:100%;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);
+  background:var(--ink);
+  overflow-x:hidden;
+}
+
+/* Kill browser default link styling (purple/underline) */
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+button{font-family:inherit}
+
+/* =====================================================
+   FIELD (single source of truth)
+===================================================== */
+
+body{
   background:
-    radial-gradient(circle at 20% 20%, #7a2a14 0%, transparent 40%),
-    radial-gradient(circle at 80% 60%, #3a0e0e 0%, transparent 45%),
-    linear-gradient(180deg, #5b1e12 0%, #1a0505 100%);
-  background-attachment:fixed;
+    radial-gradient(1200px 900px at 12% 16%, rgba(202,160,74,.22) 0%, transparent 62%),
+    radial-gradient(1400px 1000px at 86% 18%, rgba(122,11,20,.28) 0%, transparent 66%),
+    radial-gradient(1800px 1200px at 50% 0%, rgba(122,11,20,.18) 0%, transparent 72%),
+    linear-gradient(to bottom, var(--ink2), var(--ink));
 }
 
-*{ box-sizing:border-box; }
-
-/* Default link color (inherits) */
-a{ color:inherit; }
-
-/* ---------- LAYOUT SHELL ---------- */
-.crp-shell{
-  width:100%;
-  max-width:1100px;
-  margin:0 auto;
-  padding:28px 20px 60px;
+body::before{
+  content:"";
+  position:fixed;
+  inset:-12%;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    radial-gradient(520px 520px at 18% 10%, rgba(202,160,74,.16) 0%, transparent 68%),
+    radial-gradient(650px 650px at 82% 12%, rgba(122,11,20,.20) 0%, transparent 72%),
+    radial-gradient(780px 780px at 50% 6%, rgba(202,160,74,.10) 0%, transparent 78%);
+  opacity:.65;
+  filter:blur(8px);
+  animation:crpPulse 7s ease-in-out infinite alternate;
+}
+@keyframes crpPulse{
+  0%{opacity:.45; filter:blur(8px) brightness(.98)}
+  100%{opacity:.78; filter:blur(8px) brightness(1.08)}
 }
 
-/* IMPORTANT MOBILE SAFETY:
-   Centering tall content can “trap” scroll and hide new sections.
-   Use top-align so pages can always scroll naturally. */
-.crp-center{
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
+/* Disable any legacy cosmic layer class if it exists */
+.shooting-stars{display:none !important}
+
+/* =====================================================
+   LAYOUT
+===================================================== */
+
+.page{
   min-height:100vh;
-  padding-top:56px;
-}
-
-/* ---------- CARD PRIMITIVE (TAP-SAFE) ---------- */
-.crp-card{
-  width:100%;
-  max-width:720px;
-  padding:32px;
-  border-radius:20px;
-  background:rgba(0,0,0,.28);
-  border:1px solid rgba(255,255,255,.15);
-  box-shadow:0 20px 60px rgba(0,0,0,.45);
-
-  overflow:visible;
-
-  /* Tap safety: keep card above unknown overlays */
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:44px 16px 96px;
   position:relative;
   z-index:1;
-  pointer-events:auto;
 }
 
-/* If any theme uses pseudo-elements on cards, they must not steal taps */
-.crp-card::before,
-.crp-card::after{
-  pointer-events:none !important;
+.wrap{
+  width:min(980px,94vw);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
 }
 
-@media (max-width:520px){
-  .crp-card{ padding:22px; }
+.hero{position:relative;z-index:5}
+.hero h1{
+  margin:0;
+  font-weight:950;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  font-size:clamp(44px,7vw,78px);
+  line-height:1.0;
 }
-
-/* ---------- TYPOGRAPHY ---------- */
-.crp-header{ margin-bottom:10px; }
-
-.crp-mark{
-  font-size:14px;
-  letter-spacing:2px;
-  opacity:.7;
-  margin-bottom:8px;
-}
-
-.crp-title{
-  margin:0 0 10px;
-  font-size:44px;
-  font-weight:800;
-  line-height:1.05;
-}
-
-.crp-subtitle{
-  margin:0 0 18px;
-  opacity:.85;
+.hero p{
+  margin:10px 0 0;
+  color:var(--muted);
   font-size:18px;
   line-height:1.35;
 }
 
-.crp-h2{
-  margin:0 0 12px;
-  font-size:20px;
-  font-weight:800;
-  letter-spacing:.2px;
+/* =====================================================
+   UI PRIMITIVES
+===================================================== */
+
+.panel{
+  border-radius:var(--r);
+  background:var(--glass);
+  box-shadow:
+    inset 0 0 0 1px var(--stroke),
+    0 24px 64px var(--shadow);
+  backdrop-filter:blur(12px);
 }
 
-/* ---------- DIVIDER / FOOTER ---------- */
-.crp-divider{
+.pills{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+.pill{
+  border-radius:999px;
+  padding:10px 14px;
+  background:var(--glass);
+  box-shadow:inset 0 0 0 1px var(--stroke);
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-size:12px;
+  opacity:.92;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.pill.btn{cursor:pointer}
+.pill.btn:hover{background:rgba(255,255,255,.08)}
+.pill.active{
+  background:rgba(202,160,74,.18);
+  box-shadow:inset 0 0 0 1px rgba(202,160,74,.55);
+}
+
+.btn{
+  border:0;
+  cursor:pointer;
+  border-radius:18px;
+  padding:12px 16px;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+  color:var(--text);
+  font-weight:950;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-size:12px;
+}
+
+.btn:hover{background:rgba(255,255,255,.10)}
+.btn.gold{
+  background:rgba(202,160,74,.20);
+  box-shadow:inset 0 0 0 1px rgba(202,160,74,.55), 0 18px 50px rgba(0,0,0,.40);
+}
+.btn.red{
+  background:rgba(122,11,20,.34);
+  box-shadow:inset 0 0 0 1px rgba(202,160,74,.28), 0 18px 50px rgba(0,0,0,.40);
+}
+
+.section-title{
+  margin-top:10px;
+  font-weight:900;
+  letter-spacing:.18em;
+  opacity:.7;
+  font-size:12px;
+  text-transform:uppercase;
+}
+
+.footer{
+  margin-top:16px;
+  text-align:center;
+  opacity:.55;
+  letter-spacing:3px;
+  font-size:12px;
+}
+
+.ink{
+  margin-top:10px;
+  text-align:center;
+  font-weight:950;
+  letter-spacing:.24em;
+  opacity:.42;
+  font-size:12px;
+  text-transform:uppercase;
+}
+
+/* Optional separator */
+hr.sep{
   border:0;
   height:1px;
-  margin:18px 0;
-  background:rgba(255,255,255,.14);
-}
-
-.crp-footer{
-  margin-top:18px;
-  opacity:.72;
-  font-size:14px;
-  line-height:1.35;
-}
-
-.crp-footnote code{ opacity:.95; }
-
-/* ---------- BUTTONS / LINK-BUTTONS (NAV MUST WORK WITHOUT JS) ---------- */
-.crp-actions{
-  display:flex;
-  gap:14px;
-  flex-wrap:wrap;
-}
-
-/* Works for <button> and <a> */
-.crp-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-
-  padding:12px 20px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.25);
-  background:rgba(0,0,0,.20);
-  color:#fff;
-  font-weight:700;
-  text-decoration:none;
-
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  transition:background .12s ease, transform .08s ease, border-color .12s ease;
-
-  /* Tap safety: always clickable */
-  position:relative;
-  z-index:2;
-  pointer-events:auto !important;
-}
-
-.crp-btn:hover{ background:rgba(0,0,0,.35); border-color:rgba(255,255,255,.30); }
-.crp-btn:active{ transform:scale(.98); }
-
-.crp-btn-primary{
-  background:rgba(255,255,255,.12);
-  border-color:rgba(255,255,255,.40);
-}
-
-.crp-btn:focus{ outline:none; }
-.crp-btn:focus-visible{ box-shadow:0 0 0 3px rgba(255,255,255,.18); }
-
-/* ---------- CHIPS (TIME/STYLE CONTROLS) ---------- */
-.crp-lens{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.crp-chip{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-
-  padding:8px 14px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,.25);
-  background:rgba(0,0,0,.20);
-  color:#fff;
-  cursor:pointer;
-  font-weight:600;
-  text-decoration:none;
-
-  position:relative;
-  z-index:2;
-  pointer-events:auto !important;
-}
-
-.crp-chip[aria-pressed="true"]{
-  background:rgba(255,255,255,.18);
-  border-color:rgba(255,255,255,.50);
-}
-
-/* ---------- TOPBAR (SAFE DEFAULTS) ---------- */
-.crp-topbar{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:14px;
-  margin:0 0 14px;
-}
-
-.crp-topbar-left{ min-width:0; }
-.crp-topbar-right{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-}
-
-/* ---------- TAP SAFETY (LAST RESORT) ----------
-   Prevent unknown wrappers from disabling clicks. */
-main, section, header, footer, nav, article, div{
-  pointer-events:auto;
+  width:100%;
+  background:rgba(255,255,255,.08);
+  margin:10px 0;
 }

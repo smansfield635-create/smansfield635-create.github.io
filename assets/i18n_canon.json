@@ -11,9 +11,9 @@
     },
     "index": {
       "title": "DIAMOND",
-      "subtitle": "Enter scope.",
+      "subtitle": "Choose your scope.",
       "enter": "ENTER",
-      "footnote": "Nucleus-only portal. Scope controls language, mode, depth, style, and time."
+      "footnote": "Scope controls language, depth, style, and time."
     },
     "home": {
       "title": "COMPASS",
@@ -35,9 +35,9 @@
     },
     "index": {
       "title": "DIAMOND",
-      "subtitle": "进入范围。",
+      "subtitle": "选择范围。",
       "enter": "进入",
-      "footnote": "仅核心入口。范围控制语言、模式、深度、风格与时间。"
+      "footnote": "范围控制语言、深度、风格与时间。"
     },
     "home": {
       "title": "COMPASS",

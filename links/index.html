@@ -4,44 +4,91 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Links</title>
-  <link rel="stylesheet" href="/assets/ui.css?v=9100"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9100"/>
+  <title>Links · Geodiametrics</title>
+
+  <link rel="stylesheet" href="/assets/ui.css?v=9300"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=9300"/>
+  <script defer src="/assets/instrument.js?v=9300"></script>
 </head>
 
 <body>
-  <div class="diamond-field" aria-hidden="true"></div>
+<div class="page">
+  <div class="wrap">
 
-  <div class="page">
-    <div class="wrap" style="max-width:860px;align-items:center;text-align:center;position:relative;z-index:2;">
-      <div class="hero">
-        <h1>LINKS</h1>
-        <p>External identity & references.</p>
+    <div class="hero" style="text-align:center">
+      <h1>LINKS</h1>
+      <p>Identity · references · external anchors.</p>
+
+      <div class="pills" style="justify-content:center;margin-top:12px">
+        <a class="pill btn" href="/door/">TERMINAL</a>
+        <a class="pill btn" href="/home/">COMPASS</a>
+        <a class="pill btn" href="/explore/">EXPLORE</a>
       </div>
-
-      <div class="panel" style="width:min(980px,94vw);padding:18px 16px;background:rgba(0,0,0,.22);">
-        <div class="diamond-plate" style="margin-top:10px;">
-          <a class="diamond-node dn-top gold" href="/home/"><span><b>Home</b><small>Compass</small></span></a>
-          <a class="diamond-node dn-right" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener"><span><b>ORCID</b><small>ID</small></span></a>
-          <a class="diamond-node dn-left" href="https://osf.io/" target="_blank" rel="noopener"><span><b>OSF</b><small>Project</small></span></a>
-          <a class="diamond-node dn-bottom" href="/door/"><span><b>Door</b><small>Routes</small></span></a>
-        </div>
-
-        <hr class="sep"/>
-
-        <div style="text-align:left;opacity:.80;line-height:1.65;font-size:13px;">
-          <b>ORCID:</b> Research identity anchor.<br/>
-          <b>OSF:</b> Project registry / preprints / datasets.<br/>
-          <b>Door:</b> Route selector.<br/>
-          <b>Home:</b> Hub navigation.
-        </div>
-      </div>
-
-      <div class="ink">GEODIAMETRICS</div>
-      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </div>
-  </div>
 
-  <script src="/assets/instrument.js?v=9100"></script>
+    <div class="panel" style="padding:18px">
+      <div class="section-title" style="margin-top:0">Primary anchors</div>
+
+      <div class="bubble-row" style="margin-top:12px">
+        <a class="bubble-btn" href="https://orcid.org/0009-0004-1293-0405" target="_blank" rel="noopener">
+          <div class="lbl">
+            <b>ORCID</b>
+            <i>Research identity anchor</i>
+          </div>
+          <div class="go">↗</div>
+        </a>
+
+        <a class="bubble-btn" href="https://osf.io/" target="_blank" rel="noopener">
+          <div class="lbl">
+            <b>OSF</b>
+            <i>Project registry</i>
+          </div>
+          <div class="go">↗</div>
+        </a>
+
+        <a class="bubble-btn" href="https://github.com/" target="_blank" rel="noopener">
+          <div class="lbl">
+            <b>GITHUB</b>
+            <i>Source repository</i>
+          </div>
+          <div class="go">↗</div>
+        </a>
+
+        <a class="bubble-btn" href="/hip-demo/">
+          <div class="lbl">
+            <b>HIP DEMO</b>
+            <i>Blast radius simulator</i>
+          </div>
+          <div class="go">▶</div>
+        </a>
+      </div>
+
+      <hr class="sep"/>
+
+      <div class="section-title">Contact</div>
+      <div class="bubble-row" style="margin-top:12px">
+        <a class="bubble-btn" href="mailto:smansfield635@gmail.com">
+          <div class="lbl">
+            <b>EMAIL</b>
+            <i>Direct contact</i>
+          </div>
+          <div class="go">↗</div>
+        </a>
+
+        <a class="bubble-btn" href="/door/">
+          <div class="lbl">
+            <b>RETURN</b>
+            <i>Back to terminal</i>
+          </div>
+          <div class="go">▶</div>
+        </a>
+      </div>
+    </div>
+
+    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    <div class="ink">GEODIAMETRICS</div>
+
+  </div>
+</div>
 </body>
 </html>

@@ -1,491 +1,89 @@
-<!-- TNT — /index.html  (TERMINAL PREFACE v2 · BUBBLE-FRIENDLY + CN PROPAGATION)
-     Fixes:
-     1) If gd_lang=zh, this page renders in Chinese (not just a button label).
-     2) All outbound links carry ?lang=...&depth=...&style=...&time=... so Chinese propagates forward.
-     3) Terminal content is bubble-driven (tap bubbles → modal), not long paragraphs.
-     Canonical keys only: gd_lang, gd_depth, gd_style, gd_time. -->
-
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>TERMINAL</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>GEODIAMETRICS</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=TERMINAL_BUBBLE_1"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=TERMINAL_BUBBLE_1"/>
-  <script defer src="/assets/instrument.js?v=TERMINAL_BUBBLE_1"></script>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 
-  <style>
-    .frame{min-height:100vh;width:100%;position:relative}
+<style>
 
-    .top-left{
-      position:fixed;left:16px;top:16px;z-index:90;
-      display:flex;gap:10px;flex-wrap:wrap;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255,215,120,.05), transparent 60%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 1px, transparent 1px 90px),
+    linear-gradient(180deg, #a80000 0%, #7b0000 60%, #5a0000 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+}
 
-    .wrap{
-      max-width:980px;
-      margin:0 auto;
-      padding:96px 18px 140px;
-      display:flex;
-      justify-content:center;
-    }
-    .card{width:min(920px,100%);text-align:center}
+h1{
+  font-size:42px;
+  margin-bottom:12px;
+}
 
-    .bubble-grid{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:center;
-      margin-top:16px;
-    }
+p{
+  opacity:.85;
+  margin-bottom:40px;
+}
 
-    .bubble{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+.lang-wrap{
+  display:flex;
+  gap:24px;
+}
 
-      width:min(420px, 100%);
-      padding:14px 16px;
-      border-radius:18px;
+/* Crystal language buttons */
 
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.14);
-      box-shadow:0 12px 30px rgba(0,0,0,.45);
+.lang{
+  width:160px;
+  height:160px;
+  border-radius:24px;
+  cursor:pointer;
 
-      cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-      text-align:left;
-    }
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,.15), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
+    linear-gradient(160deg, #0a0f18 0%, #05070c 40%, #0b1424 100%);
 
-    .bubble:hover{
-      border-color:rgba(212,175,55,.35);
-      box-shadow:0 0 18px rgba(212,175,55,.18), 0 12px 30px rgba(0,0,0,.55);
-    }
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.8),
+    inset 0 2px 0 rgba(255,255,255,.2),
+    inset 0 -25px 35px rgba(0,0,0,.6);
 
-    .bubble .b-title{
-      font-weight:950;
-      letter-spacing:.2px;
-      font-size:14px;
-      opacity:.96;
-    }
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  letter-spacing:.5px;
+  transition:all 260ms ease;
+}
 
-    .bubble .b-sub{
-      margin-top:4px;
-      opacity:.78;
-      font-size:12px;
-      line-height:1.35;
-    }
+.lang:hover{
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.9),
+    0 0 25px rgba(212,175,55,.5),
+    inset 0 2px 0 rgba(255,255,255,.3);
+  transform:translateY(-6px);
+}
 
-    .bubble .b-go{
-      opacity:.75;
-      font-weight:950;
-      letter-spacing:.2px;
-    }
-
-    .status-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:center;
-      margin-top:14px;
-    }
-
-    .dock{
-      position:fixed;
-      left:50%;
-      bottom:max(12px, env(safe-area-inset-bottom));
-      transform:translateX(-50%);
-      z-index:90;
-
-      width:min(900px,94vw);
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      flex-wrap:wrap;
-
-      padding:12px 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.20);
-      backdrop-filter:blur(8px);
-    }
-
-    /* Modal bulletin */
-    .backdrop{
-      position:fixed;inset:0;z-index:110;
-      background:rgba(0,0,0,.55);
-      backdrop-filter:blur(6px);
-      display:none;
-    }
-    .backdrop.show{display:block}
-
-    .bulletin{
-      position:fixed;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      z-index:120;
-
-      width:min(720px, 92vw);
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.10);
-      background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-      box-shadow:0 30px 90px rgba(0,0,0,.75);
-      padding:16px;
-      display:none;
-      text-align:left;
-    }
-    .bulletin.show{display:block}
-
-    .bulletin-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:10px;
-      margin-bottom:10px;
-    }
-    .bulletin-title{
-      font-weight:950;
-      letter-spacing:.25px;
-      font-size:16px;
-      margin:0;
-    }
-    .bulletin-close{
-      border:none;
-      background:transparent;
-      color:#fff;
-      font-size:18px;
-      cursor:pointer;
-    }
-    .bulletin-body{
-      opacity:.90;
-      line-height:1.55;
-      font-size:14px;
-      padding:8px 6px;
-    }
-    .bulletin-body ul{margin:10px 0 0 18px; padding:0}
-    .bulletin-body li{margin:6px 0}
-
-    .bulletin-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:center;
-      margin-top:12px;
-    }
-
-    .mini{
-      opacity:.72;
-      font-size:12px;
-      line-height:1.35;
-      margin-top:10px;
-      text-align:center;
-    }
-  </style>
+</style>
 </head>
 
 <body>
-<div class="frame">
 
-  <div class="top-left">
-    <a class="crp-btn" href="/door/" role="button" id="btnBackLang">◀ Language</a>
-    <button id="resetAll" class="crp-btn" type="button">Reset</button>
-  </div>
+<h1>GEODIAMETRICS</h1>
+<p>Select your language.</p>
 
-  <div class="wrap">
-    <section class="crp-card card" aria-label="Terminal Preface">
-
-      <header class="crp-header">
-        <div class="crp-mark" id="brand">GEODIAMETRICS</div>
-        <h1 class="crp-title" id="hTitle">TERMINAL</h1>
-        <p class="crp-subtitle" id="hSub">Preface · How this site works</p>
-      </header>
-
-      <div class="bubble-grid" aria-label="Terminal bubbles">
-        <div class="bubble" data-b="construction" role="button" tabindex="0">
-          <div>
-            <div class="b-title" id="b1t">Under construction (safe to explore).</div>
-            <div class="b-sub" id="b1s">What to expect while the site is being built.</div>
-          </div>
-          <div class="b-go">▶</div>
-        </div>
-
-        <div class="bubble" data-b="what" role="button" tabindex="0">
-          <div>
-            <div class="b-title" id="b2t">What this is</div>
-            <div class="b-sub" id="b2s">Compass-based map. Meaning comes from structure.</div>
-          </div>
-          <div class="b-go">▶</div>
-        </div>
-
-        <div class="bubble" data-b="nav" role="button" tabindex="0">
-          <div>
-            <div class="b-title" id="b3t">Navigation map</div>
-            <div class="b-sub" id="b3s">Home / Explore / Learn / Links / Hubs.</div>
-          </div>
-          <div class="b-go">▶</div>
-        </div>
-
-        <div class="bubble" data-b="lenses" role="button" tabindex="0">
-          <div>
-            <div class="b-title" id="b4t">The lenses</div>
-            <div class="b-sub" id="b4s">Style · Time · Depth · Language.</div>
-          </div>
-          <div class="b-go">▶</div>
-        </div>
-
-        <div class="bubble" data-b="state" role="button" tabindex="0">
-          <div>
-            <div class="b-title" id="b5t">Your current selection</div>
-            <div class="b-sub" id="b5s">See and verify your active lenses.</div>
-          </div>
-          <div class="b-go">▶</div>
-        </div>
-      </div>
-
-      <div class="status-row" aria-label="Current selection chips">
-        <span class="crp-chip" id="stLang">LANG: —</span>
-        <span class="crp-chip" id="stDepth">DEPTH: —</span>
-        <span class="crp-chip" id="stStyle">STYLE: —</span>
-        <span class="crp-chip" id="stTime">TIME: —</span>
-      </div>
-
-      <div class="mini" id="miniKeys">Keys: gd_lang · gd_depth · gd_style · gd_time</div>
-
-      <footer class="crp-footer">
-        <small class="crp-footnote">BUILD: <strong>TERMINAL_BUBBLE_1</strong></small>
-      </footer>
-
-    </section>
-  </div>
-
-  <nav class="dock" aria-label="Continue dock">
-    <a id="goHome" class="crp-btn crp-btn-primary" href="/home/" role="button" style="min-width:260px;justify-content:center">CONTINUE → HOME</a>
-    <a id="goExplore" class="crp-btn" href="/explore/" role="button">EXPLORE</a>
-    <a id="goLinks" class="crp-btn" href="/links/" role="button">LINKS</a>
-  </nav>
-
-  <div id="bd" class="backdrop" aria-hidden="true"></div>
-
-  <div id="bulletin" class="bulletin" role="dialog" aria-modal="true" aria-label="Bulletin">
-    <div class="bulletin-head">
-      <h3 class="bulletin-title" id="bulTitle">BULLETIN</h3>
-      <button class="bulletin-close" id="bulClose" aria-label="Close">✕</button>
-    </div>
-    <div class="bulletin-body" id="bulBody"></div>
-    <div class="bulletin-actions">
-      <button class="crp-btn" id="bulReturn" type="button">RETURN</button>
-      <a id="bulHome" class="crp-btn" href="/home/" role="button">HOME</a>
-      <a id="bulExplore" class="crp-btn" href="/explore/" role="button">EXPLORE</a>
-      <a id="bulLinks" class="crp-btn" href="/links/" role="button">LINKS</a>
-    </div>
-  </div>
-
+<div class="lang-wrap">
+  <a href="/terminal/?lang=en" class="lang">ENGLISH</a>
+  <a href="/terminal/?lang=zh" class="lang">中文</a>
 </div>
-
-<script>
-(function(){
-  "use strict";
-
-  var K_LANG="gd_lang", K_DEPTH="gd_depth", K_STYLE="gd_style", K_TIME="gd_time";
-  var allowLang={en:1,zh:1};
-  var allowDepth={explore:1,learn:1};
-  var allowStyle={formal:1,informal:1};
-  var allowTime={origin:1,now:1,trajectory:1};
-
-  function qp(n){ try{return new URLSearchParams(location.search).get(n);}catch(e){return null;} }
-  function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
-  function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
-  function lsDel(k){ try{localStorage.removeItem(k);}catch(e){} }
-
-  // Accept query overrides (lang coming from /door/)
-  var qLang=qp("lang"); if(qLang && allowLang[qLang]) lsSet(K_LANG,qLang);
-  var qDepth=qp("depth"); if(qDepth && allowDepth[qDepth]) lsSet(K_DEPTH,qDepth);
-  var qStyle=qp("style"); if(qStyle && allowStyle[qStyle]) lsSet(K_STYLE,qStyle);
-  var qTime=qp("time"); if(qTime && allowTime[qTime]) lsSet(K_TIME,qTime);
-
-  var state={
-    lang: lsGet(K_LANG) || "en",
-    depth: lsGet(K_DEPTH) || "explore",
-    style: lsGet(K_STYLE) || "formal",
-    time: lsGet(K_TIME) || "now"
-  };
-
-  if(!allowLang[state.lang]) state.lang="en";
-  if(!allowDepth[state.depth]) state.depth="explore";
-  if(!allowStyle[state.style]) state.style="formal";
-  if(!allowTime[state.time]) state.time="now";
-
-  // Persist normalized so it propagates forward
-  lsSet(K_LANG,state.lang);
-  lsSet(K_DEPTH,state.depth);
-  lsSet(K_STYLE,state.style);
-  lsSet(K_TIME,state.time);
-
-  // UI strings (EN + 中文)
-  var UI = {
-    en:{
-      sub:"Preface · How this site works",
-      back:"◀ Language",
-      construction_t:"Under construction (safe to explore).",
-      construction_s:"What to expect while the site is being built.",
-      what_t:"What this is",
-      what_s:"Compass-based map. Meaning comes from structure.",
-      nav_t:"Navigation map",
-      nav_s:"Home / Explore / Learn / Links / Hubs.",
-      lenses_t:"The lenses",
-      lenses_s:"Style · Time · Depth · Language.",
-      state_t:"Your current selection",
-      state_s:"See and verify your active lenses.",
-      keys:"Keys: gd_lang · gd_depth · gd_style · gd_time",
-      cont:"CONTINUE → HOME",
-      explore:"EXPLORE",
-      links:"LINKS",
-      returnBtn:"RETURN",
-      bulHome:"HOME",
-      bulExplore:"EXPLORE",
-      bulLinks:"LINKS"
-    },
-    zh:{
-      sub:"前言 · 如何使用本站",
-      back:"◀ 语言",
-      construction_t:"施工中（可安全浏览）。",
-      construction_s:"本站正在搭建，结构与透镜稳定，内容持续扩展。",
-      what_t:"这是什么",
-      what_s:"基于指南针的项目地图。意义来自结构。",
-      nav_t:"导航地图",
-      nav_s:"HOME / EXPLORE / LEARN / LINKS / 各类HUB。",
-      lenses_t:"透镜",
-      lenses_s:"风格 · 时间 · 深度 · 语言。",
-      state_t:"当前选择",
-      state_s:"查看并确认当前透镜状态。",
-      keys:"键：gd_lang · gd_depth · gd_style · gd_time",
-      cont:"继续 → HOME",
-      explore:"浏览",
-      links:"链接",
-      returnBtn:"返回",
-      bulHome:"HOME",
-      bulExplore:"浏览",
-      bulLinks:"链接"
-    }
-  };
-
-  function applyLang(){
-    var t=UI[state.lang];
-    document.documentElement.setAttribute("lang", state.lang);
-
-    document.getElementById("hSub").textContent = t.sub;
-    document.getElementById("btnBackLang").textContent = t.back;
-
-    document.getElementById("b1t").textContent = t.construction_t;
-    document.getElementById("b1s").textContent = t.construction_s;
-    document.getElementById("b2t").textContent = t.what_t;
-    document.getElementById("b2s").textContent = t.what_s;
-    document.getElementById("b3t").textContent = t.nav_t;
-    document.getElementById("b3s").textContent = t.nav_s;
-    document.getElementById("b4t").textContent = t.lenses_t;
-    document.getElementById("b4s").textContent = t.lenses_s;
-    document.getElementById("b5t").textContent = t.state_t;
-    document.getElementById("b5s").textContent = t.state_s;
-
-    document.getElementById("miniKeys").textContent = t.keys;
-
-    document.getElementById("goHome").textContent = t.cont;
-    document.getElementById("goExplore").textContent = t.explore.toUpperCase();
-    document.getElementById("goLinks").textContent = t.links.toUpperCase();
-
-    document.getElementById("bulReturn").textContent = t.returnBtn;
-    document.getElementById("bulHome").textContent = t.bulHome;
-    document.getElementById("bulExplore").textContent = t.bulExplore;
-    document.getElementById("bulLinks").textContent = t.bulLinks;
-  }
-
-  function status(){
-    document.getElementById("stLang").textContent  = "LANG: " + (state.lang==="zh" ? "中文" : "EN");
-    document.getElementById("stDepth").textContent = "DEPTH: " + state.depth.toUpperCase();
-    document.getElementById("stStyle").textContent = "STYLE: " + state.style.toUpperCase();
-    document.getElementById("stTime").textContent  = "TIME: " + (state.time==="trajectory" ? "POST" : state.time.toUpperCase());
-  }
-
-  function routeLinks(){
-    var q="lang="+encodeURIComponent(state.lang)+
-          "&depth="+encodeURIComponent(state.depth)+
-          "&style="+encodeURIComponent(state.style)+
-          "&time="+encodeURIComponent(state.time);
-
-    document.getElementById("goHome").setAttribute("href","/home/?"+q);
-    document.getElementById("goExplore").setAttribute("href","/explore/?"+q);
-    document.getElementById("goLinks").setAttribute("href","/links/?"+q);
-
-    document.getElementById("bulHome").setAttribute("href","/home/?"+q);
-    document.getElementById("bulExplore").setAttribute("href","/explore/?"+q);
-    document.getElementById("bulLinks").setAttribute("href","/links/?"+q);
-  }
-
-  // Bubble content per language
-  function bubbleContent(key){
-    if(state.lang==="zh"){
-      if(key==="construction") return "<b>施工中（可安全浏览）。</b><br/><br/>本站正在搭建：导航与透镜稳定，内容会持续扩展。未完成区域会显示占位符，而不是断裂页面。";
-      if(key==="what") return "<b>这是什么</b><br/><br/>这是一个基于指南针的项目地图。先选透镜，再通过指南针阅读与导航。意义来自结构，界面保持中立。";
-      if(key==="nav") return "<b>导航地图</b><ul><li><b>HOME</b>：指南针面（北/东/南/西），点方向打开公告。</li><li><b>EXPLORE</b>：快速浏览（概览）。</li><li><b>LEARN</b>：深度密度（更多细节）。</li><li><b>LINKS</b>：身份与外部锚点。</li><li><b>PRODUCTS/LAWS/GAUGES</b>：功能HUB。</li></ul>";
-      if(key==="lenses") return "<b>透镜</b><ul><li><b>STYLE</b>：Formal / Informal（语气与呈现）。</li><li><b>TIME</b>：Origin / Now / Post（过去/当前/前向）。</li><li><b>DEPTH</b>：Explore / Learn（浅/深）。</li><li><b>LANG</b>：EN / 中文（规范层）。</li></ul>";
-      return "<b>当前选择</b><br/><br/>请查看下方状态条，确认语言、深度、风格、时间已正确写入。";
-    } else {
-      if(key==="construction") return "<b>Under construction (safe to explore).</b><br/><br/>This site is being built live. Navigation and lenses are stable; content expands over time. Unfinished areas show placeholders rather than broken flows.";
-      if(key==="what") return "<b>What this is</b><br/><br/>A compass-based project map. Select lenses, then navigate via the compass. Meaning comes from structure. The UI stays neutral.";
-      if(key==="nav") return "<b>Navigation map</b><ul><li><b>HOME</b>: Compass face (N/E/S/W). Tap a direction to open its bulletin.</li><li><b>EXPLORE</b>: Surface view (fast overview).</li><li><b>LEARN</b>: Deep density (more detail).</li><li><b>LINKS</b>: Identity + anchors.</li><li><b>PRODUCTS/LAWS/GAUGES</b>: hubs.</li></ul>";
-      if(key==="lenses") return "<b>The lenses</b><ul><li><b>STYLE</b>: Formal vs Informal (tone framing).</li><li><b>TIME</b>: Origin vs Now vs Post (before/current/forward).</li><li><b>DEPTH</b>: Explore vs Learn (short vs deep).</li><li><b>LANG</b>: EN or 中文 (canonical layers).</li></ul>";
-      return "<b>Your current selection</b><br/><br/>Use the status chips to verify your active lenses are set correctly.";
-    }
-  }
-
-  // Modal wiring
-  var bd=document.getElementById("bd");
-  var bul=document.getElementById("bulletin");
-  var bulTitle=document.getElementById("bulTitle");
-  var bulBody=document.getElementById("bulBody");
-
-  function openBul(key){
-    var t=UI[state.lang];
-    if(key==="construction") bulTitle.textContent=t.construction_t;
-    else if(key==="what") bulTitle.textContent=t.what_t;
-    else if(key==="nav") bulTitle.textContent=t.nav_t;
-    else if(key==="lenses") bulTitle.textContent=t.lenses_t;
-    else bulTitle.textContent=t.state_t;
-
-    bulBody.innerHTML = bubbleContent(key);
-    bd.classList.add("show");
-    bul.classList.add("show");
-  }
-
-  function closeBul(){
-    bd.classList.remove("show");
-    bul.classList.remove("show");
-  }
-
-  bd.addEventListener("click", closeBul);
-  document.getElementById("bulClose").addEventListener("click", closeBul);
-  document.getElementById("bulReturn").addEventListener("click", closeBul);
-
-  document.querySelectorAll(".bubble").forEach(function(el){
-    el.addEventListener("click", function(){ openBul(el.getAttribute("data-b")); });
-  });
-
-  document.getElementById("resetAll").addEventListener("click", function(){
-    lsDel(K_LANG); lsDel(K_DEPTH); lsDel(K_STYLE); lsDel(K_TIME);
-    state={lang:"en",depth:"explore",style:"formal",time:"now"};
-    lsSet(K_LANG,state.lang); lsSet(K_DEPTH,state.depth); lsSet(K_STYLE,state.style); lsSet(K_TIME,state.time);
-    applyLang(); status(); routeLinks();
-  });
-
-  applyLang();
-  status();
-  routeLinks();
-})();
-</script>
 
 </body>
 </html>

@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Explore · Diamond 2</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=EXPLORE_D2_1"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=EXPLORE_D2_1"/>
-  <script defer src="/assets/instrument.js?v=EXPLORE_D2_1"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=EXPLORE_D2_2"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=EXPLORE_D2_2"/>
+  <script defer src="/assets/instrument.js?v=EXPLORE_D2_2"></script>
 
   <style>
     .d2-wrap{max-width:980px;margin:0 auto;}
@@ -19,9 +19,73 @@
     .d2-desc{opacity:.82;line-height:1.25}
     .d2-tags{opacity:.70;font-size:12px;letter-spacing:.15px}
     .d2-go{opacity:.85;font-weight:900}
-    .d2-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px}
     .d2-mini{opacity:.72;font-size:12px;line-height:1.35;text-align:center;margin-top:10px}
-    .d2-section{margin-top:12px}
+
+    /* Bottom compass dock */
+    .dock{
+      position:sticky;
+      bottom:12px;
+      display:flex;
+      justify-content:center;
+      margin-top:18px;
+      z-index:10;
+      pointer-events:auto;
+    }
+    .dock-card{
+      width:min(760px, 92vw);
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      box-shadow:0 16px 50px rgba(0,0,0,.45);
+      padding:10px 12px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .mini-compass{
+      position:relative;
+      width:min(360px, 78vw);
+      height:84px;
+      display:block;
+    }
+
+    .mini-node{
+      position:absolute;
+      width:54px;
+      height:54px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.16);
+      display:grid;
+      place-items:center;
+      text-decoration:none;
+      color:#fff;
+      font-weight:900;
+      letter-spacing:.2px;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .mini-node:hover{ background:rgba(0,0,0,.24); border-color:rgba(255,255,255,.28); }
+
+    /* Center (DIAMOND core) */
+    .mini-core{
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:62px;
+      height:62px;
+      border-radius:18px;
+      background:linear-gradient(135deg, rgba(255,210,120,.20), rgba(255,150,60,.08));
+      border-color:rgba(255,210,120,.32);
+    }
+
+    /* 5 satellites around (simple dock, not full hex) */
+    .mini-a{ left:0; top:50%; transform:translateY(-50%); }            /* ABOUT */
+    .mini-l{ left:20%; top:5px; }                                      /* LINKS */
+    .mini-w{ right:20%; top:5px; }                                     /* LAWS */
+    .mini-g{ right:0; top:50%; transform:translateY(-50%); }           /* GAUGES */
+    .mini-s{ left:50%; bottom:0; transform:translateX(-50%); }         /* START */
+
+    .mini-ico{ font-size:13px; opacity:.92; }
   </style>
 </head>
 
@@ -33,7 +97,7 @@
     <h1 class="crp-title" style="margin-bottom:6px">EXPLORE</h1>
     <p class="crp-subtitle" style="margin-bottom:8px">Diamond 2 · Surface Map</p>
 
-    <!-- Top lenses (operational overlay) -->
+    <!-- Top lenses only (operational overlay) -->
     <div class="crp-topbar" style="margin:0 auto 8px;max-width:980px">
       <div class="crp-topbar-left" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%">
         <div class="crp-lens" role="group" aria-label="Style lens">
@@ -48,21 +112,12 @@
       </div>
     </div>
 
-    <div class="d2-row" aria-label="Quick navigation">
-      <a id="go-home" class="crp-btn crp-btn-primary" href="/home/" role="button">COMPASS</a>
-      <a id="go-about" class="crp-btn" href="/about/" role="button">ABOUT</a>
-      <a id="go-links" class="crp-btn" href="/links/" role="button">LINKS</a>
-      <a id="go-laws" class="crp-btn" href="/laws/" role="button">LAWS</a>
-      <a id="go-gauges" class="crp-btn" href="/gauges/" role="button">GAUGES</a>
-    </div>
-
     <p class="d2-mini">
-      Explore is the new transition diamond. It routes into the core/spine (Compass) while preserving lenses.
+      Explore is the transition diamond. It routes into the core/spine while preserving lenses.
     </p>
   </header>
 
   <section class="d2-wrap">
-
     <div class="d2-grid" aria-label="Diamond 2 quadrants">
       <!-- NW -->
       <a id="q-nw" class="crp-btn d2-tile" href="/home/" role="button">
@@ -105,22 +160,25 @@
       </a>
     </div>
 
-    <div class="d2-section">
-      <hr class="crp-divider"/>
-
-      <div class="d2-row" aria-label="Core/Spine links">
-        <a id="go-products" class="crp-btn" href="/products/" role="button">PRODUCTS</a>
-        <a id="go-cares" class="crp-btn" href="/cares/" role="button">CARES</a>
-        <a id="go-hipdemo" class="crp-btn" href="/hip-demo/" role="button">HIP DEMO</a>
-        <a id="go-start" class="crp-btn" href="/" role="button">START</a>
-      </div>
-
-      <p class="d2-mini">
-        BUILD: <b>EXPLORE_D2_1</b> · Carries: <code>gd_lang</code> <code>gd_depth</code> <code>gd_style</code> <code>gd_time</code>
-      </p>
-    </div>
-
+    <footer class="crp-footer" style="text-align:center">
+      <small class="crp-footnote">BUILD: <strong>EXPLORE_D2_2</strong></small>
+    </footer>
   </section>
+
+  <!-- Bottom compass dock (replaces top clutter) -->
+  <div class="dock" aria-label="Compass dock">
+    <div class="dock-card">
+      <div class="mini-compass" aria-label="Mini compass navigation">
+        <a id="dock-about" class="mini-node mini-a" href="/about/" title="About"><span class="mini-ico">ABOUT</span></a>
+        <a id="dock-links" class="mini-node mini-l" href="/links/" title="Links"><span class="mini-ico">LINKS</span></a>
+        <a id="dock-core"  class="mini-node mini-core" href="/home/" title="Core"><span class="mini-ico">◆</span></a>
+        <a id="dock-laws"  class="mini-node mini-w" href="/laws/" title="Laws"><span class="mini-ico">LAWS</span></a>
+        <a id="dock-gauges"class="mini-node mini-g" href="/gauges/" title="Gauges"><span class="mini-ico">GAUGES</span></a>
+        <a id="dock-start" class="mini-node mini-s" href="/" title="Start"><span class="mini-ico">START</span></a>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <script>
@@ -194,22 +252,17 @@
       if(a) a.setAttribute("href", href);
     }
 
-    // core/spine
-    set("go-home","/home/?"+q);
-    set("go-about","/about/?"+q);
-    set("go-links","/links/?"+q);
-    set("go-laws","/laws/?"+q);
-    set("go-gauges","/gauges/?"+q);
-    set("go-products","/products/?"+q);
-    set("go-cares","/cares/?"+q);
-    set("go-hipdemo","/hip-demo/?"+q);
-    set("go-start","/?"+q);
-
-    // Diamond 2 quadrants route into Compass with an axis hint (query-only; no new storage keys)
     set("q-nw","/home/?"+q+"&axis=nw");
     set("q-ne","/home/?"+q+"&axis=ne");
     set("q-sw","/home/?"+q+"&axis=sw");
     set("q-se","/home/?"+q+"&axis=se");
+
+    set("dock-core","/home/?"+q);
+    set("dock-about","/about/?"+q);
+    set("dock-links","/links/?"+q);
+    set("dock-laws","/laws/?"+q);
+    set("dock-gauges","/gauges/?"+q);
+    set("dock-start","/?"+q);
   }
 
   rewrite();

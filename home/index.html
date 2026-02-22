@@ -1,370 +1,566 @@
-<!-- TNT FILE: /home/index.html -->
+<!-- TNT FILE: /home/index.html
+     Home = hub. Explore/Learn depth controls density (learn = deeper text).
+     Hierarchy:
+       Quadrant (4) → Vine (4) → Fruit (4) → Resolution (para + bullets + implication)
+     No scroll-jump: everything opens in modal overlay.
+-->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Home · Geodiametrics</title>
-
-<link rel="stylesheet" href="/assets/ui.css?v=9100"/>
-<link rel="stylesheet" href="/assets/branch.css?v=9100"/>
-<script defer src="/assets/instrument.js?v=9100"></script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Home</title>
+  <link rel="stylesheet" href="/assets/ui.css?v=9100"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=9100"/>
 </head>
 
 <body>
-<div class="page">
-  <div class="wrap">
+  <div class="diamond-field" aria-hidden="true"></div>
 
-    <div class="hero">
-      <h1>HOME</h1>
-      <p>Quadrant → Vine → Fruit → Resolution.</p>
+  <div class="page">
+    <div class="wrap" style="position:relative;z-index:2;">
+      <div class="hero">
+        <h1>HOME</h1>
+        <p>Quadrant → Vine → Fruit → Resolution.</p>
 
-      <!-- Top lenses -->
-      <div class="pills mt12">
-        <span class="pill">LANG: <span id="langPill">EN</span></span>
-        <span class="pill">DEPTH: <span id="depthPill">EXPLORE</span></span>
+        <div class="topbar" style="margin-top:12px;">
+          <span class="pill">LANG: <span id="langPill">—</span></span>
+          <span class="pill">DEPTH: <span id="depthPill">—</span></span>
 
-        <span class="pill">TIME:</span>
-        <button class="pill btn active" id="lensOrigin" type="button">ORIGIN</button>
-        <button class="pill btn" id="lensNow" type="button">NOW</button>
-        <button class="pill btn" id="lensTraj" type="button">TRAJECTORY</button>
+          <span class="pill">TIME:</span>
+          <button class="pill btn active" id="tOrigin" type="button">ORIGIN</button>
+          <button class="pill btn" id="tNow" type="button">NOW</button>
+          <button class="pill btn" id="tTraj" type="button">TRAJECTORY</button>
 
-        <span class="pill">STYLE:</span>
-        <button class="pill btn active" id="exprFormal" type="button">FORMAL</button>
-        <button class="pill btn" id="exprInformal" type="button">INFORMAL</button>
+          <span class="pill">STYLE:</span>
+          <button class="pill btn active" id="sFormal" type="button">FORMAL</button>
+          <button class="pill btn" id="sInformal" type="button">INFORMAL</button>
 
-        <a class="pill btn" href="/door/">DOOR</a>
+          <a class="pill btn" href="/door/">DOOR</a>
+          <a class="pill btn" href="/explore/">EXPLORE</a>
+          <a class="pill btn" href="/links/">LINKS</a>
+        </div>
+
+        <div class="section-title">Quadrant routes (tap a vine)</div>
       </div>
 
-      <div class="section-title">Quadrant routes (tap a vine)</div>
-    </div>
+      <!-- QUADRANTS (4 only) -->
+      <details class="quad" open data-q="NW">
+        <summary>
+          <div class="q-left">
+            <div class="q-badge"><span class="icon">⭐</span><span class="code">NW</span></div>
+            <div class="q-text"><b>NORTHWEST</b><span>Definition · language · structure</span></div>
+          </div>
+          <div class="q-arrow">▾</div>
+        </summary>
+        <div class="inside"><div class="vine-grid" id="gridNW"></div></div>
+      </details>
 
-    <!-- 4 quadrants only -->
-    <details class="quad" data-q="NW" open>
-      <summary>
-        <div class="q-left">
-          <div class="q-badge"><span class="icon">⭐</span><span class="code">NW</span></div>
-          <div class="q-text"><b>NORTHWEST</b><span>Definition · language · structure</span></div>
-        </div>
-        <div class="q-arrow">▾</div>
-      </summary>
-      <div class="inside"><div class="bubble-row" id="rowNW"></div></div>
-    </details>
+      <details class="quad" data-q="NE">
+        <summary>
+          <div class="q-left">
+            <div class="q-badge"><span class="icon">☀️</span><span class="code">NE</span></div>
+            <div class="q-text"><b>NORTHEAST</b><span>Execution · surfaces · examples</span></div>
+          </div>
+          <div class="q-arrow">▾</div>
+        </summary>
+        <div class="inside"><div class="vine-grid" id="gridNE"></div></div>
+      </details>
 
-    <details class="quad" data-q="NE">
-      <summary>
-        <div class="q-left">
-          <div class="q-badge"><span class="icon">☀️</span><span class="code">NE</span></div>
-          <div class="q-text"><b>NORTHEAST</b><span>Execution · surfaces · examples</span></div>
-        </div>
-        <div class="q-arrow">▾</div>
-      </summary>
-      <div class="inside"><div class="bubble-row" id="rowNE"></div></div>
-    </details>
+      <details class="quad" data-q="SW">
+        <summary>
+          <div class="q-left">
+            <div class="q-badge"><span class="icon">🏮</span><span class="code">SW</span></div>
+            <div class="q-text"><b>SOUTHWEST</b><span>Measurement · diagnostics · rules</span></div>
+          </div>
+          <div class="q-arrow">▾</div>
+        </summary>
+        <div class="inside"><div class="vine-grid" id="gridSW"></div></div>
+      </details>
 
-    <details class="quad" data-q="SW">
-      <summary>
-        <div class="q-left">
-          <div class="q-badge"><span class="icon">🏮</span><span class="code">SW</span></div>
-          <div class="q-text"><b>SOUTHWEST</b><span>Measurement · diagnostics · rules</span></div>
-        </div>
-        <div class="q-arrow">▾</div>
-      </summary>
-      <div class="inside"><div class="bubble-row" id="rowSW"></div></div>
-    </details>
+      <details class="quad" data-q="SE">
+        <summary>
+          <div class="q-left">
+            <div class="q-badge"><span class="icon">🌇</span><span class="code">SE</span></div>
+            <div class="q-text"><b>SOUTHEAST</b><span>Identity · references · links</span></div>
+          </div>
+          <div class="q-arrow">▾</div>
+        </summary>
+        <div class="inside"><div class="vine-grid" id="gridSE"></div></div>
+      </details>
 
-    <details class="quad" data-q="SE">
-      <summary>
-        <div class="q-left">
-          <div class="q-badge"><span class="icon">🌇</span><span class="code">SE</span></div>
-          <div class="q-text"><b>SOUTHEAST</b><span>Identity · references · links</span></div>
-        </div>
-        <div class="q-arrow">▾</div>
-      </summary>
-      <div class="inside"><div class="bubble-row" id="rowSE"></div></div>
-    </details>
-
-    <footer class="footer">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    <div class="ink">GEODIAMETRICS</div>
-  </div>
-</div>
-
-<!-- MODAL (no scroll jump; content pops over) -->
-<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Detail popover">
-  <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title">
-        <b id="mTitle">DETAIL</b>
-        <span id="mSubtitle">—</span>
-      </div>
-      <button class="close" id="mClose" type="button">Close</button>
-    </div>
-
-    <div class="modal-body">
-      <div class="block">
-        <h3 id="mH3">—</h3>
-        <p id="mText">—</p>
-
-        <div class="mt16">
-          <div class="section-title">Fruits (pick one)</div>
-          <div class="bubble-row mt12" id="fruitGrid"></div>
-        </div>
-
-        <div id="resolutionMount"></div>
-      </div>
+      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      <div class="ink">GEODIAMETRICS</div>
     </div>
   </div>
-</div>
 
-<script>
-(() => {
-  const K1_LANG="gd_lang", K2_LANG="crp_lang";
-  const K1_DEPTH="gd_depth", K2_DEPTH="crp_depth";
+  <!-- MODAL OVERLAY (NO SCROLL-JUMP) -->
+  <div class="modal" id="modal">
+    <div class="backdrop" id="modalBackdrop"></div>
+    <div class="sheet" role="dialog" aria-modal="true" aria-label="Detail">
+      <div class="sheetHead">
+        <div class="title">
+          <b id="mTitle">—</b>
+          <span id="mSubtitle">—</span>
+        </div>
+        <button class="btn" id="mClose" type="button">CLOSE</button>
+      </div>
 
-  const state = {
-    lang: "en",
-    depth: "explore",
-    lens: "ORIGIN",      // ORIGIN | NOW | TRAJECTORY
-    expr: "FORMAL",      // FORMAL | INFORMAL
-    current: null        // { q, vineKey }
-  };
+      <div class="sheetBody">
+        <div class="card" style="border-radius:22px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);padding:14px;">
+          <div class="section-title" style="margin-top:0;">Vine</div>
+          <div style="font-weight:950;letter-spacing:.10em;text-transform:uppercase;font-size:16px;" id="mVine">—</div>
+          <p style="margin-top:8px;line-height:1.7;opacity:.85;" id="mDesc">—</p>
 
-  const $ = (id)=>document.getElementById(id);
-  const esc = (s)=>String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+          <div class="chiprow" style="margin-top:12px;">
+            <span class="pill">TIME:</span>
+            <button class="pill btn" id="mOrigin" type="button">ORIGIN</button>
+            <button class="pill btn" id="mNow" type="button">NOW</button>
+            <button class="pill btn" id="mTraj" type="button">TRAJECTORY</button>
+          </div>
 
-  function read(k){ try{return localStorage.getItem(k)||"";}catch(e){return "";} }
-  function writeBoth(a,b,v){ try{localStorage.setItem(a,v);localStorage.setItem(b,v);}catch(e){} }
+          <div class="fruit-grid">
+            <div class="section-title">Fruits (pick one)</div>
+            <div class="vine-grid" id="mFruits"></div>
+          </div>
 
-  // normalize from storage
-  state.lang = ((read(K1_LANG)||read(K2_LANG)||"en").toLowerCase()==="zh") ? "zh" : "en";
-  state.depth = ((read(K1_DEPTH)||read(K2_DEPTH)||"explore").toLowerCase()==="learn") ? "learn" : "explore";
+          <div id="mResolution"></div>
 
-  $("langPill").textContent = state.lang==="zh" ? "中文" : "EN";
-  $("depthPill").textContent = state.depth==="learn" ? "LEARN" : "EXPLORE";
+          <div class="jump-row" style="margin-top:12px;">
+            <a class="jump gold" href="/home/">JUMP HOME</a>
+            <a class="jump" href="/door/">DOOR</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  // informal simplifier placeholder
-  function simplify(t){
-    if(state.expr==="FORMAL") return t;
-    return t
-      .replaceAll("therefore","so")
-      .replaceAll("however","but")
-      .replaceAll("eliminate","remove")
-      .replaceAll("verification","proof")
-      .replaceAll("classification","name")
-      .replaceAll("consistent","same")
-      .replaceAll("trajectory","future")
-      .replaceAll("invariant","rule");
-  }
+  <script src="/assets/instrument.js?v=9100"></script>
+  <script>
+  (() => {
+    const K_LANG="gd_lang", K_DEPTH="gd_depth", K_TIME="gd_time", K_STYLE="gd_style";
 
-  function setLens(L){
-    state.lens=L;
-    localStorage.setItem("crp_lens",L);
-    syncTop();
-    if($("overlay").classList.contains("on")) renderModal();
-    renderAllQuadrants();
-  }
-  function setExpr(E){
-    state.expr=E;
-    localStorage.setItem("crp_expr",E);
-    syncTop();
-    if($("overlay").classList.contains("on")) renderModal();
-    renderAllQuadrants();
-  }
+    const state = {
+      lang: (localStorage.getItem(K_LANG)||"en"),
+      depth:(localStorage.getItem(K_DEPTH)||"explore"),
+      time: (localStorage.getItem(K_TIME)||"origin"),
+      style:(localStorage.getItem(K_STYLE)||"formal"),
+      open: null // {q, vineKey}
+    };
 
-  function syncTop(){
-    $("lensOrigin").classList.toggle("active", state.lens==="ORIGIN");
-    $("lensNow").classList.toggle("active", state.lens==="NOW");
-    $("lensTraj").classList.toggle("active", state.lens==="TRAJECTORY");
-    $("exprFormal").classList.toggle("active", state.expr==="FORMAL");
-    $("exprInformal").classList.toggle("active", state.expr==="INFORMAL");
-  }
+    const $ = (id)=>document.getElementById(id);
 
-  $("lensOrigin").addEventListener("click", ()=>setLens("ORIGIN"));
-  $("lensNow").addEventListener("click", ()=>setLens("NOW"));
-  $("lensTraj").addEventListener("click", ()=>setLens("TRAJECTORY"));
-  $("exprFormal").addEventListener("click", ()=>setExpr("FORMAL"));
-  $("exprInformal").addEventListener("click", ()=>setExpr("INFORMAL"));
-  syncTop();
+    // Pills
+    function syncTop(){
+      $("langPill").textContent = (state.lang==="zh") ? "中文" : "EN";
+      $("depthPill").textContent = state.depth.toUpperCase();
 
-  // ---- MODEL (4 quadrants -> 4 vines -> 4 fruits -> resolution paragraph+bullets+imp) ----
-  const fruit = (key,label,pack)=>({key,label,pack});
-  const vine  = (key,label,lens,fruits)=>({key,label,lens,fruits});
+      $("tOrigin").classList.toggle("active", state.time==="origin");
+      $("tNow").classList.toggle("active", state.time==="now");
+      $("tTraj").classList.toggle("active", state.time==="trajectory");
 
-  const MODEL = {
-    NW:{
-      title:"NORTHWEST",
-      subtitle:"Definition · language · structure",
-      vines:[
-        vine("SSG","SSG",
-          {ORIGIN:"Why constraint languages exist.",NOW:"How SSG runs structure and state.",TRAJECTORY:"How SSG scales execution."},
-          [
-            fruit("PRIM","Primitives",{ORIGIN:{para:"Primitives exist to keep meaning stable while complexity grows.",bullets:["Name what exists (Resource/Store).","Name what must hold (Constraint).","Name success (Goal) and admissibility (Guard)."],imp:"Clear primitives remove ambiguity."},
-                                        NOW:{para:"Today, primitives are executable contracts: Resource, Store, Constraint, Goal, Guard.",bullets:["Resource = what is acted on.","Store = where state lives.","Constraint = must-hold.","Goal = success.","Guard = allow/deny."],imp:"Primitives make execution replay-safe."},
-                                        TRAJECTORY:{para:"As the platform scales, primitives become cross-domain coordinates.",bullets:["One vocabulary across domains.","Cheaper audits.","Cheaper collaboration."],imp:"Shared primitives enable network-scale coherence."}}),
-            fruit("RECEIPT","Receipts",{ORIGIN:{para:"Receipts exist because progress must be provable.",bullets:["No invisible progress.","No narrative-only trust."],imp:"Receipts convert intent into verified history."},
-                                        NOW:{para:"Receipts gate advancement. Back-nav invalidates downstream receipts.",bullets:["Advance only after receipt.","Back invalidates downstream.","Replay verifies."],imp:"Receipts enforce coherence mechanically."},
-                                        TRAJECTORY:{para:"Receipts become portable verification tokens across systems.",bullets:["Interoperable tokens.","Automatic audits.","Cheaper disputes."],imp:"Receipts scale trust without argument."}}),
-            fruit("INV","Invariants",{ORIGIN:{para:"Invariants exist to stop drift at the root.",bullets:["Navigation-first.","No timers as gates.","Atomic handoff with receipt."],imp:"Invariants are safety rails."},
-                                     NOW:{para:"Invariants keep UX predictable under load.",bullets:["Consistent presses.","Stable returns.","No partial transitions."],imp:"Predictability is coherence."},
-                                     TRAJECTORY:{para:"Invariants reduce defects and exploits as ambiguity is removed.",bullets:["Lower exploit surface.","Lower defect rate.","Higher reliability."],imp:"Invariants are compound interest."}}),
-            fruit("EX","Examples",{ORIGIN:{para:"Examples compress learning faster than broad explanation.",bullets:["Smallest unit.","Repeatable pattern.","Minimal interpretation."],imp:"Examples create usable habits."},
-                                  NOW:{para:"Examples mirror geometry: quadrant → vine → fruit → resolution.",bullets:["Geometry-aligned.","Repeatable.","Ends in a conclusion."],imp:"Examples teach by movement."},
-                                  TRAJECTORY:{para:"Examples become templates; templates become products.",bullets:["Examples → templates.","Templates → products.","Products → standards."],imp:"Templates are executable knowledge."}})
-          ]
-        ),
-        vine("GRAM","Diamond Grammar",
-          {ORIGIN:"Why four routes exist.",NOW:"Hub-first traversal and returns.",TRAJECTORY:"Grammar scales governance."},
-          [
-            fruit("ONE","One Choice",{ORIGIN:{para:"One choice prevents fragmentation.",bullets:["Pick one route.","Finish or return."],imp:"Single choice preserves coherence."},
-                                     NOW:{para:"It keeps the site readable and stable.",bullets:["No multi-tab drift.","Clear returns."],imp:"Navigation stays coherent."},
-                                     TRAJECTORY:{para:"Teams align faster under shared traversal rules.",bullets:["Shared grammar.","Shared meaning."],imp:"Grammar becomes governance."}}),
-            fruit("RET","Return",{ORIGIN:{para:"Return prevents traps.",bullets:["Hub-first.","Safe exit.","Re-entry allowed."],imp:"Return restores orientation."},
-                                 NOW:{para:"Return is default correction under confusion.",bullets:["Return → reselect → continue."],imp:"Return is the reset button."},
-                                 TRAJECTORY:{para:"Return scales resilience under load.",bullets:["Safer workflows.","Less drift."],imp:"Return is resilience."}}),
-            fruit("ENC","Encode",{ORIGIN:{para:"Directions encode function domains.",bullets:["N=definition.","E=execution.","S=measurement.","W=identity."],imp:"Compass becomes language."},
-                                 NOW:{para:"Encoding makes the forest navigable.",bullets:["Same map everywhere.","Faster learning."],imp:"Encoding compresses comprehension."},
-                                 TRAJECTORY:{para:"Encoding generalizes cross-domain.",bullets:["Same axes.","Same filters."],imp:"Encoding is portability."}}),
-            fruit("COMP","Dual Compression",{ORIGIN:{para:"Not all screens fit diamonds.",bullets:["Diamond for routing.","Panels for density."],imp:"Compression protects readability."},
-                                           NOW:{para:"Routes stay simple while depth stays contained.",bullets:["No clutter.","No overlap confusion."],imp:"Density stays navigable."},
-                                           TRAJECTORY:{para:"More content without redesign.",bullets:["Same clarity.","More scale."],imp:"Compression is scalability."}})
-          ]
-        ),
-        vine("DOT","DOT.GRID",
-          {ORIGIN:"Why index states.",NOW:"Replay and audit.",TRAJECTORY:"Universal coordinates."},
-          [
-            fruit("STATE","State",{ORIGIN:{para:"State labeling prevents ambiguity.",bullets:["Name the situation.","Bound the space."],imp:"State naming starts control."},
-                                   NOW:{para:"States allow consistent comparison from the same evidence.",bullets:["Same evidence → same state mapping."],imp:"State indexing enables agreement."},
-                                   TRAJECTORY:{para:"States become portable across domains.",bullets:["One lattice, many domains."],imp:"State becomes infrastructure."}}),
-            fruit("REPLAY","Replay",{ORIGIN:{para:"Replay exists because trust must be verifiable.",bullets:["If you can't replay, you can't verify."],imp:"Replay is proof."},
-                                     NOW:{para:"Replay reruns the evidence path.",bullets:["Detect drift.","Audit outcomes."],imp:"Replay is audit."},
-                                     TRAJECTORY:{para:"Replay becomes automatic validation.",bullets:["Cheaper compliance.","Fewer disputes."],imp:"Replay scales trust."}}),
-            fruit("AUD","Audit",{ORIGIN:{para:"Audit prevents narrative-only interpretation.",bullets:["Trace evidence → output."],imp:"Audit is accountability."},
-                                 NOW:{para:"Audit is repeatable and observer-consistent.",bullets:["Rule-based.","Recorded."],imp:"Audit ends argument."},
-                                 TRAJECTORY:{para:"Audit becomes institution-ready infrastructure.",bullets:["Cross-domain.","Fast."],imp:"Audit becomes standard."}}),
-            fruit("PACK","Packs",{ORIGIN:{para:"Packs move evidence cleanly.",bullets:["One file.","Replayable stream."],imp:"Packs enable portability."},
-                                 NOW:{para:"Packs feed sweeps and tests.",bullets:["CSV/JSONL.","Stable fields."],imp:"Packs enable testing."},
-                                 TRAJECTORY:{para:"Packs become interchange format.",bullets:["Standard exports.","Shared tooling."],imp:"Packs scale collaboration."}})
-          ]
-        ),
-        vine("ACR","Acronyms",
-          {ORIGIN:"Why lock terms.",NOW:"Pillars map.",TRAJECTORY:"Searchable tokens."},
-          [
-            fruit("CORE","Core Set",{ORIGIN:{para:"Core terms repeat most.",bullets:["High-frequency first.","Reduce drift."],imp:"Core is the entry ramp."},
-                                    NOW:{para:"Core terms become stable UI anchors.",bullets:["Same meaning everywhere."],imp:"Core reduces confusion."},
-                                    TRAJECTORY:{para:"Core becomes training layer.",bullets:["Modules.","Cert tracks."],imp:"Core scales teaching."}}),
-            fruit("PILL","Pillars",{ORIGIN:{para:"Pillars group function.",bullets:["Language.","Execution.","Measurement.","Identity."],imp:"Pillars organize the forest."},
-                                   NOW:{para:"Pillars make lookup fast.",bullets:["Search by intent."],imp:"Pillars reduce friction."},
-                                   TRAJECTORY:{para:"Pillars scale to 256 terms.",bullets:["More terms, same clarity."],imp:"Pillars preserve readability."}}),
-            fruit("LOOK","Lookup",{ORIGIN:{para:"Lookup prevents hunting.",bullets:["Tags.","Stable names."],imp:"Lookup is navigation."},
-                                  NOW:{para:"Lookup stays consistent across pages.",bullets:["Same tokens."],imp:"Lookup keeps coherence."},
-                                  TRAJECTORY:{para:"Lookup becomes in-UI tool.",bullets:["Autocomplete.","Context links."],imp:"Lookup becomes a surface."}}),
-            fruit("USE","Usage",{ORIGIN:{para:"Use defines meaning.",bullets:["Examples anchor definitions."],imp:"Usage removes ambiguity."},
-                                NOW:{para:"Usage is short and repeatable.",bullets:["One sentence.","One action."],imp:"Usage teaches fast."},
-                                TRAJECTORY:{para:"Usage becomes drills and tests.",bullets:["Practice.","Assessment."],imp:"Usage scales learning."}})
-          ]
-        )
-      ]
+      $("sFormal").classList.toggle("active", state.style==="formal");
+      $("sInformal").classList.toggle("active", state.style==="informal");
     }
-  };
 
-  // For now, map other quadrants to same structure (so UI remains complete)
-  MODEL.NE = MODEL.NW; MODEL.SW = MODEL.NW; MODEL.SE = MODEL.NW;
+    function setTime(v){
+      state.time=v;
+      localStorage.setItem(K_TIME,v);
+      syncTop();
+      renderAll();
+      if(state.open) renderModal();
+    }
+    function setStyle(v){
+      state.style=v;
+      localStorage.setItem(K_STYLE,v);
+      syncTop();
+      renderAll();
+      if(state.open) renderModal();
+    }
 
-  function renderQuadrant(q){
-    const row = $("row"+q);
-    row.innerHTML = "";
-    const quad = MODEL[q];
-    quad.vines.forEach(v=>{
-      const btn = document.createElement("div");
-      btn.className = "bubble-btn";
-      btn.innerHTML = `
-        <div class="lbl">
-          <b>${esc(v.label)}</b>
-          <i>${esc(simplify(v.lens[state.lens]))}</i>
-        </div>
-        <div class="go">▶</div>
-      `;
-      btn.addEventListener("click", ()=>openModal(q, v.key));
-      row.appendChild(btn);
-    });
-  }
-  function renderAllQuadrants(){ ["NW","NE","SW","SE"].forEach(renderQuadrant); }
+    $("tOrigin").addEventListener("click", ()=>setTime("origin"));
+    $("tNow").addEventListener("click", ()=>setTime("now"));
+    $("tTraj").addEventListener("click", ()=>setTime("trajectory"));
 
-  function openModal(q, vineKey){
-    state.current = {q, vineKey};
-    $("overlay").classList.add("on");
-    document.body.style.overflow = "hidden";
-    renderModal();
-  }
+    $("sFormal").addEventListener("click", ()=>setStyle("formal"));
+    $("sInformal").addEventListener("click", ()=>setStyle("informal"));
 
-  function closeModal(){
-    $("overlay").classList.remove("on");
-    document.body.style.overflow = "";
-    state.current = null;
-  }
+    // Informal simplifier (placeholder for 1001 enforcement)
+    function simplify(txt){
+      if(state.style==="formal") return txt;
+      return txt
+        .replaceAll("therefore","so")
+        .replaceAll("however","but")
+        .replaceAll("verification","proof")
+        .replaceAll("classification","name")
+        .replaceAll("trajectory","future")
+        .replaceAll("invariants","rules")
+        .replaceAll("invariant","rule");
+    }
 
-  function renderModal(){
-    const {q, vineKey} = state.current;
-    const quad = MODEL[q];
-    const vine = quad.vines.find(x=>x.key===vineKey);
+    // Data model: Quadrant → 4 vines → 4 fruits → resolution packs (Origin/Now/Trajectory)
+    // (Depth toggles density: explore = shorter, learn = longer)
+    function pack(o,n,t){ return {origin:o, now:n, trajectory:t}; }
 
-    $("mTitle").textContent = `${q} · ${vine.label}`;
-    $("mSubtitle").textContent = quad.subtitle;
+    function vine(key,label,desc,fruits){
+      return {key,label,desc,fruits};
+    }
 
-    $("mH3").textContent = vine.label;
-    $("mText").textContent = simplify(vine.lens[state.lens]);
+    function fruit(key,label,sub,rez){
+      return {key,label,sub,rez};
+    }
 
-    const fruitGrid = $("fruitGrid");
-    fruitGrid.innerHTML = "";
-    vine.fruits.forEach(f=>{
-      const b = document.createElement("div");
-      b.className = "bubble-btn";
-      b.innerHTML = `
-        <div class="lbl">
-          <b>${esc(f.label)}</b>
-          <i>Open resolution</i>
-        </div>
-        <div class="go">▶</div>
-      `;
-      b.addEventListener("click", ()=>showResolution(f));
-      fruitGrid.appendChild(b);
-    });
+    const MODEL = {
+      NW: {
+        title:"NORTHWEST",
+        subtitle:"Definition · language · structure",
+        vines:[
+          vine("SSG","SSG",
+            pack(
+              "Why a constraint language exists: stable meaning under scale.",
+              "SSG: primitives + receipts + invariants → replay-safe execution.",
+              "SSG becomes cross-domain structure contracts and tooling."
+            ),
+            [
+              fruit("PRIM","Primitives","Resource / Store / Constraint / Goal / Guard",
+                pack(
+                  {p:"Primitives are the minimal words that stop drift. If you cannot name what exists and what must hold, you cannot build.",
+                   b:["Separate entity vs rule.","Define success vs admissibility.","Keep the vocabulary minimal."],
+                   i:"Primitives are executable meaning."},
+                  {p:"Resource targets; Store holds state; Constraint must hold; Goal ends; Guard gates transitions.",
+                   b:["Resources + Stores define state.","Constraints define allowed space.","Guards prevent invalid moves."],
+                   i:"Clear primitives remove ambiguity."},
+                  {p:"Shared primitives become shared coordinates across teams and domains.",
+                   b:["Lower onboarding cost.","Cheaper audits.","Portable specs."],
+                   i:"Primitives scale coherence."}
+                )
+              ),
+              fruit("RCPT","Receipts","Receipt-gated advancement",
+                pack(
+                  {p:"Receipts exist because progress must be provable, not narrated.",
+                   b:["No invisible progress.","No memory-based trust.","Proof is stored."],
+                   i:"Receipts convert intent into record."},
+                  {p:"Advance only after receipt. Back-nav invalidates downstream receipts to prevent false continuity.",
+                   b:["Advance after receipt.","Back invalidates downstream.","Replay verifies."],
+                   i:"Receipts enforce coherence mechanically."},
+                  {p:"Receipts become interoperable verification tokens across systems.",
+                   b:["Automatic audits.","Cheaper dispute resolution.","Portable trust."],
+                   i:"Receipts scale trust without narrative."}
+                )
+              ),
+              fruit("INVAR","Invariants","Navigation-first safety rails",
+                pack(
+                  {p:"Invariants exist to stop drift at the root.",
+                   b:["No timers as gates.","Unified presses.","Atomic handoff with receipt."],
+                   i:"Invariants are stability rails."},
+                  {p:"Invariants keep UI and state transitions predictable under load.",
+                   b:["Consistent interactions.","Safe returns.","No partial transitions."],
+                   i:"Predictability is coherence."},
+                  {p:"At scale, invariants shrink defect and exploit surfaces.",
+                   b:["Lower defect rate.","Lower exploit surface.","Higher reliability."],
+                   i:"Invariants compound over time."}
+                )
+              ),
+              fruit("EX","Examples","Small specs → repeatable understanding",
+                pack(
+                  {p:"Examples compress learning into movement.",
+                   b:["Show smallest unit.","Show pattern.","Remove interpretation."],
+                   i:"Examples build habit."},
+                  {p:"Quadrant → Vine → Fruit → Resolution is the teaching pattern.",
+                   b:["One route at a time.","One conclusion per path.","Repeatable."],
+                   i:"Examples teach without lecture."},
+                  {p:"Examples become templates; templates become products.",
+                   b:["Faster shipping.","Less rework.","More stability."],
+                   i:"Templates are executable knowledge."}
+                )
+              )
+            ]
+          ),
 
-    $("resolutionMount").innerHTML = "";
-  }
+          vine("GRAM","Diamond Grammar",
+            pack("Why four routes exist: direction encodes function.","Hub-first traversal keeps coherence.","Grammar scales navigation into governance."),
+            [
+              fruit("ONE","One choice","Finish or return",pack(
+                {p:"Single choice prevents fragmentation.",b:["Pick one route.","Finish or return.","No parallel commitments."],i:"One choice preserves coherence."},
+                {p:"One route at a time keeps the map readable.",b:["No multi-tab drift.","Clear returns.","Stable progress."],i:"Navigation stays stable."},
+                {p:"At scale, it aligns teams.",b:["Shared traversal rules.","Shared meaning.","Fewer conflicts."],i:"Grammar becomes governance."}
+              )),
+              fruit("RET","Return","Hub-first reset",pack(
+                {p:"Return exists to prevent traps.",b:["Hub-first.","Safe exit.","Re-entry allowed."],i:"Return restores orientation."},
+                {p:"Return is the correction primitive.",b:["Confusion → return.","Re-select route.","Continue."],i:"Return is reset."},
+                {p:"Return scales safety.",b:["Safer workflows.","Less drift.","More resilience."],i:"Return is resilience."}
+              )),
+              fruit("ENC","Encode","N/E/S/W as functions",pack(
+                {p:"Directions encode functional domains.",b:["N=definition.","E=execution.","S=measurement.","W=identity."],i:"Compass becomes language."},
+                {p:"Encoding makes the forest navigable.",b:["Same map everywhere.","Faster learning.","Less confusion."],i:"Encoding compresses comprehension."},
+                {p:"Encoding becomes portable across domains.",b:["Same axes.","Same filters.","Same audits."],i:"Encoding is portability."}
+              )),
+              fruit("DUAL","Dual compression","Diamond + panel",pack(
+                {p:"Not all screens fit diamonds.",b:["Diamond when possible.","Panels when dense.","No drift."],i:"Dual compression preserves clarity."},
+                {p:"Routes stay simple while depth stays contained.",b:["No clutter.","No overlap confusion.","Stable UI."],i:"Density stays navigable."},
+                {p:"More content, same clarity.",b:["Less redesign.","More stability.","Faster growth."],i:"Compression is scalability."}
+              ))
+            ]
+          ),
 
-  function showResolution(fruit){
-    const pack = fruit.pack[state.lens];
-    const para = simplify(pack.para);
-    const bullets = pack.bullets.map(x=>simplify(x));
-    const imp = simplify(pack.imp);
+          vine("DOT","DOT.GRID",
+            pack("Why index states: reduce ambiguity.","Replay + audit makes trust mechanical.","Universal coordinates across domains."),
+            [
+              fruit("STATE","State","Name the situation",pack(
+                {p:"State labeling prevents argument-by-story.",b:["Name the situation.","Bound the space.","Make it replayable."],i:"State naming is control."},
+                {p:"Same evidence → same state mapping.",b:["Observer-consistent.","Rule-based.","Recorded."],i:"State indexing enables agreement."},
+                {p:"State becomes portable across domains.",b:["Same lattice.","Many domains.","Shared audit."],i:"State becomes infrastructure."}
+              )),
+              fruit("REPLAY","Replay","Re-run evidence",pack(
+                {p:"If you can’t replay, you can’t verify.",b:["Replay is proof."],i:"Replay ends narrative."},
+                {p:"Replay re-runs the evidence path to detect drift.",b:["Same inputs.","Same outputs.","Detect drift."],i:"Replay is audit."},
+                {p:"Replay becomes continuous.",b:["Automatic validation.","Cheaper compliance.","Fewer disputes."],i:"Replay scales trust."}
+              )),
+              fruit("AUDIT","Audit","Trace evidence to output",pack(
+                {p:"Audit prevents hidden manipulation.",b:["Trace evidence → output."],i:"Audit is accountability."},
+                {p:"Audit is repeatable.",b:["Observer-consistent.","Rule-based.","Recorded."],i:"Audit ends argument."},
+                {p:"Audit becomes institution-ready.",b:["Cross-domain.","Fast.","Cheap."],i:"Audit becomes infrastructure."}
+              )),
+              fruit("PACKS","Packs","Replayable exports",pack(
+                {p:"Packs move evidence cleanly.",b:["One file.","Replayable stream.","Stable fields."],i:"Packs enable portability."},
+                {p:"Packs feed sweeps.",b:["CSV/JSONL.","State IDs.","Normalized fields."],i:"Packs enable testing."},
+                {p:"Packs become interchange standards.",b:["Shared tooling.","Network audits.","Collaboration."],i:"Packs scale networks."}
+              ))
+            ]
+          ),
 
-    $("resolutionMount").innerHTML = `
-      <div class="resolution">
-        <h4>${esc(fruit.label)} — Resolution</h4>
-        <p class="para">${esc(para)}</p>
-        <ul>${bullets.map(b=>`<li>${esc(b)}</li>`).join("")}</ul>
-        <div class="imp">→ ${esc(imp)}</div>
-      </div>
-    `;
-  }
+          vine("ACR","Acronyms",
+            pack("Why lock terms: prevent drift.","Pillars map function and intent.","Searchable tokens for fast navigation."),
+            [
+              fruit("CORE","Core set","High-frequency terms",pack(
+                {p:"Core terms repeat most. Lock them first.",b:["High-frequency.","Stable meaning."],i:"Core terms are the entry ramp."},
+                {p:"Core terms are stable UI anchors.",b:["Same meaning everywhere.","Fast comprehension."],i:"Core reduces confusion."},
+                {p:"Core becomes onboarding + certification.",b:["Training modules.","Tests.","Tracks."],i:"Core scales teaching."}
+              )),
+              fruit("PILL","Pillars","Category map",pack(
+                {p:"Pillars group function.",b:["Language.","Execution.","Measurement.","Identity."],i:"Pillars organize the forest."},
+                {p:"Pillars make lookup fast.",b:["Search by intent.","Not memory."],i:"Pillars reduce friction."},
+                {p:"Pillars scale to 256.",b:["More terms, same clarity."],i:"Pillars preserve readability."}
+              )),
+              fruit("LOOK","Lookup","Search rules",pack(
+                {p:"Lookup prevents hunting.",b:["Tags.","Prefixes.","Stable names."],i:"Lookup is navigation."},
+                {p:"Lookup stays consistent.",b:["Same tokens.","Same routes."],i:"Lookup keeps coherence."},
+                {p:"Lookup becomes in-UI tools.",b:["Autocomplete.","Context links."],i:"Lookup becomes a product."}
+              )),
+              fruit("USE","Usage","Examples anchor meaning",pack(
+                {p:"Use defines meaning.",b:["Examples anchor definitions."],i:"Usage removes ambiguity."},
+                {p:"Usage is short and repeatable.",b:["One sentence.","One action."],i:"Usage teaches fast."},
+                {p:"Usage becomes drills.",b:["Practice.","Tests."],i:"Usage scales learning."}
+              ))
+            ]
+          )
+        ]
+      },
 
-  $("mClose").addEventListener("click", closeModal);
-  $("overlay").addEventListener("click",(e)=>{ if(e.target.id==="overlay") closeModal(); });
-  document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && $("overlay").classList.contains("on")) closeModal(); });
+      NE: {
+        title:"NORTHEAST",
+        subtitle:"Execution · surfaces · examples",
+        vines:[
+          vine("SURF","Execution Surfaces",
+            pack("Origin: why interfaces matter.","Now: portals expose the engine.","Trajectory: surfaces become products."),
+            [
+              fruit("APPS","Apps","Native surfaces",pack(
+                {p:"Apps exist to make the engine usable.",b:["Simple inputs.","Clear outputs.","Stable navigation."],i:"Apps expose coherence."},
+                {p:"Portals and apps reflect the same constraints.",b:["Same receipts.","Same rules.","Same state flow."],i:"UI mirrors engine."},
+                {p:"Apps become modular vertical products.",b:["Reuse surfaces.","Reuse audits.","Reuse contracts."],i:"Surfaces scale."}
+              )),
+              fruit("PORT","Portals","Web surfaces",pack(
+                {p:"Portals centralize workflows.",b:["One hub.","Many routes."],i:"Portals reduce friction."},
+                {p:"Portals enforce receipts + returns.",b:["No partial transitions.","Stable back-nav."],i:"Portals stay coherent."},
+                {p:"Portals become enterprise surfaces.",b:["Role views.","Audit trails."],i:"Portals scale trust."}
+              )),
+              fruit("INTF","Interfaces","Interaction rules",pack(
+                {p:"Interfaces exist to remove ambiguity.",b:["Unified presses.","No timer gates."],i:"Interface is constraint."},
+                {p:"Interfaces are predictable under stress.",b:["Same gestures.","Same outcomes."],i:"Predictability is stability."},
+                {p:"Interfaces become standards.",b:["Shared UX rules.","Lower training cost."],i:"Standards scale adoption."}
+              )),
+              fruit("DEPLOY","Deployment","Ship reliably",pack(
+                {p:"Deployment exists to make results real.",b:["Repeatable builds.","Repeatable tests."],i:"Shipping is proof."},
+                {p:"Deployment is receipt-governed.",b:["Version receipts.","Rollback receipts."],i:"Ops becomes coherent."},
+                {p:"Deployment becomes audited pipelines.",b:["Replay logs.","Compliance outputs."],i:"Ops scales safely."}
+              ))
+            ]
+          ),
+          vine("WF","Workflows & Receipts",
+            pack("Origin: why trails exist.","Now: replay safety.","Trajectory: dispute-free resolution."),
+            [
+              fruit("TRAIL","Audit trails","Evidence path",pack(
+                {p:"Trails exist to stop narrative.",b:["Trace inputs → outputs."],i:"Trails end guessing."},
+                {p:"Trails are replayable.",b:["Same inputs.","Same outcomes."],i:"Trails enable audits."},
+                {p:"Trails become institutional proof.",b:["Faster disputes.","Cheaper compliance."],i:"Trails scale trust."}
+              )),
+              fruit("TOK","Tokens","Verification artifacts",pack(
+                {p:"Tokens make proof portable.",b:["Proof travels with the result."],i:"Tokens carry trust."},
+                {p:"Tokens are receipts you can verify.",b:["Replay-driven."],i:"Tokens are mechanical trust."},
+                {p:"Tokens become cross-system validators.",b:["Interoperable proof."],i:"Tokens scale networks."}
+              )),
+              fruit("REPLAY","Replay safety","Determinism",pack(
+                {p:"Replay safety exists to verify.",b:["Repeat exactly."],i:"Replay = truth."},
+                {p:"Replay safety detects drift.",b:["Drift becomes visible."],i:"Visibility enables correction."},
+                {p:"Replay becomes continuous validation.",b:["Always-on audits."],i:"Validation scales."}
+              )),
+              fruit("CLOSE","Closure","Resolution outcome",pack(
+                {p:"Closure exists to end loops.",b:["Settle with proof."],i:"Closure ends argument."},
+                {p:"Closure is receipt finalization.",b:["Decision receipts."],i:"Closure is final state."},
+                {p:"Closure becomes system-wide policy.",b:["Lower conflict cost."],i:"Closure scales peace."}
+              ))
+            ]
+          ),
+          vine("EX","Examples",
+            pack("Origin: why examples teach.","Now: pattern learning.","Trajectory: templates."),
+            [
+              fruit("MICRO","Micro specs","Small patterns",pack(
+                {p:"Micro specs show structure fast.",b:["Small unit.","Clear output."],i:"Micro teaches."},
+                {p:"Micro specs mirror the map.",b:["Quadrant→vine→fruit."],i:"Pattern becomes habit."},
+                {p:"Micro specs become templates.",b:["Copy/paste patterns."],i:"Templates scale."}
+              )),
+              fruit("DRILL","Drills","Practice loops",pack(
+                {p:"Drills build skill.",b:["Repeat with feedback."],i:"Practice creates stability."},
+                {p:"Drills use receipts.",b:["Progress is visible."],i:"Proof-based learning."},
+                {p:"Drills become certification.",b:["Standard tests."],i:"Training scales."}
+              )),
+              fruit("CASE","Cases","Applied examples",pack(
+                {p:"Cases prove reality.",b:["Use in context."],i:"Cases validate."},
+                {p:"Cases map to states.",b:["Same evidence → same classification."],i:"States enable comparison."},
+                {p:"Cases become product stories.",b:["Still proof-first."],i:"Stories stay coherent."}
+              )),
+              fruit("MAP","Maps","Navigation examples",pack(
+                {p:"Maps prevent getting lost.",b:["Show returns."],i:"Returns keep safety."},
+                {p:"Maps keep routes stable.",b:["One choice at a time."],i:"Choice preserves coherence."},
+                {p:"Maps become interfaces.",b:["UI mirrors map."],i:"Interfaces scale."}
+              ))
+            ]
+          ),
+          vine("PACKS","Packs & Outputs",
+            pack("Origin: what ships.","Now: downloadable artifacts.","Trajectory: productization."),
+            [
+              fruit("PDF","PDFs","Human-readable packs",pack(
+                {p:"PDFs compress knowledge.",b:["Shareable."],i:"PDF = portable."},
+                {p:"PDFs mirror the structure.",b:["Same map."],i:"Consistency builds trust."},
+                {p:"PDFs become modules.",b:["Courses."],i:"Modules scale."}
+              )),
+              fruit("DATA","Datasets","Replay packs",pack(
+                {p:"Datasets enable auditing.",b:["Replayable streams."],i:"Data = proof."},
+                {p:"Datasets power sweeps.",b:["State comparisons."],i:"Sweeps validate."},
+                {p:"Datasets become standards.",b:["Interchange."],i:"Standards scale."}
+              )),
+              fruit("SDK","SDKs","Tooling",pack(
+                {p:"SDKs lower integration cost.",b:["Reusable primitives."],i:"SDK = adoption."},
+                {p:"SDKs enforce invariants.",b:["Same rules."],i:"Rules scale reliability."},
+                {p:"SDKs become ecosystems.",b:["Plugins."],i:"Ecosystems scale."}
+              )),
+              fruit("RELS","Releases","What ships",pack(
+                {p:"Releases are receipts.",b:["Versioned proof."],i:"Shipping is record."},
+                {p:"Releases include change logs.",b:["Auditable diffs."],i:"Change stays coherent."},
+                {p:"Releases become cadence.",b:["Stable evolution."],i:"Cadence scales trust."}
+              ))
+            ]
+          )
+        ]
+      },
 
-  // If depth came via query, store it (door sets too; but safe)
-  const qs = new URLSearchParams(location.search||"");
-  const qDepth = (qs.get("depth")||"").toLowerCase();
-  if(qDepth==="learn" || qDepth==="explore"){
-    writeBoth(K1_DEPTH, K2_DEPTH, qDepth);
-    state.depth = qDepth;
-    $("depthPill").textContent = qDepth==="learn" ? "LEARN" : "EXPLORE";
-  }
-
-  // Init
-  renderAllQuadrants();
-})();
-</script>
-</body>
-</html>
+      SW: {
+        title:"SOUTHWEST",
+        subtitle:"Measurement · diagnostics · rules",
+        vines:[
+          vine("GAUG","Gauges",
+            pack("Origin: why measure.","Now: consistency checks.","Trajectory: early warning."),
+            [
+              fruit("PAN","Panels","Instrument boards",pack(
+                {p:"Panels exist to see reality.",b:["Signals visible."],i:"Visibility is control."},
+                {p:"Panels track thresholds.",b:["Redlines."],i:"Thresholds prevent collapse."},
+                {p:"Panels become early warning.",b:["Trend alerts."],i:"Early warning preserves stability."}
+              )),
+              fruit("CONS","Consistency","Same rules",pack(
+                {p:"Consistency prevents observer drift.",b:["Same evidence → same label."],i:"Consistency is invariance."},
+                {p:"Consistency checks catch fragmentation.",b:["Mismatch becomes visible."],i:"Mismatch is signal."},
+                {p:"Consistency becomes automated.",b:["Continuous audits."],i:"Automation scales."}
+              )),
+              fruit("SIGN","Signal integrity","Noise vs truth",pack(
+                {p:"Integrity separates signal from noise.",b:["Noisy inputs filtered."],i:"Integrity preserves meaning."},
+                {p:"Integrity is rule-based.",b:["No narrative."],i:"Rules beat stories."},
+                {p:"Integrity becomes standard.",b:["Shared measurement."],i:"Standards scale coordination."}
+              )),
+              fruit("THR","Thresholds","Collapse boundaries",pack(
+                {p:"Thresholds define when systems fail.",b:["Boundaries matter."],i:"Boundaries guide action."},
+                {p:"Thresholds are measurable.",b:["Observed behavior only."],i:"Measurement removes guessing."},
+                {p:"Thresholds become governance triggers.",b:["Kill/exit conditions."],i:"Triggers prevent drift."}
+              ))
+            ]
+          ),
+          vine("DIAG","Diagnostics",
+            pack("Origin: classify under constraint.","Now: coherence/drift/confusion.","Trajectory: operator correction."),
+            [
+              fruit("CLASS","Classification","State labeling",pack(
+                {p:"Classification makes states comparable.",b:["Same evidence.", "Same label."],i:"Labels enable coordination."},
+                {p:"Classification is observer-invariant.",b:["Independent agreement."],i:"Agreement is scale."},
+                {p:"Classification becomes universal.",b:["Cross-domain."],i:"Universality scales."}
+              )),
+              fruit("CD","Coherence/Drift","Motion relative to structure",pack(
+                {p:"Drift exists when actions diverge from values.",b:["Misalignment visible."],i:"Drift is measurable."},
+                {p:"Coherence is alignment under constraint.",b:["Values=actions=outcomes."],i:"Coherence is stability."},
+                {p:"Drift detection enables correction.",b:["Earlier correction."],i:"Correction scales safety."}
+              )),
+              fruit("CONF","Confusion","Amplifier",pack(
+                {p:"Confusion amplifies instability once present.",b:["Faster collapse."],i:"Confusion is acceleration."},
+                {p:"Confusion becomes visible via fragmentation.",b:["Signals show misfit."],i:"Signals guide correction."},
+                {p:"Confusion reduction becomes skill.",b:["Training loops."],i:"Skill scales."}
+              )),
+              fruit("REPLAY","Replay audits","Evidence-driven",pack(
+                {p:"Audits replay evidence to verify.",b:["No intent inference."],i:"Evidence only."},
+                {p:"Audits classify consistently.",b:["Same rules."],i:"Rules scale agreement."},
+                {p:"Audits become continuous.",b:["Always-on checks."],i:"Continuous scales trust."}
+              ))
+            ]
+          ),
+          vine("RULES","Rules",
+            pack("Origin: keep traversal safe.","Now: integrity rules.","Trajectory: enforceable standards."),
+            [
+              fruit("NAV","Navigation","Hub-first",pack(
+                {p:"Hub-first prevents traps.",b:["Return always available."],i:"Return is safety."},
+                {p:"Navigation is receipt-aware.",b:["No fake progress."],i:"Receipts prevent drift."},
+                {p:"Navigation becomes standard UX.",b:["Fewer errors."],i:"Standards scale."}
+              )),
+              fruit("INT","Integrity","No narrative drift",pack(
+                {p:"Integrity is evidence-based.",b:["Observed behavior only."],i:"Integrity is measurability."},
+                {p:"Integrity preserves classification.",b:["No semantic slip."],i:"Stability is truth."},
+                {p:"Integrity enables resolution.",b:["Proof-based closure."],i:"Resolution scales peace."}
+              )),
+              fruit("SAFE","Safety","Kill conditions",pack(
+                {p:"Safety means exit exists.",b:["Kill/exit rules."],i:"Exit prevents collapse."},
+                {p:"Safety is built into flow.",b:["No coercive timers."],i:"Coercion breaks coherence."},
+                {p:"Safety becomes protocol.",b:["Institution-ready."],i:"Protocols scale."}
+              )),
+              fruit("AUD","Audit rules","Replay-first",pack(
+                {p:"Audit rules define proof.",b:["Replay standard."],i:"Replay is verification."},
+                {p:"Audit rules remove argument.",b:["Rule wins."],i:"Rule-based resolution."},
+                {p:"Audit rules become infra.",b:["Automated compliance."],i:"Infra scales."}
+              ))
+            ]
+          ),
+          vine("PROT","Protocols",
+            pack("Origin: return/replay/audit.","Now: operational loops.","Trajectory: resilient systems."),
+            [
+              fruit("RET","Return protocol","Hub reset",pack(
+                {p:"Return resets confusion safely.",b:["No penalty for reset."],i:"Reset preserves progress."},
+                {p:"Return is built-in.",b:["Always available."],i:"Availability is resilience."},
+                {p:"Return scales to institutions.",b:["Safe workflows."],i:"Workflows scale."}
+              )),
+              fruit("REP","Replay protocol","Verify",pack(
+                {p:"Replay defines truth.",b:["Same inputs.","Same outputs."],i:"Truth is repeatable."},
+                {p:"Replay detects drift.",b:["Mismatch is signal."],i:"Signal enables correction."},
+                {p:"Replay becomes continuous.",b:["Always-on."],i:"Always-on scales trust."}
+              )),
+              fruit("AUD","Audit protocol","Proof",pack(
+                {p:"Audit traces evidence.",b:["Evidence → output."],i:"Audit is accountability."},
+                {p:"Audit is rule-driven.",b:["No narrative."],i:"Rules beat stories."},
+                {p:"Audit becomes standard.",b:["Institution-ready."],i:"Standards scale."}
+              )),
+              fruit("CLOSE","Closure","Resolution",pack(
+                {p:"Closure ends loops.",b:["Final receipt."],i:"Closure is completion."},
+                {p:"Closure is verified.",b:["Replay confirm

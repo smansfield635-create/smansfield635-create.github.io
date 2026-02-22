@@ -1,29 +1,30 @@
 /* ============================================================
-   CRP INSTRUMENT v2 — STATE NORMALIZATION + CANON I18N APPLY
+   CRP INSTRUMENT — CANONICAL UNIFORMITY PASS
    FILE: /assets/instrument.js
    SCOPE:
    - Canonical keys only: gd_lang, gd_depth, gd_time, gd_style
-   - Minimal gating only
    - Canonical languages: en (primary), zh (parallel canonical)
-   - Optional i18n apply: only for elements with data-i18n / data-i18n-attr
+   - Loads /assets/i18n_canon.json and applies to [data-i18n] nodes
+   - Minimal gating only (deep pages require valid gd_lang)
+   - NO UI geometry, NO CSS, NO timers
    ============================================================ */
 
 (function () {
   "use strict";
 
-  // -------- Canonical keys --------
+  // ---------- Canonical keys ----------
   var K_LANG  = "gd_lang";
   var K_DEPTH = "gd_depth";
   var K_TIME  = "gd_time";
   var K_STYLE = "gd_style";
 
-  // -------- Allowed values --------
+  // ---------- Allowed values ----------
   var ALLOW_LANG  = { en: true, zh: true };
   var ALLOW_DEPTH = { explore: true, learn: true };
   var ALLOW_TIME  = { origin: true, now: true, trajectory: true };
   var ALLOW_STYLE = { formal: true, informal: true };
 
-  // -------- Helpers --------
+  // ---------- Helpers ----------
   function qp(name) {
     try { return new URLSearchParams(window.location.search).get(name); }
     catch (e) { return null; }
@@ -38,7 +39,7 @@
     try { localStorage.removeItem(k); } catch (e) {}
   }
 
-  // -------- Drift cleanup (conservative) --------
+  // ---------- Drift cleanup (conservative) ----------
   function cleanupDrift() {
     var driftPrefixes = ["crp_", "CRP_"];
     var driftExact = ["lang", "depth", "time", "style", "language", "locale"];
@@ -72,14 +73,14 @@
     } catch (e) {}
   }
 
-  // -------- Normalize state --------
+  // ---------- Normalize state ----------
   function normalize() {
     var lang  = qp("lang")  || lsGet(K_LANG)  || "en";
     var depth = qp("depth") || lsGet(K_DEPTH) || "explore";
     var time  = qp("time")  || lsGet(K_TIME)  || "origin";
     var style = qp("style") || lsGet(K_STYLE) || "formal";
 
-    // Only en/zh are canonical; everything else collapses to primary en.
+    // Only en/zh are canonical; everything else collapses to en.
     if (!ALLOW_LANG[lang]) lang = "en";
     if (!ALLOW_DEPTH[depth]) depth = "explore";
     if (!ALLOW_TIME[time]) time = "origin";
@@ -93,12 +94,12 @@
     return { lang: lang, depth: depth, time: time, style: style };
   }
 
-  // -------- Minimal gating --------
-  // Gate deep pages if gd_lang missing/invalid:
-  // - /home/, /explore/, /links/, /about/, /products/, /laws/, /cares/
+  // ---------- Minimal gating ----------
   // Do NOT gate:
   // - / (index)
   // - /door/ (Terminal)
+  // Gate deep pages if gd_lang missing/invalid:
+  // - /home/, /explore/, /links/, /about/, /products/, /laws/, /cares/
   function gate(state) {
     var path = (window.location && window.location.pathname) ? window.location.pathname : "/";
 
@@ -114,17 +115,14 @@
     }
     if (!isDeep) return;
 
-    // state.lang is always normalized to en/zh at this point, so just ensure key exists
+    // state.lang is normalized; ensure it is stored
     var lang = lsGet(K_LANG);
     if (!ALLOW_LANG[lang]) {
       window.location.replace("/");
     }
   }
 
-  // -------- i18n (canon) apply --------
-  // Loads /assets/i18n_canon.json and applies translations to elements that declare:
-  // - data-i18n="index.title" (sets textContent)
-  // - data-i18n-attr="aria-label" (optional) to set an attribute instead of textContent
+  // ---------- Canon i18n apply ----------
   function getPath(obj, dotted) {
     if (!obj || !dotted) return null;
     var parts = dotted.split(".");
@@ -138,7 +136,7 @@
 
   function applyI18n(dict, lang) {
     try {
-      var scope = dict && dict[lang] ? dict[lang] : (dict && dict.en ? dict.en : null);
+      var scope = (dict && dict[lang]) ? dict[lang] : (dict && dict.en ? dict.en : null);
       if (!scope) return;
 
       var nodes = document.querySelectorAll("[data-i18n]");
@@ -157,7 +155,7 @@
     } catch (e) {}
   }
 
-  function loadCanonI18nAndApply(lang) {
+  function loadCanonI18n(lang) {
     try {
       var xhr = new XMLHttpRequest();
       xhr.open("GET", "/assets/i18n_canon.json?v=i18n_canon_v1", true);
@@ -174,11 +172,11 @@
     } catch (e) {}
   }
 
-  // -------- Run --------
+  // ---------- Run ----------
   cleanupDrift();
   var state = normalize();
   gate(state);
-  loadCanonI18nAndApply(state.lang);
+  loadCanonI18n(state.lang);
 
   // Optional debug surface (non-authoritative)
   window.CRP_INSTRUMENT = {

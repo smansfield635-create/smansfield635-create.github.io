@@ -3,107 +3,182 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cardinal Axis · Language</title>
+<title>Cardinal Axis · Terminal</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=DOOR_AXIS_1"/>
-<link rel="stylesheet" href="/assets/branch.css?v=DOOR_AXIS_1"/>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
 body{
   margin:0;
   min-height:100vh;
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
   background:
-    radial-gradient(circle at 50% 40%, rgba(20,40,90,.35), transparent 60%),
-    linear-gradient(180deg,#8a0000 0%,#b30000 50%,#8a0000 100%);
-  color:#fff;
+    radial-gradient(circle at 50% 35%, rgba(255,215,120,.06), transparent 60%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 1px, transparent 1px 90px),
+    linear-gradient(180deg,#a80000 0%,#7b0000 60%,#5a0000 100%);
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:white;
 }
 
-.title{
-  font-size:clamp(40px,8vw,72px);
-  font-weight:900;
-  letter-spacing:2px;
+.panel{
+  width:min(760px,92vw);
+  padding:42px;
+  border-radius:28px;
+
+  background:
+    radial-gradient(circle at 30% 25%, rgba(120,160,255,.15), transparent 55%),
+    linear-gradient(160deg,#0a0f18 0%,#05070c 45%,#0b1424 100%);
+
+  box-shadow:
+    0 40px 120px rgba(0,0,0,.85),
+    inset 0 2px 0 rgba(255,255,255,.15),
+    inset 0 -30px 40px rgba(0,0,0,.6);
+
+  border:1px solid rgba(255,255,255,.08);
   text-align:center;
 }
 
-.subtitle{
-  opacity:.8;
-  margin-top:12px;
-  font-size:18px;
-}
-
-.lang-wrap{
-  margin-top:60px;
-  display:flex;
-  flex-direction:column;
-  gap:40px;
-  align-items:center;
-}
-
-.lang-btn{
-  width:200px;
-  height:200px;
-  border-radius:28px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 40% 35%, rgba(80,120,255,.18), transparent 60%),
-    linear-gradient(145deg,#0b0f15,#10151c);
-  backdrop-filter:blur(10px);
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.8),
-    inset 0 3px 0 rgba(255,255,255,.15),
-    inset 0 -25px 40px rgba(0,0,0,.5);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-  font-weight:800;
-  letter-spacing:1px;
-  cursor:pointer;
-  transition:all .25s ease;
-  user-select:none;
-}
-
-.lang-btn:hover{
-  transform:scale(1.04);
-  box-shadow:
-    0 35px 100px rgba(0,0,0,.9),
-    0 0 20px rgba(212,175,55,.3),
-    inset 0 3px 0 rgba(255,255,255,.2),
-    inset 0 -30px 50px rgba(0,0,0,.6);
-}
-
-.footer{
-  position:fixed;
-  bottom:20px;
-  opacity:.6;
-  font-size:12px;
+h1{
+  font-size:42px;
+  margin-bottom:8px;
   letter-spacing:2px;
+}
+
+.subtitle{
+  opacity:.85;
+  margin-bottom:40px;
+}
+
+.bubble{
+  margin:20px 0;
+  padding:18px 22px;
+  border-radius:20px;
+  background:linear-gradient(145deg,#0e1522,#090d14);
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.7),
+    inset 0 2px 0 rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.08);
+  text-align:left;
+}
+
+.bubble strong{
+  display:block;
+  margin-bottom:6px;
+}
+
+.actions{
+  margin-top:30px;
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  padding:12px 22px;
+  border-radius:14px;
+  background:#0b1220;
+  color:white;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 12px 30px rgba(0,0,0,.6);
+  text-decoration:none;
+  transition:.25s ease;
+}
+
+.btn:hover{
+  box-shadow:
+    0 18px 50px rgba(0,0,0,.8),
+    0 0 18px rgba(212,175,55,.45);
 }
 </style>
 </head>
 
 <body>
 
-<div class="title">CARDINAL AXIS</div>
-<div class="subtitle">Select your language.</div>
+<div class="panel">
 
-<div class="lang-wrap">
-  <div class="lang-btn" onclick="goLang('en')">ENGLISH</div>
-  <div class="lang-btn" onclick="goLang('zh')">中文</div>
+  <h1 id="title"></h1>
+  <div class="subtitle" id="subtitle"></div>
+
+  <div class="bubble">
+    <strong id="b1Title"></strong>
+    <div id="b1Text"></div>
+  </div>
+
+  <div class="bubble">
+    <strong id="b2Title"></strong>
+    <div id="b2Text"></div>
+  </div>
+
+  <div class="bubble">
+    <strong id="b3Title"></strong>
+    <div id="b3Text"></div>
+  </div>
+
+  <div class="actions">
+    <a id="continueBtn" class="btn" href="/home/"></a>
+    <a id="linksBtn" class="btn" href="/links/"></a>
+  </div>
+
 </div>
 
-<div class="footer">© GEODIAMETRICS</div>
-
 <script>
-function goLang(lang){
-  try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-  window.location.href="/index/";
-}
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const queryLang = params.get("lang");
+  const storedLang = localStorage.getItem("gd_lang");
+
+  let lang = queryLang === "zh" || queryLang === "en"
+    ? queryLang
+    : (storedLang === "zh" || storedLang === "en" ? storedLang : "en");
+
+  localStorage.setItem("gd_lang", lang);
+  document.documentElement.lang = lang;
+
+  const text = {
+    en:{
+      title:"CARDINAL AXIS",
+      subtitle:"Terminal · Under Construction",
+      b1Title:"Under construction (safe to explore).",
+      b1Text:"Navigation structure is stable. Content expands progressively.",
+      b2Title:"How navigation works.",
+      b2Text:"Select lenses. Then move through the compass.",
+      b3Title:"What to expect.",
+      b3Text:"Structure remains consistent while material evolves.",
+      continue:"CONTINUE → HOME",
+      links:"LINKS"
+    },
+    zh:{
+      title:"四向轴",
+      subtitle:"终端 · 施工中",
+      b1Title:"施工中（可安全浏览）。",
+      b1Text:"导航结构稳定，内容逐步扩展。",
+      b2Title:"如何导航。",
+      b2Text:"选择透镜，然后通过指南针移动。",
+      b3Title:"预期说明。",
+      b3Text:"结构保持一致，内容持续演进。",
+      continue:"继续 → HOME",
+      links:"链接"
+    }
+  };
+
+  const t = text[lang];
+
+  document.getElementById("title").textContent = t.title;
+  document.getElementById("subtitle").textContent = t.subtitle;
+  document.getElementById("b1Title").textContent = t.b1Title;
+  document.getElementById("b1Text").textContent = t.b1Text;
+  document.getElementById("b2Title").textContent = t.b2Title;
+  document.getElementById("b2Text").textContent = t.b2Text;
+  document.getElementById("b3Title").textContent = t.b3Title;
+  document.getElementById("b3Text").textContent = t.b3Text;
+  document.getElementById("continueBtn").textContent = t.continue;
+  document.getElementById("linksBtn").textContent = t.links;
+
+})();
 </script>
 
 </body>

@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "id": "i18n_canon_v1",
+    "canon_langs": ["en", "zh"],
+    "primary_lang": "en",
+    "invariant_symbols": ["DIAMOND", "CARES", "UCI", "HIP", "ρ", "TC", "Δ", "λ", "CERT"]
+  },
+  "en": {
+    "global": {
+      "brand": "GEODIAMETRICS"
+    },
+    "index": {
+      "title": "DIAMOND",
+      "subtitle": "Enter scope.",
+      "enter": "ENTER",
+      "footnote": "Nucleus-only portal. Scope controls language, mode, depth, style, and time."
+    },
+    "home": {
+      "title": "COMPASS",
+      "subtitle": "Hexagonal Enforcement Geometry"
+    },
+    "axes": {
+      "nucleus": { "title": "DIAMOND", "kicker": "Nucleus" },
+      "rho": { "title": "ρ", "kicker": "Correlation" },
+      "tc": { "title": "TC", "kicker": "Alignment" },
+      "delta": { "title": "Δ", "kicker": "Acceleration" },
+      "hip": { "title": "HIP", "kicker": "Gates" },
+      "lambda": { "title": "λ", "kicker": "Hazard" },
+      "cert": { "title": "CERT", "kicker": "Authority" }
+    }
+  },
+  "zh": {
+    "global": {
+      "brand": "GEODIAMETRICS"
+    },
+    "index": {
+      "title": "DIAMOND",
+      "subtitle": "进入范围。",
+      "enter": "进入",
+      "footnote": "仅核心入口。范围控制语言、模式、深度、风格与时间。"
+    },
+    "home": {
+      "title": "COMPASS",
+      "subtitle": "六轴约束几何"
+    },
+    "axes": {
+      "nucleus": { "title": "DIAMOND", "kicker": "核心" },
+      "rho": { "title": "ρ", "kicker": "相关暴露" },
+      "tc": { "title": "TC", "kicker": "轨迹一致" },
+      "delta": { "title": "Δ", "kicker": "加速度" },
+      "hip": { "title": "HIP", "kicker": "闸门" },
+      "lambda": { "title": "λ", "kicker": "风险" },
+      "cert": { "title": "CERT", "kicker": "认证" }
+    }
+  }
+}

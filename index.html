@@ -3,126 +3,171 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DIAMOND · Geodiametrics</title>
+  <title>DIAMOND · Scope</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=9900" />
-  <link rel="stylesheet" href="/assets/branch.css?v=9900" />
-  <script defer src="/assets/instrument.js?v=9900"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=INDEX_SCOPE_1" />
+  <link rel="stylesheet" href="/assets/branch.css?v=INDEX_SCOPE_1" />
+  <script defer src="/assets/instrument.js?v=INDEX_SCOPE_1"></script>
 
-  <!-- Portal-only scope preview (no field/bg, no :root) -->
+  <!-- No backgrounds, no :root overrides. Layout-only helpers. -->
   <style>
-    .crp-portal-scope{
-      width:min(720px,92vw);
-      aspect-ratio:1/1;
-      margin:0 auto 14px;
-      position:relative;
-      display:grid;
-      place-items:center;
-      pointer-events:none;
-      opacity:.95;
-    }
-    .crp-portal-scope::before{
-      content:"";
-      position:absolute;
-      inset:6%;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-    }
-    .crp-portal-scope::after{
-      content:"";
-      position:absolute;
-      inset:18%;
-      border-radius:999px;
-      border:1px dashed rgba(255,255,255,.10);
-    }
-    .crp-portal-core{
-      width:clamp(130px,22vw,180px);
-      height:clamp(130px,22vw,180px);
-      border-radius:26px;
-      border:1px solid rgba(255,255,255,.22);
-      background:rgba(0,0,0,.18);
-      display:grid;
-      place-items:center;
-      text-align:center;
-      font-weight:950;
-      letter-spacing:.45px;
-      box-shadow:0 14px 40px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.06);
-    }
-    .crp-portal-core small{
-      display:block;
-      margin-top:6px;
-      font-size:12px;
-      opacity:.78;
-      font-weight:800;
-      letter-spacing:.25px;
-    }
-    .crp-portal-dot{
-      position:absolute;
-      width:10px;
-      height:10px;
-      border-radius:999px;
-      background:rgba(255,255,255,.22);
-      box-shadow:0 0 0 6px rgba(255,255,255,.04);
-    }
-    /* 6 dots at 60° increments (preview of 6+1 geometry) */
-    .crp-portal-dot.d1{ left:50%; top:7%; transform:translateX(-50%); }
-    .crp-portal-dot.d2{ right:12%; top:24%; }
-    .crp-portal-dot.d3{ right:12%; bottom:24%; }
-    .crp-portal-dot.d4{ left:50%; bottom:7%; transform:translateX(-50%); }
-    .crp-portal-dot.d5{ left:12%; bottom:24%; }
-    .crp-portal-dot.d6{ left:12%; top:24%; }
+    .scope-grid{display:grid;gap:14px;max-width:760px;margin:0 auto;}
+    .scope-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+    .scope-label{opacity:.8;font-weight:900;letter-spacing:.25px;margin:6px 0 2px;text-align:center}
+    .scope-help{opacity:.75;margin:0;text-align:center;line-height:1.35}
+    .scope-chip{min-width:140px;justify-content:center}
+    .scope-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+    .scope-mini{opacity:.7;font-size:12px;text-align:center;margin-top:10px}
   </style>
 </head>
 
 <body>
   <main class="crp-shell crp-center">
-    <section class="crp-card" aria-label="Pre-Scope Portal" style="text-align:center">
-
+    <section class="crp-card" aria-label="Scope Selector" style="text-align:center">
       <header class="crp-header">
-        <div class="crp-mark" aria-hidden="true" data-i18n="global.brand">GEODIAMETRICS</div>
-        <h1 class="crp-title" style="margin-bottom:6px" data-i18n="index.title">DIAMOND</h1>
-        <p class="crp-subtitle" style="margin-bottom:14px" data-i18n="index.subtitle">Enter scope.</p>
+        <div class="crp-mark" aria-hidden="true">GEODIAMETRICS</div>
+        <h1 class="crp-title" style="margin-bottom:6px">DIAMOND</h1>
+        <p class="crp-subtitle" style="margin-bottom:8px">Choose your scope.</p>
+        <p class="scope-help">Language · Depth · Style · Time</p>
       </header>
 
-      <!-- Scope preview (visual only) -->
-      <div class="crp-portal-scope" aria-hidden="true">
-        <div class="crp-portal-dot d1"></div>
-        <div class="crp-portal-dot d2"></div>
-        <div class="crp-portal-dot d3"></div>
-        <div class="crp-portal-dot d4"></div>
-        <div class="crp-portal-dot d5"></div>
-        <div class="crp-portal-dot d6"></div>
+      <div class="scope-grid" aria-label="Scope controls">
 
-        <div class="crp-portal-core">
-          DIAMOND
-          <small>NUCLEUS</small>
+        <!-- LANGUAGE -->
+        <div>
+          <div class="scope-label">LANGUAGE</div>
+          <div class="scope-row" role="group" aria-label="Language">
+            <button type="button" class="crp-btn scope-chip" data-set="lang" data-val="en">ENGLISH</button>
+            <button type="button" class="crp-btn scope-chip" data-set="lang" data-val="zh">中文</button>
+          </div>
         </div>
+
+        <!-- DEPTH -->
+        <div>
+          <div class="scope-label">DEPTH</div>
+          <div class="scope-row" role="group" aria-label="Depth">
+            <button type="button" class="crp-btn scope-chip" data-set="depth" data-val="explore">EXPLORE</button>
+            <button type="button" class="crp-btn scope-chip" data-set="depth" data-val="learn">LEARN</button>
+          </div>
+        </div>
+
+        <!-- STYLE -->
+        <div>
+          <div class="scope-label">STYLE</div>
+          <div class="scope-row" role="group" aria-label="Style">
+            <button type="button" class="crp-btn scope-chip" data-set="style" data-val="formal">FORMAL</button>
+            <button type="button" class="crp-btn scope-chip" data-set="style" data-val="informal">INFORMAL</button>
+          </div>
+        </div>
+
+        <!-- TIME -->
+        <div>
+          <div class="scope-label">TIME</div>
+          <div class="scope-row" role="group" aria-label="Time">
+            <button type="button" class="crp-btn scope-chip" data-set="time" data-val="origin">ORIGIN</button>
+            <button type="button" class="crp-btn scope-chip" data-set="time" data-val="now">NOW</button>
+            <button type="button" class="crp-btn scope-chip" data-set="time" data-val="trajectory">TRAJECTORY</button>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Hard link: works even if JS fails -->
-      <div style="display:flex;justify-content:center">
-        <a
-          class="crp-btn crp-btn-primary"
-          href="/home/"
-          role="button"
-          aria-label="Enter scope"
-          style="min-width:220px;justify-content:center"
-          data-i18n="index.enter"
-        >
+      <div class="scope-actions">
+        <!-- ENTER uses JS (sets gd_* + navigates). -->
+        <button id="enter" type="button" class="crp-btn crp-btn-primary" style="min-width:240px;justify-content:center">
           ENTER
+        </button>
+
+        <!-- Fallback link if JS is blocked -->
+        <a class="crp-btn" href="/home/?lang=en&depth=explore&style=formal&time=origin" role="button">
+          Fallback (EN)
         </a>
       </div>
 
-      <footer class="crp-footer" style="margin-top:18px">
-        <small class="crp-footnote" data-i18n="index.footnote">
-          Nucleus-only portal. Scope controls language, mode, depth, style, and time.
-        </small>
-        <div style="margin-top:8px;opacity:.65;font-size:12px">
-          BUILD: 9900
-        </div>
-      </footer>
+      <div class="scope-mini">
+        Canonical keys only: gd_lang · gd_depth · gd_style · gd_time
+      </div>
 
+      <footer class="crp-footer">
+        <small class="crp-footnote">BUILD: <strong>INDEX_SCOPE_1</strong></small>
+      </footer>
     </section>
   </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      // Canonical keys only
+      var K_LANG  = "gd_lang";
+      var K_DEPTH = "gd_depth";
+      var K_STYLE = "gd_style";
+      var K_TIME  = "gd_time";
+
+      var allowLang  = { en: 1, zh: 1 };
+      var allowDepth = { explore: 1, learn: 1 };
+      var allowStyle = { formal: 1, informal: 1 };
+      var allowTime  = { origin: 1, now: 1, trajectory: 1 };
+
+      function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+      function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+
+      // Defaults (English-first)
+      var state = {
+        lang:  (allowLang[lsGet(K_LANG)] ? lsGet(K_LANG) : "en"),
+        depth: (allowDepth[lsGet(K_DEPTH)] ? lsGet(K_DEPTH) : "explore"),
+        style: (allowStyle[lsGet(K_STYLE)] ? lsGet(K_STYLE) : "formal"),
+        time:  (allowTime[lsGet(K_TIME)] ? lsGet(K_TIME) : "origin")
+      };
+
+      function applyActive() {
+        var buttons = document.querySelectorAll("button[data-set][data-val]");
+        for (var i=0;i<buttons.length;i++){
+          var b = buttons[i];
+          var set = b.getAttribute("data-set");
+          var val = b.getAttribute("data-val");
+          var on = (state[set] === val);
+          b.classList.toggle("crp-btn-primary", on);
+        }
+      }
+
+      function setState(set, val){
+        if (set === "lang" && allowLang[val]) state.lang = val;
+        if (set === "depth" && allowDepth[val]) state.depth = val;
+        if (set === "style" && allowStyle[val]) state.style = val;
+        if (set === "time" && allowTime[val]) state.time = val;
+        applyActive();
+      }
+
+      // Wire buttons
+      document.addEventListener("click", function (e) {
+        var t = e.target;
+        if (!t) return;
+        if (t.matches && t.matches("button[data-set][data-val]")) {
+          setState(t.getAttribute("data-set"), t.getAttribute("data-val"));
+        }
+      });
+
+      // Enter executes: persist + navigate (query params mirror state)
+      var enter = document.getElementById("enter");
+      if (enter) enter.addEventListener("click", function () {
+        lsSet(K_LANG, state.lang);
+        lsSet(K_DEPTH, state.depth);
+        lsSet(K_STYLE, state.style);
+        lsSet(K_TIME, state.time);
+
+        var url =
+          "/home/?lang=" + encodeURIComponent(state.lang) +
+          "&depth=" + encodeURIComponent(state.depth) +
+          "&style=" + encodeURIComponent(state.style) +
+          "&time=" + encodeURIComponent(state.time);
+
+        window.location.href = url;
+      });
+
+      // initial paint
+      applyActive();
+    })();
+  </script>
 </body>
 </html>

@@ -5,87 +5,38 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>HOME · Compass Face</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=HOME_LAYOUT_NO_OVERLAP_1"/>
-<link rel="stylesheet" href="/assets/branch.css?v=HOME_LAYOUT_NO_OVERLAP_1"/>
-<script defer src="/assets/instrument.js?v=HOME_LAYOUT_NO_OVERLAP_1"></script>
+<link rel="stylesheet" href="/assets/ui.css?v=HOME_TOPRIGHT_LINE_1"/>
+<link rel="stylesheet" href="/assets/branch.css?v=HOME_TOPRIGHT_LINE_1"/>
+<script defer src="/assets/instrument.js?v=HOME_TOPRIGHT_LINE_1"></script>
 
 <style>
-  /* ===== FRAME ===== */
   .frame{position:relative;min-height:100vh;width:100%}
 
-  /* Top-left: Exit + Language */
+  /* Top-left: exit + language */
   .top-left{
     position:fixed;left:16px;top:16px;z-index:90;
     display:flex;gap:10px;flex-wrap:wrap;
   }
 
-  /* Top-right: STYLE + TIME diamond cluster */
+  /* Top-right: STYLE + TIME (STRAIGHT LINE) */
   .top-right{
     position:fixed;right:16px;top:16px;z-index:90;
     display:flex;flex-direction:column;gap:10px;align-items:flex-end;
   }
 
-  .style-pill{
+  .pillbar{
     border-radius:999px;
     border:1px solid rgba(255,255,255,.10);
     background:rgba(0,0,0,.18);
     backdrop-filter:blur(8px);
-    padding:8px 10px;
+    padding:10px 12px;
     display:flex;
-    justify-content:flex-end;
+    gap:10px;
+    align-items:center;
   }
 
-  /* TIME DIAMOND (resized + spaced so buttons never overlap) */
-  .time-diamond{
-    width:160px;height:160px;
-    position:relative;
-    border-radius:26px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(0,0,0,.18);
-    backdrop-filter:blur(8px);
-    box-shadow:0 18px 55px rgba(0,0,0,.45);
-  }
-
-  .tbtn{
-    position:absolute;
-    width:82px;height:42px;
-    display:flex;align-items:center;justify-content:center;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.12);
-    background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-    color:#fff;
-    font-weight:850;
-    letter-spacing:.25px;
-    cursor:pointer;
-    -webkit-tap-highlight-color:transparent;
-    box-shadow:0 10px 26px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.06);
-    transition:transform .08s ease, border-color .12s ease, box-shadow .12s ease;
-    white-space:nowrap;
-  }
-  .tbtn:active{transform:scale(.98)}
-  .tbtn[aria-pressed="true"]{
-    border-color:rgba(212,175,55,.70);
-    box-shadow:0 0 18px rgba(212,175,55,.30), 0 10px 26px rgba(0,0,0,.55);
-  }
-  .tbtn[aria-disabled="true"]{
-    opacity:.35;
-    pointer-events:none;
-    filter:grayscale(1);
-  }
-
-  /* Diamond placement */
-  #tNow{ left:50%; top:16px; transform:translateX(-50%); }
-  #tOrigin{ left:14px; bottom:16px; }
-  #tTrajectory{ right:14px; bottom:16px; }
-
-  /* ===== CENTER STAGE (NO OVERLAP GUARANTEE) =====
-     Push the compass down by a safe offset so it never collides with top controls.
-     We preserve true centering by centering around (50% + offset).
-  */
-  :root{
-    --CENTER_OFFSET_Y: 56px; /* tweak: more space under top controls */
-    --R: 124px;             /* radius for 150px diamonds */
-  }
+  /* ===== CENTER STAGE ===== */
+  :root{ --CENTER_OFFSET_Y: 56px; --R: 124px; }
 
   .center-stage{
     position:fixed;
@@ -152,7 +103,6 @@
     transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
   }
 
-  /* Active glow ONLY on selected diamond */
   .d-diamond.active{
     border-color:rgba(212,175,55,.70);
     box-shadow:
@@ -175,13 +125,11 @@
   .d-title{font-weight:950;letter-spacing:.35px;font-size:16px}
   .d-text{opacity:.90;font-size:13px;line-height:1.35;max-width:16em}
 
-  /* Mathematical placement from center (prevents drift) */
   .d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
   .d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
   .d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
   .d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
 
-  /* Center nucleus: neutral (no gold box) */
   .d-core{
     position:absolute;left:50%;top:50%;
     transform:translate(-50%,-50%);
@@ -214,17 +162,13 @@
     backdrop-filter:blur(8px);
   }
 
-  /* Mobile: keep no-overlap by increasing offset a bit and shrinking control cluster */
   @media (max-width:520px){
     :root{ --CENTER_OFFSET_Y: 72px; --R: 116px; }
     .top-right{ right:10px; top:10px; }
     .top-left{ left:10px; top:10px; }
-    .time-diamond{ width:150px; height:150px; }
-    .tbtn{ width:78px; height:40px; }
-    #tOrigin{ left:12px; bottom:14px; }
-    #tTrajectory{ right:12px; bottom:14px; }
     .center-stage{ width:min(520px,92vw); height:min(520px,92vw); }
     .d-core{ width:58px; height:58px; }
+    .pillbar{ gap:8px; padding:9px 10px; }
   }
 
   /* Bulletin modal */
@@ -282,14 +226,13 @@
   </div>
 
   <div class="top-right" aria-label="Top-right controls">
-    <div class="style-pill">
+    <div class="pillbar">
       <button id="styleToggle" class="crp-chip" type="button">STYLE: FORMAL</button>
     </div>
-
-    <div class="time-diamond" aria-label="Time diamond">
-      <button id="tNow" class="tbtn" type="button" data-time="now">NOW</button>
-      <button id="tOrigin" class="tbtn" type="button" data-time="origin">ORIGIN</button>
-      <button id="tTrajectory" class="tbtn" type="button" data-time="trajectory">TRAJECTORY</button>
+    <div class="pillbar">
+      <button id="tOrigin" class="crp-chip tbtn2" type="button" data-time="origin">ORIGIN</button>
+      <button id="tNow" class="crp-chip tbtn2" type="button" data-time="now">NOW</button>
+      <button id="tTrajectory" class="crp-chip tbtn2" type="button" data-time="trajectory">POST</button>
     </div>
   </div>
 
@@ -317,7 +260,6 @@
     <a class="crp-btn" href="/gauges/" role="button">GAUGES</a>
   </nav>
 
-  <!-- Bulletin overlay -->
   <div id="bd" class="backdrop" aria-hidden="true"></div>
 
   <div id="bulletin" class="bulletin" role="dialog" aria-modal="true" aria-label="Bulletin">
@@ -364,7 +306,7 @@
   function setStyleLabel(){ document.getElementById("styleToggle").textContent="STYLE: "+state.style.toUpperCase(); }
 
   function setPressedTime(){
-    document.querySelectorAll(".tbtn").forEach(function(btn){
+    document.querySelectorAll(".tbtn2").forEach(function(btn){
       var v=btn.getAttribute("data-time");
       var allowed=!!allowTimeByStyle[state.style][v];
       btn.setAttribute("aria-disabled", allowed ? "false":"true");
@@ -389,7 +331,7 @@
     if(activeDir){ bulBody.textContent = content[activeDir][state.style][state.time] || ""; }
   });
 
-  document.querySelectorAll(".tbtn").forEach(function(btn){
+  document.querySelectorAll(".tbtn2").forEach(function(btn){
     btn.addEventListener("click", function(){
       var v=btn.getAttribute("data-time");
       if(v==="trajectory" && state.style==="informal") state.style="formal";

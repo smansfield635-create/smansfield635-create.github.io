@@ -1,101 +1,128 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Compass · DIAMOND</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DIAMOND · Geodiametrics</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=9800"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9800"/>
-  <script defer src="/assets/instrument.js?v=9800"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=9900" />
+  <link rel="stylesheet" href="/assets/branch.css?v=9900" />
+  <script defer src="/assets/instrument.js?v=9900"></script>
 
-  <!-- FALLBACK GEOMETRY ONLY (no field/bg, no :root) -->
+  <!-- Portal-only scope preview (no field/bg, no :root) -->
   <style>
-    /* If branch.css is missing/cached, this forces the radial layout */
-    .crp-snowflake{
-      position:relative;
-      width:min(760px,92vw);
+    .crp-portal-scope{
+      width:min(720px,92vw);
       aspect-ratio:1/1;
-      margin:0 auto;
+      margin:0 auto 14px;
+      position:relative;
       display:grid;
       place-items:center;
+      pointer-events:none;
+      opacity:.95;
     }
-    .crp-nucleus,.crp-axis{
+    .crp-portal-scope::before{
+      content:"";
       position:absolute;
-      left:50%;
-      top:50%;
+      inset:6%;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
     }
-    .crp-nucleus{ transform:translate(-50%,-50%); }
-    .crp-axis[data-axis="rho"]{ transform:translate(-50%,-50%) translate(0,-240px); }
-    .crp-axis[data-axis="tc"]{ transform:translate(-50%,-50%) translate(208px,-120px); }
-    .crp-axis[data-axis="delta"]{ transform:translate(-50%,-50%) translate(208px,120px); }
-    .crp-axis[data-axis="hip"]{ transform:translate(-50%,-50%) translate(0,240px); }
-    .crp-axis[data-axis="lambda"]{ transform:translate(-50%,-50%) translate(-208px,120px); }
-    .crp-axis[data-axis="cert"]{ transform:translate(-50%,-50%) translate(-208px,-120px); }
-
-    @media (max-width:520px){
-      .crp-axis[data-axis="rho"]{ transform:translate(-50%,-50%) translate(0,-210px); }
-      .crp-axis[data-axis="tc"]{ transform:translate(-50%,-50%) translate(182px,-105px); }
-      .crp-axis[data-axis="delta"]{ transform:translate(-50%,-50%) translate(182px,105px); }
-      .crp-axis[data-axis="hip"]{ transform:translate(-50%,-50%) translate(0,210px); }
-      .crp-axis[data-axis="lambda"]{ transform:translate(-50%,-50%) translate(-182px,105px); }
-      .crp-axis[data-axis="cert"]{ transform:translate(-50%,-50%) translate(-182px,-105px); }
+    .crp-portal-scope::after{
+      content:"";
+      position:absolute;
+      inset:18%;
+      border-radius:999px;
+      border:1px dashed rgba(255,255,255,.10);
     }
+    .crp-portal-core{
+      width:clamp(130px,22vw,180px);
+      height:clamp(130px,22vw,180px);
+      border-radius:26px;
+      border:1px solid rgba(255,255,255,.22);
+      background:rgba(0,0,0,.18);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      font-weight:950;
+      letter-spacing:.45px;
+      box-shadow:0 14px 40px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.06);
+    }
+    .crp-portal-core small{
+      display:block;
+      margin-top:6px;
+      font-size:12px;
+      opacity:.78;
+      font-weight:800;
+      letter-spacing:.25px;
+    }
+    .crp-portal-dot{
+      position:absolute;
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.22);
+      box-shadow:0 0 0 6px rgba(255,255,255,.04);
+    }
+    /* 6 dots at 60° increments (preview of 6+1 geometry) */
+    .crp-portal-dot.d1{ left:50%; top:7%; transform:translateX(-50%); }
+    .crp-portal-dot.d2{ right:12%; top:24%; }
+    .crp-portal-dot.d3{ right:12%; bottom:24%; }
+    .crp-portal-dot.d4{ left:50%; bottom:7%; transform:translateX(-50%); }
+    .crp-portal-dot.d5{ left:12%; bottom:24%; }
+    .crp-portal-dot.d6{ left:12%; top:24%; }
   </style>
 </head>
 
 <body>
-<main class="crp-shell">
+  <main class="crp-shell crp-center">
+    <section class="crp-card" aria-label="Pre-Scope Portal" style="text-align:center">
 
-  <header class="crp-header" style="text-align:center">
-    <div class="crp-mark" data-i18n="global.brand">GEODIAMETRICS</div>
-    <h1 class="crp-title" data-i18n="home.title">COMPASS</h1>
-    <p class="crp-subtitle" data-i18n="home.subtitle">Hexagonal Enforcement Geometry</p>
-  </header>
+      <header class="crp-header">
+        <div class="crp-mark" aria-hidden="true" data-i18n="global.brand">GEODIAMETRICS</div>
+        <h1 class="crp-title" style="margin-bottom:6px" data-i18n="index.title">DIAMOND</h1>
+        <p class="crp-subtitle" style="margin-bottom:14px" data-i18n="index.subtitle">Enter scope.</p>
+      </header>
 
-  <section class="crp-snowflake" aria-label="Hexagonal enforcement geometry">
+      <!-- Scope preview (visual only) -->
+      <div class="crp-portal-scope" aria-hidden="true">
+        <div class="crp-portal-dot d1"></div>
+        <div class="crp-portal-dot d2"></div>
+        <div class="crp-portal-dot d3"></div>
+        <div class="crp-portal-dot d4"></div>
+        <div class="crp-portal-dot d5"></div>
+        <div class="crp-portal-dot d6"></div>
 
-    <button class="crp-nucleus" type="button" aria-label="DIAMOND nucleus">
-      <div data-i18n="axes.nucleus.title">DIAMOND</div>
-      <div class="crp-axis-kicker" data-i18n="axes.nucleus.kicker">Nucleus</div>
-    </button>
+        <div class="crp-portal-core">
+          DIAMOND
+          <small>NUCLEUS</small>
+        </div>
+      </div>
 
-    <button class="crp-axis" type="button" data-axis="rho" aria-label="ρ axis">
-      <div class="crp-axis-title" data-i18n="axes.rho.title">ρ</div>
-      <div class="crp-axis-kicker" data-i18n="axes.rho.kicker">Correlation</div>
-    </button>
+      <!-- Hard link: works even if JS fails -->
+      <div style="display:flex;justify-content:center">
+        <a
+          class="crp-btn crp-btn-primary"
+          href="/home/"
+          role="button"
+          aria-label="Enter scope"
+          style="min-width:220px;justify-content:center"
+          data-i18n="index.enter"
+        >
+          ENTER
+        </a>
+      </div>
 
-    <button class="crp-axis" type="button" data-axis="tc" aria-label="TC axis">
-      <div class="crp-axis-title" data-i18n="axes.tc.title">TC</div>
-      <div class="crp-axis-kicker" data-i18n="axes.tc.kicker">Alignment</div>
-    </button>
+      <footer class="crp-footer" style="margin-top:18px">
+        <small class="crp-footnote" data-i18n="index.footnote">
+          Nucleus-only portal. Scope controls language, mode, depth, style, and time.
+        </small>
+        <div style="margin-top:8px;opacity:.65;font-size:12px">
+          BUILD: 9900
+        </div>
+      </footer>
 
-    <button class="crp-axis" type="button" data-axis="delta" aria-label="Δ axis">
-      <div class="crp-axis-title" data-i18n="axes.delta.title">Δ</div>
-      <div class="crp-axis-kicker" data-i18n="axes.delta.kicker">Acceleration</div>
-    </button>
-
-    <button class="crp-axis" type="button" data-axis="hip" aria-label="HIP axis">
-      <div class="crp-axis-title" data-i18n="axes.hip.title">HIP</div>
-      <div class="crp-axis-kicker" data-i18n="axes.hip.kicker">Gates</div>
-    </button>
-
-    <button class="crp-axis" type="button" data-axis="lambda" aria-label="λ axis">
-      <div class="crp-axis-title" data-i18n="axes.lambda.title">λ</div>
-      <div class="crp-axis-kicker" data-i18n="axes.lambda.kicker">Hazard</div>
-    </button>
-
-    <button class="crp-axis" type="button" data-axis="cert" aria-label="CERT axis">
-      <div class="crp-axis-title" data-i18n="axes.cert.title">CERT</div>
-      <div class="crp-axis-kicker" data-i18n="axes.cert.kicker">Authority</div>
-    </button>
-
-  </section>
-
-  <footer class="crp-footer" style="text-align:center">
-    <small class="crp-footnote">BUILD: 9800</small>
-  </footer>
-
-</main>
+    </section>
+  </main>
 </body>
 </html>

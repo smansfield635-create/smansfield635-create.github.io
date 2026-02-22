@@ -1,7 +1,9 @@
-<!-- TNT — /laws/index.html  (LAWS HUB · Diamond Page Standard)
-     Canonical: dual-lens EN + 中文 (gd_lang), plus style/time (gd_style/gd_time)
-     Structure: same as HUB (diamond compass + hub-map modal)
-     Notes: This is a public-ready shell with placeholders; content expands safely later. -->
+<!-- TNT — /laws/index.html  (FIX: modal centered + content upgraded)
+     Changes:
+     1) Modal is truly screen-centered and NEVER “drops low” — it becomes a fixed-height shell with its own scroll.
+     2) When you open a bubble, the modal switches to a centered DETAIL view (grid hides) so content starts at the top.
+     3) Every bubble now has AT LEAST 4 bulletins (4+ bullets) + a readable paragraph.
+     Dual-lens (EN + 中文) preserved. Hub-diamond standard preserved. -->
 
 <!doctype html>
 <html lang="en">
@@ -230,12 +232,12 @@ body{
   backdrop-filter:blur(8px);
 }
 
-/* Modal */
+/* ===== Modal (FIXED CENTER + INTERNAL SCROLL) ===== */
 .bd{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,.65);
-  backdrop-filter:blur(8px);
+  backdrop-filter:blur(10px);
   display:none;
   z-index:200;
 }
@@ -247,25 +249,34 @@ body{
   top:50%;
   transform:translate(-50%,-50%);
   width:min(860px,92vw);
-  background:
-    radial-gradient(circle at 35% 25%, rgba(90,140,255,.10), transparent 55%),
-    linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
-  border-radius:26px;
-  padding:18px 16px 16px;
-  box-shadow:0 60px 180px rgba(0,0,0,.92);
-  border:1px solid rgba(255,255,255,.10);
+  max-height:84vh;              /* key: modal stays centered */
   display:none;
   z-index:210;
 }
 .modal.show{display:block;}
 
+.modal-shell{
+  height:84vh;                  /* key: fixed shell height */
+  max-height:84vh;
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 35% 25%, rgba(90,140,255,.10), transparent 55%),
+    linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
+  box-shadow:0 60px 180px rgba(0,0,0,.92);
+  overflow:hidden;              /* key: prevent “dropping low” */
+  display:flex;
+  flex-direction:column;
+}
+
 .mhead{
   display:flex;
   justify-content:space-between;
-  align-items:flex-start;
+  align-items:center;
   gap:10px;
-  padding:0 6px 10px;
+  padding:14px 16px;
   border-bottom:1px solid rgba(255,255,255,.08);
+  flex:0 0 auto;
 }
 .mtitle{
   margin:0;
@@ -282,8 +293,16 @@ body{
   padding:8px 10px;
 }
 
+/* Scroll area */
+.mbody{
+  padding:14px 16px 16px;
+  overflow:auto;                /* key: content scrolls INSIDE modal */
+  -webkit-overflow-scrolling:touch;
+  flex:1 1 auto;
+}
+
+/* Grid */
 .grid{
-  margin-top:14px;
   display:grid;
   gap:14px;
 }
@@ -317,8 +336,8 @@ body{
 .bt{ font-weight:950; margin:0 0 6px; letter-spacing:.2px; }
 .bs{ margin:0; color:var(--mut2); line-height:1.45; }
 
+/* Detail view: replaces grid (no “push-down”) */
 .detail{
-  margin-top:14px;
   display:none;
 }
 .detail.show{display:block;}
@@ -332,6 +351,12 @@ body{
 }
 .dh{ margin:0 0 10px; font-weight:950; letter-spacing:.2px; font-size:16px; }
 .dp{ margin:0 0 12px; color:var(--mut); line-height:1.55; }
+.dlabel{
+  margin:10px 0 8px;
+  font-weight:950;
+  letter-spacing:.2px;
+  opacity:.92;
+}
 .dul{ margin:0 0 12px 18px; padding:0; color:var(--mut2); }
 .dul li{ margin:6px 0; }
 
@@ -354,12 +379,21 @@ body{
   letter-spacing:.2px;
 }
 .sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
+
+@media (max-width:520px){
+  :root{ --R: 116px; }
+  .top-right{ right:10px; top:10px; }
+  .top-left{ left:10px; top:10px; }
+  .stage{ width:min(520px,92vw); height:min(520px,92vw); }
+  .core{ width:58px; height:58px; }
+  .pillbar{ gap:8px; padding:9px 10px; }
+  .modal-shell{ height:86vh; max-height:86vh; } /* a touch more room on mobile */
+}
 </style>
 </head>
 
 <body>
 
-<!-- top -->
 <div class="top-left" id="topLeft">
   <a class="btn" href="/door/">EXIT</a>
   <a class="btn" href="/index.html">LANGUAGE</a>
@@ -382,45 +416,50 @@ body{
   </div>
 </div>
 
-<!-- compass -->
 <div class="stage" id="centerStage">
-  <div class="diamond" id="north"><div class="inner"><div class="dir" id="nLab">NORTH</div><div class="preview" id="northText"></div></div></div>
-  <div class="diamond" id="east"><div class="inner"><div class="dir" id="eLab">EAST</div><div class="preview" id="eastText"></div></div></div>
-  <div class="diamond" id="south"><div class="inner"><div class="dir" id="sLab">SOUTH</div><div class="preview" id="southText"></div></div></div>
-  <div class="diamond" id="west"><div class="inner"><div class="dir" id="wLab">WEST</div><div class="preview" id="westText"></div></div></div>
+  <div class="diamond" id="north"><div class="inner"><div class="dir" id="nLab">FOUNDATION</div><div class="preview" id="northText"></div></div></div>
+  <div class="diamond" id="east"><div class="inner"><div class="dir" id="eLab">DEFINITIONS</div><div class="preview" id="eastText"></div></div></div>
+  <div class="diamond" id="south"><div class="inner"><div class="dir" id="sLab">ENFORCEMENT</div><div class="preview" id="southText"></div></div></div>
+  <div class="diamond" id="west"><div class="inner"><div class="dir" id="wLab">GOVERNANCE</div><div class="preview" id="westText"></div></div></div>
   <div class="core">◆</div>
 </div>
 
-<!-- dock -->
 <nav class="dock" id="bottomDock">
   <a class="btn" id="goHub" href="/home/">HUB</a>
   <a class="btn" id="goTerminal" href="/index.html">TERMINAL</a>
   <a class="btn" id="goLinks" href="/links/">LINKS</a>
-  <a class="btn btn active" id="goLaws" href="/laws/">LAWS</a>
+  <a class="btn active" id="goLaws" href="/laws/">LAWS</a>
   <a class="btn" id="goProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="goGauges" href="/gauges/">GAUGES</a>
 </nav>
 
-<!-- modal -->
 <div class="bd" id="bd"></div>
-<div class="modal" id="modal">
-  <div class="mhead">
-    <h3 class="mtitle" id="mTitle">LAWS MAP</h3>
-    <button class="mclose" id="mClose">✕</button>
-  </div>
 
-  <div class="grid" id="grid"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-shell">
+    <div class="mhead">
+      <h3 class="mtitle" id="mTitle">LAWS MAP</h3>
+      <button class="mclose" id="mClose" aria-label="Close">✕</button>
+    </div>
 
-  <div class="detail" id="detail">
-    <div class="dbox">
-      <div class="dh" id="dTitle"></div>
-      <div class="dp" id="dPara"></div>
-      <ul class="dul" id="dList"></ul>
-      <div class="dact">
-        <button class="sbtn" id="dBack">BACK</button>
-        <button class="sbtn" id="dClose">BACK TO LAWS</button>
-        <button class="sbtn" id="dPrev">PREV</button>
-        <button class="sbtn" id="dNext">NEXT</button>
+    <div class="mbody" id="mbody">
+      <div class="grid" id="grid"></div>
+
+      <div class="detail" id="detail">
+        <div class="dbox">
+          <div class="dh" id="dTitle"></div>
+          <div class="dp" id="dPara"></div>
+
+          <div class="dlabel" id="dBulLabel">BULLETINS</div>
+          <ul class="dul" id="dList"></ul>
+
+          <div class="dact">
+            <button class="sbtn" id="dBack">BACK</button>
+            <button class="sbtn" id="dClose">BACK TO LAWS</button>
+            <button class="sbtn" id="dPrev">PREV</button>
+            <button class="sbtn" id="dNext">NEXT</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -428,13 +467,11 @@ body{
 
 <script>
 (function(){
-  // Dual-lens always: EN + 中文
   const qs = new URLSearchParams(location.search);
   const qLang = qs.get("lang");
   let lang = (qLang==="zh"||qLang==="en") ? qLang : (localStorage.getItem("gd_lang")==="zh" ? "zh" : "en");
   try{ localStorage.setItem("gd_lang", lang); }catch(e){}
 
-  // style/time
   let style = localStorage.getItem("gd_style") || "formal";
   let time  = localStorage.getItem("gd_time")  || "now";
   if(time==="trajectory") time="post";
@@ -451,11 +488,74 @@ body{
       s:{formal:"FORMAL",informal:"INFORMAL"},
       t:{origin:"ORIGIN",now:"NOW",post:"POST"},
       nav:{back:"BACK",backPage:"BACK TO LAWS",prev:"PREV",next:"NEXT"},
+      bul:"BULLETINS",
       sections:[
-        {t:"Canonical Keys", s:"gd_* only. No drift.", p:"This site uses canonical keys to avoid drift.", li:["gd_lang","gd_depth","gd_style","gd_time"]},
-        {t:"Traversal Rule", s:"Hub routes everywhere.", p:"The hub is the universal traversal surface.", li:["One hub page","Directional entry points","Uniform navigation"]},
-        {t:"Admissibility", s:"Structure before content.", p:"Meaning is constrained by structure, not decoration.", li:["Stable topology","No silent changes","Clear under-construction flags"]},
-        {t:"Publication Safety", s:"Safe browsing by design.", p:"Unfinished areas are placeholders, not broken routes.", li:["No dead ends","No destructive actions","Clear return paths"]}
+        {
+          t:"Canonical Keys",
+          s:"gd_* only. No drift.",
+          p:"Canonical state keys are the contract between pages. They must remain stable and exclusive.",
+          li:[
+            "gd_lang controls EN/中文 rendering everywhere.",
+            "gd_style controls Formal/Informal framing everywhere.",
+            "gd_time controls Origin/Now/Post lens everywhere.",
+            "No other namespaces allowed (no crp_*; no duplicates)."
+          ]
+        },
+        {
+          t:"Traversal Rule",
+          s:"Hub routes anywhere.",
+          p:"The hub is a routing surface. Every major page is reachable from the hub without dead ends.",
+          li:[
+            "Hub is always available in the bottom dock.",
+            "Modal map provides page-level routing at any time.",
+            "Route links must propagate lang/style/time forward.",
+            "No page should require backtracking through unrelated layers."
+          ]
+        },
+        {
+          t:"Admissibility",
+          s:"Structure before content.",
+          p:"Structure is the canonical layer. Content expands within structure and cannot change meanings by drift.",
+          li:[
+            "No silent renames of routes or labels.",
+            "No duplicate meanings across pages.",
+            "Placeholders are explicit, not implied.",
+            "Every claim is bounded by lens + direction context."
+          ]
+        },
+        {
+          t:"Publication Safety",
+          s:"Safe browsing by design.",
+          p:"Public browsing must be stable, predictable, and reversible. Unfinished areas are still safe.",
+          li:[
+            "Unbuilt areas show placeholders, not broken flows.",
+            "All modals have Return + Close behavior.",
+            "No destructive actions exist on public pages.",
+            "All pages preserve a clear escape route (Exit + Language)."
+          ]
+        },
+        {
+          t:"Change Discipline",
+          s:"TNT only. One file per change.",
+          p:"Edits are full-file replacements to prevent partial drift and hidden collisions across CSS/JS.",
+          li:[
+            "One file per message update.",
+            "No partial snippets applied to production.",
+            "No inline style drift across pages.",
+            "Dual-lens (EN/中文) embedded every time."
+          ]
+        },
+        {
+          t:"Lens Integrity",
+          s:"Style + Time must alter content.",
+          p:"When a lens changes, what the user sees must change—text, bullets, and meaning—not just button highlights.",
+          li:[
+            "Formal/Informal switches language framing.",
+            "Origin/Now/Post changes what is emphasized.",
+            "No stale content after toggles.",
+            "If a combination is disallowed, the UI resolves it deterministically."
+          ]
+        }
       ]
     },
     zh:{
@@ -467,14 +567,78 @@ body{
       s:{formal:"正式",informal:"非正式"},
       t:{origin:"起源",now:"当前",post:"未来"},
       nav:{back:"返回",backPage:"回到法则",prev:"上一个",next:"下一个"},
+      bul:"公告要点",
       sections:[
-        {t:"规范键", s:"仅 gd_*，不漂移。", p:"本站使用规范键以防止漂移。", li:["gd_lang","gd_depth","gd_style","gd_time"]},
-        {t:"遍历规则", s:"枢纽可到达全站。", p:"枢纽是统一的遍历入口。", li:["一个枢纽页","方向入口点","统一导航"]},
-        {t:"可采纳性", s:"结构先于内容。", p:"含义由结构约束，而不是装饰。", li:["拓扑稳定","不静默修改","明确施工提示"]},
-        {t:"发布安全", s:"可安全浏览。", p:"未完成区域为占位，不会断路。", li:["无死路","无破坏性操作","清晰返回路径"]}
+        {
+          t:"规范键",
+          s:"仅 gd_*，不漂移。",
+          p:"规范状态键是页面之间的契约，必须稳定且唯一。",
+          li:[
+            "gd_lang 控制全站 EN/中文渲染。",
+            "gd_style 控制正式/非正式呈现。",
+            "gd_time 控制起源/当前/未来透镜。",
+            "禁止其它命名空间（不允许 crp_* 等）。"
+          ]
+        },
+        {
+          t:"遍历规则",
+          s:"枢纽可到达全站。",
+          p:"枢纽是路由面。所有主要页面都必须可从枢纽直接到达。",
+          li:[
+            "底部导航始终提供枢纽入口。",
+            "MAP 模态提供随时跳转。",
+            "跳转必须携带 lang/style/time。",
+            "不要求用户绕路或反复回退。"
+          ]
+        },
+        {
+          t:"可采纳性",
+          s:"结构先于内容。",
+          p:"结构为规范层，内容在结构内扩展，不能通过漂移改变含义。",
+          li:[
+            "禁止静默改名（路由/标签）。",
+            "禁止重复含义分布在不同页面。",
+            "占位必须明确，而非暗示。",
+            "所有表述需受透镜与方向上下文约束。"
+          ]
+        },
+        {
+          t:"发布安全",
+          s:"可安全浏览。",
+          p:"对外浏览必须稳定、可预测、可回退。未完成区域依旧安全。",
+          li:[
+            "未构建区域显示占位，不出现断链流程。",
+            "所有模态都有返回与关闭。",
+            "公开页面不包含破坏性操作。",
+            "始终提供退出路径（Exit + Language）。"
+          ]
+        },
+        {
+          t:"变更纪律",
+          s:"只用 TNT，一次一文件。",
+          p:"所有修改采用整文件替换，避免局部漂移与隐藏冲突。",
+          li:[
+            "一次只改一个文件。",
+            "不把片段当作上线代码。",
+            "不允许页面内联样式漂移。",
+            "每次都内置双语透镜（EN/中文）。"
+          ]
+        },
+        {
+          t:"透镜完整性",
+          s:"风格 + 时间必须改变内容。",
+          p:"透镜变化必须改变文本与要点，而不是只改变按钮高亮。",
+          li:[
+            "正式/非正式切换表达方式。",
+            "起源/当前/未来切换强调重点。",
+            "禁止切换后内容不变。",
+            "若某组合不允许，则需确定性处理。"
+          ]
+        }
       ]
     }
   };
+
   const T = UI[lang] || UI.en;
 
   // Apply labels
@@ -527,9 +691,9 @@ body{
     tNow.textContent = T.t.now;
     tPost.textContent = T.t.post;
 
-    // page previews (safe placeholders)
-    document.getElementById("northText").textContent = (lang==="zh" ? "规范层与不漂移规则。" : "Canonical layer + no-drift rules.");
-    document.getElementById("eastText").textContent  = (lang==="zh" ? "术语与定义统一。" : "Unified terms and definitions.");
+    // previews (short but meaningful)
+    document.getElementById("northText").textContent = (lang==="zh" ? "规范层与状态键。" : "Canonical layer + state keys.");
+    document.getElementById("eastText").textContent  = (lang==="zh" ? "术语与定义收敛。" : "Terms + definitions converge.");
     document.getElementById("southText").textContent = (lang==="zh" ? "执行与约束机制。" : "Enforcement + constraints.");
     document.getElementById("westText").textContent  = (lang==="zh" ? "治理与发布安全。" : "Governance + publication safety.");
 
@@ -571,13 +735,14 @@ body{
   window.addEventListener("orientationchange", ()=>setTimeout(level,50), {passive:true});
   setTimeout(level,0);
 
-  // Modal
+  // Modal logic
   const bd = document.getElementById("bd");
   const modal = document.getElementById("modal");
   const grid = document.getElementById("grid");
   const detail = document.getElementById("detail");
   const mClose = document.getElementById("mClose");
   const mapBtn = document.getElementById("mapBtn");
+  const mbody = document.getElementById("mbody");
 
   const dTitle = document.getElementById("dTitle");
   const dPara  = document.getElementById("dPara");
@@ -586,17 +751,20 @@ body{
   const dClose = document.getElementById("dClose");
   const dPrev  = document.getElementById("dPrev");
   const dNext  = document.getElementById("dNext");
+  const dBulLabel = document.getElementById("dBulLabel");
 
   dBack.textContent = T.nav.back;
   dClose.textContent = T.nav.backPage;
   dPrev.textContent = T.nav.prev;
   dNext.textContent = T.nav.next;
+  dBulLabel.textContent = T.bul;
 
   let idx=0;
 
   function openMap(){
     grid.innerHTML="";
     detail.classList.remove("show");
+    grid.style.display="grid";
     T.sections.forEach((it,i)=>{
       const el=document.createElement("div");
       el.className="bubble";
@@ -606,6 +774,8 @@ body{
     });
     bd.classList.add("show");
     modal.classList.add("show");
+    // ensure always starts at top
+    mbody.scrollTop = 0;
   }
 
   function closeMap(){
@@ -619,9 +789,23 @@ body{
     const it=T.sections[i];
     dTitle.textContent=it.t;
     dPara.textContent=it.p;
+
     dList.innerHTML="";
+    // enforce: at least 4 bulletins (guaranteed in data)
     it.li.forEach(x=>{ const li=document.createElement("li"); li.textContent=x; dList.appendChild(li); });
+
+    // critical: switch view instead of pushing content down
+    grid.style.display="none";
     detail.classList.add("show");
+
+    // snap to top of modal body for centered feel
+    mbody.scrollTop = 0;
+  }
+
+  function backToGrid(){
+    detail.classList.remove("show");
+    grid.style.display="grid";
+    mbody.scrollTop = 0;
   }
 
   function step(d){
@@ -634,11 +818,11 @@ body{
   bd.addEventListener("click", closeMap);
   mClose.addEventListener("click", closeMap);
   dClose.addEventListener("click", closeMap);
-  dBack.addEventListener("click", ()=>detail.classList.remove("show"));
+  dBack.addEventListener("click", backToGrid);
   dPrev.addEventListener("click", ()=>step(-1));
   dNext.addEventListener("click", ()=>step(1));
 
-  // Direction diamonds open map
+  // diamonds open map (no low dropdown)
   ["north","east","south","west"].forEach(id=>{
     document.getElementById(id).addEventListener("click", ()=>{
       ["north","east","south","west"].forEach(x=>document.getElementById(x).classList.toggle("active", x===id));

@@ -1,27 +1,26 @@
 <!-- =====================================================
-     TNT FILE: /home/index.html
-     CRP HOME v3 — FULL TNT (STRUCTURE FIX)
-     - NO inline FIELD overrides (ui.css is the only field)
-     - Bubbles ALWAYS open (overlay modal)
-     - Top-level shows ONLY 4 quadrants (NW/NE/SW/SE)
-     - Each quadrant shows ONLY 4 vines
-     - Vine opens modal; modal shows 4 fruits; fruit opens resolution panel
+TNT FILE: /home/index.html
+CRP HOME v4 (4 QUADS → 4 VINES → 4 FRUITS → RESOLUTION)
+- Uses gd_lang + gd_depth
+- Uses overlay modal (no scroll jump)
+- Tri-lens + Formal/Informal at top
 ===================================================== -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Home · Coherent Resolution Platform</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Home · Coherent Resolution Platform</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=9005"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9005"/>
-  <script src="/assets/instrument.js?v=9005" defer></script>
+<link rel="stylesheet" href="/assets/ui.css?v=9010"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9010"/>
+<script defer src="/assets/instrument.js?v=9010"></script>
 </head>
 
 <body>
 <div class="page">
   <div class="wrap">
+
     <div class="hero">
       <h1>HOME</h1>
       <p>Quadrant → Vine → Fruit → Resolution.</p>
@@ -42,10 +41,10 @@
         <a class="pill btn" href="/door/">DOOR</a>
       </div>
 
-      <div class="section-title">Quadrant routes (NW / NE / SW / SE)</div>
+      <div class="section-title">Quadrant routes (tap a vine)</div>
     </div>
 
-    <details class="quad" data-q="NW" open>
+    <details class="quad" open>
       <summary>
         <div class="q-left">
           <div class="q-badge"><span class="icon">⭐</span><span class="code">NW</span></div>
@@ -56,7 +55,7 @@
       <div class="inside"><div class="bubble-row" id="rowNW"></div></div>
     </details>
 
-    <details class="quad" data-q="NE">
+    <details class="quad">
       <summary>
         <div class="q-left">
           <div class="q-badge"><span class="icon">☀️</span><span class="code">NE</span></div>
@@ -67,7 +66,7 @@
       <div class="inside"><div class="bubble-row" id="rowNE"></div></div>
     </details>
 
-    <details class="quad" data-q="SW">
+    <details class="quad">
       <summary>
         <div class="q-left">
           <div class="q-badge"><span class="icon">🏮</span><span class="code">SW</span></div>
@@ -78,7 +77,7 @@
       <div class="inside"><div class="bubble-row" id="rowSW"></div></div>
     </details>
 
-    <details class="quad" data-q="SE">
+    <details class="quad">
       <summary>
         <div class="q-left">
           <div class="q-badge"><span class="icon">🌇</span><span class="code">SE</span></div>
@@ -94,15 +93,15 @@
   </div>
 </div>
 
-<!-- OVERLAY MODAL -->
-<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Detail popover">
+<!-- Modal overlay -->
+<div class="overlay" id="overlay">
   <div class="modal">
     <div class="modal-head">
       <div class="modal-title">
         <b id="mTitle">DETAIL</b>
-        <span id="mSubtitle">—</span>
+        <span id="mSubtitle">Select a fruit.</span>
       </div>
-      <button class="close" id="mClose" type="button">Close</button>
+      <button class="close" id="mClose">Close</button>
     </div>
 
     <div class="modal-body">
@@ -110,15 +109,10 @@
         <h3 id="mH3">—</h3>
         <p id="mText">—</p>
 
-        <div class="section-title" id="fruitTitle" style="margin-top:14px;">Fruits (pick one)</div>
+        <div class="section-title" style="margin-top:14px;">Fruits (pick one)</div>
         <div class="bubble-row" id="fruitGrid"></div>
 
         <div id="resolutionMount"></div>
-
-        <div class="jump-row" style="margin-top:14px;">
-          <a class="jump gold" href="/door/">DOOR</a>
-          <a class="jump" href="/links/">LINKS</a>
-        </div>
       </div>
     </div>
   </div>
@@ -126,45 +120,43 @@
 
 <script>
 (() => {
-  const K_LANG = "gd_lang";
-  const K_DEPTH = "gd_depth";
+  const K_LANG="gd_lang";
+  const K_DEPTH="gd_depth";
 
   const state = {
-    lang: "en",
-    depth: "explore",
-    lens: "ORIGIN",
-    expr: "FORMAL",
-    current: null // {q, vineKey}
+    lang:"en",
+    depth:"explore",
+    lens:"ORIGIN",
+    expr:"FORMAL",
+    current:{ q:null, vine:null }
   };
 
   const $ = (id)=>document.getElementById(id);
+  const esc = (s)=>String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
 
-  // load persisted
+  const simplify = (t)=>{
+    if(state.expr==="FORMAL") return t;
+    return t.replaceAll("therefore","so").replaceAll("however","but").replaceAll("verification","proof").replaceAll("trajectory","future").replaceAll("invariant","rule");
+  };
+
+  // load persisted state
   try { state.lang = (localStorage.getItem(K_LANG) || "en"); } catch(e){}
   try { state.depth = (localStorage.getItem(K_DEPTH) || "explore"); } catch(e){}
-
-  $("langPill").textContent = (state.lang === "zh" ? "中文" : "EN");
+  $("langPill").textContent = (state.lang==="zh" ? "中文" : "EN");
   $("depthPill").textContent = state.depth.toUpperCase();
 
   function setLens(L){
-    state.lens = L;
-    syncTop();
-    rerenderRows();
-    if ($("overlay").classList.contains("on")) renderModal();
+    state.lens=L;
+    $("lensOrigin").classList.toggle("active", L==="ORIGIN");
+    $("lensNow").classList.toggle("active", L==="NOW");
+    $("lensTraj").classList.toggle("active", L==="TRAJECTORY");
+    if(isOpen()) renderModal();
   }
   function setExpr(E){
-    state.expr = E;
-    syncTop();
-    rerenderRows();
-    if ($("overlay").classList.contains("on")) renderModal();
-  }
-
-  function syncTop(){
-    $("lensOrigin").classList.toggle("active", state.lens==="ORIGIN");
-    $("lensNow").classList.toggle("active", state.lens==="NOW");
-    $("lensTraj").classList.toggle("active", state.lens==="TRAJECTORY");
-    $("exprFormal").classList.toggle("active", state.expr==="FORMAL");
-    $("exprInformal").classList.toggle("active", state.expr==="INFORMAL");
+    state.expr=E;
+    $("exprFormal").classList.toggle("active", E==="FORMAL");
+    $("exprInformal").classList.toggle("active", E==="INFORMAL");
+    if(isOpen()) renderModal();
   }
 
   $("lensOrigin").addEventListener("click", ()=>setLens("ORIGIN"));
@@ -173,272 +165,122 @@
   $("exprFormal").addEventListener("click", ()=>setExpr("FORMAL"));
   $("exprInformal").addEventListener("click", ()=>setExpr("INFORMAL"));
 
-  syncTop();
-
-  // informal phrasing placeholder (swap with true 1001 constraint later)
-  const simplify = (t) => {
-    if (state.expr === "FORMAL") return t;
-    return t
-      .replaceAll("therefore","so")
-      .replaceAll("however","but")
-      .replaceAll("verification","proof")
-      .replaceAll("classification","name")
-      .replaceAll("trajectory","future")
-      .replaceAll("invariant","rule");
-  };
-
-  const esc = (s)=>String(s)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
-  const QUADS = {
-    NW:{title:"NORTHWEST", subtitle:"Definition · language · structure"},
-    NE:{title:"NORTHEAST", subtitle:"Execution · surfaces · examples"},
-    SW:{title:"SOUTHWEST", subtitle:"Measurement · diagnostics · rules"},
-    SE:{title:"SOUTHEAST", subtitle:"Identity · references · links"},
-  };
-
-  // Stable scaffold; expand content later without changing structure.
-  const VINES = {
+  // 4 vines per quadrant
+  const QUAD_VINES = {
     NW: [
-      vine("SSG","SSG", lensMap("Why constraint languages exist.","What SSG is and how it works.","Where SSG takes execution."),
-        [
-          fruit("PRIMITIVES","Primitives", pack("Minimum set for executable structure.","Resource/Store/Constraint/Goal/Guard.","Shared primitives reduce ambiguity.")),
-          fruit("RECEIPTS","Receipts", pack("Proof of progress.","Advance only after receipt.","Receipts scale trust.")),
-          fruit("INVARIANTS","Invariants", pack("Rules that stop drift.","Navigation-first, no timer gates.","Invariants compound stability.")),
-          fruit("EXAMPLES","Examples", pack("Small specs that teach fast.","Pattern → repeat → apply.","Templates become products.")),
-        ]
-      ),
-      vine("GRAM","Diamond Grammar", lensMap("Why four routes exist.","How hubs stay stable.","How grammar scales."),
-        [
-          fruit("ONE","One choice", pack("Pick one route at a time.","Finish or return.","Single choice preserves coherence.")),
-          fruit("RETURN","Return", pack("Return prevents traps.","Hub-first resets orientation.","Return is resilience.")),
-          fruit("ENCODE","Encoding", pack("Directions encode functions.","N/E/S/W are domains.","Encoding compresses learning.")),
-          fruit("COMP","Dual compression", pack("Diamond when possible.","Panels when dense.","Density stays navigable.")),
-        ]
-      ),
-      vine("DOT","DOT.GRID", lensMap("Why index states.","Replay and audit.","Universal coordinates."),
-        [
-          fruit("STATE","State", pack("Name the situation.","Bound the space.","State naming enables control.")),
-          fruit("REPLAY","Replay", pack("Trust must replay.","Same inputs → same outputs.","Replay detects drift.")),
-          fruit("AUDIT","Audit", pack("Trace evidence to output.","Observer-consistent rules.","Audit ends argument.")),
-          fruit("PACKS","Packs", pack("Portable evidence streams.","CSV/JSONL inputs.","Packs enable sweeps.")),
-        ]
-      ),
-      vine("ACR","Acronyms", lensMap("Why lock terms.","Pillars map.","Searchable tokens."),
-        [
-          fruit("CORE","Core set", pack("High-frequency terms.","Stable meaning everywhere.","Core terms reduce confusion.")),
-          fruit("PILLARS","Pillars", pack("Group by function.","Language/Exec/Measure/Identity.","Pillars organize the forest.")),
-          fruit("LOOKUP","Lookup", pack("Stop hunting.","Tags and prefixes.","Lookup is navigation.")),
-          fruit("USAGE","Usage", pack("Use defines meaning.","Examples anchor definitions.","Usage teaches fast.")),
-        ]
-      ),
+      vine("SSG","Simplified Syntax Geometry"),
+      vine("Diamond Grammar","Four routes · one choice"),
+      vine("DOT.GRID","256-state indexing"),
+      vine("Acronyms","Pillar map + usage"),
     ],
     NE: [
-      vine("SURF","Execution Surfaces", lensMap("Why surfaces matter.","Apps/portals/interfaces.","Surfaces scale adoption."),
-        [
-          fruit("APP","Apps", pack("Executable UI shells.","Stable interactions.","Apps expose the engine.")),
-          fruit("PORTAL","Portals", pack("Role-based entry.","Guided flows.","Portals reduce friction.")),
-          fruit("INTERFACE","Interfaces", pack("Unified primitives.","Consistent controls.","Interfaces prevent drift.")),
-          fruit("LAYERS","Layers", pack("Surface → workflow → receipt.","No hidden state.","Layers keep integrity.")),
-        ]
-      ),
-      vine("WF","Workflows & Receipts", lensMap("Why receipts in workflows.","Replay-safe trails.","Audit-ready execution."),
-        [
-          fruit("TRAILS","Audit trails", pack("Proof of actions.","Replay the sequence.","No narrative needed.")),
-          fruit("TOKENS","Tokens", pack("Portable receipts.","Cross-surface verification.","Tokens scale resolution.")),
-          fruit("GATES","Gates", pack("Advance after proof.","Back invalidates downstream.","Gates prevent false continuity.")),
-          fruit("SAFE","Replay safety", pack("Same evidence, same output.","Detect drift.","Stability under load.")),
-        ]
-      ),
-      vine("EX","Examples", lensMap("Why examples compress learning.","How to use the system.","From example to template."),
-        [
-          fruit("PATH","Paths", pack("Quadrant → vine → fruit.","Follow interest.","End in resolution.")),
-          fruit("DRILLS","Drills", pack("Repeatable practice.","Fast skill gain.","Drills create habit.")),
-          fruit("TEMPL","Templates", pack("Example becomes template.","Template becomes product.","Products stay coherent.")),
-          fruit("START","Start here", pack("Pick one route.","Return when unsure.","Continue with clarity.")),
-        ]
-      ),
-      vine("PACK","Packs & Outputs", lensMap("Why packaged outputs ship.","Downloadables & artifacts.","Outputs enable reuse."),
-        [
-          fruit("PDF","PDFs", pack("Structured docs.","Repeatable learning.","Portable content.")),
-          fruit("DATA","Datasets", pack("Replayable streams.","Audit inputs.","Shared evidence.")),
-          fruit("TOOLS","Tools", pack("Small utilities.","Stable primitives.","Composable parts.")),
-          fruit("RELEASE","Releases", pack("Versioned outputs.","Changelog by receipts.","Stable upgrades.")),
-        ]
-      ),
+      vine("Execution Surfaces","Apps · portals · interfaces"),
+      vine("Workflows & Receipts","Audit trails · replay safety"),
+      vine("Examples","How to use the system"),
+      vine("Packs & Outputs","Downloadables · artifacts"),
     ],
     SW: [
-      vine("GA","Gauges", lensMap("Why measurement exists.","Panels & thresholds.","Signals under load."),
-        [
-          fruit("PANEL","Panels", pack("Instrument views.","Consistent metrics.","Quick orientation.")),
-          fruit("CHECKS","Checks", pack("Consistency checks.","Drift detection.","Rule-based flags.")),
-          fruit("SIG","Signal", pack("Integrity signals.","Noise vs structure.","Stable interpretation.")),
-          fruit("THRESH","Thresholds", pack("Boundaries that matter.","Pass/fail rails.","Prevents collapse.")),
-        ]
-      ),
-      vine("DIAG","Diagnostics", lensMap("Why classify under constraint.","Coherence/drift/confusion.","Observer-consistent targets."),
-        [
-          fruit("CAT","Categories", pack("Coherent vs incoherent.","Confusion amplifies instability.","Stable labeling.")),
-          fruit("TARGET","Targets", pack("Observer-invariant rules.","Same evidence, same class.","No narrative.")),
-          fruit("REPLAY","Replay audits", pack("Re-run evidence.","Verify outputs.","Detect mismatch.")),
-          fruit("CORR","Correction", pack("Reveal misalignment.","Enable repair.","Resolution path.")),
-        ]
-      ),
-      vine("RULES","Rules", lensMap("Why rules exist.","Navigation + integrity.","Keep motion coherent."),
-        [
-          fruit("NAV","Navigation", pack("Hub-first return.","One choice at a time.","Stable traversal.")),
-          fruit("INTEG","Integrity", pack("No partials.","Atomic handoff.","Receipt required.")),
-          fruit("CONS","Constraints", pack("Must-hold invariants.","Bound behavior.","Reduce exploit surface.")),
-          fruit("KILL","Kill conditions", pack("Exit conditions.","Stop unsafe paths.","Preserve coherence.")),
-        ]
-      ),
-      vine("PROT","Protocols", lensMap("Why protocols scale.","Return/replay/audit.","Operational safety."),
-        [
-          fruit("RETURN","Return", pack("Reset via hub.","Re-orient fast.","Continue safely.")),
-          fruit("REPLAY","Replay", pack("Verify history.","Same inputs, same output.","Proof over narrative.")),
-          fruit("AUDIT","Audit", pack("Trace evidence.","Accountability.","Resolve disputes.")),
-          fruit("HANDOFF","Handoff", pack("Receipt-gated transfer.","No silent drift.","Stable transitions.")),
-        ]
-      ),
+      vine("Gauges","Panels · thresholds"),
+      vine("Diagnostics","Classification under constraint"),
+      vine("Rules","Navigation + integrity"),
+      vine("Protocols","Return · replay · audit"),
     ],
     SE: [
-      vine("ORCID","ORCID", lensMap("Why identity anchors exist.","Research identity.","Link authority."),
-        [
-          fruit("ID","Identity", pack("Who/what published.","Stable attribution.","Trust via anchors.")),
-          fruit("LINK","Links", pack("Connect projects.","Reduce ambiguity.","One source of truth.")),
-          fruit("VERIFY","Verification", pack("Proof of authorship.","Stable references.","Lower confusion.")),
-          fruit("USE","Use", pack("Cite and trace.","Find context fast.","Keep coherence.")),
-        ]
-      ),
-      vine("OSF","OSF", lensMap("Why registry matters.","Projects & preprints.","Public evidence."),
-        [
-          fruit("REG","Registry", pack("Public index.","Stable pointers.","Discoverability.")),
-          fruit("PRE","Preprints", pack("Versioned docs.","Trace evolution.","Evidence chain.")),
-          fruit("DATA","Data", pack("Uploads & logs.","Replay inputs.","Audit-ready.")),
-          fruit("AN","Analytics", pack("Traffic & adoption signals.","Trajectory hints.","Measure reach.")),
-        ]
-      ),
-      vine("REF","References", lensMap("Why citations anchor meaning.","Core citations.","Context links."),
-        [
-          fruit("CITE","Citations", pack("Anchor claims.","Trace sources.","Reduce drift.")),
-          fruit("MAP","Maps", pack("Navigation maps.","Find nodes fast.","Stay oriented.")),
-          fruit("GLOSS","Glossary", pack("Stable terms.","Shared meaning.","Fast lookup.")),
-          fruit("RULES","Reference rules", pack("Consistent naming.","Stable paths.","Avoid breakage.")),
-        ]
-      ),
-      vine("CONTACT","Contact", lensMap("Why a direct channel exists.","Coordination.","Handoff points."),
-        [
-          fruit("DIRECT","Direct", pack("Single channel.","Avoid scatter.","Reduce confusion.")),
-          fruit("INTAKE","Intake", pack("Structured requests.","Faster resolution.","Clear routing.")),
-          fruit("COLLAB","Collaboration", pack("Shared artifacts.","Receipt for changes.","Stable progress.")),
-          fruit("SUPPORT","Support", pack("Fix friction.","Improve clarity.","Keep system running.")),
-        ]
-      ),
+      vine("ORCID","Research identity"),
+      vine("OSF","Project registry"),
+      vine("References","Citations and anchors"),
+      vine("Contact","Direct channel"),
     ],
   };
 
-  function lensMap(origin, now, traj){
-    return { ORIGIN: origin, NOW: now, TRAJECTORY: traj };
-  }
-  function pack(origin, now, traj){
+  // each vine has 4 fruits
+  const FRUITS = [
+    fruit("A","Fruit A"),
+    fruit("B","Fruit B"),
+    fruit("C","Fruit C"),
+    fruit("D","Fruit D"),
+  ];
+
+  function vine(key, hint){ return { key, hint }; }
+  function fruit(key, label){
     return {
-      ORIGIN:{ para: origin, bullets: [], imp: "" },
-      NOW:{ para: now, bullets: [], imp: "" },
-      TRAJECTORY:{ para: traj, bullets: [], imp: "" },
+      key, label,
+      pack:{
+        ORIGIN:{para:`${label}: origin view.`, bullets:[""], imp:""},
+        NOW:{para:`${label}: now view.`, bullets:[""], imp:""},
+        TRAJECTORY:{para:`${label}: trajectory view.`, bullets:[""], imp:""},
+      }
     };
   }
-  function vine(key,label,lens,fruits){ return { key,label,lens,fruits }; }
-  function fruit(key,label,pack){ return { key,label,pack }; }
 
   function renderQuadrant(q){
     const row = document.getElementById("row"+q);
-    row.innerHTML = "";
-    VINES[q].slice(0,4).forEach(v=>{
-      const btn = document.createElement("div");
-      btn.className = "bubble-btn";
-      btn.innerHTML = `
-        <div class="lbl">
-          <b>${esc(v.label)}</b>
-          <i>${esc(simplify(v.lens[state.lens]))}</i>
-        </div>
-        <div class="go">▶</div>
-      `;
-      btn.addEventListener("click", ()=>openModal(q, v.key));
-      row.appendChild(btn);
+    row.innerHTML="";
+    QUAD_VINES[q].forEach(v=>{
+      const el=document.createElement("div");
+      el.className="bubble-btn";
+      el.innerHTML=`<div class="lbl"><b>${esc(v.key)}</b><i>${esc(v.hint)}</i></div><div class="go">▶</div>`;
+      el.addEventListener("click", ()=>openModal(q, v));
+      row.appendChild(el);
     });
   }
 
-  function rerenderRows(){
-    ["NW","NE","SW","SE"].forEach(renderQuadrant);
-  }
+  ["NW","NE","SW","SE"].forEach(renderQuadrant);
 
-  function openModal(q, vineKey){
-    state.current = { q, vineKey };
-    $("overlay").classList.add("on");
-    document.body.style.overflow = "hidden";
+  const overlay=$("overlay");
+  const fruitGrid=$("fruitGrid");
+  const mount=$("resolutionMount");
+
+  function isOpen(){ return overlay.classList.contains("on"); }
+  function openModal(q, vine){
+    state.current.q=q;
+    state.current.vine=vine;
+    overlay.classList.add("on");
+    document.body.style.overflow="hidden";
     renderModal();
   }
-
   function closeModal(){
-    $("overlay").classList.remove("on");
-    document.body.style.overflow = "";
-    state.current = null;
+    overlay.classList.remove("on");
+    document.body.style.overflow="";
+    mount.innerHTML="";
+    fruitGrid.innerHTML="";
   }
 
+  $("mClose").addEventListener("click", closeModal);
+  overlay.addEventListener("click", (e)=>{ if(e.target.id==="overlay") closeModal(); });
+  document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && isOpen()) closeModal(); });
+
   function renderModal(){
-    const q = state.current.q;
-    const vine = VINES[q].find(v=>v.key===state.current.vineKey);
+    const q=state.current.q;
+    const v=state.current.vine;
+    $("mTitle").textContent = q + " · " + v.key;
+    $("mSubtitle").textContent = v.hint;
+    $("mH3").textContent = v.key;
+    $("mText").textContent = simplify(`Choose one fruit to reach resolution (${state.lens.toLowerCase()}).`);
 
-    $("mTitle").textContent = `${QUADS[q].title} · ${vine.label}`;
-    $("mSubtitle").textContent = QUADS[q].subtitle;
+    fruitGrid.innerHTML="";
+    mount.innerHTML="";
 
-    $("mH3").textContent = vine.label;
-    $("mText").textContent = simplify(vine.lens[state.lens]);
-
-    const fruitGrid = $("fruitGrid");
-    fruitGrid.innerHTML = "";
-    $("resolutionMount").innerHTML = "";
-
-    vine.fruits.slice(0,4).forEach(f=>{
-      const b = document.createElement("div");
-      b.className = "bubble-btn";
-      b.innerHTML = `
-        <div class="lbl">
-          <b>${esc(f.label)}</b>
-          <i>${esc("Open resolution")}</i>
-        </div>
-        <div class="go">▶</div>
-      `;
-      b.addEventListener("click", ()=>showResolution(f));
-      fruitGrid.appendChild(b);
+    FRUITS.forEach(f=>{
+      const el=document.createElement("div");
+      el.className="bubble-btn";
+      el.innerHTML=`<div class="lbl"><b>${esc(f.label)}</b><i>${esc("Open resolution")}</i></div><div class="go">▶</div>`;
+      el.addEventListener("click", ()=>showResolution(f));
+      fruitGrid.appendChild(el);
     });
   }
 
-  function showResolution(fruit){
-    const pack = fruit.pack[state.lens];
-    const para = simplify(pack.para);
-
-    $("resolutionMount").innerHTML = `
+  function showResolution(f){
+    const p=f.pack[state.lens];
+    mount.innerHTML = `
       <div class="resolution">
-        <h4>${esc(fruit.label)} — Resolution</h4>
-        <p class="para">${esc(para)}</p>
+        <h4>${esc(f.label)} — Resolution</h4>
+        <p class="para">${esc(simplify(p.para))}</p>
         <div class="back" id="backBtn">Back</div>
       </div>
     `;
-    document.getElementById("backBtn").addEventListener("click", ()=>{ $("resolutionMount").innerHTML=""; });
+    document.getElementById("backBtn").addEventListener("click", ()=>{ mount.innerHTML=""; });
   }
-
-  // modal close controls
-  $("mClose").addEventListener("click", closeModal);
-  $("overlay").addEventListener("click", (e)=>{ if(e.target.id==="overlay") closeModal(); });
-  document.addEventListener("keydown", (e)=>{ if(e.key==="Escape" && $("overlay").classList.contains("on")) closeModal(); });
-
-  // init
-  rerenderRows();
 })();
 </script>
 </body>

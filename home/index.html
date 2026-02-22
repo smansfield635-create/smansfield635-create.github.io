@@ -5,20 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>HOME · Compass Face</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=HOME_TOPRIGHT_LINE_1"/>
-<link rel="stylesheet" href="/assets/branch.css?v=HOME_TOPRIGHT_LINE_1"/>
-<script defer src="/assets/instrument.js?v=HOME_TOPRIGHT_LINE_1"></script>
+<link rel="stylesheet" href="/assets/ui.css?v=HOME_TOPRIGHT_LINE_2"/>
+<link rel="stylesheet" href="/assets/branch.css?v=HOME_TOPRIGHT_LINE_2"/>
+<script defer src="/assets/instrument.js?v=HOME_TOPRIGHT_LINE_2"></script>
 
 <style>
   .frame{position:relative;min-height:100vh;width:100%}
 
-  /* Top-left: exit + language */
+  /* Top-left */
   .top-left{
     position:fixed;left:16px;top:16px;z-index:90;
     display:flex;gap:10px;flex-wrap:wrap;
   }
 
-  /* Top-right: STYLE + TIME (STRAIGHT LINE) */
+  /* Top-right */
   .top-right{
     position:fixed;right:16px;top:16px;z-index:90;
     display:flex;flex-direction:column;gap:10px;align-items:flex-end;
@@ -35,8 +35,10 @@
     align-items:center;
   }
 
-  /* ===== CENTER STAGE ===== */
-  :root{ --CENTER_OFFSET_Y: 56px; --R: 124px; }
+  /* ===== CENTER STAGE =====
+     CHANGE: bring diamond UP slightly by reducing offset
+  */
+  :root{ --CENTER_OFFSET_Y: 36px; --R: 124px; }
 
   .center-stage{
     position:fixed;
@@ -49,7 +51,7 @@
     pointer-events:auto;
   }
 
-  /* ===== DIAMONDS (25% smaller) ===== */
+  /* Diamonds */
   .d-diamond{
     width:150px;height:150px;
     position:absolute;
@@ -163,7 +165,7 @@
   }
 
   @media (max-width:520px){
-    :root{ --CENTER_OFFSET_Y: 72px; --R: 116px; }
+    :root{ --CENTER_OFFSET_Y: 54px; --R: 116px; }
     .top-right{ right:10px; top:10px; }
     .top-left{ left:10px; top:10px; }
     .center-stage{ width:min(520px,92vw); height:min(520px,92vw); }

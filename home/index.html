@@ -7,174 +7,36 @@
 
 <link rel="stylesheet" href="/assets/ui.css?v=9004"/>
 <link rel="stylesheet" href="/assets/branch.css?v=9004"/>
-
-<style>
-:root{
-  --ink:#05070c;--ink-deep:#070b12;
-  --red:#7a0b14;--red-soft:rgba(122,11,20,.28);
-  --gold:#caa04a;--gold-soft:rgba(202,160,74,.22);
-  --text:#eaf2f6;--muted:rgba(234,242,246,.72);
-  --glass:rgba(255,255,255,.06);--stroke:rgba(255,255,255,.10);
-}
-html,body{margin:0;padding:0;width:100%;height:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:var(--ink);overflow-x:hidden}
-body{
-  background:
-    radial-gradient(1200px 900px at 15% 15%, var(--gold-soft) 0%, transparent 60%),
-    radial-gradient(1400px 1000px at 85% 20%, var(--red-soft) 0%, transparent 65%),
-    radial-gradient(1800px 1200px at 50% 0%, rgba(122,11,20,.18) 0%, transparent 70%),
-    linear-gradient(to bottom, var(--ink-deep), var(--ink));
-}
-body::before{
-  content:"";position:fixed;inset:-10%;pointer-events:none;z-index:-1;
-  background:
-    radial-gradient(520px 520px at 18% 10%, rgba(202,160,74,.16) 0%, transparent 65%),
-    radial-gradient(640px 640px at 84% 14%, rgba(161,13,28,.20) 0%, transparent 70%),
-    radial-gradient(760px 760px at 50% 5%, rgba(202,160,74,.10) 0%, transparent 75%);
-  opacity:.62;filter:blur(6px);
-  animation:fireworkPulse 6s ease-in-out infinite alternate;
-}
-@keyframes fireworkPulse{0%{opacity:.45;filter:blur(7px) brightness(.98)}100%{opacity:.75;filter:blur(6px) brightness(1.06)}}
-.shooting-stars{display:none!important}
-
-/* layout */
-.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:34px 16px 90px}
-.wrap{width:min(980px,94vw);display:flex;flex-direction:column;gap:12px}
-.hero h1{margin:0;font-weight:950;letter-spacing:.06em;text-transform:uppercase;font-size:clamp(42px,7vw,68px)}
-.hero p{margin:10px 0 0;color:var(--muted);font-size:18px;line-height:1.35}
-
-/* top bars */
-.topbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
-.pill{
-  border-radius:999px;padding:10px 14px;background:var(--glass);
-  box-shadow:inset 0 0 0 1px var(--stroke);
-  font-weight:900;letter-spacing:.10em;text-transform:uppercase;font-size:12px;opacity:.92;
-  user-select:none;-webkit-tap-highlight-color:transparent;
-}
-.pill.btn{cursor:pointer;text-decoration:none;color:inherit}
-.pill.btn:hover{background:rgba(255,255,255,.08)}
-.pill.active{background:rgba(122,11,20,.28);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 20px 60px rgba(0,0,0,.35)}
-.pill.gold{background:rgba(202,160,74,.16);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 20px 60px rgba(0,0,0,.35)}
-
-/* section title */
-.section-title{margin-top:10px;font-weight:900;letter-spacing:.18em;opacity:.7;font-size:12px;text-transform:uppercase}
-
-/* quadrant cards */
-details.quad{
-  border-radius:22px;background:rgba(255,255,255,.05);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 22px 70px rgba(0,0,0,.45);
-  backdrop-filter:blur(12px);overflow:hidden;
-}
-details.quad+details.quad{margin-top:12px}
-details.quad summary{list-style:none;cursor:pointer;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;-webkit-tap-highlight-color:transparent}
-details.quad summary::-webkit-details-marker{display:none}
-.q-left{display:flex;align-items:center;gap:12px;min-width:0}
-.q-badge{
-  width:64px;height:44px;border-radius:18px;background:rgba(122,11,20,.18);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:950;letter-spacing:.14em;flex:0 0 auto;position:relative;
-}
-.q-badge .icon{position:absolute;left:10px;top:9px;opacity:.95}
-.q-badge .code{padding-left:18px}
-.q-text b{display:block;font-size:18px;letter-spacing:.12em}
-.q-text span{display:block;opacity:.72;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.q-arrow{width:42px;height:42px;border-radius:999px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;opacity:.9;flex:0 0 auto}
-.inside{padding:0 16px 16px}
-
-/* vine grid (4 only) */
-.bubble-row{display:grid;grid-template-columns:1fr;gap:10px;margin-top:2px}
-@media(min-width:720px){.bubble-row{grid-template-columns:1fr 1fr}}
-.bubble-btn{
-  border-radius:18px;background:rgba(0,0,0,.22);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-  padding:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;
-  cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent
-}
-.bubble-btn:hover{background:rgba(0,0,0,.28)}
-.bubble-btn .lbl{min-width:0}
-.bubble-btn b{display:block;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
-.bubble-btn i{display:block;font-style:normal;opacity:.72;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bubble-btn .go{width:40px;height:40px;border-radius:999px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;opacity:.9;flex:0 0 auto}
-
-/* modal overlay */
-.overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(5,7,12,.82);backdrop-filter:blur(10px);padding:18px}
-.overlay.on{display:flex}
-.modal{
-  width:min(980px,94vw);
-  max-height:min(86vh,760px);
-  overflow:auto;border-radius:26px;
-  background:linear-gradient(180deg, rgba(122,11,20,.28), rgba(0,0,0,.28));
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 35px 120px rgba(0,0,0,.75);
-}
-.modal-head{padding:16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;background:rgba(0,0,0,.25);backdrop-filter:blur(10px);z-index:2}
-.modal-title b{display:block;font-size:16px;letter-spacing:.18em;text-transform:uppercase}
-.modal-title span{display:block;margin-top:4px;opacity:.75;font-size:14px;line-height:1.25}
-.close{border:0;cursor:pointer;border-radius:14px;padding:10px 12px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);color:var(--text);font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:12px}
-.close:hover{background:rgba(255,255,255,.10)}
-.modal-body{padding:14px 16px 18px}
-
-.block{border-radius:20px;background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);padding:14px}
-.block h3{margin:0 0 8px;font-weight:950;letter-spacing:.06em}
-.block p{margin:0;color:rgba(234,242,246,.80);line-height:1.65}
-
-/* fruit list (4) */
-.fruit-grid{margin-top:14px}
-.fruit-grid .section-title{margin-top:0}
-.fruit-note{margin-top:8px;color:rgba(234,242,246,.70);line-height:1.55}
-
-/* resolution mode */
-.resolution{
-  margin-top:18px;
-  padding:18px;
-  border-radius:22px;
-  background:linear-gradient(180deg, rgba(202,160,74,.14), rgba(0,0,0,.30));
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 22px 80px rgba(0,0,0,.65);
-}
-.resolution h4{margin:0 0 10px;font-size:18px;letter-spacing:.14em;text-transform:uppercase}
-.resolution .para{margin:0 0 12px;font-size:16px;line-height:1.7;color:rgba(234,242,246,.86)}
-.resolution ul{margin:0 0 14px 18px;padding:0;line-height:1.6;color:rgba(234,242,246,.78)}
-.resolution .imp{font-weight:950;letter-spacing:.06em;margin-top:12px;opacity:.92}
-.resolution .back{margin-top:14px;display:inline-block;border-radius:18px;padding:10px 14px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:12px;cursor:pointer}
-.resolution .back:hover{background:rgba(255,255,255,.12)}
-
-.jump-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.jump{text-decoration:none;color:var(--text);border-radius:18px;padding:12px 14px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:12px}
-.jump:hover{background:rgba(255,255,255,.10)}
-.jump.gold{background:rgba(202,160,74,.18)}
-.jump.gold:hover{background:rgba(202,160,74,.22)}
-
-footer{margin-top:18px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
-.ink{margin-top:12px;text-align:center;letter-spacing:.22em;font-weight:900;opacity:.40;font-size:12px;text-transform:uppercase}
-</style>
 </head>
 
 <body>
 <div class="page">
   <div class="wrap">
+
     <div class="hero">
       <h1>HOME</h1>
       <p>Quadrant → Vine → Fruit → Resolution.</p>
 
-      <!-- Tri-lens at top + expression lens -->
       <div class="topbar">
         <span class="pill">LANG: <span id="langPill">EN</span></span>
         <span class="pill">DEPTH: <span id="depthPill">EXPLORE</span></span>
 
         <span class="pill">TIME:</span>
-        <button class="pill btn active" id="lensOrigin" type="button">ORIGIN</button>
-        <button class="pill btn" id="lensNow" type="button">NOW</button>
-        <button class="pill btn" id="lensTraj" type="button">TRAJECTORY</button>
+        <button class="pill btn active" id="lensOrigin">ORIGIN</button>
+        <button class="pill btn" id="lensNow">NOW</button>
+        <button class="pill btn" id="lensTraj">TRAJECTORY</button>
 
         <span class="pill">STYLE:</span>
-        <button class="pill btn active" id="exprFormal" type="button">FORMAL</button>
-        <button class="pill btn" id="exprInformal" type="button">INFORMAL</button>
+        <button class="pill btn active" id="exprFormal">FORMAL</button>
+        <button class="pill btn" id="exprInformal">INFORMAL</button>
 
-        <a class="pill btn" href="/door/">JUMP HOME</a>
+        <a class="pill btn" href="/door/">DOOR</a>
       </div>
 
       <div class="section-title">Quadrant routes (NW / NE / SW / SE)</div>
     </div>
 
+    <!-- Quadrants -->
     <details class="quad" data-q="NW" open>
       <summary>
         <div class="q-left">
@@ -221,428 +83,77 @@ footer{margin-top:18px;text-align:center;opacity:.55;letter-spacing:3px;font-siz
 
     <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
     <div class="ink">GEODIAMETRICS</div>
+
   </div>
 </div>
 
 <!-- MODAL -->
-<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Detail popover">
+<div class="overlay" id="overlay">
   <div class="modal">
     <div class="modal-head">
       <div class="modal-title">
         <b id="mTitle">DETAIL</b>
-        <span id="mSubtitle">Choose a fruit to reach resolution.</span>
+        <span id="mSubtitle">Select a fruit.</span>
       </div>
-      <button class="close" id="mClose" type="button">Close</button>
+      <button class="close" id="mClose">Close</button>
     </div>
 
     <div class="modal-body">
       <div class="block">
-        <h3 id="mH3">—</h3>
-        <p id="mText">—</p>
+        <h3 id="mH3"></h3>
+        <p id="mText"></p>
 
         <div class="fruit-grid">
-          <div class="section-title" id="fruitTitle">Fruits (pick one)</div>
+          <div class="section-title">Fruits</div>
           <div class="bubble-row" id="fruitGrid"></div>
-          <div class="fruit-note" id="fruitNote">Selecting a fruit opens the resolution chamber.</div>
         </div>
 
         <div id="resolutionMount"></div>
-
-        <div class="jump-row" id="jumpRow">
-          <a class="jump gold" href="#" id="jumpHomeBtn">JUMP HOME</a>
-        </div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-(() => {
-  const state = {
-    lang: (localStorage.getItem("crp_lang") || "EN"),
-    depth: (localStorage.getItem("crp_depth") || "EXPLORE"),
-    lens: (localStorage.getItem("crp_lens") || "ORIGIN"),
-    expr: (localStorage.getItem("crp_expr") || "FORMAL"),
-    current: null // {q, vineKey}
+(function(){
+
+  const overlay = document.getElementById("overlay");
+  const mClose = document.getElementById("mClose");
+
+  mClose.addEventListener("click", ()=>overlay.classList.remove("on"));
+  overlay.addEventListener("click", e=>{
+    if(e.target === overlay) overlay.classList.remove("on");
+  });
+
+  const data = {
+    NW: ["SSG","Diamond Grammar","DOT.GRID","Acronyms"],
+    NE: ["Execution Surfaces","Receipts","Examples","Deployment"],
+    SW: ["Gauges","Diagnostics","Rules","Thresholds"],
+    SE: ["ORCID","OSF","References","Contact"]
   };
 
-  const $ = (id)=>document.getElementById(id);
+  Object.keys(data).forEach(q=>{
+    const row = document.getElementById("row"+q);
+    if(!row) return;
 
-  // Top pills
-  $("langPill").textContent = state.lang;
-  $("depthPill").textContent = state.depth;
-
-  function setLens(L){
-    state.lens=L;
-    localStorage.setItem("crp_lens",L);
-    syncTop();
-    if(document.getElementById("overlay").classList.contains("on")) renderModal();
-  }
-  function setExpr(E){
-    state.expr=E;
-    localStorage.setItem("crp_expr",E);
-    syncTop();
-    if(document.getElementById("overlay").classList.contains("on")) renderModal();
-  }
-  function syncTop(){
-    $("lensOrigin").classList.toggle("active", state.lens==="ORIGIN");
-    $("lensNow").classList.toggle("active", state.lens==="NOW");
-    $("lensTraj").classList.toggle("active", state.lens==="TRAJECTORY");
-    $("exprFormal").classList.toggle("active", state.expr==="FORMAL");
-    $("exprInformal").classList.toggle("active", state.expr==="INFORMAL");
-  }
-
-  $("lensOrigin").addEventListener("click", ()=>setLens("ORIGIN"));
-  $("lensNow").addEventListener("click", ()=>setLens("NOW"));
-  $("lensTraj").addEventListener("click", ()=>setLens("TRAJECTORY"));
-  $("exprFormal").addEventListener("click", ()=>setExpr("FORMAL"));
-  $("exprInformal").addEventListener("click", ()=>setExpr("INFORMAL"));
-
-  syncTop();
-
-  // Helpers
-  const esc = (s)=>String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
-
-  // 1001-style (very simple controlled English) for informal mode
-  const simplify = (t)=>{
-    if(state.expr==="FORMAL") return t;
-    // Keep it simple: short sentences, fewer clauses.
-    // (You can replace these with true 1001 vocabulary constraints later.)
-    return t
-      .replaceAll("therefore","so")
-      .replaceAll("however","but")
-      .replaceAll("eliminate","remove")
-      .replaceAll("verification","proof")
-      .replaceAll("classification","name")
-      .replaceAll("consistent","same")
-      .replaceAll("trajectory","future");
-  };
-
-  // MODEL: Quadrant -> 4 vines -> 4 fruits -> resolution (para+bullets+implication)
-  const MODEL = {
-    NW: {
-      title:"NORTHWEST",
-      subtitle:"Definition · language · structure",
-      vines:[
-        vine("SSG","Simplified Syntax Geometry",
-          {ORIGIN:"Why a constraint language exists.",NOW:"What SSG is and how it works.",TRAJECTORY:"Where SSG takes execution."},
-          [
-            fruit("PRIMITIVES","Primitives",
-              {
-                ORIGIN:{
-                  para:"Primitives exist to keep meaning stable while complexity grows. If you cannot name what exists and what must hold, you cannot build a replayable system.",
-                  bullets:["Separate entities (Resource/Store) from rules (Constraint).","Define success (Goal) and admissibility (Guard).","Make the smallest stable vocabulary the default."],
-                  imp:"A system becomes executable only when primitives are explicit."
-                },
-                NOW:{
-                  para:"In practice, primitives are the minimum interface contracts: Resource (target), Store (state), Constraint (must-hold), Goal (finish), Guard (allow/deny).",
-                  bullets:["Resources and Stores define the state space.","Constraints define what is allowed.","Goals define completion.","Guards define admissible transitions."],
-                  imp:"Clear primitives remove ambiguity from execution."
-                },
-                TRAJECTORY:{
-                  para:"As the platform scales, primitives become cross-domain coordinates. Tooling, audits, and collaboration become cheaper because the same vocabulary maps everywhere.",
-                  bullets:["One primitive set → many domains.","Same evidence → same classification.","Replay becomes standard."],
-                  imp:"Shared primitives enable network-scale coherence."
-                }
-              }
-            ),
-            fruit("RECEIPTS","Receipts",
-              {
-                ORIGIN:{
-                  para:"Receipts exist because progress must be provable. Without receipts, systems drift into narrative and memory-based trust.",
-                  bullets:["No invisible progress.","No “trust me.”","Every advancement has proof."],
-                  imp:"Receipts convert intent into verifiable history."
-                },
-                NOW:{
-                  para:"Today, receipts gate advancement: you advance only after the receipt is written. If you backtrack, downstream receipts invalidate to prevent false continuity.",
-                  bullets:["Advance only after receipt.","Back invalidates downstream.","Replay verifies."],
-                  imp:"Receipts enforce coherence mechanically."
-                },
-                TRAJECTORY:{
-                  para:"Next, receipts become portable verification tokens across apps and institutions, enabling resolution without argument—because evidence replays.",
-                  bullets:["Interoperable receipts.","Automatic audits.","Cheaper dispute resolution."],
-                  imp:"Receipts scale trust without adding narrative."
-                }
-              }
-            ),
-            fruit("INVARIANTS","Invariants",
-              {
-                ORIGIN:{
-                  para:"Invariants exist to stop drift at the root. They are the rules that cannot be violated without breaking coherence.",
-                  bullets:["Navigation-first.","No timers as gates.","Atomic handoff with receipt."],
-                  imp:"Invariants are the safety rails of scale."
-                },
-                NOW:{
-                  para:"Right now, invariants keep your UI stable: consistent presses, stable returns, no time-based coercion, no partial states.",
-                  bullets:["Consistent interactions.","Stable returns.","No partial transitions."],
-                  imp:"UX becomes predictable under load."
-                },
-                TRAJECTORY:{
-                  para:"Over time, invariants reduce defects and exploits because ambiguity is removed from the control plane.",
-                  bullets:["Lower exploit surface.","Lower defect rate.","Higher reliability."],
-                  imp:"Invariants are the compound interest of coherence."
-                }
-              }
-            ),
-            fruit("EXAMPLES","Examples",
-              {
-                ORIGIN:{
-                  para:"Examples exist to compress learning. A small repeatable example teaches more than broad explanation.",
-                  bullets:["Show smallest unit.","Show the pattern.","Remove interpretation."],
-                  imp:"Examples turn structure into usable habit."
-                },
-                NOW:{
-                  para:"Now, examples mirror geometry: quadrant → vine → fruit → resolution. Every example ends in a conclusion you can apply.",
-                  bullets:["Geometry-aligned.","Repeatable.","Ends with resolution."],
-                  imp:"Examples teach by movement, not lecture."
-                },
-                TRAJECTORY:{
-                  para:"Later, examples become templates and templates become products. This is how the forest scales without drift.",
-                  bullets:["Examples → templates.","Templates → products.","Products → standards."],
-                  imp:"Templates are executable knowledge."
-                }
-              }
-            )
-          ]
-        ),
-
-        vine("DIAMOND_GRAMMAR","Diamond Grammar",
-          {ORIGIN:"Why four routes exist.",NOW:"How hubs stay stable.",TRAJECTORY:"How grammar scales."},
-          [
-            fruit("ONE","One choice",{ORIGIN:{para:"One choice prevents fragmentation.",bullets:["Pick one route.","Finish or return.","No parallel commitments."],imp:"Single choice preserves coherence."},
-                                     NOW:{para:"Today it keeps the site readable.",bullets:["One route at a time.","No multi-tab drift.","Clear returns."],imp:"Navigation becomes stable."},
-                                     TRAJECTORY:{para:"At scale it aligns teams.",bullets:["Shared traversal rules.","Shared meaning.","Fewer conflicts."],imp:"Grammar becomes governance."}}),
-            fruit("RETURN","Return",{ORIGIN:{para:"Return prevents traps.",bullets:["Hub-first.","Safe exit.","Re-entry allowed."],imp:"Return restores orientation."},
-                                     NOW:{para:"Return is the default correction.",bullets:["Confusion → return.","Re-select route.","Continue."],imp:"Return is the reset button."},
-                                     TRAJECTORY:{para:"Return scales safety.",bullets:["Safer workflows.","Less drift.","More resilience."],imp:"Return is resilience."}}),
-            fruit("ENCODE","Encode",{ORIGIN:{para:"Directions encode functions.",bullets:["N=definition.","E=execution.","S=measurement.","W=identity."],imp:"Compass becomes language."},
-                                     NOW:{para:"Encoding makes the forest navigable.",bullets:["Same map everywhere.","Faster learning.","Less confusion."],imp:"Encoding compresses comprehension."},
-                                     TRAJECTORY:{para:"Encoding generalizes cross-domain.",bullets:["Same axes.","Same filters.","Same audits."],imp:"Encoding is portability."}}),
-            fruit("DUAL_COMP","Dual compression",{ORIGIN:{para:"Not all screens fit diamonds.",bullets:["Diamond when possible.","Panel when dense.","No drift."],imp:"Dual compression protects readability."},
-                                                  NOW:{para:"Use diamond for routing; panels for depth.",bullets:["Routes remain simple.","Depth stays contained.","No overlap confusion."],imp:"Density stays navigable."},
-                                                  TRAJECTORY:{para:"At scale it prevents clutter.",bullets:["More content, same clarity.","Less redesign.","More stability."],imp:"Compression is scalability."}})
-          ]
-        ),
-
-        vine("DOT_GRID","DOT.GRID",
-          {ORIGIN:"Why index states.",NOW:"Replay and audit.",TRAJECTORY:"Universal coordinates."},
-          [
-            fruit("STATE","State",{ORIGIN:{para:"State labeling prevents ambiguity.",bullets:["Name the situation.","Bound the space.","Make it replayable."],imp:"State naming is the start of control."},
-                                   NOW:{para:"Now you can compare states consistently.",bullets:["Same evidence.","Same state mapping.","Same outputs."],imp:"State indexing enables agreement."},
-                                   TRAJECTORY:{para:"Later it becomes cross-domain.",bullets:["Same lattice.","Many domains.","Shared audit."],imp:"State becomes portable."}}),
-            fruit("REPLAY","Replay",{ORIGIN:{para:"Replay exists because trust must be verifiable.",bullets:["If you can't replay, you can't verify."],imp:"Replay is proof."},
-                                     NOW:{para:"Replay re-runs the evidence path.",bullets:["Same inputs.","Same outputs.","Detect drift."],imp:"Replay is audit."},
-                                     TRAJECTORY:{para:"Replay becomes automatic.",bullets:["Continuous validation.","Cheaper compliance.","Fewer disputes."],imp:"Replay scales trust."}}),
-            fruit("AUDIT","Audit",{ORIGIN:{para:"Audit prevents narrative.",bullets:["Trace evidence to output."],imp:"Audit is accountability."},
-                                   NOW:{para:"Audit is repeatable.",bullets:["Observer-consistent.","Rule-based.","Recorded."],imp:"Audit ends argument."},
-                                   TRAJECTORY:{para:"Audit becomes standard.",bullets:["Institution-ready.","Cross-domain.","Fast."],imp:"Audit becomes infrastructure."}}),
-            fruit("PACKS","Packs",{ORIGIN:{para:"Packs move evidence cleanly.",bullets:["One file.","Replayable stream.","Stable fields."],imp:"Packs enable portability."},
-                                   NOW:{para:"Packs feed sweeps.",bullets:["CSV/JSONL.","State IDs.","Normalized fields."],imp:"Packs enable testing."},
-                                   TRAJECTORY:{para:"Packs become interchange.",bullets:["Standard exports.","Shared tooling.","Network audits."],imp:"Packs scale collaboration."}})
-          ]
-        ),
-
-        vine("ACRONYMS","Acronyms",
-          {ORIGIN:"Why lock terms.",NOW:"Pillars map.",TRAJECTORY:"Searchable tokens."},
-          [
-            fruit("CORE","Core",{ORIGIN:{para:"Core terms repeat most.",bullets:["Start with high-frequency.","Reduce drift."],imp:"Core terms are the entry ramp."},
-                                  NOW:{para:"Core terms are stable UI anchors.",bullets:["Same meaning everywhere.","Fast comprehension."],imp:"Core terms reduce confusion."},
-                                  TRAJECTORY:{para:"Core becomes onboarding.",bullets:["Training modules.","Cert tracks."],imp:"Core terms scale teaching."}}),
-            fruit("PILLARS","Pillars",{ORIGIN:{para:"Pillars group function.",bullets:["Language.","Execution.","Measurement.","Identity."],imp:"Pillars organize the forest."},
-                                      NOW:{para:"Pillars make lookup fast.",bullets:["Search by intent.","Not memory."],imp:"Pillars reduce friction."},
-                                      TRAJECTORY:{para:"Pillars scale to 256.",bullets:["More terms, same clarity."],imp:"Pillars preserve readability."}}),
-            fruit("LOOKUP","Lookup",{ORIGIN:{para:"Lookup prevents hunting.",bullets:["Tags.","Prefixes.","Stable names."],imp:"Lookup is navigation."},
-                                     NOW:{para:"Lookup is consistent.",bullets:["Same tokens.","Same routes."],imp:"Lookup keeps coherence."},
-                                     TRAJECTORY:{para:"Lookup becomes in-UI.",bullets:["Autocomplete.","Context links."],imp:"Lookup becomes a tool."}}),
-            fruit("USAGE","Usage",{ORIGIN:{para:"Use defines meaning.",bullets:["Examples anchor definitions."],imp:"Usage removes ambiguity."},
-                                   NOW:{para:"Usage is short and repeatable.",bullets:["One sentence.","One action."],imp:"Usage teaches fast."},
-                                   TRAJECTORY:{para:"Usage becomes training.",bullets:["Drills.","Tests."],imp:"Usage scales learning."}})
-          ]
-        )
-      ]
-    };
-
-    // Render 4 vines per quadrant (only NW fully populated here; other quadrants can be filled next)
-    // For now, mirror NW vines into others so UI works end-to-end without “empty”.
-    ["NE","SW","SE"].forEach(q => { MODEL[q] = MODEL[q] || MODEL.NW; });
-
-    // Build quadrants using MODEL (4 vines only)
-    function renderQuadrant(q){
-      const row = document.getElementById("row"+q);
-      row.innerHTML = "";
-      const vines = MODEL.NW.vines.slice(0,4); // keeps exactly 4
-      vines.forEach(v=>{
-        const btn = document.createElement("div");
-        btn.className = "bubble-btn";
-        btn.innerHTML = `
-          <div class="lbl">
-            <b>${esc(v.label)}</b>
-            <i>${esc(simplify(v.lens[state.lens]))}</i>
-          </div>
-          <div class="go">▶</div>
-        `;
-        btn.addEventListener("click", ()=>openModal("NW", v.key));
-        row.appendChild(btn);
-      });
-    }
-
-    function openModal(q, vineKey){
-      state.current = {q, vineKey};
-      document.getElementById("overlay").classList.add("on");
-      document.body.style.overflow = "hidden";
-      renderModal();
-    }
-
-    function closeModal(){
-      document.getElementById("overlay").classList.remove("on");
-      document.body.style.overflow = "";
-      state.current = null;
-    }
-
-    function renderModal(){
-      const q = state.current.q;
-      const quad = MODEL[q];
-      const vine = quad.vines.find(x=>x.key===state.current.vineKey);
-
-      // header
-      document.getElementById("mTitle").textContent = `${quad.title} · ${vine.label}`;
-      document.getElementById("mSubtitle").textContent = quad.subtitle;
-
-      // vine summary (lens filtered + expression)
-      document.getElementById("mH3").textContent = vine.label;
-      document.getElementById("mText").textContent = simplify(vine.lens[state.lens]);
-
-      // fruits list (4)
-      const fruitGrid = document.getElementById("fruitGrid");
-      fruitGrid.innerHTML = "";
-      vine.fruits.forEach(f=>{
-        const b = document.createElement("div");
-        b.className = "bubble-btn";
-        b.innerHTML = `
-          <div class="lbl">
-            <b>${esc(f.label)}</b>
-            <i>Tap to open the resolution chamber</i>
-          </div>
-          <div class="go">▶</div>
-        `;
-        b.addEventListener("click", ()=>showResolution(vine, f));
-        fruitGrid.appendChild(b);
-      });
-
-      // clear resolution
-      document.getElementById("resolutionMount").innerHTML = "";
-      document.getElementById("fruitTitle").style.display = "";
-      fruitGrid.style.display = "";
-      document.getElementById("fruitNote").style.display = "";
-
-      syncModalLensButtons();
-    }
-
-    function showResolution(vine, fruit){
-      const mount = document.getElementById("resolutionMount");
-      const pack = fruit.pack[state.lens]; // {para, bullets, imp}
-      const para = simplify(pack.para);
-      const bullets = pack.bullets.map(x=>simplify(x));
-      const imp = simplify(pack.imp);
-
-      mount.innerHTML = `
-        <div class="resolution">
-          <h4>${esc(fruit.label)} — Resolution</h4>
-          <p class="para">${esc(para)}</p>
-          <ul>${bullets.map(b=>`<li>${esc(b)}</li>`).join("")}</ul>
-          <div class="imp">→ ${esc(imp)}</div>
-          <div class="back" id="backToFruits">Back</div>
-        </div>
-      `;
-
-      document.getElementById("backToFruits").addEventListener("click", ()=>{
-        mount.innerHTML = "";
-      });
-    }
-
-    function syncModalLensButtons(){
-      document.getElementById("mLensOrigin").classList.toggle("active", state.lens==="ORIGIN");
-      document.getElementById("mLensNow").classList.toggle("active", state.lens==="NOW");
-      document.getElementById("mLensTraj").classList.toggle("active", state.lens==="TRAJECTORY");
-    }
-
-    function esc(s){
-      return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
-    }
-
-    function simplify(t){
-      if(state.expr==="FORMAL") return t;
-      // informal = constrained simplified phrasing (placeholder for true 1001 enforcement)
-      return t
-        .replaceAll("therefore","so")
-        .replaceAll("however","but")
-        .replaceAll("eliminate","remove")
-        .replaceAll("verification","proof")
-        .replaceAll("classification","name")
-        .replaceAll("consistent","same")
-        .replaceAll("trajectory","future")
-        .replaceAll("invariant","rule");
-    }
-
-    // build resolution packs from earlier fruits (convert into pack objects)
-    function fruit(key,label,pack){ return {key,label,pack}; }
-    function vine(key,label,lens,fruits){ return {key,label,lens,fruits}; }
-
-    // Replace earlier fruit objects with pack objects
-    // (We already embedded packs in NW fruits above by building them as pack objects)
-    // Here we finalize the NW fruits construction:
-    // Convert NW fruits pack objects properly:
-    MODEL.NW.vines.forEach(v=>{
-      v.fruits = v.fruits.map(f=>{
-        // if already in pack format, keep
-        if(f.pack) return f;
-        return f;
-      });
+    data[q].forEach(label=>{
+      const div = document.createElement("div");
+      div.className="bubble-btn";
+      div.innerHTML = `<div class="lbl"><b>${label}</b><i>Open detail</i></div><div class="go">▶</div>`;
+      div.addEventListener("click", ()=>openModal(q,label));
+      row.appendChild(div);
     });
+  });
 
-    // Close / jump handlers
-    document.getElementById("mClose").addEventListener("click", closeModal);
-    document.getElementById("overlay").addEventListener("click",(e)=>{ if(e.target.id==="overlay") closeModal(); });
-    document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && document.getElementById("overlay").classList.contains("on")) closeModal(); });
-    document.getElementById("jumpHomeBtn").addEventListener("click",(e)=>{ e.preventDefault(); closeModal(); });
+  function openModal(q,label){
+    document.getElementById("mTitle").textContent = q + " · " + label;
+    document.getElementById("mH3").textContent = label;
+    document.getElementById("mText").textContent = "Detailed resolution explanation goes here.";
+    overlay.classList.add("on");
+  }
 
-    // Lens buttons
-    document.getElementById("mLensOrigin").addEventListener("click", ()=>setLens("ORIGIN"));
-    document.getElementById("mLensNow").addEventListener("click", ()=>setLens("NOW"));
-    document.getElementById("mLensTraj").addEventListener("click", ()=>setLens("TRAJECTORY"));
-
-    function setLens(L){
-      state.lens=L;
-      localStorage.setItem("crp_lens",L);
-      syncTop();
-      if(document.getElementById("overlay").classList.contains("on")) renderModal();
-      ["NW","NE","SW","SE"].forEach(renderQuadrant);
-    }
-    function setExpr(E){
-      state.expr=E;
-      localStorage.setItem("crp_expr",E);
-      syncTop();
-      if(document.getElementById("overlay").classList.contains("on")) renderModal();
-      ["NW","NE","SW","SE"].forEach(renderQuadrant);
-    }
-    function syncTop(){
-      document.getElementById("lensOrigin").classList.toggle("active", state.lens==="ORIGIN");
-      document.getElementById("lensNow").classList.toggle("active", state.lens==="NOW");
-      document.getElementById("lensTraj").classList.toggle("active", state.lens==="TRAJECTORY");
-      document.getElementById("exprFormal").classList.toggle("active", state.expr==="FORMAL");
-      document.getElementById("exprInformal").classList.toggle("active", state.expr==="INFORMAL");
-      syncModalLensButtons();
-    }
-    document.getElementById("lensOrigin").addEventListener("click", ()=>setLens("ORIGIN"));
-    document.getElementById("lensNow").addEventListener("click", ()=>setLens("NOW"));
-    document.getElementById("lensTraj").addEventListener("click", ()=>setLens("TRAJECTORY"));
-    document.getElementById("exprFormal").addEventListener("click", ()=>setExpr("FORMAL"));
-    document.getElementById("exprInformal").addEventListener("click", ()=>setExpr("INFORMAL"));
-
-    // Init
-    syncTop();
-    ["NW","NE","SW","SE"].forEach(renderQuadrant);
-  })();
+})();
 </script>
+
 </body>
 </html>

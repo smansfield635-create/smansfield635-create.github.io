@@ -1,118 +1,370 @@
-<!-- TNT FILE: /door/index.html -->
+<!-- TNT FILE: /home/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Door · Geodiametrics</title>
-  <link rel="stylesheet" href="/assets/ui.css?v=9100"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9100"/>
-  <script defer src="/assets/instrument.js?v=9100"></script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Home · Geodiametrics</title>
+
+<link rel="stylesheet" href="/assets/ui.css?v=9100"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9100"/>
+<script defer src="/assets/instrument.js?v=9100"></script>
 </head>
+
 <body>
-  <div class="page">
-    <div class="diamond-field"><div class="plate"></div></div>
+<div class="page">
+  <div class="wrap">
 
-    <div class="wrap" style="position:relative; z-index:2;">
-      <div class="hero center">
-        <h1>DOOR</h1>
-        <p>Choose your route.</p>
-        <div class="mt12">
-          <span class="pill">LANG: <span id="langPill">EN</span></span>
-          <span class="pill">DEPTH: <span id="depthPill">EXPLORE</span></span>
+    <div class="hero">
+      <h1>HOME</h1>
+      <p>Quadrant → Vine → Fruit → Resolution.</p>
+
+      <!-- Top lenses -->
+      <div class="pills mt12">
+        <span class="pill">LANG: <span id="langPill">EN</span></span>
+        <span class="pill">DEPTH: <span id="depthPill">EXPLORE</span></span>
+
+        <span class="pill">TIME:</span>
+        <button class="pill btn active" id="lensOrigin" type="button">ORIGIN</button>
+        <button class="pill btn" id="lensNow" type="button">NOW</button>
+        <button class="pill btn" id="lensTraj" type="button">TRAJECTORY</button>
+
+        <span class="pill">STYLE:</span>
+        <button class="pill btn active" id="exprFormal" type="button">FORMAL</button>
+        <button class="pill btn" id="exprInformal" type="button">INFORMAL</button>
+
+        <a class="pill btn" href="/door/">DOOR</a>
+      </div>
+
+      <div class="section-title">Quadrant routes (tap a vine)</div>
+    </div>
+
+    <!-- 4 quadrants only -->
+    <details class="quad" data-q="NW" open>
+      <summary>
+        <div class="q-left">
+          <div class="q-badge"><span class="icon">⭐</span><span class="code">NW</span></div>
+          <div class="q-text"><b>NORTHWEST</b><span>Definition · language · structure</span></div>
         </div>
-      </div>
+        <div class="q-arrow">▾</div>
+      </summary>
+      <div class="inside"><div class="bubble-row" id="rowNW"></div></div>
+    </details>
 
-      <div class="lane-row">
-        <button class="pill btn" id="setEN" type="button">EN</button>
-        <button class="pill btn" id="setZH" type="button">中文</button>
-        <a class="pill btn" href="/" id="backIdx">BACK</a>
-      </div>
-
-      <div class="diamond-grid mt12">
-        <button class="diamond gold pos-top" id="goExplore" type="button" aria-label="Explore">
-          <div class="inner">
-            <div class="label">EXPLORE</div>
-            <div class="sub">Surface</div>
-          </div>
-        </button>
-
-        <button class="diamond pos-left" id="goLinks" type="button" aria-label="Links">
-          <div class="inner">
-            <div class="label">LINKS</div>
-            <div class="sub">Identity</div>
-          </div>
-        </button>
-
-        <button class="diamond pos-right" id="goLearn" type="button" aria-label="Learn">
-          <div class="inner">
-            <div class="label">LEARN</div>
-            <div class="sub">Deep</div>
-          </div>
-        </button>
-
-        <button class="diamond pos-bottom" id="goHome" type="button" aria-label="Home">
-          <div class="inner">
-            <div class="label">HOME</div>
-            <div class="sub">Enter hub</div>
-          </div>
-        </button>
-      </div>
-
-      <div class="panel mt16" style="padding:14px 16px; max-width:820px; margin-left:auto; margin-right:auto;">
-        <div class="section-title">What these routes mean</div>
-        <div style="margin-top:10px; color:rgba(234,242,246,.78); line-height:1.65;">
-          <b>Explore</b> shows the surface map (fast orientation).<br/>
-          <b>Learn</b> enters the deep map (nested bubbles + resolution).<br/>
-          <b>Home</b> enters the hub at your current depth.<br/>
-          <b>Links</b> opens identity and reference anchors.
+    <details class="quad" data-q="NE">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge"><span class="icon">☀️</span><span class="code">NE</span></div>
+          <div class="q-text"><b>NORTHEAST</b><span>Execution · surfaces · examples</span></div>
         </div>
-      </div>
+        <div class="q-arrow">▾</div>
+      </summary>
+      <div class="inside"><div class="bubble-row" id="rowNE"></div></div>
+    </details>
 
-      <div class="ink">GEODIAMETRICS</div>
-      <footer class="footer">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    <details class="quad" data-q="SW">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge"><span class="icon">🏮</span><span class="code">SW</span></div>
+          <div class="q-text"><b>SOUTHWEST</b><span>Measurement · diagnostics · rules</span></div>
+        </div>
+        <div class="q-arrow">▾</div>
+      </summary>
+      <div class="inside"><div class="bubble-row" id="rowSW"></div></div>
+    </details>
+
+    <details class="quad" data-q="SE">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge"><span class="icon">🌇</span><span class="code">SE</span></div>
+          <div class="q-text"><b>SOUTHEAST</b><span>Identity · references · links</span></div>
+        </div>
+        <div class="q-arrow">▾</div>
+      </summary>
+      <div class="inside"><div class="bubble-row" id="rowSE"></div></div>
+    </details>
+
+    <footer class="footer">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    <div class="ink">GEODIAMETRICS</div>
+  </div>
+</div>
+
+<!-- MODAL (no scroll jump; content pops over) -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Detail popover">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">
+        <b id="mTitle">DETAIL</b>
+        <span id="mSubtitle">—</span>
+      </div>
+      <button class="close" id="mClose" type="button">Close</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="block">
+        <h3 id="mH3">—</h3>
+        <p id="mText">—</p>
+
+        <div class="mt16">
+          <div class="section-title">Fruits (pick one)</div>
+          <div class="bubble-row mt12" id="fruitGrid"></div>
+        </div>
+
+        <div id="resolutionMount"></div>
+      </div>
     </div>
   </div>
+</div>
 
-  <script>
-  (() => {
-    const K1_LANG="gd_lang", K2_LANG="crp_lang";
-    const K1_DEPTH="gd_depth", K2_DEPTH="crp_depth";
+<script>
+(() => {
+  const K1_LANG="gd_lang", K2_LANG="crp_lang";
+  const K1_DEPTH="gd_depth", K2_DEPTH="crp_depth";
 
-    const read = (k)=>{ try{return localStorage.getItem(k)||"";}catch(e){return "";} };
-    const writeBoth = (a,b,v)=>{ try{localStorage.setItem(a,v);localStorage.setItem(b,v);}catch(e){} };
+  const state = {
+    lang: "en",
+    depth: "explore",
+    lens: "ORIGIN",      // ORIGIN | NOW | TRAJECTORY
+    expr: "FORMAL",      // FORMAL | INFORMAL
+    current: null        // { q, vineKey }
+  };
 
-    // init pills
-    const lang = (read(K1_LANG)||read(K2_LANG)||"en").toLowerCase()==="zh" ? "zh" : "en";
-    const depth = (read(K1_DEPTH)||read(K2_DEPTH)||"explore").toLowerCase()==="learn" ? "learn" : "explore";
+  const $ = (id)=>document.getElementById(id);
+  const esc = (s)=>String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
 
-    document.getElementById("langPill").textContent = (lang==="zh" ? "中文" : "EN");
-    document.getElementById("depthPill").textContent = (depth==="learn" ? "LEARN" : "EXPLORE");
+  function read(k){ try{return localStorage.getItem(k)||"";}catch(e){return "";} }
+  function writeBoth(a,b,v){ try{localStorage.setItem(a,v);localStorage.setItem(b,v);}catch(e){} }
 
-    // language toggle
-    document.getElementById("setEN").addEventListener("click", ()=>{ writeBoth(K1_LANG,K2_LANG,"en"); location.href="/door/?lang=en"; });
-    document.getElementById("setZH").addEventListener("click", ()=>{ writeBoth(K1_LANG,K2_LANG,"zh"); location.href="/door/?lang=zh"; });
+  // normalize from storage
+  state.lang = ((read(K1_LANG)||read(K2_LANG)||"en").toLowerCase()==="zh") ? "zh" : "en";
+  state.depth = ((read(K1_DEPTH)||read(K2_DEPTH)||"explore").toLowerCase()==="learn") ? "learn" : "explore";
 
-    // routes
-    document.getElementById("goExplore").addEventListener("click", ()=>{
-      writeBoth(K1_DEPTH,K2_DEPTH,"explore");
-      location.href="/home/?depth=explore";
+  $("langPill").textContent = state.lang==="zh" ? "中文" : "EN";
+  $("depthPill").textContent = state.depth==="learn" ? "LEARN" : "EXPLORE";
+
+  // informal simplifier placeholder
+  function simplify(t){
+    if(state.expr==="FORMAL") return t;
+    return t
+      .replaceAll("therefore","so")
+      .replaceAll("however","but")
+      .replaceAll("eliminate","remove")
+      .replaceAll("verification","proof")
+      .replaceAll("classification","name")
+      .replaceAll("consistent","same")
+      .replaceAll("trajectory","future")
+      .replaceAll("invariant","rule");
+  }
+
+  function setLens(L){
+    state.lens=L;
+    localStorage.setItem("crp_lens",L);
+    syncTop();
+    if($("overlay").classList.contains("on")) renderModal();
+    renderAllQuadrants();
+  }
+  function setExpr(E){
+    state.expr=E;
+    localStorage.setItem("crp_expr",E);
+    syncTop();
+    if($("overlay").classList.contains("on")) renderModal();
+    renderAllQuadrants();
+  }
+
+  function syncTop(){
+    $("lensOrigin").classList.toggle("active", state.lens==="ORIGIN");
+    $("lensNow").classList.toggle("active", state.lens==="NOW");
+    $("lensTraj").classList.toggle("active", state.lens==="TRAJECTORY");
+    $("exprFormal").classList.toggle("active", state.expr==="FORMAL");
+    $("exprInformal").classList.toggle("active", state.expr==="INFORMAL");
+  }
+
+  $("lensOrigin").addEventListener("click", ()=>setLens("ORIGIN"));
+  $("lensNow").addEventListener("click", ()=>setLens("NOW"));
+  $("lensTraj").addEventListener("click", ()=>setLens("TRAJECTORY"));
+  $("exprFormal").addEventListener("click", ()=>setExpr("FORMAL"));
+  $("exprInformal").addEventListener("click", ()=>setExpr("INFORMAL"));
+  syncTop();
+
+  // ---- MODEL (4 quadrants -> 4 vines -> 4 fruits -> resolution paragraph+bullets+imp) ----
+  const fruit = (key,label,pack)=>({key,label,pack});
+  const vine  = (key,label,lens,fruits)=>({key,label,lens,fruits});
+
+  const MODEL = {
+    NW:{
+      title:"NORTHWEST",
+      subtitle:"Definition · language · structure",
+      vines:[
+        vine("SSG","SSG",
+          {ORIGIN:"Why constraint languages exist.",NOW:"How SSG runs structure and state.",TRAJECTORY:"How SSG scales execution."},
+          [
+            fruit("PRIM","Primitives",{ORIGIN:{para:"Primitives exist to keep meaning stable while complexity grows.",bullets:["Name what exists (Resource/Store).","Name what must hold (Constraint).","Name success (Goal) and admissibility (Guard)."],imp:"Clear primitives remove ambiguity."},
+                                        NOW:{para:"Today, primitives are executable contracts: Resource, Store, Constraint, Goal, Guard.",bullets:["Resource = what is acted on.","Store = where state lives.","Constraint = must-hold.","Goal = success.","Guard = allow/deny."],imp:"Primitives make execution replay-safe."},
+                                        TRAJECTORY:{para:"As the platform scales, primitives become cross-domain coordinates.",bullets:["One vocabulary across domains.","Cheaper audits.","Cheaper collaboration."],imp:"Shared primitives enable network-scale coherence."}}),
+            fruit("RECEIPT","Receipts",{ORIGIN:{para:"Receipts exist because progress must be provable.",bullets:["No invisible progress.","No narrative-only trust."],imp:"Receipts convert intent into verified history."},
+                                        NOW:{para:"Receipts gate advancement. Back-nav invalidates downstream receipts.",bullets:["Advance only after receipt.","Back invalidates downstream.","Replay verifies."],imp:"Receipts enforce coherence mechanically."},
+                                        TRAJECTORY:{para:"Receipts become portable verification tokens across systems.",bullets:["Interoperable tokens.","Automatic audits.","Cheaper disputes."],imp:"Receipts scale trust without argument."}}),
+            fruit("INV","Invariants",{ORIGIN:{para:"Invariants exist to stop drift at the root.",bullets:["Navigation-first.","No timers as gates.","Atomic handoff with receipt."],imp:"Invariants are safety rails."},
+                                     NOW:{para:"Invariants keep UX predictable under load.",bullets:["Consistent presses.","Stable returns.","No partial transitions."],imp:"Predictability is coherence."},
+                                     TRAJECTORY:{para:"Invariants reduce defects and exploits as ambiguity is removed.",bullets:["Lower exploit surface.","Lower defect rate.","Higher reliability."],imp:"Invariants are compound interest."}}),
+            fruit("EX","Examples",{ORIGIN:{para:"Examples compress learning faster than broad explanation.",bullets:["Smallest unit.","Repeatable pattern.","Minimal interpretation."],imp:"Examples create usable habits."},
+                                  NOW:{para:"Examples mirror geometry: quadrant → vine → fruit → resolution.",bullets:["Geometry-aligned.","Repeatable.","Ends in a conclusion."],imp:"Examples teach by movement."},
+                                  TRAJECTORY:{para:"Examples become templates; templates become products.",bullets:["Examples → templates.","Templates → products.","Products → standards."],imp:"Templates are executable knowledge."}})
+          ]
+        ),
+        vine("GRAM","Diamond Grammar",
+          {ORIGIN:"Why four routes exist.",NOW:"Hub-first traversal and returns.",TRAJECTORY:"Grammar scales governance."},
+          [
+            fruit("ONE","One Choice",{ORIGIN:{para:"One choice prevents fragmentation.",bullets:["Pick one route.","Finish or return."],imp:"Single choice preserves coherence."},
+                                     NOW:{para:"It keeps the site readable and stable.",bullets:["No multi-tab drift.","Clear returns."],imp:"Navigation stays coherent."},
+                                     TRAJECTORY:{para:"Teams align faster under shared traversal rules.",bullets:["Shared grammar.","Shared meaning."],imp:"Grammar becomes governance."}}),
+            fruit("RET","Return",{ORIGIN:{para:"Return prevents traps.",bullets:["Hub-first.","Safe exit.","Re-entry allowed."],imp:"Return restores orientation."},
+                                 NOW:{para:"Return is default correction under confusion.",bullets:["Return → reselect → continue."],imp:"Return is the reset button."},
+                                 TRAJECTORY:{para:"Return scales resilience under load.",bullets:["Safer workflows.","Less drift."],imp:"Return is resilience."}}),
+            fruit("ENC","Encode",{ORIGIN:{para:"Directions encode function domains.",bullets:["N=definition.","E=execution.","S=measurement.","W=identity."],imp:"Compass becomes language."},
+                                 NOW:{para:"Encoding makes the forest navigable.",bullets:["Same map everywhere.","Faster learning."],imp:"Encoding compresses comprehension."},
+                                 TRAJECTORY:{para:"Encoding generalizes cross-domain.",bullets:["Same axes.","Same filters."],imp:"Encoding is portability."}}),
+            fruit("COMP","Dual Compression",{ORIGIN:{para:"Not all screens fit diamonds.",bullets:["Diamond for routing.","Panels for density."],imp:"Compression protects readability."},
+                                           NOW:{para:"Routes stay simple while depth stays contained.",bullets:["No clutter.","No overlap confusion."],imp:"Density stays navigable."},
+                                           TRAJECTORY:{para:"More content without redesign.",bullets:["Same clarity.","More scale."],imp:"Compression is scalability."}})
+          ]
+        ),
+        vine("DOT","DOT.GRID",
+          {ORIGIN:"Why index states.",NOW:"Replay and audit.",TRAJECTORY:"Universal coordinates."},
+          [
+            fruit("STATE","State",{ORIGIN:{para:"State labeling prevents ambiguity.",bullets:["Name the situation.","Bound the space."],imp:"State naming starts control."},
+                                   NOW:{para:"States allow consistent comparison from the same evidence.",bullets:["Same evidence → same state mapping."],imp:"State indexing enables agreement."},
+                                   TRAJECTORY:{para:"States become portable across domains.",bullets:["One lattice, many domains."],imp:"State becomes infrastructure."}}),
+            fruit("REPLAY","Replay",{ORIGIN:{para:"Replay exists because trust must be verifiable.",bullets:["If you can't replay, you can't verify."],imp:"Replay is proof."},
+                                     NOW:{para:"Replay reruns the evidence path.",bullets:["Detect drift.","Audit outcomes."],imp:"Replay is audit."},
+                                     TRAJECTORY:{para:"Replay becomes automatic validation.",bullets:["Cheaper compliance.","Fewer disputes."],imp:"Replay scales trust."}}),
+            fruit("AUD","Audit",{ORIGIN:{para:"Audit prevents narrative-only interpretation.",bullets:["Trace evidence → output."],imp:"Audit is accountability."},
+                                 NOW:{para:"Audit is repeatable and observer-consistent.",bullets:["Rule-based.","Recorded."],imp:"Audit ends argument."},
+                                 TRAJECTORY:{para:"Audit becomes institution-ready infrastructure.",bullets:["Cross-domain.","Fast."],imp:"Audit becomes standard."}}),
+            fruit("PACK","Packs",{ORIGIN:{para:"Packs move evidence cleanly.",bullets:["One file.","Replayable stream."],imp:"Packs enable portability."},
+                                 NOW:{para:"Packs feed sweeps and tests.",bullets:["CSV/JSONL.","Stable fields."],imp:"Packs enable testing."},
+                                 TRAJECTORY:{para:"Packs become interchange format.",bullets:["Standard exports.","Shared tooling."],imp:"Packs scale collaboration."}})
+          ]
+        ),
+        vine("ACR","Acronyms",
+          {ORIGIN:"Why lock terms.",NOW:"Pillars map.",TRAJECTORY:"Searchable tokens."},
+          [
+            fruit("CORE","Core Set",{ORIGIN:{para:"Core terms repeat most.",bullets:["High-frequency first.","Reduce drift."],imp:"Core is the entry ramp."},
+                                    NOW:{para:"Core terms become stable UI anchors.",bullets:["Same meaning everywhere."],imp:"Core reduces confusion."},
+                                    TRAJECTORY:{para:"Core becomes training layer.",bullets:["Modules.","Cert tracks."],imp:"Core scales teaching."}}),
+            fruit("PILL","Pillars",{ORIGIN:{para:"Pillars group function.",bullets:["Language.","Execution.","Measurement.","Identity."],imp:"Pillars organize the forest."},
+                                   NOW:{para:"Pillars make lookup fast.",bullets:["Search by intent."],imp:"Pillars reduce friction."},
+                                   TRAJECTORY:{para:"Pillars scale to 256 terms.",bullets:["More terms, same clarity."],imp:"Pillars preserve readability."}}),
+            fruit("LOOK","Lookup",{ORIGIN:{para:"Lookup prevents hunting.",bullets:["Tags.","Stable names."],imp:"Lookup is navigation."},
+                                  NOW:{para:"Lookup stays consistent across pages.",bullets:["Same tokens."],imp:"Lookup keeps coherence."},
+                                  TRAJECTORY:{para:"Lookup becomes in-UI tool.",bullets:["Autocomplete.","Context links."],imp:"Lookup becomes a surface."}}),
+            fruit("USE","Usage",{ORIGIN:{para:"Use defines meaning.",bullets:["Examples anchor definitions."],imp:"Usage removes ambiguity."},
+                                NOW:{para:"Usage is short and repeatable.",bullets:["One sentence.","One action."],imp:"Usage teaches fast."},
+                                TRAJECTORY:{para:"Usage becomes drills and tests.",bullets:["Practice.","Assessment."],imp:"Usage scales learning."}})
+          ]
+        )
+      ]
+    }
+  };
+
+  // For now, map other quadrants to same structure (so UI remains complete)
+  MODEL.NE = MODEL.NW; MODEL.SW = MODEL.NW; MODEL.SE = MODEL.NW;
+
+  function renderQuadrant(q){
+    const row = $("row"+q);
+    row.innerHTML = "";
+    const quad = MODEL[q];
+    quad.vines.forEach(v=>{
+      const btn = document.createElement("div");
+      btn.className = "bubble-btn";
+      btn.innerHTML = `
+        <div class="lbl">
+          <b>${esc(v.label)}</b>
+          <i>${esc(simplify(v.lens[state.lens]))}</i>
+        </div>
+        <div class="go">▶</div>
+      `;
+      btn.addEventListener("click", ()=>openModal(q, v.key));
+      row.appendChild(btn);
+    });
+  }
+  function renderAllQuadrants(){ ["NW","NE","SW","SE"].forEach(renderQuadrant); }
+
+  function openModal(q, vineKey){
+    state.current = {q, vineKey};
+    $("overlay").classList.add("on");
+    document.body.style.overflow = "hidden";
+    renderModal();
+  }
+
+  function closeModal(){
+    $("overlay").classList.remove("on");
+    document.body.style.overflow = "";
+    state.current = null;
+  }
+
+  function renderModal(){
+    const {q, vineKey} = state.current;
+    const quad = MODEL[q];
+    const vine = quad.vines.find(x=>x.key===vineKey);
+
+    $("mTitle").textContent = `${q} · ${vine.label}`;
+    $("mSubtitle").textContent = quad.subtitle;
+
+    $("mH3").textContent = vine.label;
+    $("mText").textContent = simplify(vine.lens[state.lens]);
+
+    const fruitGrid = $("fruitGrid");
+    fruitGrid.innerHTML = "";
+    vine.fruits.forEach(f=>{
+      const b = document.createElement("div");
+      b.className = "bubble-btn";
+      b.innerHTML = `
+        <div class="lbl">
+          <b>${esc(f.label)}</b>
+          <i>Open resolution</i>
+        </div>
+        <div class="go">▶</div>
+      `;
+      b.addEventListener("click", ()=>showResolution(f));
+      fruitGrid.appendChild(b);
     });
 
-    document.getElementById("goLearn").addEventListener("click", ()=>{
-      writeBoth(K1_DEPTH,K2_DEPTH,"learn");
-      location.href="/home/?depth=learn";
-    });
+    $("resolutionMount").innerHTML = "";
+  }
 
-    document.getElementById("goHome").addEventListener("click", ()=>{
-      // keep existing depth
-      location.href="/home/?depth=" + encodeURIComponent(depth);
-    });
+  function showResolution(fruit){
+    const pack = fruit.pack[state.lens];
+    const para = simplify(pack.para);
+    const bullets = pack.bullets.map(x=>simplify(x));
+    const imp = simplify(pack.imp);
 
-    document.getElementById("goLinks").addEventListener("click", ()=>{
-      location.href="/links/";
-    });
-  })();
-  </script>
+    $("resolutionMount").innerHTML = `
+      <div class="resolution">
+        <h4>${esc(fruit.label)} — Resolution</h4>
+        <p class="para">${esc(para)}</p>
+        <ul>${bullets.map(b=>`<li>${esc(b)}</li>`).join("")}</ul>
+        <div class="imp">→ ${esc(imp)}</div>
+      </div>
+    `;
+  }
+
+  $("mClose").addEventListener("click", closeModal);
+  $("overlay").addEventListener("click",(e)=>{ if(e.target.id==="overlay") closeModal(); });
+  document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && $("overlay").classList.contains("on")) closeModal(); });
+
+  // If depth came via query, store it (door sets too; but safe)
+  const qs = new URLSearchParams(location.search||"");
+  const qDepth = (qs.get("depth")||"").toLowerCase();
+  if(qDepth==="learn" || qDepth==="explore"){
+    writeBoth(K1_DEPTH, K2_DEPTH, qDepth);
+    state.depth = qDepth;
+    $("depthPill").textContent = qDepth==="learn" ? "LEARN" : "EXPLORE";
+  }
+
+  // Init
+  renderAllQuadrants();
+})();
+</script>
 </body>
 </html>

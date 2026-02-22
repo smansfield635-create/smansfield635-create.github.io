@@ -3,198 +3,308 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>HOME · Geodiametrics</title>
+  <title>HOME · Compass Face</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=9800"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9800"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=HOME_DIAMOND_1"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=HOME_DIAMOND_1"/>
+  <script defer src="/assets/instrument.js?v=HOME_DIAMOND_1"></script>
+
+  <style>
+    .home-wrap{max-width:980px;margin:0 auto;padding-bottom:40px;}
+
+    .back-left{position:absolute;left:16px;top:16px;}
+
+    /* Diamond-of-diamonds */
+    .diamond-face{
+      width:min(520px, 92vw);
+      height:min(520px, 92vw);
+      margin:22px auto 8px;
+      position:relative;
+    }
+
+    .d-diamond{
+      width:190px;
+      height:190px;
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform-origin:center;
+      transform:translate(-50%,-50%) rotate(45deg);
+
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.18);
+      backdrop-filter:blur(6px);
+      box-shadow:0 18px 55px rgba(0,0,0,.35);
+    }
+
+    .d-inner{
+      width:100%;
+      height:100%;
+      transform:rotate(-45deg); /* keep text upright */
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      text-align:center;
+      gap:8px;
+    }
+
+    .d-title{
+      font-weight:950;
+      letter-spacing:.3px;
+      font-size:18px;
+    }
+
+    .d-text{
+      opacity:.86;
+      font-size:14px;
+      line-height:1.35;
+    }
+
+    /* Position the 4 diamonds to form a big diamond */
+    .d-n{ transform:translate(-50%,-50%) translate(0,-150px) rotate(45deg); }
+    .d-e{ transform:translate(-50%,-50%) translate(150px,0) rotate(45deg); }
+    .d-s{ transform:translate(-50%,-50%) translate(0,150px) rotate(45deg); }
+    .d-w{ transform:translate(-50%,-50%) translate(-150px,0) rotate(45deg); }
+
+    /* Center marker */
+    .d-core{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:72px;
+      height:72px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,210,120,.32);
+      background:linear-gradient(135deg, rgba(255,210,120,.20), rgba(255,150,60,.08));
+      box-shadow:0 0 26px rgba(255,210,120,.20);
+      font-weight:900;
+      letter-spacing:.35px;
+      opacity:.95;
+      pointer-events:none;
+    }
+
+    /* Mobile tighten */
+    @media (max-width:520px){
+      .d-diamond{ width:170px; height:170px; }
+      .d-n{ transform:translate(-50%,-50%) translate(0,-132px) rotate(45deg); }
+      .d-e{ transform:translate(-50%,-50%) translate(132px,0) rotate(45deg); }
+      .d-s{ transform:translate(-50%,-50%) translate(0,132px) rotate(45deg); }
+      .d-w{ transform:translate(-50%,-50%) translate(-132px,0) rotate(45deg); }
+    }
+
+    .mini-note{opacity:.72;font-size:12px;text-align:center;line-height:1.35;margin-top:8px;}
+  </style>
 </head>
 
 <body>
+<main class="crp-shell" style="position:relative">
 
-<div class="page">
-  <div class="wrap">
-
-    <!-- BACK TO LANGUAGE -->
-    <div style="position:absolute;left:16px;top:16px">
-      <a href="/" class="pill btn">◀ Language</a>
-    </div>
-
-    <div class="hero" style="text-align:center">
-      <h1>HOME</h1>
-      <p>Compass Face · Vector Understanding</p>
-    </div>
-
-    <!-- LENS CONTROLS -->
-
-    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:24px">
-
-      <!-- FORMAL / INFORMAL -->
-      <button id="modeToggle" class="pill btn">FORMAL</button>
-
-      <!-- TIME -->
-      <div style="display:flex;gap:10px">
-        <button class="pill btn timeBtn" data-time="origin">ORIGIN</button>
-        <button class="pill btn timeBtn" data-time="now">NOW</button>
-        <button class="pill btn timeBtn" data-time="trajectory">TRAJECTORY</button>
-      </div>
-
-    </div>
-
-    <!-- COMPASS CROSS -->
-
-    <div id="compass" style="position:relative;margin-top:60px;height:60vh;max-height:600px">
-
-      <!-- NORTH -->
-      <div class="direction north">
-        <h3>NORTH</h3>
-        <p id="northText"></p>
-      </div>
-
-      <!-- EAST -->
-      <div class="direction east">
-        <h3>EAST</h3>
-        <p id="eastText"></p>
-      </div>
-
-      <!-- SOUTH -->
-      <div class="direction south">
-        <h3>SOUTH</h3>
-        <p id="southText"></p>
-      </div>
-
-      <!-- WEST -->
-      <div class="direction west">
-        <h3>WEST</h3>
-        <p id="westText"></p>
-      </div>
-
-    </div>
-
+  <div class="back-left">
+    <a class="crp-btn" href="/" role="button">◀ Language</a>
   </div>
-</div>
+
+  <header class="crp-header" style="text-align:center">
+    <div class="crp-mark">GEODIAMETRICS</div>
+    <h1 class="crp-title">HOME</h1>
+    <p class="crp-subtitle">Compass Face · Vector Understanding</p>
+
+    <!-- Lenses -->
+    <div class="crp-topbar" style="margin:0 auto 8px;max-width:980px">
+      <div class="crp-topbar-left" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%">
+
+        <!-- Style toggle (single button) -->
+        <div class="crp-lens" role="group" aria-label="Style lens">
+          <button id="styleToggle" class="crp-chip" type="button">STYLE: FORMAL</button>
+        </div>
+
+        <!-- Time -->
+        <div class="crp-lens" role="group" aria-label="Time lens">
+          <button class="crp-chip" type="button" data-time="origin">ORIGIN</button>
+          <button class="crp-chip" type="button" data-time="now">NOW</button>
+          <button id="timeTrajectory" class="crp-chip" type="button" data-time="trajectory">TRAJECTORY</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="sliceNote" class="mini-note"></div>
+  </header>
+
+  <section class="home-wrap">
+    <div class="diamond-face" aria-label="Diamond compass face">
+
+      <div class="d-diamond d-n">
+        <div class="d-inner">
+          <div class="d-title">NORTH</div>
+          <div class="d-text" id="northText"></div>
+        </div>
+      </div>
+
+      <div class="d-diamond d-e">
+        <div class="d-inner">
+          <div class="d-title">EAST</div>
+          <div class="d-text" id="eastText"></div>
+        </div>
+      </div>
+
+      <div class="d-diamond d-s">
+        <div class="d-inner">
+          <div class="d-title">SOUTH</div>
+          <div class="d-text" id="southText"></div>
+        </div>
+      </div>
+
+      <div class="d-diamond d-w">
+        <div class="d-inner">
+          <div class="d-title">WEST</div>
+          <div class="d-text" id="westText"></div>
+        </div>
+      </div>
+
+      <div class="d-core">◆</div>
+
+    </div>
+  </section>
+
+  <footer class="crp-footer" style="text-align:center">
+    <small class="crp-footnote">BUILD: <strong>HOME_DIAMOND_1</strong></small>
+  </footer>
+
+</main>
 
 <script>
-let mode = "formal"
-let time = "origin"
+(function(){
+  "use strict";
 
-const content = {
-  north: {
-    formal: {
-      origin: "North defines invariant structure.",
-      now: "North stabilizes current position.",
-      trajectory: "North preserves long-term coherence."
-    },
-    informal: {
-      origin: "North is your anchor.",
-      now: "North keeps you steady.",
-      trajectory: ""
-    }
-  },
-  east: {
-    formal: {
-      origin: "East maps execution pathways.",
-      now: "East expresses operational flow.",
-      trajectory: "East scales systems forward."
-    },
-    informal: {
-      origin: "East is how you move.",
-      now: "East is doing.",
-      trajectory: ""
-    }
-  },
-  south: {
-    formal: {
-      origin: "South defines convergence pressure.",
-      now: "South applies constraint.",
-      trajectory: "South refines impact over time."
-    },
-    informal: {
-      origin: "South is where force happens.",
-      now: "South pushes.",
-      trajectory: ""
-    }
-  },
-  west: {
-    formal: {
-      origin: "West governs containment.",
-      now: "West enforces boundaries.",
-      trajectory: "West protects systemic integrity."
-    },
-    informal: {
-      origin: "West keeps things tight.",
-      now: "West guards the edge.",
-      trajectory: ""
+  var K_STYLE="gd_style";
+  var K_TIME="gd_time";
+  var K_DEPTH="gd_depth";
+
+  function lsGet(k){ try{return localStorage.getItem(k);}catch(e){ return null; } }
+  function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
+
+  var state={
+    style: lsGet(K_STYLE) || "formal",
+    time:  lsGet(K_TIME)  || "origin",
+    depth: lsGet(K_DEPTH) || "explore"
+  };
+
+  var allowTimeByStyle = {
+    formal: { origin:1, now:1, trajectory:1 },
+    informal: { origin:1, now:1 }  // trajectory formal-only
+  };
+
+  function normalizeTime(){
+    if(!allowTimeByStyle[state.style][state.time]){
+      state.time="now";
+      lsSet(K_TIME,state.time);
     }
   }
-}
 
-function render() {
-  document.getElementById("northText").innerText = content.north[mode][time] || ""
-  document.getElementById("eastText").innerText = content.east[mode][time] || ""
-  document.getElementById("southText").innerText = content.south[mode][time] || ""
-  document.getElementById("westText").innerText = content.west[mode][time] || ""
+  var content = {
+    north:{
+      formal:{
+        origin:"North defines invariant structure.",
+        now:"North stabilizes current position.",
+        trajectory:"North preserves long-term coherence."
+      },
+      informal:{
+        origin:"North is your anchor.",
+        now:"North keeps you from drifting."
+      }
+    },
+    east:{
+      formal:{
+        origin:"East maps execution pathways.",
+        now:"East expresses operational flow.",
+        trajectory:"East scales systems forward."
+      },
+      informal:{
+        origin:"East is how you move.",
+        now:"East is doing."
+      }
+    },
+    south:{
+      formal:{
+        origin:"South defines convergence pressure.",
+        now:"South applies constraint.",
+        trajectory:"South compounds momentum."
+      },
+      informal:{
+        origin:"South is where force happens.",
+        now:"South pushes."
+      }
+    },
+    west:{
+      formal:{
+        origin:"West governs containment.",
+        now:"West enforces boundaries.",
+        trajectory:"West protects integrity."
+      },
+      informal:{
+        origin:"West keeps things tight.",
+        now:"West guards the edge."
+      }
+    }
+  };
 
-  // Hide trajectory if informal
-  const trajectoryBtn = document.querySelector('[data-time="trajectory"]')
-  if(mode === "informal"){
-    trajectoryBtn.style.display = "none"
-    if(time === "trajectory") time = "origin"
-  } else {
-    trajectoryBtn.style.display = "inline-block"
+  function setPressedTime(){
+    document.querySelectorAll("[data-time]").forEach(function(btn){
+      var v = btn.getAttribute("data-time");
+      var allowed = !!allowTimeByStyle[state.style][v];
+      btn.style.opacity = allowed ? "1" : ".35";
+      btn.style.pointerEvents = allowed ? "auto" : "none";
+      btn.setAttribute("aria-pressed", (v===state.time) ? "true" : "false");
+    });
   }
-}
 
-document.getElementById("modeToggle").addEventListener("click", () => {
-  mode = mode === "formal" ? "informal" : "formal"
-  document.getElementById("modeToggle").innerText = mode.toUpperCase()
-  render()
-})
+  function setStyleLabel(){
+    var btn=document.getElementById("styleToggle");
+    btn.textContent = "STYLE: " + state.style.toUpperCase();
+  }
 
-document.querySelectorAll(".timeBtn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    time = btn.dataset.time
-    render()
-  })
-})
+  function render(){
+    normalizeTime();
 
-render()
+    document.getElementById("northText").textContent = content.north[state.style][state.time] || "";
+    document.getElementById("eastText").textContent  = content.east[state.style][state.time] || "";
+    document.getElementById("southText").textContent = content.south[state.style][state.time] || "";
+    document.getElementById("westText").textContent  = content.west[state.style][state.time] || "";
+
+    lsSet(K_STYLE,state.style);
+    lsSet(K_TIME,state.time);
+
+    setStyleLabel();
+    setPressedTime();
+
+    document.getElementById("sliceNote").textContent =
+      "Active: " + state.style.toUpperCase() + " · " + state.time.toUpperCase() + " · " + (state.depth||"explore").toUpperCase() +
+      "  (Trajectory = Formal only)";
+  }
+
+  document.getElementById("styleToggle").addEventListener("click", function(){
+    state.style = (state.style === "formal") ? "informal" : "formal";
+    render();
+  });
+
+  document.querySelectorAll("[data-time]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var v=btn.getAttribute("data-time");
+      if(!allowTimeByStyle[state.style][v]) return;
+      state.time=v;
+      render();
+    });
+  });
+
+  render();
+})();
 </script>
-
-<style>
-/* CROSS LAYOUT */
-
-.direction{
-  position:absolute;
-  width:45%;
-  max-width:300px;
-  padding:18px;
-  border-radius:18px;
-  backdrop-filter:blur(6px);
-  background:rgba(255,255,255,0.05);
-  text-align:center;
-}
-
-.north{top:0;left:50%;transform:translateX(-50%);}
-.south{bottom:0;left:50%;transform:translateX(-50%);}
-.east{top:50%;right:0;transform:translateY(-50%);}
-.west{top:50%;left:0;transform:translateY(-50%);}
-
-/* MOBILE ADAPT */
-@media(max-width:768px){
-  #compass{
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-    height:auto;
-  }
-  .direction{
-    position:relative;
-    width:100%;
-    max-width:none;
-    transform:none !important;
-  }
-}
-</style>
 
 </body>
 </html>

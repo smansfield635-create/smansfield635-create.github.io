@@ -5,13 +5,46 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Compass · DIAMOND</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=9700"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9700"/>
-  <script defer src="/assets/instrument.js?v=9700"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=9800"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=9800"/>
+  <script defer src="/assets/instrument.js?v=9800"></script>
+
+  <!-- FALLBACK GEOMETRY ONLY (no field/bg, no :root) -->
+  <style>
+    /* If branch.css is missing/cached, this forces the radial layout */
+    .crp-snowflake{
+      position:relative;
+      width:min(760px,92vw);
+      aspect-ratio:1/1;
+      margin:0 auto;
+      display:grid;
+      place-items:center;
+    }
+    .crp-nucleus,.crp-axis{
+      position:absolute;
+      left:50%;
+      top:50%;
+    }
+    .crp-nucleus{ transform:translate(-50%,-50%); }
+    .crp-axis[data-axis="rho"]{ transform:translate(-50%,-50%) translate(0,-240px); }
+    .crp-axis[data-axis="tc"]{ transform:translate(-50%,-50%) translate(208px,-120px); }
+    .crp-axis[data-axis="delta"]{ transform:translate(-50%,-50%) translate(208px,120px); }
+    .crp-axis[data-axis="hip"]{ transform:translate(-50%,-50%) translate(0,240px); }
+    .crp-axis[data-axis="lambda"]{ transform:translate(-50%,-50%) translate(-208px,120px); }
+    .crp-axis[data-axis="cert"]{ transform:translate(-50%,-50%) translate(-208px,-120px); }
+
+    @media (max-width:520px){
+      .crp-axis[data-axis="rho"]{ transform:translate(-50%,-50%) translate(0,-210px); }
+      .crp-axis[data-axis="tc"]{ transform:translate(-50%,-50%) translate(182px,-105px); }
+      .crp-axis[data-axis="delta"]{ transform:translate(-50%,-50%) translate(182px,105px); }
+      .crp-axis[data-axis="hip"]{ transform:translate(-50%,-50%) translate(0,210px); }
+      .crp-axis[data-axis="lambda"]{ transform:translate(-50%,-50%) translate(-182px,105px); }
+      .crp-axis[data-axis="cert"]{ transform:translate(-50%,-50%) translate(-182px,-105px); }
+    }
+  </style>
 </head>
 
 <body>
-
 <main class="crp-shell">
 
   <header class="crp-header" style="text-align:center">
@@ -20,46 +53,38 @@
     <p class="crp-subtitle" data-i18n="home.subtitle">Hexagonal Enforcement Geometry</p>
   </header>
 
-  <!-- 6+1 Geometry -->
   <section class="crp-snowflake" aria-label="Hexagonal enforcement geometry">
 
-    <!-- NUCLEUS -->
     <button class="crp-nucleus" type="button" aria-label="DIAMOND nucleus">
       <div data-i18n="axes.nucleus.title">DIAMOND</div>
       <div class="crp-axis-kicker" data-i18n="axes.nucleus.kicker">Nucleus</div>
     </button>
 
-    <!-- ρ -->
     <button class="crp-axis" type="button" data-axis="rho" aria-label="ρ axis">
       <div class="crp-axis-title" data-i18n="axes.rho.title">ρ</div>
       <div class="crp-axis-kicker" data-i18n="axes.rho.kicker">Correlation</div>
     </button>
 
-    <!-- TC -->
     <button class="crp-axis" type="button" data-axis="tc" aria-label="TC axis">
       <div class="crp-axis-title" data-i18n="axes.tc.title">TC</div>
       <div class="crp-axis-kicker" data-i18n="axes.tc.kicker">Alignment</div>
     </button>
 
-    <!-- Δ -->
     <button class="crp-axis" type="button" data-axis="delta" aria-label="Δ axis">
       <div class="crp-axis-title" data-i18n="axes.delta.title">Δ</div>
       <div class="crp-axis-kicker" data-i18n="axes.delta.kicker">Acceleration</div>
     </button>
 
-    <!-- HIP -->
     <button class="crp-axis" type="button" data-axis="hip" aria-label="HIP axis">
       <div class="crp-axis-title" data-i18n="axes.hip.title">HIP</div>
       <div class="crp-axis-kicker" data-i18n="axes.hip.kicker">Gates</div>
     </button>
 
-    <!-- λ -->
     <button class="crp-axis" type="button" data-axis="lambda" aria-label="λ axis">
       <div class="crp-axis-title" data-i18n="axes.lambda.title">λ</div>
       <div class="crp-axis-kicker" data-i18n="axes.lambda.kicker">Hazard</div>
     </button>
 
-    <!-- CERT -->
     <button class="crp-axis" type="button" data-axis="cert" aria-label="CERT axis">
       <div class="crp-axis-title" data-i18n="axes.cert.title">CERT</div>
       <div class="crp-axis-kicker" data-i18n="axes.cert.kicker">Authority</div>
@@ -68,10 +93,9 @@
   </section>
 
   <footer class="crp-footer" style="text-align:center">
-    <small class="crp-footnote">BUILD: 9700</small>
+    <small class="crp-footnote">BUILD: 9800</small>
   </footer>
 
 </main>
-
 </body>
 </html>

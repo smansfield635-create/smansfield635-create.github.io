@@ -7,41 +7,70 @@
   <title>CRP</title>
 
   <!-- CSS ORDER (CANON): ui.css FIRST, branch.css SECOND -->
-  <link rel="stylesheet" href="/assets/ui.css?v=CRP_20260221_navfix" />
-  <link rel="stylesheet" href="/assets/branch.css?v=CRP_20260221_navfix" />
+  <link rel="stylesheet" href="/assets/ui.css?v=CRP_INDEX_FULL_01" />
+  <link rel="stylesheet" href="/assets/branch.css?v=CRP_INDEX_FULL_01" />
 
-  <!-- NOTE: No instrument.js on Index. This page must work even if JS is broken. -->
+  <!-- NO JS REQUIRED ON INDEX (NAV MUST WORK EVEN IF JS IS BROKEN) -->
 </head>
 
 <body>
   <main class="crp-shell crp-center">
-    <section class="crp-card crp-index" aria-label="Language Selection">
-      <header class="crp-header">
+    <section class="crp-card crp-index" aria-label="Language Selection" style="position:relative;z-index:5;pointer-events:auto;">
+      <header class="crp-header" style="position:relative;z-index:5;pointer-events:auto;">
         <div class="crp-mark" aria-hidden="true">CRP</div>
         <h1 class="crp-title">Select Language</h1>
         <p class="crp-subtitle">Choose one to continue.</p>
       </header>
 
-      <!-- PURE LINKS (guaranteed navigation; zero JS dependency) -->
-      <div class="crp-actions" role="group" aria-label="Language options">
-        <a class="crp-btn crp-btn-primary" href="/door/?lang=en" role="button">ENGLISH</a>
-        <a class="crp-btn" href="/door/?lang=zh" role="button">中文</a>
+      <!-- HARD LINKS (work even if all JS fails) -->
+      <div class="crp-actions" role="group" aria-label="Language options" style="position:relative;z-index:10;pointer-events:auto;">
+        <a
+          class="crp-btn crp-btn-primary"
+          href="/door/?lang=en"
+          role="button"
+          aria-label="English"
+          style="position:relative;z-index:10;pointer-events:auto;"
+        >ENGLISH</a>
+
+        <a
+          class="crp-btn"
+          href="/door/?lang=zh"
+          role="button"
+          aria-label="中文"
+          style="position:relative;z-index:10;pointer-events:auto;"
+        >中文</a>
       </div>
 
       <hr class="crp-divider" />
 
-      <!-- RAW LINKS (debug: if these don’t work, something is intercepting taps) -->
-      <p class="crp-subtitle" style="margin:0 0 10px;opacity:.9;font-size:16px">
-        If the buttons above don’t navigate, tap these raw links:
-      </p>
-      <ul style="margin:0;padding-left:18px;line-height:1.6;opacity:.9">
-        <li><a href="/door/?lang=en">/door/?lang=en</a></li>
-        <li><a href="/door/?lang=zh">/door/?lang=zh</a></li>
-      </ul>
+      <!-- FULL DETAIL (NO “door/home” text) -->
+      <section aria-label="How it works" style="position:relative;z-index:5;pointer-events:auto;">
+        <p class="crp-subtitle" style="margin:0 0 10px;opacity:.9;font-size:16px">
+          What this selection does
+        </p>
+        <ul style="margin:0;padding-left:18px;line-height:1.6;opacity:.88">
+          <li>Routes forward with <code>?lang=en</code> or <code>?lang=zh</code>.</li>
+          <li>Does not select depth here.</li>
+          <li>Uses canonical language values only: <code>en</code>, <code>zh</code>.</li>
+        </ul>
+      </section>
 
-      <footer class="crp-footer">
+      <hr class="crp-divider" />
+
+      <!-- FAILSAFE RAW LINKS (if CSS is interfering with taps, these still must work) -->
+      <section aria-label="Fallback links" style="position:relative;z-index:10;pointer-events:auto;">
+        <p class="crp-subtitle" style="margin:0 0 10px;opacity:.9;font-size:16px">
+          If the buttons ever feel unresponsive, tap a direct link:
+        </p>
+        <ul style="margin:0;padding-left:18px;line-height:1.6;opacity:.92">
+          <li><a href="/door/?lang=en" style="pointer-events:auto;">Continue in English</a></li>
+          <li><a href="/door/?lang=zh" style="pointer-events:auto;">继续中文</a></li>
+        </ul>
+      </section>
+
+      <footer class="crp-footer" style="position:relative;z-index:5;pointer-events:auto;">
         <small class="crp-footnote">
-          BUILD: <strong>CRP_20260221_navfix</strong> · Index is link-only (no JS).
+          BUILD: <strong>CRP_INDEX_FULL_01</strong>
         </small>
       </footer>
     </section>

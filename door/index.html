@@ -1,166 +1,150 @@
-<!-- TNT — /door/index.html  (NEW LANGUAGE PAGE)
-     Swap logic: /door/ becomes the first page (Language).
-     After choosing language, continue routes to "/" (your new Terminal/Door page). -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>LANGUAGE · Geodiametrics</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DOOR · Geodiametrics</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=DOOR_LANG_1"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=DOOR_LANG_1"/>
-  <script defer src="/assets/instrument.js?v=DOOR_LANG_1"></script>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 
-  <style>
-    .frame{min-height:100vh;width:100%;position:relative}
+<style>
 
-    .wrap{
-      max-width:980px;
-      margin:0 auto;
-      padding:86px 18px 120px;
-      display:flex;
-      justify-content:center;
-    }
-    .card{
-      width:min(920px,100%);
-      text-align:center;
-    }
+/* ===== BACKGROUND (Same Crystal Field) ===== */
 
-    .row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center}
-    .label{
-      opacity:.80;
-      font-weight:900;
-      letter-spacing:.25px;
-      margin:10px 0 6px;
-    }
-    .note{
-      opacity:.72;
-      font-size:12px;
-      line-height:1.35;
-      margin-top:10px;
-      text-align:center;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255,215,120,.05), transparent 60%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 1px, transparent 1px 90px),
+    linear-gradient(180deg, #a80000 0%, #7b0000 60%, #5a0000 100%);
+  overflow-x:hidden;
+}
 
-    .dock{
-      position:fixed;
-      left:50%;
-      bottom:max(12px, env(safe-area-inset-bottom));
-      transform:translateX(-50%);
-      z-index:90;
+/* ===== HEADER ===== */
 
-      width:min(860px, 94vw);
-      display:flex;
-      justify-content:center;
-      gap:10px;
-      flex-wrap:wrap;
+.header{
+  text-align:center;
+  padding-top:80px;
+}
 
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.18);
-      backdrop-filter:blur(8px);
-    }
-  </style>
+.header h1{
+  font-size:46px;
+  letter-spacing:2px;
+  margin:0;
+}
+
+.header p{
+  opacity:.85;
+  margin-top:10px;
+}
+
+/* ===== GEM DIAMONDS ===== */
+
+.stage{
+  position:relative;
+  width:min(500px,90vw);
+  height:min(500px,90vw);
+  margin:80px auto 0;
+}
+
+.gem{
+  width:150px;
+  height:150px;
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform-origin:center;
+  border-radius:22px;
+  cursor:pointer;
+
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,.15), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
+    linear-gradient(160deg, #0a0f18 0%, #05070c 40%, #0b1424 100%);
+
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.8),
+    inset 0 2px 0 rgba(255,255,255,.2),
+    inset 0 -25px 35px rgba(0,0,0,.6);
+
+  border:1px solid rgba(255,255,255,.08);
+
+  transition: all 260ms ease;
+}
+
+.gem::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      rgba(255,255,255,.04) 0deg 5deg,
+      transparent 5deg 15deg
+    );
+  mix-blend-mode:overlay;
+  opacity:.25;
+  pointer-events:none;
+}
+
+.gem:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.05);
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.9),
+    0 0 22px rgba(212,175,55,.45),
+    inset 0 2px 0 rgba(255,255,255,.3);
+}
+
+.gem-inner{
+  width:100%;
+  height:100%;
+  transform:rotate(-45deg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-weight:900;
+  letter-spacing:.5px;
+  pointer-events:none;
+}
+
+.gem.explore{ transform:translate(-50%,-50%) translate(0,-120px) rotate(45deg); }
+.gem.links{ transform:translate(-50%,-50%) translate(-120px,0) rotate(45deg); }
+.gem.learn{ transform:translate(-50%,-50%) translate(120px,0) rotate(45deg); }
+.gem.home{ transform:translate(-50%,-50%) translate(0,120px) rotate(45deg); }
+
+</style>
 </head>
 
 <body>
-<div class="frame">
 
-  <div class="wrap">
-    <section class="crp-card card" aria-label="Language selection">
-      <header class="crp-header">
-        <div class="crp-mark">GEODIAMETRICS</div>
-        <h1 class="crp-title">LANGUAGE</h1>
-        <p class="crp-subtitle">Choose one to continue.</p>
-      </header>
-
-      <div class="label">CANONICAL</div>
-      <div class="row" aria-label="Language options">
-        <button id="langEn" class="crp-btn" type="button">ENGLISH (Primary)</button>
-        <button id="langZh" class="crp-btn" type="button">中文 (Canonical)</button>
-      </div>
-
-      <div class="note">
-        This sets <b>gd_lang</b> and routes you to the next page (<b>/</b>).<br/>
-        You can change language later from any page using the LANGUAGE button.
-      </div>
-
-      <hr class="crp-divider"/>
-
-      <div class="label">DEFAULTS (AUTO)</div>
-      <div class="row" aria-label="Defaults">
-        <span class="crp-chip" style="pointer-events:none">DEPTH: EXPLORE</span>
-        <span class="crp-chip" style="pointer-events:none">STYLE: FORMAL</span>
-        <span class="crp-chip" style="pointer-events:none">TIME: NOW</span>
-      </div>
-
-      <footer class="crp-footer">
-        <small class="crp-footnote">BUILD: <strong>DOOR_LANG_1</strong></small>
-      </footer>
-    </section>
-  </div>
-
-  <!-- Bottom dock: continue to "/" (your new Terminal/Door) -->
-  <nav class="dock" aria-label="Continue">
-    <a id="continueBtn" class="crp-btn crp-btn-primary" href="/?lang=en" role="button" style="min-width:260px;justify-content:center">
-      CONTINUE
-    </a>
-    <a class="crp-btn" href="/" role="button">Skip (EN)</a>
-  </nav>
-
+<div class="header">
+  <h1>DOOR</h1>
+  <p>Choose your route.</p>
 </div>
 
-<script>
-(function(){
-  "use strict";
+<div class="stage">
 
-  var K_LANG="gd_lang";
-  var K_DEPTH="gd_depth";
-  var K_STYLE="gd_style";
-  var K_TIME="gd_time";
+  <a href="/home/" class="gem explore">
+    <div class="gem-inner">EXPLORE</div>
+  </a>
 
-  function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
-  function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
+  <a href="/links/" class="gem links">
+    <div class="gem-inner">LINKS</div>
+  </a>
 
-  // Defaults (safe)
-  function ensureDefaults(){
-    if(!lsGet(K_DEPTH)) lsSet(K_DEPTH,"explore");
-    if(!lsGet(K_STYLE)) lsSet(K_STYLE,"formal");
-    if(!lsGet(K_TIME))  lsSet(K_TIME,"now");
-  }
+  <a href="/learn/" class="gem learn">
+    <div class="gem-inner">LEARN</div>
+  </a>
 
-  var lang = lsGet(K_LANG) || "en";
-  if(lang !== "en" && lang !== "zh") lang = "en";
+  <a href="/home/" class="gem home">
+    <div class="gem-inner">HOME</div>
+  </a>
 
-  var enBtn = document.getElementById("langEn");
-  var zhBtn = document.getElementById("langZh");
-  var cont  = document.getElementById("continueBtn");
-
-  function apply(){
-    // highlight
-    enBtn.classList.toggle("crp-btn-primary", lang==="en");
-    zhBtn.classList.toggle("crp-btn-primary", lang==="zh");
-
-    // continue to "/" with lang query (so your "/" page can read it)
-    cont.setAttribute("href","/?lang="+encodeURIComponent(lang));
-    document.documentElement.setAttribute("lang", lang);
-  }
-
-  function setLang(v){
-    lang = v;
-    lsSet(K_LANG, lang);
-    ensureDefaults();
-    apply();
-  }
-
-  enBtn.addEventListener("click", function(){ setLang("en"); });
-  zhBtn.addEventListener("click", function(){ setLang("zh"); });
-
-  ensureDefaults();
-  apply();
-})();
-</script>
+</div>
 
 </body>
 </html>

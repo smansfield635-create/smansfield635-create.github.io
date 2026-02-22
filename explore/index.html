@@ -1,0 +1,122 @@
+<!-- TNT FILE: /explore/index.html
+     Explore = surface, fast orientation.
+     (This is intentionally lighter than /home/ Learn-mode.)
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Explore</title>
+  <link rel="stylesheet" href="/assets/ui.css?v=9100"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=9100"/>
+</head>
+
+<body>
+  <div class="diamond-field" aria-hidden="true"></div>
+
+  <div class="page">
+    <div class="wrap" style="position:relative;z-index:2;">
+      <div class="hero">
+        <h1>EXPLORE</h1>
+        <p>Surface map. Tap a quadrant to see 4 vines. Tap a vine to see 4 fruits. Then jump when ready.</p>
+
+        <div class="topbar" style="margin-top:12px;">
+          <span class="pill">LANG: <span id="langPill">—</span></span>
+          <span class="pill">DEPTH: <span id="depthPill">—</span></span>
+          <a class="pill btn" href="/door/">DOOR</a>
+          <a class="pill btn" href="/home/">LEARN HUB</a>
+          <a class="pill btn" href="/links/">LINKS</a>
+        </div>
+
+        <div class="section-title">Quadrant routes (NW / NE / SW / SE)</div>
+      </div>
+
+      <details class="quad" open>
+        <summary>
+          <div class="q-left">
+            <div class="q-badge"><span class="icon">⭐</span><span class="code">NW</span></div>
+            <div class="q-text"><b>NORTHWEST</b><span>Definition · language · structure</span></div>
+          </div>
+          <div class="q-arrow">▾</div>
+        </summary>
+        <div class="inside">
+          <div class="vine-grid">
+            <div class="vine-tile"><div class="lbl"><b>SSG</b><i>Constraint language overview</i></div><div class="go">▶</div></div>
+            <div class="vine-tile"><div class="lbl"><b>DIAMOND GRAMMAR</b><i>Hub-first traversal + receipts</i></div><div class="go">▶</div></div>
+            <div class="vine-tile"><div class="lbl"><b>DOT.GRID</b><i>256-state indexing</i></div><div class="go">▶</div></div>
+            <div class="vine-tile"><div class="lbl"><b>ACRONYMS</b><i>Pillars + usage</i></div><div class="go">▶</div></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="quad">
+        <summary>
+          <div class="q-left">
+            <div class="q-badge"><span class="icon">☀️</span><span class="code">NE</span></div>
+            <div class="q-text"><b>NORTHEAST</b><span>Execution · surfaces · examples</span></div>
+          </div>
+          <div class="q-arrow">▾</div>
+        </summary>
+        <div class="inside">
+          <div class="vine-grid">
+            <div class="vine-tile"><div class="lbl"><b>EXECUTION SURFACES</b><i>Apps / portals / interfaces</i></div><div class="go">▶</div></div>
+            <div class="vine-tile"><div class="lbl"><b>WORKFLOWS & RECEIPTS</b><i>Audit trails</i></div><div class="go">▶</div></div>
+            <div class="vine-tile"><div class="lbl"><b>EXAMPLES</b><i>How to use the system</i></div><div class="go">▶</div></div>
+            <div class="vine-tile"><div class="lbl"><b>PACKS & OUTPUTS</b><i>Downloadables</i></div><div class="go">▶</div></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="quad">
+        <summary>
+          <div class="q-left">
+            <div class="q-badge"><span class="icon">🏮</span><span class="code">SW</span></div>
+            <div class="q-text"><b>SOUTHWEST</b><span>Measurement · diagnostics · rules</span></div>
+          </div>
+          <div class="q-arrow">▾</div>
+        </summary>
+        <div class="inside">
+          <div class="vine-grid">
+            <div class="vine-tile"><div class="lbl"><b>GAUGES</b><i>Instrument panels</i></div><div class="go">▶</div></div>
+            <div class="vine-tile"><div class="lbl"><b>DIAGNOSTICS</b><i>Classification under constraint</i></div><div class="go">▶</div></div>
+            <div class="vine-tile"><div class="lbl"><b>RULES</b><i>Navigation + integrity</i></div><div class="go">▶</div></div>
+            <div class="vine-tile"><div class="lbl"><b>PROTOCOLS</b><i>Return / replay / audit</i></div><div class="go">▶</div></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="quad">
+        <summary>
+          <div class="q-left">
+            <div class="q-badge"><span class="icon">🌇</span><span class="code">SE</span></div>
+            <div class="q-text"><b>SOUTHEAST</b><span>Identity · references · links</span></div>
+          </div>
+          <div class="q-arrow">▾</div>
+        </summary>
+        <div class="inside">
+          <div class="vine-grid">
+            <div class="vine-tile" onclick="location.href='/links/'"><div class="lbl"><b>ORCID</b><i>Research identity</i></div><div class="go">▶</div></div>
+            <div class="vine-tile" onclick="location.href='/links/'"><div class="lbl"><b>OSF</b><i>Registry / preprints</i></div><div class="go">▶</div></div>
+            <div class="vine-tile" onclick="location.href='/links/'"><div class="lbl"><b>REFERENCES</b><i>Core anchors</i></div><div class="go">▶</div></div>
+            <div class="vine-tile" onclick="location.href='/links/'"><div class="lbl"><b>CONTACT</b><i>Direct channel</i></div><div class="go">▶</div></div>
+          </div>
+        </div>
+      </details>
+
+      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      <div class="ink">GEODIAMETRICS</div>
+    </div>
+  </div>
+
+  <script src="/assets/instrument.js?v=9100"></script>
+  <script>
+  (() => {
+    const lang = (localStorage.getItem("gd_lang") || "en");
+    const depth = (localStorage.getItem("gd_depth") || "explore");
+    document.getElementById("langPill").textContent = (lang==="zh") ? "中文" : "EN";
+    document.getElementById("depthPill").textContent = depth.toUpperCase();
+  })();
+  </script>
+</body>
+</html>

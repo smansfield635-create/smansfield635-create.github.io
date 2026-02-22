@@ -1,80 +1,109 @@
-<!-- TNT — /index.html -->
+<!-- TNT — /index.html  (NEW TERMINAL PAGE)
+     This is now the page you hit AFTER /door/ (language).
+     Keeps the 3D diamond layout you loved. -->
+
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>INDEX · DIAMOND</title>
+  <title>TERMINAL · Geodiametrics</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=INDEX_FINAL_1"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=INDEX_FINAL_1"/>
-  <script defer src="/assets/instrument.js?v=INDEX_FINAL_1"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=TERMINAL_3D_1"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=TERMINAL_3D_1"/>
+  <script defer src="/assets/instrument.js?v=TERMINAL_3D_1"></script>
 
   <style>
-    .frame{position:relative;min-height:100vh;width:100%}
-
-    /* Top-left only */
-    .top-left{
-      position:fixed;left:16px;top:16px;z-index:90;
-      display:flex;gap:10px;flex-wrap:wrap;
-    }
-
-    /* Center card */
-    .card{
-      max-width:900px;
-      margin:0 auto;
-      padding:120px 18px 120px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      text-align:center;
-      gap:18px;
-    }
-
-    .title{
-      margin:0;
-      font-size:44px;
-      font-weight:900;
-      letter-spacing:.25px;
-      line-height:1.05;
-    }
-
-    .sub{margin:0;opacity:.84;font-size:18px;line-height:1.35}
-
-    /* Country select */
-    .select-wrap{width:min(560px,100%);display:flex;justify-content:center}
-    select.country{
+    .frame{
+      min-height:100vh;
       width:100%;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.16);
-      background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-      color:#fff;
-      font-weight:800;
-      letter-spacing:.2px;
+      position:relative;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:120px 16px 160px;
     }
-    option{color:#000}
 
-    /* Language + depth rows */
-    .row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+    .terminal-card{
+      width:min(980px,100%);
+      text-align:center;
+    }
 
-    /* Footer note */
-    .note{opacity:.72;font-size:12px;line-height:1.35}
+    .terminal-title{
+      font-size:clamp(40px,6vw,72px);
+      font-weight:900;
+      letter-spacing:.5px;
+      margin-bottom:12px;
+    }
 
-    /* Bottom enter dock */
-    .enter-dock{
-      position:fixed;left:50%;
-      bottom:max(12px, env(safe-area-inset-bottom));
+    .terminal-sub{
+      opacity:.85;
+      margin-bottom:38px;
+      font-size:18px;
+    }
+
+    /* 3D Diamond Cluster */
+    .diamond-cluster{
+      position:relative;
+      width:520px;
+      height:520px;
+      margin:0 auto;
+    }
+
+    .diamond-btn{
+      position:absolute;
+      width:180px;
+      height:180px;
+      border-radius:26px;
+      transform:rotate(45deg);
+      background:linear-gradient(145deg,#0b0f18,#111827);
+      box-shadow:
+        inset -10px -12px 20px rgba(0,0,0,.6),
+        inset 8px 8px 18px rgba(255,255,255,.04),
+        0 20px 40px rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.08);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      transition:.25s ease;
+      cursor:pointer;
+    }
+
+    .diamond-btn span{
+      transform:rotate(-45deg);
+      font-weight:800;
+      font-size:18px;
+      letter-spacing:.3px;
+    }
+
+    .diamond-btn:hover{
+      box-shadow:
+        inset -10px -12px 20px rgba(0,0,0,.6),
+        inset 8px 8px 18px rgba(255,255,255,.06),
+        0 0 24px rgba(255,204,0,.8);
+    }
+
+    /* Positions */
+    .d-top   { top:0; left:50%; transform:translateX(-50%) rotate(45deg); }
+    .d-left  { top:50%; left:0; transform:translateY(-50%) rotate(45deg); }
+    .d-right { top:50%; right:0; transform:translateY(-50%) rotate(45deg); }
+    .d-bot   { bottom:0; left:50%; transform:translateX(-50%) rotate(45deg); }
+
+    /* Dock */
+    .dock{
+      position:fixed;
+      left:50%;
+      bottom:max(16px, env(safe-area-inset-bottom));
       transform:translateX(-50%);
-      z-index:80;
-
-      width:min(860px,94vw);
-      display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-
-      padding:10px 12px;
+      width:min(900px,94vw);
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      padding:12px 14px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.18);
+      background:rgba(0,0,0,.20);
       backdrop-filter:blur(8px);
     }
   </style>
@@ -83,66 +112,25 @@
 <body>
 <div class="frame">
 
-  <div class="top-left">
-    <a class="crp-btn" href="/door/" role="button">EXIT</a>
-  </div>
+  <section class="terminal-card">
 
-  <div class="card">
-    <div class="crp-mark" data-i18n="global.brand">GEODIAMETRICS</div>
-    <h1 class="title" data-i18n="index.title">DIAMOND</h1>
-    <p class="sub" id="subtitleTop" data-i18n="index.subtitle">Choose your scope.</p>
+    <div class="terminal-title">TERMINAL</div>
+    <div class="terminal-sub">Choose your route.</div>
 
-    <div class="select-wrap">
-      <select id="country" class="country" aria-label="Country or region">
-        <option value="">Select country/region…</option>
-        <option value="US">United States</option>
-        <option value="CA">Canada</option>
-        <option value="MX">Mexico</option>
-        <option value="GB">United Kingdom</option>
-        <option value="FR">France</option>
-        <option value="DE">Germany</option>
-        <option value="ES">Spain</option>
-        <option value="BR">Brazil</option>
-        <option value="IN">India</option>
-        <option value="CN">China</option>
-        <option value="TW">Taiwan</option>
-        <option value="HK">Hong Kong</option>
-        <option value="JP">Japan</option>
-        <option value="KR">South Korea</option>
-        <option value="VN">Vietnam</option>
-        <option value="TH">Thailand</option>
-        <option value="PH">Philippines</option>
-        <option value="ID">Indonesia</option>
-        <option value="AE">United Arab Emirates</option>
-        <option value="SA">Saudi Arabia</option>
-        <option value="IL">Israel</option>
-        <option value="TR">Turkey</option>
-        <option value="ZA">South Africa</option>
-        <option value="NG">Nigeria</option>
-        <option value="EG">Egypt</option>
-        <option value="AU">Australia</option>
-        <option value="NZ">New Zealand</option>
-      </select>
+    <div class="diamond-cluster">
+
+      <div class="diamond-btn d-top"   onclick="route('explore')"><span>EXPLORE</span></div>
+      <div class="diamond-btn d-left"  onclick="route('links')"><span>LINKS</span></div>
+      <div class="diamond-btn d-right" onclick="route('learn')"><span>LEARN</span></div>
+      <div class="diamond-btn d-bot"   onclick="route('home')"><span>HOME</span></div>
+
     </div>
 
-    <div class="row" aria-label="Languages">
-      <button id="langEn" class="crp-btn" type="button">ENGLISH</button>
-      <button id="langZh" class="crp-btn" type="button">中文</button>
-      <div id="suggestedRow" class="row" style="width:100%"></div>
-    </div>
+  </section>
 
-    <div class="row" aria-label="Depth">
-      <button id="depthExplore" class="crp-btn" type="button">EXPLORE</button>
-      <button id="depthLearn" class="crp-btn" type="button">LEARN</button>
-    </div>
-
-    <div class="note" id="noteLine">EN + 中文 are canonical. Country suggests common runtime overlays.</div>
-  </div>
-
-  <nav class="enter-dock" aria-label="Enter dock">
-    <a id="enterLink" class="crp-btn crp-btn-primary" href="/home/?lang=en&depth=explore" role="button"
-       style="min-width:260px;justify-content:center" data-i18n="index.enter">ENTER</a>
-    <a id="fallbackLink" class="crp-btn" href="/home/?lang=en&depth=explore" role="button">Fallback (EN)</a>
+  <nav class="dock">
+    <a class="crp-btn" href="/door/">LANGUAGE</a>
+    <button class="crp-btn" onclick="resetDepth()">RESET DEPTH</button>
   </nav>
 
 </div>
@@ -151,145 +139,41 @@
 (function(){
   "use strict";
 
-  var K_LANG="gd_lang", K_DEPTH="gd_depth", K_COUNTRY="gd_country";
+  var K_LANG="gd_lang";
+  var K_DEPTH="gd_depth";
+  var K_STYLE="gd_style";
+  var K_TIME="gd_time";
+
   function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
   function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
 
-  // Canonical UI chrome translations (whole page switches, not just ENTER)
-  var UI = {
-    en:{
-      subtitle:"Choose your scope.",
-      note:"EN + 中文 are canonical. Country suggests common runtime overlays.",
-      enter:"ENTER",
-      fallback:"Fallback (EN)",
-      enBtn:"ENGLISH",
-      zhBtn:"中文",
-      explore:"EXPLORE",
-      learn:"LEARN"
-    },
-    zh:{
-      subtitle:"选择范围。",
-      note:"EN + 中文为规范层。国家仅推荐常用语言（运行时覆盖）。",
-      enter:"进入",
-      fallback:"备用（英文）",
-      enBtn:"英文",
-      zhBtn:"中文",
-      explore:"浏览",
-      learn:"学习"
-    }
-  };
-
-  // Minimal country suggestion map
-  var COUNTRY_LANG = {
-    "SA":[{code:"ar",label:"العربية"}],
-    "AE":[{code:"ar",label:"العربية"}],
-    "EG":[{code:"ar",label:"العربية"}],
-    "FR":[{code:"fr",label:"Français"}],
-    "DE":[{code:"de",label:"Deutsch"}],
-    "ES":[{code:"es",label:"Español"}],
-    "MX":[{code:"es",label:"Español"}],
-    "BR":[{code:"pt-BR",label:"Português (Brasil)"}],
-    "IN":[{code:"hi",label:"हिन्दी"}],
-    "JP":[{code:"ja",label:"日本語"}],
-    "KR":[{code:"ko",label:"한국어"}],
-    "CN":[{code:"zh-Hans",label:"中文（简体）"}],
-    "TW":[{code:"zh-Hant",label:"中文（繁體）"}],
-    "HK":[{code:"zh-Hant-HK",label:"中文（香港）"}]
-  };
-
-  var state = {
-    lang: (lsGet(K_LANG) || "en"),
-    depth: (lsGet(K_DEPTH) || "explore"),
-    country: (lsGet(K_COUNTRY) || "")
-  };
-  if(state.lang!=="en" && state.lang!=="zh") state.lang="en";
-  if(state.depth!=="explore" && state.depth!=="learn") state.depth="explore";
-
-  function applyUI(){
-    var t=UI[state.lang];
-    document.getElementById("subtitleTop").textContent = t.subtitle;
-    document.getElementById("noteLine").textContent = t.note;
-    document.getElementById("enterLink").textContent = t.enter;
-    document.getElementById("fallbackLink").textContent = t.fallback;
-    document.getElementById("langEn").textContent = t.enBtn;
-    document.getElementById("langZh").textContent = t.zhBtn;
-    document.getElementById("depthExplore").textContent = t.explore;
-    document.getElementById("depthLearn").textContent = t.learn;
-    document.documentElement.setAttribute("lang", state.lang);
+  var params = new URLSearchParams(location.search);
+  var qLang = params.get("lang");
+  if(qLang==="en" || qLang==="zh"){
+    lsSet(K_LANG,qLang);
   }
 
-  function highlight(){
-    function setOn(id,on){
-      var el=document.getElementById(id);
-      if(!el) return;
-      el.classList.toggle("crp-btn-primary", !!on);
-    }
-    setOn("langEn", state.lang==="en");
-    setOn("langZh", state.lang==="zh");
-    setOn("depthExplore", state.depth==="explore");
-    setOn("depthLearn", state.depth==="learn");
+  function route(page){
+    var lang  = lsGet(K_LANG)  || "en";
+    var depth = lsGet(K_DEPTH) || "explore";
+    var style = lsGet(K_STYLE) || "formal";
+    var time  = lsGet(K_TIME)  || "now";
+
+    location.href = "/" + page + "/?lang=" + lang +
+                    "&depth=" + depth +
+                    "&style=" + style +
+                    "&time=" + time;
   }
 
-  function updateEnter(){
-    var href="/home/?lang="+encodeURIComponent(state.lang)+"&depth="+encodeURIComponent(state.depth);
-    document.getElementById("enterLink").setAttribute("href", href);
-    document.getElementById("fallbackLink").setAttribute("href", href);
+  function resetDepth(){
+    lsSet(K_DEPTH,"explore");
+    lsSet(K_STYLE,"formal");
+    lsSet(K_TIME,"now");
+    location.reload();
   }
 
-  function renderSuggested(){
-    var row=document.getElementById("suggestedRow");
-    row.innerHTML="";
-    if(!state.country || !COUNTRY_LANG[state.country]) return;
-
-    COUNTRY_LANG[state.country].forEach(function(it){
-      // Do not duplicate canonical
-      if(it.code==="en" || it.code==="zh") return;
-
-      var b=document.createElement("button");
-      b.type="button";
-      b.className="crp-btn";
-      b.textContent=it.label;
-
-      b.addEventListener("click", function(){
-        // For now, runtime overlay suggestions don't translate UI chrome.
-        // They just set canonical UI language best-fit: any zh* → zh, else en.
-        state.lang = (it.code.indexOf("zh")===0) ? "zh" : "en";
-        lsSet(K_LANG, state.lang);
-        applyUI(); highlight(); updateEnter();
-      });
-
-      row.appendChild(b);
-    });
-  }
-
-  // Wire
-  document.getElementById("langEn").addEventListener("click", function(){
-    state.lang="en"; lsSet(K_LANG,state.lang); applyUI(); highlight(); updateEnter();
-  });
-  document.getElementById("langZh").addEventListener("click", function(){
-    state.lang="zh"; lsSet(K_LANG,state.lang); applyUI(); highlight(); updateEnter();
-  });
-
-  document.getElementById("depthExplore").addEventListener("click", function(){
-    state.depth="explore"; lsSet(K_DEPTH,state.depth); highlight(); updateEnter();
-  });
-  document.getElementById("depthLearn").addEventListener("click", function(){
-    state.depth="learn"; lsSet(K_DEPTH,state.depth); highlight(); updateEnter();
-  });
-
-  var countryEl=document.getElementById("country");
-  if(state.country) countryEl.value=state.country;
-  countryEl.addEventListener("change", function(){
-    state.country=countryEl.value||"";
-    lsSet(K_COUNTRY,state.country);
-    renderSuggested();
-  });
-
-  // Init
-  applyUI();
-  highlight();
-  updateEnter();
-  renderSuggested();
+  window.route = route;
+  window.resetDepth = resetDepth;
 })();
 </script>
 

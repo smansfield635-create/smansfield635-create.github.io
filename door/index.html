@@ -1,228 +1,166 @@
+<!-- TNT — /door/index.html  (NEW LANGUAGE PAGE)
+     Swap logic: /door/ becomes the first page (Language).
+     After choosing language, continue routes to "/" (your new Terminal/Door page). -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Terminal · DIAMOND</title>
+  <title>LANGUAGE · Geodiametrics</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=DOOR_1"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=DOOR_1"/>
-  <script defer src="/assets/instrument.js?v=DOOR_1"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=DOOR_LANG_1"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=DOOR_LANG_1"/>
+  <script defer src="/assets/instrument.js?v=DOOR_LANG_1"></script>
 
   <style>
-    .term-wrap{max-width:900px;margin:0 auto;}
-    .term-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-    .term-label{opacity:.78;font-weight:900;letter-spacing:.25px;margin:10px 0 4px;text-align:center}
-    .term-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
-    @media (max-width:720px){ .term-grid{grid-template-columns:1fr;} }
-    .term-cardlink{min-height:88px;display:grid;place-items:center;text-align:center}
-    .term-small{opacity:.72;font-size:12px;line-height:1.35;text-align:center;margin-top:10px}
+    .frame{min-height:100vh;width:100%;position:relative}
+
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:86px 18px 120px;
+      display:flex;
+      justify-content:center;
+    }
+    .card{
+      width:min(920px,100%);
+      text-align:center;
+    }
+
+    .row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center}
+    .label{
+      opacity:.80;
+      font-weight:900;
+      letter-spacing:.25px;
+      margin:10px 0 6px;
+    }
+    .note{
+      opacity:.72;
+      font-size:12px;
+      line-height:1.35;
+      margin-top:10px;
+      text-align:center;
+    }
+
+    .dock{
+      position:fixed;
+      left:50%;
+      bottom:max(12px, env(safe-area-inset-bottom));
+      transform:translateX(-50%);
+      z-index:90;
+
+      width:min(860px, 94vw);
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      backdrop-filter:blur(8px);
+    }
   </style>
 </head>
 
 <body>
-  <main class="crp-shell crp-center">
-    <section class="crp-card term-wrap" aria-label="Terminal" style="text-align:center">
+<div class="frame">
 
+  <div class="wrap">
+    <section class="crp-card card" aria-label="Language selection">
       <header class="crp-header">
         <div class="crp-mark">GEODIAMETRICS</div>
-        <h1 class="crp-title" style="margin-bottom:6px">TERMINAL</h1>
-        <p class="crp-subtitle" style="margin-bottom:8px">Choose your route.</p>
+        <h1 class="crp-title">LANGUAGE</h1>
+        <p class="crp-subtitle">Choose one to continue.</p>
       </header>
 
-      <!-- TOP LENSES (operational) -->
-      <div class="crp-topbar" style="margin:0 auto 12px;max-width:860px">
-        <div class="crp-topbar-left" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%">
-          <div class="crp-lens" role="group" aria-label="Style lens">
-            <button class="crp-chip" type="button" data-style="formal">FORMAL</button>
-            <button class="crp-chip" type="button" data-style="informal">INFORMAL</button>
-          </div>
+      <div class="label">CANONICAL</div>
+      <div class="row" aria-label="Language options">
+        <button id="langEn" class="crp-btn" type="button">ENGLISH (Primary)</button>
+        <button id="langZh" class="crp-btn" type="button">中文 (Canonical)</button>
+      </div>
 
-          <div class="crp-lens" role="group" aria-label="Time lens">
-            <button class="crp-chip" type="button" data-time="origin">ORIGIN</button>
-            <button class="crp-chip" type="button" data-time="now">NOW</button>
-            <button class="crp-chip" type="button" data-time="trajectory">TRAJECTORY</button>
-          </div>
-        </div>
+      <div class="note">
+        This sets <b>gd_lang</b> and routes you to the next page (<b>/</b>).<br/>
+        You can change language later from any page using the LANGUAGE button.
       </div>
 
       <hr class="crp-divider"/>
 
-      <!-- Language + Depth (routing-critical) -->
-      <div>
-        <div class="term-label">LANGUAGE</div>
-        <div class="term-row" role="group" aria-label="Language">
-          <button type="button" class="crp-btn" data-set="lang" data-val="en">ENGLISH</button>
-          <button type="button" class="crp-btn" data-set="lang" data-val="zh">中文</button>
-        </div>
-
-        <div class="term-label">DEPTH</div>
-        <div class="term-row" role="group" aria-label="Depth">
-          <button type="button" class="crp-btn" data-set="depth" data-val="explore">EXPLORE</button>
-          <button type="button" class="crp-btn" data-set="depth" data-val="learn">LEARN</button>
-        </div>
-      </div>
-
-      <hr class="crp-divider"/>
-
-      <!-- Routes (real links; JS rewrites with current state) -->
-      <div class="term-grid" aria-label="Terminal routes">
-        <a id="go-explore" class="crp-btn term-cardlink" href="/explore/?depth=explore" role="button">
-          EXPLORE
-        </a>
-
-        <a id="go-home" class="crp-btn crp-btn-primary term-cardlink" href="/home/?depth=explore" role="button">
-          COMPASS
-        </a>
-
-        <a id="go-links" class="crp-btn term-cardlink" href="/links/" role="button">
-          LINKS
-        </a>
-
-        <a id="go-start" class="crp-btn term-cardlink" href="/" role="button">
-          START
-        </a>
-      </div>
-
-      <div class="term-small">
-        Routes inherit: <code>gd_lang</code> + <code>gd_depth</code>. Lenses at top apply: <code>gd_style</code> + <code>gd_time</code>.
+      <div class="label">DEFAULTS (AUTO)</div>
+      <div class="row" aria-label="Defaults">
+        <span class="crp-chip" style="pointer-events:none">DEPTH: EXPLORE</span>
+        <span class="crp-chip" style="pointer-events:none">STYLE: FORMAL</span>
+        <span class="crp-chip" style="pointer-events:none">TIME: NOW</span>
       </div>
 
       <footer class="crp-footer">
-        <small class="crp-footnote">BUILD: <strong>DOOR_1</strong></small>
+        <small class="crp-footnote">BUILD: <strong>DOOR_LANG_1</strong></small>
       </footer>
-
     </section>
-  </main>
+  </div>
 
-  <script>
-    (function () {
-      "use strict";
+  <!-- Bottom dock: continue to "/" (your new Terminal/Door) -->
+  <nav class="dock" aria-label="Continue">
+    <a id="continueBtn" class="crp-btn crp-btn-primary" href="/?lang=en" role="button" style="min-width:260px;justify-content:center">
+      CONTINUE
+    </a>
+    <a class="crp-btn" href="/" role="button">Skip (EN)</a>
+  </nav>
 
-      // Canonical keys
-      var K_LANG  = "gd_lang";
-      var K_DEPTH = "gd_depth";
-      var K_STYLE = "gd_style";
-      var K_TIME  = "gd_time";
+</div>
 
-      var allowLang  = { en:1, zh:1 };
-      var allowDepth = { explore:1, learn:1 };
-      var allowStyle = { formal:1, informal:1 };
-      var allowTime  = { origin:1, now:1, trajectory:1 };
+<script>
+(function(){
+  "use strict";
 
-      function qp(name){
-        try { return new URLSearchParams(window.location.search).get(name); }
-        catch(e){ return null; }
-      }
-      function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
-      function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+  var K_LANG="gd_lang";
+  var K_DEPTH="gd_depth";
+  var K_STYLE="gd_style";
+  var K_TIME="gd_time";
 
-      // Normalize state (query wins; else localStorage; else defaults)
-      var state = {
-        lang:  qp("lang")  || lsGet(K_LANG)  || "en",
-        depth: qp("depth") || lsGet(K_DEPTH) || "explore",
-        style: qp("style") || lsGet(K_STYLE) || "formal",
-        time:  qp("time")  || lsGet(K_TIME)  || "origin"
-      };
+  function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
+  function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
 
-      if (!allowLang[state.lang]) state.lang = "en";
-      if (!allowDepth[state.depth]) state.depth = "explore";
-      if (!allowStyle[state.style]) state.style = "formal";
-      if (!allowTime[state.time]) state.time = "origin";
+  // Defaults (safe)
+  function ensureDefaults(){
+    if(!lsGet(K_DEPTH)) lsSet(K_DEPTH,"explore");
+    if(!lsGet(K_STYLE)) lsSet(K_STYLE,"formal");
+    if(!lsGet(K_TIME))  lsSet(K_TIME,"now");
+  }
 
-      // Persist
-      lsSet(K_LANG, state.lang);
-      lsSet(K_DEPTH, state.depth);
-      lsSet(K_STYLE, state.style);
-      lsSet(K_TIME, state.time);
+  var lang = lsGet(K_LANG) || "en";
+  if(lang !== "en" && lang !== "zh") lang = "en";
 
-      // Highlight active language/depth buttons
-      function setActive(){
-        var buttons = document.querySelectorAll("button[data-set][data-val]");
-        for (var i=0;i<buttons.length;i++){
-          var b = buttons[i];
-          var set = b.getAttribute("data-set");
-          var val = b.getAttribute("data-val");
-          b.classList.toggle("crp-btn-primary", state[set] === val);
-        }
-      }
-      setActive();
+  var enBtn = document.getElementById("langEn");
+  var zhBtn = document.getElementById("langZh");
+  var cont  = document.getElementById("continueBtn");
 
-      // Lens chips pressed state
-      function setPressed(groupSelector, attr, value) {
-        var chips = document.querySelectorAll(groupSelector + " .crp-chip[" + attr + "]");
-        for (var i=0;i<chips.length;i++){
-          var v = chips[i].getAttribute(attr);
-          chips[i].setAttribute("aria-pressed", v === value ? "true" : "false");
-        }
-      }
-      setPressed("[aria-label='Style lens']", "data-style", state.style);
-      setPressed("[aria-label='Time lens']", "data-time", state.time);
+  function apply(){
+    // highlight
+    enBtn.classList.toggle("crp-btn-primary", lang==="en");
+    zhBtn.classList.toggle("crp-btn-primary", lang==="zh");
 
-      // Wire lens chips
-      var styleChips = document.querySelectorAll(".crp-chip[data-style]");
-      for (var s=0;s<styleChips.length;s++){
-        styleChips[s].addEventListener("click", function(e){
-          var v = e.currentTarget.getAttribute("data-style");
-          if (!allowStyle[v]) return;
-          state.style = v;
-          lsSet(K_STYLE, v);
-          setPressed("[aria-label='Style lens']", "data-style", v);
-          rewriteLinks();
-        });
-      }
+    // continue to "/" with lang query (so your "/" page can read it)
+    cont.setAttribute("href","/?lang="+encodeURIComponent(lang));
+    document.documentElement.setAttribute("lang", lang);
+  }
 
-      var timeChips = document.querySelectorAll(".crp-chip[data-time]");
-      for (var t=0;t<timeChips.length;t++){
-        timeChips[t].addEventListener("click", function(e){
-          var v = e.currentTarget.getAttribute("data-time");
-          if (!allowTime[v]) return;
-          state.time = v;
-          lsSet(K_TIME, v);
-          setPressed("[aria-label='Time lens']", "data-time", v);
-          rewriteLinks();
-        });
-      }
+  function setLang(v){
+    lang = v;
+    lsSet(K_LANG, lang);
+    ensureDefaults();
+    apply();
+  }
 
-      // Wire language/depth buttons
-      document.addEventListener("click", function(e){
-        var t = e.target;
-        if (!t) return;
-        if (t.matches && t.matches("button[data-set][data-val]")){
-          var set = t.getAttribute("data-set");
-          var val = t.getAttribute("data-val");
-          if (set === "lang" && allowLang[val]) state.lang = val;
-          if (set === "depth" && allowDepth[val]) state.depth = val;
+  enBtn.addEventListener("click", function(){ setLang("en"); });
+  zhBtn.addEventListener("click", function(){ setLang("zh"); });
 
-          lsSet(K_LANG, state.lang);
-          lsSet(K_DEPTH, state.depth);
-          setActive();
-          rewriteLinks();
-        }
-      });
+  ensureDefaults();
+  apply();
+})();
+</script>
 
-      // Rewrite route links to carry state consistently
-      function rewriteLinks(){
-        var q =
-          "lang=" + encodeURIComponent(state.lang) +
-          "&depth=" + encodeURIComponent(state.depth) +
-          "&style=" + encodeURIComponent(state.style) +
-          "&time=" + encodeURIComponent(state.time);
-
-        var home = document.getElementById("go-home");
-        var exp  = document.getElementById("go-explore");
-        var links= document.getElementById("go-links");
-        var start= document.getElementById("go-start");
-
-        if (home) home.setAttribute("href", "/home/?" + q);
-        // Explore is always depth=explore by spec, but we still carry lang/style/time
-        if (exp) exp.setAttribute("href", "/explore/?lang=" + encodeURIComponent(state.lang) + "&depth=explore&style=" + encodeURIComponent(state.style) + "&time=" + encodeURIComponent(state.time));
-        if (links) links.setAttribute("href", "/links/?" + q);
-        if (start) start.setAttribute("href", "/?" + q);
-      }
-
-      rewriteLinks();
-    })();
-  </script>
 </body>
 </html>

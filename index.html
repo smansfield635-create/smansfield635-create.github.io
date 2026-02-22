@@ -7,11 +7,10 @@
   <title>CRP</title>
 
   <!-- CSS ORDER (CANON): ui.css FIRST, branch.css SECOND -->
-  <link rel="stylesheet" href="/assets/ui.css?v=CRP_20260221c" />
-  <link rel="stylesheet" href="/assets/branch.css?v=CRP_20260221c" />
+  <link rel="stylesheet" href="/assets/ui.css?v=CRP_20260221_navfix" />
+  <link rel="stylesheet" href="/assets/branch.css?v=CRP_20260221_navfix" />
 
-  <!-- INSTRUMENT -->
-  <script defer src="/assets/instrument.js?v=CRP_20260221c"></script>
+  <!-- NOTE: No instrument.js on Index. This page must work even if JS is broken. -->
 </head>
 
 <body>
@@ -23,103 +22,29 @@
         <p class="crp-subtitle">Choose one to continue.</p>
       </header>
 
-      <!-- PRIMARY ACTIONS
-           IMPORTANT: These are <a> links (guaranteed navigation) styled as buttons.
-           JS also sets localStorage, but navigation works even if JS fails.
-      -->
+      <!-- PURE LINKS (guaranteed navigation; zero JS dependency) -->
       <div class="crp-actions" role="group" aria-label="Language options">
-        <a id="link-en" class="crp-btn crp-btn-primary" href="/door/?lang=en" role="button" aria-label="English">
-          ENGLISH
-        </a>
-        <a id="link-zh" class="crp-btn" href="/door/?lang=zh" role="button" aria-label="中文">
-          中文
-        </a>
+        <a class="crp-btn crp-btn-primary" href="/door/?lang=en" role="button">ENGLISH</a>
+        <a class="crp-btn" href="/door/?lang=zh" role="button">中文</a>
       </div>
-
-      <section aria-label="What happens next" style="margin-top:18px">
-        <p class="crp-subtitle" style="margin:0 0 10px;opacity:.9;font-size:16px">
-          Next step: this sets <code>gd_lang</code> and routes to <strong>Terminal</strong>.
-        </p>
-        <ul style="margin:0;padding-left:18px;opacity:.85;line-height:1.5">
-          <li>Language is stored as <code>gd_lang</code> = <code>en</code> or <code>zh</code>.</li>
-          <li>Depth selection happens later (Explore vs Learn).</li>
-          <li>No other keys are written on this page.</li>
-        </ul>
-      </section>
 
       <hr class="crp-divider" />
 
-      <!-- STATUS + DIAGNOSTICS (FULL DETAIL, NO GUESSING) -->
-      <section aria-label="Status and diagnostics">
-        <p class="crp-subtitle" style="margin:0 0 10px;opacity:.9;font-size:16px">
-          Status
-        </p>
-
-        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
-          <div style="opacity:.85">
-            BUILD ID: <strong>CRP_20260221c</strong>
-          </div>
-          <button id="btn-clear" class="crp-btn" type="button" aria-label="Clear local state">
-            Clear state
-          </button>
-          <a class="crp-btn" href="/door/?lang=en" role="button" aria-label="Go to Terminal (English)">
-            Go (EN)
-          </a>
-          <a class="crp-btn" href="/door/?lang=zh" role="button" aria-label="Go to Terminal (中文)">
-            Go (中文)
-          </a>
-        </div>
-
-        <details style="margin-top:14px">
-          <summary style="cursor:pointer;opacity:.9;font-weight:700">Diagnostics</summary>
-          <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:10px">
-            <a class="crp-btn" href="/assets/ui.css?v=CRP_20260221c" role="button">Open ui.css</a>
-            <a class="crp-btn" href="/assets/branch.css?v=CRP_20260221c" role="button">Open branch.css</a>
-            <a class="crp-btn" href="/assets/instrument.js?v=CRP_20260221c" role="button">Open instrument.js</a>
-          </div>
-          <p style="margin:10px 0 0;opacity:.75;line-height:1.5">
-            If the buttons ever “do nothing,” use the Go buttons above (pure links). This removes all JS dependence.
-          </p>
-        </details>
-      </section>
+      <!-- RAW LINKS (debug: if these don’t work, something is intercepting taps) -->
+      <p class="crp-subtitle" style="margin:0 0 10px;opacity:.9;font-size:16px">
+        If the buttons above don’t navigate, tap these raw links:
+      </p>
+      <ul style="margin:0;padding-left:18px;line-height:1.6;opacity:.9">
+        <li><a href="/door/?lang=en">/door/?lang=en</a></li>
+        <li><a href="/door/?lang=zh">/door/?lang=zh</a></li>
+      </ul>
 
       <footer class="crp-footer">
         <small class="crp-footnote">
-          Canonical keys only: <code>gd_lang</code>, <code>gd_depth</code>, <code>gd_time</code>, <code>gd_style</code>.
+          BUILD: <strong>CRP_20260221_navfix</strong> · Index is link-only (no JS).
         </small>
       </footer>
     </section>
   </main>
-
-  <script>
-    (function () {
-      "use strict";
-
-      // INDEX OWNER: gd_lang only.
-      var K_LANG  = "gd_lang";
-      var K_DEPTH = "gd_depth";
-      var K_TIME  = "gd_time";
-      var K_STYLE = "gd_style";
-
-      function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
-      function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
-
-      // Set lang on link click (navigation is handled by href regardless).
-      var en = document.getElementById("link-en");
-      var zh = document.getElementById("link-zh");
-
-      if (en) en.addEventListener("click", function () { lsSet(K_LANG, "en"); });
-      if (zh) zh.addEventListener("click", function () { lsSet(K_LANG, "zh"); });
-
-      // Clear state button (safe; does not touch non-canonical keys)
-      var clear = document.getElementById("btn-clear");
-      if (clear) clear.addEventListener("click", function () {
-        lsDel(K_LANG); lsDel(K_DEPTH); lsDel(K_TIME); lsDel(K_STYLE);
-        // visual confirmation without alerts
-        clear.textContent = "Cleared";
-        setTimeout(function(){ clear.textContent = "Clear state"; }, 700);
-      });
-    })();
-  </script>
 </body>
 </html>

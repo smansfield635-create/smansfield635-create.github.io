@@ -1,202 +1,424 @@
 /* =====================================================
-   TNT FILE: /assets/ui.css
-   CRP AUTUMN FIELD v3 — Ink Black + Lacquer Red + Antique Gold
-   Subtle distant fireworks (peripheral only). No cosmic residue.
+   TNT FILE: /assets/branch.css
+   CRP BRANCH LAYOUT v1 — LAYOUT ONLY (NO FIELD / NO BODY BACKGROUND)
+   PURPOSE:
+     - Diamond geometry (platform + 4 tiles)
+     - Quadrant cards (NW/NE/SW/SE)
+     - Bubble buttons (vine/fruit)
+     - Overlay + modal layout helpers
+   RULES:
+     - DO NOT define :root colors here
+     - DO NOT set html/body backgrounds here
+     - UI field lives ONLY in /assets/ui.css
 ===================================================== */
-
-:root{
-  --ink:#05070c;
-  --ink2:#070b12;
-
-  --red:#7a0b14;
-  --red2:#3a060a;
-
-  --gold:#caa04a;
-  --gold2:#9a7a2f;
-
-  --text:#eaf2f6;
-  --muted:rgba(234,242,246,.72);
-
-  --glass:rgba(255,255,255,.06);
-  --glass2:rgba(0,0,0,.20);
-  --stroke:rgba(255,255,255,.10);
-  --stroke2:rgba(255,255,255,.14);
-
-  --shadow:rgba(0,0,0,.55);
-  --shadow2:rgba(0,0,0,.85);
-
-  --r:22px;
-}
 
 *{box-sizing:border-box}
-html,body{
-  margin:0;padding:0;width:100%;height:100%;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text);
-  background:var(--ink);
-  overflow-x:hidden;
-}
-
-/* Kill browser default link styling (purple/underline) */
-a{color:inherit;text-decoration:none}
-a:visited{color:inherit}
-button{font-family:inherit}
 
 /* =====================================================
-   FIELD (single source of truth)
+   STAGE / PLATFORM (DIAMOND)
 ===================================================== */
 
-body{
-  background:
-    radial-gradient(1200px 900px at 12% 16%, rgba(202,160,74,.22) 0%, transparent 62%),
-    radial-gradient(1400px 1000px at 86% 18%, rgba(122,11,20,.28) 0%, transparent 66%),
-    radial-gradient(1800px 1200px at 50% 0%, rgba(122,11,20,.18) 0%, transparent 72%),
-    linear-gradient(to bottom, var(--ink2), var(--ink));
-}
-
-body::before{
-  content:"";
-  position:fixed;
-  inset:-12%;
-  pointer-events:none;
-  z-index:-1;
-  background:
-    radial-gradient(520px 520px at 18% 10%, rgba(202,160,74,.16) 0%, transparent 68%),
-    radial-gradient(650px 650px at 82% 12%, rgba(122,11,20,.20) 0%, transparent 72%),
-    radial-gradient(780px 780px at 50% 6%, rgba(202,160,74,.10) 0%, transparent 78%);
-  opacity:.65;
-  filter:blur(8px);
-  animation:crpPulse 7s ease-in-out infinite alternate;
-}
-@keyframes crpPulse{
-  0%{opacity:.45; filter:blur(8px) brightness(.98)}
-  100%{opacity:.78; filter:blur(8px) brightness(1.08)}
-}
-
-/* Disable any legacy cosmic layer class if it exists */
-.shooting-stars{display:none !important}
-
-/* =====================================================
-   LAYOUT
-===================================================== */
-
-.page{
-  min-height:100vh;
+.stage{
+  width:100%;
   display:flex;
-  flex-direction:column;
   align-items:center;
-  justify-content:flex-start;
-  padding:44px 16px 96px;
+  justify-content:center;
+}
+
+.platform{
   position:relative;
-  z-index:1;
+  width:min(420px,88vw);
+  aspect-ratio:1/1;
+  margin:0 auto;
 }
 
-.wrap{
-  width:min(980px,94vw);
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-
-.hero{position:relative;z-index:5}
-.hero h1{
-  margin:0;
-  font-weight:950;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  font-size:clamp(44px,7vw,78px);
-  line-height:1.0;
-}
-.hero p{
-  margin:10px 0 0;
-  color:var(--muted);
-  font-size:18px;
-  line-height:1.35;
+/* Diamond plate */
+.platform::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
+  border-radius:46px;
+  background:rgba(255,255,255,.04);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    0 30px 90px rgba(0,0,0,.55);
+  backdrop-filter:blur(10px);
+  z-index:0;
 }
 
 /* =====================================================
-   UI PRIMITIVES
+   DIAMOND TILE (4 ROUTES)
 ===================================================== */
 
-.panel{
-  border-radius:var(--r);
-  background:var(--glass);
+.diamond{
+  position:absolute;
+  width:42%;
+  height:42%;
+  transform:rotate(45deg);
+  border-radius:24px;
+  background:rgba(0,0,0,.26);
   box-shadow:
-    inset 0 0 0 1px var(--stroke),
-    0 24px 64px var(--shadow);
-  backdrop-filter:blur(12px);
+    inset 0 0 0 1px rgba(255,255,255,.12),
+    0 18px 60px rgba(0,0,0,.50);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:inherit;
+  z-index:2;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+  transition:filter .15s ease, transform .15s ease, background .15s ease, box-shadow .15s ease;
 }
 
-.pills{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.diamond:hover{
+  filter:brightness(1.05);
+  background:rgba(0,0,0,.30);
+}
+.diamond:active{
+  transform:rotate(45deg) translateY(1px);
+}
 
-.pill{
-  border-radius:999px;
-  padding:10px 14px;
-  background:var(--glass);
-  box-shadow:inset 0 0 0 1px var(--stroke);
-  font-weight:900;
+.diamond span{
+  transform:rotate(-45deg);
+  display:block;
+  text-align:center;
+  padding:10px 12px;
+  line-height:1.1;
+  font-weight:950;
   letter-spacing:.12em;
   text-transform:uppercase;
+}
+
+.diamond span b{
+  display:block;
+  font-size:16px;
+  font-weight:950;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+
+.diamond span small{
+  display:block;
+  margin-top:8px;
   font-size:12px;
-  opacity:.92;
+  opacity:.72;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-weight:900;
+}
+
+/* Positions */
+.top{top:6%;left:29%}
+.right{top:29%;right:6%}
+.bottom{bottom:6%;left:29%}
+.left{top:29%;left:6%}
+
+/* Optional highlight */
+.diamond.gold{
+  box-shadow:
+    inset 0 0 0 1px rgba(202,160,74,.55),
+    0 18px 60px rgba(0,0,0,.50);
+}
+
+/* =====================================================
+   QUADRANT CARDS (HOME)
+===================================================== */
+
+details.quad{
+  border-radius:22px;
+  background:rgba(255,255,255,.05);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    0 22px 70px rgba(0,0,0,.45);
+  backdrop-filter:blur(12px);
+  overflow:hidden;
+}
+
+details.quad + details.quad{margin-top:12px}
+
+details.quad summary{
+  list-style:none;
+  cursor:pointer;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  -webkit-tap-highlight-color:transparent;
+}
+details.quad summary::-webkit-details-marker{display:none}
+
+.q-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+
+.q-badge{
+  width:64px;
+  height:44px;
+  border-radius:18px;
+  background:rgba(0,0,0,.18);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:950;
+  letter-spacing:.14em;
+  flex:0 0 auto;
+  position:relative;
+}
+
+.q-badge .icon{
+  position:absolute;
+  left:10px;
+  top:9px;
+  opacity:.95;
+}
+
+.q-badge .code{
+  padding-left:18px;
+}
+
+.q-text{min-width:0}
+.q-text b{
+  display:block;
+  font-size:18px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-weight:950;
+}
+.q-text span{
+  display:block;
+  opacity:.72;
+  margin-top:4px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.q-arrow{
+  width:42px;
+  height:42px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:.9;
+  flex:0 0 auto;
+}
+
+.inside{padding:0 16px 16px}
+
+/* =====================================================
+   BUBBLE GRID (VINES / FRUITS)
+===================================================== */
+
+.bubble-row{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  margin-top:10px;
+}
+
+@media(min-width:720px){
+  .bubble-row{grid-template-columns:1fr 1fr}
+}
+
+.bubble-btn{
+  border-radius:18px;
+  background:rgba(0,0,0,.22);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  padding:12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  cursor:pointer;
   user-select:none;
   -webkit-tap-highlight-color:transparent;
 }
 
-.pill.btn{cursor:pointer}
-.pill.btn:hover{background:rgba(255,255,255,.08)}
-.pill.active{
-  background:rgba(202,160,74,.18);
-  box-shadow:inset 0 0 0 1px rgba(202,160,74,.55);
-}
+.bubble-btn:hover{background:rgba(0,0,0,.28)}
 
-.btn{
-  border:0;
-  cursor:pointer;
-  border-radius:18px;
-  padding:12px 16px;
-  background:rgba(255,255,255,.08);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
-  color:var(--text);
-  font-weight:950;
+.bubble-btn .lbl{min-width:0}
+
+.bubble-btn b{
+  display:block;
+  font-size:13px;
   letter-spacing:.14em;
   text-transform:uppercase;
-  font-size:12px;
-}
-
-.btn:hover{background:rgba(255,255,255,.10)}
-.btn.gold{
-  background:rgba(202,160,74,.20);
-  box-shadow:inset 0 0 0 1px rgba(202,160,74,.55), 0 18px 50px rgba(0,0,0,.40);
-}
-.btn.red{
-  background:rgba(122,11,20,.34);
-  box-shadow:inset 0 0 0 1px rgba(202,160,74,.28), 0 18px 50px rgba(0,0,0,.40);
-}
-
-.section-title{
-  margin-top:10px;
-  font-weight:900;
-  letter-spacing:.18em;
-  opacity:.7;
-  font-size:12px;
-  text-transform:uppercase;
-}
-
-.footer{
-  margin-top:16px;
-  text-align:center;
-  opacity:.55;
-  letter-spacing:3px;
-  font-size:12px;
-}
-
-.ink{
-  margin-top:10px;
-  text-align:center;
   font-weight:950;
-  letter-spacing:.24em;
-  opacity:.42;
+}
+
+.bubble-btn i{
+  display:block;
+  margin-top:3px;
+  font-style:normal;
+  opacity:.72;
   font-size:12px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.bubble-btn .go{
+  width:40px;
+  height:40px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:.9;
+  flex:0 0 auto;
+}
+
+/* =====================================================
+   OVERLAY / MODAL HELPERS
+===================================================== */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(0,0,0,.70);
+  backdrop-filter:blur(10px);
+}
+
+.overlay.on{display:flex}
+
+.modal{
+  width:min(980px,94vw);
+  max-height:min(86vh,760px);
+  overflow:auto;
+  border-radius:26px;
+  background:rgba(0,0,0,.30);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.12),
+    0 35px 120px rgba(0,0,0,.75);
+}
+
+.modal-head{
+  padding:16px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  position:sticky;
+  top:0;
+  background:rgba(0,0,0,.25);
+  backdrop-filter:blur(10px);
+  z-index:2;
+}
+
+.modal-title b{
+  display:block;
+  font-size:16px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  font-weight:950;
+}
+.modal-title span{
+  display:block;
+  margin-top:6px;
+  opacity:.75;
+  font-size:14px;
+  line-height:1.25;
+}
+
+.close{
+  border:0;
+  cursor:pointer;
+  border-radius:14px;
+  padding:10px 12px;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+  color:inherit;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-size:12px;
+}
+.close:hover{background:rgba(255,255,255,.10)}
+
+.modal-body{padding:14px 16px 18px}
+
+.block{
+  border-radius:22px;
+  background:rgba(0,0,0,.26);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  padding:14px;
+}
+.block h3{
+  margin:0 0 10px;
+  font-weight:950;
+  letter-spacing:.08em;
   text-transform:uppercase;
 }
+.block p{
+  margin:0;
+  opacity:.86;
+  line-height:1.7;
+}
+
+/* =====================================================
+   RESOLUTION BLOCK (LAYOUT ONLY)
+===================================================== */
+
+.resolution{
+  margin-top:14px;
+  padding:16px;
+  border-radius:22px;
+  background:rgba(255,255,255,.05);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+}
+.resolution h4{
+  margin:0 0 10px;
+  font-size:16px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-weight:950;
+}
+.resolution .para{
+  margin:0 0 12px;
+  line-height:1.75;
+  opacity:.90;
+}
+.resolution ul{
+  margin:0 0 12px 18px;
+  padding:0;
+  line-height:1.65;
+  opacity:.82;
+}
+.resolution .imp{
+  font-weight:950;
+  letter-spacing:.06em;
+  opacity:.92;
+  margin-top:10px;
+}
+.resolution .back{
+  margin-top:14px;
+  display:inline-block;
+  border-radius:18px;
+  padding:10px 14px;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+  font-weight:950;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-size:12px;
+  cursor:pointer;
+}
+.resolution .back:hover{background:rgba(255,255,255,.12)}

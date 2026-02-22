@@ -1,81 +1,83 @@
 /* =====================================================
-   CRP AUTUMN FIELD v2 — FULL TNT
-   Ink Black + Lacquer Red + Antique Gold
-   Subtle Distant Fireworks (Peripheral Only)
-   No cosmic residue.
+   TNT FILE: /assets/ui.css
+   CRP AUTUMN FIELD v3 — Ink Black + Lacquer Red + Antique Gold
+   Subtle distant fireworks (peripheral only). No cosmic residue.
 ===================================================== */
 
 :root{
   --ink:#05070c;
-  --ink-deep:#070b12;
+  --ink2:#070b12;
 
   --red:#7a0b14;
-  --red-soft:rgba(122,11,20,.28);
+  --red2:#3a060a;
 
   --gold:#caa04a;
-  --gold-soft:rgba(202,160,74,.22);
+  --gold2:#9a7a2f;
 
   --text:#eaf2f6;
   --muted:rgba(234,242,246,.72);
 
   --glass:rgba(255,255,255,.06);
+  --glass2:rgba(0,0,0,.20);
   --stroke:rgba(255,255,255,.10);
+  --stroke2:rgba(255,255,255,.14);
 
-  --shadow-heavy:rgba(0,0,0,.85);
+  --shadow:rgba(0,0,0,.55);
+  --shadow2:rgba(0,0,0,.85);
+
+  --r:22px;
 }
 
-/* Base reset */
+*{box-sizing:border-box}
 html,body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
+  margin:0;padding:0;width:100%;height:100%;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text);
   background:var(--ink);
   overflow-x:hidden;
 }
 
+/* Kill browser default link styling (purple/underline) */
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+button{font-family:inherit}
+
 /* =====================================================
-   FIELD LAYERS
+   FIELD (single source of truth)
 ===================================================== */
 
 body{
   background:
-    radial-gradient(1200px 900px at 15% 15%, var(--gold-soft) 0%, transparent 60%),
-    radial-gradient(1400px 1000px at 85% 20%, var(--red-soft) 0%, transparent 65%),
-    radial-gradient(1800px 1200px at 50% 0%, rgba(122,11,20,.18) 0%, transparent 70%),
-    linear-gradient(to bottom, var(--ink-deep), var(--ink));
+    radial-gradient(1200px 900px at 12% 16%, rgba(202,160,74,.22) 0%, transparent 62%),
+    radial-gradient(1400px 1000px at 86% 18%, rgba(122,11,20,.28) 0%, transparent 66%),
+    radial-gradient(1800px 1200px at 50% 0%, rgba(122,11,20,.18) 0%, transparent 72%),
+    linear-gradient(to bottom, var(--ink2), var(--ink));
 }
-
-/* =====================================================
-   DISTANT FIREWORKS (Peripheral Energy Only)
-   Very subtle radial flickers, top horizon.
-===================================================== */
 
 body::before{
   content:"";
   position:fixed;
-  inset:-10%;
+  inset:-12%;
   pointer-events:none;
   z-index:-1;
-
   background:
-    radial-gradient(500px 500px at 20% 10%, rgba(202,160,74,.18) 0%, transparent 65%),
-    radial-gradient(600px 600px at 80% 15%, rgba(161,13,28,.22) 0%, transparent 70%),
-    radial-gradient(700px 700px at 50% 5%, rgba(202,160,74,.12) 0%, transparent 75%);
-
+    radial-gradient(520px 520px at 18% 10%, rgba(202,160,74,.16) 0%, transparent 68%),
+    radial-gradient(650px 650px at 82% 12%, rgba(122,11,20,.20) 0%, transparent 72%),
+    radial-gradient(780px 780px at 50% 6%, rgba(202,160,74,.10) 0%, transparent 78%);
   opacity:.65;
-  animation:fireworkPulse 6s ease-in-out infinite alternate;
+  filter:blur(8px);
+  animation:crpPulse 7s ease-in-out infinite alternate;
+}
+@keyframes crpPulse{
+  0%{opacity:.45; filter:blur(8px) brightness(.98)}
+  100%{opacity:.78; filter:blur(8px) brightness(1.08)}
 }
 
-@keyframes fireworkPulse{
-  0%{ opacity:.45; filter:brightness(.95); }
-  100%{ opacity:.75; filter:brightness(1.08); }
-}
+/* Disable any legacy cosmic layer class if it exists */
+.shooting-stars{display:none !important}
 
 /* =====================================================
-   STRUCTURAL LAYOUT
+   LAYOUT
 ===================================================== */
 
 .page{
@@ -84,37 +86,48 @@ body::before{
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
-  padding:40px 16px 100px;
+  padding:44px 16px 96px;
+  position:relative;
+  z-index:1;
 }
 
-.stage{
-  width:100%;
+.wrap{
+  width:min(980px,94vw);
   display:flex;
-  align-items:center;
-  justify-content:center;
+  flex-direction:column;
+  gap:14px;
 }
 
-/* Headings */
-h1{
+.hero{position:relative;z-index:5}
+.hero h1{
   margin:0;
   font-weight:950;
-  letter-spacing:.04em;
+  letter-spacing:.06em;
   text-transform:uppercase;
+  font-size:clamp(44px,7vw,78px);
+  line-height:1.0;
 }
-
-h2,h3{
-  margin:0;
-  font-weight:900;
-}
-
-p{
-  margin:0;
+.hero p{
+  margin:10px 0 0;
   color:var(--muted);
+  font-size:18px;
+  line-height:1.35;
 }
 
 /* =====================================================
-   UI ELEMENTS
+   UI PRIMITIVES
 ===================================================== */
+
+.panel{
+  border-radius:var(--r);
+  background:var(--glass);
+  box-shadow:
+    inset 0 0 0 1px var(--stroke),
+    0 24px 64px var(--shadow);
+  backdrop-filter:blur(12px);
+}
+
+.pills{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 
 .pill{
   border-radius:999px;
@@ -122,10 +135,19 @@ p{
   background:var(--glass);
   box-shadow:inset 0 0 0 1px var(--stroke);
   font-weight:900;
-  letter-spacing:.10em;
+  letter-spacing:.12em;
   text-transform:uppercase;
   font-size:12px;
   opacity:.92;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.pill.btn{cursor:pointer}
+.pill.btn:hover{background:rgba(255,255,255,.08)}
+.pill.active{
+  background:rgba(202,160,74,.18);
+  box-shadow:inset 0 0 0 1px rgba(202,160,74,.55);
 }
 
 .btn{
@@ -136,29 +158,33 @@ p{
   background:rgba(255,255,255,.08);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
   color:var(--text);
-  font-weight:900;
-  letter-spacing:.12em;
+  font-weight:950;
+  letter-spacing:.14em;
   text-transform:uppercase;
   font-size:12px;
 }
 
-.btn.primary{
-  background:rgba(122,11,20,.35);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.14),
-    0 18px 50px rgba(0,0,0,.45);
-}
-
+.btn:hover{background:rgba(255,255,255,.10)}
 .btn.gold{
   background:rgba(202,160,74,.20);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.14),
-    0 18px 50px rgba(0,0,0,.45);
+  box-shadow:inset 0 0 0 1px rgba(202,160,74,.55), 0 18px 50px rgba(0,0,0,.40);
+}
+.btn.red{
+  background:rgba(122,11,20,.34);
+  box-shadow:inset 0 0 0 1px rgba(202,160,74,.28), 0 18px 50px rgba(0,0,0,.40);
 }
 
-/* Footer / Ink */
-footer{
-  margin-top:18px;
+.section-title{
+  margin-top:10px;
+  font-weight:900;
+  letter-spacing:.18em;
+  opacity:.7;
+  font-size:12px;
+  text-transform:uppercase;
+}
+
+.footer{
+  margin-top:16px;
   text-align:center;
   opacity:.55;
   letter-spacing:3px;
@@ -166,14 +192,11 @@ footer{
 }
 
 .ink{
-  margin-top:12px;
+  margin-top:10px;
   text-align:center;
-  letter-spacing:.22em;
-  font-weight:900;
-  opacity:.40;
+  font-weight:950;
+  letter-spacing:.24em;
+  opacity:.42;
   font-size:12px;
   text-transform:uppercase;
 }
-
-/* No legacy cosmic */
-.shooting-stars{display:none !important}

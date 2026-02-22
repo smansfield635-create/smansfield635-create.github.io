@@ -3,12 +3,14 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>GEODIAMETRICS</title>
+<title>DOOR · Geodiametrics</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
+
+/* ===== BACKGROUND (Same Crystal Field) ===== */
 
 body{
   margin:0;
@@ -17,33 +19,44 @@ body{
     radial-gradient(circle at 50% 35%, rgba(255,215,120,.05), transparent 60%),
     repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 1px, transparent 1px 90px),
     linear-gradient(180deg, #a80000 0%, #7b0000 60%, #5a0000 100%);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
+  overflow-x:hidden;
 }
 
-h1{
-  font-size:42px;
-  margin-bottom:12px;
+/* ===== HEADER ===== */
+
+.header{
+  text-align:center;
+  padding-top:80px;
 }
 
-p{
+.header h1{
+  font-size:46px;
+  letter-spacing:2px;
+  margin:0;
+}
+
+.header p{
   opacity:.85;
-  margin-bottom:40px;
+  margin-top:10px;
 }
 
-.lang-wrap{
-  display:flex;
-  gap:24px;
+/* ===== GEM DIAMONDS ===== */
+
+.stage{
+  position:relative;
+  width:min(500px,90vw);
+  height:min(500px,90vw);
+  margin:80px auto 0;
 }
 
-/* Crystal language buttons */
-
-.lang{
-  width:160px;
-  height:160px;
-  border-radius:24px;
+.gem{
+  width:150px;
+  height:150px;
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform-origin:center;
+  border-radius:22px;
   cursor:pointer;
 
   background:
@@ -56,33 +69,81 @@ p{
     inset 0 2px 0 rgba(255,255,255,.2),
     inset 0 -25px 35px rgba(0,0,0,.6);
 
+  border:1px solid rgba(255,255,255,.08);
+
+  transition: all 260ms ease;
+}
+
+.gem::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      rgba(255,255,255,.04) 0deg 5deg,
+      transparent 5deg 15deg
+    );
+  mix-blend-mode:overlay;
+  opacity:.25;
+  pointer-events:none;
+}
+
+.gem:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.05);
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.9),
+    0 0 22px rgba(212,175,55,.45),
+    inset 0 2px 0 rgba(255,255,255,.3);
+}
+
+.gem-inner{
+  width:100%;
+  height:100%;
+  transform:rotate(-45deg);
   display:flex;
   align-items:center;
   justify-content:center;
+  text-align:center;
   font-weight:900;
   letter-spacing:.5px;
-  transition:all 260ms ease;
+  pointer-events:none;
 }
 
-.lang:hover{
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.9),
-    0 0 25px rgba(212,175,55,.5),
-    inset 0 2px 0 rgba(255,255,255,.3);
-  transform:translateY(-6px);
-}
+.gem.explore{ transform:translate(-50%,-50%) translate(0,-120px) rotate(45deg); }
+.gem.links{ transform:translate(-50%,-50%) translate(-120px,0) rotate(45deg); }
+.gem.learn{ transform:translate(-50%,-50%) translate(120px,0) rotate(45deg); }
+.gem.home{ transform:translate(-50%,-50%) translate(0,120px) rotate(45deg); }
 
 </style>
 </head>
 
 <body>
 
-<h1>GEODIAMETRICS</h1>
-<p>Select your language.</p>
+<div class="header">
+  <h1>DOOR</h1>
+  <p>Choose your route.</p>
+</div>
 
-<div class="lang-wrap">
-  <a href="/terminal/?lang=en" class="lang">ENGLISH</a>
-  <a href="/terminal/?lang=zh" class="lang">中文</a>
+<div class="stage">
+
+  <a href="/home/" class="gem explore">
+    <div class="gem-inner">EXPLORE</div>
+  </a>
+
+  <a href="/links/" class="gem links">
+    <div class="gem-inner">LINKS</div>
+  </a>
+
+  <a href="/learn/" class="gem learn">
+    <div class="gem-inner">LEARN</div>
+  </a>
+
+  <a href="/home/" class="gem home">
+    <div class="gem-inner">HOME</div>
+  </a>
+
 </div>
 
 </body>

@@ -3,233 +3,198 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Home · Compass Face</title>
+  <title>HOME · Geodiametrics</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=HOME_FACE_1"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=HOME_FACE_1"/>
-  <script defer src="/assets/instrument.js?v=HOME_FACE_1"></script>
-
-  <style>
-    .compass-wrap{max-width:980px;margin:0 auto;padding-bottom:40px;}
-
-    .compass-face{
-      position:relative;
-      width:min(620px, 90vw);
-      height:min(620px, 90vw);
-      margin:24px auto;
-    }
-
-    .dir-panel{
-      position:absolute;
-      width:260px;
-      min-height:120px;
-      padding:14px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.18);
-      backdrop-filter:blur(6px);
-    }
-
-    .dir-title{
-      font-weight:950;
-      letter-spacing:.3px;
-      margin-bottom:6px;
-    }
-
-    .dir-content{
-      opacity:.85;
-      line-height:1.35;
-      font-size:14px;
-    }
-
-    /* Compass cross layout */
-    .north{ top:0; left:50%; transform:translate(-50%,0); text-align:center;}
-    .south{ bottom:0; left:50%; transform:translate(-50%,0); text-align:center;}
-    .east{ right:0; top:50%; transform:translate(0,-50%); text-align:left;}
-    .west{ left:0; top:50%; transform:translate(0,-50%); text-align:right;}
-
-    .center-core{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      width:120px;
-      height:120px;
-      border-radius:20px;
-      display:grid;
-      place-items:center;
-      font-weight:900;
-      letter-spacing:.4px;
-      border:1px solid rgba(255,210,120,.35);
-      background:linear-gradient(135deg, rgba(255,210,120,.20), rgba(255,150,60,.08));
-      box-shadow:0 0 30px rgba(255,210,120,.25);
-    }
-  </style>
+  <link rel="stylesheet" href="/assets/ui.css?v=9800"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=9800"/>
 </head>
 
 <body>
-<main class="crp-shell">
 
-  <header class="crp-header" style="text-align:center">
-    <div class="crp-mark">GEODIAMETRICS</div>
-    <h1 class="crp-title">HOME</h1>
-    <p class="crp-subtitle">Compass Face · Vector Understanding</p>
+<div class="page">
+  <div class="wrap">
 
-    <!-- Lenses -->
-    <div class="crp-topbar" style="margin:0 auto 8px;max-width:980px">
-      <div class="crp-topbar-left" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%">
-        <div class="crp-lens">
-          <button class="crp-chip" data-style="formal">FORMAL</button>
-          <button class="crp-chip" data-style="informal">INFORMAL</button>
-        </div>
-        <div class="crp-lens">
-          <button class="crp-chip" data-time="origin">ORIGIN</button>
-          <button class="crp-chip" data-time="now">NOW</button>
-          <button class="crp-chip" data-time="trajectory">TRAJECTORY</button>
-        </div>
-      </div>
+    <!-- BACK TO LANGUAGE -->
+    <div style="position:absolute;left:16px;top:16px">
+      <a href="/" class="pill btn">◀ Language</a>
     </div>
-  </header>
 
-  <section class="compass-wrap">
-    <div class="compass-face">
+    <div class="hero" style="text-align:center">
+      <h1>HOME</h1>
+      <p>Compass Face · Vector Understanding</p>
+    </div>
 
-      <div class="dir-panel north">
-        <div class="dir-title">NORTH</div>
-        <div class="dir-content" id="content-north"></div>
+    <!-- LENS CONTROLS -->
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:24px">
+
+      <!-- FORMAL / INFORMAL -->
+      <button id="modeToggle" class="pill btn">FORMAL</button>
+
+      <!-- TIME -->
+      <div style="display:flex;gap:10px">
+        <button class="pill btn timeBtn" data-time="origin">ORIGIN</button>
+        <button class="pill btn timeBtn" data-time="now">NOW</button>
+        <button class="pill btn timeBtn" data-time="trajectory">TRAJECTORY</button>
       </div>
-
-      <div class="dir-panel east">
-        <div class="dir-title">EAST</div>
-        <div class="dir-content" id="content-east"></div>
-      </div>
-
-      <div class="dir-panel south">
-        <div class="dir-title">SOUTH</div>
-        <div class="dir-content" id="content-south"></div>
-      </div>
-
-      <div class="dir-panel west">
-        <div class="dir-title">WEST</div>
-        <div class="dir-content" id="content-west"></div>
-      </div>
-
-      <div class="center-core">◆</div>
 
     </div>
-  </section>
 
-</main>
+    <!-- COMPASS CROSS -->
+
+    <div id="compass" style="position:relative;margin-top:60px;height:60vh;max-height:600px">
+
+      <!-- NORTH -->
+      <div class="direction north">
+        <h3>NORTH</h3>
+        <p id="northText"></p>
+      </div>
+
+      <!-- EAST -->
+      <div class="direction east">
+        <h3>EAST</h3>
+        <p id="eastText"></p>
+      </div>
+
+      <!-- SOUTH -->
+      <div class="direction south">
+        <h3>SOUTH</h3>
+        <p id="southText"></p>
+      </div>
+
+      <!-- WEST -->
+      <div class="direction west">
+        <h3>WEST</h3>
+        <p id="westText"></p>
+      </div>
+
+    </div>
+
+  </div>
+</div>
 
 <script>
-(function(){
-  "use strict";
+let mode = "formal"
+let time = "origin"
 
-  var K_STYLE="gd_style";
-  var K_TIME="gd_time";
-  var K_DEPTH="gd_depth";
-
-  function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
-  function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
-
-  var state={
-    style: lsGet(K_STYLE) || "formal",
-    time:  lsGet(K_TIME)  || "origin",
-    depth: lsGet(K_DEPTH) || "explore"
-  };
-
-  function setPressed(attr, value){
-    var nodes=document.querySelectorAll("[data-"+attr+"]");
-    for(var i=0;i<nodes.length;i++){
-      var v=nodes[i].getAttribute("data-"+attr);
-      nodes[i].setAttribute("aria-pressed", v===value ? "true":"false");
+const content = {
+  north: {
+    formal: {
+      origin: "North defines invariant structure.",
+      now: "North stabilizes current position.",
+      trajectory: "North preserves long-term coherence."
+    },
+    informal: {
+      origin: "North is your anchor.",
+      now: "North keeps you steady.",
+      trajectory: ""
+    }
+  },
+  east: {
+    formal: {
+      origin: "East maps execution pathways.",
+      now: "East expresses operational flow.",
+      trajectory: "East scales systems forward."
+    },
+    informal: {
+      origin: "East is how you move.",
+      now: "East is doing.",
+      trajectory: ""
+    }
+  },
+  south: {
+    formal: {
+      origin: "South defines convergence pressure.",
+      now: "South applies constraint.",
+      trajectory: "South refines impact over time."
+    },
+    informal: {
+      origin: "South is where force happens.",
+      now: "South pushes.",
+      trajectory: ""
+    }
+  },
+  west: {
+    formal: {
+      origin: "West governs containment.",
+      now: "West enforces boundaries.",
+      trajectory: "West protects systemic integrity."
+    },
+    informal: {
+      origin: "West keeps things tight.",
+      now: "West guards the edge.",
+      trajectory: ""
     }
   }
+}
 
-  setPressed("style", state.style);
-  setPressed("time", state.time);
+function render() {
+  document.getElementById("northText").innerText = content.north[mode][time] || ""
+  document.getElementById("eastText").innerText = content.east[mode][time] || ""
+  document.getElementById("southText").innerText = content.south[mode][time] || ""
+  document.getElementById("westText").innerText = content.west[mode][time] || ""
 
-  var content = {
-    north:{
-      formal:{
-        origin:"North represents invariant principle at origin state.",
-        now:"North represents present alignment to principle.",
-        trajectory:"North represents guiding invariant across time."
-      },
-      informal:{
-        origin:"North is your original truth.",
-        now:"North is what keeps you honest right now.",
-        trajectory:"North keeps you from drifting."
-      }
-    },
-    east:{
-      formal:{
-        origin:"East represents emergence and structured expansion.",
-        now:"East represents active growth and surface creation.",
-        trajectory:"East drives forward projection."
-      },
-      informal:{
-        origin:"East is where things begin to move.",
-        now:"East is your creative push.",
-        trajectory:"East is forward motion."
-      }
-    },
-    south:{
-      formal:{
-        origin:"South represents convergence and applied force.",
-        now:"South represents execution and motion.",
-        trajectory:"South compounds applied momentum."
-      },
-      informal:{
-        origin:"South is where things get done.",
-        now:"South is action.",
-        trajectory:"South is pressure applied."
-      }
-    },
-    west:{
-      formal:{
-        origin:"West represents integration and refinement.",
-        now:"West represents stabilization and correction.",
-        trajectory:"West ensures coherence under stress."
-      },
-      informal:{
-        origin:"West is clean-up.",
-        now:"West is adjusting.",
-        trajectory:"West keeps things tight."
-      }
-    }
-  };
-
-  function render(){
-    var dirs=["north","east","south","west"];
-    dirs.forEach(function(d){
-      var el=document.getElementById("content-"+d);
-      if(!el) return;
-      el.textContent = content[d][state.style][state.time];
-    });
+  // Hide trajectory if informal
+  const trajectoryBtn = document.querySelector('[data-time="trajectory"]')
+  if(mode === "informal"){
+    trajectoryBtn.style.display = "none"
+    if(time === "trajectory") time = "origin"
+  } else {
+    trajectoryBtn.style.display = "inline-block"
   }
+}
 
-  document.querySelectorAll("[data-style]").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      state.style=btn.getAttribute("data-style");
-      lsSet(K_STYLE,state.style);
-      setPressed("style",state.style);
-      render();
-    });
-  });
+document.getElementById("modeToggle").addEventListener("click", () => {
+  mode = mode === "formal" ? "informal" : "formal"
+  document.getElementById("modeToggle").innerText = mode.toUpperCase()
+  render()
+})
 
-  document.querySelectorAll("[data-time]").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      state.time=btn.getAttribute("data-time");
-      lsSet(K_TIME,state.time);
-      setPressed("time",state.time);
-      render();
-    });
-  });
+document.querySelectorAll(".timeBtn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    time = btn.dataset.time
+    render()
+  })
+})
 
-  render();
-})();
+render()
 </script>
+
+<style>
+/* CROSS LAYOUT */
+
+.direction{
+  position:absolute;
+  width:45%;
+  max-width:300px;
+  padding:18px;
+  border-radius:18px;
+  backdrop-filter:blur(6px);
+  background:rgba(255,255,255,0.05);
+  text-align:center;
+}
+
+.north{top:0;left:50%;transform:translateX(-50%);}
+.south{bottom:0;left:50%;transform:translateX(-50%);}
+.east{top:50%;right:0;transform:translateY(-50%);}
+.west{top:50%;left:0;transform:translateY(-50%);}
+
+/* MOBILE ADAPT */
+@media(max-width:768px){
+  #compass{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    height:auto;
+  }
+  .direction{
+    position:relative;
+    width:100%;
+    max-width:none;
+    transform:none !important;
+  }
+}
+</style>
 
 </body>
 </html>

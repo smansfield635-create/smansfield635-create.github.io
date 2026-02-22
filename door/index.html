@@ -4,114 +4,122 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Door · Geodiametrics</title>
+  <title>Door</title>
   <link rel="stylesheet" href="/assets/ui.css?v=9100"/>
   <link rel="stylesheet" href="/assets/branch.css?v=9100"/>
-  <script defer src="/assets/instrument.js?v=9100"></script>
 </head>
-<body>
-  <div class="page">
-    <div class="diamond-field"><div class="plate"></div></div>
 
-    <div class="wrap" style="position:relative; z-index:2;">
-      <div class="hero center">
+<body>
+  <div class="diamond-field" aria-hidden="true"></div>
+
+  <div class="page">
+    <div class="wrap" style="max-width:860px;align-items:center;text-align:center;position:relative;z-index:2;">
+      <div class="hero">
         <h1>DOOR</h1>
         <p>Choose your route.</p>
-        <div class="mt12">
-          <span class="pill">LANG: <span id="langPill">EN</span></span>
-          <span class="pill">DEPTH: <span id="depthPill">EXPLORE</span></span>
-        </div>
       </div>
 
-      <div class="lane-row">
-        <button class="pill btn" id="setEN" type="button">EN</button>
-        <button class="pill btn" id="setZH" type="button">中文</button>
+      <div class="door-meta">
+        <span class="pill">LANG: <span id="langLbl">—</span></span>
+        <span class="pill">DEPTH: <span id="depthLbl">—</span></span>
         <a class="pill btn" href="/" id="backIdx">BACK</a>
       </div>
 
-      <div class="diamond-grid mt12">
-        <button class="diamond gold pos-top" id="goExplore" type="button" aria-label="Explore">
-          <div class="inner">
-            <div class="label">EXPLORE</div>
-            <div class="sub">Surface</div>
-          </div>
-        </button>
-
-        <button class="diamond pos-left" id="goLinks" type="button" aria-label="Links">
-          <div class="inner">
-            <div class="label">LINKS</div>
-            <div class="sub">Identity</div>
-          </div>
-        </button>
-
-        <button class="diamond pos-right" id="goLearn" type="button" aria-label="Learn">
-          <div class="inner">
-            <div class="label">LEARN</div>
-            <div class="sub">Deep</div>
-          </div>
-        </button>
-
-        <button class="diamond pos-bottom" id="goHome" type="button" aria-label="Home">
-          <div class="inner">
-            <div class="label">HOME</div>
-            <div class="sub">Enter hub</div>
-          </div>
-        </button>
+      <div class="door-meta" style="margin-top:-4px;">
+        <button class="pill btn" id="setEN" type="button">EN</button>
+        <button class="pill btn" id="setZH" type="button">中文</button>
       </div>
 
-      <div class="panel mt16" style="padding:14px 16px; max-width:820px; margin-left:auto; margin-right:auto;">
-        <div class="section-title">What these routes mean</div>
-        <div style="margin-top:10px; color:rgba(234,242,246,.78); line-height:1.65;">
-          <b>Explore</b> shows the surface map (fast orientation).<br/>
-          <b>Learn</b> enters the deep map (nested bubbles + resolution).<br/>
-          <b>Home</b> enters the hub at your current depth.<br/>
-          <b>Links</b> opens identity and reference anchors.
+      <div class="door-meta" style="margin-top:2px;">
+        <button class="pill btn" id="setExplore" type="button">EXPLORE</button>
+        <button class="pill btn" id="setLearn" type="button">LEARN</button>
+      </div>
+
+      <div class="panel" style="width:min(980px,94vw);padding:18px 16px;background:rgba(0,0,0,.22);">
+        <div style="position:relative;">
+          <div class="diamond-plate" aria-label="Door routes" style="margin-top:10px;">
+            <a class="diamond-node dn-top gold" id="goExplore" href="/explore/">
+              <span><b>Explore</b><small>Surface</small></span>
+            </a>
+
+            <a class="diamond-node dn-right" id="goLearn" href="/home/">
+              <span><b>Learn</b><small>Deep</small></span>
+            </a>
+
+            <a class="diamond-node dn-left" id="goLinks" href="/links/">
+              <span><b>Links</b><small>Identity</small></span>
+            </a>
+
+            <a class="diamond-node dn-bottom" id="goHome" href="/home/">
+              <span><b>Home</b><small>Enter hub</small></span>
+            </a>
+          </div>
+        </div>
+
+        <hr class="sep"/>
+
+        <div style="text-align:left;opacity:.78;line-height:1.6;font-size:13px;">
+          <b style="letter-spacing:.08em;">Explore</b> = surface map (fast orientation).<br/>
+          <b style="letter-spacing:.08em;">Learn</b> = deep map (nested bubbles + resolution).<br/>
+          <b style="letter-spacing:.08em;">Home</b> = hub entry (same hub; your depth controls density).<br/>
+          <b style="letter-spacing:.08em;">Links</b> = identity, references, contact.
         </div>
       </div>
 
       <div class="ink">GEODIAMETRICS</div>
-      <footer class="footer">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
     </div>
   </div>
 
+  <script src="/assets/instrument.js?v=9100"></script>
   <script>
   (() => {
-    const K1_LANG="gd_lang", K2_LANG="crp_lang";
-    const K1_DEPTH="gd_depth", K2_DEPTH="crp_depth";
+    const K_LANG  = "gd_lang";
+    const K_DEPTH = "gd_depth";
 
-    const read = (k)=>{ try{return localStorage.getItem(k)||"";}catch(e){return "";} };
-    const writeBoth = (a,b,v)=>{ try{localStorage.setItem(a,v);localStorage.setItem(b,v);}catch(e){} };
+    const qp = new URLSearchParams(location.search);
 
-    // init pills
-    const lang = (read(K1_LANG)||read(K2_LANG)||"en").toLowerCase()==="zh" ? "zh" : "en";
-    const depth = (read(K1_DEPTH)||read(K2_DEPTH)||"explore").toLowerCase()==="learn" ? "learn" : "explore";
+    function get(key){ try { return localStorage.getItem(key); } catch(e){ return null; } }
+    function set(key,val){ try { localStorage.setItem(key,val); } catch(e){} }
 
-    document.getElementById("langPill").textContent = (lang==="zh" ? "中文" : "EN");
-    document.getElementById("depthPill").textContent = (depth==="learn" ? "LEARN" : "EXPLORE");
+    // Seed from query
+    const qLang = (qp.get("lang")||"").toLowerCase();
+    if (qLang === "en" || qLang === "zh") set(K_LANG, qLang);
 
-    // language toggle
-    document.getElementById("setEN").addEventListener("click", ()=>{ writeBoth(K1_LANG,K2_LANG,"en"); location.href="/door/?lang=en"; });
-    document.getElementById("setZH").addEventListener("click", ()=>{ writeBoth(K1_LANG,K2_LANG,"zh"); location.href="/door/?lang=zh"; });
+    // Defaults (if missing)
+    if (!get(K_LANG)) set(K_LANG, "en");
+    if (!get(K_DEPTH)) set(K_DEPTH, "explore");
 
-    // routes
-    document.getElementById("goExplore").addEventListener("click", ()=>{
-      writeBoth(K1_DEPTH,K2_DEPTH,"explore");
-      location.href="/home/?depth=explore";
-    });
+    function sync(){
+      const lang = get(K_LANG) || "en";
+      const depth = get(K_DEPTH) || "explore";
 
-    document.getElementById("goLearn").addEventListener("click", ()=>{
-      writeBoth(K1_DEPTH,K2_DEPTH,"learn");
-      location.href="/home/?depth=learn";
-    });
+      document.getElementById("langLbl").textContent = (lang === "zh") ? "中文" : "EN";
+      document.getElementById("depthLbl").textContent = (depth === "learn") ? "LEARN" : "EXPLORE";
 
-    document.getElementById("goHome").addEventListener("click", ()=>{
-      // keep existing depth
-      location.href="/home/?depth=" + encodeURIComponent(depth);
-    });
+      // active pills
+      document.getElementById("setEN").classList.toggle("active", lang==="en");
+      document.getElementById("setZH").classList.toggle("active", lang==="zh");
+      document.getElementById("setExplore").classList.toggle("active", depth==="explore");
+      document.getElementById("setLearn").classList.toggle("active", depth==="learn");
 
-    document.getElementById("goLinks").addEventListener("click", ()=>{
-      location.href="/links/";
-    });
+      // route highlight
+      document.getElementById("goExplore").classList.toggle("gold", depth==="explore");
+      document.getElementById("goLearn").classList.toggle("gold", depth==="learn");
+    }
+
+    document.getElementById("setEN").addEventListener("click", ()=>{ set(K_LANG,"en"); sync(); });
+    document.getElementById("setZH").addEventListener("click", ()=>{ set(K_LANG,"zh"); sync(); });
+    document.getElementById("setExplore").addEventListener("click", ()=>{ set(K_DEPTH,"explore"); sync(); });
+    document.getElementById("setLearn").addEventListener("click", ()=>{ set(K_DEPTH,"learn"); sync(); });
+
+    // Ensure clicks set depth before navigation
+    document.getElementById("goExplore").addEventListener("click", ()=>set(K_DEPTH,"explore"));
+    document.getElementById("goLearn").addEventListener("click", ()=>set(K_DEPTH,"learn"));
+    document.getElementById("goHome").addEventListener("click", ()=>{}); // keep current depth
+    document.getElementById("goLinks").addEventListener("click", ()=>{}); // keep current depth
+
+    sync();
   })();
   </script>
 </body>

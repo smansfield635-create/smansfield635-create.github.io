@@ -1,3 +1,4 @@
+<!-- TNT — /home/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -5,68 +6,51 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>HOME · Compass Face</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=HOME_FACE_FULL_1"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=HOME_FACE_FULL_1"/>
-  <script defer src="/assets/instrument.js?v=HOME_FACE_FULL_1"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=HOME_FACE_FULL_2"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=HOME_FACE_FULL_2"/>
+  <script defer src="/assets/instrument.js?v=HOME_FACE_FULL_2"></script>
 
   <style>
-    /* ===== PAGE FRAME ===== */
-    .frame{
-      position:relative;
-      min-height:100vh;
-      width:100%;
-    }
+    .frame{position:relative;min-height:100vh;width:100%}
 
-    /* Top-left controls */
+    /* Top-left: exit + language */
     .top-left{
-      position:fixed;
-      left:16px;
-      top:16px;
-      z-index:80;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+      position:fixed;left:16px;top:16px;z-index:90;
+      display:flex;gap:10px;flex-wrap:wrap;
     }
 
-    /* Top center controls (only style + time) */
+    /* Top center: ONLY style + time, moved down below top-left */
     .top-controls{
       position:fixed;
       left:50%;
-      top:16px;
+      top:70px; /* below the top-left row */
       transform:translateX(-50%);
-      z-index:80;
+      z-index:90;
 
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:center;
-      align-items:center;
+      display:flex;flex-wrap:wrap;gap:10px;
+      justify-content:center;align-items:center;
 
-      padding:8px 10px;
+      padding:10px 12px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.10);
       background:rgba(0,0,0,.18);
       backdrop-filter:blur(8px);
     }
 
-    /* Center cluster (true viewport center) */
+    /* Center stage: moved DOWN and RIGHT a touch */
     .center-stage{
       position:absolute;
       left:50%;
       top:50%;
-      transform:translate(-50%,-50%);
+      transform:translate(-50%,-50%) translate(16px,20px);
       width:min(560px,92vw);
       height:min(560px,92vw);
-      display:block;
     }
 
-    /* ===== DIAMOND COMPASS (4 diamonds = big diamond) ===== */
+    /* Diamond compass */
     .d-diamond{
-      width:200px;
-      height:200px;
-      position:absolute;
-      left:50%;
-      top:50%;
+      width:200px;height:200px;
+      position:absolute;left:50%;top:50%;
       transform-origin:center;
       transform:translate(-50%,-50%) rotate(45deg);
 
@@ -83,102 +67,59 @@
 
       transition:transform 240ms ease, box-shadow 240ms ease, filter 240ms ease;
       filter: drop-shadow(0 0 16px rgba(212,175,55,.08));
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
     }
 
-    .d-diamond::before{
-      content:"";
-      position:absolute;
-      inset:10px;
-      border-radius:20px;
+    /* Eliminate gold box in the middle: nucleus is neutral (no gold glow) */
+    .d-core{
+      position:absolute;left:50%;top:50%;
+      transform:translate(-50%,-50%);
+      width:86px;height:86px;border-radius:22px;
+      display:grid;place-items:center;
       border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      box-shadow:0 22px 55px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
+      font-weight:950;letter-spacing:.4px;
       pointer-events:none;
+      opacity:.85;
     }
 
-    .d-diamond::after{
-      content:"";
-      position:absolute;
-      left:10%;
-      right:10%;
-      top:10%;
-      height:28%;
-      border-radius:999px;
-      background:linear-gradient(to bottom, rgba(255,255,255,.14), rgba(255,255,255,0));
-      opacity:.9;
-      pointer-events:none;
-      transform:rotate(-10deg);
-    }
-
-    .d-diamond:hover{
-      transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+    /* Active glow ONLY on diamonds when selected */
+    .d-diamond.active{
+      border-color:rgba(212,175,55,.70);
       box-shadow:
         0 42px 110px rgba(0,0,0,.86),
-        0 18px 42px rgba(0,0,0,.58),
+        0 0 26px rgba(212,175,55,.35),
         inset 0 2px 0 rgba(255,255,255,.22),
         inset 0 -26px 40px rgba(0,0,0,.48);
-      filter: drop-shadow(0 0 20px rgba(212,175,55,.14));
+      filter: drop-shadow(0 0 20px rgba(212,175,55,.18));
     }
 
     .d-inner{
-      width:100%;
-      height:100%;
+      width:100%;height:100%;
       transform:rotate(-45deg);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      gap:10px;
-      text-align:center;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      padding:20px;gap:10px;text-align:center;
+      user-select:none;
+      pointer-events:none; /* click goes to tile */
     }
-
-    .d-title{
-      font-weight:950;
-      letter-spacing:.35px;
-      font-size:18px;
-    }
-
-    .d-text{
-      opacity:.90;
-      font-size:14px;
-      line-height:1.35;
-      max-width:16em;
-    }
+    .d-title{font-weight:950;letter-spacing:.35px;font-size:18px}
+    .d-text{opacity:.90;font-size:14px;line-height:1.35;max-width:16em}
 
     .d-n{ transform:translate(-50%,-50%) translate(0,-165px) rotate(45deg); }
     .d-e{ transform:translate(-50%,-50%) translate(165px,0) rotate(45deg); }
     .d-s{ transform:translate(-50%,-50%) translate(0,165px) rotate(45deg); }
     .d-w{ transform:translate(-50%,-50%) translate(-165px,0) rotate(45deg); }
 
-    .d-core{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      width:86px;
-      height:86px;
-      border-radius:22px;
-      display:grid;
-      place-items:center;
-
-      border:1px solid rgba(212,175,55,.36);
-      background:linear-gradient(135deg, rgba(212,175,55,.26), rgba(255,150,60,.12));
-      box-shadow:
-        0 0 44px rgba(212,175,55,.34),
-        0 22px 55px rgba(0,0,0,.62),
-        inset 0 2px 0 rgba(255,255,255,.22);
-
-      font-weight:950;
-      letter-spacing:.4px;
-      pointer-events:none;
-    }
-
-    /* ===== Bottom dock ===== */
+    /* Bottom nav dock */
     .bottom-dock{
       position:fixed;
       left:50%;
       bottom:max(12px, env(safe-area-inset-bottom));
       transform:translateX(-50%);
-      z-index:80;
+      z-index:90;
 
       width:min(860px, 94vw);
       display:flex;
@@ -193,32 +134,78 @@
       backdrop-filter:blur(8px);
     }
 
-    /* Mobile tightening */
+    /* Mobile adjustments */
     @media (max-width:520px){
-      .center-stage{ width:min(520px,92vw); height:min(520px,92vw); }
+      .top-controls{ top:74px; }
+      .center-stage{ transform:translate(-50%,-50%) translate(10px,16px); width:min(520px,92vw); height:min(520px,92vw); }
       .d-diamond{ width:180px; height:180px; }
       .d-n{ transform:translate(-50%,-50%) translate(0,-145px) rotate(45deg); }
       .d-e{ transform:translate(-50%,-50%) translate(145px,0) rotate(45deg); }
       .d-s{ transform:translate(-50%,-50%) translate(0,145px) rotate(45deg); }
       .d-w{ transform:translate(-50%,-50%) translate(-145px,0) rotate(45deg); }
       .d-core{ width:74px; height:74px; }
-
-      .top-controls{ top:10px; }
-      .top-left{ top:10px; left:10px; }
     }
+
+    /* Bulletin modal (hidden until click) */
+    .bulletin{
+      position:fixed;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      z-index:120;
+
+      width:min(680px, 92vw);
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+      box-shadow:0 30px 90px rgba(0,0,0,.75);
+      padding:16px;
+      display:none;
+    }
+    .bulletin.show{ display:block; }
+
+    .bulletin-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .bulletin-title{font-weight:950;letter-spacing:.25px;font-size:16px;margin:0}
+    .bulletin-close{border:none;background:transparent;color:#fff;font-size:18px;cursor:pointer}
+
+    .bulletin-lenses{
+      display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+      margin:10px 0 12px;
+    }
+
+    .bulletin-body{
+      opacity:.90;line-height:1.45;font-size:14px;text-align:center;
+      padding:8px 10px;
+    }
+
+    .bulletin-actions{
+      display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:12px;
+    }
+
+    .backdrop{
+      position:fixed;inset:0;z-index:110;
+      background:rgba(0,0,0,.55);
+      backdrop-filter:blur(6px);
+      display:none;
+    }
+    .backdrop.show{ display:block; }
   </style>
 </head>
 
 <body>
 <div class="frame">
 
-  <!-- Top-left: Exit + Language -->
   <div class="top-left">
     <a class="crp-btn" href="/door/" role="button">EXIT</a>
     <a class="crp-btn" href="/" role="button">LANGUAGE</a>
   </div>
 
-  <!-- Top: ONLY style + time -->
   <div class="top-controls" aria-label="Top controls">
     <button id="styleToggle" class="crp-chip" type="button">STYLE: FORMAL</button>
     <button class="crp-chip timeBtn" type="button" data-time="origin">ORIGIN</button>
@@ -226,30 +213,30 @@
     <button class="crp-chip timeBtn" type="button" data-time="trajectory" id="timeTrajectory">TRAJECTORY</button>
   </div>
 
-  <!-- True centered diamond stage -->
   <div class="center-stage" aria-label="Compass face">
-    <div class="d-diamond d-n" role="button" tabindex="0" aria-label="North">
+
+    <div id="north" class="d-diamond d-n" role="button" tabindex="0" aria-label="North">
       <div class="d-inner">
         <div class="d-title">NORTH</div>
         <div class="d-text" id="northText"></div>
       </div>
     </div>
 
-    <div class="d-diamond d-e" role="button" tabindex="0" aria-label="East">
+    <div id="east" class="d-diamond d-e" role="button" tabindex="0" aria-label="East">
       <div class="d-inner">
         <div class="d-title">EAST</div>
         <div class="d-text" id="eastText"></div>
       </div>
     </div>
 
-    <div class="d-diamond d-s" role="button" tabindex="0" aria-label="South">
+    <div id="south" class="d-diamond d-s" role="button" tabindex="0" aria-label="South">
       <div class="d-inner">
         <div class="d-title">SOUTH</div>
         <div class="d-text" id="southText"></div>
       </div>
     </div>
 
-    <div class="d-diamond d-w" role="button" tabindex="0" aria-label="West">
+    <div id="west" class="d-diamond d-w" role="button" tabindex="0" aria-label="West">
       <div class="d-inner">
         <div class="d-title">WEST</div>
         <div class="d-text" id="westText"></div>
@@ -259,7 +246,6 @@
     <div class="d-core">◆</div>
   </div>
 
-  <!-- Bottom dock -->
   <nav class="bottom-dock" aria-label="Bottom navigation">
     <a class="crp-btn" href="/links/" role="button">LINKS</a>
     <a class="crp-btn crp-btn-primary" href="/home/" role="button">HOME</a>
@@ -268,30 +254,55 @@
     <a class="crp-btn" href="/gauges/" role="button">GAUGES</a>
   </nav>
 
+  <!-- Bulletin overlay -->
+  <div id="bd" class="backdrop" aria-hidden="true"></div>
+
+  <div id="bulletin" class="bulletin" role="dialog" aria-modal="true" aria-label="Bulletin">
+    <div class="bulletin-head">
+      <h3 class="bulletin-title" id="bulTitle">BULLETIN</h3>
+      <button class="bulletin-close" id="bulClose" aria-label="Close">✕</button>
+    </div>
+
+    <!-- Embedded lenses (ingrained into bubble structure) -->
+    <div class="bulletin-lenses" aria-label="Bulletin lenses">
+      <button id="bulStyle" class="crp-chip" type="button">STYLE: FORMAL</button>
+      <button class="crp-chip bulTime" type="button" data-btime="origin">ORIGIN</button>
+      <button class="crp-chip bulTime" type="button" data-btime="now">NOW</button>
+      <button class="crp-chip bulTime" type="button" data-btime="trajectory" id="bulTrajectory">TRAJECTORY</button>
+    </div>
+
+    <div class="bulletin-body" id="bulBody"></div>
+
+    <div class="bulletin-actions">
+      <button class="crp-btn" id="bulReturn" type="button">RETURN</button>
+      <a class="crp-btn" href="/links/" role="button">JUMP LINKS</a>
+      <a class="crp-btn" href="/products/" role="button">JUMP PRODUCTS</a>
+    </div>
+  </div>
+
 </div>
 
 <script>
 (function(){
   "use strict";
 
-  var K_STYLE = "gd_style";
-  var K_TIME  = "gd_time";
+  var K_STYLE="gd_style";
+  var K_TIME="gd_time";
 
   function lsGet(k){ try{return localStorage.getItem(k);}catch(e){ return null; } }
   function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
 
-  var state = {
+  var state={
     style: lsGet(K_STYLE) || "formal",
     time:  lsGet(K_TIME)  || "origin"
   };
 
-  // Trajectory is formal-only; clicking it auto-forces formal
-  var allowTimeByStyle = {
-    formal:   { origin:1, now:1, trajectory:1 },
-    informal: { origin:1, now:1 }
+  var allowTimeByStyle={
+    formal:{origin:1,now:1,trajectory:1},
+    informal:{origin:1,now:1}
   };
 
-  var content = {
+  var content={
     north:{
       formal:{origin:"North defines invariant structure.",now:"North stabilizes current position.",trajectory:"North preserves long-term coherence."},
       informal:{origin:"North is your anchor.",now:"North keeps you from drifting."}
@@ -311,29 +322,31 @@
   };
 
   function normalizeTime(){
-    if(!allowTimeByStyle[state.style][state.time]){
-      state.time = "now";
-    }
+    if(!allowTimeByStyle[state.style][state.time]) state.time="now";
   }
 
   function setStyleLabel(){
-    document.getElementById("styleToggle").textContent = "STYLE: " + state.style.toUpperCase();
+    document.getElementById("styleToggle").textContent="STYLE: "+state.style.toUpperCase();
+    document.getElementById("bulStyle").textContent="STYLE: "+state.style.toUpperCase();
   }
 
   function setPressedTime(){
     document.querySelectorAll(".timeBtn").forEach(function(btn){
-      var v = btn.getAttribute("data-time");
-      var allowed = !!allowTimeByStyle[state.style][v];
-      btn.setAttribute("aria-disabled", allowed ? "false" : "true");
-      btn.setAttribute("aria-pressed", (v === state.time) ? "true" : "false");
+      var v=btn.getAttribute("data-time");
+      btn.setAttribute("aria-disabled", allowTimeByStyle[state.style][v] ? "false":"true");
+      btn.setAttribute("aria-pressed", (v===state.time) ? "true":"false");
+    });
+    document.querySelectorAll(".bulTime").forEach(function(btn){
+      var v=btn.getAttribute("data-btime");
+      btn.setAttribute("aria-disabled", allowTimeByStyle[state.style][v] ? "false":"true");
+      btn.setAttribute("aria-pressed", (v===state.time) ? "true":"false");
     });
   }
 
   function render(){
     normalizeTime();
-
-    lsSet(K_STYLE, state.style);
-    lsSet(K_TIME, state.time);
+    lsSet(K_STYLE,state.style);
+    lsSet(K_TIME,state.time);
 
     document.getElementById("northText").textContent = content.north[state.style][state.time] || "";
     document.getElementById("eastText").textContent  = content.east[state.style][state.time]  || "";
@@ -344,28 +357,85 @@
     setPressedTime();
   }
 
-  // Style toggle
+  // Top controls
   document.getElementById("styleToggle").addEventListener("click", function(){
-    state.style = (state.style === "formal") ? "informal" : "formal";
+    state.style = (state.style==="formal") ? "informal" : "formal";
     render();
   });
 
-  // Time buttons
   document.querySelectorAll(".timeBtn").forEach(function(btn){
     btn.addEventListener("click", function(){
-      var v = btn.getAttribute("data-time");
-
-      // Trajectory click forces Formal
-      if(v === "trajectory" && state.style === "informal"){
-        state.style = "formal";
-      }
-
-      // Enforce availability
+      var v=btn.getAttribute("data-time");
+      if(v==="trajectory" && state.style==="informal") state.style="formal";
       if(!allowTimeByStyle[state.style][v]) return;
-
-      state.time = v;
+      state.time=v;
       render();
     });
+  });
+
+  // Bulletin overlay
+  var bd=document.getElementById("bd");
+  var bul=document.getElementById("bulletin");
+  var bulTitle=document.getElementById("bulTitle");
+  var bulBody=document.getElementById("bulBody");
+
+  var activeDir=null;
+
+  function setActiveDiamond(dir){
+    ["north","east","south","west"].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el) el.classList.toggle("active", id===dir);
+    });
+  }
+
+  function openBulletin(dir){
+    activeDir=dir;
+    setActiveDiamond(dir);
+
+    bulTitle.textContent = dir.toUpperCase();
+    bulBody.textContent = (content[dir] && content[dir][state.style] && content[dir][state.style][state.time]) ?
+      content[dir][state.style][state.time] : "";
+
+    bd.classList.add("show");
+    bul.classList.add("show");
+  }
+
+  function closeBulletin(){
+    bd.classList.remove("show");
+    bul.classList.remove("show");
+  }
+
+  bd.addEventListener("click", closeBulletin);
+  document.getElementById("bulClose").addEventListener("click", closeBulletin);
+  document.getElementById("bulReturn").addEventListener("click", closeBulletin);
+
+  // Bulletin embedded lenses
+  document.getElementById("bulStyle").addEventListener("click", function(){
+    state.style = (state.style==="formal") ? "informal" : "formal";
+    render();
+    if(activeDir){
+      bulBody.textContent = content[activeDir][state.style][state.time] || "";
+    }
+  });
+
+  document.querySelectorAll(".bulTime").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var v=btn.getAttribute("data-btime");
+      if(v==="trajectory" && state.style==="informal") state.style="formal";
+      if(!allowTimeByStyle[state.style][v]) return;
+      state.time=v;
+      render();
+      if(activeDir){
+        bulBody.textContent = content[activeDir][state.style][state.time] || "";
+      }
+    });
+  });
+
+  // Diamond click opens bulletin
+  ["north","east","south","west"].forEach(function(id){
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.addEventListener("click", function(){ openBulletin(id); });
   });
 
   render();

@@ -1,521 +1,429 @@
-<!-- TNT FILE: /home/index.html
-     HOME (HUB) — Quadrant → Vine → Fruit → Resolution
-     Requirements:
-       - NO scroll-jump (all detail opens in modal overlay)
-       - 4 quadrants visible
-       - Each quadrant shows 4 vines (and ONLY 4)
-       - Vine click → modal (fruits)
-       - Fruit click → resolution (paragraph + bullets + implication)
-       - Tri-lens (Origin/Now/Trajectory) lives at TOP (filters everything)
-       - Style lens (Formal/Informal) lives at TOP (filters everything)
--->
-
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Home · Geodiametrics</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title>Compass</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=9200"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9200"/>
+  <!-- CSS ORDER (CANON): ui.css FIRST, branch.css SECOND -->
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
 
-  <!-- HARD SAFETY: if branch.css is missing/broken, modal still works -->
-  <style>
-    /* Modal overlay baseline (no scroll-jump) */
-    .overlay{
-      position:fixed; inset:0; z-index:9999;
-      display:none; align-items:center; justify-content:center;
-      background:rgba(5,7,12,.78);
-      backdrop-filter:blur(10px);
-      padding:18px;
-    }
-    .overlay.on{display:flex}
-    .modal{
-      width:min(980px,94vw);
-      max-height:min(86vh,760px);
-      overflow:auto;
-      border-radius:26px;
-      background:linear-gradient(180deg, rgba(122,11,20,.26), rgba(0,0,0,.32));
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 35px 120px rgba(0,0,0,.75);
-    }
-    .modal-head{
-      padding:16px;
-      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
-      border-bottom:1px solid rgba(255,255,255,.08);
-      position:sticky; top:0;
-      background:rgba(0,0,0,.28);
-      backdrop-filter:blur(10px);
-      z-index:2;
-    }
-    .modal-title b{display:block;font-size:16px;letter-spacing:.18em;text-transform:uppercase;font-weight:950}
-    .modal-title span{display:block;margin-top:6px;opacity:.75;font-size:14px;line-height:1.25}
-    .modal-body{padding:14px 16px 18px}
-    .block{
-      border-radius:22px;
-      background:rgba(0,0,0,.26);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-      padding:14px;
-    }
-    .block h3{margin:0 0 10px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
-    .block p{margin:0;color:rgba(234,242,246,.82);line-height:1.75}
-    .jump-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .jump{
-      text-decoration:none;color:inherit;
-      border-radius:18px;padding:12px 14px;
-      background:rgba(255,255,255,.08);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
-      font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:12px;
-    }
-    .jump:hover{background:rgba(255,255,255,.10)}
-    .jump.gold{background:rgba(202,160,74,.18)}
-    .jump.gold:hover{background:rgba(202,160,74,.22)}
-    .vine-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
-    @media(min-width:720px){.vine-grid{grid-template-columns:1fr 1fr}}
-    .vine-tile{
-      border-radius:18px;background:rgba(0,0,0,.22);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-      padding:12px;
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;
-    }
-    .vine-tile:hover{background:rgba(0,0,0,.28)}
-    .vine-tile .lbl{min-width:0}
-    .vine-tile .lbl b{display:block;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:950}
-    .vine-tile .lbl i{display:block;font-style:normal;opacity:.72;font-size:12px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .vine-tile .go{
-      width:40px;height:40px;border-radius:999px;
-      background:rgba(255,255,255,.06);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-      display:flex;align-items:center;justify-content:center;
-      opacity:.92;flex:0 0 auto;
-    }
-    .resolution{
-      margin-top:14px;
-      padding:16px;
-      border-radius:22px;
-      background:linear-gradient(180deg, rgba(202,160,74,.14), rgba(0,0,0,.30));
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 22px 80px rgba(0,0,0,.65);
-    }
-    .resolution h4{margin:0 0 10px;font-size:16px;letter-spacing:.14em;text-transform:uppercase;font-weight:950}
-    .resolution .para{margin:0 0 12px;line-height:1.75;opacity:.92}
-    .resolution ul{margin:0 0 12px 18px;padding:0;line-height:1.65;opacity:.86}
-    .resolution .imp{font-weight:950;letter-spacing:.06em;opacity:.92}
-    .resolution .back{
-      margin-top:14px;display:inline-block;
-      border-radius:18px;padding:10px 14px;
-      background:rgba(255,255,255,.08);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
-      font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:12px;
-      cursor:pointer;
-    }
-    .resolution .back:hover{background:rgba(255,255,255,.12)}
-  </style>
+  <!-- INSTRUMENT (state normalization) -->
+  <script defer src="/assets/instrument.js"></script>
 </head>
 
 <body>
-  <div class="diamond-field" aria-hidden="true"></div>
-
-  <div class="page">
-    <div class="wrap" style="position:relative;z-index:2;">
-      <div class="hero">
-        <h1>HOME</h1>
-        <p>Quadrant → Vine → Fruit → Resolution.</p>
-
-        <div class="topbar" style="margin-top:12px;">
-          <span class="pill">LANG: <span id="langPill">—</span></span>
-          <span class="pill">DEPTH: <span id="depthPill">—</span></span>
-
-          <span class="pill">TIME:</span>
-          <button class="pill btn active" id="tOrigin" type="button">ORIGIN</button>
-          <button class="pill btn" id="tNow" type="button">NOW</button>
-          <button class="pill btn" id="tTraj" type="button">TRAJECTORY</button>
-
-          <span class="pill">STYLE:</span>
-          <button class="pill btn active" id="sFormal" type="button">FORMAL</button>
-          <button class="pill btn" id="sInformal" type="button">INFORMAL</button>
-
-          <a class="pill btn" href="/door/">DOOR</a>
-          <a class="pill btn" href="/links/">LINKS</a>
-        </div>
-
-        <div class="section-title">Quadrant routes (tap a vine)</div>
+  <main class="crp-shell">
+    <header class="crp-topbar" aria-label="Global controls">
+      <div class="crp-topbar-left">
+        <div class="crp-mark" aria-hidden="true">CRP</div>
+        <h1 class="crp-title">Compass</h1>
       </div>
 
-      <!-- QUADRANTS (4 only) -->
-      <details class="quad" open data-q="NW">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge"><span class="icon">⭐</span><span class="code">NW</span></div>
-            <div class="q-text"><b>NORTHWEST</b><span>Definition · language · structure</span></div>
-          </div>
-          <div class="q-arrow">▾</div>
-        </summary>
-        <div class="inside"><div class="vine-grid" id="gridNW"></div></div>
-      </details>
+      <div class="crp-topbar-right">
+        <!-- TIME tri-lens -->
+        <div class="crp-lens" role="group" aria-label="Time lens">
+          <button class="crp-chip" type="button" data-time="origin">Origin</button>
+          <button class="crp-chip" type="button" data-time="now">Now</button>
+          <button class="crp-chip" type="button" data-time="trajectory">Trajectory</button>
+        </div>
 
-      <details class="quad" data-q="NE">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge"><span class="icon">☀️</span><span class="code">NE</span></div>
-            <div class="q-text"><b>NORTHEAST</b><span>Execution · surfaces · examples</span></div>
-          </div>
-          <div class="q-arrow">▾</div>
-        </summary>
-        <div class="inside"><div class="vine-grid" id="gridNE"></div></div>
-      </details>
+        <!-- STYLE lens -->
+        <div class="crp-lens" role="group" aria-label="Style lens">
+          <button class="crp-chip" type="button" data-style="formal">Formal</button>
+          <button class="crp-chip" type="button" data-style="informal">Informal</button>
+        </div>
+      </div>
+    </header>
 
-      <details class="quad" data-q="SW">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge"><span class="icon">🏮</span><span class="code">SW</span></div>
-            <div class="q-text"><b>SOUTHWEST</b><span>Measurement · diagnostics · rules</span></div>
-          </div>
-          <div class="q-arrow">▾</div>
-        </summary>
-        <div class="inside"><div class="vine-grid" id="gridSW"></div></div>
-      </details>
+    <section class="crp-compass" aria-label="Quadrants">
+      <!-- EXACTLY 4 QUADRANTS -->
+      <article class="crp-quadrant" data-quadrant="NW" aria-label="Northwest">
+        <h2 class="crp-quadrant-title">NW</h2>
+        <div class="crp-vines" role="list">
+          <!-- EXACTLY 4 VINES -->
+          <button class="crp-vine" type="button" data-vine="NW-1" role="listitem">NW Vine 1</button>
+          <button class="crp-vine" type="button" data-vine="NW-2" role="listitem">NW Vine 2</button>
+          <button class="crp-vine" type="button" data-vine="NW-3" role="listitem">NW Vine 3</button>
+          <button class="crp-vine" type="button" data-vine="NW-4" role="listitem">NW Vine 4</button>
+        </div>
+      </article>
 
-      <details class="quad" data-q="SE">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge"><span class="icon">🌇</span><span class="code">SE</span></div>
-            <div class="q-text"><b>SOUTHEAST</b><span>Identity · references · links</span></div>
-          </div>
-          <div class="q-arrow">▾</div>
-        </summary>
-        <div class="inside"><div class="vine-grid" id="gridSE"></div></div>
-      </details>
+      <article class="crp-quadrant" data-quadrant="NE" aria-label="Northeast">
+        <h2 class="crp-quadrant-title">NE</h2>
+        <div class="crp-vines" role="list">
+          <button class="crp-vine" type="button" data-vine="NE-1" role="listitem">NE Vine 1</button>
+          <button class="crp-vine" type="button" data-vine="NE-2" role="listitem">NE Vine 2</button>
+          <button class="crp-vine" type="button" data-vine="NE-3" role="listitem">NE Vine 3</button>
+          <button class="crp-vine" type="button" data-vine="NE-4" role="listitem">NE Vine 4</button>
+        </div>
+      </article>
 
-      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-      <div class="ink">GEODIAMETRICS</div>
+      <article class="crp-quadrant" data-quadrant="SW" aria-label="Southwest">
+        <h2 class="crp-quadrant-title">SW</h2>
+        <div class="crp-vines" role="list">
+          <button class="crp-vine" type="button" data-vine="SW-1" role="listitem">SW Vine 1</button>
+          <button class="crp-vine" type="button" data-vine="SW-2" role="listitem">SW Vine 2</button>
+          <button class="crp-vine" type="button" data-vine="SW-3" role="listitem">SW Vine 3</button>
+          <button class="crp-vine" type="button" data-vine="SW-4" role="listitem">SW Vine 4</button>
+        </div>
+      </article>
+
+      <article class="crp-quadrant" data-quadrant="SE" aria-label="Southeast">
+        <h2 class="crp-quadrant-title">SE</h2>
+        <div class="crp-vines" role="list">
+          <button class="crp-vine" type="button" data-vine="SE-1" role="listitem">SE Vine 1</button>
+          <button class="crp-vine" type="button" data-vine="SE-2" role="listitem">SE Vine 2</button>
+          <button class="crp-vine" type="button" data-vine="SE-3" role="listitem">SE Vine 3</button>
+          <button class="crp-vine" type="button" data-vine="SE-4" role="listitem">SE Vine 4</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- MODAL OVERLAY (owned/styled by /assets/branch.css; no page-level styles) -->
+  <div id="crp-modal" class="crp-modal" hidden aria-hidden="true">
+    <div class="crp-modal-backdrop" data-modal-close="1"></div>
+
+    <div class="crp-modal-panel" role="dialog" aria-modal="true" aria-label="Detail">
+      <header class="crp-modal-header">
+        <div class="crp-modal-titlewrap">
+          <div class="crp-modal-kicker" id="modal-kicker">Vine</div>
+          <h3 class="crp-modal-title" id="modal-title">Select a fruit</h3>
+        </div>
+
+        <button class="crp-modal-close" type="button" aria-label="Close" data-modal-close="1">✕</button>
+      </header>
+
+      <!-- FRUIT LIST VIEW -->
+      <section id="modal-fruits-view" class="crp-modal-body" aria-label="Fruits">
+        <p class="crp-modal-hint" id="modal-hint">Choose one.</p>
+
+        <div class="crp-fruits" role="list" aria-label="Fruit options">
+          <!-- EXACTLY 4 FRUITS (buttons) -->
+          <button class="crp-fruit" type="button" data-fruit="F1" role="listitem">Fruit 1</button>
+          <button class="crp-fruit" type="button" data-fruit="F2" role="listitem">Fruit 2</button>
+          <button class="crp-fruit" type="button" data-fruit="F3" role="listitem">Fruit 3</button>
+          <button class="crp-fruit" type="button" data-fruit="F4" role="listitem">Fruit 4</button>
+        </div>
+      </section>
+
+      <!-- RESOLUTION VIEW -->
+      <section id="modal-resolution-view" class="crp-modal-body" aria-label="Resolution" hidden>
+        <div class="crp-resolution">
+          <p id="res-paragraph" class="crp-resolution-paragraph"></p>
+          <ul id="res-bullets" class="crp-resolution-bullets"></ul>
+          <div class="crp-resolution-implication">
+            <div class="crp-resolution-implication-label">Implication</div>
+            <p id="res-implication" class="crp-resolution-implication-text"></p>
+          </div>
+
+          <div class="crp-resolution-actions">
+            <button id="res-back" class="crp-btn" type="button">Back</button>
+          </div>
+        </div>
+      </section>
+
+      <footer class="crp-modal-footer">
+        <small class="crp-footnote">
+          Depth: <span id="ui-depth">explore</span> · Time: <span id="ui-time">origin</span> · Style: <span id="ui-style">formal</span>
+        </small>
+      </footer>
     </div>
   </div>
 
-  <!-- MODAL OVERLAY -->
-  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Detail popover">
-    <div class="modal">
-      <div class="modal-head">
-        <div class="modal-title">
-          <b id="mTitle">DETAIL</b>
-          <span id="mSubtitle">—</span>
-        </div>
-        <button class="btn" id="mClose" type="button">CLOSE</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="block">
-          <h3 id="mH3">—</h3>
-          <p id="mText">—</p>
-
-          <div style="margin-top:12px;">
-            <div class="section-title" style="margin-top:0;">Fruits (pick one)</div>
-            <div class="vine-grid" id="mFruits"></div>
-          </div>
-
-          <div id="mResolution"></div>
-
-          <div class="jump-row">
-            <a class="jump gold" href="/home/" id="jumpHome">JUMP HOME</a>
-            <a class="jump" href="/door/">DOOR</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="/assets/instrument.js?v=9200"></script>
   <script>
-  (() => {
-    const K_LANG="gd_lang", K_DEPTH="gd_depth", K_TIME="gd_time", K_STYLE="gd_style";
+    (function () {
+      "use strict";
 
-    const state = {
-      lang: (localStorage.getItem(K_LANG)||"en"),
-      depth:(localStorage.getItem(K_DEPTH)||"explore"),
-      time: (localStorage.getItem(K_TIME)||"origin"),
-      style:(localStorage.getItem(K_STYLE)||"formal"),
-      open: null // {q, vineKey}
-    };
+      // CANONICAL STATE KEYS ONLY
+      var KEY_LANG  = "gd_lang";
+      var KEY_DEPTH = "gd_depth";
+      var KEY_TIME  = "gd_time";
+      var KEY_STYLE = "gd_style";
 
-    const $ = (id)=>document.getElementById(id);
+      var ALLOWED_LANG  = { en: 1, zh: 1 };
+      var ALLOWED_DEPTH = { explore: 1, learn: 1 };
+      var ALLOWED_TIME  = { origin: 1, now: 1, trajectory: 1 };
+      var ALLOWED_STYLE = { formal: 1, informal: 1 };
 
-    function syncTop(){
-      $("langPill").textContent  = (state.lang==="zh") ? "中文" : "EN";
-      $("depthPill").textContent = state.depth.toUpperCase();
+      function qp(name) {
+        try { return new URLSearchParams(window.location.search).get(name); }
+        catch (e) { return null; }
+      }
 
-      $("tOrigin").classList.toggle("active", state.time==="origin");
-      $("tNow").classList.toggle("active", state.time==="now");
-      $("tTraj").classList.toggle("active", state.time==="trajectory");
+      function lsGet(k) {
+        try { return localStorage.getItem(k); } catch (e) { return null; }
+      }
 
-      $("sFormal").classList.toggle("active", state.style==="formal");
-      $("sInformal").classList.toggle("active", state.style==="informal");
-    }
+      function lsSet(k, v) {
+        try { localStorage.setItem(k, v); } catch (e) {}
+      }
 
-    function setTime(v){
-      state.time=v;
-      localStorage.setItem(K_TIME,v);
-      syncTop();
-      renderAll();
-      if (state.open) renderModal();
-    }
-    function setStyle(v){
-      state.style=v;
-      localStorage.setItem(K_STYLE,v);
-      syncTop();
-      renderAll();
-      if (state.open) renderModal();
-    }
+      function normalize() {
+        // Language must exist (inherited from Index). If missing, force back to start.
+        var lang = qp("lang") || lsGet(KEY_LANG);
+        if (!ALLOWED_LANG[lang]) {
+          window.location.href = "/";
+          return null;
+        }
+        lsSet(KEY_LANG, lang);
 
-    $("tOrigin").addEventListener("click", ()=>setTime("origin"));
-    $("tNow").addEventListener("click", ()=>setTime("now"));
-    $("tTraj").addEventListener("click", ()=>setTime("trajectory"));
-    $("sFormal").addEventListener("click", ()=>setStyle("formal"));
-    $("sInformal").addEventListener("click", ()=>setStyle("informal"));
+        var depth = qp("depth") || lsGet(KEY_DEPTH);
+        if (!ALLOWED_DEPTH[depth]) depth = "explore";
+        lsSet(KEY_DEPTH, depth);
 
-    function simplify(txt){
-      if (state.style==="formal") return txt;
-      return txt
-        .replaceAll("therefore","so")
-        .replaceAll("however","but")
-        .replaceAll("verification","proof")
-        .replaceAll("classification","name")
-        .replaceAll("trajectory","future")
-        .replaceAll("invariants","rules")
-        .replaceAll("invariant","rule");
-    }
+        var time = qp("time") || lsGet(KEY_TIME);
+        if (!ALLOWED_TIME[time]) time = "origin";
+        lsSet(KEY_TIME, time);
 
-    function esc(s){
-      return String(s)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
+        var style = qp("style") || lsGet(KEY_STYLE);
+        if (!ALLOWED_STYLE[style]) style = "formal";
+        lsSet(KEY_STYLE, style);
 
-    // Data helpers
-    const pack = (o,n,t)=>({origin:o, now:n, trajectory:t});
-    const vine = (key,label,desc,fruits)=>({key,label,desc,fruits});
-    const fruit = (key,label,sub,rez)=>({key,label,sub,rez});
+        return { lang: lang, depth: depth, time: time, style: style };
+      }
 
-    // MODEL (4 vines each, 4 fruits each)
-    const MODEL = {
-      NW:{
-        title:"NORTHWEST",
-        subtitle:"Definition · language · structure",
-        vines:[
-          vine("SSG","SSG",pack(
-            "Why a constraint language exists: stable meaning under scale.",
-            "SSG: primitives + receipts + invariants → replay-safe execution.",
-            "SSG becomes cross-domain structure contracts and tooling."
-          ),[
-            fruit("PRIM","Primitives","Resource / Store / Constraint / Goal / Guard",pack(
-              {p:"Primitives are the minimal words that stop drift.",b:["Separate entity vs rule.","Define success vs admissibility.","Keep vocabulary minimal."],i:"Primitives are executable meaning."},
-              {p:"Resource targets; Store holds state; Constraint must hold; Goal ends; Guard gates transitions.",b:["Resources + Stores define state.","Constraints define allowed space.","Guards prevent invalid moves."],i:"Clear primitives remove ambiguity."},
-              {p:"Shared primitives become shared coordinates across domains.",b:["Lower onboarding cost.","Cheaper audits.","Portable specs."],i:"Primitives scale coherence."}
-            )),
-            fruit("RCPT","Receipts","Receipt-gated advancement",pack(
-              {p:"Receipts exist because progress must be provable, not narrated.",b:["No invisible progress.","No memory-based trust.","Proof is stored."],i:"Receipts convert intent into record."},
-              {p:"Advance only after receipt; back-nav invalidates downstream receipts.",b:["Advance after receipt.","Back invalidates downstream.","Replay verifies."],i:"Receipts enforce coherence mechanically."},
-              {p:"Receipts become interoperable verification tokens across systems.",b:["Automatic audits.","Cheaper disputes.","Portable trust."],i:"Receipts scale trust without narrative."}
-            )),
-            fruit("INV","Invariants","Navigation-first safety rails",pack(
-              {p:"Invariants exist to stop drift at the root.",b:["No timers as gates.","Unified presses.","Atomic handoff with receipt."],i:"Invariants are stability rails."},
-              {p:"Invariants keep transitions predictable under load.",b:["Consistent interactions.","Safe returns.","No partial transitions."],i:"Predictability is coherence."},
-              {p:"At scale, invariants shrink defect and exploit surfaces.",b:["Lower defect rate.","Lower exploit surface.","Higher reliability."],i:"Invariants compound over time."}
-            )),
-            fruit("EX","Examples","Small specs → repeatable understanding",pack(
-              {p:"Examples compress learning into movement.",b:["Show smallest unit.","Show the pattern.","Remove interpretation."],i:"Examples build habit."},
-              {p:"Quadrant → Vine → Fruit → Resolution is the teaching pattern.",b:["One route at a time.","One conclusion per path.","Repeatable."],i:"Examples teach without lecture."},
-              {p:"Examples become templates; templates become products.",b:["Faster shipping.","Less rework.","More stability."],i:"Templates are executable knowledge."}
-            ))
-          ]),
-          vine("GRAM","Diamond Grammar",pack(
-            "Why four routes exist: direction encodes function.",
-            "Hub-first traversal keeps coherence.",
-            "Grammar scales navigation into governance."
-          ),[
-            fruit("ONE","One choice","Finish or return",pack(
-              {p:"Single choice prevents fragmentation.",b:["Pick one route.","Finish or return.","No parallel commitments."],i:"One choice preserves coherence."},
-              {p:"One route at a time keeps the map readable.",b:["No multi-tab drift.","Clear returns.","Stable progress."],i:"Navigation stays stable."},
-              {p:"At scale, it aligns teams.",b:["Shared traversal rules.","Shared meaning.","Fewer conflicts."],i:"Grammar becomes governance."}
-            )),
-            fruit("RET","Return","Hub-first reset",pack(
-              {p:"Return exists to prevent traps.",b:["Hub-first.","Safe exit.","Re-entry allowed."],i:"Return restores orientation."},
-              {p:"Return is the correction primitive.",b:["Confusion → return.","Re-select route.","Continue."],i:"Return is reset."},
-              {p:"Return scales safety.",b:["Safer workflows.","Less drift.","More resilience."],i:"Return is resilience."}
-            )),
-            fruit("ENC","Encode","N/E/S/W as functions",pack(
-              {p:"Directions encode functional domains.",b:["N=definition.","E=execution.","S=measurement.","W=identity."],i:"Compass becomes language."},
-              {p:"Encoding makes the forest navigable.",b:["Same map everywhere.","Faster learning.","Less confusion."],i:"Encoding compresses comprehension."},
-              {p:"Encoding becomes portable across domains.",b:["Same axes.","Same filters.","Same audits."],i:"Encoding is portability."}
-            )),
-            fruit("DUAL","Dual compression","Diamond + panel",pack(
-              {p:"Not all screens fit diamonds.",b:["Diamond when possible.","Panels when dense.","No drift."],i:"Dual compression preserves clarity."},
-              {p:"Routes stay simple; depth stays contained.",b:["No clutter.","No overlap confusion.","Stable UI."],i:"Density stays navigable."},
-              {p:"More content, same clarity.",b:["Less redesign.","More stability.","Faster growth."],i:"Compression is scalability."}
-            ))
-          ]),
-          vine("DOT","DOT.GRID",pack(
-            "Why index states: reduce ambiguity.",
-            "Replay + audit makes trust mechanical.",
-            "Universal coordinates across domains."
-          ),[
-            fruit("STATE","State","Name the situation",pack(
-              {p:"State labeling prevents argument-by-story.",b:["Name the situation.","Bound the space.","Make it replayable."],i:"State naming is control."},
-              {p:"Same evidence → same state mapping.",b:["Observer-consistent.","Rule-based.","Recorded."],i:"State indexing enables agreement."},
-              {p:"State becomes portable across domains.",b:["Same lattice.","Many domains.","Shared audit."],i:"State becomes infrastructure."}
-            )),
-            fruit("REPLAY","Replay","Re-run evidence",pack(
-              {p:"If you can’t replay, you can’t verify.",b:["Replay is proof."],i:"Replay ends narrative."},
-              {p:"Replay re-runs evidence to detect drift.",b:["Same inputs.","Same outputs.","Detect drift."],i:"Replay is audit."},
-              {p:"Replay becomes continuous.",b:["Automatic validation.","Cheaper compliance.","Fewer disputes."],i:"Replay scales trust."}
-            )),
-            fruit("AUDIT","Audit","Trace evidence to output",pack(
-              {p:"Audit prevents hidden manipulation.",b:["Trace evidence → output."],i:"Audit is accountability."},
-              {p:"Audit is repeatable.",b:["Observer-consistent.","Rule-based.","Recorded."],i:"Audit ends argument."},
-              {p:"Audit becomes institution-ready.",b:["Cross-domain.","Fast.","Cheap."],i:"Audit becomes infrastructure."}
-            )),
-            fruit("PACKS","Packs","Replayable exports",pack(
-              {p:"Packs move evidence cleanly.",b:["One file.","Replayable stream.","Stable fields."],i:"Packs enable portability."},
-              {p:"Packs feed sweeps.",b:["CSV/JSONL.","State IDs.","Normalized fields."],i:"Packs enable testing."},
-              {p:"Packs become interchange standards.",b:["Shared tooling.","Network audits.","Collaboration."],i:"Packs scale networks."}
-            ))
-          ]),
-          vine("ACR","Acronyms",pack(
-            "Why lock terms: prevent drift.",
-            "Pillars map function and intent.",
-            "Searchable tokens for fast navigation."
-          ),[
-            fruit("CORE","Core set","High-frequency terms",pack(
-              {p:"Core terms repeat most. Lock them first.",b:["High-frequency.","Stable meaning."],i:"Core terms are the entry ramp."},
-              {p:"Core terms are stable UI anchors.",b:["Same meaning everywhere.","Fast comprehension."],i:"Core reduces confusion."},
-              {p:"Core becomes onboarding + certification.",b:["Training modules.","Tests.","Tracks."],i:"Core scales teaching."}
-            )),
-            fruit("PILL","Pillars","Category map",pack(
-              {p:"Pillars group function.",b:["Language.","Execution.","Measurement.","Identity."],i:"Pillars organize the forest."},
-              {p:"Pillars make lookup fast.",b:["Search by intent.","Not memory."],i:"Pillars reduce friction."},
-              {p:"Pillars scale to 256.",b:["More terms, same clarity."],i:"Pillars preserve readability."}
-            )),
-            fruit("LOOK","Lookup","Search rules",pack(
-              {p:"Lookup prevents hunting.",b:["Tags.","Prefixes.","Stable names."],i:"Lookup is navigation."},
-              {p:"Lookup stays consistent.",b:["Same tokens.","Same routes."],i:"Lookup keeps coherence."},
-              {p:"Lookup becomes in-UI tools.",b:["Autocomplete.","Context links."],i:"Lookup becomes a product."}
-            )),
-            fruit("USE","Usage","Examples anchor meaning",pack(
-              {p:"Use defines meaning.",b:["Examples anchor definitions."],i:"Usage removes ambiguity."},
-              {p:"Usage is short and repeatable.",b:["One sentence.","One action."],i:"Usage teaches fast."},
-              {p:"Usage becomes drills.",b:["Practice.","Tests."],i:"Usage scales learning."}
-            ))
-          ])
-        ]
-      },
+      var state = normalize();
+      if (!state) return;
 
-      // For now: mirror NW into other quadrants so HOME never breaks.
-      NE:null, SW:null, SE:null
-    };
-    MODEL.NE = JSON.parse(JSON.stringify(MODEL.NW)); MODEL.NE.title="NORTHEAST"; MODEL.NE.subtitle="Execution · surfaces · examples";
-    MODEL.SW = JSON.parse(JSON.stringify(MODEL.NW)); MODEL.SW.title="SOUTHWEST"; MODEL.SW.subtitle="Measurement · diagnostics · rules";
-    MODEL.SE = JSON.parse(JSON.stringify(MODEL.NW)); MODEL.SE.title="SOUTHEAST"; MODEL.SE.subtitle="Identity · references · links";
+      // UI refs
+      var modal = document.getElementById("crp-modal");
+      var modalKicker = document.getElementById("modal-kicker");
+      var modalTitle = document.getElementById("modal-title");
+      var modalHint = document.getElementById("modal-hint");
 
-    // Overlay controls
-    const overlay = $("overlay");
-    const openOverlay = ()=>{ overlay.classList.add("on"); document.body.style.overflow="hidden"; };
-    const closeOverlay= ()=>{ overlay.classList.remove("on"); document.body.style.overflow=""; state.open=null; };
+      var fruitsView = document.getElementById("modal-fruits-view");
+      var resView = document.getElementById("modal-resolution-view");
 
-    $("mClose").addEventListener("click", closeOverlay);
-    overlay.addEventListener("click",(e)=>{ if(e.target === overlay) closeOverlay(); });
-    document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && overlay.classList.contains("on")) closeOverlay(); });
+      var resP = document.getElementById("res-paragraph");
+      var resBullets = document.getElementById("res-bullets");
+      var resImp = document.getElementById("res-implication");
+      var resBack = document.getElementById("res-back");
 
-    function renderAll(){
-      renderQuadrant("NW");
-      renderQuadrant("NE");
-      renderQuadrant("SW");
-      renderQuadrant("SE");
-    }
+      var uiDepth = document.getElementById("ui-depth");
+      var uiTime = document.getElementById("ui-time");
+      var uiStyle = document.getElementById("ui-style");
 
-    function renderQuadrant(q){
-      const grid = $("grid"+q);
-      grid.innerHTML = "";
-      const quad = MODEL[q];
+      function syncFooter() {
+        if (uiDepth) uiDepth.textContent = state.depth;
+        if (uiTime) uiTime.textContent = state.time;
+        if (uiStyle) uiStyle.textContent = state.style;
+      }
 
-      quad.vines.slice(0,4).forEach(v=>{
-        const tile = document.createElement("div");
-        tile.className = "vine-tile";
+      syncFooter();
 
-        // density control (explore vs learn)
-        const base = simplify(v.desc[state.time]);
-        const extra = (state.depth === "learn") ? (" " + simplify(v.desc[state.time])) : "";
-        const line = base + extra;
+      // Content model (placeholder, deterministic; will be expanded later without structure changes)
+      // Each vine has exactly 4 fruits; each fruit yields a resolution payload.
+      var VINES = {
+        "NW-1": { label: "NW Vine 1" },
+        "NW-2": { label: "NW Vine 2" },
+        "NW-3": { label: "NW Vine 3" },
+        "NW-4": { label: "NW Vine 4" },
 
-        tile.innerHTML = `
-          <div class="lbl">
-            <b>${esc(v.label)}</b>
-            <i>${esc(line)}</i>
-          </div>
-          <div class="go">▶</div>
-        `;
+        "NE-1": { label: "NE Vine 1" },
+        "NE-2": { label: "NE Vine 2" },
+        "NE-3": { label: "NE Vine 3" },
+        "NE-4": { label: "NE Vine 4" },
 
-        tile.addEventListener("click", ()=>{
-          state.open = {q, vineKey: v.key};
-          openOverlay();
-          renderModal();
+        "SW-1": { label: "SW Vine 1" },
+        "SW-2": { label: "SW Vine 2" },
+        "SW-3": { label: "SW Vine 3" },
+        "SW-4": { label: "SW Vine 4" },
+
+        "SE-1": { label: "SE Vine 1" },
+        "SE-2": { label: "SE Vine 2" },
+        "SE-3": { label: "SE Vine 3" },
+        "SE-4": { label: "SE Vine 4" }
+      };
+
+      var FRUITS = [
+        { id: "F1", label: "Fruit 1" },
+        { id: "F2", label: "Fruit 2" },
+        { id: "F3", label: "Fruit 3" },
+        { id: "F4", label: "Fruit 4" }
+      ];
+
+      function densityText(vineId, fruitId) {
+        // Explore vs Learn density spec:
+        // Explore = short summary
+        // Learn = full paragraph + bullets
+        var base = vineId + " · " + fruitId + " · " + state.time + " · " + state.style;
+
+        if (state.depth === "explore") {
+          return {
+            paragraph: "Summary: " + base + ".",
+            bullets: [],
+            implication: "Implication: move to Learn for full detail."
+          };
+        }
+
+        // learn
+        return {
+          paragraph: "Full: " + base + ". This block expresses a stable resolution statement under the current lenses.",
+          bullets: [
+            "Bullet 1: deterministic point tied to the selected fruit.",
+            "Bullet 2: bounded claim with no drift.",
+            "Bullet 3: compatible with canonical state keys only."
+          ],
+          implication: "Implication: apply the resolution to the current traversal without changing structure."
+        };
+      }
+
+      // Modal state
+      var currentVineId = null;
+
+      function openModal(vineId) {
+        currentVineId = vineId;
+
+        // Reset views
+        if (fruitsView) fruitsView.hidden = false;
+        if (resView) resView.hidden = true;
+
+        // Update header
+        var vineLabel = (VINES[vineId] && VINES[vineId].label) ? VINES[vineId].label : vineId;
+        if (modalKicker) modalKicker.textContent = vineLabel;
+        if (modalTitle) modalTitle.textContent = "Select a fruit";
+        if (modalHint) modalHint.textContent = "Choose one.";
+
+        // Update fruit labels (always exactly 4)
+        var fruitBtns = modal ? modal.querySelectorAll(".crp-fruit") : null;
+        if (fruitBtns && fruitBtns.length === 4) {
+          for (var i = 0; i < 4; i++) {
+            fruitBtns[i].textContent = FRUITS[i].label;
+            fruitBtns[i].setAttribute("data-fruit", FRUITS[i].id);
+          }
+        }
+
+        // Show modal
+        if (modal) {
+          modal.hidden = false;
+          modal.setAttribute("aria-hidden", "false");
+        }
+
+        syncFooter();
+      }
+
+      function closeModal() {
+        currentVineId = null;
+        if (modal) {
+          modal.hidden = true;
+          modal.setAttribute("aria-hidden", "true");
+        }
+      }
+
+      function showResolution(fruitId) {
+        if (!currentVineId) return;
+
+        var payload = densityText(currentVineId, fruitId);
+
+        if (resP) resP.textContent = payload.paragraph;
+
+        if (resBullets) {
+          resBullets.innerHTML = "";
+          for (var i = 0; i < payload.bullets.length; i++) {
+            var li = document.createElement("li");
+            li.textContent = payload.bullets[i];
+            resBullets.appendChild(li);
+          }
+        }
+
+        if (resImp) resImp.textContent = payload.implication;
+
+        if (fruitsView) fruitsView.hidden = true;
+        if (resView) resView.hidden = false;
+
+        if (modalTitle) modalTitle.textContent = "Resolution";
+        if (modalHint) modalHint.textContent = "";
+
+        syncFooter();
+      }
+
+      function backToFruits() {
+        if (fruitsView) fruitsView.hidden = false;
+        if (resView) resView.hidden = true;
+
+        if (modalTitle) modalTitle.textContent = "Select a fruit";
+        if (modalHint) modalHint.textContent = "Choose one.";
+      }
+
+      // Wire vines (click opens modal; no scroll-jump because modal is overlay)
+      var vineBtns = document.querySelectorAll(".crp-vine[data-vine]");
+      for (var v = 0; v < vineBtns.length; v++) {
+        vineBtns[v].addEventListener("click", function (e) {
+          var id = e.currentTarget.getAttribute("data-vine");
+          openModal(id);
         });
+      }
 
-        grid.appendChild(tile);
+      // Wire fruit clicks
+      var fruitBtns2 = document.querySelectorAll(".crp-fruit[data-fruit]");
+      for (var f = 0; f < fruitBtns2.length; f++) {
+        fruitBtns2[f].addEventListener("click", function (e) {
+          var fruitId = e.currentTarget.getAttribute("data-fruit");
+          showResolution(fruitId);
+        });
+      }
+
+      // Back button in Resolution
+      if (resBack) resBack.addEventListener("click", backToFruits);
+
+      // Close controls (backdrop + close button)
+      var closeEls = document.querySelectorAll("[data-modal-close='1']");
+      for (var c = 0; c < closeEls.length; c++) {
+        closeEls[c].addEventListener("click", closeModal);
+      }
+
+      // Lens controls (Time / Style)
+      function setActiveChip(groupSelector, attr, value) {
+        var chips = document.querySelectorAll(groupSelector + " .crp-chip[" + attr + "]");
+        for (var i = 0; i < chips.length; i++) {
+          var v = chips[i].getAttribute(attr);
+          if (v === value) chips[i].setAttribute("aria-pressed", "true");
+          else chips[i].setAttribute("aria-pressed", "false");
+        }
+      }
+
+      function initChips() {
+        setActiveChip("[aria-label='Time lens']", "data-time", state.time);
+        setActiveChip("[aria-label='Style lens']", "data-style", state.style);
+      }
+
+      initChips();
+
+      // Time chip handlers
+      var timeChips = document.querySelectorAll(".crp-chip[data-time]");
+      for (var t = 0; t < timeChips.length; t++) {
+        timeChips[t].addEventListener("click", function (e) {
+          var val = e.currentTarget.getAttribute("data-time");
+          if (!ALLOWED_TIME[val]) return;
+          state.time = val;
+          lsSet(KEY_TIME, val);
+          setActiveChip("[aria-label='Time lens']", "data-time", val);
+          syncFooter();
+        });
+      }
+
+      // Style chip handlers
+      var styleChips = document.querySelectorAll(".crp-chip[data-style]");
+      for (var s = 0; s < styleChips.length; s++) {
+        styleChips[s].addEventListener("click", function (e) {
+          var val = e.currentTarget.getAttribute("data-style");
+          if (!ALLOWED_STYLE[val]) return;
+          state.style = val;
+          lsSet(KEY_STYLE, val);
+          setActiveChip("[aria-label='Style lens']", "data-style", val);
+          syncFooter();
+        });
+      }
+
+      // Escape to close modal
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modal && !modal.hidden) closeModal();
       });
-    }
-
-    function renderModal(){
-      const quad = MODEL[state.open.q];
-      const v = quad.vines.find(x=>x.key===state.open.vineKey);
-
-      $("mTitle").textContent = `${quad.title} · ${v.label}`;
-      $("mSubtitle").textContent = quad.subtitle;
-
-      $("mH3").textContent = v.label;
-      $("mText").textContent = simplify(v.desc[state.time]);
-
-      $("mFruits").innerHTML = "";
-      $("mResolution").innerHTML = "";
-
-      v.fruits.slice(0,4).forEach(f=>{
-        const ft = document.createElement("div");
-        ft.className = "vine-tile";
-        ft.innerHTML = `
-          <div class="lbl">
-            <b>${esc(f.label)}</b>
-            <i>${esc(simplify(f.sub))}</i>
-          </div>
-          <div class="go">▶</div>
-        `;
-        ft.addEventListener("click", ()=>renderResolution(v, f));
-        $("mFruits").appendChild(ft);
-      });
-    }
-
-    function renderResolution(v, f){
-      const rez = f.rez[state.time];
-      const p = simplify(rez.p);
-      const bullets = rez.b.map(simplify);
-      const imp = simplify(rez.i);
-
-      $("mResolution").innerHTML = `
-        <div class="resolution">
-          <h4>${esc(v.label)} · ${esc(f.label)} — Resolution</h4>
-          <p class="para">${esc(p)}</p>
-          <ul>${bullets.map(b=>`<li>${esc(b)}</li>`).join("")}</ul>
-          <div class="imp">→ ${esc(imp)}</div>
-          <div class="back" id="rezBack">BACK</div>
-        </div>
-      `;
-      document.getElementById("rezBack").addEventListener("click", ()=>{ $("mResolution").innerHTML = ""; });
-    }
-
-    // Init
-    syncTop();
-    renderAll();
-  })();
+    })();
   </script>
 </body>
 </html>

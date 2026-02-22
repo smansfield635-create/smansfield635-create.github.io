@@ -1,314 +1,260 @@
-/* ============================================================
-   CRP GEOMETRY + MODAL OWNER — SINGLE OWNER
-   FILE: /assets/branch.css
-   OWNERSHIP:
-   - Owns: diamonds, quadrants layout helpers, modal overlay/panel, vines/fruits/resolution block visuals
-   - MUST NOT define: html/body background/field (ui.css owns that)
-   - MUST NOT redefine :root variables
-   ============================================================ */
+/* =====================================================
+   TNT FILE: /assets/branch.css
+   CRP BRANCH v4 — Diamonds + Quadrants + Bubbles + Overlay Modal
+   COMPONENTS ONLY (NO BODY BACKGROUND)
+   COPY/PASTE ENTIRE FILE AS-IS
+===================================================== */
 
-/* -----------------------------
-   TERMINAL: 4 DIAMOND OPTIONS
-   ----------------------------- */
-.crp-terminal-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:16px;
-  width:100%;
-  max-width:760px;
-  margin:0 auto;
-  padding:8px 0;
-}
+/* Kill default disclosure triangle */
+details > summary{list-style:none}
+details > summary::-webkit-details-marker{display:none}
 
-@media (max-width:520px){
-  .crp-terminal-grid{ grid-template-columns:1fr; }
-}
-
-/* Diamond option (works for <a> or <button>) */
-.crp-diamond{
+/* ---------- Diamond Stage (Index/Door/Links) ---------- */
+.diamond-stage{
   position:relative;
-  display:grid;
-  place-items:center;
-  min-height:110px;
-  width:100%;
-
-  border:1px solid rgba(255,255,255,.22);
-  background:rgba(0,0,0,.18);
-  color:inherit;
-  text-decoration:none;
-
-  border-radius:16px;
-  cursor:pointer;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-
-  transition:transform .08s ease, background .12s ease, border-color .12s ease;
+  width:min(640px,94vw);
+  aspect-ratio:1/1;
+  margin:18px auto 0;
 }
 
-.crp-diamond:hover{ background:rgba(0,0,0,.24); border-color:rgba(255,255,255,.30); }
-.crp-diamond:active{ transform:scale(.99); }
-
-.crp-diamond:focus{ outline:none; }
-.crp-diamond:focus-visible{
-  box-shadow:0 0 0 3px rgba(255,255,255,.18);
-  border-color:rgba(255,255,255,.38);
+.diamond-plate{
+  position:absolute;
+  inset:8%;
+  transform:rotate(45deg);
+  border-radius:46px;
+  background:rgba(255,255,255,.04);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    0 30px 90px rgba(0,0,0,.55);
+  backdrop-filter:blur(10px);
+  z-index:0;
 }
 
-.crp-diamond::before{
+/* lacquer glow */
+.diamond-plate::after{
   content:"";
   position:absolute;
-  inset:12px;
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:14px;
-  transform:rotate(45deg);
+  inset:-10%;
+  border-radius:60px;
+  background:
+    radial-gradient(700px 700px at 50% 40%, rgba(122,11,20,.34) 0%, transparent 62%),
+    radial-gradient(700px 700px at 50% 60%, rgba(202,160,74,.10) 0%, transparent 70%);
+  filter:blur(10px);
+  opacity:.85;
   pointer-events:none;
 }
 
-.crp-diamond-label{
-  font-weight:900;
-  letter-spacing:.35px;
-  font-size:18px;
-}
-
-/* -----------------------------
-   COMPASS: QUADRANT GRID + VINES
-   (Layout + visuals only; field stays in ui.css)
-   ----------------------------- */
-.crp-compass{
-  width:100%;
-  max-width:1040px;
-  margin:0 auto;
-  padding:18px 14px 28px;
-
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:18px;
-}
-
-@media (max-width:720px){
-  .crp-compass{ grid-template-columns:1fr; }
-}
-
-.crp-quadrant{
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(0,0,0,.14);
-  border-radius:18px;
-  padding:14px;
-  box-shadow:0 8px 24px rgba(0,0,0,.18);
-}
-
-.crp-quadrant-title{
-  margin:0 0 10px;
-  font-size:22px;
-  font-weight:900;
-  letter-spacing:.45px;
-}
-
-/* Vines (4 per quadrant; button styling) */
-.crp-vines{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
-}
-
-@media (max-width:520px){
-  .crp-vines{ grid-template-columns:1fr; }
-}
-
-.crp-vine{
-  width:100%;
-  border:1px solid rgba(255,255,255,.20);
-  background:rgba(0,0,0,.18);
+/* ---------- Diamond Buttons ---------- */
+.diamond-btn{
+  position:absolute;
+  width:40%;
+  height:40%;
+  transform:rotate(45deg);
+  border-radius:26px;
+  background:rgba(0,0,0,.28);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.12),
+    0 18px 60px rgba(0,0,0,.55);
+  backdrop-filter:blur(10px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
   color:inherit;
-  border-radius:12px;
-  padding:12px 10px;
-  text-align:center;
-  font-weight:800;
   cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  transition:transform .08s ease, background .12s ease, border-color .12s ease;
-
-  position:relative;
   z-index:2;
-  pointer-events:auto !important;
+  transition:filter .15s ease, transform .15s ease, box-shadow .15s ease;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+.diamond-btn:hover{
+  filter:brightness(1.05);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.16),
+    0 22px 80px rgba(0,0,0,.62);
+}
+.diamond-btn:active{transform:rotate(45deg) translateY(2px)}
+
+.diamond-btn span{
+  transform:rotate(-45deg);
+  display:block;
+  text-align:center;
+  padding:10px 12px;
+  line-height:1.15;
+  font-weight:950;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.diamond-btn span b{display:block;font-size:16px;font-weight:950}
+.diamond-btn span small{display:block;margin-top:8px;font-size:12px;opacity:.72;letter-spacing:.14em;font-weight:900;text-transform:uppercase}
+
+/* positions */
+.diamond-top{ top:6%; left:30%; }
+.diamond-right{ top:30%; right:6%; }
+.diamond-bottom{ bottom:6%; left:30%; }
+.diamond-left{ top:30%; left:6%; }
+
+/* highlight */
+.diamond-gold{
+  box-shadow:
+    inset 0 0 0 1px rgba(202,160,74,.55),
+    0 18px 60px rgba(0,0,0,.55);
 }
 
-.crp-vine:hover{ background:rgba(0,0,0,.24); border-color:rgba(255,255,255,.30); }
-.crp-vine:active{ transform:scale(.99); }
-.crp-vine:focus{ outline:none; }
-.crp-vine:focus-visible{
-  box-shadow:0 0 0 3px rgba(255,255,255,.18);
-  border-color:rgba(255,255,255,.38);
+/* ---------- Door pills row ---------- */
+.door-pills{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin:14px 0 0;
 }
 
-/* -----------------------------
-   MODAL OVERLAY (NO SCROLL-JUMP)
-   ----------------------------- */
-.crp-modal{
+/* ---------- Home quadrant cards ---------- */
+details.quad{
+  border-radius:22px;
+  background:rgba(255,255,255,.05);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    0 22px 70px rgba(0,0,0,.45);
+  backdrop-filter:blur(12px);
+  overflow:hidden;
+}
+details.quad + details.quad{margin-top:12px}
+details.quad summary{
+  cursor:pointer;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.q-left{display:flex;align-items:center;gap:12px;min-width:0}
+.q-badge{
+  width:64px;height:44px;border-radius:18px;
+  background:rgba(122,11,20,.18);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:950;letter-spacing:.14em;flex:0 0 auto;position:relative;
+}
+.q-badge .icon{position:absolute;left:10px;top:9px;opacity:.95}
+.q-badge .code{padding-left:18px}
+
+.q-text{min-width:0}
+.q-text b{display:block;font-size:18px;letter-spacing:.12em;text-transform:uppercase;font-weight:950}
+.q-text span{display:block;opacity:.72;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.q-arrow{
+  width:42px;height:42px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  display:flex;align-items:center;justify-content:center;
+  opacity:.9;flex:0 0 auto;
+}
+
+.inside{padding:0 16px 16px}
+
+/* ---------- Bubbles (vines/fruits) ---------- */
+.bubble-row{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  margin-top:10px;
+}
+@media(min-width:720px){.bubble-row{grid-template-columns:1fr 1fr}}
+
+.bubble-btn{
+  border-radius:18px;
+  background:rgba(0,0,0,.22);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  padding:12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  cursor:pointer;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.bubble-btn:hover{background:rgba(0,0,0,.28)}
+.bubble-btn .lbl{min-width:0}
+.bubble-btn b{display:block;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:950}
+.bubble-btn i{display:block;font-style:normal;opacity:.72;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bubble-btn .go{
+  width:40px;height:40px;border-radius:999px;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  display:flex;align-items:center;justify-content:center;
+  opacity:.9;flex:0 0 auto;
+}
+
+/* ---------- Overlay / Modal ---------- */
+.overlay{
   position:fixed;
   inset:0;
   z-index:9999;
-  display:block;
-
-  /* Tap safety: modal itself should not block when hidden */
-  pointer-events:auto;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(0,0,0,.70);
+  backdrop-filter:blur(10px);
 }
+.overlay.on{display:flex}
 
-.crp-modal[hidden]{ display:none; }
-
-.crp-modal-backdrop{
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.55);
-  backdrop-filter:blur(6px);
-
-  pointer-events:auto;
-}
-
-.crp-modal-panel{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-
-  width:min(720px, calc(100% - 28px));
-  max-height:calc(100% - 28px);
+.modal{
+  width:min(980px,94vw);
+  max-height:min(86vh,760px);
   overflow:auto;
-
-  border:1px solid rgba(255,255,255,.20);
-  background:rgba(12,12,12,.92);
-  color:inherit;
-  border-radius:18px;
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-
-  pointer-events:auto;
+  border-radius:26px;
+  background:radial-gradient(900px 600px at 50% 0%, rgba(122,11,20,.26) 0%, transparent 70%), rgba(0,0,0,.34);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 40px 120px rgba(0,0,0,.80);
 }
-
-.crp-modal-header{
+.modal-head{
+  padding:16px;
   display:flex;
   align-items:flex-start;
   justify-content:space-between;
   gap:12px;
-  padding:14px 14px 10px;
-  border-bottom:1px solid rgba(255,255,255,.12);
-}
-
-.crp-modal-titlewrap{ min-width:0; }
-.crp-modal-kicker{
-  font-size:12px;
-  opacity:.78;
-  letter-spacing:.3px;
-  margin:0 0 2px;
-}
-.crp-modal-title{
-  margin:0;
-  font-size:18px;
-  font-weight:900;
-  letter-spacing:.2px;
-}
-
-.crp-modal-close{
-  border:1px solid rgba(255,255,255,.20);
-  background:rgba(0,0,0,.22);
-  color:inherit;
-  border-radius:12px;
-  width:40px;
-  height:40px;
-  display:grid;
-  place-items:center;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-
-  position:relative;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  position:sticky;
+  top:0;
+  background:rgba(0,0,0,.25);
+  backdrop-filter:blur(10px);
   z-index:2;
-  pointer-events:auto !important;
 }
-.crp-modal-close:hover{ background:rgba(0,0,0,.30); border-color:rgba(255,255,255,.30); }
-.crp-modal-close:focus{ outline:none; }
-.crp-modal-close:focus-visible{ box-shadow:0 0 0 3px rgba(255,255,255,.18); }
+.modal-title b{display:block;font-size:16px;letter-spacing:.18em;text-transform:uppercase;font-weight:950}
+.modal-title span{display:block;margin-top:6px;opacity:.75;font-size:14px;line-height:1.25}
+.modal-body{padding:14px 16px 18px}
 
-.crp-modal-body{ padding:14px; }
-.crp-modal-hint{ margin:0 0 10px; opacity:.85; }
-
-.crp-modal-footer{
-  padding:10px 14px 14px;
-  border-top:1px solid rgba(255,255,255,.12);
-  opacity:.9;
+.block{
+  border-radius:22px;
+  background:rgba(0,0,0,.26);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  padding:14px;
 }
+.block h3{margin:0 0 10px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
+.block p{margin:0;color:rgba(234,242,246,.82);line-height:1.65}
 
-/* -----------------------------
-   FRUITS (4 in modal)
-   ----------------------------- */
-.crp-fruits{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
+.resolution{
+  margin-top:14px;
+  padding:16px;
+  border-radius:22px;
+  background:rgba(255,255,255,.05);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
 }
-@media (max-width:520px){
-  .crp-fruits{ grid-template-columns:1fr; }
-}
+.resolution h4{margin:0 0 10px;font-size:16px;letter-spacing:.14em;text-transform:uppercase;font-weight:950}
+.resolution .para{margin:0 0 12px;line-height:1.75;opacity:.90}
+.resolution ul{margin:0 0 12px 18px;padding:0;line-height:1.65;opacity:.84}
+.resolution .imp{margin-top:10px;font-weight:950;letter-spacing:.06em;opacity:.92}
 
-.crp-fruit{
-  width:100%;
-  border:1px solid rgba(255,255,255,.20);
-  background:rgba(0,0,0,.18);
-  color:inherit;
-  border-radius:12px;
-  padding:12px 10px;
-  font-weight:900;
-  text-align:center;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  transition:transform .08s ease, background .12s ease, border-color .12s ease;
-
-  position:relative;
-  z-index:2;
-  pointer-events:auto !important;
+.close{
+  border:0;cursor:pointer;border-radius:14px;padding:10px 12px;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+  color:inherit;font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:12px;
 }
-.crp-fruit:hover{ background:rgba(0,0,0,.24); border-color:rgba(255,255,255,.30); }
-.crp-fruit:active{ transform:scale(.99); }
-.crp-fruit:focus{ outline:none; }
-.crp-fruit:focus-visible{ box-shadow:0 0 0 3px rgba(255,255,255,.18); }
-
-/* -----------------------------
-   RESOLUTION BLOCK (inside modal)
-   ----------------------------- */
-.crp-resolution-paragraph{
-  margin:0 0 10px;
-  line-height:1.45;
-}
-
-.crp-resolution-bullets{
-  margin:0 0 12px 18px;
-  padding:0;
-}
-
-.crp-resolution-implication{
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.16);
-  border-radius:14px;
-  padding:12px;
-  margin:0 0 14px;
-}
-
-.crp-resolution-implication-label{
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:.35px;
-  opacity:.85;
-  margin:0 0 6px;
-}
-
-.crp-resolution-implication-text{
-  margin:0;
-  line-height:1.45;
-}
-
-/* -----------------------------
-   Compatibility: pressed chips highlight
-   (ui.css also styles chips; this is safe additive)
-   ----------------------------- */
-.crp-chip[aria-pressed="true"]{
-  border-color:rgba(255,255,255,.36);
-  background:rgba(0,0,0,.28);
-}
+.close:hover{background:rgba(255,255,255,.10)}
+```0

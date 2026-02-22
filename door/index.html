@@ -1,102 +1,110 @@
-<!-- TNT FILE: /door/index.html -->
+<!-- =====================================================
+     TNT FILE: /door/index.html
+     CRP DOOR v2 — FULL TNT
+     - Restores legible diamond geometry
+     - Allows language toggle (EN / 中文) that ACTUALLY sticks
+     - Routes:
+         Explore -> /home/ (depth=explore)
+         Learn   -> /home/ (depth=learn)
+         Home    -> /home/ (uses current depth or defaults explore)
+         Links   -> /links/
+===================================================== -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Door · Geodiametrics</title>
-
-<link rel="stylesheet" href="/assets/ui.css?v=9005"/>
-<link rel="stylesheet" href="/assets/branch.css?v=9005"/>
-<script defer src="/assets/instrument.js?v=9005"></script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Door · Coherent Resolution Platform</title>
+  <link rel="stylesheet" href="/assets/ui.css?v=9005"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=9005"/>
+  <script src="/assets/instrument.js?v=9005" defer></script>
 </head>
-
 <body>
-<div class="page">
-  <div class="wrap">
-
-    <div class="hero" style="text-align:center;">
-      <h1>DOOR</h1>
-      <p style="margin-top:12px;">Choose your route.</p>
-
-      <div class="pills" style="justify-content:center; margin-top:12px;">
-        <span class="pill">LANG: <span id="langLabel">EN</span></span>
-        <span class="pill">DEPTH: <span id="depthLabel">EXPLORE</span></span>
+  <div class="page">
+    <div class="wrap" style="max-width:740px; width:100%;">
+      <div class="hero" style="text-align:center;">
+        <h1>DOOR</h1>
+        <p>Choose your route.</p>
       </div>
 
-      <div class="pills" style="justify-content:center; margin-top:12px;">
-        <button class="pill btn" id="setEN">EN</button>
-        <button class="pill btn" id="setZH">中文</button>
-        <a class="pill btn" href="/">BACK</a>
+      <div class="pills" style="justify-content:center; margin-top:6px;">
+        <span class="pill">LANG: <span id="langPill">EN</span></span>
+        <button class="pill btn" id="setEN" type="button">EN</button>
+        <button class="pill btn" id="setZH" type="button">中文</button>
+        <a class="pill btn" href="/" aria-label="Back to index">BACK</a>
       </div>
+
+      <div class="stage" style="margin-top:18px;">
+        <div class="platform">
+          <a class="diamond top gold" href="#" id="goExplore">
+            <span><b>EXPLORE</b><small>Surface</small></span>
+          </a>
+
+          <a class="diamond right" href="#" id="goLearn">
+            <span><b>LEARN</b><small>Deep</small></span>
+          </a>
+
+          <a class="diamond bottom" href="#" id="goHome">
+            <span><b>HOME</b><small>Enter hub</small></span>
+          </a>
+
+          <a class="diamond left" href="/links/">
+            <span><b>LINKS</b><small>Identity</small></span>
+          </a>
+        </div>
+      </div>
+
+      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      <div class="ink">GEODIAMETRICS</div>
     </div>
-
-    <div class="stage" style="margin-top:18px;">
-      <div class="platform">
-
-        <a class="diamond top gold" id="goExplore" href="/home/?depth=explore">
-          <span><b>Explore</b><small>Surface</small></span>
-        </a>
-
-        <a class="diamond right" id="goLearn" href="/home/?depth=learn">
-          <span><b>Learn</b><small>Deep</small></span>
-        </a>
-
-        <a class="diamond bottom" id="goHome" href="/home/">
-          <span><b>Home</b><small>Enter hub</small></span>
-        </a>
-
-        <a class="diamond left" id="goLinks" href="/links/">
-          <span><b>Links</b><small>Identity</small></span>
-        </a>
-
-      </div>
-    </div>
-
-    <div class="ink">GEODIAMETRICS</div>
-    <div class="footer">CANONICAL · STABLE · © GEODIAMETRICS</div>
   </div>
-</div>
 
-<script>
-(() => {
-  const get = (k) => { try { return localStorage.getItem(k); } catch(e){ return null; } };
-  const set = (k,v) => { try { localStorage.setItem(k, v); } catch(e){} };
+  <script>
+  (() => {
+    const K_LANG = "gd_lang";
+    const K_DEPTH = "gd_depth";
 
-  const qs = new URLSearchParams(location.search || "");
-  const normalizeLang = (v) => (String(v||"").toLowerCase().startsWith("zh") ? "zh" : "en");
-  const normalizeDepth = (v) => (String(v||"").toLowerCase() === "learn" ? "learn" : "explore");
+    const getLang = () => {
+      try { return (localStorage.getItem(K_LANG) || "en"); } catch(e){ return "en"; }
+    };
+    const setLang = (lang) => {
+      try { localStorage.setItem(K_LANG, lang); } catch(e){}
+      document.getElementById("langPill").textContent = (lang === "zh" ? "中文" : "EN");
+    };
+    const setDepth = (depth) => {
+      try { localStorage.setItem(K_DEPTH, depth); } catch(e){}
+    };
 
-  const lang = normalizeLang(qs.get("lang") || get("gd_lang") || "en");
-  const depth = normalizeDepth(qs.get("depth") || get("gd_depth") || "explore");
+    // Init pill
+    setLang(getLang());
 
-  set("gd_lang", lang);
-  set("gd_depth", depth);
+    // Toggle language (sticky)
+    document.getElementById("setEN").addEventListener("click", () => setLang("en"));
+    document.getElementById("setZH").addEventListener("click", () => setLang("zh"));
 
-  const stamp = (url) => {
-    const u = new URL(url, location.origin);
-    u.searchParams.set("lang", lang);
-    return u.pathname + "?" + u.searchParams.toString();
-  };
+    // Routes
+    document.getElementById("goExplore").addEventListener("click", (e) => {
+      e.preventDefault();
+      setDepth("explore");
+      location.href = "/home/?depth=explore";
+    });
 
-  function render(){
-    document.getElementById("langLabel").textContent = (lang === "zh" ? "中文" : "EN");
-    document.getElementById("depthLabel").textContent = depth.toUpperCase();
+    document.getElementById("goLearn").addEventListener("click", (e) => {
+      e.preventDefault();
+      setDepth("learn");
+      location.href = "/home/?depth=learn";
+    });
 
-    document.getElementById("setEN").classList.toggle("active", lang === "en");
-    document.getElementById("setZH").classList.toggle("active", lang === "zh");
-
-    document.getElementById("goExplore").href = stamp("/home/?depth=explore");
-    document.getElementById("goLearn").href = stamp("/home/?depth=learn");
-    document.getElementById("goHome").href = stamp("/home/?depth="+depth);
-    document.getElementById("goLinks").href = stamp("/links/");
-  }
-
-  document.getElementById("setEN").addEventListener("click", ()=>{ set("gd_lang","en"); location.href="/door/?lang=en&depth="+depth; });
-  document.getElementById("setZH").addEventListener("click", ()=>{ set("gd_lang","zh"); location.href="/door/?lang=zh&depth="+depth; });
-
-  render();
-})();
-</script>
+    document.getElementById("goHome").addEventListener("click", (e) => {
+      e.preventDefault();
+      let depth = null;
+      try { depth = localStorage.getItem(K_DEPTH); } catch(e){}
+      if (depth !== "explore" && depth !== "learn") {
+        setDepth("explore");
+      }
+      location.href = "/home/";
+    });
+  })();
+  </script>
 </body>
 </html>

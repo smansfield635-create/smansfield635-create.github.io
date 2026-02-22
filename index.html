@@ -6,9 +6,15 @@
 <title>Cardinal Axis · Terminal</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
+:root{
+  --gold: rgba(212,175,55,.9);
+  --gold-soft: rgba(212,175,55,.35);
+  --obsidian1:#070b12;
+  --obsidian2:#0c1626;
+}
+
 body{
   margin:0;
   min-height:100vh;
@@ -16,61 +22,106 @@ body{
   align-items:center;
   justify-content:center;
   background:
-    radial-gradient(circle at 50% 35%, rgba(255,215,120,.06), transparent 60%),
-    repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 1px, transparent 1px 90px),
-    linear-gradient(180deg,#a80000 0%,#7b0000 60%,#5a0000 100%);
+    radial-gradient(circle at 50% 40%, rgba(90,140,255,.08), transparent 60%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 1px, transparent 1px 100px),
+    linear-gradient(180deg,#b00000 0%,#7a0000 60%,#550000 100%);
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:white;
 }
 
 .panel{
-  width:min(760px,92vw);
-  padding:42px;
+  width:min(820px,92vw);
+  padding:50px 36px;
   border-radius:28px;
+  position:relative;
 
   background:
-    radial-gradient(circle at 30% 25%, rgba(120,160,255,.15), transparent 55%),
-    linear-gradient(160deg,#0a0f18 0%,#05070c 45%,#0b1424 100%);
+    radial-gradient(circle at 35% 25%, rgba(90,140,255,.12), transparent 55%),
+    radial-gradient(circle at 70% 60%, rgba(0,120,255,.08), transparent 60%),
+    linear-gradient(160deg,var(--obsidian2) 0%,var(--obsidian1) 60%);
 
   box-shadow:
-    0 40px 120px rgba(0,0,0,.85),
-    inset 0 2px 0 rgba(255,255,255,.15),
-    inset 0 -30px 40px rgba(0,0,0,.6);
+    0 50px 140px rgba(0,0,0,.85),
+    inset 0 2px 0 rgba(255,255,255,.12),
+    inset 0 -40px 60px rgba(0,0,0,.65);
 
   border:1px solid rgba(255,255,255,.08);
-  text-align:center;
+}
+
+.panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:28px;
+  padding:1px;
+  background:linear-gradient(135deg, var(--gold-soft), transparent 40%, transparent 60%, var(--gold-soft));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
 }
 
 h1{
   font-size:42px;
-  margin-bottom:8px;
+  margin:0 0 6px 0;
+  text-align:center;
   letter-spacing:2px;
 }
 
 .subtitle{
+  text-align:center;
   opacity:.85;
   margin-bottom:40px;
 }
 
+/* Bubble grid */
+.bubble-grid{
+  display:grid;
+  gap:22px;
+}
+
 .bubble{
-  margin:20px 0;
-  padding:18px 22px;
-  border-radius:20px;
-  background:linear-gradient(145deg,#0e1522,#090d14);
+  padding:20px 22px;
+  border-radius:22px;
+  position:relative;
+
+  background:
+    radial-gradient(circle at 30% 30%, rgba(120,160,255,.12), transparent 55%),
+    linear-gradient(145deg,var(--obsidian2),var(--obsidian1));
+
   box-shadow:
-    0 18px 60px rgba(0,0,0,.7),
+    0 25px 70px rgba(0,0,0,.8),
     inset 0 2px 0 rgba(255,255,255,.1);
-  border:1px solid rgba(255,255,255,.08);
-  text-align:left;
+
+  border:1px solid rgba(255,255,255,.07);
+}
+
+.bubble::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:22px;
+  padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--gold-soft) 50%, transparent 100%);
+  opacity:.5;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
 }
 
 .bubble strong{
   display:block;
-  margin-bottom:6px;
+  margin-bottom:8px;
+  letter-spacing:.4px;
 }
 
 .actions{
-  margin-top:30px;
+  margin-top:40px;
   display:flex;
   justify-content:center;
   gap:16px;
@@ -78,20 +129,36 @@ h1{
 }
 
 .btn{
-  padding:12px 22px;
-  border-radius:14px;
-  background:#0b1220;
+  padding:14px 26px;
+  border-radius:16px;
+  background:linear-gradient(145deg,var(--obsidian2),var(--obsidian1));
   color:white;
   border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 12px 30px rgba(0,0,0,.6);
+  box-shadow:0 18px 45px rgba(0,0,0,.7);
   text-decoration:none;
   transition:.25s ease;
+  position:relative;
+}
+
+.btn::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:16px;
+  padding:1px;
+  background:linear-gradient(135deg, var(--gold-soft), transparent 60%);
+  opacity:.6;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
 }
 
 .btn:hover{
   box-shadow:
-    0 18px 50px rgba(0,0,0,.8),
-    0 0 18px rgba(212,175,55,.45);
+    0 25px 70px rgba(0,0,0,.9),
+    0 0 20px var(--gold-soft);
 }
 </style>
 </head>
@@ -103,19 +170,23 @@ h1{
   <h1 id="title"></h1>
   <div class="subtitle" id="subtitle"></div>
 
-  <div class="bubble">
-    <strong id="b1Title"></strong>
-    <div id="b1Text"></div>
-  </div>
+  <div class="bubble-grid">
 
-  <div class="bubble">
-    <strong id="b2Title"></strong>
-    <div id="b2Text"></div>
-  </div>
+    <div class="bubble">
+      <strong id="b1Title"></strong>
+      <div id="b1Text"></div>
+    </div>
 
-  <div class="bubble">
-    <strong id="b3Title"></strong>
-    <div id="b3Text"></div>
+    <div class="bubble">
+      <strong id="b2Title"></strong>
+      <div id="b2Text"></div>
+    </div>
+
+    <div class="bubble">
+      <strong id="b3Title"></strong>
+      <div id="b3Text"></div>
+    </div>
+
   </div>
 
   <div class="actions">
@@ -127,6 +198,7 @@ h1{
 
 <script>
 (function(){
+
   const params = new URLSearchParams(window.location.search);
   const queryLang = params.get("lang");
   const storedLang = localStorage.getItem("gd_lang");
@@ -141,25 +213,25 @@ h1{
   const text = {
     en:{
       title:"CARDINAL AXIS",
-      subtitle:"Terminal · Under Construction",
+      subtitle:"Terminal · Structural Preface",
       b1Title:"Under construction (safe to explore).",
-      b1Text:"Navigation structure is stable. Content expands progressively.",
-      b2Title:"How navigation works.",
-      b2Text:"Select lenses. Then move through the compass.",
-      b3Title:"What to expect.",
-      b3Text:"Structure remains consistent while material evolves.",
+      b1Text:"Navigation is architecturally stable. Content layers expand over time. Incomplete regions show placeholders rather than broken paths.",
+      b2Title:"How this system works.",
+      b2Text:"You select lenses (style + time), then navigate using the compass. Meaning emerges from structure.",
+      b3Title:"What to expect moving forward.",
+      b3Text:"North stabilizes. East executes. South converges. West contains. Each direction deepens progressively.",
       continue:"CONTINUE → HOME",
       links:"LINKS"
     },
     zh:{
       title:"四向轴",
-      subtitle:"终端 · 施工中",
+      subtitle:"终端 · 结构前言",
       b1Title:"施工中（可安全浏览）。",
-      b1Text:"导航结构稳定，内容逐步扩展。",
-      b2Title:"如何导航。",
-      b2Text:"选择透镜，然后通过指南针移动。",
-      b3Title:"预期说明。",
-      b3Text:"结构保持一致，内容持续演进。",
+      b1Text:"导航结构稳定，内容逐步扩展。未完成区域将显示占位，而不会出现错误。",
+      b2Title:"系统如何运作。",
+      b2Text:"选择透镜（风格 + 时间），然后通过指南针移动。意义来自结构。",
+      b3Title:"未来预期。",
+      b3Text:"北稳定，东执行，南汇聚，西约束。每个方向都会逐步深化。",
       continue:"继续 → HOME",
       links:"链接"
     }

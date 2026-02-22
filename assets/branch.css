@@ -1,15 +1,14 @@
 /* =====================================================
    TNT FILE: /assets/branch.css
-   CRP BRANCH v4 — Diamonds + Quadrants + Bubbles + Overlay Modal
+   CRP BRANCH v9300 — DIAMONDS + QUADS + BUBBLES + MODAL
    COMPONENTS ONLY (NO BODY BACKGROUND)
-   COPY/PASTE ENTIRE FILE AS-IS
 ===================================================== */
 
-/* Kill default disclosure triangle */
+/* Kill default disclosure marker */
 details > summary{list-style:none}
 details > summary::-webkit-details-marker{display:none}
 
-/* ---------- Diamond Stage (Index/Door/Links) ---------- */
+/* ---------- Diamond Stage (Door/Links) ---------- */
 .diamond-stage{
   position:relative;
   width:min(640px,94vw);
@@ -67,12 +66,14 @@ details > summary::-webkit-details-marker{display:none}
   -webkit-tap-highlight-color:transparent;
   user-select:none;
 }
+
 .diamond-btn:hover{
   filter:brightness(1.05);
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.16),
     0 22px 80px rgba(0,0,0,.62);
 }
+
 .diamond-btn:active{transform:rotate(45deg) translateY(2px)}
 
 .diamond-btn span{
@@ -85,8 +86,18 @@ details > summary::-webkit-details-marker{display:none}
   letter-spacing:.14em;
   text-transform:uppercase;
 }
+
 .diamond-btn span b{display:block;font-size:16px;font-weight:950}
-.diamond-btn span small{display:block;margin-top:8px;font-size:12px;opacity:.72;letter-spacing:.14em;font-weight:900;text-transform:uppercase}
+
+.diamond-btn span small{
+  display:block;
+  margin-top:8px;
+  font-size:12px;
+  opacity:.72;
+  letter-spacing:.14em;
+  font-weight:900;
+  text-transform:uppercase;
+}
 
 /* positions */
 .diamond-top{ top:6%; left:30%; }
@@ -110,6 +121,19 @@ details > summary::-webkit-details-marker{display:none}
   margin:14px 0 0;
 }
 
+/* ---------- Door meaning panel ---------- */
+.route-meaning{
+  margin:16px auto 0;
+  width:min(820px,94vw);
+  border-radius:22px;
+  background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10), 0 22px 70px rgba(0,0,0,.45);
+  backdrop-filter:blur(12px);
+  padding:16px;
+  color:rgba(234,242,246,.82);
+  line-height:1.65;
+}
+
 /* ---------- Home quadrant cards ---------- */
 details.quad{
   border-radius:22px;
@@ -120,7 +144,9 @@ details.quad{
   backdrop-filter:blur(12px);
   overflow:hidden;
 }
+
 details.quad + details.quad{margin-top:12px}
+
 details.quad summary{
   cursor:pointer;
   padding:16px;
@@ -132,26 +158,55 @@ details.quad summary{
 }
 
 .q-left{display:flex;align-items:center;gap:12px;min-width:0}
+
 .q-badge{
-  width:64px;height:44px;border-radius:18px;
+  width:64px;
+  height:44px;
+  border-radius:18px;
   background:rgba(122,11,20,.18);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:950;letter-spacing:.14em;flex:0 0 auto;position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:950;
+  letter-spacing:.14em;
+  flex:0 0 auto;
+  position:relative;
 }
+
 .q-badge .icon{position:absolute;left:10px;top:9px;opacity:.95}
 .q-badge .code{padding-left:18px}
 
 .q-text{min-width:0}
-.q-text b{display:block;font-size:18px;letter-spacing:.12em;text-transform:uppercase;font-weight:950}
-.q-text span{display:block;opacity:.72;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.q-text b{
+  display:block;
+  font-size:18px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-weight:950;
+}
+
+.q-text span{
+  display:block;
+  opacity:.72;
+  margin-top:4px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 
 .q-arrow{
-  width:42px;height:42px;border-radius:999px;
+  width:42px;
+  height:42px;
+  border-radius:999px;
   background:rgba(255,255,255,.06);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  display:flex;align-items:center;justify-content:center;
-  opacity:.9;flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:.9;
+  flex:0 0 auto;
 }
 
 .inside{padding:0 16px 16px}
@@ -163,6 +218,7 @@ details.quad summary{
   gap:10px;
   margin-top:10px;
 }
+
 @media(min-width:720px){.bubble-row{grid-template-columns:1fr 1fr}}
 
 .bubble-btn{
@@ -178,17 +234,44 @@ details.quad summary{
   user-select:none;
   -webkit-tap-highlight-color:transparent;
 }
+
 .bubble-btn:hover{background:rgba(0,0,0,.28)}
+
 .bubble-btn .lbl{min-width:0}
-.bubble-btn b{display:block;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:950}
-.bubble-btn i{display:block;font-style:normal;opacity:.72;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.bubble-btn b{
+  display:block;
+  font-size:13px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-weight:950;
+}
+
+.bubble-btn i{
+  display:block;
+  font-style:normal;
+  opacity:.72;
+  font-size:12px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
 .bubble-btn .go{
-  width:40px;height:40px;border-radius:999px;
+  width:40px;
+  height:40px;
+  border-radius:999px;
   background:rgba(255,255,255,.06);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  display:flex;align-items:center;justify-content:center;
-  opacity:.9;flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:.9;
+  flex:0 0 auto;
 }
+
+/* Allow <a class="bubble-btn"> without link underline */
+a.bubble-btn{text-decoration:none;color:inherit}
 
 /* ---------- Overlay / Modal ---------- */
 .overlay{
@@ -202,6 +285,7 @@ details.quad summary{
   background:rgba(0,0,0,.70);
   backdrop-filter:blur(10px);
 }
+
 .overlay.on{display:flex}
 
 .modal{
@@ -209,9 +293,14 @@ details.quad summary{
   max-height:min(86vh,760px);
   overflow:auto;
   border-radius:26px;
-  background:radial-gradient(900px 600px at 50% 0%, rgba(122,11,20,.26) 0%, transparent 70%), rgba(0,0,0,.34);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 40px 120px rgba(0,0,0,.80);
+  background:
+    radial-gradient(900px 600px at 50% 0%, rgba(122,11,20,.26) 0%, transparent 70%),
+    rgba(0,0,0,.34);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.12),
+    0 40px 120px rgba(0,0,0,.80);
 }
+
 .modal-head{
   padding:16px;
   display:flex;
@@ -225,8 +314,23 @@ details.quad summary{
   backdrop-filter:blur(10px);
   z-index:2;
 }
-.modal-title b{display:block;font-size:16px;letter-spacing:.18em;text-transform:uppercase;font-weight:950}
-.modal-title span{display:block;margin-top:6px;opacity:.75;font-size:14px;line-height:1.25}
+
+.modal-title b{
+  display:block;
+  font-size:16px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  font-weight:950;
+}
+
+.modal-title span{
+  display:block;
+  margin-top:6px;
+  opacity:.75;
+  font-size:14px;
+  line-height:1.25;
+}
+
 .modal-body{padding:14px 16px 18px}
 
 .block{
@@ -235,7 +339,9 @@ details.quad summary{
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
   padding:14px;
 }
+
 .block h3{margin:0 0 10px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
+
 .block p{margin:0;color:rgba(234,242,246,.82);line-height:1.65}
 
 .resolution{
@@ -245,16 +351,27 @@ details.quad summary{
   background:rgba(255,255,255,.05);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
 }
+
 .resolution h4{margin:0 0 10px;font-size:16px;letter-spacing:.14em;text-transform:uppercase;font-weight:950}
+
 .resolution .para{margin:0 0 12px;line-height:1.75;opacity:.90}
+
 .resolution ul{margin:0 0 12px 18px;padding:0;line-height:1.65;opacity:.84}
+
 .resolution .imp{margin-top:10px;font-weight:950;letter-spacing:.06em;opacity:.92}
 
 .close{
-  border:0;cursor:pointer;border-radius:14px;padding:10px 12px;
+  border:0;
+  cursor:pointer;
+  border-radius:14px;
+  padding:10px 12px;
   background:rgba(255,255,255,.08);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
-  color:inherit;font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:12px;
+  color:inherit;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-size:12px;
 }
+
 .close:hover{background:rgba(255,255,255,.10)}
-```0

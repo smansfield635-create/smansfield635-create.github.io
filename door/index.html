@@ -1,144 +1,228 @@
-<!-- TNT FILE: /door/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Door · Geodiametrics</title>
+  <title>Terminal · DIAMOND</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=9999"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9999"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=DOOR_1"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=DOOR_1"/>
+  <script defer src="/assets/instrument.js?v=DOOR_1"></script>
+
+  <style>
+    .term-wrap{max-width:900px;margin:0 auto;}
+    .term-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+    .term-label{opacity:.78;font-weight:900;letter-spacing:.25px;margin:10px 0 4px;text-align:center}
+    .term-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+    @media (max-width:720px){ .term-grid{grid-template-columns:1fr;} }
+    .term-cardlink{min-height:88px;display:grid;place-items:center;text-align:center}
+    .term-small{opacity:.72;font-size:12px;line-height:1.35;text-align:center;margin-top:10px}
+  </style>
 </head>
 
 <body>
-  <div class="page">
-    <div class="wrap">
+  <main class="crp-shell crp-center">
+    <section class="crp-card term-wrap" aria-label="Terminal" style="text-align:center">
 
-      <div class="hero" style="text-align:center">
-        <h1>DOOR</h1>
-        <p>Choose your route.</p>
+      <header class="crp-header">
+        <div class="crp-mark">GEODIAMETRICS</div>
+        <h1 class="crp-title" style="margin-bottom:6px">TERMINAL</h1>
+        <p class="crp-subtitle" style="margin-bottom:8px">Choose your route.</p>
+      </header>
+
+      <!-- TOP LENSES (operational) -->
+      <div class="crp-topbar" style="margin:0 auto 12px;max-width:860px">
+        <div class="crp-topbar-left" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%">
+          <div class="crp-lens" role="group" aria-label="Style lens">
+            <button class="crp-chip" type="button" data-style="formal">FORMAL</button>
+            <button class="crp-chip" type="button" data-style="informal">INFORMAL</button>
+          </div>
+
+          <div class="crp-lens" role="group" aria-label="Time lens">
+            <button class="crp-chip" type="button" data-time="origin">ORIGIN</button>
+            <button class="crp-chip" type="button" data-time="now">NOW</button>
+            <button class="crp-chip" type="button" data-time="trajectory">TRAJECTORY</button>
+          </div>
+        </div>
       </div>
 
-      <!-- STATE PILLS -->
-      <div class="pills" style="justify-content:center">
-        <span class="pill">LANG: <span id="pillLang">EN</span></span>
-        <span class="pill">DEPTH: <span id="pillDepth">EXPLORE</span></span>
-        <a class="pill btn" href="/">BACK</a>
+      <hr class="crp-divider"/>
+
+      <!-- Language + Depth (routing-critical) -->
+      <div>
+        <div class="term-label">LANGUAGE</div>
+        <div class="term-row" role="group" aria-label="Language">
+          <button type="button" class="crp-btn" data-set="lang" data-val="en">ENGLISH</button>
+          <button type="button" class="crp-btn" data-set="lang" data-val="zh">中文</button>
+        </div>
+
+        <div class="term-label">DEPTH</div>
+        <div class="term-row" role="group" aria-label="Depth">
+          <button type="button" class="crp-btn" data-set="depth" data-val="explore">EXPLORE</button>
+          <button type="button" class="crp-btn" data-set="depth" data-val="learn">LEARN</button>
+        </div>
       </div>
 
-      <!-- LANGUAGE + DEPTH TOGGLES -->
-      <div class="pills" style="justify-content:center">
-        <button class="pill btn" id="btnEN" type="button">EN</button>
-        <button class="pill btn" id="btnZH" type="button">中文</button>
-        <span class="pill">·</span>
-        <button class="pill btn" id="btnExplore" type="button">EXPLORE</button>
-        <button class="pill btn" id="btnLearn" type="button">LEARN</button>
-      </div>
+      <hr class="crp-divider"/>
 
-      <!-- DIAMOND ROUTES -->
-      <div class="diamond-stage" aria-label="Route diamond">
-        <div class="diamond-plate" aria-hidden="true"></div>
-
-        <!-- TOP -->
-        <a class="diamond-btn diamond-top gold" id="goExplore" href="/explore/">
-          <span><b>EXPLORE</b><small>Surface</small></span>
+      <!-- Routes (real links; JS rewrites with current state) -->
+      <div class="term-grid" aria-label="Terminal routes">
+        <a id="go-explore" class="crp-btn term-cardlink" href="/explore/?depth=explore" role="button">
+          EXPLORE
         </a>
 
-        <!-- RIGHT -->
-        <a class="diamond-btn diamond-right" id="goLearn" href="/home/">
-          <span><b>LEARN</b><small>Deep</small></span>
+        <a id="go-home" class="crp-btn crp-btn-primary term-cardlink" href="/home/?depth=explore" role="button">
+          COMPASS
         </a>
 
-        <!-- BOTTOM -->
-        <a class="diamond-btn diamond-bottom" id="goHome" href="/home/">
-          <span><b>HOME</b><small>Enter hub</small></span>
+        <a id="go-links" class="crp-btn term-cardlink" href="/links/" role="button">
+          LINKS
         </a>
 
-        <!-- LEFT -->
-        <a class="diamond-btn diamond-left" id="goLinks" href="/links/">
-          <span><b>LINKS</b><small>Identity</small></span>
+        <a id="go-start" class="crp-btn term-cardlink" href="/" role="button">
+          START
         </a>
       </div>
 
-      <div class="panel" style="padding:16px; margin-top:12px">
-        <div class="section-title" style="margin-top:0">What these routes mean</div>
-        <p style="margin-top:8px">
-          Explore = surface map. Learn = deep map (nested bubbles + resolution). Home = same hub (depth controls density). Links = identity, references, contact.
-        </p>
+      <div class="term-small">
+        Routes inherit: <code>gd_lang</code> + <code>gd_depth</code>. Lenses at top apply: <code>gd_style</code> + <code>gd_time</code>.
       </div>
 
-      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-      <div class="ink">GEODIAMETRICS</div>
+      <footer class="crp-footer">
+        <small class="crp-footnote">BUILD: <strong>DOOR_1</strong></small>
+      </footer>
 
-    </div>
-  </div>
+    </section>
+  </main>
 
   <script>
-  (() => {
-    // single source of truth keys (match your instrument engine)
-    const K_LANG = "gd_lang";
-    const K_DEPTH = "gd_depth";
+    (function () {
+      "use strict";
 
-    // accept query param as override (index may pass ?lang=zh)
-    const qs = new URLSearchParams(location.search);
-    const qLang = (qs.get("lang") || "").toLowerCase();
+      // Canonical keys
+      var K_LANG  = "gd_lang";
+      var K_DEPTH = "gd_depth";
+      var K_STYLE = "gd_style";
+      var K_TIME  = "gd_time";
 
-    function getLang(){
-      const v = (localStorage.getItem(K_LANG) || "").toLowerCase();
-      if (v === "en" || v === "zh") return v;
-      return "en";
-    }
-    function setLang(v){
-      v = (v || "").toLowerCase();
-      if (v !== "en" && v !== "zh") return;
-      localStorage.setItem(K_LANG, v);
-      paint();
-    }
+      var allowLang  = { en:1, zh:1 };
+      var allowDepth = { explore:1, learn:1 };
+      var allowStyle = { formal:1, informal:1 };
+      var allowTime  = { origin:1, now:1, trajectory:1 };
 
-    function getDepth(){
-      const v = (localStorage.getItem(K_DEPTH) || "").toLowerCase();
-      if (v === "explore" || v === "learn") return v;
-      return "explore";
-    }
-    function setDepth(v){
-      v = (v || "").toLowerCase();
-      if (v !== "explore" && v !== "learn") return;
-      localStorage.setItem(K_DEPTH, v);
-      paint();
-    }
+      function qp(name){
+        try { return new URLSearchParams(window.location.search).get(name); }
+        catch(e){ return null; }
+      }
+      function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+      function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
 
-    // If index passed a lang, apply it once
-    if (qLang === "en" || qLang === "zh") setLang(qLang);
+      // Normalize state (query wins; else localStorage; else defaults)
+      var state = {
+        lang:  qp("lang")  || lsGet(K_LANG)  || "en",
+        depth: qp("depth") || lsGet(K_DEPTH) || "explore",
+        style: qp("style") || lsGet(K_STYLE) || "formal",
+        time:  qp("time")  || lsGet(K_TIME)  || "origin"
+      };
 
-    const $ = (id) => document.getElementById(id);
+      if (!allowLang[state.lang]) state.lang = "en";
+      if (!allowDepth[state.depth]) state.depth = "explore";
+      if (!allowStyle[state.style]) state.style = "formal";
+      if (!allowTime[state.time]) state.time = "origin";
 
-    function paint(){
-      const lang = getLang();
-      const depth = getDepth();
+      // Persist
+      lsSet(K_LANG, state.lang);
+      lsSet(K_DEPTH, state.depth);
+      lsSet(K_STYLE, state.style);
+      lsSet(K_TIME, state.time);
 
-      $("pillLang").textContent = (lang === "zh") ? "中文" : "EN";
-      $("pillDepth").textContent = depth.toUpperCase();
+      // Highlight active language/depth buttons
+      function setActive(){
+        var buttons = document.querySelectorAll("button[data-set][data-val]");
+        for (var i=0;i<buttons.length;i++){
+          var b = buttons[i];
+          var set = b.getAttribute("data-set");
+          var val = b.getAttribute("data-val");
+          b.classList.toggle("crp-btn-primary", state[set] === val);
+        }
+      }
+      setActive();
 
-      $("btnEN").classList.toggle("active", lang === "en");
-      $("btnZH").classList.toggle("active", lang === "zh");
-      $("btnExplore").classList.toggle("active", depth === "explore");
-      $("btnLearn").classList.toggle("active", depth === "learn");
-    }
+      // Lens chips pressed state
+      function setPressed(groupSelector, attr, value) {
+        var chips = document.querySelectorAll(groupSelector + " .crp-chip[" + attr + "]");
+        for (var i=0;i<chips.length;i++){
+          var v = chips[i].getAttribute(attr);
+          chips[i].setAttribute("aria-pressed", v === value ? "true" : "false");
+        }
+      }
+      setPressed("[aria-label='Style lens']", "data-style", state.style);
+      setPressed("[aria-label='Time lens']", "data-time", state.time);
 
-    $("btnEN").addEventListener("click", () => setLang("en"));
-    $("btnZH").addEventListener("click", () => setLang("zh"));
-    $("btnExplore").addEventListener("click", () => setDepth("explore"));
-    $("btnLearn").addEventListener("click", () => setDepth("learn"));
+      // Wire lens chips
+      var styleChips = document.querySelectorAll(".crp-chip[data-style]");
+      for (var s=0;s<styleChips.length;s++){
+        styleChips[s].addEventListener("click", function(e){
+          var v = e.currentTarget.getAttribute("data-style");
+          if (!allowStyle[v]) return;
+          state.style = v;
+          lsSet(K_STYLE, v);
+          setPressed("[aria-label='Style lens']", "data-style", v);
+          rewriteLinks();
+        });
+      }
 
-    // Route clicks also stamp depth so Home can read it deterministically
-    $("goExplore").addEventListener("click", () => setDepth("explore"));
-    $("goLearn").addEventListener("click", () => setDepth("learn"));
-    $("goHome").addEventListener("click", () => {/* keep current depth */});
-    $("goLinks").addEventListener("click", () => {/* no-op */});
+      var timeChips = document.querySelectorAll(".crp-chip[data-time]");
+      for (var t=0;t<timeChips.length;t++){
+        timeChips[t].addEventListener("click", function(e){
+          var v = e.currentTarget.getAttribute("data-time");
+          if (!allowTime[v]) return;
+          state.time = v;
+          lsSet(K_TIME, v);
+          setPressed("[aria-label='Time lens']", "data-time", v);
+          rewriteLinks();
+        });
+      }
 
-    paint();
-  })();
+      // Wire language/depth buttons
+      document.addEventListener("click", function(e){
+        var t = e.target;
+        if (!t) return;
+        if (t.matches && t.matches("button[data-set][data-val]")){
+          var set = t.getAttribute("data-set");
+          var val = t.getAttribute("data-val");
+          if (set === "lang" && allowLang[val]) state.lang = val;
+          if (set === "depth" && allowDepth[val]) state.depth = val;
+
+          lsSet(K_LANG, state.lang);
+          lsSet(K_DEPTH, state.depth);
+          setActive();
+          rewriteLinks();
+        }
+      });
+
+      // Rewrite route links to carry state consistently
+      function rewriteLinks(){
+        var q =
+          "lang=" + encodeURIComponent(state.lang) +
+          "&depth=" + encodeURIComponent(state.depth) +
+          "&style=" + encodeURIComponent(state.style) +
+          "&time=" + encodeURIComponent(state.time);
+
+        var home = document.getElementById("go-home");
+        var exp  = document.getElementById("go-explore");
+        var links= document.getElementById("go-links");
+        var start= document.getElementById("go-start");
+
+        if (home) home.setAttribute("href", "/home/?" + q);
+        // Explore is always depth=explore by spec, but we still carry lang/style/time
+        if (exp) exp.setAttribute("href", "/explore/?lang=" + encodeURIComponent(state.lang) + "&depth=explore&style=" + encodeURIComponent(state.style) + "&time=" + encodeURIComponent(state.time));
+        if (links) links.setAttribute("href", "/links/?" + q);
+        if (start) start.setAttribute("href", "/?" + q);
+      }
+
+      rewriteLinks();
+    })();
   </script>
 </body>
 </html>
-```0

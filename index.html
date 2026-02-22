@@ -5,19 +5,50 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>DIAMOND · Scope</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=PAGE_UNI_100" />
-  <link rel="stylesheet" href="/assets/branch.css?v=PAGE_UNI_100" />
-  <script defer src="/assets/instrument.js?v=PAGE_UNI_100"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=INDEX_COUNTRY_1" />
+  <link rel="stylesheet" href="/assets/branch.css?v=INDEX_COUNTRY_1" />
+  <script defer src="/assets/instrument.js?v=INDEX_COUNTRY_1"></script>
 
-  <!-- Layout-only helpers (no field/bg, no :root). -->
   <style>
-    .scope-grid{display:grid;gap:14px;max-width:760px;margin:0 auto;}
+    .scope-grid{display:grid;gap:14px;max-width:860px;margin:0 auto;}
     .scope-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
     .scope-label{opacity:.80;font-weight:900;letter-spacing:.25px;margin:6px 0 2px;text-align:center}
     .scope-help{opacity:.75;margin:0;text-align:center;line-height:1.35}
-    .scope-chip{min-width:140px;justify-content:center}
-    .scope-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+    .scope-chip{min-width:160px;justify-content:center}
+    .scope-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
     .scope-mini{opacity:.7;font-size:12px;text-align:center;margin-top:10px}
+
+    .select-wrap{
+      display:flex;
+      justify-content:center;
+      margin-top:8px;
+    }
+    select.country{
+      width:min(520px, 100%);
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.16);
+      color:#fff;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    option{ color:#000; } /* mobile browsers handle this differently; harmless */
+
+    .lang-strip{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+      margin-top:10px;
+    }
+    .lang-note{
+      opacity:.72;
+      font-size:12px;
+      line-height:1.35;
+      text-align:center;
+      margin-top:6px;
+    }
   </style>
 </head>
 
@@ -27,18 +58,68 @@
       <header class="crp-header">
         <div class="crp-mark" aria-hidden="true" data-i18n="global.brand">GEODIAMETRICS</div>
         <h1 class="crp-title" style="margin-bottom:6px" data-i18n="index.title">DIAMOND</h1>
-        <p class="crp-subtitle" style="margin-bottom:8px" data-i18n="index.subtitle">Choose your scope.</p>
-        <p class="scope-help">Language · Depth · Style · Time</p>
+        <p class="crp-subtitle" style="margin-bottom:6px" data-i18n="index.subtitle">Choose your scope.</p>
+        <p class="scope-help">Country/Region → Language · Depth</p>
       </header>
 
       <div class="scope-grid" aria-label="Scope controls">
 
+        <!-- COUNTRY -->
+        <div>
+          <div class="scope-label">COUNTRY / REGION</div>
+          <div class="select-wrap">
+            <select id="country" class="country" aria-label="Country or region">
+              <!-- Minimal built-in list (extend later via country_to_languages.json and/or full list) -->
+              <option value="">Select…</option>
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="MX">Mexico</option>
+              <option value="GB">United Kingdom</option>
+              <option value="FR">France</option>
+              <option value="DE">Germany</option>
+              <option value="ES">Spain</option>
+              <option value="BR">Brazil</option>
+              <option value="IN">India</option>
+              <option value="CN">China</option>
+              <option value="TW">Taiwan</option>
+              <option value="HK">Hong Kong</option>
+              <option value="JP">Japan</option>
+              <option value="KR">South Korea</option>
+              <option value="VN">Vietnam</option>
+              <option value="TH">Thailand</option>
+              <option value="PH">Philippines</option>
+              <option value="ID">Indonesia</option>
+              <option value="AE">United Arab Emirates</option>
+              <option value="SA">Saudi Arabia</option>
+              <option value="IL">Israel</option>
+              <option value="TR">Turkey</option>
+              <option value="ZA">South Africa</option>
+              <option value="NG">Nigeria</option>
+              <option value="EG">Egypt</option>
+              <option value="AU">Australia</option>
+              <option value="NZ">New Zealand</option>
+            </select>
+          </div>
+          <div class="lang-note">
+            Selecting a country suggests common languages. You can always override.
+          </div>
+        </div>
+
         <!-- LANGUAGE -->
         <div>
           <div class="scope-label">LANGUAGE</div>
-          <div class="scope-row" role="group" aria-label="Language">
-            <button type="button" class="crp-btn scope-chip" data-set="lang" data-val="en">ENGLISH</button>
-            <button type="button" class="crp-btn scope-chip" data-set="lang" data-val="zh">中文</button>
+
+          <!-- Canonical quick picks always visible -->
+          <div class="lang-strip" role="group" aria-label="Canonical languages">
+            <button type="button" class="crp-btn scope-chip" data-set="lang" data-val="en">ENGLISH (Primary)</button>
+            <button type="button" class="crp-btn scope-chip" data-set="lang" data-val="zh">中文 (Canonical)</button>
+          </div>
+
+          <!-- Country suggested languages populate here -->
+          <div id="langSuggested" class="lang-strip" role="group" aria-label="Suggested languages"></div>
+
+          <div class="lang-note">
+            EN + 中文 are canonical layers. All other languages are runtime overlays (fallback to EN if unavailable).
           </div>
         </div>
 
@@ -51,45 +132,26 @@
           </div>
         </div>
 
-        <!-- STYLE -->
-        <div>
-          <div class="scope-label">STYLE</div>
-          <div class="scope-row" role="group" aria-label="Style">
-            <button type="button" class="crp-btn scope-chip" data-set="style" data-val="formal">FORMAL</button>
-            <button type="button" class="crp-btn scope-chip" data-set="style" data-val="informal">INFORMAL</button>
-          </div>
-        </div>
-
-        <!-- TIME -->
-        <div>
-          <div class="scope-label">TIME</div>
-          <div class="scope-row" role="group" aria-label="Time">
-            <button type="button" class="crp-btn scope-chip" data-set="time" data-val="origin">ORIGIN</button>
-            <button type="button" class="crp-btn scope-chip" data-set="time" data-val="now">NOW</button>
-            <button type="button" class="crp-btn scope-chip" data-set="time" data-val="trajectory">TRAJECTORY</button>
-          </div>
-        </div>
-
       </div>
 
       <div class="scope-actions">
-        <button id="enter" type="button" class="crp-btn crp-btn-primary" style="min-width:240px;justify-content:center" data-i18n="index.enter">
+        <button id="enter" type="button" class="crp-btn crp-btn-primary" style="min-width:260px;justify-content:center" data-i18n="index.enter">
           ENTER
         </button>
 
-        <!-- Fallback link if JS is blocked -->
-        <a class="crp-btn" href="/home/?lang=en&depth=explore&style=formal&time=origin" role="button">
+        <!-- Fallback (no JS) -->
+        <a class="crp-btn" href="/home/?lang=en&depth=explore" role="button">
           Fallback (EN)
         </a>
       </div>
 
       <div class="scope-mini">
-        Canonical keys only: gd_lang · gd_depth · gd_style · gd_time
+        Canonical keys set here: <code>gd_lang</code> · <code>gd_depth</code> · (optional) <code>gd_country</code>
       </div>
 
       <footer class="crp-footer">
-        <small class="crp-footnote" data-i18n="index.footnote">Scope controls language, depth, style, and time.</small>
-        <div style="margin-top:8px;opacity:.65;font-size:12px">BUILD: PAGE_UNI_100</div>
+        <small class="crp-footnote" data-i18n="index.footnote">Scope controls language and depth.</small>
+        <div style="margin-top:8px;opacity:.65;font-size:12px">BUILD: INDEX_COUNTRY_1</div>
       </footer>
     </section>
   </main>
@@ -98,29 +160,25 @@
     (function () {
       "use strict";
 
-      // Canonical keys only
+      // Canonical keys only (plus optional country UX)
       var K_LANG  = "gd_lang";
       var K_DEPTH = "gd_depth";
-      var K_STYLE = "gd_style";
-      var K_TIME  = "gd_time";
+      var K_COUNTRY = "gd_country"; // optional, not a canonical state key
 
-      var allowLang  = { en: 1, zh: 1 };
+      var allowLang  = { en: 1, zh: 1 }; // structural canon; runtime overlays allowed but not enforced here
       var allowDepth = { explore: 1, learn: 1 };
-      var allowStyle = { formal: 1, informal: 1 };
-      var allowTime  = { origin: 1, now: 1, trajectory: 1 };
 
       function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
       function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
 
       // Defaults (English-first)
       var state = {
-        lang:  (allowLang[lsGet(K_LANG)] ? lsGet(K_LANG) : "en"),
+        lang:  (lsGet(K_LANG) ? lsGet(K_LANG) : "en"),
         depth: (allowDepth[lsGet(K_DEPTH)] ? lsGet(K_DEPTH) : "explore"),
-        style: (allowStyle[lsGet(K_STYLE)] ? lsGet(K_STYLE) : "formal"),
-        time:  (allowTime[lsGet(K_TIME)] ? lsGet(K_TIME) : "origin")
+        country: (lsGet(K_COUNTRY) || "")
       };
 
-      function applyActive() {
+      function setActive() {
         var buttons = document.querySelectorAll("button[data-set][data-val]");
         for (var i=0;i<buttons.length;i++){
           var b = buttons[i];
@@ -131,39 +189,177 @@
         }
       }
 
-      function setState(set, val){
-        if (set === "lang" && allowLang[val]) state.lang = val;
-        if (set === "depth" && allowDepth[val]) state.depth = val;
-        if (set === "style" && allowStyle[val]) state.style = val;
-        if (set === "time" && allowTime[val]) state.time = val;
-        applyActive();
+      function chooseLang(lang){
+        state.lang = lang;
+        lsSet(K_LANG, lang);
+        setActive();
       }
 
+      function chooseDepth(depth){
+        if (!allowDepth[depth]) return;
+        state.depth = depth;
+        lsSet(K_DEPTH, depth);
+        setActive();
+      }
+
+      function clearSuggested() {
+        var box = document.getElementById("langSuggested");
+        if (box) box.innerHTML = "";
+      }
+
+      function addSuggested(langCode, label) {
+        var box = document.getElementById("langSuggested");
+        if (!box) return;
+
+        // Do not duplicate canonical quick picks
+        if (langCode === "en" || langCode === "zh") return;
+
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "crp-btn scope-chip";
+        btn.setAttribute("data-set", "lang");
+        btn.setAttribute("data-val", langCode);
+        btn.textContent = label;
+
+        btn.addEventListener("click", function () {
+          // runtime overlay language allowed; stored in gd_lang as-is
+          state.lang = langCode;
+          lsSet(K_LANG, langCode);
+          setActive();
+        });
+
+        box.appendChild(btn);
+      }
+
+      // Minimal built-in mapping (works even if country_to_languages.json is absent)
+      var fallbackMap = {
+        "US": [{c:"en",l:"English"},{c:"es",l:"Español"}],
+        "CA": [{c:"en",l:"English"},{c:"fr-CA",l:"Français (Canada)"}],
+        "MX": [{c:"es",l:"Español"},{c:"en",l:"English"}],
+        "GB": [{c:"en",l:"English"}],
+        "FR": [{c:"fr",l:"Français"},{c:"en",l:"English"}],
+        "DE": [{c:"de",l:"Deutsch"},{c:"en",l:"English"}],
+        "ES": [{c:"es",l:"Español"},{c:"en",l:"English"}],
+        "BR": [{c:"pt-BR",l:"Português (Brasil)"},{c:"en",l:"English"}],
+        "IN": [{c:"hi",l:"हिन्दी"},{c:"en",l:"English"}],
+        "CN": [{c:"zh-Hans",l:"中文（简体）"},{c:"en",l:"English"}],
+        "TW": [{c:"zh-Hant",l:"中文（繁體）"},{c:"en",l:"English"}],
+        "HK": [{c:"zh-Hant-HK",l:"中文（香港）"},{c:"en",l:"English"}],
+        "JP": [{c:"ja",l:"日本語"},{c:"en",l:"English"}],
+        "KR": [{c:"ko",l:"한국어"},{c:"en",l:"English"}],
+        "VN": [{c:"vi",l:"Tiếng Việt"},{c:"en",l:"English"}],
+        "TH": [{c:"th",l:"ไทย"},{c:"en",l:"English"}],
+        "PH": [{c:"fil",l:"Filipino"},{c:"en",l:"English"}],
+        "ID": [{c:"id",l:"Bahasa Indonesia"},{c:"en",l:"English"}],
+        "AE": [{c:"ar",l:"العربية"},{c:"en",l:"English"}],
+        "SA": [{c:"ar",l:"العربية"},{c:"en",l:"English"}],
+        "IL": [{c:"he",l:"עברית"},{c:"en",l:"English"}],
+        "TR": [{c:"tr",l:"Türkçe"},{c:"en",l:"English"}],
+        "ZA": [{c:"en",l:"English"}],
+        "NG": [{c:"en",l:"English"}],
+        "EG": [{c:"ar",l:"العربية"},{c:"en",l:"English"}],
+        "AU": [{c:"en",l:"English"}],
+        "NZ": [{c:"en",l:"English"}]
+      };
+
+      // Attempt to fetch the full mapping (runtime), fallback to built-in
+      function loadCountryMap(cb) {
+        try {
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", "/assets/country_to_languages.json?v=1", true);
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) return;
+            if (xhr.status >= 200 && xhr.status < 300) {
+              try { cb(JSON.parse(xhr.responseText)); return; } catch(e) {}
+            }
+            cb(null);
+          };
+          xhr.send(null);
+        } catch (e) {
+          cb(null);
+        }
+      }
+
+      function renderCountryLanguages(country, map) {
+        clearSuggested();
+
+        var list = null;
+
+        // If runtime map present, expected format:
+        // { "US": [{"code":"en","label":"English"}, ...], ... }
+        if (map && map[country]) list = map[country];
+
+        // Fallback map format:
+        // { "US": [{c:"en",l:"English"}, ...] }
+        if (!list && fallbackMap[country]) {
+          list = fallbackMap[country].map(function(x){ return { code:x.c, label:x.l }; });
+        }
+
+        if (!list) return;
+
+        for (var i=0;i<list.length;i++){
+          var code = list[i].code;
+          var label = list[i].label || code;
+
+          // We treat EN + 中文 as canonical quick picks and keep them separate.
+          // Suggested list contains everything else.
+          addSuggested(code, label);
+        }
+      }
+
+      // Wire button clicks
       document.addEventListener("click", function (e) {
         var t = e.target;
         if (!t) return;
         if (t.matches && t.matches("button[data-set][data-val]")) {
-          setState(t.getAttribute("data-set"), t.getAttribute("data-val"));
+          var set = t.getAttribute("data-set");
+          var val = t.getAttribute("data-val");
+          if (set === "lang") {
+            // allow any lang code (runtime overlay), but keep EN/中文 as canonical quick picks
+            state.lang = val;
+            lsSet(K_LANG, val);
+            setActive();
+          }
+          if (set === "depth") chooseDepth(val);
         }
       });
 
+      // Country selector
+      var countryEl = document.getElementById("country");
+      if (countryEl) {
+        // restore prior
+        if (state.country) countryEl.value = state.country;
+
+        loadCountryMap(function(map){
+          if (state.country) renderCountryLanguages(state.country, map);
+
+          countryEl.addEventListener("change", function () {
+            state.country = countryEl.value || "";
+            lsSet(K_COUNTRY, state.country);
+
+            loadCountryMap(function(map2){
+              if (state.country) renderCountryLanguages(state.country, map2);
+              else clearSuggested();
+            });
+          });
+        });
+      }
+
+      // Enter
       var enter = document.getElementById("enter");
       if (enter) enter.addEventListener("click", function () {
         lsSet(K_LANG, state.lang);
         lsSet(K_DEPTH, state.depth);
-        lsSet(K_STYLE, state.style);
-        lsSet(K_TIME, state.time);
 
         var url =
           "/home/?lang=" + encodeURIComponent(state.lang) +
-          "&depth=" + encodeURIComponent(state.depth) +
-          "&style=" + encodeURIComponent(state.style) +
-          "&time=" + encodeURIComponent(state.time);
+          "&depth=" + encodeURIComponent(state.depth);
 
         window.location.href = url;
       });
 
-      applyActive();
+      // initial highlight
+      setActive();
     })();
   </script>
 </body>

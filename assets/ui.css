@@ -16,12 +16,15 @@ html, body {
   min-height: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #f2f2f2;
+
   background:
     radial-gradient(circle at 20% 20%, #7a2a14 0%, transparent 40%),
     radial-gradient(circle at 80% 60%, #3a0e0e 0%, transparent 45%),
     linear-gradient(180deg, #5b1e12 0%, #1a0505 100%);
   background-attachment: fixed;
 }
+
+* { box-sizing: border-box; }
 
 /* -----------------------------
    Shell
@@ -31,14 +34,18 @@ html, body {
   max-width: 1100px;
   margin: 0 auto;
   padding: 28px 20px 60px;
-  box-sizing: border-box;
 }
 
+/* IMPORTANT:
+   On mobile, center layouts often “trap” extra content visually.
+   We align to top so the page can scroll naturally when the card is tall.
+*/
 .crp-center {
   display: flex;
-  align-items: center;
+  align-items: flex-start;      /* was center */
   justify-content: center;
-  min-height: 80vh;
+  min-height: 100vh;
+  padding-top: 56px;
 }
 
 /* -----------------------------
@@ -52,11 +59,22 @@ html, body {
   background: rgba(0, 0, 0, 0.28);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 20px 60px rgba(0,0,0,.45);
+
+  /* CRITICAL: do not clip your added sections */
+  overflow: visible;            /* prevents “new content exists but not visible” */
+}
+
+@media (max-width: 520px) {
+  .crp-card {
+    padding: 22px;
+  }
 }
 
 /* -----------------------------
-   Typography
+   Header / Typography
    ----------------------------- */
+.crp-header { margin-bottom: 10px; }
+
 .crp-mark {
   font-size: 14px;
   letter-spacing: 2px;
@@ -66,14 +84,16 @@ html, body {
 
 .crp-title {
   margin: 0 0 10px;
-  font-size: 42px;
+  font-size: 44px;
   font-weight: 800;
+  line-height: 1.05;
 }
 
 .crp-subtitle {
-  margin: 0 0 24px;
+  margin: 0 0 18px;
   opacity: .85;
   font-size: 18px;
+  line-height: 1.35;
 }
 
 /* -----------------------------
@@ -86,28 +106,52 @@ html, body {
 }
 
 .crp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   padding: 12px 20px;
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,.25);
   background: rgba(0,0,0,.2);
   color: #fff;
   font-weight: 700;
+  text-decoration: none;
+
   cursor: pointer;
-  transition: background .12s ease, transform .08s ease;
+  transition: background .12s ease, transform .08s ease, border-color .12s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.crp-btn:hover {
-  background: rgba(0,0,0,.35);
-}
-
-.crp-btn:active {
-  transform: scale(.98);
-}
+.crp-btn:hover { background: rgba(0,0,0,.35); }
+.crp-btn:active { transform: scale(.98); }
 
 .crp-btn-primary {
   background: rgba(255,255,255,.12);
   border-color: rgba(255,255,255,.4);
 }
+
+.crp-btn:focus { outline: none; }
+.crp-btn:focus-visible { box-shadow: 0 0 0 3px rgba(255,255,255,.18); }
+
+/* -----------------------------
+   Divider / Footer
+   ----------------------------- */
+.crp-divider {
+  border: 0;
+  height: 1px;
+  margin: 18px 0;
+  background: rgba(255,255,255,.14);
+}
+
+.crp-footer {
+  margin-top: 18px;
+  opacity: .72;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.crp-footnote code { opacity: .95; }
 
 /* -----------------------------
    Chips (Time / Style)
@@ -120,22 +164,10 @@ html, body {
   color: #fff;
   cursor: pointer;
   font-weight: 600;
+  text-decoration: none;
 }
 
 .crp-chip[aria-pressed="true"] {
   background: rgba(255,255,255,.18);
   border-color: rgba(255,255,255,.5);
-}
-
-/* -----------------------------
-   Footer / Notes
-   ----------------------------- */
-.crp-footer {
-  margin-top: 24px;
-  opacity: .7;
-  font-size: 14px;
-}
-
-.crp-footnote code {
-  opacity: .9;
 }

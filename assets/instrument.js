@@ -1,153 +1,106 @@
-/* ============================================================
-   CRP INSTRUMENT (STATE NORMALIZER + MINIMAL GATING) — SINGLE OWNER
-   FILE: /assets/instrument.js
-   OWNERSHIP:
-   - Canonical keys only: gd_lang, gd_depth, gd_time, gd_style
-   - Normalizes from query params to localStorage
-   - Minimal gating only (deep pages require valid gd_lang)
-   - NO UI logic, NO timers, NO CSS, NO modal logic
-   ============================================================ */
+/* =====================================================
+   TNT FILE: /assets/instrument.js
+   PURPOSE: FIX THE WEBSITE NOW
+   RESULT:
+     - Unifies state keys (gd_lang/gd_depth) everywhere
+     - Migrates legacy keys (crp_lang/crp_depth) automatically
+     - Normalizes casing (EN->en, EXPLORE->explore, etc.)
+     - Optional minimal hub gating (/, /door/, /home/, /explore/)
+   COPY/PASTE THIS ENTIRE FILE AS-IS
+===================================================== */
 
-(function () {
-  "use strict";
+(() => {
+  // ===== Canonical keys (ONLY THESE) =====
+  const K_LANG  = "gd_lang";    // "en" | "zh"
+  const K_DEPTH = "gd_depth";   // "explore" | "learn"
 
-  // ---------- Canonical keys ----------
-  var K_LANG  = "gd_lang";
-  var K_DEPTH = "gd_depth";
-  var K_TIME  = "gd_time";
-  var K_STYLE = "gd_style";
+  // ===== Legacy keys (auto-migrate, then ignore) =====
+  const K_LANG_OLD  = "crp_lang";
+  const K_DEPTH_OLD = "crp_depth";
 
-  // ---------- Allowed values ----------
-  var ALLOW_LANG  = { en: true, zh: true };
-  var ALLOW_DEPTH = { explore: true, learn: true };
-  var ALLOW_TIME  = { origin: true, now: true, trajectory: true };
-  var ALLOW_STYLE = { formal: true, informal: true };
+  const VALID_LANG  = new Set(["en","zh"]);
+  const VALID_DEPTH = new Set(["explore","learn"]);
 
-  // ---------- Helpers ----------
-  function qp(name) {
-    try { return new URLSearchParams(window.location.search).get(name); }
-    catch (e) { return null; }
-  }
+  const safeGet = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const safeSet = (k,v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+  const safeDel = (k) => { try { localStorage.removeItem(k); } catch (e) {} };
 
-  function lsGet(k) {
-    try { return localStorage.getItem(k); } catch (e) { return null; }
-  }
+  const norm = (v) => String(v ?? "").trim().toLowerCase();
 
-  function lsSet(k, v) {
-    try { localStorage.setItem(k, v); } catch (e) {}
-  }
-
-  function lsDel(k) {
-    try { localStorage.removeItem(k); } catch (e) {}
-  }
-
-  // ---------- Drift cleanup (only known bad namespaces) ----------
-  function cleanupDrift() {
-    var driftPrefixes = ["crp_", "CRP_"];
-    var driftExact = ["lang", "depth", "time", "style", "language", "locale"];
-
-    try {
-      for (var i = localStorage.length - 1; i >= 0; i--) {
-        var key = localStorage.key(i);
-        if (!key) continue;
-
-        // Keep canonical keys
-        if (key === K_LANG || key === K_DEPTH || key === K_TIME || key === K_STYLE) continue;
-
-        // Remove known drift prefixes
-        for (var p = 0; p < driftPrefixes.length; p++) {
-          if (key.indexOf(driftPrefixes[p]) === 0) {
-            localStorage.removeItem(key);
-            key = null;
-            break;
-          }
-        }
-        if (!key) continue;
-
-        // Remove known drift exact keys
-        for (var d = 0; d < driftExact.length; d++) {
-          if (key === driftExact[d]) {
-            localStorage.removeItem(key);
-            break;
-          }
-        }
-      }
-    } catch (e) {}
-  }
-
-  // ---------- Normalize state ----------
-  function normalize() {
-    // Query wins; fall back to localStorage
-    var lang  = qp("lang")  || lsGet(K_LANG);
-    var depth = qp("depth") || lsGet(K_DEPTH);
-    var time  = qp("time")  || lsGet(K_TIME);
-    var style = qp("style") || lsGet(K_STYLE);
-
-    // Validate + default
-    if (!ALLOW_LANG[lang]) lang = null;
-    if (!ALLOW_DEPTH[depth]) depth = "explore";
-    if (!ALLOW_TIME[time]) time = "origin";
-    if (!ALLOW_STYLE[style]) style = "formal";
-
-    // Persist normalized values (only canonical)
-    if (lang) lsSet(K_LANG, lang);
-    lsSet(K_DEPTH, depth);
-    lsSet(K_TIME, time);
-    lsSet(K_STYLE, style);
-
-    return { lang: lang, depth: depth, time: time, style: style };
-  }
-
-  // ---------- Minimal gating ----------
-  // Do NOT gate:
-  // - Index (/)
-  // - Terminal (/door/) because it has its own Back-to-Start UI
-  // Gate deep pages if gd_lang missing/invalid:
-  // - /home/, /explore/, /links/, /about/, /products/, /laws/
-  function gate(state) {
-    var path = (window.location && window.location.pathname) ? window.location.pathname : "/";
-
-    var isIndex = (path === "/" || path === "/index.html");
-    var isDoor = (path.indexOf("/door") === 0);
-
-    if (isIndex || isDoor) return;
-
-    var deepPrefixes = ["/home", "/explore", "/links", "/about", "/products", "/laws"];
-    var isDeep = false;
-    for (var i = 0; i < deepPrefixes.length; i++) {
-      if (path.indexOf(deepPrefixes[i]) === 0) { isDeep = true; break; }
-    }
-    if (!isDeep) return;
-
-    if (!state.lang || !ALLOW_LANG[state.lang]) {
-      window.location.replace("/");
-    }
-  }
-
-  // ---------- Run ----------
-  cleanupDrift();
-  var state = normalize();
-  gate(state);
-
-  // Optional non-authoritative debug surface
-  window.CRP_INSTRUMENT = {
-    getState: function () {
-      return {
-        gd_lang: lsGet(K_LANG),
-        gd_depth: lsGet(K_DEPTH),
-        gd_time: lsGet(K_TIME),
-        gd_style: lsGet(K_STYLE)
-      };
-    },
-    reset: function () {
-      lsDel(K_LANG); lsDel(K_DEPTH); lsDel(K_TIME); lsDel(K_STYLE);
-      cleanupDrift();
-    },
-    allowed: {
-      gd_lang: Object.keys(ALLOW_LANG),
-      gd_depth: Object.keys(ALLOW_DEPTH),
-      gd_time: Object.keys(ALLOW_TIME),
-      gd_style: Object.keys(ALLOW_STYLE)
-    }
+  const normLang = (v) => {
+    v = norm(v);
+    if (v === "en" || v === "english") return "en";
+    if (v === "zh" || v === "cn" || v === "chinese" || v === "中文") return "zh";
+    if (v === "zh-cn" || v === "zh-hans") return "zh";
+    // handle bad casing
+    if (v === "en-us") return "en";
+    return VALID_LANG.has(v) ? v : null;
   };
+
+  const normDepth = (v) => {
+    v = norm(v);
+    if (v === "explore") return "explore";
+    if (v === "learn") return "learn";
+    // legacy synonyms
+    if (v === "surface") return "explore";
+    if (v === "deep") return "learn";
+    if (v === "shop") return "explore";
+    return VALID_DEPTH.has(v) ? v : null;
+  };
+
+  // ===== 1) Querystring override (wins if present) =====
+  const qs = new URLSearchParams(location.search || "");
+  const qLang  = normLang(qs.get("lang"));
+  const qDepth = normDepth(qs.get("depth"));
+
+  if (qLang)  safeSet(K_LANG, qLang);
+  if (qDepth) safeSet(K_DEPTH, qDepth);
+
+  // ===== 2) Migrate legacy -> canonical (if canonical missing) =====
+  const curLang = normLang(safeGet(K_LANG));
+  const curDepth = normDepth(safeGet(K_DEPTH));
+
+  const oldLang = normLang(safeGet(K_LANG_OLD));
+  const oldDepth = normDepth(safeGet(K_DEPTH_OLD));
+
+  if (!curLang && oldLang) safeSet(K_LANG, oldLang);
+  if (!curDepth && oldDepth) safeSet(K_DEPTH, oldDepth);
+
+  // ===== 3) Normalize + delete legacy keys =====
+  const finalLang = normLang(safeGet(K_LANG));
+  const finalDepth = normDepth(safeGet(K_DEPTH));
+
+  if (finalLang) safeSet(K_LANG, finalLang); else safeDel(K_LANG);
+  if (finalDepth) safeSet(K_DEPTH, finalDepth); else safeDel(K_DEPTH);
+
+  safeDel(K_LANG_OLD);
+  safeDel(K_DEPTH_OLD);
+
+  // ===== 4) Minimal hub gating (prevents broken states) =====
+  const path = (location.pathname || "/").toLowerCase();
+  const normPath = path.endsWith("/") ? path : (path + "/");
+
+  const IS_INDEX   = (normPath === "/");
+  const IS_DOOR    = (normPath === "/door/");
+  const IS_HOME    = (normPath === "/home/");
+  const IS_EXPLORE = (normPath === "/explore/");
+
+  if (IS_INDEX) return;
+
+  const L = normLang(safeGet(K_LANG));
+  const D = normDepth(safeGet(K_DEPTH));
+
+  if (IS_DOOR) {
+    if (!L) location.replace("/");
+    return;
+  }
+
+  if (IS_HOME || IS_EXPLORE) {
+    if (!L) { location.replace("/"); return; }
+    if (!D) { location.replace("/door/"); return; }
+    return;
+  }
+
+  // Leaf pages: no enforcement
 })();
+```0

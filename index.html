@@ -7,12 +7,11 @@
   <title>CRP</title>
 
   <!-- CSS ORDER (CANON): ui.css FIRST, branch.css SECOND -->
-  <!-- CACHE-BUST: forces fresh assets on mobile + GitHub Pages -->
-  <link rel="stylesheet" href="/assets/ui.css?v=CRP_20260221b" />
-  <link rel="stylesheet" href="/assets/branch.css?v=CRP_20260221b" />
+  <link rel="stylesheet" href="/assets/ui.css?v=CRP_20260221c" />
+  <link rel="stylesheet" href="/assets/branch.css?v=CRP_20260221c" />
 
   <!-- INSTRUMENT -->
-  <script defer src="/assets/instrument.js?v=CRP_20260221b"></script>
+  <script defer src="/assets/instrument.js?v=CRP_20260221c"></script>
 </head>
 
 <body>
@@ -22,36 +21,71 @@
         <div class="crp-mark" aria-hidden="true">CRP</div>
         <h1 class="crp-title">Select Language</h1>
         <p class="crp-subtitle">Choose one to continue.</p>
-
-        <!-- DEPLOY-PROOF BANNER (if you do not see this exact ID, you are NOT editing the live file) -->
-        <p class="crp-subtitle" style="margin-top:12px;opacity:.9">
-          BUILD ID: <strong>CRP_20260221b</strong>
-        </p>
       </header>
 
+      <!-- PRIMARY ACTIONS
+           IMPORTANT: These are <a> links (guaranteed navigation) styled as buttons.
+           JS also sets localStorage, but navigation works even if JS fails.
+      -->
       <div class="crp-actions" role="group" aria-label="Language options">
-        <button id="btn-en" class="crp-btn crp-btn-primary" type="button">ENGLISH</button>
-        <button id="btn-zh" class="crp-btn" type="button">中文</button>
+        <a id="link-en" class="crp-btn crp-btn-primary" href="/door/?lang=en" role="button" aria-label="English">
+          ENGLISH
+        </a>
+        <a id="link-zh" class="crp-btn" href="/door/?lang=zh" role="button" aria-label="中文">
+          中文
+        </a>
       </div>
+
+      <section aria-label="What happens next" style="margin-top:18px">
+        <p class="crp-subtitle" style="margin:0 0 10px;opacity:.9;font-size:16px">
+          Next step: this sets <code>gd_lang</code> and routes to <strong>Terminal</strong>.
+        </p>
+        <ul style="margin:0;padding-left:18px;opacity:.85;line-height:1.5">
+          <li>Language is stored as <code>gd_lang</code> = <code>en</code> or <code>zh</code>.</li>
+          <li>Depth selection happens later (Explore vs Learn).</li>
+          <li>No other keys are written on this page.</li>
+        </ul>
+      </section>
 
       <hr class="crp-divider" />
 
-      <!-- SELF-DIAG (no speculation): quick links to confirm what the live site is serving -->
-      <section aria-label="Diagnostics" style="margin-top:6px">
-        <p class="crp-subtitle" style="margin:0 0 10px;opacity:.85;font-size:16px">
-          Diagnostics (tap to confirm live assets):
+      <!-- STATUS + DIAGNOSTICS (FULL DETAIL, NO GUESSING) -->
+      <section aria-label="Status and diagnostics">
+        <p class="crp-subtitle" style="margin:0 0 10px;opacity:.9;font-size:16px">
+          Status
         </p>
-        <div class="crp-actions" style="gap:10px">
-          <a class="crp-btn" href="/assets/ui.css?v=CRP_20260221b">Open ui.css</a>
-          <a class="crp-btn" href="/assets/branch.css?v=CRP_20260221b">Open branch.css</a>
-          <a class="crp-btn" href="/assets/instrument.js?v=CRP_20260221b">Open instrument.js</a>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <div style="opacity:.85">
+            BUILD ID: <strong>CRP_20260221c</strong>
+          </div>
+          <button id="btn-clear" class="crp-btn" type="button" aria-label="Clear local state">
+            Clear state
+          </button>
+          <a class="crp-btn" href="/door/?lang=en" role="button" aria-label="Go to Terminal (English)">
+            Go (EN)
+          </a>
+          <a class="crp-btn" href="/door/?lang=zh" role="button" aria-label="Go to Terminal (中文)">
+            Go (中文)
+          </a>
         </div>
+
+        <details style="margin-top:14px">
+          <summary style="cursor:pointer;opacity:.9;font-weight:700">Diagnostics</summary>
+          <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:10px">
+            <a class="crp-btn" href="/assets/ui.css?v=CRP_20260221c" role="button">Open ui.css</a>
+            <a class="crp-btn" href="/assets/branch.css?v=CRP_20260221c" role="button">Open branch.css</a>
+            <a class="crp-btn" href="/assets/instrument.js?v=CRP_20260221c" role="button">Open instrument.js</a>
+          </div>
+          <p style="margin:10px 0 0;opacity:.75;line-height:1.5">
+            If the buttons ever “do nothing,” use the Go buttons above (pure links). This removes all JS dependence.
+          </p>
+        </details>
       </section>
 
       <footer class="crp-footer">
         <small class="crp-footnote">
-          Language sets <code>gd_lang</code> and routes to <code>/door/?lang=…</code>.
-          If you do not see <strong>CRP_20260221b</strong>, GitHub Pages is serving a different <code>/index.html</code>.
+          Canonical keys only: <code>gd_lang</code>, <code>gd_depth</code>, <code>gd_time</code>, <code>gd_style</code>.
         </small>
       </footer>
     </section>
@@ -61,18 +95,30 @@
     (function () {
       "use strict";
 
-      var KEY_LANG = "gd_lang";
+      // INDEX OWNER: gd_lang only.
+      var K_LANG  = "gd_lang";
+      var K_DEPTH = "gd_depth";
+      var K_TIME  = "gd_time";
+      var K_STYLE = "gd_style";
 
-      function setLangAndGo(lang) {
-        try { localStorage.setItem(KEY_LANG, lang); } catch (e) {}
-        window.location.href = "/door/?lang=" + encodeURIComponent(lang);
-      }
+      function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+      function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
 
-      var en = document.getElementById("btn-en");
-      var zh = document.getElementById("btn-zh");
+      // Set lang on link click (navigation is handled by href regardless).
+      var en = document.getElementById("link-en");
+      var zh = document.getElementById("link-zh");
 
-      if (en) en.addEventListener("click", function () { setLangAndGo("en"); });
-      if (zh) zh.addEventListener("click", function () { setLangAndGo("zh"); });
+      if (en) en.addEventListener("click", function () { lsSet(K_LANG, "en"); });
+      if (zh) zh.addEventListener("click", function () { lsSet(K_LANG, "zh"); });
+
+      // Clear state button (safe; does not touch non-canonical keys)
+      var clear = document.getElementById("btn-clear");
+      if (clear) clear.addEventListener("click", function () {
+        lsDel(K_LANG); lsDel(K_DEPTH); lsDel(K_TIME); lsDel(K_STYLE);
+        // visual confirmation without alerts
+        clear.textContent = "Cleared";
+        setTimeout(function(){ clear.textContent = "Clear state"; }, 700);
+      });
     })();
   </script>
 </body>

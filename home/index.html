@@ -1,390 +1,375 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>GEODIAMETRICS — HOME</title>
-<link rel="stylesheet" href="/assets/ui.css" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>HOME · Geodiametrics</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instrument.js"></script>
+
 <style>
 
-/* ===========================
-   LAYOUT FOUNDATION
-=========================== */
+/* ===== BACKGROUND ===== */
 
 body{
   margin:0;
-  font-family: system-ui, -apple-system, sans-serif;
-  background: radial-gradient(circle at center, #b30000 0%, #7a0000 60%, #4d0000 100%);
-  color:#fff;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255,215,120,.05), transparent 60%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 1px, transparent 1px 90px),
+    linear-gradient(180deg, #a80000 0%, #7b0000 60%, #5a0000 100%);
   overflow-x:hidden;
 }
 
-.page{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding-top:110px;
-}
+/* ===== TOP CONTROLS ===== */
 
-/* ===========================
-   TOP CONTROLS
-=========================== */
-
-.top-bar{
+.top-left,.top-right{
   position:fixed;
   top:18px;
-  left:18px;
-  right:18px;
-  display:flex;
-  justify-content:space-between;
-  z-index:100;
-}
-
-.left-controls,
-.right-controls{
+  z-index:90;
   display:flex;
   gap:12px;
 }
 
-.control-btn{
-  background:#0a0f18;
-  color:#fff;
-  border:none;
-  padding:12px 18px;
-  border-radius:14px;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:0 6px 18px rgba(0,0,0,.6);
-}
+.top-left{left:18px;}
+.top-right{right:18px;flex-direction:column;align-items:flex-end;}
 
-.control-btn.active{
-  outline:2px solid gold;
-}
-
-/* ===========================
-   TIME ROW
-=========================== */
-
-.time-row{
-  margin-top:20px;
+.pillbar{
   display:flex;
-  gap:14px;
+  gap:10px;
 }
 
-.time-btn{
-  background:#0a0f18;
-  color:#fff;
-  border:none;
-  padding:10px 20px;
-  border-radius:12px;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:0 6px 18px rgba(0,0,0,.6);
+/* ===== GEM DIAMONDS ===== */
+
+:root{ --R: 120px; }
+
+.center-stage{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(520px,90vw);
+  height:min(520px,90vw);
+  z-index:40;
 }
 
-.time-btn.active{
-  outline:2px solid gold;
-}
+/* OBISIDIAN OPAL GEM */
 
-/* ===========================
-   DIAMOND CORE
-=========================== */
-
-.diamond-wrap{
-  margin-top:60px;
-  position:relative;
-  width:340px;
-  height:340px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.diamond{
+.d-diamond{
+  width:155px;
+  height:155px;
   position:absolute;
-  width:150px;
-  height:150px;
-  background:linear-gradient(145deg,#0c1420,#05080f);
-  border-radius:26px;
-  transform:rotate(45deg);
+  left:50%;
+  top:50%;
+  transform-origin:center;
+  border-radius:22px;
+  cursor:pointer;
+
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,.15), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
+    linear-gradient(160deg, #0a0f18 0%, #05070c 40%, #0b1424 100%);
+
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.8),
+    inset 0 2px 0 rgba(255,255,255,.2),
+    inset 0 -25px 35px rgba(0,0,0,.6);
+
+  border:1px solid rgba(255,255,255,.08);
+
+  transition: all 260ms ease;
+}
+
+/* FRACTAL SHIMMER */
+
+.d-diamond::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      rgba(255,255,255,.04) 0deg 5deg,
+      transparent 5deg 15deg
+    );
+  mix-blend-mode:overlay;
+  opacity:.3;
+  pointer-events:none;
+}
+
+.d-diamond:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.04);
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.9),
+    0 0 18px rgba(212,175,55,.3),
+    inset 0 2px 0 rgba(255,255,255,.3);
+}
+
+.d-diamond.active{
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.9),
+    0 0 30px rgba(212,175,55,.55),
+    inset 0 2px 0 rgba(255,255,255,.3);
+}
+
+/* TEXT INSIDE */
+
+.d-inner{
+  width:100%;
+  height:100%;
+  transform:rotate(-45deg);
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
-  cursor:pointer;
-  box-shadow:
-    0 20px 45px rgba(0,0,0,.8),
-    inset -8px -8px 16px rgba(0,0,0,.6),
-    inset 8px 8px 16px rgba(255,255,255,.03);
-  transition:.25s ease;
+  text-align:center;
+  gap:6px;
+  pointer-events:none;
 }
 
-.diamond span{
-  transform:rotate(-45deg);
-  font-weight:700;
-  letter-spacing:1px;
+.d-title{
+  font-weight:900;
+  letter-spacing:.5px;
+  font-size:17px;
+  color:#f4f4f4;
 }
 
-.diamond:hover{
-  box-shadow:
-    0 0 40px rgba(255,215,0,.5),
-    0 20px 45px rgba(0,0,0,.8);
+.d-text{
+  font-size:13px;
+  opacity:.85;
+  max-width:15em;
+  line-height:1.4;
 }
 
-/* Compass Positions */
+/* PLACEMENT */
 
-.north{ top:0; }
-.south{ bottom:0; }
-.west{ left:0; }
-.east{ right:0; }
+.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
+.d-e{ transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg); }
+.d-s{ transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg); }
+.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1),0) rotate(45deg); }
 
-/* ===========================
-   BOTTOM NAV
-=========================== */
+/* CENTER CORE */
 
-.bottom-nav{
-  margin-top:70px;
-  background:rgba(0,0,0,.35);
-  backdrop-filter:blur(6px);
-  padding:16px 24px;
-  border-radius:26px;
+.d-core{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:60px;
+  height:60px;
+  border-radius:18px;
+  background:linear-gradient(145deg,#111,#000);
+  display:grid;
+  place-items:center;
+  box-shadow:0 0 20px rgba(212,175,55,.25);
+  font-weight:900;
+}
+
+/* BOTTOM DOCK */
+
+.bottom-dock{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
   display:flex;
-  gap:16px;
-  flex-wrap:wrap;
-  justify-content:center;
+  gap:12px;
+  padding:10px 16px;
+  border-radius:999px;
+  background:rgba(0,0,0,.25);
+  backdrop-filter:blur(8px);
+  z-index:90;
 }
 
-.nav-btn{
-  background:#0a0f18;
-  color:#fff;
-  border:none;
-  padding:12px 22px;
-  border-radius:16px;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:0 6px 18px rgba(0,0,0,.6);
-}
+/* BULLETIN */
 
-.nav-btn.active{
-  outline:2px solid gold;
-}
-
-/* ===========================
-   MODAL
-=========================== */
-
-.modal{
+.backdrop{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,.65);
   backdrop-filter:blur(6px);
   display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:200;
+  z-index:110;
 }
+.backdrop.show{display:block;}
 
-.modal-card{
-  background:#0b111a;
-  padding:30px;
-  border-radius:24px;
-  width:80%;
-  max-width:420px;
-  box-shadow:0 20px 60px rgba(0,0,0,.8);
+.bulletin{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(620px,92vw);
+  background:linear-gradient(160deg,#0c1118,#070a0f);
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 40px 120px rgba(0,0,0,.9);
+  display:none;
+  z-index:120;
 }
+.bulletin.show{display:block;}
 
-.modal-card h2{
-  margin-top:0;
-}
-
-.modal-actions{
-  margin-top:24px;
+.bulletin-head{
   display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.bulletin-body{
+  margin-top:14px;
+  line-height:1.5;
+  opacity:.9;
+  text-align:center;
+}
+
+.bulletin-actions{
+  display:flex;
+  justify-content:center;
   gap:12px;
-  flex-wrap:wrap;
-}
-
-.modal button{
-  flex:1;
-}
-
-/* ===========================
-   RESPONSIVE
-=========================== */
-
-@media(max-width:480px){
-  .diamond-wrap{
-    width:280px;
-    height:280px;
-  }
-  .diamond{
-    width:120px;
-    height:120px;
-  }
+  margin-top:16px;
 }
 
 </style>
 </head>
+
 <body>
 
-<div class="top-bar">
-  <div class="left-controls">
-    <button class="control-btn">EXIT</button>
-    <button class="control-btn">LANGUAGE</button>
-  </div>
+<div class="top-left">
+  <a class="crp-btn" href="/door/">EXIT</a>
+  <a class="crp-btn" href="/">LANGUAGE</a>
+</div>
 
-  <div class="right-controls">
-    <button id="styleBtn" class="control-btn active">STYLE: INFORMAL</button>
+<div class="top-right">
+  <div class="pillbar">
+    <button id="styleToggle" class="crp-chip">STYLE: FORMAL</button>
+  </div>
+  <div class="pillbar">
+    <button class="crp-chip tbtn2" data-time="origin">ORIGIN</button>
+    <button class="crp-chip tbtn2" data-time="now">NOW</button>
+    <button class="crp-chip tbtn2" data-time="trajectory">POST</button>
   </div>
 </div>
 
-<div class="page">
+<div class="center-stage">
 
-  <div class="time-row">
-    <button class="time-btn active" data-time="origin">ORIGIN</button>
-    <button class="time-btn" data-time="now">NOW</button>
-    <button class="time-btn" data-time="post">POST</button>
-  </div>
-
-  <div class="diamond-wrap">
-    <div class="diamond north" data-dir="north"><span>NORTH</span></div>
-    <div class="diamond south" data-dir="south"><span>SOUTH</span></div>
-    <div class="diamond west" data-dir="west"><span>WEST</span></div>
-    <div class="diamond east" data-dir="east"><span>EAST</span></div>
-  </div>
-
-  <div class="bottom-nav">
-    <button class="nav-btn">LINKS</button>
-    <button class="nav-btn active">HOME</button>
-    <button class="nav-btn">PRODUCTS</button>
-    <button class="nav-btn">LAWS</button>
-    <button class="nav-btn">GAUGES</button>
-  </div>
-
-</div>
-
-<!-- Modal -->
-<div class="modal" id="modal">
-  <div class="modal-card">
-    <h2 id="modalTitle"></h2>
-    <p id="modalText"></p>
-
-    <div class="modal-actions">
-      <button class="nav-btn" onclick="closeModal()">RETURN</button>
-      <button class="nav-btn">JUMP LINKS</button>
-      <button class="nav-btn">JUMP PRODUCTS</button>
+  <div id="north" class="d-diamond d-n">
+    <div class="d-inner">
+      <div class="d-title">NORTH</div>
+      <div class="d-text" id="northText"></div>
     </div>
+  </div>
+
+  <div id="east" class="d-diamond d-e">
+    <div class="d-inner">
+      <div class="d-title">EAST</div>
+      <div class="d-text" id="eastText"></div>
+    </div>
+  </div>
+
+  <div id="south" class="d-diamond d-s">
+    <div class="d-inner">
+      <div class="d-title">SOUTH</div>
+      <div class="d-text" id="southText"></div>
+    </div>
+  </div>
+
+  <div id="west" class="d-diamond d-w">
+    <div class="d-inner">
+      <div class="d-title">WEST</div>
+      <div class="d-text" id="westText"></div>
+    </div>
+  </div>
+
+  <div class="d-core">◆</div>
+</div>
+
+<nav class="bottom-dock">
+  <a class="crp-btn" href="/links/">LINKS</a>
+  <a class="crp-btn crp-btn-primary" href="/home/">HOME</a>
+  <a class="crp-btn" href="/products/">PRODUCTS</a>
+  <a class="crp-btn" href="/laws/">LAWS</a>
+  <a class="crp-btn" href="/gauges/">GAUGES</a>
+</nav>
+
+<div id="bd" class="backdrop"></div>
+
+<div id="bulletin" class="bulletin">
+  <div class="bulletin-head">
+    <strong id="bulTitle">NORTH</strong>
+    <button id="bulClose">✕</button>
+  </div>
+  <div id="bulBody" class="bulletin-body"></div>
+  <div class="bulletin-actions">
+    <button class="crp-btn" id="bulReturn">RETURN</button>
+    <a class="crp-btn" href="/links/">JUMP LINKS</a>
+    <a class="crp-btn" href="/products/">JUMP PRODUCTS</a>
   </div>
 </div>
 
 <script>
-
-/* ===========================
-   STATE
-=========================== */
-
-let style = "informal";
-let time = "origin";
-
-/* ===========================
-   STYLE TOGGLE
-=========================== */
-
-document.getElementById("styleBtn").onclick = () => {
-  style = style === "informal" ? "formal" : "informal";
-  document.getElementById("styleBtn").innerText =
-    "STYLE: " + style.toUpperCase();
+const content={
+  north:{formal:{origin:"North defines invariant structure.",now:"North stabilizes position.",trajectory:"North preserves long-term coherence."},
+         informal:{origin:"North is your anchor.",now:"North keeps you steady."}},
+  east:{formal:{origin:"East maps execution pathways.",now:"East expresses flow.",trajectory:"East scales forward."},
+        informal:{origin:"East is how you move.",now:"East is doing."}},
+  south:{formal:{origin:"South defines pressure.",now:"South applies constraint.",trajectory:"South compounds momentum."},
+         informal:{origin:"South is where force happens.",now:"South pushes."}},
+  west:{formal:{origin:"West governs containment.",now:"West enforces edge.",trajectory:"West protects integrity."},
+        informal:{origin:"West keeps things tight.",now:"West guards the edge."}}
 };
 
-/* ===========================
-   TIME SWITCH
-=========================== */
+let style="formal";
+let time="now";
+let active=null;
 
-document.querySelectorAll(".time-btn").forEach(btn=>{
-  btn.onclick = ()=>{
-    document.querySelectorAll(".time-btn").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    time = btn.dataset.time;
+function render(){
+  northText.textContent=content.north[style][time]||"";
+  eastText.textContent=content.east[style][time]||"";
+  southText.textContent=content.south[style][time]||"";
+  westText.textContent=content.west[style][time]||"";
+}
+
+styleToggle.onclick=()=>{
+  style=(style==="formal")?"informal":"formal";
+  styleToggle.textContent="STYLE: "+style.toUpperCase();
+  render();
+};
+
+document.querySelectorAll(".tbtn2").forEach(btn=>{
+  btn.onclick=()=>{
+    const t=btn.dataset.time;
+    if(t==="trajectory"&&style==="informal")style="formal";
+    time=t;
+    render();
   };
 });
 
-/* ===========================
-   DIAMOND CLICK
-=========================== */
+function open(dir){
+  active=dir;
+  bulTitle.textContent=dir.toUpperCase();
+  bulBody.textContent=content[dir][style][time]||"";
+  bd.classList.add("show");
+  bulletin.classList.add("show");
+  document.getElementById(dir).classList.add("active");
+}
 
-document.querySelectorAll(".diamond").forEach(d=>{
-  d.onclick = ()=>{
-    openModal(d.dataset.dir);
-  };
+function close(){
+  bd.classList.remove("show");
+  bulletin.classList.remove("show");
+  if(active)document.getElementById(active).classList.remove("active");
+}
+
+bd.onclick=close;
+bulClose.onclick=close;
+bulReturn.onclick=close;
+
+["north","east","south","west"].forEach(id=>{
+  document.getElementById(id).onclick=()=>open(id);
 });
 
-function openModal(dir){
-  const modal = document.getElementById("modal");
-  const title = document.getElementById("modalTitle");
-  const text = document.getElementById("modalText");
-
-  title.innerText = dir.toUpperCase();
-
-  const content = {
-    north:{
-      informal:{
-        origin:"North anchors beginnings.",
-        now:"North stabilizes direction.",
-        post:"North preserves long-term coherence."
-      },
-      formal:{
-        origin:"North defines invariant structure.",
-        now:"North maintains system alignment.",
-        post:"North preserves structural continuity."
-      }
-    },
-    south:{
-      informal:{
-        origin:"South begins pressure.",
-        now:"South pushes force.",
-        post:"South compounds momentum."
-      },
-      formal:{
-        origin:"South initiates convergence.",
-        now:"South applies systemic pressure.",
-        post:"South amplifies directional force."
-      }
-    },
-    east:{
-      informal:{
-        origin:"East starts motion.",
-        now:"East executes action.",
-        post:"East scales forward."
-      },
-      formal:{
-        origin:"East maps execution pathways.",
-        now:"East drives operational throughput.",
-        post:"East accelerates expansion."
-      }
-    },
-    west:{
-      informal:{
-        origin:"West forms boundaries.",
-        now:"West guards the edge.",
-        post:"West tightens control."
-      },
-      formal:{
-        origin:"West defines containment.",
-        now:"West enforces constraint.",
-        post:"West governs system limits."
-      }
-    }
-  };
-
-  text.innerText = content[dir][style][time];
-
-  modal.style.display="flex";
-}
-
-function closeModal(){
-  document.getElementById("modal").style.display="none";
-}
-
+render();
 </script>
 
 </body>

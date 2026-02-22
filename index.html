@@ -7,11 +7,10 @@
   <title>CRP</title>
 
   <!-- CSS ORDER (CANON): ui.css FIRST, branch.css SECOND -->
-  <link rel="stylesheet" href="/assets/ui.css?v=CRP_RB1" />
-  <link rel="stylesheet" href="/assets/branch.css?v=CRP_RB1" />
-
-  <!-- INSTRUMENT (safe; Index does not depend on JS) -->
-  <script defer src="/assets/instrument.js?v=CRP_RB1"></script>
+  <!-- CACHE-BUST: forces the browser + Pages CDN to fetch fresh assets -->
+  <link rel="stylesheet" href="/assets/ui.css?v=CRP_UI_FIRST_1008A" />
+  <link rel="stylesheet" href="/assets/branch.css?v=CRP_UI_FIRST_1008A" />
+  <script defer src="/assets/instrument.js?v=CRP_UI_FIRST_1008A"></script>
 </head>
 
 <body>
@@ -21,48 +20,37 @@
         <div class="crp-mark" aria-hidden="true">CRP</div>
         <h1 class="crp-title">Select Language</h1>
         <p class="crp-subtitle">Choose one to continue.</p>
+
+        <!-- DEPLOY-PROOF MARKER: if you do not see this exact line, the live site is not updated -->
+        <p class="crp-subtitle" style="margin-top:10px;opacity:.9;font-size:16px">
+          BUILD ID: <strong>CRP_UI_FIRST_1008A</strong>
+        </p>
       </header>
 
-      <!-- HARD LINKS: navigation works even if all JS fails -->
+      <!-- HARD LINKS: navigation works even if JS is broken -->
       <div class="crp-actions" role="group" aria-label="Language options">
-        <a id="go-en" class="crp-btn crp-btn-primary" href="/door/?lang=en" role="button" aria-label="English">
-          ENGLISH
-        </a>
-        <a id="go-zh" class="crp-btn" href="/door/?lang=zh" role="button" aria-label="中文">
-          中文
-        </a>
+        <a class="crp-btn crp-btn-primary" href="/door/?lang=en" role="button">ENGLISH</a>
+        <a class="crp-btn" href="/door/?lang=zh" role="button">中文</a>
       </div>
 
       <hr class="crp-divider" />
 
-      <section aria-label="Details">
-        <h2 class="crp-h2">What this selection does</h2>
+      <section aria-label="Diagnostics">
+        <p class="crp-subtitle" style="margin:0 0 10px;opacity:.9;font-size:16px">
+          If this still looks “unchanged,” you are viewing an older deploy.
+        </p>
         <ul style="margin:0;padding-left:18px;line-height:1.6;opacity:.9">
-          <li>Sets <code>gd_lang</code> to <code>en</code> or <code>zh</code>.</li>
-          <li>Routes forward with <code>?lang=…</code> (language fork appears only here).</li>
-          <li>Does not set depth here (depth is selected later).</li>
+          <li>Open: <a href="/index.html?cb=1008A">/index.html?cb=1008A</a></li>
+          <li>Confirm you see: <strong>CRP_UI_FIRST_1008A</strong></li>
         </ul>
       </section>
 
       <footer class="crp-footer">
         <small class="crp-footnote">
-          BUILD: <strong>CRP_RB1</strong> · Canonical key written here: <code>gd_lang</code>.
+          Index is language fork only. Canonical key: <code>gd_lang</code>.
         </small>
       </footer>
     </section>
   </main>
-
-  <script>
-    (function () {
-      "use strict";
-      // Optional persistence. Navigation does NOT depend on this.
-      try {
-        var en = document.getElementById("go-en");
-        var zh = document.getElementById("go-zh");
-        if (en) en.addEventListener("click", function () { localStorage.setItem("gd_lang", "en"); });
-        if (zh) zh.addEventListener("click", function () { localStorage.setItem("gd_lang", "zh"); });
-      } catch (e) {}
-    })();
-  </script>
 </body>
 </html>

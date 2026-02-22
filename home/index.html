@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Explore · Diamond 2</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=EXPLORE_D2_2"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=EXPLORE_D2_2"/>
-  <script defer src="/assets/instrument.js?v=EXPLORE_D2_2"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=EXPLORE_D2_3"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=EXPLORE_D2_3"/>
+  <script defer src="/assets/instrument.js?v=EXPLORE_D2_3"></script>
 
   <style>
-    .d2-wrap{max-width:980px;margin:0 auto;}
+    .d2-wrap{max-width:980px;margin:0 auto; padding-bottom:140px;} /* space for fixed dock */
     .d2-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
     @media (max-width:820px){ .d2-grid{grid-template-columns:1fr;} }
     .d2-tile{min-height:104px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
@@ -21,25 +21,28 @@
     .d2-go{opacity:.85;font-weight:900}
     .d2-mini{opacity:.72;font-size:12px;line-height:1.35;text-align:center;margin-top:10px}
 
-    /* Bottom compass dock */
+    /* FIXED bottom compass dock (no overlap) */
     .dock{
-      position:sticky;
-      bottom:12px;
+      position:fixed;
+      left:0;
+      right:0;
+      bottom: max(10px, env(safe-area-inset-bottom));
       display:flex;
       justify-content:center;
-      margin-top:18px;
-      z-index:10;
-      pointer-events:auto;
+      z-index:50;
+      pointer-events:none; /* only the dock itself is clickable */
     }
     .dock-card{
+      pointer-events:auto;
       width:min(760px, 92vw);
       border-radius:999px;
       border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.18);
+      background:rgba(0,0,0,.22);
       box-shadow:0 16px 50px rgba(0,0,0,.45);
       padding:10px 12px;
       display:flex;
       justify-content:center;
+      backdrop-filter: blur(8px);
     }
 
     .mini-compass{
@@ -78,7 +81,7 @@
       border-color:rgba(255,210,120,.32);
     }
 
-    /* 5 satellites around (simple dock, not full hex) */
+    /* satellites */
     .mini-a{ left:0; top:50%; transform:translateY(-50%); }            /* ABOUT */
     .mini-l{ left:20%; top:5px; }                                      /* LINKS */
     .mini-w{ right:20%; top:5px; }                                     /* LAWS */
@@ -119,7 +122,8 @@
 
   <section class="d2-wrap">
     <div class="d2-grid" aria-label="Diamond 2 quadrants">
-      <!-- NW -->
+
+      <!-- NW (definition) -->
       <a id="q-nw" class="crp-btn d2-tile" href="/home/" role="button">
         <div class="d2-left">
           <div class="d2-code">⭐ NW · NORTHWEST</div>
@@ -129,7 +133,7 @@
         <div class="d2-go">▶</div>
       </a>
 
-      <!-- NE -->
+      <!-- NE (go deep) -->
       <a id="q-ne" class="crp-btn d2-tile" href="/home/" role="button">
         <div class="d2-left">
           <div class="d2-code">☀️ NE · NORTHEAST</div>
@@ -139,7 +143,7 @@
         <div class="d2-go">▶</div>
       </a>
 
-      <!-- SW -->
+      <!-- SW (go deep) -->
       <a id="q-sw" class="crp-btn d2-tile" href="/home/" role="button">
         <div class="d2-left">
           <div class="d2-code">🔥 SW · SOUTHWEST</div>
@@ -149,7 +153,7 @@
         <div class="d2-go">▶</div>
       </a>
 
-      <!-- SE -->
+      <!-- SE (governance) -->
       <a id="q-se" class="crp-btn d2-tile" href="/home/" role="button">
         <div class="d2-left">
           <div class="d2-code">🌙 SE · SOUTHEAST</div>
@@ -158,14 +162,15 @@
         </div>
         <div class="d2-go">▶</div>
       </a>
+
     </div>
 
     <footer class="crp-footer" style="text-align:center">
-      <small class="crp-footnote">BUILD: <strong>EXPLORE_D2_2</strong></small>
+      <small class="crp-footnote">BUILD: <strong>EXPLORE_D2_3</strong></small>
     </footer>
   </section>
 
-  <!-- Bottom compass dock (replaces top clutter) -->
+  <!-- Fixed bottom compass dock -->
   <div class="dock" aria-label="Compass dock">
     <div class="dock-card">
       <div class="mini-compass" aria-label="Mini compass navigation">
@@ -252,11 +257,13 @@
       if(a) a.setAttribute("href", href);
     }
 
+    // Deep routing into Home with quadrant hint
     set("q-nw","/home/?"+q+"&axis=nw");
     set("q-ne","/home/?"+q+"&axis=ne");
     set("q-sw","/home/?"+q+"&axis=sw");
     set("q-se","/home/?"+q+"&axis=se");
 
+    // Dock
     set("dock-core","/home/?"+q);
     set("dock-about","/about/?"+q);
     set("dock-links","/links/?"+q);

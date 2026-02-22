@@ -1,13 +1,12 @@
-<!-- TNT — /products/index.html  (PRODUCTS HUB · Traversal Encyclopedic Study)
-     Rules honored:
-     - SAME diamond geometry as HUB.
-     - Main page stays clean (no lenses on main page).
-     - Lenses live INSIDE bubbles/modal only:
-         STYLE: Formal / Informal
-         TIME: Concept / Live / Roadmap  (stored as gd_time = origin/now/post)
-     - Dual-lens (EN + 中文) embedded every time (gd_lang).
-     - Modal is screen-centered (fixed-height shell + internal scroll).
-     - Every bubble has a sentence + at least 4 bulletins.
+<!-- TNT — /products/index.html  (PRODUCTS HUB → 4 SUBPAGES)
+     Fix: buttons didn’t work because we tried to hold an entire product encyclopedia on one page.
+     New structure (correct):
+       NORTH → /products/software/
+       EAST  → /products/commercial/
+       SOUTH → /products/energy/
+       WEST  → /products/education/
+     Main page stays clean (no lenses on main page).
+     Dual-lens persists via localStorage and is also propagated via query string on click.
 -->
 
 <!doctype html>
@@ -23,11 +22,9 @@
 <style>
 :root{
   --R:124px;
-  --gold:rgba(212,175,55,.9);
   --goldSoft:rgba(212,175,55,.35);
   --obs1:#070b12;
   --obs2:#0c1626;
-  --mut:rgba(255,255,255,.82);
   --mut2:rgba(255,255,255,.68);
 }
 
@@ -43,7 +40,7 @@ body{
   overflow-x:hidden;
 }
 
-/* ===== TOP LEFT ONLY ===== */
+/* Top-left only */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:90;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
@@ -61,9 +58,8 @@ body{
   text-decoration:none;
 }
 .btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
-.btn.active{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 22px rgba(212,175,55,.45); border-color:rgba(212,175,55,.25); }
 
-/* ===== CENTER BRAND ===== */
+/* Center brand */
 .brand{
   position:fixed;
   left:50%;
@@ -80,7 +76,7 @@ body{
 .brand .name{ font-weight:950; letter-spacing:1.2px; font-size:12px; opacity:.95; }
 .brand .tag{ font-size:11px; letter-spacing:.6px; opacity:.70; margin-top:2px; }
 
-/* ===== STAGE ===== */
+/* Stage */
 .stage{
   position:fixed;
   left:50%;
@@ -91,7 +87,7 @@ body{
   z-index:40;
 }
 
-/* ===== GEM DIAMONDS ===== */
+/* Diamond link (anchor) */
 .diamond{
   width:150px;height:150px;
   position:absolute;
@@ -113,6 +109,10 @@ body{
 
   border:1px solid rgba(255,255,255,.08);
   transition:all 260ms ease;
+
+  text-decoration:none;
+  color:#fff;
+  display:block;
 }
 .diamond::after{
   content:"";
@@ -132,13 +132,6 @@ body{
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -28px 40px rgba(0,0,0,.7);
 }
-.diamond.active{
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.9),
-    0 0 30px rgba(212,175,55,.55),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -28px 40px rgba(0,0,0,.7);
-}
 
 .inner{
   width:100%;
@@ -150,11 +143,11 @@ body{
   justify-content:center;
   text-align:center;
   padding:16px;
-  gap:8px;
+  gap:10px;
   pointer-events:none;
 }
 .dir{ font-weight:950; letter-spacing:.6px; font-size:16px; }
-.preview{ font-size:13px; opacity:.88; line-height:1.35; max-width:16em; }
+.preview{ font-size:13px; opacity:.88; line-height:1.35; max-width:16em; color:var(--mut2); }
 
 #north{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
 #east { transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg); }
@@ -178,7 +171,7 @@ body{
   pointer-events:none;
 }
 
-/* ===== DOCK ===== */
+/* Dock */
 .dock{
   position:fixed;
   left:50%;
@@ -197,7 +190,7 @@ body{
   backdrop-filter:blur(8px);
 }
 
-/* ===== STAMP ===== */
+/* Stamp */
 .stamp{
   position:fixed;
   right:16px;
@@ -213,177 +206,14 @@ body{
   font-size:11px;
   opacity:.90;
 }
-
-/* ===== MODAL (CENTERED, INTERNAL SCROLL) ===== */
-.bd{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(10px);
-  display:none;
-  z-index:200;
-}
-.bd.show{display:block;}
-
-.modal{
-  position:fixed;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:min(920px,92vw);
-  max-height:84vh;
-  display:none;
-  z-index:210;
-}
-.modal.show{display:block;}
-
-.shell{
-  height:84vh;
-  max-height:84vh;
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 50% 20%, rgba(176,0,0,.18), transparent 55%),
-    radial-gradient(circle at 35% 25%, rgba(90,140,255,.10), transparent 55%),
-    linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
-  box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-}
-
-.mhead{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:14px 16px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  flex:0 0 auto;
-}
-.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
-.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
-
-.mbody{
-  padding:14px 16px 16px;
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
-  flex:1 1 auto;
-}
-
-/* Lenses INSIDE modal */
-.lensbar{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:center;
-  padding:10px 10px 14px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  margin:-6px -6px 14px;
-}
-.chip{
-  padding:10px 16px;
-  border-radius:999px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  color:#fff;
-}
-.chip.active{
-  border-color:rgba(212,175,55,.35);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
-}
-
-/* Grid bubbles for products */
-.grid{
-  display:grid;
-  gap:14px;
-}
-@media (min-width:760px){ .grid{ grid-template-columns:1fr 1fr; } }
-
-.bubble{
-  padding:16px 18px;
-  border-radius:20px;
-  cursor:pointer;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
-    linear-gradient(145deg,var(--obs2),var(--obs1));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 55px rgba(0,0,0,.78), inset 0 2px 0 rgba(255,255,255,.06);
-  position:relative;
-}
-.bubble::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:20px;
-  padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
-.bubble:hover{ box-shadow:0 22px 65px rgba(0,0,0,.86), 0 0 14px rgba(212,175,55,.16); border-color:rgba(212,175,55,.16); }
-.bt{ font-weight:950; margin:0 0 6px; letter-spacing:.2px; }
-.bs{ margin:0; color:var(--mut2); line-height:1.45; }
-
-/* Detail */
-.detail{ display:none; margin-top:14px; }
-.detail.show{ display:block; }
-
-.dbox{
-  padding:18px;
-  border-radius:22px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 22px 70px rgba(0,0,0,.86), inset 0 2px 0 rgba(255,255,255,.08);
-}
-.dh{ margin:0 0 10px; font-weight:950; letter-spacing:.2px; font-size:16px; }
-.dp{ margin:0 0 12px; color:var(--mut); line-height:1.55; }
-.dlabel{ margin:10px 0 8px; font-weight:950; letter-spacing:.2px; opacity:.92; }
-.dul{ margin:0 0 12px 18px; padding:0; color:var(--mut2); }
-.dul li{ margin:6px 0; }
-
-.dact{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-top:10px;
-}
-.sbtn{
-  padding:12px 18px;
-  border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:white;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-}
-.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
-
-@media (max-width:520px){
-  :root{ --R: 116px; }
-  .stage{ width:min(520px,92vw); height:min(520px,92vw); }
-  .core{ width:58px; height:58px; }
-  .shell{ height:86vh; max-height:86vh; }
-}
 </style>
 </head>
 
 <body>
 
-<div class="top-left" id="topLeft">
+<div class="top-left">
+  <a class="btn" href="/home/">HUB</a>
   <a class="btn" href="/door/">EXIT</a>
-  <button class="btn" id="mapBtn">MAP</button>
 </div>
 
 <div class="brand">
@@ -391,646 +221,126 @@ body{
   <div class="tag" id="brandTag">Traversal Encyclopedic Study</div>
 </div>
 
-<div class="stage" id="centerStage">
-  <div class="diamond" id="north"><div class="inner"><div class="dir" id="nLab">NORTH</div><div class="preview" id="northText"></div></div></div>
-  <div class="diamond" id="east"><div class="inner"><div class="dir" id="eLab">EAST</div><div class="preview" id="eastText"></div></div></div>
-  <div class="diamond" id="south"><div class="inner"><div class="dir" id="sLab">SOUTH</div><div class="preview" id="southText"></div></div></div>
-  <div class="diamond" id="west"><div class="inner"><div class="dir" id="wLab">WEST</div><div class="preview" id="westText"></div></div></div>
+<div class="stage" id="stage">
+  <a class="diamond" id="north" href="/products/software/">
+    <div class="inner">
+      <div class="dir" id="nLab">SOFTWARE</div>
+      <div class="preview" id="nPrev">Software systems express the architecture as executable tools.</div>
+    </div>
+  </a>
+
+  <a class="diamond" id="east" href="/products/commercial/">
+    <div class="inner">
+      <div class="dir" id="eLab">COMMERCIAL</div>
+      <div class="preview" id="ePrev">Commercial systems package execution into revenue-ready workflows.</div>
+    </div>
+  </a>
+
+  <a class="diamond" id="south" href="/products/energy/">
+    <div class="inner">
+      <div class="dir" id="sLab">ENERGY</div>
+      <div class="preview" id="sPrev">Energy systems apply the architecture to infrastructure and conversion chains.</div>
+    </div>
+  </a>
+
+  <a class="diamond" id="west" href="/products/education/">
+    <div class="inner">
+      <div class="dir" id="wLab">EDUCATION</div>
+      <div class="preview" id="wPrev">Education systems teach traversal study as a repeatable method.</div>
+    </div>
+  </a>
+
   <div class="core">◆</div>
 </div>
 
-<nav class="dock" id="bottomDock">
-  <a class="btn" id="goHub" href="/home/">HUB</a>
+<nav class="dock" id="dock">
   <a class="btn" id="goTerminal" href="/index.html">TERMINAL</a>
   <a class="btn" id="goLinks" href="/links/">LINKS</a>
-  <a class="btn active" id="goProducts" href="/products/">PRODUCTS</a>
+  <a class="btn active" href="/products/">PRODUCTS</a>
   <a class="btn" id="goLaws" href="/laws/">LAWS</a>
   <a class="btn" id="goGauges" href="/gauges/">GAUGES</a>
 </nav>
 
 <div class="stamp" id="stamp">TRAVERSAL STUDY</div>
 
-<div class="bd" id="bd"></div>
-
-<div class="modal" id="modal" role="dialog" aria-modal="true">
-  <div class="shell">
-    <div class="mhead">
-      <h3 class="mtitle" id="mTitle">PRODUCTS</h3>
-      <button class="mclose" id="mClose" aria-label="Close">✕</button>
-    </div>
-
-    <div class="mbody" id="mbody">
-      <div class="lensbar" id="lensbar">
-        <button class="chip" id="styleChip">STYLE: FORMAL</button>
-        <button class="chip" data-time="origin" id="chipConcept">CONCEPT</button>
-        <button class="chip" data-time="now" id="chipLive">LIVE</button>
-        <button class="chip" data-time="post" id="chipRoadmap">ROADMAP</button>
-      </div>
-
-      <div class="grid" id="grid"></div>
-
-      <div class="detail" id="detail">
-        <div class="dbox">
-          <div class="dh" id="dTitle"></div>
-          <div class="dp" id="dPara"></div>
-          <div class="dlabel" id="dBulLabel">BULLETINS</div>
-          <ul class="dul" id="dList"></ul>
-          <div class="dact">
-            <button class="sbtn" id="dBack">BACK</button>
-            <button class="sbtn" id="dClose">BACK TO PRODUCTS</button>
-            <button class="sbtn" id="dPrev">PREV</button>
-            <button class="sbtn" id="dNext">NEXT</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
 <script>
 (function(){
+  // Dual lens always: EN + 中文
   const qs = new URLSearchParams(location.search);
   const qLang = qs.get("lang");
   let lang = (qLang==="zh"||qLang==="en") ? qLang : (localStorage.getItem("gd_lang")==="zh" ? "zh" : "en");
   try{ localStorage.setItem("gd_lang", lang); }catch(e){}
 
+  // Persisted lenses (kept for subpages)
   let style = localStorage.getItem("gd_style") || "formal";
   let time  = localStorage.getItem("gd_time")  || "now";
   if(time==="trajectory") time="post";
   if(!["origin","now","post"].includes(time)) time="now";
   if(!["formal","informal"].includes(style)) style="formal";
 
-  // Dual-lens labels
   const UI = {
     en:{
       brand:"CARDINAL AXIS",
       tag:"Traversal Encyclopedic Study",
       stamp:"TRAVERSAL STUDY",
-      dirs:{north:"SOFTWARE",east:"COMMERCIAL",south:"ENERGY",west:"EDUCATION"},
-      s:{formal:"FORMAL",informal:"INFORMAL"},
-      t:{origin:"CONCEPT",now:"LIVE",post:"ROADMAP"},
-      modal:"PRODUCTS",
-      bul:"BULLETINS",
-      nav:{back:"BACK",backPage:"BACK TO PRODUCTS",prev:"PREV",next:"NEXT"}
+      north:{t:"SOFTWARE", s:"Software systems express the architecture as executable tools."},
+      east:{t:"COMMERCIAL", s:"Commercial systems package execution into revenue-ready workflows."},
+      south:{t:"ENERGY", s:"Energy systems apply the architecture to infrastructure and conversion chains."},
+      west:{t:"EDUCATION", s:"Education systems teach traversal study as a repeatable method."},
+      dock:{terminal:"TERMINAL",links:"LINKS",laws:"LAWS",gauges:"GAUGES"}
     },
     zh:{
       brand:"四向轴",
       tag:"遍历式百科研究",
       stamp:"遍历研究",
-      dirs:{north:"软件",east:"商业",south:"能源",west:"教育"},
-      s:{formal:"正式",informal:"非正式"},
-      t:{origin:"概念",now:"上线",post:"路线图"},
-      modal:"产品",
-      bul:"公告要点",
-      nav:{back:"返回",backPage:"回到产品",prev:"上一个",next:"下一个"}
+      north:{t:"软件", s:"软件系统把架构表达为可执行工具。"},
+      east:{t:"商业", s:"商业系统把执行打包为可变现流程。"},
+      south:{t:"能源", s:"能源系统把架构应用到基础设施与转换链。"},
+      west:{t:"教育", s:"教育系统把遍历研究教成可重复的方法。"},
+      dock:{terminal:"终端",links:"链接",laws:"法则",gauges:"量规"}
     }
   };
   const T = UI[lang] || UI.en;
 
-  // Category previews (subject+predicate sentences)
-  const preview = {
-    north:{en:"Software systems express the architecture as executable tools.", zh:"软件系统把架构表达为可执行工具。"},
-    east:{en:"Commercial systems package execution into revenue-ready workflows.", zh:"商业系统把执行打包为可变现流程。"},
-    south:{en:"Energy systems apply the architecture to infrastructure and conversion chains.", zh:"能源系统把架构应用到基础设施与转换链。"},
-    west:{en:"Education systems teach traversal study as a repeatable method.", zh:"教育系统把遍历研究教成可重复的方法。"}
-  };
-
-  // Product catalog by category (4 items each as starters; expand later)
-  // Each item: title + sentence + bullets for each time lens + both langs + both styles.
-  const catalog = {
-    north:[
-      {
-        en:{t:"Compass Hub Platform", s:"A gem-compass hub that routes across the full architecture.", p:{
-          origin:{formal:["Defines the traversal topology.","Locks lens semantics.","Implements hub routing surfaces.","Specifies modal recursion contract."],
-                 informal:["Shows the map.","Keeps everything reachable.","Keeps you oriented.","Stops drift visually."]},
-          now:{formal:["Runs as a live hub page.","Propagates gd_* keys.","Supports bilingual lensing.","Keeps UI stable under updates."],
-               informal:["Works now.","Keeps state.","Feels consistent.","Stays clean."]},
-          post:{formal:["Adds deeper recursion per direction.","Adds per-node evidence bundles.","Adds certification registry hooks.","Adds multi-domain dashboards."],
-                informal:["More depth soon.","More pages soon.","More tools soon.","More automation soon."]}
-        }},
-        zh:{t:"指南针枢纽平台", s:"一个宝石指南针枢纽，用于遍历全套架构。", p:{
-          origin:{formal:["定义遍历拓扑。","锁定透镜语义。","实现枢纽路由面。","规定模态递归契约。"],
-                 informal:["展示地图。","保持可达。","保持方向感。","视觉上止漂移。"]},
-          now:{formal:["作为枢纽页上线运行。","传播 gd_* 键。","支持双语透镜。","更新下保持一致。"],
-               informal:["现在可用。","保持状态。","感觉一致。","保持简洁。"]},
-          post:{formal:["增加方向递归。","增加节点证据包。","增加认证登记钩子。","增加多域仪表盘。"],
-                informal:["即将更深。","即将更多页。","即将更多工具。","即将更多自动化。"]}
-        }}
-      },
-      {
-        en:{t:"Universal Coherence Instrument (UCI)", s:"A measurement core that standardizes ρ/TC and gate checks.", p:{
-          origin:{formal:["Defines universal input schema.","Defines ρ/TC primitives.","Defines Δ acceleration rules.","Defines HIP gate vector."],
-                 informal:["Defines the basics.","Measures correlation.","Checks gates.","Keeps things honest."]},
-          now:{formal:["Runs audits over evidence streams.","Outputs dashboards + alerts.","Exports hash-verifiable bundles.","Supports certification tiers."],
-               informal:["It measures.","It alerts.","It exports.","It verifies."]},
-          post:{formal:["Adds domain adapters library.","Adds anti-gaming harnesses.","Adds enterprise connectors.","Adds public registry surfaces."],
-                informal:["More adapters soon.","More checks soon.","More connectors soon.","More visibility soon."]}
-        }},
-        zh:{t:"通用一致性仪器（UCI）", s:"一个测量核心，用于标准化 ρ/TC 与门控检查。", p:{
-          origin:{formal:["定义通用输入格式。","定义 ρ/TC 原语。","定义 Δ 加速度规则。","定义 HIP 门控向量。"],
-                 informal:["定义基础。","测相关暴露。","检查门控。","保持诚实。"]},
-          now:{formal:["对证据流运行审计。","输出仪表盘与告警。","导出可哈希验证包。","支持认证分层。"],
-               informal:["能测。","能报。","能导出。","能验证。"]},
-          post:{formal:["增加领域适配器库。","增加防作弊测试。","增加企业连接器。","增加公开登记页。"],
-                informal:["更多适配器。","更多检查。","更多连接。","更多可见性。"]}
-        }}
-      },
-      {
-        en:{t:"Risk & Correlation Scoring", s:"A scoring surface that turns correlation exposure into an executive metric.", p:{
-          origin:{formal:["Defines score components.","Defines hard-fail overrides.","Defines reason codes.","Defines audit outputs."],
-                 informal:["Defines the score.","Defines fail rules.","Explains why.","Keeps it readable."]},
-          now:{formal:["Computes scores per system.","Flags gate failures.","Generates executive one-pagers.","Exports audit bundles."],
-               informal:["Scores systems.","Flags problems.","Prints reports.","Exports data."]},
-          post:{formal:["Adds insurance/capital interfaces.","Adds scenario simulation.","Adds cross-domain correlation maps.","Adds portfolio overlays."],
-                informal:["Adds simulations.","Adds investors view.","Adds maps.","Adds portfolio mode."]}
-        }},
-        zh:{t:"风险与相关评分", s:"把相关暴露转为高管可用指标的评分界面。", p:{
-          origin:{formal:["定义评分组件。","定义硬失败覆盖。","定义原因码。","定义审计输出。"],
-                 informal:["定义分数。","定义失败规则。","解释原因。","保持可读。"]},
-          now:{formal:["按系统计算评分。","标记门控失败。","生成高管一页纸。","导出审计包。"],
-               informal:["评分。","报警。","出报告。","导出。"]},
-          post:{formal:["增加保险/资本接口。","增加情景模拟。","增加跨域相关地图。","增加组合视图。"],
-                informal:["加模拟。","加投资视图。","加地图。","加组合模式。"]}
-        }}
-      },
-      {
-        en:{t:"Certification Registry Layer", s:"A public lookup surface for certificate serials and status.", p:{
-          origin:{formal:["Defines issuance vectors.","Defines revocation rules.","Defines registry fields.","Defines immutability constraints."],
-                 informal:["Defines certificates.","Defines revokes.","Defines lookup.","Defines what’s public."]},
-          now:{formal:["Publishes serial status.","Supports renewal windows.","Logs reason codes.","Separates powers."],
-               informal:["Shows status.","Shows dates.","Shows reasons.","Keeps it clean."]},
-          post:{formal:["Adds third-party attestations.","Adds evidence hash chain.","Adds tier automation.","Adds API subscriptions."],
-                informal:["Adds audits.","Adds hash proofs.","Adds automation.","Adds API."]}
-        }},
-        zh:{t:"认证登记层", s:"用于证书序列号与状态查询的公开界面。", p:{
-          origin:{formal:["定义颁发向量。","定义撤销规则。","定义登记字段。","定义不可变约束。"],
-                 informal:["定义证书。","定义撤销。","定义查询。","定义公开范围。"]},
-          now:{formal:["发布序列状态。","支持续期窗口。","记录原因码。","权力分离。"],
-               informal:["显示状态。","显示日期。","显示原因。","保持简洁。"]},
-          post:{formal:["增加第三方证明。","增加证据哈希链。","增加分层自动化。","增加订阅 API。"],
-                informal:["加审计。","加哈希证明。","加自动化。","加 API。"]}
-        }}
-      }
-    ],
-
-    east:[
-      {
-        en:{t:"Sales Execution System", s:"A repeatable revenue engine that turns structure into conversions.", p:{
-          origin:{formal:["Defines offer structure.","Defines qualification gates.","Defines pipeline stages.","Defines audit logging."],
-                 informal:["Defines the pitch.","Defines the steps.","Defines the flow.","Keeps it simple."]},
-          now:{formal:["Runs calls/scripts.","Captures performance.","Improves close rate.","Produces repeatable outcomes."],
-               informal:["Runs sales.","Tracks it.","Improves it.","Repeats it."]},
-          post:{formal:["Adds training loops.","Adds team dashboards.","Adds incentive controls.","Adds partner replication kit."],
-                informal:["Adds training.","Adds dashboards.","Adds controls.","Adds replication."]}
-        }},
-        zh:{t:"销售执行系统", s:"把结构转为成交的可重复收入引擎。", p:{
-          origin:{formal:["定义报价结构。","定义筛选门槛。","定义管道阶段。","定义审计记录。"],
-                 informal:["定义话术。","定义步骤。","定义流程。","保持简单。"]},
-          now:{formal:["运行脚本与通话。","捕捉表现。","提升成交率。","形成可复制结果。"],
-               informal:["做销售。","追踪。","改进。","复用。"]},
-          post:{formal:["增加训练闭环。","增加团队仪表盘。","增加激励控制。","增加合作复制包。"],
-                informal:["加训练。","加看板。","加控制。","加复制。"]}
-        }}
-      },
-      {
-        en:{t:"Licensing Platform", s:"A system to package IP into licensable modules with clear terms.", p:{
-          origin:{formal:["Defines module boundaries.","Defines license classes.","Defines compliance tests.","Defines revocation triggers."],
-                 informal:["Defines what it is.","Defines who gets it.","Defines the rules.","Defines the guardrails."]},
-          now:{formal:["Issues licenses.","Tracks scope/usage.","Enforces terms.","Exports audit trail."],
-               informal:["Licenses it.","Tracks it.","Enforces it.","Logs it."]},
-          post:{formal:["Adds marketplace routing.","Adds payment rails.","Adds automated renewals.","Adds enterprise bundles."],
-                informal:["Adds marketplace.","Adds payments.","Adds renewals.","Adds bundles."]}
-        }},
-        zh:{t:"授权平台", s:"把 IP 打包成可授权模块并明确条款的系统。", p:{
-          origin:{formal:["定义模块边界。","定义授权类别。","定义合规测试。","定义撤销触发。"],
-                 informal:["定义是什么。","定义给谁。","定义规则。","定义护栏。"]},
-          now:{formal:["发放授权。","追踪范围/使用。","执行条款。","导出审计轨迹。"],
-               informal:["授权。","追踪。","执行。","记录。"]},
-          post:{formal:["增加市场路由。","增加支付通道。","增加自动续期。","增加企业包。"],
-                informal:["加市场。","加支付。","加续期。","加套餐。"]}
-        }}
-      },
-      {
-        en:{t:"Commercial Playbooks", s:"Field-ready operating procedures that compress decision time.", p:{
-          origin:{formal:["Defines roles.","Defines scripts.","Defines objections handling.","Defines KPIs."],
-                 informal:["Defines who does what.","Defines the script.","Defines responses.","Defines what to track."]},
-          now:{formal:["Runs in field.","Improves consistency.","Reduces error rates.","Raises throughput."],
-               informal:["Works on site.","Keeps consistent.","Reduces mistakes.","Speeds up."]},
-          post:{formal:["Adds AI assist.","Adds training tiers.","Adds certification.","Adds rollouts by region."],
-                informal:["Adds AI help.","Adds training.","Adds certs.","Adds regional rollouts."]}
-        }},
-        zh:{t:"商业作战手册", s:"现场可用的操作流程，用于压缩决策时间。", p:{
-          origin:{formal:["定义角色。","定义脚本。","定义异议处理。","定义 KPI。"],
-                 informal:["谁做什么。","脚本是什么。","怎么回应。","追踪什么。"]},
-          now:{formal:["现场运行。","提升一致性。","降低错误率。","提升吞吐。"],
-               informal:["现场能用。","更一致。","少出错。","更快。"]},
-          post:{formal:["增加 AI 辅助。","增加训练分层。","增加认证。","按区域发布。"],
-                informal:["加 AI。","加训练。","加认证。","加区域发布。"]}
-        }}
-      },
-      {
-        en:{t:"Funnel Architecture", s:"A structured funnel that aligns messaging, qualification, and delivery.", p:{
-          origin:{formal:["Defines stages.","Defines inputs/outputs.","Defines measurement schema.","Defines failure modes."],
-                 informal:["Defines steps.","Defines what goes in/out.","Defines metrics.","Defines what breaks."]},
-          now:{formal:["Runs traffic to conversion.","Measures drop-off.","Improves messaging.","Stabilizes outcome."],
-               informal:["Runs the funnel.","Tracks drop-off.","Fixes messaging.","Gets results."]},
-          post:{formal:["Adds multi-channel expansion.","Adds cohort analysis.","Adds automation.","Adds A/B governance."],
-                informal:["Adds channels.","Adds cohorts.","Adds automation.","Adds A/B rules."]}
-        }},
-        zh:{t:"漏斗架构", s:"对齐信息、筛选与交付的结构化漏斗。", p:{
-          origin:{formal:["定义阶段。","定义输入输出。","定义测量格式。","定义失败模式。"],
-                 informal:["定义步骤。","定义进出。","定义指标。","定义哪里会坏。"]},
-          now:{formal:["流量到转化。","测量流失。","优化信息。","稳定结果。"],
-               informal:["跑漏斗。","看流失。","改信息。","出结果。"]},
-          post:{formal:["多渠道扩展。","队列分析。","自动化。","A/B 治理。"],
-                informal:["加渠道。","加队列。","加自动化。","加 A/B 规则。"]}
-        }}
-      }
-    ],
-
-    south:[
-      {
-        en:{t:"Energy Procurement Engine", s:"A procurement logic layer for reducing costs and stabilizing supply.", p:{
-          origin:{formal:["Defines procurement model.","Defines risk budget.","Defines contract constraints.","Defines audit trail."],
-                 informal:["Defines buying rules.","Defines risk limits.","Defines constraints.","Defines tracking."]},
-          now:{formal:["Optimizes pricing.","Tracks volatility exposure.","Improves plan selection.","Reports savings."],
-               informal:["Finds better rates.","Tracks risk.","Chooses plans.","Shows savings."]},
-          post:{formal:["Adds automation.","Adds portfolio aggregation.","Adds hedging logic.","Adds enterprise dashboards."],
-                informal:["Adds automation.","Adds portfolio view.","Adds hedging.","Adds dashboards."]}
-        }},
-        zh:{t:"能源采购引擎", s:"用于降本与稳定供给的采购逻辑层。", p:{
-          origin:{formal:["定义采购模型。","定义风险预算。","定义合同约束。","定义审计轨迹。"],
-                 informal:["定义购买规则。","定义风险上限。","定义约束。","定义追踪。"]},
-          now:{formal:["优化价格。","追踪波动暴露。","改进方案选择。","报告节省。"],
-               informal:["找更低价。","追踪风险。","选方案。","看节省。"]},
-          post:{formal:["增加自动化。","增加组合聚合。","增加对冲逻辑。","增加企业看板。"],
-                informal:["加自动化。","加组合视图。","加对冲。","加看板。"]}
-        }}
-      },
-      {
-        en:{t:"Microgrid Control Concepts", s:"A control geometry for local generation and resilience.", p:{
-          origin:{formal:["Defines control objectives.","Defines segmentation zones.","Defines failover behaviors.","Defines measurement adapters."],
-                 informal:["Defines goals.","Defines zones.","Defines failover.","Defines what to measure."]},
-          now:{formal:["Monitors margin.","Detects correlated risk.","Supports staged changes.","Improves resilience."],
-               informal:["Watches margin.","Finds risk.","Stages changes.","Keeps power stable."]},
-          post:{formal:["Adds simulations.","Adds grid interfaces.","Adds certification gating.","Adds incident replay."],
-                informal:["Adds sims.","Adds interfaces.","Adds gating.","Adds replay."]}
-        }},
-        zh:{t:"微电网控制概念", s:"用于本地发电与韧性的控制几何。", p:{
-          origin:{formal:["定义控制目标。","定义分区。","定义故障切换。","定义测量适配器。"],
-                 informal:["定义目标。","定义分区。","定义切换。","定义测量。"]},
-          now:{formal:["监控裕度。","检测相关风险。","支持分阶段变更。","提升韧性。"],
-               informal:["看裕度。","找风险。","分阶段。","稳供电。"]},
-          post:{formal:["增加模拟。","增加电网接口。","增加认证门控。","增加事故回放。"],
-                informal:["加模拟。","加接口。","加门控。","加回放。"]}
-        }}
-      },
-      {
-        en:{t:"Infrastructure Risk Models", s:"A model layer for correlated exposure in critical systems.", p:{
-          origin:{formal:["Defines exposure primitives.","Defines hazard proxy.","Defines audit windows.","Defines red-team harness."],
-                 informal:["Defines exposure.","Defines hazard.","Defines windows.","Defines tests."]},
-          now:{formal:["Computes correlation.","Flags clusters.","Suggests remediation.","Exports evidence bundles."],
-               informal:["Computes risk.","Finds clusters.","Suggests fixes.","Exports proof."]},
-          post:{formal:["Adds public reporting tiers.","Adds underwriting interface.","Adds zone independence calculator.","Adds slope monitoring."],
-                informal:["Adds reports.","Adds insurance view.","Adds zone calc.","Adds slope monitoring."]}
-        }},
-        zh:{t:"基础设施风险模型", s:"关键系统相关暴露的模型层。", p:{
-          origin:{formal:["定义暴露原语。","定义风险代理。","定义审计窗口。","定义红队测试。"],
-                 informal:["定义暴露。","定义风险。","定义窗口。","定义测试。"]},
-          now:{formal:["计算相关性。","标记集群。","建议修复。","导出证据包。"],
-               informal:["算风险。","找集群。","给修复建议。","导出证明。"]},
-          post:{formal:["增加公开分层报告。","增加承保接口。","增加分区独立计算。","增加斜率监控。"],
-                informal:["加报告。","加保险视图。","加独立计算。","加斜率监控。"]}
-        }}
-      },
-      {
-        en:{t:"Environmental Stress Lens", s:"A traversal lens for climate and operational stress correlation.", p:{
-          origin:{formal:["Defines drivers.","Defines normalization.","Defines missing-data rules.","Defines bias controls."],
-                 informal:["Defines drivers.","Defines scaling.","Defines missing rules.","Defines bias checks."]},
-          now:{formal:["Tracks anomalies.","Detects co-movement.","Raises alerts.","Maps stress to ops."],
-               informal:["Tracks spikes.","Finds co-moves.","Alerts.","Maps to ops."]},
-          post:{formal:["Adds planetary adapters.","Adds district metabolism model.","Adds public dashboards.","Adds research exports."],
-                informal:["Adds adapters.","Adds district model.","Adds dashboards.","Adds exports."]}
-        }},
-        zh:{t:"环境压力透镜", s:"用于气候与运行压力相关性的遍历透镜。", p:{
-          origin:{formal:["定义驱动项。","定义归一化。","定义缺失规则。","定义偏差控制。"],
-                 informal:["定义驱动。","定义缩放。","定义缺失。","定义偏差检查。"]},
-          now:{formal:["追踪异常。","检测共振。","触发告警。","映射到运行。"],
-               informal:["追踪峰值。","找共振。","告警。","映射运行。"]},
-          post:{formal:["增加行星适配器。","增加区域代谢模型。","增加公开看板。","增加研究导出。"],
-                informal:["加适配器。","加区域模型。","加看板。","加导出。"]}
-        }}
-      }
-    ],
-
-    west:[
-      {
-        en:{t:"1001 English Program", s:"A traversal-based language program optimized for fast outcomes.", p:{
-          origin:{formal:["Defines 10 categories.","Defines 4 levels.","Defines 1–50 lesson plan.","Defines PDF progression."],
-                 informal:["10 categories.","4 levels.","Lessons 1–50.","PDFs."]},
-          now:{formal:["Runs lessons.","Tracks mastery.","Improves fluency.","Provides templates."],
-               informal:["Teaches fast.","Tracks progress.","Builds fluency.","Gives templates."]},
-          post:{formal:["Adds certificate checks.","Adds placement test.","Adds cohort dashboards.","Adds translations."],
-                informal:["Adds certs.","Adds placement.","Adds dashboards.","Adds more languages."]}
-        }},
-        zh:{t:"1001 英语课程", s:"一种遍历式语言学习项目，追求快速成果。", p:{
-          origin:{formal:["定义 10 类词汇。","定义 4 个等级。","定义 1–50 课计划。","定义 PDF 进阶。"],
-                 informal:["10 类。","4 级。","1–50 课。","PDF。"]},
-          now:{formal:["运行课程。","追踪掌握度。","提升流利度。","提供模板。"],
-               informal:["学得快。","看进度。","更流利。","有模板。"]},
-          post:{formal:["增加证书检查。","增加分班测试。","增加队列看板。","增加翻译扩展。"],
-                informal:["加证书。","加分班。","加看板。","加更多语言。"]}
-        }}
-      },
-      {
-        en:{t:"Mandarin SSG Layer", s:"A bilingual structural layer for Simplified Syntax Geometry outputs.", p:{
-          origin:{formal:["Defines canonical syntax.","Defines compression rules.","Defines engine mapping.","Defines invariant keys."],
-                 informal:["Defines syntax.","Defines compression.","Defines mapping.","Defines keys."]},
-          now:{formal:["Produces SSG outputs.","Supports ops compression.","Enforces TNT discipline.","Keeps structure canonical."],
-               informal:["Outputs SSG.","Compresses ops.","Forces TNT.","Stays canonical."]},
-          post:{formal:["Adds toolchain integration.","Adds validators.","Adds export formats.","Adds collaborators view."],
-                informal:["Adds toolchain.","Adds validators.","Adds exports.","Adds collab view."]}
-        }},
-        zh:{t:"中文 SSG 层", s:"用于简化语法几何输出的双语结构层。", p:{
-          origin:{formal:["定义规范语法。","定义压缩规则。","定义引擎映射。","定义不变量键。"],
-                 informal:["语法。","压缩。","映射。","键。"]},
-          now:{formal:["生成 SSG 输出。","支持操作压缩。","强制 TNT。","保持规范结构。"],
-               informal:["出 SSG。","压缩操作。","强制 TNT。","保持规范。"]},
-          post:{formal:["增加工具链集成。","增加校验器。","增加导出格式。","增加协作视图。"],
-                informal:["加工具链。","加校验。","加导出。","加协作。"]}
-        }}
-      },
-      {
-        en:{t:"Traversal Study Method", s:"A method for non-linear encyclopedic understanding via navigation.", p:{
-          origin:{formal:["Defines traversal primitives.","Defines hub routing.","Defines bubble recursion.","Defines lens semantics."],
-                 informal:["Defines traversal.","Defines hub.","Defines bubbles.","Defines lenses."]},
-          now:{formal:["Applies across domains.","Supports education delivery.","Enables compression.","Improves retention."],
-               informal:["Works anywhere.","Teaches better.","Compresses knowledge.","Helps memory."]},
-          post:{formal:["Adds curriculum packs.","Adds certifications.","Adds research papers.","Adds public library."],
-                informal:["Adds curriculum.","Adds certs.","Adds papers.","Adds library."]}
-        }},
-        zh:{t:"遍历研究方法", s:"通过导航实现非线性百科理解的方法。", p:{
-          origin:{formal:["定义遍历原语。","定义枢纽路由。","定义气泡递归。","定义透镜语义。"],
-                 informal:["定义遍历。","定义枢纽。","定义气泡。","定义透镜。"]},
-          now:{formal:["可跨领域应用。","支持教学交付。","支持压缩。","提升记忆。"],
-               informal:["处处可用。","更好教。","压缩知识。","更好记。"]},
-          post:{formal:["增加课程包。","增加认证。","增加论文。","增加公开库。"],
-                informal:["加课程。","加认证。","加论文。","加资料库。"]}
-        }}
-      },
-      {
-        en:{t:"Clarity Training Modules", s:"Training surfaces that teach coherence through practice loops.", p:{
-          origin:{formal:["Defines exercises.","Defines progress markers.","Defines feedback loops.","Defines safety rules."],
-                 informal:["Defines drills.","Defines markers.","Defines loops.","Defines safety."]},
-          now:{formal:["Runs practice.","Improves clarity.","Reduces confusion.","Builds discipline."],
-               informal:["Practice.","More clarity.","Less fog.","More discipline."]},
-          post:{formal:["Adds apps integration.","Adds cohort curriculum.","Adds certifications.","Adds metrics."],
-                informal:["Adds app integration.","Adds curriculum.","Adds certs.","Adds metrics."]}
-        }},
-        zh:{t:"清晰训练模块", s:"通过练习闭环教授一致性的训练界面。", p:{
-          origin:{formal:["定义练习。","定义进度标记。","定义反馈闭环。","定义安全规则。"],
-                 informal:["练习。","标记。","闭环。","安全。"]},
-          now:{formal:["运行训练。","提升清晰。","减少迷雾。","建立纪律。"],
-               informal:["练起来。","更清晰。","更少雾。","更有纪律。"]},
-          post:{formal:["增加应用集成。","增加队列课程。","增加认证。","增加指标。"],
-                informal:["加集成。","加课程。","加认证。","加指标。"]}
-        }}
-      }
-    ]
-  };
-
-  // Apply UI labels
   document.getElementById("brandName").textContent = T.brand;
   document.getElementById("brandTag").textContent = T.tag;
   document.getElementById("stamp").textContent = T.stamp;
 
-  document.getElementById("nLab").textContent = T.dirs.north;
-  document.getElementById("eLab").textContent = T.dirs.east;
-  document.getElementById("sLab").textContent = T.dirs.south;
-  document.getElementById("wLab").textContent = T.dirs.west;
+  document.getElementById("nLab").textContent = T.north.t;
+  document.getElementById("nPrev").textContent = T.north.s;
+  document.getElementById("eLab").textContent = T.east.t;
+  document.getElementById("ePrev").textContent = T.east.s;
+  document.getElementById("sLab").textContent = T.south.t;
+  document.getElementById("sPrev").textContent = T.south.s;
+  document.getElementById("wLab").textContent = T.west.t;
+  document.getElementById("wPrev").textContent = T.west.s;
 
-  // Modal elements
-  const bd = document.getElementById("bd");
-  const modal = document.getElementById("modal");
-  const mClose = document.getElementById("mClose");
-  const mTitle = document.getElementById("mTitle");
-  const mbody = document.getElementById("mbody");
+  document.getElementById("goTerminal").textContent = T.dock.terminal;
+  document.getElementById("goLinks").textContent = T.dock.links;
+  document.getElementById("goLaws").textContent = T.dock.laws;
+  document.getElementById("goGauges").textContent = T.dock.gauges;
 
-  const styleChip = document.getElementById("styleChip");
-  const chipConcept = document.getElementById("chipConcept");
-  const chipLive = document.getElementById("chipLive");
-  const chipRoadmap = document.getElementById("chipRoadmap");
+  // Propagate lens state to subpages via query string (deterministic)
+  const q = "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
 
-  const grid = document.getElementById("grid");
-  const detail = document.getElementById("detail");
-  const dTitle = document.getElementById("dTitle");
-  const dPara  = document.getElementById("dPara");
-  const dList  = document.getElementById("dList");
-  const dBulLabel = document.getElementById("dBulLabel");
-  const dBack  = document.getElementById("dBack");
-  const dClose = document.getElementById("dClose");
-  const dPrev  = document.getElementById("dPrev");
-  const dNext  = document.getElementById("dNext");
+  document.getElementById("north").setAttribute("href","/products/software/?"+q);
+  document.getElementById("east").setAttribute("href","/products/commercial/?"+q);
+  document.getElementById("south").setAttribute("href","/products/energy/?"+q);
+  document.getElementById("west").setAttribute("href","/products/education/?"+q);
 
-  dBulLabel.textContent = T.bul;
-  dBack.textContent = T.nav.back;
-  dClose.textContent = T.nav.backPage;
-  dPrev.textContent = T.nav.prev;
-  dNext.textContent = T.nav.next;
+  document.getElementById("goTerminal").setAttribute("href","/index.html?"+q);
+  document.getElementById("goLinks").setAttribute("href","/links/?"+q);
+  document.getElementById("goLaws").setAttribute("href","/laws/?"+q);
+  document.getElementById("goGauges").setAttribute("href","/gauges/?"+q);
 
-  // Dock labels
-  document.getElementById("goHub").textContent = T.routes.hub;
-  document.getElementById("goTerminal").textContent = T.routes.terminal;
-  document.getElementById("goLinks").textContent = T.routes.links;
-  document.getElementById("goProducts").textContent = T.routes.products;
-  document.getElementById("goLaws").textContent = T.routes.laws;
-  document.getElementById("goGauges").textContent = T.routes.gauges;
-
-  // Rewrite links propagate lens state
-  function rewriteLinks(){
-    const q = "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
-    document.getElementById("goHub").setAttribute("href","/home/?"+q);
-    document.getElementById("goTerminal").setAttribute("href","/index.html?"+q);
-    document.getElementById("goLinks").setAttribute("href","/links/?"+q);
-    document.getElementById("goProducts").setAttribute("href","/products/?"+q);
-    document.getElementById("goLaws").setAttribute("href","/laws/?"+q);
-    document.getElementById("goGauges").setAttribute("href","/gauges/?"+q);
-  }
-
-  // Main page previews
-  function setPreviews(){
-    document.getElementById("northText").textContent = preview.north[lang];
-    document.getElementById("eastText").textContent  = preview.east[lang];
-    document.getElementById("southText").textContent = preview.south[lang];
-    document.getElementById("westText").textContent  = preview.west[lang];
-  }
-
-  // Lenses inside modal
-  function setLensLabels(){
-    styleChip.textContent = "STYLE: " + (style==="formal" ? T.s.formal : T.s.informal);
-    chipConcept.textContent = T.t.origin;
-    chipLive.textContent = T.t.now;
-    chipRoadmap.textContent = T.t.post;
-
-    chipConcept.classList.toggle("active", time==="origin");
-    chipLive.classList.toggle("active", time==="now");
-    chipRoadmap.classList.toggle("active", time==="post");
-  }
-
-  // Current category in modal
-  let cat = "north"; // north/east/south/west
-  let idx = 0;
-
-  function catTitle(category){
-    return category==="north" ? T.dirs.north :
-           category==="east"  ? T.dirs.east :
-           category==="south" ? T.dirs.south : T.dirs.west;
-  }
-
-  function buildGrid(){
-    grid.innerHTML = "";
-    detail.classList.remove("show");
-    grid.style.display = "grid";
-
-    const items = catalog[cat] || [];
-    items.forEach((it,i)=>{
-      const title = it[lang].t;
-      const sentence = it[lang].s;
-      const box = document.createElement("div");
-      box.className = "bubble";
-      box.innerHTML = `<div class="bt">${title}</div><p class="bs">${sentence}</p>`;
-      box.addEventListener("click", ()=>openDetail(i));
-      grid.appendChild(box);
-    });
-
-    mbody.scrollTop = 0;
-  }
-
-  function openDetail(i){
-    idx = i;
-    const it = (catalog[cat]||[])[idx];
-    const pack = it[lang].p[time][style];
-
-    dTitle.textContent = it[lang].t;
-    dPara.textContent = it[lang].s;
-
-    dList.innerHTML = "";
-    pack.forEach(x=>{
-      const li = document.createElement("li");
-      li.textContent = x;
-      dList.appendChild(li);
-    });
-
-    grid.style.display = "none";
-    detail.classList.add("show");
-    mbody.scrollTop = 0;
-  }
-
-  function backToGrid(){
-    detail.classList.remove("show");
-    grid.style.display = "grid";
-    mbody.scrollTop = 0;
-  }
-
-  function step(delta){
-    const items = catalog[cat] || [];
-    if(!items.length) return;
-    idx = (idx + delta + items.length) % items.length;
-    openDetail(idx);
-  }
-
-  function persist(){
-    try{
-      localStorage.setItem("gd_style", style);
-      localStorage.setItem("gd_time", time);
-    }catch(e){}
-  }
-
-  function openCategory(category){
-    cat = category;
-    ["north","east","south","west"].forEach(x=>document.getElementById(x).classList.toggle("active", x===category));
-    mTitle.textContent = catTitle(category);
-    bd.classList.add("show");
-    modal.classList.add("show");
-    setLensLabels();
-    persist();
-    buildGrid();
-  }
-
-  function closeModal(){
-    bd.classList.remove("show");
-    modal.classList.remove("show");
-    ["north","east","south","west"].forEach(x=>document.getElementById(x).classList.remove("active"));
-  }
-
-  // Lens handlers (concept/live/roadmap)
-  styleChip.addEventListener("click", ()=>{
-    style = (style==="formal") ? "informal" : "formal";
-    // post should still work in informal for products (it is a study lens), so no forcing here
-    setLensLabels();
-    persist();
-    if(detail.classList.contains("show")) openDetail(idx);
-  });
-  chipConcept.addEventListener("click", ()=>{ time="origin"; setLensLabels(); persist(); if(detail.classList.contains("show")) openDetail(idx); });
-  chipLive.addEventListener("click", ()=>{ time="now"; setLensLabels(); persist(); if(detail.classList.contains("show")) openDetail(idx); });
-  chipRoadmap.addEventListener("click", ()=>{ time="post"; setLensLabels(); persist(); if(detail.classList.contains("show")) openDetail(idx); });
-
-  // Buttons
-  bd.addEventListener("click", closeModal);
-  mClose.addEventListener("click", closeModal);
-  dClose.addEventListener("click", closeModal);
-  dBack.addEventListener("click", backToGrid);
-  dPrev.addEventListener("click", ()=>step(-1));
-  dNext.addEventListener("click", ()=>step(1));
-
-  // Diamond click -> category modal
-  ["north","east","south","west"].forEach(id=>{
-    document.getElementById(id).addEventListener("click", ()=>openCategory(id));
-  });
-
-  // Map button: open a routing list (still inside products modal, no extra UI)
-  document.getElementById("mapBtn").addEventListener("click", ()=>{
-    // Open products modal but show a routing grid (reuse catalog grid with routing items)
-    cat = "map";
-    mTitle.textContent = (lang==="zh" ? "产品地图" : "PRODUCTS MAP");
-    bd.classList.add("show");
-    modal.classList.add("show");
-    setLensLabels();
-    persist();
-
-    grid.innerHTML = "";
-    detail.classList.remove("show");
-    grid.style.display = "grid";
-
-    const q = "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
-    const routes = [
-      {t:(lang==="zh"?"枢纽":"Hub"), s:(lang==="zh"?"返回遍历枢纽。":"Return to the traversal hub."), href:"/home/?"+q},
-      {t:(lang==="zh"?"终端":"Terminal"), s:(lang==="zh"?"阅读导航与施工说明。":"Read navigation + under-construction guide."), href:"/index.html?"+q},
-      {t:(lang==="zh"?"链接":"Links"), s:(lang==="zh"?"外部锚点与身份。":"External anchors and identity."), href:"/links/?"+q},
-      {t:(lang==="zh"?"法则":"Laws"), s:(lang==="zh"?"标准、规则与治理。":"Standards, rules, governance."), href:"/laws/?"+q},
-      {t:(lang==="zh"?"量规":"Gauges"), s:(lang==="zh"?"仪表盘与指标。":"Dashboards and metrics."), href:"/gauges/?"+q}
-    ];
-    routes.forEach(r=>{
-      const el=document.createElement("div");
-      el.className="bubble";
-      el.innerHTML=`<div class="bt">${r.t}</div><p class="bs">${r.s}</p>`;
-      el.addEventListener("click", ()=>{ window.location.href = r.href; });
-      grid.appendChild(el);
-    });
-
-    mbody.scrollTop = 0;
-  });
-
-  // Leveling (no overlap)
+  // Leveling (no overlap) like hub: keep stage centered between top and dock
   function level(){
-    const tl = document.getElementById("topLeft");
-    const dock = document.getElementById("bottomDock");
-    const stage = document.getElementById("centerStage");
+    const top = document.querySelector(".top-left");
+    const dock = document.getElementById("dock");
+    const stage = document.getElementById("stage");
     if(!dock || !stage) return;
-
     const safe=10;
-    const topBand = (tl ? tl.getBoundingClientRect().bottom : 0) + safe;
+    const topBand = (top ? top.getBoundingClientRect().bottom : 0) + safe;
     const dockTop = dock.getBoundingClientRect().top - safe;
     const centerY = (topBand + dockTop) / 2;
     stage.style.top = centerY + "px";
@@ -1038,11 +348,6 @@ body{
   window.addEventListener("resize", level, {passive:true});
   window.addEventListener("orientationchange", ()=>setTimeout(level,50), {passive:true});
   setTimeout(level,0);
-
-  // Init
-  setPreviews();
-  rewriteLinks();
-  setLensLabels();
 })();
 </script>
 

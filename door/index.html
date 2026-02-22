@@ -1,65 +1,144 @@
+<!-- TNT FILE: /door/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="color-scheme" content="dark light" />
-  <title>CRP</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Door · Geodiametrics</title>
 
-  <!-- CSS ORDER (CANON): ui.css FIRST, branch.css SECOND -->
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
-
-  <!-- INSTRUMENT (state normalization) -->
-  <script defer src="/assets/instrument.js"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=9999"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=9999"/>
 </head>
 
 <body>
-  <main class="crp-shell crp-center">
-    <section class="crp-card crp-index" aria-label="Language Selection">
-      <header class="crp-header">
-        <div class="crp-mark" aria-hidden="true">CRP</div>
-        <h1 class="crp-title">Select Language</h1>
-        <p class="crp-subtitle">Choose one to continue.</p>
-      </header>
+  <div class="page">
+    <div class="wrap">
 
-      <div class="crp-actions" role="group" aria-label="Language options">
-        <button id="btn-en" class="crp-btn crp-btn-primary" type="button">
-          ENGLISH
-        </button>
-
-        <button id="btn-zh" class="crp-btn" type="button">
-          中文
-        </button>
+      <div class="hero" style="text-align:center">
+        <h1>DOOR</h1>
+        <p>Choose your route.</p>
       </div>
 
-      <footer class="crp-footer">
-        <small class="crp-footnote">Language sets <code>gd_lang</code> and routes forward.</small>
-      </footer>
-    </section>
-  </main>
+      <!-- STATE PILLS -->
+      <div class="pills" style="justify-content:center">
+        <span class="pill">LANG: <span id="pillLang">EN</span></span>
+        <span class="pill">DEPTH: <span id="pillDepth">EXPLORE</span></span>
+        <a class="pill btn" href="/">BACK</a>
+      </div>
+
+      <!-- LANGUAGE + DEPTH TOGGLES -->
+      <div class="pills" style="justify-content:center">
+        <button class="pill btn" id="btnEN" type="button">EN</button>
+        <button class="pill btn" id="btnZH" type="button">中文</button>
+        <span class="pill">·</span>
+        <button class="pill btn" id="btnExplore" type="button">EXPLORE</button>
+        <button class="pill btn" id="btnLearn" type="button">LEARN</button>
+      </div>
+
+      <!-- DIAMOND ROUTES -->
+      <div class="diamond-stage" aria-label="Route diamond">
+        <div class="diamond-plate" aria-hidden="true"></div>
+
+        <!-- TOP -->
+        <a class="diamond-btn diamond-top gold" id="goExplore" href="/explore/">
+          <span><b>EXPLORE</b><small>Surface</small></span>
+        </a>
+
+        <!-- RIGHT -->
+        <a class="diamond-btn diamond-right" id="goLearn" href="/home/">
+          <span><b>LEARN</b><small>Deep</small></span>
+        </a>
+
+        <!-- BOTTOM -->
+        <a class="diamond-btn diamond-bottom" id="goHome" href="/home/">
+          <span><b>HOME</b><small>Enter hub</small></span>
+        </a>
+
+        <!-- LEFT -->
+        <a class="diamond-btn diamond-left" id="goLinks" href="/links/">
+          <span><b>LINKS</b><small>Identity</small></span>
+        </a>
+      </div>
+
+      <div class="panel" style="padding:16px; margin-top:12px">
+        <div class="section-title" style="margin-top:0">What these routes mean</div>
+        <p style="margin-top:8px">
+          Explore = surface map. Learn = deep map (nested bubbles + resolution). Home = same hub (depth controls density). Links = identity, references, contact.
+        </p>
+      </div>
+
+      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+      <div class="ink">GEODIAMETRICS</div>
+
+    </div>
+  </div>
 
   <script>
-    (function () {
-      "use strict";
+  (() => {
+    // single source of truth keys (match your instrument engine)
+    const K_LANG = "gd_lang";
+    const K_DEPTH = "gd_depth";
 
-      // CANONICAL KEY OWNER (Index): gd_lang only.
-      var KEY_LANG = "gd_lang";
+    // accept query param as override (index may pass ?lang=zh)
+    const qs = new URLSearchParams(location.search);
+    const qLang = (qs.get("lang") || "").toLowerCase();
 
-      function setLangAndGo(lang) {
-        try { localStorage.setItem(KEY_LANG, lang); } catch (e) {}
-        // Route to Terminal with explicit lang query (canonical).
-        window.location.href = "/door/?lang=" + encodeURIComponent(lang);
-      }
+    function getLang(){
+      const v = (localStorage.getItem(K_LANG) || "").toLowerCase();
+      if (v === "en" || v === "zh") return v;
+      return "en";
+    }
+    function setLang(v){
+      v = (v || "").toLowerCase();
+      if (v !== "en" && v !== "zh") return;
+      localStorage.setItem(K_LANG, v);
+      paint();
+    }
 
-      var en = document.getElementById("btn-en");
-      var zh = document.getElementById("btn-zh");
+    function getDepth(){
+      const v = (localStorage.getItem(K_DEPTH) || "").toLowerCase();
+      if (v === "explore" || v === "learn") return v;
+      return "explore";
+    }
+    function setDepth(v){
+      v = (v || "").toLowerCase();
+      if (v !== "explore" && v !== "learn") return;
+      localStorage.setItem(K_DEPTH, v);
+      paint();
+    }
 
-      if (en) en.addEventListener("click", function () { setLangAndGo("en"); });
-      if (zh) zh.addEventListener("click", function () { setLangAndGo("zh"); });
+    // If index passed a lang, apply it once
+    if (qLang === "en" || qLang === "zh") setLang(qLang);
 
-      // Accessibility: Enter/Space already handled by <button>.
-    })();
+    const $ = (id) => document.getElementById(id);
+
+    function paint(){
+      const lang = getLang();
+      const depth = getDepth();
+
+      $("pillLang").textContent = (lang === "zh") ? "中文" : "EN";
+      $("pillDepth").textContent = depth.toUpperCase();
+
+      $("btnEN").classList.toggle("active", lang === "en");
+      $("btnZH").classList.toggle("active", lang === "zh");
+      $("btnExplore").classList.toggle("active", depth === "explore");
+      $("btnLearn").classList.toggle("active", depth === "learn");
+    }
+
+    $("btnEN").addEventListener("click", () => setLang("en"));
+    $("btnZH").addEventListener("click", () => setLang("zh"));
+    $("btnExplore").addEventListener("click", () => setDepth("explore"));
+    $("btnLearn").addEventListener("click", () => setDepth("learn"));
+
+    // Route clicks also stamp depth so Home can read it deterministically
+    $("goExplore").addEventListener("click", () => setDepth("explore"));
+    $("goLearn").addEventListener("click", () => setDepth("learn"));
+    $("goHome").addEventListener("click", () => {/* keep current depth */});
+    $("goLinks").addEventListener("click", () => {/* no-op */});
+
+    paint();
+  })();
   </script>
 </body>
 </html>
+```0

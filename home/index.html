@@ -1,429 +1,220 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="color-scheme" content="dark light" />
-  <title>Compass</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Explore · Diamond 2</title>
 
-  <!-- CSS ORDER (CANON): ui.css FIRST, branch.css SECOND -->
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+  <link rel="stylesheet" href="/assets/ui.css?v=EXPLORE_D2_1"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=EXPLORE_D2_1"/>
+  <script defer src="/assets/instrument.js?v=EXPLORE_D2_1"></script>
 
-  <!-- INSTRUMENT (state normalization) -->
-  <script defer src="/assets/instrument.js"></script>
+  <style>
+    .d2-wrap{max-width:980px;margin:0 auto;}
+    .d2-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+    @media (max-width:820px){ .d2-grid{grid-template-columns:1fr;} }
+    .d2-tile{min-height:104px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
+    .d2-left{display:flex;flex-direction:column;gap:4px;text-align:left}
+    .d2-code{font-weight:950;letter-spacing:.3px}
+    .d2-desc{opacity:.82;line-height:1.25}
+    .d2-tags{opacity:.70;font-size:12px;letter-spacing:.15px}
+    .d2-go{opacity:.85;font-weight:900}
+    .d2-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px}
+    .d2-mini{opacity:.72;font-size:12px;line-height:1.35;text-align:center;margin-top:10px}
+    .d2-section{margin-top:12px}
+  </style>
 </head>
 
 <body>
-  <main class="crp-shell">
-    <header class="crp-topbar" aria-label="Global controls">
-      <div class="crp-topbar-left">
-        <div class="crp-mark" aria-hidden="true">CRP</div>
-        <h1 class="crp-title">Compass</h1>
-      </div>
+<main class="crp-shell">
 
-      <div class="crp-topbar-right">
-        <!-- TIME tri-lens -->
-        <div class="crp-lens" role="group" aria-label="Time lens">
-          <button class="crp-chip" type="button" data-time="origin">Origin</button>
-          <button class="crp-chip" type="button" data-time="now">Now</button>
-          <button class="crp-chip" type="button" data-time="trajectory">Trajectory</button>
-        </div>
+  <header class="crp-header" style="text-align:center">
+    <div class="crp-mark" data-i18n="global.brand">GEODIAMETRICS</div>
+    <h1 class="crp-title" style="margin-bottom:6px">EXPLORE</h1>
+    <p class="crp-subtitle" style="margin-bottom:8px">Diamond 2 · Surface Map</p>
 
-        <!-- STYLE lens -->
+    <!-- Top lenses (operational overlay) -->
+    <div class="crp-topbar" style="margin:0 auto 8px;max-width:980px">
+      <div class="crp-topbar-left" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%">
         <div class="crp-lens" role="group" aria-label="Style lens">
-          <button class="crp-chip" type="button" data-style="formal">Formal</button>
-          <button class="crp-chip" type="button" data-style="informal">Informal</button>
+          <button class="crp-chip" type="button" data-style="formal">FORMAL</button>
+          <button class="crp-chip" type="button" data-style="informal">INFORMAL</button>
+        </div>
+        <div class="crp-lens" role="group" aria-label="Time lens">
+          <button class="crp-chip" type="button" data-time="origin">ORIGIN</button>
+          <button class="crp-chip" type="button" data-time="now">NOW</button>
+          <button class="crp-chip" type="button" data-time="trajectory">TRAJECTORY</button>
         </div>
       </div>
-    </header>
-
-    <section class="crp-compass" aria-label="Quadrants">
-      <!-- EXACTLY 4 QUADRANTS -->
-      <article class="crp-quadrant" data-quadrant="NW" aria-label="Northwest">
-        <h2 class="crp-quadrant-title">NW</h2>
-        <div class="crp-vines" role="list">
-          <!-- EXACTLY 4 VINES -->
-          <button class="crp-vine" type="button" data-vine="NW-1" role="listitem">NW Vine 1</button>
-          <button class="crp-vine" type="button" data-vine="NW-2" role="listitem">NW Vine 2</button>
-          <button class="crp-vine" type="button" data-vine="NW-3" role="listitem">NW Vine 3</button>
-          <button class="crp-vine" type="button" data-vine="NW-4" role="listitem">NW Vine 4</button>
-        </div>
-      </article>
-
-      <article class="crp-quadrant" data-quadrant="NE" aria-label="Northeast">
-        <h2 class="crp-quadrant-title">NE</h2>
-        <div class="crp-vines" role="list">
-          <button class="crp-vine" type="button" data-vine="NE-1" role="listitem">NE Vine 1</button>
-          <button class="crp-vine" type="button" data-vine="NE-2" role="listitem">NE Vine 2</button>
-          <button class="crp-vine" type="button" data-vine="NE-3" role="listitem">NE Vine 3</button>
-          <button class="crp-vine" type="button" data-vine="NE-4" role="listitem">NE Vine 4</button>
-        </div>
-      </article>
-
-      <article class="crp-quadrant" data-quadrant="SW" aria-label="Southwest">
-        <h2 class="crp-quadrant-title">SW</h2>
-        <div class="crp-vines" role="list">
-          <button class="crp-vine" type="button" data-vine="SW-1" role="listitem">SW Vine 1</button>
-          <button class="crp-vine" type="button" data-vine="SW-2" role="listitem">SW Vine 2</button>
-          <button class="crp-vine" type="button" data-vine="SW-3" role="listitem">SW Vine 3</button>
-          <button class="crp-vine" type="button" data-vine="SW-4" role="listitem">SW Vine 4</button>
-        </div>
-      </article>
-
-      <article class="crp-quadrant" data-quadrant="SE" aria-label="Southeast">
-        <h2 class="crp-quadrant-title">SE</h2>
-        <div class="crp-vines" role="list">
-          <button class="crp-vine" type="button" data-vine="SE-1" role="listitem">SE Vine 1</button>
-          <button class="crp-vine" type="button" data-vine="SE-2" role="listitem">SE Vine 2</button>
-          <button class="crp-vine" type="button" data-vine="SE-3" role="listitem">SE Vine 3</button>
-          <button class="crp-vine" type="button" data-vine="SE-4" role="listitem">SE Vine 4</button>
-        </div>
-      </article>
-    </section>
-  </main>
-
-  <!-- MODAL OVERLAY (owned/styled by /assets/branch.css; no page-level styles) -->
-  <div id="crp-modal" class="crp-modal" hidden aria-hidden="true">
-    <div class="crp-modal-backdrop" data-modal-close="1"></div>
-
-    <div class="crp-modal-panel" role="dialog" aria-modal="true" aria-label="Detail">
-      <header class="crp-modal-header">
-        <div class="crp-modal-titlewrap">
-          <div class="crp-modal-kicker" id="modal-kicker">Vine</div>
-          <h3 class="crp-modal-title" id="modal-title">Select a fruit</h3>
-        </div>
-
-        <button class="crp-modal-close" type="button" aria-label="Close" data-modal-close="1">✕</button>
-      </header>
-
-      <!-- FRUIT LIST VIEW -->
-      <section id="modal-fruits-view" class="crp-modal-body" aria-label="Fruits">
-        <p class="crp-modal-hint" id="modal-hint">Choose one.</p>
-
-        <div class="crp-fruits" role="list" aria-label="Fruit options">
-          <!-- EXACTLY 4 FRUITS (buttons) -->
-          <button class="crp-fruit" type="button" data-fruit="F1" role="listitem">Fruit 1</button>
-          <button class="crp-fruit" type="button" data-fruit="F2" role="listitem">Fruit 2</button>
-          <button class="crp-fruit" type="button" data-fruit="F3" role="listitem">Fruit 3</button>
-          <button class="crp-fruit" type="button" data-fruit="F4" role="listitem">Fruit 4</button>
-        </div>
-      </section>
-
-      <!-- RESOLUTION VIEW -->
-      <section id="modal-resolution-view" class="crp-modal-body" aria-label="Resolution" hidden>
-        <div class="crp-resolution">
-          <p id="res-paragraph" class="crp-resolution-paragraph"></p>
-          <ul id="res-bullets" class="crp-resolution-bullets"></ul>
-          <div class="crp-resolution-implication">
-            <div class="crp-resolution-implication-label">Implication</div>
-            <p id="res-implication" class="crp-resolution-implication-text"></p>
-          </div>
-
-          <div class="crp-resolution-actions">
-            <button id="res-back" class="crp-btn" type="button">Back</button>
-          </div>
-        </div>
-      </section>
-
-      <footer class="crp-modal-footer">
-        <small class="crp-footnote">
-          Depth: <span id="ui-depth">explore</span> · Time: <span id="ui-time">origin</span> · Style: <span id="ui-style">formal</span>
-        </small>
-      </footer>
     </div>
-  </div>
 
-  <script>
-    (function () {
-      "use strict";
+    <div class="d2-row" aria-label="Quick navigation">
+      <a id="go-home" class="crp-btn crp-btn-primary" href="/home/" role="button">COMPASS</a>
+      <a id="go-about" class="crp-btn" href="/about/" role="button">ABOUT</a>
+      <a id="go-links" class="crp-btn" href="/links/" role="button">LINKS</a>
+      <a id="go-laws" class="crp-btn" href="/laws/" role="button">LAWS</a>
+      <a id="go-gauges" class="crp-btn" href="/gauges/" role="button">GAUGES</a>
+    </div>
 
-      // CANONICAL STATE KEYS ONLY
-      var KEY_LANG  = "gd_lang";
-      var KEY_DEPTH = "gd_depth";
-      var KEY_TIME  = "gd_time";
-      var KEY_STYLE = "gd_style";
+    <p class="d2-mini">
+      Explore is the new transition diamond. It routes into the core/spine (Compass) while preserving lenses.
+    </p>
+  </header>
 
-      var ALLOWED_LANG  = { en: 1, zh: 1 };
-      var ALLOWED_DEPTH = { explore: 1, learn: 1 };
-      var ALLOWED_TIME  = { origin: 1, now: 1, trajectory: 1 };
-      var ALLOWED_STYLE = { formal: 1, informal: 1 };
+  <section class="d2-wrap">
 
-      function qp(name) {
-        try { return new URLSearchParams(window.location.search).get(name); }
-        catch (e) { return null; }
-      }
+    <div class="d2-grid" aria-label="Diamond 2 quadrants">
+      <!-- NW -->
+      <a id="q-nw" class="crp-btn d2-tile" href="/home/" role="button">
+        <div class="d2-left">
+          <div class="d2-code">⭐ NW · NORTHWEST</div>
+          <div class="d2-desc"><b>Definition · Language · Structure</b></div>
+          <div class="d2-tags">SSG · Grammar · DOT.GRID · Acronyms</div>
+        </div>
+        <div class="d2-go">▶</div>
+      </a>
 
-      function lsGet(k) {
-        try { return localStorage.getItem(k); } catch (e) { return null; }
-      }
+      <!-- NE -->
+      <a id="q-ne" class="crp-btn d2-tile" href="/home/" role="button">
+        <div class="d2-left">
+          <div class="d2-code">☀️ NE · NORTHEAST</div>
+          <div class="d2-desc"><b>Execution · Surfaces · Examples</b></div>
+          <div class="d2-tags">Products · Demos · Workflows</div>
+        </div>
+        <div class="d2-go">▶</div>
+      </a>
 
-      function lsSet(k, v) {
-        try { localStorage.setItem(k, v); } catch (e) {}
-      }
+      <!-- SW -->
+      <a id="q-sw" class="crp-btn d2-tile" href="/home/" role="button">
+        <div class="d2-left">
+          <div class="d2-code">🔥 SW · SOUTHWEST</div>
+          <div class="d2-desc"><b>Measurement · Diagnostics · Rules</b></div>
+          <div class="d2-tags">UCI · HIP Gates · Alerts · Reports</div>
+        </div>
+        <div class="d2-go">▶</div>
+      </a>
 
-      function normalize() {
-        // Language must exist (inherited from Index). If missing, force back to start.
-        var lang = qp("lang") || lsGet(KEY_LANG);
-        if (!ALLOWED_LANG[lang]) {
-          window.location.href = "/";
-          return null;
-        }
-        lsSet(KEY_LANG, lang);
+      <!-- SE -->
+      <a id="q-se" class="crp-btn d2-tile" href="/home/" role="button">
+        <div class="d2-left">
+          <div class="d2-code">🌙 SE · SOUTHEAST</div>
+          <div class="d2-desc"><b>Governance · Capital · Certification</b></div>
+          <div class="d2-tags">CARES · Charter · Registry · Audit</div>
+        </div>
+        <div class="d2-go">▶</div>
+      </a>
+    </div>
 
-        var depth = qp("depth") || lsGet(KEY_DEPTH);
-        if (!ALLOWED_DEPTH[depth]) depth = "explore";
-        lsSet(KEY_DEPTH, depth);
+    <div class="d2-section">
+      <hr class="crp-divider"/>
 
-        var time = qp("time") || lsGet(KEY_TIME);
-        if (!ALLOWED_TIME[time]) time = "origin";
-        lsSet(KEY_TIME, time);
+      <div class="d2-row" aria-label="Core/Spine links">
+        <a id="go-products" class="crp-btn" href="/products/" role="button">PRODUCTS</a>
+        <a id="go-cares" class="crp-btn" href="/cares/" role="button">CARES</a>
+        <a id="go-hipdemo" class="crp-btn" href="/hip-demo/" role="button">HIP DEMO</a>
+        <a id="go-start" class="crp-btn" href="/" role="button">START</a>
+      </div>
 
-        var style = qp("style") || lsGet(KEY_STYLE);
-        if (!ALLOWED_STYLE[style]) style = "formal";
-        lsSet(KEY_STYLE, style);
+      <p class="d2-mini">
+        BUILD: <b>EXPLORE_D2_1</b> · Carries: <code>gd_lang</code> <code>gd_depth</code> <code>gd_style</code> <code>gd_time</code>
+      </p>
+    </div>
 
-        return { lang: lang, depth: depth, time: time, style: style };
-      }
+  </section>
+</main>
 
-      var state = normalize();
-      if (!state) return;
+<script>
+(function(){
+  "use strict";
 
-      // UI refs
-      var modal = document.getElementById("crp-modal");
-      var modalKicker = document.getElementById("modal-kicker");
-      var modalTitle = document.getElementById("modal-title");
-      var modalHint = document.getElementById("modal-hint");
+  var K_LANG="gd_lang", K_DEPTH="gd_depth", K_STYLE="gd_style", K_TIME="gd_time";
+  var allowLang={en:1,zh:1};
+  var allowDepth={explore:1,learn:1};
+  var allowStyle={formal:1,informal:1};
+  var allowTime={origin:1,now:1,trajectory:1};
 
-      var fruitsView = document.getElementById("modal-fruits-view");
-      var resView = document.getElementById("modal-resolution-view");
+  function qp(n){ try{return new URLSearchParams(location.search).get(n);}catch(e){return null;} }
+  function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
+  function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
 
-      var resP = document.getElementById("res-paragraph");
-      var resBullets = document.getElementById("res-bullets");
-      var resImp = document.getElementById("res-implication");
-      var resBack = document.getElementById("res-back");
+  var state={
+    lang:  qp("lang")  || lsGet(K_LANG)  || "en",
+    depth: qp("depth") || lsGet(K_DEPTH) || "explore",
+    style: qp("style") || lsGet(K_STYLE) || "formal",
+    time:  qp("time")  || lsGet(K_TIME)  || "origin"
+  };
 
-      var uiDepth = document.getElementById("ui-depth");
-      var uiTime = document.getElementById("ui-time");
-      var uiStyle = document.getElementById("ui-style");
+  if(!allowLang[state.lang]) state.lang="en";
+  if(!allowDepth[state.depth]) state.depth="explore";
+  if(!allowStyle[state.style]) state.style="formal";
+  if(!allowTime[state.time]) state.time="origin";
 
-      function syncFooter() {
-        if (uiDepth) uiDepth.textContent = state.depth;
-        if (uiTime) uiTime.textContent = state.time;
-        if (uiStyle) uiStyle.textContent = state.style;
-      }
+  lsSet(K_LANG,state.lang); lsSet(K_DEPTH,state.depth); lsSet(K_STYLE,state.style); lsSet(K_TIME,state.time);
 
-      syncFooter();
+  function setPressed(group, attr, value){
+    var nodes=document.querySelectorAll(group+" .crp-chip["+attr+"]");
+    for(var i=0;i<nodes.length;i++){
+      var v=nodes[i].getAttribute(attr);
+      nodes[i].setAttribute("aria-pressed", v===value ? "true":"false");
+    }
+  }
+  setPressed("[aria-label='Style lens']","data-style",state.style);
+  setPressed("[aria-label='Time lens']","data-time",state.time);
 
-      // Content model (placeholder, deterministic; will be expanded later without structure changes)
-      // Each vine has exactly 4 fruits; each fruit yields a resolution payload.
-      var VINES = {
-        "NW-1": { label: "NW Vine 1" },
-        "NW-2": { label: "NW Vine 2" },
-        "NW-3": { label: "NW Vine 3" },
-        "NW-4": { label: "NW Vine 4" },
+  // lens handlers
+  var styleChips=document.querySelectorAll(".crp-chip[data-style]");
+  for(var s=0;s<styleChips.length;s++){
+    styleChips[s].addEventListener("click", function(e){
+      var v=e.currentTarget.getAttribute("data-style");
+      if(!allowStyle[v]) return;
+      state.style=v; lsSet(K_STYLE,v);
+      setPressed("[aria-label='Style lens']","data-style",v);
+      rewrite();
+    });
+  }
+  var timeChips=document.querySelectorAll(".crp-chip[data-time]");
+  for(var t=0;t<timeChips.length;t++){
+    timeChips[t].addEventListener("click", function(e){
+      var v=e.currentTarget.getAttribute("data-time");
+      if(!allowTime[v]) return;
+      state.time=v; lsSet(K_TIME,v);
+      setPressed("[aria-label='Time lens']","data-time",v);
+      rewrite();
+    });
+  }
 
-        "NE-1": { label: "NE Vine 1" },
-        "NE-2": { label: "NE Vine 2" },
-        "NE-3": { label: "NE Vine 3" },
-        "NE-4": { label: "NE Vine 4" },
+  function rewrite(){
+    var q="lang="+encodeURIComponent(state.lang)+
+          "&depth="+encodeURIComponent(state.depth)+
+          "&style="+encodeURIComponent(state.style)+
+          "&time="+encodeURIComponent(state.time);
 
-        "SW-1": { label: "SW Vine 1" },
-        "SW-2": { label: "SW Vine 2" },
-        "SW-3": { label: "SW Vine 3" },
-        "SW-4": { label: "SW Vine 4" },
+    function set(id, href){
+      var a=document.getElementById(id);
+      if(a) a.setAttribute("href", href);
+    }
 
-        "SE-1": { label: "SE Vine 1" },
-        "SE-2": { label: "SE Vine 2" },
-        "SE-3": { label: "SE Vine 3" },
-        "SE-4": { label: "SE Vine 4" }
-      };
+    // core/spine
+    set("go-home","/home/?"+q);
+    set("go-about","/about/?"+q);
+    set("go-links","/links/?"+q);
+    set("go-laws","/laws/?"+q);
+    set("go-gauges","/gauges/?"+q);
+    set("go-products","/products/?"+q);
+    set("go-cares","/cares/?"+q);
+    set("go-hipdemo","/hip-demo/?"+q);
+    set("go-start","/?"+q);
 
-      var FRUITS = [
-        { id: "F1", label: "Fruit 1" },
-        { id: "F2", label: "Fruit 2" },
-        { id: "F3", label: "Fruit 3" },
-        { id: "F4", label: "Fruit 4" }
-      ];
+    // Diamond 2 quadrants route into Compass with an axis hint (query-only; no new storage keys)
+    set("q-nw","/home/?"+q+"&axis=nw");
+    set("q-ne","/home/?"+q+"&axis=ne");
+    set("q-sw","/home/?"+q+"&axis=sw");
+    set("q-se","/home/?"+q+"&axis=se");
+  }
 
-      function densityText(vineId, fruitId) {
-        // Explore vs Learn density spec:
-        // Explore = short summary
-        // Learn = full paragraph + bullets
-        var base = vineId + " · " + fruitId + " · " + state.time + " · " + state.style;
+  rewrite();
+})();
+</script>
 
-        if (state.depth === "explore") {
-          return {
-            paragraph: "Summary: " + base + ".",
-            bullets: [],
-            implication: "Implication: move to Learn for full detail."
-          };
-        }
-
-        // learn
-        return {
-          paragraph: "Full: " + base + ". This block expresses a stable resolution statement under the current lenses.",
-          bullets: [
-            "Bullet 1: deterministic point tied to the selected fruit.",
-            "Bullet 2: bounded claim with no drift.",
-            "Bullet 3: compatible with canonical state keys only."
-          ],
-          implication: "Implication: apply the resolution to the current traversal without changing structure."
-        };
-      }
-
-      // Modal state
-      var currentVineId = null;
-
-      function openModal(vineId) {
-        currentVineId = vineId;
-
-        // Reset views
-        if (fruitsView) fruitsView.hidden = false;
-        if (resView) resView.hidden = true;
-
-        // Update header
-        var vineLabel = (VINES[vineId] && VINES[vineId].label) ? VINES[vineId].label : vineId;
-        if (modalKicker) modalKicker.textContent = vineLabel;
-        if (modalTitle) modalTitle.textContent = "Select a fruit";
-        if (modalHint) modalHint.textContent = "Choose one.";
-
-        // Update fruit labels (always exactly 4)
-        var fruitBtns = modal ? modal.querySelectorAll(".crp-fruit") : null;
-        if (fruitBtns && fruitBtns.length === 4) {
-          for (var i = 0; i < 4; i++) {
-            fruitBtns[i].textContent = FRUITS[i].label;
-            fruitBtns[i].setAttribute("data-fruit", FRUITS[i].id);
-          }
-        }
-
-        // Show modal
-        if (modal) {
-          modal.hidden = false;
-          modal.setAttribute("aria-hidden", "false");
-        }
-
-        syncFooter();
-      }
-
-      function closeModal() {
-        currentVineId = null;
-        if (modal) {
-          modal.hidden = true;
-          modal.setAttribute("aria-hidden", "true");
-        }
-      }
-
-      function showResolution(fruitId) {
-        if (!currentVineId) return;
-
-        var payload = densityText(currentVineId, fruitId);
-
-        if (resP) resP.textContent = payload.paragraph;
-
-        if (resBullets) {
-          resBullets.innerHTML = "";
-          for (var i = 0; i < payload.bullets.length; i++) {
-            var li = document.createElement("li");
-            li.textContent = payload.bullets[i];
-            resBullets.appendChild(li);
-          }
-        }
-
-        if (resImp) resImp.textContent = payload.implication;
-
-        if (fruitsView) fruitsView.hidden = true;
-        if (resView) resView.hidden = false;
-
-        if (modalTitle) modalTitle.textContent = "Resolution";
-        if (modalHint) modalHint.textContent = "";
-
-        syncFooter();
-      }
-
-      function backToFruits() {
-        if (fruitsView) fruitsView.hidden = false;
-        if (resView) resView.hidden = true;
-
-        if (modalTitle) modalTitle.textContent = "Select a fruit";
-        if (modalHint) modalHint.textContent = "Choose one.";
-      }
-
-      // Wire vines (click opens modal; no scroll-jump because modal is overlay)
-      var vineBtns = document.querySelectorAll(".crp-vine[data-vine]");
-      for (var v = 0; v < vineBtns.length; v++) {
-        vineBtns[v].addEventListener("click", function (e) {
-          var id = e.currentTarget.getAttribute("data-vine");
-          openModal(id);
-        });
-      }
-
-      // Wire fruit clicks
-      var fruitBtns2 = document.querySelectorAll(".crp-fruit[data-fruit]");
-      for (var f = 0; f < fruitBtns2.length; f++) {
-        fruitBtns2[f].addEventListener("click", function (e) {
-          var fruitId = e.currentTarget.getAttribute("data-fruit");
-          showResolution(fruitId);
-        });
-      }
-
-      // Back button in Resolution
-      if (resBack) resBack.addEventListener("click", backToFruits);
-
-      // Close controls (backdrop + close button)
-      var closeEls = document.querySelectorAll("[data-modal-close='1']");
-      for (var c = 0; c < closeEls.length; c++) {
-        closeEls[c].addEventListener("click", closeModal);
-      }
-
-      // Lens controls (Time / Style)
-      function setActiveChip(groupSelector, attr, value) {
-        var chips = document.querySelectorAll(groupSelector + " .crp-chip[" + attr + "]");
-        for (var i = 0; i < chips.length; i++) {
-          var v = chips[i].getAttribute(attr);
-          if (v === value) chips[i].setAttribute("aria-pressed", "true");
-          else chips[i].setAttribute("aria-pressed", "false");
-        }
-      }
-
-      function initChips() {
-        setActiveChip("[aria-label='Time lens']", "data-time", state.time);
-        setActiveChip("[aria-label='Style lens']", "data-style", state.style);
-      }
-
-      initChips();
-
-      // Time chip handlers
-      var timeChips = document.querySelectorAll(".crp-chip[data-time]");
-      for (var t = 0; t < timeChips.length; t++) {
-        timeChips[t].addEventListener("click", function (e) {
-          var val = e.currentTarget.getAttribute("data-time");
-          if (!ALLOWED_TIME[val]) return;
-          state.time = val;
-          lsSet(KEY_TIME, val);
-          setActiveChip("[aria-label='Time lens']", "data-time", val);
-          syncFooter();
-        });
-      }
-
-      // Style chip handlers
-      var styleChips = document.querySelectorAll(".crp-chip[data-style]");
-      for (var s = 0; s < styleChips.length; s++) {
-        styleChips[s].addEventListener("click", function (e) {
-          var val = e.currentTarget.getAttribute("data-style");
-          if (!ALLOWED_STYLE[val]) return;
-          state.style = val;
-          lsSet(KEY_STYLE, val);
-          setActiveChip("[aria-label='Style lens']", "data-style", val);
-          syncFooter();
-        });
-      }
-
-      // Escape to close modal
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && modal && !modal.hidden) closeModal();
-      });
-    })();
-  </script>
 </body>
 </html>

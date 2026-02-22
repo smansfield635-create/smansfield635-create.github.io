@@ -1,71 +1,45 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Compass · DIAMOND</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DIAMOND · Geodiametrics</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=9400"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9400"/>
-  <script defer src="/assets/instrument.js?v=9400"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=9500" />
+  <link rel="stylesheet" href="/assets/branch.css?v=9500" />
+  <script defer src="/assets/instrument.js?v=9500"></script>
 </head>
 
 <body>
+  <main class="crp-shell crp-center">
+    <section class="crp-card" aria-label="Pre-Scope Portal" style="text-align:center">
+      <header class="crp-header">
+        <div class="crp-mark" aria-hidden="true">GEODIAMETRICS</div>
+        <h1 class="crp-title" style="margin-bottom:6px">DIAMOND</h1>
+        <p class="crp-subtitle" style="margin-bottom:18px">
+          Enter scope.
+        </p>
+      </header>
 
-<main class="crp-shell">
+      <!-- Hard link: works even if JS fails -->
+      <div style="display:flex;justify-content:center">
+        <a
+          class="crp-btn crp-btn-primary"
+          href="/home/"
+          role="button"
+          aria-label="Enter scope"
+          style="min-width:220px;justify-content:center"
+        >
+          ENTER
+        </a>
+      </div>
 
-  <header class="crp-header" style="text-align:center">
-    <div class="crp-mark">GEODIAMETRICS</div>
-    <h1 class="crp-title">COMPASS</h1>
-    <p class="crp-subtitle">Hexagonal Enforcement Geometry</p>
-  </header>
-
-  <section class="crp-snowflake">
-
-    <!-- NUCLEUS -->
-    <button class="crp-nucleus">
-      <div>DIAMOND</div>
-    </button>
-
-    <!-- AXIS 1 -->
-    <button class="crp-axis" data-axis="rho">
-      <div class="crp-axis-title">ρ</div>
-      <div class="crp-axis-kicker">Correlation</div>
-    </button>
-
-    <!-- AXIS 2 -->
-    <button class="crp-axis" data-axis="tc">
-      <div class="crp-axis-title">TC</div>
-      <div class="crp-axis-kicker">Alignment</div>
-    </button>
-
-    <!-- AXIS 3 -->
-    <button class="crp-axis" data-axis="delta">
-      <div class="crp-axis-title">Δ</div>
-      <div class="crp-axis-kicker">Acceleration</div>
-    </button>
-
-    <!-- AXIS 4 -->
-    <button class="crp-axis" data-axis="hip">
-      <div class="crp-axis-title">HIP</div>
-      <div class="crp-axis-kicker">Gates</div>
-    </button>
-
-    <!-- AXIS 5 -->
-    <button class="crp-axis" data-axis="lambda">
-      <div class="crp-axis-title">λ</div>
-      <div class="crp-axis-kicker">Hazard</div>
-    </button>
-
-    <!-- AXIS 6 -->
-    <button class="crp-axis" data-axis="cert">
-      <div class="crp-axis-title">CERT</div>
-      <div class="crp-axis-kicker">Authority</div>
-    </button>
-
-  </section>
-
-</main>
-
+      <footer class="crp-footer" style="margin-top:18px">
+        <small class="crp-footnote">
+          Nucleus-only portal. Scope controls language, mode, depth, style, and time.
+        </small>
+      </footer>
+    </section>
+  </main>
 </body>
 </html>

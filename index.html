@@ -1,63 +1,65 @@
-<!-- TNT FILE: /index.html -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Coherent Resolution Platform</title>
-  <link rel="stylesheet" href="/assets/ui.css?v=9100"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9100"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title>CRP</title>
+
+  <!-- CSS ORDER (CANON): ui.css FIRST, branch.css SECOND -->
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+
+  <!-- INSTRUMENT (state normalization) -->
+  <script defer src="/assets/instrument.js"></script>
 </head>
 
 <body>
-  <div class="diamond-field" aria-hidden="true"></div>
+  <main class="crp-shell crp-center">
+    <section class="crp-card crp-index" aria-label="Language Selection">
+      <header class="crp-header">
+        <div class="crp-mark" aria-hidden="true">CRP</div>
+        <h1 class="crp-title">Select Language</h1>
+        <p class="crp-subtitle">Choose one to continue.</p>
+      </header>
 
-  <div class="page">
-    <div class="wrap" style="max-width:740px;align-items:center;text-align:center;position:relative;z-index:2;">
-      <div class="hero">
-        <h1>COHERENT<br/>RESOLUTION<br/>PLATFORM</h1>
-        <p>Choose your language once. Everything adapts from there.</p>
+      <div class="crp-actions" role="group" aria-label="Language options">
+        <button id="btn-en" class="crp-btn crp-btn-primary" type="button">
+          ENGLISH
+        </button>
+
+        <button id="btn-zh" class="crp-btn" type="button">
+          中文
+        </button>
       </div>
 
-      <div class="panel" style="padding:22px 18px; width:min(640px,94vw); background:rgba(0,0,0,.34);">
-        <div class="section-title" style="margin-top:0;">Language</div>
-
-        <div style="display:flex;flex-direction:column;gap:12px;margin-top:14px;">
-          <button class="btn gold" id="btnEN" type="button" style="text-align:left;padding:16px 18px;font-size:13px;border-radius:18px;">
-            ENGLISH
-          </button>
-
-          <button class="btn" id="btnZH" type="button" style="text-align:left;padding:16px 18px;font-size:13px;border-radius:18px;">
-            中文
-          </button>
-        </div>
-
-        <hr class="sep"/>
-
-        <p style="font-size:13px;opacity:.70;line-height:1.6;">
-          Tip: You can switch language later from the Door.
-        </p>
-      </div>
-
-      <div class="ink">GEODIAMETRICS</div>
-      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </div>
-  </div>
+      <footer class="crp-footer">
+        <small class="crp-footnote">Language sets <code>gd_lang</code> and routes forward.</small>
+      </footer>
+    </section>
+  </main>
 
   <script>
-  (() => {
-    const K_LANG = "gd_lang";
+    (function () {
+      "use strict";
 
-    function go(lang){
-      try { localStorage.setItem(K_LANG, lang); } catch(e){}
-      location.href = "/door/?lang=" + encodeURIComponent(lang);
-    }
+      // CANONICAL KEY OWNER (Index): gd_lang only.
+      var KEY_LANG = "gd_lang";
 
-    document.getElementById("btnEN").addEventListener("click", ()=>go("en"));
-    document.getElementById("btnZH").addEventListener("click", ()=>go("zh"));
-  })();
+      function setLangAndGo(lang) {
+        try { localStorage.setItem(KEY_LANG, lang); } catch (e) {}
+        // Route to Terminal with explicit lang query (canonical).
+        window.location.href = "/door/?lang=" + encodeURIComponent(lang);
+      }
+
+      var en = document.getElementById("btn-en");
+      var zh = document.getElementById("btn-zh");
+
+      if (en) en.addEventListener("click", function () { setLangAndGo("en"); });
+      if (zh) zh.addEventListener("click", function () { setLangAndGo("zh"); });
+
+      // Accessibility: Enter/Space already handled by <button>.
+    })();
   </script>
-
-  <script src="/assets/instrument.js?v=9100"></script>
 </body>
 </html>

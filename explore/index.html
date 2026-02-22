@@ -6,129 +6,167 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Explore · Geodiametrics</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=9999"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9999"/>
+  <link rel="stylesheet" href="/assets/ui.css?v=9300"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=9300"/>
+  <script defer src="/assets/instrument.js?v=9300"></script>
 </head>
 
 <body>
-  <div class="page">
-    <div class="wrap">
+<div class="page">
+  <div class="wrap">
 
-      <div class="hero" style="text-align:center">
-        <h1>EXPLORE</h1>
-        <p>Surface map. Tap a quadrant to see 4 vines.</p>
-      </div>
+    <div class="hero" style="text-align:center">
+      <h1>EXPLORE</h1>
+      <p>Surface map. Tap any vine to jump into Compass.</p>
 
-      <!-- STATE BAR -->
-      <div class="pills" style="justify-content:center">
+      <div class="pills" style="justify-content:center;margin-top:12px">
         <span class="pill">LANG: <span id="pillLang">EN</span></span>
         <span class="pill">DEPTH: <span id="pillDepth">EXPLORE</span></span>
-        <a class="pill btn" href="/door/">DOOR</a>
+        <a class="pill btn" href="/door/">TERMINAL</a>
+        <a class="pill btn" href="/home/">COMPASS</a>
       </div>
 
-      <!-- QUADRANTS -->
-      <details class="quad" open>
-        <summary>
-          <div class="q-left">
-            <div class="q-badge">⭐ NW</div>
-            <div class="q-text">
-              <b>NORTHWEST</b>
-              <span>Definition · language · structure</span>
-            </div>
-          </div>
-        </summary>
-
-        <div class="inside">
-          <div class="bubble-row">
-            <a class="bubble-btn" href="/home/?q=NW&v=SSG">
-              <div>
-                <b>SSG</b>
-                <i>Constraint language overview</i>
-              </div>
-              <div class="go">▶</div>
-            </a>
-
-            <a class="bubble-btn" href="/home/?q=NW&v=GRAMMAR">
-              <div>
-                <b>DIAMOND GRAMMAR</b>
-                <i>Hub-first traversal + receipts</i>
-              </div>
-              <div class="go">▶</div>
-            </a>
-
-            <a class="bubble-btn" href="/home/?q=NW&v=DOTGRID">
-              <div>
-                <b>DOT.GRID</b>
-                <i>256-state indexing</i>
-              </div>
-              <div class="go">▶</div>
-            </a>
-
-            <a class="bubble-btn" href="/home/?q=NW&v=ACRONYMS">
-              <div>
-                <b>ACRONYMS</b>
-                <i>Pillars + usage</i>
-              </div>
-              <div class="go">▶</div>
-            </a>
-          </div>
-        </div>
-      </details>
-
-      <details class="quad">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge">☀ NE</div>
-            <div class="q-text">
-              <b>NORTHEAST</b>
-              <span>Execution · surfaces · examples</span>
-            </div>
-          </div>
-        </summary>
-      </details>
-
-      <details class="quad">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge">🏮 SW</div>
-            <div class="q-text">
-              <b>SOUTHWEST</b>
-              <span>Measurement · diagnostics · rules</span>
-            </div>
-          </div>
-        </summary>
-      </details>
-
-      <details class="quad">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge">🌇 SE</div>
-            <div class="q-text">
-              <b>SOUTHEAST</b>
-              <span>Identity · references · links</span>
-            </div>
-          </div>
-        </summary>
-      </details>
-
-      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-      <div class="ink">GEODIAMETRICS</div>
-
+      <div class="section-title">Quadrants (NW / NE / SW / SE)</div>
     </div>
+
+    <!-- NW -->
+    <details class="quad" open>
+      <summary>
+        <div class="q-left">
+          <div class="q-badge"><span class="icon">⭐</span><span class="code">NW</span></div>
+          <div class="q-text"><b>NORTHWEST</b><span>Definition · language · structure</span></div>
+        </div>
+        <div class="q-arrow">▾</div>
+      </summary>
+      <div class="inside">
+        <div class="bubble-row">
+          <a class="bubble-btn js-vine" data-q="NW" data-v="SSG" href="#">
+            <div class="lbl"><b>SSG</b><i>Constraint language</i></div><div class="go">▶</div>
+          </a>
+          <a class="bubble-btn js-vine" data-q="NW" data-v="GRAMMAR" href="#">
+            <div class="lbl"><b>DIAMOND GRAMMAR</b><i>Traversal rules</i></div><div class="go">▶</div>
+          </a>
+          <a class="bubble-btn js-vine" data-q="NW" data-v="DOTGRID" href="#">
+            <div class="lbl"><b>DOT.GRID</b><i>256-state indexing</i></div><div class="go">▶</div>
+          </a>
+          <a class="bubble-btn js-vine" data-q="NW" data-v="ACRONYMS" href="#">
+            <div class="lbl"><b>ACRONYMS</b><i>Pillars + lookup</i></div><div class="go">▶</div>
+          </a>
+        </div>
+      </div>
+    </details>
+
+    <!-- NE -->
+    <details class="quad">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge"><span class="icon">☀️</span><span class="code">NE</span></div>
+          <div class="q-text"><b>NORTHEAST</b><span>Execution · surfaces · examples</span></div>
+        </div>
+        <div class="q-arrow">▾</div>
+      </summary>
+      <div class="inside">
+        <div class="bubble-row">
+          <a class="bubble-btn js-vine" data-q="NE" data-v="SURFACES" href="#">
+            <div class="lbl"><b>SURFACES</b><i>Apps · portals</i></div><div class="go">▶</div>
+          </a>
+          <a class="bubble-btn js-vine" data-q="NE" data-v="WORKFLOWS" href="#">
+            <div class="lbl"><b>WORKFLOWS</b><i>Receipts · replay</i></div><div class="go">▶</div>
+          </a>
+          <a class="bubble-btn js-vine" data-q="NE" data-v="EXAMPLES" href="#">
+            <div class="lbl"><b>EXAMPLES</b><i>How to use</i></div><div class="go">▶</div>
+          </a>
+          <a class="bubble-btn js-vine" data-q="NE" data-v="OUTPUTS" href="#">
+            <div class="lbl"><b>OUTPUTS</b><i>Packs · artifacts</i></div><div class="go">▶</div>
+          </a>
+        </div>
+      </div>
+    </details>
+
+    <!-- SW -->
+    <details class="quad">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge"><span class="icon">🏮</span><span class="code">SW</span></div>
+          <div class="q-text"><b>SOUTHWEST</b><span>Measurement · diagnostics · rules</span></div>
+        </div>
+        <div class="q-arrow">▾</div>
+      </summary>
+      <div class="inside">
+        <div class="bubble-row">
+          <a class="bubble-btn js-vine" data-q="SW" data-v="GAUGES" href="#">
+            <div class="lbl"><b>GAUGES</b><i>Panels · thresholds</i></div><div class="go">▶</div>
+          </a>
+          <a class="bubble-btn js-vine" data-q="SW" data-v="DIAGNOSTICS" href="#">
+            <div class="lbl"><b>DIAGNOSTICS</b><i>Classification</i></div><div class="go">▶</div>
+          </a>
+          <a class="bubble-btn js-vine" data-q="SW" data-v="RULES" href="#">
+            <div class="lbl"><b>RULES</b><i>Integrity constraints</i></div><div class="go">▶</div>
+          </a>
+          <a class="bubble-btn js-vine" data-q="SW" data-v="PROTOCOLS" href="#">
+            <div class="lbl"><b>PROTOCOLS</b><i>Return · audit</i></div><div class="go">▶</div>
+          </a>
+        </div>
+      </div>
+    </details>
+
+    <!-- SE -->
+    <details class="quad">
+      <summary>
+        <div class="q-left">
+          <div class="q-badge"><span class="icon">🌇</span><span class="code">SE</span></div>
+          <div class="q-text"><b>SOUTHEAST</b><span>Identity · references · links</span></div>
+        </div>
+        <div class="q-arrow">▾</div>
+      </summary>
+      <div class="inside">
+        <div class="bubble-row">
+          <a class="bubble-btn js-vine" data-q="SE" data-v="ORCID" href="#">
+            <div class="lbl"><b>ORCID</b><i>Identity anchor</i></div><div class="go">▶</div>
+          </a>
+          <a class="bubble-btn js-vine" data-q="SE" data-v="OSF" href="#">
+            <div class="lbl"><b>OSF</b><i>Registry</i></div><div class="go">▶</div>
+          </a>
+          <a class="bubble-btn js-vine" data-q="SE" data-v="REFERENCES" href="#">
+            <div class="lbl"><b>REFERENCES</b><i>Anchors</i></div><div class="go">▶</div>
+          </a>
+          <a class="bubble-btn js-vine" data-q="SE" data-v="CONTACT" href="#">
+            <div class="lbl"><b>CONTACT</b><i>Channel</i></div><div class="go">▶</div>
+          </a>
+        </div>
+      </div>
+    </details>
+
+    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    <div class="ink">GEODIAMETRICS</div>
   </div>
+</div>
 
 <script>
 (() => {
-  const lang = localStorage.getItem("gd_lang") || "en";
-  const depth = localStorage.getItem("gd_depth") || "explore";
+  // display state
+  const lang = (localStorage.getItem("gd_lang") || "en").toLowerCase();
+  const depth = (localStorage.getItem("gd_depth") || "explore").toLowerCase();
 
-  document.getElementById("pillLang").textContent =
-    (lang === "zh") ? "中文" : "EN";
+  document.getElementById("pillLang").textContent = (lang === "zh") ? "中文" : "EN";
+  document.getElementById("pillDepth").textContent = "EXPLORE";
 
-  document.getElementById("pillDepth").textContent =
-    depth.toUpperCase();
+  // force depth=explore for Explore page
+  try { localStorage.setItem("gd_depth", "explore"); } catch(e){}
+
+  // wire all vines to Compass deterministically
+  const vines = document.querySelectorAll(".js-vine");
+  vines.forEach(a => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      const q = a.getAttribute("data-q") || "";
+      const v = a.getAttribute("data-v") || "";
+      // we keep q/v in query for future use; Compass can ignore safely
+      const url = `/home/?depth=explore&lang=${encodeURIComponent(lang)}&q=${encodeURIComponent(q)}&v=${encodeURIComponent(v)}`;
+      window.location.href = url;
+    });
+  });
 })();
 </script>
-
 </body>
 </html>

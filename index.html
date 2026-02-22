@@ -4,84 +4,47 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Coherent Resolution Platform</title>
-<link rel="stylesheet" href="/assets/ui.css?v=9000"/>
+
+<link rel="stylesheet" href="/assets/ui.css?v=9004"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9004"/>
 </head>
 
 <body>
-<div class="page stage">
-  <div class="stage" style="flex-direction:column; gap:28px; max-width:620px; width:100%;">
+<div class="page">
+  <div class="wrap" style="max-width:640px; width:100%; align-items:center; text-align:center; position:relative;">
 
-    <!-- DIAMOND FIELD -->
-    <div style="
+    <!-- diamond silhouette (uniform construct) -->
+    <div aria-hidden="true" style="
       position:absolute;
-      width:520px;
-      height:520px;
-      background:linear-gradient(145deg, rgba(122,11,20,.35), rgba(0,0,0,.6));
+      width:520px; height:520px;
       transform:rotate(45deg);
-      border-radius:40px;
-      opacity:.35;
+      border-radius:46px;
+      background:rgba(122,11,20,.18);
+      box-shadow:inset 0 0 0 1px rgba(202,160,74,.22), 0 40px 110px rgba(0,0,0,.70);
+      opacity:.38;
       z-index:0;
     "></div>
 
-    <!-- HEADER -->
-    <div style="position:relative; z-index:1; text-align:center;">
-      <h1 style="font-size:42px; margin:0; font-weight:950; letter-spacing:.04em; text-transform:uppercase;">
-        COHERENT<br/>RESOLUTION<br/>PLATFORM
-      </h1>
-      <p style="margin-top:14px; opacity:.72;">
-        Choose your language once. Everything adapts from there.
-      </p>
+    <div class="hero" style="z-index:1;">
+      <h1>COHERENT<br/>RESOLUTION<br/>PLATFORM</h1>
+      <p style="margin-top:14px;">Choose your language once. Everything adapts from there.</p>
     </div>
 
-    <!-- LANGUAGE PANEL -->
-    <div style="
-      position:relative;
-      z-index:2;
-      width:100%;
-      border-radius:26px;
-      padding:28px;
-      background:rgba(5,7,12,.92);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.10),
-        0 40px 80px rgba(0,0,0,.65);
-    ">
-      <div style="letter-spacing:.2em; opacity:.6; font-size:12px; margin-bottom:20px;">
-        LANGUAGE
-      </div>
+    <div class="panel" style="z-index:2; width:100%; padding:22px; background:rgba(5,7,12,.92); box-shadow:inset 0 0 0 1px rgba(255,255,255,.10), 0 40px 80px rgba(0,0,0,.65);">
+      <div style="letter-spacing:.2em; opacity:.6; font-size:12px; margin-bottom:16px;">LANGUAGE</div>
 
-      <button type="button" id="btnEN" style="
-        width:100%;
-        text-align:left;
-        border:0;
-        cursor:pointer;
-        margin-bottom:16px;
-        padding:18px 22px;
-        border-radius:18px;
-        color:#eaf2f6;
-        background:linear-gradient(90deg, rgba(202,160,74,.25), rgba(122,11,20,.45));
-        box-shadow:
-          inset 0 0 0 1px rgba(255,255,255,.15),
-          0 18px 50px rgba(0,0,0,.5);
-        font-weight:900;
-        letter-spacing:.12em;
-      ">ENGLISH</button>
+      <button type="button" id="btnEN" class="btn gold" style="width:100%; text-align:left; padding:16px 18px; border-radius:18px; font-size:14px;">
+        ENGLISH
+      </button>
 
-      <button type="button" id="btnZH" style="
-        width:100%;
-        text-align:left;
-        border:0;
-        cursor:pointer;
-        padding:18px 22px;
-        border-radius:18px;
-        color:#eaf2f6;
-        background:rgba(255,255,255,.06);
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,.10);
-        font-weight:900;
-        letter-spacing:.12em;
-      ">中文</button>
+      <div style="height:12px;"></div>
 
-      <div style="margin-top:20px; opacity:.6; font-size:13px;">
-        Interface language can be adjusted later from the Door.
+      <button type="button" id="btnZH" class="btn" style="width:100%; text-align:left; padding:16px 18px; border-radius:18px; font-size:14px;">
+        中文
+      </button>
+
+      <div style="margin-top:14px; opacity:.6; font-size:13px;">
+        Language can be adjusted later from the Door.
       </div>
     </div>
 
@@ -94,7 +57,6 @@
 (() => {
   const go = (lang) => {
     try { localStorage.setItem("crp_lang", lang); } catch(e){}
-    // also carry via querystring so Door can pick it up even if storage blocked
     location.href = "/door/?lang=" + encodeURIComponent(lang);
   };
   document.getElementById("btnEN").addEventListener("click", () => go("en"));

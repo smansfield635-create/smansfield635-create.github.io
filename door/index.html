@@ -100,11 +100,24 @@ body{
 <div class="footer">© GEODIAMETRICS</div>
 
 <script>
-function goLang(lang){
-  try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-  window.location.href="/index/";
-}
-</script>
+(function(){
+  "use strict";
 
-</body>
-</html>
+  function goLang(lang){
+    try{
+      localStorage.setItem("gd_lang", lang);
+    }catch(e){}
+    
+    // Route to root index.html
+    window.location.href = "/";
+  }
+
+  // Attach handlers safely
+  var en = document.getElementById("lang-en");
+  var zh = document.getElementById("lang-zh");
+
+  if(en){ en.addEventListener("click", function(){ goLang("en"); }); }
+  if(zh){ zh.addEventListener("click", function(){ goLang("zh"); }); }
+
+})();
+</script>

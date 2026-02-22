@@ -1,59 +1,73 @@
 /* TNT FILE: /assets/instrument.js
-   CRP INSTRUMENT ENGINE v3 — FULL TNT
-   Purpose: normalize state ONLY (no blocking, no redirects)
-   Fixes: key drift (gd_* vs crp_*), value drift (EN/en), query carry.
+   CRP INSTRUMENT ENGINE v3 — State + UI safety only
+   Purpose:
+     - Persist: language + depth + time + style
+     - Normalize query params → localStorage
+     - Minimal gating (only for /door/ and /home/ and /explore/)
+     - NEVER blocks leaf pages
 */
+
 (() => {
-  const VALID_LANG = ["en","zh"];
-  const VALID_DEPTH = ["explore","learn"];
+  const path = (location.pathname || "/").toLowerCase();
+  const norm = path.endsWith("/") ? path : path + "/";
 
-  const K1_LANG = "gd_lang";
-  const K1_DEPTH = "gd_depth";
-  const K2_LANG = "crp_lang";
-  const K2_DEPTH = "crp_depth";
+  const K_LANG  = "gd_lang";   // "en" | "zh"
+  const K_DEPTH = "gd_depth";  // "explore" | "learn"
+  const K_TIME  = "gd_time";   // "origin" | "now" | "trajectory"
+  const K_STYLE = "gd_style";  // "formal" | "informal"
 
-  const qs = new URLSearchParams(location.search || "");
-  const qLang = (qs.get("lang") || "").toLowerCase();
-  const qDepth = (qs.get("depth") || "").toLowerCase();
+  const VALID_LANG  = new Set(["en","zh"]);
+  const VALID_DEPTH = new Set(["explore","learn"]);
+  const VALID_TIME  = new Set(["origin","now","trajectory"]);
+  const VALID_STYLE = new Set(["formal","informal"]);
 
-  function readAny(keyA, keyB){
-    try {
-      return (localStorage.getItem(keyA) || localStorage.getItem(keyB) || "");
-    } catch(e){ return ""; }
+  const qp = new URLSearchParams(location.search);
+
+  function setIfValid(key, val, validSet){
+    if (!val) return;
+    const v = String(val).toLowerCase();
+    if (validSet.has(v)) {
+      try { localStorage.setItem(key, v); } catch(e){}
+    }
   }
 
-  function writeBoth(keyA, keyB, val){
-    try {
-      localStorage.setItem(keyA, val);
-      localStorage.setItem(keyB, val);
-    } catch(e){}
+  // Pull from querystring if present (index → door carries ?lang= / ?depth= etc)
+  setIfValid(K_LANG,  qp.get("lang"),  VALID_LANG);
+  setIfValid(K_DEPTH, qp.get("depth"), VALID_DEPTH);
+  setIfValid(K_TIME,  qp.get("time"),  VALID_TIME);
+  setIfValid(K_STYLE, qp.get("style"), VALID_STYLE);
+
+  // Normalize invalid stored values
+  function getValid(key, validSet){
+    let v = null;
+    try { v = localStorage.getItem(key); } catch(e){}
+    if (!v) return null;
+    v = String(v).toLowerCase();
+    if (!validSet.has(v)) {
+      try { localStorage.removeItem(key); } catch(e){}
+      return null;
+    }
+    return v;
   }
 
-  function normalizeLang(v){
-    const s = String(v||"").toLowerCase();
-    if (s === "en" || s === "english") return "en";
-    if (s === "zh" || s === "cn" || s === "中文" || s === "chinese") return "zh";
-    return "";
+  const lang  = getValid(K_LANG,  VALID_LANG);
+  const depth = getValid(K_DEPTH, VALID_DEPTH);
+
+  // INDEX: no requirements
+  if (norm === "/") return;
+
+  // DOOR: requires language
+  if (norm === "/door/") {
+    if (!lang) { location.replace("/"); }
+    return;
   }
 
-  function normalizeDepth(v){
-    const s = String(v||"").toLowerCase();
-    if (s === "explore" || s === "surface") return "explore";
-    if (s === "learn" || s === "deep") return "learn";
-    return "";
+  // EXPLORE + HOME: require language + depth
+  if (norm === "/explore/" || norm === "/home/") {
+    if (!lang) { location.replace("/"); return; }
+    if (!depth) { location.replace("/door/"); return; }
+    return;
   }
 
-  // 1) query wins
-  const langQ = normalizeLang(qLang);
-  const depthQ = normalizeDepth(qDepth);
-  if (langQ) writeBoth(K1_LANG, K2_LANG, langQ);
-  if (depthQ) writeBoth(K1_DEPTH, K2_DEPTH, depthQ);
-
-  // 2) otherwise normalize existing storage and re-write cleanly
-  const langS = normalizeLang(readAny(K1_LANG, K2_LANG));
-  const depthS = normalizeDepth(readAny(K1_DEPTH, K2_DEPTH));
-  if (langS) writeBoth(K1_LANG, K2_LANG, langS);
-  if (depthS) writeBoth(K1_DEPTH, K2_DEPTH, depthS);
-
-  // 3) do not redirect or enforce routes (leaf safe)
+  // Everything else: NO-OP
 })();

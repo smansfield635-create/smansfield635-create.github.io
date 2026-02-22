@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>HOME · Compass Face</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=HOME_DIAMOND_3"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=HOME_DIAMOND_3"/>
-  <script defer src="/assets/instrument.js?v=HOME_DIAMOND_3"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=HOME_DIAMOND_3A"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=HOME_DIAMOND_3A"/>
+  <script defer src="/assets/instrument.js?v=HOME_DIAMOND_3A"></script>
 
   <style>
-    /* ===== TASK 1: CENTER EVERYTHING ===== */
+    /* Center everything */
     .shell{
       max-width:1100px;
       margin:0 auto;
@@ -19,8 +19,10 @@
       flex-direction:column;
       align-items:center;
       text-align:center;
+      position:relative;
     }
 
+    /* Back to language (top-left) */
     .back-left{
       position:fixed;
       left:16px;
@@ -28,20 +30,7 @@
       z-index:30;
     }
 
-    .title{
-      margin:0 0 8px;
-      font-size:44px;
-      font-weight:900;
-      letter-spacing:.25px;
-      line-height:1.05;
-    }
-    .subtitle{
-      margin:0 0 16px;
-      opacity:.84;
-      font-size:18px;
-      line-height:1.35;
-    }
-
+    /* Lens rows */
     .lens-row{
       display:flex;
       flex-wrap:wrap;
@@ -58,14 +47,13 @@
       margin-top:8px;
     }
 
-    /* ===== TASK 2: STRAIGHT + STRONG 3D (NO TILT) ===== */
+    /* ===== 3D DIAMOND COMPASS (STRAIGHTENED: no tilt) ===== */
     .diamond-face{
       width:min(560px,92vw);
       height:min(560px,92vw);
       margin:22px auto 10px;
       position:relative;
-      /* STRAIGHTENED: no rotateX / no perspective tilt */
-      transform:none;
+      transform:none; /* straight */
     }
 
     .d-diamond{
@@ -78,11 +66,11 @@
       transform:translate(-50%,-50%) rotate(45deg);
 
       border-radius:26px;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(0,0,0,.20);
+      border:1px solid rgba(255,255,255,.14);
+      background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.92));
       backdrop-filter:blur(8px);
 
-      /* 3D: deeper shadow stack + bevels + specular */
+      /* strong depth stack */
       box-shadow:
         0 34px 90px rgba(0,0,0,.78),
         0 14px 34px rgba(0,0,0,.52),
@@ -90,7 +78,7 @@
         inset 0 -22px 34px rgba(0,0,0,.42);
 
       transition:transform 240ms ease, box-shadow 240ms ease, filter 240ms ease;
-      filter: drop-shadow(0 0 16px rgba(255,210,120,.08));
+      filter: drop-shadow(0 0 16px rgba(212,175,55,.08));
     }
 
     .d-diamond::before{
@@ -123,7 +111,7 @@
         0 18px 42px rgba(0,0,0,.58),
         inset 0 2px 0 rgba(255,255,255,.22),
         inset 0 -26px 40px rgba(0,0,0,.48);
-      filter: drop-shadow(0 0 20px rgba(255,210,120,.14));
+      filter: drop-shadow(0 0 20px rgba(212,175,55,.14));
     }
 
     .d-inner{
@@ -151,11 +139,13 @@
       max-width:16em;
     }
 
+    /* Positions: 4 diamonds make 1 big diamond */
     .d-n{ transform:translate(-50%,-50%) translate(0,-165px) rotate(45deg); }
     .d-e{ transform:translate(-50%,-50%) translate(165px,0) rotate(45deg); }
     .d-s{ transform:translate(-50%,-50%) translate(0,165px) rotate(45deg); }
     .d-w{ transform:translate(-50%,-50%) translate(-165px,0) rotate(45deg); }
 
+    /* Center nucleus */
     .d-core{
       position:absolute;
       left:50%;
@@ -167,10 +157,10 @@
       display:grid;
       place-items:center;
 
-      border:1px solid rgba(255,210,120,.36);
-      background:linear-gradient(135deg, rgba(255,210,120,.26), rgba(255,150,60,.12));
+      border:1px solid rgba(212,175,55,.36);
+      background:linear-gradient(135deg, rgba(212,175,55,.26), rgba(255,150,60,.12));
       box-shadow:
-        0 0 44px rgba(255,210,120,.34),
+        0 0 44px rgba(212,175,55,.34),
         0 22px 55px rgba(0,0,0,.62),
         inset 0 2px 0 rgba(255,255,255,.22);
 
@@ -187,64 +177,30 @@
       .d-w{ transform:translate(-50%,-50%) translate(-145px,0) rotate(45deg); }
       .d-core{ width:74px; height:74px; }
     }
-
-    /* ===== TASK 3: FIX TRAJECTORY + CORRECT LENS BEHAVIOR ===== */
-    .chip[aria-disabled="true"]{
-      opacity:.35 !important;
-      pointer-events:none !important;
-      filter:grayscale(1);
-    }
-    .chip[aria-pressed="true"]{
-      background:linear-gradient(135deg, rgba(255,210,120,.22), rgba(255,150,60,.10));
-      border-color:rgba(255,210,120,.40);
-      box-shadow:0 0 22px rgba(255,200,120,.12);
-    }
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(0,0,0,.18);
-      color:#fff;
-      font-weight:850;
-      letter-spacing:.25px;
-      cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-      text-decoration:none;
-    }
-    .chip:active{ transform:scale(.98); }
-
-    .footer{
-      margin-top:10px;
-      opacity:.78;
-      font-size:13px;
-    }
   </style>
 </head>
 
 <body>
-  <main class="shell" style="position:relative">
+  <main class="shell">
 
     <div class="back-left">
-      <a class="chip" href="/">◀ Language</a>
+      <a class="crp-btn" href="/" role="button">◀ Language</a>
     </div>
 
-    <div style="opacity:.78;font-size:12px;letter-spacing:2.4px;text-transform:uppercase;margin-bottom:8px">GEODIAMETRICS</div>
-    <h1 class="title">HOME</h1>
-    <p class="subtitle">Compass Face · Vector Understanding</p>
+    <div class="crp-mark">GEODIAMETRICS</div>
+    <h1 class="crp-title">HOME</h1>
+    <p class="crp-subtitle">Compass Face · Vector Understanding</p>
 
     <!-- Style toggle (single button) -->
     <div class="lens-row" aria-label="Style lens">
-      <button id="styleToggle" class="chip" type="button">STYLE: FORMAL</button>
+      <button id="styleToggle" class="crp-chip" type="button">STYLE: FORMAL</button>
     </div>
 
     <!-- Time buttons (Trajectory = formal-only) -->
     <div class="lens-row" aria-label="Time lens">
-      <button class="chip timeBtn" type="button" data-time="origin">ORIGIN</button>
-      <button class="chip timeBtn" type="button" data-time="now">NOW</button>
-      <button class="chip timeBtn" type="button" data-time="trajectory" id="timeTrajectory">TRAJECTORY</button>
+      <button class="crp-chip timeBtn" type="button" data-time="origin">ORIGIN</button>
+      <button class="crp-chip timeBtn" type="button" data-time="now">NOW</button>
+      <button class="crp-chip timeBtn" type="button" data-time="trajectory" id="timeTrajectory">TRAJECTORY</button>
     </div>
 
     <div id="sliceNote" class="note"></div>
@@ -285,7 +241,7 @@
       </div>
     </section>
 
-    <div class="footer">BUILD: <strong>HOME_DIAMOND_3</strong></div>
+    <div class="crp-footer">BUILD: <strong>HOME_DIAMOND_3A</strong></div>
 
   </main>
 
@@ -293,14 +249,12 @@
 (function(){
   "use strict";
 
-  // Canonical keys only
   var K_STYLE = "gd_style";
   var K_TIME  = "gd_time";
 
   function lsGet(k){ try{return localStorage.getItem(k);}catch(e){ return null; } }
   function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
 
-  // State
   var state = {
     style: lsGet(K_STYLE) || "formal",
     time:  lsGet(K_TIME)  || "origin"
@@ -312,7 +266,6 @@
     informal: { origin:1, now:1 }
   };
 
-  // Content map (placeholder; correct coupling)
   var content = {
     north:{
       formal:{origin:"North defines invariant structure.",now:"North stabilizes current position.",trajectory:"North preserves long-term coherence."},
@@ -333,42 +286,40 @@
   };
 
   function normalizeTime(){
-    // If informal and trajectory was selected, force NOW
     if(!allowTimeByStyle[state.style][state.time]){
       state.time = "now";
     }
-  }
-
-  function setPressedStyle(){
-    var btn = document.getElementById("styleToggle");
-    btn.textContent = "STYLE: " + state.style.toUpperCase();
   }
 
   function setPressedTime(){
     document.querySelectorAll(".timeBtn").forEach(function(btn){
       var v = btn.getAttribute("data-time");
       var allowed = !!allowTimeByStyle[state.style][v];
-
       btn.setAttribute("aria-disabled", allowed ? "false" : "true");
       btn.setAttribute("aria-pressed", (v === state.time) ? "true" : "false");
     });
   }
 
+  function setStyleLabel(){
+    var btn = document.getElementById("styleToggle");
+    btn.textContent = "STYLE: " + state.style.toUpperCase();
+  }
+
   function render(){
     normalizeTime();
 
-    // Persist
+    // Persist state
     lsSet(K_STYLE, state.style);
     lsSet(K_TIME, state.time);
 
-    // Render text
+    // Render content
     document.getElementById("northText").textContent = content.north[state.style][state.time] || "";
     document.getElementById("eastText").textContent  = content.east[state.style][state.time]  || "";
     document.getElementById("southText").textContent = content.south[state.style][state.time] || "";
     document.getElementById("westText").textContent  = content.west[state.style][state.time]  || "";
 
     // Render lenses
-    setPressedStyle();
+    setStyleLabel();
     setPressedTime();
 
     // Note
@@ -376,17 +327,16 @@
       "Active: " + state.style.toUpperCase() + " · " + state.time.toUpperCase() + " (Trajectory = Formal only)";
   }
 
-  // STYLE toggle (single button)
+  // Style toggle
   document.getElementById("styleToggle").addEventListener("click", function(){
     state.style = (state.style === "formal") ? "informal" : "formal";
-    render(); // must rerender everything
+    render();
   });
 
-  // TIME buttons
+  // Time buttons
   document.querySelectorAll(".timeBtn").forEach(function(btn){
     btn.addEventListener("click", function(){
       var v = btn.getAttribute("data-time");
-      // enforce rule
       if(!allowTimeByStyle[state.style][v]) return;
       state.time = v;
       render();

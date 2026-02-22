@@ -1,41 +1,67 @@
+<!-- TNT — /door/index.html  (Language Door · adds descriptive subline)
+     Requirements:
+     - Keep same visual (obsidian gem cards + red field).
+     - Add clear explanation line(s): “Traversal Architecture” + “Coherence-based study”.
+     - Dual language (EN + 中文) for the descriptive text on THIS page.
+     - Click EN/中文 sets gd_lang and routes to /index.html (Terminal).
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cardinal Axis · Entry</title>
+<title>Cardinal Axis · Door</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
+:root{
+  --goldSoft: rgba(212,175,55,.35);
+  --obs1:#070b12;
+  --obs2:#0c1626;
+}
+
 body{
   margin:0;
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  background:radial-gradient(circle at 50% 40%, #b00000 0%, #7a0000 40%, #3a0000 75%, #140000 100%);
+  background:
+    radial-gradient(circle at 50% 40%, rgba(90,140,255,.10), transparent 60%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 1px, transparent 1px 100px),
+    linear-gradient(180deg,#b00000 0%,#7a0000 60%,#550000 100%);
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   color:#fff;
 }
 
 .container{
   text-align:center;
-  width:90%;
-  max-width:640px;
+  width:92%;
+  max-width:680px;
+  padding:22px 0;
 }
 
 h1{
-  font-size:48px;
+  font-size:46px;
   letter-spacing:2px;
+  margin:0 0 10px;
+  font-weight:950;
+}
+
+.sub1{
+  opacity:.86;
+  font-size:16px;
   margin:0 0 10px;
 }
 
-.subtitle{
-  opacity:.8;
-  margin:0 0 50px;
-  font-size:18px;
+.sub2{
+  opacity:.70;
+  font-size:13px;
+  line-height:1.45;
+  margin:0 0 42px;
 }
 
 .lang-grid{
@@ -53,33 +79,37 @@ h1{
   align-items:center;
   justify-content:center;
   font-size:22px;
-  font-weight:800;
-  letter-spacing:.5px;
+  font-weight:900;
+  letter-spacing:.6px;
   cursor:pointer;
   transition:all .25s ease;
-  text-decoration:none;
-  color:#fff;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
 
   background:
-    radial-gradient(circle at 50% 40%, #0f2b5a 0%, #071426 60%, #02060c 100%);
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
+    linear-gradient(160deg, var(--obs2) 0%, var(--obs1) 60%);
+
   box-shadow:
-    0 20px 60px rgba(0,0,0,.7),
-    inset 0 2px 6px rgba(255,255,255,.08),
-    inset 0 -10px 30px rgba(0,0,0,.6);
-  border:1px solid rgba(255,255,255,.12);
+    0 24px 70px rgba(0,0,0,.8),
+    inset 0 2px 0 rgba(255,255,255,.16),
+    inset 0 -25px 35px rgba(0,0,0,.62);
+
+  border:1px solid rgba(255,255,255,.10);
 }
 
 .lang-card:hover{
   transform:translateY(-6px);
   box-shadow:
-    0 30px 80px rgba(0,0,0,.85),
-    0 0 25px rgba(212,175,55,.35),
-    inset 0 2px 6px rgba(255,255,255,.1),
-    inset 0 -12px 35px rgba(0,0,0,.65);
+    0 30px 90px rgba(0,0,0,.9),
+    0 0 22px var(--goldSoft),
+    inset 0 2px 0 rgba(255,255,255,.20),
+    inset 0 -28px 40px rgba(0,0,0,.70);
 }
 
 .footer{
-  margin-top:40px;
+  margin-top:34px;
   font-size:12px;
   opacity:.55;
   letter-spacing:1px;
@@ -89,25 +119,57 @@ h1{
 
 <body>
 <div class="container">
-  <h1>CARDINAL AXIS</h1>
-  <div class="subtitle">Select your language.</div>
+  <h1 id="title">CARDINAL AXIS</h1>
+  <div class="sub1" id="sub1">Traversal Architecture</div>
+  <div class="sub2" id="sub2">
+    Coherence-based study environment.<br/>
+    Select your language to enter the Terminal.
+  </div>
 
   <div class="lang-grid">
-    <div class="lang-card" onclick="goLang('en')">ENGLISH</div>
-    <div class="lang-card" onclick="goLang('zh')">中文</div>
+    <div class="lang-card" id="lang-en">ENGLISH</div>
+    <div class="lang-card" id="lang-zh">中文</div>
   </div>
 
   <div class="footer">© GEODIAMETRICS</div>
 </div>
 
 <script>
-function goLang(lang){
-  try{
-    localStorage.setItem("gd_lang", lang);
-  }catch(e){}
-  // Explicit routing to index.html
-  window.location.href = "/index.html";
-}
+(function(){
+  // Render helper
+  function setText(lang){
+    document.documentElement.lang = (lang === "zh") ? "zh" : "en";
+
+    if(lang === "zh"){
+      document.getElementById("title").textContent = "四向轴";
+      document.getElementById("sub1").textContent = "遍历架构";
+      document.getElementById("sub2").innerHTML =
+        "基于一致性的研究环境。<br/>选择语言后进入终端。";
+    } else {
+      document.getElementById("title").textContent = "CARDINAL AXIS";
+      document.getElementById("sub1").textContent = "Traversal Architecture";
+      document.getElementById("sub2").innerHTML =
+        "Coherence-based study environment.<br/>Select your language to enter the Terminal.";
+    }
+  }
+
+  // If user already has a language, reflect it (visual only)
+  var existing = null;
+  try{ existing = localStorage.getItem("gd_lang"); }catch(e){}
+  if(existing === "zh") setText("zh"); else setText("en");
+
+  function go(lang){
+    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
+    // Door -> Terminal (under construction / preface)
+    window.location.href = "/index.html?lang=" + encodeURIComponent(lang);
+  }
+
+  var en = document.getElementById("lang-en");
+  var zh = document.getElementById("lang-zh");
+
+  en.addEventListener("click", function(){ go("en"); }, {passive:true});
+  zh.addEventListener("click", function(){ go("zh"); }, {passive:true});
+})();
 </script>
 
 </body>

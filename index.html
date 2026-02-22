@@ -1,48 +1,77 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DIAMOND · Geodiametrics</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Compass · DIAMOND</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=9600" />
-  <link rel="stylesheet" href="/assets/branch.css?v=9600" />
-  <script defer src="/assets/instrument.js?v=9600"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=9700"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=9700"/>
+  <script defer src="/assets/instrument.js?v=9700"></script>
 </head>
 
 <body>
-  <main class="crp-shell crp-center">
-    <section class="crp-card" aria-label="Pre-Scope Portal" style="text-align:center">
-      <header class="crp-header">
-        <div class="crp-mark" aria-hidden="true" data-i18n="global.brand">GEODIAMETRICS</div>
 
-        <h1 class="crp-title" style="margin-bottom:6px" data-i18n="index.title">DIAMOND</h1>
+<main class="crp-shell">
 
-        <p class="crp-subtitle" style="margin-bottom:18px" data-i18n="index.subtitle">
-          Enter scope.
-        </p>
-      </header>
+  <header class="crp-header" style="text-align:center">
+    <div class="crp-mark" data-i18n="global.brand">GEODIAMETRICS</div>
+    <h1 class="crp-title" data-i18n="home.title">COMPASS</h1>
+    <p class="crp-subtitle" data-i18n="home.subtitle">Hexagonal Enforcement Geometry</p>
+  </header>
 
-      <!-- Hard link: works even if JS fails -->
-      <div style="display:flex;justify-content:center">
-        <a
-          class="crp-btn crp-btn-primary"
-          href="/home/"
-          role="button"
-          aria-label="Enter scope"
-          style="min-width:220px;justify-content:center"
-          data-i18n="index.enter"
-        >
-          ENTER
-        </a>
-      </div>
+  <!-- 6+1 Geometry -->
+  <section class="crp-snowflake" aria-label="Hexagonal enforcement geometry">
 
-      <footer class="crp-footer" style="margin-top:18px">
-        <small class="crp-footnote" data-i18n="index.footnote">
-          Nucleus-only portal. Scope controls language, mode, depth, style, and time.
-        </small>
-      </footer>
-    </section>
-  </main>
+    <!-- NUCLEUS -->
+    <button class="crp-nucleus" type="button" aria-label="DIAMOND nucleus">
+      <div data-i18n="axes.nucleus.title">DIAMOND</div>
+      <div class="crp-axis-kicker" data-i18n="axes.nucleus.kicker">Nucleus</div>
+    </button>
+
+    <!-- ρ -->
+    <button class="crp-axis" type="button" data-axis="rho" aria-label="ρ axis">
+      <div class="crp-axis-title" data-i18n="axes.rho.title">ρ</div>
+      <div class="crp-axis-kicker" data-i18n="axes.rho.kicker">Correlation</div>
+    </button>
+
+    <!-- TC -->
+    <button class="crp-axis" type="button" data-axis="tc" aria-label="TC axis">
+      <div class="crp-axis-title" data-i18n="axes.tc.title">TC</div>
+      <div class="crp-axis-kicker" data-i18n="axes.tc.kicker">Alignment</div>
+    </button>
+
+    <!-- Δ -->
+    <button class="crp-axis" type="button" data-axis="delta" aria-label="Δ axis">
+      <div class="crp-axis-title" data-i18n="axes.delta.title">Δ</div>
+      <div class="crp-axis-kicker" data-i18n="axes.delta.kicker">Acceleration</div>
+    </button>
+
+    <!-- HIP -->
+    <button class="crp-axis" type="button" data-axis="hip" aria-label="HIP axis">
+      <div class="crp-axis-title" data-i18n="axes.hip.title">HIP</div>
+      <div class="crp-axis-kicker" data-i18n="axes.hip.kicker">Gates</div>
+    </button>
+
+    <!-- λ -->
+    <button class="crp-axis" type="button" data-axis="lambda" aria-label="λ axis">
+      <div class="crp-axis-title" data-i18n="axes.lambda.title">λ</div>
+      <div class="crp-axis-kicker" data-i18n="axes.lambda.kicker">Hazard</div>
+    </button>
+
+    <!-- CERT -->
+    <button class="crp-axis" type="button" data-axis="cert" aria-label="CERT axis">
+      <div class="crp-axis-title" data-i18n="axes.cert.title">CERT</div>
+      <div class="crp-axis-kicker" data-i18n="axes.cert.kicker">Authority</div>
+    </button>
+
+  </section>
+
+  <footer class="crp-footer" style="text-align:center">
+    <small class="crp-footnote">BUILD: 9700</small>
+  </footer>
+
+</main>
+
 </body>
 </html>

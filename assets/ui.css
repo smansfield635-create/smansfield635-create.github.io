@@ -43,7 +43,7 @@ a:visited{color:inherit}
 button{font-family:inherit}
 
 /* =====================================================
-   FIELD
+   FIELD (single source of truth)
 ===================================================== */
 
 body{
@@ -140,6 +140,7 @@ body::before{
   font-size:12px;
   opacity:.92;
   user-select:none;
+  -webkit-tap-highlight-color:transparent;
 }
 
 .pill.btn{cursor:pointer}
@@ -173,12 +174,13 @@ body::before{
   box-shadow:inset 0 0 0 1px rgba(202,160,74,.28), 0 18px 50px rgba(0,0,0,.40);
 }
 
-hr.sep{
-  border:0;
-  height:1px;
-  width:100%;
-  background:rgba(255,255,255,.08);
-  margin:8px 0 6px;
+.section-title{
+  margin-top:10px;
+  font-weight:900;
+  letter-spacing:.18em;
+  opacity:.7;
+  font-size:12px;
+  text-transform:uppercase;
 }
 
 .footer{
@@ -198,146 +200,3 @@ hr.sep{
   font-size:12px;
   text-transform:uppercase;
 }
-
-/* =====================================================
-   MODAL (NO SCROLL JUMP)
-===================================================== */
-
-.modal{
-  position:fixed;
-  inset:0;
-  display:none;
-  z-index:9999;
-}
-
-.modal.on{display:block}
-
-.modal .backdrop{
-  position:absolute;inset:0;
-  background:rgba(0,0,0,.68);
-  backdrop-filter:blur(8px);
-}
-
-.modal .sheet{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:min(980px,94vw);
-  max-height:min(84vh,780px);
-  overflow:auto;
-  border-radius:26px;
-  background:
-    radial-gradient(900px 600px at 50% 0%, rgba(122,11,20,.22) 0%, transparent 70%),
-    rgba(0,0,0,.34);
-  box-shadow:
-    inset 0 0 0 1px rgba(202,160,74,.18),
-    0 40px 120px rgba(0,0,0,.80);
-}
-
-.modal .sheet::-webkit-scrollbar{width:10px}
-.modal .sheet::-webkit-scrollbar-thumb{background:rgba(255,255,255,.10);border-radius:999px}
-
-.modal .sheetHead{
-  position:sticky;top:0;z-index:2;
-  padding:14px 14px;
-  background:rgba(0,0,0,.35);
-  backdrop-filter:blur(10px);
-  box-shadow:inset 0 -1px 0 rgba(255,255,255,.08);
-  display:flex;gap:12px;align-items:center;justify-content:space-between;
-}
-
-.modal .title{
-  display:flex;flex-direction:column;gap:4px;min-width:0;
-}
-.modal .title b{
-  font-size:14px;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.modal .title span{
-  color:var(--muted);
-  font-size:12px;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.modal .sheetBody{padding:14px 14px 18px}
-
-/* =====================================================
-   CARD (THIS IS WHERE YOUR FILE BROKE)
-===================================================== */
-
-.card{
-  border-radius:22px;
-  background:rgba(255,255,255,.05);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.08),
-    0 22px 70px rgba(0,0,0,.55);
-  backdrop-filter:blur(12px);
-  padding:14px 14px;
-}
-
-.card + .card{margin-top:12px}
-
-.card h3{
-  margin:0 0 8px;
-  font-weight:950;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  font-size:12px;
-  opacity:.82;
-}
-
-.card p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.55;
-  font-size:14px;
-}
-
-/* Mini chip row (origin/now/trajectory buttons, etc.) */
-.chips{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-top:10px;
-}
-
-.chip{
-  border-radius:999px;
-  padding:10px 14px;
-  background:rgba(0,0,0,.20);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  font-weight:950;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  font-size:12px;
-  cursor:pointer;
-  user-select:none;
-}
-.chip:hover{background:rgba(0,0,0,.26)}
-.chip.active{
-  background:rgba(202,160,74,.16);
-  box-shadow:inset 0 0 0 1px rgba(202,160,74,.55);
-}
-
-/* =====================================================
-   SAFE DEFAULTS (prevents random “dirty wash” overlays)
-===================================================== */
-
-/* If any component accidentally sets low opacity on wrappers, neutralize */
-.page, .wrap, .panel, .card{opacity:1}
-
-/* Keep text readable on mobile */
-@media(max-width:420px){
-  .hero p{font-size:16px}
-}
-
-/* End of file */

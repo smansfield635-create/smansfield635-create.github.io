@@ -1,122 +1,115 @@
-<!-- TNT FILE: /explore/index.html
-     Explore = surface, fast orientation.
-     (This is intentionally lighter than /home/ Learn-mode.)
--->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
   <title>Explore</title>
-  <link rel="stylesheet" href="/assets/ui.css?v=9100"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9100"/>
+
+  <!-- CSS ORDER (CANON): ui.css FIRST, branch.css SECOND -->
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+
+  <!-- INSTRUMENT (state normalization) -->
+  <script defer src="/assets/instrument.js"></script>
 </head>
 
 <body>
-  <div class="diamond-field" aria-hidden="true"></div>
-
-  <div class="page">
-    <div class="wrap" style="position:relative;z-index:2;">
-      <div class="hero">
-        <h1>EXPLORE</h1>
-        <p>Surface map. Tap a quadrant to see 4 vines. Tap a vine to see 4 fruits. Then jump when ready.</p>
-
-        <div class="topbar" style="margin-top:12px;">
-          <span class="pill">LANG: <span id="langPill">—</span></span>
-          <span class="pill">DEPTH: <span id="depthPill">—</span></span>
-          <a class="pill btn" href="/door/">DOOR</a>
-          <a class="pill btn" href="/home/">LEARN HUB</a>
-          <a class="pill btn" href="/links/">LINKS</a>
-        </div>
-
-        <div class="section-title">Quadrant routes (NW / NE / SW / SE)</div>
+  <main class="crp-shell">
+    <header class="crp-topbar" aria-label="Explore header">
+      <div class="crp-topbar-left">
+        <div class="crp-mark" aria-hidden="true">CRP</div>
+        <h1 class="crp-title">Explore</h1>
       </div>
 
-      <details class="quad" open>
-        <summary>
-          <div class="q-left">
-            <div class="q-badge"><span class="icon">⭐</span><span class="code">NW</span></div>
-            <div class="q-text"><b>NORTHWEST</b><span>Definition · language · structure</span></div>
-          </div>
-          <div class="q-arrow">▾</div>
-        </summary>
-        <div class="inside">
-          <div class="vine-grid">
-            <div class="vine-tile"><div class="lbl"><b>SSG</b><i>Constraint language overview</i></div><div class="go">▶</div></div>
-            <div class="vine-tile"><div class="lbl"><b>DIAMOND GRAMMAR</b><i>Hub-first traversal + receipts</i></div><div class="go">▶</div></div>
-            <div class="vine-tile"><div class="lbl"><b>DOT.GRID</b><i>256-state indexing</i></div><div class="go">▶</div></div>
-            <div class="vine-tile"><div class="lbl"><b>ACRONYMS</b><i>Pillars + usage</i></div><div class="go">▶</div></div>
-          </div>
+      <div class="crp-topbar-right">
+        <div class="crp-lens" role="group" aria-label="Depth lens">
+          <a id="depth-explore" class="crp-chip" href="/explore/?depth=explore" role="button">Explore</a>
+          <a id="depth-learn" class="crp-chip" href="/home/?depth=learn" role="button">Learn</a>
         </div>
-      </details>
+        <a class="crp-btn" href="/door/" role="button">Terminal</a>
+      </div>
+    </header>
 
-      <details class="quad">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge"><span class="icon">☀️</span><span class="code">NE</span></div>
-            <div class="q-text"><b>NORTHEAST</b><span>Execution · surfaces · examples</span></div>
-          </div>
-          <div class="q-arrow">▾</div>
-        </summary>
-        <div class="inside">
-          <div class="vine-grid">
-            <div class="vine-tile"><div class="lbl"><b>EXECUTION SURFACES</b><i>Apps / portals / interfaces</i></div><div class="go">▶</div></div>
-            <div class="vine-tile"><div class="lbl"><b>WORKFLOWS & RECEIPTS</b><i>Audit trails</i></div><div class="go">▶</div></div>
-            <div class="vine-tile"><div class="lbl"><b>EXAMPLES</b><i>How to use the system</i></div><div class="go">▶</div></div>
-            <div class="vine-tile"><div class="lbl"><b>PACKS & OUTPUTS</b><i>Downloadables</i></div><div class="go">▶</div></div>
-          </div>
+    <!-- Surface map only: no modal, no click-to-open -->
+    <section class="crp-compass" aria-label="Surface map">
+      <article class="crp-quadrant" data-quadrant="NW" aria-label="Northwest">
+        <h2 class="crp-quadrant-title">NW</h2>
+        <div class="crp-vines" role="list">
+          <div class="crp-vine" role="listitem" aria-label="NW Vine 1">NW Vine 1</div>
+          <div class="crp-vine" role="listitem" aria-label="NW Vine 2">NW Vine 2</div>
+          <div class="crp-vine" role="listitem" aria-label="NW Vine 3">NW Vine 3</div>
+          <div class="crp-vine" role="listitem" aria-label="NW Vine 4">NW Vine 4</div>
         </div>
-      </details>
+      </article>
 
-      <details class="quad">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge"><span class="icon">🏮</span><span class="code">SW</span></div>
-            <div class="q-text"><b>SOUTHWEST</b><span>Measurement · diagnostics · rules</span></div>
-          </div>
-          <div class="q-arrow">▾</div>
-        </summary>
-        <div class="inside">
-          <div class="vine-grid">
-            <div class="vine-tile"><div class="lbl"><b>GAUGES</b><i>Instrument panels</i></div><div class="go">▶</div></div>
-            <div class="vine-tile"><div class="lbl"><b>DIAGNOSTICS</b><i>Classification under constraint</i></div><div class="go">▶</div></div>
-            <div class="vine-tile"><div class="lbl"><b>RULES</b><i>Navigation + integrity</i></div><div class="go">▶</div></div>
-            <div class="vine-tile"><div class="lbl"><b>PROTOCOLS</b><i>Return / replay / audit</i></div><div class="go">▶</div></div>
-          </div>
+      <article class="crp-quadrant" data-quadrant="NE" aria-label="Northeast">
+        <h2 class="crp-quadrant-title">NE</h2>
+        <div class="crp-vines" role="list">
+          <div class="crp-vine" role="listitem" aria-label="NE Vine 1">NE Vine 1</div>
+          <div class="crp-vine" role="listitem" aria-label="NE Vine 2">NE Vine 2</div>
+          <div class="crp-vine" role="listitem" aria-label="NE Vine 3">NE Vine 3</div>
+          <div class="crp-vine" role="listitem" aria-label="NE Vine 4">NE Vine 4</div>
         </div>
-      </details>
+      </article>
 
-      <details class="quad">
-        <summary>
-          <div class="q-left">
-            <div class="q-badge"><span class="icon">🌇</span><span class="code">SE</span></div>
-            <div class="q-text"><b>SOUTHEAST</b><span>Identity · references · links</span></div>
-          </div>
-          <div class="q-arrow">▾</div>
-        </summary>
-        <div class="inside">
-          <div class="vine-grid">
-            <div class="vine-tile" onclick="location.href='/links/'"><div class="lbl"><b>ORCID</b><i>Research identity</i></div><div class="go">▶</div></div>
-            <div class="vine-tile" onclick="location.href='/links/'"><div class="lbl"><b>OSF</b><i>Registry / preprints</i></div><div class="go">▶</div></div>
-            <div class="vine-tile" onclick="location.href='/links/'"><div class="lbl"><b>REFERENCES</b><i>Core anchors</i></div><div class="go">▶</div></div>
-            <div class="vine-tile" onclick="location.href='/links/'"><div class="lbl"><b>CONTACT</b><i>Direct channel</i></div><div class="go">▶</div></div>
-          </div>
+      <article class="crp-quadrant" data-quadrant="SW" aria-label="Southwest">
+        <h2 class="crp-quadrant-title">SW</h2>
+        <div class="crp-vines" role="list">
+          <div class="crp-vine" role="listitem" aria-label="SW Vine 1">SW Vine 1</div>
+          <div class="crp-vine" role="listitem" aria-label="SW Vine 2">SW Vine 2</div>
+          <div class="crp-vine" role="listitem" aria-label="SW Vine 3">SW Vine 3</div>
+          <div class="crp-vine" role="listitem" aria-label="SW Vine 4">SW Vine 4</div>
         </div>
-      </details>
+      </article>
 
-      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-      <div class="ink">GEODIAMETRICS</div>
-    </div>
-  </div>
+      <article class="crp-quadrant" data-quadrant="SE" aria-label="Southeast">
+        <h2 class="crp-quadrant-title">SE</h2>
+        <div class="crp-vines" role="list">
+          <div class="crp-vine" role="listitem" aria-label="SE Vine 1">SE Vine 1</div>
+          <div class="crp-vine" role="listitem" aria-label="SE Vine 2">SE Vine 2</div>
+          <div class="crp-vine" role="listitem" aria-label="SE Vine 3">SE Vine 3</div>
+          <div class="crp-vine" role="listitem" aria-label="SE Vine 4">SE Vine 4</div>
+        </div>
+      </article>
+    </section>
 
-  <script src="/assets/instrument.js?v=9100"></script>
+    <footer class="crp-footer">
+      <small class="crp-footnote">
+        Surface map only (no modal). Depth is <code>gd_depth</code>.
+      </small>
+    </footer>
+  </main>
+
   <script>
-  (() => {
-    const lang = (localStorage.getItem("gd_lang") || "en");
-    const depth = (localStorage.getItem("gd_depth") || "explore");
-    document.getElementById("langPill").textContent = (lang==="zh") ? "中文" : "EN";
-    document.getElementById("depthPill").textContent = depth.toUpperCase();
-  })();
+    (function () {
+      "use strict";
+
+      // Canonical keys only
+      var K_DEPTH = "gd_depth";
+
+      function qp(name) {
+        try { return new URLSearchParams(window.location.search).get(name); }
+        catch (e) { return null; }
+      }
+
+      function lsGet(k) {
+        try { return localStorage.getItem(k); } catch (e) { return null; }
+      }
+
+      function setPressed(el, pressed) {
+        if (!el) return;
+        el.setAttribute("aria-pressed", pressed ? "true" : "false");
+      }
+
+      // Explore page forces/reflects explore density
+      var depth = qp("depth") || lsGet(K_DEPTH) || "explore";
+      if (depth !== "explore") depth = "explore";
+
+      // Reflect UI
+      setPressed(document.getElementById("depth-explore"), true);
+      setPressed(document.getElementById("depth-learn"), false);
+    })();
   </script>
 </body>
 </html>

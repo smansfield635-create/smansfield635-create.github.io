@@ -7,11 +7,12 @@
   <title>CRP</title>
 
   <!-- CSS ORDER (CANON): ui.css FIRST, branch.css SECOND -->
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+  <!-- CACHE-BUST: prevents GitHub Pages/mobile cache from serving stale CSS -->
+  <link rel="stylesheet" href="/assets/ui.css?v=20260221a" />
+  <link rel="stylesheet" href="/assets/branch.css?v=20260221a" />
 
   <!-- INSTRUMENT (state normalization) -->
-  <script defer src="/assets/instrument.js"></script>
+  <script defer src="/assets/instrument.js?v=20260221a"></script>
 </head>
 
 <body>

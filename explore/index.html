@@ -1,172 +1,220 @@
-<!-- TNT FILE: /explore/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Explore · Geodiametrics</title>
+  <title>Explore · Diamond 2</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=9300"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9300"/>
-  <script defer src="/assets/instrument.js?v=9300"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=EXPLORE_D2_1"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=EXPLORE_D2_1"/>
+  <script defer src="/assets/instrument.js?v=EXPLORE_D2_1"></script>
+
+  <style>
+    .d2-wrap{max-width:980px;margin:0 auto;}
+    .d2-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+    @media (max-width:820px){ .d2-grid{grid-template-columns:1fr;} }
+    .d2-tile{min-height:104px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
+    .d2-left{display:flex;flex-direction:column;gap:4px;text-align:left}
+    .d2-code{font-weight:950;letter-spacing:.3px}
+    .d2-desc{opacity:.82;line-height:1.25}
+    .d2-tags{opacity:.70;font-size:12px;letter-spacing:.15px}
+    .d2-go{opacity:.85;font-weight:900}
+    .d2-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px}
+    .d2-mini{opacity:.72;font-size:12px;line-height:1.35;text-align:center;margin-top:10px}
+    .d2-section{margin-top:12px}
+  </style>
 </head>
 
 <body>
-<div class="page">
-  <div class="wrap">
+<main class="crp-shell">
 
-    <div class="hero" style="text-align:center">
-      <h1>EXPLORE</h1>
-      <p>Surface map. Tap any vine to jump into Compass.</p>
+  <header class="crp-header" style="text-align:center">
+    <div class="crp-mark" data-i18n="global.brand">GEODIAMETRICS</div>
+    <h1 class="crp-title" style="margin-bottom:6px">EXPLORE</h1>
+    <p class="crp-subtitle" style="margin-bottom:8px">Diamond 2 · Surface Map</p>
 
-      <div class="pills" style="justify-content:center;margin-top:12px">
-        <span class="pill">LANG: <span id="pillLang">EN</span></span>
-        <span class="pill">DEPTH: <span id="pillDepth">EXPLORE</span></span>
-        <a class="pill btn" href="/door/">TERMINAL</a>
-        <a class="pill btn" href="/home/">COMPASS</a>
+    <!-- Top lenses (operational overlay) -->
+    <div class="crp-topbar" style="margin:0 auto 8px;max-width:980px">
+      <div class="crp-topbar-left" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%">
+        <div class="crp-lens" role="group" aria-label="Style lens">
+          <button class="crp-chip" type="button" data-style="formal">FORMAL</button>
+          <button class="crp-chip" type="button" data-style="informal">INFORMAL</button>
+        </div>
+        <div class="crp-lens" role="group" aria-label="Time lens">
+          <button class="crp-chip" type="button" data-time="origin">ORIGIN</button>
+          <button class="crp-chip" type="button" data-time="now">NOW</button>
+          <button class="crp-chip" type="button" data-time="trajectory">TRAJECTORY</button>
+        </div>
       </div>
-
-      <div class="section-title">Quadrants (NW / NE / SW / SE)</div>
     </div>
 
-    <!-- NW -->
-    <details class="quad" open>
-      <summary>
-        <div class="q-left">
-          <div class="q-badge"><span class="icon">⭐</span><span class="code">NW</span></div>
-          <div class="q-text"><b>NORTHWEST</b><span>Definition · language · structure</span></div>
-        </div>
-        <div class="q-arrow">▾</div>
-      </summary>
-      <div class="inside">
-        <div class="bubble-row">
-          <a class="bubble-btn js-vine" data-q="NW" data-v="SSG" href="#">
-            <div class="lbl"><b>SSG</b><i>Constraint language</i></div><div class="go">▶</div>
-          </a>
-          <a class="bubble-btn js-vine" data-q="NW" data-v="GRAMMAR" href="#">
-            <div class="lbl"><b>DIAMOND GRAMMAR</b><i>Traversal rules</i></div><div class="go">▶</div>
-          </a>
-          <a class="bubble-btn js-vine" data-q="NW" data-v="DOTGRID" href="#">
-            <div class="lbl"><b>DOT.GRID</b><i>256-state indexing</i></div><div class="go">▶</div>
-          </a>
-          <a class="bubble-btn js-vine" data-q="NW" data-v="ACRONYMS" href="#">
-            <div class="lbl"><b>ACRONYMS</b><i>Pillars + lookup</i></div><div class="go">▶</div>
-          </a>
-        </div>
-      </div>
-    </details>
+    <div class="d2-row" aria-label="Quick navigation">
+      <a id="go-home" class="crp-btn crp-btn-primary" href="/home/" role="button">COMPASS</a>
+      <a id="go-about" class="crp-btn" href="/about/" role="button">ABOUT</a>
+      <a id="go-links" class="crp-btn" href="/links/" role="button">LINKS</a>
+      <a id="go-laws" class="crp-btn" href="/laws/" role="button">LAWS</a>
+      <a id="go-gauges" class="crp-btn" href="/gauges/" role="button">GAUGES</a>
+    </div>
 
-    <!-- NE -->
-    <details class="quad">
-      <summary>
-        <div class="q-left">
-          <div class="q-badge"><span class="icon">☀️</span><span class="code">NE</span></div>
-          <div class="q-text"><b>NORTHEAST</b><span>Execution · surfaces · examples</span></div>
-        </div>
-        <div class="q-arrow">▾</div>
-      </summary>
-      <div class="inside">
-        <div class="bubble-row">
-          <a class="bubble-btn js-vine" data-q="NE" data-v="SURFACES" href="#">
-            <div class="lbl"><b>SURFACES</b><i>Apps · portals</i></div><div class="go">▶</div>
-          </a>
-          <a class="bubble-btn js-vine" data-q="NE" data-v="WORKFLOWS" href="#">
-            <div class="lbl"><b>WORKFLOWS</b><i>Receipts · replay</i></div><div class="go">▶</div>
-          </a>
-          <a class="bubble-btn js-vine" data-q="NE" data-v="EXAMPLES" href="#">
-            <div class="lbl"><b>EXAMPLES</b><i>How to use</i></div><div class="go">▶</div>
-          </a>
-          <a class="bubble-btn js-vine" data-q="NE" data-v="OUTPUTS" href="#">
-            <div class="lbl"><b>OUTPUTS</b><i>Packs · artifacts</i></div><div class="go">▶</div>
-          </a>
-        </div>
-      </div>
-    </details>
+    <p class="d2-mini">
+      Explore is the new transition diamond. It routes into the core/spine (Compass) while preserving lenses.
+    </p>
+  </header>
 
-    <!-- SW -->
-    <details class="quad">
-      <summary>
-        <div class="q-left">
-          <div class="q-badge"><span class="icon">🏮</span><span class="code">SW</span></div>
-          <div class="q-text"><b>SOUTHWEST</b><span>Measurement · diagnostics · rules</span></div>
-        </div>
-        <div class="q-arrow">▾</div>
-      </summary>
-      <div class="inside">
-        <div class="bubble-row">
-          <a class="bubble-btn js-vine" data-q="SW" data-v="GAUGES" href="#">
-            <div class="lbl"><b>GAUGES</b><i>Panels · thresholds</i></div><div class="go">▶</div>
-          </a>
-          <a class="bubble-btn js-vine" data-q="SW" data-v="DIAGNOSTICS" href="#">
-            <div class="lbl"><b>DIAGNOSTICS</b><i>Classification</i></div><div class="go">▶</div>
-          </a>
-          <a class="bubble-btn js-vine" data-q="SW" data-v="RULES" href="#">
-            <div class="lbl"><b>RULES</b><i>Integrity constraints</i></div><div class="go">▶</div>
-          </a>
-          <a class="bubble-btn js-vine" data-q="SW" data-v="PROTOCOLS" href="#">
-            <div class="lbl"><b>PROTOCOLS</b><i>Return · audit</i></div><div class="go">▶</div>
-          </a>
-        </div>
-      </div>
-    </details>
+  <section class="d2-wrap">
 
-    <!-- SE -->
-    <details class="quad">
-      <summary>
-        <div class="q-left">
-          <div class="q-badge"><span class="icon">🌇</span><span class="code">SE</span></div>
-          <div class="q-text"><b>SOUTHEAST</b><span>Identity · references · links</span></div>
+    <div class="d2-grid" aria-label="Diamond 2 quadrants">
+      <!-- NW -->
+      <a id="q-nw" class="crp-btn d2-tile" href="/home/" role="button">
+        <div class="d2-left">
+          <div class="d2-code">⭐ NW · NORTHWEST</div>
+          <div class="d2-desc"><b>Definition · Language · Structure</b></div>
+          <div class="d2-tags">SSG · Grammar · DOT.GRID · Acronyms</div>
         </div>
-        <div class="q-arrow">▾</div>
-      </summary>
-      <div class="inside">
-        <div class="bubble-row">
-          <a class="bubble-btn js-vine" data-q="SE" data-v="ORCID" href="#">
-            <div class="lbl"><b>ORCID</b><i>Identity anchor</i></div><div class="go">▶</div>
-          </a>
-          <a class="bubble-btn js-vine" data-q="SE" data-v="OSF" href="#">
-            <div class="lbl"><b>OSF</b><i>Registry</i></div><div class="go">▶</div>
-          </a>
-          <a class="bubble-btn js-vine" data-q="SE" data-v="REFERENCES" href="#">
-            <div class="lbl"><b>REFERENCES</b><i>Anchors</i></div><div class="go">▶</div>
-          </a>
-          <a class="bubble-btn js-vine" data-q="SE" data-v="CONTACT" href="#">
-            <div class="lbl"><b>CONTACT</b><i>Channel</i></div><div class="go">▶</div>
-          </a>
-        </div>
-      </div>
-    </details>
+        <div class="d2-go">▶</div>
+      </a>
 
-    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    <div class="ink">GEODIAMETRICS</div>
-  </div>
-</div>
+      <!-- NE -->
+      <a id="q-ne" class="crp-btn d2-tile" href="/home/" role="button">
+        <div class="d2-left">
+          <div class="d2-code">☀️ NE · NORTHEAST</div>
+          <div class="d2-desc"><b>Execution · Surfaces · Examples</b></div>
+          <div class="d2-tags">Products · Demos · Workflows</div>
+        </div>
+        <div class="d2-go">▶</div>
+      </a>
+
+      <!-- SW -->
+      <a id="q-sw" class="crp-btn d2-tile" href="/home/" role="button">
+        <div class="d2-left">
+          <div class="d2-code">🔥 SW · SOUTHWEST</div>
+          <div class="d2-desc"><b>Measurement · Diagnostics · Rules</b></div>
+          <div class="d2-tags">UCI · HIP Gates · Alerts · Reports</div>
+        </div>
+        <div class="d2-go">▶</div>
+      </a>
+
+      <!-- SE -->
+      <a id="q-se" class="crp-btn d2-tile" href="/home/" role="button">
+        <div class="d2-left">
+          <div class="d2-code">🌙 SE · SOUTHEAST</div>
+          <div class="d2-desc"><b>Governance · Capital · Certification</b></div>
+          <div class="d2-tags">CARES · Charter · Registry · Audit</div>
+        </div>
+        <div class="d2-go">▶</div>
+      </a>
+    </div>
+
+    <div class="d2-section">
+      <hr class="crp-divider"/>
+
+      <div class="d2-row" aria-label="Core/Spine links">
+        <a id="go-products" class="crp-btn" href="/products/" role="button">PRODUCTS</a>
+        <a id="go-cares" class="crp-btn" href="/cares/" role="button">CARES</a>
+        <a id="go-hipdemo" class="crp-btn" href="/hip-demo/" role="button">HIP DEMO</a>
+        <a id="go-start" class="crp-btn" href="/" role="button">START</a>
+      </div>
+
+      <p class="d2-mini">
+        BUILD: <b>EXPLORE_D2_1</b> · Carries: <code>gd_lang</code> <code>gd_depth</code> <code>gd_style</code> <code>gd_time</code>
+      </p>
+    </div>
+
+  </section>
+</main>
 
 <script>
-(() => {
-  // display state
-  const lang = (localStorage.getItem("gd_lang") || "en").toLowerCase();
-  const depth = (localStorage.getItem("gd_depth") || "explore").toLowerCase();
+(function(){
+  "use strict";
 
-  document.getElementById("pillLang").textContent = (lang === "zh") ? "中文" : "EN";
-  document.getElementById("pillDepth").textContent = "EXPLORE";
+  var K_LANG="gd_lang", K_DEPTH="gd_depth", K_STYLE="gd_style", K_TIME="gd_time";
+  var allowLang={en:1,zh:1};
+  var allowDepth={explore:1,learn:1};
+  var allowStyle={formal:1,informal:1};
+  var allowTime={origin:1,now:1,trajectory:1};
 
-  // force depth=explore for Explore page
-  try { localStorage.setItem("gd_depth", "explore"); } catch(e){}
+  function qp(n){ try{return new URLSearchParams(location.search).get(n);}catch(e){return null;} }
+  function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
+  function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
 
-  // wire all vines to Compass deterministically
-  const vines = document.querySelectorAll(".js-vine");
-  vines.forEach(a => {
-    a.addEventListener("click", (e) => {
-      e.preventDefault();
-      const q = a.getAttribute("data-q") || "";
-      const v = a.getAttribute("data-v") || "";
-      // we keep q/v in query for future use; Compass can ignore safely
-      const url = `/home/?depth=explore&lang=${encodeURIComponent(lang)}&q=${encodeURIComponent(q)}&v=${encodeURIComponent(v)}`;
-      window.location.href = url;
+  var state={
+    lang:  qp("lang")  || lsGet(K_LANG)  || "en",
+    depth: qp("depth") || lsGet(K_DEPTH) || "explore",
+    style: qp("style") || lsGet(K_STYLE) || "formal",
+    time:  qp("time")  || lsGet(K_TIME)  || "origin"
+  };
+
+  if(!allowLang[state.lang]) state.lang="en";
+  if(!allowDepth[state.depth]) state.depth="explore";
+  if(!allowStyle[state.style]) state.style="formal";
+  if(!allowTime[state.time]) state.time="origin";
+
+  lsSet(K_LANG,state.lang); lsSet(K_DEPTH,state.depth); lsSet(K_STYLE,state.style); lsSet(K_TIME,state.time);
+
+  function setPressed(group, attr, value){
+    var nodes=document.querySelectorAll(group+" .crp-chip["+attr+"]");
+    for(var i=0;i<nodes.length;i++){
+      var v=nodes[i].getAttribute(attr);
+      nodes[i].setAttribute("aria-pressed", v===value ? "true":"false");
+    }
+  }
+  setPressed("[aria-label='Style lens']","data-style",state.style);
+  setPressed("[aria-label='Time lens']","data-time",state.time);
+
+  // lens handlers
+  var styleChips=document.querySelectorAll(".crp-chip[data-style]");
+  for(var s=0;s<styleChips.length;s++){
+    styleChips[s].addEventListener("click", function(e){
+      var v=e.currentTarget.getAttribute("data-style");
+      if(!allowStyle[v]) return;
+      state.style=v; lsSet(K_STYLE,v);
+      setPressed("[aria-label='Style lens']","data-style",v);
+      rewrite();
     });
-  });
+  }
+  var timeChips=document.querySelectorAll(".crp-chip[data-time]");
+  for(var t=0;t<timeChips.length;t++){
+    timeChips[t].addEventListener("click", function(e){
+      var v=e.currentTarget.getAttribute("data-time");
+      if(!allowTime[v]) return;
+      state.time=v; lsSet(K_TIME,v);
+      setPressed("[aria-label='Time lens']","data-time",v);
+      rewrite();
+    });
+  }
+
+  function rewrite(){
+    var q="lang="+encodeURIComponent(state.lang)+
+          "&depth="+encodeURIComponent(state.depth)+
+          "&style="+encodeURIComponent(state.style)+
+          "&time="+encodeURIComponent(state.time);
+
+    function set(id, href){
+      var a=document.getElementById(id);
+      if(a) a.setAttribute("href", href);
+    }
+
+    // core/spine
+    set("go-home","/home/?"+q);
+    set("go-about","/about/?"+q);
+    set("go-links","/links/?"+q);
+    set("go-laws","/laws/?"+q);
+    set("go-gauges","/gauges/?"+q);
+    set("go-products","/products/?"+q);
+    set("go-cares","/cares/?"+q);
+    set("go-hipdemo","/hip-demo/?"+q);
+    set("go-start","/?"+q);
+
+    // Diamond 2 quadrants route into Compass with an axis hint (query-only; no new storage keys)
+    set("q-nw","/home/?"+q+"&axis=nw");
+    set("q-ne","/home/?"+q+"&axis=ne");
+    set("q-sw","/home/?"+q+"&axis=sw");
+    set("q-se","/home/?"+q+"&axis=se");
+  }
+
+  rewrite();
 })();
 </script>
+
 </body>
 </html>

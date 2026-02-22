@@ -1,73 +1,91 @@
-/* TNT FILE: /assets/instrument.js
-   CRP INSTRUMENT ENGINE v3 — State + UI safety only
+/* =====================================================
+   TNT FILE: /assets/instrument.js
+   CRP STATE BRIDGE v3 — FULL TNT
    Purpose:
-     - Persist: language + depth + time + style
-     - Normalize query params → localStorage
-     - Minimal gating (only for /door/ and /home/ and /explore/)
-     - NEVER blocks leaf pages
-*/
+     - Single source of truth for lang/depth across pages
+     - Bridge legacy keys (crp_*) and current keys (gd_*)
+     - Accept querystring overrides (?lang=zh&depth=learn)
+   No routing enforcement. No page blocking.
+===================================================== */
 
 (() => {
-  const path = (location.pathname || "/").toLowerCase();
-  const norm = path.endsWith("/") ? path : path + "/";
-
-  const K_LANG  = "gd_lang";   // "en" | "zh"
-  const K_DEPTH = "gd_depth";  // "explore" | "learn"
-  const K_TIME  = "gd_time";   // "origin" | "now" | "trajectory"
-  const K_STYLE = "gd_style";  // "formal" | "informal"
-
-  const VALID_LANG  = new Set(["en","zh"]);
+  const VALID_LANG = new Set(["en","zh"]);
   const VALID_DEPTH = new Set(["explore","learn"]);
-  const VALID_TIME  = new Set(["origin","now","trajectory"]);
-  const VALID_STYLE = new Set(["formal","informal"]);
 
-  const qp = new URLSearchParams(location.search);
+  // Canonical keys going forward
+  const K_LANG = "gd_lang";
+  const K_DEPTH = "gd_depth";
 
-  function setIfValid(key, val, validSet){
-    if (!val) return;
-    const v = String(val).toLowerCase();
-    if (validSet.has(v)) {
-      try { localStorage.setItem(key, v); } catch(e){}
-    }
-  }
+  // Legacy keys that may still exist
+  const K_LANG_OLD = "crp_lang";
+  const K_DEPTH_OLD = "crp_depth";
 
-  // Pull from querystring if present (index → door carries ?lang= / ?depth= etc)
-  setIfValid(K_LANG,  qp.get("lang"),  VALID_LANG);
-  setIfValid(K_DEPTH, qp.get("depth"), VALID_DEPTH);
-  setIfValid(K_TIME,  qp.get("time"),  VALID_TIME);
-  setIfValid(K_STYLE, qp.get("style"), VALID_STYLE);
+  const qs = new URLSearchParams(location.search);
 
-  // Normalize invalid stored values
-  function getValid(key, validSet){
-    let v = null;
-    try { v = localStorage.getItem(key); } catch(e){}
-    if (!v) return null;
-    v = String(v).toLowerCase();
-    if (!validSet.has(v)) {
-      try { localStorage.removeItem(key); } catch(e){}
+  const norm = (s) => String(s || "").trim().toLowerCase();
+
+  const pickLang = (v) => {
+    v = norm(v);
+    if (v === "cn" || v === "zh-cn" || v === "zh-hans") v = "zh";
+    if (v === "eng") v = "en";
+    return VALID_LANG.has(v) ? v : null;
+  };
+
+  const pickDepth = (v) => {
+    v = norm(v);
+    if (v === "shop") v = "explore"; // legacy mapping
+    return VALID_DEPTH.has(v) ? v : null;
+  };
+
+  function getAny(keyA, keyB){
+    try {
+      return localStorage.getItem(keyA) || localStorage.getItem(keyB);
+    } catch (e) {
       return null;
     }
-    return v;
   }
 
-  const lang  = getValid(K_LANG,  VALID_LANG);
-  const depth = getValid(K_DEPTH, VALID_DEPTH);
-
-  // INDEX: no requirements
-  if (norm === "/") return;
-
-  // DOOR: requires language
-  if (norm === "/door/") {
-    if (!lang) { location.replace("/"); }
-    return;
+  function setKey(key, val){
+    try { localStorage.setItem(key, val); } catch(e){}
   }
 
-  // EXPLORE + HOME: require language + depth
-  if (norm === "/explore/" || norm === "/home/") {
-    if (!lang) { location.replace("/"); return; }
-    if (!depth) { location.replace("/door/"); return; }
-    return;
+  function delKey(key){
+    try { localStorage.removeItem(key); } catch(e){}
   }
 
-  // Everything else: NO-OP
+  // 1) Querystring wins (explicit user choice)
+  const qLang = pickLang(qs.get("lang"));
+  const qDepth = pickDepth(qs.get("depth"));
+
+  // 2) Otherwise any existing stored value
+  const sLang = pickLang(getAny(K_LANG, K_LANG_OLD));
+  const sDepth = pickDepth(getAny(K_DEPTH, K_DEPTH_OLD));
+
+  const finalLang = qLang || sLang;
+  const finalDepth = qDepth || sDepth;
+
+  // 3) Write BOTH keysets so every page agrees
+  if (finalLang) {
+    setKey(K_LANG, finalLang);
+    setKey(K_LANG_OLD, finalLang);
+  } else {
+    delKey(K_LANG);
+    delKey(K_LANG_OLD);
+  }
+
+  if (finalDepth) {
+    setKey(K_DEPTH, finalDepth);
+    setKey(K_DEPTH_OLD, finalDepth);
+  } else {
+    delKey(K_DEPTH);
+    delKey(K_DEPTH_OLD);
+  }
+
+  // Optional: clean URL after applying query (prevents re-overrides)
+  if (qLang || qDepth) {
+    qs.delete("lang");
+    qs.delete("depth");
+    const next = location.pathname + (qs.toString() ? ("?" + qs.toString()) : "") + location.hash;
+    history.replaceState({}, "", next);
+  }
 })();

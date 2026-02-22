@@ -3,121 +3,112 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cardinal Axis · Language</title>
+<title>Cardinal Axis · Entry</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=DOOR_AXIS_1"/>
-<link rel="stylesheet" href="/assets/branch.css?v=DOOR_AXIS_1"/>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
 body{
   margin:0;
   min-height:100vh;
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
-  background:
-    radial-gradient(circle at 50% 40%, rgba(20,40,90,.35), transparent 60%),
-    linear-gradient(180deg,#8a0000 0%,#b30000 50%,#8a0000 100%);
+  background:radial-gradient(circle at 50% 40%, #b00000 0%, #7a0000 40%, #3a0000 75%, #140000 100%);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   color:#fff;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
 
-.title{
-  font-size:clamp(40px,8vw,72px);
-  font-weight:900;
-  letter-spacing:2px;
+.container{
   text-align:center;
+  width:90%;
+  max-width:640px;
+}
+
+h1{
+  font-size:48px;
+  letter-spacing:2px;
+  margin:0 0 10px;
 }
 
 .subtitle{
   opacity:.8;
-  margin-top:12px;
+  margin:0 0 50px;
   font-size:18px;
 }
 
-.lang-wrap{
-  margin-top:60px;
+.lang-grid{
   display:flex;
   flex-direction:column;
-  gap:40px;
+  gap:34px;
   align-items:center;
 }
 
-.lang-btn{
-  width:200px;
-  height:200px;
+.lang-card{
+  width:240px;
+  height:240px;
   border-radius:28px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 40% 35%, rgba(80,120,255,.18), transparent 60%),
-    linear-gradient(145deg,#0b0f15,#10151c);
-  backdrop-filter:blur(10px);
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.8),
-    inset 0 3px 0 rgba(255,255,255,.15),
-    inset 0 -25px 40px rgba(0,0,0,.5);
   display:flex;
   align-items:center;
   justify-content:center;
   font-size:22px;
   font-weight:800;
-  letter-spacing:1px;
+  letter-spacing:.5px;
   cursor:pointer;
   transition:all .25s ease;
-  user-select:none;
+  text-decoration:none;
+  color:#fff;
+
+  background:
+    radial-gradient(circle at 50% 40%, #0f2b5a 0%, #071426 60%, #02060c 100%);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.7),
+    inset 0 2px 6px rgba(255,255,255,.08),
+    inset 0 -10px 30px rgba(0,0,0,.6);
+  border:1px solid rgba(255,255,255,.12);
 }
 
-.lang-btn:hover{
-  transform:scale(1.04);
+.lang-card:hover{
+  transform:translateY(-6px);
   box-shadow:
-    0 35px 100px rgba(0,0,0,.9),
-    0 0 20px rgba(212,175,55,.3),
-    inset 0 3px 0 rgba(255,255,255,.2),
-    inset 0 -30px 50px rgba(0,0,0,.6);
+    0 30px 80px rgba(0,0,0,.85),
+    0 0 25px rgba(212,175,55,.35),
+    inset 0 2px 6px rgba(255,255,255,.1),
+    inset 0 -12px 35px rgba(0,0,0,.65);
 }
 
 .footer{
-  position:fixed;
-  bottom:20px;
-  opacity:.6;
+  margin-top:40px;
   font-size:12px;
-  letter-spacing:2px;
+  opacity:.55;
+  letter-spacing:1px;
 }
 </style>
 </head>
 
 <body>
+<div class="container">
+  <h1>CARDINAL AXIS</h1>
+  <div class="subtitle">Select your language.</div>
 
-<div class="title">CARDINAL AXIS</div>
-<div class="subtitle">Select your language.</div>
+  <div class="lang-grid">
+    <div class="lang-card" onclick="goLang('en')">ENGLISH</div>
+    <div class="lang-card" onclick="goLang('zh')">中文</div>
+  </div>
 
-<div class="lang-wrap">
-  <div class="lang-btn" onclick="goLang('en')">ENGLISH</div>
-  <div class="lang-btn" onclick="goLang('zh')">中文</div>
+  <div class="footer">© GEODIAMETRICS</div>
 </div>
 
-<div class="footer">© GEODIAMETRICS</div>
-
 <script>
-(function(){
-  "use strict";
-
-  function goLang(lang){
-    try{
-      localStorage.setItem("gd_lang", lang);
-    }catch(e){}
-    
-    // Route to root index.html
-    window.location.href = "/";
-  }
-
-  // Attach handlers safely
-  var en = document.getElementById("lang-en");
-  var zh = document.getElementById("lang-zh");
-
-  if(en){ en.addEventListener("click", function(){ goLang("en"); }); }
-  if(zh){ zh.addEventListener("click", function(){ goLang("zh"); }); }
-
-})();
+function goLang(lang){
+  try{
+    localStorage.setItem("gd_lang", lang);
+  }catch(e){}
+  // Explicit routing to index.html
+  window.location.href = "/index.html";
+}
 </script>
+
+</body>
+</html>

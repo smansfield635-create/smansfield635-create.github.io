@@ -34,7 +34,9 @@
       </div>
 
       <footer class="crp-footer">
-        <small class="crp-footnote">Language sets <code>gd_lang</code> and routes forward.</small>
+        <small class="crp-footnote">
+          Language sets <code>gd_lang</code> and routes forward.
+        </small>
       </footer>
     </section>
   </main>
@@ -43,12 +45,11 @@
     (function () {
       "use strict";
 
-      // CANONICAL KEY OWNER (Index): gd_lang only.
+      // INDEX OWNER: gd_lang only
       var KEY_LANG = "gd_lang";
 
       function setLangAndGo(lang) {
         try { localStorage.setItem(KEY_LANG, lang); } catch (e) {}
-        // Route to Terminal with explicit lang query (canonical).
         window.location.href = "/door/?lang=" + encodeURIComponent(lang);
       }
 
@@ -57,8 +58,6 @@
 
       if (en) en.addEventListener("click", function () { setLangAndGo("en"); });
       if (zh) zh.addEventListener("click", function () { setLangAndGo("zh"); });
-
-      // Accessibility: Enter/Space already handled by <button>.
     })();
   </script>
 </body>

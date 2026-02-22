@@ -1,22 +1,15 @@
 /* =====================================================
    TNT FILE: /assets/branch.css
-   CRP BRANCH LAYOUT v1 — LAYOUT ONLY (NO FIELD / NO BODY BACKGROUND)
-   PURPOSE:
-     - Diamond geometry (platform + 4 tiles)
-     - Quadrant cards (NW/NE/SW/SE)
-     - Bubble buttons (vine/fruit)
-     - Overlay + modal layout helpers
+   PURPOSE: Branch visuals (diamonds / 3D tiles / door layouts / links layouts)
    RULES:
-     - DO NOT define :root colors here
-     - DO NOT set html/body backgrounds here
-     - UI field lives ONLY in /assets/ui.css
+     - DO NOT redefine body/html backgrounds here (ui.css is the single source of truth)
+     - Use ui.css variables (--ink/--red/--gold/etc)
+     - Provide the “3D diamond” look consistently across Door/Links/Home
 ===================================================== */
 
-*{box-sizing:border-box}
-
-/* =====================================================
-   STAGE / PLATFORM (DIAMOND)
-===================================================== */
+/* -----------------------------------------------------
+   Shared helpers
+----------------------------------------------------- */
 
 .stage{
   width:100%;
@@ -25,106 +18,227 @@
   justify-content:center;
 }
 
-.platform{
-  position:relative;
-  width:min(420px,88vw);
-  aspect-ratio:1/1;
-  margin:0 auto;
+.center{
+  text-align:center;
 }
 
-/* Diamond plate */
-.platform::before{
+.mono{
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  font-weight:900;
+  opacity:.72;
+}
+
+.subtle{
+  color:var(--muted);
+  opacity:.78;
+}
+
+/* -----------------------------------------------------
+   Diamond field (big rotated plate behind content)
+   Use on pages that want the big red diamond silhouette.
+----------------------------------------------------- */
+
+.diamond-field{
+  position:relative;
+  width:min(720px, 92vw);
+  height:min(720px, 92vw);
+  max-width:720px;
+  max-height:720px;
+  margin:18px auto 10px;
+  pointer-events:none;
+}
+
+.diamond-field::before{
   content:"";
   position:absolute;
   inset:0;
   transform:rotate(45deg);
-  border-radius:46px;
-  background:rgba(255,255,255,.04);
+  border-radius:56px;
+  background:
+    radial-gradient(900px 600px at 50% 0%,
+      rgba(122,11,20,.38) 0%,
+      rgba(122,11,20,.18) 38%,
+      rgba(0,0,0,.10) 75%),
+    rgba(0,0,0,.10);
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.10),
-    0 30px 90px rgba(0,0,0,.55);
-  backdrop-filter:blur(10px);
-  z-index:0;
+    inset 0 0 0 1px rgba(202,160,74,.14),
+    0 60px 180px rgba(0,0,0,.70);
+  filter:saturate(1.05);
+  opacity:.85;
 }
 
-/* =====================================================
-   DIAMOND TILE (4 ROUTES)
-===================================================== */
-
-.diamond{
+.diamond-field::after{
+  content:"";
   position:absolute;
-  width:42%;
-  height:42%;
+  inset:8%;
   transform:rotate(45deg);
-  border-radius:24px;
-  background:rgba(0,0,0,.26);
+  border-radius:48px;
+  background:rgba(255,255,255,.03);
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.12),
-    0 18px 60px rgba(0,0,0,.50);
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    0 30px 90px rgba(0,0,0,.55);
+  opacity:.55;
+}
+
+/* -----------------------------------------------------
+   3D diamond tiles (used by Door and Links)
+----------------------------------------------------- */
+
+.diamond-wrap{
+  position:relative;
+  width:min(620px, 92vw);
+  height:min(620px, 92vw);
+  max-width:620px;
+  max-height:620px;
+  margin:18px auto 0;
+}
+
+.diamond-tile{
+  position:absolute;
+  width:34%;
+  height:34%;
+  border-radius:22px;
+  background:
+    radial-gradient(220px 180px at 50% 18%,
+      rgba(255,255,255,.10) 0%,
+      rgba(255,255,255,.04) 45%,
+      rgba(0,0,0,.32) 100%),
+    rgba(0,0,0,.22);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    0 26px 90px rgba(0,0,0,.60);
+  backdrop-filter:blur(12px);
   display:flex;
   align-items:center;
   justify-content:center;
-  text-decoration:none;
-  color:inherit;
-  z-index:2;
-  -webkit-tap-highlight-color:transparent;
-  user-select:none;
-  transition:filter .15s ease, transform .15s ease, background .15s ease, box-shadow .15s ease;
-}
-
-.diamond:hover{
-  filter:brightness(1.05);
-  background:rgba(0,0,0,.30);
-}
-.diamond:active{
-  transform:rotate(45deg) translateY(1px);
-}
-
-.diamond span{
-  transform:rotate(-45deg);
-  display:block;
   text-align:center;
-  padding:10px 12px;
-  line-height:1.1;
+  color:var(--text);
+  text-decoration:none;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.diamond-tile:hover{
+  filter:brightness(1.06);
+}
+
+.diamond-tile .tile-inner{
+  transform:rotate(0deg);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:center;
+  justify-content:center;
+  padding:14px 14px;
+}
+
+.diamond-tile .tile-title{
   font-weight:950;
-  letter-spacing:.12em;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  font-size:clamp(12px, 2.4vw, 18px);
+}
+
+.diamond-tile .tile-sub{
+  font-size:clamp(11px, 2.0vw, 14px);
+  opacity:.75;
+  letter-spacing:.10em;
   text-transform:uppercase;
 }
 
-.diamond span b{
-  display:block;
-  font-size:16px;
-  font-weight:950;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-}
-
-.diamond span small{
-  display:block;
-  margin-top:8px;
-  font-size:12px;
-  opacity:.72;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  font-weight:900;
-}
-
-/* Positions */
-.top{top:6%;left:29%}
-.right{top:29%;right:6%}
-.bottom{bottom:6%;left:29%}
-.left{top:29%;left:6%}
-
-/* Optional highlight */
-.diamond.gold{
+/* Gold “selected” ring */
+.diamond-tile.active{
   box-shadow:
     inset 0 0 0 1px rgba(202,160,74,.55),
-    0 18px 60px rgba(0,0,0,.50);
+    0 26px 90px rgba(0,0,0,.60);
 }
 
-/* =====================================================
-   QUADRANT CARDS (HOME)
-===================================================== */
+.diamond-tile.active .tile-title{
+  color:rgba(202,160,74,.98);
+}
+
+/* Positions for 4-tile cross */
+.diamond-top{top:22%; left:33%;}
+.diamond-left{top:46%; left:12%;}
+.diamond-right{top:46%; left:54%;}
+.diamond-bottom{top:70%; left:33%;}
+
+/* Responsive tightening */
+@media (max-width:420px){
+  .diamond-tile{border-radius:18px}
+  .diamond-top{top:24%;}
+  .diamond-left{left:8%;}
+  .diamond-right{left:58%;}
+}
+
+/* -----------------------------------------------------
+   Door page: “Choose your route” + 4 tiles over red plate
+----------------------------------------------------- */
+
+.door-plate{
+  position:relative;
+  width:min(720px, 92vw);
+  margin:0 auto;
+}
+
+.door-plate .diamond-field{
+  position:absolute;
+  left:50%;
+  top:52%;
+  transform:translate(-50%,-50%);
+  opacity:.92;
+}
+
+.door-plate .diamond-wrap{
+  position:relative;
+  z-index:3;
+  margin-top:0;
+}
+
+.door-controls{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.lang-chip{
+  display:inline-flex;
+  gap:10px;
+  align-items:center;
+  justify-content:center;
+  margin-top:10px;
+}
+
+/* -----------------------------------------------------
+   Links page: same geometry, different labels
+----------------------------------------------------- */
+
+.links-plate{
+  position:relative;
+  width:min(720px, 92vw);
+  margin:0 auto;
+}
+
+.links-plate .diamond-field{
+  position:absolute;
+  left:50%;
+  top:54%;
+  transform:translate(-50%,-50%);
+  opacity:.92;
+}
+
+.links-plate .diamond-wrap{
+  position:relative;
+  z-index:3;
+}
+
+/* -----------------------------------------------------
+   Home page: quadrant cards (details.quad etc) — shared
+   NOTE: These are used by your Home HTML.
+----------------------------------------------------- */
 
 details.quad{
   border-radius:22px;
@@ -136,7 +250,7 @@ details.quad{
   overflow:hidden;
 }
 
-details.quad + details.quad{margin-top:12px}
+details.quad + details.quad{margin-top:12px;}
 
 details.quad summary{
   list-style:none;
@@ -148,26 +262,17 @@ details.quad summary{
   gap:12px;
   -webkit-tap-highlight-color:transparent;
 }
-details.quad summary::-webkit-details-marker{display:none}
 
-.q-left{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  min-width:0;
-}
+details.quad summary::-webkit-details-marker{display:none;}
+
+.q-left{display:flex;align-items:center;gap:12px;min-width:0;}
 
 .q-badge{
-  width:64px;
-  height:44px;
-  border-radius:18px;
-  background:rgba(0,0,0,.18);
+  width:64px;height:44px;border-radius:18px;
+  background:rgba(122,11,20,.18);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:950;
-  letter-spacing:.14em;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:950;letter-spacing:.14em;
   flex:0 0 auto;
   position:relative;
 }
@@ -179,55 +284,31 @@ details.quad summary::-webkit-details-marker{display:none}
   opacity:.95;
 }
 
-.q-badge .code{
-  padding-left:18px;
-}
+.q-badge .code{padding-left:18px;}
 
-.q-text{min-width:0}
-.q-text b{
-  display:block;
-  font-size:18px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  font-weight:950;
-}
-.q-text span{
-  display:block;
-  opacity:.72;
-  margin-top:4px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
+.q-text{min-width:0;}
+.q-text b{display:block;font-size:18px;letter-spacing:.12em;text-transform:uppercase;font-weight:950;}
+.q-text span{display:block;opacity:.72;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
 .q-arrow{
-  width:42px;
-  height:42px;
-  border-radius:999px;
+  width:42px;height:42px;border-radius:999px;
   background:rgba(255,255,255,.06);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  opacity:.9;
-  flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;
+  opacity:.9;flex:0 0 auto;
 }
 
-.inside{padding:0 16px 16px}
+.inside{padding:0 16px 16px;}
 
-/* =====================================================
-   BUBBLE GRID (VINES / FRUITS)
-===================================================== */
-
+/* Vine grid (4 bubbles) */
 .bubble-row{
   display:grid;
   grid-template-columns:1fr;
   gap:10px;
   margin-top:10px;
 }
-
 @media(min-width:720px){
-  .bubble-row{grid-template-columns:1fr 1fr}
+  .bubble-row{grid-template-columns:1fr 1fr;}
 }
 
 .bubble-btn{
@@ -244,45 +325,23 @@ details.quad summary::-webkit-details-marker{display:none}
   -webkit-tap-highlight-color:transparent;
 }
 
-.bubble-btn:hover{background:rgba(0,0,0,.28)}
+.bubble-btn:hover{background:rgba(0,0,0,.28);}
 
-.bubble-btn .lbl{min-width:0}
-
-.bubble-btn b{
-  display:block;
-  font-size:13px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  font-weight:950;
-}
-
-.bubble-btn i{
-  display:block;
-  margin-top:3px;
-  font-style:normal;
-  opacity:.72;
-  font-size:12px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
+.bubble-btn .lbl{min-width:0;}
+.bubble-btn b{display:block;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:950;}
+.bubble-btn i{display:block;font-style:normal;opacity:.72;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
 .bubble-btn .go{
-  width:40px;
-  height:40px;
-  border-radius:999px;
+  width:40px;height:40px;border-radius:999px;
   background:rgba(255,255,255,.06);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  opacity:.9;
-  flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;
+  opacity:.9;flex:0 0 auto;
 }
 
-/* =====================================================
-   OVERLAY / MODAL HELPERS
-===================================================== */
+/* -----------------------------------------------------
+   Modal overlay (no scroll-jump UX)
+----------------------------------------------------- */
 
 .overlay{
   position:fixed;
@@ -291,19 +350,20 @@ details.quad summary::-webkit-details-marker{display:none}
   display:none;
   align-items:center;
   justify-content:center;
-  padding:18px;
-  background:rgba(0,0,0,.70);
+  background:rgba(5,7,12,.82);
   backdrop-filter:blur(10px);
+  padding:18px;
 }
-
-.overlay.on{display:flex}
+.overlay.on{display:flex;}
 
 .modal{
   width:min(980px,94vw);
   max-height:min(86vh,760px);
   overflow:auto;
   border-radius:26px;
-  background:rgba(0,0,0,.30);
+  background:
+    radial-gradient(900px 600px at 50% 0%, rgba(122,11,20,.22) 0%, transparent 70%),
+    rgba(0,0,0,.30);
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.12),
     0 35px 120px rgba(0,0,0,.75);
@@ -332,7 +392,7 @@ details.quad summary::-webkit-details-marker{display:none}
 }
 .modal-title span{
   display:block;
-  margin-top:6px;
+  margin-top:4px;
   opacity:.75;
   font-size:14px;
   line-height:1.25;
@@ -345,15 +405,15 @@ details.quad summary::-webkit-details-marker{display:none}
   padding:10px 12px;
   background:rgba(255,255,255,.08);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
-  color:inherit;
+  color:var(--text);
   font-weight:900;
   letter-spacing:.12em;
   text-transform:uppercase;
   font-size:12px;
 }
-.close:hover{background:rgba(255,255,255,.10)}
+.close:hover{background:rgba(255,255,255,.10);}
 
-.modal-body{padding:14px 16px 18px}
+.modal-body{padding:14px 16px 18px;}
 
 .block{
   border-radius:22px;
@@ -361,64 +421,37 @@ details.quad summary::-webkit-details-marker{display:none}
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
   padding:14px;
 }
+
 .block h3{
   margin:0 0 10px;
   font-weight:950;
   letter-spacing:.08em;
   text-transform:uppercase;
 }
+
 .block p{
   margin:0;
-  opacity:.86;
-  line-height:1.7;
-}
-
-/* =====================================================
-   RESOLUTION BLOCK (LAYOUT ONLY)
-===================================================== */
-
-.resolution{
-  margin-top:14px;
-  padding:16px;
-  border-radius:22px;
-  background:rgba(255,255,255,.05);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-}
-.resolution h4{
-  margin:0 0 10px;
-  font-size:16px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  font-weight:950;
-}
-.resolution .para{
-  margin:0 0 12px;
+  color:rgba(234,242,246,.80);
   line-height:1.75;
-  opacity:.90;
 }
-.resolution ul{
-  margin:0 0 12px 18px;
-  padding:0;
-  line-height:1.65;
-  opacity:.82;
-}
-.resolution .imp{
-  font-weight:950;
-  letter-spacing:.06em;
-  opacity:.92;
-  margin-top:10px;
-}
-.resolution .back{
+
+.jump-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
   margin-top:14px;
-  display:inline-block;
-  border-radius:18px;
-  padding:10px 14px;
-  background:rgba(255,255,255,.08);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
-  font-weight:950;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  font-size:12px;
-  cursor:pointer;
 }
-.resolution .back:hover{background:rgba(255,255,255,.12)}
+
+/* (Optional) make jump buttons feel “gold” without changing ui.css */
+.jump-row .jump.gold{
+  background:rgba(202,160,74,.18);
+  box-shadow:inset 0 0 0 1px rgba(202,160,74,.40);
+}
+
+/* -----------------------------------------------------
+   “Back to month-one” prevention:
+   Make sure diamonds keep depth even if other CSS loads.
+----------------------------------------------------- */
+.diamond-wrap .diamond-tile{
+  filter:contrast(1.06) saturate(1.03);
+}

@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>HOME · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=HOME_MAX_UP_1"/>
-<link rel="stylesheet" href="/assets/branch.css?v=HOME_MAX_UP_1"/>
-<script defer src="/assets/instrument.js?v=HOME_MAX_UP_1"></script>
+<link rel="stylesheet" href="/assets/ui.css?v=HOME_LEVEL_NO_OVERLAP_1"/>
+<link rel="stylesheet" href="/assets/branch.css?v=HOME_LEVEL_NO_OVERLAP_1"/>
+<script defer src="/assets/instrument.js?v=HOME_LEVEL_NO_OVERLAP_1"></script>
 
 <style>
   .frame{position:relative;min-height:100vh;width:100%}
@@ -35,41 +35,17 @@
     align-items:center;
   }
 
-  /* ===== GEOMETRY VARIABLES =====
-     D = diamond box size
-     R = radial offset from center to each diamond center
-     extent = distance from center to topmost point of a diamond (R + half diagonal)
+  /* ===== CENTER STAGE (AUTO-LEVEL: NO OVERLAP) =====
+     JS will set top in px to the midpoint between:
+     - bottom edge of top UI block
+     - top edge of bottom dock
   */
-  :root{
-    --D: 150px;
-    --R: 124px;
-    --diagHalf: calc(var(--D) * 0.70710678);
-    --extent: calc(var(--R) + var(--diagHalf));
+  :root{ --R: 124px; }
 
-    --safeTop: env(safe-area-inset-top, 0px);
-    --safeBottom: env(safe-area-inset-bottom, 0px);
-
-    /* approximate bottom dock height (keeps compass clear) */
-    --dockH: 92px;
-
-    /* gap buffers */
-    --gapTop: 18px;
-    --gapBottom: 18px;
-  }
-
-  /* ===== CENTER STAGE (MAX UP WITHOUT BREAKING) =====
-     Set center Y as high as possible:
-     centerY = clamp(minTop, minTop, maxTop)
-     If there isn't enough room, it auto-lowers to maxTop.
-  */
   .center-stage{
     position:fixed;
     left:50%;
-    top:clamp(
-      calc(var(--safeTop) + var(--extent) + var(--gapTop)),
-      calc(var(--safeTop) + var(--extent) + var(--gapTop)),
-      calc(100vh - var(--safeBottom) - var(--dockH) - var(--extent) - var(--gapBottom))
-    );
+    top:50%;                /* overwritten by JS for perfect leveling */
     transform:translate(-50%,-50%);
     width:min(560px,92vw);
     height:min(560px,92vw);
@@ -77,9 +53,9 @@
     pointer-events:auto;
   }
 
-  /* ===== DIAMONDS ===== */
+  /* ===== DIAMONDS (25% smaller) ===== */
   .d-diamond{
-    width:var(--D);height:var(--D);
+    width:150px;height:150px;
     position:absolute;
     left:50%;top:50%;
     transform-origin:center;
@@ -153,7 +129,7 @@
   .d-title{font-weight:950;letter-spacing:.35px;font-size:16px}
   .d-text{opacity:.90;font-size:13px;line-height:1.35;max-width:16em}
 
-  /* Mathematical placement */
+  /* Mathematical placement (stable) */
   .d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
   .d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
   .d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
@@ -177,7 +153,7 @@
   .bottom-dock{
     position:fixed;
     left:50%;
-    bottom:max(12px, var(--safeBottom));
+    bottom:max(12px, env(safe-area-inset-bottom));
     transform:translateX(-50%);
     z-index:90;
     width:min(860px, 94vw);
@@ -192,15 +168,8 @@
     backdrop-filter:blur(8px);
   }
 
-  /* Mobile: tighten a bit */
   @media (max-width:520px){
-    :root{
-      --D: 144px;
-      --R: 116px;
-      --dockH: 98px;
-      --gapTop: 16px;
-      --gapBottom: 14px;
-    }
+    :root{ --R: 116px; }
     .top-right{ right:10px; top:10px; }
     .top-left{ left:10px; top:10px; }
     .center-stage{ width:min(520px,92vw); height:min(520px,92vw); }
@@ -257,12 +226,12 @@
 <body>
 <div class="frame">
 
-  <div class="top-left">
+  <div class="top-left" id="topLeft">
     <a class="crp-btn" href="/door/" role="button">EXIT</a>
     <a class="crp-btn" href="/" role="button">LANGUAGE</a>
   </div>
 
-  <div class="top-right" aria-label="Top-right controls">
+  <div class="top-right" id="topRight" aria-label="Top-right controls">
     <div class="pillbar">
       <button id="styleToggle" class="crp-chip" type="button">STYLE: FORMAL</button>
     </div>
@@ -273,7 +242,7 @@
     </div>
   </div>
 
-  <div class="center-stage" aria-label="Compass face">
+  <div class="center-stage" id="centerStage" aria-label="Compass face">
     <div id="north" class="d-diamond d-n" role="button" tabindex="0" aria-label="North">
       <div class="d-inner"><div class="d-title">NORTH</div><div class="d-text" id="northText"></div></div>
     </div>
@@ -289,7 +258,7 @@
     <div class="d-core">◆</div>
   </div>
 
-  <nav class="bottom-dock" aria-label="Bottom navigation">
+  <nav class="bottom-dock" id="bottomDock" aria-label="Bottom navigation">
     <a class="crp-btn" href="/links/" role="button">LINKS</a>
     <a class="crp-btn crp-btn-primary" href="/home/" role="button">HOME</a>
     <a class="crp-btn" href="/products/" role="button">PRODUCTS</a>
@@ -414,6 +383,35 @@
     var el=document.getElementById(id);
     if(el) el.addEventListener("click", function(){ openBulletin(id); });
   });
+
+  /* ===== LEVELING: AUTO NO-OVERLAP POSITIONING =====
+     Put compass as high as possible without crossing:
+     - bottom of the top UI block (top-left/top-right)
+     - top of bottom dock
+     Then center it in the remaining band.
+  */
+  function level(){
+    var tl=document.getElementById("topLeft");
+    var tr=document.getElementById("topRight");
+    var bdock=document.getElementById("bottomDock");
+    var stage=document.getElementById("centerStage");
+    if(!stage || !bdock) return;
+
+    var safe=10;
+    var tlb=tl ? tl.getBoundingClientRect().bottom : 0;
+    var trb=tr ? tr.getBoundingClientRect().bottom : 0;
+    var topBand = Math.max(tlb,trb) + safe;
+
+    var dockTop = bdock.getBoundingClientRect().top - safe;
+
+    var centerY = (topBand + dockTop) / 2;
+
+    stage.style.top = centerY + "px";
+  }
+
+  window.addEventListener("resize", level, {passive:true});
+  window.addEventListener("orientationchange", function(){ setTimeout(level, 50); }, {passive:true});
+  setTimeout(level, 0);
 
   render();
 })();

@@ -5,100 +5,151 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>HOME · Compass Face</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=HOME_DIAMOND_1"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=HOME_DIAMOND_1"/>
-  <script defer src="/assets/instrument.js?v=HOME_DIAMOND_1"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=HOME_FINAL_1"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=HOME_FINAL_1"/>
+  <script defer src="/assets/instrument.js?v=HOME_FINAL_1"></script>
 
   <style>
-    .home-wrap{max-width:980px;margin:0 auto;padding-bottom:40px;}
 
-    .back-left{position:absolute;left:16px;top:16px;}
+    .home-wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding-bottom:40px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
 
-    /* Diamond-of-diamonds */
+    .back-left{
+      position:fixed;
+      left:16px;
+      top:16px;
+      z-index:30;
+    }
+
+    /* --- 3D DIAMOND COMPASS --- */
+
     .diamond-face{
-      width:min(520px, 92vw);
-      height:min(520px, 92vw);
-      margin:22px auto 8px;
+      width:min(560px,92vw);
+      height:min(560px,92vw);
+      margin:30px auto 10px;
       position:relative;
+      transform:perspective(1200px) rotateX(6deg);
+      transform-origin:center;
     }
 
     .d-diamond{
-      width:190px;
-      height:190px;
+      width:200px;
+      height:200px;
       position:absolute;
       left:50%;
       top:50%;
       transform-origin:center;
       transform:translate(-50%,-50%) rotate(45deg);
 
-      border-radius:22px;
+      border-radius:26px;
       border:1px solid rgba(255,255,255,.14);
-      background:rgba(0,0,0,.18);
-      backdrop-filter:blur(6px);
-      box-shadow:0 18px 55px rgba(0,0,0,.35);
+      background:rgba(0,0,0,.20);
+      backdrop-filter:blur(8px);
+
+      box-shadow:
+        0 30px 85px rgba(0,0,0,.75),
+        0 12px 28px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.18),
+        inset 0 -20px 28px rgba(0,0,0,.35);
+
+      transition:transform 240ms ease, box-shadow 240ms ease;
+    }
+
+    .d-diamond:hover{
+      transform:translate(-50%,-50%) rotate(45deg) translateZ(12px) scale(1.02);
+      box-shadow:
+        0 40px 100px rgba(0,0,0,.85),
+        0 18px 40px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.22),
+        inset 0 -24px 36px rgba(0,0,0,.45);
     }
 
     .d-inner{
       width:100%;
       height:100%;
-      transform:rotate(-45deg); /* keep text upright */
+      transform:rotate(-45deg);
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      padding:16px;
+      padding:20px;
       text-align:center;
-      gap:8px;
+      gap:10px;
     }
 
     .d-title{
       font-weight:950;
-      letter-spacing:.3px;
+      letter-spacing:.35px;
       font-size:18px;
     }
 
     .d-text{
-      opacity:.86;
+      opacity:.90;
       font-size:14px;
       line-height:1.35;
+      max-width:16em;
     }
 
-    /* Position the 4 diamonds to form a big diamond */
-    .d-n{ transform:translate(-50%,-50%) translate(0,-150px) rotate(45deg); }
-    .d-e{ transform:translate(-50%,-50%) translate(150px,0) rotate(45deg); }
-    .d-s{ transform:translate(-50%,-50%) translate(0,150px) rotate(45deg); }
-    .d-w{ transform:translate(-50%,-50%) translate(-150px,0) rotate(45deg); }
+    .d-n{ transform:translate(-50%,-50%) translate(0,-165px) rotate(45deg); }
+    .d-e{ transform:translate(-50%,-50%) translate(165px,0) rotate(45deg); }
+    .d-s{ transform:translate(-50%,-50%) translate(0,165px) rotate(45deg); }
+    .d-w{ transform:translate(-50%,-50%) translate(-165px,0) rotate(45deg); }
 
-    /* Center marker */
     .d-core{
       position:absolute;
       left:50%;
       top:50%;
       transform:translate(-50%,-50%);
-      width:72px;
-      height:72px;
-      border-radius:18px;
+      width:84px;
+      height:84px;
+      border-radius:22px;
       display:grid;
       place-items:center;
-      border:1px solid rgba(255,210,120,.32);
-      background:linear-gradient(135deg, rgba(255,210,120,.20), rgba(255,150,60,.08));
-      box-shadow:0 0 26px rgba(255,210,120,.20);
-      font-weight:900;
-      letter-spacing:.35px;
-      opacity:.95;
+      border:1px solid rgba(255,210,120,.35);
+      background:linear-gradient(135deg, rgba(255,210,120,.25), rgba(255,150,60,.12));
+      box-shadow:
+        0 0 40px rgba(255,210,120,.35),
+        0 24px 60px rgba(0,0,0,.65),
+        inset 0 1px 0 rgba(255,255,255,.25);
+      font-weight:950;
+      letter-spacing:.4px;
       pointer-events:none;
     }
 
-    /* Mobile tighten */
+    /* Mobile adjustment */
     @media (max-width:520px){
-      .d-diamond{ width:170px; height:170px; }
-      .d-n{ transform:translate(-50%,-50%) translate(0,-132px) rotate(45deg); }
-      .d-e{ transform:translate(-50%,-50%) translate(132px,0) rotate(45deg); }
-      .d-s{ transform:translate(-50%,-50%) translate(0,132px) rotate(45deg); }
-      .d-w{ transform:translate(-50%,-50%) translate(-132px,0) rotate(45deg); }
+      .diamond-face{
+        transform:perspective(1200px) rotateX(3deg);
+      }
+      .d-diamond{
+        width:180px;
+        height:180px;
+      }
+      .d-n{ transform:translate(-50%,-50%) translate(0,-145px) rotate(45deg); }
+      .d-e{ transform:translate(-50%,-50%) translate(145px,0) rotate(45deg); }
+      .d-s{ transform:translate(-50%,-50%) translate(0,145px) rotate(45deg); }
+      .d-w{ transform:translate(-50%,-50%) translate(-145px,0) rotate(45deg); }
     }
 
-    .mini-note{opacity:.72;font-size:12px;text-align:center;line-height:1.35;margin-top:8px;}
+    .mini-note{
+      opacity:.72;
+      font-size:12px;
+      text-align:center;
+      margin-top:8px;
+    }
+
+    .crp-chip[aria-disabled="true"]{
+      opacity:.35;
+      pointer-events:none;
+      filter:grayscale(1);
+    }
+
   </style>
 </head>
 
@@ -106,200 +157,152 @@
 <main class="crp-shell" style="position:relative">
 
   <div class="back-left">
-    <a class="crp-btn" href="/" role="button">◀ Language</a>
+    <a class="crp-btn" href="/">◀ Language</a>
   </div>
 
-  <header class="crp-header" style="text-align:center">
-    <div class="crp-mark">GEODIAMETRICS</div>
-    <h1 class="crp-title">HOME</h1>
-    <p class="crp-subtitle">Compass Face · Vector Understanding</p>
+  <div class="home-wrap">
 
-    <!-- Lenses -->
-    <div class="crp-topbar" style="margin:0 auto 8px;max-width:980px">
-      <div class="crp-topbar-left" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%">
+    <header class="crp-header" style="text-align:center">
+      <div class="crp-mark">GEODIAMETRICS</div>
+      <h1 class="crp-title">HOME</h1>
+      <p class="crp-subtitle">Compass Face · Vector Understanding</p>
 
-        <!-- Style toggle (single button) -->
-        <div class="crp-lens" role="group" aria-label="Style lens">
-          <button id="styleToggle" class="crp-chip" type="button">STYLE: FORMAL</button>
-        </div>
+      <div class="crp-topbar" style="margin:0 auto 8px;max-width:980px">
+        <div class="crp-topbar-left" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%">
 
-        <!-- Time -->
-        <div class="crp-lens" role="group" aria-label="Time lens">
-          <button class="crp-chip" type="button" data-time="origin">ORIGIN</button>
-          <button class="crp-chip" type="button" data-time="now">NOW</button>
-          <button id="timeTrajectory" class="crp-chip" type="button" data-time="trajectory">TRAJECTORY</button>
-        </div>
+          <div class="crp-lens">
+            <button id="styleToggle" class="crp-chip">STYLE: FORMAL</button>
+          </div>
 
-      </div>
-    </div>
+          <div class="crp-lens">
+            <button class="crp-chip" data-time="origin">ORIGIN</button>
+            <button class="crp-chip" data-time="now">NOW</button>
+            <button id="timeTrajectory" class="crp-chip" data-time="trajectory">TRAJECTORY</button>
+          </div>
 
-    <div id="sliceNote" class="mini-note"></div>
-  </header>
-
-  <section class="home-wrap">
-    <div class="diamond-face" aria-label="Diamond compass face">
-
-      <div class="d-diamond d-n">
-        <div class="d-inner">
-          <div class="d-title">NORTH</div>
-          <div class="d-text" id="northText"></div>
         </div>
       </div>
 
-      <div class="d-diamond d-e">
-        <div class="d-inner">
-          <div class="d-title">EAST</div>
-          <div class="d-text" id="eastText"></div>
+      <div id="sliceNote" class="mini-note"></div>
+    </header>
+
+    <section>
+      <div class="diamond-face">
+
+        <div class="d-diamond d-n">
+          <div class="d-inner">
+            <div class="d-title">NORTH</div>
+            <div class="d-text" id="northText"></div>
+          </div>
         </div>
-      </div>
 
-      <div class="d-diamond d-s">
-        <div class="d-inner">
-          <div class="d-title">SOUTH</div>
-          <div class="d-text" id="southText"></div>
+        <div class="d-diamond d-e">
+          <div class="d-inner">
+            <div class="d-title">EAST</div>
+            <div class="d-text" id="eastText"></div>
+          </div>
         </div>
-      </div>
 
-      <div class="d-diamond d-w">
-        <div class="d-inner">
-          <div class="d-title">WEST</div>
-          <div class="d-text" id="westText"></div>
+        <div class="d-diamond d-s">
+          <div class="d-inner">
+            <div class="d-title">SOUTH</div>
+            <div class="d-text" id="southText"></div>
+          </div>
         </div>
+
+        <div class="d-diamond d-w">
+          <div class="d-inner">
+            <div class="d-title">WEST</div>
+            <div class="d-text" id="westText"></div>
+          </div>
+        </div>
+
+        <div class="d-core">◆</div>
+
       </div>
+    </section>
 
-      <div class="d-core">◆</div>
-
-    </div>
-  </section>
-
-  <footer class="crp-footer" style="text-align:center">
-    <small class="crp-footnote">BUILD: <strong>HOME_DIAMOND_1</strong></small>
-  </footer>
-
+  </div>
 </main>
 
 <script>
 (function(){
-  "use strict";
-
   var K_STYLE="gd_style";
   var K_TIME="gd_time";
-  var K_DEPTH="gd_depth";
 
-  function lsGet(k){ try{return localStorage.getItem(k);}catch(e){ return null; } }
+  function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
   function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
 
   var state={
-    style: lsGet(K_STYLE) || "formal",
-    time:  lsGet(K_TIME)  || "origin",
-    depth: lsGet(K_DEPTH) || "explore"
+    style: lsGet(K_STYLE)||"formal",
+    time: lsGet(K_TIME)||"origin"
   };
 
-  var allowTimeByStyle = {
-    formal: { origin:1, now:1, trajectory:1 },
-    informal: { origin:1, now:1 }  // trajectory formal-only
+  var allowTimeByStyle={
+    formal:{origin:1,now:1,trajectory:1},
+    informal:{origin:1,now:1}
   };
 
-  function normalizeTime(){
-    if(!allowTimeByStyle[state.style][state.time]){
-      state.time="now";
-      lsSet(K_TIME,state.time);
-    }
-  }
-
-  var content = {
+  var content={
     north:{
-      formal:{
-        origin:"North defines invariant structure.",
-        now:"North stabilizes current position.",
-        trajectory:"North preserves long-term coherence."
-      },
-      informal:{
-        origin:"North is your anchor.",
-        now:"North keeps you from drifting."
-      }
+      formal:{origin:"North defines invariant structure.",now:"North stabilizes current position.",trajectory:"North preserves long-term coherence."},
+      informal:{origin:"North is your anchor.",now:"North keeps you from drifting."}
     },
     east:{
-      formal:{
-        origin:"East maps execution pathways.",
-        now:"East expresses operational flow.",
-        trajectory:"East scales systems forward."
-      },
-      informal:{
-        origin:"East is how you move.",
-        now:"East is doing."
-      }
+      formal:{origin:"East maps execution pathways.",now:"East expresses operational flow.",trajectory:"East scales systems forward."},
+      informal:{origin:"East is how you move.",now:"East is doing."}
     },
     south:{
-      formal:{
-        origin:"South defines convergence pressure.",
-        now:"South applies constraint.",
-        trajectory:"South compounds momentum."
-      },
-      informal:{
-        origin:"South is where force happens.",
-        now:"South pushes."
-      }
+      formal:{origin:"South defines convergence pressure.",now:"South applies constraint.",trajectory:"South compounds momentum."},
+      informal:{origin:"South is where force happens.",now:"South pushes."}
     },
     west:{
-      formal:{
-        origin:"West governs containment.",
-        now:"West enforces boundaries.",
-        trajectory:"West protects integrity."
-      },
-      informal:{
-        origin:"West keeps things tight.",
-        now:"West guards the edge."
-      }
+      formal:{origin:"West governs containment.",now:"West enforces boundaries.",trajectory:"West protects integrity."},
+      informal:{origin:"West keeps things tight.",now:"West guards the edge."}
     }
   };
 
-  function setPressedTime(){
-    document.querySelectorAll("[data-time]").forEach(function(btn){
-      var v = btn.getAttribute("data-time");
-      var allowed = !!allowTimeByStyle[state.style][v];
-      btn.style.opacity = allowed ? "1" : ".35";
-      btn.style.pointerEvents = allowed ? "auto" : "none";
-      btn.setAttribute("aria-pressed", (v===state.time) ? "true" : "false");
-    });
-  }
-
-  function setStyleLabel(){
-    var btn=document.getElementById("styleToggle");
-    btn.textContent = "STYLE: " + state.style.toUpperCase();
+  function normalize(){
+    if(!allowTimeByStyle[state.style][state.time]){
+      state.time="now";
+    }
   }
 
   function render(){
-    normalizeTime();
+    normalize();
+    document.getElementById("northText").innerText=content.north[state.style][state.time]||"";
+    document.getElementById("eastText").innerText=content.east[state.style][state.time]||"";
+    document.getElementById("southText").innerText=content.south[state.style][state.time]||"";
+    document.getElementById("westText").innerText=content.west[state.style][state.time]||"";
 
-    document.getElementById("northText").textContent = content.north[state.style][state.time] || "";
-    document.getElementById("eastText").textContent  = content.east[state.style][state.time] || "";
-    document.getElementById("southText").textContent = content.south[state.style][state.time] || "";
-    document.getElementById("westText").textContent  = content.west[state.style][state.time] || "";
+    document.getElementById("styleToggle").innerText="STYLE: "+state.style.toUpperCase();
+
+    document.querySelectorAll("[data-time]").forEach(function(btn){
+      var v=btn.getAttribute("data-time");
+      var allowed=!!allowTimeByStyle[state.style][v];
+      btn.style.opacity=allowed?"1":".35";
+      btn.style.pointerEvents=allowed?"auto":"none";
+    });
+
+    document.getElementById("sliceNote").innerText=
+      "Active: "+state.style.toUpperCase()+" · "+state.time.toUpperCase()+"  (Trajectory = Formal only)";
 
     lsSet(K_STYLE,state.style);
     lsSet(K_TIME,state.time);
-
-    setStyleLabel();
-    setPressedTime();
-
-    document.getElementById("sliceNote").textContent =
-      "Active: " + state.style.toUpperCase() + " · " + state.time.toUpperCase() + " · " + (state.depth||"explore").toUpperCase() +
-      "  (Trajectory = Formal only)";
   }
 
-  document.getElementById("styleToggle").addEventListener("click", function(){
-    state.style = (state.style === "formal") ? "informal" : "formal";
+  document.getElementById("styleToggle").onclick=function(){
+    state.style=state.style==="formal"?"informal":"formal";
     render();
-  });
+  };
 
   document.querySelectorAll("[data-time]").forEach(function(btn){
-    btn.addEventListener("click", function(){
+    btn.onclick=function(){
       var v=btn.getAttribute("data-time");
-      if(!allowTimeByStyle[state.style][v]) return;
+      if(!allowTimeByStyle[state.style][v])return;
       state.time=v;
       render();
-    });
+    };
   });
 
   render();

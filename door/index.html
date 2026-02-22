@@ -5,214 +5,65 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Door · Geodiametrics</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=9000"/>
-
-<style>
-  :root{
-    --ink:#05070c;
-    --ink2:#070b12;
-    --red:#7a0b14;          /* lacquer */
-    --red2:#3a050a;         /* deep */
-    --gold:#caa04a;         /* antique gold */
-    --text:#eaf2f6;
-    --muted:rgba(234,242,246,.72);
-    --glass:rgba(255,255,255,.06);
-    --stroke:rgba(255,255,255,.12);
-  }
-
-  html,body{margin:0;height:100%;background:var(--ink);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;}
-  body{
-    background:
-      radial-gradient(1200px 900px at 50% 10%, rgba(122,11,20,.55) 0%, rgba(58,5,10,.25) 55%, rgba(5,7,12,1) 100%),
-      radial-gradient(900px 700px at 18% 18%, rgba(202,160,74,.14) 0%, transparent 60%),
-      radial-gradient(900px 700px at 82% 22%, rgba(202,160,74,.10) 0%, transparent 65%),
-      linear-gradient(to bottom, var(--ink2), var(--ink));
-  }
-
-  .page{min-height:100vh;display:flex;align-items:center;justify-content:flex-start;flex-direction:column;padding:46px 16px 70px;gap:18px;}
-  .hero{width:min(760px,94vw);text-align:center;position:relative;z-index:3;}
-  .hero h1{margin:0;font-weight:950;letter-spacing:.06em;text-transform:uppercase;font-size:clamp(44px,9vw,72px);}
-  .hero p{margin:10px 0 0;opacity:.75;font-size:18px}
-  .meta{margin-top:12px;letter-spacing:.22em;opacity:.55;font-weight:900;font-size:12px;text-transform:uppercase}
-
-  /* language toggle */
-  .topbar{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}
-  .pill{
-    border-radius:999px;
-    padding:10px 14px;
-    background:var(--glass);
-    box-shadow:inset 0 0 0 1px var(--stroke);
-    color:var(--text);
-    font-weight:900;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    font-size:12px;
-    cursor:pointer;
-    user-select:none;
-    -webkit-tap-highlight-color:transparent;
-  }
-  .pill.active{
-    background:rgba(202,160,74,.16);
-    box-shadow:inset 0 0 0 1px rgba(202,160,74,.55), 0 14px 40px rgba(0,0,0,.35);
-  }
-
-  /* platform */
-  .platform{
-    width:min(540px,92vw);
-    aspect-ratio:1/1;
-    position:relative;
-    margin-top:10px;
-    z-index:2;
-  }
-  .plate{
-    position:absolute; inset:0;
-    transform:rotate(45deg);
-    border-radius:48px;
-    background:rgba(0,0,0,.22);
-    box-shadow:
-      inset 0 0 0 1px rgba(255,255,255,.08),
-      0 34px 90px rgba(0,0,0,.60);
-  }
-  .plate::after{
-    content:"";
-    position:absolute; inset:10%;
-    border-radius:40px;
-    box-shadow:inset 0 0 0 1px rgba(202,160,74,.16);
-  }
-
-  .tile{
-    position:absolute;
-    border-radius:22px;
-    background:rgba(5,7,12,.88);
-    box-shadow:
-      inset 0 0 0 1px rgba(255,255,255,.18),
-      0 22px 60px rgba(0,0,0,.45);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-decoration:none;
-    color:var(--text);
-    -webkit-tap-highlight-color:transparent;
-    user-select:none;
-  }
-  .tile b{
-    display:block;
-    font-weight:950;
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    font-size:18px;
-  }
-  .tile small{
-    display:block;
-    margin-top:8px;
-    font-size:12px;
-    opacity:.72;
-    letter-spacing:.14em;
-  }
-
-  .tile.gold{
-    box-shadow:
-      inset 0 0 0 1px rgba(202,160,74,.60),
-      0 22px 60px rgba(0,0,0,.45);
-  }
-  .tile.gold b{color:rgba(202,160,74,.98);}
-
-  /* positions */
-  .top{left:50%;top:16%;transform:translate(-50%,-50%);width:46%;height:30%;}
-  .left{left:17%;top:54%;transform:translate(-50%,-50%);width:44%;height:30%;}
-  .right{left:83%;top:54%;transform:translate(-50%,-50%);width:44%;height:30%;}
-  .bottom{left:50%;top:86%;transform:translate(-50%,-50%);width:52%;height:30%;}
-
-  footer{margin-top:6px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
-  .ink{margin-top:10px;text-align:center;letter-spacing:.22em;font-weight:900;opacity:.35;font-size:12px;text-transform:uppercase}
-</style>
+<link rel="stylesheet" href="/assets/ui.css?v=9004"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9004"/>
 </head>
 
 <body>
-  <div class="page">
+<div class="page">
+  <div class="wrap">
 
-    <div class="hero">
-      <h1 id="tTitle">DOOR</h1>
-      <p id="tSub">Choose your route.</p>
-      <div class="meta" id="tMeta">LANG: EN</div>
+    <div class="hero" style="text-align:center;">
+      <h1>DOOR</h1>
+      <p style="margin-top:12px;">Choose your route.</p>
+      <div class="pill" style="margin-top:12px; display:inline-block;">
+        LANG: <span id="langLabel">EN</span>
+      </div>
 
-      <div class="topbar" aria-label="language toggle">
-        <div class="pill" id="btnEN">EN</div>
-        <div class="pill" id="btnZH">中文</div>
+      <div style="margin-top:12px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <div class="pill btn" id="setEN">EN</div>
+        <div class="pill btn" id="setZH">中文</div>
+        <a class="pill btn" href="/">BACK</a>
       </div>
     </div>
 
-    <div class="platform">
-      <div class="plate"></div>
+    <div class="stage" style="margin-top:18px;">
+      <div class="platform">
 
-      <a class="tile gold top" id="aExplore" href="/home/?depth=explore">
-        <div style="text-align:center;line-height:1.05">
-          <b id="tExplore">EXPLORE</b>
-          <small id="tExploreSub">Surface</small>
-        </div>
-      </a>
+        <a class="diamond top gold" id="goExplore" href="/home/?depth=explore">
+          <span><b>Explore</b><small>Surface</small></span>
+        </a>
 
-      <a class="tile left" id="aLinks" href="/links/">
-        <div style="text-align:center;line-height:1.05">
-          <b id="tLinks">LINKS</b>
-          <small id="tLinksSub">Identity</small>
-        </div>
-      </a>
+        <a class="diamond right" id="goLearn" href="/home/?depth=learn">
+          <span><b>Learn</b><small>Deep</small></span>
+        </a>
 
-      <a class="tile right" id="aLearn" href="/learn/">
-        <div style="text-align:center;line-height:1.05">
-          <b id="tLearn">LEARN</b>
-          <small id="tLearnSub">Deep</small>
-        </div>
-      </a>
+        <a class="diamond bottom" id="goHome" href="/home/">
+          <span><b>Home</b><small>Enter hub</small></span>
+        </a>
 
-      <a class="tile bottom" id="aHome" href="/home/">
-        <div style="text-align:center;line-height:1.05">
-          <b id="tHome">HOME</b>
-          <small id="tHomeSub">Enter hub</small>
-        </div>
-      </a>
+        <a class="diamond left" id="goLinks" href="/links/">
+          <span><b>Links</b><small>Identity</small></span>
+        </a>
+
+      </div>
     </div>
 
     <div class="ink">GEODIAMETRICS</div>
     <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+
   </div>
+</div>
 
 <script>
 (() => {
   const qs = new URLSearchParams(location.search || "");
-  const safeGet = (k) => { try { return localStorage.getItem(k); } catch(e){ return null; } };
-  const safeSet = (k,v) => { try { localStorage.setItem(k, v); } catch(e){} };
+  const normalize = (x) => (String(x||"").toLowerCase().startsWith("zh") ? "zh" : "en");
 
-  const normalizeLang = (x) => (String(x||"").toLowerCase().startsWith("zh") ? "zh" : "en");
-  const current = normalizeLang(qs.get("lang") || safeGet("crp_lang") || "en");
+  const saved = (() => { try { return localStorage.getItem("crp_lang"); } catch(e){ return null; } })();
+  const initial = normalize(qs.get("lang") || saved || "en");
 
-  const i18n = {
-    en: {
-      sub:"Choose your route.",
-      meta:"LANG: EN",
-      explore:"EXPLORE",
-      exploreSub:"Surface",
-      learn:"LEARN",
-      learnSub:"Deep",
-      home:"HOME",
-      homeSub:"Enter hub",
-      links:"LINKS",
-      linksSub:"Identity"
-    },
-    zh: {
-      sub:"选择路线。",
-      meta:"LANG: 中文",
-      explore:"探索",
-      exploreSub:"概览",
-      learn:"学习",
-      learnSub:"深入",
-      home:"主页",
-      homeSub:"进入中枢",
-      links:"链接",
-      linksSub:"身份"
-    }
-  };
+  const langLabel = document.getElementById("langLabel");
 
   function stamp(url, lang){
     const u = new URL(url, location.origin);
@@ -221,51 +72,31 @@
   }
 
   function apply(lang){
-    lang = normalizeLang(lang);
-    safeSet("crp_lang", lang);
+    lang = normalize(lang);
+    try { localStorage.setItem("crp_lang", lang); } catch(e){}
 
-    const t = i18n[lang];
-
-    document.getElementById("tSub").textContent = t.sub;
-    document.getElementById("tMeta").textContent = t.meta;
-
-    document.getElementById("tExplore").textContent = t.explore;
-    document.getElementById("tExploreSub").textContent = t.exploreSub;
-
-    document.getElementById("tLearn").textContent = t.learn;
-    document.getElementById("tLearnSub").textContent = t.learnSub;
-
-    document.getElementById("tHome").textContent = t.home;
-    document.getElementById("tHomeSub").textContent = t.homeSub;
-
-    document.getElementById("tLinks").textContent = t.links;
-    document.getElementById("tLinksSub").textContent = t.linksSub;
+    langLabel.textContent = (lang === "zh" ? "中文" : "EN");
 
     // active pills
-    document.getElementById("btnEN").classList.toggle("active", lang === "en");
-    document.getElementById("btnZH").classList.toggle("active", lang === "zh");
+    document.getElementById("setEN").classList.toggle("active", lang === "en");
+    document.getElementById("setZH").classList.toggle("active", lang === "zh");
 
-    // route stamping
-    document.getElementById("aExplore").setAttribute("href", stamp("/home/?depth=explore", lang));
-    document.getElementById("aHome").setAttribute("href", stamp("/home/", lang));
-    document.getElementById("aLinks").setAttribute("href", stamp("/links/", lang));
-    document.getElementById("aLearn").setAttribute("href", stamp("/learn/", lang));
+    // stamp routes forward
+    document.getElementById("goExplore").href = stamp("/home/?depth=explore", lang);
+    document.getElementById("goLearn").href = stamp("/home/?depth=learn", lang);
+    document.getElementById("goHome").href = stamp("/home/", lang);
+    document.getElementById("goLinks").href = stamp("/links/", lang);
   }
 
-  document.getElementById("btnEN").addEventListener("click", () => apply("en"));
-  document.getElementById("btnZH").addEventListener("click", () => apply("zh"));
+  document.getElementById("setEN").addEventListener("click", () => apply("en"));
+  document.getElementById("setZH").addEventListener("click", () => apply("zh"));
 
-  // IMPORTANT: if user arrived with ?lang=zh, persist it
-  apply(current);
+  apply(initial);
 
-  // also keep URL clean/consistent (optional): ensure ?lang is present
-  // (prevents “I clicked Chinese but it’s still English” when bookmarking)
-  const want = normalizeLang(safeGet("crp_lang") || current);
-  if (normalizeLang(qs.get("lang")) !== want){
-    const u = new URL(location.href);
-    u.searchParams.set("lang", want);
-    history.replaceState(null, "", u.toString());
-  }
+  // keep URL consistent (so bookmarks stay correct)
+  const u = new URL(location.href);
+  u.searchParams.set("lang", initial);
+  history.replaceState(null, "", u.toString());
 })();
 </script>
 </body>

@@ -1,199 +1,180 @@
-<!-- TNT FILE: /assets/branch.css -->
-/* =====================================================
-   CRP BRANCH v1 — FULL TNT
-   Purpose: diamond geometry + hub panels + bubbles + modal
-   Depends on: /assets/ui.css (colors + field)
-===================================================== */
+/* TNT FILE: /assets/branch.css
+   CRP AUTUMN FIELD — Branch layer (Diamonds + Route tiles + Hub cards)
+   Works with: /assets/ui.css
+   Purpose:
+     - Diamond visuals (index/door/links)
+     - “Quadrant → Vine → Fruit → Resolution” hub styling
+     - NO background overrides (ui.css is the only field source of truth)
+*/
 
-/* ---------- helpers ---------- */
-.hidden{display:none!important}
-.center{text-align:center}
-.mt8{margin-top:8px}
-.mt12{margin-top:12px}
-.mt16{margin-top:16px}
-.mt20{margin-top:20px}
-.mt24{margin-top:24px}
-.w100{width:100%}
-
-/* ---------- Diamond Field (background geometry) ---------- */
+/* =========================
+   DIAMOND FIELD (visual)
+========================= */
 .diamond-field{
   position:absolute;
-  inset:0;
+  inset:-12%;
   pointer-events:none;
   z-index:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  opacity:.38;
+  filter:blur(.2px);
 }
-
-.diamond-field .plate{
-  width:min(620px,86vw);
-  height:min(620px,86vw);
-  transform:rotate(45deg);
-  border-radius:56px;
-  opacity:.42;
+.diamond-field::before,
+.diamond-field::after{
+  content:"";
+  position:absolute;
+  inset:0;
   background:
-    radial-gradient(900px 700px at 50% 25%, rgba(122,11,20,.22) 0%, transparent 68%),
-    linear-gradient(145deg, rgba(122,11,20,.30), rgba(0,0,0,.58));
-  box-shadow:
-    inset 0 0 0 1px rgba(202,160,74,.16),
-    0 30px 100px rgba(0,0,0,.70);
+    radial-gradient(900px 700px at 50% 20%, rgba(122,11,20,.26) 0%, transparent 70%),
+    radial-gradient(800px 600px at 20% 10%, rgba(202,160,74,.20) 0%, transparent 72%),
+    radial-gradient(900px 650px at 80% 12%, rgba(122,11,20,.18) 0%, transparent 74%);
+}
+.diamond-field::after{
+  opacity:.55;
+  filter:blur(10px);
 }
 
-.diamond-field .plate::before{
-  content:"";
-  position:absolute;
-  inset:7%;
-  border-radius:48px;
-  background:rgba(255,255,255,.03);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
-}
-
-.diamond-field .plate::after{
-  content:"";
-  position:absolute;
-  inset:16%;
-  border-radius:38px;
-  background:rgba(0,0,0,.22);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.06),
-    0 18px 70px rgba(0,0,0,.55);
-}
-
-/* ---------- Diamond Grid (4 tiles) ---------- */
-.diamond-grid{
+/* =========================
+   DIAMOND PLATE (big)
+========================= */
+.diamond-plate{
   position:relative;
-  z-index:2;
-  width:min(720px,94vw);
-  height:min(520px,70vh);
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:min(520px,92vw);
+  height:min(520px,92vw);
+  margin:0 auto;
+  transform:rotate(45deg);
+  border-radius:46px;
+  background:rgba(255,255,255,.04);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    0 50px 140px rgba(0,0,0,.80);
+  backdrop-filter:blur(12px);
+}
+.diamond-plate::before{
+  content:"";
+  position:absolute;
+  inset:10%;
+  border-radius:40px;
+  background:rgba(0,0,0,.22);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+}
+.diamond-plate::after{
+  content:"";
+  position:absolute;
+  inset:-6%;
+  border-radius:58px;
+  background:
+    radial-gradient(900px 700px at 50% 18%, rgba(122,11,20,.26) 0%, transparent 70%),
+    radial-gradient(760px 620px at 50% 10%, rgba(202,160,74,.18) 0%, transparent 74%);
+  opacity:.55;
+  filter:blur(8px);
+  z-index:-1;
 }
 
-.diamond{
+/* =========================
+   DIAMOND NODE (clickable)
+   - Used on Door (Explore/Learn/Links/Home)
+========================= */
+.diamond-node{
   position:absolute;
-  width:min(240px,34vw);
-  height:min(240px,34vw);
-  border-radius:26px;
-  background:rgba(0,0,0,.34);
+  width:42%;
+  height:42%;
+  border-radius:24px;
+  background:rgba(0,0,0,.30);
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.10),
-    0 26px 80px rgba(0,0,0,.70);
-  backdrop-filter:blur(10px);
+    0 18px 60px rgba(0,0,0,.55);
   display:flex;
   align-items:center;
   justify-content:center;
-  transform:rotate(45deg);
+  text-decoration:none;
+  color:inherit;
   cursor:pointer;
-  user-select:none;
   -webkit-tap-highlight-color:transparent;
+  user-select:none;
+  z-index:2;
 }
-
-.diamond > .inner{
+.diamond-node:hover{filter:brightness(1.06)}
+.diamond-node:active{transform:translateY(1px)}
+.diamond-node span{
   transform:rotate(-45deg);
+  display:block;
   text-align:center;
-  padding:10px 14px;
-  width:90%;
-}
-
-.diamond .label{
+  padding:10px 12px;
+  line-height:1.1;
   font-weight:950;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  font-size:clamp(16px,3.2vw,22px);
-  margin:0;
-}
-
-.diamond .sub{
-  margin-top:8px;
-  opacity:.72;
   letter-spacing:.14em;
   text-transform:uppercase;
-  font-weight:900;
+}
+.diamond-node span b{
+  display:block;
+  font-size:16px;
+}
+.diamond-node span small{
+  display:block;
+  margin-top:8px;
   font-size:12px;
+  opacity:.72;
+  letter-spacing:.18em;
 }
 
-.diamond.gold{
+/* Node positions */
+.dn-top{top:6%;left:29%}
+.dn-right{top:29%;right:6%}
+.dn-bottom{bottom:6%;left:29%}
+.dn-left{top:29%;left:6%}
+
+/* Highlight (gold rim) */
+.diamond-node.gold{
   box-shadow:
-    inset 0 0 0 1px rgba(202,160,74,.45),
-    0 26px 90px rgba(0,0,0,.72);
+    inset 0 0 0 1px rgba(202,160,74,.55),
+    0 18px 70px rgba(0,0,0,.55);
+}
+.diamond-node.gold::after{
+  content:"";
+  position:absolute;
+  inset:-10px;
+  border-radius:30px;
+  background:radial-gradient(220px 220px at 50% 40%, rgba(202,160,74,.20) 0%, transparent 70%);
+  filter:blur(8px);
+  opacity:.85;
+  z-index:-1;
 }
 
-.diamond.gold .label{color:var(--gold)}
-.diamond.gold:hover{filter:brightness(1.06)}
-.diamond:hover{filter:brightness(1.04)}
-
-/* positions */
-.diamond.pos-top{top:4%;left:50%;transform:translateX(-50%) rotate(45deg)}
-.diamond.pos-left{left:4%;top:50%;transform:translateY(-50%) rotate(45deg)}
-.diamond.pos-right{right:4%;top:50%;transform:translateY(-50%) rotate(45deg)}
-.diamond.pos-bottom{bottom:4%;left:50%;transform:translateX(-50%) rotate(45deg)}
-
-/* ---------- Door lane pills ---------- */
-.lane-row{
+/* =========================
+   DOOR HEADER STRIP
+========================= */
+.door-meta{
   display:flex;
-  gap:10px;
   flex-wrap:wrap;
-  align-items:center;
+  gap:10px;
   justify-content:center;
-  margin-top:10px;
-}
-
-/* ---------- Quadrant Cards (Home) ---------- */
-details.quad{
-  border-radius:22px;
-  background:rgba(255,255,255,.05);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.10),
-    0 22px 70px rgba(0,0,0,.55);
-  backdrop-filter:blur(12px);
-  overflow:hidden;
-}
-details.quad + details.quad{margin-top:12px}
-
-details.quad summary{
-  list-style:none;
-  cursor:pointer;
-  padding:16px;
-  display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  -webkit-tap-highlight-color:transparent;
+  margin:10px 0 18px;
 }
-details.quad summary::-webkit-details-marker{display:none}
-
-.q-left{display:flex;align-items:center;gap:12px;min-width:0}
-.q-badge{
-  width:64px;height:44px;border-radius:18px;
-  background:rgba(122,11,20,.18);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:950;letter-spacing:.14em;flex:0 0 auto;position:relative;
-}
-.q-badge .icon{position:absolute;left:10px;top:9px;opacity:.95}
-.q-badge .code{padding-left:18px}
-
-.q-text{min-width:0}
-.q-text b{display:block;font-size:18px;letter-spacing:.12em;text-transform:uppercase;font-weight:950}
-.q-text span{display:block;opacity:.72;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-.q-arrow{
-  width:42px;height:42px;border-radius:999px;
-  background:rgba(255,255,255,.06);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  display:flex;align-items:center;justify-content:center;
-  opacity:.9;flex:0 0 auto;
+.door-meta .pill{opacity:.95}
+.door-meta .pill.active{
+  background:rgba(202,160,74,.18);
+  box-shadow:inset 0 0 0 1px rgba(202,160,74,.55);
 }
 
-.inside{padding:0 16px 16px}
+/* =========================
+   HUB CARDS (Home)
+   (ui.css already defines details.quad etc; we add small upgrades)
+========================= */
+details.quad summary{position:relative}
+details.quad summary .q-arrow{transition:transform .15s ease}
+details.quad[open] summary .q-arrow{transform:rotate(180deg)}
+details.quad .inside{padding-top:2px}
 
-/* bubble grid */
-.bubble-row{display:grid;grid-template-columns:1fr;gap:10px;margin-top:2px}
-@media(min-width:720px){.bubble-row{grid-template-columns:1fr 1fr}}
-
-.bubble-btn{
+/* Vine tiles inside quadrant (4) */
+.vine-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  margin-top:6px;
+}
+@media(min-width:720px){.vine-grid{grid-template-columns:1fr 1fr}}
+.vine-tile{
   border-radius:18px;
   background:rgba(0,0,0,.22);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
@@ -206,78 +187,61 @@ details.quad summary::-webkit-details-marker{display:none}
   user-select:none;
   -webkit-tap-highlight-color:transparent;
 }
-.bubble-btn:hover{background:rgba(0,0,0,.28)}
-.bubble-btn .lbl{min-width:0}
-.bubble-btn b{display:block;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:950}
-.bubble-btn i{display:block;font-style:normal;opacity:.72;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bubble-btn .go{
-  width:40px;height:40px;border-radius:999px;
+.vine-tile:hover{background:rgba(0,0,0,.28)}
+.vine-tile .lbl{min-width:0}
+.vine-tile .lbl b{
+  display:block;
+  font-size:13px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-weight:950;
+}
+.vine-tile .lbl i{
+  display:block;
+  font-style:normal;
+  opacity:.72;
+  font-size:12px;
+  margin-top:3px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.vine-tile .go{
+  width:40px;height:40px;
+  border-radius:999px;
   background:rgba(255,255,255,.06);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
   display:flex;align-items:center;justify-content:center;
-  opacity:.9;flex:0 0 auto;
+  opacity:.92;
+  flex:0 0 auto;
 }
 
-/* ---------- Modal Overlay (No scroll jump) ---------- */
-.overlay{
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(5,7,12,.82);
-  backdrop-filter:blur(10px);
-  padding:18px;
+/* Modal (detail popover) upgrades (ui.css provides .modal; keep consistent) */
+.modal .chiprow{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  margin-top:10px;
 }
-.overlay.on{display:flex}
-
-.modal{
-  width:min(980px,94vw);
-  max-height:min(86vh,760px);
-  overflow:auto;
-  border-radius:26px;
-  background:linear-gradient(180deg, rgba(122,11,20,.28), rgba(0,0,0,.30));
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.12),
-    0 35px 120px rgba(0,0,0,.75);
+.modal .chiprow .pill{cursor:pointer}
+.modal .chiprow .pill.active{
+  background:rgba(202,160,74,.18);
+  box-shadow:inset 0 0 0 1px rgba(202,160,74,.55);
 }
 
-.modal-head{
-  padding:16px;
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  position:sticky;
-  top:0;
-  background:rgba(0,0,0,.25);
-  backdrop-filter:blur(10px);
-  z-index:2;
-}
-
-.modal-title b{display:block;font-size:16px;letter-spacing:.18em;text-transform:uppercase;font-weight:950}
-.modal-title span{display:block;margin-top:4px;opacity:.75;font-size:14px;line-height:1.25}
-
-.modal-body{padding:14px 16px 18px}
-
-.block{
-  border-radius:22px;
-  background:rgba(0,0,0,.26);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
-  padding:14px;
-}
-
-.block h3{margin:0 0 10px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
-.block p{margin:0;color:rgba(234,242,246,.82);line-height:1.65}
-
-.resolution{
+/* Fruit list (4) */
+.fruit-grid{
   margin-top:14px;
+}
+.fruit-grid .vine-grid{margin-top:10px}
+
+/* Resolution chamber */
+.resolution{
+  margin-top:16px;
   padding:16px;
   border-radius:22px;
-  background:rgba(255,255,255,.05);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  background:linear-gradient(180deg, rgba(202,160,74,.14), rgba(0,0,0,.30));
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    0 22px 80px rgba(0,0,0,.65);
 }
 .resolution h4{
   margin:0 0 10px;
@@ -286,20 +250,34 @@ details.quad summary::-webkit-details-marker{display:none}
   text-transform:uppercase;
   font-weight:950;
 }
-.resolution .para{margin:0 0 12px;line-height:1.75;opacity:.90}
-.resolution ul{margin:0 0 12px 18px;padding:0;line-height:1.65;opacity:.82}
-.resolution .imp{font-weight:950;letter-spacing:.06em;opacity:.92;margin-top:10px}
-
-.close{
-  border:0;cursor:pointer;border-radius:14px;padding:10px 12px;
+.resolution .para{
+  margin:0 0 12px;
+  font-size:15px;
+  line-height:1.75;
+  opacity:.92;
+}
+.resolution ul{
+  margin:0 0 12px 18px;
+  padding:0;
+  line-height:1.65;
+  opacity:.86;
+}
+.resolution .imp{
+  font-weight:950;
+  letter-spacing:.06em;
+  opacity:.92;
+}
+.resolution .back{
+  margin-top:14px;
+  display:inline-block;
+  border-radius:18px;
+  padding:10px 14px;
   background:rgba(255,255,255,.08);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
-  color:var(--text);font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:12px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-size:12px;
+  cursor:pointer;
 }
-.close:hover{background:rgba(255,255,255,.10)}
-
-/* small screens tighten */
-@media(max-width:420px){
-  .diamond{width:min(220px,42vw);height:min(220px,42vw)}
-  .q-badge{width:58px;height:42px}
-}
+.resolution .back:hover{background:rgba(255,255,255,.12)}

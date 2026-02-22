@@ -1,136 +1,216 @@
-<!-- TNT — /index.html  (NEW TERMINAL PAGE)
-     This is now the page you hit AFTER /door/ (language).
-     Keeps the 3D diamond layout you loved. -->
+<!-- TNT — /index.html  (TERMINAL = PREFACE / INTRO / UNDER CONSTRUCTION)
+     Purpose: After language selection (/door/), this page is the INTRO to the entire site.
+     It explains navigation + lenses and then provides safe “Continue” routes.
+     Canonical keys only: gd_lang, gd_depth, gd_style, gd_time. -->
 
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>TERMINAL · Geodiametrics</title>
+  <title>TERMINAL · Preface</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=TERMINAL_3D_1"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=TERMINAL_3D_1"/>
-  <script defer src="/assets/instrument.js?v=TERMINAL_3D_1"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=TERMINAL_PREFACE_1"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=TERMINAL_PREFACE_1"/>
+  <script defer src="/assets/instrument.js?v=TERMINAL_PREFACE_1"></script>
 
   <style>
-    .frame{
-      min-height:100vh;
-      width:100%;
-      position:relative;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:120px 16px 160px;
+    .frame{min-height:100vh;width:100%;position:relative}
+
+    .top-left{
+      position:fixed;left:16px;top:16px;z-index:90;
+      display:flex;gap:10px;flex-wrap:wrap;
     }
 
-    .terminal-card{
-      width:min(980px,100%);
-      text-align:center;
-    }
-
-    .terminal-title{
-      font-size:clamp(40px,6vw,72px);
-      font-weight:900;
-      letter-spacing:.5px;
-      margin-bottom:12px;
-    }
-
-    .terminal-sub{
-      opacity:.85;
-      margin-bottom:38px;
-      font-size:18px;
-    }
-
-    /* 3D Diamond Cluster */
-    .diamond-cluster{
-      position:relative;
-      width:520px;
-      height:520px;
+    .wrap{
+      max-width:980px;
       margin:0 auto;
-    }
-
-    .diamond-btn{
-      position:absolute;
-      width:180px;
-      height:180px;
-      border-radius:26px;
-      transform:rotate(45deg);
-      background:linear-gradient(145deg,#0b0f18,#111827);
-      box-shadow:
-        inset -10px -12px 20px rgba(0,0,0,.6),
-        inset 8px 8px 18px rgba(255,255,255,.04),
-        0 20px 40px rgba(0,0,0,.55);
-      border:1px solid rgba(255,255,255,.08);
+      padding:96px 18px 140px;
       display:flex;
       justify-content:center;
-      align-items:center;
-      transition:.25s ease;
-      cursor:pointer;
     }
 
-    .diamond-btn span{
-      transform:rotate(-45deg);
+    .card{width:min(920px,100%);text-align:center}
+
+    .notice{
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:18px;
+      border:1px solid rgba(212,175,55,.22);
+      background:rgba(0,0,0,.14);
+      box-shadow:0 12px 30px rgba(0,0,0,.45);
+      text-align:left;
+    }
+    .notice b{letter-spacing:.2px}
+    .notice p{margin:8px 0 0;opacity:.86;line-height:1.5;font-size:14px}
+
+    .section{
+      margin-top:18px;
+      padding-top:16px;
+      border-top:1px solid rgba(255,255,255,.10);
+      text-align:left;
+    }
+    .section h2{
+      margin:0 0 10px;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .section p{
+      margin:0 0 10px;
+      opacity:.88;
+      line-height:1.5;
+      font-size:14px;
+    }
+    .section ul{
+      margin:0 0 10px 18px;
+      opacity:.88;
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .k{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.14);
       font-weight:800;
-      font-size:18px;
-      letter-spacing:.3px;
+      letter-spacing:.15px;
+      font-size:12px;
+      opacity:.95;
+      white-space:nowrap;
     }
 
-    .diamond-btn:hover{
-      box-shadow:
-        inset -10px -12px 20px rgba(0,0,0,.6),
-        inset 8px 8px 18px rgba(255,255,255,.06),
-        0 0 24px rgba(255,204,0,.8);
+    .status-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+      margin-top:12px;
     }
 
-    /* Positions */
-    .d-top   { top:0; left:50%; transform:translateX(-50%) rotate(45deg); }
-    .d-left  { top:50%; left:0; transform:translateY(-50%) rotate(45deg); }
-    .d-right { top:50%; right:0; transform:translateY(-50%) rotate(45deg); }
-    .d-bot   { bottom:0; left:50%; transform:translateX(-50%) rotate(45deg); }
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+      margin-top:16px;
+    }
 
-    /* Dock */
     .dock{
       position:fixed;
       left:50%;
-      bottom:max(16px, env(safe-area-inset-bottom));
+      bottom:max(12px, env(safe-area-inset-bottom));
       transform:translateX(-50%);
+      z-index:90;
+
       width:min(900px,94vw);
       display:flex;
       justify-content:center;
       gap:12px;
       flex-wrap:wrap;
+
       padding:12px 14px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.10);
       background:rgba(0,0,0,.20);
       backdrop-filter:blur(8px);
     }
+
+    .mini{
+      opacity:.72;
+      font-size:12px;
+      line-height:1.35;
+      margin-top:10px;
+      text-align:center;
+    }
+
+    .hidden{display:none !important}
   </style>
 </head>
 
 <body>
 <div class="frame">
 
-  <section class="terminal-card">
+  <div class="top-left">
+    <a class="crp-btn" href="/door/" role="button">◀ Language</a>
+    <button id="resetAll" class="crp-btn" type="button">Reset</button>
+  </div>
 
-    <div class="terminal-title">TERMINAL</div>
-    <div class="terminal-sub">Choose your route.</div>
+  <div class="wrap">
+    <section class="crp-card card" aria-label="Terminal Preface">
 
-    <div class="diamond-cluster">
+      <header class="crp-header">
+        <div class="crp-mark">GEODIAMETRICS</div>
+        <h1 class="crp-title">TERMINAL</h1>
+        <p class="crp-subtitle">Preface · How this site works</p>
+      </header>
 
-      <div class="diamond-btn d-top"   onclick="route('explore')"><span>EXPLORE</span></div>
-      <div class="diamond-btn d-left"  onclick="route('links')"><span>LINKS</span></div>
-      <div class="diamond-btn d-right" onclick="route('learn')"><span>LEARN</span></div>
-      <div class="diamond-btn d-bot"   onclick="route('home')"><span>HOME</span></div>
+      <div class="notice">
+        <b>Under construction (safe to explore).</b>
+        <p>
+          This site is being built live. Navigation and lenses are stable; content expands over time.
+          You can explore safely—unfinished areas will show placeholders rather than broken flows.
+        </p>
+      </div>
 
-    </div>
+      <div class="section">
+        <h2>What this is</h2>
+        <p>
+          This is a compass-based project map. You select lenses, then navigate via the compass.
+          Meaning comes from structure. The UI stays neutral.
+        </p>
+      </div>
 
-  </section>
+      <div class="section">
+        <h2>Navigation map</h2>
+        <ul>
+          <li><span class="k">HOME</span> = Compass face (N/E/S/W). Tap a direction to open its bulletin.</li>
+          <li><span class="k">EXPLORE</span> = Surface view (fast overview).</li>
+          <li><span class="k">LEARN</span> = Deep density (more detail).</li>
+          <li><span class="k">LINKS</span> = Identity + anchors.</li>
+          <li><span class="k">PRODUCTS</span> / <span class="k">LAWS</span> / <span class="k">GAUGES</span> = hubs.</li>
+        </ul>
+      </div>
 
-  <nav class="dock">
-    <a class="crp-btn" href="/door/">LANGUAGE</a>
-    <button class="crp-btn" onclick="resetDepth()">RESET DEPTH</button>
+      <div class="section">
+        <h2>The lenses</h2>
+        <ul>
+          <li><span class="k">STYLE</span>: Formal vs Informal (tone framing).</li>
+          <li><span class="k">TIME</span>: Origin vs Now vs Post (before / current / forward).</li>
+          <li><span class="k">DEPTH</span>: Explore vs Learn (short vs deep).</li>
+          <li><span class="k">LANG</span>: EN or 中文 (canonical layers).</li>
+        </ul>
+        <p class="mini">Canonical keys only: <span class="k">gd_lang</span> · <span class="k">gd_depth</span> · <span class="k">gd_style</span> · <span class="k">gd_time</span></p>
+      </div>
+
+      <div class="section">
+        <h2>Your current selection</h2>
+        <div class="status-row">
+          <span class="crp-chip" id="stLang">LANG: —</span>
+          <span class="crp-chip" id="stDepth">DEPTH: —</span>
+          <span class="crp-chip" id="stStyle">STYLE: —</span>
+          <span class="crp-chip" id="stTime">TIME: —</span>
+        </div>
+
+        <div class="actions">
+          <button class="crp-btn" id="toggleStyle" type="button">Toggle Style</button>
+          <button class="crp-btn" id="cycleTime" type="button">Cycle Time</button>
+          <button class="crp-btn" id="toggleDepth" type="button">Toggle Depth</button>
+        </div>
+      </div>
+
+      <footer class="crp-footer">
+        <small class="crp-footnote">BUILD: <strong>TERMINAL_PREFACE_1</strong></small>
+      </footer>
+
+    </section>
+  </div>
+
+  <nav class="dock" aria-label="Continue dock">
+    <a id="goHome" class="crp-btn crp-btn-primary" href="/home/" role="button" style="min-width:260px;justify-content:center">CONTINUE → HOME</a>
+    <a id="goExplore" class="crp-btn" href="/explore/" role="button">EXPLORE</a>
+    <a id="goLinks" class="crp-btn" href="/links/" role="button">LINKS</a>
   </nav>
 
 </div>
@@ -139,41 +219,90 @@
 (function(){
   "use strict";
 
-  var K_LANG="gd_lang";
-  var K_DEPTH="gd_depth";
-  var K_STYLE="gd_style";
-  var K_TIME="gd_time";
+  var K_LANG="gd_lang", K_DEPTH="gd_depth", K_STYLE="gd_style", K_TIME="gd_time";
 
+  var allowLang={en:1,zh:1};
+  var allowDepth={explore:1,learn:1};
+  var allowStyle={formal:1,informal:1};
+  var allowTime={origin:1,now:1,trajectory:1};
+
+  function qp(n){ try{return new URLSearchParams(location.search).get(n);}catch(e){return null;} }
   function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
   function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
+  function lsDel(k){ try{localStorage.removeItem(k);}catch(e){} }
 
-  var params = new URLSearchParams(location.search);
-  var qLang = params.get("lang");
-  if(qLang==="en" || qLang==="zh"){
-    lsSet(K_LANG,qLang);
+  // Accept query overrides if present (optional)
+  var qLang=qp("lang"); if(qLang && allowLang[qLang]) lsSet(K_LANG,qLang);
+  var qDepth=qp("depth"); if(qDepth && allowDepth[qDepth]) lsSet(K_DEPTH,qDepth);
+  var qStyle=qp("style"); if(qStyle && allowStyle[qStyle]) lsSet(K_STYLE,qStyle);
+  var qTime=qp("time"); if(qTime && allowTime[qTime]) lsSet(K_TIME,qTime);
+
+  // Normalize state
+  var state={
+    lang: lsGet(K_LANG) || "en",
+    depth: lsGet(K_DEPTH) || "explore",
+    style: lsGet(K_STYLE) || "formal",
+    time: lsGet(K_TIME) || "now"
+  };
+
+  if(!allowLang[state.lang]) state.lang="en";
+  if(!allowDepth[state.depth]) state.depth="explore";
+  if(!allowStyle[state.style]) state.style="formal";
+  if(!allowTime[state.time]) state.time="now";
+
+  // Persist normalized
+  lsSet(K_LANG,state.lang);
+  lsSet(K_DEPTH,state.depth);
+  lsSet(K_STYLE,state.style);
+  lsSet(K_TIME,state.time);
+
+  function status(){
+    document.getElementById("stLang").textContent  = "LANG: " + (state.lang==="zh" ? "中文" : "EN");
+    document.getElementById("stDepth").textContent = "DEPTH: " + state.depth.toUpperCase();
+    document.getElementById("stStyle").textContent = "STYLE: " + state.style.toUpperCase();
+    document.getElementById("stTime").textContent  = "TIME: " + (state.time==="trajectory" ? "POST" : state.time.toUpperCase());
   }
 
-  function route(page){
-    var lang  = lsGet(K_LANG)  || "en";
-    var depth = lsGet(K_DEPTH) || "explore";
-    var style = lsGet(K_STYLE) || "formal";
-    var time  = lsGet(K_TIME)  || "now";
-
-    location.href = "/" + page + "/?lang=" + lang +
-                    "&depth=" + depth +
-                    "&style=" + style +
-                    "&time=" + time;
+  function routeLinks(){
+    var q="lang="+encodeURIComponent(state.lang)+
+          "&depth="+encodeURIComponent(state.depth)+
+          "&style="+encodeURIComponent(state.style)+
+          "&time="+encodeURIComponent(state.time);
+    document.getElementById("goHome").setAttribute("href","/home/?"+q);
+    document.getElementById("goExplore").setAttribute("href","/explore/?"+q);
+    document.getElementById("goLinks").setAttribute("href","/links/?"+q);
   }
 
-  function resetDepth(){
-    lsSet(K_DEPTH,"explore");
-    lsSet(K_STYLE,"formal");
-    lsSet(K_TIME,"now");
-    location.reload();
-  }
+  document.getElementById("toggleStyle").addEventListener("click", function(){
+    state.style = (state.style==="formal") ? "informal" : "formal";
+    lsSet(K_STYLE,state.style);
+    status(); routeLinks();
+  });
 
-  window.route = route;
-  window.resetDepth = resetDepth;
+  document.getElementById("toggleDepth").addEventListener("click", function(){
+    state.depth = (state.depth==="explore") ? "learn" : "explore";
+    lsSet(K_DEPTH,state.depth);
+    status(); routeLinks();
+  });
+
+  document.getElementById("cycleTime").addEventListener("click", function(){
+    // origin -> now -> post -> origin
+    state.time = (state.time==="origin") ? "now" : (state.time==="now" ? "trajectory" : "origin");
+    lsSet(K_TIME,state.time);
+    status(); routeLinks();
+  });
+
+  document.getElementById("resetAll").addEventListener("click", function(){
+    lsDel(K_LANG); lsDel(K_DEPTH); lsDel(K_STYLE); lsDel(K_TIME);
+    state={lang:"en",depth:"explore",style:"formal",time:"now"};
+    lsSet(K_LANG,state.lang);
+    lsSet(K_DEPTH,state.depth);
+    lsSet(K_STYLE,state.style);
+    lsSet(K_TIME,state.time);
+    status(); routeLinks();
+  });
+
+  status(); routeLinks();
 })();
 </script>
 

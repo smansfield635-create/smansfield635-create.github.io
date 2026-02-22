@@ -1,0 +1,67 @@
+/* TNT FILE: /assets/hip-demo.css
+   PURPOSE: HIP demo-only styling (prevents branch.css overwrite)
+   NOTE: This file is only linked on /hip-demo/
+*/
+
+.hip-demo .panel{padding:18px}
+.hip-demo .inputs{margin-top:12px}
+.hip-demo .inputs .row{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:720px){.hip-demo .inputs .row{grid-template-columns:1fr 1fr}}
+.hip-demo .field{
+  border-radius:18px;
+  background:rgba(0,0,0,.22);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  padding:12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.hip-demo .field .lbl{min-width:0}
+.hip-demo .field .lbl b{
+  display:block;
+  font-size:13px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-weight:950;
+}
+.hip-demo .field .lbl i{
+  display:block;
+  margin-top:3px;
+  font-style:normal;
+  opacity:.72;
+  font-size:12px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.hip-demo input{
+  width:130px;
+  background:rgba(0,0,0,.20);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;
+  padding:10px 12px;
+  color:inherit;
+  outline:none;
+}
+.hip-demo .results{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+@media(min-width:720px){.hip-demo .results{grid-template-columns:1fr 1fr}}
+.hip-demo .box{
+  border-radius:22px;
+  background:rgba(0,0,0,.26);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  padding:14px;
+}
+.hip-demo .box h3{
+  margin:0 0 10px;
+  font-weight:950;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.hip-demo .box p{margin:0;line-height:1.7;opacity:.86}
+.hip-demo .delta{margin-top:12px}

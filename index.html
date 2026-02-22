@@ -1,76 +1,170 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Compass · DIAMOND</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DIAMOND · Scope</title>
 
-  <!-- NOTE: keep absolute paths; you are using the repo-root host -->
-  <link rel="stylesheet" href="/assets/ui.css?v=MOON_101"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=MOON_101"/>
-  <script defer src="/assets/instrument.js?v=MOON_101"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=PAGE_UNI_100" />
+  <link rel="stylesheet" href="/assets/branch.css?v=PAGE_UNI_100" />
+  <script defer src="/assets/instrument.js?v=PAGE_UNI_100"></script>
+
+  <!-- Layout-only helpers (no field/bg, no :root). -->
+  <style>
+    .scope-grid{display:grid;gap:14px;max-width:760px;margin:0 auto;}
+    .scope-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+    .scope-label{opacity:.80;font-weight:900;letter-spacing:.25px;margin:6px 0 2px;text-align:center}
+    .scope-help{opacity:.75;margin:0;text-align:center;line-height:1.35}
+    .scope-chip{min-width:140px;justify-content:center}
+    .scope-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+    .scope-mini{opacity:.7;font-size:12px;text-align:center;margin-top:10px}
+  </style>
 </head>
 
 <body>
-<main class="crp-shell">
+  <main class="crp-shell crp-center">
+    <section class="crp-card" aria-label="Scope Selector" style="text-align:center">
+      <header class="crp-header">
+        <div class="crp-mark" aria-hidden="true" data-i18n="global.brand">GEODIAMETRICS</div>
+        <h1 class="crp-title" style="margin-bottom:6px" data-i18n="index.title">DIAMOND</h1>
+        <p class="crp-subtitle" style="margin-bottom:8px" data-i18n="index.subtitle">Choose your scope.</p>
+        <p class="scope-help">Language · Depth · Style · Time</p>
+      </header>
 
-  <header class="crp-header" style="text-align:center">
-    <div class="crp-mark" data-i18n="global.brand">GEODIAMETRICS</div>
-    <h1 class="crp-title" data-i18n="home.title">COMPASS</h1>
-    <p class="crp-subtitle" data-i18n="home.subtitle">Hexagonal Enforcement Geometry</p>
-  </header>
+      <div class="scope-grid" aria-label="Scope controls">
 
-  <!-- 6+1 Geometry (center DIAMOND, six diamond axes) -->
-  <section class="crp-snowflake" aria-label="Hexagonal enforcement geometry">
+        <!-- LANGUAGE -->
+        <div>
+          <div class="scope-label">LANGUAGE</div>
+          <div class="scope-row" role="group" aria-label="Language">
+            <button type="button" class="crp-btn scope-chip" data-set="lang" data-val="en">ENGLISH</button>
+            <button type="button" class="crp-btn scope-chip" data-set="lang" data-val="zh">中文</button>
+          </div>
+        </div>
 
-    <!-- NUCLEUS -->
-    <button class="crp-nucleus" type="button" aria-label="DIAMOND nucleus">
-      <div data-i18n="axes.nucleus.title">DIAMOND</div>
-      <div class="crp-axis-kicker" data-i18n="axes.nucleus.kicker">Nucleus</div>
-    </button>
+        <!-- DEPTH -->
+        <div>
+          <div class="scope-label">DEPTH</div>
+          <div class="scope-row" role="group" aria-label="Depth">
+            <button type="button" class="crp-btn scope-chip" data-set="depth" data-val="explore">EXPLORE</button>
+            <button type="button" class="crp-btn scope-chip" data-set="depth" data-val="learn">LEARN</button>
+          </div>
+        </div>
 
-    <!-- ρ -->
-    <button class="crp-axis" type="button" data-axis="rho" aria-label="ρ axis">
-      <div class="crp-axis-title" data-i18n="axes.rho.title">ρ</div>
-      <div class="crp-axis-kicker" data-i18n="axes.rho.kicker">Correlation</div>
-    </button>
+        <!-- STYLE -->
+        <div>
+          <div class="scope-label">STYLE</div>
+          <div class="scope-row" role="group" aria-label="Style">
+            <button type="button" class="crp-btn scope-chip" data-set="style" data-val="formal">FORMAL</button>
+            <button type="button" class="crp-btn scope-chip" data-set="style" data-val="informal">INFORMAL</button>
+          </div>
+        </div>
 
-    <!-- TC -->
-    <button class="crp-axis" type="button" data-axis="tc" aria-label="TC axis">
-      <div class="crp-axis-title" data-i18n="axes.tc.title">TC</div>
-      <div class="crp-axis-kicker" data-i18n="axes.tc.kicker">Alignment</div>
-    </button>
+        <!-- TIME -->
+        <div>
+          <div class="scope-label">TIME</div>
+          <div class="scope-row" role="group" aria-label="Time">
+            <button type="button" class="crp-btn scope-chip" data-set="time" data-val="origin">ORIGIN</button>
+            <button type="button" class="crp-btn scope-chip" data-set="time" data-val="now">NOW</button>
+            <button type="button" class="crp-btn scope-chip" data-set="time" data-val="trajectory">TRAJECTORY</button>
+          </div>
+        </div>
 
-    <!-- Δ -->
-    <button class="crp-axis" type="button" data-axis="delta" aria-label="Δ axis">
-      <div class="crp-axis-title" data-i18n="axes.delta.title">Δ</div>
-      <div class="crp-axis-kicker" data-i18n="axes.delta.kicker">Acceleration</div>
-    </button>
+      </div>
 
-    <!-- HIP -->
-    <button class="crp-axis" type="button" data-axis="hip" aria-label="HIP axis">
-      <div class="crp-axis-title" data-i18n="axes.hip.title">HIP</div>
-      <div class="crp-axis-kicker" data-i18n="axes.hip.kicker">Gates</div>
-    </button>
+      <div class="scope-actions">
+        <button id="enter" type="button" class="crp-btn crp-btn-primary" style="min-width:240px;justify-content:center" data-i18n="index.enter">
+          ENTER
+        </button>
 
-    <!-- λ -->
-    <button class="crp-axis" type="button" data-axis="lambda" aria-label="λ axis">
-      <div class="crp-axis-title" data-i18n="axes.lambda.title">λ</div>
-      <div class="crp-axis-kicker" data-i18n="axes.lambda.kicker">Hazard</div>
-    </button>
+        <!-- Fallback link if JS is blocked -->
+        <a class="crp-btn" href="/home/?lang=en&depth=explore&style=formal&time=origin" role="button">
+          Fallback (EN)
+        </a>
+      </div>
 
-    <!-- CERT -->
-    <button class="crp-axis" type="button" data-axis="cert" aria-label="CERT axis">
-      <div class="crp-axis-title" data-i18n="axes.cert.title">CERT</div>
-      <div class="crp-axis-kicker" data-i18n="axes.cert.kicker">Authority</div>
-    </button>
+      <div class="scope-mini">
+        Canonical keys only: gd_lang · gd_depth · gd_style · gd_time
+      </div>
 
-  </section>
+      <footer class="crp-footer">
+        <small class="crp-footnote" data-i18n="index.footnote">Scope controls language, depth, style, and time.</small>
+        <div style="margin-top:8px;opacity:.65;font-size:12px">BUILD: PAGE_UNI_100</div>
+      </footer>
+    </section>
+  </main>
 
-  <footer class="crp-footer" style="text-align:center">
-    <small class="crp-footnote">BUILD: <strong>MOON_101</strong></small>
-  </footer>
+  <script>
+    (function () {
+      "use strict";
 
-</main>
+      // Canonical keys only
+      var K_LANG  = "gd_lang";
+      var K_DEPTH = "gd_depth";
+      var K_STYLE = "gd_style";
+      var K_TIME  = "gd_time";
+
+      var allowLang  = { en: 1, zh: 1 };
+      var allowDepth = { explore: 1, learn: 1 };
+      var allowStyle = { formal: 1, informal: 1 };
+      var allowTime  = { origin: 1, now: 1, trajectory: 1 };
+
+      function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+      function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+
+      // Defaults (English-first)
+      var state = {
+        lang:  (allowLang[lsGet(K_LANG)] ? lsGet(K_LANG) : "en"),
+        depth: (allowDepth[lsGet(K_DEPTH)] ? lsGet(K_DEPTH) : "explore"),
+        style: (allowStyle[lsGet(K_STYLE)] ? lsGet(K_STYLE) : "formal"),
+        time:  (allowTime[lsGet(K_TIME)] ? lsGet(K_TIME) : "origin")
+      };
+
+      function applyActive() {
+        var buttons = document.querySelectorAll("button[data-set][data-val]");
+        for (var i=0;i<buttons.length;i++){
+          var b = buttons[i];
+          var set = b.getAttribute("data-set");
+          var val = b.getAttribute("data-val");
+          var on = (state[set] === val);
+          b.classList.toggle("crp-btn-primary", on);
+        }
+      }
+
+      function setState(set, val){
+        if (set === "lang" && allowLang[val]) state.lang = val;
+        if (set === "depth" && allowDepth[val]) state.depth = val;
+        if (set === "style" && allowStyle[val]) state.style = val;
+        if (set === "time" && allowTime[val]) state.time = val;
+        applyActive();
+      }
+
+      document.addEventListener("click", function (e) {
+        var t = e.target;
+        if (!t) return;
+        if (t.matches && t.matches("button[data-set][data-val]")) {
+          setState(t.getAttribute("data-set"), t.getAttribute("data-val"));
+        }
+      });
+
+      var enter = document.getElementById("enter");
+      if (enter) enter.addEventListener("click", function () {
+        lsSet(K_LANG, state.lang);
+        lsSet(K_DEPTH, state.depth);
+        lsSet(K_STYLE, state.style);
+        lsSet(K_TIME, state.time);
+
+        var url =
+          "/home/?lang=" + encodeURIComponent(state.lang) +
+          "&depth=" + encodeURIComponent(state.depth) +
+          "&style=" + encodeURIComponent(state.style) +
+          "&time=" + encodeURIComponent(state.time);
+
+        window.location.href = url;
+      });
+
+      applyActive();
+    })();
+  </script>
 </body>
 </html>

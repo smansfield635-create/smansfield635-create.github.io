@@ -5,57 +5,62 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>HOME · Compass Face</title>
 
-  <link rel="stylesheet" href="/assets/ui.css?v=HOME_DIAMOND_3A"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=HOME_DIAMOND_3A"/>
-  <script defer src="/assets/instrument.js?v=HOME_DIAMOND_3A"></script>
+  <link rel="stylesheet" href="/assets/ui.css?v=HOME_FACE_FULL_1"/>
+  <link rel="stylesheet" href="/assets/branch.css?v=HOME_FACE_FULL_1"/>
+  <script defer src="/assets/instrument.js?v=HOME_FACE_FULL_1"></script>
 
   <style>
-    /* Center everything */
-    .shell{
-      max-width:1100px;
-      margin:0 auto;
-      padding:26px 18px 56px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      text-align:center;
+    /* ===== PAGE FRAME ===== */
+    .frame{
       position:relative;
+      min-height:100vh;
+      width:100%;
     }
 
-    /* Back to language (top-left) */
-    .back-left{
+    /* Top-left controls */
+    .top-left{
       position:fixed;
       left:16px;
       top:16px;
-      z-index:30;
+      z-index:80;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
     }
 
-    /* Lens rows */
-    .lens-row{
+    /* Top center controls (only style + time) */
+    .top-controls{
+      position:fixed;
+      left:50%;
+      top:16px;
+      transform:translateX(-50%);
+      z-index:80;
+
       display:flex;
       flex-wrap:wrap;
       gap:10px;
       justify-content:center;
       align-items:center;
-      margin:10px 0 8px;
+
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      backdrop-filter:blur(8px);
     }
 
-    .note{
-      opacity:.72;
-      font-size:12px;
-      line-height:1.35;
-      margin-top:8px;
-    }
-
-    /* ===== 3D DIAMOND COMPASS (STRAIGHTENED: no tilt) ===== */
-    .diamond-face{
+    /* Center cluster (true viewport center) */
+    .center-stage{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
       width:min(560px,92vw);
       height:min(560px,92vw);
-      margin:22px auto 10px;
-      position:relative;
-      transform:none; /* straight */
+      display:block;
     }
 
+    /* ===== DIAMOND COMPASS (4 diamonds = big diamond) ===== */
     .d-diamond{
       width:200px;
       height:200px;
@@ -70,7 +75,6 @@
       background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.92));
       backdrop-filter:blur(8px);
 
-      /* strong depth stack */
       box-shadow:
         0 34px 90px rgba(0,0,0,.78),
         0 14px 34px rgba(0,0,0,.52),
@@ -124,6 +128,7 @@
       justify-content:center;
       padding:20px;
       gap:10px;
+      text-align:center;
     }
 
     .d-title{
@@ -139,13 +144,11 @@
       max-width:16em;
     }
 
-    /* Positions: 4 diamonds make 1 big diamond */
     .d-n{ transform:translate(-50%,-50%) translate(0,-165px) rotate(45deg); }
     .d-e{ transform:translate(-50%,-50%) translate(165px,0) rotate(45deg); }
     .d-s{ transform:translate(-50%,-50%) translate(0,165px) rotate(45deg); }
     .d-w{ transform:translate(-50%,-50%) translate(-165px,0) rotate(45deg); }
 
-    /* Center nucleus */
     .d-core{
       position:absolute;
       left:50%;
@@ -169,81 +172,103 @@
       pointer-events:none;
     }
 
+    /* ===== Bottom dock ===== */
+    .bottom-dock{
+      position:fixed;
+      left:50%;
+      bottom:max(12px, env(safe-area-inset-bottom));
+      transform:translateX(-50%);
+      z-index:80;
+
+      width:min(860px, 94vw);
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      backdrop-filter:blur(8px);
+    }
+
+    /* Mobile tightening */
     @media (max-width:520px){
+      .center-stage{ width:min(520px,92vw); height:min(520px,92vw); }
       .d-diamond{ width:180px; height:180px; }
       .d-n{ transform:translate(-50%,-50%) translate(0,-145px) rotate(45deg); }
       .d-e{ transform:translate(-50%,-50%) translate(145px,0) rotate(45deg); }
       .d-s{ transform:translate(-50%,-50%) translate(0,145px) rotate(45deg); }
       .d-w{ transform:translate(-50%,-50%) translate(-145px,0) rotate(45deg); }
       .d-core{ width:74px; height:74px; }
+
+      .top-controls{ top:10px; }
+      .top-left{ top:10px; left:10px; }
     }
   </style>
 </head>
 
 <body>
-  <main class="shell">
+<div class="frame">
 
-    <div class="back-left">
-      <a class="crp-btn" href="/" role="button">◀ Language</a>
-    </div>
+  <!-- Top-left: Exit + Language -->
+  <div class="top-left">
+    <a class="crp-btn" href="/door/" role="button">EXIT</a>
+    <a class="crp-btn" href="/" role="button">LANGUAGE</a>
+  </div>
 
-    <div class="crp-mark">GEODIAMETRICS</div>
-    <h1 class="crp-title">HOME</h1>
-    <p class="crp-subtitle">Compass Face · Vector Understanding</p>
+  <!-- Top: ONLY style + time -->
+  <div class="top-controls" aria-label="Top controls">
+    <button id="styleToggle" class="crp-chip" type="button">STYLE: FORMAL</button>
+    <button class="crp-chip timeBtn" type="button" data-time="origin">ORIGIN</button>
+    <button class="crp-chip timeBtn" type="button" data-time="now">NOW</button>
+    <button class="crp-chip timeBtn" type="button" data-time="trajectory" id="timeTrajectory">TRAJECTORY</button>
+  </div>
 
-    <!-- Style toggle (single button) -->
-    <div class="lens-row" aria-label="Style lens">
-      <button id="styleToggle" class="crp-chip" type="button">STYLE: FORMAL</button>
-    </div>
-
-    <!-- Time buttons (Trajectory = formal-only) -->
-    <div class="lens-row" aria-label="Time lens">
-      <button class="crp-chip timeBtn" type="button" data-time="origin">ORIGIN</button>
-      <button class="crp-chip timeBtn" type="button" data-time="now">NOW</button>
-      <button class="crp-chip timeBtn" type="button" data-time="trajectory" id="timeTrajectory">TRAJECTORY</button>
-    </div>
-
-    <div id="sliceNote" class="note"></div>
-
-    <section aria-label="Diamond compass face">
-      <div class="diamond-face">
-
-        <div class="d-diamond d-n" role="button" tabindex="0" aria-label="North">
-          <div class="d-inner">
-            <div class="d-title">NORTH</div>
-            <div class="d-text" id="northText"></div>
-          </div>
-        </div>
-
-        <div class="d-diamond d-e" role="button" tabindex="0" aria-label="East">
-          <div class="d-inner">
-            <div class="d-title">EAST</div>
-            <div class="d-text" id="eastText"></div>
-          </div>
-        </div>
-
-        <div class="d-diamond d-s" role="button" tabindex="0" aria-label="South">
-          <div class="d-inner">
-            <div class="d-title">SOUTH</div>
-            <div class="d-text" id="southText"></div>
-          </div>
-        </div>
-
-        <div class="d-diamond d-w" role="button" tabindex="0" aria-label="West">
-          <div class="d-inner">
-            <div class="d-title">WEST</div>
-            <div class="d-text" id="westText"></div>
-          </div>
-        </div>
-
-        <div class="d-core">◆</div>
-
+  <!-- True centered diamond stage -->
+  <div class="center-stage" aria-label="Compass face">
+    <div class="d-diamond d-n" role="button" tabindex="0" aria-label="North">
+      <div class="d-inner">
+        <div class="d-title">NORTH</div>
+        <div class="d-text" id="northText"></div>
       </div>
-    </section>
+    </div>
 
-    <div class="crp-footer">BUILD: <strong>HOME_DIAMOND_3A</strong></div>
+    <div class="d-diamond d-e" role="button" tabindex="0" aria-label="East">
+      <div class="d-inner">
+        <div class="d-title">EAST</div>
+        <div class="d-text" id="eastText"></div>
+      </div>
+    </div>
 
-  </main>
+    <div class="d-diamond d-s" role="button" tabindex="0" aria-label="South">
+      <div class="d-inner">
+        <div class="d-title">SOUTH</div>
+        <div class="d-text" id="southText"></div>
+      </div>
+    </div>
+
+    <div class="d-diamond d-w" role="button" tabindex="0" aria-label="West">
+      <div class="d-inner">
+        <div class="d-title">WEST</div>
+        <div class="d-text" id="westText"></div>
+      </div>
+    </div>
+
+    <div class="d-core">◆</div>
+  </div>
+
+  <!-- Bottom dock -->
+  <nav class="bottom-dock" aria-label="Bottom navigation">
+    <a class="crp-btn" href="/links/" role="button">LINKS</a>
+    <a class="crp-btn crp-btn-primary" href="/home/" role="button">HOME</a>
+    <a class="crp-btn" href="/products/" role="button">PRODUCTS</a>
+    <a class="crp-btn" href="/laws/" role="button">LAWS</a>
+    <a class="crp-btn" href="/gauges/" role="button">GAUGES</a>
+  </nav>
+
+</div>
 
 <script>
 (function(){
@@ -260,7 +285,7 @@
     time:  lsGet(K_TIME)  || "origin"
   };
 
-  // Trajectory is FORMAL-only
+  // Trajectory is formal-only; clicking it auto-forces formal
   var allowTimeByStyle = {
     formal:   { origin:1, now:1, trajectory:1 },
     informal: { origin:1, now:1 }
@@ -291,6 +316,10 @@
     }
   }
 
+  function setStyleLabel(){
+    document.getElementById("styleToggle").textContent = "STYLE: " + state.style.toUpperCase();
+  }
+
   function setPressedTime(){
     document.querySelectorAll(".timeBtn").forEach(function(btn){
       var v = btn.getAttribute("data-time");
@@ -300,31 +329,19 @@
     });
   }
 
-  function setStyleLabel(){
-    var btn = document.getElementById("styleToggle");
-    btn.textContent = "STYLE: " + state.style.toUpperCase();
-  }
-
   function render(){
     normalizeTime();
 
-    // Persist state
     lsSet(K_STYLE, state.style);
     lsSet(K_TIME, state.time);
 
-    // Render content
     document.getElementById("northText").textContent = content.north[state.style][state.time] || "";
     document.getElementById("eastText").textContent  = content.east[state.style][state.time]  || "";
     document.getElementById("southText").textContent = content.south[state.style][state.time] || "";
     document.getElementById("westText").textContent  = content.west[state.style][state.time]  || "";
 
-    // Render lenses
     setStyleLabel();
     setPressedTime();
-
-    // Note
-    document.getElementById("sliceNote").textContent =
-      "Active: " + state.style.toUpperCase() + " · " + state.time.toUpperCase() + " (Trajectory = Formal only)";
   }
 
   // Style toggle
@@ -337,7 +354,15 @@
   document.querySelectorAll(".timeBtn").forEach(function(btn){
     btn.addEventListener("click", function(){
       var v = btn.getAttribute("data-time");
+
+      // Trajectory click forces Formal
+      if(v === "trajectory" && state.style === "informal"){
+        state.style = "formal";
+      }
+
+      // Enforce availability
       if(!allowTimeByStyle[state.style][v]) return;
+
       state.time = v;
       render();
     });

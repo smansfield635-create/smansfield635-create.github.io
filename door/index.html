@@ -1,110 +1,167 @@
 <!-- =====================================================
-     TNT FILE: /door/index.html
-     CRP DOOR v2 — FULL TNT
-     - Restores legible diamond geometry
-     - Allows language toggle (EN / 中文) that ACTUALLY sticks
-     - Routes:
-         Explore -> /home/ (depth=explore)
-         Learn   -> /home/ (depth=learn)
-         Home    -> /home/ (uses current depth or defaults explore)
-         Links   -> /links/
+TNT FILE: /door/index.html
+CRP DOOR v3 (3D DIAMOND TILES + LANG TOGGLE + DEPTH SET)
+- Uses gd_lang + gd_depth (en|zh, explore|learn)
+- No inline body/background; ui.css owns field
+- Uses branch.css 3D tiles (diamond-field + diamond-wrap + diamond-tile)
 ===================================================== -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Door · Coherent Resolution Platform</title>
-  <link rel="stylesheet" href="/assets/ui.css?v=9005"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9005"/>
-  <script src="/assets/instrument.js?v=9005" defer></script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Door · Coherent Resolution Platform</title>
+
+<link rel="stylesheet" href="/assets/ui.css?v=9010"/>
+<link rel="stylesheet" href="/assets/branch.css?v=9010"/>
+<script defer src="/assets/instrument.js?v=9010"></script>
 </head>
+
 <body>
-  <div class="page">
-    <div class="wrap" style="max-width:740px; width:100%;">
-      <div class="hero" style="text-align:center;">
-        <h1>DOOR</h1>
-        <p>Choose your route.</p>
+<div class="page">
+  <div class="wrap" style="max-width:980px;">
+
+    <div class="hero" style="text-align:center;">
+      <h1>DOOR</h1>
+      <p style="margin-top:12px;">Choose your route.</p>
+
+      <div class="pills" style="justify-content:center;margin-top:10px;">
+        <span class="pill">LANG: <span id="langPill">EN</span></span>
+        <span class="pill">DEPTH: <span id="depthPill">EXPLORE</span></span>
+        <a class="pill btn" href="/">BACK</a>
       </div>
 
-      <div class="pills" style="justify-content:center; margin-top:6px;">
-        <span class="pill">LANG: <span id="langPill">EN</span></span>
+      <div class="pills" style="justify-content:center;margin-top:10px;">
         <button class="pill btn" id="setEN" type="button">EN</button>
         <button class="pill btn" id="setZH" type="button">中文</button>
-        <a class="pill btn" href="/" aria-label="Back to index">BACK</a>
       </div>
-
-      <div class="stage" style="margin-top:18px;">
-        <div class="platform">
-          <a class="diamond top gold" href="#" id="goExplore">
-            <span><b>EXPLORE</b><small>Surface</small></span>
-          </a>
-
-          <a class="diamond right" href="#" id="goLearn">
-            <span><b>LEARN</b><small>Deep</small></span>
-          </a>
-
-          <a class="diamond bottom" href="#" id="goHome">
-            <span><b>HOME</b><small>Enter hub</small></span>
-          </a>
-
-          <a class="diamond left" href="/links/">
-            <span><b>LINKS</b><small>Identity</small></span>
-          </a>
-        </div>
-      </div>
-
-      <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-      <div class="ink">GEODIAMETRICS</div>
     </div>
+
+    <div class="door-plate" style="margin-top:8px;">
+      <div class="diamond-field" aria-hidden="true"></div>
+
+      <div class="diamond-wrap" aria-label="Door tiles">
+        <a class="diamond-tile diamond-top active" id="goExplore" href="/home/?depth=explore">
+          <div class="tile-inner">
+            <div class="tile-title" id="tExplore">EXPLORE</div>
+            <div class="tile-sub" id="sExplore">Surface</div>
+          </div>
+        </a>
+
+        <a class="diamond-tile diamond-right" id="goLearn" href="/home/?depth=learn">
+          <div class="tile-inner">
+            <div class="tile-title" id="tLearn">LEARN</div>
+            <div class="tile-sub" id="sLearn">Deep</div>
+          </div>
+        </a>
+
+        <a class="diamond-tile diamond-bottom" id="goHome" href="/home/">
+          <div class="tile-inner">
+            <div class="tile-title" id="tHome">HOME</div>
+            <div class="tile-sub" id="sHome">Enter hub</div>
+          </div>
+        </a>
+
+        <a class="diamond-tile diamond-left" id="goLinks" href="/links/">
+          <div class="tile-inner">
+            <div class="tile-title" id="tLinks">LINKS</div>
+            <div class="tile-sub" id="sLinks">Identity</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="panel" style="padding:16px;margin-top:14px;">
+      <div class="section-title" style="margin-top:0;">What these routes mean</div>
+      <div id="doorText" style="color:rgba(234,242,246,.70);line-height:1.55;">
+        Explore = surface map. Learn = deep map. Home = hub. Links = identity and references.
+      </div>
+    </div>
+
+    <div class="ink">GEODIAMETRICS</div>
+    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
   </div>
+</div>
 
-  <script>
-  (() => {
-    const K_LANG = "gd_lang";
-    const K_DEPTH = "gd_depth";
+<script>
+(() => {
+  const K_LANG  = "gd_lang";
+  const K_DEPTH = "gd_depth";
 
-    const getLang = () => {
-      try { return (localStorage.getItem(K_LANG) || "en"); } catch(e){ return "en"; }
-    };
-    const setLang = (lang) => {
-      try { localStorage.setItem(K_LANG, lang); } catch(e){}
-      document.getElementById("langPill").textContent = (lang === "zh" ? "中文" : "EN");
-    };
-    const setDepth = (depth) => {
-      try { localStorage.setItem(K_DEPTH, depth); } catch(e){}
-    };
+  const qs = new URLSearchParams(location.search || "");
+  const get = (k)=>{ try{return localStorage.getItem(k);}catch(e){return null;} };
+  const set = (k,v)=>{ try{localStorage.setItem(k,v);}catch(e){} };
 
-    // Init pill
-    setLang(getLang());
+  const normLang = (v)=> String(v||"").toLowerCase().startsWith("zh") ? "zh" : "en";
+  const normDepth = (v)=> String(v||"").toLowerCase()==="learn" ? "learn" : "explore";
 
-    // Toggle language (sticky)
-    document.getElementById("setEN").addEventListener("click", () => setLang("en"));
-    document.getElementById("setZH").addEventListener("click", () => setLang("zh"));
+  let lang  = normLang(qs.get("lang") || get(K_LANG) || "en");
+  let depth = normDepth(qs.get("depth") || get(K_DEPTH) || "explore");
 
-    // Routes
-    document.getElementById("goExplore").addEventListener("click", (e) => {
-      e.preventDefault();
-      setDepth("explore");
-      location.href = "/home/?depth=explore";
-    });
+  function stamp(url){
+    const u = new URL(url, location.origin);
+    u.searchParams.set("lang", lang);
+    u.searchParams.set("depth", depth);
+    return u.pathname + "?" + u.searchParams.toString();
+  }
 
-    document.getElementById("goLearn").addEventListener("click", (e) => {
-      e.preventDefault();
-      setDepth("learn");
-      location.href = "/home/?depth=learn";
-    });
+  function apply(){
+    set(K_LANG, lang);
+    set(K_DEPTH, depth);
 
-    document.getElementById("goHome").addEventListener("click", (e) => {
-      e.preventDefault();
-      let depth = null;
-      try { depth = localStorage.getItem(K_DEPTH); } catch(e){}
-      if (depth !== "explore" && depth !== "learn") {
-        setDepth("explore");
-      }
-      location.href = "/home/";
-    });
-  })();
-  </script>
+    document.getElementById("langPill").textContent = (lang==="zh" ? "中文" : "EN");
+    document.getElementById("depthPill").textContent = depth.toUpperCase();
+
+    document.getElementById("setEN").classList.toggle("active", lang==="en");
+    document.getElementById("setZH").classList.toggle("active", lang==="zh");
+
+    // language labels (minimal)
+    if(lang==="zh"){
+      document.getElementById("tExplore").textContent="探索";
+      document.getElementById("sExplore").textContent="概览";
+      document.getElementById("tLearn").textContent="学习";
+      document.getElementById("sLearn").textContent="深入";
+      document.getElementById("tHome").textContent="主页";
+      document.getElementById("sHome").textContent="进入中枢";
+      document.getElementById("tLinks").textContent="链接";
+      document.getElementById("sLinks").textContent="身份";
+      document.getElementById("doorText").textContent="Explore＝快速浏览地图。Learn＝深度拆解。Home＝进入枢纽。Links＝身份与引用。";
+    }else{
+      document.getElementById("tExplore").textContent="EXPLORE";
+      document.getElementById("sExplore").textContent="Surface";
+      document.getElementById("tLearn").textContent="LEARN";
+      document.getElementById("sLearn").textContent="Deep";
+      document.getElementById("tHome").textContent="HOME";
+      document.getElementById("sHome").textContent="Enter hub";
+      document.getElementById("tLinks").textContent="LINKS";
+      document.getElementById("sLinks").textContent="Identity";
+      document.getElementById("doorText").textContent="Explore = surface map. Learn = deep map. Home = hub. Links = identity and references.";
+    }
+
+    // routes
+    document.getElementById("goExplore").href = stamp("/home/?depth=explore");
+    document.getElementById("goLearn").href   = stamp("/home/?depth=learn");
+    document.getElementById("goHome").href    = stamp("/home/");
+    document.getElementById("goLinks").href   = stamp("/links/");
+  }
+
+  // depth on click
+  document.getElementById("goExplore").addEventListener("click", ()=>{ depth="explore"; apply(); });
+  document.getElementById("goLearn").addEventListener("click", ()=>{ depth="learn"; apply(); });
+  document.getElementById("goHome").addEventListener("click", ()=>{ apply(); });
+
+  // language toggle
+  document.getElementById("setEN").addEventListener("click", ()=>{ lang="en"; apply(); });
+  document.getElementById("setZH").addEventListener("click", ()=>{ lang="zh"; apply(); });
+
+  apply();
+
+  // keep URL consistent for bookmarks
+  const u = new URL(location.href);
+  u.searchParams.set("lang", lang);
+  u.searchParams.set("depth", depth);
+  history.replaceState(null, "", u.toString());
+})();
+</script>
 </body>
 </html>

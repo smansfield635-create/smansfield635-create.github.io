@@ -3,50 +3,50 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOOR · Geodiametrics</title>
+<title>Cardinal Axis</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-
-/* ===== BACKGROUND (Same Crystal Field) ===== */
-
 body{
   margin:0;
   min-height:100vh;
   background:
-    radial-gradient(circle at 50% 35%, rgba(255,215,120,.05), transparent 60%),
+    radial-gradient(circle at 50% 40%, rgba(255,215,120,.05), transparent 60%),
     repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 1px, transparent 1px 90px),
-    linear-gradient(180deg, #a80000 0%, #7b0000 60%, #5a0000 100%);
-  overflow-x:hidden;
+    linear-gradient(180deg,#a80000 0%,#7b0000 60%,#5a0000 100%);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:white;
+}
+
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding-top:120px;
 }
 
 /* ===== HEADER ===== */
 
-.header{
-  text-align:center;
-  padding-top:80px;
-}
-
-.header h1{
+.title{
   font-size:46px;
   letter-spacing:2px;
-  margin:0;
+  margin-bottom:10px;
 }
 
-.header p{
+.subtitle{
   opacity:.85;
-  margin-top:10px;
+  margin-bottom:50px;
 }
 
 /* ===== GEM DIAMONDS ===== */
 
 .stage{
   position:relative;
-  width:min(500px,90vw);
-  height:min(500px,90vw);
-  margin:80px auto 0;
+  width:min(520px,90vw);
+  height:min(520px,90vw);
 }
 
 .gem{
@@ -70,8 +70,7 @@ body{
     inset 0 -25px 35px rgba(0,0,0,.6);
 
   border:1px solid rgba(255,255,255,.08);
-
-  transition: all 260ms ease;
+  transition:all 260ms ease;
 }
 
 .gem::after{
@@ -87,15 +86,13 @@ body{
     );
   mix-blend-mode:overlay;
   opacity:.25;
-  pointer-events:none;
 }
 
 .gem:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.05);
   box-shadow:
     0 30px 90px rgba(0,0,0,.9),
-    0 0 22px rgba(212,175,55,.45),
-    inset 0 2px 0 rgba(255,255,255,.3);
+    0 0 22px rgba(212,175,55,.45);
 }
 
 .gem-inner{
@@ -111,40 +108,81 @@ body{
   pointer-events:none;
 }
 
-.gem.explore{ transform:translate(-50%,-50%) translate(0,-120px) rotate(45deg); }
-.gem.links{ transform:translate(-50%,-50%) translate(-120px,0) rotate(45deg); }
-.gem.learn{ transform:translate(-50%,-50%) translate(120px,0) rotate(45deg); }
-.gem.home{ transform:translate(-50%,-50%) translate(0,120px) rotate(45deg); }
+/* Placement */
+
+.explore{ transform:translate(-50%,-50%) translate(0,-120px) rotate(45deg); }
+.links{ transform:translate(-50%,-50%) translate(-120px,0) rotate(45deg); }
+.learn{ transform:translate(-50%,-50%) translate(120px,0) rotate(45deg); }
+.home{ transform:translate(-50%,-50%) translate(0,120px) rotate(45deg); }
 
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <h1>DOOR</h1>
-  <p>Choose your route.</p>
-</div>
+<div class="page">
 
-<div class="stage">
+  <div class="title" id="title"></div>
+  <div class="subtitle" id="subtitle"></div>
 
-  <a href="/home/" class="gem explore">
-    <div class="gem-inner">EXPLORE</div>
-  </a>
-
-  <a href="/links/" class="gem links">
-    <div class="gem-inner">LINKS</div>
-  </a>
-
-  <a href="/learn/" class="gem learn">
-    <div class="gem-inner">LEARN</div>
-  </a>
-
-  <a href="/home/" class="gem home">
-    <div class="gem-inner">HOME</div>
-  </a>
+  <div class="stage">
+    <a href="/home/" class="gem explore">
+      <div class="gem-inner" id="btnExplore"></div>
+    </a>
+    <a href="/links/" class="gem links">
+      <div class="gem-inner" id="btnLinks"></div>
+    </a>
+    <a href="/home/?depth=learn" class="gem learn">
+      <div class="gem-inner" id="btnLearn"></div>
+    </a>
+    <a href="/home/" class="gem home">
+      <div class="gem-inner" id="btnHome"></div>
+    </a>
+  </div>
 
 </div>
+
+<script>
+
+/* ===== LANGUAGE STATE ===== */
+
+const lang = localStorage.getItem("gd_lang") || "en";
+
+/* ===== DICTIONARY ===== */
+
+const i18n = {
+  en:{
+    title:"CARDINAL AXIS",
+    subtitle:"Choose your route.",
+    explore:"EXPLORE",
+    links:"LINKS",
+    learn:"LEARN",
+    home:"HOME"
+  },
+  zh:{
+    title:"四向轴",
+    subtitle:"选择路径。",
+    explore:"浏览",
+    links:"链接",
+    learn:"深入",
+    home:"主页"
+  }
+};
+
+/* ===== RENDER ===== */
+
+const t = i18n[lang] || i18n.en;
+
+document.getElementById("title").textContent = t.title;
+document.getElementById("subtitle").textContent = t.subtitle;
+document.getElementById("btnExplore").textContent = t.explore;
+document.getElementById("btnLinks").textContent = t.links;
+document.getElementById("btnLearn").textContent = t.learn;
+document.getElementById("btnHome").textContent = t.home;
+
+document.documentElement.lang = lang;
+
+</script>
 
 </body>
 </html>

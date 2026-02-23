@@ -1,12 +1,8 @@
-<!-- TNT — /door/index.html  (DOOR · LANGUAGE SELECT · GEM STANDARD · UNIFORM + NO OVERLAP)
-     FIXES:
-       - Restores gem-uniform obsidian/opal (no “blue plate” feel)
-       - Prevents diamonds from covering the header text (stage pushed down + header reserved)
-     LOCKS:
-       - TNT ONLY (full file)
-       - Uses /assets/ui.css + /assets/branch.css only (no asset rewrites)
-       - DO NOT style html/body background (ui.css owns field)
-       - Routes to /index.html with state: /index.html?lang=__&style=__&time=__
+<!-- TNT — /door/index.html  (DOOR · LANGUAGE SELECT · GEM STANDARD)
+     FIX:
+     - Title/subtitle now render ON TOP of diamonds (z-index overlay), like the bottom footer does.
+     - No html/body background styling here (ui.css owns field).
+     - Keeps same EN/中文 diamonds + state carry (gd_style/gd_time) into /index.html
 -->
 <!doctype html>
 <html lang="en">
@@ -28,82 +24,55 @@
   --obsB:rgba(11,15,20,.94);
 }
 
-/* Top-left */
+/* top-left */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:90;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Layout */
-.wrap{
-  width:min(980px,94vw);
-  margin:0 auto;
-  padding:18px 0 90px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-align:center;
-}
-
-/* Header reserved space so diamonds NEVER overlap */
-.kicker{
-  margin-top:52px;
-  font-size:12px;
-  letter-spacing:2.6px;
-  text-transform:uppercase;
-  opacity:.80;
-}
-.title{
-  margin:10px 0 0;
-  font-size:54px;
-  font-weight:950;
-  letter-spacing:.2px;
-  line-height:1.0;
-}
-.sub{
-  margin:10px 0 0;
-  opacity:.82;
-  font-size:15px;
-  line-height:1.35;
-}
-
-/* Stage: pushed DOWN so it cannot cover header */
+/* stage */
 .stage{
-  position:relative;
-  margin-top:26px;
+  position:fixed;
+  left:50%;
+  top:52%;
+  transform:translate(-50%,-50%);
   width:min(560px,92vw);
   height:min(560px,92vw);
+  z-index:40;
 }
 
-/* Outer gem shell (neutral obsidian, NOT blue) */
+/* outer diamond shell */
 .outer{
-  position:absolute;left:50%;top:50%;
-  width:100%;height:100%;
+  position:absolute;
+  left:50%;top:50%;
+  width:min(560px,92vw);
+  height:min(560px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.07), transparent 58%),
-    radial-gradient(circle at 75% 78%, rgba(212,175,55,.06), transparent 62%),
-    linear-gradient(160deg, rgba(14,18,24,.34) 0%, rgba(6,8,12,.46) 72%);
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
   border:1px solid rgba(255,255,255,.10);
   box-shadow:
     0 90px 260px rgba(0,0,0,.62),
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -50px 90px rgba(0,0,0,.55);
   pointer-events:none;
-  opacity:.52;
+  opacity:.55;
 }
 .outer::after{
   content:"";
-  position:absolute;inset:0;border-radius:60px;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.035) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.12;
+  position:absolute; inset:0; border-radius:60px;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.14;
 }
 
-/* Diamonds (same gem material as standard pages) */
+/* diamonds */
 .d{
   width:210px;height:210px;
-  position:absolute;left:50%;top:50%;
+  position:absolute;
+  left:50%;top:50%;
   transform-origin:center;
   border-radius:26px;
   cursor:pointer;
@@ -111,8 +80,8 @@
 
   background:
     radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(212,175,55,.08), transparent 62%),
-    linear-gradient(145deg, var(--obsA), var(--obsB));
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
+    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
 
   border:1px solid rgba(255,255,255,.10);
   box-shadow:
@@ -123,9 +92,9 @@
 }
 .d::before{
   content:"";
-  position:absolute;inset:0;border-radius:26px;padding:1px;
+  position:absolute; inset:0; border-radius:26px; padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.42;
+  opacity:.45;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   pointer-events:none;
@@ -133,7 +102,7 @@
 .d::after{
   content:"";
   position:absolute;
-  left:12%;right:12%;
+  left:12%; right:12%;
   top:10%;
   height:28%;
   border-radius:999px;
@@ -143,7 +112,7 @@
   pointer-events:none;
 }
 .d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.01);
   box-shadow:
     0 34px 110px rgba(0,0,0,.88),
     0 0 18px rgba(212,175,55,.18),
@@ -159,7 +128,7 @@
     inset 0 -32px 52px rgba(0,0,0,.68);
 }
 
-/* Placement: stacked */
+/* placement */
 .d-en{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
 .d-zh{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
 
@@ -171,25 +140,70 @@
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:18px;
-  gap:8px;
+  padding:16px;
+  gap:10px;
   pointer-events:none;
   user-select:none;
 }
-.lab{ font-weight:950; letter-spacing:.9px; font-size:18px; }
+.lab{ font-weight:950; letter-spacing:.8px; font-size:18px; }
 
+/* === OVERLAY HEADER (prints over diamonds) === */
+.headOverlay{
+  position:absolute;
+  left:50%;
+  top:-8px;
+  transform:translateX(-50%);
+  width:min(560px,92vw);
+  z-index:80; /* ABOVE diamonds */
+  text-align:center;
+  pointer-events:none; /* doesn't block taps */
+}
+.kicker{
+  font-size:12px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:.78;
+  margin:0 0 10px 0;
+}
+.title{
+  margin:0;
+  font-size:52px;
+  font-weight:950;
+  letter-spacing:.2px;
+  line-height:1.02;
+  text-shadow:0 18px 60px rgba(0,0,0,.65);
+}
+.sub{
+  margin:10px auto 0;
+  max-width:46ch;
+  opacity:.84;
+  font-size:16px;
+  line-height:1.35;
+  text-shadow:0 18px 60px rgba(0,0,0,.55);
+}
+
+/* footer (already “on top”) */
 .footer{
-  margin-top:22px;
+  position:fixed;
+  left:50%;
+  bottom:calc(18px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:85;
+  width:min(560px,92vw);
+  text-align:center;
   opacity:.74;
   font-size:13px;
   line-height:1.35;
+  pointer-events:none;
+  text-shadow:0 18px 60px rgba(0,0,0,.55);
 }
 
+/* mobile */
 @media (max-width:520px){
-  :root{ --R: 116px; }
-  .title{font-size:46px}
-  .d{width:190px;height:190px}
-  .kicker{margin-top:46px}
+  :root{ --R: 124px; }
+  .d{ width:200px; height:200px; }
+  .title{ font-size:46px; }
+  .sub{ font-size:15px; }
 }
 </style>
 </head>
@@ -200,43 +214,35 @@
   <a class="crp-btn" id="btnExit" href="/home/">EXIT</a>
 </div>
 
-<main class="wrap" aria-label="Door language selection">
-  <div class="kicker" id="kicker">CARDINAL AXIS</div>
-  <h1 class="title" id="title">Select language</h1>
-  <p class="sub" id="subtitle">Choose a canonical language to enter the system.</p>
+<div class="stage" aria-label="Language diamonds">
+  <div class="outer"></div>
 
-  <div class="stage" aria-label="Language diamonds">
-    <div class="outer"></div>
-
-    <div class="d d-en" id="pickEN" role="button" tabindex="0" aria-label="English">
-      <div class="inner"><div class="lab">ENGLISH</div></div>
-    </div>
-
-    <div class="d d-zh" id="pickZH" role="button" tabindex="0" aria-label="Chinese">
-      <div class="inner"><div class="lab">中文</div></div>
-    </div>
+  <!-- OVERLAY PRINT (ON TOP OF DIAMONDS) -->
+  <div class="headOverlay" aria-hidden="true">
+    <p class="kicker" id="kicker">CARDINAL AXIS</p>
+    <h1 class="title" id="title">Select language</h1>
+    <p class="sub" id="subtitle">Choose a canonical language to enter the system.</p>
   </div>
 
-  <div class="footer" id="foot">Coherence-based traversal study · under construction · safe to explore</div>
-</main>
+  <div class="d d-en" id="pickEN" role="button" tabindex="0" aria-label="English">
+    <div class="inner"><div class="lab">ENGLISH</div></div>
+  </div>
+
+  <div class="d d-zh" id="pickZH" role="button" tabindex="0" aria-label="Chinese">
+    <div class="inner"><div class="lab">中文</div></div>
+  </div>
+</div>
+
+<div class="footer" id="foot">Coherence-based traversal study · under construction · safe to explore</div>
 
 <script>
 (function(){
-  // URL overrides allowed (shared links hydrate deterministically)
-  var qs = new URLSearchParams(location.search);
-  var qStyle = qs.get("style");
-  var qTime  = qs.get("time");
-
-  var style = (qStyle==="formal"||qStyle==="informal") ? qStyle : (localStorage.getItem("gd_style") || "formal");
-  var time  = (qTime==="origin"||qTime==="now"||qTime==="post") ? qTime : (localStorage.getItem("gd_time") || "now");
+  // preserve / default lenses
+  var style = localStorage.getItem("gd_style") || "formal";
+  var time  = localStorage.getItem("gd_time")  || "now";
   if(time==="trajectory") time="post";
   if(["origin","now","post"].indexOf(time)<0) time="now";
   if(["formal","informal"].indexOf(style)<0) style="formal";
-
-  try{
-    localStorage.setItem("gd_style", style);
-    localStorage.setItem("gd_time", time);
-  }catch(e){}
 
   function go(lang){
     try{ localStorage.setItem("gd_lang", lang); }catch(e){}
@@ -245,8 +251,9 @@
   }
 
   function activate(el){
-    var a=[document.getElementById("pickEN"), document.getElementById("pickZH")];
-    a.forEach(function(x){ x.classList.remove("active"); });
+    [document.getElementById("pickEN"), document.getElementById("pickZH")].forEach(function(x){
+      x.classList.remove("active");
+    });
     el.classList.add("active");
     setTimeout(function(){ el.classList.remove("active"); }, 160);
   }
@@ -263,12 +270,15 @@
     });
   });
 
-  // EXIT preserves state (bubble button, not a “blue link”)
-  var exit = document.getElementById("btnExit");
-  var curLang = (localStorage.getItem("gd_lang")==="zh") ? "zh" : "en";
-  exit.href = "/home/?lang="+encodeURIComponent(curLang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
+  // EXIT preserves state (goes to hub)
+  (function(){
+    var curLang = localStorage.getItem("gd_lang") || "en";
+    var q = "lang="+encodeURIComponent(curLang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
+    document.getElementById("btnExit").href = "/home/?"+q;
+  })();
 })();
 </script>
 
 </body>
 </html>
+```0

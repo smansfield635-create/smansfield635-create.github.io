@@ -1,12 +1,6 @@
-<!-- TNT — /explore/index.html  (RESTORE EXPLORE / INNOVATION HUB)
-     RULES:
-     - TNT FULL FILE ONLY
-     - DOES NOT TOUCH /assets/ui.css or /assets/branch.css
-     - DOES NOT SET html/body background (ui.css owns field)
-     - RESTORES the diamond-of-diamonds page that “disappeared”
-     - Dual-lens: single-language render based on gd_lang or ?lang=en|zh
-     - State propagation: lang/style/time carried through links
-     - Click diamonds routes into subpages (NW is wired; others can be wired later)
+<!-- TNT — /explore/index.html (KEEP LOOK · CONNECT NW → /innovation/language/)
+     CHANGE ONLY:
+       dNW onclick routes to /innovation/language/ (instead of products or explore-nested)
 -->
 <!doctype html>
 <html lang="en">
@@ -21,7 +15,6 @@
 <script defer src="/assets/instrument.js"></script>
 
 <style>
-  /* PAGE-LOCAL ONLY: geometry + layout; ui.css owns background/material */
   :root{ --R:154px; }
 
   .top-left{
@@ -202,89 +195,80 @@
 
 <script>
 (function(){
-  // Canonical keys only
-  var qs = new URLSearchParams(location.search);
-  var qLang = qs.get("lang");
-  var qStyle = qs.get("style");
-  var qTime = qs.get("time");
+  var qs=new URLSearchParams(location.search);
+  var qLang=qs.get("lang");
+  var qStyle=qs.get("style");
+  var qTime=qs.get("time");
 
-  var lang = (qLang==="zh"||qLang==="en") ? qLang : ((localStorage.getItem("gd_lang")==="zh") ? "zh" : "en");
-  var style = (qStyle==="formal"||qStyle==="informal") ? qStyle : (localStorage.getItem("gd_style")||"formal");
-  var time = (qTime==="origin"||qTime==="now"||qTime==="post") ? qTime : (localStorage.getItem("gd_time")||"now");
+  var lang=(qLang==="zh"||qLang==="en")?qLang:((localStorage.getItem("gd_lang")==="zh")?"zh":"en");
+  var style=(qStyle==="formal"||qStyle==="informal")?qStyle:(localStorage.getItem("gd_style")||"formal");
+  var time=(qTime==="origin"||qTime==="now"||qTime==="post")?qTime:(localStorage.getItem("gd_time")||"now");
   if(time==="trajectory") time="post";
 
-  try{
-    localStorage.setItem("gd_lang", lang);
-    localStorage.setItem("gd_style", style);
-    localStorage.setItem("gd_time", time);
-  }catch(e){}
+  try{localStorage.setItem("gd_lang",lang);localStorage.setItem("gd_style",style);localStorage.setItem("gd_time",time);}catch(e){}
 
-  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+  function q(){return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);}
 
-  // Single-language render (no EN+中文 simultaneously)
-  var UI = {
+  var UI={
     en:{
       brand:"QUEEN’S ARCHITECTURE",
       tag:"INNOVATION · FUTURE TRUNKS",
-      nw:{lab:"LANGUAGE ENGINE", sub:"Semantic compilers · grammar · indexing."},
-      ne:{lab:"EXECUTION SYSTEMS", sub:"Workflows · receipts · constrained ops."},
-      sw:{lab:"MEASUREMENT LAB", sub:"Instruments · sweeps · evidence."},
-      se:{lab:"GOVERNANCE STACK", sub:"Policies · gates · certification."}
+      nw:{lab:"LANGUAGE ENGINE",sub:"Semantic compilers · grammar · indexing."},
+      ne:{lab:"EXECUTION SYSTEMS",sub:"Workflows · receipts · constrained ops."},
+      sw:{lab:"MEASUREMENT LAB",sub:"Instruments · sweeps · evidence."},
+      se:{lab:"GOVERNANCE STACK",sub:"Policies · gates · certification."}
     },
     zh:{
       brand:"女王架构",
       tag:"创新 · 未来干线",
-      nw:{lab:"语言引擎", sub:"语义编译 · 语法 · 索引。"},
-      ne:{lab:"执行系统", sub:"流程 · 回执 · 约束执行。"},
-      sw:{lab:"测量实验室", sub:"仪器 · 扫掠 · 证据流。"},
-      se:{lab:"治理栈", sub:"策略 · 门控 · 认证。"}
+      nw:{lab:"语言引擎",sub:"语义编译 · 语法 · 索引。"},
+      ne:{lab:"执行系统",sub:"流程 · 回执 · 约束执行。"},
+      sw:{lab:"测量实验室",sub:"仪器 · 扫掠 · 证据流。"},
+      se:{lab:"治理栈",sub:"策略 · 门控 · 认证。"}
     }
   };
-  var T = UI[lang] || UI.en;
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
-  document.getElementById("brandName").textContent = T.brand;
-  document.getElementById("brandTag").textContent = T.tag;
+  var T=UI[lang]||UI.en;
+  document.documentElement.lang=(lang==="zh")?"zh":"en";
+  document.getElementById("brandName").textContent=T.brand;
+  document.getElementById("brandTag").textContent=T.tag;
 
-  document.getElementById("nwLab").textContent = T.nw.lab;
-  document.getElementById("nwSub").textContent = T.nw.sub;
-  document.getElementById("neLab").textContent = T.ne.lab;
-  document.getElementById("neSub").textContent = T.ne.sub;
-  document.getElementById("swLab").textContent = T.sw.lab;
-  document.getElementById("swSub").textContent = T.sw.sub;
-  document.getElementById("seLab").textContent = T.se.lab;
-  document.getElementById("seSub").textContent = T.se.sub;
+  document.getElementById("nwLab").textContent=T.nw.lab;
+  document.getElementById("nwSub").textContent=T.nw.sub;
+  document.getElementById("neLab").textContent=T.ne.lab;
+  document.getElementById("neSub").textContent=T.ne.sub;
+  document.getElementById("swLab").textContent=T.sw.lab;
+  document.getElementById("swSub").textContent=T.sw.sub;
+  document.getElementById("seLab").textContent=T.se.lab;
+  document.getElementById("seSub").textContent=T.se.sub;
 
-  // Wire state propagation
   var s=q();
   document.getElementById("btnHub").href="/home/?"+s;
   document.getElementById("btnExit").href="/door/?"+s;
-
   document.getElementById("dockTerminal").href="/index.html?"+s;
   document.getElementById("dockProducts").href="/products/?"+s;
   document.getElementById("dockEducation").href="/products/education/?"+s;
   document.getElementById("dockLaws").href="/laws/?"+s;
   document.getElementById("dockLinks").href="/links/?"+s;
 
-  // Route diamonds (ONLY NW subpage exists right now in your repo)
-  function go(path){ location.href = path + "?" + q(); }
+  // ✅ CONNECT NW → Innovation language page
+  // Change only this route if you move the folder later.
+  function go(path){ location.href = path + "?" + s; }
+  document.getElementById("dNW").onclick=function(){ go("/innovation/language/"); };
 
-  // NW -> existing subpage you created
-  document.getElementById("dNW").onclick = function(){ go("/explore/innovation/language/"); };
-
-  // Others: keep them on this page until you create their subpages
-  document.getElementById("dNE").onclick = function(){ /* placeholder */ };
-  document.getElementById("dSW").onclick = function(){ /* placeholder */ };
-  document.getElementById("dSE").onclick = function(){ /* placeholder */ };
+  ["dNE","dSW","dSE"].forEach(function(id){
+    document.getElementById(id).onclick=function(){};
+  });
 
   ["dNW","dNE","dSW","dSE"].forEach(function(id){
     var el=document.getElementById(id);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+    el.addEventListener("keydown",function(e){
+      if(e.key==="Enter"||e.key===" "){e.preventDefault();el.click();}
     });
   });
+
+  history.replaceState(null,"",location.pathname+"?"+s);
 })();
 </script>
 
 </body>
 </html>
-```0

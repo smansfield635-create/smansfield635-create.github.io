@@ -1,17 +1,12 @@
 <!-- TNT — /explore/innovation/language/grammar/index.html
      GRAMMAR · Traversal Contracts (GEM STANDARD)
-     LOCKS:
-     - TNT ONLY (full file)
-     - Uses existing /assets/ui.css + /assets/branch.css (NO ui/branch edits)
-     - DOES NOT touch html/body background (ui.css owns field)
+     CHANGE (PER YOUR NOTE):
+     - KEEP: STYLE + (CONCEPT / NOW / ROADMAP) lenses INSIDE modal
+     - REMOVE: the extra inner “FEELS / MATTERS / WORKS / NEXT” tab layer
+     - Modal now shows ONLY: 4 bubbles (paragraphs) for the section you clicked
+     - Outer diamond (HOW IT FEELS / WHY IT MATTERS / HOW IT WORKS / WHAT’S NEXT) stays as the ONLY section selector
      - Single-language render (EN OR 中文) via gd_lang / ?lang=
-     - Lenses INSIDE modal only:
-         STYLE: Formal/Informal (gd_style)
-         TIME: Concept / Now / Roadmap (gd_time = origin/now/post)
-     - Content model:
-         4 SECTIONS (tabs) × 4 BUBBLES (paragraph cards) per section
-         (Total 16 bubbles per lens-state)
-     - Routing/state propagation: lang/style/time carried through all links
+     - State propagation: lang/style/time carried through links
 -->
 <!doctype html>
 <html lang="en">
@@ -217,21 +212,6 @@
   box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
 }
 
-.tabbar{
-  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
-  padding:10px 12px 12px;border-bottom:1px solid rgba(255,255,255,.08);
-}
-.tab{ padding:10px 16px;border-radius:999px; cursor:pointer;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.10);
-  color:#fff;font-weight:950;letter-spacing:.2px;
-  box-shadow:0 14px 36px rgba(0,0,0,.55);
-}
-.tab.on{
-  border-color:rgba(212,175,55,.70);
-  box-shadow:0 18px 50px rgba(0,0,0,.85), 0 0 14px rgba(212,175,55,.26);
-}
-
 .mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
 .grid4{display:grid;gap:14px}
@@ -258,6 +238,7 @@
 .bp{margin:0;color:var(--mut);line-height:1.55}
 
 .mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+
 @media (max-width:560px){
   :root{ --R: 136px; }
   .g-d{width:158px;height:158px}
@@ -321,7 +302,7 @@
   <a class="crp-btn" id="dockExplore" href="/explore/">EXPLORE</a>
   <a class="crp-btn" id="dockInnovation" href="/explore/?">INNOVATION</a>
   <a class="crp-btn" id="dockLanguage" href="/explore/innovation/language/">LANGUAGE</a>
-  <a class="crp-btn" id="dockGrammar" href="/explore/innovation/language/grammar/">GRAMMAR</a>
+  <a class="crp-btn crp-btn-primary" id="dockGrammar" href="/explore/innovation/language/grammar/">GRAMMAR</a>
 </nav>
 
 <!-- MODAL -->
@@ -334,20 +315,12 @@
       <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
     </div>
 
-    <!-- LENSES INSIDE MODAL ONLY -->
+    <!-- LENSES (ONLY) -->
     <div class="lensbar">
       <button class="chip" id="chipStyle" type="button">STYLE: FORMAL</button>
       <button class="chip" id="chipConcept" data-time="origin" type="button">CONCEPT</button>
       <button class="chip" id="chipNow" data-time="now" type="button">NOW</button>
       <button class="chip" id="chipRoadmap" data-time="post" type="button">ROADMAP</button>
-    </div>
-
-    <!-- SECTION TABS -->
-    <div class="tabbar">
-      <button class="tab" id="tabA" type="button">A</button>
-      <button class="tab" id="tabB" type="button">B</button>
-      <button class="tab" id="tabC" type="button">C</button>
-      <button class="tab" id="tabD" type="button">D</button>
     </div>
 
     <div class="mbody">
@@ -387,6 +360,7 @@
   }catch(e){}
 
   function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+
   function wire(){
     var s=q();
     document.getElementById("btnHub").href="/home/?"+s;
@@ -401,9 +375,8 @@
     document.getElementById("mJumpLang").href="/explore/innovation/language/?"+s;
     document.getElementById("mJumpExplore").href="/explore/?"+s;
   }
-  wire();
 
-  // ===== i18n labels =====
+  // ===== i18n =====
   var L = {
     en:{
       brand1:"GRAMMAR",
@@ -415,7 +388,6 @@
         D:{lab:"WHAT’S NEXT", sub:"Roadmap extensions."}
       },
       lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", now:"NOW", roadmap:"ROADMAP"},
-      tabs:{A:"FEELS",B:"MATTERS",C:"WORKS",D:"NEXT"},
       ret:"RETURN",
       jLang:"JUMP LANGUAGE",
       jExp:"JUMP EXPLORE"
@@ -430,7 +402,6 @@
         D:{lab:"下一步", sub:"路线图扩展。"}
       },
       lens:{formal:"正式", informal:"非正式", concept:"概念", now:"当前", roadmap:"路线图"},
-      tabs:{A:"体验",B:"重要",C:"机制",D:"下一步"},
       ret:"返回",
       jLang:"跳转语言",
       jExp:"跳转探索"
@@ -438,6 +409,7 @@
   };
   var T = (lang==="zh") ? L.zh : L.en;
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+
   document.getElementById("brand1").textContent = T.brand1;
   document.getElementById("brand2").textContent = T.brand2;
 
@@ -450,21 +422,15 @@
   document.getElementById("dLab").textContent = T.sec.D.lab;
   document.getElementById("dSub").textContent = T.sec.D.sub;
 
-  document.getElementById("tabA").textContent = T.tabs.A;
-  document.getElementById("tabB").textContent = T.tabs.B;
-  document.getElementById("tabC").textContent = T.tabs.C;
-  document.getElementById("tabD").textContent = T.tabs.D;
-
   document.getElementById("mReturn").textContent = T.ret;
   document.getElementById("mJumpLang").textContent = T.jLang;
   document.getElementById("mJumpExplore").textContent = T.jExp;
 
-  // ===== content: 4 sections × 4 bubbles × (time × style) =====
-  // bubble model: {h, p} (paragraph in p)
+  // ===== content (4 sections × 4 bubbles × time × style) =====
   function C(h,p){ return {h:h, p:p}; }
 
   var CONTENT = {
-    A:{ // HOW IT FEELS
+    A:{ // FEELS
       origin:{
         formal:[
           C("Orientation stays locked","Language stays selected, so the interface never ‘forgets’ what you chose between pages or returns."),
@@ -482,8 +448,8 @@
       now:{
         formal:[
           C("No drift in-session","Active selections persist (gd_*), so the user sees continuity across clicks and pages."),
-          C("Live copy is operational","Now view focuses on the current mechanism: what is enforced today and where the contract is applied."),
-          C("Reading stays scannable","Four bubbles per section keep density high without turning into walls of text."),
+          C("Live copy is operational","Now view focuses on what is enforced today and where the contract is applied."),
+          C("Reading stays scannable","Four bubbles keep density high without turning into walls of text."),
           C("Interaction stays deterministic","Same inputs produce the same outputs; UI never ‘guesses’ what you meant.")
         ],
         informal:[
@@ -495,40 +461,40 @@
       },
       post:{
         formal:[
-          C("Roadmap stays structured","Roadmap is not hype—future additions are scoped, versioned, and plugged into the same contract."),
-          C("Upgrades won’t break you","New content expands inside the same topology, so bookmarks and routes don’t rot."),
-          C("Growth still feels safe","Even as pages multiply, state discipline keeps navigation coherent."),
-          C("It becomes a reference surface","Roadmap bubbles explain what gets built next and what must remain invariant.")
+          C("Roadmap stays structured","Roadmap is scoped and plugs into the same contract."),
+          C("Upgrades won’t break you","New content expands inside the same topology."),
+          C("Growth still feels safe","State discipline keeps navigation coherent at scale."),
+          C("It becomes a reference surface","Roadmap bubbles explain what changes and what stays invariant.")
         ],
         informal:[
-          C("Roadmap is readable","It tells you what’s coming without drowning you in jargon."),
-          C("New stuff won’t wreck old stuff","The structure stays the same when features expand."),
+          C("Roadmap is readable","It tells you what’s coming without jargon overload."),
+          C("New stuff won’t wreck old stuff","Structure stays the same when features expand."),
           C("Scaling still feels calm","More pages, same rules."),
           C("It turns into a real map","You’ll know where to go next, every time.")
         ]
       }
     },
-    B:{ // WHY IT MATTERS
+    B:{ // MATTERS
       origin:{
         formal:[
           C("Prevents silent meaning shifts","Grammar contracts stop terms from changing underneath the user as content evolves."),
-          C("Supports audit-grade reading","Formal phrasing makes claims falsifiable and keeps ambiguity bounded."),
-          C("Makes traversal study possible","Instead of linear chapters, the grammar defines how concepts connect across nodes."),
-          C("Stops ‘pretty confusion’","Aesthetic without contract creates drift; grammar is the contract that prevents it.")
+          C("Supports audit-grade reading","Formal phrasing keeps ambiguity bounded and claims testable."),
+          C("Makes traversal study possible","Grammar defines how concepts connect across nodes, not just within chapters."),
+          C("Stops ‘pretty confusion’","Beauty without contract drifts; grammar is the contract.")
         ],
         informal:[
           C("Stops drift","Words don’t change their meaning randomly."),
           C("Makes it trustworthy","Formal mode is careful—no storytelling as fact."),
           C("Lets you learn by moving","You don’t need one long article to ‘get it.’"),
-          C("Keeps beauty from lying","A nice UI without rules still confuses people—this prevents that.")
+          C("Keeps beauty from lying","Nice UI without rules still confuses people—this prevents that.")
         ]
       },
       now:{
         formal:[
-          C("Protects navigation integrity","When routing is defined by grammar, links don’t fragment into mismatched states."),
-          C("Protects the user’s time","Four bubbles per section replace long paragraphs with faster comprehension."),
+          C("Protects navigation integrity","Routing defined by grammar prevents state forks and mismatched pages."),
+          C("Protects the user’s time","Bubbles replace long paragraphs with faster comprehension."),
           C("Protects cross-page coherence","Language/style/time remain stable across the project surface."),
-          C("Protects scale readiness","You can add pages without breaking the mental model or UI contract.")
+          C("Protects scale readiness","You can add pages without breaking the mental model.")
         ],
         informal:[
           C("Keeps the site from breaking","Rules stop random drift."),
@@ -539,10 +505,10 @@
       },
       post:{
         formal:[
-          C("Enables multi-language growth","EN/中文 remain canonical; additional overlays can be added without breaking core meaning."),
-          C("Enables productization","Grammar becomes a reusable layer across products, laws, and gauges."),
-          C("Enables consistent onboarding","Users learn the map once and can traverse any new branch safely."),
-          C("Enables verification","Roadmap items can be tied to evidence, receipts, and reproducible artifacts.")
+          C("Enables multi-language growth","EN/中文 remain canonical; overlays can be added without breaking meaning."),
+          C("Enables productization","Grammar becomes reusable across products, laws, and gauges."),
+          C("Enables consistent onboarding","Users learn the map once and traverse new branches safely."),
+          C("Enables verification","Roadmap items tie to evidence, receipts, and reproducible artifacts.")
         ],
         informal:[
           C("More languages later","Without messing up the core."),
@@ -552,27 +518,27 @@
         ]
       }
     },
-    C:{ // HOW IT WORKS
+    C:{ // WORKS
       origin:{
         formal:[
           C("Canonical state keys","gd_lang, gd_style, gd_time persist; internal links carry them forward deterministically."),
           C("Lens separation","Lenses live inside modal only, so the main page stays clean and action-first."),
-          C("Contracted copy rules","Formal/Informal changes framing; Concept/Now/Roadmap changes emphasis—text must change, not just highlights."),
-          C("Uniform presentation","Every page uses the same gem + modal structure so behavior remains predictable.")
+          C("Contracted copy rules","Style/time must change text meaning, not just button highlights."),
+          C("Uniform presentation","All pages reuse the same gem + modal structure for predictable behavior.")
         ],
         informal:[
           C("It saves your settings","Language/style/time stick."),
           C("Lenses stay inside the bubble","Main page stays clean."),
           C("Buttons actually change meaning","Not just a glow—real text changes."),
-          C("Everything looks and behaves the same","Same gem pattern everywhere.")
+          C("Everything behaves the same","Same gem pattern everywhere.")
         ]
       },
       now:{
         formal:[
-          C("Deterministic routing","The same click produces the same destination; ‘back’ does not corrupt downstream state."),
-          C("Centered modal containment","Backdrop + centered shell prevent scroll-jumps and keep focus on the bubble content."),
-          C("Four-bubble density rule","Each section is always 4 bubbles, so you never get ‘empty’ pages."),
-          C("Roadmap labeling","UI says ROADMAP; internal time key remains post to preserve compatibility.")
+          C("Deterministic routing","The same click produces the same destination; back does not corrupt state."),
+          C("Centered modal containment","Backdrop + centered shell prevent scroll-jumps and keep focus."),
+          C("Four-bubble density rule","Each section is always 4 bubbles—no empty nodes."),
+          C("Roadmap labeling","UI says ROADMAP; internal key remains post for compatibility.")
         ],
         informal:[
           C("Clicks go where they should","No random behavior."),
@@ -583,59 +549,59 @@
       },
       post:{
         formal:[
-          C("Extensible contract","New pages plug into the same state propagation and modal lensing."),
-          C("Version discipline","Roadmap can point to versioned schemas, receipts, and testable claims."),
-          C("Overlay discipline","Additional languages can be layered while EN/中文 remain stable anchors."),
-          C("Evidence integration","Roadmap bubbles can reference evidence bundles, registries, and audits.")
+          C("Extensible contract","New pages plug into the same propagation and modal lensing."),
+          C("Version discipline","Roadmap can point to versioned schemas, receipts, and tests."),
+          C("Overlay discipline","Additional languages layer safely while EN/中文 remain anchors."),
+          C("Evidence integration","Roadmap bubbles can reference bundles, registries, and audits.")
         ],
         informal:[
-          C("You can add more pages safely","Same rules."),
+          C("Add more pages safely","Same rules."),
           C("Roadmap can be versioned","So it’s real."),
-          C("More languages can be added later","Without chaos."),
-          C("Future stuff can connect to proof","Not just text.")
+          C("More languages later","Without chaos."),
+          C("Future connects to proof","Not just text.")
         ]
       }
     },
-    D:{ // WHAT'S NEXT
+    D:{ // NEXT
       origin:{
         formal:[
-          C("Define the trunk glossary","Lock key terms used across Innovation so future pages don’t drift."),
-          C("Clone this grammar pattern","Each leaf page should copy the same lens + 4×4 bubble contract."),
-          C("Add executable examples","Where appropriate, show the smallest example that proves the claim."),
-          C("Connect to products cleanly","Innovation references products as deployed surfaces, not as theoretical claims.")
+          C("Define the trunk glossary","Lock the key terms used across Innovation so future pages don’t drift."),
+          C("Clone this pattern","Each leaf page copies lens + 4-bubble contract."),
+          C("Add executable examples","Small examples that prove the claim, not long essays."),
+          C("Connect to products cleanly","Innovation references deployed surfaces without overclaiming.")
         ],
         informal:[
           C("Lock the words","So meanings don’t drift."),
           C("Clone the pattern","Same lenses, same bubbles."),
-          C("Show tiny proofs","Short examples that actually demonstrate."),
-          C("Connect to products clearly","Innovation = future; Products = deployed.")
+          C("Show tiny proofs","Short examples that demonstrate."),
+          C("Connect clearly","Innovation = future; Products = deployed.")
         ]
       },
       now:{
         formal:[
-          C("Build the next leaf nodes","SSG, DOT.GRID, Acronyms become sibling pages under Language."),
-          C("Keep routing deterministic","All links must carry lang/style/time."),
-          C("Fill content before expanding paths","No empty nodes: 4 bubbles per section before deeper branching."),
-          C("Add return/jump controls consistently","Every modal includes RETURN + JUMP parent + JUMP explore.")
+          C("Build sibling leaves","SSG, DOT.GRID, Acronyms become sibling pages under Language."),
+          C("Keep routing deterministic","All links carry lang/style/time."),
+          C("Fill before branching deeper","No empty nodes: 4 bubbles before deeper paths."),
+          C("Keep jump controls consistent","RETURN + JUMP parent + JUMP explore on every modal.")
         ],
         informal:[
           C("Make the sibling pages","SSG / DOT.GRID / Acronyms."),
-          C("Keep the links carrying state","Always."),
+          C("Keep links carrying state","Always."),
           C("Fill bubbles first","No empty pages."),
-          C("Keep jump buttons consistent","Return + jump up.")
+          C("Keep jumps consistent","Return + jump up.")
         ]
       },
       post:{
         formal:[
-          C("Roadmap the trunk expansion","Execution/Measurement/Governance gain the same leaf structure as Language."),
-          C("Introduce consumer-friendly framing","Keep it legible while still bounded and non-drifting."),
-          C("Instrument the build","Add basic counters/logs to detect broken routes immediately."),
-          C("Publish a stable index","Innovation becomes browsable as an encyclopedia with traversal, not linear reading.")
+          C("Expand the other trunks","Execution/Measurement/Governance gain the same leaf structure as Language."),
+          C("Keep consumer-legible framing","Readable to the public while still bounded and non-drifting."),
+          C("Instrument the build","Add simple route checks to catch 404 immediately."),
+          C("Publish a stable index","Innovation becomes encyclopedic traversal, not linear reading.")
         ],
         informal:[
           C("Expand the other trunks","Same pattern."),
           C("Make it readable for normal people","Still accurate."),
-          C("Add simple checks","So you catch broken links fast."),
+          C("Add simple checks","Catch broken links fast."),
           C("Make Innovation a real encyclopedia","Traversal study, not chapters.")
         ]
       }
@@ -653,17 +619,12 @@
   var chipNow=document.getElementById("chipNow");
   var chipRoadmap=document.getElementById("chipRoadmap");
 
-  var tabA=document.getElementById("tabA");
-  var tabB=document.getElementById("tabB");
-  var tabC=document.getElementById("tabC");
-  var tabD=document.getElementById("tabD");
-
   var h1=document.getElementById("h1"),p1=document.getElementById("p1");
   var h2=document.getElementById("h2"),p2=document.getElementById("p2");
   var h3=document.getElementById("h3"),p3=document.getElementById("p3");
   var h4=document.getElementById("h4"),p4=document.getElementById("p4");
 
-  var activeSec="A";
+  var activeSec="A"; // A/B/C/D from outer diamonds
 
   function persist(){
     try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time);}catch(e){}
@@ -680,27 +641,31 @@
     chipRoadmap.classList.toggle("active", time==="post");
   }
 
-  function setTabs(){
-    tabA.classList.toggle("on", activeSec==="A");
-    tabB.classList.toggle("on", activeSec==="B");
-    tabC.classList.toggle("on", activeSec==="C");
-    tabD.classList.toggle("on", activeSec==="D");
-    // also highlight the diamond chosen
+  function setActiveDiamond(){
     ["secA","secB","secC","secD"].forEach(function(id){
-      document.getElementById(id).classList.toggle("active",
-        (id==="secA"&&activeSec==="A")||(id==="secB"&&activeSec==="B")||(id==="secC"&&activeSec==="C")||(id==="secD"&&activeSec==="D"));
+      var on = (id==="secA" && activeSec==="A") ||
+               (id==="secB" && activeSec==="B") ||
+               (id==="secC" && activeSec==="C") ||
+               (id==="secD" && activeSec==="D");
+      document.getElementById(id).classList.toggle("active", on);
     });
+  }
+
+  function titleForSec(){
+    if(activeSec==="A") return T.sec.A.lab;
+    if(activeSec==="B") return T.sec.B.lab;
+    if(activeSec==="C") return T.sec.C.lab;
+    return T.sec.D.lab;
   }
 
   function render(){
     persist();
     wire();
     setLensLabels();
-    setTabs();
+    setActiveDiamond();
 
     var bubbles = CONTENT[activeSec][time][style];
-    var title = T.brand1 + " · " + (activeSec==="A"?T.tabs.A:(activeSec==="B"?T.tabs.B:(activeSec==="C"?T.tabs.C:T.tabs.D)));
-    mTitle.textContent = title;
+    mTitle.textContent = T.brand1 + " · " + titleForSec();
 
     h1.textContent=bubbles[0].h; p1.textContent=bubbles[0].p;
     h2.textContent=bubbles[1].h; p2.textContent=bubbles[1].p;
@@ -708,8 +673,8 @@
     h4.textContent=bubbles[3].h; p4.textContent=bubbles[3].p;
   }
 
-  function open(sectionKey){
-    activeSec=sectionKey;
+  function open(secKey){
+    activeSec = secKey;
     render();
     bd.classList.add("show");
     modal.classList.add("show");
@@ -720,7 +685,7 @@
     ["secA","secB","secC","secD"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
   }
 
-  // diamond clicks
+  // Outer diamond clicks
   document.getElementById("secA").onclick=function(){ open("A"); };
   document.getElementById("secB").onclick=function(){ open("B"); };
   document.getElementById("secC").onclick=function(){ open("C"); };
@@ -733,25 +698,21 @@
     });
   });
 
-  // tab clicks
-  tabA.onclick=function(){ activeSec="A"; render(); };
-  tabB.onclick=function(){ activeSec="B"; render(); };
-  tabC.onclick=function(){ activeSec="C"; render(); };
-  tabD.onclick=function(){ activeSec="D"; render(); };
-
-  // lens clicks (modal only)
+  // Lenses (modal only)
   chipStyle.onclick=function(){ style = (style==="formal") ? "informal" : "formal"; render(); };
   chipConcept.onclick=function(){ time="origin"; render(); };
   chipNow.onclick=function(){ time="now"; render(); };
   chipRoadmap.onclick=function(){ time="post"; render(); };
 
-  // close controls
+  // Close
   bd.onclick=close;
   mClose.onclick=close;
   document.getElementById("mReturn").onclick=close;
 
-  // initialize labels (no open)
-  // (Stage labels remain fixed; modal carries lenses)
+  // First wire (no open)
+  wire();
+  setLensLabels();
+
 })();
 </script>
 

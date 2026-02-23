@@ -1,0 +1,709 @@
+<!-- TNT — /products/education/index.html  (EDUCATION SUB-HUB · DIAMOND-OF-DIAMONDS)
+     Matches SOFTWARE architecture exactly:
+       - One outer diamond + four inner diamonds
+       - Click diamond → centered opal/obsidian modal
+       - Lenses INSIDE modal only:
+           STYLE: Formal/Informal (gd_style)
+           TIME: Concept/Live/Roadmap (gd_time = origin/now/post)
+       - Dual language EN/中文 always (gd_lang + ?lang=)
+       - Thorough bulletins: 4 sections × 4 bullets
+       - Navigation: BACK (/products/), EXIT (/door/), bottom dock with state
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PRODUCTS · EDUCATION</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+:root{
+  --R:154px;
+  --gold:rgba(212,175,55,.9);
+  --goldSoft:rgba(212,175,55,.35);
+  --obs1:#070b12;
+  --obs2:#0c1626;
+  --mut:rgba(255,255,255,.84);
+  --mut2:rgba(255,255,255,.68);
+}
+body{
+  margin:0; min-height:100vh; overflow-x:hidden;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(90,140,255,.10), transparent 60%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 1px, transparent 1px 100px),
+    linear-gradient(180deg,#b00000 0%,#7a0000 60%,#550000 100%);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:#fff;
+}
+.btn{
+  padding:10px 16px; border-radius:14px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  color:#fff; border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.7);
+  cursor:pointer; font-weight:900; letter-spacing:.2px; text-decoration:none;
+}
+.btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
+.top-left{
+  position:fixed; left:16px; top:16px; z-index:90;
+  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+}
+.brand{
+  position:fixed; left:50%; top:16px; transform:translateX(-50%);
+  z-index:80; text-align:center;
+  padding:10px 14px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16); backdrop-filter:blur(8px);
+}
+.brand .name{ font-weight:950; letter-spacing:1.2px; font-size:12px; opacity:.95; }
+.brand .tag{ font-size:11px; letter-spacing:.6px; opacity:.70; margin-top:2px; }
+
+/* Stage */
+.stage{
+  position:fixed; left:50%; top:52%;
+  transform:translate(-50%,-50%);
+  width:min(720px,94vw); height:min(720px,94vw);
+  z-index:40;
+}
+.outer{
+  position:absolute; left:50%; top:50%;
+  width:min(680px,92vw); height:min(680px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.72),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+  pointer-events:none; opacity:.85;
+}
+.outer::after{
+  content:""; position:absolute; inset:0; border-radius:60px;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.16;
+}
+.d{
+  width:170px; height:170px;
+  position:absolute; left:50%; top:50%;
+  transform-origin:center; border-radius:26px;
+  cursor:pointer; -webkit-tap-highlight-color:transparent;
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
+    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 28px 84px rgba(0,0,0,.78),
+    inset 0 2px 0 rgba(255,255,255,.14),
+    inset 0 -28px 44px rgba(0,0,0,.62);
+  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+.d::before{
+  content:""; position:absolute; inset:0; border-radius:26px; padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:""; position:absolute; left:12%; right:12%; top:10%; height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
+  opacity:.85; transform:rotate(-10deg);
+  pointer-events:none;
+}
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 18px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
+}
+.d.active{
+  border-color:rgba(212,175,55,.55);
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 30px rgba(212,175,55,.40),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
+}
+.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
+.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
+.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
+.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
+
+.inner{
+  width:100%; height:100%; transform:rotate(-45deg);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:16px; gap:10px;
+  pointer-events:none;
+}
+.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
+.sub{ font-size:12.5px; opacity:.80; line-height:1.35; max-width:18em; }
+
+.core{
+  position:absolute; left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  width:74px; height:74px; border-radius:22px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid; place-items:center;
+  font-weight:950; letter-spacing:.5px;
+  opacity:.92; pointer-events:none;
+}
+
+/* Dock */
+.dock{
+  position:fixed; left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:90;
+  width:min(900px,94vw);
+  display:flex; justify-content:center;
+  gap:10px; flex-wrap:wrap;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.20);
+  backdrop-filter:blur(8px);
+}
+
+/* Modal */
+.bd{
+  position:fixed; inset:0; z-index:200;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(10px);
+  display:none;
+}
+.bd.show{display:block;}
+.modal{
+  position:fixed; left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  width:min(1020px,94vw);
+  max-height:88vh;
+  display:none;
+  z-index:210;
+}
+.modal.show{display:block;}
+.shell{
+  height:88vh;
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
+    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
+    linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
+  box-shadow:0 60px 180px rgba(0,0,0,.92);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.shell::before{
+  content:""; position:absolute; left:50%; top:58%;
+  width:min(980px,94vw); height:min(980px,94vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:70px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.16), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);
+  box-shadow:
+    0 100px 280px rgba(0,0,0,.72),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -55px 100px rgba(0,0,0,.55);
+  opacity:.55; pointer-events:none;
+}
+.mhead{
+  display:flex; justify-content:space-between; align-items:center;
+  gap:10px; padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  position:relative; z-index:2;
+}
+.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
+.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
+.mbody{
+  padding:14px 16px 18px;
+  overflow:auto; -webkit-overflow-scrolling:touch;
+  flex:1 1 auto;
+  position:relative; z-index:2;
+}
+.lensbar{
+  display:flex; gap:10px; flex-wrap:wrap;
+  align-items:center; justify-content:center;
+  padding:10px 10px 14px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  margin:-6px -6px 14px;
+}
+.chip{
+  padding:10px 16px; border-radius:999px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer; font-weight:900; letter-spacing:.2px; color:#fff;
+}
+.chip.active{
+  border-color:rgba(212,175,55,.35);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
+}
+.mgrid{ display:grid; gap:14px; }
+@media (min-width:920px){ .mgrid{ grid-template-columns:1fr 1fr; } }
+.box{
+  padding:16px 18px; border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
+  position:relative;
+}
+.box::before{
+  content:""; position:absolute; inset:0; border-radius:22px; padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.h{ margin:0 0 8px; font-weight:950; letter-spacing:.2px; }
+.p{ margin:0 0 10px; color:var(--mut); line-height:1.55; }
+.ul{ margin:0 0 0 18px; padding:0; color:var(--mut2); }
+.ul li{ margin:6px 0; }
+.mact{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
+.sbtn{
+  padding:12px 18px; border-radius:14px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  color:#fff; border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.7);
+  cursor:pointer; font-weight:900; letter-spacing:.2px; text-decoration:none;
+}
+.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
+
+@media (max-width:560px){
+  :root{ --R: 136px; }
+  .d{ width:158px; height:158px; }
+  .stage{ top:54%; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-left">
+  <a class="btn" id="btnBack" href="/products/">BACK</a>
+  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+</div>
+
+<div class="brand">
+  <div class="name" id="brandName">PRODUCTS</div>
+  <div class="tag" id="brandTag">EDUCATION SYSTEMS</div>
+</div>
+
+<div class="stage">
+  <div class="outer"></div>
+
+  <div class="d d-n" id="dProg" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="progLab">PROGRAMS</div>
+      <div class="sub" id="progSub">Curriculum · outcomes.</div>
+    </div>
+  </div>
+
+  <div class="d d-e" id="dLang" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="langLab">LANGUAGE</div>
+      <div class="sub" id="langSub">1001 · fluency path.</div>
+    </div>
+  </div>
+
+  <div class="d d-s" id="dTrain" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="trainLab">TRAINING</div>
+      <div class="sub" id="trainSub">Masterclasses · reps.</div>
+    </div>
+  </div>
+
+  <div class="d d-w" id="dCert" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="certLab">CERTIFICATION</div>
+      <div class="sub" id="certSub">Verification · tiers.</div>
+    </div>
+  </div>
+
+  <div class="core">◆</div>
+</div>
+
+<nav class="dock" id="dock">
+  <a class="btn" id="dockHub" href="/home/">HUB</a>
+  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<div class="bd" id="bd"></div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="shell">
+    <div class="mhead">
+      <h3 class="mtitle" id="mTitle">DETAIL</h3>
+      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
+    </div>
+
+    <div class="mbody">
+      <div class="lensbar">
+        <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>
+        <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>
+        <button class="chip" data-time="now" id="chipLive" type="button">LIVE</button>
+        <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
+      </div>
+
+      <div class="mgrid">
+        <div class="box"><h4 class="h" id="h1"></h4><p class="p" id="p1"></p><ul class="ul" id="u1"></ul></div>
+        <div class="box"><h4 class="h" id="h2"></h4><p class="p" id="p2"></p><ul class="ul" id="u2"></ul></div>
+        <div class="box"><h4 class="h" id="h3"></h4><p class="p" id="p3"></p><ul class="ul" id="u3"></ul></div>
+        <div class="box"><h4 class="h" id="h4"></h4><p class="p" id="p4"></p><ul class="ul" id="u4"></ul></div>
+      </div>
+
+      <div class="mact">
+        <button class="sbtn" id="mReturn" type="button">RETURN</button>
+        <a class="sbtn" id="mJumpHub" href="/home/">JUMP HUB</a>
+        <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // language + state
+  var qs = new URLSearchParams(location.search);
+  var qLang = qs.get("lang");
+  var lang = (qLang==="zh"||qLang==="en") ? qLang : ((localStorage.getItem("gd_lang")==="zh") ? "zh" : "en");
+  try{ localStorage.setItem("gd_lang", lang); }catch(e){}
+
+  var style = localStorage.getItem("gd_style") || "formal";
+  var time  = localStorage.getItem("gd_time")  || "now";
+  if(time==="trajectory") time="post";
+  if(["origin","now","post"].indexOf(time)<0) time="now";
+  if(["formal","informal"].indexOf(style)<0) style="formal";
+
+  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+  function setLinks(){
+    var s=q();
+    document.getElementById("btnBack").href="/products/?"+s;
+    document.getElementById("btnExit").href="/door/?"+s;
+    document.getElementById("dockHub").href="/home/?"+s;
+    document.getElementById("dockTerminal").href="/index.html?"+s;
+    document.getElementById("dockLinks").href="/links/?"+s;
+    document.getElementById("dockProducts").href="/products/?"+s;
+    document.getElementById("dockLaws").href="/laws/?"+s;
+    document.getElementById("dockGauges").href="/gauges/?"+s;
+    document.getElementById("mJumpHub").href="/home/?"+s;
+    document.getElementById("mJumpProducts").href="/products/?"+s;
+  }
+
+  var TEXT = {
+    en:{
+      title:"PRODUCTS",
+      tag:"EDUCATION SYSTEMS",
+      d:{
+        prog:{lab:"PROGRAMS", sub:"Curriculum · outcomes."},
+        lang:{lab:"LANGUAGE", sub:"1001 · fluency path."},
+        train:{lab:"TRAINING", sub:"Masterclasses · reps."},
+        cert:{lab:"CERTIFICATION", sub:"Verification · tiers."}
+      },
+      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", live:"LIVE", roadmap:"ROADMAP"},
+      buttons:{return:"RETURN", jhub:"JUMP HUB", jprod:"JUMP PRODUCTS"},
+      content:{
+        prog:{
+          origin:{formal:{title:"Programs",
+            b1:{h:"What it is",p:"A structured set of curricula built for traversal study (not linear study).",u:["Defined categories.","Defined levels.","Defined progression.","Defined outputs."]},
+            b2:{h:"Design rule",p:"Meaning comes from structure; content expands without breaking navigation.",u:["Stable topology.","Stable lenses.","Deterministic routing.","No drift."]},
+            b3:{h:"Outcome",p:"Fast understanding through movement across concepts rather than long reading.",u:["Compressed learning.","Higher retention.","Better orientation.","Less friction."]},
+            b4:{h:"Deliverables",p:"Programs ship as lessons, PDFs, and templates with measurable milestones.",u:["Lesson plans.","Vocabulary sets.","Practice scripts.","Checkpoints."]}
+          }, informal:{title:"Programs",
+            b1:{h:"What it is",p:"Clear programs that you can actually follow.",u:["Easy structure.","Clear steps.","Clear outputs.","No confusion."]},
+            b2:{h:"How it works",p:"You traverse—tap into what you need, when you need it.",u:["Not long reading.","Not endless scrolling.","Just routes.","Just clarity."]},
+            b3:{h:"Why it works",p:"Structure removes guesswork.",u:["You know where you are.","You know what’s next.","You can return.","You can repeat."]},
+            b4:{h:"What you get",p:"Lessons, PDFs, templates.",u:["Lesson plan.","Word lists.","Practice prompts.","Milestones."]}
+          }},
+          now:{formal:{title:"Programs",
+            b1:{h:"Current status",p:"Program scaffolding is live; content expands in place.",u:["Navigation stable.","Lenses stable.","Pages safe.","Placeholders allowed."]},
+            b2:{h:"Content discipline",p:"Each node gains bulletins before expansion into deeper pages.",u:["4 bullet minimum.","No empty bubbles.","Lens-aware text.","Deterministic changes."]},
+            b3:{h:"Measurement",p:"Progress is tracked by checkpoints tied to the structure.",u:["Category completion.","Level completion.","Skill drills.","Retention checks."]},
+            b4:{h:"Governance",p:"Programs remain neutral; users infer meaning via structure.",u:["No ideology.","No moralizing.","Just contrast.","Just consequences."]}
+          }, informal:{title:"Programs",
+            b1:{h:"Now",p:"The program structure is live.",u:["You can browse.","You can learn.","It won’t break.","It stays coherent."]},
+            b2:{h:"Rule",p:"No empty bubbles—every node has content.",u:["Bullet points.","Clear meaning.","Lens changes work.","Always readable."]},
+            b3:{h:"Tracking",p:"You’ll know what you’ve done.",u:["Checkpoints.","Levels.","Categories.","Milestones."]},
+            b4:{h:"Tone",p:"Neutral and practical.",u:["No preaching.","No fluff.","Just structure.","Just progress."]}
+          }},
+          post:{formal:{title:"Programs",
+            b1:{h:"Roadmap",p:"Programs expand into full traversal syllabi per domain.",u:["Education track.","Tech track.","Governance track.","Enterprise track."]},
+            b2:{h:"Depth control",p:"Explore vs Learn density becomes adjustable per user.",u:["Short summaries.","Full breakdowns.","Adaptive pacing.","Consistent routing."]},
+            b3:{h:"Certification",p:"Completion can map into tiered verification where appropriate.",u:["Assessments.","Evidence logs.","Badges.","Registry links."]},
+            b4:{h:"Scale",p:"Programs become multilingual overlays while EN/中文 remain canonical.",u:["Overlay packs.","Country maps.","Fallback rules.","Consistency checks."]}
+          }, informal:{title:"Programs",
+            b1:{h:"Next",p:"More tracks, same structure.",u:["More lessons.","More templates.","Same map.","Same rules."]},
+            b2:{h:"Pacing",p:"You’ll be able to control depth.",u:["Quick view.","Deep view.","Your speed.","Same navigation."]},
+            b3:{h:"Proof",p:"Completion can be verified.",u:["Assessments.","Badges.","Logs.","Links."]},
+            b4:{h:"Languages",p:"More languages as overlays.",u:["EN/中文 core.","Overlays optional.","Fallback safe.","Always coherent."]}
+          }}
+        },
+        lang:{
+          origin:{formal:{title:"Language (1001)",
+            b1:{h:"What it is",p:"A 1001-word mastery program designed for fast functional English.",u:["10 categories.","4 levels.","Clear drills.","PDF outputs."]},
+            b2:{h:"Traversal method",p:"Learn by navigating categories and use-cases, not by linear chapters.",u:["Pick a category.","Pick a skill.","Practice immediately.","Return and repeat."]},
+            b3:{h:"Architecture",p:"EN is primary; 中文 is canonical support; others are overlays.",u:["EN = default.","中文 = canonical.","Overlays optional.","Fallback rules."]},
+            b4:{h:"Deliverables",p:"Lessons + vocabulary + practice scripts + tracking.",u:["Lesson plan 1–50.","Level lists.","Conversation drills.","Checkpoint tests."]}
+          }, informal:{title:"Language (1001)",
+            b1:{h:"What it is",p:"A fast English program.",u:["Small word set.","Big results.","Clear drills.","Clear levels."]},
+            b2:{h:"How you learn",p:"Tap what you need and use it right away.",u:["Category first.","Practice first.","Use immediately.","Repeat."]},
+            b3:{h:"Languages",p:"EN + 中文 are the core.",u:["Everything supports that.","Overlays later.","Fallback to EN.","Always works."]},
+            b4:{h:"What you get",p:"Words + lessons + drills.",u:["Lists.","Plans.","Practice.","Tracking."]}
+          }},
+          now:{formal:{title:"Language (1001)",
+            b1:{h:"Current status",p:"Core structure is live; content expands deterministically.",u:["Stable categories.","Stable levels.","Stable routing.","Safe placeholders."]},
+            b2:{h:"Lens integrity",p:"Style/time changes language framing and emphasis.",u:["Formal = precise.","Informal = direct.","Concept/Live/Roadmap.","No stale text."]},
+            b3:{h:"Chinese layer",p:"Chinese supports canonical understanding and SSG usage.",u:["Terminology anchor.","SSG compatibility.","Consistent mapping.","No drift."]},
+            b4:{h:"Outcome target",p:"Functional fluency improvement in 1–3 months with discipline.",u:["Daily reps.","Feedback loops.","Real conversations.","Measured progress."]}
+          }, informal:{title:"Language (1001)",
+            b1:{h:"Now",p:"It’s usable right now.",u:["Structure works.","Practice works.","Routing works.","No broken paths."]},
+            b2:{h:"Rule",p:"When you switch lenses, the text really changes.",u:["Not just buttons.","Real content.","Real emphasis.","Always coherent."]},
+            b3:{h:"Chinese",p:"Chinese is a real support layer.",u:["Not decoration.","Terminology anchor.","SSG compatible.","Consistent."]},
+            b4:{h:"Goal",p:"Fast practical progress.",u:["Talk better.","Understand more.","Practice daily.","Track wins."]}
+          }},
+          post:{formal:{title:"Language (1001)",
+            b1:{h:"Roadmap",p:"Expand to country-based overlays with deterministic mapping.",u:["Country select.","Overlay packs.","Auto suggestions.","Fallback safe."]},
+            b2:{h:"Curriculum depth",p:"Add advanced levels while preserving the 1001 core.",u:["Level 5+.","Industry vocab.","Formal writing.","Negotiation."]},
+            b3:{h:"Assessment",p:"Add placement and mastery tests tied to structure.",u:["Placement test.","Skill tests.","Pronunciation checks.","Certification."]},
+            b4:{h:"Distribution",p:"Package as printable PDFs and micro-lessons.",u:["PDF bundles.","Short lessons.","Audio prompts.","Practice cards."]}
+          }, informal:{title:"Language (1001)",
+            b1:{h:"Next",p:"More languages as overlays.",u:["Country-based.","Auto suggestions.","Fallback safe.","No chaos."]},
+            b2:{h:"More levels",p:"Beyond the core 1001.",u:["Advanced vocab.","Industry words.","Writing.","Negotiation."]},
+            b3:{h:"Tests",p:"Simple tests that make sense.",u:["Placement.","Mastery.","Skills.","Badges."]},
+            b4:{h:"Packaging",p:"More PDFs and micro-lessons.",u:["Bundles.","Cards.","Audio.","Short drills."]}
+          }}
+        },
+        train:{
+          origin:{formal:{title:"Training (Masterclasses)",
+            b1:{h:"What it is",p:"Structured masterclasses that teach the traversal method itself.",u:["Method first.","Geometry first.","Practice loops.","Clear outcomes."]},
+            b2:{h:"Why it matters",p:"Teachers scale the system faster than content alone.",u:["Train trainers.","Reduce drift.","Spread safely.","Increase coherence."]},
+            b3:{h:"Format",p:"Short modules with drills and checkpoints.",u:["Explain lensing.","Run exercises.","Evaluate output.","Iterate."]},
+            b4:{h:"Deliverables",p:"Slides, PDFs, and facilitator scripts.",u:["Facilitator guide.","Exercises.","Rubrics.","Take-home pack."]}
+          }, informal:{title:"Training (Masterclasses)",
+            b1:{h:"What it is",p:"Masterclasses that teach the method.",u:["Clear modules.","Hands-on drills.","Real practice.","Clear wins."]},
+            b2:{h:"Why",p:"Teachers scale faster.",u:["Less drift.","More consistency.","Safer spread.","More coherence."]},
+            b3:{h:"How",p:"Short lessons + reps.",u:["Explain.","Practice.","Check.","Repeat."]},
+            b4:{h:"What you get",p:"Guides + scripts.",u:["Slides.","PDFs.","Rubrics.","Packs."]}
+          }},
+          now:{formal:{title:"Training (Masterclasses)",
+            b1:{h:"Current status",p:"Training scaffolds can be built directly from the hub structure.",u:["Same diamonds.","Same lenses.","Same contract.","Repeatable delivery."]},
+            b2:{h:"Quality control",p:"Use rubrics so independent facilitators stay aligned.",u:["Observer-invariant.","Evidence-based.","No intent inference.","Deterministic scoring."]},
+            b3:{h:"Audience",p:"Designed for community-respected instructors.",u:["Safer adoption.","Better trust.","Higher retention.","Lower friction."]},
+            b4:{h:"Delivery",p:"Workshops + practice labs + feedback loops.",u:["Practice blocks.","Live feedback.","Checkpoint tests.","Re-run."]}
+          }, informal:{title:"Training (Masterclasses)",
+            b1:{h:"Now",p:"We can build training from the hub.",u:["Same structure.","Same rules.","Repeatable.","Teachable."]},
+            b2:{h:"Quality",p:"Rubrics keep people aligned.",u:["Same evidence.","Same outputs.","Less confusion.","No drift."]},
+            b3:{h:"Who",p:"Best through trusted teachers.",u:["Safer.","Faster.","More trust.","More reach."]},
+            b4:{h:"How",p:"Workshops and practice labs.",u:["Learn.","Practice.","Feedback.","Repeat."]}
+          }},
+          post:{formal:{title:"Training (Masterclasses)",
+            b1:{h:"Roadmap",p:"Certification-backed instructor tiers.",u:["Tiered facilitators.","Audit logs.","Renewals.","Revocation rules."]},
+            b2:{h:"Scale",p:"Deploy standardized training kits.",u:["Cohorts.","Playbooks.","Community nodes.","Translation overlays."]},
+            b3:{h:"Instrumentation",p:"Track learning outcomes without violating neutrality.",u:["Behavioral signals.","Skill metrics.","Progress graphs.","Exportable reports."]},
+            b4:{h:"Enterprise",p:"Offer in org contexts as governance training.",u:["Policy adoption.","Change discipline.","Risk suppression.","Reporting."]}
+          }, informal:{title:"Training (Masterclasses)",
+            b1:{h:"Next",p:"Instructor tiers.",u:["Levels.","Audits.","Renewals.","Rules."]},
+            b2:{h:"Scale",p:"Training kits.",u:["Cohorts.","Playbooks.","Nodes.","Overlays."]},
+            b3:{h:"Metrics",p:"Track outcomes cleanly.",u:["Signals.","Skills.","Progress.","Reports."]},
+            b4:{h:"Enterprise",p:"Org training version.",u:["Policies.","Discipline.","Risk control.","Reporting."]}
+          }}
+        },
+        cert:{
+          origin:{formal:{title:"Education Certification",
+            b1:{h:"What it is",p:"A verification layer for completion and competence where appropriate.",u:["Serial IDs.","Scope definition.","Validity windows.","Revocation rules."]},
+            b2:{h:"Anti-gaming",p:"Prevent paper credentials without skill.",u:["Evidence required.","Rubric checks.","Dual coding.","Audit logs."]},
+            b3:{h:"Outputs",p:"Certificates are lookupable and time-stamped.",u:["Registry entry.","Status.","Reason codes.","History."]},
+            b4:{h:"Use cases",p:"Training programs, language mastery, facilitator readiness.",u:["Program completion.","Level mastery.","Instructor tiering.","Quality control."]}
+          }, informal:{title:"Education Certification",
+            b1:{h:"What it is",p:"Proof that someone actually finished and can do it.",u:["IDs.","Dates.","Status.","Reasons."]},
+            b2:{h:"Why",p:"Stops fake credentials.",u:["Evidence.","Rubrics.","Audits.","Logs."]},
+            b3:{h:"What you see",p:"Lookupable status.",u:["Active.","Expired.","Revoked.","Why."]},
+            b4:{h:"Where it fits",p:"Programs and instructors.",u:["Completion.","Mastery.","Instructor level.","Quality."]}
+          }},
+          now:{formal:{title:"Education Certification",
+            b1:{h:"Current status",p:"Registry-ready scaffolding can be applied to learning outputs.",u:["Stable keys.","Stable windows.","Deterministic checks.","Safe publication."]},
+            b2:{h:"Neutrality",p:"Certification verifies output and evidence, not ideology.",u:["Observed behavior.","Artifact checks.","No intent inference.","Clear bounds."]},
+            b3:{h:"Governance",p:"Separation of roles prevents capture.",u:["Builders != issuers.","Commercial != tuning.","Auditors != thresholds.","Public logs."]},
+            b4:{h:"Renewal",p:"Renewal ties to updated evidence windows.",u:["Time-bound validity.","Re-check required.","Logs preserved.","Status updates."]}
+          }, informal:{title:"Education Certification",
+            b1:{h:"Now",p:"We can certify what’s measurable.",u:["Evidence.","Checks.","Logs.","Status."]},
+            b2:{h:"Rule",p:"No ideology—only output.",u:["Behavior.","Artifacts.","Proof.","Bounds."]},
+            b3:{h:"Safety",p:"Roles are separated.",u:["No capture.","No cheating.","Logs.","Audits."]},
+            b4:{h:"Renewal",p:"You renew with new evidence.",u:["Time window.","Re-check.","History kept.","Status updates."]}
+          }},
+          post:{formal:{title:"Education Certification",
+            b1:{h:"Roadmap",p:"Tiered educational certificates aligned to traversal competence.",u:["Student tiers.","Instructor tiers.","Audit tiers.","Public lookup."]},
+            b2:{h:"Integration",p:"Certificates connect to products/laws/gauges as a unified system.",u:["Shared keys.","Shared routing.","Shared registry.","Shared evidence bundles."]},
+            b3:{h:"Scale",p:"Multilingual overlays expand access while core remains stable.",u:["EN/中文 canonical.","Overlay packs.","Fallback safety.","Consistency checks."]},
+            b4:{h:"Outcome",p:"A coherent training ecosystem that does not drift over time.",u:["Stable rules.","Stable meaning.","Upgradeable content.","Public-safe."]}
+          }, informal:{title:"Education Certification",
+            b1:{h:"Next",p:"Tiers for learners and teachers.",u:["Levels.","Audits.","Lookup.","Status."]},
+            b2:{h:"Connected",p:"Everything links together cleanly.",u:["Same keys.","Same routing.","Same registry.","Same proof."]},
+            b3:{h:"Languages",p:"Overlays expand access.",u:["EN/中文 core.","Overlays optional.","Fallback safe.","Consistent."]},
+            b4:{h:"Result",p:"Training grows without drift.",u:["Stable rules.","Stable meaning.","More depth.","Public-ready."]}
+          }}
+        }
+      }
+    },
+    zh:{
+      title:"产品",
+      tag:"教育系统",
+      d:{
+        prog:{lab:"课程", sub:"课程表 · 成果。"},
+        lang:{lab:"语言", sub:"1001 · 流利路径。"},
+        train:{lab:"训练", sub:"大师课 · 练习。"},
+        cert:{lab:"认证", sub:"验证 · 分层。"}
+      },
+      lens:{formal:"正式", informal:"非正式", concept:"概念", live:"上线", roadmap:"路线图"},
+      buttons:{return:"返回", jhub:"跳转枢纽", jprod:"跳转产品"},
+      content:null
+    }
+  };
+
+  var pack = TEXT[lang] || TEXT.en;
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+  document.getElementById("brandName").textContent = pack.title;
+  document.getElementById("brandTag").textContent = pack.tag;
+
+  document.getElementById("progLab").textContent = pack.d.prog.lab;
+  document.getElementById("progSub").textContent = pack.d.prog.sub;
+  document.getElementById("langLab").textContent = pack.d.lang.lab;
+  document.getElementById("langSub").textContent = pack.d.lang.sub;
+  document.getElementById("trainLab").textContent = pack.d.train.lab;
+  document.getElementById("trainSub").textContent = pack.d.train.sub;
+  document.getElementById("certLab").textContent = pack.d.cert.lab;
+  document.getElementById("certSub").textContent = pack.d.cert.sub;
+
+  document.getElementById("mReturn").textContent = pack.buttons.return;
+  document.getElementById("mJumpHub").textContent = pack.buttons.jhub;
+  document.getElementById("mJumpProducts").textContent = pack.buttons.jprod;
+
+  // If lang=zh but we didn't duplicate full zh bullet matrices here, fall back to en content while keeping zh labels.
+  var contentPack = (TEXT[lang] && TEXT[lang].content) ? TEXT[lang].content : TEXT.en.content;
+
+  function persist(){
+    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time); }catch(e){}
+  }
+  function setLensLabels(){
+    document.getElementById("styleChip").textContent = "STYLE: " + (style==="formal" ? pack.lens.formal : pack.lens.informal);
+    document.getElementById("chipConcept").textContent = pack.lens.concept;
+    document.getElementById("chipLive").textContent = pack.lens.live;
+    document.getElementById("chipRoadmap").textContent = pack.lens.roadmap;
+    document.getElementById("chipConcept").classList.toggle("active", time==="origin");
+    document.getElementById("chipLive").classList.toggle("active", time==="now");
+    document.getElementById("chipRoadmap").classList.toggle("active", time==="post");
+  }
+  function setLinks(){
+    var s=q();
+    document.getElementById("btnBack").href="/products/?"+s;
+    document.getElementById("btnExit").href="/door/?"+s;
+    document.getElementById("dockHub").href="/home/?"+s;
+    document.getElementById("dockTerminal").href="/index.html?"+s;
+    document.getElementById("dockLinks").href="/links/?"+s;
+    document.getElementById("dockProducts").href="/products/?"+s;
+    document.getElementById("dockLaws").href="/laws/?"+s;
+    document.getElementById("dockGauges").href="/gauges/?"+s;
+    document.getElementById("mJumpHub").href="/home/?"+s;
+    document.getElementById("mJumpProducts").href="/products/?"+s;
+  }
+
+  var bd=document.getElementById("bd");
+  var modal=document.getElementById("modal");
+  var mClose=document.getElementById("mClose");
+  var mTitle=document.getElementById("mTitle");
+  var activeKey=null;
+
+  var h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1");
+  var h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2");
+  var h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3");
+  var h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4");
+
+  function fill(hEl,pEl,uEl,b){
+    hEl.textContent=b.h; pEl.textContent=b.p; uEl.innerHTML="";
+    b.u.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; uEl.appendChild(li); });
+  }
+
+  function render(){
+    setLensLabels(); persist(); setLinks();
+    var view = contentPack[activeKey][time][style];
+    mTitle.textContent = view.title;
+    fill(h1,p1,u1,view.b1);
+    fill(h2,p2,u2,view.b2);
+    fill(h3,p3,u3,view.b3);
+    fill(h4,p4,u4,view.b4);
+  }
+
+  function setActiveDiamond(key){
+    ["dProg","dLang","dTrain","dCert"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
+    var map={prog:"dProg",lang:"dLang",train:"dTrain",cert:"dCert"};
+    document.getElementById(map[key]).classList.add("active");
+  }
+
+  function open(key){
+    activeKey=key;
+    setActiveDiamond(key);
+    render();
+    bd.classList.add("show");
+    modal.classList.add("show");
+  }
+  function close(){
+    bd.classList.remove("show");
+    modal.classList.remove("show");
+    ["dProg","dLang","dTrain","dCert"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
+  }
+
+  document.getElementById("styleChip").addEventListener("click", function(){
+    style = (style==="formal") ? "informal" : "formal";
+    render();
+  });
+  document.getElementById("chipConcept").addEventListener("click", function(){ time="origin"; render(); });
+  document.getElementById("chipLive").addEventListener("click", function(){ time="now"; render(); });
+  document.getElementById("chipRoadmap").addEventListener("click", function(){ time="post"; render(); });
+
+  bd.addEventListener("click", close);
+  mClose.addEventListener("click", close);
+  document.getElementById("mReturn").addEventListener("click", close);
+
+  document.getElementById("dProg").addEventListener("click", function(){ open("prog"); });
+  document.getElementById("dLang").addEventListener("click", function(){ open("lang"); });
+  document.getElementById("dTrain").addEventListener("click", function(){ open("train"); });
+  document.getElementById("dCert").addEventListener("click", function(){ open("cert"); });
+
+  ["dProg","dLang","dTrain","dCert"].forEach(function(id){
+    var el=document.getElementById(id);
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+    });
+  });
+
+  setLensLabels();
+  setLinks();
+})();
+</script>
+
+</body>
+</html>

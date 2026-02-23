@@ -3,143 +3,70 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>INNOVATION · Queen’s Architecture</title>
+<title>INNOVATION · Future Trunks</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instrument.js"></script>
-
-<style>
-:root{ --R:154px; }
-
-.stage{
-  position:fixed;left:50%;top:52%;
-  transform:translate(-50%,-50%);
-  width:min(720px,94vw);height:min(720px,94vw);
-  z-index:40;
-}
-
-.outer{
-  position:absolute;left:50%;top:50%;
-  width:min(680px,92vw);height:min(680px,92vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:60px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.72),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none;opacity:.85;
-}
-
-.d{
-  width:170px;height:170px;
-  position:absolute;left:50%;top:50%;
-  transform-origin:center;border-radius:26px;
-  cursor:pointer;
-  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 28px 84px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.14),
-    inset 0 -28px 44px rgba(0,0,0,.62);
-  transition:transform 220ms ease;
-}
-.d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-}
-
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
-.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
-
-.inner{
-  width:100%;height:100%;
-  transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;padding:16px;gap:10px;
-  pointer-events:none;
-}
-.lab{font-weight:950;letter-spacing:.8px;font-size:16px;}
-.sub{font-size:12.5px;opacity:.80;line-height:1.35;max-width:18em;}
-
-.core{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:74px;height:74px;border-radius:22px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  display:grid;place-items:center;
-  font-weight:950;letter-spacing:.5px;
-  pointer-events:none;
-}
-</style>
 </head>
 
 <body>
 
+<div class="top-left">
+  <a class="btn" id="btnHub" href="/home/">HUB</a>
+  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+</div>
+
+<div class="brand">
+  <div class="name">QUEEN’S ARCHITECTURE</div>
+  <div class="tag">INNOVATION · FUTURE TRUNKS</div>
+</div>
+
 <div class="stage">
+
   <div class="outer"></div>
 
-  <div class="d d-n" id="dNW">
+  <!-- NORTH -->
+  <a class="d d-n" href="/innovation/language/">
     <div class="inner">
       <div class="lab">LANGUAGE ENGINE</div>
       <div class="sub">Semantic compilers · grammar · indexing.</div>
     </div>
-  </div>
+  </a>
 
-  <div class="d d-e" id="dNE">
+  <!-- EAST -->
+  <a class="d d-e" href="/innovation/execution/">
     <div class="inner">
       <div class="lab">EXECUTION SYSTEMS</div>
       <div class="sub">Workflows · receipts · constrained ops.</div>
     </div>
-  </div>
+  </a>
 
-  <div class="d d-w" id="dSW">
+  <!-- WEST -->
+  <a class="d d-w" href="/innovation/measurement/">
     <div class="inner">
       <div class="lab">MEASUREMENT LAB</div>
       <div class="sub">Instruments · sweeps · evidence.</div>
     </div>
-  </div>
+  </a>
 
-  <div class="d d-s" id="dSE">
+  <!-- SOUTH -->
+  <a class="d d-s" href="/innovation/governance/">
     <div class="inner">
       <div class="lab">GOVERNANCE STACK</div>
       <div class="sub">Policies · gates · certification.</div>
     </div>
-  </div>
+  </a>
 
   <div class="core">◆</div>
+
 </div>
 
-<script>
-(function(){
-  var qs = new URLSearchParams(location.search);
-  var lang = qs.get("lang") || localStorage.getItem("gd_lang") || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time = qs.get("time") || localStorage.getItem("gd_time") || "now";
-
-  function q(){ return "lang="+lang+"&style="+style+"&time="+time; }
-
-  // 🔴 FIXED PATHS — MATCH YOUR ACTUAL REPO STRUCTURE
-
-  document.getElementById("dNW").onclick = function(){
-    location.href="/innovation/language/?"+q();
-  };
-  document.getElementById("dNE").onclick = function(){
-    location.href="/innovation/execution/?"+q();
-  };
-  document.getElementById("dSW").onclick = function(){
-    location.href="/innovation/measurement/?"+q();
-  };
-  document.getElementById("dSE").onclick = function(){
-    location.href="/innovation/governance/?"+q();
-  };
-})();
-</script>
+<nav class="dock">
+  <a class="btn" href="/index.html">TERMINAL</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" href="/links/">LINKS</a>
+</nav>
 
 </body>
 </html>

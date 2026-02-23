@@ -1,3 +1,16 @@
+<!-- TNT — /laws/index.html  (LAWS HUB · GEM STANDARD · 4 DIRECTIONS)
+     REQUIREMENTS MET:
+     ✅ Full-file TNT (one file)
+     ✅ Gem uniformity matches HUB/PRODUCTS/SOFTWARE (obsidian-opal + gold crust)
+     ✅ Dual language every time (EN + 中文) via gd_lang + ?lang=
+     ✅ NO lenses on main page (lenses live inside modal only)
+     ✅ Clicking N/E/S/W opens centered modal:
+        - 4 sections (boxes)
+        - each box has 4 bulletins
+     ✅ State propagates across all links (lang/style/time)
+     ✅ Modal is centered with internal scroll; no “dropdown too low”
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -616,4 +629,106 @@ body{
                                 b3:{h:"Actions",p:"Outputs tell you what to do.",u:["Stop.","Rollback.","Segment.","Audit."]},
                                 b4:{h:"Claims",p:"Claims must be verifiable.",u:["Serial.","Tier.","Status.","Reasons."]}}},
         post:{formal:{title:"ENFORCEMENT",b1:{h:"Post",p:"Enforcement becomes automated with time locks and signatures.",u:["Multi-sig changes.","Time lock.","Public log.","Override limits."]},
-                                 b2:{h:"Red-team",p:"Quarterly injections become mandatory for Tier ≥3.",u:["Monoculture shock.","Wave overload.","
+                                 b2:{h:"Red-team",p:"Quarterly injections become mandatory for Tier ≥3.",u:["Monoculture shock.","Wave overload.","Seg collapse.","Audit delay."]},
+                                 b3:{h:"Enterprise",p:"Enforcement integrates with CI/CD and change control.",u:["Wave gating.","Rollback checks.","Zone validation.","Audit pipelines."]},
+                                 b4:{h:"Outcome",p:"A defensible enforcement layer that resists capture.",u:["Separation of powers.","Public transparency.","Hard constraints.","Stable meaning."]}},
+            informal:{title:"ENFORCEMENT",b1:{h:"Next",p:"Automation + locks.",u:["Signatures.","Time locks.","Logs.","Overrides limited."]},
+                                 b2:{h:"Red-team",p:"Mandatory testing.",u:["Shocks.","Overloads.","Collapse tests.","Audit delay."]},
+                                 b3:{h:"Enterprise",p:"CI/CD gates.",u:["Wave caps.","Rollback checks.","Zones.","Audit pipeline."]},
+                                 b4:{h:"Result",p:"Hard to capture.",u:["Separation.","Transparency.","Constraints.","Stable."]}}}
+      },
+      w:{
+        origin:{formal:{title:"GOVERNANCE",b1:{h:"Separation of powers",p:"Different roles cannot tune outcomes or thresholds.",u:["Engineering builds.","Authority issues.","Commercial sells.","Audit verifies."]},
+                                   b2:{h:"Freeze window",p:"No threshold relaxation during freeze window.",u:["Lock thresholds.","Allow clarifications only.","Changelog required.","Time-lock changes."]},
+                                   b3:{h:"Survival boundary",p:"Define W ∩ S = 0 boundary by domain map.",u:["Define survival components.","Measure pay-to-prioritize.","Bound W_S.","Publish violations."]},
+                                   b4:{h:"Public audit",p:"No silent revocations and no silent exclusions.",u:["Publish reason codes.","Publish status.","Publish exclusions.","Audit logs."]}},
+            informal:{title:"GOVERNANCE",b1:{h:"Roles",p:"Different people do different things.",u:["Builders build.","Issuers issue.","Sellers sell.","Auditors audit."]},
+                                   b2:{h:"Freeze",p:"No relaxing rules.",u:["Lock thresholds.","Log changes.","No silent edits.","Time-lock."]},
+                                   b3:{h:"Boundary",p:"No pay-to-prioritize in survival systems.",u:["Define survival map.","Measure W_S.","Publish issues.","Enforce."]},
+                                   b4:{h:"Public",p:"No silent actions.",u:["Status visible.","Reasons visible.","Exclusions visible.","Audits visible."]}}},
+        now:{formal:{title:"GOVERNANCE",b1:{h:"Now",p:"Governance is expressed as stable pages + registry-ready logic.",u:["Uniform pages.","Uniform language.","Uniform keys.","Uniform contracts."]},
+                                b2:{h:"Anti-capture rule",p:"No single group can change thresholds or outcomes.",u:["Multi-sig.","Time lock.","Public log.","Audit cross-check."]},
+                                b3:{h:"Neutrality",p:"Language remains technical and operational, not ideological.",u:["No metaphysics.","No moral framing.","Just constraints.","Just measures."]},
+                                b4:{h:"Outcome",p:"Governance supports public reintroduction safely.",u:["Stable UI.","Dense bulletins.","Bilingual.","Upgradeable."]}},
+            informal:{title:"GOVERNANCE",b1:{h:"Now",p:"Governance is stable.",u:["Pages.","Keys.","Contracts.","Registry-ready."]},
+                                b2:{h:"No capture",p:"Nobody can tune outcomes quietly.",u:["Locks.","Logs.","Audits.","Cross-checks."]},
+                                b3:{h:"Neutral",p:"Technical language only.",u:["No ideology.","No preaching.","Just rules.","Just measures."]},
+                                b4:{h:"Result",p:"Safe to publish.",u:["Stable.","Dense.","Bilingual.","Ready."]}}},
+        post:{formal:{title:"GOVERNANCE",b1:{h:"Post",p:"Governance becomes the backbone of certification and underwriting.",u:["Public registry.","Third-party audits.","Evidence hashes.","Subscription interfaces."]},
+                                 b2:{h:"Entropy index",p:"Track override frequency and threshold change attempts.",u:["Override logs.","Auto downgrades.","Audit requirements.","Stability flags."]},
+                                 b3:{h:"Global deployment",p:"Governance maps to institutions and policy.",u:["Utilities.","Data centers.","Industry.","Financial infra."]},
+                                 b4:{h:"Outcome",p:"A resilient governance layer that scales.",u:["Capture resistance.","Auditability.","Clarity.","Trust."]}},
+            informal:{title:"GOVERNANCE",b1:{h:"Next",p:"Registry + audits.",u:["Public status.","Audits.","Hashes.","Subscriptions."]},
+                                 b2:{h:"Entropy",p:"Track overrides.",u:["Logs.","Flags.","Downgrades.","Audits."]},
+                                 b3:{h:"Scale",p:"Institution adoption.",u:["Utilities.","Cloud.","Industry.","Finance."]},
+                                 b4:{h:"Result",p:"Trust at scale.",u:["Resists capture.","Auditable.","Clear.","Stable."]}}}
+      }
+    };
+    const v = EN[dir][time][style];
+    return v;
+  }
+
+  var active=null;
+
+  function setActiveDiamond(id){
+    ["north","east","south","west"].forEach(function(x){
+      document.getElementById(x).classList.toggle("active", x===id);
+    });
+  }
+
+  function open(dir){
+    active=dir;
+    setActiveDiamond(dir);
+    render();
+    bd.classList.add("show");
+    modal.classList.add("show");
+  }
+
+  function close(){
+    bd.classList.remove("show");
+    modal.classList.remove("show");
+    setActiveDiamond("__none__");
+    active=null;
+  }
+
+  function render(){
+    persist();
+    setLinks();
+    setLensLabels();
+
+    var v = view(active);
+    mTitle.textContent = v.title;
+    fill(h1,p1,u1,v.b1);
+    fill(h2,p2,u2,v.b2);
+    fill(h3,p3,u3,v.b3);
+    fill(h4,p4,u4,v.b4);
+  }
+
+  // Lens labels
+  setLensLabels();
+
+  // Wire diamonds
+  ["north","east","south","west"].forEach(function(id){
+    var el=document.getElementById(id);
+    el.onclick=function(){ open(id); };
+    el.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(id);} };
+  });
+
+  // Lens controls
+  styleChip.onclick=function(){ style = (style==="formal") ? "informal" : "formal"; render(); };
+  chipConcept.onclick=function(){ time="origin"; render(); };
+  chipNow.onclick=function(){ time="now"; render(); };
+  chipPost.onclick=function(){ time="post"; render(); };
+
+  // Close controls
+  bd.onclick=close;
+  mClose.onclick=close;
+  document.getElementById("mReturn").onclick=close;
+
+  // Init
+  setLinks();
+})();
+</script>
+
+</body>
+</html>

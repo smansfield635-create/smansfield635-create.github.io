@@ -1,15 +1,3 @@
-<!-- TNT — /index.html  (TERMINAL · STRUCTURAL PREFACE · GEM STANDARD)
-     URL: /index.html?lang=en&style=informal&time=post
-     LOCKS:
-       - TNT ONLY (full file)
-       - Uses /assets/ui.css + /assets/branch.css only (no asset rewrites)
-       - DO NOT style html/body background (ui.css owns field)
-       - Lenses live INSIDE modal only (no lens controls on main page)
-       - Dual language compatible (single-language render via gd_lang / ?lang=)
-       - 4 primary bubbles on page → centered modal
-       - Modal: STYLE (formal/informal) + TIME (concept/now/post)
-       - State propagation: lang/style/time carried through all internal links
--->
 <!doctype html>
 <html lang="en">
 <head>
@@ -21,7 +9,7 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-/* DO NOT TOUCH FIELD — ui.css owns html/body background */
+/* ui.css owns field — do not override */
 
 .term-wrap{width:min(980px,94vw);margin:0 auto;padding:22px 0 120px}
 .term-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
@@ -30,16 +18,10 @@
 .term-mark{font-size:12px;letter-spacing:2.4px;text-transform:uppercase;opacity:.78;margin-bottom:8px}
 .term-title{margin:0;font-size:44px;font-weight:950;letter-spacing:.25px;line-height:1.05}
 .term-sub{margin:10px 0 0;opacity:.84;font-size:16px;line-height:1.35}
-.term-note{margin:10px 0 0;opacity:.74;font-size:13px;line-height:1.35}
+.term-note{margin:10px 0 0;opacity:.72;font-size:13px;line-height:1.35}
 
-.term-grid{
-  display:grid;
-  gap:14px;
-  margin-top:18px;
-}
-@media (min-width:820px){
-  .term-grid{grid-template-columns:1fr 1fr;}
-}
+.term-grid{display:grid;gap:14px;margin-top:18px}
+@media (min-width:820px){ .term-grid{grid-template-columns:1fr 1fr;} }
 
 .bubble{
   border-radius:22px;
@@ -48,27 +30,16 @@
   box-shadow:0 22px 70px rgba(0,0,0,.60), inset 0 1px 0 rgba(255,255,255,.06);
   padding:18px;
   cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  transition:transform .10s ease, border-color .12s ease, box-shadow .12s ease;
+  transition:transform .10s ease, border-color .12s ease;
 }
 .bubble:hover{
   transform:translateY(-1px);
   border-color:rgba(212,175,55,.22);
-  box-shadow:0 24px 80px rgba(0,0,0,.68), 0 0 16px rgba(212,175,55,.12), inset 0 1px 0 rgba(255,255,255,.06);
 }
-.bh{margin:0 0 8px;font-size:18px;font-weight:950;letter-spacing:.2px}
+
+.bh{margin:0 0 8px;font-size:18px;font-weight:950}
 .bp{margin:0;color:rgba(255,255,255,.82);line-height:1.55}
-.bmini{margin-top:10px;color:rgba(255,255,255,.66);font-size:12px;line-height:1.45}
 
-.term-actions{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-top:16px;
-}
-
-/* Bottom dock (same material as other pages) */
 .dock{
   position:fixed;
   left:50%;
@@ -87,661 +58,146 @@
   backdrop-filter:blur(8px);
 }
 
-/* Centered modal (same contract as hub) */
-.bd{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(10px);
-  display:none;
-}
-.bd.show{display:block;}
+/* Modal */
+
+.bd{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);display:none;z-index:200}
+.bd.show{display:block}
 
 .modal{
   position:fixed;left:50%;top:50%;
   transform:translate(-50%,-50%);
   width:min(1020px,94vw);
   max-height:88vh;
-  display:none;
-  z-index:210;
+  display:none;z-index:210;
 }
-.modal.show{display:block;}
+.modal.show{display:block}
 
 .shell{
-  height:88vh;
-  border-radius:26px;
+  height:88vh;border-radius:26px;
   border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 52% 14%, rgba(176,0,0,.16), transparent 55%),
-    radial-gradient(circle at 38% 28%, rgba(90,140,255,.12), transparent 55%),
-    linear-gradient(145deg, rgba(17,22,28,.90), rgba(11,15,20,.94));
+  background:linear-gradient(145deg, rgba(17,22,28,.90), rgba(11,15,20,.94));
   box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-}
-.mhead{
-  display:flex;justify-content:space-between;align-items:center;gap:10px;
-  padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
-}
-.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
-.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
-
-.mbody{
-  padding:14px 16px 18px;
-  overflow:auto;-webkit-overflow-scrolling:touch;
-  flex:1 1 auto;
+  overflow:hidden;display:flex;flex-direction:column;
 }
 
-.lensbar{
-  display:flex;gap:10px;flex-wrap:wrap;
-  align-items:center;justify-content:center;
-  padding:10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);
-  margin:-6px -6px 14px;
-}
-.chip{
-  padding:10px 16px;border-radius:999px;
-  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
-}
-.chip.active{
-  border-color:rgba(212,175,55,.70);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
-}
+.mhead{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.mtitle{margin:0;font-weight:950;font-size:16px}
+.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer}
 
-/* “Bubbles in modal” = 4 paragraphs */
-.mgrid{display:grid;gap:14px}
-.mbox{
-  padding:16px 18px;border-radius:22px;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
-}
-.mh{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
-.mp{margin:0;color:rgba(255,255,255,.84);line-height:1.55}
+.lensbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:12px;border-bottom:1px solid rgba(255,255,255,.08)}
+.chip{padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.25);font-weight:900;cursor:pointer}
+.chip.active{border-color:rgba(212,175,55,.7)}
 
-.mact{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-top:14px;
-}
-@media (max-width:520px){
-  .term-title{font-size:38px}
-  .shell{height:90vh}
-}
+.mbody{padding:16px;overflow:auto}
+.mbox{margin-bottom:18px}
+.mh{margin:0 0 6px;font-weight:950}
+.mp{margin:0;color:rgba(255,255,255,.85);line-height:1.6}
 </style>
 </head>
 
 <body>
 <main class="term-wrap">
 
-  <div class="term-top">
-    <div class="term-top-left">
-      <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
-      <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
-    </div>
-
-    <div class="term-mid">
-      <div class="term-mark" id="mark">CARDINAL AXIS</div>
-      <h1 class="term-title" id="tTitle">TERMINAL</h1>
-      <p class="term-sub" id="tSub">Structural preface · how this site works.</p>
-      <p class="term-note" id="tNote">Under construction (safe to explore). Navigation is stable; content expands progressively.</p>
-    </div>
-
-    <div style="width:140px;flex:0 0 auto"></div>
+<div class="term-top">
+  <div class="term-top-left">
+    <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
+    <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
   </div>
 
-  <section class="term-grid" aria-label="Terminal sections">
-    <div class="bubble" id="b0" role="button" tabindex="0">
-      <h2 class="bh" id="b0h">Under construction</h2>
-      <p class="bp" id="b0p">This site is being built live. Unfinished areas show placeholders, not broken flows.</p>
-      <p class="bmini" id="b0m">Tap to open lens view.</p>
-    </div>
-
-    <div class="bubble" id="b1" role="button" tabindex="0">
-      <h2 class="bh" id="b1h">How navigation works</h2>
-      <p class="bp" id="b1p">You choose a lens (style + time), then traverse via diamonds and bubbles.</p>
-      <p class="bmini" id="b1m">Tap to open lens view.</p>
-    </div>
-
-    <div class="bubble" id="b2" role="button" tabindex="0">
-      <h2 class="bh" id="b2h">State keys</h2>
-      <p class="bp" id="b2p">Language, style, and time persist. Pages do not reset randomly.</p>
-      <p class="bmini" id="b2m">Tap to open lens view.</p>
-    </div>
-
-    <div class="bubble" id="b3" role="button" tabindex="0">
-      <h2 class="bh" id="b3h">What to expect</h2>
-      <p class="bp" id="b3p">Structure stays consistent while material evolves. Explore safely; return paths remain stable.</p>
-      <p class="bmini" id="b3m">Tap to open lens view.</p>
-    </div>
-  </section>
-
-  <div class="term-actions">
-    <a class="crp-btn crp-btn-primary" id="btnContinue" href="/home/">CONTINUE → HUB</a>
-    <a class="crp-btn" id="btnLinks" href="/links/">JUMP LINKS</a>
+  <div class="term-mid">
+    <div class="term-mark" id="mark">CARDINAL AXIS</div>
+    <h1 class="term-title" id="title">TERMINAL</h1>
+    <p class="term-sub" id="subtitle">Structural entry point into the entire system.</p>
+    <p class="term-note" id="note">This page explains how everything connects before you explore deeper layers.</p>
   </div>
+
+  <div style="width:140px"></div>
+</div>
+
+<section class="term-grid">
+  <div class="bubble" onclick="openModal(0)">
+    <h2 class="bh">What this system is</h2>
+    <p class="bp">An interactive, coherence-based traversal architecture designed to replace linear browsing.</p>
+  </div>
+
+  <div class="bubble" onclick="openModal(1)">
+    <h2 class="bh">How navigation works</h2>
+    <p class="bp">Choose a lens, open diamonds, read structured bubbles, then jump to broader domains.</p>
+  </div>
+
+  <div class="bubble" onclick="openModal(2)">
+    <h2 class="bh">State stability</h2>
+    <p class="bp">Language, style, and time persist so your context never resets unexpectedly.</p>
+  </div>
+
+  <div class="bubble" onclick="openModal(3)">
+    <h2 class="bh">Where to go next</h2>
+    <p class="bp">Products, Innovation, Laws, and Gauges expand this architecture into applied systems.</p>
+  </div>
+</section>
 
 </main>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
-  <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="crp-btn" id="dockGauges" href="/gauges/">GAUGES</a>
+<nav class="dock">
+  <a class="crp-btn" href="/index.html">TERMINAL</a>
+  <a class="crp-btn" href="/links/">LINKS</a>
+  <a class="crp-btn" href="/products/">PRODUCTS</a>
+  <a class="crp-btn" href="/laws/">LAWS</a>
+  <a class="crp-btn" href="/gauges/">GAUGES</a>
 </nav>
 
-<!-- Modal -->
-<div class="bd" id="bd" aria-hidden="true"></div>
+<div class="bd" id="bd"></div>
 
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Terminal detail">
+<div class="modal" id="modal">
   <div class="shell">
     <div class="mhead">
       <h3 class="mtitle" id="mTitle">DETAIL</h3>
-      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
+      <button class="mclose" onclick="closeModal()">✕</button>
     </div>
 
-    <!-- LENSES INSIDE MODAL ONLY -->
     <div class="lensbar">
-      <button class="chip" id="chipStyle" type="button">STYLE: FORMAL</button>
-      <button class="chip" id="chipConcept" data-time="origin" type="button">CONCEPT</button>
-      <button class="chip" id="chipNow" data-time="now" type="button">NOW</button>
-      <button class="chip" id="chipPost" data-time="post" type="button">POST</button>
+      <button class="chip" id="chipStyle" onclick="toggleStyle()">STYLE</button>
+      <button class="chip" onclick="setTime('origin')">CONCEPT</button>
+      <button class="chip" onclick="setTime('now')">LIVE</button>
+      <button class="chip" onclick="setTime('post')">ROADMAP</button>
     </div>
 
-    <div class="mbody">
-      <div class="mgrid">
-        <div class="mbox"><h4 class="mh" id="h1"></h4><p class="mp" id="p1"></p></div>
-        <div class="mbox"><h4 class="mh" id="h2"></h4><p class="mp" id="p2"></p></div>
-        <div class="mbox"><h4 class="mh" id="h3"></h4><p class="mp" id="p3"></p></div>
-        <div class="mbox"><h4 class="mh" id="h4"></h4><p class="mp" id="p4"></p></div>
-      </div>
-
-      <div class="mact">
-        <button class="crp-btn" id="mReturn" type="button">RETURN</button>
-        <a class="crp-btn" id="mJumpHub" href="/home/">JUMP HUB</a>
-        <a class="crp-btn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
-      </div>
-    </div>
+    <div class="mbody" id="modalContent"></div>
   </div>
 </div>
 
 <script>
-(function(){
-  // ===== STATE (gd_* only) =====
-  var qs=new URLSearchParams(location.search);
-  var qLang=qs.get("lang");
-  var qStyle=qs.get("style");
-  var qTime=qs.get("time");
+let style = localStorage.getItem("gd_style") || "formal";
+let time = localStorage.getItem("gd_time") || "now";
 
-  var lang=(qLang==="zh"||qLang==="en")?qLang:((localStorage.getItem("gd_lang")==="zh")?"zh":"en");
-  var style=(qStyle==="formal"||qStyle==="informal")?qStyle:(localStorage.getItem("gd_style")||"formal");
-  var time=(qTime==="origin"||qTime==="now"||qTime==="post")?qTime:(localStorage.getItem("gd_time")||"now");
+function openModal(i){
+  const data = [
+    "This system unifies products, innovation, governance, and metrics into one coherent traversal map.",
+    "Navigation is deterministic; every diamond and bubble follows the same interaction contract.",
+    "State persistence ensures continuity across pages without random resets.",
+    "Next steps branch into applied surfaces while preserving structural integrity."
+  ];
+  document.getElementById("modalContent").innerHTML =
+    data.map(d => `<div class="mbox"><h4 class="mh">Detail</h4><p class="mp">${d}</p></div>`).join("");
+  document.getElementById("bd").classList.add("show");
+  document.getElementById("modal").classList.add("show");
+}
 
-  if(time==="trajectory") time="post";
+function closeModal(){
+  document.getElementById("bd").classList.remove("show");
+  document.getElementById("modal").classList.remove("show");
+}
 
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-  }catch(e){}
+function toggleStyle(){
+  style = style==="formal"?"informal":"formal";
+  localStorage.setItem("gd_style",style);
+}
 
-  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
-  function wire(){
-    var s=q();
-    document.getElementById("btnExit").href="/door/?"+s;
-    document.getElementById("btnHub").href="/home/?"+s;
-
-    document.getElementById("btnContinue").href="/home/?"+s;
-    document.getElementById("btnLinks").href="/links/?"+s;
-
-    document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
-    document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockGauges").href="/gauges/?"+s;
-
-    document.getElementById("mJumpHub").href="/home/?"+s;
-    document.getElementById("mJumpProducts").href="/products/?"+s;
-  }
-  wire();
-
-  // ===== I18N (single language render) =====
-  var T={
-    en:{
-      mark:"CARDINAL AXIS",
-      title:"TERMINAL",
-      sub:"Structural preface · how this site works.",
-      note:"Under construction (safe to explore). Navigation is stable; content expands progressively.",
-      bubbles:[
-        {h:"Under construction", p:"This site is being built live. Unfinished areas show placeholders, not broken flows."},
-        {h:"How navigation works", p:"You choose a lens (style + time), then traverse via diamonds and bubbles."},
-        {h:"State keys", p:"Language, style, and time persist. Pages do not reset randomly."},
-        {h:"What to expect", p:"Structure stays consistent while material evolves. Explore safely; return paths remain stable."}
-      ],
-      chips:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",now:"NOW",post:"POST"},
-      modalTitles:["Under construction","How navigation works","State keys","What to expect"],
-      views:{
-        // key = bubbleIndex
-        0:{
-          origin:{formal:[
-            ["Safety guarantee","Placeholders replace broken flows so exploration never dead-ends."],
-            ["Build reality","Pages are built live; structure ships first; content fills in second."],
-            ["Consistency rule","Routing and lens semantics are treated as contracts, not preferences."],
-            ["User promise","If a path is unfinished, you still get a coherent next move."]
-          ],
-          informal:[
-            ["It won’t break","You can explore without fear of getting stuck."],
-            ["Built live","You’re watching the site grow in real time."],
-            ["Rules first","The structure stays stable while content expands."],
-            ["Always a way back","Return paths stay obvious and consistent."]
-          ]},
-          now:{formal:[
-            ["Stable navigation","The diamond layout and modal behavior are uniform across pages."],
-            ["Deterministic state","gd_lang/gd_style/gd_time persist through links and storage."],
-            ["No silent resets","Lens changes change content; page refresh does not erase state."],
-            ["Troubleshooting","If something looks wrong: verify URL → verify assets → verify path."]
-          ],
-          informal:[
-            ["Same feel everywhere","Every diamond page behaves the same."],
-            ["State sticks","Your language/style/time stays selected."],
-            ["No random resets","The site doesn’t wipe your context."],
-            ["Fix fast","If it’s off: check URL + path + assets."]
-          ]},
-          post:{formal:[
-            ["Public-safe growth","Structure remains stable while material scales outward."],
-            ["Expansion method","New content adds depth without changing the topology."],
-            ["Auditability","Updates become traceable because keys and routes stay canonical."],
-            ["Outcome","Exploration becomes an encyclopedia you traverse instead of a book you read."]
-          ],
-          informal:[
-            ["More pages, same rules","It scales without turning into chaos."],
-            ["Depth adds in place","New stuff doesn’t wreck old stuff."],
-            ["Easy to verify","You can tell what changed and when."],
-            ["Feels like a map","You always know where you are."]
-          ]}
-        },
-        1:{
-          origin:{formal:[
-            ["Traversal first","You learn by moving across structure, not by reading one long article."],
-            ["Lenses define meaning","Style = framing. Time = emphasis. Together they change what you see."],
-            ["Diamonds are routers","Each diamond opens a dense bulletin surface in the modal."],
-            ["Return discipline","Close returns you to the same map position with the same state."]
-          ],
-          informal:[
-            ["Tap, don’t scroll","You move by clicking structure, not by hunting in paragraphs."],
-            ["Lenses change what you see","Same page, different meaning depending on lens."],
-            ["Diamonds open detail","Tap a node, get the relevant info immediately."],
-            ["Return is stable","You don’t lose your place."]
-          ]},
-          now:{formal:[
-            ["State propagation","Every internal link carries lang/style/time so the system stays coherent."],
-            ["Modal-only lenses","Lens controls live inside the bubble to keep the face clean."],
-            ["Uniform contract","All pages follow the same diamond + modal rule set."],
-            ["Practical flow","Pick lens → open node → read bubbles → jump or return."]
-          ],
-          informal:[
-            ["Same controls everywhere","Once you learn it, you can use any page."],
-            ["Face stays clean","No lens clutter on the main screen."],
-            ["Fast route","Pick lens, open node, jump if needed."],
-            ["No getting lost","Return always works."]
-          ]},
-          post:{formal:[
-            ["Depth scaling","Each node grows into sub-nodes without breaking the entry map."],
-            ["Reference surfaces","Products/Laws/Gauges become navigable knowledge systems."],
-            ["Multiple audiences","Informal = consumer legibility. Formal = precision."],
-            ["Outcome","Traversal becomes the default learning method."]
-          ],
-          informal:[
-            ["Bigger map","More branches, same rules."],
-            ["Consumer-friendly","Informal stays simple and usable."],
-            ["Deep when needed","Formal gives the full technical picture."],
-            ["Feels modern","Like exploring a world, not reading a book."]
-          ]}
-        },
-        2:{
-          origin:{formal:[
-            ["Language sticks","gd_lang persists so the entire site stays in one language mode."],
-            ["Style sticks","gd_style persists so your framing stays consistent."],
-            ["Time sticks","gd_time persists so concept/now/post stays selected."],
-            ["No random reset","State changes only when you change it."]
-          ],
-          informal:[
-            ["Language stays selected","No surprise flips."],
-            ["Style stays selected","Your tone stays consistent."],
-            ["Time stays selected","Concept/Now/Post doesn’t reset randomly."],
-            ["You stay oriented","The site keeps your context."]
-          ]},
-          now:{formal:[
-            ["Canonical keys","Only gd_lang/gd_style/gd_time are used for state."],
-            ["URL wins","If URL provides state, it hydrates deterministically."],
-            ["Storage backs it","LocalStorage keeps state across sessions."],
-            ["Links propagate","All internal links carry state forward."]
-          ],
-          informal:[
-            ["One state system","No duplicates, no collisions."],
-            ["URL sets it","If you share a link, it opens the same view."],
-            ["Storage remembers","Close the tab, come back, it stays."],
-            ["Links carry it","You don’t lose your settings."]
-          ]},
-          post:{formal:[
-            ["Scalable semantics","Stable keys prevent drift as the project grows."],
-            ["Collaboration safety","Independent edits can’t silently change meaning."],
-            ["Public clarity","Users learn the lens system once and trust it."],
-            ["Outcome","State becomes the glue of the traversal encyclopedia."]
-          ],
-          informal:[
-            ["Stable forever","The site doesn’t get weird as it grows."],
-            ["Safer sharing","Links open the right view for other people."],
-            ["Less stress","You don’t fight the UI."],
-            ["More trust","It behaves the same every time."]
-          ]}
-        },
-        3:{
-          origin:{formal:[
-            ["Predictability","The interface stays neutral; meaning comes from structure + lens."],
-            ["Safety","Unfinished areas do not break navigation."],
-            ["Consistency","Pages share the same diamond and modal contract."],
-            ["Speed","Traversal replaces long reading with targeted movement."]
-          ],
-          informal:[
-            ["It feels stable","Same patterns everywhere."],
-            ["It feels safe","You can click around without punishment."],
-            ["It feels clean","The UI stays out of your way."],
-            ["It feels fast","You get what you need quickly."]
-          ]},
-          now:{formal:[
-            ["What you’ll see","Some nodes are dense; some are still placeholders."],
-            ["How to explore","Use the hub, open diamonds, then use jump buttons."],
-            ["How to report","If a link 404s, it’s a missing page path, not a UI failure."],
-            ["How to grow","Clone a working page, change only content, keep contract."]
-          ],
-          informal:[
-            ["Some pages are thin","That’s normal right now."],
-            ["Explore anyway","You won’t break anything."],
-            ["If something 404s","It just means that page isn’t created yet."],
-            ["We grow by cloning","Same template, new content."]
-          ]},
-          post:{formal:[
-            ["Future experience","Every trunk becomes a deep map of sub-maps."],
-            ["Navigation stays stable","No redesigns needed to scale."],
-            ["New layers","Innovation and Products diverge cleanly by purpose."],
-            ["Outcome","A public-ready traversal encyclopedia."]
-          ],
-          informal:[
-            ["It gets deeper","More pages inside every node."],
-            ["Still simple","Same clicks, same flow."],
-            ["Innovation vs Products","Future vs deployed surfaces stays clear."],
-            ["Public-ready","Safe, stable, understandable."]
-          ]}
-        }
-      }
-    },
-    zh:{
-      mark:"基轴体系",
-      title:"终端",
-      sub:"结构前言 · 本站如何使用。",
-      note:"施工中（可安全探索）。导航稳定，内容逐步扩展。",
-      bubbles:[
-        {h:"施工中", p:"本站实时构建。未完成区域展示占位，不会出现断路。"},
-        {h:"导航方式", p:"先选透镜（风格+时间），再通过菱形与气泡遍历。"},
-        {h:"状态键", p:"语言/风格/时间会保持，不会随机重置。"},
-        {h:"你会看到什么", p:"结构保持一致，材料逐步演化；可安全探索，回退路径稳定。"}
-      ],
-      chips:{formal:"正式",informal:"直接",concept:"概念",now:"当前",post:"后续"},
-      modalTitles:["施工中","导航方式","状态键","你会看到什么"],
-      // zh uses the same 4-paragraph structure; keep it concise (can be expanded later)
-      views:{
-        0:{
-          origin:{formal:[
-            ["安全承诺","未完成区域用占位替代断路。"],
-            ["构建方式","先结构后内容，顺序不反转。"],
-            ["一致性规则","路由与透镜语义是契约。"],
-            ["用户体验","永远有下一步与回退。"]
-          ],informal:[
-            ["不会卡死","放心点。"],
-            ["实时搭建","你在看它成长。"],
-            ["规则优先","先稳定，再扩展。"],
-            ["随时回退","不丢位置。"]
-          ]},
-          now:{formal:[
-            ["导航稳定","菱形与模态统一。"],
-            ["状态确定","gd_* 贯穿。"],
-            ["不随机重置","只有你改才会变。"],
-            ["排查顺序","URL→资源→路径。"]
-          ],informal:[
-            ["同款手感","每页一样。"],
-            ["状态会记住","语言/风格/时间不丢。"],
-            ["不乱跳","不重置。"],
-            ["快速排查","看URL与路径。"]
-          ]},
-          post:{formal:[
-            ["公开可用","结构稳定可扩展。"],
-            ["扩展方式","加深不改拓扑。"],
-            ["可审计","键与路由稳定。"],
-            ["结果","遍历式百科。"]
-          ],informal:[
-            ["越做越深","规则不变。"],
-            ["新东西不砸旧东西","稳定。"],
-            ["好验证","看得见变化。"],
-            ["像地图","不迷路。"]
-          ]}
-        },
-        1:{origin:{formal:[
-            ["遍历优先","通过结构移动学习。"],
-            ["透镜决定强调","风格=表达；时间=重点。"],
-            ["菱形是路由器","点开即详情。"],
-            ["回退稳定","返回不丢状态。"]
-          ],informal:[
-            ["点，不刷","靠结构走。"],
-            ["透镜会改内容","不是只亮按钮。"],
-            ["菱形开详情","直达重点。"],
-            ["回退稳定","不迷路。"]
-          ]},
-          now:{formal:[
-            ["状态传播","所有链接携带 lang/style/time。"],
-            ["透镜仅在模态","界面更干净。"],
-            ["统一契约","所有页同规则。"],
-            ["使用流程","选透镜→开节点→跳转/返回。"]
-          ],informal:[
-            ["学一次用全站","一致。"],
-            ["主界面干净","不堆按钮。"],
-            ["快速到达","直接点。"],
-            ["稳定返回","不丢。"]
-          ]},
-          post:{formal:[
-            ["深度增长","节点长出子节点。"],
-            ["参考面","产品/法则/量规变成可遍历系统。"],
-            ["双受众","直接=大众；正式=精确。"],
-            ["结果","遍历成为默认学习法。"]
-          ],informal:[
-            ["地图更大","规则不变。"],
-            ["更好懂","直接模式给大众。"],
-            ["需要再深","正式模式给细节。"],
-            ["像探索","不是读书。"]
-          ]}},
-        2:{origin:{formal:[
-            ["语言保持","gd_lang 贯穿。"],
-            ["风格保持","gd_style 贯穿。"],
-            ["时间保持","gd_time 贯穿。"],
-            ["不随机重置","只因你改。"]
-          ],informal:[
-            ["语言不乱变","稳定。"],
-            ["风格不乱变","一致。"],
-            ["时间不乱变","概念/当前/后续保持。"],
-            ["不迷路","上下文留存。"]
-          ]},
-          now:{formal:[
-            ["规范键","只用 gd_lang/gd_style/gd_time。"],
-            ["URL优先","链接决定视图。"],
-            ["存储兜底","localStorage 记住。"],
-            ["链接传播","内部跳转携带状态。"]
-          ],informal:[
-            ["一套状态系统","不重复。"],
-            ["分享链接一致","别人打开也一样。"],
-            ["会记住","关了再来还在。"],
-            ["跳转不丢","一直带着。"]
-          ]},
-          post:{formal:[
-            ["可扩展语义","稳定键防漂移。"],
-            ["协作安全","别人改不至于乱。"],
-            ["公众可理解","学一次就信任。"],
-            ["结果","状态是遍历胶水。"]
-          ],informal:[
-            ["越大越稳定","不乱。"],
-            ["分享更安全","别人也对。"],
-            ["少折腾","少压力。"],
-            ["更可信","一直一致。"]
-          ]}},
-        3:{origin:{formal:[
-            ["可预测","UI中性，意义来自结构+透镜。"],
-            ["安全","未完成不破路。"],
-            ["一致","同款菱形+模态契约。"],
-            ["速度","遍历代替长读。"]
-          ],informal:[
-            ["很稳","不乱。"],
-            ["很安全","随便点。"],
-            ["很干净","UI不抢戏。"],
-            ["很快","直达重点。"]
-          ]},
-          now:{formal:[
-            ["你会看到","有的密集，有的还薄。"],
-            ["怎么探索","用枢纽→开菱形→跳转。"],
-            ["怎么反馈","404=缺页路径，不是UI坏。"],
-            ["怎么增长","复制可用页，只换内容。"]
-          ],informal:[
-            ["有的还薄","正常。"],
-            ["照样探索","不会坏。"],
-            ["404只是缺页","不是崩了。"],
-            ["复制增长","同模板。"]
-          ]},
-          post:{formal:[
-            ["未来体验","每个干线成为子地图。"],
-            ["导航不变","无需重设计扩展。"],
-            ["新层清晰","创新 vs 产品 分离。"],
-            ["结果","公开可用遍历百科。"]
-          ],informal:[
-            ["更深","更多子页。"],
-            ["还简单","同点击流程。"],
-            ["创新/产品分开","未来/已部署清晰。"],
-            ["公众可用","稳定好懂。"]
-          ]}}
-      }
-    }
-  };
-
-  var P = (lang==="zh") ? T.zh : T.en;
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
-
-  // header
-  document.getElementById("mark").textContent=P.mark;
-  document.getElementById("tTitle").textContent=P.title;
-  document.getElementById("tSub").textContent=P.sub;
-  document.getElementById("tNote").textContent=P.note;
-
-  // main bubbles
-  var bubbles=P.bubbles;
-  document.getElementById("b0h").textContent=bubbles[0].h;
-  document.getElementById("b0p").textContent=bubbles[0].p;
-  document.getElementById("b1h").textContent=bubbles[1].h;
-  document.getElementById("b1p").textContent=bubbles[1].p;
-  document.getElementById("b2h").textContent=bubbles[2].h;
-  document.getElementById("b2p").textContent=bubbles[2].p;
-  document.getElementById("b3h").textContent=bubbles[3].h;
-  document.getElementById("b3p").textContent=bubbles[3].p;
-
-  // modal refs
-  var bd=document.getElementById("bd");
-  var modal=document.getElementById("modal");
-  var mClose=document.getElementById("mClose");
-  var mReturn=document.getElementById("mReturn");
-  var mTitle=document.getElementById("mTitle");
-
-  var chipStyle=document.getElementById("chipStyle");
-  var chipConcept=document.getElementById("chipConcept");
-  var chipNow=document.getElementById("chipNow");
-  var chipPost=document.getElementById("chipPost");
-
-  var h1=document.getElementById("h1"),p1=document.getElementById("p1");
-  var h2=document.getElementById("h2"),p2=document.getElementById("p2");
-  var h3=document.getElementById("h3"),p3=document.getElementById("p3");
-  var h4=document.getElementById("h4"),p4=document.getElementById("p4");
-
-  var activeIdx=0;
-
-  function setChipLabels(){
-    chipStyle.textContent="STYLE: " + (style==="formal" ? P.chips.formal : P.chips.informal);
-    chipConcept.textContent=P.chips.concept;
-    chipNow.textContent=P.chips.now;
-    chipPost.textContent=P.chips.post;
-
-    chipConcept.classList.toggle("active", time==="origin");
-    chipNow.classList.toggle("active", time==="now");
-    chipPost.classList.toggle("active", time==="post");
-  }
-
-  function renderModal(){
-    setChipLabels();
-    wire();
-
-    mTitle.textContent = P.modalTitles[activeIdx];
-
-    var v = P.views[activeIdx][time][style];
-    h1.textContent=v[0][0]; p1.textContent=v[0][1];
-    h2.textContent=v[1][0]; p2.textContent=v[1][1];
-    h3.textContent=v[2][0]; p3.textContent=v[2][1];
-    h4.textContent=v[3][0]; p4.textContent=v[3][1];
-  }
-
-  function openModal(i){
-    activeIdx=i;
-    renderModal();
-    bd.classList.add("show");
-    modal.classList.add("show");
-  }
-  function closeModal(){
-    bd.classList.remove("show");
-    modal.classList.remove("show");
-  }
-
-  // main bubble clicks
-  function bindBubble(id,i){
-    var el=document.getElementById(id);
-    el.onclick=function(){ openModal(i); };
-    el.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(i);} };
-  }
-  bindBubble("b0",0);
-  bindBubble("b1",1);
-  bindBubble("b2",2);
-  bindBubble("b3",3);
-
-  // lens buttons
-  chipStyle.onclick=function(){
-    style = (style==="formal") ? "informal" : "formal";
-    try{ localStorage.setItem("gd_style",style);}catch(e){}
-    renderModal();
-  };
-  chipConcept.onclick=function(){ time="origin"; try{ localStorage.setItem("gd_time",time);}catch(e){} renderModal(); };
-  chipNow.onclick=function(){ time="now"; try{ localStorage.setItem("gd_time",time);}catch(e){} renderModal(); };
-  chipPost.onclick=function(){ time="post"; try{ localStorage.setItem("gd_time",time);}catch(e){} renderModal(); };
-
-  // close
-  bd.onclick=closeModal;
-  mClose.onclick=closeModal;
-  mReturn.onclick=closeModal;
-
-  // initial chip label + links
-  setChipLabels();
-  wire();
-})();
+function setTime(t){
+  time = t;
+  localStorage.setItem("gd_time",time);
+}
 </script>
 
 </body>
 </html>
-```0

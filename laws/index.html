@@ -1,14 +1,15 @@
-<!-- TNT — /laws/index.html  (LAWS HUB · GEM STANDARD · 4 DIRECTIONS)
-     REQUIREMENTS MET:
-     ✅ Full-file TNT (one file)
-     ✅ Gem uniformity matches HUB/PRODUCTS/SOFTWARE (obsidian-opal + gold crust)
-     ✅ Dual language every time (EN + 中文) via gd_lang + ?lang=
-     ✅ NO lenses on main page (lenses live inside modal only)
-     ✅ Clicking N/E/S/W opens centered modal:
-        - 4 sections (boxes)
-        - each box has 4 bulletins
-     ✅ State propagates across all links (lang/style/time)
-     ✅ Modal is centered with internal scroll; no “dropdown too low”
+<!-- TNT — /laws/index.html  (LAWS · HUB · GEM STANDARD)
+     PATTERN (matches DOT.GRID / SSG / ACRONYMS):
+       - Main page: 4 diamonds (HOW IT FEELS / WHY IT MATTERS / HOW IT WORKS / WHAT’S NEXT)
+       - Click a diamond → centered modal
+       - Modal lenses ONLY: STYLE (formal/informal) + TIME (CONCEPT / NOW / ROADMAP) with gd_time = origin/now/post
+       - Inside modal: 4 BUBBLES (rich paragraph; consumer-legible)
+       - Modal footer actions are bubbles (no purple links): RETURN / JUMP HUB / JUMP EXPLORE
+       - Deterministic state propagation via ?lang=&style=&time= and gd_* localStorage
+     LOCKS:
+       - TNT FULL FILE
+       - Uses /assets/ui.css + /assets/branch.css only
+       - DOES NOT style html/body background (ui.css owns field)
 -->
 
 <!doctype html>
@@ -16,7 +17,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>LAWS · Cardinal Axis</title>
+<title>LAWS · Standards & Principles</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -24,83 +25,42 @@
 <style>
 :root{
   --R:124px;
-  --gold:rgba(212,175,55,.9);
   --goldSoft:rgba(212,175,55,.35);
   --obs1:#070b12;
   --obs2:#0c1626;
   --mut:rgba(255,255,255,.84);
-  --mut2:rgba(255,255,255,.68);
 }
 
-body{
-  margin:0;
-  min-height:100vh;
-  background:
-    radial-gradient(circle at 50% 40%, rgba(90,140,255,.10), transparent 60%),
-    repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 1px, transparent 1px 100px),
-    linear-gradient(180deg,#b00000 0%,#7a0000 60%,#550000 100%);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:#fff;
-  overflow-x:hidden;
-}
-
-/* Top-left */
+/* Top-left controls */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:90;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Buttons */
-.btn{
-  padding:10px 16px;
-  border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:white;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  text-decoration:none;
-}
-.btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
-.btn.active{
-  border-color:rgba(212,175,55,.25);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 22px rgba(212,175,55,.30);
-}
-
-/* Brand */
+/* Title pill */
 .brand{
-  position:fixed;
-  left:50%;
-  top:16px;
-  transform:translateX(-50%);
-  z-index:80;
-  text-align:center;
-  padding:10px 14px;
-  border-radius:999px;
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:80;text-align:center;
+  padding:10px 14px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.16);
   backdrop-filter:blur(8px);
 }
-.brand .name{ font-weight:950; letter-spacing:1.2px; font-size:12px; opacity:.95; }
-.brand .tag{ font-size:11px; letter-spacing:.6px; opacity:.70; margin-top:2px; }
+.brand .t1{font-weight:950;letter-spacing:1.1px;font-size:12px;opacity:.95}
+.brand .t2{margin-top:2px;font-size:11px;letter-spacing:.6px;opacity:.72}
 
 /* Stage */
 .stage{
-  position:fixed;
-  left:50%;
-  top:50%;
+  position:fixed;left:50%;top:52%;
   transform:translate(-50%,-50%);
   width:min(560px,92vw);
   height:min(560px,92vw);
   z-index:40;
 }
 
-/* Outer diamond */
+/* Outer gem diamond */
 .outer{
-  position:absolute;
-  left:50%;top:50%;
+  position:absolute;left:50%;top:50%;
   width:min(560px,92vw);
   height:min(560px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
@@ -115,20 +75,19 @@ body{
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -50px 90px rgba(0,0,0,.55);
   pointer-events:none;
-  opacity:.55;
+  opacity:.85;
 }
 .outer::after{
   content:"";
   position:absolute; inset:0; border-radius:60px;
   background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.14;
+  opacity:.16;
 }
 
-/* Diamonds */
+/* Gem diamonds */
 .d{
   width:150px;height:150px;
-  position:absolute;
-  left:50%;top:50%;
+  position:absolute;left:50%;top:50%;
   transform-origin:center;
   border-radius:26px;
   cursor:pointer;
@@ -144,6 +103,7 @@ body{
     0 28px 84px rgba(0,0,0,.78),
     inset 0 2px 0 rgba(255,255,255,.14),
     inset 0 -28px 44px rgba(0,0,0,.62);
+
   transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
 }
 .d::before{
@@ -157,10 +117,7 @@ body{
 }
 .d::after{
   content:"";
-  position:absolute;
-  left:12%; right:12%;
-  top:10%;
-  height:28%;
+  position:absolute; left:12%; right:12%; top:10%; height:28%;
   border-radius:999px;
   background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
   opacity:.85;
@@ -174,6 +131,7 @@ body{
     0 0 18px rgba(212,175,55,.18),
     inset 0 2px 0 rgba(255,255,255,.18),
     inset 0 -32px 52px rgba(0,0,0,.68);
+  border-color:rgba(212,175,55,.28);
 }
 .d.active{
   border-color:rgba(212,175,55,.55);
@@ -189,52 +147,43 @@ body{
 .d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
 .d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
 
-.inner{
+.in{
   width:100%; height:100%;
   transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
   text-align:center;
   padding:16px;
   gap:8px;
   pointer-events:none;
   user-select:none;
 }
-.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
-.sub{ font-size:13px; opacity:.86; line-height:1.35; max-width:16em; }
+.lab{ font-weight:950; letter-spacing:.8px; font-size:15px; }
+.sub{ font-size:12.5px; opacity:.86; line-height:1.35; max-width:16em; }
 
-/* Core */
 .core{
-  position:absolute;
-  left:50%; top:50%;
+  position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:64px;height:64px;
-  border-radius:18px;
+  width:64px;height:64px;border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
   box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid; place-items:center;
-  font-weight:950; letter-spacing:.5px;
+  display:grid;place-items:center;
+  font-weight:950;letter-spacing:.5px;
   opacity:.92;
   pointer-events:none;
 }
 
-/* Dock */
+/* Bottom dock */
 .dock{
-  position:fixed;
-  left:50%;
+  position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:90;
-  width:min(900px,94vw);
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-  padding:10px 12px;
-  border-radius:999px;
+  width:min(980px,94vw);
+  display:flex;justify-content:center;
+  gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.20);
   backdrop-filter:blur(8px);
@@ -264,7 +213,7 @@ body{
   background:
     radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
     radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
-    linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
+    linear-gradient(160deg, rgba(17,22,28,.90), rgba(11,15,20,.94));
   box-shadow:0 60px 180px rgba(0,0,0,.92);
   overflow:hidden;
   display:flex;
@@ -298,17 +247,12 @@ body{
 }
 .mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
 .mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
-.mbody{
-  padding:14px 16px 18px;
-  overflow:auto;-webkit-overflow-scrolling:touch;
-  flex:1 1 auto;
-  position:relative;z-index:2;
-}
+
 .lensbar{
   display:flex;gap:10px;flex-wrap:wrap;
   align-items:center;justify-content:center;
-  padding:10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);
-  margin:-6px -6px 14px;
+  padding:10px 10px 12px;border-bottom:1px solid rgba(255,255,255,.08);
+  position:relative;z-index:2;
 }
 .chip{
   padding:10px 16px;border-radius:999px;
@@ -321,9 +265,17 @@ body{
   border-color:rgba(212,175,55,.35);
   box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
 }
-.mgrid{ display:grid; gap:14px; }
-@media (min-width:920px){ .mgrid{ grid-template-columns:1fr 1fr; } }
-.box{
+
+.mbody{
+  padding:14px 16px 18px;
+  overflow:auto;-webkit-overflow-scrolling:touch;
+  flex:1 1 auto;
+  position:relative;z-index:2;
+}
+
+/* 4 bubbles (rich paragraph cards) */
+.grid{display:grid;gap:14px}
+.bubble{
   padding:16px 18px;border-radius:22px;
   background:
     radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
@@ -332,29 +284,30 @@ body{
   box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
   position:relative;
 }
-.box::before{
+.bubble::before{
   content:"";
   position:absolute;inset:0;border-radius:22px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.35) 50%, transparent 100%);
   opacity:.55;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   pointer-events:none;
 }
-.h{ margin:0 0 8px; font-weight:950; letter-spacing:.2px; }
-.p{ margin:0 0 10px; color:var(--mut); line-height:1.55; }
-.ul{ margin:0 0 0 18px; padding:0; color:var(--mut2); }
-.ul li{ margin:6px 0; }
+.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
+.bubble p{margin:0;color:var(--mut);line-height:1.55}
+.bubble p span{color:rgba(255,255,255,.70);font-weight:800}
 
-.mact{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
+/* Modal footer actions (bubbles) */
+.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
 .sbtn{
+  display:inline-flex;align-items:center;justify-content:center;
   padding:12px 18px;border-radius:14px;
   background:linear-gradient(145deg,var(--obs2),var(--obs1));
   color:#fff;border:1px solid rgba(255,255,255,.08);
   box-shadow:0 14px 36px rgba(0,0,0,.7);
   cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
 }
-.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
+.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.20); }
 
 @media (max-width:520px){
   :root{ --R: 116px; }
@@ -369,43 +322,54 @@ body{
 <body>
 
 <div class="top-left">
-  <a class="btn" id="btnHub" href="/home/">HUB</a>
-  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+  <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
+  <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
 <div class="brand">
-  <div class="name" id="brandName">CARDINAL AXIS</div>
-  <div class="tag" id="brandTag">LAWS · STANDARDS & RULES</div>
+  <div class="t1" id="brandTop">LAWS</div>
+  <div class="t2" id="brandSub">STANDARDS · PRINCIPLES · GOVERNANCE</div>
 </div>
 
 <div class="stage" aria-label="Laws diamond">
   <div class="outer"></div>
 
-  <div class="d d-n" id="north" role="button" tabindex="0">
-    <div class="inner"><div class="lab" id="nLab">FOUNDATION</div><div class="sub" id="nSub">Keys · topology · invariants.</div></div>
+  <div class="d d-n" id="dFeels" role="button" tabindex="0">
+    <div class="in">
+      <div class="lab" id="labFeels">HOW IT FEELS</div>
+      <div class="sub" id="subFeels">Clarity without ideology.</div>
+    </div>
   </div>
 
-  <div class="d d-e" id="east" role="button" tabindex="0">
-    <div class="inner"><div class="lab" id="eLab">DEFINITIONS</div><div class="sub" id="eSub">Primitives · measures · terms.</div></div>
+  <div class="d d-e" id="dMatters" role="button" tabindex="0">
+    <div class="in">
+      <div class="lab" id="labMatters">WHY IT MATTERS</div>
+      <div class="sub" id="subMatters">Lower risk · more trust.</div>
+    </div>
   </div>
 
-  <div class="d d-s" id="south" role="button" tabindex="0">
-    <div class="inner"><div class="lab" id="sLab">ENFORCEMENT</div><div class="sub" id="sSub">Gates · tiers · revocation.</div></div>
+  <div class="d d-w" id="dWorks" role="button" tabindex="0">
+    <div class="in">
+      <div class="lab" id="labWorks">HOW IT WORKS</div>
+      <div class="sub" id="subWorks">Measure · bound · audit.</div>
+    </div>
   </div>
 
-  <div class="d d-w" id="west" role="button" tabindex="0">
-    <div class="inner"><div class="lab" id="wLab">GOVERNANCE</div><div class="sub" id="wSub">Anti-capture · audit · freeze.</div></div>
+  <div class="d d-s" id="dNext" role="button" tabindex="0">
+    <div class="in">
+      <div class="lab" id="labNext">WHAT’S NEXT</div>
+      <div class="sub" id="subNext">CARES/HIP/UCI pages.</div>
+    </div>
   </div>
 
   <div class="core">◆</div>
 </div>
 
-<nav class="dock" id="dock">
-  <a class="btn" id="goTerminal" href="/index.html">TERMINAL</a>
-  <a class="btn" id="goLinks" href="/links/">LINKS</a>
-  <a class="btn" id="goProducts" href="/products/">PRODUCTS</a>
-  <a class="btn active" id="goLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="goGauges" href="/gauges/">GAUGES</a>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="crp-btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
 </nav>
 
 <div class="bd" id="bd"></div>
@@ -413,29 +377,29 @@ body{
 <div class="modal" id="modal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="mTitle">DETAIL</h3>
+      <h3 class="mtitle" id="mTitle">LAWS · DETAIL</h3>
       <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
     </div>
 
-    <div class="mbody">
-      <div class="lensbar">
-        <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>
-        <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>
-        <button class="chip" data-time="now" id="chipNow" type="button">NOW</button>
-        <button class="chip" data-time="post" id="chipPost" type="button">POST</button>
-      </div>
+    <div class="lensbar">
+      <button class="chip" id="chipStyle" type="button">STYLE: FORMAL</button>
+      <button class="chip" id="chipConcept" data-time="origin" type="button">CONCEPT</button>
+      <button class="chip" id="chipNow" data-time="now" type="button">NOW</button>
+      <button class="chip" id="chipRoadmap" data-time="post" type="button">ROADMAP</button>
+    </div>
 
-      <div class="mgrid">
-        <div class="box"><h4 class="h" id="h1"></h4><p class="p" id="p1"></p><ul class="ul" id="u1"></ul></div>
-        <div class="box"><h4 class="h" id="h2"></h4><p class="p" id="p2"></p><ul class="ul" id="u2"></ul></div>
-        <div class="box"><h4 class="h" id="h3"></h4><p class="p" id="p3"></p><ul class="ul" id="u3"></ul></div>
-        <div class="box"><h4 class="h" id="h4"></h4><p class="p" id="p4"></p><ul class="ul" id="u4"></ul></div>
+    <div class="mbody">
+      <div class="grid">
+        <div class="bubble"><h4 id="h1"></h4><p id="p1"></p></div>
+        <div class="bubble"><h4 id="h2"></h4><p id="p2"></p></div>
+        <div class="bubble"><h4 id="h3"></h4><p id="p3"></p></div>
+        <div class="bubble"><h4 id="h4"></h4><p id="p4"></p></div>
       </div>
 
       <div class="mact">
         <button class="sbtn" id="mReturn" type="button">RETURN</button>
-        <a class="sbtn" id="mGoHub" href="/home/">GO HUB</a>
-        <a class="sbtn" id="mGoProducts" href="/products/">GO PRODUCTS</a>
+        <a class="sbtn" id="mJumpHub" href="/home/">JUMP HUB</a>
+        <a class="sbtn" id="mJumpExplore" href="/explore/">JUMP EXPLORE</a>
       </div>
     </div>
   </div>
@@ -443,16 +407,16 @@ body{
 
 <script>
 (function(){
-  /* URL → STATE HYDRATION */
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  // ===== STATE =====
+  var qs = new URLSearchParams(location.search);
+  var qLang = qs.get("lang");
+  var qStyle = qs.get("style");
+  var qTime = qs.get("time");
 
-  if(lang!=="en" && lang!=="zh") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
+  var lang = (qLang==="zh"||qLang==="en") ? qLang : ((localStorage.getItem("gd_lang")==="zh") ? "zh" : "en");
+  var style = (qStyle==="formal"||qStyle==="informal") ? qStyle : (localStorage.getItem("gd_style")||"formal");
+  var time = (qTime==="origin"||qTime==="now"||qTime==="post") ? qTime : (localStorage.getItem("gd_time")||"now");
   if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
 
   try{
     localStorage.setItem("gd_lang", lang);
@@ -461,224 +425,333 @@ body{
   }catch(e){}
 
   function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
-  function setLinks(){
+
+  function wire(){
     var s=q();
     document.getElementById("btnHub").href="/home/?"+s;
     document.getElementById("btnExit").href="/door/?"+s;
 
-    document.getElementById("goTerminal").href="/index.html?"+s;
-    document.getElementById("goLinks").href="/links/?"+s;
-    document.getElementById("goProducts").href="/products/?"+s;
-    document.getElementById("goLaws").href="/laws/?"+s;
-    document.getElementById("goGauges").href="/gauges/?"+s;
+    document.getElementById("dockTerminal").href="/index.html?"+s;
+    document.getElementById("dockExplore").href="/explore/?"+s;
+    document.getElementById("dockProducts").href="/products/?"+s;
+    document.getElementById("dockLinks").href="/links/?"+s;
 
-    document.getElementById("mGoHub").href="/home/?"+s;
-    document.getElementById("mGoProducts").href="/products/?"+s;
+    document.getElementById("mJumpHub").href="/home/?"+s;
+    document.getElementById("mJumpExplore").href="/explore/?"+s;
   }
+  wire();
 
-  var UI={
+  // ===== UI STRINGS (single-language render) =====
+  var UI = {
     en:{
-      brand:"CARDINAL AXIS",
-      tag:"LAWS · STANDARDS & RULES",
-      lens:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",now:"NOW",post:"POST"},
-      d:{
-        n:{lab:"FOUNDATION",sub:"Keys · topology · invariants."},
-        e:{lab:"DEFINITIONS",sub:"Primitives · measures · terms."},
-        s:{lab:"ENFORCEMENT",sub:"Gates · tiers · revocation."},
-        w:{lab:"GOVERNANCE",sub:"Anti-capture · audit · freeze."}
-      }
+      top:"LAWS",
+      sub:"STANDARDS · PRINCIPLES · GOVERNANCE",
+      tiles:{
+        feels:{lab:"HOW IT FEELS", sub:"Clarity without ideology."},
+        matters:{lab:"WHY IT MATTERS", sub:"Lower risk · more trust."},
+        works:{lab:"HOW IT WORKS", sub:"Measure · bound · audit."},
+        next:{lab:"WHAT’S NEXT", sub:"CARES/HIP/UCI pages."}
+      },
+      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", now:"NOW", roadmap:"ROADMAP"},
+      actions:{return:"RETURN", jHub:"JUMP HUB", jExp:"JUMP EXPLORE"}
     },
     zh:{
-      brand:"枢轴罗盘",
-      tag:"法则 · 标准与规则",
-      lens:{formal:"正式",informal:"非正式",concept:"概念",now:"当前",post:"后续"},
-      d:{
-        n:{lab:"基础",sub:"键 · 拓扑 · 不变量。"},
-        e:{lab:"定义",sub:"原语 · 指标 · 术语。"},
-        s:{lab:"执行",sub:"门控 · 分层 · 撤销。"},
-        w:{lab:"治理",sub:"反俘获 · 审计 · 冻结。"}
+      top:"法则",
+      sub:"标准 · 原则 · 治理",
+      tiles:{
+        feels:{lab:"使用感受", sub:"清晰而中立。"},
+        matters:{lab:"为什么重要", sub:"更低风险 · 更可信。"},
+        works:{lab:"怎么运作", sub:"测量 · 约束 · 审计。"},
+        next:{lab:"下一步", sub:"CARES/HIP/UCI 页面。"}
+      },
+      lens:{formal:"正式", informal:"直接", concept:"概念", now:"现在", roadmap:"路线图"},
+      actions:{return:"返回", jHub:"跳转枢纽", jExp:"跳转探索"}
+    }
+  };
+  var T = (lang==="zh") ? UI.zh : UI.en;
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+
+  document.getElementById("brandTop").textContent = T.top;
+  document.getElementById("brandSub").textContent = T.sub;
+
+  document.getElementById("labFeels").textContent = T.tiles.feels.lab;
+  document.getElementById("subFeels").textContent = T.tiles.feels.sub;
+  document.getElementById("labMatters").textContent = T.tiles.matters.lab;
+  document.getElementById("subMatters").textContent = T.tiles.matters.sub;
+  document.getElementById("labWorks").textContent = T.tiles.works.lab;
+  document.getElementById("subWorks").textContent = T.tiles.works.sub;
+  document.getElementById("labNext").textContent = T.tiles.next.lab;
+  document.getElementById("subNext").textContent = T.tiles.next.sub;
+
+  document.getElementById("mReturn").textContent = T.actions.return;
+  document.getElementById("mJumpHub").textContent = T.actions.jHub;
+  document.getElementById("mJumpExplore").textContent = T.actions.jExp;
+
+  // ===== LENS UI =====
+  var chipStyle=document.getElementById("chipStyle");
+  var chipConcept=document.getElementById("chipConcept");
+  var chipNow=document.getElementById("chipNow");
+  var chipRoadmap=document.getElementById("chipRoadmap");
+
+  function setLensLabels(){
+    chipStyle.textContent = "STYLE: " + (style==="formal" ? T.lens.formal : T.lens.informal);
+    chipConcept.textContent = T.lens.concept;
+    chipNow.textContent = T.lens.now;
+    chipRoadmap.textContent = T.lens.roadmap;
+
+    chipConcept.classList.toggle("active", time==="origin");
+    chipNow.classList.toggle("active", time==="now");
+    chipRoadmap.classList.toggle("active", time==="post");
+  }
+
+  // ===== CONTENT (4 bubbles per view) =====
+  var C = {
+    feels:{
+      origin:{
+        formal:[
+          {h:"Neutral clarity", p:"These pages are written to be neutral: they describe what a rule does and when it applies, without ideology. <span>Structure first.</span>"},
+          {h:"You always know the frame", p:"Concept/Now/Roadmap makes it clear whether you are reading foundations, current operation, or planned expansion. <span>No hidden frame shifts.</span>"},
+          {h:"Reading feels safe", p:"Rules are bounded and testable; they don’t rely on intention stories. <span>That reduces argument and increases agreement.</span>"},
+          {h:"Navigation stays coherent", p:"The same gem + modal contract keeps the Laws section consistent with the rest of the site. <span>Less cognitive load.</span>"}
+        ],
+        informal:[
+          {h:"Clear without preaching", p:"You can read it without feeling pushed. <span>Just the rule.</span>"},
+          {h:"You know what you’re reading", p:"Concept/Now/Roadmap tells you the frame. <span>No guessing.</span>"},
+          {h:"It feels fair", p:"Rules are about behavior and outcomes. <span>Not labels.</span>"},
+          {h:"It feels consistent", p:"Same look, same flow. <span>Easy to use.</span>"}
+        ]
+      },
+      now:{
+        formal:[
+          {h:"Operational tone", p:"Now focuses on what is enforced today: routing discipline, state discipline, and gate discipline. <span>Execution language.</span>"},
+          {h:"Less confusion", p:"When rules are explicit, users stop debating what a page ‘meant’. <span>Meaning becomes stable.</span>"},
+          {h:"Faster orientation", p:"A consistent rules hub reduces onboarding time for new users. <span>They learn the map once.</span>"},
+          {h:"Stable return paths", p:"Every rule can be opened, read, and closed without losing your place. <span>Traversal stays calm.</span>"}
+        ],
+        informal:[
+          {h:"What’s enforced now", p:"It tells you what rules are active today. <span>Practical.</span>"},
+          {h:"Less arguing", p:"Clear rules reduce confusion. <span>Period.</span>"},
+          {h:"Easy onboarding", p:"People learn faster. <span>Same map.</span>"},
+          {h:"Easy returns", p:"Read it, close it, keep going. <span>No resets.</span>"}
+        ]
+      },
+      post:{
+        formal:[
+          {h:"Roadmap stays disciplined", p:"Planned standards (CARES/HIP/UCI) can expand without changing the interaction contract. <span>Growth without drift.</span>"},
+          {h:"Public-safe publishing", p:"Rules become shareable because their meaning is bounded and consistent. <span>Stable references.</span>"},
+          {h:"Cross-domain portability", p:"Standards can be applied to multiple domains because the primitives are universal. <span>One method, many uses.</span>"},
+          {h:"Long-term trust", p:"Consistency over time becomes evidence of integrity. <span>That is the trust surface.</span>"}
+        ],
+        informal:[
+          {h:"Growth without drift", p:"Add standards without breaking the site. <span>Same rules.</span>"},
+          {h:"Shareable rules", p:"People can link and trust it. <span>Stable meaning.</span>"},
+          {h:"Works across domains", p:"Same primitives everywhere. <span>One method.</span>"},
+          {h:"Trust builds", p:"Consistency becomes proof. <span>That’s the point.</span>"}
+        ]
+      }
+    },
+
+    matters:{
+      origin:{
+        formal:[
+          {h:"Risk suppression", p:"Rules exist to suppress correlated failure: when everything depends on one fragile link, cascades happen. <span>Standards reduce blast radius.</span>"},
+          {h:"Admissibility", p:"Bounded definitions and falsifiers make claims checkable. <span>Checkable beats persuasive.</span>"},
+          {h:"Anti-capture", p:"Separation of powers prevents the system from being tuned for convenience. <span>Integrity over comfort.</span>"},
+          {h:"Consumer legibility", p:"Rules written plainly become usable by non-experts. <span>That increases adoption.</span>"}
+        ],
+        informal:[
+          {h:"Stops cascades", p:"Rules reduce chain reactions. <span>Less damage.</span>"},
+          {h:"Makes it checkable", p:"You can verify it. <span>No vibes.</span>"},
+          {h:"Prevents cheating", p:"Roles separated. <span>No capture.</span>"},
+          {h:"Makes it usable", p:"Normal people can read it. <span>That matters.</span>"}
+        ]
+      },
+      now:{
+        formal:[
+          {h:"Deployment stability", p:"Standards reduce ‘mystery breakage’ by defining what can change and what cannot. <span>Deterministic recoverability.</span>"},
+          {h:"Faster debugging", p:"If a rule is violated, the failure mode is classifiable. <span>404 means missing path, not metaphysics.</span>"},
+          {h:"Safer scaling", p:"Uniformity allows cloning: new pages inherit the contract. <span>No reinventing each node.</span>"},
+          {h:"Public trust", p:"A coherent rules hub improves credibility because it shows discipline. <span>Discipline is visible.</span>"}
+        ],
+        informal:[
+          {h:"Less breakage", p:"Rules make updates safer. <span>Deterministic.</span>"},
+          {h:"Faster fixes", p:"Failures are obvious. <span>Fix path, fix state.</span>"},
+          {h:"Scale by cloning", p:"Same pattern everywhere. <span>Less mess.</span>"},
+          {h:"People trust discipline", p:"Consistency shows seriousness. <span>It’s visible.</span>"}
+        ]
+      },
+      post:{
+        formal:[
+          {h:"Certification readiness", p:"Once standards are stable, certification becomes possible: tiers, revocation, registry. <span>Optional layer, strong spine.</span>"},
+          {h:"Institutional adoption", p:"Institutions adopt what is auditable and stable. <span>Rules are the adoption surface.</span>"},
+          {h:"Cross-language expansion", p:"Rules can be translated without changing meaning when primitives are locked. <span>Overlays, not forks.</span>"},
+          {h:"Durability under pressure", p:"Under time stress, the system stays coherent because constraints are explicit. <span>That is resilience.</span>"}
+        ],
+        informal:[
+          {h:"Certification possible", p:"Tiers and registry become real. <span>Optional but strong.</span>"},
+          {h:"Institutions adopt it", p:"Auditable rules get adopted. <span>Simple.</span>"},
+          {h:"Translate safely", p:"Meaning stays stable. <span>No forks.</span>"},
+          {h:"Durable under stress", p:"Constraints keep it coherent. <span>Resilient.</span>"}
+        ]
+      }
+    },
+
+    works:{
+      origin:{
+        formal:[
+          {h:"Measure exposure", p:"Start by measuring correlated exposure (ρ) and alignment (TC). <span>If you don’t measure, you can’t bound.</span>"},
+          {h:"Bound exposure", p:"Apply gates (WaveCap, segmentation, rollback readiness). <span>Structure prevents cascades.</span>"},
+          {h:"Detect acceleration", p:"Track changes over time (Δρ, ΔTC). <span>Acceleration matters more than snapshots.</span>"},
+          {h:"Audit + enforce", p:"Record evidence, publish reason codes, and enforce revocations when required. <span>Accountability is operational.</span>"}
+        ],
+        informal:[
+          {h:"Measure first", p:"If you don’t measure, you’re guessing. <span>Start there.</span>"},
+          {h:"Bound it", p:"Cap rollout, segment zones, keep rollback ready. <span>Contain damage.</span>"},
+          {h:"Watch acceleration", p:"Trend matters. <span>Not just today’s number.</span>"},
+          {h:"Audit it", p:"Log it and enforce it. <span>Accountability.</span>"}
+        ]
+      },
+      now:{
+        formal:[
+          {h:"Contracted UI + state", p:"Laws pages use the same state contract: lang/style/time propagate, modal is centered, returns are stable. <span>Uniform surface.</span>"},
+          {h:"Bound claims", p:"Each law page states what is claimed, what is not claimed, and how it could be falsified. <span>Admissible writing.</span>"},
+          {h:"Deterministic gating", p:"Rules are written as constraints: PASS/FAIL/UNKNOWN with quotas. <span>No narrative tuning.</span>"},
+          {h:"Publishable structure", p:"Pages are modular: each standard can become its own route later without rewriting the hub. <span>Safe expansion.</span>"}
+        ],
+        informal:[
+          {h:"Same contract", p:"Same state, same modal, same returns. <span>Consistent.</span>"},
+          {h:"Bounded writing", p:"Say what it is and isn’t. <span>Checkable.</span>"},
+          {h:"Constraints, not vibes", p:"PASS/FAIL rules. <span>Operational.</span>"},
+          {h:"Modular pages", p:"Easy to expand later. <span>No rewrites.</span>"}
+        ]
+      },
+      post:{
+        formal:[
+          {h:"Standard registry", p:"Each standard gets a registry entry (version, hash, scope). <span>Immutable history.</span>"},
+          {h:"Demo integration", p:"Standards connect to demos (HIP rollout simulator, certificate lookup). <span>Rules become interactive.</span>"},
+          {h:"Public audit dashboard", p:"Dashboards show whether gates are being respected. <span>Visibility reduces corruption.</span>"},
+          {h:"Cross-domain adapters", p:"Domain adapters map real systems into the same law primitives. <span>Universal interface.</span>"}
+        ],
+        informal:[
+          {h:"Registry", p:"Versions and history. <span>Immutable.</span>"},
+          {h:"Demos", p:"Rules you can see. <span>Interactive.</span>"},
+          {h:"Dashboards", p:"See gate compliance. <span>Visibility.</span>"},
+          {h:"Adapters", p:"Same primitives across domains. <span>Universal.</span>"}
+        ]
+      }
+    },
+
+    next:{
+      origin:{
+        formal:[
+          {h:"Publish CARES", p:"CARES becomes the neutral standard page: definitions + minimal law + mapping into the site. <span>Stable reference.</span>"},
+          {h:"Publish HIP", p:"HIP becomes the change-control gate page: wave caps, rollback, audit latency. <span>Enforcement layer.</span>"},
+          {h:"Publish UCI", p:"UCI becomes the measurement page: ρ/TC/Δ and export schema. <span>Operationalization.</span>"},
+          {h:"Add China lens (optional layer)", p:"Add a dedicated lens that maps classical principles into measurable constraints. <span>Parallel wisdom, same rigor.</span>"}
+        ],
+        informal:[
+          {h:"Write CARES", p:"The neutral standard page. <span>Reference.</span>"},
+          {h:"Write HIP", p:"Change-control gates. <span>Enforce.</span>"},
+          {h:"Write UCI", p:"Measurements + schema. <span>Operational.</span>"},
+          {h:"Add China lens", p:"Classics → constraints. <span>Same rigor.</span>"}
+        ]
+      },
+      now:{
+        formal:[
+          {h:"Keep names consistent", p:"CARES/HIP/UCI labels must match across pages and links. <span>No naming drift.</span>"},
+          {h:"Create subroutes only when ready", p:"When a standard needs depth, create its own folder with the same gem contract. <span>One at a time.</span>"},
+          {h:"Fill content density", p:"No empty bubbles: each view must deliver real context. <span>Legible to consumers.</span>"},
+          {h:"Verify deployment determinism", p:"Use view-source probes and direct file URLs when debugging. <span>Stop caching ghosts.</span>"}
+        ],
+        informal:[
+          {h:"Keep labels stable", p:"Same names everywhere. <span>No drift.</span>"},
+          {h:"Add subpages only when needed", p:"One at a time. <span>Same pattern.</span>"},
+          {h:"Fill bubbles", p:"No empties. <span>Make it worth reading.</span>"},
+          {h:"Debug deterministically", p:"Probes + direct URLs. <span>No ghosts.</span>"}
+        ]
+      },
+      post:{
+        formal:[
+          {h:"Certification lookup", p:"Add a certificate serial lookup page tied to the registry. <span>Public accountability.</span>"},
+          {h:"Revocation logic", p:"Publish revocation rules and reason codes. <span>No silent changes.</span>"},
+          {h:"Industry landing pages", p:"Data centers, utilities, industrial automation, finance. <span>Same laws, different adapters.</span>"},
+          {h:"Live demos", p:"Blast radius simulation + staged rollout vs full rollout. <span>Make value visible.</span>"}
+        ],
+        informal:[
+          {h:"Lookup page", p:"Serial lookup. <span>Accountability.</span>"},
+          {h:"Revocation rules", p:"No silent changes. <span>Reason codes.</span>"},
+          {h:"Industry pages", p:"Same laws, different adapters. <span>Clear.</span>"},
+          {h:"Live demos", p:"Show value. <span>Make it visible.</span>"}
+        ]
       }
     }
   };
 
-  var pack=(lang==="zh")?UI.zh:UI.en;
-  document.documentElement.lang = (lang==="zh")?"zh":"en";
-
-  document.getElementById("brandName").textContent=pack.brand;
-  document.getElementById("brandTag").textContent=pack.tag;
-
-  document.getElementById("nLab").textContent=pack.d.n.lab;
-  document.getElementById("nSub").textContent=pack.d.n.sub;
-  document.getElementById("eLab").textContent=pack.d.e.lab;
-  document.getElementById("eSub").textContent=pack.d.e.sub;
-  document.getElementById("sLab").textContent=pack.d.s.lab;
-  document.getElementById("sSub").textContent=pack.d.s.sub;
-  document.getElementById("wLab").textContent=pack.d.w.lab;
-  document.getElementById("wSub").textContent=pack.d.w.sub;
-
-  // Modal refs
+  // ===== MODAL WIRING =====
   var bd=document.getElementById("bd");
   var modal=document.getElementById("modal");
   var mClose=document.getElementById("mClose");
   var mTitle=document.getElementById("mTitle");
 
-  var styleChip=document.getElementById("styleChip");
+  var chipStyle=document.getElementById("chipStyle");
   var chipConcept=document.getElementById("chipConcept");
   var chipNow=document.getElementById("chipNow");
-  var chipPost=document.getElementById("chipPost");
+  var chipRoadmap=document.getElementById("chipRoadmap");
 
-  var h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1");
-  var h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2");
-  var h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3");
-  var h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4");
+  var h1=document.getElementById("h1"), p1=document.getElementById("p1");
+  var h2=document.getElementById("h2"), p2=document.getElementById("p2");
+  var h3=document.getElementById("h3"), p3=document.getElementById("p3");
+  var h4=document.getElementById("h4"), p4=document.getElementById("p4");
 
-  function fill(hEl,pEl,uEl,b){
-    hEl.textContent=b.h; pEl.textContent=b.p; uEl.innerHTML="";
-    b.u.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; uEl.appendChild(li); });
-  }
+  var activeSection=null; // feels|matters|works|next
 
   function persist(){
-    try{
-      localStorage.setItem("gd_lang", lang);
-      localStorage.setItem("gd_style", style);
-      localStorage.setItem("gd_time", time);
-    }catch(e){}
+    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time); }catch(e){}
   }
 
   function setLensLabels(){
-    styleChip.textContent = "STYLE: " + (style==="formal" ? pack.lens.formal : pack.lens.informal);
-    chipConcept.textContent = pack.lens.concept;
-    chipNow.textContent = pack.lens.now;
-    chipPost.textContent = pack.lens.post;
+    chipStyle.textContent = "STYLE: " + (style==="formal" ? T.lens.formal : T.lens.informal);
+    chipConcept.textContent = T.lens.concept;
+    chipNow.textContent = T.lens.now;
+    chipRoadmap.textContent = T.lens.roadmap;
 
     chipConcept.classList.toggle("active", time==="origin");
     chipNow.classList.toggle("active", time==="now");
-    chipPost.classList.toggle("active", time==="post");
+    chipRoadmap.classList.toggle("active", time==="post");
   }
 
-  // Laws content (dense, 4×4)
-  function view(dir){
-    const EN={
-      n:{
-        origin:{formal:{title:"FOUNDATION",b1:{h:"Canonical keys",p:"Only gd_* keys govern language and lenses; no mixed namespaces are allowed.",u:["gd_lang ∈ {en, zh}.","gd_style ∈ {formal, informal}.","gd_time ∈ {origin, now, post}.","gd_depth only where needed."]},
-                                   b2:{h:"Route topology",p:"Routes must match folders and labels to prevent 404 and semantic drift.",u:["/door/ = language.","/index.html = terminal.","/home/ = hub.","/products/ /laws/ /gauges/ = hubs."]},
-                                   b3:{h:"CSS ownership",p:"Background is owned by ui.css; geometry by branch.css—no page overrides.",u:["No page body gradients.","No page :root overrides.","ui.css first.","branch.css second."]},
-                                   b4:{h:"Interaction contract",p:"Tap → centered modal → return. This contract is non-negotiable.",u:["No scroll jumps.","Backdrop blocks drift.","Return always works.","Dock always present."]}},
-            informal:{title:"FOUNDATION",b1:{h:"Keys",p:"Only gd_* keys.",u:["Language.","Style.","Time.","Depth when needed."]},
-                                   b2:{h:"Routes",p:"Folders and labels must match.",u:["Door.","Terminal.","Hub.","Hubs."]},
-                                   b3:{h:"CSS",p:"No CSS fights.",u:["ui owns background.","branch owns geometry.","No overrides.","Order fixed."]},
-                                   b4:{h:"Contract",p:"Tap → modal → return.",u:["Centered.","Stable.","No jump.","No drift."]}}},
-        now:{formal:{title:"FOUNDATION",b1:{h:"Now",p:"This law set keeps the site deterministic while building live.",u:["Uniform gems.","Uniform modals.","Uniform dock.","Uniform keys."]},
-                                b2:{h:"Debug rule",p:"When something breaks, diagnose deterministically before editing.",u:["Check URL.","Check view-source.","Check localStorage.","Check 404."]},
-                                b3:{h:"No empty nodes",p:"Every bubble must contain real bulletins; empty bubbles are forbidden.",u:["4 sections.","4 bullets each.","Lens-aware text.","Dual language aware."]},
-                                b4:{h:"Propagation",p:"All links propagate lang/style/time forward.",u:["Query propagation.","LocalStorage fallback.","No silent overwrites.","Fallback safe."]}},
-            informal:{title:"FOUNDATION",b1:{h:"Now",p:"Uniform pattern is the rule.",u:["Same gems.","Same modal.","Same dock.","Same keys."]},
-                                b2:{h:"Debug",p:"Check before changing.",u:["URL.","Source.","Storage.","404."]},
-                                b3:{h:"No empties",p:"Every node has content.",u:["Bulletins.","Meaning.","Lenses work.","Bilingual."]},
-                                b4:{h:"Carry state",p:"State follows you.",u:["Lang.","Style.","Time.","No surprises."]}}},
-        post:{formal:{title:"FOUNDATION",b1:{h:"Post",p:"Foundation becomes a published reference layer with versions and freezes.",u:["Version tags.","Changelog.","Hash anchors.","Citable references."]},
-                                 b2:{h:"Scaling",p:"Scaling is cloning under contract, not redesign.",u:["Clone pages.","Swap content.","Keep contract.","No drift."]},
-                                 b3:{h:"Auditability",p:"State and artifacts become replayable evidence bundles.",u:["Window logs.","Hash exports.","Registry ties.","Reason codes."]},
-                                 b4:{h:"Public safety",p:"Uniform navigation + dense bulletins makes it safe to publish.",u:["Predictable UI.","Clear meaning.","Stable returns.","No broken flows."]}},
-            informal:{title:"FOUNDATION",b1:{h:"Next",p:"Publish the reference layer.",u:["Versions.","Logs.","Hashes.","Cites."]},
-                                 b2:{h:"Scale",p:"Clone, don’t redesign.",u:["Copy.","Edit content.","Keep rules.","Ship."]},
-                                 b3:{h:"Proof",p:"Make it replayable.",u:["Logs.","Exports.","Registry.","Reasons."]},
-                                 b4:{h:"Public",p:"Safe to publish.",u:["Stable.","Clear.","Predictable.","Ready."]}}}
-      },
-      e:{
-        origin:{formal:{title:"DEFINITIONS",b1:{h:"Primitives",p:"Define core primitives (ρ, TC, Δρ, ΔTC, λ_proxy) in a neutral, operational way.",u:["ρ = correlated exposure.","TC = driver alignment.","Δ = acceleration.","λ_proxy = hazard composite."]},
-                                   b2:{h:"Windows",p:"Define measurement windows deterministically by domain adapter registry.",u:["W by domain.","Locked in registry.","No silent changes.","Freeze window honored."]},
-                                   b3:{h:"EffectiveSegZones",p:"Define a deterministic calculator for ‘independence’ not cosmetic zones.",u:["Update pipeline zones.","Trust boundary zones.","Rollback authority zones.","Upstream dependency zones."]},
-                                   b4:{h:"Unknown policy",p:"Define UNKNOWN quotas per tier to prevent gaming.",u:["Tier 2: ≤1 unknown.","Tier 3+: 0 for core gates.","Tier 4: 0 unknown overall.","Publish exclusions."]}},
-            informal:{title:"DEFINITIONS",b1:{h:"Basics",p:"Define the core measures.",u:["ρ exposure.","TC alignment.","Δ drift.","λ hazard."]},
-                                   b2:{h:"Windows",p:"Lock window rules.",u:["By domain.","In a registry.","No silent change.","Freeze honored."]},
-                                   b3:{h:"Zones",p:"Make ‘zones’ real.",u:["Independence.","Not cosmetic.","Deterministic calc.","Auditable."]},
-                                   b4:{h:"Unknowns",p:"Limit unknowns.",u:["Quota.","No gaming.","Publish reasons.","Stay honest."]}}},
-        now:{formal:{title:"DEFINITIONS",b1:{h:"Now",p:"Definitions govern how Explore becomes Products and Products become certifiable.",u:["Stable terms.","Stable windows.","Stable gates.","Stable outputs."]},
-                                b2:{h:"Adapters",p:"Domain adapters define driver vectors and sign conventions.",u:["4 drivers per domain.","Normalization method.","Missing-data rules.","Sign convention (+1 risk)."]},
-                                b3:{h:"Evidence schema",p:"UCI_EVENT schema is the universal intake for audits.",u:["timestamp_utc.","system_id/unit_id.","event_type.","rollout/gate fields."]},
-                                b4:{h:"Publish rule",p:"Short definitions on page; dense bulletins in modal.",u:["Readable surface.","Deep detail inside.","Lens-aware.","Bilingual."]}},
-            informal:{title:"DEFINITIONS",b1:{h:"Now",p:"Definitions keep everything consistent.",u:["Same terms.","Same windows.","Same gates.","Same outputs."]},
-                                b2:{h:"Adapters",p:"Drivers are defined per domain.",u:["4 drivers.","Normalize.","Missing rules.","Sign convention."]},
-                                b3:{h:"Schema",p:"Same intake format.",u:["Timestamp.","IDs.","Event type.","Gate fields."]},
-                                b4:{h:"Publish",p:"Readable outside, dense inside.",u:["Surface simple.","Modal deep.","Lenses work.","Bilingual."]}}},
-        post:{formal:{title:"DEFINITIONS",b1:{h:"Post",p:"Definitions become a stable reference and citation layer (CARES pages).",u:["Neutral standard page.","Versioned registry.","Audit-ready wording.","Public-safe."]},
-                                 b2:{h:"Cross-check",p:"Two independent implementations cross-check definitions and outputs.",u:["Dual engines.","Tolerance bounds.","Auto-suspension.","Audit triggers."]},
-                                 b3:{h:"Extension",p:"Extend definitions only via registry with compatibility.",u:["No ad-hoc keys.","No silent changes.","Back-compat.","Changelog."]},
-                                 b4:{h:"Outcome",p:"Definitions remain observer-invariant across domains.",u:["Same evidence → same classification.","Same thresholds.","Same outputs.","Same meaning."]}},
-            informal:{title:"DEFINITIONS",b1:{h:"Next",p:"Definitions become the standard page.",u:["Neutral.","Versioned.","Audit-ready.","Public-safe."]},
-                                 b2:{h:"Cross-check",p:"Two engines agree or stop.",u:["Dual compute.","Tolerance.","Auto suspend.","Audit."]},
-                                 b3:{h:"Extend safely",p:"Only by registry.",u:["No hacks.","No drift.","Compatible.","Logged."]},
-                                 b4:{h:"Result",p:"Same meaning everywhere.",u:["Same evidence.","Same outputs.","Same thresholds.","Same classification."]}}}
-      },
-      s:{
-        origin:{formal:{title:"ENFORCEMENT",b1:{h:"HIP gates",p:"Enforce WaveCap, SegZones, Rollback, AuditLatency, and Δρ slope.",u:["WaveCap ≤ 0.20.","EffectiveSegZones ≥ 4.","Rollback ≤ 15 min.","AuditLatency ≤ 72h."]},
-                                   b2:{h:"Tiering",p:"Define tiers as claims with revocation rules.",u:["Tier 0 observed.","Tier 1 monitored.","Tier 2 compliant.","Tier 3/4 certified."]},
-                                   b3:{h:"Revocation",p:"Define automatic suspension triggers.",u:["Critical gate FAIL.","Sustained ρ>0.50.","Audit refusal/falsification.","Red-team failure."]},
-                                   b4:{h:"Anti-splitting",p:"Prevent micro-wave gaming by cumulative exposure accounting.",u:["Group by dependency.","≤30d window merge.","Cumulative ρ_change.","Publish disputes."]}},
-            informal:{title:"ENFORCEMENT",b1:{h:"Gates",p:"Hard limits for safe change.",u:["Wave cap.","Real zones.","Fast rollback.","Fast audit."]},
-                                   b2:{h:"Tiers",p:"Tiers are claims.",u:["Observed.","Monitored.","Compliant.","Certified."]},
-                                   b3:{h:"Revokes",p:"Fails trigger suspension.",u:["Gate fail.","ρ too high.","Audit refused.","Red-team fail."]},
-                                   b4:{h:"No gaming",p:"No micro-wave loopholes.",u:["Cumulative exposure.","Same dependency group.","Same window.","Auditable."]}}},
-        now:{formal:{title:"ENFORCEMENT",b1:{h:"Now",p:"Enforcement is expressed as gate flags and reason codes.",u:["PASS/FAIL/UNKNOWN.","Reason codes.","Exports.","Dashboards."]},
-                                b2:{h:"Change discipline",p:"Pilots validate certification; certification never weakens for pilots.",u:["No threshold relaxing.","Implementation remediation only.","Audit required.","Freeze honored."]},
-                                b3:{h:"Operator workflows",p:"Enforcement outputs map to operator actions.",u:["Stop rollout.","Rollback.","Segment zones.","Audit within bound."]},
-                                b4:{h:"Public claims",p:"Public claims require registry status and evidence hash.",u:["Serial lookup.","Tier shown.","Status shown.","Reason codes shown."]}},
-            informal:{title:"ENFORCEMENT",b1:{h:"Now",p:"You get clear pass/fail.",u:["Gate flags.","Reasons.","Reports.","Exports."]},
-                                b2:{h:"Rule",p:"Pilots don’t change standards.",u:["No relaxing.","Fix implementation.","Audit it.","Stay honest."]},
-                                b3:{h:"Actions",p:"Outputs tell you what to do.",u:["Stop.","Rollback.","Segment.","Audit."]},
-                                b4:{h:"Claims",p:"Claims must be verifiable.",u:["Serial.","Tier.","Status.","Reasons."]}}},
-        post:{formal:{title:"ENFORCEMENT",b1:{h:"Post",p:"Enforcement becomes automated with time locks and signatures.",u:["Multi-sig changes.","Time lock.","Public log.","Override limits."]},
-                                 b2:{h:"Red-team",p:"Quarterly injections become mandatory for Tier ≥3.",u:["Monoculture shock.","Wave overload.","Seg collapse.","Audit delay."]},
-                                 b3:{h:"Enterprise",p:"Enforcement integrates with CI/CD and change control.",u:["Wave gating.","Rollback checks.","Zone validation.","Audit pipelines."]},
-                                 b4:{h:"Outcome",p:"A defensible enforcement layer that resists capture.",u:["Separation of powers.","Public transparency.","Hard constraints.","Stable meaning."]}},
-            informal:{title:"ENFORCEMENT",b1:{h:"Next",p:"Automation + locks.",u:["Signatures.","Time locks.","Logs.","Overrides limited."]},
-                                 b2:{h:"Red-team",p:"Mandatory testing.",u:["Shocks.","Overloads.","Collapse tests.","Audit delay."]},
-                                 b3:{h:"Enterprise",p:"CI/CD gates.",u:["Wave caps.","Rollback checks.","Zones.","Audit pipeline."]},
-                                 b4:{h:"Result",p:"Hard to capture.",u:["Separation.","Transparency.","Constraints.","Stable."]}}}
-      },
-      w:{
-        origin:{formal:{title:"GOVERNANCE",b1:{h:"Separation of powers",p:"Different roles cannot tune outcomes or thresholds.",u:["Engineering builds.","Authority issues.","Commercial sells.","Audit verifies."]},
-                                   b2:{h:"Freeze window",p:"No threshold relaxation during freeze window.",u:["Lock thresholds.","Allow clarifications only.","Changelog required.","Time-lock changes."]},
-                                   b3:{h:"Survival boundary",p:"Define W ∩ S = 0 boundary by domain map.",u:["Define survival components.","Measure pay-to-prioritize.","Bound W_S.","Publish violations."]},
-                                   b4:{h:"Public audit",p:"No silent revocations and no silent exclusions.",u:["Publish reason codes.","Publish status.","Publish exclusions.","Audit logs."]}},
-            informal:{title:"GOVERNANCE",b1:{h:"Roles",p:"Different people do different things.",u:["Builders build.","Issuers issue.","Sellers sell.","Auditors audit."]},
-                                   b2:{h:"Freeze",p:"No relaxing rules.",u:["Lock thresholds.","Log changes.","No silent edits.","Time-lock."]},
-                                   b3:{h:"Boundary",p:"No pay-to-prioritize in survival systems.",u:["Define survival map.","Measure W_S.","Publish issues.","Enforce."]},
-                                   b4:{h:"Public",p:"No silent actions.",u:["Status visible.","Reasons visible.","Exclusions visible.","Audits visible."]}}},
-        now:{formal:{title:"GOVERNANCE",b1:{h:"Now",p:"Governance is expressed as stable pages + registry-ready logic.",u:["Uniform pages.","Uniform language.","Uniform keys.","Uniform contracts."]},
-                                b2:{h:"Anti-capture rule",p:"No single group can change thresholds or outcomes.",u:["Multi-sig.","Time lock.","Public log.","Audit cross-check."]},
-                                b3:{h:"Neutrality",p:"Language remains technical and operational, not ideological.",u:["No metaphysics.","No moral framing.","Just constraints.","Just measures."]},
-                                b4:{h:"Outcome",p:"Governance supports public reintroduction safely.",u:["Stable UI.","Dense bulletins.","Bilingual.","Upgradeable."]}},
-            informal:{title:"GOVERNANCE",b1:{h:"Now",p:"Governance is stable.",u:["Pages.","Keys.","Contracts.","Registry-ready."]},
-                                b2:{h:"No capture",p:"Nobody can tune outcomes quietly.",u:["Locks.","Logs.","Audits.","Cross-checks."]},
-                                b3:{h:"Neutral",p:"Technical language only.",u:["No ideology.","No preaching.","Just rules.","Just measures."]},
-                                b4:{h:"Result",p:"Safe to publish.",u:["Stable.","Dense.","Bilingual.","Ready."]}}},
-        post:{formal:{title:"GOVERNANCE",b1:{h:"Post",p:"Governance becomes the backbone of certification and underwriting.",u:["Public registry.","Third-party audits.","Evidence hashes.","Subscription interfaces."]},
-                                 b2:{h:"Entropy index",p:"Track override frequency and threshold change attempts.",u:["Override logs.","Auto downgrades.","Audit requirements.","Stability flags."]},
-                                 b3:{h:"Global deployment",p:"Governance maps to institutions and policy.",u:["Utilities.","Data centers.","Industry.","Financial infra."]},
-                                 b4:{h:"Outcome",p:"A resilient governance layer that scales.",u:["Capture resistance.","Auditability.","Clarity.","Trust."]}},
-            informal:{title:"GOVERNANCE",b1:{h:"Next",p:"Registry + audits.",u:["Public status.","Audits.","Hashes.","Subscriptions."]},
-                                 b2:{h:"Entropy",p:"Track overrides.",u:["Logs.","Flags.","Downgrades.","Audits."]},
-                                 b3:{h:"Scale",p:"Institution adoption.",u:["Utilities.","Cloud.","Industry.","Finance."]},
-                                 b4:{h:"Result",p:"Trust at scale.",u:["Resists capture.","Auditable.","Clear.","Stable."]}}}
-      }
+  function render(){
+    persist();
+    wire();
+    setLensLabels();
+
+    if(!activeSection) return;
+    var pack = C[activeSection][time][style];
+    var titleMap = {
+      feels: (lang==="zh" ? "使用感受" : "HOW IT FEELS"),
+      matters: (lang==="zh" ? "为什么重要" : "WHY IT MATTERS"),
+      works: (lang==="zh" ? "怎么运作" : "HOW IT WORKS"),
+      next: (lang==="zh" ? "下一步" : "WHAT’S NEXT")
     };
-    const v = EN[dir][time][style];
-    return v;
+    mTitle.textContent = T.top + " · " + titleMap[activeSection];
+
+    h1.textContent = pack[0].h; p1.innerHTML = pack[0].p;
+    h2.textContent = pack[1].h; p2.innerHTML = pack[1].p;
+    h3.textContent = pack[2].h; p3.innerHTML = pack[2].p;
+    h4.textContent = pack[3].h; p4.innerHTML = pack[3].p;
   }
 
-  var active=null;
-
-  function setActiveDiamond(id){
-    ["north","east","south","west"].forEach(function(x){
-      document.getElementById(x).classList.toggle("active", x===id);
+  function open(which){
+    activeSection=which;
+    ["dFeels","dMatters","dWorks","dNext"].forEach(function(id){
+      document.getElementById(id).classList.toggle("active",
+        (which==="feels" && id==="dFeels") ||
+        (which==="matters" && id==="dMatters") ||
+        (which==="works" && id==="dWorks") ||
+        (which==="next" && id==="dNext")
+      );
     });
-  }
 
-  function open(dir){
-    active=dir;
-    setActiveDiamond(dir);
     render();
     bd.classList.add("show");
     modal.classList.add("show");
@@ -687,46 +760,38 @@ body{
   function close(){
     bd.classList.remove("show");
     modal.classList.remove("show");
-    setActiveDiamond("__none__");
-    active=null;
+    ["dFeels","dMatters","dWorks","dNext"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
+    activeSection=null;
   }
 
-  function render(){
-    persist();
-    setLinks();
-    setLensLabels();
+  // Click handlers
+  document.getElementById("dFeels").onclick=function(){ open("feels"); };
+  document.getElementById("dMatters").onclick=function(){ open("matters"); };
+  document.getElementById("dWorks").onclick=function(){ open("works"); };
+  document.getElementById("dNext").onclick=function(){ open("next"); };
 
-    var v = view(active);
-    mTitle.textContent = v.title;
-    fill(h1,p1,u1,v.b1);
-    fill(h2,p2,u2,v.b2);
-    fill(h3,p3,u3,v.b3);
-    fill(h4,p4,u4,v.b4);
-  }
-
-  // Lens labels
-  setLensLabels();
-
-  // Wire diamonds
-  ["north","east","south","west"].forEach(function(id){
+  ["dFeels","dMatters","dWorks","dNext"].forEach(function(id){
     var el=document.getElementById(id);
-    el.onclick=function(){ open(id); };
-    el.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(id);} };
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+    });
   });
 
-  // Lens controls
-  styleChip.onclick=function(){ style = (style==="formal") ? "informal" : "formal"; render(); };
+  // Lenses (inside modal only)
+  chipStyle.onclick=function(){
+    style = (style==="formal") ? "informal" : "formal";
+    render();
+  };
   chipConcept.onclick=function(){ time="origin"; render(); };
   chipNow.onclick=function(){ time="now"; render(); };
-  chipPost.onclick=function(){ time="post"; render(); };
+  chipRoadmap.onclick=function(){ time="post"; render(); };
 
-  // Close controls
+  // Close actions
   bd.onclick=close;
   mClose.onclick=close;
   document.getElementById("mReturn").onclick=close;
 
-  // Init
-  setLinks();
+  setLensLabels();
 })();
 </script>
 

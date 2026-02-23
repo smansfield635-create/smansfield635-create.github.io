@@ -1,96 +1,90 @@
-<!-- TNT — /door/index.html  (LANGUAGE SELECT · GEM STANDARD)
-     Goal: Make the first page match the SOFTWARE gem aesthetic.
-     Behavior:
-       - Choose EN or 中文 → set gd_lang and route to /index.html (Terminal / Structural Preface)
-       - Preserve existing gd_style / gd_time if present; otherwise defaults.
-       - No 404 routes: always goes to /index.html
+<!-- TNT — /door/index.html  (DOOR · LANGUAGE SELECT · GEM STANDARD)
+     LOCKS:
+       - TNT ONLY (full file)
+       - Uses /assets/ui.css + /assets/branch.css only (no asset rewrites)
+       - DO NOT style html/body background (ui.css owns field)
+       - Purpose: choose LANGUAGE (EN / 中文) then route to /index.html with state
+       - State preserved: gd_style + gd_time (and accepts URL overrides if present)
+       - Result route: /index.html?lang=__&style=__&time=__
 -->
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOOR · Language</title>
+<title>DOOR · Cardinal Axis</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
+/* DO NOT TOUCH FIELD — ui.css owns html/body background */
+
 :root{
-  --gold:rgba(212,175,55,.9);
+  --R:140px;
   --goldSoft:rgba(212,175,55,.35);
   --obs1:#070b12;
   --obs2:#0c1626;
-  --mut2:rgba(255,255,255,.70);
 }
 
-body{
-  margin:0;
-  min-height:100vh;
-  background:
-    radial-gradient(circle at 50% 40%, rgba(90,140,255,.10), transparent 60%),
-    repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 1px, transparent 1px 100px),
-    linear-gradient(180deg,#b00000 0%,#7a0000 60%,#550000 100%);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:#fff;
-  overflow-x:hidden;
-}
-
+/* Top-left */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:90;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
+
+/* Fallback button style (if ui.css already provides .crp-btn, use it in markup) */
 .btn{
-  padding:10px 16px;
-  border-radius:14px;
+  padding:10px 16px;border-radius:14px;
   background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:white;
-  border:1px solid rgba(255,255,255,.08);
+  color:#fff;border:1px solid rgba(255,255,255,.08);
   box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  text-decoration:none;
+  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
 }
 .btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
 
-.hero{
-  width:min(920px, 92vw);
-  margin:70px auto 0;
+/* Header */
+.wrap{
+  width:min(980px,94vw);
+  margin:0 auto;
+  padding:26px 0 90px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
   text-align:center;
 }
 .kicker{
-  font-weight:950;
-  letter-spacing:3px;
-  opacity:.85;
+  margin-top:36px;
   font-size:12px;
+  letter-spacing:2.6px;
+  text-transform:uppercase;
+  opacity:.80;
 }
-.h1{
-  margin:10px 0 6px;
+.title{
+  margin:0;
+  font-size:54px;
   font-weight:950;
-  letter-spacing:2px;
-  font-size:42px;
+  letter-spacing:.2px;
+  line-height:1.0;
 }
 .sub{
   margin:0;
-  opacity:.78;
+  opacity:.82;
   font-size:15px;
-  letter-spacing:.6px;
+  line-height:1.35;
 }
 
+/* Stage */
 .stage{
-  width:min(640px, 92vw);
-  height:min(640px, 92vw);
-  margin:24px auto 0;
   position:relative;
+  margin-top:18px;
+  width:min(560px,92vw);
+  height:min(560px,92vw);
 }
-
 .outer{
-  position:absolute;
-  left:50%; top:50%;
-  width:min(640px, 92vw);
-  height:min(640px, 92vw);
+  position:absolute;left:50%;top:50%;
+  width:100%;height:100%;
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   background:
@@ -99,26 +93,25 @@ body{
     linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
   border:1px solid rgba(255,255,255,.10);
   box-shadow:
-    0 90px 260px rgba(0,0,0,.72),
+    0 90px 260px rgba(0,0,0,.62),
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -50px 90px rgba(0,0,0,.55);
   pointer-events:none;
-  opacity:.85;
+  opacity:.55;
 }
 .outer::after{
   content:"";
-  position:absolute; inset:0;
-  border-radius:60px;
+  position:absolute;inset:0;border-radius:60px;
   background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.16;
+  opacity:.14;
 }
 
+/* Diamonds */
 .d{
   width:210px;height:210px;
-  position:absolute;
-  left:50%;top:50%;
+  position:absolute;left:50%;top:50%;
   transform-origin:center;
-  border-radius:28px;
+  border-radius:26px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 
@@ -136,8 +129,7 @@ body{
 }
 .d::before{
   content:"";
-  position:absolute; inset:0;
-  border-radius:28px; padding:1px;
+  position:absolute;inset:0;border-radius:26px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.45;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -147,7 +139,7 @@ body{
 .d::after{
   content:"";
   position:absolute;
-  left:12%; right:12%;
+  left:12%;right:12%;
   top:10%;
   height:28%;
   border-radius:999px;
@@ -173,40 +165,36 @@ body{
     inset 0 -32px 52px rgba(0,0,0,.68);
 }
 
-.d-en{ transform:translate(-50%,-50%) translate(0, -130px) rotate(45deg); }
-.d-zh{ transform:translate(-50%,-50%) translate(0, 130px) rotate(45deg); }
+/* Placement: stacked */
+.d-en{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
+.d-zh{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
 
 .inner{
-  width:100%; height:100%;
+  width:100%;height:100%;
   transform:rotate(-45deg);
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:16px;
+  padding:18px;
+  gap:8px;
   pointer-events:none;
   user-select:none;
 }
-.lab{
-  font-weight:950;
-  letter-spacing:1.6px;
-  font-size:18px;
-}
+.lab{ font-weight:950; letter-spacing:.9px; font-size:18px; }
 
 .footer{
-  width:min(920px, 92vw);
-  margin:18px auto 28px;
-  text-align:center;
-  color:var(--mut2);
-  font-size:12px;
-  letter-spacing:.6px;
+  margin-top:18px;
+  opacity:.74;
+  font-size:13px;
+  line-height:1.35;
 }
 
 @media (max-width:520px){
-  .h1{ font-size:36px; }
-  .d{ width:200px; height:200px; }
-  .d-en{ transform:translate(-50%,-50%) translate(0, -118px) rotate(45deg); }
-  .d-zh{ transform:translate(-50%,-50%) translate(0, 118px) rotate(45deg); }
+  :root{ --R: 122px; }
+  .title{font-size:46px}
+  .d{width:190px;height:190px}
 }
 </style>
 </head>
@@ -214,13 +202,13 @@ body{
 <body>
 
 <div class="top-left">
-  <a class="btn" id="exitBtn" href="https://smansfield635-create.github.io/">EXIT</a>
+  <a class="crp-btn" id="btnExit" href="/home/">EXIT</a>
 </div>
 
-<section class="hero">
+<main class="wrap" aria-label="Door language selection">
   <div class="kicker" id="kicker">CARDINAL AXIS</div>
-  <div class="h1" id="title">Select Language</div>
-  <p class="sub" id="subtitle">Choose a canonical lens to enter the system.</p>
+  <h1 class="title" id="title">Select language</h1>
+  <p class="sub" id="subtitle">Choose a canonical language to enter the system.</p>
 
   <div class="stage" aria-label="Language diamonds">
     <div class="outer"></div>
@@ -235,16 +223,27 @@ body{
   </div>
 
   <div class="footer" id="foot">Coherence-based traversal study · under construction · safe to explore</div>
-</section>
+</main>
 
 <script>
 (function(){
+  // URL overrides allowed (so shared links open deterministically)
+  var qs = new URLSearchParams(location.search);
+  var qStyle = qs.get("style");
+  var qTime  = qs.get("time");
+
   // preserve / default lenses
-  var style = localStorage.getItem("gd_style") || "formal";
-  var time  = localStorage.getItem("gd_time")  || "now";
+  var style = (qStyle==="formal"||qStyle==="informal") ? qStyle : (localStorage.getItem("gd_style") || "formal");
+  var time  = (qTime==="origin"||qTime==="now"||qTime==="post") ? qTime : (localStorage.getItem("gd_time") || "now");
+
   if(time==="trajectory") time="post";
   if(["origin","now","post"].indexOf(time)<0) time="now";
   if(["formal","informal"].indexOf(style)<0) style="formal";
+
+  try{
+    localStorage.setItem("gd_style", style);
+    localStorage.setItem("gd_time", time);
+  }catch(e){}
 
   function go(lang){
     try{ localStorage.setItem("gd_lang", lang); }catch(e){}
@@ -271,8 +270,15 @@ body{
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
     });
   });
+
+  // EXIT preserves state
+  var exit = document.getElementById("btnExit");
+  exit.href = "/home/?lang="+encodeURIComponent(localStorage.getItem("gd_lang")||"en")+
+              "&style="+encodeURIComponent(style)+
+              "&time="+encodeURIComponent(time);
 })();
 </script>
 
 </body>
 </html>
+```0

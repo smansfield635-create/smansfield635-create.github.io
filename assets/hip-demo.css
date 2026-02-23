@@ -1,11 +1,21 @@
 /* ============================================================
-   HIP DEMO UI — MID-AUTUMN UNIFORMITY PASS
+   HIP DEMO UI — MID-AUTUMN UNIFORMITY PASS (TNT)
    FILE: /assets/hip-demo.css
-   SCOPE:
+   SCOPE (LOCKED):
    - Styles the /hip-demo/ page only
-   - No html/body background ownership (ui.css owns field)
-   - Uses existing ui primitives where possible
+   - NO html/body background ownership (ui.css owns field)
+   - NO geometry transforms (branch.css owns geometry)
+   - Uses ui.css primitives where possible
    ============================================================ */
+
+/* Normalize anchors inside this page (kills any residual blue/purple) */
+.hipdemo-wrap a,
+.hipdemo-wrap a:visited,
+.hipdemo-wrap a:hover,
+.hipdemo-wrap a:active{
+  color:inherit;
+  text-decoration:none;
+}
 
 /* Demo shell containers (safe, local) */
 .hipdemo-wrap{
@@ -15,6 +25,7 @@
   padding:26px 18px 56px;
 }
 
+/* Card uses the same “black glass” feel (no field ownership) */
 .hipdemo-card{
   width:100%;
   max-width:980px;
@@ -22,12 +33,12 @@
   padding:28px;
   border-radius:22px;
 
-  background:rgba(10,12,29,.45);
+  background:linear-gradient(145deg, rgba(17,22,28,.82), rgba(11,15,20,.88));
   border:1px solid rgba(255,255,255,.10);
 
   box-shadow:
     0 22px 70px rgba(0,0,0,.55),
-    inset 0 0 0 1px rgba(255,255,255,.06);
+    inset 0 1px 0 rgba(255,255,255,.06);
 }
 
 /* Headline + subhead */
@@ -57,6 +68,7 @@
   margin:14px 0 18px;
 }
 
+/* “Pill” buttons: match ui.css bubble vibe (black → gold) */
 .hipdemo-pill{
   display:inline-flex;
   align-items:center;
@@ -65,8 +77,8 @@
   padding:10px 14px;
   border-radius:14px;
 
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
   color:#fff;
 
   font-weight:800;
@@ -76,21 +88,24 @@
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 
-  transition:transform .08s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
+  transition:transform .08s ease, border-color .12s ease, box-shadow .12s ease;
 }
 
 .hipdemo-pill:hover{
-  background:rgba(0,0,0,.26);
-  border-color:rgba(255,255,255,.28);
-  box-shadow:0 0 18px rgba(255,210,140,.10);
+  border-color:rgba(212,175,55,.35);
+  box-shadow:
+    0 0 16px rgba(212,175,55,.18),
+    0 10px 26px rgba(0,0,0,.55);
 }
 
 .hipdemo-pill:active{ transform:scale(.98); }
 
 .hipdemo-pill.primary{
-  background:linear-gradient(135deg, rgba(255,210,120,.22), rgba(255,150,60,.10));
-  border-color:rgba(255,210,120,.40);
-  box-shadow:0 0 22px rgba(255,200,120,.12);
+  border-color:rgba(212,175,55,.70);
+  box-shadow:
+    0 0 22px rgba(212,175,55,.26),
+    0 12px 28px rgba(0,0,0,.60),
+    inset 0 0 18px rgba(212,175,55,.08);
 }
 
 /* Demo panels */
@@ -106,7 +121,7 @@
 .hipdemo-panel{
   border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
+  background:rgba(0,0,0,.16);
   padding:14px;
   box-shadow:0 14px 40px rgba(0,0,0,.28);
 }
@@ -137,7 +152,8 @@
   padding:10px 12px;
   border-radius:14px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.16);
+  background:rgba(0,0,0,.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
 }
 
 .hipdemo-metric .k{
@@ -166,11 +182,15 @@
   overflow:hidden;
 }
 
+/* Mid-autumn glow accent (local) */
 .hipdemo-chart::after{
   content:"";
   position:absolute;
   inset:-30%;
-  background:radial-gradient(circle at 50% 30%, rgba(255,220,140,.14), rgba(255,220,140,0) 55%);
+  background:
+    radial-gradient(circle at 50% 28%, rgba(255,220,140,.12), rgba(255,220,140,0) 56%),
+    radial-gradient(circle at 22% 18%, rgba(255,150,90,.08), rgba(255,150,90,0) 60%),
+    radial-gradient(circle at 78% 20%, rgba(255,210,130,.08), rgba(255,210,130,0) 60%);
   pointer-events:none;
 }
 

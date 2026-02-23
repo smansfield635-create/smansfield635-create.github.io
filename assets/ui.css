@@ -1,34 +1,51 @@
 /* ============================================================
-   GEODIAMETRICS UI — CANONICAL MATERIAL SYSTEM
-   RED FIELD · BLACK STRUCTURE · GOLD ENERGY
+   GEODIAMETRICS UI — CANONICAL FIELD OWNER
+   RED FIELD · GOLD GRID · BLACK MATERIAL
    FILE: /assets/ui.css
-   OWNERSHIP:
-   - ONLY file allowed to style html/body background/field
-   - Owns: shell, cards, typography, buttons/links, chips, dividers, topbar
-   - MUST NOT define geometry layouts (branch.css owns those)
+   RULE: This file owns html/body background. NOTHING ELSE may.
    ============================================================ */
 
-/* ---------- FIELD (SINGLE OWNER) ---------- */
+/* =========================
+   ROOT TOKENS
+   ========================= */
+
+:root{
+  --red-top:#b00000;
+  --red-mid:#7a0000;
+  --red-deep:#4a0000;
+
+  --gold:#d4af37;
+  --gold-soft:rgba(212,175,55,.35);
+
+  --black-1:#0b0f16;
+  --black-2:#111827;
+
+  --white-1:#ffffff;
+  --white-2:rgba(255,255,255,.82);
+}
+
+/* =========================
+   FIELD (SINGLE OWNER)
+   ========================= */
+
 html, body{
   margin:0;
   padding:0;
   min-height:100%;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  color:#f5f5f5;
 
-  /* Door-style lantern red field */
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:var(--white-1);
+
   background:
-    radial-gradient(circle at 50% 18%, rgba(212,175,55,.10) 0%, rgba(212,175,55,0) 46%),
-    radial-gradient(circle at 20% 30%, rgba(255,140,90,.14) 0%, rgba(255,140,90,0) 55%),
-    radial-gradient(circle at 85% 70%, rgba(255,170,90,.10) 0%, rgba(255,170,90,0) 58%),
-    linear-gradient(180deg, #990000 0%, #5b0000 55%, #200000 100%);
+    radial-gradient(circle at 50% 20%, rgba(255,210,120,.08) 0%, transparent 55%),
+    radial-gradient(circle at 20% 40%, rgba(255,140,90,.08) 0%, transparent 60%),
+    radial-gradient(circle at 85% 70%, rgba(255,160,90,.06) 0%, transparent 60%),
+    linear-gradient(180deg, var(--red-top) 0%, var(--red-mid) 60%, var(--red-deep) 100%);
+
   background-attachment:fixed;
 }
 
-*{ box-sizing:border-box; }
-a{ color:inherit; }
-
-/* Subtle diamond grid (structural, not loud) */
+/* subtle diamond grid overlay */
 body::before{
   content:"";
   position:fixed;
@@ -37,223 +54,100 @@ body::before{
   background:
     repeating-linear-gradient(
       45deg,
-      rgba(212,175,55,0.035) 0px,
-      rgba(212,175,55,0.035) 1px,
+      rgba(212,175,55,.03) 0px,
+      rgba(212,175,55,.03) 1px,
       transparent 1px,
       transparent 140px
     ),
     repeating-linear-gradient(
       -45deg,
-      rgba(212,175,55,0.035) 0px,
-      rgba(212,175,55,0.035) 1px,
+      rgba(212,175,55,.03) 0px,
+      rgba(212,175,55,.03) 1px,
       transparent 1px,
       transparent 140px
     );
 }
 
-/* ---------- LAYOUT SHELL ---------- */
-.crp-shell{
-  width:100%;
-  max-width:1100px;
-  margin:0 auto;
-  padding:26px 18px 56px;
-}
+/* =========================
+   MATERIAL BUTTON SYSTEM
+   ========================= */
 
-.crp-center{
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  min-height:100vh;
-  padding-top:46px;
-}
+button,
+.btn{
+  appearance:none;
+  border:none;
+  cursor:pointer;
 
-/* ---------- CARD (BLACK GLASS) ---------- */
-.crp-card{
-  width:100%;
-  max-width:900px;
-  padding:28px;
-  border-radius:22px;
+  padding:10px 18px;
+  border-radius:16px;
 
-  background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.92));
-  border:1px solid rgba(255,255,255,.09);
+  background:linear-gradient(145deg,var(--black-2),var(--black-1));
+  border:1px solid rgba(255,255,255,.10);
+
+  color:var(--white-1);
+  font-weight:800;
+  letter-spacing:.3px;
 
   box-shadow:
-    0 22px 70px rgba(0,0,0,.60),
+    0 14px 36px rgba(0,0,0,.6),
     inset 0 1px 0 rgba(255,255,255,.06);
 
-  position:relative;
-  z-index:1;
-  pointer-events:auto;
+  transition:
+    transform .12s ease,
+    box-shadow .18s ease,
+    border-color .18s ease;
 }
 
-@media (max-width:520px){
-  .crp-card{ padding:20px; }
-}
-
-/* ---------- TYPOGRAPHY ---------- */
-.crp-header{ margin-bottom:10px; }
-
-.crp-mark{
-  font-size:12px;
-  letter-spacing:2.4px;
-  text-transform:uppercase;
-  opacity:.78;
-  margin-bottom:8px;
-}
-
-.crp-title{
-  margin:0 0 8px;
-  font-size:44px;
-  font-weight:900;
-  line-height:1.05;
-  letter-spacing:.25px;
-}
-
-.crp-subtitle{
-  margin:0 0 16px;
-  opacity:.84;
-  font-size:18px;
-  line-height:1.35;
-}
-
-.crp-h2{
-  margin:0 0 12px;
-  font-size:20px;
-  font-weight:900;
-  letter-spacing:.2px;
-}
-
-/* ---------- DIVIDERS / FOOTER ---------- */
-.crp-divider{
-  border:0;
-  height:1px;
-  margin:18px 0;
-  background:rgba(255,255,255,.10);
-}
-
-.crp-footer{
-  margin-top:18px;
-  opacity:.78;
-  font-size:13px;
-  line-height:1.35;
-}
-
-.crp-footnote code{ opacity:.95; }
-
-/* ---------- BUTTONS (BLACK → GOLD ACTIVE) ---------- */
-.crp-actions{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-}
-
-.crp-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-
-  padding:12px 18px;
-  border-radius:14px;
-
-  border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-  color:#fff;
-
-  font-weight:850;
-  letter-spacing:.25px;
-  text-decoration:none;
-
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-
-  transition:transform .08s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
-
-  position:relative;
-  z-index:2;
-  pointer-events:auto !important;
-}
-
-.crp-btn:hover{
-  border-color:rgba(212,175,55,.35);
+button:hover,
+.btn:hover{
+  border-color:var(--gold);
   box-shadow:
-    0 0 16px rgba(212,175,55,.20),
-    0 10px 26px rgba(0,0,0,.55);
+    0 18px 50px rgba(0,0,0,.85),
+    0 0 16px var(--gold-soft);
 }
 
-.crp-btn:active{ transform:scale(.98); }
+button:active,
+.btn:active{
+  transform:scale(.98);
+}
 
-.crp-btn-primary{
-  border-color:rgba(212,175,55,.70);
+.btn.active{
+  border-color:var(--gold);
   box-shadow:
-    0 0 22px rgba(212,175,55,.35),
-    0 12px 28px rgba(0,0,0,.60),
-    inset 0 0 18px rgba(212,175,55,.10);
+    0 0 20px var(--gold-soft),
+    0 18px 50px rgba(0,0,0,.85);
 }
 
-/* ---------- CHIPS (LENSES) ---------- */
-.crp-lens{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
+/* =========================
+   TYPOGRAPHY
+   ========================= */
+
+h1,h2,h3,h4{
+  margin:0;
+  font-weight:900;
+  letter-spacing:.3px;
 }
 
-.crp-chip{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-
-  padding:8px 12px;
-  border-radius:12px;
-
-  border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-  color:#fff;
-
-  cursor:pointer;
-  font-weight:750;
-  letter-spacing:.2px;
-  text-decoration:none;
-
-  position:relative;
-  z-index:2;
-  pointer-events:auto !important;
-
-  transition:background .12s ease, border-color .12s ease, box-shadow .12s ease;
+p{
+  color:var(--white-2);
+  line-height:1.5;
 }
 
-.crp-chip:hover{
-  border-color:rgba(212,175,55,.28);
-  box-shadow:0 0 14px rgba(212,175,55,.16);
+/* =========================
+   GLASS CONTAINERS
+   ========================= */
+
+.glass{
+  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  backdrop-filter:blur(8px);
 }
 
-.crp-chip[aria-pressed="true"]{
-  border-color:rgba(212,175,55,.70);
-  box-shadow:0 0 18px rgba(212,175,55,.30);
-}
-
-/* Optional disabled state */
-.crp-chip[aria-disabled="true"]{
-  opacity:.35;
-  pointer-events:none;
-  filter:grayscale(1);
-}
-
-/* ---------- TOPBAR ---------- */
-.crp-topbar{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:14px;
-  margin:0 0 14px;
-}
-
-.crp-topbar-left{ min-width:0; }
-.crp-topbar-right{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-}
-
-/* ---------- TAP SAFETY ---------- */
-main, section, header, footer, nav, article, div{ pointer-events:auto; }
+/* =========================
+   DO NOT ADD:
+   - .diamond
+   - geometry transforms
+   - layout positioning
+   Those belong in branch.css
+   ========================= */

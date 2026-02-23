@@ -1,7 +1,8 @@
 /* ============================================================
    GEODIAMETRICS BRANCH — CANONICAL GEOMETRY LAYER (branch.css)
-   OWNERSHIP:
-   - GEOMETRY ONLY (layout + diamond positioning)
+   FILE: /assets/branch.css
+   OWNERSHIP (LOCKED):
+   - GEOMETRY ONLY (layout + positioning + transforms + modal geometry)
    - MUST NOT set html/body background, color-scheme, or typography
    - MUST NOT override ui.css field ownership
    ============================================================ */
@@ -16,12 +17,12 @@
   --gd-radius: 22px;
 }
 
-/* ---------- Common wrappers ---------- */
+/* ---------- Common wrappers (geometry only) ---------- */
 .page{ width:100%; }
 .wrap{ width:min(1100px,94vw); margin:0 auto; }
 .stage{ width:100%; display:flex; justify-content:center; align-items:center; }
 
-/* ---------- Diamond primitives ---------- */
+/* ---------- Diamond primitives (geometry only) ---------- */
 .diamond,
 .gd-diamond{
   position:relative;
@@ -52,7 +53,7 @@
   padding:14px;
 }
 
-/* Optional small label blocks */
+/* Optional small label blocks (no typography styling beyond size/opacity) */
 .diamond small,
 .gd-diamond small{
   opacity:.82;
@@ -109,7 +110,86 @@
   width:min(720px,92vw);
 }
 
-/* ---------- Responsive scaling ---------- */
+/* ============================================================
+   MODAL GEOMETRY (NO COLORS / NO MATERIAL)
+   Purpose: stop repeating modal positioning in every page.
+   Styling (background/borders/shadows/colors) stays in ui.css or per-page.
+   ============================================================ */
+
+.bd{
+  position:fixed;
+  inset:0;
+  display:none;
+  z-index:200;
+}
+.bd.show{ display:block; }
+
+.modal{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(1020px,94vw);
+  max-height:88vh;
+  display:none;
+  z-index:210;
+}
+.modal.show{ display:block; }
+
+.shell{
+  height:88vh;
+  max-height:88vh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+.mhead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:14px 16px;
+  flex:0 0 auto;
+}
+
+.mbody{
+  padding:14px 16px 18px;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  flex:1 1 auto;
+}
+
+.lensbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:center;
+  padding:10px 10px 14px;
+  margin:-6px -6px 14px;
+}
+
+.mgrid{
+  display:grid;
+  gap:14px;
+}
+@media (min-width:920px){
+  .mgrid{ grid-template-columns:1fr 1fr; }
+}
+
+.mact{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:14px;
+}
+
+/* ============================================================
+   RESPONSIVE SCALING
+   ============================================================ */
+
 @media (max-width:520px){
   :root{ --gd-diamond: var(--gd-diamond-mobile); }
   .platform,
@@ -122,6 +202,7 @@
     width:60px;
     height:60px;
   }
+  .shell{ height:90vh; max-height:90vh; }
 }
 
 /* ---------- Pointer event safety (geometry only) ---------- */

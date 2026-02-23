@@ -1,11 +1,12 @@
-<!-- TNT — /links/index.html  (LINKS HUB · GEM STANDARD · WORKING LINKS)
-     Fixes the issue: “they don’t go anywhere.”
-     ✅ Every link is a real href (no placeholders)
-     ✅ Gem-uniform with HUB/SOFTWARE/LAWS/PRODUCTS
-     ✅ Dual language (EN + 中文) via gd_lang + ?lang=
-     ✅ No lenses on main page; lenses inside modal only
-     ✅ Modal: 4 sections × 4 bulletins + real outbound buttons
-     ✅ State propagates across internal navigation (lang/style/time)
+<!-- TNT — /links/index.html  (QUEEN’S ARCHITECTURE · LINKS · ANCHOR DIAMOND)
+     Changes in this TNT:
+     ✅ Title + header updated to QUEEN’S ARCHITECTURE
+     ✅ Links page is ANCHOR-TYPE: diamonds open centered modal + outbound buttons
+     ✅ No subcategories / no recursion
+     ✅ Dual language always (EN + 中文) using gd_lang + ?lang=
+     ✅ Lenses are INSIDE modal only (Style + Concept/Now/Post)
+     ✅ Every modal has 4 sections × 4 bulletins + WORKING buttons (open URLs)
+     ✅ Internal navigation propagates lang/style/time
 -->
 
 <!doctype html>
@@ -13,7 +14,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>LINKS · Cardinal Axis</title>
+<title>LINKS · Queen’s Architecture</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -343,7 +344,7 @@ body{
 .ul{ margin:0 0 0 18px; padding:0; color:var(--mut2); }
 .ul li{ margin:6px 0; }
 
-/* Real links row inside modal */
+/* Clickable rows inside boxes */
 .linkrow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
 .linkbtn{
   display:inline-block;
@@ -387,15 +388,15 @@ body{
 </div>
 
 <div class="brand">
-  <div class="name" id="brandName">CARDINAL AXIS</div>
+  <div class="name" id="brandName">QUEEN’S ARCHITECTURE</div>
   <div class="tag" id="brandTag">LINKS · ANCHORS</div>
 </div>
 
-<div class="stage" aria-label="Links diamond">
+<div class="stage" aria-label="Links anchor diamond">
   <div class="outer"></div>
 
   <div class="d d-n" id="north" role="button" tabindex="0">
-    <div class="inner"><div class="lab" id="nLab">IDENTITY</div><div class="sub" id="nSub">Research identity anchors.</div></div>
+    <div class="inner"><div class="lab" id="nLab">IDENTITY</div><div class="sub" id="nSub">ORCID and attribution.</div></div>
   </div>
 
   <div class="d d-e" id="east" role="button" tabindex="0">
@@ -407,7 +408,7 @@ body{
   </div>
 
   <div class="d d-w" id="west" role="button" tabindex="0">
-    <div class="inner"><div class="lab" id="wLab">CONTACT</div><div class="sub" id="wSub">Direct channels.</div></div>
+    <div class="inner"><div class="lab" id="wLab">CONTACT</div><div class="sub" id="wSub">Email and entry points.</div></div>
   </div>
 
   <div class="core">◆</div>
@@ -441,27 +442,19 @@ body{
 
       <div class="mgrid">
         <div class="box">
-          <h4 class="h" id="h1"></h4>
-          <p class="p" id="p1"></p>
-          <ul class="ul" id="u1"></ul>
+          <h4 class="h" id="h1"></h4><p class="p" id="p1"></p><ul class="ul" id="u1"></ul>
           <div class="linkrow" id="links1"></div>
         </div>
         <div class="box">
-          <h4 class="h" id="h2"></h4>
-          <p class="p" id="p2"></p>
-          <ul class="ul" id="u2"></ul>
+          <h4 class="h" id="h2"></h4><p class="p" id="p2"></p><ul class="ul" id="u2"></ul>
           <div class="linkrow" id="links2"></div>
         </div>
         <div class="box">
-          <h4 class="h" id="h3"></h4>
-          <p class="p" id="p3"></p>
-          <ul class="ul" id="u3"></ul>
+          <h4 class="h" id="h3"></h4><p class="p" id="p3"></p><ul class="ul" id="u3"></ul>
           <div class="linkrow" id="links3"></div>
         </div>
         <div class="box">
-          <h4 class="h" id="h4"></h4>
-          <p class="p" id="p4"></p>
-          <ul class="ul" id="u4"></ul>
+          <h4 class="h" id="h4"></h4><p class="p" id="p4"></p><ul class="ul" id="u4"></ul>
           <div class="linkrow" id="links4"></div>
         </div>
       </div>
@@ -477,22 +470,16 @@ body{
 
 <script>
 (function(){
-  /* URL → STATE HYDRATION */
+  /* STATE */
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-
   if(lang!=="en" && lang!=="zh") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
-
-  try{
-    localStorage.setItem("gd_lang", lang);
-    localStorage.setItem("gd_style", style);
-    localStorage.setItem("gd_time", time);
-  }catch(e){}
+  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time);}catch(e){}
 
   function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
   function setLinks(){
@@ -510,163 +497,198 @@ body{
     document.getElementById("mGoProducts").href="/products/?"+s;
   }
 
+  /* REAL TARGETS (WORKING) */
+  var ORCID="https://orcid.org/0009-0004-1293-0405";
+  var OSF_PROJECT="https://osf.io/g5294/";
+  var OSF_ROOT="https://osf.io/";
+  var GITHUB_ROOT="https://github.com/";
+  var SITE="https://smansfield635-create.github.io/";
+  var EMAIL="mailto:smansfield635@gmail.com";
+
   var UI={
     en:{
-      brand:"CARDINAL AXIS",
       tag:"LINKS · ANCHORS",
       lens:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",now:"NOW",post:"POST"},
-      d:{
-        n:{lab:"IDENTITY",sub:"Research identity anchors."},
-        e:{lab:"PROJECTS",sub:"OSF and public nodes."},
-        s:{lab:"SOURCE",sub:"GitHub and artifacts."},
-        w:{lab:"CONTACT",sub:"Direct channels."}
-      },
-      btn:{open:"OPEN ↗"}
+      d:{n:{lab:"IDENTITY",sub:"ORCID and attribution."},e:{lab:"PROJECTS",sub:"OSF and public nodes."},s:{lab:"SOURCE",sub:"GitHub and artifacts."},w:{lab:"CONTACT",sub:"Email and entry points."}},
+      open:"OPEN ↗", email:"EMAIL ↗"
     },
     zh:{
-      brand:"枢轴罗盘",
       tag:"链接 · 锚点",
       lens:{formal:"正式",informal:"非正式",concept:"概念",now:"当前",post:"后续"},
-      d:{
-        n:{lab:"身份",sub:"研究身份锚点。"},
-        e:{lab:"项目",sub:"OSF 与公开节点。"},
-        s:{lab:"源码",sub:"GitHub 与工件。"},
-        w:{lab:"联系",sub:"直接渠道。"}
-      },
-      btn:{open:"打开 ↗"}
+      d:{n:{lab:"身份",sub:"ORCID 与署名。"},e:{lab:"项目",sub:"OSF 与公开节点。"},s:{lab:"源码",sub:"GitHub 与工件。"},w:{lab:"联系",sub:"邮箱与入口。"}},
+      open:"打开 ↗", email:"写邮件 ↗"
     }
   };
-
   var pack=(lang==="zh")?UI.zh:UI.en;
-  document.documentElement.lang = (lang==="zh")?"zh":"en";
-
-  document.getElementById("brandName").textContent=pack.brand;
+  document.documentElement.lang=(lang==="zh")?"zh":"en";
   document.getElementById("brandTag").textContent=pack.tag;
+  document.getElementById("nLab").textContent=pack.d.n.lab; document.getElementById("nSub").textContent=pack.d.n.sub;
+  document.getElementById("eLab").textContent=pack.d.e.lab; document.getElementById("eSub").textContent=pack.d.e.sub;
+  document.getElementById("sLab").textContent=pack.d.s.lab; document.getElementById("sSub").textContent=pack.d.s.sub;
+  document.getElementById("wLab").textContent=pack.d.w.lab; document.getElementById("wSub").textContent=pack.d.w.sub;
 
-  document.getElementById("nLab").textContent=pack.d.n.lab;
-  document.getElementById("nSub").textContent=pack.d.n.sub;
-  document.getElementById("eLab").textContent=pack.d.e.lab;
-  document.getElementById("eSub").textContent=pack.d.e.sub;
-  document.getElementById("sLab").textContent=pack.d.s.lab;
-  document.getElementById("sSub").textContent=pack.d.s.sub;
-  document.getElementById("wLab").textContent=pack.d.w.lab;
-  document.getElementById("wSub").textContent=pack.d.w.sub;
-
-  // Lens labels
+  /* MODAL */
+  var bd=document.getElementById("bd");
+  var modal=document.getElementById("modal");
+  var mClose=document.getElementById("mClose");
+  var mTitle=document.getElementById("mTitle");
   var styleChip=document.getElementById("styleChip");
   var chipConcept=document.getElementById("chipConcept");
   var chipNow=document.getElementById("chipNow");
   var chipPost=document.getElementById("chipPost");
 
-  function persist(){
-    try{
-      localStorage.setItem("gd_lang", lang);
-      localStorage.setItem("gd_style", style);
-      localStorage.setItem("gd_time", time);
-    }catch(e){}
-  }
-
   function setLensLabels(){
-    styleChip.textContent = "STYLE: " + (style==="formal" ? pack.lens.formal : pack.lens.informal);
-    chipConcept.textContent = pack.lens.concept;
-    chipNow.textContent = pack.lens.now;
-    chipPost.textContent = pack.lens.post;
-
+    styleChip.textContent="STYLE: "+(style==="formal"?pack.lens.formal:pack.lens.informal);
+    chipConcept.textContent=pack.lens.concept;
+    chipNow.textContent=pack.lens.now;
+    chipPost.textContent=pack.lens.post;
     chipConcept.classList.toggle("active", time==="origin");
     chipNow.classList.toggle("active", time==="now");
     chipPost.classList.toggle("active", time==="post");
   }
 
-  // Real external anchors
-  var ORCID = "https://orcid.org/0009-0004-1293-0405";
-  var OSF_ROOT = "https://osf.io/";
-  var OSF_PROJECT = "https://osf.io/g5294/";
-  var SITE = "https://smansfield635-create.github.io/";
-  var GITHUB = "https://github.com/";
-  var EMAIL = "mailto:smansfield635@gmail.com";
-
-  function linkButton(href, label){
+  function linkButton(href,label){
     var a=document.createElement("a");
     a.className="linkbtn";
     a.href=href;
-    a.target = href.startsWith("http") ? "_blank" : "";
-    a.rel = href.startsWith("http") ? "noopener" : "";
-    a.textContent = label;
+    if(href.startsWith("http")){ a.target="_blank"; a.rel="noopener"; }
+    a.textContent=label;
     return a;
   }
 
-  // Modal refs
-  var bd=document.getElementById("bd");
-  var modal=document.getElementById("modal");
-  var mClose=document.getElementById("mClose");
-  var mTitle=document.getElementById("mTitle");
+  function fill(hEl,pEl,uEl,linksEl,b){
+    hEl.textContent=b.h; pEl.textContent=b.p; uEl.innerHTML=""; linksEl.innerHTML="";
+    b.u.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; uEl.appendChild(li); });
+    (b.links||[]).forEach(function(L){ linksEl.appendChild(linkButton(L.href,L.label)); });
+  }
 
   var h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1"),links1=document.getElementById("links1");
   var h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2"),links2=document.getElementById("links2");
   var h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3"),links3=document.getElementById("links3");
   var h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4"),links4=document.getElementById("links4");
 
-  function fill(hEl,pEl,uEl,linksEl,b){
-    hEl.textContent=b.h;
-    pEl.textContent=b.p;
-    uEl.innerHTML="";
-    (b.u||[]).forEach(function(x){
-      var li=document.createElement("li");
-      li.textContent=x;
-      uEl.appendChild(li);
-    });
-    linksEl.innerHTML="";
-    (b.links||[]).forEach(function(L){
-      linksEl.appendChild(linkButton(L.href, L.label));
+  function content(dir){
+    var C={
+      north:{
+        title:(lang==="zh"?"身份":"IDENTITY"),
+        b1:{h:"ORCID",p:(lang==="zh"?"公开研究身份锚点。":"Public research identity anchor."),u:["Verifiable.","Citable.","Stable over time.","Primary identity surface."],
+            links:[{href:ORCID,label:pack.open}]},
+        b2:{h:(lang==="zh"?"署名":"Attribution"),p:(lang==="zh"?"用于署名、引用、对外一致性。":"For attribution, citation, external consistency."),u:["One ID across projects.","Low ambiguity.","Public lookup.","Stable anchor."],
+            links:[]},
+        b3:{h:(lang==="zh"?"站点":"Site"),p:(lang==="zh"?"公开站点入口。":"Public site entry."),u:["Uniform UI.","Stable routes.","State propagation.","Safe navigation."],
+            links:[{href:SITE,label:pack.open}]},
+        b4:{h:(lang==="zh"?"操作":"Action"),p:(lang==="zh"?"打开并复制链接用于分享。":"Open and copy for sharing."),u:["Open ORCID.","Copy URL.","Paste into posts.","Return to hub."],
+            links:[]}
+      },
+      east:{
+        title:(lang==="zh"?"项目":"PROJECTS"),
+        b1:{h:"OSF",p:(lang==="zh"?"公开项目登记与归档。":"Public project registry and archive."),u:["Public nodes.","Artifacts.","Versioning.","Citations."],
+            links:[{href:OSF_PROJECT,label:(lang==="zh"?"打开项目 ↗":"OPEN PROJECT ↗")},{href:OSF_ROOT,label:pack.open}]},
+        b2:{h:(lang==="zh"?"节点":"Node"),p:(lang==="zh"?"当前公开节点用于对外分享。":"Current public node for sharing."),u:["Stable link.","Public access.","Referenceable.","Safe."],
+            links:[{href:OSF_PROJECT,label:(lang==="zh"?"打开 g5294 ↗":"OPEN g5294 ↗")}]},
+        b3:{h:(lang==="zh"?"标准":"Standards"),p:(lang==="zh"?"标准与报告可在 OSF 作为工件发布。":"Standards/reports can be published as artifacts."),u:["PDF specs.","Reports.","Datasets.","Changelogs."],
+            links:[]},
+        b4:{h:(lang==="zh"?"操作":"Action"),p:(lang==="zh"?"打开 OSF 并定位到项目。":"Open OSF and navigate to projects."),u:["Open project.","Copy share link.","Return here.","Continue traversal."],
+            links:[]}
+      },
+      south:{
+        title:(lang==="zh"?"源码":"SOURCE"),
+        b1:{h:"GitHub",p:(lang==="zh"?"源码与发布层所在。":"Where source and deployment live."),u:["Version control.","Issues/PRs.","Releases.","Pages deploy."],
+            links:[{href:GITHUB_ROOT,label:pack.open}]},
+        b2:{h:(lang==="zh"?"资产":"Assets"),p:(lang==="zh"?"CSS/JS 可以直接打开验证版本。":"Assets can be opened directly to verify versions."),u:["ui.css.","branch.css.","instrument.js.","Cache-busting via ?v=."],
+            links:[{href:SITE+"assets/ui.css",label:"ui.css ↗"},{href:SITE+"assets/branch.css",label:"branch.css ↗"}]},
+        b3:{h:(lang==="zh"?"部署":"Deploy"),p:(lang==="zh"?"部署应可通过探测标记验证。":"Deploy should be verifiable via probe markers."),u:["LIVE_PROBE comment.","View-source check.","Actions run.","Incognito confirm."],
+            links:[]},
+        b4:{h:(lang==="zh"?"操作":"Action"),p:(lang==="zh"?"打开仓库后检查 Pages 设置。":"Open repo and check Pages settings."),u:["Settings → Pages.","Confirm branch/folder.","Confirm last deploy.","Fix mismatches."],
+            links:[]}
+      },
+      west:{
+        title:(lang==="zh"?"联系":"CONTACT"),
+        b1:{h:(lang==="zh"?"邮箱":"Email"),p:(lang==="zh"?"直接联系渠道。":"Direct contact channel."),u:["Fast.","Direct.","Traceable.","Public-safe."],
+            links:[{href:EMAIL,label:pack.email}]},
+        b2:{h:(lang==="zh"?"入口":"Entry"),p:(lang==="zh"?"分享时优先发 Hub 或 Terminal。":"Share Hub or Terminal by default."),u:["/home/ hub.","/index.html terminal.","Stable routes.","Avoid deep links."],
+            links:[{href:SITE,label:pack.open}]},
+        b3:{h:(lang==="zh"?"对外规则":"External rule"),p:(lang==="zh"?"对外只用可验证锚点。":"Use verifiable anchors externally."),u:["ORCID + OSF + Site.","No dead links.","Uniform UI.","Clear context."],
+            links:[{href:ORCID,label:"ORCID ↗"},{href:OSF_PROJECT,label:"OSF ↗"}]},
+        b4:{h:(lang==="zh"?"操作":"Action"),p:(lang==="zh"?"写邮件并附上 Hub 链接。":"Send email with Hub link attached."),u:["Compose message.","Include Hub URL.","Include OSF node.","Send."],
+            links:[]}
+      }
+    };
+
+    // Lens variations (keep meaning change without breaking)
+    // Formal vs informal and time mainly changes headline emphasis.
+    var base=C[dir];
+    if(style==="informal"){
+      base = JSON.parse(JSON.stringify(base));
+      base.b2.p = (lang==="zh"?"更短、更直白。":"Shorter, more direct framing.");
+    }
+    if(time==="origin"){
+      base = JSON.parse(JSON.stringify(base));
+      base.b1.u[0] = (lang==="zh"?"这是起点锚点。":"This is the origin anchor.");
+    }else if(time==="post"){
+      base = JSON.parse(JSON.stringify(base));
+      base.b4.p = (lang==="zh"?"后续会加入更多锚点，但这些必须永远可用。":"More anchors will be added later, but these must always work.");
+    }
+    return base;
+  }
+
+  var active=null;
+  function setActiveDiamond(id){
+    ["north","east","south","west"].forEach(function(x){
+      document.getElementById(x).classList.toggle("active", x===id);
     });
   }
 
-  function view(dir){
-    // Lens-aware copy (kept meaningful; links always active)
-    var openLabel = pack.btn.open;
-    var v = {
-      n:{
-        origin:{formal:{
-          title:(lang==="zh"?"身份":"IDENTITY"),
-          b1:{h:(lang==="zh"?"ORCID":"ORCID"),p:(lang==="zh"?"研究身份锚点，可公开验证。":"Research identity anchor, publicly verifiable."),u:["Persistent identifier.","Public profile.","Citation-safe.","Identity continuity."],
-              links:[{href:ORCID,label:openLabel}]},
-          b2:{h:(lang==="zh"?"站点":"SITE"),p:(lang==="zh"?"公开入口与导航层。":"Public entry point and navigation layer."),u:["Public access.","Stable routes.","Gem standard UI.","Traversal hub."],
-              links:[{href:SITE,label:openLabel}]},
-          b3:{h:(lang==="zh"?"语言状态":"STATE"),p:(lang==="zh"?"状态通过 gd_* 键传播。":"State propagates via gd_* keys."),u:["gd_lang.","gd_style.","gd_time.","No mixed keys."],
-              links:[]},
-          b4:{h:(lang==="zh"?"用途":"USE"),p:(lang==="zh"?"用于对外身份与引用的统一锚点。":"Single anchor set for identity and citation."),u:["One identity surface.","One citation route.","No drift.","Always reachable."],
-              links:[]}
-        },informal:{
-          title:(lang==="zh"?"身份":"IDENTITY"),
-          b1:{h:"ORCID",p:(lang==="zh"?"这是你的公开研究身份证。":"Your public research ID."),u:["Verified.","Stable.","Citable.","Public."],links:[{href:ORCID,label:openLabel}]},
-          b2:{h:(lang==="zh"?"站点":"SITE"),p:(lang==="zh"?"这是公开入口。":"Public entry point."),u:["Reachable.","Stable.","Uniform.","Clean."],links:[{href:SITE,label:openLabel}]},
-          b3:{h:(lang==="zh"?"状态":"STATE"),p:(lang==="zh"?"状态跟随你移动。":"State follows you."),u:["Language.","Style.","Time.","No surprises."],links:[]},
-          b4:{h:(lang==="zh"?"结果":"RESULT"),p:(lang==="zh"?"别人能验证你是谁。":"Others can verify who you are."),u:["Trust.","Clarity.","Consistency.","No drift."],links:[]}
-        }},
-        now:{formal:{title:(lang==="zh"?"身份":"IDENTITY"),
-          b1:{h:"ORCID",p:(lang==="zh"?"当前身份锚点可用。":"Identity anchor is live."),u:["Works now.","Public.","Stable.","Citable."],links:[{href:ORCID,label:openLabel}]},
-          b2:{h:(lang==="zh"?"站点":"SITE"),p:(lang==="zh"?"当前站点路由可用。":"Site routing is live."),u:["Hub works.","Dock works.","Modals work.","Returns work."],links:[{href:SITE,label:openLabel}]},
-          b3:{h:(lang==="zh"?"一致性":"COHERENCE"),p:(lang==="zh"?"统一外观=统一信任。":"Uniform UI supports trust."),u:["Same gems.","Same contract.","Same state.","Same behavior."],links:[]},
-          b4:{h:(lang==="zh"?"下一步":"NEXT"),p:(lang==="zh"?"添加更多身份锚点时保持一致。":"Keep uniform when adding anchors."),u:["No new keys.","No drift.","No broken links.","Always reachable."],links:[]}
-        },informal:{title:(lang==="zh"?"身份":"IDENTITY"),
-          b1:{h:"ORCID",p:(lang==="zh"?"现在就能打开。":"Opens now."),u:["One click.","Public.","Stable.","Done."],links:[{href:ORCID,label:openLabel}]},
-          b2:{h:(lang==="zh"?"站点":"SITE"),p:(lang==="zh"?"站点也能打开。":"Site opens."),u:["Routes work.","Looks uniform.","No drift.","Return works."],links:[{href:SITE,label:openLabel}]},
-          b3:{h:(lang==="zh"?"规则":"RULE"),p:(lang==="zh"?"链接必须是真链接。":"Links must be real."),u:["Real hrefs.","No dead buttons.","No 404 loops.","No placeholders."],links:[]},
-          b4:{h:(lang==="zh"?"结果":"RESULT"),p:(lang==="zh"?"身份可验证。":"Identity is verifiable."),u:["Trust.","Clarity.","Consistency.","Speed."],links:[]}
-        }},
-        post:{formal:{title:(lang==="zh"?"身份":"IDENTITY"),
-          b1:{h:(lang==="zh"?"公开锚点":"PUBLIC"),p:(lang==="zh"?"未来加入更多公开身份与注册表锚点。":"Add more public anchors over time."),u:["Registry ties.","Citations.","Proof bundles.","Versioning."],links:[{href:ORCID,label:openLabel}]},
-          b2:{h:(lang==="zh"?"一致性":"UNIFORM"),p:(lang==="zh"?"统一入口=统一可信度。":"Uniform entry increases credibility."),u:["Same gems.","Same contract.","Same keys.","Same behavior."],links:[]},
-          b3:{h:(lang==="zh"?"证据":"EVIDENCE"),p:(lang==="zh"?"身份锚点连接证据哈希与登记状态。":"Anchors connect to evidence + status."),u:["Hash bundles.","Registry status.","Audit trail.","Replay."],links:[]},
-          b4:{h:(lang==="zh"?"结果":"RESULT"),p:(lang==="zh"?"对外可验证且可追溯。":"Externally verifiable and traceable."),u:["Trust.","Durability.","Legal defensibility.","Enterprise-ready."],links:[]}
-        },informal:{title:(lang==="zh"?"身份":"IDENTITY"),
-          b1:{h:(lang==="zh"?"身份":"ID"),p:(lang==="zh"?"更多锚点会加入。":"More anchors later."),u:["Registry.","Citations.","Proof.","Versions."],links:[{href:ORCID,label:openLabel}]},
-          b2:{h:(lang==="zh"?"统一":"UNIFORM"),p:(lang==="zh"?"保持统一。":"Keep it uniform."),u:["Same gems.","Same rules.","Same keys.","Same feel."],links:[]},
-          b3:{h:(lang==="zh"?"证据":"PROOF"),p:(lang==="zh"?"连接证明。":"Connect proof."),u:["Hashes.","Status.","Audits.","Replay."],links:[]},
-          b4:{h:(lang==="zh"?"结果":"RESULT"),p:(lang==="zh"?"更可信。":"More credible."),u:["Trust.","Speed.","Stability.","Scale."],links:[]}
-        }}
-      },
-      e:{
-        origin:{formal:{title:(lang==="zh"?"项目":"PROJECTS"),
-          b1:{h:"OSF",p:(lang==="zh"?"公开项目注册表入口。":"Public project registry entry point."),u:["Project hosting.","Public references.","Versioned files.","Citation anchors."],
-              links:[{href:OSF
+  function open(dir){
+    active=dir;
+    setActiveDiamond(dir);
+    render();
+    bd.classList.add("show");
+    modal.classList.add("show");
+  }
+
+  function close(){
+    bd.classList.remove("show");
+    modal.classList.remove("show");
+    setActiveDiamond("__none__");
+    active=null;
+  }
+
+  function render(){
+    try{ localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time);}catch(e){}
+    setLinks();
+    setLensLabels();
+    var v=content(active);
+    mTitle.textContent=v.title;
+    fill(h1,p1,u1,links1,v.b1);
+    fill(h2,p2,u2,links2,v.b2);
+    fill(h3,p3,u3,links3,v.b3);
+    fill(h4,p4,u4,links4,v.b4);
+  }
+
+  // Wire diamonds
+  ["north","east","south","west"].forEach(function(id){
+    var el=document.getElementById(id);
+    el.onclick=function(){ open(id); };
+    el.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(id);} };
+  });
+
+  // Lens controls
+  styleChip.onclick=function(){ style=(style==="formal")?"informal":"formal"; render(); };
+  chipConcept.onclick=function(){ time="origin"; render(); };
+  chipNow.onclick=function(){ time="now"; render(); };
+  chipPost.onclick=function(){ time="post"; render(); };
+
+  // Close controls
+  bd.onclick=close;
+  mClose.onclick=close;
+  document.getElementById("mReturn").onclick=close;
+
+  // init
+  setLinks();
+  setLensLabels();
+})();
+</script>
+
+</body>
+</html>

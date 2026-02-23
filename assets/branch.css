@@ -1,176 +1,547 @@
-/* ==========================================
-   GEODIAMETRICS MATERIAL SYSTEM
-   Canonical: Red + Black + Gold
-   ========================================== */
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>INNOVATION · Cardinal Axis</title>
 
-:root {
-  --red-deep: #5a0000;
-  --red-core: #8c0000;
-  --gold: #d4af37;
-  --gold-soft: rgba(212,175,55,0.45);
-  --black-matte: #0c0c0f;
-  --black-soft: #151519;
-}
+  <link rel="stylesheet" href="/assets/ui.css"/>
+  <link rel="stylesheet" href="/assets/branch.css"/>
+  <script defer src="/assets/instrument.js"></script>
 
-/* ===== BACKGROUND ===== */
+  <style>
+    /* Page-local layout only (NO html/body background here; ui.css owns field) */
+    .crp-center{ padding-top: 18px; }
+    .topbar{
+      width:100%;
+      max-width:1100px;
+      margin:0 auto;
+      padding:18px 18px 6px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brandblock{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      min-width:0;
+    }
+    .brandblock .kicker{ font-size:12px; letter-spacing:2.2px; text-transform:uppercase; opacity:.78; }
+    .brandblock .title{ font-size:34px; font-weight:900; line-height:1.05; margin:0; }
+    .brandblock .sub{ opacity:.82; font-size:14px; line-height:1.35; }
 
-body {
-  background:
-    radial-gradient(circle at center,
-      rgba(255,180,60,0.05) 0%,
-      rgba(255,120,0,0.04) 30%,
-      transparent 60%),
-    linear-gradient(180deg,
-      var(--red-core) 0%,
-      var(--red-deep) 60%,
-      #200000 100%);
-  background-attachment: fixed;
-  color: #ffffff;
-}
+    .mid{
+      width:100%;
+      max-width:1100px;
+      margin:0 auto;
+      padding: 12px 18px 16px;
+      display:flex;
+      justify-content:center;
+    }
 
-/* ===== CENTERING FIX ===== */
+    /* Make the diamond-container scale up nicely on desktop while still using branch.css geometry */
+    .diamond-container{
+      width:min(420px, 86vw);
+      height:min(420px, 86vw);
+      margin: 28px auto 14px;
+    }
+    /* Recenter the branch.css positioned diamonds based on the container size */
+    .diamond-container .diamond.north{ left: calc(50% - 60px); }
+    .diamond-container .diamond.south{ left: calc(50% - 60px); }
+    .diamond-container .diamond.west{  top:  calc(50% - 60px); }
+    .diamond-container .diamond.east{  top:  calc(50% - 60px); }
+    .diamond-container .diamond.core{
+      left: calc(50% - 40px);
+      top:  calc(50% - 40px);
+    }
 
-.page,
-.wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+    /* Modal (scoped) */
+    .bd{
+      position:fixed; inset:0; z-index:120;
+      background:rgba(0,0,0,.62);
+      backdrop-filter: blur(8px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+    }
+    .bd.show{ display:flex; }
 
-/* ==========================================
-   DIAMOND CORE SYSTEM
-   ========================================== */
+    .modal{
+      width:min(980px, 94vw);
+      max-height:86vh;
+      overflow:hidden;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+      box-shadow: 0 28px 120px rgba(0,0,0,.75);
+      display:flex;
+      flex-direction:column;
+    }
+    .mhead{
+      padding:14px 16px 10px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .mttl{ min-width:0; }
+    .mttl h3{ margin:0; font-size:14px; letter-spacing:.6px; text-transform:uppercase; opacity:.85; }
+    .mttl p{ margin:6px 0 0; opacity:.80; font-size:13px; line-height:1.35; }
+    .mclose{
+      width:38px; height:38px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+      color:#fff;
+      cursor:pointer;
+      font-weight:900;
+    }
 
-.diamond-container {
-  position: relative;
-  width: 320px;
-  height: 320px;
-  margin: 60px auto;
-}
+    .lensrow{
+      padding:10px 16px 12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .lensrow .group{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    .lenslabel{
+      font-size:11px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      opacity:.70;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.14);
+    }
 
-/* smaller diamonds */
-.diamond {
-  width: 120px;
-  height: 120px;
-  background: var(--black-matte);
-  border-radius: 18px;
-  transform: rotate(45deg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.6),
-    inset 0 0 12px rgba(255,255,255,0.02);
-}
+    .mbody{
+      padding:14px 16px 16px;
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 860px){
+      .grid{ grid-template-columns: 1fr; }
+    }
 
-/* text inside diamond */
-.diamond span {
-  transform: rotate(-45deg);
-  font-weight: 600;
-  letter-spacing: 1px;
-}
+    .box{
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+      padding:12px 12px 10px;
+    }
+    .box h4{
+      margin:0;
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:.2px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .box h4 .k{
+      font-size:11px;
+      opacity:.70;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.14);
+      letter-spacing:1px;
+    }
+    .box p{
+      margin:8px 0 8px;
+      font-size:12px;
+      opacity:.84;
+      line-height:1.35;
+    }
+    .box ul{
+      margin:0;
+      padding-left:16px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .box li{
+      font-size:12px;
+      opacity:.90;
+      line-height:1.25;
+    }
+  </style>
+</head>
 
-/* gold activation */
-.diamond:hover,
-.diamond.active {
-  box-shadow:
-    0 0 25px var(--gold-soft),
-    0 15px 40px rgba(0,0,0,0.8);
-  border: 1px solid var(--gold);
-}
+<body>
+  <div class="topbar">
+    <div class="crp-actions">
+      <a class="crp-btn" id="goHub" href="/home/">HUB</a>
+      <a class="crp-btn" id="goExit" href="/door/">EXIT</a>
+    </div>
 
-/* ===== Compass Positions ===== */
+    <div class="brandblock">
+      <div class="kicker" id="kicker">CARDINAL AXIS</div>
+      <h1 class="title" id="title">INNOVATION</h1>
+      <div class="sub" id="subtitle">Future trunks · modal lenses · 4×4 bulletins.</div>
+    </div>
 
-.diamond.north { top: 0; left: 100px; }
-.diamond.south { bottom: 0; left: 100px; }
-.diamond.west  { left: 0; top: 100px; }
-.diamond.east  { right: 0; top: 100px; }
+    <div class="crp-actions">
+      <a class="crp-btn" id="goProducts" href="/products/">PRODUCTS</a>
+      <a class="crp-btn" id="goLaws" href="/laws/">LAWS</a>
+    </div>
+  </div>
 
-/* Center nucleus */
-.diamond.core {
-  top: 100px;
-  left: 100px;
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(145deg, #1a1a1f, #0a0a0d);
-  border-radius: 16px;
-  box-shadow:
-    0 0 30px rgba(212,175,55,0.3),
-    0 0 60px rgba(212,175,55,0.15);
-}
+  <div class="mid">
+    <!-- Uses branch.css geometry component (SCOPED diamonds only) -->
+    <div class="diamond-container" aria-label="Innovation trunks">
+      <!-- We reuse north/east/south/west positions but label them as trunks (NW/NE/SW/SE) -->
+      <div class="diamond north" id="dNW" data-trunk="nw" role="button" tabindex="0"><span id="lblNW">NW</span></div>
+      <div class="diamond east"  id="dNE" data-trunk="ne" role="button" tabindex="0"><span id="lblNE">NE</span></div>
+      <div class="diamond west"  id="dSW" data-trunk="sw" role="button" tabindex="0"><span id="lblSW">SW</span></div>
+      <div class="diamond south" id="dSE" data-trunk="se" role="button" tabindex="0"><span id="lblSE">SE</span></div>
+      <div class="diamond core"><span>◆</span></div>
+    </div>
+  </div>
 
-/* ==========================================
-   BUTTON SYSTEM (Black → Gold)
-   ========================================== */
+  <div class="crp-actions" style="justify-content:center; padding: 0 18px 22px; gap:10px; flex-wrap:wrap;">
+    <a class="crp-btn" id="goTerminal" href="/?v=9900">TERMINAL</a>
+    <a class="crp-btn" id="goLinks" href="/links/">LINKS</a>
+    <a class="crp-btn crp-btn-primary" id="goExplore" href="/explore/">INNOVATION</a>
+    <a class="crp-btn" id="goGauges" href="/gauges/">GAUGES</a>
+  </div>
 
-button,
-.btn {
-  background: var(--black-matte);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 30px;
-  padding: 10px 22px;
-  color: white;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.6);
-}
+  <!-- Modal -->
+  <div class="bd" id="bd" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="mhead">
+        <div class="mttl">
+          <h3 id="mTitle">INNOVATION</h3>
+          <p id="mSub">Lenses inside modal only.</p>
+        </div>
+        <button class="mclose" id="mClose" aria-label="Close">✕</button>
+      </div>
 
-button:hover,
-.btn:hover {
-  border-color: var(--gold);
-  box-shadow:
-    0 0 15px var(--gold-soft),
-    0 4px 18px rgba(0,0,0,0.7);
-}
+      <div class="lensrow">
+        <div class="group">
+          <span class="lenslabel" id="lblStyle">STYLE</span>
+          <button class="crp-chip" id="chipFormal" type="button">FORMAL</button>
+          <button class="crp-chip" id="chipInformal" type="button">INFORMAL</button>
+        </div>
+        <div class="group">
+          <span class="lenslabel" id="lblLife">LIFECYCLE</span>
+          <button class="crp-chip" id="chipOrigin" type="button">CONCEPT</button>
+          <button class="crp-chip" id="chipNow" type="button">NOW</button>
+          <button class="crp-chip" id="chipPost" type="button">ROADMAP</button>
+        </div>
+      </div>
 
-button.active,
-.btn.active {
-  border-color: var(--gold);
-  box-shadow:
-    0 0 20px var(--gold-soft),
-    0 6px 25px rgba(0,0,0,0.8);
-}
+      <div class="mbody">
+        <div class="grid">
+          <div class="box"><h4 id="h1">— <span class="k" id="k1">—</span></h4><p id="p1"></p><ul id="u1"></ul></div>
+          <div class="box"><h4 id="h2">— <span class="k" id="k2">—</span></h4><p id="p2"></p><ul id="u2"></ul></div>
+          <div class="box"><h4 id="h3">— <span class="k" id="k3">—</span></h4><p id="p3"></p><ul id="u3"></ul></div>
+          <div class="box"><h4 id="h4">— <span class="k" id="k4">—</span></h4><p id="p4"></p><ul id="u4"></ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-/* ==========================================
-   BUBBLE OVERLAY
-   ========================================== */
+<script>
+(function(){
+  // Canonical keys only
+  const qs = new URLSearchParams(location.search);
+  let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  let style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  let time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
 
-.bubble-overlay {
-  background: rgba(0,0,0,0.92);
-  border-radius: 22px;
-  padding: 24px;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow:
-    0 0 40px rgba(0,0,0,0.8),
-    0 0 25px rgba(212,175,55,0.15);
-}
+  if(!["en","zh"].includes(lang)) lang="en";
+  if(!["formal","informal"].includes(style)) style="formal";
+  if(time==="trajectory") time="post";
+  if(!["origin","now","post"].includes(time)) time="now";
 
-/* ==========================================
-   MOBILE SCALING
-   ========================================== */
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+  }catch(e){}
 
-@media (max-width: 480px) {
-  .diamond-container {
-    width: 260px;
-    height: 260px;
+  function q(){
+    return `lang=${encodeURIComponent(lang)}&style=${encodeURIComponent(style)}&time=${encodeURIComponent(time)}`;
   }
 
-  .diamond {
-    width: 95px;
-    height: 95px;
+  // propagate to nav links
+  const linkIds = [
+    ["goHub","/home/"],["goExit","/door/"],["goProducts","/products/"],["goLaws","/laws/"],
+    ["goTerminal","/"],["goLinks","/links/"],["goExplore","/explore/"],["goGauges","/gauges/"]
+  ];
+  linkIds.forEach(([id,base])=>{
+    const a=document.getElementById(id);
+    if(!a) return;
+    // keep user’s /?v=9900 terminal if present
+    const href = a.getAttribute("href");
+    if(href && href.includes("?v=")) return;
+    a.href = base + "?" + q();
+  });
+
+  // UI strings (true language lens — not mixed)
+  const UI = {
+    en:{
+      kicker:"CARDINAL AXIS",
+      title:"INNOVATION",
+      subtitle:"Future trunks · modal lenses · 4×4 bulletins.",
+      labels:{nw:"NW",ne:"NE",sw:"SW",se:"SE"},
+      modal:{style:"STYLE",life:"LIFECYCLE",formal:"FORMAL",informal:"INFORMAL",origin:"CONCEPT",now:"NOW",post:"ROADMAP"},
+      trunks:{
+        nw:{name:"LANGUAGE ENGINE", desc:"Constraint language, grammar, indexing, model expansion."},
+        ne:{name:"EXECUTION SYSTEMS", desc:"Deterministic workflows, receipts, constrained operations."},
+        sw:{name:"MEASUREMENT LAB", desc:"Instrumentation, stress sweeps, evidence streams."},
+        se:{name:"GOVERNANCE STACK", desc:"Policies, gates, certification, audit interfaces."}
+      }
+    },
+    zh:{
+      kicker:"枢轴罗盘",
+      title:"创新",
+      subtitle:"未来干线 · 弹窗镜头 · 4×4公告。",
+      labels:{nw:"西北",ne:"东北",sw:"西南",se:"东南"},
+      modal:{style:"风格",life:"生命周期",formal:"正式",informal:"直接",origin:"概念",now:"当前",post:"路线图"},
+      trunks:{
+        nw:{name:"语言引擎", desc:"约束语言、语法、索引、模型扩展。"},
+        ne:{name:"执行系统", desc:"确定性流程、回执、约束执行。"},
+        sw:{name:"测量实验室", desc:"仪器、压力扫掠、证据流。"},
+        se:{name:"治理栈", desc:"策略、门控、认证、审计接口。"}
+      }
+    }
+  };
+  const T = UI[lang];
+  document.documentElement.lang = lang;
+
+  // apply top strings
+  document.getElementById("kicker").textContent = T.kicker;
+  document.getElementById("title").textContent = T.title;
+  document.getElementById("subtitle").textContent = T.subtitle;
+
+  // labels on diamonds (you asked: don’t say Southwest; show trunk name)
+  document.getElementById("lblNW").textContent = T.trunks.nw.name;
+  document.getElementById("lblNE").textContent = T.trunks.ne.name;
+  document.getElementById("lblSW").textContent = T.trunks.sw.name;
+  document.getElementById("lblSE").textContent = T.trunks.se.name;
+
+  // modal labels
+  document.getElementById("lblStyle").textContent = T.modal.style;
+  document.getElementById("lblLife").textContent = T.modal.life;
+  document.getElementById("chipFormal").textContent = T.modal.formal;
+  document.getElementById("chipInformal").textContent = T.modal.informal;
+  document.getElementById("chipOrigin").textContent = T.modal.origin;
+  document.getElementById("chipNow").textContent = T.modal.now;
+  document.getElementById("chipPost").textContent = T.modal.post;
+
+  // content factory: 4 boxes × 4 bullets always
+  function box(k, h, p, bullets){
+    return {k,h,p,bullets};
+  }
+  function packFor(tr){
+    const trunk = T.trunks[tr];
+
+    // time semantics: origin=concept, now=now, post=roadmap
+    const tKey = time;
+
+    // short vs dense
+    const dense = (style === "formal");
+
+    const base = {
+      origin: dense
+        ? box("SCOPE",
+              lang==="zh"?"定义":"Definition",
+              lang==="zh"?`将${trunk.name}定义为未来产品干线：语义稳定、可导航、可审计。`
+                        :`Define ${trunk.name} as a future product trunk: stable semantics, navigable, auditable.`,
+              lang==="zh"
+                ? ["干线名称稳定。","不改拓扑与键。","镜头在弹窗内。","4×4密度为硬规则。"]
+                : ["Trunk name is stable.","Topology+keys stay fixed.","Lenses live in modal.","4×4 density is hard rule."])
+        : box("SCOPE",
+              lang==="zh"?"是什么":"What it is",
+              lang==="zh"?`${trunk.name} 是一个未来产品干线。`:`${trunk.name} is a future product trunk.`,
+              lang==="zh"
+                ? ["名字稳定。","不漂移。","固定地图。","清晰含义。"]
+                : ["Stable name.","No drift.","Fixed map.","Clear meaning."]),
+      now: dense
+        ? box("BUILD",
+              lang==="zh"?"当前":"Now",
+              lang==="zh"?`当前以统一UI运行：同菱形、同弹窗、同镜头、同回退。`:`Runs with uniform UI: same diamonds, modal, lenses, return.`,
+              lang==="zh"
+                ? ["URL注水。","键只用gd_*。","链接传参。","内容随镜头变化。"]
+                : ["URL hydration.","gd_* keys only.","Links propagate state.","Content changes with lenses."])
+        : box("BUILD",
+              lang==="zh"?"现在":"Now",
+              lang==="zh"?`跑起来并保持一致。`:`Make it run and keep it consistent.`,
+              lang==="zh"
+                ? ["同外观。","同手感。","同回退。","同密度。"]
+                : ["Same look.","Same feel.","Same return.","Same density."]),
+      post: dense
+        ? box("ROADMAP",
+              lang==="zh"?"路线图":"Roadmap",
+              lang==="zh"?`晋升为产品线：子页、演示、导出、登记锚点。`:`Promote into product line: subpages, demos, exports, registry anchors.`,
+              lang==="zh"
+                ? ["每干线子枢纽。","每果实演示。","证据包导出。","可审计状态。"]
+                : ["Sub-hub per trunk.","Demos per fruit.","Evidence bundle exports.","Audit-ready status."])
+        : box("ROADMAP",
+              lang==="zh"?"下一步":"Next",
+              lang==="zh"?`把它做成真产品。`:`Turn it into real products.`,
+              lang==="zh"
+                ? ["子页。","演示。","导出。","链接。"]
+                : ["Subpages.","Demos.","Exports.","Links."])
+    };
+
+    const b1 = base[tKey];
+    const b2 = dense
+      ? box("MECHANICS",
+            lang==="zh"?"机制":"Mechanics",
+            lang==="zh"?`点击干线→弹窗；镜头改变内容；保持4×4结构。`:`Tap trunk → modal; lenses change content; keep 4×4 structure.`,
+            lang==="zh"
+              ? ["无跳动。","居中弹窗。","返回关闭。","不改结构。"]
+              : ["No scroll-jump.","Centered modal.","Return closes.","No structure drift."])
+      : box("MECHANICS",
+            lang==="zh"?"怎么跑":"How it works",
+            lang==="zh"?`点开就读，读完就关。`:`Open, read, close.`,
+            lang==="zh"
+              ? ["弹窗里切镜头。","四块内容。","每块四点。","返回关闭。"]
+              : ["Switch lenses in modal.","4 sections.","4 bullets each.","Return closes."]);
+
+    const b3 = dense
+      ? box("QUALITY",
+            lang==="zh"?"完整性":"Integrity",
+            lang==="zh"?`只用gd_*键；URL注水；链接传播；无暗覆盖。`:`gd_* keys only; URL hydration; link propagation; no hidden overrides.`,
+            lang==="zh"
+              ? ["gd_lang。","gd_style。","gd_time。","不加新键。"]
+              : ["gd_lang.","gd_style.","gd_time.","No extra keys."])
+      : box("QUALITY",
+            lang==="zh"?"规则":"Rules",
+            lang==="zh"?`键干净，路由干净。`:`Keys clean, routing clean.`,
+            lang==="zh"
+              ? ["只用gd_*。","链接传参。","不暗跳。","不漂移。"]
+              : ["gd_* only.","Propagate q.","No hidden jumps.","No drift."]);
+
+    const b4 = dense
+      ? box("OUTPUT",
+            lang==="zh"?"输出":"Outputs",
+            lang==="zh"?`把未来产品表达成“安全可读”的预览。`:`Express future products as safe, readable previews.`,
+            lang==="zh"
+              ? ["功能预览。","约束预览。","演示预览。","路线图预览。"]
+              : ["Feature preview.","Constraint preview.","Demo preview.","Roadmap preview."])
+      : box("OUTPUT",
+            lang==="zh"?"预览":"Preview",
+            lang==="zh"?`展示将来会做什么。`:`Show what’s coming.`,
+            lang==="zh"
+              ? ["功能。","规则。","地图。","路线图。"]
+              : ["Features.","Rules.","Map.","Roadmap."]);
+
+    return [b1,b2,b3,b4];
   }
 
-  .diamond.north { left: 82px; }
-  .diamond.south { left: 82px; }
-  .diamond.west  { top: 82px; }
-  .diamond.east  { top: 82px; }
+  // modal controls
+  const bd = document.getElementById("bd");
+  const mClose = document.getElementById("mClose");
+  const mTitle = document.getElementById("mTitle");
+  const mSub = document.getElementById("mSub");
 
-  .diamond.core {
-    width: 60px;
-    height: 60px;
-    top: 82px;
-    left: 82px;
+  const out = [
+    ["h1","k1","p1","u1"],
+    ["h2","k2","p2","u2"],
+    ["h3","k3","p3","u3"],
+    ["h4","k4","p4","u4"]
+  ];
+
+  function render(tr){
+    const meta = T.trunks[tr];
+    mTitle.textContent = meta.name;
+    mSub.textContent = meta.desc;
+
+    const boxes = packFor(tr);
+    boxes.forEach((b, i)=>{
+      const [h,k,p,u] = out[i];
+      document.getElementById(h).textContent = b.h;
+      document.getElementById(k).textContent = b.k;
+      document.getElementById(p).textContent = b.p;
+
+      const ul = document.getElementById(u);
+      ul.innerHTML = "";
+      b.bullets.forEach(x=>{
+        const li = document.createElement("li");
+        li.textContent = x;
+        ul.appendChild(li);
+      });
+    });
   }
-}
+
+  function open(tr){
+    render(tr);
+    bd.classList.add("show");
+    bd.setAttribute("aria-hidden","false");
+  }
+  function close(){
+    bd.classList.remove("show");
+    bd.setAttribute("aria-hidden","true");
+  }
+
+  // wire diamonds
+  document.querySelectorAll(".diamond-container .diamond").forEach(el=>{
+    const tr = el.dataset.trunk;
+    if(!tr) return;
+    el.addEventListener("click", ()=>open(tr));
+    el.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(tr); }});
+  });
+
+  // lens buttons (modal only)
+  function setPressed(){
+    // style pressed
+    document.getElementById("chipFormal").setAttribute("aria-pressed", style==="formal");
+    document.getElementById("chipInformal").setAttribute("aria-pressed", style==="informal");
+    // time pressed
+    document.getElementById("chipOrigin").setAttribute("aria-pressed", time==="origin");
+    document.getElementById("chipNow").setAttribute("aria-pressed", time==="now");
+    document.getElementById("chipPost").setAttribute("aria-pressed", time==="post");
+  }
+
+  function updateUrl(){
+    history.replaceState(null, "", `${location.pathname}?${q()}`);
+  }
+
+  document.getElementById("chipFormal").addEventListener("click", ()=>{
+    style="formal"; localStorage.setItem("gd_style",style); setPressed(); updateUrl(); if(activeTrunk) render(activeTrunk);
+  });
+  document.getElementById("chipInformal").addEventListener("click", ()=>{
+    style="informal"; localStorage.setItem("gd_style",style); setPressed(); updateUrl(); if(activeTrunk) render(activeTrunk);
+  });
+  document.getElementById("chipOrigin").addEventListener("click", ()=>{
+    time="origin"; localStorage.setItem("gd_time",time); setPressed(); updateUrl(); if(activeTrunk) render(activeTrunk);
+  });
+  document.getElementById("chipNow").addEventListener("click", ()=>{
+    time="now"; localStorage.setItem("gd_time",time); setPressed(); updateUrl(); if(activeTrunk) render(activeTrunk);
+  });
+  document.getElementById("chipPost").addEventListener("click", ()=>{
+    time="post"; localStorage.setItem("gd_time",time); setPressed(); updateUrl(); if(activeTrunk) render(activeTrunk);
+  });
+
+  let activeTrunk = null;
+  const oldOpen = open;
+  function open(tr){ activeTrunk = tr; oldOpen(tr); setPressed(); }
+
+  // close controls
+  mClose.addEventListener("click", close);
+  bd.addEventListener("click", (e)=>{ if(e.target===bd) close(); });
+  window.addEventListener("keydown", (e)=>{ if(e.key==="Escape" && bd.classList.contains("show")) close(); });
+
+})();
+</script>
+</body>
+</html>

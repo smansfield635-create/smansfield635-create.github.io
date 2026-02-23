@@ -44,7 +44,7 @@
     0 28px 84px rgba(0,0,0,.78),
     inset 0 2px 0 rgba(255,255,255,.14),
     inset 0 -28px 44px rgba(0,0,0,.62);
-  transition:transform 220ms ease, box-shadow 220ms ease;
+  transition:transform 220ms ease;
 }
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
@@ -124,17 +124,19 @@
 
   function q(){ return "lang="+lang+"&style="+style+"&time="+time; }
 
+  // 🔴 FIXED PATHS — MATCH YOUR ACTUAL REPO STRUCTURE
+
   document.getElementById("dNW").onclick = function(){
-    location.href="/explore/innovation/language/?"+q();
+    location.href="/innovation/language/?"+q();
   };
   document.getElementById("dNE").onclick = function(){
-    location.href="/explore/innovation/execution/?"+q();
+    location.href="/innovation/execution/?"+q();
   };
   document.getElementById("dSW").onclick = function(){
-    location.href="/explore/innovation/measurement/?"+q();
+    location.href="/innovation/measurement/?"+q();
   };
   document.getElementById("dSE").onclick = function(){
-    location.href="/explore/innovation/governance/?"+q();
+    location.href="/innovation/governance/?"+q();
   };
 })();
 </script>

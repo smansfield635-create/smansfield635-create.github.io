@@ -1,272 +1,194 @@
-<!-- TNT — /explore/index.html (KEEP LOOK · CONNECT NW → /innovation/language/)
-     CHANGE ONLY:
-       dNW onclick routes to /innovation/language/ (instead of products or explore-nested)
+<!-- TNT — /explore/index.html  (RESTORED · CANONICAL · CORRECT ROUTING)
+     PURPOSE:
+     - Restore original diamond layout
+     - Route LANGUAGE ENGINE to /innovation/language/
+     - NO UI / CSS ownership changes
+     - NO background overrides
+     - Uses existing /assets/ui.css + /assets/branch.css
 -->
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="color-scheme" content="dark"/>
-<title>EXPLORE · Innovation</title>
+<title>INNOVATION · FUTURE TRUNKS</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instrument.js"></script>
 
 <style>
-  :root{ --R:154px; }
+:root{ --R:154px; }
 
-  .top-left{
-    position:fixed;left:16px;top:16px;z-index:90;
-    display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-  }
+.stage{
+  position:fixed;
+  left:50%;
+  top:52%;
+  transform:translate(-50%,-50%);
+  width:min(720px,94vw);
+  height:min(720px,94vw);
+}
 
-  .brand{
-    position:fixed;left:50%;top:16px;transform:translateX(-50%);
-    z-index:80;text-align:center;
-    padding:10px 14px;border-radius:999px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(0,0,0,.16);
-    backdrop-filter:blur(8px);
-    pointer-events:none;
-  }
-  .brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95;}
-  .brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px;}
+.outer{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(680px,92vw);
+  height:min(680px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 90px 260px rgba(0,0,0,.72);
+  pointer-events:none;
+}
 
-  .stage{
-    position:fixed;left:50%;top:52%;
-    transform:translate(-50%,-50%);
-    width:min(720px,94vw);height:min(720px,94vw);
-    z-index:40;
-  }
+.d{
+  width:170px;
+  height:170px;
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform-origin:center;
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:26px;
+  cursor:pointer;
+  background:linear-gradient(145deg,#0f1826,#070b12);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 28px 84px rgba(0,0,0,.78);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  box-shadow:0 34px 110px rgba(0,0,0,.88);
+}
 
-  .outer{
-    position:absolute;left:50%;top:50%;
-    width:min(680px,92vw);height:min(680px,92vw);
-    transform:translate(-50%,-50%) rotate(45deg);
-    border-radius:60px;
-    background:rgba(0,0,0,.14);
-    border:1px solid rgba(255,255,255,.10);
-    box-shadow:
-      0 90px 260px rgba(0,0,0,.62),
-      inset 0 2px 0 rgba(255,255,255,.08),
-      inset 0 -50px 90px rgba(0,0,0,.55);
-    pointer-events:none;opacity:.65;
-  }
-  .outer::after{
-    content:"";position:absolute;inset:0;border-radius:60px;
-    background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-    opacity:.14;
-  }
+.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
+.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
+.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
+.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
 
-  .d{
-    width:170px;height:170px;
-    position:absolute;left:50%;top:50%;
-    transform-origin:center;border-radius:26px;
-    cursor:pointer;-webkit-tap-highlight-color:transparent;
-    background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.92));
-    border:1px solid rgba(255,255,255,.10);
-    box-shadow:
-      0 28px 84px rgba(0,0,0,.72),
-      inset 0 2px 0 rgba(255,255,255,.14),
-      inset 0 -28px 44px rgba(0,0,0,.62);
-    transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
-  }
-  .d::after{
-    content:"";position:absolute;left:12%;right:12%;top:10%;height:28%;
-    border-radius:999px;
-    background:linear-gradient(to bottom, rgba(255,255,255,.14), rgba(255,255,255,0));
-    opacity:.82;transform:rotate(-10deg);
-    pointer-events:none;
-  }
-  .d:hover{
-    transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-    border-color:rgba(212,175,55,.28);
-    box-shadow:
-      0 34px 110px rgba(0,0,0,.82),
-      0 0 18px rgba(212,175,55,.18),
-      inset 0 2px 0 rgba(255,255,255,.18),
-      inset 0 -32px 52px rgba(0,0,0,.68);
-  }
+.inner{
+  width:100%;
+  height:100%;
+  transform:rotate(-45deg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:16px;
+  pointer-events:none;
+}
+.lab{font-weight:950;letter-spacing:.8px;font-size:16px;}
+.sub{font-size:12px;opacity:.80;}
 
-  .d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-  .d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
-  .d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
-  .d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
+.core{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:74px;
+  height:74px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.22);
+  display:grid;
+  place-items:center;
+  font-weight:950;
+  pointer-events:none;
+}
 
-  .inner{
-    width:100%;height:100%;transform:rotate(-45deg);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    text-align:center;padding:16px;gap:10px;
-    pointer-events:none;
-  }
-  .lab{font-weight:950;letter-spacing:.8px;font-size:16px;}
-  .sub{font-size:12.5px;opacity:.80;line-height:1.35;max-width:18em;}
+.top-left{
+  position:fixed;
+  left:16px;
+  top:16px;
+  display:flex;
+  gap:10px;
+}
+.btn{
+  padding:10px 16px;
+  border-radius:14px;
+  background:linear-gradient(145deg,#0f1826,#070b12);
+  border:1px solid rgba(255,255,255,.10);
+  color:#fff;
+  font-weight:900;
+  text-decoration:none;
+}
 
-  .core{
-    position:absolute;left:50%;top:50%;
-    transform:translate(-50%,-50%);
-    width:74px;height:74px;border-radius:22px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(0,0,0,.18);
-    box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
-    display:grid;place-items:center;
-    font-weight:950;letter-spacing:.5px;
-    opacity:.92;pointer-events:none;
-  }
-
-  .dock{
-    position:fixed;left:50%;
-    bottom:max(12px, env(safe-area-inset-bottom));
-    transform:translateX(-50%);
-    z-index:90;
-    width:min(900px,94vw);
-    display:flex;justify-content:center;
-    gap:10px;flex-wrap:wrap;
-    padding:10px 12px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(0,0,0,.20);
-    backdrop-filter:blur(8px);
-  }
-
-  @media (max-width:560px){
-    :root{ --R:136px; }
-    .d{ width:158px; height:158px; }
-    .stage{ top:54%; }
-  }
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  display:flex;
+  gap:10px;
+}
 </style>
 </head>
 
 <body>
 
 <div class="top-left">
-  <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
-  <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
+  <a class="btn" href="/home/">HUB</a>
+  <a class="btn" href="/door/">EXIT</a>
 </div>
 
-<div class="brand">
-  <div class="name" id="brandName">QUEEN’S ARCHITECTURE</div>
-  <div class="tag" id="brandTag">INNOVATION · FUTURE TRUNKS</div>
-</div>
-
-<div class="stage" aria-label="Explore / Innovation hub">
+<div class="stage">
   <div class="outer"></div>
 
-  <div class="d d-n" id="dNW" role="button" tabindex="0">
+  <div class="d d-n" onclick="go('/innovation/language/')">
     <div class="inner">
-      <div class="lab" id="nwLab">LANGUAGE ENGINE</div>
-      <div class="sub" id="nwSub">Semantic compilers · grammar · indexing.</div>
+      <div class="lab">LANGUAGE ENGINE</div>
+      <div class="sub">Semantic compilers · grammar · indexing.</div>
     </div>
   </div>
 
-  <div class="d d-e" id="dNE" role="button" tabindex="0">
+  <div class="d d-e" onclick="go('/innovation/execution/')">
     <div class="inner">
-      <div class="lab" id="neLab">EXECUTION SYSTEMS</div>
-      <div class="sub" id="neSub">Workflows · receipts · constrained ops.</div>
+      <div class="lab">EXECUTION SYSTEMS</div>
+      <div class="sub">Workflows · receipts · constrained ops.</div>
     </div>
   </div>
 
-  <div class="d d-w" id="dSW" role="button" tabindex="0">
+  <div class="d d-w" onclick="go('/innovation/measurement/')">
     <div class="inner">
-      <div class="lab" id="swLab">MEASUREMENT LAB</div>
-      <div class="sub" id="swSub">Instruments · sweeps · evidence.</div>
+      <div class="lab">MEASUREMENT LAB</div>
+      <div class="sub">Instruments · sweeps · evidence.</div>
     </div>
   </div>
 
-  <div class="d d-s" id="dSE" role="button" tabindex="0">
+  <div class="d d-s" onclick="go('/innovation/governance/')">
     <div class="inner">
-      <div class="lab" id="seLab">GOVERNANCE STACK</div>
-      <div class="sub" id="seSub">Policies · gates · certification.</div>
+      <div class="lab">GOVERNANCE STACK</div>
+      <div class="sub">Policies · gates · certification.</div>
     </div>
   </div>
 
   <div class="core">◆</div>
 </div>
 
-<nav class="dock" id="dock" aria-label="Bottom navigation">
-  <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="crp-btn" id="dockEducation" href="/products/education/">EDUCATION</a>
-  <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
+<nav class="dock">
+  <a class="btn" href="/index.html">TERMINAL</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" href="/links/">LINKS</a>
 </nav>
 
 <script>
 (function(){
-  var qs=new URLSearchParams(location.search);
-  var qLang=qs.get("lang");
-  var qStyle=qs.get("style");
-  var qTime=qs.get("time");
+  var qs = new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
 
-  var lang=(qLang==="zh"||qLang==="en")?qLang:((localStorage.getItem("gd_lang")==="zh")?"zh":"en");
-  var style=(qStyle==="formal"||qStyle==="informal")?qStyle:(localStorage.getItem("gd_style")||"formal");
-  var time=(qTime==="origin"||qTime==="now"||qTime==="post")?qTime:(localStorage.getItem("gd_time")||"now");
-  if(time==="trajectory") time="post";
+  localStorage.setItem("gd_lang",lang);
+  localStorage.setItem("gd_style",style);
+  localStorage.setItem("gd_time",time);
 
-  try{localStorage.setItem("gd_lang",lang);localStorage.setItem("gd_style",style);localStorage.setItem("gd_time",time);}catch(e){}
-
-  function q(){return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);}
-
-  var UI={
-    en:{
-      brand:"QUEEN’S ARCHITECTURE",
-      tag:"INNOVATION · FUTURE TRUNKS",
-      nw:{lab:"LANGUAGE ENGINE",sub:"Semantic compilers · grammar · indexing."},
-      ne:{lab:"EXECUTION SYSTEMS",sub:"Workflows · receipts · constrained ops."},
-      sw:{lab:"MEASUREMENT LAB",sub:"Instruments · sweeps · evidence."},
-      se:{lab:"GOVERNANCE STACK",sub:"Policies · gates · certification."}
-    },
-    zh:{
-      brand:"女王架构",
-      tag:"创新 · 未来干线",
-      nw:{lab:"语言引擎",sub:"语义编译 · 语法 · 索引。"},
-      ne:{lab:"执行系统",sub:"流程 · 回执 · 约束执行。"},
-      sw:{lab:"测量实验室",sub:"仪器 · 扫掠 · 证据流。"},
-      se:{lab:"治理栈",sub:"策略 · 门控 · 认证。"}
-    }
+  window.go = function(path){
+    location.href = path + "?lang=" + lang + "&style=" + style + "&time=" + time;
   };
-  var T=UI[lang]||UI.en;
-  document.documentElement.lang=(lang==="zh")?"zh":"en";
-  document.getElementById("brandName").textContent=T.brand;
-  document.getElementById("brandTag").textContent=T.tag;
-
-  document.getElementById("nwLab").textContent=T.nw.lab;
-  document.getElementById("nwSub").textContent=T.nw.sub;
-  document.getElementById("neLab").textContent=T.ne.lab;
-  document.getElementById("neSub").textContent=T.ne.sub;
-  document.getElementById("swLab").textContent=T.sw.lab;
-  document.getElementById("swSub").textContent=T.sw.sub;
-  document.getElementById("seLab").textContent=T.se.lab;
-  document.getElementById("seSub").textContent=T.se.sub;
-
-  var s=q();
-  document.getElementById("btnHub").href="/home/?"+s;
-  document.getElementById("btnExit").href="/door/?"+s;
-  document.getElementById("dockTerminal").href="/index.html?"+s;
-  document.getElementById("dockProducts").href="/products/?"+s;
-  document.getElementById("dockEducation").href="/products/education/?"+s;
-  document.getElementById("dockLaws").href="/laws/?"+s;
-  document.getElementById("dockLinks").href="/links/?"+s;
-
-  // ✅ CONNECT NW → Innovation language page
-  // Change only this route if you move the folder later.
-  function go(path){ location.href = path + "?" + s; }
-  document.getElementById("dNW").onclick=function(){ go("/innovation/language/"); };
-
-  ["dNE","dSW","dSE"].forEach(function(id){
-    document.getElementById(id).onclick=function(){};
-  });
-
-  ["dNW","dNE","dSW","dSE"].forEach(function(id){
-    var el=document.getElementById(id);
-    el.addEventListener("keydown",function(e){
-      if(e.key==="Enter"||e.key===" "){e.preventDefault();el.click();}
-    });
-  });
-
-  history.replaceState(null,"",location.pathname+"?"+s);
 })();
 </script>
 

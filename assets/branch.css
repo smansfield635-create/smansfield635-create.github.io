@@ -1,102 +1,131 @@
-/* GEODIAMETRICS — BRANCH GEOMETRY (CANONICAL)
-   FILE: /assets/branch.css
+/* ============================================================
+   GEODIAMETRICS BRANCH — CANONICAL GEOMETRY LAYER (branch.css)
    OWNERSHIP:
-   - GEOMETRY + POSITIONING ONLY
-   - MUST NOT style html/body background (ui.css owns field)
-   - MUST NOT redefine material palette (ui.css owns material)
-*/
+   - GEOMETRY ONLY (layout + diamond positioning)
+   - MUST NOT set html/body background, color-scheme, or typography
+   - MUST NOT override ui.css field ownership
+   ============================================================ */
 
-/* ---------- SAFETY: never touch field ---------- */
-html, body { background: unset !important; }
+/* ---------- Safety: branch owns NO field ---------- */
+/* (Intentionally NO html, body selectors here.) */
 
-/* ---------- COMMON STAGE WRAPPERS ---------- */
-.stage,
-.platform,
-.diamond-stage{
+:root{
+  --gd-diamond: 150px;
+  --gd-diamond-mobile: 120px;
+  --gd-gap: 22px;
+  --gd-radius: 22px;
+}
+
+/* ---------- Common wrappers ---------- */
+.page{ width:100%; }
+.wrap{ width:min(1100px,94vw); margin:0 auto; }
+.stage{ width:100%; display:flex; justify-content:center; align-items:center; }
+
+/* ---------- Diamond primitives ---------- */
+.diamond,
+.gd-diamond{
   position:relative;
-  width:min(620px, 92vw);
-  height:min(620px, 92vw);
-  margin:0 auto;
-}
-
-/* ---------- 4-DIAMOND COMPASS PLATFORM ---------- */
-.platform{
-  display:block;
-}
-
-/* This targets ONLY diamonds inside .platform to avoid collisions with page-local .diamond */
-.platform > .diamond{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:170px;
-  height:170px;
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:26px;
+  width:var(--gd-diamond);
+  height:var(--gd-diamond);
+  border-radius:var(--gd-radius);
+  transform:rotate(45deg);
   display:flex;
   align-items:center;
   justify-content:center;
   text-decoration:none;
+  -webkit-tap-highlight-color:transparent;
 }
 
-/* Inner label should read upright */
-.platform > .diamond > span,
-.platform > .diamond > div,
-.platform > .diamond > span > span{
+.diamond > span,
+.gd-diamond > span,
+.diamond > span > span,
+.diamond span{
   transform:rotate(-45deg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
+  gap:6px;
+  width:100%;
+  height:100%;
+  padding:14px;
 }
 
-/* Cardinal positions */
-.platform > .diamond.top{
-  transform:translate(-50%,-50%) translate(0, calc(-1 * var(--platR, 190px))) rotate(45deg);
-}
-.platform > .diamond.right{
-  transform:translate(-50%,-50%) translate(var(--platR, 190px), 0) rotate(45deg);
-}
-.platform > .diamond.bottom{
-  transform:translate(-50%,-50%) translate(0, var(--platR, 190px)) rotate(45deg);
-}
-.platform > .diamond.left{
-  transform:translate(-50%,-50%) translate(calc(-1 * var(--platR, 190px)), 0) rotate(45deg);
+/* Optional small label blocks */
+.diamond small,
+.gd-diamond small{
+  opacity:.82;
+  font-size:12px;
+  letter-spacing:.4px;
 }
 
-/* Optional nucleus (if used) */
-.platform > .diamond.core{
-  width:74px;
-  height:74px;
-  border-radius:22px;
-  transform:translate(-50%,-50%);
+/* ---------- Compass platform (big diamond made of 4 diamonds) ---------- */
+.platform,
+.gd-platform{
+  position:relative;
+  width: calc(var(--gd-diamond) * 3);
+  height: calc(var(--gd-diamond) * 3);
+  display:block;
 }
 
-/* ---------- DIAMOND GRID / LIST HELPERS ---------- */
-.branch-grid{
+/* Position helpers (top/right/bottom/left) */
+.platform .top,
+.gd-platform .top{ position:absolute; left:50%; top:0; transform:translateX(-50%) rotate(45deg); }
+.platform .right,
+.gd-platform .right{ position:absolute; right:0; top:50%; transform:translateY(-50%) rotate(45deg); }
+.platform .bottom,
+.gd-platform .bottom{ position:absolute; left:50%; bottom:0; transform:translateX(-50%) rotate(45deg); }
+.platform .left,
+.gd-platform .left{ position:absolute; left:0; top:50%; transform:translateY(-50%) rotate(45deg); }
+
+/* Center nucleus (small diamond) */
+.platform .center,
+.gd-platform .center{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:72px;
+  height:72px;
+  border-radius:18px;
+  transform:translate(-50%,-50%) rotate(45deg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.platform .center > span,
+.gd-platform .center > span{
+  transform:rotate(-45deg);
+  font-weight:900;
+  letter-spacing:.6px;
+}
+
+/* ---------- Grid-style diamonds (used in some pages) ---------- */
+.diamond-grid,
+.gd-diamond-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-@media (max-width:720px){
-  .branch-grid{ grid-template-columns:1fr; }
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gd-gap);
+  width:min(720px,92vw);
 }
 
-/* ---------- MOBILE SCALING ---------- */
-@media (max-width:560px){
-  .stage,.platform,.diamond-stage{
-    width:min(560px, 94vw);
-    height:min(560px, 94vw);
+/* ---------- Responsive scaling ---------- */
+@media (max-width:520px){
+  :root{ --gd-diamond: var(--gd-diamond-mobile); }
+  .platform,
+  .gd-platform{
+    width: calc(var(--gd-diamond) * 3);
+    height: calc(var(--gd-diamond) * 3);
   }
-  .platform > .diamond{
-    width:158px;
-    height:158px;
-    border-radius:24px;
+  .platform .center,
+  .gd-platform .center{
+    width:60px;
+    height:60px;
   }
-  .platform{ --platR: 170px; }
 }
-@media (max-width:420px){
-  .platform > .diamond{
-    width:146px;
-    height:146px;
-    border-radius:22px;
-  }
-  .platform{ --platR: 158px; }
-}
+
+/* ---------- Pointer event safety (geometry only) ---------- */
+.platform a,
+.gd-platform a,
+.diamond,
+.gd-diamond{ pointer-events:auto; }

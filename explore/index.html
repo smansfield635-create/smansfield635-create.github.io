@@ -1,10 +1,10 @@
-<!-- TNT — /explore/index.html  (RESTORED · CANONICAL · CORRECT ROUTING)
-     PURPOSE:
-     - Restore original diamond layout
-     - Route LANGUAGE ENGINE to /innovation/language/
-     - NO UI / CSS ownership changes
-     - NO background overrides
-     - Uses existing /assets/ui.css + /assets/branch.css
+<!-- TNT — /explore/index.html
+     CANONICAL RESTORE
+     - Uses ONLY /assets/ui.css + /assets/branch.css
+     - No inline field overrides
+     - Restores 3D gem diamond
+     - Routes LANGUAGE ENGINE → /innovation/language/
+     - Deterministic state propagation
 -->
 
 <!doctype html>
@@ -16,10 +16,12 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instrument.js"></script>
 
 <style>
 :root{ --R:154px; }
 
+/* stage only — no background ownership */
 .stage{
   position:fixed;
   left:50%;
@@ -27,19 +29,17 @@
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
+  z-index:40;
 }
 
 .outer{
   position:absolute;
   left:50%;
   top:50%;
-  width:min(680px,92vw);
-  height:min(680px,92vw);
+  width:90%;
+  height:90%;
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 90px 260px rgba(0,0,0,.72);
   pointer-events:none;
 }
 
@@ -53,14 +53,11 @@
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:26px;
   cursor:pointer;
-  background:linear-gradient(145deg,#0f1826,#070b12);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 28px 84px rgba(0,0,0,.78);
-  transition:transform .18s ease, box-shadow .18s ease;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .18s ease;
 }
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-  box-shadow:0 34px 110px rgba(0,0,0,.88);
 }
 
 .d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
@@ -78,10 +75,12 @@
   justify-content:center;
   text-align:center;
   padding:16px;
+  gap:10px;
   pointer-events:none;
 }
-.lab{font-weight:950;letter-spacing:.8px;font-size:16px;}
-.sub{font-size:12px;opacity:.80;}
+
+.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
+.sub{ font-size:12.5px; opacity:.80; line-height:1.35; max-width:18em; }
 
 .core{
   position:absolute;
@@ -91,74 +90,48 @@
   width:74px;
   height:74px;
   border-radius:22px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.22);
   display:grid;
   place-items:center;
   font-weight:950;
+  letter-spacing:.5px;
   pointer-events:none;
-}
-
-.top-left{
-  position:fixed;
-  left:16px;
-  top:16px;
-  display:flex;
-  gap:10px;
-}
-.btn{
-  padding:10px 16px;
-  border-radius:14px;
-  background:linear-gradient(145deg,#0f1826,#070b12);
-  border:1px solid rgba(255,255,255,.10);
-  color:#fff;
-  font-weight:900;
-  text-decoration:none;
-}
-
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  display:flex;
-  gap:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" href="/home/">HUB</a>
-  <a class="btn" href="/door/">EXIT</a>
+<div style="position:fixed;left:16px;top:16px;z-index:90;display:flex;gap:10px;">
+  <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
+  <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
 <div class="stage">
+
   <div class="outer"></div>
 
-  <div class="d d-n" onclick="go('/innovation/language/')">
+  <div class="d d-n" id="dNW" role="button" tabindex="0">
     <div class="inner">
       <div class="lab">LANGUAGE ENGINE</div>
       <div class="sub">Semantic compilers · grammar · indexing.</div>
     </div>
   </div>
 
-  <div class="d d-e" onclick="go('/innovation/execution/')">
+  <div class="d d-e" id="dNE" role="button" tabindex="0">
     <div class="inner">
       <div class="lab">EXECUTION SYSTEMS</div>
       <div class="sub">Workflows · receipts · constrained ops.</div>
     </div>
   </div>
 
-  <div class="d d-w" onclick="go('/innovation/measurement/')">
+  <div class="d d-w" id="dSW" role="button" tabindex="0">
     <div class="inner">
       <div class="lab">MEASUREMENT LAB</div>
       <div class="sub">Instruments · sweeps · evidence.</div>
     </div>
   </div>
 
-  <div class="d d-s" onclick="go('/innovation/governance/')">
+  <div class="d d-s" id="dSE" role="button" tabindex="0">
     <div class="inner">
       <div class="lab">GOVERNANCE STACK</div>
       <div class="sub">Policies · gates · certification.</div>
@@ -166,29 +139,54 @@
   </div>
 
   <div class="core">◆</div>
+
 </div>
 
-<nav class="dock">
-  <a class="btn" href="/index.html">TERMINAL</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/laws/">LAWS</a>
-  <a class="btn" href="/links/">LINKS</a>
+<nav style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:10px;z-index:90;">
+  <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
 </nav>
 
 <script>
 (function(){
+
   var qs = new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var lang = qs.get("lang") || localStorage.getItem("gd_lang") || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var time = qs.get("time") || localStorage.getItem("gd_time") || "now";
 
   localStorage.setItem("gd_lang",lang);
   localStorage.setItem("gd_style",style);
   localStorage.setItem("gd_time",time);
 
-  window.go = function(path){
-    location.href = path + "?lang=" + lang + "&style=" + style + "&time=" + time;
+  function q(){ return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+
+  document.getElementById("btnHub").href="/home/"+q();
+  document.getElementById("btnExit").href="/door/"+q();
+  document.getElementById("dockTerminal").href="/index.html"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockLinks").href="/links/"+q();
+
+  // ROUTING FIX — THIS IS THE CRITICAL PART
+  document.getElementById("dNW").onclick=function(){
+    location.href="/innovation/language/"+q();
   };
+
+  document.getElementById("dNE").onclick=function(){
+    location.href="/innovation/execution/"+q();
+  };
+
+  document.getElementById("dSW").onclick=function(){
+    location.href="/innovation/measurement/"+q();
+  };
+
+  document.getElementById("dSE").onclick=function(){
+    location.href="/innovation/governance/"+q();
+  };
+
 })();
 </script>
 

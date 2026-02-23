@@ -1,1 +1,640 @@
+<!-- TNT — /innovation/language/index.html  (INNOVATION · LANGUAGE ENGINE · SUBPAGE)
+     LOCKS:
+     - Uses existing /assets/ui.css + /assets/branch.css only (NO UI/branch edits)
+     - No lenses on main page (lenses are INSIDE modal only)
+     - Single-language render based on gd_lang / ?lang= (NO EN+中文 simultaneously)
+     - 4 sub-diamonds (diamond-of-diamonds)
+     - Every view = 4 sections × 4 bullets (always filled)
+     - State propagation: lang/style/time carried through links
+-->
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="color-scheme" content="dark"/>
+  <title>INNOVATION · LANGUAGE ENGINE</title>
+
+  <link rel="stylesheet" href="/assets/ui.css"/>
+  <link rel="stylesheet" href="/assets/branch.css"/>
+  <script defer src="/assets/instrument.js"></script>
+
+  <style>
+    /* PAGE-LOCAL LAYOUT ONLY (ui.css owns html/body field) */
+    .inv-shell{width:min(980px,94vw);margin:0 auto;padding:22px 0 120px}
+    .inv-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .inv-left{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .inv-mid{flex:1;min-width:240px;text-align:center}
+    .inv-kicker{font-size:12px;letter-spacing:2.2px;text-transform:uppercase;opacity:.78;margin-bottom:8px}
+    .inv-title{margin:0;font-size:34px;font-weight:950;letter-spacing:.35px;line-height:1.05}
+    .inv-sub{margin:10px 0 0;opacity:.82;font-size:14px;line-height:1.35}
+
+    /* diamond-of-diamonds */
+    .stage{position:relative;margin:18px auto 0;width:min(720px,92vw);height:min(720px,92vw)}
+    :root{ --R: 168px; }
+    .outer{
+      position:absolute;left:50%;top:50%;
+      width:90%;height:90%;
+      transform:translate(-50%,-50%) rotate(45deg);
+      border-radius:44px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.14);
+      box-shadow:0 40px 140px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.06);
+      pointer-events:none;
+    }
+    .d{
+      position:absolute;left:50%;top:50%;
+      width:170px;height:170px;
+      transform-origin:center;
+      transform:translate(-50%,-50%) rotate(45deg);
+      border-radius:26px;
+      border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.92));
+      box-shadow:
+        0 28px 78px rgba(0,0,0,.78),
+        inset 0 2px 0 rgba(255,255,255,.16),
+        inset 0 -22px 34px rgba(0,0,0,.52);
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      transition:transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+    }
+    .d:hover{
+      border-color:rgba(212,175,55,.28);
+      box-shadow:
+        0 34px 92px rgba(0,0,0,.86),
+        0 0 18px rgba(212,175,55,.18),
+        inset 0 2px 0 rgba(255,255,255,.18),
+        inset 0 -26px 40px rgba(0,0,0,.58);
+      transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+    }
+    .d.active{
+      border-color:rgba(212,175,55,.70);
+      box-shadow:
+        0 34px 92px rgba(0,0,0,.86),
+        0 0 26px rgba(212,175,55,.32),
+        inset 0 2px 0 rgba(255,255,255,.18),
+        inset 0 -26px 40px rgba(0,0,0,.58);
+    }
+    .dn{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
+    .de{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
+    .ds{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
+    .dw{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
+    .in{
+      width:100%;height:100%;
+      transform:rotate(-45deg);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:16px;gap:10px;text-align:center;pointer-events:none;
+    }
+    .lab{font-weight:950;letter-spacing:.7px;font-size:16px}
+    .mini{opacity:.84;font-size:12px;line-height:1.35;max-width:18em}
+    .core{
+      position:absolute;left:50%;top:50%;
+      transform:translate(-50%,-50%);
+      width:74px;height:74px;border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
+      display:grid;place-items:center;
+      font-weight:950;letter-spacing:.5px;opacity:.92;
+      pointer-events:none;
+    }
+
+    /* bottom dock */
+    .dock{
+      position:fixed;left:50%;
+      bottom:max(12px, env(safe-area-inset-bottom));
+      transform:translateX(-50%);
+      z-index:90;
+      width:min(980px,94vw);
+      display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+      padding:10px 12px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      backdrop-filter:blur(8px);
+    }
+
+    /* centered modal */
+    .bd{
+      position:fixed;inset:0;z-index:200;
+      background:rgba(0,0,0,.65);
+      backdrop-filter:blur(10px);
+      display:none;
+    }
+    .bd.show{display:block;}
+    .modal{
+      position:fixed;left:50%;top:50%;
+      transform:translate(-50%,-50%);
+      width:min(1040px,94vw);
+      max-height:88vh;
+      display:none;z-index:210;
+    }
+    .modal.show{display:block;}
+    .mshell{
+      height:88vh;
+      border-radius:26px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(circle at 52% 14%, rgba(176,0,0,.16), transparent 55%),
+        radial-gradient(circle at 38% 28%, rgba(90,140,255,.12), transparent 55%),
+        linear-gradient(145deg, rgba(17,22,28,.90), rgba(11,15,20,.94));
+      box-shadow:0 60px 180px rgba(0,0,0,.92);
+      overflow:hidden;
+      display:flex;flex-direction:column;
+    }
+    .mhead{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
+      padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
+    .mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
+
+    /* lenses INSIDE modal only */
+    .lensbar{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;
+      padding:10px 12px 12px;border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .chip{
+      padding:10px 16px;border-radius:999px;
+      background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+      border:1px solid rgba(255,255,255,.10);
+      color:#fff;font-weight:900;letter-spacing:.2px;
+      cursor:pointer;
+      box-shadow:0 14px 36px rgba(0,0,0,.65);
+    }
+    .chip.active{
+      border-color:rgba(212,175,55,.70);
+      box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
+    }
+    .mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
+    .grid{display:grid;gap:14px}
+    @media (min-width:920px){ .grid{grid-template-columns:1fr 1fr} }
+    .box{
+      padding:16px 18px;border-radius:22px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
+        linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
+    }
+    .box h4{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
+    .box p{margin:0 0 10px;color:rgba(255,255,255,.84);line-height:1.55}
+    .box ul{margin:0 0 0 18px;padding:0;color:rgba(255,255,255,.68)}
+    .box li{margin:6px 0}
+
+    @media (max-width:560px){
+      :root{ --R: 150px; }
+      .d{width:156px;height:156px}
+      .stage{height:min(660px,92vw)}
+    }
+  </style>
+</head>
+
+<body>
+  <main class="inv-shell">
+    <div class="inv-top">
+      <div class="inv-left">
+        <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
+        <a class="crp-btn" id="btnBack" href="/innovation/">BACK</a>
+        <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
+      </div>
+
+      <div class="inv-mid">
+        <div class="inv-kicker" id="kicker">INNOVATION</div>
+        <h1 class="inv-title" id="title">LANGUAGE ENGINE</h1>
+        <p class="inv-sub" id="subtitle">Grammar · SSG · DOT.GRID · Acronyms.</p>
+      </div>
+
+      <div style="width:140px;flex:0 0 auto"></div>
+    </div>
+
+    <div class="stage" aria-label="Language Engine diamond">
+      <div class="outer"></div>
+
+      <div class="d dn" id="dGrammar" role="button" tabindex="0"><div class="in"><div class="lab" id="labGrammar">GRAMMAR</div><div class="mini" id="subGrammar">Traversal rules and contracts.</div></div></div>
+      <div class="d de" id="dSSG" role="button" tabindex="0"><div class="in"><div class="lab" id="labSSG">SSG</div><div class="mini" id="subSSG">Constraint syntax geometry.</div></div></div>
+      <div class="d ds" id="dDOT" role="button" tabindex="0"><div class="in"><div class="lab" id="labDOT">DOT.GRID</div><div class="mini" id="subDOT">256-state indexing + sweeps.</div></div></div>
+      <div class="d dw" id="dAcr" role="button" tabindex="0"><div class="in"><div class="lab" id="labAcr">ACRONYMS</div><div class="mini" id="subAcr">Pillars + lookup anchors.</div></div></div>
+
+      <div class="core">◆</div>
+    </div>
+  </main>
+
+  <nav class="dock" aria-label="Bottom navigation">
+    <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+    <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
+    <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
+    <a class="crp-btn crp-btn-primary" id="dockInnovation" href="/innovation/">INNOVATION</a>
+    <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
+    <a class="crp-btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  </nav>
+
+  <div class="bd" id="bd" aria-hidden="true"></div>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <div class="mshell">
+      <div class="mhead">
+        <h3 class="mtitle" id="mTitle">DETAIL</h3>
+        <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
+      </div>
+
+      <div class="lensbar">
+        <button class="chip" id="chipStyle" type="button">STYLE: FORMAL</button>
+        <button class="chip" id="chipConcept" data-time="origin" type="button">CONCEPT</button>
+        <button class="chip" id="chipNow" data-time="now" type="button">NOW</button>
+        <button class="chip" id="chipPost" data-time="post" type="button">ROADMAP</button>
+      </div>
+
+      <div class="mbody">
+        <div class="grid">
+          <div class="box"><h4 id="h1"></h4><p id="p1"></p><ul id="u1"></ul></div>
+          <div class="box"><h4 id="h2"></h4><p id="p2"></p><ul id="u2"></ul></div>
+          <div class="box"><h4 id="h3"></h4><p id="p3"></p><ul id="u3"></ul></div>
+          <div class="box"><h4 id="h4"></h4><p id="p4"></p><ul id="u4"></ul></div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+          <button class="crp-btn" id="mReturn" type="button">RETURN</button>
+          <a class="crp-btn" id="mJumpInnovation" href="/innovation/">JUMP INNOVATION</a>
+          <a class="crp-btn" id="mJumpHub" href="/home/">JUMP HUB</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    // ===== STATE =====
+    var qs = new URLSearchParams(location.search);
+    var qLang = qs.get("lang");
+    var qStyle = qs.get("style");
+    var qTime = qs.get("time");
+
+    var lang = (qLang==="zh"||qLang==="en") ? qLang : ((localStorage.getItem("gd_lang")==="zh") ? "zh" : "en");
+    var style = (qStyle==="formal"||qStyle==="informal") ? qStyle : (localStorage.getItem("gd_style")||"formal");
+    var time = (qTime==="origin"||qTime==="now"||qTime==="post") ? qTime : (localStorage.getItem("gd_time")||"now");
+    if(time==="trajectory") time="post";
+
+    try{
+      localStorage.setItem("gd_lang", lang);
+      localStorage.setItem("gd_style", style);
+      localStorage.setItem("gd_time", time);
+    }catch(e){}
+
+    function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+
+    function setLinks(){
+      var s=q();
+      document.getElementById("btnHub").href="/home/?"+s;
+      document.getElementById("btnBack").href="/innovation/?"+s;
+      document.getElementById("btnExit").href="/door/?"+s;
+
+      document.getElementById("dockTerminal").href="/index.html?"+s;
+      document.getElementById("dockLinks").href="/links/?"+s;
+      document.getElementById("dockProducts").href="/products/?"+s;
+      document.getElementById("dockInnovation").href="/innovation/?"+s;
+      document.getElementById("dockLaws").href="/laws/?"+s;
+      document.getElementById("dockGauges").href="/gauges/?"+s;
+
+      document.getElementById("mJumpInnovation").href="/innovation/?"+s;
+      document.getElementById("mJumpHub").href="/home/?"+s;
+    }
+
+    // ===== I18N (single-language render) =====
+    var I = {
+      en:{
+        kicker:"INNOVATION",
+        title:"LANGUAGE ENGINE",
+        sub:"Grammar · SSG · DOT.GRID · Acronyms.",
+        tiles:{
+          grammar:{lab:"GRAMMAR", sub:"Traversal rules and contracts."},
+          ssg:{lab:"SSG", sub:"Constraint syntax geometry."},
+          dot:{lab:"DOT.GRID", sub:"256-state indexing + sweeps."},
+          acr:{lab:"ACRONYMS", sub:"Pillars + lookup anchors."}
+        },
+        lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", now:"NOW", post:"ROADMAP"},
+        modal:{return:"RETURN", jInv:"JUMP INNOVATION", jHub:"JUMP HUB"},
+        sections:["WHAT IT IS","WHY IT EXISTS","OUTPUTS","HOW TO USE"]
+      },
+      zh:{
+        kicker:"创新",
+        title:"语言引擎",
+        sub:"语法 · SSG · DOT.GRID · 缩写体系。",
+        tiles:{
+          grammar:{lab:"语法", sub:"遍历规则与契约。"},
+          ssg:{lab:"SSG", sub:"约束语法几何。"},
+          dot:{lab:"DOT.GRID", sub:"256状态索引与扫掠。"},
+          acr:{lab:"缩写", sub:"支柱与检索锚点。"}
+        },
+        lens:{formal:"正式", informal:"直接", concept:"概念", now:"现在", post:"路线图"},
+        modal:{return:"返回", jInv:"跳转创新", jHub:"跳转枢纽"},
+        sections:["是什么","为什么","输出","怎么用"]
+      }
+    };
+
+    function applyI18n(){
+      var pack = I[lang] || I.en;
+      document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+      document.getElementById("kicker").textContent = pack.kicker;
+      document.getElementById("title").textContent = pack.title;
+      document.getElementById("subtitle").textContent = pack.sub;
+
+      document.getElementById("labGrammar").textContent = pack.tiles.grammar.lab;
+      document.getElementById("subGrammar").textContent = pack.tiles.grammar.sub;
+      document.getElementById("labSSG").textContent = pack.tiles.ssg.lab;
+      document.getElementById("subSSG").textContent = pack.tiles.ssg.sub;
+      document.getElementById("labDOT").textContent = pack.tiles.dot.lab;
+      document.getElementById("subDOT").textContent = pack.tiles.dot.sub;
+      document.getElementById("labAcr").textContent = pack.tiles.acr.lab;
+      document.getElementById("subAcr").textContent = pack.tiles.acr.sub;
+
+      document.getElementById("mReturn").textContent = pack.modal.return;
+      document.getElementById("mJumpInnovation").textContent = pack.modal.jInv;
+      document.getElementById("mJumpHub").textContent = pack.modal.jHub;
+    }
+
+    // ===== CONTENT (4 sections × 4 bullets always) =====
+    function view(tile, style, time){
+      var isZH = (lang==="zh");
+      function S(en, zh){ return isZH ? zh : en; }
+
+      var T = {
+        grammar:{
+          title: S("GRAMMAR","语法"),
+          what: S("A deterministic set of traversal rules that maps input → structure → output.","把输入→结构→输出固定下来的确定性遍历规则。"),
+          why:  S("Prevents drift by making the allowed moves explicit.","把允许的“移动”写清楚，从而避免漂移。"),
+          out:  S("Contracts, receipts, and route semantics that stay consistent across pages.","跨页一致的契约、回执与路由语义。"),
+          use:  S("Use it to define how any page behaves under the same lens state.","用它定义任何页面在同一镜头状态下的行为。"),
+          bWhat:[
+            S("Traversal primitives are finite and reusable.","遍历原语是有限且可复用的。"),
+            S("Routes carry state deterministically (gd_*).","路由确定性携带状态（gd_*）。"),
+            S("Receipts gate progression, not timers.","回执门控推进，不用计时器。"),
+            S("Same input yields same rendering.","同输入得到同渲染。")
+          ],
+          bWhy:[
+            S("Stops UI/meaning divergence after toggles.","防止切换后UI/含义分裂。"),
+            S("Keeps navigation neutral and falsifiable.","保持导航中立且可证伪。"),
+            S("Limits ambiguity with declared bounds.","用声明边界限制歧义。"),
+            S("Enforces canonicity across pages.","跨页强制规范一致。")
+          ],
+          bOut:[
+            S("Canonical key contract (gd_lang/gd_style/gd_time).","规范键契约（gd_lang/gd_style/gd_time）。"),
+            S("Modal lens placement rule (lenses live inside modal).","镜头放置规则（镜头只在模态内）。"),
+            S("State propagation rule for links.","链接状态传播规则。"),
+            S("Validation rules for disallowed combinations.","不允许组合的确定性修正规则。")
+          ],
+          bUse:[
+            S("Write a page: hydrate state → set links → render content.","写页面：注水状态→设置链接→渲染内容。"),
+            S("Update lens: change content, not just highlights.","切换镜头：改内容，不只是高亮。"),
+            S("Keep 4×4 bulletin density for every view.","每个视图保持4×4公告密度。"),
+            S("Never add new state keys without registry-level decision.","未做登记决策前不加新状态键。")
+          ]
+        },
+
+        ssg:{
+          title:S("SSG","SSG"),
+          what:S("A constraint-language geometry that expresses behavior as Resources/Stores/Constraints/Goals/Guards.","用资源/存储/约束/目标/守卫表达行为的约束语言几何。"),
+          why:S("Compresses complex app behavior into a minimal stable rule set.","把复杂行为压缩成最小稳定规则集。"),
+          out:S("Finite specs that generate consistent UI + routing without drift.","能生成一致UI与路由、不漂移的有限规格。"),
+          use:S("Use SSG to describe what the system must do, then implement once and reuse everywhere.","用SSG描述系统必须做什么，实现一次，全站复用。"),
+          bWhat:[
+            S("Behavior is defined by constraint objects, not narrative.","行为由约束对象定义，不靠叙述。"),
+            S("Global constraints (C1–C5) prevent timer-gated logic.","全局约束（C1–C5）禁止计时门控。"),
+            S("Receipt-gated advancement is first-class.","回执门控推进是一等规则。"),
+            S("Back-nav invalidates downstream receipts.","返回会使下游回执失效。")
+          ],
+          bWhy:[
+            S("Keeps execution deterministic under pressure.","在压力下保持确定性执行。"),
+            S("Prevents hidden state and ad-hoc UI patterns.","防止隐藏状态与随意UI模式。"),
+            S("Makes audits possible from evidence streams.","可由证据流进行审计。"),
+            S("Allows cross-domain reuse (education/software/governance).","允许跨域复用（教育/软件/治理）。")
+          ],
+          bOut:[
+            S("Screen-to-stroke mapping (12 strokes) with receipts.","屏幕到行程映射（12行程）+回执。"),
+            S("Unified press primitives and pointer policy.","统一按压原语与pointer策略。"),
+            S("Atomic handoff with receipt token.","带回执令牌的原子交接。"),
+            S("Deterministic RUNNING criteria (G1–G5).","确定性的RUNNING判据（G1–G5）。")
+          ],
+          bUse:[
+            S("Define: constraints → guards → receipts.","定义：约束→守卫→回执。"),
+            S("Implement: one engine, many pages.","实现：一个引擎，多页面。"),
+            S("Validate: falsifiers + kill conditions.","验证：可证伪项+杀死条件。"),
+            S("Publish: spec pages under Laws/Docs.","发布：在法则/文档中发布规格。")
+          ]
+        },
+
+        dot:{
+          title:S("DOT.GRID","DOT.GRID"),
+          what:S("A 256-state indexing surface for evidence streams and sweep-based validation.","用于证据流与扫掠验证的256状态索引表面。"),
+          why:S("Turns ambiguous situations into structured state classification.","把模糊情境转成结构化状态分类。"),
+          out:S("Replayable runs, tables with bounds, and falsification hit logs.","可回放运行、带边界表格、证伪命中日志。"),
+          use:S("Use DOT.GRID to audit behavior across domains using the same rules.","用DOT.GRID用同一规则跨域审计行为。"),
+          bWhat:[
+            S("States are discrete labels applied to the same evidence.","状态是对同一证据应用的离散标签。"),
+            S("Sweeps evaluate across state lattice, not narratives.","扫掠跨状态格评估，不讲故事。"),
+            S("Outputs include bounds and falsifiers.","输出包含边界与证伪项。"),
+            S("Runs are reproducible from a single evidence stream file.","可从单一证据流文件复现实验。")
+          ],
+          bWhy:[
+            S("Prevents cherry-picking by forcing full-grid coverage.","强制全格覆盖，防止挑数据。"),
+            S("Enables scale-and-correlation standard measurements.","支持规模-相关标准测量。"),
+            S("Supports strict “what/when” reporting.","支持严格的what/when报告。"),
+            S("Allows independent verification by other observers.","允许其他观察者独立复核。")
+          ],
+          bOut:[
+            S("State tables (256) + indicators.","256状态表+指标。"),
+            S("Falsification hit-rate and safety efficiency metrics.","证伪命中率与安全效率指标。"),
+            S("Evidence bundles (timestamped).","带时间戳的证据包。"),
+            S("Kill/exit triggers when constraints break.","约束破坏时触发杀死/退出。")
+          ],
+          bUse:[
+            S("Collect: evidence stream (CSV/JSONL).","收集：证据流（CSV/JSONL）。"),
+            S("Sweep: apply lattice rules across 256 states.","扫掠：对256状态应用规则。"),
+            S("Report: publish bounded claims + falsifiers.","报告：发布有界主张+证伪项。"),
+            S("Integrate: feed results into governance thresholds.","集成：把结果喂给治理阈值。")
+          ]
+        },
+
+        acr:{
+          title:S("ACRONYMS","缩写"),
+          what:S("A canonical lookup layer for the architecture’s main signals and pillars.","用于架构主信号与支柱的规范检索层。"),
+          why:S("Prevents terminology drift by anchoring words to stable definitions.","把词固定到稳定定义上，防止术语漂移。"),
+          out:S("Acronym map pages, diagrams, and cross-links across products/laws/gauges.","缩写地图页面、图表、以及跨产品/法则/仪表的链接。"),
+          use:S("Use it to translate between domains without losing meaning.","用它在跨领域翻译时不丢含义。"),
+          bWhat:[
+            S("Each acronym has one canonical definition.","每个缩写只有一个规范定义。"),
+            S("Pages reference acronyms instead of re-inventing terms.","页面引用缩写，不重复造词。"),
+            S("Cross-links provide fast navigation and context.","交叉链接提供快速导航与上下文。"),
+            S("Dual-language labels map 1:1 to avoid mismatch.","双语标签1:1映射，避免错位。")
+          ],
+          bWhy:[
+            S("Keeps docs and UI aligned over time.","让文档与UI随时间保持一致。"),
+            S("Supports governance and certification references.","支持治理与认证引用。"),
+            S("Improves onboarding speed for new readers.","加速新读者上手。"),
+            S("Enables deterministic translation overlays later.","为后续确定性翻译覆盖层做准备。")
+          ],
+          bOut:[
+            S("Acronym dictionary pages and diagrams.","缩写词典页与图表。"),
+            S("Tagged references across Laws and Products.","在法则/产品中打标签引用。"),
+            S("Searchable anchors for routing and UI chips.","可搜索锚点用于路由与chips。"),
+            S("Change-log discipline for definition updates.","定义更新的变更日志纪律。")
+          ],
+          bUse:[
+            S("Add: new term only through a canonical registry decision.","新增术语必须走规范登记决策。"),
+            S("Link: every product/law points to the acronym anchor.","链接：每个产品/法则指向缩写锚点。"),
+            S("Verify: definitions match across EN/中文.","校验：英/中文定义一致。"),
+            S("Publish: show diagram + lookup table.","发布：展示图表+检索表。")
+          ]
+        }
+      };
+
+      // style/time framing tweaks (content stays filled)
+      var base = T[tile];
+      if(style==="informal"){
+        return {
+          title: base.title,
+          boxes: [
+            {h:S(I.en.sections[0], I.zh.sections[0]), p: base.what, ul: base.bWhat},
+            {h:S(I.en.sections[1], I.zh.sections[1]), p: base.why,  ul: base.bWhy},
+            {h:S(I.en.sections[2], I.zh.sections[2]), p: base.out,  ul: base.bOut},
+            {h:S(I.en.sections[3], I.zh.sections[3]), p: base.use,  ul: base.bUse}
+          ]
+        };
+      }
+      // formal: keep same but slightly more declarative (still filled)
+      return {
+        title: base.title,
+        boxes: [
+          {h:S(I.en.sections[0], I.zh.sections[0]), p: base.what, ul: base.bWhat},
+          {h:S(I.en.sections[1], I.zh.sections[1]), p: base.why,  ul: base.bWhy},
+          {h:S(I.en.sections[2], I.zh.sections[2]), p: base.out,  ul: base.bOut},
+          {h:S(I.en.sections[3], I.zh.sections[3]), p: base.use,  ul: base.bUse}
+        ]
+      };
+    }
+
+    // ===== UI WIRING =====
+    var pack = I[lang] || I.en;
+    document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+    applyI18n();
+    setLinks();
+
+    var bd = document.getElementById("bd");
+    var modal = document.getElementById("modal");
+    var mClose = document.getElementById("mClose");
+    var mReturn = document.getElementById("mReturn");
+    var chipStyle = document.getElementById("chipStyle");
+    var chipConcept = document.getElementById("chipConcept");
+    var chipNow = document.getElementById("chipNow");
+    var chipPost = document.getElementById("chipPost");
+
+    var active = null;
+
+    function setChipText(){
+      var p = I[lang] || I.en;
+      chipStyle.textContent = "STYLE: " + (style==="formal" ? p.lens.formal : p.lens.informal);
+      chipConcept.textContent = p.lens.concept;
+      chipNow.textContent = p.lens.now;
+      chipPost.textContent = p.lens.post;
+
+      chipConcept.classList.toggle("active", time==="origin");
+      chipNow.classList.toggle("active", time==="now");
+      chipPost.classList.toggle("active", time==="post");
+      chipStyle.classList.toggle("active", true);
+    }
+
+    function setActiveDiamond(id){
+      ["dGrammar","dSSG","dDOT","dAcr"].forEach(function(x){
+        var el=document.getElementById(x);
+        if(el) el.classList.toggle("active", x===id);
+      });
+    }
+
+    function fillBox(i, b){
+      document.getElementById("h"+i).textContent = b.h;
+      document.getElementById("p"+i).textContent = b.p;
+      var ul = document.getElementById("u"+i);
+      ul.innerHTML = "";
+      b.ul.forEach(function(x){
+        var li=document.createElement("li");
+        li.textContent = x;
+        ul.appendChild(li);
+      });
+    }
+
+    function render(){
+      setLinks();
+      setChipText();
+
+      if(!active) return;
+
+      var tileKey = (active==="dGrammar") ? "grammar"
+                 : (active==="dSSG") ? "ssg"
+                 : (active==="dDOT") ? "dot"
+                 : "acr";
+
+      var v = view(tileKey, style, time);
+      document.getElementById("mTitle").textContent = v.title;
+
+      fillBox(1, v.boxes[0]);
+      fillBox(2, v.boxes[1]);
+      fillBox(3, v.boxes[2]);
+      fillBox(4, v.boxes[3]);
+
+      try{
+        localStorage.setItem("gd_style", style);
+        localStorage.setItem("gd_time", time);
+      }catch(e){}
+    }
+
+    function open(id){
+      active = id;
+      setActiveDiamond(id);
+      render();
+      bd.classList.add("show");
+      modal.classList.add("show");
+      bd.setAttribute("aria-hidden","false");
+    }
+
+    function close(){
+      bd.classList.remove("show");
+      modal.classList.remove("show");
+      bd.setAttribute("aria-hidden","true");
+      setActiveDiamond(null);
+      active = null;
+    }
+
+    // lens interactions (modal only)
+    chipStyle.addEventListener("click", function(){
+      style = (style==="formal") ? "informal" : "formal";
+      render();
+    });
+    chipConcept.addEventListener("click", function(){ time="origin"; render(); });
+    chipNow.addEventListener("click", function(){ time="now"; render(); });
+    chipPost.addEventListener("click", function(){ time="post"; render(); });
+
+    // modal close
+    bd.addEventListener("click", close);
+    mClose.addEventListener("click", close);
+    mReturn.addEventListener("click", close);
+
+    // diamond clicks
+    document.getElementById("dGrammar").addEventListener("click", function(){ open("dGrammar"); });
+    document.getElementById("dSSG").addEventListener("click", function(){ open("dSSG"); });
+    document.getElementById("dDOT").addEventListener("click", function(){ open("dDOT"); });
+    document.getElementById("dAcr").addEventListener("click", function(){ open("dAcr"); });
+
+    ["dGrammar","dSSG","dDOT","dAcr"].forEach(function(id){
+      var el=document.getElementById(id);
+      el.addEventListener("keydown", function(e){
+        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+      });
+    });
+
+    // initial paint
+    setChipText();
+  })();
+  </script>
+</body>
+</html>
+```0

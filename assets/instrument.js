@@ -1,12 +1,16 @@
 /* ============================================================
-   CRP INSTRUMENT — CANONICAL UNIFORMITY PASS
+   CRP INSTRUMENT — CANONICAL UNIFORMITY PASS (TNT)
    FILE: /assets/instrument.js
-   SCOPE:
+   SCOPE (LOCKED):
    - Canonical keys only: gd_lang, gd_depth, gd_time, gd_style
    - Canonical languages: en (primary), zh (parallel canonical)
    - Loads /assets/i18n_canon.json and applies to [data-i18n] nodes
    - Minimal gating only (deep pages require valid gd_lang)
    - NO UI geometry, NO CSS, NO timers
+   NOTES (FIXED):
+   - Canonical time is {origin, now, post} (trajectory is normalized → post)
+   - Canonical depth is {explore, learn}
+   - Canonical paths: "/" is language select; "/door/" is language select page; "/index.html" is Terminal
    ============================================================ */
 
 (function () {
@@ -21,7 +25,7 @@
   // ---------- Allowed values ----------
   var ALLOW_LANG  = { en: true, zh: true };
   var ALLOW_DEPTH = { explore: true, learn: true };
-  var ALLOW_TIME  = { origin: true, now: true, trajectory: true };
+  var ALLOW_TIME  = { origin: true, now: true, post: true };          // canonical
   var ALLOW_STYLE = { formal: true, informal: true };
 
   // ---------- Helpers ----------
@@ -73,17 +77,25 @@
     } catch (e) {}
   }
 
-  // ---------- Normalize state ----------
+  // ---------- Normalize canonical values ----------
+  function normalizeTime(t) {
+    // accept legacy synonyms
+    if (t === "trajectory") return "post";
+    if (t === "roadmap") return "post";
+    if (t === "future") return "post";
+    if (t === "current") return "now";
+    return t;
+  }
+
   function normalize() {
     var lang  = qp("lang")  || lsGet(K_LANG)  || "en";
     var depth = qp("depth") || lsGet(K_DEPTH) || "explore";
-    var time  = qp("time")  || lsGet(K_TIME)  || "origin";
+    var time  = normalizeTime(qp("time") || lsGet(K_TIME) || "now");
     var style = qp("style") || lsGet(K_STYLE) || "formal";
 
-    // Only en/zh are canonical; everything else collapses to en.
     if (!ALLOW_LANG[lang]) lang = "en";
     if (!ALLOW_DEPTH[depth]) depth = "explore";
-    if (!ALLOW_TIME[time]) time = "origin";
+    if (!ALLOW_TIME[time]) time = "now";
     if (!ALLOW_STYLE[style]) style = "formal";
 
     lsSet(K_LANG, lang);
@@ -96,28 +108,30 @@
 
   // ---------- Minimal gating ----------
   // Do NOT gate:
-  // - / (index)
-  // - /door/ (Terminal)
+  // - / (root)
+  // - /index.html (Terminal)
+  // - /door/ (language select page)
   // Gate deep pages if gd_lang missing/invalid:
-  // - /home/, /explore/, /links/, /about/, /products/, /laws/, /cares/
+  // - /home/, /explore/, /links/, /about/, /products/, /laws/, /cares/, /gauges/, /innovation/
   function gate(state) {
     var path = (window.location && window.location.pathname) ? window.location.pathname : "/";
 
-    var isIndex = (path === "/" || path === "/index.html");
-    var isDoor  = (path.indexOf("/door") === 0);
+    var isRoot    = (path === "/");
+    var isIndex   = (path === "/index.html");
+    var isDoor    = (path.indexOf("/door") === 0);
 
-    if (isIndex || isDoor) return;
+    if (isRoot || isIndex || isDoor) return;
 
-    var deepPrefixes = ["/home", "/explore", "/links", "/about", "/products", "/laws", "/cares"];
+    var deepPrefixes = ["/home", "/explore", "/links", "/about", "/products", "/laws", "/cares", "/gauges", "/innovation"];
     var isDeep = false;
     for (var i = 0; i < deepPrefixes.length; i++) {
       if (path.indexOf(deepPrefixes[i]) === 0) { isDeep = true; break; }
     }
     if (!isDeep) return;
 
-    // state.lang is normalized; ensure it is stored
     var lang = lsGet(K_LANG);
     if (!ALLOW_LANG[lang]) {
+      // return to root (language selection)
       window.location.replace("/");
     }
   }
@@ -192,7 +206,13 @@
       lsDel(K_LANG); lsDel(K_DEPTH); lsDel(K_TIME); lsDel(K_STYLE);
       cleanupDrift();
     },
-    canon_langs: ["en", "zh"],
+    canon: {
+      langs: ["en", "zh"],
+      depth: ["explore", "learn"],
+      time: ["origin", "now", "post"],
+      style: ["formal", "informal"]
+    },
     primary_lang: "en"
   };
 })();
+```0

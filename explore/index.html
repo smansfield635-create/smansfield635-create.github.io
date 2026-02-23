@@ -1,704 +1,110 @@
-<!-- /explore/index.html | QUEEN’S ARCHITECTURE — GEM STANDARD | TNT FULL FILE
-     FIX: TRUE LANGUAGE LENS + EMBEDDED CONTENT (NO window.CONTENT DEPENDENCY)
-     - Keeps your existing design approach (inline CSS + gem diamond + modal)
-     - lang=en shows EN only
-     - lang=zh shows 中文 only
-     - Modal always renders 4 boxes × 4 bullets (no LOCK fallback)
-     - Lenses remain inside modal only (STYLE + LIFECYCLE)
--->
+/* ===== PROBE OVERRIDE — RESTORE CANONICAL GEM LOOK (EXPLORE) ===== */
+/* Paste at END of <style> so it wins. */
 
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="color-scheme" content="dark" />
-  <title>QUEEN’S ARCHITECTURE · INNOVATION</title>
+:root{
+  --qa_red0:#7a0000;
+  --qa_red1:#b00000;
+  --qa_red2:#550000;
 
-  <style>
-    :root{
-      --bg0:#140006; --bg1:#1d0009; --bg2:#26000c;
-      --opal1:rgba(245,248,255,.92); --opal2:rgba(216,226,255,.58); --opal3:rgba(180,200,255,.22);
-      --gold1:rgba(255,220,120,.92); --gold2:rgba(255,190,70,.55); --gold3:rgba(255,160,40,.25);
-      --ink:rgba(245,248,255,.94); --muted:rgba(245,248,255,.74);
-      --hair:rgba(255,210,120,.80);
-      --shadow: 0 18px 80px rgba(0,0,0,.55);
-      --rad:18px;
-      --rad2:26px;
-      --w: min(980px, 92vw);
-      --h: min(620px, 78vh);
-    }
+  --qa_obs0:#070b12;
+  --qa_obs1:#0b1526;
+  --qa_obs2:#0d1a31;
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
-      color:var(--ink);
-      background:
-        radial-gradient(1200px 700px at 50% 30%, rgba(255,220,120,.07), transparent 60%),
-        radial-gradient(900px 520px at 18% 70%, rgba(210,235,255,.05), transparent 62%),
-        radial-gradient(900px 520px at 85% 75%, rgba(210,235,255,.04), transparent 62%),
-        linear-gradient(180deg, var(--bg2), var(--bg0));
-      overflow-x:hidden;
-    }
+  --qa_opalA:rgba(245,248,255,.16);
+  --qa_opalB:rgba(210,235,255,.10);
+  --qa_opalC:rgba(160,200,255,.06);
 
-    .top{width:100%;padding:18px 18px 10px;display:flex;align-items:flex-start;justify-content:center;}
-    .topin{width:var(--w);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
-    .brand{display:flex;flex-direction:column;gap:4px;letter-spacing:.3px;}
-    .brand .t1{font-weight:700;font-size:14px;opacity:.92}
-    .brand .t2{font-weight:900;font-size:20px;line-height:1.05;letter-spacing:.3px}
-    .brand .t3{font-weight:650;font-size:12px;opacity:.74;letter-spacing:.2px}
-    .stamp{
-      display:flex;align-items:center;gap:10px;font-size:12px;opacity:.90;
-      padding:8px 10px;border-radius:999px;border:1px solid rgba(255,210,120,.28);
-      background:rgba(0,0,0,.18);box-shadow:0 10px 30px rgba(0,0,0,.28);
-      user-select:none;white-space:nowrap;
-    }
-    .dot{
-      width:8px;height:8px;border-radius:50%;
-      background:radial-gradient(circle at 30% 30%, var(--gold1), rgba(255,200,80,.20));
-      box-shadow:0 0 12px rgba(255,210,120,.22);
-    }
+  --qa_goldA:rgba(255,220,120,.92);
+  --qa_goldB:rgba(255,190,70,.55);
+  --qa_goldC:rgba(255,160,40,.20);
+}
 
-    .stage{width:100%;display:flex;justify-content:center;padding:8px 18px 26px;}
-    .frame{width:var(--w);min-height:calc(var(--h) + 40px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;}
+/* Background: return to canonical red field + subtle diagonal lattice */
+body{
+  background:
+    radial-gradient(1100px 720px at 50% 28%, rgba(255,220,120,.06), transparent 60%),
+    radial-gradient(900px 520px at 18% 70%, rgba(210,235,255,.04), transparent 62%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.018) 0 1px, transparent 1px 110px),
+    linear-gradient(180deg, var(--qa_red1) 0%, var(--qa_red0) 58%, var(--qa_red2) 100%) !important;
+  color: rgba(245,248,255,.94) !important;
+}
 
-    .subtitle{width:100%;display:flex;align-items:center;justify-content:center;opacity:.92;gap:10px;margin-top:8px;}
-    .subtitle .big{font-weight:950;letter-spacing:.5px;font-size:22px;text-shadow:0 2px 14px rgba(0,0,0,.55);}
-    .subtitle .small{font-weight:750;font-size:12px;opacity:.76;letter-spacing:.2px;text-shadow:0 2px 14px rgba(0,0,0,.45);}
+/* Outer diamond: darker, less haze, crisp edge */
+.diamond{
+  background:
+    radial-gradient(1000px 680px at 28% 18%, var(--qa_opalA), transparent 62%),
+    radial-gradient(820px 580px at 74% 84%, var(--qa_opalB), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.46)) !important;
+  border: 1px solid rgba(255,210,120,.28) !important;
+  box-shadow: 0 22px 90px rgba(0,0,0,.62) !important;
+}
 
-    .diamondWrap{
-      position:relative;width:min(760px, 92vw);height:min(760px, 92vw);
-      max-width:760px;max-height:760px;display:flex;align-items:center;justify-content:center;
-      filter:drop-shadow(0 22px 80px rgba(0,0,0,.55));
-    }
+/* Gold hairline “sword-inlay” */
+.diamond::before{
+  border: 1px solid rgba(255,210,120,.46) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(210,235,255,.05),
+    inset 0 0 14px rgba(255,210,120,.05) !important;
+}
 
-    .diamond{
-      position:relative;width:82%;height:82%;transform:rotate(45deg);border-radius:var(--rad2);
-      background:
-        linear-gradient(135deg, rgba(255,210,120,.05), rgba(210,235,255,.04)),
-        radial-gradient(900px 650px at 28% 18%, rgba(245,248,255,.08), transparent 62%),
-        radial-gradient(780px 560px at 72% 82%, rgba(245,248,255,.05), transparent 64%),
-        rgba(0,0,0,.26);
-      border:1px solid rgba(255,210,120,.28);box-shadow:var(--shadow);overflow:hidden;
-    }
+/* Reduce fog overlay */
+.diamond::after{
+  opacity: .55 !important;
+  background:
+    radial-gradient(900px 520px at 16% 22%, rgba(255,210,120,.05), transparent 60%),
+    radial-gradient(820px 520px at 82% 78%, rgba(210,235,255,.04), transparent 62%),
+    linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.22)) !important;
+}
 
-    .diamond::before{
-      content:"";position:absolute;inset:10px;border-radius:calc(var(--rad2) - 6px);
-      border:1px solid rgba(255,210,120,.42);
-      box-shadow:inset 0 0 0 1px rgba(210,235,255,.06), inset 0 0 18px rgba(255,210,120,.05);
-      pointer-events:none;
-    }
-    .diamond::after{
-      content:"";position:absolute;inset:0;
-      background:
-        radial-gradient(900px 520px at 15% 22%, rgba(255,210,120,.06), transparent 58%),
-        radial-gradient(820px 520px at 82% 78%, rgba(210,235,255,.045), transparent 60%),
-        linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.22));
-      pointer-events:none;
-    }
+/* Quadrant panels: obsidian gem, not gray glass */
+.q{
+  background:
+    radial-gradient(260px 220px at 32% 24%, rgba(245,248,255,.12), transparent 66%),
+    radial-gradient(260px 220px at 72% 78%, rgba(255,210,120,.06), transparent 66%),
+    linear-gradient(160deg, rgba(13,26,49,.92), rgba(7,11,18,.96)) !important;
+  border: 1px solid rgba(255,210,120,.20) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(210,235,255,.04),
+    0 14px 44px rgba(0,0,0,.44) !important;
+}
 
-    .qgrid{
-      position:absolute;inset:14px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
-      gap:12px;transform:rotate(-45deg) scale(1.08);transform-origin:center;padding:22px;
-    }
+/* Hover/active: gold glow only on interaction */
+.q:hover{
+  border-color: rgba(255,210,120,.34) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(210,235,255,.04),
+    0 0 22px rgba(255,210,120,.10),
+    0 18px 60px rgba(0,0,0,.52) !important;
+}
 
-    .q{
-      position:relative;border-radius:20px;border:1px solid rgba(255,210,120,.18);
-      background:
-        radial-gradient(240px 200px at 30% 25%, rgba(245,248,255,.10), transparent 66%),
-        radial-gradient(240px 200px at 70% 75%, rgba(255,210,120,.07), transparent 66%),
-        rgba(0,0,0,.32);
-      overflow:hidden;cursor:pointer;user-select:none;
-      transition:transform .12s ease,border-color .12s ease,background .12s ease,box-shadow .12s ease;
-      display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;min-height:160px;
-      box-shadow:inset 0 0 0 1px rgba(210,235,255,.05);
-    }
-    .q:hover{
-      transform:translateY(-2px);border-color:rgba(255,210,120,.28);
-      background:
-        radial-gradient(240px 200px at 30% 25%, rgba(245,248,255,.12), transparent 66%),
-        radial-gradient(240px 200px at 70% 75%, rgba(255,210,120,.09), transparent 66%),
-        rgba(0,0,0,.36);
-      box-shadow:inset 0 0 0 1px rgba(210,235,255,.05),0 0 22px rgba(255,210,120,.06);
-    }
-    .q:active{transform:translateY(0px) scale(.995);}
+/* Badges: clean, crisp */
+.q .badge{
+  border: 1px solid rgba(255,210,120,.28) !important;
+  background: rgba(0,0,0,.22) !important;
+}
 
-    .q .inner{display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;}
-    .q .badge{
-      display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
-      border:1px solid rgba(255,210,120,.28);background:rgba(0,0,0,.22);
-      font-weight:900;letter-spacing:.7px;font-size:12px;opacity:.95;
-      box-shadow:inset 0 0 0 1px rgba(210,235,255,.05);
-    }
-    .q .name{font-size:18px;font-weight:950;letter-spacing:.25px;line-height:1.12;text-shadow:0 2px 18px rgba(0,0,0,.60);}
-    .q .sub{font-size:12px;font-weight:750;opacity:.82;line-height:1.35;max-width:300px;text-shadow:0 2px 18px rgba(0,0,0,.55);}
+/* Text contrast bump */
+.q .name{ color: rgba(245,248,255,.96) !important; }
+.q .sub{ color: rgba(245,248,255,.76) !important; }
 
-    .foot{width:var(--w);display:flex;align-items:center;justify-content:center;gap:10px;padding:4px 0 0;opacity:.95;flex-wrap:wrap;}
-    .btn{
-      appearance:none;border:none;cursor:pointer;padding:10px 12px;border-radius:999px;background:rgba(0,0,0,.22);
-      border:1px solid rgba(255,210,120,.24);color:var(--ink);font-weight:900;letter-spacing:.25px;font-size:12px;
-      display:inline-flex;align-items:center;gap:8px;transition:transform .12s ease,border-color .12s ease,background .12s ease;
-      text-decoration:none;box-shadow:0 10px 28px rgba(0,0,0,.28);
-    }
-    .btn:hover{transform:translateY(-1px);border-color:rgba(255,210,120,.34);background:rgba(0,0,0,.26);}
-    .btn:active{transform:translateY(0);}
-    .btn .k{opacity:.85;font-weight:950}
+/* Modal: keep obsidian with a *subtle* red undertone (not purple fog) */
+.modal{
+  background:
+    radial-gradient(900px 540px at 18% 10%, rgba(245,248,255,.07), transparent 60%),
+    radial-gradient(820px 560px at 86% 88%, rgba(255,210,120,.05), transparent 64%),
+    radial-gradient(980px 640px at 52% 10%, rgba(176,0,0,.10), transparent 60%),
+    linear-gradient(160deg, rgba(13,26,49,.92), rgba(7,11,18,.96)) !important;
+  border: 1px solid rgba(255,210,120,.26) !important;
+}
 
-    .bd{
-      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
-      background:rgba(0,0,0,.66);backdrop-filter:blur(7px);z-index:50;padding:18px;
-    }
-    .bd.show{display:flex;}
-    .modal{
-      position:relative;width:min(980px, 92vw);max-height:min(760px, 86vh);
-      display:none;flex-direction:column;border-radius:22px;border:1px solid rgba(255,210,120,.28);
-      background:
-        radial-gradient(860px 520px at 18% 10%, rgba(245,248,255,.08), transparent 60%),
-        radial-gradient(800px 560px at 86% 88%, rgba(255,210,120,.06), transparent 62%),
-        radial-gradient(980px 640px at 52% 10%, rgba(176,0,0,.12), transparent 58%),
-        rgba(0,0,0,.44);
-      box-shadow:0 28px 140px rgba(0,0,0,.78);overflow:hidden;
-    }
-    .modal.show{display:flex;}
-    .mhead{
-      padding:14px 16px 10px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
-      border-bottom:1px solid rgba(255,210,120,.14);background:rgba(0,0,0,.20);
-    }
-    .mttl{display:flex;flex-direction:column;gap:4px;min-width:0;}
-    .mttl .h1{font-weight:950;letter-spacing:.35px;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 18px rgba(0,0,0,.65);}
-    .mttl .h2{font-weight:800;font-size:12px;opacity:.78;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 18px rgba(0,0,0,.55);}
-    .x{
-      width:38px;height:38px;border-radius:999px;border:1px solid rgba(255,210,120,.26);background:rgba(0,0,0,.22);color:var(--ink);
-      cursor:pointer;font-weight:950;display:inline-flex;align-items:center;justify-content:center;transition:transform .12s ease,border-color .12s ease,background .12s ease;
-      user-select:none;box-shadow:0 10px 28px rgba(0,0,0,.30);
-    }
-    .x:hover{transform:translateY(-1px);border-color:rgba(255,210,120,.34);background:rgba(0,0,0,.28);}
-    .x:active{transform:translateY(0);}
-
-    .lensbar{
-      padding:10px 16px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-      border-bottom:1px solid rgba(210,235,255,.08);background:rgba(0,0,0,.16);
-    }
-    .lensgroup{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-    .lenslabel{
-      font-size:11px;font-weight:950;opacity:.74;letter-spacing:.55px;text-transform:uppercase;padding:6px 8px;border-radius:999px;
-      background:rgba(0,0,0,.16);border:1px solid rgba(210,235,255,.07);
-    }
-    .chip{
-      cursor:pointer;user-select:none;padding:8px 10px;border-radius:999px;border:1px solid rgba(255,210,120,.22);background:rgba(0,0,0,.18);
-      color:var(--ink);font-weight:950;letter-spacing:.2px;font-size:12px;display:inline-flex;align-items:center;gap:8px;
-      transition:transform .12s ease,border-color .12s ease,background .12s ease,box-shadow .12s ease;white-space:nowrap;
-      box-shadow:0 10px 26px rgba(0,0,0,.26);
-    }
-    .chip:hover{transform:translateY(-1px);border-color:rgba(255,210,120,.32);background:rgba(0,0,0,.22);}
-    .chip:active{transform:translateY(0);}
-    .chip.on{
-      border-color:rgba(255,210,120,.46);
-      box-shadow:inset 0 0 0 1px rgba(255,210,120,.12),0 0 22px rgba(255,210,120,.10);
-      background:rgba(255,210,120,.06);
-    }
-
-    .mbody{padding:14px 16px 16px;overflow:auto;overscroll-behavior:contain;}
-    .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-    @media (max-width: 860px){.mgrid{grid-template-columns:1fr;}.diamondWrap{height:min(620px, 92vw);}}
-
-    .box{
-      border-radius:18px;border:1px solid rgba(255,210,120,.18);
-      background:
-        radial-gradient(420px 260px at 22% 18%, rgba(245,248,255,.08), transparent 64%),
-        radial-gradient(420px 260px at 80% 86%, rgba(255,210,120,.06), transparent 66%),
-        rgba(0,0,0,.30);
-      padding:12px 12px 10px;box-shadow:inset 0 0 0 1px rgba(210,235,255,.05);
-    }
-    .box h3{margin:0;font-size:13px;font-weight:950;letter-spacing:.25px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-shadow:0 2px 16px rgba(0,0,0,.60);}
-    .box .k{font-size:11px;font-weight:950;opacity:.78;padding:4px 8px;border-radius:999px;border:1px solid rgba(210,235,255,.08);background:rgba(0,0,0,.16);letter-spacing:.45px;}
-    .box p{margin:8px 0 8px;font-size:12px;font-weight:800;opacity:.86;line-height:1.35;text-shadow:0 2px 16px rgba(0,0,0,.55);}
-    .box ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:6px;}
-    .box li{font-size:12px;font-weight:850;line-height:1.28;opacity:.92;text-shadow:0 2px 14px rgba(0,0,0,.55);}
-  </style>
-</head>
-
-<body>
-  <header class="top">
-    <div class="topin">
-      <div class="brand">
-        <div class="t1" id="t1"></div>
-        <div class="t2" id="t2"></div>
-        <div class="t3" id="t3"></div>
-      </div>
-      <div class="stamp" aria-label="module stamp">
-        <span class="dot" aria-hidden="true"></span>
-        <span id="modName">Cardinal Axis</span>
-        <span style="opacity:.55">·</span>
-        <span id="stateStamp">lang=en · style=formal · time=now</span>
-      </div>
-    </div>
-  </header>
-
-  <main class="stage">
-    <section class="frame">
-      <div class="subtitle" aria-hidden="true">
-        <div class="big" id="pageTitle"></div>
-        <div class="small" id="pageSub"></div>
-      </div>
-
-      <div class="diamondWrap" aria-label="Innovation diamond">
-        <div class="diamond">
-          <div class="qgrid">
-            <div class="q" data-trunk="nw" role="button" tabindex="0" aria-label="Open NW trunk">
-              <div class="inner">
-                <div class="badge"><span>NW</span><span style="opacity:.55">·</span><span>⭐</span></div>
-                <div class="name" id="nwName"></div>
-                <div class="sub" id="nwSub"></div>
-              </div>
-            </div>
-
-            <div class="q" data-trunk="ne" role="button" tabindex="0" aria-label="Open NE trunk">
-              <div class="inner">
-                <div class="badge"><span>NE</span><span style="opacity:.55">·</span><span>☀️</span></div>
-                <div class="name" id="neName"></div>
-                <div class="sub" id="neSub"></div>
-              </div>
-            </div>
-
-            <div class="q" data-trunk="sw" role="button" tabindex="0" aria-label="Open SW trunk">
-              <div class="inner">
-                <div class="badge"><span>SW</span><span style="opacity:.55">·</span><span>🔥</span></div>
-                <div class="name" id="swName"></div>
-                <div class="sub" id="swSub"></div>
-              </div>
-            </div>
-
-            <div class="q" data-trunk="se" role="button" tabindex="0" aria-label="Open SE trunk">
-              <div class="inner">
-                <div class="badge"><span>SE</span><span style="opacity:.55">·</span><span>🌙</span></div>
-                <div class="name" id="seName"></div>
-                <div class="sub" id="seSub"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <nav class="foot" aria-label="internal navigation">
-        <a class="btn" id="toHome" href="#"><span class="k">◆</span><span id="navHome"></span></a>
-        <a class="btn" id="toProducts" href="#"><span class="k">◆</span><span id="navProducts"></span></a>
-        <a class="btn" id="toLaws" href="#"><span class="k">◆</span><span id="navLaws"></span></a>
-        <a class="btn" id="toLinks" href="#"><span class="k">◆</span><span id="navLinks"></span></a>
-      </nav>
-    </section>
-  </main>
-
-  <div class="bd" id="bd" aria-hidden="true">
-    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
-      <div class="mhead">
-        <div class="mttl">
-          <div class="h1" id="mTitle"></div>
-          <div class="h2" id="mSub"></div>
-        </div>
-        <button class="x" id="x" aria-label="Close modal">✕</button>
-      </div>
-
-      <div class="lensbar" aria-label="lenses">
-        <div class="lensgroup">
-          <span class="lenslabel" id="lblStyle"></span>
-          <span class="chip" id="chipFormal" data-style="formal"></span>
-          <span class="chip" id="chipInformal" data-style="informal"></span>
-        </div>
-        <div class="lensgroup">
-          <span class="lenslabel" id="lblLife"></span>
-          <span class="chip" id="chipConcept" data-time="origin"></span>
-          <span class="chip" id="chipNow" data-time="now"></span>
-          <span class="chip" id="chipPost" data-time="post"></span>
-        </div>
-      </div>
-
-      <div class="mbody">
-        <div class="mgrid" id="mgrid"></div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // URL → STATE HYDRATION
-    const qs = new URLSearchParams(location.search);
-    let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-    let style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-    let time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-    if(!["en","zh"].includes(lang)) lang="en";
-    if(!["formal","informal"].includes(style)) style="formal";
-    if(time==="trajectory") time="post";
-    if(!["origin","now","post"].includes(time)) time="now";
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-
-    function makeQ(){ return `lang=${encodeURIComponent(lang)}&style=${encodeURIComponent(style)}&time=${encodeURIComponent(time)}`; }
-    function setQueryInUrl(){ history.replaceState(null, "", `${location.pathname}?${makeQ()}`); }
-
-    document.getElementById("toHome").href = `/home/?${makeQ()}`;
-    document.getElementById("toProducts").href = `/products/?${makeQ()}`;
-    document.getElementById("toLaws").href = `/laws/?${makeQ()}`;
-    document.getElementById("toLinks").href = `/links/?${makeQ()}`;
-
-    const stateStamp = document.getElementById("stateStamp");
-    function refreshStamp(){ stateStamp.textContent = `lang=${lang} · style=${style} · time=${time}`; }
-
-    const UI = {
-      en:{
-        t1:"QUEEN’S ARCHITECTURE",
-        t2:"INNOVATION",
-        t3:"Diamond 2 · Future Layer · Explore",
-        pageTitle:"INNOVATION",
-        pageSub:"Future trunks · lifecycle lenses inside modal",
-        nav:{home:"HOME",products:"PRODUCTS",laws:"LAWS",links:"LINKS"},
-        lblStyle:"STYLE", lblLife:"LIFECYCLE",
-        chips:{formal:"Formal",informal:"Informal",concept:"CONCEPT",now:"NOW",post:"ROADMAP"},
-        trunks:{
-          nw:{name:"LANGUAGE ENGINE", sub:"Semantic compilers, interaction grammar, multi-modal synthesis."},
-          ne:{name:"EXECUTION SYSTEMS", sub:"Deterministic workflows, receipts, constrained operations at speed."},
-          sw:{name:"MEASUREMENT LAB", sub:"Instruments, stress sweeps, audit-grade evidence streams."},
-          se:{name:"GOVERNANCE STACK", sub:"Rules, policy lattices, safety controllers for real deployment."}
-        }
-      },
-      zh:{
-        t1:"女王架构",
-        t2:"创新",
-        t3:"钻石二 · 未来层 · 探索",
-        pageTitle:"创新",
-        pageSub:"未来干线 · 生命周期镜头在弹窗内",
-        nav:{home:"主页",products:"产品",laws:"法则",links:"链接"},
-        lblStyle:"风格", lblLife:"生命周期",
-        chips:{formal:"正式",informal:"直接",concept:"概念",now:"当前",post:"路线图"},
-        trunks:{
-          nw:{name:"语言引擎", sub:"语义编译、交互语法、多模态合成。"},
-          ne:{name:"执行系统", sub:"确定性流程、回执、约束执行。"},
-          sw:{name:"测量实验室", sub:"仪器、压力扫掠、审计级证据流。"},
-          se:{name:"治理栈", sub:"规则、政策格、部署级安全控制。"}
-        }
-      }
-    };
-    const T = UI[lang];
-    document.documentElement.lang = lang;
-
-    document.getElementById("t1").textContent = T.t1;
-    document.getElementById("t2").textContent = T.t2;
-    document.getElementById("t3").textContent = T.t3;
-    document.getElementById("pageTitle").textContent = T.pageTitle;
-    document.getElementById("pageSub").textContent = T.pageSub;
-
-    document.getElementById("navHome").textContent = T.nav.home;
-    document.getElementById("navProducts").textContent = T.nav.products;
-    document.getElementById("navLaws").textContent = T.nav.laws;
-    document.getElementById("navLinks").textContent = T.nav.links;
-
-    document.getElementById("lblStyle").textContent = T.lblStyle;
-    document.getElementById("lblLife").textContent = T.lblLife;
-
-    const chipFormal = document.getElementById("chipFormal");
-    const chipInformal = document.getElementById("chipInformal");
-    const chipConcept = document.getElementById("chipConcept");
-    const chipNow = document.getElementById("chipNow");
-    const chipPost = document.getElementById("chipPost");
-
-    chipFormal.textContent = T.chips.formal;
-    chipInformal.textContent = T.chips.informal;
-    chipConcept.textContent = T.chips.concept;
-    chipNow.textContent = T.chips.now;
-    chipPost.textContent = T.chips.post;
-
-    document.getElementById("nwName").textContent = T.trunks.nw.name;
-    document.getElementById("nwSub").textContent = T.trunks.nw.sub;
-    document.getElementById("neName").textContent = T.trunks.ne.name;
-    document.getElementById("neSub").textContent = T.trunks.ne.sub;
-    document.getElementById("swName").textContent = T.trunks.sw.name;
-    document.getElementById("swSub").textContent = T.trunks.sw.sub;
-    document.getElementById("seName").textContent = T.trunks.se.name;
-    document.getElementById("seSub").textContent = T.trunks.se.sub;
-
-    refreshStamp();
-    setQueryInUrl();
-
-    const bd = document.getElementById("bd");
-    const modal = document.getElementById("modal");
-    const x = document.getElementById("x");
-    const mTitle = document.getElementById("mTitle");
-    const mSub = document.getElementById("mSub");
-    const mgrid = document.getElementById("mgrid");
-
-    let activeTrunk=null, scrollY=0;
-
-    const TRUNK_META = {
-      nw:{badge:"NW",icon:"⭐",en:"LANGUAGE ENGINE",zh:"语言引擎"},
-      ne:{badge:"NE",icon:"☀️",en:"EXECUTION SYSTEMS",zh:"执行系统"},
-      sw:{badge:"SW",icon:"🔥",en:"MEASUREMENT LAB",zh:"测量实验室"},
-      se:{badge:"SE",icon:"🌙",en:"GOVERNANCE STACK",zh:"治理栈"}
-    };
-
-    const BOX=(k,enH,zhH,enP,zhP,enU,zhU)=>({k,h:{en:enH,zh:zhH},p:{en:enP,zh:zhP},ul:[
-      {en:enU[0],zh:zhU[0]},{en:enU[1],zh:zhU[1]},{en:enU[2],zh:zhU[2]},{en:enU[3],zh:zhU[3]}
-    ]});
-
-    // Deterministic embedded content (complete; same shape for all trunks)
-    const CONTENT = {};
-    ["nw","ne","sw","se"].forEach(tr=>{
-      CONTENT[tr]={origin:{formal:{boxes:[]},informal:{boxes:[]}},now:{formal:{boxes:[]},informal:{boxes:[]}},post:{formal:{boxes:[]},informal:{boxes:[]}}};
-    });
-
-    function fillTrunk(tr, originFormal, originInformal, nowFormal, nowInformal, postFormal, postInformal){
-      CONTENT[tr].origin.formal.boxes=originFormal;
-      CONTENT[tr].origin.informal.boxes=originInformal;
-      CONTENT[tr].now.formal.boxes=nowFormal;
-      CONTENT[tr].now.informal.boxes=nowInformal;
-      CONTENT[tr].post.formal.boxes=postFormal;
-      CONTENT[tr].post.informal.boxes=postInformal;
-    }
-
-    function commonPack(trNameEn,trNameZh){
-      return {
-        origin:{
-          formal:[
-            BOX("SCOPE","Definition","定义",
-              `Define ${trNameEn} as a future product trunk with stable semantics.`,
-              `将${trNameZh}定义为未来产品干线：语义稳定。`,
-              ["Trunk name is stable.","NW/NE/SW/SE are coordinates.","No semantic drift.","Topology stays fixed."],
-              ["干线名称稳定。","NW/NE/SW/SE为坐标。","不语义漂移。","拓扑固定。"]),
-            BOX("MECHANICS","Mechanics","机制",
-              "Concept → structured navigation → outputs (deterministic).",
-              "概念→结构化导航→输出（确定性）。",
-              ["Tap trunk → modal.","Lenses inside modal.","4×4 density rule.","Return closes modal."],
-              ["点干线→弹窗。","镜头仅弹窗内。","4×4密度规则。","返回关闭弹窗。"]),
-            BOX("QUALITY","Integrity","完整性",
-              "Contract compliance: gd_* keys, URL hydration, deterministic routing.",
-              "契约一致：gd_*键、URL注水、确定路由。",
-              ["gd_* keys only.","URL hydration first.","Links propagate state.","No hidden overrides."],
-              ["仅gd_*键。","先URL注水。","链接传参。","无暗覆盖。"]),
-            BOX("DELIVERABLE","Concept Pack","概念包",
-              "Publish a concept pack: scope, mechanics, constraints, examples.",
-              "发布概念包：范围、机制、约束、示例。",
-              ["Scope statement.","Mechanics bullets.","Constraint list.","Example outputs."],
-              ["范围声明。","机制要点。","约束清单。","示例输出。"])
-          ],
-          informal:[
-            BOX("SCOPE","What it is","是什么",
-              `A future product trunk: ${trNameEn}.`,
-              `未来产品干线：${trNameZh}。`,
-              ["Name stays stable.","No drift.","Fixed map.","Clear meaning."],
-              ["名字稳定。","不漂移。","地图固定。","含义清楚。"]),
-            BOX("MECHANICS","How it works","怎么跑",
-              "Tap → read → return.",
-              "点开→阅读→返回。",
-              ["Modal-only lenses.","4×4 density.","No jump.","Close to return."],
-              ["镜头仅弹窗。","4×4密度。","不跳动。","关闭返回。"]),
-            BOX("QUALITY","Rules","规则",
-              "Same keys everywhere.",
-              "处处同键。",
-              ["gd_lang/gd_style/gd_time.","URL hydration.","Propagate q.","No extra keys."],
-              ["gd_lang/gd_style/gd_time。","URL注水。","传q。","不加新键。"]),
-            BOX("DELIVERABLE","What you get","得到啥",
-              "A usable spec surface.",
-              "一份可用规格表面。",
-              ["Bullets.","Examples.","Constraints.","Outputs."],
-              ["要点。","示例。","约束。","输出。"])
-          ]
-        },
-        now:{
-          formal:[
-            BOX("BUILD","Prototype","原型",
-              `Build the first runnable ${trNameEn} surface with uniform GEM behavior.`,
-              `构建首个可运行的${trNameZh}表面，统一GEM行为。`,
-              ["Same diamond layout.","Same modal.","Same chips.","Same close behavior."],
-              ["同菱形布局。","同弹窗。","同芯片。","同关闭行为。"]),
-            BOX("STATE","State Discipline","状态纪律",
-              "Hydrate from URL and persist canonical keys only.",
-              "从URL注水并仅持久化规范键。",
-              ["lang/style/time parsed.","Normalized values.","Stored in localStorage.","Query kept clean."],
-              ["解析lang/style/time。","规范化取值。","localStorage存储。","查询保持干净。"]),
-            BOX("CONTENT","4×4 Density","4×4密度",
-              "Every view ships 4 sections × 4 bullets (no empties).",
-              "每个视图交付4区×4要点（不许空）。",
-              ["No empty boxes.","Lens changes change content.","Readable defaults.","Consistent titles."],
-              ["不空盒子。","镜头改变内容。","默认可读。","标题一致。"]),
-            BOX("OUTPUT","Early Surface","早期表面",
-              "Expose early outputs as safe previews.",
-              "将早期输出作为安全预览。",
-              ["Preview features.","Preview constraints.","Preview routing.","Preview UX."],
-              ["预览功能。","预览约束。","预览路由。","预览体验。"])
-          ],
-          informal:[
-            BOX("BUILD","Make it run","跑起来",
-              "Same look, same behavior.",
-              "同外观，同手感。",
-              ["Diamond.","Modal.","Chips.","Close."],
-              ["菱形。","弹窗。","芯片。","关闭。"]),
-            BOX("STATE","Keep keys clean","键要干净",
-              "Only gd_*.",
-              "只用gd_*。",
-              ["Hydrate URL.","Save keys.","Keep q.","No extras."],
-              ["注水URL。","保存键。","保留q。","不加额外。"]),
-            BOX("CONTENT","No empty","不许空",
-              "4×4 always.",
-              "永远4×4。",
-              ["4 sections.","4 bullets.","Readable.","Consistent."],
-              ["4区。","4点。","可读。","一致。"]),
-            BOX("OUTPUT","Preview","预览",
-              "Show what’s coming.",
-              "展示将来会有啥。",
-              ["Features.","Rules.","UX.","Map."],
-              ["功能。","规则。","体验。","地图。"])
-          ]
-        },
-        post:{
-          formal:[
-            BOX("ROADMAP","Roadmap","路线图",
-              `Promote ${trNameEn} into a shipped product line with subpages and demos.`,
-              `将${trNameZh}升级为已交付产品线：子页面+演示。`,
-              ["Sub-hubs per trunk.","Demos per fruit.","Exports.","Registry links."],
-              ["每干线子枢纽。","每果实演示。","导出。","登记链接。"]),
-            BOX("SCALE","Scale","扩展",
-              "Scale content without changing topology or keys.",
-              "扩展内容但不改变拓扑或状态键。",
-              ["Topology fixed.","Keys fixed.","Components reused.","Versioned content."],
-              ["拓扑固定。","键固定。","组件复用。","内容版本化。"]),
-            BOX("VERIFY","Verification","验证",
-              "Tie outputs to evidence bundles and audit artifacts.",
-              "将输出绑定证据包与审计工件。",
-              ["Evidence bundles.","Hashes.","Reports.","Replays."],
-              ["证据包。","哈希。","报告。","回放。"]),
-            BOX("IMPACT","Pipeline","管线",
-              "Concept → prototype → product (explicit promotion).",
-              "概念→原型→产品（显式晋升）。",
-              ["Promotion events.","Explicit gates.","No silent changes.","Public-safe."],
-              ["晋升事件。","显式门控。","无暗改。","对公众安全。"])
-          ],
-          informal:[
-            BOX("ROADMAP","Next","下一步",
-              "Turn this into real products.",
-              "把它变成真产品。",
-              ["Subpages.","Demos.","Exports.","Links."],
-              ["子页。","演示。","导出。","链接。"]),
-            BOX("SCALE","Grow safely","安全扩展",
-              "No topology changes.",
-              "不改拓扑。",
-              ["Map fixed.","Keys fixed.","Reuse parts.","Version content."],
-              ["地图固定。","键固定。","复用部件。","内容版本化。"]),
-            BOX("VERIFY","Prove it","证明",
-              "Tie to evidence.",
-              "绑定证据。",
-              ["Bundles.","Hashes.","Reports.","Replay."],
-              ["证据包。","哈希。","报告。","回放。"]),
-            BOX("IMPACT","Pipeline","管线",
-              "Concept → prototype → product.",
-              "概念→原型→产品。",
-              ["Promotion gates.","No silent changes.","Public-safe.","Deterministic."],
-              ["晋升门。","无暗改。","对公众安全。","确定性。"])
-          ]
-        }
-      };
-    }
-
-    // Fill each trunk with a trunk-specific name (content stays coherent)
-    ["nw","ne","sw","se"].forEach(tr=>{
-      const meta=TRUNK_META[tr];
-      const P=commonPack(meta.en, meta.zh);
-      fillTrunk(tr, P.origin.formal, P.origin.informal, P.now.formal, P.now.informal, P.post.formal, P.post.informal);
-    });
-
-    function setChipStates(){
-      chipFormal.classList.toggle("on", style==="formal");
-      chipInformal.classList.toggle("on", style==="informal");
-      chipConcept.classList.toggle("on", time==="origin");
-      chipNow.classList.toggle("on", time==="now");
-      chipPost.classList.toggle("on", time==="post");
-      refreshStamp();
-    }
-
-    function renderBoxes(trunk){
-      const meta=TRUNK_META[trunk];
-      const title=(lang==="zh")?meta.zh:meta.en;
-
-      mTitle.textContent = `INNOVATION · ${meta.badge} · ${meta.icon} · ${title}`;
-      mSub.textContent = (lang==="zh")
-        ? `语言=${lang} · 风格=${style} · 生命周期=${time} · 镜头仅在弹窗内`
-        : `lang=${lang} · style=${style} · lifecycle=${time} · lenses inside modal only`;
-
-      const pack = CONTENT[trunk][time][style].boxes;
-
-      mgrid.innerHTML="";
-      pack.forEach(b=>{
-        const div=document.createElement("div");
-        div.className="box";
-        const h=b.h[lang];
-        const p=b.p[lang];
-        const ul=b.ul.map(x=>`<li>${x[lang]}</li>`).join("");
-        div.innerHTML=`<h3>${h}<span class="k">${b.k}</span></h3><p>${p}</p><ul>${ul}</ul>`;
-        mgrid.appendChild(div);
-      });
-    }
-
-    function openModal(trunk){
-      activeTrunk=trunk;
-      scrollY=window.scrollY||0;
-      document.body.style.position="fixed";
-      document.body.style.top=`-${scrollY}px`;
-      document.body.style.width="100%";
-      bd.classList.add("show");
-      modal.classList.add("show");
-      bd.setAttribute("aria-hidden","false");
-      setChipStates();
-      renderBoxes(trunk);
-    }
-    function closeModal(){
-      bd.classList.remove("show");
-      modal.classList.remove("show");
-      bd.setAttribute("aria-hidden","true");
-      document.body.style.position="";
-      document.body.style.top="";
-      document.body.style.width="";
-      window.scrollTo(0, scrollY);
-      activeTrunk=null;
-    }
-
-    function attachQuadrantHandlers(){
-      document.querySelectorAll(".q").forEach(el=>{
-        el.addEventListener("click", ()=>openModal(el.dataset.trunk));
-        el.addEventListener("keydown", e=>{
-          if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(el.dataset.trunk); }
-        });
-      });
-    }
-    attachQuadrantHandlers();
-
-    function applyStyle(next){
-      style=next;
-      localStorage.setItem("gd_style", style);
-      setChipStates();
-      setQueryInUrl();
-      if(activeTrunk) renderBoxes(activeTrunk);
-    }
-    function applyTime(next){
-      time=next;
-      localStorage.setItem("gd_time", time);
-      setChipStates();
-      setQueryInUrl();
-      if(activeTrunk) renderBoxes(activeTrunk);
-    }
-
-    chipFormal.addEventListener("click", ()=>applyStyle("formal"));
-    chipInformal.addEventListener("click", ()=>applyStyle("informal"));
-    chipConcept.addEventListener("click", ()=>applyTime("origin"));
-    chipNow.addEventListener("click", ()=>applyTime("now"));
-    chipPost.addEventListener("click", ()=>applyTime("post"));
-
-    x.addEventListener("click", closeModal);
-    bd.addEventListener("click", e=>{ if(e.target===bd) closeModal(); });
-    window.addEventListener("keydown", e=>{ if(e.key==="Escape" && bd.classList.contains("show")) closeModal(); });
-
-    setChipStates();
-    refreshStamp();
-    setQueryInUrl();
-  </script>
-</body>
-</html>
+/* Chips/buttons: ensure “gold edge” reads */
+.chip, .btn{
+  border-color: rgba(255,210,120,.24) !important;
+  background: rgba(0,0,0,.22) !important;
+}
+.chip.on{
+  border-color: rgba(255,210,120,.46) !important;
+  box-shadow: 0 0 18px rgba(255,210,120,.10) !important;
+  background: rgba(255,210,120,.06) !important;
+}
+/* ===== END PROBE OVERRIDE ===== */

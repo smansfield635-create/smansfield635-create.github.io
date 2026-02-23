@@ -1,3 +1,16 @@
+<!-- TNT — /index.html  (TERMINAL · STRUCTURAL PREFACE · 8 SECTIONS · GEM STANDARD)
+     LOCKS:
+       - TNT ONLY (full file)
+       - Uses /assets/ui.css + /assets/branch.css only (no asset rewrites)
+       - DO NOT style html/body background (ui.css owns field)
+       - NO lenses on main page (lenses INSIDE modal only)
+       - Dual language compatible (single-language render via gd_lang / ?lang=)
+       - 8 main bubbles → centered modal
+       - Modal lenses: STYLE (formal/informal) + TIME (concept/now/post)
+       - Modal content: 4 paragraph-bubbles (no bullet lists)
+       - All navigation links are uniform buttons (no blue/purple anchors)
+       - State propagation: lang/style/time carried through all internal links
+-->
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,8 +22,12 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-/* ui.css owns field — do not override */
+/* DO NOT TOUCH FIELD — ui.css owns html/body background */
 
+/* Neutralize default link styling just in case */
+a{color:inherit;text-decoration:none}
+
+/* Layout */
 .term-wrap{width:min(980px,94vw);margin:0 auto;padding:22px 0 120px}
 .term-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .term-top-left{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -18,10 +35,10 @@
 .term-mark{font-size:12px;letter-spacing:2.4px;text-transform:uppercase;opacity:.78;margin-bottom:8px}
 .term-title{margin:0;font-size:44px;font-weight:950;letter-spacing:.25px;line-height:1.05}
 .term-sub{margin:10px 0 0;opacity:.84;font-size:16px;line-height:1.35}
-.term-note{margin:10px 0 0;opacity:.72;font-size:13px;line-height:1.35}
+.term-note{margin:10px 0 0;opacity:.74;font-size:13px;line-height:1.35}
 
 .term-grid{display:grid;gap:14px;margin-top:18px}
-@media (min-width:820px){ .term-grid{grid-template-columns:1fr 1fr;} }
+@media (min-width:820px){.term-grid{grid-template-columns:1fr 1fr;}}
 
 .bubble{
   border-radius:22px;
@@ -30,39 +47,42 @@
   box-shadow:0 22px 70px rgba(0,0,0,.60), inset 0 1px 0 rgba(255,255,255,.06);
   padding:18px;
   cursor:pointer;
-  transition:transform .10s ease, border-color .12s ease;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .10s ease, border-color .12s ease, box-shadow .12s ease;
 }
 .bubble:hover{
   transform:translateY(-1px);
   border-color:rgba(212,175,55,.22);
+  box-shadow:0 24px 80px rgba(0,0,0,.68), 0 0 16px rgba(212,175,55,.12), inset 0 1px 0 rgba(255,255,255,.06);
 }
-
-.bh{margin:0 0 8px;font-size:18px;font-weight:950}
+.bh{margin:0 0 8px;font-size:18px;font-weight:950;letter-spacing:.2px}
 .bp{margin:0;color:rgba(255,255,255,.82);line-height:1.55}
+.bmini{margin-top:10px;color:rgba(255,255,255,.66);font-size:12px;line-height:1.45}
 
+.term-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+
+/* Bottom dock */
 .dock{
-  position:fixed;
-  left:50%;
+  position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:90;
   width:min(980px,94vw);
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-  padding:10px 12px;
-  border-radius:999px;
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
   backdrop-filter:blur(8px);
 }
 
 /* Modal */
-
-.bd{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);display:none;z-index:200}
-.bd.show{display:block}
-
+.bd{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(10px);
+  display:none;
+}
+.bd.show{display:block;}
 .modal{
   position:fixed;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -70,134 +90,747 @@
   max-height:88vh;
   display:none;z-index:210;
 }
-.modal.show{display:block}
-
+.modal.show{display:block;}
 .shell{
-  height:88vh;border-radius:26px;
+  height:88vh;
+  border-radius:26px;
   border:1px solid rgba(255,255,255,.10);
-  background:linear-gradient(145deg, rgba(17,22,28,.90), rgba(11,15,20,.94));
+  background:
+    radial-gradient(circle at 52% 14%, rgba(176,0,0,.16), transparent 55%),
+    radial-gradient(circle at 38% 28%, rgba(90,140,255,.12), transparent 55%),
+    linear-gradient(145deg, rgba(17,22,28,.90), rgba(11,15,20,.94));
   box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;display:flex;flex-direction:column;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.mhead{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
+.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
+
+.mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
+
+/* Lenses INSIDE modal only */
+.lensbar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  align-items:center;justify-content:center;
+  padding:10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);
+  margin:-6px -6px 14px;
+}
+.chip{
+  padding:10px 16px;border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
+}
+.chip.active{
+  border-color:rgba(212,175,55,.70);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
 }
 
-.mhead{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
-.mtitle{margin:0;font-weight:950;font-size:16px}
-.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer}
+/* 4 paragraph-bubbles */
+.mgrid{display:grid;gap:14px}
+.mbox{
+  padding:16px 18px;border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
+}
+.mh{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
+.mp{margin:0;color:rgba(255,255,255,.84);line-height:1.55}
 
-.lensbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:12px;border-bottom:1px solid rgba(255,255,255,.08)}
-.chip{padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.25);font-weight:900;cursor:pointer}
-.chip.active{border-color:rgba(212,175,55,.7)}
+/* Modal actions (uniform buttons only) */
+.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
 
-.mbody{padding:16px;overflow:auto}
-.mbox{margin-bottom:18px}
-.mh{margin:0 0 6px;font-weight:950}
-.mp{margin:0;color:rgba(255,255,255,.85);line-height:1.6}
+@media (max-width:520px){
+  .term-title{font-size:38px}
+  .shell{height:90vh}
+}
 </style>
 </head>
 
 <body>
 <main class="term-wrap">
 
-<div class="term-top">
-  <div class="term-top-left">
-    <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
-    <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
+  <div class="term-top">
+    <div class="term-top-left">
+      <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
+      <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
+    </div>
+
+    <div class="term-mid">
+      <div class="term-mark" id="mark">CARDINAL AXIS</div>
+      <h1 class="term-title" id="tTitle">TERMINAL</h1>
+      <p class="term-sub" id="tSub">Structural entry point into the entire system.</p>
+      <p class="term-note" id="tNote">This page gives the minimal skeleton first, then lets you jump into deeper layers.</p>
+    </div>
+
+    <div style="width:140px;flex:0 0 auto"></div>
   </div>
 
-  <div class="term-mid">
-    <div class="term-mark" id="mark">CARDINAL AXIS</div>
-    <h1 class="term-title" id="title">TERMINAL</h1>
-    <p class="term-sub" id="subtitle">Structural entry point into the entire system.</p>
-    <p class="term-note" id="note">This page explains how everything connects before you explore deeper layers.</p>
-  </div>
+  <section class="term-grid" aria-label="Terminal sections">
+    <div class="bubble" id="b0" role="button" tabindex="0">
+      <h2 class="bh" id="b0h">Under construction</h2>
+      <p class="bp" id="b0p">Unfinished areas show placeholders so you see progress without broken flows.</p>
+      <p class="bmini" id="b0m">Tap to open lens view.</p>
+    </div>
 
-  <div style="width:140px"></div>
-</div>
+    <div class="bubble" id="b1" role="button" tabindex="0">
+      <h2 class="bh" id="b1h">How navigation works</h2>
+      <p class="bp" id="b1p">You choose a lens inside the bubble, then traverse by structure instead of scrolling.</p>
+      <p class="bmini" id="b1m">Tap to open lens view.</p>
+    </div>
 
-<section class="term-grid">
-  <div class="bubble" onclick="openModal(0)">
-    <h2 class="bh">What this system is</h2>
-    <p class="bp">An interactive, coherence-based traversal architecture designed to replace linear browsing.</p>
-  </div>
+    <div class="bubble" id="b2" role="button" tabindex="0">
+      <h2 class="bh" id="b2h">State stability</h2>
+      <p class="bp" id="b2p">Language, style, and time persist so your context does not reset unexpectedly.</p>
+      <p class="bmini" id="b2m">Tap to open lens view.</p>
+    </div>
 
-  <div class="bubble" onclick="openModal(1)">
-    <h2 class="bh">How navigation works</h2>
-    <p class="bp">Choose a lens, open diamonds, read structured bubbles, then jump to broader domains.</p>
-  </div>
+    <div class="bubble" id="b3" role="button" tabindex="0">
+      <h2 class="bh" id="b3h">Where to go next</h2>
+      <p class="bp" id="b3p">Products and Innovation expand the system, while Laws and Gauges define rules and measurement.</p>
+      <p class="bmini" id="b3m">Tap to open lens view.</p>
+    </div>
 
-  <div class="bubble" onclick="openModal(2)">
-    <h2 class="bh">State stability</h2>
-    <p class="bp">Language, style, and time persist so your context never resets unexpectedly.</p>
-  </div>
+    <div class="bubble" id="b4" role="button" tabindex="0">
+      <h2 class="bh" id="b4h">Index</h2>
+      <p class="bp" id="b4p">The index is the map of maps: it routes you to the right trunk quickly and consistently.</p>
+      <p class="bmini" id="b4m">Tap to open lens view.</p>
+    </div>
 
-  <div class="bubble" onclick="openModal(3)">
-    <h2 class="bh">Where to go next</h2>
-    <p class="bp">Products, Innovation, Laws, and Gauges expand this architecture into applied systems.</p>
+    <div class="bubble" id="b5" role="button" tabindex="0">
+      <h2 class="bh" id="b5h">Glossary</h2>
+      <p class="bp" id="b5p">The glossary pins meanings to terms so the system stays readable as it scales.</p>
+      <p class="bmini" id="b5m">Tap to open lens view.</p>
+    </div>
+
+    <div class="bubble" id="b6" role="button" tabindex="0">
+      <h2 class="bh" id="b6h">Appendix</h2>
+      <p class="bp" id="b6p">The appendix holds references and conventions that support deeper sections without cluttering them.</p>
+      <p class="bmini" id="b6m">Tap to open lens view.</p>
+    </div>
+
+    <div class="bubble" id="b7" role="button" tabindex="0">
+      <h2 class="bh" id="b7h">Scientific fact-checking</h2>
+      <p class="bp" id="b7p">This is the verification layer for engineering/math readers who want the hard claims and checks.</p>
+      <p class="bmini" id="b7m">Tap to open lens view.</p>
+    </div>
+  </section>
+
+  <div class="term-actions">
+    <a class="crp-btn crp-btn-primary" id="btnContinue" href="/home/">CONTINUE → HUB</a>
+    <a class="crp-btn" id="btnLinks" href="/links/">JUMP LINKS</a>
+    <a class="crp-btn" id="btnProducts" href="/products/">JUMP PRODUCTS</a>
+    <a class="crp-btn" id="btnExplore" href="/explore/">JUMP INNOVATION</a>
   </div>
-</section>
 
 </main>
 
-<nav class="dock">
-  <a class="crp-btn" href="/index.html">TERMINAL</a>
-  <a class="crp-btn" href="/links/">LINKS</a>
-  <a class="crp-btn" href="/products/">PRODUCTS</a>
-  <a class="crp-btn" href="/laws/">LAWS</a>
-  <a class="crp-btn" href="/gauges/">GAUGES</a>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="crp-btn crp-btn-primary" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
+  <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="crp-btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
-<div class="bd" id="bd"></div>
+<!-- Modal -->
+<div class="bd" id="bd" aria-hidden="true"></div>
 
-<div class="modal" id="modal">
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Terminal detail">
   <div class="shell">
     <div class="mhead">
       <h3 class="mtitle" id="mTitle">DETAIL</h3>
-      <button class="mclose" onclick="closeModal()">✕</button>
+      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
     </div>
 
+    <!-- LENSES INSIDE MODAL ONLY -->
     <div class="lensbar">
-      <button class="chip" id="chipStyle" onclick="toggleStyle()">STYLE</button>
-      <button class="chip" onclick="setTime('origin')">CONCEPT</button>
-      <button class="chip" onclick="setTime('now')">LIVE</button>
-      <button class="chip" onclick="setTime('post')">ROADMAP</button>
+      <button class="chip" id="chipStyle" type="button">STYLE: FORMAL</button>
+      <button class="chip" id="chipConcept" data-time="origin" type="button">CONCEPT</button>
+      <button class="chip" id="chipNow" data-time="now" type="button">NOW</button>
+      <button class="chip" id="chipPost" data-time="post" type="button">POST</button>
     </div>
 
-    <div class="mbody" id="modalContent"></div>
+    <div class="mbody">
+      <div class="mgrid">
+        <div class="mbox"><h4 class="mh" id="h1"></h4><p class="mp" id="p1"></p></div>
+        <div class="mbox"><h4 class="mh" id="h2"></h4><p class="mp" id="p2"></p></div>
+        <div class="mbox"><h4 class="mh" id="h3"></h4><p class="mp" id="p3"></p></div>
+        <div class="mbox"><h4 class="mh" id="h4"></h4><p class="mp" id="p4"></p></div>
+      </div>
+
+      <div class="mact">
+        <button class="crp-btn" id="mReturn" type="button">RETURN</button>
+        <a class="crp-btn" id="mJumpHub" href="/home/">JUMP HUB</a>
+        <a class="crp-btn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
+        <a class="crp-btn" id="mJumpExplore" href="/explore/">JUMP INNOVATION</a>
+        <a class="crp-btn" id="mJumpLinks" href="/links/">JUMP LINKS</a>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-let style = localStorage.getItem("gd_style") || "formal";
-let time = localStorage.getItem("gd_time") || "now";
+(function(){
+  // ===== STATE (gd_* only) =====
+  var qs=new URLSearchParams(location.search);
+  var qLang=qs.get("lang");
+  var qStyle=qs.get("style");
+  var qTime=qs.get("time");
 
-function openModal(i){
-  const data = [
-    "This system unifies products, innovation, governance, and metrics into one coherent traversal map.",
-    "Navigation is deterministic; every diamond and bubble follows the same interaction contract.",
-    "State persistence ensures continuity across pages without random resets.",
-    "Next steps branch into applied surfaces while preserving structural integrity."
-  ];
-  document.getElementById("modalContent").innerHTML =
-    data.map(d => `<div class="mbox"><h4 class="mh">Detail</h4><p class="mp">${d}</p></div>`).join("");
-  document.getElementById("bd").classList.add("show");
-  document.getElementById("modal").classList.add("show");
-}
+  var lang=(qLang==="zh"||qLang==="en")?qLang:((localStorage.getItem("gd_lang")==="zh")?"zh":"en");
+  var style=(qStyle==="formal"||qStyle==="informal")?qStyle:(localStorage.getItem("gd_style")||"formal");
+  var time=(qTime==="origin"||qTime==="now"||qTime==="post")?qTime:(localStorage.getItem("gd_time")||"now");
+  if(time==="trajectory") time="post";
 
-function closeModal(){
-  document.getElementById("bd").classList.remove("show");
-  document.getElementById("modal").classList.remove("show");
-}
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+  }catch(e){}
 
-function toggleStyle(){
-  style = style==="formal"?"informal":"formal";
-  localStorage.setItem("gd_style",style);
-}
+  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
 
-function setTime(t){
-  time = t;
-  localStorage.setItem("gd_time",time);
-}
+  function wire(){
+    var s=q();
+    document.getElementById("btnExit").href="/door/?"+s;
+    document.getElementById("btnHub").href="/home/?"+s;
+
+    document.getElementById("btnContinue").href="/home/?"+s;
+    document.getElementById("btnLinks").href="/links/?"+s;
+    document.getElementById("btnProducts").href="/products/?"+s;
+    document.getElementById("btnExplore").href="/explore/?"+s;
+
+    document.getElementById("dockTerminal").href="/index.html?"+s;
+    document.getElementById("dockLinks").href="/links/?"+s;
+    document.getElementById("dockProducts").href="/products/?"+s;
+    document.getElementById("dockLaws").href="/laws/?"+s;
+    document.getElementById("dockGauges").href="/gauges/?"+s;
+
+    document.getElementById("mJumpHub").href="/home/?"+s;
+    document.getElementById("mJumpProducts").href="/products/?"+s;
+    document.getElementById("mJumpExplore").href="/explore/?"+s;
+    document.getElementById("mJumpLinks").href="/links/?"+s;
+  }
+  wire();
+
+  // ===== I18N (single language render) =====
+  var T={
+    en:{
+      mark:"CARDINAL AXIS",
+      title:"TERMINAL",
+      sub:"Structural entry point into the entire system.",
+      note:"This page gives the minimal skeleton first, then lets you jump into deeper layers.",
+      bubbles:[
+        {h:"Under construction",p:"Unfinished areas show placeholders so you see progress without broken flows."},
+        {h:"How navigation works",p:"You choose a lens inside the bubble, then traverse by structure instead of scrolling."},
+        {h:"State stability",p:"Language, style, and time persist so your context does not reset unexpectedly."},
+        {h:"Where to go next",p:"Products and Innovation expand the system, while Laws and Gauges define rules and measurement."},
+        {h:"Index",p:"The index is the map of maps: it routes you to the right trunk quickly and consistently."},
+        {h:"Glossary",p:"The glossary pins meanings to terms so the system stays readable as it scales."},
+        {h:"Appendix",p:"The appendix holds references and conventions that support deeper sections without cluttering them."},
+        {h:"Scientific fact-checking",p:"This is the verification layer for engineering/math readers who want the hard claims and checks."}
+      ],
+      chips:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",now:"NOW",post:"POST"},
+      warnTech:"Scientific fact-checking · Engineering/Math · Do not enter unless comfortable with technical detail."
+    },
+    zh:{
+      mark:"基轴体系",
+      title:"终端",
+      sub:"进入全系统的结构入口。",
+      note:"此页先给最小骨架，再提供跳转进入更深层。",
+      bubbles:[
+        {h:"施工中",p:"未完成区域用占位显示进度，不会出现断路。"},
+        {h:"导航方式",p:"透镜在气泡内选择，然后按结构遍历而不是刷长文。"},
+        {h:"状态稳定",p:"语言/风格/时间保持，不会意外重置上下文。"},
+        {h:"下一步去哪",p:"产品与创新扩展系统；法则与量规定义规则与测量。"},
+        {h:"索引",p:"索引是“地图的地图”，把你快速路由到正确干线。"},
+        {h:"术语表",p:"术语表把词的意义钉死，让系统越大越可读。"},
+        {h:"附录",p:"附录存放参考与约定，支撑深层内容而不污染正文。"},
+        {h:"科学事实核查",p:"工程/数学读者的核查层：硬约束、硬证据、硬检查。"}
+      ],
+      chips:{formal:"正式",informal:"直接",concept:"概念",now:"当前",post:"后续"},
+      warnTech:"科学事实核查 · 工程/数学 · 非技术读者不建议进入。"
+    }
+  };
+
+  var P=(lang==="zh")?T.zh:T.en;
+  document.documentElement.lang=(lang==="zh")?"zh":"en";
+
+  // Header
+  document.getElementById("mark").textContent=P.mark;
+  document.getElementById("tTitle").textContent=P.title;
+  document.getElementById("tSub").textContent=P.sub;
+  document.getElementById("tNote").textContent=P.note;
+
+  // Main bubbles
+  for(var i=0;i<8;i++){
+    document.getElementById("b"+i+"h").textContent=P.bubbles[i].h;
+    document.getElementById("b"+i+"p").textContent=P.bubbles[i].p;
+  }
+
+  // Modal refs
+  var bd=document.getElementById("bd");
+  var modal=document.getElementById("modal");
+  var mClose=document.getElementById("mClose");
+  var mReturn=document.getElementById("mReturn");
+  var mTitle=document.getElementById("mTitle");
+
+  var chipStyle=document.getElementById("chipStyle");
+  var chipConcept=document.getElementById("chipConcept");
+  var chipNow=document.getElementById("chipNow");
+  var chipPost=document.getElementById("chipPost");
+
+  var h1=document.getElementById("h1"),p1=document.getElementById("p1");
+  var h2=document.getElementById("h2"),p2=document.getElementById("p2");
+  var h3=document.getElementById("h3"),p3=document.getElementById("p3");
+  var h4=document.getElementById("h4"),p4=document.getElementById("p4");
+
+  var activeIdx=0;
+
+  function setChipLabels(){
+    chipStyle.textContent="STYLE: "+(style==="formal"?P.chips.formal:P.chips.informal);
+    chipConcept.textContent=P.chips.concept;
+    chipNow.textContent=P.chips.now;
+    chipPost.textContent=P.chips.post;
+
+    chipConcept.classList.toggle("active", time==="origin");
+    chipNow.classList.toggle("active", time==="now");
+    chipPost.classList.toggle("active", time==="post");
+  }
+
+  function view(idx){
+    // 4 paragraph bubbles per view, per lens, sentence-minimum, tech warning included for idx=7
+    // Keys: origin/now/post × formal/informal
+    var TECHWARN = (idx===7) ? P.warnTech : null;
+
+    function pack(a,b,c,d){ return [a,b,c,d]; }
+
+    var V = {
+      0:{
+        origin:{
+          formal:pack(
+            ["Safety guarantee","Placeholders replace broken flows so exploration never dead-ends."],
+            ["Build reality","The system ships structure first and fills content second."],
+            ["Contract rule","Routing and lens semantics are treated as contracts, not preferences."],
+            ["User promise","If a path is unfinished, you still receive a coherent next move."]
+          ),
+          informal:pack(
+            ["It won’t break","You can explore without fear of getting stuck."],
+            ["Built live","You are watching the site grow in real time."],
+            ["Rules first","The structure stays stable while content expands."],
+            ["Always a way back","Return paths stay obvious and consistent."]
+          )
+        },
+        now:{
+          formal:pack(
+            ["Stable navigation","Diamond layout and modal behavior remain uniform across pages."],
+            ["Deterministic state","gd_lang/gd_style/gd_time persist through links and storage."],
+            ["No silent resets","Refreshing a page does not erase state unless you change it."],
+            ["Fast diagnosis","If something looks wrong: verify URL → verify assets → verify path."]
+          ),
+          informal:pack(
+            ["Same feel everywhere","Every page follows the same interaction contract."],
+            ["State sticks","Language, style, and time stay selected."],
+            ["No random resets","The system does not wipe your context."],
+            ["Fix fast","Check URL, check path, and check that the page exists."]
+          )
+        },
+        post:{
+          formal:pack(
+            ["Public-safe growth","Structure remains stable while material scales outward."],
+            ["Expansion method","New content adds depth without changing topology."],
+            ["Auditability","Stable keys and routes make changes traceable."],
+            ["Outcome","Exploration becomes an encyclopedia you traverse instead of a book you read."]
+          ),
+          informal:pack(
+            ["More pages, same rules","It scales without turning into chaos."],
+            ["New stuff won’t wreck old stuff","Structure stays the same when features expand."],
+            ["Easy to verify","You can tell what changed and when."],
+            ["Feels like a map","You always know where you are."]
+          )
+        }
+      },
+
+      1:{
+        origin:{
+          formal:pack(
+            ["Traversal first","You learn by moving across structure, not by reading one long article."],
+            ["Lens meaning","Style changes framing and time changes emphasis in a controlled way."],
+            ["Diamonds and bubbles","Nodes route you to dense, structured explanations immediately."],
+            ["Return discipline","Close returns you to the same map with the same state intact."]
+          ),
+          informal:pack(
+            ["Tap, don’t scroll","You move by clicking structure, not by hunting in paragraphs."],
+            ["Lenses change content","The page meaning changes with the lens, not just button highlights."],
+            ["Fast entry","Tap a node and get the relevant info immediately."],
+            ["Return stays stable","You do not lose your place when you close."]
+          )
+        },
+        now:{
+          formal:pack(
+            ["State propagation","Every internal link carries lang/style/time forward."],
+            ["Modal-only lenses","Lens controls live inside the bubble to keep the face clean."],
+            ["Uniform contract","All pages follow the same diamond + modal rule set."],
+            ["Practical flow","Pick lens → open node → read → jump or return."]
+          ),
+          informal:pack(
+            ["Learn once","If you can use one page, you can use the whole site."],
+            ["Face stays clean","No lens clutter on the main screen."],
+            ["Quick route","Pick lens, open node, and move with jump buttons."],
+            ["No getting lost","Return always puts you back where you started."]
+          )
+        },
+        post:{
+          formal:pack(
+            ["Depth scaling","Each node grows into sub-nodes without breaking the entry map."],
+            ["Reference surfaces","Products, Laws, and Gauges become navigable knowledge systems."],
+            ["Multiple audiences","Informal stays legible while Formal stays precise."],
+            ["Outcome","Traversal becomes the default learning method for the architecture."]
+          ),
+          informal:pack(
+            ["Bigger map","More branches show up but the rules stay the same."],
+            ["Consumer-friendly","Informal stays simple and usable."],
+            ["Deep when needed","Formal gives the technical picture when you want it."],
+            ["Feels modern","You explore a system instead of reading a book."]
+          )
+        }
+      },
+
+      2:{
+        origin:{
+          formal:pack(
+            ["Language stays selected","gd_lang persists so the system stays in one language mode."],
+            ["Style stays consistent","gd_style persists so framing remains consistent across pages."],
+            ["Time layer stays consistent","gd_time persists so Concept/Now/Post remains selected."],
+            ["No random reset","State changes only when you change it."]
+          ),
+          informal:pack(
+            ["Language sticks","The system does not flip languages unexpectedly."],
+            ["Style sticks","Your tone stays consistent across pages."],
+            ["Time sticks","Concept/Now/Post does not reset randomly."],
+            ["You stay oriented","The UI keeps your context intact."]
+          )
+        },
+        now:{
+          formal:pack(
+            ["Canonical keys only","Only gd_lang/gd_style/gd_time are used for state."],
+            ["URL wins deterministically","If URL provides state, it hydrates first and cleanly."],
+            ["Storage backs it up","LocalStorage keeps state across sessions as a fallback."],
+            ["Links propagate state","All internal links carry state forward."]
+          ),
+          informal:pack(
+            ["One state system","No duplicate keys and no collisions."],
+            ["Shareable links","Other people open the same view from the same link."],
+            ["It remembers","Close a tab and return later without losing settings."],
+            ["It carries through","Jumps do not wipe your selections."]
+          )
+        },
+        post:{
+          formal:pack(
+            ["Scalable semantics","Stable keys prevent meaning drift as the project grows."],
+            ["Collaboration safety","Independent edits cannot silently change the interface contract."],
+            ["Public clarity","Users learn the lens system once and trust it everywhere."],
+            ["Outcome","State becomes the glue of the traversal encyclopedia."]
+          ),
+          informal:pack(
+            ["Stable forever","The site stays consistent as it grows."],
+            ["Safer sharing","Links open the right view for other people."],
+            ["Less stress","You stop fighting the UI."],
+            ["More trust","It behaves the same every time."]
+          )
+        }
+      },
+
+      3:{
+        origin:{
+          formal:pack(
+            ["Products","Deployed surfaces you can adopt, test, and deploy under constraints."],
+            ["Innovation","Future trunks that describe next surfaces and how they will be structured."],
+            ["Laws","Standards and rules that define what is allowed and what is constrained."],
+            ["Gauges","Dashboards and metrics that show behavior, bounds, and change over time."]
+          ),
+          informal:pack(
+            ["Products","What exists and can be used."],
+            ["Innovation","What is coming next."],
+            ["Laws","Rules and guardrails."],
+            ["Gauges","Metrics and dashboards."]
+          )
+        },
+        now:{
+          formal:pack(
+            ["Jump behavior","Jump buttons look specific but route to safe generalized hubs."],
+            ["Cross-interest discovery","A jump reveals related subcategories you may not expect."],
+            ["Consistency","Every destination preserves the same lens semantics."],
+            ["Return safety","You can always return to the hub without losing state."]
+          ),
+          informal:pack(
+            ["Jumps are intentional","They bring you into the right zone fast."],
+            ["You’ll find related things","Categories cluster naturally."],
+            ["Everything stays consistent","Same lens rules everywhere."],
+            ["Return stays easy","You never get trapped."]
+          )
+        },
+        post:{
+          formal:pack(
+            ["Convergence surface","Hubs converge different paths into coherent understanding."],
+            ["Layering","Deployed and future layers remain distinct but compatible."],
+            ["Mapping","Every trunk gets a stable map, then deeper leaf nodes."],
+            ["Outcome","Users experience discovery without confusion."]
+          ),
+          informal:pack(
+            ["It ties together","Different paths feel connected."],
+            ["Future vs deployed stays clear","No mixing meanings."],
+            ["Maps get deeper","More nodes appear over time."],
+            ["Still easy","Same clicks and returns."]
+          )
+        }
+      },
+
+      4:{
+        origin:{
+          formal:pack(
+            ["What the index is","A table-of-contents that routes to the right trunk without reading everything."],
+            ["How it is written","Each entry is a complete sentence with bounded meaning."],
+            ["How it is used","You skim, then jump to the nearest relevant hub."],
+            ["Why it matters","It compresses exploration time without losing structure."]
+          ),
+          informal:pack(
+            ["Index = quick map","It helps you find the right place fast."],
+            ["One sentence minimum","No one-word placeholders."],
+            ["Use it to jump","Get into the right zone immediately."],
+            ["It saves time","You don’t have to read in order."]
+          )
+        },
+        now:{
+          formal:pack(
+            ["Index targets","Entries route into Products, Innovation, Laws, and Gauges hubs."],
+            ["Depth control","Index stays skeletal; deeper pages hold the details."],
+            ["Lens integrity","Index meaning is lens-aware but never ambiguous."],
+            ["Consistency rule","Index never overrides UI contracts; it only routes."]
+          ),
+          informal:pack(
+            ["Index points you","Straight to the right trunk."],
+            ["Skeleton only here","Details live in the deeper pages."],
+            ["Still consistent","Same lens behavior everywhere."],
+            ["No tricks","It routes and returns cleanly."]
+          )
+        },
+        post:{
+          formal:pack(
+            ["Scaling plan","Index grows by adding entries, not by redesigning the page."],
+            ["Cross-linking","Entries can point to multiple hubs when a concept spans trunks."],
+            ["Verification hooks","Index entries can reference fact-check nodes when relevant."],
+            ["Outcome","A stable circuit-board surface for discovery."]
+          ),
+          informal:pack(
+            ["More entries, same page","No redesign needed."],
+            ["Links connect naturally","One concept can point to several places."],
+            ["Fact-check routes exist","If you want proof, it’s there."],
+            ["Feels like a board","You pick a trace and follow it."]
+          )
+        }
+      },
+
+      5:{
+        origin:{
+          formal:pack(
+            ["What glossary is","A definition surface that pins meaning to terms and labels."],
+            ["How it is written","Each term gets a complete sentence with bounded scope."],
+            ["How it is used","You clarify a term, then return to the page you were reading."],
+            ["Why it matters","Stable definitions prevent drift and confusion at scale."]
+          ),
+          informal:pack(
+            ["Glossary = definitions","It tells you what a term means."],
+            ["One sentence minimum","No fragments and no mystery."],
+            ["Use it fast","Check a term, then go back."],
+            ["It prevents confusion","Words stop drifting."]
+          )
+        },
+        now:{
+          formal:pack(
+            ["Scope discipline","Glossary avoids ideology and stays descriptive."],
+            ["Bilingual anchor","EN/中文 stays consistent so terms map cleanly."],
+            ["Cross-references","Definitions can point to deeper nodes for examples."],
+            ["Outcome","Readers stay oriented across trunks."]
+          ),
+          informal:pack(
+            ["Neutral definitions","No preaching and no fluff."],
+            ["Bilingual consistency","Terms line up across languages."],
+            ["Easy references","If you want examples, there are jumps."],
+            ["You stay oriented","No guessing what a label means."]
+          )
+        },
+        post:{
+          formal:pack(
+            ["Library growth","Glossary scales by adding terms under stable categories."],
+            ["Tooling support","Eventually conformance checks keep definitions consistent."],
+            ["Evidence links","Key terms can link to fact-check nodes."],
+            ["Outcome","A stable language layer for the project."]
+          ),
+          informal:pack(
+            ["More terms, still readable","It stays clean."],
+            ["Consistency checks later","We can enforce alignment."],
+            ["Proof links when needed","Facts have routes."],
+            ["Language stays stable","Less confusion as we scale."]
+          )
+        }
+      },
+
+      6:{
+        origin:{
+          formal:pack(
+            ["What appendix is","Supporting material and conventions that should not clutter core pages."],
+            ["What belongs here","References, formatting rules, and structural notes."],
+            ["How it is used","You jump in for context, then return to the main map."],
+            ["Why it matters","It keeps the system clean while still being complete."]
+          ),
+          informal:pack(
+            ["Appendix = support material","Helpful extras live here."],
+            ["Keeps pages clean","Core pages stay readable."],
+            ["Use when needed","Jump in, get context, jump back."],
+            ["It reduces clutter","Depth without mess."]
+          )
+        },
+        now:{
+          formal:pack(
+            ["Conventions","Naming, routing, and state-key discipline are recorded here."],
+            ["References","External links and identity anchors can be listed safely."],
+            ["Version notes","Appendix can log changes without bloating core pages."],
+            ["Outcome","A clean separation between narrative and support."]
+          ),
+          informal:pack(
+            ["Rules live here","So core pages stay simple."],
+            ["References live here","So you can check sources."],
+            ["Notes live here","So we don’t clutter the map."],
+            ["It stays clean","Support without overload."]
+          )
+        },
+        post:{
+          formal:pack(
+            ["Scaling","Appendix becomes the structured archive for deeper artifacts."],
+            ["Cross-domain","Appendix can group materials by trunk or by purpose."],
+            ["Verification aid","Appendix can point to fact-check nodes or raw artifacts."],
+            ["Outcome","A durable support layer for a large system."]
+          ),
+          informal:pack(
+            ["Becomes the archive","Organized and searchable."],
+            ["Grouped cleanly","By topic or by purpose."],
+            ["Supports fact-checking","Links to proof when needed."],
+            ["Durable","Doesn’t get messy over time."]
+          )
+        }
+      },
+
+      7:{
+        origin:{
+          formal:pack(
+            ["Warning",TECHWARN || "Scientific fact-checking is for technical readers who want the hard checks."],
+            ["What it contains","Hard claims, definitions, assumptions, and falsifiers in precise language."],
+            ["How to use it","Use it to verify what matters most before trusting an interpretation."],
+            ["Why it matters","This is the defensible layer that keeps the system falsifiable."]
+          ),
+          informal:pack(
+            ["Warning",TECHWARN || "Scientific fact-checking is for technical readers."],
+            ["Hard checks only","This is the proof-and-bounds surface."],
+            ["Use it to verify","Check claims before you build on them."],
+            ["Keeps it real","It forces falsifiability and reduces hand-waving."]
+          )
+        },
+        now:{
+          formal:pack(
+            ["Warning",TECHWARN || "Do not enter unless comfortable with technical detail."],
+            ["What you will see","Equations, constraints, assumptions, and measurable definitions."],
+            ["How it is organized","Claims → evidence type → falsifier → limits → link-out."],
+            ["Outcome","Readers can separate marketing from measurement."]
+          ),
+          informal:pack(
+            ["Warning",TECHWARN || "Technical detail ahead."],
+            ["It’s strict","Claims must have bounds and falsifiers."],
+            ["It’s organized","Claim, evidence, falsifier, limits."],
+            ["It builds trust","Because it is checkable."]
+          )
+        },
+        post:{
+          formal:pack(
+            ["Warning",TECHWARN || "Engineering/math layer."],
+            ["Scaling plan","Fact-check nodes expand as the system expands, without changing structure."],
+            ["Integration","Fact-check nodes link to Products, Innovation, Laws, and Gauges where relevant."],
+            ["Outcome","A permanent verification backbone for the entire project."]
+          ),
+          informal:pack(
+            ["Warning",TECHWARN || "Technical layer."],
+            ["Grows safely","More checks, same structure."],
+            ["Links everywhere","Proof routes into the relevant trunks."],
+            ["Stable backbone","Verification stays permanent as the project grows."]
+          )
+        }
+      }
+    };
+
+    return V[idx][time][style];
+  }
+
+  function renderModal(){
+    setChipLabels();
+    wire();
+
+    mTitle.textContent = P.bubbles[activeIdx].h;
+
+    var v = view(activeIdx);
+    h1.textContent=v[0][0]; p1.textContent=v[0][1];
+    h2.textContent=v[1][0]; p2.textContent=v[1][1];
+    h3.textContent=v[2][0]; p3.textContent=v[2][1];
+    h4.textContent=v[3][0]; p4.textContent=v[3][1];
+  }
+
+  function openModal(i){
+    activeIdx=i;
+    renderModal();
+    bd.classList.add("show");
+    modal.classList.add("show");
+  }
+  function closeModal(){
+    bd.classList.remove("show");
+    modal.classList.remove("show");
+  }
+
+  // Main bubble clicks
+  function bindBubble(id,i){
+    var el=document.getElementById(id);
+    el.onclick=function(){ openModal(i); };
+    el.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(i);} };
+  }
+  for(var i=0;i<8;i++){ bindBubble("b"+i, i); }
+
+  // Lens buttons
+  chipStyle.onclick=function(){
+    style=(style==="formal")?"informal":"formal";
+    try{localStorage.setItem("gd_style",style);}catch(e){}
+    renderModal();
+  };
+  chipConcept.onclick=function(){ time="origin"; try{localStorage.setItem("gd_time",time);}catch(e){} renderModal(); };
+  chipNow.onclick=function(){ time="now"; try{localStorage.setItem("gd_time",time);}catch(e){} renderModal(); };
+  chipPost.onclick=function(){ time="post"; try{localStorage.setItem("gd_time",time);}catch(e){} renderModal(); };
+
+  // Close
+  bd.onclick=closeModal;
+  mClose.onclick=closeModal;
+  mReturn.onclick=closeModal;
+
+  // Initial
+  setChipLabels();
+  wire();
+})();
 </script>
 
 </body>
 </html>
+```0

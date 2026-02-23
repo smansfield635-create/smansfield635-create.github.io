@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>INNOVATION · LANGUAGE · GRAMMAR</title>
+<title>GRAMMAR · Language Engine</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -17,7 +17,7 @@
   --obs2:#0c1626;
 }
 
-/* DO NOT TOUCH FIELD */
+/* DO NOT TOUCH FIELD — ui.css owns background */
 
 .stage{
   position:fixed;
@@ -49,98 +49,126 @@
   opacity:.55;
 }
 
-/* Single centered gem */
-
 .d{
-  width:180px;height:180px;
+  width:150px;height:150px;
   position:absolute;
   left:50%;top:50%;
-  transform:translate(-50%,-50%) rotate(45deg);
+  transform-origin:center;
   border-radius:26px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+
   background:
     radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
     linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
+
   border:1px solid rgba(255,255,255,.10);
   box-shadow:
     0 28px 84px rgba(0,0,0,.78),
     inset 0 2px 0 rgba(255,255,255,.14),
     inset 0 -28px 44px rgba(0,0,0,.62);
+
+  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
 }
 
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 18px rgba(212,175,55,.18);
+}
+
+.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
+.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
+.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
+.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
+
 .inner{
-  width:100%;
-  height:100%;
+  width:100%; height:100%;
   transform:rotate(-45deg);
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:20px;
+  padding:16px;
+  gap:8px;
+  pointer-events:none;
 }
 
-.lab{
-  font-weight:950;
-  letter-spacing:.8px;
-  font-size:18px;
-}
+.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
+.sub{ font-size:13px; opacity:.86; line-height:1.35; max-width:16em; }
 
-.sub{
-  font-size:13px;
-  opacity:.85;
-  margin-top:8px;
-}
-
-.btn{
-  position:fixed;
-  top:16px;
-  left:16px;
-  padding:10px 16px;
-  border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:white;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  text-decoration:none;
-  font-weight:900;
+.core{
+  position:absolute;
+  left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  width:64px;height:64px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  box-shadow:0 18px 44px rgba(0,0,0,.62);
+  display:grid; place-items:center;
+  font-weight:950; letter-spacing:.5px;
+  opacity:.92;
+  pointer-events:none;
 }
 </style>
 </head>
 
 <body>
 
-<a class="btn" id="btnBack">BACK</a>
-
 <div class="stage">
   <div class="outer"></div>
 
-  <div class="d">
+  <!-- TRAVERSAL CONTRACTS -->
+  <div class="d d-n" onclick="go('/explore/innovation/language/grammar/traversal/')">
     <div class="inner">
-      <div class="lab">GRAMMAR</div>
-      <div class="sub">
-        Traversal contracts.<br/>
-        Structural language constraints.<br/>
-        Deterministic parsing.<br/>
-        Anti-drift syntax.
-      </div>
+      <div class="lab">TRAVERSAL</div>
+      <div class="sub">Traversal contracts.</div>
     </div>
   </div>
 
+  <!-- STRUCTURAL LANGUAGE -->
+  <div class="d d-e" onclick="go('/explore/innovation/language/grammar/structure/')">
+    <div class="inner">
+      <div class="lab">STRUCTURE</div>
+      <div class="sub">Structural language constraints.</div>
+    </div>
+  </div>
+
+  <!-- DETERMINISTIC PARSING -->
+  <div class="d d-w" onclick="go('/explore/innovation/language/grammar/parsing/')">
+    <div class="inner">
+      <div class="lab">PARSING</div>
+      <div class="sub">Deterministic parsing.</div>
+    </div>
+  </div>
+
+  <!-- ANTI-DRIFT SYNTAX -->
+  <div class="d d-s" onclick="go('/explore/innovation/language/grammar/anti-drift/')">
+    <div class="inner">
+      <div class="lab">ANTI-DRIFT</div>
+      <div class="sub">Anti-drift syntax.</div>
+    </div>
+  </div>
+
+  <div class="core">◆</div>
 </div>
 
 <script>
-(function(){
+function go(path){
   const qs = new URLSearchParams(window.location.search);
   const lang = qs.get("lang") || localStorage.getItem("gd_lang") || "en";
   const style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   const time = qs.get("time") || localStorage.getItem("gd_time") || "now";
 
-  document.getElementById("btnBack").href =
-    "/explore/innovation/language/?lang=" + lang +
+  window.location.href =
+    path + "?lang=" + lang +
     "&style=" + style +
     "&time=" + time;
-})();
+}
 </script>
 
 </body>

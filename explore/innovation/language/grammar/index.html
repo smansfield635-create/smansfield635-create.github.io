@@ -1,15 +1,12 @@
 <!-- TNT — /explore/innovation/language/grammar/traversal/structure/index.html
-     PURPOSE:
-       TRAVERSAL → STRUCTURE (consumer-legible)
-       Page = 4 bubbles (diamond-of-diamonds)
-       Click bubble = centered final modal with 4 bulletins (thorough + interesting)
-     RULES:
-       - TNT full file
-       - ui.css owns field (no html/body background)
-       - branch.css untouched
-       - State propagation: lang/style/time preserved
-       - Top-left: BACK + EXIT
-       - Bottom dock: HUB + INNOVATION + PRODUCTS
+     NO MORE PATHS.
+     Page = 4 bubbles (diamond layout).
+     Click bubble = FINAL MODAL.
+     FINAL MODAL = 4 SECTIONS × 4 BUBBLES (each bubble = one full paragraph).
+     No bullets. No fragments. Paragraph bubbles only.
+     ui.css owns field. branch.css untouched.
+     Top-left: BACK + EXIT
+     Bottom dock: HUB + INNOVATION + PRODUCTS
 -->
 
 <!doctype html>
@@ -69,7 +66,7 @@
   z-index:40;
 }
 
-/* Outer gem shell (with subtle red undertone so it stays “in-world”) */
+/* Outer shell with subtle red undertone (in-world) */
 .outer{
   position:absolute;
   left:50%;top:50%;
@@ -133,8 +130,8 @@
   padding:16px;
   gap:10px;
   user-select:none;
+  pointer-events:none;
 }
-
 .lab{font-weight:950;letter-spacing:.8px;font-size:16px;}
 .sub{font-size:13px;opacity:.86;line-height:1.35;max-width:18em;}
 
@@ -190,7 +187,7 @@
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
-  width:min(980px,94vw);
+  width:min(1040px,94vw);
   max-height:86vh;
   z-index:210;
   display:none;
@@ -234,41 +231,55 @@
   padding:8px 10px;
 }
 
-.grid{
+/* FINAL: 4 sections, each section contains 4 paragraph bubbles */
+.section-grid{
   display:grid;
-  gap:14px;
+  gap:16px;
 }
-@media(min-width:920px){
-  .grid{ grid-template-columns:1fr 1fr; }
+@media(min-width:980px){
+  .section-grid{ grid-template-columns:1fr 1fr; }
 }
 
-.box{
+.section{
   border-radius:18px;
-  padding:16px 16px 14px;
-  background:rgba(0,0,0,.22);
+  padding:14px;
+  background:rgba(0,0,0,.18);
   border:1px solid rgba(255,255,255,.08);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
 }
 
-.box h4{
+.section h4{
   margin:0 0 10px;
   font-weight:950;
   letter-spacing:.2px;
   font-size:14px;
 }
 
-.box p{
-  margin:0 0 10px;
-  opacity:.88;
-  line-height:1.55;
+.pbubbles{
+  display:grid;
+  gap:10px;
 }
 
-.box ul{
-  margin:0;
-  padding-left:18px;
-  opacity:.85;
+.pbubble{
+  border-radius:16px;
+  padding:12px 12px 10px;
+  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.08);
 }
-.box li{ margin:6px 0; }
+
+.pbubble .ptitle{
+  font-weight:950;
+  letter-spacing:.2px;
+  font-size:12px;
+  opacity:.92;
+  margin:0 0 6px;
+}
+
+.pbubble p{
+  margin:0;
+  line-height:1.55;
+  opacity:.88;
+}
 
 .mact{
   display:flex;
@@ -290,31 +301,31 @@
 <div class="stage" aria-label="Traversal Structure bubbles">
   <div class="outer"></div>
 
-  <div class="d d-n" role="button" tabindex="0" onclick="openModal('Anchor')">
+  <div class="d d-n" role="button" tabindex="0" onclick="openModal('ANCHOR')">
     <div class="inner">
       <div class="lab">ANCHOR</div>
-      <div class="sub">The “north star” that keeps meaning stable.</div>
+      <div class="sub">Stable reference point.</div>
     </div>
   </div>
 
-  <div class="d d-e" role="button" tabindex="0" onclick="openModal('Paths')">
+  <div class="d d-e" role="button" tabindex="0" onclick="openModal('PATHS')">
     <div class="inner">
       <div class="lab">PATHS</div>
-      <div class="sub">How you move without getting lost.</div>
+      <div class="sub">Routes you can trust.</div>
     </div>
   </div>
 
-  <div class="d d-w" role="button" tabindex="0" onclick="openModal('Signals')">
+  <div class="d d-w" role="button" tabindex="0" onclick="openModal('SIGNALS')">
     <div class="inner">
       <div class="lab">SIGNALS</div>
-      <div class="sub">What the system watches and remembers.</div>
+      <div class="sub">What the system remembers.</div>
     </div>
   </div>
 
-  <div class="d d-s" role="button" tabindex="0" onclick="openModal('Safety')">
+  <div class="d d-s" role="button" tabindex="0" onclick="openModal('SAFETY')">
     <div class="inner">
       <div class="lab">SAFETY</div>
-      <div class="sub">How structure prevents drift and chaos.</div>
+      <div class="sub">Why it doesn’t drift.</div>
     </div>
   </div>
 
@@ -336,28 +347,96 @@
       <button class="mclose" id="mClose" type="button" aria-label="Close">✕</button>
     </div>
 
-    <!-- FINAL BLOCK: 4 BULLETINS -->
-    <div class="grid">
-      <div class="box">
+    <div class="section-grid">
+
+      <div class="section">
         <h4>What it means</h4>
-        <p id="b1p"></p>
-        <ul id="b1u"></ul>
+        <div class="pbubbles">
+          <div class="pbubble">
+            <div class="ptitle">Language stays selected</div>
+            <p id="m_lang"></p>
+          </div>
+          <div class="pbubble">
+            <div class="ptitle">Style stays consistent</div>
+            <p id="m_style"></p>
+          </div>
+          <div class="pbubble">
+            <div class="ptitle">Time layer stays consistent</div>
+            <p id="m_time"></p>
+          </div>
+          <div class="pbubble">
+            <div class="ptitle">Pages don’t reset randomly</div>
+            <p id="m_reset"></p>
+          </div>
+        </div>
       </div>
-      <div class="box">
+
+      <div class="section">
         <h4>How it feels to use</h4>
-        <p id="b2p"></p>
-        <ul id="b2u"></ul>
+        <div class="pbubbles">
+          <div class="pbubble">
+            <div class="ptitle">Language stays selected</div>
+            <p id="f_lang"></p>
+          </div>
+          <div class="pbubble">
+            <div class="ptitle">Style stays consistent</div>
+            <p id="f_style"></p>
+          </div>
+          <div class="pbubble">
+            <div class="ptitle">Time layer stays consistent</div>
+            <p id="f_time"></p>
+          </div>
+          <div class="pbubble">
+            <div class="ptitle">Pages don’t reset randomly</div>
+            <p id="f_reset"></p>
+          </div>
+        </div>
       </div>
-      <div class="box">
+
+      <div class="section">
         <h4>Why it matters</h4>
-        <p id="b3p"></p>
-        <ul id="b3u"></ul>
+        <div class="pbubbles">
+          <div class="pbubble">
+            <div class="ptitle">Language stays selected</div>
+            <p id="w_lang"></p>
+          </div>
+          <div class="pbubble">
+            <div class="ptitle">Style stays consistent</div>
+            <p id="w_style"></p>
+          </div>
+          <div class="pbubble">
+            <div class="ptitle">Time layer stays consistent</div>
+            <p id="w_time"></p>
+          </div>
+          <div class="pbubble">
+            <div class="ptitle">Pages don’t reset randomly</div>
+            <p id="w_reset"></p>
+          </div>
+        </div>
       </div>
-      <div class="box">
+
+      <div class="section">
         <h4>What’s next</h4>
-        <p id="b4p"></p>
-        <ul id="b4u"></ul>
+        <div class="pbubbles">
+          <div class="pbubble">
+            <div class="ptitle">Language stays selected</div>
+            <p id="n_lang"></p>
+          </div>
+          <div class="pbubble">
+            <div class="ptitle">Style stays consistent</div>
+            <p id="n_style"></p>
+          </div>
+          <div class="pbubble">
+            <div class="ptitle">Time layer stays consistent</div>
+            <p id="n_time"></p>
+          </div>
+          <div class="pbubble">
+            <div class="ptitle">Pages don’t reset randomly</div>
+            <p id="n_reset"></p>
+          </div>
+        </div>
       </div>
+
     </div>
 
     <div class="mact">
@@ -381,73 +460,142 @@ function q(){
   return "lang="+encodeURIComponent(s.lang)+"&style="+encodeURIComponent(s.style)+"&time="+encodeURIComponent(s.time);
 }
 
-function fillList(id, arr){
-  const ul=document.getElementById(id);
-  ul.innerHTML="";
-  arr.forEach(t=>{
-    const li=document.createElement("li");
-    li.textContent=t;
-    ul.appendChild(li);
-  });
-}
+const COPY = {
+  ANCHOR:{
+    means:{
+      lang:"Your language choice becomes a “home setting.” Once you pick it, the site stops asking again and simply speaks to you that way—so the experience feels continuous instead of constantly restarting.",
+      style:"Style is a reading attitude: calm and precise or direct and conversational. Structure makes sure that attitude stays the same across every page you touch, so the tone never randomly flips on you.",
+      time:"Time isn’t a timeline you scroll through; it’s the lens you’re wearing. When you choose Concept, Now, or Post, the site keeps that lens on until you intentionally change it—so the story stays coherent.",
+      reset:"A stable structure means you never get punished for exploring. You can wander, open bubbles, and go deep, and the site won’t wipe your context just because you moved to a new page."
+    },
+    feels:{
+      lang:"It feels like the site remembers you—without trying to “profile” you. You don’t have to re-select your language every time you enter a new room; it simply stays aligned with you.",
+      style:"It feels predictable. If you’re reading in a formal tone, the whole environment stays formal until you decide otherwise—so you don’t get jerked between “manual mode” and “chat mode.”",
+      time:"It feels like you’re exploring the same world from different angles, not clicking random tabs. You can stay in Concept for a while, then switch to Now, and everything reorients cleanly.",
+      reset:"It feels safe to tap. You don’t hesitate because you’re not afraid of losing your place; exploration becomes playful instead of stressful."
+    },
+    why:{
+      lang:"Consistency reduces friction. When language doesn’t reset, you spend attention on meaning—not on reconfiguring settings over and over again.",
+      style:"Style stability prevents confusion. If tone changes unexpectedly, people misread intent; keeping style consistent keeps interpretation consistent.",
+      time:"Time stability prevents narrative whiplash. When time shifts without consent, meaning collapses; when time is stable, learning becomes structured.",
+      reset:"No-reset structure protects momentum. People stop exploring when they fear losing context; continuity keeps curiosity alive."
+    },
+    next:{
+      lang:"Next, we support more languages through overlays, but keep English/Chinese as the canonical pair. The goal is global access without breaking consistency.",
+      style:"Next, we let style influence how dense explanations are—short and friendly vs. deeper and more exact—without changing the navigation contract.",
+      time:"Next, time layers will control what’s “front and center” in each bubble, so the same page can feel like concept art, a live dashboard, or a roadmap—on demand.",
+      reset:"Next, we add safe “resume tokens” so you can return to the exact bubble you were reading, even after leaving the site—without creating chaos or drift."
+    }
+  },
 
-const CONTENT = {
-  Anchor:{
-    b1p:"Structure starts with a single anchor—one stable reference point that doesn’t change when the page changes.",
-    b1u:["Names stay consistent.","The map stays readable.","You always know where you are.","You can always return."],
-    b2p:"It feels like a compass that never lies—no matter how deep you go, the center still makes sense.",
-    b2u:["Less scrolling.","Less hunting.","More clarity.","More confidence."],
-    b3p:"Without an anchor, knowledge becomes noise. With an anchor, learning becomes fast and repeatable.",
-    b3u:["Stops confusion loops.","Prevents “drift.”","Keeps language consistent.","Keeps navigation safe."],
-    b4p:"As this grows, the anchor becomes a public standard: glossary + registry + stable definitions.",
-    b4u:["Acronym registry.","Definition sheets.","Cross-links everywhere.","Printable references."]
+  PATHS:{
+    means:{
+      lang:"Language staying selected means every route leads to the same ‘world,’ just translated. You don’t jump into a different site when you click; you stay in the same structure, speaking your language.",
+      style:"Style staying consistent means every path feels like part of one narrative voice. No matter which corridor you take, the storyteller remains the same.",
+      time:"Time staying consistent means the path you take doesn’t secretly change the era you’re reading from. The route is the route; the time lens is your choice.",
+      reset:"No random resets means paths are trustworthy. You can try something, go back, try another, and your context remains intact."
+    },
+    feels:{
+      lang:"It feels like walking through a museum where every room has the same tour guide language you picked at the entrance.",
+      style:"It feels like the same guide is speaking across rooms—so your brain doesn’t have to re-adjust to a new tone every time you click.",
+      time:"It feels like you’re choosing a viewpoint (concept / now / post) and then walking freely—rather than being dragged into a different viewpoint by accident.",
+      reset:"It feels like exploration has a safety rail. You can move fast because you know the system won’t wipe your state mid-walk."
+    },
+    why:{
+      lang:"When language is stable, the site becomes shareable. You can send a link and know the recipient isn’t trapped in the wrong language context.",
+      style:"When style is stable, trust rises. People don’t fear misinterpretation; they can read and understand without second-guessing tone shifts.",
+      time:"When time is stable, learning becomes traversable. You can compare concept vs now without losing the anchor that makes comparison meaningful.",
+      reset:"When pages don’t reset randomly, users keep exploring. Retention is a function of confidence, not just curiosity."
+    },
+    next:{
+      lang:"Next, paths will support country→language overlays while keeping the same underlying structure (no parallel site copies).",
+      style:"Next, style will control how much context you see at once—like dimming or brightening the information without breaking the map.",
+      time:"Next, time will also influence recommended routes (concept-first vs now-first vs post-first), so the system can guide without forcing.",
+      reset:"Next, we add “return paths” and “continue paths” inside bubbles so the journey feels intentional—not like a random click storm."
+    }
   },
-  Paths:{
-    b1p:"Paths are the routes you can take that always behave the same way—like rails on a track.",
-    b1u:["Routes carry your settings.","Back always returns.","No dead ends.","No surprise jumps."],
-    b2p:"It feels like exploring a city with perfect signage—you can wander, but you can’t get lost.",
-    b2u:["Tap, learn, return.","Open, read, close.","Move by curiosity.","Always oriented."],
-    b3p:"Paths turn exploration into a consumer-friendly experience instead of a technical manual.",
-    b3u:["More approachable.","More playful.","More memorable.","More shareable."],
-    b4p:"Next we add richer route choices and “continue where you left off” behavior without chaos.",
-    b4u:["Save position tokens.","Safe resume flow.","More branches.","Same structure."]
+
+  SIGNALS:{
+    means:{
+      lang:"Language persistence is a signal: it tells the system which set of words to use so meaning stays aligned across every bubble you open.",
+      style:"Style persistence is a signal: it tells the system how to speak—more exact or more conversational—without changing the structure underneath.",
+      time:"Time persistence is a signal: it tells the system whether you want the idea, the present reality, or the future direction—then keeps that viewpoint stable.",
+      reset:"No resets means signals survive navigation. The system holds your context across pages so your reading state is continuous."
+    },
+    feels:{
+      lang:"It feels like the system respects your preference. Once you choose language, you’re not forced to repeatedly prove it.",
+      style:"It feels like the site has a consistent personality. You can settle into a mode and stay there.",
+      time:"It feels like you can stay in a layer long enough to understand it—without being yanked out.",
+      reset:"It feels calm. The site doesn’t punish curiosity with ‘state loss’ every time you step into a new room."
+    },
+    why:{
+      lang:"Signals reduce cognitive load. People quit when they must reconfigure; stable signals keep attention on meaning.",
+      style:"Signals prevent tone whiplash. Consistent style prevents misreadings and makes the content safer to share publicly.",
+      time:"Signals prevent conceptual whiplash. Stable time lens makes comparison and learning actually possible.",
+      reset:"Signals without resets prevent drop-off. Continuity is the foundation of depth."
+    },
+    next:{
+      lang:"Next, signals become portable across more pages, more products, and eventually more languages—without needing 256 hard-coded translations.",
+      style:"Next, style signals can control ‘density’: short bubbles vs deeper bubbles, without changing the structure of the page.",
+      time:"Next, time signals can unlock “roadmap storytelling” where the same bubble shifts between concept, now, and post elegantly.",
+      reset:"Next, signals will generate a return token so you can jump back to the exact bubble you were last reading."
+    }
   },
-  Signals:{
-    b1p:"Signals are the small markers the system watches: language, lens, time layer—so content stays coherent.",
-    b1u:["Language stays selected.","Style stays consistent.","Time layer stays consistent.","Pages don’t reset randomly."],
-    b2p:"It feels personalized without being creepy—the site simply remembers how you were reading.",
-    b2u:["Faster re-entry.","Less re-clicking.","Fewer settings.","Smoother flow."],
-    b3p:"Signals are what make the whole experience feel like one continuous world—not separate pages.",
-    b3u:["Uniform behavior.","Uniform look.","Uniform meaning.","Uniform navigation."],
-    b4p:"Next we expose “why” only when you ask—keeping the surface simple but depth available.",
-    b4u:["Consumer-first text.","Deep optional details.","Guided discovery.","No overload."]
-  },
-  Safety:{
-    b1p:"Safety is the rule that structure must survive change—so new pages don’t break old pages.",
-    b1u:["No mixed key namespaces.","No background ownership conflicts.","No hidden routing rules.","No silent overrides."],
-    b2p:"It feels reliable—the site doesn’t “randomly change” or “randomly break.”",
-    b2u:["Fewer bugs.","Fewer regressions.","Fewer rebuilds.","More momentum."],
-    b3p:"Safety is what lets these innovations grow into a real product line without collapsing under complexity.",
-    b3u:["Scale without drift.","Consistency under pressure.","Audit-ready structure.","Enterprise-ready discipline."],
-    b4p:"Next we add more bubbles and stories, but the safety rules stay frozen.",
-    b4u:["More content.","Same contract.","Same geometry.","Same standards."]
+
+  SAFETY:{
+    means:{
+      lang:"Language stability is a safety rule: it prevents accidental miscommunication. The system should never silently switch language and confuse the reader.",
+      style:"Style stability is a safety rule: it prevents accidental framing changes. The system should not reframe tone without you choosing it.",
+      time:"Time stability is a safety rule: it prevents accidental narrative shifts. The system should not move you into ‘future’ or ‘concept’ without consent.",
+      reset:"No resets is a safety rule: it prevents accidental loss of context. The system should not wipe state just because you navigated."
+    },
+    feels:{
+      lang:"It feels respectful. You’re not forced into the wrong language because you clicked something new.",
+      style:"It feels stable. The site doesn’t suddenly become technical or casual without you choosing it.",
+      time:"It feels grounded. You don’t lose your viewpoint mid-reading.",
+      reset:"It feels safe to experiment. You can click without fear."
+    },
+    why:{
+      lang:"Safety prevents public-facing embarrassment and confusion. Language mistakes erode trust instantly.",
+      style:"Safety prevents misinterpretation and conflict. Sudden tone changes create unnecessary emotional noise.",
+      time:"Safety prevents misunderstanding of claims. Time shifts can change meaning; stability keeps meaning accountable.",
+      reset:"Safety preserves momentum. When context disappears, users disengage; continuity keeps them moving forward."
+    },
+    next:{
+      lang:"Next, we add clean fallbacks (if a translation is missing, default safely—never silently switch to nonsense).",
+      style:"Next, we standardize style shifts so they are always visible and reversible—no hidden tone changes.",
+      time:"Next, time layers will control what is shown first, but never override your chosen lens unless you request it.",
+      reset:"Next, we add ‘admissibility checks’ that block updates that would cause state loss or navigation drift."
+    }
   }
 };
 
 function openModal(key){
-  document.getElementById("modalTitle").textContent = "STRUCTURE · " + key.toUpperCase();
+  const s=getState();
+  document.getElementById("modalTitle").textContent =
+    "STRUCTURE · " + key + " · " + s.lang.toUpperCase();
 
-  document.getElementById("b1p").textContent = CONTENT[key].b1p;
-  fillList("b1u", CONTENT[key].b1u);
+  const c = COPY[key];
 
-  document.getElementById("b2p").textContent = CONTENT[key].b2p;
-  fillList("b2u", CONTENT[key].b2u);
+  document.getElementById("m_lang").textContent  = c.means.lang;
+  document.getElementById("m_style").textContent = c.means.style;
+  document.getElementById("m_time").textContent  = c.means.time;
+  document.getElementById("m_reset").textContent = c.means.reset;
 
-  document.getElementById("b3p").textContent = CONTENT[key].b3p;
-  fillList("b3u", CONTENT[key].b3u);
+  document.getElementById("f_lang").textContent  = c.feels.lang;
+  document.getElementById("f_style").textContent = c.feels.style;
+  document.getElementById("f_time").textContent  = c.feels.time;
+  document.getElementById("f_reset").textContent = c.feels.reset;
 
-  document.getElementById("b4p").textContent = CONTENT[key].b4p;
-  fillList("b4u", CONTENT[key].b4u);
+  document.getElementById("w_lang").textContent  = c.why.lang;
+  document.getElementById("w_style").textContent = c.why.style;
+  document.getElementById("w_time").textContent  = c.why.time;
+  document.getElementById("w_reset").textContent = c.why.reset;
+
+  document.getElementById("n_lang").textContent  = c.next.lang;
+  document.getElementById("n_style").textContent = c.next.style;
+  document.getElementById("n_time").textContent  = c.next.time;
+  document.getElementById("n_reset").textContent = c.next.reset;
 
   document.getElementById("bd").classList.add("show");
   document.getElementById("modal").classList.add("show");
@@ -460,20 +608,17 @@ function closeModal(){
 
 (function(){
   const s=getState();
-  // persist canonical keys
   try{
     localStorage.setItem("gd_lang", s.lang);
     localStorage.setItem("gd_style", s.style);
     localStorage.setItem("gd_time", s.time);
   }catch(e){}
 
-  // top nav
   document.getElementById("btnBack").href =
     "/explore/innovation/language/grammar/traversal/index.html?"+q();
   document.getElementById("btnExit").href =
     "/door/?"+q();
 
-  // dock
   document.getElementById("dockHub").href =
     "/home/?"+q();
   document.getElementById("dockInnovation").href =
@@ -481,17 +626,19 @@ function closeModal(){
   document.getElementById("dockProducts").href =
     "/products/?"+q();
 
-  // modal controls
   document.getElementById("bd").addEventListener("click", closeModal);
   document.getElementById("mClose").addEventListener("click", closeModal);
   document.getElementById("mReturn").addEventListener("click", closeModal);
 
   // keyboard accessibility
-  ["Anchor","Paths","Signals","Safety"].forEach(function(k){
-    // nothing needed; diamonds use onclick already
+  document.querySelectorAll(".d").forEach(function(el){
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+    });
   });
 })();
 </script>
 
 </body>
 </html>
+```0

@@ -1,101 +1,88 @@
-<!-- TNT — /explore/innovation/language/grammar/traversal/structure/index.html
-     NO MORE PATHS.
-     Page = 4 bubbles (diamond layout).
-     Click bubble = FINAL MODAL.
-     FINAL MODAL = 4 SECTIONS × 4 BUBBLES (each bubble = one full paragraph).
-     No bullets. No fragments. Paragraph bubbles only.
-     ui.css owns field. branch.css untouched.
-     Top-left: BACK + EXIT
-     Bottom dock: HUB + INNOVATION + PRODUCTS
+<!-- TNT — /explore/innovation/language/grammar/index.html
+     GRAMMAR · Traversal Contracts (GEM STANDARD)
+     LOCKS:
+     - TNT ONLY (full file)
+     - Uses existing /assets/ui.css + /assets/branch.css (NO ui/branch edits)
+     - DOES NOT touch html/body background (ui.css owns field)
+     - Single-language render (EN OR 中文) via gd_lang / ?lang=
+     - Lenses INSIDE modal only:
+         STYLE: Formal/Informal (gd_style)
+         TIME: Concept / Now / Roadmap (gd_time = origin/now/post)
+     - Content model:
+         4 SECTIONS (tabs) × 4 BUBBLES (paragraph cards) per section
+         (Total 16 bubbles per lens-state)
+     - Routing/state propagation: lang/style/time carried through all links
 -->
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>TRAVERSAL · STRUCTURE</title>
+<title>GRAMMAR · Traversal Contracts</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
+/* PAGE-LOCAL ONLY — ui.css owns field */
 :root{
-  --R:124px;
   --goldSoft:rgba(212,175,55,.35);
   --obs1:#070b12;
   --obs2:#0c1626;
+  --mut:rgba(255,255,255,.86);
+  --mut2:rgba(255,255,255,.70);
 }
 
-/* Top controls */
-.top-left{
-  position:fixed;
-  left:16px;
-  top:16px;
-  z-index:90;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
+/* Top */
+.g-top{
+  position:fixed;left:16px;top:16px;z-index:90;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
+.g-brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:80;text-align:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16);backdrop-filter:blur(8px);
+}
+.g-brand .t1{font-weight:950;letter-spacing:1.1px;font-size:12px;opacity:.95}
+.g-brand .t2{margin-top:2px;font-size:11px;letter-spacing:.6px;opacity:.72}
 
-.btn{
-  padding:10px 16px;
-  border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:white;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  text-decoration:none;
-}
-.btn:hover{
-  box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px var(--goldSoft);
-}
-
-/* Stage */
-.stage{
-  position:fixed;
-  left:50%;
-  top:52%;
+/* Stage — gem diamond-of-diamonds (4 sections) */
+.g-stage{
+  position:fixed;left:50%;top:52%;
   transform:translate(-50%,-50%);
-  width:min(560px,92vw);
-  height:min(560px,92vw);
+  width:min(720px,94vw);height:min(720px,94vw);
   z-index:40;
 }
-
-/* Outer shell with subtle red undertone (in-world) */
-.outer{
-  position:absolute;
-  left:50%;top:50%;
-  width:100%;height:100%;
+.g-outer{
+  position:absolute;left:50%;top:50%;
+  width:min(680px,92vw);height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   background:
-    radial-gradient(circle at 50% 18%, rgba(176,0,0,.18), transparent 60%),
     radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.55) 0%, rgba(7,11,18,.75) 70%);
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
   border:1px solid rgba(255,255,255,.10);
   box-shadow:
     0 90px 260px rgba(0,0,0,.62),
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none;
-  opacity:.75;
+  pointer-events:none;opacity:.85;
+}
+.g-outer::after{
+  content:"";position:absolute;inset:0;border-radius:60px;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.16;
 }
 
-/* Bubble-diamonds (gem) */
-.d{
-  width:150px;height:150px;
-  position:absolute;
-  left:50%;top:50%;
-  transform-origin:center;
-  border-radius:26px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
+:root{ --R:154px; }
+.g-d{
+  width:170px;height:170px;
+  position:absolute;left:50%;top:50%;
+  transform-origin:center;border-radius:26px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
   background:
     radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
@@ -105,539 +92,669 @@
     0 28px 84px rgba(0,0,0,.78),
     inset 0 2px 0 rgba(255,255,255,.14),
     inset 0 -28px 44px rgba(0,0,0,.62);
-  transition:transform .2s ease, box-shadow .2s ease;
+  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
 }
-.d:hover{
+.g-d::before{
+  content:"";position:absolute;inset:0;border-radius:26px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.g-d::after{
+  content:"";position:absolute;left:12%;right:12%;top:10%;height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
+  opacity:.85;transform:rotate(-10deg);
+  pointer-events:none;
+}
+.g-d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
   box-shadow:
     0 34px 110px rgba(0,0,0,.88),
-    0 0 18px rgba(212,175,55,.18);
+    0 0 18px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
+}
+.g-d.active{
+  border-color:rgba(212,175,55,.70);
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 30px rgba(212,175,55,.40),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
 }
 
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
-.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
+.g-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
+.g-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
+.g-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
+.g-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
 
-.inner{
+.g-in{
   width:100%;height:100%;
   transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:16px;
-  gap:10px;
-  user-select:none;
-  pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:16px;gap:10px;
+  pointer-events:none;user-select:none;
 }
-.lab{font-weight:950;letter-spacing:.8px;font-size:16px;}
-.sub{font-size:13px;opacity:.86;line-height:1.35;max-width:18em;}
+.g-lab{font-weight:950;letter-spacing:.9px;font-size:16px}
+.g-sub{font-size:12.5px;opacity:.84;line-height:1.35;max-width:18em}
 
-/* Center core */
-.core{
-  position:absolute;
-  left:50%;top:50%;
+.g-core{
+  position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:64px;height:64px;
-  border-radius:18px;
+  width:74px;height:74px;border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.62);
-  display:grid;
-  place-items:center;
-  font-weight:950;
-  opacity:.92;
-  pointer-events:none;
+  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;
+  font-weight:950;letter-spacing:.5px;opacity:.92;pointer-events:none;
 }
 
-/* Bottom dock */
-.dock{
-  position:fixed;
-  left:50%;
+/* Dock */
+.g-dock{
+  position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:90;
-  width:min(900px,94vw);
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-  padding:10px 12px;
-  border-radius:999px;
+  width:min(980px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
+  background:rgba(0,0,0,.18);
   backdrop-filter:blur(8px);
 }
 
 /* Modal */
 .bd{
-  position:fixed;
-  inset:0;
-  z-index:200;
+  position:fixed;inset:0;z-index:200;
   background:rgba(0,0,0,.65);
   backdrop-filter:blur(10px);
   display:none;
 }
 .bd.show{display:block;}
-
 .modal{
-  position:fixed;
-  left:50%;
-  top:50%;
+  position:fixed;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(1040px,94vw);
-  max-height:86vh;
-  z-index:210;
-  display:none;
+  width:min(1100px,94vw);
+  max-height:88vh;
+  display:none;z-index:210;
 }
 .modal.show{display:block;}
-
 .shell{
+  height:88vh;
   border-radius:26px;
   border:1px solid rgba(255,255,255,.10);
   background:
-    radial-gradient(circle at 50% 14%, rgba(176,0,0,.18), transparent 55%),
-    radial-gradient(circle at 38% 28%, rgba(90,140,255,.10), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.95), rgba(7,11,18,.98));
+    radial-gradient(circle at 52% 14%, rgba(176,0,0,.16), transparent 55%),
+    radial-gradient(circle at 38% 28%, rgba(90,140,255,.12), transparent 55%),
+    linear-gradient(145deg, rgba(17,22,28,.90), rgba(11,15,20,.94));
   box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:auto;
-  max-height:86vh;
-  padding:18px;
+  overflow:hidden;
+  display:flex;flex-direction:column;
 }
-
 .mhead{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:10px 6px 14px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  margin-bottom:14px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
 }
-.mtitle{
-  margin:0;
-  font-weight:950;
-  letter-spacing:.3px;
-  font-size:16px;
+.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
+.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
+
+.lensbar{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;
+  padding:10px 12px 12px;border-bottom:1px solid rgba(255,255,255,.08);
 }
-.mclose{
-  border:0;
-  background:transparent;
-  color:#fff;
-  font-size:18px;
-  cursor:pointer;
-  padding:8px 10px;
+.chip{
+  padding:10px 16px;border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  color:#fff;font-weight:900;letter-spacing:.2px;
+  cursor:pointer;box-shadow:0 14px 36px rgba(0,0,0,.65);
+}
+.chip.active{
+  border-color:rgba(212,175,55,.70);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
 }
 
-/* FINAL: 4 sections, each section contains 4 paragraph bubbles */
-.section-grid{
-  display:grid;
-  gap:16px;
+.tabbar{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+  padding:10px 12px 12px;border-bottom:1px solid rgba(255,255,255,.08);
 }
-@media(min-width:980px){
-  .section-grid{ grid-template-columns:1fr 1fr; }
-}
-
-.section{
-  border-radius:18px;
-  padding:14px;
+.tab{ padding:10px 16px;border-radius:999px; cursor:pointer;
   background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.10);
+  color:#fff;font-weight:950;letter-spacing:.2px;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+}
+.tab.on{
+  border-color:rgba(212,175,55,.70);
+  box-shadow:0 18px 50px rgba(0,0,0,.85), 0 0 14px rgba(212,175,55,.26);
 }
 
-.section h4{
-  margin:0 0 10px;
-  font-weight:950;
-  letter-spacing:.2px;
-  font-size:14px;
-}
+.mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-.pbubbles{
-  display:grid;
-  gap:10px;
-}
+.grid4{display:grid;gap:14px}
+@media (min-width:920px){ .grid4{grid-template-columns:1fr 1fr} }
 
-.pbubble{
-  border-radius:16px;
-  padding:12px 12px 10px;
-  background:rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.08);
+.bubble{
+  padding:16px 18px;border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
+  position:relative;
 }
-
-.pbubble .ptitle{
-  font-weight:950;
-  letter-spacing:.2px;
-  font-size:12px;
-  opacity:.92;
-  margin:0 0 6px;
+.bubble::before{
+  content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.35) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
 }
+.bh{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
+.bp{margin:0;color:var(--mut);line-height:1.55}
 
-.pbubble p{
-  margin:0;
-  line-height:1.55;
-  opacity:.88;
-}
-
-.mact{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:14px;
+.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+@media (max-width:560px){
+  :root{ --R: 136px; }
+  .g-d{width:158px;height:158px}
+  .g-stage{top:54%}
 }
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnBack" href="#">BACK</a>
-  <a class="btn" id="btnExit" href="#">EXIT</a>
+<!-- TOP NAV -->
+<div class="g-top">
+  <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
+  <a class="crp-btn" id="btnBack" href="/explore/innovation/language/">BACK</a>
+  <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
-<div class="stage" aria-label="Traversal Structure bubbles">
-  <div class="outer"></div>
-
-  <div class="d d-n" role="button" tabindex="0" onclick="openModal('ANCHOR')">
-    <div class="inner">
-      <div class="lab">ANCHOR</div>
-      <div class="sub">Stable reference point.</div>
-    </div>
-  </div>
-
-  <div class="d d-e" role="button" tabindex="0" onclick="openModal('PATHS')">
-    <div class="inner">
-      <div class="lab">PATHS</div>
-      <div class="sub">Routes you can trust.</div>
-    </div>
-  </div>
-
-  <div class="d d-w" role="button" tabindex="0" onclick="openModal('SIGNALS')">
-    <div class="inner">
-      <div class="lab">SIGNALS</div>
-      <div class="sub">What the system remembers.</div>
-    </div>
-  </div>
-
-  <div class="d d-s" role="button" tabindex="0" onclick="openModal('SAFETY')">
-    <div class="inner">
-      <div class="lab">SAFETY</div>
-      <div class="sub">Why it doesn’t drift.</div>
-    </div>
-  </div>
-
-  <div class="core">◆</div>
+<!-- BRAND -->
+<div class="g-brand">
+  <div class="t1" id="brand1">GRAMMAR</div>
+  <div class="t2" id="brand2">Traversal contracts · structural language.</div>
 </div>
 
-<nav class="dock">
-  <a class="btn" id="dockHub" href="#">HUB</a>
-  <a class="btn" id="dockInnovation" href="#">INNOVATION</a>
-  <a class="btn" id="dockProducts" href="#">PRODUCTS</a>
+<!-- DIAMOND (4 SECTIONS) -->
+<div class="g-stage" aria-label="Grammar sections">
+  <div class="g-outer"></div>
+
+  <div class="g-d g-n" id="secA" role="button" tabindex="0">
+    <div class="g-in">
+      <div class="g-lab" id="aLab">HOW IT FEELS</div>
+      <div class="g-sub" id="aSub">User experience under constraint.</div>
+    </div>
+  </div>
+
+  <div class="g-d g-e" id="secB" role="button" tabindex="0">
+    <div class="g-in">
+      <div class="g-lab" id="bLab">WHY IT MATTERS</div>
+      <div class="g-sub" id="bSub">Safety, coherence, scale.</div>
+    </div>
+  </div>
+
+  <div class="g-d g-w" id="secC" role="button" tabindex="0">
+    <div class="g-in">
+      <div class="g-lab" id="cLab">HOW IT WORKS</div>
+      <div class="g-sub" id="cSub">Contracts, receipts, routing.</div>
+    </div>
+  </div>
+
+  <div class="g-d g-s" id="secD" role="button" tabindex="0">
+    <div class="g-in">
+      <div class="g-lab" id="dLab">WHAT’S NEXT</div>
+      <div class="g-sub" id="dSub">Roadmap extensions.</div>
+    </div>
+  </div>
+
+  <div class="g-core">◆</div>
+</div>
+
+<!-- DOCK -->
+<nav class="g-dock" aria-label="Bottom navigation">
+  <a class="crp-btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="crp-btn" id="dockInnovation" href="/explore/?">INNOVATION</a>
+  <a class="crp-btn" id="dockLanguage" href="/explore/innovation/language/">LANGUAGE</a>
+  <a class="crp-btn" id="dockGrammar" href="/explore/innovation/language/grammar/">GRAMMAR</a>
 </nav>
 
-<div class="bd" id="bd"></div>
+<!-- MODAL -->
+<div class="bd" id="bd" aria-hidden="true"></div>
 
 <div class="modal" id="modal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="modalTitle">DETAIL</h3>
-      <button class="mclose" id="mClose" type="button" aria-label="Close">✕</button>
+      <h3 class="mtitle" id="mTitle">GRAMMAR</h3>
+      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
     </div>
 
-    <div class="section-grid">
-
-      <div class="section">
-        <h4>What it means</h4>
-        <div class="pbubbles">
-          <div class="pbubble">
-            <div class="ptitle">Language stays selected</div>
-            <p id="m_lang"></p>
-          </div>
-          <div class="pbubble">
-            <div class="ptitle">Style stays consistent</div>
-            <p id="m_style"></p>
-          </div>
-          <div class="pbubble">
-            <div class="ptitle">Time layer stays consistent</div>
-            <p id="m_time"></p>
-          </div>
-          <div class="pbubble">
-            <div class="ptitle">Pages don’t reset randomly</div>
-            <p id="m_reset"></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <h4>How it feels to use</h4>
-        <div class="pbubbles">
-          <div class="pbubble">
-            <div class="ptitle">Language stays selected</div>
-            <p id="f_lang"></p>
-          </div>
-          <div class="pbubble">
-            <div class="ptitle">Style stays consistent</div>
-            <p id="f_style"></p>
-          </div>
-          <div class="pbubble">
-            <div class="ptitle">Time layer stays consistent</div>
-            <p id="f_time"></p>
-          </div>
-          <div class="pbubble">
-            <div class="ptitle">Pages don’t reset randomly</div>
-            <p id="f_reset"></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <h4>Why it matters</h4>
-        <div class="pbubbles">
-          <div class="pbubble">
-            <div class="ptitle">Language stays selected</div>
-            <p id="w_lang"></p>
-          </div>
-          <div class="pbubble">
-            <div class="ptitle">Style stays consistent</div>
-            <p id="w_style"></p>
-          </div>
-          <div class="pbubble">
-            <div class="ptitle">Time layer stays consistent</div>
-            <p id="w_time"></p>
-          </div>
-          <div class="pbubble">
-            <div class="ptitle">Pages don’t reset randomly</div>
-            <p id="w_reset"></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <h4>What’s next</h4>
-        <div class="pbubbles">
-          <div class="pbubble">
-            <div class="ptitle">Language stays selected</div>
-            <p id="n_lang"></p>
-          </div>
-          <div class="pbubble">
-            <div class="ptitle">Style stays consistent</div>
-            <p id="n_style"></p>
-          </div>
-          <div class="pbubble">
-            <div class="ptitle">Time layer stays consistent</div>
-            <p id="n_time"></p>
-          </div>
-          <div class="pbubble">
-            <div class="ptitle">Pages don’t reset randomly</div>
-            <p id="n_reset"></p>
-          </div>
-        </div>
-      </div>
-
+    <!-- LENSES INSIDE MODAL ONLY -->
+    <div class="lensbar">
+      <button class="chip" id="chipStyle" type="button">STYLE: FORMAL</button>
+      <button class="chip" id="chipConcept" data-time="origin" type="button">CONCEPT</button>
+      <button class="chip" id="chipNow" data-time="now" type="button">NOW</button>
+      <button class="chip" id="chipRoadmap" data-time="post" type="button">ROADMAP</button>
     </div>
 
-    <div class="mact">
-      <button class="btn" id="mReturn" type="button">RETURN</button>
+    <!-- SECTION TABS -->
+    <div class="tabbar">
+      <button class="tab" id="tabA" type="button">A</button>
+      <button class="tab" id="tabB" type="button">B</button>
+      <button class="tab" id="tabC" type="button">C</button>
+      <button class="tab" id="tabD" type="button">D</button>
+    </div>
+
+    <div class="mbody">
+      <div class="grid4">
+        <div class="bubble"><h4 class="bh" id="h1"></h4><p class="bp" id="p1"></p></div>
+        <div class="bubble"><h4 class="bh" id="h2"></h4><p class="bp" id="p2"></p></div>
+        <div class="bubble"><h4 class="bh" id="h3"></h4><p class="bp" id="p3"></p></div>
+        <div class="bubble"><h4 class="bh" id="h4"></h4><p class="bp" id="p4"></p></div>
+      </div>
+
+      <div class="mact">
+        <button class="crp-btn" id="mReturn" type="button">RETURN</button>
+        <a class="crp-btn" id="mJumpLang" href="/explore/innovation/language/">JUMP LANGUAGE</a>
+        <a class="crp-btn" id="mJumpExplore" href="/explore/">JUMP EXPLORE</a>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-function getState(){
-  const qs = new URLSearchParams(window.location.search);
-  return {
-    lang: qs.get("lang") || localStorage.getItem("gd_lang") || "en",
-    style: qs.get("style") || localStorage.getItem("gd_style") || "formal",
-    time: qs.get("time") || localStorage.getItem("gd_time") || "now"
-  };
-}
-
-function q(){
-  const s=getState();
-  return "lang="+encodeURIComponent(s.lang)+"&style="+encodeURIComponent(s.style)+"&time="+encodeURIComponent(s.time);
-}
-
-const COPY = {
-  ANCHOR:{
-    means:{
-      lang:"Your language choice becomes a “home setting.” Once you pick it, the site stops asking again and simply speaks to you that way—so the experience feels continuous instead of constantly restarting.",
-      style:"Style is a reading attitude: calm and precise or direct and conversational. Structure makes sure that attitude stays the same across every page you touch, so the tone never randomly flips on you.",
-      time:"Time isn’t a timeline you scroll through; it’s the lens you’re wearing. When you choose Concept, Now, or Post, the site keeps that lens on until you intentionally change it—so the story stays coherent.",
-      reset:"A stable structure means you never get punished for exploring. You can wander, open bubbles, and go deep, and the site won’t wipe your context just because you moved to a new page."
-    },
-    feels:{
-      lang:"It feels like the site remembers you—without trying to “profile” you. You don’t have to re-select your language every time you enter a new room; it simply stays aligned with you.",
-      style:"It feels predictable. If you’re reading in a formal tone, the whole environment stays formal until you decide otherwise—so you don’t get jerked between “manual mode” and “chat mode.”",
-      time:"It feels like you’re exploring the same world from different angles, not clicking random tabs. You can stay in Concept for a while, then switch to Now, and everything reorients cleanly.",
-      reset:"It feels safe to tap. You don’t hesitate because you’re not afraid of losing your place; exploration becomes playful instead of stressful."
-    },
-    why:{
-      lang:"Consistency reduces friction. When language doesn’t reset, you spend attention on meaning—not on reconfiguring settings over and over again.",
-      style:"Style stability prevents confusion. If tone changes unexpectedly, people misread intent; keeping style consistent keeps interpretation consistent.",
-      time:"Time stability prevents narrative whiplash. When time shifts without consent, meaning collapses; when time is stable, learning becomes structured.",
-      reset:"No-reset structure protects momentum. People stop exploring when they fear losing context; continuity keeps curiosity alive."
-    },
-    next:{
-      lang:"Next, we support more languages through overlays, but keep English/Chinese as the canonical pair. The goal is global access without breaking consistency.",
-      style:"Next, we let style influence how dense explanations are—short and friendly vs. deeper and more exact—without changing the navigation contract.",
-      time:"Next, time layers will control what’s “front and center” in each bubble, so the same page can feel like concept art, a live dashboard, or a roadmap—on demand.",
-      reset:"Next, we add safe “resume tokens” so you can return to the exact bubble you were reading, even after leaving the site—without creating chaos or drift."
-    }
-  },
-
-  PATHS:{
-    means:{
-      lang:"Language staying selected means every route leads to the same ‘world,’ just translated. You don’t jump into a different site when you click; you stay in the same structure, speaking your language.",
-      style:"Style staying consistent means every path feels like part of one narrative voice. No matter which corridor you take, the storyteller remains the same.",
-      time:"Time staying consistent means the path you take doesn’t secretly change the era you’re reading from. The route is the route; the time lens is your choice.",
-      reset:"No random resets means paths are trustworthy. You can try something, go back, try another, and your context remains intact."
-    },
-    feels:{
-      lang:"It feels like walking through a museum where every room has the same tour guide language you picked at the entrance.",
-      style:"It feels like the same guide is speaking across rooms—so your brain doesn’t have to re-adjust to a new tone every time you click.",
-      time:"It feels like you’re choosing a viewpoint (concept / now / post) and then walking freely—rather than being dragged into a different viewpoint by accident.",
-      reset:"It feels like exploration has a safety rail. You can move fast because you know the system won’t wipe your state mid-walk."
-    },
-    why:{
-      lang:"When language is stable, the site becomes shareable. You can send a link and know the recipient isn’t trapped in the wrong language context.",
-      style:"When style is stable, trust rises. People don’t fear misinterpretation; they can read and understand without second-guessing tone shifts.",
-      time:"When time is stable, learning becomes traversable. You can compare concept vs now without losing the anchor that makes comparison meaningful.",
-      reset:"When pages don’t reset randomly, users keep exploring. Retention is a function of confidence, not just curiosity."
-    },
-    next:{
-      lang:"Next, paths will support country→language overlays while keeping the same underlying structure (no parallel site copies).",
-      style:"Next, style will control how much context you see at once—like dimming or brightening the information without breaking the map.",
-      time:"Next, time will also influence recommended routes (concept-first vs now-first vs post-first), so the system can guide without forcing.",
-      reset:"Next, we add “return paths” and “continue paths” inside bubbles so the journey feels intentional—not like a random click storm."
-    }
-  },
-
-  SIGNALS:{
-    means:{
-      lang:"Language persistence is a signal: it tells the system which set of words to use so meaning stays aligned across every bubble you open.",
-      style:"Style persistence is a signal: it tells the system how to speak—more exact or more conversational—without changing the structure underneath.",
-      time:"Time persistence is a signal: it tells the system whether you want the idea, the present reality, or the future direction—then keeps that viewpoint stable.",
-      reset:"No resets means signals survive navigation. The system holds your context across pages so your reading state is continuous."
-    },
-    feels:{
-      lang:"It feels like the system respects your preference. Once you choose language, you’re not forced to repeatedly prove it.",
-      style:"It feels like the site has a consistent personality. You can settle into a mode and stay there.",
-      time:"It feels like you can stay in a layer long enough to understand it—without being yanked out.",
-      reset:"It feels calm. The site doesn’t punish curiosity with ‘state loss’ every time you step into a new room."
-    },
-    why:{
-      lang:"Signals reduce cognitive load. People quit when they must reconfigure; stable signals keep attention on meaning.",
-      style:"Signals prevent tone whiplash. Consistent style prevents misreadings and makes the content safer to share publicly.",
-      time:"Signals prevent conceptual whiplash. Stable time lens makes comparison and learning actually possible.",
-      reset:"Signals without resets prevent drop-off. Continuity is the foundation of depth."
-    },
-    next:{
-      lang:"Next, signals become portable across more pages, more products, and eventually more languages—without needing 256 hard-coded translations.",
-      style:"Next, style signals can control ‘density’: short bubbles vs deeper bubbles, without changing the structure of the page.",
-      time:"Next, time signals can unlock “roadmap storytelling” where the same bubble shifts between concept, now, and post elegantly.",
-      reset:"Next, signals will generate a return token so you can jump back to the exact bubble you were last reading."
-    }
-  },
-
-  SAFETY:{
-    means:{
-      lang:"Language stability is a safety rule: it prevents accidental miscommunication. The system should never silently switch language and confuse the reader.",
-      style:"Style stability is a safety rule: it prevents accidental framing changes. The system should not reframe tone without you choosing it.",
-      time:"Time stability is a safety rule: it prevents accidental narrative shifts. The system should not move you into ‘future’ or ‘concept’ without consent.",
-      reset:"No resets is a safety rule: it prevents accidental loss of context. The system should not wipe state just because you navigated."
-    },
-    feels:{
-      lang:"It feels respectful. You’re not forced into the wrong language because you clicked something new.",
-      style:"It feels stable. The site doesn’t suddenly become technical or casual without you choosing it.",
-      time:"It feels grounded. You don’t lose your viewpoint mid-reading.",
-      reset:"It feels safe to experiment. You can click without fear."
-    },
-    why:{
-      lang:"Safety prevents public-facing embarrassment and confusion. Language mistakes erode trust instantly.",
-      style:"Safety prevents misinterpretation and conflict. Sudden tone changes create unnecessary emotional noise.",
-      time:"Safety prevents misunderstanding of claims. Time shifts can change meaning; stability keeps meaning accountable.",
-      reset:"Safety preserves momentum. When context disappears, users disengage; continuity keeps them moving forward."
-    },
-    next:{
-      lang:"Next, we add clean fallbacks (if a translation is missing, default safely—never silently switch to nonsense).",
-      style:"Next, we standardize style shifts so they are always visible and reversible—no hidden tone changes.",
-      time:"Next, time layers will control what is shown first, but never override your chosen lens unless you request it.",
-      reset:"Next, we add ‘admissibility checks’ that block updates that would cause state loss or navigation drift."
-    }
-  }
-};
-
-function openModal(key){
-  const s=getState();
-  document.getElementById("modalTitle").textContent =
-    "STRUCTURE · " + key + " · " + s.lang.toUpperCase();
-
-  const c = COPY[key];
-
-  document.getElementById("m_lang").textContent  = c.means.lang;
-  document.getElementById("m_style").textContent = c.means.style;
-  document.getElementById("m_time").textContent  = c.means.time;
-  document.getElementById("m_reset").textContent = c.means.reset;
-
-  document.getElementById("f_lang").textContent  = c.feels.lang;
-  document.getElementById("f_style").textContent = c.feels.style;
-  document.getElementById("f_time").textContent  = c.feels.time;
-  document.getElementById("f_reset").textContent = c.feels.reset;
-
-  document.getElementById("w_lang").textContent  = c.why.lang;
-  document.getElementById("w_style").textContent = c.why.style;
-  document.getElementById("w_time").textContent  = c.why.time;
-  document.getElementById("w_reset").textContent = c.why.reset;
-
-  document.getElementById("n_lang").textContent  = c.next.lang;
-  document.getElementById("n_style").textContent = c.next.style;
-  document.getElementById("n_time").textContent  = c.next.time;
-  document.getElementById("n_reset").textContent = c.next.reset;
-
-  document.getElementById("bd").classList.add("show");
-  document.getElementById("modal").classList.add("show");
-}
-
-function closeModal(){
-  document.getElementById("bd").classList.remove("show");
-  document.getElementById("modal").classList.remove("show");
-}
-
 (function(){
-  const s=getState();
+  // ===== state =====
+  var qs = new URLSearchParams(location.search);
+  var qLang = qs.get("lang");
+  var qStyle = qs.get("style");
+  var qTime = qs.get("time");
+
+  var lang = (qLang==="zh"||qLang==="en") ? qLang : ((localStorage.getItem("gd_lang")==="zh") ? "zh" : "en");
+  var style = (qStyle==="formal"||qStyle==="informal") ? qStyle : (localStorage.getItem("gd_style")||"formal");
+  var time = (qTime==="origin"||qTime==="now"||qTime==="post") ? qTime : (localStorage.getItem("gd_time")||"now");
+  if(time==="trajectory") time="post";
+
   try{
-    localStorage.setItem("gd_lang", s.lang);
-    localStorage.setItem("gd_style", s.style);
-    localStorage.setItem("gd_time", s.time);
+    localStorage.setItem("gd_lang", lang);
+    localStorage.setItem("gd_style", style);
+    localStorage.setItem("gd_time", time);
   }catch(e){}
 
-  document.getElementById("btnBack").href =
-    "/explore/innovation/language/grammar/traversal/index.html?"+q();
-  document.getElementById("btnExit").href =
-    "/door/?"+q();
+  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+  function wire(){
+    var s=q();
+    document.getElementById("btnHub").href="/home/?"+s;
+    document.getElementById("btnBack").href="/explore/innovation/language/?"+s;
+    document.getElementById("btnExit").href="/door/?"+s;
 
-  document.getElementById("dockHub").href =
-    "/home/?"+q();
-  document.getElementById("dockInnovation").href =
-    "/explore/?"+q();
-  document.getElementById("dockProducts").href =
-    "/products/?"+q();
+    document.getElementById("dockExplore").href="/explore/?"+s;
+    document.getElementById("dockInnovation").href="/explore/?"+s;
+    document.getElementById("dockLanguage").href="/explore/innovation/language/?"+s;
+    document.getElementById("dockGrammar").href="/explore/innovation/language/grammar/?"+s;
 
-  document.getElementById("bd").addEventListener("click", closeModal);
-  document.getElementById("mClose").addEventListener("click", closeModal);
-  document.getElementById("mReturn").addEventListener("click", closeModal);
+    document.getElementById("mJumpLang").href="/explore/innovation/language/?"+s;
+    document.getElementById("mJumpExplore").href="/explore/?"+s;
+  }
+  wire();
 
-  // keyboard accessibility
-  document.querySelectorAll(".d").forEach(function(el){
+  // ===== i18n labels =====
+  var L = {
+    en:{
+      brand1:"GRAMMAR",
+      brand2:"Traversal contracts · structural language.",
+      sec:{
+        A:{lab:"HOW IT FEELS", sub:"User experience under constraint."},
+        B:{lab:"WHY IT MATTERS", sub:"Safety, coherence, scale."},
+        C:{lab:"HOW IT WORKS", sub:"Contracts, receipts, routing."},
+        D:{lab:"WHAT’S NEXT", sub:"Roadmap extensions."}
+      },
+      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", now:"NOW", roadmap:"ROADMAP"},
+      tabs:{A:"FEELS",B:"MATTERS",C:"WORKS",D:"NEXT"},
+      ret:"RETURN",
+      jLang:"JUMP LANGUAGE",
+      jExp:"JUMP EXPLORE"
+    },
+    zh:{
+      brand1:"语法",
+      brand2:"遍历契约 · 结构化语言。",
+      sec:{
+        A:{lab:"使用感", sub:"在约束下的体验。"},
+        B:{lab:"重要性", sub:"安全 · 一致性 · 规模。"},
+        C:{lab:"工作方式", sub:"契约 · 回执 · 路由。"},
+        D:{lab:"下一步", sub:"路线图扩展。"}
+      },
+      lens:{formal:"正式", informal:"非正式", concept:"概念", now:"当前", roadmap:"路线图"},
+      tabs:{A:"体验",B:"重要",C:"机制",D:"下一步"},
+      ret:"返回",
+      jLang:"跳转语言",
+      jExp:"跳转探索"
+    }
+  };
+  var T = (lang==="zh") ? L.zh : L.en;
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+  document.getElementById("brand1").textContent = T.brand1;
+  document.getElementById("brand2").textContent = T.brand2;
+
+  document.getElementById("aLab").textContent = T.sec.A.lab;
+  document.getElementById("aSub").textContent = T.sec.A.sub;
+  document.getElementById("bLab").textContent = T.sec.B.lab;
+  document.getElementById("bSub").textContent = T.sec.B.sub;
+  document.getElementById("cLab").textContent = T.sec.C.lab;
+  document.getElementById("cSub").textContent = T.sec.C.sub;
+  document.getElementById("dLab").textContent = T.sec.D.lab;
+  document.getElementById("dSub").textContent = T.sec.D.sub;
+
+  document.getElementById("tabA").textContent = T.tabs.A;
+  document.getElementById("tabB").textContent = T.tabs.B;
+  document.getElementById("tabC").textContent = T.tabs.C;
+  document.getElementById("tabD").textContent = T.tabs.D;
+
+  document.getElementById("mReturn").textContent = T.ret;
+  document.getElementById("mJumpLang").textContent = T.jLang;
+  document.getElementById("mJumpExplore").textContent = T.jExp;
+
+  // ===== content: 4 sections × 4 bubbles × (time × style) =====
+  // bubble model: {h, p} (paragraph in p)
+  function C(h,p){ return {h:h, p:p}; }
+
+  var CONTENT = {
+    A:{ // HOW IT FEELS
+      origin:{
+        formal:[
+          C("Orientation stays locked","Language stays selected, so the interface never ‘forgets’ what you chose between pages or returns."),
+          C("Tone stays consistent","Formal mode reads like a contract: precise terms, no implied intent, and bounded statements only."),
+          C("Time layer stays consistent","Concept view keeps you in foundations, so you don’t bounce into live details unexpectedly."),
+          C("Navigation feels reversible","You can go deep, return, and nothing collapses—routes remain stable and recoverable.")
+        ],
+        informal:[
+          C("You don’t get lost","Language sticks. The site doesn’t reset randomly, so you stay oriented."),
+          C("It speaks plainly","Informal mode keeps it short and direct—no academic fog."),
+          C("Concept keeps it clean","You’re learning the idea, not drowning in implementation detail."),
+          C("You can tap around safely","Exploration doesn’t punish you—return paths stay obvious.")
+        ]
+      },
+      now:{
+        formal:[
+          C("No drift in-session","Active selections persist (gd_*), so the user sees continuity across clicks and pages."),
+          C("Live copy is operational","Now view focuses on the current mechanism: what is enforced today and where the contract is applied."),
+          C("Reading stays scannable","Four bubbles per section keep density high without turning into walls of text."),
+          C("Interaction stays deterministic","Same inputs produce the same outputs; UI never ‘guesses’ what you meant.")
+        ],
+        informal:[
+          C("It feels stable","You can switch around and it stays coherent."),
+          C("Now means ‘what’s live’","You see what exists today, not long theory."),
+          C("Fast skim, real meaning","Four bubbles give you enough without a scroll marathon."),
+          C("It behaves the same every time","No random jumps, no surprise resets.")
+        ]
+      },
+      post:{
+        formal:[
+          C("Roadmap stays structured","Roadmap is not hype—future additions are scoped, versioned, and plugged into the same contract."),
+          C("Upgrades won’t break you","New content expands inside the same topology, so bookmarks and routes don’t rot."),
+          C("Growth still feels safe","Even as pages multiply, state discipline keeps navigation coherent."),
+          C("It becomes a reference surface","Roadmap bubbles explain what gets built next and what must remain invariant.")
+        ],
+        informal:[
+          C("Roadmap is readable","It tells you what’s coming without drowning you in jargon."),
+          C("New stuff won’t wreck old stuff","The structure stays the same when features expand."),
+          C("Scaling still feels calm","More pages, same rules."),
+          C("It turns into a real map","You’ll know where to go next, every time.")
+        ]
+      }
+    },
+    B:{ // WHY IT MATTERS
+      origin:{
+        formal:[
+          C("Prevents silent meaning shifts","Grammar contracts stop terms from changing underneath the user as content evolves."),
+          C("Supports audit-grade reading","Formal phrasing makes claims falsifiable and keeps ambiguity bounded."),
+          C("Makes traversal study possible","Instead of linear chapters, the grammar defines how concepts connect across nodes."),
+          C("Stops ‘pretty confusion’","Aesthetic without contract creates drift; grammar is the contract that prevents it.")
+        ],
+        informal:[
+          C("Stops drift","Words don’t change their meaning randomly."),
+          C("Makes it trustworthy","Formal mode is careful—no storytelling as fact."),
+          C("Lets you learn by moving","You don’t need one long article to ‘get it.’"),
+          C("Keeps beauty from lying","A nice UI without rules still confuses people—this prevents that.")
+        ]
+      },
+      now:{
+        formal:[
+          C("Protects navigation integrity","When routing is defined by grammar, links don’t fragment into mismatched states."),
+          C("Protects the user’s time","Four bubbles per section replace long paragraphs with faster comprehension."),
+          C("Protects cross-page coherence","Language/style/time remain stable across the project surface."),
+          C("Protects scale readiness","You can add pages without breaking the mental model or UI contract.")
+        ],
+        informal:[
+          C("Keeps the site from breaking","Rules stop random drift."),
+          C("Saves time","You can skim and still understand."),
+          C("Keeps your settings","Language/style/time stay consistent."),
+          C("Lets you scale fast","Add pages without chaos.")
+        ]
+      },
+      post:{
+        formal:[
+          C("Enables multi-language growth","EN/中文 remain canonical; additional overlays can be added without breaking core meaning."),
+          C("Enables productization","Grammar becomes a reusable layer across products, laws, and gauges."),
+          C("Enables consistent onboarding","Users learn the map once and can traverse any new branch safely."),
+          C("Enables verification","Roadmap items can be tied to evidence, receipts, and reproducible artifacts.")
+        ],
+        informal:[
+          C("More languages later","Without messing up the core."),
+          C("Turns into a real product layer","Not just a website trick."),
+          C("New users learn fast","They learn the map once."),
+          C("Future work can be proven","Not just promised.")
+        ]
+      }
+    },
+    C:{ // HOW IT WORKS
+      origin:{
+        formal:[
+          C("Canonical state keys","gd_lang, gd_style, gd_time persist; internal links carry them forward deterministically."),
+          C("Lens separation","Lenses live inside modal only, so the main page stays clean and action-first."),
+          C("Contracted copy rules","Formal/Informal changes framing; Concept/Now/Roadmap changes emphasis—text must change, not just highlights."),
+          C("Uniform presentation","Every page uses the same gem + modal structure so behavior remains predictable.")
+        ],
+        informal:[
+          C("It saves your settings","Language/style/time stick."),
+          C("Lenses stay inside the bubble","Main page stays clean."),
+          C("Buttons actually change meaning","Not just a glow—real text changes."),
+          C("Everything looks and behaves the same","Same gem pattern everywhere.")
+        ]
+      },
+      now:{
+        formal:[
+          C("Deterministic routing","The same click produces the same destination; ‘back’ does not corrupt downstream state."),
+          C("Centered modal containment","Backdrop + centered shell prevent scroll-jumps and keep focus on the bubble content."),
+          C("Four-bubble density rule","Each section is always 4 bubbles, so you never get ‘empty’ pages."),
+          C("Roadmap labeling","UI says ROADMAP; internal time key remains post to preserve compatibility.")
+        ],
+        informal:[
+          C("Clicks go where they should","No random behavior."),
+          C("Modal stays centered","No weird jump scroll."),
+          C("No empty bubbles","Always something worth reading."),
+          C("Roadmap is Roadmap","Not ‘POST’ on screen.")
+        ]
+      },
+      post:{
+        formal:[
+          C("Extensible contract","New pages plug into the same state propagation and modal lensing."),
+          C("Version discipline","Roadmap can point to versioned schemas, receipts, and testable claims."),
+          C("Overlay discipline","Additional languages can be layered while EN/中文 remain stable anchors."),
+          C("Evidence integration","Roadmap bubbles can reference evidence bundles, registries, and audits.")
+        ],
+        informal:[
+          C("You can add more pages safely","Same rules."),
+          C("Roadmap can be versioned","So it’s real."),
+          C("More languages can be added later","Without chaos."),
+          C("Future stuff can connect to proof","Not just text.")
+        ]
+      }
+    },
+    D:{ // WHAT'S NEXT
+      origin:{
+        formal:[
+          C("Define the trunk glossary","Lock key terms used across Innovation so future pages don’t drift."),
+          C("Clone this grammar pattern","Each leaf page should copy the same lens + 4×4 bubble contract."),
+          C("Add executable examples","Where appropriate, show the smallest example that proves the claim."),
+          C("Connect to products cleanly","Innovation references products as deployed surfaces, not as theoretical claims.")
+        ],
+        informal:[
+          C("Lock the words","So meanings don’t drift."),
+          C("Clone the pattern","Same lenses, same bubbles."),
+          C("Show tiny proofs","Short examples that actually demonstrate."),
+          C("Connect to products clearly","Innovation = future; Products = deployed.")
+        ]
+      },
+      now:{
+        formal:[
+          C("Build the next leaf nodes","SSG, DOT.GRID, Acronyms become sibling pages under Language."),
+          C("Keep routing deterministic","All links must carry lang/style/time."),
+          C("Fill content before expanding paths","No empty nodes: 4 bubbles per section before deeper branching."),
+          C("Add return/jump controls consistently","Every modal includes RETURN + JUMP parent + JUMP explore.")
+        ],
+        informal:[
+          C("Make the sibling pages","SSG / DOT.GRID / Acronyms."),
+          C("Keep the links carrying state","Always."),
+          C("Fill bubbles first","No empty pages."),
+          C("Keep jump buttons consistent","Return + jump up.")
+        ]
+      },
+      post:{
+        formal:[
+          C("Roadmap the trunk expansion","Execution/Measurement/Governance gain the same leaf structure as Language."),
+          C("Introduce consumer-friendly framing","Keep it legible while still bounded and non-drifting."),
+          C("Instrument the build","Add basic counters/logs to detect broken routes immediately."),
+          C("Publish a stable index","Innovation becomes browsable as an encyclopedia with traversal, not linear reading.")
+        ],
+        informal:[
+          C("Expand the other trunks","Same pattern."),
+          C("Make it readable for normal people","Still accurate."),
+          C("Add simple checks","So you catch broken links fast."),
+          C("Make Innovation a real encyclopedia","Traversal study, not chapters.")
+        ]
+      }
+    }
+  };
+
+  // ===== modal logic =====
+  var bd=document.getElementById("bd");
+  var modal=document.getElementById("modal");
+  var mClose=document.getElementById("mClose");
+  var mTitle=document.getElementById("mTitle");
+
+  var chipStyle=document.getElementById("chipStyle");
+  var chipConcept=document.getElementById("chipConcept");
+  var chipNow=document.getElementById("chipNow");
+  var chipRoadmap=document.getElementById("chipRoadmap");
+
+  var tabA=document.getElementById("tabA");
+  var tabB=document.getElementById("tabB");
+  var tabC=document.getElementById("tabC");
+  var tabD=document.getElementById("tabD");
+
+  var h1=document.getElementById("h1"),p1=document.getElementById("p1");
+  var h2=document.getElementById("h2"),p2=document.getElementById("p2");
+  var h3=document.getElementById("h3"),p3=document.getElementById("p3");
+  var h4=document.getElementById("h4"),p4=document.getElementById("p4");
+
+  var activeSec="A";
+
+  function persist(){
+    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time);}catch(e){}
+  }
+
+  function setLensLabels(){
+    chipStyle.textContent = "STYLE: " + (style==="formal" ? T.lens.formal : T.lens.informal);
+    chipConcept.textContent = T.lens.concept;
+    chipNow.textContent = T.lens.now;
+    chipRoadmap.textContent = T.lens.roadmap;
+
+    chipConcept.classList.toggle("active", time==="origin");
+    chipNow.classList.toggle("active", time==="now");
+    chipRoadmap.classList.toggle("active", time==="post");
+  }
+
+  function setTabs(){
+    tabA.classList.toggle("on", activeSec==="A");
+    tabB.classList.toggle("on", activeSec==="B");
+    tabC.classList.toggle("on", activeSec==="C");
+    tabD.classList.toggle("on", activeSec==="D");
+    // also highlight the diamond chosen
+    ["secA","secB","secC","secD"].forEach(function(id){
+      document.getElementById(id).classList.toggle("active",
+        (id==="secA"&&activeSec==="A")||(id==="secB"&&activeSec==="B")||(id==="secC"&&activeSec==="C")||(id==="secD"&&activeSec==="D"));
+    });
+  }
+
+  function render(){
+    persist();
+    wire();
+    setLensLabels();
+    setTabs();
+
+    var bubbles = CONTENT[activeSec][time][style];
+    var title = T.brand1 + " · " + (activeSec==="A"?T.tabs.A:(activeSec==="B"?T.tabs.B:(activeSec==="C"?T.tabs.C:T.tabs.D)));
+    mTitle.textContent = title;
+
+    h1.textContent=bubbles[0].h; p1.textContent=bubbles[0].p;
+    h2.textContent=bubbles[1].h; p2.textContent=bubbles[1].p;
+    h3.textContent=bubbles[2].h; p3.textContent=bubbles[2].p;
+    h4.textContent=bubbles[3].h; p4.textContent=bubbles[3].p;
+  }
+
+  function open(sectionKey){
+    activeSec=sectionKey;
+    render();
+    bd.classList.add("show");
+    modal.classList.add("show");
+  }
+  function close(){
+    bd.classList.remove("show");
+    modal.classList.remove("show");
+    ["secA","secB","secC","secD"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
+  }
+
+  // diamond clicks
+  document.getElementById("secA").onclick=function(){ open("A"); };
+  document.getElementById("secB").onclick=function(){ open("B"); };
+  document.getElementById("secC").onclick=function(){ open("C"); };
+  document.getElementById("secD").onclick=function(){ open("D"); };
+
+  ["secA","secB","secC","secD"].forEach(function(id){
+    var el=document.getElementById(id);
     el.addEventListener("keydown", function(e){
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
     });
   });
+
+  // tab clicks
+  tabA.onclick=function(){ activeSec="A"; render(); };
+  tabB.onclick=function(){ activeSec="B"; render(); };
+  tabC.onclick=function(){ activeSec="C"; render(); };
+  tabD.onclick=function(){ activeSec="D"; render(); };
+
+  // lens clicks (modal only)
+  chipStyle.onclick=function(){ style = (style==="formal") ? "informal" : "formal"; render(); };
+  chipConcept.onclick=function(){ time="origin"; render(); };
+  chipNow.onclick=function(){ time="now"; render(); };
+  chipRoadmap.onclick=function(){ time="post"; render(); };
+
+  // close controls
+  bd.onclick=close;
+  mClose.onclick=close;
+  document.getElementById("mReturn").onclick=close;
+
+  // initialize labels (no open)
+  // (Stage labels remain fixed; modal carries lenses)
 })();
 </script>
 
 </body>
 </html>
+```0

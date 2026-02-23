@@ -3,10 +3,13 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>INNOVATION · Future Trunks</title>
+<title>INNOVATION · LANGUAGE ENGINE</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+
+<!-- DEPLOYMENT PROBE -->
+<!-- FILE: /explore/innovation/language/index.html -->
 
 <style>
 :root{
@@ -32,27 +35,15 @@
 .outer{
   position:absolute;
   left:50%;top:50%;
-  width:min(560px,92vw);
-  height:min(560px,92vw);
+  width:100%;
+  height:100%;
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.62),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
+  background:rgba(0,0,0,.12);
+  box-shadow:0 60px 180px rgba(0,0,0,.65);
   pointer-events:none;
-  opacity:.55;
-}
-.outer::after{
-  content:"";
-  position:absolute; inset:0; border-radius:60px;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.14;
+  opacity:.6;
 }
 
 .d{
@@ -62,23 +53,23 @@
   transform-origin:center;
   border-radius:26px;
   cursor:pointer;
-
   background:
     radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
     linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
-
   border:1px solid rgba(255,255,255,.10);
   box-shadow:
     0 28px 84px rgba(0,0,0,.78),
     inset 0 2px 0 rgba(255,255,255,.14),
     inset 0 -28px 44px rgba(0,0,0,.62);
-
-  transition:transform 220ms ease, box-shadow 220ms ease;
+  transition:all 220ms ease;
 }
 
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 18px rgba(212,175,55,.18);
 }
 
 .d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
@@ -87,7 +78,7 @@
 .d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
 
 .inner{
-  width:100%; height:100%;
+  width:100%;height:100%;
   transform:rotate(-45deg);
   display:flex;
   flex-direction:column;
@@ -96,21 +87,21 @@
   text-align:center;
   padding:16px;
   gap:8px;
-  pointer-events:none;
 }
 
-.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
-.sub{ font-size:13px; opacity:.86; }
+.lab{font-weight:950;letter-spacing:.8px;font-size:16px;}
+.sub{font-size:13px;opacity:.86;}
 
 .core{
   position:absolute;
-  left:50%; top:50%;
+  left:50%;top:50%;
   transform:translate(-50%,-50%);
   width:64px;height:64px;
   border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
-  display:grid; place-items:center;
+  box-shadow:0 18px 44px rgba(0,0,0,.62);
+  display:grid;place-items:center;
   font-weight:950;
   pointer-events:none;
 }
@@ -122,31 +113,31 @@
 <div class="stage">
   <div class="outer"></div>
 
-  <div class="d d-n" onclick="route('language')">
+  <div class="d d-n" onclick="route('grammar')">
     <div class="inner">
-      <div class="lab">LANGUAGE ENGINE</div>
-      <div class="sub">Semantic compilers · grammar · indexing.</div>
+      <div class="lab">GRAMMAR</div>
+      <div class="sub">Traversal contracts.</div>
     </div>
   </div>
 
-  <div class="d d-e" onclick="route('execution')">
+  <div class="d d-e" onclick="route('ssg')">
     <div class="inner">
-      <div class="lab">EXECUTION SYSTEMS</div>
-      <div class="sub">Workflows · receipts · constrained ops.</div>
+      <div class="lab">SSG</div>
+      <div class="sub">Constraint geometry.</div>
     </div>
   </div>
 
-  <div class="d d-w" onclick="route('measurement')">
+  <div class="d d-w" onclick="route('dot')">
     <div class="inner">
-      <div class="lab">MEASUREMENT LAB</div>
-      <div class="sub">Instruments · sweeps · evidence.</div>
+      <div class="lab">DOT.GRID</div>
+      <div class="sub">256-state indexing.</div>
     </div>
   </div>
 
-  <div class="d d-s" onclick="route('governance')">
+  <div class="d d-s" onclick="route('acronyms')">
     <div class="inner">
-      <div class="lab">GOVERNANCE STACK</div>
-      <div class="sub">Policies · gates · certification.</div>
+      <div class="lab">ACRONYMS</div>
+      <div class="sub">Lookup anchors.</div>
     </div>
   </div>
 
@@ -161,7 +152,8 @@ function route(section){
   const time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
 
   window.location.href =
-    "/explore/innovation/" + section + "/?lang=" + lang +
+    "/explore/innovation/language/" + section +
+    "/?lang=" + lang +
     "&style=" + style +
     "&time=" + time;
 }

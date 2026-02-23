@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>INNOVATION · LANGUAGE · ACRONYMS</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+:root{
+  --R:124px;
+  --gold:rgba(212,175,55,.9);
+  --goldSoft:rgba(212,175,55,.35);
+  --obs1:#070b12;
+  --obs2:#0c1626;
+}
+
+.stage{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(560px,92vw);
+  height:min(560px,92vw);
+  z-index:40;
+}
+
+.outer{
+  position:absolute;
+  left:50%;top:50%;
+  width:min(560px,92vw);
+  height:min(560px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+  pointer-events:none;
+  opacity:.55;
+}
+
+.d{
+  width:180px;height:180px;
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:26px;
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
+    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 28px 84px rgba(0,0,0,.78),
+    inset 0 2px 0 rgba(255,255,255,.14),
+    inset 0 -28px 44px rgba(0,0,0,.62);
+}
+
+.inner{
+  width:100%;
+  height:100%;
+  transform:rotate(-45deg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20px;
+}
+
+.lab{font-weight:950;letter-spacing:.8px;font-size:18px;}
+.sub{font-size:13px;opacity:.85;margin-top:8px;}
+
+.btn{
+  position:fixed;
+  top:16px;
+  left:16px;
+  padding:10px 16px;
+  border-radius:14px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  color:white;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.7);
+  text-decoration:none;
+  font-weight:900;
+}
+</style>
+</head>
+
+<body>
+
+<a class="btn" id="btnBack">BACK</a>
+
+<div class="stage">
+  <div class="outer"></div>
+  <div class="d">
+    <div class="inner">
+      <div class="lab">ACRONYMS</div>
+      <div class="sub">
+        Pillar anchors.<br/>
+        Lookup contracts.<br/>
+        Registry mappings.<br/>
+        Canonical references.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const qs = new URLSearchParams(window.location.search);
+  const lang = qs.get("lang") || localStorage.getItem("gd_lang") || "en";
+  const style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  const time = qs.get("time") || localStorage.getItem("gd_time") || "now";
+
+  document.getElementById("btnBack").href =
+    "/explore/innovation/language/?lang=" + lang +
+    "&style=" + style +
+    "&time=" + time;
+})();
+</script>
+
+</body>
+</html>

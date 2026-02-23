@@ -1,11 +1,17 @@
-<!-- TNT — /explore/index.html  (EXPLORE · INNOVATION HUB · GEM STANDARD)
-     FIXES:
-     - FULL TNT (entire file)
-     - DOES NOT touch /assets/ui.css or /assets/branch.css
-     - DOES NOT set html/body background (ui.css owns field)
-     - Uses REAL <a href="..."> links (no onclick bounce / iOS no-nav bug)
-     - Routes to /explore/innovation/{language|execution|measurement|governance}/  (NO 404)
-     - State propagation: lang/style/time always carried (gd_lang/gd_style/gd_time)
+<!-- TNT — /explore/index.html  (EXPLORE · INNOVATION HUB · NAMES RESTORED)
+     FIXES REQUESTED:
+       1) Remove purple/blue “link” styling → ALL nav uses .crp-btn (no raw anchors).
+       2) Restore names to match the Language/Grammar stack:
+            GRAMMAR · DOT.GRID · SSG · ACRONYMS
+       3) Wire each diamond to the correct live page (no name mismatch confusion):
+            /explore/innovation/language/grammar/
+            /explore/innovation/language/dot-grid/
+            /explore/innovation/language/ssg/
+            /explore/innovation/language/acronyms/
+       4) State propagation always (lang/style/time) via query + localStorage.
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css only
+       - DOES NOT style html/body background (ui.css owns the red field)
 -->
 
 <!doctype html>
@@ -13,47 +19,51 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>EXPLORE · Innovation</title>
+<title>EXPLORE · Innovation Hub</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instrument.js"></script>
 
 <style>
-/* PAGE-LOCAL ONLY — ui.css owns field */
+/* PAGE-LOCAL ONLY (no field ownership) */
 :root{
   --R:124px;
   --goldSoft:rgba(212,175,55,.35);
-  --obs1:#070b12;
-  --obs2:#0c1626;
 }
 
-/* Top controls */
+/* Top-left */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:90;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
+
+/* Title pill */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
   z-index:80;text-align:center;
   padding:10px 14px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.16);
+  backdrop-filter:blur(8px);
 }
 .brand .t1{font-weight:950;letter-spacing:1.1px;font-size:12px;opacity:.95}
 .brand .t2{margin-top:2px;font-size:11px;letter-spacing:.6px;opacity:.72}
 
-/* Stage (center) */
+/* Stage */
 .stage{
   position:fixed;left:50%;top:52%;
   transform:translate(-50%,-50%);
-  width:min(720px,94vw);height:min(720px,94vw);
+  width:min(560px,92vw);
+  height:min(560px,92vw);
   z-index:40;
 }
 
-/* Outer gem shell */
+/* Outer gem diamond */
 .outer{
   position:absolute;left:50%;top:50%;
-  width:min(680px,92vw);height:min(680px,92vw);
+  width:min(560px,92vw);
+  height:min(560px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   background:
@@ -65,19 +75,23 @@
     0 90px 260px rgba(0,0,0,.62),
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none;opacity:.85;
+  pointer-events:none;
+  opacity:.85;
 }
 .outer::after{
-  content:"";position:absolute;inset:0;border-radius:60px;
+  content:"";
+  position:absolute; inset:0; border-radius:60px;
   background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
   opacity:.16;
 }
 
-/* Diamonds as LINKS (important) */
+/* Gem diamonds (match standard) */
 .d{
-  width:170px;height:170px;
+  width:150px;height:150px;
   position:absolute;left:50%;top:50%;
-  transform-origin:center;border-radius:26px;
+  transform-origin:center;
+  border-radius:26px;
+  cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 
   background:
@@ -92,12 +106,10 @@
     inset 0 -28px 44px rgba(0,0,0,.62);
 
   transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
-  text-decoration:none;
-  color:#fff;
-  display:block;
 }
 .d::before{
-  content:"";position:absolute;inset:0;border-radius:26px;padding:1px;
+  content:"";
+  position:absolute; inset:0; border-radius:26px; padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.45;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -105,10 +117,12 @@
   pointer-events:none;
 }
 .d::after{
-  content:"";position:absolute;left:12%;right:12%;top:10%;height:28%;
+  content:"";
+  position:absolute; left:12%; right:12%; top:10%; height:28%;
   border-radius:999px;
   background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
-  opacity:.85;transform:rotate(-10deg);
+  opacity:.85;
+  transform:rotate(-10deg);
   pointer-events:none;
 }
 .d:hover{
@@ -127,44 +141,52 @@
 .d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
 
 .in{
-  width:100%;height:100%;
+  width:100%; height:100%;
   transform:rotate(-45deg);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:16px;gap:10px;
-  pointer-events:none;user-select:none;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center;
+  padding:16px;
+  gap:8px;
+  pointer-events:none;
+  user-select:none;
 }
-.lab{font-weight:950;letter-spacing:.9px;font-size:16px}
-.sub{font-size:12.5px;opacity:.84;line-height:1.35;max-width:18em}
+.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
+.sub{ font-size:13px; opacity:.86; line-height:1.35; max-width:16em; }
 
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:74px;height:74px;border-radius:22px;
+  width:64px;height:64px;border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
   box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
   display:grid;place-items:center;
-  font-weight:950;letter-spacing:.5px;opacity:.92;pointer-events:none;
+  font-weight:950;letter-spacing:.5px;
+  opacity:.92;
+  pointer-events:none;
 }
 
-/* Dock */
+/* Dock (buttons only, no purple links) */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:90;
-  width:min(980px,94vw);
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  width:min(900px,94vw);
+  display:flex;justify-content:center;
+  gap:10px;flex-wrap:wrap;
   padding:10px 12px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
+  background:rgba(0,0,0,.20);
   backdrop-filter:blur(8px);
 }
 
-@media (max-width:560px){
-  :root{ --R: 136px; }
-  .d{ width:158px; height:158px; }
-  .stage{ top:54%; }
+@media (max-width:520px){
+  :root{ --R: 116px; }
+  .stage{ width:min(520px,92vw); height:min(520px,92vw); }
+  .outer{ width:min(520px,92vw); height:min(520px,92vw); }
+  .core{ width:58px; height:58px; }
 }
 </style>
 </head>
@@ -177,41 +199,40 @@
 </div>
 
 <div class="brand">
-  <div class="t1" id="b1">QUEEN’S ARCHITECTURE</div>
-  <div class="t2" id="b2">INNOVATION · FUTURE TRUNKS</div>
+  <div class="t1" id="brandTop">QUEEN’S ARCHITECTURE</div>
+  <div class="t2" id="brandSub">INNOVATION · FUTURE TRUNKS</div>
 </div>
 
-<div class="stage" aria-label="Explore innovation trunks">
+<div class="stage" aria-label="Explore innovation hub">
   <div class="outer"></div>
 
-  <!-- IMPORTANT: real hrefs (wired in JS with state) -->
-  <a class="d d-n" id="lnkLang" href="/explore/innovation/language/">
+  <div class="d d-n" id="dGrammar" role="button" tabindex="0">
     <div class="in">
-      <div class="lab" id="labLang">LANGUAGE ENGINE</div>
-      <div class="sub" id="subLang">Semantic compilers · grammar · indexing.</div>
+      <div class="lab" id="labGrammar">GRAMMAR</div>
+      <div class="sub" id="subGrammar">Traversal contracts · structural language.</div>
     </div>
-  </a>
+  </div>
 
-  <a class="d d-e" id="lnkExec" href="/explore/innovation/execution/">
+  <div class="d d-e" id="dSSG" role="button" tabindex="0">
     <div class="in">
-      <div class="lab" id="labExec">EXECUTION SYSTEMS</div>
-      <div class="sub" id="subExec">Workflows · receipts · constrained ops.</div>
+      <div class="lab" id="labSSG">SSG</div>
+      <div class="sub" id="subSSG">Constraint syntax geometry.</div>
     </div>
-  </a>
+  </div>
 
-  <a class="d d-w" id="lnkMeas" href="/explore/innovation/measurement/">
+  <div class="d d-w" id="dDOT" role="button" tabindex="0">
     <div class="in">
-      <div class="lab" id="labMeas">MEASUREMENT LAB</div>
-      <div class="sub" id="subMeas">Instruments · sweeps · evidence.</div>
+      <div class="lab" id="labDOT">DOT.GRID</div>
+      <div class="sub" id="subDOT">256-state indexing · sweeps.</div>
     </div>
-  </a>
+  </div>
 
-  <a class="d d-s" id="lnkGov" href="/explore/innovation/governance/">
+  <div class="d d-s" id="dAcr" role="button" tabindex="0">
     <div class="in">
-      <div class="lab" id="labGov">GOVERNANCE STACK</div>
-      <div class="sub" id="subGov">Policies · gates · certification.</div>
+      <div class="lab" id="labAcr">ACRONYMS</div>
+      <div class="sub" id="subAcr">Lookup anchors · shared language.</div>
     </div>
-  </a>
+  </div>
 
   <div class="core">◆</div>
 </div>
@@ -226,7 +247,7 @@
 
 <script>
 (function(){
-  // state
+  // Canonical state
   var qs = new URLSearchParams(location.search);
   var qLang = qs.get("lang");
   var qStyle = qs.get("style");
@@ -244,55 +265,74 @@
   }catch(e){}
 
   function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
-  var s = q();
 
-  // i18n (single-language render)
+  // Wire nav
+  function wire(){
+    var s=q();
+    document.getElementById("btnHub").href="/home/?"+s;
+    document.getElementById("btnExit").href="/door/?"+s;
+
+    document.getElementById("dockTerminal").href="/index.html?"+s;
+    document.getElementById("dockProducts").href="/products/?"+s;
+    document.getElementById("dockEducation").href="/products/education/?"+s;
+    document.getElementById("dockLaws").href="/laws/?"+s;
+    document.getElementById("dockLinks").href="/links/?"+s;
+  }
+  wire();
+
+  // Route diamonds to EXISTING paths in your repo (explore/innovation/language/*)
+  function go(path){
+    location.href = path + "?" + q();
+  }
+
+  document.getElementById("dGrammar").onclick = function(){ go("/explore/innovation/language/grammar/"); };
+  document.getElementById("dSSG").onclick     = function(){ go("/explore/innovation/language/ssg/"); };
+  document.getElementById("dDOT").onclick     = function(){ go("/explore/innovation/language/dot-grid/"); };
+  document.getElementById("dAcr").onclick     = function(){ go("/explore/innovation/language/acronyms/"); };
+
+  ["dGrammar","dSSG","dDOT","dAcr"].forEach(function(id){
+    var el=document.getElementById(id);
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+    });
+  });
+
+  // Single-language labels (no mixed EN/中文 on same line)
   var UI = {
     en:{
-      b1:"QUEEN’S ARCHITECTURE",
-      b2:"INNOVATION · FUTURE TRUNKS",
-      lang:{lab:"LANGUAGE ENGINE", sub:"Semantic compilers · grammar · indexing."},
-      exec:{lab:"EXECUTION SYSTEMS", sub:"Workflows · receipts · constrained ops."},
-      meas:{lab:"MEASUREMENT LAB", sub:"Instruments · sweeps · evidence."},
-      gov:{lab:"GOVERNANCE STACK", sub:"Policies · gates · certification."}
+      top:"QUEEN’S ARCHITECTURE",
+      sub:"INNOVATION · FUTURE TRUNKS",
+      grammar:{lab:"GRAMMAR", sub:"Traversal contracts · structural language."},
+      ssg:{lab:"SSG", sub:"Constraint syntax geometry."},
+      dot:{lab:"DOT.GRID", sub:"256-state indexing · sweeps."},
+      acr:{lab:"ACRONYMS", sub:"Lookup anchors · shared language."}
     },
     zh:{
-      b1:"女王架构",
-      b2:"创新 · 未来干线",
-      lang:{lab:"语言引擎", sub:"语义编译 · 语法 · 索引。"},
-      exec:{lab:"执行系统", sub:"流程 · 回执 · 约束执行。"},
-      meas:{lab:"测量实验室", sub:"仪器 · 扫掠 · 证据流。"},
-      gov:{lab:"治理栈", sub:"策略 · 门控 · 认证。"}
+      top:"女王架构",
+      sub:"创新 · 未来干线",
+      grammar:{lab:"语法", sub:"遍历契约 · 结构语言。"},
+      ssg:{lab:"SSG", sub:"约束语法几何。"},
+      dot:{lab:"DOT.GRID", sub:"256态索引 · 扫掠。"},
+      acr:{lab:"缩略语", sub:"查表锚点 · 共用术语。"}
     }
   };
   var T = (lang==="zh") ? UI.zh : UI.en;
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
-  document.getElementById("b1").textContent = T.b1;
-  document.getElementById("b2").textContent = T.b2;
 
-  document.getElementById("labLang").textContent = T.lang.lab;
-  document.getElementById("subLang").textContent = T.lang.sub;
-  document.getElementById("labExec").textContent = T.exec.lab;
-  document.getElementById("subExec").textContent = T.exec.sub;
-  document.getElementById("labMeas").textContent = T.meas.lab;
-  document.getElementById("subMeas").textContent = T.meas.sub;
-  document.getElementById("labGov").textContent = T.gov.lab;
-  document.getElementById("subGov").textContent = T.gov.sub;
+  document.getElementById("brandTop").textContent = T.top;
+  document.getElementById("brandSub").textContent = T.sub;
 
-  // wire all links with state
-  document.getElementById("btnHub").href = "/home/?" + s;
-  document.getElementById("btnExit").href = "/door/?" + s;
+  document.getElementById("labGrammar").textContent = T.grammar.lab;
+  document.getElementById("subGrammar").textContent = T.grammar.sub;
 
-  document.getElementById("lnkLang").href = "/explore/innovation/language/?" + s;
-  document.getElementById("lnkExec").href = "/explore/innovation/execution/?" + s;
-  document.getElementById("lnkMeas").href = "/explore/innovation/measurement/?" + s;
-  document.getElementById("lnkGov").href = "/explore/innovation/governance/?" + s;
+  document.getElementById("labSSG").textContent = T.ssg.lab;
+  document.getElementById("subSSG").textContent = T.ssg.sub;
 
-  document.getElementById("dockTerminal").href = "/index.html?" + s;
-  document.getElementById("dockProducts").href = "/products/?" + s;
-  document.getElementById("dockEducation").href = "/products/education/?" + s;
-  document.getElementById("dockLaws").href = "/laws/?" + s;
-  document.getElementById("dockLinks").href = "/links/?" + s;
+  document.getElementById("labDOT").textContent = T.dot.lab;
+  document.getElementById("subDOT").textContent = T.dot.sub;
+
+  document.getElementById("labAcr").textContent = T.acr.lab;
+  document.getElementById("subAcr").textContent = T.acr.sub;
 })();
 </script>
 

@@ -9,109 +9,57 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-:root{
-  --R:124px;
-  --gold:rgba(212,175,55,.9);
-  --goldSoft:rgba(212,175,55,.35);
-  --obs1:#070b12;
-  --obs2:#0c1626;
-}
-
-/* DO NOT TOUCH FIELD — ui.css owns background */
+:root{ --R:124px; --obs1:#070b12; --obs2:#0c1626; }
 
 .stage{
-  position:fixed;
-  left:50%;
-  top:50%;
+  position:fixed; left:50%; top:50%;
   transform:translate(-50%,-50%);
-  width:min(560px,92vw);
-  height:min(560px,92vw);
-  z-index:40;
+  width:min(560px,92vw); height:min(560px,92vw);
 }
 
 .outer{
-  position:absolute;
-  left:50%;top:50%;
-  width:min(560px,92vw);
-  height:min(560px,92vw);
+  position:absolute; left:50%; top:50%;
+  width:100%; height:100%;
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
+  background:linear-gradient(160deg, rgba(14,24,40,.45), rgba(7,11,18,.62));
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.62),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none;
   opacity:.55;
-}
-.outer::after{
-  content:"";
-  position:absolute; inset:0; border-radius:60px;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.14;
 }
 
 .d{
-  width:150px;height:150px;
-  position:absolute;
-  left:50%;top:50%;
+  width:150px; height:150px;
+  position:absolute; left:50%; top:50%;
   transform-origin:center;
   border-radius:26px;
   cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
+  background:linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 28px 84px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.14),
-    inset 0 -28px 44px rgba(0,0,0,.62);
-  transition:transform 220ms ease, box-shadow 220ms ease;
 }
 
-.d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-}
-
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
-.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
+.d-n{ transform:translate(-50%,-50%) translate(0,-124px) rotate(45deg); }
+.d-e{ transform:translate(-50%,-50%) translate(124px,0) rotate(45deg); }
+.d-s{ transform:translate(-50%,-50%) translate(0,124px) rotate(45deg); }
+.d-w{ transform:translate(-50%,-50%) translate(-124px,0) rotate(45deg); }
 
 .inner{
   width:100%; height:100%;
   transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
   text-align:center;
   padding:16px;
-  gap:8px;
-  pointer-events:none;
 }
 
-.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
-.sub{ font-size:13px; opacity:.86; line-height:1.35; max-width:16em; }
+.lab{ font-weight:900; font-size:16px; }
+.sub{ font-size:13px; opacity:.85; }
 
 .core{
-  position:absolute;
-  left:50%; top:50%;
+  position:absolute; left:50%; top:50%;
   transform:translate(-50%,-50%);
-  width:64px;height:64px;
+  width:64px; height:64px;
   border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.62);
-  display:grid; place-items:center;
-  font-weight:950;
-  pointer-events:none;
+  background:rgba(0,0,0,.2);
 }
 </style>
 </head>
@@ -149,20 +97,21 @@
     </div>
   </div>
 
-  <div class="core">◆</div>
+  <div class="core"></div>
 </div>
 
 <script>
 function goLang(){
   const qs = new URLSearchParams(window.location.search);
-  const lang = qs.get("lang") || localStorage.getItem("gd_lang") || "en";
-  const style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  const time = qs.get("time") || localStorage.getItem("gd_time") || "now";
+  const lang = qs.get("lang") || "en";
+  const style = qs.get("style") || "formal";
+  const time = qs.get("time") || "now";
 
   window.location.href =
-    "/explore/innovation/language/?lang=" + lang +
-    "&style=" + style +
-    "&time=" + time;
+    "https://smansfield635-create.github.io/explore/innovation/language/index.html"
+    + "?lang=" + lang
+    + "&style=" + style
+    + "&time=" + time;
 }
 </script>
 

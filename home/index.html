@@ -1,11 +1,14 @@
-<!-- TNT — /home/index.html  (HUB PAGE vNext)
-     Fixes requested:
-     1) MAP bubble page gets a subtle red undertone so it matches the site (no “different website” feel).
-     2) MAP explanations upgraded: each item has a real sentence (subject + predicate), not one-word labels.
-     3) Remove “LANGUAGE” from the HUB page (redundant). Keep EXIT + MAP only.
-     4) Move “Traversal Architecture” tag to a visible stamp position (bottom-right).
-     5) Lenses remain INSIDE direction bubbles (modal), not on the main page.
-     Dual-lens (EN + 中文) preserved.
+<!-- TNT — /home/index.html  (HUB · GEM STANDARD · LENSES INSIDE BUBBLES ONLY)
+     Uniform with SOFTWARE gem aesthetic.
+     Main page:
+       - NO lens controls on the page.
+       - Top-left: EXIT (to /door/) + MAP (opens centered modal).
+       - Center: 4-direction gem diamond (N/E/S/W). Tap opens centered modal.
+       - Bottom dock: TERMINAL / LINKS / PRODUCTS / LAWS / GAUGES
+     Inside modal only:
+       - STYLE: Formal/Informal (gd_style)
+       - TIME: Concept/Now/Post (gd_time origin/now/post)
+     Dual language always (EN + 中文) (gd_lang + ?lang=)
 -->
 
 <!doctype html>
@@ -25,7 +28,7 @@
   --goldSoft:rgba(212,175,55,.35);
   --obs1:#070b12;
   --obs2:#0c1626;
-  --mut:rgba(255,255,255,.82);
+  --mut:rgba(255,255,255,.84);
   --mut2:rgba(255,255,255,.68);
 }
 
@@ -41,11 +44,7 @@ body{
   overflow-x:hidden;
 }
 
-/* ===== TOP LEFT ONLY (clean page) ===== */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:90;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
+/* Buttons */
 .btn{
   padding:10px 16px;
   border-radius:14px;
@@ -59,9 +58,36 @@ body{
   text-decoration:none;
 }
 .btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
-.btn.active{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 22px rgba(212,175,55,.45); border-color:rgba(212,175,55,.25); }
+.btn.active{
+  border-color:rgba(212,175,55,.25);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 22px rgba(212,175,55,.30);
+}
 
-/* ===== STAGE ===== */
+/* Top-left only */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:90;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+
+/* Architecture stamp */
+.stamp{
+  position:fixed;
+  right:16px;
+  bottom:max(16px, env(safe-area-inset-bottom));
+  z-index:85;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(8px);
+  font-weight:950;
+  letter-spacing:.8px;
+  font-size:11px;
+  opacity:.90;
+  pointer-events:none;
+}
+
+/* Center stage */
 .stage{
   position:fixed;
   left:50%;
@@ -72,58 +98,100 @@ body{
   z-index:40;
 }
 
-/* ===== GEM DIAMONDS ===== */
-.diamond{
+/* Outer gem diamond (subtle) */
+.outer{
+  position:absolute;
+  left:50%;top:50%;
+  width:min(560px,92vw);
+  height:min(560px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+  pointer-events:none;
+  opacity:.55;
+}
+.outer::after{
+  content:"";
+  position:absolute; inset:0; border-radius:60px;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.14;
+}
+
+/* Diamonds */
+.d{
   width:150px;height:150px;
   position:absolute;
   left:50%;top:50%;
   transform-origin:center;
-  border-radius:22px;
+  border-radius:26px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 
   background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.15), transparent 55%),
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, var(--obs2) 0%, var(--obs1) 60%);
+    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
 
+  border:1px solid rgba(255,255,255,.10);
   box-shadow:
-    0 25px 70px rgba(0,0,0,.82),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -25px 35px rgba(0,0,0,.65);
-
-  border:1px solid rgba(255,255,255,.08);
-  transition:all 260ms ease;
+    0 28px 84px rgba(0,0,0,.78),
+    inset 0 2px 0 rgba(255,255,255,.14),
+    inset 0 -28px 44px rgba(0,0,0,.62);
+  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
 }
-.diamond::after{
+.d::before{
   content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 5deg, transparent 5deg 15deg);
-  mix-blend-mode:overlay;
-  opacity:.25;
+  position:absolute; inset:0; border-radius:26px; padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
   pointer-events:none;
 }
-.diamond:hover{
+.d::after{
+  content:"";
+  position:absolute;
+  left:12%; right:12%;
+  top:10%;
+  height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
+  opacity:.85;
+  transform:rotate(-10deg);
+  pointer-events:none;
+}
+.d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
   box-shadow:
-    0 30px 90px rgba(0,0,0,.9),
-    0 0 22px var(--goldSoft),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -28px 40px rgba(0,0,0,.7);
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 18px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
 }
-.diamond.active{
+.d.active{
+  border-color:rgba(212,175,55,.55);
   box-shadow:
-    0 30px 90px rgba(0,0,0,.9),
-    0 0 30px rgba(212,175,55,.55),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -28px 40px rgba(0,0,0,.7);
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 30px rgba(212,175,55,.40),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
 }
 
+.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
+.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
+.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
+.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
+
 .inner{
-  width:100%;
-  height:100%;
+  width:100%; height:100%;
   transform:rotate(-45deg);
   display:flex;
   flex-direction:column;
@@ -133,33 +201,27 @@ body{
   padding:16px;
   gap:8px;
   pointer-events:none;
+  user-select:none;
 }
-.dir{ font-weight:950; letter-spacing:.6px; font-size:16px; }
-.preview{ font-size:13px; opacity:.88; line-height:1.35; max-width:16em; }
-
-#north{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-#east { transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg); }
-#south{ transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg); }
-#west { transform:translate(-50%,-50%) translate(calc(var(--R) * -1),0) rotate(45deg); }
+.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
+.sub{ font-size:13px; opacity:.86; line-height:1.35; max-width:16em; }
 
 .core{
   position:absolute;
-  left:50%;top:50%;
+  left:50%; top:50%;
   transform:translate(-50%,-50%);
   width:64px;height:64px;
   border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
   box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;
-  place-items:center;
-  font-weight:950;
-  letter-spacing:.5px;
-  opacity:.90;
+  display:grid; place-items:center;
+  font-weight:950; letter-spacing:.5px;
+  opacity:.92;
   pointer-events:none;
 }
 
-/* ===== BOTTOM DOCK ===== */
+/* Dock */
 .dock{
   position:fixed;
   left:50%;
@@ -178,178 +240,129 @@ body{
   backdrop-filter:blur(8px);
 }
 
-/* ===== ARCHITECTURE STAMP (visible) ===== */
-.stamp{
-  position:fixed;
-  right:16px;
-  bottom:max(16px, env(safe-area-inset-bottom));
-  z-index:85;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  backdrop-filter:blur(8px);
-  font-weight:950;
-  letter-spacing:.8px;
-  font-size:11px;
-  opacity:.90;
-}
-
-/* ===== MODAL (CENTERED, INTERNAL SCROLL) ===== */
+/* Modal */
 .bd{
-  position:fixed;
-  inset:0;
+  position:fixed;inset:0;z-index:200;
   background:rgba(0,0,0,.65);
   backdrop-filter:blur(10px);
   display:none;
-  z-index:200;
 }
 .bd.show{display:block;}
-
 .modal{
-  position:fixed;
-  left:50%;
-  top:50%;
+  position:fixed;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(860px,92vw);
-  max-height:84vh;
+  width:min(1020px,94vw);
+  max-height:88vh;
   display:none;
   z-index:210;
 }
 .modal.show{display:block;}
-
 .shell{
-  height:84vh;
-  max-height:84vh;
+  height:88vh;
   border-radius:26px;
   border:1px solid rgba(255,255,255,.10);
-  /* subtle red undertone mixed into obsidian so it doesn't feel “different site” */
   background:
-    radial-gradient(circle at 50% 20%, rgba(176,0,0,.18), transparent 55%),
-    radial-gradient(circle at 35% 25%, rgba(90,140,255,.10), transparent 55%),
+    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
+    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
     linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
   box-shadow:0 60px 180px rgba(0,0,0,.92);
   overflow:hidden;
   display:flex;
   flex-direction:column;
+  position:relative;
 }
-
+.shell::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:58%;
+  width:min(980px,94vw);
+  height:min(980px,94vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:70px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.16), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);
+  box-shadow:
+    0 100px 280px rgba(0,0,0,.72),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -55px 100px rgba(0,0,0,.55);
+  opacity:.55;
+  pointer-events:none;
+}
 .mhead{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:14px 16px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  flex:0 0 auto;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
+  position:relative;z-index:2;
 }
 .mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
 .mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
-
 .mbody{
-  padding:14px 16px 16px;
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
+  padding:14px 16px 18px;
+  overflow:auto;-webkit-overflow-scrolling:touch;
   flex:1 1 auto;
+  position:relative;z-index:2;
 }
-
-/* Lens controls INSIDE modal only */
 .lensbar{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:center;
-  padding:10px 10px 14px;
-  border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;gap:10px;flex-wrap:wrap;
+  align-items:center;justify-content:center;
+  padding:10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);
   margin:-6px -6px 14px;
 }
 .chip{
-  padding:10px 16px;
-  border-radius:999px;
+  padding:10px 16px;border-radius:999px;
   background:linear-gradient(145deg,var(--obs2),var(--obs1));
   border:1px solid rgba(255,255,255,.08);
   box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  color:#fff;
+  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
 }
 .chip.active{
   border-color:rgba(212,175,55,.35);
   box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
 }
 
-.lead{
-  font-weight:950;
-  letter-spacing:.2px;
-  margin:0 0 8px 0;
-}
-.p{
-  margin:0 0 12px 0;
-  color:var(--mut);
-  line-height:1.55;
-}
-.ul{
-  margin:0 0 0 18px;
-  padding:0;
-  color:var(--mut2);
-}
-.ul li{ margin:6px 0; }
-
-/* Map bubbles (sentence-level explanations) */
-.mapgrid{
-  display:grid;
-  gap:14px;
-}
-@media (min-width:760px){ .mapgrid{ grid-template-columns:1fr 1fr; } }
-
-.mapbubble{
-  padding:16px 18px;
-  border-radius:20px;
+.mgrid{ display:grid; gap:14px; }
+@media (min-width:920px){ .mgrid{ grid-template-columns:1fr 1fr; } }
+.box{
+  padding:16px 18px;border-radius:22px;
   background:
     radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
-    linear-gradient(145deg,var(--obs2),var(--obs1));
+    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 55px rgba(0,0,0,.78), inset 0 2px 0 rgba(255,255,255,.06);
+  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
   position:relative;
 }
-.mapbubble::before{
+.box::before{
   content:"";
-  position:absolute;
-  inset:0;
-  border-radius:20px;
-  padding:1px;
+  position:absolute;inset:0;border-radius:22px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.55;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
+  -webkit-mask-composite:xor; mask-composite:exclude;
   pointer-events:none;
 }
-.mapbubble .t{ font-weight:950; margin:0 0 6px; letter-spacing:.2px; }
-.mapbubble .s{ margin:0; color:var(--mut2); line-height:1.45; }
-.mapbubble .go{
-  margin-top:10px;
-  display:inline-block;
-  padding:10px 14px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 12px 30px rgba(0,0,0,.6);
-  text-decoration:none;
-  color:#fff;
-  font-weight:900;
-  letter-spacing:.2px;
-}
-.mapbubble .go:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
+.h{ margin:0 0 8px; font-weight:950; letter-spacing:.2px; }
+.p{ margin:0 0 10px; color:var(--mut); line-height:1.55; }
+.ul{ margin:0 0 0 18px; padding:0; color:var(--mut2); }
+.ul li{ margin:6px 0; }
 
-/* Small screens */
+.mact{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
+.sbtn{
+  padding:12px 18px;border-radius:14px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  color:#fff;border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.7);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
+}
+.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
+
 @media (max-width:520px){
   :root{ --R: 116px; }
   .stage{ width:min(520px,92vw); height:min(520px,92vw); }
+  .outer{ width:min(520px,92vw); height:min(520px,92vw); }
   .core{ width:58px; height:58px; }
-  .shell{ height:86vh; max-height:86vh; }
+  .shell{ height:90vh; }
 }
 </style>
 </head>
@@ -357,19 +370,30 @@ body{
 <body>
 
 <div class="top-left" id="topLeft">
-  <a class="btn" href="/door/">EXIT</a>
-  <button class="btn" id="mapBtn">MAP</button>
+  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+  <button class="btn" id="btnMap" type="button">MAP</button>
 </div>
 
-<div class="stage" id="centerStage">
-  <div class="diamond" id="north"><div class="inner"><div class="dir" id="nLab">NORTH</div><div class="preview" id="northText"></div></div></div>
-  <div class="diamond" id="east"><div class="inner"><div class="dir" id="eLab">EAST</div><div class="preview" id="eastText"></div></div></div>
-  <div class="diamond" id="south"><div class="inner"><div class="dir" id="sLab">SOUTH</div><div class="preview" id="southText"></div></div></div>
-  <div class="diamond" id="west"><div class="inner"><div class="dir" id="wLab">WEST</div><div class="preview" id="westText"></div></div></div>
+<div class="stage" id="stage" aria-label="Hub diamond">
+  <div class="outer"></div>
+
+  <div class="d d-n" id="north" role="button" tabindex="0" aria-label="North">
+    <div class="inner"><div class="lab" id="nLab">NORTH</div><div class="sub" id="northText"></div></div>
+  </div>
+  <div class="d d-e" id="east" role="button" tabindex="0" aria-label="East">
+    <div class="inner"><div class="lab" id="eLab">EAST</div><div class="sub" id="eastText"></div></div>
+  </div>
+  <div class="d d-s" id="south" role="button" tabindex="0" aria-label="South">
+    <div class="inner"><div class="lab" id="sLab">SOUTH</div><div class="sub" id="southText"></div></div>
+  </div>
+  <div class="d d-w" id="west" role="button" tabindex="0" aria-label="West">
+    <div class="inner"><div class="lab" id="wLab">WEST</div><div class="sub" id="westText"></div></div>
+  </div>
+
   <div class="core">◆</div>
 </div>
 
-<nav class="dock" id="bottomDock">
+<nav class="dock" id="dock">
   <a class="btn" id="goTerminal" href="/index.html">TERMINAL</a>
   <a class="btn" id="goLinks" href="/links/">LINKS</a>
   <a class="btn" id="goProducts" href="/products/">PRODUCTS</a>
@@ -384,31 +408,30 @@ body{
 <div class="modal" id="modal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="mTitle">NORTH</h3>
-      <button class="mclose" id="mClose" aria-label="Close">✕</button>
+      <h3 class="mtitle" id="mTitle">DETAIL</h3>
+      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
     </div>
 
-    <div class="mbody" id="mbody">
-      <!-- Lens controls (only shown for direction content, hidden for MAP) -->
+    <div class="mbody">
+      <!-- Lenses inside bubble only -->
       <div class="lensbar" id="lensbar">
-        <button class="chip" id="styleChip">STYLE: FORMAL</button>
-        <button class="chip" data-time="origin" id="chipOrigin">ORIGIN</button>
-        <button class="chip" data-time="now" id="chipNow">NOW</button>
-        <button class="chip" data-time="post" id="chipPost">POST</button>
+        <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>
+        <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>
+        <button class="chip" data-time="now" id="chipNow" type="button">NOW</button>
+        <button class="chip" data-time="post" id="chipPost" type="button">POST</button>
       </div>
 
-      <!-- Direction content -->
-      <div id="dirContent">
-        <p class="lead" id="lead"></p>
-        <p class="p" id="para"></p>
-        <ul class="ul" id="bullets"></ul>
+      <div class="mgrid">
+        <div class="box"><h4 class="h" id="h1"></h4><p class="p" id="p1"></p><ul class="ul" id="u1"></ul></div>
+        <div class="box"><h4 class="h" id="h2"></h4><p class="p" id="p2"></p><ul class="ul" id="u2"></ul></div>
+        <div class="box"><h4 class="h" id="h3"></h4><p class="p" id="p3"></p><ul class="ul" id="u3"></ul></div>
+        <div class="box"><h4 class="h" id="h4"></h4><p class="p" id="p4"></p><ul class="ul" id="u4"></ul></div>
       </div>
 
-      <!-- Map content -->
-      <div id="mapContent" style="display:none;">
-        <p class="lead" id="mapLead"></p>
-        <p class="p" id="mapPara"></p>
-        <div class="mapgrid" id="mapGrid"></div>
+      <div class="mact">
+        <button class="sbtn" id="mReturn" type="button">RETURN</button>
+        <a class="sbtn" id="mJumpLinks" href="/links/">JUMP LINKS</a>
+        <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
       </div>
     </div>
   </div>
@@ -416,355 +439,353 @@ body{
 
 <script>
 (function(){
-  // Permanent dual lens
-  const qs = new URLSearchParams(location.search);
-  const qLang = qs.get("lang");
-  let lang = (qLang==="zh"||qLang==="en") ? qLang : (localStorage.getItem("gd_lang")==="zh" ? "zh" : "en");
-  try{ localStorage.setItem("gd_lang", lang); }catch(e){}
+  // language + state
+  var qs=new URLSearchParams(location.search);
+  var qLang=qs.get("lang");
+  var lang=(qLang==="zh"||qLang==="en")?qLang:((localStorage.getItem("gd_lang")==="zh")?"zh":"en");
+  try{ localStorage.setItem("gd_lang", lang);}catch(e){}
 
-  // state (persisted, controls inside modal only)
-  let style = localStorage.getItem("gd_style") || "formal";
-  let time  = localStorage.getItem("gd_time")  || "now";
+  var style=localStorage.getItem("gd_style")||"formal";
+  var time=localStorage.getItem("gd_time")||"now";
   if(time==="trajectory") time="post";
-  if(!["origin","now","post"].includes(time)) time="now";
-  if(!["formal","informal"].includes(style)) style="formal";
+  if(["origin","now","post"].indexOf(time)<0) time="now";
+  if(["formal","informal"].indexOf(style)<0) style="formal";
 
-  // UI strings
-  const UI = {
+  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+  function setLinks(){
+    var s=q();
+    document.getElementById("btnExit").href="/door/?"+s;
+    document.getElementById("goTerminal").href="/index.html?"+s;
+    document.getElementById("goLinks").href="/links/?"+s;
+    document.getElementById("goProducts").href="/products/?"+s;
+    document.getElementById("goLaws").href="/laws/?"+s;
+    document.getElementById("goGauges").href="/gauges/?"+s;
+    document.getElementById("mJumpLinks").href="/links/?"+s;
+    document.getElementById("mJumpProducts").href="/products/?"+s;
+  }
+
+  // UI text
+  var UI={
     en:{
       stamp:"TRAVERSAL ARCHITECTURE",
-      dirs:{north:"NORTH",east:"EAST",south:"SOUTH",west:"WEST"},
-      s:{formal:"FORMAL",informal:"INFORMAL"},
-      t:{origin:"ORIGIN",now:"NOW",post:"POST"},
-      mapTitle:"HUB MAP",
-      mapLead:"Jump anywhere from the hub.",
-      mapPara:"Every link carries your current language and lens state forward so the site stays coherent.",
-      mapItems:[
-        {t:"Terminal", s:"Terminal explains how the system works and what is safe to explore right now.", href:"/index.html"},
-        {t:"Links", s:"Links collect identity anchors, references, and external entry points.", href:"/links/"},
-        {t:"Products", s:"Products show execution surfaces and applied systems built from the architecture.", href:"/products/"},
-        {t:"Laws", s:"Laws publish standards, rules, and governance constraints in a readable form.", href:"/laws/"},
-        {t:"Gauges", s:"Gauges provide dashboards and metrics for operational monitoring.", href:"/gauges/"}
-      ]
+      dir:{n:"NORTH",e:"EAST",s:"SOUTH",w:"WEST"},
+      sub:{
+        n:"Invariant structure · definition.",
+        e:"Execution pathways · action.",
+        s:"Convergence pressure · change.",
+        w:"Containment · integrity."
+      },
+      lens:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",now:"NOW",post:"POST"},
+      map:{
+        title:"HUB MAP",
+        b1:{h:"Terminal",p:"Structural preface and navigation guide for the entire site.",u:["Explains lenses.","Explains traversal.","States safety rules.","Routes into hub."]},
+        b2:{h:"Links",p:"Identity anchors and external references, kept clean and stable.",u:["ORCID/OSF/GitHub.","Contact anchor.","Registry entry points.","Return to hub."]},
+        b3:{h:"Products",p:"Execution surfaces: software, commercial, energy, education.",u:["Domain sub-hubs.","Gem-uniform pages.","Modal bulletins.","State propagation."]},
+        b4:{h:"Laws & Gauges",p:"Standards/rules and dashboards/metrics respectively.",u:["Publish rules.","Publish metrics.","Keep auditability.","Keep neutrality."]}
+      }
     },
     zh:{
       stamp:"遍历架构",
-      dirs:{north:"北",east:"东",south:"南",west:"西"},
-      s:{formal:"正式",informal:"非正式"},
-      t:{origin:"起源",now:"当前",post:"未来"},
-      mapTitle:"枢纽地图",
-      mapLead:"从枢纽跳转到任意页面。",
-      mapPara:"所有链接都会携带当前语言与透镜状态，从而保持结构一致与含义稳定。",
-      mapItems:[
-        {t:"终端", s:"终端说明系统如何运作，以及当前可安全浏览的范围。", href:"/index.html"},
-        {t:"链接", s:"链接汇集身份锚点、参考资料与外部入口。", href:"/links/"},
-        {t:"产品", s:"产品展示由架构衍生的执行界面与应用系统。", href:"/products/"},
-        {t:"法则", s:"法则以可读形式发布标准、规则与治理约束。", href:"/laws/"},
-        {t:"量规", s:"量规提供仪表盘与指标用于运行监控。", href:"/gauges/"}
-      ]
-    }
-  };
-  const T = UI[lang] || UI.en;
-
-  // Content (lead + paragraph + 4 bullets) — direction modal
-  const C = {
-    north:{
-      en:{
-        formal:{
-          origin:{lead:"North establishes invariant structure.",para:"North is the reference frame. It keeps meaning stable under constraint.",bul:["Defines the baseline.","Prevents drift.","Locks structure.","Anchors truth."]},
-          now:{lead:"North stabilizes position.",para:"North maintains alignment in the present window.",bul:["Detects deviation.","Re-centers choices.","Keeps coherence.","Reduces noise."]},
-          post:{lead:"North preserves long-term coherence.",para:"North protects integrity across cycles and time pressure.",bul:["Stops slow corruption.","Keeps direction.","Sustains truth.","Holds the future constant."]}
-        },
-        informal:{
-          origin:{lead:"North is your anchor.",para:"North keeps you grounded so you don’t drift.",bul:["Keeps you honest.","Keeps you steady.","Gives a baseline.","Stops drift early."]},
-          now:{lead:"North keeps you steady.",para:"North clears the fog and holds you in alignment.",bul:["Less confusion.","More consistency.","Cleaner choices.","Better direction."]},
-          post:{lead:"North preserves long-term coherence.",para:"Post is formal-only; switching you to formal to keep it rigorous.",bul:["Formal lens applied.","Future stability.","Integrity preserved.","Coherence maintained."]}
-        }
+      dir:{n:"北",e:"东",s:"南",w:"西"},
+      sub:{
+        n:"不变结构 · 定义。",
+        e:"执行路径 · 行动。",
+        s:"收敛压力 · 变化。",
+        w:"约束防护 · 完整性。"
       },
-      zh:{
-        formal:{
-          origin:{lead:"北：建立不变结构。",para:"北是参考系，确保含义在约束下保持稳定。",bul:["定义基线。","防止漂移。","锁定结构。","锚定真理。"]},
-          now:{lead:"北：稳定当前位置。",para:"北在当前窗口保持对齐与清晰。",bul:["发现偏差。","重置选择。","保持一致。","降低噪声。"]},
-          post:{lead:"北：保持长期一致性。",para:"北在时间压力下保护长期完整性。",bul:["阻止慢性腐蚀。","保持方向。","维持真理。","锚定未来。"]}
-        },
-        informal:{
-          origin:{lead:"北：你的锚点。",para:"北让你不漂移，保持脚下稳定。",bul:["保持诚实。","保持稳定。","提供基线。","提前止漂。"]},
-          now:{lead:"北：让你稳住。",para:"北清除迷雾，让你保持对齐。",bul:["更少混乱。","更一致。","更清晰选择。","更好方向。"]},
-          post:{lead:"北：保持长期一致性。",para:"未来透镜为正式优先；已切换到正式以保持严谨。",bul:["已启用正式。","未来稳定。","完整性保护。","一致性维持。"]}
-        }
-      }
-    },
-    east:{
-      en:{
-        formal:{
-          origin:{lead:"East maps execution pathways.",para:"East turns structure into motion by defining how execution flows.",bul:["Defines routes.","Enables action.","Starts motion.","Creates throughput."]},
-          now:{lead:"East expresses flow.",para:"East is execution in the present window—movement, output, throughput.",bul:["Runs operations.","Ships output.","Moves forward.","Maintains velocity."]},
-          post:{lead:"East scales forward.",para:"East projects capability forward without collapsing structure.",bul:["Expands reach.","Scales safely.","Sustains growth.","Protects throughput."]}
-        },
-        informal:{
-          origin:{lead:"East starts motion.",para:"East gets things moving.",bul:["Turn it on.","Start the process.","Build momentum.","Move."]},
-          now:{lead:"East is doing.",para:"East is the doing part.",bul:["Execute.","Move it.","Ship it.","Keep going."]},
-          post:{lead:"East scales forward.",para:"Post is formal-only; switching you to formal to keep it rigorous.",bul:["Formal lens applied.","Scale safely.","Protect structure.","Project forward."]}
-        }
-      },
-      zh:{
-        formal:{
-          origin:{lead:"东：映射执行路径。",para:"东把结构转成运动，定义执行如何流动。",bul:["定义路径。","开启行动。","启动运动。","形成吞吐。"]},
-          now:{lead:"东：表达流程。",para:"东是当前窗口的执行：运动、产出、吞吐。",bul:["运行运作。","交付产出。","推进前行。","维持速度。"]},
-          post:{lead:"东：向前扩展。",para:"东将能力投射到未来，同时不让结构崩塌。",bul:["扩大范围。","安全扩展。","持续增长。","保护吞吐。"]}
-        },
-        informal:{
-          origin:{lead:"东：启动运动。",para:"东让事情动起来。",bul:["点火。","开始流程。","积累动量。","前进。"]},
-          now:{lead:"东：正在做。",para:"东就是“做”。",bul:["执行。","推进。","交付。","持续。"]},
-          post:{lead:"东：向前扩展。",para:"未来透镜为正式优先；已切换到正式以保持严谨。",bul:["已启用正式。","安全扩展。","保护结构。","向前投射。"]}
-        }
-      }
-    },
-    south:{
-      en:{
-        formal:{
-          origin:{lead:"South defines convergence pressure.",para:"South compacts ambiguity and forces commitment.",bul:["Creates focus.","Forces decisions.","Compacts uncertainty.","Raises stakes."]},
-          now:{lead:"South applies constraint.",para:"South adds pressure that turns intent into proof.",bul:["Adds accountability.","Creates traction.","Turns talk to proof.","Amplifies force."]},
-          post:{lead:"South compounds momentum.",para:"South ensures pressure compounds rather than dissipates.",bul:["Builds compounding returns.","Accelerates outcomes.","Sustains force.","Creates convergence."]}
-        },
-        informal:{
-          origin:{lead:"South is where force happens.",para:"South is pressure time.",bul:["Get real.","Stop excuses.","Add pressure.","Move."]},
-          now:{lead:"South pushes.",para:"South pushes you forward.",bul:["Drive action.","Create urgency.","Force clarity.","Break stagnation."]},
-          post:{lead:"South compounds momentum.",para:"Post is formal-only; switching you to formal to keep it rigorous.",bul:["Formal lens applied.","Compound returns.","Sustain force.","Converge."]}
-        }
-      },
-      zh:{
-        formal:{
-          origin:{lead:"南：定义汇聚压力。",para:"南压缩模糊，迫使承诺。",bul:["形成焦点。","迫使决策。","压缩不确定。","提升压力。"]},
-          now:{lead:"南：施加约束。",para:"南把意图变成证据。",bul:["增加问责。","形成牵引。","把话变证据。","放大力量。"]},
-          post:{lead:"南：增强动量。",para:"南确保压力复利，而非消散。",bul:["复利增长。","加速结果。","持续施力。","产生汇聚。"]}
-        },
-        informal:{
-          origin:{lead:"南：力量发生处。",para:"南就是压力时间。",bul:["直面现实。","停止借口。","加压。","前进。"]},
-          now:{lead:"南：推动。",para:"南把你推向前。",bul:["驱动行动。","制造紧迫。","迫使清晰。","打破停滞。"]},
-          post:{lead:"南：增强动量。",para:"未来透镜为正式优先；已切换到正式以保持严谨。",bul:["已启用正式。","复利增长。","持续施力。","汇聚。"]}
-        }
-      }
-    },
-    west:{
-      en:{
-        formal:{
-          origin:{lead:"West defines containment.",para:"West sets boundary conditions so the system stays safe.",bul:["Sets limits.","Defines edges.","Prevents leakage.","Keeps scope tight."]},
-          now:{lead:"West enforces the edge.",para:"West protects the perimeter in the present window.",bul:["Stops spillover.","Guards boundary.","Maintains control.","Contains risk."]},
-          post:{lead:"West protects integrity.",para:"West prevents slow decay and governance capture over time.",bul:["Prevents drift.","Stops exploit paths.","Secures governance.","Preserves stability."]}
-        },
-        informal:{
-          origin:{lead:"West keeps things tight.",para:"West keeps it contained.",bul:["Keep it safe.","Keep it clean.","Keep it simple.","Keep it bounded."]},
-          now:{lead:"West guards the edge.",para:"West holds the line.",bul:["Stop overflow.","Protect boundary.","Maintain control.","Prevent chaos."]},
-          post:{lead:"West protects integrity.",para:"Post is formal-only; switching you to formal to keep it rigorous.",bul:["Formal lens applied.","Prevent decay.","Secure governance.","Preserve stability."]}
-        }
-      },
-      zh:{
-        formal:{
-          origin:{lead:"西：管理边界。",para:"西设置边界条件，确保系统安全。",bul:["设定限制。","定义边缘。","防止泄漏。","保持范围紧凑。"]},
-          now:{lead:"西：强化边缘。",para:"西在当前窗口守住边界。",bul:["阻止外溢。","守护边界。","保持控制。","约束风险。"]},
-          post:{lead:"西：保护完整性。",para:"西防止长期衰减与治理被俘获。",bul:["防止漂移。","阻断利用路径。","巩固治理。","保持稳定。"]}
-        },
-        informal:{
-          origin:{lead:"西：让一切紧凑。",para:"西让它被控制住。",bul:["保持安全。","保持干净。","保持简单。","保持有界。"]},
-          now:{lead:"西：守住边界。",para:"西守住底线。",bul:["阻止外溢。","保护边界。","保持控制。","防止混乱。"]},
-          post:{lead:"西：保护完整性。",para:"未来透镜为正式优先；已切换到正式以保持严谨。",bul:["已启用正式。","防止衰减。","巩固治理。","保持稳定。"]}
-        }
+      lens:{formal:"正式",informal:"非正式",concept:"概念",now:"当前",post:"后续"},
+      map:{
+        title:"枢纽地图",
+        b1:{h:"终端",p:"全站结构前言与导航说明。",u:["解释透镜。","解释遍历。","说明安全规则。","进入枢纽。"]},
+        b2:{h:"链接",p:"身份锚点与外部参考（保持稳定）。",u:["ORCID/OSF/GitHub。","联系方式。","登记入口。","返回枢纽。"]},
+        b3:{h:"产品",p:"执行面：软件/商业/能源/教育。",u:["领域子枢纽。","宝石统一页面。","模态要点。","状态传播。"]},
+        b4:{h:"法则与量规",p:"法则=标准规则；量规=仪表盘指标。",u:["发布规则。","发布指标。","保持可审计。","保持中立。"]}
       }
     }
   };
 
-  // Apply labels and stamp
-  document.getElementById("nLab").textContent = T.dirs.north;
-  document.getElementById("eLab").textContent = T.dirs.east;
-  document.getElementById("sLab").textContent = T.dirs.south;
-  document.getElementById("wLab").textContent = T.dirs.west;
-  document.getElementById("stamp").textContent = T.stamp;
+  var pack = (lang==="zh") ? UI.zh : UI.en;
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+  document.getElementById("stamp").textContent = pack.stamp;
 
-  // Links propagate lang/style/time
-  function rewriteLinks(){
-    const q = "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
-    document.getElementById("goTerminal").setAttribute("href","/index.html?"+q);
-    document.getElementById("goLinks").setAttribute("href","/links/?"+q);
-    document.getElementById("goProducts").setAttribute("href","/products/?"+q);
-    document.getElementById("goLaws").setAttribute("href","/laws/?"+q);
-    document.getElementById("goGauges").setAttribute("href","/gauges/?"+q);
+  document.getElementById("nLab").textContent = pack.dir.n;
+  document.getElementById("eLab").textContent = pack.dir.e;
+  document.getElementById("sLab").textContent = pack.dir.s;
+  document.getElementById("wLab").textContent = pack.dir.w;
+
+  document.getElementById("northText").textContent = pack.sub.n;
+  document.getElementById("eastText").textContent = pack.sub.e;
+  document.getElementById("southText").textContent = pack.sub.s;
+  document.getElementById("westText").textContent = pack.sub.w;
+
+  // modal refs
+  var bd=document.getElementById("bd");
+  var modal=document.getElementById("modal");
+  var mClose=document.getElementById("mClose");
+  var mTitle=document.getElementById("mTitle");
+
+  var styleChip=document.getElementById("styleChip");
+  var chipConcept=document.getElementById("chipConcept");
+  var chipNow=document.getElementById("chipNow");
+  var chipPost=document.getElementById("chipPost");
+
+  var h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1");
+  var h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2");
+  var h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3");
+  var h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4");
+
+  function fill(hEl,pEl,uEl,b){
+    hEl.textContent=b.h; pEl.textContent=b.p; uEl.innerHTML="";
+    b.u.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; uEl.appendChild(li); });
   }
 
   function persist(){
-    try{
-      localStorage.setItem("gd_style", style);
-      localStorage.setItem("gd_time", time);
-    }catch(e){}
+    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time);}catch(e){}
   }
-
-  function renderPreviews(){
-    document.getElementById("northText").textContent = C.north[lang][style][time].lead;
-    document.getElementById("eastText").textContent  = C.east[lang][style][time].lead;
-    document.getElementById("southText").textContent = C.south[lang][style][time].lead;
-    document.getElementById("westText").textContent  = C.west[lang][style][time].lead;
-  }
-
-  // Modal wiring
-  const bd = document.getElementById("bd");
-  const modal = document.getElementById("modal");
-  const mClose = document.getElementById("mClose");
-  const mbody = document.getElementById("mbody");
-
-  const mTitle = document.getElementById("mTitle");
-  const lead = document.getElementById("lead");
-  const para = document.getElementById("para");
-  const bullets = document.getElementById("bullets");
-
-  const styleChip = document.getElementById("styleChip");
-  const chipOrigin = document.getElementById("chipOrigin");
-  const chipNow = document.getElementById("chipNow");
-  const chipPost = document.getElementById("chipPost");
-
-  const lensbar = document.getElementById("lensbar");
-  const dirContent = document.getElementById("dirContent");
-  const mapContent = document.getElementById("mapContent");
-  const mapLead = document.getElementById("mapLead");
-  const mapPara = document.getElementById("mapPara");
-  const mapGrid = document.getElementById("mapGrid");
-
-  let activeDir = null;
-  let mode = "dir"; // dir | map
 
   function setLensLabels(){
-    styleChip.textContent = "STYLE: " + (style==="formal" ? T.s.formal : T.s.informal);
-    chipOrigin.textContent = T.t.origin;
-    chipNow.textContent = T.t.now;
-    chipPost.textContent = T.t.post;
+    styleChip.textContent = "STYLE: " + (style==="formal" ? pack.lens.formal : pack.lens.informal);
+    chipConcept.textContent = pack.lens.concept;
+    chipNow.textContent = pack.lens.now;
+    chipPost.textContent = pack.lens.post;
 
-    chipOrigin.classList.toggle("active", time==="origin");
+    chipConcept.classList.toggle("active", time==="origin");
     chipNow.classList.toggle("active", time==="now");
     chipPost.classList.toggle("active", time==="post");
   }
 
-  function showDirMode(){
-    mode = "dir";
-    lensbar.style.display = "flex";
-    dirContent.style.display = "block";
-    mapContent.style.display = "none";
+  // content (hub explanations vary by style/time)
+  var CONTENT={
+    north:{
+      origin:{
+        formal:{title:"NORTH", b1:{h:"Definition",p:"North defines invariant structure: what must remain true.",u:["Names are stable.","Routes are stable.","Keys are canonical.","Meaning anchors here."]},
+                                b2:{h:"How to use",p:"Use North when you need definitions and constraints.",u:["What is allowed.","What is forbidden.","What cannot drift.","What stays constant."]},
+                                b3:{h:"What to expect",p:"Content is precise and contract-driven.",u:["Clear terms.","Clear bounds.","Clear mapping.","Clear return paths."]},
+                                b4:{h:"Implication",p:"North prevents confusion by stabilizing the map.",u:["Less drift.","Less ambiguity.","More trust.","More speed."]}},
+        informal:{title:"NORTH", b1:{h:"Meaning",p:"North is your anchor.",u:["Keeps you oriented.","Keeps labels stable.","Keeps rules clear.","Keeps drift out."]},
+                                b2:{h:"Use it for",p:"Definitions and the ‘what’ layer.",u:["What it is.","What it isn’t.","What’s allowed.","What’s stable."]},
+                                b3:{h:"Expect",p:"Short, direct explanations.",u:["No fluff.","Just clarity.","Just bounds.","Just return."]},
+                                b4:{h:"Result",p:"You stop getting lost.",u:["Faster navigation.","Cleaner decisions.","Stable context.","Calmer mind."]}}
+      },
+      now:{
+        formal:{title:"NORTH", b1:{h:"Now",p:"North stabilizes current position: it keeps the live system coherent.",u:["Live pages uniform.","Modal contract holds.","State propagates.","No collisions."]},
+                              b2:{h:"Checks",p:"Verify consistency whenever you add a page.",u:["Same gem style.","Same modal lensing.","Same dock.","Same keys."]},
+                              b3:{h:"Operator rule",p:"If something breaks, diagnose deterministically.",u:["Check routes.","Check CSS order.","Check gd_* keys.","Check view-source."]},
+                              b4:{h:"Implication",p:"North is operational: it governs system integrity.",u:["No broken flows.","No drift.","No ambiguity.","No silent changes."]}},
+        informal:{title:"NORTH", b1:{h:"Now",p:"North keeps things stable right now.",u:["Same look.","Same feel.","Same rules.","Same returns."]},
+                              b2:{h:"Do",p:"Clone what works.",u:["Copy gem pages.","Keep keys.","Keep dock.","Keep modal."]},
+                              b3:{h:"Don’t",p:"Don’t redesign mid-build.",u:["No new paradigms.","No random CSS.","No mixed keys.","No drift."]},
+                              b4:{h:"Result",p:"Everything stays coherent.",u:["Faster build.","Less stress.","More progress.","More confidence."]}}
+      },
+      post:{
+        formal:{title:"NORTH", b1:{h:"Post",p:"North becomes the reference library for the whole site.",u:["Glossaries.","Registries.","Standards.","Canonical definitions."]},
+                               b2:{h:"Scaling",p:"Uniformity is what makes growth safe.",u:["Clone pages.","Add depth.","Never break contract.","Never drift keys."]},
+                               b3:{h:"Audit",p:"North enables proof-grade structure.",u:["Deterministic logs.","Stable routing.","Evidence anchors.","Time-stamped changes."]},
+                               b4:{h:"Outcome",p:"Public-safe navigation emerges from invariant structure.",u:["Predictable UI.","Clear meaning.","Safe exploration.","Enterprise-ready."]}},
+        informal:{title:"NORTH", b1:{h:"Post",p:"North becomes the reference section.",u:["Definitions.","Rules.","Glossary.","Anchors."]},
+                               b2:{h:"Scale",p:"Grow by cloning.",u:["Same pages.","More depth.","Same contract.","No drift."]},
+                               b3:{h:"Proof",p:"Make it verifiable.",u:["Logs.","Anchors.","History.","Checks."]},
+                               b4:{h:"Result",p:"Safe for the public.",u:["Predictable.","Clear.","Stable.","Trustable."]}}
+      }
+    },
+    east:{
+      origin:{
+        formal:{title:"EAST", b1:{h:"Definition",p:"East maps execution pathways: how things move through the system.",u:["Workflows.","Routes.","Surfaces.","Applied examples."]},
+                                b2:{h:"How to use",p:"Use East to find ‘how it works’ in practice.",u:["Step sequences.","Operational interfaces.","Implementation patterns.","Repeatable flows."]},
+                                b3:{h:"What to expect",p:"Concrete examples and system surfaces.",u:["Products pages.","Demos.","Workflows.","Integrations."]},
+                                b4:{h:"Implication",p:"East turns structure into action.",u:["Faster execution.","Less friction.","Clear next steps.","Measurable outputs."]}},
+        informal:{title:"EAST", b1:{h:"Meaning",p:"East is how you move.",u:["Execution.","Doing.","Workflow.","Momentum."]},
+                                b2:{h:"Use it for",p:"Practical steps and tools.",u:["Products.","Demos.","How-to flows.","Real examples."]},
+                                b3:{h:"Expect",p:"Less theory, more action.",u:["Short steps.","Clear clicks.","Clear routes.","Clear outputs."]},
+                                b4:{h:"Result",p:"You go from idea to execution.",u:["Faster progress.","Less confusion.","More momentum.","More wins."]}}
+      },
+      now:{
+        formal:{title:"EAST", b1:{h:"Now",p:"East is live as product sub-hubs with uniform gem behavior.",u:["Diamond-of-diamonds.","Centered modal.","Lens chips inside.","Dense bulletins."]},
+                              b2:{h:"Routing",p:"All routes propagate gd_lang/gd_style/gd_time.",u:["Query propagation.","LocalStorage persistence.","No silent overrides.","Fallback rules."]},
+                              b3:{h:"Operator rule",p:"Every new execution surface copies the same contract.",u:["Same layout.","Same modal grid.","Same lensing.","Same dock."]},
+                              b4:{h:"Implication",p:"East becomes a scalable execution catalog.",u:["Fast browsing.","Deep dives.","Stable returns.","Public safe."]}},
+        informal:{title:"EAST", b1:{h:"Now",p:"East is working as product pages.",u:["Same gems.","Same modals.","Same lenses.","Same dock."]},
+                              b2:{h:"Rule",p:"Carry state everywhere.",u:["Language sticks.","Style sticks.","Time sticks.","No drift."]},
+                              b3:{h:"Build",p:"Clone the pattern.",u:["Copy file.","Swap content.","Keep contract.","Ship."]},
+                              b4:{h:"Result",p:"Execution stays clean.",u:["Faster build.","Less bugs.","More pages.","More value."]}}
+      },
+      post:{
+        formal:{title:"EAST", b1:{h:"Post",p:"East expands into demos and live simulations tied to standards.",u:["HIP demos.","Registry lookup.","Score dashboards.","Staged rollout sims."]},
+                               b2:{h:"Depth",p:"Execution surfaces gain deeper leaf nodes and exports.",u:["Fruits.","Resolutions.","Exports.","Evidence bundles."]},
+                               b3:{h:"Enterprise",p:"East becomes the interface for institutional adoption.",u:["Governance.","Underwriting.","Compliance.","Operations."]},
+                               b4:{h:"Outcome",p:"Traversal becomes the operating system for learning and doing.",u:["Faster onboarding.","Less drift.","More coherence.","Higher trust."]}},
+        informal:{title:"EAST", b1:{h:"Post",p:"More demos, more tools.",u:["Sims.","Dashboards.","Lookups.","Exports."]},
+                               b2:{h:"Depth",p:"More leaf nodes.",u:["Fruits.","Resolutions.","Bundles.","Proof."]},
+                               b3:{h:"Enterprise",p:"Real adoption surfaces.",u:["Governance.","Compliance.","Ops.","Capital."]},
+                               b4:{h:"Result",p:"People learn by doing.",u:["Faster.","Clearer.","Stable.","Trustable."]}}
+      }
+    },
+    south:{
+      origin:{
+        formal:{title:"SOUTH", b1:{h:"Definition",p:"South is convergence pressure: constraints that force alignment.",u:["Gates.","Thresholds.","Discipline.","No-drift rules."]},
+                                b2:{h:"How to use",p:"Use South to understand why some actions are disallowed.",u:["Guardrails.","Deterministic resolution.","Rollback discipline.","Audit latency discipline."]},
+                                b3:{h:"What to expect",p:"Rules, standards, and enforcement language.",u:["Laws pages.","Certification charter.","Gate vectors.","Reason codes."]},
+                                b4:{h:"Implication",p:"South prevents collapse by enforcing constraint.",u:["Lower blast radius.","Less common-mode risk.","Safer changes.","More resilience."]}},
+        informal:{title:"SOUTH", b1:{h:"Meaning",p:"South pushes.",u:["Pressure.","Constraint.","Discipline.","Force."]},
+                                b2:{h:"Use it for",p:"Rules and guardrails.",u:["What’s allowed.","What’s blocked.","Why it matters.","What to fix."]},
+                                b3:{h:"Expect",p:"Firm boundaries.",u:["Clear guardrails.","No drift.","Deterministic behavior.","Stable outcomes."]},
+                                b4:{h:"Result",p:"You don’t break the system.",u:["Safer changes.","Fewer mistakes.","Less chaos.","More confidence."]}}
+      },
+      now:{
+        formal:{title:"SOUTH", b1:{h:"Now",p:"South is enforced by the site contract and by standards content.",u:["Modal contract.","Key contract.","CSS ownership.","No drift rules."]},
+                              b2:{h:"Site safety",p:"This prevents deployment-layer chaos from UI drift.",u:["Same assets.","Same geometry owner.","Same backgrounds.","No page overrides."]},
+                              b3:{h:"Content safety",p:"This prevents ‘pretty but empty’ pages.",u:["Dense bulletins.","Lens-aware changes.","Dual language.","No empties."]},
+                              b4:{h:"Implication",p:"South is the reason you can scale safely.",u:["Faster building.","Fewer regressions.","More uniformity.","More trust."]}},
+        informal:{title:"SOUTH", b1:{h:"Now",p:"South keeps the build safe.",u:["Rules.","Contracts.","No drift.","No chaos."]},
+                              b2:{h:"Prevents",p:"UI drift and broken pages.",u:["Same assets.","Same geometry.","Same keys.","Same behavior."]},
+                              b3:{h:"Content",p:"No empty bubbles.",u:["Dense bullets.","Real meaning.","Lens-aware.","Dual language."]},
+                              b4:{h:"Result",p:"You can scale fast.",u:["Clone.","Ship.","Repeat.","Stay stable."]}}
+      },
+      post:{
+        formal:{title:"SOUTH", b1:{h:"Post",p:"South becomes the standards enforcement layer (CARES/HIP/UCI).",u:["Certification tiers.","Revocation rules.","Audit discipline.","Red-team harnesses."]},
+                               b2:{h:"Integration",p:"Constraints map into products and dashboards.",u:["Gate checks.","Score output.","Registry lookups.","Alerts."]},
+                               b3:{h:"Governance",p:"Separation of powers prevents capture.",u:["Engineering vs issuance.","Commercial vs thresholds.","Audit vs tuning.","Public logging."]},
+                               b4:{h:"Outcome",p:"Constraint makes the system durable under stress.",u:["Stable growth.","Lower correlation.","Higher safety.","Enterprise readiness."]}},
+        informal:{title:"SOUTH", b1:{h:"Post",p:"South is the standards layer.",u:["Rules.","Tiers.","Audits.","Red-team."]},
+                               b2:{h:"Connects",p:"It ties into products and gauges.",u:["Checks.","Scores.","Lookups.","Alerts."]},
+                               b3:{h:"Governance",p:"No capture.",u:["Separation.","Logs.","Locks.","Audits."]},
+                               b4:{h:"Result",p:"Durable under stress.",u:["Stable.","Safe.","Trustable.","Ready."]}}
+      }
+    },
+    west:{
+      origin:{
+        formal:{title:"WEST", b1:{h:"Definition",p:"West is containment: boundaries that prevent spread.",u:["Segmentation.","Rollback.","Zone independence.","Blast-radius limits."]},
+                                b2:{h:"How to use",p:"Use West to understand the protection logic.",u:["What is isolated.","What can fail safely.","What gets rolled back.","What gets audited."]},
+                                b3:{h:"What to expect",p:"Integrity, safety, and anti-gaming rules.",u:["EffectiveSegZones.","Wave caps.","Unknown quotas.","Anti-splitting."]},
+                                b4:{h:"Implication",p:"West protects system integrity.",u:["Lower correlated risk.","Less damage.","Faster recovery.","Higher resilience."]}},
+        informal:{title:"WEST", b1:{h:"Meaning",p:"West keeps things tight.",u:["Containment.","Boundaries.","Safety.","Control."]},
+                                b2:{h:"Use it for",p:"Protection logic.",u:["Segmentation.","Rollback.","Limits.","Audits."]},
+                                b3:{h:"Expect",p:"Clear containment rules.",u:["What’s isolated.","What’s capped.","What’s reversible.","What’s logged."]},
+                                b4:{h:"Result",p:"Failures don’t spread.",u:["Less damage.","Faster recovery.","More stability.","More trust."]}}
+      },
+      now:{
+        formal:{title:"WEST", b1:{h:"Now",p:"West is present as UI containment and state containment.",u:["Centered modals.","Backdrop blocks drift.","No scroll jump.","Return deterministic."]},
+                              b2:{h:"Routing containment",p:"State propagates without multiplying forks.",u:["One language fork.","One key namespace.","No duplicates.","No collisions."]},
+                              b3:{h:"Content containment",p:"Dense bulletins prevent ambiguous interpretations.",u:["More explicit info.","Less guessing.","Better decisions.","Less drift."]},
+                              b4:{h:"Implication",p:"West keeps the build defensible as it scales.",u:["Lower regressions.","Higher uniformity.","Cleaner updates.","More stability."]}},
+        informal:{title:"WEST", b1:{h:"Now",p:"West keeps the UI contained.",u:["Centered modal.","Backdrop.","No jump.","Return works."]},
+                              b2:{h:"State",p:"No fork explosions.",u:["One language fork.","One key set.","No duplicates.","No collisions."]},
+                              b3:{h:"Content",p:"No ambiguity.",u:["Dense bullets.","Clear meaning.","Less guessing.","Less drift."]},
+                              b4:{h:"Result",p:"Stable scaling.",u:["Less bugs.","More uniformity.","Faster building.","Calmer."]}}
+      },
+      post:{
+        formal:{title:"WEST", b1:{h:"Post",p:"West becomes formal containment logic across products.",u:["Seg zone calculators.","Rollback enforcement.","Audit latency checks.","Risk suppression."]},
+                               b2:{h:"Dashboards",p:"Containment becomes visible and measurable.",u:["Blast radius sims.","Gate dashboards.","Trend views.","Alerts."]},
+                               b3:{h:"Certification",p:"Containment compliance becomes certifiable.",u:["Tiering.","Revocation.","Evidence bundles.","Registry lookups."]},
+                               b4:{h:"Outcome",p:"West is the reason scaling doesn’t collapse into chaos.",u:["Stable growth.","Lower correlation.","Higher resilience.","Public safety."]}},
+        informal:{title:"WEST", b1:{h:"Post",p:"West becomes real containment logic.",u:["Seg zones.","Rollback.","Audit checks.","Suppression."]},
+                               b2:{h:"Visibility",p:"You can see containment.",u:["Sims.","Dashboards.","Trends.","Alerts."]},
+                               b3:{h:"Proof",p:"You can certify it.",u:["Tiers.","Registry.","Evidence.","Status."]},
+                               b4:{h:"Result",p:"Scale without chaos.",u:["Stable.","Safe.","Resilient.","Ready."]}}
+      }
+    }
+  };
+
+  // MAP content (lens-agnostic)
+  function mapView(){
+    var m = pack.map;
+    return {
+      title:m.title,
+      b1:m.b1, b2:m.b2, b3:m.b3, b4:m.b4
+    };
   }
 
-  function showMapMode(){
-    mode = "map";
-    lensbar.style.display = "none";
-    dirContent.style.display = "none";
-    mapContent.style.display = "block";
+  function persist(){
+    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time);}catch(e){}
+  }
+  function setLensLabels(){
+    styleChip.textContent = "STYLE: " + (style==="formal" ? pack.lens.formal : pack.lens.informal);
+    chipConcept.textContent = pack.lens.concept;
+    chipNow.textContent = pack.lens.now;
+    chipPost.textContent = pack.lens.post;
+    chipConcept.classList.toggle("active", time==="origin");
+    chipNow.classList.toggle("active", time==="now");
+    chipPost.classList.toggle("active", time==="post");
   }
 
-  function renderModal(){
-    if(mode !== "dir" || !activeDir) return;
-    if(time==="post" && style==="informal") style="formal";
+  var active=null; // 'north'|'east'|'south'|'west'|'map'
 
-    const pack = C[activeDir][lang][style][time];
+  function fill(hEl,pEl,uEl,b){
+    hEl.textContent=b.h; pEl.textContent=b.p; uEl.innerHTML="";
+    b.u.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; uEl.appendChild(li); });
+  }
 
-    mTitle.textContent = (activeDir==="north"?T.dirs.north:activeDir==="east"?T.dirs.east:activeDir==="south"?T.dirs.south:T.dirs.west);
-    lead.textContent = pack.lead;
-    para.textContent = pack.para;
-
-    bullets.innerHTML = "";
-    pack.bul.forEach(x=>{
-      const li = document.createElement("li");
-      li.textContent = x;
-      bullets.appendChild(li);
-    });
-
+  function render(){
+    setLinks();
     setLensLabels();
     persist();
-    renderPreviews();
-    rewriteLinks();
-    mbody.scrollTop = 0;
+
+    var view;
+    if(active==="map"){
+      view = mapView();
+      mTitle.textContent = view.title;
+      fill(h1,p1,u1,view.b1);
+      fill(h2,p2,u2,view.b2);
+      fill(h3,p3,u3,view.b3);
+      fill(h4,p4,u4,view.b4);
+      return;
+    }
+
+    var v = CONTENT[active][time][style];
+    mTitle.textContent = v.title;
+    fill(h1,p1,u1,v.b1);
+    fill(h2,p2,u2,v.b2);
+    fill(h3,p3,u3,v.b3);
+    fill(h4,p4,u4,v.b4);
   }
 
-  function openDir(dir){
-    activeDir = dir;
-    ["north","east","south","west"].forEach(x=>document.getElementById(x).classList.toggle("active", x===dir));
-    bd.classList.add("show");
-    modal.classList.add("show");
-    showDirMode();
-    renderModal();
-  }
-
-  function openMap(){
-    activeDir = null;
-    ["north","east","south","west"].forEach(x=>document.getElementById(x).classList.remove("active"));
-    bd.classList.add("show");
-    modal.classList.add("show");
-    showMapMode();
-
-    mTitle.textContent = T.mapTitle;
-    mapLead.textContent = T.mapLead;
-    mapPara.textContent = T.mapPara;
-
-    mapGrid.innerHTML = "";
-    const q = "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
-
-    (T.mapItems || []).forEach(it=>{
-      const box = document.createElement("div");
-      box.className = "mapbubble";
-      box.innerHTML =
-        `<div class="t">${it.t}</div>
-         <p class="s">${it.s}</p>
-         <a class="go" href="${it.href}?${q}">OPEN →</a>`;
-      mapGrid.appendChild(box);
+  function setActiveDiamond(id){
+    ["north","east","south","west"].forEach(function(x){
+      document.getElementById(x).classList.toggle("active", x===id);
     });
-
-    rewriteLinks();
-    mbody.scrollTop = 0;
   }
 
-  function closeModal(){
+  function open(which){
+    active=which;
+    if(which==="map"){ setActiveDiamond("__none__"); }
+    else setActiveDiamond(which);
+    render();
+    bd.classList.add("show");
+    modal.classList.add("show");
+  }
+
+  function close(){
     bd.classList.remove("show");
     modal.classList.remove("show");
-    ["north","east","south","west"].forEach(x=>document.getElementById(x).classList.remove("active"));
-    activeDir = null;
+    setActiveDiamond("__none__");
+    active=null;
   }
 
-  bd.addEventListener("click", closeModal);
-  mClose.addEventListener("click", closeModal);
+  // click handlers
+  ["north","east","south","west"].forEach(function(id){
+    var el=document.getElementById(id);
+    el.onclick=function(){ open(id); };
+    el.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(id);} };
+  });
 
-  // Lens interactions (INSIDE modal only)
-  styleChip.addEventListener("click", ()=>{
+  document.getElementById("btnMap").onclick=function(){ open("map"); };
+
+  bd.onclick=close;
+  mClose.onclick=close;
+  document.getElementById("mReturn").onclick=close;
+
+  // lens buttons (inside modal)
+  styleChip.onclick=function(){
     style = (style==="formal") ? "informal" : "formal";
-    if(mode==="dir") renderModal(); else openMap();
-  });
-  chipOrigin.addEventListener("click", ()=>{ time="origin"; if(mode==="dir") renderModal(); else openMap(); });
-  chipNow.addEventListener("click", ()=>{ time="now"; if(mode==="dir") renderModal(); else openMap(); });
-  chipPost.addEventListener("click", ()=>{ time="post"; if(mode==="dir") renderModal(); else openMap(); });
+    render();
+  };
+  chipConcept.onclick=function(){ time="origin"; render(); };
+  chipNow.onclick=function(){ time="now"; render(); };
+  chipPost.onclick=function(){ time="post"; render(); };
 
-  // diamonds
-  ["north","east","south","west"].forEach(id=>{
-    document.getElementById(id).addEventListener("click", ()=>openDir(id));
-  });
-
-  // map button
-  document.getElementById("mapBtn").addEventListener("click", openMap);
-
-  // Leveling no overlap
-  function level(){
-    const tl = document.getElementById("topLeft");
-    const dock = document.getElementById("bottomDock");
-    const stage = document.getElementById("centerStage");
-    if(!dock || !stage) return;
-
-    const safe=10;
-    const topBand = (tl ? tl.getBoundingClientRect().bottom : 0) + safe;
-    const dockTop = dock.getBoundingClientRect().top - safe;
-    const centerY = (topBand + dockTop) / 2;
-    stage.style.top = centerY + "px";
-  }
-  window.addEventListener("resize", level, {passive:true});
-  window.addEventListener("orientationchange", ()=>setTimeout(level,50), {passive:true});
-  setTimeout(level,0);
-
-  // initial render
-  renderPreviews();
-  rewriteLinks();
-  persist();
+  // initialize static labels + links
+  setLinks();
+  setLensLabels();
 })();
 </script>
 

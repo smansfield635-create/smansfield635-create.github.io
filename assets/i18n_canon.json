@@ -1,3 +1,9 @@
+/* TNT — /assets/i18n_canon.json  (i18n_canon_v1 · EN/中文)
+   LOCKS:
+   - Canonical langs: ["en","zh"]
+   - Primary: "en"
+   - Symbols listed in meta.invariant_symbols are treated as invariant labels.
+*/
 {
   "meta": {
     "id": "i18n_canon_v1",

@@ -1,8 +1,9 @@
 <!-- TNT — /door/index.html  (DOOR · LANGUAGE SELECT · GEM STANDARD)
      FIX:
-     - Title/subtitle now render ON TOP of diamonds (z-index overlay), like the bottom footer does.
+     - Title/subtitle moved to a FIXED top-center overlay (slight overlap allowed, NOT centered on diamonds).
+     - EXIT button uses standard .btn (no funky glyphs).
      - No html/body background styling here (ui.css owns field).
-     - Keeps same EN/中文 diamonds + state carry (gd_style/gd_time) into /index.html
+     - Keeps EN/中文 diamonds + state carry (gd_style/gd_time) into /index.html
 -->
 <!doctype html>
 <html lang="en">
@@ -20,21 +21,55 @@
 :root{
   --R:132px;
   --goldSoft:rgba(212,175,55,.35);
-  --obsA:rgba(17,22,28,.90);
-  --obsB:rgba(11,15,20,.94);
 }
 
 /* top-left */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:90;
+  position:fixed;left:16px;top:16px;z-index:120;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+
+/* fixed header overlay (NOT centered on diamonds) */
+.headFixed{
+  position:fixed;
+  left:50%;
+  top:64px; /* <- sits near top; can overlap a little, not centered */
+  transform:translateX(-50%);
+  width:min(720px,94vw);
+  z-index:110;
+  text-align:center;
+  pointer-events:none;
+}
+.kicker{
+  font-size:12px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:.78;
+  margin:0 0 10px 0;
+  text-shadow:0 18px 60px rgba(0,0,0,.65);
+}
+.title{
+  margin:0;
+  font-size:52px;
+  font-weight:950;
+  letter-spacing:.2px;
+  line-height:1.02;
+  text-shadow:0 18px 60px rgba(0,0,0,.65);
+}
+.sub{
+  margin:10px auto 0;
+  max-width:54ch;
+  opacity:.84;
+  font-size:16px;
+  line-height:1.35;
+  text-shadow:0 18px 60px rgba(0,0,0,.55);
 }
 
 /* stage */
 .stage{
   position:fixed;
   left:50%;
-  top:52%;
+  top:54%;
   transform:translate(-50%,-50%);
   width:min(560px,92vw);
   height:min(560px,92vw);
@@ -147,49 +182,14 @@
 }
 .lab{ font-weight:950; letter-spacing:.8px; font-size:18px; }
 
-/* === OVERLAY HEADER (prints over diamonds) === */
-.headOverlay{
-  position:absolute;
-  left:50%;
-  top:-8px;
-  transform:translateX(-50%);
-  width:min(560px,92vw);
-  z-index:80; /* ABOVE diamonds */
-  text-align:center;
-  pointer-events:none; /* doesn't block taps */
-}
-.kicker{
-  font-size:12px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  opacity:.78;
-  margin:0 0 10px 0;
-}
-.title{
-  margin:0;
-  font-size:52px;
-  font-weight:950;
-  letter-spacing:.2px;
-  line-height:1.02;
-  text-shadow:0 18px 60px rgba(0,0,0,.65);
-}
-.sub{
-  margin:10px auto 0;
-  max-width:46ch;
-  opacity:.84;
-  font-size:16px;
-  line-height:1.35;
-  text-shadow:0 18px 60px rgba(0,0,0,.55);
-}
-
-/* footer (already “on top”) */
+/* footer */
 .footer{
   position:fixed;
   left:50%;
   bottom:calc(18px + env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:85;
-  width:min(560px,92vw);
+  width:min(720px,94vw);
   text-align:center;
   opacity:.74;
   font-size:13px;
@@ -204,6 +204,8 @@
   .d{ width:200px; height:200px; }
   .title{ font-size:46px; }
   .sub{ font-size:15px; }
+  .headFixed{ top:56px; }
+  .stage{ top:56%; }
 }
 </style>
 </head>
@@ -211,18 +213,17 @@
 <body>
 
 <div class="top-left">
-  <a class="crp-btn" id="btnExit" href="/home/">EXIT</a>
+  <a class="btn" id="btnExit" href="/home/">EXIT</a>
+</div>
+
+<div class="headFixed" aria-hidden="true">
+  <p class="kicker" id="kicker">CARDINAL AXIS</p>
+  <h1 class="title" id="title">Select language</h1>
+  <p class="sub" id="subtitle">Choose a canonical language to enter the system.</p>
 </div>
 
 <div class="stage" aria-label="Language diamonds">
   <div class="outer"></div>
-
-  <!-- OVERLAY PRINT (ON TOP OF DIAMONDS) -->
-  <div class="headOverlay" aria-hidden="true">
-    <p class="kicker" id="kicker">CARDINAL AXIS</p>
-    <h1 class="title" id="title">Select language</h1>
-    <p class="sub" id="subtitle">Choose a canonical language to enter the system.</p>
-  </div>
 
   <div class="d d-en" id="pickEN" role="button" tabindex="0" aria-label="English">
     <div class="inner"><div class="lab">ENGLISH</div></div>
@@ -281,4 +282,3 @@
 
 </body>
 </html>
-```0

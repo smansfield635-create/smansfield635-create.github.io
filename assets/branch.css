@@ -1,176 +1,149 @@
-/* ==========================================
-GEODIAMETRICS MATERIAL SYSTEM
-Canonical: Red + Black + Gold
-========================================== */
+/* TNT — /assets/branch.css
+   GEODIAMETRICS GEOMETRY LAYER (CANONICAL)
+   RULES:
+   - GEOMETRY ONLY (positioning + transforms)
+   - MUST NOT style: html/body/background/color/typography/material
+   - ui.css owns field + material
+   - Pages may add local layout, but should not duplicate this geometry
+*/
 
-:root {
---red-deep: #5a0000;
---red-core: #8c0000;
---gold: #d4af37;
---gold-soft: rgba(212,175,55,0.45);
---black-matte: #0c0c0f;
---black-soft: #151519;
+/* ---------- GLOBAL GEOMETRY PRIMITIVES ---------- */
+
+.gd-stage{
+  position:relative;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-/* ===== BACKGROUND ===== */
-
-body {
-background:
-radial-gradient(circle at center,
-rgba(255,180,60,0.05) 0%,
-rgba(255,120,0,0.04) 30%,
-transparent 60%),
-linear-gradient(180deg,
-var(--red-core) 0%,
-var(--red-deep) 60%,
-#200000 100%);
-background-attachment: fixed;
-color: #ffffff;
+.gd-platform{
+  position:relative;
+  width:min(980px, 92vw);
+  height:min(620px, 72vh);
+  min-height:420px;
 }
 
-/* ===== CENTERING FIX ===== */
+/* ---------- DIAMOND PRIMITIVE ---------- */
+/* NOTE: no background, no colors, no shadows here (ui.css/page owns material) */
 
-.page,
-.wrap {
-display: flex;
-flex-direction: column;
-align-items: center;
+.diamond,
+.gd-diamond{
+  position:absolute;
+  width:var(--gd-d, 150px);
+  height:var(--gd-d, 150px);
+  border-radius:22px;
+  transform:rotate(45deg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  -webkit-tap-highlight-color:transparent;
 }
 
-/* ==========================================
-DIAMOND CORE SYSTEM
-========================================== */
-
-.diamond-container {
-position: relative;
-width: 320px;
-height: 320px;
-margin: 60px auto;
+.diamond > span,
+.gd-diamond > span,
+.gd-diamond .inner,
+.diamond .inner{
+  transform:rotate(-45deg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:14px;
+  gap:6px;
+  width:100%;
+  height:100%;
 }
 
-/* smaller diamonds */
-.diamond {
-width: 120px;
-height: 120px;
-background: var(--black-matte);
-border-radius: 18px;
-transform: rotate(45deg);
-display: flex;
-align-items: center;
-justify-content: center;
-position: absolute;
-cursor: pointer;
-transition: all 0.25s ease;
-box-shadow:
-0 10px 30px rgba(0,0,0,0.6),
-inset 0 0 12px rgba(255,255,255,0.02);
+/* ---------- COMPASS DIAMOND POSITIONS (HOME / HUB / COMPASS) ---------- */
+/* Uses a center anchor and a radius. Pages can override --gd-d and --gd-r. */
+
+.gd-compass{
+  --gd-d: 150px;
+  --gd-r: 190px;
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:1px;
+  height:1px;
 }
 
-/* text inside diamond */
-.diamond span {
-transform: rotate(-45deg);
-font-weight: 600;
-letter-spacing: 1px;
+/* Outer 4 */
+.gd-compass .gd-n{ transform:translate(-50%,-50%) translate(0, calc(var(--gd-r) * -1)) rotate(45deg); }
+.gd-compass .gd-e{ transform:translate(-50%,-50%) translate(var(--gd-r), 0) rotate(45deg); }
+.gd-compass .gd-s{ transform:translate(-50%,-50%) translate(0, var(--gd-r)) rotate(45deg); }
+.gd-compass .gd-w{ transform:translate(-50%,-50%) translate(calc(var(--gd-r) * -1), 0) rotate(45deg); }
+
+/* Center core (optional) */
+.gd-core{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:var(--gd-core, 64px);
+  height:var(--gd-core, 64px);
+  transform:translate(-50%,-50%);
+  border-radius:18px;
+  display:grid;
+  place-items:center;
 }
 
-/* gold activation */
-.diamond:hover,
-.diamond.active {
-box-shadow:
-0 0 25px var(--gold-soft),
-0 15px 40px rgba(0,0,0,0.8);
-border: 1px solid var(--gold);
+/* ---------- LEGACY COMPASS DIAMOND CLASS NAMES ---------- */
+/* Supports pages using .diamond.top/.right/.bottom/.left */
+
+.platform{
+  position:relative;
+  width:min(980px, 92vw);
+  height:min(620px, 72vh);
+  min-height:420px;
 }
 
-/* ===== Compass Positions ===== */
-
-.diamond.north { top: 0; left: 100px; }
-.diamond.south { bottom: 0; left: 100px; }
-.diamond.west  { left: 0; top: 100px; }
-.diamond.east  { right: 0; top: 100px; }
-
-/* Center nucleus */
-.diamond.core {
-top: 100px;
-left: 100px;
-width: 80px;
-height: 80px;
-background: linear-gradient(145deg, #1a1a1f, #0a0a0d);
-border-radius: 16px;
-box-shadow:
-0 0 30px rgba(212,175,55,0.3),
-0 0 60px rgba(212,175,55,0.15);
+.platform .diamond{
+  --gd-d: 150px;
+  left:50%;
+  top:50%;
 }
 
-/* ==========================================
-BUTTON SYSTEM (Black → Gold)
-========================================== */
+.platform .diamond.top{    transform:translate(-50%,-50%) translate(0, calc(var(--gd-r, 190px) * -1)) rotate(45deg); }
+.platform .diamond.right{  transform:translate(-50%,-50%) translate(var(--gd-r, 190px), 0) rotate(45deg); }
+.platform .diamond.bottom{ transform:translate(-50%,-50%) translate(0, var(--gd-r, 190px)) rotate(45deg); }
+.platform .diamond.left{   transform:translate(-50%,-50%) translate(calc(var(--gd-r, 190px) * -1), 0) rotate(45deg); }
 
-button,
-.btn {
-background: var(--black-matte);
-border: 1px solid rgba(255,255,255,0.1);
-border-radius: 30px;
-padding: 10px 22px;
-color: white;
-transition: all 0.2s ease;
-box-shadow: 0 4px 18px rgba(0,0,0,0.6);
+/* ---------- 4-DIAMOND CLUSTER (DOOR / TERMINAL ROUTE CHOOSER) ---------- */
+/* A tight 2x2 diamond cluster centered on screen. */
+.gd-cluster{
+  --gd-d: 150px;
+  --gd-gap: 18px;
+  position:relative;
+  width:calc((var(--gd-d) * 2) + var(--gd-gap));
+  height:calc((var(--gd-d) * 2) + var(--gd-gap));
 }
 
-button:hover,
-.btn:hover {
-border-color: var(--gold);
-box-shadow:
-0 0 15px var(--gold-soft),
-0 4px 18px rgba(0,0,0,0.7);
+.gd-cluster .gd-tl{ left:0; top:0; }
+.gd-cluster .gd-tr{ right:0; top:0; }
+.gd-cluster .gd-bl{ left:0; bottom:0; }
+.gd-cluster .gd-br{ right:0; bottom:0; }
+
+/* ---------- RESPONSIVE GEOMETRY ---------- */
+
+@media (max-width:520px){
+  .gd-platform,
+  .platform{
+    height:min(640px, 78vh);
+    min-height:380px;
+  }
+
+  .gd-compass{ --gd-d: 132px; --gd-r: 168px; }
+  .platform .diamond{ --gd-d: 132px; }
+  .gd-core{ --gd-core: 58px; }
+
+  .gd-cluster{ --gd-d: 132px; --gd-gap: 14px; }
 }
 
-button.active,
-.btn.active {
-border-color: var(--gold);
-box-shadow:
-0 0 20px var(--gold-soft),
-0 6px 25px rgba(0,0,0,0.8);
+@media (max-width:380px){
+  .gd-compass{ --gd-d: 120px; --gd-r: 152px; }
+  .platform .diamond{ --gd-d: 120px; }
+  .gd-cluster{ --gd-d: 120px; --gd-gap: 12px; }
 }
-
-/* ==========================================
-BUBBLE OVERLAY
-========================================== */
-
-.bubble-overlay {
-background: rgba(0,0,0,0.92);
-border-radius: 22px;
-padding: 24px;
-border: 1px solid rgba(255,255,255,0.1);
-box-shadow:
-0 0 40px rgba(0,0,0,0.8),
-0 0 25px rgba(212,175,55,0.15);
-}
-
-/* ==========================================
-MOBILE SCALING
-========================================== */
-
-@media (max-width: 480px) {
-.diamond-container {
-width: 260px;
-height: 260px;
-}
-
-.diamond {
-width: 95px;
-height: 95px;
-}
-
-.diamond.north { left: 82px; }
-.diamond.south { left: 82px; }
-.diamond.west  { top: 82px; }
-.diamond.east  { top: 82px; }
-
-.diamond.core {
-width: 60px;
-height: 60px;
-top: 82px;
-left: 82px;
-}
-}
+```0

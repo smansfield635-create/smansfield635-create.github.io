@@ -1,338 +1,56 @@
+<!-- TNT — /index.html  (TERMINAL · STRUCTURAL PREFACE · GEM STANDARD)
+     Uniform with SOFTWARE gem style.
+     Purpose:
+       - Under construction (safe to explore)
+       - How navigation works (traversal study)
+       - Bubble-first (tap a bubble → centered modal with 4 bulletins)
+     Routing:
+       - CONTINUE → /home/
+       - EXPLORE → /explore/
+       - LINKS → /links/
+       - PRODUCTS → /products/
+       - LAWS → /laws/
+       - GAUGES → /gauges/
+     State:
+       - Dual language: gd_lang (en|zh) always
+       - Preserve gd_style (formal|informal) and gd_time (origin|now|post) but keep lenses INSIDE bubbles (modal)
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cardinal Axis · Terminal</title>
+<title>TERMINAL · Cardinal Axis</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
 :root{
-  --gold: rgba(212,175,55,.90);
-  --gold-soft: rgba(212,175,55,.35);
+  --gold:rgba(212,175,55,.9);
+  --goldSoft:rgba(212,175,55,.35);
   --obs1:#070b12;
   --obs2:#0c1626;
-  --ink:#ffffff;
-  --mut:rgba(255,255,255,.82);
+  --mut:rgba(255,255,255,.84);
   --mut2:rgba(255,255,255,.68);
 }
 
 body{
   margin:0;
   min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
   background:
     radial-gradient(circle at 50% 40%, rgba(90,140,255,.10), transparent 60%),
     repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 1px, transparent 1px 100px),
     linear-gradient(180deg,#b00000 0%,#7a0000 60%,#550000 100%);
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:var(--ink);
-}
-
-.panel{
-  width:min(860px,92vw);
-  padding:52px 34px 40px;
-  border-radius:30px;
-  position:relative;
-
-  background:
-    radial-gradient(circle at 35% 25%, rgba(90,140,255,.12), transparent 55%),
-    radial-gradient(circle at 70% 60%, rgba(0,120,255,.08), transparent 60%),
-    linear-gradient(160deg,var(--obs2) 0%,var(--obs1) 60%);
-
-  box-shadow:
-    0 50px 140px rgba(0,0,0,.85),
-    inset 0 2px 0 rgba(255,255,255,.12),
-    inset 0 -40px 60px rgba(0,0,0,.65);
-
-  border:1px solid rgba(255,255,255,.08);
-}
-
-.panel::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:30px;
-  padding:1px;
-  background:linear-gradient(135deg, var(--gold-soft), transparent 40%, transparent 60%, var(--gold-soft));
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
-
-h1{
-  font-size:44px;
-  margin:0 0 8px 0;
-  text-align:center;
-  letter-spacing:2px;
-}
-.subtitle{
-  text-align:center;
-  color:var(--mut);
-  margin:0 0 28px 0;
-}
-
-.bubble-grid{
-  display:grid;
-  gap:18px;
-}
-
-.bubble{
-  padding:18px 20px;
-  border-radius:22px;
-  position:relative;
-  cursor:pointer;
-
-  background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.12), transparent 55%),
-    linear-gradient(145deg,var(--obs2),var(--obs1));
-
-  box-shadow:
-    0 22px 65px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.10);
-
-  border:1px solid rgba(255,255,255,.07);
-}
-
-.bubble::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:22px;
-  padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--gold-soft) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
-
-.bubble:hover{
-  box-shadow:
-    0 26px 78px rgba(0,0,0,.86),
-    0 0 18px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.12);
-  border-color:rgba(212,175,55,.18);
-}
-
-.b-title{
-  font-weight:950;
-  letter-spacing:.2px;
-  margin-bottom:6px;
-}
-.b-sub{
-  color:var(--mut2);
-  line-height:1.45;
-}
-
-.actions{
-  margin-top:26px;
-  display:flex;
-  justify-content:center;
-  gap:14px;
-  flex-wrap:wrap;
-}
-
-.btn{
-  padding:14px 22px;
-  border-radius:16px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:white;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 16px 40px rgba(0,0,0,.65);
-  text-decoration:none;
-  transition:.25s ease;
-  position:relative;
-  font-weight:800;
-  letter-spacing:.2px;
-}
-
-.btn::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:16px;
-  padding:1px;
-  background:linear-gradient(135deg, var(--gold-soft), transparent 60%);
-  opacity:.6;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-}
-
-.btn:hover{ box-shadow:0 22px 60px rgba(0,0,0,.85), 0 0 18px var(--gold-soft); }
-
-.mini{
-  text-align:center;
-  margin-top:14px;
-  color:rgba(255,255,255,.55);
-  font-size:12px;
-  letter-spacing:.8px;
-}
-
-/* ===== MODAL (Level 1 + Level 2) ===== */
-
-.backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(8px);
-  display:none;
-  z-index:200;
-}
-.backdrop.show{display:block;}
-
-.modal{
-  position:fixed;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:min(820px,92vw);
-  display:none;
-  z-index:210;
-}
-.modal.show{display:block;}
-
-.modal-card{
-  border-radius:26px;
-  padding:22px 18px 18px;
-  position:relative;
-
-  background:
-    radial-gradient(circle at 35% 25%, rgba(90,140,255,.10), transparent 55%),
-    linear-gradient(160deg,var(--obs2) 0%,var(--obs1) 65%);
-
-  box-shadow:0 55px 160px rgba(0,0,0,.92);
-  border:1px solid rgba(255,255,255,.08);
-}
-.modal-card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:26px;
-  padding:1px;
-  background:linear-gradient(135deg, var(--gold-soft), transparent 40%, transparent 60%, var(--gold-soft));
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
-
-.modal-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:0 6px 10px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-.modal-title{
-  font-weight:950;
-  letter-spacing:.3px;
-  margin:0;
-  font-size:16px;
-}
-
-.modal-close{
-  border:0;
-  background:transparent;
   color:#fff;
-  font-size:18px;
-  cursor:pointer;
-  padding:8px 10px;
+  overflow-x:hidden;
 }
 
-.subgrid{
-  display:grid;
-  gap:14px;
-  margin-top:14px;
-}
-
-.subbubble{
-  padding:16px 18px;
-  border-radius:20px;
-  position:relative;
-  cursor:pointer;
-
-  background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.10), transparent 55%),
-    linear-gradient(145deg,var(--obs2),var(--obs1));
-
-  border:1px solid rgba(255,255,255,.07);
-  box-shadow:0 18px 55px rgba(0,0,0,.78), inset 0 2px 0 rgba(255,255,255,.08);
-}
-
-.subbubble::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:20px;
-  padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--gold-soft) 50%, transparent 100%);
-  opacity:.5;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
-
-.subbubble:hover{ box-shadow:0 22px 65px rgba(0,0,0,.86), 0 0 14px rgba(212,175,55,.16); border-color:rgba(212,175,55,.16); }
-
-.sub-title{ font-weight:950; margin:0 0 6px; letter-spacing:.2px; }
-.sub-sub{ color:var(--mut2); line-height:1.45; margin:0; }
-
-/* Level 2 detail view */
-.detail{
-  margin-top:14px;
-  display:none;
-}
-.detail.show{display:block;}
-
-.detail-box{
-  padding:18px;
-  border-radius:22px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 22px 70px rgba(0,0,0,.86), inset 0 2px 0 rgba(255,255,255,.08);
-}
-
-.detail-h{
-  margin:0 0 10px 0;
-  font-weight:950;
-  letter-spacing:.2px;
-  font-size:16px;
-}
-
-.detail-p{
-  margin:0 0 12px 0;
-  color:var(--mut);
-  line-height:1.55;
-}
-
-.detail-ul{
-  margin:0 0 12px 18px;
-  padding:0;
-  color:var(--mut2);
-}
-.detail-ul li{ margin:6px 0; }
-
-.detail-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-top:10px;
-}
-
-.sbtn{
-  padding:12px 18px;
+/* Buttons */
+.btn{
+  padding:10px 16px;
   border-radius:14px;
   background:linear-gradient(145deg,var(--obs2),var(--obs1));
   color:white;
@@ -340,266 +58,661 @@ h1{
   box-shadow:0 14px 36px rgba(0,0,0,.7);
   cursor:pointer;
   font-weight:900;
+  letter-spacing:.2px;
+  text-decoration:none;
+  display:inline-block;
 }
-.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--gold-soft); }
+.btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
 
-@media (min-width:720px){
-  .subgrid{ grid-template-columns:1fr 1fr; }
+/* Top controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:90;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.brand{
+  position:fixed;
+  left:50%;
+  top:16px;
+  transform:translateX(-50%);
+  z-index:80;
+  text-align:center;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16);
+  backdrop-filter:blur(8px);
+}
+.brand .name{ font-weight:950; letter-spacing:1.2px; font-size:12px; opacity:.95; }
+.brand .tag{ font-size:11px; letter-spacing:.6px; opacity:.70; margin-top:2px; }
+
+.wrap{
+  width:min(980px, 92vw);
+  margin:92px auto 120px;
+  padding-top:10px;
+}
+
+.hero{
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
+    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
+    linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
+  box-shadow:0 60px 180px rgba(0,0,0,.72);
+  padding:20px 18px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:58%;
+  width:min(980px, 94vw);
+  height:min(980px, 94vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:70px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.16), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);
+  box-shadow:
+    0 100px 280px rgba(0,0,0,.65),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -55px 100px rgba(0,0,0,.55);
+  opacity:.45;
+  pointer-events:none;
+}
+.h1{
+  margin:0;
+  font-weight:950;
+  letter-spacing:2px;
+  font-size:44px;
+  text-align:center;
+  position:relative;
+  z-index:2;
+}
+.sub{
+  margin:8px 0 0;
+  text-align:center;
+  opacity:.80;
+  letter-spacing:.6px;
+  position:relative;
+  z-index:2;
+}
+
+.grid{
+  margin-top:16px;
+  display:grid;
+  gap:14px;
+  position:relative;
+  z-index:2;
+}
+@media (min-width:900px){ .grid{ grid-template-columns:1fr 1fr; } }
+
+.bubble{
+  padding:16px 18px;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
+  cursor:pointer;
+  position:relative;
+}
+.bubble::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:22px;
+  padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.bubble:hover{ box-shadow:0 22px 70px rgba(0,0,0,.86), 0 0 14px rgba(212,175,55,.16); border-color:rgba(212,175,55,.16); }
+.bt{ margin:0 0 6px; font-weight:950; letter-spacing:.2px; }
+.bs{ margin:0; color:var(--mut2); line-height:1.45; }
+
+/* Dock */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:90;
+  width:min(900px,94vw);
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.20);
+  backdrop-filter:blur(8px);
+}
+
+/* Modal */
+.bd{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(10px);
+  display:none;
+}
+.bd.show{display:block;}
+.modal{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(1020px,94vw);
+  max-height:88vh;
+  display:none;
+  z-index:210;
+}
+.modal.show{display:block;}
+.shell{
+  height:88vh;
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
+    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
+    linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
+  box-shadow:0 60px 180px rgba(0,0,0,.92);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.shell::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:58%;
+  width:min(980px,94vw);
+  height:min(980px,94vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:70px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.16), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);
+  box-shadow:
+    0 100px 280px rgba(0,0,0,.72),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -55px 100px rgba(0,0,0,.55);
+  opacity:.55;
+  pointer-events:none;
+}
+.mhead{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
+  position:relative;z-index:2;
+}
+.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
+.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
+.mbody{
+  padding:14px 16px 18px;
+  overflow:auto;-webkit-overflow-scrolling:touch;
+  flex:1 1 auto;
+  position:relative;z-index:2;
+}
+.lensbar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  align-items:center;justify-content:center;
+  padding:10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);
+  margin:-6px -6px 14px;
+}
+.chip{
+  padding:10px 16px;border-radius:999px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
+}
+.chip.active{
+  border-color:rgba(212,175,55,.35);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
+}
+.mgrid{ display:grid; gap:14px; }
+@media (min-width:920px){ .mgrid{ grid-template-columns:1fr 1fr; } }
+.box{
+  padding:16px 18px;border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
+  position:relative;
+}
+.box::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.h{ margin:0 0 8px; font-weight:950; letter-spacing:.2px; }
+.p{ margin:0 0 10px; color:var(--mut); line-height:1.55; }
+.ul{ margin:0 0 0 18px; padding:0; color:var(--mut2); }
+.ul li{ margin:6px 0; }
+
+.mact{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
+.sbtn{
+  padding:12px 18px;border-radius:14px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  color:#fff;border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.7);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
+}
+.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
+
+@media (max-width:520px){
+  .h1{ font-size:38px; }
+  .wrap{ margin:86px auto 120px; }
+  .shell{ height:90vh; }
 }
 </style>
 </head>
 
 <body>
-<div class="panel">
-  <h1 id="tTitle">CARDINAL AXIS</h1>
-  <div class="subtitle" id="tSub">Terminal · Structural Preface</div>
 
-  <!-- Level 0: Primary bubbles -->
-  <div class="bubble-grid" id="primaryBubbles"></div>
-
-  <div class="actions">
-    <a class="btn" id="btnHome" href="/home/">CONTINUE → HOME</a>
-    <a class="btn" id="btnLinks" href="/links/">LINKS</a>
-  </div>
-
-  <div class="mini" id="miniKeys">KEYS: gd_lang · gd_depth · gd_style · gd_time</div>
+<div class="top-left">
+  <a class="btn" id="btnLanguage" href="/door/">LANGUAGE</a>
+  <button class="btn" id="btnReset" type="button">RESET</button>
 </div>
 
-<!-- Modal -->
-<div class="backdrop" id="bd"></div>
-<div class="modal" id="modal">
-  <div class="modal-card">
-    <div class="modal-head">
-      <div class="modal-title" id="mTitle">SECTION</div>
-      <button class="modal-close" id="mClose">✕</button>
+<div class="brand">
+  <div class="name" id="brandName">CARDINAL AXIS</div>
+  <div class="tag" id="brandTag">TERMINAL · STRUCTURAL PREFACE</div>
+</div>
+
+<main class="wrap">
+  <section class="hero">
+    <h1 class="h1" id="heroTitle">TERMINAL</h1>
+    <p class="sub" id="heroSub">Under construction · safe to explore · traversal navigation</p>
+
+    <div class="grid" id="grid"></div>
+  </section>
+</main>
+
+<nav class="dock" id="dock">
+  <a class="btn" id="goHome" href="/home/">HOME</a>
+  <a class="btn" id="goExplore" href="/explore/">EXPLORE</a>
+  <a class="btn" id="goLinks" href="/links/">LINKS</a>
+  <a class="btn" id="goProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="goLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="goGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<div class="bd" id="bd"></div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="shell">
+    <div class="mhead">
+      <h3 class="mtitle" id="mTitle">DETAIL</h3>
+      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
     </div>
 
-    <!-- Level 1: Sub-bubbles -->
-    <div class="subgrid" id="subGrid"></div>
+    <div class="mbody">
+      <!-- Lenses inside bubble only -->
+      <div class="lensbar">
+        <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>
+        <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>
+        <button class="chip" data-time="now" id="chipLive" type="button">LIVE</button>
+        <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
+      </div>
 
-    <!-- Level 2: Detail -->
-    <div class="detail" id="detail">
-      <div class="detail-box">
-        <div class="detail-h" id="dTitle"></div>
-        <div class="detail-p" id="dPara"></div>
-        <ul class="detail-ul" id="dList"></ul>
+      <div class="mgrid">
+        <div class="box"><h4 class="h" id="h1"></h4><p class="p" id="p1"></p><ul class="ul" id="u1"></ul></div>
+        <div class="box"><h4 class="h" id="h2"></h4><p class="p" id="p2"></p><ul class="ul" id="u2"></ul></div>
+        <div class="box"><h4 class="h" id="h3"></h4><p class="p" id="p3"></p><ul class="ul" id="u3"></ul></div>
+        <div class="box"><h4 class="h" id="h4"></h4><p class="p" id="p4"></p><ul class="ul" id="u4"></ul></div>
+      </div>
 
-        <div class="detail-actions">
-          <button class="sbtn" id="dBack">BACK</button>
-          <button class="sbtn" id="dClose">BACK TO PAGE</button>
-          <button class="sbtn" id="dPrev">PREV</button>
-          <button class="sbtn" id="dNext">NEXT</button>
-        </div>
+      <div class="mact">
+        <button class="sbtn" id="mReturn" type="button">RETURN</button>
+        <a class="sbtn" id="mGoHome" href="/home/">GO HOME</a>
+        <a class="sbtn" id="mGoExplore" href="/explore/">GO EXPLORE</a>
       </div>
     </div>
-
   </div>
 </div>
 
 <script>
 (function(){
-  // Lang: query wins, else storage, else en
-  const qs = new URLSearchParams(location.search);
-  const qLang = qs.get("lang");
-  let lang = (qLang==="zh"||qLang==="en") ? qLang : (localStorage.getItem("gd_lang")==="zh" ? "zh" : "en");
-  try{ localStorage.setItem("gd_lang", lang); }catch(e){}
-  document.documentElement.lang = lang;
+  // state
+  var qs=new URLSearchParams(location.search);
+  var qLang=qs.get("lang");
+  var lang=(qLang==="zh"||qLang==="en")?qLang:((localStorage.getItem("gd_lang")==="zh")?"zh":"en");
+  try{ localStorage.setItem("gd_lang", lang);}catch(e){}
+  var style=localStorage.getItem("gd_style")||"formal";
+  var time=localStorage.getItem("gd_time")||"now";
+  if(time==="trajectory") time="post";
+  if(["origin","now","post"].indexOf(time)<0) time="now";
+  if(["formal","informal"].indexOf(style)<0) style="formal";
 
-  const UI = {
+  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+  function setLinks(){
+    var s=q();
+    document.getElementById("btnLanguage").href="/door/?"+s;
+    document.getElementById("goHome").href="/home/?"+s;
+    document.getElementById("goExplore").href="/explore/?"+s;
+    document.getElementById("goLinks").href="/links/?"+s;
+    document.getElementById("goProducts").href="/products/?"+s;
+    document.getElementById("goLaws").href="/laws/?"+s;
+    document.getElementById("goGauges").href="/gauges/?"+s;
+    document.getElementById("mGoHome").href="/home/?"+s;
+    document.getElementById("mGoExplore").href="/explore/?"+s;
+  }
+
+  // UI packs
+  var PACK={
     en:{
-      title:"CARDINAL AXIS",
-      sub:"Terminal · Structural Preface",
-      keys:"KEYS: gd_lang · gd_depth · gd_style · gd_time",
-      home:"CONTINUE → HOME",
-      links:"LINKS",
-      p:[
-        {id:"construction", t:"Under construction (safe to explore).", s:"What is stable vs what is expanding."},
-        {id:"how", t:"How this system works.", s:"Lenses → Compass → Directional depth."},
-        {id:"expect", t:"What to expect moving forward.", s:"North/East/South/West deepen progressively."}
+      brand:"CARDINAL AXIS",
+      tag:"TERMINAL · STRUCTURAL PREFACE",
+      hero:"TERMINAL",
+      sub:"Under construction · safe to explore · traversal navigation",
+      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", live:"LIVE", roadmap:"ROADMAP"},
+      buttons:{reset:"RESET", ret:"RETURN", goHome:"GO HOME", goExplore:"GO EXPLORE"},
+      bubbles:[
+        {key:"safe", t:"Under construction (safe to explore).", s:"Navigation is stable. Content expands progressively."},
+        {key:"how", t:"How this works.", s:"Select lenses inside nodes, then traverse by structure."},
+        {key:"keys", t:"Canonical state keys.", s:"Only gd_* keys are used; no mixed namespaces."},
+        {key:"rules", t:"No drift rules.", s:"When lenses change, content must change—text and meaning."}
       ],
-      sections:{
-        construction:{
-          title:"Under construction",
-          items:[
-            {k:"stability", t:"What is stable", s:"The structure won’t drift.", p:"Navigation and lens controls are stable and canonical.", li:["Routes remain consistent across updates.","State keys stay gd_* only.","UI changes won’t break meaning."]},
-            {k:"safe", t:"Safe to explore", s:"No dead ends.", p:"You can browse without fear of breaking flows.", li:["Unfinished content shows placeholders.","Links route to known hubs.","No destructive actions exist."]},
-            {k:"placeholders", t:"Placeholders", s:"Incomplete areas are marked.", p:"If a section isn’t built yet, it will be visibly incomplete rather than silently wrong.", li:["Clear “under construction” signals.","No misleading content.","Navigation remains usable."]},
-            {k:"timeline", t:"What changes over time", s:"Content expands.", p:"The material layer grows while the structure stays fixed.", li:["More bubbles → more depth.","More examples and references.","More bilingual coverage."]}
-          ]
+      content:{
+        safe:{
+          origin:{formal:{title:"Under construction (safe to explore)",
+            b1:{h:"What is stable",p:"Navigation and geometry are fixed; content can expand without breaking structure.",u:["Routes are deterministic.","Return paths are reliable.","State keys are canonical.","UI avoids collisions."]},
+            b2:{h:"What is still growing",p:"Nodes gain depth over time while preserving the same map.",u:["More bubbles per node.","More subpages per branch.","More examples.","More exports."]},
+            b3:{h:"What you should expect",p:"Unfinished areas show placeholders rather than broken flows.",u:["No dead ends.","No drifted labels.","No hidden redirects.","No silent changes."]},
+            b4:{h:"What you can do now",p:"Explore safely and treat structure as the source of meaning.",u:["Traverse the hub.","Open bubbles.","Change lenses inside.","Return cleanly."]}
+          }, informal:{title:"Under construction (safe to explore)",
+            b1:{h:"Stable",p:"The map works.",u:["Buttons work.","Returns work.","State sticks.","No drift."]},
+            b2:{h:"Growing",p:"Content fills in over time.",u:["More bubbles.","More pages.","More examples.","More proof."]},
+            b3:{h:"Expect",p:"Placeholders instead of broken paths.",u:["No dead ends.","No confusion.","No surprise redirects.","No chaos."]},
+            b4:{h:"Do now",p:"Explore and learn the structure.",u:["Tap nodes.","Open bubbles.","Flip lenses.","Return."]}
+          }},
+          now:{formal:{title:"Under construction (safe to explore)",
+            b1:{h:"Live build discipline",p:"We build live while keeping deterministic navigation.",u:["One geometry contract.","One state contract.","One modal contract.","One return contract."]},
+            b2:{h:"Safety constraint",p:"If something is incomplete, it must still be navigable.",u:["Placeholder content.","Stable links.","Stable dock.","Stable exit."]},
+            b3:{h:"What this prevents",p:"Drift, confusion, and broken information architecture.",u:["No duplicate forks.","No mixed keys.","No page-level CSS collisions.","No hidden state."]},
+            b4:{h:"Your role",p:"Use the site to traverse; the structure teaches faster than linear text.",u:["Nonlinear study.","Lens-based emphasis.","Return stability.","Context compounding."]}
+          }, informal:{title:"Under construction (safe to explore)",
+            b1:{h:"Now",p:"We’re building live, but it stays stable.",u:["Navigation is safe.","State is consistent.","UI is uniform.","Returns work."]},
+            b2:{h:"Rule",p:"Incomplete = placeholder, not broken.",u:["Always navigable.","Always readable.","Always returnable.","Always coherent."]},
+            b3:{h:"Prevents",p:"Mess and drift.",u:["No duplicates.","No random keys.","No CSS fights.","No surprises."]},
+            b4:{h:"Use",p:"Traverse instead of scrolling.",u:["Move by meaning.","Flip lenses inside.","Return cleanly.","Repeat."]}
+          }},
+          post:{formal:{title:"Under construction (safe to explore)",
+            b1:{h:"Roadmap",p:"Every node gains a deeper traversal stack.",u:["Sub-hubs.","Fruits/leaf nodes.","Evidence bundles.","Search and filters."]},
+            b2:{h:"Uniformity",p:"All diamond pages converge on one gem standard.",u:["Same depth model.","Same modal model.","Same lens model.","Same routing model."]},
+            b3:{h:"Publication",p:"Stable navigation plus dense content becomes public-safe.",u:["No broken flows.","Clear lens meaning.","Consistent UI.","Predictable updates."]},
+            b4:{h:"Expansion",p:"Languages scale as overlays while EN/中文 remain canonical.",u:["Overlay packs.","Fallback rules.","No drift.","Consistency checks."]}
+          }, informal:{title:"Under construction (safe to explore)",
+            b1:{h:"Next",p:"More depth everywhere.",u:["More bubbles.","More pages.","More proof.","Same map."]},
+            b2:{h:"Uniform",p:"All diamonds look and behave the same.",u:["Same style.","Same lensing.","Same routing.","Same feel."]},
+            b3:{h:"Public",p:"Ready once dense and stable.",u:["No broken paths.","Clear lenses.","Consistent UI.","Safe updates."]},
+            b4:{h:"Languages",p:"Overlays later; core stays stable.",u:["EN/中文 core.","Overlays optional.","Fallback safe.","No drift."]}
+          }}
         },
         how:{
-          title:"How it works",
-          items:[
-            {k:"lenses", t:"Lenses", s:"Style + Time + Depth + Language.", p:"Lenses change presentation without changing structure.", li:["Style: Formal / Informal","Time: Origin / Now / Post","Depth: Explore / Learn","Language: EN / 中文"]},
-            {k:"compass", t:"Compass face", s:"North/East/South/West.", p:"The compass is the interface for directional understanding.", li:["Tap a direction to open its bulletin.","Each direction becomes its own compass over time.","Return paths remain stable."]},
-            {k:"state", t:"State keys", s:"gd_* only.", p:"State persists across pages through canonical keys.", li:["gd_lang","gd_depth","gd_style","gd_time"]},
-            {k:"safety", t:"No drift rule", s:"Structure first.", p:"We treat structure as canonical; content is layered on top.", li:["No silent renames.","No duplicate meanings.","No broken topology."]}
-          ]
+          origin:{formal:{title:"How this works",
+            b1:{h:"Traversal study",p:"You navigate a structure; meaning comes from position and relations.",u:["Not linear chapters.","Nodes are indexable.","Return paths are stable.","Context compounds."]},
+            b2:{h:"Lenses",p:"Lenses change framing and emphasis, and they must change the content.",u:["Style lens: formal/informal.","Time lens: concept/live/roadmap.","Changes are deterministic.","No stale text allowed."]},
+            b3:{h:"Geometry contract",p:"Diamond pages implement the same interaction contract.",u:["Tap node → modal.","Modal contains lenses.","Modal contains bulletins.","Modal returns cleanly."]},
+            b4:{h:"Navigation contract",p:"Dock routes remain consistent across pages.",u:["Hub always reachable.","Terminal always reachable.","Products/Laws/Gauges reachable.","Exit always reachable."]}
+          }, informal:{title:"How this works",
+            b1:{h:"Method",p:"You traverse a map.",u:["Tap nodes.","Open bubbles.","Return cleanly.","Repeat."]},
+            b2:{h:"Lenses",p:"Lenses actually change content.",u:["Formal vs informal.","Concept/live/roadmap.","No stale text.","Always coherent."]},
+            b3:{h:"Diamonds",p:"Diamonds all behave the same.",u:["Tap → modal.","Modal has lenses.","Modal has bullets.","Return works."]},
+            b4:{h:"Dock",p:"Dock is consistent everywhere.",u:["Hub.","Terminal.","Products.","Laws/Gauges."]}
+          }},
+          now:{formal:{title:"How this works",
+            b1:{h:"Current implementation",p:"The system already enforces a uniform gem standard on diamond pages.",u:["Same background.","Same gem materials.","Same modal style.","Same lens chips."]},
+            b2:{h:"Content rule",p:"Every bubble must have bulletins; empty bubbles are forbidden.",u:["4 sections minimum.","4 bullets minimum.","Lens-aware variants.","Dual-language aware."]},
+            b3:{h:"State rule",p:"gd_* keys are the only state namespace.",u:["gd_lang","gd_style","gd_time","gd_depth (as needed)"]},
+            b4:{h:"Return rule",p:"Back/Exit must always work.",u:["No dead ends.","No broken routes.","No mismatched folders.","No 404 loops."]}
+          }, informal:{title:"How this works",
+            b1:{h:"Now",p:"Uniform diamonds are working.",u:["Same look.","Same feel.","Same modal.","Same lenses."]},
+            b2:{h:"Rule",p:"No empty bubbles.",u:["Always content.","Always bullets.","Always changes.","Always readable."]},
+            b3:{h:"State",p:"Only gd_* keys.",u:["Language.","Style.","Time.","Depth when needed."]},
+            b4:{h:"Return",p:"Back and exit always work.",u:["No dead ends.","No broken links.","No folder mistakes.","No 404 loops."]}
+          }},
+          post:{formal:{title:"How this works",
+            b1:{h:"Scaling",p:"Every domain gets the same traversal contract.",u:["Software sub-hub.","Commercial sub-hub.","Energy sub-hub.","Education sub-hub."]},
+            b2:{h:"Depth",p:"Deeper recursion adds fruits and leaf nodes under each diamond.",u:["Branch → vine → fruit.","Resolution blocks.","Exports.","Proof bundles."]},
+            b3:{h:"Search",p:"Search is layered on top of traversal, not replacing it.",u:["Filters.","Evidence bundles.","Cross-links.","Registries."]},
+            b4:{h:"Language",p:"Overlays expand while keeping canonical EN/中文 stability.",u:["Overlay packs.","Country mapping.","Fallback to EN.","Consistency checks."]}
+          }, informal:{title:"How this works",
+            b1:{h:"Next",p:"More sub-hubs.",u:["Commercial.","Energy.","Education.","More."]},
+            b2:{h:"Depth",p:"More layers under each diamond.",u:["Vines.","Fruits.","Resolutions.","Exports."]},
+            b3:{h:"Search",p:"Search helps, but traversal stays primary.",u:["Filters.","Links.","Bundles.","Registry."]},
+            b4:{h:"Language",p:"More languages as overlays.",u:["Country mapping.","Fallback safe.","EN/中文 core.","No drift."]}
+          }}
         },
-        expect:{
-          title:"Moving forward",
-          items:[
-            {k:"dirs", t:"Direction meaning", s:"Four directions, four roles.", p:"Each direction encodes a function in the system.", li:["North stabilizes.","East executes.","South converges.","West contains."]},
-            {k:"depth", t:"Depth expansion", s:"Explore → Learn.", p:"Explore gives short summaries; Learn gives full density.", li:["Surface-first browsing.","Deep dives when ready.","Consistent structure across both."]},
-            {k:"bilingual", t:"Bilingual growth", s:"EN + 中文.", p:"English is primary; Chinese is canonical structural layer.", li:["Core pages bilingual.","Key terms bilingual.","Expansion continues."]},
-            {k:"roadmap", t:"Roadmap", s:"More bubbles, more recursion.", p:"You’ll see each compass direction unfold into its own nested set.", li:["Sub-compasses per direction.","Fruits / resolutions per path.","Unified navigation everywhere."]}
-          ]
+        keys:{
+          origin:{formal:{title:"Canonical state keys",
+            b1:{h:"Allowed keys",p:"Only these keys may exist in localStorage for navigation state.",u:["gd_lang ∈ {en, zh}.","gd_style ∈ {formal, informal}.","gd_time ∈ {origin, now, post}.","gd_depth (only where needed)."]},
+            b2:{h:"Forbidden keys",p:"Any other namespace creates drift and breaks determinism.",u:["No crp_* keys.","No mixed namespaces.","No ad-hoc keys.","No duplicate state."]},
+            b3:{h:"Propagation rule",p:"Links must carry state forward deterministically.",u:["Query string propagation.","LocalStorage persistence.","No silent overwrites.","Fallback rules explicit."]},
+            b4:{h:"Compatibility rule",p:"Every page must render correctly under both languages.",u:["EN canonical.","中文 canonical.","Others overlays later.","No partial toggles."]}
+          }, informal:{title:"Canonical state keys",
+            b1:{h:"Allowed",p:"Only gd_* keys.",u:["gd_lang.","gd_style.","gd_time.","gd_depth when needed."]},
+            b2:{h:"Forbidden",p:"No random keys.",u:["No crp_*.","No mixed keys.","No duplicates.","No hacks."]},
+            b3:{h:"Carry",p:"State carries forward.",u:["In links.","In storage.","No surprises.","Fallback safe."]},
+            b4:{h:"Both languages",p:"Every page works in EN and 中文.",u:["Not partial.","Not mixed.","Fully coherent.","Fully stable."]}
+          }},
+          now:{formal:{title:"Canonical state keys",
+            b1:{h:"Current behavior",p:"Your site is already behaving on gd_* keys for the core flows.",u:["Language selection.","Lens persistence.","Modal lensing.","Dock routing."]},
+            b2:{h:"What to enforce",p:"Make sure every new page copies the same key discipline.",u:["No new keys.","No drifted labels.","No CSS owner violations.","No page-level root overrides."]},
+            b3:{h:"Debug method",p:"If something breaks, inspect localStorage and view-source.",u:["Confirm gd_* only.","Confirm CSS order.","Confirm routes exist.","Confirm no 404."]},
+            b4:{h:"Scaling",p:"This discipline lets you clone pages safely.",u:["Uniform look.","Uniform behavior.","Uniform state.","Fast expansion."]}
+          }, informal:{title:"Canonical state keys",
+            b1:{h:"Now",p:"gd_* is working.",u:["Language.","Style.","Time.","Dock."]},
+            b2:{h:"Enforce",p:"Copy the same discipline.",u:["No new keys.","No drift.","No CSS fights.","No hacks."]},
+            b3:{h:"Debug",p:"Check storage and source.",u:["Keys.","CSS order.","Routes.","404s."]},
+            b4:{h:"Scale",p:"Then you can clone fast.",u:["Uniform.","Stable.","Repeatable.","Safe."]}
+          }},
+          post:{formal:{title:"Canonical state keys",
+            b1:{h:"Language scaling",p:"More languages become overlays without changing canonical keys.",u:["Country selection UI.","Overlay packs.","Fallback rules.","No drift."]},
+            b2:{h:"Time expansion",p:"Time can expand beyond three states later, but only via a registry.",u:["No ad-hoc additions.","Versioned registry.","Back-compat.","Deterministic mapping."]},
+            b3:{h:"Style expansion",p:"Style can expand, but must remain deterministic.",u:["No ambiguous blends.","Explicit framing.","Stable outputs.","No stale content."]},
+            b4:{h:"Auditability",p:"State logs can become part of evidence bundles.",u:["Replayable routes.","Timestamp anchors.","Hash bundles.","Registry links."]}
+          }, informal:{title:"Canonical state keys",
+            b1:{h:"Languages",p:"Overlays later, keys stay the same.",u:["Country UI.","Overlays.","Fallback safe.","No drift."]},
+            b2:{h:"Time",p:"More time modes only with a registry.",u:["Versioned.","Compatible.","Deterministic.","Safe."]},
+            b3:{h:"Style",p:"More styles only if explicit.",u:["Clear framing.","Stable outputs.","No ambiguity.","No stale text."]},
+            b4:{h:"Proof",p:"State can be logged.",u:["Replayable.","Timestamped.","Hashed.","Linked."]}
+          }}
+        },
+        rules:{
+          origin:{formal:{title:"No drift rules",
+            b1:{h:"Lens integrity",p:"Lens changes must change what is shown—text, bullets, and meaning.",u:["Not cosmetic.","No stale text.","No stale bullets.","Deterministic disallow rules."]},
+            b2:{h:"CSS integrity",p:"Background is owned by ui.css; branch.css owns geometry only.",u:["No body gradients in pages.","No :root overrides in pages.","CSS order fixed.","No collisions."]},
+            b3:{h:"Topology integrity",p:"Routes must match folders; names must match labels.",u:["Door = language select.","Terminal = preface.","Home = hub.","Products/Laws/Gauges = hubs."]},
+            b4:{h:"Interaction integrity",p:"Tap → modal → return. This is the contract.",u:["Centered modal.","No scroll jump.","Clear exit.","Consistent dock."]}
+          }, informal:{title:"No drift rules",
+            b1:{h:"Lens rule",p:"Lenses must change real content.",u:["Text changes.","Bullets change.","Meaning changes.","No stale frames."]},
+            b2:{h:"CSS rule",p:"No CSS fights.",u:["ui.css owns background.","branch.css owns geometry.","No page overrides.","Order fixed."]},
+            b3:{h:"Routes",p:"Folders and labels must match.",u:["Door language.","Terminal preface.","Home hub.","Products/Laws/Gauges hubs."]},
+            b4:{h:"Interaction",p:"Tap → modal → return.",u:["Centered modal.","No jump.","Exit works.","Dock consistent."]}
+          }},
+          now:{formal:{title:"No drift rules",
+            b1:{h:"Current enforcement",p:"Your gem pages already match this contract; keep cloning it.",u:["Uniform diamonds.","Uniform modals.","Uniform chips.","Uniform state."]},
+            b2:{h:"What to remove",p:"Remove any redundant lens UI outside bubbles.",u:["No top-of-page lens rows.","No duplicated toggles.","No mixed interaction models.","No conflicting layouts."]},
+            b3:{h:"What to add",p:"Every bubble gets dense bulletins before new pages.",u:["4 sections.","4 bullets.","EN+中文 variants.","Lens-aware."]},
+            b4:{h:"What to watch",p:"404 means missing route folder/page, not broken JS.",u:["Create route.","Clone pattern.","Keep keys.","Keep CSS owners."]}
+          }, informal:{title:"No drift rules",
+            b1:{h:"Now",p:"Clone the working gem pattern.",u:["Same diamonds.","Same modal.","Same chips.","Same state."]},
+            b2:{h:"Remove",p:"No redundant lens rows outside.",u:["Inside modal only.","Less clutter.","More consistency.","Less drift."]},
+            b3:{h:"Add",p:"Dense bulletins.",u:["4 sections.","4 bullets.","Both languages.","Lens-aware."]},
+            b4:{h:"Watch",p:"404 = missing page.",u:["Create folder.","Clone file.","Done."]}
+          }},
+          post:{formal:{title:"No drift rules",
+            b1:{h:"Scaling discipline",p:"The site grows by cloning, not by redesigning.",u:["Uniformity first.","Content second.","New pages follow contract.","No paradigm collisions."]},
+            b2:{h:"Anti-fragmentation",p:"Keep one geometry owner and one background owner.",u:["branch.css only geometry.","ui.css only background.","No page-level overrides.","No mixed systems."]},
+            b3:{h:"User comprehension",p:"Traversal study becomes intuitive once the contract is consistent.",u:["Same interactions.","Same placements.","Same returns.","Same lens meaning."]},
+            b4:{h:"Public readiness",p:"Uniform navigation plus dense bulletins makes it safe to publish.",u:["Stable.","Coherent.","Bilingual.","Upgrade-ready."]}
+          }, informal:{title:"No drift rules",
+            b1:{h:"Scale",p:"Clone, don’t redesign.",u:["Uniform first.","Content next.","Same contract.","No collisions."]},
+            b2:{h:"No fragmentation",p:"Keep CSS ownership clean.",u:["branch = geometry.","ui = background.","No overrides.","No mixed systems."]},
+            b3:{h:"Users",p:"Consistency makes it easy.",u:["Same actions.","Same returns.","Same lenses.","Same meaning."]},
+            b4:{h:"Public",p:"Uniform + dense = publish.",u:["Stable.","Coherent.","Bilingual.","Ready."]}
+          }}
         }
-      },
-      buttons:{back:"BACK", backPage:"BACK TO PAGE", prev:"PREV", next:"NEXT"}
+      }
     },
     zh:{
-      title:"四向轴",
-      sub:"终端 · 结构前言",
-      keys:"键：gd_lang · gd_depth · gd_style · gd_time",
-      home:"继续 → HOME",
-      links:"链接",
-      p:[
-        {id:"construction", t:"施工中（可安全浏览）。", s:"哪些稳定，哪些扩展。"},
-        {id:"how", t:"系统如何运作。", s:"透镜 → 指南针 → 方向深化。"},
-        {id:"expect", t:"未来预期。", s:"北/东/南/西将逐步深化。"}
-      ],
-      sections:{
-        construction:{
-          title:"施工中",
-          items:[
-            {k:"stability", t:"哪些是稳定的", s:"结构不漂移。", p:"导航与透镜是稳定且规范的。", li:["路径结构保持一致。","状态键只用 gd_*。","UI变化不破坏含义。"]},
-            {k:"safe", t:"可安全浏览", s:"不会走到死路。", p:"你可以放心浏览，不会破坏流程。", li:["未完成内容显示占位。","链接只指向已知枢纽。","无破坏性操作。"]},
-            {k:"placeholders", t:"占位提示", s:"不完整会被标记。", p:"未构建区域会明确显示“施工中”，而不是悄悄出错。", li:["清晰提示。","避免误导。","导航仍可用。"]},
-            {k:"timeline", t:"哪些会变化", s:"内容扩展。", p:"内容层增长，结构层保持不变。", li:["更多气泡与层级。","更多示例与引用。","更多双语覆盖。"]}
-          ]
-        },
-        how:{
-          title:"如何运作",
-          items:[
-            {k:"lenses", t:"透镜", s:"风格 + 时间 + 深度 + 语言。", p:"透镜改变呈现方式，不改变结构。", li:["风格：正式/非正式","时间：起源/当前/未来","深度：浏览/深入","语言：EN/中文"]},
-            {k:"compass", t:"指南针面", s:"北/东/南/西。", p:"指南针是方向理解的入口。", li:["点方向打开公告。","每个方向会变成子指南针。","返回路径稳定。"]},
-            {k:"state", t:"状态键", s:"仅 gd_*。", p:"状态在页面间通过规范键保持一致。", li:["gd_lang","gd_depth","gd_style","gd_time"]},
-            {k:"safety", t:"不漂移规则", s:"结构优先。", p:"结构为规范层，内容在其上扩展。", li:["不静默改名。","不重复含义。","不破坏拓扑。"]}
-          ]
-        },
-        expect:{
-          title:"未来预期",
-          items:[
-            {k:"dirs", t:"方向含义", s:"四向四职能。", p:"每个方向对应系统中的一种作用。", li:["北：稳定","东：执行","南：汇聚","西：约束"]},
-            {k:"depth", t:"深度扩展", s:"浏览 → 深入。", p:"浏览提供概览，深入提供完整密度。", li:["先概览。","需要时深入。","结构始终一致。"]},
-            {k:"bilingual", t:"双语扩展", s:"EN + 中文。", p:"英文为主，中文为规范结构层。", li:["核心页面双语。","关键术语双语。","持续扩展。"]},
-            {k:"roadmap", t:"路线图", s:"更多气泡，更多递归。", p:"每个方向会展开为嵌套路径与最终解析。", li:["方向子指南针。","果实/解析模块。","统一导航。"]}
-          ]
-        }
-      },
-      buttons:{back:"返回", backPage:"回到页面", prev:"上一个", next:"下一个"}
+      brand:"枢轴罗盘",
+      tag:"终端 · 结构前言",
+      hero:"终端",
+      sub:"施工中 · 可安全探索 · 遍历式导航",
+      lens:{formal:"正式", informal:"非正式", concept:"概念", live:"上线", roadmap:"路线图"},
+      buttons:{reset:"重置", ret:"返回", goHome:"进入枢纽", goExplore:"进入探索"},
+      bubbles:[
+        {key:"safe", t:"施工中（可安全探索）。", s:"导航稳定；内容逐步扩展。"},
+        {key:"how", t:"系统如何工作。", s:"在节点内选择透镜，然后按结构遍历。"},
+        {key:"keys", t:"规范状态键。", s:"仅使用 gd_*；不允许混合命名空间。"},
+        {key:"rules", t:"不漂移规则。", s:"透镜改变时，文本与含义必须改变。"}
+      ]
     }
   };
 
-  const T = UI[lang] || UI.en;
+  var pack = (lang==="zh") ? PACK.zh : PACK.en;
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
-  // Apply header + buttons
-  document.getElementById("tTitle").textContent = T.title;
-  document.getElementById("tSub").textContent = T.sub;
-  document.getElementById("miniKeys").textContent = T.keys;
-  document.getElementById("btnHome").textContent = T.home;
-  document.getElementById("btnLinks").textContent = T.links;
+  // header labels
+  document.getElementById("brandName").textContent = pack.brand;
+  document.getElementById("brandTag").textContent = pack.tag;
+  document.getElementById("heroTitle").textContent = pack.hero;
+  document.getElementById("heroSub").textContent = pack.sub;
+  document.getElementById("btnReset").textContent = pack.buttons.reset;
+  document.getElementById("mReturn").textContent = pack.buttons.ret;
+  document.getElementById("mGoHome").textContent = pack.buttons.goHome;
+  document.getElementById("mGoExplore").textContent = pack.buttons.goExplore;
 
-  // Primary bubbles
-  const primary = document.getElementById("primaryBubbles");
-  primary.innerHTML = "";
-  T.p.forEach(p=>{
-    const div = document.createElement("div");
-    div.className = "bubble";
-    div.setAttribute("data-section", p.id);
-    div.innerHTML = `<div class="b-title">${p.t}</div><div class="b-sub">${p.s}</div>`;
-    primary.appendChild(div);
+  // lens labels
+  function setLensLabels(){
+    document.getElementById("styleChip").textContent = "STYLE: " + (style==="formal" ? pack.lens.formal : pack.lens.informal);
+    document.getElementById("chipConcept").textContent = pack.lens.concept;
+    document.getElementById("chipLive").textContent = pack.lens.live;
+    document.getElementById("chipRoadmap").textContent = pack.lens.roadmap;
+
+    document.getElementById("chipConcept").classList.toggle("active", time==="origin");
+    document.getElementById("chipLive").classList.toggle("active", time==="now");
+    document.getElementById("chipRoadmap").classList.toggle("active", time==="post");
+  }
+
+  // build bubbles
+  var grid=document.getElementById("grid");
+  pack.bubbles.forEach(function(b){
+    var el=document.createElement("div");
+    el.className="bubble";
+    el.setAttribute("role","button");
+    el.setAttribute("tabindex","0");
+    el.dataset.key=b.key;
+    el.innerHTML='<div class="bt">'+b.t+'</div><p class="bs">'+b.s+'</p>';
+    el.onclick=function(){ open(b.key); };
+    el.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(b.key);} };
+    grid.appendChild(el);
   });
 
-  // Modal controls
-  const bd = document.getElementById("bd");
-  const modal = document.getElementById("modal");
-  const mTitle = document.getElementById("mTitle");
-  const mClose = document.getElementById("mClose");
-  const subGrid = document.getElementById("subGrid");
-  const detail = document.getElementById("detail");
-  const dTitle = document.getElementById("dTitle");
-  const dPara = document.getElementById("dPara");
-  const dList = document.getElementById("dList");
-  const dBack = document.getElementById("dBack");
-  const dClose = document.getElementById("dClose");
-  const dPrev = document.getElementById("dPrev");
-  const dNext = document.getElementById("dNext");
+  // modal refs
+  var bd=document.getElementById("bd");
+  var modal=document.getElementById("modal");
+  var mClose=document.getElementById("mClose");
+  var mTitle=document.getElementById("mTitle");
 
-  dBack.textContent = T.buttons.back;
-  dClose.textContent = T.buttons.backPage;
-  dPrev.textContent = T.buttons.prev;
-  dNext.textContent = T.buttons.next;
+  var h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1");
+  var h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2");
+  var h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3");
+  var h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4");
 
-  let currentSection = null;
-  let currentIndex = 0;
+  function fill(hEl,pEl,uEl,b){
+    hEl.textContent=b.h; pEl.textContent=b.p; uEl.innerHTML="";
+    b.u.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; uEl.appendChild(li); });
+  }
 
-  function openModal(sectionId){
-    currentSection = sectionId;
-    currentIndex = 0;
-    mTitle.textContent = T.sections[sectionId].title;
-    buildSub(sectionId);
-    detail.classList.remove("show");
+  function persist(){
+    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time);}catch(e){}
+  }
+
+  function open(key){
+    activeKey=key;
+    render();
     bd.classList.add("show");
     modal.classList.add("show");
   }
 
-  function closeModal(){
+  function close(){
     bd.classList.remove("show");
     modal.classList.remove("show");
-    detail.classList.remove("show");
+    activeKey=null;
   }
 
-  function buildSub(sectionId){
-    const items = T.sections[sectionId].items;
-    subGrid.innerHTML = "";
-    items.forEach((it, idx)=>{
-      const el = document.createElement("div");
-      el.className = "subbubble";
-      el.setAttribute("data-idx", String(idx));
-      el.innerHTML = `<div class="sub-title">${it.t}</div><p class="sub-sub">${it.s}</p>`;
-      el.addEventListener("click", ()=>openDetail(idx));
-      subGrid.appendChild(el);
-    });
+  var activeKey=null;
+
+  function render(){
+    setLensLabels();
+    persist();
+    setLinks();
+
+    if(lang==="zh"){
+      // Chinese UI: show concise bulletins (content expansion can come later)
+      var zhTitle = pack.bubbles.find(function(x){return x.key===activeKey;}).t;
+      mTitle.textContent = zhTitle;
+
+      // simple 4 boxes, each with 4 bullets (still dense)
+      fill(h1,p1,u1,{h:"说明",p:"该节点用于建立结构理解。",u:["结构优先。","透镜在气泡内。","返回路径稳定。","可安全探索。"]});
+      fill(h2,p2,u2,{h:"透镜",p:"风格与时间改变呈现。",u:["正式/非正式。","概念/上线/路线图。","改变必须影响内容。","不允许陈旧文本。"]});
+      fill(h3,p3,u3,{h:"导航",p:"通过枢纽遍历全站。",u:["枢纽可达。","Dock 一致。","退出可用。","无断链。"]});
+      fill(h4,p4,u4,{h:"状态键",p:"只使用 gd_*。",u:["gd_lang。","gd_style。","gd_time。","必要时 gd_depth。"]});
+      return;
+    }
+
+    var view = PACK.en.content[activeKey][time][style];
+    mTitle.textContent = view.title;
+    fill(h1,p1,u1,view.b1);
+    fill(h2,p2,u2,view.b2);
+    fill(h3,p3,u3,view.b3);
+    fill(h4,p4,u4,view.b4);
   }
 
-  function openDetail(idx){
-    const items = T.sections[currentSection].items;
-    currentIndex = idx;
-    const it = items[idx];
-    dTitle.textContent = it.t;
-    dPara.textContent = it.p;
-    dList.innerHTML = "";
-    it.li.forEach(x=>{
-      const li = document.createElement("li");
-      li.textContent = x;
-      dList.appendChild(li);
-    });
-    detail.classList.add("show");
-  }
+  // lens handlers
+  document.getElementById("styleChip").onclick=function(){
+    style = (style==="formal") ? "informal" : "formal";
+    render();
+  };
+  document.getElementById("chipConcept").onclick=function(){ time="origin"; render(); };
+  document.getElementById("chipLive").onclick=function(){ time="now"; render(); };
+  document.getElementById("chipRoadmap").onclick=function(){ time="post"; render(); };
 
-  function step(dir){
-    const items = T.sections[currentSection].items;
-    let n = currentIndex + dir;
-    if(n < 0) n = items.length - 1;
-    if(n >= items.length) n = 0;
-    openDetail(n);
-  }
+  // close handlers
+  bd.onclick=close;
+  mClose.onclick=close;
+  document.getElementById("mReturn").onclick=close;
 
-  bd.addEventListener("click", closeModal);
-  mClose.addEventListener("click", closeModal);
-  dClose.addEventListener("click", closeModal);
-  dBack.addEventListener("click", ()=>detail.classList.remove("show"));
-  dPrev.addEventListener("click", ()=>step(-1));
-  dNext.addEventListener("click", ()=>step(1));
+  // reset
+  document.getElementById("btnReset").onclick=function(){
+    try{
+      localStorage.removeItem("gd_style");
+      localStorage.removeItem("gd_time");
+    }catch(e){}
+    style="formal"; time="now";
+    setLinks();
+    setLensLabels();
+  };
 
-  // Primary click
-  primary.addEventListener("click", (e)=>{
-    const bubble = e.target.closest(".bubble");
-    if(!bubble) return;
-    openModal(bubble.getAttribute("data-section"));
-  });
+  setLinks();
+  setLensLabels();
 })();
 </script>
 

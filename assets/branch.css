@@ -1,149 +1,63 @@
-/* TNT — /assets/branch.css
-   GEODIAMETRICS GEOMETRY LAYER (CANONICAL)
-   RULES:
-   - GEOMETRY ONLY (positioning + transforms)
-   - MUST NOT style: html/body/background/color/typography/material
-   - ui.css owns field + material
-   - Pages may add local layout, but should not duplicate this geometry
-*/
+/* ==========================================
+   GEODIAMETRICS BRANCH GEOMETRY
+   Owns DIAMOND LAYOUT ONLY
+   ========================================== */
 
-/* ---------- GLOBAL GEOMETRY PRIMITIVES ---------- */
-
-.gd-stage{
-  position:relative;
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.diamond-container {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  margin: 80px auto;
 }
 
-.gd-platform{
-  position:relative;
-  width:min(980px, 92vw);
-  height:min(620px, 72vh);
-  min-height:420px;
+.diamond {
+  width: 130px;
+  height: 130px;
+  background: #0c0c0f;
+  border-radius: 20px;
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow:
+    0 14px 40px rgba(0,0,0,0.7),
+    inset 0 0 12px rgba(255,255,255,0.03);
 }
 
-/* ---------- DIAMOND PRIMITIVE ---------- */
-/* NOTE: no background, no colors, no shadows here (ui.css/page owns material) */
-
-.diamond,
-.gd-diamond{
-  position:absolute;
-  width:var(--gd-d, 150px);
-  height:var(--gd-d, 150px);
-  border-radius:22px;
-  transform:rotate(45deg);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  -webkit-tap-highlight-color:transparent;
+.diamond span {
+  transform: rotate(-45deg);
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
-.diamond > span,
-.gd-diamond > span,
-.gd-diamond .inner,
-.diamond .inner{
-  transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:14px;
-  gap:6px;
-  width:100%;
-  height:100%;
+.diamond:hover,
+.diamond.active {
+  border: 1px solid #d4af37;
+  box-shadow:
+    0 0 28px rgba(212,175,55,0.4),
+    0 18px 50px rgba(0,0,0,0.85);
 }
 
-/* ---------- COMPASS DIAMOND POSITIONS (HOME / HUB / COMPASS) ---------- */
-/* Uses a center anchor and a radius. Pages can override --gd-d and --gd-r. */
+/* Compass positions */
 
-.gd-compass{
-  --gd-d: 150px;
-  --gd-r: 190px;
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:1px;
-  height:1px;
+.diamond.north { top: 0; left: 105px; }
+.diamond.south { bottom: 0; left: 105px; }
+.diamond.west  { left: 0; top: 105px; }
+.diamond.east  { right: 0; top: 105px; }
+
+/* Center nucleus */
+
+.diamond.core {
+  top: 105px;
+  left: 105px;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(145deg, #1a1a1f, #0a0a0d);
+  border-radius: 16px;
+  box-shadow:
+    0 0 30px rgba(212,175,55,0.35),
+    0 0 60px rgba(212,175,55,0.2);
 }
-
-/* Outer 4 */
-.gd-compass .gd-n{ transform:translate(-50%,-50%) translate(0, calc(var(--gd-r) * -1)) rotate(45deg); }
-.gd-compass .gd-e{ transform:translate(-50%,-50%) translate(var(--gd-r), 0) rotate(45deg); }
-.gd-compass .gd-s{ transform:translate(-50%,-50%) translate(0, var(--gd-r)) rotate(45deg); }
-.gd-compass .gd-w{ transform:translate(-50%,-50%) translate(calc(var(--gd-r) * -1), 0) rotate(45deg); }
-
-/* Center core (optional) */
-.gd-core{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:var(--gd-core, 64px);
-  height:var(--gd-core, 64px);
-  transform:translate(-50%,-50%);
-  border-radius:18px;
-  display:grid;
-  place-items:center;
-}
-
-/* ---------- LEGACY COMPASS DIAMOND CLASS NAMES ---------- */
-/* Supports pages using .diamond.top/.right/.bottom/.left */
-
-.platform{
-  position:relative;
-  width:min(980px, 92vw);
-  height:min(620px, 72vh);
-  min-height:420px;
-}
-
-.platform .diamond{
-  --gd-d: 150px;
-  left:50%;
-  top:50%;
-}
-
-.platform .diamond.top{    transform:translate(-50%,-50%) translate(0, calc(var(--gd-r, 190px) * -1)) rotate(45deg); }
-.platform .diamond.right{  transform:translate(-50%,-50%) translate(var(--gd-r, 190px), 0) rotate(45deg); }
-.platform .diamond.bottom{ transform:translate(-50%,-50%) translate(0, var(--gd-r, 190px)) rotate(45deg); }
-.platform .diamond.left{   transform:translate(-50%,-50%) translate(calc(var(--gd-r, 190px) * -1), 0) rotate(45deg); }
-
-/* ---------- 4-DIAMOND CLUSTER (DOOR / TERMINAL ROUTE CHOOSER) ---------- */
-/* A tight 2x2 diamond cluster centered on screen. */
-.gd-cluster{
-  --gd-d: 150px;
-  --gd-gap: 18px;
-  position:relative;
-  width:calc((var(--gd-d) * 2) + var(--gd-gap));
-  height:calc((var(--gd-d) * 2) + var(--gd-gap));
-}
-
-.gd-cluster .gd-tl{ left:0; top:0; }
-.gd-cluster .gd-tr{ right:0; top:0; }
-.gd-cluster .gd-bl{ left:0; bottom:0; }
-.gd-cluster .gd-br{ right:0; bottom:0; }
-
-/* ---------- RESPONSIVE GEOMETRY ---------- */
-
-@media (max-width:520px){
-  .gd-platform,
-  .platform{
-    height:min(640px, 78vh);
-    min-height:380px;
-  }
-
-  .gd-compass{ --gd-d: 132px; --gd-r: 168px; }
-  .platform .diamond{ --gd-d: 132px; }
-  .gd-core{ --gd-core: 58px; }
-
-  .gd-cluster{ --gd-d: 132px; --gd-gap: 14px; }
-}
-
-@media (max-width:380px){
-  .gd-compass{ --gd-d: 120px; --gd-r: 152px; }
-  .platform .diamond{ --gd-d: 120px; }
-  .gd-cluster{ --gd-d: 120px; --gd-gap: 12px; }
-}
-```0

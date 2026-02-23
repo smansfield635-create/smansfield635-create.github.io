@@ -1,0 +1,26 @@
+<!-- TNT — /explore/innovation/language/index.html
+     PURPOSE: Legacy-path shim. Redirects to canonical /innovation/language/ preserving query + hash.
+     DOES NOT touch ui.css/branch.css. No layout. No drift.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="robots" content="noindex"/>
+  <title>Redirect · Innovation · Language</title>
+  <script>
+    (function () {
+      var q = window.location.search || "";
+      var h = window.location.hash || "";
+      // Canonical target:
+      var target = "/innovation/language/" + q + h;
+
+      // Use replace so back button doesn’t bounce through the shim.
+      try { window.location.replace(target); }
+      catch(e) { window.location.href = target; }
+    })();
+  </script>
+</head>
+<body></body>
+</html>

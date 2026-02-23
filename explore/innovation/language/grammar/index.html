@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>GRAMMAR · Language Engine</title>
+<title>TRAVERSAL · Grammar</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -17,8 +17,7 @@
   --obs2:#0c1626;
 }
 
-/* DO NOT TOUCH FIELD — ui.css owns background */
-
+/* stage */
 .stage{
   position:fixed;
   left:50%;
@@ -32,8 +31,7 @@
 .outer{
   position:absolute;
   left:50%;top:50%;
-  width:min(560px,92vw);
-  height:min(560px,92vw);
+  width:100%;height:100%;
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   background:
@@ -56,20 +54,16 @@
   transform-origin:center;
   border-radius:26px;
   cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-
   background:
     radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
     linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
-
   border:1px solid rgba(255,255,255,.10);
   box-shadow:
     0 28px 84px rgba(0,0,0,.78),
     inset 0 2px 0 rgba(255,255,255,.14),
     inset 0 -28px 44px rgba(0,0,0,.62);
-
-  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  transition:transform .2s ease, box-shadow .2s ease;
 }
 
 .d:hover{
@@ -85,7 +79,7 @@
 .d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
 
 .inner{
-  width:100%; height:100%;
+  width:100%;height:100%;
   transform:rotate(-45deg);
   display:flex;
   flex-direction:column;
@@ -94,25 +88,86 @@
   text-align:center;
   padding:16px;
   gap:8px;
-  pointer-events:none;
 }
 
-.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
-.sub{ font-size:13px; opacity:.86; line-height:1.35; max-width:16em; }
+.lab{font-weight:950;letter-spacing:.8px;font-size:16px;}
+.sub{font-size:13px;opacity:.86;}
 
 .core{
   position:absolute;
-  left:50%; top:50%;
+  left:50%;top:50%;
   transform:translate(-50%,-50%);
   width:64px;height:64px;
   border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
   box-shadow:0 18px 44px rgba(0,0,0,.62);
-  display:grid; place-items:center;
-  font-weight:950; letter-spacing:.5px;
+  display:grid;place-items:center;
+  font-weight:950;
   opacity:.92;
-  pointer-events:none;
+}
+
+/* modal */
+.bd{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(10px);
+  display:none;
+  z-index:200;
+}
+.bd.show{display:block;}
+
+.modal{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(900px,94vw);
+  max-height:85vh;
+  display:none;
+  z-index:210;
+}
+
+.modal.show{display:block;}
+
+.shell{
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(145deg, rgba(12,22,38,.95), rgba(7,11,18,.98));
+  box-shadow:0 60px 180px rgba(0,0,0,.92);
+  padding:24px;
+  overflow:auto;
+}
+
+.grid{
+  display:grid;
+  gap:18px;
+}
+
+@media(min-width:900px){
+  .grid{grid-template-columns:1fr 1fr;}
+}
+
+.box{
+  border-radius:18px;
+  padding:18px;
+  background:rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.box h4{
+  margin:0 0 8px;
+  font-weight:950;
+}
+
+.box ul{
+  margin:0;
+  padding-left:18px;
+}
+
+.box li{
+  margin:6px 0;
 }
 </style>
 </head>
@@ -122,52 +177,92 @@
 <div class="stage">
   <div class="outer"></div>
 
-  <!-- TRAVERSAL CONTRACTS -->
-  <div class="d d-n" onclick="go('/explore/innovation/language/grammar/traversal/')">
+  <div class="d d-n" onclick="openModal('Contracts')">
     <div class="inner">
-      <div class="lab">TRAVERSAL</div>
-      <div class="sub">Traversal contracts.</div>
+      <div class="lab">CONTRACTS</div>
+      <div class="sub">Traversal agreements.</div>
     </div>
   </div>
 
-  <!-- STRUCTURAL LANGUAGE -->
-  <div class="d d-e" onclick="go('/explore/innovation/language/grammar/structure/')">
+  <div class="d d-e" onclick="openModal('Vectors')">
     <div class="inner">
-      <div class="lab">STRUCTURE</div>
-      <div class="sub">Structural language constraints.</div>
+      <div class="lab">VECTORS</div>
+      <div class="sub">Directional routing logic.</div>
     </div>
   </div>
 
-  <!-- DETERMINISTIC PARSING -->
-  <div class="d d-w" onclick="go('/explore/innovation/language/grammar/parsing/')">
+  <div class="d d-w" onclick="openModal('Resolution')">
     <div class="inner">
-      <div class="lab">PARSING</div>
-      <div class="sub">Deterministic parsing.</div>
+      <div class="lab">RESOLUTION</div>
+      <div class="sub">Deterministic outcomes.</div>
     </div>
   </div>
 
-  <!-- ANTI-DRIFT SYNTAX -->
-  <div class="d d-s" onclick="go('/explore/innovation/language/grammar/anti-drift/')">
+  <div class="d d-s" onclick="openModal('Containment')">
     <div class="inner">
-      <div class="lab">ANTI-DRIFT</div>
-      <div class="sub">Anti-drift syntax.</div>
+      <div class="lab">CONTAINMENT</div>
+      <div class="sub">Anti-drift enforcement.</div>
     </div>
   </div>
 
   <div class="core">◆</div>
 </div>
 
-<script>
-function go(path){
-  const qs = new URLSearchParams(window.location.search);
-  const lang = qs.get("lang") || localStorage.getItem("gd_lang") || "en";
-  const style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  const time = qs.get("time") || localStorage.getItem("gd_time") || "now";
+<div class="bd" id="bd" onclick="closeModal()"></div>
 
-  window.location.href =
-    path + "?lang=" + lang +
-    "&style=" + style +
-    "&time=" + time;
+<div class="modal" id="modal">
+  <div class="shell">
+    <h3 id="modalTitle"></h3>
+    <div class="grid">
+      <div class="box">
+        <h4>Definition</h4>
+        <ul>
+          <li>Structural role</li>
+          <li>Directional influence</li>
+          <li>System anchor</li>
+          <li>Traversal impact</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h4>Mechanics</h4>
+        <ul>
+          <li>Routing behavior</li>
+          <li>Constraint application</li>
+          <li>Resolution order</li>
+          <li>Fallback logic</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h4>Failure Modes</h4>
+        <ul>
+          <li>Drift risk</li>
+          <li>Ambiguity</li>
+          <li>Over-expansion</li>
+          <li>Key corruption</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h4>System Effect</h4>
+        <ul>
+          <li>Stability gain</li>
+          <li>Clarity increase</li>
+          <li>Traversal speed</li>
+          <li>Coherence preservation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openModal(title){
+  document.getElementById("modalTitle").textContent = title;
+  document.getElementById("bd").classList.add("show");
+  document.getElementById("modal").classList.add("show");
+}
+function closeModal(){
+  document.getElementById("bd").classList.remove("show");
+  document.getElementById("modal").classList.remove("show");
 }
 </script>
 

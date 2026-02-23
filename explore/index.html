@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
 <title>INNOVATION · Cardinal Axis</title>
 
 <style>
@@ -18,116 +19,118 @@
   --ink:#f5f8ff;
 }
 
+/* base */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--ink);
-  background:
-    linear-gradient(180deg,var(--redA),var(--redB) 60%,var(--redC));
+  background:linear-gradient(180deg,var(--redA),var(--redB) 60%,var(--redC));
+  overflow:hidden; /* prevent the “giant red scroll” regression */
 }
 
-/* Center layout */
+/* fully centered stage */
 .stage{
+  height:100dvh;              /* dynamic viewport height (fixes mobile bars) */
+  width:100vw;
   display:flex;
   align-items:center;
   justify-content:center;
-  height:100%;
+  padding: max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom));
 }
 
-/* Parent diamond */
+/* responsive diamond size */
 .diamond{
+  --D: min(86vw, 72dvh, 520px); /* THIS is the fix */
   position:relative;
-  width:520px;
-  height:520px;
+  width:var(--D);
+  height:var(--D);
   transform:rotate(45deg);
   background:linear-gradient(160deg,var(--obsA),var(--obsB));
   border:1px solid rgba(212,175,55,.35);
   box-shadow:0 30px 100px rgba(0,0,0,.7);
 }
 
-/* Inner grid */
+/* inner grid scales with diamond */
 .grid{
   position:absolute;
-  inset:40px;
+  inset: calc(var(--D) * 0.10);
   transform:rotate(-45deg);
   display:grid;
   grid-template-columns:1fr 1fr;
   grid-template-rows:1fr 1fr;
-  gap:20px;
+  gap: calc(var(--D) * 0.045);
 }
 
-/* Inner diamonds */
+/* panels */
 .cell{
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:20px;
+  padding: calc(var(--D) * 0.05);
   background:linear-gradient(160deg,var(--obsA),var(--obsB));
-  border:1px solid rgba(212,175,55,.25);
+  border:1px solid rgba(212,175,55,.22);
   box-shadow:0 15px 40px rgba(0,0,0,.6);
   cursor:pointer;
-  transition:all .15s ease;
+  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
 }
-
 .cell:hover{
-  border-color:var(--gold);
-  box-shadow:0 0 20px rgba(212,175,55,.25);
+  border-color: rgba(212,175,55,.65);
+  box-shadow:0 0 20px rgba(212,175,55,.18), 0 15px 40px rgba(0,0,0,.6);
+  transform: translateY(-1px);
 }
 
+/* text scales slightly */
 h2{
   margin:0;
-  font-size:16px;
+  font-size: clamp(14px, 2.2vw, 16px);
   letter-spacing:.5px;
 }
-
 .sub{
   margin-top:6px;
-  font-size:12px;
-  opacity:.8;
+  font-size: clamp(11px, 1.9vw, 12px);
+  opacity:.80;
 }
 </style>
 </head>
 
 <body>
+  <div class="stage">
+    <div class="diamond">
+      <div class="grid">
 
-<div class="stage">
-  <div class="diamond">
-    <div class="grid">
-
-      <div class="cell">
-        <div>
-          <h2>LANGUAGE ENGINE</h2>
-          <div class="sub">语义结构与编译</div>
+        <div class="cell" role="button" tabindex="0">
+          <div>
+            <h2>LANGUAGE ENGINE</h2>
+            <div class="sub">语义结构与编译</div>
+          </div>
         </div>
-      </div>
 
-      <div class="cell">
-        <div>
-          <h2>EXECUTION SYSTEMS</h2>
-          <div class="sub">确定性执行框架</div>
+        <div class="cell" role="button" tabindex="0">
+          <div>
+            <h2>EXECUTION SYSTEMS</h2>
+            <div class="sub">确定性执行框架</div>
+          </div>
         </div>
-      </div>
 
-      <div class="cell">
-        <div>
-          <h2>MEASUREMENT LAB</h2>
-          <div class="sub">指标与证据流</div>
+        <div class="cell" role="button" tabindex="0">
+          <div>
+            <h2>MEASUREMENT LAB</h2>
+            <div class="sub">指标与证据流</div>
+          </div>
         </div>
-      </div>
 
-      <div class="cell">
-        <div>
-          <h2>GOVERNANCE STACK</h2>
-          <div class="sub">政策与安全控制</div>
+        <div class="cell" role="button" tabindex="0">
+          <div>
+            <h2>GOVERNANCE STACK</h2>
+            <div class="sub">政策与安全控制</div>
+          </div>
         </div>
-      </div>
 
+      </div>
     </div>
   </div>
-</div>
-
 </body>
 </html>

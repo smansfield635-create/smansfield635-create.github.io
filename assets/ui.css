@@ -2,7 +2,7 @@
    GEODIAMETRICS UI — CANONICAL FIELD OWNER
    RED FIELD · GOLD GRID · BLACK MATERIAL
    FILE: /assets/ui.css
-   RULE: This file owns html/body background. NOTHING ELSE may.
+   RULE (LOCKED): This file owns html/body background. NOTHING ELSE may.
    ============================================================ */
 
 /* =========================
@@ -26,6 +26,8 @@
 
 /* =========================
    FIELD (SINGLE OWNER)
+   Mid-Autumn atmosphere: lantern glow + distant fireworks + night haze
+   (NO geometry, NO layout positioning)
    ========================= */
 
 html, body{
@@ -36,16 +38,17 @@ html, body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   color:var(--white-1);
 
+  /* Base field */
   background:
+    radial-gradient(circle at 62% 14%, rgba(255,230,160,.10) 0%, rgba(255,230,160,0) 58%), /* moon haze */
     radial-gradient(circle at 50% 20%, rgba(255,210,120,.08) 0%, transparent 55%),
     radial-gradient(circle at 20% 40%, rgba(255,140,90,.08) 0%, transparent 60%),
     radial-gradient(circle at 85% 70%, rgba(255,160,90,.06) 0%, transparent 60%),
     linear-gradient(180deg, var(--red-top) 0%, var(--red-mid) 60%, var(--red-deep) 100%);
-
   background-attachment:fixed;
 }
 
-/* subtle diamond grid overlay */
+/* Subtle diamond grid overlay (gold) */
 body::before{
   content:"";
   position:fixed;
@@ -66,6 +69,50 @@ body::before{
       transparent 1px,
       transparent 140px
     );
+  opacity:1;
+}
+
+/* Mid-Autumn atmospheric overlay (lantern bokeh + fireworks in distance + landscape haze) */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+
+  background:
+    /* lantern bokeh (warm) */
+    radial-gradient(22px 22px at 14% 22%, rgba(255,190,120,.10) 0%, rgba(255,190,120,0) 72%),
+    radial-gradient(30px 30px at 24% 34%, rgba(255,160,90,.08) 0%, rgba(255,160,90,0) 76%),
+    radial-gradient(18px 18px at 78% 26%, rgba(255,210,140,.08) 0%, rgba(255,210,140,0) 72%),
+    radial-gradient(26px 26px at 70% 40%, rgba(255,150,80,.07) 0%, rgba(255,150,80,0) 78%),
+    radial-gradient(20px 20px at 58% 30%, rgba(255,220,160,.06) 0%, rgba(255,220,160,0) 78%),
+
+    /* fireworks bursts (upper distance; subtle) */
+    radial-gradient(130px 130px at 18% 12%, rgba(255,240,210,.10) 0%, rgba(255,240,210,0) 62%),
+    radial-gradient(170px 170px at 34% 18%, rgba(255,200,140,.08) 0%, rgba(255,200,140,0) 64%),
+    radial-gradient(150px 150px at 78% 15%, rgba(255,230,190,.09) 0%, rgba(255,230,190,0) 64%),
+    radial-gradient(190px 190px at 64% 22%, rgba(255,180,120,.06) 0%, rgba(255,180,120,0) 66%),
+
+    /* distant ridge / haze near bottom */
+    radial-gradient(1200px 520px at 50% 100%, rgba(0,0,0,.22) 0%, rgba(0,0,0,0) 62%),
+    linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.10) 100%);
+
+  mix-blend-mode:screen;
+  opacity:.60;
+}
+
+/* =========================
+   LINK NORMALIZATION (FIX BLUE/PURPLE)
+   ========================= */
+
+a, a:visited, a:hover, a:active{
+  color:inherit;
+  text-decoration:none;
+}
+a:focus-visible{
+  outline:2px solid rgba(212,175,55,.55);
+  outline-offset:2px;
+  border-radius:12px;
 }
 
 /* =========================

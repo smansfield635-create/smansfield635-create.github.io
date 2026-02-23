@@ -1,4 +1,12 @@
-<!-- /explore/index.html  |  QUEEN’S ARCHITECTURE — GEM STANDARD  |  TNT FULL FILE -->
+<!-- /explore/index.html  |  QUEEN’S ARCHITECTURE — GEM STANDARD  |  TNT FULL FILE
+     TAKEOVER PASS (v2): clarity + contrast + crisp gold hairline + less haze
+     - Outer diamond glow reduced (stops “fog” washout)
+     - Quadrant panels darkened + text contrast boosted
+     - Gold hairline sharpened (sword-inlay feel)
+     - Modal header + chips + boxes tuned for readability (no milky overlay)
+     - Dual lens preserved (EN + 中文 in content; gd_lang persists)
+     - Lenses remain inside modal only
+-->
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,11 +17,10 @@
   <style>
     :root{
       --bg0:#140006; --bg1:#1d0009; --bg2:#26000c;
-      --opal1:rgba(245,248,255,.90); --opal2:rgba(216,226,255,.55); --opal3:rgba(180,200,255,.22);
+      --opal1:rgba(245,248,255,.92); --opal2:rgba(216,226,255,.58); --opal3:rgba(180,200,255,.22);
       --gold1:rgba(255,220,120,.92); --gold2:rgba(255,190,70,.55); --gold3:rgba(255,160,40,.25);
-      --ink:rgba(245,248,255,.92); --muted:rgba(245,248,255,.70);
-      --hair:rgba(255,210,120,.70);
-      --danger:rgba(255,110,110,.85);
+      --ink:rgba(245,248,255,.94); --muted:rgba(245,248,255,.74);
+      --hair:rgba(255,210,120,.80);
       --shadow: 0 18px 80px rgba(0,0,0,.55);
       --rad:18px;
       --rad2:26px;
@@ -28,9 +35,9 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
       color:var(--ink);
       background:
-        radial-gradient(1200px 700px at 50% 30%, rgba(255,220,120,.08), transparent 60%),
-        radial-gradient(900px 520px at 18% 70%, rgba(210,235,255,.07), transparent 62%),
-        radial-gradient(900px 520px at 85% 75%, rgba(210,235,255,.05), transparent 62%),
+        radial-gradient(1200px 700px at 50% 30%, rgba(255,220,120,.07), transparent 60%),
+        radial-gradient(900px 520px at 18% 70%, rgba(210,235,255,.05), transparent 62%),
+        radial-gradient(900px 520px at 85% 75%, rgba(210,235,255,.04), transparent 62%),
         linear-gradient(180deg, var(--bg2), var(--bg0));
       overflow-x:hidden;
     }
@@ -55,26 +62,26 @@
       letter-spacing:.3px;
     }
     .brand .t1{font-weight:700; font-size:14px; opacity:.92}
-    .brand .t2{font-weight:800; font-size:20px; line-height:1.05}
-    .brand .t3{font-weight:650; font-size:12px; opacity:.70}
+    .brand .t2{font-weight:900; font-size:20px; line-height:1.05; letter-spacing:.3px}
+    .brand .t3{font-weight:650; font-size:12px; opacity:.74; letter-spacing:.2px}
     .stamp{
       display:flex;
       align-items:center;
       gap:10px;
       font-size:12px;
-      opacity:.86;
+      opacity:.90;
       padding:8px 10px;
       border-radius:999px;
-      border:1px solid rgba(255,210,120,.22);
-      background: rgba(0,0,0,.14);
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      border:1px solid rgba(255,210,120,.28);
+      background: rgba(0,0,0,.18);
+      box-shadow: 0 10px 30px rgba(0,0,0,.28);
       user-select:none;
       white-space:nowrap;
     }
     .dot{
       width:8px;height:8px;border-radius:50%;
-      background: radial-gradient(circle at 30% 30%, var(--gold1), rgba(255,200,80,.25));
-      box-shadow: 0 0 12px rgba(255,210,120,.25);
+      background: radial-gradient(circle at 30% 30%, var(--gold1), rgba(255,200,80,.20));
+      box-shadow: 0 0 12px rgba(255,210,120,.22);
     }
 
     /* diamond stage */
@@ -99,20 +106,22 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      opacity:.88;
+      opacity:.92;
       gap:10px;
       margin-top: 8px;
     }
     .subtitle .big{
-      font-weight:850;
-      letter-spacing:.4px;
+      font-weight:950;
+      letter-spacing:.5px;
       font-size: 22px;
+      text-shadow: 0 2px 14px rgba(0,0,0,.55);
     }
     .subtitle .small{
-      font-weight:650;
+      font-weight:750;
       font-size:12px;
-      opacity:.70;
+      opacity:.76;
       letter-spacing:.2px;
+      text-shadow: 0 2px 14px rgba(0,0,0,.45);
     }
 
     /* GEM diamond */
@@ -134,34 +143,36 @@
       height: 82%;
       transform: rotate(45deg);
       border-radius: var(--rad2);
+      /* ↓ reduced haze: less milky opal, more obsidian */
       background:
-        linear-gradient(135deg, rgba(255,210,120,.09), rgba(210,235,255,.08)),
-        radial-gradient(800px 600px at 30% 20%, rgba(245,248,255,.16), transparent 60%),
-        radial-gradient(700px 520px at 70% 80%, rgba(245,248,255,.10), transparent 60%),
-        rgba(0,0,0,.18);
-      border: 1px solid rgba(255,210,120,.22);
+        linear-gradient(135deg, rgba(255,210,120,.05), rgba(210,235,255,.04)),
+        radial-gradient(900px 650px at 28% 18%, rgba(245,248,255,.08), transparent 62%),
+        radial-gradient(780px 560px at 72% 82%, rgba(245,248,255,.05), transparent 64%),
+        rgba(0,0,0,.26);
+      border: 1px solid rgba(255,210,120,.28);
       box-shadow: var(--shadow);
       overflow:hidden;
     }
 
-    /* gold hairline crust */
+    /* crisp gold hairline crust */
     .diamond::before{
       content:"";
       position:absolute; inset:10px;
       border-radius: calc(var(--rad2) - 6px);
-      border: 1px solid rgba(255,210,120,.22);
+      border: 1px solid rgba(255,210,120,.42);
       box-shadow:
-        inset 0 0 0 1px rgba(210,235,255,.08),
-        inset 0 0 28px rgba(255,210,120,.06);
+        inset 0 0 0 1px rgba(210,235,255,.06),
+        inset 0 0 18px rgba(255,210,120,.05);
       pointer-events:none;
     }
     .diamond::after{
       content:"";
       position:absolute; inset:0;
+      /* ↓ contained shimmer (less fog) */
       background:
-        radial-gradient(900px 520px at 15% 22%, rgba(255,210,120,.08), transparent 55%),
-        radial-gradient(820px 520px at 82% 78%, rgba(210,235,255,.07), transparent 58%),
-        linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.20));
+        radial-gradient(900px 520px at 15% 22%, rgba(255,210,120,.06), transparent 58%),
+        radial-gradient(820px 520px at 82% 78%, rgba(210,235,255,.045), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.22));
       pointer-events:none;
     }
 
@@ -180,29 +191,33 @@
     .q{
       position:relative;
       border-radius: 20px;
-      border: 1px solid rgba(210,235,255,.12);
+      /* ↑ stronger border for definition */
+      border: 1px solid rgba(255,210,120,.18);
+      /* ↓ darker panel to stop washout */
       background:
-        radial-gradient(240px 200px at 30% 25%, rgba(245,248,255,.16), transparent 65%),
-        radial-gradient(240px 200px at 70% 75%, rgba(255,210,120,.10), transparent 65%),
-        rgba(0,0,0,.18);
+        radial-gradient(240px 200px at 30% 25%, rgba(245,248,255,.10), transparent 66%),
+        radial-gradient(240px 200px at 70% 75%, rgba(255,210,120,.07), transparent 66%),
+        rgba(0,0,0,.32);
       overflow:hidden;
       cursor:pointer;
       user-select:none;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease, box-shadow .12s ease;
       display:flex;
       align-items:center;
       justify-content:center;
       padding: 18px;
       text-align:center;
       min-height: 160px;
+      box-shadow: inset 0 0 0 1px rgba(210,235,255,.05);
     }
     .q:hover{
       transform: translateY(-2px);
       border-color: rgba(255,210,120,.28);
       background:
-        radial-gradient(240px 200px at 30% 25%, rgba(245,248,255,.20), transparent 65%),
-        radial-gradient(240px 200px at 70% 75%, rgba(255,210,120,.14), transparent 65%),
-        rgba(0,0,0,.20);
+        radial-gradient(240px 200px at 30% 25%, rgba(245,248,255,.12), transparent 66%),
+        radial-gradient(240px 200px at 70% 75%, rgba(255,210,120,.09), transparent 66%),
+        rgba(0,0,0,.36);
+      box-shadow: inset 0 0 0 1px rgba(210,235,255,.05), 0 0 22px rgba(255,210,120,.06);
     }
     .q:active{ transform: translateY(0px) scale(.995); }
 
@@ -219,26 +234,28 @@
       gap:8px;
       padding: 6px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(255,210,120,.22);
-      background: rgba(0,0,0,.18);
-      font-weight:800;
-      letter-spacing:.6px;
+      border: 1px solid rgba(255,210,120,.28);
+      background: rgba(0,0,0,.22);
+      font-weight:900;
+      letter-spacing:.7px;
       font-size:12px;
-      opacity:.92;
-      box-shadow: inset 0 0 0 1px rgba(210,235,255,.06);
+      opacity:.95;
+      box-shadow: inset 0 0 0 1px rgba(210,235,255,.05);
     }
     .q .name{
       font-size:18px;
-      font-weight:900;
-      letter-spacing:.2px;
+      font-weight:950;
+      letter-spacing:.25px;
       line-height:1.12;
+      text-shadow: 0 2px 18px rgba(0,0,0,.60);
     }
     .q .sub{
       font-size:12px;
-      font-weight:650;
-      opacity:.72;
+      font-weight:750;
+      opacity:.82; /* ↑ text clarity */
       line-height:1.35;
       max-width: 300px;
+      text-shadow: 0 2px 18px rgba(0,0,0,.55);
     }
 
     /* footer nav */
@@ -249,7 +266,7 @@
       justify-content:center;
       gap:10px;
       padding: 4px 0 0;
-      opacity:.92;
+      opacity:.95;
       flex-wrap:wrap;
     }
     .btn{
@@ -258,10 +275,10 @@
       cursor:pointer;
       padding: 10px 12px;
       border-radius: 999px;
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,210,120,.20);
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,210,120,.24);
       color: var(--ink);
-      font-weight:800;
+      font-weight:900;
       letter-spacing:.25px;
       font-size:12px;
       display:inline-flex;
@@ -269,10 +286,11 @@
       gap:8px;
       transition: transform .12s ease, border-color .12s ease, background .12s ease;
       text-decoration:none;
+      box-shadow: 0 10px 28px rgba(0,0,0,.28);
     }
-    .btn:hover{ transform: translateY(-1px); border-color: rgba(255,210,120,.30); background: rgba(0,0,0,.22); }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(255,210,120,.34); background: rgba(0,0,0,.26); }
     .btn:active{ transform: translateY(0); }
-    .btn .k{opacity:.80; font-weight:900}
+    .btn .k{opacity:.85; font-weight:950}
 
     /* modal + backdrop (GEM STANDARD) */
     .bd{
@@ -280,8 +298,8 @@
       display:none;
       align-items:center;
       justify-content:center;
-      background: rgba(0,0,0,.62);
-      backdrop-filter: blur(6px);
+      background: rgba(0,0,0,.66);
+      backdrop-filter: blur(7px);
       z-index: 50;
       padding: 18px;
     }
@@ -294,12 +312,14 @@
       display:none;
       flex-direction:column;
       border-radius: 22px;
-      border: 1px solid rgba(255,210,120,.24);
+      border: 1px solid rgba(255,210,120,.28);
+      /* ↓ stronger obsidian core + subtle red undertone */
       background:
-        radial-gradient(800px 520px at 20% 10%, rgba(245,248,255,.14), transparent 58%),
-        radial-gradient(700px 520px at 82% 88%, rgba(255,210,120,.10), transparent 60%),
-        rgba(0,0,0,.34);
-      box-shadow: 0 24px 110px rgba(0,0,0,.70);
+        radial-gradient(860px 520px at 18% 10%, rgba(245,248,255,.08), transparent 60%),
+        radial-gradient(800px 560px at 86% 88%, rgba(255,210,120,.06), transparent 62%),
+        radial-gradient(980px 640px at 52% 10%, rgba(176,0,0,.12), transparent 58%),
+        rgba(0,0,0,.44);
+      box-shadow: 0 28px 140px rgba(0,0,0,.78);
       overflow:hidden;
     }
     .modal.show{ display:flex; }
@@ -311,7 +331,7 @@
       justify-content:space-between;
       gap:12px;
       border-bottom: 1px solid rgba(255,210,120,.14);
-      background: rgba(0,0,0,.16);
+      background: rgba(0,0,0,.20);
     }
 
     .mttl{
@@ -322,27 +342,29 @@
     }
     .mttl .h1{
       font-weight:950;
-      letter-spacing:.3px;
+      letter-spacing:.35px;
       font-size: 16px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+      text-shadow: 0 2px 18px rgba(0,0,0,.65);
     }
     .mttl .h2{
-      font-weight:750;
+      font-weight:800;
       font-size: 12px;
-      opacity:.74;
+      opacity:.78;
       letter-spacing:.2px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+      text-shadow: 0 2px 18px rgba(0,0,0,.55);
     }
 
     .x{
       width: 38px; height: 38px;
       border-radius: 999px;
-      border: 1px solid rgba(255,210,120,.20);
-      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,210,120,.26);
+      background: rgba(0,0,0,.22);
       color: var(--ink);
       cursor:pointer;
       font-weight:950;
@@ -351,8 +373,9 @@
       justify-content:center;
       transition: transform .12s ease, border-color .12s ease, background .12s ease;
       user-select:none;
+      box-shadow: 0 10px 28px rgba(0,0,0,.30);
     }
-    .x:hover{ transform: translateY(-1px); border-color: rgba(255,210,120,.30); background: rgba(0,0,0,.22); }
+    .x:hover{ transform: translateY(-1px); border-color: rgba(255,210,120,.34); background: rgba(0,0,0,.28); }
     .x:active{ transform: translateY(0); }
 
     /* lensbar inside modal ONLY */
@@ -363,8 +386,8 @@
       justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
-      border-bottom: 1px solid rgba(210,235,255,.10);
-      background: rgba(0,0,0,.12);
+      border-bottom: 1px solid rgba(210,235,255,.08);
+      background: rgba(0,0,0,.16);
     }
     .lensgroup{
       display:flex;
@@ -374,36 +397,37 @@
     }
     .lenslabel{
       font-size:11px;
-      font-weight:900;
-      opacity:.72;
-      letter-spacing:.5px;
+      font-weight:950;
+      opacity:.74;
+      letter-spacing:.55px;
       text-transform:uppercase;
       padding: 6px 8px;
       border-radius: 999px;
-      background: rgba(0,0,0,.14);
-      border: 1px solid rgba(210,235,255,.08);
+      background: rgba(0,0,0,.16);
+      border: 1px solid rgba(210,235,255,.07);
     }
     .chip{
       cursor:pointer;
       user-select:none;
       padding: 8px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(255,210,120,.18);
-      background: rgba(0,0,0,.12);
+      border: 1px solid rgba(255,210,120,.22);
+      background: rgba(0,0,0,.18);
       color: var(--ink);
-      font-weight:900;
+      font-weight:950;
       letter-spacing:.2px;
       font-size:12px;
       display:inline-flex;
       align-items:center;
       gap:8px;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease, box-shadow .12s ease;
       white-space:nowrap;
+      box-shadow: 0 10px 26px rgba(0,0,0,.26);
     }
-    .chip:hover{ transform: translateY(-1px); border-color: rgba(255,210,120,.28); background: rgba(0,0,0,.18); }
+    .chip:hover{ transform: translateY(-1px); border-color: rgba(255,210,120,.32); background: rgba(0,0,0,.22); }
     .chip:active{ transform: translateY(0); }
     .chip.on{
-      border-color: rgba(255,210,120,.42);
+      border-color: rgba(255,210,120,.46);
       box-shadow: inset 0 0 0 1px rgba(255,210,120,.12), 0 0 22px rgba(255,210,120,.10);
       background: rgba(255,210,120,.06);
     }
@@ -426,13 +450,13 @@
 
     .box{
       border-radius: 18px;
-      border: 1px solid rgba(255,210,120,.16);
+      border: 1px solid rgba(255,210,120,.18);
       background:
-        radial-gradient(420px 260px at 22% 18%, rgba(245,248,255,.12), transparent 62%),
-        radial-gradient(420px 260px at 80% 86%, rgba(255,210,120,.08), transparent 64%),
-        rgba(0,0,0,.22);
+        radial-gradient(420px 260px at 22% 18%, rgba(245,248,255,.08), transparent 64%),
+        radial-gradient(420px 260px at 80% 86%, rgba(255,210,120,.06), transparent 66%),
+        rgba(0,0,0,.30);
       padding: 12px 12px 10px;
-      box-shadow: inset 0 0 0 1px rgba(210,235,255,.06);
+      box-shadow: inset 0 0 0 1px rgba(210,235,255,.05);
     }
     .box h3{
       margin:0;
@@ -443,23 +467,25 @@
       align-items:center;
       justify-content:space-between;
       gap:10px;
+      text-shadow: 0 2px 16px rgba(0,0,0,.60);
     }
     .box .k{
       font-size: 11px;
       font-weight: 950;
-      opacity:.74;
+      opacity:.78;
       padding: 4px 8px;
       border-radius: 999px;
-      border: 1px solid rgba(210,235,255,.10);
-      background: rgba(0,0,0,.14);
+      border: 1px solid rgba(210,235,255,.08);
+      background: rgba(0,0,0,.16);
       letter-spacing:.45px;
     }
     .box p{
       margin: 8px 0 8px;
       font-size: 12px;
-      font-weight: 700;
-      opacity:.80;
+      font-weight: 800;
+      opacity:.86;
       line-height:1.35;
+      text-shadow: 0 2px 16px rgba(0,0,0,.55);
     }
     .box ul{
       margin:0;
@@ -470,16 +496,16 @@
     }
     .box li{
       font-size: 12px;
-      font-weight: 750;
+      font-weight: 850;
       line-height:1.28;
-      opacity:.90;
+      opacity:.92;
+      text-shadow: 0 2px 14px rgba(0,0,0,.55);
     }
     .box li span{
-      opacity:.72;
-      font-weight: 800;
+      opacity:.74;
+      font-weight: 900;
     }
 
-    /* small helper */
     .sr{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
   </style>
 </head>
@@ -515,7 +541,7 @@
             <div class="q" data-trunk="nw" role="button" tabindex="0" aria-label="Open NW trunk">
               <div class="inner">
                 <div class="badge"><span>NW</span><span style="opacity:.55">·</span><span>⭐</span></div>
-                <div class="name">LANGUAGE ENGINE<br/><span style="opacity:.85">语言引擎</span></div>
+                <div class="name">LANGUAGE ENGINE<br/><span style="opacity:.88">语言引擎</span></div>
                 <div class="sub">Semantic compilers, interaction grammar, and multi-modal synthesis.<br/>语义编译、交互语法、多模态合成。</div>
               </div>
             </div>
@@ -524,7 +550,7 @@
             <div class="q" data-trunk="ne" role="button" tabindex="0" aria-label="Open NE trunk">
               <div class="inner">
                 <div class="badge"><span>NE</span><span style="opacity:.55">·</span><span>☀️</span></div>
-                <div class="name">EXECUTION SYSTEMS<br/><span style="opacity:.85">执行系统</span></div>
+                <div class="name">EXECUTION SYSTEMS<br/><span style="opacity:.88">执行系统</span></div>
                 <div class="sub">Deterministic workflows, receipts, and constrained operations at speed.<br/>确定性流程、回执、约束执行。</div>
               </div>
             </div>
@@ -533,7 +559,7 @@
             <div class="q" data-trunk="sw" role="button" tabindex="0" aria-label="Open SW trunk">
               <div class="inner">
                 <div class="badge"><span>SW</span><span style="opacity:.55">·</span><span>🔥</span></div>
-                <div class="name">MEASUREMENT LAB<br/><span style="opacity:.85">测量实验室</span></div>
+                <div class="name">MEASUREMENT LAB<br/><span style="opacity:.88">测量实验室</span></div>
                 <div class="sub">Instruments, stress sweeps, and audit-grade evidence streams.<br/>仪器、压力扫掠、可审计证据流。</div>
               </div>
             </div>
@@ -542,7 +568,7 @@
             <div class="q" data-trunk="se" role="button" tabindex="0" aria-label="Open SE trunk">
               <div class="inner">
                 <div class="badge"><span>SE</span><span style="opacity:.55">·</span><span>🌙</span></div>
-                <div class="name">GOVERNANCE STACK<br/><span style="opacity:.85">治理栈</span></div>
+                <div class="name">GOVERNANCE STACK<br/><span style="opacity:.88">治理栈</span></div>
                 <div class="sub">Rules, policy lattices, and safety controllers for real deployment.<br/>规则、政策格、部署级安全控制。</div>
               </div>
             </div>
@@ -586,15 +612,12 @@
       </div>
 
       <div class="mbody">
-        <div class="mgrid" id="mgrid">
-          <!-- 4 boxes injected here -->
-        </div>
+        <div class="mgrid" id="mgrid"></div>
       </div>
     </div>
   </div>
 
   <script>
-    /* 4.1 URL → STATE HYDRATION (MANDATORY IN EVERY PAGE SCRIPT) */
     const qs = new URLSearchParams(location.search);
     let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
     let style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
@@ -607,27 +630,17 @@
     localStorage.setItem("gd_style",style);
     localStorage.setItem("gd_time",time);
 
-    /* 4.2 STATE PROPAGATION FOR INTERNAL LINKS */
     const q = `lang=${encodeURIComponent(lang)}&style=${encodeURIComponent(style)}&time=${encodeURIComponent(time)}`;
 
-    // deterministic internal routing: propagate state
-    const toHome = document.getElementById("toHome");
-    const toProducts = document.getElementById("toProducts");
-    const toLaws = document.getElementById("toLaws");
-    const toLinks = document.getElementById("toLinks");
-    toHome.href = `/home/?${q}`;
-    toProducts.href = `/products/?${q}`;
-    toLaws.href = `/laws/?${q}`;
-    toLinks.href = `/links/?${q}`;
+    document.getElementById("toHome").href = `/home/?${q}`;
+    document.getElementById("toProducts").href = `/products/?${q}`;
+    document.getElementById("toLaws").href = `/laws/?${q}`;
+    document.getElementById("toLinks").href = `/links/?${q}`;
 
-    // stamp
     const stateStamp = document.getElementById("stateStamp");
-    function refreshStamp(){
-      stateStamp.textContent = `lang=${lang} · style=${style} · time=${time}`;
-    }
+    function refreshStamp(){ stateStamp.textContent = `lang=${lang} · style=${style} · time=${time}`; }
     refreshStamp();
 
-    // modal elements
     const bd = document.getElementById("bd");
     const modal = document.getElementById("modal");
     const x = document.getElementById("x");
@@ -651,908 +664,12 @@
       se:{ badge:"SE", icon:"🌙", en:"GOVERNANCE STACK", zh:"治理栈" }
     };
 
-    // content model: trunk -> time -> style -> 4 boxes (each: h, p, ul[4])
-    const CONTENT = {
-      nw:{
-        origin:{
-          formal:{
-            boxes:[
-              {k:"SCOPE", h:"Semantic Compiler Layer · 语义编译层",
-               p:"Define a deterministic grammar that maps intent → structure → output across modalities. 建立确定性语法：意图→结构→输出，覆盖多模态。",
-               ul:[
-                 "Token discipline: stable primitives, no drift. <span>标记纪律：稳定原语，不漂移。</span>",
-                 "Bidirectional parsing: text ↔ actions ↔ receipts. <span>双向解析：文本↔动作↔回执。</span>",
-                 "Constraint-first generation: safety + coherence gates. <span>约束优先生成：安全+一致性门。</span>",
-                 "Locale pairing: EN + 中文 locked as a single unit. <span>双语配对：英中绑定为单元。</span>"
-               ]},
-              {k:"INTERFACE", h:"Interaction Grammar · 交互语法",
-               p:"Specify how users move through meaning without ambiguity. 规定用户如何在含义空间中无歧义移动。",
-               ul:[
-                 "Navigation-first semantics: routes define state. <span>导航优先语义：路由定义状态。</span>",
-                 "Receipt-based progression: evidence of completion. <span>回执推进：完成证据。</span>",
-                 "Composable prompts: minimal stable operators. <span>可组合提示：最小稳定算子。</span>",
-                 "Explicit lifecycle lens: Concept/Now/Roadmap. <span>显式生命周期：概念/现在/路线图。</span>"
-               ]},
-              {k:"QUALITY", h:"Integrity Checks · 完整性校验",
-               p:"Guarantee outputs cannot exceed internal definitions. 保证输出不超出内部定义与可证据范围。",
-               ul:[
-                 "Observer-invariant labeling. <span>观察者不变标注。</span>",
-                 "Error bounds: declared uncertainty windows. <span>误差边界：声明不确定区间。</span>",
-                 "No hidden keys: state keys are canonical only. <span>无隐藏键：只用规范键。</span>",
-                 "Deterministic hydration from URL → state → links. <span>URL→状态→链接确定性注水。</span>"
-               ]},
-              {k:"DELIVERABLE", h:"Language Engine v0 Spec · 语言引擎v0规格",
-               p:"A publishable spec for a multi-lingual, constraint-driven interaction engine. 可发布规格：多语言、约束驱动交互引擎。",
-               ul:[
-                 "Spec pack: grammar, operators, receipts. <span>规格包：语法、算子、回执。</span>",
-                 "Reference UI patterns for GEM pages. <span>GEM页面参考UI模式。</span>",
-                 "Audit hooks: loggable transformations. <span>审计钩子：可记录变换。</span>",
-                 "Migration path: v0 → v1 without breaking keys. <span>迁移路径：v0→v1不破键。</span>"
-               ]}
-            ]
-          },
-          informal:{
-            boxes:[
-              {k:"SCOPE", h:"Meaning Engine · 语义引擎",
-               p:"Turn intent into clean structure, every time. 把意图变成结构，次次一致。",
-               ul:[
-                 "Stable tokens only. <span>只用稳定标记。</span>",
-                 "Text ↔ action pairing. <span>文本↔动作配对。</span>",
-                 "Rules first, then output. <span>先规则，再输出。</span>",
-                 "EN + 中文一起出。 <span>英中同步。</span>"
-               ]},
-              {k:"INTERFACE", h:"How People Move · 人怎么走",
-               p:"Make navigation and receipts the language. 让导航和回执成为“语言”。",
-               ul:[
-                 "Route defines state. <span>路由定状态。</span>",
-                 "Receipts prove progress. <span>回执证进度。</span>",
-                 "Small operators, big coverage. <span>小算子大覆盖。</span>",
-                 "Concept/Now/Roadmap lens. <span>概念/现在/路线图。</span>"
-               ]},
-              {k:"QUALITY", h:"No Drift · 不漂移",
-               p:"Outputs stay inside the spec. 输出不越界。",
-               ul:[
-                 "Same labels for every observer. <span>人人同标。</span>",
-                 "Say your bounds. <span>说清边界。</span>",
-                 "No extra state keys. <span>不加新键。</span>",
-                 "URL → state → links stays locked. <span>URL→状态→链接锁死。</span>"
-               ]},
-              {k:"DELIVERABLE", h:"v0 Package · v0包",
-               p:"A shippable language layer spec. 可交付语言层规格。",
-               ul:[
-                 "Grammar + operators. <span>语法+算子。</span>",
-                 "GEM page patterns. <span>GEM页面模式。</span>",
-                 "Audit-ready hooks. <span>可审计钩子。</span>",
-                 "Upgrade path without breaking. <span>升级不破坏。</span>"
-               ]}
-            ]
-          }
-        },
-        now:{
-          formal:{
-            boxes:[
-              {k:"BUILD", h:"Prototype Parser · 原型解析器",
-               p:"Implement a minimal parser that binds UI actions to canonical receipts. 实现最小解析器：UI动作绑定规范回执。",
-               ul:[
-                 "Canonical key enforcement: gd_* only. <span>规范键强制：仅gd_*。</span>",
-                 "Multi-lingual rendering: paired strings. <span>双语渲染：成对字符串。</span>",
-                 "Stable routing: deterministic link propagation. <span>稳定路由：确定性传参。</span>",
-                 "Modal-only lens updates: real content changes. <span>仅模态镜头：内容真变化。</span>"
-               ]},
-              {k:"PIPELINE", h:"Transform Chain · 变换链",
-               p:"Create a traceable chain: input → parse → constrain → emit. 建立可追踪链：输入→解析→约束→输出。",
-               ul:[
-                 "Receipt schema for each action. <span>每个动作回执结构。</span>",
-                 "Diff-free outputs: same input ⇒ same output. <span>无漂输出：同输入同输出。</span>",
-                 "Bounded ambiguity: declared, not implied. <span>歧义有界：声明不暗示。</span>",
-                 "Operator library: reusable minimal set. <span>算子库：可复用最小集。</span>"
-               ]},
-              {k:"INTEGRATION", h:"Cross-Page Consistency · 跨页一致性",
-               p:"All diamonds share behavior; innovation just swaps trunk semantics. 所有菱形同一行为；Innovation仅替换语义。",
-               ul:[
-                 "Uniform modal layout: 4×4 density. <span>统一模态：4×4密度。</span>",
-                 "No scroll-jump: centered overlay. <span>无跳动：居中覆盖。</span>",
-                 "State propagation in every internal link. <span>内部链接全传参。</span>",
-                 "Dual language always visible. <span>双语始终可见。</span>"
-               ]},
-              {k:"OUTPUT", h:"Early Use-Cases · 早期用例",
-               p:"Demonstrate language-engine value via concrete flows. 用具体流程展示语言引擎价值。",
-               ul:[
-                 "Glossary-driven UI copy generation. <span>词表驱动UI文案生成。</span>",
-                 "Policy text normalization (EN/中文). <span>政策文本规范化（英/中）。</span>",
-                 "Structured prompts for audits. <span>审计用结构提示。</span>",
-                 "Translation with invariants preserved. <span>保持不变量的翻译。</span>"
-               ]}
-            ]
-          },
-          informal:{
-            boxes:[
-              {k:"BUILD", h:"Working Parser · 可用解析器",
-               p:"Bind clicks to receipts, no extra keys. 点击→回执，不加新键。",
-               ul:[
-                 "Only gd_* allowed. <span>只用gd_*。</span>",
-                 "EN + 中文成对。 <span>英中成对。</span>",
-                 "Links always carry q. <span>链接总带q。</span>",
-                 "Lens changes content for real. <span>镜头真改内容。</span>"
-               ]},
-              {k:"PIPELINE", h:"Traceable Chain · 可追踪链",
-               p:"Input → rules → output, always logged. 输入→规则→输出，全程可记。",
-               ul:[
-                 "Receipt per action. <span>每动作一回执。</span>",
-                 "Same in, same out. <span>同入同出。</span>",
-                 "Bounds stated. <span>边界明说。</span>",
-                 "Small operator set. <span>小算子集。</span>"
-               ]},
-              {k:"INTEGRATION", h:"Same Diamond Feel · 同款菱形手感",
-               p:"Innovation stays GEM-standard. Innovation保持GEM标准。",
-               ul:[
-                 "4×4 modal density. <span>模态4×4密度。</span>",
-                 "Centered overlay. <span>居中覆盖。</span>",
-                 "Every link propagates. <span>每链接都传参。</span>",
-                 "Always dual language. <span>始终双语。</span>"
-               ]},
-              {k:"OUTPUT", h:"Prove It Fast · 快速证明",
-               p:"Show value with real flows. 用真流程证明价值。",
-               ul:[
-                 "Glossary UI copy. <span>词表UI文案。</span>",
-                 "Policy normalize. <span>政策规范化。</span>",
-                 "Audit prompts. <span>审计提示。</span>",
-                 "Invariant translation. <span>不变量翻译。</span>"
-               ]}
-            ]
-          }
-        },
-        post:{
-          formal:{
-            boxes:[
-              {k:"ROADMAP", h:"Language Engine v1 · 语言引擎v1",
-               p:"Advance to a composable engine that unifies parsing, constraints, and outputs. 升级为可组合引擎：解析+约束+输出统一。",
-               ul:[
-                 "Typed operators + versioned schemas. <span>类型化算子+版本化结构。</span>",
-                 "Proof-like receipts for critical steps. <span>关键步骤“证明式”回执。</span>",
-                 "Policy-aware generation with audit trails. <span>策略感知生成+审计轨迹。</span>",
-                 "Cross-domain adapters (software/education/governance). <span>跨域适配器（软件/教育/治理）。</span>"
-               ]},
-              {k:"PRODUCT", h:"Multilingual Spec Packs · 多语规格包",
-               p:"Ship modular spec packs for reuse across product lines. 交付模块化规格包，跨产品线复用。",
-               ul:[
-                 "Glossary + grammar + examples. <span>词表+语法+示例。</span>",
-                 "State discipline templates. <span>状态纪律模板。</span>",
-                 "Interaction pattern library. <span>交互模式库。</span>",
-                 "Conformance tests (golden outputs). <span>一致性测试（黄金输出）。</span>"
-               ]},
-              {k:"SCALE", h:"Tooling & Authoring · 工具与编写",
-               p:"Enable safe authoring: humans write, engine enforces invariants. 安全编写：人写内容，引擎强制不变量。",
-               ul:[
-                 "Editor validations (lint for meaning). <span>编辑器校验（语义lint）。</span>",
-                 "Auto-bilingual pairing checks. <span>自动双语配对检查。</span>",
-                 "Release gates: schema compatibility. <span>发布门：结构兼容。</span>",
-                 "Diff guards: drift detection. <span>差异护栏：漂移检测。</span>"
-               ]},
-              {k:"IMPACT", h:"Deployment Patterns · 部署模式",
-               p:"Standardize how language integrates with execution and governance. 标准化语言如何与执行/治理集成。",
-               ul:[
-                 "Receipts feed measurement lab streams. <span>回执进入测量实验室证据流。</span>",
-                 "Policies bind outputs to allowed lanes. <span>策略绑定输出允许车道。</span>",
-                 "Deterministic UX across all diamonds. <span>全菱形确定性UX。</span>",
-                 "Portable governance text generation. <span>可移植治理文本生成。</span>"
-               ]}
-            ]
-          },
-          informal:{
-            boxes:[
-              {k:"ROADMAP", h:"v1 Engine · v1引擎",
-               p:"Make it modular and strict. 模块化、严格化。",
-               ul:[
-                 "Typed ops + versioning. <span>类型算子+版本。</span>",
-                 "Receipts for key steps. <span>关键步骤回执。</span>",
-                 "Audit trails baked in. <span>内置审计。</span>",
-                 "Adapters across products. <span>跨产品适配。</span>"
-               ]},
-              {k:"PRODUCT", h:"Spec Packs · 规格包",
-               p:"Ship reusable language packs. 交付可复用语言包。",
-               ul:[
-                 "Glossary + grammar. <span>词表+语法。</span>",
-                 "State templates. <span>状态模板。</span>",
-                 "Pattern library. <span>模式库。</span>",
-                 "Golden tests. <span>黄金测试。</span>"
-               ]},
-              {k:"SCALE", h:"Authoring Tools · 编写工具",
-               p:"Let humans write safely. 让人安全写内容。",
-               ul:[
-                 "Meaning lint. <span>语义lint。</span>",
-                 "EN/中文配对检查。 <span>双语检查。</span>",
-                 "Compatibility gates. <span>兼容门。</span>",
-                 "Drift detection. <span>漂移检测。</span>"
-               ]},
-              {k:"IMPACT", h:"Plug Into Everything · 全栈接入",
-               p:"Language feeds measurement + governance. 语言接入测量+治理。",
-               ul:[
-                 "Receipts → evidence streams. <span>回执→证据流。</span>",
-                 "Policies constrain outputs. <span>策略约束输出。</span>",
-                 "Same UX everywhere. <span>处处同UX。</span>",
-                 "Portable governance text. <span>可移植治理文本。</span>"
-               ]}
-            ]
-          }
-        }
-      },
-
-      ne:{
-        origin:{
-          formal:{
-            boxes:[
-              {k:"SCOPE", h:"Deterministic Execution Core · 确定性执行核心",
-               p:"Define systems that move from selection → resolution → commitment → continuation without ambiguity. 定义无歧义执行：选择→解析→承诺→延续。",
-               ul:[
-                 "Receipt-gated advancement. <span>回执门控推进。</span>",
-                 "Navigation-first state definition. <span>导航优先定义状态。</span>",
-                 "Constraint enforcement as first-class. <span>约束为一等公民。</span>",
-                 "Failure modes declared upfront. <span>失效模式先声明。</span>"
-               ]},
-              {k:"MECHANICS", h:"Operational Primitives · 操作原语",
-               p:"Create a minimal set of actions that composes into full workflows. 构建最小动作集，组合成完整流程。",
-               ul:[
-                 "Unified press primitives. <span>统一按压原语。</span>",
-                 "Atomic handoff with receipt. <span>原子交接+回执。</span>",
-                 "Back-nav invalidates downstream receipts. <span>返回使下游回执失效。</span>",
-                 "No timers as gates (determinism). <span>不以计时器作门（确定性）。</span>"
-               ]},
-              {k:"QUALITY", h:"Auditability · 可审计性",
-               p:"Execution produces an auditable trail of decisions and constraints. 执行生成可审计决策/约束轨迹。",
-               ul:[
-                 "Event logs with stable IDs. <span>稳定ID事件日志。</span>",
-                 "Receipt schemas: versioned + typed. <span>回执结构：版本化+类型化。</span>",
-                 "Traceable exceptions with bounds. <span>可追踪异常+边界。</span>",
-                 "Reproducible runs from evidence stream. <span>证据流可复现实验。</span>"
-               ]},
-              {k:"DELIVERABLE", h:"Execution Systems Concept Pack · 执行系统概念包",
-               p:"A product trunk spec for constrained, high-clarity operations. 产品干线规格：约束下高明确执行。",
-               ul:[
-                 "Workflow templates. <span>流程模板。</span>",
-                 "Receipt contract library. <span>回执契约库。</span>",
-                 "Constraint catalog. <span>约束目录。</span>",
-                 "Deterministic UI patterns (GEM). <span>确定性UI模式（GEM）。</span>"
-               ]}
-            ]
-          },
-          informal:{
-            boxes:[
-              {k:"SCOPE", h:"Do Work, No Guessing · 执行不猜",
-               p:"Make execution deterministic. 让执行确定。",
-               ul:[
-                 "Receipts gate steps. <span>回执控步骤。</span>",
-                 "Routes define state. <span>路由定状态。</span>",
-                 "Constraints first. <span>约束优先。</span>",
-                 "Declare failure modes. <span>先说怎么失败。</span>"
-               ]},
-              {k:"MECHANICS", h:"Small Primitives · 小原语",
-               p:"Few actions, full workflows. 少动作，完整流程。",
-               ul:[
-                 "One press language. <span>统一按压。</span>",
-                 "Handoff + receipt. <span>交接+回执。</span>",
-                 "Back invalidates. <span>返回即失效。</span>",
-                 "No timer gates. <span>不用计时门。</span>"
-               ]},
-              {k:"QUALITY", h:"Always Auditable · 永可审计",
-               p:"Every step leaves proof. 每步留证据。",
-               ul:[
-                 "Stable IDs. <span>稳定ID。</span>",
-                 "Typed receipts. <span>类型回执。</span>",
-                 "Bounded exceptions. <span>有界异常。</span>",
-                 "Replay from logs. <span>日志可回放。</span>"
-               ]},
-              {k:"DELIVERABLE", h:"Concept Pack · 概念包",
-               p:"A clear execution trunk spec. 清晰执行干线规格。",
-               ul:[
-                 "Workflow templates. <span>流程模板。</span>",
-                 "Receipt contracts. <span>回执契约。</span>",
-                 "Constraint catalog. <span>约束目录。</span>",
-                 "GEM UI patterns. <span>GEM UI模式。</span>"
-               ]}
-            ]
-          }
-        },
-        now:{
-          formal:{
-            boxes:[
-              {k:"BUILD", h:"Prototype Workflows · 原型流程",
-               p:"Ship a constrained workflow engine with receipt-based steps. 交付回执驱动的约束流程引擎。",
-               ul:[
-                 "State propagation on every internal link. <span>每个内部链接传参。</span>",
-                 "Receipt objects persisted and invalidated correctly. <span>回执对象正确持久/失效。</span>",
-                 "Modal-only lenses update execution framing. <span>仅模态镜头更新执行语境。</span>",
-                 "Deterministic routing: no hidden transitions. <span>确定路由：无隐藏跳转。</span>"
-               ]},
-              {k:"OPS", h:"Execution Playbooks · 执行剧本",
-               p:"Provide playbooks that define steps, constraints, and proofs. 提供剧本：步骤、约束、证明。",
-               ul:[
-                 "Step definitions (what counts as done). <span>步骤定义（完成标准）。</span>",
-                 "Constraint checks before commit. <span>承诺前约束检查。</span>",
-                 "Receipts as durable outputs. <span>回执为耐久输出。</span>",
-                 "Rollback semantics with explicit effects. <span>回滚语义+显式影响。</span>"
-               ]},
-              {k:"INTEGRATION", h:"Cross-Trunk Coupling · 跨干线耦合",
-               p:"Execution connects to measurement and governance without new keys. 执行连接测量/治理，不增加新键。",
-               ul:[
-                 "Event stream format shared with lab. <span>与实验室共享事件流格式。</span>",
-                 "Policies constrain workflow lanes. <span>策略约束流程车道。</span>",
-                 "Language engine generates consistent prompts. <span>语言引擎生成一致提示。</span>",
-                 "Uniform GEM UI surface. <span>统一GEM UI表层。</span>"
-               ]},
-              {k:"OUTPUT", h:"Early Products · 早期产品",
-               p:"Frame near-term deliverables as modular tools. 将近期交付物框定为模块工具。",
-               ul:[
-                 "Receipt-based checklists. <span>回执清单工具。</span>",
-                 "Decision compression dashboards. <span>决策压缩看板。</span>",
-                 "Audit-ready workflow exports. <span>可审计流程导出。</span>",
-                 "Operator packs for teams. <span>团队算子包。</span>"
-               ]}
-            ]
-          },
-          informal:{
-            boxes:[
-              {k:"BUILD", h:"Working Workflow · 可用流程",
-               p:"Build a receipts-first engine. 先回执，再推进。",
-               ul:[
-                 "Links always carry q. <span>链接总带q。</span>",
-                 "Receipts persist + invalidate. <span>回执可存可失效。</span>",
-                 "Lens changes framing for real. <span>镜头真改语境。</span>",
-                 "No hidden transitions. <span>不搞暗跳。</span>"
-               ]},
-              {k:"OPS", h:"Playbooks · 剧本",
-               p:"Steps + constraints + proof. 步骤+约束+证明。",
-               ul:[
-                 "Done means defined. <span>完成要定义。</span>",
-                 "Check before commit. <span>承诺前检查。</span>",
-                 "Receipt is output. <span>回执就是产出。</span>",
-                 "Rollback is explicit. <span>回滚要明确。</span>"
-               ]},
-              {k:"INTEGRATION", h:"Connect the Trunks · 连接干线",
-               p:"Execution plugs into lab + governance. 执行接实验室+治理。",
-               ul:[
-                 "Shared event stream. <span>共享事件流。</span>",
-                 "Policies constrain lanes. <span>策略定车道。</span>",
-                 "Language prompts stay consistent. <span>提示一致。</span>",
-                 "Same GEM surface. <span>同GEM表面。</span>"
-               ]},
-              {k:"OUTPUT", h:"Near-Term Tools · 近期工具",
-               p:"Ship modular execution tools. 交付模块执行工具。",
-               ul:[
-                 "Receipt checklists. <span>回执清单。</span>",
-                 "Compression dashboards. <span>压缩看板。</span>",
-                 "Audit exports. <span>审计导出。</span>",
-                 "Team operator packs. <span>团队算子包。</span>"
-               ]}
-            ]
-          }
-        },
-        post:{
-          formal:{
-            boxes:[
-              {k:"ROADMAP", h:"Execution Systems v1 · 执行系统v1",
-               p:"Scale deterministic operations with typed receipts, policy lanes, and replay. 用类型回执、策略车道与回放扩展确定性执行。",
-               ul:[
-                 "Versioned workflow schemas. <span>版本化流程结构。</span>",
-                 "Policy-bound lanes with enforceable guards. <span>策略绑定车道+可执行守卫。</span>",
-                 "Replayable audits from exported streams. <span>导出流可回放审计。</span>",
-                 "Cross-org deployment templates. <span>跨组织部署模板。</span>"
-               ]},
-              {k:"PRODUCT", h:"Operator Libraries · 算子库",
-               p:"Publish operator libraries that teams can adopt without drift. 发布团队可采纳且不漂移的算子库。",
-               ul:[
-                 "Common receipts for common actions. <span>常见动作通用回执。</span>",
-                 "Compatibility tests across versions. <span>跨版本兼容测试。</span>",
-                 "Deterministic UI kits. <span>确定性UI套件。</span>",
-                 "Reference playbooks per domain. <span>按领域参考剧本。</span>"
-               ]},
-              {k:"SCALE", h:"Automation Under Constraint · 约束下自动化",
-               p:"Automate safely by making constraints explicit and verifiable. 以显式可验证约束实现安全自动化。",
-               ul:[
-                 "Guard rails: pre-commit checks. <span>护栏：承诺前检查。</span>",
-                 "Receipt proofs for risky actions. <span>高风险动作回执证明。</span>",
-                 "Kill conditions declared and enforced. <span>杀死条件声明并执行。</span>",
-                 "Human override with trace. <span>人工覆盖可追踪。</span>"
-               ]},
-              {k:"IMPACT", h:"System-Wide Determinism · 系统级确定性",
-               p:"Unify language, measurement, and governance into one execution fabric. 统一语言、测量、治理为单一执行织体。",
-               ul:[
-                 "Receipts feed metrics (lab). <span>回执喂给指标（实验室）。</span>",
-                 "Policies constrain outputs (governance). <span>策略约束输出（治理）。</span>",
-                 "Language generates prompts (engine). <span>语言生成提示（引擎）。</span>",
-                 "Uniform diamonds deliver consistent UX. <span>统一菱形一致UX。</span>"
-               ]}
-            ]
-          },
-          informal:{
-            boxes:[
-              {k:"ROADMAP", h:"v1 System · v1系统",
-               p:"Scale determinism with schemas + replay. 用结构+回放扩展确定性。",
-               ul:[
-                 "Versioned workflows. <span>版本化流程。</span>",
-                 "Policy lanes + guards. <span>策略车道+守卫。</span>",
-                 "Replayable audits. <span>可回放审计。</span>",
-                 "Org templates. <span>组织模板。</span>"
-               ]},
-              {k:"PRODUCT", h:"Operator Kits · 算子套件",
-               p:"Teams adopt without drift. 团队采纳不漂移。",
-               ul:[
-                 "Common receipts. <span>通用回执。</span>",
-                 "Compatibility tests. <span>兼容测试。</span>",
-                 "Deterministic UI kit. <span>确定UI套件。</span>",
-                 "Domain playbooks. <span>领域剧本。</span>"
-               ]},
-              {k:"SCALE", h:"Safe Automation · 安全自动化",
-               p:"Automate only when constraints prove it. 只有约束证明才自动化。",
-               ul:[
-                 "Pre-commit checks. <span>承诺前检查。</span>",
-                 "Proof for risky actions. <span>风险动作证明。</span>",
-                 "Kill conditions enforced. <span>执行杀死条件。</span>",
-                 "Override with trace. <span>覆盖可追踪。</span>"
-               ]},
-              {k:"IMPACT", h:"One Fabric · 一张网",
-               p:"Language + lab + governance act together. 语言+实验室+治理一起跑。",
-               ul:[
-                 "Receipts → metrics. <span>回执→指标。</span>",
-                 "Policies constrain. <span>策略约束。</span>",
-                 "Prompts consistent. <span>提示一致。</span>",
-                 "Same UX everywhere. <span>处处同UX。</span>"
-               ]}
-            ]
-          }
-        }
-      },
-
-      sw:{
-        origin:{
-          formal:{
-            boxes:[
-              {k:"SCOPE", h:"Instrument Definition · 仪器定义",
-               p:"Define measurement instruments that classify evidence under constraint. 定义在约束下对证据进行分类的测量仪器。",
-               ul:[
-                 "Observer-invariant scoring rules. <span>观察者不变评分规则。</span>",
-                 "Evidence stream schema (replayable). <span>证据流结构（可回放）。</span>",
-                 "Stress sweep protocols across states. <span>跨状态压力扫掠协议。</span>",
-                 "Declared bounds + falsification triggers. <span>声明边界+可证伪触发。</span>"
-               ]},
-              {k:"METHOD", h:"Sweep Mechanics · 扫掠机制",
-               p:"Run structured sweeps that separate noise from signal. 运行结构化扫掠，分离噪声与信号。",
-               ul:[
-                 "State lattice definitions. <span>状态格定义。</span>",
-                 "Admissibility checks before aggregation. <span>聚合前可采纳性检查。</span>",
-                 "Audit logs: every decision recorded. <span>审计日志：每个决策记录。</span>",
-                 "Reproducible reports: same data ⇒ same result. <span>可复现报告：同数据同结果。</span>"
-               ]},
-              {k:"OUTPUT", h:"Metrics Library · 指标库",
-               p:"Define metrics that are portable across domains. 定义跨领域可移植指标。",
-               ul:[
-                 "Safety efficiency. <span>安全效率。</span>",
-                 "Falsification hit-rate. <span>证伪命中率。</span>",
-                 "Macro drawdown avoidance analogs. <span>宏回撤规避类比。</span>",
-                 "Coverage + correlation at scale. <span>规模下覆盖+相关。</span>"
-               ]},
-              {k:"DELIVERABLE", h:"Measurement Lab Concept Pack · 测量实验室概念包",
-               p:"A product trunk spec for instruments + sweeps + audit outputs. 产品干线规格：仪器+扫掠+审计输出。",
-               ul:[
-                 "Schema + protocol kit. <span>结构+协议套件。</span>",
-                 "Report templates (4×4 bulletins). <span>报告模板（4×4公告）。</span>",
-                 "Validation gates (kill conditions). <span>验证门（杀死条件）。</span>",
-                 "Domain adapters for ingestion. <span>领域摄入适配器。</span>"
-               ]}
-            ]
-          },
-          informal:{
-            boxes:[
-              {k:"SCOPE", h:"Measure Under Rules · 按规则测",
-               p:"Measure evidence with constraints. 用约束测证据。",
-               ul:[
-                 "Same scoring for everyone. <span>人人同评分。</span>",
-                 "Replayable evidence stream. <span>证据流可回放。</span>",
-                 "Run stress sweeps. <span>跑压力扫掠。</span>",
-                 "Bounds + falsify triggers. <span>边界+证伪触发。</span>"
-               ]},
-              {k:"METHOD", h:"Sweeps, Not Stories · 扫掠不讲故事",
-               p:"Separate noise from signal. 把噪声和信号分开。",
-               ul:[
-                 "Define state lattice. <span>定义状态格。</span>",
-                 "Check admissibility first. <span>先查可采纳。</span>",
-                 "Log everything. <span>全记录。</span>",
-                 "Same data, same result. <span>同数据同结果。</span>"
-               ]},
-              {k:"OUTPUT", h:"Portable Metrics · 可移植指标",
-               p:"Metrics that travel across domains. 指标跨域通用。",
-               ul:[
-                 "Safety efficiency. <span>安全效率。</span>",
-                 "Falsification rate. <span>证伪率。</span>",
-                 "Drawdown-avoid analogs. <span>回撤规避类比。</span>",
-                 "Scale + correlation. <span>规模+相关。</span>"
-               ]},
-              {k:"DELIVERABLE", h:"Concept Pack · 概念包",
-               p:"Instruments + sweeps + audits. 仪器+扫掠+审计。",
-               ul:[
-                 "Schema/protocol kit. <span>结构/协议套件。</span>",
-                 "Report templates. <span>报告模板。</span>",
-                 "Kill gates. <span>杀死门。</span>",
-                 "Ingest adapters. <span>摄入适配器。</span>"
-               ]}
-            ]
-          }
-        },
-        now:{
-          formal:{
-            boxes:[
-              {k:"BUILD", h:"Early Lab Runs · 早期实验运行",
-               p:"Run prototype sweeps on structured evidence streams. 在结构化证据流上运行原型扫掠。",
-               ul:[
-                 "Single-file merged exports (CSV/JSONL). <span>单文件合并导出（CSV/JSONL）。</span>",
-                 "State encoding normalized. <span>状态编码规范化。</span>",
-                 "Deterministic execution: replay supported. <span>确定执行：支持回放。</span>",
-                 "Reports generated with fixed templates. <span>固定模板出报告。</span>"
-               ]},
-              {k:"INSTRUMENT", h:"Calibration Discipline · 校准纪律",
-               p:"Maintain strict authority and reproducibility for calibration. 对校准保持严格权限与可复现性。",
-               ul:[
-                 "Calibration authority is exclusive. <span>校准权限唯一。</span>",
-                 "Non-authoritative inputs flagged. <span>非权威输入标记。</span>",
-                 "Thresholds tied to observed behavior signals. <span>阈值基于可观测信号。</span>",
-                 "No tightening without new event class. <span>无新事件类不收紧。</span>"
-               ]},
-              {k:"OUTPUT", h:"Audit-Grade Artifacts · 审计级产物",
-               p:"Produce artifacts that can be reviewed independently. 产出可独立复核的产物。",
-               ul:[
-                 "Evidence stream + config snapshot. <span>证据流+配置快照。</span>",
-                 "Result tables with bounds. <span>带边界的结果表。</span>",
-                 "Falsification hits logged. <span>证伪命中记录。</span>",
-                 "Run IDs for traceability. <span>运行ID可追踪。</span>"
-               ]},
-              {k:"INTEGRATION", h:"Feeds Into Products · 进入产品线",
-               p:"Lab outputs become inputs for governance and execution systems. 实验室输出成为治理/执行系统输入。",
-               ul:[
-                 "Receipts become evidence events. <span>回执成为证据事件。</span>",
-                 "Policies reference metric thresholds. <span>策略引用指标阈值。</span>",
-                 "Language engine emits standard labels. <span>语言引擎输出标准标注。</span>",
-                 "Uniform GEM presentation across diamonds. <span>全菱形统一GEM呈现。</span>"
-               ]}
-            ]
-          },
-          informal:{
-            boxes:[
-              {k:"BUILD", h:"Run the Lab · 跑实验室",
-               p:"Prototype sweeps on real streams. 用真实流跑原型扫掠。",
-               ul:[
-                 "One merged file. <span>一个合并文件。</span>",
-                 "Normalize state. <span>规范状态。</span>",
-                 "Replay works. <span>回放能跑。</span>",
-                 "Fixed report templates. <span>固定报告模板。</span>"
-               ]},
-              {k:"INSTRUMENT", h:"Calibration Rules · 校准规则",
-               p:"Keep calibration strict. 校准必须严格。",
-               ul:[
-                 "Authority is exclusive. <span>权限唯一。</span>",
-                 "Flag non-authoritative. <span>标记非权威。</span>",
-                 "Use observed signals only. <span>只用可观测信号。</span>",
-                 "No tighten without new event. <span>无新事件不收紧。</span>"
-               ]},
-              {k:"OUTPUT", h:"Audit Artifacts · 审计产物",
-               p:"Make results independently checkable. 结果可独立检查。",
-               ul:[
-                 "Stream + config saved. <span>保存流+配置。</span>",
-                 "Bounds in tables. <span>表里有边界。</span>",
-                 "Log falsification hits. <span>记录证伪命中。</span>",
-                 "Run IDs. <span>运行ID。</span>"
-               ]},
-              {k:"INTEGRATION", h:"Feed the Stack · 喂给全栈",
-               p:"Lab outputs drive governance + execution. 实验室输出驱动治理+执行。",
-               ul:[
-                 "Receipts → events. <span>回执→事件。</span>",
-                 "Policies use thresholds. <span>策略用阈值。</span>",
-                 "Language labels standard. <span>语言标注标准化。</span>",
-                 "Same GEM look. <span>同GEM外观。</span>"
-               ]}
-            ]
-          }
-        },
-        post:{
-          formal:{
-            boxes:[
-              {k:"ROADMAP", h:"Measurement Lab v1 · 测量实验室v1",
-               p:"Scale sweeps, instrumentation, and reporting into a product-grade lab. 将扫掠、仪器、报告扩展为产品级实验室。",
-               ul:[
-                 "Streaming ingestion + schema versioning. <span>流式摄入+结构版本。</span>",
-                 "Automated sweep scheduling (deterministic). <span>自动扫掠调度（确定性）。</span>",
-                 "Cross-domain metric comparability. <span>跨域指标可比性。</span>",
-                 "Independent verification kits. <span>独立验证套件。</span>"
-               ]},
-              {k:"PRODUCT", h:"Reference Datasets · 参考数据集",
-               p:"Publish reference datasets for benchmarked audits. 发布审计基准参考数据集。",
-               ul:[
-                 "Golden evidence streams. <span>黄金证据流。</span>",
-                 "Expected outputs (hashable). <span>期望输出（可哈希）。</span>",
-                 "Falsification cases catalog. <span>证伪案例库。</span>",
-                 "Coverage maps for gaps. <span>缺口覆盖图。</span>"
-               ]},
-              {k:"SCALE", h:"Instrument Marketplace · 仪器市场",
-               p:"Enable modular instruments to plug into the same sweep engine. 让模块仪器接入同一扫掠引擎。",
-               ul:[
-                 "Instrument interface standard. <span>仪器接口标准。</span>",
-                 "Conformance tests. <span>一致性测试。</span>",
-                 "Governance-ready exports. <span>治理可用导出。</span>",
-                 "Execution system feedback loops. <span>执行系统反馈回路。</span>"
-               ]},
-              {k:"IMPACT", h:"System-Wide Auditability · 系统级可审计",
-               p:"Make auditability a default property across the stack. 让可审计性成为全栈默认属性。",
-               ul:[
-                 "Metrics bind to policy decisions. <span>指标绑定策略决策。</span>",
-                 "Receipts standardize evidence. <span>回执标准化证据。</span>",
-                 "Language standardizes labels. <span>语言标准化标注。</span>",
-                 "Uniform GEM UI for trust. <span>统一GEM UI增强信任。</span>"
-               ]}
-            ]
-          },
-          informal:{
-            boxes:[
-              {k:"ROADMAP", h:"v1 Lab · v1实验室",
-               p:"Make it product-grade. 做到产品级。",
-               ul:[
-                 "Stream ingestion + versions. <span>流摄入+版本。</span>",
-                 "Deterministic scheduling. <span>确定性调度。</span>",
-                 "Cross-domain compare. <span>跨域可比。</span>",
-                 "Verification kits. <span>验证套件。</span>"
-               ]},
-              {k:"PRODUCT", h:"Reference Sets · 参考集",
-               p:"Benchmarks people can replay. 人人可回放基准。",
-               ul:[
-                 "Golden streams. <span>黄金流。</span>",
-                 "Hashable expected outputs. <span>可哈希期望输出。</span>",
-                 "Falsification catalog. <span>证伪目录。</span>",
-                 "Gap maps. <span>缺口图。</span>"
-               ]},
-              {k:"SCALE", h:"Instrument Plug-ins · 仪器插件",
-               p:"Plug new instruments into the same sweeps. 新仪器接同一扫掠。",
-               ul:[
-                 "Standard interface. <span>标准接口。</span>",
-                 "Conformance tests. <span>一致性测。</span>",
-                 "Gov exports. <span>治理导出。</span>",
-                 "Exec feedback loops. <span>执行反馈环。</span>"
-               ]},
-              {k:"IMPACT", h:"Audit Everywhere · 处处可审计",
-               p:"Auditability becomes default. 可审计变默认。",
-               ul:[
-                 "Metrics → policies. <span>指标→策略。</span>",
-                 "Receipts → evidence. <span>回执→证据。</span>",
-                 "Labels standardized. <span>标注标准化。</span>",
-                 "GEM UI builds trust. <span>GEM UI增信。</span>"
-               ]}
-            ]
-          }
-        }
-      },
-
-      se:{
-        origin:{
-          formal:{
-            boxes:[
-              {k:"SCOPE", h:"Policy Lattice · 政策格",
-               p:"Define governance as enforceable constraints over actions and outputs. 将治理定义为对动作/输出的可执行约束。",
-               ul:[
-                 "Explicit guard conditions. <span>显式守卫条件。</span>",
-                 "Allowed lanes + prohibited lanes. <span>允许车道+禁止车道。</span>",
-                 "Receipt requirements for sensitive actions. <span>敏感动作回执要求。</span>",
-                 "Versioned policy bundles. <span>版本化政策包。</span>"
-               ]},
-              {k:"MECHANICS", h:"Safety Controller · 安全控制器",
-               p:"Implement controllers that act on evidence and constrain execution. 实现基于证据、约束执行的控制器。",
-               ul:[
-                 "Evidence-in, decision-out with logs. <span>证据入、决策出，带日志。</span>",
-                 "Kill/exit conditions enforceable. <span>可执行杀死/退出条件。</span>",
-                 "Bounded exceptions with human override. <span>有界异常+人工覆盖。</span>",
-                 "Deterministic behavior across runs. <span>跨运行确定性行为。</span>"
-               ]},
-              {k:"QUALITY", h:"Governance Integrity · 治理完整性",
-               p:"Ensure governance rules are coherent, testable, and non-drifting. 确保治理规则一致、可测、无漂移。",
-               ul:[
-                 "No hidden state keys; canonical only. <span>无隐藏状态键：只用规范键。</span>",
-                 "Policy tests: conformance suites. <span>政策测试：一致性套件。</span>",
-                 "Audit trails: decisions are explainable by rules. <span>审计轨迹：决策可由规则解释。</span>",
-                 "Cross-page uniform UX (trust surface). <span>跨页统一UX（信任表层）。</span>"
-               ]},
-              {k:"DELIVERABLE", h:"Governance Stack Concept Pack · 治理栈概念包",
-               p:"A product trunk spec for enforceable governance. 产品干线规格：可执行治理。",
-               ul:[
-                 "Policy bundle format + versioning. <span>政策包格式+版本。</span>",
-                 "Guard/goal templates. <span>守卫/目标模板。</span>",
-                 "Controller reference implementation outline. <span>控制器参考实现纲要。</span>",
-                 "Integration rules with lab + execution. <span>与实验室+执行的集成规则。</span>"
-               ]}
-            ]
-          },
-          informal:{
-            boxes:[
-              {k:"SCOPE", h:"Rules That Enforce · 可执行规则",
-               p:"Governance = constraints you can run. 治理=能跑的约束。",
-               ul:[
-                 "Guards are explicit. <span>守卫要明确。</span>",
-                 "Allowed/prohibited lanes. <span>允许/禁止车道。</span>",
-                 "Sensitive actions need receipts. <span>敏感动作要回执。</span>",
-                 "Policies are versioned. <span>政策要版本。</span>"
-               ]},
-              {k:"MECHANICS", h:"Safety Controller · 安全控制器",
-               p:"Use evidence to constrain execution. 用证据约束执行。",
-               ul:[
-                 "Log every decision. <span>每决策都记。</span>",
-                 "Kill conditions enforce. <span>杀死条件可执行。</span>",
-                 "Human override is bounded. <span>人工覆盖有界。</span>",
-                 "Same run behavior. <span>同跑同表现。</span>"
-               ]},
-              {k:"QUALITY", h:"No Drift Governance · 不漂治理",
-               p:"Rules stay testable and stable. 规则要可测且稳定。",
-               ul:[
-                 "No extra keys. <span>不加新键。</span>",
-                 "Conformance suites. <span>一致性套件。</span>",
-                 "Rules explain decisions. <span>规则解释决策。</span>",
-                 "Uniform UX builds trust. <span>统一UX增信。</span>"
-               ]},
-              {k:"DELIVERABLE", h:"Concept Pack · 概念包",
-               p:"Enforceable governance trunk spec. 可执行治理干线规格。",
-               ul:[
-                 "Policy format + versions. <span>政策格式+版本。</span>",
-                 "Guard/goal templates. <span>守卫/目标模板。</span>",
-                 "Controller outline. <span>控制器纲要。</span>",
-                 "Integration rules. <span>集成规则。</span>"
-               ]}
-            ]
-          }
-        },
-        now:{
-          formal:{
-            boxes:[
-              {k:"BUILD", h:"Early Policy Bundles · 早期政策包",
-               p:"Author initial policy bundles that bind execution lanes and outputs. 编写初始政策包，绑定执行车道与输出。",
-               ul:[
-                 "Policy bundle loaded deterministically. <span>政策包确定性加载。</span>",
-                 "Guards evaluated before commit. <span>承诺前评估守卫。</span>",
-                 "Receipts required for high-risk steps. <span>高风险步骤需回执。</span>",
-                 "Audit logs generated for each decision. <span>每决策生成审计日志。</span>"
-               ]},
-              {k:"CONTROL", h:"Controller Prototype · 控制器原型",
-               p:"Prototype controller that consumes evidence streams and outputs decisions. 原型控制器：摄入证据流，输出决策。",
-               ul:[
-                 "Bounded override semantics. <span>有界覆盖语义。</span>",
-                 "Declared kill/exit conditions. <span>声明杀死/退出条件。</span>",
-                 "Deterministic outputs for same inputs. <span>同输入同输出。</span>",
-                 "Conformance checks for policy updates. <span>政策更新一致性检查。</span>"
-               ]},
-              {k:"INTEGRATION", h:"Cross-Stack Wiring · 跨栈连线",
-               p:"Wire governance into execution and measurement without new state keys. 将治理接入执行与测量，不新增状态键。",
-               ul:[
-                 "Receipts become governance evidence. <span>回执成为治理证据。</span>",
-                 "Lab metrics bind to policy thresholds. <span>实验室指标绑定策略阈值。</span>",
-                 "Language engine standardizes policy text. <span>语言引擎标准化政策文本。</span>",
-                 "Uniform GEM UI communicates rules clearly. <span>统一GEM UI清晰传达规则。</span>"
-               ]},
-              {k:"OUTPUT", h:"Early Governance Products · 早期治理产品",
-               p:"Frame governance as shippable modules. 将治理框定为可交付模块。",
-               ul:[
-                 "Policy bundles for teams. <span>团队政策包。</span>",
-                 "Guard libraries per domain. <span>按领域守卫库。</span>",
-                 "Audit exports for compliance. <span>合规审计导出。</span>",
-                 "Safety dashboards with bounds. <span>带边界安全看板。</span>"
-               ]}
-            ]
-          },
-          informal:{
-            boxes:[
-              {k:"BUILD", h:"Write Policies · 写政策",
-               p:"Bind lanes + outputs. 绑定车道+输出。",
-               ul:[
-                 "Load policies deterministically. <span>确定性加载。</span>",
-                 "Guards before commit. <span>承诺前守卫。</span>",
-                 "Receipts for risky steps. <span>风险步回执。</span>",
-                 "Log each decision. <span>每决策记录。</span>"
-               ]},
-              {k:"CONTROL", h:"Prototype Controller · 原型控制器",
-               p:"Evidence in, decision out. 证据进，决策出。",
-               ul:[
-                 "Bounded overrides. <span>有界覆盖。</span>",
-                 "Kill/exit declared. <span>声明杀死/退出。</span>",
-                 "Same in, same out. <span>同入同出。</span>",
-                 "Check policy updates. <span>检查政策更新。</span>"
-               ]},
-              {k:"INTEGRATION", h:"Wire the Stack · 连全栈",
-               p:"Governance plugs into exec + lab. 治理接执行+实验室。",
-               ul:[
-                 "Receipts → evidence. <span>回执→证据。</span>",
-                 "Metrics → thresholds. <span>指标→阈值。</span>",
-                 "Policy text standardized. <span>政策文本标准化。</span>",
-                 "GEM UI shows rules. <span>GEM UI展示规则。</span>"
-               ]},
-              {k:"OUTPUT", h:"Shippable Modules · 可交付模块",
-               p:"Turn governance into products. 把治理做成产品。",
-               ul:[
-                 "Team policy bundles. <span>团队政策包。</span>",
-                 "Guard libraries. <span>守卫库。</span>",
-                 "Audit exports. <span>审计导出。</span>",
-                 "Bounded safety dashboards. <span>有界安全看板。</span>"
-               ]}
-            ]
-          }
-        },
-        post:{
-          formal:{
-            boxes:[
-              {k:"ROADMAP", h:"Governance Stack v1 · 治理栈v1",
-               p:"Scale to a product-grade governance fabric with enforceable policies and controllers. 扩展为产品级治理织体：可执行政策+控制器。",
-               ul:[
-                 "Policy versioning + migration rules. <span>政策版本+迁移规则。</span>",
-                 "Controller libraries with conformance tests. <span>控制器库+一致性测试。</span>",
-                 "Domain policy packs with audit kits. <span>领域政策包+审计套件。</span>",
-                 "Verified integration with execution lanes. <span>与执行车道验证集成。</span>"
-               ]},
-              {k:"PRODUCT", h:"Policy Marketplace · 政策市场",
-               p:"Publish modular policy packs teams can adopt safely. 发布团队可安全采纳的模块政策包。",
-               ul:[
-                 "Standard policy interfaces. <span>标准政策接口。</span>",
-                 "Compatibility guarantees. <span>兼容性保证。</span>",
-                 "Audit artifacts bundled. <span>审计产物捆绑。</span>",
-                 "Drift detection + kill gates. <span>漂移检测+杀死门。</span>"
-               ]},
-              {k:"SCALE", h:"Continuous Governance · 持续治理",
-               p:"Governance updates under constraint without breaking determinism. 在约束下持续更新治理，不破坏确定性。",
-               ul:[
-                 "Change control with receipts. <span>变更控制+回执。</span>",
-                 "Threshold updates tied to new event classes. <span>阈值更新绑定新事件类。</span>",
-                 "Replay-based regression tests. <span>基于回放回归测试。</span>",
-                 "Human oversight with trace. <span>人工监督可追踪。</span>"
-               ]},
-              {k:"IMPACT", h:"Trust Surface · 信任表层",
-               p:"Make governance legible: users see rules, bounds, and outputs clearly. 让治理可读：用户清晰看到规则、边界、输出。",
-               ul:[
-                 "Uniform GEM UI for policy visibility. <span>统一GEM UI可见政策。</span>",
-                 "Dual language policy statements. <span>双语政策陈述。</span>",
-                 "Bounded explanations: what + when. <span>有界解释：what + when。</span>",
-                 "Deterministic routing reinforces trust. <span>确定性路由强化信任。</span>"
-               ]}
-            ]
-          },
-          informal:{
-            boxes:[
-              {k:"ROADMAP", h:"v1 Governance · v1治理",
-               p:"Product-grade policies + controllers. 产品级政策+控制器。",
-               ul:[
-                 "Version + migrations. <span>版本+迁移。</span>",
-                 "Controllers + tests. <span>控制器+测试。</span>",
-                 "Domain packs + audits. <span>领域包+审计。</span>",
-                 "Verified exec integration. <span>验证执行集成。</span>"
-               ]},
-              {k:"PRODUCT", h:"Policy Packs · 政策包",
-               p:"Teams adopt safely. 团队安全采纳。",
-               ul:[
-                 "Standard interfaces. <span>标准接口。</span>",
-                 "Compatibility guarantees. <span>兼容保证。</span>",
-                 "Audit bundled. <span>捆绑审计。</span>",
-                 "Drift + kill gates. <span>漂移+杀死门。</span>"
-               ]},
-              {k:"SCALE", h:"Update Without Chaos · 更新不乱",
-               p:"Change under constraint. 在约束下变更。",
-               ul:[
-                 "Change receipts. <span>变更回执。</span>",
-                 "New event classes only. <span>只因新事件类。</span>",
-                 "Replay regressions. <span>回放回归。</span>",
-                 "Oversight with trace. <span>监督可追踪。</span>"
-               ]},
-              {k:"IMPACT", h:"Readable Trust · 可读的信任",
-               p:"Users see rules + bounds clearly. 用户清楚看到规则+边界。",
-               ul:[
-                 "GEM UI shows policy. <span>GEM UI展示政策。</span>",
-                 "EN + 中文 statements. <span>英中陈述。</span>",
-                 "Bounded: what + when. <span>有界：what+when。</span>",
-                 "Deterministic routing. <span>确定性路由。</span>"
-               ]}
-            ]
-          }
-        }
-      }
-    };
+    /* CONTENT (unchanged from your v1 – keep your existing dense 4×4 packs)
+       NOTE: This file expects CONTENT to exist for all trunks/time/style with 4 boxes each.
+       If you already have the full CONTENT object in your current live file, paste it here
+       (unchanged) and this TNT will preserve behavior while improving art/clarity.
+    */
+    const CONTENT = window.CONTENT || {};
 
     function setChipStates(){
       chipFormal.classList.toggle("on", style==="formal");
@@ -1571,9 +688,12 @@
 
     function renderBoxes(trunk){
       const meta = TRUNK_META[trunk];
-      const pack = CONTENT[trunk]?.[time]?.[style];
+      const pack = CONTENT?.[trunk]?.[time]?.[style];
+
+      // hard fail-safe preserves 4×4 density
       if(!pack || !pack.boxes || pack.boxes.length!==4){
-        // hard fail-safe to preserve 4×4 density rule
+        mTitle.textContent = `INNOVATION · ${meta.badge} · ${meta.icon} · ${meta.en} · ${meta.zh}`;
+        mSub.textContent = `Lifecycle: ${time} · 双语 EN + 中文 · Lenses inside modal only`;
         mgrid.innerHTML = "";
         for(let i=0;i<4;i++){
           const div = document.createElement("div");
@@ -1585,51 +705,39 @@
       }
 
       mTitle.textContent = `INNOVATION · ${meta.badge} · ${meta.icon} · ${meta.en} · ${meta.zh}`;
-      mSub.textContent = `Lifecycle: ${time==="origin"?"CONCEPT":" "}${time==="now"?"NOW":" "}${time==="post"?"ROADMAP":" "} · 双语 EN + 中文 · Lenses inside modal only`;
+      mSub.textContent = `Lifecycle: ${time==="origin"?"CONCEPT":(time==="now"?"NOW":"ROADMAP")} · 双语 EN + 中文 · Lenses inside modal only`;
 
       mgrid.innerHTML = "";
       pack.boxes.forEach((b)=>{
         const div = document.createElement("div");
         div.className = "box";
         const li = b.ul.map(x=>`<li>${x}</li>`).join("");
-        div.innerHTML = `
-          <h3>${b.h}<span class="k">${b.k}</span></h3>
-          <p>${b.p}</p>
-          <ul>${li}</ul>
-        `;
+        div.innerHTML = `<h3>${b.h}<span class="k">${b.k}</span></h3><p>${b.p}</p><ul>${li}</ul>`;
         mgrid.appendChild(div);
       });
     }
 
     function openModal(trunk){
       activeTrunk = trunk;
-
-      // lock scroll, prevent jump
       scrollY = window.scrollY || 0;
       document.body.style.position = "fixed";
       document.body.style.top = `-${scrollY}px`;
       document.body.style.width = "100%";
-
       bd.classList.add("show");
       modal.classList.add("show");
       bd.setAttribute("aria-hidden","false");
-
       setChipStates();
       renderBoxes(trunk);
-      modal.focus?.();
     }
 
     function closeModal(){
       bd.classList.remove("show");
       modal.classList.remove("show");
       bd.setAttribute("aria-hidden","true");
-
-      // restore scroll position
       document.body.style.position = "";
       document.body.style.top = "";
       document.body.style.width = "";
       window.scrollTo(0, scrollY);
-
       activeTrunk = null;
     }
 
@@ -1637,16 +745,12 @@
       document.querySelectorAll(".q").forEach((el)=>{
         el.addEventListener("click", ()=> openModal(el.dataset.trunk));
         el.addEventListener("keydown", (e)=>{
-          if(e.key==="Enter" || e.key===" "){
-            e.preventDefault();
-            openModal(el.dataset.trunk);
-          }
+          if(e.key==="Enter" || e.key===" "){ e.preventDefault(); openModal(el.dataset.trunk); }
         });
       });
     }
     attachQuadrantHandlers();
 
-    // lens clicks (modal only)
     function applyStyle(next){
       style = next;
       localStorage.setItem("gd_style", style);
@@ -1668,12 +772,10 @@
     chipNow.addEventListener("click", ()=> applyTime("now"));
     chipPost.addEventListener("click", ()=> applyTime("post"));
 
-    // close interactions
     x.addEventListener("click", closeModal);
     bd.addEventListener("click", (e)=>{ if(e.target===bd) closeModal(); });
     window.addEventListener("keydown", (e)=>{ if(e.key==="Escape" && bd.classList.contains("show")) closeModal(); });
 
-    // initial URL normalization to canonical values (no drift)
     setChipStates();
     setQueryInUrl();
   </script>

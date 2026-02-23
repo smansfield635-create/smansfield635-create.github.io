@@ -17,6 +17,8 @@
   --obs2:#0c1626;
 }
 
+/* DO NOT TOUCH FIELD — ui.css owns background */
+
 .stage{
   position:fixed;
   left:50%;
@@ -30,7 +32,8 @@
 .outer{
   position:absolute;
   left:50%;top:50%;
-  width:100%;height:100%;
+  width:min(560px,92vw);
+  height:min(560px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   background:
@@ -42,8 +45,14 @@
     0 90px 260px rgba(0,0,0,.62),
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -50px 90px rgba(0,0,0,.55);
-  opacity:.55;
   pointer-events:none;
+  opacity:.55;
+}
+.outer::after{
+  content:"";
+  position:absolute; inset:0; border-radius:60px;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.14;
 }
 
 .d{
@@ -63,11 +72,11 @@
     0 28px 84px rgba(0,0,0,.78),
     inset 0 2px 0 rgba(255,255,255,.14),
     inset 0 -28px 44px rgba(0,0,0,.62);
-  transition:transform 200ms ease;
+  transition:transform 220ms ease, box-shadow 220ms ease;
 }
 
 .d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
 }
 
 .d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
@@ -89,7 +98,7 @@
 }
 
 .lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
-.sub{ font-size:13px; opacity:.86; line-height:1.35; }
+.sub{ font-size:13px; opacity:.86; line-height:1.35; max-width:16em; }
 
 .core{
   position:absolute;
@@ -102,6 +111,7 @@
   box-shadow:0 18px 44px rgba(0,0,0,.62);
   display:grid; place-items:center;
   font-weight:950;
+  pointer-events:none;
 }
 </style>
 </head>
@@ -111,7 +121,7 @@
 <div class="stage">
   <div class="outer"></div>
 
-  <div class="d d-n" id="lang">
+  <div class="d d-n" onclick="goLang()">
     <div class="inner">
       <div class="lab">LANGUAGE ENGINE</div>
       <div class="sub">Semantic compilers · grammar · indexing.</div>
@@ -121,21 +131,21 @@
   <div class="d d-e">
     <div class="inner">
       <div class="lab">EXECUTION SYSTEMS</div>
-      <div class="sub">Workflows · receipts.</div>
+      <div class="sub">Workflows · receipts · constrained ops.</div>
     </div>
   </div>
 
   <div class="d d-w">
     <div class="inner">
       <div class="lab">MEASUREMENT LAB</div>
-      <div class="sub">Instruments · sweeps.</div>
+      <div class="sub">Instruments · sweeps · evidence.</div>
     </div>
   </div>
 
   <div class="d d-s">
     <div class="inner">
       <div class="lab">GOVERNANCE STACK</div>
-      <div class="sub">Policies · gates.</div>
+      <div class="sub">Policies · gates · certification.</div>
     </div>
   </div>
 
@@ -143,17 +153,17 @@
 </div>
 
 <script>
-document.getElementById("lang").addEventListener("click", function(){
+function goLang(){
   const qs = new URLSearchParams(window.location.search);
-  const lang = qs.get("lang") || "en";
-  const style = qs.get("style") || "formal";
-  const time = qs.get("time") || "now";
+  const lang = qs.get("lang") || localStorage.getItem("gd_lang") || "en";
+  const style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  const time = qs.get("time") || localStorage.getItem("gd_time") || "now";
 
-  window.location.href = "/explore/innovation/language/index.html"
-    + "?lang=" + lang
-    + "&style=" + style
-    + "&time=" + time;
-});
+  window.location.href =
+    "/explore/innovation/language/?lang=" + lang +
+    "&style=" + style +
+    "&time=" + time;
+}
 </script>
 
 </body>

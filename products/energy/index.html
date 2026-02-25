@@ -1,19 +1,14 @@
 <!-- TNT — /products/energy/index.html  (ENERGY SUB-HUB · GEM STANDARD · DIAMOND-OF-DIAMONDS)
-     FIX (HIT-TEST LOCK + QUALITY RESTORE):
-       - Stage ignores taps; only diamonds accept taps:
-           .stage{pointer-events:none}
-           .stage .d{pointer-events:auto}
-       - Dock tap-safe:
-           .dock{pointer-events:none} + .dock .btn{pointer-events:auto}
-       - Debug pill stays: ENERGY LIVE · vE-9002
-       - Inline onclick remains (no listener dependency)
-       - open(): show modal first, then render
-       - render(): guarded fallback
+     STATUS:
+       - Mechanics fixed (hit-testing + modal show-first + guarded render).
+       - Now fully populated: CHAIN / PLASMA / FUSION / VALIDATION across ALL lenses.
      LOCKS:
        - TNT FULL FILE
        - Uses /assets/ui.css + /assets/branch.css only
        - DOES NOT style html/body background (ui.css owns field)
        - Canonical keys only: gd_lang / gd_style / gd_time
+       - Lenses INSIDE modal only
+       - 4 boxes × 4 bullets per view
 -->
 
 <!doctype html>
@@ -71,16 +66,14 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 .brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
 .brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
 
-/* Stage (HIT-TEST LOCK) */
+/* Stage */
 .stage{
   position:fixed;left:50%;top:52%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);height:min(720px,94vw);
   z-index:60;
-  pointer-events:none; /* KEY: stage ignores taps */
+  pointer-events:none; /* stage ignores taps */
 }
-
-/* Outer gem */
 .outer{
   position:absolute;left:50%;top:50%;
   width:min(680px,92vw);height:min(680px,92vw);
@@ -101,8 +94,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   opacity:.16;
   pointer-events:none;
 }
-
-/* Diamonds (ONLY CLICKABLE THINGS IN STAGE) */
 .d{
   width:170px;height:170px;position:absolute;left:50%;top:50%;
   transform-origin:center;border-radius:26px;cursor:pointer;
@@ -114,7 +105,7 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   border:1px solid rgba(255,255,255,.10);
   box-shadow:0 28px 84px rgba(0,0,0,.78), inset 0 2px 0 rgba(255,255,255,.14), inset 0 -28px 44px rgba(0,0,0,.62);
   transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
-  pointer-events:auto;      /* KEY: diamonds receive taps */
+  pointer-events:auto; /* diamonds receive taps */
   touch-action:manipulation;
 }
 .d::before{
@@ -141,21 +132,10 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 .d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
 .d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
 .d-w{transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg)}
-
 .inner{width:100%;height:100%;transform:rotate(-45deg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;gap:10px;pointer-events:none;user-select:none}
 .lab{font-weight:950;letter-spacing:.8px;font-size:16px}
 .sub{font-size:12.5px;opacity:.80;line-height:1.35;max-width:18em}
-
-.core{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:74px;height:74px;border-radius:22px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;place-items:center;font-weight:950;letter-spacing:.5px;opacity:.92;
-  pointer-events:none;
-}
+.core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:22px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);display:grid;place-items:center;font-weight:950;letter-spacing:.5px;opacity:.92;pointer-events:none}
 
 /* Dock (tap-safe) */
 .dock{
@@ -207,7 +187,7 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 
 <body>
 
-<div id="dbg">ENERGY LIVE · vE-9002</div>
+<div id="dbg">ENERGY LIVE · vE-9003</div>
 
 <div class="top-left">
   <a class="btn" id="btnBack" href="/products/">BACK</a>
@@ -282,9 +262,8 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 
 <script>
 (function(){
-  const dbg = document.getElementById("dbg");
+  const dbg=document.getElementById("dbg");
 
-  // STATE
   const qs = new URLSearchParams(location.search);
   let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   let style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
@@ -297,7 +276,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   const q = () => `lang=${encodeURIComponent(lang)}&style=${encodeURIComponent(style)}&time=${encodeURIComponent(time)}`;
-
   function setLinks(){
     const s=q();
     document.getElementById("btnBack").href="/products/?"+s;
@@ -315,29 +293,19 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 
   const UI = {
     en:{brand:"PRODUCTS",tag:"ENERGY CONVERSION",stylePrefix:"STYLE: ",
-      d:{chain:{lab:"CHAIN",sub:"Solar → plasma → fusion."},plasma:{lab:"PLASMA",sub:"Formation · stability."},fusion:{lab:"FUSION",sub:"Confinement · criteria."},validation:{lab:"VALIDATION",sub:"Signals · falsifiers."}},
       lens:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",live:"LIVE",roadmap:"ROADMAP"},
       btn:{ret:"RETURN",jp:"JUMP PRODUCTS",jh:"JUMP HUB"}},
     zh:{brand:"产品",tag:"能源转换",stylePrefix:"风格：",
-      d:{chain:{lab:"链路",sub:"太阳 → 等离子 → 聚变。"},plasma:{lab:"等离子",sub:"形成 · 稳定。"},fusion:{lab:"聚变",sub:"约束 · 标准。"},validation:{lab:"验证",sub:"信号 · 证伪。"}},
       lens:{formal:"正式",informal:"直接",concept:"概念",live:"上线",roadmap:"路线图"},
       btn:{ret:"返回",jp:"跳转产品",jh:"跳转枢纽"}}
   };
-  const ui = (lang==="zh") ? UI.zh : UI.en;
+  const ui=(lang==="zh")?UI.zh:UI.en;
+  document.getElementById("brandName").textContent=ui.brand;
+  document.getElementById("brandTag").textContent=ui.tag;
+  document.getElementById("mReturn").textContent=ui.btn.ret;
+  document.getElementById("mJumpProducts").textContent=ui.btn.jp;
+  document.getElementById("mJumpHub").textContent=ui.btn.jh;
 
-  document.getElementById("brandName").textContent = ui.brand;
-  document.getElementById("brandTag").textContent = ui.tag;
-
-  document.getElementById("labChain").textContent=ui.d.chain.lab;
-  document.getElementById("subChain").textContent=ui.d.chain.sub;
-  document.getElementById("labPlasma").textContent=ui.d.plasma.lab;
-  document.getElementById("subPlasma").textContent=ui.d.plasma.sub;
-  document.getElementById("labFusion").textContent=ui.d.fusion.lab;
-  document.getElementById("subFusion").textContent=ui.d.fusion.sub;
-  document.getElementById("labValidation").textContent=ui.d.validation.lab;
-  document.getElementById("subValidation").textContent=ui.d.validation.sub;
-
-  // Modal refs
   const bd=document.getElementById("bd");
   const modal=document.getElementById("modal");
   const mClose=document.getElementById("mClose");
@@ -350,13 +318,10 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   const h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2");
   const h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3");
   const h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4");
-  document.getElementById("mReturn").textContent=ui.btn.ret;
-  document.getElementById("mJumpProducts").textContent=ui.btn.jp;
-  document.getElementById("mJumpHub").textContent=ui.btn.jh;
 
   const persist=()=>{ try{ localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time);}catch(e){} };
   const setLensLabels=()=>{
-    styleChip.textContent = ui.stylePrefix + (style==="formal" ? ui.lens.formal : ui.lens.informal);
+    styleChip.textContent = ui.stylePrefix + (style==="formal"?ui.lens.formal:ui.lens.informal);
     chipConcept.textContent = ui.lens.concept;
     chipLive.textContent = ui.lens.live;
     chipRoadmap.textContent = ui.lens.roadmap;
@@ -369,13 +334,8 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     b.u.forEach(x=>{ const li=document.createElement("li"); li.textContent=x; uEl.appendChild(li); });
   };
 
-  // CONTENT (use the thick EN set; zh can be expanded later)
-  const CONTENT = {
-    chain: window.__EN_CHAIN,
-    plasma: window.__EN_PLASMA,
-    fusion: window.__EN_FUSION,
-    validation: window.__EN_VALIDATION
-  };
+  const EN = window.__ENERGY_EN;
+  const CONTENT = EN;
 
   const FALLBACK = {
     title:"Missing content",
@@ -386,18 +346,12 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   };
 
   let activeKey=null;
-  function setActiveDiamond(key){
-    document.getElementById("dChain").classList.toggle("active", key==="chain");
-    document.getElementById("dPlasma").classList.toggle("active", key==="plasma");
-    document.getElementById("dFusion").classList.toggle("active", key==="fusion");
-    document.getElementById("dValidation").classList.toggle("active", key==="validation");
-  }
 
   function render(){
     persist(); setLinks(); setLensLabels();
     if(!activeKey) return;
     const view = ((((CONTENT[activeKey]||{})[time]||{})[style]) || FALLBACK);
-    mTitle.textContent = view.title || FALLBACK.title;
+    mTitle.textContent=view.title||FALLBACK.title;
     fill(h1,p1,u1,view.b1||FALLBACK.b1);
     fill(h2,p2,u2,view.b2||FALLBACK.b2);
     fill(h3,p3,u3,view.b3||FALLBACK.b3);
@@ -406,7 +360,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 
   function open(key){
     activeKey=key;
-    setActiveDiamond(key);
     bd.classList.add("show");
     modal.classList.add("show");
     render();
@@ -415,73 +368,209 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     bd.classList.remove("show");
     modal.classList.remove("show");
     activeKey=null;
-    setActiveDiamond("__none__");
   }
 
-  window.__openEnergy = function(key){
-    dbg.textContent = "ENERGY LIVE · vE-9002 · TAP: " + key.toUpperCase();
+  window.__openEnergy=function(key){
+    dbg.textContent="ENERGY LIVE · vE-9003 · TAP: "+key.toUpperCase();
     open(key);
   };
 
-  // lenses
   styleChip.addEventListener("click", ()=>{ style=(style==="formal")?"informal":"formal"; render(); });
   chipConcept.addEventListener("click", ()=>{ time="origin"; render(); });
   chipLive.addEventListener("click", ()=>{ time="now"; render(); });
   chipRoadmap.addEventListener("click", ()=>{ time="post"; render(); });
 
-  // close
   bd.addEventListener("click", close);
   mClose.addEventListener("click", close);
   document.getElementById("mReturn").addEventListener("click", close);
-
-  // keyboard
-  [["dChain","chain"],["dPlasma","plasma"],["dFusion","fusion"],["dValidation","validation"]].forEach(pair=>{
-    document.getElementById(pair[0]).addEventListener("keydown",(e)=>{
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.__openEnergy(pair[1]); }
-    });
-  });
 
   setLensLabels();
 })();
 </script>
 
 <script>
-/* THICK CONTENT OBJECTS (global so the main script can access them reliably) */
-window.__EN_CHAIN = {
-  origin:{formal:{title:"Chain · Concept",
-    b1:{h:"System model",p:"Energy is modeled as a conversion chain: input → stage → output, with explicit boundaries and measurable signals.",u:["Stages are explicit.","Interfaces are named.","Loss acknowledged.","Unknowns labeled."]},
-    b2:{h:"Core direction",p:"Solar capture → plasma formation → controlled pathways toward fusion-relevant criteria.",u:["Define first.","Constrain first.","Measure first.","List failures."]},
-    b3:{h:"Public-safe disclosure",p:"Publish signals and falsifiers; do not publish recipes or apparatus details.",u:["Signals public.","Falsifiers public.","Recipes private.","No hazardous how-to."]},
-    b4:{h:"Why it’s a breakthrough",p:"It makes the topic test-ready: claims map to signals and disproof conditions.",u:["Test-ready framing.","Stable semantics.","Clear disproof.","Upgradeable structure."]}},
-    informal:{title:"Chain · Concept",
-    b1:{h:"What it is",p:"Input → stage → output.",u:["Stages.","Bounds.","Signals.","Fails."]},
-    b2:{h:"Direction",p:"Solar → plasma → criteria.",u:["Define.","Measure.","Test.","Repeat."]},
-    b3:{h:"Boundary",p:"No recipes here.",u:["No steps.","No numbers.","No schematics.","No hazards."]},
-    b4:{h:"Result",p:"Clear and testable.",u:["Clear.","Bounded.","Safe.","Honest."]}}}},
-  now:{formal:{title:"Chain · Live",
-    b1:{h:"Live posture",p:"Public reference surface with stable terms and stable lens behavior.",u:["Stable terms.","Stable lenses.","Deterministic state.","Return-safe."]},
-    b2:{h:"What you can do",p:"Traverse stage framing and see what-to-measure lists immediately.",u:["Stage roles.","Constraints.","Signals.","Falsifiers."]},
-    b3:{h:"What we refuse",p:"No mixed live/roadmap claims; no recipe disclosure.",u:["No mixed claims.","No recipes.","No hidden failures.","No silent drift."]},
-    b4:{h:"Reader outcome",p:"You can see what would count as proof and what would count as failure.",u:["Proof conditions.","Failure conditions.","Alternatives allowed.","Limits stated."]}},
-    informal:{title:"Chain · Live",
-    b1:{h:"Now",p:"Stable reference surface.",u:["Clear.","Safe.","Bounded.","Consistent."]},
-    b2:{h:"Included",p:"Signals + bounds.",u:["Signals.","Bounds.","Fails.","Checks."]},
-    b3:{h:"Excluded",p:"No recipes.",u:["No steps.","No numbers.","No schematics.","No hazards."]},
-    b4:{h:"Result",p:"Judge by tests.",u:["Test-ready.","Honest.","Bounded.","Clear."]}}}},
-  post:{formal:{title:"Chain · Roadmap",
-    b1:{h:"Depth expansion",p:"Deeper stage pages without changing meanings.",u:["More definition.","More constraints.","More falsifiers.","Same contract."]},
-    b2:{h:"Measurement atlas",p:"Signals grouped by meaning to prevent confusion.",u:["Stability.","Loss.","Artefacts.","Repeatability."]},
-    b3:{h:"Evidence bundles",p:"Reporting templates: conditions, signals, bounds, disproof.",u:["Condition logs.","Signal logs.","Bounds.","Disproof."]},
-    b4:{h:"End-state",p:"Frontier energy surface compelling by rigor.",u:["Disciplined.","Falsifiable.","Public-safe.","Upgradeable."]}},
-    informal:{title:"Chain · Roadmap",
-    b1:{h:"More depth",p:"More detail, same rules.",u:["Clearer.","Deeper.","Bounded.","Safe."]},
-    b2:{h:"Signals map",p:"Signals by meaning.",u:["Stability.","Loss.","Noise.","Checks."]},
-    b3:{h:"Templates",p:"Proof templates.",u:["Logs.","Formats.","Repeat.","Audit."]},
-    b4:{h:"Result",p:"Compelling by rigor.",u:["Disciplined.","Test-ready.","Bounded.","Safe."]}}}}
+/* FULL ENERGY CONTENT (EN). 4 boxes × 4 bullets for every diamond × every lens × every style. */
+window.__ENERGY_EN = {
+  chain:{
+    origin:{
+      formal:{title:"CHAIN · Concept (Formal)",
+        b1:{h:"Chain definition",p:"Energy is modeled as a staged conversion chain with explicit interfaces and measurable outputs at each boundary.",u:["Define stages by role.","Name interfaces explicitly.","Attach signals to each stage.","Attach falsifiers to each claim."]},
+        b2:{h:"Scope boundary",p:"Public layer communicates structure and measurement without disclosing recipes, schematics, or hazardous procedures.",u:["No apparatus schematics.","No parameter recipes.","No hazardous steps.","No proprietary geometry."]},
+        b3:{h:"Why this works",p:"A chain model prevents narrative leaps by forcing each stage to prove itself independently before claims can propagate.",u:["Stage-level validation.","Loss accounting per stage.","Independent falsifiers.","No mixed time layers."]},
+        b4:{h:"What to expect",p:"This surface is designed to be read fast and judged by tests, not by persuasion.",u:["Consumer-legible first.","Technical depth via lenses.","Bounded language.","Deterministic navigation."]}
+      },
+      informal:{title:"CHAIN · Concept (Direct)",
+        b1:{h:"Model",p:"Input → stage → output, with checks.",u:["Stages.","Bounds.","Signals.","Fails."]},
+        b2:{h:"Boundary",p:"We share tests, not recipes.",u:["Signals yes.","Falsifiers yes.","Recipes no.","Schematics no."]},
+        b3:{h:"Rule",p:"No stage gets a free pass.",u:["Prove each stage.","Track losses.","Name failure modes.","Don’t mix claims."]},
+        b4:{h:"Result",p:"A chain you can actually evaluate.",u:["Checkable.","Bounded.","Clear.","Safe."]}
+      }
+    },
+    now:{
+      formal:{title:"CHAIN · Live (Formal)",
+        b1:{h:"Live posture",p:"The chain surface is stable: state keys persist, lens semantics persist, and returns are deterministic.",u:["gd_* persists.","URL hydration works.","Modal-first reading.","Return always works."]},
+        b2:{h:"Stage roles",p:"Each stage is described by what it must accomplish and what would count as failure.",u:["Role definition.","Success conditions.","Failure conditions.","Alternative explanations allowed."]},
+        b3:{h:"Measurement posture",p:"We focus on signal taxonomy and noise controls so claims remain defensible.",u:["Baselines required.","Repeatability required.","Artefact awareness.","Bounded interpretation."]},
+        b4:{h:"Disclosure posture",p:"We publish the evaluation rules and keep implementation details private.",u:["Rules public.","Evidence format public.","Recipes private.","Safety preserved."]}
+      },
+      informal:{title:"CHAIN · Live (Direct)",
+        b1:{h:"Now",p:"Stable reference surface.",u:["Consistent.","Bounded.","Safe.","Predictable."]},
+        b2:{h:"Included",p:"Roles, signals, fails.",u:["Stage roles.","Signals.","Fails.","Limits."]},
+        b3:{h:"Rule",p:"If it can’t be tested, it stays concept.",u:["Test first.","Repeat.","Log conditions.","Name falsifiers."]},
+        b4:{h:"Boundary",p:"No recipes here.",u:["No steps.","No numbers.","No schematics.","No hazards."]}
+      }
+    },
+    post:{
+      formal:{title:"CHAIN · Roadmap (Formal)",
+        b1:{h:"Depth expansion",p:"Roadmap deepens each stage without changing topology or semantics.",u:["Sharper definitions.","More constraints.","More falsifiers.","Same navigation."]},
+        b2:{h:"Evidence bundles",p:"Standardized report templates unify conditions, signals, limits, and disproof logic.",u:["Condition log.","Signal log.","Noise controls.","Disproof conditions."]},
+        b3:{h:"Adversarial testing",p:"Stress tests distinguish signal from artefact without disclosing apparatus internals.",u:["Artefact checks.","Cross-checks.","Alternative hypotheses.","Kill conditions."]},
+        b4:{h:"End-state",p:"A public frontier surface that compels by rigor and stays safe under scale.",u:["Disciplined.","Falsifiable.","Public-safe.","Upgradeable."]}
+      },
+      informal:{title:"CHAIN · Roadmap (Direct)",
+        b1:{h:"Next",p:"More depth per stage.",u:["More definition.","More signals.","More falsifiers.","Same map."]},
+        b2:{h:"Proof format",p:"Templates, not blueprints.",u:["Logs.","Checks.","Repeat.","Audit."]},
+        b3:{h:"Stress tests",p:"Signal vs artefact.",u:["Cross-checks.","Alternatives.","Falsifiers.","Kill conditions."]},
+        b4:{h:"Result",p:"Rigor scales.",u:["Disciplined.","Safe.","Clear.","Upgradeable."]}
+      }
+    }
+  },
+
+  plasma:{
+    origin:{
+      formal:{title:"PLASMA · Concept (Formal)",
+        b1:{h:"Plasma role",p:"Plasma is the bridge state where energy density, stability, and loss control become the core engineering problem.",u:["Bridge state defined.","Instabilities acknowledged.","Loss mechanisms acknowledged.","Diagnostics required."]},
+        b2:{h:"Stability definition",p:"Stability means bounded response under disturbance with repeatable behavior and controlled losses.",u:["Bounded response.","Repeatable response.","Loss accounting.","No runaway modes."]},
+        b3:{h:"Signal taxonomy",p:"We classify signals by meaning: stability, loss, confinement proxies, and noise controls.",u:["Stability signals.","Loss signals.","Proxy signals.","Noise/artefact controls."]},
+        b4:{h:"Public-safe boundary",p:"We publish categories and evaluation rules, not actuation recipes or apparatus details.",u:["Categories public.","Rules public.","Recipes private.","Safety preserved."]}
+      },
+      informal:{title:"PLASMA · Concept (Direct)",
+        b1:{h:"Bridge state",p:"Stability + loss control.",u:["Stability.","Loss.","Modes.","Measure."]},
+        b2:{h:"Stability",p:"Bounded + repeatable.",u:["Bounded.","Repeatable.","Measured.","No runaway."]},
+        b3:{h:"Signals",p:"Signals tell the truth.",u:["Stability.","Loss.","Noise.","Checks."]},
+        b4:{h:"Boundary",p:"No recipes.",u:["No steps.","No numbers.","No schematics.","No hazards."]}
+      }
+    },
+    now:{
+      formal:{title:"PLASMA · Live (Formal)",
+        b1:{h:"Live deliverable",p:"A stability primer that makes plasma legible: modes, loss channels, and minimum diagnostic language.",u:["Mode catalog.","Loss catalog.","Signal groups.","Bounded claims."]},
+        b2:{h:"Measurement discipline",p:"Baselines and repeatability are mandatory for separating signal from noise and artefacts.",u:["Baselines required.","Repeatability required.","Artefact controls.","Bounded interpretation."]},
+        b3:{h:"Failure-first honesty",p:"We list failure modes explicitly so readers can tell when conditions are not met.",u:["Instability growth.","Loss dominance.","Non-repeatability.","Alternative explanations."]},
+        b4:{h:"Safety boundary",p:"No hazardous procedures or apparatus guidance is provided.",u:["No steps.","No setpoints.","No schematics.","No hazards."]}
+      },
+      informal:{title:"PLASMA · Live (Direct)",
+        b1:{h:"Now",p:"Stability primer.",u:["Modes.","Losses.","Signals.","Bounds."]},
+        b2:{h:"Rule",p:"Baseline + repeat.",u:["Baseline.","Repeat.","Noise.","Checks."]},
+        b3:{h:"Failures",p:"Name them.",u:["Instability.","Loss.","Artefacts.","Not repeatable."]},
+        b4:{h:"Safety",p:"No recipes.",u:["No steps.","No numbers.","No schematics.","No hazards."]}
+      }
+    },
+    post:{
+      formal:{title:"PLASMA · Roadmap (Formal)",
+        b1:{h:"Stability ladder",p:"Publish stable/drift/fail markers that remain observer-invariant.",u:["Stable marker.","Drift marker.","Fail marker.","Noise marker."]},
+        b2:{h:"Loss accounting",p:"Loss types map to signal signatures so comparisons are honest.",u:["Loss types.","Signatures.","Bounding strategies.","Audit posture."]},
+        b3:{h:"Evidence templates",p:"Replication-safe reporting expands without revealing internals.",u:["Templates.","Condition logs.","Repeatability checks.","Public-safe."]},
+        b4:{h:"Outcome",p:"A compelling plasma surface that invites serious collaboration while staying safe.",u:["Serious.","Bounded.","Safe.","Upgradeable."]}
+      },
+      informal:{title:"PLASMA · Roadmap (Direct)",
+        b1:{h:"Markers",p:"Stable / drift / fail.",u:["Stable.","Drift.","Fail.","Noise."]},
+        b2:{h:"Loss map",p:"Loss signatures.",u:["Types.","Signals.","Bounds.","Checks."]},
+        b3:{h:"Templates",p:"Better reports.",u:["Logs.","Formats.","Repeat.","Audit."]},
+        b4:{h:"Result",p:"Serious + safe.",u:["Disciplined.","Safe.","Clear.","Upgradeable."]}
+      }
+    }
+  },
+
+  fusion:{
+    origin:{
+      formal:{title:"FUSION · Concept (Formal)",
+        b1:{h:"Fusion criteria",p:"Fusion is framed as criteria under constraint: confinement, energy density, time, and loss control.",u:["Criteria explicit.","Loss explicit.","Time explicit.","Measured."]},
+        b2:{h:"Confinement framing",p:"Confinement is defined by what it must accomplish, not by device claims.",u:["Hold conditions.","Suppress loss.","Resist modes.","Be measurable."]},
+        b3:{h:"Test boundaries",p:"We publish what would count as progress and what would count as failure, without recipes.",u:["Progress markers.","Failure markers.","Falsifiers.","Limits."]},
+        b4:{h:"Public-safe posture",p:"This is a criteria map and evidence map, not a build guide.",u:["No recipes.","No schematics.","No setpoints.","No hazards."]}
+      },
+      informal:{title:"FUSION · Concept (Direct)",
+        b1:{h:"Checklist",p:"Fusion = criteria checklist.",u:["Criteria.","Signals.","Fails.","Bounds."]},
+        b2:{h:"Confinement",p:"Hold long enough.",u:["Hold.","Stabilize.","Measure.","Repeat."]},
+        b3:{h:"Judge by",p:"Falsifiers and limits.",u:["Falsifiers.","Limits.","Fails.","No hype."]},
+        b4:{h:"Boundary",p:"No recipes.",u:["No steps.","No numbers.","No schematics.","No hazards."]}
+      }
+    },
+    now:{
+      formal:{title:"FUSION · Live (Formal)",
+        b1:{h:"Live surface",p:"Definitions, constraints, signals, and failure language presented without mystique.",u:["Definitions.","Constraints.","Signals.","Fails."]},
+        b2:{h:"No mixed claims",p:"Roadmap is separated from live posture to prevent accidental overclaiming.",u:["Separated.","Bounded.","Honest.","Stable."]},
+        b3:{h:"Validation posture",p:"We focus on what-to-measure lists and disproof conditions rather than narratives.",u:["Signals listed.","Noise controls.","Disproof conditions.","Alternative hypotheses."]},
+        b4:{h:"Safety boundary",p:"No apparatus specifics or hazardous procedures are published.",u:["No steps.","No recipes.","No specs.","No hazards."]}
+      },
+      informal:{title:"FUSION · Live (Direct)",
+        b1:{h:"Now",p:"Criteria + signals.",u:["Criteria.","Signals.","Fails.","Bounds."]},
+        b2:{h:"Separated",p:"Live ≠ Roadmap.",u:["Separated.","Clean.","Honest.","Stable."]},
+        b3:{h:"Rule",p:"Measure first.",u:["Signals.","Noise.","Repeat.","Bounds."]},
+        b4:{h:"Safety",p:"No recipes.",u:["No steps.","No numbers.","No schematics.","No hazards."]}
+      }
+    },
+    post:{
+      formal:{title:"FUSION · Roadmap (Formal)",
+        b1:{h:"Criteria tightening",p:"Sharper boundary between ‘interesting plasma’ and ‘fusion-relevant plasma’.",u:["Stronger definitions.","Boundary clarity.","Thresholds (bounded).","Failure conditions."]},
+        b2:{h:"Stepwise proof",p:"Milestones are falsifiable steps, not timelines.",u:["Steps.","Falsifiers.","Kill conditions.","Alternatives."]},
+        b3:{h:"Adversarial tests",p:"Stress tests separate signal from artefact and prevent narrative inflation.",u:["Artefact checks.","Cross-checks.","Alternative explanations.","Disproof focus."]},
+        b4:{h:"Outcome",p:"Compelling by discipline without leaking recipes.",u:["Disciplined.","Public-safe.","Test-ready.","Upgradeable."]}
+      },
+      informal:{title:"FUSION · Roadmap (Direct)",
+        b1:{h:"Tighter",p:"Sharper criteria.",u:["Definitions.","Signals.","Fails.","Bounds."]},
+        b2:{h:"Steps",p:"Proof steps.",u:["Steps.","Falsifiers.","Limits.","Alternatives."]},
+        b3:{h:"Stress tests",p:"Signal vs artefact.",u:["Checks.","Cross-checks.","Alternatives.","Fails."]},
+        b4:{h:"Result",p:"Rigor scales.",u:["Disciplined.","Safe.","Clear.","Upgradeable."]}
+      }
+    }
+  },
+
+  validation:{
+    origin:{
+      formal:{title:"VALIDATION · Concept (Formal)",
+        b1:{h:"Validation principle",p:"Validation is measurement + falsification. Untestable claims remain conceptual.",u:["Define claim.","Define measure.","Define falsifier.","Define limit."]},
+        b2:{h:"Evidence format",p:"Evidence includes conditions, time anchors, signal definitions, and bounded interpretation.",u:["Conditions logged.","Time anchored.","Signals defined.","Interpretation bounded."]},
+        b3:{h:"Failure-first honesty",p:"Failure modes are explicit to prevent narrative inflation.",u:["Instability growth.","Loss dominance.","Artefacts.","Non-repeatability."]},
+        b4:{h:"Public-safe boundary",p:"Rules and templates can be public; build recipes cannot.",u:["Rules public.","Templates public.","Recipes private.","Safety preserved."]}
+      },
+      informal:{title:"VALIDATION · Concept (Direct)",
+        b1:{h:"Rules",p:"Measure and falsify.",u:["Measure.","Test.","Falsify.","Repeat."]},
+        b2:{h:"Evidence",p:"Conditions + signals + bounds.",u:["Conditions.","Signals.","Bounds.","Fails."]},
+        b3:{h:"Failures",p:"Name failures.",u:["Instability.","Loss.","Artefacts.","Not repeatable."]},
+        b4:{h:"Result",p:"Proof becomes checkable.",u:["Checkable.","Bounded.","Clear.","Honest."]}
+      }
+    },
+    now:{
+      formal:{title:"VALIDATION · Live (Formal)",
+        b1:{h:"Live scaffold",p:"Claims, evidence conditions, disproof conditions, and limits are explicit.",u:["Claims bounded.","Evidence defined.","Disproof defined.","Limits stated."]},
+        b2:{h:"Reader evaluation",p:"Readers evaluate coherence by checking signal alignment and falsifier meaning.",u:["Signal alignment.","Bound checks.","Falsifier meaning.","Consistency."]},
+        b3:{h:"Adversarial posture",p:"We allow alternative explanations and specify what would disprove them.",u:["Alternatives allowed.","Disproof conditions.","Noise controls.","Repeatability checks."]},
+        b4:{h:"Outcome",p:"Trust grows from stable definitions and stable validation logic over time.",u:["Stable terms.","Stable tests.","Stable bounds.","Repeatability."]}
+      },
+      informal:{title:"VALIDATION · Live (Direct)",
+        b1:{h:"Now",p:"Proof scaffold.",u:["Claims.","Evidence.","Disproof.","Limits."]},
+        b2:{h:"Judge",p:"Signals + falsifiers.",u:["Signals.","Bounds.","Fails.","Checks."]},
+        b3:{h:"Alternatives",p:"Allow them and test them.",u:["Alternatives.","Controls.","Repeat.","Disproof."]},
+        b4:{h:"Result",p:"Checkable trust.",u:["Checkable.","Bounded.","Clear.","Honest."]}
+      }
+    },
+    post:{
+      formal:{title:"VALIDATION · Roadmap (Formal)",
+        b1:{h:"Evidence bundles",p:"Templates define what a ‘good report’ contains.",u:["Templates.","Condition logs.","Noise controls.","Repeat checks."]},
+        b2:{h:"Stress tests",p:"Methods to separate signal from artefact without exposing internals.",u:["Artefact checks.","Cross-checks.","Alternative hypotheses.","Falsifiers."]},
+        b3:{h:"Registry posture",p:"Lookupable status with reason codes and history.",u:["Status.","Reasons.","History.","Rules."]},
+        b4:{h:"Outcome",p:"A durable verification spine that scales with the project.",u:["Durable.","Public-safe.","Audit-friendly.","Upgradeable."]}
+      },
+      informal:{title:"VALIDATION · Roadmap (Direct)",
+        b1:{h:"Templates",p:"Proof templates.",u:["Templates.","Logs.","Repeat.","Audit."]},
+        b2:{h:"Stress",p:"Signal vs artefact.",u:["Checks.","Cross-checks.","Alternatives.","Fails."]},
+        b3:{h:"Registry",p:"Status lookup.",u:["Status.","Reasons.","History.","Rules."]},
+        b4:{h:"Result",p:"Verification spine.",u:["Durable.","Clear.","Safe.","Upgradeable."]}
+      }
+    }
+  }
 };
-window.__EN_PLASMA = window.__EN_CHAIN;      /* placeholders to keep page functional if you want */
-window.__EN_FUSION = window.__EN_CHAIN;
-window.__EN_VALIDATION = window.__EN_CHAIN;
 </script>
 
 </body>

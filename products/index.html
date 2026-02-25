@@ -1,774 +1,266 @@
-<!-- TNT — /products/index.html  (PRODUCTS · DEPLOYED SURFACES · GEM STANDARD)  
-     GOAL:  
-       - Restore/replace butchered PRODUCT copy with thorough, consumer-facing language (no “sales correlation” tone).  
-       - Keep Concept / Live / Roadmap lenses (origin / now / post).  
-       - Keep Style lens (formal / informal).  
-       - Lenses live INSIDE MODAL only (no lens controls on main page).  
-       - Dual language (EN / 中文) supported via ?lang= and gd_lang persistence.  
-       - 4 product diamonds: SOFTWARE / COMMERCIAL / ENERGY / EDUCATION.  
-       - Modal content = 4 BUBBLES (4 paragraphs) — NOT bullets.  
-     RULES:  
-       - Uses /assets/ui.css + /assets/branch.css  
-       - Does NOT touch field ownership beyond this page (ui.css owns background)  
--->  <!doctype html>
+<!-- TNT — /products/index.html  (PRODUCTS · DEPLOYED SURFACES · GEM STANDARD)
+     FINALIZED: Catalog + Vision + Launch-Ready
+-->
 
-<html lang="en">  
-<head>  
-<meta charset="utf-8"/>  
-<meta name="viewport" content="width=device-width,initial-scale=1"/>  
-<title>PRODUCTS · Cardinal Axis</title>  <link rel="stylesheet" href="/assets/ui.css"/>  
-<link rel="stylesheet" href="/assets/branch.css"/>  <style>  
-/* PAGE-LOCAL ONLY (layout + gem cards). ui.css owns field. */  
-:root{  
-  --R:124px;  
-  --goldSoft:rgba(212,175,55,.35);  
-  --obs1:#070b12;  
-  --obs2:#0c1626;  
-  --mut:rgba(255,255,255,.84);  
-  --mut2:rgba(255,255,255,.68);  
-}  
-  
-/* Top-left */  
-.top-left{  
-  position:fixed;left:16px;top:16px;z-index:90;  
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;  
-}  
-  
-/* Buttons (fallback if ui.css class not present) */  
-.btn{  
-  padding:10px 16px;  
-  border-radius:14px;  
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));  
-  color:#fff;  
-  border:1px solid rgba(255,255,255,.08);  
-  box-shadow:0 14px 36px rgba(0,0,0,.7);  
-  cursor:pointer;  
-  font-weight:900;  
-  letter-spacing:.2px;  
-  text-decoration:none;  
-  -webkit-tap-highlight-color:transparent;  
-}  
-.btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }  
-.btn.active{  
-  border-color:rgba(212,175,55,.25);  
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 22px rgba(212,175,55,.30);  
-}  
-  
-/* Brand */  
-.brand{  
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);  
-  z-index:80;text-align:center;  
-  padding:10px 14px;border-radius:999px;  
-  border:1px solid rgba(255,255,255,.10);  
-  background:rgba(0,0,0,.16);  
-  backdrop-filter:blur(8px);  
-}  
-.brand .name{ font-weight:950; letter-spacing:1.2px; font-size:12px; opacity:.95; }  
-.brand .tag{ font-size:11px; letter-spacing:.6px; opacity:.70; margin-top:2px; }  
-  
-/* Stage */  
-.stage{  
-  position:fixed;left:50%;top:50%;  
-  transform:translate(-50%,-50%);  
-  width:min(560px,92vw);  
-  height:min(560px,92vw);  
-  z-index:40;  
-}  
-  
-/* Outer diamond */  
-.outer{  
-  position:absolute;left:50%;top:50%;  
-  width:min(560px,92vw);height:min(560px,92vw);  
-  transform:translate(-50%,-50%) rotate(45deg);  
-  border-radius:60px;  
-  background:  
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),  
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),  
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);  
-  border:1px solid rgba(255,255,255,.10);  
-  box-shadow:  
-    0 90px 260px rgba(0,0,0,.62),  
-    inset 0 2px 0 rgba(255,255,255,.10),  
-    inset 0 -50px 90px rgba(0,0,0,.55);  
-  pointer-events:none;  
-  opacity:.55;  
-}  
-.outer::after{  
-  content:"";  
-  position:absolute; inset:0; border-radius:60px;  
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);  
-  opacity:.14;  
-}  
-  
-/* Category diamonds */  
-.d{  
-  width:160px;height:160px;  
-  position:absolute;left:50%;top:50%;  
-  transform-origin:center;  
-  border-radius:26px;  
-  cursor:pointer;  
-  -webkit-tap-highlight-color:transparent;  
-  background:  
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),  
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),  
-    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);  
-  border:1px solid rgba(255,255,255,.10);  
-  box-shadow:  
-    0 28px 84px rgba(0,0,0,.78),  
-    inset 0 2px 0 rgba(255,255,255,.14),  
-    inset 0 -28px 44px rgba(0,0,0,.62);  
-  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;  
-}  
-.d::before{  
-  content:"";  
-  position:absolute; inset:0; border-radius:26px; padding:1px;  
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);  
-  opacity:.45;  
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);  
-  -webkit-mask-composite:xor; mask-composite:exclude;  
-  pointer-events:none;  
-}  
-.d::after{  
-  content:"";  
-  position:absolute; left:12%; right:12%; top:10%; height:28%;  
-  border-radius:999px;  
-  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));  
-  opacity:.85; transform:rotate(-10deg);  
-  pointer-events:none;  
-}  
-.d:hover{  
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);  
-  box-shadow:  
-    0 34px 110px rgba(0,0,0,.88),  
-    0 0 18px rgba(212,175,55,.18),  
-    inset 0 2px 0 rgba(255,255,255,.18),  
-    inset 0 -32px 52px rgba(0,0,0,.68);  
-}  
-.d.active{  
-  border-color:rgba(212,175,55,.55);  
-  box-shadow:  
-    0 34px 110px rgba(0,0,0,.88),  
-    0 0 30px rgba(212,175,55,.40),  
-    inset 0 2px 0 rgba(255,255,255,.18),  
-    inset 0 -32px 52px rgba(0,0,0,.68);  
-}  
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }  
-.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }  
-.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }  
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }  
-  
-.inner{  
-  width:100%; height:100%;  
-  transform:rotate(-45deg);  
-  display:flex; flex-direction:column;  
-  align-items:center; justify-content:center;  
-  text-align:center; padding:16px;  
-  gap:10px;  
-  pointer-events:none; user-select:none;  
-}  
-.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }  
-.sub{ font-size:12.5px; opacity:.86; line-height:1.35; max-width:17em; }  
-  
-/* Core */  
-.core{  
-  position:absolute;left:50%;top:50%;  
-  transform:translate(-50%,-50%);  
-  width:64px;height:64px;border-radius:18px;  
-  border:1px solid rgba(255,255,255,.10);  
-  background:rgba(0,0,0,.18);  
-  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);  
-  display:grid; place-items:center;  
-  font-weight:950; letter-spacing:.5px;  
-  opacity:.92;  
-  pointer-events:none;  
-}  
-  
-/* Dock */  
-.dock{  
-  position:fixed;left:50%;  
-  bottom:max(12px, env(safe-area-inset-bottom));  
-  transform:translateX(-50%);  
-  z-index:90;  
-  width:min(900px,94vw);  
-  display:flex;justify-content:center;  
-  gap:10px;flex-wrap:wrap;  
-  padding:10px 12px;border-radius:999px;  
-  border:1px solid rgba(255,255,255,.10);  
-  background:rgba(0,0,0,.20);  
-  backdrop-filter:blur(8px);  
-}  
-  
-/* Modal */  
-.bd{  
-  position:fixed;inset:0;z-index:200;  
-  background:rgba(0,0,0,.65);  
-  backdrop-filter:blur(10px);  
-  display:none;  
-}  
-.bd.show{display:block;}  
-.modal{  
-  position:fixed;left:50%;top:50%;  
-  transform:translate(-50%,-50%);  
-  width:min(1020px,94vw);  
-  max-height:88vh;  
-  display:none;  
-  z-index:210;  
-}  
-.modal.show{display:block;}  
-.shell{  
-  height:88vh;  
-  border-radius:26px;  
-  border:1px solid rgba(255,255,255,.10);  
-  background:  
-    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),  
-    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),  
-    linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);  
-  box-shadow:0 60px 180px rgba(0,0,0,.92);  
-  overflow:hidden;  
-  display:flex;flex-direction:column;  
-  position:relative;  
-}  
-.shell::before{  
-  content:"";  
-  position:absolute;left:50%;top:58%;  
-  width:min(980px,94vw);height:min(980px,94vw);  
-  transform:translate(-50%,-50%) rotate(45deg);  
-  border-radius:70px;  
-  background:  
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),  
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.16), transparent 60%),  
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);  
-  box-shadow:  
-    0 100px 280px rgba(0,0,0,.72),  
-    inset 0 2px 0 rgba(255,255,255,.10),  
-    inset 0 -55px 100px rgba(0,0,0,.55);  
-  opacity:.55;  
-  pointer-events:none;  
-}  
-.mhead{  
-  display:flex;justify-content:space-between;align-items:center;  
-  gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);  
-  position:relative;z-index:2;  
-}  
-.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}  
-.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}  
-.mbody{  
-  padding:14px 16px 18px;  
-  overflow:auto;-webkit-overflow-scrolling:touch;  
-  flex:1 1 auto;  
-  position:relative;z-index:2;  
-}  
-.lensbar{  
-  display:flex;gap:10px;flex-wrap:wrap;  
-  align-items:center;justify-content:center;  
-  padding:10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);  
-  margin:-6px -6px 14px;  
-}  
-.chip{  
-  padding:10px 16px;border-radius:999px;  
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));  
-  border:1px solid rgba(255,255,255,.08);  
-  box-shadow:0 14px 36px rgba(0,0,0,.65);  
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;  
-}  
-.chip.active{  
-  border-color:rgba(212,175,55,.35);  
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);  
-}  
-  
-/* Bubbles (4 paragraphs) */  
-.grid{display:grid;gap:14px}  
-@media (min-width:920px){ .grid{grid-template-columns:1fr 1fr} }  
-.bubble{  
-  padding:16px 18px;border-radius:22px;  
-  background:  
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),  
-    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));  
-  border:1px solid rgba(255,255,255,.10);  
-  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);  
-  position:relative;  
-}  
-.bubble::before{  
-  content:"";  
-  position:absolute;inset:0;border-radius:22px;padding:1px;  
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);  
-  opacity:.55;  
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);  
-  -webkit-mask-composite:xor; mask-composite:exclude;  
-  pointer-events:none;  
-}  
-.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.2px}  
-.bubble p{margin:0;color:var(--mut);line-height:1.6}  
-.small{margin-top:10px;color:var(--mut2);font-size:12.5px;line-height:1.45}  
-  
-.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}  
-.sbtn{  
-  padding:12px 18px;border-radius:14px;  
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));  
-  color:#fff;border:1px solid rgba(255,255,255,.08);  
-  box-shadow:0 14px 36px rgba(0,0,0,.7);  
-  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;  
-}  
-.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }  
-  
-@media (max-width:520px){  
-  :root{ --R: 116px; }  
-  .stage{ width:min(520px,92vw); height:min(520px,92vw); }  
-  .outer{ width:min(520px,92vw); height:min(520px,92vw); }  
-  .core{ width:58px; height:58px; }  
-  .shell{ height:90vh; }  
-}  
-</style>  </head>  <body>  <div class="top-left">  
-  <a class="btn" id="btnHub" href="/home/">HUB</a>  
-  <a class="btn" id="btnExit" href="/door/">EXIT</a>  
-</div>  <div class="brand">  
-  <div class="name" id="brandName">CARDINAL AXIS</div>  
-  <div class="tag" id="brandTag">PRODUCTS · DEPLOYED SURFACES</div>  
-</div>  <div class="stage" aria-label="Products category diamond">  
-  <div class="outer"></div>    <div class="d d-n" id="software" role="button" tabindex="0" aria-label="Software">  
-    <div class="inner">  
-      <div class="lab" id="labN">SOFTWARE</div>  
-      <div class="sub" id="subN">Tools you can run today.</div>  
-    </div>  
-  </div>    <div class="d d-e" id="commercial" role="button" tabindex="0" aria-label="Commercial">  
-    <div class="inner">  
-      <div class="lab" id="labE">COMMERCIAL</div>  
-      <div class="sub" id="subE">Deployable offerings and licenses.</div>  
-    </div>  
-  </div>    <div class="d d-s" id="energy" role="button" tabindex="0" aria-label="Energy">  
-    <div class="inner">  
-      <div class="lab" id="labS">ENERGY</div>  
-      <div class="sub" id="subS">Plasma pathways and conversion chains.</div>  
-    </div>  
-  </div>    <div class="d d-w" id="education" role="button" tabindex="0" aria-label="Education">  
-    <div class="inner">  
-      <div class="lab" id="labW">EDUCATION</div>  
-      <div class="sub" id="subW">Traversal study programs you can take.</div>  
-    </div>  
-  </div>    <div class="core">◆</div>  
-</div>  <nav class="dock" id="dock">  
-  <a class="btn" id="goTerminal" href="/index.html">TERMINAL</a>  
-  <a class="btn" id="goLinks" href="/links/">LINKS</a>  
-  <a class="btn active" id="goProducts" href="/products/">PRODUCTS</a>  
-  <a class="btn" id="goLaws" href="/laws/">LAWS</a>  
-  <a class="btn" id="goGauges" href="/gauges/">GAUGES</a>  
-</nav>  <div class="bd" id="bd"></div>  <div class="modal" id="modal" role="dialog" aria-modal="true">  
-  <div class="shell">  
-    <div class="mhead">  
-      <h3 class="mtitle" id="mTitle">DETAIL</h3>  
-      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>  
-    </div>  <div class="mbody">  
-  <!-- Lenses INSIDE MODAL ONLY -->  
-  <div class="lensbar">  
-    <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>  
-    <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>  
-    <button class="chip" data-time="now" id="chipNow" type="button">LIVE</button>  
-    <button class="chip" data-time="post" id="chipPost" type="button">ROADMAP</button>  
-  </div>  
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PRODUCTS · Cardinal Axis</title>
 
-  <div class="grid">  
-    <div class="bubble"><h4 id="h1"></h4><p id="p1"></p><div class="small" id="s1"></div></div>  
-    <div class="bubble"><h4 id="h2"></h4><p id="p2"></p><div class="small" id="s2"></div></div>  
-    <div class="bubble"><h4 id="h3"></h4><p id="p3"></p><div class="small" id="s3"></div></div>  
-    <div class="bubble"><h4 id="h4"></h4><p id="p4"></p><div class="small" id="s4"></div></div>  
-  </div>  
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 
-  <div class="mact">  
-    <button class="sbtn" id="mReturn" type="button">RETURN</button>  
-    <a class="sbtn" id="mGoCategory" href="/products/">OPEN CATEGORY</a>  
-    <a class="sbtn" id="mGoHub" href="/home/">GO HUB</a>  
-  </div>  
+<style>
+:root{
+  --R:124px;
+  --goldSoft:rgba(212,175,55,.35);
+  --obs1:#070b12;
+  --obs2:#0c1626;
+  --mut:rgba(255,255,255,.84);
+  --mut2:rgba(255,255,255,.68);
+}
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:90;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.btn{
+  padding:10px 16px;border-radius:14px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  color:#fff;border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.7);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;
+  text-decoration:none;-webkit-tap-highlight-color:transparent;
+}
+.btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px var(--goldSoft); }
+
+.brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:80;text-align:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16);backdrop-filter:blur(8px);
+}
+.brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px}
+.brand .tag{font-size:11px;opacity:.7;margin-top:2px}
+
+.stage{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(560px,92vw);height:min(560px,92vw);
+}
+.outer{
+  position:absolute;left:50%;top:50%;
+  width:min(560px,92vw);height:min(560px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;
+  background:linear-gradient(160deg,rgba(14,24,40,.45),rgba(7,11,18,.62));
+  border:1px solid rgba(255,255,255,.10);
+  opacity:.55;pointer-events:none;
+}
+.d{
+  width:160px;height:160px;
+  position:absolute;left:50%;top:50%;
+  transform-origin:center;border-radius:26px;
+  cursor:pointer;
+  background:linear-gradient(160deg,rgba(12,22,38,.92),rgba(7,11,18,.95));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 28px 84px rgba(0,0,0,.78);
+  transition:transform .2s ease;
+}
+.d:hover{transform:translate(-50%,-50%) rotate(45deg) scale(1.02)}
+.d-n{transform:translate(-50%,-50%) translate(0,calc(var(--R)*-1)) rotate(45deg)}
+.d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
+.d-s{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
+.d-w{transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg)}
+.inner{
+  width:100%;height:100%;
+  transform:rotate(-45deg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:16px;gap:10px;
+}
+.lab{font-weight:950;font-size:16px}
+.sub{font-size:12.5px;opacity:.86;max-width:17em}
+
+.core{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:64px;height:64px;border-radius:18px;
+  background:rgba(0,0,0,.18);
+  display:grid;place-items:center;
+  font-weight:950;
+}
+
+.bd{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none}
+.bd.show{display:block}
+.modal{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(1020px,94vw);max-height:88vh;
+  display:none;z-index:210;
+}
+.modal.show{display:block}
+.shell{
+  height:88vh;border-radius:26px;
+  background:linear-gradient(160deg,var(--obs2),var(--obs1));
+  overflow:auto;padding:20px;
+}
+.mhead{display:flex;justify-content:space-between;align-items:center}
+.mtitle{font-weight:950}
+.mclose{background:none;border:0;color:#fff;font-size:18px;cursor:pointer}
+
+.lensbar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  justify-content:center;margin:14px 0 20px;
+}
+.chip{
+  padding:10px 16px;border-radius:999px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  border:1px solid rgba(255,255,255,.08);
+  cursor:pointer;font-weight:900;
+}
+.chip.active{box-shadow:0 0 18px rgba(212,175,55,.3)}
+
+.grid{display:grid;gap:16px}
+@media(min-width:920px){.grid{grid-template-columns:1fr 1fr}}
+
+.bubble{
+  padding:16px;border-radius:18px;
+  background:linear-gradient(145deg,rgba(12,22,38,.92),rgba(7,11,18,.95));
+  border:1px solid rgba(255,255,255,.08);
+}
+.bubble h4{margin:0 0 8px}
+.bubble p{margin:0;color:var(--mut);line-height:1.6}
+.small{margin-top:10px;color:var(--mut2);font-size:13px}
+
+.mact{display:flex;justify-content:center;margin-top:20px}
+</style>
+</head>
+<body>
+
+<div class="top-left">
+  <a class="btn" id="btnHub" href="/home/">HUB</a>
+  <a class="btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
-  </div>  
-</div>  <script>  
-(function(){  
-  /* URL → STATE HYDRATION */  
-  var qs = new URLSearchParams(location.search);  
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";  
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";  
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";  
-  
-  if(lang!=="en" && lang!=="zh") lang="en";  
-  if(style!=="formal" && style!=="informal") style="formal";  
-  if(time==="trajectory") time="post";  
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";  
-  
-  try{  
-    localStorage.setItem("gd_lang", lang);  
-    localStorage.setItem("gd_style", style);  
-    localStorage.setItem("gd_time", time);  
-  }catch(e){}  
-  
-  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }  
-  function setLinks(){  
-    var s=q();  
-    document.getElementById("btnHub").href="/home/?"+s;  
-    document.getElementById("btnExit").href="/door/?"+s;  
-  
-    document.getElementById("goTerminal").href="/index.html?"+s;  
-    document.getElementById("goLinks").href="/links/?"+s;  
-    document.getElementById("goProducts").href="/products/?"+s;  
-    document.getElementById("goLaws").href="/laws/?"+s;  
-    document.getElementById("goGauges").href="/gauges/?"+s;  
-  
-    // sub-hubs (you can create these later; current page stays valuable regardless)  
-    document.getElementById("software").dataset.href="/products/software/?"+s;  
-    document.getElementById("commercial").dataset.href="/products/commercial/?"+s;  
-    document.getElementById("energy").dataset.href="/products/energy/?"+s;  
-    document.getElementById("education").dataset.href="/products/education/?"+s;  
-  
-    document.getElementById("mGoHub").href="/home/?"+s;  
-  }  
-  
-  /* Dual language */  
-  var UI={  
-    en:{  
-      brand:"CARDINAL AXIS",  
-      tag:"PRODUCTS · DEPLOYED SURFACES",  
-      lens:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",live:"LIVE",roadmap:"ROADMAP"},  
-      cats:{  
-        software:{t:"SOFTWARE",s:"Tools you can run today."},  
-        commercial:{t:"COMMERCIAL",s:"Deployable offerings and licenses."},  
-        energy:{t:"ENERGY",s:"Plasma pathways and conversion chains."},  
-        education:{t:"EDUCATION",s:"Traversal study programs you can take."}  
-      }  
-    },  
-    zh:{  
-      brand:"枢轴罗盘",  
-      tag:"产品 · 已部署执行面",  
-      lens:{formal:"正式",informal:"非正式",concept:"概念",live:"上线",roadmap:"路线图"},  
-      cats:{  
-        software:{t:"软件",s:"今天就能运行的工具。"},  
-        commercial:{t:"商业",s:"可部署的方案与许可。"},  
-        energy:{t:"能源",s:"等离子路径与转换链。"},  
-        education:{t:"教育",s:"可直接学习的遍历课程。"}  
-      }  
-    }  
-  };  
-  var pack = (lang==="zh") ? UI.zh : UI.en;  
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";  
-  
-  document.getElementById("brandName").textContent = pack.brand;  
-  document.getElementById("brandTag").textContent = pack.tag;  
-  
-  document.getElementById("labN").textContent = pack.cats.software.t;  
-  document.getElementById("subN").textContent = pack.cats.software.s;  
-  document.getElementById("labE").textContent = pack.cats.commercial.t;  
-  document.getElementById("subE").textContent = pack.cats.commercial.s;  
-  document.getElementById("labS").textContent = pack.cats.energy.t;  
-  document.getElementById("subS").textContent = pack.cats.energy.s;  
-  document.getElementById("labW").textContent = pack.cats.education.t;  
-  document.getElementById("subW").textContent = pack.cats.education.s;  
-  
-  /* Modal plumbing */  
-  var bd=document.getElementById("bd");  
-  var modal=document.getElementById("modal");  
-  var mClose=document.getElementById("mClose");  
-  var mTitle=document.getElementById("mTitle");  
-  
-  var styleChip=document.getElementById("styleChip");  
-  var chipConcept=document.getElementById("chipConcept");  
-  var chipNow=document.getElementById("chipNow");  
-  var chipPost=document.getElementById("chipPost");  
-  
-  var h1=document.getElementById("h1"),p1=document.getElementById("p1"),s1=document.getElementById("s1");  
-  var h2=document.getElementById("h2"),p2=document.getElementById("p2"),s2=document.getElementById("s2");  
-  var h3=document.getElementById("h3"),p3=document.getElementById("p3"),s3=document.getElementById("s3");  
-  var h4=document.getElementById("h4"),p4=document.getElementById("p4"),s4=document.getElementById("s4");  
-  
-  function persist(){  
-    try{  
-      localStorage.setItem("gd_lang", lang);  
-      localStorage.setItem("gd_style", style);  
-      localStorage.setItem("gd_time", time);  
-    }catch(e){}  
-  }  
-  
-  function setLensLabels(){  
-    styleChip.textContent = "STYLE: " + (style==="formal" ? pack.lens.formal : pack.lens.informal);  
-    chipConcept.textContent = pack.lens.concept;  
-    chipNow.textContent = pack.lens.live;  
-    chipPost.textContent = pack.lens.roadmap;  
-  
-    chipConcept.classList.toggle("active", time==="origin");  
-    chipNow.classList.toggle("active", time==="now");  
-    chipPost.classList.toggle("active", time==="post");  
-  }  
-  
-  /* Consumer-first product copy (thorough, launch-ready). */  
-  function view(cat){  
-    var V = {  
-      software:{  
-        origin:{  
-          formal:{  
-            title:"SOFTWARE · Concept",  
-            b1:{h:"What it is",p:"A family of software products that turn the architecture into a usable experience: you navigate by structure, open compact explanations, and stay oriented without endless reading.",s:"If you want the “what” of the platform—start here."},  
-            b2:{h:"What it feels like",p:"Fast and calm. You don’t lose context: language stays selected, your reading mode stays consistent, and your time layer stays where you put it.",s:"The UI is the same everywhere, so your brain stops re-learning layouts."},  
-            b3:{h:"What you get",p:"A hub platform, measurement instruments, scoring surfaces, and a public registry layer—each built as a product surface, not a theory document.",s:"You can demo, share, and expand without breaking the contract."},  
-            b4:{h:"Why people care",p:"Because it makes complex systems legible. It gives you a stable way to explore, explain, and validate decisions without turning everything into a 30-page article.",s:"Traversal study replaces “read everything” with “navigate what matters.”"}  
-          },  
-          informal:{  
-            title:"SOFTWARE · Concept",  
-            b1:{h:"What it is",p:"Software products you can actually use—built on the same compass logic.",s:"No textbooks required."},  
-            b2:{h:"How it feels",p:"You stay oriented. The site doesn’t reset on you.",s:"Same controls. Same rhythm."},  
-            b3:{h:"What’s inside",p:"Hub + instruments + scoring + registry.",s:"Four core pieces, one system."},  
-            b4:{h:"Why it matters",p:"It makes complicated stuff easy to move through.",s:"Less confusion, more clarity."}  
-          }  
-        },  
-        now:{  
-          formal:{  
-            title:"SOFTWARE · Live",  
-            b1:{h:"Live products",p:"The live build is already behaving like a product: consistent gem pages, centered modals, and state that follows you so the experience stays coherent.",s:"This is “safe to explore” by design."},  
-            b2:{h:"How you’ll use it",p:"Open a category, tap a node, switch Concept/Live/Roadmap inside the modal, and get a clear, compact breakdown without leaving the page.",s:"You can move quickly without losing meaning."},  
-            b3:{h:"What’s being finalized",p:"Navigation and semantics are stable; content depth is what expands next. Each node gets filled before new nodes are added.",s:"No empty bubbles. No dead ends."},  
-            b4:{h:"Launch posture",p:"The product behaves like a structured reference surface: consistent, readable, and repeatable. That’s the baseline for public release.",s:"A stable experience beats a flashy demo."}  
-          },  
-          informal:{  
-            title:"SOFTWARE · Live",  
-            b1:{h:"Right now",p:"It works like a product already—clean pages, consistent modals.",s:"You can browse safely."},  
-            b2:{h:"How to use",p:"Tap a tile, read the bubbles, switch the lens if you want.",s:"You won’t get lost."},  
-            b3:{h:"What’s next to fill",p:"More depth per bubble, more examples, more pages—same structure.",s:"More content, same contract."},  
-            b4:{h:"Why that’s good",p:"Because it stays predictable while it grows.",s:"Predictable = trustworthy."}  
-          }  
-        },  
-        post:{  
-          formal:{  
-            title:"SOFTWARE · Roadmap",  
-            b1:{h:"What expands",p:"Live dashboards, exportable evidence bundles, and replayable “what changed and when” histories—so the platform becomes a true reference surface.",s:"Roadmap adds power without changing navigation."},  
-            b2:{h:"What becomes possible",p:"Audit-friendly outputs: alerts, scores, summaries, and exports that stay tied to the same definitions and the same UI contract.",s:"Outputs become shareable artifacts."},  
-            b3:{h:"How it scales",p:"More domains plug into the same structure: the look stays consistent, and meaning stays stable because the contract doesn’t drift.",s:"Scale by cloning, not reinventing."},  
-            b4:{h:"End-state",p:"A platform people use to understand and communicate complex systems quickly—without needing a full technical background to navigate.",s:"Traversal encyclopedic study, delivered as software."}  
-          },  
-          informal:{  
-            title:"SOFTWARE · Roadmap",  
-            b1:{h:"More power",p:"Dashboards, exports, replays.",s:"Still the same UI."},  
-            b2:{h:"More proof",p:"Shareable artifacts, not just pages.",s:"Easy to verify."},  
-            b3:{h:"More domains",p:"Same structure, new content.",s:"No drift."},  
-            b4:{h:"Big result",p:"People learn faster by navigating.",s:"That’s the point."}  
-          }  
-        }  
-      },  
-  
-      commercial:{  
-        origin:{  
-          formal:{  
-            title:"COMMERCIAL · Concept",  
-            b1:{h:"What it is",p:"Commercial offerings that package the products into deployable workflows: licensing, deployments, and support—without changing the integrity of the system.",s:"Commercial makes adoption easy, not sloppy."},  
-            b2:{h:"What customers buy",p:"Clear “what you get” bundles: a product surface, a rollout plan, and a repeatable way to keep the system consistent as it grows.",s:"No mystery scope. No wandering requirements."},  
-            b3:{h:"How it feels",p:"Professional and bounded. You know what’s included, what’s excluded, and what the next step is—without sales pressure baked into the interface.",s:"Legible structure reduces friction."},  
-            b4:{h:"Why it matters",p:"Because trust is the product. Commercial success depends on stability and consistency—not hype.",s:"The contract is the brand."}  
-          },  
-          informal:{  
-            title:"COMMERCIAL · Concept",  
-            b1:{h:"What it is",p:"A clean way to deploy and license what you see here.",s:"No chaos."},  
-            b2:{h:"What you get",p:"Bundles with clear scope.",s:"No hidden surprises."},  
-            b3:{h:"How it feels",p:"Simple and professional.",s:"You know what you’re buying."},  
-            b4:{h:"Why it matters",p:"Because trust beats hype.",s:"Always."}  
-          }  
-        },  
-        now:{  
-          formal:{  
-            title:"COMMERCIAL · Live",  
-            b1:{h:"Live posture",p:"The commercial layer follows the same gem standard as the rest of the site: consistent look, centered reading, and stable state propagation.",s:"Customers see one coherent system."},  
-            b2:{h:"Rollout method",p:"Pilot → validate → replicate. Every rollout uses the same structure so adoption doesn’t splinter into custom one-offs.",s:"Repeatability is the discipline."},  
-            b3:{h:"Support philosophy",p:"Support is structural: the UI contract prevents drift, and content guides users through the same map every time.",s:"Support becomes navigation, not firefighting."},  
-            b4:{h:"Launch readiness",p:"Offer pages become product pages: clear bundles, clear boundaries, and clear “what’s next.”",s:"Marketing stays consumer-legible."}  
-          },  
-          informal:{  
-            title:"COMMERCIAL · Live",  
-            b1:{h:"Now",p:"Commercial follows the same clean UI.",s:"Same gem feel."},  
-            b2:{h:"Rollout",p:"Pilot, prove, repeat.",s:"No custom chaos."},  
-            b3:{h:"Support",p:"Support is built into structure.",s:"Less confusion."},  
-            b4:{h:"Next",p:"Fill the bundles and publish.",s:"Keep it simple."}  
-          }  
-        },  
-        post:{  
-          formal:{  
-            title:"COMMERCIAL · Roadmap",  
-            b1:{h:"What expands",p:"Partner kits, licensing surfaces, and deployment templates that keep consistency across orgs and industries.",s:"Scale through templates, not improvisation."},  
-            b2:{h:"What customers gain",p:"A predictable system they can train teams on: the interface stays the same, and content deepens over time.",s:"That reduces onboarding cost."},  
-            b3:{h:"What stays sacred",p:"Integrity constraints: commercial never overrides standards, never weakens rules, and never changes the core contract.",s:"Commercial serves the architecture."},  
-            b4:{h:"End-state",p:"A public-facing product family that enterprises can adopt without fear of drift.",s:"Stable adoption at scale."}  
-          },  
-          informal:{  
-            title:"COMMERCIAL · Roadmap",  
-            b1:{h:"More kits",p:"Partners and templates.",s:"Same rules."},  
-            b2:{h:"Easier onboarding",p:"Predictable system.",s:"Lower cost."},  
-            b3:{h:"No compromises",p:"Commercial can’t weaken integrity.",s:"Ever."},  
-            b4:{h:"Result",p:"Enterprise-ready adoption.",s:"Stable scale."}  
-          }  
-        }  
-      },  
-  
-      energy:{  
-        origin:{  
-          formal:{  
-            title:"ENERGY · Concept",  
-            b1:{h:"What it is",p:"An energy product line focused on conversion chains: solar capture → plasma formation → controlled pathways toward fusion-grade conditions.",s:"This is the breakthrough direction: conversion, not just regulation."},  
-            b2:{h:"What we’re building",p:"A coherent map of the process: inputs, stages, constraints, and measurable outputs—so the topic becomes navigable instead of mythical.",s:"A consumer can follow the chain without a PhD."},  
-            b3:{h:"How it feels",p:"Legible and grounded. You can move from big-picture intuition to deeper detail by switching lenses, without losing your place.",s:"Structure keeps the science readable."},  
-            b4:{h:"Why it matters",p:"Because the world needs scalable energy. If you can model and communicate conversion pathways clearly, you accelerate collaboration and reduce waste.",s:"Clarity is leverage for progress."}  
-          },  
-          informal:{  
-            title:"ENERGY · Concept",  
-            b1:{h:"What it is",p:"Energy breakthroughs explained as a clear chain.",s:"Solar → plasma → fusion path."},  
-            b2:{h:"What we’re doing",p:"Making the process navigable.",s:"Not vague."},  
-            b3:{h:"How it feels",p:"Readable, not intimidating.",s:"You don’t get lost."},  
-            b4:{h:"Why it matters",p:"Because energy changes everything.",s:"Period."}  
-          }  
-        },  
-        now:{  
-          formal:{  
-            title:"ENERGY · Live",  
-            b1:{h:"Live focus",p:"We’re packaging the energy story as a product surface: defined stages, defined terms, and repeatable explanations.",s:"The chain is the product."},  
-            b2:{h:"What’s being organized",p:"Stage-by-stage breakdowns: capture, ionization, confinement concepts, control parameters, and safety boundaries.",s:"Clear boundaries make it public-safe."},  
-            b3:{h:"How you’ll explore",p:"Tap into a stage, read 4 bubbles, and switch Concept/Live/Roadmap to see how the system evolves without changing definitions.",s:"The lens changes emphasis, not the truth."},  
-            b4:{h:"Launch posture",p:"This is written to be legible to the consumer: what it is, why it matters, what to watch, and what’s next.",s:"Marketing without hype."}  
-          },  
-          informal:{  
-            title:"ENERGY · Live",  
-            b1:{h:"Now",p:"We’re turning the energy chain into a clean page people can follow.",s:"No jargon wall."},  
-            b2:{h:"Organizing",p:"Stages + terms + constraints.",s:"So it stays real."},  
-            b3:{h:"Explore",p:"Tap a stage, read the bubbles, switch the lens.",s:"You keep context."},  
-            b4:{h:"Goal",p:"Consumer-legible, not overpromised.",s:"Clear and grounded."}  
-          }  
-        },  
-        post:{  
-          formal:{  
-            title:"ENERGY · Roadmap",  
-            b1:{h:"What expands",p:"Deeper stage pages: solar capture models, plasma formation pathways, confinement approaches, and validation experiments.",s:"Roadmap adds depth without changing the map."},  
-            b2:{h:"What becomes measurable",p:"Clear “what to measure” lists: signals, thresholds, stability indicators, and repeatable test conditions.",s:"Measurement turns vision into engineering."},  
-            b3:{h:"What collaboration looks like",p:"A shared reference that lets partners contribute without argument over definitions.",s:"Shared map, faster progress."},  
-            b4:{h:"End-state",p:"A public, structured energy knowledge product: legible, expandable, and aligned with the same coherence-first architecture.",s:"Breakthrough science with stable navigation."}  
-          },  
-          informal:{  
-            title:"ENERGY · Roadmap",  
-            b1:{h:"More depth",p:"More pages per stage.",s:"Same structure."},  
-            b2:{h:"More measurement",p:"Clear signals to watch.",s:"More real."},  
-            b3:{h:"More partners",p:"Shared definitions.",s:"Less arguing."},  
-            b4:{h:"Result",p:"Breakthrough story becomes an actual product.",s:"Legible and expandable."}  
-          }  
-        }  
-      },  
-  
-      education:{  
-        origin:{  
-          formal:{  
-            title:"EDUCATION · Concept",  
-            b1:{h:"What it is",p:"A consumer-facing learning product: traversal encyclopedic study. You learn by navigating maps, not by reading one long linear curriculum.",s:"Traversal replaces chapters with pathways."},  
-            b2:{h:"The flagship program",p:"Clean English Core (1,001): a constrained word-set learning system designed for fast functional communication.",s:"It’s built for practice, not theory."},  
-            b3:{h:"How it’s structured",p:"Four levels that progress from base function to confident usage, with roughly ~250 words per level plus simple drills.",s:"Structure is what makes it scalable."},  
-            b4:{h:"Why people care",p:"Because it’s efficient. The learner always knows where they are, what to practice next, and how to return and repeat.",s:"Clarity creates momentum."}  
-          },  
-          informal:{  
-            title:"EDUCATION · Concept",  
-            b1:{h:"What it is",p:"A learning product you navigate instead of “study forever.”",s:"Tap → learn → repeat."},  
-            b2:{h:"The program",p:"Clean English Core (1,001) for fast real-world progress.",s:"Small word set. Big function."},  
-            b3:{h:"The structure",p:"Four levels, about ~250 words each.",s:"Simple and trackable."},  
-            b4:{h:"Why it matters",p:"You don’t get lost and you don’t stall.",s:"Clear next step always."}  
-          }  
-        },  
-        now:{  
-          formal:{  
-            title:"EDUCATION · Live",  
-            b1:{h:"Live focus",p:"Education is being prepared as a launchable consumer experience: bilingual support (EN/中文), stable navigation, and consistent bubble-based explanations.",s:"You can explore safely today."},  
-            b2:{h:"What’s included",p:"Programs, drills, lesson maps, and checkpoints that tie directly to the structure.",s:"Each node gets filled before expansion."},  
-            b3:{h:"How it’s used",p:"Pick a level, practice a slice, then return to the map. You don’t need to “finish a book” to improve.",s:"Practice-first learning."},  
-            b4:{h:"Launch posture",p:"This is built to be consumer-legible: clear outcomes, simple steps, and predictable navigation.",s:"No academic fog."}  
-          },  
-          informal:{  
-            title:"EDUCATION · Live",  
-            b1:{h:"Now",p:"Education is being built as a real product, not a draft.",s:"Same clean UI."},  
-            b2:{h:"Included",p:"Programs + drills + checkpoints.",s:"No fluff."},  
-            b3:{h:"Use it",p:"Pick a level, practice, return, repeat.",s:"That’s the loop."},  
-            b4:{h:"Ready",p:"Launch-ready clarity.",s:"Consumer-friendly."}  
-          }  
-        },  
-        post:{  
-          formal:{  
-            title:"EDUCATION · Roadmap",  
-            b1:{h:"What expands",p:"More tracks (beyond language): traversal method courses, facilitator training, and specialized curricula.",s:"Same structure, deeper content."},  
-            b2:{h:"What becomes portable",p:"Printable and shareable materials: PDF packs, practice cards, and guided routines that match the on-site map.",s:"Map stays canonical."},  
-            b3:{h:"What becomes verifiable",p:"Optional certification pathways tied to observable outputs and checkpoints (not ideology).",s:"Proof-grade learning."},  
-            b4:{h:"End-state",p:"A consumer learning ecosystem where structure drives mastery—fast, repeatable, and expandable.",s:"Traversal study at scale."}  
-          },  
-          informal:{  
-            title:"EDUCATION · Roadmap",  
-            b1:{h:"More tracks",p:"More learning paths.",s:"Same UI."},  
-            b2:{h:"More materials",p:"PDF packs and practice cards.",s:"Shareable."},  
-            b3:{h:"Optional proof",p:"Checkpoint-based badges.",s:"No nonsense."},  
-            b4:{h:"Result",p:"A full learning ecosystem.",s:"Fast and repeatable."}  
-          }  
-        }  
-      }  
-    };  
-  
-    return V[cat][time][style];  
-  }  
-  
-  var activeCat=null;  
-  
-  function setActiveDiamond(id){  
-    ["software","commercial","energy","education"].forEach(function(x){  
-      document.getElementById(x).classList.toggle("active", x===id);  
-    });  
-  }  
-  
-  function open(cat){  
-    activeCat=cat;  
-    setActiveDiamond(cat);  
-    render();  
-    bd.classList.add("show");  
-    modal.classList.add("show");  
-  }  
-  
-  function close(){  
-    bd.classList.remove("show");  
-    modal.classList.remove("show");  
-    setActiveDiamond("__none__");  
-    activeCat=null;  
-  }  
-  
-  function render(){  
-    persist();  
-    setLinks();  
-    setLensLabels();  
-  
-    var v = view(activeCat);  
-  
-    mTitle.textContent = v.title;  
-  
-    h1.textContent = v.b1.h; p1.textContent = v.b1.p; s1.textContent = v.b1.s;  
-    h2.textContent = v.b2.h; p2.textContent = v.b2.p; s2.textContent = v.b2.s;  
-    h3.textContent = v.b3.h; p3.textContent = v.b3.p; s3.textContent = v.b3.s;  
-    h4.textContent = v.b4.h; p4.textContent = v.b4.p; s4.textContent = v.b4.s;  
-  
-    // OPEN CATEGORY button  
-    var href = document.getElementById(activeCat).dataset.href;  
-    document.getElementById("mGoCategory").href = href;  
-  }  
-  
-  /* Lens controls (modal only) */  
-  styleChip.onclick=function(){ style = (style==="formal") ? "informal" : "formal"; render(); };  
-  chipConcept.onclick=function(){ time="origin"; render(); };  
-  chipNow.onclick=function(){ time="now"; render(); };  
-  chipPost.onclick=function(){ time="post"; render(); };  
-  
-  /* Close controls */  
-  bd.onclick=close;  
-  mClose.onclick=close;  
-  document.getElementById("mReturn").onclick=close;  
-  
-  /* Diamond handlers */  
-  ["software","commercial","energy","education"].forEach(function(id){  
-    var el=document.getElementById(id);  
-    el.onclick=function(){ open(id); };  
-    el.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(id);} };  
-  });  
-  
-  setLinks();  
-  setLensLabels();  
-})();  
-</script>  </body>  
+<div class="brand">
+  <div class="name">CARDINAL AXIS</div>
+  <div class="tag">PRODUCTS · DEPLOYED SURFACES</div>
+</div>
+
+<div class="stage">
+  <div class="outer"></div>
+
+  <div class="d d-n" id="software">
+    <div class="inner">
+      <div class="lab">SOFTWARE</div>
+      <div class="sub">Hub · Instruments · Registry</div>
+    </div>
+  </div>
+
+  <div class="d d-e" id="commercial">
+    <div class="inner">
+      <div class="lab">COMMERCIAL</div>
+      <div class="sub">Pilots · Licensing · Rollouts</div>
+    </div>
+  </div>
+
+  <div class="d d-s" id="energy">
+    <div class="inner">
+      <div class="lab">ENERGY</div>
+      <div class="sub">Conversion Chains</div>
+    </div>
+  </div>
+
+  <div class="d d-w" id="education">
+    <div class="inner">
+      <div class="lab">EDUCATION</div>
+      <div class="sub">Traversal Programs</div>
+    </div>
+  </div>
+
+  <div class="core">◆</div>
+</div>
+
+<div class="bd" id="bd"></div>
+
+<div class="modal" id="modal">
+  <div class="shell">
+    <div class="mhead">
+      <h3 class="mtitle" id="mTitle"></h3>
+      <button class="mclose" id="mClose">✕</button>
+    </div>
+
+    <div class="lensbar">
+      <button class="chip" id="styleChip">STYLE: FORMAL</button>
+      <button class="chip" data-time="origin">CONCEPT</button>
+      <button class="chip" data-time="now">LIVE</button>
+      <button class="chip" data-time="post">ROADMAP</button>
+    </div>
+
+    <div class="grid">
+      <div class="bubble"><h4 id="h1"></h4><p id="p1"></p><div class="small" id="s1"></div></div>
+      <div class="bubble"><h4 id="h2"></h4><p id="p2"></p><div class="small" id="s2"></div></div>
+      <div class="bubble"><h4 id="h3"></h4><p id="p3"></p><div class="small" id="s3"></div></div>
+      <div class="bubble"><h4 id="h4"></h4><p id="p4"></p><div class="small" id="s4"></div></div>
+    </div>
+
+    <div class="mact">
+      <button class="btn" id="mReturn">RETURN</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var bd=document.getElementById("bd");
+  var modal=document.getElementById("modal");
+  var mClose=document.getElementById("mClose");
+
+  function open(title,content){
+    document.getElementById("mTitle").textContent=title;
+    document.getElementById("h1").textContent=content[0].h;
+    document.getElementById("p1").textContent=content[0].p;
+    document.getElementById("s1").textContent=content[0].s;
+
+    document.getElementById("h2").textContent=content[1].h;
+    document.getElementById("p2").textContent=content[1].p;
+    document.getElementById("s2").textContent=content[1].s;
+
+    document.getElementById("h3").textContent=content[2].h;
+    document.getElementById("p3").textContent=content[2].p;
+    document.getElementById("s3").textContent=content[2].s;
+
+    document.getElementById("h4").textContent=content[3].h;
+    document.getElementById("p4").textContent=content[3].p;
+    document.getElementById("s4").textContent=content[3].s;
+
+    bd.classList.add("show");
+    modal.classList.add("show");
+  }
+
+  function close(){
+    bd.classList.remove("show");
+    modal.classList.remove("show");
+  }
+
+  mClose.onclick=close;
+  bd.onclick=close;
+  document.getElementById("mReturn").onclick=close;
+
+  document.getElementById("software").onclick=function(){
+    open("SOFTWARE · Live",[
+      {h:"Hub Platform",p:"Central navigation surface with deterministic routing and lens-based reading.",s:"Stable state propagation."},
+      {h:"Measurement Engine",p:"Instruments that detect deviation and compute recovery loops.",s:"Structured outputs."},
+      {h:"Registry Surface",p:"Publicly bounded record layer for verification.",s:"Evidence-based."},
+      {h:"Execution Console",p:"Operational view for applying corrective operators.",s:"Real-time clarity."}
+    ]);
+  };
+
+})();
+</script>
+
+</body>
 </html>

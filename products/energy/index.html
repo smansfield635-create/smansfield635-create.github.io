@@ -1,28 +1,17 @@
-<!-- TNT — /products/energy/index.html  (PRODUCTS · ENERGY · INDUSTRIAL FIRST)
-     PHASE 1 — ENERGY REWRITE (INDUSTRIAL / AGRICULTURAL / CORPORATE / ADVERSARIAL) + DOTGRID BINDING
-     STATUS:
-       - NO NET-FUSION CLAIMS (STRUCTURAL FRAMEWORK ONLY)
-       - Industrial plan first; residential licensing downstream
-       - Uses canonical acronyms: HIP / UCI / CARES / PFM / CC / EDT / SLA / SVF / FCM / TGI / PSS / ERI / IDP / RLM
-       - DOTGRID binding published: DOTGRID-ENERGY-HYBRID-v1
-       - DHY strict posture referenced (UI may relax display only; certs remain strict internally)
-     MECHANICS (PROVEN):
-       - hit-test lock: .stage pointer-events none; diamonds pointer-events auto
-       - dock tap-safe: dock container ignores taps; dock buttons click
-       - inline onclick to open modal
-       - open(): show modal first, then render
-       - render(): guarded; never blank
-     LENSES (NO NEW KEYS):
-       - gd_lang: en/zh (single-language render)
-       - gd_style: formal/informal (formal=scientific; informal=layman contextual)
-       - gd_time: origin/now/post (concept/live/roadmap)
-     CONTENT RULE:
-       - Each diamond view renders 4 boxes × 4 bullets
-       - Boxes map perspectives to avoid abstraction:
-           Box 1 = Scientific/Physics
-           Box 2 = Industrial/Grid/Corporate
-           Box 3 = Agricultural/Plasma farms
-           Box 4 = Adversarial Validation (SVF + CARES + DHY strict posture)
+<!-- TNT — /products/energy/index.html  (PRODUCTS · ENERGY · INDUSTRIAL PLASMA ARCHITECTURE)
+     FIXES:
+       - Restores working diamond taps (proven hit-test + inline onclick)
+       - Removes debug “ENERGY LIVE …” pill entirely
+       - Adds “category bubbles” inside the modal:
+           Scientific / Industrial / Agricultural / Adversarial
+         → tap a bubble to expand; others stay collapsed (no overwhelm)
+     RULES:
+       - NO new state keys (gd_lang/gd_style/gd_time only)
+       - Lenses stay inside modal only (STYLE + Concept/Live/Roadmap)
+       - 4 bubbles exist always; each bubble has 4 bullets when expanded
+       - Single-language render (en only if lang=en; zh only if lang=zh; zh mirrors EN for now)
+       - Uses /assets/ui.css + /assets/branch.css only
+       - Does NOT style html/body background (ui.css owns field)
 -->
 
 <!doctype html>
@@ -45,16 +34,6 @@
   --mut2:rgba(255,255,255,.68);
 }
 body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-
-  position:fixed; right:12px; top:12px; z-index:9999;
-  padding:8px 10px; border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  font-weight:950; letter-spacing:.3px; font-size:12px;
-  color:rgba(255,255,255,.92);
-  pointer-events:none;
-}
 
 /* Top-left */
 .top-left{position:fixed;left:16px;top:16px;z-index:90;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -181,9 +160,11 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 .lensbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;padding:10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);margin:-6px -6px 14px}
 .chip{padding:10px 16px;border-radius:999px;background:linear-gradient(145deg,var(--obs2),var(--obs1));border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 36px rgba(0,0,0,.65);cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff}
 .chip.active{border-color:rgba(212,175,55,.35);box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 16px rgba(212,175,55,.30)}
+
 .mgrid{display:grid;gap:14px}
-@media (min-width:920px){.mgrid{grid-template-columns:1fr 1fr}}
-.box{
+
+/* Category bubbles (collapsible) */
+.cbox{
   padding:16px 18px;border-radius:22px;
   background:
     radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
@@ -191,8 +172,10 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   border:1px solid rgba(255,255,255,.10);
   box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
   position:relative;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
 }
-.box::before{
+.cbox::before{
   content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.55;
@@ -200,10 +183,17 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   -webkit-mask-composite:xor;mask-composite:exclude;
   pointer-events:none;
 }
-.h{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
-.p{margin:0 0 10px;color:var(--mut);line-height:1.55}
-.ul{margin:0 0 0 18px;padding:0;color:var(--mut2)}
-.ul li{margin:6px 0}
+.cbox.open{border-color:rgba(212,175,55,.28); box-shadow:0 22px 80px rgba(0,0,0,.78), 0 0 18px rgba(212,175,55,.10), inset 0 2px 0 rgba(255,255,255,.06)}
+.ch{margin:0 0 8px;font-weight:950;letter-spacing:.2px;font-size:16px}
+.cp{margin:0;color:var(--mut);line-height:1.55;display:none}
+.cbox.open .cp{display:block}
+.cmini{margin:0;color:rgba(255,255,255,.70);font-size:12.5px;line-height:1.45}
+.cbox.open .cmini{display:none}
+.cul{margin:10px 0 0 18px;padding:0;color:var(--mut2);display:none}
+.cbox.open .cul{display:block}
+.cul li{margin:6px 0}
+
+/* Modal actions */
 .mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
 .sbtn{padding:12px 18px;border-radius:14px;background:linear-gradient(145deg,var(--obs2),var(--obs1));color:#fff;border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 36px rgba(0,0,0,.7);cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none}
 
@@ -268,11 +258,12 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
         <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
       </div>
 
-      <div class="mgrid">
-        <div class="box"><h4 class="h" id="h1"></h4><p class="p" id="p1"></p><ul class="ul" id="u1"></ul></div>
-        <div class="box"><h4 class="h" id="h2"></h4><p class="p" id="p2"></p><ul class="ul" id="u2"></ul></div>
-        <div class="box"><h4 class="h" id="h3"></h4><p class="p" id="p3"></p><ul class="ul" id="u3"></ul></div>
-        <div class="box"><h4 class="h" id="h4"></h4><p class="p" id="p4"></p><ul class="ul" id="u4"></ul></div>
+      <!-- category bubbles: tap to expand -->
+      <div class="mgrid" id="mgrid">
+        <div class="cbox" id="c1" role="button" tabindex="0"><h4 class="ch" id="h1"></h4><p class="cmini" id="m1"></p><p class="cp" id="p1"></p><ul class="cul" id="u1"></ul></div>
+        <div class="cbox" id="c2" role="button" tabindex="0"><h4 class="ch" id="h2"></h4><p class="cmini" id="m2"></p><p class="cp" id="p2"></p><ul class="cul" id="u2"></ul></div>
+        <div class="cbox" id="c3" role="button" tabindex="0"><h4 class="ch" id="h3"></h4><p class="cmini" id="m3"></p><p class="cp" id="p3"></p><ul class="cul" id="u3"></ul></div>
+        <div class="cbox" id="c4" role="button" tabindex="0"><h4 class="ch" id="h4"></h4><p class="cmini" id="m4"></p><p class="cp" id="p4"></p><ul class="cul" id="u4"></ul></div>
       </div>
 
       <div class="mact">
@@ -286,8 +277,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 
 <script>
 (function(){
-  const dbg=document.getElementById("dbg");
-
   // ===== State hydration (gd_* only) =====
   const qs = new URLSearchParams(location.search);
   let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
@@ -301,7 +290,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   const q = () => `lang=${encodeURIComponent(lang)}&style=${encodeURIComponent(style)}&time=${encodeURIComponent(time)}`;
-
   function setLinks(){
     const s=q();
     document.getElementById("btnBack").href="/products/?"+s;
@@ -338,7 +326,7 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
       d:{
         chain:{lab:"链路", sub:"太阳 → HIP → SLA → 电网。"},
         plasma:{lab:"等离子", sub:"CC 分级 · UCI · ERI。"},
-        fusion:{lab:"聚变", sub:"无净聚变主张 · 边界框架。"},
+        fusion:{lab:"聚变", sub:"无主张 · 边界框架。"},
         validation:{lab:"验证", sub:"SVF · CARES · DHY 严格。"}
       },
       lens:{formal:"正式",informal:"通俗",concept:"概念",live:"上线",roadmap:"路线图"},
@@ -369,10 +357,12 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   const chipConcept=document.getElementById("chipConcept");
   const chipLive=document.getElementById("chipLive");
   const chipRoadmap=document.getElementById("chipRoadmap");
-  const h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1");
-  const h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2");
-  const h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3");
-  const h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4");
+
+  const c1=document.getElementById("c1"),c2=document.getElementById("c2"),c3=document.getElementById("c3"),c4=document.getElementById("c4");
+  const h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1"),m1=document.getElementById("m1");
+  const h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2"),m2=document.getElementById("m2");
+  const h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3"),m3=document.getElementById("m3");
+  const h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4"),m4=document.getElementById("m4");
 
   document.getElementById("mReturn").textContent = ui.btn.ret;
   document.getElementById("mJumpProducts").textContent = ui.btn.jp;
@@ -389,10 +379,13 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     chipRoadmap.classList.toggle("active", time==="post");
   };
 
-  const fill=(hEl,pEl,uEl,b)=>{
+  function fillBox(hEl,pEl,uEl,mEl,b){
     const safe = b || {h:"—",p:"—",u:["—","—","—","—"]};
     hEl.textContent = safe.h || "—";
     pEl.textContent = safe.p || "—";
+    // mini line = first bullet or first sentence fragment
+    const mini = (safe.u && safe.u[0]) ? safe.u[0] : (safe.p ? safe.p.slice(0,80) : "—");
+    mEl.textContent = mini;
     uEl.innerHTML="";
     const arr = (safe.u && safe.u.length) ? safe.u : ["—","—","—","—"];
     for(let i=0;i<4;i++){
@@ -400,895 +393,201 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
       li.textContent = arr[i] || "—";
       uEl.appendChild(li);
     }
-  };
-
-  // =========================================================
-  // CONTENT PACKS (EMBEDDED HERE: NO ORDERING FAILURES)
-  // =========================================================
-
-  // Common DOTGRID binding statement (used across nodes)
-  const DOTGRID_BINDING_EN =
-    "DOTGRID-ENERGY-HYBRID-v1 encodes operational state_id (0–255) as (CC tier, SLA phase, ERI tier, IDP tier). DHY strict certification is required for any aggregated claims (S1→S2→S3).";
-  const DOTGRID_BINDING_ZH =
-    "DOTGRID-ENERGY-HYBRID-v1 用 state_id(0–255) 编码 (CC 分级, SLA 阶段, ERI 分级, IDP 阶段)。任何聚合结论必须通过 DHY 严格认证（S1→S2→S3）。";
-
-  function makeBox(h,p,u0,u1,u2,u3){
-    return {h:h,p:p,u:[u0,u1,u2,u3]};
   }
 
-  // To keep Phase 1 focused and non-abstract:
-  // Each view uses 4 boxes = Scientific / Industrial / Agricultural / Adversarial.
+  // DOTGRID binding line (referenced in Adversarial bubble; keeps Energy non-abstract)
+  const DOTGRID_EN = "DOTGRID-ENERGY-HYBRID-v1 encodes state_id(0–255) as (CC tier, SLA phase, ERI tier, IDP tier). DHY strict certs gate admissibility (S1→S2→S3).";
+  const DOTGRID_ZH = "DOTGRID-ENERGY-HYBRID-v1 用 state_id(0–255) 编码 (CC 分级, SLA 阶段, ERI 分级, IDP 阶段)。DHY 严格认证决定可采信（S1→S2→S3）。";
+
+  function B(h,p,a,b,c,d){ return {h:h,p:p,u:[a,b,c,d]}; }
+
+  // Content: Phase 1 (industrial-first, no abstract drift, no net-fusion claims)
   const EN = {
     chain:{
       origin:{
-        formal:{
-          title:"CHAIN · Industrial Conversion (Concept)",
-          b1:makeBox(
-            "Scientific",
-            "HIP (High-Intensity Plasma) is framed as an industrial ionized operating regime for thermal/chemical processing. The chain is Solar → HIP → SLA buffering → industrial heat and/or buffered electric injection. No net-fusion claim is made; this is conversion architecture.",
-            "Define HIP regime by CC tier bounds (CC-1/2/3).",
-            "Track loss channels: heat bleed, conversion inefficiency, instability shutdown.",
-            "Use UCI (Unified Confinement Interface) as the governing control layer.",
-            "Treat EDT tiers as failure-envelope magnitude classes (EDT-1/2/3)."
-          ),
-          b2:makeBox(
-            "Industrial / Grid",
-            "PFM (Plasma Farm Module) is upstream-only hardened infrastructure. IDP phases scale from IDP-1 pilot to IDP-4 global replication without grid shock. Corporate posture is coexistence + stabilization: augment renewables and buffer volatility.",
-            "IDP-1: 1 PFM near industrial heat user (2–5 acres).",
-            "IDP-2: 5–20 PFMs with SLA distributed reservoirs and buffered conversion.",
-            "IDP-3: industrial adjacency (steel/cement/desalination/chemicals).",
-            "IDP-4: replication via CC certification + insurance underwriting."
-          ),
-          b3:makeBox(
-            "Agricultural / Plasma Farms",
-            "Plasma farms are agricultural co-location deployments: rectilinear layout with setback, no plasma–soil contact, midstream thermal exchange only. Thermal Gradient Interceptor (TGI) routes usable heat into greenhouses/soil buffers.",
-            "Minimum 500m setback from residential zones.",
-            "No direct plasma interface with soil (midstream exchanger only).",
-            "Revenue stacking: energy + greenhouse + industrial heat contract.",
-            "Seasonal mitigation: SLA buffering + load balancing contracts."
-          ),
-          b4:makeBox(
-            "Adversarial Validation",
-            "SVF (Signal Validation Framework) + CARES governs admissibility. Any claim requires artifact suppression, multi-sensor agreement, and DHY strict certificates. Policy violations trigger R3 epoch rollover; no degraded states.",
-            "Kill: confinement breach, ERI spike, unrecoverable instability, multi-sensor disagreement.",
-            "Disproof: net-negative SLA under declared conditions; repeat instability at fixed params.",
-            "Evidence: evidence_hash receipts + third-party instrumentation audit pathway.",
-            DOTGRID_BINDING_EN
-          )
+        formal:{title:"CHAIN · Concept",
+          b1:B("Scientific","HIP is defined as an industrial ionized operating regime used for thermal/chemical processing. The chain is Solar → HIP → SLA buffering → industrial heat and/or buffered conversion. No net-fusion claim is asserted here.","HIP regime bounded by CC tiers.","Loss channels tracked per stage.","UCI governs stability thresholds.","EDT tiers map failure envelope magnitude."),
+          b2:B("Industrial / Grid","PFM is upstream-only hardened infrastructure. Scaling follows IDP-1→IDP-4 with no grid shock: industrial heat first, buffered injection second, replication third.","IDP-1: single hardened PFM.","IDP-2: 5–20 PFMs + SLA reservoirs.","IDP-3: industrial adjacency sectors.","IDP-4: replication via CC underwriting."),
+          b3:B("Agricultural / Plasma Farms","Plasma farms are co-located deployments: rectilinear layout, setback from residential zones, plasma isolated from soil (midstream thermal exchange only). TGI routes thermal gradients to greenhouses/soil buffers.","500m setback minimum.","No plasma–soil contact.","TGI midstream heat reuse.","Revenue stacking + SLA smoothing."),
+          b4:B("Adversarial Validation","SVF + CARES define admissibility. Any multi-sensor disagreement is a kill. Any policy violation forces R3 rollover; no degraded states. Evidence is hash-linked and audited.","Kill: confinement breach / ERI spike.","Disproof: net-negative SLA under declared conditions.","Artifact suppression required (SVF).",DOTGRID_EN)
         },
-        informal:{
-          title:"CHAIN · Industrial Conversion (Concept)",
-          b1:makeBox(
-            "Science (Plain)",
-            "Think of HIP as a controlled industrial plasma regime used for clean heat and processing. The chain is: sunlight or power in → controlled plasma → storage loop (SLA) → steady industrial output. This is not a fusion claim.",
-            "HIP is controlled by CC tiers (how hardened the containment is).",
-            "EDT tiers describe how intense the stored/operating energy is.",
-            "UCI is the control interface that prevents drift and runaway.",
-            "Losses are tracked first, not ignored."
-          ),
-          b2:makeBox(
-            "Industrial (Plain)",
-            "We scale in phases so the grid never gets shocked. First one hardened module near a heat user, then clusters, then industrial adjacency, then replication with insurance tied to CC certification.",
-            "IDP-1: one PFM proves stability.",
-            "IDP-2: clusters prove buffering.",
-            "IDP-3: industry proves dispatch value.",
-            "IDP-4: replication proves global scale."
-          ),
-          b3:makeBox(
-            "Agriculture (Plain)",
-            "Plasma farms can live on farmland without touching soil: the plasma stays inside hardened modules and only clean heat moves through exchangers. TGI routes heat into greenhouse/soil buffers.",
-            "Rectilinear farm layout + safety setback.",
-            "No soil contact; thermal exchange only.",
-            "Farm earns energy + crop-adjacent value.",
-            "SLA smooths seasons and demand."
-          ),
-          b4:makeBox(
-            "Adversarial (Plain)",
-            "We assume the system is wrong until it survives tests. SVF requires cross-sensor agreement. CARES defines what happens under stress. DHY strict certs decide what is admissible.",
-            "If sensors disagree, it fails.",
-            "If ERI spikes, it terminates.",
-            "If it can’t repeat, it’s disqualified.",
-            DOTGRID_BINDING_EN
-          )
+        informal:{title:"CHAIN · Concept (Plain)",
+          b1:B("Science (Plain)","Think: controlled industrial plasma used for clean heat and processing. We buffer it with SLA before anything touches the grid. This is not a fusion claim.","CC tiers keep it bounded.","UCI enforces control rules.","EDT tells intensity vs risk.","Loss is tracked, not ignored."),
+          b2:B("Industrial (Plain)","We scale in phases so nothing gets shocked. One module, then clusters, then industrial adjacency, then replication with underwriting.","Pilot first.","Cluster second.","Industry third.","Replication last."),
+          b3:B("Agriculture (Plain)","Farm sites use heat exchange only. Plasma stays inside hardened PFMs. TGI routes heat to useful farming endpoints.","No soil contact.","Setback enforced.","Heat reuse.","SLA smooths seasons."),
+          b4:B("Adversarial (Plain)","We assume it’s wrong until tests prove otherwise. If sensors disagree or risk spikes, it fails.","Disagreement kills.","ERI terminate stops operation.","Strict rollover on violations.",DOTGRID_EN)
         }
       },
       now:{
-        formal:{
-          title:"CHAIN · Live Posture (IDP-Ready)",
-          b1:makeBox(
-            "Scientific",
-            "Live posture means the chain is defined with measurable variables and explicit failure envelopes. R&D tests exist for stability envelopes, termination thresholds, and thermal gradients; no net-fusion claim is asserted.",
-            "Instrumented signals: thermal gradient, ion density proxy, pressure differential, power in/out ratio.",
-            "Confinement domains modeled: normalized K/M/R/P envelope (declared).",
-            "Failure modes mapped: overpressure, field collapse, thermal runaway, containment breach.",
-            "SLA loss: heat bleed, conversion inefficiency, instability termination."
-          ),
-          b2:makeBox(
-            "Industrial / Grid",
-            "Live IDP posture is industrial-first: target process heat users and buffered midstream conversion. PSS supervises dispatch smoothing; FCM defines isolation boundaries; CARES governs escalation ladder.",
-            "Grid injection is buffered (no raw HIP to grid).",
-            "PSS enforces supervisory overrides and denial rules.",
-            "FCM defines blast-radius containment and isolation.",
-            "Insurance posture ties CC certification to underwriting."
-          ),
-          b3:makeBox(
-            "Agricultural / Plasma Farms",
-            "Live agricultural posture is dual-use and non-invasive: plasma modules are hardened upstream-only; thermal is intercepted midstream; environmental boundaries are explicit and auditable.",
-            "Soil boundary: thermal exchanger only.",
-            "Livestock boundary: hard perimeter + EM/noise isolation.",
-            "Greenhouse heating via TGI loop.",
-            "Seasonal smoothing via SLA reservoirs."
-          ),
-          b4:makeBox(
-            "Adversarial Validation",
-            "Strict admissibility: SVF must PASS; multi-sensor disagreement is a kill condition. Late events invalidate windows. Violations force R3 rollover; contaminated epochs remain permanently invalid at higher scopes.",
-            "Kill: ERI > threshold tier; confinement breach; unrecoverable instability; sensor disagreement.",
-            "Disproof: artifact-dependent confirmation; repeat instability fixed params.",
-            "Audit: third-party instrumentation + env compliance + insurance verification.",
-            DOTGRID_BINDING_EN
-          )
+        formal:{title:"CHAIN · Live",
+          b1:B("Scientific","Live means measurable variables and named failure envelopes. Testing covers stability envelopes, termination thresholds, thermal gradients, and escalation indices.","Signals: thermal/pressure/ion proxy/power ratio.","Failure modes mapped explicitly.","Termination bands contract under repeats.","Loss accounting enforced."),
+          b2:B("Industrial / Grid","Industrial integration is buffered: upstream HIP remains isolated; midstream conversion smooths dispatch. PSS supervises; FCM isolates; CARES governs response.","Buffered injection only.","PSS override logs immutable.","FCM defines blast radius.","CC certification supports insurance."),
+          b3:B("Agricultural / Plasma Farms","Live farm integration stays non-invasive: soil boundary is exchanger-only; livestock boundary is perimeter + isolation; TGI loops are auditable.","Soil: exchanger only.","Livestock exclusion + isolation.","Greenhouse heat reuse.","Compliance artifacts logged."),
+          b4:B("Adversarial Validation","Strict windows: late events hard invalidate; missing streams invalidate roll-up; violations force R3 epoch rollover; history stays invalid.","Hard invalidation on lag.","100% roll-up requirement.","R3 rollover only recovery.",DOTGRID_EN)
         },
-        informal:{
-          title:"CHAIN · Live Posture",
-          b1:makeBox(
-            "Science (Plain)",
-            "Live means: we can measure what matters and we’ve defined what fails. We track heat gradients, pressure differences, plasma proxies, and power ratios. No fusion claim is being made.",
-            "If we can’t measure it, we don’t claim it.",
-            "If it can’t repeat, it doesn’t count.",
-            "Failures are named up front.",
-            "Loss is tracked, not ignored."
-          ),
-          b2:makeBox(
-            "Industrial (Plain)",
-            "We plug into industry first (heat users) and buffer before grid injection. PSS supervises dispatch; FCM contains failures; CARES handles escalation and shutdown.",
-            "Buffered injection only.",
-            "Supervisory control always on.",
-            "Containment boundaries are explicit.",
-            "Scaling is phased (IDP)."
-          ),
-          b3:makeBox(
-            "Agriculture (Plain)",
-            "Farm integration is heat exchange only. Plasma stays inside hardened modules. Heat can support greenhouses and seasonal buffering without harming soil.",
-            "No soil contact.",
-            "Hard perimeter for livestock.",
-            "Heat routed through TGI.",
-            "Storage smooths seasons."
-          ),
-          b4:makeBox(
-            "Adversarial (Plain)",
-            "Strict mode: if anything violates rules, it fails the window. No soft passes. Recovery requires rollover. Old bad epochs stay bad.",
-            "Sensor disagreement kills.",
-            "Late events invalidate.",
-            "Policy violation triggers R3.",
-            DOTGRID_BINDING_EN
-          )
+        informal:{title:"CHAIN · Live (Plain)",
+          b1:B("Science (Plain)","Live = we can measure it, repeat it, and name what fails.","Measure first.","Repeat or disqualify.","Failures named.","Loss tracked."),
+          b2:B("Industrial (Plain)","Grid sees buffered output, not raw plasma behavior.","Buffered output.","Supervised dispatch.","Contained failures.","Underwriting posture."),
+          b3:B("Agriculture (Plain)","Farm sites stay heat-exchange only and audit-ready.","Setbacks.","No soil contact.","TGI heat reuse.","Logged compliance."),
+          b4:B("Adversarial (Plain)","Strict means: bad data breaks the window and forces rollover.","Late invalidates.","Missing stream invalidates.","R3 rollover only.",DOTGRID_EN)
         }
       },
       post:{
-        formal:{
-          title:"CHAIN · Roadmap (Global Scaling)",
-          b1:makeBox(
-            "Scientific",
-            "Roadmap tightens definitions and expands evidence templates without disclosing apparatus recipes. It formalizes which signals count, which proxies are admissible, and which falsifiers terminate claims.",
-            "SVF templates become mandatory artifacts.",
-            "Noise floors declared per sensor; SNR minimum enforced.",
-            "Transition policy enforced via DHY strict (no degraded states).",
-            "K/M/R/P binning locked by BM + bm_hash (if derived)."
-          ),
-          b2:makeBox(
-            "Industrial / Grid",
-            "Roadmap formalizes industrial adoption: modular clusters, buffered conversion, and insurance-ready CC certification. Licensing is downstream: industrial proof first, residential endpoints later.",
-            "IDP-2/3 become underwriting thresholds.",
-            "Regional replication uses group/program manifests (no silent drift).",
-            "Grid stabilization posture: coexistence + buffer.",
-            "Residential licensing gated by IDP-3 completion."
-          ),
-          b3:makeBox(
-            "Agricultural / Plasma Farms",
-            "Roadmap codifies agricultural integration boundaries for global replication: layout, setbacks, soil isolation, thermal reuse constraints, and audit checklists.",
-            "Setback rules codified in manifest.",
-            "Soil/groundwater boundaries declared and audited.",
-            "TGI loop declared (greenhouse/soil buffer).",
-            "Revenue stacking modeled conservatively (stress tested)."
-          ),
-          b4:makeBox(
-            "Adversarial Validation",
-            "DHY strict certificates become the admissibility backbone: S1 per stream, S2 per cluster, S3 per program. Any invalidation cascades. R3 rollover is the only recovery path.",
-            "S2 requires 100% valid S1 streams.",
-            "S3 requires 100% valid S2 groups.",
-            "Entropy/coverage admissible only with VALID certs.",
-            DOTGRID_BINDING_EN
-          )
+        formal:{title:"CHAIN · Roadmap",
+          b1:B("Scientific","Roadmap tightens SVF templates, locks binning manifests (BM), and publishes replayable evidence bundles without disclosing recipes.","SVF templates mandatory.","BM + bm_hash lock if derived.","Noise floors declared per sensor.","Replay scripts verify chains."),
+          b2:B("Industrial / Grid","Roadmap formalizes underwriting-grade CC certification and global replication via manifests and certificates. Residential licensing is downstream and gated by IDP-3 proof.","CC→insurance underwriting.","Manifests lock membership.","Industrial-first posture locked.","RLM gated by IDP-3."),
+          b3:B("Agricultural / Plasma Farms","Roadmap codifies global farm deployment: setbacks, exchanger-only soil boundary, thermal reuse constraints, noise/EM limits, audit checklists.","Setback manifest.","Thermal exchange manifest.","Noise/EM limits.","Environmental boundary artifacts."),
+          b4:B("Adversarial Validation","DHY strict certs become the admissibility backbone. No cert issuance under low transitions; any invalidity cascades; no cross-epoch mixing.","No cert <10 transitions.","S2=100% S1.","S3=100% S2.","No cross-epoch aggregation.")
         },
-        informal:{
-          title:"CHAIN · Roadmap (Scaling)",
-          b1:makeBox(
-            "Science (Plain)",
-            "Next we make everything easier to audit: templates, locked meanings, locked bins, and stricter disproof rules—without giving away recipes.",
-            "Templates become standard.",
-            "Noise floors are declared.",
-            "Bins can’t drift.",
-            "Claims stay bounded."
-          ),
-          b2:makeBox(
-            "Industrial (Plain)",
-            "Scaling means modular clusters + insurance-ready certification. Residential is downstream and gated by industrial proof.",
-            "Industrial first.",
-            "Clusters next.",
-            "Global replication last.",
-            "Residential only after IDP-3 proof."
-          ),
-          b3:makeBox(
-            "Agriculture (Plain)",
-            "We standardize the farm model: setbacks, no soil contact, heat reuse, and audit checklists so it can replicate globally.",
-            "Layout standards.",
-            "Safety boundaries.",
-            "Thermal reuse.",
-            "Conservative economics."
-          ),
-          b4:makeBox(
-            "Adversarial (Plain)",
-            "Strict certificates decide what’s real. One failure invalidates the roll-up. Recovery requires a new epoch.",
-            "S1→S2→S3 is strict.",
-            "No soft passes.",
-            "R3 rollover only.",
-            DOTGRID_BINDING_EN
-          )
+        informal:{title:"CHAIN · Roadmap (Plain)",
+          b1:B("Science (Plain)","Next we standardize audits: locked bins, templates, and replay.","Locked bins.","Templates.","Replayable logs.","Clear disproof."),
+          b2:B("Industrial (Plain)","Next we scale via certification and underwriting; residential is gated.","Insurance-ready CC.","Replication manifests.","Industrial-first.","Residential later."),
+          b3:B("Agriculture (Plain)","Next we standardize farm integration globally.","Setbacks.","Heat exchange only.","Audit checklists.","Environmental limits."),
+          b4:B("Adversarial (Plain)","No cert means no claims.","No cert <10 transitions.","100% roll-up.","No cross-epoch mixing.")
         }
       }
     },
 
     plasma:{
       origin:{
-        formal:{title:"PLASMA · CC / UCI / ERI (Concept)",
-          b1:makeBox(
-            "Scientific",
-            "HIP plasma is treated as an industrial ionized operating regime whose stability must be governed by CC tiers. UCI enforces stability thresholds; ERI quantifies escalation risk; PSS executes supervisory decisions.",
-            "CC defines allowed regime and containment robustness.",
-            "UCI governs stability thresholds + override gates.",
-            "ERI tiers: Normal/Watch/Escalate/Terminate.",
-            "PSS mediates supervisory overrides (logged)."
-          ),
-          b2:makeBox(
-            "Industrial / Grid",
-            "Industrial posture requires upstream-only HIP with hardened containment and isolation. No direct consumer exposure. FCM defines failure containment boundaries; CARES defines response tiers.",
-            "PFM is upstream-only hardened unit.",
-            "FCM maps failure containment actions.",
-            "CARES enforces containment→attenuation→recovery→escalation→shutdown.",
-            "Insurance posture ties CC certification to underwriting."
-          ),
-          b3:makeBox(
-            "Agricultural / Plasma Farms",
-            "Farm integration requires physical separation and midstream thermal exchange. Plasma state never interfaces with soil; TGI routes thermal gradients to usable endpoints.",
-            "Rectilinear layout to reduce correlated risk.",
-            "Setback requirement enforced.",
-            "Thermal reuse: greenhouse + soil buffer via exchanger.",
-            "Livestock/EM/noise isolation boundary."
-          ),
-          b4:makeBox(
-            "Adversarial Validation",
-            "Plasma claims are admissible only if SVF passes multi-channel agreement and artifact suppression. Any sensor disagreement is kill; any ERI spike triggers termination + DHY invalidation.",
-            "Kill: multi-sensor disagreement.",
-            "Kill: ERI tier reaches Terminate.",
-            "Disproof: artifact-dependent stability.",
-            DOTGRID_BINDING_EN
-          )
+        formal:{title:"PLASMA · Concept",
+          b1:B("Scientific","HIP plasma is governed by CC tiers and UCI. ERI quantifies escalation risk; PSS executes supervisory decisions; EDT tiers bound intensity to envelope magnitude.","CC defines regime + robustness.","UCI enforces thresholds.","ERI tiers drive escalation.","PSS logs overrides."),
+          b2:B("Industrial / Grid","Upstream-only plasma: PFMs are hardened and isolated; no consumer exposure. FCM defines containment actions; CARES defines tiered response.","PFM upstream-only.","FCM containment matrix.","CARES response ladder.","Insurance ties to CC."),
+          b3:B("Agricultural / Plasma Farms","Farm integration uses physical separation and thermal exchange only. TGI routes gradients to useful endpoints without plasma–soil contact.","Rectilinear layout.","Setback enforced.","Exchanger-only soil boundary.","Livestock/EM/noise isolation."),
+          b4:B("Adversarial Validation","SVF requires redundancy + null comparison + agreement threshold. Multi-sensor disagreement is kill. ERI terminate triggers stop + invalidation.","Kill: disagreement.","Kill: ERI terminate.","Disproof: artifact dependence.",DOTGRID_EN)
         },
-        informal:{title:"PLASMA · Control (Direct)",
-          b1:makeBox(
-            "Science (Plain)",
-            "We run plasma like an industrial regime, not a stunt. CC tiers describe how hardened the containment is. UCI enforces the rules. ERI tells us when to stop.",
-            "CC = containment tier.",
-            "UCI = control layer.",
-            "ERI = risk tier.",
-            "PSS = supervisory stack."
-          ),
-          b2:makeBox(
-            "Industrial (Plain)",
-            "Plasma stays upstream-only in PFMs. FCM contains failures. CARES handles the response ladder.",
-            "Upstream-only.",
-            "Containment first.",
-            "Automatic shutdown path.",
-            "No consumer exposure."
-          ),
-          b3:makeBox(
-            "Agriculture (Plain)",
-            "Farm sites use heat exchange only. Plasma never touches soil. TGI routes heat to greenhouses and buffers.",
-            "No soil contact.",
-            "Setbacks enforced.",
-            "Heat reuse.",
-            "Rural stability."
-          ),
-          b4:makeBox(
-            "Adversarial (Plain)",
-            "If sensors disagree or risk spikes, it fails. No soft passes.",
-            "SVF must pass.",
-            "ERI terminate = stop.",
-            "DHY certs decide admissibility.",
-            DOTGRID_BINDING_EN
-          )
+        informal:{title:"PLASMA · Concept (Plain)",
+          b1:B("Science (Plain)","CC tiers tell how hardened it is. UCI enforces rules. ERI tells when to stop. PSS logs what happened.","CC = tier.","UCI = control.","ERI = risk.","PSS = supervisor."),
+          b2:B("Industrial (Plain)","Plasma stays upstream-only and contained.","Upstream-only.","Contained failures.","CARES enforced.","No consumer exposure."),
+          b3:B("Agriculture (Plain)","Farm sites use heat exchange only.","No soil contact.","Setbacks.","Heat reuse.","Audit-ready."),
+          b4:B("Adversarial (Plain)","If sensors disagree, it fails.","SVF required.","Disagreement kills.","ERI terminate stops.",DOTGRID_EN)
         }
       },
       now:{
-        formal:{title:"PLASMA · Live Posture",
-          b1:makeBox(
-            "Scientific",
-            "Instrumented testing focuses on stability envelopes and termination thresholds. Diagnostics include multi-channel redundancy, cross-sensor agreement, and anomaly flagging.",
-            "Signals: thermal gradient, pressure differential, ion proxy, power ratio.",
-            "Domains: normalized K/M/R/P envelope (declared).",
-            "Failures: overpressure, field collapse, runaway, breach.",
-            "Termination bands contract under repeated instability."
-          ),
-          b2:makeBox(
-            "Industrial / Grid",
-            "Live industrial posture uses buffered midstream conversion; upstream HIP remains isolated. PSS supervises dispatch smoothing; overrides are logged and cannot bypass CARES.",
-            "Buffered midstream conversion only.",
-            "Supervisory overrides logged (no silent override).",
-            "CARES tiered response enforced.",
-            "FCM isolates blast radius."
-          ),
-          b3:makeBox(
-            "Agricultural / Plasma Farms",
-            "Live farm posture uses thermal exchange only; TGI routes usable gradients; environmental boundaries are auditable (soil, groundwater, livestock).",
-            "Soil boundary: exchanger only.",
-            "Groundwater boundary declared.",
-            "Livestock perimeter enforced.",
-            "Noise/EM isolation standard."
-          ),
-          b4:makeBox(
-            "Adversarial Validation",
-            "Strict disproof triggers include repeat instability under fixed parameters, artifact-dependent confirmation, and multi-sensor disagreement. Late events hard invalidate windows.",
-            "Disproof: repeat instability fixed params.",
-            "Disproof: artifact-dependent signal.",
-            "Kill: sensor disagreement.",
-            DOTGRID_BINDING_EN
-          )
+        formal:{title:"PLASMA · Live",
+          b1:B("Scientific","Live testing is envelope-first: stability domains, termination thresholds, and escalation indices are measured and tightened under repeats.","Multi-channel redundancy.","Cross-sensor agreement.","Anomaly flagging.","Termination band contraction."),
+          b2:B("Industrial / Grid","Buffered integration is enforced: upstream HIP isolated; dispatch smoothing supervised; overrides logged; containment boundaries explicit.","Buffered conversion.","Supervisory smoothing.","Logged overrides.","FCM isolation."),
+          b3:B("Agricultural / Plasma Farms","Live farm posture enforces: exchanger-only soil boundary, perimeter exclusion, and auditable thermal reuse via TGI.","Soil exchanger-only.","Hard perimeter.","TGI heat reuse.","Compliance artifacts logged."),
+          b4:B("Adversarial Validation","Strict: repeat instability under fixed params is disproof; artifacts disqualify; late events invalidate windows.","Disproof: repeat instability.","Disproof: artifact dependence.","Lag invalidates.","R3 rollover on violation.")
         },
-        informal:{title:"PLASMA · Live (Direct)",
-          b1:makeBox(
-            "Science (Plain)",
-            "We measure the regime, we track failures, and we tighten thresholds when instability repeats.",
-            "Multi-sensor agreement.",
-            "Anomaly flagging.",
-            "Named failure modes.",
-            "Termination tightening."
-          ),
-          b2:makeBox(
-            "Industrial (Plain)",
-            "Upstream plasma is isolated. The grid sees buffered output, not raw plasma behavior.",
-            "Buffered output.",
-            "Isolation boundaries.",
-            "Logged overrides.",
-            "CARES enforced."
-          ),
-          b3:makeBox(
-            "Agriculture (Plain)",
-            "Farm operations are heat exchange + safety boundaries.",
-            "No soil contact.",
-            "Perimeter rules.",
-            "Heat reuse.",
-            "Audit ready."
-          ),
-          b4:makeBox(
-            "Adversarial (Plain)",
-            "Strict: late or inconsistent data invalidates. No soft truth.",
-            "Late invalidates.",
-            "Disagreement kills.",
-            "Repeat instability disproves.",
-            DOTGRID_BINDING_EN
-          )
+        informal:{title:"PLASMA · Live (Plain)",
+          b1:B("Science (Plain)","We measure stability and tighten kills when it repeats.","Redundant sensors.","Agreement required.","Flags.","Tighten kills."),
+          b2:B("Industrial (Plain)","Grid only sees buffered output.","Buffered.","Supervised.","Contained.","Logged."),
+          b3:B("Agriculture (Plain)","Heat exchange only; audited.","No soil.","Perimeter.","Reuse.","Logs."),
+          b4:B("Adversarial (Plain)","Strict disproof rules apply.","Repeat instability fails.","Artifacts fail.","Late invalidates.","R3 rollover.")
         }
       },
       post:{
         formal:{title:"PLASMA · Roadmap (Scaling)",
-          b1:makeBox(
-            "Scientific",
-            "Roadmap publishes stable markers vs drift markers vs fail markers as observer-invariant bins (BM locked). It expands SVF templates and formalizes kill conditions per CC tier.",
-            "Observer-invariant bins.",
-            "BM + bm_hash locked (if derived).",
-            "SVF templates mandatory.",
-            "Kill conditions per CC tier."
-          ),
-          b2:makeBox(
-            "Industrial / Grid",
-            "Roadmap makes CC certification underwriting-grade and ties policy enforcement to DHY strict. Any policy violation triggers R3 rollover; historical invalidity is permanent.",
-            "CC cert ties to insurance.",
-            "Policy enforcement required.",
-            "Violation ⇒ R3 rollover.",
-            "No cross-epoch aggregation."
-          ),
-          b3:makeBox(
-            "Agricultural / Plasma Farms",
-            "Roadmap codifies farm integration with WRM windowing for audits and environmental compliance checklists. Deployment remains upstream-only HIP.",
-            "Environmental checklist artifacts.",
-            "WRM window rules locked.",
-            "Thermal reuse documented.",
-            "Upstream-only enforced."
-          ),
-          b4:makeBox(
-            "Adversarial Validation",
-            "S1/S2/S3 cert issuance requires ≥10 transitions per window; otherwise no certificate is issued. Any missing stream invalidates roll-up (100% required).",
-            "No cert if <10 transitions.",
-            "S2 requires 100% valid S1.",
-            "S3 requires 100% valid S2.",
-            DOTGRID_BINDING_EN
-          )
+          b1:B("Scientific","Roadmap publishes observer-invariant markers via locked BM and expands SVF templates. Kill conditions become tiered per CC and enforced by policy.","BM locked (if derived).","SVF templates mandatory.","Kill per CC tier.","Policy enforcement required."),
+          b2:B("Industrial / Grid","Roadmap makes CC certification underwriting-grade and ties enforcement to DHY strict. Any policy violation forces R3 rollover; no cross-epoch mixing.","CC underwriting.","Strict enforcement.","R3 rollover.","No cross-epoch."),
+          b3:B("Agricultural / Plasma Farms","Roadmap standardizes farm compliance artifacts so replication is global and auditable.","Setback rules.","Thermal exchange rules.","Noise/EM limits.","Environmental artifacts."),
+          b4:B("Adversarial Validation","No certificate issuance under low transitions. 100% roll-up required. Missing stream invalidates higher scope.","No cert <10 transitions.","S2=100% S1.","S3=100% S2.","Missing stream invalidates.")
         },
-        informal:{title:"PLASMA · Roadmap (Direct)",
-          b1:makeBox(
-            "Science (Plain)",
-            "We standardize markers, templates, and kill rules so audits don’t drift.",
-            "Standard bins.",
-            "Locked templates.",
-            "Clear kills.",
-            "Repeatable checks."
-          ),
-          b2:makeBox(
-            "Industrial (Plain)",
-            "Certification becomes underwriting-ready. Violations force rollover.",
-            "Insurance-ready certs.",
-            "Strict enforcement.",
-            "R3 rollover.",
-            "No cross-epoch mixing."
-          ),
-          b3:makeBox(
-            "Agriculture (Plain)",
-            "Farm deployment becomes a replicable standard with audit checklists.",
-            "Replicable layout.",
-            "Compliance artifacts.",
-            "Thermal reuse.",
-            "Upstream-only."
-          ),
-          b4:makeBox(
-            "Adversarial (Plain)",
-            "If the window is too small or broken, there is no certificate.",
-            "No cert <10 transitions.",
-            "100% roll-up required.",
-            "Missing stream invalidates.",
-            DOTGRID_BINDING_EN
-          )
+        informal:{title:"PLASMA · Roadmap (Plain)",
+          b1:B("Science (Plain)","We standardize markers and templates.","Markers.","Templates.","Kills.","Replay."),
+          b2:B("Industrial (Plain)","Certification becomes underwriting-ready.","Insurance-ready.","Strict.","R3 rollover.","No mixing."),
+          b3:B("Agriculture (Plain)","Farm integration becomes a standard.","Setbacks.","Heat exchange only.","Limits.","Artifacts."),
+          b4:B("Adversarial (Plain)","No cert means no roll-up.","No cert <10.","100% required.","Missing invalidates.","Strict.")
         }
       }
     },
 
     fusion:{
       origin:{
-        formal:{title:"FUSION · Boundary Framing (Concept)",
-          b1:makeBox(
-            "Scientific",
-            "This section defines fusion-relevant boundary conditions without asserting net fusion. It distinguishes ‘interesting plasma’ from ‘fusion-relevant plasma’ using criteria language (density/time/loss competition) without publishing thresholds.",
-            "No net-fusion claim.",
-            "Criteria framing only (no setpoints).",
-            "Loss competition acknowledged.",
-            "Disproof conditions explicit."
-          ),
-          b2:makeBox(
-            "Industrial / Grid",
-            "Industrial plan is decarbonized heat + stability buffering first. Any future tightening toward fusion relevance remains upstream-only and supervised; grid remains buffered and coexistence-focused.",
-            "Industrial heat first.",
-            "Grid stabilization layer.",
-            "Upstream-only high-energy regimes.",
-            "No baseload shock narrative."
-          ),
-          b3:makeBox(
-            "Agricultural / Plasma Farms",
-            "Farm deployments remain modular and buffered. Any higher-tier CC/EDT operation remains physically isolated and never interfaces with soil; only midstream thermal exchange persists.",
-            "Isolation increases with tier.",
-            "No soil contact ever.",
-            "Thermal exchange remains midstream.",
-            "Setback rules enforced."
-          ),
-          b4:makeBox(
-            "Adversarial Validation",
-            "Any ‘fusion relevance’ claim requires SVF multi-channel confirmation and DHY strict certificates across scopes. Artifact dependence or non-repeatability is disproof.",
-            "Disproof: artifact-dependent signal.",
-            "Disproof: non-repeatability under fixed params.",
-            "Kill: ERI terminate tier.",
-            DOTGRID_BINDING_EN
-          )
+        formal:{title:"FUSION · Concept (No Net Claims)",
+          b1:B("Scientific","This is boundary framing only. We define what would count as ‘fusion-relevant’ conditions without asserting net fusion. Claims remain bounded and falsifiable.","No net-fusion claim.","Criteria framing only.","Loss competition acknowledged.","Disproof conditions explicit."),
+          b2:B("Industrial / Grid","Industrial heat decarbonization + grid stabilization remains primary. Any tightening toward higher regimes remains upstream-only, buffered, and supervised.","Industrial-first posture.","Grid stabilization layer.","Upstream-only higher regimes.","No baseload shock."),
+          b3:B("Agricultural / Plasma Farms","Farm deployments remain modular and buffered. No soil contact ever; only midstream thermal exchange. Higher tiers increase isolation rather than exposure.","Isolation increases with tier.","No soil contact.","Midstream exchanger only.","Setbacks enforced."),
+          b4:B("Adversarial Validation","Any ‘fusion relevance’ claim requires SVF multi-channel confirmation + DHY strict certs. Artifact dependence and non-repeatability are disproof.","SVF required.","DHY certs required.","Artifacts disprove.","Non-repeat disprove.")
         },
-        informal:{title:"FUSION · Boundary (Direct)",
-          b1:makeBox(
-            "Science (Plain)",
-            "We are not claiming net fusion. We’re defining what ‘fusion-relevant’ would mean so the system stays honest.",
-            "No net-fusion claim.",
-            "Criteria language only.",
-            "Failure conditions named.",
-            "No magic words."
-          ),
-          b2:makeBox(
-            "Industrial (Plain)",
-            "Industrial heat + buffering comes first. Anything beyond that stays upstream-only and supervised.",
-            "Industrial first.",
-            "Buffer the grid.",
-            "No disruption story.",
-            "Upstream-only."
-          ),
-          b3:makeBox(
-            "Agriculture (Plain)",
-            "Farm integration stays heat-exchange only, always.",
-            "No soil contact.",
-            "Setbacks.",
-            "Thermal reuse.",
-            "Safety boundary."
-          ),
-          b4:makeBox(
-            "Adversarial (Plain)",
-            "If it can’t be proven under strict certs, it’s not admissible.",
-            "SVF must pass.",
-            "DHY certs required.",
-            "Artifacts kill claims.",
-            DOTGRID_BINDING_EN
-          )
+        informal:{title:"FUSION · Concept (Plain)",
+          b1:B("Science (Plain)","We are not claiming net fusion here. We’re defining boundaries so it stays honest.","No net claim.","Clear boundaries.","Clear disproof.","No hype."),
+          b2:B("Industrial (Plain)","Industrial output first; grid buffered.","Industrial first.","Buffer the grid.","Upstream only.","No shock."),
+          b3:B("Agriculture (Plain)","Farm integration stays heat-exchange only.","No soil contact.","Setbacks.","Heat reuse.","Safety."),
+          b4:B("Adversarial (Plain)","No cert = no claim.","SVF + certs.","Artifacts kill.","Repeat required.","Strict.")
         }
       },
       now:{
-        formal:{title:"FUSION · Live Posture (No Claims)",
-          b1:makeBox(
-            "Scientific",
-            "Live posture is bounded: we publish framing, signals, and falsifiers; we do not publish thresholds or apparatus recipes. Any tightening is described as ‘under R&D’ not ‘achieved.’",
-            "Bounded language only.",
-            "Signals and falsifiers listed.",
-            "No thresholds published.",
-            "No recipe disclosure."
-          ),
-          b2:makeBox(
-            "Industrial / Grid",
-            "Live industrial posture is clear: PFM clusters deliver stable industrial heat and buffered electric contribution where applicable, coordinated by supervisory stack and SLA buffering.",
-            "Buffered conversion pathway.",
-            "Dispatch smoothing via PSS.",
-            "FCM containment enforced.",
-            "Industrial contracts stabilize load."
-          ),
-          b3:makeBox(
-            "Agricultural / Plasma Farms",
-            "Live agricultural posture: rectilinear layout, setback, heat reuse via TGI, and strict environmental boundaries. No consumer endpoints beyond passive tiers.",
-            "Setback + perimeter rules.",
-            "TGI greenhouse/soil buffer loops.",
-            "Environmental audit artifacts.",
-            "No residential active plasma."
-          ),
-          b4:makeBox(
-            "Adversarial Validation",
-            "Strict mode applies: late events hard invalidate; any missing stream invalidates roll-up; R3 rollover required for violations; historical invalid epochs stay invalid.",
-            "Hard invalidation on late events.",
-            "100% S1 for S2; 100% S2 for S3.",
-            "Violation ⇒ R3 rollover.",
-            DOTGRID_BINDING_EN
-          )
+        formal:{title:"FUSION · Live (No Claims)",
+          b1:B("Scientific","Live posture publishes signals and falsifiers without thresholds or recipes. Any tightening remains labeled R&D and is audited under strict doctrine.","Bounded language.","No thresholds published.","No recipes.","Falsifiers listed."),
+          b2:B("Industrial / Grid","Live industrial posture is stable output + buffering. PSS supervises dispatch; FCM isolates; CARES governs escalation.","Buffered conversion.","PSS supervision.","FCM containment.","CARES response."),
+          b3:B("Agricultural / Plasma Farms","Live farm posture: setbacks + exchanger-only boundary + auditable thermal reuse.","Setbacks verified.","Exchanger-only verified.","TGI reuse.","Compliance logged."),
+          b4:B("Adversarial Validation","Strict windows: late invalidates; missing stream invalidates; R3 rollover on violation; historical invalidity permanent.","Late invalidates.","Missing invalidates.","R3 rollover.","No cross-epoch.")
         },
-        informal:{title:"FUSION · Live (Direct)",
-          b1:makeBox(
-            "Science (Plain)",
-            "Live means we’re careful: we list what would prove or disprove, but we don’t claim net fusion.",
-            "Bounded wording.",
-            "Clear disproof.",
-            "No secret numbers.",
-            "No recipes."
-          ),
-          b2:makeBox(
-            "Industrial (Plain)",
-            "We deliver stable industrial output first and buffer the grid.",
-            "Industrial heat.",
-            "Buffered conversion.",
-            "Supervised dispatch.",
-            "Containment always."
-          ),
-          b3:makeBox(
-            "Agriculture (Plain)",
-            "Farm integration stays safe and modular.",
-            "Setbacks.",
-            "Heat reuse.",
-            "Audit artifacts.",
-            "No consumer exposure."
-          ),
-          b4:makeBox(
-            "Adversarial (Plain)",
-            "Strict certificates decide what is admissible.",
-            "Late invalidates.",
-            "Missing stream invalidates roll-up.",
-            "R3 rollover on violation.",
-            DOTGRID_BINDING_EN
-          )
+        informal:{title:"FUSION · Live (Plain)",
+          b1:B("Science (Plain)","We list what would prove/disprove, not promises.","Bounded wording.","No secret numbers.","Disproof first.","No hype."),
+          b2:B("Industrial (Plain)","Stable industrial output first.","Heat + buffer.","Supervised.","Contained.","Logged."),
+          b3:B("Agriculture (Plain)","Safe farm integration.","Setbacks.","No soil.","Reuse.","Audit."),
+          b4:B("Adversarial (Plain)","Strict validity rules apply.","Late invalidates.","Missing invalidates.","R3 rollover.","Strict.")
         }
       },
       post:{
         formal:{title:"FUSION · Roadmap (Tightening Without Overclaim)",
-          b1:makeBox(
-            "Scientific",
-            "Roadmap defines boundary-tightening milestones as falsifiable steps (not timelines). Each step binds to SVF and DHY certificates, with explicit disproof and kill conditions.",
-            "Milestones are falsifiable steps.",
-            "Disproof conditions required.",
-            "Kill conditions required.",
-            "No timeline hype."
-          ),
-          b2:makeBox(
-            "Industrial / Grid",
-            "Roadmap preserves coexistence: industrial heat decarbonization and grid stabilization remain primary. Any higher-tier work is isolated upstream and audited.",
-            "Coexistence posture locked.",
-            "Industrial remains primary.",
-            "Upstream-only tightening.",
-            "Audit-grade evidence bundles."
-          ),
-          b3:makeBox(
-            "Agricultural / Plasma Farms",
-            "Roadmap scales farm deployments via checklists, manifests, and licensing boundaries; thermal reuse stays midstream; residential remains EDT-1 passive only.",
-            "Replicable farm manifests.",
-            "Midstream exchange only.",
-            "Residential EDT-1 passive only.",
-            "Trigger-gated licensing."
-          ),
-          b4:makeBox(
-            "Adversarial Validation",
-            "Strict certificates are the gate. If a scope window lacks ≥10 transitions, no certificate is issued. Aggregation is illegal without VALID certificates.",
-            "No cert <10 transitions.",
-            "No aggregation without certs.",
-            "S1→S2→S3 strict cascade.",
-            DOTGRID_BINDING_EN
-          )
+          b1:B("Scientific","Roadmap defines falsifiable steps (not timelines). Each step binds to SVF and DHY certificates and includes explicit disproof and kill conditions.","Steps not timelines.","Falsifiers required.","Kill conditions required.","No hype."),
+          b2:B("Industrial / Grid","Roadmap preserves coexistence posture: industrial heat + stabilization remain primary; any higher-tier work remains upstream-only and audited.","Coexistence posture locked.","Industrial primary.","Upstream-only tightening.","Audit bundles."),
+          b3:B("Agricultural / Plasma Farms","Roadmap scales farm deployments via standards and keeps residential endpoints passive-only under RLM gating.","Farm standards.","Exchanger-only.","RLM gating.","Passive-only endpoints."),
+          b4:B("Adversarial Validation","No cert <10 transitions. No aggregation without VALID certs. 100% roll-up required.","No cert <10.","No agg without cert.","100% roll-up.","Strict.")
         },
-        informal:{title:"FUSION · Roadmap (Direct)",
-          b1:makeBox(
-            "Science (Plain)",
-            "Next steps are test steps, not promises.",
-            "Falsifiable steps.",
-            "Clear disproof.",
-            "Clear kills.",
-            "No hype timelines."
-          ),
-          b2:makeBox(
-            "Industrial (Plain)",
-            "Industrial and grid stabilization stays first.",
-            "Coexistence.",
-            "Stabilize.",
-            "Decarbonize heat.",
-            "Audit everything."
-          ),
-          b3:makeBox(
-            "Agriculture (Plain)",
-            "Farm scaling is standardized; residential stays passive-only until industrial proof is done.",
-            "Checklists.",
-            "Boundaries.",
-            "EDT-1 only.",
-            "Trigger gating."
-          ),
-          b4:makeBox(
-            "Adversarial (Plain)",
-            "No cert means no claims.",
-            "No cert <10 transitions.",
-            "No roll-up without 100% validity.",
-            "R3 rollover on failure.",
-            DOTGRID_BINDING_EN
-          )
+        informal:{title:"FUSION · Roadmap (Plain)",
+          b1:B("Science (Plain)","Next steps are tests, not promises.","Test steps.","Disproof first.","Clear kills.","No timelines."),
+          b2:B("Industrial (Plain)","Industrial and stability stays first.","Stabilize.","Decarbonize heat.","Audit.","Coexist."),
+          b3:B("Agriculture (Plain)","Farm scaling stays standardized and safe.","Standards.","No soil.","Reuse.","Gated licensing."),
+          b4:B("Adversarial (Plain)","No cert means no claim.","No cert <10.","100% required.","Strict.","No mixing.")
         }
       }
     },
 
     validation:{
       origin:{
-        formal:{title:"VALIDATION · SVF + CARES + DHY (Concept)",
-          b1:makeBox(
-            "Scientific",
-            "SVF is a multi-channel verification protocol: null-channel comparisons, cross-sensor agreement thresholds, and artifact suppression. If a signal depends on artifact, it is disqualified.",
-            "Independent sensor streams required.",
-            "Null-channel comparison required.",
-            "Cross-signal agreement threshold required.",
-            "Artifact-dependent confirmation disqualifies."
-          ),
-          b2:makeBox(
-            "Industrial / Grid",
-            "Industrial validation includes environmental compliance and insurance verification. CC certification underwrites risk. PSS logs overrides; FCM defines containment actions.",
-            "Third-party instrumentation review.",
-            "Environmental compliance audit.",
-            "Insurance verification tied to CC tier.",
-            "Override logs are immutable artifacts."
-          ),
-          b3:makeBox(
-            "Agricultural / Plasma Farms",
-            "Agricultural validation includes soil and livestock boundaries and thermal-exchange-only constraints. TGI is auditable; no soil plasma contact is enforced.",
-            "Soil boundary: exchanger only.",
-            "Livestock exclusion perimeter.",
-            "Noise/EM isolation standard.",
-            "Thermal reuse logged as midstream only."
-          ),
-          b4:makeBox(
-            "Adversarial Validation",
-            "DHY strict mode: ABM/BM/WRM locks, SHA-256 hash chains, strict certificates, and R3 recovery only. User relaxation is UI-display only and logged with SEGMENT_BREAK.",
-            "Canonical_json_v1 + SHA-256 enforced.",
-            "Late events hard invalidate windows.",
-            "Policy violations require R3 rollover.",
-            DOTGRID_BINDING_EN
-          )
+        formal:{title:"VALIDATION · SVF / CARES / DHY (Concept)",
+          b1:B("Scientific","SVF is multi-channel verification: null-channel comparison, cross-sensor agreement threshold, and artifact suppression. Artifact-dependent confirmation is disqualified.","Null comparison.","Redundant sensors.","Agreement threshold.","Artifacts disqualify."),
+          b2:B("Industrial / Grid","Industrial validation includes third-party instrumentation review, environmental compliance audit, and insurance verification tied to CC certification.","Third-party review.","Env audit.","Insurance verification.","CC certification artifacts."),
+          b3:B("Agricultural / Plasma Farms","Farm validation enforces exchanger-only soil boundary, perimeter exclusion, and noise/EM isolation standards. TGI heat reuse is logged midstream-only.","No soil contact.","Perimeter enforced.","Noise/EM limits.","TGI midstream logging."),
+          b4:B("Adversarial Validation","DHY strict: ABM/BM/WRM locks + SHA-256 chain + binary certs + R3 recovery only. UI relaxation is display-only and triggers logged override + SEGMENT_BREAK.","Strict hashes.","Binary certs.","R3 recovery only.",DOTGRID_EN)
         },
-        informal:{title:"VALIDATION · Strict (Direct)",
-          b1:makeBox(
-            "Science (Plain)",
-            "We don’t trust one sensor. SVF requires multiple sensors to agree and uses a null comparison to kill artifacts.",
-            "Multiple sensors.",
-            "Null comparison.",
-            "Agreement threshold.",
-            "Artifacts disqualify."
-          ),
-          b2:makeBox(
-            "Industrial (Plain)",
-            "Industrial proof includes audits and insurance checks. CC certification matters.",
-            "Third-party review.",
-            "Environmental audit.",
-            "Insurance verification.",
-            "Logged overrides."
-          ),
-          b3:makeBox(
-            "Agriculture (Plain)",
-            "Farm proof includes soil/livestock boundaries and heat exchange only.",
-            "No soil contact.",
-            "Perimeter.",
-            "Isolation.",
-            "Logged heat reuse."
-          ),
-          b4:makeBox(
-            "Adversarial (Plain)",
-            "DHY is strict. UI can hide it, but the certs stay strict and overrides are logged.",
-            "Strict certs.",
-            "Overrides logged.",
-            "SEGMENT_BREAK on override.",
-            DOTGRID_BINDING_EN
-          )
+        informal:{title:"VALIDATION · Concept (Plain)",
+          b1:B("Science (Plain)","We don’t trust one sensor.","Null comparison.","Redundant sensors.","Agreement required.","Artifacts fail."),
+          b2:B("Industrial (Plain)","Industrial proof includes audits and insurance posture.","Review.","Compliance.","Insurance.","Artifacts."),
+          b3:B("Agriculture (Plain)","Farm proof is boundary + logs.","No soil.","Perimeter.","Limits.","Logs."),
+          b4:B("Adversarial (Plain)","DHY is strict; UI can’t change it.","Strict.","Logged overrides.","SEGMENT_BREAK.","R3 only.")
         }
       },
       now:{
-        formal:{title:"VALIDATION · Live Strict Posture",
-          b1:makeBox(
-            "Scientific",
-            "Live SVF uses redundancy, anomaly flagging, and explicit noise floors. Multi-sensor disagreement is a kill condition. Repeat instability at fixed parameters is disproof.",
-            "Noise floors declared per sensor.",
-            "Anomaly flagging enabled.",
-            "Disagreement = kill.",
-            "Repeat instability = disproof."
-          ),
-          b2:makeBox(
-            "Industrial / Grid",
-            "Live industrial validation ties to deployment phases: IDP-1 single PFM, IDP-2 cluster, IDP-3 industrial adjacency. Residential licensing is blocked until IDP-3 thresholds are met.",
-            "IDP-1/2/3/4 tracked as Axis4.",
-            "Cluster membership locked by manifests.",
-            "Expected stream counts enforced.",
-            "RLM gated by IDP-3 completion."
-          ),
-          b3:makeBox(
-            "Agricultural / Plasma Farms",
-            "Live agricultural validation verifies setback, perimeter, and exchanger-only boundary. Thermal reuse is bounded and audited; environmental thresholds are compliance-controlled.",
-            "Setback verified.",
-            "Perimeter verified.",
-            "Exchanger-only verified.",
-            "Compliance artifacts recorded."
-          ),
-          b4:makeBox(
-            "Adversarial Validation",
-            "Strict certificates are binary. Low-data windows (<10 transitions) produce no certificate. Any invalid S1 invalidates S2/S3. R3 recovery creates new epochs; no cross-epoch aggregation.",
-            "No cert <10 transitions.",
-            "S2 requires 100% valid S1.",
-            "S3 requires 100% valid S2.",
-            DOTGRID_BINDING_EN
-          )
+        formal:{title:"VALIDATION · Live Strict",
+          b1:B("Scientific","Noise floors are declared per sensor; anomaly flags are logged; disagreement is kill; repeat instability is disproof. Low-data windows issue no certs.","Noise floors.","Anomaly flags.","Disagreement kills.","Repeat fails."),
+          b2:B("Industrial / Grid","IDP tier is tracked; group membership locked; expected stream count enforced; RLM gated by IDP-3 completion without catastrophic breach.","IDP tracked.","Membership locked.","Counts enforced.","RLM gated."),
+          b3:B("Agricultural / Plasma Farms","Setbacks, perimeter, exchanger-only boundary and compliance artifacts are verified under strict windows.","Setbacks verified.","Perimeter verified.","Exchanger-only verified.","Compliance logged."),
+          b4:B("Adversarial Validation","Late events hard invalidate. 100% roll-up required. No cross-epoch aggregation. Policy violations force R3 rollover.","Late invalidates.","100% roll-up.","No cross-epoch.","R3 rollover.")
         },
-        informal:{title:"VALIDATION · Live (Direct)",
-          b1:makeBox(
-            "Science (Plain)",
-            "If sensors disagree or it can’t repeat, it fails.",
-            "Noise floors.",
-            "Anomaly flags.",
-            "Disagreement kills.",
-            "Repeat instability disproves."
-          ),
-          b2:makeBox(
-            "Industrial (Plain)",
-            "Licensing is gated. Industrial first.",
-            "IDP tracked.",
-            "Cluster locked.",
-            "Counts enforced.",
-            "RLM gated."
-          ),
-          b3:makeBox(
-            "Agriculture (Plain)",
-            "Setbacks + exchanger-only boundary are audited.",
-            "Setbacks.",
-            "Perimeter.",
-            "No soil contact.",
-            "Compliance artifacts."
-          ),
-          b4:makeBox(
-            "Adversarial (Plain)",
-            "Binary certs. No cert means no claims.",
-            "No cert <10 transitions.",
-            "100% roll-up.",
-            "R3 rollover only.",
-            DOTGRID_BINDING_EN
-          )
+        informal:{title:"VALIDATION · Live (Plain)",
+          b1:B("Science (Plain)","If it can’t repeat or sensors disagree, it fails.","Repeat required.","Disagreement kills.","Noise floors.","No cert <10."),
+          b2:B("Industrial (Plain)","Industrial first; licensing gated.","Counts enforced.","Membership locked.","IDP gated.","RLM gated."),
+          b3:B("Agriculture (Plain)","Boundaries are audited.","Setbacks.","No soil.","Perimeter.","Compliance."),
+          b4:B("Adversarial (Plain)","Strict roll-up.","Late invalidates.","100% required.","R3 rollover.","No mixing.")
         }
       },
       post:{
         formal:{title:"VALIDATION · Roadmap (Audit Backbone)",
-          b1:makeBox(
-            "Scientific",
-            "Roadmap publishes SVF templates and binning manifests so independent auditors can replay evidence streams. Canonical JSON and hash rules eliminate drift across platforms.",
-            "SVF templates published.",
-            "BM thresholds locked and versioned.",
-            "Canonical JSON v1 enforced.",
-            "Replay scripts validate chains."
-          ),
-          b2:makeBox(
-            "Industrial / Grid",
-            "Roadmap produces underwriting-grade artifacts: CC certifications, manifest hashes, scope certificates, and permanent audit trails that support industrial adoption and coexistence positioning.",
-            "CC certification artifacts.",
-            "Group/program manifests.",
-            "Certificate ledger.",
-            "Permanent audit trails."
-          ),
-          b3:makeBox(
-            "Agricultural / Plasma Farms",
-            "Roadmap produces agricultural compliance artifacts that replicate globally: setback rules, thermal exchange constraints, noise/EM limits, soil/water boundaries, and verification checklists.",
-            "Setback manifest.",
-            "Thermal exchange manifest.",
-            "Noise/EM limits.",
-            "Soil/water boundaries."
-          ),
-          b4:makeBox(
-            "Adversarial Validation",
-            "Threat model is codified: semantic drift, bin drift, chain tampering, topology laundering, window slicing, late insertion, artifact masking, exception abuse. Controls are enforced by DHY strict.",
-            "ABM/BM/WRM locks stop drift.",
-            "Hash chain stops tampering.",
-            "Manifests stop laundering.",
-            DOTGRID_BINDING_EN
-          )
+          b1:B("Scientific","Publish SVF templates, BM manifests, and replay scripts so evidence can be recomputed independently under canonical JSON v1 + SHA-256.","SVF templates.","BM manifests.","Replay scripts.","Canonical hashes."),
+          b2:B("Industrial / Grid","Produce underwriting-grade artifacts: CC certification, manifest hashes, certificate ledger, and permanent audit trails.","CC cert.","Manifests.","Cert ledger.","Audit trails."),
+          b3:B("Agricultural / Plasma Farms","Publish compliance artifacts for global replication: setbacks, thermal exchange constraints, noise/EM limits, soil/water boundaries.","Setbacks.","Exchange constraints.","Noise/EM.","Soil/water."),
+          b4:B("Adversarial Validation","Codify red-team threat model: semantic drift, bin drift, tampering, laundering, window slicing, late insertion, artifact masking, exception abuse—enforced by strict controls.","ABM/BM/WRM locks.","Hash chains.","Manifests.","Strict certs.")
         },
-        informal:{title:"VALIDATION · Roadmap (Direct)",
-          b1:makeBox(
-            "Science (Plain)",
-            "Next we make audits easy: templates + locked meanings + replay.",
-            "Templates.",
-            "Locked bins.",
-            "Replayable chains.",
-            "No drift."
-          ),
-          b2:makeBox(
-            "Industrial (Plain)",
-            "Next we make insurance and regulators comfortable.",
-            "CC certs.",
-            "Certificate ledger.",
-            "Audit trails.",
-            "Coexistence posture."
-          ),
-          b3:makeBox(
-            "Agriculture (Plain)",
-            "Next we standardize the farm compliance layer.",
-            "Setbacks.",
-            "Heat exchange rules.",
-            "Noise/EM limits.",
-            "Soil boundaries."
-          ),
-          b4:makeBox(
-            "Adversarial (Plain)",
-            "Next we publish the attack model and enforce it.",
-            "Drift locks.",
-            "Tamper locks.",
-            "No laundering.",
-            DOTGRID_BINDING_EN
-          )
+        informal:{title:"VALIDATION · Roadmap (Plain)",
+          b1:B("Science (Plain)","Make audits easy and repeatable.","Templates.","Locked bins.","Replay.","Hashes."),
+          b2:B("Industrial (Plain)","Make insurance and regulators comfortable.","Certs.","Ledger.","Trails.","Artifacts."),
+          b3:B("Agriculture (Plain)","Standardize compliance globally.","Setbacks.","Limits.","Boundaries.","Artifacts."),
+          b4:B("Adversarial (Plain)","Publish the attack model and enforce it.","No drift.","No tamper.","No laundering.","Strict.")
         }
       }
     }
   };
 
-  // Chinese pack: same structure, concise but non-empty (single-language render).
-  const ZH = {
-    chain: EN.chain,
-    plasma: EN.plasma,
-    fusion: EN.fusion,
-    validation: EN.validation
-  };
-
+  // ZH mirrors EN for now (single-language render still holds)
+  const ZH = { chain:EN.chain, plasma:EN.plasma, fusion:EN.fusion, validation:EN.validation };
   const CONTENT = (lang==="zh") ? ZH : EN;
 
-  // Guard fallback (never blank)
   const FALLBACK = {
     title:(lang==="zh")?"缺少内容":"Missing content",
     b1:{h:(lang==="zh")?"提示":"Notice",p:(lang==="zh")?"该视图内容尚未填充。":"This view is not populated yet.",u:["OK","OK","OK","OK"]},
@@ -1298,50 +597,65 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   };
 
   let activeKey=null;
+  let openIdx=1; // which category bubble is expanded (1..4)
+
+  function setOpen(idx){
+    openIdx=idx;
+    [c1,c2,c3,c4].forEach((el,i)=>el.classList.toggle("open",(i+1)===openIdx));
+  }
 
   function render(){
     persist(); setLinks(); setLensLabels();
     if(!activeKey) return;
-
     const view = ((((CONTENT[activeKey]||{})[time]||{})[style]) || FALLBACK);
+
     mTitle.textContent = view.title || FALLBACK.title;
 
-    fill(h1,p1,u1,view.b1||FALLBACK.b1);
-    fill(h2,p2,u2,view.b2||FALLBACK.b2);
-    fill(h3,p3,u3,view.b3||FALLBACK.b3);
-    fill(h4,p4,u4,view.b4||FALLBACK.b4);
+    fillBox(h1,p1,u1,m1,view.b1||FALLBACK.b1);
+    fillBox(h2,p2,u2,m2,view.b2||FALLBACK.b2);
+    fillBox(h3,p3,u3,m3,view.b3||FALLBACK.b3);
+    fillBox(h4,p4,u4,m4,view.b4||FALLBACK.b4);
+
+    // ensure open bubble is visible
+    setOpen(openIdx);
   }
 
-  function open(key){
+  function openModal(key){
     activeKey=key;
     bd.classList.add("show");
     modal.classList.add("show");
+    // default open bubble = 1 (Scientific) on open
+    openIdx=1;
     render();
   }
-  function close(){
+
+  function closeModal(){
     bd.classList.remove("show");
     modal.classList.remove("show");
     activeKey=null;
   }
 
-  // Inline-open export (kept)
-  window.__openEnergy=function(key){
-    dbg.textContent="ENERGY LIVE · vE-9005 · TAP: "+key.toUpperCase();
-    open(key);
-  };
+  window.__openEnergy=function(key){ openModal(key); };
 
-  // Lens events
+  // Lens buttons
   styleChip.addEventListener("click", ()=>{ style=(style==="formal")?"informal":"formal"; render(); });
   chipConcept.addEventListener("click", ()=>{ time="origin"; render(); });
   chipLive.addEventListener("click", ()=>{ time="now"; render(); });
   chipRoadmap.addEventListener("click", ()=>{ time="post"; render(); });
 
-  // Close
-  bd.addEventListener("click", close);
-  mClose.addEventListener("click", close);
-  document.getElementById("mReturn").addEventListener("click", close);
+  // Close buttons
+  bd.addEventListener("click", closeModal);
+  mClose.addEventListener("click", closeModal);
+  document.getElementById("mReturn").addEventListener("click", closeModal);
 
-  // Keyboard
+  // Category bubble clicks
+  function bindBubble(el,idx){
+    el.addEventListener("click", ()=>{ setOpen(idx); });
+    el.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); setOpen(idx);} });
+  }
+  bindBubble(c1,1); bindBubble(c2,2); bindBubble(c3,3); bindBubble(c4,4);
+
+  // Keyboard for diamonds
   [["dChain","chain"],["dPlasma","plasma"],["dFusion","fusion"],["dValidation","validation"]].forEach(pair=>{
     document.getElementById(pair[0]).addEventListener("keydown",(e)=>{
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.__openEnergy(pair[1]); }

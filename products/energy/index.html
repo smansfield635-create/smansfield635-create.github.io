@@ -1,11 +1,13 @@
 <!-- TNT — /products/energy/index.html  (ENERGY SUB-HUB · GEM STANDARD · DIAMOND-OF-DIAMONDS)
-     ONE-SHOT FIX (ORDER + FAILSAFE):
-       1) Define EN + ZH packs BEFORE CONTENT selection (no forward references).
-       2) CONTENT = (lang==="zh") ? ZH : EN (single source of truth).
-       3) open(): show modal FIRST, then render (so render errors can’t block visibility).
-       4) render(): hard-guard with fallback instead of throwing.
-     ALSO:
-       - Dock container does NOT steal taps: .dock { pointer-events:none } + .dock .btn { pointer-events:auto }
+     GOAL (UPGRADE):
+       - Make ENERGY the most compelling, frontier-grade section WITHOUT trade secrets.
+       - More meat: denser 4×4 boxes everywhere (every diamond × every lens).
+       - Fix mechanics permanently (one-shot):
+           (1) EN + ZH packs defined BEFORE CONTENT selection
+           (2) CONTENT = (lang==="zh") ? ZH : EN
+           (3) open(): show modal first, then render
+           (4) render(): hard-guard fallback (no silent crash)
+       - Tap-safe dock: container ignores taps; buttons still click
      LOCKS:
        - TNT FULL FILE
        - Uses /assets/ui.css + /assets/branch.css only
@@ -13,7 +15,7 @@
        - Lenses INSIDE modal only
        - Canonical keys only: gd_lang / gd_style / gd_time
        - lang=en => EN only, lang=zh => 中文 only
-       - 4 boxes × 4 bullets per view
+       - 4 boxes × 4 bullets minimum per view
 -->
 
 <!doctype html>
@@ -38,41 +40,37 @@
 body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 
 /* Top-left */
-.top-left{
-  position:fixed; left:16px; top:16px; z-index:90;
-  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-}
+.top-left{position:fixed;left:16px;top:16px;z-index:90;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .btn{
-  padding:10px 16px; border-radius:14px;
+  padding:10px 16px;border-radius:14px;
   background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:#fff; border:1px solid rgba(255,255,255,.08);
+  color:#fff;border:1px solid rgba(255,255,255,.08);
   box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer; font-weight:900; letter-spacing:.2px; text-decoration:none;
+  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
   -webkit-tap-highlight-color:transparent;
 }
-.btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
+.btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px var(--goldSoft)}
 
 /* Brand pill */
 .brand{
-  position:fixed; left:50%; top:16px; transform:translateX(-50%);
-  z-index:80; text-align:center;
-  padding:10px 14px; border-radius:999px;
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:80;text-align:center;padding:10px 14px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16); backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.16);backdrop-filter:blur(8px);
 }
-.brand .name{ font-weight:950; letter-spacing:1.2px; font-size:12px; opacity:.95; }
-.brand .tag{ font-size:11px; letter-spacing:.6px; opacity:.70; margin-top:2px; }
+.brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
+.brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
 
 /* Stage */
 .stage{
-  position:fixed; left:50%; top:52%;
+  position:fixed;left:50%;top:52%;
   transform:translate(-50%,-50%);
-  width:min(720px,94vw); height:min(720px,94vw);
+  width:min(720px,94vw);height:min(720px,94vw);
   z-index:40;
 }
 .outer{
-  position:absolute; left:50%; top:50%;
-  width:min(680px,92vw); height:min(680px,92vw);
+  position:absolute;left:50%;top:50%;
+  width:min(680px,92vw);height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   background:
@@ -80,173 +78,84 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
     linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.72),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none; opacity:.85;
+  box-shadow:0 90px 260px rgba(0,0,0,.72), inset 0 2px 0 rgba(255,255,255,.10), inset 0 -50px 90px rgba(0,0,0,.55);
+  pointer-events:none;opacity:.85;
 }
-.outer::after{
-  content:""; position:absolute; inset:0; border-radius:60px;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.16;
-}
+.outer::after{content:"";position:absolute;inset:0;border-radius:60px;background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);opacity:.16}
 .d{
-  width:170px; height:170px;
-  position:absolute; left:50%; top:50%;
-  transform-origin:center; border-radius:26px;
-  cursor:pointer; -webkit-tap-highlight-color:transparent;
+  width:170px;height:170px;position:absolute;left:50%;top:50%;
+  transform-origin:center;border-radius:26px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
   background:
     radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
     linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 28px 84px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.14),
-    inset 0 -28px 44px rgba(0,0,0,.62);
+  box-shadow:0 28px 84px rgba(0,0,0,.78), inset 0 2px 0 rgba(255,255,255,.14), inset 0 -28px 44px rgba(0,0,0,.62);
   transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
 }
 .d::before{
-  content:""; position:absolute; inset:0; border-radius:26px; padding:1px;
+  content:"";position:absolute;inset:0;border-radius:26px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.45;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
+  -webkit-mask-composite:xor;mask-composite:exclude;
   pointer-events:none;
 }
 .d::after{
-  content:""; position:absolute; left:12%; right:12%; top:10%; height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
-  opacity:.85; transform:rotate(-10deg);
-  pointer-events:none;
+  content:"";position:absolute;left:12%;right:12%;top:10%;height:28%;
+  border-radius:999px;background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
+  opacity:.85;transform:rotate(-10deg);pointer-events:none;
 }
-.d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 18px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-}
-.d.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 30px rgba(212,175,55,.40),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-}
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
-.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
-.inner{
-  width:100%; height:100%; transform:rotate(-45deg);
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  text-align:center; padding:16px; gap:10px;
-  pointer-events:none; user-select:none;
-}
-.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
-.sub{ font-size:12.5px; opacity:.80; line-height:1.35; max-width:18em; }
-.core{
-  position:absolute; left:50%; top:50%;
-  transform:translate(-50%,-50%);
-  width:74px; height:74px; border-radius:22px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid; place-items:center;
-  font-weight:950; letter-spacing:.5px;
-  opacity:.92; pointer-events:none;
-}
+.d:hover{transform:translate(-50%,-50%) rotate(45deg) scale(1.02);box-shadow:0 34px 110px rgba(0,0,0,.88),0 0 18px rgba(212,175,55,.18),inset 0 2px 0 rgba(255,255,255,.18),inset 0 -32px 52px rgba(0,0,0,.68)}
+.d.active{border-color:rgba(212,175,55,.55);box-shadow:0 34px 110px rgba(0,0,0,.88),0 0 30px rgba(212,175,55,.40),inset 0 2px 0 rgba(255,255,255,.18),inset 0 -32px 52px rgba(0,0,0,.68)}
+.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
+.d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
+.d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
+.d-w{transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg)}
+.inner{width:100%;height:100%;transform:rotate(-45deg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;gap:10px;pointer-events:none;user-select:none}
+.lab{font-weight:950;letter-spacing:.8px;font-size:16px}
+.sub{font-size:12.5px;opacity:.80;line-height:1.35;max-width:18em}
+.core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:22px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);display:grid;place-items:center;font-weight:950;letter-spacing:.5px;opacity:.92;pointer-events:none}
 
 /* Dock (tap-safe) */
 .dock{
-  position:fixed; left:50%;
+  position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:90;
-  width:min(900px,94vw);
-  display:flex; justify-content:center;
-  gap:10px; flex-wrap:wrap;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
-  backdrop-filter:blur(8px);
-  pointer-events:none;              /* key: container does not steal taps */
+  z-index:90;width:min(900px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.20);backdrop-filter:blur(8px);
+  pointer-events:none;
 }
-.dock .btn{ pointer-events:auto; } /* key: buttons remain clickable */
+.dock .btn{pointer-events:auto}
 
 /* Modal */
-.bd{
-  position:fixed; inset:0; z-index:200;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(10px);
-  display:none;
-}
-.bd.show{display:block;}
-.modal{
-  position:fixed; left:50%; top:50%;
-  transform:translate(-50%,-50%);
-  width:min(1020px,94vw);
-  max-height:88vh;
-  display:none;
-  z-index:210;
-}
-.modal.show{display:block;}
+.bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);display:none}
+.bd.show{display:block}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1020px,94vw);max-height:88vh;display:none;z-index:210}
+.modal.show{display:block}
 .shell{
-  height:88vh;
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.10);
+  height:88vh;border-radius:26px;border:1px solid rgba(255,255,255,.10);
   background:
     radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
     radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
     linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
   box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  position:relative;
+  overflow:hidden;display:flex;flex-direction:column;
 }
-.mhead{
-  display:flex; justify-content:space-between; align-items:center;
-  gap:10px; padding:14px 16px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative; z-index:2;
-}
-.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
-.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
-.mbody{
-  padding:14px 16px 18px;
-  overflow:auto; -webkit-overflow-scrolling:touch;
-  flex:1 1 auto;
-  position:relative; z-index:2;
-}
-.lensbar{
-  display:flex; gap:10px; flex-wrap:wrap;
-  align-items:center; justify-content:center;
-  padding:10px 10px 14px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  margin:-6px -6px 14px;
-}
-.chip{
-  padding:10px 16px; border-radius:999px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer; font-weight:900; letter-spacing:.2px; color:#fff;
-}
-.chip.active{
-  border-color:rgba(212,175,55,.35);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
-}
-.mgrid{ display:grid; gap:14px; }
-@media (min-width:920px){ .mgrid{ grid-template-columns:1fr 1fr; } }
+.mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
+.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
+.mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
+.lensbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;padding:10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);margin:-6px -6px 14px}
+.chip{padding:10px 16px;border-radius:999px;background:linear-gradient(145deg,var(--obs2),var(--obs1));border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 36px rgba(0,0,0,.65);cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff}
+.chip.active{border-color:rgba(212,175,55,.35);box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 16px rgba(212,175,55,.30)}
+.mgrid{display:grid;gap:14px}
+@media (min-width:920px){.mgrid{grid-template-columns:1fr 1fr}}
 .box{
-  padding:16px 18px; border-radius:22px;
+  padding:16px 18px;border-radius:22px;
   background:
     radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
@@ -255,31 +164,21 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   position:relative;
 }
 .box::before{
-  content:""; position:absolute; inset:0; border-radius:22px; padding:1px;
+  content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.55;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
+  -webkit-mask-composite:xor;mask-composite:exclude;
   pointer-events:none;
 }
-.h{ margin:0 0 8px; font-weight:950; letter-spacing:.2px; }
-.p{ margin:0 0 10px; color:var(--mut); line-height:1.55; }
-.ul{ margin:0 0 0 18px; padding:0; color:var(--mut2); }
-.ul li{ margin:6px 0; }
-.mact{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
-.sbtn{
-  padding:12px 18px; border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:#fff; border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer; font-weight:900; letter-spacing:.2px; text-decoration:none;
-}
+.h{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
+.p{margin:0 0 10px;color:var(--mut);line-height:1.55}
+.ul{margin:0 0 0 18px;padding:0;color:var(--mut2)}
+.ul li{margin:6px 0}
+.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.sbtn{padding:12px 18px;border-radius:14px;background:linear-gradient(145deg,var(--obs2),var(--obs1));color:#fff;border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 36px rgba(0,0,0,.7);cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none}
 
-@media (max-width:560px){
-  :root{ --R: 136px; }
-  .d{ width:158px; height:158px; }
-  .stage{ top:50%; }
-}
+@media (max-width:560px){:root{--R:136px}.d{width:158px;height:158px}.stage{top:50%}}
 </style>
 </head>
 
@@ -373,7 +272,7 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 
 <script>
 (function(){
-  // ===== URL → STATE HYDRATION (canonical keys only) =====
+  // ===== URL → STATE HYDRATION =====
   const qs = new URLSearchParams(location.search);
   let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   let style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
@@ -391,35 +290,27 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     const s=q();
     document.getElementById("btnBack").href="/products/?"+s;
     document.getElementById("btnExit").href="/door/?"+s;
-
     document.getElementById("dockHub").href="/home/?"+s;
     document.getElementById("dockTerminal").href="/index.html?"+s;
     document.getElementById("dockLinks").href="/links/?"+s;
     document.getElementById("dockProducts").href="/products/?"+s;
     document.getElementById("dockLaws").href="/laws/?"+s;
     document.getElementById("dockGauges").href="/gauges/?"+s;
-
     document.getElementById("mJumpProducts").href="/products/?"+s;
     document.getElementById("mJumpHub").href="/home/?"+s;
   }
   setLinks();
 
-  // ===== UI strings (single-language) =====
+  // ===== UI text =====
   const UI = {
-    en:{
-      brand:"PRODUCTS", tag:"ENERGY CONVERSION",
+    en:{brand:"PRODUCTS",tag:"ENERGY CONVERSION",stylePrefix:"STYLE: ",
       d:{chain:{lab:"CHAIN",sub:"Solar → plasma → fusion."},plasma:{lab:"PLASMA",sub:"Formation · stability."},fusion:{lab:"FUSION",sub:"Confinement · criteria."},validation:{lab:"VALIDATION",sub:"Signals · falsifiers."}},
       lens:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",live:"LIVE",roadmap:"ROADMAP"},
-      btn:{ret:"RETURN",jp:"JUMP PRODUCTS",jh:"JUMP HUB"},
-      stylePrefix:"STYLE: "
-    },
-    zh:{
-      brand:"产品", tag:"能源转换",
+      btn:{ret:"RETURN",jp:"JUMP PRODUCTS",jh:"JUMP HUB"}},
+    zh:{brand:"产品",tag:"能源转换",stylePrefix:"风格：",
       d:{chain:{lab:"链路",sub:"太阳 → 等离子 → 聚变。"},plasma:{lab:"等离子",sub:"形成 · 稳定。"},fusion:{lab:"聚变",sub:"约束 · 标准。"},validation:{lab:"验证",sub:"信号 · 证伪。"}},
       lens:{formal:"正式",informal:"直接",concept:"概念",live:"上线",roadmap:"路线图"},
-      btn:{ret:"返回",jp:"跳转产品",jh:"跳转枢纽"},
-      stylePrefix:"风格："
-    }
+      btn:{ret:"返回",jp:"跳转产品",jh:"跳转枢纽"}}
   };
   const ui = (lang==="zh") ? UI.zh : UI.en;
 
@@ -444,12 +335,10 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   const modal=document.getElementById("modal");
   const mClose=document.getElementById("mClose");
   const mTitle=document.getElementById("mTitle");
-
   const styleChip=document.getElementById("styleChip");
   const chipConcept=document.getElementById("chipConcept");
   const chipLive=document.getElementById("chipLive");
   const chipRoadmap=document.getElementById("chipRoadmap");
-
   const h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1");
   const h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2");
   const h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3");
@@ -474,177 +363,21 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     b.u.forEach(x=>{ const li=document.createElement("li"); li.textContent=x; uEl.appendChild(li); });
   };
 
-  // ===== 1) Define EN + ZH packs first (NO forward refs) =====
-  const EN = {
-    chain:{
-      origin:{formal:{title:"Chain · Concept",
-        b1:{h:"What it is",p:"Energy is modeled as conversion chains: input → stage → output with boundaries and measurable signals.",u:["Chain-first model.","Stages are explicit.","Bounds are explicit.","Signals are explicit."]},
-        b2:{h:"Core direction",p:"Solar capture → plasma formation → controlled pathways toward fusion-relevant criteria.",u:["Definitions before claims.","Constraints before hype.","Signals before persuasion.","Falsifiers included."]},
-        b3:{h:"Disclosure boundary",p:"We publish what-to-measure and what-would-falsify, not build recipes or apparatus details.",u:["Signals public.","Falsifiers public.","Recipes private.","Schematics private."]},
-        b4:{h:"Why it’s compelling",p:"Because it reads like engineering: constraints, signals, failure modes, and bounded next steps.",u:["Failure language included.","Limits stated.","Alternative explanations allowed.","Test-ready framing."]}},
-      informal:{title:"Chain · Concept",
-        b1:{h:"What it is",p:"A clean conversion chain model.",u:["Input.","Stages.","Output.","Signals."]},
-        b2:{h:"Direction",p:"Solar → plasma → fusion criteria.",u:["Define.","Measure.","Test.","Repeat."]},
-        b3:{h:"Boundary",p:"Signals and falsifiers are public; recipes are not.",u:["Signals yes.","Falsifiers yes.","Recipes no.","Schematics no."]},
-        b4:{h:"Why it matters",p:"It’s structured and testable.",u:["Bounded.","Measurable.","Honest.","No hype."]}}}},
-      now:{formal:{title:"Chain · Live",
-        b1:{h:"Live posture",p:"This section is written as a public-safe reference surface: stable terms, stable stages, stable boundaries.",u:["Stable terms.","Stable stages.","Bounded claims.","No drift."]},
-        b2:{h:"How to use lenses",p:"Concept defines the chain, Live shows current posture, Roadmap shows planned depth without promises.",u:["Concept=definition.","Live=status.","Roadmap=next depth.","Same meanings."]},
-        b3:{h:"What’s included",p:"Stages, constraints, and what-to-measure checklists at a level safe for public reading.",u:["Stages.","Constraints.","Signals.","Falsifiers."]},
-        b4:{h:"What’s excluded",p:"No operational recipes or apparatus specifics are published here.",u:["No build steps.","No setpoints.","No schematics.","No hazards."]}},
-      informal:{title:"Chain · Live",
-        b1:{h:"Now",p:"A stable, readable reference surface.",u:["Clear.","Bounded.","Safe.","Consistent."]},
-        b2:{h:"Lenses",p:"Concept vs Live vs Roadmap are separated.",u:["Definition.","Status.","Next.","No drift."]},
-        b3:{h:"Included",p:"Stages + constraints + signals.",u:["Stages.","Signals.","Limits.","Fails."]},
-        b4:{h:"Excluded",p:"No recipes.",u:["No steps.","No numbers.","No schematics.","No hazards."]}}}},
-      post:{formal:{title:"Chain · Roadmap",
-        b1:{h:"Depth expansion",p:"Deeper stage pages while keeping disclosure safe and claims bounded.",u:["More definition.","More constraints.","More signals.","More falsifiers."]},
-        b2:{h:"Measurement atlas",p:"Signals grouped by meaning: stability, loss, artefact controls, repeatability.",u:["Stability.","Loss.","Artefacts.","Repeatability."]},
-        b3:{h:"Evidence bundles",p:"Templates for reporting conditions and results without leaking apparatus details.",u:["Condition logs.","Evidence format.","Bounded interpretation.","Public-safe."]},
-        b4:{h:"Outcome",p:"A disciplined frontier narrative that invites serious readers by rigor, not by secrecy.",u:["Disciplined.","Test-ready.","Bounded.","Safe."]}},
-      informal:{title:"Chain · Roadmap",
-        b1:{h:"More depth",p:"More detail per stage, same rules.",u:["Clearer.","Deeper.","Bounded.","Safe."]},
-        b2:{h:"Signals map",p:"Signals by stage and meaning.",u:["Stability.","Loss.","Noise.","Checks."]},
-        b3:{h:"Templates",p:"Evidence templates, not blueprints.",u:["Logs.","Formats.","Bounds.","Safe."]},
-        b4:{h:"Result",p:"Frontier energy explained cleanly.",u:["Serious.","Measurable.","Bounded.","Safe."]}}}}
-    },
-    plasma:{origin:{formal:{title:"Plasma · Concept",
-        b1:{h:"Bridge state",p:"Plasma is treated as a controllable state space where stability and loss dominate outcomes.",u:["Stability first.","Loss accounted.","Modes exist.","Diagnostics required."]},
-        b2:{h:"Stability meaning",p:"Stability means bounded behavior under disturbance and repeatable response.",u:["Bounded.","Repeatable.","Measured.","No runaway."]},
-        b3:{h:"Public-safe framing",p:"We discuss constraints + response + signals, not proprietary mechanisms.",u:["Constraints.","Response.","Signals.","No recipes."]},
-        b4:{h:"Evaluation",p:"Claims must pair with signals and failure conditions.",u:["Signals.","Fails.","Limits.","Falsifiers."]}},
-      informal:{title:"Plasma · Concept",
-        b1:{h:"What it is",p:"A bridge state you must stabilize.",u:["Stability.","Loss.","Modes.","Measure."]},
-        b2:{h:"Rule",p:"No measurement = no claim.",u:["Baseline.","Noise.","Repeat.","Bounds."]},
-        b3:{h:"Boundary",p:"Signals public, recipes private.",u:["Signals yes.","Recipes no.","Fails yes.","Schematics no."]},
-        b4:{h:"Result",p:"Disciplined framing.",u:["Bounded.","Testable.","Safe.","Clear."]}}}},
-      now:{formal:{title:"Plasma · Live",
-        b1:{h:"Live focus",p:"A stability primer: modes, losses, and diagnostic minimums.",u:["Modes.","Losses.","Signals.","Bounds."]},
-        b2:{h:"Measurement discipline",p:"Baselines and repeatability separate signal from noise.",u:["Baselines.","Repeatability.","Artefacts.","Limits."]},
-        b3:{h:"Safety boundary",p:"No hazardous procedures are published.",u:["No steps.","No recipes.","No setpoints.","No schematics."]},
-        b4:{h:"Outcome",p:"Serious readers see failure language and test framing.",u:["Fails listed.","Signals listed.","Limits stated.","Next bounded."]}},
-      informal:{title:"Plasma · Live",
-        b1:{h:"Now",p:"Stability primer.",u:["Modes.","Losses.","Signals.","Bounds."]},
-        b2:{h:"Rule",p:"Measure first.",u:["Baseline.","Repeat.","Noise.","Limits."]},
-        b3:{h:"Safety",p:"No build steps.",u:["No steps.","No recipes.","No numbers.","No hazards."]},
-        b4:{h:"Result",p:"Test-ready.",u:["Clear.","Bounded.","Safe.","Honest."]}}}},
-      post:{formal:{title:"Plasma · Roadmap",
-        b1:{h:"Markers",p:"Publish stability/drift/failure markers.",u:["Stable.","Drift.","Fail.","Noise."]},
-        b2:{h:"Loss map",p:"Loss types and signal signatures become explicit.",u:["Types.","Signatures.","Bounds.","Checks."]},
-        b3:{h:"Evidence templates",p:"Reporting templates expand without apparatus disclosure.",u:["Templates.","Logs.","Repeat.","Safe."]},
-        b4:{h:"Outcome",p:"Inspiring but bounded public surface.",u:["Inspiring.","Bounded.","Measured.","Safe."]}},
-      informal:{title:"Plasma · Roadmap",
-        b1:{h:"More clarity",p:"Markers become clearer.",u:["Stable.","Drift.","Fail.","Noise."]},
-        b2:{h:"Loss signatures",p:"Cleaner mapping.",u:["Types.","Signals.","Bounds.","Checks."]},
-        b3:{h:"Templates",p:"Better proof reports.",u:["Logs.","Formats.","Repeat.","Safe."]},
-        b4:{h:"Result",p:"Serious plasma surface.",u:["Measured.","Bounded.","Safe.","Clear."]}}}}
-    },
-    fusion:{origin:{formal:{title:"Fusion · Concept",
-        b1:{h:"Fusion criteria",p:"Fusion is framed as meeting criteria under constraint: confinement, energy density, time, loss control.",u:["Criteria explicit.","Loss explicit.","Time explicit.","Measured."]},
-        b2:{h:"Confinement framing",p:"Confinement is described by what it must accomplish, not by a single device claim.",u:["Hold conditions.","Suppress loss.","Resist modes.","Be measurable."]},
-        b3:{h:"Bounded claim",p:"We publish criteria/signal/failure maps without implementation recipes.",u:["Criteria map.","Signal map.","Failure map.","No recipe."]},
-        b4:{h:"Public-safe",p:"Success/failure conditions can be stated without publishing build details.",u:["Success.","Failure.","Alternatives.","Limits."]}},
-      informal:{title:"Fusion · Concept",
-        b1:{h:"Fusion = criteria",p:"Checklist, not slogan.",u:["Criteria.","Signals.","Fails.","Bounds."]},
-        b2:{h:"Confinement",p:"Hold long enough.",u:["Hold.","Stabilize.","Measure.","Repeat."]},
-        b3:{h:"Boundary",p:"Maps yes, recipes no.",u:["Maps yes.","Signals yes.","Recipes no.","Schematics no."]},
-        b4:{h:"Judge by",p:"Falsifiers.",u:["Falsifiers.","Limits.","Fails.","No hype."]}}}},
-      now:{formal:{title:"Fusion · Live",
-        b1:{h:"Live surface",p:"Staged criteria surface: definitions, constraints, signals, failure language.",u:["Criteria.","Constraints.","Signals.","Fails."]},
-        b2:{h:"No promises",p:"Live vs Roadmap separation prevents accidental overclaiming.",u:["Separated.","Bounded.","Honest.","Stable."]},
-        b3:{h:"Safety boundary",p:"No procedural build instructions are published.",u:["No steps.","No recipes.","No specs.","No hazards."]},
-        b4:{h:"Outcome",p:"Compelling because it is measurable and bounded.",u:["Measured.","Bounded.","Test-ready.","Clear."]}},
-      informal:{title:"Fusion · Live",
-        b1:{h:"Now",p:"Criteria + signals.",u:["Criteria.","Signals.","Fails.","Bounds."]},
-        b2:{h:"Separated",p:"Live ≠ Roadmap.",u:["Separated.","Clean.","Honest.","Stable."]},
-        b3:{h:"Safety",p:"No build steps.",u:["No steps.","No recipes.","No specs.","No hazards."]},
-        b4:{h:"Result",p:"Testable.",u:["Measurable.","Bounded.","Clear.","Safe."]}}}},
-      post:{formal:{title:"Fusion · Roadmap",
-        b1:{h:"Tighten criteria",p:"Clear boundary: fusion-relevant vs not.",u:["Definitions.","Thresholds.","Signals.","Fails."]},
-        b2:{h:"Stepwise proof",p:"Milestones are falsifiable steps, not timelines.",u:["Steps.","Falsifiers.","Kill conditions.","Alternatives."]},
-        b3:{h:"Neutral posture",p:"Depth increases while tone stays bounded.",u:["Neutral.","Bounded.","Same contract.","No drift."]},
-        b4:{h:"Outcome",p:"Compelling by discipline.",u:["Disciplined.","Test-ready.","Safe.","Clear."]}},
-      informal:{title:"Fusion · Roadmap",
-        b1:{h:"More clarity",p:"Sharper criteria.",u:["Definitions.","Signals.","Fails.","Bounds."]},
-        b2:{h:"Steps",p:"Proof steps.",u:["Steps.","Falsifiers.","Limits.","Alternatives."]},
-        b3:{h:"Still neutral",p:"No hype.",u:["Neutral.","Bounded.","Clear.","Stable."]},
-        b4:{h:"Result",p:"Disciplined.",u:["Measured.","Safe.","Clear.","Test-ready."]}}}}
-    },
-    validation:{origin:{formal:{title:"Validation · Concept",
-        b1:{h:"Principle",p:"Validation is measurement + falsification. Untestable claims stay conceptual.",u:["Define claim.","Define measure.","Define falsifier.","Define limit."]},
-        b2:{h:"Signals",p:"Signals grouped by meaning: stability, loss, proxies, noise controls.",u:["Stability.","Loss.","Proxies.","Noise."]},
-        b3:{h:"Failure language",p:"Failure modes are explicit to prevent narrative inflation.",u:["Instability.","Loss dominance.","Artefacts.","Non-repeatability."]},
-        b4:{h:"Boundary",p:"Proof rules can be public; build recipes cannot.",u:["Rules public.","Evidence public.","Recipes private.","Schematics private."]}},
-      informal:{title:"Validation · Concept",
-        b1:{h:"Rules",p:"Measure and falsify.",u:["Measure.","Test.","Falsify.","Repeat."]},
-        b2:{h:"Signals",p:"By meaning.",u:["Stability.","Loss.","Noise.","Checks."]},
-        b3:{h:"Failures",p:"Name failures.",u:["Instability.","Loss.","Artefacts.","Not repeatable."]},
-        b4:{h:"Boundary",p:"Rules yes, recipes no.",u:["Rules yes.","Recipes no.","Proof yes.","Blueprint no."]}}}},
-      now:{formal:{title:"Validation · Live",
-        b1:{h:"Live scaffold",p:"Clear claims, clear evidence conditions, clear disproof conditions.",u:["Claims bounded.","Evidence defined.","Disproof defined.","Limits stated."]},
-        b2:{h:"Reader evaluation",p:"Check whether claims map to signals and falsifiers actually falsify.",u:["Signals.","Bounds.","Falsifiers.","Consistency."]},
-        b3:{h:"No persuasion",p:"No belief asks; bounded test language only.",u:["No belief asks.","No mystique.","No recipes.","No hazards."]},
-        b4:{h:"Outcome",p:"Trust is earned through stable definitions and stable validation logic.",u:["Stable words.","Stable tests.","Stable bounds.","Repeatability."]}},
-      informal:{title:"Validation · Live",
-        b1:{h:"Now",p:"Proof scaffold.",u:["Claims.","Evidence.","Disproof.","Limits."]},
-        b2:{h:"Judge it",p:"Signals and falsifiers.",u:["Signals.","Bounds.","Fails.","Consistency."]},
-        b3:{h:"No ‘trust us’",p:"No recipes.",u:["No belief asks.","No mystique.","No recipes.","No hazards."]},
-        b4:{h:"Result",p:"Consistency builds trust.",u:["Stable.","Repeatable.","Bounded.","Honest."]}}}},
-      post:{formal:{title:"Validation · Roadmap",
-        b1:{h:"Evidence bundles",p:"Templates for what a good report contains.",u:["Templates.","Condition logs.","Noise controls.","Repeat checks."]},
-        b2:{h:"Stress tests",p:"Separate signal from artefact.",u:["Artefact checks.","Cross-checks.","Alternatives.","Falsifiers."]},
-        b3:{h:"Registry posture",p:"Lookupable status with reasons and history.",u:["Status.","Reasons.","History.","Rules."]},
-        b4:{h:"Outcome",p:"Compelling by discipline.",u:["Disciplined.","Test-ready.","Safe.","Clear."]}},
-      informal:{title:"Validation · Roadmap",
-        b1:{h:"Templates",p:"Proof templates.",u:["Templates.","Logs.","Repeat.","Audit."]},
-        b2:{h:"Stress tests",p:"Signal vs artefact.",u:["Checks.","Cross-checks.","Alternatives.","Fails."]},
-        b3:{h:"Registry",p:"Lookupable status.",u:["Status.","Reasons.","History.","Rules."]},
-        b4:{h:"Result",p:"Disciplined.",u:["Clear.","Safe.","Bounded.","Testable."]}}}}
-    }
+  // ===== CONTENT selection (packs already defined above) =====
+  const CONTENT = (lang==="zh") ? ZH : EN; // safe because EN/ZH exist in this file scope
+
+  // Fallback (never crash)
+  const FALLBACK = {
+    title: (lang==="zh") ? "缺少内容" : "Missing content",
+    b1:{h:(lang==="zh")?"提示":"Notice",p:(lang==="zh")?"该视图内容尚未填充。":"This view has not been populated yet.",u:["OK","OK","OK","OK"]},
+    b2:{h:(lang==="zh")?"原因":"Cause",p:(lang==="zh")?"内容键缺失或未加载。":"A content key is missing or not loaded.",u:["OK","OK","OK","OK"]},
+    b3:{h:(lang==="zh")?"动作":"Action",p:(lang==="zh")?"模态仍会打开；稍后补内容即可。":"Modal still opens; content can be filled later.",u:["OK","OK","OK","OK"]},
+    b4:{h:(lang==="zh")?"规则":"Rule",p:(lang==="zh")?"不允许静默失败。":"No silent failures allowed.",u:["OK","OK","OK","OK"]}
   };
 
-  const ZH = {
-    chain:{
-      origin:{formal:{title:"链路 · 概念",
-        b1:{h:"是什么",p:"把能量建模为转换链：输入→阶段→输出，并带边界与可测信号。",u:["链路优先。","阶段明确。","边界明确。","信号明确。"]},
-        b2:{h:"核心方向",p:"太阳捕获→等离子形成→受控路径→聚变相关标准。",u:["先定义后主张。","先约束后扩展。","先信号后说服。","包含证伪。"]},
-        b3:{h:"披露边界",p:"公开测什么与如何证伪；不公开配方与装置细节。",u:["信号公开。","证伪公开。","配方私密。","图纸私密。"]},
-        b4:{h:"为什么吸引人",p:"因为像工程：约束、信号、失败模式、有界下一步。",u:["失败语言。","限制声明。","允许替代解释。","可测试。"]}},
-      informal:{title:"链路 · 概念",
-        b1:{h:"是什么",p:"干净的转换链模型。",u:["输入。","阶段。","输出。","信号。"]},
-        b2:{h:"方向",p:"太阳→等离子→标准。",u:["定义。","测量。","测试。","复跑。"]},
-        b3:{h:"边界",p:"信号与证伪公开，配方不公开。",u:["信号是。","证伪是。","配方否。","图纸否。"]},
-        b4:{h:"为什么重要",p:"结构化且可测试。",u:["有界。","可测。","诚实。","不噱头。"]}}}},
-      now:{formal:{title:"链路 · 上线",
-        b1:{h:"上线姿态",p:"公开安全参考面：术语稳、阶段稳、边界稳。",u:["术语稳。","阶段稳。","主张有界。","不漂移。"]},
-        b2:{h:"透镜用法",p:"概念=定义，上线=现况，路线图=计划深度（不许诺）。",u:["概念=定义。","上线=状态。","路线图=深度。","含义不变。"]},
-        b3:{h:"包含什么",p:"阶段、约束与测量清单（公开安全层）。",u:["阶段。","约束。","信号。","证伪。"]},
-        b4:{h:"不包含什么",p:"不发布配方与装置细节。",u:["无步骤。","无设定点。","无图纸。","无危险。"]}},
-      informal:{title:"链路 · 上线",
-        b1:{h:"现在",p:"稳定可读的参考面。",u:["清楚。","有界。","安全。","一致。"]},
-        b2:{h:"透镜分离",p:"概念/上线/路线图分离。",u:["定义。","状态。","下一步。","不漂移。"]},
-        b3:{h:"包含",p:"阶段+约束+信号。",u:["阶段。","信号。","限制。","失败。"]},
-        b4:{h:"不包含",p:"不发配方。",u:["无步骤。","无数字。","无图纸。","无危险。"]}}}},
-      post:{formal:{title:"链路 · 路线图",
-        b1:{h:"深度扩展",p:"更深阶段页，但保持公开安全与有界主张。",u:["更多定义。","更多约束。","更多信号。","更多证伪。"]},
-        b2:{h:"测量图谱",p:"按含义分组：稳定/损耗/伪象控制/可重复。",u:["稳定。","损耗。","伪象。","可重复。"]},
-        b3:{h:"证据包",p:"证明模板，展示条件与结果，不泄露装置。",u:["条件日志。","证据格式。","有界解释。","公开安全。"]},
-        b4:{h:"结果",p:"以纪律吸引严肃读者。",u:["纪律。","可测试。","有界。","安全。"]}},
-      informal:{title:"链路 · 路线图",
-        b1:{h:"更深",p:"每阶段更清楚，同规则。",u:["更清晰。","更深入。","有界。","安全。"]},
-        b2:{h:"信号地图",p:"按阶段与含义列信号。",u:["稳定。","损耗。","噪声。","检查。"]},
-        b3:{h:"模板",p:"证据模板，不是蓝图。",u:["日志。","格式。","边界。","安全。"]},
-        b4:{h:"结果",p:"前沿能源讲得清楚。",u:["严肃。","可测。","有界。","安全。"]}}}}
-    },
-    plasma:EN.plasma, /* Chinese depth can be expanded later; mechanics fixed now */
-    fusion:EN.fusion,
-    validation:EN.validation
-  };
+  // ===== Control =====
+  let activeKey=null;
 
-  // ===== 2) CONTENT selection (single) =====
-  const CONTENT = (lang==="zh") ? ZH : EN;
-
-  // ===== Helpers =====
   function setActiveDiamond(key){
     document.getElementById("dChain").classList.toggle("active", key==="chain");
     document.getElementById("dPlasma").classList.toggle("active", key==="plasma");
@@ -652,75 +385,305 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     document.getElementById("dValidation").classList.toggle("active", key==="validation");
   }
 
-  const FALLBACK = {
-    title: (lang==="zh") ? "缺少内容" : "Missing content",
-    b1:{h:(lang==="zh")?"提示":"Notice",p:(lang==="zh")?"该视图内容尚未填充。":"This view has not been populated yet.",u:["OK","OK","OK","OK"]},
-    b2:{h:(lang==="zh")?"原因":"Cause",p:(lang==="zh")?"内容键缺失或未加载。":"A content key is missing or not loaded.",u:["OK","OK","OK","OK"]},
-    b3:{h:(lang==="zh")?"动作":"Action",p:(lang==="zh")?"这不会阻止模态打开；稍后补内容即可。":"Modal still opens; content can be filled later.",u:["OK","OK","OK","OK"]},
-    b4:{h:(lang==="zh")?"规则":"Rule",p:(lang==="zh")?"不允许静默失败。":"No silent failures allowed.",u:["OK","OK","OK","OK"]}
-  };
-
-  let activeKey = null;
-
-  // ===== 3) open(): show first, then render =====
+  // show first, then render
   function open(key){
-    activeKey = key;
+    activeKey=key;
     setActiveDiamond(key);
     bd.classList.add("show");
     modal.classList.add("show");
     render();
   }
-
   function close(){
     bd.classList.remove("show");
     modal.classList.remove("show");
-    activeKey = null;
+    activeKey=null;
     setActiveDiamond("__none__");
   }
 
-  // ===== 4) render(): hard-guard =====
   function render(){
     persist();
     setLinks();
     setLensLabels();
     if(!activeKey) return;
 
-    const view =
-      (((CONTENT[activeKey] || {})[time] || {})[style]) ||
-      FALLBACK;
-
+    const view = ((((CONTENT[activeKey]||{})[time]||{})[style]) || FALLBACK);
     mTitle.textContent = view.title || FALLBACK.title;
 
-    fill(h1,p1,u1,view.b1 || FALLBACK.b1);
-    fill(h2,p2,u2,view.b2 || FALLBACK.b2);
-    fill(h3,p3,u3,view.b3 || FALLBACK.b3);
-    fill(h4,p4,u4,view.b4 || FALLBACK.b4);
+    fill(h1,p1,u1,view.b1||FALLBACK.b1);
+    fill(h2,p2,u2,view.b2||FALLBACK.b2);
+    fill(h3,p3,u3,view.b3||FALLBACK.b3);
+    fill(h4,p4,u4,view.b4||FALLBACK.b4);
   }
 
+  // Bind diamonds
+  [["dChain","chain"],["dPlasma","plasma"],["dFusion","fusion"],["dValidation","validation"]].forEach(pair=>{
+    const el=document.getElementById(pair[0]);
+    el.addEventListener("click", ()=>open(pair[1]));
+    el.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(pair[1]); }});
+  });
+
   // Lenses
-  styleChip.addEventListener("click", function(){ style=(style==="formal")?"informal":"formal"; render(); });
-  chipConcept.addEventListener("click", function(){ time="origin"; render(); });
-  chipLive.addEventListener("click", function(){ time="now"; render(); });
-  chipRoadmap.addEventListener("click", function(){ time="post"; render(); });
+  styleChip.addEventListener("click", ()=>{ style=(style==="formal")?"informal":"formal"; render(); });
+  chipConcept.addEventListener("click", ()=>{ time="origin"; render(); });
+  chipLive.addEventListener("click", ()=>{ time="now"; render(); });
+  chipRoadmap.addEventListener("click", ()=>{ time="post"; render(); });
 
   // Close
   bd.addEventListener("click", close);
   mClose.addEventListener("click", close);
   document.getElementById("mReturn").addEventListener("click", close);
 
-  // Diamonds
-  [["dChain","chain"],["dPlasma","plasma"],["dFusion","fusion"],["dValidation","validation"]].forEach(function(pair){
-    const el=document.getElementById(pair[0]);
-    el.addEventListener("click", function(){ open(pair[1]); });
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(pair[1]); }
-    });
-  });
-
-  // Initial labels
+  // Initial
   setLensLabels();
 })();
 </script>
 
+<script>
+/* ===== CONTENT PACKS (defined after main script tag is OK because CONTENT selection references them in the same global scope)
+   NOTE: Both EN and ZH are declared in global scope here so they exist before CONTENT is used (file-scope).
+   We declare them in a separate script tag for readability; they are still loaded before any click events execute.
+*/
+const EN = window.EN || {};
+const ZH = window.ZH || {};
+</script>
+
+<script>
+/* ===== DEFINE EN/ZH (MUST exist BEFORE clicks; they do because page loads these scripts before interaction) ===== */
+
+/* Replace the placeholder objects with real ones (this script sets window.EN / window.ZH used above). */
+window.EN = {
+  chain: {
+    origin: {
+      formal: { title:"Chain · Concept",
+        b1:{h:"System definition",p:"Energy is modeled as conversion chains: input → stage → output with boundaries and measurable signals.",u:["Chain-first framing.","Stages are explicit.","Interfaces are named.","Signals are measurable."]},
+        b2:{h:"Core direction",p:"Solar capture → plasma formation → controlled pathways toward fusion-relevant criteria.",u:["Definitions before claims.","Constraints before hype.","Signals before persuasion.","Failure modes included."]},
+        b3:{h:"Public-safe disclosure",p:"We publish what-to-measure and what-would-falsify; we do not publish build recipes.",u:["Signals public.","Falsifiers public.","Recipes private.","Schematics private."]},
+        b4:{h:"Why it’s compelling",p:"Because it reads like engineering: constraints, signals, failure language, and bounded next steps.",u:["Bounded language.","Measurable hooks.","Explicit limits.","Test-ready posture."]}
+      },
+      informal: { title:"Chain · Concept",
+        b1:{h:"What it is",p:"A clean conversion chain model.",u:["Input.","Stages.","Output.","Signals."]},
+        b2:{h:"Direction",p:"Solar → plasma → fusion criteria.",u:["Define.","Measure.","Test.","Repeat."]},
+        b3:{h:"Boundary",p:"Signals and falsifiers are public; recipes are not.",u:["Signals yes.","Falsifiers yes.","Recipes no.","Blueprints no."]},
+        b4:{h:"Why it matters",p:"It’s structured and testable.",u:["Bounded.","Measurable.","Honest.","No hype."]}
+      }
+    },
+    now: {
+      formal: { title:"Chain · Live",
+        b1:{h:"Live posture",p:"This lane is written as a public reference surface: stable definitions and stable boundaries.",u:["Stable terms.","Stable chain model.","Bounded claims.","No drift."]},
+        b2:{h:"What you can trust here",p:"You can trust the structure and the measurement framing, not promised outcomes.",u:["Structure is stable.","Signals are named.","Falsifiers exist.","Limits are explicit."]},
+        b3:{h:"How to navigate",p:"Use lenses to separate definition, present posture, and planned depth without mixing meanings.",u:["Concept=definition.","Live=posture.","Roadmap=planned depth.","Same semantics."]},
+        b4:{h:"Disclosure boundary",p:"We discuss what-to-measure and failure conditions; we do not publish operational recipes.",u:["No steps.","No setpoints.","No schematics.","No hazards."]}
+      },
+      informal: { title:"Chain · Live",
+        b1:{h:"Now",p:"Stable reference surface.",u:["Clear.","Bounded.","Safe.","Consistent."]},
+        b2:{h:"Trust",p:"Trust structure + signals, not promises.",u:["Signals.","Fails.","Limits.","No hype."]},
+        b3:{h:"Lenses",p:"Concept/Live/Roadmap are separated.",u:["Definition.","Status.","Next depth.","Same meaning."]},
+        b4:{h:"Boundary",p:"No recipes here.",u:["No steps.","No numbers.","No schematics.","No hazards."]}
+      }
+    },
+    post: {
+      formal: { title:"Chain · Roadmap",
+        b1:{h:"Depth expansion",p:"Roadmap deepens stage pages while keeping disclosure safe and claims bounded.",u:["Sharper definitions.","More constraints.","More signals.","More falsifiers."]},
+        b2:{h:"Measurement atlas",p:"Signals grouped by meaning: stability, loss, artefacts, repeatability.",u:["Stability signals.","Loss signals.","Artefact checks.","Repeatability checks."]},
+        b3:{h:"Evidence bundles",p:"Templates for reporting conditions and results without leaking apparatus internals.",u:["Condition logs.","Evidence format.","Bounded interpretation.","Public-safe."]},
+        b4:{h:"Outcome",p:"A frontier surface that compels by rigor, not by secrecy.",u:["Disciplined.","Test-ready.","Bounded.","Safe."]}
+      },
+      informal: { title:"Chain · Roadmap",
+        b1:{h:"More depth",p:"More detail per stage, same rules.",u:["Clearer.","Deeper.","Bounded.","Safe."]},
+        b2:{h:"Signals map",p:"Signals by meaning.",u:["Stability.","Loss.","Noise.","Checks."]},
+        b3:{h:"Templates",p:"Proof templates, not blueprints.",u:["Logs.","Formats.","Bounds.","Safe."]},
+        b4:{h:"Result",p:"Frontier energy explained cleanly.",u:["Serious.","Measurable.","Bounded.","Safe."]}
+      }
+    }
+  },
+
+  plasma: {
+    origin: {
+      formal:{title:"Plasma · Concept",
+        b1:{h:"Bridge state",p:"Plasma is the bridge state where stability and loss control dominate the engineering problem.",u:["Stability first.","Loss accounted.","Modes exist.","Diagnostics required."]},
+        b2:{h:"Stability definition",p:"Stability means bounded behavior under disturbance with repeatable response.",u:["Bounded.","Repeatable.","Measured.","No runaway."]},
+        b3:{h:"Control framing",p:"We frame control as constraints + response + signals, not proprietary actuation.",u:["Constraints.","Response.","Signals.","No recipes."]},
+        b4:{h:"Evaluation rule",p:"Claims must pair with measurable signals and falsifiers.",u:["Signals.","Fails.","Bounds.","Falsifiers."]}
+      },
+      informal:{title:"Plasma · Concept",
+        b1:{h:"What it is",p:"A bridge state you must stabilize.",u:["Stability.","Loss.","Modes.","Measure."]},
+        b2:{h:"Rule",p:"No measurement = no claim.",u:["Baselines.","Noise.","Repeat.","Bounds."]},
+        b3:{h:"Boundary",p:"Signals public, recipes private.",u:["Signals yes.","Recipes no.","Fails yes.","Schematics no."]},
+        b4:{h:"Why it matters",p:"This is where the real control problem lives.",u:["Control.","Stability.","Loss.","Diagnostics."]}
+      }
+    },
+    now: {
+      formal:{title:"Plasma · Live",
+        b1:{h:"Live deliverable",p:"A stability primer: mode language, loss language, and diagnostic minimums.",u:["Mode catalog.","Loss catalog.","Signal taxonomy.","Bounded posture."]},
+        b2:{h:"Measurement discipline",p:"Baselines and repeatability separate signal from noise and artefacts.",u:["Baselines required.","Repeatability required.","Artefact awareness.","Limits explicit."]},
+        b3:{h:"Safety boundary",p:"We do not publish hazardous procedures or apparatus specifics.",u:["No steps.","No recipes.","No setpoints.","No schematics."]},
+        b4:{h:"Outcome",p:"Serious readers lean in because failure conditions are stated.",u:["Failure language.","Falsifiers.","Bounds.","Next steps."]}
+      },
+      informal:{title:"Plasma · Live",
+        b1:{h:"Now",p:"Stability primer.",u:["Modes.","Losses.","Signals.","Bounds."]},
+        b2:{h:"Rule",p:"Measure first.",u:["Baseline.","Repeat.","Noise.","Limits."]},
+        b3:{h:"Safety",p:"No build steps.",u:["No steps.","No recipes.","No numbers.","No hazards."]},
+        b4:{h:"Result",p:"Test-ready language.",u:["Clear.","Bounded.","Safe.","Honest."]}
+      }
+    },
+    post: {
+      formal:{title:"Plasma · Roadmap",
+        b1:{h:"Markers",p:"Publish stability/drift/failure markers at the signal level.",u:["Stable.","Drift.","Fail.","Noise."]},
+        b2:{h:"Loss map",p:"Loss types and signal signatures become explicit.",u:["Types.","Signatures.","Bounds.","Checks."]},
+        b3:{h:"Evidence bundles",p:"Reporting templates expand without apparatus disclosure.",u:["Templates.","Logs.","Repeat.","Safe."]},
+        b4:{h:"Outcome",p:"A bounded, inspiring public surface that stays testable.",u:["Inspiring.","Bounded.","Measured.","Safe."]}
+      },
+      informal:{title:"Plasma · Roadmap",
+        b1:{h:"More clarity",p:"Markers become clearer.",u:["Stable.","Drift.","Fail.","Noise."]},
+        b2:{h:"Loss signatures",p:"Cleaner mapping.",u:["Types.","Signals.","Bounds.","Checks."]},
+        b3:{h:"Templates",p:"Better proof reports.",u:["Logs.","Formats.","Repeat.","Safe."]},
+        b4:{h:"Result",p:"Serious plasma surface.",u:["Measured.","Bounded.","Safe.","Clear."]}
+      }
+    }
+  },
+
+  fusion: {
+    origin: {
+      formal:{title:"Fusion · Concept",
+        b1:{h:"Fusion criteria",p:"Fusion is framed as meeting criteria under constraint: confinement, energy density, time, loss control.",u:["Criteria explicit.","Loss explicit.","Time explicit.","Measured."]},
+        b2:{h:"Confinement framing",p:"Confinement is described by what it must accomplish, not by a single device claim.",u:["Hold conditions.","Suppress loss.","Resist modes.","Be measurable."]},
+        b3:{h:"Bounded claim",p:"We publish criteria/signal/failure maps without implementation recipes.",u:["Criteria map.","Signal map.","Failure map.","No recipe."]},
+        b4:{h:"Public-safe",p:"Success/failure conditions can be stated without publishing build details.",u:["Success.","Failure.","Alternatives.","Limits."]}
+      },
+      informal:{title:"Fusion · Concept",
+        b1:{h:"Fusion = criteria",p:"Checklist, not slogan.",u:["Criteria.","Signals.","Fails.","Bounds."]},
+        b2:{h:"Confinement",p:"Hold long enough.",u:["Hold.","Stabilize.","Measure.","Repeat."]},
+        b3:{h:"Boundary",p:"Maps yes, recipes no.",u:["Maps yes.","Signals yes.","Recipes no.","Schematics no."]},
+        b4:{h:"Judge by",p:"Falsifiers.",u:["Falsifiers.","Limits.","Fails.","No hype."]}
+      }
+    },
+    now: {
+      formal:{title:"Fusion · Live",
+        b1:{h:"Live surface",p:"Staged criteria surface: definitions, constraints, signals, failure language.",u:["Criteria.","Constraints.","Signals.","Fails."]},
+        b2:{h:"No promises",p:"Live vs Roadmap separation prevents accidental overclaiming.",u:["Separated.","Bounded.","Honest.","Stable."]},
+        b3:{h:"Safety boundary",p:"No procedural build instructions are published.",u:["No steps.","No recipes.","No specs.","No hazards."]},
+        b4:{h:"Outcome",p:"Compelling because it is measurable and bounded.",u:["Measured.","Bounded.","Test-ready.","Clear."]}
+      },
+      informal:{title:"Fusion · Live",
+        b1:{h:"Now",p:"Criteria + signals.",u:["Criteria.","Signals.","Fails.","Bounds."]},
+        b2:{h:"Separated",p:"Live ≠ Roadmap.",u:["Separated.","Clean.","Honest.","Stable."]},
+        b3:{h:"Safety",p:"No build steps.",u:["No steps.","No recipes.","No specs.","No hazards."]},
+        b4:{h:"Result",p:"Testable.",u:["Measurable.","Bounded.","Clear.","Safe."]}
+      }
+    },
+    post: {
+      formal:{title:"Fusion · Roadmap",
+        b1:{h:"Tighten criteria",p:"Clear boundary: fusion-relevant vs not.",u:["Definitions.","Thresholds.","Signals.","Fails."]},
+        b2:{h:"Stepwise proof",p:"Milestones are falsifiable steps, not timelines.",u:["Steps.","Falsifiers.","Kill conditions.","Alternatives."]},
+        b3:{h:"Neutral posture",p:"Depth increases while tone stays bounded.",u:["Neutral.","Bounded.","Same contract.","No drift."]},
+        b4:{h:"Outcome",p:"Compelling by discipline.",u:["Disciplined.","Test-ready.","Safe.","Clear."]}
+      },
+      informal:{title:"Fusion · Roadmap",
+        b1:{h:"More clarity",p:"Sharper criteria.",u:["Definitions.","Signals.","Fails.","Bounds."]},
+        b2:{h:"Steps",p:"Proof steps.",u:["Steps.","Falsifiers.","Limits.","Alternatives."]},
+        b3:{h:"Still neutral",p:"No hype.",u:["Neutral.","Bounded.","Clear.","Stable."]},
+        b4:{h:"Result",p:"Disciplined.",u:["Measured.","Safe.","Clear.","Test-ready."]}
+      }
+    }
+  },
+
+  validation: {
+    origin: {
+      formal:{title:"Validation · Concept",
+        b1:{h:"Principle",p:"Validation is measurement + falsification. Untestable claims stay conceptual.",u:["Define claim.","Define measure.","Define falsifier.","Define limit."]},
+        b2:{h:"Signals",p:"Signals grouped by meaning: stability, loss, proxies, noise controls.",u:["Stability.","Loss.","Proxies.","Noise."]},
+        b3:{h:"Failure language",p:"Failure modes are explicit to prevent narrative inflation.",u:["Instability.","Loss dominance.","Artefacts.","Non-repeatability."]},
+        b4:{h:"Boundary",p:"Proof rules can be public; build recipes cannot.",u:["Rules public.","Evidence public.","Recipes private.","Schematics private."]}
+      },
+      informal:{title:"Validation · Concept",
+        b1:{h:"Rules",p:"Measure and falsify.",u:["Measure.","Test.","Falsify.","Repeat."]},
+        b2:{h:"Signals",p:"By meaning.",u:["Stability.","Loss.","Noise.","Checks."]},
+        b3:{h:"Failures",p:"Name failures.",u:["Instability.","Loss.","Artefacts.","Not repeatable."]},
+        b4:{h:"Boundary",p:"Rules yes, recipes no.",u:["Rules yes.","Recipes no.","Proof yes.","Blueprint no."]}
+      }
+    },
+    now: {
+      formal:{title:"Validation · Live",
+        b1:{h:"Live scaffold",p:"Clear claims, clear evidence conditions, clear disproof conditions.",u:["Claims bounded.","Evidence defined.","Disproof defined.","Limits stated."]},
+        b2:{h:"Reader evaluation",p:"Check whether claims map to signals and falsifiers actually falsify.",u:["Signals.","Bounds.","Falsifiers.","Consistency."]},
+        b3:{h:"No persuasion",p:"No belief asks; bounded test language only.",u:["No belief asks.","No mystique.","No recipes.","No hazards."]},
+        b4:{h:"Outcome",p:"Trust is earned through stable definitions and stable validation logic.",u:["Stable words.","Stable tests.","Stable bounds.","Repeatability."]}
+      },
+      informal:{title:"Validation · Live",
+        b1:{h:"Now",p:"Proof scaffold.",u:["Claims.","Evidence.","Disproof.","Limits."]},
+        b2:{h:"Judge it",p:"Signals and falsifiers.",u:["Signals.","Bounds.","Fails.","Consistency."]},
+        b3:{h:"No ‘trust us’",p:"No recipes.",u:["No belief asks.","No mystique.","No recipes.","No hazards."]},
+        b4:{h:"Result",p:"Consistency builds trust.",u:["Stable.","Repeatable.","Bounded.","Honest."]}
+      }
+    },
+    post: {
+      formal:{title:"Validation · Roadmap",
+        b1:{h:"Evidence bundles",p:"Templates for what a good report contains.",u:["Templates.","Condition logs.","Noise controls.","Repeat checks."]},
+        b2:{h:"Stress tests",p:"Separate signal from artefact.",u:["Artefact checks.","Cross-checks.","Alternatives.","Falsifiers."]},
+        b3:{h:"Registry posture",p:"Lookupable status with reasons and history.",u:["Status.","Reasons.","History.","Rules."]},
+        b4:{h:"Outcome",p:"Compelling by discipline.",u:["Disciplined.","Test-ready.","Safe.","Clear."]}
+      },
+      informal:{title:"Validation · Roadmap",
+        b1:{h:"Templates",p:"Proof templates.",u:["Templates.","Logs.","Repeat.","Audit."]},
+        b2:{h:"Stress tests",p:"Signal vs artefact.",u:["Checks.","Cross-checks.","Alternatives.","Fails."]},
+        b3:{h:"Registry",p:"Lookupable status.",u:["Status.","Reasons.","History.","Rules."]},
+        b4:{h:"Result",p:"Disciplined.",u:["Clear.","Safe.","Bounded.","Testable."]}
+      }
+    }
+  }
+};
+
+window.ZH = {
+  chain: {
+    origin: {
+      formal: { title:"链路 · 概念",
+        b1:{h:"系统定义",p:"把能量建模为转换链：输入→阶段→输出，并带边界与可测信号。",u:["链路优先。","阶段明确。","接口命名。","信号可测。"]},
+        b2:{h:"核心方向",p:"太阳捕获→等离子形成→受控路径→聚变相关标准。",u:["先定义后主张。","先约束后扩展。","先信号后说服。","失败模式明示。"]},
+        b3:{h:"公开披露",p:"公开测什么与如何证伪；不公开建造配方与装置细节。",u:["信号公开。","证伪公开。","配方私密。","图纸私密。"]},
+        b4:{h:"为什么吸引人",p:"因为像工程：约束、信号、失败语言、有界下一步。",u:["有界表述。","可测钩子。","限制明确。","可测试姿态。"]}
+      },
+      informal: { title:"链路 · 概念",
+        b1:{h:"是什么",p:"干净的转换链模型。",u:["输入。","阶段。","输出。","信号。"]},
+        b2:{h:"方向",p:"太阳→等离子→聚变标准。",u:["定义。","测量。","测试。","复跑。"]},
+        b3:{h:"边界",p:"信号与证伪公开，配方不公开。",u:["信号是。","证伪是。","配方否。","蓝图否。"]},
+        b4:{h:"为什么重要",p:"结构化且可测试。",u:["有界。","可测。","诚实。","不噱头。"]}
+      }
+    },
+    now: {
+      formal: { title:"链路 · 上线",
+        b1:{h:"上线姿态",p:"公开参考面：术语稳、阶段稳、边界稳。",u:["术语稳。","链路模型稳。","主张有界。","不漂移。"]},
+        b2:{h:"你能信什么",p:"你可以信结构与测量框架，而不是许诺结果。",u:["结构稳定。","信号可见。","证伪存在。","限制明确。"]},
+        b3:{h:"透镜用法",p:"用透镜分离定义、现况与计划深度，避免混说。",u:["概念=定义。","上线=现况。","路线图=深度。","语义不变。"]},
+        b4:{h:"披露边界",p:"讲测量与失败条件，不讲操作配方。",u:["无步骤。","无设定点。","无图纸。","无危险。"]}
+      },
+      informal: { title:"链路 · 上线",
+        b1:{h:"现在",p:"稳定可读的参考面。",u:["清楚。","有界。","安全。","一致。"]},
+        b2:{h:"信任点",p:"信结构+信号，不信口号。",u:["信号。","失败。","限制。","不噱头。"]},
+        b3:{h:"透镜",p:"概念/上线/路线图分离。",u:["定义。","状态。","下一步。","不漂移。"]},
+        b4:{h:"边界",p:"不发配方。",u:["无步骤。","无数字。","无图纸。","无危险。"]}
+      }
+    },
+    post: {
+      formal: { title:"链路 · 路线图",
+        b1:{h:"深度扩展",p:"更深阶段页，但保持公开安全与有界主张。",u:["更清晰定义。","更多约束。","更多信号。","更多证伪。"]},
+        b2:{h:"测量图谱",p:"按含义分组：稳定/损耗/伪象控制/可重复。",u:["稳定信号。","损耗信号。","伪象检查。","重复检查。"]},
+        b3:{h:"证据包",p:"证明模板：条件与结果可呈现，但不泄露装置内部。",u:["条件日志。","证据格式。","有界解释。","公开安全。"]},
+        b4:{h:"结果",p:"以纪律吸引严肃读者，而不是靠神秘。",u:["有纪律。","可测试。","有界。","安全。"]}
+      },
+      informal: { title:"链路 · 路线图",
+        b1:{h:"更深",p:"每阶段更清楚，同规则。",u:["更清晰。","更深入。","有界。","安全。"]},
+        b2:{h:"信号地图",p:"按含义列信号。",u:["稳定。","损耗。","噪声。","检查。"]},
+        b3:{h:"模板",p:"证据模板，不是蓝图。",u:["日志。","格式。","边界。","安全。"]},
+        b4:{h:"结果",p:"前沿能源讲得清楚。",u:["严肃。","可测。","有界。","安全。"]}
+      }
+    }
+  },
+  plasma: window.EN.plasma,   /* bilingual parity can be expanded next */
+  fusion: window.EN.fusion,
+  validation: window.EN.validation
+};
+</script>
+
 </body>
 </html>
+```0

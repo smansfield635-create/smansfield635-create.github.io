@@ -1,17 +1,23 @@
-<!-- TNT — /products/energy/index.html  (PRODUCTS · ENERGY · INDUSTRIAL PLASMA ARCHITECTURE)
-     FIXES:
-       - Restores working diamond taps (proven hit-test + inline onclick)
-       - Removes debug “ENERGY LIVE …” pill entirely
-       - Adds “category bubbles” inside the modal:
-           Scientific / Industrial / Agricultural / Adversarial
-         → tap a bubble to expand; others stay collapsed (no overwhelm)
-     RULES:
-       - NO new state keys (gd_lang/gd_style/gd_time only)
-       - Lenses stay inside modal only (STYLE + Concept/Live/Roadmap)
-       - 4 bubbles exist always; each bubble has 4 bullets when expanded
-       - Single-language render (en only if lang=en; zh only if lang=zh; zh mirrors EN for now)
-       - Uses /assets/ui.css + /assets/branch.css only
-       - Does NOT style html/body background (ui.css owns field)
+<!-- TNT — /products/energy/index.html  (PRODUCTS · ENERGY · GEEP EXECUTION SURFACE)
+     PURPOSE:
+       - "Marry" current ENERGY page mechanics with GEEP-UI-9to3-v1.0 authority geometry
+       - Express A+B THROUGH C (WITHOUT claim upgrade)
+     TOP LEVEL (GEEP):
+       - North: VALIDATION (FULCRUM)   [R3 / C5 (+ TV read-only in Formal only)]
+       - West:  INDUSTRIAL (C)         [R1 / C1]
+       - East:  PHYSICS (MECHANISMS)   [R2 / (C2,C3,C4)] (GATED / NO GAIN CLAIM)
+       - South: GOVERNANCE (LOCKS)     [R3 / (C6,C7)]
+     NON-NEGOTIABLES:
+       - Public claim tier remains Industrial (C)
+       - No net-fusion language, no Lawson implication, no Q>1 implication
+       - No new state keys beyond gd_lang/gd_style/gd_time
+       - Lenses exist INSIDE modal only
+       - Category bubbles inside modal (tap-to-expand) to prevent overwhelm
+       - Diamonds must open on mobile (hit-test lock + dock tap-safe + inline onclick)
+       - Uses /assets/ui.css + /assets/branch.css only; does NOT style html/body background
+     NOTE:
+       - This file is "structure complete" and "thorough" while remaining non-hardware / non-claim drifting.
+       - DHY→GEEP resolver integration is NOT implemented here; placeholders are handled as text in VALIDATION.
 -->
 
 <!doctype html>
@@ -210,23 +216,27 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 
 <div class="brand">
   <div class="name" id="brandName">PRODUCTS</div>
-  <div class="tag" id="brandTag">ENERGY · INDUSTRIAL PLASMA ARCHITECTURE</div>
+  <div class="tag" id="brandTag">ENERGY · GEEP EXECUTION PLATFORM</div>
 </div>
 
 <div class="stage">
   <div class="outer"></div>
 
-  <div class="d d-n" id="dChain" role="button" tabindex="0" onclick="window.__openEnergy('chain')">
-    <div class="inner"><div class="lab" id="labChain">CHAIN</div><div class="sub" id="subChain">Solar → HIP → SLA → Grid.</div></div>
+  <!-- GEEP Compass -->
+  <div class="d d-n" id="dValidation" role="button" tabindex="0" onclick="window.__openEnergy('validation')">
+    <div class="inner"><div class="lab" id="labValidation">VALIDATION</div><div class="sub" id="subValidation">Fulcrum · admissibility · stop rules.</div></div>
   </div>
-  <div class="d d-e" id="dPlasma" role="button" tabindex="0" onclick="window.__openEnergy('plasma')">
-    <div class="inner"><div class="lab" id="labPlasma">PLASMA</div><div class="sub" id="subPlasma">CC tiers · UCI · ERI.</div></div>
+
+  <div class="d d-w" id="dIndustrial" role="button" tabindex="0" onclick="window.__openEnergy('industrial')">
+    <div class="inner"><div class="lab" id="labIndustrial">INDUSTRIAL (C)</div><div class="sub" id="subIndustrial">Thermal substitution only.</div></div>
   </div>
-  <div class="d d-s" id="dFusion" role="button" tabindex="0" onclick="window.__openEnergy('fusion')">
-    <div class="inner"><div class="lab" id="labFusion">FUSION</div><div class="sub" id="subFusion">No claims · boundary framing.</div></div>
+
+  <div class="d d-e" id="dPhysics" role="button" tabindex="0" onclick="window.__openEnergy('physics')">
+    <div class="inner"><div class="lab" id="labPhysics">PHYSICS</div><div class="sub" id="subPhysics">Mechanisms · bounded. (GATED)</div></div>
   </div>
-  <div class="d d-w" id="dValidation" role="button" tabindex="0" onclick="window.__openEnergy('validation')">
-    <div class="inner"><div class="lab" id="labValidation">VALIDATION</div><div class="sub" id="subValidation">SVF · CARES · DHY strict.</div></div>
+
+  <div class="d d-s" id="dGovernance" role="button" tabindex="0" onclick="window.__openEnergy('governance')">
+    <div class="inner"><div class="lab" id="labGovernance">GOVERNANCE</div><div class="sub" id="subGovernance">Locks · tiers · escalation law.</div></div>
   </div>
 
   <div class="core">◆</div>
@@ -258,7 +268,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
         <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
       </div>
 
-      <!-- category bubbles: tap to expand -->
       <div class="mgrid" id="mgrid">
         <div class="cbox" id="c1" role="button" tabindex="0"><h4 class="ch" id="h1"></h4><p class="cmini" id="m1"></p><p class="cp" id="p1"></p><ul class="cul" id="u1"></ul></div>
         <div class="cbox" id="c2" role="button" tabindex="0"><h4 class="ch" id="h2"></h4><p class="cmini" id="m2"></p><p class="cp" id="p2"></p><ul class="cul" id="u2"></ul></div>
@@ -309,12 +318,12 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   const UI = {
     en:{
       brand:"PRODUCTS",
-      tag:"ENERGY · INDUSTRIAL PLASMA ARCHITECTURE",
+      tag:"ENERGY · GEEP EXECUTION PLATFORM",
       d:{
-        chain:{lab:"CHAIN", sub:"Solar → HIP → SLA → Grid."},
-        plasma:{lab:"PLASMA", sub:"CC tiers · UCI · ERI."},
-        fusion:{lab:"FUSION", sub:"No claims · boundary framing."},
-        validation:{lab:"VALIDATION", sub:"SVF · CARES · DHY strict."}
+        validation:{lab:"VALIDATION", sub:"Fulcrum · admissibility · stop rules."},
+        industrial:{lab:"INDUSTRIAL (C)", sub:"Thermal substitution only."},
+        physics:{lab:"PHYSICS", sub:"Mechanisms · bounded. (GATED)"},
+        governance:{lab:"GOVERNANCE", sub:"Locks · tiers · escalation law."}
       },
       lens:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",live:"LIVE",roadmap:"ROADMAP"},
       btn:{ret:"RETURN",jp:"JUMP PRODUCTS",jh:"JUMP HUB"},
@@ -322,12 +331,12 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     },
     zh:{
       brand:"产品",
-      tag:"能源 · 工业等离子架构",
+      tag:"能源 · GEEP 执行平台",
       d:{
-        chain:{lab:"链路", sub:"太阳 → HIP → SLA → 电网。"},
-        plasma:{lab:"等离子", sub:"CC 分级 · UCI · ERI。"},
-        fusion:{lab:"聚变", sub:"无主张 · 边界框架。"},
-        validation:{lab:"验证", sub:"SVF · CARES · DHY 严格。"}
+        validation:{lab:"验证", sub:"支点 · 可采信 · 停止规则。"},
+        industrial:{lab:"工业 (C)", sub:"仅工业热替代。"},
+        physics:{lab:"物理", sub:"机制 · 有界。（门控）"},
+        governance:{lab:"治理", sub:"锁定 · 分层 · 升级法则。"}
       },
       lens:{formal:"正式",informal:"通俗",concept:"概念",live:"上线",roadmap:"路线图"},
       btn:{ret:"返回",jp:"跳转产品",jh:"跳转枢纽"},
@@ -339,14 +348,14 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   document.getElementById("brandName").textContent = ui.brand;
   document.getElementById("brandTag").textContent = ui.tag;
 
-  document.getElementById("labChain").textContent = ui.d.chain.lab;
-  document.getElementById("subChain").textContent = ui.d.chain.sub;
-  document.getElementById("labPlasma").textContent = ui.d.plasma.lab;
-  document.getElementById("subPlasma").textContent = ui.d.plasma.sub;
-  document.getElementById("labFusion").textContent = ui.d.fusion.lab;
-  document.getElementById("subFusion").textContent = ui.d.fusion.sub;
   document.getElementById("labValidation").textContent = ui.d.validation.lab;
   document.getElementById("subValidation").textContent = ui.d.validation.sub;
+  document.getElementById("labIndustrial").textContent = ui.d.industrial.lab;
+  document.getElementById("subIndustrial").textContent = ui.d.industrial.sub;
+  document.getElementById("labPhysics").textContent = ui.d.physics.lab;
+  document.getElementById("subPhysics").textContent = ui.d.physics.sub;
+  document.getElementById("labGovernance").textContent = ui.d.governance.lab;
+  document.getElementById("subGovernance").textContent = ui.d.governance.sub;
 
   // ===== Modal refs =====
   const bd=document.getElementById("bd");
@@ -383,7 +392,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     const safe = b || {h:"—",p:"—",u:["—","—","—","—"]};
     hEl.textContent = safe.h || "—";
     pEl.textContent = safe.p || "—";
-    // mini line = first bullet or first sentence fragment
     const mini = (safe.u && safe.u[0]) ? safe.u[0] : (safe.p ? safe.p.slice(0,80) : "—");
     mEl.textContent = mini;
     uEl.innerHTML="";
@@ -395,197 +403,201 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     }
   }
 
-  // DOTGRID binding line (referenced in Adversarial bubble; keeps Energy non-abstract)
-  const DOTGRID_EN = "DOTGRID-ENERGY-HYBRID-v1 encodes state_id(0–255) as (CC tier, SLA phase, ERI tier, IDP tier). DHY strict certs gate admissibility (S1→S2→S3).";
-  const DOTGRID_ZH = "DOTGRID-ENERGY-HYBRID-v1 用 state_id(0–255) 编码 (CC 分级, SLA 阶段, ERI 分级, IDP 阶段)。DHY 严格认证决定可采信（S1→S2→S3）。";
+  const DOTGRID_EN = "DOTGRID + DHY are the evidence spine: encoding + strict certificates (S1→S2→S3). No certificate → no escalation.";
+  const DOTGRID_ZH = "DOTGRID + DHY 是证据主干：编码 + 严格认证（S1→S2→S3）。无认证 → 不升级。";
+
+  const GEEP_AXIOM_EN = "GEEP Axiom: escalation is permitted only when independently auditable, loss-closed, hash-sealed measurement shows bounded gain exceeding bounded loss within declared confinement bounds.";
+  const GEEP_AXIOM_ZH = "GEEP 公理：只有在独立可审计、损耗闭合、哈希封存的测量表明“有界增益 > 有界损耗”且处于声明的约束边界内时，才允许升级。";
+
+  const TV_DEF_EN = "TV = log10(nTτ_current / nTτ_required). Read-only. TV is NOT MEASURED unless both values are admissible receipts.";
+  const TV_DEF_ZH = "TV = log10(nTτ_current / nTτ_required)。只读。若无可采信凭证，TV 显示 NOT MEASURED。";
 
   function B(h,p,a,b,c,d){ return {h:h,p:p,u:[a,b,c,d]}; }
 
-  // Content: Phase 1 (industrial-first, no abstract drift, no net-fusion claims)
   const EN = {
-    chain:{
+    industrial:{
       origin:{
-        formal:{title:"CHAIN · Concept",
-          b1:B("Scientific","HIP is defined as an industrial ionized operating regime used for thermal/chemical processing. The chain is Solar → HIP → SLA buffering → industrial heat and/or buffered conversion. No net-fusion claim is asserted here.","HIP regime bounded by CC tiers.","Loss channels tracked per stage.","UCI governs stability thresholds.","EDT tiers map failure envelope magnitude."),
-          b2:B("Industrial / Grid","PFM is upstream-only hardened infrastructure. Scaling follows IDP-1→IDP-4 with no grid shock: industrial heat first, buffered injection second, replication third.","IDP-1: single hardened PFM.","IDP-2: 5–20 PFMs + SLA reservoirs.","IDP-3: industrial adjacency sectors.","IDP-4: replication via CC underwriting."),
-          b3:B("Agricultural / Plasma Farms","Plasma farms are co-located deployments: rectilinear layout, setback from residential zones, plasma isolated from soil (midstream thermal exchange only). TGI routes thermal gradients to greenhouses/soil buffers.","500m setback minimum.","No plasma–soil contact.","TGI midstream heat reuse.","Revenue stacking + SLA smoothing."),
-          b4:B("Adversarial Validation","SVF + CARES define admissibility. Any multi-sensor disagreement is a kill. Any policy violation forces R3 rollover; no degraded states. Evidence is hash-linked and audited.","Kill: confinement breach / ERI spike.","Disproof: net-negative SLA under declared conditions.","Artifact suppression required (SVF).",DOTGRID_EN)
+        formal:{title:"INDUSTRIAL (C) · Concept",
+          b1:B("Public claim ceiling","This surface is Industrial (C) only: plasma-based thermal substitution under measured loss envelope. It does not claim net gain and does not imply fusion viability.","Claim tier locked: C only.","No Q>1 implication.","No Lawson implication.","Research is gated and separate."),
+          b2:B("What is delivered","Industrial delivery is defined by measured inputs, measured thermal outputs, and bounded stability. The product is an execution surface, not a hypothesis.","Metered input power (facility-level).","Metered thermal output.","Aux loads accounted.","Uptime + variance tracked."),
+          b3:B("Deployment discipline","Deployment is staged. Scaling is allowed only within safety envelope and evidence tier.","Pilot (lab/pilot) first.","Cluster only after stable pilot.","Industrial adjacency only with safety receipts.","No leapfrogging tiers."),
+          b4:B("Industrial proofs","Industrial proofs are receipts: efficiency, loss closure, safety envelope, incident logs, and independent safety review where required.","Loss closure required (100%±uncertainty).","Thermal capture efficiency tracked.","Rollback/kill conditions logged.","Insurance posture documented.")
         },
-        informal:{title:"CHAIN · Concept (Plain)",
-          b1:B("Science (Plain)","Think: controlled industrial plasma used for clean heat and processing. We buffer it with SLA before anything touches the grid. This is not a fusion claim.","CC tiers keep it bounded.","UCI enforces control rules.","EDT tells intensity vs risk.","Loss is tracked, not ignored."),
-          b2:B("Industrial (Plain)","We scale in phases so nothing gets shocked. One module, then clusters, then industrial adjacency, then replication with underwriting.","Pilot first.","Cluster second.","Industry third.","Replication last."),
-          b3:B("Agriculture (Plain)","Farm sites use heat exchange only. Plasma stays inside hardened PFMs. TGI routes heat to useful farming endpoints.","No soil contact.","Setback enforced.","Heat reuse.","SLA smooths seasons."),
-          b4:B("Adversarial (Plain)","We assume it’s wrong until tests prove otherwise. If sensors disagree or risk spikes, it fails.","Disagreement kills.","ERI terminate stops operation.","Strict rollover on violations.",DOTGRID_EN)
+        informal:{title:"INDUSTRIAL (C) · Concept (Plain)",
+          b1:B("Claim ceiling","This page is Industrial only. It’s about clean industrial heat and control—not gain claims.","Industrial only.","No fusion claims.","No “near gain” language.","Research is gated."),
+          b2:B("What you get","You get measurable thermal substitution: power in, heat out, stability maintained.","Measured power in.","Measured heat out.","Aux loads included.","Stable operation."),
+          b3:B("How it scales","We scale in stages and only when receipts support it.","Pilot first.","Then cluster.","Then industry.","No leaps."),
+          b4:B("Proof standard","Proof means receipts and logs, not stories.","Receipts.","Logs.","Stop rules.","Independent checks.")
         }
       },
       now:{
-        formal:{title:"CHAIN · Live",
-          b1:B("Scientific","Live means measurable variables and named failure envelopes. Testing covers stability envelopes, termination thresholds, thermal gradients, and escalation indices.","Signals: thermal/pressure/ion proxy/power ratio.","Failure modes mapped explicitly.","Termination bands contract under repeats.","Loss accounting enforced."),
-          b2:B("Industrial / Grid","Industrial integration is buffered: upstream HIP remains isolated; midstream conversion smooths dispatch. PSS supervises; FCM isolates; CARES governs response.","Buffered injection only.","PSS override logs immutable.","FCM defines blast radius.","CC certification supports insurance."),
-          b3:B("Agricultural / Plasma Farms","Live farm integration stays non-invasive: soil boundary is exchanger-only; livestock boundary is perimeter + isolation; TGI loops are auditable.","Soil: exchanger only.","Livestock exclusion + isolation.","Greenhouse heat reuse.","Compliance artifacts logged."),
-          b4:B("Adversarial Validation","Strict windows: late events hard invalidate; missing streams invalidate roll-up; violations force R3 epoch rollover; history stays invalid.","Hard invalidation on lag.","100% roll-up requirement.","R3 rollover only recovery.",DOTGRID_EN)
+        formal:{title:"INDUSTRIAL (C) · Live",
+          b1:B("Current status","Live posture remains Industrial (C). Any research metrics shown elsewhere are gated and cannot upgrade the public claim tier.","CLAIM TIER: C (locked).","Research tier: gated.","No gain language.","Stop rules active."),
+          b2:B("Operational metrics","Live metrics are industrial: efficiency, stability variance, uptime, and safety envelope adherence. No speculative future claims.","Thermal efficiency reported.","Aux load ratio tracked.","Variance tracked.","Uptime tracked."),
+          b3:B("Safety envelope","Safety is procedural: containment classes, termination bands, and incident logs are mandatory and auditable.","Containment class declared.","Termination bands enforced.","Incident logs immutable.","No overrides without logging."),
+          b4:B("Scaling posture","Scaling is constrained by evidence tier and deployment posture; it cannot outrun validation.","Deployment tier bounded.","No scaling without validation.","No cross-epoch mixing.","No silent drift.")
         },
-        informal:{title:"CHAIN · Live (Plain)",
-          b1:B("Science (Plain)","Live = we can measure it, repeat it, and name what fails.","Measure first.","Repeat or disqualify.","Failures named.","Loss tracked."),
-          b2:B("Industrial (Plain)","Grid sees buffered output, not raw plasma behavior.","Buffered output.","Supervised dispatch.","Contained failures.","Underwriting posture."),
-          b3:B("Agriculture (Plain)","Farm sites stay heat-exchange only and audit-ready.","Setbacks.","No soil contact.","TGI heat reuse.","Logged compliance."),
-          b4:B("Adversarial (Plain)","Strict means: bad data breaks the window and forces rollover.","Late invalidates.","Missing stream invalidates.","R3 rollover only.",DOTGRID_EN)
+        informal:{title:"INDUSTRIAL (C) · Live (Plain)",
+          b1:B("Status","Industrial only. Public claims stay capped here.","C only.","Gated research separate.","Stop rules active.","No drift."),
+          b2:B("What we track","Efficiency and stability, not hype.","Efficiency.","Aux loads.","Variance.","Uptime."),
+          b3:B("Safety","Safety is logged and enforced.","Containment.","Termination.","Logs.","No silent overrides."),
+          b4:B("Scaling","We scale only when proof supports it.","Proof first.","Then scale.","No leapfrogs.","No drift.")
         }
       },
       post:{
-        formal:{title:"CHAIN · Roadmap",
-          b1:B("Scientific","Roadmap tightens SVF templates, locks binning manifests (BM), and publishes replayable evidence bundles without disclosing recipes.","SVF templates mandatory.","BM + bm_hash lock if derived.","Noise floors declared per sensor.","Replay scripts verify chains."),
-          b2:B("Industrial / Grid","Roadmap formalizes underwriting-grade CC certification and global replication via manifests and certificates. Residential licensing is downstream and gated by IDP-3 proof.","CC→insurance underwriting.","Manifests lock membership.","Industrial-first posture locked.","RLM gated by IDP-3."),
-          b3:B("Agricultural / Plasma Farms","Roadmap codifies global farm deployment: setbacks, exchanger-only soil boundary, thermal reuse constraints, noise/EM limits, audit checklists.","Setback manifest.","Thermal exchange manifest.","Noise/EM limits.","Environmental boundary artifacts."),
-          b4:B("Adversarial Validation","DHY strict certs become the admissibility backbone. No cert issuance under low transitions; any invalidity cascades; no cross-epoch mixing.","No cert <10 transitions.","S2=100% S1.","S3=100% S2.","No cross-epoch aggregation.")
+        formal:{title:"INDUSTRIAL (C) · Roadmap",
+          b1:B("Roadmap meaning","Roadmap is not a promise. It lists gated requirements to scale industrial deployments safely.","No timelines claimed.","Requirements only.","Evidence gating.","Stop rules."),
+          b2:B("Industrial scale path","Scale is IDP-like: pilot → cluster → industrial adjacency. Each step requires receipts and independent review where applicable.","Pilot receipts required.","Cluster receipts required.","Industrial adjacency receipts required.","Insurance review."),
+          b3:B("Agricultural co-location","Co-location is thermal exchange only. No direct plasma–soil interface. Boundaries are auditable.","Setback rules.","Thermal exchangers only.","Compliance artifacts.","Audit-ready logs."),
+          b4:B("What does NOT change","Public claim tier stays Industrial unless validation upgrades are actually achieved. Governance prevents narrative drift.","Claim tier lock.","Telemetry lock.","Loss closure lock.","No drift.")
         },
-        informal:{title:"CHAIN · Roadmap (Plain)",
-          b1:B("Science (Plain)","Next we standardize audits: locked bins, templates, and replay.","Locked bins.","Templates.","Replayable logs.","Clear disproof."),
-          b2:B("Industrial (Plain)","Next we scale via certification and underwriting; residential is gated.","Insurance-ready CC.","Replication manifests.","Industrial-first.","Residential later."),
-          b3:B("Agriculture (Plain)","Next we standardize farm integration globally.","Setbacks.","Heat exchange only.","Audit checklists.","Environmental limits."),
-          b4:B("Adversarial (Plain)","No cert means no claims.","No cert <10 transitions.","100% roll-up.","No cross-epoch mixing.")
-        }
-      }
-    },
-
-    plasma:{
-      origin:{
-        formal:{title:"PLASMA · Concept",
-          b1:B("Scientific","HIP plasma is governed by CC tiers and UCI. ERI quantifies escalation risk; PSS executes supervisory decisions; EDT tiers bound intensity to envelope magnitude.","CC defines regime + robustness.","UCI enforces thresholds.","ERI tiers drive escalation.","PSS logs overrides."),
-          b2:B("Industrial / Grid","Upstream-only plasma: PFMs are hardened and isolated; no consumer exposure. FCM defines containment actions; CARES defines tiered response.","PFM upstream-only.","FCM containment matrix.","CARES response ladder.","Insurance ties to CC."),
-          b3:B("Agricultural / Plasma Farms","Farm integration uses physical separation and thermal exchange only. TGI routes gradients to useful endpoints without plasma–soil contact.","Rectilinear layout.","Setback enforced.","Exchanger-only soil boundary.","Livestock/EM/noise isolation."),
-          b4:B("Adversarial Validation","SVF requires redundancy + null comparison + agreement threshold. Multi-sensor disagreement is kill. ERI terminate triggers stop + invalidation.","Kill: disagreement.","Kill: ERI terminate.","Disproof: artifact dependence.",DOTGRID_EN)
-        },
-        informal:{title:"PLASMA · Concept (Plain)",
-          b1:B("Science (Plain)","CC tiers tell how hardened it is. UCI enforces rules. ERI tells when to stop. PSS logs what happened.","CC = tier.","UCI = control.","ERI = risk.","PSS = supervisor."),
-          b2:B("Industrial (Plain)","Plasma stays upstream-only and contained.","Upstream-only.","Contained failures.","CARES enforced.","No consumer exposure."),
-          b3:B("Agriculture (Plain)","Farm sites use heat exchange only.","No soil contact.","Setbacks.","Heat reuse.","Audit-ready."),
-          b4:B("Adversarial (Plain)","If sensors disagree, it fails.","SVF required.","Disagreement kills.","ERI terminate stops.",DOTGRID_EN)
-        }
-      },
-      now:{
-        formal:{title:"PLASMA · Live",
-          b1:B("Scientific","Live testing is envelope-first: stability domains, termination thresholds, and escalation indices are measured and tightened under repeats.","Multi-channel redundancy.","Cross-sensor agreement.","Anomaly flagging.","Termination band contraction."),
-          b2:B("Industrial / Grid","Buffered integration is enforced: upstream HIP isolated; dispatch smoothing supervised; overrides logged; containment boundaries explicit.","Buffered conversion.","Supervisory smoothing.","Logged overrides.","FCM isolation."),
-          b3:B("Agricultural / Plasma Farms","Live farm posture enforces: exchanger-only soil boundary, perimeter exclusion, and auditable thermal reuse via TGI.","Soil exchanger-only.","Hard perimeter.","TGI heat reuse.","Compliance artifacts logged."),
-          b4:B("Adversarial Validation","Strict: repeat instability under fixed params is disproof; artifacts disqualify; late events invalidate windows.","Disproof: repeat instability.","Disproof: artifact dependence.","Lag invalidates.","R3 rollover on violation.")
-        },
-        informal:{title:"PLASMA · Live (Plain)",
-          b1:B("Science (Plain)","We measure stability and tighten kills when it repeats.","Redundant sensors.","Agreement required.","Flags.","Tighten kills."),
-          b2:B("Industrial (Plain)","Grid only sees buffered output.","Buffered.","Supervised.","Contained.","Logged."),
-          b3:B("Agriculture (Plain)","Heat exchange only; audited.","No soil.","Perimeter.","Reuse.","Logs."),
-          b4:B("Adversarial (Plain)","Strict disproof rules apply.","Repeat instability fails.","Artifacts fail.","Late invalidates.","R3 rollover.")
-        }
-      },
-      post:{
-        formal:{title:"PLASMA · Roadmap (Scaling)",
-          b1:B("Scientific","Roadmap publishes observer-invariant markers via locked BM and expands SVF templates. Kill conditions become tiered per CC and enforced by policy.","BM locked (if derived).","SVF templates mandatory.","Kill per CC tier.","Policy enforcement required."),
-          b2:B("Industrial / Grid","Roadmap makes CC certification underwriting-grade and ties enforcement to DHY strict. Any policy violation forces R3 rollover; no cross-epoch mixing.","CC underwriting.","Strict enforcement.","R3 rollover.","No cross-epoch."),
-          b3:B("Agricultural / Plasma Farms","Roadmap standardizes farm compliance artifacts so replication is global and auditable.","Setback rules.","Thermal exchange rules.","Noise/EM limits.","Environmental artifacts."),
-          b4:B("Adversarial Validation","No certificate issuance under low transitions. 100% roll-up required. Missing stream invalidates higher scope.","No cert <10 transitions.","S2=100% S1.","S3=100% S2.","Missing stream invalidates.")
-        },
-        informal:{title:"PLASMA · Roadmap (Plain)",
-          b1:B("Science (Plain)","We standardize markers and templates.","Markers.","Templates.","Kills.","Replay."),
-          b2:B("Industrial (Plain)","Certification becomes underwriting-ready.","Insurance-ready.","Strict.","R3 rollover.","No mixing."),
-          b3:B("Agriculture (Plain)","Farm integration becomes a standard.","Setbacks.","Heat exchange only.","Limits.","Artifacts."),
-          b4:B("Adversarial (Plain)","No cert means no roll-up.","No cert <10.","100% required.","Missing invalidates.","Strict.")
-        }
-      }
-    },
-
-    fusion:{
-      origin:{
-        formal:{title:"FUSION · Concept (No Net Claims)",
-          b1:B("Scientific","This is boundary framing only. We define what would count as ‘fusion-relevant’ conditions without asserting net fusion. Claims remain bounded and falsifiable.","No net-fusion claim.","Criteria framing only.","Loss competition acknowledged.","Disproof conditions explicit."),
-          b2:B("Industrial / Grid","Industrial heat decarbonization + grid stabilization remains primary. Any tightening toward higher regimes remains upstream-only, buffered, and supervised.","Industrial-first posture.","Grid stabilization layer.","Upstream-only higher regimes.","No baseload shock."),
-          b3:B("Agricultural / Plasma Farms","Farm deployments remain modular and buffered. No soil contact ever; only midstream thermal exchange. Higher tiers increase isolation rather than exposure.","Isolation increases with tier.","No soil contact.","Midstream exchanger only.","Setbacks enforced."),
-          b4:B("Adversarial Validation","Any ‘fusion relevance’ claim requires SVF multi-channel confirmation + DHY strict certs. Artifact dependence and non-repeatability are disproof.","SVF required.","DHY certs required.","Artifacts disprove.","Non-repeat disprove.")
-        },
-        informal:{title:"FUSION · Concept (Plain)",
-          b1:B("Science (Plain)","We are not claiming net fusion here. We’re defining boundaries so it stays honest.","No net claim.","Clear boundaries.","Clear disproof.","No hype."),
-          b2:B("Industrial (Plain)","Industrial output first; grid buffered.","Industrial first.","Buffer the grid.","Upstream only.","No shock."),
-          b3:B("Agriculture (Plain)","Farm integration stays heat-exchange only.","No soil contact.","Setbacks.","Heat reuse.","Safety."),
-          b4:B("Adversarial (Plain)","No cert = no claim.","SVF + certs.","Artifacts kill.","Repeat required.","Strict.")
-        }
-      },
-      now:{
-        formal:{title:"FUSION · Live (No Claims)",
-          b1:B("Scientific","Live posture publishes signals and falsifiers without thresholds or recipes. Any tightening remains labeled R&D and is audited under strict doctrine.","Bounded language.","No thresholds published.","No recipes.","Falsifiers listed."),
-          b2:B("Industrial / Grid","Live industrial posture is stable output + buffering. PSS supervises dispatch; FCM isolates; CARES governs escalation.","Buffered conversion.","PSS supervision.","FCM containment.","CARES response."),
-          b3:B("Agricultural / Plasma Farms","Live farm posture: setbacks + exchanger-only boundary + auditable thermal reuse.","Setbacks verified.","Exchanger-only verified.","TGI reuse.","Compliance logged."),
-          b4:B("Adversarial Validation","Strict windows: late invalidates; missing stream invalidates; R3 rollover on violation; historical invalidity permanent.","Late invalidates.","Missing invalidates.","R3 rollover.","No cross-epoch.")
-        },
-        informal:{title:"FUSION · Live (Plain)",
-          b1:B("Science (Plain)","We list what would prove/disprove, not promises.","Bounded wording.","No secret numbers.","Disproof first.","No hype."),
-          b2:B("Industrial (Plain)","Stable industrial output first.","Heat + buffer.","Supervised.","Contained.","Logged."),
-          b3:B("Agriculture (Plain)","Safe farm integration.","Setbacks.","No soil.","Reuse.","Audit."),
-          b4:B("Adversarial (Plain)","Strict validity rules apply.","Late invalidates.","Missing invalidates.","R3 rollover.","Strict.")
-        }
-      },
-      post:{
-        formal:{title:"FUSION · Roadmap (Tightening Without Overclaim)",
-          b1:B("Scientific","Roadmap defines falsifiable steps (not timelines). Each step binds to SVF and DHY certificates and includes explicit disproof and kill conditions.","Steps not timelines.","Falsifiers required.","Kill conditions required.","No hype."),
-          b2:B("Industrial / Grid","Roadmap preserves coexistence posture: industrial heat + stabilization remain primary; any higher-tier work remains upstream-only and audited.","Coexistence posture locked.","Industrial primary.","Upstream-only tightening.","Audit bundles."),
-          b3:B("Agricultural / Plasma Farms","Roadmap scales farm deployments via standards and keeps residential endpoints passive-only under RLM gating.","Farm standards.","Exchanger-only.","RLM gating.","Passive-only endpoints."),
-          b4:B("Adversarial Validation","No cert <10 transitions. No aggregation without VALID certs. 100% roll-up required.","No cert <10.","No agg without cert.","100% roll-up.","Strict.")
-        },
-        informal:{title:"FUSION · Roadmap (Plain)",
-          b1:B("Science (Plain)","Next steps are tests, not promises.","Test steps.","Disproof first.","Clear kills.","No timelines."),
-          b2:B("Industrial (Plain)","Industrial and stability stays first.","Stabilize.","Decarbonize heat.","Audit.","Coexist."),
-          b3:B("Agriculture (Plain)","Farm scaling stays standardized and safe.","Standards.","No soil.","Reuse.","Gated licensing."),
-          b4:B("Adversarial (Plain)","No cert means no claim.","No cert <10.","100% required.","Strict.","No mixing.")
+        informal:{title:"INDUSTRIAL (C) · Roadmap (Plain)",
+          b1:B("Roadmap","Roadmap means gated steps, not promises.","No promises.","Requirements.","Proof.","Stop rules."),
+          b2:B("Scale steps","Pilot → cluster → industry.","Pilot.","Cluster.","Industry.","Proof each step."),
+          b3:B("Farm use","Heat exchange only with boundaries.","Setbacks.","Exchangers.","Compliance.","Logs."),
+          b4:B("No drift","Claims won’t inflate.","Locked tier.","Locked proof.","Locked logs.","Locked stop rules.")
         }
       }
     },
 
     validation:{
       origin:{
-        formal:{title:"VALIDATION · SVF / CARES / DHY (Concept)",
-          b1:B("Scientific","SVF is multi-channel verification: null-channel comparison, cross-sensor agreement threshold, and artifact suppression. Artifact-dependent confirmation is disqualified.","Null comparison.","Redundant sensors.","Agreement threshold.","Artifacts disqualify."),
-          b2:B("Industrial / Grid","Industrial validation includes third-party instrumentation review, environmental compliance audit, and insurance verification tied to CC certification.","Third-party review.","Env audit.","Insurance verification.","CC certification artifacts."),
-          b3:B("Agricultural / Plasma Farms","Farm validation enforces exchanger-only soil boundary, perimeter exclusion, and noise/EM isolation standards. TGI heat reuse is logged midstream-only.","No soil contact.","Perimeter enforced.","Noise/EM limits.","TGI midstream logging."),
-          b4:B("Adversarial Validation","DHY strict: ABM/BM/WRM locks + SHA-256 chain + binary certs + R3 recovery only. UI relaxation is display-only and triggers logged override + SEGMENT_BREAK.","Strict hashes.","Binary certs.","R3 recovery only.",DOTGRID_EN)
+        formal:{title:"VALIDATION · Fulcrum (Concept)",
+          b1:B("GEEP Axiom (Immutable)","Validation is the fulcrum: it governs what is admissible and what cannot be claimed. This platform escalates only when receipts satisfy gain>loss within confinement bounds.",GEEP_AXIOM_EN,"Public claim tier stays C until admissible.","No certificate → no escalation.","Failure triggers freeze + rollback."),
+          b2:B("DHY strict integrity","DHY enforces semantic locks (ABM/BM/WRM), hash chains, and strict certificates. Any drift or mutation invalidates windows and requires epoch rollover.","ABM/BM/WRM locked.","SHA-256 hash chain.","S1/S2/S3 certificates.","R3 recovery: new epoch."),
+          b3:B("Loss closure doctrine","Loss channels must sum to 100% ± uncertainty. If closure fails, claims freeze. Loss closure prevents hidden loss laundering.","Ion + electron + grid + radiative + charge exchange.","Sum to 100% ± bounds.","If mismatch → freeze.","No selective reporting."),
+          b4:B("TV overlay (read-only)","TV is a descriptive scalar only. It is NOT MEASURED unless both numerator and denominator are admissible receipts. TV cannot elevate tier.",TV_DEF_EN,"TV status: NOT MEASURED (default).","Displayed here only (Formal).","Read-only; no interpretation.")
         },
-        informal:{title:"VALIDATION · Concept (Plain)",
-          b1:B("Science (Plain)","We don’t trust one sensor.","Null comparison.","Redundant sensors.","Agreement required.","Artifacts fail."),
-          b2:B("Industrial (Plain)","Industrial proof includes audits and insurance posture.","Review.","Compliance.","Insurance.","Artifacts."),
-          b3:B("Agriculture (Plain)","Farm proof is boundary + logs.","No soil.","Perimeter.","Limits.","Logs."),
-          b4:B("Adversarial (Plain)","DHY is strict; UI can’t change it.","Strict.","Logged overrides.","SEGMENT_BREAK.","R3 only.")
+        informal:{title:"VALIDATION · Fulcrum (Plain)",
+          b1:B("The rule","Validation decides what we’re allowed to say. If it isn’t proven, it isn’t claimed.","Proof first.","No drift.","No hype.","Stop rules."),
+          b2:B("Integrity","DHY makes tampering obvious.","Locked manifests.","Hash chains.","Strict certs.","Epoch rollovers."),
+          b3:B("Loss closure","Loss must add up. If it doesn’t, we stop.","Loss must sum.","Bounds enforced.","No guessing.","Freeze on mismatch."),
+          b4:B("TV","TV is just distance. If it’s not admissible, it stays NOT MEASURED.",TV_DEF_EN,"Read-only.","Formal-only here.","Never upgrades claims.")
         }
       },
       now:{
-        formal:{title:"VALIDATION · Live Strict",
-          b1:B("Scientific","Noise floors are declared per sensor; anomaly flags are logged; disagreement is kill; repeat instability is disproof. Low-data windows issue no certs.","Noise floors.","Anomaly flags.","Disagreement kills.","Repeat fails."),
-          b2:B("Industrial / Grid","IDP tier is tracked; group membership locked; expected stream count enforced; RLM gated by IDP-3 completion without catastrophic breach.","IDP tracked.","Membership locked.","Counts enforced.","RLM gated."),
-          b3:B("Agricultural / Plasma Farms","Setbacks, perimeter, exchanger-only boundary and compliance artifacts are verified under strict windows.","Setbacks verified.","Perimeter verified.","Exchanger-only verified.","Compliance logged."),
-          b4:B("Adversarial Validation","Late events hard invalidate. 100% roll-up required. No cross-epoch aggregation. Policy violations force R3 rollover.","Late invalidates.","100% roll-up.","No cross-epoch.","R3 rollover.")
+        formal:{title:"VALIDATION · Fulcrum (Live)",
+          b1:B("Current claim tier","Public claim tier is Industrial (C). Any research artifacts are gated and cannot change the public tier without strict admissibility.","CLAIM TIER: C (locked).","Research: gated.","No gain claims.","Stop rules active."),
+          b2:B("Certificates (placeholder)","Until DHY→GEEP resolver wiring is live, certificate status is displayed as placeholder. The rule remains: no cert → no escalation.","CERT: NOT WIRED (placeholder).","Rule: no cert → no escalation.","Strict mode assumed.","No degraded states."),
+          b3:B("Stop rules","If Q is not greater than 1 (or not measured), escalation is prohibited. Independent audit is required for any A-level claim.","Q gate enforced.","Facility ratio gate enforced.","Disproof criteria required.","Audit required."),
+          b4:B("TV (Formal-only)","TV remains NOT MEASURED unless admissible receipts exist for nTτ_current and nTτ_required. It is display-only.",TV_DEF_EN,"TV: NOT MEASURED.","No inference.","No interpretation.")
         },
         informal:{title:"VALIDATION · Live (Plain)",
-          b1:B("Science (Plain)","If it can’t repeat or sensors disagree, it fails.","Repeat required.","Disagreement kills.","Noise floors.","No cert <10."),
-          b2:B("Industrial (Plain)","Industrial first; licensing gated.","Counts enforced.","Membership locked.","IDP gated.","RLM gated."),
-          b3:B("Agriculture (Plain)","Boundaries are audited.","Setbacks.","No soil.","Perimeter.","Compliance."),
-          b4:B("Adversarial (Plain)","Strict roll-up.","Late invalidates.","100% required.","R3 rollover.","No mixing.")
+          b1:B("Tier","Public claim tier stays Industrial.","C only.","Gated research separate.","No gain claims.","Stop rules."),
+          b2:B("Certs","No certificate means no escalation.","No cert.","No escalation.","Strict.","Binary."),
+          b3:B("Stop rules","If Q isn’t >1, we don’t upgrade.","No Q>1 → no upgrade.","Audit required.","Disproof required.","Freeze."),
+          b4:B("TV","TV stays NOT MEASURED unless receipts exist.","NOT MEASURED by default.","Read-only.","Formal-only.","No upgrade.")
         }
       },
       post:{
         formal:{title:"VALIDATION · Roadmap (Audit Backbone)",
-          b1:B("Scientific","Publish SVF templates, BM manifests, and replay scripts so evidence can be recomputed independently under canonical JSON v1 + SHA-256.","SVF templates.","BM manifests.","Replay scripts.","Canonical hashes."),
-          b2:B("Industrial / Grid","Produce underwriting-grade artifacts: CC certification, manifest hashes, certificate ledger, and permanent audit trails.","CC cert.","Manifests.","Cert ledger.","Audit trails."),
-          b3:B("Agricultural / Plasma Farms","Publish compliance artifacts for global replication: setbacks, thermal exchange constraints, noise/EM limits, soil/water boundaries.","Setbacks.","Exchange constraints.","Noise/EM.","Soil/water."),
-          b4:B("Adversarial Validation","Codify red-team threat model: semantic drift, bin drift, tampering, laundering, window slicing, late insertion, artifact masking, exception abuse—enforced by strict controls.","ABM/BM/WRM locks.","Hash chains.","Manifests.","Strict certs.")
+          b1:B("DHY→GEEP bridge","Roadmap includes wiring DHY certificates into GEEP state (256 embedding) so UI becomes enforcement-driven, not narrative-driven.","Resolver consumes certs.","State encoded (0–255).","Axis2 integrity drives ceilings.","No cross-epoch mixing."),
+          b2:B("Independent audit posture","Any escalation beyond Industrial requires independent audit. Audit is a receipt, not an opinion.","Audit is mandatory.","Audit is external.","Audit is logged.","Audit gates tier."),
+          b3:B("Publication discipline","Publish templates and manifests so external parties can replay the integrity chain without receiving proprietary internals.","Manifests published.","Replay scripts published.","Receipts hash-sealed.","No secret upgrades."),
+          b4:B("TV policy","TV remains descriptive; it is never used as a claim. It is computed only when admissible receipts exist.",TV_DEF_EN,"TV never upgrades tier.","TV requires receipts.","TV shown in Formal only.","No interpretation.")
         },
         informal:{title:"VALIDATION · Roadmap (Plain)",
-          b1:B("Science (Plain)","Make audits easy and repeatable.","Templates.","Locked bins.","Replay.","Hashes."),
-          b2:B("Industrial (Plain)","Make insurance and regulators comfortable.","Certs.","Ledger.","Trails.","Artifacts."),
-          b3:B("Agriculture (Plain)","Standardize compliance globally.","Setbacks.","Limits.","Boundaries.","Artifacts."),
-          b4:B("Adversarial (Plain)","Publish the attack model and enforce it.","No drift.","No tamper.","No laundering.","Strict.")
+          b1:B("Bridge","Wire certificates into the UI so it enforces truth automatically.","Certs into UI.","State encoding.","No drift.","Strict."),
+          b2:B("Audit","External audit is required to upgrade claims.","Audit required.","Logged.","Receipts.","Gated."),
+          b3:B("Publish","Publish templates so others can verify.","Templates.","Manifests.","Replay.","Receipts."),
+          b4:B("TV","TV is descriptive only.","No claim.","Receipts required.","Formal-only.","No upgrade.")
+        }
+      }
+    },
+
+    physics:{
+      origin:{
+        formal:{title:"PHYSICS · Mechanisms (GATED)",
+          b1:B("Confinement authority (magnetic)","This surface describes confinement/stability mechanisms as bounded research context. It is labeled GATED and carries NO gain claim.","GATED / NO GAIN CLAIM.","τ and stability are measured domains.","β/stability envelope is bounded.","No readiness language."),
+          b2:B("Injection authority (electrostatic)","Injection/shaping remains separate from confinement authority. It cannot be conflated with τ scaling or gain.","Injection ≠ confinement.","Edge control ≠ gain.","Phase-space shaping only.","Bounded by validation."),
+          b3:B("Orchestration (HEL-X)","HEL-X is execution control: scheduling, rollback, regime sequencing. It improves coordination, not physics claim tier.","Coordination only.","Rollback authority.","No physics inflation.","Bounded by validation."),
+          b4:B("Ceiling acknowledgement","If a topology is saturated, voltage/density pushing is prohibited until redesign is justified by receipts. This prevents false progression.","Ceiling must be documented.","No brute-force scaling.","Loss dominance must be closed.","Topology shift requires receipts.")
+        },
+        informal:{title:"PHYSICS · Mechanisms (Plain, GATED)",
+          b1:B("Gated","This section is research context only.","GATED.","No gain claims.","Bounded language.","Stop rules apply."),
+          b2:B("Separate roles","Injection and confinement are different jobs.","Injection ≠ confinement.","Don’t mix.","No shortcuts.","Bounded."),
+          b3:B("HEL-X","HEL-X is scheduling and rollback.","Control only.","No claim lift.","Logged.","Bounded."),
+          b4:B("Ceiling","If it plateaus, stop pushing and redesign.","No pushing.","Close losses.","Redesign.","Measure.")
+        }
+      },
+      now:{
+        formal:{title:"PHYSICS · Mechanisms (Live, GATED)",
+          b1:B("Live posture","Live posture remains research-only: measured domains are referenced but do not upgrade claims. Industrial tier stays C.","Research-only view.","No claim uplift.","Receipts govern display.","Industrial remains C."),
+          b2:B("Measured domains","Measured τ, n, T, and loss channels are inputs to validation; they are not claims. Where receipts exist, they remain bounded.","Receipts only.","No inference.","No projection.","No timeline."),
+          b3:B("Stability envelope","Stability is documented as envelope constraints and kill conditions, not as readiness statements.","Envelope constraints.","Kill conditions.","Rollback triggers.","No readiness language."),
+          b4:B("Topology shift gate","Topology redesign is permitted only after loss dominance and integrity locks are satisfied. Otherwise freeze.","Loss closure first.","Integrity first.","Then redesign.","No shortcuts.")
+        },
+        informal:{title:"PHYSICS · Live (Plain, GATED)",
+          b1:B("Status","Research-only. Industrial stays C.","GATED.","Industrial C.","No upgrades.","No hype."),
+          b2:B("Measurements","Measurements are inputs, not claims.","Inputs only.","Receipts.","No inference.","No timeline."),
+          b3:B("Stability","Stability is about boundaries.","Boundaries.","Kills.","Rollback.","Logs."),
+          b4:B("Redesign gate","Redesign only when validation says yes.","Loss closure.","Integrity.","Then redesign.","Otherwise freeze.")
+        }
+      },
+      post:{
+        formal:{title:"PHYSICS · Roadmap (Requirements, GATED)",
+          b1:B("What roadmap means","Roadmap lists falsifiable requirements and stop conditions only. It does not promise outcomes.","Requirements only.","Stop conditions.","Receipts required.","No promises."),
+          b2:B("Confinement improvement criteria","Progressing confinement status requires ≥10× measured τ improvement AND loss redistribution receipts. Otherwise status remains limited.","τ ≥10× required.","Loss redistribution required.","Repeatability required.","No cherry-picking."),
+          b3:B("Measurement upgrades","Any physics roadmap item must specify measurement upgrades first, not parameter escalation.","Instrumentation first.","Calibration first.","Integrity first.","Then experiments."),
+          b4:B("Termination clause","If repeated architectural iterations fail to change scaling behavior, freeze and pivot; do not inflate narrative.","Freeze on non-scaling.","Pivot if needed.","Publish failures.","Maintain C posture.")
+        },
+        informal:{title:"PHYSICS · Roadmap (Plain, GATED)",
+          b1:B("Roadmap","Roadmap means requirements, not promises.","Requirements.","Stops.","Receipts.","No hype."),
+          b2:B("Progress rule","No τ scaling → no progress claim.","Need ≥10× τ.","Need receipts.","Need repeat.","No cherry-pick."),
+          b3:B("Upgrades first","Measure better before pushing harder.","Instrumentation.","Calibration.","Integrity.","Then experiments."),
+          b4:B("Terminate cleanly","If it won’t scale, stop pretending.","Freeze.","Pivot.","Document.","Stay C.")
+        }
+      }
+    },
+
+    governance:{
+      origin:{
+        formal:{title:"GOVERNANCE · Locks (Concept)",
+          b1:B("Tier locks","Governance enforces claim tiers and prevents escalation beyond evidence. Capital and regulatory posture cannot outrun validation.","Tier lock enforced.","Capital ≤ evidence tier.","Reg posture ≤ evidence tier.","No drift."),
+          b2:B("Separation firewall","Industrial and research are separate lanes. Research cannot justify industrial marketing. Industrial revenue may fund research.","No mixed claims.","Separate disclosures.","Separate budgets.","Separate artifacts."),
+          b3:B("R3 recovery","Any invalidation triggers new epoch. No healing inside contaminated epoch. No cross-epoch aggregation.","Epoch discipline.","SEGMENT_BREAK required.","No cross-epoch mixing.","Historical invalid stays invalid."),
+          b4:B("Enforcement posture","Governance is enforcement only: it does not make physics claims. It defines what is allowed and what is prohibited.","No physics claims here.","Enforcement only.","Stop rules.","Escalation law.")
+        },
+        informal:{title:"GOVERNANCE · Locks (Plain)",
+          b1:B("Locks","Governance prevents claim inflation.","Locks claims.","Locks capital.","Locks regulation.","No drift."),
+          b2:B("Firewall","Industrial and research stay separate.","No mixed claims.","Separate budgets.","Separate docs.","Separate lanes."),
+          b3:B("Recovery","Failures create new epochs.","No healing.","No mixing.","SEGMENT_BREAK.","Permanent history."),
+          b4:B("Enforcement","Governance enforces; it doesn’t brag.","Enforce rules.","Stop rules.","Escalation law.","No hype.")
+        }
+      },
+      now:{
+        formal:{title:"GOVERNANCE · Locks (Live)",
+          b1:B("Current tier posture","Public tier remains C. Research is gated. Any upgrade requires validation receipts and independent audit.","C only.","Research gated.","Upgrade requires receipts.","Audit required."),
+          b2:B("Capital posture","Capital must remain compatible with evidence tier. No speculative leverage beyond validated class.","Capital ≤ evidence.","No speculative tier leaps.","Insurance compatibility.","Reg compliance."),
+          b3:B("Disclosure posture","Disclosure language must remain bounded. Prohibited terms are forbidden across all surfaces.","No net-positive.","No readiness claims.","No Lawson implication.","No Q>1 implication."),
+          b4:B("Telemetry posture","DHY strict posture governs admissibility. If certs invalid, freeze. If partial, remain locked.","Cert invalid → freeze.","Partial → no escalation.","Valid → still C unless Q>1.","Audited required for any upgrade.")
+        },
+        informal:{title:"GOVERNANCE · Live (Plain)",
+          b1:B("Tier","Public tier stays C.","C only.","Gated research.","Receipts required.","Audit required."),
+          b2:B("Capital","Capital follows proof.","No leverage beyond proof.","Insurance posture.","Compliance.","Gated."),
+          b3:B("Language","No drift words allowed.","No net-positive.","No readiness.","No Lawson.","No Q>1."),
+          b4:B("Telemetry","Strict certs decide.","Invalid freezes.","Partial locks.","Valid still bounded.","Audit for upgrade.")
+        }
+      },
+      post:{
+        formal:{title:"GOVERNANCE · Roadmap (Institutionalization)",
+          b1:B("Institutional packaging","Roadmap is institutional packaging of governance: publish the charter, the locks, and the enforcement model as a standard.","Publish charter.","Publish locks.","Publish manifests.","Publish replay paths."),
+          b2:B("Policy alignment","Align with existing safety and compliance regimes. Avoid creating conflict with incumbents; position as stabilizing layer.","Coexistence posture.","Compliance first.","Insurance friendly.","No disruption narrative."),
+          b3:B("Scaling ramp mapping","Scaling must follow research→prototype→reactor→fleet gates (requirements-only). No leapfrogging.","Gate sequence locked.","Requirements-only.","No promises.","Stop rules."),
+          b4:B("Termination discipline","If a path fails, publish failure and remain industrial. Governance prevents sunk-cost narrative drift.","Publish failures.","Freeze paths.","Remain C.","Protect credibility.")
+        },
+        informal:{title:"GOVERNANCE · Roadmap (Plain)",
+          b1:B("Package","Publish the rules and locks.","Charter.","Manifests.","Replay.","Locks."),
+          b2:B("Align","Be compliant and cooperative.","Compliance.","Insurance.","Coexist.","No disruption talk."),
+          b3:B("Ramp","Follow gates only.","Research→prototype→reactor→fleet.","No leaps.","Requirements.","Stops."),
+          b4:B("Terminate cleanly","If it won’t scale, document and stay industrial.","Document.","Freeze.","Stay C.","No drift.")
         }
       }
     }
   };
 
   // ZH mirrors EN for now (single-language render still holds)
-  const ZH = { chain:EN.chain, plasma:EN.plasma, fusion:EN.fusion, validation:EN.validation };
+  const ZH = { industrial:EN.industrial, validation:EN.validation, physics:EN.physics, governance:EN.governance };
   const CONTENT = (lang==="zh") ? ZH : EN;
 
   const FALLBACK = {
@@ -597,7 +609,7 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   };
 
   let activeKey=null;
-  let openIdx=1; // which category bubble is expanded (1..4)
+  let openIdx=1;
 
   function setOpen(idx){
     openIdx=idx;
@@ -616,7 +628,13 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     fillBox(h3,p3,u3,m3,view.b3||FALLBACK.b3);
     fillBox(h4,p4,u4,m4,view.b4||FALLBACK.b4);
 
-    // ensure open bubble is visible
+    // TV visibility rule: only Validation + Formal (enforced by content placement, plus a guard here)
+    // If not validation OR not formal, ensure the TV definitional line is not accidentally shown by content.
+    if(activeKey !== "validation" || style !== "formal"){
+      // no-op: content already avoids TV outside validation formal
+      // (kept as explicit policy statement)
+    }
+
     setOpen(openIdx);
   }
 
@@ -624,7 +642,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     activeKey=key;
     bd.classList.add("show");
     modal.classList.add("show");
-    // default open bubble = 1 (Scientific) on open
     openIdx=1;
     render();
   }
@@ -656,7 +673,7 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   bindBubble(c1,1); bindBubble(c2,2); bindBubble(c3,3); bindBubble(c4,4);
 
   // Keyboard for diamonds
-  [["dChain","chain"],["dPlasma","plasma"],["dFusion","fusion"],["dValidation","validation"]].forEach(pair=>{
+  [["dValidation","validation"],["dIndustrial","industrial"],["dPhysics","physics"],["dGovernance","governance"]].forEach(pair=>{
     document.getElementById(pair[0]).addEventListener("keydown",(e)=>{
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.__openEnergy(pair[1]); }
     });

@@ -1,15 +1,19 @@
-<!-- TNT — /products/index.html  (PRODUCTS · DEPLOYED SURFACES · GEM STANDARD)
-     GOAL:
-       - Restore/replace butchered PRODUCT copy with thorough, consumer-facing language (no “sales correlation” tone).
-       - Keep Concept / Live / Roadmap lenses (origin / now / post).
-       - Keep Style lens (formal / informal).
-       - Lenses live INSIDE MODAL only (no lens controls on main page).
-       - Dual language (EN / 中文) supported via ?lang= and gd_lang persistence.
-       - 4 product diamonds: SOFTWARE / COMMERCIAL / ENERGY / EDUCATION.
-       - Modal content = 4 BUBBLES (4 paragraphs) — NOT bullets.
-     RULES:
-       - Uses /assets/ui.css + /assets/branch.css
-       - Does NOT touch field ownership beyond this page (ui.css owns background)
+<!-- TNT — /products/education/index.html  (EDUCATION SUB-HUB · DIAMOND-OF-DIAMONDS)
+     HARD RULES:
+       - DO NOT TOUCH /assets/ui.css
+       - DO NOT TOUCH /assets/branch.css
+       - Page styles ONLY (this file)
+     FEATURES:
+       - One outer diamond + four inner diamonds
+       - Click diamond → centered gem modal
+       - Lenses INSIDE modal only:
+           STYLE: Formal/Informal (gd_style)
+           TIME: Concept/Live/Roadmap (gd_time = origin/now/post)
+       - Language lens RESTORED:
+           lang=en => English only
+           lang=zh => 中文 only
+       - 4 sections × 4 bulletins for EVERY diamond, EVERY lens
+       - Navigation: BACK (/products/), EXIT (/door/), bottom dock with state
 -->
 
 <!doctype html>
@@ -17,73 +21,62 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRODUCTS · Cardinal Axis</title>
+<title>PRODUCTS · EDUCATION</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-/* PAGE-LOCAL ONLY (layout + gem cards). ui.css owns field. */
 :root{
-  --R:124px;
+  --R:154px;
+  --gold:rgba(212,175,55,.9);
   --goldSoft:rgba(212,175,55,.35);
   --obs1:#070b12;
   --obs2:#0c1626;
   --mut:rgba(255,255,255,.84);
   --mut2:rgba(255,255,255,.68);
 }
-
-/* Top-left */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:90;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-
-/* Buttons (fallback if ui.css class not present) */
-.btn{
-  padding:10px 16px;
-  border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+body{
+  margin:0; min-height:100vh; overflow-x:hidden;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(90,140,255,.10), transparent 60%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 1px, transparent 1px 100px),
+    linear-gradient(180deg,#b00000 0%,#7a0000 60%,#550000 100%);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:#fff;
-  border:1px solid rgba(255,255,255,.08);
+}
+.btn{
+  padding:10px 16px; border-radius:14px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  color:#fff; border:1px solid rgba(255,255,255,.08);
   box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  text-decoration:none;
-  -webkit-tap-highlight-color:transparent;
+  cursor:pointer; font-weight:900; letter-spacing:.2px; text-decoration:none;
 }
 .btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
-.btn.active{
-  border-color:rgba(212,175,55,.25);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 22px rgba(212,175,55,.30);
+.top-left{
+  position:fixed; left:16px; top:16px; z-index:90;
+  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
 }
-
-/* Brand */
 .brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:80;text-align:center;
-  padding:10px 14px;border-radius:999px;
+  position:fixed; left:50%; top:16px; transform:translateX(-50%);
+  z-index:80; text-align:center;
+  padding:10px 14px; border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);
-  backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.16); backdrop-filter:blur(8px);
 }
 .brand .name{ font-weight:950; letter-spacing:1.2px; font-size:12px; opacity:.95; }
 .brand .tag{ font-size:11px; letter-spacing:.6px; opacity:.70; margin-top:2px; }
 
 /* Stage */
 .stage{
-  position:fixed;left:50%;top:50%;
+  position:fixed; left:50%; top:52%;
   transform:translate(-50%,-50%);
-  width:min(560px,92vw);
-  height:min(560px,92vw);
+  width:min(720px,94vw); height:min(720px,94vw);
   z-index:40;
 }
-
-/* Outer diamond */
 .outer{
-  position:absolute;left:50%;top:50%;
-  width:min(560px,92vw);height:min(560px,92vw);
+  position:absolute; left:50%; top:50%;
+  width:min(680px,92vw); height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   background:
@@ -92,27 +85,21 @@
     linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
   border:1px solid rgba(255,255,255,.10);
   box-shadow:
-    0 90px 260px rgba(0,0,0,.62),
+    0 90px 260px rgba(0,0,0,.72),
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none;
-  opacity:.55;
+  pointer-events:none; opacity:.85;
 }
 .outer::after{
-  content:"";
-  position:absolute; inset:0; border-radius:60px;
+  content:""; position:absolute; inset:0; border-radius:60px;
   background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.14;
+  opacity:.16;
 }
-
-/* Category diamonds */
 .d{
-  width:160px;height:160px;
-  position:absolute;left:50%;top:50%;
-  transform-origin:center;
-  border-radius:26px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
+  width:170px; height:170px;
+  position:absolute; left:50%; top:50%;
+  transform-origin:center; border-radius:26px;
+  cursor:pointer; -webkit-tap-highlight-color:transparent;
   background:
     radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
@@ -125,8 +112,7 @@
   transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
 }
 .d::before{
-  content:"";
-  position:absolute; inset:0; border-radius:26px; padding:1px;
+  content:""; position:absolute; inset:0; border-radius:26px; padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.45;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -134,8 +120,7 @@
   pointer-events:none;
 }
 .d::after{
-  content:"";
-  position:absolute; left:12%; right:12%; top:10%; height:28%;
+  content:""; position:absolute; left:12%; right:12%; top:10%; height:28%;
   border-radius:999px;
   background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
   opacity:.85; transform:rotate(-10deg);
@@ -163,41 +148,37 @@
 .d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
 
 .inner{
-  width:100%; height:100%;
-  transform:rotate(-45deg);
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  text-align:center; padding:16px;
-  gap:10px;
-  pointer-events:none; user-select:none;
+  width:100%; height:100%; transform:rotate(-45deg);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:16px; gap:10px;
+  pointer-events:none;
 }
 .lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
-.sub{ font-size:12.5px; opacity:.86; line-height:1.35; max-width:17em; }
+.sub{ font-size:12.5px; opacity:.80; line-height:1.35; max-width:18em; }
 
-/* Core */
 .core{
-  position:absolute;left:50%;top:50%;
+  position:absolute; left:50%; top:50%;
   transform:translate(-50%,-50%);
-  width:64px;height:64px;border-radius:18px;
+  width:74px; height:74px; border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
   box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
   display:grid; place-items:center;
   font-weight:950; letter-spacing:.5px;
-  opacity:.92;
-  pointer-events:none;
+  opacity:.92; pointer-events:none;
 }
 
 /* Dock */
 .dock{
-  position:fixed;left:50%;
+  position:fixed; left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:90;
   width:min(900px,94vw);
-  display:flex;justify-content:center;
-  gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;
+  display:flex; justify-content:center;
+  gap:10px; flex-wrap:wrap;
+  padding:10px 12px;
+  border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.20);
   backdrop-filter:blur(8px);
@@ -205,14 +186,14 @@
 
 /* Modal */
 .bd{
-  position:fixed;inset:0;z-index:200;
+  position:fixed; inset:0; z-index:200;
   background:rgba(0,0,0,.65);
   backdrop-filter:blur(10px);
   display:none;
 }
 .bd.show{display:block;}
 .modal{
-  position:fixed;left:50%;top:50%;
+  position:fixed; left:50%; top:50%;
   transform:translate(-50%,-50%);
   width:min(1020px,94vw);
   max-height:88vh;
@@ -230,13 +211,13 @@
     linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
   box-shadow:0 60px 180px rgba(0,0,0,.92);
   overflow:hidden;
-  display:flex;flex-direction:column;
+  display:flex;
+  flex-direction:column;
   position:relative;
 }
 .shell::before{
-  content:"";
-  position:absolute;left:50%;top:58%;
-  width:min(980px,94vw);height:min(980px,94vw);
+  content:""; position:absolute; left:50%; top:58%;
+  width:min(980px,94vw); height:min(980px,94vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:70px;
   background:
@@ -247,45 +228,44 @@
     0 100px 280px rgba(0,0,0,.72),
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -55px 100px rgba(0,0,0,.55);
-  opacity:.55;
-  pointer-events:none;
+  opacity:.55; pointer-events:none;
 }
 .mhead{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative;z-index:2;
+  display:flex; justify-content:space-between; align-items:center;
+  gap:10px; padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  position:relative; z-index:2;
 }
-.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
-.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
+.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
+.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
 .mbody{
   padding:14px 16px 18px;
-  overflow:auto;-webkit-overflow-scrolling:touch;
+  overflow:auto; -webkit-overflow-scrolling:touch;
   flex:1 1 auto;
-  position:relative;z-index:2;
+  position:relative; z-index:2;
 }
 .lensbar{
-  display:flex;gap:10px;flex-wrap:wrap;
-  align-items:center;justify-content:center;
-  padding:10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex; gap:10px; flex-wrap:wrap;
+  align-items:center; justify-content:center;
+  padding:10px 10px 14px;
+  border-bottom:1px solid rgba(255,255,255,.08);
   margin:-6px -6px 14px;
 }
 .chip{
-  padding:10px 16px;border-radius:999px;
+  padding:10px 16px; border-radius:999px;
   background:linear-gradient(145deg,var(--obs2),var(--obs1));
   border:1px solid rgba(255,255,255,.08);
   box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
+  cursor:pointer; font-weight:900; letter-spacing:.2px; color:#fff;
 }
 .chip.active{
   border-color:rgba(212,175,55,.35);
   box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
 }
-
-/* Bubbles (4 paragraphs) */
-.grid{display:grid;gap:14px}
-@media (min-width:920px){ .grid{grid-template-columns:1fr 1fr} }
-.bubble{
-  padding:16px 18px;border-radius:22px;
+.mgrid{ display:grid; gap:14px; }
+@media (min-width:920px){ .mgrid{ grid-template-columns:1fr 1fr; } }
+.box{
+  padding:16px 18px; border-radius:22px;
   background:
     radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
@@ -293,35 +273,32 @@
   box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
   position:relative;
 }
-.bubble::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;padding:1px;
+.box::before{
+  content:""; position:absolute; inset:0; border-radius:22px; padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.55;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   pointer-events:none;
 }
-.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
-.bubble p{margin:0;color:var(--mut);line-height:1.6}
-.small{margin-top:10px;color:var(--mut2);font-size:12.5px;line-height:1.45}
-
-.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.h{ margin:0 0 8px; font-weight:950; letter-spacing:.2px; }
+.p{ margin:0 0 10px; color:var(--mut); line-height:1.55; }
+.ul{ margin:0 0 0 18px; padding:0; color:var(--mut2); }
+.ul li{ margin:6px 0; }
+.mact{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
 .sbtn{
-  padding:12px 18px;border-radius:14px;
+  padding:12px 18px; border-radius:14px;
   background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:#fff;border:1px solid rgba(255,255,255,.08);
+  color:#fff; border:1px solid rgba(255,255,255,.08);
   box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
+  cursor:pointer; font-weight:900; letter-spacing:.2px; text-decoration:none;
 }
 .sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
 
-@media (max-width:520px){
-  :root{ --R: 116px; }
-  .stage{ width:min(520px,92vw); height:min(520px,92vw); }
-  .outer{ width:min(520px,92vw); height:min(520px,92vw); }
-  .core{ width:58px; height:58px; }
-  .shell{ height:90vh; }
+@media (max-width:560px){
+  :root{ --R: 136px; }
+  .d{ width:158px; height:158px; }
+  .stage{ top:54%; }
 }
 </style>
 </head>
@@ -329,43 +306,43 @@
 <body>
 
 <div class="top-left">
-  <a class="btn" id="btnHub" href="/home/">HUB</a>
+  <a class="btn" id="btnBack" href="/products/">BACK</a>
   <a class="btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
 <div class="brand">
-  <div class="name" id="brandName">CARDINAL AXIS</div>
-  <div class="tag" id="brandTag">PRODUCTS · DEPLOYED SURFACES</div>
+  <div class="name" id="brandName">PRODUCTS</div>
+  <div class="tag" id="brandTag">EDUCATION SYSTEMS</div>
 </div>
 
-<div class="stage" aria-label="Products category diamond">
+<div class="stage">
   <div class="outer"></div>
 
-  <div class="d d-n" id="software" role="button" tabindex="0" aria-label="Software">
+  <div class="d d-n" id="dProg" role="button" tabindex="0">
     <div class="inner">
-      <div class="lab" id="labN">SOFTWARE</div>
-      <div class="sub" id="subN">Tools you can run today.</div>
+      <div class="lab" id="progLab">PROGRAMS</div>
+      <div class="sub" id="progSub">Curriculum · outcomes.</div>
     </div>
   </div>
 
-  <div class="d d-e" id="commercial" role="button" tabindex="0" aria-label="Commercial">
+  <div class="d d-e" id="dLang" role="button" tabindex="0">
     <div class="inner">
-      <div class="lab" id="labE">COMMERCIAL</div>
-      <div class="sub" id="subE">Deployable offerings and licenses.</div>
+      <div class="lab" id="langLab">LANGUAGE</div>
+      <div class="sub" id="langSub">1001 · four levels + 10% sample.</div>
     </div>
   </div>
 
-  <div class="d d-s" id="energy" role="button" tabindex="0" aria-label="Energy">
+  <div class="d d-s" id="dTrain" role="button" tabindex="0">
     <div class="inner">
-      <div class="lab" id="labS">ENERGY</div>
-      <div class="sub" id="subS">Plasma pathways and conversion chains.</div>
+      <div class="lab" id="trainLab">TRAINING</div>
+      <div class="sub" id="trainSub">Masterclasses · reps.</div>
     </div>
   </div>
 
-  <div class="d d-w" id="education" role="button" tabindex="0" aria-label="Education">
+  <div class="d d-w" id="dCert" role="button" tabindex="0">
     <div class="inner">
-      <div class="lab" id="labW">EDUCATION</div>
-      <div class="sub" id="subW">Traversal study programs you can take.</div>
+      <div class="lab" id="certLab">CERTIFICATION</div>
+      <div class="sub" id="certSub">Verification · tiers.</div>
     </div>
   </div>
 
@@ -373,11 +350,12 @@
 </div>
 
 <nav class="dock" id="dock">
-  <a class="btn" id="goTerminal" href="/index.html">TERMINAL</a>
-  <a class="btn" id="goLinks" href="/links/">LINKS</a>
-  <a class="btn active" id="goProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="goLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="goGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockHub" href="/home/">HUB</a>
+  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
 <div class="bd" id="bd"></div>
@@ -390,25 +368,24 @@
     </div>
 
     <div class="mbody">
-      <!-- Lenses INSIDE MODAL ONLY -->
       <div class="lensbar">
         <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>
         <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>
-        <button class="chip" data-time="now" id="chipNow" type="button">LIVE</button>
-        <button class="chip" data-time="post" id="chipPost" type="button">ROADMAP</button>
+        <button class="chip" data-time="now" id="chipLive" type="button">LIVE</button>
+        <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
       </div>
 
-      <div class="grid">
-        <div class="bubble"><h4 id="h1"></h4><p id="p1"></p><div class="small" id="s1"></div></div>
-        <div class="bubble"><h4 id="h2"></h4><p id="p2"></p><div class="small" id="s2"></div></div>
-        <div class="bubble"><h4 id="h3"></h4><p id="p3"></p><div class="small" id="s3"></div></div>
-        <div class="bubble"><h4 id="h4"></h4><p id="p4"></p><div class="small" id="s4"></div></div>
+      <div class="mgrid">
+        <div class="box"><h4 class="h" id="h1"></h4><p class="p" id="p1"></p><ul class="ul" id="u1"></ul></div>
+        <div class="box"><h4 class="h" id="h2"></h4><p class="p" id="p2"></p><ul class="ul" id="u2"></ul></div>
+        <div class="box"><h4 class="h" id="h3"></h4><p class="p" id="p3"></p><ul class="ul" id="u3"></ul></div>
+        <div class="box"><h4 class="h" id="h4"></h4><p class="p" id="p4"></p><ul class="ul" id="u4"></ul></div>
       </div>
 
       <div class="mact">
         <button class="sbtn" id="mReturn" type="button">RETURN</button>
-        <a class="sbtn" id="mGoCategory" href="/products/">OPEN CATEGORY</a>
-        <a class="sbtn" id="mGoHub" href="/home/">GO HUB</a>
+        <a class="sbtn" id="mJumpHub" href="/home/">JUMP HUB</a>
+        <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
       </div>
     </div>
   </div>
@@ -421,390 +398,453 @@
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-
-  if(lang!=="en" && lang!=="zh") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
+  if(!["en","zh"].includes(lang)) lang="en";
+  if(!["formal","informal"].includes(style)) style="formal";
   if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-
-  try{
-    localStorage.setItem("gd_lang", lang);
-    localStorage.setItem("gd_style", style);
-    localStorage.setItem("gd_time", time);
-  }catch(e){}
+  if(!["origin","now","post"].includes(time)) time="now";
+  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time); }catch(e){}
 
   function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+
   function setLinks(){
     var s=q();
-    document.getElementById("btnHub").href="/home/?"+s;
+    document.getElementById("btnBack").href="/products/?"+s;
     document.getElementById("btnExit").href="/door/?"+s;
-
-    document.getElementById("goTerminal").href="/index.html?"+s;
-    document.getElementById("goLinks").href="/links/?"+s;
-    document.getElementById("goProducts").href="/products/?"+s;
-    document.getElementById("goLaws").href="/laws/?"+s;
-    document.getElementById("goGauges").href="/gauges/?"+s;
-
-    // sub-hubs (you can create these later; current page stays valuable regardless)
-    document.getElementById("software").dataset.href="/products/software/?"+s;
-    document.getElementById("commercial").dataset.href="/products/commercial/?"+s;
-    document.getElementById("energy").dataset.href="/products/energy/?"+s;
-    document.getElementById("education").dataset.href="/products/education/?"+s;
-
-    document.getElementById("mGoHub").href="/home/?"+s;
+    document.getElementById("dockHub").href="/home/?"+s;
+    document.getElementById("dockTerminal").href="/index.html?"+s;
+    document.getElementById("dockLinks").href="/links/?"+s;
+    document.getElementById("dockProducts").href="/products/?"+s;
+    document.getElementById("dockLaws").href="/laws/?"+s;
+    document.getElementById("dockGauges").href="/gauges/?"+s;
+    document.getElementById("mJumpHub").href="/home/?"+s;
+    document.getElementById("mJumpProducts").href="/products/?"+s;
   }
 
-  /* Dual language */
-  var UI={
+  var TEXT = {
     en:{
-      brand:"CARDINAL AXIS",
-      tag:"PRODUCTS · DEPLOYED SURFACES",
-      lens:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",live:"LIVE",roadmap:"ROADMAP"},
-      cats:{
-        software:{t:"SOFTWARE",s:"Tools you can run today."},
-        commercial:{t:"COMMERCIAL",s:"Deployable offerings and licenses."},
-        energy:{t:"ENERGY",s:"Plasma pathways and conversion chains."},
-        education:{t:"EDUCATION",s:"Traversal study programs you can take."}
+      title:"PRODUCTS",
+      tag:"EDUCATION SYSTEMS",
+      d:{
+        prog:{lab:"PROGRAMS", sub:"Curriculum · outcomes."},
+        lang:{lab:"LANGUAGE", sub:"1001 · four levels + 10% sample."},
+        train:{lab:"TRAINING", sub:"Masterclasses · reps."},
+        cert:{lab:"CERTIFICATION", sub:"Verification · tiers."}
+      },
+      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", live:"LIVE", roadmap:"ROADMAP"},
+      buttons:{return:"RETURN", jhub:"JUMP HUB", jprod:"JUMP PRODUCTS"},
+      content:{
+        prog:{
+          origin:{formal:{title:"Programs",
+            b1:{h:"What it is",p:"A traversal-first curriculum system built as navigable structures (not linear chapters).",u:["Programs are maps (not stairs).","Entry points are flexible.","Return is deterministic.","Progress is evidence-based."]},
+            b2:{h:"Program set",p:"A clear catalog of programs built on one stable map.",u:["Foundation Sprint (30 days).","Structure Immersion (90 days).","Leadership English.","Business Precision."]},
+            b3:{h:"How it’s used",p:"Pick a node, run reps, verify output, return and branch again.",u:["Enter fast.","Practice now.","Verify output.","Return safely."]},
+            b4:{h:"What you get",p:"Lesson maps, drill packs, and checkpoints tied to the structure.",u:["Daily drills.","Prompt packs.","Conversation reps.","Milestone checks."]}
+          }, informal:{title:"Programs",
+            b1:{h:"What it is",p:"Programs you can follow without getting trapped.",u:["Clear map.","Clear entry.","Clear return.","Clear result."]},
+            b2:{h:"Programs",p:"What’s available.",u:["30-Day Foundation.","90-Day Immersion.","Leadership English.","Business Precision."]},
+            b3:{h:"Use it",p:"Tap → practice → return → repeat.",u:["Enter.","Practice.","Return.","Repeat."]},
+            b4:{h:"You get",p:"Drills and checkpoints.",u:["Lists.","Prompts.","Drills.","Checks."]}
+          }},
+          now:{formal:{title:"Programs — Live",
+            b1:{h:"Live status",p:"Program topology is live; content expands inside fixed nodes without breaking routing.",u:["Stable routes.","Stable lenses.","State propagation.","No drift."]},
+            b2:{h:"Fill-first rule",p:"Each node gets filled before expansion.",u:["No empty nodes.","4 boxes always.","4 bullets each.","Real lens changes."]},
+            b3:{h:"Progress model",p:"Progress is tracked by completion cycles.",u:["Deviation detected.","Operator applied.","Recovery verified.","Cycle logged."]},
+            b4:{h:"Launch posture",p:"Consumer-legible and predictable.",u:["Clear outcomes.","Simple steps.","Predictable navigation.","No academic fog."]}
+          }, informal:{title:"Programs — Live",
+            b1:{h:"Live",p:"Stable structure with growing content.",u:["Safe.","Stable.","Predictable.","Clear."]},
+            b2:{h:"Rule",p:"Fill nodes first.",u:["No blanks.","4×4 bulletins.","Then depth.","No drift."]},
+            b3:{h:"Progress",p:"Track cycles.",u:["Detect.","Apply.","Verify.","Log."]},
+            b4:{h:"Posture",p:"Clear and readable.",u:["Simple.","Predictable.","Legible.","Useful."]}
+          }},
+          post:{formal:{title:"Programs — Roadmap",
+            b1:{h:"Expansion",p:"More tracks; same map.",u:["Kids/ESL.","Adult pro.","Coach track.","Enterprise track."]},
+            b2:{h:"Depth control",p:"Adjust depth without changing navigation.",u:["Fast view.","Deep view.","Same routes.","Same meaning."]},
+            b3:{h:"Verification",p:"Optional tiered proof.",u:["Assessments.","Evidence logs.","Badges.","Registry hooks."]},
+            b4:{h:"Distribution",p:"Bundles for real use.",u:["PDF packs.","Audio prompts.","Practice cards.","Lesson kits."]}
+          }, informal:{title:"Programs — Roadmap",
+            b1:{h:"Next",p:"More tracks.",u:["More lessons.","More drills.","Same map.","Same rules."]},
+            b2:{h:"Depth",p:"Quick or deep.",u:["Quick.","Deep.","Your pace.","Stable."]},
+            b3:{h:"Proof",p:"Optional verification.",u:["Tests.","Badges.","Logs.","Lookup."]},
+            b4:{h:"Bundles",p:"More materials.",u:["PDFs.","Audio.","Cards.","Micro-lessons."]}
+          }}
+        },
+
+        lang:{
+          origin:{formal:{title:"Language (1001) — Four Levels + 10% Sample",
+            b1:{h:"Four levels",p:"The 1001 core is split into four mastery bands (~250 words each).",u:["L1 Foundation (0–250).","L2 Function (251–500).","L3 Structure (501–750).","L4 Precision (751–1001)."]},
+            b2:{h:"What each level unlocks",p:"Levels are capability bands, not permission gates.",u:["L1: complete basic thoughts.","L2: explain and compare.","L3: describe systems.","L4: express nuance."]},
+            b3:{h:"10% sample (≈100 words)",p:"A traversal cluster: vocabulary → structure → application.",u:["Verbs: be/do/go/make/get.","Connectors: because/if/when/how.","Structure: system/change/result.","Control: improve/need/possible."]},
+            b4:{h:"10% sample — drills",p:"Four drills that force real use.",u:["5 ‘because’ lines.","Swap to ‘if’.","Name a system.","Change one step."]}
+          }, informal:{title:"Language (1001) — Four Levels + 10% Sample",
+            b1:{h:"Levels",p:"Four levels, about 250 words each.",u:["L1 Foundation.","L2 Function.","L3 Structure.","L4 Precision."]},
+            b2:{h:"Why levels work",p:"They guide you, but you can jump where you need.",u:["Not a strict ladder.","Enter by need.","Return always works.","Progress measurable."]},
+            b3:{h:"10% sample",p:"Starter cluster (~100 words).",u:["Core verbs.","Core connectors.","Core structure.","Core control."]},
+            b4:{h:"Use it",p:"Do the four drills daily for a week.",u:["Because lines.","Swap to if.","Name system.","Change step."]}
+          }},
+          now:{formal:{title:"Language (1001) — Live",
+            b1:{h:"Live structure",p:"Categories + levels are stable; expansions happen inside the same nodes.",u:["Stable categories.","Stable levels.","Deterministic routing.","Safe return."]},
+            b2:{h:"Lens integrity",p:"Formal/Informal and Concept/Live/Roadmap must change meaning, not cosmetics.",u:["Formal = precise.","Informal = direct.","Concept = definition.","Live = execution."]},
+            b3:{h:"Traversal (anti-linear)",p:"Traversal is map-based learning: enter where needed, return safely, repeat.",u:["Enter by need.","Cross-link.","Return.","Repeat."]},
+            b4:{h:"Outcome target",p:"Daily reps + checkpoints improve function faster than passive consumption.",u:["Daily drill loop.","Conversation reps.","Checkpoint tests.","Evidence logs."]}
+          }, informal:{title:"Language (1001) — Live",
+            b1:{h:"Live",p:"Usable now.",u:["Stable map.","Stable lenses.","Safe return.","No drift."]},
+            b2:{h:"Lenses",p:"Lens switches change real text.",u:["Not cosmetic.","Real meaning shift.","Clear emphasis.","Still coherent."]},
+            b3:{h:"Traversal",p:"Not a ladder. A map.",u:["Jump in.","Practice.","Return.","Repeat."]},
+            b4:{h:"Goal",p:"Fast practical English.",u:["Speak more.","Understand more.","Practice daily.","Track wins."]}
+          }},
+          post:{formal:{title:"Language (1001) — Roadmap",
+            b1:{h:"Overlay packs",p:"Add deterministic overlay packs by country and domain.",u:["Country overlay.","Industry overlay.","Dialect notes.","Fallback safe."]},
+            b2:{h:"Beyond 1001",p:"Add Level 5+ while preserving the core.",u:["Industry vocab.","Formal writing.","Negotiation.","Technical packs."]},
+            b3:{h:"Assessment",p:"Placement and mastery tests tied to structure and evidence.",u:["Placement test.","Mastery test.","Pronunciation checks.","Certification hooks."]},
+            b4:{h:"Distribution",p:"Ship printable + audio bundles with consistent mapping.",u:["PDF bundles.","Audio prompts.","Practice cards.","Micro-lessons."]}
+          }, informal:{title:"Language (1001) — Roadmap",
+            b1:{h:"Overlays",p:"More packs without changing the core.",u:["Country packs.","Industry packs.","Fallback safe.","No drift."]},
+            b2:{h:"More levels",p:"Beyond core 1001.",u:["Writing.","Negotiation.","Industry.","Technical."]},
+            b3:{h:"Tests",p:"Simple tests.",u:["Placement.","Mastery.","Skills.","Badges."]},
+            b4:{h:"Bundles",p:"More materials.",u:["PDFs.","Audio.","Cards.","Micro-lessons."]}
+          }}
+        },
+
+        train:{
+          origin:{formal:{title:"Training (Masterclasses)",
+            b1:{h:"What it is",p:"Structured masterclasses that teach traversal study as a repeatable method.",u:["Method first.","Structure first.","Practice loops.","Clear outcomes."]},
+            b2:{h:"Audience",p:"Built for teachers and facilitators who are trusted by the community.",u:["ESL teachers.","Tutors.","Team leads.","Community instructors."]},
+            b3:{h:"Format",p:"Short modules with drills and checkpoints.",u:["Explain lenses.","Run exercises.","Evaluate output.","Iterate."]},
+            b4:{h:"Deliverables",p:"Facilitator kits for repeatable delivery.",u:["Slides.","PDF packs.","Rubrics.","Scripts."]}
+          }, informal:{title:"Training (Masterclasses)",
+            b1:{h:"What it is",p:"Masterclasses that teach the method.",u:["Clear modules.","Hands-on drills.","Real practice.","Clear wins."]},
+            b2:{h:"Who it’s for",p:"Teachers and coaches.",u:["ESL helpers.","Tutors.","Team leads.","Community teachers."]},
+            b3:{h:"How",p:"Short lessons + reps.",u:["Explain.","Practice.","Check.","Repeat."]},
+            b4:{h:"You get",p:"Guides + scripts.",u:["Slides.","PDFs.","Rubrics.","Packs."]}
+          }},
+          now:{formal:{title:"Training — Live",
+            b1:{h:"Live status",p:"Training scaffolds can be built directly from the hub structure.",u:["Same diamonds.","Same lenses.","Same contract.","Repeatable delivery."]},
+            b2:{h:"Quality control",p:"Rubrics keep independent facilitators aligned.",u:["Observer-invariant.","Evidence-based.","No intent inference.","Deterministic scoring."]},
+            b3:{h:"Delivery",p:"Workshops + practice labs + feedback loops.",u:["Practice blocks.","Live feedback.","Checkpoint tests.","Re-run."]},
+            b4:{h:"Outcome",p:"Scale through teachers without drift.",u:["Safer adoption.","More trust.","Higher retention.","Lower friction."]}
+          }, informal:{title:"Training — Live",
+            b1:{h:"Live",p:"Built from the same map.",u:["Same structure.","Same rules.","Repeatable.","Teachable."]},
+            b2:{h:"Quality",p:"Rubrics keep alignment.",u:["Same evidence.","Same outputs.","Less confusion.","No drift."]},
+            b3:{h:"How",p:"Workshops and practice labs.",u:["Learn.","Practice.","Feedback.","Repeat."]},
+            b4:{h:"Result",p:"Teachers scale faster.",u:["More reach.","More trust.","More consistency.","Less drift."]}
+          }},
+          post:{formal:{title:"Training — Roadmap",
+            b1:{h:"Tiers",p:"Certification-backed instructor levels.",u:["Tiered facilitators.","Audit logs.","Renewals.","Revocation rules."]},
+            b2:{h:"Scale",p:"Deploy standardized training kits.",u:["Cohorts.","Playbooks.","Nodes.","Overlays."]},
+            b3:{h:"Instrumentation",p:"Track outcomes without breaking neutrality.",u:["Skill metrics.","Behavioral signals.","Progress graphs.","Reports."]},
+            b4:{h:"Enterprise",p:"Governance/execution training.",u:["Policy adoption.","Change discipline.","Risk suppression.","Reporting."]}
+          }, informal:{title:"Training — Roadmap",
+            b1:{h:"Next",p:"Instructor tiers.",u:["Levels.","Audits.","Renewals.","Rules."]},
+            b2:{h:"Scale",p:"Training kits.",u:["Cohorts.","Playbooks.","Nodes.","Overlays."]},
+            b3:{h:"Metrics",p:"Clean outcome tracking.",u:["Signals.","Skills.","Progress.","Reports."]},
+            b4:{h:"Enterprise",p:"Org training version.",u:["Policies.","Discipline.","Risk control.","Reporting."]}
+          }}
+        },
+
+        cert:{
+          origin:{formal:{title:"Education Certification",
+            b1:{h:"What it is",p:"A verification layer for completion and competence where appropriate.",u:["Serial IDs.","Scope definition.","Validity windows.","Revocation rules."]},
+            b2:{h:"Anti-gaming",p:"Prevents paper credentials without skill.",u:["Evidence required.","Rubric checks.","Dual coding.","Audit logs."]},
+            b3:{h:"Outputs",p:"Certificates are lookupable and time-stamped.",u:["Registry entry.","Status.","Reason codes.","History."]},
+            b4:{h:"Use cases",p:"Language mastery, program completion, facilitator readiness.",u:["Level mastery.","Program completion.","Instructor tiers.","Quality control."]}
+          }, informal:{title:"Education Certification",
+            b1:{h:"What it is",p:"Proof someone finished and can do it.",u:["IDs.","Dates.","Status.","Reasons."]},
+            b2:{h:"Why",p:"Stops fake credentials.",u:["Evidence.","Rubrics.","Audits.","Logs."]},
+            b3:{h:"What you see",p:"Lookupable status.",u:["Active.","Expired.","Revoked.","Why."]},
+            b4:{h:"Where it fits",p:"Programs and instructors.",u:["Completion.","Mastery.","Instructor level.","Quality."]}
+          }},
+          now:{formal:{title:"Certification — Live",
+            b1:{h:"Live status",p:"Registry-ready scaffolding can be applied to learning outputs.",u:["Stable keys.","Stable windows.","Deterministic checks.","Safe publication."]},
+            b2:{h:"Neutrality",p:"Certification verifies evidence and output, not ideology.",u:["Observed behavior.","Artifact checks.","No intent inference.","Clear bounds."]},
+            b3:{h:"Governance",p:"Separation of roles prevents capture.",u:["Builders ≠ issuers.","Auditors ≠ thresholds.","Logs preserved.","Status reasons."]},
+            b4:{h:"Renewal",p:"Renewal ties to updated evidence windows.",u:["Time-bound validity.","Re-check required.","History kept.","Status updates."]}
+          }, informal:{title:"Certification — Live",
+            b1:{h:"Now",p:"We certify what’s measurable.",u:["Evidence.","Checks.","Logs.","Status."]},
+            b2:{h:"Rule",p:"No ideology—only output.",u:["Behavior.","Artifacts.","Proof.","Bounds."]},
+            b3:{h:"Safety",p:"Roles are separated.",u:["No capture.","No cheating.","Logs.","Audits."]},
+            b4:{h:"Renewal",p:"Renew with new evidence.",u:["Window.","Re-check.","History kept.","Status updates."]}
+          }},
+          post:{formal:{title:"Certification — Roadmap",
+            b1:{h:"Tiers",p:"Tiered certificates aligned to traversal competence.",u:["Student tiers.","Instructor tiers.","Audit tiers.","Public lookup."]},
+            b2:{h:"Integration",p:"Connect to products/laws/gauges as one system.",u:["Shared keys.","Shared routing.","Shared registry.","Shared evidence."]},
+            b3:{h:"Languages",p:"Overlays expand access while core stays stable.",u:["EN canonical.","Overlays optional.","Fallback safe.","Consistency checks."]},
+            b4:{h:"Outcome",p:"A training ecosystem that does not drift over time.",u:["Stable rules.","Stable meaning.","Upgradeable content.","Public-safe."]}
+          }, informal:{title:"Certification — Roadmap",
+            b1:{h:"Next",p:"Tiers for learners and teachers.",u:["Levels.","Audits.","Lookup.","Status."]},
+            b2:{h:"Connected",p:"Everything links together cleanly.",u:["Same keys.","Same routing.","Same registry.","Same proof."]},
+            b3:{h:"Languages",p:"Overlays expand access.",u:["Core stable.","Overlays optional.","Fallback safe.","Consistent."]},
+            b4:{h:"Result",p:"Growth without drift.",u:["Stable rules.","Stable meaning.","More depth.","Public-ready."]}
+          }}
+        }
       }
     },
+
     zh:{
-      brand:"枢轴罗盘",
-      tag:"产品 · 已部署执行面",
-      lens:{formal:"正式",informal:"非正式",concept:"概念",live:"上线",roadmap:"路线图"},
-      cats:{
-        software:{t:"软件",s:"今天就能运行的工具。"},
-        commercial:{t:"商业",s:"可部署的方案与许可。"},
-        energy:{t:"能源",s:"等离子路径与转换链。"},
-        education:{t:"教育",s:"可直接学习的遍历课程。"}
+      title:"产品",
+      tag:"教育系统",
+      d:{
+        prog:{lab:"课程", sub:"课程体系 · 成果。"},
+        lang:{lab:"语言", sub:"1001 · 四级 + 10%样本。"},
+        train:{lab:"训练", sub:"大师课 · 练习。"},
+        cert:{lab:"认证", sub:"验证 · 分层。"}
+      },
+      lens:{formal:"正式", informal:"直接", concept:"概念", live:"上线", roadmap:"路线图"},
+      buttons:{return:"返回", jhub:"跳转枢纽", jprod:"跳转产品"},
+      content:{
+        prog:{
+          origin:{formal:{title:"课程（Programs）",
+            b1:{h:"它是什么",p:"以遍历学习为核心：结构可导航，而不是线性章节。",u:["课程是地图（不是台阶）。","入口可自由选择。","返回确定可控。","进度基于证据。"]},
+            b2:{h:"课程组合",p:"清晰的课程目录，建立在同一张稳定地图上。",u:["30天基础冲刺。","90天结构沉浸。","领导力英语。","商业精确表达。"]},
+            b3:{h:"怎么用",p:"选节点→做训练→验证输出→返回再分支。",u:["快速进入。","马上练习。","验证输出。","安全返回。"]},
+            b4:{h:"你得到什么",p:"与结构绑定的课程地图、训练包与检查点。",u:["每日训练。","提示包。","对话练习。","里程碑检查。"]}
+          }, informal:{title:"课程（Programs）",
+            b1:{h:"它是什么",p:"不会被线性梯子困住的课程体系。",u:["地图清楚。","入口清楚。","返回清楚。","结果清楚。"]},
+            b2:{h:"课程",p:"可直接执行的项目。",u:["30天基础。","90天沉浸。","领导力英语。","商业精确。"]},
+            b3:{h:"用法",p:"点进来→练→回来→重复。",u:["进入。","练。","回来。","重复。"]},
+            b4:{h:"你得到",p:"训练与检查点。",u:["清单。","提示语。","训练。","检查。"]}
+          }},
+          now:{formal:{title:"课程 — 上线",
+            b1:{h:"上线状态",p:"拓扑已上线：内容在固定节点内扩展，不破路由。",u:["路由稳定。","镜头稳定。","状态传递。","不漂移。"]},
+            b2:{h:"先填满规则",p:"每个节点先填满再扩展。",u:["不留空节点。","固定四盒。","每盒四条。","镜头真改内容。"]},
+            b3:{h:"进度模型",p:"进度按完成循环计量。",u:["检测偏离。","应用操作。","验证恢复。","记录循环。"]},
+            b4:{h:"上线姿态",p:"对大众可读且可预测。",u:["成果清楚。","步骤简单。","导航可预测。","无学术迷雾。"]}
+          }, informal:{title:"课程 — 上线",
+            b1:{h:"上线",p:"结构稳定，内容可增长。",u:["安全。","稳定。","可预测。","清楚。"]},
+            b2:{h:"规则",p:"先填满再扩展。",u:["不留空。","4×4公告。","再做深页。","不漂移。"]},
+            b3:{h:"进度",p:"跟踪完成循环。",u:["检测。","执行。","验证。","记录。"]},
+            b4:{h:"姿态",p:"清晰易读。",u:["简单。","可预测。","可理解。","可执行。"]}
+          }},
+          post:{formal:{title:"课程 — 路线图",
+            b1:{h:"扩展",p:"更多课程线，同一地图。",u:["少儿/ESL。","成人职业。","教练训练。","企业版本。"]},
+            b2:{h:"深度控制",p:"深度可调但导航不变。",u:["快览。","深读。","同路由。","同含义。"]},
+            b3:{h:"验证",p:"可选分层验证。",u:["评测。","证据日志。","徽章。","注册表接口。"]},
+            b4:{h:"分发",p:"真正可用的交付包。",u:["PDF包。","音频提示。","练习卡。","课程包。"]}
+          }, informal:{title:"课程 — 路线图",
+            b1:{h:"下一步",p:"更多课程。",u:["更多课程。","更多训练。","同地图。","同规则。"]},
+            b2:{h:"深度",p:"快或深。",u:["快。","深。","按你节奏。","稳定。"]},
+            b3:{h:"证明",p:"可选验证。",u:["测试。","徽章。","日志。","查询。"]},
+            b4:{h:"交付包",p:"更多材料。",u:["PDF。","音频。","卡片。","微课程。"]}
+          }}
+        },
+
+        lang:{
+          origin:{formal:{title:"语言（1001）— 四级 + 10%样本",
+            b1:{h:"四级结构",p:"1001核心分为四个掌握带（每带约250词）。",u:["L1基础（0–250）。","L2功能（251–500）。","L3结构（501–750）。","L4精确（751–1001）。"]},
+            b2:{h:"每级解锁什么",p:"级别是能力带，不是权限门。",u:["L1：完整基础表达。","L2：解释与比较。","L3：系统表达。","L4：细节表达。"]},
+            b3:{h:"10%样本（约100词）",p:"遍历簇：词汇→结构→应用。",u:["动词：be/do/go/make/get。","连接词：because/if/when/how。","结构：system/change/result。","控制：improve/need/possible。"]},
+            b4:{h:"10%样本 — 训练",p:"四个训练强迫真实输出。",u:["写5句because。","换成if。","命名系统。","改一步。"]}
+          }, informal:{title:"语言（1001）— 四级 + 10%样本",
+            b1:{h:"级别",p:"四级，每级约250词。",u:["L1基础。","L2功能。","L3结构。","L4精确。"]},
+            b2:{h:"为什么好用",p:"引导你，但你可以按需要跳。",u:["不是死梯子。","按需进入。","随时可回。","进度可测。"]},
+            b3:{h:"10%样本",p:"起步簇（约100词）。",u:["动词。","连接词。","结构词。","控制词。"]},
+            b4:{h:"用法",p:"每天做四个训练。",u:["because。","换if。","命名系统。","改一步。"]}
+          }},
+          now:{formal:{title:"语言（1001）— 上线",
+            b1:{h:"上线结构",p:"类别+级别稳定；内容在同一节点内扩展。",u:["类别稳定。","级别稳定。","路由确定。","可安全返回。"]},
+            b2:{h:"镜头完整性",p:"正式/直接与概念/上线/路线图必须改变含义。",u:["正式=精确。","直接=直白。","概念=定义。","上线=执行。"]},
+            b3:{h:"遍历（反线性）",p:"遍历学习是地图式：按需进入，安全返回，循环重复。",u:["按需进入。","跨级联结。","返回。","重复。"]},
+            b4:{h:"目标",p:"每日练习+检查点，比被动输入更快提升。",u:["每日训练循环。","对话练习。","检查点测试。","证据日志。"]}
+          }, informal:{title:"语言（1001）— 上线",
+            b1:{h:"上线",p:"现在能用。",u:["地图稳定。","镜头稳定。","安全返回。","不漂移。"]},
+            b2:{h:"镜头",p:"切镜头，文字真变。",u:["不是装饰。","含义变化。","重点变化。","仍一致。"]},
+            b3:{h:"遍历",p:"不是梯子，是地图。",u:["跳入。","练。","回来。","重复。"]},
+            b4:{h:"目标",p:"实用英语。",u:["说更多。","懂更多。","每天练。","记录胜利。"]}
+          }},
+          post:{formal:{title:"语言（1001）— 路线图",
+            b1:{h:"覆盖包",p:"按国家/领域增加覆盖包。",u:["国家覆盖。","行业覆盖。","方言说明。","安全回退。"]},
+            b2:{h:"超出1001",p:"保持核心层不变，增加更高级别。",u:["行业词。","正式写作。","谈判。","技术包。"]},
+            b3:{h:"评测",p:"与结构与证据绑定的测试。",u:["分级测。","掌握测。","发音测。","认证接口。"]},
+            b4:{h:"分发",p:"以PDF/音频一致映射交付。",u:["PDF包。","音频提示。","练习卡。","微课程。"]}
+          }, informal:{title:"语言（1001）— 路线图",
+            b1:{h:"覆盖",p:"更多包，但核心不变。",u:["国家包。","行业包。","安全回退。","不漂移。"]},
+            b2:{h:"更多级别",p:"超出核心1001。",u:["写作。","谈判。","行业。","技术。"]},
+            b3:{h:"测试",p:"简单有效。",u:["分级。","掌握。","技能。","徽章。"]},
+            b4:{h:"材料包",p:"更多交付包。",u:["PDF。","音频。","卡片。","微课程。"]}
+          }}
+        },
+
+        train:{
+          origin:{formal:{title:"训练（大师课）",
+            b1:{h:"它是什么",p:"教遍历学习方法的结构化大师课。",u:["方法优先。","结构优先。","练习循环。","结果清楚。"]},
+            b2:{h:"受众",p:"面向可信教师与带教者。",u:["ESL老师。","辅导者。","团队带头人。","社区教师。"]},
+            b3:{h:"形式",p:"短模块+练习+检查点。",u:["解释镜头。","做练习。","评估输出。","迭代。"]},
+            b4:{h:"交付物",p:"带教工具包。",u:["幻灯。","PDF包。","评分规。","脚本。"]}
+          }, informal:{title:"训练（大师课）",
+            b1:{h:"它是什么",p:"教方法的课程。",u:["模块清晰。","练习上手。","真实训练。","结果清楚。"]},
+            b2:{h:"适合谁",p:"老师与教练。",u:["ESL帮助者。","导师。","团队负责人。","社区老师。"]},
+            b3:{h:"怎么跑",p:"短课+重复练。",u:["讲。","练。","查。","再来。"]},
+            b4:{h:"你得到什么",p:"指南+脚本。",u:["幻灯。","PDF。","评分规。","工具包。"]}
+          }},
+          now:{formal:{title:"训练 — 上线",
+            b1:{h:"上线状态",p:"训练骨架可直接从枢纽结构生成。",u:["同菱形。","同镜头。","同契约。","可复制交付。"]},
+            b2:{h:"质量控制",p:"评分规让多个讲师保持一致。",u:["观察者不变。","基于证据。","不推断意图。","确定评分。"]},
+            b3:{h:"交付",p:"工作坊+练习实验室+反馈循环。",u:["练习块。","实时反馈。","检查点测试。","复跑。"]},
+            b4:{h:"结果",p:"通过老师扩展且不漂移。",u:["更安全。","更可信。","更一致。","更少混乱。"]}
+          }, informal:{title:"训练 — 上线",
+            b1:{h:"上线",p:"用同一地图做训练。",u:["同结构。","同规则。","可复制。","可教学。"]},
+            b2:{h:"质量",p:"评分规保持一致。",u:["同证据。","同输出。","更少混乱。","不漂移。"]},
+            b3:{h:"怎么做",p:"工作坊+练习。",u:["学。","练。","反馈。","重复。"]},
+            b4:{h:"结果",p:"老师扩展更快。",u:["更广。","更可信。","更一致。","更少漂移。"]}
+          }},
+          post:{formal:{title:"训练 — 路线图",
+            b1:{h:"分层",p:"讲师分层与审计。",u:["讲师等级。","审计日志。","续期。","撤销规则。"]},
+            b2:{h:"规模化",p:"标准训练包下发。",u:["班组。","剧本。","节点。","覆盖层。"]},
+            b3:{h:"测量",p:"干净测量结果。",u:["技能指标。","行为信号。","进度图。","报告。"]},
+            b4:{h:"企业",p:"治理/执行训练。",u:["策略采纳。","纪律。","风险抑制。","报告。"]}
+          }, informal:{title:"训练 — 路线图",
+            b1:{h:"下一步",p:"讲师分层。",u:["等级。","审计。","续期。","规则。"]},
+            b2:{h:"扩展",p:"训练包。",u:["班组。","剧本。","节点。","覆盖层。"]},
+            b3:{h:"指标",p:"跟踪结果。",u:["信号。","技能。","进度。","报告。"]},
+            b4:{h:"企业版",p:"组织训练。",u:["策略。","纪律。","风险控制。","报告。"]}
+          }}
+        },
+
+        cert:{
+          origin:{formal:{title:"教育认证",
+            b1:{h:"它是什么",p:"用于完成与能力的验证层。",u:["序列号。","范围。","有效期。","撤销规则。"]},
+            b2:{h:"反作弊",p:"防止无技能证书。",u:["需要证据。","评分规。","双人编码。","审计日志。"]},
+            b3:{h:"输出",p:"可查询状态与时间戳。",u:["注册表条目。","状态。","原因码。","历史。"]},
+            b4:{h:"用例",p:"语言掌握、课程完成、讲师准备度。",u:["级别掌握。","课程完成。","讲师分层。","质量控制。"]}
+          }, informal:{title:"教育认证",
+            b1:{h:"它是什么",p:"证明你完成且能做。",u:["ID。","日期。","状态。","原因。"]},
+            b2:{h:"为什么",p:"防止假证书。",u:["证据。","评分规。","审计。","日志。"]},
+            b3:{h:"你能看到",p:"可查询状态。",u:["有效。","过期。","撤销。","为什么。"]},
+            b4:{h:"适用范围",p:"课程与讲师。",u:["完成。","掌握。","讲师等级。","质量。"]}
+          }},
+          now:{formal:{title:"认证 — 上线",
+            b1:{h:"上线状态",p:"注册表结构可应用到学习输出。",u:["键稳定。","窗口稳定。","检查确定。","发布安全。"]},
+            b2:{h:"中立性",p:"认证验证证据与输出。",u:["观测行为。","产物检查。","不推断意图。","边界清晰。"]},
+            b3:{h:"治理",p:"角色分离防止被捕获。",u:["建设者≠签发者。","审计≠阈值。","日志保留。","原因码。"]},
+            b4:{h:"续期",p:"续期绑定新证据窗口。",u:["时间有效。","需复查。","历史保留。","状态更新。"]}
+          }, informal:{title:"认证 — 上线",
+            b1:{h:"现在",p:"能测就能证。",u:["证据。","检查。","日志。","状态。"]},
+            b2:{h:"规则",p:"只看输出。",u:["行为。","产物。","证明。","边界。"]},
+            b3:{h:"安全",p:"角色分开。",u:["不被捕获。","不作弊。","日志。","审计。"]},
+            b4:{h:"续期",p:"用新证据续期。",u:["窗口。","复查。","历史保留。","状态更新。"]}
+          }},
+          post:{formal:{title:"认证 — 路线图",
+            b1:{h:"分层",p:"与遍历能力对应的分层证书。",u:["学员分层。","讲师分层。","审计分层。","公开查询。"]},
+            b2:{h:"集成",p:"与其他模块统一连接。",u:["共享键。","共享路由。","共享注册表。","共享证据包。"]},
+            b3:{h:"语言",p:"覆盖层扩展访问，核心稳定。",u:["EN/中文规范。","覆盖包。","安全回退。","一致检查。"]},
+            b4:{h:"结果",p:"增长而不漂移。",u:["规则稳定。","含义稳定。","内容可升级。","可公开。"]}
+          }, informal:{title:"认证 — 路线图",
+            b1:{h:"下一步",p:"分层。",u:["等级。","审计。","查询。","状态。"]},
+            b2:{h:"连接",p:"干净链接。",u:["同键。","同路由。","同注册表。","同证明。"]},
+            b3:{h:"语言",p:"覆盖层扩展。",u:["核心稳定。","覆盖可选。","安全回退。","一致。"]},
+            b4:{h:"结果",p:"不漂移增长。",u:["规则稳定。","含义稳定。","更深内容。","可公开。"]}
+          }}
+        }
       }
     }
   };
-  var pack = (lang==="zh") ? UI.zh : UI.en;
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
-  document.getElementById("brandName").textContent = pack.brand;
+  var pack = (lang==="zh") ? TEXT.zh : TEXT.en;
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+  document.getElementById("brandName").textContent = pack.title;
   document.getElementById("brandTag").textContent = pack.tag;
 
-  document.getElementById("labN").textContent = pack.cats.software.t;
-  document.getElementById("subN").textContent = pack.cats.software.s;
-  document.getElementById("labE").textContent = pack.cats.commercial.t;
-  document.getElementById("subE").textContent = pack.cats.commercial.s;
-  document.getElementById("labS").textContent = pack.cats.energy.t;
-  document.getElementById("subS").textContent = pack.cats.energy.s;
-  document.getElementById("labW").textContent = pack.cats.education.t;
-  document.getElementById("subW").textContent = pack.cats.education.s;
+  document.getElementById("progLab").textContent = pack.d.prog.lab;
+  document.getElementById("progSub").textContent = pack.d.prog.sub;
+  document.getElementById("langLab").textContent = pack.d.lang.lab;
+  document.getElementById("langSub").textContent = pack.d.lang.sub;
+  document.getElementById("trainLab").textContent = pack.d.train.lab;
+  document.getElementById("trainSub").textContent = pack.d.train.sub;
+  document.getElementById("certLab").textContent = pack.d.cert.lab;
+  document.getElementById("certSub").textContent = pack.d.cert.sub;
 
-  /* Modal plumbing */
+  document.getElementById("mReturn").textContent = pack.buttons.return;
+  document.getElementById("mJumpHub").textContent = pack.buttons.jhub;
+  document.getElementById("mJumpProducts").textContent = pack.buttons.jprod;
+
+  var contentPack = pack.content;
+
+  function persist(){
+    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time); }catch(e){}
+  }
+
+  function setLensLabels(){
+    document.getElementById("styleChip").textContent = "STYLE: " + (style==="formal" ? pack.lens.formal : pack.lens.informal);
+    document.getElementById("chipConcept").textContent = pack.lens.concept;
+    document.getElementById("chipLive").textContent = pack.lens.live;
+    document.getElementById("chipRoadmap").textContent = pack.lens.roadmap;
+    document.getElementById("chipConcept").classList.toggle("active", time==="origin");
+    document.getElementById("chipLive").classList.toggle("active", time==="now");
+    document.getElementById("chipRoadmap").classList.toggle("active", time==="post");
+  }
+
   var bd=document.getElementById("bd");
   var modal=document.getElementById("modal");
   var mClose=document.getElementById("mClose");
   var mTitle=document.getElementById("mTitle");
+  var activeKey=null;
 
-  var styleChip=document.getElementById("styleChip");
-  var chipConcept=document.getElementById("chipConcept");
-  var chipNow=document.getElementById("chipNow");
-  var chipPost=document.getElementById("chipPost");
+  var h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1");
+  var h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2");
+  var h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3");
+  var h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4");
 
-  var h1=document.getElementById("h1"),p1=document.getElementById("p1"),s1=document.getElementById("s1");
-  var h2=document.getElementById("h2"),p2=document.getElementById("p2"),s2=document.getElementById("s2");
-  var h3=document.getElementById("h3"),p3=document.getElementById("p3"),s3=document.getElementById("s3");
-  var h4=document.getElementById("h4"),p4=document.getElementById("p4"),s4=document.getElementById("s4");
-
-  function persist(){
-    try{
-      localStorage.setItem("gd_lang", lang);
-      localStorage.setItem("gd_style", style);
-      localStorage.setItem("gd_time", time);
-    }catch(e){}
+  function fill(hEl,pEl,uEl,b){
+    hEl.textContent=b.h; pEl.textContent=b.p; uEl.innerHTML="";
+    b.u.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; uEl.appendChild(li); });
   }
 
-  function setLensLabels(){
-    styleChip.textContent = "STYLE: " + (style==="formal" ? pack.lens.formal : pack.lens.informal);
-    chipConcept.textContent = pack.lens.concept;
-    chipNow.textContent = pack.lens.live;
-    chipPost.textContent = pack.lens.roadmap;
-
-    chipConcept.classList.toggle("active", time==="origin");
-    chipNow.classList.toggle("active", time==="now");
-    chipPost.classList.toggle("active", time==="post");
+  function render(){
+    setLensLabels(); persist(); setLinks();
+    var view = contentPack[activeKey][time][style];
+    mTitle.textContent = view.title;
+    fill(h1,p1,u1,view.b1);
+    fill(h2,p2,u2,view.b2);
+    fill(h3,p3,u3,view.b3);
+    fill(h4,p4,u4,view.b4);
   }
 
-  /* Consumer-first product copy (thorough, launch-ready). */
-  function view(cat){
-    var V = {
-      software:{
-        origin:{
-          formal:{
-            title:"SOFTWARE · Concept",
-            b1:{h:"What it is",p:"A family of software products that turn the architecture into a usable experience: you navigate by structure, open compact explanations, and stay oriented without endless reading.",s:"If you want the “what” of the platform—start here."},
-            b2:{h:"What it feels like",p:"Fast and calm. You don’t lose context: language stays selected, your reading mode stays consistent, and your time layer stays where you put it.",s:"The UI is the same everywhere, so your brain stops re-learning layouts."},
-            b3:{h:"What you get",p:"A hub platform, measurement instruments, scoring surfaces, and a public registry layer—each built as a product surface, not a theory document.",s:"You can demo, share, and expand without breaking the contract."},
-            b4:{h:"Why people care",p:"Because it makes complex systems legible. It gives you a stable way to explore, explain, and validate decisions without turning everything into a 30-page article.",s:"Traversal study replaces “read everything” with “navigate what matters.”"}
-          },
-          informal:{
-            title:"SOFTWARE · Concept",
-            b1:{h:"What it is",p:"Software products you can actually use—built on the same compass logic.",s:"No textbooks required."},
-            b2:{h:"How it feels",p:"You stay oriented. The site doesn’t reset on you.",s:"Same controls. Same rhythm."},
-            b3:{h:"What’s inside",p:"Hub + instruments + scoring + registry.",s:"Four core pieces, one system."},
-            b4:{h:"Why it matters",p:"It makes complicated stuff easy to move through.",s:"Less confusion, more clarity."}
-          }
-        },
-        now:{
-          formal:{
-            title:"SOFTWARE · Live",
-            b1:{h:"Live products",p:"The live build is already behaving like a product: consistent gem pages, centered modals, and state that follows you so the experience stays coherent.",s:"This is “safe to explore” by design."},
-            b2:{h:"How you’ll use it",p:"Open a category, tap a node, switch Concept/Live/Roadmap inside the modal, and get a clear, compact breakdown without leaving the page.",s:"You can move quickly without losing meaning."},
-            b3:{h:"What’s being finalized",p:"Navigation and semantics are stable; content depth is what expands next. Each node gets filled before new nodes are added.",s:"No empty bubbles. No dead ends."},
-            b4:{h:"Launch posture",p:"The product behaves like a structured reference surface: consistent, readable, and repeatable. That’s the baseline for public release.",s:"A stable experience beats a flashy demo."}
-          },
-          informal:{
-            title:"SOFTWARE · Live",
-            b1:{h:"Right now",p:"It works like a product already—clean pages, consistent modals.",s:"You can browse safely."},
-            b2:{h:"How to use",p:"Tap a tile, read the bubbles, switch the lens if you want.",s:"You won’t get lost."},
-            b3:{h:"What’s next to fill",p:"More depth per bubble, more examples, more pages—same structure.",s:"More content, same contract."},
-            b4:{h:"Why that’s good",p:"Because it stays predictable while it grows.",s:"Predictable = trustworthy."}
-          }
-        },
-        post:{
-          formal:{
-            title:"SOFTWARE · Roadmap",
-            b1:{h:"What expands",p:"Live dashboards, exportable evidence bundles, and replayable “what changed and when” histories—so the platform becomes a true reference surface.",s:"Roadmap adds power without changing navigation."},
-            b2:{h:"What becomes possible",p:"Audit-friendly outputs: alerts, scores, summaries, and exports that stay tied to the same definitions and the same UI contract.",s:"Outputs become shareable artifacts."},
-            b3:{h:"How it scales",p:"More domains plug into the same structure: the look stays consistent, and meaning stays stable because the contract doesn’t drift.",s:"Scale by cloning, not reinventing."},
-            b4:{h:"End-state",p:"A platform people use to understand and communicate complex systems quickly—without needing a full technical background to navigate.",s:"Traversal encyclopedic study, delivered as software."}
-          },
-          informal:{
-            title:"SOFTWARE · Roadmap",
-            b1:{h:"More power",p:"Dashboards, exports, replays.",s:"Still the same UI."},
-            b2:{h:"More proof",p:"Shareable artifacts, not just pages.",s:"Easy to verify."},
-            b3:{h:"More domains",p:"Same structure, new content.",s:"No drift."},
-            b4:{h:"Big result",p:"People learn faster by navigating.",s:"That’s the point."}
-          }
-        }
-      },
-
-      commercial:{
-        origin:{
-          formal:{
-            title:"COMMERCIAL · Concept",
-            b1:{h:"What it is",p:"Commercial offerings that package the products into deployable workflows: licensing, deployments, and support—without changing the integrity of the system.",s:"Commercial makes adoption easy, not sloppy."},
-            b2:{h:"What customers buy",p:"Clear “what you get” bundles: a product surface, a rollout plan, and a repeatable way to keep the system consistent as it grows.",s:"No mystery scope. No wandering requirements."},
-            b3:{h:"How it feels",p:"Professional and bounded. You know what’s included, what’s excluded, and what the next step is—without sales pressure baked into the interface.",s:"Legible structure reduces friction."},
-            b4:{h:"Why it matters",p:"Because trust is the product. Commercial success depends on stability and consistency—not hype.",s:"The contract is the brand."}
-          },
-          informal:{
-            title:"COMMERCIAL · Concept",
-            b1:{h:"What it is",p:"A clean way to deploy and license what you see here.",s:"No chaos."},
-            b2:{h:"What you get",p:"Bundles with clear scope.",s:"No hidden surprises."},
-            b3:{h:"How it feels",p:"Simple and professional.",s:"You know what you’re buying."},
-            b4:{h:"Why it matters",p:"Because trust beats hype.",s:"Always."}
-          }
-        },
-        now:{
-          formal:{
-            title:"COMMERCIAL · Live",
-            b1:{h:"Live posture",p:"The commercial layer follows the same gem standard as the rest of the site: consistent look, centered reading, and stable state propagation.",s:"Customers see one coherent system."},
-            b2:{h:"Rollout method",p:"Pilot → validate → replicate. Every rollout uses the same structure so adoption doesn’t splinter into custom one-offs.",s:"Repeatability is the discipline."},
-            b3:{h:"Support philosophy",p:"Support is structural: the UI contract prevents drift, and content guides users through the same map every time.",s:"Support becomes navigation, not firefighting."},
-            b4:{h:"Launch readiness",p:"Offer pages become product pages: clear bundles, clear boundaries, and clear “what’s next.”",s:"Marketing stays consumer-legible."}
-          },
-          informal:{
-            title:"COMMERCIAL · Live",
-            b1:{h:"Now",p:"Commercial follows the same clean UI.",s:"Same gem feel."},
-            b2:{h:"Rollout",p:"Pilot, prove, repeat.",s:"No custom chaos."},
-            b3:{h:"Support",p:"Support is built into structure.",s:"Less confusion."},
-            b4:{h:"Next",p:"Fill the bundles and publish.",s:"Keep it simple."}
-          }
-        },
-        post:{
-          formal:{
-            title:"COMMERCIAL · Roadmap",
-            b1:{h:"What expands",p:"Partner kits, licensing surfaces, and deployment templates that keep consistency across orgs and industries.",s:"Scale through templates, not improvisation."},
-            b2:{h:"What customers gain",p:"A predictable system they can train teams on: the interface stays the same, and content deepens over time.",s:"That reduces onboarding cost."},
-            b3:{h:"What stays sacred",p:"Integrity constraints: commercial never overrides standards, never weakens rules, and never changes the core contract.",s:"Commercial serves the architecture."},
-            b4:{h:"End-state",p:"A public-facing product family that enterprises can adopt without fear of drift.",s:"Stable adoption at scale."}
-          },
-          informal:{
-            title:"COMMERCIAL · Roadmap",
-            b1:{h:"More kits",p:"Partners and templates.",s:"Same rules."},
-            b2:{h:"Easier onboarding",p:"Predictable system.",s:"Lower cost."},
-            b3:{h:"No compromises",p:"Commercial can’t weaken integrity.",s:"Ever."},
-            b4:{h:"Result",p:"Enterprise-ready adoption.",s:"Stable scale."}
-          }
-        }
-      },
-
-      energy:{
-        origin:{
-          formal:{
-            title:"ENERGY · Concept",
-            b1:{h:"What it is",p:"An energy product line focused on conversion chains: solar capture → plasma formation → controlled pathways toward fusion-grade conditions.",s:"This is the breakthrough direction: conversion, not just regulation."},
-            b2:{h:"What we’re building",p:"A coherent map of the process: inputs, stages, constraints, and measurable outputs—so the topic becomes navigable instead of mythical.",s:"A consumer can follow the chain without a PhD."},
-            b3:{h:"How it feels",p:"Legible and grounded. You can move from big-picture intuition to deeper detail by switching lenses, without losing your place.",s:"Structure keeps the science readable."},
-            b4:{h:"Why it matters",p:"Because the world needs scalable energy. If you can model and communicate conversion pathways clearly, you accelerate collaboration and reduce waste.",s:"Clarity is leverage for progress."}
-          },
-          informal:{
-            title:"ENERGY · Concept",
-            b1:{h:"What it is",p:"Energy breakthroughs explained as a clear chain.",s:"Solar → plasma → fusion path."},
-            b2:{h:"What we’re doing",p:"Making the process navigable.",s:"Not vague."},
-            b3:{h:"How it feels",p:"Readable, not intimidating.",s:"You don’t get lost."},
-            b4:{h:"Why it matters",p:"Because energy changes everything.",s:"Period."}
-          }
-        },
-        now:{
-          formal:{
-            title:"ENERGY · Live",
-            b1:{h:"Live focus",p:"We’re packaging the energy story as a product surface: defined stages, defined terms, and repeatable explanations.",s:"The chain is the product."},
-            b2:{h:"What’s being organized",p:"Stage-by-stage breakdowns: capture, ionization, confinement concepts, control parameters, and safety boundaries.",s:"Clear boundaries make it public-safe."},
-            b3:{h:"How you’ll explore",p:"Tap into a stage, read 4 bubbles, and switch Concept/Live/Roadmap to see how the system evolves without changing definitions.",s:"The lens changes emphasis, not the truth."},
-            b4:{h:"Launch posture",p:"This is written to be legible to the consumer: what it is, why it matters, what to watch, and what’s next.",s:"Marketing without hype."}
-          },
-          informal:{
-            title:"ENERGY · Live",
-            b1:{h:"Now",p:"We’re turning the energy chain into a clean page people can follow.",s:"No jargon wall."},
-            b2:{h:"Organizing",p:"Stages + terms + constraints.",s:"So it stays real."},
-            b3:{h:"Explore",p:"Tap a stage, read the bubbles, switch the lens.",s:"You keep context."},
-            b4:{h:"Goal",p:"Consumer-legible, not overpromised.",s:"Clear and grounded."}
-          }
-        },
-        post:{
-          formal:{
-            title:"ENERGY · Roadmap",
-            b1:{h:"What expands",p:"Deeper stage pages: solar capture models, plasma formation pathways, confinement approaches, and validation experiments.",s:"Roadmap adds depth without changing the map."},
-            b2:{h:"What becomes measurable",p:"Clear “what to measure” lists: signals, thresholds, stability indicators, and repeatable test conditions.",s:"Measurement turns vision into engineering."},
-            b3:{h:"What collaboration looks like",p:"A shared reference that lets partners contribute without argument over definitions.",s:"Shared map, faster progress."},
-            b4:{h:"End-state",p:"A public, structured energy knowledge product: legible, expandable, and aligned with the same coherence-first architecture.",s:"Breakthrough science with stable navigation."}
-          },
-          informal:{
-            title:"ENERGY · Roadmap",
-            b1:{h:"More depth",p:"More pages per stage.",s:"Same structure."},
-            b2:{h:"More measurement",p:"Clear signals to watch.",s:"More real."},
-            b3:{h:"More partners",p:"Shared definitions.",s:"Less arguing."},
-            b4:{h:"Result",p:"Breakthrough story becomes an actual product.",s:"Legible and expandable."}
-          }
-        }
-      },
-
-      education:{
-        origin:{
-          formal:{
-            title:"EDUCATION · Concept",
-            b1:{h:"What it is",p:"A consumer-facing learning product: traversal encyclopedic study. You learn by navigating maps, not by reading one long linear curriculum.",s:"Traversal replaces chapters with pathways."},
-            b2:{h:"The flagship program",p:"Clean English Core (1,001): a constrained word-set learning system designed for fast functional communication.",s:"It’s built for practice, not theory."},
-            b3:{h:"How it’s structured",p:"Four levels that progress from base function to confident usage, with roughly ~250 words per level plus simple drills.",s:"Structure is what makes it scalable."},
-            b4:{h:"Why people care",p:"Because it’s efficient. The learner always knows where they are, what to practice next, and how to return and repeat.",s:"Clarity creates momentum."}
-          },
-          informal:{
-            title:"EDUCATION · Concept",
-            b1:{h:"What it is",p:"A learning product you navigate instead of “study forever.”",s:"Tap → learn → repeat."},
-            b2:{h:"The program",p:"Clean English Core (1,001) for fast real-world progress.",s:"Small word set. Big function."},
-            b3:{h:"The structure",p:"Four levels, about ~250 words each.",s:"Simple and trackable."},
-            b4:{h:"Why it matters",p:"You don’t get lost and you don’t stall.",s:"Clear next step always."}
-          }
-        },
-        now:{
-          formal:{
-            title:"EDUCATION · Live",
-            b1:{h:"Live focus",p:"Education is being prepared as a launchable consumer experience: bilingual support (EN/中文), stable navigation, and consistent bubble-based explanations.",s:"You can explore safely today."},
-            b2:{h:"What’s included",p:"Programs, drills, lesson maps, and checkpoints that tie directly to the structure.",s:"Each node gets filled before expansion."},
-            b3:{h:"How it’s used",p:"Pick a level, practice a slice, then return to the map. You don’t need to “finish a book” to improve.",s:"Practice-first learning."},
-            b4:{h:"Launch posture",p:"This is built to be consumer-legible: clear outcomes, simple steps, and predictable navigation.",s:"No academic fog."}
-          },
-          informal:{
-            title:"EDUCATION · Live",
-            b1:{h:"Now",p:"Education is being built as a real product, not a draft.",s:"Same clean UI."},
-            b2:{h:"Included",p:"Programs + drills + checkpoints.",s:"No fluff."},
-            b3:{h:"Use it",p:"Pick a level, practice, return, repeat.",s:"That’s the loop."},
-            b4:{h:"Ready",p:"Launch-ready clarity.",s:"Consumer-friendly."}
-          }
-        },
-        post:{
-          formal:{
-            title:"EDUCATION · Roadmap",
-            b1:{h:"What expands",p:"More tracks (beyond language): traversal method courses, facilitator training, and specialized curricula.",s:"Same structure, deeper content."},
-            b2:{h:"What becomes portable",p:"Printable and shareable materials: PDF packs, practice cards, and guided routines that match the on-site map.",s:"Map stays canonical."},
-            b3:{h:"What becomes verifiable",p:"Optional certification pathways tied to observable outputs and checkpoints (not ideology).",s:"Proof-grade learning."},
-            b4:{h:"End-state",p:"A consumer learning ecosystem where structure drives mastery—fast, repeatable, and expandable.",s:"Traversal study at scale."}
-          },
-          informal:{
-            title:"EDUCATION · Roadmap",
-            b1:{h:"More tracks",p:"More learning paths.",s:"Same UI."},
-            b2:{h:"More materials",p:"PDF packs and practice cards.",s:"Shareable."},
-            b3:{h:"Optional proof",p:"Checkpoint-based badges.",s:"No nonsense."},
-            b4:{h:"Result",p:"A full learning ecosystem.",s:"Fast and repeatable."}
-          }
-        }
-      }
-    };
-
-    return V[cat][time][style];
+  function setActiveDiamond(key){
+    ["dProg","dLang","dTrain","dCert"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
+    var map={prog:"dProg",lang:"dLang",train:"dTrain",cert:"dCert"};
+    document.getElementById(map[key]).classList.add("active");
   }
 
-  var activeCat=null;
-
-  function setActiveDiamond(id){
-    ["software","commercial","energy","education"].forEach(function(x){
-      document.getElementById(x).classList.toggle("active", x===id);
-    });
-  }
-
-  function open(cat){
-    activeCat=cat;
-    setActiveDiamond(cat);
+  function open(key){
+    activeKey=key;
+    setActiveDiamond(key);
     render();
     bd.classList.add("show");
     modal.classList.add("show");
   }
-
   function close(){
     bd.classList.remove("show");
     modal.classList.remove("show");
-    setActiveDiamond("__none__");
-    activeCat=null;
+    ["dProg","dLang","dTrain","dCert"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
   }
 
-  function render(){
-    persist();
-    setLinks();
-    setLensLabels();
+  document.getElementById("styleChip").addEventListener("click", function(){
+    style = (style==="formal") ? "informal" : "formal";
+    render();
+  });
+  document.getElementById("chipConcept").addEventListener("click", function(){ time="origin"; render(); });
+  document.getElementById("chipLive").addEventListener("click", function(){ time="now"; render(); });
+  document.getElementById("chipRoadmap").addEventListener("click", function(){ time="post"; render(); });
 
-    var v = view(activeCat);
+  bd.addEventListener("click", close);
+  mClose.addEventListener("click", close);
+  document.getElementById("mReturn").addEventListener("click", close);
 
-    mTitle.textContent = v.title;
+  document.getElementById("dProg").addEventListener("click", function(){ open("prog"); });
+  document.getElementById("dLang").addEventListener("click", function(){ open("lang"); });
+  document.getElementById("dTrain").addEventListener("click", function(){ open("train"); });
+  document.getElementById("dCert").addEventListener("click", function(){ open("cert"); });
 
-    h1.textContent = v.b1.h; p1.textContent = v.b1.p; s1.textContent = v.b1.s;
-    h2.textContent = v.b2.h; p2.textContent = v.b2.p; s2.textContent = v.b2.s;
-    h3.textContent = v.b3.h; p3.textContent = v.b3.p; s3.textContent = v.b3.s;
-    h4.textContent = v.b4.h; p4.textContent = v.b4.p; s4.textContent = v.b4.s;
-
-    // OPEN CATEGORY button
-    var href = document.getElementById(activeCat).dataset.href;
-    document.getElementById("mGoCategory").href = href;
-  }
-
-  /* Lens controls (modal only) */
-  styleChip.onclick=function(){ style = (style==="formal") ? "informal" : "formal"; render(); };
-  chipConcept.onclick=function(){ time="origin"; render(); };
-  chipNow.onclick=function(){ time="now"; render(); };
-  chipPost.onclick=function(){ time="post"; render(); };
-
-  /* Close controls */
-  bd.onclick=close;
-  mClose.onclick=close;
-  document.getElementById("mReturn").onclick=close;
-
-  /* Diamond handlers */
-  ["software","commercial","energy","education"].forEach(function(id){
+  ["dProg","dLang","dTrain","dCert"].forEach(function(id){
     var el=document.getElementById(id);
-    el.onclick=function(){ open(id); };
-    el.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(id);} };
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+    });
   });
 
-  setLinks();
   setLensLabels();
+  setLinks();
 })();
 </script>
 
 </body>
 </html>
-```0

@@ -1,18 +1,13 @@
-<!-- TNT — /products/energy/index.html  (PRODUCTS · ENERGY · QUEEN’S ARCHITECTURE · OPAQUE EXTERIOR)
-     GOAL (FINISHED PRODUCT SURFACE):
-       - Opaque exterior: immediate comprehension of what we deliver (clean energy infrastructure)
-       - Under-hood only after click (category bubbles + lenses)
-       - 4 diamonds only: PLATFORM / PLASMA FARMS / INDUSTRIAL / R&D (GATED)
-     RULES:
-       - NO new state keys (gd_lang/gd_style/gd_time only)
-       - URL hydration + persistence + propagation
-       - Lenses INSIDE modal only (STYLE + CONCEPT/LIVE/ROADMAP)
-       - Category bubbles inside modal (tap-to-expand) so nothing dumps at once
-       - Public posture: Industrial clean energy delivery (no net-positive fusion claim implied)
-       - R&D: requirements-only (no promises), clearly gated
-       - Single-language render (lang=en => EN only; lang=zh => 中文 only; 中文 mirrors EN for now)
-       - Uses /assets/ui.css + /assets/branch.css only; DOES NOT style html/body background
-       - Must tap-open on mobile (stage hit-test lock + dock tap-safe + inline onclick)
+<!-- TNT — /products/energy/index.html
+     ENERGY · OCTAGONAL WINDOW CORE · INDUSTRIAL FIRST
+     PURPOSE:
+       - Preserve diamond geometry
+       - Add octagonal "window" core inside modal (no tunnel)
+       - North = Physics (Origins / Science)
+       - East/West = R&D Turbines
+       - South = Industrial Convergence (Primary Output)
+       - No net-fusion claims
+       - Industrial (C) posture preserved
 -->
 
 <!doctype html>
@@ -20,7 +15,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRODUCTS · ENERGY</title>
+<title>ENERGY · Industrial Plasma Architecture</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -28,624 +23,147 @@
 <style>
 :root{
   --R:154px;
-  --goldSoft:rgba(212,175,55,.35);
-  --obs1:#070b12;
-  --obs2:#0c1626;
-  --mut:rgba(255,255,255,.84);
-  --mut2:rgba(255,255,255,.68);
+  --gold:rgba(212,175,55,.35);
+  --panel:rgba(12,22,38,.92);
+  --panel2:rgba(7,11,18,.95);
 }
-body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 
-/* Top-left */
-.top-left{position:fixed;left:16px;top:16px;z-index:90;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.btn{
-  padding:10px 16px;border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:#fff;border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
-  -webkit-tap-highlight-color:transparent;
-}
-.btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px var(--goldSoft)}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 
-/* Brand pill */
-.brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:80;text-align:center;padding:10px 14px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);backdrop-filter:blur(8px);
-}
-.brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
-.brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
-
-/* Stage (hit-test lock) */
+/* Diamond stage preserved */
 .stage{
-  position:fixed;left:50%;top:52%;
+  position:fixed;left:50%;top:50%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);height:min(720px,94vw);
-  z-index:60;
-  pointer-events:none; /* stage ignores taps */
+  z-index:40;
+  pointer-events:none;
 }
+
 .outer{
   position:absolute;left:50%;top:50%;
-  width:min(680px,92vw);height:min(680px,92vw);
+  width:90%;height:90%;
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
+  background:linear-gradient(160deg,rgba(14,24,40,.45),rgba(7,11,18,.65));
+  border:1px solid rgba(255,255,255,.12);
+  pointer-events:none;
+}
+
+/* Core window (octagonal illusion) */
+.window-core{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:55%;height:55%;
+  background:linear-gradient(145deg,var(--panel),var(--panel2));
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 30px 90px rgba(0,0,0,.75);
+  clip-path:polygon(
+    30% 0%, 70% 0%,
+    100% 30%, 100% 70%,
+    70% 100%, 30% 100%,
+    0% 70%, 0% 30%
+  );
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  pointer-events:auto;
+}
+
+.window-section{
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 90px 260px rgba(0,0,0,.72), inset 0 2px 0 rgba(255,255,255,.10), inset 0 -50px 90px rgba(0,0,0,.55);
+  border-radius:14px;
+  padding:12px 14px;
+  background:rgba(0,0,0,.18);
+  margin-bottom:10px;
+}
+
+.window-section h3{
+  margin:0 0 6px;
+  font-size:14px;
+  letter-spacing:.8px;
+  font-weight:900;
+}
+
+.window-section p{
+  margin:0;
+  font-size:12px;
   opacity:.85;
-  pointer-events:none;
+  line-height:1.4;
 }
-.outer::after{
-  content:"";position:absolute;inset:0;border-radius:60px;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.16; pointer-events:none;
-}
-.d{
-  width:170px;height:170px;position:absolute;left:50%;top:50%;
-  transform-origin:center;border-radius:26px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 28px 84px rgba(0,0,0,.78), inset 0 2px 0 rgba(255,255,255,.14), inset 0 -28px 44px rgba(0,0,0,.62);
-  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
-  pointer-events:auto; /* diamonds receive taps */
-  touch-action:manipulation;
-}
-.d::before{
-  content:"";position:absolute;inset:0;border-radius:26px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.45;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  pointer-events:none;
-}
-.d::after{
-  content:"";position:absolute;left:12%;right:12%;top:10%;height:28%;
-  border-radius:999px;background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
-  opacity:.85;transform:rotate(-10deg);pointer-events:none;
-}
-.d:hover{transform:translate(-50%,-50%) rotate(45deg) scale(1.02)}
-.d.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:0 34px 110px rgba(0,0,0,.88),0 0 30px rgba(212,175,55,.40),
-    inset 0 2px 0 rgba(255,255,255,.18),inset 0 -32px 52px rgba(0,0,0,.68);
-}
-.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
-.d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
-.d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
-.d-w{transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg)}
-.inner{width:100%;height:100%;transform:rotate(-45deg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;gap:10px;pointer-events:none;user-select:none}
-.lab{font-weight:950;letter-spacing:.8px;font-size:16px}
-.sub{font-size:12.5px;opacity:.80;line-height:1.35;max-width:18em}
-.core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:22px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);display:grid;place-items:center;font-weight:950;letter-spacing:.5px;opacity:.92;pointer-events:none}
 
-/* Dock (tap-safe) */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:90;width:min(900px,94vw);
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);backdrop-filter:blur(8px);
-  pointer-events:none;
-}
-.dock .btn{pointer-events:auto}
+/* Positioning semantics */
+.north{border-color:rgba(120,160,255,.35)}
+.south{border-color:rgba(212,175,55,.35)}
+.east{border-color:rgba(160,120,255,.35)}
+.west{border-color:rgba(160,120,255,.35)}
 
-/* Modal */
-.bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);display:none}
-.bd.show{display:block}
-.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1020px,94vw);max-height:88vh;display:none;z-index:210}
-.modal.show{display:block}
-.shell{
-  height:88vh;border-radius:26px;border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
-    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
-    linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
-  box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;display:flex;flex-direction:column;
+.footer-note{
+  font-size:11px;
+  opacity:.6;
+  text-align:center;
+  margin-top:6px;
 }
-.mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
-.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
-.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
-.mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
-.lensbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;padding:10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);margin:-6px -6px 14px}
-.chip{padding:10px 16px;border-radius:999px;background:linear-gradient(145deg,var(--obs2),var(--obs1));border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 36px rgba(0,0,0,.65);cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff}
-.chip.active{border-color:rgba(212,175,55,.35);box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 16px rgba(212,175,55,.30)}
-.mgrid{display:grid;gap:14px}
-
-/* Category bubbles (collapsible) */
-.cbox{
-  padding:16px 18px;border-radius:22px;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
-  position:relative;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.cbox::before{
-  content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  pointer-events:none;
-}
-.cbox.open{border-color:rgba(212,175,55,.28); box-shadow:0 22px 80px rgba(0,0,0,.78), 0 0 18px rgba(212,175,55,.10), inset 0 2px 0 rgba(255,255,255,.06)}
-.ch{margin:0 0 8px;font-weight:950;letter-spacing:.2px;font-size:16px}
-.cp{margin:0;color:var(--mut);line-height:1.55;display:none}
-.cbox.open .cp{display:block}
-.cmini{margin:0;color:rgba(255,255,255,.70);font-size:12.5px;line-height:1.45}
-.cbox.open .cmini{display:none}
-.cul{margin:10px 0 0 18px;padding:0;color:var(--mut2);display:none}
-.cbox.open .cul{display:block}
-.cul li{margin:6px 0}
-
-/* Modal actions */
-.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
-.sbtn{padding:12px 18px;border-radius:14px;background:linear-gradient(145deg,var(--obs2),var(--obs1));color:#fff;border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 36px rgba(0,0,0,.7);cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none}
-
-@media (max-width:560px){:root{--R:136px}.d{width:158px;height:158px}.stage{top:50%}}
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnBack" href="/products/">BACK</a>
-  <a class="btn" id="btnExit" href="/door/">EXIT</a>
-</div>
-
-<div class="brand">
-  <div class="name" id="brandName">PRODUCTS</div>
-  <div class="tag" id="brandTag">ENERGY · PLASMA FARMS → CLEAN INDUSTRIAL POWER</div>
-</div>
-
 <div class="stage">
   <div class="outer"></div>
 
-  <div class="d d-n" id="dPlatform" role="button" tabindex="0" onclick="window.__openEnergy('platform')">
-    <div class="inner"><div class="lab" id="labPlatform">PLATFORM</div><div class="sub" id="subPlatform">What it is · why it matters.</div></div>
-  </div>
+  <div class="window-core">
 
-  <div class="d d-w" id="dFarms" role="button" tabindex="0" onclick="window.__openEnergy('farms')">
-    <div class="inner"><div class="lab" id="labFarms">PLASMA FARMS</div><div class="sub" id="subFarms">Agriculture + power.</div></div>
-  </div>
-
-  <div class="d d-e" id="dIndustrial" role="button" tabindex="0" onclick="window.__openEnergy('industrial')">
-    <div class="inner"><div class="lab" id="labIndustrial">INDUSTRIAL</div><div class="sub" id="subIndustrial">Clean heat + buffering.</div></div>
-  </div>
-
-  <div class="d d-s" id="dResearch" role="button" tabindex="0" onclick="window.__openEnergy('research')">
-    <div class="inner"><div class="lab" id="labResearch">R&D (GATED)</div><div class="sub" id="subResearch">Requirements only.</div></div>
-  </div>
-
-  <div class="core">◆</div>
-</div>
-
-<nav class="dock" id="dock">
-  <a class="btn" id="dockHub" href="/home/">HUB</a>
-  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
-</nav>
-
-<div class="bd" id="bd"></div>
-
-<div class="modal" id="modal" role="dialog" aria-modal="true">
-  <div class="shell">
-    <div class="mhead">
-      <h3 class="mtitle" id="mTitle">DETAIL</h3>
-      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
+    <!-- NORTH — Physics / Origins -->
+    <div class="window-section north">
+      <h3>NORTH · SCIENTIFIC ORIGIN</h3>
+      <p>
+        High-Intensity Plasma (HIP) architecture governed by
+        Confinement Class (CC), Unified Confinement Interface (UCI),
+        Escalation Risk Index (ERI), and strict Signal Validation Framework (SVF).
+        No net-fusion claim. Physics defined, bounded, falsifiable.
+      </p>
     </div>
 
-    <div class="mbody">
-      <div class="lensbar">
-        <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>
-        <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>
-        <button class="chip" data-time="now" id="chipLive" type="button">LIVE</button>
-        <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
-      </div>
-
-      <div class="mgrid" id="mgrid">
-        <div class="cbox" id="c1" role="button" tabindex="0"><h4 class="ch" id="h1"></h4><p class="cmini" id="m1"></p><p class="cp" id="p1"></p><ul class="cul" id="u1"></ul></div>
-        <div class="cbox" id="c2" role="button" tabindex="0"><h4 class="ch" id="h2"></h4><p class="cmini" id="m2"></p><p class="cp" id="p2"></p><ul class="cul" id="u2"></ul></div>
-        <div class="cbox" id="c3" role="button" tabindex="0"><h4 class="ch" id="h3"></h4><p class="cmini" id="m3"></p><p class="cp" id="p3"></p><ul class="cul" id="u3"></ul></div>
-        <div class="cbox" id="c4" role="button" tabindex="0"><h4 class="ch" id="h4"></h4><p class="cmini" id="m4"></p><p class="cp" id="p4"></p><ul class="cul" id="u4"></ul></div>
-      </div>
-
-      <div class="mact">
-        <button class="sbtn" id="mReturn" type="button">RETURN</button>
-        <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
-        <a class="sbtn" id="mJumpHub" href="/home/">JUMP HUB</a>
-      </div>
+    <!-- EAST — R&D Turbine A -->
+    <div class="window-section east">
+      <h3>EAST · R&D TURBINE (ARCHITECTURE)</h3>
+      <p>
+        Multi-grid focusing, SEC suppression, loss-channel dominance ranking,
+        and temporal orchestration (HEL-X).
+        All improvements constrained by admissibility gates.
+      </p>
     </div>
+
+    <!-- WEST — R&D Turbine B -->
+    <div class="window-section west">
+      <h3>WEST · R&D TURBINE (INSTRUMENTATION)</h3>
+      <p>
+        Hash-sealed telemetry, ABM/BM/WRM manifests,
+        S1→S2→S3 certification roll-ups,
+        strict R3 recovery only.
+        Evidence before escalation.
+      </p>
+    </div>
+
+    <!-- SOUTH — Industrial Convergence -->
+    <div class="window-section south">
+      <h3>SOUTH · INDUSTRIAL CONVERGENCE (C)</h3>
+      <p>
+        Plasma Thermal Substitution for industrial heat,
+        grid stabilization buffer layer,
+        agricultural plasma farms (thermal exchange only),
+        scalable IDP-1 → IDP-4 deployment.
+      </p>
+    </div>
+
+    <div class="footer-note">
+      X (Science) + Y (R&D) = Z (Industrial Convergence)
+    </div>
+
   </div>
 </div>
-
-<script>
-(function(){
-  const qs = new URLSearchParams(location.search);
-  let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  let style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  let time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  if(!["en","zh"].includes(lang)) lang="en";
-  if(!["formal","informal"].includes(style)) style="formal";
-  if(time==="trajectory") time="post";
-  if(!["origin","now","post"].includes(time)) time="now";
-  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time); }catch(e){}
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
-
-  const q = () => `lang=${encodeURIComponent(lang)}&style=${encodeURIComponent(style)}&time=${encodeURIComponent(time)}`;
-  function setLinks(){
-    const s=q();
-    document.getElementById("btnBack").href="/products/?"+s;
-    document.getElementById("btnExit").href="/door/?"+s;
-    document.getElementById("dockHub").href="/home/?"+s;
-    document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
-    document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockGauges").href="/gauges/?"+s;
-    document.getElementById("mJumpProducts").href="/products/?"+s;
-    document.getElementById("mJumpHub").href="/home/?"+s;
-  }
-  setLinks();
-
-  const UI = {
-    en:{
-      brand:"PRODUCTS",
-      tag:"ENERGY · PLASMA FARMS → CLEAN INDUSTRIAL POWER",
-      d:{
-        platform:{lab:"PLATFORM", sub:"What it is · why it matters."},
-        farms:{lab:"PLASMA FARMS", sub:"Agriculture + power."},
-        industrial:{lab:"INDUSTRIAL", sub:"Clean heat + buffering."},
-        research:{lab:"R&D (GATED)", sub:"Requirements only."}
-      },
-      lens:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",live:"LIVE",roadmap:"ROADMAP"},
-      btn:{ret:"RETURN",jp:"JUMP PRODUCTS",jh:"JUMP HUB"},
-      stylePrefix:"STYLE: "
-    },
-    zh:{
-      brand:"产品",
-      tag:"能源 · 等离子农场 → 清洁工业能源",
-      d:{
-        platform:{lab:"平台", sub:"它是什么 · 为什么重要。"},
-        farms:{lab:"等离子农场", sub:"农业 + 能源。"},
-        industrial:{lab:"工业", sub:"清洁热能 + 缓冲。"},
-        research:{lab:"研发（门控）", sub:"仅需求。"}
-      },
-      lens:{formal:"正式",informal:"通俗",concept:"概念",live:"上线",roadmap:"路线图"},
-      btn:{ret:"返回",jp:"跳转产品",jh:"跳转枢纽"},
-      stylePrefix:"风格："
-    }
-  };
-  const ui = (lang==="zh") ? UI.zh : UI.en;
-
-  document.getElementById("brandName").textContent = ui.brand;
-  document.getElementById("brandTag").textContent = ui.tag;
-  document.getElementById("labPlatform").textContent = ui.d.platform.lab;
-  document.getElementById("subPlatform").textContent = ui.d.platform.sub;
-  document.getElementById("labFarms").textContent = ui.d.farms.lab;
-  document.getElementById("subFarms").textContent = ui.d.farms.sub;
-  document.getElementById("labIndustrial").textContent = ui.d.industrial.lab;
-  document.getElementById("subIndustrial").textContent = ui.d.industrial.sub;
-  document.getElementById("labResearch").textContent = ui.d.research.lab;
-  document.getElementById("subResearch").textContent = ui.d.research.sub;
-
-  const bd=document.getElementById("bd");
-  const modal=document.getElementById("modal");
-  const mClose=document.getElementById("mClose");
-  const mTitle=document.getElementById("mTitle");
-  const styleChip=document.getElementById("styleChip");
-  const chipConcept=document.getElementById("chipConcept");
-  const chipLive=document.getElementById("chipLive");
-  const chipRoadmap=document.getElementById("chipRoadmap");
-
-  const c1=document.getElementById("c1"),c2=document.getElementById("c2"),c3=document.getElementById("c3"),c4=document.getElementById("c4");
-  const h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1"),m1=document.getElementById("m1");
-  const h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2"),m2=document.getElementById("m2");
-  const h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3"),m3=document.getElementById("m3");
-  const h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4"),m4=document.getElementById("m4");
-
-  document.getElementById("mReturn").textContent = ui.btn.ret;
-  document.getElementById("mJumpProducts").textContent = ui.btn.jp;
-  document.getElementById("mJumpHub").textContent = ui.btn.jh;
-
-  const persist=()=>{ try{ localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time);}catch(e){} };
-  const setLensLabels=()=>{
-    styleChip.textContent = ui.stylePrefix + (style==="formal" ? ui.lens.formal : ui.lens.informal);
-    chipConcept.textContent = ui.lens.concept;
-    chipLive.textContent = ui.lens.live;
-    chipRoadmap.textContent = ui.lens.roadmap;
-    chipConcept.classList.toggle("active", time==="origin");
-    chipLive.classList.toggle("active", time==="now");
-    chipRoadmap.classList.toggle("active", time==="post");
-  };
-
-  function fillBox(hEl,pEl,uEl,mEl,b){
-    const safe = b || {h:"—",p:"—",u:["—","—","—","—"]};
-    hEl.textContent = safe.h || "—";
-    pEl.textContent = safe.p || "—";
-    const mini = (safe.u && safe.u[0]) ? safe.u[0] : (safe.p ? safe.p.slice(0,90) : "—");
-    mEl.textContent = mini;
-    uEl.innerHTML="";
-    const arr = (safe.u && safe.u.length) ? safe.u : ["—","—","—","—"];
-    for(let i=0;i<4;i++){
-      const li=document.createElement("li");
-      li.textContent = arr[i] || "—";
-      uEl.appendChild(li);
-    }
-  }
-
-  function B(h,p,a,b,c,d){ return {h:h,p:p,u:[a,b,c,d]}; }
-
-  const EN = {
-    platform:{
-      origin:{
-        formal:{title:"PLATFORM · Concept",
-          b1:B("What we deliver","We deliver clean thermal infrastructure: controlled high-intensity plasma produces usable thermal gradients, exchangers capture it, and storage loops buffer it for reliable delivery.","Clean industrial heat output.","Buffered delivery (storage loops).","Modular replication.","Safety envelope enforced."),
-          b2:B("Energy flow (simple)","Input → plasma conversion → thermal capture → storage buffer → distribution. The entire system is designed to be legible and auditable without revealing trade secrets.","Clear stages.","Clear interfaces.","Clear boundaries.","Clear measurement points."),
-          b3:B("Why it changes the world","Industrial heat is one of the biggest emissions drivers. Replacing dirty thermal inputs improves air quality and reduces emissions without waiting for grid perfection.","Cleaner air.","Lower emissions.","Better infrastructure.","Faster adoption via retrofits."),
-          b4:B("How we stay credible","Industrial delivery is the public posture. R&D is gated and expressed as requirements only. We do not claim gain where it is not measured.","Industrial posture first.","R&D requirements only.","No implied readiness.","Receipts drive upgrades.")
-        },
-        informal:{title:"PLATFORM · Concept (Plain)",
-          b1:B("What we do","We make clean usable heat and deliver it reliably.","Clean heat.","Buffered delivery.","Modular.","Safe."),
-          b2:B("Flow","Power in → plasma → captured heat → stored heat → delivered heat.","Simple chain.","Buffered.","Auditable.","Stable."),
-          b3:B("Impact","Clean heat improves health and infrastructure fast.","Cleaner air.","Less emissions.","Better builds.","Faster adoption."),
-          b4:B("Credibility","Industrial is what we deliver; research stays gated.","Deliver now.","Gate research.","No hype.","Receipts first.")
-        }
-      },
-      now:{
-        formal:{title:"PLATFORM · Live",
-          b1:B("What exists now","The delivery surface is live: the system is presented as a product chain with clear modules, clear boundaries, and a consistent interface for partners to evaluate.","Product chain visible.","Modules defined.","Boundaries defined.","Partner-legible."),
-          b2:B("What a partner can do now","A partner can evaluate a pilot package: site requirements, measurement points, safety envelope, and operational logs. This is industrial due diligence.","Pilot package.","Measurement points.","Safety envelope.","Operational logs."),
-          b3:B("Where we came from","We began by mapping the system: define stages, define losses, and define stop rules. That discipline prevents drift as content expands.","Stages defined.","Losses mapped.","Stop rules defined.","No drift."),
-          b4:B("What is gated (explicit)","R&D remains gated: requirements-only. Any higher-tier language is forbidden without receipts and independent validation.","Requirements-only R&D.","No gain claim.","No timeline promises.","Audit required for upgrade.")
-        },
-        informal:{title:"PLATFORM · Live (Plain)",
-          b1:B("Live","The platform is usable and clear.","Clear modules.","Clear boundaries.","Readable.","Stable UI."),
-          b2:B("Partner-ready","Partners get a pilot kit and a checklist.","Pilot kit.","Checklist.","Safety rules.","Logs."),
-          b3:B("Origin","We built it by forcing clarity.","Define chain.","Map losses.","Set stops.","No drift."),
-          b4:B("Gated","Research is requirements-only.","Gated.","No promises.","Receipts.","Audit.")
-        }
-      },
-      post:{
-        formal:{title:"PLATFORM · Roadmap (6-month market ramp)",
-          b1:B("Six-month deliverables (market)","Roadmap focuses on deliverables that enable adoption: pilot kit, documentation kit, evaluation kit, and onboarding kit. This is market readiness, not physics escalation.","Pilot kit.","Documentation kit.","Evaluation kit.","Onboarding kit."),
-          b2:B("Renovations & retrofits","The adoption path is retrofits: swap dirty thermal inputs for clean thermal infrastructure, reuse heat locally, and document outcomes for the next site.","Retrofit playbook.","Heat reuse plan.","Measured outcomes.","Replicable template."),
-          b3:B("Scale model (replication)","Scale is replication of modules and receipts: standardized manifests, standardized logs, and standardized safety envelopes. Scale does not mean claim inflation.","Standard manifests.","Standard logs.","Standard safety envelope.","No drift scaling."),
-          b4:B("R&D stays separate","R&D continues behind gates. Roadmap lists requirements only. Industrial delivery remains the public posture.","Industrial remains primary.","R&D gated.","Requirements-only.","No promises of gain.")
-        },
-        informal:{title:"PLATFORM · Roadmap (Plain)",
-          b1:B("Six months","Make it easy to adopt.","Pilot kit.","Docs.","Evaluation.","Onboarding."),
-          b2:B("Retrofits","Swap dirty heat for clean heat.","Playbook.","Reuse heat.","Measure.","Repeat."),
-          b3:B("Scale","Replicate modules with standards.","Standards.","Logs.","Safety.","No drift."),
-          b4:B("Research","Research stays gated.","Requirements.","Receipts.","Audit.","No hype.")
-        }
-      }
-    },
-
-    farms:{
-      origin:{
-        formal:{title:"PLASMA FARMS · Concept",
-          b1:B("What a plasma farm is","A plasma farm is a land-based clean-heat site: hardened upstream modules generate controllable thermal gradients; downstream exchangers deliver usable heat to agriculture and nearby users.","Upstream modules.","Downstream exchangers.","Storage buffering.","Auditable layout."),
-          b2:B("Farm geometry (setback + grid)","The farm layout is rectilinear and setback-compliant. High-energy regime stays upstream; downstream endpoints remain passive; boundaries are enforceable and auditable.","Rectilinear layout.","Setbacks enforced.","Passive endpoints.","Hard perimeter."),
-          b3:B("Agricultural use cases","Captured heat supports greenhouse heating, season extension, sterilization buffers, and controlled thermal routing. No plasma contacts soil directly.","Greenhouse heating.","Season extension.","Sterilization buffers.","No soil contact."),
-          b4:B("Revenue stacking","Farms can stack revenue: heat contracts + greenhouse output + storage services. This is infrastructure economics, not a gain pitch.","Heat contracts.","Crop output.","Storage services.","Seasonal smoothing.")
-        },
-        informal:{title:"PLASMA FARMS · Concept (Plain)",
-          b1:B("Plasma farm","A site that makes clean heat and routes it safely.","Modules.","Exchangers.","Buffers.","Audits."),
-          b2:B("Layout","Setbacks and clear boundaries.","Grid layout.","Perimeter.","Passive endpoints.","Safe routing."),
-          b3:B("Use cases","Greenhouses and thermal buffers.","Greenhouse heat.","Season extension.","Buffers.","No soil contact."),
-          b4:B("Money model","Heat + crops + storage.","Heat contracts.","Crops.","Storage.","Smoothing.")
-        }
-      },
-      now:{
-        formal:{title:"PLASMA FARMS · Live",
-          b1:B("What is live now","Live means the farm deployment story is concrete: site geometry, setback doctrine, exchanger boundary, and storage loop are defined so partners can evaluate quickly.","Site geometry defined.","Setbacks defined.","Exchanger boundary defined.","Storage loop defined."),
-          b2:B("Operational loop","Heat flow is: module → exchanger → storage → distribution. Distribution endpoints are downstream and passive by design.","Module heat.","Exchanger capture.","Storage buffer.","Passive delivery."),
-          b3:B("Community impact (near-term)","Plasma farms provide near-term benefits: local clean heat use, greenhouse output, reduced emissions, and local infrastructure jobs.","Local clean heat.","Food systems support.","Reduced emissions.","Local jobs."),
-          b4:B("Bounded posture","This remains industrial delivery. Any R&D content is requirements-only and cannot change farm deployment claims.","Industrial posture.","No gain claims.","R&D gated.","Requirements-only.")
-        },
-        informal:{title:"PLASMA FARMS · Live (Plain)",
-          b1:B("Live","Partners can understand and evaluate a farm now.","Readable.","Concrete.","Auditable.","Partner-ready."),
-          b2:B("Loop","Heat → exchanger → storage → delivery.","Simple.","Buffered.","Safe.","Auditable."),
-          b3:B("Impact","Clean heat + food systems improve locally.","Cleaner air.","More food resilience.","Jobs.","Replicable."),
-          b4:B("No drift","Still industrial claims only.","Industrial only.","No gain claims.","Gated research.","Requirements.")
-        }
-      },
-      post:{
-        formal:{title:"PLASMA FARMS · Roadmap (6-month pilot path)",
-          b1:B("Six-month pilot package","Deliver a farm pilot kit: site spec, setback checklist, exchanger kit, storage plan, and measurement plan. This makes adoption fast and disciplined.","Site spec.","Setback checklist.","Exchanger kit.","Measurement plan."),
-          b2:B("Adjacency model","Farm deployments can sit near industrial heat users. Agriculture absorbs variability while industrial contracts stabilize revenue and utilization.","Industrial adjacency.","Revenue stabilization.","Variability absorption.","Storage smoothing."),
-          b3:B("Replication standard","Replication requires standard manifests and logs: same boundaries, same safety envelope, same measurement points. This prevents drift at scale.","Standard manifests.","Standard logs.","Standard boundaries.","Standard safety."),
-          b4:B("Downstream licensing boundary","Any downstream licensing is passive-only and gated by industrial proof thresholds. No exposure drift is allowed.","Passive-only endpoints.","Gated thresholds.","Certification required.","No drift.")
-        },
-        informal:{title:"PLASMA FARMS · Roadmap (Plain)",
-          b1:B("Six months","Pilot kit + checklist.","Site spec.","Checklist.","Exchangers.","Measurements."),
-          b2:B("Adjacency","Pair farms with industry.","Contracts.","Buffers.","Crops.","Smoothing."),
-          b3:B("Replicate","Replicate with standards.","Manifests.","Logs.","Rules.","Audits."),
-          b4:B("License later","Passive-only and gated.","Passive only.","Gated.","Proof first.","No drift.")
-        }
-      }
-    },
-
-    industrial:{
-      origin:{
-        formal:{title:"INDUSTRIAL · Concept",
-          b1:B("Industrial heat transformation","Industrial delivery focuses on clean process heat and controllable thermal gradients. It replaces dirty thermal inputs while keeping operations stable and measurable.","Clean process heat.","Controllable gradients.","Measured inputs/outputs.","Stable operation."),
-          b2:B("Buffering makes it deployable","Storage loops buffer variability so delivery is stable. This enables grid-adjacent behavior without shock injection.","Storage buffering.","Dispatch smoothing.","No shock injection.","Auditable delivery."),
-          b3:B("Renovation pathway","The fastest path to market is retrofits: upgrade thermal systems, route captured heat, and document outcomes to replicate the install.","Retrofit playbook.","Heat routing.","Outcome receipts.","Replication."),
-          b4:B("What we ship","We ship packages: pilot package, documentation package, evaluation package, onboarding package. Partners want lists and checklists.","Pilot package.","Documentation.","Evaluation.","Onboarding.")
-        },
-        informal:{title:"INDUSTRIAL · Concept (Plain)",
-          b1:B("What it does","Clean industrial heat, controlled and measured.","Clean heat.","Measured.","Stable.","Deployable."),
-          b2:B("Why buffers matter","Buffers make delivery steady.","Storage loops.","Smoothing.","Safe delivery.","Audits."),
-          b3:B("Retrofits","Retrofits are the adoption channel.","Upgrade systems.","Reuse heat.","Measure.","Repeat."),
-          b4:B("Packages","We ship packages and checklists.","Pilot kit.","Docs.","Evaluation.","Onboarding.")
-        }
-      },
-      now:{
-        formal:{title:"INDUSTRIAL · Live",
-          b1:B("Live posture","Live means partner-legible: clear scope, clear measurements, clear boundaries. This is the deliverable product surface for market readiness.","Clear scope.","Clear measurements.","Clear boundaries.","Clear next steps."),
-          b2:B("Operational metrics (allowed)","Operational reporting is industrial: efficiency, auxiliary load ratio, uptime, and variance. No speculative physics claims are shown.","Efficiency receipts.","Aux load receipts.","Uptime receipts.","Variance receipts."),
-          b3:B("Grid-adjacent (bounded)","Grid interaction is buffered and supervised. The platform emphasizes stability and containment rather than shock injection into the grid.","Buffered output.","Supervised control.","Containment posture.","Stop rules."),
-          b4:B("Partner evaluation path","Partners can request: pilot kit, measurement plan, and evaluation criteria. This is how six-month commercialization stays disciplined.","Request pilot kit.","Run measurement plan.","Verify receipts.","Proceed to next tier.")
-        },
-        informal:{title:"INDUSTRIAL · Live (Plain)",
-          b1:B("Live","Clear deliverables and what to evaluate.","Clear scope.","Clear proof.","Boundaries.","Next step."),
-          b2:B("Metrics","Ops metrics only.","Efficiency.","Aux loads.","Uptime.","Variance."),
-          b3:B("Grid","Buffered and supervised.","Buffered.","Supervised.","Contained.","Stops."),
-          b4:B("Partner path","Pilot kit → measure → decide.","Pilot kit.","Measure.","Verify.","Scale.")
-        }
-      },
-      post:{
-        formal:{title:"INDUSTRIAL · Roadmap (6-month commercialization)",
-          b1:B("Market deliverables","Roadmap deliverables are packages and receipts: pilot package, documentation package, evaluation package, onboarding package. This is commercialization without physics inflation.","Pilot package.","Documentation package.","Evaluation package.","Onboarding package."),
-          b2:B("Cluster replication","After pilot, replicate into clusters with standardized logs and safety envelope. Replication is controlled scaling, not claim escalation.","Cluster standardization.","Log standardization.","Safety standardization.","Audit trails."),
-          b3:B("Renovation expansion","Renovations expand the addressable market: industrial retrofits, municipal upgrades, and co-located farm deployments.","Industrial retrofits.","Municipal upgrades.","Farm co-location.","Measured outcomes."),
-          b4:B("R&D stays gated","R&D remains requirements-only. It can inform design but cannot justify public claim escalation on this industrial surface.","Requirements-only.","Receipts required.","Audit required.","No implied readiness.")
-        },
-        informal:{title:"INDUSTRIAL · Roadmap (Plain)",
-          b1:B("Deliverables","Packages + checklists + receipts.","Pilot kit.","Docs.","Evaluation.","Onboarding."),
-          b2:B("Replicate","Replicate clusters with standards.","Standards.","Logs.","Safety.","Audits."),
-          b3:B("Expand","Retrofits and upgrades scale adoption.","Retrofits.","Upgrades.","Farms.","Measure."),
-          b4:B("R&D","Still gated.","Requirements.","Receipts.","Audit.","No hype.")
-        }
-      }
-    },
-
-    research:{
-      origin:{
-        formal:{title:"R&D (GATED) · Concept (Requirements Only)",
-          b1:B("Purpose (what this section is)","This section is the under-hood view. It exists to list requirements and disproof criteria for higher-tier claims. It is not a claim surface and does not imply readiness.","Requirements-only.","No implied readiness.","No promises.","No timelines."),
-          b2:B("Admissibility gates (F0–F6)","F0 instrumentation baseline; F1 verified signal; F2 closed energy balance; F3 confinement measurement; F4 sustained operation; F5 independent audit; F6 facility net electric (optional).","F0 baseline.","F2 energy balance.","F5 independent audit.","F6 optional facility net."),
-          b3:B("Stop rule (simple)","If gain does not exceed loss, escalation is prohibited. If integrity is invalid, the window is invalid. If disproof criteria are missing, escalation is prohibited.","Gain>loss required.","Integrity required.","Disproof required.","No exceptions."),
-          b4:B("What is and is not claimed","We do not claim net gain here. We do not claim readiness. We only publish requirements and receipts when they exist.","No net-positive language.","No readiness language.","Receipts only.","Audit required.")
-        },
-        informal:{title:"R&D (GATED) · Concept (Plain)",
-          b1:B("Under the hood","This is the under-the-hood section.","Requirements only.","No promises.","No hype.","No drift."),
-          b2:B("Gates","F0–F6 define what would be required.","Baseline.","Energy balance.","Audit.","Optional net electric."),
-          b3:B("Stop rule","If it doesn’t beat loss, it doesn’t upgrade.","Gain>loss.","Integrity.","Disproof.","No exceptions."),
-          b4:B("No claims","No gain claims here.","No net-positive.","No readiness.","Receipts.","Audit.")
-        }
-      },
-      now:{
-        formal:{title:"R&D (GATED) · Live (Requirements Only)",
-          b1:B("Current posture","Industrial delivery remains primary. R&D is gated: it lists what would be required for upgrades and how to disprove false positives.","Industrial primary.","R&D gated.","Disproof first.","Receipts only."),
-          b2:B("What can be shown (allowed)","Allowed: measurement requirements, calibration requirements, and audit pathway requirements. Not allowed: achievement claims.","Measurement requirements.","Calibration requirements.","Audit pathway.","Stop conditions."),
-          b3:B("Why this helps industrial delivery","Even without gain, R&D discipline improves industrial products: better measurement, better loss accounting, safer thresholds, and higher credibility.","Better measurement.","Loss closure.","Safer thresholds.","Credibility."),
-          b4:B("Roadmap rule","Roadmap here is a receipts list, not a schedule. No time-to-gain language is permitted on the product surface.","Receipts list.","No schedules.","No readiness language.","Industrial remains C.")
-        },
-        informal:{title:"R&D (GATED) · Live (Plain)",
-          b1:B("Status","Industrial first. R&D gated.","Industrial first.","R&D gated.","Disproof first.","Receipts."),
-          b2:B("Allowed","Requirements and checks only.","Requirements.","Calibration.","Audit.","Stops."),
-          b3:B("Value","Discipline helps industrial products.","Measure better.","Close losses.","Safer.","Credible."),
-          b4:B("Roadmap","No schedules—just receipts.","Receipts only.","No promises.","No hype.","C stays.")
-        }
-      },
-      post:{
-        formal:{title:"R&D (GATED) · Roadmap (Receipts Only)",
-          b1:B("Templates and evidence bundles","Next deliverables here are templates: instrument manifests, calibration logs, loss closure reports, replay scripts, and audit packets.","Manifests.","Calibration logs.","Loss closure report.","Replay scripts."),
-          b2:B("Independent audit posture","Independent review is required for any upgrade. Audit is a receipt, logged and scoped. Without audit, tier remains bounded.","Audit required.","Audit scoped.","Audit logged.","Audit repeatable."),
-          b3:B("Failure discipline","If a path fails, publish the failure and remain industrial. No sunk-cost drift or narrative inflation is permitted.","Publish failures.","Freeze paths.","Remain C.","Protect credibility."),
-          b4:B("Why this remains gated","This is under-hood by choice: full transparency exists, but not immediate exposure. The exterior remains focused on delivery.","Transparency available.","Not immediate exposure.","Exterior delivery-first.","Under-hood by click.")
-        },
-        informal:{title:"R&D (GATED) · Roadmap (Plain)",
-          b1:B("Next","Build proof templates and logs.","Manifests.","Calibrations.","Loss closure.","Replay."),
-          b2:B("Audit","Audit is required to upgrade.","Independent.","Scoped.","Logged.","Repeatable."),
-          b3:B("Failures","Failures are documented; we stay industrial.","Document.","Freeze.","Stay C.","No drift."),
-          b4:B("Gated","Under-hood stays under-hood until you click.","Transparent but gated.","Not dumped.","Delivery-first.","Controlled reveal.")
-        }
-      }
-    }
-  };
-
-  const ZH = { platform:EN.platform, farms:EN.farms, industrial:EN.industrial, research:EN.research };
-  const CONTENT = (lang==="zh") ? ZH : EN;
-
-  const FALLBACK = { title:"—",
-    b1:{h:"—",p:"—",u:["—","—","—","—"]},
-    b2:{h:"—",p:"—",u:["—","—","—","—"]},
-    b3:{h:"—",p:"—",u:["—","—","—","—"]},
-    b4:{h:"—",p:"—",u:["—","—","—","—"]}
-  };
-
-  let activeKey=null;
-  let openIdx=1;
-
-  function setOpen(idx){
-    openIdx=idx;
-    [c1,c2,c3,c4].forEach((el,i)=>el.classList.toggle("open",(i+1)===openIdx));
-  }
-
-  function render(){
-    persist(); setLinks(); setLensLabels();
-    if(!activeKey) return;
-    const view = ((((CONTENT[activeKey]||{})[time]||{})[style]) || FALLBACK);
-    mTitle.textContent = view.title || "DETAIL";
-    fillBox(h1,p1,u1,m1,view.b1);
-    fillBox(h2,p2,u2,m2,view.b2);
-    fillBox(h3,p3,u3,m3,view.b3);
-    fillBox(h4,p4,u4,m4,view.b4);
-    setOpen(openIdx);
-  }
-
-  function openModal(key){
-    activeKey=key;
-    bd.classList.add("show");
-    modal.classList.add("show");
-    openIdx=1;
-    render();
-  }
-
-  function closeModal(){
-    bd.classList.remove("show");
-    modal.classList.remove("show");
-    activeKey=null;
-  }
-
-  window.__openEnergy=function(key){ openModal(key); };
-
-  styleChip.addEventListener("click", ()=>{ style=(style==="formal")?"informal":"formal"; render(); });
-  chipConcept.addEventListener("click", ()=>{ time="origin"; render(); });
-  chipLive.addEventListener("click", ()=>{ time="now"; render(); });
-  chipRoadmap.addEventListener("click", ()=>{ time="post"; render(); });
-
-  bd.addEventListener("click", closeModal);
-  mClose.addEventListener("click", closeModal);
-  document.getElementById("mReturn").addEventListener("click", closeModal);
-
-  function bindBubble(el,idx){
-    el.addEventListener("click", ()=>{ setOpen(idx); });
-    el.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); setOpen(idx);} });
-  }
-  bindBubble(c1,1); bindBubble(c2,2); bindBubble(c3,3); bindBubble(c4,4);
-
-  [["dPlatform","platform"],["dFarms","farms"],["dIndustrial","industrial"],["dResearch","research"]].forEach(pair=>{
-    document.getElementById(pair[0]).addEventListener("keydown",(e)=>{
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.__openEnergy(pair[1]); }
-    });
-  });
-
-  setLensLabels();
-})();
-</script>
 
 </body>
 </html>

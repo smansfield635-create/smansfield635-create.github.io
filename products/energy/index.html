@@ -1,17 +1,17 @@
-<!-- TNT — /products/energy/index.html  (PRODUCTS · ENERGY · 4-DRAGON OUTER + 8-TAB INNER DIAMOND SURFACES)
-     GOAL (NO DRIFT / GEOMETRY-LOCKED):
-       - KEEP outer 4 diamonds (N/E/W/S) only (no second diamond set on page face)
-       - Modal opens on outer diamond tap
-       - Inside modal: 8 opal tabs (8 cores)
-       - Each tab swaps to ONE inner “diamond surface” (2×2 inner diamonds) — only one visible at a time
-       - Inner diamond tap populates ONE content panel (headline + paragraph + 4 bullets)
-       - No tunnel (no new routes; no nested pages)
+<!-- TNT — /products/energy/index.html  (PRODUCTS · ENERGY · BRANCH-PILOT · GEOMETRY LOCKED)
+     GOAL:
+       - PERFECT this design as the template for other branches
+       - Keep the OUTER diamond geometry (single set on the page)
+       - Keep N/S/E/W UNDER THE HOOD only (inside modal after click)
+       - Inside modal: 8 opal bubble tabs (no inner diamonds; no stacking geometry)
+       - Each tab drives one elastic content panel (headline + paragraph + 4 bullets)
+       - Lenses inside modal only: STYLE (formal/informal) + TIME (concept/live/roadmap)
      RULES:
        - NO new state keys (gd_lang/gd_style/gd_time only)
-       - Lenses INSIDE modal only (STYLE + CONCEPT/LIVE/ROADMAP)
-       - Single-language render (EN only if lang=en; 中文 only if lang=zh; zh mirrors EN for now)
+       - Single-language render (lang=en => EN only; lang=zh => 中文 only; 中文为镜像占位)
        - Uses /assets/ui.css + /assets/branch.css only
        - DOES NOT style html/body background (ui.css owns field)
+       - Industrial (C) posture preserved; no net-positive fusion claim language
 -->
 
 <!doctype html>
@@ -28,51 +28,50 @@
 :root{
   --R:154px;
   --goldSoft:rgba(212,175,55,.35);
-  --goldHard:rgba(212,175,55,.65);
+  --goldHard:rgba(212,175,55,.62);
   --obs1:#070b12;
   --obs2:#0c1626;
   --mut:rgba(255,255,255,.84);
   --mut2:rgba(255,255,255,.70);
 }
 
-/* Buttons */
+/* Top-left */
+.top-left{
+  position:fixed; left:16px; top:16px; z-index:90;
+  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+}
 .btn{
-  padding:10px 16px;border-radius:14px;
+  padding:10px 16px; border-radius:14px;
   background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:#fff;border:1px solid rgba(255,255,255,.08);
+  color:#fff; border:1px solid rgba(255,255,255,.08);
   box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
+  cursor:pointer; font-weight:900; letter-spacing:.2px; text-decoration:none;
   -webkit-tap-highlight-color:transparent;
 }
 .btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
 
-/* Top-left */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:90;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-
 /* Brand pill */
 .brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:80;text-align:center;padding:10px 14px;border-radius:999px;
+  position:fixed; left:50%; top:16px; transform:translateX(-50%);
+  z-index:80; text-align:center;
+  padding:10px 14px; border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.16); backdrop-filter:blur(8px);
 }
-.brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
-.brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
+.brand .name{ font-weight:950; letter-spacing:1.2px; font-size:12px; opacity:.95; }
+.brand .tag{ font-size:11px; letter-spacing:.6px; opacity:.70; margin-top:2px; }
 
-/* Outer stage */
+/* Stage */
 .stage{
-  position:fixed;left:50%;top:52%;
+  position:fixed; left:50%; top:52%;
   transform:translate(-50%,-50%);
-  width:min(720px,94vw);height:min(720px,94vw);
+  width:min(720px,94vw); height:min(720px,94vw);
   z-index:40;
   pointer-events:none;
 }
 .outer{
-  position:absolute;left:50%;top:50%;
-  width:min(680px,92vw);height:min(680px,92vw);
+  position:absolute; left:50%; top:50%;
+  width:min(680px,92vw); height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   background:
@@ -80,30 +79,37 @@
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
     linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 90px 260px rgba(0,0,0,.72), inset 0 2px 0 rgba(255,255,255,.10), inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none;opacity:.85;
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.72),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+  pointer-events:none; opacity:.85;
 }
 .outer::after{
-  content:"";position:absolute;inset:0;border-radius:60px;
+  content:""; position:absolute; inset:0; border-radius:60px;
   background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.16;pointer-events:none;
+  opacity:.16; pointer-events:none;
 }
 .d{
-  width:170px;height:170px;position:absolute;left:50%;top:50%;
-  transform-origin:center;border-radius:26px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
+  width:170px; height:170px;
+  position:absolute; left:50%; top:50%;
+  transform-origin:center; border-radius:26px;
+  cursor:pointer; -webkit-tap-highlight-color:transparent;
   background:
     radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
     linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 28px 84px rgba(0,0,0,.78), inset 0 2px 0 rgba(255,255,255,.14), inset 0 -28px 44px rgba(0,0,0,.62);
+  box-shadow:
+    0 28px 84px rgba(0,0,0,.78),
+    inset 0 2px 0 rgba(255,255,255,.14),
+    inset 0 -28px 44px rgba(0,0,0,.62);
   transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
   pointer-events:auto;
   touch-action:manipulation;
 }
 .d::before{
-  content:"";position:absolute;inset:0;border-radius:26px;padding:1px;
+  content:""; position:absolute; inset:0; border-radius:26px; padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.45;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -111,86 +117,160 @@
   pointer-events:none;
 }
 .d::after{
-  content:"";position:absolute;left:12%;right:12%;top:10%;height:28%;
-  border-radius:999px;background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
-  opacity:.85;transform:rotate(-10deg);pointer-events:none;
+  content:""; position:absolute; left:12%; right:12%; top:10%; height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
+  opacity:.85; transform:rotate(-10deg);
+  pointer-events:none;
 }
 .d:hover{ transform:translate(-50%,-50%) rotate(45deg) scale(1.02); }
 .d.active{
   border-color:rgba(212,175,55,.55);
-  box-shadow:0 34px 110px rgba(0,0,0,.88),0 0 30px rgba(212,175,55,.40),
-    inset 0 2px 0 rgba(255,255,255,.18), inset 0 -32px 52px rgba(0,0,0,.68);
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 30px rgba(212,175,55,.40),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
 }
+.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
+.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
+.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
+.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
 
-.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
-.d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
-.d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
-.d-w{transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg)}
-
-.inner{width:100%;height:100%;transform:rotate(-45deg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;gap:10px;pointer-events:none;user-select:none}
-.lab{font-weight:950;letter-spacing:.8px;font-size:16px}
-.sub{font-size:12.5px;opacity:.80;line-height:1.35;max-width:18em}
+.inner{
+  width:100%; height:100%; transform:rotate(-45deg);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:16px; gap:10px;
+  pointer-events:none; user-select:none;
+}
+.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
+.sub{ font-size:12.5px; opacity:.80; line-height:1.35; max-width:18em; }
 
 .core{
-  position:absolute;left:50%;top:50%;
+  position:absolute; left:50%; top:50%;
   transform:translate(-50%,-50%);
-  width:74px;height:74px;border-radius:22px;
+  width:74px; height:74px; border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
   box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;place-items:center;
-  font-weight:950;letter-spacing:.5px;
-  opacity:.92;pointer-events:none;
+  display:grid; place-items:center;
+  font-weight:950; letter-spacing:.5px;
+  opacity:.92; pointer-events:none;
 }
 
 /* Dock */
 .dock{
-  position:fixed;left:50%;
+  position:fixed; left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:90;width:min(900px,94vw);
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);backdrop-filter:blur(8px);
+  z-index:90;
+  width:min(900px,94vw);
+  display:flex; justify-content:center;
+  gap:10px; flex-wrap:wrap;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.20);
+  backdrop-filter:blur(8px);
   pointer-events:none;
 }
-.dock .btn{pointer-events:auto}
+.dock .btn{ pointer-events:auto; }
 
-/* Modal shell */
-.bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);display:none}
-.bd.show{display:block}
-.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1020px,94vw);max-height:88vh;display:none;z-index:210}
-.modal.show{display:block}
+/* Modal */
+.bd{
+  position:fixed; inset:0; z-index:200;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(10px);
+  display:none;
+}
+.bd.show{display:block;}
+.modal{
+  position:fixed; left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  width:min(1020px,94vw);
+  max-height:88vh;
+  display:none;
+  z-index:210;
+}
+.modal.show{display:block;}
 .shell{
-  height:88vh;border-radius:26px;border:1px solid rgba(255,255,255,.10);
+  height:88vh;
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.10);
   background:
     radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
     radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
     linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
   box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;display:flex;flex-direction:column;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
 }
-.mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
-.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
-.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
-.mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
-
-/* Lenses (modal only) */
+.mhead{
+  display:flex; justify-content:space-between; align-items:center;
+  gap:10px; padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
+.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
+.mbody{
+  padding:14px 16px 18px;
+  overflow:auto; -webkit-overflow-scrolling:touch;
+  flex:1 1 auto;
+}
 .lensbar{
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;
-  padding:10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex; gap:10px; flex-wrap:wrap;
+  align-items:center; justify-content:center;
+  padding:10px 10px 14px;
+  border-bottom:1px solid rgba(255,255,255,.08);
   margin:-6px -6px 14px;
 }
 .chip{
-  padding:10px 16px;border-radius:999px;
+  padding:10px 16px; border-radius:999px;
   background:linear-gradient(145deg,var(--obs2),var(--obs1));
   border:1px solid rgba(255,255,255,.08);
   box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
+  cursor:pointer; font-weight:900; letter-spacing:.2px; color:#fff;
 }
-.chip.active{border-color:rgba(212,175,55,.35);box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 16px rgba(212,175,55,.30)}
+.chip.active{
+  border-color:rgba(212,175,55,.35);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
+}
 
-/* 8 opal tabs (modal only) */
+/* Under-hood compass line (visible only in modal) */
+.udWrap{
+  display:flex;
+  justify-content:center;
+  margin:8px 0 12px;
+}
+.ud{
+  width:min(820px,100%);
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(6px);
+}
+.udPill{
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  font-weight:950;
+  letter-spacing:.2px;
+  font-size:11px;
+  opacity:.92;
+}
+.udPill.active{
+  border-color:var(--goldHard);
+  box-shadow:0 0 14px rgba(212,175,55,.18);
+}
+
+/* 8 opal tabs */
 .tabs{
   display:grid;
   grid-template-columns:repeat(4, 1fr);
@@ -211,58 +291,7 @@
   box-shadow:0 16px 40px rgba(0,0,0,.78),0 0 16px rgba(212,175,55,.20);
 }
 
-/* Inner diamond surface (2×2) — ONLY ONE surface shown at a time */
-.surface{
-  display:none;
-  margin:8px 0 12px;
-  width:min(720px, 100%);
-  margin-left:auto;margin-right:auto;
-}
-.surface.show{display:block}
-.sgrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-.sd{
-  height:96px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.12), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.12), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  box-shadow:0 16px 48px rgba(0,0,0,.65), inset 0 2px 0 rgba(255,255,255,.08);
-  cursor:pointer;
-  transform:rotate(45deg);
-  -webkit-tap-highlight-color:transparent;
-  transition:transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
-  position:relative;
-}
-.sd::before{
-  content:""; position:absolute; inset:0; border-radius:18px; padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.sd:hover{ transform:rotate(45deg) scale(1.02); }
-.sd.active{
-  border-color:var(--goldHard);
-  box-shadow:0 18px 60px rgba(0,0,0,.78), 0 0 18px rgba(212,175,55,.16), inset 0 2px 0 rgba(255,255,255,.10);
-}
-.sdIn{
-  width:100%;height:100%;
-  transform:rotate(-45deg);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:10px;
-  pointer-events:none;
-}
-.sdH{margin:0;font-weight:950;letter-spacing:.8px;font-size:13px}
-.sdP{margin:6px 0 0;font-size:11px;opacity:.78;line-height:1.2}
-
-/* Single content panel */
+/* Single elastic panel */
 .panel{
   border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
@@ -302,7 +331,6 @@
   .d{width:158px;height:158px}
   .stage{top:54%}
   .tabs{grid-template-columns:repeat(2, 1fr)}
-  .sd{height:90px}
 }
 </style>
 </head>
@@ -319,24 +347,23 @@
   <div class="tag" id="brandTag">ENERGY · INDUSTRIAL PLASMA ARCHITECTURE</div>
 </div>
 
-<!-- OUTER 4 DIAMONDS ONLY -->
 <div class="stage">
   <div class="outer"></div>
 
   <div class="d d-n" id="dNorth" role="button" tabindex="0" onclick="window.__openEnergy('north')">
-    <div class="inner"><div class="lab" id="labNorth">NORTH</div><div class="sub" id="subNorth">Scientific origins.</div></div>
+    <div class="inner"><div class="lab" id="labNorth">ORIGIN</div><div class="sub" id="subNorth">Science baseline.</div></div>
   </div>
 
   <div class="d d-e" id="dEast" role="button" tabindex="0" onclick="window.__openEnergy('east')">
-    <div class="inner"><div class="lab" id="labEast">EAST</div><div class="sub" id="subEast">R&D architecture.</div></div>
+    <div class="inner"><div class="lab" id="labEast">R&D</div><div class="sub" id="subEast">Architecture build.</div></div>
   </div>
 
   <div class="d d-w" id="dWest" role="button" tabindex="0" onclick="window.__openEnergy('west')">
-    <div class="inner"><div class="lab" id="labWest">WEST</div><div class="sub" id="subWest">Execution systems.</div></div>
+    <div class="inner"><div class="lab" id="labWest">VERIFY</div><div class="sub" id="subWest">Execution proof.</div></div>
   </div>
 
   <div class="d d-s" id="dSouth" role="button" tabindex="0" onclick="window.__openEnergy('south')">
-    <div class="inner"><div class="lab" id="labSouth">SOUTH</div><div class="sub" id="subSouth">Industrial convergence.</div></div>
+    <div class="inner"><div class="lab" id="labSouth">DELIVERY</div><div class="sub" id="subSouth">Industrial (C).</div></div>
   </div>
 
   <div class="core">◆</div>
@@ -361,7 +388,6 @@
     </div>
 
     <div class="mbody">
-      <!-- LENSES INSIDE MODAL ONLY -->
       <div class="lensbar">
         <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>
         <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>
@@ -369,8 +395,18 @@
         <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
       </div>
 
-      <!-- 8 OPAL TABS -->
-      <div class="tabs" id="tabs">
+      <!-- Under-hood compass mapping (shown only after click) -->
+      <div class="udWrap">
+        <div class="ud" aria-label="Under-hood orientation">
+          <div class="udPill" id="udN">NORTH · ORIGIN</div>
+          <div class="udPill" id="udE">EAST · R&D</div>
+          <div class="udPill" id="udW">WEST · VERIFY</div>
+          <div class="udPill" id="udS">SOUTH · DELIVERY</div>
+        </div>
+      </div>
+
+      <!-- 8 tabs -->
+      <div class="tabs">
         <button class="tab active" id="t1" type="button">PRINCIPLE</button>
         <button class="tab" id="t2" type="button">ARCH</button>
         <button class="tab" id="t3" type="button">MECH</button>
@@ -381,72 +417,14 @@
         <button class="tab" id="t8" type="button">TRAJECTORY</button>
       </div>
 
-      <!-- 8 SURFACES (only one visible) -->
-      <div class="surface show" id="s1"><div class="sgrid">
-        <div class="sd active" data-node="n1"><div class="sdIn"><div class="sdH">WHAT</div><div class="sdP">Definition.</div></div></div>
-        <div class="sd" data-node="n2"><div class="sdIn"><div class="sdH">WHY</div><div class="sdP">Value.</div></div></div>
-        <div class="sd" data-node="n3"><div class="sdIn"><div class="sdH">SCOPE</div><div class="sdP">Boundary.</div></div></div>
-        <div class="sd" data-node="n4"><div class="sdIn"><div class="sdH">OUTPUT</div><div class="sdP">Deliverable.</div></div></div>
-      </div></div>
-
-      <div class="surface" id="s2"><div class="sgrid">
-        <div class="sd active" data-node="n1"><div class="sdIn"><div class="sdH">STACK</div><div class="sdP">Modules.</div></div></div>
-        <div class="sd" data-node="n2"><div class="sdIn"><div class="sdH">INTERFACE</div><div class="sdP">UCI/SLA.</div></div></div>
-        <div class="sd" data-node="n3"><div class="sdIn"><div class="sdH">RAMP</div><div class="sdP">IDP.</div></div></div>
-        <div class="sd" data-node="n4"><div class="sdIn"><div class="sdH">FARM</div><div class="sdP">PFM.</div></div></div>
-      </div></div>
-
-      <div class="surface" id="s3"><div class="sgrid">
-        <div class="sd active" data-node="n1"><div class="sdIn"><div class="sdH">HIP</div><div class="sdP">Regime.</div></div></div>
-        <div class="sd" data-node="n2"><div class="sdIn"><div class="sdH">SLA</div><div class="sdP">Loop.</div></div></div>
-        <div class="sd" data-node="n3"><div class="sdIn"><div class="sdH">TGI</div><div class="sdP">Thermal.</div></div></div>
-        <div class="sd" data-node="n4"><div class="sdIn"><div class="sdH">PSS</div><div class="sdP">Supervision.</div></div></div>
-      </div></div>
-
-      <div class="surface" id="s4"><div class="sgrid">
-        <div class="sd active" data-node="n1"><div class="sdIn"><div class="sdH">INPUTS</div><div class="sdP">Metered.</div></div></div>
-        <div class="sd" data-node="n2"><div class="sdIn"><div class="sdH">OUTPUTS</div><div class="sdP">Thermal.</div></div></div>
-        <div class="sd" data-node="n3"><div class="sdIn"><div class="sdH">UPTIME</div><div class="sdP">Variance.</div></div></div>
-        <div class="sd" data-node="n4"><div class="sdIn"><div class="sdH">SCALE</div><div class="sdP">Phase.</div></div></div>
-      </div></div>
-
-      <div class="surface" id="s5"><div class="sgrid">
-        <div class="sd active" data-node="n1"><div class="sdIn"><div class="sdH">CC</div><div class="sdP">Tier.</div></div></div>
-        <div class="sd" data-node="n2"><div class="sdIn"><div class="sdH">EDT</div><div class="sdP">Intensity.</div></div></div>
-        <div class="sd" data-node="n3"><div class="sdIn"><div class="sdH">BOUND</div><div class="sdP">Setback.</div></div></div>
-        <div class="sd" data-node="n4"><div class="sdIn"><div class="sdH">CAP</div><div class="sdP">Claim.</div></div></div>
-      </div></div>
-
-      <div class="surface" id="s6"><div class="sgrid">
-        <div class="sd active" data-node="n1"><div class="sdIn"><div class="sdH">ERI</div><div class="sdP">Escalation.</div></div></div>
-        <div class="sd" data-node="n2"><div class="sdIn"><div class="sdH">CARES</div><div class="sdP">Response.</div></div></div>
-        <div class="sd" data-node="n3"><div class="sdIn"><div class="sdH">FCM</div><div class="sdP">Contain.</div></div></div>
-        <div class="sd" data-node="n4"><div class="sdIn"><div class="sdH">KILL</div><div class="sdP">Stops.</div></div></div>
-      </div></div>
-
-      <div class="surface" id="s7"><div class="sgrid">
-        <div class="sd active" data-node="n1"><div class="sdIn"><div class="sdH">SVF</div><div class="sdP">Signals.</div></div></div>
-        <div class="sd" data-node="n2"><div class="sdIn"><div class="sdH">DHY</div><div class="sdP">Strict.</div></div></div>
-        <div class="sd" data-node="n3"><div class="sdIn"><div class="sdH">CERT</div><div class="sdP">S1–S3.</div></div></div>
-        <div class="sd" data-node="n4"><div class="sdIn"><div class="sdH">R3</div><div class="sdP">Rollover.</div></div></div>
-      </div></div>
-
-      <div class="surface" id="s8"><div class="sgrid">
-        <div class="sd active" data-node="n1"><div class="sdIn"><div class="sdH">IDP</div><div class="sdP">Ramp.</div></div></div>
-        <div class="sd" data-node="n2"><div class="sdIn"><div class="sdH">RLM</div><div class="sdP">License.</div></div></div>
-        <div class="sd" data-node="n3"><div class="sdIn"><div class="sdH">TV</div><div class="sdP">Read-only.</div></div></div>
-        <div class="sd" data-node="n4"><div class="sdIn"><div class="sdH">NEXT</div><div class="sdP">Receipts.</div></div></div>
-      </div></div>
-
-      <!-- ONE CONTENT PANEL (updates on inner diamond tap) -->
-      <div class="panel" id="panel">
-        <h4 class="ph" id="ph">WHAT</h4>
-        <p class="pp" id="pp">Select a core tab, then tap a diamond. One surface at a time. No stacking. No tunnel.</p>
+      <div class="panel">
+        <h4 class="ph" id="ph">PRINCIPLE</h4>
+        <p class="pp" id="pp">Select a tab to change scope. This is depth without a tunnel.</p>
         <ul class="pu" id="pu">
-          <li>Industrial (C) is the public posture.</li>
-          <li>R&D is gated and audit-bound.</li>
-          <li>No net-positive fusion claim.</li>
-          <li>Geometry stays in control.</li>
+          <li>One panel, one scope.</li>
+          <li>Concept/Live/Roadmap changes emphasis.</li>
+          <li>Formal/Informal changes phrasing.</li>
+          <li>Industrial (C) remains the public posture.</li>
         </ul>
       </div>
 
@@ -504,12 +482,16 @@
   const pp=document.getElementById("pp");
   const pu=document.getElementById("pu");
 
+  const udN=document.getElementById("udN");
+  const udE=document.getElementById("udE");
+  const udW=document.getElementById("udW");
+  const udS=document.getElementById("udS");
+
   let activeAuthority="south"; // north/east/west/south
   let activeTab=1; // 1..8
-  let activeNode="n1"; // n1..n4
 
   function persist(){
-    try{ localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time); }catch(e){}
+    try{ localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time);}catch(e){}
   }
 
   function setLensLabels(){
@@ -523,167 +505,95 @@
   }
   setLensLabels();
 
-  function setActiveOuter(which){
-    activeAuthority=which;
-    ["dNorth","dEast","dWest","dSouth"].forEach(id=>document.getElementById(id).classList.remove("active"));
-    const map={north:"dNorth",east:"dEast",west:"dWest",south:"dSouth"};
-    document.getElementById(map[which]).classList.add("active");
+  function setUnderHood(which){
+    [udN,udE,udW,udS].forEach(x=>x.classList.remove("active"));
+    (which==="north"?udN:which==="east"?udE:which==="west"?udW:udS).classList.add("active");
   }
 
   function setTabs(idx){
     activeTab=idx;
     for(let i=1;i<=8;i++){
       document.getElementById("t"+i).classList.toggle("active", i===idx);
-      document.getElementById("s"+i).classList.toggle("show", i===idx);
     }
-    // default node selection within tab
-    setInnerActive("n1");
     renderPanel();
   }
 
-  function setInnerActive(node){
-    activeNode=node;
-    const surface=document.getElementById("s"+activeTab);
-    Array.from(surface.querySelectorAll(".sd")).forEach(el=>{
-      el.classList.toggle("active", el.getAttribute("data-node")===node);
-    });
-  }
-
-  // CONTENT (thorough shell; expand further later without altering geometry)
-  const AUTH = {
-    north:"NORTH · PHYSICS",
-    south:"SOUTH · INDUSTRIAL (C)",
-    east:"EAST · R&D (BUILD)",
-    west:"WEST · R&D (VERIFY)"
+  const TABNAME = {
+    1:"PRINCIPLE",2:"ARCH",3:"MECH",4:"METRICS",5:"CONSTRAINTS",6:"RISK",7:"VALIDATION",8:"TRAJECTORY"
   };
 
-  const TAB = [
-    null,
-    {k:"PRINCIPLE", a:["WHAT","WHY","SCOPE","OUTPUT"]},
-    {k:"ARCH", a:["STACK","INTERFACE","RAMP","FARM"]},
-    {k:"MECH", a:["HIP","SLA","TGI","PSS"]},
-    {k:"METRICS", a:["INPUTS","OUTPUTS","UPTIME","SCALE"]},
-    {k:"CONSTRAINTS", a:["CC","EDT","BOUND","CAP"]},
-    {k:"RISK", a:["ERI","CARES","FCM","KILL"]},
-    {k:"VALIDATION", a:["SVF","DHY","CERT","R3"]},
-    {k:"TRAJECTORY", a:["IDP","RLM","TV","NEXT"]}
-  ];
+  function make(authority, tab, t, s){
+    // authoritative, concrete, non-recipe, non-claim-inflating, lens-fused
+    const A = authority; const T = t; const S = s;
+    const head = TABNAME[tab] + " · " + (A==="north"?"ORIGIN":A==="east"?"R&D":A==="west"?"VERIFY":"DELIVERY");
 
-  function bullets(arr){ return arr.map(x=>"• "+x); }
+    const byTime = (T==="origin") ? "Concept: definition and scope." : (T==="now") ? "Live: current state and what is actionable." : "Roadmap: requirements and deliverables (no gain promises).";
+    const byStyle = (S==="informal") ? "Plain:" : "Formal:";
 
-  function getPanel(authority, tabIdx, node, timeKey, styleKey){
-    const aName = AUTH[authority] || AUTH.south;
-    const tName = TAB[tabIdx].k;
-    const nName = TAB[tabIdx].a[ node==="n1"?0 : node==="n2"?1 : node==="n3"?2 : 3 ];
+    const base = { h: head, p: byStyle+" "+byTime, u: [] };
 
-    // These are “opaque hood” summaries: strong, concrete, but not a recipe dump.
-    // Industrial (C) posture stays explicit; fusion is R&D gated; no net gain claims.
-    const base = {
-      h: `${nName} · ${tName} · ${aName}`,
-      p: "",
-      u: []
-    };
+    // core content by authority
+    const AText = {
+      north:[
+        "Physics layer defines constraints and ceilings.",
+        "Loss channels are named and accounted.",
+        "No net-positive fusion claim is made.",
+        "Definitions remain stable and falsifiable."
+      ],
+      east:[
+        "Build layer executes architecture changes under constraint.",
+        "Gen work requires receipts before escalation.",
+        "HEL-X is orchestration, not physics substitution.",
+        "Design iteration remains bounded and auditable."
+      ],
+      west:[
+        "Verify layer enforces admissibility and integrity.",
+        "SVF + DHY strict prevent silent drift.",
+        "Late/missing data invalidates certification.",
+        "R3 rollover is the only recovery."
+      ],
+      south:[
+        "Delivery layer is Industrial plasma thermal substitution (C).",
+        "Plasma farms + buffering are the public posture.",
+        "Deployment phases scale by replication (IDP).",
+        "R&D remains gated and does not market-upgrade delivery."
+      ]
+    }[A];
 
-    // Time lens changes emphasis (Concept/Live/Roadmap). Style changes tone.
-    const isFormal = (styleKey==="formal");
-    const isConcept = (timeKey==="origin");
-    const isLive = (timeKey==="now");
+    // tab-specific tightening
+    const TText = {
+      1:["What it is.","Why it matters.","Where it applies.","What it outputs."],
+      2:["System stack.","Interfaces.","Phase ramp.","Modules."],
+      3:["Operating loop.","Buffer loop.","Thermal routing.","Supervision."],
+      4:["Inputs to meter.","Outputs to meter.","Stability indicators.","Scale indicators."],
+      5:["Confinement class.","Energy density tier.","Boundary rules.","Claim ceiling."],
+      6:["Escalation index.","Response protocol.","Containment matrix.","Kill conditions."],
+      7:["Signal validation.","Telemetry integrity.","Certification roll-up.","R3 recovery."],
+      8:["IDP ramp.","Licensing gate.","TV read-only.","Next receipts."]
+    }[tab];
 
-    // Authority core messages
-    const A = {
-      north:{
-        headline:"Physics is definition-first. Bounded. Falsifiable.",
-        bodyConcept:"Define HIP, CC tiers, UCI control boundaries, ERI escalation bins, and SVF validation rules as stable meanings.",
-        bodyLive:"Publish current measured envelopes and ceiling observations as constraints, not promises.",
-        bodyRoad:"Publish requirements and disproof conditions; avoid timelines for gain.",
-        bullets:[
-          "HIP defined as industrial ionized operating regime.",
-          "CC tiers define stability + robustness bounds.",
-          "UCI governs thresholds; ERI governs escalation logic.",
-          "SVF defines admissible signals + artifact suppression."
-        ]
-      },
-      south:{
-        headline:"Industrial (C) is the public delivery surface.",
-        bodyConcept:"Define plasma thermal substitution product posture: upstream-only, buffered, auditable, scalable.",
-        bodyLive:"Show current operational deliverables: metrics, phases, safety, and deployment constraints.",
-        bodyRoad:"Show replication ramp (IDP) + licensing gates (RLM) without implying fusion gain.",
-        bullets:[
-          "Industrial heat decarbonization + buffering is the product.",
-          "SLA buffers input→store→release→recover loop.",
-          "CARES + FCM define containment + shutdown discipline.",
-          "IDP phases scale from pilot to replication; RLM is gated."
-        ]
-      },
-      east:{
-        headline:"R&D Build is design execution under constraints.",
-        bodyConcept:"Define MVH/MVH-2 hardware freeze logic, loss-dominance ranking, and redesign gates (no leapfrogging).",
-        bodyLive:"Show what is being built now: instrument freeze, DAQ integrity, repeatability controls.",
-        bodyRoad:"Show upgrade order: measure better → recalibrate → execute redesign → re-measure.",
-        bullets:[
-          "Instrument stack frozen before regime escalation.",
-          "Loss dominance ranking blocks premature redesign.",
-          "HEL-X orchestration is execution control, not physics claim.",
-          "Gen upgrades must produce receipts, not narratives."
-        ]
-      },
-      west:{
-        headline:"R&D Verify is strict audit + admissibility.",
-        bodyConcept:"Define ABM/BM/WRM locks, SHA-256 chain, S1→S2→S3 cert doctrine, R3 rollover recovery only.",
-        bodyLive:"Show current validation posture: windows, thresholds, disagreement kills, no degraded certs.",
-        bodyRoad:"Publish replayable evidence bundles + threat model (drift/tamper/late insertion).",
-        bullets:[
-          "DHY strict certs are binary; no degraded validity.",
-          "Late events hard invalidate; missing stream invalidates roll-up.",
-          "R3 rollover is the only recovery; no cross-epoch mixing.",
-          "Admissibility requires SVF + chain integrity."
-        ]
-      }
-    }[authority] || {
-      headline:"Authority undefined.",
-      bodyConcept:"—",
-      bodyLive:"—",
-      bodyRoad:"—",
-      bullets:["—","—","—","—"]
-    };
+    base.u = [
+      AText[0] + " " + TText[0],
+      AText[1] + " " + TText[1],
+      AText[2] + " " + TText[2],
+      AText[3] + " " + TText[3]
+    ];
 
-    base.p = isConcept ? A.bodyConcept : isLive ? A.bodyLive : A.bodyRoad;
+    // informal squeeze
+    if(S==="informal"){
+      base.p = "Plain: " + ((T==="origin")?"What it means." : (T==="now")?"What’s real now." : "What must be done next.");
+      base.u = base.u.map(x=>x.replace(" is "," = ").replace(" layer "," ").replace(" remain "," stay "));
+    }
 
-    // Node-specific tightening (keeps it concrete)
-    const nodeAdd = {
-      n1:{ // first diamond in each surface
-        addP:isFormal?"This is the definition surface.":"Plain: this defines the thing.",
-        addU:["No ambiguity labels.","No mixed claims.","No recipe disclosure.","Stable meaning."]
-      },
-      n2:{
-        addP:isFormal?"This is the operational driver for decisions.":"Plain: this drives decisions.",
-        addU:["Explicit boundaries.","Explicit gates.","Explicit stop rules.","Explicit receipts."]
-      },
-      n3:{
-        addP:isFormal?"This is the scoping boundary (what is allowed).":"Plain: this is the boundary.",
-        addU:["Upstream-only high-energy regime.","No residential exposure.","Exchanger-only agriculture boundary.","Buffer before grid."]
-      },
-      n4:{
-        addP:isFormal?"This is the deliverable/output framing.":"Plain: this is what you get.",
-        addU:["Auditable reports.","Repeatable tests.","Deployment phases.","Underwriting posture."]
-      }
-    }[node];
-
-    base.p = `${A.headline} ${base.p} ${nodeAdd.addP}`.trim();
-    base.u = bullets(A.bullets.concat(nodeAdd.addU)).slice(0,4);
-
-    // Keep bullets exactly 4 (density rule)
-    while(base.u.length<4) base.u.push("• —");
-    base.u = base.u.slice(0,4);
-
-    // zh mirror EN for now, but single-language render is respected
+    // zh mirror (single-language)
     if(lang==="zh"){
       return {
-        h: base.h,
-        p: base.p,
-        u: base.u
+        h: head,
+        p: (T==="origin") ? "概念：定义与范围。" : (T==="now") ? "上线：当前状态与可执行点。" : "路线图：要求与交付物（不许夸张）。",
+        u: base.u.map(x=>x) // mirror EN for now
       };
     }
+
     return base;
   }
 
@@ -692,7 +602,7 @@
     setLinks();
     setLensLabels();
 
-    const v = getPanel(activeAuthority, activeTab, activeNode, time, style);
+    const v = make(activeAuthority, activeTab, time, style);
 
     ph.textContent = v.h;
     pp.textContent = v.p;
@@ -700,106 +610,83 @@
     pu.innerHTML="";
     v.u.forEach(line=>{
       const li=document.createElement("li");
-      li.textContent = line.replace(/^•\s?/,"");
+      li.textContent=line;
       pu.appendChild(li);
     });
   }
 
   function openModal(which){
-    setActiveOuter(which);
-    activeTab=1;
-    activeNode="n1";
-    // title
+    activeAuthority = which;
+    setUnderHood(which);
+    activeTab = 1;
+    setTabs(1);
+
     mTitle.textContent = (lang==="zh")
       ? ("细节 · " + (which==="north"?"北":which==="east"?"东":which==="west"?"西":"南"))
-      : ("DETAIL · " + (which==="north"?"NORTH":"south"===which?"SOUTH":which.toUpperCase()));
+      : ("DETAIL · " + (which==="north"?"NORTH":which==="east"?"EAST":which==="west"?"WEST":"SOUTH"));
+
     bd.classList.add("show");
     modal.classList.add("show");
-    setTabs(1);
+    renderPanel();
   }
 
   function closeModal(){
     bd.classList.remove("show");
     modal.classList.remove("show");
-    ["dNorth","dEast","dWest","dSouth"].forEach(id=>document.getElementById(id).classList.remove("active"));
   }
 
   window.__openEnergy = openModal;
 
-  // Outer keyboard
+  // outer diamond keyboard
   [["dNorth","north"],["dEast","east"],["dWest","west"],["dSouth","south"]].forEach(pair=>{
     document.getElementById(pair[0]).addEventListener("keydown",(e)=>{
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.__openEnergy(pair[1]); }
     });
   });
 
-  // Close
-  bd.addEventListener("click", closeModal);
-  mClose.addEventListener("click", closeModal);
-  document.getElementById("mReturn").addEventListener("click", closeModal);
-
-  // Tabs
+  // tab clicks
   for(let i=1;i<=8;i++){
     document.getElementById("t"+i).addEventListener("click", ()=>setTabs(i));
   }
 
-  // Inner diamonds (per surface)
-  function bindSurfaceClicks(surfaceId){
-    const surf=document.getElementById(surfaceId);
-    Array.from(surf.querySelectorAll(".sd")).forEach(el=>{
-      el.addEventListener("click", ()=>{
-        setInnerActive(el.getAttribute("data-node"));
-        renderPanel();
-      });
-    });
-  }
-  for(let i=1;i<=8;i++) bindSurfaceClicks("s"+i);
-
-  // Lenses
+  // lens controls
   styleChip.addEventListener("click", ()=>{ style=(style==="formal")?"informal":"formal"; renderPanel(); });
   chipConcept.addEventListener("click", ()=>{ time="origin"; renderPanel(); });
   chipLive.addEventListener("click", ()=>{ time="now"; renderPanel(); });
   chipRoadmap.addEventListener("click", ()=>{ time="post"; renderPanel(); });
 
-  // Initial labels (single-language)
-  const UI = {
-    en:{
-      brand:"PRODUCTS",
-      tag:"ENERGY · INDUSTRIAL PLASMA ARCHITECTURE",
-      outer:{
-        north:{lab:"NORTH", sub:"Scientific origins."},
-        south:{lab:"SOUTH", sub:"Industrial convergence."},
-        east:{lab:"EAST", sub:"R&D architecture."},
-        west:{lab:"WEST", sub:"Execution systems."}
-      }
-    },
-    zh:{
-      brand:"产品",
-      tag:"能源 · 工业等离子架构",
-      outer:{
-        north:{lab:"北", sub:"科学起源。"},
-        south:{lab:"南", sub:"工业收敛。"},
-        east:{lab:"东", sub:"研发架构。"},
-        west:{lab:"西", sub:"执行系统。"}
-      }
-    }
-  };
-  const ui = (lang==="zh") ? UI.zh : UI.en;
+  // close controls
+  bd.addEventListener("click", closeModal);
+  mClose.addEventListener("click", closeModal);
+  document.getElementById("mReturn").addEventListener("click", closeModal);
 
-  document.getElementById("brandName").textContent = ui.brand;
-  document.getElementById("brandTag").textContent = ui.tag;
+  // initial labels: keep N/S/E/W under the hood, so outer labels are product-facing
+  if(lang==="zh"){
+    document.getElementById("brandName").textContent="产品";
+    document.getElementById("brandTag").textContent="能源 · 工业等离子架构";
+    document.getElementById("labNorth").textContent="起源";
+    document.getElementById("subNorth").textContent="科学基线。";
+    document.getElementById("labEast").textContent="研发";
+    document.getElementById("subEast").textContent="架构构建。";
+    document.getElementById("labWest").textContent="验证";
+    document.getElementById("subWest").textContent="执行证据。";
+    document.getElementById("labSouth").textContent="交付";
+    document.getElementById("subSouth").textContent="工业（C）。";
 
-  document.getElementById("labNorth").textContent = ui.outer.north.lab;
-  document.getElementById("subNorth").textContent = ui.outer.north.sub;
-  document.getElementById("labSouth").textContent = ui.outer.south.lab;
-  document.getElementById("subSouth").textContent = ui.outer.south.sub;
-  document.getElementById("labEast").textContent = ui.outer.east.lab;
-  document.getElementById("subEast").textContent = ui.outer.east.sub;
-  document.getElementById("labWest").textContent = ui.outer.west.lab;
-  document.getElementById("subWest").textContent = ui.outer.west.sub;
+    udN.textContent="北 · 起源";
+    udE.textContent="东 · 研发";
+    udW.textContent="西 · 验证";
+    udS.textContent="南 · 交付";
 
-  // Default panel render (modal closed)
-  setLensLabels();
+    document.getElementById("t1").textContent="原则";
+    document.getElementById("t2").textContent="架构";
+    document.getElementById("t3").textContent="机制";
+    document.getElementById("t4").textContent="指标";
+    document.getElementById("t5").textContent="约束";
+    document.getElementById("t6").textContent="风险";
+    document.getElementById("t7").textContent="验证";
+    document.getElementById("t8").textContent="轨迹";
+  }
 })();
 </script>
 

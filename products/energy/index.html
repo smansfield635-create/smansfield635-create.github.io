@@ -417,7 +417,8 @@
         val:{lab:"VALIDATION", sub:"Signals · falsifiers."}
       },
       lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", live:"LIVE", roadmap:"ROADMAP"},
-      btn:{return:"RETURN", jp:"JUMP PRODUCTS", jh:"JUMP HUB"}
+      btn:{return:"RETURN", jp:"JUMP PRODUCTS", jh:"JUMP HUB"},
+      stylePrefix:"STYLE: "
     },
     zh:{
       brand:"产品",
@@ -429,7 +430,8 @@
         val:{lab:"验证", sub:"信号 · 证伪。"}
       },
       lens:{formal:"正式", informal:"直接", concept:"概念", live:"上线", roadmap:"路线图"},
-      btn:{return:"返回", jp:"跳转产品", jh:"跳转枢纽"}
+      btn:{return:"返回", jp:"跳转产品", jh:"跳转枢纽"},
+      stylePrefix:"风格："
     }
   };
   var ui = (lang==="zh") ? UI.zh : UI.en;
@@ -469,9 +471,7 @@
   }
 
   function setLensLabels(){
-    styleChip.textContent = (lang==="zh")
-      ? ("风格：" + (style==="formal" ? ui.lens.formal : ui.lens.informal))
-      : ("STYLE: " + (style==="formal" ? ui.lens.formal : ui.lens.informal));
+    styleChip.textContent = ui.stylePrefix + (style==="formal" ? ui.lens.formal : ui.lens.informal);
     chipConcept.textContent = ui.lens.concept;
     chipLive.textContent = ui.lens.live;
     chipRoadmap.textContent = ui.lens.roadmap;
@@ -493,14 +493,452 @@
   }
 
   // Content strategy:
-  // - Be thorough and frontier-level
-  // - NO trade secrets: no proprietary geometry, no unique parameter values, no unpublished apparatus schematics
-  // - Use bounded language + falsifiers + measurable signals
+  // - Thorough and frontier-level
+  // - NO trade secrets: no schematics, no proprietary geometry, no parameter recipes, no device details
+  // - Bounded language + falsifiers + measurable signals
   var EN = {
     chain:{
       origin:{
         formal:{title:"Chain · Concept",
-          b1:{h:"System idea",p:"A conversion chain treated as an engineered process: capture → condition → form plasma → maintain stability → drive toward fusion criteria.",u:["Stage separation is explicit.","Inputs/outputs are defined per stage.","Constraints are named, not hidden.","Unknowns are marked as unknowns."]},
-          b2:{h:"Why plasma is central",p:"Plasma is the bridge state where energy density and controllability become the design problem (stability, confinement, loss control).",u:["Plasma is not a buzzword.","It is a controllable state space.","Stability is the product.","Loss mechanisms are first-class constraints."]},
-          b3:{h:"What we claim (bounded)",p:"We claim a coherent, testable chain framing that specifies what to measure and what would disprove the approach.",u:["Measured signals are named.","Failure modes are listed.","Alternative explanations are allowed.","No ‘magic’ steps."]},
-          b4:{h:"What we do not claim",p:"We do not claim a finished reactor or disclose apparatus specifics here. This page is a public-safe structural overview.",u:["No proprietary schematics.","No parameter ‘recipes
+          b1:{h:"System definition",p:"A conversion chain framed as engineering: capture → condition → plasma → stability → fusion criteria. Each stage is defined by inputs, outputs, constraints, and failure modes.",u:["Stages are explicit.","Interfaces are defined.","Constraints are named.","Unknowns are labeled."]},
+          b2:{h:"Why this is frontier",p:"The frontier is not one ‘magic’ component; it is closing the loop between conversion, controllability, and verification without drifting definitions.",u:["Control is first-class.","Loss is first-class.","Measurement is first-class.","Claims remain bounded."]},
+          b3:{h:"What we claim (bounded)",p:"We claim a coherent chain with measurable checkpoints and falsifiers that can be discussed publicly without disclosing apparatus specifics.",u:["Signals are named.","Checkpoints are named.","Falsifiers are listed.","No recipe disclosed."]},
+          b4:{h:"What we do NOT claim",p:"We do not claim a finished reactor here, and we do not publish proprietary apparatus details or parameter recipes on this page.",u:["No schematics.","No unique geometry.","No secret setpoints.","No unpublished methods."]}
+        },
+        informal:{title:"Chain · Concept",
+          b1:{h:"The idea",p:"Treat it like a chain: input → stages → output.",u:["Clear stages.","Clear constraints.","Clear checkpoints.","Clear falsifiers."]},
+          b2:{h:"Frontier part",p:"The frontier is control + measurement, not hype.",u:["Control matters.","Loss matters.","Signals matter.","Truth matters."]},
+          b3:{h:"Our claim",p:"A coherent chain people can evaluate without secrets.",u:["Public checkpoints.","Public signals.","Public falsifiers.","No recipe."]},
+          b4:{h:"Not claimed",p:"Not a finished reactor here.",u:["No schematics.","No setpoints.","No secret build.","No hidden leaps."]}
+        }}
+      },
+      now:{
+        formal:{title:"Chain · Live",
+          b1:{h:"Live posture",p:"This section is being written as a public-safe reference surface: consistent terms, consistent stages, and consistent boundaries across pages.",u:["Consumer-legible.","Technically grounded.","Bounded language.","No drift."]},
+          b2:{h:"Stage map (public)",p:"We describe the chain at the level of stages and constraints: capture, conversion, plasma stability, confinement framing, and verification signals.",u:["Stage roles defined.","Interfaces described.","Loss channels acknowledged.","Safety boundaries stated."]},
+          b3:{h:"How to read it",p:"Use Concept/Live/Roadmap to separate definitions, current execution posture, and future expansion—without moving the goalposts.",u:["Concept = definition.","Live = current posture.","Roadmap = planned depth.","Same meanings."]},
+          b4:{h:"Trade-secret boundary",p:"We disclose the ‘what to measure’ layer and the ‘what would disprove it’ layer. We do not disclose proprietary ‘how to build it’ recipes.",u:["Signals yes.","Recipes no.","Falsifiers yes.","Apparatus no."]}
+        },
+        informal:{title:"Chain · Live",
+          b1:{h:"Live",p:"Written as a clean reference surface.",u:["Stable terms.","Stable stages.","Clear bounds.","No drift."]},
+          b2:{h:"What’s here",p:"Stage-by-stage story with constraints.",u:["Capture.","Plasma.","Stability.","Verification."]},
+          b3:{h:"How to use",p:"Switch lenses to separate definition vs status vs next.",u:["Concept.","Live.","Roadmap.","Same meanings."]},
+          b4:{h:"Boundary",p:"Signals and falsifiers are public; build recipes are not.",u:["Signals yes.","Recipes no.","Proof yes.","Schematics no."]}
+        }}
+      },
+      post:{
+        formal:{title:"Chain · Roadmap",
+          b1:{h:"Depth expansion",p:"Roadmap adds deeper stage pages (still public-safe): sharper definitions, clearer constraint lists, and stronger falsification conditions.",u:["More stage detail.","More constraints.","More signal clarity.","More falsifiers."]},
+          b2:{h:"Measurement atlas",p:"Roadmap builds an atlas of measurable signals by stage, including what constitutes stability vs loss vs noise.",u:["Signal taxonomy.","Noise taxonomy.","Stability indicators.","Failure indicators."]},
+          b3:{h:"Validation protocol",p:"Roadmap adds replication-friendly protocols at the level of evidence bundles, not apparatus recipes.",u:["Public protocols.","Evidence bundles.","Replicable scoring.","No device reveal."]},
+          b4:{h:"Public posture",p:"The page remains legible to non-specialists while preserving correct boundaries. That is the product.",u:["Legible summaries.","Precise constraints.","Bounded claims.","Safe disclosure."]}
+        },
+        informal:{title:"Chain · Roadmap",
+          b1:{h:"More depth",p:"Deeper stage pages (still public-safe).",u:["More clarity.","More constraints.","More signals.","More falsifiers."]},
+          b2:{h:"Measurement map",p:"Signals by stage.",u:["Stability.","Loss.","Noise.","Thresholds."]},
+          b3:{h:"Protocols",p:"Evidence bundles, not recipes.",u:["Public proof.","Replicable checks.","Safe disclosure.","No schematics."]},
+          b4:{h:"Result",p:"Frontier energy explained cleanly.",u:["Legible.","Bounded.","Testable.","Safe."]}
+        }}
+      }
+    },
+
+    plasma:{
+      origin:{
+        formal:{title:"Plasma · Concept",
+          b1:{h:"Plasma definition",p:"Plasma is the bridge state: ionized matter where electromagnetic control becomes the design space and stability becomes the core problem.",u:["Ionization as threshold.","Control variables exist.","Stability is central.","Loss is unavoidable."]},
+          b2:{h:"What ‘stability’ means",p:"Stability is not a slogan. It means bounded behavior under disturbance: reduced turbulence growth, reduced loss, and repeatable control response.",u:["Bounded disturbances.","Repeatable response.","Loss channels tracked.","No runaway modes."]},
+          b3:{h:"Why plasma is hard",p:"Plasma wants to drift: instabilities, boundary interactions, and energy losses. A credible approach must name these, not ignore them.",u:["Instabilities exist.","Boundaries matter.","Loss exists.","Noise exists."]},
+          b4:{h:"Public-safe claim",p:"We can define a stability ladder: what signals indicate stability, what indicates drift, and what indicates failure—without disclosing device design.",u:["Signal ladder.","Drift indicators.","Failure markers.","No apparatus reveal."]}
+        },
+        informal:{title:"Plasma · Concept",
+          b1:{h:"What it is",p:"Plasma is the bridge state you must control.",u:["Ionized matter.","Control problem.","Stability problem.","Loss problem."]},
+          b2:{h:"Stability",p:"Stability means bounded behavior, not hype.",u:["Repeatable.","Controlled.","Measured.","No runaway."]},
+          b3:{h:"Why it’s hard",p:"Plasma drifts and loses energy.",u:["Instabilities.","Boundaries.","Loss.","Noise."]},
+          b4:{h:"Our angle",p:"Define stability signals and falsifiers publicly.",u:["Signals.","Drift.","Failure.","No device reveal."]}
+        }}
+      },
+      now:{
+        formal:{title:"Plasma · Live",
+          b1:{h:"Live posture",p:"We treat plasma as an operational state space: define inputs, define outputs, define stability markers, define failure markers.",u:["Inputs declared.","Outputs declared.","Stability markers.","Failure markers."]},
+          b2:{h:"Control framing (public)",p:"We describe control in terms of constraints and measurable response, not proprietary mechanisms.",u:["Control response curves.","Disturbance handling.","Loss tracking.","Noise handling."]},
+          b3:{h:"Safety and boundaries",p:"Public-facing work stays bounded: what we mean by plasma, what we do not mean, and what would count as instability.",u:["No overclaiming.","No hidden leaps.","Bounded language.","Explicit falsifiers."]},
+          b4:{h:"Trade-secret boundary",p:"We share the measurement model and the stability taxonomy. We do not share apparatus-level implementation details.",u:["Taxonomy yes.","Setpoints no.","Signals yes.","Schematics no."]}
+        },
+        informal:{title:"Plasma · Live",
+          b1:{h:"Now",p:"Plasma is treated as a controllable state space.",u:["Inputs.","Outputs.","Stability.","Failure."]},
+          b2:{h:"Control",p:"We talk constraints and response—not device secrets.",u:["Response.","Disturbance.","Loss.","Noise."]},
+          b3:{h:"Bounded",p:"Clear meaning, clear limits.",u:["No hype.","No leaps.","Falsifiers.","Safety."]},
+          b4:{h:"Boundary",p:"Taxonomy public, build details private.",u:["Taxonomy yes.","Recipes no.","Signals yes.","Schematics no."]}
+        }}
+      },
+      post:{
+        formal:{title:"Plasma · Roadmap",
+          b1:{h:"Stability ladder",p:"Roadmap publishes a clearer ladder of stability conditions and what measurements separate ‘stable’ from ‘drifting’ from ‘failed.’",u:["Stable criteria.","Drift criteria.","Failure criteria.","Noise criteria."]},
+          b2:{h:"Loss accounting",p:"Roadmap expands loss accounting: what losses dominate, how they show up in signals, and how we bound them.",u:["Loss categories.","Signal signatures.","Bounding strategy.","Audit posture."]},
+          b3:{h:"Replication framing",p:"Roadmap focuses on evidence bundles and replication logic at the level of signals and classifications.",u:["Evidence bundles.","Repeatable scoring.","Observer-invariant rules.","No device reveal."]},
+          b4:{h:"Public value",p:"The product becomes a legible reference: people can see what ‘plasma stability’ means and what would disprove claims.",u:["Legible terms.","Measurable claims.","Clear falsifiers.","Safe disclosure."]}
+        },
+        informal:{title:"Plasma · Roadmap",
+          b1:{h:"More clarity",p:"Publish stability vs drift vs failure markers.",u:["Stable.","Drift.","Failure.","Noise."]},
+          b2:{h:"Loss map",p:"Explain loss signatures cleanly.",u:["Loss types.","Signal patterns.","Bounds.","Checks."]},
+          b3:{h:"Replication",p:"Evidence bundles, not blueprints.",u:["Rules.","Scoring.","Repeatable.","Safe."]},
+          b4:{h:"Result",p:"People understand what would count as proof.",u:["Measurable.","Falsifiable.","Legible.","Safe."]}
+        }}
+      }
+    },
+
+    fusion:{
+      origin:{
+        formal:{title:"Fusion · Concept",
+          b1:{h:"Fusion framing",p:"Fusion is not a word—it is a set of criteria: sufficient temperature/energy, sufficient density, sufficient confinement time, and controlled loss.",u:["Criteria, not vibes.","Loss accounted.","Time accounted.","Stability required."]},
+          b2:{h:"Confinement concept",p:"Confinement is the bridge from ‘plasma exists’ to ‘plasma sustains conditions.’ The public framing is about what confinement must accomplish.",u:["Hold conditions.","Limit loss.","Resist instabilities.","Be measurable."]},
+          b3:{h:"Why approaches differ",p:"Approaches differ mainly in confinement strategy and stability management. We avoid claiming a single magic method; we claim a coherent measurement-first pathway.",u:["No single magic.","Measurement-first.","Criteria-first.","Bounded claims."]},
+          b4:{h:"Public-safe claim",p:"We can describe the criteria, the signal set, and the failure modes publicly, without disclosing implementation.",u:["Criteria listed.","Signals listed.","Failure modes listed.","No schematics."]}
+        },
+        informal:{title:"Fusion · Concept",
+          b1:{h:"Fusion = criteria",p:"It’s a checklist, not a slogan.",u:["Temperature/energy.","Density.","Time.","Loss control."]},
+          b2:{h:"Confinement",p:"Confinement means holding conditions long enough.",u:["Hold.","Stabilize.","Measure.","Repeat."]},
+          b3:{h:"No magic",p:"We don’t claim a magic device; we claim a coherent pathway.",u:["Criteria-first.","Signals-first.","Bounded.","Testable."]},
+          b4:{h:"Public-safe",p:"Criteria and falsifiers can be public; build secrets cannot.",u:["Criteria yes.","Signals yes.","Falsifiers yes.","Blueprints no."]}
+        }}
+      },
+      now:{
+        formal:{title:"Fusion · Live",
+          b1:{h:"Live posture",p:"We present fusion as a staged criteria pathway, separating definition from current work status from future expansion.",u:["Definition stable.","Status explicit.","Roadmap explicit.","No moving targets."]},
+          b2:{h:"What we publish (public)",p:"We publish criteria language, signal language, and failure language. That allows readers to evaluate coherence without needing secrets.",u:["Criteria map.","Signal map.","Failure map.","Bounded claims."]},
+          b3:{h:"Safety boundary",p:"We do not publish build recipes. We publish what would count as evidence and what would count as disproof.",u:["Evidence conditions.","Disproof conditions.","No recipe.","No apparatus."]},
+          b4:{h:"Why this matters",p:"Fusion discourse is usually polarizing. A criteria-first, signal-first framing makes discussion productive and falsifiable.",u:["Reduces hype.","Reduces ideology.","Improves clarity.","Enables collaboration."]}
+        },
+        informal:{title:"Fusion · Live",
+          b1:{h:"Now",p:"Fusion is shown as staged criteria.",u:["Definition.","Status.","Roadmap.","No drift."]},
+          b2:{h:"What we share",p:"Criteria + signals + failures.",u:["Map.","Signals.","Falsifiers.","Bounded."]},
+          b3:{h:"What we don’t share",p:"No recipes or apparatus details.",u:["No blueprints.","No setpoints.","No geometry.","No secrets."]},
+          b4:{h:"Why it helps",p:"It makes the conversation testable.",u:["Less hype.","More clarity.","More trust.","More progress."]}
+        }}
+      },
+      post:{
+        formal:{title:"Fusion · Roadmap",
+          b1:{h:"Criteria tightening",p:"Roadmap sharpens criteria language and clarifies the boundary between ‘interesting plasma’ and ‘fusion-relevant plasma.’",u:["Stronger definitions.","Boundary clarity.","Signal thresholds (public).","Failure conditions."]},
+          b2:{h:"Validation layering",p:"Roadmap adds layered validation: what must be shown first, what can be inferred, and what cannot be inferred.",u:["Stepwise evidence.","Inference bounds.","No leaps.","Audit posture."]},
+          b3:{h:"Neutral public surface",p:"Roadmap maintains a neutral, non-hype posture while increasing depth. The value is the structure itself.",u:["Neutral tone.","Bounded claims.","More depth.","Same map."]},
+          b4:{h:"Collaboration posture",p:"Roadmap supports collaboration by providing shared language and shared falsifiers, without disclosing proprietary implementation.",u:["Shared definitions.","Shared tests.","Shared signals.","Safe boundary."]}
+        },
+        informal:{title:"Fusion · Roadmap",
+          b1:{h:"Tighter criteria",p:"Clear boundary: fusion-relevant vs not.",u:["Definitions.","Thresholds.","Signals.","Failures."]},
+          b2:{h:"Layered proof",p:"Stepwise evidence only.",u:["No leaps.","Bounds.","Auditable.","Clear."]},
+          b3:{h:"Still neutral",p:"More depth without hype.",u:["Neutral.","Bounded.","Deep.","Stable."]},
+          b4:{h:"Shared language",p:"Collaboration without secrets.",u:["Shared tests.","Shared signals.","Shared words.","Safe."]}
+        }}
+      }
+    },
+
+    val:{
+      origin:{
+        formal:{title:"Validation · Concept",
+          b1:{h:"Validation philosophy",p:"Validation is not persuasion; it is measurement + falsification. We publish what to measure and what would disprove the story.",u:["Measurement-first.","Falsification-first.","Bounded claims.","Audit posture."]},
+          b2:{h:"Signal categories (public)",p:"Signals are grouped by function: stability, loss, confinement indicators, and noise/artefact controls.",u:["Stability signals.","Loss signals.","Confinement proxies.","Noise controls."]},
+          b3:{h:"Failure modes",p:"Failure modes are explicitly named so readers can distinguish real progress from artefacts or wishful interpretation.",u:["Instability growth.","Energy loss dominance.","Measurement artefacts.","Non-repeatability."]},
+          b4:{h:"No-trade-secret validation",p:"We can publish what evidence would count without publishing how to build the apparatus that generates it.",u:["Evidence rules public.","Blueprint private.","Replication at signal level.","No device reveal."]}
+        },
+        informal:{title:"Validation · Concept",
+          b1:{h:"Validation = proof rules",p:"Signals and falsifiers, not persuasion.",u:["Measure.","Test.","Falsify.","Repeat."]},
+          b2:{h:"Signals",p:"Group signals by what they mean.",u:["Stability.","Loss.","Confinement.","Noise."]},
+          b3:{h:"Failure",p:"Name failure modes up front.",u:["Instability.","Loss.","Artefacts.","Not repeatable."]},
+          b4:{h:"Boundary",p:"Proof rules can be public; build secrets cannot.",u:["Rules yes.","Blueprint no.","Signals yes.","Schematics no."]}
+        }}
+      },
+      now:{
+        formal:{title:"Validation · Live",
+          b1:{h:"Live posture",p:"We’re building a public-safe validation surface: clear claims, clear evidence conditions, clear disproof conditions.",u:["Claims bounded.","Evidence defined.","Disproof defined.","No drift."]},
+          b2:{h:"What readers can do",p:"Readers can evaluate coherence by checking whether claims correspond to measurable signals and whether falsifiers are meaningful.",u:["Check signals.","Check bounds.","Check falsifiers.","Check consistency."]},
+          b3:{h:"What we will not do",p:"We will not ask you to ‘believe.’ We will not rely on mystery. We will not publish recipes here.",u:["No belief asks.","No mysticism.","No recipes.","No schematics."]},
+          b4:{h:"Trust posture",p:"Trust is earned through stable definitions and stable validation logic over time.",u:["Stable words.","Stable tests.","Stable boundaries.","Repeatability."]}
+        },
+        informal:{title:"Validation · Live",
+          b1:{h:"Now",p:"Clear claims with clear proof rules.",u:["Bounded.","Measurable.","Falsifiable.","Stable."]},
+          b2:{h:"You can evaluate",p:"Check if claims match signals and falsifiers.",u:["Signals.","Bounds.","Falsifiers.","Consistency."]},
+          b3:{h:"We won’t do",p:"No ‘just trust us.’",u:["No belief asks.","No mystery.","No recipes.","No schematics."]},
+          b4:{h:"Trust",p:"Stable tests over time.",u:["Repeatable.","Clear.","Bounded.","Honest."]}
+        }}
+      },
+      post:{
+        formal:{title:"Validation · Roadmap",
+          b1:{h:"Evidence bundles",p:"Roadmap adds evidence-bundle templates: what a ‘good report’ contains, how to log conditions, and how to show repeatability.",u:["Template bundles.","Condition logs.","Repeatability checks.","Audit posture."]},
+          b2:{h:"Stress testing",p:"Roadmap adds adversarial stress tests: how to distinguish signal from noise and how to detect artefacts.",u:["Noise controls.","Artefact checks.","Cross-checks.","Falsifier emphasis."]},
+          b3:{h:"Public registry",p:"Roadmap supports a registry layer where validation claims and status can be looked up without ambiguity.",u:["Lookupable status.","Reason codes.","History preserved.","Revocation rules."]},
+          b4:{h:"Safe disclosure",p:"Roadmap keeps disclosure safe: we increase clarity and rigor without publishing proprietary apparatus details.",u:["More rigor.","Same boundary.","No recipes.","No schematics."]}
+        },
+        informal:{title:"Validation · Roadmap",
+          b1:{h:"Bundles",p:"Templates for what proof looks like.",u:["Templates.","Logs.","Repeatability.","Audit."]},
+          b2:{h:"Stress tests",p:"How to separate signal from noise.",u:["Noise controls.","Artefacts.","Cross-checks.","Falsifiers."]},
+          b3:{h:"Registry",p:"Lookupable validation status.",u:["Status.","Reasons.","History.","Rules."]},
+          b4:{h:"Boundary",p:"More rigor, still no secrets.",u:["More clarity.","No recipes.","No schematics.","Safe."]}
+        }}
+      }
+    }
+  };
+
+  var ZH = {
+    chain:{
+      origin:{
+        formal:{title:"链路 · 概念",
+          b1:{h:"系统定义",p:"把转换链当工程流程：捕获→调制→等离子→稳定→聚变标准。每阶段都有输入/输出/约束/故障模式。",u:["阶段明确。","接口明确。","约束可见。","未知标注。"]},
+          b2:{h:"为什么前沿",p:"前沿不是“魔法部件”，而是把转换、可控性与验证闭环，并保持定义不漂移。",u:["控制优先。","损耗优先。","测量优先。","主张有界。"]},
+          b3:{h:"我们主张（有界）",p:"我们主张一条可测、可证伪、可公开讨论的链路框架，但不公开装置实现细节。",u:["信号可见。","检查点可见。","证伪条件可见。","不公开配方。"]},
+          b4:{h:"我们不主张",p:"这里不主张成品反应堆，也不公开专有装置细节与参数配方。",u:["无原理图。","无独特几何。","无秘密设定。","无未发表方法。"]}
+        },
+        informal:{title:"链路 · 概念",
+          b1:{h:"核心想法",p:"输入→阶段→输出。",u:["阶段清楚。","约束清楚。","检查点清楚。","证伪清楚。"]},
+          b2:{h:"前沿点",p:"控制+测量，不靠噱头。",u:["控制。","损耗。","信号。","真值。"]},
+          b3:{h:"我们的主张",p:"公开可评估的链路框架，不泄露秘密。",u:["检查点。","信号。","证伪。","无配方。"]},
+          b4:{h:"不主张",p:"这里不是成品反应堆介绍。",u:["无图纸。","无设定。","无秘密建造。","无暗跳。"]}
+        }}
+      },
+      now:{
+        formal:{title:"链路 · 上线",
+          b1:{h:"上线姿态",p:"以公开安全的参考面写作：术语一致、阶段一致、边界一致。",u:["大众可读。","技术可信。","语言有界。","不漂移。"]},
+          b2:{h:"阶段图（公开）",p:"公开描述阶段与约束：捕获、转换、等离子稳定、约束框架、验证信号。",u:["阶段角色清晰。","接口描述。","损耗承认。","安全边界。"]},
+          b3:{h:"怎么读",p:"用概念/上线/路线图区分定义、现况与扩展，不移动目标。",u:["概念=定义。","上线=现况。","路线图=扩展。","含义不变。"]},
+          b4:{h:"秘密边界",p:"公开‘测什么/如何证伪’，不公开‘怎么造’的配方。",u:["信号可见。","配方不公开。","证伪可见。","装置不公开。"]}
+        },
+        informal:{title:"链路 · 上线",
+          b1:{h:"现在",p:"写成干净参考面。",u:["术语稳。","阶段稳。","边界清。","不漂移。"]},
+          b2:{h:"内容",p:"分阶段+分约束。",u:["捕获。","等离子。","稳定。","验证。"]},
+          b3:{h:"用法",p:"切镜头看定义/现况/下一步。",u:["概念。","上线。","路线图。","同含义。"]},
+          b4:{h:"边界",p:"公开信号与证伪，不公开配方。",u:["信号是。","配方否。","证明是。","图纸否。"]}
+        }}
+      },
+      post:{
+        formal:{title:"链路 · 路线图",
+          b1:{h:"加深度",p:"更深阶段页（仍公开安全）：更清晰定义、更完整约束、更强证伪条件。",u:["更多细节。","更多约束。","更清晰信号。","更多证伪。"]},
+          b2:{h:"测量图谱",p:"按阶段构建可测信号图谱：稳定/损耗/噪声/失败如何区分。",u:["信号分类。","噪声分类。","稳定指标。","失败指标。"]},
+          b3:{h:"验证协议",p:"以证据包与复现逻辑扩展，而不是装置配方。",u:["公开协议。","证据包。","可复现评分。","不泄露装置。"]},
+          b4:{h:"公开价值",p:"保持大众可读且边界正确，这本身就是产品。",u:["可读摘要。","精确约束。","有界主张。","安全披露。"]}
+        },
+        informal:{title:"链路 · 路线图",
+          b1:{h:"更深",p:"更深阶段页（公开安全）。",u:["更清晰。","更多约束。","更多信号。","更多证伪。"]},
+          b2:{h:"测量地图",p:"按阶段列信号。",u:["稳定。","损耗。","噪声。","阈值。"]},
+          b3:{h:"协议",p:"证据包，不是配方。",u:["公开证明。","可复现检查。","安全披露。","无图纸。"]},
+          b4:{h:"结果",p:"把前沿能源讲清楚。",u:["可读。","有界。","可测。","安全。"]}
+        }}
+      }
+    },
+
+    plasma:{
+      origin:{
+        formal:{title:"等离子 · 概念",
+          b1:{h:"等离子定义",p:"等离子是桥态：电离物质，电磁控制成为设计空间，稳定成为核心问题。",u:["电离阈值。","控制变量存在。","稳定为核心。","损耗不可避免。"]},
+          b2:{h:"稳定的含义",p:"稳定不是口号：在扰动下保持有界，湍动不失控，损耗可控，响应可重复。",u:["扰动有界。","响应可重复。","损耗可跟踪。","无失控模式。"]},
+          b3:{h:"为什么难",p:"等离子会漂移：不稳定、边界相互作用、能量损耗。可信方案必须承认这些。",u:["不稳定存在。","边界重要。","损耗存在。","噪声存在。"]},
+          b4:{h:"公开主张",p:"可公开稳定阶梯：稳定/漂移/失败信号与证伪条件，而不公开装置实现。",u:["信号阶梯。","漂移指标。","失败标记。","不泄露装置。"]}
+        },
+        informal:{title:"等离子 · 概念",
+          b1:{h:"是什么",p:"必须控制的桥态。",u:["电离。","控制。","稳定。","损耗。"]},
+          b2:{h:"稳定",p:"稳定=有界，不是噱头。",u:["可重复。","可测。","可控。","不失控。"]},
+          b3:{h:"难点",p:"漂移与损耗。",u:["不稳定。","边界。","损耗。","噪声。"]},
+          b4:{h:"我们的角度",p:"公开信号与证伪，不泄露装置。",u:["信号。","漂移。","失败。","无装置细节。"]}
+        }}
+      },
+      now:{
+        formal:{title:"等离子 · 上线",
+          b1:{h:"上线姿态",p:"把等离子当可操作状态空间：输入/输出/稳定标记/失败标记明确。",u:["输入声明。","输出声明。","稳定标记。","失败标记。"]},
+          b2:{h:"控制框架（公开）",p:"公开描述约束与可测响应，而非专有机制。",u:["响应曲线。","扰动处理。","损耗跟踪。","噪声处理。"]},
+          b3:{h:"安全边界",p:"公开工作保持有界：定义清楚、限制清楚、证伪清楚。",u:["不夸大。","无暗跳。","有界语言。","明确证伪。"]},
+          b4:{h:"秘密边界",p:"公开测量模型与稳定分类，不公开装置实现细节。",u:["分类可见。","设定不见。","信号可见。","图纸不见。"]}
+        },
+        informal:{title:"等离子 · 上线",
+          b1:{h:"现在",p:"把等离子当可控状态。",u:["输入。","输出。","稳定。","失败。"]},
+          b2:{h:"控制",p:"讲约束与响应，不讲秘密。",u:["响应。","扰动。","损耗。","噪声。"]},
+          b3:{h:"有界",p:"含义清楚，限制清楚。",u:["不吹。","不跳。","证伪。","安全。"]},
+          b4:{h:"边界",p:"分类公开，配方私密。",u:["分类是。","配方否。","信号是。","图纸否。"]}
+        }}
+      },
+      post:{
+        formal:{title:"等离子 · 路线图",
+          b1:{h:"稳定阶梯",p:"发布稳定/漂移/失败/噪声判定条件。",u:["稳定条件。","漂移条件。","失败条件。","噪声条件。"]},
+          b2:{h:"损耗账本",p:"扩展损耗分类与信号特征，说明如何有界。",u:["损耗类型。","信号特征。","有界策略。","审计姿态。"]},
+          b3:{h:"复现框架",p:"以信号与分类层面支持复现，而不是蓝图。",u:["证据包。","可复现评分。","观察者一致。","无装置泄露。"]},
+          b4:{h:"公开价值",p:"让读者知道什么算证明、什么算反证。",u:["术语可读。","主张可测。","证伪清晰。","安全披露。"]}
+        },
+        informal:{title:"等离子 · 路线图",
+          b1:{h:"更清晰",p:"稳定/漂移/失败标记。",u:["稳定。","漂移。","失败。","噪声。"]},
+          b2:{h:"损耗地图",p:"解释损耗信号。",u:["类型。","特征。","边界。","检查。"]},
+          b3:{h:"复现",p:"证据包，不是蓝图。",u:["规则。","评分。","可复现。","安全。"]},
+          b4:{h:"结果",p:"读者能判断什么算证明。",u:["可测。","可证伪。","可读。","安全。"]}
+        }}
+      }
+    },
+
+    fusion:{
+      origin:{
+        formal:{title:"聚变 · 概念",
+          b1:{h:"聚变=标准",p:"聚变是一组标准：能量/温度、密度、约束时间、损耗控制与稳定。",u:["标准不是口号。","损耗需计。","时间需计。","稳定必需。"]},
+          b2:{h:"约束概念",p:"约束把‘有等离子’变成‘能持续条件’。公开层面描述约束需要达成什么。",u:["保持条件。","限制损耗。","抵抗不稳定。","可测。"]},
+          b3:{h:"避免魔法叙事",p:"不同路线主要差异在约束策略与稳定管理。我们主张测量优先、标准优先。",u:["无魔法。","测量优先。","标准优先。","主张有界。"]},
+          b4:{h:"公开主张",p:"可公开标准、信号与失败模式，不公开实现细节。",u:["标准可列。","信号可列。","失败可列。","无图纸。"]}
+        },
+        informal:{title:"聚变 · 概念",
+          b1:{h:"聚变=清单",p:"不是口号，是标准。",u:["温度/能量。","密度。","时间。","损耗控制。"]},
+          b2:{h:"约束",p:"保持条件够久。",u:["保持。","稳定。","测量。","重复。"]},
+          b3:{h:"无魔法",p:"我们讲路径与测量。",u:["标准优先。","信号优先。","有界。","可测。"]},
+          b4:{h:"公开/私密",p:"标准可公开，配方不可。",u:["标准是。","信号是。","证伪是。","蓝图否。"]}
+        }}
+      },
+      now:{
+        formal:{title:"聚变 · 上线",
+          b1:{h:"上线姿态",p:"以分阶段标准路径呈现：定义/现况/路线图分离，不移动目标。",u:["定义稳定。","现况明确。","路线图明确。","不漂移。"]},
+          b2:{h:"公开内容",p:"公开标准语言、信号语言、失败语言，便于评估一致性。",u:["标准图。","信号图。","失败图。","主张有界。"]},
+          b3:{h:"安全边界",p:"不发布建造配方；发布什么算证据、什么算反证。",u:["证据条件。","反证条件。","无配方。","无装置。"]},
+          b4:{h:"价值",p:"让讨论可测试、可证伪、可协作。",u:["减噱头。","减意识形态。","增清晰。","促合作。"]}
+        },
+        informal:{title:"聚变 · 上线",
+          b1:{h:"现在",p:"按标准分阶段呈现。",u:["定义。","现况。","路线图。","不漂移。"]},
+          b2:{h:"公开",p:"标准+信号+失败。",u:["地图。","信号。","证伪。","有界。"]},
+          b3:{h:"不公开",p:"不发配方与装置细节。",u:["无蓝图。","无设定。","无几何。","无秘密。"]},
+          b4:{h:"为什么好",p:"讨论变可测。",u:["更少噱头。","更多清晰。","更多信任。","更快进展。"]}
+        }}
+      },
+      post:{
+        formal:{title:"聚变 · 路线图",
+          b1:{h:"标准收紧",p:"更清晰区分‘有趣等离子’与‘聚变相关等离子’。",u:["更强定义。","边界更清晰。","信号阈值（公开）。","失败条件。"]},
+          b2:{h:"验证分层",p:"分层证据：先必须展示什么，再能推断什么，不能推断什么。",u:["逐步证据。","推断边界。","无暗跳。","可审计。"]},
+          b3:{h:"中立公开面",p:"保持中立、无夸大，同时提升深度。结构本身就是价值。",u:["中立语气。","有界主张。","更深内容。","同地图。"]},
+          b4:{h:"合作姿态",p:"共享语言与共享证伪，不泄露实现。",u:["共享定义。","共享测试。","共享信号。","安全边界。"]}
+        },
+        informal:{title:"聚变 · 路线图",
+          b1:{h:"更紧标准",p:"清晰边界：相关/不相关。",u:["定义。","阈值。","信号。","失败。"]},
+          b2:{h:"分层证明",p:"只走逐步证据。",u:["无暗跳。","有界。","可审计。","清晰。"]},
+          b3:{h:"仍中立",p:"加深度不加噱头。",u:["中立。","有界。","更深。","稳定。"]},
+          b4:{h:"共享语言",p:"合作但不泄密。",u:["共享测试。","共享信号。","共享术语。","安全。"]}
+        }}
+      }
+    },
+
+    val:{
+      origin:{
+        formal:{title:"验证 · 概念",
+          b1:{h:"验证哲学",p:"验证不是说服，而是测量+证伪。公开‘测什么’与‘如何证伪’。",u:["测量优先。","证伪优先。","主张有界。","可审计。"]},
+          b2:{h:"信号分类（公开）",p:"按含义分组：稳定、损耗、约束代理、噪声控制。",u:["稳定信号。","损耗信号。","约束代理。","噪声控制。"]},
+          b3:{h:"失败模式",p:"明确失败模式，区分进展与伪象。",u:["不稳定增长。","损耗主导。","测量伪象。","不可重复。"]},
+          b4:{h:"不泄密验证",p:"可公开证据规则，不公开装置配方。",u:["规则公开。","蓝图私密。","信号层复现。","无装置泄露。"]}
+        },
+        informal:{title:"验证 · 概念",
+          b1:{h:"验证=规则",p:"信号与证伪，不是说服。",u:["测。","试。","证伪。","重复。"]},
+          b2:{h:"信号",p:"按含义分类。",u:["稳定。","损耗。","约束。","噪声。"]},
+          b3:{h:"失败",p:"先把失败讲清楚。",u:["不稳定。","损耗。","伪象。","不重复。"]},
+          b4:{h:"边界",p:"规则可公开，配方不可。",u:["规则是。","蓝图否。","信号是。","图纸否。"]}
+        }}
+      },
+      now:{
+        formal:{title:"验证 · 上线",
+          b1:{h:"上线姿态",p:"构建公开安全的验证面：主张清晰、证据条件清晰、反证条件清晰。",u:["主张有界。","证据定义。","反证定义。","不漂移。"]},
+          b2:{h:"读者能做什么",p:"检查主张是否对应可测信号，证伪是否有效，定义是否一致。",u:["查信号。","查边界。","查证伪。","查一致。"]},
+          b3:{h:"我们不会做",p:"不要求相信，不依赖神秘，不在此公开配方。",u:["不求信。","不神秘。","无配方。","无图纸。"]},
+          b4:{h:"信任姿态",p:"信任靠长期一致：稳定定义+稳定验证逻辑。",u:["稳定术语。","稳定测试。","稳定边界。","可重复。"]}
+        },
+        informal:{title:"验证 · 上线",
+          b1:{h:"现在",p:"清晰主张+清晰证明规则。",u:["有界。","可测。","可证伪。","稳定。"]},
+          b2:{h:"你能评估",p:"看主张是否匹配信号与证伪。",u:["信号。","边界。","证伪。","一致。"]},
+          b3:{h:"不做",p:"不搞‘信我就行’。",u:["不求信。","不神秘。","无配方。","无图纸。"]},
+          b4:{h:"信任",p:"长期一致的测试与边界。",u:["可重复。","清晰。","有界。","诚实。"]}
+        }}
+      },
+      post:{
+        formal:{title:"验证 · 路线图",
+          b1:{h:"证据包",p:"增加证据包模板：良好报告包含什么、如何记录条件、如何展示可重复。",u:["模板。","条件日志。","可重复检查。","可审计。"]},
+          b2:{h:"压力测试",p:"增加对抗测试：区分信号与噪声，识别伪象。",u:["噪声控制。","伪象检查。","交叉验证。","证伪优先。"]},
+          b3:{h:"公开注册表",p:"支持查询验证状态：状态、原因码、历史、撤销规则。",u:["可查询状态。","原因码。","历史保留。","撤销规则。"]},
+          b4:{h:"安全披露",p:"增加严谨度但不泄露装置实现。",u:["更严谨。","边界不变。","无配方。","无图纸。"]}
+        },
+        informal:{title:"验证 · 路线图",
+          b1:{h:"证据包",p:"证明长什么样的模板。",u:["模板。","日志。","可重复。","审计。"]},
+          b2:{h:"压力测试",p:"分离信号与噪声。",u:["噪声。","伪象。","交叉。","证伪。"]},
+          b3:{h:"注册表",p:"可查询的验证状态。",u:["状态。","原因。","历史。","规则。"]},
+          b4:{h:"边界",p:"更严谨但不泄密。",u:["更清晰。","无配方。","无图纸。","安全。"]}
+        }}
+      }
+    }
+  };
+
+  var CONTENT = (lang==="zh") ? ZH : EN;
+
+  function setLensLabels(){
+    styleChip.textContent = ui.stylePrefix + (style==="formal" ? ui.lens.formal : ui.lens.informal);
+    chipConcept.textContent = ui.lens.concept;
+    chipLive.textContent = ui.lens.live;
+    chipRoadmap.textContent = ui.lens.roadmap;
+
+    chipConcept.classList.toggle("active", time==="origin");
+    chipLive.classList.toggle("active", time==="now");
+    chipRoadmap.classList.toggle("active", time==="post");
+  }
+
+  var activeKey=null;
+
+  function setActiveDiamond(key){
+    ["dChain","dPlasma","dFusion","dValidation"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
+    var map={chain:"dChain",plasma:"dPlasma",fusion:"dFusion",val:"dValidation"};
+    document.getElementById(map[key]).classList.add("active");
+  }
+
+  function render(){
+    persist();
+    setLinks();
+    setLensLabels();
+
+    var view = CONTENT[activeKey][time][style];
+    mTitle.textContent = view.title;
+
+    fill(h1,p1,u1,view.b1);
+    fill(h2,p2,u2,view.b2);
+    fill(h3,p3,u3,view.b3);
+    fill(h4,p4,u4,view.b4);
+  }
+
+  function open(key){
+    activeKey=key;
+    setActiveDiamond(key);
+    render();
+    bd.classList.add("show");
+    modal.classList.add("show");
+  }
+
+  function close(){
+    bd.classList.remove("show");
+    modal.classList.remove("show");
+    ["dChain","dPlasma","dFusion","dValidation"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
+    activeKey=null;
+  }
+
+  // Events
+  document.getElementById("styleChip").addEventListener("click", function(){
+    style = (style==="formal") ? "informal" : "formal";
+    render();
+  });
+  document.getElementById("chipConcept").addEventListener("click", function(){ time="origin"; render(); });
+  document.getElementById("chipLive").addEventListener("click", function(){ time="now"; render(); });
+  document.getElementById("chipRoadmap").addEventListener("click", function(){ time="post"; render(); });
+
+  bd.addEventListener("click", close);
+  mClose.addEventListener("click", close);
+  document.getElementById("mReturn").addEventListener("click", close);
+
+  document.getElementById("dChain").addEventListener("click", function(){ open("chain"); });
+  document.getElementById("dPlasma").addEventListener("click", function(){ open("plasma"); });
+  document.getElementById("dFusion").addEventListener("click", function(){ open("fusion"); });
+  document.getElementById("dValidation").addEventListener("click", function(){ open("val"); });
+
+  ["dChain","dPlasma","dFusion","dValidation"].forEach(function(id){
+    var el=document.getElementById(id);
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+    });
+  });
+
+  setLensLabels();
+})();
+</script>
+
+</body>
+</html>
+```0

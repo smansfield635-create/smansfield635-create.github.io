@@ -1,0 +1,506 @@
+<!-- TNT — /products/energy/index.html  (ENERGY SUB-HUB · GEM STANDARD · DIAMOND-OF-DIAMONDS)
+     GOAL:
+       - Frontier-level energy section (conversion → plasma → fusion) WITHOUT trade secrets.
+       - Consumer-legible, technically grounded, bounded language.
+       - Same GEM STANDARD as education/software sub-hubs:
+           - One outer diamond + four inner diamonds
+           - Click diamond → centered modal
+           - Lenses INSIDE modal only:
+               STYLE: Formal/Informal (gd_style)
+               TIME:  CONCEPT / LIVE / ROADMAP (gd_time = origin/now/post)
+           - Language lens: lang=en => EN only, lang=zh => 中文 only
+           - 4 sections × 4 bullet bullets per diamond per lens (4×4 density)
+       - Deterministic state propagation via query (?lang=&style=&time=) + localStorage gd_*
+     LOCKS:
+       - TNT FULL FILE
+       - Uses /assets/ui.css + /assets/branch.css only
+       - DOES NOT style html/body background (ui.css owns field)
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PRODUCTS · ENERGY</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+:root{
+  --R:154px;
+  --goldSoft:rgba(212,175,55,.35);
+  --obs1:#070b12;
+  --obs2:#0c1626;
+  --mut:rgba(255,255,255,.84);
+  --mut2:rgba(255,255,255,.68);
+}
+
+/* Top-left */
+.top-left{
+  position:fixed; left:16px; top:16px; z-index:90;
+  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+}
+.btn{
+  padding:10px 16px; border-radius:14px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  color:#fff; border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.7);
+  cursor:pointer; font-weight:900; letter-spacing:.2px; text-decoration:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
+
+/* Brand pill */
+.brand{
+  position:fixed; left:50%; top:16px; transform:translateX(-50%);
+  z-index:80; text-align:center;
+  padding:10px 14px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16); backdrop-filter:blur(8px);
+}
+.brand .name{ font-weight:950; letter-spacing:1.2px; font-size:12px; opacity:.95; }
+.brand .tag{ font-size:11px; letter-spacing:.6px; opacity:.70; margin-top:2px; }
+
+/* Stage */
+.stage{
+  position:fixed; left:50%; top:52%;
+  transform:translate(-50%,-50%);
+  width:min(720px,94vw); height:min(720px,94vw);
+  z-index:40;
+}
+.outer{
+  position:absolute; left:50%; top:50%;
+  width:min(680px,92vw); height:min(680px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.72),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+  pointer-events:none; opacity:.85;
+}
+.outer::after{
+  content:""; position:absolute; inset:0; border-radius:60px;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.16;
+}
+.d{
+  width:170px; height:170px;
+  position:absolute; left:50%; top:50%;
+  transform-origin:center; border-radius:26px;
+  cursor:pointer; -webkit-tap-highlight-color:transparent;
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
+    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 28px 84px rgba(0,0,0,.78),
+    inset 0 2px 0 rgba(255,255,255,.14),
+    inset 0 -28px 44px rgba(0,0,0,.62);
+  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+.d::before{
+  content:""; position:absolute; inset:0; border-radius:26px; padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:""; position:absolute; left:12%; right:12%; top:10%; height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
+  opacity:.85; transform:rotate(-10deg);
+  pointer-events:none;
+}
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 18px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
+}
+.d.active{
+  border-color:rgba(212,175,55,.55);
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 30px rgba(212,175,55,.40),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
+}
+.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
+.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
+.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
+.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
+
+.inner{
+  width:100%; height:100%; transform:rotate(-45deg);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:16px; gap:10px;
+  pointer-events:none; user-select:none;
+}
+.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
+.sub{ font-size:12.5px; opacity:.80; line-height:1.35; max-width:18em; }
+
+.core{
+  position:absolute; left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  width:74px; height:74px; border-radius:22px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid; place-items:center;
+  font-weight:950; letter-spacing:.5px;
+  opacity:.92; pointer-events:none;
+}
+
+/* Dock */
+.dock{
+  position:fixed; left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:90;
+  width:min(900px,94vw);
+  display:flex; justify-content:center;
+  gap:10px; flex-wrap:wrap;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.20);
+  backdrop-filter:blur(8px);
+}
+
+/* Modal */
+.bd{
+  position:fixed; inset:0; z-index:200;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(10px);
+  display:none;
+}
+.bd.show{display:block;}
+.modal{
+  position:fixed; left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  width:min(1020px,94vw);
+  max-height:88vh;
+  display:none;
+  z-index:210;
+}
+.modal.show{display:block;}
+.shell{
+  height:88vh;
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
+    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
+    linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
+  box-shadow:0 60px 180px rgba(0,0,0,.92);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.mhead{
+  display:flex; justify-content:space-between; align-items:center;
+  gap:10px; padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  position:relative; z-index:2;
+}
+.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
+.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
+.mbody{
+  padding:14px 16px 18px;
+  overflow:auto; -webkit-overflow-scrolling:touch;
+  flex:1 1 auto;
+  position:relative; z-index:2;
+}
+.lensbar{
+  display:flex; gap:10px; flex-wrap:wrap;
+  align-items:center; justify-content:center;
+  padding:10px 10px 14px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  margin:-6px -6px 14px;
+}
+.chip{
+  padding:10px 16px; border-radius:999px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer; font-weight:900; letter-spacing:.2px; color:#fff;
+}
+.chip.active{
+  border-color:rgba(212,175,55,.35);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
+}
+.mgrid{ display:grid; gap:14px; }
+@media (min-width:920px){ .mgrid{ grid-template-columns:1fr 1fr; } }
+.box{
+  padding:16px 18px; border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
+  position:relative;
+}
+.box::before{
+  content:""; position:absolute; inset:0; border-radius:22px; padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.h{ margin:0 0 8px; font-weight:950; letter-spacing:.2px; }
+.p{ margin:0 0 10px; color:var(--mut); line-height:1.55; }
+.ul{ margin:0 0 0 18px; padding:0; color:var(--mut2); }
+.ul li{ margin:6px 0; }
+
+.mact{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
+.sbtn{
+  padding:12px 18px; border-radius:14px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  color:#fff; border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.7);
+  cursor:pointer; font-weight:900; letter-spacing:.2px; text-decoration:none;
+}
+.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
+
+@media (max-width:560px){
+  :root{ --R: 136px; }
+  .d{ width:158px; height:158px; }
+  .stage{ top:54%; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-left">
+  <a class="btn" id="btnBack" href="/products/">BACK</a>
+  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+</div>
+
+<div class="brand">
+  <div class="name" id="brandName">PRODUCTS</div>
+  <div class="tag" id="brandTag">ENERGY CONVERSION</div>
+</div>
+
+<div class="stage">
+  <div class="outer"></div>
+
+  <div class="d d-n" id="dChain" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="labChain">CHAIN</div>
+      <div class="sub" id="subChain">Solar → plasma → fusion.</div>
+    </div>
+  </div>
+
+  <div class="d d-e" id="dPlasma" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="labPlasma">PLASMA</div>
+      <div class="sub" id="subPlasma">Formation · stability.</div>
+    </div>
+  </div>
+
+  <div class="d d-s" id="dFusion" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="labFusion">FUSION</div>
+      <div class="sub" id="subFusion">Confinement · criteria.</div>
+    </div>
+  </div>
+
+  <div class="d d-w" id="dValidation" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="labValidation">VALIDATION</div>
+      <div class="sub" id="subValidation">Signals · falsifiers.</div>
+    </div>
+  </div>
+
+  <div class="core">◆</div>
+</div>
+
+<nav class="dock" id="dock">
+  <a class="btn" id="dockHub" href="/home/">HUB</a>
+  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<div class="bd" id="bd"></div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="shell">
+    <div class="mhead">
+      <h3 class="mtitle" id="mTitle">DETAIL</h3>
+      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
+    </div>
+
+    <div class="mbody">
+      <div class="lensbar">
+        <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>
+        <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>
+        <button class="chip" data-time="now" id="chipLive" type="button">LIVE</button>
+        <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
+      </div>
+
+      <div class="mgrid">
+        <div class="box"><h4 class="h" id="h1"></h4><p class="p" id="p1"></p><ul class="ul" id="u1"></ul></div>
+        <div class="box"><h4 class="h" id="h2"></h4><p class="p" id="p2"></p><ul class="ul" id="u2"></ul></div>
+        <div class="box"><h4 class="h" id="h3"></h4><p class="p" id="p3"></p><ul class="ul" id="u3"></ul></div>
+        <div class="box"><h4 class="h" id="h4"></h4><p class="p" id="p4"></p><ul class="ul" id="u4"></ul></div>
+      </div>
+
+      <div class="mact">
+        <button class="sbtn" id="mReturn" type="button">RETURN</button>
+        <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
+        <a class="sbtn" id="mJumpHub" href="/home/">JUMP HUB</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // URL → STATE HYDRATION (canonical keys only)
+  var qs = new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  if(!["en","zh"].includes(lang)) lang="en";
+  if(!["formal","informal"].includes(style)) style="formal";
+  if(time==="trajectory") time="post";
+  if(!["origin","now","post"].includes(time)) time="now";
+  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time); }catch(e){}
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+
+  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+
+  function setLinks(){
+    var s=q();
+    document.getElementById("btnBack").href="/products/?"+s;
+    document.getElementById("btnExit").href="/door/?"+s;
+
+    document.getElementById("dockHub").href="/home/?"+s;
+    document.getElementById("dockTerminal").href="/index.html?"+s;
+    document.getElementById("dockLinks").href="/links/?"+s;
+    document.getElementById("dockProducts").href="/products/?"+s;
+    document.getElementById("dockLaws").href="/laws/?"+s;
+    document.getElementById("dockGauges").href="/gauges/?"+s;
+
+    document.getElementById("mJumpProducts").href="/products/?"+s;
+    document.getElementById("mJumpHub").href="/home/?"+s;
+  }
+  setLinks();
+
+  var UI = {
+    en:{
+      brand:"PRODUCTS",
+      tag:"ENERGY CONVERSION",
+      d:{
+        chain:{lab:"CHAIN", sub:"Solar → plasma → fusion."},
+        plasma:{lab:"PLASMA", sub:"Formation · stability."},
+        fusion:{lab:"FUSION", sub:"Confinement · criteria."},
+        val:{lab:"VALIDATION", sub:"Signals · falsifiers."}
+      },
+      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", live:"LIVE", roadmap:"ROADMAP"},
+      btn:{return:"RETURN", jp:"JUMP PRODUCTS", jh:"JUMP HUB"}
+    },
+    zh:{
+      brand:"产品",
+      tag:"能源转换",
+      d:{
+        chain:{lab:"链路", sub:"太阳 → 等离子 → 聚变。"},
+        plasma:{lab:"等离子", sub:"形成 · 稳定。"},
+        fusion:{lab:"聚变", sub:"约束 · 标准。"},
+        val:{lab:"验证", sub:"信号 · 证伪。"}
+      },
+      lens:{formal:"正式", informal:"直接", concept:"概念", live:"上线", roadmap:"路线图"},
+      btn:{return:"返回", jp:"跳转产品", jh:"跳转枢纽"}
+    }
+  };
+  var ui = (lang==="zh") ? UI.zh : UI.en;
+
+  document.getElementById("brandName").textContent = ui.brand;
+  document.getElementById("brandTag").textContent = ui.tag;
+
+  document.getElementById("labChain").textContent = ui.d.chain.lab;
+  document.getElementById("subChain").textContent = ui.d.chain.sub;
+  document.getElementById("labPlasma").textContent = ui.d.plasma.lab;
+  document.getElementById("subPlasma").textContent = ui.d.plasma.sub;
+  document.getElementById("labFusion").textContent = ui.d.fusion.lab;
+  document.getElementById("subFusion").textContent = ui.d.fusion.sub;
+  document.getElementById("labValidation").textContent = ui.d.val.lab;
+  document.getElementById("subValidation").textContent = ui.d.val.sub;
+
+  document.getElementById("mReturn").textContent = ui.btn.return;
+  document.getElementById("mJumpProducts").textContent = ui.btn.jp;
+  document.getElementById("mJumpHub").textContent = ui.btn.jh;
+
+  var bd=document.getElementById("bd");
+  var modal=document.getElementById("modal");
+  var mClose=document.getElementById("mClose");
+  var mTitle=document.getElementById("mTitle");
+  var styleChip=document.getElementById("styleChip");
+  var chipConcept=document.getElementById("chipConcept");
+  var chipLive=document.getElementById("chipLive");
+  var chipRoadmap=document.getElementById("chipRoadmap");
+
+  var h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1");
+  var h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2");
+  var h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3");
+  var h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4");
+
+  function persist(){
+    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time); }catch(e){}
+  }
+
+  function setLensLabels(){
+    styleChip.textContent = (lang==="zh")
+      ? ("风格：" + (style==="formal" ? ui.lens.formal : ui.lens.informal))
+      : ("STYLE: " + (style==="formal" ? ui.lens.formal : ui.lens.informal));
+    chipConcept.textContent = ui.lens.concept;
+    chipLive.textContent = ui.lens.live;
+    chipRoadmap.textContent = ui.lens.roadmap;
+
+    chipConcept.classList.toggle("active", time==="origin");
+    chipLive.classList.toggle("active", time==="now");
+    chipRoadmap.classList.toggle("active", time==="post");
+  }
+
+  function fill(hEl,pEl,uEl,b){
+    hEl.textContent=b.h;
+    pEl.textContent=b.p;
+    uEl.innerHTML="";
+    b.u.forEach(function(x){
+      var li=document.createElement("li");
+      li.textContent=x;
+      uEl.appendChild(li);
+    });
+  }
+
+  // Content strategy:
+  // - Be thorough and frontier-level
+  // - NO trade secrets: no proprietary geometry, no unique parameter values, no unpublished apparatus schematics
+  // - Use bounded language + falsifiers + measurable signals
+  var EN = {
+    chain:{
+      origin:{
+        formal:{title:"Chain · Concept",
+          b1:{h:"System idea",p:"A conversion chain treated as an engineered process: capture → condition → form plasma → maintain stability → drive toward fusion criteria.",u:["Stage separation is explicit.","Inputs/outputs are defined per stage.","Constraints are named, not hidden.","Unknowns are marked as unknowns."]},
+          b2:{h:"Why plasma is central",p:"Plasma is the bridge state where energy density and controllability become the design problem (stability, confinement, loss control).",u:["Plasma is not a buzzword.","It is a controllable state space.","Stability is the product.","Loss mechanisms are first-class constraints."]},
+          b3:{h:"What we claim (bounded)",p:"We claim a coherent, testable chain framing that specifies what to measure and what would disprove the approach.",u:["Measured signals are named.","Failure modes are listed.","Alternative explanations are allowed.","No ‘magic’ steps."]},
+          b4:{h:"What we do not claim",p:"We do not claim a finished reactor or disclose apparatus specifics here. This page is a public-safe structural overview.",u:["No proprietary schematics.","No parameter ‘recipes

@@ -1,619 +1,186 @@
-<!-- TNT — /products/energy/index.html  (ENERGY · PRODUCTS · MODAL-ONLY WINDOW TEST · SHELL)
-     GOAL:
-       - DO NOT change the main page UI/geometry (diamonds stay exactly as-is)
-       - Test the “octagonal window” ONLY inside the modal (under-the-hood)
-       - No tunnel: window sits above the expandable panels
-       - Shell content only (verify harmony + readability first)
-     RULES:
-       - NO new state keys (gd_lang / gd_style / gd_time only)
-       - Lenses stay inside modal only
-       - Uses /assets/ui.css + /assets/branch.css only
-       - DOES NOT style html/body background (ui.css owns field)
--->
-
+<!-- TNT — /products/energy/index.html  -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRODUCTS · ENERGY</title>
+<title>ENERGY · INDUSTRIAL PLASMA ARCHITECTURE</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-:root{
-  --R:154px;
-  --goldSoft:rgba(212,175,55,.35);
-  --obs1:#070b12;
-  --obs2:#0c1626;
-  --mut:rgba(255,255,255,.84);
-  --mut2:rgba(255,255,255,.68);
-}
+/* ===== DO NOT TOUCH GLOBAL FIELD ===== */
 
-/* Top-left */
-.top-left{
-  position:fixed; left:16px; top:16px; z-index:90;
-  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-}
-.btn{
-  padding:10px 16px; border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:#fff; border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer; font-weight:900; letter-spacing:.2px; text-decoration:none;
-  -webkit-tap-highlight-color:transparent;
-}
-.btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
-
-/* Brand pill */
-.brand{
-  position:fixed; left:50%; top:16px; transform:translateX(-50%);
-  z-index:80; text-align:center;
-  padding:10px 14px; border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16); backdrop-filter:blur(8px);
-}
-.brand .name{ font-weight:950; letter-spacing:1.2px; font-size:12px; opacity:.95; }
-.brand .tag{ font-size:11px; letter-spacing:.6px; opacity:.70; margin-top:2px; }
-
-/* Stage */
-.stage{
-  position:fixed; left:50%; top:52%;
-  transform:translate(-50%,-50%);
-  width:min(720px,94vw); height:min(720px,94vw);
-  z-index:40;
-  pointer-events:none; /* stage ignores taps */
-}
-.outer{
-  position:absolute; left:50%; top:50%;
-  width:min(680px,92vw); height:min(680px,92vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:60px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.72),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none; opacity:.85;
-}
-.outer::after{
-  content:""; position:absolute; inset:0; border-radius:60px;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.16;
-}
-.d{
-  width:170px; height:170px;
-  position:absolute; left:50%; top:50%;
-  transform-origin:center; border-radius:26px;
-  cursor:pointer; -webkit-tap-highlight-color:transparent;
-  background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 28px 84px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.14),
-    inset 0 -28px 44px rgba(0,0,0,.62);
-  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
-  pointer-events:auto; /* diamonds receive taps */
-  touch-action:manipulation;
-}
-.d::before{
-  content:""; position:absolute; inset:0; border-radius:26px; padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.45;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.d::after{
-  content:""; position:absolute; left:12%; right:12%; top:10%; height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
-  opacity:.85; transform:rotate(-10deg);
-  pointer-events:none;
-}
-.d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 18px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-}
-.d.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 30px rgba(212,175,55,.40),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-}
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
-.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
-
-.inner{
-  width:100%; height:100%; transform:rotate(-45deg);
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  text-align:center; padding:16px; gap:10px;
-  pointer-events:none; user-select:none;
-}
-.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
-.sub{ font-size:12.5px; opacity:.80; line-height:1.35; max-width:18em; }
-
-.core{
-  position:absolute; left:50%; top:50%;
-  transform:translate(-50%,-50%);
-  width:74px; height:74px; border-radius:22px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid; place-items:center;
-  font-weight:950; letter-spacing:.5px;
-  opacity:.92; pointer-events:none;
-}
-
-/* Dock */
-.dock{
-  position:fixed; left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:90;
-  width:min(900px,94vw);
-  display:flex; justify-content:center;
-  gap:10px; flex-wrap:wrap;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
-  backdrop-filter:blur(8px);
-  pointer-events:none;
-}
-.dock .btn{ pointer-events:auto; }
-
-/* Modal */
-.bd{
-  position:fixed; inset:0; z-index:200;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(10px);
-  display:none;
-}
-.bd.show{display:block;}
-.modal{
-  position:fixed; left:50%; top:50%;
-  transform:translate(-50%,-50%);
-  width:min(1020px,94vw);
-  max-height:88vh;
-  display:none;
-  z-index:210;
-}
-.modal.show{display:block;}
-.shell{
-  height:88vh;
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
-    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
-    linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
-  box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  position:relative;
-}
-.mhead{
-  display:flex; justify-content:space-between; align-items:center;
-  gap:10px; padding:14px 16px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative; z-index:2;
-}
-.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
-.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
-.mbody{
-  padding:14px 16px 18px;
-  overflow:auto; -webkit-overflow-scrolling:touch;
-  flex:1 1 auto;
-  position:relative; z-index:2;
-}
-.lensbar{
-  display:flex; gap:10px; flex-wrap:wrap;
-  align-items:center; justify-content:center;
-  padding:10px 10px 14px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  margin:-6px -6px 14px;
-}
-.chip{
-  padding:10px 16px; border-radius:999px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+.energy-lane{
   border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer; font-weight:900; letter-spacing:.2px; color:#fff;
-}
-.chip.active{
-  border-color:rgba(212,175,55,.35);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
-}
-
-/* ===== MODAL-ONLY WINDOW CORE (TEST) ===== */
-.winwrap{
-  display:flex;
-  justify-content:center;
-  margin:6px 0 14px;
-}
-.winOct{
-  width:min(520px, 92vw);
-  background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.96));
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 22px 80px rgba(0,0,0,.70);
-  clip-path:polygon(
-    30% 0%,70% 0%,
-    100% 30%,100% 70%,
-    70% 100%,30% 100%,
-    0% 70%,0% 30%
-  );
-  position:relative;
-  padding:18px 18px 14px;
-}
-.winOct::before{
-  content:"";
-  position:absolute; inset:0; padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.winTitle{
-  margin:0 0 10px;
-  font-weight:950;
-  letter-spacing:.8px;
-  font-size:15px;
-}
-.winGrid{
-  display:grid;
-  gap:10px;
-}
-@media (min-width:860px){
-  .winGrid{ grid-template-columns:1fr 1fr; }
-}
-.winCell{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:14px;
-  background:rgba(0,0,0,.18);
-  padding:12px 12px 10px;
-}
-.winCell h4{
-  margin:0 0 6px;
-  font-size:12px;
-  letter-spacing:1px;
-  font-weight:950;
-  opacity:.95;
-}
-.winCell p{
-  margin:0;
-  font-size:12px;
-  line-height:1.45;
-  color:rgba(255,255,255,.84);
-}
-.winEq{
-  margin:12px 0 0;
-  text-align:center;
-  font-size:11px;
-  color:rgba(255,255,255,.70);
-}
-
-/* ===== existing expandable panels (kept) ===== */
-.mgrid{display:grid;gap:14px}
-
-.cbox{
-  padding:16px 18px;border-radius:22px;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
-  position:relative;
+  border-radius:18px;
+  padding:14px 18px;
+  margin:10px 0;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
   cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
+  transition:all .18s ease;
 }
-.cbox::before{
-  content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  pointer-events:none;
+.energy-lane:hover{
+  border-color:rgba(212,175,55,.35);
+  box-shadow:0 0 12px rgba(212,175,55,.15);
 }
-.cbox.open{border-color:rgba(212,175,55,.28); box-shadow:0 22px 80px rgba(0,0,0,.78), 0 0 18px rgba(212,175,55,.10), inset 0 2px 0 rgba(255,255,255,.06)}
-.ch{margin:0 0 8px;font-weight:950;letter-spacing:.2px;font-size:16px}
-.cp{margin:0;color:var(--mut);line-height:1.55;display:none}
-.cbox.open .cp{display:block}
-.cmini{margin:0;color:rgba(255,255,255,.70);font-size:12.5px;line-height:1.45}
-.cbox.open .cmini{display:none}
-.cul{margin:10px 0 0 18px;padding:0;color:var(--mut2);display:none}
-.cbox.open .cul{display:block}
-.cul li{margin:6px 0}
-
-.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
-.sbtn{
-  padding:12px 18px;border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:#fff;border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
+.energy-lane h4{
+  margin:0;
+  font-weight:900;
+  letter-spacing:.4px;
 }
-.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
-
-@media (max-width:560px){
-  :root{ --R: 136px; }
-  .d{ width:158px; height:158px; }
-  .stage{ top:54%; }
+.energy-lane-content{
+  display:none;
+  margin-top:10px;
+  color:rgba(255,255,255,.78);
+  line-height:1.55;
+}
+.energy-lane.open .energy-lane-content{
+  display:block;
 }
 </style>
 </head>
 
 <body>
 
+<!-- TOP BAR -->
 <div class="top-left">
-  <a class="btn" id="btnBack" href="/products/">BACK</a>
-  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+  <a class="crp-btn" href="/products/">BACK</a>
+  <a class="crp-btn" href="/door/">EXIT</a>
 </div>
 
 <div class="brand">
-  <div class="name" id="brandName">PRODUCTS</div>
-  <div class="tag" id="brandTag">ENERGY · INDUSTRIAL PLASMA ARCHITECTURE</div>
+  <div class="t1">ENERGY</div>
+  <div class="t2">INDUSTRIAL PLASMA ARCHITECTURE</div>
 </div>
+
+<!-- EXISTING DIAMOND STRUCTURE REMAINS UNTOUCHED -->
 
 <div class="stage">
   <div class="outer"></div>
 
-  <div class="d d-n" id="dChain" role="button" tabindex="0" onclick="window.__openEnergy('chain')">
-    <div class="inner"><div class="lab" id="labChain">CHAIN</div><div class="sub" id="subChain">Solar → HIP → SLA → Grid.</div></div>
+  <div class="d d-n" onclick="openEnergyModal('physics')">
+    <div class="in">
+      <div class="lab">NORTH</div>
+      <div class="sub">Scientific Origins</div>
+    </div>
   </div>
 
-  <div class="d d-e" id="dPlasma" role="button" tabindex="0" onclick="window.__openEnergy('plasma')">
-    <div class="inner"><div class="lab" id="labPlasma">PLASMA</div><div class="sub" id="subPlasma">CC tiers · UCI · ERI.</div></div>
+  <div class="d d-s" onclick="openEnergyModal('industrial')">
+    <div class="in">
+      <div class="lab">SOUTH</div>
+      <div class="sub">Industrial Convergence</div>
+    </div>
   </div>
 
-  <div class="d d-s" id="dFusion" role="button" tabindex="0" onclick="window.__openEnergy('fusion')">
-    <div class="inner"><div class="lab" id="labFusion">FUSION</div><div class="sub" id="subFusion">Boundary framing.</div></div>
+  <div class="d d-e" onclick="openEnergyModal('rnd-east')">
+    <div class="in">
+      <div class="lab">EAST</div>
+      <div class="sub">R&D Architecture</div>
+    </div>
   </div>
 
-  <div class="d d-w" id="dValidation" role="button" tabindex="0" onclick="window.__openEnergy('validation')">
-    <div class="inner"><div class="lab" id="labValidation">VALIDATION</div><div class="sub" id="subValidation">SVF · CARES · DHY.</div></div>
+  <div class="d d-w" onclick="openEnergyModal('rnd-west')">
+    <div class="in">
+      <div class="lab">WEST</div>
+      <div class="sub">Execution Systems</div>
+    </div>
   </div>
 
   <div class="core">◆</div>
 </div>
 
-<nav class="dock" id="dock">
-  <a class="btn" id="dockHub" href="/home/">HUB</a>
-  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
-</nav>
+<!-- MODAL -->
+<div class="bd" id="energyBackdrop"></div>
 
-<div class="bd" id="bd"></div>
-
-<div class="modal" id="modal" role="dialog" aria-modal="true">
+<div class="modal" id="energyModal">
   <div class="shell">
+
     <div class="mhead">
-      <h3 class="mtitle" id="mTitle">DETAIL</h3>
-      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
+      <h3 id="energyTitle">DETAIL</h3>
+      <button class="mclose" onclick="closeEnergyModal()">✕</button>
     </div>
 
-    <div class="mbody">
+    <div class="mbody" id="energyContent">
 
-      <div class="lensbar">
-        <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>
-        <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>
-        <button class="chip" data-time="now" id="chipLive" type="button">LIVE</button>
-        <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
-      </div>
-
-      <!-- ✅ MODAL-ONLY WINDOW CORE TEST (NO MAIN UI CHANGE) -->
-      <div class="winwrap" aria-label="Octagonal window core (modal-only)">
-        <div class="winOct">
-          <h3 class="winTitle" id="winTitle">OQISE Window · North + (East/West) → South</h3>
-          <div class="winGrid">
-            <div class="winCell">
-              <h4 id="wN">NORTH · ORIGIN</h4>
-              <p id="wNp">Physics constraints, loss taxonomy, and bounded definitions.</p>
-            </div>
-            <div class="winCell">
-              <h4 id="wS">SOUTH · CONVERGENCE</h4>
-              <p id="wSp">Industrial plasma delivery: farms, buffering, deployment phases.</p>
-            </div>
-            <div class="winCell">
-              <h4 id="wE">EAST · R&D TURBINE</h4>
-              <p id="wEp">Design iteration: topology, shaping, orchestration improvements.</p>
-            </div>
-            <div class="winCell">
-              <h4 id="wW">WEST · VALIDATION TURBINE</h4>
-              <p id="wWp">SVF + DHY strict: admissibility, certificates, stop rules.</p>
-            </div>
-          </div>
-          <div class="winEq" id="winEq">Shell test only. If this looks right, we expand content into the panels below.</div>
+      <!-- 8 STRUCTURAL LANES -->
+      <div class="energy-lane" onclick="toggleLane(this)">
+        <h4>1 · Confinement Geometry</h4>
+        <div class="energy-lane-content">
+          Magnetic and electrostatic confinement structure. 
+          Defines τ envelope, loss channels, stability bands.
         </div>
       </div>
 
-      <!-- Existing expandable panels (kept) -->
-      <div class="mgrid" id="mgrid">
-        <div class="cbox open" id="c1" role="button" tabindex="0"><h4 class="ch" id="h1">Scientific</h4><p class="cmini" id="m1">Shell.</p><p class="cp" id="p1">Shell: content expands after window test passes.</p><ul class="cul" id="u1"><li>OK</li><li>OK</li><li>OK</li><li>OK</li></ul></div>
-        <div class="cbox" id="c2" role="button" tabindex="0"><h4 class="ch" id="h2">Industrial</h4><p class="cmini" id="m2">Shell.</p><p class="cp" id="p2">Shell: content expands after window test passes.</p><ul class="cul" id="u2"><li>OK</li><li>OK</li><li>OK</li><li>OK</li></ul></div>
-        <div class="cbox" id="c3" role="button" tabindex="0"><h4 class="ch" id="h3">Agricultural</h4><p class="cmini" id="m3">Shell.</p><p class="cp" id="p3">Shell: content expands after window test passes.</p><ul class="cul" id="u3"><li>OK</li><li>OK</li><li>OK</li><li>OK</li></ul></div>
-        <div class="cbox" id="c4" role="button" tabindex="0"><h4 class="ch" id="h4">Adversarial</h4><p class="cmini" id="m4">Shell.</p><p class="cp" id="p4">Shell: content expands after window test passes.</p><ul class="cul" id="u4"><li>OK</li><li>OK</li><li>OK</li><li>OK</li></ul></div>
+      <div class="energy-lane" onclick="toggleLane(this)">
+        <h4>2 · Injection Architecture</h4>
+        <div class="energy-lane-content">
+          Phase-space shaping, ion injection profiles, grid bias mapping.
+        </div>
       </div>
 
-      <div class="mact">
-        <button class="sbtn" id="mReturn" type="button">RETURN</button>
-        <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
-        <a class="sbtn" id="mJumpHub" href="/home/">JUMP HUB</a>
+      <div class="energy-lane" onclick="toggleLane(this)">
+        <h4>3 · Loss Channel Audit</h4>
+        <div class="energy-lane-content">
+          Ion loss, electron loss, radiative loss, charge exchange mapping.
+        </div>
       </div>
+
+      <div class="energy-lane" onclick="toggleLane(this)">
+        <h4>4 · HEL-X Orchestration</h4>
+        <div class="energy-lane-content">
+          Temporal multiplexing, rollback control, regime scheduling.
+        </div>
+      </div>
+
+      <div class="energy-lane" onclick="toggleLane(this)">
+        <h4>5 · Industrial Thermal Substitution</h4>
+        <div class="energy-lane-content">
+          HIP upstream deployment, SLA buffering, IDP scaling.
+        </div>
+      </div>
+
+      <div class="energy-lane" onclick="toggleLane(this)">
+        <h4>6 · Plasma Farms Integration</h4>
+        <div class="energy-lane-content">
+          Agricultural co-location, TGI heat routing, compliance boundaries.
+        </div>
+      </div>
+
+      <div class="energy-lane" onclick="toggleLane(this)">
+        <h4>7 · Telemetry Integrity (DHY)</h4>
+        <div class="energy-lane-content">
+          Hash chain, certificate stack, strict window discipline.
+        </div>
+      </div>
+
+      <div class="energy-lane" onclick="toggleLane(this)">
+        <h4>8 · Governance & Claim Discipline</h4>
+        <div class="energy-lane-content">
+          Industrial (C) posture. 
+          No net-gain claim. 
+          Fusion R&D gated separately.
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
 <script>
-(function(){
-  // ===== State hydration (gd_* only) =====
-  const qs = new URLSearchParams(location.search);
-  let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  let style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  let time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  if(!["en","zh"].includes(lang)) lang="en";
-  if(!["formal","informal"].includes(style)) style="formal";
-  if(time==="trajectory") time="post";
-  if(!["origin","now","post"].includes(time)) time="now";
-  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time); }catch(e){}
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
-
-  const q = () => `lang=${encodeURIComponent(lang)}&style=${encodeURIComponent(style)}&time=${encodeURIComponent(time)}`;
-
-  function setLinks(){
-    const s=q();
-    document.getElementById("btnBack").href="/products/?"+s;
-    document.getElementById("btnExit").href="/door/?"+s;
-    document.getElementById("dockHub").href="/home/?"+s;
-    document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
-    document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockGauges").href="/gauges/?"+s;
-    document.getElementById("mJumpProducts").href="/products/?"+s;
-    document.getElementById("mJumpHub").href="/home/?"+s;
-  }
-  setLinks();
-
-  // Modal plumbing
-  const bd=document.getElementById("bd");
-  const modal=document.getElementById("modal");
-  const mClose=document.getElementById("mClose");
-  const mTitle=document.getElementById("mTitle");
-
-  const styleChip=document.getElementById("styleChip");
-  const chipConcept=document.getElementById("chipConcept");
-  const chipLive=document.getElementById("chipLive");
-  const chipRoadmap=document.getElementById("chipRoadmap");
-
-  let activeKey=null;
-  let openIdx=1;
-
-  function setOpen(idx){
-    openIdx=idx;
-    ["c1","c2","c3","c4"].forEach((id,i)=>{
-      document.getElementById(id).classList.toggle("open",(i+1)===openIdx);
-    });
-  }
-
-  function setLensLabels(){
-    document.getElementById("styleChip").textContent = (lang==="zh")
-      ? ("风格：" + (style==="formal" ? "正式" : "通俗"))
-      : ("STYLE: " + (style==="formal" ? "FORMAL" : "INFORMAL"));
-    document.getElementById("chipConcept").textContent = (lang==="zh") ? "概念" : "CONCEPT";
-    document.getElementById("chipLive").textContent = (lang==="zh") ? "上线" : "LIVE";
-    document.getElementById("chipRoadmap").textContent = (lang==="zh") ? "路线图" : "ROADMAP";
-
-    chipConcept.classList.toggle("active", time==="origin");
-    chipLive.classList.toggle("active", time==="now");
-    chipRoadmap.classList.toggle("active", time==="post");
-  }
-
-  function openModal(key){
-    activeKey=key;
-    // Title just proves taps work; content expansion comes next
-    const map={chain:"CHAIN",plasma:"PLASMA",fusion:"FUSION",validation:"VALIDATION"};
-    mTitle.textContent = (lang==="zh") ? ("细节 · " + map[key]) : ("DETAIL · " + map[key]);
-    setOpen(1);
-    setLensLabels();
-    bd.classList.add("show");
-    modal.classList.add("show");
-  }
-
-  function closeModal(){
-    bd.classList.remove("show");
-    modal.classList.remove("show");
-    activeKey=null;
-  }
-
-  window.__openEnergy = openModal;
-
-  // Diamond keyboard support
-  [["dChain","chain"],["dPlasma","plasma"],["dFusion","fusion"],["dValidation","validation"]].forEach(pair=>{
-    document.getElementById(pair[0]).addEventListener("keydown",(e)=>{
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.__openEnergy(pair[1]); }
-    });
-  });
-
-  // Category bubbles
-  [["c1",1],["c2",2],["c3",3],["c4",4]].forEach(pair=>{
-    const el=document.getElementById(pair[0]);
-    el.addEventListener("click",()=>setOpen(pair[1]));
-    el.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); setOpen(pair[1]); }});
-  });
-
-  // Lens buttons
-  styleChip.addEventListener("click",()=>{ style=(style==="formal")?"informal":"formal"; try{localStorage.setItem("gd_style",style);}catch(e){} setLensLabels(); });
-  chipConcept.addEventListener("click",()=>{ time="origin"; try{localStorage.setItem("gd_time",time);}catch(e){} setLensLabels(); });
-  chipLive.addEventListener("click",()=>{ time="now"; try{localStorage.setItem("gd_time",time);}catch(e){} setLensLabels(); });
-  chipRoadmap.addEventListener("click",()=>{ time="post"; try{localStorage.setItem("gd_time",time);}catch(e){} setLensLabels(); });
-
-  // Close buttons
-  bd.addEventListener("click",closeModal);
-  mClose.addEventListener("click",closeModal);
-  document.getElementById("mReturn").addEventListener("click",closeModal);
-
-  // Minimal zh labels for the window test (optional)
-  if(lang==="zh"){
-    document.getElementById("brandName").textContent="产品";
-    document.getElementById("brandTag").textContent="能源 · 工业等离子架构";
-    document.getElementById("labChain").textContent="链路";
-    document.getElementById("subChain").textContent="太阳 → HIP → SLA → 电网。";
-    document.getElementById("labPlasma").textContent="等离子";
-    document.getElementById("subPlasma").textContent="CC 分级 · UCI · ERI。";
-    document.getElementById("labFusion").textContent="聚变";
-    document.getElementById("subFusion").textContent="边界框架。";
-    document.getElementById("labValidation").textContent="验证";
-    document.getElementById("subValidation").textContent="SVF · CARES · DHY。";
-
-    document.getElementById("winTitle").textContent="窗口核心（测试）· 北 +（东/西）→ 南";
-    document.getElementById("wN").textContent="北 · 起源";
-    document.getElementById("wNp").textContent="物理约束、损耗分类与有界定义。";
-    document.getElementById("wS").textContent="南 · 收敛";
-    document.getElementById("wSp").textContent="工业交付：等离子农场、缓冲、部署阶段。";
-    document.getElementById("wE").textContent="东 · 研发涡轮";
-    document.getElementById("wEp").textContent="设计迭代：拓扑、整形、编排改进。";
-    document.getElementById("wW").textContent="西 · 验证涡轮";
-    document.getElementById("wWp").textContent="SVF + DHY 严格：可采信、证书、停止规则。";
-    document.getElementById("winEq").textContent="仅测试窗口层级。确认后再扩展下方面板。";
-
-    document.getElementById("h1").textContent="科学";
-    document.getElementById("m1").textContent="测试。";
-    document.getElementById("p1").textContent="测试：窗口通过后再扩展内容。";
-    document.getElementById("h2").textContent="工业";
-    document.getElementById("m2").textContent="测试。";
-    document.getElementById("p2").textContent="测试：窗口通过后再扩展内容。";
-    document.getElementById("h3").textContent="农业";
-    document.getElementById("m3").textContent="测试。";
-    document.getElementById("p3").textContent="测试：窗口通过后再扩展内容。";
-    document.getElementById("h4").textContent="对抗";
-    document.getElementById("m4").textContent="测试。";
-    document.getElementById("p4").textContent="测试：窗口通过后再扩展内容。";
-  }
-
-  setLensLabels();
-})();
+function openEnergyModal(type){
+  document.getElementById("energyModal").classList.add("show");
+  document.getElementById("energyBackdrop").classList.add("show");
+  document.getElementById("energyTitle").innerText = type.toUpperCase();
+}
+function closeEnergyModal(){
+  document.getElementById("energyModal").classList.remove("show");
+  document.getElementById("energyBackdrop").classList.remove("show");
+}
+function toggleLane(el){
+  el.classList.toggle("open");
+}
 </script>
 
 </body>

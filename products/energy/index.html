@@ -1,13 +1,13 @@
-<!-- TNT — /products/energy/index.html
-     ENERGY · OCTAGONAL WINDOW CORE · INDUSTRIAL FIRST
+<!-- TNT — /products/energy/index.html  (ENERGY · WINDOW CORE · SHELL TEST)
      PURPOSE:
-       - Preserve diamond geometry
-       - Add octagonal "window" core inside modal (no tunnel)
-       - North = Physics (Origins / Science)
-       - East/West = R&D Turbines
-       - South = Industrial Convergence (Primary Output)
-       - No net-fusion claims
-       - Industrial (C) posture preserved
+       - Fix visual hierarchy without breaking diamond geometry
+       - Octagon is rotated to harmonize with the 45° diamond axis
+       - Text is counter-rotated to read upright
+       - Shell only (minimal content) so you can verify geometry first
+     RULES:
+       - NO new state keys (gd_lang/gd_style/gd_time only)
+       - Uses /assets/ui.css + /assets/branch.css only
+       - DOES NOT style html/body background (ui.css owns field)
 -->
 
 <!doctype html>
@@ -15,155 +15,228 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ENERGY · Industrial Plasma Architecture</title>
+<title>PRODUCTS · ENERGY</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
 :root{
-  --R:154px;
-  --gold:rgba(212,175,55,.35);
-  --panel:rgba(12,22,38,.92);
-  --panel2:rgba(7,11,18,.95);
+  --goldSoft:rgba(212,175,55,.35);
+  --obs1:#070b12;
+  --obs2:#0c1626;
+  --panelA:rgba(12,22,38,.92);
+  --panelB:rgba(7,11,18,.96);
 }
 
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+/* Top-left */
+.top-left{
+  position:fixed; left:16px; top:16px; z-index:90;
+  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+}
+.btn{
+  padding:10px 16px;border-radius:14px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  color:#fff;border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.7);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
 
-/* Diamond stage preserved */
+/* Brand pill */
+.brand{
+  position:fixed; left:50%; top:16px; transform:translateX(-50%);
+  z-index:80; text-align:center;
+  padding:10px 14px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16); backdrop-filter:blur(8px);
+}
+.brand .name{ font-weight:950; letter-spacing:1.2px; font-size:12px; opacity:.95; }
+.brand .tag{ font-size:11px; letter-spacing:.6px; opacity:.70; margin-top:2px; }
+
+/* Stage (diamond preserved) */
 .stage{
-  position:fixed;left:50%;top:50%;
+  position:fixed; left:50%; top:52%;
   transform:translate(-50%,-50%);
-  width:min(720px,94vw);height:min(720px,94vw);
+  width:min(760px,94vw); height:min(760px,94vw);
   z-index:40;
   pointer-events:none;
 }
-
 .outer{
-  position:absolute;left:50%;top:50%;
-  width:90%;height:90%;
+  position:absolute; left:50%; top:50%;
+  width:min(700px,92vw); height:min(700px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:60px;
-  background:linear-gradient(160deg,rgba(14,24,40,.45),rgba(7,11,18,.65));
+  border-radius:70px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.66) 70%);
   border:1px solid rgba(255,255,255,.12);
-  pointer-events:none;
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.70),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -55px 100px rgba(0,0,0,.55);
+  opacity:.85;
+}
+.outer::after{
+  content:"";
+  position:absolute; inset:0; border-radius:70px;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.14;
 }
 
-/* Core window (octagonal illusion) */
-.window-core{
-  position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:55%;height:55%;
-  background:linear-gradient(145deg,var(--panel),var(--panel2));
-  border:1px solid rgba(255,255,255,.14);
-  box-shadow:0 30px 90px rgba(0,0,0,.75);
+/* WINDOW CORE (FIX):
+   - Octagon rotated +45° to harmonize with diamond axis
+   - Inner content counter-rotated -45° so text reads upright
+*/
+.window{
+  position:absolute; left:50%; top:50%;
+  width:min(460px,72vw); height:min(460px,72vw);
+  transform:translate(-50%,-50%) rotate(45deg); /* << key fix */
   clip-path:polygon(
     30% 0%, 70% 0%,
     100% 30%, 100% 70%,
     70% 100%, 30% 100%,
     0% 70%, 0% 30%
   );
-  padding:24px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
+  background:linear-gradient(145deg,var(--panelA),var(--panelB));
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 40px 140px rgba(0,0,0,.88);
   pointer-events:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-
-.window-section{
+.window::before{
+  content:"";
+  position:absolute; inset:0; padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.windowInner{
+  width:86%; height:86%;
+  transform:rotate(-45deg); /* << counter-rotate text */
+  border-radius:20px;
   border:1px solid rgba(255,255,255,.10);
-  border-radius:14px;
-  padding:12px 14px;
-  background:rgba(0,0,0,.18);
-  margin-bottom:10px;
+  background:rgba(0,0,0,.22);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.06);
+  padding:18px 18px 16px;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
 }
-
-.window-section h3{
-  margin:0 0 6px;
-  font-size:14px;
-  letter-spacing:.8px;
-  font-weight:900;
+.h{
+  margin:0 0 8px;
+  font-weight:950;
+  letter-spacing:.9px;
+  font-size:15px;
 }
-
-.window-section p{
+.p{
   margin:0;
+  color:rgba(255,255,255,.84);
+  line-height:1.55;
+  font-size:13px;
+}
+.hr{
+  height:1px; background:rgba(255,255,255,.08);
+  margin:12px 0;
+}
+.small{
+  margin:0;
+  color:rgba(255,255,255,.70);
+  line-height:1.45;
   font-size:12px;
-  opacity:.85;
-  line-height:1.4;
 }
 
-/* Positioning semantics */
-.north{border-color:rgba(120,160,255,.35)}
-.south{border-color:rgba(212,175,55,.35)}
-.east{border-color:rgba(160,120,255,.35)}
-.west{border-color:rgba(160,120,255,.35)}
-
-.footer-note{
-  font-size:11px;
-  opacity:.6;
-  text-align:center;
-  margin-top:6px;
+/* Mobile tweak */
+@media (max-width:560px){
+  .stage{ top:54%; }
+  .window{ width:min(420px,78vw); height:min(420px,78vw); }
 }
 </style>
 </head>
 
 <body>
 
+<div class="top-left">
+  <a class="btn" id="btnBack" href="/products/">BACK</a>
+  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+</div>
+
+<div class="brand">
+  <div class="name" id="brandName">PRODUCTS</div>
+  <div class="tag" id="brandTag">ENERGY · WINDOW CORE (SHELL)</div>
+</div>
+
 <div class="stage">
   <div class="outer"></div>
 
-  <div class="window-core">
-
-    <!-- NORTH — Physics / Origins -->
-    <div class="window-section north">
-      <h3>NORTH · SCIENTIFIC ORIGIN</h3>
-      <p>
-        High-Intensity Plasma (HIP) architecture governed by
-        Confinement Class (CC), Unified Confinement Interface (UCI),
-        Escalation Risk Index (ERI), and strict Signal Validation Framework (SVF).
-        No net-fusion claim. Physics defined, bounded, falsifiable.
+  <!-- Window Core -->
+  <div class="window" id="windowCore" role="button" tabindex="0" aria-label="Energy window core">
+    <div class="windowInner">
+      <h2 class="h" id="t1">NORTH · SCIENTIFIC ORIGIN</h2>
+      <p class="p" id="b1">
+        High-Intensity Plasma (HIP) architecture governed by CC / UCI / ERI / SVF.
+        This surface is an entrance to scope, not a full disclosure dump.
+      </p>
+      <div class="hr"></div>
+      <p class="small" id="b2">
+        EAST/WEST (R&D turbines) translate constraints into executable design + admissible validation.
+        SOUTH is the convergence coordinate (industrial delivery).
+      </p>
+      <div class="hr"></div>
+      <p class="small" id="b3">
+        Shell test: verify window feels integrated (not “a box inside a diamond”).
+        If this looks right, we expand content into expandable panels inside the modal next.
       </p>
     </div>
-
-    <!-- EAST — R&D Turbine A -->
-    <div class="window-section east">
-      <h3>EAST · R&D TURBINE (ARCHITECTURE)</h3>
-      <p>
-        Multi-grid focusing, SEC suppression, loss-channel dominance ranking,
-        and temporal orchestration (HEL-X).
-        All improvements constrained by admissibility gates.
-      </p>
-    </div>
-
-    <!-- WEST — R&D Turbine B -->
-    <div class="window-section west">
-      <h3>WEST · R&D TURBINE (INSTRUMENTATION)</h3>
-      <p>
-        Hash-sealed telemetry, ABM/BM/WRM manifests,
-        S1→S2→S3 certification roll-ups,
-        strict R3 recovery only.
-        Evidence before escalation.
-      </p>
-    </div>
-
-    <!-- SOUTH — Industrial Convergence -->
-    <div class="window-section south">
-      <h3>SOUTH · INDUSTRIAL CONVERGENCE (C)</h3>
-      <p>
-        Plasma Thermal Substitution for industrial heat,
-        grid stabilization buffer layer,
-        agricultural plasma farms (thermal exchange only),
-        scalable IDP-1 → IDP-4 deployment.
-      </p>
-    </div>
-
-    <div class="footer-note">
-      X (Science) + Y (R&D) = Z (Industrial Convergence)
-    </div>
-
   </div>
 </div>
+
+<script>
+(function(){
+  // URL → STATE HYDRATION (gd_* only)
+  const qs = new URLSearchParams(location.search);
+  let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  let style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  let time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  if(!["en","zh"].includes(lang)) lang="en";
+  if(!["formal","informal"].includes(style)) style="formal";
+  if(time==="trajectory") time="post";
+  if(!["origin","now","post"].includes(time)) time="now";
+  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time); }catch(e){}
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+
+  const q = () => `lang=${encodeURIComponent(lang)}&style=${encodeURIComponent(style)}&time=${encodeURIComponent(time)}`;
+  const s = q();
+
+  // Propagate state
+  document.getElementById("btnBack").href = "/products/?" + s;
+  document.getElementById("btnExit").href = "/door/?" + s;
+
+  // Minimal EN/中文 (shell mirrors only — you said Chinese later)
+  if(lang==="zh"){
+    document.getElementById("brandName").textContent = "产品";
+    document.getElementById("brandTag").textContent = "能源 · 窗口核心（测试）";
+    document.getElementById("t1").textContent = "北 · 科学起源";
+    document.getElementById("b1").textContent =
+      "高强度等离子（HIP）架构由 CC / UCI / ERI / SVF 约束治理。本面是“进入范围”的入口，不是一次性全暴露。";
+    document.getElementById("b2").textContent =
+      "东/西（研发涡轮）把约束转成可执行设计与可采信验证。南是收敛坐标（工业交付）。";
+    document.getElementById("b3").textContent =
+      "测试版：确认窗口与菱形融合（不是“菱形里塞了个盒子”）。确认后再扩展为可展开面板。";
+  }
+
+  // Accessibility: allow Enter/Space to “click” (no behavior yet; shell only)
+  const core = document.getElementById("windowCore");
+  core.addEventListener("keydown", (e)=>{
+    if(e.key==="Enter" || e.key===" "){ e.preventDefault(); core.click(); }
+  });
+})();
+</script>
 
 </body>
 </html>

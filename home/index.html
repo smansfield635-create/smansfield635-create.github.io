@@ -1,13 +1,12 @@
 <!-- TNT — /home/index.html  (HUB · GEM STANDARD · CLEAN)
      PURPOSE:
-       - Restore/standardize the HOME HUB page to match the new GEM STANDARD
-       - No purple/blue link styling — only bubble buttons (.crp-btn) (ui.css)
-       - Lenses exist ONLY inside the modal:
+       - GEM Standard HUB with working bilingual lens
+       - Language lens: lang=en => EN only, lang=zh => 中文 only
+       - Lenses ONLY inside modal:
            STYLE: Formal/Informal (gd_style)
-           TIME:  CONCEPT / NOW / ROADMAP (gd_time = origin / now / post)
-       - Main page stays pure navigation:
-           4 gems (N/E/S/W)
-       - Modal shows 4 bubbles (rich paragraphs) for the selected direction
+           TIME:  CONCEPT / NOW / ROADMAP (gd_time = origin/now/post)
+       - Main page pure navigation: 4 gems (N/E/S/W) + MAP button (center)
+       - Modal shows 4 bubbles (rich paragraphs)
        - Deterministic state propagation (lang/style/time) through all nav
      LOCKS:
        - TNT FULL FILE
@@ -165,6 +164,7 @@
 .lab{ font-weight:950; letter-spacing:.8px; font-size:15px; }
 .sub{ font-size:12.5px; opacity:.86; line-height:1.35; max-width:16em; }
 
+/* Center MAP button (clickable) */
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -175,7 +175,11 @@
   display:grid;place-items:center;
   font-weight:950;letter-spacing:.5px;
   opacity:.92;
-  pointer-events:none;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.core:hover{
+  box-shadow:0 22px 56px rgba(0,0,0,.78), 0 0 14px rgba(212,175,55,.18), inset 0 2px 0 rgba(255,255,255,.12);
 }
 
 /* Bottom dock */
@@ -226,9 +230,7 @@
 }
 .shell::before{
   content:"";
-  position:absolute;
-  left:50%;
-  top:58%;
+  position:absolute;left:50%;top:58%;
   width:min(980px,94vw);
   height:min(980px,94vw);
   transform:translate(-50%,-50%) rotate(45deg);
@@ -292,7 +294,7 @@
 .bubble::before{
   content:"";
   position:absolute;inset:0;border-radius:22px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.35) 50%, transparent 100%);
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.55;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
@@ -302,6 +304,7 @@
 .bubble p{margin:0;color:var(--mut);line-height:1.55}
 .bubble p span{color:rgba(255,255,255,.70);font-weight:800}
 
+/* Modal footer actions */
 .mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
 .sbtn{
   display:inline-flex;align-items:center;justify-content:center;
@@ -366,7 +369,7 @@
     </div>
   </div>
 
-  <div class="core">◆</div>
+  <div class="core" id="dMap" role="button" tabindex="0" aria-label="Map">MAP</div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
@@ -412,7 +415,6 @@
 
 <script>
 (function(){
-  // ===== STATE =====
   var qs = new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
@@ -421,60 +423,53 @@
   if(style!=="formal" && style!=="informal") style="formal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time); }catch(e){}
 
-  try{
-    localStorage.setItem("gd_lang", lang);
-    localStorage.setItem("gd_style", style);
-    localStorage.setItem("gd_time", time);
-  }catch(e){}
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
-
   function wire(){
     var s=q();
     document.getElementById("btnExplore").href="/explore/?"+s;
     document.getElementById("btnExit").href="/door/?"+s;
-
     document.getElementById("dockTerminal").href="/index.html?"+s;
     document.getElementById("dockLinks").href="/links/?"+s;
     document.getElementById("dockProducts").href="/products/?"+s;
     document.getElementById("dockLaws").href="/laws/?"+s;
     document.getElementById("dockGauges").href="/gauges/?"+s;
-
     document.getElementById("mJumpTerminal").href="/index.html?"+s;
     document.getElementById("mJumpExplore").href="/explore/?"+s;
   }
   wire();
 
-  // ===== LANGUAGE LENS (ONE LANGUAGE AT A TIME) =====
   var UI = {
     en:{
-      top:"HUB",
-      sub:"NORTH · EAST · SOUTH · WEST",
+      top:"HUB", sub:"NORTH · EAST · SOUTH · WEST",
       n:{lab:"NORTH", sub:"Definitions · invariants · laws."},
       e:{lab:"EAST",  sub:"Products · execution surfaces."},
       s:{lab:"SOUTH", sub:"Pressure · convergence · change."},
       w:{lab:"WEST",  sub:"Containment · gates · integrity."},
       lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", now:"NOW", roadmap:"ROADMAP"},
-      btn:{ret:"RETURN", jt:"JUMP TERMINAL", je:"JUMP EXPLORE"}
+      map:"MAP",
+      btn:{ret:"RETURN", jt:"JUMP TERMINAL", je:"JUMP EXPLORE"},
+      stylePrefix:"STYLE: "
     },
     zh:{
-      top:"枢纽",
-      sub:"北 · 东 · 南 · 西",
+      top:"枢纽", sub:"北 · 东 · 南 · 西",
       n:{lab:"北", sub:"定义 · 不变量 · 法则。"},
       e:{lab:"东", sub:"产品 · 执行面。"},
       s:{lab:"南", sub:"压力 · 收敛 · 变化。"},
       w:{lab:"西", sub:"隔离 · 闸门 · 完整性。"},
       lens:{formal:"正式", informal:"直接", concept:"概念", now:"现况", roadmap:"路线图"},
-      btn:{ret:"返回", jt:"跳转终端", je:"跳转探索"}
+      map:"地图",
+      btn:{ret:"返回", jt:"跳转终端", je:"跳转探索"},
+      stylePrefix:"风格："
     }
   };
   var ui = (lang==="zh") ? UI.zh : UI.en;
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   document.getElementById("brandTop").textContent = ui.top;
   document.getElementById("brandSub").textContent = ui.sub;
-
   document.getElementById("labNorth").textContent = ui.n.lab;
   document.getElementById("subNorth").textContent = ui.n.sub;
   document.getElementById("labEast").textContent = ui.e.lab;
@@ -483,198 +478,428 @@
   document.getElementById("subSouth").textContent = ui.s.sub;
   document.getElementById("labWest").textContent = ui.w.lab;
   document.getElementById("subWest").textContent = ui.w.sub;
+  document.getElementById("dMap").textContent = ui.map;
 
   document.getElementById("mReturn").textContent = ui.btn.ret;
   document.getElementById("mJumpTerminal").textContent = ui.btn.jt;
   document.getElementById("mJumpExplore").textContent = ui.btn.je;
 
-  // ===== MODAL CONTENT (EXPANDED, 4 BUBBLES) =====
-  // NOTE: Bubble bodies support inline <span> tags only (no links).
   var C_EN = {
-    north:{
+    map:{
       origin:{
         formal:[
-          {h:"North definition", p:"North is the invariant layer: terms, definitions, and laws that must remain stable across the whole site. <span>Meaning is anchored here.</span>"},
-          {h:"North usage", p:"Use North before execution. It removes ambiguity so later choices are faster and cleaner. <span>Definition → constraint → action.</span>"},
-          {h:"North output", p:"North outputs bounded statements: what is claimed, what is not claimed, and what would falsify it. <span>Truth stays testable.</span>"},
-          {h:"North value", p:"Stable definitions reduce drift and reduce conflict. <span>Consistency becomes measurable trust.</span>"}
+          {h:"What the map is",p:"This hub is a compass: North defines, East executes, South constrains, West contains. <span>One system.</span>"},
+          {h:"How to use it",p:"Pick a direction when you’re stuck: definitions (N), products (E), guardrails (S), containment (W). <span>Then return.</span>"},
+          {h:"Why it works",p:"It reduces confusion by keeping structure stable while content expands. <span>Same UI grammar.</span>"},
+          {h:"What changes",p:"Only content changes under lenses; the contract stays fixed. <span>No drift.</span>"}
         ],
         informal:[
-          {h:"North = definitions", p:"North is what things mean. <span>Anchor.</span>"},
-          {h:"Use it first", p:"Definition before action. <span>Less confusion.</span>"},
-          {h:"What it gives", p:"Clear claims with clear boundaries. <span>No drifting words.</span>"},
-          {h:"Why it matters", p:"Stable meaning = stable decisions. <span>Trust grows.</span>"}
-        ]
-      },
-      now:{
-        formal:[
-          {h:"North now", p:"North is live as a consistent law surface: same contract, same lens discipline, same navigation. <span>No special pages.</span>"},
-          {h:"Enforcement", p:"Now view focuses on what is enforced: canonical keys, deterministic routing, and coherent lenses. <span>Same rules everywhere.</span>"},
-          {h:"Failure clarity", p:"If something breaks, it breaks deterministically (missing route, missing file, wrong key). <span>Fixable by design.</span>"},
-          {h:"Operational benefit", p:"Deterministic failures are fast to repair. <span>Entropy stays low.</span>"}
-        ],
-        informal:[
-          {h:"North now", p:"Rules are live. <span>Same contract.</span>"},
-          {h:"What’s enforced", p:"Keys + routing + lenses. <span>Clean.</span>"},
-          {h:"Errors are obvious", p:"404 means missing folder. <span>Fix it.</span>"},
-          {h:"Benefit", p:"Less chaos, faster repairs. <span>Always.</span>"}
-        ]
-      },
-      post:{
-        formal:[
-          {h:"North roadmap", p:"North expands into registries: standards, definitions, and verification lookups. <span>Public-safe references.</span>"},
-          {h:"Scale rule", p:"Scale happens by cloning the contract, not reinventing pages. <span>Uniformity stays sacred.</span>"},
-          {h:"Publishing posture", p:"Roadmap adds depth without changing meaning: appendices, adapters, and evidence bundles. <span>Same claims, more support.</span>"},
-          {h:"Long-run value", p:"The larger the system, the more invariants matter. <span>North prevents collapse into contradiction.</span>"}
-        ],
-        informal:[
-          {h:"North roadmap", p:"More registries and references. <span>Public-safe.</span>"},
-          {h:"Clone the contract", p:"Same pattern everywhere. <span>No reinvention.</span>"},
-          {h:"More depth", p:"Add support without changing meaning. <span>Stable.</span>"},
-          {h:"Why it matters", p:"Big systems need anchors. <span>North is that.</span>"}
-        ]
-      }
-    },
-
-    east:{
-      origin:{
-        formal:[
-          {h:"East definition", p:"East is execution surfaces: products, tools, and applied systems. <span>Where structure becomes action.</span>"},
-          {h:"East usage", p:"Use East after North: pick a product lane and traverse it with the same contract. <span>Definition → execution.</span>"},
-          {h:"East output", p:"East outputs runnable surfaces: hubs, sub-hubs, and predictable pages that remain coherent as content expands. <span>Usable clarity.</span>"},
-          {h:"East value", p:"Repeatable execution patterns reduce training time and reduce mistakes. <span>Product equals consistency.</span>"}
-        ],
-        informal:[
-          {h:"East = products", p:"Where you do things. <span>Execution.</span>"},
-          {h:"Use it after North", p:"Understand first, then act. <span>Cleaner.</span>"},
-          {h:"What you get", p:"Runnable pages that stay consistent. <span>Predictable.</span>"},
-          {h:"Why it matters", p:"Patterns save time. <span>Less mess.</span>"}
-        ]
-      },
-      now:{
-        formal:[
-          {h:"East now", p:"East is live as product hubs and sub-hubs. The UI contract is already stable. <span>Content is the main expansion.</span>"},
-          {h:"Deployed vs roadmap", p:"Now view keeps a strict separation between what is deployed and what is future. <span>No mixed claims.</span>"},
-          {h:"User experience", p:"Users navigate by diamond, read by modal, and keep state across pages. <span>Orientation stays intact.</span>"},
-          {h:"Operational benefit", p:"Clear separation of live vs roadmap reduces confusion and protects trust. <span>Truth surface.</span>"}
-        ],
-        informal:[
-          {h:"East now", p:"Products are live. <span>Same contract.</span>"},
-          {h:"Claims stay clean", p:"Live vs roadmap stays separate. <span>Clarity.</span>"},
-          {h:"Experience", p:"Tap, read, return. <span>Stay oriented.</span>"},
-          {h:"Benefit", p:"Trust increases when claims are clean. <span>Always.</span>"}
-        ]
-      },
-      post:{
-        formal:[
-          {h:"East roadmap", p:"East expands into deeper product catalogs, demos, dashboards, and exports. <span>More tools, same map.</span>"},
-          {h:"Scaling rule", p:"Every new product uses the same gem + modal pattern. <span>No bespoke UI debt.</span>"},
-          {h:"Distribution", p:"Roadmap adds portable packs: PDFs, kits, and registries tied to stable definitions. <span>Shareable artifacts.</span>"},
-          {h:"Long-run value", p:"Repeatable structure accelerates new product lines without chaos. <span>Speed with integrity.</span>"}
-        ],
-        informal:[
-          {h:"East roadmap", p:"More tools and demos. <span>Same map.</span>"},
-          {h:"No custom UI", p:"Same pattern everywhere. <span>Less debt.</span>"},
-          {h:"More artifacts", p:"PDFs, kits, exports. <span>Shareable.</span>"},
-          {h:"Why it matters", p:"Structure scales without chaos. <span>Clean.</span>"}
-        ]
-      }
-    },
-
-    south:{
-      origin:{
-        formal:[
-          {h:"South definition", p:"South is pressure and convergence: where constraints force alignment and drift is removed. <span>Discipline lives here.</span>"},
-          {h:"South usage", p:"Use South when you need safety boundaries: what is allowed, what is blocked, and why. <span>Guardrails first.</span>"},
-          {h:"South output", p:"South outputs enforceable rules: caps, thresholds, and refusal conditions. <span>Prevents narrative drift.</span>"},
-          {h:"South value", p:"Strong constraints reduce correlated cascades and reduce long-run damage. <span>Lower blast radius.</span>"}
-        ],
-        informal:[
-          {h:"South = constraints", p:"Where rules push back. <span>Discipline.</span>"},
-          {h:"Use it for guardrails", p:"What’s allowed and why. <span>Safety.</span>"},
-          {h:"What it gives", p:"Caps and refusal rules. <span>No drift.</span>"},
-          {h:"Why it matters", p:"Constraints stop cascades. <span>Less damage.</span>"}
-        ]
-      },
-      now:{
-        formal:[
-          {h:"South now", p:"South is active whenever the site refuses drift: canonical keys, stable lens semantics, deterministic routing. <span>Enforced by structure.</span>"},
-          {h:"Operator view", p:"Now emphasizes visible enforcement: PASS/FAIL/UNKNOWN with caps. <span>No ambiguity gaming.</span>"},
-          {h:"Example", p:"If ROADMAP is shown, it must map to gd_time=post consistently. <span>Label and meaning stay aligned.</span>"},
-          {h:"Operational benefit", p:"Visible constraints prevent capture and prevent quiet degradation. <span>Durability.</span>"}
-        ],
-        informal:[
-          {h:"South now", p:"Rules are enforced. <span>No drift.</span>"},
-          {h:"No ambiguity gaming", p:"Unknown can’t be abused. <span>Caps.</span>"},
-          {h:"Example", p:"Roadmap label stays true. <span>Always.</span>"},
-          {h:"Benefit", p:"Constraints keep it honest. <span>Durable.</span>"}
-        ]
-      },
-      post:{
-        formal:[
-          {h:"South roadmap", p:"South becomes publishable standards: registries, revocation logic, and system-wide governance. <span>Public accountability.</span>"},
-          {h:"Scaling rule", p:"Thresholds stay frozen; content expands around them. <span>Stability over convenience.</span>"},
-          {h:"Deployment posture", p:"Roadmap includes adoption kits that preserve constraints under growth. <span>No weakening for speed.</span>"},
-          {h:"Long-run value", p:"Constraint discipline is what survives time pressure. <span>Resilience.</span>"}
-        ],
-        informal:[
-          {h:"South roadmap", p:"Publish the standards. <span>Registry + governance.</span>"},
-          {h:"Freeze thresholds", p:"Only expand content. <span>Stable.</span>"},
-          {h:"No weakening", p:"Speed can’t break rules. <span>Ever.</span>"},
-          {h:"Why it matters", p:"Discipline survives pressure. <span>Resilient.</span>"}
-        ]
-      }
-    },
-
-    west:{
-      origin:{
-        formal:[
-          {h:"West definition", p:"West is containment: segmentation, rollback, and blast-radius control. <span>Protection logic.</span>"},
-          {h:"West usage", p:"Use West to understand how changes stay safe and how failures are bounded. <span>Bound the damage.</span>"},
-          {h:"West output", p:"West outputs clear containment rules: independent zones, rollback semantics, and change receipts. <span>Audit-ready.</span>"},
-          {h:"West value", p:"Containment reduces correlated failure and speeds recovery. <span>Resilience.</span>"}
-        ],
-        informal:[
-          {h:"West = containment", p:"Keep damage small. <span>Bound it.</span>"},
-          {h:"Use it for safety", p:"Rollback and segmentation. <span>Protection.</span>"},
-          {h:"What it gives", p:"Clear zones and receipts. <span>Auditable.</span>"},
-          {h:"Why it matters", p:"Less damage, faster recovery. <span>Resilient.</span>"}
-        ]
-      },
-      now:{
-        formal:[
-          {h:"West now", p:"West appears as deterministic returns, centered modals, and stable navigation. <span>UI containment.</span>"},
-          {h:"Error posture", p:"Now emphasizes deterministic errors: missing folders, broken links, wrong keys. <span>Fixable by design.</span>"},
-          {h:"Example", p:"If a diamond doesn’t navigate, it’s a routing/link issue, not a mystery. <span>Contain and repair.</span>"},
-          {h:"Operational benefit", p:"Containment makes debugging fast and scaling safe. <span>Lower entropy.</span>"}
-        ],
-        informal:[
-          {h:"West now", p:"The UI stays contained. <span>Centered.</span>"},
-          {h:"Errors are obvious", p:"Missing link = fix it. <span>No ghosts.</span>"},
-          {h:"Example", p:"Routing issues are deterministic. <span>Repairable.</span>"},
-          {h:"Benefit", p:"Fast fixes, safe scaling. <span>Clean.</span>"}
-        ]
-      },
-      post:{
-        formal:[
-          {h:"West roadmap", p:"West becomes dashboards and simulations: blast radius visuals, gate tables, trend lines. <span>Visibility.</span>"},
-          {h:"Scaling rule", p:"Overrides are logged and capped. <span>No silent erosion.</span>"},
-          {h:"Accountability", p:"Reason codes are visible, not hidden. <span>Explainable decisions.</span>"},
-          {h:"Long-run value", p:"Visible containment prevents capture and increases institutional trust. <span>Enterprise-ready.</span>"}
-        ],
-        informal:[
-          {h:"West roadmap", p:"Dashboards and sims. <span>See containment.</span>"},
-          {h:"No silent overrides", p:"Everything logged. <span>Accountable.</span>"},
-          {h:"Reason codes", p:"Visible why, not hidden why. <span>Explainable.</span>"},
-          {h:"Why it matters", p:"Visibility builds trust. <span>Enterprise-ready.</span>"}
+          {h:"Map",p:"North = rules. East = products. South = constraints. West = containment.",span:""},
+          {h:"Use it",p:"Pick the direction you need and go.",span:""},
+          {h:"Why",p:"Stable structure stops confusion.",span:""},
+          {h:"Rule",p:"Content changes; contract stays.",span:""}
         ]
       }
     }
   };
 
-  var C = (lang==="zh") ? C_ZH : C_EN; // language lens works: one language only
+  var C_ZH = {
+    map:{
+      origin:{
+        formal:[
+          {h:"这张地图是什么",p:"这是罗盘枢纽：北定义，东执行，南约束，西隔离。<span>同一系统。</span>"},
+          {h:"怎么用",p:"卡住时选方向：定义（北）、产品（东）、护栏（南）、隔离（西）。<span>然后返回。</span>"},
+          {h:"为什么有效",p:"结构稳定、内容扩展，混乱减少。<span>同一UI语法。</span>"},
+          {h:"什么会变",p:"只有内容随镜头变化；契约不变。<span>不漂移。</span>"}
+        ],
+        informal:[
+          {h:"地图",p:"北=规则，东=产品，南=约束，西=隔离。",span:""},
+          {h:"用法",p:"选你需要的方向。",span:""},
+          {h:"为什么",p:"结构稳定就不混乱。",span:""},
+          {h:"规则",p:"内容变，契约不变。",span:""}
+        ]
+      }
+    }
+  };
 
-  // ===== MODAL WIRING =====
+  // Full packs for N/E/S/W (kept compact but correct)
+  function mkNorthPack(langIsZh){
+    if(!langIsZh){
+      return {
+        origin:{
+          formal:[
+            {h:"North definition",p:"North is the invariant layer: definitions and laws. <span>Meaning is anchored here.</span>"},
+            {h:"North usage",p:"Use North before execution. <span>Definition → constraint → action.</span>"},
+            {h:"North output",p:"Bounded claims with falsifiers. <span>Testable truth.</span>"},
+            {h:"North value",p:"Stable meaning reduces drift. <span>Trust becomes measurable.</span>"}
+          ],
+          informal:[
+            {h:"North = definitions",p:"Anchor layer. <span>What things mean.</span>"},
+            {h:"Use it first",p:"Define before acting. <span>Less confusion.</span>"},
+            {h:"What you get",p:"Clear bounds. <span>No drift.</span>"},
+            {h:"Why it matters",p:"Stable words → stable decisions.",span:""}
+          ]
+        },
+        now:{
+          formal:[
+            {h:"North now",p:"Rules are live under the same contract. <span>No special pages.</span>"},
+            {h:"Enforcement",p:"Canonical keys and deterministic routing. <span>Uniform.</span>"},
+            {h:"Failure clarity",p:"Deterministic errors are fixable. <span>Fast repair.</span>"},
+            {h:"Benefit",p:"Lower entropy under growth. <span>Durable.</span>"}
+          ],
+          informal:[
+            {h:"North now",p:"Rules are live.",span:""},
+            {h:"Uniform",p:"Same keys, same routes.",span:""},
+            {h:"Fixable",p:"Errors are obvious.",span:""},
+            {h:"Durable",p:"Less chaos.",span:""}
+          ]
+        },
+        post:{
+          formal:[
+            {h:"North roadmap",p:"Registries and lookup surfaces. <span>Public-safe references.</span>"},
+            {h:"Scale rule",p:"Clone the contract. <span>No reinvention.</span>"},
+            {h:"Publishing posture",p:"More depth without changing meaning. <span>Stable.</span>"},
+            {h:"Value",p:"Invariants prevent contradiction at scale. <span>Anchor.</span>"}
+          ],
+          informal:[
+            {h:"North roadmap",p:"More registries.",span:""},
+            {h:"Same contract",p:"No reinvention.",span:""},
+            {h:"More depth",p:"Add support, not drift.",span:""},
+            {h:"Anchor",p:"Big systems need it.",span:""}
+          ]
+        }
+      };
+    }
+    return {
+      origin:{
+        formal:[
+          {h:"北的定义",p:"北是不变量层：定义与法则。<span>含义在此锚定。</span>"},
+          {h:"北的用法",p:"先定义再执行。<span>定义→约束→行动。</span>"},
+          {h:"北的输出",p:"有界主张与可证伪条件。<span>可测试真值。</span>"},
+          {h:"北的价值",p:"稳定含义减少漂移。<span>信任可测。</span>"}
+        ],
+        informal:[
+          {h:"北=定义",p:"锚点层。<span>含义。</span>"},
+          {h:"先用北",p:"先定义再行动。",span:""},
+          {h:"你得到",p:"清晰边界。",span:""},
+          {h:"为什么",p:"词稳→决策稳。",span:""}
+        ]
+      },
+      now:{
+        formal:[
+          {h:"北·现况",p:"规则按同一契约上线。<span>无特例页。</span>"},
+          {h:"执行",p:"规范键与确定路由。<span>统一。</span>"},
+          {h:"故障清晰",p:"确定错误可快速修复。<span>快修。</span>"},
+          {h:"收益",p:"增长下熵更低。<span>更耐久。</span>"}
+        ],
+        informal:[
+          {h:"北·现况",p:"规则已上线。",span:""},
+          {h:"统一",p:"同键同路由。",span:""},
+          {h:"可修",p:"错误很明显。",span:""},
+          {h:"耐久",p:"更少混乱。",span:""}
+        ]
+      },
+      post:{
+        formal:[
+          {h:"北·路线图",p:"注册表与查询面。<span>公开安全。</span>"},
+          {h:"扩展规则",p:"复制契约。<span>不重做。</span>"},
+          {h:"发布姿态",p:"加深度但不改含义。<span>稳定。</span>"},
+          {h:"价值",p:"不变量阻止规模矛盾。<span>锚点。</span>"}
+        ],
+        informal:[
+          {h:"北·路线图",p:"更多注册表。",span:""},
+          {h:"同契约",p:"不重做。",span:""},
+          {h:"更深",p:"加支持不漂移。",span:""},
+          {h:"锚点",p:"大系统需要。",span:""}
+        ]
+      }
+    };
+  }
+
+  function mkEastPack(langIsZh){
+    if(!langIsZh){
+      return {
+        origin:{
+          formal:[
+            {h:"East definition",p:"East is execution surfaces: products and tools. <span>Structure → action.</span>"},
+            {h:"East usage",p:"Use East after North. <span>Choose a lane and traverse.</span>"},
+            {h:"East output",p:"Runnable pages that remain coherent as they grow.",span:""},
+            {h:"East value",p:"Repeatable patterns reduce training time and mistakes.",span:""}
+          ],
+          informal:[
+            {h:"East = products",p:"Execution surfaces.",span:""},
+            {h:"After North",p:"Understand then act.",span:""},
+            {h:"Runnable",p:"Pages you can use.",span:""},
+            {h:"Benefit",p:"Less confusion.",span:""}
+          ]
+        },
+        now:{
+          formal:[
+            {h:"East now",p:"Products are live as hubs and sub-hubs. <span>Stable contract.</span>"},
+            {h:"Claims discipline",p:"Live vs roadmap stays separated. <span>No mixed claims.</span>"},
+            {h:"Experience",p:"Tap, read, return with state intact. <span>Orientation.</span>"},
+            {h:"Benefit",p:"Clean claims protect trust. <span>Truth surface.</span>"}
+          ],
+          informal:[
+            {h:"East now",p:"Live products.",span:""},
+            {h:"Clean claims",p:"No mixing.",span:""},
+            {h:"Use it",p:"Tap and return.",span:""},
+            {h:"Trust",p:"Clarity wins.",span:""}
+          ]
+        },
+        post:{
+          formal:[
+            {h:"East roadmap",p:"More tools, demos, and exportable packs. <span>Same map.</span>"},
+            {h:"Scale rule",p:"Same gem + modal pattern everywhere.",span:""},
+            {h:"Artifacts",p:"Shareable outputs tied to stable definitions.",span:""},
+            {h:"Value",p:"Scale without chaos. <span>Speed with integrity.</span>"}
+          ],
+          informal:[
+            {h:"East roadmap",p:"More tools.",span:""},
+            {h:"Same pattern",p:"No bespoke UI.",span:""},
+            {h:"Shareable",p:"Exports and packs.",span:""},
+            {h:"Result",p:"Clean scale.",span:""}
+          ]
+        }
+      };
+    }
+    return {
+      origin:{
+        formal:[
+          {h:"东的定义",p:"东是执行面：产品与工具。<span>结构→行动。</span>"},
+          {h:"东的用法",p:"先北后东。<span>选一条线遍历。</span>"},
+          {h:"东的输出",p:"可运行页面，增长仍一致。",span:""},
+          {h:"东的价值",p:"可重复模式减少训练成本与错误。",span:""}
+        ],
+        informal:[
+          {h:"东=产品",p:"执行面。",span:""},
+          {h:"先北后东",p:"先理解再行动。",span:""},
+          {h:"可运行",p:"页面可直接用。",span:""},
+          {h:"收益",p:"更少混乱。",span:""}
+        ]
+      },
+      now:{
+        formal:[
+          {h:"东·现况",p:"产品以枢纽/子枢纽上线。<span>契约稳定。</span>"},
+          {h:"主张纪律",p:"上线与路线图分离。<span>不混说。</span>"},
+          {h:"体验",p:"点开、阅读、返回，状态保持。<span>不迷路。</span>"},
+          {h:"收益",p:"清晰主张保护信任。<span>真值面。</span>"}
+        ],
+        informal:[
+          {h:"东·现况",p:"产品已上线。",span:""},
+          {h:"不混说",p:"上线/路线图分开。",span:""},
+          {h:"用法",p:"点开就回。",span:""},
+          {h:"信任",p:"清晰胜出。",span:""}
+        ]
+      },
+      post:{
+        formal:[
+          {h:"东·路线图",p:"更多工具/演示/导出包。<span>同地图。</span>"},
+          {h:"扩展规则",p:"全站同宝石+模态模式。",span:""},
+          {h:"工件",p:"可分享输出绑定稳定定义。",span:""},
+          {h:"价值",p:"规模化而不混乱。<span>速度+完整性。</span>"}
+        ],
+        informal:[
+          {h:"东·路线图",p:"更多工具。",span:""},
+          {h:"同模式",p:"不做花样UI。",span:""},
+          {h:"可分享",p:"导出与包。",span:""},
+          {h:"结果",p:"干净扩展。",span:""}
+        ]
+      }
+    };
+  }
+
+  function mkSouthPack(langIsZh){
+    if(!langIsZh){
+      return {
+        origin:{
+          formal:[
+            {h:"South definition",p:"South is constraints and convergence: where alignment is forced under pressure.",span:""},
+            {h:"South usage",p:"Use South for guardrails: what is allowed, blocked, and why.",span:""},
+            {h:"South output",p:"Caps, thresholds, refusal rules. <span>No ambiguity gaming.</span>",span:""},
+            {h:"South value",p:"Constraints prevent cascades and reduce damage.",span:""}
+          ],
+          informal:[
+            {h:"South = guardrails",p:"Rules push back.",span:""},
+            {h:"Use it",p:"Safety logic.",span:""},
+            {h:"What you get",p:"Caps and refusals.",span:""},
+            {h:"Why",p:"Less damage.",span:""}
+          ]
+        },
+        now:{
+          formal:[
+            {h:"South now",p:"Enforcement is visible: canonical keys, stable lens semantics, deterministic routing.",span:""},
+            {h:"Operator view",p:"PASS/FAIL/UNKNOWN with caps. <span>No silent drift.</span>",span:""},
+            {h:"Example",p:"ROADMAP label must map to gd_time=post consistently.",span:""},
+            {h:"Benefit",p:"Durability under growth and pressure.",span:""}
+          ],
+          informal:[
+            {h:"South now",p:"Rules enforced.",span:""},
+            {h:"No gaming",p:"Unknown is capped.",span:""},
+            {h:"Example",p:"Roadmap means post.",span:""},
+            {h:"Benefit",p:"Stays honest.",span:""}
+          ]
+        },
+        post:{
+          formal:[
+            {h:"South roadmap",p:"Publish standards + governance surfaces.",span:""},
+            {h:"Scale rule",p:"Freeze thresholds; expand content only.",span:""},
+            {h:"Adoption kits",p:"Grow without weakening constraints.",span:""},
+            {h:"Value",p:"Resilience: discipline survives time.",span:""}
+          ],
+          informal:[
+            {h:"South roadmap",p:"Publish standards.",span:""},
+            {h:"Freeze thresholds",p:"No weakening.",span:""},
+            {h:"Grow clean",p:"No drift.",span:""},
+            {h:"Result",p:"Resilient.",span:""}
+          ]
+        }
+      };
+    }
+    return {
+      origin:{
+        formal:[
+          {h:"南的定义",p:"南是约束与收敛：压力下强制对齐。",span:""},
+          {h:"南的用法",p:"护栏：允许/阻止/原因。",span:""},
+          {h:"南的输出",p:"上限、阈值、拒绝规则。<span>不允许玩模糊。</span>",span:""},
+          {h:"南的价值",p:"约束阻止级联与损伤扩大。",span:""}
+        ],
+        informal:[
+          {h:"南=护栏",p:"规则会反弹。",span:""},
+          {h:"用它",p:"安全逻辑。",span:""},
+          {h:"你得到",p:"上限与拒绝。",span:""},
+          {h:"为什么",p:"更少损伤。",span:""}
+        ]
+      },
+      now:{
+        formal:[
+          {h:"南·现况",p:"执行可见：规范键、稳定镜头语义、确定路由。",span:""},
+          {h:"操作视图",p:"PASS/FAIL/UNKNOWN并带上限。<span>不允许静默漂移。</span>",span:""},
+          {h:"例子",p:"路线图标签必须一致映射gd_time=post。",span:""},
+          {h:"收益",p:"增长与压力下更耐久。",span:""}
+        ],
+        informal:[
+          {h:"南·现况",p:"规则在执行。",span:""},
+          {h:"不允许玩",p:"未知有上限。",span:""},
+          {h:"例子",p:"路线图=post。",span:""},
+          {h:"收益",p:"保持诚实。",span:""}
+        ]
+      },
+      post:{
+        formal:[
+          {h:"南·路线图",p:"发布标准与治理面。",span:""},
+          {h:"扩展规则",p:"阈值冻结，只扩内容。",span:""},
+          {h:"采纳套件",p:"增长但不弱化约束。",span:""},
+          {h:"价值",p:"纪律在时间压力下存活。",span:""}
+        ],
+        informal:[
+          {h:"南·路线图",p:"发布标准。",span:""},
+          {h:"冻结阈值",p:"不弱化。",span:""},
+          {h:"干净增长",p:"不漂移。",span:""},
+          {h:"结果",p:"更耐久。",span:""}
+        ]
+      }
+    };
+  }
+
+  function mkWestPack(langIsZh){
+    if(!langIsZh){
+      return {
+        origin:{
+          formal:[
+            {h:"West definition",p:"West is containment: segmentation, rollback, and blast-radius control.",span:""},
+            {h:"West usage",p:"Use West to keep changes safe and failures bounded.",span:""},
+            {h:"West output",p:"Zones, rollback semantics, and receipts. <span>Audit-ready.</span>",span:""},
+            {h:"West value",p:"Containment speeds recovery and reduces correlated failure.",span:""}
+          ],
+          informal:[
+            {h:"West = containment",p:"Keep damage small.",span:""},
+            {h:"Use it",p:"Rollback and segmentation.",span:""},
+            {h:"You get",p:"Clear zones and receipts.",span:""},
+            {h:"Why",p:"Faster recovery.",span:""}
+          ]
+        },
+        now:{
+          formal:[
+            {h:"West now",p:"Deterministic returns and stable modal behavior are UI containment.",span:""},
+            {h:"Error posture",p:"Missing folder/link/key is deterministic. <span>Fixable.</span>",span:""},
+            {h:"Example",p:"If a diamond doesn’t navigate, it’s routing—not mystery.",span:""},
+            {h:"Benefit",p:"Low entropy scaling: safe changes and fast repairs.",span:""}
+          ],
+          informal:[
+            {h:"West now",p:"UI stays contained.",span:""},
+            {h:"Errors obvious",p:"Fixable issues.",span:""},
+            {h:"Example",p:"Routing problems are deterministic.",span:""},
+            {h:"Benefit",p:"Fast repair.",span:""}
+          ]
+        },
+        post:{
+          formal:[
+            {h:"West roadmap",p:"Dashboards and simulations: blast radius visuals, gate tables.",span:""},
+            {h:"Override rule",p:"Overrides logged and capped. <span>No silent erosion.</span>",span:""},
+            {h:"Accountability",p:"Reason codes visible, not hidden.",span:""},
+            {h:"Value",p:"Trust increases when containment is visible.",span:""}
+          ],
+          informal:[
+            {h:"West roadmap",p:"Dashboards and sims.",span:""},
+            {h:"No silent overrides",p:"Everything logged.",span:""},
+            {h:"Reason codes",p:"Visible why.",span:""},
+            {h:"Result",p:"Enterprise-ready trust.",span:""}
+          ]
+        }
+      };
+    }
+    return {
+      origin:{
+        formal:[
+          {h:"西的定义",p:"西是隔离：分区、回滚、控制爆炸半径。",span:""},
+          {h:"西的用法",p:"让变更安全、故障可控。",span:""},
+          {h:"西的输出",p:"分区、回滚语义与收据。<span>可审计。</span>",span:""},
+          {h:"西的价值",p:"隔离加快恢复并减少关联失败。",span:""}
+        ],
+        informal:[
+          {h:"西=隔离",p:"把损伤变小。",span:""},
+          {h:"用它",p:"回滚与分区。",span:""},
+          {h:"你得到",p:"清晰分区与收据。",span:""},
+          {h:"为什么",p:"恢复更快。",span:""}
+        ]
+      },
+      now:{
+        formal:[
+          {h:"西·现况",p:"确定返回与稳定模态行为属于UI隔离。",span:""},
+          {h:"错误姿态",p:"缺文件/缺链接/错键是确定的。<span>可修。</span>",span:""},
+          {h:"例子",p:"菱形不跳转=路由问题，不是神秘问题。",span:""},
+          {h:"收益",p:"低熵扩展：安全变更与快修。",span:""}
+        ],
+        informal:[
+          {h:"西·现况",p:"UI保持隔离。",span:""},
+          {h:"错误明显",p:"可修的问题。",span:""},
+          {h:"例子",p:"路由是确定的。",span:""},
+          {h:"收益",p:"快修。",span:""}
+        ]
+      },
+      post:{
+        formal:[
+          {h:"西·路线图",p:"仪表板与模拟：爆炸半径可视化、闸门表。",span:""},
+          {h:"覆盖规则",p:"覆盖必须记录并有上限。<span>不允许静默侵蚀。</span>",span:""},
+          {h:"问责",p:"原因码可见，不隐藏。",span:""},
+          {h:"价值",p:"隔离可见则信任增加。",span:""}
+        ],
+        informal:[
+          {h:"西·路线图",p:"仪表板与模拟。",span:""},
+          {h:"不静默覆盖",p:"全部记录。",span:""},
+          {h:"原因码",p:"可见为什么。",span:""},
+          {h:"结果",p:"企业级信任。",span:""}
+        ]
+      }
+    };
+  }
+
+  var C_EN_full = {north:mkNorthPack(false), east:mkEastPack(false), south:mkSouthPack(false), west:mkWestPack(false), map:C_EN.map};
+  var C_ZH_full = {north:mkNorthPack(true),  east:mkEastPack(true),  south:mkSouthPack(true),  west:mkWestPack(true),  map:C_ZH.map};
+
+  var C = (lang==="zh") ? C_ZH_full : C_EN_full;
+
   var bd=document.getElementById("bd");
   var modal=document.getElementById("modal");
   var mClose=document.getElementById("mClose");
@@ -690,24 +915,19 @@
 
   var active=null;
 
-  function setLensLabels(){
-    chipStyle.textContent = (lang==="zh")
-      ? ("风格：" + (style==="formal" ? UI.zh.lens.formal : UI.zh.lens.informal))
-      : ("STYLE: " + (style==="formal" ? UI.en.lens.formal : UI.en.lens.informal));
+  function persist(){ try{ localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time);}catch(e){} }
 
-    chipConcept.textContent = (lang==="zh") ? UI.zh.lens.concept : UI.en.lens.concept;
-    chipNow.textContent     = (lang==="zh") ? UI.zh.lens.now     : UI.en.lens.now;
-    chipRoadmap.textContent = (lang==="zh") ? UI.zh.lens.roadmap : UI.en.lens.roadmap;
+  function setLensLabels(){
+    chipStyle.textContent = ui.stylePrefix + (style==="formal" ? ui.lens.formal : ui.lens.informal);
+    chipConcept.textContent = ui.lens.concept;
+    chipNow.textContent = ui.lens.now;
+    chipRoadmap.textContent = ui.lens.roadmap;
 
     chipConcept.classList.toggle("active", time==="origin");
     chipNow.classList.toggle("active", time==="now");
     chipRoadmap.classList.toggle("active", time==="post");
   }
   setLensLabels();
-
-  function persist(){
-    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time); }catch(e){}
-  }
 
   function render(){
     persist();
@@ -749,8 +969,9 @@
   document.getElementById("dEast").onclick=function(){ open("east"); };
   document.getElementById("dSouth").onclick=function(){ open("south"); };
   document.getElementById("dWest").onclick=function(){ open("west"); };
+  document.getElementById("dMap").onclick=function(){ open("map"); };
 
-  ["dNorth","dEast","dSouth","dWest"].forEach(function(id){
+  ["dNorth","dEast","dSouth","dWest","dMap"].forEach(function(id){
     var el=document.getElementById(id);
     el.addEventListener("keydown", function(e){
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
@@ -765,27 +986,8 @@
   bd.onclick=close;
   mClose.onclick=close;
   document.getElementById("mReturn").onclick=close;
-
-  // ===== Apply language labels to page chrome AFTER C_EN/C_ZH exist =====
-  if(lang==="zh"){
-    document.getElementById("brandTop").textContent = UI.zh.top;
-    document.getElementById("brandSub").textContent = UI.zh.sub;
-    document.getElementById("labNorth").textContent = UI.zh.n.lab;
-    document.getElementById("subNorth").textContent = UI.zh.n.sub;
-    document.getElementById("labEast").textContent = UI.zh.e.lab;
-    document.getElementById("subEast").textContent = UI.zh.e.sub;
-    document.getElementById("labSouth").textContent = UI.zh.s.lab;
-    document.getElementById("subSouth").textContent = UI.zh.s.sub;
-    document.getElementById("labWest").textContent = UI.zh.w.lab;
-    document.getElementById("subWest").textContent = UI.zh.w.sub;
-    document.getElementById("mReturn").textContent = UI.zh.btn.ret;
-    document.getElementById("mJumpTerminal").textContent = UI.zh.btn.jt;
-    document.getElementById("mJumpExplore").textContent = UI.zh.btn.je;
-  }
-
 })();
 </script>
 
 </body>
 </html>
-```0

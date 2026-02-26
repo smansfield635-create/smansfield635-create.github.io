@@ -1,11 +1,10 @@
-<!-- TNT — /products/index.html  (PRODUCTS SPINE · TRUE OPAL JEWEL · TAP-SAFE · NO UI OVERRIDE)
-     FIX:
-       - ✅ CLICK FIX: .stage is pointer-events:auto (parent no longer kills taps)
-       - ✅ Outer shell remains pointer-events:none
-       - ✅ Diamonds are true opal (tint-resistant) + stronger gloss + stronger gold rim
-       - ✅ No blur/backdrop-filter (iOS tap-safe)
-       - ✅ No html/body background styling (ui.css owns field)
-       - ✅ State-carry on all nav + diamond clicks
+<!-- TNT — /products/index.html  (PRODUCTS SPINE · IMPERIAL OBSIDIAN + MIDNIGHT SAPPHIRE + OPAL FILM · GOLD CROWN EDGE)
+     PURPOSE:
+       - Same uniform as the “good” pages: lacquer jewel depth + gold trim + crisp specular
+       - UI field remains owned by /assets/ui.css
+       - Geometry remains owned by /assets/branch.css
+       - Diamonds click reliably (mobile-safe hit testing)
+       - State carry (lang/style/time) on all jumps
 -->
 
 <!doctype html>
@@ -22,31 +21,35 @@
 :root{
   --R:154px;
 
-  /* OPAL palette (LESS TRANSPARENT to stop red bleed) */
-  --opal-w: rgba(245,248,255,.34);
-  --opal-b: rgba(170,205,255,.22);
-  --opal-g: rgba(170,245,230,.16);
-  --opal-a: rgba(255,225,180,.16);
+  /* IMPERIAL JEWEL MATERIAL (locked uniform) */
+  --obs-0: rgba(0,0,0,.78);
+  --obs-1: rgba(8,10,14,.92);
+  --obs-2: rgba(4,6,10,.95);
 
-  /* deep base that resists field tint */
-  --opal-base-1: rgba(10,14,22,.94);
-  --opal-base-2: rgba(6,9,14,.92);
+  --sapphire-1: rgba(40,90,200,.18);
+  --sapphire-2: rgba(110,190,255,.14);
 
-  --goldSoft: rgba(212,175,55,.48);
-  --goldHard: rgba(212,175,55,.72);
+  --opal-w: rgba(245,248,255,.18);
+  --opal-b: rgba(180,220,255,.12);
+  --opal-a: rgba(255,235,200,.10);
+  --opal-g: rgba(170,255,235,.10);
+
+  --gold: rgba(212,175,55,.80);
+  --gold-soft: rgba(212,175,55,.35);
+  --gold-line: rgba(212,175,55,.18);
 }
 
-/* No field overrides */
+/* Minimal page layout (no field ownership) */
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
 
-/* Top-left controls */
-.top-left{position:fixed;left:16px;top:16px;z-index:90;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+/* Top-left */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:90;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
 
-/* Use ui.css button material (gold hover etc.) */
-.tbtn{display:inline-flex;align-items:center;justify-content:center}
-
-/* Brand pill — NO BLUR */
+/* Brand (no blur; matches “done right” feel) */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
   z-index:80;text-align:center;padding:10px 14px;border-radius:999px;
@@ -56,18 +59,16 @@ a{color:inherit;text-decoration:none}
 .brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
 .brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
 
-/* Stage positioning */
+/* Stage (tap-safe: stage is hit-testable; outer is not) */
 .stage{
   position:fixed;left:50%;top:52%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);height:min(720px,94vw);
   z-index:60;
-
-  /* ✅ CRITICAL FIX: allow hit-testing in this container */
   pointer-events:auto;
 }
 
-/* Outer diamond shell is visual only */
+/* Outer shell (visual only) */
 .outer{
   position:absolute;left:50%;top:50%;
   width:min(680px,92vw);height:min(680px,92vw);
@@ -76,15 +77,21 @@ a{color:inherit;text-decoration:none}
   border:1px solid rgba(255,255,255,.10);
   box-shadow:
     0 90px 260px rgba(0,0,0,.55),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    0 0 34px rgba(212,175,55,.08);
+    inset 0 2px 0 rgba(255,255,255,.10);
   opacity:.55;
-  pointer-events:none; /* stays non-clickable */
+  pointer-events:none;
+}
+.outer::after{
+  content:"";
+  position:absolute;inset:0;border-radius:60px;
+  background:repeating-conic-gradient(from 0deg, rgba(212,175,55,.04) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.10;
+  pointer-events:none;
 }
 
-/* Diamonds: TRUE OPAL JEWEL (tint-resistant) */
+/* Diamonds: IMPERIAL OBSIDIAN LACQUER + MIDNIGHT SAPPHIRE + OPAL FILM */
 .d{
-  width:200px;height:200px;
+  width:205px;height:205px;
   position:absolute;left:50%;top:50%;
   transform-origin:center;
   border-radius:30px;
@@ -93,65 +100,73 @@ a{color:inherit;text-decoration:none}
   touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
 
-  /* Dark base first (prevents red field tint) */
   background:
-    radial-gradient(circle at 35% 22%, var(--opal-w) 0%, rgba(245,248,255,0) 52%),
-    radial-gradient(circle at 78% 28%, var(--opal-b) 0%, rgba(170,205,255,0) 58%),
-    radial-gradient(circle at 30% 78%, var(--opal-g) 0%, rgba(170,245,230,0) 60%),
-    radial-gradient(circle at 82% 78%, var(--opal-a) 0%, rgba(255,225,180,0) 62%),
-    linear-gradient(160deg, var(--opal-base-1) 0%, var(--opal-base-2) 72%);
+    /* sapphire glow lanes (cool) */
+    radial-gradient(circle at 72% 26%, var(--sapphire-2) 0%, rgba(110,190,255,0) 62%),
+    radial-gradient(circle at 34% 78%, var(--sapphire-1) 0%, rgba(40,90,200,0) 64%),
 
-  border:1px solid rgba(255,255,255,.18);
+    /* opal interference film (neutral) */
+    radial-gradient(circle at 34% 22%, var(--opal-w) 0%, rgba(245,248,255,0) 54%),
+    radial-gradient(circle at 78% 32%, var(--opal-b) 0%, rgba(180,220,255,0) 58%),
+    radial-gradient(circle at 82% 78%, var(--opal-a) 0%, rgba(255,235,200,0) 64%),
+    radial-gradient(circle at 30% 82%, var(--opal-g) 0%, rgba(170,255,235,0) 66%),
+
+    /* lacquer base (tint-resistant) */
+    linear-gradient(160deg, var(--obs-1) 0%, var(--obs-2) 78%);
+
+  border:1px solid rgba(255,255,255,.16);
+
   box-shadow:
-    0 26px 90px rgba(0,0,0,.62),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -34px 70px rgba(0,0,0,.70);
+    0 30px 110px rgba(0,0,0,.72),
+    0 0 22px rgba(212,175,55,.10),
+    inset 0 2px 0 rgba(255,255,255,.16),
+    inset 0 -44px 86px rgba(0,0,0,.80);
 }
 
-/* Gold rim (stronger) */
+/* Gold crown rim (strong) */
 .d::before{
   content:"";
   position:absolute;inset:0;border-radius:30px;padding:1px;
   background:linear-gradient(135deg,
     rgba(212,175,55,0) 0%,
-    rgba(212,175,55,.52) 46%,
+    rgba(212,175,55,.55) 38%,
+    rgba(212,175,55,.85) 50%,
+    rgba(212,175,55,.55) 62%,
     rgba(212,175,55,0) 100%
   );
-  opacity:.78;
+  opacity:.70;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
   pointer-events:none;
 }
 
-/* Specular cap + neutral opal film (stronger “lacquer”) */
+/* Gloss cap + glass sheen (static, crisp) */
 .d::after{
   content:"";
   position:absolute;inset:0;border-radius:30px;
   background:
-    radial-gradient(120% 58% at 50% 16%, rgba(255,255,255,.30) 0%, rgba(255,255,255,0) 62%),
-    radial-gradient(140% 70% at 50% 92%, rgba(0,0,0,.26) 0%, rgba(0,0,0,0) 55%),
-    conic-gradient(from 210deg at 50% 52%,
-      rgba(255,255,255,0) 0deg,
-      rgba(200,230,255,.12) 70deg,
-      rgba(255,240,210,.10) 150deg,
-      rgba(190,255,240,.10) 230deg,
-      rgba(255,255,255,0) 360deg
-    );
-  opacity:.82;
+    /* specular cap */
+    radial-gradient(120% 58% at 50% 16%, rgba(255,255,255,.32) 0%, rgba(255,255,255,0) 64%),
+    /* secondary sheen */
+    radial-gradient(120% 60% at 50% 55%, rgba(255,255,255,.06) 0%, rgba(255,255,255,0) 62%),
+    /* bottom depth */
+    radial-gradient(140% 70% at 50% 92%, rgba(0,0,0,.36) 0%, rgba(0,0,0,0) 56%);
+  opacity:.92;
   pointer-events:none;
 }
 
 .d:hover{
+  border-color:rgba(212,175,55,.32);
   box-shadow:
-    0 36px 130px rgba(0,0,0,.76),
+    0 40px 140px rgba(0,0,0,.80),
     0 0 32px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.24),
-    inset 0 -40px 86px rgba(0,0,0,.78);
-  border-color:rgba(212,175,55,.34);
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -50px 98px rgba(0,0,0,.84);
 }
 .d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
+/* Position */
 .d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
 .d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
@@ -165,7 +180,7 @@ a{color:inherit;text-decoration:none}
   text-align:center;padding:16px;gap:10px;
   pointer-events:none;user-select:none;
 }
-.lab{font-weight:950;letter-spacing:.8px;font-size:18px}
+.lab{font-weight:950;letter-spacing:.8px;font-size:18px;text-shadow:0 0 18px rgba(255,255,255,.16)}
 .sub{font-size:13px;opacity:.84;line-height:1.3;max-width:18em}
 
 /* Core */
@@ -181,7 +196,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Dock — NO BLUR */
+/* Dock (uses ui.css .btn look by applying .btn class in HTML) */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -190,16 +205,14 @@ a{color:inherit;text-decoration:none}
   display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
   padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
+  pointer-events:none;
 }
-.dock a{display:inline-flex;align-items:center;justify-content:center}
-.dock a.active{
-  border-color:rgba(212,175,55,.30);
-  box-shadow:0 16px 44px rgba(0,0,0,.55), 0 0 14px rgba(212,175,55,.12);
-}
+.dock .btn{pointer-events:auto}
 
+/* Responsive */
 @media (max-width:560px){
   :root{--R:142px}
-  .d{width:176px;height:176px}
+  .d{width:180px;height:180px}
 }
 </style>
 </head>
@@ -207,8 +220,8 @@ a{color:inherit;text-decoration:none}
 <body>
 
 <div class="top-left">
-  <a class="btn tbtn" id="btnHub" href="/home/">HUB</a>
-  <a class="btn tbtn" id="btnExit" href="/door/">EXIT</a>
+  <a class="btn" id="btnHub" href="/home/">HUB</a>
+  <a class="btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
 <div class="brand">
@@ -216,7 +229,7 @@ a{color:inherit;text-decoration:none}
   <div class="tag">Four volumes · One catalog spine</div>
 </div>
 
-<div class="stage" aria-label="Products catalog diamond">
+<div class="stage" aria-label="Products catalog">
   <div class="outer"></div>
 
   <div class="d d-n" id="goEnergy" role="button" tabindex="0" aria-label="Energy">
@@ -275,9 +288,11 @@ a{color:inherit;text-decoration:none}
     return s ? ("?"+s) : "";
   }
 
+  // Top links
   document.getElementById("btnHub").href  = "/home/"+q();
   document.getElementById("btnExit").href = "/door/"+q();
 
+  // Dock links
   document.getElementById("dockTerminal").href = "/index.html"+q();
   document.getElementById("dockProducts").href = "/products/"+q();
   document.getElementById("dockLaws").href = "/laws/"+q();

@@ -1,0 +1,925 @@
+<!-- TNT — /explore/frontier/index.html  (EXPLORE · FRONTIER HUB · GEM STANDARD · BILINGUAL)
+     PURPOSE:
+       - Frontier hub for “big horizon” topics (space communities, fusion readiness, solar power, orbital infrastructure)
+       - Single-language render:
+           lang=en => EN only
+           lang=zh => 中文 only
+       - Lenses ONLY inside modal:
+           STYLE: Formal/Informal (gd_style)
+           TIME:  CONCEPT / NOW / ROADMAP (gd_time = origin/now/post)
+       - Main page is pure navigation: 4 diamonds + core
+       - Click diamond → centered modal with 4 bubbles + jump buttons
+       - Deterministic state propagation via ?lang=&style=&time= and gd_* localStorage
+     LOCKS:
+       - TNT FULL FILE
+       - Uses /assets/ui.css + /assets/branch.css only
+       - DOES NOT style html/body background (ui.css owns field)
+       - No new state keys (gd_lang/gd_style/gd_time only)
+       - No purple links (all nav uses .crp-btn)
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>EXPLORE · FRONTIER</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instrument.js"></script>
+
+<style>
+/* PAGE-LOCAL ONLY (no field ownership) */
+:root{
+  --R:124px;
+  --goldSoft:rgba(212,175,55,.35);
+  --obs1:#070b12;
+  --obs2:#0c1626;
+  --mut:rgba(255,255,255,.84);
+}
+
+/* Top-left controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:90;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+
+/* Title pill */
+.brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:80;text-align:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16);
+  backdrop-filter:blur(8px);
+  pointer-events:none;
+}
+.brand .t1{font-weight:950;letter-spacing:1.1px;font-size:12px;opacity:.95}
+.brand .t2{margin-top:2px;font-size:11px;letter-spacing:.6px;opacity:.72}
+
+/* Stage */
+.stage{
+  position:fixed;left:50%;top:52%;
+  transform:translate(-50%,-50%);
+  width:min(560px,92vw);
+  height:min(560px,92vw);
+  z-index:40;
+}
+
+/* Outer gem diamond */
+.outer{
+  position:absolute;left:50%;top:50%;
+  width:min(560px,92vw);
+  height:min(560px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+  pointer-events:none;
+  opacity:.85;
+}
+.outer::after{
+  content:"";
+  position:absolute; inset:0; border-radius:60px;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.16;
+  pointer-events:none;
+}
+
+/* Gem diamonds */
+.d{
+  width:150px;height:150px;
+  position:absolute;left:50%;top:50%;
+  transform-origin:center;
+  border-radius:26px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
+    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
+
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 28px 84px rgba(0,0,0,.78),
+    inset 0 2px 0 rgba(255,255,255,.14),
+    inset 0 -28px 44px rgba(0,0,0,.62);
+
+  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+.d::before{
+  content:"";
+  position:absolute; inset:0; border-radius:26px; padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:"";
+  position:absolute; left:12%; right:12%; top:10%; height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
+  opacity:.85;
+  transform:rotate(-10deg);
+  pointer-events:none;
+}
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 18px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
+  border-color:rgba(212,175,55,.28);
+}
+.d.active{
+  border-color:rgba(212,175,55,.55);
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 30px rgba(212,175,55,.40),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
+}
+
+.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
+.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
+.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
+.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
+
+.in{
+  width:100%; height:100%;
+  transform:rotate(-45deg);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center;
+  padding:16px;
+  gap:8px;
+  pointer-events:none;
+  user-select:none;
+}
+.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
+.sub{ font-size:12.5px; opacity:.86; line-height:1.35; max-width:16em; }
+
+/* Core */
+.core{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:64px;height:64px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;
+  font-weight:950;letter-spacing:.5px;
+  opacity:.92;
+  pointer-events:none;
+}
+
+/* Dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:90;
+  width:min(980px,94vw);
+  display:flex;justify-content:center;
+  gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.20);
+  backdrop-filter:blur(8px);
+}
+
+/* Modal */
+.bd{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(10px);
+  display:none;
+}
+.bd.show{display:block;}
+.modal{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(1020px,94vw);
+  max-height:88vh;
+  display:none;
+  z-index:210;
+}
+.modal.show{display:block;}
+.shell{
+  height:88vh;
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
+    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
+    linear-gradient(160deg, rgba(17,22,28,.90), rgba(11,15,20,.94));
+  box-shadow:0 60px 180px rgba(0,0,0,.92);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.shell::before{
+  content:"";
+  position:absolute;left:50%;top:58%;
+  width:min(980px,94vw);
+  height:min(980px,94vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:70px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.16), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);
+  box-shadow:
+    0 100px 280px rgba(0,0,0,.72),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -55px 100px rgba(0,0,0,.55);
+  opacity:.55;
+  pointer-events:none;
+}
+.mhead{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
+  position:relative;z-index:2;
+}
+.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
+.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
+
+.lensbar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  align-items:center;justify-content:center;
+  padding:10px 10px 12px;border-bottom:1px solid rgba(255,255,255,.08);
+  position:relative;z-index:2;
+}
+.chip{
+  padding:10px 16px;border-radius:999px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
+}
+.chip.active{
+  border-color:rgba(212,175,55,.35);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
+}
+
+.mbody{
+  padding:14px 16px 18px;
+  overflow:auto;-webkit-overflow-scrolling:touch;
+  flex:1 1 auto;
+  position:relative;z-index:2;
+}
+
+/* 4 bubbles */
+.grid{display:grid;gap:14px}
+@media (min-width:920px){ .grid{grid-template-columns:1fr 1fr} }
+.bubble{
+  padding:16px 18px;border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
+  position:relative;
+}
+.bubble::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.35) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
+.bubble p{margin:0;color:var(--mut);line-height:1.55}
+.bubble p span{color:rgba(255,255,255,.70);font-weight:800}
+
+/* Modal footer actions */
+.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.sbtn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:12px 18px;border-radius:14px;
+  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  color:#fff;border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.7);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
+}
+.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.20); }
+
+@media (max-width:520px){
+  :root{ --R: 116px; }
+  .stage{ width:min(520px,92vw); height:min(520px,92vw); }
+  .outer{ width:min(520px,92vw); height:min(520px,92vw); }
+  .core{ width:58px; height:58px; }
+  .shell{ height:90vh; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-left">
+  <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
+  <a class="crp-btn" id="btnExplore" href="/explore/">LANGUAGE HUB</a>
+  <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
+</div>
+
+<div class="brand">
+  <div class="t1" id="brandTop">FRONTIER</div>
+  <div class="t2" id="brandSub">SPACE · SOLAR · FUSION READINESS · ORBITAL</div>
+</div>
+
+<div class="stage" aria-label="Frontier hub">
+  <div class="outer"></div>
+
+  <div class="d d-n" id="dSpace" role="button" tabindex="0">
+    <div class="in">
+      <div class="lab" id="labSpace">SPACE</div>
+      <div class="sub" id="subSpace">Habitation · logistics · stability.</div>
+    </div>
+  </div>
+
+  <div class="d d-e" id="dSolar" role="button" tabindex="0">
+    <div class="in">
+      <div class="lab" id="labSolar">SOLAR</div>
+      <div class="sub" id="subSolar">Capture · storage · conversion.</div>
+    </div>
+  </div>
+
+  <div class="d d-s" id="dFusion" role="button" tabindex="0">
+    <div class="in">
+      <div class="lab" id="labFusion">FUSION</div>
+      <div class="sub" id="subFusion">Readiness · gates · evidence.</div>
+    </div>
+  </div>
+
+  <div class="d d-w" id="dOrbit" role="button" tabindex="0">
+    <div class="in">
+      <div class="lab" id="labOrbit">ORBITAL</div>
+      <div class="sub" id="subOrbit">Infrastructure · stations · industry.</div>
+    </div>
+  </div>
+
+  <div class="core">◆</div>
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="crp-btn" id="dockExplore2" href="/explore/">EXPLORE</a>
+  <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
+</nav>
+
+<div class="bd" id="bd"></div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="shell">
+    <div class="mhead">
+      <h3 class="mtitle" id="mTitle">FRONTIER</h3>
+      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
+    </div>
+
+    <div class="lensbar">
+      <button class="chip" id="chipStyle" type="button">STYLE: FORMAL</button>
+      <button class="chip" id="chipConcept" data-time="origin" type="button">CONCEPT</button>
+      <button class="chip" id="chipNow" data-time="now" type="button">NOW</button>
+      <button class="chip" id="chipRoadmap" data-time="post" type="button">ROADMAP</button>
+    </div>
+
+    <div class="mbody">
+      <div class="grid">
+        <div class="bubble"><h4 id="h1"></h4><p id="p1"></p></div>
+        <div class="bubble"><h4 id="h2"></h4><p id="p2"></p></div>
+        <div class="bubble"><h4 id="h3"></h4><p id="p3"></p></div>
+        <div class="bubble"><h4 id="h4"></h4><p id="p4"></p></div>
+      </div>
+
+      <div class="mact">
+        <button class="sbtn" id="mReturn" type="button">RETURN</button>
+        <a class="sbtn" id="mJumpExplore" href="/explore/">LANGUAGE HUB</a>
+        <a class="sbtn" id="mJumpEnergy" href="/products/energy/">JUMP ENERGY</a>
+        <a class="sbtn" id="mJumpFusion" href="/explore/fusion-readiness/">FUSION READINESS</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ===== STATE =====
+  var qs = new URLSearchParams(location.search);
+  var qLang = qs.get("lang");
+  var qStyle = qs.get("style");
+  var qTime = qs.get("time");
+
+  var lang = (qLang==="zh"||qLang==="en") ? qLang : ((localStorage.getItem("gd_lang")==="zh") ? "zh" : "en");
+  var style = (qStyle==="formal"||qStyle==="informal") ? qStyle : (localStorage.getItem("gd_style")||"formal");
+  var time = (qTime==="origin"||qTime==="now"||qTime==="post") ? qTime : (localStorage.getItem("gd_time")||"now");
+  if(time==="trajectory") time="post";
+
+  try{
+    localStorage.setItem("gd_lang", lang);
+    localStorage.setItem("gd_style", style);
+    localStorage.setItem("gd_time", time);
+  }catch(e){}
+
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+
+  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+
+  function wire(){
+    var s=q();
+    document.getElementById("btnHub").href="/home/?"+s;
+    document.getElementById("btnExplore").href="/explore/?"+s;
+    document.getElementById("btnExit").href="/door/?"+s;
+
+    document.getElementById("dockTerminal").href="/index.html?"+s;
+    document.getElementById("dockProducts").href="/products/?"+s;
+    document.getElementById("dockExplore2").href="/explore/?"+s;
+    document.getElementById("dockLaws").href="/laws/?"+s;
+    document.getElementById("dockLinks").href="/links/?"+s;
+
+    document.getElementById("mJumpExplore").href="/explore/?"+s;
+    document.getElementById("mJumpEnergy").href="/products/energy/?"+s;
+    document.getElementById("mJumpFusion").href="/explore/fusion-readiness/?"+s;
+  }
+  wire();
+
+  // ===== UI (single-language) =====
+  var UI = {
+    en:{
+      top:"FRONTIER",
+      sub:"SPACE · SOLAR · FUSION READINESS · ORBITAL",
+      tiles:{
+        space:{lab:"SPACE", sub:"Habitation · logistics · stability."},
+        solar:{lab:"SOLAR", sub:"Capture · storage · conversion."},
+        fusion:{lab:"FUSION", sub:"Readiness · gates · evidence."},
+        orbit:{lab:"ORBITAL", sub:"Infrastructure · stations · industry."}
+      },
+      lens:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",now:"NOW",roadmap:"ROADMAP"},
+      btn:{ret:"RETURN", hub:"LANGUAGE HUB", energy:"JUMP ENERGY", fr:"FUSION READINESS"},
+      stylePrefix:"STYLE: "
+    },
+    zh:{
+      top:"前沿",
+      sub:"太空 · 太阳能 · 聚变就绪 · 轨道",
+      tiles:{
+        space:{lab:"太空", sub:"栖居 · 物流 · 稳定。"},
+        solar:{lab:"太阳能", sub:"捕获 · 存储 · 转换。"},
+        fusion:{lab:"聚变", sub:"就绪 · 闸门 · 证据。"},
+        orbit:{lab:"轨道", sub:"基础设施 · 空间站 · 工业。"}
+      },
+      lens:{formal:"正式",informal:"通俗",concept:"概念",now:"现况",roadmap:"路线图"},
+      btn:{ret:"返回", hub:"语言枢纽", energy:"跳转能源", fr:"聚变就绪"},
+      stylePrefix:"风格："
+    }
+  };
+  var T = (lang==="zh") ? UI.zh : UI.en;
+
+  document.getElementById("brandTop").textContent = T.top;
+  document.getElementById("brandSub").textContent = T.sub;
+
+  document.getElementById("labSpace").textContent = T.tiles.space.lab;
+  document.getElementById("subSpace").textContent = T.tiles.space.sub;
+  document.getElementById("labSolar").textContent = T.tiles.solar.lab;
+  document.getElementById("subSolar").textContent = T.tiles.solar.sub;
+  document.getElementById("labFusion").textContent = T.tiles.fusion.lab;
+  document.getElementById("subFusion").textContent = T.tiles.fusion.sub;
+  document.getElementById("labOrbit").textContent = T.tiles.orbit.lab;
+  document.getElementById("subOrbit").textContent = T.tiles.orbit.sub;
+
+  document.getElementById("mReturn").textContent = T.btn.ret;
+  document.getElementById("mJumpExplore").textContent = T.btn.hub;
+  document.getElementById("mJumpEnergy").textContent = T.btn.energy;
+  document.getElementById("mJumpFusion").textContent = T.btn.fr;
+
+  // ===== Modal wiring =====
+  var bd=document.getElementById("bd");
+  var modal=document.getElementById("modal");
+  var mClose=document.getElementById("mClose");
+  var mTitle=document.getElementById("mTitle");
+
+  var chipStyle=document.getElementById("chipStyle");
+  var chipConcept=document.getElementById("chipConcept");
+  var chipNow=document.getElementById("chipNow");
+  var chipRoadmap=document.getElementById("chipRoadmap");
+
+  var h1=document.getElementById("h1"),p1=document.getElementById("p1");
+  var h2=document.getElementById("h2"),p2=document.getElementById("p2");
+  var h3=document.getElementById("h3"),p3=document.getElementById("p3");
+  var h4=document.getElementById("h4"),p4=document.getElementById("p4");
+
+  var active=null; // space|solar|fusion|orbit
+
+  function persist(){
+    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time);}catch(e){}
+  }
+
+  function setLensLabels(){
+    chipStyle.textContent = T.stylePrefix + (style==="formal" ? T.lens.formal : T.lens.informal);
+    chipConcept.textContent = T.lens.concept;
+    chipNow.textContent = T.lens.now;
+    chipRoadmap.textContent = T.lens.roadmap;
+
+    chipConcept.classList.toggle("active", time==="origin");
+    chipNow.classList.toggle("active", time==="now");
+    chipRoadmap.classList.toggle("active", time==="post");
+  }
+
+  function pack(space, solar, fusion, orbit){
+    return {space, solar, fusion, orbit};
+  }
+
+  // Copy is bounded + exciting, but not claiming achievements.
+  var COPY = (lang==="zh")
+    ? {
+        space:{
+          origin:{formal:[
+            {h:"范围",p:"太空栖居被当作“稳定性工程”：电力稳定先于生命支持稳定。<span>先约束后扩张。</span>"},
+            {h:"最低条件",p:"把居住当作系统：封闭循环、冗余、可审计的故障恢复。<span>不靠叙事。</span>"},
+            {h:"连接到本网站",p:"前沿内容只通过结构化跳转呈现，并保持与标准/量规相连。<span>不脱离约束。</span>"},
+            {h:"不做的事",p:"此处不发布危险细节与配方；仅提供结构与路线。<span>安全优先。</span>"}
+          ],informal:[
+            {h:"想象",p:"当电力稳定成为常态，太空就不再只是目标，而是下一层基础设施。<span>先稳再飞。</span>"},
+            {h:"现实感",p:"每个生活系统都必须能被解释、被测量、被恢复。<span>这才是真正的“可居住”。</span>"},
+            {h:"我们怎么讲",p:"我们把它写成可导航的地图：你可以追线索，但不会被幻想带跑。<span>约束一直在。</span>"},
+            {h:"下一步",p:"从能源与标准开始，再把稳定扩展到更高层的系统。<span>一步一步。</span>"}
+          ]},
+          now:{formal:[
+            {h:"当前目标",p:"把“太空叙事”绑定到可执行约束：稳定、隔离、回滚、审计。<span>可复现语言。</span>"},
+            {h:"当前边界",p:"所有前沿页面保持“跳转面”身份：不升级主张，不混合证据。<span>纪律。</span>"},
+            {h:"当前连接",p:"前沿跳转直接进入创新/法则/量规/能源等主干。<span>快速定位。</span>"},
+            {h:"当前价值",p:"让大想法保持可说、可测、可扩展。<span>不漂移。</span>"}
+          ],informal:[
+            {h:"现在",p:"我们把太空当成“稳定的下一站”，而不是“遥远的幻想”。<span>先把地面做对。</span>"},
+            {h:"不迷路",p:"你可以从任意话题进入，但总能回到约束与测量。<span>这就是地图。</span>"},
+            {h:"为什么有用",p:"因为宏大叙事一旦脱离约束，就会变成噪声。<span>我们拒绝噪声。</span>"},
+            {h:"你会看到",p:"清晰的跳转与边界：哪里是工程，哪里是就绪门槛。<span>不混。</span>"}
+          ]},
+          post:{formal:[
+            {h:"路线图",p:"把前沿扩展为“可审计的板”：每个概念都对应约束、证伪、与跳转。<span>结构化策展。</span>"},
+            {h:"扩展规则",p:"扩展不改契约；只增加深度与链接。<span>复制而非重做。</span>"},
+            {h:"风险控制",p:"任何新增主张都必须被归类、被门控、被审计。<span>不允许偷渡。</span>"},
+            {h:"结果",p:"让前沿成为可持续的工程叙事，而非一次性宣传。<span>长期可信。</span>"}
+          ],informal:[
+            {h:"下一步",p:"把前沿做成一块“未来路线板”：每条路线都能回到现实的约束。<span>越飞越稳。</span>"},
+            {h:"扩展方式",p:"我们只加深，不改规则。<span>同一张地图走得更远。</span>"},
+            {h:"防飘移",p:"任何夸张都会被结构拒绝。<span>这反而让愿景更强。</span>"},
+            {h:"期待",p:"当稳定成为默认值，边界会打开，但永远是“可测的打开”。<span>可复现。</span>"}
+          ]}
+        },
+
+        solar:{
+          origin:{formal:[
+            {h:"范围",p:"太阳能被当作输入端：捕获、缓冲、再分配。<span>输入必须可测。</span>"},
+            {h:"核心问题",p:"问题不是“能不能捕获”，而是“能不能稳定交付”。<span>稳定优先。</span>"},
+            {h:"与能源产品的关系",p:"工业等离子热替代是可见输出端；太阳是上游输入端之一。<span>不混主张。</span>"},
+            {h:"不做的事",p:"此处不公开危险细节；只定义链路与边界。<span>公开安全。</span>"}
+          ],informal:[
+            {h:"画面",p:"想象一片“太阳能农场”像粮仓一样储存能量：先储、再放、再交付。<span>能量也能像收成。</span>"},
+            {h:"关键",p:"真正的突破是稳定：把波动变成可预期的曲线。<span>稳定就是价值。</span>"},
+            {h:"连接",p:"你会看到链路：捕获→缓冲→工业交付→再扩展。<span>一步不跳。</span>"},
+            {h:"边界",p:"我们描述结构与可测接口，不发布配方。<span>安全 + 清晰。</span>"}
+          ]},
+          now:{formal:[
+            {h:"当前目标",p:"把捕获/存储/交付写成可审计的链路，并与量规连接。<span>可复算。</span>"},
+            {h:"当前边界",p:"所有说法保持“可测接口”语言，不升级为性能承诺。<span>纪律。</span>"},
+            {h:"当前连接",p:"太阳相关内容通过前沿跳转进入创新与产品页。<span>统一导航。</span>"},
+            {h:"当前价值",p:"将复杂系统表述为可导航的链路。<span>减少迷雾。</span>"}
+          ],informal:[
+            {h:"现在",p:"我们把太阳写成“可交付的链路”，而不是“漂亮的口号”。<span>这就是差别。</span>"},
+            {h:"为什么兴奋",p:"因为一旦稳定交付成立，产业就能按计划运行。<span>世界会变得更安静。</span>"},
+            {h:"怎么读",p:"打开气泡，沿着链路走，你会看到哪些是现在，哪些是下一步。<span>不混。</span>"},
+            {h:"安全感",p:"结构化的边界让你既能梦想，也能相信它不会乱飞。<span>有护栏的愿景。</span>"}
+          ]},
+          post:{formal:[
+            {h:"路线图",p:"扩展为分层页面：捕获、缓冲、转换、交付、审计。<span>链路更深。</span>"},
+            {h:"证据包",p:"每一段链路对应可重复的证据包模板。<span>可审计。</span>"},
+            {h:"协作",p:"共享定义减少争论，让协作聚焦在测量与改进。<span>加速。</span>"},
+            {h:"结果",p:"太阳成为可规模化的工业输入端叙事。<span>可复制。</span>"}
+          ],informal:[
+            {h:"下一步",p:"把太阳能写成一张“收成地图”：从光到热到工业交付。<span>能量像粮食。</span>"},
+            {h:"证据",p:"每一步都能留下可复算的证据。<span>越大越稳。</span>"},
+            {h:"合作",p:"当定义一致，合作就像拼图，不像争吵。<span>速度起飞。</span>"},
+            {h:"结果",p:"太阳不只是发电，它是稳定工业的第一口粮。<span>基础设施。</span>"}
+          ]}
+        },
+
+        fusion:{
+          origin:{formal:[
+            {h:"范围",p:"聚变仅为“就绪门槛”叙事：定义证据、定义证伪、定义停止条件。<span>不主张增益。</span>"},
+            {h:"门控原则",p:"没有仪器冻结与独立验证，就不升级语言。<span>收据决定。</span>"},
+            {h:"与能源产品的关系",p:"能源产品公开姿态为工业热替代（C）。聚变就绪为单独跳转面。<span>不混。</span>"},
+            {h:"目的",p:"把高风险话题写成可审计的要求清单。<span>降低噪声。</span>"}
+          ],informal:[
+            {h:"直说",p:"聚变很酷，但酷不等于可用。我们把“酷”锁在门后，把“就绪”写成清单。<span>这才是尊重现实。</span>"},
+            {h:"为什么重要",p:"因为世界不缺口号，缺的是可复现的门槛。<span>门槛就是速度。</span>"},
+            {h:"你会看到",p:"仪器、收据、证伪、独立审计——这些不是限制，这是通往未来的跑道。<span>跑道先铺好。</span>"},
+            {h:"边界",p:"这里不说“我们做到了”，只说“做到必须满足什么”。<span>清晰而诚实。</span>"}
+          ]},
+          now:{formal:[
+            {h:"当前目标",p:"将就绪门槛与能源页面跳转绑定，并保持语言有界。<span>不偷渡。</span>"},
+            {h:"当前内容",p:"概念/现况/路线图三层叙事仅描述要求与方法学，不描述成果。<span>严格。</span>"},
+            {h:"当前约束",p:"任何增益暗示都被排除；任何危险步骤都不公开。<span>公开安全。</span>"},
+            {h:"当前价值",p:"把争议话题变成可执行的审计清单。<span>减少争吵。</span>"}
+          ],informal:[
+            {h:"现在",p:"我们把聚变当作“未来的门”，而不是“现在的宣称”。<span>门是清单。</span>"},
+            {h:"机会成本",p:"如果你跳过门槛，你会用时间、金钱、信任来付账。<span>我们不做那种账。</span>"},
+            {h:"风险与回报",p:"越高的回报，越需要更严的门控。<span>严不是慢，是快。</span>"},
+            {h:"结果",p:"你得到的是一条可持续前进的路线，不是一阵热闹。<span>长期赢。</span>"}
+          ]},
+          post:{formal:[
+            {h:"路线图",p:"将就绪门槛扩展为证据包模板与第三方复算流程。<span>可审计升级。</span>"},
+            {h:"门控升级",p:"升级只发生在证据链完整时，并产生可公开的原因码。<span>无灰区。</span>"},
+            {h:"协作接口",p:"通过标准化要求，让外部团队在同一语言下协作。<span>减少摩擦。</span>"},
+            {h:"结果",p:"就绪门槛成为长期可信的“前沿—工程”接口。<span>可持续。</span>"}
+          ],informal:[
+            {h:"下一步",p:"把聚变就绪做成可复算的“通关卡”：每张卡都能被外部验证。<span>真正的加速器。</span>"},
+            {h:"机会成本",p:"每一次跳过验证都会让未来更贵。我们选择让未来更便宜。<span>这是战略。</span>"},
+            {h:"风险回报",p:"风险不靠勇气解决，靠结构解决。结构越强，回报越稳。<span>稳才会大。</span>"},
+            {h:"结果",p:"当门槛被满足，升级会自然发生，不需要说服。<span>证据会说话。</span>"}
+          ]}
+        },
+
+        orbit:{
+          origin:{formal:[
+            {h:"范围",p:"轨道基础设施被当作“工业扩展层”：发电、存储、制造、维护。<span>先稳定后扩张。</span>"},
+            {h:"核心约束",p:"任何轨道愿景都必须回到：电力、热控、材料、补给、故障恢复。<span>可测。</span>"},
+            {h:"与网站结构的关系",p:"轨道内容通过前沿跳转保持与法则与量规联动。<span>不脱离标准。</span>"},
+            {h:"边界",p:"本页不发布危险细节；仅叙事结构与跳转。<span>公开安全。</span>"}
+          ],informal:[
+            {h:"画面",p:"轨道不是浪漫，它是下一层工业园区：稳定电力让制造离开地面。<span>这不是科幻，是路线。</span>"},
+            {h:"现实",p:"没有稳定就没有轨道工业。稳定来自约束、测量、恢复。<span>三件事缺一不可。</span>"},
+            {h:"机会成本",p:"把愿景说得太早会烧掉信任；把约束写得太清会赢得合作。<span>我们选后者。</span>"},
+            {h:"结果",p:"你会看到跳转与边界：先把地面系统做稳，再把稳复制到更高处。<span>复制上天。</span>"}
+          ]},
+          now:{formal:[
+            {h:"当前目标",p:"将轨道叙事作为策展板：每个概念绑定约束与跳转。<span>可追溯。</span>"},
+            {h:"当前姿态",p:"不做时间线承诺；只写结构依赖与门控条件。<span>有界。</span>"},
+            {h:"当前连接",p:"轨道主题跳转至创新与标准与能源主干。<span>统一导航。</span>"},
+            {h:"当前价值",p:"让宏大叙事保持可读与可审计。<span>减少噪声。</span>"}
+          ],informal:[
+            {h:"现在",p:"轨道工业不需要被神化，它需要被结构化。<span>结构让未来变得可谈。</span>"},
+            {h:"风险回报",p:"回报很大，但只有当风险被拆解、被隔离、被审计时才会变成现实。<span>结构换回报。</span>"},
+            {h:"机会成本",p:"如果你不把依赖讲清楚，你会在最贵的时候发现缺了最便宜的部件。<span>我们提前讲清。</span>"},
+            {h:"结果",p:"你获得的是一条可持续扩展的路线，而不是一段短暂的兴奋。<span>长期叙事。</span>"}
+          ]},
+          post:{formal:[
+            {h:"路线图",p:"扩展轨道主题为依赖图与门控图，并与量规联动。<span>可复算。</span>"},
+            {h:"约束升级",p:"规模越大，约束越严格：材料、热控、辐射、防故障。<span>不放松。</span>"},
+            {h:"协作接口",p:"定义一致可让合作变成模块拼装。<span>减少争论。</span>"},
+            {h:"结果",p:"轨道叙事成为工程路线的上层索引。<span>可持续。</span>"}
+          ],informal:[
+            {h:"下一步",p:"把轨道愿景写成一张可走的路线图：每一步都有门槛、有依赖、有回退。<span>可走。</span>"},
+            {h:"风险回报",p:"越大的回报越需要更清晰的依赖。清晰不是束缚，是加速。<span>加速。</span>"},
+            {h:"机会成本",p:"今天写清依赖，明天就少烧掉一个十倍成本的错误。<span>这就是赢。</span>"},
+            {h:"结果",p:"当稳定的能量与标准形成闭环，轨道工业就不再遥远。<span>它会靠近。</span>"}
+          ]}
+        }
+      }
+    : {
+        space:{
+          origin:{formal:[
+            {h:"Scope",p:"Space habitation is treated as stability engineering: power stability precedes life-support stability. <span>Constraints first.</span>"},
+            {h:"Minimums",p:"Habitation is a system: closed loops, redundancy, auditable recovery. <span>No narrative shortcuts.</span>"},
+            {h:"Site posture",p:"Frontier is a structured jump surface tied back to standards and gauges. <span>Vision stays bounded.</span>"},
+            {h:"Boundary",p:"This page avoids hazardous detail. It provides structure and routes only. <span>Public-safe.</span>"}
+          ],informal:[
+            {h:"Picture",p:"When stable power becomes normal, space stops being a dream and becomes the next infrastructure layer. <span>Stability first.</span>"},
+            {h:"Reality",p:"Every life system must be explainable, measurable, and recoverable. <span>That is ‘habitable’.</span>"},
+            {h:"How we talk",p:"We write it as a map you can navigate without being pulled into fantasy. <span>Constraints stay attached.</span>"},
+            {h:"Next move",p:"Start with energy and standards, then expand stability upward. <span>One step at a time.</span>"}
+          ]},
+          now:{formal:[
+            {h:"Now goal",p:"Bind frontier narrative to executable constraints: stability, isolation, rollback, audit. <span>Reproducible language.</span>"},
+            {h:"Now boundary",p:"Frontier pages remain jump surfaces: no claim upgrades, no mixed evidence. <span>Discipline.</span>"},
+            {h:"Now connections",p:"Frontier routes into Innovation, Laws, Gauges, and Energy trunks. <span>Fast orientation.</span>"},
+            {h:"Now value",p:"Keep big ideas speakable, measurable, and scalable. <span>No drift.</span>"}
+          ],informal:[
+            {h:"Now",p:"We treat space as the next station after stability, not a distant fantasy. <span>Do the ground right.</span>"},
+            {h:"Stay oriented",p:"You can enter anywhere and always return to constraints and measurement. <span>That’s the map.</span>"},
+            {h:"Why it matters",p:"Big narratives without constraints become noise. <span>We refuse noise.</span>"},
+            {h:"What you’ll see",p:"Clear jumps and boundaries: what’s engineering and what’s gated readiness. <span>No mixing.</span>"}
+          ]},
+          post:{formal:[
+            {h:"Roadmap",p:"Expand Frontier into an auditable board: each idea binds to constraints, falsifiers, and jumps. <span>Curated structure.</span>"},
+            {h:"Scale rule",p:"Scale by deepening links, not changing the contract. <span>Clone, don’t reinvent.</span>"},
+            {h:"Risk control",p:"Any new claim must be classified, gated, and auditable. <span>No smuggling.</span>"},
+            {h:"Outcome",p:"A durable engineering narrative, not a one-time pitch. <span>Long-term credibility.</span>"}
+          ],informal:[
+            {h:"Next",p:"Turn Frontier into a future route-board where every thread returns to real constraints. <span>Higher, steadier.</span>"},
+            {h:"How it grows",p:"We add depth, not new rules. <span>Same map, farther reach.</span>"},
+            {h:"Anti-drift",p:"Structure refuses exaggeration—so vision becomes stronger, not weaker. <span>Trustable hype.</span>"},
+            {h:"Outcome",p:"When stability becomes default, the boundary opens—measurably. <span>Receipts lead.</span>"}
+          ]}
+        },
+
+        solar:{
+          origin:{formal:[
+            {h:"Scope",p:"Solar is treated as an input chain: capture, buffer, distribute. <span>Input must be measurable.</span>"},
+            {h:"Core problem",p:"The challenge is not capture—it is stable delivery. <span>Stability first.</span>"},
+            {h:"Relation to Energy",p:"Industrial plasma thermal substitution is a visible output lane; solar is one upstream input lane. <span>No mixed claims.</span>"},
+            {h:"Boundary",p:"No hazardous recipes here—only chain structure and interfaces. <span>Public-safe.</span>"}
+          ],informal:[
+            {h:"Picture",p:"A solar ‘power farm’ that stores energy like harvest: store, release, deliver. <span>Energy becomes yield.</span>"},
+            {h:"Breakthrough",p:"The breakthrough is stability: convert variability into a predictable curve. <span>Stability is value.</span>"},
+            {h:"How it connects",p:"You’ll see the chain: capture → buffer → industrial delivery → expansion. <span>No leaps.</span>"},
+            {h:"Boundary",p:"We describe structure and measurable interfaces, not recipes. <span>Safe + clear.</span>"}
+          ]},
+          now:{formal:[
+            {h:"Now goal",p:"Write capture/storage/delivery as an auditable chain tied to gauges. <span>Replayable.</span>"},
+            {h:"Now boundary",p:"Keep claims in interface language, not performance promises. <span>Discipline.</span>"},
+            {h:"Now connections",p:"Solar topics route through Frontier into Innovation and Product trunks. <span>Unified navigation.</span>"},
+            {h:"Now value",p:"Make complex systems navigable as chains. <span>Less fog.</span>"}
+          ],informal:[
+            {h:"Now",p:"We treat solar as a deliverable chain, not a slogan. <span>That’s the difference.</span>"},
+            {h:"Why it’s exciting",p:"Because once delivery is stable, industry can run on plan. <span>The world gets quieter.</span>"},
+            {h:"How to read",p:"Open bubbles, follow the chain, see what’s now vs next. <span>No mixing.</span>"},
+            {h:"Safety",p:"Boundaries let us dream without losing reality. <span>Guardrails on vision.</span>"}
+          ]},
+          post:{formal:[
+            {h:"Roadmap",p:"Deepen into subpages: capture, buffer, conversion, delivery, audit. <span>More depth.</span>"},
+            {h:"Evidence packs",p:"Each stage maps to repeatable evidence templates. <span>Auditable.</span>"},
+            {h:"Collaboration",p:"Shared definitions reduce disputes and focus work on measurement. <span>Faster progress.</span>"},
+            {h:"Outcome",p:"Solar becomes a scalable industrial input narrative. <span>Cloneable.</span>"}
+          ],informal:[
+            {h:"Next",p:"Turn solar into a harvest map—from light to heat to industry. <span>Energy as crop.</span>"},
+            {h:"Proof",p:"Every step leaves recomputable evidence. <span>Bigger gets steadier.</span>"},
+            {h:"Partners",p:"When definitions align, collaboration becomes assembly, not argument. <span>Speed rises.</span>"},
+            {h:"Outcome",p:"Solar becomes the first meal of stable industry. <span>Infrastructure.</span>"}
+          ]}
+        },
+
+        fusion:{
+          origin:{formal:[
+            {h:"Scope",p:"Fusion is presented as readiness doctrine: required evidence, disproof, stop rules. <span>No gain claim.</span>"},
+            {h:"Gating rule",p:"No instrumentation freeze + independent validation means no language escalation. <span>Receipts decide.</span>"},
+            {h:"Relation to Energy",p:"Energy remains Industrial thermal substitution (C). Fusion readiness is a separate jump surface. <span>No mixing.</span>"},
+            {h:"Purpose",p:"Turn high-risk talk into auditable requirements. <span>Reduce noise.</span>"}
+          ],informal:[
+            {h:"Plain talk",p:"Fusion is cool, but cool isn’t usable. We lock ‘cool’ behind a gate and write ‘ready’ as a checklist. <span>Respect reality.</span>"},
+            {h:"Why it matters",p:"The world has slogans; it needs reproducible gates. <span>Gates are speed.</span>"},
+            {h:"What you’ll see",p:"Instruments, receipts, disproof, independent audit—this isn’t friction; it’s the runway. <span>Runway first.</span>"},
+            {h:"Boundary",p:"We don’t say ‘done’ here. We say ‘must satisfy’. <span>Clear and honest.</span>"}
+          ]},
+          now:{formal:[
+            {h:"Now goal",p:"Bind readiness doctrine into jumps while keeping all language bounded. <span>No smuggling.</span>"},
+            {h:"Now content",p:"Concept/Now/Roadmap describe requirements and methodology only, not achievements. <span>Strict.</span>"},
+            {h:"Now safety",p:"No gain implication and no hazardous steps are published. <span>Public-safe.</span>"},
+            {h:"Now value",p:"Convert controversy into an executable audit checklist. <span>Less argument.</span>"}
+          ],informal:[
+            {h:"Now",p:"Fusion is a future door, not a present boast. <span>The door is a checklist.</span>"},
+            {h:"Opportunity cost",p:"Skip the gate and you pay in time, money, and trust later. <span>We don’t pay that bill.</span>"},
+            {h:"Risk vs reward",p:"Bigger reward demands harder gates. <span>Hard isn’t slow; it’s fast.</span>"},
+            {h:"Outcome",p:"You get a path that keeps moving, not a short burst of hype. <span>Long win.</span>"}
+          ]},
+          post:{formal:[
+            {h:"Roadmap",p:"Expand readiness into evidence pack templates and third-party recomputation flow. <span>Audit-grade.</span>"},
+            {h:"Upgrade discipline",p:"Upgrades occur only when the evidence chain is complete, with visible reason codes. <span>No gray zone.</span>"},
+            {h:"Collaboration interface",p:"Standardized requirements let external teams collaborate under shared definitions. <span>Less friction.</span>"},
+            {h:"Outcome",p:"A durable frontier→engineering interface rooted in receipts. <span>Sustainable.</span>"}
+          ],informal:[
+            {h:"Next",p:"Make readiness a set of ‘pass cards’ that outsiders can verify. <span>That’s acceleration.</span>"},
+            {h:"Opportunity cost",p:"Every skipped validation makes the future more expensive. We choose to make it cheaper. <span>Strategy.</span>"},
+            {h:"Risk vs reward",p:"Risk is solved by structure, not courage. Stronger structure makes reward steadier. <span>Steady gets big.</span>"},
+            {h:"Outcome",p:"When gates are satisfied, upgrades happen naturally—no persuasion required. <span>Evidence speaks.</span>"}
+          ]}
+        },
+
+        orbit:{
+          origin:{formal:[
+            {h:"Scope",p:"Orbital infrastructure is treated as an industry extension layer: power, storage, manufacturing, maintenance. <span>Stability first.</span>"},
+            {h:"Core constraints",p:"Any orbital vision returns to power, thermal control, materials, logistics, and recovery. <span>Measurable.</span>"},
+            {h:"Site linkage",p:"Orbital topics stay connected to Laws and Gauges through Frontier structure. <span>No escape from standards.</span>"},
+            {h:"Boundary",p:"No hazardous detail here—structure and jump routes only. <span>Public-safe.</span>"}
+          ],informal:[
+            {h:"Picture",p:"Orbit is not romance; it’s the next industrial park. Stable power lets manufacturing leave the ground. <span>Route, not sci-fi.</span>"},
+            {h:"Reality",p:"No stable energy means no orbital industry. Stability comes from constraints, measurement, recovery. <span>All three.</span>"},
+            {h:"Opportunity cost",p:"Hype burns trust; clear dependencies win partners. <span>We choose partners.</span>"},
+            {h:"Outcome",p:"You get boundaries and jumps: stabilize on Earth, then clone stability upward. <span>Clone it to orbit.</span>"}
+          ]},
+          now:{formal:[
+            {h:"Now goal",p:"Present orbital topics as a curated board where each concept binds to constraints and jumps. <span>Traceable.</span>"},
+            {h:"Now posture",p:"No timelines; only dependencies and gates. <span>Bounded.</span>"},
+            {h:"Now connections",p:"Orbital routes into Innovation, Laws, Gauges, and Energy trunks. <span>Unified navigation.</span>"},
+            {h:"Now value",p:"Keep big narratives readable and auditable. <span>Less noise.</span>"}
+          ],informal:[
+            {h:"Now",p:"Orbit doesn’t need mystique; it needs structure. <span>Structure makes the future discussable.</span>"},
+            {h:"Risk vs reward",p:"Huge reward only becomes real when risk is decomposed, isolated, and audited. <span>Structure buys reward.</span>"},
+            {h:"Opportunity cost",p:"Unclear dependencies get discovered at the worst possible moment. We write them early. <span>Cheap clarity.</span>"},
+            {h:"Outcome",p:"A sustainable expansion path, not a short adrenaline spike. <span>Long narrative.</span>"}
+          ]},
+          post:{formal:[
+            {h:"Roadmap",p:"Expand into dependency maps and gate maps tied to gauges. <span>Recomputable.</span>"},
+            {h:"Constraint tightening",p:"Bigger scale tightens constraints: materials, thermal control, radiation, fault containment. <span>No relaxation.</span>"},
+            {h:"Collaboration interface",p:"Stable definitions turn collaboration into modular assembly. <span>Less debate.</span>"},
+            {h:"Outcome",p:"Orbital narrative becomes an index layer over an engineering route. <span>Durable.</span>"}
+          ],informal:[
+            {h:"Next",p:"Write orbit as a walkable route-map: each step has gates, dependencies, rollback. <span>Walkable.</span>"},
+            {h:"Risk vs reward",p:"The bigger the prize, the clearer the dependency chain must be. Clarity isn’t constraint—it’s speed. <span>Acceleration.</span>"},
+            {h:"Opportunity cost",p:"Clear dependencies today prevent ten-times-cost mistakes tomorrow. <span>That’s winning.</span>"},
+            {h:"Outcome",p:"When stable energy and standards loop together, orbital industry stops being distant. <span>It approaches.</span>"}
+          ]}
+        }
+      };
+
+  var COPY = packSpace();
+
+  // Active tile
+  var active="space";
+
+  // Modal show/hide
+  var bd=document.getElementById("bd");
+  var modal=document.getElementById("modal");
+  var mClose=document.getElementById("mClose");
+  var mTitle=document.getElementById("mTitle");
+  var mReturn=document.getElementById("mReturn");
+
+  function open(which){
+    active=which;
+    ["dSpace","dSolar","dFusion","dOrbit"].forEach(function(id){
+      document.getElementById(id).classList.toggle("active",
+        (which==="space" && id==="dSpace") ||
+        (which==="solar" && id==="dSolar") ||
+        (which==="fusion" && id==="dFusion") ||
+        (which==="orbit" && id==="dOrbit")
+      );
+    });
+    render();
+    bd.classList.add("show");
+    modal.classList.add("show");
+  }
+  function close(){
+    bd.classList.remove("show");
+    modal.classList.remove("show");
+    ["dSpace","dSolar","dFusion","dOrbit"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
+  }
+
+  // Lens behavior
+  function render(){
+    persist();
+    wire();
+    setLensLabels();
+
+    var titleMap = {
+      space: (lang==="zh" ? "前沿 · 太空" : "FRONTIER · SPACE"),
+      solar: (lang==="zh" ? "前沿 · 太阳能" : "FRONTIER · SOLAR"),
+      fusion:(lang==="zh" ? "前沿 · 聚变就绪" : "FRONTIER · FUSION READINESS"),
+      orbit: (lang==="zh" ? "前沿 · 轨道" : "FRONTIER · ORBITAL")
+    };
+    mTitle.textContent = titleMap[active] || T.top;
+
+    var pack = COPY[active][time][style];
+
+    h1.textContent = pack[0].h; p1.innerHTML = pack[0].p;
+    h2.textContent = pack[1].h; p2.innerHTML = pack[1].p;
+    h3.textContent = pack[2].h; p3.innerHTML = pack[2].p;
+    h4.textContent = pack[3].h; p4.innerHTML = pack[3].p;
+  }
+
+  // Lenses
+  chipStyle.onclick=function(){ style=(style==="formal")?"informal":"formal"; render(); };
+  chipConcept.onclick=function(){ time="origin"; render(); };
+  chipNow.onclick=function(){ time="now"; render(); };
+  chipRoadmap.onclick=function(){ time="post"; render(); };
+
+  // Close
+  bd.onclick=close;
+  mClose.onclick=close;
+  mReturn.onclick=close;
+
+  // Diamonds
+  document.getElementById("dSpace").onclick=function(){ open("space"); };
+  document.getElementById("dSolar").onclick=function(){ open("solar"); };
+  document.getElementById("dFusion").onclick=function(){ open("fusion"); };
+  document.getElementById("dOrbit").onclick=function(){ open("orbit"); };
+
+  ["dSpace","dSolar","dFusion","dOrbit"].forEach(function(id){
+    var el=document.getElementById(id);
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+    });
+  });
+
+  // Initialize lens labels
+  setLensLabels();
+})();
+</script>
+
+</body>
+</html>

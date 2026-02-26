@@ -1,19 +1,16 @@
-<!-- TNT — /home/index.html  (HUB · GEM STANDARD · CLEAN + FRONTIER)
+<!-- TNT — /explore/index.html  (EXPLORE · LANGUAGE INNOVATION HUB · BILINGUAL · GEM STANDARD)
      PURPOSE:
-       - GEM Standard HUB with working bilingual lens
-       - Language lens: lang=en => EN only, lang=zh => 中文 only
-       - Lenses ONLY inside modal:
-           STYLE: Formal/Informal (gd_style)
-           TIME:  CONCEPT / NOW / ROADMAP (gd_time = origin/now/post)
-       - Main page pure navigation: 4 gems (N/E/S/W) + MAP button (center)
-       - Modal shows 4 bubbles (rich paragraphs) for selected direction or MAP
-       - Frontier is expressed as a real bubble inside MAP + a jump button (no new route created here)
-       - Deterministic state propagation (lang/style/time) through all nav
+       - Explore is the LANGUAGE INNOVATION HUB (Grammar / DOT.GRID / SSG / Acronyms)
+       - Frontier moves to its own trunk: /explore/frontier/ (jump-only from here)
+       - Single-language render:
+           lang=en => English labels only
+           lang=zh => 中文 labels only
+       - Deterministic state propagation: lang/style/time via query + gd_* localStorage
      LOCKS:
        - TNT FULL FILE
        - Uses /assets/ui.css + /assets/branch.css only
        - DOES NOT style html/body background (ui.css owns field)
-       - No new state keys (gd_lang/gd_style/gd_time only)
+       - No purple links; ALL nav uses .crp-btn
 -->
 
 <!doctype html>
@@ -21,22 +18,20 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>HUB · Cardinal Axis</title>
+<title>EXPLORE · Language Innovation</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instrument.js"></script>
 
 <style>
+/* PAGE-LOCAL ONLY (no field ownership) */
 :root{
   --R:124px;
   --goldSoft:rgba(212,175,55,.35);
-  --obs1:#070b12;
-  --obs2:#0c1626;
-  --mut:rgba(255,255,255,.84);
 }
 
-/* Top-left controls */
+/* Top-left */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:90;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
@@ -50,6 +45,7 @@
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.16);
   backdrop-filter:blur(8px);
+  pointer-events:none;
 }
 .brand .t1{font-weight:950;letter-spacing:1.1px;font-size:12px;opacity:.95}
 .brand .t2{margin-top:2px;font-size:11px;letter-spacing:.6px;opacity:.72}
@@ -90,7 +86,7 @@
   pointer-events:none;
 }
 
-/* Gem diamonds */
+/* Gem diamonds (match standard) */
 .d{
   width:150px;height:150px;
   position:absolute;left:50%;top:50%;
@@ -140,14 +136,6 @@
     inset 0 -32px 52px rgba(0,0,0,.68);
   border-color:rgba(212,175,55,.28);
 }
-.d.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 30px rgba(212,175,55,.40),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-}
 
 .d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
 .d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
@@ -165,10 +153,9 @@
   pointer-events:none;
   user-select:none;
 }
-.lab{ font-weight:950; letter-spacing:.8px; font-size:15px; }
-.sub{ font-size:12.5px; opacity:.86; line-height:1.35; max-width:16em; }
+.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
+.sub{ font-size:13px; opacity:.86; line-height:1.35; max-width:16em; }
 
-/* Center MAP button (clickable) */
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -179,20 +166,16 @@
   display:grid;place-items:center;
   font-weight:950;letter-spacing:.5px;
   opacity:.92;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.core:hover{
-  box-shadow:0 22px 56px rgba(0,0,0,.78), 0 0 14px rgba(212,175,55,.18), inset 0 2px 0 rgba(255,255,255,.12);
+  pointer-events:none;
 }
 
-/* Bottom dock */
+/* Dock (buttons only) */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:90;
-  width:min(980px,94vw);
+  width:min(900px,94vw);
   display:flex;justify-content:center;
   gap:10px;flex-wrap:wrap;
   padding:10px 12px;border-radius:999px;
@@ -201,131 +184,11 @@
   backdrop-filter:blur(8px);
 }
 
-/* Modal */
-.bd{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(10px);
-  display:none;
-}
-.bd.show{display:block;}
-.modal{
-  position:fixed;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(1020px,94vw);
-  max-height:88vh;
-  display:none;
-  z-index:210;
-}
-.modal.show{display:block;}
-.shell{
-  height:88vh;
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
-    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
-    linear-gradient(160deg, rgba(17,22,28,.90), rgba(11,15,20,.94));
-  box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  position:relative;
-}
-.shell::before{
-  content:"";
-  position:absolute;left:50%;top:58%;
-  width:min(980px,94vw);
-  height:min(980px,94vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:70px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.16), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);
-  box-shadow:
-    0 100px 280px rgba(0,0,0,.72),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -55px 100px rgba(0,0,0,.55);
-  opacity:.55;
-  pointer-events:none;
-}
-.mhead{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative;z-index:2;
-}
-.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
-.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
-
-.lensbar{
-  display:flex;gap:10px;flex-wrap:wrap;
-  align-items:center;justify-content:center;
-  padding:10px 10px 12px;border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative;z-index:2;
-}
-.chip{
-  padding:10px 16px;border-radius:999px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
-}
-.chip.active{
-  border-color:rgba(212,175,55,.35);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
-}
-
-.mbody{
-  padding:14px 16px 18px;
-  overflow:auto;-webkit-overflow-scrolling:touch;
-  flex:1 1 auto;
-  position:relative;z-index:2;
-}
-
-/* 4 bubbles */
-.grid{display:grid;gap:14px}
-.bubble{
-  padding:16px 18px;border-radius:22px;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
-  position:relative;
-}
-.bubble::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.35) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
-.bubble p{margin:0;color:var(--mut);line-height:1.55}
-.bubble p span{color:rgba(255,255,255,.70);font-weight:800}
-
-/* Modal footer actions */
-.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
-.sbtn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:12px 18px;border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:#fff;border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
-}
-.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.20); }
-
-@media (min-width:920px){ .grid{grid-template-columns:1fr 1fr} }
 @media (max-width:520px){
   :root{ --R: 116px; }
   .stage{ width:min(520px,92vw); height:min(520px,92vw); }
   .outer{ width:min(520px,92vw); height:min(520px,92vw); }
   .core{ width:58px; height:58px; }
-  .shell{ height:90vh; }
 }
 </style>
 </head>
@@ -333,648 +196,150 @@
 <body>
 
 <div class="top-left">
-  <a class="crp-btn" id="btnFrontier" href="/explore/">FRONTIER</a>
+  <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
+  <a class="crp-btn" id="btnFrontier" href="/explore/frontier/">FRONTIER</a>
   <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
 <div class="brand">
-  <div class="t1" id="brandTop">HUB</div>
-  <div class="t2" id="brandSub">NORTH · EAST · SOUTH · WEST</div>
+  <div class="t1" id="brandTop">LANGUAGE INNOVATION</div>
+  <div class="t2" id="brandSub">GRAMMAR · DOT.GRID · SSG · ACRONYMS</div>
 </div>
 
-<div class="stage" aria-label="Hub diamond">
+<div class="stage" aria-label="Explore language innovation hub">
   <div class="outer"></div>
 
-  <div class="d d-n" id="dNorth" role="button" tabindex="0">
+  <div class="d d-n" id="dGrammar" role="button" tabindex="0">
     <div class="in">
-      <div class="lab" id="labNorth">NORTH</div>
-      <div class="sub" id="subNorth">Definitions · invariants · laws.</div>
+      <div class="lab" id="labGrammar">GRAMMAR</div>
+      <div class="sub" id="subGrammar">Traversal contracts · structural language.</div>
     </div>
   </div>
 
-  <div class="d d-e" id="dEast" role="button" tabindex="0">
+  <div class="d d-e" id="dSSG" role="button" tabindex="0">
     <div class="in">
-      <div class="lab" id="labEast">EAST</div>
-      <div class="sub" id="subEast">Products · execution surfaces.</div>
+      <div class="lab" id="labSSG">SSG</div>
+      <div class="sub" id="subSSG">Constraint syntax geometry.</div>
     </div>
   </div>
 
-  <div class="d d-w" id="dWest" role="button" tabindex="0">
+  <div class="d d-w" id="dDOT" role="button" tabindex="0">
     <div class="in">
-      <div class="lab" id="labWest">WEST</div>
-      <div class="sub" id="subWest">Containment · gates · integrity.</div>
+      <div class="lab" id="labDOT">DOT.GRID</div>
+      <div class="sub" id="subDOT">256-state indexing · sweeps.</div>
     </div>
   </div>
 
-  <div class="d d-s" id="dSouth" role="button" tabindex="0">
+  <div class="d d-s" id="dAcr" role="button" tabindex="0">
     <div class="in">
-      <div class="lab" id="labSouth">SOUTH</div>
-      <div class="sub" id="subSouth">Pressure · convergence · change.</div>
+      <div class="lab" id="labAcr">ACRONYMS</div>
+      <div class="sub" id="subAcr">Lookup anchors · shared language.</div>
     </div>
   </div>
 
-  <div class="core" id="dMap" role="button" tabindex="0" aria-label="Map">MAP</div>
+  <div class="core">◆</div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
   <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
   <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="crp-btn" id="dockExplore" href="/explore/">EXPLORE</a>
   <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="crp-btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
 </nav>
-
-<div class="bd" id="bd"></div>
-
-<div class="modal" id="modal" role="dialog" aria-modal="true">
-  <div class="shell">
-    <div class="mhead">
-      <h3 class="mtitle" id="mTitle">HUB · DETAIL</h3>
-      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
-    </div>
-
-    <div class="lensbar">
-      <button class="chip" id="chipStyle" type="button">STYLE: FORMAL</button>
-      <button class="chip" id="chipConcept" data-time="origin" type="button">CONCEPT</button>
-      <button class="chip" id="chipNow" data-time="now" type="button">NOW</button>
-      <button class="chip" id="chipRoadmap" data-time="post" type="button">ROADMAP</button>
-    </div>
-
-    <div class="mbody">
-      <div class="grid">
-        <div class="bubble"><h4 id="h1"></h4><p id="p1"></p></div>
-        <div class="bubble"><h4 id="h2"></h4><p id="p2"></p></div>
-        <div class="bubble"><h4 id="h3"></h4><p id="p3"></p></div>
-        <div class="bubble"><h4 id="h4"></h4><p id="p4"></p></div>
-      </div>
-
-      <div class="mact">
-        <button class="sbtn" id="mReturn" type="button">RETURN</button>
-        <a class="sbtn" id="mJumpTerminal" href="/index.html">JUMP TERMINAL</a>
-        <a class="sbtn" id="mJumpFrontier" href="/explore/">JUMP FRONTIER</a>
-        <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
-      </div>
-    </div>
-  </div>
-</div>
 
 <script>
 (function(){
-  // URL → STATE HYDRATION (canonical keys only)
+  // Canonical state
   var qs = new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  if(lang!=="en" && lang!=="zh") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-  }catch(e){}
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+  var qLang = qs.get("lang");
+  var qStyle = qs.get("style");
+  var qTime = qs.get("time");
 
-  function q(){
-    return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
-  }
+  var lang = (qLang==="zh"||qLang==="en") ? qLang : ((localStorage.getItem("gd_lang")==="zh") ? "zh" : "en");
+  var style = (qStyle==="formal"||qStyle==="informal") ? qStyle : (localStorage.getItem("gd_style")||"formal");
+  var time = (qTime==="origin"||qTime==="now"||qTime==="post") ? qTime : (localStorage.getItem("gd_time")||"now");
+  if(time==="trajectory") time="post";
+
+  try{
+    localStorage.setItem("gd_lang", lang);
+    localStorage.setItem("gd_style", style);
+    localStorage.setItem("gd_time", time);
+  }catch(e){}
+
+  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+
+  // Wire nav
   function wire(){
     var s=q();
-    document.getElementById("btnFrontier").href="/explore/?"+s;
+    document.getElementById("btnHub").href="/home/?"+s;
+    document.getElementById("btnFrontier").href="/explore/frontier/?"+s;
     document.getElementById("btnExit").href="/door/?"+s;
 
     document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
     document.getElementById("dockProducts").href="/products/?"+s;
+    document.getElementById("dockExplore").href="/explore/?"+s;
     document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockGauges").href="/gauges/?"+s;
-
-    document.getElementById("mJumpTerminal").href="/index.html?"+s;
-    document.getElementById("mJumpFrontier").href="/explore/?"+s;
-    document.getElementById("mJumpProducts").href="/products/?"+s;
+    document.getElementById("dockLinks").href="/links/?"+s;
   }
   wire();
 
-  function persist(){
-    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time); }catch(e){}
+  // Route diamonds to existing language paths
+  function go(path){
+    location.href = path + "?" + q();
   }
+  document.getElementById("dGrammar").onclick = function(){ go("/explore/innovation/language/grammar/"); };
+  document.getElementById("dSSG").onclick     = function(){ go("/explore/innovation/language/ssg/"); };
+  document.getElementById("dDOT").onclick     = function(){ go("/explore/innovation/language/dot-grid/"); };
+  document.getElementById("dAcr").onclick     = function(){ go("/explore/innovation/language/acronyms/"); };
 
-  var UI = {
-    en:{
-      top:"HUB", sub:"NORTH · EAST · SOUTH · WEST",
-      n:{lab:"NORTH", sub:"Definitions · invariants · laws."},
-      e:{lab:"EAST",  sub:"Products · execution surfaces."},
-      s:{lab:"SOUTH", sub:"Pressure · convergence · change."},
-      w:{lab:"WEST",  sub:"Containment · gates · integrity."},
-      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", now:"NOW", roadmap:"ROADMAP"},
-      map:"MAP",
-      btn:{ret:"RETURN", jt:"JUMP TERMINAL", jf:"JUMP FRONTIER", jp:"JUMP PRODUCTS"},
-      stylePrefix:"STYLE: "
-    },
-    zh:{
-      top:"枢纽", sub:"北 · 东 · 南 · 西",
-      n:{lab:"北", sub:"定义 · 不变量 · 法则。"},
-      e:{lab:"东", sub:"产品 · 执行面。"},
-      s:{lab:"南", sub:"压力 · 收敛 · 变化。"},
-      w:{lab:"西", sub:"隔离 · 闸门 · 完整性。"},
-      lens:{formal:"正式", informal:"直接", concept:"概念", now:"现况", roadmap:"路线图"},
-      map:"地图",
-      btn:{ret:"返回", jt:"跳转终端", jf:"跳转前沿", jp:"跳转产品"},
-      stylePrefix:"风格："
-    }
-  };
-  var T = (lang==="zh") ? UI.zh : UI.en;
-
-  document.getElementById("brandTop").textContent = T.top;
-  document.getElementById("brandSub").textContent = T.sub;
-
-  document.getElementById("labNorth").textContent = T.n.lab;
-  document.getElementById("subNorth").textContent = T.n.sub;
-  document.getElementById("labEast").textContent = T.e.lab;
-  document.getElementById("subEast").textContent = T.e.sub;
-  document.getElementById("labSouth").textContent = T.s.lab;
-  document.getElementById("subSouth").textContent = T.s.sub;
-  document.getElementById("labWest").textContent = T.w.lab;
-  document.getElementById("subWest").textContent = T.w.sub;
-
-  document.getElementById("dMap").textContent = T.map;
-
-  document.getElementById("mReturn").textContent = T.btn.ret;
-  document.getElementById("mJumpTerminal").textContent = T.btn.jt;
-  document.getElementById("mJumpFrontier").textContent = T.btn.jf;
-  document.getElementById("mJumpProducts").textContent = T.btn.jp;
-
-  var bd=document.getElementById("bd");
-  var modal=document.getElementById("modal");
-  var mClose=document.getElementById("mClose");
-  var mTitle=document.getElementById("mTitle");
-
-  var chipStyle=document.getElementById("chipStyle");
-  var chipConcept=document.getElementById("chipConcept");
-  var chipNow=document.getElementById("chipNow");
-  var chipRoadmap=document.getElementById("chipRoadmap");
-
-  var h1=document.getElementById("h1"),p1=document.getElementById("p1");
-  var h2=document.getElementById("h2"),p2=document.getElementById("p2");
-  var h3=document.getElementById("h3"),p3=document.getElementById("p3");
-  var h4=document.getElementById("h4"),p4=document.getElementById("p4");
-
-  var active=null;
-
-  function setLensLabels(){
-    chipStyle.textContent = T.stylePrefix + (style==="formal" ? T.lens.formal : T.lens.informal);
-    chipConcept.textContent = T.lens.concept;
-    chipNow.textContent = T.lens.now;
-    chipRoadmap.textContent = T.lens.roadmap;
-
-    chipConcept.classList.toggle("active", time==="origin");
-    chipNow.classList.toggle("active", time==="now");
-    chipRoadmap.classList.toggle("active", time==="post");
-  }
-
-  function packs(){
-    if(lang==="zh"){
-      return {
-        north:{
-          origin:{formal:[
-            {h:"北是什么",p:"北是定义层：术语、不变量、标准。<span>先定含义。</span>"},
-            {h:"怎么用北",p:"当你不确定下一步，先回到定义。<span>定义→约束→行动。</span>"},
-            {h:"你会得到",p:"边界与证伪条件。<span>可检验。</span>"},
-            {h:"为什么重要",p:"含义稳定就不会漂移。<span>信任可被维护。</span>"}
-          ],informal:[
-            {h:"北=定义",p:"锚点层：把话说清楚。"},
-            {h:"用法",p:"先弄清楚再做。"},
-            {h:"结果",p:"边界清楚，可检验。"},
-            {h:"价值",p:"不漂移就不混乱。"}
-          ]},
-          now:{formal:[
-            {h:"北·现况",p:"规则按同一契约运行。<span>统一。</span>"},
-            {h:"执行内容",p:"规范键、确定路由、镜头语义一致。<span>可重复。</span>"},
-            {h:"故障姿态",p:"错误是确定的，因此可修复。<span>快修。</span>"},
-            {h:"结果",p:"增长时熵更低。<span>更耐久。</span>"}
-          ],informal:[
-            {h:"北现在",p:"规则已上线。"},
-            {h:"统一",p:"同键同路由同语义。"},
-            {h:"可修",p:"错了就能修。"},
-            {h:"耐久",p:"越大越需要北。"}
-          ]},
-          post:{formal:[
-            {h:"北·路线图",p:"更多注册表与查询面。<span>公开安全。</span>"},
-            {h:"扩展规则",p:"复制契约，不重做范式。<span>不漂移。</span>"},
-            {h:"发布姿态",p:"加深度但不改含义。<span>一致。</span>"},
-            {h:"长远价值",p:"不变量阻止规模矛盾。<span>锚点。</span>"}
-          ],informal:[
-            {h:"北的下一步",p:"更多注册表与标准页。"},
-            {h:"不重做",p:"复制同一契约。"},
-            {h:"更深不更乱",p:"内容增长，含义不漂移。"},
-            {h:"锚点",p:"规模越大越需要它。"}
-          ]}
-        },
-        east:{
-          origin:{formal:[
-            {h:"东是什么",p:"东是执行面：产品与工具。<span>结构→行动。</span>"},
-            {h:"怎么用东",p:"先理解定义，再进入产品干线。<span>不迷路。</span>"},
-            {h:"你会看到",p:"同样的页面契约承载不同产品线。<span>可复制。</span>"},
-            {h:"为什么重要",p:"可重复模式减少训练成本与错误。<span>可规模化。</span>"}
-          ],informal:[
-            {h:"东=产品",p:"能用、能跑、能执行。"},
-            {h:"用法",p:"先北后东：先懂再做。"},
-            {h:"体验",p:"同一结构，不同内容。"},
-            {h:"价值",p:"更少摩擦、更快上手。"}
-          ]},
-          now:{formal:[
-            {h:"东·现况",p:"产品枢纽已上线，子枢纽可扩展。<span>契约稳定。</span>"},
-            {h:"主张纪律",p:"上线与路线图分离。<span>不混说。</span>"},
-            {h:"操作方式",p:"点开→读→返回，状态保持。<span>连续。</span>"},
-            {h:"结果",p:"清晰主张保护信任。<span>真值面。</span>"}
-          ],informal:[
-            {h:"东现在",p:"产品可浏览。"},
-            {h:"不混",p:"现在的与未来的分开写。"},
-            {h:"不迷路",p:"点开读完还能回到同一处。"},
-            {h:"信任",p:"清楚比夸张更快。"}
-          ]},
-          post:{formal:[
-            {h:"东·路线图",p:"更多工具、演示与导出包。<span>同地图。</span>"},
-            {h:"扩展规则",p:"全站同宝石+模态模式。<span>不做花样。</span>"},
-            {h:"工件化",p:"输出成为可分享工件并可审计。<span>可复算。</span>"},
-            {h:"价值",p:"规模化而不混乱。<span>速度+完整性。</span>"}
-          ],informal:[
-            {h:"东的下一步",p:"更多工具与演示。"},
-            {h:"同一模式",p:"别让UI债务增长。"},
-            {h:"可分享",p:"导出、包、可复用材料。"},
-            {h:"结果",p:"更快扩展但不乱。"}
-          ]}
-        },
-        south:{
-          origin:{formal:[
-            {h:"南是什么",p:"南是约束与收敛：压力下强制对齐。<span>护栏。</span>"},
-            {h:"怎么用南",p:"看哪些动作被允许、被阻止，以及原因。<span>执行纪律。</span>"},
-            {h:"你会看到",p:"阈值、上限、拒绝规则。<span>不允许玩模糊。</span>"},
-            {h:"为什么重要",p:"约束阻止级联与损伤扩大。<span>减少爆炸半径。</span>"}
-          ],informal:[
-            {h:"南=护栏",p:"规则会反弹。"},
-            {h:"用它",p:"告诉你什么能做、什么不能做。"},
-            {h:"结果",p:"上限、阈值、拒绝。"},
-            {h:"价值",p:"更少级联、更少损伤。"}
-          ]},
-          now:{formal:[
-            {h:"南·现况",p:"执行可见：规范键、稳定镜头语义、确定路由。<span>不漂移。</span>"},
-            {h:"状态表示",p:"PASS/FAIL/UNKNOWN并带上限。<span>不可被滥用。</span>"},
-            {h:"兼容性",p:"路线图=post映射一致。<span>语义不变。</span>"},
-            {h:"结果",p:"压力下仍可保持一致与可修复。<span>耐久。</span>"}
-          ],informal:[
-            {h:"南现在",p:"规则在执行。"},
-            {h:"不允许玩",p:"未知不等于自由。"},
-            {h:"兼容",p:"路线图就是post。"},
-            {h:"耐久",p:"压力越大越需要南。"}
-          ]},
-          post:{formal:[
-            {h:"南·路线图",p:"发布标准与治理面。<span>公开可审计。</span>"},
-            {h:"扩展规则",p:"阈值冻结，只扩内容。<span>不为方便让步。</span>"},
-            {h:"采纳",p:"采纳包与执行纪律模板。<span>可复制。</span>"},
-            {h:"价值",p:"纪律在时间压力下存活。<span>韧性。</span>"}
-          ],informal:[
-            {h:"南的下一步",p:"把护栏写成标准页。"},
-            {h:"阈值冻结",p:"别为了舒服而弱化。"},
-            {h:"复制执行",p:"用模板扩展。"},
-            {h:"结果",p:"系统长期不塌。"}
-          ]}
-        },
-        west:{
-          origin:{formal:[
-            {h:"西是什么",p:"西是隔离：分区、回滚、控制爆炸半径。<span>保护逻辑。</span>"},
-            {h:"怎么用西",p:"理解如何把失败限制在局部并快速恢复。<span>可恢复性。</span>"},
-            {h:"你会看到",p:"分区规则与回滚路径。<span>原因码可见。</span>"},
-            {h:"为什么重要",p:"隔离降低关联失败并加快恢复。<span>韧性。</span>"}
-          ],informal:[
-            {h:"西=隔离",p:"把损伤变小。"},
-            {h:"用法",p:"分区与回滚。"},
-            {h:"结果",p:"失败被关在小房间里。"},
-            {h:"价值",p:"恢复更快。"}
-          ]},
-          now:{formal:[
-            {h:"西·现况",p:"确定返回与稳定模态行为属于UI隔离。<span>不跳动。</span>"},
-            {h:"错误姿态",p:"缺文件/缺链接/错键是确定的。<span>可修。</span>"},
-            {h:"例子",p:"菱形不跳转=路由问题，不是神秘问题。<span>可定位。</span>"},
-            {h:"结果",p:"低熵扩展：安全变更与快修。<span>更稳。</span>"}
-          ],informal:[
-            {h:"西现在",p:"UI保持隔离。"},
-            {h:"错误明显",p:"404就是缺路径。"},
-            {h:"可定位",p:"不跳就是路由。"},
-            {h:"快修",p:"快速恢复继续走。"}
-          ]},
-          post:{formal:[
-            {h:"西·路线图",p:"仪表板与模拟：爆炸半径可视化、闸门表。<span>可见性。</span>"},
-            {h:"覆盖规则",p:"覆盖必须记录并有上限。<span>不允许静默侵蚀。</span>"},
-            {h:"问责",p:"原因码可见，不隐藏。<span>责任可追。</span>"},
-            {h:"价值",p:"隔离可见则信任增加。<span>机构可采纳。</span>"}
-          ],informal:[
-            {h:"西的下一步",p:"把隔离做成看得见的仪表板。"},
-            {h:"不静默覆盖",p:"所有覆盖都要记录。"},
-            {h:"原因码",p:"让人看得见为什么。"},
-            {h:"结果",p:"更容易被机构采纳。"}
-          ]}
-        },
-        map:{
-          origin:{formal:[
-            {h:"地图总览",p:"这是罗盘枢纽：北定义，东执行，南约束，西隔离。<span>同一系统。</span>"},
-            {h:"前沿通道",p:"前沿属于“探索/创新”作为结构化跳转面。<span>愿景必须有界。</span>"},
-            {h:"怎么用",p:"选一个方向，读完四泡泡，再跳转。<span>返回是确定的。</span>"},
-            {h:"状态规则",p:"语言/风格/时间在页面间保持。<span>上下文不丢。</span>"}
-          ],informal:[
-            {h:"地图",p:"一个罗盘，四个角色。北/东/南/西让系统一直可读。"},
-            {h:"前沿",p:"前沿是邀请，但它必须连着规则与测量。"},
-            {h:"用法",p:"点开、阅读、跳转、返回。"},
-            {h:"状态",p:"你的语言与视图会一直保持。"}
-          ]},
-          now:{formal:[
-            {h:"地图·现况",p:"枢纽已上线：可安全路由到产品/法则/量规/探索。"},
-            {h:"不漂移规则",p:"UI契约稳定，内容扩展。"},
-            {h:"前沿姿态",p:"前沿以跳转面呈现，不以承诺呈现。"},
-            {h:"结果",p:"你能快速探索而不丢位置。"}
-          ],informal:[
-            {h:"现在",p:"枢纽路由很干净。"},
-            {h:"稳定",p:"全站同契约。"},
-            {h:"前沿",p:"大想法在结构化页面里。"},
-            {h:"结果",p:"探索快、混乱少。"}
-          ]},
-          post:{formal:[
-            {h:"地图·路线图",p:"更多枢纽与子枢纽将接入同一契约。"},
-            {h:"前沿增长",p:"前沿页将作为策展板扩展，并保持有界语言。"},
-            {h:"审计姿态",p:"更多页面可复现、可链接且不改含义。"},
-            {h:"结果",p:"规模化靠复制，不靠重造。"}
-          ],informal:[
-            {h:"下一步",p:"更多节点，同一规则。"},
-            {h:"前沿",p:"更完整的前沿板。"},
-            {h:"审计",p:"可分享且不漂移。"},
-            {h:"规模",p:"复制模式保持一致。"}
-          ]}
-        }
-      };
-    }
-
-    // EN packs
-    return {
-      north:{
-        origin:{formal:[
-          {h:"What North is",p:"North is the invariant layer: definitions and laws. <span>Meaning is anchored here.</span>"},
-          {h:"How to use North",p:"Use North before execution. <span>Definition → constraint → action.</span>"},
-          {h:"What you get",p:"Bounded claims with falsifiers. <span>Checkable.</span>"},
-          {h:"Why it matters",p:"Stable meaning reduces drift. <span>Trust becomes durable.</span>"}
-        ],informal:[
-          {h:"North = definitions",p:"Anchor layer. <span>What things mean.</span>"},
-          {h:"Use it first",p:"Define before acting. <span>Less confusion.</span>"},
-          {h:"Output",p:"Clear bounds. <span>No drift.</span>"},
-          {h:"Value",p:"Stable words → stable decisions."}
-        ]},
-        now:{formal:[
-          {h:"North now",p:"Rules are live under the same contract. <span>No special pages.</span>"},
-          {h:"Enforcement",p:"Canonical keys and deterministic routing. <span>Uniform.</span>"},
-          {h:"Failure clarity",p:"Deterministic errors are fixable. <span>Fast repair.</span>"},
-          {h:"Benefit",p:"Lower entropy under growth. <span>Durable.</span>"}
-        ],informal:[
-          {h:"North now",p:"Rules are live."},
-          {h:"Uniform",p:"Same keys, same routes."},
-          {h:"Fixable",p:"Errors are obvious."},
-          {h:"Durable",p:"Less chaos."}
-        ]},
-        post:{formal:[
-          {h:"North roadmap",p:"Registries and lookup surfaces. <span>Public-safe references.</span>"},
-          {h:"Scale rule",p:"Clone the contract. <span>No reinvention.</span>"},
-          {h:"Publishing posture",p:"More depth without changing meaning. <span>Stable.</span>"},
-          {h:"Value",p:"Invariants prevent contradiction at scale. <span>Anchor.</span>"}
-        ],informal:[
-          {h:"North roadmap",p:"More registries."},
-          {h:"Same contract",p:"No reinvention."},
-          {h:"More depth",p:"Add support, not drift."},
-          {h:"Anchor",p:"Big systems need it."}
-        ]}
-      },
-      east:{
-        origin:{formal:[
-          {h:"What East is",p:"East is execution surfaces: products and tools. <span>Structure → action.</span>"},
-          {h:"How to use East",p:"Use East after North. <span>Choose a lane and traverse.</span>"},
-          {h:"What you get",p:"Runnable surfaces that remain coherent as they grow."},
-          {h:"Why it matters",p:"Repeatable patterns reduce training time and mistakes."}
-        ],informal:[
-          {h:"East = products",p:"Execution surfaces."},
-          {h:"After North",p:"Understand then act."},
-          {h:"Runnable",p:"Pages you can use."},
-          {h:"Benefit",p:"Less confusion."}
-        ]},
-        now:{formal:[
-          {h:"East now",p:"Products are live as hubs and sub-hubs. <span>Stable contract.</span>"},
-          {h:"Claims discipline",p:"Live vs roadmap stays separated. <span>No mixed claims.</span>"},
-          {h:"Experience",p:"Tap, read, return with state intact. <span>Orientation.</span>"},
-          {h:"Benefit",p:"Clean claims protect trust. <span>Truth surface.</span>"}
-        ],informal:[
-          {h:"East now",p:"Live products."},
-          {h:"Clean claims",p:"No mixing."},
-          {h:"Use it",p:"Tap and return."},
-          {h:"Trust",p:"Clarity wins."}
-        ]},
-        post:{formal:[
-          {h:"East roadmap",p:"More tools, demos, and exportable packs. <span>Same map.</span>"},
-          {h:"Scale rule",p:"Same gem + modal pattern everywhere."},
-          {h:"Artifacts",p:"Shareable outputs tied to stable definitions."},
-          {h:"Value",p:"Scale without chaos. <span>Speed with integrity.</span>"}
-        ],informal:[
-          {h:"East roadmap",p:"More tools."},
-          {h:"Same pattern",p:"No bespoke UI."},
-          {h:"Shareable",p:"Exports and packs."},
-          {h:"Result",p:"Clean scale."}
-        ]}
-      },
-      south:{
-        origin:{formal:[
-          {h:"What South is",p:"South is constraints and convergence: alignment under pressure."},
-          {h:"How to use South",p:"Use South for guardrails: allowed, blocked, and why."},
-          {h:"What you get",p:"Caps, thresholds, refusal rules. <span>No ambiguity gaming.</span>"},
-          {h:"Why it matters",p:"Constraints prevent cascades and reduce damage."}
-        ],informal:[
-          {h:"South = guardrails",p:"Rules push back."},
-          {h:"Use it",p:"Safety logic."},
-          {h:"Output",p:"Caps and refusals."},
-          {h:"Value",p:"Less damage."}
-        ]},
-        now:{formal:[
-          {h:"South now",p:"Enforcement is visible: canonical keys, stable lens semantics, deterministic routing."},
-          {h:"Operator view",p:"PASS/FAIL/UNKNOWN with caps. <span>No silent drift.</span>"},
-          {h:"Compatibility",p:"ROADMAP label maps to gd_time=post consistently."},
-          {h:"Benefit",p:"Durability under growth and pressure."}
-        ],informal:[
-          {h:"South now",p:"Rules enforced."},
-          {h:"No gaming",p:"Unknown is capped."},
-          {h:"Compatibility",p:"Roadmap means post."},
-          {h:"Benefit",p:"Stays honest."}
-        ]},
-        post:{formal:[
-          {h:"South roadmap",p:"Publish standards + governance surfaces."},
-          {h:"Scale rule",p:"Freeze thresholds; expand content only."},
-          {h:"Adoption kits",p:"Grow without weakening constraints."},
-          {h:"Value",p:"Resilience: discipline survives time."}
-        ],informal:[
-          {h:"South roadmap",p:"Publish standards."},
-          {h:"Freeze thresholds",p:"No weakening."},
-          {h:"Grow clean",p:"No drift."},
-          {h:"Result",p:"Resilient."}
-        ]}
-      },
-      west:{
-        origin:{formal:[
-          {h:"What West is",p:"West is containment: segmentation, rollback, blast-radius control."},
-          {h:"How to use West",p:"Keep changes safe and failures bounded."},
-          {h:"What you get",p:"Zones, rollback semantics, and receipts. <span>Audit-ready.</span>"},
-          {h:"Why it matters",p:"Containment speeds recovery and reduces correlated failure."}
-        ],informal:[
-          {h:"West = containment",p:"Keep damage small."},
-          {h:"Use it",p:"Rollback and segmentation."},
-          {h:"Output",p:"Clear zones and receipts."},
-          {h:"Value",p:"Faster recovery."}
-        ]},
-        now:{formal:[
-          {h:"West now",p:"Deterministic returns and stable modal behavior are UI containment."},
-          {h:"Error posture",p:"Missing folder/link/key is deterministic. <span>Fixable.</span>"},
-          {h:"Example",p:"If a diamond doesn’t navigate, it’s routing—not mystery."},
-          {h:"Benefit",p:"Low entropy scaling: safe changes and fast repairs."}
-        ],informal:[
-          {h:"West now",p:"UI stays contained."},
-          {h:"Errors obvious",p:"Fixable issues."},
-          {h:"Example",p:"Routing problems are deterministic."},
-          {h:"Benefit",p:"Fast repair."}
-        ]},
-        post:{formal:[
-          {h:"West roadmap",p:"Dashboards and simulations: blast radius visuals, gate tables."},
-          {h:"Override rule",p:"Overrides logged and capped. <span>No silent erosion.</span>"},
-          {h:"Accountability",p:"Reason codes visible, not hidden."},
-          {h:"Value",p:"Trust increases when containment is visible."}
-        ],informal:[
-          {h:"West roadmap",p:"Dashboards and sims."},
-          {h:"No silent overrides",p:"Everything logged."},
-          {h:"Reason codes",p:"Visible why."},
-          {h:"Result",p:"Enterprise-ready trust."}
-        ]}
-      },
-      map:{
-        origin:{formal:[
-          {h:"What the map is",p:"This hub is a compass: North defines, East executes, South constrains, West contains. <span>One system.</span>"},
-          {h:"Frontier lane",p:"Frontier belongs to Explore/Innovation as a structured jump surface. <span>Vision stays bounded.</span>"},
-          {h:"How to use it",p:"Pick a direction, read the bubbles, then jump. <span>Return is deterministic.</span>"},
-          {h:"State rule",p:"Language/style/time persist across pages. <span>Your context stays.</span>"}
-        ],informal:[
-          {h:"Map",p:"One compass, four roles. North/East/South/West keep the system legible."},
-          {h:"Frontier",p:"Frontier is an invitation — but it stays connected to rules and measurement."},
-          {h:"Use it",p:"Tap, read, jump, return."},
-          {h:"State",p:"Your language and view persist across the site."}
-        ]},
-        now:{formal:[
-          {h:"Map now",p:"The hub routes into Products, Laws, Gauges, and Explore safely."},
-          {h:"No drift",p:"The UI contract stays stable while content expands."},
-          {h:"Frontier posture",p:"Frontier is expressed via jump surfaces, not promises."},
-          {h:"Outcome",p:"Explore quickly without losing your place."}
-        ],informal:[
-          {h:"Now",p:"The hub routes cleanly."},
-          {h:"Stable",p:"Same contract everywhere."},
-          {h:"Frontier",p:"Big ideas live on structured pages."},
-          {h:"Result",p:"Fast exploration, low confusion."}
-        ]},
-        post:{formal:[
-          {h:"Map roadmap",p:"More hubs and sub-hubs will plug into the same contract."},
-          {h:"Frontier growth",p:"Frontier pages expand as a curated board with bounded language."},
-          {h:"Audit posture",p:"More pages will be replayable without changing meaning."},
-          {h:"Outcome",p:"Scale by cloning, not reinventing."}
-        ],informal:[
-          {h:"Next",p:"More nodes, same rules."},
-          {h:"Frontier",p:"Curated board of future lanes."},
-          {h:"Audit",p:"Shareable pages that don’t drift."},
-          {h:"Scale",p:"Clone the pattern, stay coherent."}
-        ]}
-      }
-    };
-  }
-
-  var C = packs();
-
-  function setLensLabels(){
-    chipStyle.textContent = T.stylePrefix + (style==="formal" ? T.lens.formal : T.lens.informal);
-    chipConcept.textContent = T.lens.concept;
-    chipNow.textContent = T.lens.now;
-    chipRoadmap.textContent = T.lens.roadmap;
-
-    chipConcept.classList.toggle("active", time==="origin");
-    chipNow.classList.toggle("active", time==="now");
-    chipRoadmap.classList.toggle("active", time==="post");
-  }
-
-  function render(){
-    persist();
-    wire();
-    setLensLabels();
-    if(!active) return;
-
-    var pack = C[active][time][style];
-    var titleMap = {
-      north:(lang==="zh"?"枢纽 · 北":"HUB · NORTH"),
-      east:(lang==="zh"?"枢纽 · 东":"HUB · EAST"),
-      south:(lang==="zh"?"枢纽 · 南":"HUB · SOUTH"),
-      west:(lang==="zh"?"枢纽 · 西":"HUB · WEST"),
-      map:(lang==="zh"?"枢纽 · 地图":"HUB · MAP")
-    };
-    mTitle.textContent = titleMap[active] || (lang==="zh"?"枢纽":"HUB");
-
-    h1.textContent = pack[0].h; p1.innerHTML = pack[0].p;
-    h2.textContent = pack[1].h; p2.innerHTML = pack[1].p;
-    h3.textContent = pack[2].h; p3.innerHTML = pack[2].p;
-    h4.textContent = pack[3].h; p4.innerHTML = pack[3].p;
-  }
-
-  function open(which){
-    active=which;
-    ["dNorth","dEast","dSouth","dWest"].forEach(function(id){
-      var on = (which==="north" && id==="dNorth") ||
-               (which==="east"  && id==="dEast")  ||
-               (which==="south" && id==="dSouth") ||
-               (which==="west"  && id==="dWest");
-      document.getElementById(id).classList.toggle("active", on);
-    });
-    render();
-    bd.classList.add("show");
-    modal.classList.add("show");
-  }
-
-  function close(){
-    bd.classList.remove("show");
-    modal.classList.remove("show");
-    ["dNorth","dEast","dSouth","dWest"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
-    active=null;
-  }
-
-  // Bind clicks
-  document.getElementById("dNorth").onclick=function(){ open("north"); };
-  document.getElementById("dEast").onclick=function(){ open("east"); };
-  document.getElementById("dSouth").onclick=function(){ open("south"); };
-  document.getElementById("dWest").onclick=function(){ open("west"); };
-  document.getElementById("dMap").onclick=function(){ open("map"); };
-
-  ["dNorth","dEast","dSouth","dWest","dMap"].forEach(function(id){
+  ["dGrammar","dSSG","dDOT","dAcr"].forEach(function(id){
     var el=document.getElementById(id);
     el.addEventListener("keydown", function(e){
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
     });
   });
 
-  chipStyle.onclick=function(){ style=(style==="formal")?"informal":"formal"; render(); };
-  chipConcept.onclick=function(){ time="origin"; render(); };
-  chipNow.onclick=function(){ time="now"; render(); };
-  chipRoadmap.onclick=function(){ time="post"; render(); };
+  // Single-language labels
+  var UI = {
+    en:{
+      top:"LANGUAGE INNOVATION",
+      sub:"GRAMMAR · DOT.GRID · SSG · ACRONYMS",
+      grammar:{lab:"GRAMMAR", sub:"Traversal contracts · structural language."},
+      ssg:{lab:"SSG", sub:"Constraint syntax geometry."},
+      dot:{lab:"DOT.GRID", sub:"256-state indexing · sweeps."},
+      acr:{lab:"ACRONYMS", sub:"Lookup anchors · shared language."},
+      frontier:"FRONTIER"
+    },
+    zh:{
+      top:"语言创新",
+      sub:"语法 · DOT.GRID · SSG · 缩略语",
+      grammar:{lab:"语法", sub:"遍历契约 · 结构语言。"},
+      ssg:{lab:"SSG", sub:"约束语法几何。"},
+      dot:{lab:"DOT.GRID", sub:"256态索引 · 扫掠。"},
+      acr:{lab:"缩略语", sub:"查表锚点 · 共用术语。"},
+      frontier:"前沿"
+    }
+  };
+  var T = (lang==="zh") ? UI.zh : UI.en;
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
-  bd.onclick=close;
-  mClose.onclick=close;
-  document.getElementById("mReturn").onclick=close;
+  document.getElementById("brandTop").textContent = T.top;
+  document.getElementById("brandSub").textContent = T.sub;
 
-  // init
-  setLensLabels();
+  document.getElementById("labGrammar").textContent = T.grammar.lab;
+  document.getElementById("subGrammar").textContent = T.grammar.sub;
+
+  document.getElementById("labSSG").textContent = T.ssg.lab;
+  document.getElementById("subSSG").textContent = T.ssg.sub;
+
+  document.getElementById("labDOT").textContent = T.dot.lab;
+  document.getElementById("subDOT").textContent = T.dot.sub;
+
+  document.getElementById("labAcr").textContent = T.acr.lab;
+  document.getElementById("subAcr").textContent = T.acr.sub;
+
+  document.getElementById("btnFrontier").textContent = T.frontier;
 })();
 </script>
 

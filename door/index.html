@@ -1,27 +1,39 @@
-<!-- TNT — /door/index.html  (DOOR · LANGUAGE SELECT · GEM STANDARD)
-     FIX:
-     - Title/subtitle moved to a FIXED top-center overlay (slight overlap allowed, NOT centered on diamonds).
-     - EXIT button uses standard .btn (no funky glyphs).
-     - No html/body background styling here (ui.css owns field).
-     - Keeps EN/中文 diamonds + state carry (gd_style/gd_time) into /index.html
+<!-- TNT — /products/index.html  (PRODUCTS SPINE · TAP-SAFE · DOOR-STYLE HEADER)
+     FIX (WHY IT DIDN’T WORK):
+       - On some mobile stacks, ui.css field overlays (body::before/body::after) can steal taps.
+       - This TNT hard-forces those overlays to pointer-events:none (NO repaint; just hit-test safety).
+       - Stage container is pointer-events:none; ONLY diamonds are pointer-events:auto (proven pattern on Energy).
+     RULES:
+       - ui.css owns field background (we do NOT repaint)
+       - branch.css allowed but must not break hit-testing
+       - gd_lang/gd_style/gd_time only
 -->
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOOR · Cardinal Axis</title>
+<title>PRODUCTS · Catalog Spine</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-/* DO NOT TOUCH FIELD — ui.css owns html/body background */
-
 :root{
-  --R:132px;
+  --R:154px;
   --goldSoft:rgba(212,175,55,.35);
+  --obs1:#070b12;
+  --obs2:#0c1626;
+  --mut:rgba(255,255,255,.84);
+  --mut2:rgba(255,255,255,.68);
 }
+
+/* DO NOT REPAINT FIELD — ONLY HIT-TEST SAFETY */
+body::before, body::after{ pointer-events:none !important; }
+
+body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+a{color:inherit;text-decoration:none}
 
 /* top-left */
 .top-left{
@@ -29,59 +41,31 @@
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* fixed header overlay (NOT centered on diamonds) */
-.headFixed{
-  position:fixed;
-  left:50%;
-  top:64px; /* <- sits near top; can overlap a little, not centered */
-  transform:translateX(-50%);
-  width:min(720px,94vw);
-  z-index:110;
-  text-align:center;
+/* brand pill (no blur) */
+.brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:110;text-align:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
   pointer-events:none;
 }
-.kicker{
-  font-size:12px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  opacity:.78;
-  margin:0 0 10px 0;
-  text-shadow:0 18px 60px rgba(0,0,0,.65);
-}
-.title{
-  margin:0;
-  font-size:52px;
-  font-weight:950;
-  letter-spacing:.2px;
-  line-height:1.02;
-  text-shadow:0 18px 60px rgba(0,0,0,.65);
-}
-.sub{
-  margin:10px auto 0;
-  max-width:54ch;
-  opacity:.84;
-  font-size:16px;
-  line-height:1.35;
-  text-shadow:0 18px 60px rgba(0,0,0,.55);
-}
+.brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
+.brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
 
-/* stage */
+/* stage (tap-safe: stage ignores taps, diamonds take taps) */
 .stage{
-  position:fixed;
-  left:50%;
-  top:54%;
+  position:fixed;left:50%;top:52%;
   transform:translate(-50%,-50%);
-  width:min(560px,92vw);
-  height:min(560px,92vw);
-  z-index:40;
+  width:min(720px,94vw);height:min(720px,94vw);
+  z-index:60;
+  pointer-events:none;
 }
 
-/* outer diamond shell */
+/* outer diamond shell (visual only) */
 .outer{
-  position:absolute;
-  left:50%;top:50%;
-  width:min(560px,92vw);
-  height:min(560px,92vw);
+  position:absolute;left:50%;top:50%;
+  width:min(680px,92vw);height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   background:
@@ -93,119 +77,118 @@
     0 90px 260px rgba(0,0,0,.62),
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none;
   opacity:.55;
+  pointer-events:none;
 }
 .outer::after{
   content:"";
-  position:absolute; inset:0; border-radius:60px;
+  position:absolute;inset:0;border-radius:60px;
   background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
   opacity:.14;
+  pointer-events:none;
 }
 
 /* diamonds */
 .d{
-  width:210px;height:210px;
-  position:absolute;
-  left:50%;top:50%;
+  width:205px;height:205px;
+  position:absolute;left:50%;top:50%;
   transform-origin:center;
-  border-radius:26px;
+  border-radius:30px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  pointer-events:auto; /* ONLY tappable layer */
 
   background:
     radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
     linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
 
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.12);
   box-shadow:
-    0 28px 84px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.14),
-    inset 0 -28px 44px rgba(0,0,0,.62);
-  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+    0 30px 110px rgba(0,0,0,.72),
+    0 0 22px rgba(212,175,55,.10),
+    inset 0 2px 0 rgba(255,255,255,.16),
+    inset 0 -44px 86px rgba(0,0,0,.80);
+  transition:transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
 .d::before{
   content:"";
-  position:absolute; inset:0; border-radius:26px; padding:1px;
+  position:absolute;inset:0;border-radius:30px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.45;
+  opacity:.65;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   pointer-events:none;
 }
 .d::after{
   content:"";
-  position:absolute;
-  left:12%; right:12%;
-  top:10%;
-  height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
-  opacity:.85;
-  transform:rotate(-10deg);
+  position:absolute;inset:0;border-radius:30px;
+  background:
+    radial-gradient(120% 58% at 50% 16%, rgba(255,255,255,.28) 0%, rgba(255,255,255,0) 64%),
+    radial-gradient(140% 70% at 50% 92%, rgba(0,0,0,.32) 0%, rgba(0,0,0,0) 56%);
+  opacity:.92;
   pointer-events:none;
 }
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.01);
+  border-color:rgba(212,175,55,.28);
   box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 18px rgba(212,175,55,.18),
+    0 40px 140px rgba(0,0,0,.80),
+    0 0 32px rgba(212,175,55,.18),
     inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
+    inset 0 -50px 98px rgba(0,0,0,.84);
 }
-.d.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 30px rgba(212,175,55,.40),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-}
+.d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
-/* placement */
-.d-en{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-zh{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
+/* positions */
+.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
+.d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
+.d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
+.d-w{transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg)}
 
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:16px;
-  gap:10px;
-  pointer-events:none;
-  user-select:none;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:16px;gap:10px;
+  pointer-events:none;user-select:none;
 }
-.lab{ font-weight:950; letter-spacing:.8px; font-size:18px; }
+.lab{font-weight:950;letter-spacing:.8px;font-size:18px;text-shadow:0 0 18px rgba(255,255,255,.16)}
+.sub{font-size:13px;opacity:.84;line-height:1.3;max-width:18em}
 
-/* footer */
-.footer{
-  position:fixed;
-  left:50%;
-  bottom:calc(18px + env(safe-area-inset-bottom));
+/* core */
+.core{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:74px;height:74px;border-radius:22px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;
+  font-weight:950;letter-spacing:.5px;opacity:.92;
+  pointer-events:none;
+}
+
+/* dock (tap-safe wrapper) */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:85;
-  width:min(720px,94vw);
-  text-align:center;
-  opacity:.74;
-  font-size:13px;
-  line-height:1.35;
+  z-index:120;
+  width:min(900px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
   pointer-events:none;
-  text-shadow:0 18px 60px rgba(0,0,0,.55);
 }
+.dock .btn{pointer-events:auto}
 
-/* mobile */
-@media (max-width:520px){
-  :root{ --R: 124px; }
-  .d{ width:200px; height:200px; }
-  .title{ font-size:46px; }
-  .sub{ font-size:15px; }
-  .headFixed{ top:56px; }
-  .stage{ top:56%; }
+@media (max-width:560px){
+  :root{--R:142px}
+  .d{width:180px;height:180px}
+  .stage{top:54%}
 }
 </style>
 </head>
@@ -213,70 +196,109 @@
 <body>
 
 <div class="top-left">
-  <a class="btn" id="btnExit" href="/home/">EXIT</a>
+  <a class="btn" id="btnHub" href="/home/">HUB</a>
+  <a class="btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
-<div class="headFixed" aria-hidden="true">
-  <p class="kicker" id="kicker">CARDINAL AXIS</p>
-  <h1 class="title" id="title">Select language</h1>
-  <p class="sub" id="subtitle">Choose a canonical language to enter the system.</p>
+<div class="brand">
+  <div class="name" id="brandName">PRODUCTS</div>
+  <div class="tag" id="brandTag">Four volumes · One catalog spine</div>
 </div>
 
-<div class="stage" aria-label="Language diamonds">
+<div class="stage" aria-label="Products catalog">
   <div class="outer"></div>
 
-  <div class="d d-en" id="pickEN" role="button" tabindex="0" aria-label="English">
-    <div class="inner"><div class="lab">ENGLISH</div></div>
+  <div class="d d-n" id="goEnergy" role="button" tabindex="0" onclick="window.__goP('energy')" aria-label="Energy">
+    <div class="inner">
+      <div class="lab" id="labEnergy">ENERGY</div>
+      <div class="sub" id="subEnergy">Industrial plasma substitution · Gated fusion readiness</div>
+    </div>
   </div>
 
-  <div class="d d-zh" id="pickZH" role="button" tabindex="0" aria-label="Chinese">
-    <div class="inner"><div class="lab">中文</div></div>
+  <div class="d d-e" id="goEducation" role="button" tabindex="0" onclick="window.__goP('education')" aria-label="Education">
+    <div class="inner">
+      <div class="lab" id="labEducation">EDUCATION</div>
+      <div class="sub" id="subEducation">Language compression · Traversal learning systems</div>
+    </div>
   </div>
+
+  <div class="d d-s" id="goSoftware" role="button" tabindex="0" onclick="window.__goP('software')" aria-label="Software">
+    <div class="inner">
+      <div class="lab" id="labSoftware">SOFTWARE</div>
+      <div class="sub" id="subSoftware">Instrumentation · Dashboards · Execution engines</div>
+    </div>
+  </div>
+
+  <div class="d d-w" id="goCommercial" role="button" tabindex="0" onclick="window.__goP('commercial')" aria-label="Commercial">
+    <div class="inner">
+      <div class="lab" id="labCommercial">COMMERCIAL</div>
+      <div class="sub" id="subCommercial">Deployment packaging · Licensing · Phase rollout</div>
+    </div>
+  </div>
+
+  <div class="core">◆</div>
 </div>
 
-<div class="footer" id="foot">Coherence-based traversal study · under construction · safe to explore</div>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
+</nav>
 
 <script>
 (function(){
-  // preserve / default lenses
-  var style = localStorage.getItem("gd_style") || "formal";
-  var time  = localStorage.getItem("gd_time")  || "now";
+  // gd_* only
+  var qs = new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   if(time==="trajectory") time="post";
-  if(["origin","now","post"].indexOf(time)<0) time="now";
-  if(["formal","informal"].indexOf(style)<0) style="formal";
+  if(lang!=="en" && lang!=="zh") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
 
-  function go(lang){
-    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
-    var q = "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
-    window.location.href = "/index.html?"+q;
+  try{
+    localStorage.setItem("gd_lang", lang);
+    localStorage.setItem("gd_style", style);
+    localStorage.setItem("gd_time", time);
+  }catch(e){}
+
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
   }
 
-  function activate(el){
-    [document.getElementById("pickEN"), document.getElementById("pickZH")].forEach(function(x){
-      x.classList.remove("active");
-    });
-    el.classList.add("active");
-    setTimeout(function(){ el.classList.remove("active"); }, 160);
-  }
+  // links
+  document.getElementById("btnHub").href  = "/home/" + q();
+  document.getElementById("btnExit").href = "/door/" + q();
 
-  var en = document.getElementById("pickEN");
-  var zh = document.getElementById("pickZH");
+  document.getElementById("dockTerminal").href = "/index.html" + q();
+  document.getElementById("dockProducts").href = "/products/" + q();
+  document.getElementById("dockLaws").href = "/laws/" + q();
+  document.getElementById("dockGauges").href = "/gauges/" + q();
+  document.getElementById("dockLinks").href = "/links/" + q();
 
-  en.addEventListener("click", function(){ activate(en); go("en"); });
-  zh.addEventListener("click", function(){ activate(zh); go("zh"); });
+  // hard navigation (inline onclick calls this)
+  window.__goP = function(which){
+    var map = {
+      energy:"/products/energy/",
+      education:"/products/education/",
+      software:"/products/software/",
+      commercial:"/products/commercial/"
+    };
+    var path = map[which] || "/products/";
+    location.href = path + q();
+  };
 
-  [en,zh].forEach(function(el){
+  // keyboard safety
+  [["goEnergy","energy"],["goEducation","education"],["goSoftware","software"],["goCommercial","commercial"]].forEach(function(pair){
+    var el=document.getElementById(pair[0]);
+    if(!el) return;
     el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.__goP(pair[1]); }
     });
   });
-
-  // EXIT preserves state (goes to hub)
-  (function(){
-    var curLang = localStorage.getItem("gd_lang") || "en";
-    var q = "lang="+encodeURIComponent(curLang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
-    document.getElementById("btnExit").href = "/home/?"+q;
-  })();
 })();
 </script>
 

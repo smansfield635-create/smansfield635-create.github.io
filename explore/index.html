@@ -1,17 +1,16 @@
-<!-- TNT — /explore/index.html  (EXPLORE · INNOVATION HUB · NAMES RESTORED)
-     FIXES REQUESTED:
-       1) Remove purple/blue “link” styling → ALL nav uses .crp-btn (no raw anchors).
-       2) Restore names to match the Language/Grammar stack:
-            GRAMMAR · DOT.GRID · SSG · ACRONYMS
-       3) Wire each diamond to the correct live page (no name mismatch confusion):
-            /explore/innovation/language/grammar/
-            /explore/innovation/language/dot-grid/
-            /explore/innovation/language/ssg/
-            /explore/innovation/language/acronyms/
-       4) State propagation always (lang/style/time) via query + localStorage.
+<!-- TNT — /explore/index.html  (EXPLORE · LANGUAGE INNOVATION HUB · BILINGUAL · GEM STANDARD)
+     PURPOSE:
+       - Explore is the LANGUAGE INNOVATION HUB (Grammar / DOT.GRID / SSG / Acronyms)
+       - Frontier moves to its own trunk: /explore/frontier/ (jump-only from here)
+       - Single-language render:
+           lang=en => English labels only
+           lang=zh => 中文 labels only
+       - Deterministic state propagation: lang/style/time via query + gd_* localStorage
      LOCKS:
+       - TNT FULL FILE
        - Uses /assets/ui.css + /assets/branch.css only
-       - DOES NOT style html/body background (ui.css owns the red field)
+       - DOES NOT style html/body background (ui.css owns field)
+       - No purple links; ALL nav uses .crp-btn
 -->
 
 <!doctype html>
@@ -19,7 +18,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>EXPLORE · Innovation Hub</title>
+<title>EXPLORE · Language Innovation</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -46,6 +45,7 @@
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.16);
   backdrop-filter:blur(8px);
+  pointer-events:none;
 }
 .brand .t1{font-weight:950;letter-spacing:1.1px;font-size:12px;opacity:.95}
 .brand .t2{margin-top:2px;font-size:11px;letter-spacing:.6px;opacity:.72}
@@ -83,6 +83,7 @@
   position:absolute; inset:0; border-radius:60px;
   background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
   opacity:.16;
+  pointer-events:none;
 }
 
 /* Gem diamonds (match standard) */
@@ -93,6 +94,7 @@
   border-radius:26px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 
   background:
     radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
@@ -167,7 +169,7 @@
   pointer-events:none;
 }
 
-/* Dock (buttons only, no purple links) */
+/* Dock (buttons only) */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -195,15 +197,16 @@
 
 <div class="top-left">
   <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
+  <a class="crp-btn" id="btnFrontier" href="/explore/frontier/">FRONTIER</a>
   <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
 <div class="brand">
-  <div class="t1" id="brandTop">QUEEN’S ARCHITECTURE</div>
-  <div class="t2" id="brandSub">INNOVATION · FUTURE TRUNKS</div>
+  <div class="t1" id="brandTop">LANGUAGE INNOVATION</div>
+  <div class="t2" id="brandSub">GRAMMAR · DOT.GRID · SSG · ACRONYMS</div>
 </div>
 
-<div class="stage" aria-label="Explore innovation hub">
+<div class="stage" aria-label="Explore language innovation hub">
   <div class="outer"></div>
 
   <div class="d d-n" id="dGrammar" role="button" tabindex="0">
@@ -240,7 +243,7 @@
 <nav class="dock" aria-label="Bottom navigation">
   <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
   <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="crp-btn" id="dockEducation" href="/products/education/">EDUCATION</a>
+  <a class="crp-btn" id="dockExplore" href="/explore/">EXPLORE</a>
   <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
   <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
 </nav>
@@ -270,21 +273,21 @@
   function wire(){
     var s=q();
     document.getElementById("btnHub").href="/home/?"+s;
+    document.getElementById("btnFrontier").href="/explore/frontier/?"+s;
     document.getElementById("btnExit").href="/door/?"+s;
 
     document.getElementById("dockTerminal").href="/index.html?"+s;
     document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockEducation").href="/products/education/?"+s;
+    document.getElementById("dockExplore").href="/explore/?"+s;
     document.getElementById("dockLaws").href="/laws/?"+s;
     document.getElementById("dockLinks").href="/links/?"+s;
   }
   wire();
 
-  // Route diamonds to EXISTING paths in your repo (explore/innovation/language/*)
+  // Route diamonds to existing language paths
   function go(path){
     location.href = path + "?" + q();
   }
-
   document.getElementById("dGrammar").onclick = function(){ go("/explore/innovation/language/grammar/"); };
   document.getElementById("dSSG").onclick     = function(){ go("/explore/innovation/language/ssg/"); };
   document.getElementById("dDOT").onclick     = function(){ go("/explore/innovation/language/dot-grid/"); };
@@ -297,23 +300,25 @@
     });
   });
 
-  // Single-language labels (no mixed EN/中文 on same line)
+  // Single-language labels
   var UI = {
     en:{
-      top:"QUEEN’S ARCHITECTURE",
-      sub:"INNOVATION · FUTURE TRUNKS",
+      top:"LANGUAGE INNOVATION",
+      sub:"GRAMMAR · DOT.GRID · SSG · ACRONYMS",
       grammar:{lab:"GRAMMAR", sub:"Traversal contracts · structural language."},
       ssg:{lab:"SSG", sub:"Constraint syntax geometry."},
       dot:{lab:"DOT.GRID", sub:"256-state indexing · sweeps."},
-      acr:{lab:"ACRONYMS", sub:"Lookup anchors · shared language."}
+      acr:{lab:"ACRONYMS", sub:"Lookup anchors · shared language."},
+      frontier:"FRONTIER"
     },
     zh:{
-      top:"女王架构",
-      sub:"创新 · 未来干线",
+      top:"语言创新",
+      sub:"语法 · DOT.GRID · SSG · 缩略语",
       grammar:{lab:"语法", sub:"遍历契约 · 结构语言。"},
       ssg:{lab:"SSG", sub:"约束语法几何。"},
       dot:{lab:"DOT.GRID", sub:"256态索引 · 扫掠。"},
-      acr:{lab:"缩略语", sub:"查表锚点 · 共用术语。"}
+      acr:{lab:"缩略语", sub:"查表锚点 · 共用术语。"},
+      frontier:"前沿"
     }
   };
   var T = (lang==="zh") ? UI.zh : UI.en;
@@ -333,6 +338,8 @@
 
   document.getElementById("labAcr").textContent = T.acr.lab;
   document.getElementById("subAcr").textContent = T.acr.sub;
+
+  document.getElementById("btnFrontier").textContent = T.frontier;
 })();
 </script>
 

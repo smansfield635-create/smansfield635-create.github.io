@@ -1,305 +1,102 @@
-<!-- TNT — /products/education/index.html  (EDUCATION SUB-HUB · DIAMOND-OF-DIAMONDS)
-     HARD RULES:
-       - DO NOT TOUCH /assets/ui.css
-       - DO NOT TOUCH /assets/branch.css
-       - Page styles ONLY (this file)
-     FEATURES:
-       - One outer diamond + four inner diamonds
-       - Click diamond → centered gem modal
-       - Lenses INSIDE modal only:
-           STYLE: Formal/Informal (gd_style)
-           TIME: Concept/Live/Roadmap (gd_time = origin/now/post)
-       - Language lens RESTORED:
-           lang=en => English only
-           lang=zh => 中文 only
-       - 4 sections × 4 bulletins for EVERY diamond, EVERY lens
-       - Navigation: BACK (/products/), EXIT (/door/), bottom dock with state
+<!-- TNT — /products/energy/index.html  (LATEST-STABLE PATTERN + 2 CHANGES)
+     ONLY CHANGES:
+       (1) Diamond-theme RETURN inside Quadrant modal (already) + add Diamond-theme RETURN inside Domain modal (NEW) → returns to Quadrant modal (no looping).
+       (2) Keep the same gem-diamond theme for sub-domain selection (already via smallDiamond).
+     FULL CONTENT:
+       12 domains × 3 bubbles (Concept/Live/Roadmap) × 2 tones (Formal/Informal) = 72 narratives.
+     NO NEW STATE KEYS:
+       gd_lang / gd_style / gd_time only.
 -->
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRODUCTS · EDUCATION</title>
+<title>PRODUCTS · ENERGY</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-:root{
-  --R:154px;
-  --gold:rgba(212,175,55,.9);
-  --goldSoft:rgba(212,175,55,.35);
-  --obs1:#070b12;
-  --obs2:#0c1626;
-  --mut:rgba(255,255,255,.84);
-  --mut2:rgba(255,255,255,.68);
-}
-body{
-  margin:0; min-height:100vh; overflow-x:hidden;
-  background:
-    radial-gradient(circle at 50% 40%, rgba(90,140,255,.10), transparent 60%),
-    repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 1px, transparent 1px 100px),
-    linear-gradient(180deg,#b00000 0%,#7a0000 60%,#550000 100%);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:#fff;
-}
-.btn{
-  padding:10px 16px; border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:#fff; border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer; font-weight:900; letter-spacing:.2px; text-decoration:none;
-}
-.btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
-.top-left{
-  position:fixed; left:16px; top:16px; z-index:90;
-  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-}
-.brand{
-  position:fixed; left:50%; top:16px; transform:translateX(-50%);
-  z-index:80; text-align:center;
-  padding:10px 14px; border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16); backdrop-filter:blur(8px);
-}
-.brand .name{ font-weight:950; letter-spacing:1.2px; font-size:12px; opacity:.95; }
-.brand .tag{ font-size:11px; letter-spacing:.6px; opacity:.70; margin-top:2px; }
+:root{--R:150px;--D:184px;--goldSoft:rgba(212,175,55,.45);--mut:rgba(255,255,255,.90);--mut2:rgba(255,255,255,.74)}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{text-decoration:none;color:inherit}
+body::before,body::after{pointer-events:none!important}
+
+/* Top */
+.top-left{position:fixed;left:16px;top:16px;z-index:140;display:flex;gap:10px;flex-wrap:wrap}
+.brand{position:fixed;left:50%;top:16px;transform:translateX(-50%);z-index:130;text-align:center;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);pointer-events:none}
+.brand .t{font-weight:950;font-size:40px;letter-spacing:.25px;line-height:1.05;margin:0}
+.brand .s{opacity:.86;font-size:14px;margin:6px 0 0;line-height:1.25}
 
 /* Stage */
-.stage{
-  position:fixed; left:50%; top:52%;
-  transform:translate(-50%,-50%);
-  width:min(720px,94vw); height:min(720px,94vw);
-  z-index:40;
-}
-.outer{
-  position:absolute; left:50%; top:50%;
-  width:min(680px,92vw); height:min(680px,92vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:60px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.72),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none; opacity:.85;
-}
-.outer::after{
-  content:""; position:absolute; inset:0; border-radius:60px;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.16;
-}
+.stage{position:fixed;left:50%;top:56%;transform:translate(-50%,-50%);width:min(720px,94vw);height:min(720px,94vw);z-index:60}
+.outer{position:absolute;left:50%;top:50%;width:min(680px,92vw);height:min(680px,92vw);transform:translate(-50%,-50%) rotate(45deg);border-radius:60px;opacity:.62;pointer-events:none;border:1px solid rgba(255,255,255,.10);background:radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),linear-gradient(160deg, rgba(14,24,40,.42) 0%, rgba(7,11,18,.58) 70%);box-shadow:0 90px 260px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.10),inset 0 -50px 90px rgba(0,0,0,.55)}
+.outer::after{content:"";position:absolute;inset:0;border-radius:60px;opacity:.12;pointer-events:none;background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg)}
+
+/* Pearlescent glossy diamonds (LOCK) */
 .d{
-  width:170px; height:170px;
-  position:absolute; left:50%; top:50%;
-  transform-origin:center; border-radius:26px;
-  cursor:pointer; -webkit-tap-highlight-color:transparent;
+  width:var(--D);height:var(--D);
+  position:absolute;left:50%;top:50%;
+  transform-origin:center;border-radius:28px;
+  cursor:pointer;pointer-events:auto;touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
   background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
-  border:1px solid rgba(255,255,255,.10);
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.30), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.96), rgba(7,11,18,.98));
+  border:1px solid rgba(255,255,255,.16);
   box-shadow:
-    0 28px 84px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.14),
-    inset 0 -28px 44px rgba(0,0,0,.62);
-  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+    0 38px 120px rgba(0,0,0,.85),
+    0 0 32px rgba(212,175,55,.28),
+    inset 0 2px 0 rgba(255,255,255,.25),
+    inset 0 -42px 78px rgba(0,0,0,.80);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.d::before{
-  content:""; position:absolute; inset:0; border-radius:26px; padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.45;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.d::after{
-  content:""; position:absolute; left:12%; right:12%; top:10%; height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
-  opacity:.85; transform:rotate(-10deg);
-  pointer-events:none;
-}
-.d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 18px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-}
-.d.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 30px rgba(212,175,55,.40),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-}
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
-.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
-
-.inner{
-  width:100%; height:100%; transform:rotate(-45deg);
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  text-align:center; padding:16px; gap:10px;
-  pointer-events:none;
-}
-.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
-.sub{ font-size:12.5px; opacity:.80; line-height:1.35; max-width:18em; }
-
-.core{
-  position:absolute; left:50%; top:50%;
-  transform:translate(-50%,-50%);
-  width:74px; height:74px; border-radius:22px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid; place-items:center;
-  font-weight:950; letter-spacing:.5px;
-  opacity:.92; pointer-events:none;
-}
+.d::before{content:"";position:absolute;inset:0;border-radius:28px;padding:1px;background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);opacity:.65;-webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.d::after{content:"";position:absolute;left:10%;right:10%;top:10%;height:28%;border-radius:999px;background:linear-gradient(to bottom, rgba(255,255,255,.25), rgba(255,255,255,0));transform:rotate(-10deg);pointer-events:none}
+.d:hover{transform:translate(-50%,-50%) rotate(45deg) scale(1.02);border-color:rgba(212,175,55,.35);box-shadow:0 44px 140px rgba(0,0,0,.92),0 0 44px rgba(212,175,55,.32),inset 0 2px 0 rgba(255,255,255,.28),inset 0 -46px 86px rgba(0,0,0,.84)}
+.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R)*-1)) rotate(45deg)}
+.d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
+.d-s{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
+.d-w{transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg)}
+.inner{transform:rotate(-45deg) translateY(-3px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;height:100%;padding:14px;gap:8px;pointer-events:none;user-select:none}
+.lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 16px rgba(255,255,255,.14)}
+.sub{font-size:13px;opacity:.88;line-height:1.25;max-width:18em}
 
 /* Dock */
-.dock{
-  position:fixed; left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:90;
-  width:min(900px,94vw);
-  display:flex; justify-content:center;
-  gap:10px; flex-wrap:wrap;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
-  backdrop-filter:blur(8px);
-}
+.dock{position:fixed;left:50%;bottom:max(12px, env(safe-area-inset-bottom));transform:translateX(-50%);z-index:120;width:min(980px,94vw);display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);pointer-events:none}
+.dock .btn{pointer-events:auto}
 
-/* Modal */
-.bd{
-  position:fixed; inset:0; z-index:200;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(10px);
-  display:none;
-}
-.bd.show{display:block;}
-.modal{
-  position:fixed; left:50%; top:50%;
-  transform:translate(-50%,-50%);
-  width:min(1020px,94vw);
-  max-height:88vh;
-  display:none;
-  z-index:210;
-}
-.modal.show{display:block;}
-.shell{
-  height:88vh;
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
-    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
-    linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
-  box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  position:relative;
-}
-.shell::before{
-  content:""; position:absolute; left:50%; top:58%;
-  width:min(980px,94vw); height:min(980px,94vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:70px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.16), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);
-  box-shadow:
-    0 100px 280px rgba(0,0,0,.72),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -55px 100px rgba(0,0,0,.55);
-  opacity:.55; pointer-events:none;
-}
-.mhead{
-  display:flex; justify-content:space-between; align-items:center;
-  gap:10px; padding:14px 16px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative; z-index:2;
-}
-.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
-.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
-.mbody{
-  padding:14px 16px 18px;
-  overflow:auto; -webkit-overflow-scrolling:touch;
-  flex:1 1 auto;
-  position:relative; z-index:2;
-}
-.lensbar{
-  display:flex; gap:10px; flex-wrap:wrap;
-  align-items:center; justify-content:center;
-  padding:10px 10px 14px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  margin:-6px -6px 14px;
-}
-.chip{
-  padding:10px 16px; border-radius:999px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer; font-weight:900; letter-spacing:.2px; color:#fff;
-}
-.chip.active{
-  border-color:rgba(212,175,55,.35);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
-}
-.mgrid{ display:grid; gap:14px; }
-@media (min-width:920px){ .mgrid{ grid-template-columns:1fr 1fr; } }
-.box{
-  padding:16px 18px; border-radius:22px;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
-  position:relative;
-}
-.box::before{
-  content:""; position:absolute; inset:0; border-radius:22px; padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.h{ margin:0 0 8px; font-weight:950; letter-spacing:.2px; }
-.p{ margin:0 0 10px; color:var(--mut); line-height:1.55; }
-.ul{ margin:0 0 0 18px; padding:0; color:var(--mut2); }
-.ul li{ margin:6px 0; }
-.mact{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
-.sbtn{
-  padding:12px 18px; border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:#fff; border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer; font-weight:900; letter-spacing:.2px; text-decoration:none;
-}
-.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
+/* Modals */
+.bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);display:none}
+.bd.show{display:block}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1180px,96vw);height:90vh;display:none;z-index:210}
+.modal.show{display:block}
+.shell{height:90vh;border-radius:22px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));overflow:hidden;display:flex;flex-direction:column}
+.mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
+.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
+.mbody{padding:16px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-@media (max-width:560px){
-  :root{ --R: 136px; }
-  .d{ width:158px; height:158px; }
-  .stage{ top:54%; }
-}
+/* Domain grid inside quadrant modal (diamond theme) */
+.qgrid{display:grid;gap:14px;grid-template-columns:1fr}
+@media (min-width:760px){.qgrid{grid-template-columns:1fr 1fr}}
+.smallDiamond{width:100%;height:140px;position:relative;border-radius:22px;cursor:pointer;pointer-events:auto;touch-action:manipulation;background:radial-gradient(circle at 30% 22%, rgba(255,255,255,.50), transparent 52%),radial-gradient(circle at 70% 78%, rgba(0,120,255,.26), transparent 62%),linear-gradient(160deg, rgba(14,24,40,.96), rgba(7,11,18,.98));border:1px solid rgba(255,255,255,.16);box-shadow:0 22px 70px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.22), inset 0 -34px 60px rgba(0,0,0,.70)}
+.smallDiamond::before{content:"";position:absolute;inset:0;border-radius:22px;padding:1px;background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);opacity:.55;-webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.sdInner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;pointer-events:none}
+.sdT{font-weight:950;letter-spacing:.25px}
+.sdS{font-size:12.5px;opacity:.82;margin-top:6px}
+
+/* Domain narrative modal */
+.lensbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 14px}
+.pill{padding:10px 14px;border-radius:999px;background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));border:1px solid rgba(255,255,255,.10);box-shadow:0 14px 36px rgba(0,0,0,.65);cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;user-select:none;-webkit-tap-highlight-color:transparent}
+.pill.active{border-color:rgba(212,175,55,.60);box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.22)}
+.bubble{border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(255,255,255,.05);padding:14px 14px 12px;margin:0 0 12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
+.bubble p{margin:0;color:var(--mut2);line-height:1.65;display:none}
+.bubble.open p{display:block}
+.hint{max-width:980px;margin:0 auto 12px;padding:10px 12px;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.16);color:rgba(255,255,255,.80);font-size:12.5px;line-height:1.45}
 </style>
 </head>
 
@@ -310,539 +107,419 @@ body{
   <a class="btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
-<div class="brand">
-  <div class="name" id="brandName">PRODUCTS</div>
-  <div class="tag" id="brandTag">EDUCATION SYSTEMS</div>
+<div class="brand" aria-hidden="true">
+  <div class="t">Energy</div>
+  <div class="s">72 Narratives · 4→12→36→72</div>
 </div>
 
-<div class="stage">
+<div class="stage" aria-label="Energy quadrants">
   <div class="outer"></div>
 
-  <div class="d d-n" id="dProg" role="button" tabindex="0">
-    <div class="inner">
-      <div class="lab" id="progLab">PROGRAMS</div>
-      <div class="sub" id="progSub">Curriculum · outcomes.</div>
-    </div>
+  <div class="d d-n" id="qFoundation" role="button" tabindex="0">
+    <div class="inner"><div class="lab">FOUNDATION</div><div class="sub">Origins · risk · baselines</div></div>
   </div>
 
-  <div class="d d-e" id="dLang" role="button" tabindex="0">
-    <div class="inner">
-      <div class="lab" id="langLab">LANGUAGE</div>
-      <div class="sub" id="langSub">1001 · four levels + 10% sample.</div>
-    </div>
+  <div class="d d-e" id="qArchitecture" role="button" tabindex="0">
+    <div class="inner"><div class="lab">ARCHITECTURE</div><div class="sub">Build · interfaces · isolation</div></div>
   </div>
 
-  <div class="d d-s" id="dTrain" role="button" tabindex="0">
-    <div class="inner">
-      <div class="lab" id="trainLab">TRAINING</div>
-      <div class="sub" id="trainSub">Masterclasses · reps.</div>
-    </div>
+  <div class="d d-s" id="qPerformance" role="button" tabindex="0">
+    <div class="inner"><div class="lab">PERFORMANCE</div><div class="sub">Measured outcomes</div></div>
   </div>
 
-  <div class="d d-w" id="dCert" role="button" tabindex="0">
-    <div class="inner">
-      <div class="lab" id="certLab">CERTIFICATION</div>
-      <div class="sub" id="certSub">Verification · tiers.</div>
-    </div>
+  <div class="d d-w" id="qGovernance" role="button" tabindex="0">
+    <div class="inner"><div class="lab">GOVERNANCE</div><div class="sub">Scaling discipline</div></div>
   </div>
 
-  <div class="core">◆</div>
 </div>
 
-<nav class="dock" id="dock">
-  <a class="btn" id="dockHub" href="/home/">HUB</a>
+<nav class="dock" aria-label="Bottom navigation">
   <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
+  <a class="btn" id="dockHub" href="/home/">HUB</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
 </nav>
 
 <div class="bd" id="bd"></div>
 
-<div class="modal" id="modal" role="dialog" aria-modal="true">
+<div class="modal" id="quadModal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="mTitle">DETAIL</h3>
-      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
+      <h3 class="mtitle" id="quadTitle">Quadrant</h3>
+      <button class="mclose" id="quadClose" aria-label="Close" type="button">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="hint" id="quadHint">Tap a domain diamond to enter its narrative. RETURN closes this layer.</div>
+      <div class="qgrid" id="quadGrid"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="domainModal" role="dialog" aria-modal="true">
+  <div class="shell">
+    <div class="mhead">
+      <h3 class="mtitle" id="domainTitle">Domain</h3>
+      <button class="mclose" id="domainClose" aria-label="Close" type="button">✕</button>
     </div>
 
-    <div class="mbody">
+    <div class="mbody" id="domainBody">
       <div class="lensbar">
-        <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>
-        <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>
-        <button class="chip" data-time="now" id="chipLive" type="button">LIVE</button>
-        <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
+        <div class="pill active" id="toneFormal">FORMAL</div>
+        <div class="pill" id="toneInformal">INFORMAL</div>
       </div>
 
-      <div class="mgrid">
-        <div class="box"><h4 class="h" id="h1"></h4><p class="p" id="p1"></p><ul class="ul" id="u1"></ul></div>
-        <div class="box"><h4 class="h" id="h2"></h4><p class="p" id="p2"></p><ul class="ul" id="u2"></ul></div>
-        <div class="box"><h4 class="h" id="h3"></h4><p class="p" id="p3"></p><ul class="ul" id="u3"></ul></div>
-        <div class="box"><h4 class="h" id="h4"></h4><p class="p" id="p4"></p><ul class="ul" id="u4"></ul></div>
+      <div class="hint" id="claimHint">Public posture remains Industrial Plasma Thermal Substitution (C). Fusion is referenced only as readiness doctrine, not as gain.</div>
+
+      <div class="bubble" id="bConcept"><h4>Concept</h4><p id="pConcept"></p></div>
+      <div class="bubble" id="bLive"><h4>Live</h4><p id="pLive"></p></div>
+      <div class="bubble" id="bRoadmap"><h4>Roadmap</h4><p id="pRoadmap"></p></div>
+
+      <!-- CHANGE #1: RETURN DIAMOND INSIDE DOMAIN MODAL -->
+      <div class="qgrid" style="margin-top:14px;">
+        <div class="smallDiamond" id="domainReturn" role="button" tabindex="0">
+          <div class="sdInner">
+            <div class="sdT">RETURN</div>
+            <div class="sdS">Back to domain diamonds</div>
+          </div>
+        </div>
       </div>
 
-      <div class="mact">
-        <button class="sbtn" id="mReturn" type="button">RETURN</button>
-        <a class="sbtn" id="mJumpHub" href="/home/">JUMP HUB</a>
-        <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
-      </div>
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  /* URL → STATE HYDRATION */
-  var qs = new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  if(!["en","zh"].includes(lang)) lang="en";
-  if(!["formal","informal"].includes(style)) style="formal";
+  // state hydration (gd_* only)
+  var qs=new URLSearchParams(location.search);
+  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+  var style=qs.get("style")||localStorage.getItem("gd_style")||"formal";
+  var time=qs.get("time")||localStorage.getItem("gd_time")||"now";
   if(time==="trajectory") time="post";
-  if(!["origin","now","post"].includes(time)) time="now";
-  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time); }catch(e){}
+  if(lang!=="en"&&lang!=="zh") lang="en";
+  if(style!=="formal"&&style!=="informal") style="formal";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  try{localStorage.setItem("gd_lang",lang);localStorage.setItem("gd_style",style);localStorage.setItem("gd_time",time);}catch(e){}
+  function q(){var p=new URLSearchParams();p.set("lang",lang);p.set("style",style);p.set("time",time);return "?"+p.toString();}
 
-  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+  // nav links
+  document.getElementById("btnBack").href="/products/"+q();
+  document.getElementById("btnExit").href="/door/"+q();
+  document.getElementById("dockTerminal").href="/index.html"+q();
+  document.getElementById("dockHub").href="/home/"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockLinks").href="/links/"+q();
 
-  function setLinks(){
-    var s=q();
-    document.getElementById("btnBack").href="/products/?"+s;
-    document.getElementById("btnExit").href="/door/?"+s;
-    document.getElementById("dockHub").href="/home/?"+s;
-    document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
-    document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockGauges").href="/gauges/?"+s;
-    document.getElementById("mJumpHub").href="/home/?"+s;
-    document.getElementById("mJumpProducts").href="/products/?"+s;
-  }
+  // Quadrant -> domains mapping (4×3)
+  var QUADS={
+    "FOUNDATION":["Historical Systems","Adversarial","Baseline Constraints"],
+    "ARCHITECTURE":["Engineering","Technology","Industrial"],
+    "PERFORMANCE":["Environmental","Medicine","Financial"],
+    "GOVERNANCE":["Legal","Political","Social"]
+  };
 
-  var TEXT = {
-    en:{
-      title:"PRODUCTS",
-      tag:"EDUCATION SYSTEMS",
-      d:{
-        prog:{lab:"PROGRAMS", sub:"Curriculum · outcomes."},
-        lang:{lab:"LANGUAGE", sub:"1001 · four levels + 10% sample."},
-        train:{lab:"TRAINING", sub:"Masterclasses · reps."},
-        cert:{lab:"CERTIFICATION", sub:"Verification · tiers."}
+  // 72 narratives (12 domains × 3 × 2)
+  var N={
+    "Historical Systems":{
+      concept:{
+        formal:"Historical energy systems often scale narrative faster than constraint. This creates delayed discovery of failure modes. Fragmented oversight allows drift to remain invisible until collapse. A disciplined architecture must lock definitions before expansion. Measurement must lead story. This domain frames the inherited problem and why constraint-first scaling is required.",
+        informal:"History is the stress test we already failed a hundred ways. Civilizations scaled power first and paid the bill later. The reward was progress; the cost was collapse cycles that arrived late and expensive. We use history as a warning label, not a museum. If the frontier is real, it must learn faster than it expands. That is the first lesson."
       },
-      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", live:"LIVE", roadmap:"ROADMAP"},
-      buttons:{return:"RETURN", jhub:"JUMP HUB", jprod:"JUMP PRODUCTS"},
-      content:{
-        prog:{
-          origin:{formal:{title:"Programs",
-            b1:{h:"What it is",p:"A traversal-first curriculum system built as navigable structures (not linear chapters).",u:["Programs are maps (not stairs).","Entry points are flexible.","Return is deterministic.","Progress is evidence-based."]},
-            b2:{h:"Program set",p:"A clear catalog of programs built on one stable map.",u:["Foundation Sprint (30 days).","Structure Immersion (90 days).","Leadership English.","Business Precision."]},
-            b3:{h:"How it’s used",p:"Pick a node, run reps, verify output, return and branch again.",u:["Enter fast.","Practice now.","Verify output.","Return safely."]},
-            b4:{h:"What you get",p:"Lesson maps, drill packs, and checkpoints tied to the structure.",u:["Daily drills.","Prompt packs.","Conversation reps.","Milestone checks."]}
-          }, informal:{title:"Programs",
-            b1:{h:"What it is",p:"Programs you can follow without getting trapped.",u:["Clear map.","Clear entry.","Clear return.","Clear result."]},
-            b2:{h:"Programs",p:"What’s available.",u:["30-Day Foundation.","90-Day Immersion.","Leadership English.","Business Precision."]},
-            b3:{h:"Use it",p:"Tap → practice → return → repeat.",u:["Enter.","Practice.","Return.","Repeat."]},
-            b4:{h:"You get",p:"Drills and checkpoints.",u:["Lists.","Prompts.","Drills.","Checks."]}
-          }},
-          now:{formal:{title:"Programs — Live",
-            b1:{h:"Live status",p:"Program topology is live; content expands inside fixed nodes without breaking routing.",u:["Stable routes.","Stable lenses.","State propagation.","No drift."]},
-            b2:{h:"Fill-first rule",p:"Each node gets filled before expansion.",u:["No empty nodes.","4 boxes always.","4 bullets each.","Real lens changes."]},
-            b3:{h:"Progress model",p:"Progress is tracked by completion cycles.",u:["Deviation detected.","Operator applied.","Recovery verified.","Cycle logged."]},
-            b4:{h:"Launch posture",p:"Consumer-legible and predictable.",u:["Clear outcomes.","Simple steps.","Predictable navigation.","No academic fog."]}
-          }, informal:{title:"Programs — Live",
-            b1:{h:"Live",p:"Stable structure with growing content.",u:["Safe.","Stable.","Predictable.","Clear."]},
-            b2:{h:"Rule",p:"Fill nodes first.",u:["No blanks.","4×4 bulletins.","Then depth.","No drift."]},
-            b3:{h:"Progress",p:"Track cycles.",u:["Detect.","Apply.","Verify.","Log."]},
-            b4:{h:"Posture",p:"Clear and readable.",u:["Simple.","Predictable.","Legible.","Useful."]}
-          }},
-          post:{formal:{title:"Programs — Roadmap",
-            b1:{h:"Expansion",p:"More tracks; same map.",u:["Kids/ESL.","Adult pro.","Coach track.","Enterprise track."]},
-            b2:{h:"Depth control",p:"Adjust depth without changing navigation.",u:["Fast view.","Deep view.","Same routes.","Same meaning."]},
-            b3:{h:"Verification",p:"Optional tiered proof.",u:["Assessments.","Evidence logs.","Badges.","Registry hooks."]},
-            b4:{h:"Distribution",p:"Bundles for real use.",u:["PDF packs.","Audio prompts.","Practice cards.","Lesson kits."]}
-          }, informal:{title:"Programs — Roadmap",
-            b1:{h:"Next",p:"More tracks.",u:["More lessons.","More drills.","Same map.","Same rules."]},
-            b2:{h:"Depth",p:"Quick or deep.",u:["Quick.","Deep.","Your pace.","Stable."]},
-            b3:{h:"Proof",p:"Optional verification.",u:["Tests.","Badges.","Logs.","Lookup."]},
-            b4:{h:"Bundles",p:"More materials.",u:["PDFs.","Audio.","Cards.","Micro-lessons."]}
-          }}
-        },
-
-        lang:{
-          origin:{formal:{title:"Language (1001) — Four Levels + 10% Sample",
-            b1:{h:"Four levels",p:"The 1001 core is split into four mastery bands (~250 words each).",u:["L1 Foundation (0–250).","L2 Function (251–500).","L3 Structure (501–750).","L4 Precision (751–1001)."]},
-            b2:{h:"What each level unlocks",p:"Levels are capability bands, not permission gates.",u:["L1: complete basic thoughts.","L2: explain and compare.","L3: describe systems.","L4: express nuance."]},
-            b3:{h:"10% sample (≈100 words)",p:"A traversal cluster: vocabulary → structure → application.",u:["Verbs: be/do/go/make/get.","Connectors: because/if/when/how.","Structure: system/change/result.","Control: improve/need/possible."]},
-            b4:{h:"10% sample — drills",p:"Four drills that force real use.",u:["5 ‘because’ lines.","Swap to ‘if’.","Name a system.","Change one step."]}
-          }, informal:{title:"Language (1001) — Four Levels + 10% Sample",
-            b1:{h:"Levels",p:"Four levels, about 250 words each.",u:["L1 Foundation.","L2 Function.","L3 Structure.","L4 Precision."]},
-            b2:{h:"Why levels work",p:"They guide you, but you can jump where you need.",u:["Not a strict ladder.","Enter by need.","Return always works.","Progress measurable."]},
-            b3:{h:"10% sample",p:"Starter cluster (~100 words).",u:["Core verbs.","Core connectors.","Core structure.","Core control."]},
-            b4:{h:"Use it",p:"Do the four drills daily for a week.",u:["Because lines.","Swap to if.","Name system.","Change step."]}
-          }},
-          now:{formal:{title:"Language (1001) — Live",
-            b1:{h:"Live structure",p:"Categories + levels are stable; expansions happen inside the same nodes.",u:["Stable categories.","Stable levels.","Deterministic routing.","Safe return."]},
-            b2:{h:"Lens integrity",p:"Formal/Informal and Concept/Live/Roadmap must change meaning, not cosmetics.",u:["Formal = precise.","Informal = direct.","Concept = definition.","Live = execution."]},
-            b3:{h:"Traversal (anti-linear)",p:"Traversal is map-based learning: enter where needed, return safely, repeat.",u:["Enter by need.","Cross-link.","Return.","Repeat."]},
-            b4:{h:"Outcome target",p:"Daily reps + checkpoints improve function faster than passive consumption.",u:["Daily drill loop.","Conversation reps.","Checkpoint tests.","Evidence logs."]}
-          }, informal:{title:"Language (1001) — Live",
-            b1:{h:"Live",p:"Usable now.",u:["Stable map.","Stable lenses.","Safe return.","No drift."]},
-            b2:{h:"Lenses",p:"Lens switches change real text.",u:["Not cosmetic.","Real meaning shift.","Clear emphasis.","Still coherent."]},
-            b3:{h:"Traversal",p:"Not a ladder. A map.",u:["Jump in.","Practice.","Return.","Repeat."]},
-            b4:{h:"Goal",p:"Fast practical English.",u:["Speak more.","Understand more.","Practice daily.","Track wins."]}
-          }},
-          post:{formal:{title:"Language (1001) — Roadmap",
-            b1:{h:"Overlay packs",p:"Add deterministic overlay packs by country and domain.",u:["Country overlay.","Industry overlay.","Dialect notes.","Fallback safe."]},
-            b2:{h:"Beyond 1001",p:"Add Level 5+ while preserving the core.",u:["Industry vocab.","Formal writing.","Negotiation.","Technical packs."]},
-            b3:{h:"Assessment",p:"Placement and mastery tests tied to structure and evidence.",u:["Placement test.","Mastery test.","Pronunciation checks.","Certification hooks."]},
-            b4:{h:"Distribution",p:"Ship printable + audio bundles with consistent mapping.",u:["PDF bundles.","Audio prompts.","Practice cards.","Micro-lessons."]}
-          }, informal:{title:"Language (1001) — Roadmap",
-            b1:{h:"Overlays",p:"More packs without changing the core.",u:["Country packs.","Industry packs.","Fallback safe.","No drift."]},
-            b2:{h:"More levels",p:"Beyond core 1001.",u:["Writing.","Negotiation.","Industry.","Technical."]},
-            b3:{h:"Tests",p:"Simple tests.",u:["Placement.","Mastery.","Skills.","Badges."]},
-            b4:{h:"Bundles",p:"More materials.",u:["PDFs.","Audio.","Cards.","Micro-lessons."]}
-          }}
-        },
-
-        train:{
-          origin:{formal:{title:"Training (Masterclasses)",
-            b1:{h:"What it is",p:"Structured masterclasses that teach traversal study as a repeatable method.",u:["Method first.","Structure first.","Practice loops.","Clear outcomes."]},
-            b2:{h:"Audience",p:"Built for teachers and facilitators who are trusted by the community.",u:["ESL teachers.","Tutors.","Team leads.","Community instructors."]},
-            b3:{h:"Format",p:"Short modules with drills and checkpoints.",u:["Explain lenses.","Run exercises.","Evaluate output.","Iterate."]},
-            b4:{h:"Deliverables",p:"Facilitator kits for repeatable delivery.",u:["Slides.","PDF packs.","Rubrics.","Scripts."]}
-          }, informal:{title:"Training (Masterclasses)",
-            b1:{h:"What it is",p:"Masterclasses that teach the method.",u:["Clear modules.","Hands-on drills.","Real practice.","Clear wins."]},
-            b2:{h:"Who it’s for",p:"Teachers and coaches.",u:["ESL helpers.","Tutors.","Team leads.","Community teachers."]},
-            b3:{h:"How",p:"Short lessons + reps.",u:["Explain.","Practice.","Check.","Repeat."]},
-            b4:{h:"You get",p:"Guides + scripts.",u:["Slides.","PDFs.","Rubrics.","Packs."]}
-          }},
-          now:{formal:{title:"Training — Live",
-            b1:{h:"Live status",p:"Training scaffolds can be built directly from the hub structure.",u:["Same diamonds.","Same lenses.","Same contract.","Repeatable delivery."]},
-            b2:{h:"Quality control",p:"Rubrics keep independent facilitators aligned.",u:["Observer-invariant.","Evidence-based.","No intent inference.","Deterministic scoring."]},
-            b3:{h:"Delivery",p:"Workshops + practice labs + feedback loops.",u:["Practice blocks.","Live feedback.","Checkpoint tests.","Re-run."]},
-            b4:{h:"Outcome",p:"Scale through teachers without drift.",u:["Safer adoption.","More trust.","Higher retention.","Lower friction."]}
-          }, informal:{title:"Training — Live",
-            b1:{h:"Live",p:"Built from the same map.",u:["Same structure.","Same rules.","Repeatable.","Teachable."]},
-            b2:{h:"Quality",p:"Rubrics keep alignment.",u:["Same evidence.","Same outputs.","Less confusion.","No drift."]},
-            b3:{h:"How",p:"Workshops and practice labs.",u:["Learn.","Practice.","Feedback.","Repeat."]},
-            b4:{h:"Result",p:"Teachers scale faster.",u:["More reach.","More trust.","More consistency.","Less drift."]}
-          }},
-          post:{formal:{title:"Training — Roadmap",
-            b1:{h:"Tiers",p:"Certification-backed instructor levels.",u:["Tiered facilitators.","Audit logs.","Renewals.","Revocation rules."]},
-            b2:{h:"Scale",p:"Deploy standardized training kits.",u:["Cohorts.","Playbooks.","Nodes.","Overlays."]},
-            b3:{h:"Instrumentation",p:"Track outcomes without breaking neutrality.",u:["Skill metrics.","Behavioral signals.","Progress graphs.","Reports."]},
-            b4:{h:"Enterprise",p:"Governance/execution training.",u:["Policy adoption.","Change discipline.","Risk suppression.","Reporting."]}
-          }, informal:{title:"Training — Roadmap",
-            b1:{h:"Next",p:"Instructor tiers.",u:["Levels.","Audits.","Renewals.","Rules."]},
-            b2:{h:"Scale",p:"Training kits.",u:["Cohorts.","Playbooks.","Nodes.","Overlays."]},
-            b3:{h:"Metrics",p:"Clean outcome tracking.",u:["Signals.","Skills.","Progress.","Reports."]},
-            b4:{h:"Enterprise",p:"Org training version.",u:["Policies.","Discipline.","Risk control.","Reporting."]}
-          }}
-        },
-
-        cert:{
-          origin:{formal:{title:"Education Certification",
-            b1:{h:"What it is",p:"A verification layer for completion and competence where appropriate.",u:["Serial IDs.","Scope definition.","Validity windows.","Revocation rules."]},
-            b2:{h:"Anti-gaming",p:"Prevents paper credentials without skill.",u:["Evidence required.","Rubric checks.","Dual coding.","Audit logs."]},
-            b3:{h:"Outputs",p:"Certificates are lookupable and time-stamped.",u:["Registry entry.","Status.","Reason codes.","History."]},
-            b4:{h:"Use cases",p:"Language mastery, program completion, facilitator readiness.",u:["Level mastery.","Program completion.","Instructor tiers.","Quality control."]}
-          }, informal:{title:"Education Certification",
-            b1:{h:"What it is",p:"Proof someone finished and can do it.",u:["IDs.","Dates.","Status.","Reasons."]},
-            b2:{h:"Why",p:"Stops fake credentials.",u:["Evidence.","Rubrics.","Audits.","Logs."]},
-            b3:{h:"What you see",p:"Lookupable status.",u:["Active.","Expired.","Revoked.","Why."]},
-            b4:{h:"Where it fits",p:"Programs and instructors.",u:["Completion.","Mastery.","Instructor level.","Quality."]}
-          }},
-          now:{formal:{title:"Certification — Live",
-            b1:{h:"Live status",p:"Registry-ready scaffolding can be applied to learning outputs.",u:["Stable keys.","Stable windows.","Deterministic checks.","Safe publication."]},
-            b2:{h:"Neutrality",p:"Certification verifies evidence and output, not ideology.",u:["Observed behavior.","Artifact checks.","No intent inference.","Clear bounds."]},
-            b3:{h:"Governance",p:"Separation of roles prevents capture.",u:["Builders ≠ issuers.","Auditors ≠ thresholds.","Logs preserved.","Status reasons."]},
-            b4:{h:"Renewal",p:"Renewal ties to updated evidence windows.",u:["Time-bound validity.","Re-check required.","History kept.","Status updates."]}
-          }, informal:{title:"Certification — Live",
-            b1:{h:"Now",p:"We certify what’s measurable.",u:["Evidence.","Checks.","Logs.","Status."]},
-            b2:{h:"Rule",p:"No ideology—only output.",u:["Behavior.","Artifacts.","Proof.","Bounds."]},
-            b3:{h:"Safety",p:"Roles are separated.",u:["No capture.","No cheating.","Logs.","Audits."]},
-            b4:{h:"Renewal",p:"Renew with new evidence.",u:["Window.","Re-check.","History kept.","Status updates."]}
-          }},
-          post:{formal:{title:"Certification — Roadmap",
-            b1:{h:"Tiers",p:"Tiered certificates aligned to traversal competence.",u:["Student tiers.","Instructor tiers.","Audit tiers.","Public lookup."]},
-            b2:{h:"Integration",p:"Connect to products/laws/gauges as one system.",u:["Shared keys.","Shared routing.","Shared registry.","Shared evidence."]},
-            b3:{h:"Languages",p:"Overlays expand access while core stays stable.",u:["EN canonical.","Overlays optional.","Fallback safe.","Consistency checks."]},
-            b4:{h:"Outcome",p:"A training ecosystem that does not drift over time.",u:["Stable rules.","Stable meaning.","Upgradeable content.","Public-safe."]}
-          }, informal:{title:"Certification — Roadmap",
-            b1:{h:"Next",p:"Tiers for learners and teachers.",u:["Levels.","Audits.","Lookup.","Status."]},
-            b2:{h:"Connected",p:"Everything links together cleanly.",u:["Same keys.","Same routing.","Same registry.","Same proof."]},
-            b3:{h:"Languages",p:"Overlays expand access.",u:["Core stable.","Overlays optional.","Fallback safe.","Consistent."]},
-            b4:{h:"Result",p:"Growth without drift.",u:["Stable rules.","Stable meaning.","More depth.","Public-ready."]}
-          }}
-        }
+      live:{
+        formal:"Present systems remain fragmented across engineering, policy, finance, and public language. This fragmentation enlarges manipulation space and increases dispute surface. Claims drift because definitions are not locked. Late corrections become political, not technical. Live stability requires a single auditable spine that compresses argument into verification. Without that, scale remains unstable by construction.",
+        informal:"Right now the world is loud, fast, and unstable. People argue about outcomes while infrastructure quietly drifts underneath. That’s the smoke-and-mirrors reality: noise on top, fragility below. The fix is not more debate; it’s more structure. Live discipline turns chaos into a band you can actually operate in. When structure holds, trust stops bleeding."
+      },
+      roadmap:{
+        formal:"Roadmap for learning from history is institutionalizing constraints as default. This includes non-retroactive evidence discipline and portable standards. The objective is to compress hard lessons into enforced interfaces. Failures become disproof triggers rather than recurring surprises. Scaling becomes replication under invariants. The future posture is earned when the same failure cannot hide again.",
+        informal:"The roadmap is simple: stop paying tuition to failure. We turn hard lessons into hard interfaces so the same mistake can’t repeat quietly. When history can’t sneak back in through a loophole, progress accelerates safely. The frontier becomes survivable because it becomes disciplined. That is how “next” stops being a reboot. That is how scale becomes continuity."
       }
     },
-
-    zh:{
-      title:"产品",
-      tag:"教育系统",
-      d:{
-        prog:{lab:"课程", sub:"课程体系 · 成果。"},
-        lang:{lab:"语言", sub:"1001 · 四级 + 10%样本。"},
-        train:{lab:"训练", sub:"大师课 · 练习。"},
-        cert:{lab:"认证", sub:"验证 · 分层。"}
+    "Adversarial":{
+      concept:{
+        formal:"Adversarial posture assumes spoofing, omission, drift injection, and exception laundering. Attack surfaces are defined before scaling, not after incidents. Integrity requires redundancy, segmentation, and non-retroactive logging. Opportunity cost is reduced improvisation, but reward is defensibility under scrutiny. Manipulation resistance is a structural requirement, not a preference. If a system can be manipulated, it is already broken.",
+        informal:"Every system gets tested—by attackers, incentives, and pressure. The deeper enemy isn’t attack; it’s complacency. If you scale first and secure later, you lose trust forever. We bake detection and containment into the bones so manipulation becomes loud and expensive. That’s not paranoia; that’s asymmetric intelligence. The frontier survives only when it resists being gamed."
       },
-      lens:{formal:"正式", informal:"直接", concept:"概念", live:"上线", roadmap:"路线图"},
-      buttons:{return:"返回", jhub:"跳转枢纽", jprod:"跳转产品"},
-      content:{
-        prog:{
-          origin:{formal:{title:"课程（Programs）",
-            b1:{h:"它是什么",p:"以遍历学习为核心：结构可导航，而不是线性章节。",u:["课程是地图（不是台阶）。","入口可自由选择。","返回确定可控。","进度基于证据。"]},
-            b2:{h:"课程组合",p:"清晰的课程目录，建立在同一张稳定地图上。",u:["30天基础冲刺。","90天结构沉浸。","领导力英语。","商业精确表达。"]},
-            b3:{h:"怎么用",p:"选节点→做训练→验证输出→返回再分支。",u:["快速进入。","马上练习。","验证输出。","安全返回。"]},
-            b4:{h:"你得到什么",p:"与结构绑定的课程地图、训练包与检查点。",u:["每日训练。","提示包。","对话练习。","里程碑检查。"]}
-          }, informal:{title:"课程（Programs）",
-            b1:{h:"它是什么",p:"不会被线性梯子困住的课程体系。",u:["地图清楚。","入口清楚。","返回清楚。","结果清楚。"]},
-            b2:{h:"课程",p:"可直接执行的项目。",u:["30天基础。","90天沉浸。","领导力英语。","商业精确。"]},
-            b3:{h:"用法",p:"点进来→练→回来→重复。",u:["进入。","练。","回来。","重复。"]},
-            b4:{h:"你得到",p:"训练与检查点。",u:["清单。","提示语。","训练。","检查。"]}
-          }},
-          now:{formal:{title:"课程 — 上线",
-            b1:{h:"上线状态",p:"拓扑已上线：内容在固定节点内扩展，不破路由。",u:["路由稳定。","镜头稳定。","状态传递。","不漂移。"]},
-            b2:{h:"先填满规则",p:"每个节点先填满再扩展。",u:["不留空节点。","固定四盒。","每盒四条。","镜头真改内容。"]},
-            b3:{h:"进度模型",p:"进度按完成循环计量。",u:["检测偏离。","应用操作。","验证恢复。","记录循环。"]},
-            b4:{h:"上线姿态",p:"对大众可读且可预测。",u:["成果清楚。","步骤简单。","导航可预测。","无学术迷雾。"]}
-          }, informal:{title:"课程 — 上线",
-            b1:{h:"上线",p:"结构稳定，内容可增长。",u:["安全。","稳定。","可预测。","清楚。"]},
-            b2:{h:"规则",p:"先填满再扩展。",u:["不留空。","4×4公告。","再做深页。","不漂移。"]},
-            b3:{h:"进度",p:"跟踪完成循环。",u:["检测。","执行。","验证。","记录。"]},
-            b4:{h:"姿态",p:"清晰易读。",u:["简单。","可预测。","可理解。","可执行。"]}
-          }},
-          post:{formal:{title:"课程 — 路线图",
-            b1:{h:"扩展",p:"更多课程线，同一地图。",u:["少儿/ESL。","成人职业。","教练训练。","企业版本。"]},
-            b2:{h:"深度控制",p:"深度可调但导航不变。",u:["快览。","深读。","同路由。","同含义。"]},
-            b3:{h:"验证",p:"可选分层验证。",u:["评测。","证据日志。","徽章。","注册表接口。"]},
-            b4:{h:"分发",p:"真正可用的交付包。",u:["PDF包。","音频提示。","练习卡。","课程包。"]}
-          }, informal:{title:"课程 — 路线图",
-            b1:{h:"下一步",p:"更多课程。",u:["更多课程。","更多训练。","同地图。","同规则。"]},
-            b2:{h:"深度",p:"快或深。",u:["快。","深。","按你节奏。","稳定。"]},
-            b3:{h:"证明",p:"可选验证。",u:["测试。","徽章。","日志。","查询。"]},
-            b4:{h:"交付包",p:"更多材料。",u:["PDF。","音频。","卡片。","微课程。"]}
-          }}
-        },
-
-        lang:{
-          origin:{formal:{title:"语言（1001）— 四级 + 10%样本",
-            b1:{h:"四级结构",p:"1001核心分为四个掌握带（每带约250词）。",u:["L1基础（0–250）。","L2功能（251–500）。","L3结构（501–750）。","L4精确（751–1001）。"]},
-            b2:{h:"每级解锁什么",p:"级别是能力带，不是权限门。",u:["L1：完整基础表达。","L2：解释与比较。","L3：系统表达。","L4：细节表达。"]},
-            b3:{h:"10%样本（约100词）",p:"遍历簇：词汇→结构→应用。",u:["动词：be/do/go/make/get。","连接词：because/if/when/how。","结构：system/change/result。","控制：improve/need/possible。"]},
-            b4:{h:"10%样本 — 训练",p:"四个训练强迫真实输出。",u:["写5句because。","换成if。","命名系统。","改一步。"]}
-          }, informal:{title:"语言（1001）— 四级 + 10%样本",
-            b1:{h:"级别",p:"四级，每级约250词。",u:["L1基础。","L2功能。","L3结构。","L4精确。"]},
-            b2:{h:"为什么好用",p:"引导你，但你可以按需要跳。",u:["不是死梯子。","按需进入。","随时可回。","进度可测。"]},
-            b3:{h:"10%样本",p:"起步簇（约100词）。",u:["动词。","连接词。","结构词。","控制词。"]},
-            b4:{h:"用法",p:"每天做四个训练。",u:["because。","换if。","命名系统。","改一步。"]}
-          }},
-          now:{formal:{title:"语言（1001）— 上线",
-            b1:{h:"上线结构",p:"类别+级别稳定；内容在同一节点内扩展。",u:["类别稳定。","级别稳定。","路由确定。","可安全返回。"]},
-            b2:{h:"镜头完整性",p:"正式/直接与概念/上线/路线图必须改变含义。",u:["正式=精确。","直接=直白。","概念=定义。","上线=执行。"]},
-            b3:{h:"遍历（反线性）",p:"遍历学习是地图式：按需进入，安全返回，循环重复。",u:["按需进入。","跨级联结。","返回。","重复。"]},
-            b4:{h:"目标",p:"每日练习+检查点，比被动输入更快提升。",u:["每日训练循环。","对话练习。","检查点测试。","证据日志。"]}
-          }, informal:{title:"语言（1001）— 上线",
-            b1:{h:"上线",p:"现在能用。",u:["地图稳定。","镜头稳定。","安全返回。","不漂移。"]},
-            b2:{h:"镜头",p:"切镜头，文字真变。",u:["不是装饰。","含义变化。","重点变化。","仍一致。"]},
-            b3:{h:"遍历",p:"不是梯子，是地图。",u:["跳入。","练。","回来。","重复。"]},
-            b4:{h:"目标",p:"实用英语。",u:["说更多。","懂更多。","每天练。","记录胜利。"]}
-          }},
-          post:{formal:{title:"语言（1001）— 路线图",
-            b1:{h:"覆盖包",p:"按国家/领域增加覆盖包。",u:["国家覆盖。","行业覆盖。","方言说明。","安全回退。"]},
-            b2:{h:"超出1001",p:"保持核心层不变，增加更高级别。",u:["行业词。","正式写作。","谈判。","技术包。"]},
-            b3:{h:"评测",p:"与结构与证据绑定的测试。",u:["分级测。","掌握测。","发音测。","认证接口。"]},
-            b4:{h:"分发",p:"以PDF/音频一致映射交付。",u:["PDF包。","音频提示。","练习卡。","微课程。"]}
-          }, informal:{title:"语言（1001）— 路线图",
-            b1:{h:"覆盖",p:"更多包，但核心不变。",u:["国家包。","行业包。","安全回退。","不漂移。"]},
-            b2:{h:"更多级别",p:"超出核心1001。",u:["写作。","谈判。","行业。","技术。"]},
-            b3:{h:"测试",p:"简单有效。",u:["分级。","掌握。","技能。","徽章。"]},
-            b4:{h:"材料包",p:"更多交付包。",u:["PDF。","音频。","卡片。","微课程。"]}
-          }}
-        },
-
-        train:{
-          origin:{formal:{title:"训练（大师课）",
-            b1:{h:"它是什么",p:"教遍历学习方法的结构化大师课。",u:["方法优先。","结构优先。","练习循环。","结果清楚。"]},
-            b2:{h:"受众",p:"面向可信教师与带教者。",u:["ESL老师。","辅导者。","团队带头人。","社区教师。"]},
-            b3:{h:"形式",p:"短模块+练习+检查点。",u:["解释镜头。","做练习。","评估输出。","迭代。"]},
-            b4:{h:"交付物",p:"带教工具包。",u:["幻灯。","PDF包。","评分规。","脚本。"]}
-          }, informal:{title:"训练（大师课）",
-            b1:{h:"它是什么",p:"教方法的课程。",u:["模块清晰。","练习上手。","真实训练。","结果清楚。"]},
-            b2:{h:"适合谁",p:"老师与教练。",u:["ESL帮助者。","导师。","团队负责人。","社区老师。"]},
-            b3:{h:"怎么跑",p:"短课+重复练。",u:["讲。","练。","查。","再来。"]},
-            b4:{h:"你得到什么",p:"指南+脚本。",u:["幻灯。","PDF。","评分规。","工具包。"]}
-          }},
-          now:{formal:{title:"训练 — 上线",
-            b1:{h:"上线状态",p:"训练骨架可直接从枢纽结构生成。",u:["同菱形。","同镜头。","同契约。","可复制交付。"]},
-            b2:{h:"质量控制",p:"评分规让多个讲师保持一致。",u:["观察者不变。","基于证据。","不推断意图。","确定评分。"]},
-            b3:{h:"交付",p:"工作坊+练习实验室+反馈循环。",u:["练习块。","实时反馈。","检查点测试。","复跑。"]},
-            b4:{h:"结果",p:"通过老师扩展且不漂移。",u:["更安全。","更可信。","更一致。","更少混乱。"]}
-          }, informal:{title:"训练 — 上线",
-            b1:{h:"上线",p:"用同一地图做训练。",u:["同结构。","同规则。","可复制。","可教学。"]},
-            b2:{h:"质量",p:"评分规保持一致。",u:["同证据。","同输出。","更少混乱。","不漂移。"]},
-            b3:{h:"怎么做",p:"工作坊+练习。",u:["学。","练。","反馈。","重复。"]},
-            b4:{h:"结果",p:"老师扩展更快。",u:["更广。","更可信。","更一致。","更少漂移。"]}
-          }},
-          post:{formal:{title:"训练 — 路线图",
-            b1:{h:"分层",p:"讲师分层与审计。",u:["讲师等级。","审计日志。","续期。","撤销规则。"]},
-            b2:{h:"规模化",p:"标准训练包下发。",u:["班组。","剧本。","节点。","覆盖层。"]},
-            b3:{h:"测量",p:"干净测量结果。",u:["技能指标。","行为信号。","进度图。","报告。"]},
-            b4:{h:"企业",p:"治理/执行训练。",u:["策略采纳。","纪律。","风险抑制。","报告。"]}
-          }, informal:{title:"训练 — 路线图",
-            b1:{h:"下一步",p:"讲师分层。",u:["等级。","审计。","续期。","规则。"]},
-            b2:{h:"扩展",p:"训练包。",u:["班组。","剧本。","节点。","覆盖层。"]},
-            b3:{h:"指标",p:"跟踪结果。",u:["信号。","技能。","进度。","报告。"]},
-            b4:{h:"企业版",p:"组织训练。",u:["策略。","纪律。","风险控制。","报告。"]}
-          }}
-        },
-
-        cert:{
-          origin:{formal:{title:"教育认证",
-            b1:{h:"它是什么",p:"用于完成与能力的验证层。",u:["序列号。","范围。","有效期。","撤销规则。"]},
-            b2:{h:"反作弊",p:"防止无技能证书。",u:["需要证据。","评分规。","双人编码。","审计日志。"]},
-            b3:{h:"输出",p:"可查询状态与时间戳。",u:["注册表条目。","状态。","原因码。","历史。"]},
-            b4:{h:"用例",p:"语言掌握、课程完成、讲师准备度。",u:["级别掌握。","课程完成。","讲师分层。","质量控制。"]}
-          }, informal:{title:"教育认证",
-            b1:{h:"它是什么",p:"证明你完成且能做。",u:["ID。","日期。","状态。","原因。"]},
-            b2:{h:"为什么",p:"防止假证书。",u:["证据。","评分规。","审计。","日志。"]},
-            b3:{h:"你能看到",p:"可查询状态。",u:["有效。","过期。","撤销。","为什么。"]},
-            b4:{h:"适用范围",p:"课程与讲师。",u:["完成。","掌握。","讲师等级。","质量。"]}
-          }},
-          now:{formal:{title:"认证 — 上线",
-            b1:{h:"上线状态",p:"注册表结构可应用到学习输出。",u:["键稳定。","窗口稳定。","检查确定。","发布安全。"]},
-            b2:{h:"中立性",p:"认证验证证据与输出。",u:["观测行为。","产物检查。","不推断意图。","边界清晰。"]},
-            b3:{h:"治理",p:"角色分离防止被捕获。",u:["建设者≠签发者。","审计≠阈值。","日志保留。","原因码。"]},
-            b4:{h:"续期",p:"续期绑定新证据窗口。",u:["时间有效。","需复查。","历史保留。","状态更新。"]}
-          }, informal:{title:"认证 — 上线",
-            b1:{h:"现在",p:"能测就能证。",u:["证据。","检查。","日志。","状态。"]},
-            b2:{h:"规则",p:"只看输出。",u:["行为。","产物。","证明。","边界。"]},
-            b3:{h:"安全",p:"角色分开。",u:["不被捕获。","不作弊。","日志。","审计。"]},
-            b4:{h:"续期",p:"用新证据续期。",u:["窗口。","复查。","历史保留。","状态更新。"]}
-          }},
-          post:{formal:{title:"认证 — 路线图",
-            b1:{h:"分层",p:"与遍历能力对应的分层证书。",u:["学员分层。","讲师分层。","审计分层。","公开查询。"]},
-            b2:{h:"集成",p:"与其他模块统一连接。",u:["共享键。","共享路由。","共享注册表。","共享证据包。"]},
-            b3:{h:"语言",p:"覆盖层扩展访问，核心稳定。",u:["EN/中文规范。","覆盖包。","安全回退。","一致检查。"]},
-            b4:{h:"结果",p:"增长而不漂移。",u:["规则稳定。","含义稳定。","内容可升级。","可公开。"]}
-          }, informal:{title:"认证 — 路线图",
-            b1:{h:"下一步",p:"分层。",u:["等级。","审计。","查询。","状态。"]},
-            b2:{h:"连接",p:"干净链接。",u:["同键。","同路由。","同注册表。","同证明。"]},
-            b3:{h:"语言",p:"覆盖层扩展。",u:["核心稳定。","覆盖可选。","安全回退。","一致。"]},
-            b4:{h:"结果",p:"不漂移增长。",u:["规则稳定。","含义稳定。","更深内容。","可公开。"]}
-          }}
-        }
+      live:{
+        formal:"Live adversarial monitoring flags anomaly clusters, integrity breaks, and policy violations. Telemetry is cross-validated to suppress artifact-driven wins. Response prioritizes containment and rollback over continuity. Recovery is procedural and logged. Exceptions remain bounded and visible. Live resilience is measured as detectability and bounded blast radius, not as uninterrupted operation.",
+        informal:"Live mode is where drift tries to hide. We make drift loud. We make shortcuts visible. We make tampering expensive. When something doesn’t match the envelope, it doesn’t get a story—it gets contained. That’s how momentum stays safe under pressure. Resilience is built before it’s needed. That’s the difference between a demo and a system."
+      },
+      roadmap:{
+        formal:"Roadmap expands red-team cycles, strengthens tamper evidence, and tightens integrity locks. Defensive posture evolves with deployment footprint. Transparency reduces manipulation space by removing ambiguity. Scale is gated by adversarial clearance rather than optimism. The system advances when it proves it cannot be quietly gamed. Trust becomes durable when manipulation classes are structurally suppressed.",
+        informal:"The roadmap is “harder to fool” every quarter. More tests, tighter locks, faster containment, cleaner recovery. As scale grows, manipulation gets cheaper, so defenses must get smarter. We don’t grow into fragility. We grow into resilience. That’s how the frontier survives contact with reality. That’s how reward stays larger than risk."
+      }
+    },
+    "Baseline Constraints":{
+      concept:{
+        formal:"Baseline constraints define what is permitted before expansion. Industrial posture remains thermal substitution under classification (C). No net-positive fusion claim is asserted. High-energy regimes remain upstream-only. Measurement is the authority for escalation decisions. These constraints are the spine of admissibility and the boundary against narrative inflation. They are enforced rather than requested.",
+        informal:"This is the rulebook before the game. We don’t get to scale whatever we want just because it sounds exciting. The baseline is containment, measurement, and discipline. Industrial substitution is the foothold because it’s real. Everything else must be earned. That’s how the dream stays honest. Without baseline constraints, the frontier becomes propaganda."
+      },
+      live:{
+        formal:"Live constraints enforce stability bands, auditability, and reversible escalation. Drift cannot be masked by narrative framing. Any correction requires explicit rollover rather than silent edits. Boundaries remain visible and enforceable. Live posture is constraint compliance under stress, not best-case storytelling. Failures remain admissible data and are used to tighten gates.",
+        informal:"Live means the rules actually matter. If the band drifts, you don’t debate—you respond. If the record breaks, you don’t patch—you roll forward cleanly. The whole point is that reality stays louder than rhetoric. That’s how stability feels calm instead of fragile. Discipline is what makes speed survivable. It’s the difference between progress and chaos."
+      },
+      roadmap:{
+        formal:"Roadmap constraints tighten under scale rather than loosening. Certification artifacts become portable and underwriting-grade. Governance remains non-retroactive and binary for admissibility. Expansion is conditional upon stable receipts and explicit disproof triggers. The system remains anchored to constraints as it grows. Scale is permitted only where proof density increases.",
+        informal:"The roadmap isn’t “more freedom.” It’s more discipline at larger scale. We tighten the rules because the stakes get bigger. We make proof easier to verify and harder to fake. That’s how growth stays clean. The frontier doesn’t need permission; it needs structure. When structure holds, the horizon opens without collapse."
+      }
+    },
+    "Engineering":{
+      concept:{
+        formal:"Engineering defines the physical separation wall between regime and endpoint. Interfaces are explicit and isolation is structural. Thermal transfer is exchanger-mediated rather than uncontrolled. Failure modes are enumerated before scaling decisions. Mechanical survivability is a precondition and is validated under variance. Engineering is the first admissibility gate for deployment.",
+        informal:"Engineering is where ambition becomes real. Heat either stays contained or it leaks into consequences. We build walls that behave like laws, not like suggestions. The cost is friction now; the reward is no catastrophe later. That’s how you keep velocity without paying collapse. The frontier becomes infrastructure only when engineering says it can survive."
+      },
+      live:{
+        formal:"Live engineering is judged by envelope adherence under variance. Thermal drift and stress accumulation are logged continuously. Shutdown pathways are deterministic. Redundancy absorbs shock rather than averaging error away. Maintenance follows measured wear, not optimism. Stability is the operational KPI that governs advancement.",
+        informal:"Live mode is where seams tell the truth. We watch drift, not headlines. When the envelope is threatened, we contain first and recover cleanly. That’s not fear—it’s professionalism. Stability is what makes scale possible. The best systems don’t surprise you; they behave."
+      },
+      roadmap:{
+        formal:"Engineering roadmap improves efficiency without relaxing constraints. Isolation tiers deepen and certification strengthens. Expansion is blocked if stress mapping is incomplete. Interfaces evolve only with re-validation. Growth remains subordinate to physical proof. The system grows safer as it grows larger.",
+        informal:"The roadmap is stronger boundaries, cleaner interfaces, sharper envelopes. We don’t move closer to people; we move closer to resilience. Every upgrade must survive the stress we expect at scale. That’s how engineering earns the right to expand. The future is not louder—it’s more reliable."
+      }
+    },
+    "Technology":{
+      concept:{
+        formal:"Technology establishes observability and replayability. Telemetry is authority, not decoration. Logs prevent post-hoc reinterpretation. Automation remains subordinate to measurement integrity. Drift detection is first-class. Integrity discipline constrains what the system is allowed to claim. Visibility is an operational requirement.",
+        informal:"Technology is the nervous system that keeps the dream honest. If the system can’t see itself, it can’t correct itself. Logs are memory you can trust under pressure. Automation serves truth, not vibes. That’s how progress stops being a story. The frontier becomes credible when it becomes observable."
+      },
+      live:{
+        formal:"Live telemetry tracks deviation and acceleration. Cross-signal agreement suppresses artifact wins. Control actions are logged with reason codes. Auditability remains continuous. Latency is bounded and declared. Visibility defines authority under stress. The system rejects ambiguous interpretation by retaining evidence.",
+        informal:"Live mode is where drift tries to hide inside averages. We don’t let it. We cross-check, we log, and we make weirdness loud. Every intervention leaves a footprint. That’s how the system stays calm while it moves fast. When the nervous system is clean, the body can run."
+      },
+      roadmap:{
+        formal:"Roadmap improves fidelity and integrity constraints. Upgrades preserve comparability under locked definitions. Automated reporting may be introduced without losing raw traceability. Transparency increases with scale. No algorithmic change proceeds without audit impact review. Evidence remains portable.",
+        informal:"The roadmap is sharper vision, not thicker mystery. Better sensing, cleaner validation, more replayable truth. We add complexity only to clarify. The bigger it gets, the more visible it must become. That’s how frontier tech becomes trusted tech. Clarity is the compounding advantage."
+      }
+    },
+    "Industrial":{
+      concept:{
+        formal:"Industrial posture remains thermal substitution under containment. No net-positive fusion claim is asserted. Buffering precedes adjacency. Deployment follows staged phases. Claims remain bounded to measured delivered bands. The public layer is constrained by auditable performance, not speculative promise.",
+        informal:"Industrial scale is where you earn credibility. We start with substitution because it’s measurable and useful. We buffer before we broadcast, and we stage before we multiply. No fusion gain claims here—only disciplined delivery. That’s how trust survives scrutiny. The reward is adoption that doesn’t collapse."
+      },
+      live:{
+        formal:"Live operation is evaluated by stability, uptime, and bounded variance. Containment remains upstream and auditable. Phase advancement is blocked without receipts. Interface behavior remains predictable under stress. Stability under pressure defines viability. Operational metrics outrank narratives.",
+        informal:"Live industrial isn’t loud—it’s steady. Buffers absorb spikes and interfaces stay predictable. We don’t sprint into scale; we walk phases with proof. The reward is bankable stability. The risk of rushing is reputational ruin. Calm output is the signature of real scale."
+      },
+      roadmap:{
+        formal:"Roadmap advances through certification, underwriting alignment, and replication discipline. Cluster expansion is conditional on compliance history. Licensing ties to containment classes. Scale remains staged. Growth is reversible under violation and proceeds only when evidence density increases.",
+        informal:"The roadmap is replication without chaos. Certification first, clusters second, adjacency third. Underwriting gets easier because exposure is bounded. Growth becomes boring in the right way because it’s repeatable. That’s how industrial dominance is built. The future arrives through discipline, not hype."
+      }
+    },
+    "Environmental":{
+      concept:{
+        formal:"Environmental integrity is an interface contract. Plasma regimes remain isolated from endpoints. Discharge bands are declared and measured. Buffering reduces shock propagation. Compliance is engineered rather than narrated. Expansion is blocked without verified conformity.",
+        informal:"The environment is a boundary you don’t get to cheat. Heat must stay in its lane and impact must stay measurable. Buffers exist because shocks exist. The reward is scale without harm; shortcuts buy irreversible damage. Clean energy must behave cleanly, not just sound clean."
+      },
+      live:{
+        formal:"Live monitoring tracks discharge variance and boundary integrity. Anomalies trigger containment response. Interfaces remain segregated. Reporting stays consistent with measured bands. Drift is not tolerated. Environmental posture is measured behavior over time, not a single good day.",
+        informal:"Live mode is where nature audits you. If the band drifts, you respond. If the boundary is threatened, you contain. We log reality as it happens. That’s what makes adoption possible without fear. When impact stays bounded, trust grows."
+      },
+      roadmap:{
+        formal:"Roadmap tightens impact bands and improves audit portability. Monitoring increases resolution. Expansion is blocked without verified conformity. Environmental invariants remain non-negotiable under growth. Cross-site harmonization prevents drift by replication.",
+        informal:"The roadmap is tighter rules at larger scale. Better monitoring, cleaner reporting, and less room for drift. We don’t loosen standards because we’re bigger—we strengthen them. That’s how sustainability becomes structural. The future is audited cleanliness."
+      }
+    },
+    "Medicine":{
+      concept:{
+        formal:"Medical adjacency emphasizes absolute boundary discipline for human safety. High-energy regimes remain upstream-only and non-proximate. Endpoints must remain passive and certified. Health claims are excluded without validation. Safety posture is enforced by design.",
+        informal:"Healthcare teaches the harsh rule: ‘probably safe’ is still unsafe. So we keep high-energy upstream and endpoints passive. The reward is trust that doesn’t depend on hope. Boundaries are life. That’s the medical lesson baked into the architecture."
+      },
+      live:{
+        formal:"Live medical suitability is measured as consistent isolation and predictable incident response. Monitoring triggers deterministic shutdown. Documentation supports oversight. Human factors are treated as constraints. Exposure remains structurally prevented.",
+        informal:"Live medical environments don’t tolerate ambiguity. If the interface isn’t predictable, stress explodes. So we design for calm: clear procedures, clear logs, and zero exposure. That’s how infrastructure supports life systems. Reliability is the medical standard applied to energy."
+      },
+      roadmap:{
+        formal:"Roadmap adds stronger third-party oversight and standardized safety artifacts. Bio-interface modeling becomes explicit before adjacency expansion. Isolation invariants remain dominant. Expansion proceeds only under measurable safety evidence.",
+        informal:"The roadmap is stronger oversight, cleaner artifacts, and more preventative monitoring. We expand only when safety proof is portable. No shortcuts. The future is resilience without exposure. That’s how energy earns proximity."
+      }
+    },
+    "Financial":{
+      concept:{
+        formal:"Financial posture prices risk based on containment tier and measured variance. Insurance maps to certification. Revenue models reference verified bands. Speculative gains are excluded from operational economics. Capital allocation follows proof density.",
+        informal:"Money loves speed until speed breaks things. Here, finance follows physics. Risk is priced against the envelope and reward comes from repeatability. The opportunity cost is slower hype; the reward is cheaper capital that stays. Stable bands make capital calm."
+      },
+      live:{
+        formal:"Live discipline monitors cost per verified output and variance impact. Underwriting references telemetry-backed compliance. Expansion capital is released only after verification. Stability reduces fragility. Financial claims remain constrained to measurable outcomes.",
+        informal:"Live finance is where the world charges interest on sloppiness. If variance spikes, capital tightens. If receipts are clean, confidence rises. We release growth money only after proof. The best financial strategy is operational integrity. Trust lowers cost."
+      },
+      roadmap:{
+        formal:"Roadmap integrates certificate-linked underwriting and staged replication financing. Risk decreases as audit fidelity increases. Capital scaling remains gated by receipts. Contract structures align with containment tiers and compliance history.",
+        informal:"The roadmap is confidence that compounds. As auditability improves, underwriting calms down. Contracts map to measurable bands. Growth money becomes structural instead of speculative. Reward follows proof. Capital stops being a gamble and becomes a multiplier."
+      }
+    },
+    "Legal":{
+      concept:{
+        formal:"Legal alignment binds deployment to enforceable definitions and measurable thresholds. Compliance is tied to documented procedures. Scope remains stable to prevent interpretive drift. Liability maps to containment tiers. Legitimacy depends on auditable posture.",
+        informal:"Law punishes what it can’t define. So we define everything that matters: boundaries, bands, and procedures. The reward is adoption without drama. The cost is discipline. Legal clarity becomes a scaling accelerator when proof is portable. Receipts are the legal language."
+      },
+      live:{
+        formal:"Live compliance uses auditable logs and stable thresholds. Disputes resolve through receipts rather than recollection. No regulatory bypass is tolerated. Posture remains bounded. Documentation remains current and consistent.",
+        informal:"Live legal posture is calm because the system is honest. When a question comes, the receipt answers it. No guessing. No arguing. That’s how legal risk shrinks. And when legal risk shrinks, scaling gets easier."
+      },
+      roadmap:{
+        formal:"Roadmap improves certification portability and cross-jurisdiction comparability. Contract triggers map to certificate states. Expansion remains contingent on compliance stability. Neutral posture prevents capture. Standards reduce ambiguity under scale.",
+        informal:"The roadmap is standards you can carry across regions without rewriting meaning. Certification becomes the language institutions trust. Political noise has less power when proof is stable. That’s how infrastructure becomes policy-safe. Scale becomes procedural, not political."
+      }
+    },
+    "Political":{
+      concept:{
+        formal:"Political interface is treated as an institutional constraint surface. Neutral posture prevents capture. Adoption depends on auditable stability and bounded claims. Policy must not exceed technical proof. Interfaces remain consistent under scrutiny.",
+        informal:"Politics amplifies what it can’t verify. So we make verification easy. Neutral posture keeps the system from becoming someone’s propaganda tool. The reward is broader adoption. The cost is refusing easy narratives. That’s how scale stays clean."
+      },
+      live:{
+        formal:"Live posture maintains bounded messaging aligned to measured state. Stakeholder engagement references receipts. Drift is suppressed by stable definitions. Trust grows through consistency. Governance prevents narrative escalation under pressure.",
+        informal:"Live political reality is pressure. Everyone wants a headline. We give them receipts instead. That’s how you avoid polarization: you keep the system boringly consistent. When consistency holds, politics calms down."
+      },
+      roadmap:{
+        formal:"Roadmap harmonizes institutional adoption through portable certification and stable interfaces. Expansion remains conditional on compliance and auditability. Neutrality remains structural. Standards reduce argument surface and improve alignment.",
+        informal:"The roadmap is unity through structure. When proof is portable, alignment becomes possible without forcing beliefs. Scale becomes cooperation instead of conflict. That’s how the frontier becomes a shared project. Coherence beats ideology."
+      }
+    },
+    "Social":{
+      concept:{
+        formal:"Social adoption requires legible boundaries and bounded language. Trust derives from consistent posture and falsifiable claims. Transparency reduces rumor amplification. Messaging remains subordinate to measured reality. Consistency prevents volatility.",
+        informal:"People don’t reject systems first—they reject confusion. If the story inflates, trust collapses. So we keep boundaries clear and posture honest. The reward is alignment that scales. The cost is resisting hype. That’s how excitement stays safe."
+      },
+      live:{
+        formal:"Live communication remains consistent with measured posture. Updates reference operational bands and compliance artifacts. No speculative escalation is permitted. Transparency lowers anxiety. Trust becomes a consequence of repeatable behavior.",
+        informal:"Live is where trust is either built or burned. We keep the frame stable so people don’t panic. We point to receipts, not slogans. That’s how adoption becomes calm. Consistency is the social version of containment."
+      },
+      roadmap:{
+        formal:"Roadmap standardizes reporting and multilingual consistency without semantic drift. Public dashboards may reflect compliance bands. Education aligns with containment tiers. Adoption remains evidence-driven. Narrative remains bounded under scale.",
+        informal:"The roadmap is stronger legibility at larger scale. More clarity, fewer misunderstandings, and less room for rumor. We educate without exaggerating. Trust compounds when the story doesn’t shift. That’s how social alignment becomes durable."
       }
     }
   };
 
-  var pack = (lang==="zh") ? TEXT.zh : TEXT.en;
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
-  document.getElementById("brandName").textContent = pack.title;
-  document.getElementById("brandTag").textContent = pack.tag;
-
-  document.getElementById("progLab").textContent = pack.d.prog.lab;
-  document.getElementById("progSub").textContent = pack.d.prog.sub;
-  document.getElementById("langLab").textContent = pack.d.lang.lab;
-  document.getElementById("langSub").textContent = pack.d.lang.sub;
-  document.getElementById("trainLab").textContent = pack.d.train.lab;
-  document.getElementById("trainSub").textContent = pack.d.train.sub;
-  document.getElementById("certLab").textContent = pack.d.cert.lab;
-  document.getElementById("certSub").textContent = pack.d.cert.sub;
-
-  document.getElementById("mReturn").textContent = pack.buttons.return;
-  document.getElementById("mJumpHub").textContent = pack.buttons.jhub;
-  document.getElementById("mJumpProducts").textContent = pack.buttons.jprod;
-
-  var contentPack = pack.content;
-
-  function persist(){
-    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time); }catch(e){}
-  }
-
-  function setLensLabels(){
-    document.getElementById("styleChip").textContent = "STYLE: " + (style==="formal" ? pack.lens.formal : pack.lens.informal);
-    document.getElementById("chipConcept").textContent = pack.lens.concept;
-    document.getElementById("chipLive").textContent = pack.lens.live;
-    document.getElementById("chipRoadmap").textContent = pack.lens.roadmap;
-    document.getElementById("chipConcept").classList.toggle("active", time==="origin");
-    document.getElementById("chipLive").classList.toggle("active", time==="now");
-    document.getElementById("chipRoadmap").classList.toggle("active", time==="post");
-  }
-
+  // UI refs
   var bd=document.getElementById("bd");
-  var modal=document.getElementById("modal");
-  var mClose=document.getElementById("mClose");
-  var mTitle=document.getElementById("mTitle");
-  var activeKey=null;
+  var quadModal=document.getElementById("quadModal");
+  var domainModal=document.getElementById("domainModal");
+  var quadClose=document.getElementById("quadClose");
+  var domainClose=document.getElementById("domainClose");
+  var quadTitle=document.getElementById("quadTitle");
+  var quadGrid=document.getElementById("quadGrid");
+  var domainTitle=document.getElementById("domainTitle");
+  var toneFormal=document.getElementById("toneFormal");
+  var toneInformal=document.getElementById("toneInformal");
+  var bConcept=document.getElementById("bConcept");
+  var bLive=document.getElementById("bLive");
+  var bRoadmap=document.getElementById("bRoadmap");
+  var pConcept=document.getElementById("pConcept");
+  var pLive=document.getElementById("pLive");
+  var pRoadmap=document.getElementById("pRoadmap");
+  var domainReturn=document.getElementById("domainReturn");
 
-  var h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1");
-  var h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2");
-  var h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3");
-  var h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4");
+  var currentQuad=null;
+  var currentDomain=null;
+  var tone="formal";
 
-  function fill(hEl,pEl,uEl,b){
-    hEl.textContent=b.h; pEl.textContent=b.p; uEl.innerHTML="";
-    b.u.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; uEl.appendChild(li); });
-  }
+  function showBD(){ bd.classList.add("show"); }
+  function hideBD(){ bd.classList.remove("show"); }
 
-  function render(){
-    setLensLabels(); persist(); setLinks();
-    var view = contentPack[activeKey][time][style];
-    mTitle.textContent = view.title;
-    fill(h1,p1,u1,view.b1);
-    fill(h2,p2,u2,view.b2);
-    fill(h3,p3,u3,view.b3);
-    fill(h4,p4,u4,view.b4);
-  }
+  function openQuad(qname){
+    currentQuad=qname;
+    quadTitle.textContent="ENERGY · " + qname;
+    quadGrid.innerHTML="";
+    var domains = QUADS[qname] || [];
 
-  function setActiveDiamond(key){
-    ["dProg","dLang","dTrain","dCert"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
-    var map={prog:"dProg",lang:"dLang",train:"dTrain",cert:"dCert"};
-    document.getElementById(map[key]).classList.add("active");
-  }
-
-  function open(key){
-    activeKey=key;
-    setActiveDiamond(key);
-    render();
-    bd.classList.add("show");
-    modal.classList.add("show");
-  }
-  function close(){
-    bd.classList.remove("show");
-    modal.classList.remove("show");
-    ["dProg","dLang","dTrain","dCert"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
-  }
-
-  document.getElementById("styleChip").addEventListener("click", function(){
-    style = (style==="formal") ? "informal" : "formal";
-    render();
-  });
-  document.getElementById("chipConcept").addEventListener("click", function(){ time="origin"; render(); });
-  document.getElementById("chipLive").addEventListener("click", function(){ time="now"; render(); });
-  document.getElementById("chipRoadmap").addEventListener("click", function(){ time="post"; render(); });
-
-  bd.addEventListener("click", close);
-  mClose.addEventListener("click", close);
-  document.getElementById("mReturn").addEventListener("click", close);
-
-  document.getElementById("dProg").addEventListener("click", function(){ open("prog"); });
-  document.getElementById("dLang").addEventListener("click", function(){ open("lang"); });
-  document.getElementById("dTrain").addEventListener("click", function(){ open("train"); });
-  document.getElementById("dCert").addEventListener("click", function(){ open("cert"); });
-
-  ["dProg","dLang","dTrain","dCert"].forEach(function(id){
-    var el=document.getElementById(id);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+    domains.forEach(function(d){
+      var tile=document.createElement("div");
+      tile.className="smallDiamond";
+      tile.setAttribute("role","button");
+      tile.tabIndex=0;
+      tile.innerHTML='<div class="sdInner"><div class="sdT">'+d+'</div><div class="sdS">Concept · Live · Roadmap</div></div>';
+      tile.addEventListener("click", function(){ openDomain(d); });
+      tile.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openDomain(d);} });
+      quadGrid.appendChild(tile);
     });
-  });
 
-  setLensLabels();
-  setLinks();
+    // RETURN tile (diamond)
+    var ret=document.createElement("div");
+    ret.className="smallDiamond";
+    ret.setAttribute("role","button");
+    ret.tabIndex=0;
+    ret.innerHTML='<div class="sdInner"><div class="sdT">RETURN</div><div class="sdS">Back to quadrants</div></div>';
+    ret.addEventListener("click", closeQuad);
+    ret.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); closeQuad(); }});
+    quadGrid.appendChild(ret);
+
+    showBD();
+    quadModal.classList.add("show");
+  }
+
+  function closeQuad(){
+    quadModal.classList.remove("show");
+    if(!domainModal.classList.contains("show")) hideBD();
+  }
+
+  function openDomain(dname){
+    currentDomain=dname;
+    domainTitle.textContent="ENERGY · " + dname;
+    [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
+    applyTone(tone);
+    quadModal.classList.remove("show");
+    showBD();
+    domainModal.classList.add("show");
+  }
+
+  function backToDomains(){
+    domainModal.classList.remove("show");
+    quadModal.classList.add("show");
+  }
+
+  function applyTone(t){
+    tone=t;
+    toneFormal.classList.toggle("active", tone==="formal");
+    toneInformal.classList.toggle("active", tone==="informal");
+
+    var pack=N[currentDomain];
+    if(!pack){
+      pConcept.textContent="NOT MEASURED";
+      pLive.textContent="NOT MEASURED";
+      pRoadmap.textContent="NOT MEASURED";
+      return;
+    }
+    pConcept.textContent = pack.concept[tone];
+    pLive.textContent = pack.live[tone];
+    pRoadmap.textContent = pack.roadmap[tone];
+  }
+
+  function bindBubble(box){
+    box.addEventListener("click", function(){ box.classList.toggle("open"); });
+    box.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); box.classList.toggle("open"); }});
+    box.tabIndex=0; box.setAttribute("role","button");
+  }
+  bindBubble(bConcept); bindBubble(bLive); bindBubble(bRoadmap);
+
+  toneFormal.addEventListener("click", function(){ applyTone("formal"); });
+  toneInformal.addEventListener("click", function(){ applyTone("informal"); });
+
+  // CHANGE #2: RETURN diamond inside domain modal (goes back to domain diamonds)
+  domainReturn.addEventListener("click", backToDomains);
+  domainReturn.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); backToDomains(); }});
+
+  // Close buttons
+  bd.addEventListener("click", function(){
+    domainModal.classList.remove("show");
+    quadModal.classList.remove("show");
+    hideBD();
+  });
+  quadClose.addEventListener("click", function(){ quadModal.classList.remove("show"); hideBD(); });
+  domainClose.addEventListener("click", function(){ domainModal.classList.remove("show"); quadModal.classList.remove("show"); hideBD(); });
+
+  // Open quadrants
+  function bindQuad(id,name){
+    var el=document.getElementById(id);
+    el.addEventListener("click", function(){ openQuad(name); });
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openQuad(name);} });
+  }
+  bindQuad("qFoundation","FOUNDATION");
+  bindQuad("qArchitecture","ARCHITECTURE");
+  bindQuad("qPerformance","PERFORMANCE");
+  bindQuad("qGovernance","GOVERNANCE");
+
 })();
 </script>
 

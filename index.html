@@ -1,15 +1,14 @@
 <!-- TNT — /index.html  (TERMINAL · STRUCTURAL PREFACE · 8 SECTIONS · GEM STANDARD)
-     LOCKS:
-       - TNT ONLY (full file)
-       - Uses /assets/ui.css + /assets/branch.css only (no asset rewrites)
-       - DO NOT style html/body background (ui.css owns field)
-       - NO lenses on main page (lenses INSIDE modal only)
-       - Dual language compatible (single-language render via gd_lang / ?lang=)
-       - 8 main bubbles → centered modal
-       - Modal lenses: STYLE (formal/informal) + TIME (concept/now/roadmap)  (gd_time = origin/now/post)
-       - Modal content: 4 paragraph-bubbles (no bullet lists)
-       - All navigation links are uniform buttons (no blue/purple anchors)
+     UPGRADE (NO DRIFT):
+       - Same 8 main bubbles → centered modal
+       - Same modal lenses (STYLE + TIME) using gd_style + gd_time
+       - Same 4 paragraph-bubbles (NO bullet lists)
+       - ADD: per-paragraph "JUMP" buttons (uniform buttons) that route either:
+           A) internal jump to another Terminal bubble section
+           B) external jump to a site segment (HUB / LAWS / PRODUCTS / LINKS / GAUGES / EXPLORE)
+       - Dual language compatible: zh mirrors en content for now
        - State propagation: lang/style/time carried through all internal links
+       - No new state keys
 -->
 
 <!doctype html>
@@ -143,6 +142,10 @@ a{color:inherit;text-decoration:none}
 .mh{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
 .mp{margin:0;color:rgba(255,255,255,.84);line-height:1.55}
 
+/* Per-paragraph jump row */
+.mjump{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-start;margin-top:10px}
+.mjump .crp-btn{white-space:nowrap}
+
 /* Modal actions (uniform buttons only) */
 .mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
 
@@ -259,10 +262,26 @@ a{color:inherit;text-decoration:none}
 
     <div class="mbody">
       <div class="mgrid">
-        <div class="mbox"><h4 class="mh" id="h1"></h4><p class="mp" id="p1"></p></div>
-        <div class="mbox"><h4 class="mh" id="h2"></h4><p class="mp" id="p2"></p></div>
-        <div class="mbox"><h4 class="mh" id="h3"></h4><p class="mp" id="p3"></p></div>
-        <div class="mbox"><h4 class="mh" id="h4"></h4><p class="mp" id="p4"></p></div>
+        <div class="mbox">
+          <h4 class="mh" id="h1"></h4>
+          <p class="mp" id="p1"></p>
+          <div class="mjump"><button class="crp-btn" id="j1" type="button">JUMP</button></div>
+        </div>
+        <div class="mbox">
+          <h4 class="mh" id="h2"></h4>
+          <p class="mp" id="p2"></p>
+          <div class="mjump"><button class="crp-btn" id="j2" type="button">JUMP</button></div>
+        </div>
+        <div class="mbox">
+          <h4 class="mh" id="h3"></h4>
+          <p class="mp" id="p3"></p>
+          <div class="mjump"><button class="crp-btn" id="j3" type="button">JUMP</button></div>
+        </div>
+        <div class="mbox">
+          <h4 class="mh" id="h4"></h4>
+          <p class="mp" id="p4"></p>
+          <div class="mjump"><button class="crp-btn" id="j4" type="button">JUMP</button></div>
+        </div>
       </div>
 
       <div class="mact">
@@ -314,7 +333,7 @@ a{color:inherit;text-decoration:none}
   }
   wire();
 
-  // ===== LANGUAGE PACK =====
+  // ===== LANGUAGE PACK (zh mirrors en for now) =====
   var T={
     en:{
       mark:"CARDINAL AXIS",
@@ -327,35 +346,27 @@ a{color:inherit;text-decoration:none}
         {h:"How navigation works",p:"You traverse by structure; lenses live inside the modal only."},
         {h:"State stability",p:"Language, style, and time persist so context does not reset."},
         {h:"Where to go next",p:"Use HUB for compass navigation; Products/Innovation for build surfaces."},
-        {h:"Index",p:"The map of maps: routes to the right trunk quickly and consistently."},
-        {h:"Glossary",p:"Pinned meanings so the system stays readable as it scales."},
+        {h:"Index",p:"The routing surface: jump to trunks quickly with state preserved."},
+        {h:"Glossary",p:"Pinned meanings so definitions do not drift as the system scales."},
         {h:"Appendix",p:"Conventions and references that support deeper pages without clutter."},
         {h:"Scientific fact-checking",p:"Hard bounds, assumptions, and falsifiers for technical readers."}
       ],
       chips:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",now:"NOW",roadmap:"ROADMAP"},
-      warn:"Warning: this section is technical and bounded. It does not promise outcomes; it defines test conditions."
-    },
-    zh:{
-      mark:"基轴体系",
-      title:"终端",
-      sub:"进入全系统的结构入口。",
-      note:"此页自包含：索引、术语表与附录都在本页模态中呈现。",
-      mini:"点击打开透镜视图。",
-      bubbles:[
-        {h:"施工中",p:"未完成区域使用占位显示进度，不会出现断路。"},
-        {h:"导航方式",p:"按结构遍历；透镜只在模态内出现。"},
-        {h:"状态稳定",p:"语言/风格/时间保持，避免上下文重置。"},
-        {h:"下一步去哪",p:"用枢纽做罗盘导航；用产品/创新进入执行面。"},
-        {h:"索引",p:"地图的地图：快速把你路由到正确干线。"},
-        {h:"术语表",p:"固定术语含义，系统越大越可读。"},
-        {h:"附录",p:"约定与参考，支撑深层内容而不污染正文。"},
-        {h:"科学事实核查",p:"面向技术读者：硬边界、假设与证伪条件。"}
-      ],
-      chips:{formal:"正式",informal:"直接",concept:"概念",now:"当前",roadmap:"路线图"},
-      warn:"提示：本节偏技术与有界表述，不承诺结果，只定义可测试条件。"
+      warn:"This section is technical and bounded. It does not promise outcomes; it defines test conditions."
     }
   };
-  var P=(lang==="zh")?T.zh:T.en;
+  var P=T.en;
+
+  if(lang==="zh"){
+    // Mirror EN for now (per lock)
+    P=JSON.parse(JSON.stringify(T.en));
+    P.mark="基轴体系";
+    P.title="终端";
+    P.sub="进入全系统的结构入口。";
+    P.note="此页自包含：索引、术语表与附录都在本页模态中呈现。";
+    P.mini="点击打开透镜视图。";
+    // Keep headings readable; content mirrors EN to avoid drift.
+  }
 
   document.getElementById("mark").textContent=P.mark;
   document.getElementById("tTitle").textContent=P.title;
@@ -385,6 +396,11 @@ a{color:inherit;text-decoration:none}
   var h3=document.getElementById("h3"),p3=document.getElementById("p3");
   var h4=document.getElementById("h4"),p4=document.getElementById("p4");
 
+  var j1=document.getElementById("j1");
+  var j2=document.getElementById("j2");
+  var j3=document.getElementById("j3");
+  var j4=document.getElementById("j4");
+
   var activeIdx=0;
 
   function setChipLabels(){
@@ -398,104 +414,129 @@ a{color:inherit;text-decoration:none}
     chipRoadmap.classList.toggle("active", time==="post");
   }
 
-  // ===== CONTENT (8 × 3 × 2 × 4 paragraphs) =====
-  // Helper to keep formatting consistent and dense.
-  function V(hA,pA,hB,pB,hC,pC,hD,pD){
+  // Helper: 4 paragraph bubbles (no bullet lists)
+  function V(a,b,c,d){
     return [
-      {h:hA,p:pA},
-      {h:hB,p:pB},
-      {h:hC,p:pC},
-      {h:hD,p:pD}
+      {h:a.h,p:a.p,j:a.j},
+      {h:b.h,p:b.p,j:b.j},
+      {h:c.h,p:c.p,j:c.j},
+      {h:d.h,p:d.p,j:d.j}
     ];
   }
 
-  var CONTENT_EN = {
+  // Jump actions:
+  // {type:"route", path:"/laws/"} or {type:"internal", idx:5}
+  function doJump(action){
+    if(!action) return;
+    if(action.type==="internal"){
+      openModal(action.idx);
+      return;
+    }
+    if(action.type==="route"){
+      location.href = action.path + (action.path.indexOf("?")>=0 ? "&" : "?") + q();
+      return;
+    }
+  }
+
+  function setJumpButton(btn, action, label){
+    if(!action){
+      btn.style.display="none";
+      btn.onclick=null;
+      return;
+    }
+    btn.style.display="inline-flex";
+    btn.textContent=label || "JUMP";
+    btn.onclick=function(){ doJump(action); };
+  }
+
+  // Dense content with embedded “jump to that segment” per paragraph
+  var CONTENT = {
     0:{ // Under construction
       origin:{
         formal:V(
-          "Continuity rule","Unfinished areas show placeholders instead of breaking navigation. The goal is to preserve traversal flow even while content is incomplete.",
-          "Truth rule","A placeholder is an explicit statement of incompleteness. It prevents implied claims and prevents the reader from guessing intent.",
-          "Contract rule","Structure and routing ship first. Content expands inside stable nodes. This prevents redesign churn and reduces drift.",
-          "Reader promise","You can always return, always jump, and always keep state; incompleteness is visible rather than hidden."
+          {h:"Continuity rule",p:"Unfinished areas show placeholders instead of breaking navigation. The goal is uninterrupted traversal under a stable contract.",j:{type:"internal",idx:1}},
+          {h:"Truth rule",p:"A placeholder is an explicit incompleteness marker. It prevents implied claims and prevents readers from guessing intent.",j:{type:"internal",idx:7}},
+          {h:"Contract rule",p:"Structure ships first; content grows inside stable nodes. This prevents redesign churn and reduces drift.",j:{type:"route",path:"/laws/"}},
+          {h:"Reader promise",p:"You can always return, always jump, and always keep state. Incompleteness stays visible, not hidden.",j:{type:"route",path:"/home/"}}
         ),
         informal:V(
-          "No dead ends","If something isn’t finished, you’ll see a clear placeholder instead of a broken page.",
-          "No pretending","Placeholders mean: not done yet. That’s intentional.",
-          "Same map","The map stays stable while content grows inside it.",
-          "Safe to explore","You can click around without getting trapped."
+          {h:"No dead ends",p:"If something isn’t finished, you’ll see a placeholder instead of a broken flow.",j:{type:"internal",idx:1}},
+          {h:"No pretending",p:"Placeholders mean: not done yet. That’s intentional.",j:{type:"internal",idx:7}},
+          {h:"Same map",p:"The map stays stable while content grows inside it.",j:{type:"route",path:"/links/"}},
+          {h:"Safe to explore",p:"You can click around without getting trapped or losing state.",j:{type:"route",path:"/home/"}}
         )
       },
       now:{
         formal:V(
-          "Current posture","The system is being filled node-by-node. Each node becomes usable before the next wave is added.",
-          "No-empty rule","A node is considered live only when it has content under both style lenses and all time layers.",
-          "Stability rule","Keys and routing are not changed to fit content; content is written to fit the contract.",
-          "Transparency rule","What exists is labeled as live; what does not exist stays clearly marked."
+          {h:"Current posture",p:"Nodes are filled in waves. A node becomes usable before new branches are added.",j:{type:"route",path:"/products/"}},
+          {h:"No-empty rule",p:"A node is live only when it has complete content under both style lenses and all time layers.",j:{type:"internal",idx:2}},
+          {h:"Stability rule",p:"Keys and routing are not changed to fit content; content is written to fit the contract.",j:{type:"internal",idx:1}},
+          {h:"Transparency rule",p:"Live vs not-yet stays explicit, so progress never requires guessing.",j:{type:"internal",idx:4}}
         ),
         informal:V(
-          "Fill-first","We fill what’s here before adding more.",
-          "No empty nodes","If you can open it, it should say something real.",
-          "Structure stays","We don’t rewrite the map every day.",
-          "Clear status","Live vs not-yet stays obvious."
+          {h:"Fill-first",p:"We fill what’s here before adding more.",j:{type:"route",path:"/products/"}},
+          {h:"No empty nodes",p:"If you can open it, it should say something real.",j:{type:"internal",idx:2}},
+          {h:"Structure stays",p:"We don’t rewrite the map every day.",j:{type:"internal",idx:1}},
+          {h:"Clear status",p:"Live vs not-yet stays obvious.",j:{type:"internal",idx:4}}
         )
       },
       post:{
         formal:V(
-          "Scaling posture","More content is added without changing UI paradigms. Contract stability is the scalability mechanism.",
-          "Audit posture","Stable nodes allow change tracking: what changed, where, and when.",
-          "User outcome","The project becomes a navigable reference rather than a linear document.",
-          "Safety outcome","Public surfaces remain bounded and legible as depth increases."
+          {h:"Scaling posture",p:"More content is added without changing UI paradigms. Contract stability is the scale mechanism.",j:{type:"route",path:"/explore/"}},
+          {h:"Audit posture",p:"Stable nodes allow tracking: what changed, where, and when.",j:{type:"route",path:"/gauges/"}},
+          {h:"Outcome",p:"The site becomes a navigable reference rather than a linear document.",j:{type:"internal",idx:4}},
+          {h:"Safety posture",p:"Public surfaces remain bounded and legible as depth increases.",j:{type:"internal",idx:7}}
         ),
         informal:V(
-          "More content","More pages will appear without breaking the feel.",
-          "Easier tracking","Changes are easier to notice because structure is stable.",
-          "Feels like a map","Not a book you have to finish.",
-          "Stays safe","Clear boundaries stay clear as it grows."
+          {h:"More content",p:"More pages appear without breaking the feel.",j:{type:"route",path:"/explore/"}},
+          {h:"Easier tracking",p:"Changes are easier to notice because structure is stable.",j:{type:"route",path:"/gauges/"}},
+          {h:"Feels like a map",p:"Not a book you have to finish.",j:{type:"internal",idx:4}},
+          {h:"Stays safe",p:"Clear boundaries stay clear as it grows.",j:{type:"internal",idx:7}}
         )
       }
     },
 
-    1:{ // Navigation
+    1:{ // How navigation works
       origin:{
         formal:V(
-          "Traversal method","Navigation is structural: diamonds open modal surfaces; modals contain lenses; lenses change meaning, not just styling.",
-          "Lens placement","Lenses are inside the modal only so the main page stays pure navigation and does not become a control panel.",
-          "Return discipline","Closing a modal returns you to the same map state. Backtracking does not corrupt the route.",
-          "Reader outcome","You learn one interaction grammar and reuse it everywhere across products, laws, and measurements."
+          {h:"Traversal method",p:"Navigation is structural: bubbles open modal surfaces; lenses live inside the modal only.",j:{type:"route",path:"/home/"}},
+          {h:"Lens placement",p:"Keeping lenses in the modal prevents the main page from becoming a control panel.",j:{type:"internal",idx:2}},
+          {h:"Return discipline",p:"Closing the modal returns you to the same map state. Backtracking does not corrupt the route.",j:{type:"internal",idx:4}},
+          {h:"Outcome",p:"Learn one interaction grammar and reuse it across Products, Laws, Gauges, and Innovation.",j:{type:"route",path:"/links/"}}
         ),
         informal:V(
-          "Tap structure","You move by clicking the map, not by scrolling a wall of text.",
-          "Lenses inside only","The face stays clean; the controls are inside the modal.",
-          "Return works","Close returns you to where you started.",
-          "Learn once","If you can use one page, you can use the whole site."
+          {h:"Tap structure",p:"You move by clicking the map, not by scrolling a wall of text.",j:{type:"route",path:"/home/"}},
+          {h:"Controls inside",p:"The face stays clean; controls are inside the modal.",j:{type:"internal",idx:2}},
+          {h:"Return works",p:"Close returns you to where you started.",j:{type:"internal",idx:4}},
+          {h:"Learn once",p:"If you can use one page, you can use the whole site.",j:{type:"route",path:"/links/"}}
         )
       },
       now:{
         formal:V(
-          "Deterministic routing","Every internal link carries state in the querystring and respects localStorage fallback.",
-          "Uniform buttons","All navigation uses the same button style to prevent default browser link coloring and reduce visual drift.",
-          "Modal density","Each modal view contains four dense paragraphs so the reader gets signal quickly.",
-          "Jump surfaces","Jump buttons move you to hubs without losing language/style/time."
+          {h:"Deterministic routing",p:"Every internal link carries lang/style/time; storage is a fallback. No silent resets.",j:{type:"internal",idx:2}},
+          {h:"Uniform buttons",p:"All navigation is a uniform button so default browser link colors never drift the UI.",j:{type:"route",path:"/links/"}},
+          {h:"Modal density",p:"Four dense paragraphs per view. No bullet walls. Fast signal under pressure.",j:{type:"internal",idx:4}},
+          {h:"Jump surfaces",p:"Jump buttons move to trunks without losing state.",j:{type:"route",path:"/products/"}}
         ),
         informal:V(
-          "Links carry state","Language/style/time follow you automatically.",
-          "No ugly link colors","Buttons stay consistent.",
-          "Dense info","Four good paragraphs per view.",
-          "Jump safely","Jump without losing your settings."
+          {h:"Links carry state",p:"Language/style/time follow you automatically.",j:{type:"internal",idx:2}},
+          {h:"Buttons stay consistent",p:"No ugly link colors.",j:{type:"route",path:"/links/"}},
+          {h:"Dense info",p:"Four good paragraphs per view.",j:{type:"internal",idx:4}},
+          {h:"Jump safely",p:"Jump without losing your settings.",j:{type:"route",path:"/products/"}}
         )
       },
       post:{
         formal:V(
-          "Deeper maps","Nodes expand into sub-hubs while keeping the same surface contract and lens semantics.",
-          "Audience layering","Informal stays direct; Formal stays precise; both remain consistent under the same keys.",
-          "Discovery without chaos","Crosslinks grow but never break return or state propagation.",
-          "Outcome","Navigation becomes a dependable learning tool under pressure."
+          {h:"Deeper maps",p:"Nodes expand into sub-hubs while keeping the same surface contract and lens semantics.",j:{type:"route",path:"/explore/"}},
+          {h:"Audience layering",p:"Informal stays direct; Formal stays precise; both remain bounded.",j:{type:"internal",idx:5}},
+          {h:"Discovery without chaos",p:"Crosslinks grow but never break return or state propagation.",j:{type:"route",path:"/links/"}},
+          {h:"Outcome",p:"Navigation becomes a dependable learning tool under pressure.",j:{type:"route",path:"/home/"}}
         ),
         informal:V(
-          "Bigger maps","More branches, same rules.",
-          "Two tones","Direct and precise, both stable.",
-          "No chaos","More links without confusion.",
-          "Reliable","Feels consistent over time."
+          {h:"Bigger maps",p:"More branches, same rules.",j:{type:"route",path:"/explore/"}},
+          {h:"Two tones",p:"Direct and precise, both stable.",j:{type:"internal",idx:5}},
+          {h:"No chaos",p:"More links without confusion.",j:{type:"route",path:"/links/"}},
+          {h:"Reliable",p:"HUB stays the reset anchor.",j:{type:"route",path:"/home/"}}
         )
       }
     },
@@ -503,640 +544,228 @@ a{color:inherit;text-decoration:none}
     2:{ // State stability
       origin:{
         formal:V(
-          "Canonical keys","State is limited to gd_lang, gd_style, gd_time. No extra namespaces are allowed.",
-          "Hydration order","URL parameters hydrate first; storage backs up; values are normalized to prevent drift.",
-          "Propagation rule","All internal links carry the state forward via querystring.",
-          "User outcome","The system behaves predictably and does not ‘forget’ context."
+          {h:"Canonical keys",p:"State is limited to gd_lang, gd_style, gd_time. No extra namespaces are allowed.",j:{type:"internal",idx:6}},
+          {h:"Hydration order",p:"URL parameters hydrate first; localStorage backs up; values are normalized to prevent drift.",j:{type:"route",path:"/links/"}},
+          {h:"Propagation rule",p:"All internal links carry state forward by querystring.",j:{type:"internal",idx:4}},
+          {h:"Outcome",p:"The system behaves predictably and does not forget context.",j:{type:"route",path:"/home/"}}
         ),
         informal:V(
-          "Only three keys","Language, style, time. That’s it.",
-          "URL wins","If it’s in the link, it loads that view.",
-          "Links carry forward","Your settings go with you.",
-          "Predictable","No random resets."
+          {h:"Only three keys",p:"Language, style, time. That’s it.",j:{type:"internal",idx:6}},
+          {h:"URL wins",p:"If it’s in the link, it loads that view.",j:{type:"route",path:"/links/"}},
+          {h:"Links carry forward",p:"Your settings go with you.",j:{type:"internal",idx:4}},
+          {h:"Predictable",p:"No random resets.",j:{type:"route",path:"/home/"}}
         )
       },
       now:{
         formal:V(
-          "Single-language render","Language is a lens: English-only or Chinese-only, not both at once.",
-          "Style lens","Formal vs Informal changes framing and density while staying truthful and bounded.",
-          "Time lens","Concept vs Now vs Roadmap changes emphasis while keeping definitions stable.",
-          "Failure clarity","If state looks wrong, it is traceable: URL, storage, or missing propagation."
+          {h:"Single-language render",p:"Language is a lens: English-only or Chinese-only, not mixed output.",j:{type:"route",path:"/home/"}},
+          {h:"Style lens",p:"Formal vs Informal changes framing while staying bounded and truthful.",j:{type:"internal",idx:7}},
+          {h:"Time lens",p:"Concept vs Now vs Roadmap changes emphasis while keeping definitions stable.",j:{type:"internal",idx:4}},
+          {h:"Failure clarity",p:"If state looks wrong, it is traceable: URL, storage, or missing propagation.",j:{type:"route",path:"/links/"}}
         ),
         informal:V(
-          "Language is a switch","One language at a time.",
-          "Style changes meaning","Not just cosmetics.",
-          "Time changes emphasis","Concept/Now/Roadmap are different views.",
-          "Fixable","If it’s wrong, we can trace it."
+          {h:"One language",p:"One language at a time.",j:{type:"route",path:"/home/"}},
+          {h:"Style changes meaning",p:"Not just cosmetics.",j:{type:"internal",idx:7}},
+          {h:"Time changes emphasis",p:"Concept/Now/Roadmap are different views.",j:{type:"internal",idx:4}},
+          {h:"Fixable",p:"If it’s wrong, we can trace it.",j:{type:"route",path:"/links/"}}
         )
       },
       post:{
         formal:V(
-          "Scale safety","Stable keys and stable semantics are what make the platform scalable and auditable.",
-          "Shareability","A link becomes a portable state: others open the same view you meant.",
-          "No capture","State is for comprehension, not for tracking people.",
-          "Outcome","Coherent traversal across a growing knowledge graph."
+          {h:"Scale safety",p:"Stable keys and semantics make the platform scalable and auditable.",j:{type:"route",path:"/gauges/"}},
+          {h:"Shareability",p:"A link becomes a portable state: others open the same view you intended.",j:{type:"route",path:"/links/"}},
+          {h:"No capture",p:"State is for comprehension, not tracking people.",j:{type:"internal",idx:5}},
+          {h:"Outcome",p:"Coherent traversal across a growing knowledge graph.",j:{type:"route",path:"/home/"}}
         ),
         informal:V(
-          "Stable forever","Keys don’t drift.",
-          "Shareable links","People open the same view.",
-          "No tracking games","State is for clarity.",
-          "Coherent","Everything stays aligned."
+          {h:"Stable forever",p:"Keys don’t drift.",j:{type:"route",path:"/gauges/"}},
+          {h:"Shareable links",p:"People open the same view.",j:{type:"route",path:"/links/"}},
+          {h:"No tracking games",p:"State is for clarity.",j:{type:"internal",idx:5}},
+          {h:"Coherent",p:"Everything stays aligned.",j:{type:"route",path:"/home/"}}
         )
       }
     },
 
     3:{ // Where to go next
-      origin:{
-        formal:V(
-          "HUB","Use HUB when you want compass navigation (North/East/South/West) and quick orientation.",
-          "PRODUCTS","Use PRODUCTS when you want deployable surfaces: software, education, energy, and commercial packaging.",
-          "INNOVATION","Use INNOVATION when you want future trunks and frontier expansions under the same contract.",
-          "LAWS / GAUGES","Use LAWS for definitions and standards; use GAUGES for measurement and dashboards."
-        ),
-        informal:V(
-          "HUB","Compass navigation.",
-          "PRODUCTS","What exists and can be used.",
-          "INNOVATION","Future trunks and frontier ideas.",
-          "LAWS/GAUGES","Rules and measurements."
-        )
-      },
-      now:{
-        formal:V(
-          "Deployed vs future","Products are written as deployed surfaces; Innovation is written as future surfaces; the contract is shared but claims are separated.",
-          "Fast path","If you want to ‘do’ something, go Products. If you want ‘what it means,’ go Laws. If you want ‘how we measure,’ go Gauges.",
-          "Crosslinks","Crosslinks exist, but they do not replace the compass discipline.",
-          "Return discipline","Always return to HUB if you feel lost; that is the intended reset."
-        ),
-        informal:V(
-          "Keep claims clean","Products vs Innovation stay separate.",
-          "Do vs mean vs measure","Products, Laws, Gauges.",
-          "Crosslinks help","But HUB is the anchor.",
-          "Return anytime","If lost, go HUB."
-        )
-      },
-      post:{
-        formal:V(
-          "Catalog growth","More product sub-hubs appear (education tracks, energy stages, commercial kits) without changing navigation grammar.",
-          "Proof growth","More gauges and fact-check nodes appear for readers who want verification.",
-          "Translation growth","More bilingual coverage with stable term mapping, not mixed-language clutter.",
-          "Outcome","A platform that supports both discovery and discipline."
-        ),
-        informal:V(
-          "More products","More sub-hubs, same UI.",
-          "More proof","More measurements and checks.",
-          "Better bilingual","Clean language switching.",
-          "Still disciplined","Discovery without drift."
-        )
-      }
+      origin:{ formal:V(
+        {h:"HUB",p:"Use HUB for compass navigation and structural orientation.",j:{type:"route",path:"/home/"}},
+        {h:"PRODUCTS",p:"Use PRODUCTS for deployable surfaces: software, education, energy, and commercial packaging.",j:{type:"route",path:"/products/"}},
+        {h:"INNOVATION",p:"Use INNOVATION for future trunks and frontier expansions under the same contract.",j:{type:"route",path:"/explore/"}},
+        {h:"LAWS / GAUGES",p:"Use LAWS for definitions and standards; use GAUGES for measurement surfaces.",j:{type:"route",path:"/laws/"}}
+      ), informal:V(
+        {h:"HUB",p:"Compass navigation.",j:{type:"route",path:"/home/"}},
+        {h:"PRODUCTS",p:"What exists and can be used.",j:{type:"route",path:"/products/"}},
+        {h:"INNOVATION",p:"Future trunks.",j:{type:"route",path:"/explore/"}},
+        {h:"LAWS / GAUGES",p:"Rules and measurements.",j:{type:"route",path:"/gauges/"}}
+      )},
+      now:{ formal:V(
+        {h:"Deployed vs future",p:"Products are deployed posture; Innovation is future posture. Claims remain separated.",j:{type:"route",path:"/products/"}},
+        {h:"Fast path",p:"Do → Products. Mean → Laws. Measure → Gauges.",j:{type:"route",path:"/gauges/"}},
+        {h:"Crosslinks",p:"Crosslinks exist, but they do not replace compass discipline.",j:{type:"route",path:"/links/"}},
+        {h:"Reset",p:"Return to HUB if you feel lost. That is the intended reset.",j:{type:"route",path:"/home/"}}
+      ), informal:V(
+        {h:"Keep claims clean",p:"Products vs Innovation stay separate.",j:{type:"route",path:"/products/"}},
+        {h:"Do vs mean vs measure",p:"Products, Laws, Gauges.",j:{type:"route",path:"/laws/"}},
+        {h:"Crosslinks help",p:"But HUB is the anchor.",j:{type:"route",path:"/links/"}},
+        {h:"Return anytime",p:"If lost, go HUB.",j:{type:"route",path:"/home/"}}
+      )},
+      post:{ formal:V(
+        {h:"Catalog growth",p:"More product sub-hubs appear without changing navigation grammar.",j:{type:"route",path:"/products/"}},
+        {h:"Proof growth",p:"More gauges and fact-check nodes appear for verification.",j:{type:"route",path:"/gauges/"}},
+        {h:"Translation growth",p:"More bilingual coverage with stable term mapping.",j:{type:"internal",idx:5}},
+        {h:"Outcome",p:"Discovery and discipline at the same time.",j:{type:"route",path:"/home/"}}
+      ), informal:V(
+        {h:"More products",p:"More sub-hubs, same UI.",j:{type:"route",path:"/products/"}},
+        {h:"More proof",p:"More measurements and checks.",j:{type:"route",path:"/gauges/"}},
+        {h:"Better bilingual",p:"Clean language switching.",j:{type:"internal",idx:5}},
+        {h:"Still disciplined",p:"Structure stays stable.",j:{type:"route",path:"/home/"}}
+      )}
     },
 
-    4:{ // Index (on this page)
-      origin:{
-        formal:V(
-          "Index purpose","Index is routing compression: a table-of-contents that gets you to the correct trunk with minimal reading.",
-          "Index rule","Index entries must be complete sentences with bounded meaning so they do not become vague labels.",
-          "Index routes","Core routes: /home/ (HUB), /products/ (PRODUCTS), /explore/ (INNOVATION), /laws/ (LAWS), /gauges/ (GAUGES), /links/ (LINKS).",
-          "Index outcome","Faster discovery without sacrificing structure or truth boundaries."
-        ),
-        informal:V(
-          "Index = quick map","Routes you fast.",
-          "One-sentence rule","No vague labels.",
-          "Main routes","HUB, PRODUCTS, INNOVATION, LAWS, GAUGES, LINKS.",
-          "Result","Less time wasted."
-        )
-      },
-      now:{
-        formal:V(
-          "Products index","SOFTWARE: site surfaces + instruments; EDUCATION: traversal learning; ENERGY: conversion chain; COMMERCIAL: deployment packaging.",
-          "Innovation index","INNOVATION: future trunks by quadrant; Concept/Now/Roadmap separates definition, execution posture, and planned expansion.",
-          "Laws index","LAWS: definitions, constraints, and standards; bounded claims; falsifiers when applicable.",
-          "Gauges index","GAUGES: measurement surfaces; status views; regime/threshold representations when available."
-        ),
-        informal:V(
-          "Products","Software, Education, Energy, Commercial.",
-          "Innovation","Future trunks + lens separation.",
-          "Laws","Definitions and standards.",
-          "Gauges","Measurements and status."
-        )
-      },
-      post:{
-        formal:V(
-          "Index scaling","Index grows on this page by adding entries inside the modal only; it does not require new pages.",
-          "Cross-indexing","Index entries may point to multiple trunks when a concept spans products, laws, and gauges.",
-          "Verification hooks","Index entries may reference fact-check nodes when verification matters.",
-          "Outcome","A stable routing circuit for a large project."
-        ),
-        informal:V(
-          "It stays here","No extra pages needed.",
-          "More entries","Added inside the modal.",
-          "Cross-links","One idea can point to several places.",
-          "Still fast","It stays usable."
-        )
-      }
+    4:{ // Index
+      origin:{ formal:V(
+        {h:"Index purpose",p:"Index is routing compression: get to the right trunk with minimal reading.",j:{type:"route",path:"/links/"}},
+        {h:"Index rule",p:"Index entries must remain bounded and descriptive; no vague labels.",j:{type:"internal",idx:7}},
+        {h:"Core routes",p:"HUB, PRODUCTS, INNOVATION, LAWS, GAUGES, LINKS.",j:{type:"route",path:"/home/"}},
+        {h:"Outcome",p:"Faster discovery without sacrificing boundaries.",j:{type:"route",path:"/products/"}}
+      ), informal:V(
+        {h:"Quick map",p:"Routes you fast.",j:{type:"route",path:"/links/"}},
+        {h:"No vague labels",p:"One sentence per entry.",j:{type:"internal",idx:7}},
+        {h:"Main routes",p:"HUB, PRODUCTS, INNOVATION, LAWS, GAUGES, LINKS.",j:{type:"route",path:"/home/"}},
+        {h:"Result",p:"Less time wasted.",j:{type:"route",path:"/products/"}}
+      )},
+      now:{ formal:V(
+        {h:"Products",p:"Software, Education, Energy, Commercial surfaces.",j:{type:"route",path:"/products/"}},
+        {h:"Innovation",p:"Concept/Now/Roadmap separation for future trunks.",j:{type:"route",path:"/explore/"}},
+        {h:"Laws",p:"Definitions, constraints, and standards.",j:{type:"route",path:"/laws/"}},
+        {h:"Gauges",p:"Measurement surfaces and status views.",j:{type:"route",path:"/gauges/"}}
+      ), informal:V(
+        {h:"Products",p:"What exists and can be used.",j:{type:"route",path:"/products/"}},
+        {h:"Innovation",p:"Future trunks.",j:{type:"route",path:"/explore/"}},
+        {h:"Laws",p:"Rules and definitions.",j:{type:"route",path:"/laws/"}},
+        {h:"Gauges",p:"Measurements.",j:{type:"route",path:"/gauges/"}}
+      )},
+      post:{ formal:V(
+        {h:"Index scaling",p:"Index grows inside this modal; structure stays stable.",j:{type:"internal",idx:1}},
+        {h:"Cross-indexing",p:"An idea may route to multiple trunks without confusion.",j:{type:"route",path:"/links/"}},
+        {h:"Verification hooks",p:"Index entries may reference fact-check nodes when needed.",j:{type:"internal",idx:7}},
+        {h:"Outcome",p:"Stable routing circuit for a large project.",j:{type:"route",path:"/home/"}}
+      ), informal:V(
+        {h:"Stays here",p:"No extra pages needed.",j:{type:"internal",idx:1}},
+        {h:"More entries",p:"Added inside the modal.",j:{type:"route",path:"/links/"}},
+        {h:"Proof hooks",p:"Link to fact-check when it matters.",j:{type:"internal",idx:7}},
+        {h:"Still fast",p:"Still usable.",j:{type:"route",path:"/home/"}}
+      )}
     },
 
-    5:{ // Glossary (on this page)
-      origin:{
-        formal:V(
-          "Glossary purpose","Glossary pins meaning to terms so the system remains readable as it scales and translations remain stable.",
-          "Glossary rule","Definitions are bounded and descriptive; they do not claim more than the evidence supports.",
-          "Core terms (starter)","Invariant: a property that must remain stable; Variance: measured deviation; Lens: controlled view; Contract: enforced rule; Drift: instability growth; Receipt: verifiable completion marker.",
-          "Glossary outcome","Readers share the same meanings, which reduces misunderstanding and conflict."
-        ),
-        informal:V(
-          "Glossary = definitions","Words mean one thing here.",
-          "Bounded definitions","No vague claims.",
-          "Starter terms","Invariant, Variance, Lens, Contract, Drift, Receipt.",
-          "Result","Less confusion."
-        )
-      },
-      now:{
-        formal:V(
-          "Traversal","Traversal is structured navigation through knowledge, not linear reading; it prioritizes orientation and return safety.",
-          "Bilingual mapping","Terms are translated consistently; language is a lens (EN only / 中文 only), not mixed output.",
-          "Time lens mapping","Concept = definition; Now = current execution posture; Roadmap = planned expansion; all map to gd_time keys.",
-          "Integrity rule","If a term is used, it must match its glossary meaning across the site."
-        ),
-        informal:V(
-          "Traversal","Navigate by structure, not chapters.",
-          "Bilingual","One language at a time; consistent mapping.",
-          "Time lens","Concept/Now/Roadmap are different views.",
-          "Integrity","Words must mean the same thing everywhere."
-        )
-      },
-      post:{
-        formal:V(
-          "Glossary growth","Glossary expands inside this page by adding terms grouped by trunk: Products, Innovation, Laws, Gauges.",
-          "Conformance checks","Later, glossary conformance can be enforced by review and instrumentation, not by vibes.",
-          "Evidence links","High-load terms can point to fact-check nodes for technical readers.",
-          "Outcome","A stable language layer that supports scale."
-        ),
-        informal:V(
-          "More terms","Added here, in this modal.",
-          "Consistency checks","Enforced by rules, not opinions.",
-          "Proof links","When needed, terms can link to checks.",
-          "Stable language","Scale without drift."
-        )
-      }
+    5:{ // Glossary
+      origin:{ formal:V(
+        {h:"Glossary purpose",p:"Glossary pins meanings so the system stays readable as it scales.",j:{type:"route",path:"/laws/"}},
+        {h:"Bounded definitions",p:"Definitions remain descriptive; they do not exceed evidence.",j:{type:"internal",idx:7}},
+        {h:"Starter terms",p:"Invariant, Lens, Contract, Drift, Receipt.",j:{type:"internal",idx:6}},
+        {h:"Outcome",p:"Shared meanings reduce misunderstanding.",j:{type:"route",path:"/home/"}}
+      ), informal:V(
+        {h:"Definitions",p:"Words mean one thing here.",j:{type:"route",path:"/laws/"}},
+        {h:"Stay bounded",p:"No inflated definitions.",j:{type:"internal",idx:7}},
+        {h:"Starter terms",p:"Invariant, Lens, Contract, Drift, Receipt.",j:{type:"internal",idx:6}},
+        {h:"Result",p:"Less confusion.",j:{type:"route",path:"/home/"}}
+      )},
+      now:{ formal:V(
+        {h:"Traversal",p:"Traversal is structured navigation, not linear reading.",j:{type:"internal",idx:1}},
+        {h:"Bilingual mapping",p:"Language is a lens: single-language render; stable mapping.",j:{type:"internal",idx:2}},
+        {h:"Time lens",p:"Concept/Now/Roadmap map to gd_time keys; definitions stay stable.",j:{type:"internal",idx:2}},
+        {h:"Integrity",p:"Terms must match glossary meaning across the site.",j:{type:"route",path:"/laws/"}}
+      ), informal:V(
+        {h:"Traversal",p:"Navigate by structure.",j:{type:"internal",idx:1}},
+        {h:"One language",p:"No mixed output.",j:{type:"internal",idx:2}},
+        {h:"Time lens",p:"Emphasis changes; definitions don’t drift.",j:{type:"internal",idx:2}},
+        {h:"Integrity",p:"Words must stay consistent.",j:{type:"route",path:"/laws/"}}
+      )},
+      post:{ formal:V(
+        {h:"Glossary growth",p:"Glossary expands inside this modal and in Laws where needed.",j:{type:"route",path:"/laws/"}},
+        {h:"Conformance",p:"Consistency is enforced by review and instrumentation, not vibes.",j:{type:"internal",idx:7}},
+        {h:"Evidence links",p:"High-load terms can point to fact-check nodes.",j:{type:"internal",idx:7}},
+        {h:"Outcome",p:"Stable language layer for scale.",j:{type:"route",path:"/home/"}}
+      ), informal:V(
+        {h:"More terms",p:"Added without breaking structure.",j:{type:"route",path:"/laws/"}},
+        {h:"Consistency",p:"Enforced by rules.",j:{type:"internal",idx:7}},
+        {h:"Proof links",p:"Link to checks when needed.",j:{type:"internal",idx:7}},
+        {h:"Stable language",p:"Scale without drift.",j:{type:"route",path:"/home/"}}
+      )}
     },
 
-    6:{ // Appendix (on this page)
-      origin:{
-        formal:V(
-          "Appendix purpose","Appendix holds conventions and references that support the system without cluttering core surfaces.",
-          "What belongs here","Naming conventions, routing conventions, key constraints, and publication posture rules.",
-          "Conventions (starter)","Keys: gd_lang/gd_style/gd_time only; Lenses live inside modal only; Main pages are navigation surfaces; Deterministic routing required.",
-          "Outcome","A clean core plus a complete support layer."
-        ),
-        informal:V(
-          "Appendix = support","Rules and references live here.",
-          "Keeps pages clean","Core stays readable.",
-          "Starter conventions","Only gd_* keys; lenses in modal only; deterministic routing.",
-          "Result","Complete without clutter."
-        )
-      },
-      now:{
-        formal:V(
-          "Disclosure boundary","Public pages explain structure, signals, and falsifiers; they do not disclose hazardous instructions or proprietary build recipes.",
-          "Neutrality rule","Public copy stays consumer-legible and neutral; no funnels, no capture, no pressure language.",
-          "Version posture","Structure changes are rare; content expands inside stable nodes.",
-          "Outcome","Public-safe growth with integrity."
-        ),
-        informal:V(
-          "Boundary","Explain structure; don’t publish recipes.",
-          "Neutral tone","No hype and no funnels.",
-          "Version rule","Structure stable, content grows.",
-          "Result","Safe growth."
-        )
-      },
-      post:{
-        formal:V(
-          "Archive posture","Appendix becomes the internal archive of conventions, version notes, and replication scaffolds—still inside this page.",
-          "Replication posture","Appendix can store minimal replication protocols at a high level without creating new pages.",
-          "Cross-room continuity","Appendix can record room-to-room invariants to prevent drift.",
-          "Outcome","Durable documentation without page explosion."
-        ),
-        informal:V(
-          "Becomes the archive","Still on this page.",
-          "Replication notes","Minimal, high level.",
-          "Continuity","Invariants recorded clearly.",
-          "Result","Durable without clutter."
-        )
-      }
+    6:{ // Appendix
+      origin:{ formal:V(
+        {h:"Appendix purpose",p:"Appendix holds conventions and references so core surfaces stay clean.",j:{type:"internal",idx:6}},
+        {h:"What belongs",p:"Naming rules, routing rules, key constraints, disclosure boundaries.",j:{type:"route",path:"/links/"}},
+        {h:"Starter conventions",p:"gd_lang/gd_style/gd_time only; lenses inside modal only; deterministic routing.",j:{type:"internal",idx:2}},
+        {h:"Outcome",p:"Clean core plus complete support layer.",j:{type:"route",path:"/home/"}}
+      ), informal:V(
+        {h:"Support layer",p:"Rules and references live here.",j:{type:"internal",idx:6}},
+        {h:"Keeps pages clean",p:"Core stays readable.",j:{type:"route",path:"/links/"}},
+        {h:"Conventions",p:"Only three keys; lenses inside modal; deterministic routing.",j:{type:"internal",idx:2}},
+        {h:"Result",p:"Complete without clutter.",j:{type:"route",path:"/home/"}}
+      )},
+      now:{ formal:V(
+        {h:"Disclosure boundary",p:"Public pages explain structure and falsifiers; they do not disclose hazardous instructions.",j:{type:"internal",idx:7}},
+        {h:"Neutrality",p:"No funnels, no capture, no pressure language.",j:{type:"internal",idx:1}},
+        {h:"Version posture",p:"Structure changes are rare; content expands inside stable nodes.",j:{type:"internal",idx:0}},
+        {h:"Outcome",p:"Public-safe growth with integrity.",j:{type:"route",path:"/home/"}}
+      ), informal:V(
+        {h:"Boundary",p:"Explain structure; don’t publish recipes.",j:{type:"internal",idx:7}},
+        {h:"Neutral",p:"No hype and no funnels.",j:{type:"internal",idx:1}},
+        {h:"Version",p:"Structure stable, content grows.",j:{type:"internal",idx:0}},
+        {h:"Safe",p:"Bounded growth.",j:{type:"route",path:"/home/"}}
+      )},
+      post:{ formal:V(
+        {h:"Archive posture",p:"Appendix becomes a durable store of conventions and replication scaffolds.",j:{type:"internal",idx:6}},
+        {h:"Replication posture",p:"Minimal replication protocols may live here without page explosion.",j:{type:"internal",idx:4}},
+        {h:"Cross-room continuity",p:"Invariants are recorded to prevent drift across rooms.",j:{type:"internal",idx:2}},
+        {h:"Outcome",p:"Durable documentation without clutter.",j:{type:"route",path:"/home/"}}
+      ), informal:V(
+        {h:"Becomes archive",p:"Still on this page.",j:{type:"internal",idx:6}},
+        {h:"Replication notes",p:"High-level only.",j:{type:"internal",idx:4}},
+        {h:"Continuity",p:"Invariants stay pinned.",j:{type:"internal",idx:2}},
+        {h:"Durable",p:"Without clutter.",j:{type:"route",path:"/home/"}}
+      )}
     },
 
-    7:{ // Fact-checking
-      origin:{
-        formal:V(
-          "Warning","This section is technical. It defines bounded claims, assumptions, and falsifiers. It does not promise outcomes.",
-          "Fact-check format","Claim → assumptions → measurement definition → falsifier → limits. This is the permanent structure.",
-          "Reader posture","If a claim cannot be measured, it is labeled as conceptual and does not enter the verified layer.",
-          "Outcome","A falsifiable backbone that prevents narrative inflation."
-        ),
-        informal:V(
-          "Warning","Technical layer. No promises.",
-          "Format","Claim, assumptions, measurement, falsifier, limits.",
-          "Rule","No measurement = not verified.",
-          "Result","Stops hand-waving."
-        )
-      },
-      now:{
-        formal:V(
-          "What is checked","Definitions, invariants, and measurement semantics for the platform (state keys, lens semantics, bounded claims).",
-          "What is not claimed","No universal conclusions without evidence; no trade secrets disclosed; no hazardous instructions published.",
-          "How to falsify","Falsification is explicit: what observation would contradict the statement.",
-          "Outcome","Engineers can audit the work without guessing intent."
-        ),
-        informal:V(
-          "What we check","Definitions and measurement rules.",
-          "What we don’t do","No universal promises. No secrets. No hazards.",
-          "Falsify means","Say what would prove it wrong.",
-          "Result","Audit without arguing."
-        )
-      },
-      post:{
-        formal:V(
-          "Scaling plan","Fact-check nodes expand by adding more bounded claims under the same format; no new page types needed.",
-          "Integration","Fact-checking can reference Products/Laws/Gauges where a claim is used.",
-          "Governance posture","Fact-checking remains neutral and evidence-only; it does not become marketing copy.",
-          "Outcome","A permanent verification spine for a growing platform."
-        ),
-        informal:V(
-          "More checks","Same format, more claims.",
-          "Connected","Links back to where claims are used.",
-          "Neutral","Evidence-only.",
-          "Result","Verification spine."
-        )
-      }
+    7:{ // Scientific fact-checking
+      origin:{ formal:V(
+        {h:"Warning",p:P.warn,j:{type:"internal",idx:7}},
+        {h:"Format",p:"Claim → assumptions → measurement definition → falsifier → limits.",j:{type:"route",path:"/laws/"}},
+        {h:"Rule",p:"If a claim cannot be measured, it remains conceptual.",j:{type:"internal",idx:4}},
+        {h:"Outcome",p:"Falsifiable backbone that prevents narrative inflation.",j:{type:"internal",idx:5}}
+      ), informal:V(
+        {h:"Warning",p:P.warn,j:{type:"internal",idx:7}},
+        {h:"Format",p:"Claim, assumptions, measurement, falsifier, limits.",j:{type:"route",path:"/laws/"}},
+        {h:"Rule",p:"No measurement = not verified.",j:{type:"internal",idx:4}},
+        {h:"Result",p:"Stops hand-waving.",j:{type:"internal",idx:5}}
+      )},
+      now:{ formal:V(
+        {h:"What is checked",p:"Definitions, invariants, and measurement semantics for the platform.",j:{type:"route",path:"/laws/"}},
+        {h:"What is not claimed",p:"No universality without receipts; no hazardous instructions; no secret recipes.",j:{type:"internal",idx:6}},
+        {h:"How to falsify",p:"Falsification is explicit: what observation contradicts the statement.",j:{type:"internal",idx:4}},
+        {h:"Outcome",p:"Engineers can audit without guessing intent.",j:{type:"route",path:"/gauges/"}}
+      ), informal:V(
+        {h:"Check what matters",p:"Definitions and measurement rules.",j:{type:"route",path:"/laws/"}},
+        {h:"No drift",p:"No universal promises. No hazards.",j:{type:"internal",idx:6}},
+        {h:"Falsify means",p:"Say what would prove it wrong.",j:{type:"internal",idx:4}},
+        {h:"Audit-ready",p:"Clear and testable.",j:{type:"route",path:"/gauges/"}}
+      )},
+      post:{ formal:V(
+        {h:"Scaling plan",p:"Add more checks under the same format; no new page types needed.",j:{type:"internal",idx:4}},
+        {h:"Integration",p:"Fact-checking references Products/Laws/Gauges where a claim is used.",j:{type:"route",path:"/products/"}},
+        {h:"Governance posture",p:"Evidence-only; never marketing copy.",j:{type:"internal",idx:5}},
+        {h:"Outcome",p:"Permanent verification spine for a growing platform.",j:{type:"route",path:"/home/"}}
+      ), informal:V(
+        {h:"More checks",p:"Same format, more claims.",j:{type:"internal",idx:4}},
+        {h:"Connected",p:"Links back to usage points.",j:{type:"route",path:"/products/"}},
+        {h:"Neutral",p:"Evidence-only.",j:{type:"internal",idx:5}},
+        {h:"Spine",p:"Verification that scales.",j:{type:"route",path:"/home/"}}
+      )}
     }
   };
-
-  var CONTENT_ZH = JSON.parse(JSON.stringify(CONTENT_EN)); // placeholder will be overwritten below
-
-  // Chinese modal content (dense, single-language, no bullets)
-  CONTENT_ZH = {
-    0:{
-      origin:{
-        formal:V(
-          "连续性规则","未完成区域用占位替代断路，保证遍历流不断。目标是让探索永远可返回。",
-          "真值规则","占位=明确的不完整声明，防止读者猜意图与暗含主张。",
-          "契约规则","先发布结构与路由，再在稳定节点内填内容，避免反复重做。",
-          "读者承诺","永远可返回、永远可跳转、状态保持；不完整可见而不隐藏。"
-        ),
-        informal:V(
-          "不堵路","未完成就显示占位，不会崩。",
-          "不装完成","占位=没做完。",
-          "同地图","结构稳定，内容慢慢长。",
-          "可安全探索","随便点也不会被困住。"
-        )
-      },
-      now:{
-        formal:V(
-          "当前姿态","按节点填充：一个节点先可用，再扩下一波。",
-          "不留空规则","节点要同时满足两种风格与三种时间层才算上线。",
-          "稳定规则","不为迎合内容而改契约；内容按契约写。",
-          "透明规则","上线与未上线明确分离。"
-        ),
-        informal:V(
-          "先填满","先把现有写实，再扩。",
-          "不留空节点","能点开的都要有内容。",
-          "结构不乱改","地图不天天重做。",
-          "状态清楚","上线/未上线一眼能看。"
-        )
-      },
-      post:{
-        formal:V(
-          "规模化姿态","更多内容在同一契约下扩展，不引入新范式。",
-          "审计姿态","节点稳定后可追踪：哪里变了、何时变了。",
-          "读者结果","项目变成可遍历参考面，不是线性长文。",
-          "安全结果","公开内容在深度增长时仍保持有界与可读。"
-        ),
-        informal:V(
-          "更多内容","不会破坏体验。",
-          "更好追踪","结构稳定更容易看出变化。",
-          "像地图","不需要按顺序读完。",
-          "仍安全","边界一直清楚。"
-        )
-      }
-    },
-
-    1:{
-      origin:{
-        formal:V(
-          "遍历方法","导航是结构化的：菱形→模态；透镜在模态内；透镜改变含义而非仅样式。",
-          "透镜位置","透镜只在模态内，主页面保持纯导航，避免变成控制面板。",
-          "返回纪律","关闭模态回到同一地图状态，不污染路径。",
-          "读者结果","学一次交互语法，全站复用。"
-        ),
-        informal:V(
-          "点结构","靠地图移动，不刷长文。",
-          "透镜在里面","主页面干净。",
-          "返回可靠","关掉就回到原处。",
-          "学一次就够","全站一样用。"
-        )
-      },
-      now:{
-        formal:V(
-          "确定路由","所有内部链接携带状态，并尊重本地存储回退。",
-          "统一按钮","全部导航使用统一按钮，避免浏览器默认蓝紫链接样式。",
-          "密度规则","每个视图四段密文，读者快速获得信号。",
-          "跳转安全","跳转不丢语言/风格/时间层。"
-        ),
-        informal:V(
-          "链接带状态","你的设置会跟着走。",
-          "按钮统一","不出现怪颜色链接。",
-          "信息密度高","四段就够清楚。",
-          "跳转安全","不丢设置。"
-        )
-      },
-      post:{
-        formal:V(
-          "更深地图","节点扩展为子枢纽，但保持同契约与同透镜语义。",
-          "受众分层","直接与正式两种风格都稳定，且保持有界。",
-          "跨链不混乱","交叉链接增长，但返回与状态传播不破。",
-          "结果","导航成为可靠的学习工具。"
-        ),
-        informal:V(
-          "地图更大","规则不变。",
-          "两种语气","直接/正式都稳定。",
-          "不混乱","链接变多也不乱。",
-          "可靠","长期一致。"
-        )
-      }
-    },
-
-    2:{
-      origin:{
-        formal:V(
-          "规范键","状态只允许 gd_lang / gd_style / gd_time，不引入新命名空间。",
-          "注入顺序","URL优先注入，本地存储回退，并做值归一化。",
-          "传播规则","所有内部链接必须携带状态。",
-          "读者结果","系统可预测，不会“忘记”上下文。"
-        ),
-        informal:V(
-          "只三键","语言/风格/时间层。",
-          "URL优先","链接怎么写就怎么开。",
-          "链接会带走","设置一路跟随。",
-          "可预测","不随机重置。"
-        )
-      },
-      now:{
-        formal:V(
-          "单语渲染","语言是透镜：英文或中文，不混排。",
-          "风格透镜","正式/直接改变框架与密度，保持有界与真实。",
-          "时间透镜","概念/当前/路线图改变强调点，但定义不漂移。",
-          "故障可追踪","若状态异常：查URL、查存储、查传播。"
-        ),
-        informal:V(
-          "语言是开关","一次一种语言。",
-          "风格真改含义","不是换皮。",
-          "时间真改强调","概念/当前/路线图不同。",
-          "可修","状态错了能追根。"
-        )
-      },
-      post:{
-        formal:V(
-          "规模安全","稳定键与稳定语义让平台可扩展且可审计。",
-          "可分享性","链接即状态，别人打开即同视图。",
-          "不捕获","状态用于理解，不用于追踪人。",
-          "结果","在大系统中保持一致的遍历体验。"
-        ),
-        informal:V(
-          "长期稳定","键不漂移。",
-          "分享方便","链接即视图。",
-          "不搞追踪","只为清晰。",
-          "一致","全站对齐。"
-        )
-      }
-    },
-
-    3:{
-      origin:{
-        formal:V(
-          "枢纽","枢纽用于罗盘导航（北东南西）与快速定位。",
-          "产品","产品用于可部署执行面：软件、教育、能源、商业。",
-          "创新","创新用于未来干线与前沿扩展，仍遵守同契约。",
-          "法则/仪表","法则定义规则；仪表提供测量与状态视图。"
-        ),
-        informal:V(
-          "枢纽","罗盘导航。",
-          "产品","可用的执行面。",
-          "创新","未来扩展。",
-          "法则/仪表","规则与测量。"
-        )
-      },
-      now:{
-        formal:V(
-          "上线与未来分离","产品=上线执行面；创新=未来执行面；契约共享但主张分离。",
-          "最快路径","想做事→产品；想弄清含义→法则；想看测量→仪表。",
-          "交叉链接","交叉链接存在，但不替代罗盘纪律。",
-          "返回策略","迷路时回枢纽，这是设计的重置点。"
-        ),
-        informal:V(
-          "主张要干净","上线与路线图不混说。",
-          "做/懂/测","产品/法则/仪表。",
-          "交叉链接辅助","枢纽是锚点。",
-          "随时回枢纽","别硬撑。"
-        )
-      },
-      post:{
-        formal:V(
-          "目录增长","更多产品子枢纽出现，但不改变交互语法。",
-          "证明增长","更多仪表与核查节点为验证服务。",
-          "翻译增长","更强双语覆盖与稳定术语映射。",
-          "结果","既支持发现又保持纪律。"
-        ),
-        informal:V(
-          "更多子枢纽","同UI。",
-          "更多验证","更强测量与核查。",
-          "更好双语","干净切换。",
-          "仍有纪律","不漂移。"
-        )
-      }
-    },
-
-    4:{
-      origin:{
-        formal:V(
-          "索引目的","索引=路由压缩：用最少阅读进入正确干线。",
-          "索引规则","索引条目必须是完整句子与有界含义，避免变成标签堆。",
-          "核心路由","/home/枢纽、/products/产品、/explore/创新、/laws/法则、/gauges/仪表、/links/链接。",
-          "结果","更快发现但不牺牲结构与边界。"
-        ),
-        informal:V(
-          "索引=快地图","快速路由。",
-          "一条至少一句","不搞标签堆。",
-          "主路由","枢纽/产品/创新/法则/仪表/链接。",
-          "结果","省时间。"
-        )
-      },
-      now:{
-        formal:V(
-          "产品索引","软件：执行面与仪器；教育：遍历学习；能源：转换链；商业：部署打包。",
-          "创新索引","创新：未来干线；概念/当前/路线图区分定义、现况与扩展。",
-          "法则索引","法则：定义与约束；主张有界；可证伪时给证伪条件。",
-          "仪表索引","仪表：测量与状态；阈值与制度化状态展示（可用时）。"
-        ),
-        informal:V(
-          "产品","软件/教育/能源/商业。",
-          "创新","未来干线+透镜分离。",
-          "法则","定义与规则。",
-          "仪表","测量与状态。"
-        )
-      },
-      post:{
-        formal:V(
-          "扩展方式","索引仍在本页，通过增加条目扩展，不创建新页面。",
-          "交叉索引","跨干线概念可以多指向：产品/法则/仪表。",
-          "验证钩子","需要证明时索引可引用核查节点。",
-          "结果","大系统的稳定路由电路。"
-        ),
-        informal:V(
-          "还在这页","不加新页。",
-          "更多条目","只增加内容。",
-          "多指向","一概念可指多处。",
-          "仍快","仍可用。"
-        )
-      }
-    },
-
-    5:{
-      origin:{
-        formal:V(
-          "术语表目的","术语表固定含义，保证规模化后仍可读且翻译不漂移。",
-          "术语表规则","定义有界、描述性，不超出证据。",
-          "核心术语（起步）","不变量：必须稳定的属性；方差：可测偏离；透镜：受控视图；契约：可执行规则；漂移：不稳定增长；收据：可验证完成标记。",
-          "结果","读者共享含义，误解与冲突下降。"
-        ),
-        informal:V(
-          "术语表=定义","词在这里有固定含义。",
-          "定义有界","不夸大。",
-          "起步术语","不变量/方差/透镜/契约/漂移/收据。",
-          "结果","更少混乱。"
-        )
-      },
-      now:{
-        formal:V(
-          "遍历","遍历=按结构导航学习，不是线性读完；强调定位与安全返回。",
-          "双语映射","术语翻译保持一致；语言是透镜（单语渲染），不混排。",
-          "时间透镜映射","概念=定义；当前=执行姿态；路线图=扩展方向；都映射到gd_time键。",
-          "完整性规则","任何页面使用术语必须与术语表一致。"
-        ),
-        informal:V(
-          "遍历","按结构学习，不按章节。",
-          "双语","一次一种语言，映射一致。",
-          "时间透镜","概念/当前/路线图不同视图。",
-          "完整性","词必须全站一致。"
-        )
-      },
-      post:{
-        formal:V(
-          "增长方式","术语表仍在本页，通过增加术语扩展，并按干线分组。",
-          "一致性检查","后续通过审阅与仪器约束保持一致，而非凭感觉。",
-          "证据链接","高负载术语可链接核查节点供技术读者验证。",
-          "结果","稳定语言层支撑规模化。"
-        ),
-        informal:V(
-          "更多术语","在这里加。",
-          "一致性","用规则约束。",
-          "证明链接","需要时有核查。",
-          "语言稳定","规模不漂移。"
-        )
-      }
-    },
-
-    6:{
-      origin:{
-        formal:V(
-          "附录目的","附录存放约定与参考，避免污染核心执行面。",
-          "内容范围","命名规则、路由规则、键约束、公开披露边界。",
-          "约定（起步）","仅gd_lang/gd_style/gd_time；透镜只在模态内；主页面是导航面；路由必须确定。",
-          "结果","核心干净但系统完整。"
-        ),
-        informal:V(
-          "附录=支撑层","规则与参考在此。",
-          "保持干净","核心页面更可读。",
-          "起步约定","只三键；透镜在模态；确定路由。",
-          "结果","完整不杂乱。"
-        )
-      },
-      now:{
-        formal:V(
-          "披露边界","公开页面讲结构/信号/证伪，不讲危险步骤与专有配方。",
-          "中立规则","公开文案保持大众可读与中立，无漏斗、无捕获、无压迫语言。",
-          "版本姿态","结构变更稀少；内容在稳定节点内增长。",
-          "结果","公开安全增长且保持完整性。"
-        ),
-        informal:V(
-          "边界","讲结构，不讲配方。",
-          "中立","不夸大，不操控。",
-          "版本","结构稳，内容长。",
-          "结果","安全增长。"
-        )
-      },
-      post:{
-        formal:V(
-          "归档姿态","附录成为约定、版本注记与复现脚手架的归档层，仍在本页。",
-          "复现姿态","可存放最低限度复现协议（高层），不增加页面爆炸。",
-          "连续性","记录跨房间不变量，防止漂移。",
-          "结果","耐久文档而不引入杂乱。"
-        ),
-        informal:V(
-          "成为归档","仍在本页。",
-          "复现笔记","保持高层与安全。",
-          "连续性","不变量写清楚。",
-          "结果","耐久不杂乱。"
-        )
-      }
-    },
-
-    7:{
-      origin:{
-        formal:V(
-          "提示",P.warn,
-          "核查格式","主张→假设→测量定义→证伪→限制。保持固定结构。",
-          "验证规则","不可测的主张标记为概念，不进入已验证层。",
-          "结果","防止叙事膨胀，保持可证伪。"
-        ),
-        informal:V(
-          "提示",P.warn,
-          "格式","主张/假设/测量/证伪/限制。",
-          "规则","不可测=未验证。",
-          "结果","阻止空谈。"
-        )
-      },
-      now:{
-        formal:V(
-          "核查对象","定义、不变量与测量语义（键、透镜语义、有界表述）。",
-          "不主张事项","不做普遍结论承诺；不泄露秘密；不发布危险步骤。",
-          "证伪方式","明确指出什么观察会推翻陈述。",
-          "结果","技术读者可审计而不需猜意图。"
-        ),
-        informal:V(
-          "检查什么","定义与测量规则。",
-          "不做什么","不许诺、不泄密、不危险。",
-          "证伪","说明什么会证明它错。",
-          "结果","可审计不争吵。"
-        )
-      },
-      post:{
-        formal:V(
-          "扩展方式","同格式增加更多核查主张，不新增页面类型。",
-          "集成","核查可引用产品/法则/仪表中被使用的主张。",
-          "治理姿态","核查保持中立与证据优先，不变成营销。",
-          "结果","成为增长平台的永久验证脊柱。"
-        ),
-        informal:V(
-          "更多核查","同格式扩展。",
-          "可引用","回指到使用位置。",
-          "中立","只证据。",
-          "结果","永久验证骨架。"
-        )
-      }
-    }
-  };
-
-  var CONTENT = (lang==="zh") ? CONTENT_ZH : CONTENT_EN;
 
   function view(idx){ return CONTENT[idx][time][style]; }
 
@@ -1149,6 +778,11 @@ a{color:inherit;text-decoration:none}
     h2.textContent=v[1].h; p2.textContent=v[1].p;
     h3.textContent=v[2].h; p3.textContent=v[2].p;
     h4.textContent=v[3].h; p4.textContent=v[3].p;
+
+    setJumpButton(j1, v[0].j, "JUMP");
+    setJumpButton(j2, v[1].j, "JUMP");
+    setJumpButton(j3, v[2].j, "JUMP");
+    setJumpButton(j4, v[3].j, "JUMP");
   }
 
   function openModal(i){

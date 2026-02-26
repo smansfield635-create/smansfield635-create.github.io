@@ -1,19 +1,22 @@
-<!-- TNT — /products/energy/index.html  (ENERGY · LAYER 2 · SECTION ROUTER + SINGLE-ARTICLE PER LENS + 4 DIAMONDS)
-     PLAYER 2 GOAL:
-       - Keep pearlescent diamonds EXACTLY unchanged
-       - Keep 4-diamond gateway (FOUNDATION / ARCHITECTURE / PERFORMANCE / GOVERNANCE)
-       - Modal renders SINGLE ARTICLE PER LENS (one paragraph per domain)
-       - Section router changes:
-           • section title line
-           • section lead-in sentence
-           • domain ordering per section (operational-heavy)
-       - No new state keys (gd_lang / gd_style / gd_time only)
-       - Lenses remain inside modal only (STYLE + TIME + DIR)
-       - Content is still placeholder in this layer; Layer 3 injects the full 144 paragraphs
+<!-- TNT — /products/energy/index.html  (ENERGY · PLAYER 3 · LONG DOMAIN BUBBLES · MULTI-OPEN SAME LENS · OPEN-ALL · INTEGRATED MODE)
+     PLAYER 3 ADDS:
+       - Inside modal: 12 domains rendered as LONG CLICKABLE BUBBLES (collapsed by default)
+       - Multi-open allowed ONLY within the same lens-state
+         (lens change => all collapse)
+       - OPEN ALL / CLOSE ALL controls
+       - MODE toggle:
+           LENS = normal (Style+Time+Dir active)
+           INTEGRATED = “avoid the lens” (Time+Dir ignored, still respects Style)
+             • When expanded, each domain shows a 3-part integrated read:
+               Concept (Cause+Effect merged)
+               Live (Cause+Effect merged)
+               Roadmap (Cause+Effect merged)
 
-     LOCKED DOMAINS (12):
-       Engineering, Technology, Industrial, Environmental, Financial, Governance,
-       Adversarial, Social, Medicine, Political, Legal, Historical Systems
+     IMPORTANT:
+       - Pearlescent diamond CSS is locked and untouched.
+       - 4 diamonds open modal (Foundation/Architecture/Performance/Governance).
+       - Content is still placeholder in this layer.
+       - Player 4 injects the full 144 (or 120+) paragraphs into ARTICLE_LENS.
 -->
 
 <!doctype html>
@@ -266,6 +269,11 @@ body::before,body::after{pointer-events:none!important}
   border-color:rgba(212,175,55,.55);
   box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.22);
 }
+.pill.disabled{
+  opacity:.28;
+  filter:grayscale(1);
+  pointer-events:none;
+}
 
 /* Header card */
 .hcard{
@@ -278,21 +286,45 @@ body::before,body::after{pointer-events:none!important}
 .h2{margin:0;color:var(--mut);line-height:1.45;font-size:12.5px}
 .h3{margin:8px 0 0;color:rgba(255,255,255,.70);font-size:12px;line-height:1.35}
 
-/* Article container */
+/* Long clickable bubbles */
 .content{padding:14px 16px 18px}
-.article{
-  max-width:980px;margin:0 auto;
-  display:flex;flex-direction:column;gap:12px;
-}
-.pcard{
+.list{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.bub{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
   background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
   box-shadow:0 16px 52px rgba(0,0,0,.60);
-  padding:14px 16px;
+  overflow:hidden;
 }
-.pname{margin:0 0 8px;font-weight:950;letter-spacing:.2px;font-size:14px}
-.ptext{margin:0;color:var(--mut2);line-height:1.55}
+.bub.open{box-shadow:0 18px 60px rgba(0,0,0,.72), 0 0 26px rgba(212,175,55,.12)}
+.bhead{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:14px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent
+}
+.btitle{font-weight:950;letter-spacing:.2px;font-size:14px}
+.bmini{font-size:12px;opacity:.72;line-height:1.25}
+.bchev{font-size:16px;opacity:.75}
+.bbody{
+  display:none;
+  padding:14px 16px 12px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.bub.open .bbody{display:block}
+.p{margin:0;color:var(--mut2);line-height:1.58}
+
+/* Integrated panels */
+.ipanels{display:flex;flex-direction:column;gap:10px}
+.ip{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  background:rgba(0,0,0,.12);
+  padding:10px 12px;
+}
+.iph{margin:0 0 6px;font-weight:950;font-size:12px;letter-spacing:.25px;opacity:.92}
+.ipt{margin:0;color:var(--mut2);line-height:1.58}
 
 /* Actions */
 .mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
@@ -364,20 +396,30 @@ body::before,body::after{pointer-events:none!important}
       <div class="lensbar">
         <div class="row">
           <div class="cluster">
+            <div class="tag">MODE</div>
+            <div class="pill active" data-mode="lens">LENS</div>
+            <div class="pill" data-mode="integrated">INTEGRATED</div>
+          </div>
+          <div class="cluster">
             <div class="tag">STYLE</div>
             <div class="pill active" data-style="formal">FORMAL</div>
             <div class="pill" data-style="informal">INFORMAL</div>
           </div>
-          <div class="cluster">
+          <div class="cluster" id="clusterTime">
             <div class="tag">TIME</div>
             <div class="pill active" data-time="concept">CONCEPT</div>
             <div class="pill" data-time="live">LIVE</div>
             <div class="pill" data-time="roadmap">ROADMAP</div>
           </div>
-          <div class="cluster">
+          <div class="cluster" id="clusterDir">
             <div class="tag">DIR</div>
             <div class="pill active" data-dir="cause">CAUSE</div>
             <div class="pill" data-dir="effect">EFFECT</div>
+          </div>
+          <div class="cluster">
+            <div class="tag">BUBBLES</div>
+            <div class="pill" id="openAll">OPEN ALL</div>
+            <div class="pill" id="closeAll">CLOSE ALL</div>
           </div>
         </div>
 
@@ -389,7 +431,7 @@ body::before,body::after{pointer-events:none!important}
       </div>
 
       <div class="content">
-        <div class="article" id="article"></div>
+        <div class="list" id="list"></div>
 
         <div class="mact">
           <button class="sbtn" id="mReturn" type="button">RETURN</button>
@@ -437,7 +479,7 @@ body::before,body::after{pointer-events:none!important}
     "Adversarial","Social","Medicine","Political","Legal","Historical Systems"
   ];
 
-  // ===== Single-article ordering per section (operational-heavy) =====
+  // ===== Section ordering (operational-heavy) =====
   const ORDER = {
     FOUNDATION: ["Industrial","Engineering","Technology","Governance","Financial","Adversarial","Legal","Political","Environmental","Social","Medicine","Historical Systems"],
     ARCHITECTURE:["Engineering","Technology","Industrial","Governance","Adversarial","Financial","Legal","Political","Environmental","Social","Medicine","Historical Systems"],
@@ -446,25 +488,51 @@ body::before,body::after{pointer-events:none!important}
   };
 
   // ===== Lens state (no new gd_* keys) =====
-  let L = { style:"formal", time:"concept", dir:"cause" };
+  let S = { mode:"lens", style:"formal", time:"concept", dir:"cause" };
   let section = "FOUNDATION";
 
-  // ===== Placeholders (Layer 3 injects full 144 paragraphs) =====
-  const ARTICLE = {};
+  // ===== Multi-open rule: allowed only within same lensKey =====
+  let openSet = new Set();
+  let openKey = "";
+
+  function lensKey(){
+    // mode included so integrated has its own open group
+    return [S.mode,S.style,S.time,S.dir,section].join("|");
+  }
+  function resetOpenIfLensChanged(){
+    const k = lensKey();
+    if(k !== openKey){
+      openKey = k;
+      openSet = new Set();
+    }
+  }
+
+  // ===== Content store (Player 4 injects full paragraphs) =====
+  // Placeholder now; guarantees wiring.
+  const ARTICLE_LENS = {};
   DOMAINS.forEach(d=>{
-    ARTICLE[d] = {
+    ARTICLE_LENS[d] = {
       formal:{
-        concept:{cause:"(Pending content injection) Layer 3 will insert the full institutional paragraph.",effect:"(Pending content injection) Layer 3 will insert the full institutional paragraph."},
-        live:{cause:"(Pending content injection) Layer 3 will insert the full institutional paragraph.",effect:"(Pending content injection) Layer 3 will insert the full institutional paragraph."},
-        roadmap:{cause:"(Pending content injection) Layer 3 will insert the full institutional paragraph.",effect:"(Pending content injection) Layer 3 will insert the full institutional paragraph."}
+        concept:{cause:"(Pending injection) Formal Concept Cause paragraph.",effect:"(Pending injection) Formal Concept Effect paragraph."},
+        live:{cause:"(Pending injection) Formal Live Cause paragraph.",effect:"(Pending injection) Formal Live Effect paragraph."},
+        roadmap:{cause:"(Pending injection) Formal Roadmap Cause paragraph.",effect:"(Pending injection) Formal Roadmap Effect paragraph."}
       },
       informal:{
-        concept:{cause:"(Pending content injection) Layer 3 will insert the full keynote paragraph.",effect:"(Pending content injection) Layer 3 will insert the full keynote paragraph."},
-        live:{cause:"(Pending content injection) Layer 3 will insert the full keynote paragraph.",effect:"(Pending content injection) Layer 3 will insert the full keynote paragraph."},
-        roadmap:{cause:"(Pending content injection) Layer 3 will insert the full keynote paragraph.",effect:"(Pending content injection) Layer 3 will insert the full keynote paragraph."}
+        concept:{cause:"(Pending injection) Informal Concept Cause paragraph.",effect:"(Pending injection) Informal Concept Effect paragraph."},
+        live:{cause:"(Pending injection) Informal Live Cause paragraph.",effect:"(Pending injection) Informal Live Effect paragraph."},
+        roadmap:{cause:"(Pending injection) Informal Roadmap Cause paragraph.",effect:"(Pending injection) Informal Roadmap Effect paragraph."}
       }
     };
   });
+
+  // Integrated view merges cause+effect for each time slice (still respects style).
+  function integratedText(domain){
+    const st = S.style;
+    const c = ARTICLE_LENS[domain][st].concept.cause + " " + ARTICLE_LENS[domain][st].concept.effect;
+    const l = ARTICLE_LENS[domain][st].live.cause    + " " + ARTICLE_LENS[domain][st].live.effect;
+    const r = ARTICLE_LENS[domain][st].roadmap.cause + " " + ARTICLE_LENS[domain][st].roadmap.effect;
+    return { concept:c, live:l, roadmap:r };
+  }
 
   const bd=document.getElementById("bd");
   const modal=document.getElementById("modal");
@@ -474,67 +542,185 @@ body::before,body::after{pointer-events:none!important}
   const h1=document.getElementById("h1");
   const h2=document.getElementById("h2");
   const h3=document.getElementById("h3");
-  const article=document.getElementById("article");
-
-  function tLabel(){ return (L.time==="concept")?"CONCEPT":(L.time==="live")?"LIVE":"ROADMAP"; }
-  function sLabel(){ return (L.style==="formal")?"FORMAL":"INFORMAL"; }
-  function dLabel(){ return (L.dir==="cause")?"CAUSE":"EFFECT"; }
+  const list=document.getElementById("list");
+  const clusterTime=document.getElementById("clusterTime");
+  const clusterDir=document.getElementById("clusterDir");
 
   function sectionLead(sec){
-    if(sec==="FOUNDATION") return "Foundation states the admissible claim ceiling and the non-negotiable operational bounds.";
-    if(sec==="ARCHITECTURE") return "Architecture defines how the system is built, isolated, and interfaced without exposure drift.";
-    if(sec==="PERFORMANCE") return "Performance constrains what is measured, stabilized, and repeated without narrative inflation.";
-    return "Governance enforces claim discipline, audit integrity, and scale gates under adversarial pressure.";
+    if(sec==="FOUNDATION") return "Foundation states admissible bounds, operational constraints, and claim discipline.";
+    if(sec==="ARCHITECTURE") return "Architecture defines build, isolation, and interfaces without exposure drift.";
+    if(sec==="PERFORMANCE") return "Performance describes what is measured, stabilized, and repeated without inflation.";
+    return "Governance enforces claim discipline, audit integrity, and scale gates under pressure.";
+  }
+
+  function labelTime(){
+    return (S.time==="concept")?"CONCEPT":(S.time==="live")?"LIVE":"ROADMAP";
+  }
+  function labelDir(){
+    return (S.dir==="cause")?"CAUSE":"EFFECT";
+  }
+  function labelStyle(){
+    return (S.style==="formal")?"FORMAL":"INFORMAL";
   }
 
   function setHeader(){
-    h1.textContent = `ENERGY · ${section} · ${sLabel()} · ${tLabel()} · ${dLabel()}`;
-    h2.textContent = sectionLead(section);
+    if(S.mode==="integrated"){
+      h1.textContent = `ENERGY · ${section} · INTEGRATED · ${labelStyle()}`;
+      h2.textContent = sectionLead(section) + " Integrated mode shows Concept+Live+Roadmap per domain.";
+    } else {
+      h1.textContent = `ENERGY · ${section} · ${labelStyle()} · ${labelTime()} · ${labelDir()}`;
+      h2.textContent = sectionLead(section);
+    }
     h3.textContent = "Public posture is Industrial thermal substitution (C). No net-positive fusion claim. Fusion readiness is requirements-only.";
     mTitle.textContent = `ENERGY · ${section}`;
   }
 
-  function renderArticle(){
-    setHeader();
-    article.innerHTML="";
+  function getLensParagraph(domain){
+    return ARTICLE_LENS[domain][S.style][S.time][S.dir];
+  }
+
+  function setPillActives(){
+    document.querySelectorAll("[data-mode]").forEach(p=>p.classList.toggle("active", p.dataset.mode===S.mode));
+    document.querySelectorAll("[data-style]").forEach(p=>p.classList.toggle("active", p.dataset.style===S.style));
+    document.querySelectorAll("[data-time]").forEach(p=>p.classList.toggle("active", p.dataset.time===S.time));
+    document.querySelectorAll("[data-dir]").forEach(p=>p.classList.toggle("active", p.dataset.dir===S.dir));
+    // disable time/dir clusters in integrated mode (avoid lens)
+    const dis = (S.mode==="integrated");
+    clusterTime.style.opacity = dis ? ".35" : "1";
+    clusterDir.style.opacity  = dis ? ".35" : "1";
+    clusterTime.style.pointerEvents = dis ? "none" : "auto";
+    clusterDir.style.pointerEvents  = dis ? "none" : "auto";
+  }
+
+  function renderList(){
+    resetOpenIfLensChanged();
+    list.innerHTML="";
     const order = ORDER[section] || DOMAINS;
 
-    order.forEach(name=>{
-      const card=document.createElement("div");
-      card.className="pcard";
+    order.forEach(domain=>{
+      const bub=document.createElement("div");
+      bub.className="bub";
+      bub.dataset.domain = domain;
 
+      const head=document.createElement("div");
+      head.className="bhead";
+      head.tabIndex = 0;
+      head.setAttribute("role","button");
+
+      const left=document.createElement("div");
       const t=document.createElement("div");
-      t.className="pname";
-      t.textContent=name;
+      t.className="btitle";
+      t.textContent = domain;
+      const mini=document.createElement("div");
+      mini.className="bmini";
+      mini.textContent = (S.mode==="integrated")
+        ? "Tap to expand: Concept + Live + Roadmap"
+        : "Tap to expand: one paragraph per lens";
 
-      const p=document.createElement("p");
-      p.className="ptext";
-      p.textContent = ARTICLE[name][L.style][L.time][L.dir];
+      left.appendChild(t);
+      left.appendChild(mini);
 
-      card.appendChild(t);
-      card.appendChild(p);
-      article.appendChild(card);
+      const chev=document.createElement("div");
+      chev.className="bchev";
+      chev.textContent = openSet.has(domain) ? "▾" : "▸";
+
+      head.appendChild(left);
+      head.appendChild(chev);
+
+      const body=document.createElement("div");
+      body.className="bbody";
+
+      if(S.mode==="integrated"){
+        const parts = integratedText(domain);
+        const wrap=document.createElement("div");
+        wrap.className="ipanels";
+
+        [["CONCEPT",parts.concept],["LIVE",parts.live],["ROADMAP",parts.roadmap]].forEach(pair=>{
+          const ip=document.createElement("div");
+          ip.className="ip";
+          const iph=document.createElement("div");
+          iph.className="iph";
+          iph.textContent = pair[0];
+          const ipt=document.createElement("p");
+          ipt.className="ipt";
+          ipt.textContent = pair[1];
+          ip.appendChild(iph);
+          ip.appendChild(ipt);
+          wrap.appendChild(ip);
+        });
+
+        body.appendChild(wrap);
+      } else {
+        const p=document.createElement("p");
+        p.className="p";
+        p.textContent = getLensParagraph(domain);
+        body.appendChild(p);
+      }
+
+      function toggleOpen(){
+        if(openSet.has(domain)){ openSet.delete(domain); }
+        else { openSet.add(domain); }
+        renderAll(); // re-render to reflect chevrons + bodies
+      }
+
+      head.addEventListener("click", toggleOpen);
+      head.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggleOpen(); }});
+
+      if(openSet.has(domain)) bub.classList.add("open");
+
+      bub.appendChild(head);
+      bub.appendChild(body);
+      list.appendChild(bub);
     });
   }
 
-  function renderPills(){
-    document.querySelectorAll("[data-style]").forEach(x=>x.classList.toggle("active", x.dataset.style===L.style));
-    document.querySelectorAll("[data-time]").forEach(x=>x.classList.toggle("active", x.dataset.time===L.time));
-    document.querySelectorAll("[data-dir]").forEach(x=>x.classList.toggle("active", x.dataset.dir===L.dir));
+  function renderAll(){
+    setHeader();
+    setPillActives();
+    renderList();
   }
 
-  function renderAll(){
-    renderPills();
-    renderArticle();
-  }
+  // OPEN ALL / CLOSE ALL (within current lensKey)
+  document.getElementById("openAll").addEventListener("click", ()=>{
+    resetOpenIfLensChanged();
+    (ORDER[section] || DOMAINS).forEach(d=>openSet.add(d));
+    renderAll();
+  });
+  document.getElementById("closeAll").addEventListener("click", ()=>{
+    resetOpenIfLensChanged();
+    openSet = new Set();
+    renderAll();
+  });
 
   // Lens handlers
-  document.querySelectorAll("[data-style]").forEach(p=>p.addEventListener("click",()=>{ L.style=p.dataset.style; renderAll(); }));
-  document.querySelectorAll("[data-time]").forEach(p=>p.addEventListener("click",()=>{ L.time=p.dataset.time; renderAll(); }));
-  document.querySelectorAll("[data-dir]").forEach(p=>p.addEventListener("click",()=>{ L.dir=p.dataset.dir; renderAll(); }));
+  document.querySelectorAll("[data-mode]").forEach(p=>p.addEventListener("click", ()=>{
+    const next = p.dataset.mode;
+    if(next===S.mode) return;
+    S.mode = next;
+    renderAll();
+  }));
+  document.querySelectorAll("[data-style]").forEach(p=>p.addEventListener("click", ()=>{
+    const next = p.dataset.style;
+    if(next===S.style) return;
+    S.style = next;
+    renderAll();
+  }));
+  document.querySelectorAll("[data-time]").forEach(p=>p.addEventListener("click", ()=>{
+    const next = p.dataset.time;
+    if(next===S.time) return;
+    S.time = next;
+    renderAll();
+  }));
+  document.querySelectorAll("[data-dir]").forEach(p=>p.addEventListener("click", ()=>{
+    const next = p.dataset.dir;
+    if(next===S.dir) return;
+    S.dir = next;
+    renderAll();
+  }));
 
+  // Modal open/close
   function openModal(sec){
-    section=sec;
+    section = sec;
     bd.classList.add("show");
     modal.classList.add("show");
     renderAll();
@@ -543,7 +729,6 @@ body::before,body::after{pointer-events:none!important}
     bd.classList.remove("show");
     modal.classList.remove("show");
   }
-
   bd.addEventListener("click", closeModal);
   mClose.addEventListener("click", closeModal);
   mReturn.addEventListener("click", closeModal);

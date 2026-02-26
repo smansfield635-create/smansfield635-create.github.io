@@ -1,13 +1,17 @@
-<!-- TNT — /products/energy/index.html  (ENERGY · LAYER 1 · GEOMETRY + PEARLESCENT LOCK + LENS WIRES)
-     LAYER 1 PURPOSE:
-       - Restore 4-diamond geometry (FOUNDATION / ARCHITECTURE / PERFORMANCE / GOVERNANCE)
-       - Lock pearlescent lacquer diamonds (no coal)
-       - Modal opens 10/10 (mobile-safe hit testing)
-       - Canonical state keys only: gd_lang / gd_style / gd_time
-       - Lens UI present and wired (STYLE + TIME + DIR) without new keys
-       - Domain list scaffolding present (12 domains) but content injection occurs in later layers
+<!-- TNT — /products/energy/index.html  (ENERGY · LAYER 2 · SECTION ROUTER + SINGLE-ARTICLE PER LENS + 4 DIAMONDS)
+     PLAYER 2 GOAL:
+       - Keep pearlescent diamonds EXACTLY unchanged
+       - Keep 4-diamond gateway (FOUNDATION / ARCHITECTURE / PERFORMANCE / GOVERNANCE)
+       - Modal renders SINGLE ARTICLE PER LENS (one paragraph per domain)
+       - Section router changes:
+           • section title line
+           • section lead-in sentence
+           • domain ordering per section (operational-heavy)
+       - No new state keys (gd_lang / gd_style / gd_time only)
+       - Lenses remain inside modal only (STYLE + TIME + DIR)
+       - Content is still placeholder in this layer; Layer 3 injects the full 144 paragraphs
 
-     DOMAIN LIST (LOCKED, 12):
+     LOCKED DOMAINS (12):
        Engineering, Technology, Industrial, Environmental, Financial, Governance,
        Adversarial, Social, Medicine, Political, Legal, Historical Systems
 -->
@@ -72,7 +76,7 @@ body::before,body::after{pointer-events:none!important}
   z-index:60;
 }
 
-/* Outer (visual only, never blocks taps) */
+/* Outer (visual only) */
 .outer{
   position:absolute;left:50%;top:50%;
   width:min(680px,92vw);height:min(680px,92vw);
@@ -380,7 +384,7 @@ body::before,body::after{pointer-events:none!important}
         <div class="hcard">
           <div class="h1" id="h1">—</div>
           <div class="h2" id="h2">—</div>
-          <div class="h3">Public posture is Industrial thermal substitution (C). No net-positive fusion claim. Fusion readiness is requirements-only.</div>
+          <div class="h3" id="h3">Public posture is Industrial thermal substitution (C). No net-positive fusion claim. Fusion readiness is requirements-only.</div>
         </div>
       </div>
 
@@ -409,7 +413,7 @@ body::before,body::after{pointer-events:none!important}
   if(!["formal","informal"].includes(gdStyle)) gdStyle="formal";
   if(gdTime==="trajectory") gdTime="post";
   if(!["origin","now","post"].includes(gdTime)) gdTime="origin";
-  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime); }catch(e){}
+  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime);}catch(e){}
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(gdStyle)+"&time="+encodeURIComponent(gdTime); }
@@ -427,31 +431,37 @@ body::before,body::after{pointer-events:none!important}
     document.getElementById("mJumpHub").href="/home/?"+s;
   })();
 
-  // ===== Locked domains =====
+  // ===== Locked domains (12) =====
   const DOMAINS = [
     "Engineering","Technology","Industrial","Environmental","Financial","Governance",
     "Adversarial","Social","Medicine","Political","Legal","Historical Systems"
   ];
 
+  // ===== Single-article ordering per section (operational-heavy) =====
+  const ORDER = {
+    FOUNDATION: ["Industrial","Engineering","Technology","Governance","Financial","Adversarial","Legal","Political","Environmental","Social","Medicine","Historical Systems"],
+    ARCHITECTURE:["Engineering","Technology","Industrial","Governance","Adversarial","Financial","Legal","Political","Environmental","Social","Medicine","Historical Systems"],
+    PERFORMANCE:["Industrial","Technology","Engineering","Financial","Governance","Adversarial","Environmental","Legal","Political","Social","Medicine","Historical Systems"],
+    GOVERNANCE:["Governance","Legal","Adversarial","Political","Financial","Industrial","Technology","Engineering","Environmental","Social","Medicine","Historical Systems"]
+  };
+
   // ===== Lens state (no new gd_* keys) =====
   let L = { style:"formal", time:"concept", dir:"cause" };
   let section = "FOUNDATION";
 
-  // ===== Article store (Layer 1 minimal placeholders; content injected in Layer 4) =====
-  // This layer intentionally does NOT include the 144 paragraphs yet.
-  // Next layer will inject full content while keeping this geometry and lacquer locked.
+  // ===== Placeholders (Layer 3 injects full 144 paragraphs) =====
   const ARTICLE = {};
   DOMAINS.forEach(d=>{
     ARTICLE[d] = {
       formal:{
-        concept:{cause:"(Content layer pending) This domain paragraph will be injected in Layer 4.",effect:"(Content layer pending) This domain paragraph will be injected in Layer 4."},
-        live:{cause:"(Content layer pending) This domain paragraph will be injected in Layer 4.",effect:"(Content layer pending) This domain paragraph will be injected in Layer 4."},
-        roadmap:{cause:"(Content layer pending) This domain paragraph will be injected in Layer 4.",effect:"(Content layer pending) This domain paragraph will be injected in Layer 4."}
+        concept:{cause:"(Pending content injection) Layer 3 will insert the full institutional paragraph.",effect:"(Pending content injection) Layer 3 will insert the full institutional paragraph."},
+        live:{cause:"(Pending content injection) Layer 3 will insert the full institutional paragraph.",effect:"(Pending content injection) Layer 3 will insert the full institutional paragraph."},
+        roadmap:{cause:"(Pending content injection) Layer 3 will insert the full institutional paragraph.",effect:"(Pending content injection) Layer 3 will insert the full institutional paragraph."}
       },
       informal:{
-        concept:{cause:"(Content layer pending) This domain paragraph will be injected in Layer 4.",effect:"(Content layer pending) This domain paragraph will be injected in Layer 4."},
-        live:{cause:"(Content layer pending) This domain paragraph will be injected in Layer 4.",effect:"(Content layer pending) This domain paragraph will be injected in Layer 4."},
-        roadmap:{cause:"(Content layer pending) This domain paragraph will be injected in Layer 4.",effect:"(Content layer pending) This domain paragraph will be injected in Layer 4."}
+        concept:{cause:"(Pending content injection) Layer 3 will insert the full keynote paragraph.",effect:"(Pending content injection) Layer 3 will insert the full keynote paragraph."},
+        live:{cause:"(Pending content injection) Layer 3 will insert the full keynote paragraph.",effect:"(Pending content injection) Layer 3 will insert the full keynote paragraph."},
+        roadmap:{cause:"(Pending content injection) Layer 3 will insert the full keynote paragraph.",effect:"(Pending content injection) Layer 3 will insert the full keynote paragraph."}
       }
     };
   });
@@ -463,33 +473,44 @@ body::before,body::after{pointer-events:none!important}
   const mTitle=document.getElementById("mTitle");
   const h1=document.getElementById("h1");
   const h2=document.getElementById("h2");
+  const h3=document.getElementById("h3");
   const article=document.getElementById("article");
 
-  function normTime(){
-    return (L.time==="concept") ? "CONCEPT" : (L.time==="live") ? "LIVE" : "ROADMAP";
+  function tLabel(){ return (L.time==="concept")?"CONCEPT":(L.time==="live")?"LIVE":"ROADMAP"; }
+  function sLabel(){ return (L.style==="formal")?"FORMAL":"INFORMAL"; }
+  function dLabel(){ return (L.dir==="cause")?"CAUSE":"EFFECT"; }
+
+  function sectionLead(sec){
+    if(sec==="FOUNDATION") return "Foundation states the admissible claim ceiling and the non-negotiable operational bounds.";
+    if(sec==="ARCHITECTURE") return "Architecture defines how the system is built, isolated, and interfaced without exposure drift.";
+    if(sec==="PERFORMANCE") return "Performance constrains what is measured, stabilized, and repeated without narrative inflation.";
+    return "Governance enforces claim discipline, audit integrity, and scale gates under adversarial pressure.";
   }
+
   function setHeader(){
-    const S = (L.style==="formal") ? "FORMAL" : "INFORMAL";
-    const D = (L.dir==="cause") ? "CAUSE" : "EFFECT";
-    h1.textContent = `ENERGY · ${section} · ${S} · ${normTime()} · ${D}`;
-    h2.textContent = (L.style==="formal")
-      ? "Institutional language. Measured, restrained, auditable."
-      : "High-velocity narrative. Compelling, disciplined, bounded.";
+    h1.textContent = `ENERGY · ${section} · ${sLabel()} · ${tLabel()} · ${dLabel()}`;
+    h2.textContent = sectionLead(section);
+    h3.textContent = "Public posture is Industrial thermal substitution (C). No net-positive fusion claim. Fusion readiness is requirements-only.";
     mTitle.textContent = `ENERGY · ${section}`;
   }
 
   function renderArticle(){
     setHeader();
     article.innerHTML="";
-    DOMAINS.forEach(name=>{
+    const order = ORDER[section] || DOMAINS;
+
+    order.forEach(name=>{
       const card=document.createElement("div");
       card.className="pcard";
+
       const t=document.createElement("div");
       t.className="pname";
       t.textContent=name;
+
       const p=document.createElement("p");
       p.className="ptext";
       p.textContent = ARTICLE[name][L.style][L.time][L.dir];
+
       card.appendChild(t);
       card.appendChild(p);
       article.appendChild(card);

@@ -1,10 +1,14 @@
-<!-- TNT — /products/index.html  (PRODUCTS SPINE · IMPERIAL OBSIDIAN + MIDNIGHT SAPPHIRE + OPAL FILM · GOLD CROWN EDGE)
-     PURPOSE:
-       - Same uniform as the “good” pages: lacquer jewel depth + gold trim + crisp specular
-       - UI field remains owned by /assets/ui.css
-       - Geometry remains owned by /assets/branch.css
-       - Diamonds click reliably (mobile-safe hit testing)
-       - State carry (lang/style/time) on all jumps
+<!-- TNT — /products/index.html  (PRODUCTS SPINE · LACQUER JEWEL UNIFORM · MOBILE TAP-SAFE)
+     OWNS:
+       - Page-local layout + jewel material ONLY
+     USES:
+       - /assets/ui.css (field owner)
+       - /assets/branch.css (geometry primitives)
+     GUARANTEES:
+       - Diamonds tap 10/10 (no tap blockers)
+       - No blur stacks (no iOS hit-test bugs)
+       - No new state keys (gd_lang/gd_style/gd_time only)
+       - Full state propagation on ALL internal links
 -->
 
 <!doctype html>
@@ -21,65 +25,61 @@
 :root{
   --R:154px;
 
-  /* IMPERIAL JEWEL MATERIAL (locked uniform) */
-  --obs-0: rgba(0,0,0,.78);
-  --obs-1: rgba(8,10,14,.92);
-  --obs-2: rgba(4,6,10,.95);
+  /* LACQUER JEWEL (Door-grade) */
+  --obsA:#070b12;
+  --obsB:#0c1626;
+  --obsC:#05070c;
 
-  --sapphire-1: rgba(40,90,200,.18);
-  --sapphire-2: rgba(110,190,255,.14);
+  --opal1: rgba(245,248,255,.18);
+  --opal2: rgba(180,220,255,.12);
+  --opal3: rgba(255,235,200,.10);
+  --opal4: rgba(170,255,235,.10);
 
-  --opal-w: rgba(245,248,255,.18);
-  --opal-b: rgba(180,220,255,.12);
-  --opal-a: rgba(255,235,200,.10);
-  --opal-g: rgba(170,255,235,.10);
+  --sapp1: rgba(40,90,200,.18);
+  --sapp2: rgba(110,190,255,.14);
 
   --gold: rgba(212,175,55,.80);
-  --gold-soft: rgba(212,175,55,.35);
-  --gold-line: rgba(212,175,55,.18);
+  --goldSoft: rgba(212,175,55,.35);
 }
 
-/* Minimal page layout (no field ownership) */
+/* page neutral (ui.css owns field) */
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
 
-/* Top-left */
+/* top-left */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:90;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Brand (no blur; matches “done right” feel) */
+/* brand pill (NO backdrop-filter) */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:80;text-align:center;padding:10px 14px;border-radius:999px;
+  z-index:80;text-align:center;
+  padding:10px 14px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
 }
 .brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
 .brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
 
-/* Stage (tap-safe: stage is hit-testable; outer is not) */
+/* stage (tap-safe) */
 .stage{
   position:fixed;left:50%;top:52%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);height:min(720px,94vw);
   z-index:60;
-  pointer-events:auto;
+  pointer-events:auto; /* stage is hittable */
 }
-
-/* Outer shell (visual only) */
 .outer{
   position:absolute;left:50%;top:50%;
   width:min(680px,92vw);height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.55),
-    inset 0 2px 0 rgba(255,255,255,.10);
+  box-shadow:0 90px 260px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
   opacity:.55;
-  pointer-events:none;
+  pointer-events:none; /* decorative only */
 }
 .outer::after{
   content:"";
@@ -89,30 +89,26 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Diamonds: IMPERIAL OBSIDIAN LACQUER + MIDNIGHT SAPPHIRE + OPAL FILM */
+/* diamonds (tap-safe + lacquer) */
 .d{
   width:205px;height:205px;
   position:absolute;left:50%;top:50%;
-  transform-origin:center;
-  border-radius:30px;
+  transform-origin:center;border-radius:30px;
   cursor:pointer;
   pointer-events:auto;
   touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
 
   background:
-    /* sapphire glow lanes (cool) */
-    radial-gradient(circle at 72% 26%, var(--sapphire-2) 0%, rgba(110,190,255,0) 62%),
-    radial-gradient(circle at 34% 78%, var(--sapphire-1) 0%, rgba(40,90,200,0) 64%),
+    radial-gradient(circle at 72% 26%, var(--sapp2) 0%, rgba(110,190,255,0) 62%),
+    radial-gradient(circle at 34% 78%, var(--sapp1) 0%, rgba(40,90,200,0) 64%),
 
-    /* opal interference film (neutral) */
-    radial-gradient(circle at 34% 22%, var(--opal-w) 0%, rgba(245,248,255,0) 54%),
-    radial-gradient(circle at 78% 32%, var(--opal-b) 0%, rgba(180,220,255,0) 58%),
-    radial-gradient(circle at 82% 78%, var(--opal-a) 0%, rgba(255,235,200,0) 64%),
-    radial-gradient(circle at 30% 82%, var(--opal-g) 0%, rgba(170,255,235,0) 66%),
+    radial-gradient(circle at 34% 22%, var(--opal1) 0%, rgba(245,248,255,0) 54%),
+    radial-gradient(circle at 78% 32%, var(--opal2) 0%, rgba(180,220,255,0) 58%),
+    radial-gradient(circle at 82% 78%, var(--opal3) 0%, rgba(255,235,200,0) 64%),
+    radial-gradient(circle at 30% 82%, var(--opal4) 0%, rgba(170,255,235,0) 66%),
 
-    /* lacquer base (tint-resistant) */
-    linear-gradient(160deg, var(--obs-1) 0%, var(--obs-2) 78%);
+    linear-gradient(160deg, var(--obsB) 0%, var(--obsC) 78%);
 
   border:1px solid rgba(255,255,255,.16);
 
@@ -122,8 +118,6 @@ a{color:inherit;text-decoration:none}
     inset 0 2px 0 rgba(255,255,255,.16),
     inset 0 -44px 86px rgba(0,0,0,.80);
 }
-
-/* Gold crown rim (strong) */
 .d::before{
   content:"";
   position:absolute;inset:0;border-radius:30px;padding:1px;
@@ -138,24 +132,18 @@ a{color:inherit;text-decoration:none}
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
-  pointer-events:none;
+  pointer-events:none; /* never capture taps */
 }
-
-/* Gloss cap + glass sheen (static, crisp) */
 .d::after{
   content:"";
   position:absolute;inset:0;border-radius:30px;
   background:
-    /* specular cap */
     radial-gradient(120% 58% at 50% 16%, rgba(255,255,255,.32) 0%, rgba(255,255,255,0) 64%),
-    /* secondary sheen */
     radial-gradient(120% 60% at 50% 55%, rgba(255,255,255,.06) 0%, rgba(255,255,255,0) 62%),
-    /* bottom depth */
     radial-gradient(140% 70% at 50% 92%, rgba(0,0,0,.36) 0%, rgba(0,0,0,0) 56%);
   opacity:.92;
-  pointer-events:none;
+  pointer-events:none; /* never capture taps */
 }
-
 .d:hover{
   border-color:rgba(212,175,55,.32);
   box-shadow:
@@ -166,24 +154,23 @@ a{color:inherit;text-decoration:none}
 }
 .d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
-/* Position */
+/* positions */
 .d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
 .d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
 .d-w{transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg)}
 
+/* inner label */
 .inner{
-  width:100%;height:100%;
-  transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+  width:100%;height:100%;transform:rotate(-45deg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;padding:16px;gap:10px;
   pointer-events:none;user-select:none;
 }
 .lab{font-weight:950;letter-spacing:.8px;font-size:18px;text-shadow:0 0 18px rgba(255,255,255,.16)}
 .sub{font-size:13px;opacity:.84;line-height:1.3;max-width:18em}
 
-/* Core */
+/* core */
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -196,7 +183,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Dock (uses ui.css .btn look by applying .btn class in HTML) */
+/* dock (tap-safe wrapper) */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -209,10 +196,10 @@ a{color:inherit;text-decoration:none}
 }
 .dock .btn{pointer-events:auto}
 
-/* Responsive */
 @media (max-width:560px){
   :root{--R:142px}
   .d{width:180px;height:180px}
+  .stage{top:54%}
 }
 </style>
 </head>
@@ -273,31 +260,40 @@ a{color:inherit;text-decoration:none}
 
 <script>
 (function(){
+  // state hydration (gd_* only)
   var qs = new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   if(time==="trajectory") time="post";
+  if(lang!=="en" && lang!=="zh") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+
+  try{
+    localStorage.setItem("gd_lang", lang);
+    localStorage.setItem("gd_style", style);
+    localStorage.setItem("gd_time", time);
+  }catch(e){}
 
   function q(){
     var p = new URLSearchParams();
-    if(lang)  p.set("lang",lang);
-    if(style) p.set("style",style);
-    if(time)  p.set("time",time);
-    var s = p.toString();
-    return s ? ("?"+s) : "";
+    p.set("lang", lang);
+    p.set("style", style);
+    p.set("time", time);
+    return "?" + p.toString();
   }
 
-  // Top links
-  document.getElementById("btnHub").href  = "/home/"+q();
-  document.getElementById("btnExit").href = "/door/"+q();
+  // top links
+  document.getElementById("btnHub").href  = "/home/" + q();
+  document.getElementById("btnExit").href = "/door/" + q();
 
-  // Dock links
-  document.getElementById("dockTerminal").href = "/index.html"+q();
-  document.getElementById("dockProducts").href = "/products/"+q();
-  document.getElementById("dockLaws").href = "/laws/"+q();
-  document.getElementById("dockGauges").href = "/gauges/"+q();
-  document.getElementById("dockLinks").href = "/links/"+q();
+  // dock links
+  document.getElementById("dockTerminal").href = "/index.html" + q();
+  document.getElementById("dockProducts").href = "/products/" + q();
+  document.getElementById("dockLaws").href = "/laws/" + q();
+  document.getElementById("dockGauges").href = "/gauges/" + q();
+  document.getElementById("dockLinks").href = "/links/" + q();
 
   function go(path){ location.href = path + q(); }
 

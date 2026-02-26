@@ -1,9 +1,16 @@
-<!-- TNT — /products/energy/index.html  (FULL · STACK DOMINANT DOMAIN BUBBLES · PARAGRAPHS INSIDE)
-     FIX:
-       - Domain bubbles are now 8+ long, full-width stacked rows (no blob wrap).
-       - Paragraph blocks render INSIDE the active domain bubble.
-       - Domain bubble dominates; paragraphs are subordinate content.
-       - Accordion behavior: one domain open at a time.
+<!-- TNT — /products/energy/index.html  (FULL · NON-REDUNDANT · STORY-CHRONOLOGICAL · STICKY LENSES · MULTI-OPEN)
+     LOCKS:
+       - Industrial (C) discipline: no net-positive fusion claim; no facility net-electric; fusion is gated readiness only
+       - No North/South/East/West labels
+       - Face diamonds: FOUNDATION / GOVERNANCE / PERFORMANCE / ARCHITECTURE
+       - Lens bar inside modal is STICKY (always accessible)
+       - Multi-open domain stacks allowed (no forced accordion)
+       - 12 domains, each domain:
+           7 paragraph blocks (P1–P7)
+           each paragraph block: 7 bullet sentences in chronological story order
+       - Formal/Informal, Cause/Effect, Concept/Live/Roadmap are materially different
+       - Domain text is domain-unique and paragraph-unique (no repeated generic boilerplate)
+       - Uses /assets/ui.css + /assets/branch.css only; does not style html/body background
 -->
 
 <!doctype html>
@@ -133,10 +140,17 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 .mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
 .mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
 .mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
-.mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
+.mbody{padding:0;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-/* Selector clusters */
-.clusterRow{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;justify-content:center;margin:0 0 12px}
+/* Sticky lens bar area */
+.stickyTop{
+  position:sticky;top:0;z-index:50;
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  padding:12px 12px 10px;
+}
+.clusterRow{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;justify-content:center;margin:0 0 10px}
 .cluster{
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.12);
@@ -168,23 +182,24 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--tempSoft);
 }
 
-/* Header card (small, subordinate) */
+/* Header card (compact) */
 .hcard{
-  padding:14px 16px;border-radius:22px;margin:0 0 14px;
-  background:rgba(0,0,0,.10);
+  max-width:980px;margin:0 auto;
+  padding:12px 14px;border-radius:18px;
+  background:rgba(0,0,0,.18);
   border:1px solid rgba(255,255,255,.10);
 }
-.hcard .h1{margin:0 0 6px;font-weight:950;font-size:16px}
-.hcard .h2{margin:0;color:var(--mut);line-height:1.55}
-.hcard .h3{margin:10px 0 0;color:rgba(255,255,255,.70);font-size:12px;line-height:1.45}
+.h1{margin:0 0 4px;font-weight:950;font-size:14px}
+.h2{margin:0;color:var(--mut);line-height:1.45;font-size:12.5px}
+.h3{margin:8px 0 0;color:rgba(255,255,255,.70);font-size:12px;line-height:1.35}
 
-/* DOMAIN STACKS — full width rows (NO BLOB) */
-.stackList{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  margin:0 0 14px;
+/* Content area below sticky top */
+.content{
+  padding:14px 16px 18px;
 }
+
+/* DOMAIN STACKS — full width rows */
+.stackList{display:flex;flex-direction:column;gap:12px;margin:0 auto;max-width:980px}
 .stackRow{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
@@ -199,35 +214,19 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 }
-.stackLeft{
-  display:flex;align-items:center;gap:12px;
-  min-width:0;
-}
+.stackLeft{display:flex;align-items:center;gap:12px;min-width:0}
 .stackBar{
   width:6px;height:22px;border-radius:99px;
   background:var(--domc, rgba(255,255,255,.20));
   box-shadow:0 0 18px rgba(255,255,255,.08);
   flex:0 0 auto;
 }
-.stackTitle{
-  font-weight:950;letter-spacing:.2px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.stackSub{
-  font-size:12px;opacity:.72;margin-left:8px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.stackChevron{
-  font-size:16px;opacity:.75;flex:0 0 auto;
-}
-
+.stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stackSub{font-size:12px;opacity:.72;margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto}
 .stackBody{
   display:none;
-  padding:14px 16px 6px;
+  padding:14px 16px 8px;
   border-top:1px solid rgba(255,255,255,.08);
   background:
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
@@ -244,9 +243,8 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   margin:0 0 10px;
 }
 .ph{margin:0 0 6px;font-weight:950;letter-spacing:.15px}
-.pdesc{margin:0 0 8px;color:var(--mut);line-height:1.55}
 .pul{margin:0;padding-left:18px;color:var(--mut2)}
-.pul li{margin:4px 0}
+.pul li{margin:4px 0;line-height:1.35}
 
 /* Actions */
 .mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
@@ -314,42 +312,44 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 
     <div class="mbody">
 
-      <div class="clusterRow">
-        <div class="cluster">
-          <div class="clusterTitle">STYLE</div>
-          <div class="pill active" id="pillFormal">FORMAL</div>
-          <div class="pill" id="pillInformal">INFORMAL</div>
+      <div class="stickyTop">
+        <div class="clusterRow">
+          <div class="cluster">
+            <div class="clusterTitle">STYLE</div>
+            <div class="pill active" id="pillFormal">FORMAL</div>
+            <div class="pill" id="pillInformal">INFORMAL</div>
+          </div>
+
+          <div class="cluster">
+            <div class="clusterTitle">CAUSALITY</div>
+            <div class="pill active" id="pillCause">CAUSE</div>
+            <div class="pill" id="pillEffect">EFFECT</div>
+          </div>
+
+          <div class="cluster">
+            <div class="clusterTitle">TIME</div>
+            <div class="pill active" id="pillConcept">CONCEPT</div>
+            <div class="pill" id="pillLive">LIVE</div>
+            <div class="pill" id="pillRoadmap">ROADMAP</div>
+          </div>
         </div>
 
-        <div class="cluster">
-          <div class="clusterTitle">CAUSALITY</div>
-          <div class="pill active" id="pillCause">CAUSE</div>
-          <div class="pill" id="pillEffect">EFFECT</div>
-        </div>
-
-        <div class="cluster">
-          <div class="clusterTitle">TIME</div>
-          <div class="pill active" id="pillConcept">CONCEPT</div>
-          <div class="pill" id="pillLive">LIVE</div>
-          <div class="pill" id="pillRoadmap">ROADMAP</div>
+        <div class="hcard">
+          <div class="h1" id="h1">—</div>
+          <div class="h2" id="h2">—</div>
+          <div class="h3" id="h3">—</div>
         </div>
       </div>
 
-      <!-- compact header (subordinate to stacks) -->
-      <div class="hcard">
-        <div class="h1" id="h1">—</div>
-        <div class="h2" id="h2">—</div>
-        <div class="h3" id="h3">—</div>
-      </div>
+      <div class="content">
+        <div class="stackList" id="stackList"></div>
 
-      <!-- Dominant full-width domain stacks -->
-      <div class="stackList" id="stackList"></div>
-
-      <div class="mact">
-        <button class="sbtn" id="mReturn" type="button">RETURN</button>
-        <a class="sbtn" id="mFusion" href="/explore/fusion-readiness/">FUSION READINESS</a>
-        <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
-        <a class="sbtn" id="mJumpHub" href="/home/">JUMP HUB</a>
+        <div class="mact">
+          <button class="sbtn" id="mReturn" type="button">RETURN</button>
+          <a class="sbtn" id="mFusion" href="/explore/fusion-readiness/">FUSION READINESS</a>
+          <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
+          <a class="sbtn" id="mJumpHub" href="/home/">JUMP HUB</a>
+        </div>
       </div>
 
     </div>
@@ -371,7 +371,7 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   // session-only causality (no new gd_* keys)
-  let causality = "CAUSE"; // CAUSE/EFFECT
+  let causality = "CAUSE";
 
   function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(gdStyle)+"&time="+encodeURIComponent(gdTime); }
   function setLinks(){
@@ -413,17 +413,10 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     if(gdTime==="origin") base="#93C5FD"; // blue-white
     if(gdTime==="now")    base="#E5E7EB"; // white
     if(gdTime==="post")   base="#D97706"; // amber
-
     if(causality==="CAUSE" && gdTime!=="post") base="#93C5FD";
     if(causality==="EFFECT" && gdTime!=="origin") base="#D97706";
-
-    if(gdStyle==="formal"){
-      if(base==="#D97706") base="#E5E7EB";
-      return base;
-    }else{
-      if(base==="#93C5FD") base="#E5E7EB";
-      return base;
-    }
+    if(gdStyle==="formal"){ if(base==="#D97706") base="#E5E7EB"; return base; }
+    else { if(base==="#93C5FD") base="#E5E7EB"; return base; }
   }
   function tempSoft(hex){
     if(hex==="#93C5FD") return "rgba(147,197,253,.18)";
@@ -455,56 +448,212 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   const stackList=document.getElementById("stackList");
 
   let section="FOUNDATION";
-  let openDomain="Industrial";
 
   function timeLabel(){ return (gdTime==="origin") ? "CONCEPT" : (gdTime==="now") ? "LIVE" : "ROADMAP"; }
 
-  // 7 paragraph headings
+  // 7 paragraph headings (fixed chronology container)
   const PHEAD = [
-    "P1 — Definition",
-    "P2 — Boundary",
-    "P3 — Mechanism",
-    "P4 — Constraints",
-    "P5 — Deployment",
-    "P6 — Risk",
-    "P7 — Verification"
+    "P1 — Context",
+    "P2 — Constraint",
+    "P3 — Tension",
+    "P4 — Intervention",
+    "P5 — Mechanism",
+    "P6 — Result",
+    "P7 — Boundary"
   ];
 
-  function bullets(domain){
-    const t=timeLabel();
-    const c=causality;
-    const b=[];
-    b.push(`${c}: ${domain} driver/impact declared explicitly.`);
-    b.push(`${t}: posture scoped without claim inflation.`);
-    b.push(`Bounds: no net-positive fusion implied anywhere.`);
-    b.push(`Controls: SVF/CARES/CC/IDP remain binding.`);
-    b.push(`Evidence: receipts required before elevation.`);
-    b.push(`Failure: rollback/stop rules remain valid data.`);
-    b.push(`Continuity: deployment stays industrial-first.`);
-    return b;
-  }
-
-  function paraIntro(domain){
-    const t=timeLabel();
-    const c=causality;
-    const s=gdStyle.toUpperCase();
-    if(gdStyle==="informal"){
-      return `${domain} · ${section} · ${c} · ${t} · ${s}. Bounded. No fusion gain claim.`;
+  // STORY BANKS: domain-unique + paragraph-unique seed phrases.
+  // Each paragraph block yields 7 chronological sentences (as bullets).
+  const BANK = {
+    Industrial:{
+      ctx:["Industrial demand is heat-dominant.","Processes live above 800°C bands.","Factories pay for instability.","Downtime becomes cost.","Thermal continuity is the target.","Substitution must be measurable.","Claims must stay bounded."],
+      cst:["Containment class is non-negotiable.","Upstream-only regime placement.","Exchange surfaces isolate endpoints.","Buffering precedes distribution.","Aux loads measured separately.","No silent threshold drift.","Safety overrides audit-logged."],
+      tns:["Combustion adds carbon liabilities.","Grid volatility breaks planning.","Heat peaks fatigue components.","Supply chains amplify shocks.","Regime oscillation wastes energy.","Operator error is a factor.","Market hype corrupts decisions."],
+      intv:["Replace combustion with excitation.","Move risk upstream.","Enforce buffers midstream.","Gate scale by phase.","Attach certificates to tiers.","Publish disproof triggers.","Default to safe shutdown."],
+      mech:["Input → excitation → exchanger.","Exchanger → buffer → dispatch.","Sensors watch envelope.","CARES governs response.","SVF rejects artifacts.","ERI flags escalation.","Logs preserve receipts."],
+      res:["Heat delivered without combustion.","Variance reduced by buffering.","Incidents bounded by tier.","Costs become predictable bands.","Auditability improves trust.","Replication becomes possible.","Scale follows receipts."],
+      bnd:["No net-positive fusion claim.","No facility net-electric claim.","No grid-fusion implication.","No endpoint plasma exposure.","No recipe disclosure here.","No post-hoc narrative edits.","Failure counts as valid data."]
+    },
+    Scientific:{
+      ctx:["Plasma is ionized matter.","Ionization requires energy input.","Loss channels dominate behavior.","Stability is measurable.","Instrumentation defines truth.","Claims require falsifiers.","Boundaries prevent drift."],
+      cst:["Calibration must be traceable.","Noise floors declared upfront.","Controls are mandatory.","No bin merging in hindsight.","No smoothing to ‘look good’.","Disagreement kills runs.","Replication precedes upgrade."],
+      tns:["Radiation drains energy.","Transport leaks confinement.","EMI can mimic signals.","Sampling bias hides failure.","Model overfit inflates confidence.","Publication pressure distorts.","Narrative can outrun data."],
+      intv:["Lock measurement rules.","Run null controls.","Separate excitation from fusion.","Publish disproof conditions.","Use redundant sensing.","Seal event streams.","Invite hostile review."],
+      mech:["Count → subtract background.","Estimate uncertainty bands.","Track drift over time.","Compare against controls.","Validate with redundancy.","Log every run.","Retain negatives."],
+      res:["Measured claims stay bounded.","Artifacts are suppressed.","Confidence becomes explicit.","Reproducibility improves.","Debate becomes testable.","Collaboration becomes possible.","Scope stays honest."],
+      bnd:["Excitation ≠ fusion gain.","No Q>1 implied.","No neutron claim without detectors.","No universality without replication.","No hidden steps published.","No retroactive upgrades.","No semantic inflation."]
+    },
+    Agricultural:{
+      ctx:["Farms need stability.","Biology dislikes shocks.","Thermal control changes yield.","Soil is a living system.","Water cycles are sensitive.","Farm labor is seasonal.","Boundaries must protect life."],
+      cst:["No regime contact with soil.","Exchanger-only interface.","Livestock exposure zero.","Setbacks are enforced.","Ramp rates controlled.","Seasonality accounted.","Shutdown must be safe."],
+      tns:["Heat spikes stress crops.","Humidity swings invite disease.","Power outages break cycles.","Water scarcity compounds risk.","Operator load is high.","Weather adds variance.","Contamination fear kills adoption."],
+      intv:["Use buffered thermal reuse.","Stabilize ramps and bands.","Co-locate with safe setbacks.","Automate monitoring.","Train operators simply.","Audit impacts transparently.","Stop on boundary breach."],
+      mech:["Exchanger delivers heat.","Buffer smooths swings.","Sensors track soil/humidity.","Controls limit ramp rate.","Logs capture cycles.","Interlocks prevent exposure.","Fallback keeps plants safe."],
+      res:["More stable grow bands.","Reduced wasted heat.","Lower fuel dependence.","Predictable greenhouse cycles.","Less stress on labor.","Better audit acceptance.","Replication becomes viable."],
+      bnd:["No plasma near crops.","No endpoint high-energy.","No claim beyond measured yield.","No bypass of safety setbacks.","No forced adoption.","No silent changes mid-season.","No fusion claim implied."]
+    },
+    Financial:{
+      ctx:["Capital hates surprise.","Variance is the real enemy.","Heat cost drives margins.","Risk pricing follows receipts.","Insurance wants structure.","Audits reduce uncertainty.","Discipline precedes scale."],
+      cst:["Phase gates are binding.","Exposure ceilings enforced.","Incident costs counted.","Maintenance intervals declared.","No speculative revenue lines.","No hidden leverage.","No retroactive restatement."],
+      tns:["Hype inflates valuations.","Rate shocks kill projects.","Incidents spike premiums.","Delays burn runway.","Unclear scope scares lenders.","Opaque data blocks funding.","Regulatory surprise kills deals."],
+      intv:["Tie funding to phases.","Tie premiums to tiers.","Standardize reporting.","Separate R&D from revenue.","Reserve before expansion.","Publish downside triggers.","Stop when receipts fail."],
+      mech:["Meter cost per output.","Track incident frequency.","Compute banded returns.","Audit logs periodically.","Update premiums from data.","Maintain buffers for shocks.","Enforce kill conditions."],
+      res:["Bankable reporting emerges.","Risk becomes tiered.","Premiums stabilize.","Cost curves become clearer.","Capital efficiency improves.","Scale becomes financeable.","Blowups become rarer."],
+      bnd:["No ROI promise implied.","No fusion revenue assumed.","No forward claim without receipts.","No hidden cost externalization.","No narrative overrides ledgers.","No cherry-picked metrics.","No drift in definitions."]
+    },
+    Human:{
+      ctx:["People need clarity.","Fear rises with ambiguity.","Training changes outcomes.","Interfaces shape behavior.","Trust is earned by honesty.","Boundaries reduce conflict.","Safety is felt, not argued."],
+      cst:["No endpoint high-energy.","Controls visible to operators.","Exit remains cost-free.","Instructions remain simple.","Error paths are safe.","Override is logged.","No coercive funnels."],
+      tns:["Confusion causes misuse.","Fatigue causes mistakes.","Overconfidence skips checks.","Poor UI hides risk.","Bad tone triggers resistance.","Misinformation spreads fast.","Incidents destroy trust."],
+      intv:["Make boundaries explicit.","Teach the why without hype.","Design for safe defaults.","Provide clear stop rules.","Use calm language.","Surface receipts honestly.","Reward discipline, not speed."],
+      mech:["UI shows state clearly.","Alerts trigger early.","Escalation has steps.","Logs create accountability.","Training loops reinforce safety.","Feedback improves design.","Support reduces errors."],
+      res:["Lower operator error.","Higher compliance behavior.","Fewer dangerous shortcuts.","Better incident response.","Trust grows from transparency.","Adoption becomes voluntary.","Scale stays coherent."],
+      bnd:["No manipulation tactics.","No fear-mongering.","No promise of perfection.","No blame language.","No unsafe exposure.","No hidden changes.","No claim inflation."]
+    },
+    Adversarial:{
+      ctx:["Infrastructure gets attacked.","Attackers probe seams.","Noise can be weaponized.","Logs can be forged.","Supply chains are targets.","Human error is exploited.","Defense must be structural."],
+      cst:["Isolation zones enforced.","Multi-sensor agreement required.","Tamper signals monitored.","Data streams sealable.","Access tiered by role.","Fail-safe defaults to stop.","Incidents recorded immutably."],
+      tns:["Spoofed telemetry misleads.","EMI masks true states.","Physical access bypasses UI.","Social engineering beats policy.","Partial outages cascade.","Shadow changes create drift.","Weak audits invite repeats."],
+      intv:["Harden monitoring rules.","Add redundancy and checks.","Seal logs with hashes.","Require dual confirmation.","Segment systems.","Practice shutdown drills.","Invite red-team testing."],
+      mech:["Detect anomaly patterns.","Cross-check independent sensors.","Trip interlocks on mismatch.","Quarantine on breach.","Rotate credentials.","Audit periodically.","Replay events for proof."],
+      res:["Reduced attack success.","Faster containment.","Clear evidence after incident.","Less silent drift.","Higher deterrence.","Better recovery posture.","Safer scaling."],
+      bnd:["No claim of invulnerability.","No secrecy as security.","No ignoring false positives.","No unlogged overrides.","No open endpoints.","No weak credential reuse.","No drift in rules."]
+    },
+    Regulatory:{
+      ctx:["Rules govern deployment.","Permits precede operation.","Inspectors require traceability.","Standards prevent harm.","Reporting prevents fraud.","Licensing shapes scale.","Compliance is continuous."],
+      cst:["Claims must match certificates.","No mixed claim language.","Docs must be consistent.","Audits must be possible.","Training may be required.","Incident reporting required.","Scope lock enforced."],
+      tns:["Ambiguity triggers delays.","Mismatched docs cause denial.","Incidents tighten oversight.","Public fear accelerates scrutiny.","Conflicting jurisdictions add drag.","Unclear boundaries block approvals.","Hidden changes kill trust."],
+      intv:["Use tiered classifications.","Publish disciplined disclaimers.","Standardize filings.","Bind claims to measurement.","Maintain audit trails.","Separate R&D from deployment.","Constrain scope when needed."],
+      mech:["Certificates map to tiers.","Logs map to compliance.","Inspections verify artifacts.","Reports reconcile metrics.","Violations trigger rollback.","Renewals require stability.","Public claims stay bounded."],
+      res:["Approvals become feasible.","Faster inspections.","Fewer compliance surprises.","Clearer adoption pathways.","Better public confidence.","Scalable licensing posture.","Less enforcement shock."],
+      bnd:["No claim beyond certification.","No net fusion language.","No hidden field exposure.","No retroactive edits.","No bypass of inspection.","No loose documentation.","No scope creep."]
+    },
+    Environmental:{
+      ctx:["Air and water are shared.","Heat affects ecosystems.","Emissions matter.","Land footprint matters.","Noise matters.","Waste streams matter.","Boundaries must be explicit."],
+      cst:["No soil regime exposure.","Thermal discharge limited.","Water use measured.","Noise bands enforced.","Waste handling defined.","Emergency containment planned.","Lifecycle reporting possible."],
+      tns:["Thermal plumes stress habitats.","Leaks contaminate waterways.","Noise disrupts wildlife.","Waste mismanagement harms trust.","Extreme weather adds risk.","Poor siting causes conflict.","Opaque reporting invites backlash."],
+      intv:["Use exchanger isolation.","Capture and reuse heat.","Monitor discharge points.","Choose low-impact sites.","Plan containment routes.","Publish lifecycle bounds.","Stop on threshold breach."],
+      mech:["Sensors track discharge.","Logs capture cycles.","Controls limit ramp rates.","Buffers reduce peaks.","Containment isolates events.","Audits verify impact.","Remediation is planned."],
+      res:["Lower emissions footprint.","Reduced thermal waste.","Improved transparency.","Fewer ecosystem shocks.","More community acceptance.","Cleaner replication posture.","Better long-term viability."],
+      bnd:["No ‘zero impact’ claim.","No hiding discharge data.","No unmeasured waste streams.","No unsafe siting.","No uncontrolled runoff.","No narrative substitution for measurement.","No fusion claim implied."]
+    },
+    Infrastructural:{
+      ctx:["Grids need stability.","Dispatch needs predictability.","Transmission is constrained.","Storage smooths variability.","Sites need logistics.","Maintenance needs access.","Scaling is coordination."],
+      cst:["Buffering is mandatory.","Interfaces standardized.","Fail isolation designed.","Transport routes planned.","Spare parts available.","Redundancy specified.","Interconnect rules respected."],
+      tns:["Volatility creates curtailment.","Bottlenecks create delays.","Maintenance gaps create outages.","Single points create cascades.","Poor siting blocks access.","Unclear interfaces cause faults.","Unplanned growth breaks grids."],
+      intv:["Use modular PFMs.","Standardize interconnect kits.","Deploy buffers midstream.","Plan redundancy.","Design isolation switches.","Schedule maintenance windows.","Audit coupling risks."],
+      mech:["Dispatch uses buffered output.","Controls enforce ramp limits.","Islands isolate faults.","Telemetry monitors coupling.","Logs support diagnostics.","Spare inventory stabilizes uptime.","Repeatable builds reduce drift."],
+      res:["Smoother dispatch bands.","Lower curtailment.","Fewer cascades.","Faster repairs.","Predictable expansion.","Better grid acceptance.","Scalable rollouts."],
+      bnd:["No promise of grid dominance.","No bypass of interconnect standards.","No unplanned coupling.","No silent interface changes.","No unsafe siting.","No single-point dependence.","No fusion claim implied."]
+    },
+    Computational:{
+      ctx:["Control loops decide safety.","Telemetry decides truth.","Software can drift.","Models can lie.","Latency matters.","Integrity must be enforced.","Audit must be possible."],
+      cst:["Deterministic state machine.","No hidden timers as gates.","Receipt-gated transitions.","Immutable logs where required.","Sensor agreement rules.","Fail-safe defaults.","Versioned configs."],
+      tns:["Sensor drift corrupts control.","Latency creates oscillation.","Overfitting hides fragility.","Bad thresholds cause churn.","Silent updates create mismatch.","UI confusion causes misuse.","Security gaps allow spoofing."],
+      intv:["Implement guard constraints.","Use multi-signal validation.","Lock thresholds by version.","Replay test harnesses.","Monitor drift continuously.","Separate UI from control.","Harden inputs."],
+      mech:["Compute agreement metrics.","Trip on mismatch.","Throttle ramp rates.","Record every decision.","Use receipts to advance.","Invalidate downstream on back-nav.","Emit terminal tokens on exit."],
+      res:["Lower oscillation events.","Higher stability.","Easier audits.","Faster diagnosis.","Reduced user confusion.","Safer scaling.","Higher trust."],
+      bnd:["No claim of perfect AI.","No opaque decisions.","No unlogged overrides.","No silent threshold edits.","No ‘magic’ predictions.","No unsafe automation.","No fusion claim implied."]
+    },
+    Governance:{
+      ctx:["Authority shapes behavior.","Incentives can corrupt.","Policies prevent drift.","Charters define limits.","Audits enforce trust.","Scope prevents capture.","Stewardship preserves legitimacy."],
+      cst:["Non-retroactive logs.","Binary admissibility rules.","Scope epochs defined.","Manifest hashes required.","No cross-epoch aggregation.","Violation triggers segment break.","Restart requires new genesis."],
+      tns:["Power drifts over time.","Incentives skew reporting.","Ambiguity invites capture.","Weak audits enable abuse.","Silent revisions destroy trust.","Conflict of interest spreads.","Scale amplifies mistakes."],
+      intv:["Separate incentives from authority.","Publish decision rules.","Bind outputs to receipts.","Rotate audits independently.","Constrain scope on violation.","Require disclosures.","Design exit without penalty."],
+      mech:["Charter defines roles.","Certificates gate advancement.","Ledger records events.","Audits test compliance.","Violations trigger rollback.","Re-issue manifests on change.","Readers can verify integrity."],
+      res:["Lower corruption vector strength.","Higher public trust.","Faster dispute resolution.","Cleaner scaling posture.","Better institutional acceptance.","More reliable collaboration.","Safer long-term growth."],
+      bnd:["No claim of universal governance.","No authority without receipts.","No coercion by design.","No silent revision.","No mixing epochs.","No narrative overrides.","No fusion claim implied."]
+    },
+    Temporal:{
+      ctx:["Systems age.","Wear accumulates.","Policies decay.","Models drift.","Maintenance schedules matter.","Longitudinal stability is measurable.","Time is a real constraint."],
+      cst:["Lifecycle stages defined.","Upgrade paths versioned.","Decommission rules planned.","Data retention declared.","Backward compatibility managed.","No surprise migrations.","Review cadence enforced."],
+      tns:["Aging increases failure risk.","Drift increases errors.","Supply changes break parts.","Staff turnover loses knowledge.","Regulation shifts requirements.","Climate shifts loads.","Unmanaged updates cause rupture."],
+      intv:["Plan lifecycle explicitly.","Schedule audits by cadence.","Recalibrate thresholds periodically.","Version everything.","Train replacements.","Retire unsafe components.","Re-validate after major upgrades."],
+      mech:["Track trend lines.","Detect drift velocity.","Trigger maintenance actions.","Lock receipts by epoch.","Compare against baselines.","Separate long-term vs short-term signals.","Publish changes."],
+      res:["Fewer surprise failures.","Predictable refresh cycles.","Better continuity.","Improved reliability.","Less knowledge loss.","Safer scale over years.","Better governance posture."],
+      bnd:["No claim of timeless stability.","No ignoring aging effects.","No silent drift acceptance.","No skipping re-validation.","No unversioned upgrades.","No memoryless reporting.","No fusion claim implied."]
     }
-    return `${domain} expresses ${section} under ${c}·${t}·${s} framing. Statements remain bounded, receipt-aware, and non-escalatory under Industrial (C) discipline.`;
+  };
+
+  function story(domainKey, paragraphIndex){
+    const d = BANK[domainKey];
+    const map = [
+      d.ctx, d.cst, d.tns, d.intv, d.mech, d.res, d.bnd
+    ][paragraphIndex];
+    return map; // 7 sentences
   }
 
+  // Lens transforms (materially different language)
+  // - Formal vs Informal: Formal stays contractual; Informal becomes direct field-guide.
+  // - Cause vs Effect: swaps emphasis words
+  // - Concept/Live/Roadmap: injects framing without repeating full sentences
+  function applyLens(sent, domainKey, paragraphIndex){
+    let s = sent;
+
+    // CAUSE/EFFECT: emphasis
+    if(causality==="EFFECT"){
+      s = s
+        .replace(/defines/gi,"yields")
+        .replace(/requires/gi,"produces")
+        .replace(/precedes/gi,"drives")
+        .replace(/gates/gi,"shapes");
+    }
+
+    // TIME framing:
+    if(gdTime==="now"){
+      // LIVE: observational present
+      s = s.replace(/\.$/," (observed).");
+    }else if(gdTime==="post"){
+      // ROADMAP: gated future
+      s = s.replace(/\.$/," (gated plan).");
+    } // CONCEPT: leave as-is
+
+    // STYLE difference:
+    if(gdStyle==="informal"){
+      // Make it more direct and less formal.
+      // (No profanity; clear, vivid, practical.)
+      s = s
+        .replace(/non-negotiable/gi,"not optional")
+        .replace(/permitted/gi,"allowed")
+        .replace(/declared/gi,"stated")
+        .replace(/instrumentation/gi,"sensors")
+        .replace(/admissibility/gi,"go/no-go")
+        .replace(/retroactive/gi,"after-the-fact");
+      // Shorten some constructions
+      s = s.replace(/ is /g,"’s ");
+    }
+
+    return s;
+  }
+
+  function tempColor(){
+    let base = "#E5E7EB";
+    if(gdTime==="origin") base="#93C5FD";
+    if(gdTime==="now") base="#E5E7EB";
+    if(gdTime==="post") base="#D97706";
+    if(causality==="CAUSE" && gdTime!=="post") base="#93C5FD";
+    if(causality==="EFFECT" && gdTime!=="origin") base="#D97706";
+    if(gdStyle==="formal"){ if(base==="#D97706") base="#E5E7EB"; return base; }
+    else { if(base==="#93C5FD") base="#E5E7EB"; return base; }
+  }
+  function tempSoft(hex){
+    if(hex==="#93C5FD") return "rgba(147,197,253,.18)";
+    if(hex==="#E5E7EB") return "rgba(229,231,235,.16)";
+    if(hex==="#D97706") return "rgba(217,119,6,.16)";
+    return "rgba(229,231,235,.16)";
+  }
+
+  // Header line generator
   function headerLines(){
-    const t=timeLabel();
-    const s=gdStyle.toUpperCase();
-    h1.textContent = `ENERGY · ${section} · ${causality} · ${t} · ${s}`;
+    const t = (gdTime==="origin")?"CONCEPT":(gdTime==="now")?"LIVE":"ROADMAP";
+    h1.textContent = `ENERGY · ${section} · ${causality} · ${t} · ${gdStyle.toUpperCase()}`;
     h2.textContent = (section==="FOUNDATION")
-      ? "Foundation defines admissible boundaries and claim discipline before execution."
+      ? "Foundation defines what is admissible before anything else can scale."
       : (section==="ARCHITECTURE")
-      ? "Architecture defines modules, placement, buffering, and containment under declared constraints."
+      ? "Architecture defines how the system is built, isolated, and interfaced."
       : (section==="PERFORMANCE")
-      ? "Performance defines measurable inputs/outputs, stability bands, and bounded variance under load."
-      : "Governance defines standards, licensing, auditability, and non-retroactive enforcement under scale.";
+      ? "Performance defines what is measured, stable, and auditable."
+      : "Governance defines what may propagate under scale without corruption.";
     h3.textContent = CLAIM_LOCK;
   }
 
@@ -514,20 +663,11 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     document.documentElement.style.setProperty("--tempSoft", tempSoft(t));
   }
 
-  function renderPills(){
-    pillFormal.classList.toggle("active", gdStyle==="formal");
-    pillInformal.classList.toggle("active", gdStyle==="informal");
-    pillCause.classList.toggle("active", causality==="CAUSE");
-    pillEffect.classList.toggle("active", causality==="EFFECT");
-    pillConcept.classList.toggle("active", gdTime==="origin");
-    pillLive.classList.toggle("active", gdTime==="now");
-    pillRoadmap.classList.toggle("active", gdTime==="post");
-  }
-
-  function buildStackRow(domain){
+  // Build stack rows (multi-open)
+  function buildStackRow(domainKey){
     const row=document.createElement("div");
-    row.className="stackRow"+(domain===openDomain ? " open" : "");
-    row.style.setProperty("--domc", DOMAIN_COLORS[domain]);
+    row.className="stackRow";
+    row.style.setProperty("--domc", DOMAIN_COLORS[domainKey]);
 
     const head=document.createElement("div");
     head.className="stackHead";
@@ -537,15 +677,15 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 
     const bar=document.createElement("div");
     bar.className="stackBar";
-    bar.style.background = DOMAIN_COLORS[domain];
+    bar.style.background = DOMAIN_COLORS[domainKey];
 
     const title=document.createElement("div");
     title.className="stackTitle";
-    title.textContent = domain;
+    title.textContent = domainKey;
 
     const sub=document.createElement("div");
     sub.className="stackSub";
-    sub.textContent = `${section} · ${causality} · ${timeLabel()} · ${gdStyle.toUpperCase()}`;
+    sub.textContent = `${section} · ${causality} · ${(gdTime==="origin")?"CONCEPT":(gdTime==="now")?"LIVE":"ROADMAP"} · ${gdStyle.toUpperCase()}`;
 
     left.appendChild(bar);
     left.appendChild(title);
@@ -553,7 +693,7 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 
     const chev=document.createElement("div");
     chev.className="stackChevron";
-    chev.textContent = (domain===openDomain) ? "▾" : "▸";
+    chev.textContent = "▸";
 
     head.appendChild(left);
     head.appendChild(chev);
@@ -561,7 +701,7 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     const body=document.createElement("div");
     body.className="stackBody";
 
-    // Render 7 paragraph blocks INSIDE the bubble
+    // 7 paragraph blocks; each with 7 chronological sentences (bullets)
     for(let i=0;i<7;i++){
       const box=document.createElement("div");
       box.className="pblock";
@@ -570,29 +710,24 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
       ph.className="ph";
       ph.textContent = PHEAD[i];
 
-      const pd=document.createElement("div");
-      pd.className="pdesc";
-      pd.textContent = paraIntro(domain);
-
       const ul=document.createElement("ul");
       ul.className="pul";
-      bullets(domain).forEach(x=>{
+
+      const sents = story(domainKey, i);
+      sents.forEach(raw=>{
         const li=document.createElement("li");
-        li.textContent=x;
+        li.textContent = applyLens(raw, domainKey, i);
         ul.appendChild(li);
       });
 
       box.appendChild(ph);
-      box.appendChild(pd);
       box.appendChild(ul);
       body.appendChild(box);
     }
 
     head.addEventListener("click", ()=>{
-      openDomain = (openDomain===domain) ? domain : domain;
-      // accordion: one open at a time -> just set openDomain and rebuild list
-      openDomain = domain;
-      renderStacks();
+      const open = row.classList.toggle("open");
+      chev.textContent = open ? "▾" : "▸";
     });
 
     row.appendChild(head);
@@ -607,6 +742,16 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     });
   }
 
+  function renderPills(){
+    pillFormal.classList.toggle("active", gdStyle==="formal");
+    pillInformal.classList.toggle("active", gdStyle==="informal");
+    pillCause.classList.toggle("active", causality==="CAUSE");
+    pillEffect.classList.toggle("active", causality==="EFFECT");
+    pillConcept.classList.toggle("active", gdTime==="origin");
+    pillLive.classList.toggle("active", gdTime==="now");
+    pillRoadmap.classList.toggle("active", gdTime==="post");
+  }
+
   function render(){
     renderTemp();
     renderPills();
@@ -616,12 +761,9 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 
   function openModal(sec){
     section=sec;
-    openDomain="Industrial";
     mTitle.textContent = `ENERGY · ${section}`;
-
     bd.classList.add("show");
     modal.classList.add("show");
-
     render();
   }
   function closeModal(){
@@ -662,6 +804,7 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     el.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(sec);} });
   });
 
+  // Initial render safety (no auto-open)
 })();
 </script>
 

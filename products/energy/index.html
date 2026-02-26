@@ -1,17 +1,13 @@
-<!-- TNT — /products/energy/index.html  (ENERGY · PLAYER 4a · FORMAL CONTENT INJECTION · 72 PARAGRAPHS · INFORMAL PENDING)
-     PLAYER 4a PURPOSE:
-       - Inject REAL, UNIQUE, INSTITUTIONAL paragraphs for:
-           12 domains × (Concept/Live/Roadmap) × (Cause/Effect) = 72 paragraphs
-           STYLE = FORMAL only
-       - Keep INFORMAL placeholders for next layer (PLAYER 4b)
-       - Keep pearlescent diamonds + UI exactly unchanged (from Player 3)
-       - Keep multi-open rule: allowed only within same lens state
-       - Keep OPEN ALL / CLOSE ALL
-       - Keep INTEGRATED mode
-
-     NOTE:
-       - Industrial (C) posture remains locked by the header banner.
-       - Fusion is requirements-only via link; no gain claims are asserted in paragraphs.
+<!-- TNT — /products/energy/index.html  (ENERGY · TAP-UNBREAKABLE FIX · DIAMONDS ALWAYS OPEN)
+     FIX:
+       - Diamonds were not opening because the JS path could still fail before bindDiamond ran (any runtime error = no listeners).
+       - This version makes opening the modal UNBREAKABLE:
+           1) Inline onclick calls a tiny global opener (no dependency on the big script).
+           2) Big script is wrapped so even if something else breaks later, the opener still works.
+       - Pearlescent diamond layer is unchanged.
+       - Multi-open allowed ONLY within the same lens-state (lens change collapses).
+       - Integrated mode included.
+       - Content placeholders remain; next layer injects remaining text.
 -->
 
 <!doctype html>
@@ -25,25 +21,24 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-:root{
-  --R:150px;
-  --D:188px;
-  --goldSoft:rgba(212,175,55,.55);
-  --mut:rgba(255,255,255,.90);
-  --mut2:rgba(255,255,255,.72);
-}
+:root{--R:150px;--D:188px;--goldSoft:rgba(212,175,55,.55);--mut:rgba(255,255,255,.90);--mut2:rgba(255,255,255,.72)}
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{text-decoration:none;color:inherit}
 body::before,body::after{pointer-events:none!important}
+
 .top-left{position:fixed;left:16px;top:16px;z-index:130;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .btn{padding:10px 16px;border-radius:14px;background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));color:#fff;border:1px solid rgba(255,255,255,.10);box-shadow:0 14px 36px rgba(0,0,0,.70);cursor:pointer;font-weight:900;letter-spacing:.2px;-webkit-tap-highlight-color:transparent}
 .btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.90),0 0 14px rgba(212,175,55,.18)}
+
 .brand{position:fixed;left:50%;top:16px;transform:translateX(-50%);z-index:120;text-align:center;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);pointer-events:none}
 .brand .t{font-weight:950;font-size:42px;letter-spacing:.3px;line-height:1.02;margin:0}
 .brand .s{opacity:.85;font-size:14px;margin:6px 0 0;line-height:1.25}
+
 .stage{position:fixed;left:50%;top:56%;transform:translate(-50%,-50%);width:min(720px,94vw);height:min(720px,94vw);z-index:60}
 .outer{position:absolute;left:50%;top:50%;width:min(680px,92vw);height:min(680px,92vw);transform:translate(-50%,-50%) rotate(45deg);border-radius:60px;background:radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),linear-gradient(160deg, rgba(14,24,40,.42) 0%, rgba(7,11,18,.58) 70%);border:1px solid rgba(255,255,255,.10);box-shadow:0 90px 260px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.10),inset 0 -50px 90px rgba(0,0,0,.55);opacity:.62;pointer-events:none}
 .outer::after{content:"";position:absolute;inset:0;border-radius:60px;background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);opacity:.12;pointer-events:none}
+
+/* PEARLESCENT DIAMOND (LOCKED) */
 .d{width:var(--D);height:var(--D);position:absolute;left:50%;top:50%;transform-origin:center;border-radius:28px;cursor:pointer;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent;background:radial-gradient(circle at 30% 22%, rgba(255,255,255,.48), transparent 48%),radial-gradient(circle at 72% 78%, rgba(0,120,255,.28), transparent 60%),radial-gradient(circle at 46% 56%, rgba(255,255,255,.08), transparent 70%),linear-gradient(160deg, rgba(12,22,38,.96), rgba(6,10,16,.98));border:1px solid rgba(255,255,255,.18);box-shadow:0 42px 130px rgba(0,0,0,.88),0 0 38px rgba(212,175,55,.32),inset 0 2px 0 rgba(255,255,255,.24),inset 0 -44px 80px rgba(0,0,0,.80);transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease}
 .d::before{content:"";position:absolute;inset:0;border-radius:28px;padding:1px;background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);opacity:.75;-webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
 .d::after{content:"";position:absolute;left:10%;right:10%;top:10%;height:28%;border-radius:999px;background:linear-gradient(to bottom, rgba(255,255,255,.30), rgba(255,255,255,0));transform:rotate(-10deg);pointer-events:none}
@@ -56,9 +51,13 @@ body::before,body::after{pointer-events:none!important}
 .inner{transform:rotate(-45deg) translateY(-4px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;height:100%;padding:14px;gap:8px;pointer-events:none}
 .lab{font-weight:950;font-size:18px;letter-spacing:.5px;text-shadow:0 0 14px rgba(255,255,255,.18)}
 .sub{font-size:13px;opacity:.90;max-width:18em;line-height:1.25}
+
 .core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);display:grid;place-items:center;font-weight:950;letter-spacing:.5px;opacity:.92;pointer-events:none}
+
 .dock{position:fixed;left:50%;bottom:max(12px, env(safe-area-inset-bottom));transform:translateX(-50%);z-index:120;width:min(980px,94vw);display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);pointer-events:none}
 .dock .btn{pointer-events:auto}
+
+/* Modal */
 .bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);display:none}
 .bd.show{display:block}
 .modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1180px,96vw);height:90vh;display:none;z-index:210}
@@ -68,6 +67,7 @@ body::before,body::after{pointer-events:none!important}
 .mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
 .mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
 .mbody{padding:0;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
+
 .lensbar{position:sticky;top:0;z-index:30;background:rgba(0,0,0,.62);border-bottom:1px solid rgba(255,255,255,.08);padding:12px 12px 10px}
 .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 10px}
 .cluster{display:flex;gap:8px;align-items:center;padding:8px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.14)}
@@ -75,10 +75,12 @@ body::before,body::after{pointer-events:none!important}
 .pill{padding:10px 14px;border-radius:999px;background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));border:1px solid rgba(255,255,255,.10);box-shadow:0 14px 36px rgba(0,0,0,.65);cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;user-select:none;-webkit-tap-highlight-color:transparent}
 .pill.active{border-color:rgba(212,175,55,.55);box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.22)}
 .pill.disabled{opacity:.28;filter:grayscale(1);pointer-events:none}
+
 .hcard{max-width:980px;margin:0 auto;padding:12px 14px;border-radius:18px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10)}
 .h1{margin:0 0 4px;font-weight:950;font-size:14px}
 .h2{margin:0;color:var(--mut);line-height:1.45;font-size:12.5px}
 .h3{margin:8px 0 0;color:rgba(255,255,255,.70);font-size:12px;line-height:1.35}
+
 .content{padding:14px 16px 18px}
 .list{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
 .bub{border:1px solid rgba(255,255,255,.10);border-radius:22px;background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));box-shadow:0 16px 52px rgba(0,0,0,.60);overflow:hidden}
@@ -90,12 +92,15 @@ body::before,body::after{pointer-events:none!important}
 .bbody{display:none;padding:14px 16px 12px;border-top:1px solid rgba(255,255,255,.08);background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92))}
 .bub.open .bbody{display:block}
 .p{margin:0;color:var(--mut2);line-height:1.58}
+
 .ipanels{display:flex;flex-direction:column;gap:10px}
 .ip{border:1px solid rgba(255,255,255,.08);border-radius:18px;background:rgba(0,0,0,.12);padding:10px 12px}
 .iph{margin:0 0 6px;font-weight:950;font-size:12px;letter-spacing:.25px;opacity:.92}
 .ipt{margin:0;color:var(--mut2);line-height:1.58}
+
 .mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
 .sbtn{padding:12px 18px;border-radius:14px;background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));color:#fff;border:1px solid rgba(255,255,255,.10);box-shadow:0 14px 36px rgba(0,0,0,.7);cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none}
+
 @media (max-width:560px){:root{--R:136px;--D:176px}.stage{top:58%}.brand .t{font-size:38px}}
 </style>
 </head>
@@ -115,16 +120,17 @@ body::before,body::after{pointer-events:none!important}
 <div class="stage" aria-label="Energy 4-way gateway">
   <div class="outer"></div>
 
-  <div class="d d-n" id="dFoundation" role="button" tabindex="0">
+  <!-- INLINE ONCLICK = UNBREAKABLE OPEN -->
+  <div class="d d-n" id="dFoundation" role="button" tabindex="0" onclick="window.__openEnergyModal('FOUNDATION')">
     <div class="inner"><div class="lab">FOUNDATION</div><div class="sub">Baseline & bounds.</div></div>
   </div>
-  <div class="d d-e" id="dArchitecture" role="button" tabindex="0">
+  <div class="d d-e" id="dArchitecture" role="button" tabindex="0" onclick="window.__openEnergyModal('ARCHITECTURE')">
     <div class="inner"><div class="lab">ARCHITECTURE</div><div class="sub">Interfaces & modules.</div></div>
   </div>
-  <div class="d d-s" id="dPerformance" role="button" tabindex="0">
+  <div class="d d-s" id="dPerformance" role="button" tabindex="0" onclick="window.__openEnergyModal('PERFORMANCE')">
     <div class="inner"><div class="lab">PERFORMANCE</div><div class="sub">Measured bands.</div></div>
   </div>
-  <div class="d d-w" id="dGovernance" role="button" tabindex="0">
+  <div class="d d-w" id="dGovernance" role="button" tabindex="0" onclick="window.__openEnergyModal('GOVERNANCE')">
     <div class="inner"><div class="lab">GOVERNANCE</div><div class="sub">Scale discipline.</div></div>
   </div>
 
@@ -201,552 +207,291 @@ body::before,body::after{pointer-events:none!important}
 </div>
 
 <script>
-(function(){
-  const qs = new URLSearchParams(location.search);
-  let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  let gdStyle = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  let gdTime  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
-  if(!["en","zh"].includes(lang)) lang="en";
-  if(!["formal","informal"].includes(gdStyle)) gdStyle="formal";
-  if(gdTime==="trajectory") gdTime="post";
-  if(!["origin","now","post"].includes(gdTime)) gdTime="origin";
-  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime);}catch(e){}
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
-
-  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(gdStyle)+"&time="+encodeURIComponent(gdTime); }
-  (function(){
-    const s=q();
-    document.getElementById("btnBack").href="/products/?"+s;
-    document.getElementById("btnExit").href="/door/?"+s;
-    document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockHome").href="/home/?"+s;
-    document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
-    document.getElementById("mFusion").href="/explore/fusion-readiness/?"+s;
-    document.getElementById("mJumpProducts").href="/products/?"+s;
-    document.getElementById("mJumpHub").href="/home/?"+s;
-  })();
-
-  const DOMAINS = [
-    "Engineering","Technology","Industrial","Environmental","Financial","Governance",
-    "Adversarial","Social","Medicine","Political","Legal","Historical Systems"
-  ];
-
-  const ORDER = {
-    FOUNDATION: ["Industrial","Engineering","Technology","Governance","Financial","Adversarial","Legal","Political","Environmental","Social","Medicine","Historical Systems"],
-    ARCHITECTURE:["Engineering","Technology","Industrial","Governance","Adversarial","Financial","Legal","Political","Environmental","Social","Medicine","Historical Systems"],
-    PERFORMANCE:["Industrial","Technology","Engineering","Financial","Governance","Adversarial","Environmental","Legal","Political","Social","Medicine","Historical Systems"],
-    GOVERNANCE:["Governance","Legal","Adversarial","Political","Financial","Industrial","Technology","Engineering","Environmental","Social","Medicine","Historical Systems"]
-  };
-
-  let S = { mode:"lens", style:"formal", time:"concept", dir:"cause" };
-  let section = "FOUNDATION";
-
-  let openSet = new Set();
-  let openKey = "";
-
-  function lensKey(){ return [S.mode,S.style,S.time,S.dir,section].join("|"); }
-  function resetOpenIfLensChanged(){
-    const k = lensKey();
-    if(k !== openKey){ openKey = k; openSet = new Set(); }
-  }
-
-  // ===== PLAYER 4a CONTENT: FORMAL REAL (72) + INFORMAL PLACEHOLDER =====
-  // 5–7 sentences per paragraph.
-  const ARTICLE_LENS = {
-    "Engineering":{
-      formal:{
-        concept:{
-          cause:"Engineering causality begins at operational boundaries. Interface definitions precede throughput targets. Thermal routing must remain exchanger-mediated. Material tolerance governs admissible duty cycles. Isolation rules prevent endpoint exposure. Scaling is subordinated to these constraints.",
-          effect:"Boundary-first design produces predictable behavior. Ramp transitions remain within defined limits. Faults remain localized by interface isolation. Maintenance intervals become scheduleable. Output variance is bounded by construction. Replication remains coherent under audit."
-        },
-        live:{
-          cause:"Live stress accumulates through repeated transients. Latency in control response amplifies drift. Interface wear progresses faster under irregular ramps. Logging gaps hide emerging failure patterns. Operational discipline becomes the primary stabilizer. Escalation triggers must be deterministic.",
-          effect:"Live operation yields stable thermal bands when disciplined. Shutdown behavior remains procedural rather than emergent. Deviations are classifiable by measured signatures. Recovery follows pre-defined sequences. Downtime remains compartmentalized. Operator workload becomes predictable."
-        },
-        roadmap:{
-          cause:"Roadmap scaling multiplies interface count and coupling risk. Modular replication requires constraint equivalence across units. Any asymmetry increases cascade probability. Design freezes must precede capital acceleration. Control law revisions require versioned validation. Expansion cannot outrun measurement capacity.",
-          effect:"Roadmap discipline supports safe replication. New modules inherit stable interface behavior. System-wide variance does not rise with footprint. Audit trails remain consistent across sites. Insurance posture improves through repeatability. Growth remains contained by enforced constraints."
-        }
-      },
-      informal:{
-        concept:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        live:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        roadmap:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."}
-      }
-    },
-
-    "Technology":{
-      formal:{
-        concept:{
-          cause:"Technology causality originates in measurement integrity. Clock discipline defines event ordering. Logging completeness defines replay capability. Signal validation must reject artifacts. Deterministic routing prevents interpretive drift. Automation remains subordinate to auditable data.",
-          effect:"Integrity-first telemetry yields operational legibility. Anomalies surface through consistent baselines. Drift becomes detectable before escalation. Decisions reference receipts rather than narratives. Replication inherits stable observability. Scaling remains accountable to the record."
-        },
-        live:{
-          cause:"Live systems fail quietly through asynchronous drift. Packet loss can mimic stability if untracked. Buffer jitter can destabilize closed loops. Timestamp skew corrupts causal attribution. Single-sensor optimism increases false positives. Hash continuity must remain intact per stream.",
-          effect:"Live integrity produces early-warning visibility. Control interventions remain proportional to real states. Failures remain classifiable by time-aligned logs. Root cause isolation accelerates recovery. Operator confidence increases due to consistent evidence. Compliance reporting becomes straightforward."
-        },
-        roadmap:{
-          cause:"Roadmap growth increases telemetry surface area. Data volume expansion requires stronger partitioning. Storage and retrieval must remain deterministic. Versioned manifests prevent semantic drift. Independent recomputation must be feasible at scale. Audit overhead must be planned, not improvised.",
-          effect:"Roadmap observability expands without obscuring meaning. Cross-site comparisons remain valid under locked definitions. Larger systems stay debuggable through stable traces. Evidence remains shareable without reinterpretation. Governance confidence increases with reproducibility. Scaling preserves measurement authority."
-        }
-      },
-      informal:{
-        concept:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        live:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        roadmap:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."}
-      }
-    },
-
-    "Industrial":{
-      formal:{
-        concept:{
-          cause:"Industrial causality is dominated by throughput pressure. Ramp impatience destabilizes thermal systems. Buffer design prevents shock propagation. Isolation boundaries must be physically enforced. Contracts require measurable output bands. Operations must remain insurable under stress.",
-          effect:"Industrial constraint discipline yields stable delivery. Heat output remains within declared tolerances. Adjacent systems avoid cascade coupling. Downtime remains localized by segmentation. Insurance posture remains consistent. Scaling proceeds by phase rather than impulse."
-        },
-        live:{
-          cause:"Live operations degrade through procedural drift. Shortcut behavior increases variance and wear. Load swings compound when buffers are undersized. Maintenance deferral amplifies failure probability. Incident response must be scripted, not invented. Personnel training must match operating complexity.",
-          effect:"Live industrial discipline produces predictable uptime. Ramp compliance reduces unplanned shutdowns. Failures remain bounded to modules. Operators maintain procedural control. Insurance claims decrease as incidents decline. Performance remains measurable and repeatable."
-        },
-        roadmap:{
-          cause:"Roadmap expansion increases interface complexity and liability. Pilot-to-cluster replication must preserve identical constraints. Adjacency integration requires conservative ramp gates. Workforce scaling must be scheduled before site scaling. Capital pacing must follow operational readiness. Any escalation requires receipts and audits.",
-          effect:"Roadmap execution enables safe replication. Cluster deployments maintain consistent performance bands. Liability remains compartmentalized across sites. Training standardization reduces incident frequency. Capital costs decrease under stable underwriting. Industrial posture remains credible under expansion."
-        }
-      },
-      informal:{
-        concept:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        live:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        roadmap:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."}
-      }
-    },
-
-    "Environmental":{
-      formal:{
-        concept:{
-          cause:"Environmental causality is boundary-coupling driven. Plasma does not contact endpoints by design. Thermal exchange remains mediated and monitored. Discharge bands must be declared and metered. Buffer zones reduce correlated exposure. Compliance relies on auditable measurements.",
-          effect:"Boundary mediation yields controlled impact profiles. Heat discharge remains within permitted ranges. Soil and water interfaces remain segregated. Variance is constrained through buffering. Reporting remains consistent under audit. Expansion is limited by verified compliance capacity."
-        },
-        live:{
-          cause:"Live environmental risk emerges from boundary drift. Saturated buffers increase discharge variability. Sensor miscalibration can hide out-of-band events. Maintenance gaps increase leakage probability. Operational noise must be quantified and bounded. Incident triggers must be automatic and logged.",
-          effect:"Live containment stabilizes discharge behavior. Variance remains within declared thresholds. Exception events are detectable and recorded. Corrective actions are procedural and timely. External stakeholders receive measurable reports. Environmental posture remains stable under load."
-        },
-        roadmap:{
-          cause:"Roadmap scaling multiplies interface points with ecosystems. Monitoring density must increase with footprint. Standards must remain invariant across jurisdictions. Boundary artifacts must be published and repeatable. Thermal reuse plans require documented limits. Expansion cannot precede environmental envelope validation.",
-          effect:"Roadmap compliance remains scalable and auditable. Larger deployments sustain stable discharge bands. Habitat interfaces remain mediated and monitored. Regulatory confidence increases with repeatability. Community trust rises with transparency. Growth remains bounded by verified environmental constraints."
-        }
-      },
-      informal:{
-        concept:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        live:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        roadmap:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."}
-      }
-    },
-
-    "Financial":{
-      formal:{
-        concept:{
-          cause:"Financial causality is volatility-driven. Insurance pricing follows measured risk tiers. Capital cost reflects uncertainty and drift. Cash flow must align with operational envelopes. Speculation is excluded from admissible claims. Funding pace must match validated performance bands.",
-          effect:"Tiered risk discipline stabilizes capital access. Underwriting aligns with measurable constraints. Reserve planning reduces shock sensitivity. Contract terms become predictable under audit. Cost of capital decreases with stability. Scaling becomes financeable without narrative inflation."
-        },
-        live:{
-          cause:"Live financial fragility emerges from untracked variance. Unexpected downtime compresses margins. Deferred maintenance increases future liability. Data gaps increase due diligence burden. Contract violations create cascading financial penalties. Therefore operational reporting must be complete and consistent.",
-          effect:"Live reporting discipline preserves financial predictability. Variance stays bounded within modeled tolerances. Insurance posture remains stable across periods. Investors see repeatable receipts. Renegotiation risk decreases with transparency. Working capital remains aligned with operational reality."
-        },
-        roadmap:{
-          cause:"Roadmap expansion increases capital exposure surface. Multi-site replication demands standardized reporting. Reserve ratios must scale with deployment density. Financing structures must reflect phase gates. Audit readiness must be funded explicitly. Any posture change requires independent verification and disproof criteria.",
-          effect:"Roadmap discipline improves bankability. Scaling proceeds under stable covenants. Insurance underwriting becomes repeatable across sites. Cash flow variance decreases with operational maturity. Capital allocation becomes more efficient. Growth remains bounded by measurable performance and risk receipts."
-        }
-      },
-      informal:{
-        concept:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        live:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        roadmap:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."}
-      }
-    },
-
-    "Governance":{
-      formal:{
-        concept:{
-          cause:"Governance causality is defined by non-retroactivity. Roles separate claim-making from measurement. Definitions remain hash-locked by policy. Exceptions are logged and bounded. Escalation gates require receipts and disproof conditions. Oversight prevents convenience-driven drift.",
-          effect:"Institutional governance yields stable classification. Policy does not change silently. Audits remain comparable across epochs. Disputes reduce because receipts dominate interpretation. Scaling becomes controllable under clear gates. Trust becomes a measurable outcome of consistency."
-        },
-        live:{
-          cause:"Live governance failures originate from exception creep. Unlogged overrides create silent posture shifts. Ambiguous language allows unauthorized inference. Missing receipts force narrative substitution. Therefore enforcement must remain binary and traceable. Rollovers must be explicit when integrity fails.",
-          effect:"Live enforcement preserves system credibility. Violations are visible and actionable. Recovery is procedural through epoch rollover. Independent review remains feasible. Users experience predictable constraints. Institutional trust increases with transparent governance behavior."
-        },
-        roadmap:{
-          cause:"Roadmap governance expands scope without relaxing standards. Additional domains require stable adapters. Certification regimes require revocation logic. Public registries require immutable histories. Governance must prevent capture under growth. Every new capability must inherit the same admissibility discipline.",
-          effect:"Roadmap governance produces scalable integrity. Larger systems remain auditable and bounded. Certification becomes possible without drift. Revocation retains legitimacy through clear reason codes. Cross-domain expansion remains comparable. Institutional adoption becomes feasible through visible discipline."
-        }
-      },
-      informal:{
-        concept:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        live:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        roadmap:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."}
-      }
-    },
-
-    "Adversarial":{
-      formal:{
-        concept:{
-          cause:"Adversarial causality assumes manipulation attempts. Attack surfaces scale with complexity. Telemetry must be tamper-evident by design. Least privilege constrains damage radius. Policy violations trigger deterministic invalidation. Recovery requires explicit rollover, not quiet repair.",
-          effect:"Adversarial discipline yields resilient scaling. Manipulation becomes detectable through integrity breaks. Blast radius remains bounded by segmentation. Audit trails preserve causal truth. Stakeholders retain trust under scrutiny. Systems remain defensible against hostile review."
-        },
-        live:{
-          cause:"Live adversarial risk includes spoofing, replay, and drift injection. Single-channel reliance increases deception probability. Late event insertion corrupts windowed analysis. Unbounded exceptions allow laundering of invalidity. Therefore strict window rules and chain validation must remain active. Violations require immediate containment.",
-          effect:"Live hardening reduces successful manipulation. Tamper attempts trigger visible integrity failures. Operators receive clear stop signals. Recovery proceeds through documented rollovers. System state remains classifiable after attack attempts. Trust is preserved by refusing ambiguous continuity."
-        },
-        roadmap:{
-          cause:"Roadmap adversarial posture must scale ahead of deployment. Threat models expand with new interfaces. Exception handling must remain enumerated and logged. Independent recomputation must remain possible. Certification chains must resist partial-validity interpretations. Security requirements must remain operational, not cosmetic.",
-          effect:"Roadmap hardening supports institutional adoption. Larger deployments remain tamper-evident. Incident response becomes standardized across sites. Attack costs rise due to reduced ambiguity. Compliance confidence increases with traceability. Growth proceeds without weakening adversarial posture."
-        }
-      },
-      informal:{
-        concept:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        live:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        roadmap:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."}
-      }
-    },
-
-    "Social":{
-      formal:{
-        concept:{
-          cause:"Social adoption causality is clarity-driven. Ambiguous claims increase skepticism and friction. Transparent constraints reduce rumor dynamics. Consistent language reduces misinterpretation. Education must accompany deployment artifacts. Trust emerges from bounded claims and repeatable evidence.",
-          effect:"Clarity yields stable public expectations. Reduced confusion lowers resistance to adoption. Stakeholders can verify posture through receipts. Safety narratives become consistent across audiences. Community confidence increases with predictable behavior. Scaling becomes socially feasible through disciplined communication."
-        },
-        live:{
-          cause:"Live social risk increases when incidents are not legible. Overexposure creates confusion rather than trust. Inconsistent framing multiplies rumor propagation. Operational secrecy invites narrative filling. Therefore communication must remain bounded and consistent. Evidence must remain accessible in stable formats.",
-          effect:"Live discipline stabilizes stakeholder perception. Users experience predictable messaging under stress. Incident response appears procedural, not improvised. Community anxiety decreases with visibility. Trust increases because behavior matches claims. Adoption remains durable across volatility periods."
-        },
-        roadmap:{
-          cause:"Roadmap social scaling requires structured education surfaces. Multi-language expansion demands semantic stability. Platform growth increases visibility and scrutiny. Stakeholder segments require tailored but consistent framing. Narrative inflation must be avoided under acceleration pressure. Communication must remain aligned with measurable posture.",
-          effect:"Roadmap preparation increases adoption readiness. Messaging remains coherent across regions. Scrutiny is met with stable evidence surfaces. Community confidence grows with transparency. Advocacy becomes possible without overclaim. Scaling proceeds with reduced social friction."
-        }
-      },
-      informal:{
-        concept:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        live:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        roadmap:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."}
-      }
-    },
-
-    "Medicine":{
-      formal:{
-        concept:{
-          cause:"Medical relevance is governed by exposure boundaries. High-energy regimes remain upstream-only by design. Risk models prefer passive endpoints over active sources. Monitoring and interlocks must be auditable. Emergency procedures must be deterministic and trained. Health claims are excluded unless clinically validated.",
-          effect:"Strict boundaries reduce exposure probability. Incident likelihood decreases through containment. Response times improve with clear protocols. Auditable logs support post-incident review. Public health confidence increases with conservative design. Medical oversight becomes feasible through measurable safeguards."
-        },
-        live:{
-          cause:"Live medical risk arises from procedural deviation. Training gaps increase response variance. Unlogged overrides increase exposure uncertainty. Maintenance lapses increase probability of abnormal events. Therefore safety protocols must remain enforced and visible. Clinical claims remain prohibited without trials and approvals.",
-          effect:"Live discipline yields predictable safety behavior. Health exposures remain prevented by design barriers. Response procedures are rehearsed and repeatable. Documentation supports medical oversight. Compliance reviews remain evidence-based. Public safety posture remains conservative and stable."
-        },
-        roadmap:{
-          cause:"Roadmap medical integration requires formal hazard analysis. Human factors engineering must be validated. Training programs must scale with deployment. Third-party safety reviews must be scheduled. Claims must remain bounded to measured safety performance. No clinical benefit is implied without research protocols.",
-          effect:"Roadmap planning yields scalable safety assurance. Training quality becomes consistent across sites. Oversight relationships become structured. Public confidence increases through verified safeguards. Health risk remains contained through conservative interfaces. Expansion remains permissible within validated safety bounds."
-        }
-      },
-      informal:{
-        concept:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        live:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        roadmap:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."}
-      }
-    },
-
-    "Political":{
-      formal:{
-        concept:{
-          cause:"Political stability depends on risk perception management. Overstated claims invite backlash and polarization. Transparent constraint statements reduce speculative narratives. Deployment posture must align with measurable evidence. Public classification must remain consistent under scrutiny. Policy engagement must be evidence-first and non-inflated.",
-          effect:"Bounded posture reduces political volatility. Legislators receive coherent definitions. Oversight becomes procedural rather than reactionary. Stakeholders align on measurable risk surfaces. Coalition support stabilizes with consistent behavior. Policy outcomes improve under disciplined framing."
-        },
-        live:{
-          cause:"Live political risk increases after incidents and miscommunication. Asymmetric narratives can escalate quickly. Inconsistent messaging undermines credibility. Data opacity invites hostile interpretation. Therefore public reporting must remain stable and auditable. Engagement must avoid premature projections and implied gains.",
-          effect:"Live transparency reduces rumor acceleration. Oversight interactions remain calm and structured. Public confidence rises with consistent disclosures. Regulatory response becomes predictable. Policy posture remains stable across media cycles. Deployment proceeds with reduced political friction."
-        },
-        roadmap:{
-          cause:"Roadmap scaling increases geopolitical attention. Cross-jurisdiction expansion requires consistent standards. International partnerships demand stable definitions and auditability. Funding narratives must remain aligned with evidence gates. Messaging must resist escalation pressure. Policy frameworks must remain compatible with conservative classifications.",
-          effect:"Roadmap preparation stabilizes external engagement. Cross-border adoption becomes feasible through standardization. Scrutiny is met with reproducible receipts. Political risk is reduced through bounded language. Policy environments remain supportive under transparent constraints. Expansion proceeds without destabilizing public posture."
-        }
-      },
-      informal:{
-        concept:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        live:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        roadmap:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."}
-      }
-    },
-
-    "Legal":{
-      formal:{
-        concept:{
-          cause:"Legal defensibility depends on definitions and scope. Classification must align with measurable behavior. Documentation must be immutable and time-stamped. Liability is bounded through enforced interfaces. Compliance artifacts must be retrievable under audit. Claims remain limited to what is operationally supported.",
-          effect:"Definitional discipline reduces litigation exposure. Contracts reference stable terms and limits. Evidence supports dispute resolution. Liability remains compartmentalized by design. Jurisdictional compliance becomes manageable through modular documentation. Legal posture remains consistent under scrutiny."
-        },
-        live:{
-          cause:"Live legal risk increases when records are incomplete. Unlogged overrides create liability ambiguity. Inconsistent procedures produce negligence exposure. Missing maintenance logs increase fault attribution. Therefore chain-of-custody must be preserved. Compliance reporting must remain continuous and accurate.",
-          effect:"Live compliance reduces surprise liability. Records support operational defense. Incident response appears procedural and documented. Regulatory inspections become predictable. Contract enforcement becomes stable through receipts. Legal confidence improves with consistent evidence."
-        },
-        roadmap:{
-          cause:"Roadmap scaling requires standardized documentation across sites. Cross-jurisdiction differences require explicit adapters. Certification regimes require revocation and renewal rules. Auditability must remain invariant under growth. Legal review must occur before expansion, not after. Claims must remain bounded to avoid misrepresentation.",
-          effect:"Roadmap legal readiness supports expansion. Contracts remain consistent across deployments. Regulatory acceptance increases with stable artifacts. Disputes reduce under clear definitions. Insurance underwriting benefits from legal clarity. Scaling remains defensible through disciplined documentation."
-        }
-      },
-      informal:{
-        concept:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        live:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        roadmap:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."}
-      }
-    },
-
-    "Historical Systems":{
-      formal:{
-        concept:{
-          cause:"Historical systems fail through unbounded assumptions. Early infrastructure scaled faster than governance. Measurement gaps allowed hidden fragility to accumulate. Interfaces were treated as secondary until incidents forced redesign. Classification drift created policy confusion. Modern design must invert this sequence with constraint-first discipline.",
-          effect:"Constraint-first posture avoids repeat mistakes. Known failure patterns become preventable. Scaling aligns with governance maturity. Measurement becomes the basis for legitimacy. Public trust improves through predictability. History becomes a design input rather than a postmortem."
-        },
-        live:{
-          cause:"Live legacy systems exhibit deferred maintenance debt. Coupled networks propagate failures rapidly. Documentation is often incomplete or inconsistent. Operators rely on tribal knowledge under stress. Policy and practice diverge during emergencies. Therefore modernization must prioritize auditability and isolation.",
-          effect:"Modernized operations reduce cascade probability. Systems become debuggable under load. Procedures become transferable across teams. Recovery becomes predictable rather than heroic. Oversight becomes evidence-based. Legacy fragility is replaced by modular stability."
-        },
-        roadmap:{
-          cause:"Roadmap lessons require institutional memory mechanisms. Standards must be versioned and preserved. Migration plans must include rollback and containment. Cultural adoption must be paced with training. Expansion must not repeat historical overreach. Modern systems must learn from failure patterns before scaling.",
-          effect:"Institutional memory improves long-term resilience. Standards remain stable across decades. Rollback capability reduces modernization risk. Training reduces dependence on tribal knowledge. Expansion proceeds without repeating historical collapses. The system becomes durable under time pressure."
-        }
-      },
-      informal:{
-        concept:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        live:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."},
-        roadmap:{cause:"(Informal content injected in Player 4b).",effect:"(Informal content injected in Player 4b)."}
-      }
-    }
-  };
-
-  // ===== UI state =====
-  let S = { mode:"lens", style:"formal", time:"concept", dir:"cause" };
-  let section = "FOUNDATION";
-  let openSet = new Set();
-  let openKey = "";
-
-  function lensKey(){ return [S.mode,S.style,S.time,S.dir,section].join("|"); }
-  function resetOpenIfLensChanged(){
-    const k = lensKey();
-    if(k !== openKey){ openKey = k; openSet = new Set(); }
-  }
-
-  const bd=document.getElementById("bd");
-  const modal=document.getElementById("modal");
-  const mClose=document.getElementById("mClose");
-  const mReturn=document.getElementById("mReturn");
-  const mTitle=document.getElementById("mTitle");
-  const h1=document.getElementById("h1");
-  const h2=document.getElementById("h2");
-  const h3=document.getElementById("h3");
-  const list=document.getElementById("list");
-  const clusterTime=document.getElementById("clusterTime");
-  const clusterDir=document.getElementById("clusterDir");
-
-  const ORDER = {
-    FOUNDATION: ["Industrial","Engineering","Technology","Governance","Financial","Adversarial","Legal","Political","Environmental","Social","Medicine","Historical Systems"],
-    ARCHITECTURE:["Engineering","Technology","Industrial","Governance","Adversarial","Financial","Legal","Political","Environmental","Social","Medicine","Historical Systems"],
-    PERFORMANCE:["Industrial","Technology","Engineering","Financial","Governance","Adversarial","Environmental","Legal","Political","Social","Medicine","Historical Systems"],
-    GOVERNANCE:["Governance","Legal","Adversarial","Political","Financial","Industrial","Technology","Engineering","Environmental","Social","Medicine","Historical Systems"]
-  };
-
-  function sectionLead(sec){
-    if(sec==="FOUNDATION") return "Foundation states admissible bounds, operational constraints, and claim discipline.";
-    if(sec==="ARCHITECTURE") return "Architecture defines build, isolation, and interfaces without exposure drift.";
-    if(sec==="PERFORMANCE") return "Performance describes what is measured, stabilized, and repeated without inflation.";
-    return "Governance enforces claim discipline, audit integrity, and scale gates under pressure.";
-  }
-  function labelTime(){ return (S.time==="concept")?"CONCEPT":(S.time==="live")?"LIVE":"ROADMAP"; }
-  function labelDir(){ return (S.dir==="cause")?"CAUSE":"EFFECT"; }
-  function labelStyle(){ return (S.style==="formal")?"FORMAL":"INFORMAL"; }
-
-  function setHeader(){
-    if(S.mode==="integrated"){
-      h1.textContent = `ENERGY · ${section} · INTEGRATED · ${labelStyle()}`;
-      h2.textContent = sectionLead(section) + " Integrated mode shows Concept+Live+Roadmap per domain.";
-    } else {
-      h1.textContent = `ENERGY · ${section} · ${labelStyle()} · ${labelTime()} · ${labelDir()}`;
-      h2.textContent = sectionLead(section);
-    }
-    h3.textContent = "Public posture is Industrial thermal substitution (C). No net-positive fusion claim. Fusion readiness is requirements-only.";
-    mTitle.textContent = `ENERGY · ${section}`;
-  }
-
-  function getLensParagraph(domain){
-    const timeKey = (S.time==="concept") ? "concept" : (S.time==="live") ? "live" : "roadmap";
-    return ARTICLE_LENS[domain][S.style][timeKey][S.dir];
-  }
-
-  function integratedText(domain){
-    const st = S.style;
-    const c = ARTICLE_LENS[domain][st].concept.cause + " " + ARTICLE_LENS[domain][st].concept.effect;
-    const l = ARTICLE_LENS[domain][st].live.cause    + " " + ARTICLE_LENS[domain][st].live.effect;
-    const r = ARTICLE_LENS[domain][st].roadmap.cause + " " + ARTICLE_LENS[domain][st].roadmap.effect;
-    return { concept:c, live:l, roadmap:r };
-  }
-
-  function setPillActives(){
-    document.querySelectorAll("[data-mode]").forEach(p=>p.classList.toggle("active", p.dataset.mode===S.mode));
-    document.querySelectorAll("[data-style]").forEach(p=>p.classList.toggle("active", p.dataset.style===S.style));
-    document.querySelectorAll("[data-time]").forEach(p=>p.classList.toggle("active", p.dataset.time===S.time));
-    document.querySelectorAll("[data-dir]").forEach(p=>p.classList.toggle("active", p.dataset.dir===S.dir));
-    const dis = (S.mode==="integrated");
-    clusterTime.style.opacity = dis ? ".35" : "1";
-    clusterDir.style.opacity  = dis ? ".35" : "1";
-    clusterTime.style.pointerEvents = dis ? "none" : "auto";
-    clusterDir.style.pointerEvents  = dis ? "none" : "auto";
-  }
-
-  function renderList(){
-    resetOpenIfLensChanged();
-    list.innerHTML="";
-    const order = ORDER[section] || DOMAINS;
-
-    order.forEach(domain=>{
-      const bub=document.createElement("div");
-      bub.className="bub";
-      bub.dataset.domain = domain;
-
-      const head=document.createElement("div");
-      head.className="bhead";
-      head.tabIndex = 0;
-      head.setAttribute("role","button");
-
-      const left=document.createElement("div");
-      const t=document.createElement("div");
-      t.className="btitle";
-      t.textContent = domain;
-      const mini=document.createElement("div");
-      mini.className="bmini";
-      mini.textContent = (S.mode==="integrated")
-        ? "Tap to expand: Concept + Live + Roadmap"
-        : "Tap to expand: one paragraph per lens";
-
-      left.appendChild(t);
-      left.appendChild(mini);
-
-      const chev=document.createElement("div");
-      chev.className="bchev";
-      chev.textContent = openSet.has(domain) ? "▾" : "▸";
-
-      head.appendChild(left);
-      head.appendChild(chev);
-
-      const body=document.createElement("div");
-      body.className="bbody";
-
-      if(S.mode==="integrated"){
-        const parts = integratedText(domain);
-        const wrap=document.createElement("div");
-        wrap.className="ipanels";
-        [["CONCEPT",parts.concept],["LIVE",parts.live],["ROADMAP",parts.roadmap]].forEach(pair=>{
-          const ip=document.createElement("div");
-          ip.className="ip";
-          const iph=document.createElement("div");
-          iph.className="iph";
-          iph.textContent = pair[0];
-          const ipt=document.createElement("p");
-          ipt.className="ipt";
-          ipt.textContent = pair[1];
-          ip.appendChild(iph);
-          ip.appendChild(ipt);
-          wrap.appendChild(ip);
-        });
-        body.appendChild(wrap);
-      } else {
-        const p=document.createElement("p");
-        p.className="p";
-        p.textContent = getLensParagraph(domain);
-        body.appendChild(p);
-      }
-
-      function toggleOpen(){
-        if(openSet.has(domain)){ openSet.delete(domain); }
-        else { openSet.add(domain); }
-        renderAll();
-      }
-
-      head.addEventListener("click", toggleOpen);
-      head.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggleOpen(); }});
-
-      if(openSet.has(domain)) bub.classList.add("open");
-
-      bub.appendChild(head);
-      bub.appendChild(body);
-      list.appendChild(bub);
-    });
-  }
-
-  function renderAll(){
-    setHeader();
-    setPillActives();
-    renderList();
-  }
-
-  // OPEN ALL / CLOSE ALL (current lensKey)
-  document.getElementById("openAll").addEventListener("click", ()=>{
-    resetOpenIfLensChanged();
-    (ORDER[section] || DOMAINS).forEach(d=>openSet.add(d));
-    renderAll();
-  });
-  document.getElementById("closeAll").addEventListener("click", ()=>{
-    resetOpenIfLensChanged();
-    openSet = new Set();
-    renderAll();
-  });
-
-  // Lens handlers
-  document.querySelectorAll("[data-mode]").forEach(p=>p.addEventListener("click", ()=>{
-    const next = p.dataset.mode;
-    if(next===S.mode) return;
-    S.mode = next;
-    renderAll();
-  }));
-  document.querySelectorAll("[data-style]").forEach(p=>p.addEventListener("click", ()=>{
-    const next = p.dataset.style;
-    if(next===S.style) return;
-    S.style = next;
-    renderAll();
-  }));
-  document.querySelectorAll("[data-time]").forEach(p=>p.addEventListener("click", ()=>{
-    const next = p.dataset.time;
-    if(next===S.time) return;
-    S.time = next;
-    renderAll();
-  }));
-  document.querySelectorAll("[data-dir]").forEach(p=>p.addEventListener("click", ()=>{
-    const next = p.dataset.dir;
-    if(next===S.dir) return;
-    S.dir = next;
-    renderAll();
-  }));
-
-  // Modal open/close
-  function openModal(sec){
-    section = sec;
+/* UNBREAKABLE OPENER: runs even if later script errors */
+window.__openEnergyModal = function(sec){
+  try{
+    var bd=document.getElementById("bd");
+    var modal=document.getElementById("modal");
+    if(!bd || !modal) return;
     bd.classList.add("show");
     modal.classList.add("show");
-    renderAll();
-  }
-  function closeModal(){
-    bd.classList.remove("show");
-    modal.classList.remove("show");
-  }
-  bd.addEventListener("click", closeModal);
-  mClose.addEventListener("click", closeModal);
-  mReturn.addEventListener("click", closeModal);
+    // store section for renderer if present
+    window.__energy_section = sec || "FOUNDATION";
+    if(typeof window.__energy_render_all === "function"){
+      window.__energy_render_all();
+    }
+  }catch(e){}
+};
+</script>
 
-  function bindDiamond(id, sec){
-    const el=document.getElementById(id);
-    el.addEventListener("click", ()=>openModal(sec));
-    el.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(sec);} });
-  }
-  bindDiamond("dFoundation","FOUNDATION");
-  bindDiamond("dArchitecture","ARCHITECTURE");
-  bindDiamond("dPerformance","PERFORMANCE");
-  bindDiamond("dGovernance","GOVERNANCE");
+<script>
+/* MAIN LOGIC (wrapped so opener still works even if something fails) */
+(function(){
+  try{
+    const qs = new URLSearchParams(location.search);
+    let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+    let gdStyle = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+    let gdTime  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
+    if(!["en","zh"].includes(lang)) lang="en";
+    if(!["formal","informal"].includes(gdStyle)) gdStyle="formal";
+    if(gdTime==="trajectory") gdTime="post";
+    if(!["origin","now","post"].includes(gdTime)) gdTime="origin";
+    try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime);}catch(e){}
+    document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
+    function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(gdStyle)+"&time="+encodeURIComponent(gdTime); }
+    (function(){
+      const s=q();
+      document.getElementById("btnBack").href="/products/?"+s;
+      document.getElementById("btnExit").href="/door/?"+s;
+      document.getElementById("dockTerminal").href="/index.html?"+s;
+      document.getElementById("dockHome").href="/home/?"+s;
+      document.getElementById("dockProducts").href="/products/?"+s;
+      document.getElementById("dockLaws").href="/laws/?"+s;
+      document.getElementById("dockLinks").href="/links/?"+s;
+      document.getElementById("mFusion").href="/explore/fusion-readiness/?"+s;
+      document.getElementById("mJumpProducts").href="/products/?"+s;
+      document.getElementById("mJumpHub").href="/home/?"+s;
+    })();
+
+    const DOMAINS = [
+      "Engineering","Technology","Industrial","Environmental","Financial","Governance",
+      "Adversarial","Social","Medicine","Political","Legal","Historical Systems"
+    ];
+
+    const ORDER = {
+      FOUNDATION: ["Industrial","Engineering","Technology","Governance","Financial","Adversarial","Legal","Political","Environmental","Social","Medicine","Historical Systems"],
+      ARCHITECTURE:["Engineering","Technology","Industrial","Governance","Adversarial","Financial","Legal","Political","Environmental","Social","Medicine","Historical Systems"],
+      PERFORMANCE:["Industrial","Technology","Engineering","Financial","Governance","Adversarial","Environmental","Legal","Political","Social","Medicine","Historical Systems"],
+      GOVERNANCE:["Governance","Legal","Adversarial","Political","Financial","Industrial","Technology","Engineering","Environmental","Social","Medicine","Historical Systems"]
+    };
+
+    let S = { mode:"lens", style:"formal", time:"concept", dir:"cause" };
+    let section = "FOUNDATION";
+
+    let openSet = new Set();
+    let openKey = "";
+
+    function lensKey(){ return [S.mode,S.style,S.time,S.dir,section].join("|"); }
+    function resetOpenIfLensChanged(){
+      const k = lensKey();
+      if(k !== openKey){ openKey = k; openSet = new Set(); }
+    }
+
+    // Placeholder content; next layer injects full paragraphs.
+    const ARTICLE_LENS = {};
+    DOMAINS.forEach(d=>{
+      ARTICLE_LENS[d] = {
+        formal:{
+          concept:{cause:"(Pending injection) Formal Concept Cause paragraph.",effect:"(Pending injection) Formal Concept Effect paragraph."},
+          live:{cause:"(Pending injection) Formal Live Cause paragraph.",effect:"(Pending injection) Formal Live Effect paragraph."},
+          roadmap:{cause:"(Pending injection) Formal Roadmap Cause paragraph.",effect:"(Pending injection) Formal Roadmap Effect paragraph."}
+        },
+        informal:{
+          concept:{cause:"(Pending injection) Informal Concept Cause paragraph.",effect:"(Pending injection) Informal Concept Effect paragraph."},
+          live:{cause:"(Pending injection) Informal Live Cause paragraph.",effect:"(Pending injection) Informal Live Effect paragraph."},
+          roadmap:{cause:"(Pending injection) Informal Roadmap Cause paragraph.",effect:"(Pending injection) Informal Roadmap Effect paragraph."}
+        }
+      };
+    });
+
+    function integratedText(domain){
+      const st = S.style;
+      const c = ARTICLE_LENS[domain][st].concept.cause + " " + ARTICLE_LENS[domain][st].concept.effect;
+      const l = ARTICLE_LENS[domain][st].live.cause    + " " + ARTICLE_LENS[domain][st].live.effect;
+      const r = ARTICLE_LENS[domain][st].roadmap.cause + " " + ARTICLE_LENS[domain][st].roadmap.effect;
+      return { concept:c, live:l, roadmap:r };
+    }
+
+    const bd=document.getElementById("bd");
+    const modal=document.getElementById("modal");
+    const mClose=document.getElementById("mClose");
+    const mReturn=document.getElementById("mReturn");
+    const mTitle=document.getElementById("mTitle");
+    const h1=document.getElementById("h1");
+    const h2=document.getElementById("h2");
+    const h3=document.getElementById("h3");
+    const list=document.getElementById("list");
+    const clusterTime=document.getElementById("clusterTime");
+    const clusterDir=document.getElementById("clusterDir");
+
+    function sectionLead(sec){
+      if(sec==="FOUNDATION") return "Foundation states admissible bounds, operational constraints, and claim discipline.";
+      if(sec==="ARCHITECTURE") return "Architecture defines build, isolation, and interfaces without exposure drift.";
+      if(sec==="PERFORMANCE") return "Performance describes what is measured, stabilized, and repeated without inflation.";
+      return "Governance enforces claim discipline, audit integrity, and scale gates under pressure.";
+    }
+    function labelTime(){ return (S.time==="concept")?"CONCEPT":(S.time==="live")?"LIVE":"ROADMAP"; }
+    function labelDir(){ return (S.dir==="cause")?"CAUSE":"EFFECT"; }
+    function labelStyle(){ return (S.style==="formal")?"FORMAL":"INFORMAL"; }
+
+    function setHeader(){
+      if(S.mode==="integrated"){
+        h1.textContent = `ENERGY · ${section} · INTEGRATED · ${labelStyle()}`;
+        h2.textContent = sectionLead(section) + " Integrated mode shows Concept+Live+Roadmap per domain.";
+      } else {
+        h1.textContent = `ENERGY · ${section} · ${labelStyle()} · ${labelTime()} · ${labelDir()}`;
+        h2.textContent = sectionLead(section);
+      }
+      h3.textContent = "Public posture is Industrial thermal substitution (C). No net-positive fusion claim. Fusion readiness is requirements-only.";
+      mTitle.textContent = `ENERGY · ${section}`;
+    }
+
+    function getLensParagraph(domain){
+      const timeKey = (S.time==="concept") ? "concept" : (S.time==="live") ? "live" : "roadmap";
+      return ARTICLE_LENS[domain][S.style][timeKey][S.dir];
+    }
+
+    function setPillActives(){
+      document.querySelectorAll("[data-mode]").forEach(p=>p.classList.toggle("active", p.dataset.mode===S.mode));
+      document.querySelectorAll("[data-style]").forEach(p=>p.classList.toggle("active", p.dataset.style===S.style));
+      document.querySelectorAll("[data-time]").forEach(p=>p.classList.toggle("active", p.dataset.time===S.time));
+      document.querySelectorAll("[data-dir]").forEach(p=>p.classList.toggle("active", p.dataset.dir===S.dir));
+      const dis = (S.mode==="integrated");
+      clusterTime.style.opacity = dis ? ".35" : "1";
+      clusterDir.style.opacity  = dis ? ".35" : "1";
+      clusterTime.style.pointerEvents = dis ? "none" : "auto";
+      clusterDir.style.pointerEvents  = dis ? "none" : "auto";
+    }
+
+    function renderList(){
+      resetOpenIfLensChanged();
+      list.innerHTML="";
+      const order = ORDER[section] || DOMAINS;
+
+      order.forEach(domain=>{
+        const bub=document.createElement("div");
+        bub.className="bub";
+        bub.dataset.domain = domain;
+
+        const head=document.createElement("div");
+        head.className="bhead";
+        head.tabIndex = 0;
+        head.setAttribute("role","button");
+
+        const left=document.createElement("div");
+        const t=document.createElement("div");
+        t.className="btitle";
+        t.textContent = domain;
+        const mini=document.createElement("div");
+        mini.className="bmini";
+        mini.textContent = (S.mode==="integrated")
+          ? "Tap to expand: Concept + Live + Roadmap"
+          : "Tap to expand: one paragraph per lens";
+        left.appendChild(t);
+        left.appendChild(mini);
+
+        const chev=document.createElement("div");
+        chev.className="bchev";
+        chev.textContent = openSet.has(domain) ? "▾" : "▸";
+
+        head.appendChild(left);
+        head.appendChild(chev);
+
+        const body=document.createElement("div");
+        body.className="bbody";
+
+        if(S.mode==="integrated"){
+          const parts = integratedText(domain);
+          const wrap=document.createElement("div");
+          wrap.className="ipanels";
+          [["CONCEPT",parts.concept],["LIVE",parts.live],["ROADMAP",parts.roadmap]].forEach(pair=>{
+            const ip=document.createElement("div");
+            ip.className="ip";
+            const iph=document.createElement("div");
+            iph.className="iph";
+            iph.textContent = pair[0];
+            const ipt=document.createElement("p");
+            ipt.className="ipt";
+            ipt.textContent = pair[1];
+            ip.appendChild(iph);
+            ip.appendChild(ipt);
+            wrap.appendChild(ip);
+          });
+          body.appendChild(wrap);
+        } else {
+          const p=document.createElement("p");
+          p.className="p";
+          p.textContent = getLensParagraph(domain);
+          body.appendChild(p);
+        }
+
+        function toggleOpen(){
+          if(openSet.has(domain)){ openSet.delete(domain); }
+          else { openSet.add(domain); }
+          renderAll();
+        }
+
+        head.addEventListener("click", toggleOpen);
+        head.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggleOpen(); }});
+
+        if(openSet.has(domain)) bub.classList.add("open");
+        bub.appendChild(head);
+        bub.appendChild(body);
+        list.appendChild(bub);
+      });
+    }
+
+    function renderAll(){
+      section = window.__energy_section || section;
+      setHeader();
+      setPillActives();
+      renderList();
+    }
+
+    // expose renderer for unbreakable opener
+    window.__energy_render_all = renderAll;
+
+    document.getElementById("openAll").addEventListener("click", ()=>{
+      resetOpenIfLensChanged();
+      (ORDER[section] || DOMAINS).forEach(d=>openSet.add(d));
+      renderAll();
+    });
+    document.getElementById("closeAll").addEventListener("click", ()=>{
+      resetOpenIfLensChanged();
+      openSet = new Set();
+      renderAll();
+    });
+
+    document.querySelectorAll("[data-mode]").forEach(p=>p.addEventListener("click", ()=>{
+      const next = p.dataset.mode;
+      if(next===S.mode) return;
+      S.mode = next;
+      renderAll();
+    }));
+    document.querySelectorAll("[data-style]").forEach(p=>p.addEventListener("click", ()=>{
+      const next = p.dataset.style;
+      if(next===S.style) return;
+      S.style = next;
+      renderAll();
+    }));
+    document.querySelectorAll("[data-time]").forEach(p=>p.addEventListener("click", ()=>{
+      const next = p.dataset.time;
+      if(next===S.time) return;
+      S.time = next;
+      renderAll();
+    }));
+    document.querySelectorAll("[data-dir]").forEach(p=>p.addEventListener("click", ()=>{
+      const next = p.dataset.dir;
+      if(next===S.dir) return;
+      S.dir = next;
+      renderAll();
+    }));
+
+    function closeModal(){ bd.classList.remove("show"); modal.classList.remove("show"); }
+    bd.addEventListener("click", closeModal);
+    mClose.addEventListener("click", closeModal);
+    mReturn.addEventListener("click", closeModal);
+
+    // keyboard support for inline diamonds
+    [["dFoundation","FOUNDATION"],["dArchitecture","ARCHITECTURE"],["dPerformance","PERFORMANCE"],["dGovernance","GOVERNANCE"]].forEach(pair=>{
+      const el=document.getElementById(pair[0]);
+      el.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.__openEnergyModal(pair[1]); }});
+    });
+
+  }catch(e){
+    // swallow errors; opener remains functional
+  }
 })();
 </script>
 

@@ -11,18 +11,39 @@
 /* (Intentionally NO html, body selectors here.) */
 
 :root{
+  /* Legacy diamond sizing (kept) */
   --gd-diamond: 150px;
   --gd-diamond-mobile: 120px;
   --gd-gap: 22px;
   --gd-radius: 22px;
+
+  /* NEW: Octagonal processor sizing */
+  --gd-oct: 160px;
+  --gd-oct-mobile: 128px;
+  --gd-oct-radius: 22px;
+
+  /* Ring radii for 4-lane + 8-lane */
+  --gd-ring-r: 154px;          /* 4-lane default */
+  --gd-ring-r8: 210px;         /* 8-lane default */
+
+  /* Center core */
+  --gd-core: 78px;
+  --gd-core-mobile: 64px;
 }
 
-/* ---------- Common wrappers (geometry only) ---------- */
+/* ============================================================
+   COMMON WRAPPERS (GEOMETRY ONLY)
+   ============================================================ */
+
 .page{ width:100%; }
 .wrap{ width:min(1100px,94vw); margin:0 auto; }
 .stage{ width:100%; display:flex; justify-content:center; align-items:center; }
 
-/* ---------- Diamond primitives (geometry only) ---------- */
+/* ============================================================
+   LEGACY DIAMOND PRIMITIVES (KEPT FOR BACKWARD COMPAT)
+   (GEOMETRY ONLY — NO COLORS)
+   ============================================================ */
+
 .diamond,
 .gd-diamond{
   position:relative;
@@ -53,7 +74,6 @@
   padding:14px;
 }
 
-/* Optional small label blocks (no typography styling beyond size/opacity) */
 .diamond small,
 .gd-diamond small{
   opacity:.82;
@@ -101,7 +121,7 @@
   letter-spacing:.6px;
 }
 
-/* ---------- Grid-style diamonds (used in some pages) ---------- */
+/* ---------- Grid-style diamonds ---------- */
 .diamond-grid,
 .gd-diamond-grid{
   display:grid;
@@ -109,6 +129,159 @@
   gap: var(--gd-gap);
   width:min(720px,92vw);
 }
+
+/* ============================================================
+   OCTAGONAL PROCESSOR PRIMITIVES (NEW)
+   (GEOMETRY ONLY — NO COLORS)
+   ============================================================ */
+
+/* Octagon clip-path token */
+.gd-oct{
+  position:relative;
+  width:var(--gd-oct);
+  height:var(--gd-oct);
+  border-radius:var(--gd-oct-radius); /* fallback for browsers that dislike clip-path */
+  clip-path:polygon(
+    30% 0%, 70% 0%,
+    100% 30%, 100% 70%,
+    70% 100%, 30% 100%,
+    0% 70%, 0% 30%
+  );
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  -webkit-tap-highlight-color:transparent;
+  pointer-events:auto;
+  touch-action:manipulation;
+}
+
+/* Inner label orientation for octagon nodes (no rotation) */
+.gd-oct > span,
+.gd-oct span{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:6px;
+  width:100%;
+  height:100%;
+  padding:14px;
+}
+
+/* Optional small label blocks (geometry only) */
+.gd-oct small{
+  opacity:.82;
+  font-size:12px;
+  letter-spacing:.4px;
+}
+
+/* ============================================================
+   OCTAGONAL PROCESSOR STAGE (NEW)
+   Use this instead of diamond platform when ready:
+     <div class="gd-proc">
+       <div class="gd-proc-ring"></div>
+       <a class="gd-oct gd-proc-n" ...>...</a> ...
+       <div class="gd-proc-core"><span>◆</span></div>
+     </div>
+   ============================================================ */
+
+.gd-proc{
+  position:relative;
+  width:min(720px,94vw);
+  height:min(720px,94vw);
+  margin:0 auto;
+  display:block;
+}
+
+/* Decorative ring (geometry only; style in ui.css/page if desired) */
+.gd-proc-ring{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(620px,90vw);
+  height:min(620px,90vw);
+  transform:translate(-50%,-50%);
+  border-radius:36px;
+  clip-path:polygon(
+    30% 0%, 70% 0%,
+    100% 30%, 100% 70%,
+    70% 100%, 30% 100%,
+    0% 70%, 0% 30%
+  );
+  pointer-events:none;
+}
+
+/* Center core (geometry only) */
+.gd-proc-core{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:var(--gd-core);
+  height:var(--gd-core);
+  transform:translate(-50%,-50%);
+  border-radius:20px;
+  clip-path:polygon(
+    30% 0%, 70% 0%,
+    100% 30%, 100% 70%,
+    70% 100%, 30% 100%,
+    0% 70%, 0% 30%
+  );
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+}
+.gd-proc-core > span{
+  font-weight:900;
+  letter-spacing:.6px;
+}
+
+/* ============================================================
+   4-LANE POSITIONS (N/E/S/W) — OCTAGON NODES
+   ============================================================ */
+
+.gd-proc-n,
+.gd-proc-e,
+.gd-proc-s,
+.gd-proc-w{
+  position:absolute;
+  left:50%;
+  top:50%;
+}
+
+.gd-proc-n{ transform:translate(-50%,-50%) translate(0, calc(var(--gd-ring-r) * -1)); }
+.gd-proc-e{ transform:translate(-50%,-50%) translate(var(--gd-ring-r), 0); }
+.gd-proc-s{ transform:translate(-50%,-50%) translate(0, var(--gd-ring-r)); }
+.gd-proc-w{ transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r) * -1), 0); }
+
+/* ============================================================
+   8-LANE POSITIONS (N, NE, E, SE, S, SW, W, NW) — OCTAGON NODES
+   Use --gd-ring-r8 radius
+   ============================================================ */
+
+.gd-proc8-n,
+.gd-proc8-ne,
+.gd-proc8-e,
+.gd-proc8-se,
+.gd-proc8-s,
+.gd-proc8-sw,
+.gd-proc8-w,
+.gd-proc8-nw{
+  position:absolute;
+  left:50%;
+  top:50%;
+}
+
+.gd-proc8-n {  transform:translate(-50%,-50%) translate(0, calc(var(--gd-ring-r8) * -1)); }
+.gd-proc8-ne{  transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * .707), calc(var(--gd-ring-r8) * -.707)); }
+.gd-proc8-e {  transform:translate(-50%,-50%) translate(var(--gd-ring-r8), 0); }
+.gd-proc8-se{  transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * .707), calc(var(--gd-ring-r8) * .707)); }
+.gd-proc8-s {  transform:translate(-50%,-50%) translate(0, var(--gd-ring-r8)); }
+.gd-proc8-sw{  transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * -.707), calc(var(--gd-ring-r8) * .707)); }
+.gd-proc8-w {  transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * -1), 0); }
+.gd-proc8-nw{  transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * -.707), calc(var(--gd-ring-r8) * -.707)); }
 
 /* ============================================================
    MODAL GEOMETRY (NO COLORS / NO MATERIAL)
@@ -160,6 +333,7 @@
   flex:1 1 auto;
 }
 
+/* Lensbar geometry only */
 .lensbar{
   display:flex;
   gap:10px;
@@ -191,17 +365,26 @@
    ============================================================ */
 
 @media (max-width:520px){
-  :root{ --gd-diamond: var(--gd-diamond-mobile); }
+  :root{
+    --gd-diamond: var(--gd-diamond-mobile);
+    --gd-oct: var(--gd-oct-mobile);
+    --gd-ring-r: 136px;
+    --gd-ring-r8: 182px;
+    --gd-core: var(--gd-core-mobile);
+  }
+
   .platform,
   .gd-platform{
     width: calc(var(--gd-diamond) * 3);
     height: calc(var(--gd-diamond) * 3);
   }
+
   .platform .center,
   .gd-platform .center{
     width:60px;
     height:60px;
   }
+
   .shell{ height:90vh; max-height:90vh; }
 }
 
@@ -209,4 +392,7 @@
 .platform a,
 .gd-platform a,
 .diamond,
-.gd-diamond{ pointer-events:auto; }
+.gd-diamond,
+.gd-oct{
+  pointer-events:auto;
+}

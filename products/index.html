@@ -1,9 +1,10 @@
-<!-- TNT — /products/index.html  (PRODUCTS SPINE · GLOSSY JEWEL RESTORE · NO UI OVERRIDE)
+<!-- TNT — /products/index.html  (PRODUCTS SPINE · OPAL JEWEL RESTORE · NO UI OVERRIDE)
      FIX:
-       - Stops overriding UI “field” (no html/body bg)
-       - Removes backdrop-filter blurs (reduces iOS tap bugs + restores crispness)
-       - Uses minimal diamond CSS: position + gloss overlay only (enhances, not replaces)
+       - UI FIELD stays owned by ui.css (NO html/body background)
+       - Diamonds become OPAL (pearl/iridescent) instead of red-tinted
+       - Keeps glossy jewel specular + gold rim
        - Keeps 4-volume spine layout
+       - Adds state-carry on clicks (lang/style/time preserved)
 -->
 
 <!doctype html>
@@ -17,13 +18,24 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-:root{--R:154px}
+:root{
+  --R:154px;
+
+  /* OPAL core tones (fixed) */
+  --opal-1: rgba(230,236,246,.26);
+  --opal-2: rgba(170,195,255,.16);
+  --opal-3: rgba(255,220,170,.10);
+  --opal-4: rgba(140,220,210,.10);
+  --opal-deep: rgba(9,14,22,.78);
+
+  --goldSoft: rgba(212,175,55,.35);
+}
 
 /* No field overrides */
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
 
-/* Top-left controls (use existing button class if available, else fall back) */
+/* Top-left controls */
 .top-left{position:fixed;left:16px;top:16px;z-index:90;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .tbtn{
   padding:10px 16px;border-radius:14px;
@@ -63,7 +75,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Diamonds: minimal base + GLOSS overlay (enhances instead of repainting) */
+/* Diamonds: OPAL JEWEL (no red tint) */
 .d{
   width:200px;height:200px;
   position:absolute;left:50%;top:50%;
@@ -74,49 +86,67 @@ a{color:inherit;text-decoration:none}
   touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
 
-  /* Let ui.css do most of the look; we only add “jewel depth” */
-  background:rgba(0,0,0,.14);
-  border:1px solid rgba(255,255,255,.14);
+  /* OPAL face (iridescent) */
+  background:
+    radial-gradient(circle at 32% 22%, var(--opal-1) 0%, rgba(230,236,246,0) 52%),
+    radial-gradient(circle at 78% 28%, var(--opal-2) 0%, rgba(170,195,255,0) 56%),
+    radial-gradient(circle at 38% 78%, var(--opal-4) 0%, rgba(140,220,210,0) 58%),
+    radial-gradient(circle at 82% 78%, var(--opal-3) 0%, rgba(255,220,170,0) 60%),
+    linear-gradient(160deg, rgba(14,18,28,.86) 0%, rgba(7,10,16,.90) 70%);
+
+  border:1px solid rgba(255,255,255,.16);
   box-shadow:
-    0 26px 90px rgba(0,0,0,.60),
-    inset 0 2px 0 rgba(255,255,255,.14),
-    inset 0 -28px 56px rgba(0,0,0,.55);
+    0 26px 90px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.16),
+    inset 0 -30px 60px rgba(0,0,0,.62);
 }
+
+/* Gold rim highlight */
 .d::before{
-  /* gold rim highlight (thin) */
   content:"";
   position:absolute;inset:0;border-radius:30px;padding:1px;
-  background:linear-gradient(135deg, rgba(212,175,55,.0) 0%, rgba(212,175,55,.35) 50%, rgba(212,175,55,.0) 100%);
+  background:linear-gradient(135deg,
+    rgba(212,175,55,0) 0%,
+    rgba(212,175,55,.40) 50%,
+    rgba(212,175,55,0) 100%
+  );
   opacity:.55;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
   pointer-events:none;
 }
+
+/* OPAL shimmer layer (static, no animation) */
 .d::after{
-  /* glossy specular cap (STATIC — no animation, no blur) */
   content:"";
   position:absolute;
-  left:10%; right:10%;
-  top:8%;
-  height:34%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
-  transform:rotate(-10deg);
-  opacity:.85;
+  inset:0;
+  border-radius:30px;
+  background:
+    /* glossy specular cap */
+    radial-gradient(120% 55% at 50% 18%, rgba(255,255,255,.22) 0%, rgba(255,255,255,0) 60%),
+    /* subtle opal “film” */
+    conic-gradient(from 210deg at 50% 52%,
+      rgba(255,255,255,0) 0deg,
+      rgba(190,220,255,.10) 70deg,
+      rgba(255,230,180,.08) 140deg,
+      rgba(160,240,220,.08) 210deg,
+      rgba(255,255,255,0) 360deg
+    );
+  opacity:.78;
   pointer-events:none;
 }
+
 .d:hover{
   box-shadow:
-    0 34px 120px rgba(0,0,0,.72),
+    0 34px 120px rgba(0,0,0,.74),
     0 0 22px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -34px 64px rgba(0,0,0,.60);
+    inset 0 2px 0 rgba(255,255,255,.20),
+    inset 0 -34px 64px rgba(0,0,0,.64);
   border-color:rgba(212,175,55,.26);
 }
-.d:active{
-  transform:translate(-50%,-50%) rotate(45deg) scale(.99);
-}
+.d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
 .d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
@@ -132,7 +162,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;user-select:none;
 }
 .lab{font-weight:950;letter-spacing:.8px;font-size:18px}
-.sub{font-size:13px;opacity:.78;line-height:1.3;max-width:18em}
+.sub{font-size:13px;opacity:.82;line-height:1.3;max-width:18em}
 
 /* Core */
 .core{
@@ -180,8 +210,8 @@ a{color:inherit;text-decoration:none}
 <body>
 
 <div class="top-left">
-  <a class="tbtn" href="/home/">HUB</a>
-  <a class="tbtn" href="/door/">EXIT</a>
+  <a class="tbtn" id="btnHub" href="/home/">HUB</a>
+  <a class="tbtn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
 <div class="brand">
@@ -192,28 +222,28 @@ a{color:inherit;text-decoration:none}
 <div class="stage" aria-label="Products catalog diamond">
   <div class="outer"></div>
 
-  <div class="d d-n" role="button" tabindex="0" onclick="location.href='/products/energy/'">
+  <div class="d d-n" id="goEnergy" role="button" tabindex="0" aria-label="Energy">
     <div class="inner">
       <div class="lab">ENERGY</div>
       <div class="sub">Industrial plasma substitution · Gated fusion readiness</div>
     </div>
   </div>
 
-  <div class="d d-e" role="button" tabindex="0" onclick="location.href='/products/education/'">
+  <div class="d d-e" id="goEducation" role="button" tabindex="0" aria-label="Education">
     <div class="inner">
       <div class="lab">EDUCATION</div>
       <div class="sub">Language compression · Traversal learning systems</div>
     </div>
   </div>
 
-  <div class="d d-s" role="button" tabindex="0" onclick="location.href='/products/software/'">
+  <div class="d d-s" id="goSoftware" role="button" tabindex="0" aria-label="Software">
     <div class="inner">
       <div class="lab">SOFTWARE</div>
       <div class="sub">Instrumentation · Dashboards · Execution engines</div>
     </div>
   </div>
 
-  <div class="d d-w" role="button" tabindex="0" onclick="location.href='/products/commercial/'">
+  <div class="d d-w" id="goCommercial" role="button" tabindex="0" aria-label="Commercial">
     <div class="inner">
       <div class="lab">COMMERCIAL</div>
       <div class="sub">Deployment packaging · Licensing · Phase rollout</div>
@@ -224,12 +254,61 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a href="/index.html">TERMINAL</a>
-  <a class="active" href="/products/">PRODUCTS</a>
-  <a href="/laws/">LAWS</a>
-  <a href="/gauges/">GAUGES</a>
-  <a href="/links/">LINKS</a>
+  <a id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="active" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a id="dockLaws" href="/laws/">LAWS</a>
+  <a id="dockGauges" href="/gauges/">GAUGES</a>
+  <a id="dockLinks" href="/links/">LINKS</a>
 </nav>
+
+<script>
+(function(){
+  // Carry state without introducing new keys.
+  var qs = new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  if(time==="trajectory") time="post";
+
+  function q(){
+    var p = new URLSearchParams();
+    if(lang)  p.set("lang",lang);
+    if(style) p.set("style",style);
+    if(time)  p.set("time",time);
+    var s = p.toString();
+    return s ? ("?"+s) : "";
+  }
+
+  // Top buttons
+  document.getElementById("btnHub").href  = "/home/"+q();
+  document.getElementById("btnExit").href = "/door/"+q();
+
+  // Dock
+  document.getElementById("dockTerminal").href = "/index.html"+q();
+  document.getElementById("dockProducts").href = "/products/"+q();
+  document.getElementById("dockLaws").href = "/laws/"+q();
+  document.getElementById("dockGauges").href = "/gauges/"+q();
+  document.getElementById("dockLinks").href = "/links/"+q();
+
+  // Diamond routing (state preserved)
+  function go(path){ location.href = path + q(); }
+
+  var map = [
+    ["goEnergy","/products/energy/"],
+    ["goEducation","/products/education/"],
+    ["goSoftware","/products/software/"],
+    ["goCommercial","/products/commercial/"]
+  ];
+  map.forEach(function(pair){
+    var el = document.getElementById(pair[0]);
+    var path = pair[1];
+    el.addEventListener("click", function(){ go(path); });
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }
+    });
+  });
+})();
+</script>
 
 </body>
 </html>

@@ -1,4 +1,13 @@
-<!-- TNT — /products/index.html  (PRODUCTS · Catalog Spine · Door Standard · SPACING + SIMPLER COPY) -->
+<!-- TNT — /products/index.html  (PRODUCTS SPINE · SINGLE-SHELL ONLY · TAP-SAFE · SIMPLE COPY)
+     FIX:
+       - Removes the OUTER shell entirely (no “double shell” blend)
+       - Keeps ONLY the inner diamond cluster (the real product diamonds)
+       - Adds real gaps by slightly shrinking diamonds + slightly increasing radius
+       - Moves text slightly UP inside each diamond
+       - Keeps state carry (gd_lang/gd_style/gd_time) with NO new keys
+       - No blur stacks (tap safe)
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,198 +20,138 @@
 
 <style>
 :root{
-  --R:148px;                 /* was 154px (slightly tighter radius) */
-  --goldSoft:rgba(212,175,55,.35);
+  /* GAP CONTROL */
+  --R:168px; /* a touch wider for visible gaps */
+
+  /* LACQUER JEWEL */
+  --obsB:#0c1626;
+  --obsC:#05070c;
+
+  --opal1: rgba(245,248,255,.18);
+  --opal2: rgba(180,220,255,.12);
+  --opal3: rgba(255,235,200,.10);
+  --opal4: rgba(170,255,235,.10);
+
+  --sapp1: rgba(40,90,200,.18);
+  --sapp2: rgba(110,190,255,.14);
+
+  --goldSoft: rgba(212,175,55,.35);
 }
 
-/* hit-test safety for field overlays */
-body::before, body::after{ pointer-events:none !important; }
-
-body{
-  margin:0;
-  min-height:100vh;
-  overflow-x:hidden;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:#fff;
-}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
 
-/* top-left */
+/* Top-left */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:120;
+  position:fixed;left:16px;top:16px;z-index:90;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* fixed header overlay (Door standard) */
-.headFixed{
-  position:fixed;
-  left:50%;
-  top:64px;
-  transform:translateX(-50%);
-  width:min(720px,94vw);
-  z-index:110;
-  text-align:center;
-  pointer-events:none;
+/* Brand pill (no blur) */
+.brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:80;text-align:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
 }
-.kicker{
-  font-size:12px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  opacity:.78;
-  margin:0 0 10px 0;
-  text-shadow:0 18px 60px rgba(0,0,0,.65);
-}
-.title{
-  margin:0;
-  font-size:52px;
-  font-weight:950;
-  letter-spacing:.2px;
-  line-height:1.02;
-  text-shadow:0 18px 60px rgba(0,0,0,.65);
-}
-.sub{
-  margin:10px auto 0;
-  max-width:54ch;
-  opacity:.84;
-  font-size:16px;
-  line-height:1.35;
-  text-shadow:0 18px 60px rgba(0,0,0,.55);
-}
+.brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.92}
+.brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
 
-/* stage */
+/* Stage (SINGLE-SHELL ONLY: no outer diamond element at all) */
 .stage{
-  position:fixed;
-  left:50%;
-  top:54%;
+  position:fixed;left:50%;top:54%;
   transform:translate(-50%,-50%);
-  width:min(600px,92vw);     /* was 620 */
-  height:min(600px,92vw);    /* was 620 */
-  z-index:40;
-}
-
-/* outer diamond shell (Door standard) */
-.outer{
-  position:absolute;
-  left:50%;top:50%;
-  width:min(600px,92vw);     /* was 620 */
-  height:min(600px,92vw);    /* was 620 */
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:60px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.62),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none;
-  opacity:.55;
-}
-.outer::after{
-  content:"";
-  position:absolute; inset:0; border-radius:60px;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.14;
-  pointer-events:none;
-}
-
-/* diamonds (Door standard) */
-.d{
-  width:196px;height:196px;  /* was 210: smaller diamonds = visible gaps */
-  position:absolute;
-  left:50%;top:50%;
-  transform-origin:center;
-  border-radius:26px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+  width:min(720px,94vw);height:min(720px,94vw);
+  z-index:60;
   pointer-events:auto;
+}
+
+/* Diamonds (slightly smaller to create gaps) */
+.d{
+  width:188px;height:188px;
+  position:absolute;left:50%;top:50%;
+  transform-origin:center;border-radius:28px;
+  cursor:pointer;
+  pointer-events:auto;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
 
   background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
+    radial-gradient(circle at 72% 26%, var(--sapp2) 0%, rgba(110,190,255,0) 62%),
+    radial-gradient(circle at 34% 78%, var(--sapp1) 0%, rgba(40,90,200,0) 64%),
 
-  border:1px solid rgba(255,255,255,.10);
+    radial-gradient(circle at 34% 22%, var(--opal1) 0%, rgba(245,248,255,0) 54%),
+    radial-gradient(circle at 78% 32%, var(--opal2) 0%, rgba(180,220,255,0) 58%),
+    radial-gradient(circle at 82% 78%, var(--opal3) 0%, rgba(255,235,200,0) 64%),
+    radial-gradient(circle at 30% 82%, var(--opal4) 0%, rgba(170,255,235,0) 66%),
+
+    linear-gradient(160deg, var(--obsB) 0%, var(--obsC) 78%);
+
+  border:1px solid rgba(255,255,255,.16);
   box-shadow:
-    0 28px 84px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.14),
-    inset 0 -28px 44px rgba(0,0,0,.62);
-  transition:box-shadow 220ms ease, border-color 220ms ease, transform 220ms ease;
+    0 30px 110px rgba(0,0,0,.72),
+    0 0 18px rgba(212,175,55,.10),
+    inset 0 2px 0 rgba(255,255,255,.16),
+    inset 0 -44px 86px rgba(0,0,0,.80);
 }
+
+/* Gold rim */
 .d::before{
   content:"";
-  position:absolute; inset:0; border-radius:26px; padding:1px;
+  position:absolute;inset:0;border-radius:28px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.45;
+  opacity:.60;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
   pointer-events:none;
 }
+
+/* Gloss cap */
 .d::after{
   content:"";
-  position:absolute;
-  left:12%; right:12%;
-  top:10%;
-  height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
-  opacity:.85;
-  transform:rotate(-10deg);
+  position:absolute;inset:0;border-radius:28px;
+  background:
+    radial-gradient(120% 58% at 50% 16%, rgba(255,255,255,.32) 0%, rgba(255,255,255,0) 64%),
+    radial-gradient(120% 60% at 50% 55%, rgba(255,255,255,.06) 0%, rgba(255,255,255,0) 62%),
+    radial-gradient(140% 70% at 50% 92%, rgba(0,0,0,.36) 0%, rgba(0,0,0,0) 56%);
+  opacity:.92;
   pointer-events:none;
 }
+
 .d:hover{
-  border-color:rgba(212,175,55,.28);
+  border-color:rgba(212,175,55,.32);
   box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 18px rgba(212,175,55,.18),
+    0 40px 140px rgba(0,0,0,.80),
+    0 0 26px rgba(212,175,55,.18),
     inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-}
-.d:active{
-  transform:translate(-50%,-50%) rotate(45deg) scale(.99);
+    inset 0 -50px 98px rgba(0,0,0,.84);
 }
 
-/* placement */
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
-.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
+/* Position */
+.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
+.d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
+.d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
+.d-w{transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg)}
 
+/* Inner label (move slightly UP) */
 .inner{
   width:100%;height:100%;
-  transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start; /* move content upward */
-  text-align:center;
-  padding:18px 16px 16px;     /* top padding -> text sits higher */
-  gap:10px;
-  pointer-events:none;
-  user-select:none;
+  transform:rotate(-45deg) translateY(-8px);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:16px;gap:8px;
+  pointer-events:none;user-select:none;
 }
-.lab{
-  margin-top:10px;            /* push label slightly down from top edge */
-  font-weight:950;
-  letter-spacing:.8px;
-  font-size:18px;
-}
-.subt{
-  margin-top:2px;
-  font-size:12.5px;
-  opacity:.84;
-  line-height:1.25;
-  max-width:16em;
-}
+.lab{font-weight:950;letter-spacing:.8px;font-size:18px;text-shadow:0 0 18px rgba(255,255,255,.16)}
+.sub{font-size:13px;opacity:.84;line-height:1.25;max-width:16em}
 
-/* core */
+/* Core */
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:70px;height:70px;border-radius:22px; /* slightly smaller */
+  width:64px;height:64px;border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
   box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
@@ -211,35 +160,25 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* dock */
+/* Dock (tap-safe wrapper) */
 .dock{
-  position:fixed;
-  left:50%;
-  bottom:calc(12px + env(safe-area-inset-bottom));
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:120;
-  width:min(900px,94vw);
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
+  z-index:90;width:min(900px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
   pointer-events:none;
 }
-.dock .btn{ pointer-events:auto; }
+.dock .btn{pointer-events:auto}
 
-/* mobile */
-@media (max-width:520px){
-  :root{ --R: 132px; }
-  .d{ width:186px; height:186px; }
-  .title{ font-size:46px; }
-  .sub{ font-size:15px; }
-  .headFixed{ top:56px; }
-  .stage{ top:56%; width:min(560px,92vw); height:min(560px,92vw); }
-  .outer{ width:min(560px,92vw); height:min(560px,92vw); }
+/* Mobile */
+@media (max-width:560px){
+  :root{--R:154px}
+  .d{width:172px;height:172px}
+  .stage{top:56%}
+  .inner{transform:rotate(-45deg) translateY(-6px)}
 }
 </style>
 </head>
@@ -251,40 +190,37 @@ a{color:inherit;text-decoration:none}
   <a class="btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
-<div class="headFixed" aria-hidden="true">
-  <p class="kicker">CARDINAL AXIS</p>
-  <h1 class="title">Products</h1>
-  <p class="sub">Four volumes · One catalog spine</p>
+<div class="brand">
+  <div class="name">PRODUCTS</div>
+  <div class="tag">Four volumes · One catalog spine</div>
 </div>
 
-<div class="stage" aria-label="Products diamonds">
-  <div class="outer"></div>
-
+<div class="stage" aria-label="Products catalog">
   <div class="d d-n" id="goEnergy" role="button" tabindex="0" aria-label="Energy">
     <div class="inner">
       <div class="lab">ENERGY</div>
-      <div class="subt">Industrial plasma · Readiness</div>
+      <div class="sub">Industrial plasma · Readiness</div>
     </div>
   </div>
 
   <div class="d d-e" id="goEducation" role="button" tabindex="0" aria-label="Education">
     <div class="inner">
       <div class="lab">EDUCATION</div>
-      <div class="subt">Language · Learning</div>
+      <div class="sub">Language · Learning</div>
     </div>
   </div>
 
   <div class="d d-s" id="goSoftware" role="button" tabindex="0" aria-label="Software">
     <div class="inner">
       <div class="lab">SOFTWARE</div>
-      <div class="subt">Tools · Dashboards</div>
+      <div class="sub">Tools · Dashboards</div>
     </div>
   </div>
 
   <div class="d d-w" id="goCommercial" role="button" tabindex="0" aria-label="Commercial">
     <div class="inner">
       <div class="lab">COMMERCIAL</div>
-      <div class="subt">Deploy · License</div>
+      <div class="sub">Deploy · License</div>
     </div>
   </div>
 
@@ -309,6 +245,7 @@ a{color:inherit;text-decoration:none}
   if(lang!=="en" && lang!=="zh") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
+
   try{
     localStorage.setItem("gd_lang", lang);
     localStorage.setItem("gd_style", style);
@@ -316,7 +253,11 @@ a{color:inherit;text-decoration:none}
   }catch(e){}
 
   function q(){
-    return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
+    var p = new URLSearchParams();
+    p.set("lang", lang);
+    p.set("style", style);
+    p.set("time", time);
+    return "?" + p.toString();
   }
 
   document.getElementById("btnHub").href  = "/home/" + q();
@@ -330,19 +271,18 @@ a{color:inherit;text-decoration:none}
 
   function go(path){ location.href = path + q(); }
 
-  var map = {
-    goEnergy: "/products/energy/",
-    goEducation: "/products/education/",
-    goSoftware: "/products/software/",
-    goCommercial: "/products/commercial/"
-  };
-
-  Object.keys(map).forEach(function(id){
-    var el = document.getElementById(id);
+  [
+    ["goEnergy","/products/energy/"],
+    ["goEducation","/products/education/"],
+    ["goSoftware","/products/software/"],
+    ["goCommercial","/products/commercial/"]
+  ].forEach(function(pair){
+    var el = document.getElementById(pair[0]);
+    var path = pair[1];
     if(!el) return;
-    el.addEventListener("click", function(){ go(map[id]); });
+    el.addEventListener("click", function(){ go(path); });
     el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(map[id]); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }
     });
   });
 })();

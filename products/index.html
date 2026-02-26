@@ -1,18 +1,12 @@
-<!-- TNT — /products/index.html  (PRODUCTS · DEPLOYED SURFACES · GEM STANDARD)
-     FIX:
-       - Restore GEM-standard Products hub (4 diamonds → modal)
-       - Lenses INSIDE modal only:
-           STYLE: Formal/Informal (gd_style)
-           TIME:  CONCEPT / LIVE / ROADMAP (gd_time = origin/now/post)
-       - Language lens works:
-           lang=en => EN only
-           lang=zh => 中文 only
-       - Deterministic state propagation through all nav
-       - Modal content = 4 BUBBLES (paragraphs) — NOT bullets
+
+<!-- TNT — /products/index.html  (PRODUCTS SPINE · 4 PRIMARY VOLUMES · NO LENSES)
      LOCKS:
        - TNT FULL FILE
        - Uses /assets/ui.css + /assets/branch.css only
-       - DOES NOT style html/body background (ui.css owns field)
+       - DO NOT style html/body background
+       - No lenses on this page
+       - Pure jump surface
+       - Symmetrical 4-diamond stage
 -->
 
 <!doctype html>
@@ -20,128 +14,120 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRODUCTS · Cardinal Axis</title>
+<title>PRODUCTS · Catalog Spine</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
 :root{
-  --R:124px;
-  --goldSoft:rgba(212,175,55,.35);
-  --obs1:#070b12;
-  --obs2:#0c1626;
-  --mut:rgba(255,255,255,.84);
-  --mut2:rgba(255,255,255,.68);
+  --R:154px;
 }
 
-/* Top-left controls */
+body{
+  margin:0;
+  color:#fff;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+
+/* Top left */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:90;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  position:fixed;
+  left:16px;
+  top:16px;
+  z-index:90;
+  display:flex;
+  gap:10px;
 }
 
-/* Title pill */
+/* Brand */
 .brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:80;text-align:center;
-  padding:10px 14px;border-radius:999px;
+  position:fixed;
+  left:50%;
+  top:16px;
+  transform:translateX(-50%);
+  z-index:80;
+  text-align:center;
+  padding:10px 14px;
+  border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.16);
   backdrop-filter:blur(8px);
 }
-.brand .t1{font-weight:950;letter-spacing:1.1px;font-size:12px;opacity:.95}
-.brand .t2{margin-top:2px;font-size:11px;letter-spacing:.6px;opacity:.72}
+.brand .name{
+  font-weight:950;
+  letter-spacing:1.2px;
+  font-size:12px;
+  opacity:.95;
+}
+.brand .tag{
+  font-size:11px;
+  letter-spacing:.6px;
+  opacity:.70;
+  margin-top:2px;
+}
 
 /* Stage */
 .stage{
-  position:fixed;left:50%;top:50%;
+  position:fixed;
+  left:50%;
+  top:52%;
   transform:translate(-50%,-50%);
-  width:min(560px,92vw);
-  height:min(560px,92vw);
-  z-index:40;
+  width:min(720px,94vw);
+  height:min(720px,94vw);
+  z-index:60;
+  pointer-events:none;
 }
 
-/* Outer gem diamond */
 .outer{
-  position:absolute;left:50%;top:50%;
-  width:min(560px,92vw);height:min(560px,92vw);
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(680px,92vw);
+  height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
   border:1px solid rgba(255,255,255,.10);
   box-shadow:
-    0 90px 260px rgba(0,0,0,.62),
+    0 90px 260px rgba(0,0,0,.72),
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -50px 90px rgba(0,0,0,.55);
+  opacity:.85;
   pointer-events:none;
-  opacity:.55;
-}
-.outer::after{
-  content:"";
-  position:absolute; inset:0; border-radius:60px;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.14;
 }
 
-/* Category diamonds */
 .d{
-  width:160px;height:160px;
-  position:absolute;left:50%;top:50%;
+  width:190px;
+  height:190px;
+  position:absolute;
+  left:50%;
+  top:50%;
   transform-origin:center;
-  border-radius:26px;
+  border-radius:28px;
   cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
+  pointer-events:auto;
+  touch-action:manipulation;
 
   background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
+    radial-gradient(circle at 35% 22%, rgba(255,255,255,.18), transparent 58%),
+    radial-gradient(circle at 70% 82%, rgba(0,80,255,.18), transparent 62%),
+    linear-gradient(160deg, rgba(12,22,38,.94) 0%, rgba(7,11,18,.96) 72%);
 
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.12);
+
   box-shadow:
-    0 28px 84px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.14),
-    inset 0 -28px 44px rgba(0,0,0,.62);
+    0 30px 90px rgba(0,0,0,.78),
+    inset 0 2px 0 rgba(255,255,255,.10);
 
-  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  transition:all .22s ease;
 }
-.d::before{
-  content:"";
-  position:absolute; inset:0; border-radius:26px; padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.45;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.d::after{
-  content:"";
-  position:absolute; left:12%; right:12%; top:10%; height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
-  opacity:.85; transform:rotate(-10deg);
-  pointer-events:none;
-}
+
 .d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  transform:translate(-50%,-50%) scale(1.04) rotate(45deg);
   box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 18px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-  border-color:rgba(212,175,55,.28);
-}
-.d.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 30px rgba(212,175,55,.40),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
+    0 36px 120px rgba(0,0,0,.90),
+    0 0 22px rgba(212,175,55,.22),
+    inset 0 2px 0 rgba(255,255,255,.12);
 }
 
 .d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
@@ -150,880 +136,129 @@
 .d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
 
 .inner{
-  width:100%; height:100%;
+  width:100%;
+  height:100%;
   transform:rotate(-45deg);
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  text-align:center; padding:16px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:16px;
   gap:10px;
-  pointer-events:none; user-select:none;
+  pointer-events:none;
+  user-select:none;
 }
-.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
-.sub{ font-size:12.5px; opacity:.86; line-height:1.35; max-width:17em; }
 
-/* Core */
+.lab{
+  font-weight:950;
+  letter-spacing:.8px;
+  font-size:18px;
+}
+
+.sub{
+  font-size:13px;
+  opacity:.78;
+  line-height:1.3;
+  max-width:18em;
+}
+
 .core{
-  position:absolute;left:50%;top:50%;
+  position:absolute;
+  left:50%;
+  top:50%;
   transform:translate(-50%,-50%);
-  width:64px;height:64px;border-radius:18px;
+  width:74px;
+  height:74px;
+  border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid; place-items:center;
-  font-weight:950; letter-spacing:.5px;
+  box-shadow:
+    0 18px 44px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;
+  place-items:center;
+  font-weight:950;
+  letter-spacing:.5px;
   opacity:.92;
   pointer-events:none;
 }
 
-/* Bottom dock */
+/* Dock */
 .dock{
-  position:fixed;left:50%;
+  position:fixed;
+  left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:90;
   width:min(900px,94vw);
-  display:flex;justify-content:center;
-  gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:10px 12px;
+  border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.20);
   backdrop-filter:blur(8px);
 }
 
-/* Modal */
-.bd{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(10px);
-  display:none;
-}
-.bd.show{display:block;}
-.modal{
-  position:fixed;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(1020px,94vw);
-  max-height:88vh;
-  display:none;
-  z-index:210;
-}
-.modal.show{display:block;}
-.shell{
-  height:88vh;
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
-    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
-    linear-gradient(160deg, rgba(17,22,28,.90), rgba(11,15,20,.94));
-  box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;
-  display:flex;flex-direction:column;
-  position:relative;
-}
-.shell::before{
-  content:"";
-  position:absolute;left:50%;top:58%;
-  width:min(980px,94vw);height:min(980px,94vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:70px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.16), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);
-  box-shadow:
-    0 100px 280px rgba(0,0,0,.72),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -55px 100px rgba(0,0,0,.55);
-  opacity:.55;
-  pointer-events:none;
-}
-.mhead{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative;z-index:2;
-}
-.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
-.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
-
-.lensbar{
-  display:flex;gap:10px;flex-wrap:wrap;
-  align-items:center;justify-content:center;
-  padding:10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative;z-index:2;
-}
-.chip{
-  padding:10px 16px;border-radius:999px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
-}
-.chip.active{
-  border-color:rgba(212,175,55,.35);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
-}
-
-.mbody{
-  padding:14px 16px 18px;
-  overflow:auto;-webkit-overflow-scrolling:touch;
-  flex:1 1 auto;
-  position:relative;z-index:2;
-}
-
-/* 4 bubbles (paragraphs, not bullets) */
-.grid{display:grid;gap:14px}
-@media (min-width:920px){ .grid{grid-template-columns:1fr 1fr} }
-.bubble{
-  padding:16px 18px;border-radius:22px;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
-  position:relative;
-}
-.bubble::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
-.bubble p{margin:0;color:var(--mut);line-height:1.6}
-.small{margin-top:10px;color:var(--mut2);font-size:12.5px;line-height:1.45}
-
-.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
-.sbtn{
-  padding:12px 18px;border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:#fff;border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
-}
-.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
-
-@media (max-width:520px){
-  :root{ --R: 116px; }
-  .stage{ width:min(520px,92vw); height:min(520px,92vw); }
-  .outer{ width:min(520px,92vw); height:min(520px,92vw); }
-  .core{ width:58px; height:58px; }
-  .shell{ height:90vh; }
-}
 </style>
 </head>
 
 <body>
 
 <div class="top-left">
-  <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
-  <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
+  <a class="crp-btn" href="/home/">HUB</a>
+  <a class="crp-btn" href="/door/">EXIT</a>
 </div>
 
 <div class="brand">
-  <div class="t1" id="brandName">CARDINAL AXIS</div>
-  <div class="t2" id="brandTag">PRODUCTS · DEPLOYED SURFACES</div>
+  <div class="name">PRODUCTS</div>
+  <div class="tag">Four volumes · One catalog spine</div>
 </div>
 
-<div class="stage" aria-label="Products category diamond">
+<div class="stage">
   <div class="outer"></div>
 
-  <div class="d d-n" id="software" role="button" tabindex="0" aria-label="Software">
+  <div class="d d-n" onclick="location.href='/products/energy/'">
     <div class="inner">
-      <div class="lab" id="labN">SOFTWARE</div>
-      <div class="sub" id="subN">Hub · Instruments · Registry</div>
+      <div class="lab">ENERGY</div>
+      <div class="sub">Industrial plasma substitution · Gated fusion readiness</div>
     </div>
   </div>
 
-  <div class="d d-e" id="commercial" role="button" tabindex="0" aria-label="Commercial">
+  <div class="d d-e" onclick="location.href='/products/education/'">
     <div class="inner">
-      <div class="lab" id="labE">COMMERCIAL</div>
-      <div class="sub" id="subE">Pilots · Licensing · Rollouts</div>
+      <div class="lab">EDUCATION</div>
+      <div class="sub">Language compression · Traversal learning systems</div>
     </div>
   </div>
 
-  <div class="d d-s" id="energy" role="button" tabindex="0" aria-label="Energy">
+  <div class="d d-s" onclick="location.href='/products/software/'">
     <div class="inner">
-      <div class="lab" id="labS">ENERGY</div>
-      <div class="sub" id="subS">Conversion Chains</div>
+      <div class="lab">SOFTWARE</div>
+      <div class="sub">Instrumentation · Dashboards · Execution engines</div>
     </div>
   </div>
 
-  <div class="d d-w" id="education" role="button" tabindex="0" aria-label="Education">
+  <div class="d d-w" onclick="location.href='/products/commercial/'">
     <div class="inner">
-      <div class="lab" id="labW">EDUCATION</div>
-      <div class="sub" id="subW">Traversal Programs</div>
+      <div class="lab">COMMERCIAL</div>
+      <div class="sub">Deployment packaging · Licensing · Phase rollout</div>
     </div>
   </div>
 
   <div class="core">◆</div>
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
-  <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="crp-btn" id="dockGauges" href="/gauges/">GAUGES</a>
+<nav class="dock">
+  <a class="crp-btn" href="/index.html">TERMINAL</a>
+  <a class="crp-btn active" href="/products/">PRODUCTS</a>
+  <a class="crp-btn" href="/laws/">LAWS</a>
+  <a class="crp-btn" href="/gauges/">GAUGES</a>
+  <a class="crp-btn" href="/links/">LINKS</a>
 </nav>
-
-<div class="bd" id="bd"></div>
-
-<div class="modal" id="modal" role="dialog" aria-modal="true">
-  <div class="shell">
-    <div class="mhead">
-      <h3 class="mtitle" id="mTitle">DETAIL</h3>
-      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
-    </div>
-
-    <div class="lensbar">
-      <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>
-      <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>
-      <button class="chip" data-time="now" id="chipLive" type="button">LIVE</button>
-      <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
-    </div>
-
-    <div class="mbody">
-      <div class="grid">
-        <div class="bubble"><h4 id="h1"></h4><p id="p1"></p><div class="small" id="s1"></div></div>
-        <div class="bubble"><h4 id="h2"></h4><p id="p2"></p><div class="small" id="s2"></div></div>
-        <div class="bubble"><h4 id="h3"></h4><p id="p3"></p><div class="small" id="s3"></div></div>
-        <div class="bubble"><h4 id="h4"></h4><p id="p4"></p><div class="small" id="s4"></div></div>
-      </div>
-
-      <div class="mact">
-        <button class="sbtn" id="mReturn" type="button">RETURN</button>
-        <a class="sbtn" id="mGoCategory" href="/products/">OPEN CATEGORY</a>
-        <a class="sbtn" id="mGoHub" href="/home/">GO HUB</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-(function(){
-  // URL → STATE HYDRATION (canonical keys only)
-  var qs = new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  if(lang!=="en" && lang!=="zh") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time); }catch(e){}
-
-  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
-
-  function setLinks(){
-    var s=q();
-    document.getElementById("btnHub").href="/home/?"+s;
-    document.getElementById("btnExit").href="/door/?"+s;
-    document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
-    document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockGauges").href="/gauges/?"+s;
-    document.getElementById("mGoHub").href="/home/?"+s;
-
-    // sub-hubs (safe even if not created yet)
-    document.getElementById("software").dataset.href="/products/software/?"+s;
-    document.getElementById("commercial").dataset.href="/products/commercial/?"+s;
-    document.getElementById("energy").dataset.href="/products/energy/?"+s;
-    document.getElementById("education").dataset.href="/products/education/?"+s;
-  }
-  setLinks();
-
-  var UI = {
-    en:{
-      brand:"CARDINAL AXIS",
-      tag:"PRODUCTS · DEPLOYED SURFACES",
-      lens:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",live:"LIVE",roadmap:"ROADMAP"},
-      cats:{
-        software:{t:"SOFTWARE",s:"Hub · Instruments · Registry"},
-        commercial:{t:"COMMERCIAL",s:"Pilots · Licensing · Rollouts"},
-        energy:{t:"ENERGY",s:"Conversion Chains"},
-        education:{t:"EDUCATION",s:"Traversal Programs"}
-      },
-      btn:{return:"RETURN",open:"OPEN CATEGORY",hub:"GO HUB"},
-      stylePrefix:"STYLE: "
-    },
-    zh:{
-      brand:"枢轴罗盘",
-      tag:"产品 · 已部署执行面",
-      lens:{formal:"正式",informal:"直接",concept:"概念",live:"上线",roadmap:"路线图"},
-      cats:{
-        software:{t:"软件",s:"枢纽 · 仪器 · 注册表"},
-        commercial:{t:"商业",s:"试点 · 许可 · 上线"},
-        energy:{t:"能源",s:"转换链"},
-        education:{t:"教育",s:"遍历课程"}
-      },
-      btn:{return:"返回",open:"打开分类",hub:"去枢纽"},
-      stylePrefix:"风格："
-    }
-  };
-  var pack = (lang==="zh") ? UI.zh : UI.en;
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
-
-  document.getElementById("brandName").textContent = pack.brand;
-  document.getElementById("brandTag").textContent = pack.tag;
-
-  document.getElementById("labN").textContent = pack.cats.software.t;
-  document.getElementById("subN").textContent = pack.cats.software.s;
-  document.getElementById("labE").textContent = pack.cats.commercial.t;
-  document.getElementById("subE").textContent = pack.cats.commercial.s;
-  document.getElementById("labS").textContent = pack.cats.energy.t;
-  document.getElementById("subS").textContent = pack.cats.energy.s;
-  document.getElementById("labW").textContent = pack.cats.education.t;
-  document.getElementById("subW").textContent = pack.cats.education.s;
-
-  document.getElementById("mReturn").textContent = pack.btn.return;
-  document.getElementById("mGoCategory").textContent = pack.btn.open;
-  document.getElementById("mGoHub").textContent = pack.btn.hub;
-
-  var bd=document.getElementById("bd");
-  var modal=document.getElementById("modal");
-  var mClose=document.getElementById("mClose");
-  var mTitle=document.getElementById("mTitle");
-
-  var styleChip=document.getElementById("styleChip");
-  var chipConcept=document.getElementById("chipConcept");
-  var chipLive=document.getElementById("chipLive");
-  var chipRoadmap=document.getElementById("chipRoadmap");
-
-  var h1=document.getElementById("h1"),p1=document.getElementById("p1"),s1=document.getElementById("s1");
-  var h2=document.getElementById("h2"),p2=document.getElementById("p2"),s2=document.getElementById("s2");
-  var h3=document.getElementById("h3"),p3=document.getElementById("p3"),s3=document.getElementById("s3");
-  var h4=document.getElementById("h4"),p4=document.getElementById("p4"),s4=document.getElementById("s4");
-
-  function setLensLabels(){
-    styleChip.textContent = pack.stylePrefix + (style==="formal" ? pack.lens.formal : pack.lens.informal);
-    chipConcept.textContent = pack.lens.concept;
-    chipLive.textContent = pack.lens.live;
-    chipRoadmap.textContent = pack.lens.roadmap;
-
-    chipConcept.classList.toggle("active", time==="origin");
-    chipLive.classList.toggle("active", time==="now");
-    chipRoadmap.classList.toggle("active", time==="post");
-  }
-  setLensLabels();
-
-  var CONTENT_EN = {
-    software:{
-      origin:{
-        formal:{
-          title:"SOFTWARE · Concept",
-          b:[
-            {h:"Product surfaces",p:"Software is the delivery layer: hub navigation, instrument panels, and registry views. It turns structure into something a person can use.",s:"Product = stable interface + stable meaning."},
-            {h:"Catalog",p:"Core surfaces include: HUB (navigation), PRODUCTS (execution pages), LAWS (definitions), GAUGES (measurement views), and LINK surfaces (anchors).",s:"One contract across all surfaces."},
-            {h:"How it works",p:"You tap a node, read four dense bubbles, switch lenses inside the modal, and return without losing state.",s:"Traversal replaces linear reading."},
-            {h:"Why it matters",p:"Consistency reduces confusion. It lowers cognitive friction and increases learning speed under pressure.",s:"Stable UX is a safety feature."}
-          ]
-        },
-        informal:{
-          title:"SOFTWARE · Concept",
-          b:[
-            {h:"What it is",p:"Software surfaces you can navigate.",s:"Not a doc pile."},
-            {h:"What’s inside",p:"Hub, products, laws, gauges, links.",s:"Same contract."},
-            {h:"How it feels",p:"Tap, read, switch lens, return.",s:"You stay oriented."},
-            {h:"Why",p:"Less confusion, more clarity.",s:"That’s the win."}
-          ]
-        }
-      },
-      now:{
-        formal:{
-          title:"SOFTWARE · Live",
-          b:[
-            {h:"Live status",p:"The live build already behaves consistently: gem pages, centered modals, deterministic propagation of lang/style/time.",s:"Stable before deep."},
-            {h:"What’s live",p:"Navigation, lens semantics, and routing are stable. Content expands inside fixed nodes without breaking the map.",s:"Fill-first discipline."},
-            {h:"How to use",p:"Use Concept/Live/Roadmap to switch framing (definition vs current status vs next steps) while staying on one node.",s:"Lens changes must change meaning."},
-            {h:"Launch posture",p:"Consumer-legible and neutral: no funnels, no capture, no pressure language. The site is a runnable surface.",s:"Clarity over hype."}
-          ]
-        },
-        informal:{
-          title:"SOFTWARE · Live",
-          b:[
-            {h:"Live",p:"The product experience is stable.",s:"Safe."},
-            {h:"What’s live",p:"Routes + lenses + modals.",s:"Predictable."},
-            {h:"Use it",p:"Switch lenses inside the modal.",s:"Real text changes."},
-            {h:"Posture",p:"Clear and neutral.",s:"No funnel."}
-          ]
-        }
-      },
-      post:{
-        formal:{
-          title:"SOFTWARE · Roadmap",
-          b:[
-            {h:"More depth",p:"Dashboards, exports, and replayable change histories that produce shareable artifacts.",s:"Evidence bundles."},
-            {h:"Same contract",p:"The UI contract remains fixed: same keys, same routing, same modal grammar.",s:"No UI drift."},
-            {h:"Scale method",p:"Clone the map across domains and fill content; do not invent new paradigms per feature.",s:"Scale by replication."},
-            {h:"End-state",p:"A coherent reference platform people can use daily to understand and communicate complex systems quickly.",s:"Usable clarity at scale."}
-          ]
-        },
-        informal:{
-          title:"SOFTWARE · Roadmap",
-          b:[
-            {h:"More outputs",p:"Dashboards and exports.",s:"Same map."},
-            {h:"Same rules",p:"No new keys, no drift.",s:"Locked."},
-            {h:"More domains",p:"Clone structure, fill content.",s:"Repeatable."},
-            {h:"Result",p:"Reference platform.",s:"Reliable."}
-          ]
-        }
-      }
-    },
-
-    commercial:{
-      origin:{
-        formal:{
-          title:"COMMERCIAL · Concept",
-          b:[
-            {h:"What it is",p:"Commercial packages the platform into deployments and licenses without altering integrity constraints.",s:"Commercial serves structure."},
-            {h:"Offer types",p:"Pilot deployment, rollout kit, licensing (by surface), and partner integration (by template).",s:"Clear scope boundaries."},
-            {h:"Adoption model",p:"Pilot → validate → replicate. Adoption is measured by stability and comprehension, not persuasion.",s:"Repeatability is the method."},
-            {h:"Why it matters",p:"Trust is the product: stable UI, bounded claims, and consistent outputs across teams.",s:"No hype dependency."}
-          ]
-        },
-        informal:{
-          title:"COMMERCIAL · Concept",
-          b:[
-            {h:"What it is",p:"Clean deployments and licensing.",s:"No funnel."},
-            {h:"Offers",p:"Pilots, rollouts, licenses, partners.",s:"Clear scope."},
-            {h:"How it scales",p:"Pilot, prove, repeat.",s:"No chaos."},
-            {h:"Why",p:"Trust beats hype.",s:"Always."}
-          ]
-        }
-      },
-      now:{
-        formal:{
-          title:"COMMERCIAL · Live",
-          b:[
-            {h:"Live posture",p:"Commercial copy stays consumer-legible and bounded. It explains what exists and what does not exist.",s:"No manipulation."},
-            {h:"Rollout discipline",p:"Deployments reuse the same map and lens semantics so adoption cannot fragment into custom variants.",s:"No drift."},
-            {h:"What can be requested",p:"A pilot, a rollout kit, or a license scope. All remain consistent with the platform contract.",s:"Bounded delivery."},
-            {h:"Launch readiness",p:"Public surfaces stay neutral and readable; commercial decisions remain separate from content truth.",s:"Integrity first."}
-          ]
-        },
-        informal:{
-          title:"COMMERCIAL · Live",
-          b:[
-            {h:"Now",p:"Clean and readable.",s:"No funnel."},
-            {h:"Rollout",p:"Same map, same rules.",s:"No drift."},
-            {h:"Requests",p:"Pilot, kit, or license scope.",s:"Simple."},
-            {h:"Posture",p:"Clear and neutral.",s:"Trust-first."}
-          ]
-        }
-      },
-      post:{
-        formal:{
-          title:"COMMERCIAL · Roadmap",
-          b:[
-            {h:"Partner kits",p:"Templates and playbooks that preserve integrity while scaling adoption.",s:"Scale safely."},
-            {h:"Licensing clarity",p:"Licenses map to surfaces and scopes, with explicit renewal and revocation policies.",s:"No ambiguity."},
-            {h:"Governance guardrails",p:"Commercial cannot override constraints. Violations are refused and logged.",s:"Contract protection."},
-            {h:"End-state",p:"Enterprise adoption without fragmentation: stable surface, stable meaning, stable operation.",s:"Scale without collapse."}
-          ]
-        },
-        informal:{
-          title:"COMMERCIAL · Roadmap",
-          b:[
-            {h:"Kits",p:"Partner templates.",s:"Stable."},
-            {h:"Licenses",p:"Clear scope.",s:"No confusion."},
-            {h:"Guardrails",p:"No rule weakening.",s:"Ever."},
-            {h:"Result",p:"Enterprise adoption.",s:"Clean."}
-          ]
-        }
-      }
-    },
-
-    energy:{
-      origin:{
-        formal:{
-          title:"ENERGY · Concept",
-          b:[
-            {h:"What it is",p:"Energy is modeled as conversion chains: input → stage → output with boundaries and measurable signals.",s:"Chain-first."},
-            {h:"Core direction",p:"Solar capture → plasma formation → controlled pathways toward fusion-grade conditions.",s:"Definitions before claims."},
-            {h:"How it’s presented",p:"Consumer-legible summaries first, then deeper technical layers without changing definitions.",s:"Same lens contract."},
-            {h:"Why it matters",p:"Clear pathways accelerate collaboration and reduce wasted effort.",s:"Clarity is leverage."}
-          ]
-        },
-        informal:{
-          title:"ENERGY · Concept",
-          b:[
-            {h:"What it is",p:"A clear conversion chain.",s:"Stages."},
-            {h:"Direction",p:"Solar → plasma → fusion path.",s:"Legible."},
-            {h:"How to read",p:"Enter any stage and return.",s:"No lost context."},
-            {h:"Why",p:"Clarity speeds progress.",s:"Less waste."}
-          ]
-        }
-      },
-      now:{
-        formal:{
-          title:"ENERGY · Live",
-          b:[
-            {h:"Live focus",p:"Energy content is being organized into stable stages with explicit boundaries.",s:"Public-safe."},
-            {h:"What’s included",p:"Stage definitions, constraint lists, and “what to measure” indicators.",s:"Measurable direction."},
-            {h:"How you explore",p:"Switch Concept/Live/Roadmap to separate definition, current build status, and future expansion.",s:"No moving targets."},
-            {h:"Launch posture",p:"Bounded language only: what we mean, what we do not mean, and what would count as evidence.",s:"Credibility protection."}
-          ]
-        },
-        informal:{
-          title:"ENERGY · Live",
-          b:[
-            {h:"Now",p:"Stages + boundaries.",s:"Clear."},
-            {h:"Included",p:"Definitions + constraints + signals.",s:"Real."},
-            {h:"Explore",p:"Lens separates definition vs status.",s:"No drift."},
-            {h:"Tone",p:"Grounded.",s:"No hype."}
-          ]
-        }
-      },
-      post:{
-        formal:{
-          title:"ENERGY · Roadmap",
-          b:[
-            {h:"Depth expansion",p:"Deeper stage pages and validation protocols that can be debated cleanly.",s:"Testable."},
-            {h:"Signal definitions",p:"Thresholds and stability indicators per stage.",s:"Measurable."},
-            {h:"Collaboration surface",p:"Shared definitions and shared map for partners.",s:"Less arguing."},
-            {h:"End-state",p:"A structured energy knowledge product aligned with the platform contract.",s:"Legible scale."}
-          ]
-        },
-        informal:{
-          title:"ENERGY · Roadmap",
-          b:[
-            {h:"More depth",p:"More pages per stage.",s:"Same map."},
-            {h:"More measurement",p:"Signals and thresholds.",s:"Testable."},
-            {h:"More partners",p:"Shared definitions.",s:"Faster."},
-            {h:"Result",p:"Energy surface.",s:"Coherent."}
-          ]
-        }
-      }
-    },
-
-    education:{
-      origin:{
-        formal:{
-          title:"EDUCATION · Concept",
-          b:[
-            {h:"What it is",p:"Education is traversal learning: a structured map where learners enter by need, practice immediately, and return safely.",s:"Map-based."},
-            {h:"Flagship",p:"Clean English Core (1,001): constrained word-set for fast functional English.",s:"Practice-first."},
-            {h:"Levels",p:"Four capability bands (~250 each) with drills that force real usage.",s:"Not a rigid ladder."},
-            {h:"Why it works",p:"Learners always know where they are and what to do next.",s:"Clarity → momentum."}
-          ]
-        },
-        informal:{
-          title:"EDUCATION · Concept",
-          b:[
-            {h:"What it is",p:"A learning map you can use.",s:"Tap → practice."},
-            {h:"Program",p:"1001 English core.",s:"Fast."},
-            {h:"Levels",p:"Four bands.",s:"Simple."},
-            {h:"Why",p:"No getting lost.",s:"Next step clear."}
-          ]
-        }
-      },
-      now:{
-        formal:{
-          title:"EDUCATION · Live",
-          b:[
-            {h:"Live focus",p:"Education is being built as a launchable consumer experience with stable navigation and consistent modals.",s:"Usable now."},
-            {h:"What’s included",p:"Programs, drills, maps, and checkpoints tied to structure.",s:"Fill-first rule."},
-            {h:"How it’s used",p:"Pick a level, practice a slice, return to the map.",s:"Looped practice."},
-            {h:"Launch posture",p:"Consumer-legible, bilingual-supported via language lens, and non-capture.",s:"No academic fog."}
-          ]
-        },
-        informal:{
-          title:"EDUCATION · Live",
-          b:[
-            {h:"Now",p:"Built like a real product.",s:"Clean."},
-            {h:"Included",p:"Programs + drills + checkpoints.",s:"Clear."},
-            {h:"Use it",p:"Practice, return, repeat.",s:"Loop."},
-            {h:"Ready",p:"Readable and neutral.",s:"Trust-first."}
-          ]
-        }
-      },
-      post:{
-        formal:{
-          title:"EDUCATION · Roadmap",
-          b:[
-            {h:"More tracks",p:"Traversal method courses, facilitator training, and specialized curricula.",s:"Same contract."},
-            {h:"Portable materials",p:"PDF packs, practice cards, audio prompts, facilitator scripts.",s:"Shareable."},
-            {h:"Verification",p:"Optional certification tied to observable outputs.",s:"Bounded proof."},
-            {h:"End-state",p:"A consumer learning ecosystem that scales without drift.",s:"Traversal at scale."}
-          ]
-        },
-        informal:{
-          title:"EDUCATION · Roadmap",
-          b:[
-            {h:"More tracks",p:"More learning paths.",s:"Same UI."},
-            {h:"More materials",p:"PDF + cards + audio.",s:"Shareable."},
-            {h:"Optional proof",p:"Checkpoint badges.",s:"Clean."},
-            {h:"Result",p:"Full ecosystem.",s:"Stable."}
-          ]
-        }
-      }
-    }
-  };
-
-  var CONTENT_ZH = {
-    software:{
-      origin:{
-        formal:{title:"软件 · 概念",b:[
-          {h:"产品面",p:"软件=执行面：枢纽导航、仪器面、注册表视图。目标是把结构变成可用体验。",s:"产品=稳定界面+稳定含义。"},
-          {h:"目录",p:"核心面包括：HUB（枢纽）、PRODUCTS（产品执行面）、LAWS（定义法则）、GAUGES（测量视图）、LINKS（锚点）。",s:"同一契约贯穿全站。"},
-          {h:"怎么用",p:"点节点→读四段→在模态里切镜头→安全返回，不丢状态。",s:"遍历替代线性阅读。"},
-          {h:"价值",p:"一致性降低混乱，降低认知摩擦，提高压力下学习速度。",s:"稳定UX是安全特性。"}
-        ]},
-        informal:{title:"软件 · 概念",b:[
-          {h:"它是什么",p:"可导航的产品面。",s:"不是文档堆。"},
-          {h:"包含什么",p:"枢纽、产品、法则、仪表、链接。",s:"同一契约。"},
-          {h:"感觉如何",p:"点开、阅读、切镜头、返回。",s:"不迷路。"},
-          {h:"为什么",p:"更少混乱，更多清晰。",s:"这就是价值。"}
-        ]}
-      },
-      now:{
-        formal:{title:"软件 · 上线",b:[
-          {h:"上线状态",p:"当前已稳定：宝石页、居中模态、语言/风格/时间层确定传递。",s:"先稳定，再加深度。"},
-          {h:"已上线内容",p:"导航与镜头语义稳定；内容在固定节点内扩展，不破地图。",s:"先填满规则。"},
-          {h:"怎么探索",p:"在模态切换概念/上线/路线图：定义/现况/下一步分开。",s:"镜头切换必须改含义。"},
-          {h:"姿态",p:"大众可读且中立：无漏斗、无捕获、无压力语言。",s:"清晰胜过噱头。"}
-        ]},
-        informal:{title:"软件 · 上线",b:[
-          {h:"现在",p:"体验已经稳定。",s:"可安心浏览。"},
-          {h:"已上线",p:"路线+镜头+模态。",s:"可预测。"},
-          {h:"用法",p:"在模态里切镜头。",s:"文字真变。"},
-          {h:"姿态",p:"清晰且中立。",s:"无漏斗。"}
-        ]}
-      },
-      post:{
-        formal:{title:"软件 · 路线图",b:[
-          {h:"更多输出",p:"仪表板、导出、可回放变更历史，产出可分享证据面。",s:"证据包。"},
-          {h:"同一契约",p:"契约固定：同键、同路由、同模态语法。",s:"不漂移。"},
-          {h:"扩展方法",p:"跨领域复制地图并填内容，不为每个功能重做UX。",s:"复制扩展。"},
-          {h:"终态",p:"一个可日常使用的参考平台：快速理解、快速沟通。",s:"清晰规模化。"}
-        ]},
-        informal:{title:"软件 · 路线图",b:[
-          {h:"更多输出",p:"仪表板与导出。",s:"同地图。"},
-          {h:"同规则",p:"不加新键，不改契约。",s:"锁定。"},
-          {h:"更多领域",p:"复制结构，填内容。",s:"可重复。"},
-          {h:"结果",p:"可靠参考平台。",s:"稳定。"}
-        ]}
-      }
-    },
-
-    commercial:{
-      origin:{
-        formal:{title:"商业 · 概念",b:[
-          {h:"它是什么",p:"商业层=采纳层：部署与许可，但不改变完整性约束。",s:"商业服务结构。"},
-          {h:"提供形式",p:"试点部署、上线套件、按执行面许可、合作集成。",s:"范围清楚。"},
-          {h:"采纳模型",p:"试点→验证→复制。采纳按稳定与理解度衡量，不靠推销。",s:"可重复=方法。"},
-          {h:"价值",p:"信任就是产品：稳定UI、有界表述、一致输出。",s:"不依赖噱头。"}
-        ]},
-        informal:{title:"商业 · 概念",b:[
-          {h:"它是什么",p:"干净的部署与许可。",s:"无漏斗。"},
-          {h:"提供",p:"试点、上线、许可、合作。",s:"范围清楚。"},
-          {h:"扩展",p:"试点、证明、复制。",s:"不乱做。"},
-          {h:"为什么",p:"信任胜过噱头。",s:"永远。"}
-        ]}
-      },
-      now:{
-        formal:{title:"商业 · 上线",b:[
-          {h:"当前姿态",p:"商业文案保持大众可读与有界：说明存在什么、不存在什么。",s:"不操控。"},
-          {h:"上线纪律",p:"部署复用同一地图与镜头语义，避免拆成无数定制。",s:"不漂移。"},
-          {h:"可请求内容",p:"试点、上线套件或许可范围。全部遵守平台契约。",s:"有界交付。"},
-          {h:"公开要求",p:"商业决策与内容真值分离：内容不为商业而变。",s:"完整性第一。"}
-        ]},
-        informal:{title:"商业 · 上线",b:[
-          {h:"现在",p:"干净可读。",s:"无漏斗。"},
-          {h:"纪律",p:"同地图同规则。",s:"不漂移。"},
-          {h:"请求",p:"试点/套件/许可范围。",s:"简单。"},
-          {h:"要求",p:"清晰且中立。",s:"信任优先。"}
-        ]}
-      },
-      post:{
-        formal:{title:"商业 · 路线图",b:[
-          {h:"合作套件",p:"模板与剧本在扩展采纳时保持完整性。",s:"安全扩展。"},
-          {h:"许可清晰",p:"许可绑定执行面与范围，续期/撤销明确。",s:"不模糊。"},
-          {h:"治理护栏",p:"商业不能覆盖约束；违规请求拒绝并记录。",s:"保护契约。"},
-          {h:"终态",p:"企业采纳但不碎裂：稳定面、稳定含义、稳定运转。",s:"规模不崩。"}
-        ]},
-        informal:{title:"商业 · 路线图",b:[
-          {h:"套件",p:"合作模板。",s:"稳定。"},
-          {h:"许可",p:"范围清楚。",s:"不混乱。"},
-          {h:"护栏",p:"不弱化规则。",s:"永远。"},
-          {h:"结果",p:"企业采纳不漂移。",s:"干净。"}
-        ]}
-      }
-    },
-
-    energy:{
-      origin:{
-        formal:{title:"能源 · 概念",b:[
-          {h:"它是什么",p:"能源=转换链产品线：输入→阶段→输出，带边界与可测信号。",s:"链优先。"},
-          {h:"核心方向",p:"太阳捕获→等离子形成→受控路径逼近聚变条件。",s:"先定义再谈结论。"},
-          {h:"表达方式",p:"阶段映射为可进入/可返回结构：从任意阶段开始理解。",s:"遍历降低混乱。"},
-          {h:"价值",p:"链清晰→合作变快→浪费变少。",s:"清晰就是加速器。"}
-        ]},
-        informal:{title:"能源 · 概念",b:[
-          {h:"它是什么",p:"清晰转换链。",s:"阶段。"},
-          {h:"方向",p:"太阳→等离子→聚变路径。",s:"可读。"},
-          {h:"怎么读",p:"进阶段，理解，再返回。",s:"不迷路。"},
-          {h:"为什么",p:"清晰让进展更快。",s:"更少浪费。"}
-        ]}
-      },
-      now:{
-        formal:{title:"能源 · 上线",b:[
-          {h:"上线重点",p:"按阶段组织内容：术语一致、边界明确。",s:"公开安全。"},
-          {h:"包含内容",p:"阶段定义、约束列表、可测信号。",s:"方向可测。"},
-          {h:"怎么探索",p:"镜头分离定义/现况/路线图，不换定义。",s:"不移动目标。"},
-          {h:"姿态",p:"有界语言：说明已知/未知与证据标准。",s:"保护可信度。"}
-        ]},
-        informal:{title:"能源 · 上线",b:[
-          {h:"现在",p:"阶段+边界。",s:"清楚。"},
-          {h:"包含",p:"定义+约束+信号。",s:"真实。"},
-          {h:"探索",p:"切镜头看定义与现况。",s:"不漂移。"},
-          {h:"语气",p:"稳且有界。",s:"不吹。"}
-        ]}
-      },
-      post:{
-        formal:{title:"能源 · 路线图",b:[
-          {h:"更深内容",p:"更深阶段页与验证协议，可被干净讨论。",s:"可测试。"},
-          {h:"信号标准",p:"每阶段阈值与稳定指标。",s:"可测。"},
-          {h:"合作面",p:"共享定义与共享地图，减少争论。",s:"更快。"},
-          {h:"终态",p:"结构化能源知识产品与平台契约一致。",s:"可读规模化。"}
-        ]},
-        informal:{title:"能源 · 路线图",b:[
-          {h:"更多深度",p:"每阶段更多页。",s:"同结构。"},
-          {h:"更多测量",p:"信号与阈值。",s:"可测试。"},
-          {h:"更多合作",p:"共享定义。",s:"更快。"},
-          {h:"结果",p:"能源成为产品面。",s:"一致。"}
-        ]}
-      }
-    },
-
-    education:{
-      origin:{
-        formal:{title:"教育 · 概念",b:[
-          {h:"它是什么",p:"教育=遍历学习：按需进入、立刻练习、安全返回。",s:"地图式学习。"},
-          {h:"旗舰项目",p:"Clean English Core（1001）：约束词表，快速功能性英语。",s:"练习优先。"},
-          {h:"级别结构",p:"四个能力带（约250/级），强调真实输出。",s:"不是死梯子。"},
-          {h:"为什么有效",p:"永远知道位置与下一步。",s:"清晰→动力。"}
-        ]},
-        informal:{title:"教育 · 概念",b:[
-          {h:"它是什么",p:"可导航学习产品。",s:"点→练。"},
-          {h:"项目",p:"1001核心英语。",s:"快。"},
-          {h:"级别",p:"四级。",s:"简单。"},
-          {h:"为什么",p:"不迷路。",s:"下一步清楚。"}
-        ]}
-      },
-      now:{
-        formal:{title:"教育 · 上线",b:[
-          {h:"上线重点",p:"教育作为可上线体验构建：稳定导航与一致模态。",s:"现在可用。"},
-          {h:"包含内容",p:"课程/训练/地图/检查点与结构绑定。",s:"先填满。"},
-          {h:"怎么使用",p:"选级别→练一小块→回到地图。",s:"循环练习。"},
-          {h:"姿态",p:"大众可读、中立、无捕获。",s:"无学术雾。"}
-        ]},
-        informal:{title:"教育 · 上线",b:[
-          {h:"现在",p:"像产品一样做教育。",s:"干净。"},
-          {h:"包含",p:"课程+训练+检查点。",s:"清楚。"},
-          {h:"用法",p:"练、回、重复。",s:"循环。"},
-          {h:"姿态",p:"可读且中立。",s:"信任优先。"}
-        ]}
-      },
-      post:{
-        formal:{title:"教育 · 路线图",b:[
-          {h:"更多课程线",p:"方法课、带教者训练、专项课程。",s:"同契约。"},
-          {h:"可携带材料",p:"PDF包、练习卡、音频提示与脚本。",s:"可分享。"},
-          {h:"可选验证",p:"绑定可观察输出与检查点。",s:"有界证明。"},
-          {h:"终态",p:"一个不漂移的学习生态。",s:"遍历规模化。"}
-        ]},
-        informal:{title:"教育 · 路线图",b:[
-          {h:"更多课程",p:"更多学习路径。",s:"同UI。"},
-          {h:"更多材料",p:"PDF+卡片+音频。",s:"可分享。"},
-          {h:"可选证明",p:"检查点徽章。",s:"干净。"},
-          {h:"结果",p:"完整生态。",s:"稳定。"}
-        ]}
-      }
-    }
-  };
-
-  function persist(){ try{ localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time);}catch(e){} }
-
-  function setLensLabels(){
-    styleChip.textContent = pack.stylePrefix + (style==="formal" ? pack.lens.formal : pack.lens.informal);
-    chipConcept.textContent = pack.lens.concept;
-    chipLive.textContent = pack.lens.live;
-    chipRoadmap.textContent = pack.lens.roadmap;
-    chipConcept.classList.toggle("active", time==="origin");
-    chipLive.classList.toggle("active", time==="now");
-    chipRoadmap.classList.toggle("active", time==="post");
-  }
-  setLensLabels();
-
-  function view(cat){
-    var V = (lang==="zh") ? CONTENT_ZH : CONTENT_EN;
-    return V[cat][time][style];
-  }
-
-  var activeCat=null;
-
-  function setActiveDiamond(id){
-    ["software","commercial","energy","education"].forEach(function(x){
-      document.getElementById(x).classList.toggle("active", x===id);
-    });
-  }
-
-  function render(){
-    persist();
-    setLinks();
-    setLensLabels();
-
-    var v = view(activeCat);
-
-    mTitle.textContent = v.title;
-
-    h1.textContent = v.b[0].h; p1.textContent = v.b[0].p; s1.textContent = v.b[0].s;
-    h2.textContent = v.b[1].h; p2.textContent = v.b[1].p; s2.textContent = v.b[1].s;
-    h3.textContent = v.b[2].h; p3.textContent = v.b[2].p; s3.textContent = v.b[2].s;
-    h4.textContent = v.b[3].h; p4.textContent = v.b[3].p; s4.textContent = v.b[3].s;
-
-    document.getElementById("mGoCategory").href = document.getElementById(activeCat).dataset.href;
-  }
-
-  function open(cat){
-    activeCat=cat;
-    setActiveDiamond(cat);
-    render();
-    bd.classList.add("show");
-    modal.classList.add("show");
-  }
-
-  function close(){
-    bd.classList.remove("show");
-    modal.classList.remove("show");
-    setActiveDiamond("__none__");
-    activeCat=null;
-  }
-
-  // Lens controls (modal only)
-  styleChip.onclick=function(){ style=(style==="formal") ? "informal" : "formal"; render(); };
-  chipConcept.onclick=function(){ time="origin"; render(); };
-  chipLive.onclick=function(){ time="now"; render(); };
-  chipRoadmap.onclick=function(){ time="post"; render(); };
-
-  // Close controls
-  bd.onclick=close;
-  mClose.onclick=close;
-  document.getElementById("mReturn").onclick=close;
-
-  // Diamond handlers
-  ["software","commercial","energy","education"].forEach(function(id){
-    var el=document.getElementById(id);
-    el.onclick=function(){ open(id); };
-    el.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(id);} };
-  });
-
-})();
-</script>
 
 </body>
 </html>

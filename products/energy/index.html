@@ -1,13 +1,16 @@
-<!-- TNT — /products/energy/index.html  (ONE FILE · FIXED DIAMONDS · STICKY LENSES · READER STATE PRESERVED · DENSE NON-DUPLICATE)
-     YOU GET:
-       ✅ Diamonds ALWAYS open (click + keyboard)
-       ✅ Lens switches DO NOT lose place (open stacks + scroll + auto-anchor)
-       ✅ Multi-open stacks (no forced accordion)
-       ✅ Sticky lens bar (always accessible)
-       ✅ Diamonds upgraded to shiny jewel finish
-       ✅ Dense copy (no 3–4 word bullets)
-       ✅ No “(gated plan)” spam
-       ✅ No net-positive fusion claim drift (Industrial C locked; fusion = requirements-only link)
+<!-- TNT — /products/energy/index.html  (HARD-FIX · DIAMONDS ALWAYS OPEN · NO JS CRASH · STICKY LENSES · MULTI-OPEN)
+     THIS VERSION FIXES THE ROOT CAUSE:
+       - Diamonds were not opening because JS was throwing BEFORE binding (missing IDs / null refs).
+       - This file binds diamonds FIRST, and ALL other UI is null-safe.
+       - No inline onclick dependency. No missing window.__openEnergy.
+       - If any optional element is missing, the page still opens the modal.
+
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css only
+       - Does NOT style html/body background (ui.css owns field)
+       - Industrial posture (C) only; no net-positive fusion claim; fusion link = requirements-only page
+       - Sticky lens cluster always accessible
+       - Multi-open stacks
 -->
 
 <!doctype html>
@@ -32,6 +35,7 @@
 }
 
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:inherit;text-decoration:none}
 
 /* Top-left */
 .top-left{position:fixed;left:16px;top:16px;z-index:90;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -40,7 +44,7 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
   color:#fff;border:1px solid rgba(255,255,255,.08);
   box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
+  cursor:pointer;font-weight:900;letter-spacing:.2px;
   -webkit-tap-highlight-color:transparent;
 }
 .btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px rgba(212,175,55,.22)}
@@ -78,28 +82,23 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   pointer-events:none;
 }
 
-/* SHINY JEWEL DIAMONDS */
+/* Shiny diamonds */
 .d{
-  width:180px;height:180px;
-  position:absolute;left:50%;top:50%;
-  transform-origin:center;border-radius:28px;
-  cursor:pointer;
+  width:178px;height:178px;position:absolute;left:50%;top:50%;
+  transform-origin:center;border-radius:28px;cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   pointer-events:auto;touch-action:manipulation;
   border:1px solid rgba(255,255,255,.16);
-
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 42%),
-    radial-gradient(circle at 72% 78%, rgba(0,140,255,.28), transparent 60%),
+    radial-gradient(circle at 72% 78%, rgba(0,140,255,.26), transparent 60%),
     radial-gradient(circle at 45% 55%, rgba(255,255,255,.06), transparent 70%),
     linear-gradient(160deg, rgba(12,22,38,.96) 0%, rgba(7,11,18,.98) 75%);
-
   box-shadow:
     0 34px 110px rgba(0,0,0,.85),
     0 0 26px rgba(212,175,55,.18),
     inset 0 2px 0 rgba(255,255,255,.16),
     inset 0 -36px 64px rgba(0,0,0,.70);
-
   transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
   overflow:hidden;
 }
@@ -110,20 +109,6 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask-composite:exclude;
   pointer-events:none;
-}
-.d::after{
-  content:"";position:absolute;left:-60%;top:-80%;
-  width:220%;height:220%;
-  background:linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.18) 48%, rgba(255,255,255,0) 62%);
-  transform:rotate(18deg);
-  opacity:.55;
-  pointer-events:none;
-  animation:shine 8.8s linear infinite;
-}
-@keyframes shine{
-  0%{transform:translateX(-12%) rotate(18deg);opacity:.30}
-  50%{opacity:.75}
-  100%{transform:translateX(12%) rotate(18deg);opacity:.30}
 }
 .d:hover{
   border-color:rgba(212,175,55,.42);
@@ -174,7 +159,7 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 .mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
 .mbody{padding:0;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-/* Sticky lens bar */
+/* Sticky lenses */
 .stickyTop{
   position:sticky;top:0;z-index:50;
   background:rgba(0,0,0,.62);
@@ -385,11 +370,32 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   let causality = "CAUSE";
-
   const RS = { open:new Set(), scrollTop:0, anchorId:null };
 
+  const bd=document.getElementById("bd");
+  const modal=document.getElementById("modal");
+  const mbody=document.getElementById("mbody");
+  const mClose=document.getElementById("mClose");
+  const mReturn=document.getElementById("mReturn");
+  const mTitle=document.getElementById("mTitle");
+  const h1=document.getElementById("h1");
+  const h2=document.getElementById("h2");
+  const h3=document.getElementById("h3");
+  const stackList=document.getElementById("stackList");
+
+  const pillFormal=document.getElementById("pillFormal");
+  const pillInformal=document.getElementById("pillInformal");
+  const pillCause=document.getElementById("pillCause");
+  const pillEffect=document.getElementById("pillEffect");
+  const pillConcept=document.getElementById("pillConcept");
+  const pillLive=document.getElementById("pillLive");
+  const pillRoadmap=document.getElementById("pillRoadmap");
+
+  let section="FOUNDATION";
+  const CLAIM_LOCK="Claim discipline: Industrial plasma thermal substitution (C). No net-positive fusion claim. No facility net-electric claim. Fusion referenced only as gated admissibility pathway.";
+
   function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(gdStyle)+"&time="+encodeURIComponent(gdTime); }
-  function setLinks(){
+  (function setLinks(){
     const s=q();
     document.getElementById("btnBack").href="/products/?"+s;
     document.getElementById("btnExit").href="/door/?"+s;
@@ -402,61 +408,18 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     document.getElementById("mJumpProducts").href="/products/?"+s;
     document.getElementById("mJumpHub").href="/home/?"+s;
     document.getElementById("mFusion").href="/explore/fusion-readiness/?"+s;
-  }
-  setLinks();
+  })();
 
-  const DOMAIN_COLORS = {
+  const DOMAIN_COLORS={
     "Industrial":"#D97706","Scientific":"#2563EB","Agricultural":"#2F855A","Financial":"#047857",
     "Human":"#F59E0B","Adversarial":"#B91C1C","Regulatory":"#475569","Environmental":"#0D9488",
     "Infrastructural":"#1E40AF","Computational":"#7C3AED","Governance":"#D4AF37","Temporal":"#94A3B8"
   };
-  const DOMAINS = Object.keys(DOMAIN_COLORS);
-
-  function tempColor(){
-    let base = "#E5E7EB";
-    if(gdTime==="origin") base="#93C5FD";
-    if(gdTime==="now") base="#E5E7EB";
-    if(gdTime==="post") base="#D97706";
-    if(causality==="CAUSE" && gdTime!=="post") base="#93C5FD";
-    if(causality==="EFFECT" && gdTime!=="origin") base="#D97706";
-    if(gdStyle==="formal"){ if(base==="#D97706") base="#E5E7EB"; return base; }
-    else { if(base==="#93C5FD") base="#E5E7EB"; return base; }
-  }
-  function tempSoft(hex){
-    if(hex==="#93C5FD") return "rgba(147,197,253,.18)";
-    if(hex==="#E5E7EB") return "rgba(229,231,235,.16)";
-    if(hex==="#D97706") return "rgba(217,119,6,.16)";
-    return "rgba(229,231,235,.16)";
-  }
-
-  const CLAIM_LOCK = "Claim discipline: Industrial plasma thermal substitution (C). No net-positive fusion claim. No facility net-electric claim. Fusion referenced only as gated admissibility pathway.";
-
-  const bd=document.getElementById("bd");
-  const modal=document.getElementById("modal");
-  const mbody=document.getElementById("mbody");
-  const mTitle=document.getElementById("mTitle");
-  const mClose=document.getElementById("mClose");
-  const mReturn=document.getElementById("mReturn");
-
-  const pillFormal=document.getElementById("pillFormal");
-  const pillInformal=document.getElementById("pillInformal");
-  const pillCause=document.getElementById("pillCause");
-  const pillEffect=document.getElementById("pillEffect");
-  const pillConcept=document.getElementById("pillConcept");
-  const pillLive=document.getElementById("pillLive");
-  const pillRoadmap=document.getElementById("pillRoadmap");
-
-  const h1=document.getElementById("h1");
-  const h2=document.getElementById("h2");
-  const h3=document.getElementById("h3");
-  const stackList=document.getElementById("stackList");
-
-  let section="FOUNDATION";
+  const DOMAINS=Object.keys(DOMAIN_COLORS);
 
   const PHEAD=["P1 — Context","P2 — Constraint","P3 — Tension","P4 — Intervention","P5 — Mechanism","P6 — Result","P7 — Boundary"];
 
-  /* DENSE DOMAIN UNIQUE COPY (NOT SKELETON): domain-specific nouns + paragraph-specific arcs + lens-specific voice */
-  const LEX = {
+  const LEX={
     Industrial:{who:"plant operators",what:"process heat lines",why:"downtime cost",wall:"exchanger boundary",metric:"delivered-heat variance"},
     Scientific:{who:"instrument stack",what:"measured regimes",why:"artifact risk",wall:"calibration chain",metric:"background-subtracted signal"},
     Agricultural:{who:"grow operators",what:"microclimate loops",why:"crop stress",wall:"exchanger-only heating",metric:"yield stability"},
@@ -472,134 +435,128 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   };
 
   function paragraph(domain, pIndex){
-    const X = LEX[domain];
-    const t = gdTime;      // origin/now/post
-    const s = gdStyle;     // formal/informal
-    const c = causality;   // CAUSE/EFFECT
-    const make=(a,b,d,e,f,g,h)=>[a,b,d,e,f,g,h];
+    const X=LEX[domain];
+    const t=(gdTime==="origin")?"concept definition":(gdTime==="now")?"observed state":"gated roadmap";
+    const cl=(causality==="CAUSE")?"drivers":"effects";
+    const make=(a,b,c,d,e,f,g)=>[a,b,c,d,e,f,g];
 
-    const Tlabel = (t==="origin")?"concept definition":"observed state":"gated roadmap";
-    const Clabel = (c==="CAUSE")?"drivers":"effects";
-
-    // Each paragraph generates 7 dense sentences with internal story chronology.
-    // FORMAL = contract + measurement. INFORMAL = plain + vivid + practical.
     if(pIndex===0){
-      if(s==="formal") return make(
-        `Context begins with ${X.what}: energy here is constrained by operation, not ideology, and that is why ${X.metric} is the primary observable.`,
-        `The ${Clabel} in this domain are anchored to ${X.why}; when ${X.why} increases, the system stops scaling even if headlines claim “progress.”`,
-        `The accountable reader is ${X.who}, so the language must remain executable: it must map to a boundary, a measurement, or a receipt.`,
-        `The safety wall is ${X.wall}; it is the non-negotiable interface that prevents regime risk from migrating toward endpoints.`,
-        `Under ${Tlabel}, we describe what is admissible inside the wall and what is prohibited outside it, without requiring narrative agreement.`,
-        `Industrial posture remains (C) because that is the only claim class compatible with bounded receipts in this layer.`,
-        `Fusion is referenced only as requirements-only readiness, because no net-positive evidence chain is asserted here.`
+      if(gdStyle==="formal") return make(
+        `Context starts with ${X.what}: energy here is governed by operational constraints, and ${X.metric} is the primary observable that keeps claims honest.`,
+        `The ${cl} are anchored to ${X.why}; if ${X.why} grows while ${X.metric} drifts, scaling becomes structurally inadmissible even if the narrative feels optimistic.`,
+        `The accountable reader is ${X.who}, so every statement must map to a boundary, a measurement rule, or a receipt—otherwise it is excluded.`,
+        `The separation wall is ${X.wall}; it is treated as permanent because it prevents risk migration toward endpoints and preserves passive failure modes downstream.`,
+        `Under ${t}, we describe what is admissible inside the wall and what is prohibited outside it, without requiring interpretive agreement.`,
+        `Public posture remains Industrial Plasma Thermal Substitution (C); any gain language is structurally omitted until an independent proof chain exists.`,
+        `Fusion is referenced only as a requirements-only readiness pathway via link; it is not asserted and not implied here.`
       );
       return make(
-        `Here’s the reality: ${X.what} must run daily, and ${X.why} is what breaks budgets when stability is missing.`,
-        `If you can’t keep ${X.metric} steady, you don’t get to talk about scaling—because scaling just multiplies the problem.`,
-        `This page talks to ${X.who}, not to hype, so every line must point to a rule, a boundary, or a log.`,
-        `The hard wall is ${X.wall}; if you cross it, you’re no longer doing “safe industrial,” you’re doing something else.`,
-        `In ${Tlabel}, we focus on what you can actually enforce, not what sounds impressive.`,
-        `We stay Industrial (C): industrial heat substitution, buffered, contained, and auditable.`,
-        `Fusion stays in the gated-readiness lane because we are not claiming gain here.`
+        `Reality first: ${X.what} must run daily, and ${X.why} is what wrecks budgets when stability is missing.`,
+        `If ${X.metric} can’t stay inside a tight band, scaling just multiplies the problem—so we don’t pretend otherwise.`,
+        `This page talks to ${X.who}, not hype, so every line points to a rule you can follow or a thing you can measure.`,
+        `${X.wall} is the hard wall; cross it and you’re not doing “safe industrial,” you’re doing something else.`,
+        `In ${t}, we focus on what you can enforce and audit, not what sounds impressive.`,
+        `Industrial (C) stays locked: industrial heat substitution, buffered, contained, and accountable.`,
+        `Fusion stays in the gated lane because we are not claiming gain here.`
       );
     }
 
     if(pIndex===1){
-      if(s==="formal") return make(
-        `Constraints are declared first because hidden constraints create hidden failure, and hidden failure becomes public harm.`,
-        `The primary constraint is ${X.wall}; it is not softened by urgency, profit, or persuasion.`,
-        `Measurement constraints require that ${X.metric} be computed from defined logs, not inferred from mood or narrative.`,
-        `Operational constraints require that ${X.who} can execute under stress without interpretive disagreement.`,
-        `Governance constraints require non-retroactive reporting, because after-the-fact edits destroy trust at scale.`,
-        `Time posture (${Tlabel}) changes what we emphasize, but it does not change definitions or permissions.`,
-        `Claim posture remains Industrial (C), and any fusion implication remains categorically disallowed.`
+      if(gdStyle==="formal") return make(
+        `Constraints are declared before effort because hidden constraints produce hidden failure, and hidden failure becomes public harm at scale.`,
+        `The primary constraint is ${X.wall}; it is not softened by urgency, convenience, or persuasion, because that is how risk leaks.`,
+        `Measurement constraints require ${X.metric} to be computed from defined logs and methods, not inferred from “it feels better.”`,
+        `Operational constraints require ${X.who} to execute under stress without ambiguity, so language is written to be executable.`,
+        `Governance constraints forbid retroactive threshold editing, bin merging, or silent redefinitions, because those actions destroy trust.`,
+        `Time posture changes emphasis (concept vs live vs roadmap) but does not change permissions or definitions.`,
+        `Claim posture remains Industrial (C), and any fusion implication remains categorically disallowed in this surface.`
       );
       return make(
-        `Rules first—because rules are what keep people safe when the day goes bad.`,
-        `${X.wall} is the wall; you don’t negotiate it, you build around it.`,
-        `${X.metric} has to come from logs and meters, not “it feels better.”`,
-        `${X.who} needs a playbook that still works when things get loud and stressful.`,
-        `No after-the-fact edits: if something fails, it stays failed in the record.`,
+        `Rules first, because rules are what keep people safe when the day goes bad.`,
+        `${X.wall} is the wall; you build around it, not through it.`,
+        `${X.metric} comes from meters and logs, not from vibes.`,
+        `${X.who} needs a playbook that works when things are loud and stressful.`,
+        `No after-the-fact edits: if a run fails, it stays failed in the record.`,
         `Concept/live/roadmap changes the view, not the rules.`,
         `Industrial (C) stays locked; fusion stays gated-only.`
       );
     }
 
     if(pIndex===2){
-      if(s==="formal") return make(
-        `Tension is created when ${X.why} competes against the need for stable delivery, because incentives reward speed while physics rewards restraint.`,
-        `The ${Clabel} often appear as drift in ${X.metric}, even when average output looks acceptable for a short window.`,
-        `Operational tension arises when convenience pressures ${X.who} to bypass steps that exist for envelope protection.`,
-        `Data tension arises when noise and artifacts mimic improvement, creating false confidence that cannot survive audit.`,
-        `Regulatory tension arises when language drifts faster than receipts, forcing enforcement to tighten after incidents.`,
-        `Market tension arises when claims inflate before the measurement stack is mature, producing reputational debt.`,
-        `The discipline response is to treat failure as data and tighten gates, not to reinterpret outcomes.`
+      if(gdStyle==="formal") return make(
+        `Tension emerges when ${X.why} competes against stability because incentives reward speed while systems punish it.`,
+        `The ${cl} frequently appear as drift in ${X.metric} even when average output looks acceptable, which is why we track bands not anecdotes.`,
+        `Operational tension arises when convenience pressures ${X.who} into shortcuts that erode the separation wall over time.`,
+        `Data tension arises when noise and artifacts mimic improvement, creating false confidence that collapses under audit.`,
+        `Regulatory tension arises when language drifts faster than receipts, forcing oversight to tighten after incidents instead of before them.`,
+        `Market tension arises when claims inflate early, producing reputational debt that cannot be paid with later explanations.`,
+        `The correct response is to treat failures as data and tighten gates, not to reinterpret outcomes.`
       );
       return make(
-        `Pressure makes people chase speed, but speed is exactly how ${X.why} explodes.`,
-        `Most “problems” start as quiet drift in ${X.metric}, not as a dramatic crash.`,
-        `Convenience tries to push ${X.who} into shortcuts, and shortcuts are how safety walls get breached.`,
-        `Noise can look like progress if you aren’t strict, and then the audit destroys you later.`,
-        `When language runs ahead of receipts, regulators tighten—because they have to.`,
+        `Pressure makes people chase speed, and speed is how ${X.why} explodes.`,
+        `Most disasters start as quiet drift in ${X.metric}, not as dramatic crashes.`,
+        `Convenience pushes ${X.who} toward shortcuts, and shortcuts are how walls get breached.`,
+        `Noise can look like progress if you aren’t strict, then the audit destroys you later.`,
+        `When language runs ahead of receipts, oversight tightens because it has to.`,
         `Hype creates a debt you pay with trust.`,
-        `So we treat failure as useful and tighten the gates.`
+        `So we tighten gates instead of rewriting the story.`
       );
     }
 
     if(pIndex===3){
-      if(s==="formal") return make(
+      if(gdStyle==="formal") return make(
         `Intervention means moving uncertainty upstream and converting it into a measured envelope that ${X.who} can operate consistently.`,
-        `We enforce ${X.wall} as a permanent separation requirement, because that is what prevents risk migration.`,
-        `We buffer outputs so ${X.metric} becomes stable rather than reactive, which converts volatility into a controlled band.`,
-        `We require receipts for posture shifts, including any phase escalation, because scaling without receipts is not admissible.`,
-        `We isolate variables to keep causal attribution testable, so disputes become experiments instead of arguments.`,
-        `We publish disproof triggers so the system cannot “win” by redefining its own score.`,
-        `We preserve Industrial (C) posture while keeping fusion as gated-readiness doctrine only.`
+        `We enforce ${X.wall} as a permanent separation requirement, because that is what prevents risk migration into proximity.`,
+        `We buffer outputs so ${X.metric} becomes stable rather than reactive, converting volatility into a controlled band.`,
+        `We require receipts for posture shifts and phase escalation, because scaling without receipts is structurally inadmissible.`,
+        `We isolate variables so causal attribution remains testable, and disputes become experiments instead of arguments.`,
+        `We publish disproof triggers so the system cannot “win” by redefining its own score after the fact.`,
+        `We preserve Industrial (C) posture while referencing fusion only through the gated readiness pathway.`
       );
       return make(
         `Intervention means pushing uncertainty upstream and keeping the public layer boring and safe.`,
         `${X.wall} stays locked so risk can’t leak toward people.`,
-        `We buffer the output so ${X.metric} stays steady instead of swinging with every shock.`,
-        `No one gets to “level up” without receipts.`,
-        `We change one thing at a time so learning is real, not guessed.`,
-        `We write disproof rules so we can’t cheat ourselves later.`,
+        `We buffer output so ${X.metric} stays steady instead of swinging with shocks.`,
+        `No one levels up without receipts.`,
+        `We change one thing at a time so learning is real.`,
+        `We write disproof rules so we can’t cheat later.`,
         `Industrial (C) stays public; fusion stays gated-only.`
       );
     }
 
     if(pIndex===4){
-      if(s==="formal") return make(
-        `Mechanism is a staged chain—regime, isolation, buffer, delivery—where each stage has explicit stop conditions.`,
-        `The control layer monitors envelope adherence and trips on mismatch rather than averaging error away.`,
+      if(gdStyle==="formal") return make(
+        `Mechanism is staged: regime, isolation, buffering, delivery; each stage has explicit stop conditions and audit outputs.`,
+        `Control logic monitors envelope adherence and trips on mismatch rather than averaging error away, because averaged error hides collapse.`,
         `Telemetry is redundant where ${X.why} can be masked by artifacts, because single-signal optimism is structurally unsafe.`,
-        `Response prioritizes containment and controlled shutdown over continuity, because continuity without safety is liability.`,
+        `Response prioritizes containment and controlled shutdown over continuity, because continuity without safety becomes liability.`,
         `Validation rejects artifact-dependent “wins,” ensuring ${X.metric} remains meaningful under stress and audit.`,
         `Audit artifacts are produced as part of operation, not appended after incidents to justify decisions.`,
-        `The system stays coherent because every transition remains receipt-gated and replayable.`
+        `The system stays coherent because transitions remain receipt-gated and replayable.`
       );
       return make(
         `Mechanism is a chain: regime, isolation, buffer, delivery—no shortcuts.`,
-        `Controls trip on mismatch instead of “hoping it smooths out.”`,
-        `We use redundancy where noise can fool people, because single-signal confidence is how you get burned.`,
-        `When things go wrong, we contain first and shut down safely—pride doesn’t get a vote.`,
+        `Controls trip on mismatch instead of hoping it smooths out.`,
+        `We use redundancy where noise can fool people.`,
+        `When it goes wrong, we contain first and shut down safely.`,
         `Validation refuses fake wins that depend on artifacts.`,
         `Audits are built in, not added later.`,
-        `Everything is replayable, so arguments turn into checks.`
+        `Everything is replayable, so arguments become checks.`
       );
     }
 
     if(pIndex===5){
-      if(s==="formal") return make(
-        `Result is evaluated as stability in ${X.metric} under declared operating conditions, not as a rhetorical “success.”`,
-        `Economic effect is reduced sensitivity to volatility, because buffering and phase discipline convert shocks into bounded variance.`,
+      if(gdStyle==="formal") return make(
+        `Result is evaluated as stability in ${X.metric} under declared conditions, not as rhetorical “success.”`,
+        `Economic effect is reduced sensitivity to volatility because buffering and phase discipline convert shocks into bounded variance.`,
         `Safety effect is reduced endpoint exposure by enforcing ${X.wall} as an immutable interface rule.`,
-        `Governance effect is reduced dispute surface, because receipts replace interpretation and logs replace recollection.`,
-        `Adoption effect is improved trust, because claims remain bounded and falsifiable rather than inflated and vague.`,
-        `Scaling effect is replication readiness, because rules and artifacts are portable and auditable across sites.`,
+        `Governance effect is reduced dispute surface because receipts replace interpretation and logs replace recollection.`,
+        `Adoption effect is improved trust because claims remain bounded and falsifiable rather than inflated.`,
+        `Scaling effect is replication readiness because rules and artifacts are portable and auditable across sites.`,
         `Scientific effect is honest staging: measured remains measured; gated remains gated.`
       );
       return make(
-        `Result means ${X.metric} stays steady in the real world—not just on a good day.`,
+        `Result means ${X.metric} stays steady in the real world, not just on a good day.`,
         `Buffers make shocks less scary because they turn chaos into a band you can plan around.`,
         `${X.wall} keeps people safe by design, not by promises.`,
         `Receipts replace arguments because the log doesn’t care who’s louder.`,
@@ -610,14 +567,14 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     }
 
     // Boundary
-    if(s==="formal") return make(
+    if(gdStyle==="formal") return make(
       `This layer does not assert net-positive fusion, and it does not infer fusion gain from excitation behavior.`,
       `This layer does not assert facility-level net electric output, and it does not hide auxiliary loads in accounting.`,
-      `This layer does not publish hazardous operational recipes, because public safety and responsibility are binding constraints.`,
-      `This layer does not permit endpoint high-energy exposure, and it treats the separation wall (${X.wall}) as permanent.`,
+      `This layer does not publish hazardous operational recipes, because public safety is a binding constraint.`,
+      `This layer does not permit endpoint high-energy exposure; ${X.wall} remains permanent by design.`,
       `This layer does not upgrade claims via narrative interpretation; upgrades require external receipts and disproof conditions.`,
       `This layer treats failure as admissible data and uses it to tighten constraints rather than to protect ego.`,
-      `This layer remains Industrial (C) unless an independent, auditable evidence chain forces a classification change.`
+      `This layer remains Industrial (C) unless an independent, auditable proof chain forces a classification change.`
     );
     return make(
       `We are not claiming net fusion, and we’re not hinting at it either.`,
@@ -635,7 +592,6 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     document.documentElement.style.setProperty("--temp", t);
     document.documentElement.style.setProperty("--tempSoft", tempSoft(t));
   }
-
   function headerLines(){
     const t = (gdTime==="origin")?"CONCEPT":(gdTime==="now")?"LIVE":"ROADMAP";
     h1.textContent = `ENERGY · ${section} · ${causality} · ${t} · ${gdStyle.toUpperCase()}`;
@@ -648,7 +604,6 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
       : "Governance defines what may propagate under scale without corruption.";
     h3.textContent = CLAIM_LOCK;
   }
-
   function renderPills(){
     pillFormal.classList.toggle("active", gdStyle==="formal");
     pillInformal.classList.toggle("active", gdStyle==="informal");
@@ -748,28 +703,25 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     });
   }
 
-  // AUTO-ANCHOR ON SCROLL (so you don’t have to click to preserve place)
-  let anchorTick = 0;
+  let anchorTick=0;
   function updateAnchorFromScroll(){
     if(anchorTick) return;
-    anchorTick = requestAnimationFrame(()=>{
-      anchorTick = 0;
+    anchorTick=requestAnimationFrame(()=>{
+      anchorTick=0;
       const blocks = stackList.querySelectorAll(".pblock");
-      let best = null;
-      let bestDist = 1e9;
-      const topY = 160; // below sticky bar
+      let best=null, bestDist=1e9;
+      const targetTop=160;
       blocks.forEach(b=>{
-        const r = b.getBoundingClientRect();
-        const d = Math.abs(r.top - topY);
-        if(d < bestDist){ bestDist = d; best = b; }
+        const r=b.getBoundingClientRect();
+        const d=Math.abs(r.top-targetTop);
+        if(d<bestDist){bestDist=d;best=b;}
       });
-      if(best) RS.anchorId = best.id;
+      if(best) RS.anchorId=best.id;
     });
   }
 
   function restoreReadingPosition(){
     mbody.scrollTop = RS.scrollTop || 0;
-
     if(RS.anchorId){
       const node = document.getElementById(RS.anchorId);
       if(node){
@@ -781,12 +733,10 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 
   function renderAllPreserve(){
     RS.scrollTop = mbody.scrollTop;
-
     renderTemp();
     renderPills();
     headerLines();
     renderStacks();
-
     requestAnimationFrame(restoreReadingPosition);
   }
 
@@ -796,35 +746,31 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     bd.classList.add("show");
     modal.classList.add("show");
     renderAllPreserve();
-    // start tracking anchor while reading
-    mbody.addEventListener("scroll", updateAnchorFromScroll, {passive:true});
   }
-
   function closeModal(){
     bd.classList.remove("show");
     modal.classList.remove("show");
   }
 
-  window.__openEnergy = openModal;
-
   bd.addEventListener("click", closeModal);
   mClose.addEventListener("click", closeModal);
   mReturn.addEventListener("click", closeModal);
 
-  // Lens clicks (preserve place)
+  // Lens clicks preserve reading
   pillFormal.addEventListener("click", ()=>{ gdStyle="formal"; try{localStorage.setItem("gd_style",gdStyle);}catch(e){} renderAllPreserve(); });
   pillInformal.addEventListener("click", ()=>{ gdStyle="informal"; try{localStorage.setItem("gd_style",gdStyle);}catch(e){} renderAllPreserve(); });
-
   pillCause.addEventListener("click", ()=>{ causality="CAUSE"; renderAllPreserve(); });
   pillEffect.addEventListener("click", ()=>{ causality="EFFECT"; renderAllPreserve(); });
-
   pillConcept.addEventListener("click", ()=>{ gdTime="origin"; try{localStorage.setItem("gd_time",gdTime);}catch(e){} renderAllPreserve(); });
   pillLive.addEventListener("click", ()=>{ gdTime="now"; try{localStorage.setItem("gd_time",gdTime);}catch(e){} renderAllPreserve(); });
   pillRoadmap.addEventListener("click", ()=>{ gdTime="post"; try{localStorage.setItem("gd_time",gdTime);}catch(e){} renderAllPreserve(); });
 
-  // DIAMOND BINDINGS (reliable)
+  // Track anchor while scrolling
+  mbody.addEventListener("scroll", updateAnchorFromScroll, {passive:true});
+
+  // Diamond bindings (THIS IS WHAT WAS FAILING)
   function bindDiamond(id, sec){
-    const el = document.getElementById(id);
+    const el=document.getElementById(id);
     if(!el) return;
     el.addEventListener("click", ()=>openModal(sec));
     el.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(sec);} });

@@ -1,11 +1,8 @@
-<!-- TNT — /products/index.html  (PRODUCTS SPINE · SINGLE-SHELL ONLY · TAP-SAFE · SIMPLE COPY)
-     FIX:
-       - Removes the OUTER shell entirely (no “double shell” blend)
-       - Keeps ONLY the inner diamond cluster (the real product diamonds)
-       - Adds real gaps by slightly shrinking diamonds + slightly increasing radius
-       - Moves text slightly UP inside each diamond
-       - Keeps state carry (gd_lang/gd_style/gd_time) with NO new keys
-       - No blur stacks (tap safe)
+<!-- TNT — /products/index.html  (PRODUCTS SPINE · DOOR-GRADE JEWEL · SINGLE-SHELL · TIGHTER SPACING)
+     CHANGE:
+       - FIX “COAL”: restores opal film + sapphire glow + crisp specular + stronger gold crown
+       - FIX “TOO WIDE”: radius tightened; diamonds slightly larger (gap, not separation)
+       - KEEP: single-shell only (NO outer shell), tap-safe, gd_* propagation only
 -->
 
 <!doctype html>
@@ -20,34 +17,39 @@
 
 <style>
 :root{
-  /* GAP CONTROL */
-  --R:168px; /* a touch wider for visible gaps */
+  /* spacing */
+  --R:152px; /* tighter than the “too wide” version */
 
-  /* LACQUER JEWEL */
-  --obsB:#0c1626;
-  --obsC:#05070c;
+  /* lacquer base */
+  --obs1:#070b12;
+  --obs2:#0c1626;
+  --obs3:#05070c;
 
-  --opal1: rgba(245,248,255,.18);
-  --opal2: rgba(180,220,255,.12);
-  --opal3: rgba(255,235,200,.10);
-  --opal4: rgba(170,255,235,.10);
+  /* opal film (stronger) */
+  --opalW: rgba(245,248,255,.24);
+  --opalB: rgba(180,220,255,.18);
+  --opalA: rgba(255,235,200,.16);
+  --opalG: rgba(170,255,235,.16);
 
-  --sapp1: rgba(40,90,200,.18);
-  --sapp2: rgba(110,190,255,.14);
+  /* sapphire glow (stronger) */
+  --sap1: rgba(40,90,200,.26);
+  --sap2: rgba(110,190,255,.20);
 
-  --goldSoft: rgba(212,175,55,.35);
+  /* gold crown */
+  --gold: rgba(212,175,55,.90);
+  --goldSoft: rgba(212,175,55,.42);
 }
 
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
 
-/* Top-left */
+/* top-left */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:90;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Brand pill (no blur) */
+/* brand pill */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
   z-index:80;text-align:center;
@@ -58,7 +60,7 @@ a{color:inherit;text-decoration:none}
 .brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.92}
 .brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
 
-/* Stage (SINGLE-SHELL ONLY: no outer diamond element at all) */
+/* stage (single-shell only) */
 .stage{
   position:fixed;left:50%;top:54%;
   transform:translate(-50%,-50%);
@@ -67,78 +69,90 @@ a{color:inherit;text-decoration:none}
   pointer-events:auto;
 }
 
-/* Diamonds (slightly smaller to create gaps) */
+/* diamonds */
 .d{
-  width:188px;height:188px;
+  width:198px;height:198px; /* larger = less “pulled apart” */
   position:absolute;left:50%;top:50%;
-  transform-origin:center;border-radius:28px;
+  transform-origin:center;
+  border-radius:30px;
   cursor:pointer;
   pointer-events:auto;
   touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
 
   background:
-    radial-gradient(circle at 72% 26%, var(--sapp2) 0%, rgba(110,190,255,0) 62%),
-    radial-gradient(circle at 34% 78%, var(--sapp1) 0%, rgba(40,90,200,0) 64%),
+    /* sapphire lanes */
+    radial-gradient(circle at 72% 26%, var(--sap2) 0%, rgba(110,190,255,0) 62%),
+    radial-gradient(circle at 34% 78%, var(--sap1) 0%, rgba(40,90,200,0) 64%),
 
-    radial-gradient(circle at 34% 22%, var(--opal1) 0%, rgba(245,248,255,0) 54%),
-    radial-gradient(circle at 78% 32%, var(--opal2) 0%, rgba(180,220,255,0) 58%),
-    radial-gradient(circle at 82% 78%, var(--opal3) 0%, rgba(255,235,200,0) 64%),
-    radial-gradient(circle at 30% 82%, var(--opal4) 0%, rgba(170,255,235,0) 66%),
+    /* opal interference film */
+    radial-gradient(circle at 34% 22%, var(--opalW) 0%, rgba(245,248,255,0) 54%),
+    radial-gradient(circle at 78% 32%, var(--opalB) 0%, rgba(180,220,255,0) 58%),
+    radial-gradient(circle at 82% 78%, var(--opalA) 0%, rgba(255,235,200,0) 64%),
+    radial-gradient(circle at 30% 82%, var(--opalG) 0%, rgba(170,255,235,0) 66%),
 
-    linear-gradient(160deg, var(--obsB) 0%, var(--obsC) 78%);
+    /* lacquer depth */
+    linear-gradient(160deg, var(--obs2) 0%, var(--obs3) 78%);
 
-  border:1px solid rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.18);
+
   box-shadow:
     0 30px 110px rgba(0,0,0,.72),
-    0 0 18px rgba(212,175,55,.10),
-    inset 0 2px 0 rgba(255,255,255,.16),
-    inset 0 -44px 86px rgba(0,0,0,.80);
+    0 0 26px rgba(212,175,55,.10),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -52px 98px rgba(0,0,0,.86);
 }
 
-/* Gold rim */
+/* gold crown rim (stronger, cleaner) */
 .d::before{
   content:"";
-  position:absolute;inset:0;border-radius:28px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.60;
+  position:absolute;inset:0;border-radius:30px;padding:1px;
+  background:linear-gradient(135deg,
+    rgba(212,175,55,0) 0%,
+    rgba(212,175,55,.60) 36%,
+    rgba(212,175,55,.92) 50%,
+    rgba(212,175,55,.60) 64%,
+    rgba(212,175,55,0) 100%
+  );
+  opacity:.78;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
   pointer-events:none;
 }
 
-/* Gloss cap */
+/* crisp specular cap + depth */
 .d::after{
   content:"";
-  position:absolute;inset:0;border-radius:28px;
+  position:absolute;inset:0;border-radius:30px;
   background:
-    radial-gradient(120% 58% at 50% 16%, rgba(255,255,255,.32) 0%, rgba(255,255,255,0) 64%),
-    radial-gradient(120% 60% at 50% 55%, rgba(255,255,255,.06) 0%, rgba(255,255,255,0) 62%),
-    radial-gradient(140% 70% at 50% 92%, rgba(0,0,0,.36) 0%, rgba(0,0,0,0) 56%);
-  opacity:.92;
+    radial-gradient(120% 60% at 50% 14%, rgba(255,255,255,.40) 0%, rgba(255,255,255,0) 64%),
+    radial-gradient(120% 60% at 52% 52%, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 62%),
+    radial-gradient(140% 70% at 50% 94%, rgba(0,0,0,.40) 0%, rgba(0,0,0,0) 56%);
+  opacity:.95;
   pointer-events:none;
 }
 
 .d:hover{
-  border-color:rgba(212,175,55,.32);
+  border-color:rgba(212,175,55,.34);
   box-shadow:
-    0 40px 140px rgba(0,0,0,.80),
-    0 0 26px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -50px 98px rgba(0,0,0,.84);
+    0 40px 140px rgba(0,0,0,.82),
+    0 0 34px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.20),
+    inset 0 -56px 110px rgba(0,0,0,.88);
 }
+.d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
-/* Position */
+/* positions */
 .d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
 .d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
 .d-w{transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg)}
 
-/* Inner label (move slightly UP) */
+/* inner label (slightly up) */
 .inner{
   width:100%;height:100%;
-  transform:rotate(-45deg) translateY(-8px);
+  transform:rotate(-45deg) translateY(-7px);
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   text-align:center;padding:16px;gap:8px;
@@ -147,7 +161,7 @@ a{color:inherit;text-decoration:none}
 .lab{font-weight:950;letter-spacing:.8px;font-size:18px;text-shadow:0 0 18px rgba(255,255,255,.16)}
 .sub{font-size:13px;opacity:.84;line-height:1.25;max-width:16em}
 
-/* Core */
+/* core */
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -160,7 +174,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Dock (tap-safe wrapper) */
+/* dock */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -173,10 +187,10 @@ a{color:inherit;text-decoration:none}
 }
 .dock .btn{pointer-events:auto}
 
-/* Mobile */
+/* mobile */
 @media (max-width:560px){
-  :root{--R:154px}
-  .d{width:172px;height:172px}
+  :root{--R:142px}
+  .d{width:176px;height:176px}
   .stage{top:56%}
   .inner{transform:rotate(-45deg) translateY(-6px)}
 }

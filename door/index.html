@@ -1,12 +1,9 @@
-<!-- TNT — /products/index.html  (PRODUCTS SPINE · TAP-SAFE · DOOR-STYLE HEADER)
-     FIX (WHY IT DIDN’T WORK):
-       - On some mobile stacks, ui.css field overlays (body::before/body::after) can steal taps.
-       - This TNT hard-forces those overlays to pointer-events:none (NO repaint; just hit-test safety).
-       - Stage container is pointer-events:none; ONLY diamonds are pointer-events:auto (proven pattern on Energy).
-     RULES:
-       - ui.css owns field background (we do NOT repaint)
-       - branch.css allowed but must not break hit-testing
-       - gd_lang/gd_style/gd_time only
+<!-- TNT — /door/index.html (DOOR · LANGUAGE SELECT · DUAL DIAMOND OVERLAP · TAP-SAFE · STATE CARRY)
+     PURPOSE:
+       - Restore Door from scratch with two overlapping language diamonds (EN/中文).
+       - Single-language selection sets gd_lang and routes to /index.html with full state (?lang=&style=&time=).
+       - Uses only gd_lang/gd_style/gd_time. No new keys.
+       - ui.css owns field. branch.css untouched.
 -->
 
 <!doctype html>
@@ -14,26 +11,26 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRODUCTS · Catalog Spine</title>
+<title>DOOR · Cardinal Axis</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
 :root{
-  --R:154px;
-  --goldSoft:rgba(212,175,55,.35);
-  --obs1:#070b12;
-  --obs2:#0c1626;
-  --mut:rgba(255,255,255,.84);
-  --mut2:rgba(255,255,255,.68);
+  /* Overlap geometry */
+  --D:210px;      /* diamond size */
+  --R:86px;       /* translate distance (smaller than D/2 => overlap) */
+
+  /* Pearlescent lacquer (match your working Energy) */
+  --goldSoft:rgba(212,175,55,.45);
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
 }
 
-/* DO NOT REPAINT FIELD — ONLY HIT-TEST SAFETY */
-body::before, body::after{ pointer-events:none !important; }
-
-body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-a{color:inherit;text-decoration:none}
+/* base */
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{text-decoration:none;color:inherit}
 
 /* top-left */
 .top-left{
@@ -41,154 +38,182 @@ a{color:inherit;text-decoration:none}
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* brand pill (no blur) */
-.brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:110;text-align:center;
-  padding:10px 14px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
+/* fixed header (non-interactive) */
+.headFixed{
+  position:fixed;
+  left:50%;
+  top:64px;
+  transform:translateX(-50%);
+  width:min(760px,94vw);
+  z-index:110;
+  text-align:center;
   pointer-events:none;
 }
-.brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
-.brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
+.kicker{
+  margin:0 0 10px 0;
+  font-size:12px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:.78;
+  text-shadow:0 18px 60px rgba(0,0,0,.60);
+}
+.title{
+  margin:0;
+  font-size:52px;
+  font-weight:950;
+  letter-spacing:.2px;
+  line-height:1.02;
+  text-shadow:0 18px 60px rgba(0,0,0,.60);
+}
+.sub{
+  margin:10px auto 0;
+  max-width:56ch;
+  opacity:.84;
+  font-size:16px;
+  line-height:1.35;
+  text-shadow:0 18px 60px rgba(0,0,0,.55);
+}
 
-/* stage (tap-safe: stage ignores taps, diamonds take taps) */
+/* stage */
 .stage{
-  position:fixed;left:50%;top:52%;
+  position:fixed;
+  left:50%;
+  top:56%;
   transform:translate(-50%,-50%);
-  width:min(720px,94vw);height:min(720px,94vw);
+  width:min(560px,92vw);
+  height:min(560px,92vw);
   z-index:60;
   pointer-events:none;
 }
 
-/* outer diamond shell (visual only) */
+/* subtle outer shell for presence (visual only) */
 .outer{
   position:absolute;left:50%;top:50%;
-  width:min(680px,92vw);height:min(680px,92vw);
+  width:min(560px,92vw);height:min(560px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
   border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 50% 14%, rgba(176,0,0,.18), transparent 55%),
+    radial-gradient(circle at 40% 25%, rgba(90,140,255,.10), transparent 55%),
+    linear-gradient(160deg, rgba(14,24,40,.38) 0%, rgba(7,11,18,.56) 70%);
   box-shadow:
-    0 90px 260px rgba(0,0,0,.62),
+    0 90px 260px rgba(0,0,0,.55),
     inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
+    inset 0 -50px 90px rgba(0,0,0,.50);
   opacity:.55;
   pointer-events:none;
 }
 .outer::after{
   content:"";
   position:absolute;inset:0;border-radius:60px;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.14;
+  background:repeating-conic-gradient(from 0deg, rgba(212,175,55,.04) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.12;
   pointer-events:none;
 }
 
 /* diamonds */
 .d{
-  width:205px;height:205px;
+  width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
   transform-origin:center;
-  border-radius:30px;
+  border-radius:28px;
   cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
+  pointer-events:auto;
   touch-action:manipulation;
-  pointer-events:auto; /* ONLY tappable layer */
+  -webkit-tap-highlight-color:transparent;
 
   background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 48%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.25), transparent 60%),
+    linear-gradient(160deg, var(--obsA), var(--obsB));
 
-  border:1px solid rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.16);
   box-shadow:
-    0 30px 110px rgba(0,0,0,.72),
-    0 0 22px rgba(212,175,55,.10),
-    inset 0 2px 0 rgba(255,255,255,.16),
-    inset 0 -44px 86px rgba(0,0,0,.80);
-  transition:transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    0 38px 120px rgba(0,0,0,.82),
+    0 0 32px rgba(212,175,55,.22),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -40px 72px rgba(0,0,0,.78);
+
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  overflow:hidden;
 }
 .d::before{
   content:"";
-  position:absolute;inset:0;border-radius:30px;padding:1px;
+  position:absolute;inset:0;border-radius:28px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.65;
+  opacity:.60;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   pointer-events:none;
 }
 .d::after{
   content:"";
-  position:absolute;inset:0;border-radius:30px;
-  background:
-    radial-gradient(120% 58% at 50% 16%, rgba(255,255,255,.28) 0%, rgba(255,255,255,0) 64%),
-    radial-gradient(140% 70% at 50% 92%, rgba(0,0,0,.32) 0%, rgba(0,0,0,0) 56%);
-  opacity:.92;
+  position:absolute;left:10%;right:10%;top:10%;height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  transform:rotate(-10deg);
   pointer-events:none;
 }
 .d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.01);
   border-color:rgba(212,175,55,.28);
   box-shadow:
-    0 40px 140px rgba(0,0,0,.80),
-    0 0 32px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -50px 98px rgba(0,0,0,.84);
+    0 44px 140px rgba(0,0,0,.90),
+    0 0 40px rgba(212,175,55,.26),
+    inset 0 2px 0 rgba(255,255,255,.24),
+    inset 0 -48px 86px rgba(0,0,0,.82);
 }
 .d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
-/* positions */
-.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
-.d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
-.d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
-.d-w{transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg)}
+.d-en{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); z-index:2; }
+.d-zh{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); z-index:1; }
 
+/* inner label */
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  text-align:center;padding:16px;gap:10px;
-  pointer-events:none;user-select:none;
-}
-.lab{font-weight:950;letter-spacing:.8px;font-size:18px;text-shadow:0 0 18px rgba(255,255,255,.16)}
-.sub{font-size:13px;opacity:.84;line-height:1.3;max-width:18em}
-
-/* core */
-.core{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:74px;height:74px;border-radius:22px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;place-items:center;
-  font-weight:950;letter-spacing:.5px;opacity:.92;
+  text-align:center;
+  padding:16px;
+  gap:8px;
   pointer-events:none;
+  user-select:none;
+}
+.lab{
+  font-weight:950;
+  letter-spacing:.9px;
+  font-size:20px;
+  text-shadow:0 0 18px rgba(255,255,255,.10);
+}
+.hint{
+  font-size:12.5px;
+  opacity:.82;
 }
 
-/* dock (tap-safe wrapper) */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
+/* footer */
+.footer{
+  position:fixed;
+  left:50%;
+  bottom:calc(18px + env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:120;
-  width:min(900px,94vw);
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
+  z-index:85;
+  width:min(760px,94vw);
+  text-align:center;
+  opacity:.74;
+  font-size:13px;
+  line-height:1.35;
   pointer-events:none;
+  text-shadow:0 18px 60px rgba(0,0,0,.55);
 }
-.dock .btn{pointer-events:auto}
 
-@media (max-width:560px){
-  :root{--R:142px}
-  .d{width:180px;height:180px}
-  .stage{top:54%}
+/* responsive */
+@media (max-width:520px){
+  :root{ --D:200px; --R:78px; }
+  .title{ font-size:46px; }
+  .sub{ font-size:15px; }
+  .headFixed{ top:56px; }
+  .stage{ top:58%; }
 }
 </style>
 </head>
@@ -196,109 +221,72 @@ a{color:inherit;text-decoration:none}
 <body>
 
 <div class="top-left">
-  <a class="btn" id="btnHub" href="/home/">HUB</a>
-  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+  <a class="btn" id="btnExit" href="/home/">EXIT</a>
 </div>
 
-<div class="brand">
-  <div class="name" id="brandName">PRODUCTS</div>
-  <div class="tag" id="brandTag">Four volumes · One catalog spine</div>
+<div class="headFixed" aria-hidden="true">
+  <p class="kicker" id="kicker">CARDINAL AXIS</p>
+  <h1 class="title" id="title">Select language</h1>
+  <p class="sub" id="subtitle">Choose a canonical language to enter the system.</p>
 </div>
 
-<div class="stage" aria-label="Products catalog">
+<div class="stage" aria-label="Language diamonds">
   <div class="outer"></div>
 
-  <div class="d d-n" id="goEnergy" role="button" tabindex="0" onclick="window.__goP('energy')" aria-label="Energy">
+  <div class="d d-en" id="pickEN" role="button" tabindex="0" aria-label="English">
     <div class="inner">
-      <div class="lab" id="labEnergy">ENERGY</div>
-      <div class="sub" id="subEnergy">Industrial plasma substitution · Gated fusion readiness</div>
+      <div class="lab">ENGLISH</div>
+      <div class="hint">Tap to enter</div>
     </div>
   </div>
 
-  <div class="d d-e" id="goEducation" role="button" tabindex="0" onclick="window.__goP('education')" aria-label="Education">
+  <div class="d d-zh" id="pickZH" role="button" tabindex="0" aria-label="Chinese">
     <div class="inner">
-      <div class="lab" id="labEducation">EDUCATION</div>
-      <div class="sub" id="subEducation">Language compression · Traversal learning systems</div>
+      <div class="lab">中文</div>
+      <div class="hint">点按进入</div>
     </div>
   </div>
-
-  <div class="d d-s" id="goSoftware" role="button" tabindex="0" onclick="window.__goP('software')" aria-label="Software">
-    <div class="inner">
-      <div class="lab" id="labSoftware">SOFTWARE</div>
-      <div class="sub" id="subSoftware">Instrumentation · Dashboards · Execution engines</div>
-    </div>
-  </div>
-
-  <div class="d d-w" id="goCommercial" role="button" tabindex="0" onclick="window.__goP('commercial')" aria-label="Commercial">
-    <div class="inner">
-      <div class="lab" id="labCommercial">COMMERCIAL</div>
-      <div class="sub" id="subCommercial">Deployment packaging · Licensing · Phase rollout</div>
-    </div>
-  </div>
-
-  <div class="core">◆</div>
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
-  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
-</nav>
+<div class="footer" id="foot">Coherence-based traversal study · under construction · safe to explore</div>
 
 <script>
 (function(){
-  // gd_* only
+  // URL → STATE HYDRATION (gd_* only)
   var qs = new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   if(time==="trajectory") time="post";
-  if(lang!=="en" && lang!=="zh") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
 
-  try{
-    localStorage.setItem("gd_lang", lang);
-    localStorage.setItem("gd_style", style);
-    localStorage.setItem("gd_time", time);
-  }catch(e){}
-
-  function q(){
-    return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
+  function go(lang){
+    try{
+      localStorage.setItem("gd_lang", lang);
+      localStorage.setItem("gd_style", style);
+      localStorage.setItem("gd_time", time);
+    }catch(e){}
+    var q = "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
+    window.location.href = "/index.html?"+q;
   }
 
-  // links
-  document.getElementById("btnHub").href  = "/home/" + q();
-  document.getElementById("btnExit").href = "/door/" + q();
+  // EXIT preserves current state (fallback lang=en)
+  (function(){
+    var curLang = qs.get("lang") || localStorage.getItem("gd_lang") || "en";
+    if(curLang!=="en" && curLang!=="zh") curLang="en";
+    var q = "lang="+encodeURIComponent(curLang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
+    document.getElementById("btnExit").href = "/home/?"+q;
+  })();
 
-  document.getElementById("dockTerminal").href = "/index.html" + q();
-  document.getElementById("dockProducts").href = "/products/" + q();
-  document.getElementById("dockLaws").href = "/laws/" + q();
-  document.getElementById("dockGauges").href = "/gauges/" + q();
-  document.getElementById("dockLinks").href = "/links/" + q();
-
-  // hard navigation (inline onclick calls this)
-  window.__goP = function(which){
-    var map = {
-      energy:"/products/energy/",
-      education:"/products/education/",
-      software:"/products/software/",
-      commercial:"/products/commercial/"
-    };
-    var path = map[which] || "/products/";
-    location.href = path + q();
-  };
-
-  // keyboard safety
-  [["goEnergy","energy"],["goEducation","education"],["goSoftware","software"],["goCommercial","commercial"]].forEach(function(pair){
-    var el=document.getElementById(pair[0]);
-    if(!el) return;
+  function bind(el, lang){
+    el.addEventListener("click", function(){ go(lang); });
     el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.__goP(pair[1]); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(lang); }
     });
-  });
+  }
+
+  bind(document.getElementById("pickEN"), "en");
+  bind(document.getElementById("pickZH"), "zh");
 })();
 </script>
 

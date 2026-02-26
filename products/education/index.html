@@ -1,19 +1,21 @@
-<!-- TNT — /products/energy/index.html  (ENERGY · 72 Narratives · QUADRANTS → DOMAINS → NARRATIVE)
-     CHANGE SET (SURGICAL, NO REDESIGN):
-       1) KEEP EVERYTHING THE SAME (glossy diamonds, structure, taps, modals).
-       2) ADD TWO NEW DOMAIN TILES ON THE INNER DOMAIN PAGE:
-            - Fusion Readiness (Concept · Live · Roadmap)
-            - Frontier Expansion (Concept · Live · Roadmap)
-          (Same exact tile style as existing inner tiles. No diamond squeezing.)
-       3) UNIVERSAL RETURN:
-            - Narrative screen: RETURN → Domains (always visible)
-            - Narrative screen: BACK TO QUADRANTS (always visible)
-          (No more “looping back” or jumping two screens back.)
+<!-- TNT — /products/education/index.html  (EDUCATION · QUADRANTS → DOMAINS → NARRATIVE · EN/中文 SINGLE-LANG)
+     STRUCTURE (matches latest Energy construct):
+       - 4 quadrant diamonds on face
+       - Tap quadrant → Domains modal (tile grid)
+       - Tap domain → Narrative modal (FORMAL/INFORMAL + Concept/Live/Roadmap)
+       - Universal return:
+           RETURN TO DOMAINS (one layer back)
+           BACK TO QUADRANTS (close stack)
+     LANGUAGE (MANDATORY):
+       - lang=en => EN only
+       - lang=zh => 中文 only
+       - uses gd_lang + ?lang=
+     STATE (NO NEW KEYS):
+       - gd_lang / gd_style / gd_time only
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css only
        - Does NOT style html/body background (ui.css owns field)
-       - No new state keys (gd_lang/gd_style/gd_time only)
-       - Tap-safe (no reliance on inline onclick; bind first; null-safe)
+       - Tap-safe (bind first; null-safe; no inline onclick dependency)
 -->
 
 <!doctype html>
@@ -21,7 +23,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRODUCTS · ENERGY</title>
+<title>PRODUCTS · EDUCATION</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -31,13 +33,10 @@
   --R:150px;
   --D:184px;
 
-  /* Pearlescent lacquer (keep) */
+  /* Pearlescent lacquer (match Energy) */
   --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
-
-  --mut: rgba(255,255,255,.90);
-  --mut2: rgba(255,255,255,.74);
 }
 
 /* Base */
@@ -73,7 +72,7 @@ a{text-decoration:none;color:inherit}
   pointer-events:none; /* diamonds override */
 }
 
-/* Diamonds (KEEP pearlescent lacquer) */
+/* Diamonds */
 .d{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
@@ -168,7 +167,7 @@ a{text-decoration:none;color:inherit}
 }
 .dock .btn{pointer-events:auto}
 
-/* Overlay base */
+/* Overlay */
 .bd{
   position:fixed;inset:0;z-index:200;
   background:rgba(0,0,0,.70);
@@ -211,7 +210,7 @@ a{text-decoration:none;color:inherit}
   overflow:auto;-webkit-overflow-scrolling:touch;
 }
 
-/* Inner domain grid (cards) */
+/* Domains grid */
 .gridNote{
   max-width:980px;margin:0 auto 14px;
   padding:12px 14px;border-radius:16px;
@@ -221,7 +220,6 @@ a{text-decoration:none;color:inherit}
   line-height:1.35;
   font-size:13px;
 }
-
 .domGrid{
   max-width:980px;
   margin:0 auto;
@@ -253,19 +251,10 @@ a{text-decoration:none;color:inherit}
   -webkit-mask-composite:xor; mask-composite:exclude;
   pointer-events:none;
 }
-.domTitle{
-  font-weight:950;
-  letter-spacing:.2px;
-  font-size:22px;
-  margin:0 0 6px 0;
-}
-.domSub{
-  margin:0;
-  opacity:.82;
-  font-size:13px;
-}
+.domTitle{font-weight:950;letter-spacing:.2px;font-size:22px;margin:0 0 6px 0}
+.domSub{margin:0;opacity:.82;font-size:13px}
 
-/* Narrative view */
+/* Narrative */
 .toggleRow{
   max-width:980px;margin:0 auto 14px;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;
@@ -293,7 +282,6 @@ a{text-decoration:none;color:inherit}
   line-height:1.35;
   font-size:13px;
 }
-
 .bubble{
   max-width:980px;margin:0 auto 14px;
   padding:18px 16px;border-radius:18px;
@@ -302,8 +290,6 @@ a{text-decoration:none;color:inherit}
 }
 .bubble h3{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
 .bubble p{margin:0;color:rgba(255,255,255,.86);line-height:1.55}
-
-/* Universal return row (ALWAYS present in narrative) */
 .returnRow{
   max-width:980px;margin:16px auto 0;
   display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
@@ -326,37 +312,37 @@ a{text-decoration:none;color:inherit}
 </div>
 
 <div class="brand" aria-hidden="true">
-  <p class="k">CARDINAL AXIS</p>
-  <h1 class="t">Energy</h1>
-  <p class="s">72 Narratives · 4→12→36→72</p>
+  <p class="k" id="hdrK">CARDINAL AXIS</p>
+  <h1 class="t" id="hdrT">Education</h1>
+  <p class="s" id="hdrS">Traversal learning · bilingual · 1001 words</p>
 </div>
 
-<div class="stage" aria-label="Energy quadrants">
-  <div class="d d-n" id="qFoundation" role="button" tabindex="0" aria-label="Foundation">
+<div class="stage" aria-label="Education quadrants">
+  <div class="d d-n" id="qPrograms" role="button" tabindex="0" aria-label="Programs">
     <div class="inner">
-      <div class="lab">FOUNDATION</div>
-      <div class="sub">Origins · risk · baselines</div>
+      <div class="lab" id="labPrograms">PROGRAMS</div>
+      <div class="sub" id="subPrograms">Tracks · outcomes · routines</div>
     </div>
   </div>
 
-  <div class="d d-e" id="qArchitecture" role="button" tabindex="0" aria-label="Architecture">
+  <div class="d d-e" id="qLanguage" role="button" tabindex="0" aria-label="Language">
     <div class="inner">
-      <div class="lab">ARCHITECTURE</div>
-      <div class="sub">Build · interfaces · isolation</div>
+      <div class="lab" id="labLanguage">LANGUAGE</div>
+      <div class="sub" id="subLanguage">1001 · 4 levels</div>
     </div>
   </div>
 
-  <div class="d d-s" id="qPerformance" role="button" tabindex="0" aria-label="Performance">
+  <div class="d d-s" id="qTraining" role="button" tabindex="0" aria-label="Training">
     <div class="inner">
-      <div class="lab">PERFORMANCE</div>
-      <div class="sub">Measured outcomes</div>
+      <div class="lab" id="labTraining">TRAINING</div>
+      <div class="sub" id="subTraining">Masterclasses · reps</div>
     </div>
   </div>
 
-  <div class="d d-w" id="qGovernance" role="button" tabindex="0" aria-label="Governance">
+  <div class="d d-w" id="qCertification" role="button" tabindex="0" aria-label="Certification">
     <div class="inner">
-      <div class="lab">GOVERNANCE</div>
-      <div class="sub">Scaling discipline</div>
+      <div class="lab" id="labCertification">CERTIFICATION</div>
+      <div class="sub" id="subCertification">Verification · tiers</div>
     </div>
   </div>
 
@@ -373,18 +359,15 @@ a{text-decoration:none;color:inherit}
 
 <div class="bd" id="bd"></div>
 
-<!-- MODAL A: DOMAIN MATRIX -->
+<!-- MODAL A: DOMAINS -->
 <div class="modal" id="modalDomains" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="domainsTitle">ENERGY · FOUNDATION</h3>
+      <h3 class="mtitle" id="domainsTitle">EDUCATION · PROGRAMS</h3>
       <button class="mclose" id="domainsClose" aria-label="Close" type="button">✕</button>
     </div>
     <div class="mbody">
-      <div class="gridNote" id="domainsNote">
-        Tap a domain to enter its narrative. Return closes this layer.
-      </div>
-
+      <div class="gridNote" id="domainsNote">Tap a domain to enter its narrative. Return closes this layer.</div>
       <div class="domGrid" id="domainsGrid"></div>
     </div>
   </div>
@@ -394,7 +377,7 @@ a{text-decoration:none;color:inherit}
 <div class="modal" id="modalNarrative" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="narTitle">ENERGY · Historical Systems</h3>
+      <h3 class="mtitle" id="narTitle">EDUCATION · Domain</h3>
       <button class="mclose" id="narClose" aria-label="Close" type="button">✕</button>
     </div>
     <div class="mbody" id="narBody">
@@ -404,26 +387,23 @@ a{text-decoration:none;color:inherit}
         <div class="pill" id="pillInformal">INFORMAL</div>
       </div>
 
-      <div class="banner" id="claimBanner">
-        Public posture remains Industrial Plasma Thermal Substitution (C). Fusion is referenced only as readiness doctrine, not as gain.
-      </div>
+      <div class="banner" id="bannerLine">Traversal-first learning: structure stays stable while depth expands.</div>
 
-      <div class="bubble" id="bConcept">
-        <h3>Concept</h3>
+      <div class="bubble">
+        <h3 id="hConcept">Concept</h3>
         <p id="tConcept">—</p>
       </div>
 
-      <div class="bubble" id="bLive">
-        <h3>Live</h3>
+      <div class="bubble">
+        <h3 id="hLive">Live</h3>
         <p id="tLive">—</p>
       </div>
 
-      <div class="bubble" id="bRoadmap">
-        <h3>Roadmap</h3>
+      <div class="bubble">
+        <h3 id="hRoadmap">Roadmap</h3>
         <p id="tRoadmap">—</p>
       </div>
 
-      <!-- UNIVERSAL RETURN (NEW: ALWAYS PRESENT) -->
       <div class="returnRow">
         <button class="sbtn" id="btnReturnDomains" type="button">RETURN TO DOMAINS</button>
         <button class="sbtn" id="btnReturnQuadrants" type="button">BACK TO QUADRANTS</button>
@@ -445,12 +425,14 @@ a{text-decoration:none;color:inherit}
   if(style!=="formal" && style!=="informal") style="formal";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time);}catch(e){}
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   function q(){
     var p=new URLSearchParams();
     p.set("lang",lang); p.set("style",style); p.set("time",time);
     return "?"+p.toString();
   }
+
   // links
   document.getElementById("btnBack").href="/products/"+q();
   document.getElementById("btnExit").href="/door/"+q();
@@ -460,7 +442,117 @@ a{text-decoration:none;color:inherit}
   document.getElementById("dockLaws").href="/laws/"+q();
   document.getElementById("dockLinks").href="/links/"+q();
 
-  // ===== UI refs =====
+  // ===== UI text (single-language render) =====
+  var TXT = {
+    en:{
+      hdr:{t:"Education", s:"Traversal learning · bilingual · 1001 words"},
+      q:{
+        programs:{lab:"PROGRAMS", sub:"Tracks · outcomes · routines"},
+        language:{lab:"LANGUAGE", sub:"1001 · 4 levels"},
+        training:{lab:"TRAINING", sub:"Masterclasses · reps"},
+        cert:{lab:"CERTIFICATION", sub:"Verification · tiers"}
+      },
+      modal:{
+        note:"Tap a domain to enter its narrative. Return closes this layer.",
+        banner:"Traversal-first learning: structure stays stable while depth expands.",
+        concept:"Concept", live:"Live", roadmap:"Roadmap",
+        formal:"FORMAL", informal:"INFORMAL"
+      },
+      domains:{
+        programs:[
+          {key:"curriculum", title:"Curriculum Map", sub:"Concept · Live · Roadmap"},
+          {key:"routines", title:"Daily Routines", sub:"Concept · Live · Roadmap"},
+          {key:"checkpoints", title:"Checkpoints", sub:"Concept · Live · Roadmap"},
+          {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
+        ],
+        language:[
+          {key:"core1001", title:"Core 1001", sub:"Concept · Live · Roadmap"},
+          {key:"levels", title:"Four Levels", sub:"Concept · Live · Roadmap"},
+          {key:"practice", title:"Practice Loops", sub:"Concept · Live · Roadmap"},
+          {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
+        ],
+        training:[
+          {key:"masterclass", title:"Masterclasses", sub:"Concept · Live · Roadmap"},
+          {key:"trainer", title:"Train the Trainer", sub:"Concept · Live · Roadmap"},
+          {key:"rubrics", title:"Rubrics", sub:"Concept · Live · Roadmap"},
+          {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
+        ],
+        cert:[
+          {key:"evidence", title:"Evidence-Based Verification", sub:"Concept · Live · Roadmap"},
+          {key:"tiers", title:"Tier System", sub:"Concept · Live · Roadmap"},
+          {key:"integrity", title:"Anti-Gaming Discipline", sub:"Concept · Live · Roadmap"},
+          {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
+        ]
+      }
+    },
+    zh:{
+      hdr:{t:"教育", s:"遍历学习 · 中英双语 · 1001词"},
+      q:{
+        programs:{lab:"课程体系", sub:"路径 · 成果 · 例程"},
+        language:{lab:"语言", sub:"1001 · 四级"},
+        training:{lab:"训练", sub:"大师课 · 反复练"},
+        cert:{lab:"认证", sub:"验证 · 分层"}
+      },
+      modal:{
+        note:"点选一个域进入叙事。返回将关闭本层。",
+        banner:"遍历优先：结构稳定，深度逐步扩展。",
+        concept:"概念", live:"上线", roadmap:"路线图",
+        formal:"正式", informal:"通俗"
+      },
+      domains:{
+        programs:[
+          {key:"curriculum", title:"课程地图", sub:"概念 · 上线 · 路线图"},
+          {key:"routines", title:"每日例程", sub:"概念 · 上线 · 路线图"},
+          {key:"checkpoints", title:"检查点", sub:"概念 · 上线 · 路线图"},
+          {key:"return", title:"返回", sub:"回到四象限", action:"RETURN"}
+        ],
+        language:[
+          {key:"core1001", title:"核心1001词", sub:"概念 · 上线 · 路线图"},
+          {key:"levels", title:"四级结构", sub:"概念 · 上线 · 路线图"},
+          {key:"practice", title:"练习循环", sub:"概念 · 上线 · 路线图"},
+          {key:"return", title:"返回", sub:"回到四象限", action:"RETURN"}
+        ],
+        training:[
+          {key:"masterclass", title:"大师课", sub:"概念 · 上线 · 路线图"},
+          {key:"trainer", title:"培训讲师", sub:"概念 · 上线 · 路线图"},
+          {key:"rubrics", title:"评分规", sub:"概念 · 上线 · 路线图"},
+          {key:"return", title:"返回", sub:"回到四象限", action:"RETURN"}
+        ],
+        cert:[
+          {key:"evidence", title:"基于证据的验证", sub:"概念 · 上线 · 路线图"},
+          {key:"tiers", title:"分层体系", sub:"概念 · 上线 · 路线图"},
+          {key:"integrity", title:"防作弊纪律", sub:"概念 · 上线 · 路线图"},
+          {key:"return", title:"返回", sub:"回到四象限", action:"RETURN"}
+        ]
+      }
+    }
+  };
+
+  var T = (lang==="zh") ? TXT.zh : TXT.en;
+
+  document.getElementById("hdrT").textContent = T.hdr.t;
+  document.getElementById("hdrS").textContent = T.hdr.s;
+
+  document.getElementById("labPrograms").textContent = T.q.programs.lab;
+  document.getElementById("subPrograms").textContent = T.q.programs.sub;
+  document.getElementById("labLanguage").textContent = T.q.language.lab;
+  document.getElementById("subLanguage").textContent = T.q.language.sub;
+  document.getElementById("labTraining").textContent = T.q.training.lab;
+  document.getElementById("subTraining").textContent = T.q.training.sub;
+  document.getElementById("labCertification").textContent = T.q.cert.lab;
+  document.getElementById("subCertification").textContent = T.q.cert.sub;
+
+  document.getElementById("domainsNote").textContent = T.modal.note;
+  document.getElementById("bannerLine").textContent = T.modal.banner;
+
+  document.getElementById("hConcept").textContent = T.modal.concept;
+  document.getElementById("hLive").textContent = T.modal.live;
+  document.getElementById("hRoadmap").textContent = T.modal.roadmap;
+
+  document.getElementById("pillFormal").textContent = T.modal.formal;
+  document.getElementById("pillInformal").textContent = T.modal.informal;
+
+  // ===== refs =====
   var bd=document.getElementById("bd");
 
   var modalDomains=document.getElementById("modalDomains");
@@ -481,127 +573,10 @@ a{text-decoration:none;color:inherit}
   var btnReturnDomains=document.getElementById("btnReturnDomains");
   var btnReturnQuadrants=document.getElementById("btnReturnQuadrants");
 
-  // ===== Model =====
-  var state = {
-    quadrant: "FOUNDATION",
-    domain: null,
-    voice: "formal" // formal | informal
-  };
+  var state = { quadrant:"PROGRAMS", domain:null, voice:"formal" };
 
-  var CLAIM_LINE = "Public posture remains Industrial Plasma Thermal Substitution (C). Fusion is referenced only as readiness doctrine, not as gain.";
-
-  // Domain set per quadrant (KEEP SAME; ADD 2 new only)
-  // NOTE: We are not changing your story architecture; we only extend the existing inner page.
-  var QUADRANT_DOMAINS = {
-    "FOUNDATION": [
-      {key:"historical", title:"Historical Systems", sub:"Concept · Live · Roadmap"},
-      {key:"adversarial", title:"Adversarial", sub:"Concept · Live · Roadmap"},
-      {key:"baseline", title:"Baseline Constraints", sub:"Concept · Live · Roadmap"},
-      {key:"fusion", title:"Fusion Readiness", sub:"Concept · Live · Roadmap"},          // NEW
-      {key:"frontier", title:"Frontier Expansion", sub:"Concept · Live · Roadmap"},     // NEW
-      {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
-    ],
-    "ARCHITECTURE": [
-      {key:"engineering", title:"Engineering", sub:"Concept · Live · Roadmap"},
-      {key:"technology", title:"Technology", sub:"Concept · Live · Roadmap"},
-      {key:"interfaces", title:"Interfaces", sub:"Concept · Live · Roadmap"},
-      {key:"fusion", title:"Fusion Readiness", sub:"Concept · Live · Roadmap"},          // NEW
-      {key:"frontier", title:"Frontier Expansion", sub:"Concept · Live · Roadmap"},     // NEW
-      {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
-    ],
-    "PERFORMANCE": [
-      {key:"industrial", title:"Industrial", sub:"Concept · Live · Roadmap"},
-      {key:"environmental", title:"Environmental", sub:"Concept · Live · Roadmap"},
-      {key:"financial", title:"Financial", sub:"Concept · Live · Roadmap"},
-      {key:"fusion", title:"Fusion Readiness", sub:"Concept · Live · Roadmap"},          // NEW
-      {key:"frontier", title:"Frontier Expansion", sub:"Concept · Live · Roadmap"},     // NEW
-      {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
-    ],
-    "GOVERNANCE": [
-      {key:"policy", title:"Policy", sub:"Concept · Live · Roadmap"},
-      {key:"legal", title:"Legal", sub:"Concept · Live · Roadmap"},
-      {key:"public", title:"Public Trust", sub:"Concept · Live · Roadmap"},
-      {key:"fusion", title:"Fusion Readiness", sub:"Concept · Live · Roadmap"},          // NEW
-      {key:"frontier", title:"Frontier Expansion", sub:"Concept · Live · Roadmap"},     // NEW
-      {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
-    ]
-  };
-
-  // Content (placeholder-safe; replace later without changing structure)
-  // IMPORTANT: We are not touching your glossy/structure layer. This is content-only.
-  function getNarrative(domainKey, voice){
-    // Minimal unique bodies (kept short; your full content stays in your existing build; this is just safe scaffolding)
-    // If you already have your full text elsewhere, paste it into these fields later.
-    var V = (voice==="informal");
-    var BASE = {
-      concept: V
-        ? "This is the rulebook before the game. We don’t get to scale what sounds exciting unless it stays measurable. Industrial substitution is the foothold because it is real. Everything else is earned."
-        : "This domain establishes admissible posture prior to scaling. Industrial thermal substitution (C) remains the public surface. Fusion is referenced only as requirements doctrine. Definitions remain bounded and falsifiable.",
-      live: V
-        ? "Live means the rules actually matter. If a band drifts, you respond, not debate. If evidence breaks, you roll forward cleanly. Discipline is what makes speed survivable."
-        : "Live posture applies declared constraints under operation. Deviations trigger containment and audit logging. Stability is evaluated by measured bands. No upgrade is permitted without receipts.",
-      roadmap: V
-        ? "Roadmap is not more freedom. It is more discipline at larger scale. Proof gets easier to verify and harder to fake. That’s how the frontier stays honest."
-        : "Roadmap tightens thresholds and increases audit rigor with scale. Progression remains phase-gated. Claims remain bounded. Independent validation remains a prerequisite for any escalation."
-    };
-
-    // Domain-specific flavor (still bounded)
-    var D = {
-      historical: V
-        ? "History shows the same trap: scale by story, repair by crisis. Drift hides until it becomes catastrophic. We start by refusing that pattern."
-        : "Historical patterns show that incentive-led scaling amplifies coupled failure when constraints are discovered post-deployment. This surface begins with constraint declaration and anti-drift governance.",
-      adversarial: V
-        ? "Assume pressure. Assume bad actors. Assume shortcuts. You win by making cheating expensive and honesty easy. That’s what this structure does."
-        : "Adversarial posture assumes manipulation attempts and artifact-driven false positives. Integrity requires tamper-evidence, redundancy, and strict replayability under independent audit.",
-      baseline: V
-        ? "Baseline constraints are the foothold. They keep the dream honest. They keep the surface clean. They keep trust from becoming theater."
-        : "Baseline constraints define non-negotiable boundaries: measurement authority, containment interfaces, and non-retroactive audit discipline. This prevents narrative inflation.",
-      engineering: V
-        ? "Engineering is where romance dies and reliability wins. If heat spikes, something breaks. If isolation slips, risk travels. We design for the worst day."
-        : "Engineering posture is boundary-first: interface definition, containment robustness, and predictable failure modes. Reliability is enforced by measurable constraints, not by narrative framing.",
-      technology: V
-        ? "Technology is the nervous system. It tells the truth fast enough to matter. It makes drift visible before it becomes damage."
-        : "Technology posture requires deterministic telemetry integrity, time alignment, replayable logs, and bounded latency. Measurements remain authoritative and audit-compatible.",
-      interfaces: V
-        ? "Interfaces are where systems either scale cleanly or bleed risk. Clean interfaces make everything downstream calmer."
-        : "Interfaces define isolation and boundary conditions. Transfer functions are constrained. Downstream exposure is minimized by design. Interfaces remain measurable at the boundary.",
-      industrial: V
-        ? "Industrial is the scoreboard people actually care about. Heat delivered. Variance controlled. Uptime earned. That’s the surface."
-        : "Industrial posture remains Industrial thermal substitution (C) with audited heat delivery, bounded variance, and phase-gated scale. No fusion gain claim is asserted.",
-      environmental: V
-        ? "Environment is not a vibe; it is a boundary. If you can’t measure impact, you can’t claim safety."
-        : "Environmental posture requires measured discharge bands, explicit interface constraints, and verifiable compliance. Exposure remains segmented and monitored.",
-      financial: V
-        ? "Finance is where wishful thinking goes to die. Risk has a price. Proof lowers it. Drift raises it."
-        : "Financial posture is underwriting-grade: risk tiers map to measured envelopes. Variance is priced. Expansion requires receipts, not projections.",
-      policy: V
-        ? "Policy is how you keep scale from turning into chaos. Rules make progress repeatable instead of fragile."
-        : "Policy posture defines gating doctrine, exception discipline, and non-retroactive enforcement. Compliance is expressed as measurable criteria and reason codes.",
-      legal: V
-        ? "Legal is the contract layer. If it’s vague, somebody will exploit it. If it’s clear, everyone moves faster."
-        : "Legal posture requires bounded claims, explicit disclosures, and audit-traceable documentation. Liability is minimized by clear interfaces and disciplined language.",
-      public: V
-        ? "Public trust is the multiplier. When people can see the boundaries, fear drops and adoption rises."
-        : "Public trust posture is achieved by bounded claims, measurable interfaces, and transparent standards. Drift is prevented by stable definitions and auditability.",
-      fusion: V
-        ? "Fusion stays behind the gate until it earns daylight. Readiness is discipline: instruments, receipts, repeatability, and hard stops."
-        : "Fusion readiness is requirements doctrine only. Admissibility depends on calibrated instrumentation, closed accounting, disproof conditions, and independent review. No gain is asserted.",
-      frontier: V
-        ? "Frontier isn’t fantasy; it’s compounding capability. Stable power builds stable industry. Stable industry builds the sky."
-        : "Frontier expansion is staged feasibility: terrestrial stability precedes orbital infrastructure. Governance and measurement rules remain binding. Speculation is labeled and constrained."
-    };
-
-    return {
-      concept: D[domainKey] ? (D[domainKey] + " " + BASE.concept) : BASE.concept,
-      live: D[domainKey] ? (D[domainKey] + " " + BASE.live) : BASE.live,
-      roadmap: D[domainKey] ? (D[domainKey] + " " + BASE.roadmap) : BASE.roadmap
-    };
-  }
-
-  // ===== Show/hide helpers =====
   function showOverlay(){ bd.classList.add("show"); }
   function hideOverlay(){ bd.classList.remove("show"); }
-
   function showDomains(){
     showOverlay();
     modalNarr.classList.remove("show");
@@ -618,80 +593,265 @@ a{text-decoration:none;color:inherit}
     hideOverlay();
   }
 
-  // ===== Domain grid render =====
+  function quadrantTitle(){
+    if(state.quadrant==="PROGRAMS") return (lang==="zh")?"教育 · 课程体系":"EDUCATION · PROGRAMS";
+    if(state.quadrant==="LANGUAGE") return (lang==="zh")?"教育 · 语言":"EDUCATION · LANGUAGE";
+    if(state.quadrant==="TRAINING") return (lang==="zh")?"教育 · 训练":"EDUCATION · TRAINING";
+    return (lang==="zh")?"教育 · 认证":"EDUCATION · CERTIFICATION";
+  }
+
+  function getDomainsForQuadrant(){
+    if(state.quadrant==="PROGRAMS") return T.domains.programs;
+    if(state.quadrant==="LANGUAGE") return T.domains.language;
+    if(state.quadrant==="TRAINING") return T.domains.training;
+    return T.domains.cert;
+  }
+
+  function narrativeLabel(key){
+    var enMap={
+      curriculum:"Curriculum Map", routines:"Daily Routines", checkpoints:"Checkpoints",
+      core1001:"Core 1001", levels:"Four Levels", practice:"Practice Loops",
+      masterclass:"Masterclasses", trainer:"Train the Trainer", rubrics:"Rubrics",
+      evidence:"Evidence-Based Verification", tiers:"Tier System", integrity:"Anti-Gaming Discipline"
+    };
+    var zhMap={
+      curriculum:"课程地图", routines:"每日例程", checkpoints:"检查点",
+      core1001:"核心1001词", levels:"四级结构", practice:"练习循环",
+      masterclass:"大师课", trainer:"培训讲师", rubrics:"评分规",
+      evidence:"基于证据的验证", tiers:"分层体系", integrity:"防作弊纪律"
+    };
+    return (lang==="zh") ? (zhMap[key]||"域") : (enMap[key]||"Domain");
+  }
+
+  function narrativePack(key, voice){
+    var inf = (voice==="informal");
+    var P = {
+      curriculum:{
+        formal:{
+          concept:"The curriculum is a navigable map, not a linear textbook. Each node is defined by an outcome and a checkpoint. Structure stays stable while content expands.",
+          live:"Live operation emphasizes repeatable routines, measurable checkpoints, and predictable returns. Learners enter at need, practice, and return without losing context.",
+          roadmap:"Roadmap expands the map into domain tracks with consistent labels, bilingual parity, and exportable study bundles. The topology remains unchanged."
+        },
+        informal:{
+          concept:"Think of it like a city map for learning. You don’t walk every street in order—you go where you need, then you come back smarter.",
+          live:"Right now, the map stays steady while you explore. Tap what you need, practice it fast, and keep your momentum without getting lost.",
+          roadmap:"Next, the map becomes a full adventure: more tracks, more practice packs, and more real-world missions—same structure, deeper results."
+        }
+      },
+      routines:{
+        formal:{
+          concept:"Daily routines convert knowledge into skill through repetition under a stable structure. The objective is retention and execution, not memorization.",
+          live:"Live routines are short, bounded, and trackable. Each routine ties to a node, and each node ties to a measurable checkpoint.",
+          roadmap:"Roadmap adds adaptive scheduling and printable drill packs while preserving the same navigation contract and language parity."
+        },
+        informal:{
+          concept:"This is the part where progress becomes real. A small routine you actually do beats a big plan you never run.",
+          live:"You can run these drills daily like a gym. A few clean reps, a quick win, and you keep moving.",
+          roadmap:"Soon you’ll have routine packs for any goal—speaking, writing, confidence—delivered in the same clean, tap-first flow."
+        }
+      },
+      checkpoints:{
+        formal:{
+          concept:"Checkpoints are evidence gates. They prevent drift by verifying outputs instead of trusting intention. Completion is defined by observable performance.",
+          live:"Live checkpoints are lightweight but strict: pass/fail thresholds, clear retry loops, and consistent measurement language across EN/中文.",
+          roadmap:"Roadmap adds tiering and optional certification pathways while maintaining neutrality and auditability."
+        },
+        informal:{
+          concept:"Checkpoints keep it honest. They stop you from thinking you learned something when you only read it once.",
+          live:"You’ll know exactly what ‘done’ means. Pass it, and move on. Miss it, and you get a clean path to fix it.",
+          roadmap:"Later, checkpoints can turn into badges if you want—without turning the system into a credential circus."
+        }
+      },
+
+      core1001:{
+        formal:{
+          concept:"Clean English Core is a constrained vocabulary system designed for fast functional output. The core set is stable and the delivery is traversal-first.",
+          live:"Live usage focuses on high-frequency utility: immediate conversation, comprehension, and daily practice loops supported by bilingual mapping.",
+          roadmap:"Roadmap extends the core with overlays and domain packs while preserving the 1001 anchor for consistency and portability."
+        },
+        informal:{
+          concept:"1001 words is the cheat code for momentum. Small, powerful, and practical—so you can actually start talking.",
+          live:"You can use it today: learn a slice, speak it, and build confidence fast—中文支持 keeps you oriented.",
+          roadmap:"Next, you get overlays for real life: work, sales, travel—without breaking the core that makes it simple."
+        }
+      },
+      levels:{
+        formal:{
+          concept:"Four levels partition the 1001 set into mastery bands. Each band has defined outcomes and checkpoints and remains stable across translations.",
+          live:"Live progression is non-linear: learners may traverse categories within a level and return as needed. Structure prevents confusion while allowing freedom.",
+          roadmap:"Roadmap adds placement diagnostics and expansion packs while keeping the four-level backbone unchanged."
+        },
+        informal:{
+          concept:"Four levels means you always know where you are. It’s like climbing clean steps instead of wandering in fog.",
+          live:"You can jump around inside a level and still feel organized. That’s the whole point: freedom without chaos.",
+          roadmap:"Later, you’ll get smart placement and extra packs, but the ladder stays the same so you never lose your footing."
+        }
+      },
+      practice:{
+        formal:{
+          concept:"Practice loops are short execution cycles that convert vocabulary into automatic output. The loop is structured, repeatable, and measurable.",
+          live:"Live loops prioritize speaking, listening, and recall under time bounds. The goal is high retention with low friction.",
+          roadmap:"Roadmap expands loops into guided routines with optional audio prompts and printable practice cards."
+        },
+        informal:{
+          concept:"This is where the language becomes yours. You don’t ‘study’ it—you run it until it’s automatic.",
+          live:"Short loops, fast wins. You practice like an athlete, not like you’re taking notes for a test.",
+          roadmap:"Next you’ll have audio prompts and cards that make practice feel like a game—still disciplined, still real."
+        }
+      },
+
+      masterclass:{
+        formal:{
+          concept:"Masterclasses train traversal literacy: how to navigate maps, switch lenses, and build repeatable learning habits without drift.",
+          live:"Live delivery uses modules, drills, and checkpoints tied to the same platform structure. Facilitators remain aligned via rubrics.",
+          roadmap:"Roadmap scales via train-the-trainer kits and bilingual facilitator materials while maintaining the same contract."
+        },
+        informal:{
+          concept:"Masterclasses teach the method—not just the content. You learn how to learn, fast.",
+          live:"Workshops feel like a lab: you practice, get feedback, and leave with a clean routine you can run.",
+          roadmap:"Next, we package the whole thing so trusted teachers can multiply the impact without watering it down."
+        }
+      },
+      trainer:{
+        formal:{
+          concept:"Training instructors is a scaling strategy: it reduces drift and multiplies reach while maintaining observer-invariant evaluation standards.",
+          live:"Live train-the-trainer uses rubrics, evidence requirements, and repeatable delivery scripts to preserve meaning.",
+          roadmap:"Roadmap adds tiered instructor levels and audit-ready logs where certification is appropriate."
+        },
+        informal:{
+          concept:"If you want this to spread safely, you train the trainers. That’s how you scale without chaos.",
+          live:"We give teachers a playbook that actually works: simple structure, clear drills, and honest checkpoints.",
+          roadmap:"Then you build tiers—so the best teachers can lead, and the system stays clean as it grows."
+        }
+      },
+      rubrics:{
+        formal:{
+          concept:"Rubrics define observer-invariant scoring. They prevent intent-based interpretation and keep evaluation tied to outputs and evidence.",
+          live:"Live rubrics are used to score performance consistently across facilitators, languages, and cohorts.",
+          roadmap:"Roadmap integrates rubrics into registries and optional verification layers while preserving neutrality."
+        },
+        informal:{
+          concept:"Rubrics stop the drama. They make scoring about what happened, not what someone ‘meant.’",
+          live:"That means any teacher can grade the same output the same way—EN or 中文—no guessing.",
+          roadmap:"Later, rubrics plug into verification if you want, but the heart stays simple: show the output, earn the result."
+        }
+      },
+
+      evidence:{
+        formal:{
+          concept:"Verification is evidence-based: completion is tied to receipts and observed outputs, not self-report or credential branding.",
+          live:"Live verification supports lookupable status and clear reason codes, while separating builders from issuers to reduce capture risk.",
+          roadmap:"Roadmap expands into tiered verification and registry integration while maintaining the same structural constraints."
+        },
+        informal:{
+          concept:"We verify what’s real. Not vibes. Not resumes. Outputs.",
+          live:"If you did the work, you can prove it cleanly. If you didn’t, the system won’t pretend you did.",
+          roadmap:"Later, verification becomes more powerful—still honest, still bounded—because trust scales when proof scales."
+        }
+      },
+      tiers:{
+        formal:{
+          concept:"Tiering organizes capability into bounded levels. Each tier has defined requirements, evidence, and renewal rules when applicable.",
+          live:"Live tiers remain neutral and output-based. They are designed to prevent gaming and to support safe scaling.",
+          roadmap:"Roadmap adds cross-domain tier mapping while preserving the same admissibility discipline."
+        },
+        informal:{
+          concept:"Tiers make progress visible. You can see your level, and you know what ‘next’ means.",
+          live:"You climb by proving it, not by pretending. That keeps the culture clean.",
+          roadmap:"Later, tiers connect across tracks—language, method, leadership—without turning into bureaucracy."
+        }
+      },
+      integrity:{
+        formal:{
+          concept:"Anti-gaming discipline prevents credential inflation. It requires evidence, defines disproof conditions, and logs exceptions explicitly.",
+          live:"Live integrity controls enforce separation of roles, audit logs, and deterministic rules for validity windows and revocation.",
+          roadmap:"Roadmap strengthens public-safe transparency while maintaining user privacy boundaries and scope control."
+        },
+        informal:{
+          concept:"If a system can be gamed, it’s broken. So we build it to resist shortcuts.",
+          live:"That means clear rules, clear logs, and no secret exceptions. Trust stays high because cheating stays expensive.",
+          roadmap:"Later, integrity becomes the platform’s superpower: people adopt what stays honest under pressure."
+        }
+      }
+    };
+
+    var node = P[key];
+    if(!node){
+      return {
+        concept:(lang==="zh")?"该域内容待补充。":"This domain is not populated yet.",
+        live:(lang==="zh")?"该域内容待补充。":"This domain is not populated yet.",
+        roadmap:(lang==="zh")?"该域内容待补充。":"This domain is not populated yet."
+      };
+    }
+    return (voice==="informal") ? node.informal : node.formal;
+  }
+
+  function showOverlay(){ bd.classList.add("show"); }
+  function hideOverlay(){ bd.classList.remove("show"); }
+  function showDomains(){
+    showOverlay();
+    modalNarr.classList.remove("show");
+    modalDomains.classList.add("show");
+  }
+  function showNarrative(){
+    showOverlay();
+    modalDomains.classList.remove("show");
+    modalNarr.classList.add("show");
+  }
+  function closeAll(){
+    modalDomains.classList.remove("show");
+    modalNarr.classList.remove("show");
+    hideOverlay();
+  }
+
   function renderDomains(){
-    domainsTitle.textContent = "ENERGY · " + state.quadrant;
+    domainsTitle.textContent = quadrantTitle();
     domainsGrid.innerHTML = "";
 
-    var items = QUADRANT_DOMAINS[state.quadrant] || [];
+    var items = getDomainsForQuadrant();
     items.forEach(function(it){
-      var card = document.createElement("div");
-      card.className = "domCard";
+      var card=document.createElement("div");
+      card.className="domCard";
       card.setAttribute("role","button");
       card.setAttribute("tabindex","0");
 
-      var h = document.createElement("div");
-      h.className = "domTitle";
-      h.textContent = it.title;
+      var h=document.createElement("div");
+      h.className="domTitle";
+      h.textContent=it.title;
 
-      var s = document.createElement("div");
-      s.className = "domSub";
-      s.textContent = it.sub;
+      var s=document.createElement("div");
+      s.className="domSub";
+      s.textContent=it.sub;
 
       card.appendChild(h);
       card.appendChild(s);
 
       function act(){
-        if(it.action==="RETURN"){
-          closeAll();
-          return;
-        }
+        if(it.action==="RETURN"){ closeAll(); return; }
         state.domain = it.key;
         renderNarrative();
         showNarrative();
       }
-
       card.addEventListener("click", act);
       card.addEventListener("keydown", function(e){
-        if(e.key==="Enter" || e.key===" "){ e.preventDefault(); act(); }
+        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
       });
 
       domainsGrid.appendChild(card);
     });
   }
 
-  // ===== Narrative render =====
   function renderNarrative(){
-    var title = state.domain || "";
-    var labelMap = {
-      historical:"Historical Systems",
-      adversarial:"Adversarial",
-      baseline:"Baseline Constraints",
-      engineering:"Engineering",
-      technology:"Technology",
-      interfaces:"Interfaces",
-      industrial:"Industrial",
-      environmental:"Environmental",
-      financial:"Financial",
-      policy:"Policy",
-      legal:"Legal",
-      public:"Public Trust",
-      fusion:"Fusion Readiness",
-      frontier:"Frontier Expansion"
-    };
-    narTitle.textContent = "ENERGY · " + (labelMap[title] || "Domain");
-    document.getElementById("claimBanner").textContent = CLAIM_LINE;
+    narTitle.textContent = (lang==="zh") ? ("教育 · " + narrativeLabel(state.domain)) : ("EDUCATION · " + narrativeLabel(state.domain));
+    pillFormal.classList.toggle("active", state.voice==="formal");
+    pillInformal.classList.toggle("active", state.voice==="informal");
 
-    var pack = getNarrative(state.domain, state.voice);
+    var pack = narrativePack(state.domain, state.voice);
     tConcept.textContent = pack.concept;
     tLive.textContent = pack.live;
     tRoadmap.textContent = pack.roadmap;
-
-    pillFormal.classList.toggle("active", state.voice==="formal");
-    pillInformal.classList.toggle("active", state.voice==="informal");
   }
 
-  // ===== Quadrant bindings =====
   function bindQuad(id, quad){
     var el=document.getElementById(id);
     if(!el) return;
@@ -703,45 +863,28 @@ a{text-decoration:none;color:inherit}
     }
     el.addEventListener("click", open);
     el.addEventListener("keydown", function(e){
-      if(e.key==="Enter" || e.key===" "){ e.preventDefault(); open(); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(); }
     });
   }
-  bindQuad("qFoundation","FOUNDATION");
-  bindQuad("qArchitecture","ARCHITECTURE");
-  bindQuad("qPerformance","PERFORMANCE");
-  bindQuad("qGovernance","GOVERNANCE");
+  bindQuad("qPrograms","PROGRAMS");
+  bindQuad("qLanguage","LANGUAGE");
+  bindQuad("qTraining","TRAINING");
+  bindQuad("qCertification","CERT");
 
-  // ===== Close wiring =====
+  // close wiring
   domainsClose.addEventListener("click", closeAll);
-  narClose.addEventListener("click", function(){
-    // Close narrative → return to domains (NEW behavior)
-    showDomains();
-  });
+  narClose.addEventListener("click", showDomains);
   bd.addEventListener("click", closeAll);
-
-  // Prevent overlay click from killing modal clicks
   modalDomains.addEventListener("click", function(e){ e.stopPropagation(); });
   modalNarr.addEventListener("click", function(e){ e.stopPropagation(); });
 
-  // ===== Voice toggle =====
-  pillFormal.addEventListener("click", function(){
-    state.voice="formal";
-    renderNarrative();
-  });
-  pillInformal.addEventListener("click", function(){
-    state.voice="informal";
-    renderNarrative();
-  });
+  // voice toggle
+  pillFormal.addEventListener("click", function(){ state.voice="formal"; renderNarrative(); });
+  pillInformal.addEventListener("click", function(){ state.voice="informal"; renderNarrative(); });
 
-  // ===== Universal return (NEW) =====
-  btnReturnDomains.addEventListener("click", function(){
-    // Always go back one layer (narrative → domains)
-    showDomains();
-  });
-  btnReturnQuadrants.addEventListener("click", function(){
-    // Always go back to quadrants (close everything)
-    closeAll();
-  });
+  // returns
+  btnReturnDomains.addEventListener("click", showDomains);
+  btnReturnQuadrants.addEventListener("click", closeAll);
 
 })();
 </script>

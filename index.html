@@ -1,18 +1,17 @@
-<!-- TNT — /index.html  (TERMINAL · 2 PRIMARY DIAMONDS → CLEAN STACKED BUBBLES · NO LENSES · FRONTIER SECTION)
-     FIXES (COMPLETE + FUNCTIONAL + SYMMETRICAL):
-       - Keeps Chinese theme (black/red/gold) + opal surfaces
-       - 2 primary diamonds on the face (centered, symmetrical)
-       - Click diamond → modal opens
-       - Modal has:
-           * Header card (tight + cinematic, bounded)
-           * Stacked full-width horizontal bubbles (accordion)
-           * One open at a time (inside the chosen panel)
-           * Jump buttons only (uniform)
-       - NO lenses anywhere on Terminal
-       - Terminal preserves and propagates lang/style/time if present, but does NOT change them
-       - Adds explicit FRONTIER section (space / fusion readiness / solar / innovation) with jump routes
+<!-- TNT — /index.html  (TERMINAL · 2 PRIMARY DIAMONDS · VERTICAL · NO COMPETING UI · FRONTIER SECTION)
+     FIXES (FULL FILE):
+       1) REMOVE COMPETING UI:
+          - NO bottom dock on Terminal (only top-left EXIT + HUB).
+       2) DIAMONDS VERTICAL (stacked):
+          - Two primary diamonds are TOP/BOTTOM, centered.
+       3) COMPLETE MAP COVERAGE:
+          - WHERE TO GO NEXT includes: HOME, HUB, DOOR, TERMINAL, PRODUCTS (+ Energy/Education/Software/Commercial), LAWS, GAUGES, LINKS, INNOVATION.
+          - FRONTIER includes: INNOVATION, FUSION READINESS, ENERGY, SOLAR/SPACE lanes.
+     LOCKS:
        - Uses /assets/ui.css + /assets/branch.css only
-       - Does NOT style html/body background
+       - DOES NOT style html/body background (ui.css owns field)
+       - NO lenses anywhere on Terminal
+       - Terminal preserves & propagates lang/style/time if present, but does NOT change them
 -->
 
 <!doctype html>
@@ -31,15 +30,13 @@ a{color:inherit;text-decoration:none}
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 
 :root{
-  --R:154px;
+  --R:136px;
   --red: rgba(176,0,0,.22);
   --gold: rgba(212,175,55,.55);
-  --opal: rgba(255,255,255,.10);
   --mut: rgba(255,255,255,.88);
-  --mut2: rgba(255,255,255,.72);
 }
 
-/* Use site button class if present, otherwise fallback styling */
+/* Buttons (use site class if present; fallback included) */
 .crp-btn, .btn{
   display:inline-flex;align-items:center;justify-content:center;
   padding:10px 16px;border-radius:14px;
@@ -51,31 +48,37 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 }
 .crp-btn:hover, .btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px rgba(212,175,55,.22)}
 
-/* Top-left */
-.top-left{position:fixed;left:16px;top:16px;z-index:90;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+/* Top-left (ONLY navigation on Terminal) */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:120;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
 
 /* Brand pill */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:80;text-align:center;padding:10px 14px;border-radius:999px;
+  z-index:110;text-align:center;padding:10px 14px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.16);
   backdrop-filter:blur(8px);
+  pointer-events:none;
 }
 .brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
 .brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
 
 /* Stage */
 .stage{
-  position:fixed;left:50%;top:52%;
+  position:fixed;left:50%;top:54%;
   transform:translate(-50%,-50%);
-  width:min(760px,94vw);height:min(760px,94vw);
+  width:min(560px,92vw);height:min(560px,92vw);
   z-index:60;
   pointer-events:none;
 }
+
+/* Outer shell (visual only) */
 .outer{
   position:absolute;left:50%;top:50%;
-  width:min(700px,92vw);height:min(700px,92vw);
+  width:min(560px,92vw);height:min(560px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:64px;
   background:
@@ -84,12 +87,14 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     linear-gradient(145deg, rgba(17,22,28,.56), rgba(11,15,20,.70));
   border:1px solid rgba(255,255,255,.10);
   box-shadow:0 90px 260px rgba(0,0,0,.72), inset 0 2px 0 rgba(255,255,255,.10), inset 0 -50px 90px rgba(0,0,0,.55);
-  opacity:.88;
+  opacity:.55;
   pointer-events:none;
 }
 
+/* Diamonds (gloss) */
 .d{
-  width:220px;height:220px;position:absolute;left:50%;top:50%;
+  width:210px;height:210px;
+  position:absolute;left:50%;top:50%;
   transform-origin:center;border-radius:28px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
@@ -130,8 +135,8 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   box-shadow:0 36px 120px rgba(0,0,0,.90),0 0 22px rgba(212,175,55,.22), inset 0 2px 0 rgba(255,255,255,.12);
   border-color:rgba(212,175,55,.30);
 }
-.d-left{transform:translate(-50%,-50%) translate(calc(var(--R) * -0.88), 0) rotate(45deg)}
-.d-right{transform:translate(-50%,-50%) translate(calc(var(--R) * 0.88), 0) rotate(45deg)}
+.d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
+.d-bot{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
 
 .inner{
   width:100%;height:100%;
@@ -153,20 +158,6 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
   display:grid;place-items:center;font-weight:950;letter-spacing:.5px;opacity:.92;
   pointer-events:none;
-}
-
-/* Dock */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:90;
-  width:min(980px,94vw);
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  backdrop-filter:blur(8px);
 }
 
 /* Modal */
@@ -244,14 +235,12 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 .stackRow.open .stackBody{display:block}
 .pdesc{margin:0 0 10px;color:rgba(255,255,255,.86);line-height:1.55}
 .jumpRow{display:flex;gap:10px;flex-wrap:wrap}
-
-/* Footer */
 .mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
 
 @media (max-width:560px){
-  :root{--R:136px}
-  .d{width:180px;height:180px}
-  .stage{top:50%}
+  :root{--R:124px}
+  .d{width:200px;height:200px}
+  .stage{top:56%}
 }
 </style>
 </head>
@@ -263,38 +252,30 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
 </div>
 
-<div class="brand">
+<div class="brand" aria-hidden="true">
   <div class="name" id="brandName">TERMINAL</div>
-  <div class="tag" id="brandTag">Two diamonds · Jump-only · Symmetry</div>
+  <div class="tag" id="brandTag">Two diamonds · Jump-only · Vertical</div>
 </div>
 
-<div class="stage" aria-label="Terminal two-diamond entry">
+<div class="stage" aria-label="Terminal entry">
   <div class="outer"></div>
 
-  <div class="d d-left" id="dNext" role="button" tabindex="0">
+  <div class="d d-top" id="dNext" role="button" tabindex="0">
     <div class="inner">
       <div class="lab" id="labNext">WHERE TO GO NEXT</div>
-      <div class="sub" id="subNext">Fast orientation · Clean jumps · Return-safe</div>
+      <div class="sub" id="subNext">Full map · Clean jumps · Return-safe</div>
     </div>
   </div>
 
-  <div class="d d-right" id="dBoard" role="button" tabindex="0">
+  <div class="d d-bot" id="dFrontier" role="button" tabindex="0">
     <div class="inner">
-      <div class="lab" id="labBoard">FRONTIER</div>
-      <div class="sub" id="subBoard">Space · Solar · Fusion readiness · Innovation</div>
+      <div class="lab" id="labFrontier">FRONTIER</div>
+      <div class="sub" id="subFrontier">Space · Solar · Fusion readiness · Innovation</div>
     </div>
   </div>
 
   <div class="core">◆</div>
 </div>
-
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="crp-btn crp-btn-primary" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
-  <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="crp-btn" id="dockGauges" href="/gauges/">GAUGES</a>
-</nav>
 
 <div class="bd" id="bd" aria-hidden="true"></div>
 
@@ -343,32 +324,26 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     return s ? ("?"+s) : "";
   }
 
-  // Wire top buttons + dock
+  // Wire top buttons
   document.getElementById("btnExit").href="/door/"+q();
   document.getElementById("btnHub").href="/home/"+q();
 
-  document.getElementById("dockTerminal").href="/index.html"+q();
-  document.getElementById("dockLinks").href="/links/"+q();
-  document.getElementById("dockProducts").href="/products/"+q();
-  document.getElementById("dockLaws").href="/laws/"+q();
-  document.getElementById("dockGauges").href="/gauges/"+q();
-
-  // Minimal i18n for face labels
+  // i18n (minimal)
   const UI = {
     en:{
       brandName:"TERMINAL",
-      brandTag:"Two diamonds · Jump-only · Symmetry",
+      brandTag:"Two diamonds · Jump-only · Vertical",
       leftLab:"WHERE TO GO NEXT",
-      leftSub:"Fast orientation · Clean jumps · Return-safe",
+      leftSub:"Full map · Clean jumps · Return-safe",
       rightLab:"FRONTIER",
       rightSub:"Space · Solar · Fusion readiness · Innovation",
       ret:"RETURN"
     },
     zh:{
       brandName:"终端",
-      brandTag:"双菱形 · 仅跳转 · 对称",
+      brandTag:"双菱形 · 仅跳转 · 垂直",
       leftLab:"下一步去哪",
-      leftSub:"快速定位 · 干净跳转 · 可返回",
+      leftSub:"全站地图 · 干净跳转 · 可返回",
       rightLab:"前沿",
       rightSub:"太空 · 太阳能 · 聚变就绪 · 创新",
       ret:"返回"
@@ -379,8 +354,8 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   document.getElementById("brandTag").textContent = T.brandTag;
   document.getElementById("labNext").textContent = T.leftLab;
   document.getElementById("subNext").textContent = T.leftSub;
-  document.getElementById("labBoard").textContent = T.rightLab;
-  document.getElementById("subBoard").textContent = T.rightSub;
+  document.getElementById("labFrontier").textContent = T.rightLab;
+  document.getElementById("subFrontier").textContent = T.rightSub;
   document.getElementById("mReturn").textContent = T.ret;
 
   // Modal refs
@@ -407,13 +382,13 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   mClose.addEventListener("click", closeModal);
   mReturn.addEventListener("click", closeModal);
 
-  // Two diamonds click
+  // Diamond clicks
   const dNext=document.getElementById("dNext");
-  const dBoard=document.getElementById("dBoard");
+  const dFrontier=document.getElementById("dFrontier");
   dNext.addEventListener("click", ()=>openModal("nav"));
-  dBoard.addEventListener("click", ()=>openModal("frontier"));
+  dFrontier.addEventListener("click", ()=>openModal("frontier"));
   dNext.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal("nav"); }});
-  dBoard.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal("frontier"); }});
+  dFrontier.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal("frontier"); }});
 
   function row(title, sub, copy, jumps, color){
     return {title, sub, copy, jumps, color};
@@ -490,81 +465,129 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 
   function build(mode){
     stackList.innerHTML="";
-    const ACC = { nav:"#D4AF37", frontier:"#93C5FD", energy:"#F59E0B", explore:"#60A5FA", safety:"#A3A3A3" };
+    const ACC = { nav:"#D4AF37", frontier:"#93C5FD", energy:"#F59E0B", explore:"#A78BFA", safety:"#A3A3A3", green:"#22C55E" };
 
     const NAV_ROWS_EN = [
-      row("HUB FIRST","Re-orient fast.",
-          "If you’re unsure where to go, start with HUB. North defines, East executes, South constrains, West contains. Then return with your state intact.",
-          [ jump("JUMP HUB","/home/"), jump("JUMP PRODUCTS","/products/"), jump("JUMP LINKS","/links/") ],
+      row("HOME","Primary entry.",
+          "Home is the canonical entry surface. If you want to start clean, go there first.",
+          [ jump("JUMP HOME","/home/") ],
           ACC.nav),
-      row("STATE PRESERVATION","No surprise resets.",
-          "Terminal preserves your current lang/style/time if present. Terminal never changes your state; it only propagates it through jump links.",
-          [ jump("JUMP LAWS","/laws/"), jump("JUMP GAUGES","/gauges/"), jump("JUMP HUB","/home/") ],
+      row("HUB","Compass orientation.",
+          "Hub is the map: North defines, East executes, South constrains, West contains. Use it when you feel lost.",
+          [ jump("JUMP HUB","/home/") ],
           ACC.nav),
-      row("BUILD POSTURE","Visible progress, no broken flows.",
-          "Unfinished areas can appear as placeholders. That is intentional: progress stays visible while routing remains deterministic.",
-          [ jump("JUMP PRODUCTS","/products/"), jump("JUMP INNOVATION","/explore/"), jump("JUMP LINKS","/links/") ],
+      row("DOOR","Language selection.",
+          "Door is the language gate. If language feels wrong, re-enter there to reset cleanly.",
+          [ jump("JUMP DOOR","/door/") ],
+          ACC.safety),
+      row("PRODUCTS","Catalog spine.",
+          "Products contains the four execution volumes. Use these jumps to go directly.",
+          [ jump("JUMP PRODUCTS","/products/"),
+            jump("ENERGY","/products/energy/"),
+            jump("EDUCATION","/products/education/"),
+            jump("SOFTWARE","/products/software/"),
+            jump("COMMERCIAL","/products/commercial/") ],
+          ACC.green),
+      row("LAWS","Definitions and governance.",
+          "Laws holds bounded definitions and governance rules. If you need clarity, start there.",
+          [ jump("JUMP LAWS","/laws/") ],
+          ACC.nav),
+      row("GAUGES","Measurement surfaces.",
+          "Gauges exposes measurement-facing views without changing claims.",
+          [ jump("JUMP GAUGES","/gauges/") ],
+          ACC.nav),
+      row("LINKS","External index.",
+          "Links is the outward directory for cross-site resources.",
+          [ jump("JUMP LINKS","/links/") ],
+          ACC.nav),
+      row("INNOVATION","Frontier lane.",
+          "Innovation is the frontier lane. Big ideas live there with bounded posture.",
+          [ jump("JUMP INNOVATION","/explore/") ],
+          ACC.explore),
+      row("TERMINAL","This page.",
+          "Terminal is lens-free and jump-only. It preserves your current lang/style/time; it does not change them.",
+          [ jump("RELOAD TERMINAL","/index.html") ],
           ACC.nav)
     ];
 
     const NAV_ROWS_ZH = [
-      row("先去枢纽","快速定位。",
-          "不确定去哪就先去枢纽。北定义，东执行，南约束，西隔离。然后带着状态返回继续。",
-          [ jump("跳转枢纽","/home/"), jump("跳转产品","/products/"), jump("跳转链接","/links/") ],
+      row("主页","主入口。",
+          "主页是规范入口。想要干净开始，就先去那里。",
+          [ jump("跳转主页","/home/") ],
           ACC.nav),
-      row("状态保持","不意外重置。",
-          "终端会保留你当前的lang/style/time（若存在）。终端不改状态，只负责把状态带着跳转。",
-          [ jump("跳转法则","/laws/"), jump("跳转量规","/gauges/"), jump("跳转枢纽","/home/") ],
+      row("枢纽","罗盘定位。",
+          "枢纽是地图：北定义，东执行，南约束，西隔离。迷路就先来这里。",
+          [ jump("跳转枢纽","/home/") ],
           ACC.nav),
-      row("构建姿态","进度可见，路由不断。",
-          "未完成区域可用占位展示。目的是让进度可见，同时保持路径确定与可修。",
-          [ jump("跳转产品","/products/"), jump("跳转创新","/explore/"), jump("跳转链接","/links/") ],
+      row("入口(语言)","语言选择。",
+          "入口是语言闸门。语言不对就回入口重进。",
+          [ jump("跳转入口","/door/") ],
+          ACC.safety),
+      row("产品","目录脊柱。",
+          "产品包含四大执行卷。可直接跳转。",
+          [ jump("跳转产品","/products/"),
+            jump("能源","/products/energy/"),
+            jump("教育","/products/education/"),
+            jump("软件","/products/software/"),
+            jump("商业","/products/commercial/") ],
+          ACC.green),
+      row("法则","定义与治理。",
+          "法则保存有界定义与治理规则。需要清晰就从这里开始。",
+          [ jump("跳转法则","/laws/") ],
+          ACC.nav),
+      row("量规","测量面。",
+          "量规展示测量视图，但不改变主张。",
+          [ jump("跳转量规","/gauges/") ],
+          ACC.nav),
+      row("链接","外部索引。",
+          "链接是外部资源目录。",
+          [ jump("跳转链接","/links/") ],
+          ACC.nav),
+      row("创新","前沿通道。",
+          "创新是前沿通道。大想法在这里保持有界。",
+          [ jump("跳转创新","/explore/") ],
+          ACC.explore),
+      row("终端","本页。",
+          "终端无镜头、仅跳转。它保留lang/style/time，不会修改。",
+          [ jump("重载终端","/index.html") ],
           ACC.nav)
     ];
 
     const FRONTIER_ROWS_EN = [
-      row("FRONTIER OVERVIEW","Big horizon, bounded language.",
-          "Frontier content is allowed to be ambitious, but it must stay bounded. We jump to the surfaces that explain the ideas without collapsing into fantasy.",
-          [ jump("JUMP INNOVATION","/explore/"), jump("JUMP ENERGY","/products/energy/"), jump("JUMP LAWS","/laws/") ],
-          ACC.frontier),
-      row("SOLAR → PLASMA → INDUSTRY","Start where it’s measurable.",
-          "Industrial plasma thermal substitution is the public posture. It is measurable, deployable, and phase-scalable. Anything beyond that is gated readiness doctrine.",
-          [ jump("JUMP ENERGY","/products/energy/"), jump("JUMP PRODUCTS","/products/"), jump("JUMP GAUGES","/gauges/") ],
-          ACC.energy),
-      row("FUSION READINESS","Requirements-only lane.",
-          "Fusion stays in a requirements lane: instrumentation, receipts, disproof, independent audit. No gain is asserted in Terminal; this is a jump surface only.",
-          [ jump("FUSION READINESS","/explore/fusion-readiness/"), jump("JUMP LAWS","/laws/"), jump("JUMP GAUGES","/gauges/") ],
-          ACC.safety),
-      row("SPACE COMMUNITIES","Vision with constraints.",
-          "Space communities are treated as a frontier narrative: power stability precedes habitation stability. The site keeps these ideas connected to constraints and measurement.",
-          [ jump("JUMP INNOVATION","/explore/"), jump("JUMP LINKS","/links/"), jump("JUMP HUB","/home/") ],
+      row("INNOVATION","Frontier board.",
+          "Innovation is the curated frontier lane. Explore big ideas through structure, not drift.",
+          [ jump("JUMP INNOVATION","/explore/") ],
           ACC.explore),
-      row("FRONTIER JUMP BOARD","Follow the threads.",
-          "Use these jumps to explore the big ideas without losing your place. Return here, switch trunks, and keep your state.",
-          [ jump("JUMP INNOVATION","/explore/"), jump("JUMP ENERGY","/products/energy/"), jump("JUMP EDUCATION","/products/education/"), jump("JUMP SOFTWARE","/products/software/") ],
+      row("FUSION READINESS","Requirements-only.",
+          "Fusion readiness stays requirements doctrine: instruments, receipts, disproof, independent audit.",
+          [ jump("FUSION READINESS","/explore/fusion-readiness/"), jump("JUMP GAUGES","/gauges/"), jump("JUMP LAWS","/laws/") ],
+          ACC.safety),
+      row("ENERGY","Industrial-first surface.",
+          "Energy remains Industrial Plasma Thermal Substitution (C) publicly. Frontier narratives are bounded and staged.",
+          [ jump("JUMP ENERGY","/products/energy/"), jump("JUMP PRODUCTS","/products/") ],
+          ACC.energy),
+      row("SOLAR / SPACE","Vision with constraints.",
+          "Solar scaling and space communities belong in Frontier pages as staged feasibility, tied to constraints and measurement.",
+          [ jump("JUMP INNOVATION","/explore/"), jump("JUMP LAWS","/laws/"), jump("JUMP LINKS","/links/") ],
           ACC.frontier)
     ];
 
     const FRONTIER_ROWS_ZH = [
-      row("前沿总览","视野大，语言有界。",
-          "前沿内容可以雄心勃勃，但必须有边界。这里提供跳转，让你看到结构化解释，而不是落入幻想。",
-          [ jump("跳转创新","/explore/"), jump("跳转能源","/products/energy/"), jump("跳转法则","/laws/") ],
-          ACC.frontier),
-      row("太阳→等离子→工业","从可测处开始。",
-          "公开姿态是工业等离子热替代（C）。它可测、可部署、可分阶段扩展。更高主张只留在就绪门槛里。",
-          [ jump("跳转能源","/products/energy/"), jump("跳转产品","/products/"), jump("跳转量规","/gauges/") ],
-          ACC.energy),
-      row("聚变就绪","仅需求通道。",
-          "聚变仅作为需求通道：仪器、收据、证伪、独立审计。终端不做增益主张；这里只提供跳转。",
-          [ jump("聚变就绪","/explore/fusion-readiness/"), jump("跳转法则","/laws/"), jump("跳转量规","/gauges/") ],
-          ACC.safety),
-      row("太空社区","愿景带约束。",
-          "太空社区作为前沿叙事：电力稳定先于栖居稳定。网站把愿景与约束/测量保持连接。",
-          [ jump("跳转创新","/explore/"), jump("跳转链接","/links/"), jump("跳转枢纽","/home/") ],
+      row("创新","前沿板。",
+          "创新是前沿通道。用结构探索大想法，不漂移。",
+          [ jump("跳转创新","/explore/") ],
           ACC.explore),
-      row("前沿跳转板","沿线索探索。",
-          "用这些跳转探索大想法，同时不丢状态。随时回到这里，换干线继续。",
-          [ jump("跳转创新","/explore/"), jump("跳转能源","/products/energy/"), jump("跳转教育","/products/education/"), jump("跳转软件","/products/software/") ],
+      row("聚变就绪","仅需求。",
+          "聚变就绪保持为需求：仪器、收据、证伪、独立审计。",
+          [ jump("聚变就绪","/explore/fusion-readiness/"), jump("跳转量规","/gauges/"), jump("跳转法则","/laws/") ],
+          ACC.safety),
+      row("能源","工业优先面。",
+          "能源公开姿态保持工业等离子热替代（C）。前沿叙事保持有界与分阶段。",
+          [ jump("跳转能源","/products/energy/"), jump("跳转产品","/products/") ],
+          ACC.energy),
+      row("太阳/太空","愿景带约束。",
+          "太阳能扩展与太空社区属于前沿页面：分阶段可行性，并绑定约束与测量。",
+          [ jump("跳转创新","/explore/"), jump("跳转法则","/laws/"), jump("跳转链接","/links/") ],
           ACC.frontier)
     ];
 
@@ -577,14 +600,14 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
       : ((lang==="zh")?"终端 · 前沿":"TERMINAL · FRONTIER");
 
     mh1.textContent = (mode==="nav")
-      ? ((lang==="zh")?"快速定位，干净跳转。":"Fast orientation. Clean jumps.")
+      ? ((lang==="zh")?"全站地图。干净跳转。":"Full map. Clean jumps.")
       : ((lang==="zh")?"前沿吸引你，但约束保护你。":"Frontier pulls you in, constraints keep it real.");
     mh2.textContent = (mode==="nav")
-      ? ((lang==="zh")?"终端无镜头。只跳转，不改状态。":"No lenses here. Jump-only. Terminal does not change your state.")
-      : ((lang==="zh")?"太空/太阳能/聚变只作为跳转与结构化说明。":"Space/solar/fusion appear as structured jump surfaces.");
+      ? ((lang==="zh")?"终端无镜头。仅跳转。不改状态。":"No lenses here. Jump-only. Terminal does not change your state.")
+      : ((lang==="zh")?"太空/太阳能/聚变以结构化跳转呈现。":"Space/solar/fusion appear as structured jump surfaces.");
     mh3.textContent = (mode==="nav")
       ? ((lang==="zh")?"不确定就先去枢纽。":"If unsure, go to HUB first.")
-      : ((lang==="zh")?"公开姿态仍为工业（C）；聚变只在就绪门槛中。":"Public posture stays Industrial (C); fusion stays readiness-only.");
+      : ((lang==="zh")?"公开姿态仍为工业（C）；聚变仅就绪门槛。":"Public posture stays Industrial (C); fusion stays readiness-only.");
 
     rows.forEach((r, idx)=>{
       const el = makeRow(r);

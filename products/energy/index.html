@@ -1,29 +1,9 @@
-<!-- TNT — /products/energy/index.html  (FULL · MAX DENSITY · FIXED COLOR/TEMP · NO DRIFT)
-     LOCKS (CONFIRMED):
-       - Face diamonds show NO North/South/East/West text.
-       - Face diamonds show substance labels: FOUNDATION / GOVERNANCE / PERFORMANCE / ARCHITECTURE.
-       - Modal lenses are presented as 3 selector clusters (NOT grid):
-           1) STYLE: FORMAL / INFORMAL  (gd_style)
-           2) CAUSALITY: CAUSE / EFFECT  (session-only; no new gd_* keys)
-           3) TIME: CONCEPT / LIVE / ROADMAP  (gd_time = origin/now/post)
-       - Fixed temperature + fixed colors:
-           * Black/Red/Gold/Opal = neutral baseline (field + accents)
-           * Temperature = blackbody-aligned glow (blue/white hotter than red), glow-only
-           * Domain identity color = accent-only (left bar + badge), never tints the field
-       - Content: 12 DOMAIN STACKS (accordion):
-           * 12 domain bubbles
-           * One open at a time (dense but readable)
-           * Each domain contains 7 paragraph blocks
-           * Each paragraph block contains 7 bullets
-       - Industrial (C) positioning discipline:
-           * No net-positive fusion claim
-           * No facility net-electric claim
-           * No grid-fusion implication
-           * Fusion referenced only as gated admissibility pathway (link)
-       - No debug pills
-       - Uses /assets/ui.css + /assets/branch.css only
-       - Does NOT style html/body background (ui.css owns field)
-       - No new state keys beyond gd_lang/gd_style/gd_time
+<!-- TNT — /products/energy/index.html  (FULL · STACK DOMINANT DOMAIN BUBBLES · PARAGRAPHS INSIDE)
+     FIX:
+       - Domain bubbles are now 8+ long, full-width stacked rows (no blob wrap).
+       - Paragraph blocks render INSIDE the active domain bubble.
+       - Domain bubble dominates; paragraphs are subordinate content.
+       - Accordion behavior: one domain open at a time.
 -->
 
 <!doctype html>
@@ -41,21 +21,17 @@
   --R:154px;
 
   /* Neutral baseline (Chinese theme) */
-  --neutralBlack: rgba(0,0,0,.18);
   --neutralRed: rgba(176,0,0,.22);
   --neutralGold: rgba(212,175,55,.55);
-  --neutralOpal: rgba(255,255,255,.10);
 
-  /* Temperature glow (set by JS; blackbody aligned) */
-  --temp: #E5E7EB;         /* white */
-  --tempSoft: rgba(229,231,235,.18);
+  /* Temperature glow (set by JS; glow-only) */
+  --temp: #E5E7EB;
+  --tempSoft: rgba(229,231,235,.16);
 
-  /* Typography */
   --mut: rgba(255,255,255,.88);
-  --mut2: rgba(255,255,255,.70);
+  --mut2: rgba(255,255,255,.72);
 }
 
-/* DO NOT TOUCH FIELD — ui.css owns html/body background */
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 
 /* Top-left */
@@ -115,13 +91,9 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
   pointer-events:auto;
   touch-action:manipulation;
-  overflow:hidden;
 }
 .d:hover{box-shadow:0 36px 120px rgba(0,0,0,.90),0 0 22px rgba(212,175,55,.22), inset 0 2px 0 rgba(255,255,255,.12)}
-.d.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:0 40px 140px rgba(0,0,0,.92),0 0 26px rgba(212,175,55,.30), inset 0 2px 0 rgba(255,255,255,.14);
-}
+.d.active{border-color:rgba(212,175,55,.55);box-shadow:0 40px 140px rgba(0,0,0,.92),0 0 26px rgba(212,175,55,.30), inset 0 2px 0 rgba(255,255,255,.14)}
 .d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
 .d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
@@ -163,7 +135,7 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 .mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
 .mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-/* Lens clusters */
+/* Selector clusters */
 .clusterRow{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;justify-content:center;margin:0 0 12px}
 .cluster{
   border:1px solid rgba(255,255,255,.10);
@@ -195,62 +167,75 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   border-color:rgba(212,175,55,.45);
   box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--tempSoft);
 }
-.pill.hot{
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 18px var(--tempSoft);
-  border-color:rgba(255,255,255,.14);
-}
 
-/* Domain bubble rail */
-.domains{
-  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
-  padding:10px 10px 12px;margin:0 0 14px;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:22px;background:rgba(0,0,0,.10);
-}
-.db{
-  padding:10px 14px;border-radius:999px;
-  background:linear-gradient(145deg, rgba(17,22,28,.84), rgba(11,15,20,.90));
+/* Header card (small, subordinate) */
+.hcard{
+  padding:14px 16px;border-radius:22px;margin:0 0 14px;
+  background:rgba(0,0,0,.10);
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 12px 30px rgba(0,0,0,.50);
-  cursor:pointer;font-weight:900;letter-spacing:.15px;
-  user-select:none;
+}
+.hcard .h1{margin:0 0 6px;font-weight:950;font-size:16px}
+.hcard .h2{margin:0;color:var(--mut);line-height:1.55}
+.hcard .h3{margin:10px 0 0;color:rgba(255,255,255,.70);font-size:12px;line-height:1.45}
+
+/* DOMAIN STACKS — full width rows (NO BLOB) */
+.stackList{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin:0 0 14px;
+}
+.stackRow{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
+}
+.stackHead{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;
+  padding:14px 16px;
+  cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  position:relative;
 }
-.db::before{
-  content:"";position:absolute;left:10px;top:8px;bottom:8px;width:4px;border-radius:99px;
+.stackLeft{
+  display:flex;align-items:center;gap:12px;
+  min-width:0;
+}
+.stackBar{
+  width:6px;height:22px;border-radius:99px;
   background:var(--domc, rgba(255,255,255,.20));
-  opacity:.9;
+  box-shadow:0 0 18px rgba(255,255,255,.08);
+  flex:0 0 auto;
 }
-.db span{padding-left:10px;display:inline-block}
-.db.active{
-  border-color:rgba(212,175,55,.34);
-  box-shadow:0 16px 44px rgba(0,0,0,.70), 0 0 18px rgba(212,175,55,.18);
+.stackTitle{
+  font-weight:950;letter-spacing:.2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.stackSub{
+  font-size:12px;opacity:.72;margin-left:8px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.stackChevron{
+  font-size:16px;opacity:.75;flex:0 0 auto;
 }
 
-/* Dense article body */
-.article{
-  padding:16px 18px;border-radius:22px;
+.stackBody{
+  display:none;
+  padding:14px 16px 6px;
+  border-top:1px solid rgba(255,255,255,.08);
   background:
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
-  position:relative;
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
-.article::before{
-  content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--neutralGold) 50%, transparent 100%);
-  opacity:.35;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  pointer-events:none;
-}
-.ah{margin:0 0 10px;font-weight:950;letter-spacing:.2px;font-size:18px}
-.ap{margin:0 0 10px;color:var(--mut);line-height:1.6}
-.anote{margin:0 0 14px;color:rgba(255,255,255,.70);font-size:12px;line-height:1.45}
+.stackRow.open .stackBody{display:block}
 
-/* Paragraph blocks (7) */
+/* Paragraph blocks inside stack */
 .pblock{
   border:1px solid rgba(255,255,255,.08);
   background:rgba(0,0,0,.08);
@@ -291,31 +276,19 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   <div class="outer"></div>
 
   <div class="d d-n" id="dFoundation" role="button" tabindex="0" onclick="window.__openEnergy('FOUNDATION')">
-    <div class="inner">
-      <div class="lab">FOUNDATION</div>
-      <div class="sub">Constraint base · Industrial (C) locked</div>
-    </div>
+    <div class="inner"><div class="lab">FOUNDATION</div><div class="sub">Constraint base · Industrial (C) locked</div></div>
   </div>
 
   <div class="d d-e" id="dGovernance" role="button" tabindex="0" onclick="window.__openEnergy('GOVERNANCE')">
-    <div class="inner">
-      <div class="lab">GOVERNANCE</div>
-      <div class="sub">Standards · Licensing-before-scale</div>
-    </div>
+    <div class="inner"><div class="lab">GOVERNANCE</div><div class="sub">Standards · Licensing-before-scale</div></div>
   </div>
 
   <div class="d d-s" id="dPerformance" role="button" tabindex="0" onclick="window.__openEnergy('PERFORMANCE')">
-    <div class="inner">
-      <div class="lab">PERFORMANCE</div>
-      <div class="sub">Measured output · Bounded variance</div>
-    </div>
+    <div class="inner"><div class="lab">PERFORMANCE</div><div class="sub">Measured output · Bounded variance</div></div>
   </div>
 
   <div class="d d-w" id="dArchitecture" role="button" tabindex="0" onclick="window.__openEnergy('ARCHITECTURE')">
-    <div class="inner">
-      <div class="lab">ARCHITECTURE</div>
-      <div class="sub">System form · Containment classes</div>
-    </div>
+    <div class="inner"><div class="lab">ARCHITECTURE</div><div class="sub">System form · Containment classes</div></div>
   </div>
 
   <div class="core">◆</div>
@@ -335,14 +308,13 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 <div class="modal" id="modal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="mTitle">DETAIL</h3>
+      <h3 class="mtitle" id="mTitle">ENERGY</h3>
       <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
     </div>
 
     <div class="mbody">
 
-      <!-- Selector clusters -->
-      <div class="clusterRow" id="clusters">
+      <div class="clusterRow">
         <div class="cluster">
           <div class="clusterTitle">STYLE</div>
           <div class="pill active" id="pillFormal">FORMAL</div>
@@ -363,18 +335,15 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
         </div>
       </div>
 
-      <!-- Domain stacks -->
-      <div class="domains" id="domainRail"></div>
-
-      <!-- Article body -->
-      <div class="article">
-        <h4 class="ah" id="ah">—</h4>
-        <p class="ap" id="ap1">—</p>
-        <p class="ap" id="ap2">—</p>
-        <p class="anote" id="anote">—</p>
-
-        <div id="pblocks"></div>
+      <!-- compact header (subordinate to stacks) -->
+      <div class="hcard">
+        <div class="h1" id="h1">—</div>
+        <div class="h2" id="h2">—</div>
+        <div class="h3" id="h3">—</div>
       </div>
+
+      <!-- Dominant full-width domain stacks -->
+      <div class="stackList" id="stackList"></div>
 
       <div class="mact">
         <button class="sbtn" id="mReturn" type="button">RETURN</button>
@@ -392,8 +361,8 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   // ===== state (gd_* only) =====
   const qs = new URLSearchParams(location.search);
   let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  let gdStyle = qs.get("style") || localStorage.getItem("gd_style") || "formal";  // formal/informal
-  let gdTime  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin"; // origin/now/post
+  let gdStyle = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  let gdTime  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
   if(!["en","zh"].includes(lang)) lang="en";
   if(!["formal","informal"].includes(gdStyle)) gdStyle="formal";
   if(gdTime==="trajectory") gdTime="post";
@@ -404,89 +373,7 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   // session-only causality (no new gd_* keys)
   let causality = "CAUSE"; // CAUSE/EFFECT
 
-  // derived time label
-  function timeLabel(){ return (gdTime==="origin") ? "CONCEPT" : (gdTime==="now") ? "LIVE" : "ROADMAP"; }
-
-  // fixed domain identity colors (accent only)
-  const DOMAIN_COLORS = {
-    "Industrial":"#D97706",
-    "Scientific":"#2563EB",
-    "Agricultural":"#2F855A",
-    "Financial":"#047857",
-    "Human":"#F59E0B",
-    "Adversarial":"#B91C1C",
-    "Regulatory":"#475569",
-    "Environmental":"#0D9488",
-    "Infrastructural":"#1E40AF",
-    "Computational":"#7C3AED",
-    "Governance":"#D4AF37",
-    "Temporal":"#94A3B8"
-  };
-
-  const DOMAINS = Object.keys(DOMAIN_COLORS); // 12
-
-  // blackbody-aligned fixed temperature palette for lens state (glow only)
-  // (blue/white hotter than red)
-  function tempColor(){
-    // base by time
-    let base = "#E5E7EB"; // white (hot)
-    if(gdTime==="origin") base = "#93C5FD";   // blue-white (hot intellect)
-    if(gdTime==="now")    base = "#E5E7EB";   // white (present)
-    if(gdTime==="post")   base = "#D97706";   // warm amber (roadmap warmth)
-
-    // causality nudges
-    if(causality==="CAUSE" && gdTime!=="post") base = "#93C5FD"; // cooler bias
-    if(causality==="EFFECT" && gdTime!=="origin") base = "#D97706"; // warmer bias
-
-    // style brightness (formal tighter/cooler; informal warmer)
-    if(gdStyle==="formal"){
-      if(base==="#D97706") base = "#E5E7EB"; // formal roadmap feels white-hot constraint
-      return base;
-    }else{
-      if(base==="#93C5FD") base = "#E5E7EB"; // informal concept feels approachable white
-      return base;
-    }
-  }
-
-  function tempSoft(hex){
-    // crude alpha soft: fixed to avoid parsing complexity
-    if(hex==="#2563EB") return "rgba(37,99,235,.18)";
-    if(hex==="#93C5FD") return "rgba(147,197,253,.18)";
-    if(hex==="#E5E7EB") return "rgba(229,231,235,.16)";
-    if(hex==="#D97706") return "rgba(217,119,6,.16)";
-    if(hex==="#7F1D1D") return "rgba(127,29,29,.16)";
-    return "rgba(229,231,235,.16)";
-  }
-
-  const CLAIM_LOCK = "Claim discipline: Industrial plasma thermal substitution (C). No net-positive fusion claim. No facility net-electric claim. Fusion referenced only as gated admissibility pathway.";
-
-  // ===== modal refs =====
-  const bd=document.getElementById("bd");
-  const modal=document.getElementById("modal");
-  const mTitle=document.getElementById("mTitle");
-  const mClose=document.getElementById("mClose");
-  const mReturn=document.getElementById("mReturn");
-
-  const pillFormal=document.getElementById("pillFormal");
-  const pillInformal=document.getElementById("pillInformal");
-  const pillCause=document.getElementById("pillCause");
-  const pillEffect=document.getElementById("pillEffect");
-  const pillConcept=document.getElementById("pillConcept");
-  const pillLive=document.getElementById("pillLive");
-  const pillRoadmap=document.getElementById("pillRoadmap");
-
-  const ah=document.getElementById("ah");
-  const ap1=document.getElementById("ap1");
-  const ap2=document.getElementById("ap2");
-  const anote=document.getElementById("anote");
-  const domainRail=document.getElementById("domainRail");
-  const pblocks=document.getElementById("pblocks");
-
-  let section = "FOUNDATION";
-  let activeDomain = "Industrial";
-
   function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(gdStyle)+"&time="+encodeURIComponent(gdTime); }
-
   function setLinks(){
     const s=q();
     document.getElementById("btnBack").href="/products/?"+s;
@@ -503,7 +390,76 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   }
   setLinks();
 
-  // ===== content generator (non-skeleton: full 7×7 per domain, deterministic)
+  // fixed domain identity colors (accent-only)
+  const DOMAIN_COLORS = {
+    "Industrial":"#D97706",
+    "Scientific":"#2563EB",
+    "Agricultural":"#2F855A",
+    "Financial":"#047857",
+    "Human":"#F59E0B",
+    "Adversarial":"#B91C1C",
+    "Regulatory":"#475569",
+    "Environmental":"#0D9488",
+    "Infrastructural":"#1E40AF",
+    "Computational":"#7C3AED",
+    "Governance":"#D4AF37",
+    "Temporal":"#94A3B8"
+  };
+  const DOMAINS = Object.keys(DOMAIN_COLORS); // 12
+
+  // temperature palette (fixed per lens)
+  function tempColor(){
+    let base = "#E5E7EB";            // white
+    if(gdTime==="origin") base="#93C5FD"; // blue-white
+    if(gdTime==="now")    base="#E5E7EB"; // white
+    if(gdTime==="post")   base="#D97706"; // amber
+
+    if(causality==="CAUSE" && gdTime!=="post") base="#93C5FD";
+    if(causality==="EFFECT" && gdTime!=="origin") base="#D97706";
+
+    if(gdStyle==="formal"){
+      if(base==="#D97706") base="#E5E7EB";
+      return base;
+    }else{
+      if(base==="#93C5FD") base="#E5E7EB";
+      return base;
+    }
+  }
+  function tempSoft(hex){
+    if(hex==="#93C5FD") return "rgba(147,197,253,.18)";
+    if(hex==="#E5E7EB") return "rgba(229,231,235,.16)";
+    if(hex==="#D97706") return "rgba(217,119,6,.16)";
+    return "rgba(229,231,235,.16)";
+  }
+
+  const CLAIM_LOCK = "Claim discipline: Industrial plasma thermal substitution (C). No net-positive fusion claim. No facility net-electric claim. Fusion referenced only as gated admissibility pathway.";
+
+  // modal refs
+  const bd=document.getElementById("bd");
+  const modal=document.getElementById("modal");
+  const mTitle=document.getElementById("mTitle");
+  const mClose=document.getElementById("mClose");
+  const mReturn=document.getElementById("mReturn");
+
+  const pillFormal=document.getElementById("pillFormal");
+  const pillInformal=document.getElementById("pillInformal");
+  const pillCause=document.getElementById("pillCause");
+  const pillEffect=document.getElementById("pillEffect");
+  const pillConcept=document.getElementById("pillConcept");
+  const pillLive=document.getElementById("pillLive");
+  const pillRoadmap=document.getElementById("pillRoadmap");
+
+  const h1=document.getElementById("h1");
+  const h2=document.getElementById("h2");
+  const h3=document.getElementById("h3");
+  const stackList=document.getElementById("stackList");
+
+  let section="FOUNDATION";
+  let openDomain="Industrial";
+
+  function timeLabel(){ return (gdTime==="origin") ? "CONCEPT" : (gdTime==="now") ? "LIVE" : "ROADMAP"; }
+
+  // 7 paragraph headings
   const PHEAD = [
     "P1 — Definition",
     "P2 — Boundary",
@@ -514,152 +470,160 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     "P7 — Verification"
   ];
 
-  function paraIntro(domain, idx){
-    const t = timeLabel();
-    const c = causality;
-    const s = gdStyle.toUpperCase();
-    // One dense thesis sentence per paragraph block
-    if(gdStyle==="informal"){
-      return `${domain} · ${section} · ${c} · ${t} · ${s}. This block stays bounded and claim-safe.`;
-    }
-    return `${domain} expresses ${section} under ${c}·${t}·${s} framing. Statements remain bounded, receipt-aware, and non-escalatory under Industrial (C) discipline.`;
-  }
-
-  function bullets(domain, idx){
-    // 7 bullets per paragraph block (49 per domain)
-    // Compact, declarative, no fusion overclaim.
-    const t = timeLabel();
-    const c = causality;
-    // bullets vary slightly with c/t for journey effect, but remain fixed logic.
-    const b = [];
-    b.push(`${c}: primary driver declared before change.`);
+  function bullets(domain){
+    const t=timeLabel();
+    const c=causality;
+    const b=[];
+    b.push(`${c}: ${domain} driver/impact declared explicitly.`);
     b.push(`${t}: posture scoped without claim inflation.`);
     b.push(`Bounds: no net-positive fusion implied anywhere.`);
     b.push(`Controls: SVF/CARES/CC/IDP remain binding.`);
     b.push(`Evidence: receipts required before elevation.`);
     b.push(`Failure: rollback/stop rules remain valid data.`);
     b.push(`Continuity: deployment stays industrial-first.`);
-    // Domain nuance (swap one bullet)
-    b[0] = `${c}: ${domain} driver/impact declared explicitly.`;
     return b;
   }
 
-  function sectionLine(){
-    if(section==="FOUNDATION") return "Foundation defines admissible boundaries and claim discipline before execution.";
-    if(section==="ARCHITECTURE") return "Architecture defines modules, placement, buffering, and containment under declared constraints.";
-    if(section==="PERFORMANCE") return "Performance defines measurable inputs/outputs, stability bands, and bounded variance under load.";
-    return "Governance defines standards, licensing, auditability, and non-retroactive enforcement under scale.";
+  function paraIntro(domain){
+    const t=timeLabel();
+    const c=causality;
+    const s=gdStyle.toUpperCase();
+    if(gdStyle==="informal"){
+      return `${domain} · ${section} · ${c} · ${t} · ${s}. Bounded. No fusion gain claim.`;
+    }
+    return `${domain} expresses ${section} under ${c}·${t}·${s} framing. Statements remain bounded, receipt-aware, and non-escalatory under Industrial (C) discipline.`;
   }
 
-  function causeEffectLine(){
-    if(causality==="CAUSE") return "CAUSE view emphasizes prerequisites, drivers, constraints, and gate conditions.";
-    return "EFFECT view emphasizes observable consequences, recorded outcomes, and bounded interpretation.";
-  }
-
-  function timeLine(){
-    if(gdTime==="origin") return "CONCEPT view is definition-first: what must be true for admissibility.";
-    if(gdTime==="now") return "LIVE view is measurement-first: what is currently observed and recorded.";
-    return "ROADMAP view is gating-first: what would be required before expansion is admissible.";
+  function headerLines(){
+    const t=timeLabel();
+    const s=gdStyle.toUpperCase();
+    h1.textContent = `ENERGY · ${section} · ${causality} · ${t} · ${s}`;
+    h2.textContent = (section==="FOUNDATION")
+      ? "Foundation defines admissible boundaries and claim discipline before execution."
+      : (section==="ARCHITECTURE")
+      ? "Architecture defines modules, placement, buffering, and containment under declared constraints."
+      : (section==="PERFORMANCE")
+      ? "Performance defines measurable inputs/outputs, stability bands, and bounded variance under load."
+      : "Governance defines standards, licensing, auditability, and non-retroactive enforcement under scale.";
+    h3.textContent = CLAIM_LOCK;
   }
 
   function renderTemp(){
-    const t = tempColor();
+    const t=tempColor();
     document.documentElement.style.setProperty("--temp", t);
     document.documentElement.style.setProperty("--tempSoft", tempSoft(t));
-    // apply hot class to active pills for laser feel
-    document.querySelectorAll(".pill").forEach(p=>p.classList.remove("hot"));
-    const active = document.querySelectorAll(".pill.active");
-    active.forEach(p=>p.classList.add("hot"));
-  }
-
-  function renderDomains(){
-    domainRail.innerHTML="";
-    DOMAINS.forEach((d)=>{
-      const el=document.createElement("div");
-      el.className="db"+(d===activeDomain?" active":"");
-      el.style.setProperty("--domc", DOMAIN_COLORS[d]);
-      const sp=document.createElement("span");
-      sp.textContent=d;
-      el.appendChild(sp);
-      el.addEventListener("click", ()=>{
-        activeDomain=d;
-        render();
-      });
-      domainRail.appendChild(el);
-    });
-  }
-
-  function renderArticle(){
-    const t = timeLabel();
-    ah.textContent = `${section} · ${causality} · ${t} · ${gdStyle.toUpperCase()} · ${activeDomain}`;
-    if(gdStyle==="informal"){
-      ap1.textContent = `${sectionLine()} ${causeEffectLine()} ${timeLine()}`;
-      ap2.textContent = `Industrial (C) is locked. Fusion is gated doctrine only. Domain color stays fixed; temperature glow stays fixed per lens.`;
-    }else{
-      ap1.textContent = `${sectionLine()} ${causeEffectLine()} ${timeLine()}`;
-      ap2.textContent = `This product remains positioned as Industrial plasma thermal substitution (C). Any fusion discussion is framed strictly as a gated admissibility pathway requiring independent measurement receipts and explicit disproof conditions.`;
-    }
-    anote.textContent = CLAIM_LOCK;
-
-    pblocks.innerHTML="";
-    for(let i=0;i<7;i++){
-      const box=document.createElement("div");
-      box.className="pblock";
-
-      const h=document.createElement("div");
-      h.className="ph";
-      h.textContent = `${PHEAD[i]}`;
-
-      const p=document.createElement("div");
-      p.className="pdesc";
-      p.textContent = paraIntro(activeDomain, i);
-
-      const ul=document.createElement("ul");
-      ul.className="pul";
-      bullets(activeDomain, i).forEach(x=>{
-        const li=document.createElement("li");
-        li.textContent = x;
-        ul.appendChild(li);
-      });
-
-      box.appendChild(h);
-      box.appendChild(p);
-      box.appendChild(ul);
-      pblocks.appendChild(box);
-    }
   }
 
   function renderPills(){
     pillFormal.classList.toggle("active", gdStyle==="formal");
     pillInformal.classList.toggle("active", gdStyle==="informal");
-
     pillCause.classList.toggle("active", causality==="CAUSE");
     pillEffect.classList.toggle("active", causality==="EFFECT");
-
     pillConcept.classList.toggle("active", gdTime==="origin");
     pillLive.classList.toggle("active", gdTime==="now");
     pillRoadmap.classList.toggle("active", gdTime==="post");
   }
 
+  function buildStackRow(domain){
+    const row=document.createElement("div");
+    row.className="stackRow"+(domain===openDomain ? " open" : "");
+    row.style.setProperty("--domc", DOMAIN_COLORS[domain]);
+
+    const head=document.createElement("div");
+    head.className="stackHead";
+
+    const left=document.createElement("div");
+    left.className="stackLeft";
+
+    const bar=document.createElement("div");
+    bar.className="stackBar";
+    bar.style.background = DOMAIN_COLORS[domain];
+
+    const title=document.createElement("div");
+    title.className="stackTitle";
+    title.textContent = domain;
+
+    const sub=document.createElement("div");
+    sub.className="stackSub";
+    sub.textContent = `${section} · ${causality} · ${timeLabel()} · ${gdStyle.toUpperCase()}`;
+
+    left.appendChild(bar);
+    left.appendChild(title);
+    left.appendChild(sub);
+
+    const chev=document.createElement("div");
+    chev.className="stackChevron";
+    chev.textContent = (domain===openDomain) ? "▾" : "▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    const body=document.createElement("div");
+    body.className="stackBody";
+
+    // Render 7 paragraph blocks INSIDE the bubble
+    for(let i=0;i<7;i++){
+      const box=document.createElement("div");
+      box.className="pblock";
+
+      const ph=document.createElement("div");
+      ph.className="ph";
+      ph.textContent = PHEAD[i];
+
+      const pd=document.createElement("div");
+      pd.className="pdesc";
+      pd.textContent = paraIntro(domain);
+
+      const ul=document.createElement("ul");
+      ul.className="pul";
+      bullets(domain).forEach(x=>{
+        const li=document.createElement("li");
+        li.textContent=x;
+        ul.appendChild(li);
+      });
+
+      box.appendChild(ph);
+      box.appendChild(pd);
+      box.appendChild(ul);
+      body.appendChild(box);
+    }
+
+    head.addEventListener("click", ()=>{
+      openDomain = (openDomain===domain) ? domain : domain;
+      // accordion: one open at a time -> just set openDomain and rebuild list
+      openDomain = domain;
+      renderStacks();
+    });
+
+    row.appendChild(head);
+    row.appendChild(body);
+    return row;
+  }
+
+  function renderStacks(){
+    stackList.innerHTML="";
+    DOMAINS.forEach(d=>{
+      stackList.appendChild(buildStackRow(d));
+    });
+  }
+
   function render(){
-    renderPills();
     renderTemp();
-    renderDomains();
-    renderArticle();
+    renderPills();
+    headerLines();
+    renderStacks();
   }
 
   function openModal(sec){
-    section = sec;
-    activeDomain = "Industrial";
-    causality = "CAUSE";
-    // keep existing gdStyle/gdTime; default time to concept if missing
-    if(!gdTime) gdTime="origin";
+    section=sec;
+    openDomain="Industrial";
     mTitle.textContent = `ENERGY · ${section}`;
+
     bd.classList.add("show");
     modal.classList.add("show");
+
     render();
   }
-
   function closeModal(){
     bd.classList.remove("show");
     modal.classList.remove("show");
@@ -687,21 +651,12 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   pillCause.addEventListener("click", ()=>{ causality="CAUSE"; render(); });
   pillEffect.addEventListener("click", ()=>{ causality="EFFECT"; render(); });
 
-  // TIME (gd_time)
-  pillConcept.addEventListener("click", ()=>{
-    gdTime="origin"; try{localStorage.setItem("gd_time",gdTime);}catch(e){}
-    render();
-  });
-  pillLive.addEventListener("click", ()=>{
-    gdTime="now"; try{localStorage.setItem("gd_time",gdTime);}catch(e){}
-    render();
-  });
-  pillRoadmap.addEventListener("click", ()=>{
-    gdTime="post"; try{localStorage.setItem("gd_time",gdTime);}catch(e){}
-    render();
-  });
+  // TIME
+  pillConcept.addEventListener("click", ()=>{ gdTime="origin"; try{localStorage.setItem("gd_time",gdTime);}catch(e){} render(); });
+  pillLive.addEventListener("click", ()=>{ gdTime="now"; try{localStorage.setItem("gd_time",gdTime);}catch(e){} render(); });
+  pillRoadmap.addEventListener("click", ()=>{ gdTime="post"; try{localStorage.setItem("gd_time",gdTime);}catch(e){} render(); });
 
-  // keyboard opens
+  // keyboard open
   [["dFoundation","FOUNDATION"],["dGovernance","GOVERNANCE"],["dPerformance","PERFORMANCE"],["dArchitecture","ARCHITECTURE"]].forEach(([id,sec])=>{
     const el=document.getElementById(id);
     el.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(sec);} });

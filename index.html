@@ -1,14 +1,15 @@
-<!-- TNT — /index.html  (TERMINAL · STRUCTURAL PREFACE · 8 SECTIONS · GEM STANDARD)
-     UPGRADE (NO DRIFT):
-       - Same 8 main bubbles → centered modal
-       - Same modal lenses (STYLE + TIME) using gd_style + gd_time
-       - Same 4 paragraph-bubbles (NO bullet lists)
-       - ADD: per-paragraph "JUMP" buttons (uniform buttons) that route either:
-           A) internal jump to another Terminal bubble section
-           B) external jump to a site segment (HUB / LAWS / PRODUCTS / LINKS / GAUGES / EXPLORE)
-       - Dual language compatible: zh mirrors en content for now
-       - State propagation: lang/style/time carried through all internal links
-       - No new state keys
+<!-- TNT — /index.html  (TERMINAL · 2 PRIMARY DIAMONDS → STACKED HORIZONTAL JUMP BUBBLES)
+     LOCKS:
+       - TNT ONLY (full file)
+       - Uses /assets/ui.css + /assets/branch.css only
+       - DO NOT style html/body background (ui.css owns field)
+       - NO LENSES ANYWHERE (no STYLE/TIME chips, no toggles)
+       - Jump-only navigation (uniform buttons only; use crp-btn)
+       - Dual language compatible (single-language render via gd_lang / ?lang=)
+       - Terminal does NOT modify gd_style/gd_time; it preserves and propagates if present
+       - 2 primary diamonds (front surface) open modal
+       - Modal content is stacked full-width horizontal bubble rows (accordion), one open at a time
+       - Marketing tone (movie board) with bounded language (no promises, no timelines, no fusion overclaim)
 -->
 
 <!doctype html>
@@ -16,7 +17,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>TERMINAL · Cardinal Axis</title>
+<title>TERMINAL · Movie Board</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -25,41 +26,97 @@
 /* DO NOT TOUCH FIELD — ui.css owns html/body background */
 a{color:inherit;text-decoration:none}
 
-/* Layout */
+/* Layout wrapper */
 .term-wrap{width:min(980px,94vw);margin:0 auto;padding:22px 0 120px}
-.term-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-.term-top-left{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.term-mid{flex:1;min-width:260px;text-align:center}
-.term-mark{font-size:12px;letter-spacing:2.4px;text-transform:uppercase;opacity:.78;margin-bottom:8px}
-.term-title{margin:0;font-size:44px;font-weight:950;letter-spacing:.25px;line-height:1.05}
-.term-sub{margin:10px 0 0;opacity:.84;font-size:16px;line-height:1.35}
-.term-note{margin:10px 0 0;opacity:.74;font-size:13px;line-height:1.35}
 
-.term-grid{display:grid;gap:14px;margin-top:18px}
-@media (min-width:820px){.term-grid{grid-template-columns:1fr 1fr;}}
+/* Top-left */
+.top-left{position:fixed;left:16px;top:16px;z-index:90;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 
-.bubble{
-  border-radius:22px;
+/* Brand pill */
+.brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:80;text-align:center;padding:10px 14px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
-  background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.92));
-  box-shadow:0 22px 70px rgba(0,0,0,.60), inset 0 1px 0 rgba(255,255,255,.06);
-  padding:18px;
+  background:rgba(0,0,0,.16);backdrop-filter:blur(8px);
+}
+.brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
+.brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
+
+/* Stage (2 diamonds) */
+:root{--R:154px;--neutralRed:rgba(176,0,0,.16);--neutralGold:rgba(212,175,55,.35);--mut:rgba(255,255,255,.84)}
+.stage{
+  position:fixed;left:50%;top:52%;
+  transform:translate(-50%,-50%);
+  width:min(720px,94vw);height:min(720px,94vw);
+  z-index:60;
+  pointer-events:none;
+}
+.outer{
+  position:absolute;left:50%;top:50%;
+  width:min(680px,92vw);height:min(680px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;
+  background:
+    radial-gradient(circle at 52% 14%, var(--neutralRed), transparent 55%),
+    radial-gradient(circle at 38% 28%, rgba(90,140,255,.10), transparent 55%),
+    linear-gradient(145deg, rgba(17,22,28,.56), rgba(11,15,20,.70));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 90px 260px rgba(0,0,0,.72), inset 0 2px 0 rgba(255,255,255,.10), inset 0 -50px 90px rgba(0,0,0,.55);
+  opacity:.88;
+  pointer-events:none;
+}
+.d{
+  width:210px;height:210px;position:absolute;left:50%;top:50%;
+  transform-origin:center;border-radius:26px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  transition:transform .10s ease, border-color .12s ease, box-shadow .12s ease;
+  background:
+    radial-gradient(circle at 35% 22%, rgba(255,255,255,.18), transparent 58%),
+    radial-gradient(circle at 70% 82%, rgba(0,80,255,.18), transparent 62%),
+    linear-gradient(160deg, rgba(12,22,38,.94) 0%, rgba(7,11,18,.96) 72%);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 30px 90px rgba(0,0,0,.78), inset 0 2px 0 rgba(255,255,255,.10);
+  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  pointer-events:auto;
+  touch-action:manipulation;
+  overflow:hidden;
 }
-.bubble:hover{
-  transform:translateY(-1px);
-  border-color:rgba(212,175,55,.22);
-  box-shadow:0 24px 80px rgba(0,0,0,.68), 0 0 16px rgba(212,175,55,.12), inset 0 1px 0 rgba(255,255,255,.06);
+.d::before{
+  content:"";position:absolute;inset:0;border-radius:26px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--neutralGold) 50%, transparent 100%);
+  opacity:.35;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
 }
-.bh{margin:0 0 8px;font-size:18px;font-weight:950;letter-spacing:.2px}
-.bp{margin:0;color:rgba(255,255,255,.82);line-height:1.55}
-.bmini{margin-top:10px;color:rgba(255,255,255,.66);font-size:12px;line-height:1.45}
+.d:hover{
+  box-shadow:0 36px 120px rgba(0,0,0,.90),0 0 22px rgba(212,175,55,.22), inset 0 2px 0 rgba(255,255,255,.12);
+  border-color:rgba(212,175,55,.30);
+}
+.d-left{transform:translate(-50%,-50%) translate(calc(var(--R) * -0.82), 0) rotate(45deg)}
+.d-right{transform:translate(-50%,-50%) translate(calc(var(--R) * 0.82), 0) rotate(45deg)}
+.inner{
+  width:100%;height:100%;
+  transform:rotate(-45deg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:16px;gap:10px;
+  pointer-events:none;user-select:none
+}
+.lab{font-weight:950;letter-spacing:.8px;font-size:18px}
+.sub{font-size:12.5px;opacity:.82;line-height:1.28;max-width:20em}
+.core{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:74px;height:74px;border-radius:22px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;font-weight:950;letter-spacing:.5px;opacity:.92;
+  pointer-events:none;
+}
 
-.term-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:16px}
-
-/* Bottom dock */
+/* Dock */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -84,13 +141,13 @@ a{color:inherit;text-decoration:none}
 .modal{
   position:fixed;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(1020px,94vw);
-  max-height:88vh;
+  width:min(1180px,96vw);
+  max-height:90vh;
   display:none;z-index:210;
 }
 .modal.show{display:block;}
 .shell{
-  height:88vh;
+  height:90vh;
   border-radius:26px;
   border:1px solid rgba(255,255,255,.10);
   background:
@@ -107,132 +164,86 @@ a{color:inherit;text-decoration:none}
 }
 .mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
 .mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
-
 .mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-/* Lenses INSIDE modal only */
-.lensbar{
-  display:flex;gap:10px;flex-wrap:wrap;
-  align-items:center;justify-content:center;
-  padding:10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);
-  margin:-6px -6px 14px;
-}
-.chip{
-  padding:10px 16px;border-radius:999px;
-  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+/* Header card */
+.hcard{
+  padding:14px 16px;border-radius:22px;margin:0 0 14px;
+  background:rgba(0,0,0,.10);
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
 }
-.chip.active{
-  border-color:rgba(212,175,55,.70);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
-}
+.hcard .h1{margin:0 0 6px;font-weight:950;font-size:16px}
+.hcard .h2{margin:0;color:var(--mut);line-height:1.55}
+.hcard .h3{margin:10px 0 0;color:rgba(255,255,255,.70);font-size:12px;line-height:1.45}
 
-/* 4 paragraph-bubbles */
-.mgrid{display:grid;gap:14px}
-.mbox{
-  padding:16px 18px;border-radius:22px;
+/* Stacked horizontal bubbles (accordion) */
+.stackList{display:flex;flex-direction:column;gap:12px;margin:0 0 14px}
+.stackRow{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
+}
+.stackHead{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;padding:14px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+.stackLeft{display:flex;align-items:center;gap:12px;min-width:0}
+.stackBar{width:6px;height:22px;border-radius:99px;background:var(--domc, rgba(255,255,255,.20));box-shadow:0 0 18px rgba(255,255,255,.08);flex:0 0 auto}
+.stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stackSub{font-size:12px;opacity:.72;margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto}
+.stackBody{
+  display:none;
+  padding:14px 16px 10px;
+  border-top:1px solid rgba(255,255,255,.08);
   background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
-.mh{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
-.mp{margin:0;color:rgba(255,255,255,.84);line-height:1.55}
+.stackRow.open .stackBody{display:block}
 
-/* Per-paragraph jump row */
-.mjump{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-start;margin-top:10px}
-.mjump .crp-btn{white-space:nowrap}
+.pdesc{margin:0 0 10px;color:rgba(255,255,255,.86);line-height:1.55}
+.jumpRow{display:flex;gap:10px;flex-wrap:wrap}
+.jumpRow a.crp-btn{display:inline-flex}
 
-/* Modal actions (uniform buttons only) */
+/* Footer actions */
 .mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
-
-@media (max-width:520px){
-  .term-title{font-size:38px}
-  .shell{height:90vh}
-}
 </style>
 </head>
 
 <body>
-<main class="term-wrap">
 
-  <div class="term-top">
-    <div class="term-top-left">
-      <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
-      <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
+<div class="top-left">
+  <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
+  <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
+</div>
+
+<div class="brand">
+  <div class="name" id="brandName">TERMINAL</div>
+  <div class="tag" id="brandTag">Two diamonds · Jump-only · No drift</div>
+</div>
+
+<div class="stage" aria-label="Terminal two-diamond entry">
+  <div class="outer"></div>
+
+  <div class="d d-left" id="dNext" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="labNext">WHERE TO GO NEXT</div>
+      <div class="sub" id="subNext">Fast orientation · Clean jumps · Return-safe</div>
     </div>
-
-    <div class="term-mid">
-      <div class="term-mark" id="mark">CARDINAL AXIS</div>
-      <h1 class="term-title" id="tTitle">TERMINAL</h1>
-      <p class="term-sub" id="tSub">Structural entry point into the entire system.</p>
-      <p class="term-note" id="tNote">This page is self-contained: Index, Glossary, and Appendix are included here via the modal.</p>
-    </div>
-
-    <div style="width:140px;flex:0 0 auto"></div>
   </div>
 
-  <section class="term-grid" aria-label="Terminal sections">
-    <div class="bubble" id="b0" role="button" tabindex="0">
-      <h2 class="bh" id="b0h">Under construction</h2>
-      <p class="bp" id="b0p">Unfinished areas show placeholders so you see progress without broken flows.</p>
-      <p class="bmini" id="b0m">Tap to open lens view.</p>
+  <div class="d d-right" id="dBoard" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="labBoard">TRAILER BOARD</div>
+      <div class="sub" id="subBoard">Big missions · Bounded execution · Explore safely</div>
     </div>
-
-    <div class="bubble" id="b1" role="button" tabindex="0">
-      <h2 class="bh" id="b1h">How navigation works</h2>
-      <p class="bp" id="b1p">You traverse by structure; lenses live inside the modal only.</p>
-      <p class="bmini" id="b1m">Tap to open lens view.</p>
-    </div>
-
-    <div class="bubble" id="b2" role="button" tabindex="0">
-      <h2 class="bh" id="b2h">State stability</h2>
-      <p class="bp" id="b2p">Language, style, and time persist so context does not reset.</p>
-      <p class="bmini" id="b2m">Tap to open lens view.</p>
-    </div>
-
-    <div class="bubble" id="b3" role="button" tabindex="0">
-      <h2 class="bh" id="b3h">Where to go next</h2>
-      <p class="bp" id="b3p">Use HUB for compass navigation; Products/Innovation for build surfaces.</p>
-      <p class="bmini" id="b3m">Tap to open lens view.</p>
-    </div>
-
-    <div class="bubble" id="b4" role="button" tabindex="0">
-      <h2 class="bh" id="b4h">Index</h2>
-      <p class="bp" id="b4p">The map of maps: routes to the right trunk quickly and consistently.</p>
-      <p class="bmini" id="b4m">Tap to open lens view.</p>
-    </div>
-
-    <div class="bubble" id="b5" role="button" tabindex="0">
-      <h2 class="bh" id="b5h">Glossary</h2>
-      <p class="bp" id="b5p">Pinned meanings so the system stays readable as it scales.</p>
-      <p class="bmini" id="b5m">Tap to open lens view.</p>
-    </div>
-
-    <div class="bubble" id="b6" role="button" tabindex="0">
-      <h2 class="bh" id="b6h">Appendix</h2>
-      <p class="bp" id="b6p">Conventions and references that support deeper pages without clutter.</p>
-      <p class="bmini" id="b6m">Tap to open lens view.</p>
-    </div>
-
-    <div class="bubble" id="b7" role="button" tabindex="0">
-      <h2 class="bh" id="b7h">Scientific fact-checking</h2>
-      <p class="bp" id="b7p">Hard bounds, assumptions, and falsifiers for technical readers.</p>
-      <p class="bmini" id="b7m">Tap to open lens view.</p>
-    </div>
-  </section>
-
-  <div class="term-actions">
-    <a class="crp-btn crp-btn-primary" id="btnContinue" href="/home/">CONTINUE → HUB</a>
-    <a class="crp-btn" id="btnLinks" href="/links/">JUMP LINKS</a>
-    <a class="crp-btn" id="btnProducts" href="/products/">JUMP PRODUCTS</a>
-    <a class="crp-btn" id="btnExplore" href="/explore/">JUMP INNOVATION</a>
   </div>
 
-</main>
+  <div class="core">◆</div>
+</div>
 
 <nav class="dock" aria-label="Bottom navigation">
   <a class="crp-btn crp-btn-primary" id="dockTerminal" href="/index.html">TERMINAL</a>
@@ -242,54 +253,26 @@ a{color:inherit;text-decoration:none}
   <a class="crp-btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
-<!-- Modal -->
 <div class="bd" id="bd" aria-hidden="true"></div>
 
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Terminal detail">
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Terminal panel">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="mTitle">DETAIL</h3>
+      <h3 class="mtitle" id="mTitle">TERMINAL</h3>
       <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
     </div>
 
-    <!-- LENSES INSIDE MODAL ONLY -->
-    <div class="lensbar">
-      <button class="chip" id="chipStyle" type="button">STYLE: FORMAL</button>
-      <button class="chip" id="chipConcept" data-time="origin" type="button">CONCEPT</button>
-      <button class="chip" id="chipNow" data-time="now" type="button">NOW</button>
-      <button class="chip" id="chipRoadmap" data-time="post" type="button">ROADMAP</button>
-    </div>
-
     <div class="mbody">
-      <div class="mgrid">
-        <div class="mbox">
-          <h4 class="mh" id="h1"></h4>
-          <p class="mp" id="p1"></p>
-          <div class="mjump"><button class="crp-btn" id="j1" type="button">JUMP</button></div>
-        </div>
-        <div class="mbox">
-          <h4 class="mh" id="h2"></h4>
-          <p class="mp" id="p2"></p>
-          <div class="mjump"><button class="crp-btn" id="j2" type="button">JUMP</button></div>
-        </div>
-        <div class="mbox">
-          <h4 class="mh" id="h3"></h4>
-          <p class="mp" id="p3"></p>
-          <div class="mjump"><button class="crp-btn" id="j3" type="button">JUMP</button></div>
-        </div>
-        <div class="mbox">
-          <h4 class="mh" id="h4"></h4>
-          <p class="mp" id="p4"></p>
-          <div class="mjump"><button class="crp-btn" id="j4" type="button">JUMP</button></div>
-        </div>
+      <div class="hcard">
+        <div class="h1" id="mh1">—</div>
+        <div class="h2" id="mh2">—</div>
+        <div class="h3" id="mh3">—</div>
       </div>
+
+      <div class="stackList" id="stackList"></div>
 
       <div class="mact">
         <button class="crp-btn" id="mReturn" type="button">RETURN</button>
-        <a class="crp-btn" id="mJumpHub" href="/home/">JUMP HUB</a>
-        <a class="crp-btn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
-        <a class="crp-btn" id="mJumpExplore" href="/explore/">JUMP INNOVATION</a>
-        <a class="crp-btn" id="mJumpLinks" href="/links/">JUMP LINKS</a>
       </div>
     </div>
   </div>
@@ -297,533 +280,199 @@ a{color:inherit;text-decoration:none}
 
 <script>
 (function(){
-  // ===== STATE (gd_* only) =====
-  var qs=new URLSearchParams(location.search);
-  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
-  var style=qs.get("style")||localStorage.getItem("gd_style")||"formal";
-  var time=qs.get("time")||localStorage.getItem("gd_time")||"now";
-  if(lang!=="en"&&lang!=="zh") lang="en";
-  if(style!=="formal"&&style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
-  try{localStorage.setItem("gd_lang",lang);localStorage.setItem("gd_style",style);localStorage.setItem("gd_time",time);}catch(e){}
-  document.documentElement.lang=(lang==="zh")?"zh":"en";
+  // Preserve any existing query params; Terminal does not modify style/time.
+  const qs=new URLSearchParams(location.search);
+  let lang = qs.get("lang") || localStorage.getItem("gd_lang") || "en";
+  if(lang!=="en" && lang!=="zh") lang="en";
+  try{ localStorage.setItem("gd_lang",lang);}catch(e){}
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
-  function q(){return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);}
+  // Preserve style/time if present (or stored), but DO NOT change them here.
+  const style = qs.get("style") || localStorage.getItem("gd_style") || "";
+  const time  = qs.get("time")  || localStorage.getItem("gd_time")  || "";
 
-  function wire(){
-    var s=q();
-    document.getElementById("btnExit").href="/door/?"+s;
-    document.getElementById("btnHub").href="/home/?"+s;
-    document.getElementById("btnContinue").href="/home/?"+s;
-    document.getElementById("btnLinks").href="/links/?"+s;
-    document.getElementById("btnProducts").href="/products/?"+s;
-    document.getElementById("btnExplore").href="/explore/?"+s;
-
-    document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
-    document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockGauges").href="/gauges/?"+s;
-
-    document.getElementById("mJumpHub").href="/home/?"+s;
-    document.getElementById("mJumpProducts").href="/products/?"+s;
-    document.getElementById("mJumpExplore").href="/explore/?"+s;
-    document.getElementById("mJumpLinks").href="/links/?"+s;
-  }
-  wire();
-
-  // ===== LANGUAGE PACK (zh mirrors en for now) =====
-  var T={
-    en:{
-      mark:"CARDINAL AXIS",
-      title:"TERMINAL",
-      sub:"Structural entry point into the entire system.",
-      note:"This page is self-contained: Index, Glossary, and Appendix are included here via the modal.",
-      mini:"Tap to open lens view.",
-      bubbles:[
-        {h:"Under construction",p:"Unfinished areas show placeholders so you see progress without broken flows."},
-        {h:"How navigation works",p:"You traverse by structure; lenses live inside the modal only."},
-        {h:"State stability",p:"Language, style, and time persist so context does not reset."},
-        {h:"Where to go next",p:"Use HUB for compass navigation; Products/Innovation for build surfaces."},
-        {h:"Index",p:"The routing surface: jump to trunks quickly with state preserved."},
-        {h:"Glossary",p:"Pinned meanings so definitions do not drift as the system scales."},
-        {h:"Appendix",p:"Conventions and references that support deeper pages without clutter."},
-        {h:"Scientific fact-checking",p:"Hard bounds, assumptions, and falsifiers for technical readers."}
-      ],
-      chips:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",now:"NOW",roadmap:"ROADMAP"},
-      warn:"This section is technical and bounded. It does not promise outcomes; it defines test conditions."
-    }
-  };
-  var P=T.en;
-
-  if(lang==="zh"){
-    // Mirror EN for now (per lock)
-    P=JSON.parse(JSON.stringify(T.en));
-    P.mark="基轴体系";
-    P.title="终端";
-    P.sub="进入全系统的结构入口。";
-    P.note="此页自包含：索引、术语表与附录都在本页模态中呈现。";
-    P.mini="点击打开透镜视图。";
-    // Keep headings readable; content mirrors EN to avoid drift.
+  function q(){
+    const p = new URLSearchParams();
+    if(lang) p.set("lang",lang);
+    if(style) p.set("style",style);
+    if(time) p.set("time",time);
+    const s = p.toString();
+    return s ? ("?"+s) : "";
   }
 
-  document.getElementById("mark").textContent=P.mark;
-  document.getElementById("tTitle").textContent=P.title;
-  document.getElementById("tSub").textContent=P.sub;
-  document.getElementById("tNote").textContent=P.note;
+  // Wire top buttons + dock
+  document.getElementById("btnExit").href="/door/"+q();
+  document.getElementById("btnHub").href="/home/"+q();
 
-  for(var i=0;i<8;i++){
-    document.getElementById("b"+i+"h").textContent=P.bubbles[i].h;
-    document.getElementById("b"+i+"p").textContent=P.bubbles[i].p;
-    document.getElementById("b"+i+"m").textContent=P.mini;
-  }
+  document.getElementById("dockTerminal").href="/index.html"+q();
+  document.getElementById("dockLinks").href="/links/"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
 
-  // ===== MODAL REFS =====
-  var bd=document.getElementById("bd");
-  var modal=document.getElementById("modal");
-  var mClose=document.getElementById("mClose");
-  var mReturn=document.getElementById("mReturn");
-  var mTitle=document.getElementById("mTitle");
+  // Modal refs
+  const bd=document.getElementById("bd");
+  const modal=document.getElementById("modal");
+  const mClose=document.getElementById("mClose");
+  const mReturn=document.getElementById("mReturn");
+  const mTitle=document.getElementById("mTitle");
+  const mh1=document.getElementById("mh1");
+  const mh2=document.getElementById("mh2");
+  const mh3=document.getElementById("mh3");
+  const stackList=document.getElementById("stackList");
 
-  var chipStyle=document.getElementById("chipStyle");
-  var chipConcept=document.getElementById("chipConcept");
-  var chipNow=document.getElementById("chipNow");
-  var chipRoadmap=document.getElementById("chipRoadmap");
-
-  var h1=document.getElementById("h1"),p1=document.getElementById("p1");
-  var h2=document.getElementById("h2"),p2=document.getElementById("p2");
-  var h3=document.getElementById("h3"),p3=document.getElementById("p3");
-  var h4=document.getElementById("h4"),p4=document.getElementById("p4");
-
-  var j1=document.getElementById("j1");
-  var j2=document.getElementById("j2");
-  var j3=document.getElementById("j3");
-  var j4=document.getElementById("j4");
-
-  var activeIdx=0;
-
-  function setChipLabels(){
-    chipStyle.textContent="STYLE: "+(style==="formal"?P.chips.formal:P.chips.informal);
-    chipConcept.textContent=P.chips.concept;
-    chipNow.textContent=P.chips.now;
-    chipRoadmap.textContent=P.chips.roadmap;
-
-    chipConcept.classList.toggle("active", time==="origin");
-    chipNow.classList.toggle("active", time==="now");
-    chipRoadmap.classList.toggle("active", time==="post");
-  }
-
-  // Helper: 4 paragraph bubbles (no bullet lists)
-  function V(a,b,c,d){
-    return [
-      {h:a.h,p:a.p,j:a.j},
-      {h:b.h,p:b.p,j:b.j},
-      {h:c.h,p:c.p,j:c.j},
-      {h:d.h,p:d.p,j:d.j}
-    ];
-  }
-
-  // Jump actions:
-  // {type:"route", path:"/laws/"} or {type:"internal", idx:5}
-  function doJump(action){
-    if(!action) return;
-    if(action.type==="internal"){
-      openModal(action.idx);
-      return;
-    }
-    if(action.type==="route"){
-      location.href = action.path + (action.path.indexOf("?")>=0 ? "&" : "?") + q();
-      return;
-    }
-  }
-
-  function setJumpButton(btn, action, label){
-    if(!action){
-      btn.style.display="none";
-      btn.onclick=null;
-      return;
-    }
-    btn.style.display="inline-flex";
-    btn.textContent=label || "JUMP";
-    btn.onclick=function(){ doJump(action); };
-  }
-
-  // Dense content with embedded “jump to that segment” per paragraph
-  var CONTENT = {
-    0:{ // Under construction
-      origin:{
-        formal:V(
-          {h:"Continuity rule",p:"Unfinished areas show placeholders instead of breaking navigation. The goal is uninterrupted traversal under a stable contract.",j:{type:"internal",idx:1}},
-          {h:"Truth rule",p:"A placeholder is an explicit incompleteness marker. It prevents implied claims and prevents readers from guessing intent.",j:{type:"internal",idx:7}},
-          {h:"Contract rule",p:"Structure ships first; content grows inside stable nodes. This prevents redesign churn and reduces drift.",j:{type:"route",path:"/laws/"}},
-          {h:"Reader promise",p:"You can always return, always jump, and always keep state. Incompleteness stays visible, not hidden.",j:{type:"route",path:"/home/"}}
-        ),
-        informal:V(
-          {h:"No dead ends",p:"If something isn’t finished, you’ll see a placeholder instead of a broken flow.",j:{type:"internal",idx:1}},
-          {h:"No pretending",p:"Placeholders mean: not done yet. That’s intentional.",j:{type:"internal",idx:7}},
-          {h:"Same map",p:"The map stays stable while content grows inside it.",j:{type:"route",path:"/links/"}},
-          {h:"Safe to explore",p:"You can click around without getting trapped or losing state.",j:{type:"route",path:"/home/"}}
-        )
-      },
-      now:{
-        formal:V(
-          {h:"Current posture",p:"Nodes are filled in waves. A node becomes usable before new branches are added.",j:{type:"route",path:"/products/"}},
-          {h:"No-empty rule",p:"A node is live only when it has complete content under both style lenses and all time layers.",j:{type:"internal",idx:2}},
-          {h:"Stability rule",p:"Keys and routing are not changed to fit content; content is written to fit the contract.",j:{type:"internal",idx:1}},
-          {h:"Transparency rule",p:"Live vs not-yet stays explicit, so progress never requires guessing.",j:{type:"internal",idx:4}}
-        ),
-        informal:V(
-          {h:"Fill-first",p:"We fill what’s here before adding more.",j:{type:"route",path:"/products/"}},
-          {h:"No empty nodes",p:"If you can open it, it should say something real.",j:{type:"internal",idx:2}},
-          {h:"Structure stays",p:"We don’t rewrite the map every day.",j:{type:"internal",idx:1}},
-          {h:"Clear status",p:"Live vs not-yet stays obvious.",j:{type:"internal",idx:4}}
-        )
-      },
-      post:{
-        formal:V(
-          {h:"Scaling posture",p:"More content is added without changing UI paradigms. Contract stability is the scale mechanism.",j:{type:"route",path:"/explore/"}},
-          {h:"Audit posture",p:"Stable nodes allow tracking: what changed, where, and when.",j:{type:"route",path:"/gauges/"}},
-          {h:"Outcome",p:"The site becomes a navigable reference rather than a linear document.",j:{type:"internal",idx:4}},
-          {h:"Safety posture",p:"Public surfaces remain bounded and legible as depth increases.",j:{type:"internal",idx:7}}
-        ),
-        informal:V(
-          {h:"More content",p:"More pages appear without breaking the feel.",j:{type:"route",path:"/explore/"}},
-          {h:"Easier tracking",p:"Changes are easier to notice because structure is stable.",j:{type:"route",path:"/gauges/"}},
-          {h:"Feels like a map",p:"Not a book you have to finish.",j:{type:"internal",idx:4}},
-          {h:"Stays safe",p:"Clear boundaries stay clear as it grows.",j:{type:"internal",idx:7}}
-        )
-      }
-    },
-
-    1:{ // How navigation works
-      origin:{
-        formal:V(
-          {h:"Traversal method",p:"Navigation is structural: bubbles open modal surfaces; lenses live inside the modal only.",j:{type:"route",path:"/home/"}},
-          {h:"Lens placement",p:"Keeping lenses in the modal prevents the main page from becoming a control panel.",j:{type:"internal",idx:2}},
-          {h:"Return discipline",p:"Closing the modal returns you to the same map state. Backtracking does not corrupt the route.",j:{type:"internal",idx:4}},
-          {h:"Outcome",p:"Learn one interaction grammar and reuse it across Products, Laws, Gauges, and Innovation.",j:{type:"route",path:"/links/"}}
-        ),
-        informal:V(
-          {h:"Tap structure",p:"You move by clicking the map, not by scrolling a wall of text.",j:{type:"route",path:"/home/"}},
-          {h:"Controls inside",p:"The face stays clean; controls are inside the modal.",j:{type:"internal",idx:2}},
-          {h:"Return works",p:"Close returns you to where you started.",j:{type:"internal",idx:4}},
-          {h:"Learn once",p:"If you can use one page, you can use the whole site.",j:{type:"route",path:"/links/"}}
-        )
-      },
-      now:{
-        formal:V(
-          {h:"Deterministic routing",p:"Every internal link carries lang/style/time; storage is a fallback. No silent resets.",j:{type:"internal",idx:2}},
-          {h:"Uniform buttons",p:"All navigation is a uniform button so default browser link colors never drift the UI.",j:{type:"route",path:"/links/"}},
-          {h:"Modal density",p:"Four dense paragraphs per view. No bullet walls. Fast signal under pressure.",j:{type:"internal",idx:4}},
-          {h:"Jump surfaces",p:"Jump buttons move to trunks without losing state.",j:{type:"route",path:"/products/"}}
-        ),
-        informal:V(
-          {h:"Links carry state",p:"Language/style/time follow you automatically.",j:{type:"internal",idx:2}},
-          {h:"Buttons stay consistent",p:"No ugly link colors.",j:{type:"route",path:"/links/"}},
-          {h:"Dense info",p:"Four good paragraphs per view.",j:{type:"internal",idx:4}},
-          {h:"Jump safely",p:"Jump without losing your settings.",j:{type:"route",path:"/products/"}}
-        )
-      },
-      post:{
-        formal:V(
-          {h:"Deeper maps",p:"Nodes expand into sub-hubs while keeping the same surface contract and lens semantics.",j:{type:"route",path:"/explore/"}},
-          {h:"Audience layering",p:"Informal stays direct; Formal stays precise; both remain bounded.",j:{type:"internal",idx:5}},
-          {h:"Discovery without chaos",p:"Crosslinks grow but never break return or state propagation.",j:{type:"route",path:"/links/"}},
-          {h:"Outcome",p:"Navigation becomes a dependable learning tool under pressure.",j:{type:"route",path:"/home/"}}
-        ),
-        informal:V(
-          {h:"Bigger maps",p:"More branches, same rules.",j:{type:"route",path:"/explore/"}},
-          {h:"Two tones",p:"Direct and precise, both stable.",j:{type:"internal",idx:5}},
-          {h:"No chaos",p:"More links without confusion.",j:{type:"route",path:"/links/"}},
-          {h:"Reliable",p:"HUB stays the reset anchor.",j:{type:"route",path:"/home/"}}
-        )
-      }
-    },
-
-    2:{ // State stability
-      origin:{
-        formal:V(
-          {h:"Canonical keys",p:"State is limited to gd_lang, gd_style, gd_time. No extra namespaces are allowed.",j:{type:"internal",idx:6}},
-          {h:"Hydration order",p:"URL parameters hydrate first; localStorage backs up; values are normalized to prevent drift.",j:{type:"route",path:"/links/"}},
-          {h:"Propagation rule",p:"All internal links carry state forward by querystring.",j:{type:"internal",idx:4}},
-          {h:"Outcome",p:"The system behaves predictably and does not forget context.",j:{type:"route",path:"/home/"}}
-        ),
-        informal:V(
-          {h:"Only three keys",p:"Language, style, time. That’s it.",j:{type:"internal",idx:6}},
-          {h:"URL wins",p:"If it’s in the link, it loads that view.",j:{type:"route",path:"/links/"}},
-          {h:"Links carry forward",p:"Your settings go with you.",j:{type:"internal",idx:4}},
-          {h:"Predictable",p:"No random resets.",j:{type:"route",path:"/home/"}}
-        )
-      },
-      now:{
-        formal:V(
-          {h:"Single-language render",p:"Language is a lens: English-only or Chinese-only, not mixed output.",j:{type:"route",path:"/home/"}},
-          {h:"Style lens",p:"Formal vs Informal changes framing while staying bounded and truthful.",j:{type:"internal",idx:7}},
-          {h:"Time lens",p:"Concept vs Now vs Roadmap changes emphasis while keeping definitions stable.",j:{type:"internal",idx:4}},
-          {h:"Failure clarity",p:"If state looks wrong, it is traceable: URL, storage, or missing propagation.",j:{type:"route",path:"/links/"}}
-        ),
-        informal:V(
-          {h:"One language",p:"One language at a time.",j:{type:"route",path:"/home/"}},
-          {h:"Style changes meaning",p:"Not just cosmetics.",j:{type:"internal",idx:7}},
-          {h:"Time changes emphasis",p:"Concept/Now/Roadmap are different views.",j:{type:"internal",idx:4}},
-          {h:"Fixable",p:"If it’s wrong, we can trace it.",j:{type:"route",path:"/links/"}}
-        )
-      },
-      post:{
-        formal:V(
-          {h:"Scale safety",p:"Stable keys and semantics make the platform scalable and auditable.",j:{type:"route",path:"/gauges/"}},
-          {h:"Shareability",p:"A link becomes a portable state: others open the same view you intended.",j:{type:"route",path:"/links/"}},
-          {h:"No capture",p:"State is for comprehension, not tracking people.",j:{type:"internal",idx:5}},
-          {h:"Outcome",p:"Coherent traversal across a growing knowledge graph.",j:{type:"route",path:"/home/"}}
-        ),
-        informal:V(
-          {h:"Stable forever",p:"Keys don’t drift.",j:{type:"route",path:"/gauges/"}},
-          {h:"Shareable links",p:"People open the same view.",j:{type:"route",path:"/links/"}},
-          {h:"No tracking games",p:"State is for clarity.",j:{type:"internal",idx:5}},
-          {h:"Coherent",p:"Everything stays aligned.",j:{type:"route",path:"/home/"}}
-        )
-      }
-    },
-
-    3:{ // Where to go next
-      origin:{ formal:V(
-        {h:"HUB",p:"Use HUB for compass navigation and structural orientation.",j:{type:"route",path:"/home/"}},
-        {h:"PRODUCTS",p:"Use PRODUCTS for deployable surfaces: software, education, energy, and commercial packaging.",j:{type:"route",path:"/products/"}},
-        {h:"INNOVATION",p:"Use INNOVATION for future trunks and frontier expansions under the same contract.",j:{type:"route",path:"/explore/"}},
-        {h:"LAWS / GAUGES",p:"Use LAWS for definitions and standards; use GAUGES for measurement surfaces.",j:{type:"route",path:"/laws/"}}
-      ), informal:V(
-        {h:"HUB",p:"Compass navigation.",j:{type:"route",path:"/home/"}},
-        {h:"PRODUCTS",p:"What exists and can be used.",j:{type:"route",path:"/products/"}},
-        {h:"INNOVATION",p:"Future trunks.",j:{type:"route",path:"/explore/"}},
-        {h:"LAWS / GAUGES",p:"Rules and measurements.",j:{type:"route",path:"/gauges/"}}
-      )},
-      now:{ formal:V(
-        {h:"Deployed vs future",p:"Products are deployed posture; Innovation is future posture. Claims remain separated.",j:{type:"route",path:"/products/"}},
-        {h:"Fast path",p:"Do → Products. Mean → Laws. Measure → Gauges.",j:{type:"route",path:"/gauges/"}},
-        {h:"Crosslinks",p:"Crosslinks exist, but they do not replace compass discipline.",j:{type:"route",path:"/links/"}},
-        {h:"Reset",p:"Return to HUB if you feel lost. That is the intended reset.",j:{type:"route",path:"/home/"}}
-      ), informal:V(
-        {h:"Keep claims clean",p:"Products vs Innovation stay separate.",j:{type:"route",path:"/products/"}},
-        {h:"Do vs mean vs measure",p:"Products, Laws, Gauges.",j:{type:"route",path:"/laws/"}},
-        {h:"Crosslinks help",p:"But HUB is the anchor.",j:{type:"route",path:"/links/"}},
-        {h:"Return anytime",p:"If lost, go HUB.",j:{type:"route",path:"/home/"}}
-      )},
-      post:{ formal:V(
-        {h:"Catalog growth",p:"More product sub-hubs appear without changing navigation grammar.",j:{type:"route",path:"/products/"}},
-        {h:"Proof growth",p:"More gauges and fact-check nodes appear for verification.",j:{type:"route",path:"/gauges/"}},
-        {h:"Translation growth",p:"More bilingual coverage with stable term mapping.",j:{type:"internal",idx:5}},
-        {h:"Outcome",p:"Discovery and discipline at the same time.",j:{type:"route",path:"/home/"}}
-      ), informal:V(
-        {h:"More products",p:"More sub-hubs, same UI.",j:{type:"route",path:"/products/"}},
-        {h:"More proof",p:"More measurements and checks.",j:{type:"route",path:"/gauges/"}},
-        {h:"Better bilingual",p:"Clean language switching.",j:{type:"internal",idx:5}},
-        {h:"Still disciplined",p:"Structure stays stable.",j:{type:"route",path:"/home/"}}
-      )}
-    },
-
-    4:{ // Index
-      origin:{ formal:V(
-        {h:"Index purpose",p:"Index is routing compression: get to the right trunk with minimal reading.",j:{type:"route",path:"/links/"}},
-        {h:"Index rule",p:"Index entries must remain bounded and descriptive; no vague labels.",j:{type:"internal",idx:7}},
-        {h:"Core routes",p:"HUB, PRODUCTS, INNOVATION, LAWS, GAUGES, LINKS.",j:{type:"route",path:"/home/"}},
-        {h:"Outcome",p:"Faster discovery without sacrificing boundaries.",j:{type:"route",path:"/products/"}}
-      ), informal:V(
-        {h:"Quick map",p:"Routes you fast.",j:{type:"route",path:"/links/"}},
-        {h:"No vague labels",p:"One sentence per entry.",j:{type:"internal",idx:7}},
-        {h:"Main routes",p:"HUB, PRODUCTS, INNOVATION, LAWS, GAUGES, LINKS.",j:{type:"route",path:"/home/"}},
-        {h:"Result",p:"Less time wasted.",j:{type:"route",path:"/products/"}}
-      )},
-      now:{ formal:V(
-        {h:"Products",p:"Software, Education, Energy, Commercial surfaces.",j:{type:"route",path:"/products/"}},
-        {h:"Innovation",p:"Concept/Now/Roadmap separation for future trunks.",j:{type:"route",path:"/explore/"}},
-        {h:"Laws",p:"Definitions, constraints, and standards.",j:{type:"route",path:"/laws/"}},
-        {h:"Gauges",p:"Measurement surfaces and status views.",j:{type:"route",path:"/gauges/"}}
-      ), informal:V(
-        {h:"Products",p:"What exists and can be used.",j:{type:"route",path:"/products/"}},
-        {h:"Innovation",p:"Future trunks.",j:{type:"route",path:"/explore/"}},
-        {h:"Laws",p:"Rules and definitions.",j:{type:"route",path:"/laws/"}},
-        {h:"Gauges",p:"Measurements.",j:{type:"route",path:"/gauges/"}}
-      )},
-      post:{ formal:V(
-        {h:"Index scaling",p:"Index grows inside this modal; structure stays stable.",j:{type:"internal",idx:1}},
-        {h:"Cross-indexing",p:"An idea may route to multiple trunks without confusion.",j:{type:"route",path:"/links/"}},
-        {h:"Verification hooks",p:"Index entries may reference fact-check nodes when needed.",j:{type:"internal",idx:7}},
-        {h:"Outcome",p:"Stable routing circuit for a large project.",j:{type:"route",path:"/home/"}}
-      ), informal:V(
-        {h:"Stays here",p:"No extra pages needed.",j:{type:"internal",idx:1}},
-        {h:"More entries",p:"Added inside the modal.",j:{type:"route",path:"/links/"}},
-        {h:"Proof hooks",p:"Link to fact-check when it matters.",j:{type:"internal",idx:7}},
-        {h:"Still fast",p:"Still usable.",j:{type:"route",path:"/home/"}}
-      )}
-    },
-
-    5:{ // Glossary
-      origin:{ formal:V(
-        {h:"Glossary purpose",p:"Glossary pins meanings so the system stays readable as it scales.",j:{type:"route",path:"/laws/"}},
-        {h:"Bounded definitions",p:"Definitions remain descriptive; they do not exceed evidence.",j:{type:"internal",idx:7}},
-        {h:"Starter terms",p:"Invariant, Lens, Contract, Drift, Receipt.",j:{type:"internal",idx:6}},
-        {h:"Outcome",p:"Shared meanings reduce misunderstanding.",j:{type:"route",path:"/home/"}}
-      ), informal:V(
-        {h:"Definitions",p:"Words mean one thing here.",j:{type:"route",path:"/laws/"}},
-        {h:"Stay bounded",p:"No inflated definitions.",j:{type:"internal",idx:7}},
-        {h:"Starter terms",p:"Invariant, Lens, Contract, Drift, Receipt.",j:{type:"internal",idx:6}},
-        {h:"Result",p:"Less confusion.",j:{type:"route",path:"/home/"}}
-      )},
-      now:{ formal:V(
-        {h:"Traversal",p:"Traversal is structured navigation, not linear reading.",j:{type:"internal",idx:1}},
-        {h:"Bilingual mapping",p:"Language is a lens: single-language render; stable mapping.",j:{type:"internal",idx:2}},
-        {h:"Time lens",p:"Concept/Now/Roadmap map to gd_time keys; definitions stay stable.",j:{type:"internal",idx:2}},
-        {h:"Integrity",p:"Terms must match glossary meaning across the site.",j:{type:"route",path:"/laws/"}}
-      ), informal:V(
-        {h:"Traversal",p:"Navigate by structure.",j:{type:"internal",idx:1}},
-        {h:"One language",p:"No mixed output.",j:{type:"internal",idx:2}},
-        {h:"Time lens",p:"Emphasis changes; definitions don’t drift.",j:{type:"internal",idx:2}},
-        {h:"Integrity",p:"Words must stay consistent.",j:{type:"route",path:"/laws/"}}
-      )},
-      post:{ formal:V(
-        {h:"Glossary growth",p:"Glossary expands inside this modal and in Laws where needed.",j:{type:"route",path:"/laws/"}},
-        {h:"Conformance",p:"Consistency is enforced by review and instrumentation, not vibes.",j:{type:"internal",idx:7}},
-        {h:"Evidence links",p:"High-load terms can point to fact-check nodes.",j:{type:"internal",idx:7}},
-        {h:"Outcome",p:"Stable language layer for scale.",j:{type:"route",path:"/home/"}}
-      ), informal:V(
-        {h:"More terms",p:"Added without breaking structure.",j:{type:"route",path:"/laws/"}},
-        {h:"Consistency",p:"Enforced by rules.",j:{type:"internal",idx:7}},
-        {h:"Proof links",p:"Link to checks when needed.",j:{type:"internal",idx:7}},
-        {h:"Stable language",p:"Scale without drift.",j:{type:"route",path:"/home/"}}
-      )}
-    },
-
-    6:{ // Appendix
-      origin:{ formal:V(
-        {h:"Appendix purpose",p:"Appendix holds conventions and references so core surfaces stay clean.",j:{type:"internal",idx:6}},
-        {h:"What belongs",p:"Naming rules, routing rules, key constraints, disclosure boundaries.",j:{type:"route",path:"/links/"}},
-        {h:"Starter conventions",p:"gd_lang/gd_style/gd_time only; lenses inside modal only; deterministic routing.",j:{type:"internal",idx:2}},
-        {h:"Outcome",p:"Clean core plus complete support layer.",j:{type:"route",path:"/home/"}}
-      ), informal:V(
-        {h:"Support layer",p:"Rules and references live here.",j:{type:"internal",idx:6}},
-        {h:"Keeps pages clean",p:"Core stays readable.",j:{type:"route",path:"/links/"}},
-        {h:"Conventions",p:"Only three keys; lenses inside modal; deterministic routing.",j:{type:"internal",idx:2}},
-        {h:"Result",p:"Complete without clutter.",j:{type:"route",path:"/home/"}}
-      )},
-      now:{ formal:V(
-        {h:"Disclosure boundary",p:"Public pages explain structure and falsifiers; they do not disclose hazardous instructions.",j:{type:"internal",idx:7}},
-        {h:"Neutrality",p:"No funnels, no capture, no pressure language.",j:{type:"internal",idx:1}},
-        {h:"Version posture",p:"Structure changes are rare; content expands inside stable nodes.",j:{type:"internal",idx:0}},
-        {h:"Outcome",p:"Public-safe growth with integrity.",j:{type:"route",path:"/home/"}}
-      ), informal:V(
-        {h:"Boundary",p:"Explain structure; don’t publish recipes.",j:{type:"internal",idx:7}},
-        {h:"Neutral",p:"No hype and no funnels.",j:{type:"internal",idx:1}},
-        {h:"Version",p:"Structure stable, content grows.",j:{type:"internal",idx:0}},
-        {h:"Safe",p:"Bounded growth.",j:{type:"route",path:"/home/"}}
-      )},
-      post:{ formal:V(
-        {h:"Archive posture",p:"Appendix becomes a durable store of conventions and replication scaffolds.",j:{type:"internal",idx:6}},
-        {h:"Replication posture",p:"Minimal replication protocols may live here without page explosion.",j:{type:"internal",idx:4}},
-        {h:"Cross-room continuity",p:"Invariants are recorded to prevent drift across rooms.",j:{type:"internal",idx:2}},
-        {h:"Outcome",p:"Durable documentation without clutter.",j:{type:"route",path:"/home/"}}
-      ), informal:V(
-        {h:"Becomes archive",p:"Still on this page.",j:{type:"internal",idx:6}},
-        {h:"Replication notes",p:"High-level only.",j:{type:"internal",idx:4}},
-        {h:"Continuity",p:"Invariants stay pinned.",j:{type:"internal",idx:2}},
-        {h:"Durable",p:"Without clutter.",j:{type:"route",path:"/home/"}}
-      )}
-    },
-
-    7:{ // Scientific fact-checking
-      origin:{ formal:V(
-        {h:"Warning",p:P.warn,j:{type:"internal",idx:7}},
-        {h:"Format",p:"Claim → assumptions → measurement definition → falsifier → limits.",j:{type:"route",path:"/laws/"}},
-        {h:"Rule",p:"If a claim cannot be measured, it remains conceptual.",j:{type:"internal",idx:4}},
-        {h:"Outcome",p:"Falsifiable backbone that prevents narrative inflation.",j:{type:"internal",idx:5}}
-      ), informal:V(
-        {h:"Warning",p:P.warn,j:{type:"internal",idx:7}},
-        {h:"Format",p:"Claim, assumptions, measurement, falsifier, limits.",j:{type:"route",path:"/laws/"}},
-        {h:"Rule",p:"No measurement = not verified.",j:{type:"internal",idx:4}},
-        {h:"Result",p:"Stops hand-waving.",j:{type:"internal",idx:5}}
-      )},
-      now:{ formal:V(
-        {h:"What is checked",p:"Definitions, invariants, and measurement semantics for the platform.",j:{type:"route",path:"/laws/"}},
-        {h:"What is not claimed",p:"No universality without receipts; no hazardous instructions; no secret recipes.",j:{type:"internal",idx:6}},
-        {h:"How to falsify",p:"Falsification is explicit: what observation contradicts the statement.",j:{type:"internal",idx:4}},
-        {h:"Outcome",p:"Engineers can audit without guessing intent.",j:{type:"route",path:"/gauges/"}}
-      ), informal:V(
-        {h:"Check what matters",p:"Definitions and measurement rules.",j:{type:"route",path:"/laws/"}},
-        {h:"No drift",p:"No universal promises. No hazards.",j:{type:"internal",idx:6}},
-        {h:"Falsify means",p:"Say what would prove it wrong.",j:{type:"internal",idx:4}},
-        {h:"Audit-ready",p:"Clear and testable.",j:{type:"route",path:"/gauges/"}}
-      )},
-      post:{ formal:V(
-        {h:"Scaling plan",p:"Add more checks under the same format; no new page types needed.",j:{type:"internal",idx:4}},
-        {h:"Integration",p:"Fact-checking references Products/Laws/Gauges where a claim is used.",j:{type:"route",path:"/products/"}},
-        {h:"Governance posture",p:"Evidence-only; never marketing copy.",j:{type:"internal",idx:5}},
-        {h:"Outcome",p:"Permanent verification spine for a growing platform.",j:{type:"route",path:"/home/"}}
-      ), informal:V(
-        {h:"More checks",p:"Same format, more claims.",j:{type:"internal",idx:4}},
-        {h:"Connected",p:"Links back to usage points.",j:{type:"route",path:"/products/"}},
-        {h:"Neutral",p:"Evidence-only.",j:{type:"internal",idx:5}},
-        {h:"Spine",p:"Verification that scales.",j:{type:"route",path:"/home/"}}
-      )}
-    }
-  };
-
-  function view(idx){ return CONTENT[idx][time][style]; }
-
-  function renderModal(){
-    setChipLabels();
-    wire();
-    mTitle.textContent = P.bubbles[activeIdx].h;
-    var v = view(activeIdx);
-    h1.textContent=v[0].h; p1.textContent=v[0].p;
-    h2.textContent=v[1].h; p2.textContent=v[1].p;
-    h3.textContent=v[2].h; p3.textContent=v[2].p;
-    h4.textContent=v[3].h; p4.textContent=v[3].p;
-
-    setJumpButton(j1, v[0].j, "JUMP");
-    setJumpButton(j2, v[1].j, "JUMP");
-    setJumpButton(j3, v[2].j, "JUMP");
-    setJumpButton(j4, v[3].j, "JUMP");
-  }
-
-  function openModal(i){
-    activeIdx=i;
-    renderModal();
+  function openModal(mode){
     bd.classList.add("show");
     modal.classList.add("show");
+    render(mode);
   }
   function closeModal(){
     bd.classList.remove("show");
     modal.classList.remove("show");
   }
+  bd.addEventListener("click", closeModal);
+  mClose.addEventListener("click", closeModal);
+  mReturn.addEventListener("click", closeModal);
 
-  // Main bubble clicks
-  for(let i=0;i<8;i++){
-    (function(i){
-      var el=document.getElementById("b"+i);
-      el.onclick=function(){ openModal(i); };
-      el.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(i);} };
-    })(i);
+  // Two diamonds click
+  const dNext=document.getElementById("dNext");
+  const dBoard=document.getElementById("dBoard");
+  dNext.addEventListener("click", ()=>openModal("nav"));
+  dBoard.addEventListener("click", ()=>openModal("board"));
+  dNext.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal("nav"); }});
+  dBoard.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal("board"); }});
+
+  function row(title, sub, copy, jumps, color){
+    return {title, sub, copy, jumps, color};
+  }
+  function jump(label, href){ return {label, href}; }
+
+  function render(mode){
+    stackList.innerHTML="";
+    const ACC = { nav:"#D4AF37", board:"#93C5FD" };
+
+    const rows = (mode==="nav")
+      ? [
+          row("HOW NAVIGATION WORKS","Move fast without getting lost.",
+              "This system is built for traversal under pressure: clean jumps, predictable returns, and no dead ends. If you feel lost, go to HUB and re-orient.",
+              [ jump("JUMP HUB","/home/"), jump("JUMP PRODUCTS","/products/"), jump("JUMP LINKS","/links/") ],
+              ACC.nav),
+          row("STATE STABILITY","Your context should not reset.",
+              "Language, style, and time can persist across the site. Terminal preserves what you already have — it does not change your settings.",
+              [ jump("JUMP GAUGES","/gauges/"), jump("JUMP LAWS","/laws/"), jump("JUMP HUB","/home/") ],
+              ACC.nav),
+          row("UNDER CONSTRUCTION","Visible progress, no broken flows.",
+              "Some surfaces are being filled node-by-node. Placeholders are intentional: they keep navigation unbroken and prevent implied claims.",
+              [ jump("JUMP PRODUCTS","/products/"), jump("JUMP INNOVATION","/explore/"), jump("JUMP LINKS","/links/") ],
+              ACC.nav)
+        ]
+      : [
+          row("SOLAR EXPLORATION","The frontier lane.",
+              "Look up — but keep your feet on the ground. Big questions survive only when they pass constraints and measurement. Explore the frontier without drifting into fantasy.",
+              [ jump("JUMP INNOVATION","/explore/"), jump("JUMP LAWS","/laws/"), jump("JUMP GAUGES","/gauges/") ],
+              ACC.board),
+          row("ENERGY INDUSTRIALIZATION","Make it real, safely.",
+              "Industrial heat first. Measurable substitution. Upstream containment. Public posture stays Industrial Plasma Thermal Substitution (C). Fusion is gated readiness — requirements only.",
+              [ jump("JUMP ENERGY","/products/energy/"), jump("FUSION READINESS","/explore/fusion-readiness/"), jump("JUMP GOVERNANCE","/laws/") ],
+              ACC.board),
+          row("LANGUAGE & LEARNING","Scale begins with clarity.",
+              "If you can’t say it clearly, you can’t scale it. This lane compresses learning into something you can carry: fewer words, more control, more reach.",
+              [ jump("JUMP EDUCATION","/products/education/"), jump("JUMP HUB","/home/"), jump("JUMP LINKS","/links/") ],
+              ACC.board),
+          row("SOFTWARE INSTRUMENTS","Tools that remove noise.",
+              "Tools don’t replace judgment — they remove friction. This lane turns structure into interfaces: dashboards, routing, and execution surfaces that stay coherent under pressure.",
+              [ jump("JUMP SOFTWARE","/products/software/"), jump("JUMP GAUGES","/gauges/"), jump("JUMP LAWS","/laws/") ],
+              ACC.board),
+          row("FACT-CHECKING MODE","Hard bounds only.",
+              "No vibes. No faith-based engineering. Definitions, falsifiers, receipts. If it can’t be bounded, it can’t be claimed. If it can’t be measured, it stays conceptual.",
+              [ jump("JUMP LAWS","/laws/"), jump("JUMP GAUGES","/gauges/"), jump("JUMP LINKS","/links/") ],
+              ACC.board),
+          row("RESILIENCE & READINESS","Calm execution.",
+              "This lane is calm, not fear-driven. Planning, redundancy, and coherence when conditions change fast. No guarantees. Just preparation you can execute.",
+              [ jump("JUMP PRODUCTS","/products/"), jump("JUMP LAWS","/laws/"), jump("JUMP LINKS","/links/") ],
+              ACC.board),
+          row("FRONTIER SUBSTRATE","The spine.",
+              "Structure before claims. Evidence before scale. If it can’t pass the substrate, it doesn’t execute — and that’s the whole point.",
+              [ jump("JUMP LAWS","/laws/"), jump("JUMP LINKS","/links/"), jump("JUMP HUB","/home/") ],
+              ACC.board)
+        ];
+
+    mTitle.textContent = (mode==="nav") ? "TERMINAL · WHERE TO GO NEXT" : "TERMINAL · TRAILER BOARD";
+    mh1.textContent = (mode==="nav") ? "Fast orientation. Clean jumps." : "Pick a trailer. Jump to the trunk.";
+    mh2.textContent = (mode==="nav")
+      ? "No lenses here. No drift. Direct routes that preserve your existing state."
+      : "Exciting, bounded, executable. No promises. Receipts decide upgrades.";
+    mh3.textContent = (mode==="nav")
+      ? "If you’re unsure where to go, start with HUB."
+      : "Energy remains Industrial (C). Fusion is gated readiness only.";
+
+    let openIndex = 0;
+    rows.forEach((r, idx)=>{
+      const row=document.createElement("div");
+      row.className="stackRow"+(idx===openIndex ? " open" : "");
+      row.style.setProperty("--domc", r.color);
+
+      const head=document.createElement("div");
+      head.className="stackHead";
+
+      const left=document.createElement("div");
+      left.className="stackLeft";
+
+      const bar=document.createElement("div");
+      bar.className="stackBar";
+      bar.style.background=r.color;
+
+      const title=document.createElement("div");
+      title.className="stackTitle";
+      title.textContent=r.title;
+
+      const sub=document.createElement("div");
+      sub.className="stackSub";
+      sub.textContent=r.sub;
+
+      left.appendChild(bar);
+      left.appendChild(title);
+      left.appendChild(sub);
+
+      const chev=document.createElement("div");
+      chev.className="stackChevron";
+      chev.textContent = (idx===openIndex) ? "▾" : "▸";
+
+      head.appendChild(left);
+      head.appendChild(chev);
+
+      const body=document.createElement("div");
+      body.className="stackBody";
+
+      const copy=document.createElement("p");
+      copy.className="pdesc";
+      copy.textContent=r.copy;
+
+      const jr=document.createElement("div");
+      jr.className="jumpRow";
+
+      r.jumps.forEach(j=>{
+        const a=document.createElement("a");
+        a.className="crp-btn";
+        a.textContent=j.label;
+        a.href = j.href + q();
+        jr.appendChild(a);
+      });
+
+      body.appendChild(copy);
+      body.appendChild(jr);
+
+      head.addEventListener("click", ()=>{
+        openIndex = idx;
+        render(mode);
+      });
+
+      row.appendChild(head);
+      row.appendChild(body);
+      stackList.appendChild(row);
+    });
   }
 
-  // Lens buttons
-  chipStyle.onclick=function(){
-    style=(style==="formal")?"informal":"formal";
-    try{localStorage.setItem("gd_style",style);}catch(e){}
-    setChipLabels();
-    renderModal();
-  };
-  chipConcept.onclick=function(){ time="origin"; try{localStorage.setItem("gd_time",time);}catch(e){} renderModal(); };
-  chipNow.onclick=function(){ time="now"; try{localStorage.setItem("gd_time",time);}catch(e){} renderModal(); };
-  chipRoadmap.onclick=function(){ time="post"; try{localStorage.setItem("gd_time",time);}catch(e){} renderModal(); };
-
-  // Close
-  bd.onclick=closeModal;
-  mClose.onclick=closeModal;
-  mReturn.onclick=closeModal;
-
-  // Initial
-  setChipLabels();
-  wire();
 })();
 </script>
 

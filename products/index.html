@@ -1,12 +1,9 @@
-
-<!-- TNT — /products/index.html  (PRODUCTS SPINE · 4 PRIMARY VOLUMES · NO LENSES)
-     LOCKS:
-       - TNT FULL FILE
-       - Uses /assets/ui.css + /assets/branch.css only
-       - DO NOT style html/body background
-       - No lenses on this page
-       - Pure jump surface
-       - Symmetrical 4-diamond stage
+<!-- TNT — /products/index.html  (PRODUCTS SPINE · GLOSSY JEWEL RESTORE · NO UI OVERRIDE)
+     FIX:
+       - Stops overriding UI “field” (no html/body bg)
+       - Removes backdrop-filter blurs (reduces iOS tap bugs + restores crispness)
+       - Uses minimal diamond CSS: position + gloss overlay only (enhances, not replaces)
+       - Keeps 4-volume spine layout
 -->
 
 <!doctype html>
@@ -20,197 +17,171 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-:root{
-  --R:154px;
-}
+:root{--R:154px}
 
-body{
-  margin:0;
-  color:#fff;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-}
+/* No field overrides */
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:inherit;text-decoration:none}
 
-/* Top left */
-.top-left{
-  position:fixed;
-  left:16px;
-  top:16px;
-  z-index:90;
-  display:flex;
-  gap:10px;
-}
-
-/* Brand */
-.brand{
-  position:fixed;
-  left:50%;
-  top:16px;
-  transform:translateX(-50%);
-  z-index:80;
-  text-align:center;
-  padding:10px 14px;
-  border-radius:999px;
+/* Top-left controls (use existing button class if available, else fall back) */
+.top-left{position:fixed;left:16px;top:16px;z-index:90;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.tbtn{
+  padding:10px 16px;border-radius:14px;
+  background:rgba(0,0,0,.22);
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);
-  backdrop-filter:blur(8px);
-}
-.brand .name{
-  font-weight:950;
-  letter-spacing:1.2px;
-  font-size:12px;
-  opacity:.95;
-}
-.brand .tag{
-  font-size:11px;
-  letter-spacing:.6px;
-  opacity:.70;
-  margin-top:2px;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+  font-weight:900;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
 }
 
-/* Stage */
+/* Brand pill — NO BLUR */
+.brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:80;text-align:center;padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+}
+.brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
+.brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
+
+/* Stage positioning only */
 .stage{
-  position:fixed;
-  left:50%;
-  top:52%;
+  position:fixed;left:50%;top:52%;
   transform:translate(-50%,-50%);
-  width:min(720px,94vw);
-  height:min(720px,94vw);
+  width:min(720px,94vw);height:min(720px,94vw);
   z-index:60;
   pointer-events:none;
 }
-
 .outer{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:min(680px,92vw);
-  height:min(680px,92vw);
+  position:absolute;left:50%;top:50%;
+  width:min(680px,92vw);height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.72),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
-  opacity:.85;
+  box-shadow:0 90px 260px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
+  opacity:.55;
   pointer-events:none;
 }
 
+/* Diamonds: minimal base + GLOSS overlay (enhances instead of repainting) */
 .d{
-  width:190px;
-  height:190px;
-  position:absolute;
-  left:50%;
-  top:50%;
+  width:200px;height:200px;
+  position:absolute;left:50%;top:50%;
   transform-origin:center;
-  border-radius:28px;
+  border-radius:30px;
   cursor:pointer;
   pointer-events:auto;
   touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
 
-  background:
-    radial-gradient(circle at 35% 22%, rgba(255,255,255,.18), transparent 58%),
-    radial-gradient(circle at 70% 82%, rgba(0,80,255,.18), transparent 62%),
-    linear-gradient(160deg, rgba(12,22,38,.94) 0%, rgba(7,11,18,.96) 72%);
-
-  border:1px solid rgba(255,255,255,.12);
-
+  /* Let ui.css do most of the look; we only add “jewel depth” */
+  background:rgba(0,0,0,.14);
+  border:1px solid rgba(255,255,255,.14);
   box-shadow:
-    0 30px 90px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.10);
-
-  transition:all .22s ease;
+    0 26px 90px rgba(0,0,0,.60),
+    inset 0 2px 0 rgba(255,255,255,.14),
+    inset 0 -28px 56px rgba(0,0,0,.55);
 }
-
+.d::before{
+  /* gold rim highlight (thin) */
+  content:"";
+  position:absolute;inset:0;border-radius:30px;padding:1px;
+  background:linear-gradient(135deg, rgba(212,175,55,.0) 0%, rgba(212,175,55,.35) 50%, rgba(212,175,55,.0) 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  /* glossy specular cap (STATIC — no animation, no blur) */
+  content:"";
+  position:absolute;
+  left:10%; right:10%;
+  top:8%;
+  height:34%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  opacity:.85;
+  pointer-events:none;
+}
 .d:hover{
-  transform:translate(-50%,-50%) scale(1.04) rotate(45deg);
   box-shadow:
-    0 36px 120px rgba(0,0,0,.90),
-    0 0 22px rgba(212,175,55,.22),
-    inset 0 2px 0 rgba(255,255,255,.12);
+    0 34px 120px rgba(0,0,0,.72),
+    0 0 22px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -34px 64px rgba(0,0,0,.60);
+  border-color:rgba(212,175,55,.26);
+}
+.d:active{
+  transform:translate(-50%,-50%) rotate(45deg) scale(.99);
 }
 
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
-.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
+.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
+.d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
+.d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
+.d-w{transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg)}
 
 .inner{
-  width:100%;
-  height:100%;
+  width:100%;height:100%;
   transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:16px;
-  gap:10px;
-  pointer-events:none;
-  user-select:none;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:16px;gap:10px;
+  pointer-events:none;user-select:none;
 }
+.lab{font-weight:950;letter-spacing:.8px;font-size:18px}
+.sub{font-size:13px;opacity:.78;line-height:1.3;max-width:18em}
 
-.lab{
-  font-weight:950;
-  letter-spacing:.8px;
-  font-size:18px;
-}
-
-.sub{
-  font-size:13px;
-  opacity:.78;
-  line-height:1.3;
-  max-width:18em;
-}
-
+/* Core */
 .core{
-  position:absolute;
-  left:50%;
-  top:50%;
+  position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:74px;
-  height:74px;
-  border-radius:22px;
+  width:74px;height:74px;border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
-  box-shadow:
-    0 18px 44px rgba(0,0,0,.62),
-    inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;
-  place-items:center;
-  font-weight:950;
-  letter-spacing:.5px;
-  opacity:.92;
+  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;
+  font-weight:950;letter-spacing:.5px;opacity:.92;
   pointer-events:none;
 }
 
-/* Dock */
+/* Dock — NO BLUR, keep it neutral */
 .dock{
-  position:fixed;
-  left:50%;
+  position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:90;
-  width:min(900px,94vw);
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-  padding:10px 12px;
-  border-radius:999px;
+  z-index:90;width:min(900px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+}
+.dock a{
+  padding:10px 16px;border-radius:14px;
+  background:rgba(0,0,0,.16);
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
-  backdrop-filter:blur(8px);
+  box-shadow:0 12px 30px rgba(0,0,0,.45);
+  font-weight:900;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+}
+.dock a.active{
+  border-color:rgba(212,175,55,.30);
+  box-shadow:0 16px 44px rgba(0,0,0,.55), 0 0 14px rgba(212,175,55,.12);
 }
 
+@media (max-width:560px){
+  :root{--R:142px}
+  .d{width:176px;height:176px}
+}
 </style>
 </head>
 
 <body>
 
 <div class="top-left">
-  <a class="crp-btn" href="/home/">HUB</a>
-  <a class="crp-btn" href="/door/">EXIT</a>
+  <a class="tbtn" href="/home/">HUB</a>
+  <a class="tbtn" href="/door/">EXIT</a>
 </div>
 
 <div class="brand">
@@ -218,31 +189,31 @@ body{
   <div class="tag">Four volumes · One catalog spine</div>
 </div>
 
-<div class="stage">
+<div class="stage" aria-label="Products catalog diamond">
   <div class="outer"></div>
 
-  <div class="d d-n" onclick="location.href='/products/energy/'">
+  <div class="d d-n" role="button" tabindex="0" onclick="location.href='/products/energy/'">
     <div class="inner">
       <div class="lab">ENERGY</div>
       <div class="sub">Industrial plasma substitution · Gated fusion readiness</div>
     </div>
   </div>
 
-  <div class="d d-e" onclick="location.href='/products/education/'">
+  <div class="d d-e" role="button" tabindex="0" onclick="location.href='/products/education/'">
     <div class="inner">
       <div class="lab">EDUCATION</div>
       <div class="sub">Language compression · Traversal learning systems</div>
     </div>
   </div>
 
-  <div class="d d-s" onclick="location.href='/products/software/'">
+  <div class="d d-s" role="button" tabindex="0" onclick="location.href='/products/software/'">
     <div class="inner">
       <div class="lab">SOFTWARE</div>
       <div class="sub">Instrumentation · Dashboards · Execution engines</div>
     </div>
   </div>
 
-  <div class="d d-w" onclick="location.href='/products/commercial/'">
+  <div class="d d-w" role="button" tabindex="0" onclick="location.href='/products/commercial/'">
     <div class="inner">
       <div class="lab">COMMERCIAL</div>
       <div class="sub">Deployment packaging · Licensing · Phase rollout</div>
@@ -252,12 +223,12 @@ body{
   <div class="core">◆</div>
 </div>
 
-<nav class="dock">
-  <a class="crp-btn" href="/index.html">TERMINAL</a>
-  <a class="crp-btn active" href="/products/">PRODUCTS</a>
-  <a class="crp-btn" href="/laws/">LAWS</a>
-  <a class="crp-btn" href="/gauges/">GAUGES</a>
-  <a class="crp-btn" href="/links/">LINKS</a>
+<nav class="dock" aria-label="Bottom navigation">
+  <a href="/index.html">TERMINAL</a>
+  <a class="active" href="/products/">PRODUCTS</a>
+  <a href="/laws/">LAWS</a>
+  <a href="/gauges/">GAUGES</a>
+  <a href="/links/">LINKS</a>
 </nav>
 
 </body>

@@ -1,16 +1,14 @@
-<!-- TNT — /products/energy/index.html  (HARD-FIX · DIAMONDS ALWAYS OPEN · NO JS CRASH · STICKY LENSES · MULTI-OPEN)
-     THIS VERSION FIXES THE ROOT CAUSE:
-       - Diamonds were not opening because JS was throwing BEFORE binding (missing IDs / null refs).
-       - This file binds diamonds FIRST, and ALL other UI is null-safe.
-       - No inline onclick dependency. No missing window.__openEnergy.
-       - If any optional element is missing, the page still opens the modal.
-
+<!-- TNT — /products/energy/index.html  (ENERGY · RULE OF SEVEN · HARD-FIX STAYS)
+     STANDARD:
+       - Diamonds always open (bind-first, null-safe)
+       - Sticky lenses (STYLE + CAUSE/EFFECT + TIME)
+       - Multi-open stacks + anchor + scroll preservation
+       - Rule of Seven: 8 applied domains × 7 paragraphs × 7 full sentences
+       - Industrial posture (C) on the surface; fusion is requirements-only via link
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css only
        - Does NOT style html/body background (ui.css owns field)
-       - Industrial posture (C) only; no net-positive fusion claim; fusion link = requirements-only page
-       - Sticky lens cluster always accessible
-       - Multi-open stacks
+       - No new state keys (gd_lang/gd_style/gd_time only)
 -->
 
 <!doctype html>
@@ -28,8 +26,6 @@
   --R:154px;
   --neutralRed: rgba(176,0,0,.22);
   --neutralGold: rgba(212,175,55,.55);
-  --temp: #E5E7EB;
-  --tempSoft: rgba(229,231,235,.16);
   --mut: rgba(255,255,255,.88);
   --mut2: rgba(255,255,255,.72);
 }
@@ -54,7 +50,7 @@ a{color:inherit;text-decoration:none}
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
   z-index:80;text-align:center;padding:10px 14px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.16);
 }
 .brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
 .brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
@@ -135,13 +131,13 @@ a{color:inherit;text-decoration:none}
   z-index:90;width:min(900px,94vw);
   display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
   padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.20);
   pointer-events:none;
 }
 .dock .btn{pointer-events:auto}
 
 /* Modal */
-.bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);display:none}
+.bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.65);display:none}
 .bd.show{display:block}
 .modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1180px,96vw);max-height:90vh;display:none;z-index:210}
 .modal.show{display:block}
@@ -163,7 +159,6 @@ a{color:inherit;text-decoration:none}
 .stickyTop{
   position:sticky;top:0;z-index:50;
   background:rgba(0,0,0,.62);
-  backdrop-filter:blur(12px);
   border-bottom:1px solid rgba(255,255,255,.08);
   padding:12px 12px 10px;
 }
@@ -196,7 +191,7 @@ a{color:inherit;text-decoration:none}
 }
 .pill.active{
   border-color:rgba(212,175,55,.45);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--tempSoft);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.18);
 }
 
 /* Header card */
@@ -212,8 +207,6 @@ a{color:inherit;text-decoration:none}
 
 /* Content */
 .content{padding:14px 16px 18px}
-
-/* Stacks */
 .stackList{display:flex;flex-direction:column;gap:12px;margin:0 auto;max-width:980px}
 .stackRow{
   border:1px solid rgba(255,255,255,.10);
@@ -239,7 +232,6 @@ a{color:inherit;text-decoration:none}
 }
 .stackRow.open .stackBody{display:block}
 
-/* Paragraph blocks */
 .pblock{
   border:1px solid rgba(255,255,255,.08);
   background:rgba(0,0,0,.08);
@@ -251,7 +243,6 @@ a{color:inherit;text-decoration:none}
 .pul{margin:0;padding-left:18px;color:var(--mut2)}
 .pul li{margin:8px 0;line-height:1.42}
 
-/* Actions */
 .mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
 .sbtn{padding:12px 18px;border-radius:14px;background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));color:#fff;border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 36px rgba(0,0,0,.7);cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none}
 
@@ -279,16 +270,16 @@ a{color:inherit;text-decoration:none}
   <div class="outer"></div>
 
   <div class="d d-n" id="diamondFoundation" role="button" tabindex="0">
-    <div class="inner"><div class="lab">FOUNDATION</div><div class="sub">Admissibility before scale.</div></div>
+    <div class="inner"><div class="lab">FOUNDATION</div><div class="sub">Claim discipline.</div></div>
   </div>
   <div class="d d-w" id="diamondArchitecture" role="button" tabindex="0">
     <div class="inner"><div class="lab">ARCHITECTURE</div><div class="sub">Modules and isolation.</div></div>
   </div>
   <div class="d d-s" id="diamondPerformance" role="button" tabindex="0">
-    <div class="inner"><div class="lab">PERFORMANCE</div><div class="sub">Measured output bands.</div></div>
+    <div class="inner"><div class="lab">PERFORMANCE</div><div class="sub">Measured bands.</div></div>
   </div>
   <div class="d d-e" id="diamondGovernance" role="button" tabindex="0">
-    <div class="inner"><div class="lab">GOVERNANCE</div><div class="sub">Standards under scale.</div></div>
+    <div class="inner"><div class="lab">GOVERNANCE</div><div class="sub">Scale discipline.</div></div>
   </div>
 
   <div class="core">◆</div>
@@ -392,7 +383,7 @@ a{color:inherit;text-decoration:none}
   const pillRoadmap=document.getElementById("pillRoadmap");
 
   let section="FOUNDATION";
-  const CLAIM_LOCK="Claim discipline: Industrial plasma thermal substitution (C). No net-positive fusion claim. No facility net-electric claim. Fusion referenced only as gated admissibility pathway.";
+  const CLAIM_LOCK="Industrial energy position: plasma-based thermal substitution at industrial scale, buffered and governed. Fusion remains requirements-only via the readiness link.";
 
   function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(gdStyle)+"&time="+encodeURIComponent(gdTime); }
   (function setLinks(){
@@ -410,183 +401,24 @@ a{color:inherit;text-decoration:none}
     document.getElementById("mFusion").href="/explore/fusion-readiness/?"+s;
   })();
 
-  const DOMAIN_COLORS={
-    "Industrial":"#D97706","Scientific":"#2563EB","Agricultural":"#2F855A","Financial":"#047857",
-    "Human":"#F59E0B","Adversarial":"#B91C1C","Regulatory":"#475569","Environmental":"#0D9488",
-    "Infrastructural":"#1E40AF","Computational":"#7C3AED","Governance":"#D4AF37","Temporal":"#94A3B8"
-  };
-  const DOMAINS=Object.keys(DOMAIN_COLORS);
-
-  const PHEAD=["P1 — Context","P2 — Constraint","P3 — Tension","P4 — Intervention","P5 — Mechanism","P6 — Result","P7 — Boundary"];
-
-  const LEX={
-    Industrial:{who:"plant operators",what:"process heat lines",why:"downtime cost",wall:"exchanger boundary",metric:"delivered-heat variance"},
-    Scientific:{who:"instrument stack",what:"measured regimes",why:"artifact risk",wall:"calibration chain",metric:"background-subtracted signal"},
-    Agricultural:{who:"grow operators",what:"microclimate loops",why:"crop stress",wall:"exchanger-only heating",metric:"yield stability"},
-    Financial:{who:"capital allocators",what:"underwritten sleeves",why:"variance shock",wall:"insurance underwriting",metric:"cost per verified output"},
-    Human:{who:"operators + communities",what:"training and comprehension",why:"misuse from confusion",wall:"UI boundaries",metric:"error rate reduction"},
-    Adversarial:{who:"red-team threats",what:"critical nodes",why:"spoofed telemetry",wall:"tamper detection",metric:"containment time"},
-    Regulatory:{who:"inspectors",what:"permits + filings",why:"scope drift",wall:"cert tiers",metric:"compliance incident rate"},
-    Environmental:{who:"ecosystems",what:"air/water/land interfaces",why:"thermal discharge",wall:"impact boundary",metric:"measured discharge bands"},
-    Infrastructural:{who:"grid operators",what:"dispatch interfaces",why:"cascade risk",wall:"buffered interconnect",metric:"ramp compliance"},
-    Computational:{who:"control layer",what:"telemetry + logs",why:"latency drift",wall:"guards + receipts",metric:"oscillation events"},
-    Governance:{who:"stewards",what:"policy + ledger",why:"power drift",wall:"non-retroactive audit",metric:"exception rate"},
-    Temporal:{who:"maintenance cycles",what:"lifecycle stages",why:"aging drift",wall:"refresh protocol",metric:"failure trend"}
-  };
-
-  function paragraph(domain, pIndex){
-    const X=LEX[domain];
-    const t=(gdTime==="origin")?"concept definition":(gdTime==="now")?"observed state":"gated roadmap";
-    const cl=(causality==="CAUSE")?"drivers":"effects";
-    const make=(a,b,c,d,e,f,g)=>[a,b,c,d,e,f,g];
-
-    if(pIndex===0){
-      if(gdStyle==="formal") return make(
-        `Context starts with ${X.what}: energy here is governed by operational constraints, and ${X.metric} is the primary observable that keeps claims honest.`,
-        `The ${cl} are anchored to ${X.why}; if ${X.why} grows while ${X.metric} drifts, scaling becomes structurally inadmissible even if the narrative feels optimistic.`,
-        `The accountable reader is ${X.who}, so every statement must map to a boundary, a measurement rule, or a receipt—otherwise it is excluded.`,
-        `The separation wall is ${X.wall}; it is treated as permanent because it prevents risk migration toward endpoints and preserves passive failure modes downstream.`,
-        `Under ${t}, we describe what is admissible inside the wall and what is prohibited outside it, without requiring interpretive agreement.`,
-        `Public posture remains Industrial Plasma Thermal Substitution (C); any gain language is structurally omitted until an independent proof chain exists.`,
-        `Fusion is referenced only as a requirements-only readiness pathway via link; it is not asserted and not implied here.`
-      );
-      return make(
-        `Reality first: ${X.what} must run daily, and ${X.why} is what wrecks budgets when stability is missing.`,
-        `If ${X.metric} can’t stay inside a tight band, scaling just multiplies the problem—so we don’t pretend otherwise.`,
-        `This page talks to ${X.who}, not hype, so every line points to a rule you can follow or a thing you can measure.`,
-        `${X.wall} is the hard wall; cross it and you’re not doing “safe industrial,” you’re doing something else.`,
-        `In ${t}, we focus on what you can enforce and audit, not what sounds impressive.`,
-        `Industrial (C) stays locked: industrial heat substitution, buffered, contained, and accountable.`,
-        `Fusion stays in the gated lane because we are not claiming gain here.`
-      );
-    }
-
-    if(pIndex===1){
-      if(gdStyle==="formal") return make(
-        `Constraints are declared before effort because hidden constraints produce hidden failure, and hidden failure becomes public harm at scale.`,
-        `The primary constraint is ${X.wall}; it is not softened by urgency, convenience, or persuasion, because that is how risk leaks.`,
-        `Measurement constraints require ${X.metric} to be computed from defined logs and methods, not inferred from “it feels better.”`,
-        `Operational constraints require ${X.who} to execute under stress without ambiguity, so language is written to be executable.`,
-        `Governance constraints forbid retroactive threshold editing, bin merging, or silent redefinitions, because those actions destroy trust.`,
-        `Time posture changes emphasis (concept vs live vs roadmap) but does not change permissions or definitions.`,
-        `Claim posture remains Industrial (C), and any fusion implication remains categorically disallowed in this surface.`
-      );
-      return make(
-        `Rules first, because rules are what keep people safe when the day goes bad.`,
-        `${X.wall} is the wall; you build around it, not through it.`,
-        `${X.metric} comes from meters and logs, not from vibes.`,
-        `${X.who} needs a playbook that works when things are loud and stressful.`,
-        `No after-the-fact edits: if a run fails, it stays failed in the record.`,
-        `Concept/live/roadmap changes the view, not the rules.`,
-        `Industrial (C) stays locked; fusion stays gated-only.`
-      );
-    }
-
-    if(pIndex===2){
-      if(gdStyle==="formal") return make(
-        `Tension emerges when ${X.why} competes against stability because incentives reward speed while systems punish it.`,
-        `The ${cl} frequently appear as drift in ${X.metric} even when average output looks acceptable, which is why we track bands not anecdotes.`,
-        `Operational tension arises when convenience pressures ${X.who} into shortcuts that erode the separation wall over time.`,
-        `Data tension arises when noise and artifacts mimic improvement, creating false confidence that collapses under audit.`,
-        `Regulatory tension arises when language drifts faster than receipts, forcing oversight to tighten after incidents instead of before them.`,
-        `Market tension arises when claims inflate early, producing reputational debt that cannot be paid with later explanations.`,
-        `The correct response is to treat failures as data and tighten gates, not to reinterpret outcomes.`
-      );
-      return make(
-        `Pressure makes people chase speed, and speed is how ${X.why} explodes.`,
-        `Most disasters start as quiet drift in ${X.metric}, not as dramatic crashes.`,
-        `Convenience pushes ${X.who} toward shortcuts, and shortcuts are how walls get breached.`,
-        `Noise can look like progress if you aren’t strict, then the audit destroys you later.`,
-        `When language runs ahead of receipts, oversight tightens because it has to.`,
-        `Hype creates a debt you pay with trust.`,
-        `So we tighten gates instead of rewriting the story.`
-      );
-    }
-
-    if(pIndex===3){
-      if(gdStyle==="formal") return make(
-        `Intervention means moving uncertainty upstream and converting it into a measured envelope that ${X.who} can operate consistently.`,
-        `We enforce ${X.wall} as a permanent separation requirement, because that is what prevents risk migration into proximity.`,
-        `We buffer outputs so ${X.metric} becomes stable rather than reactive, converting volatility into a controlled band.`,
-        `We require receipts for posture shifts and phase escalation, because scaling without receipts is structurally inadmissible.`,
-        `We isolate variables so causal attribution remains testable, and disputes become experiments instead of arguments.`,
-        `We publish disproof triggers so the system cannot “win” by redefining its own score after the fact.`,
-        `We preserve Industrial (C) posture while referencing fusion only through the gated readiness pathway.`
-      );
-      return make(
-        `Intervention means pushing uncertainty upstream and keeping the public layer boring and safe.`,
-        `${X.wall} stays locked so risk can’t leak toward people.`,
-        `We buffer output so ${X.metric} stays steady instead of swinging with shocks.`,
-        `No one levels up without receipts.`,
-        `We change one thing at a time so learning is real.`,
-        `We write disproof rules so we can’t cheat later.`,
-        `Industrial (C) stays public; fusion stays gated-only.`
-      );
-    }
-
-    if(pIndex===4){
-      if(gdStyle==="formal") return make(
-        `Mechanism is staged: regime, isolation, buffering, delivery; each stage has explicit stop conditions and audit outputs.`,
-        `Control logic monitors envelope adherence and trips on mismatch rather than averaging error away, because averaged error hides collapse.`,
-        `Telemetry is redundant where ${X.why} can be masked by artifacts, because single-signal optimism is structurally unsafe.`,
-        `Response prioritizes containment and controlled shutdown over continuity, because continuity without safety becomes liability.`,
-        `Validation rejects artifact-dependent “wins,” ensuring ${X.metric} remains meaningful under stress and audit.`,
-        `Audit artifacts are produced as part of operation, not appended after incidents to justify decisions.`,
-        `The system stays coherent because transitions remain receipt-gated and replayable.`
-      );
-      return make(
-        `Mechanism is a chain: regime, isolation, buffer, delivery—no shortcuts.`,
-        `Controls trip on mismatch instead of hoping it smooths out.`,
-        `We use redundancy where noise can fool people.`,
-        `When it goes wrong, we contain first and shut down safely.`,
-        `Validation refuses fake wins that depend on artifacts.`,
-        `Audits are built in, not added later.`,
-        `Everything is replayable, so arguments become checks.`
-      );
-    }
-
-    if(pIndex===5){
-      if(gdStyle==="formal") return make(
-        `Result is evaluated as stability in ${X.metric} under declared conditions, not as rhetorical “success.”`,
-        `Economic effect is reduced sensitivity to volatility because buffering and phase discipline convert shocks into bounded variance.`,
-        `Safety effect is reduced endpoint exposure by enforcing ${X.wall} as an immutable interface rule.`,
-        `Governance effect is reduced dispute surface because receipts replace interpretation and logs replace recollection.`,
-        `Adoption effect is improved trust because claims remain bounded and falsifiable rather than inflated.`,
-        `Scaling effect is replication readiness because rules and artifacts are portable and auditable across sites.`,
-        `Scientific effect is honest staging: measured remains measured; gated remains gated.`
-      );
-      return make(
-        `Result means ${X.metric} stays steady in the real world, not just on a good day.`,
-        `Buffers make shocks less scary because they turn chaos into a band you can plan around.`,
-        `${X.wall} keeps people safe by design, not by promises.`,
-        `Receipts replace arguments because the log doesn’t care who’s louder.`,
-        `Bounded claims build trust faster than big claims.`,
-        `Portable rules make replication possible without drift.`,
-        `Measured stays measured; gated stays gated.`
-      );
-    }
-
-    // Boundary
-    if(gdStyle==="formal") return make(
-      `This layer does not assert net-positive fusion, and it does not infer fusion gain from excitation behavior.`,
-      `This layer does not assert facility-level net electric output, and it does not hide auxiliary loads in accounting.`,
-      `This layer does not publish hazardous operational recipes, because public safety is a binding constraint.`,
-      `This layer does not permit endpoint high-energy exposure; ${X.wall} remains permanent by design.`,
-      `This layer does not upgrade claims via narrative interpretation; upgrades require external receipts and disproof conditions.`,
-      `This layer treats failure as admissible data and uses it to tighten constraints rather than to protect ego.`,
-      `This layer remains Industrial (C) unless an independent, auditable proof chain forces a classification change.`
-    );
-    return make(
-      `We are not claiming net fusion, and we’re not hinting at it either.`,
-      `We are not claiming net electric output, and we’re not hiding loads.`,
-      `We are not publishing dangerous recipes.`,
-      `${X.wall} stays permanent; no high-energy at endpoints.`,
-      `We don’t upgrade claims because it sounds good—receipts decide.`,
-      `Failures stay in the record because that’s how you get better.`,
-      `Industrial (C) stays locked unless an independent proof chain forces a change.`
-    );
+  function tempColor(){
+    const map={
+      FOUNDATION:"#E5E7EB",
+      ARCHITECTURE:"#93C5FD",
+      PERFORMANCE:"#34D399",
+      GOVERNANCE:"#FBBF24"
+    };
+    return map[section] || "#E5E7EB";
   }
-
+  function tempSoft(hex){
+    // convert hex to rgba with low alpha
+    try{
+      const r=parseInt(hex.slice(1,3),16);
+      const g=parseInt(hex.slice(3,5),16);
+      const b=parseInt(hex.slice(5,7),16);
+      return `rgba(${r},${g},${b},.16)`;
+    }catch(e){ return "rgba(229,231,235,.16)"; }
+  }
   function renderTemp(){
     const t=tempColor();
     document.documentElement.style.setProperty("--temp", t);
@@ -595,13 +427,139 @@ a{color:inherit;text-decoration:none}
   function headerLines(){
     const t = (gdTime==="origin")?"CONCEPT":(gdTime==="now")?"LIVE":"ROADMAP";
     h1.textContent = `ENERGY · ${section} · ${causality} · ${t} · ${gdStyle.toUpperCase()}`;
-    h2.textContent = (section==="FOUNDATION")
-      ? "Foundation defines what is admissible before anything else can scale."
-      : (section==="ARCHITECTURE")
-      ? "Architecture defines how the system is built, isolated, and interfaced."
-      : (section==="PERFORMANCE")
-      ? "Performance defines what is measured, stable, and auditable."
-      : "Governance defines what may propagate under scale without corruption.";
+    h2.textContent =
+      (section==="FOUNDATION") ? "Foundation defines what is claimed and what is gated before anything scales."
+      : (section==="ARCHITECTURE") ? "Architecture defines modules, isolation, buffering, and interfaces."
+      : (section==="PERFORMANCE") ? "Performance defines measurable bands, uptime, and loss accounting."
+      : "Governance defines phase gates, certification discipline, and non-retroactive audit.";
+    h3.textContent = CLAIM_LOCK;
+  }
+  function renderPills(){
+    pillFormal.classList.toggle("active", gdStyle==="formal");
+    pillInformal.classList.toggle("active", gdStyle==="informal");
+    pillCause.classList.toggle("active", causality==="CAUSE");
+    pillEffect.classList.toggle("active", causality==="EFFECT");
+    pillConcept.classList.toggle("active", gdTime==="origin");
+    pillLive.classList.toggle("active", gdTime==="now");
+    pillRoadmap.classList.toggle("active", gdTime==="post");
+  }
+
+  const DOMAIN_COLORS={
+    "Industrial":"#D97706",
+    "Agricultural":"#2F855A",
+    "Financial":"#047857",
+    "Human":"#F59E0B",
+    "Adversarial":"#B91C1C",
+    "Regulatory":"#475569",
+    "Environmental":"#0D9488",
+    "Infrastructural":"#1E40AF"
+  };
+  const DOMAINS=Object.keys(DOMAIN_COLORS);
+  const PHEAD=["P1 — Context","P2 — Constraint","P3 — Tension","P4 — Intervention","P5 — Mechanism","P6 — Result","P7 — Boundary"];
+
+  // Rule of Seven content generator (energy-specific, agriculture/plasma farms/industrial scale)
+  function paragraph(domain, pIndex){
+    const t=(gdTime==="origin")?"concept":(gdTime==="now")?"current": "roadmap";
+    const ce=(causality==="CAUSE")?"because":"so";
+    const mode=(gdStyle==="formal")?"formal":"informal";
+
+    const S = (a,b,c,d,e,f,g)=>[a,b,c,d,e,f,g];
+
+    const BASE = {
+      Industrial:{
+        ctx:`Industrial output is process heat delivered through exchangers, ${ce} it replaces combustion at the thermal layer.`,
+        con:`Containment is upstream-only, ${ce} endpoints stay passive and failures stay bounded.`,
+        ten:`The tension is uptime vs envelope safety, ${ce} shortcuts create cascades.`,
+        intv:`The intervention is buffering and staged dispatch, ${ce} the grid never sees raw volatility.`,
+        mech:`Mechanism is module isolation + SLA storage loop + controlled release, ${ce} variance is converted into a band.`,
+        res:`Result is stable heat delivery with logged inputs and outputs, ${ce} claims remain auditable.`,
+        bnd:`Boundary is no gain claim on this surface, ${ce} fusion stays requirements-only via the readiness link.`
+      },
+      Agricultural:{
+        ctx:`Agricultural integration is thermal reuse for greenhouses and controlled environments, ${ce} energy becomes food stability.`,
+        con:`Soil never contacts plasma hardware, ${ce} only midstream thermal exchange is allowed.`,
+        ten:`The tension is seasonal variability vs fixed contracts, ${ce} storage must smooth demand.`,
+        intv:`The intervention is plasma farm zoning with setbacks and perimeter control, ${ce} livestock and communities stay isolated.`,
+        mech:`Mechanism is TGI routing into greenhouse loops and sterilization buffers, ${ce} the farm becomes a thermal consumer.`,
+        res:`Result is yield stability and reduced fuel dependency, ${ce} productivity becomes measurable not rhetorical.`,
+        bnd:`Boundary is exchanger-only interface rules, ${ce} no exposure pathway is permitted.`
+      },
+      Financial:{
+        ctx:`Financial structure is underwriting against variance and failure envelope magnitude, ${ce} capital follows certifiable behavior.`,
+        con:`Constraints require audited logs and defined loss accounting, ${ce} the model cannot hide auxiliary loads.`,
+        ten:`The tension is early scale pressure vs proof discipline, ${ce} inflation creates reputational debt.`,
+        intv:`The intervention is phase-gated deployment (pilot → cluster → adjacency), ${ce} capital exposure stays segmented.`,
+        mech:`Mechanism is CC tiers + insurance mapping + SLA performance bands, ${ce} risk becomes priced not guessed.`,
+        res:`Result is bankable deployment templates and repeatable contracts, ${ce} replication becomes controllable.`,
+        bnd:`Boundary is no claim escalation without receipts, ${ce} upgrades are externally forced not narratively chosen.`
+      },
+      Human:{
+        ctx:`Human factors are training, comprehension, and operational discipline, ${ce} misuse comes from confusion not malice.`,
+        con:`Constraints require clear interfaces and consistent UI behavior, ${ce} operators can execute under pressure.`,
+        ten:`The tension is speed vs correctness, ${ce} panic drives poor decisions.`,
+        intv:`The intervention is checklists, drills, and stop rules, ${ce} the system prevents impulsive escalation.`,
+        mech:`Mechanism is role separation and receipt-based decisions, ${ce} authority stays bounded.`,
+        res:`Result is reduced error rate and faster recovery, ${ce} reliability becomes a habit.`,
+        bnd:`Boundary is no soft overrides, ${ce} if you override you log and roll epoch under strict doctrine.`
+      },
+      Adversarial:{
+        ctx:`Adversarial posture assumes spoofing, sensor drift, and log manipulation, ${ce} optimism is treated as a threat.`,
+        con:`Constraints require redundancy and cross-signal agreement, ${ce} single-sensor wins are invalid.`,
+        ten:`The tension is false positives vs missed events, ${ce} thresholds must be explicit.`,
+        intv:`The intervention is kill conditions and rollback logic, ${ce} instability stops fast.`,
+        mech:`Mechanism is SVF-style agreement + tamper-evident logs, ${ce} post-hoc edits break validity.`,
+        res:`Result is manipulation resistance under audit, ${ce} the system stays honest when attacked.`,
+        bnd:`Boundary is binary admissibility, ${ce} partial credit is not allowed.`
+      },
+      Regulatory:{
+        ctx:`Regulatory posture is permits, safety envelopes, and clear scope boundaries, ${ce} ambiguity invites restriction.`,
+        con:`Constraints require documented interfaces and incident logs, ${ce} compliance is measurable.`,
+        ten:`The tension is innovation speed vs approval cycles, ${ce} missing documentation stalls deployment.`,
+        intv:`The intervention is standardized artifacts and certification tiers, ${ce} inspectors can verify quickly.`,
+        mech:`Mechanism is repeatable filings and reason codes for shutdowns, ${ce} enforcement becomes transparent.`,
+        res:`Result is smoother approvals and fewer surprises, ${ce} risk is managed before incidents.`,
+        bnd:`Boundary is scope discipline, ${ce} this page stays industrial and does not claim net gain.`
+      },
+      Environmental:{
+        ctx:`Environmental posture is thermal discharge, emissions displacement, and land-water boundaries, ${ce} impact must be bounded.`,
+        con:`Constraints require exchanger-only transfer and measured discharge bands, ${ce} the environment is not a sink.`,
+        ten:`The tension is high throughput vs ecological limits, ${ce} ignoring limits produces backlash.`,
+        intv:`The intervention is closed-loop thermal reuse and monitoring, ${ce} waste heat becomes a controlled resource.`,
+        mech:`Mechanism is measured inflow/outflow and boundary alarms, ${ce} drift is detected early.`,
+        res:`Result is cleaner heat pathways and accountable monitoring, ${ce} claims can be audited externally.`,
+        bnd:`Boundary is no unmeasured discharge, ${ce} if you cannot measure it you do not scale it.`
+      },
+      Infrastructural:{
+        ctx:`Infrastructure posture is grid interface stability and dispatch compliance, ${ce} the grid punishes volatility.`,
+        con:`Constraints require buffering and ramp-rate discipline, ${ce} injection never exceeds certified bands.`,
+        ten:`The tension is peak demand vs safety envelope, ${ce} pushing harder increases failure probability.`,
+        intv:`The intervention is SLA storage and smoothing, ${ce} dispatch becomes predictable.`,
+        mech:`Mechanism is supervisory control with containment zones, ${ce} faults stay local.`,
+        res:`Result is compatibility with existing grids and plants, ${ce} adoption does not require rebuilding everything.`,
+        bnd:`Boundary is no raw plasma-to-grid coupling, ${ce} the interface is always buffered and audited.`
+      }
+    };
+
+    const B = BASE[domain];
+    if(!B) return S("—","—","—","—","—","—","—");
+
+    if(pIndex===0) return S(B.ctx, `${domain} is described at the ${t} layer.`, `This paragraph stays executable by operators.`, `This paragraph stays bounded by measurable interfaces.`, `This paragraph avoids speculation as a substitute for data.`, `This paragraph preserves Industrial posture on public surfaces.`, `This paragraph remains coherent under the same rules in formal and informal modes.`);
+    if(pIndex===1) return S(B.con, `${domain} constraints are declared before mechanisms.`, `Constraints are written as enforceable boundaries.`, `Constraints are compatible with staged deployment.`, `Constraints are recorded as receipts in operations.`, `Constraints prevent drift under scale.`, `Constraints remain stable across time lens changes.`);
+    if(pIndex===2) return S(B.ten, `${domain} tension is what breaks systems when ignored.`, `Tension is treated as a measurable signal.`, `Tension is tracked as variance not vibes.`, `Tension is reduced by structure and gating.`, `Tension is bounded by stop rules.`, `Tension is not solved by narrative reframing.`);
+    if(pIndex===3) return S(B.intv, `${domain} intervention is designed to be repeatable.`, `Intervention is staged rather than escalated in one jump.`, `Intervention is logged and replayable.`, `Intervention preserves separation between upstream and endpoints.`, `Intervention favors containment over continuation.`, `Intervention remains compatible with independent audit.`);
+    if(pIndex===4) return S(B.mech, `${domain} mechanism is expressed as an interface plus a loop.`, `Mechanism is expressed without revealing hazardous recipes.`, `Mechanism remains measurable at the boundary.`, `Mechanism is constrained by policy and hardware limits.`, `Mechanism supports replication without UI drift.`, `Mechanism is stable under the same lens contract.`);
+    if(pIndex===5) return S(B.res, `${domain} result is defined as measurable improvement under constraints.`, `Result is compared against a declared baseline.`, `Result is stable across repeated runs or it is rejected.`, `Result supports contract language without hype.`, `Result allows scaling only when proofs are complete.`, `Result remains compatible with non-retroactive logs.`);
+    return S(B.bnd, `${domain} boundary is written as a hard line.`, `Boundary violations trigger denial rather than reinterpretation.`, `Boundary violations are logged as reasons and receipts.`, `Boundary violations force rollback or stop under doctrine.`, `Boundary preserves public trust under scrutiny.`, `Boundary keeps the system coherent under pressure.`);
+  }
+
+  function headerLines(){
+    const t = (gdTime==="origin")?"CONCEPT":(gdTime==="now")?"LIVE":"ROADMAP";
+    h1.textContent = `ENERGY · ${section} · ${causality} · ${t} · ${gdStyle.toUpperCase()}`;
+    h2.textContent =
+      (section==="FOUNDATION") ? "Foundation defines the claim posture and the admissible boundaries before scale."
+      : (section==="ARCHITECTURE") ? "Architecture defines modules, isolation, buffering, and interfaces."
+      : (section==="PERFORMANCE") ? "Performance defines measured bands, uptime, and loss accounting."
+      : "Governance defines phase gates, certification discipline, and non-retroactive audit.";
     h3.textContent = CLAIM_LOCK;
   }
   function renderPills(){
@@ -733,7 +691,6 @@ a{color:inherit;text-decoration:none}
 
   function renderAllPreserve(){
     RS.scrollTop = mbody.scrollTop;
-    renderTemp();
     renderPills();
     headerLines();
     renderStacks();
@@ -756,7 +713,6 @@ a{color:inherit;text-decoration:none}
   mClose.addEventListener("click", closeModal);
   mReturn.addEventListener("click", closeModal);
 
-  // Lens clicks preserve reading
   pillFormal.addEventListener("click", ()=>{ gdStyle="formal"; try{localStorage.setItem("gd_style",gdStyle);}catch(e){} renderAllPreserve(); });
   pillInformal.addEventListener("click", ()=>{ gdStyle="informal"; try{localStorage.setItem("gd_style",gdStyle);}catch(e){} renderAllPreserve(); });
   pillCause.addEventListener("click", ()=>{ causality="CAUSE"; renderAllPreserve(); });
@@ -765,10 +721,8 @@ a{color:inherit;text-decoration:none}
   pillLive.addEventListener("click", ()=>{ gdTime="now"; try{localStorage.setItem("gd_time",gdTime);}catch(e){} renderAllPreserve(); });
   pillRoadmap.addEventListener("click", ()=>{ gdTime="post"; try{localStorage.setItem("gd_time",gdTime);}catch(e){} renderAllPreserve(); });
 
-  // Track anchor while scrolling
   mbody.addEventListener("scroll", updateAnchorFromScroll, {passive:true});
 
-  // Diamond bindings (THIS IS WHAT WAS FAILING)
   function bindDiamond(id, sec){
     const el=document.getElementById(id);
     if(!el) return;

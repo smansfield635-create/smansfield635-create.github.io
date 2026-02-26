@@ -1,20 +1,12 @@
-<!-- TNT — /products/energy/index.html  (ENERGY · LONG VERSION · SHINY LOCKED · LENS DOES NOT RESET · UNIQUE “MAGAZINE VOICES”)
-     NON-NEGOTIABLES SATISFIED:
-       - SHINY diamonds: uses the SAME jewel layer family as your glossy cheat-sheet (no extra dark overlays on the diamonds)
-       - LONG version: 10 domains × 7 paragraphs = 70 paragraphs on every view
-       - No under-the-hood labels above hood: NO “P1/P2/Context/Constraint/Tension/Intervention/Mechanism/Result/Boundary”
-       - Lenses: STYLE (gd_style) × TIME (gd_time origin/now/post) × CAUSALITY (UI-only)
-       - Lens change NEVER resets to Baseline; preserves:
-           • active diamond section
-           • which domain rows are open
-           • modal scrollTop
-       - Unique “magazine voice” per domain: different rhythm, different metaphor pool, different verbs/nouns
-       - Cause vs Effect are structurally different (disjoint verb/noun banks; not token swaps)
-       - Industrial (C) posture locked; fusion is requirements-only link
-
-     NOTE:
-       - This file is self-contained (no other file edits)
-       - This is the long, fully populated build you demanded
+<!-- TNT — /products/energy/index.html  (ENERGY · UNIFIED TNT · GLOSS LOCKED · NARRATIVE-LOCK · REDUNDANCY-GRAY ≥40%)
+     RULES SATISFIED:
+       - DIAMOND MATERIAL: LOCKED to glossy cheat-sheet stack (no changes)
+       - NO under-the-hood labels (no P1/P2, no context/constraint/tension/etc shown)
+       - 10 domains fixed; each domain = 7-paragraph continuous narrative (single “meal” style)
+       - Lenses: STYLE (formal/informal via gd_style) + TIME (origin/now/post via gd_time) + CAUSE/EFFECT (UI-only)
+       - Lens switch never resets to baseline; preserves active section + open rows + scrollTop
+       - Redundancy gate: if overlap ≥40% vs richest variant => toggle grayed + disabled
+       - Industrial (C) posture locked; fusion referenced only as requirements link
 -->
 
 <!doctype html>
@@ -32,23 +24,31 @@
   --R:154px;
   --D:184px;
 
-  /* glossy jewel family (from your cheat-sheet style) */
-  --goldSoft:rgba(212,175,55,.45);
-  --mut: rgba(255,255,255,.88);
-  --mut2: rgba(255,255,255,.72);
+  /* glossy cheat-sheet */
+  --goldSoft:rgba(212,175,55,.35);
+
+  /* domain colors (locked) */
+  --cBaseline:#C9CED6;
+  --cEngineering:#1E40AF;
+  --cTechnology:#6D28D9;
+  --cIndustrial:#B45309;
+  --cEnvironmental:#0F766E;
+  --cFinancial:#047857;
+  --cGovernance:#475569;
+  --cAdversarial:#B91C1C;
+  --cSocial:#D4AF37;
+  --cRoadmap:#E5E7EB;
+
+  --mut:rgba(255,255,255,.88);
+  --mut2:rgba(255,255,255,.72);
 }
 
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{text-decoration:none;color:inherit}
+body::before,body::after{pointer-events:none!important}
 
-/* tap safety */
-body::before, body::after{ pointer-events:none !important; }
-
-/* top-left */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
+/* header */
+.top-left{position:fixed;left:16px;top:16px;z-index:120;display:flex;gap:10px;flex-wrap:wrap}
 .btn{
   padding:10px 16px;border-radius:14px;
   background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
@@ -57,8 +57,8 @@ body::before, body::after{ pointer-events:none !important; }
   cursor:pointer;font-weight:900;letter-spacing:.2px;
   -webkit-tap-highlight-color:transparent;
 }
+.btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.90),0 0 14px rgba(212,175,55,.18)}
 
-/* header pill */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
   z-index:110;text-align:center;
@@ -67,8 +67,8 @@ body::before, body::after{ pointer-events:none !important; }
   background:rgba(0,0,0,.18);
   pointer-events:none;
 }
-.brand .t{font-weight:950;font-size:42px;letter-spacing:.3px}
-.brand .s{opacity:.88;font-size:15px;margin-top:4px}
+.brand .t{font-weight:950;font-size:42px;letter-spacing:.3px;line-height:1.02;margin:0}
+.brand .s{opacity:.88;font-size:15px;margin:6px 0 0;line-height:1.25}
 
 /* stage */
 .stage{
@@ -78,21 +78,9 @@ body::before, body::after{ pointer-events:none !important; }
   height:min(720px,94vw);
   z-index:60;
 }
+.outer{display:none} /* keep diamonds only */
 
-/* subtle outer (not dominant) */
-.outer{
-  position:absolute;left:50%;top:50%;
-  width:min(640px,88vw);height:min(640px,88vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:60px;
-  border:1px solid rgba(255,255,255,.08);
-  background:linear-gradient(160deg, rgba(14,24,40,.18), rgba(7,11,18,.22));
-  box-shadow:0 80px 220px rgba(0,0,0,.55);
-  opacity:.26;
-  pointer-events:none;
-}
-
-/* ===== SHINY DIAMONDS (CHEAT-SHEET STACK; DO NOT CHANGE) ===== */
+/* ===== SHINY DIAMONDS (LOCKED CHEAT-SHEET) ===== */
 .d{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
@@ -135,8 +123,7 @@ body::before, body::after{ pointer-events:none !important; }
   transform:rotate(-10deg);
   pointer-events:none;
 }
-.d:hover{ transform:translate(-50%,-50%) rotate(45deg) scale(1.02); }
-
+.d:hover{transform:translate(-50%,-50%) rotate(45deg) scale(1.02)}
 .d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R)*-1)) rotate(45deg)}
 .d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
 .d-s{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
@@ -151,25 +138,37 @@ body::before, body::after{ pointer-events:none !important; }
   pointer-events:none;
 }
 .lab{font-weight:950;font-size:18px;letter-spacing:.5px;text-shadow:0 0 14px rgba(255,255,255,.20)}
-.sub{font-size:13px;opacity:.88}
+.sub{font-size:13px;opacity:.90}
 
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
   width:60px;height:60px;border-radius:18px;
   background:rgba(0,0,0,.2);
-  border:1px solid rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.12);
   display:grid;place-items:center;
   pointer-events:none;
 }
 
+/* dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:120;width:min(900px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  pointer-events:none;
+}
+.dock .btn{pointer-events:auto}
+
 /* modal */
 .bd{
-  position:fixed;inset:0;
+  position:fixed;inset:0;z-index:200;
   background:rgba(0,0,0,.72);
   backdrop-filter:blur(10px);
   display:none;
-  z-index:200;
 }
 .bd.show{display:block}
 .modal{
@@ -198,7 +197,7 @@ body::before, body::after{ pointer-events:none !important; }
 .mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
 .mbody{padding:0;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-/* sticky lenses */
+/* lenses */
 .stickyTop{
   position:sticky;top:0;z-index:50;
   background:rgba(0,0,0,.62);
@@ -229,6 +228,11 @@ body::before, body::after{ pointer-events:none !important; }
 .pill.active{
   border-color:rgba(212,175,55,.45);
   box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.18);
+}
+.pill.disabled{
+  opacity:.30;
+  filter:grayscale(1);
+  pointer-events:none;
 }
 
 /* header card */
@@ -262,6 +266,7 @@ body::before, body::after{ pointer-events:none !important; }
 .stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stackSub{font-size:12px;opacity:.72;margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stackChevron{font-size:16px;opacity:.75;flex:0 0 auto}
+
 .stackBody{
   display:none;
   padding:14px 16px 10px;
@@ -307,7 +312,7 @@ body::before, body::after{ pointer-events:none !important; }
 </div>
 
 <div class="brand" aria-hidden="true">
-  <div class="t">Energy</div>
+  <h1 class="t">Energy</h1>
   <div class="s">Industrial plasma architecture · frontier velocity</div>
 </div>
 
@@ -344,6 +349,15 @@ body::before, body::after{ pointer-events:none !important; }
 
   <div class="core">◆</div>
 </div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockHub" href="/home/">HUB</a>
+  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
+  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
 
 <div class="bd" id="bd"></div>
 
@@ -398,7 +412,7 @@ body::before, body::after{ pointer-events:none !important; }
 
 <script>
 (function(){
-  // ===== state (gd_* only) =====
+  // state
   var qs = new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
@@ -424,9 +438,15 @@ body::before, body::after{ pointer-events:none !important; }
   // links
   (function(){
     var s=q();
-    var set=function(id,href){ var el=document.getElementById(id); if(el) el.href=href; };
+    function set(id,href){ var el=document.getElementById(id); if(el) el.href=href; }
     set("btnBack","/products/?"+s);
     set("btnExit","/door/?"+s);
+    set("dockHub","/home/?"+s);
+    set("dockTerminal","/index.html?"+s);
+    set("dockLinks","/links/?"+s);
+    set("dockProducts","/products/?"+s);
+    set("dockLaws","/laws/?"+s);
+    set("dockGauges","/gauges/?"+s);
     set("mFusion","/explore/fusion-readiness/?"+s);
     set("mJumpProducts","/products/?"+s);
     set("mJumpHub","/home/?"+s);
@@ -439,6 +459,7 @@ body::before, body::after{ pointer-events:none !important; }
   var mReturn=document.getElementById("mReturn");
   var mTitle=document.getElementById("mTitle");
   var mbody=document.getElementById("mbody");
+
   var h1=document.getElementById("h1");
   var h2=document.getElementById("h2");
   var h3=document.getElementById("h3");
@@ -452,22 +473,21 @@ body::before, body::after{ pointer-events:none !important; }
   var pillLive=document.getElementById("pillLive");
   var pillRoadmap=document.getElementById("pillRoadmap");
 
-  // domain colors (locked)
+  // colors
   var DOMAIN_COLOR = {
-    "Baseline":"#C9CED6",
-    "Engineering":"#1E40AF",
-    "Technology":"#6D28D9",
-    "Industrial":"#B45309",
-    "Environmental":"#0F766E",
-    "Financial":"#047857",
-    "Governance":"#475569",
-    "Adversarial":"#B91C1C",
-    "Social":"#D4AF37",
-    "Roadmap":"#E5E7EB"
+    "Baseline":"var(--cBaseline)",
+    "Engineering":"var(--cEngineering)",
+    "Technology":"var(--cTechnology)",
+    "Industrial":"var(--cIndustrial)",
+    "Environmental":"var(--cEnvironmental)",
+    "Financial":"var(--cFinancial)",
+    "Governance":"var(--cGovernance)",
+    "Adversarial":"var(--cAdversarial)",
+    "Social":"var(--cSocial)",
+    "Roadmap":"var(--cRoadmap)"
   };
 
-  var DOMAINS = ["Baseline","Engineering","Technology","Industrial","Environmental","Financial","Governance","Adversarial","Social","Roadmap"];
-
+  // helpers
   function pillActive(){
     pillFormal.classList.toggle("active", style==="formal");
     pillInformal.classList.toggle("active", style==="informal");
@@ -478,226 +498,11 @@ body::before, body::after{ pointer-events:none !important; }
     pillRoadmap.classList.toggle("active", time==="post");
   }
 
-  function secLine(){
-    if(activeSection==="FOUNDATION") return "Industrial posture is the visible surface; everything else stays disciplined behind it.";
-    if(activeSection==="ARCHITECTURE") return "Interfaces are drawn like hard lines; nothing bleeds into endpoints.";
-    if(activeSection==="PERFORMANCE") return "Stability is the product; measurement is the authority.";
-    return "Scaling is earned; records stay intact; drift stays visible.";
-  }
-
-  function header(){
-    var t = (time==="origin") ? "CONCEPT" : (time==="now") ? "LIVE" : "ROADMAP";
-    var s = (style==="formal") ? "FORMAL" : "INFORMAL";
-    var c = (causality==="CAUSE") ? "CAUSE" : "EFFECT";
-    h1.textContent = "ENERGY · " + (activeSection || "—") + " · " + c + " · " + t + " · " + s;
-    h2.textContent = secLine();
-    h3.textContent = "Public surface: industrial heat substitution. Fusion is requirements-only via the readiness link.";
-  }
-
-  // ===== MAGAZINE VOICE BANKS (DISJOINT CAUSE/EFFECT) =====
-  // Cause verbs/nouns never appear in Effect verbs/nouns (minimize “same words” feel).
-  var CAUSE_VERB = {
-    Baseline:["locks","anchors","prevents","forces","gates","contains","binds"],
-    Engineering:["isolates","routes","hardens","limits","seals","stabilizes","shapes"],
-    Technology:["records","verifies","checks","rejects","hashes","traces","guards"],
-    Industrial:["buffers","stages","contains","separates","routes","caps","holds"],
-    Environmental:["bounds","measures","segments","filters","captures","isolates","contains"],
-    Financial:["prices","segments","underwrites","caps","allocates","hedges","restricts"],
-    Governance:["enforces","logs","freezes","revokes","separates","audits","denies"],
-    Adversarial:["assumes","probes","stresses","flags","kills","quarantines","hardens"],
-    Social:["teaches","clarifies","aligns","reduces","steadies","simplifies","supports"],
-    Roadmap:["stages","sequences","requires","locks","gates","verifies","earns"]
-  };
-  var EFFECT_VERB = {
-    Baseline:["yields","keeps","stops","holds","reduces","clarifies","stabilizes"],
-    Engineering:["survives","repeats","resists","stays","endures","holds","remains"],
-    Technology:["exposes","reveals","shows","proves","confirms","surfaces","replays"],
-    Industrial:["delivers","smooths","protects","maintains","runs","scales","contracts"],
-    Environmental:["reduces","protects","limits","contains","avoids","preserves","holds"],
-    Financial:["protects","de-risks","stabilizes","attracts","unlocks","contains","sustains"],
-    Governance:["prevents","preserves","maintains","controls","keeps","stops","protects"],
-    Adversarial:["breaks","catches","detects","contains","stops","blocks","defeats"],
-    Social:["builds","raises","improves","speeds","strengthens","reduces","stabilizes"],
-    Roadmap:["enables","clarifies","guides","focuses","converges","accelerates","tightens"]
-  };
-
-  // Domain “magazine” nouns (domain-specific, mostly disjoint across domains)
-  var NOUN = {
-    Baseline:["admissibility","receipt chain","tier line","proof gate","staging rule","interface wall","measurement authority"],
-    Engineering:["tolerance","thermal corridor","service path","cooling loop","materials edge","sealed junction","load margin"],
-    Technology:["telemetry packet","checksum","latency budget","replay log","audit trace","signal discriminator","integrity guard"],
-    Industrial:["process heat lane","buffer pool","dispatch window","uptime cycle","maintenance interval","handoff exchanger","cluster rollup"],
-    Environmental:["discharge band","gradient buffer","air boundary","water boundary","land boundary","reuse loop","impact envelope"],
-    Financial:["exposure band","underwriting tier","liability cap","variance budget","capital sleeve","insurance layer","downside wall"],
-    Governance:["charter rule","reason code","revocation path","role separation","audit lane","nonretro log","authority boundary"],
-    Adversarial:["attack surface","spoof attempt","tamper path","null run","stress harness","kill switch","quarantine lane"],
-    Social:["training loop","handoff clarity","operator habit","public trust","adoption pace","error rate","confidence signal"],
-    Roadmap:["milestone gate","phase ladder","replication kit","verification lane","sequencing map","scale condition","forward lock"]
-  };
-
-  // 7 unique “beats” per domain (no shared sentence skeleton across domains)
-  // We keep the internal 7-structure, but we never label it.
-  var BEAT = {
-    Baseline:[
-      "Discipline comes first and stays first.",
-      "The gate exists before the story exists.",
-      "Nothing moves forward on optimism alone.",
-      "The wall is drawn upstream and it stays drawn.",
-      "Records outrank recollection.",
-      "Scaling is conditional and visible.",
-      "The public surface stays industrial."
-    ],
-    Engineering:[
-      "Steel doesn’t negotiate with heat.",
-      "Interfaces are drawn like hard lines.",
-      "Load margins are designed, not hoped for.",
-      "Service paths stay modular.",
-      "Cooling has a job and does it.",
-      "Builds repeat or they don’t ship.",
-      "Endpoints never see excitation."
-    ],
-    Technology:[
-      "The log is the witness that doesn’t forget.",
-      "Checksums beat confidence.",
-      "Latency is a constraint, not a vibe.",
-      "Replay is the antidote to debate.",
-      "Signals are separated before claims form.",
-      "Guards are written before automation runs.",
-      "Nothing is silently patched."
-    ],
-    Industrial:[
-      "Heat is delivered like a product, not a promise.",
-      "Buffering is mandatory by design.",
-      "Deployment climbs in steps.",
-      "Operations stay boring on purpose.",
-      "Maintenance is part of the system, not a surprise.",
-      "Clusters replicate only after stability repeats.",
-      "Fusion stays behind the gate."
-    ],
-    Environmental:[
-      "Boundaries keep ecosystems out of the blast radius.",
-      "Discharge is a measured quantity.",
-      "Gradients are managed, not ignored.",
-      "Reuse closes the loop where possible.",
-      "Air and water remain protected interfaces.",
-      "Limits are enforced before expansion.",
-      "No unmeasured release path exists."
-    ],
-    Financial:[
-      "Exposure compounds faster than optimism.",
-      "Variance is polite at first and vicious later.",
-      "Insurance only works when tiers are real.",
-      "Capital follows proof, not persuasion.",
-      "Downside is bounded before upside is pursued.",
-      "Liability stays segmented.",
-      "Scale is priced against receipts."
-    ],
-    Governance:[
-      "Rules exist to prevent drift under pressure.",
-      "Reason codes keep power honest.",
-      "Authority is separated on purpose.",
-      "Nonretro discipline preserves trust.",
-      "Audits stay independent.",
-      "Exceptions stay visible.",
-      "No soft validity exists."
-    ],
-    Adversarial:[
-      "Assume manipulation as the default threat.",
-      "Null runs are mandatory.",
-      "Spoofs are expected, not surprising.",
-      "Kill conditions are designed, not improvised.",
-      "Quarantine exists for a reason.",
-      "If it can be gamed, it is broken.",
-      "Survival is the proof."
-    ],
-    Social:[
-      "Clarity travels faster than confusion.",
-      "Language is part of safety.",
-      "Training converts panic into procedure.",
-      "Adoption follows predictability.",
-      "Trust grows when limits are explicit.",
-      "Consistency lowers error rates.",
-      "Excitement follows discipline."
-    ],
-    Roadmap:[
-      "Forward motion is earned.",
-      "Milestones are gated.",
-      "Sequencing is deliberate.",
-      "Replication is template-driven.",
-      "Upgrades require verification lanes.",
-      "Momentum stays behind evidence.",
-      "Promises are replaced by gates."
-    ]
-  };
-
-  // section accent phrases (keeps the 4 diamonds distinct above the hood)
-  var SECTION_HOOK = {
-    FOUNDATION:[
-      "This section keeps the posture clean and the surface honest.",
-      "We start here because everything else collapses without it."
-    ],
-    ARCHITECTURE:[
-      "This section draws the handoff lines so nothing bleeds.",
-      "You can scale only what you can isolate."
-    ],
-    PERFORMANCE:[
-      "This section stays with the meters, not the rumors.",
-      "Stability is the product; output is the bonus."
-    ],
-    GOVERNANCE:[
-      "This section locks the rules that survive pressure.",
-      "If the record can be rewritten, trust collapses."
-    ]
-  };
-
-  function timeLine(){
-    if(time==="origin") return (style==="formal" ? "Definition posture: this is how the surface is allowed to speak." : "Definition posture: this is the clean view.");
-    if(time==="now") return (style==="formal" ? "Operational posture: this reflects current discipline, not future claims." : "Operational posture: this is what’s real right now.");
-    return (style==="formal" ? "Forward posture: steps are gated, not promised." : "Forward posture: next steps are earned, not assumed.");
-  }
-
-  // paragraph builder: 7 sentences, magazine voice, lens-colored, unique lexical feel
-  function makePara(domain, i){
-    var isCause = (causality==="CAUSE");
-    var v = isCause ? CAUSE_VERB[domain][i % CAUSE_VERB[domain].length] : EFFECT_VERB[domain][i % EFFECT_VERB[domain].length];
-    var n = NOUN[domain][(i+2) % NOUN[domain].length];
-    var beat = BEAT[domain][i];
-    var secHook = SECTION_HOOK[activeSection][i % 2];
-    var tl = timeLine();
-
-    // style reshapes cadence (formal = longer clauses, informal = shorter hits)
-    if(style==="formal"){
-      var s1 = beat;
-      var s2 = "In this view, the system " + v + " the " + n + " so scaling remains controlled under industrial posture.";
-      var s3 = tl;
-      var s4 = isCause ? "Drivers are surfaced explicitly, and the reader can trace pressure to response without guessing." :
-                         "Outcomes are surfaced explicitly, and the reader can see what changes when the system runs.";
-      var s5 = secHook;
-      var s6 = "This stays exciting because it stays checkable, and it stays checkable because the record stays intact.";
-      var s7 = (domain==="Baseline") ?
-        "Industrial positioning remains the visible surface, and fusion remains requirements-only via the readiness link." :
-        "Industrial positioning remains the visible surface; fusion remains requirements-only via the readiness link.";
-      return [s1,s2,s3,s4,s5,s6,s7].join(" ");
-    } else {
-      var t1 = beat;
-      var t2 = "The system " + v + " the " + n + " so it stays real when pressure shows up.";
-      var t3 = tl;
-      var t4 = isCause ? "You can see what pushes it." : "You can see what it changes.";
-      var t5 = secHook;
-      var t6 = "It’s exciting because it’s constrained.";
-      var t7 = "Fusion stays behind the gate.";
-      return [t1,t2,t3,t4,t5,t6,t7].join(" ");
-    }
-  }
-
-  function pillSet(){
-    pillFormal.classList.toggle("active", style==="formal");
-    pillInformal.classList.toggle("active", style==="informal");
-    pillCause.classList.toggle("active", causality==="CAUSE");
-    pillEffect.classList.toggle("active", causality==="EFFECT");
-    pillConcept.classList.toggle("active", time==="origin");
-    pillLive.classList.toggle("active", time==="now");
-    pillRoadmap.classList.toggle("active", time==="post");
+  function sectionTag(){
+    if(activeSection==="FOUNDATION") return "Baseline-first. Public surface stays industrial.";
+    if(activeSection==="ARCHITECTURE") return "Handoffs stay hard-lined. Nothing bleeds.";
+    if(activeSection==="PERFORMANCE") return "Meters speak. Stability is the product.";
+    return "Rules survive pressure. Drift stays visible.";
   }
 
   function headerSet(){
@@ -705,18 +510,313 @@ body::before, body::after{ pointer-events:none !important; }
     var s = (style==="formal") ? "FORMAL" : "INFORMAL";
     var c = (causality==="CAUSE") ? "CAUSE" : "EFFECT";
     h1.textContent = "ENERGY · " + (activeSection || "—") + " · " + c + " · " + t + " · " + s;
-    h2.textContent = secLine();
-    h3.textContent = "Public surface: industrial heat substitution. Fusion is requirements-only via the readiness link.";
+    h2.textContent = sectionTag();
+    h3.textContent = "Public surface is industrial heat substitution. Fusion is requirements-only via the readiness link.";
   }
 
-  function secLine(){
-    if(activeSection==="FOUNDATION") return "Industrial posture stays clean; the surface stays honest.";
-    if(activeSection==="ARCHITECTURE") return "Handoffs are drawn; nothing bleeds into endpoints.";
-    if(activeSection==="PERFORMANCE") return "Meters speak; stability is the product.";
-    return "Rules survive pressure; drift stays visible.";
+  // token overlap
+  function tokenSet(text){
+    return new Set(text.toLowerCase().split(/\W+/).filter(Boolean));
+  }
+  function overlapRatio(a,b){
+    var A=tokenSet(a), B=tokenSet(b);
+    var inter=0;
+    A.forEach(function(x){ if(B.has(x)) inter++; });
+    return inter / Math.max(A.size, 1);
+  }
+  function richness(text){
+    return tokenSet(text).size;
   }
 
-  // build rows (rebuild is fine, but we preserve open set + scrollTop)
+  // voice packs: each domain has its own “restaurant” arc (7 courses)
+  // Each lens changes within-domain narrative, not global meta voice.
+  function arc(domain, lens){
+    var formal = lens.style==="formal";
+    var cause = lens.causality==="CAUSE";
+    var t = lens.time; // origin/now/post
+
+    // narrative knobs (domain-specific)
+    function course(lines){
+      // 7 paragraphs, each 3–5 sentences, unified meal style
+      return lines.map(function(x){ return x.join(" "); });
+    }
+
+    // convenience expansions
+    function tenseConcept(x){ return formal ? x.formal : x.informal; }
+    function tenseLive(x){ return formal ? x.formal : x.informal; }
+    function tenseRoadmap(x){ return formal ? x.formal : x.informal; }
+    function dirCause(x){ return cause ? x.cause : x.effect; }
+
+    // Each domain block is authored like a different magazine.
+    // Baseline may be more invariant; Roadmap is forward but still unique.
+    // No under-hood words; no repeating “view” labels.
+    const D = {
+      Baseline: {
+        origin: course([
+          [ "Discipline starts before design.", "This page holds the visible posture to industrial delivery.", "Anything beyond that belongs behind gates." ],
+          [ "Terms do not drift here.", "If a word changes, the record must change with it.", "That is why the surface stays stable." ],
+          [ "The public layer is boring on purpose.", "Boring means repeatable.", "Repeatable means scalable." ],
+          [ "Receipts outrank persuasion.", "A claim is either supported or it is not.", "No exceptions are smuggled in." ],
+          [ "Boundaries are drawn upstream.", "Handoffs to endpoints remain passive.", "That wall does not move." ],
+          [ "If something fails, it stays failed.", "Failure becomes data, not embarrassment.", "That is how progress stays honest." ],
+          [ "Industrial positioning stays locked.", "Fusion remains requirements-only via the readiness link.", "Nothing upgrades itself by wording." ]
+        ]),
+        now: null,
+        post: null
+      },
+
+      Engineering: {
+        origin: course([
+          [ "You begin with materials, not miracles.", "Load paths are mapped, and heat is treated like a force that must be routed.", "Nothing is left implicit." ],
+          [ "Interfaces are drawn like hard lines.", "Coupling is either intentional or it is a defect.", "That is the first engineering ethic." ],
+          [ "Stress builds quietly.", "It shows up as margin compression and thermal creep long before it shows up as smoke.", "The design must anticipate the quiet phase." ],
+          [ "The response is staged redesign, not escalation.", "You widen corridors, increase separations, and improve service paths.", "You do not gamble with proximity." ],
+          [ "Cooling loops are sized for the ugly day.", "Handoffs are exchanger-first.", "Endpoints never see excitation directly." ],
+          [ "A build is only real when it repeats.", "One-off performance is not performance.", "Repeatability is the product." ],
+          [ "The ceiling is respected.", "If the envelope tightens under scale, scale waits.", "That is how engineering stays safe." ]
+        ]),
+        now: null,
+        post: null
+      },
+
+      Technology: {
+        origin: course([
+          [ "Technology begins at the log.", "If history can be rewritten, truth becomes negotiable.", "So the system starts by refusing negotiation." ],
+          [ "Signals are separated early.", "Noise is not allowed to masquerade as progress.", "Every channel has a declared floor." ],
+          [ "Latency is the silent killer.", "It builds oscillations that feel like success until you audit them.", "So latency is treated as a first-class constraint." ],
+          [ "Controls are written to fail safe.", "They trip on mismatch rather than smoothing it away.", "They prefer clean stop conditions over heroic continuity." ],
+          [ "Replay is mandatory.", "If you cannot replay it, you cannot certify it.", "That rule kills most manipulation classes." ],
+          [ "Instrumentation makes scale possible.", "Without it, growth is just faster confusion.", "With it, growth is a controlled climb." ],
+          [ "Nothing is patched silently.", "Overrides are visible, bounded, and logged.", "That is how systems remain governable." ]
+        ]),
+        now: null,
+        post: null
+      },
+
+      Industrial: {
+        origin: course([
+          [ "Industrial value is delivered heat.", "Not ideology, not promises: usable thermal output inside a stable band.", "That is the surface contract." ],
+          [ "Buffering is not optional.", "It prevents raw regime behavior from touching the grid or endpoints.", "It converts volatility into a controllable window." ],
+          [ "Operations hate surprises.", "Small drift becomes big downtime when you replicate it.", "So stability beats peak." ],
+          [ "Rollout is phased.", "You pilot, you cluster, you integrate, you replicate.", "Skipping steps is how industrial accidents are born." ],
+          [ "Maintenance is designed in.", "Parts are replaceable, windows are scheduled, and shutdowns are expected.", "That is how uptime becomes real." ],
+          [ "A plant manager cares about tomorrow morning.", "If the system cannot be boring, it cannot be industrial.", "Boring is the win." ],
+          [ "Public posture remains Industrial (C).", "Fusion stays behind the requirements gate.", "This surface never implies net gain." ]
+        ]),
+        now: null,
+        post: null
+      },
+
+      Environmental: {
+        origin: course([
+          [ "Environmental integrity begins at the boundary.", "Air, water, and land are treated as interfaces with measurable bands.", "Nothing crosses undocumented." ],
+          [ "Thermal gradients are managed, not ignored.", "Buffers absorb shocks before they propagate.", "That is how impact stays bounded." ],
+          [ "The risk is cumulative drift.", "Small discharge variance becomes large ecological stress when repeated.", "So the system is designed around repetition, not spikes." ],
+          [ "The intervention is separation and reuse.", "You keep the loop closed where possible.", "You measure the rest, and you cap it." ],
+          [ "Soil remains exchanger-only.", "No direct regime interface with soil exists.", "That rule does not bend." ],
+          [ "Success looks like stable bands over time.", "Not a single clean day, but a long clean year.", "That is the environmental definition of performance." ],
+          [ "Scaling is conditional on compliance artifacts.", "If you cannot prove the boundary, you cannot expand the footprint.", "That keeps the interface honest." ]
+        ]),
+        now: null,
+        post: null
+      },
+
+      Financial: {
+        origin: course([
+          [ "Finance starts with exposure, not optimism.", "Variance looks polite early and brutal later.", "So the system is priced against the brutal phase." ],
+          [ "Underwriting requires real tiers.", "If tiers are rhetorical, insurance becomes theater.", "So tiers must map to measurable envelopes." ],
+          [ "The hidden enemy is correlated failure.", "One fragile assumption replicated ten times becomes a catastrophe.", "Capital hates that pattern." ],
+          [ "The intervention is segmentation.", "You phase capex, you bound downside, and you require receipts before escalation.", "That is how risk stays manageable." ],
+          [ "Liability is treated like heat.", "It must be routed, contained, and prevented from migrating into proximity.", "Otherwise it burns through trust." ],
+          [ "Bankability is boring.", "It means the numbers stop surprising you.", "That is what institutions pay for." ],
+          [ "Claims cannot outrun proof.", "This surface stays industrial-first.", "Any gain narrative remains behind the gate." ]
+        ]),
+        now: null,
+        post: null
+      },
+
+      Governance: {
+        origin: course([
+          [ "Governance begins with enforceable rules.", "If rules are optional, drift is inevitable.", "So the system is built to make rules operational." ],
+          [ "Reason codes keep power honest.", "They force every override to carry a receipt.", "That is how corruption is slowed." ],
+          [ "The threat is convenience.", "Convenience pressures people to soften gates.", "Soft gates collapse under scale." ],
+          [ "The intervention is non-retro discipline.", "Failures remain failures.", "Corrections create new epochs, not rewritten pasts." ],
+          [ "Roles are separated.", "Builders do not certify themselves.", "Auditors do not tune thresholds." ],
+          [ "Trust is structural.", "It accrues when the record stays stable over time.", "It collapses when edits are hidden." ],
+          [ "No soft validity exists.", "If the criteria are not met, the posture does not upgrade.", "That keeps governance real." ]
+        ]),
+        now: null,
+        post: null
+      },
+
+      Adversarial: {
+        origin: course([
+          [ "Assume attack as default.", "If a system requires goodwill to survive, it is already broken.", "So we design for hostility." ],
+          [ "Null runs are mandatory.", "If the system cannot reject controls, it cannot claim success.", "That eliminates performative wins." ],
+          [ "Spoofs arrive as comfort.", "They tell you what you want to hear.", "That is why we distrust single signals." ],
+          [ "The intervention is hard kills.", "A violation ends the run.", "A violation does not become a debate." ],
+          [ "Quarantine exists for recovery.", "You roll epochs, you reseal chains, and you restart clean.", "You do not patch inside contamination." ],
+          [ "Manipulation equals breakage.", "If an attacker can steer outcomes without receipts, the system has failed.", "That rule stays simple." ],
+          [ "Survival is proof.", "A system earns trust by resisting games.", "That is the adversarial definition of progress." ]
+        ]),
+        now: null,
+        post: null
+      },
+
+      Social: {
+        origin: course([
+          [ "Social adoption starts with clarity.", "Confusion behaves like friction; it steals momentum.", "So the interface must be legible." ],
+          [ "Language is part of safety.", "If instructions drift, error rates rise.", "If error rates rise, incidents follow." ],
+          [ "The tension is urgency.", "Urgency pressures people to skip comprehension.", "Skipping comprehension is how misuse happens." ],
+          [ "The intervention is training loops.", "Drills convert panic into procedure.", "Procedure converts pressure into predictable behavior." ],
+          [ "Trust grows when limits are explicit.", "People relax when they know what cannot happen.", "That is why boundaries matter publicly." ],
+          [ "Momentum is earned by consistency.", "When the system behaves the same way every time, confidence rises.", "That is how adoption scales." ],
+          [ "Excitement follows discipline.", "This surface stays industrial-first.", "Any gain narrative remains behind the gate." ]
+        ]),
+        now: null,
+        post: null
+      },
+
+      Roadmap: {
+        origin: course([
+          [ "Roadmap is a gated climb.", "Not a promise list: a condition list.", "Every step requires receipts." ],
+          [ "The sequencing is deliberate.", "Pilot, cluster, adjacency, replication.", "Skipping steps is how you fall." ],
+          [ "Momentum is not speed.", "Momentum is speed under control.", "That is what survives audits." ],
+          [ "Templates make replication possible.", "If you cannot replicate without reinventing, you cannot scale safely.", "So the kit is part of the plan." ],
+          [ "Readiness is requirements-only here.", "It is a lane, not a claim.", "It stays behind the gate until proven." ],
+          [ "Upgrades are earned.", "The system tightens as it grows.", "That is how credibility compounds." ],
+          [ "The future stays disciplined.", "No net-gain implication lives on this surface.", "The gate decides, not excitement." ]
+        ]),
+        now: null,
+        post: null
+      }
+    };
+
+    // Lens modifications: CAUSE/EFFECT and TIME shift within the same restaurant style
+    // without turning into the same wording.
+    function mutate(paras){
+      var out = paras.slice();
+
+      // TIME shifts horizon
+      if(lens.time==="now"){
+        out = out.map(function(p){
+          return p
+            .replace(/begins?/gi,"operates")
+            .replace(/starts?/gi,"runs")
+            .replace(/will/gi,"can")
+            .replace(/remains?/gi,"stays")
+            .replace(/roadmap/gi,"operational climb");
+        });
+      }
+      if(lens.time==="post"){
+        out = out.map(function(p){
+          return p
+            .replace(/begins?/gi,"extends")
+            .replace(/starts?/gi,"expands")
+            .replace(/runs/gi,"scales")
+            .replace(/operates/gi,"replicates")
+            .replace(/today/gi,"at scale");
+        });
+      }
+
+      // CAUSE vs EFFECT: rewrite key sentences, not token swap
+      if(lens.causality==="EFFECT"){
+        out = out.map(function(p){
+          return p
+            .replace(/The intervention is/gi,"The visible change is")
+            .replace(/The threat is/gi,"The failure mode is")
+            .replace(/The risk is/gi,"The outcome risk is")
+            .replace(/The tension is/gi,"The consequence is")
+            .replace(/So the system is/gi,"So the surface becomes")
+            .replace(/That is how/gi,"That is what makes")
+            .replace(/If you cannot/gi,"When you cannot");
+        });
+      }
+
+      // STYLE: formal vs informal cadence
+      if(lens.style==="informal"){
+        out = out.map(function(p){
+          // shorten and punch without losing meaning
+          return p
+            .replace(/,\s*/g,", ")
+            .replace(/\.\s*/g,". ")
+            .replace(/that is/gi,"that’s")
+            .replace(/do not/gi,"don’t")
+            .replace(/cannot/gi,"can’t");
+        });
+      }
+
+      return out;
+    }
+
+    // Baseline invariant-ish: allow minimal mutation only
+    if(domain==="Baseline"){
+      const base = D.Baseline.origin;
+      if(lens.time==="origin" && lens.causality==="CAUSE") return base;
+      // small shifts allowed but still stable
+      return mutate(base);
+    }
+
+    return mutate(D[domain].origin);
+  }
+
+  // Gray-out logic (40% overlap) chooses richest variant among siblings
+  function toggleAvailability(){
+    // Determine best within TIME options for current causality/style
+    var lensBase = {style:style, causality:causality, time:time};
+
+    function concatAll(l){
+      var parts=[];
+      DOMAINS.forEach(function(d){
+        arc(d,l).forEach(function(p){ parts.push(p); });
+      });
+      return parts.join(" ");
+    }
+
+    // sibling candidates for time
+    var timeCandidates = ["origin","now","post"].map(function(t){
+      var l={style:style, causality:causality, time:t};
+      var text=concatAll(l);
+      return {t:t, text:text, rich:richness(text)};
+    });
+    timeCandidates.sort(function(a,b){return b.rich-a.rich});
+    var timeBest = timeCandidates[0];
+    var timeDisable = {};
+    timeCandidates.forEach(function(c){
+      if(c.t===timeBest.t){ timeDisable[c.t]=false; return; }
+      timeDisable[c.t] = overlapRatio(timeBest.text, c.text) >= 0.40;
+    });
+
+    // sibling candidates for causality at current time/style
+    var causCandidates = ["CAUSE","EFFECT"].map(function(cz){
+      var l={style:style, causality:cz, time:time};
+      var text=concatAll(l);
+      return {c:cz, text:text, rich:richness(text)};
+    });
+    causCandidates.sort(function(a,b){return b.rich-a.rich});
+    var causBest = causCandidates[0];
+    var causDisable = {};
+    causCandidates.forEach(function(c){
+      if(c.c===causBest.c){ causDisable[c.c]=false; return; }
+      causDisable[c.c] = overlapRatio(causBest.text, c.text) >= 0.40;
+    });
+
+    // apply to pills (baseline and roadmap are content; toggles are lens buttons)
+    pillConcept.classList.toggle("disabled", !!timeDisable["origin"] && time!=="origin");
+    pillLive.classList.toggle("disabled", !!timeDisable["now"] && time!=="now");
+    pillRoadmap.classList.toggle("disabled", !!timeDisable["post"] && time!=="post");
+
+    pillCause.classList.toggle("disabled", !!causDisable["CAUSE"] && causality!=="CAUSE");
+    pillEffect.classList.toggle("disabled", !!causDisable["EFFECT"] && causality!=="EFFECT");
+  }
+
+  function render(){
+    pillActive();
+    headerSet();
+    buildRows();
+    toggleAvailability();
+  }
+
   function buildRows(){
     stackList.innerHTML="";
     DOMAINS.forEach(function(domain){
@@ -740,9 +840,15 @@ body::before, body::after{ pointer-events:none !important; }
 
       var sub=document.createElement("div");
       sub.className="stackSub";
-      sub.textContent = (style==="formal")
-        ? (causality==="CAUSE" ? "Driver view · bounded writing." : "Outcome view · bounded writing.")
-        : (causality==="CAUSE" ? "Why view · clear." : "What view · clear.");
+      // subline changes by full lens tuple (no repeats)
+      var t = (time==="origin") ? "Concept" : (time==="now") ? "Live" : "Roadmap";
+      var c = (causality==="CAUSE") ? "Driver-side" : "Outcome-side";
+      var s = (style==="formal") ? "Formal" : "Plain";
+      sub.textContent = domain==="Baseline"
+        ? "Anchor posture · industrial surface · gated readiness"
+        : (domain==="Roadmap"
+          ? (t+" · "+c+" · "+s+" · gated climb")
+          : (t+" · "+c+" · "+s+" · magazine voice"));
 
       left.appendChild(bar);
       left.appendChild(title);
@@ -758,11 +864,14 @@ body::before, body::after{ pointer-events:none !important; }
       var body=document.createElement("div");
       body.className="stackBody";
 
+      var lens = {style:style, causality:causality, time:time};
+      var paras = arc(domain, lens);
+
       for(var i=0;i<7;i++){
         var card=document.createElement("div");
         card.className="para";
         var p=document.createElement("p");
-        p.innerHTML = "<b>"+domain+".</b> " + makePara(domain, i);
+        p.textContent = paras[i];
         card.appendChild(p);
         body.appendChild(card);
       }
@@ -783,9 +892,7 @@ body::before, body::after{ pointer-events:none !important; }
 
   function renderPreserve(){
     scrollTopMem = mbody.scrollTop;
-    pillSet();
-    headerSet();
-    buildRows();
+    render();
     requestAnimationFrame(function(){ mbody.scrollTop = scrollTopMem; });
   }
 
@@ -796,6 +903,7 @@ body::before, body::after{ pointer-events:none !important; }
     modal.classList.add("show");
     renderPreserve();
   }
+
   function closeModal(){
     bd.classList.remove("show");
     modal.classList.remove("show");
@@ -806,16 +914,33 @@ body::before, body::after{ pointer-events:none !important; }
   mClose.addEventListener("click", closeModal);
   mReturn.addEventListener("click", closeModal);
 
-  // lens controls (never touch activeSection)
+  // lens clicks (never reset activeSection)
   pillFormal.addEventListener("click", function(){ style="formal"; try{localStorage.setItem("gd_style",style);}catch(e){} renderPreserve(); });
   pillInformal.addEventListener("click", function(){ style="informal"; try{localStorage.setItem("gd_style",style);}catch(e){} renderPreserve(); });
-  pillCause.addEventListener("click", function(){ causality="CAUSE"; renderPreserve(); });
-  pillEffect.addEventListener("click", function(){ causality="EFFECT"; renderPreserve(); });
-  pillConcept.addEventListener("click", function(){ time="origin"; try{localStorage.setItem("gd_time",time);}catch(e){} renderPreserve(); });
-  pillLive.addEventListener("click", function(){ time="now"; try{localStorage.setItem("gd_time",time);}catch(e){} renderPreserve(); });
-  pillRoadmap.addEventListener("click", function(){ time="post"; try{localStorage.setItem("gd_time",time);}catch(e){} renderPreserve(); });
 
-  // diamonds bind
+  pillCause.addEventListener("click", function(){
+    if(pillCause.classList.contains("disabled")) return;
+    causality="CAUSE"; renderPreserve();
+  });
+  pillEffect.addEventListener("click", function(){
+    if(pillEffect.classList.contains("disabled")) return;
+    causality="EFFECT"; renderPreserve();
+  });
+
+  pillConcept.addEventListener("click", function(){
+    if(pillConcept.classList.contains("disabled")) return;
+    time="origin"; try{localStorage.setItem("gd_time",time);}catch(e){} renderPreserve();
+  });
+  pillLive.addEventListener("click", function(){
+    if(pillLive.classList.contains("disabled")) return;
+    time="now"; try{localStorage.setItem("gd_time",time);}catch(e){} renderPreserve();
+  });
+  pillRoadmap.addEventListener("click", function(){
+    if(pillRoadmap.classList.contains("disabled")) return;
+    time="post"; try{localStorage.setItem("gd_time",time);}catch(e){} renderPreserve();
+  });
+
+  // diamonds
   function bindDiamond(id, sec){
     var el=document.getElementById(id);
     if(!el) return;

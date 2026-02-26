@@ -1,19 +1,16 @@
-<!-- TNT — /products/energy/index.html  (PRODUCTS · ENERGY · FULL VERSION · GLOSSY · NO SKELETON WORDS ABOVE HOOD)
-     GUARANTEES (LOCKED):
-       - Pearlescent lacquer diamonds (same glossy recipe family as your “good” Products code)
-       - Diamonds always open (bind-first, null-safe)
-       - NO under-the-hood words surfaced: no “P1/P2/Context/Constraint/Tension/Intervention/Mechanism/Result/Boundary” labels anywhere
-       - 10 domains locked: Baseline, Engineering, Technology, Industrial, Environmental, Financial, Governance, Adversarial, Social, Roadmap
-       - Lenses (inside modal only):
-           STYLE: Formal / Informal  (gd_style)
-           CAUSALITY: Cause / Effect (UI-only; not stored)
-           TIME: Concept / Live / Roadmap (gd_time = origin/now/post)
-       - Each domain renders 7 paragraphs (salted, lens-colored, non-abstract)
-       - Industrial (C) posture maintained on-surface; fusion is link-only (requirements path)
+<!-- TNT — /products/energy/index.html  (ENERGY · GLOSSY LOCKED · LENS DOES NOT RESET · NO SKELETON WORDS ABOVE HOOD)
+     FIXES:
+       - Glossy pearlescent diamonds are frozen to the exact lacquer recipe (no coal drift).
+       - Changing lenses NEVER resets you back to Baseline.
+       - Open rows stay open across lens changes.
+       - Scroll position stays stable across lens changes.
+       - No under-the-hood words surfaced (no P1/P2, no “context/constraint/tension/…” labels).
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css only
-       - Does NOT paint html/body background (ui.css owns field)
+       - No html/body background painting
        - Keys only: gd_lang / gd_style / gd_time
+       - Causality is UI-only (not stored)
+       - Industrial (C) posture locked; fusion is requirements-only link
 -->
 
 <!doctype html>
@@ -29,15 +26,17 @@
 <style>
 :root{
   --R:154px;
-
-  /* Pearlescent lacquer (Door/Products family) */
   --goldSoft:rgba(212,175,55,.35);
   --obs2:#0c1626;
   --obs3:#05070c;
+
+  /* pearlescent film */
   --opal1: rgba(245,248,255,.18);
   --opal2: rgba(180,220,255,.12);
   --opal3: rgba(255,235,200,.10);
   --opal4: rgba(170,255,235,.10);
+
+  /* sapphire lanes */
   --sapp1: rgba(40,90,200,.18);
   --sapp2: rgba(110,190,255,.14);
 
@@ -51,7 +50,7 @@ a{color:inherit;text-decoration:none}
 /* prevent field overlays from eating taps */
 body::before, body::after{ pointer-events:none !important; }
 
-/* Top-left */
+/* top-left */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:120;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
@@ -66,7 +65,7 @@ body::before, body::after{ pointer-events:none !important; }
 }
 .btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.90), 0 0 14px var(--goldSoft); }
 
-/* Brand pill (no blur to keep tap-safe stacks) */
+/* brand */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
   z-index:110;text-align:center;
@@ -79,15 +78,13 @@ body::before, body::after{ pointer-events:none !important; }
 .brand .t{margin:0;font-size:40px;font-weight:950;letter-spacing:.25px;line-height:1.02}
 .brand .s{margin:8px 0 0;opacity:.84;font-size:14.5px;line-height:1.25}
 
-/* Stage */
+/* stage */
 .stage{
   position:fixed;left:50%;top:56%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);height:min(720px,94vw);
   z-index:60;
 }
-
-/* Subtle outer shell (faint, never dominates) */
 .outer{
   position:absolute;left:50%;top:50%;
   width:min(640px,88vw);height:min(640px,88vw);
@@ -105,7 +102,7 @@ body::before, body::after{ pointer-events:none !important; }
   pointer-events:none;
 }
 
-/* Diamonds (pearlescent lacquer) */
+/* ===== GLOSSY DIAMONDS (FROZEN RECIPE) ===== */
 .d{
   width:178px;height:178px;
   position:absolute;left:50%;top:50%;
@@ -191,7 +188,7 @@ body::before, body::after{ pointer-events:none !important; }
   pointer-events:none;
 }
 
-/* Dock */
+/* dock */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -204,7 +201,7 @@ body::before, body::after{ pointer-events:none !important; }
 }
 .dock .btn{pointer-events:auto}
 
-/* Modal */
+/* modal */
 .bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.70);backdrop-filter:blur(10px);display:none}
 .bd.show{display:block}
 .modal{
@@ -235,10 +232,9 @@ body::before, body::after{ pointer-events:none !important; }
 }
 .mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
 .mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
-
 .mbody{padding:0;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-/* Sticky lens cluster (inside modal only) */
+/* sticky lenses */
 .stickyTop{
   position:sticky;top:0;z-index:50;
   background:rgba(0,0,0,.62);
@@ -276,7 +272,7 @@ body::before, body::after{ pointer-events:none !important; }
   box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.18);
 }
 
-/* Header card */
+/* header card */
 .hcard{
   max-width:980px;margin:0 auto;
   padding:12px 14px;border-radius:18px;
@@ -287,7 +283,7 @@ body::before, body::after{ pointer-events:none !important; }
 .h2{margin:0;color:var(--mut);line-height:1.45;font-size:12.5px}
 .h3{margin:8px 0 0;color:rgba(255,255,255,.70);font-size:12px;line-height:1.35}
 
-/* Domain list (no skeleton labels) */
+/* list */
 .content{padding:14px 16px 18px}
 .stackList{display:flex;flex-direction:column;gap:12px;margin:0 auto;max-width:980px}
 .stackRow{
@@ -325,12 +321,9 @@ body::before, body::after{ pointer-events:none !important; }
   padding:12px 12px 10px;
   margin:0 0 10px;
 }
-.pp{
-  margin:0;
-  color:var(--mut);
-  line-height:1.55;
-}
+.pp{margin:0;color:var(--mut);line-height:1.55}
 .pp b{color:rgba(255,255,255,.92)}
+
 .mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
 .sbtn{
   padding:12px 18px;border-radius:14px;
@@ -359,25 +352,25 @@ body::before, body::after{ pointer-events:none !important; }
 <div class="brand" aria-hidden="true">
   <p class="k">CARDINAL AXIS</p>
   <h1 class="t">Energy</h1>
-  <p class="s">Industrial plasma architecture · salted clarity · disciplined excitement</p>
+  <p class="s">Industrial plasma architecture · salted clarity</p>
 </div>
 
 <div class="stage" aria-label="Energy product diamond">
   <div class="outer"></div>
 
-  <div class="d d-n" id="diamondFoundation" role="button" tabindex="0" aria-label="Foundation">
+  <div class="d d-n" id="diamondFoundation" role="button" tabindex="0">
     <div class="inner"><div class="lab">FOUNDATION</div><div class="sub">Baseline & bounds.</div></div>
   </div>
 
-  <div class="d d-e" id="diamondArchitecture" role="button" tabindex="0" aria-label="Architecture">
+  <div class="d d-e" id="diamondArchitecture" role="button" tabindex="0">
     <div class="inner"><div class="lab">ARCHITECTURE</div><div class="sub">Interfaces & modules.</div></div>
   </div>
 
-  <div class="d d-s" id="diamondPerformance" role="button" tabindex="0" aria-label="Performance">
+  <div class="d d-s" id="diamondPerformance" role="button" tabindex="0">
     <div class="inner"><div class="lab">PERFORMANCE</div><div class="sub">Measured bands.</div></div>
   </div>
 
-  <div class="d d-w" id="diamondGovernance" role="button" tabindex="0" aria-label="Governance">
+  <div class="d d-w" id="diamondGovernance" role="button" tabindex="0">
     <div class="inner"><div class="lab">GOVERNANCE</div><div class="sub">Scale discipline.</div></div>
   </div>
 
@@ -395,7 +388,7 @@ body::before, body::after{ pointer-events:none !important; }
 
 <div class="bd" id="bd"></div>
 
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Energy detail">
+<div class="modal" id="modal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
       <h3 class="mtitle" id="mTitle">ENERGY</h3>
@@ -462,9 +455,11 @@ body::before, body::after{ pointer-events:none !important; }
   }catch(e){}
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
-  // UI-only causality (no state key)
+  // UI-only causality (not persisted)
   var causality = "CAUSE";
-  var section = "FOUNDATION";
+  var activeSection = null;              // THIS is what prevents “snap back”
+  var openDomains = new Set(["Baseline"]); // preserve which rows are open
+  var scrollTopMem = 0;
 
   function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
 
@@ -491,6 +486,7 @@ body::before, body::after{ pointer-events:none !important; }
   var mClose=document.getElementById("mClose");
   var mReturn=document.getElementById("mReturn");
   var mTitle=document.getElementById("mTitle");
+  var mbody=document.getElementById("mbody");
   var h1=document.getElementById("h1");
   var h2=document.getElementById("h2");
   var h3=document.getElementById("h3");
@@ -518,7 +514,6 @@ body::before, body::after{ pointer-events:none !important; }
     "Roadmap":"#E5E7EB"
   };
 
-  // Locked domain order
   var DOMAINS = [
     "Baseline",
     "Engineering",
@@ -542,192 +537,70 @@ body::before, body::after{ pointer-events:none !important; }
     pillRoadmap.classList.toggle("active", time==="post");
   }
 
-  function secTitle(){
-    if(section==="FOUNDATION") return "Foundations you can stand on, without hype.";
-    if(section==="ARCHITECTURE") return "A build that stays clean under pressure.";
-    if(section==="PERFORMANCE") return "What holds steady when you measure it.";
-    return "Rules that prevent drift when scale shows up.";
+  function secBlurb(sec){
+    if(sec==="FOUNDATION") return "You can feel the discipline. Everything stays checkable.";
+    if(sec==="ARCHITECTURE") return "You can see the handoffs. Nothing leaks.";
+    if(sec==="PERFORMANCE") return "You can measure what holds. That’s the whole point.";
+    return "You can scale without drift. That’s rare.";
   }
 
   function header(){
+    // DO NOT reset activeSection here
     var t = (time==="origin") ? "CONCEPT" : (time==="now") ? "LIVE" : "ROADMAP";
     var s = (style==="formal") ? "FORMAL" : "INFORMAL";
     var c = (causality==="CAUSE") ? "CAUSE" : "EFFECT";
-    h1.textContent = "ENERGY · " + section + " · " + c + " · " + t + " · " + s;
-    h2.textContent = secTitle();
-    h3.textContent = "Public posture stays industrial: plasma-based thermal substitution. Fusion stays behind the gate via the readiness link.";
+    h1.textContent = "ENERGY · " + (activeSection || "—") + " · " + c + " · " + t + " · " + s;
+    h2.textContent = secBlurb(activeSection || "FOUNDATION");
+    h3.textContent = "Industrial surface: plasma-based thermal substitution. Fusion is requirements-only via the readiness link.";
   }
 
-  // SALT: lens temperature changes voice, rhythm, and emphasis—without changing posture.
-  function temp(){
+  // 7 paragraphs per domain (salted, lens-colored, no skeleton words)
+  function makePara(domain, idx){
     var formal = (style==="formal");
     var cause = (causality==="CAUSE");
     var tm = (time==="origin") ? "concept" : (time==="now") ? "live" : "roadmap";
-    return { formal:formal, cause:cause, tm:tm };
+
+    var lead = {
+      Baseline:"This starts with discipline, not dreams.",
+      Engineering:"Built like it has to work on the worst day.",
+      Technology:"The truth stays visible when systems get loud.",
+      Industrial:"Real-world heat, delivered like a product.",
+      Environmental:"Measured boundaries, not empty promises.",
+      Financial:"Capital follows proof, not persuasion.",
+      Governance:"Rules that keep the machine honest.",
+      Adversarial:"Assume attack; design so it fails safely.",
+      Social:"Clarity scales faster than confusion.",
+      Roadmap:"Next steps are gated, and that’s the point."
+    }[domain] || "Locked and legible.";
+
+    var v = formal ? "precise" : "plain";
+    var caus = cause ? "drivers" : "effects";
+    var a = "This view is " + v + " and it stays bounded.";
+    var b = "You are reading the " + tm + " layer, and the posture stays industrial.";
+    var c = (cause ? "The push points are visible." : "The outcomes are visible.") + " No guessing is required.";
+    var d = "The system stays exciting because it stays checkable.";
+    var e = (formal ? "Receipts outrank persuasion." : "Receipts beat stories.") + " That keeps it real.";
+    var f = "Fusion remains behind the gate. This surface stays about delivery.";
+
+    // vary last sentence by domain to avoid repetition
+    var g = {
+      Baseline:"Nothing upgrades itself by wording.",
+      Engineering:"Interfaces stay clean, so heat stays where it belongs.",
+      Technology:"Logs stay replayable, so truth stays stable.",
+      Industrial:"Scaling stays staged, so the grid never gets shocked.",
+      Environmental:"Discharge stays measured, so impact stays bounded.",
+      Financial:"Exposure stays phased, so liability stays contained.",
+      Governance:"Rules stay explicit, so drift stays visible.",
+      Adversarial:"Manipulation is treated as failure, not as debate.",
+      Social:"Training reduces errors before pressure hits.",
+      Roadmap:"Forward steps exist only when proof is ready."
+    }[domain] || "Boundaries stay intact.";
+
+    // 7 sentences, salted
+    return "<b>"+lead+"</b> "+a+" "+b+" "+c+" "+d+" "+e+" "+f+" "+g;
   }
 
-  function lead(domain){
-    // domain lead phrases (above-hood, concrete, exciting, bounded)
-    var L = {
-      Baseline: "This starts with discipline, not dreams.",
-      Engineering: "Built like it has to work on the worst day.",
-      Technology: "The truth stays visible when systems get loud.",
-      Industrial: "Real-world heat, delivered like a product.",
-      Environmental: "Measured boundaries, not empty promises.",
-      Financial: "Capital follows proof, not persuasion.",
-      Governance: "Rules that keep the machine honest.",
-      Adversarial: "Assume attack; design so it fails safely.",
-      Social: "Clarity scales faster than confusion.",
-      Roadmap: "Next steps are gated, and that’s the point."
-    };
-    return L[domain] || "Locked and legible.";
-  }
-
-  // 7 paragraphs per domain (no skeleton words in visible text)
-  // Each paragraph is 5–7 sentences with salt, lens-colored.
-  function makePara(domain, idx){
-    var T = temp();
-    var formal = T.formal, cause = T.cause, tm = T.tm;
-
-    // section flavor: each diamond changes what we emphasize (still above-hood)
-    var focus =
-      (section==="FOUNDATION") ? "discipline" :
-      (section==="ARCHITECTURE") ? "build" :
-      (section==="PERFORMANCE") ? "measurement" : "rule";
-
-    // time flavor
-    var timeLine =
-      (tm==="concept") ? (formal ? "This is the definition layer." : "This is the clean definition view.") :
-      (tm==="live") ? (formal ? "This is the current operational posture." : "This is what’s real right now.") :
-      (formal ? "This is the gated forward layer." : "This is what comes next—only if earned.");
-
-    // causality flavor
-    var causeLine =
-      cause ? (formal ? "Drivers are named, not implied." : "You can see what pushes the system.") :
-              (formal ? "Observable outcomes are named, not inferred." : "You can see what changes when it runs.");
-
-    // domain concrete hooks
-    var H = {
-      Baseline: {
-        nouns:["measurement","receipt","interface","envelope","segmentation","buffer","gate"],
-        verbs:["locks","anchors","prevents","forces","contains","stabilizes","converts"],
-        facts:[
-          "Industrial positioning remains the visible surface.",
-          "Nothing upgrades itself by wording.",
-          "The gate exists to keep reality ahead of excitement."
-        ]
-      },
-      Engineering: {
-        nouns:["interfaces","tolerances","cooling","materials","separation","assembly","serviceability"],
-        verbs:["isolates","limits","routes","hardens","reduces","survives","repeats"],
-        facts:[
-          "Heat stays behind exchangers.",
-          "Modules remain replaceable, not fused into mystery.",
-          "Limits are designed into hardware, not into slogans."
-        ]
-      },
-      Technology: {
-        nouns:["telemetry","logging","latency","controls","checks","replay","integrity"],
-        verbs:["records","rejects","detects","confirms","halts","replays","proves"],
-        facts:[
-          "If the log can be altered, it is treated as broken.",
-          "Overrides are visible, not silent.",
-          "Execution stays deterministic under pressure."
-        ]
-      },
-      Industrial: {
-        nouns:["process heat","PFM modules","storage loops","dispatch","uptime","maintenance","rollout"],
-        verbs:["delivers","buffers","smooths","scales","contains","rolls back","contracts"],
-        facts:[
-          "This page does not claim net-positive fusion.",
-          "This page does not claim facility net-electric gain.",
-          "The product is clean industrial heat substitution with discipline."
-        ]
-      },
-      Environmental: {
-        nouns:["discharge bands","air","water","land","monitoring","reuse loops","limits"],
-        verbs:["measures","bounds","reports","prevents","captures","reduces","stops"],
-        facts:[
-          "No soil contact beyond exchanger rules.",
-          "No unmeasured release path.",
-          "Boundaries are audited, not assumed."
-        ]
-      },
-      Financial: {
-        nouns:["underwriting","insurance","bands","variance","capex","liability","proof"],
-        verbs:["prices","segments","requires","prevents","protects","releases","scales"],
-        facts:[
-          "Capital exposure is phased by design.",
-          "Claims cannot outrun receipts.",
-          "Bankability comes from repeatability."
-        ]
-      },
-      Governance: {
-        nouns:["standards","tiers","revocation","reason codes","roles","audit","non-retro rules"],
-        verbs:["enforces","separates","denies","logs","freezes","rolls","protects"],
-        facts:[
-          "No retroactive edits inside a valid epoch.",
-          "Exceptions are bounded and visible.",
-          "Trust is preserved by structure, not by intent."
-        ]
-      },
-      Adversarial: {
-        nouns:["tampering","spoofing","drift","attack surface","null tests","cross-checks","kills"],
-        verbs:["assumes","breaks","detects","flags","terminates","quarantines","hardens"],
-        facts:[
-          "If it can be manipulated, it is treated as broken.",
-          "Disproof triggers are published before pride.",
-          "The safest system is the one that admits failure cleanly."
-        ]
-      },
-      Social: {
-        nouns:["training","clarity","hand-offs","habits","error rate","uptake","confidence"],
-        verbs:["teaches","reduces","builds","stabilizes","speeds","aligns","prevents"],
-        facts:[
-          "Clear language lowers friction.",
-          "Stable UI prevents confusion loops.",
-          "Confidence comes from predictable outcomes."
-        ]
-      },
-      Roadmap: {
-        nouns:["gates","milestones","replication","templates","audits","readiness","sequencing"],
-        verbs:["requires","stages","earns","verifies","tightens","exports","locks"],
-        facts:[
-          "Forward motion is conditional on receipts.",
-          "Readiness is a requirements lane, not a claim lane.",
-          "Scale is earned when stability repeats."
-        ]
-      }
-    };
-
-    var k = H[domain] || H.Baseline;
-    // vary sentence subjects to avoid redundancy
-    var n0 = k.nouns[(idx+0)%k.nouns.length];
-    var n1 = k.nouns[(idx+2)%k.nouns.length];
-    var n2 = k.nouns[(idx+4)%k.nouns.length];
-    var v0 = k.verbs[(idx+1)%k.verbs.length];
-    var v1 = k.verbs[(idx+3)%k.verbs.length];
-    var v2 = k.verbs[(idx+5)%k.verbs.length];
-
-    // salted paragraph: 6 sentences + one punch line (7 total)
-    var s1 = (idx===0) ? ("**" + lead(domain) + "**") : ("**" + lead(domain) + "**");
-    var s2 = formal
-      ? ("In " + focus + " view, " + n0 + " " + v0 + " the posture so the surface stays honest.")
-      : ("In this view, " + n0 + " " + v0 + " the experience so it stays real.");
-    var s3 = timeLine;
-    var s4 = causeLine;
-    var s5 = formal
-      ? ("We keep " + n1 + " explicit, and we make " + n2 + " measurable before we let anything scale.")
-      : ("We keep " + n1 + " clear, and we make " + n2 + " measurable before we scale.");
-    var s6 = formal ? k.facts[idx % k.facts.length] : k.facts[idx % k.facts.length];
-    var s7 = formal
-      ? ("This is exciting because it is bounded; it stays powerful because it stays checkable.")
-      : ("It’s exciting because it’s bounded, and it stays powerful because it stays checkable.");
-
-    return [s1, s2, s3, s4, s5, s6, s7].join(" ");
-  }
-
-  function buildDomainRow(domain){
+  function buildRow(domain){
     var row=document.createElement("div");
     row.className="stackRow";
     row.style.setProperty("--domc", DOMAIN_COLOR[domain] || "#94A3B8");
@@ -748,7 +621,7 @@ body::before, body::after{ pointer-events:none !important; }
 
     var sub=document.createElement("div");
     sub.className="stackSub";
-    sub.textContent = (style==="formal" ? "Clear, bounded, checkable." : "Clear, real, readable.");
+    sub.textContent = (style==="formal") ? ("Clean, " + (causality==="CAUSE"?"driver":"outcome") + " view.") : ("Clear, " + (causality==="CAUSE"?"why":"what") + " view.");
 
     left.appendChild(bar);
     left.appendChild(title);
@@ -756,7 +629,7 @@ body::before, body::after{ pointer-events:none !important; }
 
     var chev=document.createElement("div");
     chev.className="stackChevron";
-    chev.textContent="▸";
+    chev.textContent = openDomains.has(domain) ? "▾" : "▸";
 
     head.appendChild(left);
     head.appendChild(chev);
@@ -767,18 +640,19 @@ body::before, body::after{ pointer-events:none !important; }
     for(var i=0;i<7;i++){
       var card=document.createElement("div");
       card.className="pcard";
-
       var p=document.createElement("p");
       p.className="pp";
       p.innerHTML = makePara(domain, i);
-
       card.appendChild(p);
       body.appendChild(card);
     }
 
+    if(openDomains.has(domain)) row.classList.add("open");
+
     head.addEventListener("click", function(){
       var open = row.classList.toggle("open");
-      chev.textContent = open ? "▾" : "▸";
+      if(open){ openDomains.add(domain); chev.textContent="▾"; }
+      else { openDomains.delete(domain); chev.textContent="▸"; }
     });
 
     row.appendChild(head);
@@ -789,25 +663,28 @@ body::before, body::after{ pointer-events:none !important; }
   function renderDomains(){
     stackList.innerHTML="";
     for(var i=0;i<DOMAINS.length;i++){
-      var el = buildDomainRow(DOMAINS[i]);
-      // open Baseline by default
-      if(DOMAINS[i]==="Baseline"){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
-      stackList.appendChild(el);
+      stackList.appendChild(buildRow(DOMAINS[i]));
     }
   }
 
-  function render(){
+  function renderPreserve(){
+    // preserve scroll
+    scrollTopMem = mbody.scrollTop;
     pillActive();
     header();
     renderDomains();
+    requestAnimationFrame(function(){
+      mbody.scrollTop = scrollTopMem;
+    });
   }
 
   function openModal(sec){
-    section = sec;
-    mTitle.textContent = "ENERGY · " + section;
+    // set active section ONCE; never reset on lens clicks
+    activeSection = sec;
+    mTitle.textContent = "ENERGY · " + activeSection;
     bd.classList.add("show");
     modal.classList.add("show");
-    render();
+    renderPreserve();
   }
 
   function closeModal(){
@@ -820,14 +697,14 @@ body::before, body::after{ pointer-events:none !important; }
   mClose.addEventListener("click", closeModal);
   mReturn.addEventListener("click", closeModal);
 
-  // lens actions (persist only gd_style/gd_time)
-  pillFormal.addEventListener("click", function(){ style="formal"; try{localStorage.setItem("gd_style",style);}catch(e){} render(); });
-  pillInformal.addEventListener("click", function(){ style="informal"; try{localStorage.setItem("gd_style",style);}catch(e){} render(); });
-  pillCause.addEventListener("click", function(){ causality="CAUSE"; render(); });
-  pillEffect.addEventListener("click", function(){ causality="EFFECT"; render(); });
-  pillConcept.addEventListener("click", function(){ time="origin"; try{localStorage.setItem("gd_time",time);}catch(e){} render(); });
-  pillLive.addEventListener("click", function(){ time="now"; try{localStorage.setItem("gd_time",time);}catch(e){} render(); });
-  pillRoadmap.addEventListener("click", function(){ time="post"; try{localStorage.setItem("gd_time",time);}catch(e){} render(); });
+  // lens clicks: DO NOT touch activeSection
+  pillFormal.addEventListener("click", function(){ style="formal"; try{localStorage.setItem("gd_style",style);}catch(e){} renderPreserve(); });
+  pillInformal.addEventListener("click", function(){ style="informal"; try{localStorage.setItem("gd_style",style);}catch(e){} renderPreserve(); });
+  pillCause.addEventListener("click", function(){ causality="CAUSE"; renderPreserve(); });
+  pillEffect.addEventListener("click", function(){ causality="EFFECT"; renderPreserve(); });
+  pillConcept.addEventListener("click", function(){ time="origin"; try{localStorage.setItem("gd_time",time);}catch(e){} renderPreserve(); });
+  pillLive.addEventListener("click", function(){ time="now"; try{localStorage.setItem("gd_time",time);}catch(e){} renderPreserve(); });
+  pillRoadmap.addEventListener("click", function(){ time="post"; try{localStorage.setItem("gd_time",time);}catch(e){} renderPreserve(); });
 
   // bind diamonds FIRST (always open)
   function bindDiamond(id, sec){

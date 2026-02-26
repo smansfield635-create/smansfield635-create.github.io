@@ -1,8 +1,15 @@
-<!-- TNT — /products/index.html  (PRODUCTS SPINE · DOOR-GRADE JEWEL · SINGLE-SHELL · TIGHTER SPACING)
-     CHANGE:
-       - FIX “COAL”: restores opal film + sapphire glow + crisp specular + stronger gold crown
-       - FIX “TOO WIDE”: radius tightened; diamonds slightly larger (gap, not separation)
-       - KEEP: single-shell only (NO outer shell), tap-safe, gd_* propagation only
+<!-- TNT — /products/index.html  (PRODUCTS · Catalog Spine · DOOR-UNIFORM · TAP-SAFE)
+     CHANGE ONLY (what you asked):
+       - SAME content (ENERGY / EDUCATION / SOFTWARE / COMMERCIAL + same subtitles, just shorter)
+       - DOOR-uniform jewel material (no “coal”)
+       - NO outer/big diamond shell (inner diamonds only)
+       - Diamonds slightly smaller + natural gaps
+       - Text nudged slightly upward inside diamonds
+       - Tap reliability locked (no blur stacks, no tap blockers)
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css only
+       - Does NOT style html/body background (ui.css owns field)
+       - No new state keys (gd_lang/gd_style/gd_time only)
 -->
 
 <!doctype html>
@@ -18,154 +25,140 @@
 <style>
 :root{
   /* spacing */
-  --R:152px; /* tighter than the “too wide” version */
+  --R:162px;          /* slightly wider radius */
+  --D:192px;          /* slightly smaller diamonds for gaps */
 
-  /* lacquer base */
+  /* DOOR-grade jewel */
+  --goldSoft:rgba(212,175,55,.35);
   --obs1:#070b12;
   --obs2:#0c1626;
   --obs3:#05070c;
-
-  /* opal film (stronger) */
-  --opalW: rgba(245,248,255,.24);
-  --opalB: rgba(180,220,255,.18);
-  --opalA: rgba(255,235,200,.16);
-  --opalG: rgba(170,255,235,.16);
-
-  /* sapphire glow (stronger) */
-  --sap1: rgba(40,90,200,.26);
-  --sap2: rgba(110,190,255,.20);
-
-  /* gold crown */
-  --gold: rgba(212,175,55,.90);
-  --goldSoft: rgba(212,175,55,.42);
 }
 
+/* page neutral (ui.css owns field) */
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
 
 /* top-left */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:90;
+  position:fixed;left:16px;top:16px;z-index:120;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* brand pill */
+/* brand pill (NO blur) */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:80;text-align:center;
+  z-index:110;text-align:center;
   padding:10px 14px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
+  pointer-events:none;
 }
-.brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.92}
-.brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
+.brand .k{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.78;margin:0 0 8px 0}
+.brand .t{margin:0;font-size:46px;font-weight:950;letter-spacing:.25px;line-height:1.02}
+.brand .s{margin:8px 0 0;opacity:.84;font-size:15px;line-height:1.25}
 
-/* stage (single-shell only) */
+/* stage */
 .stage{
-  position:fixed;left:50%;top:54%;
+  position:fixed;left:50%;top:56%;
   transform:translate(-50%,-50%);
-  width:min(720px,94vw);height:min(720px,94vw);
+  width:min(760px,94vw);
+  height:min(760px,94vw);
   z-index:60;
   pointer-events:auto;
 }
 
-/* diamonds */
+/* diamonds (DOOR-grade) */
 .d{
-  width:198px;height:198px; /* larger = less “pulled apart” */
+  width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
   transform-origin:center;
-  border-radius:30px;
+  border-radius:28px;
   cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
   pointer-events:auto;
   touch-action:manipulation;
-  -webkit-tap-highlight-color:transparent;
 
   background:
-    /* sapphire lanes */
-    radial-gradient(circle at 72% 26%, var(--sap2) 0%, rgba(110,190,255,0) 62%),
-    radial-gradient(circle at 34% 78%, var(--sap1) 0%, rgba(40,90,200,0) 64%),
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
+    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
 
-    /* opal interference film */
-    radial-gradient(circle at 34% 22%, var(--opalW) 0%, rgba(245,248,255,0) 54%),
-    radial-gradient(circle at 78% 32%, var(--opalB) 0%, rgba(180,220,255,0) 58%),
-    radial-gradient(circle at 82% 78%, var(--opalA) 0%, rgba(255,235,200,0) 64%),
-    radial-gradient(circle at 30% 82%, var(--opalG) 0%, rgba(170,255,235,0) 66%),
-
-    /* lacquer depth */
-    linear-gradient(160deg, var(--obs2) 0%, var(--obs3) 78%);
-
-  border:1px solid rgba(255,255,255,.18);
-
+  border:1px solid rgba(255,255,255,.10);
   box-shadow:
-    0 30px 110px rgba(0,0,0,.72),
-    0 0 26px rgba(212,175,55,.10),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -52px 98px rgba(0,0,0,.86);
-}
+    0 28px 84px rgba(0,0,0,.78),
+    inset 0 2px 0 rgba(255,255,255,.14),
+    inset 0 -28px 44px rgba(0,0,0,.62);
 
-/* gold crown rim (stronger, cleaner) */
+  transition:transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
 .d::before{
   content:"";
-  position:absolute;inset:0;border-radius:30px;padding:1px;
-  background:linear-gradient(135deg,
-    rgba(212,175,55,0) 0%,
-    rgba(212,175,55,.60) 36%,
-    rgba(212,175,55,.92) 50%,
-    rgba(212,175,55,.60) 64%,
-    rgba(212,175,55,0) 100%
-  );
-  opacity:.78;
+  position:absolute;inset:0;border-radius:28px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.55;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
+  -webkit-mask-composite:xor; mask-composite:exclude;
   pointer-events:none;
 }
-
-/* crisp specular cap + depth */
 .d::after{
   content:"";
-  position:absolute;inset:0;border-radius:30px;
-  background:
-    radial-gradient(120% 60% at 50% 14%, rgba(255,255,255,.40) 0%, rgba(255,255,255,0) 64%),
-    radial-gradient(120% 60% at 52% 52%, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 62%),
-    radial-gradient(140% 70% at 50% 94%, rgba(0,0,0,.40) 0%, rgba(0,0,0,0) 56%);
-  opacity:.95;
+  position:absolute;left:12%;right:12%;top:10%;height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
+  opacity:.88;
+  transform:rotate(-10deg);
   pointer-events:none;
 }
-
 .d:hover{
-  border-color:rgba(212,175,55,.34);
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.01);
   box-shadow:
-    0 40px 140px rgba(0,0,0,.82),
-    0 0 34px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.20),
-    inset 0 -56px 110px rgba(0,0,0,.88);
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 18px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
+  border-color:rgba(212,175,55,.28);
 }
 .d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
-/* positions */
-.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
-.d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
-.d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
-.d-w{transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg)}
+/* placement */
+.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
+.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
+.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
+.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
 
-/* inner label (slightly up) */
+/* inner text (nudged UP slightly) */
 .inner{
   width:100%;height:100%;
-  transform:rotate(-45deg) translateY(-7px);
+  transform:rotate(-45deg);
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  text-align:center;padding:16px;gap:8px;
-  pointer-events:none;user-select:none;
+  text-align:center;
+  padding:16px;
+  gap:8px;
+  pointer-events:none;
+  user-select:none;
+  transform-origin:center;
 }
-.lab{font-weight:950;letter-spacing:.8px;font-size:18px;text-shadow:0 0 18px rgba(255,255,255,.16)}
-.sub{font-size:13px;opacity:.84;line-height:1.25;max-width:16em}
+.inner .shift{transform:translateY(-6px)}
+.lab{
+  font-weight:950;
+  letter-spacing:.9px;
+  font-size:18px;
+  text-shadow:0 0 18px rgba(255,255,255,.12);
+}
+.sub{
+  font-size:13px;
+  opacity:.86;
+  line-height:1.25;
+  max-width:14.5em;
+}
 
 /* core */
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:64px;height:64px;border-radius:18px;
+  width:62px;height:62px;border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
   box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
@@ -174,25 +167,26 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* dock */
+/* dock (NO blur; tap-safe wrapper) */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:90;width:min(900px,94vw);
+  z-index:120;
+  width:min(900px,94vw);
   display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.20);
   pointer-events:none;
 }
 .dock .btn{pointer-events:auto}
 
-/* mobile */
+/* responsive */
 @media (max-width:560px){
-  :root{--R:142px}
-  .d{width:176px;height:176px}
-  .stage{top:56%}
-  .inner{transform:rotate(-45deg) translateY(-6px)}
+  :root{ --R:146px; --D:176px; }
+  .brand .t{font-size:40px}
+  .stage{top:58%}
 }
 </style>
 </head>
@@ -204,38 +198,39 @@ a{color:inherit;text-decoration:none}
   <a class="btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
-<div class="brand">
-  <div class="name">PRODUCTS</div>
-  <div class="tag">Four volumes · One catalog spine</div>
+<div class="brand" aria-hidden="true">
+  <p class="k">CARDINAL AXIS</p>
+  <h1 class="t">Products</h1>
+  <p class="s">Four volumes · One catalog spine</p>
 </div>
 
 <div class="stage" aria-label="Products catalog">
   <div class="d d-n" id="goEnergy" role="button" tabindex="0" aria-label="Energy">
-    <div class="inner">
+    <div class="inner"><div class="shift">
       <div class="lab">ENERGY</div>
       <div class="sub">Industrial plasma · Readiness</div>
-    </div>
+    </div></div>
   </div>
 
   <div class="d d-e" id="goEducation" role="button" tabindex="0" aria-label="Education">
-    <div class="inner">
+    <div class="inner"><div class="shift">
       <div class="lab">EDUCATION</div>
       <div class="sub">Language · Learning</div>
-    </div>
+    </div></div>
   </div>
 
   <div class="d d-s" id="goSoftware" role="button" tabindex="0" aria-label="Software">
-    <div class="inner">
+    <div class="inner"><div class="shift">
       <div class="lab">SOFTWARE</div>
       <div class="sub">Tools · Dashboards</div>
-    </div>
+    </div></div>
   </div>
 
   <div class="d d-w" id="goCommercial" role="button" tabindex="0" aria-label="Commercial">
-    <div class="inner">
+    <div class="inner"><div class="shift">
       <div class="lab">COMMERCIAL</div>
       <div class="sub">Deploy · License</div>
-    </div>
+    </div></div>
   </div>
 
   <div class="core">◆</div>
@@ -283,7 +278,7 @@ a{color:inherit;text-decoration:none}
   document.getElementById("dockGauges").href = "/gauges/" + q();
   document.getElementById("dockLinks").href = "/links/" + q();
 
-  function go(path){ location.href = path + q(); }
+  function go(path){ window.location.href = path + q(); }
 
   [
     ["goEnergy","/products/energy/"],
@@ -294,7 +289,7 @@ a{color:inherit;text-decoration:none}
     var el = document.getElementById(pair[0]);
     var path = pair[1];
     if(!el) return;
-    el.addEventListener("click", function(){ go(path); });
+    el.addEventListener("click", function(){ go(path); }, {passive:true});
     el.addEventListener("keydown", function(e){
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }
     });

@@ -1,23 +1,20 @@
 <!-- TNT — /products/energy/index.html  (PRODUCTS · ENERGY · INDUSTRIAL PLASMA ARCHITECTURE)
-     FINAL DESIGN (NO DRIFT + THICKER CONTENT):
+     CONFIRMED STRUCTURE (CONDENSED + THICK):
        - Keep outer 4-diamond face (N/E/S/W) for energy domain navigation.
-       - REMOVE N/E/S/W duplication INSIDE the modal.
-       - Modal structure:
-           1) Lenses (STYLE + CONCEPT/LIVE/ROADMAP)
-           2) 4 substance tabs (FOUNDATION / ARCHITECTURE / PERFORMANCE / GOVERNANCE)  ← replaces 8 thin tabs
-           3) Bubble assets row (Scientific / Industrial / Agricultural / Financial / Human / Adversarial / Regulatory)
-           4) 4 inner diamonds (WHAT / WHY / SCOPE / OUTPUT)
-           5) One dense content bubble (headline + paragraph + 4 bullets)
-       - Substance-first labels; direction is implicit in structure.
-       - Single-language render (EN only when lang=en; 中文 only when lang=zh; (ZH mirrors EN content for now))
+       - Modal = THICK PAPER:
+           A) Lenses (STYLE: formal/informal) + TIME (CONCEPT/LIVE/ROADMAP)
+           B) 4 BIG JEWELS (FOUNDATION / ARCHITECTURE / PERFORMANCE / GOVERNANCE)  ← replaces WHAT/WHY/SCOPE/OUTPUT
+           C) 7 DOMAIN BUBBLES (Industrial/Scientific/Agricultural/Financial/Human/Adversarial/Regulatory)
+           D) 1 dense paragraph (selected domain) + 7 bullet statements (one per domain)
+           E) Actions: RETURN / FUSION READINESS / JUMP PRODUCTS / JUMP HUB
+       - Substance-first labels; direction is secondary (kept in title only: DETAIL · NORTH etc).
+       - No drift: Public positioning = Industrial (C) only. Fusion = gated pathway only.
+       - Single-language render (EN only when lang=en; 中文 only when lang=zh; ZH mirrors EN for now)
        - Proven tap reliability (stage pointer-events none; diamonds pointer-events auto; dock tap-safe)
        - No debug pill overlays.
-       - NO new state keys (gd_lang/gd_style/gd_time only) — bubble selection is session-only.
+       - NO new state keys (gd_lang/gd_style/gd_time only). Domain selection is session-only.
        - Uses /assets/ui.css + /assets/branch.css only
        - Does NOT style html/body background (ui.css owns field)
-       - PUBLIC POSITIONING = INDUSTRIAL (C) ONLY
-       - NO net-positive fusion language; NO grid-fusion implication
-       - Fusion discussion = gated admissibility pathway only (link + gates; no physics recipes)
 -->
 
 <!doctype html>
@@ -34,12 +31,12 @@
 :root{
   --R:154px;
   --goldSoft:rgba(212,175,55,.35);
+  --goldHard:rgba(212,175,55,.60);
   --obs1:#070b12;
   --obs2:#0c1626;
   --mut:rgba(255,255,255,.86);
   --mut2:rgba(255,255,255,.70);
 }
-
 body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 
 /* Top-left */
@@ -53,10 +50,7 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   -webkit-tap-highlight-color:transparent;
 }
 .btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px var(--goldSoft)}
-.btn.active{
-  border-color:rgba(212,175,55,.32);
-  box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 18px rgba(212,175,55,.18);
-}
+.btn.active{border-color:rgba(212,175,55,.32);box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 18px rgba(212,175,55,.18)}
 
 /* Brand pill */
 .brand{
@@ -174,39 +168,68 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 .chip{padding:10px 16px;border-radius:999px;background:linear-gradient(145deg,var(--obs2),var(--obs1));border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 36px rgba(0,0,0,.65);cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff}
 .chip.active{border-color:rgba(212,175,55,.35);box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 16px rgba(212,175,55,.30)}
 
-/* 4 substance tabs (thick) */
-.tabs{
-  margin:0 0 10px;
-  padding:10px 10px 12px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(0,0,0,.10);
-  border-radius:22px;
+/* 4 BIG JEWELS (Foundation/Architecture/Performance/Governance) */
+.jgrid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px;
+  gap:12px;
+  margin:0 0 14px;
 }
-@media (min-width:720px){
-  .tabs{ grid-template-columns:repeat(4, 1fr); }
+@media (min-width:760px){
+  .jgrid{ grid-template-columns:repeat(4, 1fr); }
 }
-.tab{
-  padding:12px 14px;
-  border-radius:999px;
-  background:linear-gradient(145deg, rgba(17,22,28,.85), rgba(11,15,20,.90));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 12px 30px rgba(0,0,0,.55);
+.jewel{
+  height:108px;
+  border-radius:26px;
   cursor:pointer;
-  font-weight:950;
-  letter-spacing:.2px;
-  text-align:center;
-  user-select:none;
   -webkit-tap-highlight-color:transparent;
+  background:
+    radial-gradient(circle at 35% 22%, rgba(255,255,255,.18), transparent 58%),
+    radial-gradient(circle at 70% 82%, rgba(0,80,255,.22), transparent 62%),
+    linear-gradient(160deg, rgba(12,22,38,.94) 0%, rgba(7,11,18,.96) 72%);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 22px 74px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.12);
+  position:relative;
+  overflow:hidden;
 }
-.tab.active{
-  border-color:rgba(212,175,55,.34);
-  box-shadow:0 16px 44px rgba(0,0,0,.72), 0 0 18px rgba(212,175,55,.18);
+.jewel::before{
+  content:"";position:absolute;inset:0;border-radius:26px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldHard) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.jewel::after{
+  content:"";position:absolute;left:-40%;top:-60%;
+  width:180%;height:160%;
+  background:linear-gradient(120deg, rgba(255,255,255,.00) 0%, rgba(255,255,255,.14) 45%, rgba(255,255,255,.00) 60%);
+  transform:rotate(18deg);
+  opacity:.65;
+  pointer-events:none;
+  animation:shimmer 6.4s linear infinite;
+}
+@keyframes shimmer{
+  0%{transform:translateX(-18%) rotate(18deg);opacity:.40}
+  45%{opacity:.80}
+  100%{transform:translateX(18%) rotate(18deg);opacity:.40}
+}
+.jewel.active{
+  border-color:rgba(212,175,55,.52);
+  box-shadow:0 26px 88px rgba(0,0,0,.78), 0 0 22px rgba(212,175,55,.22), inset 0 2px 0 rgba(255,255,255,.14);
+}
+.jewel .jin{
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:10px 10px;
+  font-weight:950;
+  letter-spacing:.5px;
 }
 
-/* Bubble assets row */
+/* Domain bubbles */
 .bubbles{
   margin:0 0 14px;
   padding:10px 10px 12px;
@@ -236,54 +259,7 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   box-shadow:0 16px 44px rgba(0,0,0,.70), 0 0 18px rgba(212,175,55,.18);
 }
 
-/* 4 inner diamonds: panel lens */
-.pgrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin:0 0 14px;
-}
-@media (min-width:760px){
-  .pgrid{ grid-template-columns:repeat(4, 1fr); }
-}
-.pd{
-  height:92px;
-  border-radius:22px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 54px rgba(0,0,0,.60), inset 0 2px 0 rgba(255,255,255,.10);
-  position:relative;
-  overflow:hidden;
-}
-.pd::before{
-  content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.45;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  pointer-events:none;
-}
-.pd.active{
-  border-color:rgba(212,175,55,.40);
-  box-shadow:0 22px 70px rgba(0,0,0,.72), 0 0 18px rgba(212,175,55,.18), inset 0 2px 0 rgba(255,255,255,.10);
-}
-.pd .pin{
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:10px 10px;
-  font-weight:950;
-  letter-spacing:.4px;
-}
-
-/* Main content bubble (dense) */
+/* Dense content bubble */
 .bubble{
   padding:16px 18px;border-radius:22px;
   background:
@@ -338,7 +314,7 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   </div>
 
   <div class="d d-e" id="dEast" role="button" tabindex="0" onclick="window.__openEnergy('east')">
-    <div class="inner"><div class="lab" id="labEast">EAST</div><div class="sub" id="subEast">R&amp;D gates.</div></div>
+    <div class="inner"><div class="lab" id="labEast">EAST</div><div class="sub" id="subEast">R&D gates.</div></div>
   </div>
 
   <div class="d d-w" id="dWest" role="button" tabindex="0" onclick="window.__openEnergy('west')">
@@ -379,31 +355,23 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
         <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
       </div>
 
-      <!-- 4 substance tabs (thick) -->
-      <div class="tabs" id="tabs">
-        <div class="tab active" data-group="foundation" id="tFoundation">FOUNDATION</div>
-        <div class="tab" data-group="architecture" id="tArchitecture">ARCHITECTURE</div>
-        <div class="tab" data-group="performance" id="tPerformance">PERFORMANCE</div>
-        <div class="tab" data-group="governance" id="tGovernance">GOVERNANCE</div>
+      <!-- 4 BIG JEWELS -->
+      <div class="jgrid" id="jgrid">
+        <div class="jewel active" data-j="foundation" id="jFoundation"><div class="jin">FOUNDATION</div></div>
+        <div class="jewel" data-j="architecture" id="jArchitecture"><div class="jin">ARCHITECTURE</div></div>
+        <div class="jewel" data-j="performance" id="jPerformance"><div class="jin">PERFORMANCE</div></div>
+        <div class="jewel" data-j="governance" id="jGovernance"><div class="jin">GOVERNANCE</div></div>
       </div>
 
-      <!-- Bubble assets (session-only; no new state keys) -->
+      <!-- 7 DOMAIN BUBBLES -->
       <div class="bubbles" id="bubbles">
-        <div class="bub active" data-bub="industrial" id="bIndustrial">Industrial</div>
-        <div class="bub" data-bub="scientific" id="bScientific">Scientific</div>
-        <div class="bub" data-bub="agricultural" id="bAgricultural">Agricultural</div>
-        <div class="bub" data-bub="financial" id="bFinancial">Financial</div>
-        <div class="bub" data-bub="human" id="bHuman">Human</div>
-        <div class="bub" data-bub="adversarial" id="bAdversarial">Adversarial</div>
-        <div class="bub" data-bub="regulatory" id="bRegulatory">Regulatory</div>
-      </div>
-
-      <!-- Panel lens -->
-      <div class="pgrid" id="pgrid">
-        <div class="pd active" data-panel="what" id="pWhat"><div class="pin">WHAT</div></div>
-        <div class="pd" data-panel="why" id="pWhy"><div class="pin">WHY</div></div>
-        <div class="pd" data-panel="scope" id="pScope"><div class="pin">SCOPE</div></div>
-        <div class="pd" data-panel="output" id="pOutput"><div class="pin">OUTPUT</div></div>
+        <div class="bub active" data-b="industrial" id="bIndustrial">Industrial</div>
+        <div class="bub" data-b="scientific" id="bScientific">Scientific</div>
+        <div class="bub" data-b="agricultural" id="bAgricultural">Agricultural</div>
+        <div class="bub" data-b="financial" id="bFinancial">Financial</div>
+        <div class="bub" data-b="human" id="bHuman">Human</div>
+        <div class="bub" data-b="adversarial" id="bAdversarial">Adversarial</div>
+        <div class="bub" data-b="regulatory" id="bRegulatory">Regulatory</div>
       </div>
 
       <!-- Dense content -->
@@ -516,12 +484,13 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   const pMain=document.getElementById("pMain");
   const uMain=document.getElementById("uMain");
 
-  const tabs=[...document.querySelectorAll(".tab")];
-  const panels=[...document.querySelectorAll(".pd")];
+  const jewels=[...document.querySelectorAll(".jewel")];
   const bubs=[...document.querySelectorAll(".bub")];
 
   // Session-only (no new gd_* keys)
-  let activeBub = "industrial";
+  let activeB = "industrial";
+  let activeJ = "foundation";
+  let activeFace = null; // north/east/south/west
 
   const persist=()=>{ try{ localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time);}catch(e){} };
   const setLensLabels=()=>{
@@ -534,153 +503,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     chipRoadmap.classList.toggle("active", time==="post");
   };
 
-  // Groups (8 thin -> 4 thick) — internal only
-  const GROUP_LABEL={
-    foundation:"FOUNDATION",
-    architecture:"ARCHITECTURE",
-    performance:"PERFORMANCE",
-    governance:"GOVERNANCE"
-  };
-
-  const PANEL_LABEL={ what:"WHAT", why:"WHY", scope:"SCOPE", output:"OUTPUT" };
-
-  // Base lines (Industrial C + gated R&D; no fusion claim)
-  const BASE = {
-    concept:{
-      formal:{
-        north:"Industrial posture is primary: contained high-energy regimes upstream; buffered outputs; no net-positive fusion claim.",
-        east:"R&D is gated: fusion discussion is a strict admissibility pathway under instrumentation discipline; no readiness implied.",
-        south:"Deployment is phased (IDP-1→IDP-4): pilot → cluster → adjacency → replication under containment and audit.",
-        west:"Execution is supervisory: CC tiers, ERI escalation logic, CARES response, SVF validation, SLA buffering."
-      },
-      informal:{
-        north:"Industrial first. Upstream-only high energy. No fusion claim.",
-        east:"R&D is gated. Fusion talk is requirements-only.",
-        south:"Deploy in phases, safely.",
-        west:"Supervision + buffering + validation."
-      }
-    },
-    live:{
-      formal:{
-        north:"Live posture: industrial thermal substitution with measured inputs/outputs and bounded failure envelopes.",
-        east:"Live posture: gated evidence requirements for neutron signal and energy balance; no achievement asserted.",
-        south:"Live posture: site selection, setbacks, midstream exchange, and licensing boundaries (no consumer high-energy).",
-        west:"Live posture: logs, certificates, kill conditions, and non-retroactive discipline for claim safety."
-      },
-      informal:{
-        north:"Live = measurable industrial output.",
-        east:"Live = requirements for fusion evidence, not claims.",
-        south:"Live = deployment discipline and boundaries.",
-        west:"Live = audits, kill rules, and logs."
-      }
-    },
-    roadmap:{
-      formal:{
-        north:"Roadmap: scale industrial heat substitution first; expand buffering; tighten governance; keep claims bounded.",
-        east:"Roadmap: gated fusion readiness pathway remains separate until receipts exist; failure at any gate reverts to Industrial (C).",
-        south:"Roadmap: replicate modular PFMs; add agricultural thermal reuse through exchangers only; preserve soil and livestock boundaries.",
-        west:"Roadmap: underwriting-grade CC certification, independent audits, and standardized incident reporting."
-      },
-      informal:{
-        north:"Roadmap: more industrial sites, same rules.",
-        east:"Roadmap: gated pathway only, no drift.",
-        south:"Roadmap: modular replication and safe co-location.",
-        west:"Roadmap: stronger certs and audits."
-      }
-    }
-  };
-
-  // Thick group content: each group pulls from two underlying concepts
-  const GROUP = {
-    foundation:{
-      formal:{
-        origin:"Industrial (C) positioning is the public posture. Constraints and admissibility are declared first; R&D cannot upgrade claims without receipts.",
-        now:"Claim discipline is explicit: no Q>1; no net-electric; no grid-fusion implication. Constraints remain primary over optimization.",
-        post:"Scale by cloning bounded contracts (HIP/CC/ERI/SLA/CARES/SVF/IDP) and tightening bins; never by relaxing safety or redefining terms."
-      },
-      informal:{
-        origin:"Industrial first. Constraints first. R&D gated.",
-        now:"No fusion gain claims. Constraints rule.",
-        post:"Clone contracts. Tighten rules. Scale clean."
-      }
-    },
-    architecture:{
-      formal:{
-        origin:"Architecture is modular: HIP regime core + CC tiers + UCI supervisory control + SLA buffering + SVF validation + CARES response + IDP deployment.",
-        now:"Architecture is layered: upstream high-energy regimes; midstream buffering and exchange; downstream passive endpoints only.",
-        post:"Architecture becomes certifiable: CC tier mapping to deployment permissions; audit-ledger traceability; licensing boundaries enforced."
-      },
-      informal:{
-        origin:"Modules: HIP + CC + UCI + SLA + SVF + CARES + IDP.",
-        now:"Upstream only. Buffered midstream. Passive downstream.",
-        post:"Certs + ledgers + licensing boundaries."
-      }
-    },
-    performance:{
-      formal:{
-        origin:"Performance is defined as measurable industrial substitution: power-in, thermal-out, uptime, variance, buffer behavior, and safety event rates.",
-        now:"Performance is logged: metered input/output, stability variance, ERI events, shutdown counts, and SVF agreement outcomes.",
-        post:"Performance becomes underwriting-grade: verified efficiency bands, incident rates, maintenance intervals, and phase-gated scaling."
-      },
-      informal:{
-        origin:"Performance = measured industrial output, not hype.",
-        now:"Measure input/output, stability, and safety events.",
-        post:"Verified bands + audits → scalable performance."
-      }
-    },
-    governance:{
-      formal:{
-        origin:"Governance binds risk to permissions: ERI escalation bands, CC containment classes, CARES response tiers, and explicit stop rules.",
-        now:"Governance is non-retroactive: violations trigger review; certificates require receipts; claims cannot drift after publication.",
-        post:"Governance scales through standards and licensing: risk-tiered certification, independent audit pathways, and constrained deployment boundaries."
-      },
-      informal:{
-        origin:"Risk tiers decide permissions.",
-        now:"No retroactive edits. Logs and certs matter.",
-        post:"Standards + licensing + audits scale governance."
-      }
-    }
-  };
-
-  const BUB = {
-    industrial:{
-      name:{en:"Industrial", zh:"工业"},
-      bias:"Industrial thermal substitution posture; upstream-only high-energy regime; buffered delivery via SLA; phased deployment IDP."
-    },
-    scientific:{
-      name:{en:"Scientific", zh:"科学"},
-      bias:"Definitions, falsifiers, and measurement receipts; requirements-only for fusion readiness; no achievement implied."
-    },
-    agricultural:{
-      name:{en:"Agricultural", zh:"农业"},
-      bias:"Thermal reuse via exchanger-only boundaries; soil/livestock exclusion zones; seasonal buffering via SLA; revenue stacking without risk migration."
-    },
-    financial:{
-      name:{en:"Financial", zh:"金融"},
-      bias:"Capex discipline, phase-gated scaling (IDP), underwriting-grade CC tiers, incident-rate accountability, and auditability."
-    },
-    human:{
-      name:{en:"Human", zh:"人因"},
-      bias:"Safety-first boundaries, no consumer high-energy exposure, clarity of claims, and non-coercive adoption through incumbents."
-    },
-    adversarial:{
-      name:{en:"Adversarial", zh:"对抗"},
-      bias:"Disproof triggers, artifact suppression, hostile audit posture, and hard stops before drift or rupture."
-    },
-    regulatory:{
-      name:{en:"Regulatory", zh:"监管"},
-      bias:"Standards-first, licensing-before-scale, documentation and certificates, and compliance-ready separation of regimes."
-    }
-  };
-
-  function bubbleBias(){
-    return (BUB[activeBub] && BUB[activeBub].bias) ? BUB[activeBub].bias : "";
-  }
-
-  let activeFace = null;     // north/east/south/west
-  let activeGroup = "foundation"; // foundation/architecture/performance/governance
-  let activePanel = "what";  // what/why/scope/output
-
   function setActiveDiamond(face){
     document.getElementById("dNorth").classList.toggle("active", face==="north");
     document.getElementById("dEast").classList.toggle("active", face==="east");
@@ -688,89 +510,267 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     document.getElementById("dWest").classList.toggle("active", face==="west");
   }
 
-  function setActiveTabs(){
-    tabs.forEach(t => t.classList.toggle("active", t.dataset.group===activeGroup));
-    panels.forEach(p => p.classList.toggle("active", p.dataset.panel===activePanel));
-    bubs.forEach(b => b.classList.toggle("active", b.dataset.bub===activeBub));
+  function setActiveUI(){
+    jewels.forEach(j=>j.classList.toggle("active", j.dataset.j===activeJ));
+    bubs.forEach(b=>b.classList.toggle("active", b.dataset.b===activeB));
   }
 
-  function headline(face, group, panel){
-    const FACE = (face==="north")?ui.face.north.lab:(face==="east")?ui.face.east.lab:(face==="south")?ui.face.south.lab:ui.face.west.lab;
-    return `${PANEL_LABEL[panel]} · ${GROUP_LABEL[group]} · ${FACE} · ${BUB[activeBub] ? BUB[activeBub].name[lang==="zh"?"zh":"en"] : "Industrial"}`;
-  }
+  const JLABEL = {foundation:"FOUNDATION", architecture:"ARCHITECTURE", performance:"PERFORMANCE", governance:"GOVERNANCE"};
+  const BLABEL = {
+    industrial:"Industrial", scientific:"Scientific", agricultural:"Agricultural", financial:"Financial",
+    human:"Human", adversarial:"Adversarial", regulatory:"Regulatory"
+  };
 
-  function paragraph(face, group, panel, lensTime, lensStyle){
-    const S = (lensStyle==="formal")?"formal":"informal";
-    const L = (lensTime==="origin")?"origin":(lensTime==="now")?"now":"post";
-    const groupLine = GROUP[group][S][L];
-    if(panel==="what") return groupLine;
-    if(panel==="why") return (S==="formal")
-      ? "Why states motive without claim drift: industrial-first value, buffered adoption, and strict evidence separation for R&D."
-      : "Why = reason, without hype.";
-    if(panel==="scope") return (S==="formal")
-      ? "Scope defines what is allowed, what is gated, and what is explicitly not claimed."
-      : "Scope = boundary.";
-    return (S==="formal")
-      ? "Output lists deployable artifacts and receipts—not promises."
-      : "Output = deliverables.";
-  }
-
-  function panelBullets(face, group, panel, lensTime, lensStyle){
-    const L = (lensTime==="origin")?"concept":(lensTime==="now")?"live":"roadmap";
-    const S = (lensStyle==="formal")?"formal":"informal";
-    const baseLine = BASE[L][S][face];
-    const groupLine = (lensTime==="origin")?GROUP[group][S].origin:(lensTime==="now")?GROUP[group][S].now:GROUP[group][S].post;
-    const bias = bubbleBias();
-
-    if(panel==="what"){
-      return [
-        baseLine,
-        groupLine,
-        bias || "Industrial posture is default; bubble selection changes emphasis, not claims.",
-        "Keys preserved: HIP, CC tiers, ERI, SLA, CARES, SVF, IDP; DOTGRID binding: DOTGRID-ENERGY-HYBRID-v1."
-      ];
+  // Face framing (kept neutral; no fusion gain claims)
+  const FACE_BASE = {
+    north:{
+      concept:"Industrial positioning and constraint truth: definitions, boundaries, and admissibility.",
+      now:"Industrial posture under current constraints: what is stated is bounded and auditable.",
+      post:"Roadmap posture under constraint: scale only by tightening discipline, not by expanding claims."
+    },
+    east:{
+      concept:"R&D gates and architecture posture: design changes are permitted only under declared constraints.",
+      now:"Active R&D posture: iterate loss closure, stability, and containment without claim inflation.",
+      post:"Roadmap for R&D: gated receipts determine advancement; failure reverts to Industrial (C)."
+    },
+    south:{
+      concept:"Deployment phase posture: industrial delivery is structured by IDP and SLA buffering.",
+      now:"Current delivery posture: industrial heat substitution plus buffering and safety boundaries.",
+      post:"Scale posture: modular replication with underwriting-grade discipline and auditable incidents."
+    },
+    west:{
+      concept:"Execution posture: supervision, escalation, response, and audit artifacts control the program.",
+      now:"Operational posture: ERI escalates; CARES responds; SVF validates; logs persist.",
+      post:"Governance posture: standards and licensing precede scale; non-retroactive discipline persists."
     }
-    if(panel==="why"){
+  };
+
+  // Jewel paragraph (selected domain determines paragraph), plus 7 bullets (one per domain)
+  function paragraph(face, jewel, domain, t, s){
+    const tone = (s==="formal") ? "formal" : "informal";
+    const timeKey = (t==="origin") ? "concept" : (t==="now") ? "now" : "post";
+
+    const faceLine = FACE_BASE[face][timeKey];
+
+    // Jewel core sentence (constant)
+    const jewelCore = {
+      foundation:"Constraints and claim discipline define what is admissible before scaling.",
+      architecture:"Modules, placement, and buffering define how the system is built and bounded.",
+      performance:"Measured inputs/outputs and stability bands define what is real at scale.",
+      governance:"Risk, certification, and non-retroactive enforcement define what may propagate."
+    }[jewel];
+
+    // Domain-specific expansion sentence (bounded; Industrial (C) only)
+    const dom = {
+      industrial:{
+        concept:"Industrial (C) posture: upstream-only high-energy regime; heat substitution and buffering; no fusion gain claim.",
+        now:"Industrial deployment: SLA buffering + IDP staging + CC tiers; metered inputs/outputs; bounded failure envelope.",
+        post:"Industrial scaling: replicate PFMs under certification and audited incident rates; tighten thresholds as scale increases."
+      },
+      scientific:{
+        concept:"Scientific framing: definitions, falsifiers, and measurement receipts; fusion discussion is requirements-only and gated.",
+        now:"Scientific posture: publish what is measured and what is not; no achievement implied; disproof conditions remain explicit.",
+        post:"Scientific roadmap: independent audit pathways and replication discipline; no elevation without receipts."
+      },
+      agricultural:{
+        concept:"Agricultural integration: exchanger-only thermal reuse; soil/livestock boundaries; no regime contact with biology.",
+        now:"Agricultural posture: co-location by setbacks and midstream exchange; seasonal variability mitigated by buffering.",
+        post:"Agricultural scaling: standardized land geometry, thermal reuse contracts, and compliance artifacts."
+      },
+      financial:{
+        concept:"Financial framing: capex discipline, staged deployment, and underwriting logic tied to CC tiers and incident risk.",
+        now:"Financial posture: measured performance bands, maintenance intervals, and risk-tiered certification prerequisites.",
+        post:"Financial scaling: cluster replication model, insurance compatibility, and audit-first reporting."
+      },
+      human:{
+        concept:"Human framing: clarity of claims, safe boundaries, and adoption through incumbent-compatible interfaces.",
+        now:"Human posture: no consumer high-energy exposure; communication remains bounded; failure modes remain declared.",
+        post:"Human scaling: training, governance, and safety interfaces that reduce misuse without blocking exploration."
+      },
+      adversarial:{
+        concept:"Adversarial framing: hostile audit posture, artifact suppression, and stop conditions before escalation.",
+        now:"Adversarial posture: multi-signal disagreement kills runs; thresholds do not drift; rollback triggers exist.",
+        post:"Adversarial scaling: continuous audit harnesses and reproducible event streams."
+      },
+      regulatory:{
+        concept:"Regulatory framing: standards-first; licensing-before-scale; separation requirement enforced at endpoints.",
+        now:"Regulatory posture: documentation and certificates precede expansion; no mixed claims permitted.",
+        post:"Regulatory scaling: tiered permissions by CC classification and independent validation."
+      }
+    }[domain][timeKey];
+
+    if(tone==="informal"){
       return [
-        "Reason: decarbonize industrial heat first (highest immediate leverage) while keeping deployment safe and auditable.",
-        "Reason: buffering (SLA) prevents shock and stabilizes delivery without migrating risk to endpoints.",
-        "Reason: modular PFMs allow replication without redefining safety or evidence requirements.",
-        "Reason: gated readiness prevents claim drift and protects long-term credibility."
-      ];
-    }
-    if(panel==="scope"){
-      return [
-        "Scope boundary: no net-positive fusion claim; no facility net-electric claim; no grid-fusion implication.",
-        "Scope boundary: upstream high-energy regimes only; midstream exchange/buffering; downstream passive endpoints only.",
-        "Scope boundary: agriculture uses exchanger-only thermal reuse; soil/livestock never interface with plasma regime.",
-        "Scope boundary: fusion page is requirements-only; failure at any gate reverts positioning to Industrial (C)."
-      ];
+        faceLine,
+        jewelCore,
+        dom
+      ].join(" ");
     }
     return [
-      "Output: IDP phases (pilot→cluster→adjacency→replication) with containment boundaries and audit artifacts.",
-      "Output: SVF templates, CARES response protocol, ERI escalation logic, and certificate-ledger discipline.",
-      "Output: underwriting-grade CC tier pathway (future) based on measured incidents and verified stability bands.",
-      "Output: fusion-readiness doctrine page (requirements + disproof conditions; no achievement claimed)."
+      faceLine,
+      jewelCore,
+      dom
+    ].join(" ");
+  }
+
+  function bullets(face, jewel, t){
+    // Always 7 bullets (one per domain) — thicker “paper”
+    const timeKey = (t==="origin") ? "concept" : (t==="now") ? "now" : "post";
+
+    const mk = (d, text)=>`${BLABEL[d]}: ${text}`;
+    const base = {
+      foundation:{
+        concept:{
+          industrial:"Industrial (C) locked; no net fusion claim; constraints first.",
+          scientific:"Definitions + falsifiers; gated readiness only.",
+          agricultural:"Exchanger-only; soil/livestock boundaries.",
+          financial:"Capex discipline; phase gating before scale.",
+          human:"Clear boundaries; non-coercive adoption.",
+          adversarial:"Artifact suppression; hard stops.",
+          regulatory:"Standards + licensing before distribution."
+        },
+        now:{
+          industrial:"Metered inputs/outputs; CC tiers; SLA buffering; IDP staging.",
+          scientific:"Measured vs unmeasured declared; no implied gains.",
+          agricultural:"Setbacks enforced; midstream reuse only.",
+          financial:"Verified bands + incident logs; underwriting posture.",
+          human:"Safety-first language; endpoint tolerance enforced.",
+          adversarial:"Disproof triggers active; rollback ready.",
+          regulatory:"Certificates and docs precede expansion."
+        },
+        post:{
+          industrial:"Replicate PFMs under certs; tighten thresholds with scale.",
+          scientific:"Independent audit pathways; replication-first.",
+          agricultural:"Standardized co-location templates.",
+          financial:"Insurance-compatible tiering; audit-led reporting.",
+          human:"Training and interfaces reduce misuse.",
+          adversarial:"Continuous adversarial harness and receipts.",
+          regulatory:"Tiered permissions; no claim drift."
+        }
+      },
+      architecture:{
+        concept:{
+          industrial:"HIP + CC + SLA + CARES + SVF as modular contract.",
+          scientific:"Measurement-first architecture; no recipe disclosure.",
+          agricultural:"Thermal exchange layer isolates biology.",
+          financial:"Modular replication model supports underwriting.",
+          human:"Interfaces remain simple; high-energy stays upstream.",
+          adversarial:"Isolation boundaries and termination precedence.",
+          regulatory:"Architecture aligns to licensing tiers."
+        },
+        now:{
+          industrial:"Upstream regime + midstream buffering + downstream passive endpoints.",
+          scientific:"Sensor taxonomy and agreement rules published.",
+          agricultural:"Exchange-only thermal reuse loops.",
+          financial:"Capex modules map to phases.",
+          human:"Safety UX and clear claim discipline.",
+          adversarial:"Kill conditions and logging integrity.",
+          regulatory:"Documentation-driven deployment readiness."
+        },
+        post:{
+          industrial:"Cluster replication; maintenance and incident discipline baked in.",
+          scientific:"Audit hooks and replayable streams.",
+          agricultural:"Land geometry and seasonal buffering templates.",
+          financial:"Capital segmentation and risk-tiered pricing.",
+          human:"Support and training scaffolds.",
+          adversarial:"Hardening against spoofing/artifacts.",
+          regulatory:"Compliance artifacts standardized."
+        }
+      },
+      performance:{
+        concept:{
+          industrial:"Performance = measurable substitution, not hype.",
+          scientific:"Signal-to-noise discipline and falsifiers.",
+          agricultural:"Seasonality handled by buffering, not claims.",
+          financial:"Performance bands tie to cost and insurance.",
+          human:"Performance includes safety outcomes.",
+          adversarial:"Performance includes robustness under stress.",
+          regulatory:"Performance includes compliance stability."
+        },
+        now:{
+          industrial:"Power-in / thermal-out / uptime / variance logged.",
+          scientific:"Noise floor declared; disagreement kills runs.",
+          agricultural:"Thermal reuse output measured at exchanger.",
+          financial:"Maintenance interval + incident rate tracked.",
+          human:"User-safe boundaries preserved.",
+          adversarial:"Stress conditions logged; no smoothing.",
+          regulatory:"Evidence packaged for audits."
+        },
+        post:{
+          industrial:"Underwriting-grade performance certificates.",
+          scientific:"Independent replication drives elevation.",
+          agricultural:"Co-location yields measured delta without drift.",
+          financial:"Bankable reporting structure.",
+          human:"Training reduces failure modes.",
+          adversarial:"Robust dominance evidence increases.",
+          regulatory:"Tiered certification expands legally."
+        }
+      },
+      governance:{
+        concept:{
+          industrial:"Industrial posture protected by claim firewall.",
+          scientific:"Gated pathway prevents premature elevation.",
+          agricultural:"Safety boundaries are non-negotiable.",
+          financial:"Risk segmentation prevents sprawl.",
+          human:"Non-coercive governance; exit remains available.",
+          adversarial:"Hard fail triggers; no gray zone.",
+          regulatory:"Licensing precedes scale."
+        },
+        now:{
+          industrial:"CARES + ERI enforce escalation response; logs persist.",
+          scientific:"Disproof conditions remain explicit; no backfilled claims.",
+          agricultural:"Setback and exclusion zones enforced.",
+          financial:"Spend follows receipts; no speculation sleeve drift.",
+          human:"Communication bounded; safety-first UX.",
+          adversarial:"Audit posture on by default.",
+          regulatory:"Docs, certs, and standards precede deployment."
+        },
+        post:{
+          industrial:"Insurable posture via CC certification and incident history.",
+          scientific:"Third-party validation becomes default.",
+          agricultural:"Standard templates reduce drift.",
+          financial:"Capital segmentation and controls persist.",
+          human:"Governance keeps adoption safe at scale.",
+          adversarial:"Continuous audit harness prevents inflation.",
+          regulatory:"Compliance pathways mature under evidence."
+        }
+      }
+    };
+
+    const pack = base[jewel][timeKey];
+    return [
+      mk("industrial", pack.industrial),
+      mk("scientific", pack.scientific),
+      mk("agricultural", pack.agricultural),
+      mk("financial", pack.financial),
+      mk("human", pack.human),
+      mk("adversarial", pack.adversarial),
+      mk("regulatory", pack.regulatory)
     ];
+  }
+
+  function headline(face, jewel, domain){
+    const FACE = (face==="north")?ui.face.north.lab:(face==="east")?ui.face.east.lab:(face==="south")?ui.face.south.lab:ui.face.west.lab;
+    return `${JLABEL[jewel]} · ${FACE} · ${BLABEL[domain]}`;
   }
 
   function render(){
     persist();
     setLinks();
     setLensLabels();
-    setActiveTabs();
+    setActiveUI();
     if(!activeFace) return;
 
     mTitle.textContent = (lang==="zh")
       ? ("详情 · " + (activeFace==="north"?ui.face.north.lab:activeFace==="east"?ui.face.east.lab:activeFace==="south"?ui.face.south.lab:ui.face.west.lab))
       : ("DETAIL · " + (activeFace==="north"?ui.face.north.lab:activeFace==="east"?ui.face.east.lab:activeFace==="south"?ui.face.south.lab:ui.face.west.lab));
 
-    hMain.textContent = headline(activeFace, activeGroup, activePanel);
-    pMain.textContent = paragraph(activeFace, activeGroup, activePanel, time, style);
+    hMain.textContent = headline(activeFace, activeJ, activeB);
+    pMain.textContent = paragraph(activeFace, activeJ, activeB, time, style);
 
     uMain.innerHTML = "";
-    const bullets = panelBullets(activeFace, activeGroup, activePanel, time, style);
-    bullets.forEach(x=>{
+    const list = bullets(activeFace, activeJ, time);
+    list.forEach(x=>{
       const li=document.createElement("li");
       li.textContent = x;
       uMain.appendChild(li);
@@ -783,9 +783,8 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     bd.classList.add("show");
     modal.classList.add("show");
     // Defaults: thick + industrial
-    activeGroup = "foundation";
-    activePanel = "what";
-    activeBub = "industrial";
+    activeJ = "foundation";
+    activeB = "industrial";
     render();
   }
 
@@ -809,23 +808,16 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   mClose.addEventListener("click", closeModal);
   document.getElementById("mReturn").addEventListener("click", closeModal);
 
-  // Group tabs
-  tabs.forEach(t=>{
-    t.addEventListener("click", ()=>{ activeGroup=t.dataset.group; render(); });
-    t.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); activeGroup=t.dataset.group; render(); } });
+  // Jewels
+  jewels.forEach(j=>{
+    j.addEventListener("click", ()=>{ activeJ=j.dataset.j; render(); });
+    j.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); activeJ=j.dataset.j; render(); } });
   });
 
-  // Bubble assets
+  // Bubbles
   bubs.forEach(b=>{
-    b.addEventListener("click", ()=>{ activeBub=b.dataset.bub; render(); });
-    b.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); activeBub=b.dataset.bub; render(); } });
-  });
-
-  // Panels
-  const panelEls=[...document.querySelectorAll(".pd")];
-  panelEls.forEach(p=>{
-    p.addEventListener("click", ()=>{ activePanel=p.dataset.panel; render(); });
-    p.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); activePanel=p.dataset.panel; render(); } });
+    b.addEventListener("click", ()=>{ activeB=b.dataset.b; render(); });
+    b.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); activeB=b.dataset.b; render(); } });
   });
 
   // Keyboard for diamonds

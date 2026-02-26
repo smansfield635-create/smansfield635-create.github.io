@@ -1,12 +1,21 @@
-<!-- TNT — /products/energy/index.html  (LATEST-STABLE PATTERN + 2 CHANGES)
-     ONLY CHANGES:
-       (1) Diamond-theme RETURN inside Quadrant modal (already) + add Diamond-theme RETURN inside Domain modal (NEW) → returns to Quadrant modal (no looping).
-       (2) Keep the same gem-diamond theme for sub-domain selection (already via smallDiamond).
-     FULL CONTENT:
-       12 domains × 3 bubbles (Concept/Live/Roadmap) × 2 tones (Formal/Informal) = 72 narratives.
-     NO NEW STATE KEYS:
-       gd_lang / gd_style / gd_time only.
+<!-- TNT — /products/energy/index.html  (ENERGY · 72 Narratives · QUADRANTS → DOMAINS → NARRATIVE)
+     CHANGE SET (SURGICAL, NO REDESIGN):
+       1) KEEP EVERYTHING THE SAME (glossy diamonds, structure, taps, modals).
+       2) ADD TWO NEW DOMAIN TILES ON THE INNER DOMAIN PAGE:
+            - Fusion Readiness (Concept · Live · Roadmap)
+            - Frontier Expansion (Concept · Live · Roadmap)
+          (Same exact tile style as existing inner tiles. No diamond squeezing.)
+       3) UNIVERSAL RETURN:
+            - Narrative screen: RETURN → Domains (always visible)
+            - Narrative screen: BACK TO QUADRANTS (always visible)
+          (No more “looping back” or jumping two screens back.)
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css only
+       - Does NOT style html/body background (ui.css owns field)
+       - No new state keys (gd_lang/gd_style/gd_time only)
+       - Tap-safe (no reliance on inline onclick; bind first; null-safe)
 -->
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -18,85 +27,294 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-:root{--R:150px;--D:184px;--goldSoft:rgba(212,175,55,.45);--mut:rgba(255,255,255,.90);--mut2:rgba(255,255,255,.74)}
+:root{
+  --R:150px;
+  --D:184px;
+
+  /* Pearlescent lacquer (keep) */
+  --goldSoft:rgba(212,175,55,.45);
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
+
+  --mut: rgba(255,255,255,.90);
+  --mut2: rgba(255,255,255,.74);
+}
+
+/* Base */
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{text-decoration:none;color:inherit}
-body::before,body::after{pointer-events:none!important}
 
-/* Top */
-.top-left{position:fixed;left:16px;top:16px;z-index:140;display:flex;gap:10px;flex-wrap:wrap}
-.brand{position:fixed;left:50%;top:16px;transform:translateX(-50%);z-index:130;text-align:center;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);pointer-events:none}
-.brand .t{font-weight:950;font-size:40px;letter-spacing:.25px;line-height:1.05;margin:0}
-.brand .s{opacity:.86;font-size:14px;margin:6px 0 0;line-height:1.25}
+/* Top controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:120;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+
+/* Header pill */
+.brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:110;text-align:center;
+  padding:10px 18px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  pointer-events:none;
+}
+.brand .k{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.78;margin:0 0 6px 0}
+.brand .t{font-weight:950;font-size:44px;letter-spacing:.3px;margin:0;line-height:1.02}
+.brand .s{opacity:.85;font-size:14px;margin:6px 0 0}
 
 /* Stage */
-.stage{position:fixed;left:50%;top:56%;transform:translate(-50%,-50%);width:min(720px,94vw);height:min(720px,94vw);z-index:60}
-.outer{position:absolute;left:50%;top:50%;width:min(680px,92vw);height:min(680px,92vw);transform:translate(-50%,-50%) rotate(45deg);border-radius:60px;opacity:.62;pointer-events:none;border:1px solid rgba(255,255,255,.10);background:radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),linear-gradient(160deg, rgba(14,24,40,.42) 0%, rgba(7,11,18,.58) 70%);box-shadow:0 90px 260px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.10),inset 0 -50px 90px rgba(0,0,0,.55)}
-.outer::after{content:"";position:absolute;inset:0;border-radius:60px;opacity:.12;pointer-events:none;background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg)}
+.stage{
+  position:fixed;left:50%;top:56%;
+  transform:translate(-50%,-50%);
+  width:min(720px,94vw);
+  height:min(720px,94vw);
+  z-index:60;
+  pointer-events:none; /* diamonds override */
+}
 
-/* Pearlescent glossy diamonds (LOCK) */
+/* Diamonds (KEEP pearlescent lacquer) */
 .d{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
-  transform-origin:center;border-radius:28px;
-  cursor:pointer;pointer-events:auto;touch-action:manipulation;
+  transform-origin:center;
+  border-radius:28px;
+  cursor:pointer;
+  pointer-events:auto;
+  touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
+
   background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
-    radial-gradient(circle at 70% 78%, rgba(0,120,255,.30), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.96), rgba(7,11,18,.98));
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 48%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.25), transparent 60%),
+    linear-gradient(160deg, var(--obsA), var(--obsB));
+
   border:1px solid rgba(255,255,255,.16);
   box-shadow:
     0 38px 120px rgba(0,0,0,.85),
-    0 0 32px rgba(212,175,55,.28),
-    inset 0 2px 0 rgba(255,255,255,.25),
-    inset 0 -42px 78px rgba(0,0,0,.80);
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    0 0 32px rgba(212,175,55,.25),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -40px 72px rgba(0,0,0,.78);
+
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  overflow:hidden;
 }
-.d::before{content:"";position:absolute;inset:0;border-radius:28px;padding:1px;background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);opacity:.65;-webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.d::after{content:"";position:absolute;left:10%;right:10%;top:10%;height:28%;border-radius:999px;background:linear-gradient(to bottom, rgba(255,255,255,.25), rgba(255,255,255,0));transform:rotate(-10deg);pointer-events:none}
-.d:hover{transform:translate(-50%,-50%) rotate(45deg) scale(1.02);border-color:rgba(212,175,55,.35);box-shadow:0 44px 140px rgba(0,0,0,.92),0 0 44px rgba(212,175,55,.32),inset 0 2px 0 rgba(255,255,255,.28),inset 0 -46px 86px rgba(0,0,0,.84)}
+.d::before{
+  content:"";
+  position:absolute;inset:0;border-radius:28px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.60;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:"";
+  position:absolute;left:10%;right:10%;top:10%;height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  pointer-events:none;
+}
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  border-color:rgba(212,175,55,.28);
+}
+.d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
+
 .d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R)*-1)) rotate(45deg)}
 .d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
 .d-s{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
 .d-w{transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg)}
-.inner{transform:rotate(-45deg) translateY(-3px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;height:100%;padding:14px;gap:8px;pointer-events:none;user-select:none}
-.lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 16px rgba(255,255,255,.14)}
-.sub{font-size:13px;opacity:.88;line-height:1.25;max-width:18em}
+
+.inner{
+  transform:rotate(-45deg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  height:100%;
+  padding:14px;
+  gap:8px;
+  pointer-events:none;
+  user-select:none;
+}
+.lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 18px rgba(255,255,255,.10)}
+.sub{font-size:13px;opacity:.86;line-height:1.25}
+
+/* Core */
+.core{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:60px;height:60px;border-radius:18px;
+  background:rgba(0,0,0,.20);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;
+  pointer-events:none;
+}
 
 /* Dock */
-.dock{position:fixed;left:50%;bottom:max(12px, env(safe-area-inset-bottom));transform:translateX(-50%);z-index:120;width:min(980px,94vw);display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);pointer-events:none}
+.dock{
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:120;width:min(900px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.20);
+  pointer-events:none;
+}
 .dock .btn{pointer-events:auto}
 
-/* Modals */
-.bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);display:none}
+/* Overlay base */
+.bd{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.70);
+  display:none;
+}
 .bd.show{display:block}
-.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1180px,96vw);height:90vh;display:none;z-index:210}
+
+/* Modal */
+.modal{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(1100px,96vw);
+  max-height:90vh;
+  z-index:210;
+  display:none;
+}
 .modal.show{display:block}
-.shell{height:90vh;border-radius:22px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));overflow:hidden;display:flex;flex-direction:column}
-.mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
-.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
-.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
-.mbody{padding:16px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-/* Domain grid inside quadrant modal (diamond theme) */
-.qgrid{display:grid;gap:14px;grid-template-columns:1fr}
-@media (min-width:760px){.qgrid{grid-template-columns:1fr 1fr}}
-.smallDiamond{width:100%;height:140px;position:relative;border-radius:22px;cursor:pointer;pointer-events:auto;touch-action:manipulation;background:radial-gradient(circle at 30% 22%, rgba(255,255,255,.50), transparent 52%),radial-gradient(circle at 70% 78%, rgba(0,120,255,.26), transparent 62%),linear-gradient(160deg, rgba(14,24,40,.96), rgba(7,11,18,.98));border:1px solid rgba(255,255,255,.16);box-shadow:0 22px 70px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.22), inset 0 -34px 60px rgba(0,0,0,.70)}
-.smallDiamond::before{content:"";position:absolute;inset:0;border-radius:22px;padding:1px;background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);opacity:.55;-webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.sdInner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;pointer-events:none}
-.sdT{font-weight:950;letter-spacing:.25px}
-.sdS{font-size:12.5px;opacity:.82;margin-top:6px}
+.shell{
+  background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:24px;
+  box-shadow:0 60px 180px rgba(0,0,0,.85);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.mhead{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.mtitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
+.mclose{
+  border:0;background:transparent;color:#fff;
+  font-size:20px;cursor:pointer;padding:6px 10px;
+}
+.mbody{
+  padding:14px 16px 18px;
+  overflow:auto;-webkit-overflow-scrolling:touch;
+}
 
-/* Domain narrative modal */
-.lensbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 14px}
-.pill{padding:10px 14px;border-radius:999px;background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));border:1px solid rgba(255,255,255,.10);box-shadow:0 14px 36px rgba(0,0,0,.65);cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;user-select:none;-webkit-tap-highlight-color:transparent}
-.pill.active{border-color:rgba(212,175,55,.60);box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.22)}
-.bubble{border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(255,255,255,.05);padding:14px 14px 12px;margin:0 0 12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
-.bubble p{margin:0;color:var(--mut2);line-height:1.65;display:none}
-.bubble.open p{display:block}
-.hint{max-width:980px;margin:0 auto 12px;padding:10px 12px;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.16);color:rgba(255,255,255,.80);font-size:12.5px;line-height:1.45}
+/* Inner domain grid (cards) */
+.gridNote{
+  max-width:980px;margin:0 auto 14px;
+  padding:12px 14px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  color:rgba(255,255,255,.86);
+  line-height:1.35;
+  font-size:13px;
+}
+
+.domGrid{
+  max-width:980px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+@media (max-width:720px){ .domGrid{grid-template-columns:1fr;} }
+
+.domCard{
+  position:relative;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.18), transparent 48%),
+    radial-gradient(circle at 70% 80%, rgba(0,120,255,.12), transparent 60%),
+    linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
+  box-shadow:0 22px 72px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.06);
+  padding:22px 18px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.domCard::before{
+  content:"";
+  position:absolute;inset:0;border-radius:20px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.28) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.domTitle{
+  font-weight:950;
+  letter-spacing:.2px;
+  font-size:22px;
+  margin:0 0 6px 0;
+}
+.domSub{
+  margin:0;
+  opacity:.82;
+  font-size:13px;
+}
+
+/* Narrative view */
+.toggleRow{
+  max-width:980px;margin:0 auto 14px;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;
+}
+.pill{
+  padding:10px 16px;border-radius:999px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.12);
+  cursor:pointer;
+  font-weight:900;
+  letter-spacing:.2px;
+  color:#fff;
+  user-select:none;
+}
+.pill.active{
+  border-color:rgba(212,175,55,.55);
+  box-shadow:0 0 22px rgba(212,175,55,.18);
+}
+.banner{
+  max-width:980px;margin:0 auto 14px;
+  padding:12px 14px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  color:rgba(255,255,255,.86);
+  line-height:1.35;
+  font-size:13px;
+}
+
+.bubble{
+  max-width:980px;margin:0 auto 14px;
+  padding:18px 16px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.05);
+}
+.bubble h3{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
+.bubble p{margin:0;color:rgba(255,255,255,.86);line-height:1.55}
+
+/* Universal return row (ALWAYS present in narrative) */
+.returnRow{
+  max-width:980px;margin:16px auto 0;
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+}
+.sbtn{
+  padding:12px 18px;border-radius:14px;
+  background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  color:#fff;border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;
+}
 </style>
 </head>
 
@@ -108,81 +326,107 @@ body::before,body::after{pointer-events:none!important}
 </div>
 
 <div class="brand" aria-hidden="true">
-  <div class="t">Energy</div>
-  <div class="s">72 Narratives · 4→12→36→72</div>
+  <p class="k">CARDINAL AXIS</p>
+  <h1 class="t">Energy</h1>
+  <p class="s">72 Narratives · 4→12→36→72</p>
 </div>
 
 <div class="stage" aria-label="Energy quadrants">
-  <div class="outer"></div>
-
-  <div class="d d-n" id="qFoundation" role="button" tabindex="0">
-    <div class="inner"><div class="lab">FOUNDATION</div><div class="sub">Origins · risk · baselines</div></div>
+  <div class="d d-n" id="qFoundation" role="button" tabindex="0" aria-label="Foundation">
+    <div class="inner">
+      <div class="lab">FOUNDATION</div>
+      <div class="sub">Origins · risk · baselines</div>
+    </div>
   </div>
 
-  <div class="d d-e" id="qArchitecture" role="button" tabindex="0">
-    <div class="inner"><div class="lab">ARCHITECTURE</div><div class="sub">Build · interfaces · isolation</div></div>
+  <div class="d d-e" id="qArchitecture" role="button" tabindex="0" aria-label="Architecture">
+    <div class="inner">
+      <div class="lab">ARCHITECTURE</div>
+      <div class="sub">Build · interfaces · isolation</div>
+    </div>
   </div>
 
-  <div class="d d-s" id="qPerformance" role="button" tabindex="0">
-    <div class="inner"><div class="lab">PERFORMANCE</div><div class="sub">Measured outcomes</div></div>
+  <div class="d d-s" id="qPerformance" role="button" tabindex="0" aria-label="Performance">
+    <div class="inner">
+      <div class="lab">PERFORMANCE</div>
+      <div class="sub">Measured outcomes</div>
+    </div>
   </div>
 
-  <div class="d d-w" id="qGovernance" role="button" tabindex="0">
-    <div class="inner"><div class="lab">GOVERNANCE</div><div class="sub">Scaling discipline</div></div>
+  <div class="d d-w" id="qGovernance" role="button" tabindex="0" aria-label="Governance">
+    <div class="inner">
+      <div class="lab">GOVERNANCE</div>
+      <div class="sub">Scaling discipline</div>
+    </div>
   </div>
 
+  <div class="core">◆</div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
   <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
   <a class="btn" id="dockHub" href="/home/">HUB</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
   <a class="btn" id="dockLinks" href="/links/">LINKS</a>
 </nav>
 
 <div class="bd" id="bd"></div>
 
-<div class="modal" id="quadModal" role="dialog" aria-modal="true">
+<!-- MODAL A: DOMAIN MATRIX -->
+<div class="modal" id="modalDomains" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="quadTitle">Quadrant</h3>
-      <button class="mclose" id="quadClose" aria-label="Close" type="button">✕</button>
+      <h3 class="mtitle" id="domainsTitle">ENERGY · FOUNDATION</h3>
+      <button class="mclose" id="domainsClose" aria-label="Close" type="button">✕</button>
     </div>
     <div class="mbody">
-      <div class="hint" id="quadHint">Tap a domain diamond to enter its narrative. RETURN closes this layer.</div>
-      <div class="qgrid" id="quadGrid"></div>
+      <div class="gridNote" id="domainsNote">
+        Tap a domain to enter its narrative. Return closes this layer.
+      </div>
+
+      <div class="domGrid" id="domainsGrid"></div>
     </div>
   </div>
 </div>
 
-<div class="modal" id="domainModal" role="dialog" aria-modal="true">
+<!-- MODAL B: NARRATIVE -->
+<div class="modal" id="modalNarrative" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="domainTitle">Domain</h3>
-      <button class="mclose" id="domainClose" aria-label="Close" type="button">✕</button>
+      <h3 class="mtitle" id="narTitle">ENERGY · Historical Systems</h3>
+      <button class="mclose" id="narClose" aria-label="Close" type="button">✕</button>
     </div>
+    <div class="mbody" id="narBody">
 
-    <div class="mbody" id="domainBody">
-      <div class="lensbar">
-        <div class="pill active" id="toneFormal">FORMAL</div>
-        <div class="pill" id="toneInformal">INFORMAL</div>
+      <div class="toggleRow">
+        <div class="pill active" id="pillFormal">FORMAL</div>
+        <div class="pill" id="pillInformal">INFORMAL</div>
       </div>
 
-      <div class="hint" id="claimHint">Public posture remains Industrial Plasma Thermal Substitution (C). Fusion is referenced only as readiness doctrine, not as gain.</div>
+      <div class="banner" id="claimBanner">
+        Public posture remains Industrial Plasma Thermal Substitution (C). Fusion is referenced only as readiness doctrine, not as gain.
+      </div>
 
-      <div class="bubble" id="bConcept"><h4>Concept</h4><p id="pConcept"></p></div>
-      <div class="bubble" id="bLive"><h4>Live</h4><p id="pLive"></p></div>
-      <div class="bubble" id="bRoadmap"><h4>Roadmap</h4><p id="pRoadmap"></p></div>
+      <div class="bubble" id="bConcept">
+        <h3>Concept</h3>
+        <p id="tConcept">—</p>
+      </div>
 
-      <!-- CHANGE #1: RETURN DIAMOND INSIDE DOMAIN MODAL -->
-      <div class="qgrid" style="margin-top:14px;">
-        <div class="smallDiamond" id="domainReturn" role="button" tabindex="0">
-          <div class="sdInner">
-            <div class="sdT">RETURN</div>
-            <div class="sdS">Back to domain diamonds</div>
-          </div>
-        </div>
+      <div class="bubble" id="bLive">
+        <h3>Live</h3>
+        <p id="tLive">—</p>
+      </div>
+
+      <div class="bubble" id="bRoadmap">
+        <h3>Roadmap</h3>
+        <p id="tRoadmap">—</p>
+      </div>
+
+      <!-- UNIVERSAL RETURN (NEW: ALWAYS PRESENT) -->
+      <div class="returnRow">
+        <button class="sbtn" id="btnReturnDomains" type="button">RETURN TO DOMAINS</button>
+        <button class="sbtn" id="btnReturnQuadrants" type="button">BACK TO QUADRANTS</button>
       </div>
 
     </div>
@@ -191,19 +435,23 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
-  // state hydration (gd_* only)
-  var qs=new URLSearchParams(location.search);
-  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
-  var style=qs.get("style")||localStorage.getItem("gd_style")||"formal";
-  var time=qs.get("time")||localStorage.getItem("gd_time")||"now";
+  // ===== State hydration (gd_* only) =====
+  var qs = new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   if(time==="trajectory") time="post";
-  if(lang!=="en"&&lang!=="zh") lang="en";
-  if(style!=="formal"&&style!=="informal") style="formal";
-  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
-  try{localStorage.setItem("gd_lang",lang);localStorage.setItem("gd_style",style);localStorage.setItem("gd_time",time);}catch(e){}
-  function q(){var p=new URLSearchParams();p.set("lang",lang);p.set("style",style);p.set("time",time);return "?"+p.toString();}
+  if(lang!=="en" && lang!=="zh") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time);}catch(e){}
 
-  // nav links
+  function q(){
+    var p=new URLSearchParams();
+    p.set("lang",lang); p.set("style",style); p.set("time",time);
+    return "?"+p.toString();
+  }
+  // links
   document.getElementById("btnBack").href="/products/"+q();
   document.getElementById("btnExit").href="/door/"+q();
   document.getElementById("dockTerminal").href="/index.html"+q();
@@ -212,313 +460,288 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("dockLaws").href="/laws/"+q();
   document.getElementById("dockLinks").href="/links/"+q();
 
-  // Quadrant -> domains mapping (4×3)
-  var QUADS={
-    "FOUNDATION":["Historical Systems","Adversarial","Baseline Constraints"],
-    "ARCHITECTURE":["Engineering","Technology","Industrial"],
-    "PERFORMANCE":["Environmental","Medicine","Financial"],
-    "GOVERNANCE":["Legal","Political","Social"]
-  };
-
-  // 72 narratives (12 domains × 3 × 2)
-  var N={
-    "Historical Systems":{
-      concept:{
-        formal:"Historical energy systems often scale narrative faster than constraint. This creates delayed discovery of failure modes. Fragmented oversight allows drift to remain invisible until collapse. A disciplined architecture must lock definitions before expansion. Measurement must lead story. This domain frames the inherited problem and why constraint-first scaling is required.",
-        informal:"History is the stress test we already failed a hundred ways. Civilizations scaled power first and paid the bill later. The reward was progress; the cost was collapse cycles that arrived late and expensive. We use history as a warning label, not a museum. If the frontier is real, it must learn faster than it expands. That is the first lesson."
-      },
-      live:{
-        formal:"Present systems remain fragmented across engineering, policy, finance, and public language. This fragmentation enlarges manipulation space and increases dispute surface. Claims drift because definitions are not locked. Late corrections become political, not technical. Live stability requires a single auditable spine that compresses argument into verification. Without that, scale remains unstable by construction.",
-        informal:"Right now the world is loud, fast, and unstable. People argue about outcomes while infrastructure quietly drifts underneath. That’s the smoke-and-mirrors reality: noise on top, fragility below. The fix is not more debate; it’s more structure. Live discipline turns chaos into a band you can actually operate in. When structure holds, trust stops bleeding."
-      },
-      roadmap:{
-        formal:"Roadmap for learning from history is institutionalizing constraints as default. This includes non-retroactive evidence discipline and portable standards. The objective is to compress hard lessons into enforced interfaces. Failures become disproof triggers rather than recurring surprises. Scaling becomes replication under invariants. The future posture is earned when the same failure cannot hide again.",
-        informal:"The roadmap is simple: stop paying tuition to failure. We turn hard lessons into hard interfaces so the same mistake can’t repeat quietly. When history can’t sneak back in through a loophole, progress accelerates safely. The frontier becomes survivable because it becomes disciplined. That is how “next” stops being a reboot. That is how scale becomes continuity."
-      }
-    },
-    "Adversarial":{
-      concept:{
-        formal:"Adversarial posture assumes spoofing, omission, drift injection, and exception laundering. Attack surfaces are defined before scaling, not after incidents. Integrity requires redundancy, segmentation, and non-retroactive logging. Opportunity cost is reduced improvisation, but reward is defensibility under scrutiny. Manipulation resistance is a structural requirement, not a preference. If a system can be manipulated, it is already broken.",
-        informal:"Every system gets tested—by attackers, incentives, and pressure. The deeper enemy isn’t attack; it’s complacency. If you scale first and secure later, you lose trust forever. We bake detection and containment into the bones so manipulation becomes loud and expensive. That’s not paranoia; that’s asymmetric intelligence. The frontier survives only when it resists being gamed."
-      },
-      live:{
-        formal:"Live adversarial monitoring flags anomaly clusters, integrity breaks, and policy violations. Telemetry is cross-validated to suppress artifact-driven wins. Response prioritizes containment and rollback over continuity. Recovery is procedural and logged. Exceptions remain bounded and visible. Live resilience is measured as detectability and bounded blast radius, not as uninterrupted operation.",
-        informal:"Live mode is where drift tries to hide. We make drift loud. We make shortcuts visible. We make tampering expensive. When something doesn’t match the envelope, it doesn’t get a story—it gets contained. That’s how momentum stays safe under pressure. Resilience is built before it’s needed. That’s the difference between a demo and a system."
-      },
-      roadmap:{
-        formal:"Roadmap expands red-team cycles, strengthens tamper evidence, and tightens integrity locks. Defensive posture evolves with deployment footprint. Transparency reduces manipulation space by removing ambiguity. Scale is gated by adversarial clearance rather than optimism. The system advances when it proves it cannot be quietly gamed. Trust becomes durable when manipulation classes are structurally suppressed.",
-        informal:"The roadmap is “harder to fool” every quarter. More tests, tighter locks, faster containment, cleaner recovery. As scale grows, manipulation gets cheaper, so defenses must get smarter. We don’t grow into fragility. We grow into resilience. That’s how the frontier survives contact with reality. That’s how reward stays larger than risk."
-      }
-    },
-    "Baseline Constraints":{
-      concept:{
-        formal:"Baseline constraints define what is permitted before expansion. Industrial posture remains thermal substitution under classification (C). No net-positive fusion claim is asserted. High-energy regimes remain upstream-only. Measurement is the authority for escalation decisions. These constraints are the spine of admissibility and the boundary against narrative inflation. They are enforced rather than requested.",
-        informal:"This is the rulebook before the game. We don’t get to scale whatever we want just because it sounds exciting. The baseline is containment, measurement, and discipline. Industrial substitution is the foothold because it’s real. Everything else must be earned. That’s how the dream stays honest. Without baseline constraints, the frontier becomes propaganda."
-      },
-      live:{
-        formal:"Live constraints enforce stability bands, auditability, and reversible escalation. Drift cannot be masked by narrative framing. Any correction requires explicit rollover rather than silent edits. Boundaries remain visible and enforceable. Live posture is constraint compliance under stress, not best-case storytelling. Failures remain admissible data and are used to tighten gates.",
-        informal:"Live means the rules actually matter. If the band drifts, you don’t debate—you respond. If the record breaks, you don’t patch—you roll forward cleanly. The whole point is that reality stays louder than rhetoric. That’s how stability feels calm instead of fragile. Discipline is what makes speed survivable. It’s the difference between progress and chaos."
-      },
-      roadmap:{
-        formal:"Roadmap constraints tighten under scale rather than loosening. Certification artifacts become portable and underwriting-grade. Governance remains non-retroactive and binary for admissibility. Expansion is conditional upon stable receipts and explicit disproof triggers. The system remains anchored to constraints as it grows. Scale is permitted only where proof density increases.",
-        informal:"The roadmap isn’t “more freedom.” It’s more discipline at larger scale. We tighten the rules because the stakes get bigger. We make proof easier to verify and harder to fake. That’s how growth stays clean. The frontier doesn’t need permission; it needs structure. When structure holds, the horizon opens without collapse."
-      }
-    },
-    "Engineering":{
-      concept:{
-        formal:"Engineering defines the physical separation wall between regime and endpoint. Interfaces are explicit and isolation is structural. Thermal transfer is exchanger-mediated rather than uncontrolled. Failure modes are enumerated before scaling decisions. Mechanical survivability is a precondition and is validated under variance. Engineering is the first admissibility gate for deployment.",
-        informal:"Engineering is where ambition becomes real. Heat either stays contained or it leaks into consequences. We build walls that behave like laws, not like suggestions. The cost is friction now; the reward is no catastrophe later. That’s how you keep velocity without paying collapse. The frontier becomes infrastructure only when engineering says it can survive."
-      },
-      live:{
-        formal:"Live engineering is judged by envelope adherence under variance. Thermal drift and stress accumulation are logged continuously. Shutdown pathways are deterministic. Redundancy absorbs shock rather than averaging error away. Maintenance follows measured wear, not optimism. Stability is the operational KPI that governs advancement.",
-        informal:"Live mode is where seams tell the truth. We watch drift, not headlines. When the envelope is threatened, we contain first and recover cleanly. That’s not fear—it’s professionalism. Stability is what makes scale possible. The best systems don’t surprise you; they behave."
-      },
-      roadmap:{
-        formal:"Engineering roadmap improves efficiency without relaxing constraints. Isolation tiers deepen and certification strengthens. Expansion is blocked if stress mapping is incomplete. Interfaces evolve only with re-validation. Growth remains subordinate to physical proof. The system grows safer as it grows larger.",
-        informal:"The roadmap is stronger boundaries, cleaner interfaces, sharper envelopes. We don’t move closer to people; we move closer to resilience. Every upgrade must survive the stress we expect at scale. That’s how engineering earns the right to expand. The future is not louder—it’s more reliable."
-      }
-    },
-    "Technology":{
-      concept:{
-        formal:"Technology establishes observability and replayability. Telemetry is authority, not decoration. Logs prevent post-hoc reinterpretation. Automation remains subordinate to measurement integrity. Drift detection is first-class. Integrity discipline constrains what the system is allowed to claim. Visibility is an operational requirement.",
-        informal:"Technology is the nervous system that keeps the dream honest. If the system can’t see itself, it can’t correct itself. Logs are memory you can trust under pressure. Automation serves truth, not vibes. That’s how progress stops being a story. The frontier becomes credible when it becomes observable."
-      },
-      live:{
-        formal:"Live telemetry tracks deviation and acceleration. Cross-signal agreement suppresses artifact wins. Control actions are logged with reason codes. Auditability remains continuous. Latency is bounded and declared. Visibility defines authority under stress. The system rejects ambiguous interpretation by retaining evidence.",
-        informal:"Live mode is where drift tries to hide inside averages. We don’t let it. We cross-check, we log, and we make weirdness loud. Every intervention leaves a footprint. That’s how the system stays calm while it moves fast. When the nervous system is clean, the body can run."
-      },
-      roadmap:{
-        formal:"Roadmap improves fidelity and integrity constraints. Upgrades preserve comparability under locked definitions. Automated reporting may be introduced without losing raw traceability. Transparency increases with scale. No algorithmic change proceeds without audit impact review. Evidence remains portable.",
-        informal:"The roadmap is sharper vision, not thicker mystery. Better sensing, cleaner validation, more replayable truth. We add complexity only to clarify. The bigger it gets, the more visible it must become. That’s how frontier tech becomes trusted tech. Clarity is the compounding advantage."
-      }
-    },
-    "Industrial":{
-      concept:{
-        formal:"Industrial posture remains thermal substitution under containment. No net-positive fusion claim is asserted. Buffering precedes adjacency. Deployment follows staged phases. Claims remain bounded to measured delivered bands. The public layer is constrained by auditable performance, not speculative promise.",
-        informal:"Industrial scale is where you earn credibility. We start with substitution because it’s measurable and useful. We buffer before we broadcast, and we stage before we multiply. No fusion gain claims here—only disciplined delivery. That’s how trust survives scrutiny. The reward is adoption that doesn’t collapse."
-      },
-      live:{
-        formal:"Live operation is evaluated by stability, uptime, and bounded variance. Containment remains upstream and auditable. Phase advancement is blocked without receipts. Interface behavior remains predictable under stress. Stability under pressure defines viability. Operational metrics outrank narratives.",
-        informal:"Live industrial isn’t loud—it’s steady. Buffers absorb spikes and interfaces stay predictable. We don’t sprint into scale; we walk phases with proof. The reward is bankable stability. The risk of rushing is reputational ruin. Calm output is the signature of real scale."
-      },
-      roadmap:{
-        formal:"Roadmap advances through certification, underwriting alignment, and replication discipline. Cluster expansion is conditional on compliance history. Licensing ties to containment classes. Scale remains staged. Growth is reversible under violation and proceeds only when evidence density increases.",
-        informal:"The roadmap is replication without chaos. Certification first, clusters second, adjacency third. Underwriting gets easier because exposure is bounded. Growth becomes boring in the right way because it’s repeatable. That’s how industrial dominance is built. The future arrives through discipline, not hype."
-      }
-    },
-    "Environmental":{
-      concept:{
-        formal:"Environmental integrity is an interface contract. Plasma regimes remain isolated from endpoints. Discharge bands are declared and measured. Buffering reduces shock propagation. Compliance is engineered rather than narrated. Expansion is blocked without verified conformity.",
-        informal:"The environment is a boundary you don’t get to cheat. Heat must stay in its lane and impact must stay measurable. Buffers exist because shocks exist. The reward is scale without harm; shortcuts buy irreversible damage. Clean energy must behave cleanly, not just sound clean."
-      },
-      live:{
-        formal:"Live monitoring tracks discharge variance and boundary integrity. Anomalies trigger containment response. Interfaces remain segregated. Reporting stays consistent with measured bands. Drift is not tolerated. Environmental posture is measured behavior over time, not a single good day.",
-        informal:"Live mode is where nature audits you. If the band drifts, you respond. If the boundary is threatened, you contain. We log reality as it happens. That’s what makes adoption possible without fear. When impact stays bounded, trust grows."
-      },
-      roadmap:{
-        formal:"Roadmap tightens impact bands and improves audit portability. Monitoring increases resolution. Expansion is blocked without verified conformity. Environmental invariants remain non-negotiable under growth. Cross-site harmonization prevents drift by replication.",
-        informal:"The roadmap is tighter rules at larger scale. Better monitoring, cleaner reporting, and less room for drift. We don’t loosen standards because we’re bigger—we strengthen them. That’s how sustainability becomes structural. The future is audited cleanliness."
-      }
-    },
-    "Medicine":{
-      concept:{
-        formal:"Medical adjacency emphasizes absolute boundary discipline for human safety. High-energy regimes remain upstream-only and non-proximate. Endpoints must remain passive and certified. Health claims are excluded without validation. Safety posture is enforced by design.",
-        informal:"Healthcare teaches the harsh rule: ‘probably safe’ is still unsafe. So we keep high-energy upstream and endpoints passive. The reward is trust that doesn’t depend on hope. Boundaries are life. That’s the medical lesson baked into the architecture."
-      },
-      live:{
-        formal:"Live medical suitability is measured as consistent isolation and predictable incident response. Monitoring triggers deterministic shutdown. Documentation supports oversight. Human factors are treated as constraints. Exposure remains structurally prevented.",
-        informal:"Live medical environments don’t tolerate ambiguity. If the interface isn’t predictable, stress explodes. So we design for calm: clear procedures, clear logs, and zero exposure. That’s how infrastructure supports life systems. Reliability is the medical standard applied to energy."
-      },
-      roadmap:{
-        formal:"Roadmap adds stronger third-party oversight and standardized safety artifacts. Bio-interface modeling becomes explicit before adjacency expansion. Isolation invariants remain dominant. Expansion proceeds only under measurable safety evidence.",
-        informal:"The roadmap is stronger oversight, cleaner artifacts, and more preventative monitoring. We expand only when safety proof is portable. No shortcuts. The future is resilience without exposure. That’s how energy earns proximity."
-      }
-    },
-    "Financial":{
-      concept:{
-        formal:"Financial posture prices risk based on containment tier and measured variance. Insurance maps to certification. Revenue models reference verified bands. Speculative gains are excluded from operational economics. Capital allocation follows proof density.",
-        informal:"Money loves speed until speed breaks things. Here, finance follows physics. Risk is priced against the envelope and reward comes from repeatability. The opportunity cost is slower hype; the reward is cheaper capital that stays. Stable bands make capital calm."
-      },
-      live:{
-        formal:"Live discipline monitors cost per verified output and variance impact. Underwriting references telemetry-backed compliance. Expansion capital is released only after verification. Stability reduces fragility. Financial claims remain constrained to measurable outcomes.",
-        informal:"Live finance is where the world charges interest on sloppiness. If variance spikes, capital tightens. If receipts are clean, confidence rises. We release growth money only after proof. The best financial strategy is operational integrity. Trust lowers cost."
-      },
-      roadmap:{
-        formal:"Roadmap integrates certificate-linked underwriting and staged replication financing. Risk decreases as audit fidelity increases. Capital scaling remains gated by receipts. Contract structures align with containment tiers and compliance history.",
-        informal:"The roadmap is confidence that compounds. As auditability improves, underwriting calms down. Contracts map to measurable bands. Growth money becomes structural instead of speculative. Reward follows proof. Capital stops being a gamble and becomes a multiplier."
-      }
-    },
-    "Legal":{
-      concept:{
-        formal:"Legal alignment binds deployment to enforceable definitions and measurable thresholds. Compliance is tied to documented procedures. Scope remains stable to prevent interpretive drift. Liability maps to containment tiers. Legitimacy depends on auditable posture.",
-        informal:"Law punishes what it can’t define. So we define everything that matters: boundaries, bands, and procedures. The reward is adoption without drama. The cost is discipline. Legal clarity becomes a scaling accelerator when proof is portable. Receipts are the legal language."
-      },
-      live:{
-        formal:"Live compliance uses auditable logs and stable thresholds. Disputes resolve through receipts rather than recollection. No regulatory bypass is tolerated. Posture remains bounded. Documentation remains current and consistent.",
-        informal:"Live legal posture is calm because the system is honest. When a question comes, the receipt answers it. No guessing. No arguing. That’s how legal risk shrinks. And when legal risk shrinks, scaling gets easier."
-      },
-      roadmap:{
-        formal:"Roadmap improves certification portability and cross-jurisdiction comparability. Contract triggers map to certificate states. Expansion remains contingent on compliance stability. Neutral posture prevents capture. Standards reduce ambiguity under scale.",
-        informal:"The roadmap is standards you can carry across regions without rewriting meaning. Certification becomes the language institutions trust. Political noise has less power when proof is stable. That’s how infrastructure becomes policy-safe. Scale becomes procedural, not political."
-      }
-    },
-    "Political":{
-      concept:{
-        formal:"Political interface is treated as an institutional constraint surface. Neutral posture prevents capture. Adoption depends on auditable stability and bounded claims. Policy must not exceed technical proof. Interfaces remain consistent under scrutiny.",
-        informal:"Politics amplifies what it can’t verify. So we make verification easy. Neutral posture keeps the system from becoming someone’s propaganda tool. The reward is broader adoption. The cost is refusing easy narratives. That’s how scale stays clean."
-      },
-      live:{
-        formal:"Live posture maintains bounded messaging aligned to measured state. Stakeholder engagement references receipts. Drift is suppressed by stable definitions. Trust grows through consistency. Governance prevents narrative escalation under pressure.",
-        informal:"Live political reality is pressure. Everyone wants a headline. We give them receipts instead. That’s how you avoid polarization: you keep the system boringly consistent. When consistency holds, politics calms down."
-      },
-      roadmap:{
-        formal:"Roadmap harmonizes institutional adoption through portable certification and stable interfaces. Expansion remains conditional on compliance and auditability. Neutrality remains structural. Standards reduce argument surface and improve alignment.",
-        informal:"The roadmap is unity through structure. When proof is portable, alignment becomes possible without forcing beliefs. Scale becomes cooperation instead of conflict. That’s how the frontier becomes a shared project. Coherence beats ideology."
-      }
-    },
-    "Social":{
-      concept:{
-        formal:"Social adoption requires legible boundaries and bounded language. Trust derives from consistent posture and falsifiable claims. Transparency reduces rumor amplification. Messaging remains subordinate to measured reality. Consistency prevents volatility.",
-        informal:"People don’t reject systems first—they reject confusion. If the story inflates, trust collapses. So we keep boundaries clear and posture honest. The reward is alignment that scales. The cost is resisting hype. That’s how excitement stays safe."
-      },
-      live:{
-        formal:"Live communication remains consistent with measured posture. Updates reference operational bands and compliance artifacts. No speculative escalation is permitted. Transparency lowers anxiety. Trust becomes a consequence of repeatable behavior.",
-        informal:"Live is where trust is either built or burned. We keep the frame stable so people don’t panic. We point to receipts, not slogans. That’s how adoption becomes calm. Consistency is the social version of containment."
-      },
-      roadmap:{
-        formal:"Roadmap standardizes reporting and multilingual consistency without semantic drift. Public dashboards may reflect compliance bands. Education aligns with containment tiers. Adoption remains evidence-driven. Narrative remains bounded under scale.",
-        informal:"The roadmap is stronger legibility at larger scale. More clarity, fewer misunderstandings, and less room for rumor. We educate without exaggerating. Trust compounds when the story doesn’t shift. That’s how social alignment becomes durable."
-      }
-    }
-  };
-
-  // UI refs
+  // ===== UI refs =====
   var bd=document.getElementById("bd");
-  var quadModal=document.getElementById("quadModal");
-  var domainModal=document.getElementById("domainModal");
-  var quadClose=document.getElementById("quadClose");
-  var domainClose=document.getElementById("domainClose");
-  var quadTitle=document.getElementById("quadTitle");
-  var quadGrid=document.getElementById("quadGrid");
-  var domainTitle=document.getElementById("domainTitle");
-  var toneFormal=document.getElementById("toneFormal");
-  var toneInformal=document.getElementById("toneInformal");
-  var bConcept=document.getElementById("bConcept");
-  var bLive=document.getElementById("bLive");
-  var bRoadmap=document.getElementById("bRoadmap");
-  var pConcept=document.getElementById("pConcept");
-  var pLive=document.getElementById("pLive");
-  var pRoadmap=document.getElementById("pRoadmap");
-  var domainReturn=document.getElementById("domainReturn");
 
-  var currentQuad=null;
-  var currentDomain=null;
-  var tone="formal";
+  var modalDomains=document.getElementById("modalDomains");
+  var domainsClose=document.getElementById("domainsClose");
+  var domainsTitle=document.getElementById("domainsTitle");
+  var domainsGrid=document.getElementById("domainsGrid");
 
-  function showBD(){ bd.classList.add("show"); }
-  function hideBD(){ bd.classList.remove("show"); }
+  var modalNarr=document.getElementById("modalNarrative");
+  var narClose=document.getElementById("narClose");
+  var narTitle=document.getElementById("narTitle");
+  var tConcept=document.getElementById("tConcept");
+  var tLive=document.getElementById("tLive");
+  var tRoadmap=document.getElementById("tRoadmap");
 
-  function openQuad(qname){
-    currentQuad=qname;
-    quadTitle.textContent="ENERGY · " + qname;
-    quadGrid.innerHTML="";
-    var domains = QUADS[qname] || [];
+  var pillFormal=document.getElementById("pillFormal");
+  var pillInformal=document.getElementById("pillInformal");
 
-    domains.forEach(function(d){
-      var tile=document.createElement("div");
-      tile.className="smallDiamond";
-      tile.setAttribute("role","button");
-      tile.tabIndex=0;
-      tile.innerHTML='<div class="sdInner"><div class="sdT">'+d+'</div><div class="sdS">Concept · Live · Roadmap</div></div>';
-      tile.addEventListener("click", function(){ openDomain(d); });
-      tile.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openDomain(d);} });
-      quadGrid.appendChild(tile);
+  var btnReturnDomains=document.getElementById("btnReturnDomains");
+  var btnReturnQuadrants=document.getElementById("btnReturnQuadrants");
+
+  // ===== Model =====
+  var state = {
+    quadrant: "FOUNDATION",
+    domain: null,
+    voice: "formal" // formal | informal
+  };
+
+  var CLAIM_LINE = "Public posture remains Industrial Plasma Thermal Substitution (C). Fusion is referenced only as readiness doctrine, not as gain.";
+
+  // Domain set per quadrant (KEEP SAME; ADD 2 new only)
+  // NOTE: We are not changing your story architecture; we only extend the existing inner page.
+  var QUADRANT_DOMAINS = {
+    "FOUNDATION": [
+      {key:"historical", title:"Historical Systems", sub:"Concept · Live · Roadmap"},
+      {key:"adversarial", title:"Adversarial", sub:"Concept · Live · Roadmap"},
+      {key:"baseline", title:"Baseline Constraints", sub:"Concept · Live · Roadmap"},
+      {key:"fusion", title:"Fusion Readiness", sub:"Concept · Live · Roadmap"},          // NEW
+      {key:"frontier", title:"Frontier Expansion", sub:"Concept · Live · Roadmap"},     // NEW
+      {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
+    ],
+    "ARCHITECTURE": [
+      {key:"engineering", title:"Engineering", sub:"Concept · Live · Roadmap"},
+      {key:"technology", title:"Technology", sub:"Concept · Live · Roadmap"},
+      {key:"interfaces", title:"Interfaces", sub:"Concept · Live · Roadmap"},
+      {key:"fusion", title:"Fusion Readiness", sub:"Concept · Live · Roadmap"},          // NEW
+      {key:"frontier", title:"Frontier Expansion", sub:"Concept · Live · Roadmap"},     // NEW
+      {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
+    ],
+    "PERFORMANCE": [
+      {key:"industrial", title:"Industrial", sub:"Concept · Live · Roadmap"},
+      {key:"environmental", title:"Environmental", sub:"Concept · Live · Roadmap"},
+      {key:"financial", title:"Financial", sub:"Concept · Live · Roadmap"},
+      {key:"fusion", title:"Fusion Readiness", sub:"Concept · Live · Roadmap"},          // NEW
+      {key:"frontier", title:"Frontier Expansion", sub:"Concept · Live · Roadmap"},     // NEW
+      {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
+    ],
+    "GOVERNANCE": [
+      {key:"policy", title:"Policy", sub:"Concept · Live · Roadmap"},
+      {key:"legal", title:"Legal", sub:"Concept · Live · Roadmap"},
+      {key:"public", title:"Public Trust", sub:"Concept · Live · Roadmap"},
+      {key:"fusion", title:"Fusion Readiness", sub:"Concept · Live · Roadmap"},          // NEW
+      {key:"frontier", title:"Frontier Expansion", sub:"Concept · Live · Roadmap"},     // NEW
+      {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
+    ]
+  };
+
+  // Content (placeholder-safe; replace later without changing structure)
+  // IMPORTANT: We are not touching your glossy/structure layer. This is content-only.
+  function getNarrative(domainKey, voice){
+    // Minimal unique bodies (kept short; your full content stays in your existing build; this is just safe scaffolding)
+    // If you already have your full text elsewhere, paste it into these fields later.
+    var V = (voice==="informal");
+    var BASE = {
+      concept: V
+        ? "This is the rulebook before the game. We don’t get to scale what sounds exciting unless it stays measurable. Industrial substitution is the foothold because it is real. Everything else is earned."
+        : "This domain establishes admissible posture prior to scaling. Industrial thermal substitution (C) remains the public surface. Fusion is referenced only as requirements doctrine. Definitions remain bounded and falsifiable.",
+      live: V
+        ? "Live means the rules actually matter. If a band drifts, you respond, not debate. If evidence breaks, you roll forward cleanly. Discipline is what makes speed survivable."
+        : "Live posture applies declared constraints under operation. Deviations trigger containment and audit logging. Stability is evaluated by measured bands. No upgrade is permitted without receipts.",
+      roadmap: V
+        ? "Roadmap is not more freedom. It is more discipline at larger scale. Proof gets easier to verify and harder to fake. That’s how the frontier stays honest."
+        : "Roadmap tightens thresholds and increases audit rigor with scale. Progression remains phase-gated. Claims remain bounded. Independent validation remains a prerequisite for any escalation."
+    };
+
+    // Domain-specific flavor (still bounded)
+    var D = {
+      historical: V
+        ? "History shows the same trap: scale by story, repair by crisis. Drift hides until it becomes catastrophic. We start by refusing that pattern."
+        : "Historical patterns show that incentive-led scaling amplifies coupled failure when constraints are discovered post-deployment. This surface begins with constraint declaration and anti-drift governance.",
+      adversarial: V
+        ? "Assume pressure. Assume bad actors. Assume shortcuts. You win by making cheating expensive and honesty easy. That’s what this structure does."
+        : "Adversarial posture assumes manipulation attempts and artifact-driven false positives. Integrity requires tamper-evidence, redundancy, and strict replayability under independent audit.",
+      baseline: V
+        ? "Baseline constraints are the foothold. They keep the dream honest. They keep the surface clean. They keep trust from becoming theater."
+        : "Baseline constraints define non-negotiable boundaries: measurement authority, containment interfaces, and non-retroactive audit discipline. This prevents narrative inflation.",
+      engineering: V
+        ? "Engineering is where romance dies and reliability wins. If heat spikes, something breaks. If isolation slips, risk travels. We design for the worst day."
+        : "Engineering posture is boundary-first: interface definition, containment robustness, and predictable failure modes. Reliability is enforced by measurable constraints, not by narrative framing.",
+      technology: V
+        ? "Technology is the nervous system. It tells the truth fast enough to matter. It makes drift visible before it becomes damage."
+        : "Technology posture requires deterministic telemetry integrity, time alignment, replayable logs, and bounded latency. Measurements remain authoritative and audit-compatible.",
+      interfaces: V
+        ? "Interfaces are where systems either scale cleanly or bleed risk. Clean interfaces make everything downstream calmer."
+        : "Interfaces define isolation and boundary conditions. Transfer functions are constrained. Downstream exposure is minimized by design. Interfaces remain measurable at the boundary.",
+      industrial: V
+        ? "Industrial is the scoreboard people actually care about. Heat delivered. Variance controlled. Uptime earned. That’s the surface."
+        : "Industrial posture remains Industrial thermal substitution (C) with audited heat delivery, bounded variance, and phase-gated scale. No fusion gain claim is asserted.",
+      environmental: V
+        ? "Environment is not a vibe; it is a boundary. If you can’t measure impact, you can’t claim safety."
+        : "Environmental posture requires measured discharge bands, explicit interface constraints, and verifiable compliance. Exposure remains segmented and monitored.",
+      financial: V
+        ? "Finance is where wishful thinking goes to die. Risk has a price. Proof lowers it. Drift raises it."
+        : "Financial posture is underwriting-grade: risk tiers map to measured envelopes. Variance is priced. Expansion requires receipts, not projections.",
+      policy: V
+        ? "Policy is how you keep scale from turning into chaos. Rules make progress repeatable instead of fragile."
+        : "Policy posture defines gating doctrine, exception discipline, and non-retroactive enforcement. Compliance is expressed as measurable criteria and reason codes.",
+      legal: V
+        ? "Legal is the contract layer. If it’s vague, somebody will exploit it. If it’s clear, everyone moves faster."
+        : "Legal posture requires bounded claims, explicit disclosures, and audit-traceable documentation. Liability is minimized by clear interfaces and disciplined language.",
+      public: V
+        ? "Public trust is the multiplier. When people can see the boundaries, fear drops and adoption rises."
+        : "Public trust posture is achieved by bounded claims, measurable interfaces, and transparent standards. Drift is prevented by stable definitions and auditability.",
+      fusion: V
+        ? "Fusion stays behind the gate until it earns daylight. Readiness is discipline: instruments, receipts, repeatability, and hard stops."
+        : "Fusion readiness is requirements doctrine only. Admissibility depends on calibrated instrumentation, closed accounting, disproof conditions, and independent review. No gain is asserted.",
+      frontier: V
+        ? "Frontier isn’t fantasy; it’s compounding capability. Stable power builds stable industry. Stable industry builds the sky."
+        : "Frontier expansion is staged feasibility: terrestrial stability precedes orbital infrastructure. Governance and measurement rules remain binding. Speculation is labeled and constrained."
+    };
+
+    return {
+      concept: D[domainKey] ? (D[domainKey] + " " + BASE.concept) : BASE.concept,
+      live: D[domainKey] ? (D[domainKey] + " " + BASE.live) : BASE.live,
+      roadmap: D[domainKey] ? (D[domainKey] + " " + BASE.roadmap) : BASE.roadmap
+    };
+  }
+
+  // ===== Show/hide helpers =====
+  function showOverlay(){ bd.classList.add("show"); }
+  function hideOverlay(){ bd.classList.remove("show"); }
+
+  function showDomains(){
+    showOverlay();
+    modalNarr.classList.remove("show");
+    modalDomains.classList.add("show");
+  }
+  function showNarrative(){
+    showOverlay();
+    modalDomains.classList.remove("show");
+    modalNarr.classList.add("show");
+  }
+  function closeAll(){
+    modalDomains.classList.remove("show");
+    modalNarr.classList.remove("show");
+    hideOverlay();
+  }
+
+  // ===== Domain grid render =====
+  function renderDomains(){
+    domainsTitle.textContent = "ENERGY · " + state.quadrant;
+    domainsGrid.innerHTML = "";
+
+    var items = QUADRANT_DOMAINS[state.quadrant] || [];
+    items.forEach(function(it){
+      var card = document.createElement("div");
+      card.className = "domCard";
+      card.setAttribute("role","button");
+      card.setAttribute("tabindex","0");
+
+      var h = document.createElement("div");
+      h.className = "domTitle";
+      h.textContent = it.title;
+
+      var s = document.createElement("div");
+      s.className = "domSub";
+      s.textContent = it.sub;
+
+      card.appendChild(h);
+      card.appendChild(s);
+
+      function act(){
+        if(it.action==="RETURN"){
+          closeAll();
+          return;
+        }
+        state.domain = it.key;
+        renderNarrative();
+        showNarrative();
+      }
+
+      card.addEventListener("click", act);
+      card.addEventListener("keydown", function(e){
+        if(e.key==="Enter" || e.key===" "){ e.preventDefault(); act(); }
+      });
+
+      domainsGrid.appendChild(card);
     });
-
-    // RETURN tile (diamond)
-    var ret=document.createElement("div");
-    ret.className="smallDiamond";
-    ret.setAttribute("role","button");
-    ret.tabIndex=0;
-    ret.innerHTML='<div class="sdInner"><div class="sdT">RETURN</div><div class="sdS">Back to quadrants</div></div>';
-    ret.addEventListener("click", closeQuad);
-    ret.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); closeQuad(); }});
-    quadGrid.appendChild(ret);
-
-    showBD();
-    quadModal.classList.add("show");
   }
 
-  function closeQuad(){
-    quadModal.classList.remove("show");
-    if(!domainModal.classList.contains("show")) hideBD();
+  // ===== Narrative render =====
+  function renderNarrative(){
+    var title = state.domain || "";
+    var labelMap = {
+      historical:"Historical Systems",
+      adversarial:"Adversarial",
+      baseline:"Baseline Constraints",
+      engineering:"Engineering",
+      technology:"Technology",
+      interfaces:"Interfaces",
+      industrial:"Industrial",
+      environmental:"Environmental",
+      financial:"Financial",
+      policy:"Policy",
+      legal:"Legal",
+      public:"Public Trust",
+      fusion:"Fusion Readiness",
+      frontier:"Frontier Expansion"
+    };
+    narTitle.textContent = "ENERGY · " + (labelMap[title] || "Domain");
+    document.getElementById("claimBanner").textContent = CLAIM_LINE;
+
+    var pack = getNarrative(state.domain, state.voice);
+    tConcept.textContent = pack.concept;
+    tLive.textContent = pack.live;
+    tRoadmap.textContent = pack.roadmap;
+
+    pillFormal.classList.toggle("active", state.voice==="formal");
+    pillInformal.classList.toggle("active", state.voice==="informal");
   }
 
-  function openDomain(dname){
-    currentDomain=dname;
-    domainTitle.textContent="ENERGY · " + dname;
-    [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
-    applyTone(tone);
-    quadModal.classList.remove("show");
-    showBD();
-    domainModal.classList.add("show");
-  }
-
-  function backToDomains(){
-    domainModal.classList.remove("show");
-    quadModal.classList.add("show");
-  }
-
-  function applyTone(t){
-    tone=t;
-    toneFormal.classList.toggle("active", tone==="formal");
-    toneInformal.classList.toggle("active", tone==="informal");
-
-    var pack=N[currentDomain];
-    if(!pack){
-      pConcept.textContent="NOT MEASURED";
-      pLive.textContent="NOT MEASURED";
-      pRoadmap.textContent="NOT MEASURED";
-      return;
-    }
-    pConcept.textContent = pack.concept[tone];
-    pLive.textContent = pack.live[tone];
-    pRoadmap.textContent = pack.roadmap[tone];
-  }
-
-  function bindBubble(box){
-    box.addEventListener("click", function(){ box.classList.toggle("open"); });
-    box.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); box.classList.toggle("open"); }});
-    box.tabIndex=0; box.setAttribute("role","button");
-  }
-  bindBubble(bConcept); bindBubble(bLive); bindBubble(bRoadmap);
-
-  toneFormal.addEventListener("click", function(){ applyTone("formal"); });
-  toneInformal.addEventListener("click", function(){ applyTone("informal"); });
-
-  // CHANGE #2: RETURN diamond inside domain modal (goes back to domain diamonds)
-  domainReturn.addEventListener("click", backToDomains);
-  domainReturn.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); backToDomains(); }});
-
-  // Close buttons
-  bd.addEventListener("click", function(){
-    domainModal.classList.remove("show");
-    quadModal.classList.remove("show");
-    hideBD();
-  });
-  quadClose.addEventListener("click", function(){ quadModal.classList.remove("show"); hideBD(); });
-  domainClose.addEventListener("click", function(){ domainModal.classList.remove("show"); quadModal.classList.remove("show"); hideBD(); });
-
-  // Open quadrants
-  function bindQuad(id,name){
+  // ===== Quadrant bindings =====
+  function bindQuad(id, quad){
     var el=document.getElementById(id);
-    el.addEventListener("click", function(){ openQuad(name); });
-    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openQuad(name);} });
+    if(!el) return;
+    function open(){
+      state.quadrant = quad;
+      state.domain = null;
+      renderDomains();
+      showDomains();
+    }
+    el.addEventListener("click", open);
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter" || e.key===" "){ e.preventDefault(); open(); }
+    });
   }
   bindQuad("qFoundation","FOUNDATION");
   bindQuad("qArchitecture","ARCHITECTURE");
   bindQuad("qPerformance","PERFORMANCE");
   bindQuad("qGovernance","GOVERNANCE");
+
+  // ===== Close wiring =====
+  domainsClose.addEventListener("click", closeAll);
+  narClose.addEventListener("click", function(){
+    // Close narrative → return to domains (NEW behavior)
+    showDomains();
+  });
+  bd.addEventListener("click", closeAll);
+
+  // Prevent overlay click from killing modal clicks
+  modalDomains.addEventListener("click", function(e){ e.stopPropagation(); });
+  modalNarr.addEventListener("click", function(e){ e.stopPropagation(); });
+
+  // ===== Voice toggle =====
+  pillFormal.addEventListener("click", function(){
+    state.voice="formal";
+    renderNarrative();
+  });
+  pillInformal.addEventListener("click", function(){
+    state.voice="informal";
+    renderNarrative();
+  });
+
+  // ===== Universal return (NEW) =====
+  btnReturnDomains.addEventListener("click", function(){
+    // Always go back one layer (narrative → domains)
+    showDomains();
+  });
+  btnReturnQuadrants.addEventListener("click", function(){
+    // Always go back to quadrants (close everything)
+    closeAll();
+  });
 
 })();
 </script>

@@ -1,10 +1,10 @@
-<!-- TNT — /products/index.html  (PRODUCTS SPINE · OPAL JEWEL RESTORE · NO UI OVERRIDE)
+<!-- TNT — /products/index.html  (PRODUCTS SPINE · TRUE OPAL JEWEL · NO UI OVERRIDE)
      FIX:
-       - UI FIELD stays owned by ui.css (NO html/body background)
-       - Diamonds become OPAL (pearl/iridescent) instead of red-tinted
+       - OPAL no longer reads red (reduced transparency + darker base + neutral film)
        - Keeps glossy jewel specular + gold rim
-       - Keeps 4-volume spine layout
-       - Adds state-carry on clicks (lang/style/time preserved)
+       - No html/body background styling (ui.css owns field)
+       - No blur/backdrop-filter (tap-safe)
+       - State-carry on all nav + diamond clicks
 -->
 
 <!doctype html>
@@ -21,14 +21,18 @@
 :root{
   --R:154px;
 
-  /* OPAL core tones (fixed) */
-  --opal-1: rgba(230,236,246,.26);
-  --opal-2: rgba(170,195,255,.16);
-  --opal-3: rgba(255,220,170,.10);
-  --opal-4: rgba(140,220,210,.10);
-  --opal-deep: rgba(9,14,22,.78);
+  /* OPAL palette (LESS TRANSPARENT to stop red bleed) */
+  --opal-w: rgba(245,248,255,.34);
+  --opal-b: rgba(170,205,255,.22);
+  --opal-g: rgba(170,245,230,.16);
+  --opal-a: rgba(255,225,180,.16);
 
-  --goldSoft: rgba(212,175,55,.35);
+  /* deep base that resists field tint */
+  --opal-base-1: rgba(10,14,22,.94);
+  --opal-base-2: rgba(6,9,14,.92);
+
+  --goldSoft: rgba(212,175,55,.40);
+  --goldHard: rgba(212,175,55,.65);
 }
 
 /* No field overrides */
@@ -75,7 +79,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Diamonds: OPAL JEWEL (no red tint) */
+/* Diamonds: TRUE OPAL JEWEL (tint-resistant) */
 .d{
   width:200px;height:200px;
   position:absolute;left:50%;top:50%;
@@ -86,65 +90,61 @@ a{color:inherit;text-decoration:none}
   touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
 
-  /* OPAL face (iridescent) */
+  /* Dark base first (prevents red field tint) */
   background:
-    radial-gradient(circle at 32% 22%, var(--opal-1) 0%, rgba(230,236,246,0) 52%),
-    radial-gradient(circle at 78% 28%, var(--opal-2) 0%, rgba(170,195,255,0) 56%),
-    radial-gradient(circle at 38% 78%, var(--opal-4) 0%, rgba(140,220,210,0) 58%),
-    radial-gradient(circle at 82% 78%, var(--opal-3) 0%, rgba(255,220,170,0) 60%),
-    linear-gradient(160deg, rgba(14,18,28,.86) 0%, rgba(7,10,16,.90) 70%);
+    radial-gradient(circle at 35% 22%, var(--opal-w) 0%, rgba(245,248,255,0) 52%),
+    radial-gradient(circle at 78% 28%, var(--opal-b) 0%, rgba(170,205,255,0) 58%),
+    radial-gradient(circle at 30% 78%, var(--opal-g) 0%, rgba(170,245,230,0) 60%),
+    radial-gradient(circle at 82% 78%, var(--opal-a) 0%, rgba(255,225,180,0) 62%),
+    linear-gradient(160deg, var(--opal-base-1) 0%, var(--opal-base-2) 72%);
 
-  border:1px solid rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.18);
   box-shadow:
     0 26px 90px rgba(0,0,0,.62),
-    inset 0 2px 0 rgba(255,255,255,.16),
-    inset 0 -30px 60px rgba(0,0,0,.62);
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -34px 70px rgba(0,0,0,.70);
 }
 
-/* Gold rim highlight */
+/* Gold rim (thin + stronger) */
 .d::before{
   content:"";
   position:absolute;inset:0;border-radius:30px;padding:1px;
   background:linear-gradient(135deg,
     rgba(212,175,55,0) 0%,
-    rgba(212,175,55,.40) 50%,
+    rgba(212,175,55,.45) 48%,
     rgba(212,175,55,0) 100%
   );
-  opacity:.55;
+  opacity:.62;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
   pointer-events:none;
 }
 
-/* OPAL shimmer layer (static, no animation) */
+/* Specular + neutral “opal film” (NEUTRAL so it won’t pick up red) */
 .d::after{
   content:"";
-  position:absolute;
-  inset:0;
-  border-radius:30px;
+  position:absolute;inset:0;border-radius:30px;
   background:
-    /* glossy specular cap */
-    radial-gradient(120% 55% at 50% 18%, rgba(255,255,255,.22) 0%, rgba(255,255,255,0) 60%),
-    /* subtle opal “film” */
+    radial-gradient(120% 56% at 50% 18%, rgba(255,255,255,.24) 0%, rgba(255,255,255,0) 62%),
     conic-gradient(from 210deg at 50% 52%,
       rgba(255,255,255,0) 0deg,
-      rgba(190,220,255,.10) 70deg,
-      rgba(255,230,180,.08) 140deg,
-      rgba(160,240,220,.08) 210deg,
+      rgba(200,230,255,.10) 70deg,
+      rgba(255,240,210,.08) 150deg,
+      rgba(190,255,240,.08) 230deg,
       rgba(255,255,255,0) 360deg
     );
-  opacity:.78;
+  opacity:.72;
   pointer-events:none;
 }
 
 .d:hover{
   box-shadow:
     0 34px 120px rgba(0,0,0,.74),
-    0 0 22px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.20),
-    inset 0 -34px 64px rgba(0,0,0,.64);
-  border-color:rgba(212,175,55,.26);
+    0 0 26px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -38px 78px rgba(0,0,0,.74);
+  border-color:rgba(212,175,55,.30);
 }
 .d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
@@ -162,7 +162,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;user-select:none;
 }
 .lab{font-weight:950;letter-spacing:.8px;font-size:18px}
-.sub{font-size:13px;opacity:.82;line-height:1.3;max-width:18em}
+.sub{font-size:13px;opacity:.84;line-height:1.3;max-width:18em}
 
 /* Core */
 .core{
@@ -177,7 +177,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Dock — NO BLUR, keep it neutral */
+/* Dock — NO BLUR */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -263,7 +263,6 @@ a{color:inherit;text-decoration:none}
 
 <script>
 (function(){
-  // Carry state without introducing new keys.
   var qs = new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
@@ -279,27 +278,23 @@ a{color:inherit;text-decoration:none}
     return s ? ("?"+s) : "";
   }
 
-  // Top buttons
   document.getElementById("btnHub").href  = "/home/"+q();
   document.getElementById("btnExit").href = "/door/"+q();
 
-  // Dock
   document.getElementById("dockTerminal").href = "/index.html"+q();
   document.getElementById("dockProducts").href = "/products/"+q();
   document.getElementById("dockLaws").href = "/laws/"+q();
   document.getElementById("dockGauges").href = "/gauges/"+q();
   document.getElementById("dockLinks").href = "/links/"+q();
 
-  // Diamond routing (state preserved)
   function go(path){ location.href = path + q(); }
 
-  var map = [
+  [
     ["goEnergy","/products/energy/"],
     ["goEducation","/products/education/"],
     ["goSoftware","/products/software/"],
     ["goCommercial","/products/commercial/"]
-  ];
-  map.forEach(function(pair){
+  ].forEach(function(pair){
     var el = document.getElementById(pair[0]);
     var path = pair[1];
     el.addEventListener("click", function(){ go(path); });

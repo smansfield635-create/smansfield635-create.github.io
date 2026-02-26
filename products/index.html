@@ -1,8 +1,12 @@
-<!-- TNT — /products/index.html  (PRODUCTS SPINE · DOOR-GRADE LACQUER · NO CLIP · TAP-SAFE)
-     NOTES:
-       - ui.css owns the field (no background paint here)
-       - branch.css owns geometry (we do not override it)
-       - This file owns jewel material + layout only
+<!-- TNT — /products/index.html  (PRODUCTS SPINE · SAME UNIFORM · FIX OVERLAP BUG)
+     ROOT CAUSE (WHY IT LOOKED BROKEN):
+       - Your diamond POSITION is stored in .d-n/.d-e/.d-s/.d-w via transform: translate(...) rotate(...)
+       - But your .d:hover and .d:active ALSO set transform, which OVERRIDES the position transform
+         → everything collapses toward center → overlap (“same uniform” goes to hell)
+     FIX:
+       - NEVER override transform on hover/active
+       - Only change border/box-shadow (uniform stays identical, tap-safe stays identical)
+       - Also force ui.css field overlays to NOT capture taps: body::before/after pointer-events:none
 -->
 
 <!doctype html>
@@ -17,70 +21,61 @@
 
 <style>
 :root{
-  /* Stage size */
-  --S: min(720px, 94vw);
+  --R:154px;
 
-  /* Diamond size (responsive) */
-  --D: 198px;
+  /* LACQUER JEWEL (Door-grade) */
+  --obsA:#070b12;
+  --obsB:#0c1626;
+  --obsC:#05070c;
 
-  /* Radius computed so side diamonds never clip */
-  --R: calc((var(--S) - var(--D)) / 2 - 12px);
+  --opal1: rgba(245,248,255,.18);
+  --opal2: rgba(180,220,255,.12);
+  --opal3: rgba(255,235,200,.10);
+  --opal4: rgba(170,255,235,.10);
 
-  /* Lacquer core (tint-resistant) */
-  --lac0: rgba(2,3,5,.98);
-  --lac1: rgba(6,8,12,.96);
-  --lac2: rgba(10,14,22,.92);
+  --sapp1: rgba(40,90,200,.18);
+  --sapp2: rgba(110,190,255,.14);
 
-  /* Opal film (SUBTLE ONLY) */
-  --filmW: rgba(245,248,255,.12);
-  --filmB: rgba(180,220,255,.08);
-  --filmA: rgba(255,235,200,.06);
-  --filmG: rgba(170,255,235,.06);
-
-  /* Sapphire lanes (subtle) */
-  --sapp1: rgba(40,90,200,.14);
-  --sapp2: rgba(110,190,255,.10);
-
-  /* Gold */
-  --gold: rgba(212,175,55,.86);
   --goldSoft: rgba(212,175,55,.35);
 }
+
+/* DO NOT REPAINT FIELD — ONLY HIT-TEST SAFETY */
+body::before, body::after{ pointer-events:none !important; }
 
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
 
-/* top-left */
+/* Top-left */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:90;
+  position:fixed;left:16px;top:16px;z-index:120;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* brand (no blur) */
+/* Brand (NO blur) */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:80;text-align:center;
+  z-index:110;text-align:center;
   padding:10px 14px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
+  pointer-events:none;
 }
 .brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
 .brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
 
-/* stage */
+/* Stage (tap-safe: stage ignores taps; diamonds receive taps) */
 .stage{
   position:fixed;left:50%;top:52%;
   transform:translate(-50%,-50%);
-  width:var(--S);height:var(--S);
+  width:min(720px,94vw);height:min(720px,94vw);
   z-index:60;
-  pointer-events:auto;
-  overflow:visible; /* important: never clip children */
+  pointer-events:none;
 }
 
-/* outer (visual only) */
+/* Outer shell (visual only) */
 .outer{
   position:absolute;left:50%;top:50%;
-  width:calc(var(--S) - 40px);
-  height:calc(var(--S) - 40px);
+  width:min(680px,92vw);height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   border:1px solid rgba(255,255,255,.10);
@@ -96,9 +91,9 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* jewel diamonds */
+/* Diamonds */
 .d{
-  width:var(--D);height:var(--D);
+  width:205px;height:205px;
   position:absolute;left:50%;top:50%;
   transform-origin:center;border-radius:30px;
   cursor:pointer;
@@ -107,69 +102,57 @@ a{color:inherit;text-decoration:none}
   -webkit-tap-highlight-color:transparent;
 
   background:
-    /* sapphire lanes */
-    radial-gradient(circle at 74% 22%, var(--sapp2) 0%, rgba(110,190,255,0) 62%),
-    radial-gradient(circle at 30% 78%, var(--sapp1) 0%, rgba(40,90,200,0) 64%),
+    radial-gradient(circle at 72% 26%, var(--sapp2) 0%, rgba(110,190,255,0) 62%),
+    radial-gradient(circle at 34% 78%, var(--sapp1) 0%, rgba(40,90,200,0) 64%),
 
-    /* opal film (subtle; must NOT fog) */
-    radial-gradient(circle at 34% 22%, var(--filmW) 0%, rgba(245,248,255,0) 58%),
-    radial-gradient(circle at 78% 32%, var(--filmB) 0%, rgba(180,220,255,0) 62%),
-    radial-gradient(circle at 82% 78%, var(--filmA) 0%, rgba(255,235,200,0) 66%),
-    radial-gradient(circle at 30% 82%, var(--filmG) 0%, rgba(170,255,235,0) 68%),
+    radial-gradient(circle at 34% 22%, var(--opal1) 0%, rgba(245,248,255,0) 54%),
+    radial-gradient(circle at 78% 32%, var(--opal2) 0%, rgba(180,220,255,0) 58%),
+    radial-gradient(circle at 82% 78%, var(--opal3) 0%, rgba(255,235,200,0) 64%),
+    radial-gradient(circle at 30% 82%, var(--opal4) 0%, rgba(170,255,235,0) 66%),
 
-    /* hard lacquer base */
-    linear-gradient(160deg, var(--lac2) 0%, var(--lac1) 38%, var(--lac0) 100%);
+    linear-gradient(160deg, var(--obsB) 0%, var(--obsC) 78%);
 
-  border:1px solid rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.16);
 
   box-shadow:
-    0 30px 120px rgba(0,0,0,.78),
-    0 0 26px rgba(212,175,55,.10),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -58px 110px rgba(0,0,0,.86);
-}
+    0 30px 110px rgba(0,0,0,.72),
+    0 0 22px rgba(212,175,55,.10),
+    inset 0 2px 0 rgba(255,255,255,.16),
+    inset 0 -44px 86px rgba(0,0,0,.80);
 
-/* gold crown rim */
+  transition:box-shadow 180ms ease, border-color 180ms ease;
+}
 .d::before{
   content:"";
   position:absolute;inset:0;border-radius:30px;padding:1px;
-  background:linear-gradient(135deg,
-    rgba(212,175,55,0) 0%,
-    rgba(212,175,55,.55) 34%,
-    rgba(212,175,55,.92) 50%,
-    rgba(212,175,55,.55) 66%,
-    rgba(212,175,55,0) 100%
-  );
-  opacity:.82;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.70;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
+  -webkit-mask-composite:xor; mask-composite:exclude;
   pointer-events:none;
 }
-
-/* crisp specular cap (strong like Door) */
 .d::after{
   content:"";
   position:absolute;inset:0;border-radius:30px;
   background:
-    radial-gradient(130% 60% at 50% 14%, rgba(255,255,255,.44) 0%, rgba(255,255,255,0) 62%),
-    radial-gradient(120% 60% at 50% 50%, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 66%),
-    radial-gradient(150% 80% at 50% 96%, rgba(0,0,0,.46) 0%, rgba(0,0,0,0) 56%);
-  opacity:.94;
+    radial-gradient(120% 58% at 50% 16%, rgba(255,255,255,.32) 0%, rgba(255,255,255,0) 64%),
+    radial-gradient(120% 60% at 50% 55%, rgba(255,255,255,.06) 0%, rgba(255,255,255,0) 62%),
+    radial-gradient(140% 70% at 50% 92%, rgba(0,0,0,.36) 0%, rgba(0,0,0,0) 56%);
+  opacity:.92;
   pointer-events:none;
 }
 
+/* IMPORTANT: hover/active MUST NOT override transform (prevents overlap) */
 .d:hover{
-  border-color:rgba(212,175,55,.38);
+  border-color:rgba(212,175,55,.32);
   box-shadow:
-    0 42px 160px rgba(0,0,0,.84),
-    0 0 36px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -64px 120px rgba(0,0,0,.88);
+    0 40px 140px rgba(0,0,0,.80),
+    0 0 32px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -50px 98px rgba(0,0,0,.84);
 }
-.d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
-/* positions */
+/* Positions (OWN transform) */
 .d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
 .d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
@@ -178,15 +161,14 @@ a{color:inherit;text-decoration:none}
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;padding:16px;gap:10px;
   pointer-events:none;user-select:none;
 }
-.lab{font-weight:950;letter-spacing:.8px;font-size:18px;text-shadow:0 0 18px rgba(255,255,255,.18)}
+.lab{font-weight:950;letter-spacing:.8px;font-size:18px;text-shadow:0 0 18px rgba(255,255,255,.16)}
 .sub{font-size:13px;opacity:.84;line-height:1.3;max-width:18em}
 
-/* core */
+/* Core */
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -199,12 +181,12 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* dock */
+/* Dock (tap-safe wrapper) */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:90;width:min(900px,94vw);
+  z-index:120;width:min(900px,94vw);
   display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
   padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
@@ -212,13 +194,10 @@ a{color:inherit;text-decoration:none}
 }
 .dock .btn{pointer-events:auto}
 
-/* responsive */
 @media (max-width:560px){
-  :root{ --D: 168px; }
-  .stage{ top:54%; }
-}
-@media (max-width:420px){
-  :root{ --D: 156px; }
+  :root{--R:142px}
+  .d{width:180px;height:180px}
+  .stage{top:54%}
 }
 </style>
 </head>
@@ -231,38 +210,38 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <div class="brand">
-  <div class="name">PRODUCTS</div>
-  <div class="tag">Four volumes · One catalog spine</div>
+  <div class="name" id="brandName">PRODUCTS</div>
+  <div class="tag" id="brandTag">Four volumes · One catalog spine</div>
 </div>
 
 <div class="stage" aria-label="Products catalog">
   <div class="outer"></div>
 
-  <div class="d d-n" id="goEnergy" role="button" tabindex="0" aria-label="Energy">
+  <div class="d d-n" id="goEnergy" role="button" tabindex="0" onclick="window.__goP('energy')" aria-label="Energy">
     <div class="inner">
-      <div class="lab">ENERGY</div>
-      <div class="sub">Industrial plasma substitution · Gated fusion readiness</div>
+      <div class="lab" id="labEnergy">ENERGY</div>
+      <div class="sub" id="subEnergy">Industrial plasma substitution · Gated fusion readiness</div>
     </div>
   </div>
 
-  <div class="d d-e" id="goEducation" role="button" tabindex="0" aria-label="Education">
+  <div class="d d-e" id="goEducation" role="button" tabindex="0" onclick="window.__goP('education')" aria-label="Education">
     <div class="inner">
-      <div class="lab">EDUCATION</div>
-      <div class="sub">Language compression · Traversal learning systems</div>
+      <div class="lab" id="labEducation">EDUCATION</div>
+      <div class="sub" id="subEducation">Language compression · Traversal learning systems</div>
     </div>
   </div>
 
-  <div class="d d-s" id="goSoftware" role="button" tabindex="0" aria-label="Software">
+  <div class="d d-s" id="goSoftware" role="button" tabindex="0" onclick="window.__goP('software')" aria-label="Software">
     <div class="inner">
-      <div class="lab">SOFTWARE</div>
-      <div class="sub">Instrumentation · Dashboards · Execution engines</div>
+      <div class="lab" id="labSoftware">SOFTWARE</div>
+      <div class="sub" id="subSoftware">Instrumentation · Dashboards · Execution engines</div>
     </div>
   </div>
 
-  <div class="d d-w" id="goCommercial" role="button" tabindex="0" aria-label="Commercial">
+  <div class="d d-w" id="goCommercial" role="button" tabindex="0" onclick="window.__goP('commercial')" aria-label="Commercial">
     <div class="inner">
-      <div class="lab">COMMERCIAL</div>
-      <div class="sub">Deployment packaging · Licensing · Phase rollout</div>
+      <div class="lab" id="labCommercial">COMMERCIAL</div>
+      <div class="sub" id="subCommercial">Deployment packaging · Licensing · Phase rollout</div>
     </div>
   </div>
 
@@ -273,60 +252,39 @@ a{color:inherit;text-decoration:none}
   <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
   <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGGES</a>
   <a class="btn" id="dockLinks" href="/links/">LINKS</a>
 </nav>
 
 <script>
 (function(){
-  // state hydration (gd_* only)
-  var qs = new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var qs=new URLSearchParams(location.search);
+  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+  var style=qs.get("style")||localStorage.getItem("gd_style")||"formal";
+  var time=qs.get("time")||localStorage.getItem("gd_time")||"now";
   if(time==="trajectory") time="post";
-  if(lang!=="en" && lang!=="zh") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(lang!=="en"&&lang!=="zh") lang="en";
+  if(style!=="formal"&&style!=="informal") style="formal";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  try{localStorage.setItem("gd_lang",lang);localStorage.setItem("gd_style",style);localStorage.setItem("gd_time",time);}catch(e){}
+  function q(){return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);}
+  document.getElementById("btnHub").href="/home/"+q();
+  document.getElementById("btnExit").href="/door/"+q();
+  document.getElementById("dockTerminal").href="/index.html"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
+  document.getElementById("dockLinks").href="/links/"+q();
 
-  try{
-    localStorage.setItem("gd_lang", lang);
-    localStorage.setItem("gd_style", style);
-    localStorage.setItem("gd_time", time);
-  }catch(e){}
+  window.__goP=function(which){
+    var map={energy:"/products/energy/",education:"/products/education/",software:"/products/software/",commercial:"/products/commercial/"};
+    location.href=(map[which]||"/products/")+q();
+  };
 
-  function q(){
-    var p = new URLSearchParams();
-    p.set("lang", lang);
-    p.set("style", style);
-    p.set("time", time);
-    return "?" + p.toString();
-  }
-
-  document.getElementById("btnHub").href  = "/home/" + q();
-  document.getElementById("btnExit").href = "/door/" + q();
-
-  document.getElementById("dockTerminal").href = "/index.html" + q();
-  document.getElementById("dockProducts").href = "/products/" + q();
-  document.getElementById("dockLaws").href = "/laws/" + q();
-  document.getElementById("dockGauges").href = "/gauges/" + q();
-  document.getElementById("dockLinks").href = "/links/" + q();
-
-  function go(path){ location.href = path + q(); }
-
-  [
-    ["goEnergy","/products/energy/"],
-    ["goEducation","/products/education/"],
-    ["goSoftware","/products/software/"],
-    ["goCommercial","/products/commercial/"]
-  ].forEach(function(pair){
-    var el = document.getElementById(pair[0]);
-    var path = pair[1];
+  [["goEnergy","energy"],["goEducation","education"],["goSoftware","software"],["goCommercial","commercial"]].forEach(function(p){
+    var el=document.getElementById(p[0]);
     if(!el) return;
-    el.addEventListener("click", function(){ go(path); });
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }
-    });
+    el.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();window.__goP(p[1]);}});
   });
 })();
 </script>

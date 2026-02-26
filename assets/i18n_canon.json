@@ -1,12 +1,14 @@
-/* TNT — /assets/i18n_canon.json  (i18n_canon_v1 · EN/中文)
+/* TNT — /assets/i18n_canon.json  (i18n_canon_v1.1 · EN/中文)
    LOCKS:
    - Canonical langs: ["en","zh"]
    - Primary: "en"
    - Symbols listed in meta.invariant_symbols are treated as invariant labels.
+   PATCH:
+   - Home subtitle upgraded from hexagonal wording to OCTAGONAL PROCESSOR wording (matches current direction).
 */
 {
   "meta": {
-    "id": "i18n_canon_v1",
+    "id": "i18n_canon_v1.1",
     "canon_langs": ["en", "zh"],
     "primary_lang": "en",
     "invariant_symbols": ["DIAMOND", "CARES", "UCI", "HIP", "ρ", "TC", "Δ", "λ", "CERT"]
@@ -23,7 +25,7 @@
     },
     "home": {
       "title": "COMPASS",
-      "subtitle": "Hexagonal Enforcement Geometry"
+      "subtitle": "Octagonal Processor Geometry"
     },
     "axes": {
       "nucleus": { "title": "DIAMOND", "kicker": "Nucleus" },
@@ -47,7 +49,7 @@
     },
     "home": {
       "title": "COMPASS",
-      "subtitle": "六轴约束几何"
+      "subtitle": "八角处理器几何"
     },
     "axes": {
       "nucleus": { "title": "DIAMOND", "kicker": "核心" },

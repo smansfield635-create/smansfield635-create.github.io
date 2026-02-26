@@ -1,3 +1,4 @@
+<!-- TNT — /products/energy/index.html  (ENERGY · FULL · 10 DOMAINS · 49 BULLETS · CLIENT TRANSFORM · PEARLESCENT LOCK) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -12,38 +13,53 @@
 :root{
   --R:150px;
   --D:188px;
-  --goldSoft:rgba(212,175,55,.45);
+  --goldSoft:rgba(212,175,55,.55);
+  --mut:rgba(255,255,255,.90);
+  --mut2:rgba(255,255,255,.72);
 }
 
-/* ---------- BASE ---------- */
+/* Base */
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{text-decoration:none;color:inherit}
+body::before,body::after{pointer-events:none!important}
 
-/* ---------- HEADER ---------- */
+/* Top-left */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:120;
-  display:flex;gap:10px;
+  position:fixed;left:16px;top:16px;z-index:130;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
+.btn{
+  padding:10px 16px;border-radius:14px;
+  background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  color:#fff;border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.70);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.90),0 0 14px rgba(212,175,55,.18)}
 
+/* Brand */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:110;text-align:center;
+  z-index:120;text-align:center;
   padding:10px 18px;border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
+  pointer-events:none;
 }
-.brand .t{font-weight:950;font-size:42px;letter-spacing:.3px}
-.brand .s{opacity:.85;font-size:14px;margin-top:4px}
+.brand .t{font-weight:950;font-size:42px;letter-spacing:.3px;line-height:1.02;margin:0}
+.brand .s{opacity:.85;font-size:14px;margin:6px 0 0;line-height:1.25}
 
-/* ---------- DIAMOND STAGE ---------- */
+/* Stage */
 .stage{
   position:fixed;left:50%;top:56%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
+  z-index:60;
 }
 
-/* ---------- GLOSSY PEARLESCENT DIAMOND ---------- */
+/* PEARLESCENT DIAMOND (LOCKED) */
 .d{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
@@ -52,109 +68,202 @@ a{text-decoration:none;color:inherit}
   cursor:pointer;
   pointer-events:auto;
   touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
 
   background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.48), transparent 48%),
     radial-gradient(circle at 72% 78%, rgba(0,120,255,.28), transparent 60%),
-    radial-gradient(circle at 40% 60%, rgba(255,255,255,.08), transparent 70%),
+    radial-gradient(circle at 46% 56%, rgba(255,255,255,.08), transparent 70%),
     linear-gradient(160deg, rgba(12,22,38,.96), rgba(6,10,16,.98));
 
   border:1px solid rgba(255,255,255,.18);
-  box-shadow:
-    0 40px 140px rgba(0,0,0,.85),
-    0 0 30px rgba(212,175,55,.35),
-    inset 0 2px 0 rgba(255,255,255,.25),
-    inset 0 -50px 80px rgba(0,0,0,.85);
 
-  transition:transform .2s ease, box-shadow .2s ease;
+  box-shadow:
+    0 42px 130px rgba(0,0,0,.88),
+    0 0 38px rgba(212,175,55,.32),
+    inset 0 2px 0 rgba(255,255,255,.24),
+    inset 0 -44px 80px rgba(0,0,0,.80);
+
+  transition:transform .18s ease, box-shadow .18s ease;
 }
 .d::before{
   content:"";
   position:absolute;inset:0;border-radius:28px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.65;
+  opacity:.75;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
+  pointer-events:none;
 }
 .d::after{
   content:"";
-  position:absolute;left:8%;right:8%;top:10%;height:30%;
+  position:absolute;left:10%;right:10%;top:10%;height:28%;
   border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.28), rgba(255,255,255,0));
+  background:linear-gradient(to bottom, rgba(255,255,255,.30), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  pointer-events:none;
 }
-.d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-}
-
+.d:hover{transform:translate(-50%,-50%) rotate(45deg) scale(1.03)}
 .d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R)*-1)) rotate(45deg)}
-.d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
-.d-s{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
-.d-w{transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg)}
 
 .inner{
-  transform:rotate(-45deg);
+  transform:rotate(-45deg) translateY(-4px);
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  text-align:center;
-  height:100%;
-  padding:14px;
+  text-align:center;height:100%;
+  padding:14px;gap:8px;
+  pointer-events:none;
 }
-.lab{font-weight:950;font-size:18px}
-.sub{font-size:13px;opacity:.85}
+.lab{font-weight:950;font-size:18px;letter-spacing:.5px;text-shadow:0 0 14px rgba(255,255,255,.18)}
+.sub{font-size:13px;opacity:.90;max-width:18em;line-height:1.25}
 
-/* ---------- MODAL ---------- */
+/* Dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:120;
+  width:min(980px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  pointer-events:none;
+}
+.dock .btn{pointer-events:auto}
+
+/* Modal */
 .bd{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.7);
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.72);
   backdrop-filter:blur(10px);
   display:none;
 }
 .bd.show{display:block}
-
 .modal{
   position:fixed;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(1100px,96vw);
-  max-height:90vh;
+  width:min(1180px,96vw);
+  height:90vh;
   display:none;
+  z-index:210;
 }
 .modal.show{display:block}
-
 .shell{
+  height:90vh;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.14);
   background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:24px;
-  padding:22px;
-  overflow:auto;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
 }
-
-/* ---------- DOMAIN BLOCK ---------- */
-.domain{
-  margin-bottom:20px;
-  padding:18px;
-  border-radius:18px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.08);
-  transition:opacity .2s ease;
+.mhead{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
 }
+.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
+.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
+.mbody{padding:0;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-.domain h3{
-  margin:0 0 10px 0;
-  font-weight:900;
-  font-size:18px;
+/* Lens bar */
+.lensbar{
+  position:sticky;top:0;z-index:30;
+  background:rgba(0,0,0,.62);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  padding:12px 12px 10px;
 }
-
-.domain p{
-  margin:6px 0;
-  line-height:1.5;
-  opacity:.95;
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 10px}
+.cluster{
+  display:flex;gap:8px;align-items:center;
+  padding:8px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
 }
-
-/* ---------- GRAYED REDUNDANT ---------- */
-.domain.redundant{
-  opacity:.35;
+.tag{
+  font-size:11px;letter-spacing:1.6px;opacity:.75;text-transform:uppercase;
+  padding:0 8px 0 6px;
+}
+.pill{
+  padding:10px 14px;border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.pill.active{
+  border-color:rgba(212,175,55,.55);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.22);
+}
+.pill.disabled{
+  opacity:.28;
+  filter:grayscale(1);
   pointer-events:none;
+}
+
+/* Header inside modal */
+.hcard{
+  max-width:980px;margin:0 auto;
+  padding:12px 14px;border-radius:18px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.10);
+}
+.h1{margin:0 0 4px;font-weight:950;font-size:14px}
+.h2{margin:0;color:var(--mut);line-height:1.45;font-size:12.5px}
+.h3{margin:8px 0 0;color:rgba(255,255,255,.70);font-size:12px;line-height:1.35}
+
+/* Domain list */
+.content{padding:14px 16px 18px}
+.domainList{display:flex;flex-direction:column;gap:12px;max-width:980px;margin:0 auto}
+.domainRow{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
+}
+.domainRow.open{box-shadow:0 18px 60px rgba(0,0,0,.72), 0 0 26px rgba(212,175,55,.12)}
+.domainRow.redundant{opacity:.33;filter:grayscale(1);pointer-events:none}
+
+.domainHead{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:14px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent
+}
+.left{display:flex;align-items:center;gap:12px;min-width:0}
+.bar{width:6px;height:22px;border-radius:99px;background:var(--domc);flex:0 0 auto}
+.title{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.subline{font-size:12px;opacity:.72;margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto}
+
+.body{
+  display:none;
+  padding:14px 16px 10px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.domainRow.open .body{display:block}
+ul.bul{margin:0;padding-left:18px;color:var(--mut2)}
+ul.bul li{margin:8px 0;line-height:1.44}
+
+/* Actions */
+.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.sbtn{
+  padding:12px 18px;border-radius:14px;
+  background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  color:#fff;border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.7);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
+}
+
+@media (max-width:560px){
+  :root{--R:136px;--D:176px}
+  .stage{top:58%}
+  .brand .t{font-size:38px}
 }
 </style>
 </head>
@@ -162,117 +271,851 @@ a{text-decoration:none;color:inherit}
 <body>
 
 <div class="top-left">
-  <a class="btn" href="/products/">BACK</a>
-  <a class="btn" href="/door/">EXIT</a>
+  <a class="btn" id="btnBack" href="/products/">BACK</a>
+  <a class="btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
-<div class="brand">
+<div class="brand" aria-hidden="true">
   <div class="t">Energy</div>
-  <div class="s">Industrial architecture · disciplined clarity</div>
+  <div class="s">Industrial Plasma · Structured Expansion</div>
 </div>
 
 <div class="stage">
-  <div class="d d-n" id="openModal">
+  <div class="d d-n" id="openModal" role="button" tabindex="0" aria-label="Open Energy">
     <div class="inner">
-      <div class="lab">Energy Systems</div>
-      <div class="sub">Unified operational structure</div>
+      <div class="lab">ENERGY</div>
+      <div class="sub">Open the full domain matrix</div>
     </div>
   </div>
 </div>
 
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="btn" id="dockHome" href="/home/">HUB</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
+</nav>
+
 <div class="bd" id="bd"></div>
 
-<div class="modal" id="modal">
-  <div class="shell" id="shell"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="shell">
+    <div class="mhead">
+      <h3 class="mtitle" id="mTitle">ENERGY · Domains</h3>
+      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
+    </div>
+
+    <div class="mbody" id="mbody">
+      <div class="lensbar">
+        <div class="row">
+          <div class="cluster">
+            <div class="tag">STYLE</div>
+            <div class="pill active" data-style="formal">FORMAL</div>
+            <div class="pill" data-style="informal">INFORMAL</div>
+          </div>
+          <div class="cluster">
+            <div class="tag">TIME</div>
+            <div class="pill active" data-time="concept">CONCEPT</div>
+            <div class="pill" data-time="live">LIVE</div>
+            <div class="pill" data-time="roadmap">ROADMAP</div>
+          </div>
+          <div class="cluster">
+            <div class="tag">DIR</div>
+            <div class="pill active" data-dir="cause">CAUSE</div>
+            <div class="pill" data-dir="effect">EFFECT</div>
+          </div>
+        </div>
+
+        <div class="hcard">
+          <div class="h1" id="h1">—</div>
+          <div class="h2" id="h2">—</div>
+          <div class="h3">Public posture is Industrial thermal substitution (C). No net-positive fusion claim. Fusion readiness is requirements-only.</div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="domainList" id="domainList"></div>
+
+        <div class="mact">
+          <button class="sbtn" id="mReturn" type="button">RETURN</button>
+          <a class="sbtn" id="mFusion" href="/explore/fusion-readiness/">FUSION READINESS</a>
+          <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
+          <a class="sbtn" id="mJumpHub" href="/home/">JUMP HUB</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-const domains = [
-"Engineering",
-"Technology",
-"Industrial",
-"Environmental",
-"Financial",
-"Governance",
-"Adversarial",
-"Social",
-"Medical",
-"Political"
-];
+(function(){
+  // ===== gd_* state hydration =====
+  const qs = new URLSearchParams(location.search);
+  let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  let gdStyle = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  let gdTime  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
+  if(!["en","zh"].includes(lang)) lang="en";
+  if(!["formal","informal"].includes(gdStyle)) gdStyle="formal";
+  if(gdTime==="trajectory") gdTime="post";
+  if(!["origin","now","post"].includes(gdTime)) gdTime="origin";
+  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime); }catch(e){}
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
-/* ---------- LENS STATE ---------- */
-let lens = {
- style:"formal",       // formal | informal
- axis:"cause",         // cause | effect
- time:"concept"        // concept | live | roadmap
-};
+  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(gdStyle)+"&time="+encodeURIComponent(gdTime); }
+  (function(){
+    const s=q();
+    document.getElementById("btnBack").href="/products/?"+s;
+    document.getElementById("btnExit").href="/door/?"+s;
+    document.getElementById("dockTerminal").href="/index.html?"+s;
+    document.getElementById("dockHome").href="/home/?"+s;
+    document.getElementById("dockProducts").href="/products/?"+s;
+    document.getElementById("dockLaws").href="/laws/?"+s;
+    document.getElementById("dockLinks").href="/links/?"+s;
+    document.getElementById("mFusion").href="/explore/fusion-readiness/?"+s;
+    document.getElementById("mJumpProducts").href="/products/?"+s;
+    document.getElementById("mJumpHub").href="/home/?"+s;
+  })();
 
-/* ---------- UNIQUE CONTENT ENGINE ---------- */
-function generateParagraph(domain, index){
-  const tone = lens.style === "formal"
-    ? `In ${domain.toLowerCase()} systems,`
-    : `In the world of ${domain.toLowerCase()},`;
+  // ===== Domains (10) + colors =====
+  const DOMAINS = [
+    "Engineering","Technology","Industrial","Environmental","Financial",
+    "Governance","Adversarial","Social","Legal","Political"
+  ];
+  const COLORS = {
+    Engineering:"#1E40AF",
+    Technology:"#6D28D9",
+    Industrial:"#B45309",
+    Environmental:"#0F766E",
+    Financial:"#047857",
+    Governance:"#475569",
+    Adversarial:"#B91C1C",
+    Social:"#D4AF37",
+    Legal:"#334155",
+    Political:"#7C2D12"
+  };
 
-  const axis = lens.axis === "cause"
-    ? "the drivers determine structure"
-    : "the outcomes reveal structure";
+  // ===== Full 49-bullet spines (10) =====
+  const SPINE = window.__ENERGY_SPINE__ || (function(){
+    // In case this file is copied alone, embed the same full arrays:
+    return {
+      Engineering: (function(){
+        const a = [
+          "Energy begins as a constraint problem, not a power problem.",
+          "Every industrial system fails first at its boundaries, not its core.",
+          "Engineering prevents boundary failure from becoming systemic failure.",
+          "Heat is not dangerous; uncontrolled heat is.",
+          "Confinement is about predictability, not strength.",
+          "Stability is measured in variance bands, not peak output.",
+          "A design that cannot tolerate stress has no right to scale.",
+          "Industrial plasma is treated as a thermal instrument first.",
+          "The regime is modeled as a controllable reaction space.",
+          "The reaction space remains segregated from human endpoints.",
+          "Mechanical isolation precedes electrical integration.",
+          "Electrical integration precedes economic expansion.",
+          "Economic expansion never precedes safety validation.",
+          "This ordering is structural, not optional.",
+          "Every module has a defined failure envelope.",
+          "Every envelope has a documented escalation path.",
+          "Every escalation path has a termination condition.",
+          "Termination conditions are enforced automatically.",
+          "No override exists without logging.",
+          "No logging exists without audit.",
+          "Audit exists independently of operator preference.",
+          "Engineering assumes material fatigue.",
+          "Engineering assumes seal degradation.",
+          "Engineering assumes transient oscillations.",
+          "Engineering assumes telemetry drift.",
+          "Engineering assumes human error.",
+          "Engineering assumes adversarial interference.",
+          "Engineering assumes time.",
+          "Buffers convert volatility into continuity.",
+          "Isolation converts exposure into compartmentalization.",
+          "Measurement converts narrative into data.",
+          "Data converts opinion into admissibility.",
+          "Admissibility converts ambition into staged expansion.",
+          "Staged expansion converts risk into managed growth.",
+          "Managed growth preserves structural integrity.",
+          "Energy systems are built from the inside outward.",
+          "Inner constraints define outer capability.",
+          "Outer capability never redefines inner constraints.",
+          "When outer ambition pressures inner boundaries, the system must refuse.",
+          "Refusal is a feature, not a weakness.",
+          "Discipline prevents catastrophe disguised as progress.",
+          "The system does not negotiate with physics.",
+          "Industrial posture remains thermal substitution.",
+          "No net-positive fusion claim is asserted here.",
+          "Readiness pathways are separated from operational claims.",
+          "Fusion remains a requirements-only lane.",
+          "Requirements are not achievements.",
+          "Achievement demands independent proof chains.",
+          "Until proof exists, classification remains Industrial (C)."
+        ];
+        return a;
+      })(),
 
-  const time = lens.time === "concept"
-    ? "at the conceptual layer"
-    : lens.time === "live"
-    ? "under active deployment"
-    : "along projected expansion";
+      Technology: (function(){
+        const a = [
+          "Technology functions as the nervous system of the architecture.",
+          "It interprets power rather than inventing it.",
+          "Sensors convert phenomena into signals.",
+          "Signals must survive noise before they survive scale.",
+          "Control requires signal fidelity.",
+          "Fidelity collapses when telemetry is ambiguous.",
+          "Ambiguity collapses under load.",
+          "Telemetry is redundant where failure risk is asymmetric.",
+          "Redundancy is divergence verification, not duplication theater.",
+          "Time synchronization defines causal truth.",
+          "Clock drift produces conclusion drift.",
+          "Data integrity precedes analytics.",
+          "Analytics precedes automation.",
+          "Automation never outruns auditability.",
+          "Every stream is hash-sealed at ingestion.",
+          "Every modification is epoch-bound.",
+          "No retroactive edits are permitted.",
+          "A broken chain invalidates aggregation.",
+          "Invalid aggregation cannot authorize advancement.",
+          "Advancement without validation is structural fraud.",
+          "Fraud erodes trust.",
+          "Interfaces must be deterministic.",
+          "Determinism reduces interpretive variance.",
+          "Variance increases operational entropy.",
+          "Entropy increases fragility.",
+          "Fragility increases cost.",
+          "Cost pressures compromise.",
+          "Compromise destabilizes systems.",
+          "Latency remains bounded.",
+          "Bandwidth matches telemetry density.",
+          "Compression preserves invariants.",
+          "Parsing preserves semantic binding.",
+          "Binding survives transport.",
+          "Transport survives disruption.",
+          "Disruption must not corrupt logs.",
+          "Dashboards are observational, not declarative.",
+          "Visualization never overrides raw measurement.",
+          "UI clarity does not replace fidelity.",
+          "Auditability defines admissibility.",
+          "Admissibility defines escalation eligibility.",
+          "Eligibility defines growth capacity.",
+          "Technology eliminates ambiguity.",
+          "Technology rejects spectacle as evidence.",
+          "Classification does not change because the UI is polished.",
+          "Readiness remains gated behind instrumentation sufficiency.",
+          "Sufficiency demands calibrated evidence.",
+          "Evidence demands independent reproducibility.",
+          "Without that, classification remains Industrial (C)."
+        ];
+        return a;
+      })(),
 
-  return `${tone} ${axis} ${time}.`;
-}
+      Industrial: (function(){
+        const a = [
+          "Industrial deployment is the visible face of the architecture.",
+          "It substitutes unstable heat sources with controlled plasma heat.",
+          "Substitution is practical, not philosophical.",
+          "Practical systems survive maintenance cycles.",
+          "Maintenance cycles must be predictable.",
+          "Predictability lowers operating risk.",
+          "Lower risk attracts stable capital.",
+          "Deployment occurs in phases.",
+          "Phase one proves containment.",
+          "Phase two proves repetition.",
+          "Phase three proves integration.",
+          "Integration must not shock adjacent systems.",
+          "Adjacent systems remain insulated from plasma variability.",
+          "Insulation is structural, not cosmetic.",
+          "Buffer reservoirs absorb volatility.",
+          "Volatility without buffers becomes cascade.",
+          "Cascades convert minor faults into major failures.",
+          "Isolation converts cascade into containment.",
+          "Containment preserves continuity.",
+          "Continuity protects stakeholders.",
+          "Stakeholder protection preserves adoption.",
+          "Industrial contracts map to certification tiers.",
+          "Certification tiers reflect envelope hardness.",
+          "Hardness defines insurability.",
+          "Insurability defines capital cost.",
+          "Capital cost constrains scale.",
+          "Scale never exceeds envelope capacity.",
+          "Thermal output is measured against declared load.",
+          "Load variability is bounded.",
+          "Bounding requires telemetry integrity.",
+          "Integrity requires technological discipline.",
+          "Discipline requires governance.",
+          "Governance requires audit.",
+          "Audit requires transparency.",
+          "No industrial site claims fusion gain.",
+          "No industrial site claims net-electric baseload output.",
+          "Industrial sites claim thermal substitution only.",
+          "Substitution is measurable.",
+          "Measurement is verifiable.",
+          "Verification is auditable.",
+          "Auditability defines credibility.",
+          "Scaling requires receipts.",
+          "Receipts require logs.",
+          "Logs require integrity locks.",
+          "Locks require enforcement.",
+          "Enforcement requires independence.",
+          "Independence requires separation of powers.",
+          "Classification remains (C) until proof forces change."
+        ];
+        return a;
+      })(),
 
-/* ---------- RENDER ---------- */
-function render(){
-  const shell = document.getElementById("shell");
-  shell.innerHTML = "";
+      Environmental: (function(){
+        const a = [
+          "Environmental posture is boundary-driven.",
+          "Plasma never contacts ecological endpoints.",
+          "Thermal exchange remains mediated.",
+          "Mediation prevents direct ecological coupling.",
+          "Coupling without mediation creates liability.",
+          "Liability erodes long-term viability.",
+          "Viability depends on ecological neutrality.",
+          "Air interface remains filtered.",
+          "Water interface remains segregated.",
+          "Soil interface remains exchanger-only.",
+          "Heat discharge remains band-limited.",
+          "Band limits prevent ecosystem shock.",
+          "Shock avoidance preserves biodiversity.",
+          "Biodiversity preservation reduces systemic risk.",
+          "Emission bands are measured continuously.",
+          "Continuous measurement prevents episodic blindness.",
+          "Episodic blindness masks degradation.",
+          "Degradation compounds quietly.",
+          "Compounding becomes crisis.",
+          "Crisis destroys adoption.",
+          "Buffer zones are spatial constraints.",
+          "Spatial constraints reduce coupling.",
+          "Reduced coupling prevents correlated failure.",
+          "Correlated failure magnifies small faults.",
+          "Small faults are inevitable.",
+          "Inevitability demands margin.",
+          "Margin preserves stability.",
+          "Impact reports are engineering documents.",
+          "Engineering documents bind thresholds.",
+          "Threshold breaches trigger escalation.",
+          "Escalation halts operation.",
+          "Halting protects ecosystems.",
+          "Protection protects legitimacy.",
+          "No ecological gain claim is made.",
+          "No atmospheric transformation claim is made.",
+          "Environmental benefit is displacement of unstable thermal sources.",
+          "Displacement must be quantifiable.",
+          "Quantification must be reproducible.",
+          "Reproducibility must be independent.",
+          "Independence validates credibility.",
+          "Environmental classification is operational.",
+          "It is not ideological.",
+          "It is not speculative.",
+          "It is measured.",
+          "It is bounded.",
+          "It remains within Industrial (C).",
+          "Environmental compliance is continuous.",
+          "Expansion never proceeds without validated envelopes."
+        ];
+        return a;
+      })(),
 
-  domains.forEach((d,i)=>{
-    const block = document.createElement("div");
-    block.className="domain";
-    block.innerHTML=`<h3>${d}</h3>`;
+      Financial: (function(){
+        const a = [
+          "Capital does not tolerate uncertainty without compensation.",
+          "Compensation increases cost of scale.",
+          "Increased cost constrains deployment velocity.",
+          "Constrained velocity increases exposure.",
+          "Exposure amplifies risk sensitivity.",
+          "Risk sensitivity demands measurable boundaries.",
+          "Boundaries reduce capital volatility.",
+          "Financial discipline begins with classification integrity.",
+          "Industrial (C) classification anchors underwriting logic.",
+          "Underwriting defines exposure ceilings.",
+          "Ceilings define insurance tier.",
+          "Tier defines financing structure.",
+          "Structure defines runway length.",
+          "Runway defines survivability.",
+          "Forecasting without measurement is speculation.",
+          "Speculation inflates narrative.",
+          "Inflated narrative collapses under audit.",
+          "Audit collapse destroys trust.",
+          "Trust collapse multiplies cost of capital.",
+          "Capital cost reduces margin.",
+          "Reduced margin increases fragility.",
+          "Cash flow reflects containment cost.",
+          "Containment cost reflects engineering truth.",
+          "Engineering truth reflects telemetry data.",
+          "Telemetry reflects calibrated instruments.",
+          "Calibration is traceable.",
+          "Traceability ensures replicability.",
+          "Replicability strengthens credibility.",
+          "Scaling requires reserve buffers.",
+          "Buffers reduce shock amplification.",
+          "Shock amplification erodes covenant stability.",
+          "Instability increases refinancing risk.",
+          "Refinancing risk triggers forced restructuring.",
+          "Restructuring disrupts operations.",
+          "Disruption weakens adoption.",
+          "Financial clarity requires honest classification.",
+          "Honest classification forbids premature gain claims.",
+          "No net-electric claim is permitted.",
+          "Thermal substitution remains the revenue surface.",
+          "Revenue must match operational reality.",
+          "Reality must match logged data.",
+          "Logs must withstand scrutiny.",
+          "Capital flows toward disciplined systems.",
+          "Discipline requires governance enforcement.",
+          "Enforcement requires structural separation.",
+          "Separation prevents manipulation.",
+          "Manipulation destroys valuation.",
+          "Valuation depends on credibility.",
+          "Credibility depends on coherence."
+        ];
+        return a;
+      })(),
 
-    for(let x=0;x<7;x++){
-      const p=document.createElement("p");
-      p.textContent = generateParagraph(d,x);
-      block.appendChild(p);
+      Governance: (function(){
+        const a = [
+          "Governance defines who can change what and when.",
+          "Change authority is bounded.",
+          "Boundaries prevent internal capture.",
+          "Capture corrupts measurement.",
+          "Corrupted measurement corrupts classification.",
+          "Corrupted classification corrupts scaling.",
+          "Corrupted scaling collapses systems.",
+          "Governance begins with non-retroactivity.",
+          "Past records remain immutable.",
+          "Immutable records prevent silent reclassification.",
+          "Silent reclassification hides failure.",
+          "Hidden failure accumulates systemic debt.",
+          "Debt converts into crisis.",
+          "Crisis demands emergency intervention.",
+          "Emergency intervention without protocol causes overcorrection.",
+          "Overcorrection destabilizes legitimate operation.",
+          "Stability requires predefined escalation gates.",
+          "Gates require measurable triggers.",
+          "Triggers require clear definitions.",
+          "Definitions require semantic locking.",
+          "Locking prevents drift.",
+          "Terminology drift alters perception.",
+          "Perception drift alters policy.",
+          "Policy drift alters behavior.",
+          "Behavior drift alters safety.",
+          "Safety must not depend on interpretation.",
+          "Interpretation must not override instrumentation.",
+          "Instrumentation outranks narrative.",
+          "Governance enforces classification discipline.",
+          "Industrial (C) posture is binding until overridden by proof.",
+          "Proof requires independent audit.",
+          "Audit requires disproof criteria.",
+          "Disproof criteria must be published.",
+          "Publication ensures accountability.",
+          "Accountability stabilizes legitimacy.",
+          "Role separation prevents incentive distortion.",
+          "Incentive distortion encourages misreporting.",
+          "Misreporting contaminates aggregation.",
+          "Contaminated aggregation produces false escalation.",
+          "False escalation damages trust.",
+          "Trust is costly to restore.",
+          "Prevention is cheaper than repair.",
+          "Governance sustains coherence under pressure.",
+          "Weakness must be logged, not hidden.",
+          "Hidden weakness compounds risk.",
+          "Compounded risk magnifies collapse probability.",
+          "Governance reduces collapse probability.",
+          "Reduced probability sustains adoption."
+        ];
+        return a;
+      })(),
+
+      Adversarial: (function(){
+        const a = [
+          "Every system must assume hostile conditions.",
+          "Hostility may be accidental or intentional.",
+          "Both produce damage if uncontained.",
+          "Containment requires segmentation.",
+          "Segmentation limits blast radius.",
+          "Limited blast radius preserves continuity.",
+          "Continuity protects viability.",
+          "Telemetry must be tamper-evident.",
+          "Tamper evidence requires chaining.",
+          "Broken chains invalidate trust.",
+          "Invalid trust blocks escalation.",
+          "Escalation without trust invites manipulation.",
+          "Manipulation creates artificial performance.",
+          "Artificial performance collapses under scrutiny.",
+          "Red-team simulation precedes public scaling.",
+          "Simulation exposes weak nodes.",
+          "Weak nodes require reinforcement.",
+          "Reinforcement precedes expansion.",
+          "Expansion multiplies vulnerability.",
+          "Vulnerability invites exploitation.",
+          "Exploitation damages reputation.",
+          "Access controls follow least privilege.",
+          "Privilege creep introduces silent escalation.",
+          "Silent escalation bypasses containment.",
+          "Bypass invalidates audit trails.",
+          "Invalid trails eliminate accountability.",
+          "Accountability loss encourages abuse.",
+          "Abuse destabilizes structure.",
+          "Attack surfaces expand with complexity.",
+          "Complexity must be bounded by modular design.",
+          "Modularity isolates failure.",
+          "Isolation reduces contagion.",
+          "Reduced contagion protects scale.",
+          "Scale without protection accelerates collapse.",
+          "Protection precedes ambition.",
+          "Adversarial review includes internal threats.",
+          "Internal threats masquerade as convenience.",
+          "Convenience erodes discipline.",
+          "Discipline erosion weakens integrity.",
+          "Integrity collapse destroys classification.",
+          "Classification collapse destroys trust.",
+          "Trust is expensive to restore.",
+          "Preparedness reduces surprise amplitude.",
+          "Surprise amplitude defines systemic shock.",
+          "Shock defines survivability.",
+          "Survivability defines long-term presence.",
+          "Long-term presence requires adversarial discipline.",
+          "Manipulation equals breakage.",
+          "Breakage is detected and contained."
+        ];
+        return a;
+      })(),
+
+      Social: (function(){
+        const a = [
+          "Social adoption depends on clarity.",
+          "Clarity reduces fear.",
+          "Reduced fear increases openness.",
+          "Openness increases participation.",
+          "Participation improves refinement.",
+          "Refinement strengthens stability.",
+          "Stability builds trust.",
+          "Language avoids exaggeration.",
+          "Exaggeration triggers skepticism.",
+          "Skepticism increases friction.",
+          "Friction reduces collaboration.",
+          "Reduced collaboration slows diffusion.",
+          "Slowed diffusion increases resistance.",
+          "Resistance reduces scale viability.",
+          "Transparency must be deliberate.",
+          "Overexposure creates confusion.",
+          "Confusion fuels rumor.",
+          "Rumor increases volatility.",
+          "Volatility destabilizes support.",
+          "Support stability requires measured transparency.",
+          "Public posture matches operational truth.",
+          "Mismatch destroys credibility.",
+          "Credibility collapse spreads rapidly.",
+          "Rapid collapse amplifies negative feedback.",
+          "Feedback loops magnify perception drift.",
+          "Perception drift erodes trust.",
+          "Trust requires consistency.",
+          "Education must accompany deployment.",
+          "Deployment without understanding increases misuse.",
+          "Misuse increases incident frequency.",
+          "Incidents damage reputation.",
+          "Reputation damage reduces goodwill.",
+          "Reduced goodwill increases oversight pressure.",
+          "Pressure slows scale.",
+          "Boundaries define expectations.",
+          "Unrealistic expectations create backlash.",
+          "Backlash creates political risk.",
+          "Political risk reduces stability.",
+          "Instability discourages capital.",
+          "Capital withdrawal slows adoption.",
+          "Ethical framing requires measurable claims.",
+          "Measurable claims prevent manipulation.",
+          "Manipulation destroys trust.",
+          "Trust builds networks.",
+          "Networks accelerate diffusion.",
+          "Diffusion requires integrity.",
+          "Integrity sustains long-term legitimacy.",
+          "Legitimacy sustains growth."
+        ];
+        return a;
+      })(),
+
+      Legal: (function(){
+        const a = [
+          "Legal frameworks require definitional precision.",
+          "Precision reduces interpretive ambiguity.",
+          "Ambiguity increases litigation exposure.",
+          "Exposure amplifies compliance cost.",
+          "Compliance cost influences deployment strategy.",
+          "Strategy determines operational footprint.",
+          "Footprint affects liability.",
+          "Liability is bounded by classification.",
+          "Classification reflects measurable behavior.",
+          "Measurable behavior defines admissibility.",
+          "Admissibility defines defensibility.",
+          "Defensibility stabilizes contracts.",
+          "Stable contracts reduce dispute frequency.",
+          "Reduced disputes conserve capital.",
+          "Compliance requires documentation.",
+          "Documentation must be immutable.",
+          "Immutable records prevent retroactive reinterpretation.",
+          "Reinterpretation destabilizes legal standing.",
+          "Standing influences judicial outcomes.",
+          "Outcomes influence investor trust.",
+          "Trust shapes capital allocation.",
+          "Risk disclosure is mandatory.",
+          "Disclosure reflects operational truth.",
+          "Operational truth aligns with telemetry.",
+          "Telemetry remains auditable.",
+          "Auditable logs prevent manipulation.",
+          "Manipulation invalidates contracts.",
+          "Invalid contracts destroy continuity.",
+          "Jurisdictional differences require modular compliance.",
+          "Modularity enables adaptability.",
+          "Adaptability reduces cross-border friction.",
+          "Friction delays scaling.",
+          "Delay increases cost.",
+          "Cost reduces advantage.",
+          "Advantage depends on discipline.",
+          "Legal defense requires coherent record.",
+          "Record matches documentation.",
+          "Documentation matches operations.",
+          "Operations match classification.",
+          "Classification matches measurable fact.",
+          "Fact withstands adversarial review.",
+          "Review protects longevity.",
+          "Legal clarity prevents surprise liability.",
+          "Surprise liability destabilizes strategy.",
+          "Strategy stability enables confidence.",
+          "Confidence reduces dispute escalation.",
+          "Escalation risk remains low.",
+          "Low risk supports adoption.",
+          "Adoption requires legal integrity."
+        ];
+        return a;
+      })(),
+
+      Political: (function(){
+        const a = [
+          "Political systems respond to risk perception.",
+          "Risk perception drives policy formation.",
+          "Policy shapes regulatory posture.",
+          "Regulatory posture influences capital flow.",
+          "Capital flow affects scale viability.",
+          "Scale viability determines leverage.",
+          "Leverage alters international dynamics.",
+          "Classification affects diplomatic framing.",
+          "Framing affects alliance stability.",
+          "Stability reduces trade friction.",
+          "Reduced friction improves adoption pathways.",
+          "Adoption increases global relevance.",
+          "Relevance attracts scrutiny.",
+          "Scrutiny requires transparency.",
+          "Transparency reduces conspiracy narratives.",
+          "Narratives destabilize public opinion.",
+          "Opinion pressures legislators.",
+          "Legislative pressure accelerates oversight.",
+          "Oversight demands documentation.",
+          "Documentation must precede controversy.",
+          "Controversy without preparation destabilizes.",
+          "Trust depends on non-inflated claims.",
+          "Inflated claims provoke backlash.",
+          "Backlash intensifies polarization.",
+          "Polarization reduces rational discourse.",
+          "Reduced discourse impairs policy design.",
+          "Impaired policy creates instability.",
+          "Instability slows scale.",
+          "Longevity requires coherence.",
+          "Coherence reduces fragmentation.",
+          "Fragmentation amplifies misinformation.",
+          "Misinformation damages legitimacy.",
+          "Legitimacy loss destabilizes coalition support.",
+          "Support influences funding.",
+          "Funding supports infrastructure.",
+          "Neutrality strengthens resilience.",
+          "Resilience protects continuity.",
+          "Continuity maintains market confidence.",
+          "Confidence stabilizes policy posture.",
+          "Stable posture reduces reactive regulation.",
+          "Reduced reaction improves planning horizon.",
+          "Horizon defines strategic longevity.",
+          "Energy rhetoric must remain bounded.",
+          "Bounded rhetoric protects public order.",
+          "Public order protects investment climate.",
+          "Investment climate supports scaling.",
+          "Scaling must remain phase-gated.",
+          "Phase-gating reduces systemic shock.",
+          "Reduced shock preserves political stability."
+        ];
+        return a;
+      })()
+    };
+  })();
+
+  // ===== Lens state =====
+  let L = { style:"formal", time:"concept", dir:"cause" };
+  let activeDomain = "Engineering";
+
+  const h1 = document.getElementById("h1");
+  const h2 = document.getElementById("h2");
+  const domainList = document.getElementById("domainList");
+  const bd = document.getElementById("bd");
+  const modal = document.getElementById("modal");
+  const openBtn = document.getElementById("openModal");
+  const mClose = document.getElementById("mClose");
+  const mReturn = document.getElementById("mReturn");
+
+  function setHeader(){
+    const T = (L.time==="concept") ? "CONCEPT" : (L.time==="live") ? "LIVE" : "ROADMAP";
+    const S = (L.style==="formal") ? "FORMAL" : "INFORMAL";
+    const D = (L.dir==="cause") ? "CAUSE" : "EFFECT";
+    h1.textContent = `ENERGY · ${activeDomain} · ${S} · ${T} · ${D}`;
+    h2.textContent = (L.style==="formal")
+      ? "Objective, bounded language. No hype."
+      : "High-velocity narrative. Still bounded. No overreach.";
+  }
+
+  // Transform engine (bounded: no new claims)
+  function applyTransform(line){
+    let s=line;
+
+    // Time orientation
+    if(L.time==="live"){
+      s = s.replace(/\bbegins\b/gi,"operates");
+      s = s.replace(/\bremains\b/gi,"is maintained");
+    } else if(L.time==="roadmap"){
+      s = s.replace(/\bbegins\b/gi,"will begin");
+      s = s.replace(/\bremains\b/gi,"must remain");
+      s = s.replace(/\brequires\b/gi,"will require");
     }
 
-    shell.appendChild(block);
-  });
-
-  applyRedundancyFilter();
-}
-
-/* ---------- REDUNDANCY FILTER (40% RULE) ---------- */
-function applyRedundancyFilter(){
-  const blocks = document.querySelectorAll(".domain");
-  const seen = new Set();
-
-  blocks.forEach(block=>{
-    const text = block.innerText.slice(0,120);
-    if(seen.has(text)){
-      block.classList.add("redundant");
-    }else{
-      seen.add(text);
+    // Direction polarity
+    if(L.dir==="effect"){
+      s = s.replace(/\bprevents\b/gi,"reduces likelihood of");
+      s = s.replace(/\bdefines\b/gi,"yields");
+      s = s.replace(/\banchors\b/gi,"stabilizes");
+      s = s.replace(/\bconverts\b/gi,"results in");
     }
-  });
-}
 
-/* ---------- OPEN/CLOSE ---------- */
-document.getElementById("openModal").addEventListener("click", ()=>{
-  document.getElementById("bd").classList.add("show");
-  document.getElementById("modal").classList.add("show");
-  render();
-});
-document.getElementById("bd").addEventListener("click", ()=>{
-  document.getElementById("bd").classList.remove("show");
-  document.getElementById("modal").classList.remove("show");
-});
+    // Style
+    if(L.style==="informal"){
+      s = s.replace(/\btelemetry\b/gi,"the signal");
+      s = s.replace(/\baudit\b/gi,"proof chain");
+      s = s.replace(/\bverification\b/gi,"proof");
+      s = s.replace(/\bdiscipline\b/gi,"control");
+      s = s.replace(/\bvariance\b/gi,"swing");
+      s = s.replace(/\bbounded\b/gi,"kept inside rails");
+    }
+
+    return s;
+  }
+
+  // Redundancy gating (>=40% overlap with active domain under current lens)
+  function tokenize(text){
+    return new Set(text.toLowerCase().split(/[^a-z0-9]+/g).filter(Boolean));
+  }
+  function overlapRatio(aText,bText){
+    const A=tokenize(aText), B=tokenize(bText);
+    let inter=0; A.forEach(w=>{ if(B.has(w)) inter++; });
+    return inter/Math.max(1,A.size);
+  }
+  function domainText(name){
+    return (SPINE[name]||[]).map(applyTransform).join(" ");
+  }
+
+  function renderDomains(){
+    domainList.innerHTML="";
+    const activeText = domainText(activeDomain);
+
+    DOMAINS.forEach(name=>{
+      const row=document.createElement("div");
+      row.className="domainRow";
+      row.style.setProperty("--domc", COLORS[name] || "#94A3B8");
+
+      const head=document.createElement("div");
+      head.className="domainHead";
+
+      const left=document.createElement("div");
+      left.className="left";
+
+      const bar=document.createElement("div");
+      bar.className="bar";
+      bar.style.background = COLORS[name] || "#94A3B8";
+
+      const title=document.createElement("div");
+      title.className="title";
+      title.textContent=name;
+
+      const sub=document.createElement("div");
+      sub.className="subline";
+      sub.textContent = (name===activeDomain) ? "Active" : "Tap to focus";
+
+      left.appendChild(bar);
+      left.appendChild(title);
+      left.appendChild(sub);
+
+      const chev=document.createElement("div");
+      chev.className="chev";
+      chev.textContent = (name===activeDomain) ? "▾" : "▸";
+
+      head.appendChild(left);
+      head.appendChild(chev);
+
+      const body=document.createElement("div");
+      body.className="body";
+
+      const ul=document.createElement("ul");
+      ul.className="bul";
+      (SPINE[name]||[]).forEach(line=>{
+        const li=document.createElement("li");
+        li.textContent = applyTransform(line);
+        ul.appendChild(li);
+      });
+      body.appendChild(ul);
+
+      if(name!==activeDomain){
+        const r = overlapRatio(activeText, domainText(name));
+        if(r>=0.40) row.classList.add("redundant");
+      }
+
+      head.addEventListener("click", ()=>{
+        if(row.classList.contains("redundant")) return;
+        activeDomain = name;
+        renderAll();
+      });
+
+      row.appendChild(head);
+      row.appendChild(body);
+      if(name===activeDomain) row.classList.add("open");
+      domainList.appendChild(row);
+    });
+  }
+
+  function renderAll(){
+    document.querySelectorAll("[data-style]").forEach(x=>x.classList.toggle("active", x.dataset.style===L.style));
+    document.querySelectorAll("[data-time]").forEach(x=>x.classList.toggle("active", x.dataset.time===L.time));
+    document.querySelectorAll("[data-dir]").forEach(x=>x.classList.toggle("active", x.dataset.dir===L.dir));
+    setHeader();
+    renderDomains();
+  }
+
+  // Lens handlers
+  document.querySelectorAll("[data-style]").forEach(p=>p.addEventListener("click",()=>{ L.style=p.dataset.style; renderAll(); }));
+  document.querySelectorAll("[data-time]").forEach(p=>p.addEventListener("click",()=>{ L.time=p.dataset.time; renderAll(); }));
+  document.querySelectorAll("[data-dir]").forEach(p=>p.addEventListener("click",()=>{ L.dir=p.dataset.dir; renderAll(); }));
+
+  // Modal open/close
+  function openModal(){
+    bd.classList.add("show");
+    modal.classList.add("show");
+    renderAll();
+  }
+  function closeModal(){
+    bd.classList.remove("show");
+    modal.classList.remove("show");
+  }
+
+  openBtn.addEventListener("click", openModal);
+  openBtn.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(); }});
+  bd.addEventListener("click", closeModal);
+  mClose.addEventListener("click", closeModal);
+  mReturn.addEventListener("click", closeModal);
+
+})();
 </script>
 
 </body>

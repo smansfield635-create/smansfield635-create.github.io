@@ -1,10 +1,11 @@
-<!-- TNT — /products/index.html  (PRODUCTS SPINE · TRUE OPAL JEWEL · NO UI OVERRIDE)
+<!-- TNT — /products/index.html  (PRODUCTS SPINE · TRUE OPAL JEWEL · TAP-SAFE · NO UI OVERRIDE)
      FIX:
-       - OPAL no longer reads red (reduced transparency + darker base + neutral film)
-       - Keeps glossy jewel specular + gold rim
-       - No html/body background styling (ui.css owns field)
-       - No blur/backdrop-filter (tap-safe)
-       - State-carry on all nav + diamond clicks
+       - ✅ CLICK FIX: .stage is pointer-events:auto (parent no longer kills taps)
+       - ✅ Outer shell remains pointer-events:none
+       - ✅ Diamonds are true opal (tint-resistant) + stronger gloss + stronger gold rim
+       - ✅ No blur/backdrop-filter (iOS tap-safe)
+       - ✅ No html/body background styling (ui.css owns field)
+       - ✅ State-carry on all nav + diamond clicks
 -->
 
 <!doctype html>
@@ -31,8 +32,8 @@
   --opal-base-1: rgba(10,14,22,.94);
   --opal-base-2: rgba(6,9,14,.92);
 
-  --goldSoft: rgba(212,175,55,.40);
-  --goldHard: rgba(212,175,55,.65);
+  --goldSoft: rgba(212,175,55,.48);
+  --goldHard: rgba(212,175,55,.72);
 }
 
 /* No field overrides */
@@ -41,14 +42,9 @@ a{color:inherit;text-decoration:none}
 
 /* Top-left controls */
 .top-left{position:fixed;left:16px;top:16px;z-index:90;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.tbtn{
-  padding:10px 16px;border-radius:14px;
-  background:rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 36px rgba(0,0,0,.55);
-  font-weight:900;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-}
+
+/* Use ui.css button material (gold hover etc.) */
+.tbtn{display:inline-flex;align-items:center;justify-content:center}
 
 /* Brand pill — NO BLUR */
 .brand{
@@ -60,23 +56,30 @@ a{color:inherit;text-decoration:none}
 .brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
 .brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
 
-/* Stage positioning only */
+/* Stage positioning */
 .stage{
   position:fixed;left:50%;top:52%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);height:min(720px,94vw);
   z-index:60;
-  pointer-events:none;
+
+  /* ✅ CRITICAL FIX: allow hit-testing in this container */
+  pointer-events:auto;
 }
+
+/* Outer diamond shell is visual only */
 .outer{
   position:absolute;left:50%;top:50%;
   width:min(680px,92vw);height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 90px 260px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.55),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    0 0 34px rgba(212,175,55,.08);
   opacity:.55;
-  pointer-events:none;
+  pointer-events:none; /* stays non-clickable */
 }
 
 /* Diamonds: TRUE OPAL JEWEL (tint-resistant) */
@@ -105,46 +108,47 @@ a{color:inherit;text-decoration:none}
     inset 0 -34px 70px rgba(0,0,0,.70);
 }
 
-/* Gold rim (thin + stronger) */
+/* Gold rim (stronger) */
 .d::before{
   content:"";
   position:absolute;inset:0;border-radius:30px;padding:1px;
   background:linear-gradient(135deg,
     rgba(212,175,55,0) 0%,
-    rgba(212,175,55,.45) 48%,
+    rgba(212,175,55,.52) 46%,
     rgba(212,175,55,0) 100%
   );
-  opacity:.62;
+  opacity:.78;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
   pointer-events:none;
 }
 
-/* Specular + neutral “opal film” (NEUTRAL so it won’t pick up red) */
+/* Specular cap + neutral opal film (stronger “lacquer”) */
 .d::after{
   content:"";
   position:absolute;inset:0;border-radius:30px;
   background:
-    radial-gradient(120% 56% at 50% 18%, rgba(255,255,255,.24) 0%, rgba(255,255,255,0) 62%),
+    radial-gradient(120% 58% at 50% 16%, rgba(255,255,255,.30) 0%, rgba(255,255,255,0) 62%),
+    radial-gradient(140% 70% at 50% 92%, rgba(0,0,0,.26) 0%, rgba(0,0,0,0) 55%),
     conic-gradient(from 210deg at 50% 52%,
       rgba(255,255,255,0) 0deg,
-      rgba(200,230,255,.10) 70deg,
-      rgba(255,240,210,.08) 150deg,
-      rgba(190,255,240,.08) 230deg,
+      rgba(200,230,255,.12) 70deg,
+      rgba(255,240,210,.10) 150deg,
+      rgba(190,255,240,.10) 230deg,
       rgba(255,255,255,0) 360deg
     );
-  opacity:.72;
+  opacity:.82;
   pointer-events:none;
 }
 
 .d:hover{
   box-shadow:
-    0 34px 120px rgba(0,0,0,.74),
-    0 0 26px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -38px 78px rgba(0,0,0,.74);
-  border-color:rgba(212,175,55,.30);
+    0 36px 130px rgba(0,0,0,.76),
+    0 0 32px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.24),
+    inset 0 -40px 86px rgba(0,0,0,.78);
+  border-color:rgba(212,175,55,.34);
 }
 .d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
@@ -187,14 +191,7 @@ a{color:inherit;text-decoration:none}
   padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
 }
-.dock a{
-  padding:10px 16px;border-radius:14px;
-  background:rgba(0,0,0,.16);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 12px 30px rgba(0,0,0,.45);
-  font-weight:900;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-}
+.dock a{display:inline-flex;align-items:center;justify-content:center}
 .dock a.active{
   border-color:rgba(212,175,55,.30);
   box-shadow:0 16px 44px rgba(0,0,0,.55), 0 0 14px rgba(212,175,55,.12);
@@ -210,8 +207,8 @@ a{color:inherit;text-decoration:none}
 <body>
 
 <div class="top-left">
-  <a class="tbtn" id="btnHub" href="/home/">HUB</a>
-  <a class="tbtn" id="btnExit" href="/door/">EXIT</a>
+  <a class="btn tbtn" id="btnHub" href="/home/">HUB</a>
+  <a class="btn tbtn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
 <div class="brand">
@@ -254,11 +251,11 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="active" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a id="dockLaws" href="/laws/">LAWS</a>
-  <a id="dockGauges" href="/gauges/">GAUGES</a>
-  <a id="dockLinks" href="/links/">LINKS</a>
+  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
 </nav>
 
 <script>
@@ -297,6 +294,7 @@ a{color:inherit;text-decoration:none}
   ].forEach(function(pair){
     var el = document.getElementById(pair[0]);
     var path = pair[1];
+    if(!el) return;
     el.addEventListener("click", function(){ go(path); });
     el.addEventListener("keydown", function(e){
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }

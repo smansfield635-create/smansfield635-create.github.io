@@ -1,14 +1,13 @@
-<!-- TNT — /products/energy/index.html  (ENERGY · RULE OF SEVEN · HARD-FIX STAYS)
-     STANDARD:
-       - Diamonds always open (bind-first, null-safe)
-       - Sticky lenses (STYLE + CAUSE/EFFECT + TIME)
-       - Multi-open stacks + anchor + scroll preservation
-       - Rule of Seven: 8 applied domains × 7 paragraphs × 7 full sentences
-       - Industrial posture (C) on the surface; fusion is requirements-only via link
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css only
-       - Does NOT style html/body background (ui.css owns field)
-       - No new state keys (gd_lang/gd_style/gd_time only)
+<!-- TNT — /products/energy/index.html  (ENERGY · 10-DOMAIN MATRIX · PEARLESCENT LOCKED)
+     STRUCTURE:
+       1) BASELINE (Concept + Cause) — Fixed
+       2) 8 Operational Domains
+       3) TERMINUS (Roadmap + Effect) — Fixed
+     RULE:
+       - 7 statements per domain
+       - No abstraction
+       - No redundancy
+       - Industrial (C) posture only
 -->
 
 <!doctype html>
@@ -16,725 +15,342 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRODUCTS · ENERGY</title>
+<title>ENERGY · Industrial Plasma Architecture</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
 :root{
-  --R:154px;
-  --neutralRed: rgba(176,0,0,.22);
-  --neutralGold: rgba(212,175,55,.55);
-  --mut: rgba(255,255,255,.88);
-  --mut2: rgba(255,255,255,.72);
+  --R:146px;
+
+  /* PEARLESCENT LACQUER */
+  --lacquerA:#0b1220;
+  --lacquerB:#0e1a2e;
+  --lacquerC:#070d18;
+
+  --pearlWhite:rgba(255,255,255,.55);
+  --pearlBlue:rgba(110,190,255,.25);
+  --pearlGold:rgba(212,175,55,.45);
+
+  --glass:rgba(255,255,255,.08);
 }
 
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-a{color:inherit;text-decoration:none}
 
-/* Top-left */
-.top-left{position:fixed;left:16px;top:16px;z-index:90;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.btn{
-  padding:10px 16px;border-radius:14px;
-  background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  color:#fff;border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-}
-.btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px rgba(212,175,55,.22)}
+/* ===== Diamond Stage ===== */
 
-/* Brand pill */
-.brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:80;text-align:center;padding:10px 14px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);
-}
-.brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
-.brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
-
-/* Stage */
 .stage{
-  position:fixed;left:50%;top:52%;
+  position:fixed;
+  left:50%;
+  top:52%;
   transform:translate(-50%,-50%);
-  width:min(720px,94vw);height:min(720px,94vw);
-  z-index:60;
+  width:min(680px,94vw);
+  height:min(680px,94vw);
   pointer-events:none;
 }
+
 .outer{
-  position:absolute;left:50%;top:50%;
-  width:min(680px,92vw);height:min(680px,92vw);
-  transform:translate(-50%,-50%) rotate(45deg);
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
   border-radius:60px;
   background:
-    radial-gradient(circle at 50% 14%, var(--neutralRed), transparent 55%),
-    radial-gradient(circle at 40% 25%, rgba(90,140,255,.10), transparent 55%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 90px 260px rgba(0,0,0,.72), inset 0 2px 0 rgba(255,255,255,.10), inset 0 -50px 90px rgba(0,0,0,.55);
-  opacity:.88;
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,.12), transparent 60%),
+    linear-gradient(160deg, var(--lacquerB), var(--lacquerC));
+  border:1px solid var(--glass);
+  box-shadow:
+    0 80px 220px rgba(0,0,0,.75),
+    inset 0 2px 0 rgba(255,255,255,.15),
+    inset 0 -60px 120px rgba(0,0,0,.65);
   pointer-events:none;
 }
 
-/* Shiny diamonds */
+/* Pearlescent diamonds */
+
 .d{
-  width:178px;height:178px;position:absolute;left:50%;top:50%;
-  transform-origin:center;border-radius:28px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  pointer-events:auto;touch-action:manipulation;
-  border:1px solid rgba(255,255,255,.16);
+  width:168px;height:168px;
+  position:absolute;left:50%;top:50%;
+  transform-origin:center;
+  border-radius:28px;
+  cursor:pointer;
+  pointer-events:auto;
+  border:1px solid rgba(255,255,255,.18);
+
   background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 42%),
-    radial-gradient(circle at 72% 78%, rgba(0,140,255,.26), transparent 60%),
-    radial-gradient(circle at 45% 55%, rgba(255,255,255,.06), transparent 70%),
-    linear-gradient(160deg, rgba(12,22,38,.96) 0%, rgba(7,11,18,.98) 75%);
+    radial-gradient(circle at 30% 25%, var(--pearlWhite), transparent 45%),
+    radial-gradient(circle at 70% 75%, var(--pearlBlue), transparent 60%),
+    linear-gradient(160deg, var(--lacquerA), var(--lacquerC));
+
   box-shadow:
-    0 34px 110px rgba(0,0,0,.85),
-    0 0 26px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.16),
-    inset 0 -36px 64px rgba(0,0,0,.70);
-  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
-  overflow:hidden;
-}
-.d::before{
-  content:"";position:absolute;inset:0;border-radius:28px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.55) 50%, transparent 100%);
-  opacity:.35;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  pointer-events:none;
-}
-.d:hover{
-  border-color:rgba(212,175,55,.42);
-  box-shadow:
-    0 44px 140px rgba(0,0,0,.92),
-    0 0 34px rgba(212,175,55,.28),
+    0 30px 100px rgba(0,0,0,.85),
+    0 0 28px rgba(212,175,55,.22),
     inset 0 2px 0 rgba(255,255,255,.20),
-    inset 0 -44px 78px rgba(0,0,0,.78);
-}
-.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
-.d-e{transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg)}
-.d-s{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
-.d-w{transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg)}
-.inner{width:100%;height:100%;transform:rotate(-45deg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;gap:8px;pointer-events:none;user-select:none}
-.lab{font-weight:950;letter-spacing:.7px;font-size:18px;text-shadow:0 0 14px rgba(255,255,255,.25)}
-.sub{font-size:12.5px;opacity:.78;line-height:1.28;max-width:18em}
-.core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:22px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);display:grid;place-items:center;font-weight:950;letter-spacing:.5px;opacity:.92;pointer-events:none}
+    inset 0 -36px 70px rgba(0,0,0,.75);
 
-/* Dock */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:90;width:min(900px,94vw);
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
+  transition:all .22s ease;
+}
+
+.d::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:28px;
+  padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--pearlGold) 50%, transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
   pointer-events:none;
 }
-.dock .btn{pointer-events:auto}
 
-/* Modal */
-.bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.65);display:none}
-.bd.show{display:block}
-.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1180px,96vw);max-height:90vh;display:none;z-index:210}
-.modal.show{display:block}
-.shell{
-  height:90vh;border-radius:26px;border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 50% 18%, var(--neutralRed), transparent 55%),
-    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
-    linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;display:flex;flex-direction:column;
+.d:hover{
+  box-shadow:
+    0 40px 140px rgba(0,0,0,.92),
+    0 0 40px rgba(212,175,55,.35);
 }
-.mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
-.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
-.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
-.mbody{padding:0;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-/* Sticky lenses */
-.stickyTop{
-  position:sticky;top:0;z-index:50;
-  background:rgba(0,0,0,.62);
-  border-bottom:1px solid rgba(255,255,255,.08);
-  padding:12px 12px 10px;
-}
-.clusterRow{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;justify-content:center;margin:0 0 10px}
-.cluster{
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.12);
-  border-radius:999px;
-  padding:8px;
-  display:flex;
-  gap:8px;
-}
-.clusterTitle{
-  font-size:11px;
-  letter-spacing:1.6px;
-  opacity:.75;
-  text-transform:uppercase;
+.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R)*-1)) rotate(45deg)}
+.d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
+.d-s{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
+.d-w{transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg)}
+
+.inner{
+  width:100%;height:100%;
+  transform:rotate(-45deg);
   display:flex;
   align-items:center;
-  padding:0 8px 0 6px;
-}
-.pill{
-  padding:10px 14px;border-radius:999px;
-  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-}
-.pill.active{
-  border-color:rgba(212,175,55,.45);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.18);
+  justify-content:center;
+  font-weight:900;
+  letter-spacing:.6px;
+  text-align:center;
+  pointer-events:none;
 }
 
-/* Header card */
-.hcard{
-  max-width:980px;margin:0 auto;
-  padding:12px 14px;border-radius:18px;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.10);
-}
-.h1{margin:0 0 4px;font-weight:950;font-size:14px}
-.h2{margin:0;color:var(--mut);line-height:1.45;font-size:12.5px}
-.h3{margin:8px 0 0;color:rgba(255,255,255,.70);font-size:12px;line-height:1.35}
+/* ===== Modal ===== */
 
-/* Content */
-.content{padding:14px 16px 18px}
-.stackList{display:flex;flex-direction:column;gap:12px;margin:0 auto;max-width:980px}
-.stackRow{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
-  overflow:hidden;
-}
-.stackRow.open{box-shadow:0 18px 60px rgba(0,0,0,.72), 0 0 26px rgba(212,175,55,.12)}
-.stackHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.stackLeft{display:flex;align-items:center;gap:12px;min-width:0}
-.stackBar{width:6px;height:22px;border-radius:99px;background:var(--domc);box-shadow:0 0 18px rgba(255,255,255,.08);flex:0 0 auto}
-.stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stackSub{font-size:12px;opacity:.72;margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto}
-.stackBody{
+.bd{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.70);
+  backdrop-filter:blur(10px);
   display:none;
-  padding:14px 16px 8px;
-  border-top:1px solid rgba(255,255,255,.08);
+  z-index:200;
+}
+.bd.show{display:block;}
+
+.modal{
+  position:fixed;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(1100px,96vw);
+  height:88vh;
+  display:none;
+  z-index:210;
+}
+.modal.show{display:block;}
+
+.shell{
+  height:100%;
+  border-radius:24px;
   background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    linear-gradient(160deg, var(--lacquerB), var(--lacquerC));
+  border:1px solid var(--glass);
+  overflow:auto;
+  padding:22px;
 }
-.stackRow.open .stackBody{display:block}
 
-.pblock{
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(0,0,0,.08);
+/* ===== Domain Blocks ===== */
+
+.domain{
+  margin-bottom:22px;
+  padding:18px;
   border-radius:18px;
-  padding:12px 12px 10px;
+  background:rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.domain h3{
   margin:0 0 10px;
+  font-size:15px;
+  letter-spacing:.8px;
 }
-.ph{margin:0 0 6px;font-weight:950;letter-spacing:.15px}
-.pul{margin:0;padding-left:18px;color:var(--mut2)}
-.pul li{margin:8px 0;line-height:1.42}
 
-.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
-.sbtn{padding:12px 18px;border-radius:14px;background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));color:#fff;border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 36px rgba(0,0,0,.7);cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none}
-
-@media (max-width:560px){
-  :root{--R:136px}
-  .d{width:162px;height:162px}
-  .stage{top:50%}
+.domain ul{
+  margin:0;
+  padding-left:18px;
+  line-height:1.45;
 }
+
+.domain li{margin:6px 0;}
+
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnBack" href="/products/">BACK</a>
-  <a class="btn" id="btnExit" href="/door/">EXIT</a>
-</div>
-
-<div class="brand">
-  <div class="name">PRODUCTS</div>
-  <div class="tag">ENERGY · INDUSTRIAL PLASMA ARCHITECTURE</div>
-</div>
-
-<div class="stage" aria-label="Energy product diamond">
+<div class="stage">
   <div class="outer"></div>
 
-  <div class="d d-n" id="diamondFoundation" role="button" tabindex="0">
-    <div class="inner"><div class="lab">FOUNDATION</div><div class="sub">Claim discipline.</div></div>
-  </div>
-  <div class="d d-w" id="diamondArchitecture" role="button" tabindex="0">
-    <div class="inner"><div class="lab">ARCHITECTURE</div><div class="sub">Modules and isolation.</div></div>
-  </div>
-  <div class="d d-s" id="diamondPerformance" role="button" tabindex="0">
-    <div class="inner"><div class="lab">PERFORMANCE</div><div class="sub">Measured bands.</div></div>
-  </div>
-  <div class="d d-e" id="diamondGovernance" role="button" tabindex="0">
-    <div class="inner"><div class="lab">GOVERNANCE</div><div class="sub">Scale discipline.</div></div>
+  <div class="d d-n" id="openEnergy">
+    <div class="inner">ENERGY</div>
   </div>
 
-  <div class="core">◆</div>
+  <div class="core"></div>
 </div>
-
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockHub" href="/home/">HUB</a>
-  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
-  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
-</nav>
 
 <div class="bd" id="bd"></div>
 
-<div class="modal" id="modal" role="dialog" aria-modal="true">
+<div class="modal" id="modal">
   <div class="shell">
-    <div class="mhead">
-      <h3 class="mtitle" id="mTitle">ENERGY</h3>
-      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
+
+    <!-- 1 BASELINE -->
+    <div class="domain">
+      <h3>BASELINE · CONCEPT + CAUSE</h3>
+      <ul>
+        <li>Industrial plasma substitution is defined before scale is attempted.</li>
+        <li>All claims are bounded by measured thermal output.</li>
+        <li>No net-positive fusion claim is asserted.</li>
+        <li>Containment precedes escalation.</li>
+        <li>Exposure remains upstream and segmented.</li>
+        <li>Receipts govern advancement.</li>
+        <li>Industrial classification (C) remains locked.</li>
+      </ul>
     </div>
 
-    <div class="mbody" id="mbody">
-
-      <div class="stickyTop">
-        <div class="clusterRow">
-          <div class="cluster">
-            <div class="clusterTitle">STYLE</div>
-            <div class="pill active" id="pillFormal">FORMAL</div>
-            <div class="pill" id="pillInformal">INFORMAL</div>
-          </div>
-          <div class="cluster">
-            <div class="clusterTitle">CAUSALITY</div>
-            <div class="pill active" id="pillCause">CAUSE</div>
-            <div class="pill" id="pillEffect">EFFECT</div>
-          </div>
-          <div class="cluster">
-            <div class="clusterTitle">TIME</div>
-            <div class="pill active" id="pillConcept">CONCEPT</div>
-            <div class="pill" id="pillLive">LIVE</div>
-            <div class="pill" id="pillRoadmap">ROADMAP</div>
-          </div>
-        </div>
-
-        <div class="hcard">
-          <div class="h1" id="h1">—</div>
-          <div class="h2" id="h2">—</div>
-          <div class="h3" id="h3">—</div>
-        </div>
-      </div>
-
-      <div class="content">
-        <div class="stackList" id="stackList"></div>
-
-        <div class="mact">
-          <button class="sbtn" id="mReturn" type="button">RETURN</button>
-          <a class="sbtn" id="mFusion" href="/explore/fusion-readiness/">FUSION READINESS</a>
-          <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
-          <a class="sbtn" id="mJumpHub" href="/home/">JUMP HUB</a>
-        </div>
-      </div>
-
+    <!-- 8 OPERATIONS -->
+    <div class="domain">
+      <h3>INDUSTRIAL</h3>
+      <ul>
+        <li>Deployment occurs in staged clusters.</li>
+        <li>Heat substitution replaces legacy systems.</li>
+        <li>Isolation prevents endpoint escalation.</li>
+        <li>Measured bands define output.</li>
+        <li>Buffering absorbs fluctuation.</li>
+        <li>Failure modes default safe.</li>
+        <li>Templates are repeatable.</li>
+      </ul>
     </div>
+
+    <div class="domain">
+      <h3>ENGINEERING</h3>
+      <ul>
+        <li>Modules remain separable.</li>
+        <li>Interfaces are explicit.</li>
+        <li>Load boundaries are documented.</li>
+        <li>Thermal mapping is traceable.</li>
+        <li>Materials remain within tolerance.</li>
+        <li>Maintenance windows are scheduled.</li>
+        <li>Redundancy avoids cascade.</li>
+      </ul>
+    </div>
+
+    <div class="domain">
+      <h3>AGRICULTURAL</h3>
+      <ul>
+        <li>Microclimate loops are controlled.</li>
+        <li>Yield stability is measured.</li>
+        <li>Thermal exposure is bounded.</li>
+        <li>Water systems remain isolated.</li>
+        <li>Crop stress is monitored.</li>
+        <li>Deployment remains local.</li>
+        <li>No ecological spillover.</li>
+      </ul>
+    </div>
+
+    <div class="domain">
+      <h3>FINANCIAL</h3>
+      <ul>
+        <li>Insurance mapping is explicit.</li>
+        <li>Cost bands are transparent.</li>
+        <li>Capital allocation is staged.</li>
+        <li>Variance is priced, not guessed.</li>
+        <li>Audits remain independent.</li>
+        <li>Liability remains segmented.</li>
+        <li>Scaling remains gated.</li>
+      </ul>
+    </div>
+
+    <div class="domain">
+      <h3>HUMAN</h3>
+      <ul>
+        <li>Operator training is standardized.</li>
+        <li>Interfaces remain legible.</li>
+        <li>Stress protocols are rehearsed.</li>
+        <li>Escalation paths are clear.</li>
+        <li>Logs are replayable.</li>
+        <li>Community exposure is limited.</li>
+        <li>Comprehension precedes expansion.</li>
+      </ul>
+    </div>
+
+    <div class="domain">
+      <h3>ADVERSARIAL</h3>
+      <ul>
+        <li>Critical nodes are mapped.</li>
+        <li>Tamper detection is active.</li>
+        <li>Telemetry redundancy exists.</li>
+        <li>Attack surfaces are segmented.</li>
+        <li>Containment time is measured.</li>
+        <li>Rollback paths are preserved.</li>
+        <li>Escalation remains bounded.</li>
+      </ul>
+    </div>
+
+    <div class="domain">
+      <h3>ENVIRONMENTAL</h3>
+      <ul>
+        <li>Discharge bands are measured.</li>
+        <li>Air boundaries remain intact.</li>
+        <li>Water systems stay isolated.</li>
+        <li>Land exposure is limited.</li>
+        <li>Thermal drift is monitored.</li>
+        <li>Noise remains within range.</li>
+        <li>Reporting is public.</li>
+      </ul>
+    </div>
+
+    <div class="domain">
+      <h3>TECHNOLOGICAL</h3>
+      <ul>
+        <li>Control systems are versioned.</li>
+        <li>Firmware remains auditable.</li>
+        <li>Logs are hash-locked.</li>
+        <li>Latency is monitored.</li>
+        <li>Data pipelines are redundant.</li>
+        <li>Interfaces remain modular.</li>
+        <li>No hidden automation layers.</li>
+      </ul>
+    </div>
+
+    <!-- TERMINUS -->
+    <div class="domain">
+      <h3>TERMINUS · ROADMAP + EFFECT</h3>
+      <ul>
+        <li>Scaling proceeds pilot → cluster → adjacency.</li>
+        <li>Each phase requires receipt validation.</li>
+        <li>Effect is measured, not inferred.</li>
+        <li>No gain claim without independent proof.</li>
+        <li>Industrial posture remains intact.</li>
+        <li>Fusion readiness remains gated.</li>
+        <li>Boundaries remain permanent.</li>
+      </ul>
+    </div>
+
   </div>
 </div>
 
 <script>
-(function(){
-  const qs = new URLSearchParams(location.search);
-  let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  let gdStyle = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  let gdTime  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
-  if(!["en","zh"].includes(lang)) lang="en";
-  if(!["formal","informal"].includes(gdStyle)) gdStyle="formal";
-  if(gdTime==="trajectory") gdTime="post";
-  if(!["origin","now","post"].includes(gdTime)) gdTime="origin";
-  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime);}catch(e){}
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
-
-  let causality = "CAUSE";
-  const RS = { open:new Set(), scrollTop:0, anchorId:null };
-
-  const bd=document.getElementById("bd");
-  const modal=document.getElementById("modal");
-  const mbody=document.getElementById("mbody");
-  const mClose=document.getElementById("mClose");
-  const mReturn=document.getElementById("mReturn");
-  const mTitle=document.getElementById("mTitle");
-  const h1=document.getElementById("h1");
-  const h2=document.getElementById("h2");
-  const h3=document.getElementById("h3");
-  const stackList=document.getElementById("stackList");
-
-  const pillFormal=document.getElementById("pillFormal");
-  const pillInformal=document.getElementById("pillInformal");
-  const pillCause=document.getElementById("pillCause");
-  const pillEffect=document.getElementById("pillEffect");
-  const pillConcept=document.getElementById("pillConcept");
-  const pillLive=document.getElementById("pillLive");
-  const pillRoadmap=document.getElementById("pillRoadmap");
-
-  let section="FOUNDATION";
-  const CLAIM_LOCK="Industrial energy position: plasma-based thermal substitution at industrial scale, buffered and governed. Fusion remains requirements-only via the readiness link.";
-
-  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(gdStyle)+"&time="+encodeURIComponent(gdTime); }
-  (function setLinks(){
-    const s=q();
-    document.getElementById("btnBack").href="/products/?"+s;
-    document.getElementById("btnExit").href="/door/?"+s;
-    document.getElementById("dockHub").href="/home/?"+s;
-    document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
-    document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockGauges").href="/gauges/?"+s;
-    document.getElementById("mJumpProducts").href="/products/?"+s;
-    document.getElementById("mJumpHub").href="/home/?"+s;
-    document.getElementById("mFusion").href="/explore/fusion-readiness/?"+s;
-  })();
-
-  function tempColor(){
-    const map={
-      FOUNDATION:"#E5E7EB",
-      ARCHITECTURE:"#93C5FD",
-      PERFORMANCE:"#34D399",
-      GOVERNANCE:"#FBBF24"
-    };
-    return map[section] || "#E5E7EB";
-  }
-  function tempSoft(hex){
-    // convert hex to rgba with low alpha
-    try{
-      const r=parseInt(hex.slice(1,3),16);
-      const g=parseInt(hex.slice(3,5),16);
-      const b=parseInt(hex.slice(5,7),16);
-      return `rgba(${r},${g},${b},.16)`;
-    }catch(e){ return "rgba(229,231,235,.16)"; }
-  }
-  function renderTemp(){
-    const t=tempColor();
-    document.documentElement.style.setProperty("--temp", t);
-    document.documentElement.style.setProperty("--tempSoft", tempSoft(t));
-  }
-  function headerLines(){
-    const t = (gdTime==="origin")?"CONCEPT":(gdTime==="now")?"LIVE":"ROADMAP";
-    h1.textContent = `ENERGY · ${section} · ${causality} · ${t} · ${gdStyle.toUpperCase()}`;
-    h2.textContent =
-      (section==="FOUNDATION") ? "Foundation defines what is claimed and what is gated before anything scales."
-      : (section==="ARCHITECTURE") ? "Architecture defines modules, isolation, buffering, and interfaces."
-      : (section==="PERFORMANCE") ? "Performance defines measurable bands, uptime, and loss accounting."
-      : "Governance defines phase gates, certification discipline, and non-retroactive audit.";
-    h3.textContent = CLAIM_LOCK;
-  }
-  function renderPills(){
-    pillFormal.classList.toggle("active", gdStyle==="formal");
-    pillInformal.classList.toggle("active", gdStyle==="informal");
-    pillCause.classList.toggle("active", causality==="CAUSE");
-    pillEffect.classList.toggle("active", causality==="EFFECT");
-    pillConcept.classList.toggle("active", gdTime==="origin");
-    pillLive.classList.toggle("active", gdTime==="now");
-    pillRoadmap.classList.toggle("active", gdTime==="post");
-  }
-
-  const DOMAIN_COLORS={
-    "Industrial":"#D97706",
-    "Agricultural":"#2F855A",
-    "Financial":"#047857",
-    "Human":"#F59E0B",
-    "Adversarial":"#B91C1C",
-    "Regulatory":"#475569",
-    "Environmental":"#0D9488",
-    "Infrastructural":"#1E40AF"
-  };
-  const DOMAINS=Object.keys(DOMAIN_COLORS);
-  const PHEAD=["P1 — Context","P2 — Constraint","P3 — Tension","P4 — Intervention","P5 — Mechanism","P6 — Result","P7 — Boundary"];
-
-  // Rule of Seven content generator (energy-specific, agriculture/plasma farms/industrial scale)
-  function paragraph(domain, pIndex){
-    const t=(gdTime==="origin")?"concept":(gdTime==="now")?"current": "roadmap";
-    const ce=(causality==="CAUSE")?"because":"so";
-    const mode=(gdStyle==="formal")?"formal":"informal";
-
-    const S = (a,b,c,d,e,f,g)=>[a,b,c,d,e,f,g];
-
-    const BASE = {
-      Industrial:{
-        ctx:`Industrial output is process heat delivered through exchangers, ${ce} it replaces combustion at the thermal layer.`,
-        con:`Containment is upstream-only, ${ce} endpoints stay passive and failures stay bounded.`,
-        ten:`The tension is uptime vs envelope safety, ${ce} shortcuts create cascades.`,
-        intv:`The intervention is buffering and staged dispatch, ${ce} the grid never sees raw volatility.`,
-        mech:`Mechanism is module isolation + SLA storage loop + controlled release, ${ce} variance is converted into a band.`,
-        res:`Result is stable heat delivery with logged inputs and outputs, ${ce} claims remain auditable.`,
-        bnd:`Boundary is no gain claim on this surface, ${ce} fusion stays requirements-only via the readiness link.`
-      },
-      Agricultural:{
-        ctx:`Agricultural integration is thermal reuse for greenhouses and controlled environments, ${ce} energy becomes food stability.`,
-        con:`Soil never contacts plasma hardware, ${ce} only midstream thermal exchange is allowed.`,
-        ten:`The tension is seasonal variability vs fixed contracts, ${ce} storage must smooth demand.`,
-        intv:`The intervention is plasma farm zoning with setbacks and perimeter control, ${ce} livestock and communities stay isolated.`,
-        mech:`Mechanism is TGI routing into greenhouse loops and sterilization buffers, ${ce} the farm becomes a thermal consumer.`,
-        res:`Result is yield stability and reduced fuel dependency, ${ce} productivity becomes measurable not rhetorical.`,
-        bnd:`Boundary is exchanger-only interface rules, ${ce} no exposure pathway is permitted.`
-      },
-      Financial:{
-        ctx:`Financial structure is underwriting against variance and failure envelope magnitude, ${ce} capital follows certifiable behavior.`,
-        con:`Constraints require audited logs and defined loss accounting, ${ce} the model cannot hide auxiliary loads.`,
-        ten:`The tension is early scale pressure vs proof discipline, ${ce} inflation creates reputational debt.`,
-        intv:`The intervention is phase-gated deployment (pilot → cluster → adjacency), ${ce} capital exposure stays segmented.`,
-        mech:`Mechanism is CC tiers + insurance mapping + SLA performance bands, ${ce} risk becomes priced not guessed.`,
-        res:`Result is bankable deployment templates and repeatable contracts, ${ce} replication becomes controllable.`,
-        bnd:`Boundary is no claim escalation without receipts, ${ce} upgrades are externally forced not narratively chosen.`
-      },
-      Human:{
-        ctx:`Human factors are training, comprehension, and operational discipline, ${ce} misuse comes from confusion not malice.`,
-        con:`Constraints require clear interfaces and consistent UI behavior, ${ce} operators can execute under pressure.`,
-        ten:`The tension is speed vs correctness, ${ce} panic drives poor decisions.`,
-        intv:`The intervention is checklists, drills, and stop rules, ${ce} the system prevents impulsive escalation.`,
-        mech:`Mechanism is role separation and receipt-based decisions, ${ce} authority stays bounded.`,
-        res:`Result is reduced error rate and faster recovery, ${ce} reliability becomes a habit.`,
-        bnd:`Boundary is no soft overrides, ${ce} if you override you log and roll epoch under strict doctrine.`
-      },
-      Adversarial:{
-        ctx:`Adversarial posture assumes spoofing, sensor drift, and log manipulation, ${ce} optimism is treated as a threat.`,
-        con:`Constraints require redundancy and cross-signal agreement, ${ce} single-sensor wins are invalid.`,
-        ten:`The tension is false positives vs missed events, ${ce} thresholds must be explicit.`,
-        intv:`The intervention is kill conditions and rollback logic, ${ce} instability stops fast.`,
-        mech:`Mechanism is SVF-style agreement + tamper-evident logs, ${ce} post-hoc edits break validity.`,
-        res:`Result is manipulation resistance under audit, ${ce} the system stays honest when attacked.`,
-        bnd:`Boundary is binary admissibility, ${ce} partial credit is not allowed.`
-      },
-      Regulatory:{
-        ctx:`Regulatory posture is permits, safety envelopes, and clear scope boundaries, ${ce} ambiguity invites restriction.`,
-        con:`Constraints require documented interfaces and incident logs, ${ce} compliance is measurable.`,
-        ten:`The tension is innovation speed vs approval cycles, ${ce} missing documentation stalls deployment.`,
-        intv:`The intervention is standardized artifacts and certification tiers, ${ce} inspectors can verify quickly.`,
-        mech:`Mechanism is repeatable filings and reason codes for shutdowns, ${ce} enforcement becomes transparent.`,
-        res:`Result is smoother approvals and fewer surprises, ${ce} risk is managed before incidents.`,
-        bnd:`Boundary is scope discipline, ${ce} this page stays industrial and does not claim net gain.`
-      },
-      Environmental:{
-        ctx:`Environmental posture is thermal discharge, emissions displacement, and land-water boundaries, ${ce} impact must be bounded.`,
-        con:`Constraints require exchanger-only transfer and measured discharge bands, ${ce} the environment is not a sink.`,
-        ten:`The tension is high throughput vs ecological limits, ${ce} ignoring limits produces backlash.`,
-        intv:`The intervention is closed-loop thermal reuse and monitoring, ${ce} waste heat becomes a controlled resource.`,
-        mech:`Mechanism is measured inflow/outflow and boundary alarms, ${ce} drift is detected early.`,
-        res:`Result is cleaner heat pathways and accountable monitoring, ${ce} claims can be audited externally.`,
-        bnd:`Boundary is no unmeasured discharge, ${ce} if you cannot measure it you do not scale it.`
-      },
-      Infrastructural:{
-        ctx:`Infrastructure posture is grid interface stability and dispatch compliance, ${ce} the grid punishes volatility.`,
-        con:`Constraints require buffering and ramp-rate discipline, ${ce} injection never exceeds certified bands.`,
-        ten:`The tension is peak demand vs safety envelope, ${ce} pushing harder increases failure probability.`,
-        intv:`The intervention is SLA storage and smoothing, ${ce} dispatch becomes predictable.`,
-        mech:`Mechanism is supervisory control with containment zones, ${ce} faults stay local.`,
-        res:`Result is compatibility with existing grids and plants, ${ce} adoption does not require rebuilding everything.`,
-        bnd:`Boundary is no raw plasma-to-grid coupling, ${ce} the interface is always buffered and audited.`
-      }
-    };
-
-    const B = BASE[domain];
-    if(!B) return S("—","—","—","—","—","—","—");
-
-    if(pIndex===0) return S(B.ctx, `${domain} is described at the ${t} layer.`, `This paragraph stays executable by operators.`, `This paragraph stays bounded by measurable interfaces.`, `This paragraph avoids speculation as a substitute for data.`, `This paragraph preserves Industrial posture on public surfaces.`, `This paragraph remains coherent under the same rules in formal and informal modes.`);
-    if(pIndex===1) return S(B.con, `${domain} constraints are declared before mechanisms.`, `Constraints are written as enforceable boundaries.`, `Constraints are compatible with staged deployment.`, `Constraints are recorded as receipts in operations.`, `Constraints prevent drift under scale.`, `Constraints remain stable across time lens changes.`);
-    if(pIndex===2) return S(B.ten, `${domain} tension is what breaks systems when ignored.`, `Tension is treated as a measurable signal.`, `Tension is tracked as variance not vibes.`, `Tension is reduced by structure and gating.`, `Tension is bounded by stop rules.`, `Tension is not solved by narrative reframing.`);
-    if(pIndex===3) return S(B.intv, `${domain} intervention is designed to be repeatable.`, `Intervention is staged rather than escalated in one jump.`, `Intervention is logged and replayable.`, `Intervention preserves separation between upstream and endpoints.`, `Intervention favors containment over continuation.`, `Intervention remains compatible with independent audit.`);
-    if(pIndex===4) return S(B.mech, `${domain} mechanism is expressed as an interface plus a loop.`, `Mechanism is expressed without revealing hazardous recipes.`, `Mechanism remains measurable at the boundary.`, `Mechanism is constrained by policy and hardware limits.`, `Mechanism supports replication without UI drift.`, `Mechanism is stable under the same lens contract.`);
-    if(pIndex===5) return S(B.res, `${domain} result is defined as measurable improvement under constraints.`, `Result is compared against a declared baseline.`, `Result is stable across repeated runs or it is rejected.`, `Result supports contract language without hype.`, `Result allows scaling only when proofs are complete.`, `Result remains compatible with non-retroactive logs.`);
-    return S(B.bnd, `${domain} boundary is written as a hard line.`, `Boundary violations trigger denial rather than reinterpretation.`, `Boundary violations are logged as reasons and receipts.`, `Boundary violations force rollback or stop under doctrine.`, `Boundary preserves public trust under scrutiny.`, `Boundary keeps the system coherent under pressure.`);
-  }
-
-  function headerLines(){
-    const t = (gdTime==="origin")?"CONCEPT":(gdTime==="now")?"LIVE":"ROADMAP";
-    h1.textContent = `ENERGY · ${section} · ${causality} · ${t} · ${gdStyle.toUpperCase()}`;
-    h2.textContent =
-      (section==="FOUNDATION") ? "Foundation defines the claim posture and the admissible boundaries before scale."
-      : (section==="ARCHITECTURE") ? "Architecture defines modules, isolation, buffering, and interfaces."
-      : (section==="PERFORMANCE") ? "Performance defines measured bands, uptime, and loss accounting."
-      : "Governance defines phase gates, certification discipline, and non-retroactive audit.";
-    h3.textContent = CLAIM_LOCK;
-  }
-  function renderPills(){
-    pillFormal.classList.toggle("active", gdStyle==="formal");
-    pillInformal.classList.toggle("active", gdStyle==="informal");
-    pillCause.classList.toggle("active", causality==="CAUSE");
-    pillEffect.classList.toggle("active", causality==="EFFECT");
-    pillConcept.classList.toggle("active", gdTime==="origin");
-    pillLive.classList.toggle("active", gdTime==="now");
-    pillRoadmap.classList.toggle("active", gdTime==="post");
-  }
-
-  function buildStackRow(domainKey){
-    const row=document.createElement("div");
-    row.className="stackRow";
-    row.style.setProperty("--domc", DOMAIN_COLORS[domainKey]);
-
-    const head=document.createElement("div");
-    head.className="stackHead";
-
-    const left=document.createElement("div");
-    left.className="stackLeft";
-
-    const bar=document.createElement("div");
-    bar.className="stackBar";
-    bar.style.background = DOMAIN_COLORS[domainKey];
-
-    const title=document.createElement("div");
-    title.className="stackTitle";
-    title.textContent = domainKey;
-
-    const sub=document.createElement("div");
-    sub.className="stackSub";
-    sub.textContent = `${section} · ${causality} · ${(gdTime==="origin")?"CONCEPT":(gdTime==="now")?"LIVE":"ROADMAP"} · ${gdStyle.toUpperCase()}`;
-
-    left.appendChild(bar);
-    left.appendChild(title);
-    left.appendChild(sub);
-
-    const chev=document.createElement("div");
-    chev.className="stackChevron";
-    chev.textContent = "▸";
-
-    head.appendChild(left);
-    head.appendChild(chev);
-
-    const body=document.createElement("div");
-    body.className="stackBody";
-
-    for(let i=0;i<7;i++){
-      const box=document.createElement("div");
-      box.className="pblock";
-      const pid = `p_${domainKey}_${i}`;
-      box.id = pid;
-
-      const ph=document.createElement("div");
-      ph.className="ph";
-      ph.textContent = PHEAD[i];
-
-      const ul=document.createElement("ul");
-      ul.className="pul";
-
-      const sents = paragraph(domainKey, i);
-      for(const sentence of sents){
-        const li=document.createElement("li");
-        li.textContent = sentence;
-        ul.appendChild(li);
-      }
-
-      box.appendChild(ph);
-      box.appendChild(ul);
-
-      box.addEventListener("click", ()=>{ RS.anchorId = pid; });
-
-      body.appendChild(box);
-    }
-
-    head.addEventListener("click", ()=>{
-      RS.anchorId = `p_${domainKey}_0`;
-      const open = row.classList.toggle("open");
-      if(open){ RS.open.add(domainKey); chev.textContent="▾"; }
-      else { RS.open.delete(domainKey); chev.textContent="▸"; }
-    });
-
-    row.appendChild(head);
-    row.appendChild(body);
-    return row;
-  }
-
-  function renderStacks(){
-    stackList.innerHTML="";
-    DOMAINS.forEach(d=>{
-      const el = buildStackRow(d);
-      if(RS.open.has(d)){
-        el.classList.add("open");
-        el.querySelector(".stackChevron").textContent="▾";
-      }
-      stackList.appendChild(el);
-    });
-  }
-
-  let anchorTick=0;
-  function updateAnchorFromScroll(){
-    if(anchorTick) return;
-    anchorTick=requestAnimationFrame(()=>{
-      anchorTick=0;
-      const blocks = stackList.querySelectorAll(".pblock");
-      let best=null, bestDist=1e9;
-      const targetTop=160;
-      blocks.forEach(b=>{
-        const r=b.getBoundingClientRect();
-        const d=Math.abs(r.top-targetTop);
-        if(d<bestDist){bestDist=d;best=b;}
-      });
-      if(best) RS.anchorId=best.id;
-    });
-  }
-
-  function restoreReadingPosition(){
-    mbody.scrollTop = RS.scrollTop || 0;
-    if(RS.anchorId){
-      const node = document.getElementById(RS.anchorId);
-      if(node){
-        node.scrollIntoView({block:"start", behavior:"auto"});
-        mbody.scrollTop = Math.max(0, mbody.scrollTop - 160);
-      }
-    }
-  }
-
-  function renderAllPreserve(){
-    RS.scrollTop = mbody.scrollTop;
-    renderPills();
-    headerLines();
-    renderStacks();
-    requestAnimationFrame(restoreReadingPosition);
-  }
-
-  function openModal(sec){
-    section=sec;
-    mTitle.textContent = `ENERGY · ${section}`;
-    bd.classList.add("show");
-    modal.classList.add("show");
-    renderAllPreserve();
-  }
-  function closeModal(){
-    bd.classList.remove("show");
-    modal.classList.remove("show");
-  }
-
-  bd.addEventListener("click", closeModal);
-  mClose.addEventListener("click", closeModal);
-  mReturn.addEventListener("click", closeModal);
-
-  pillFormal.addEventListener("click", ()=>{ gdStyle="formal"; try{localStorage.setItem("gd_style",gdStyle);}catch(e){} renderAllPreserve(); });
-  pillInformal.addEventListener("click", ()=>{ gdStyle="informal"; try{localStorage.setItem("gd_style",gdStyle);}catch(e){} renderAllPreserve(); });
-  pillCause.addEventListener("click", ()=>{ causality="CAUSE"; renderAllPreserve(); });
-  pillEffect.addEventListener("click", ()=>{ causality="EFFECT"; renderAllPreserve(); });
-  pillConcept.addEventListener("click", ()=>{ gdTime="origin"; try{localStorage.setItem("gd_time",gdTime);}catch(e){} renderAllPreserve(); });
-  pillLive.addEventListener("click", ()=>{ gdTime="now"; try{localStorage.setItem("gd_time",gdTime);}catch(e){} renderAllPreserve(); });
-  pillRoadmap.addEventListener("click", ()=>{ gdTime="post"; try{localStorage.setItem("gd_time",gdTime);}catch(e){} renderAllPreserve(); });
-
-  mbody.addEventListener("scroll", updateAnchorFromScroll, {passive:true});
-
-  function bindDiamond(id, sec){
-    const el=document.getElementById(id);
-    if(!el) return;
-    el.addEventListener("click", ()=>openModal(sec));
-    el.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(sec);} });
-  }
-  bindDiamond("diamondFoundation","FOUNDATION");
-  bindDiamond("diamondArchitecture","ARCHITECTURE");
-  bindDiamond("diamondPerformance","PERFORMANCE");
-  bindDiamond("diamondGovernance","GOVERNANCE");
-
-})();
+const bd=document.getElementById("bd");
+const modal=document.getElementById("modal");
+document.getElementById("openEnergy").onclick=()=>{
+  bd.classList.add("show");
+  modal.classList.add("show");
+};
+bd.onclick=()=>{
+  bd.classList.remove("show");
+  modal.classList.remove("show");
+};
 </script>
 
 </body>

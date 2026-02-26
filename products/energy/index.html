@@ -13,6 +13,9 @@
        - NO new state keys (gd_lang/gd_style/gd_time only)
        - Uses /assets/ui.css + /assets/branch.css only
        - Does NOT style html/body background (ui.css owns field)
+       - PUBLIC POSITIONING = INDUSTRIAL (C) ONLY
+       - NO net-positive fusion language; NO grid-fusion implication
+       - Fusion discussion = gated admissibility pathway only (link + gates; no physics recipes)
 -->
 
 <!doctype html>
@@ -69,7 +72,7 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   transform:translate(-50%,-50%);
   width:min(720px,94vw);height:min(720px,94vw);
   z-index:60;
-  pointer-events:none; /* stage ignores taps */
+  pointer-events:none;
 }
 .outer{
   position:absolute;left:50%;top:50%;
@@ -101,7 +104,7 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   border:1px solid rgba(255,255,255,.10);
   box-shadow:0 28px 84px rgba(0,0,0,.78), inset 0 2px 0 rgba(255,255,255,.14), inset 0 -28px 44px rgba(0,0,0,.62);
   transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
-  pointer-events:auto; /* diamonds receive taps */
+  pointer-events:auto;
   touch-action:manipulation;
 }
 .d::before{
@@ -300,19 +303,19 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   <div class="outer"></div>
 
   <div class="d d-n" id="dNorth" role="button" tabindex="0" onclick="window.__openEnergy('north')">
-    <div class="inner"><div class="lab" id="labNorth">NORTH</div><div class="sub" id="subNorth">Scientific origin.</div></div>
+    <div class="inner"><div class="lab" id="labNorth">NORTH</div><div class="sub" id="subNorth">Industrial posture.</div></div>
   </div>
 
   <div class="d d-e" id="dEast" role="button" tabindex="0" onclick="window.__openEnergy('east')">
-    <div class="inner"><div class="lab" id="labEast">EAST</div><div class="sub" id="subEast">R&amp;D architecture.</div></div>
+    <div class="inner"><div class="lab" id="labEast">EAST</div><div class="sub" id="subEast">R&amp;D gates.</div></div>
   </div>
 
   <div class="d d-w" id="dWest" role="button" tabindex="0" onclick="window.__openEnergy('west')">
-    <div class="inner"><div class="lab" id="labWest">WEST</div><div class="sub" id="subWest">Execution systems.</div></div>
+    <div class="inner"><div class="lab" id="labWest">WEST</div><div class="sub" id="subWest">Execution stack.</div></div>
   </div>
 
   <div class="d d-s" id="dSouth" role="button" tabindex="0" onclick="window.__openEnergy('south')">
-    <div class="inner"><div class="lab" id="labSouth">SOUTH</div><div class="sub" id="subSouth">Industrial convergence.</div></div>
+    <div class="inner"><div class="lab" id="labSouth">SOUTH</div><div class="sub" id="subSouth">Deployment phases.</div></div>
   </div>
 
   <div class="core">◆</div>
@@ -337,7 +340,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     </div>
 
     <div class="mbody">
-      <!-- Lenses (inside modal only) -->
       <div class="lensbar">
         <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>
         <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>
@@ -345,7 +347,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
         <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
       </div>
 
-      <!-- 8-core tabs (under-the-hood; no N/E/S/W duplication) -->
       <div class="tabs" id="tabs">
         <div class="tab" data-core="principle" id="tPrinciple">PRINCIPLE</div>
         <div class="tab" data-core="arch" id="tArch">ARCH</div>
@@ -357,7 +358,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
         <div class="tab" data-core="trajectory" id="tTrajectory">TRAJECTORY</div>
       </div>
 
-      <!-- Panel lens (4 diamonds) -->
       <div class="pgrid" id="pgrid">
         <div class="pd active" data-panel="what" id="pWhat"><div class="pin">WHAT</div></div>
         <div class="pd" data-panel="why" id="pWhy"><div class="pin">WHY</div></div>
@@ -365,7 +365,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
         <div class="pd" data-panel="output" id="pOutput"><div class="pin">OUTPUT</div></div>
       </div>
 
-      <!-- Dense content -->
       <div class="bubble">
         <h4 class="bh" id="hMain">—</h4>
         <p class="bp" id="pMain">—</p>
@@ -374,6 +373,7 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 
       <div class="mact">
         <button class="sbtn" id="mReturn" type="button">RETURN</button>
+        <a class="sbtn" id="mFusion" href="/explore/fusion-readiness/">FUSION READINESS</a>
         <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
         <a class="sbtn" id="mJumpHub" href="/home/">JUMP HUB</a>
       </div>
@@ -383,7 +383,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 
 <script>
 (function(){
-  // ===== State hydration (gd_* only) =====
   const qs = new URLSearchParams(location.search);
   let lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   let style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
@@ -408,36 +407,36 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     document.getElementById("dockGauges").href="/gauges/?"+s;
     document.getElementById("mJumpProducts").href="/products/?"+s;
     document.getElementById("mJumpHub").href="/home/?"+s;
+    document.getElementById("mFusion").href="/explore/fusion-readiness/?"+s;
   }
   setLinks();
 
-  // ===== Text (EN; ZH mirrors EN for now) =====
   const UI = {
     en:{
       brand:"PRODUCTS",
       tag:"ENERGY · INDUSTRIAL PLASMA ARCHITECTURE",
       face:{
-        north:{lab:"NORTH", sub:"Scientific origin."},
-        east:{lab:"EAST", sub:"R&D architecture."},
-        south:{lab:"SOUTH", sub:"Industrial convergence."},
-        west:{lab:"WEST", sub:"Execution systems."}
+        north:{lab:"NORTH", sub:"Industrial posture."},
+        east:{lab:"EAST", sub:"R&D gates."},
+        south:{lab:"SOUTH", sub:"Deployment phases."},
+        west:{lab:"WEST", sub:"Execution stack."}
       },
       lens:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",live:"LIVE",roadmap:"ROADMAP"},
       stylePrefix:"STYLE: ",
-      btn:{ret:"RETURN",jp:"JUMP PRODUCTS",jh:"JUMP HUB"}
+      btn:{ret:"RETURN",jp:"JUMP PRODUCTS",jh:"JUMP HUB",fr:"FUSION READINESS"}
     },
     zh:{
       brand:"产品",
       tag:"能源 · 工业等离子架构",
       face:{
-        north:{lab:"北", sub:"科学起源。"},
-        east:{lab:"东", sub:"研发架构。"},
-        south:{lab:"南", sub:"工业收敛。"},
-        west:{lab:"西", sub:"执行系统。"}
+        north:{lab:"北", sub:"工业定位。"},
+        east:{lab:"东", sub:"研发门控。"},
+        south:{lab:"南", sub:"部署阶段。"},
+        west:{lab:"西", sub:"执行栈。"}
       },
       lens:{formal:"正式",informal:"通俗",concept:"概念",live:"上线",roadmap:"路线图"},
       stylePrefix:"风格：",
-      btn:{ret:"返回",jp:"跳转产品",jh:"跳转枢纽"}
+      btn:{ret:"返回",jp:"跳转产品",jh:"跳转枢纽",fr:"聚变就绪路径"}
     }
   };
   const ui = (lang==="zh") ? UI.zh : UI.en;
@@ -457,8 +456,8 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
   document.getElementById("mReturn").textContent = ui.btn.ret;
   document.getElementById("mJumpProducts").textContent = ui.btn.jp;
   document.getElementById("mJumpHub").textContent = ui.btn.jh;
+  document.getElementById("mFusion").textContent = ui.btn.fr;
 
-  // ===== Modal refs =====
   const bd=document.getElementById("bd");
   const modal=document.getElementById("modal");
   const mClose=document.getElementById("mClose");
@@ -486,210 +485,192 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     chipRoadmap.classList.toggle("active", time==="post");
   };
 
-  // ===== Content model (thorough but controlled) =====
-  // Keys:
-  //   face: north/east/south/west (surface navigation)
-  //   core: principle/arch/mech/metrics/constraints/risk/validation/trajectory (8-core)
-  //   panel: what/why/scope/output (4-panel lens)
-  //   lens: time(origin/now/post) × style(formal/informal)
-  //
-  // Rules:
-  // - We speak what is, how it is used, and what is planned, without leaking recipes.
-  // - We do not claim net-positive fusion or Q>1; we DO claim industrial plasma thermal substitution + buffered clean power pathway.
-  // - Trajectory is a measurement framing tool; it does not upgrade claims.
-
   const CORE_LABEL={
     principle:"PRINCIPLE", arch:"ARCH", mech:"MECH", metrics:"METRICS",
     constraints:"CONSTRAINTS", risk:"RISK", validation:"VALIDATION", trajectory:"TRAJECTORY"
   };
   const PANEL_LABEL={ what:"WHAT", why:"WHY", scope:"SCOPE", output:"OUTPUT" };
 
-  function B(h,p,a,b,c,d){ return {h, p, u:[a,b,c,d]}; }
-
-  // Base “vision” lines (keeps Energy concrete: farms + industrial power + clean deployment)
+  // Base lines (Industrial C + gated R&D; no fusion claim)
   const BASE = {
     concept:{
       formal:{
-        north:"Scientific origin anchors definitions and boundaries for industrial High-Intensity Plasma (HIP) so downstream deployment stays honest and reproducible.",
-        east:"R&D architecture converts constraints into executable design changes without collapsing safety, evidence, or meaning.",
-        south:"Industrial convergence delivers measurable heat and buffered power outputs through modular plasma farms (PFMs) and deployment phases (IDP).",
-        west:"Execution systems turn the architecture into a controllable program: supervision, escalation logic, safety response, and audit artifacts."
+        north:"Industrial posture is primary: contained high-energy regimes upstream; buffered outputs; no net-positive fusion claim.",
+        east:"R&D is gated: fusion discussion is a strict admissibility pathway under instrumentation discipline; no readiness implied.",
+        south:"Deployment is phased (IDP-1→IDP-4): pilot → cluster → adjacency → replication under containment and audit.",
+        west:"Execution is supervisory: CC tiers, ERI escalation logic, CARES response, SVF validation, SLA buffering."
       },
       informal:{
-        north:"North is the science layer: definitions first so nothing drifts.",
-        east:"East is R&D: build changes under constraints, not guesses.",
-        south:"South is delivery: plasma farms → clean industrial heat and buffered power.",
-        west:"West is execution: rules, safety, and audits that keep it real."
+        north:"Industrial first. Upstream-only high energy. No fusion claim.",
+        east:"R&D is gated. Fusion talk is requirements-only.",
+        south:"Deploy in phases, safely.",
+        west:"Supervision + buffering + validation."
       }
     },
     live:{
       formal:{
-        north:"Live means current measurable envelopes, observed ceilings, and the exact rules used to classify stability and failure—published without recipe disclosure.",
-        east:"Live means active redesign loops: loss dominance → geometry change → re-measure → publish receipts → decide next move.",
-        south:"Live means deployable industrial posture: heat substitution, buffering (SLA), phased rollout (IDP), and a licensing boundary that prevents unsafe endpoints.",
-        west:"Live means strict execution discipline: supervisory stack, escalation risk index, stop rules, and reproducible logs."
+        north:"Live posture: industrial thermal substitution with measured inputs/outputs and bounded failure envelopes.",
+        east:"Live posture: gated evidence requirements for neutron signal and energy balance; no achievement asserted.",
+        south:"Live posture: site selection, setbacks, midstream exchange, and licensing boundaries (no consumer high-energy).",
+        west:"Live posture: logs, certificates, kill conditions, and non-retroactive discipline for claim safety."
       },
       informal:{
-        north:"Live = what we can measure right now.",
-        east:"Live = what we can change and re-test right now.",
-        south:"Live = what we can deliver right now (industrial heat + buffering).",
-        west:"Live = what we enforce right now (rules + safety + audits)."
+        north:"Live = measurable industrial output.",
+        east:"Live = requirements for fusion evidence, not claims.",
+        south:"Live = deployment discipline and boundaries.",
+        west:"Live = audits, kill rules, and logs."
       }
     },
     roadmap:{
       formal:{
-        north:"Roadmap tightens the science surface: marker bins, signal taxonomy, and stable ceilings—so collaboration scales without argument over definitions.",
-        east:"Roadmap expands R&D into a disciplined pipeline: MVH hardware, manifest freeze, loss closure, orchestration gains, and evidence-led upgrades only.",
-        south:"Roadmap scales industrial replication: PFM clusters, agricultural co-location, midstream conversion buffers, and underwriting-grade certification.",
-        west:"Roadmap turns execution into a program stack: telemetry integrity, certificate ledgers, adversarial tests, and controlled rollout discipline."
+        north:"Roadmap: scale industrial heat substitution first; expand buffering; tighten governance; keep claims bounded.",
+        east:"Roadmap: gated fusion readiness pathway remains separate until receipts exist; failure at any gate reverts to Industrial (C).",
+        south:"Roadmap: replicate modular PFMs; add agricultural thermal reuse through exchangers only; preserve soil and livestock boundaries.",
+        west:"Roadmap: underwriting-grade CC certification, independent audits, and standardized incident reporting."
       },
       informal:{
-        north:"Roadmap = deeper science pages, same definitions.",
-        east:"Roadmap = a stricter R&D pipeline that proves upgrades.",
-        south:"Roadmap = more plasma farms and industrial sites, safely.",
-        west:"Roadmap = stronger audits, stronger safety, stronger rollout."
+        north:"Roadmap: more industrial sites, same rules.",
+        east:"Roadmap: gated pathway only, no drift.",
+        south:"Roadmap: modular replication and safe co-location.",
+        west:"Roadmap: stronger certs and audits."
       }
     }
   };
 
-  // Core content per 8-core tab (general, then face/panel adds specificity)
   const CORE = {
     principle:{
       formal:{
-        origin:"Definition-first, boundary-first, falsifiable-first. The system is built to stay legible as it scales across industry, agriculture, and regulated deployment.",
-        now:"Industrial posture is primary. Research is gated. Evidence governs upgrades. Every output is measured, bounded, and replayable.",
-        post:"Scale by cloning stable contracts (PFM/SLA/CARES/SVF) and tightening bins; never by redefining terms or relaxing safety."
+        origin:"Industrial (C) positioning is the public posture. R&D pathways are gated and do not upgrade claims without receipts.",
+        now:"Claim discipline is explicit: no Q>1; no net-electric; no grid-fusion implication. Only industrial thermal substitution is asserted.",
+        post:"Scale by cloning bounded contracts (HIP/CC/ERI/SLA/CARES/SVF/IDP) and tightening bins; never by relaxing safety or redefining terms."
       },
       informal:{
-        origin:"Definitions first. Boundaries first. No drift.",
-        now:"Industrial delivery first. Research gated. Evidence rules.",
-        post:"Clone the contract, tighten the rules, scale clean."
+        origin:"Industrial first. R&D gated.",
+        now:"No fusion gain claims. No drift.",
+        post:"Clone contracts. Tighten rules. Scale safely."
       }
     },
     arch:{
       formal:{
-        origin:"Architecture is modular: HIP regime core + confinement class (CC) + unified control (UCI) + buffering (SLA) + deployment ramp (IDP) + validation (SVF) + response (CARES).",
-        now:"Architecture is operational: upstream-only high-energy regime, midstream thermal exchange, buffered conversion, and explicit isolation boundaries by tier.",
-        post:"Architecture becomes underwriting-grade: CC certification ties to risk and insurance; manifests and ledgers make deployments auditable at fleet scale."
+        origin:"Architecture: HIP regime core + CC tiers + UCI supervisory control + SLA buffering + SVF validation + CARES response + IDP deployment.",
+        now:"Architecture is layered: upstream high-energy regimes; midstream buffering and exchange; downstream passive endpoints only.",
+        post:"Architecture becomes certifiable: CC tier mapping to deployment permissions; audit-ledger traceability; licensing boundaries enforced."
       },
       informal:{
-        origin:"Modules: HIP + CC + UCI + SLA + IDP + SVF + CARES.",
-        now:"Upstream plasma, midstream exchange, buffered output.",
-        post:"Certs + manifests + ledgers = scalable architecture."
+        origin:"Modules: HIP + CC + UCI + SLA + SVF + CARES + IDP.",
+        now:"Upstream only. Buffered midstream. Passive downstream.",
+        post:"Certs + ledgers + licensing boundaries."
       }
     },
     mech:{
       formal:{
-        origin:"Mechanism is chain-first: input → stage → output with named loss channels and kill conditions. Stability is a controlled state space, not a vibe.",
-        now:"Mechanism is supervised: PSS executes, ERI escalates, CARES responds, FCM contains, and SLA buffers so delivery is smooth.",
-        post:"Mechanism is orchestration-ready: scheduled regimes (HEL-X) reduce instability and improve usable conversion—without inflating physics claims."
+        origin:"Mechanism: measured input → controlled regime → bounded output with explicit loss channels and termination rules.",
+        now:"Mechanism is supervised: ERI escalates; CARES responds; FCM contains; SLA buffers; SVF enforces signal agreement.",
+        post:"Mechanism improves by loss closure and stability improvements, not by claim escalation."
       },
       informal:{
-        origin:"Chain-first. Loss-first. Kill rules are real.",
-        now:"Supervision + escalation + buffering keeps it stable.",
-        post:"Orchestration improves delivery without hype."
+        origin:"Measure in. Control regime. Bound out.",
+        now:"ERI + CARES + SLA + SVF keep it stable.",
+        post:"Improve losses and stability, not claims."
       }
     },
     metrics:{
       formal:{
-        origin:"Metrics are split by authority: industrial efficiency and uptime vs R&D envelopes and losses vs audit/cert status. No mixed metrics across tiers.",
-        now:"Metrics are measured and logged: power-in, thermal-out, buffer behavior, stability variance, escalation events, and controlled shutdown counts.",
-        post:"Metrics become bankable: underwriting-grade CC, incident rates, maintenance intervals, and verified efficiency bands by deployment phase."
+        origin:"Metrics are split by layer: industrial efficiency + uptime; safety events; buffer behavior; validation status; certificate status.",
+        now:"Metrics are logged: power-in, thermal-out, variance, ERI events, shutdown counts, and SVF agreement outcomes.",
+        post:"Metrics become underwriting-grade: CC compliance bands, incident rates, and audited performance ranges per IDP phase."
       },
       informal:{
-        origin:"Different metrics for different layers. No mixing.",
-        now:"Measure input, output, stability, and safety events.",
-        post:"Bankable metrics: certs, incidents, uptime, efficiency."
+        origin:"Different metrics per layer. No mixing.",
+        now:"Log input/output, stability, and safety events.",
+        post:"Underwriting-grade bands and audits."
       }
     },
     constraints:{
       formal:{
-        origin:"Constraints are published as contracts: allowed regimes per CC tier, isolation boundaries, sensor agreement requirements, and hard stop rules.",
-        now:"Constraints enforce reality: late data invalidates windows, multi-sensor disagreement kills runs, violations trigger rollover, and boundaries do not soften.",
-        post:"Constraints scale globally: standardized setback rules for plasma farms, midstream-only soil boundary, noise/EM limits, and compliance artifacts."
+        origin:"Constraints are contracts: CC tier permissions, setback requirements, exchanger-only downstream boundaries, and hard stop rules.",
+        now:"Constraints are enforced: multi-sensor disagreement stops runs; envelope violations terminate; drift triggers review.",
+        post:"Constraints scale: standardized deployment gates, licensing boundaries, and non-retroactive reporting."
       },
       informal:{
         origin:"Contracts decide what’s allowed.",
-        now:"Strict rules: disagreement kills; bad data invalidates.",
-        post:"Global constraints: setbacks, exchange-only, compliance."
+        now:"Disagreement stops. Violations terminate.",
+        post:"Same constraints, scaled and audited."
       }
     },
     risk:{
       formal:{
-        origin:"Risk is quantified and tiered: ERI defines escalation bands; EDT defines intensity vs envelope magnitude; FCM defines containment actions.",
-        now:"Risk response is tiered: CARES defines containment, attenuation, recovery, escalation, shutdown. Overrides are logged and auditable.",
-        post:"Risk becomes insurable: CC certification + incident logs + response discipline + independent audit pathways."
+        origin:"Risk is tiered: ERI defines escalation bands; CC defines containment category; FCM defines containment actions.",
+        now:"Risk response is CARES: containment → attenuation → recovery → escalation → shutdown, with logs and receipts.",
+        post:"Risk becomes insurable via CC certification, audited incidents, and independent verification pathways."
       },
       informal:{
-        origin:"Risk is tiered and measurable.",
-        now:"CARES handles response; overrides get logged.",
-        post:"Certs + logs + audits = insurable risk posture."
+        origin:"Tiered risk. Measurable risk.",
+        now:"CARES responds. Logs persist.",
+        post:"Certs + audits enable underwriting."
       }
     },
     validation:{
       formal:{
-        origin:"Validation is SVF: null comparison + redundancy + agreement thresholds + artifact suppression. If it depends on artifacts, it fails.",
-        now:"Validation is strict: certificate issuance requires enough transitions; missing streams invalidate rollups; and recovery is via explicit rollover only.",
-        post:"Validation is public-safe and audit-ready: replay scripts, manifest locks, certificate ledgers, and third-party verification routes."
+        origin:"Validation uses SVF: redundancy, agreement thresholds, artifact suppression, and disproof triggers.",
+        now:"Fusion readiness is gated: requirements exist; achievement is not claimed. Link provides doctrine; page remains requirements-only.",
+        post:"Validation expands through independent audit paths and repeatable evidence streams with certificate ledgers."
       },
       informal:{
         origin:"SVF: don’t trust one sensor.",
-        now:"Strict: no cert without enough data; rollups are all-or-nothing.",
-        post:"Audit-ready: replay, manifests, ledgers, third-party routes."
+        now:"Fusion is gated requirements only. No claims.",
+        post:"Independent audits and replayable logs."
       }
     },
     trajectory:{
       formal:{
-        origin:"Trajectory is distance-to-boundary math: it reports position relative to declared thresholds using admissible receipts only; it never upgrades claims.",
-        now:"Trajectory is read-only: show what is measured, what is not measured, and what receipts are required next. No interpretation inflation.",
-        post:"Trajectory becomes decision support: it routes effort (loss closure, τ improvement, stability) while keeping industrial delivery stable."
+        origin:"Trajectory is distance-to-boundary reporting: it never upgrades claims. It lists receipts required for any elevation.",
+        now:"Trajectory reports the next admissible receipts only: stability, loss accounting, audit artifacts, and deployment gating.",
+        post:"Trajectory guides where to improve (loss closure, stability) while keeping industrial delivery bounded."
       },
       informal:{
-        origin:"Trajectory = distance to target, not a promise.",
-        now:"Read-only: measured vs not measured, and what’s next.",
-        post:"It helps decide where to work next without hype."
+        origin:"Trajectory = what receipts are missing.",
+        now:"Next receipts only. No hype.",
+        post:"Improve stability and losses; keep claims bounded."
       }
     }
   };
 
-  // Panel shaping: WHAT/WHY/SCOPE/OUTPUT produce different bullets for the same core
   function panelBullets(face, core, panel, lensTime, lensStyle){
     const L = (lensTime==="origin")?"concept":(lensTime==="now")?"live":"roadmap";
     const S = (lensStyle==="formal")?"formal":"informal";
     const baseLine = BASE[L][S][face];
-
     const coreLine = (lensTime==="origin")?CORE[core][S].origin:(lensTime==="now")?CORE[core][S].now:CORE[core][S].post;
 
     if(panel==="what"){
       return [
         baseLine,
         coreLine,
-        "Energy product claim: industrial plasma thermal substitution + buffered clean power pathway (SLA + IDP).",
-        "Plasma farms: modular PFMs co-located with industrial and agricultural heat users (exchanger-only boundaries)."
+        "Industrial (C) claim set: industrial plasma thermal substitution; upstream-only high-energy regime; buffered delivery via SLA.",
+        "Preserved keys: HIP, CC tiers, ERI, SLA, CARES, SVF, IDP; DOTGRID binding: DOTGRID-ENERGY-HYBRID-v1."
       ];
     }
     if(panel==="why"){
       return [
         "Reason: decarbonize industrial heat first (highest immediate leverage) while keeping deployment safe and auditable.",
-        "Reason: buffering prevents shock, stabilizes dispatch, and makes adoption compatible with existing grids and contracts.",
-        "Reason: modular farms allow replication without re-inventing safety or evidence.",
-        "Reason: strict validation prevents narrative inflation and protects trust at scale."
+        "Reason: buffering (SLA) prevents shock and stabilizes delivery without migrating risk to endpoints.",
+        "Reason: modular PFMs allow replication without redefining safety or evidence requirements.",
+        "Reason: gated readiness prevents claim drift and protects long-term credibility."
       ];
     }
     if(panel==="scope"){
       return [
-        "Scope boundary: upstream high-energy regimes remain inside hardened PFMs; downstream endpoints are passive and tier-limited.",
-        "Scope boundary: soil never interfaces with plasma; agriculture uses midstream thermal exchange only (TGI / exchangers).",
-        "Scope boundary: research is gated; industrial delivery remains primary and does not depend on unverified gain.",
-        "Scope boundary: no recipe disclosure; publish definitions, bins, signals, falsifiers, and deployment discipline."
+        "Scope boundary: no net-positive fusion claim; no facility net-electric claim; no grid-fusion implication.",
+        "Scope boundary: high-energy regimes remain upstream; midstream exchange only; downstream endpoints passive only.",
+        "Scope boundary: soil and livestock never interface with plasma; agricultural integration uses exchangers only.",
+        "Scope boundary: fusion content is requirements-only and gated; failure at any gate reverts to Industrial (C)."
       ];
     }
-    // output
     return [
-      "Deliverable: industrial deployment template (IDP) + safety response protocol (CARES) + validation templates (SVF).",
-      "Deliverable: measurable reports (power-in, thermal-out, uptime, variance) + incident ledger + compliance artifacts.",
-      "Deliverable: R&D change log (loss dominance → redesign → re-measure) with receipts and stop rules.",
-      "Deliverable: licensing boundary (RLM) gated by deployment phase and certification status."
+      "Output: deployment phases (IDP-1→IDP-4) with containment boundaries and audit artifacts.",
+      "Output: SVF templates, CARES response protocol, ERI escalation logic, and certificate-ledger discipline.",
+      "Output: underwriting-grade CC tier pathway (future) based on measured incidents and verified stability.",
+      "Output: gated fusion-readiness doctrine page (requirements + disproof conditions; no achievement claimed)."
     ];
   }
 
@@ -704,18 +685,17 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     const coreLine = CORE[core][S][L];
     if(panel==="what") return coreLine;
     if(panel==="why") return (S==="formal")
-      ? "Why explains motive without inflating claims: industrial-first value, buffered adoption, and disciplined R&D separation."
-      : "Why = the reason this exists, without hype.";
+      ? "Why states deployment motive without claim drift: industrial heat substitution, buffered delivery, and strict evidence discipline."
+      : "Why = industrial-first value without hype.";
     if(panel==="scope") return (S==="formal")
-      ? "Scope is the boundary: what is allowed, what is isolated, and what must remain gated until receipts exist."
+      ? "Scope is the boundary: what is allowed, what is gated, and what is explicitly not claimed."
       : "Scope = what stays inside the fence.";
     return (S==="formal")
-      ? "Output is what you get: templates, artifacts, and deployable surfaces that remain consistent as scale increases."
-      : "Output = deliverables, not promises.";
+      ? "Output lists templates, receipts, and bounded deployment pathways—not promises."
+      : "Output = deliverables and receipts.";
   }
 
-  // ===== Interaction state =====
-  let activeFace = null;     // north/east/south/west
+  let activeFace = null;
   let activeCore = "principle";
   let activePanel = "what";
 
@@ -759,7 +739,6 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
     setActiveDiamond(face);
     bd.classList.add("show");
     modal.classList.add("show");
-    // Default selections on open:
     activeCore = "principle";
     activePanel = "what";
     render();
@@ -774,37 +753,31 @@ body{margin:0;min-height:100vh;overflow-x:hidden;font-family:system-ui,-apple-sy
 
   window.__openEnergy=function(face){ openModal(face); };
 
-  // Lenses
   styleChip.addEventListener("click", ()=>{ style=(style==="formal")?"informal":"formal"; render(); });
   chipConcept.addEventListener("click", ()=>{ time="origin"; render(); });
   chipLive.addEventListener("click", ()=>{ time="now"; render(); });
   chipRoadmap.addEventListener("click", ()=>{ time="post"; render(); });
 
-  // Close
   bd.addEventListener("click", closeModal);
   mClose.addEventListener("click", closeModal);
   document.getElementById("mReturn").addEventListener("click", closeModal);
 
-  // Tabs
   tabs.forEach(t=>{
     t.addEventListener("click", ()=>{ activeCore=t.dataset.core; render(); });
     t.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); activeCore=t.dataset.core; render(); } });
   });
 
-  // Panels
   panels.forEach(p=>{
     p.addEventListener("click", ()=>{ activePanel=p.dataset.panel; render(); });
     p.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); activePanel=p.dataset.panel; render(); } });
   });
 
-  // Keyboard for diamonds
   [["dNorth","north"],["dEast","east"],["dSouth","south"],["dWest","west"]].forEach(pair=>{
     document.getElementById(pair[0]).addEventListener("keydown",(e)=>{
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.__openEnergy(pair[1]); }
     });
   });
 
-  // Initial
   setLensLabels();
 })();
 </script>

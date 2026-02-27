@@ -1,11 +1,12 @@
 <!-- TNT — /home/index.html
      HUB A · GRID (TWO SETS OF FOUR) → RUSSIAN DOLL BRANCHING (FULL STRUCTURE) · JI+JD OVERLAYS
-     FIXES IN THIS VERSION:
-       1) BUBBLES OPEN: explicit addEventListener wiring + z-index + no auto-click selector ambiguity
-       2) TWO SEPARATE SETS OF FOUR (NOT MIXED):
-          - Set A: N / E / S / W  (2×2)
-          - Set B: APPENDIX / GLOSSARY / ABOUT / LINKS (2×2)
-       3) Keeps: EN/中文/ES triangle, Informal/Formal/Both, field ownership, Russian doll, Analog sub-bubble, JI/JD overlays
+     FIX: BUBBLES NOT OPENING
+       - Uses ONE delegated event listener (document) for ALL taps
+       - Uses pointerup/click fallback (mobile-safe)
+       - Removes per-node addEventListener wiring (no “lost handlers” on rerender)
+       - Ensures interactive targets are pointer-events:auto and above overlays (z-index)
+       - Keeps TWO separate sets of four (Core compass vs Meta spine)
+       - Keeps EN/中文/ES triangle + Informal/Formal/Both
 -->
 
 <!doctype html>
@@ -98,16 +99,17 @@ a{color:inherit;text-decoration:none}
   touch-action:manipulation;
   display:flex;gap:10px;align-items:flex-start;
   position:relative;z-index:15;
+  pointer-events:auto;
 }
 .tile:hover{border-color:rgba(212,175,55,.35)}
 .tile.active{border-color:rgba(212,175,55,.65);box-shadow:0 18px 60px rgba(0,0,0,.62),0 0 18px rgba(212,175,55,.22)}
-.diamond{width:12px;height:12px;transform:rotate(45deg);border-radius:4px;background:var(--c);box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 14px rgba(0,0,0,.35);flex:0 0 auto;margin-top:4px}
+.diamond{width:12px;height:12px;transform:rotate(45deg);border-radius:4px;background:var(--c);box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 14px rgba(0,0,0,.35);flex:0 0 auto;margin-top:4px;pointer-events:none}
 .tt{min-width:0}
 .tt .name{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tt .hint{margin-top:6px;font-size:12.5px;opacity:.78;line-height:1.35}
-.chev{opacity:.75;font-size:18px;flex:0 0 auto}
+.chev{opacity:.75;font-size:18px;flex:0 0 auto;pointer-events:none}
 
-/* detail (expanded russian doll container) */
+/* detail */
 .detail{
   border:1px solid rgba(255,255,255,.12);
   border-radius:22px;
@@ -124,7 +126,7 @@ a{color:inherit;text-decoration:none}
 .dClose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px;border-radius:12px}
 .dClose:hover{background:rgba(255,255,255,.08)}
 
-/* node list (russian doll) */
+/* russian doll nodes */
 .node{
   --c:#93C5FD;
   border:1px solid rgba(255,255,255,.10);
@@ -132,15 +134,17 @@ a{color:inherit;text-decoration:none}
   background:rgba(0,0,0,.18);
   overflow:hidden;
   box-shadow:0 12px 36px rgba(0,0,0,.45);
+  position:relative;
+  pointer-events:auto;
 }
-.nHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;cursor:pointer;font-weight:950;letter-spacing:.2px}
+.nHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;cursor:pointer;font-weight:950;letter-spacing:.2px;touch-action:manipulation}
 .nLeft{display:flex;align-items:center;gap:10px;min-width:0}
 .nLabel{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .nBody{display:none;padding:12px 14px 14px;border-top:1px solid rgba(255,255,255,.08);overflow:auto;-webkit-overflow-scrolling:touch}
 .node.open>.nBody{display:block}
 .childStack{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 
-/* sentences (no visible labels) */
+/* sentences */
 .one{margin:0;line-height:1.65;font-size:14px;color:rgba(255,255,255,.90)}
 .one[data-lens="informal"]{display:none}
 .one[data-lens="formal"]{display:block}
@@ -148,9 +152,9 @@ a{color:inherit;text-decoration:none}
 .view-informal .one[data-lens="informal"]{display:block}
 .view-both .one{display:block}
 
-/* analog sub-bubble */
+/* analog sub */
 .subNode{border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(0,0,0,.16);overflow:hidden;margin-top:10px}
-.subHead{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-weight:950;letter-spacing:.2px;font-size:13px}
+.subHead{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-weight:950;letter-spacing:.2px;font-size:13px;touch-action:manipulation}
 .subBody{display:none;padding:10px 12px 12px;border-top:1px solid rgba(255,255,255,.08)}
 .subNode.open .subBody{display:block}
 .analog{margin:0;line-height:1.55;font-size:13px;color:rgba(255,255,255,.86)}
@@ -178,7 +182,7 @@ a{color:inherit;text-decoration:none}
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){:root{--dockH:92px}.dock{grid-template-columns:repeat(3, minmax(0,1fr))}}
 
-/* overlays (JI + JD) */
+/* overlays */
 .ov{position:fixed;inset:0;z-index:500;display:none;background:rgba(0,0,0,.72);backdrop-filter:blur(10px)}
 .ov.show{display:block}
 .panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(980px,94vw);height:min(86vh, 860px);z-index:510;display:none}
@@ -308,7 +312,7 @@ a{color:inherit;text-decoration:none}
   };
   const T=()=> (lang==="zh")?L.zh:(lang==="es")?L.es:L.en;
 
-  // ---- header text ----
+  // ---- header ----
   document.getElementById("hk").textContent=T().hk;
   document.getElementById("ht").textContent=T().ht;
   document.getElementById("hs").textContent=T().hs;
@@ -316,7 +320,7 @@ a{color:inherit;text-decoration:none}
   document.getElementById("labCore").textContent=T().core;
   document.getElementById("labMeta").textContent=T().meta;
 
-  // ---- view toggle ----
+  // ---- view ----
   const page=document.getElementById("page");
   const vInformal=document.getElementById("vInformal");
   const vFormal=document.getElementById("vFormal");
@@ -354,7 +358,7 @@ a{color:inherit;text-decoration:none}
   bZH.addEventListener("click", ()=>setLang("zh"));
   bES.addEventListener("click", ()=>setLang("es"));
 
-  // ---- TREE ----
+  // ---- tree ----
   const TREE = {
     N:{label:{en:"N · DEFINITIONS",zh:"N · 定义",es:"N · DEFINICIONES"}, color:"#1F3A8A", children:["N★","N:NE","N:NW","N:SE","N:SW"]},
     E:{label:{en:"E · PRODUCTS",zh:"E · 产品",es:"E · PRODUCTOS"}, color:"#0EA5E9", children:["E★","E:NE","E:NW","E:SE","E:SW"]},
@@ -521,10 +525,8 @@ a{color:inherit;text-decoration:none}
   const gridMeta=document.getElementById("gridMeta");
   const detail=document.getElementById("detail");
   const dTitle=document.getElementById("dTitle");
-  const dClose=document.getElementById("dClose");
   const branch=document.getElementById("branch");
 
-  // overlays
   const ovJI=document.getElementById("ovJI");
   const panelJI=document.getElementById("panelJI");
   const jiClose=document.getElementById("jiClose");
@@ -537,96 +539,38 @@ a{color:inherit;text-decoration:none}
   const jdTitle=document.getElementById("jdTitle");
   const jdBody=document.getElementById("jdBody");
 
-  function openJI(){
-    jiTitle.textContent = (lang==="zh")?"跳转目录":(lang==="es")?"ÍNDICE DE SALTOS":"JUMP INDEX";
-    jiList.innerHTML="";
-    const ids=Object.keys(TREE);
-    ids.forEach(id=>{
-      const row=document.createElement("div");
-      row.className="row";
-      const top=document.createElement("div");
-      top.className="rTop";
-      const nm=document.createElement("div");
-      nm.className="rName";
-      nm.textContent=nodeLabel(id);
-      const act=document.createElement("div");
-      const jb=document.createElement("a");
-      jb.className="btn";
-      jb.textContent=(lang==="zh")?"跳转":(lang==="es")?"Saltar":"Jump";
-      jb.href="#";
-      jb.addEventListener("click",(e)=>{e.preventDefault();e.stopPropagation();openJD(id);});
-      act.appendChild(jb);
-      top.appendChild(nm);
-      top.appendChild(act);
+  // ---- render tiles ----
+  function makeTile(id){
+    const info=TREE[id];
+    const el=document.createElement("div");
+    el.className="tile";
+    el.style.setProperty("--c", info.color || "#93C5FD");
+    el.setAttribute("data-id", id);
 
-      const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
-      const sent=document.createElement("div");
-      sent.className="rSent";
-      sent.textContent = (view==="both")
-        ? (oneSentence(id,"informal")+"  "+oneSentence(id,"formal"))
-        : oneSentence(id,view);
-
-      row.appendChild(top);
-      row.appendChild(sent);
-      row.addEventListener("click",()=>lsSet("hub_active_node", id));
-      jiList.appendChild(row);
-    });
-    ovJI.classList.add("show");
-    panelJI.classList.add("show");
-  }
-  function closeJI(){ovJI.classList.remove("show");panelJI.classList.remove("show");}
-  ovJI.addEventListener("click", closeJI);
-  jiClose.addEventListener("click", closeJI);
-  panelJI.addEventListener("click",(e)=>e.stopPropagation());
-
-  function openJD(id){
-    jdTitle.textContent = (lang==="zh")?"跳转卡组":(lang==="es")?"MAZO":"JUMP DECK";
-    jdBody.innerHTML="";
-
-    const row=document.createElement("div");
-    row.className="row";
-    const top=document.createElement("div");
-    top.className="rTop";
-    const nm=document.createElement("div");
-    nm.className="rName";
-    nm.textContent=nodeLabel(id);
-    top.appendChild(nm);
-    row.appendChild(top);
+    const d=document.createElement("div"); d.className="diamond";
+    const tt=document.createElement("div"); tt.className="tt";
+    const nm=document.createElement("div"); nm.className="name"; nm.textContent=nodeLabel(id);
 
     const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
-    const s=document.createElement("div");
-    s.className="rSent";
-    s.textContent = (view==="both")
+    const hint=document.createElement("div"); hint.className="hint";
+    hint.textContent = (view==="both")
       ? (oneSentence(id,"informal")+"  "+oneSentence(id,"formal"))
       : oneSentence(id,view);
-    row.appendChild(s);
 
-    const a=document.createElement("div");
-    a.className="rSent";
-    a.textContent = analogSentence(id);
-    row.appendChild(a);
+    const chev=document.createElement("div"); chev.className="chev"; chev.textContent="›";
 
-    const note=document.createElement("div");
-    note.className="rSent";
-    note.style.opacity=".7";
-    note.textContent = (lang==="zh")
-      ? "（占位）此处将绑定到产品/证明页面。"
-      : (lang==="es")
-      ? "(Marcador) Aquí se enlazará a producto/prueba."
-      : "(Placeholder) This will bind to product/proof pages.";
-    row.appendChild(note);
-
-    jdBody.appendChild(row);
-
-    ovJD.classList.add("show");
-    panelJD.classList.add("show");
+    tt.appendChild(nm); tt.appendChild(hint);
+    el.appendChild(d); el.appendChild(tt); el.appendChild(chev);
+    return el;
   }
-  function closeJD(){ovJD.classList.remove("show");panelJD.classList.remove("show");}
-  ovJD.addEventListener("click", closeJD);
-  jdClose.addEventListener("click", closeJD);
-  panelJD.addEventListener("click",(e)=>e.stopPropagation());
 
-  // Build russian-doll node
+  gridCore.innerHTML="";
+  ["N","E","S","W"].forEach(id=>gridCore.appendChild(makeTile(id)));
+
+  gridMeta.innerHTML="";
+  ["APPENDIX","GLOSSARY","ABOUT","LINKS"].forEach(id=>gridMeta.appendChild(makeTile(id)));
+
+  // ---- russian doll builder ----
   function buildNode(id){
     const info=TREE[id];
     const node=document.createElement("div");
@@ -636,6 +580,7 @@ a{color:inherit;text-decoration:none}
 
     const head=document.createElement("div");
     head.className="nHead";
+    head.setAttribute("data-action","toggle-node");
     head.innerHTML="<div class='nLeft'><div class='diamond'></div><div class='nLabel'>"+nodeLabel(id)+"</div></div><div>▸</div>";
 
     const body=document.createElement("div");
@@ -656,19 +601,23 @@ a{color:inherit;text-decoration:none}
 
     const sub=document.createElement("div");
     sub.className="subNode";
+    sub.setAttribute("data-id", id+"::analog");
+
     const sh=document.createElement("div");
     sh.className="subHead";
+    sh.setAttribute("data-action","toggle-analog");
     sh.innerHTML="<div>"+T().analog+"</div><div>▸</div>";
+
     const sb=document.createElement("div");
     sb.className="subBody";
+
     const ap=document.createElement("p");
     ap.className="analog";
     ap.textContent=analogSentence(id);
+
     sb.appendChild(ap);
     sub.appendChild(sh);
     sub.appendChild(sb);
-    sh.addEventListener("click",(e)=>{e.stopPropagation();sub.classList.toggle("open");});
-
     body.appendChild(sub);
 
     const act=document.createElement("div");
@@ -677,12 +626,13 @@ a{color:inherit;text-decoration:none}
     const ji=document.createElement("div");
     ji.className="pill ji";
     ji.textContent=T().jiPill;
-    ji.addEventListener("click",(e)=>{e.stopPropagation();openJI();});
+    ji.setAttribute("data-action","open-ji");
 
     const jump=document.createElement("div");
     jump.className="pill";
     jump.textContent=T().jump;
-    jump.addEventListener("click",(e)=>{e.stopPropagation();openJD(id);});
+    jump.setAttribute("data-action","open-jd");
+    jump.setAttribute("data-id", id);
 
     act.appendChild(ji);
     act.appendChild(jump);
@@ -695,87 +645,197 @@ a{color:inherit;text-decoration:none}
       body.appendChild(stack);
     }
 
-    head.addEventListener("click",()=>{
-      node.classList.toggle("open");
-      lsSet("hub_active_node", id);
-    });
-
     node.appendChild(head);
     node.appendChild(body);
     return node;
   }
 
   function showDetail(id){
-    // mark active tile
     document.querySelectorAll(".tile").forEach(x=>{
       x.classList.toggle("active", x.getAttribute("data-id")===id);
     });
-
     detail.classList.add("show");
     dTitle.textContent=nodeLabel(id);
     branch.innerHTML="";
     branch.appendChild(buildNode(id));
     lsSet("hub_active_node", id);
-
-    // scroll to detail
     detail.scrollIntoView({behavior:"smooth",block:"start"});
   }
 
-  // Make tiles (core + meta)
-  function makeTile(id){
-    const info=TREE[id];
-    const el=document.createElement("div");
-    el.className="tile";
-    el.style.setProperty("--c", info.color || "#93C5FD");
-    el.setAttribute("data-id", id);
+  // ---- overlays ----
+  function openJI(){
+    jiTitle.textContent = (lang==="zh")?"跳转目录":(lang==="es")?"ÍNDICE DE SALTOS":"JUMP INDEX";
+    jiList.innerHTML="";
+    Object.keys(TREE).forEach(id=>{
+      const row=document.createElement("div");
+      row.className="row";
 
-    const d=document.createElement("div"); d.className="diamond";
-    const tt=document.createElement("div"); tt.className="tt";
-    const nm=document.createElement("div"); nm.className="name"; nm.textContent=nodeLabel(id);
+      const top=document.createElement("div");
+      top.className="rTop";
+
+      const nm=document.createElement("div");
+      nm.className="rName";
+      nm.textContent=nodeLabel(id);
+
+      const act=document.createElement("div");
+      const jb=document.createElement("button");
+      jb.className="btn";
+      jb.type="button";
+      jb.textContent=(lang==="zh")?"跳转":(lang==="es")?"Saltar":"Jump";
+      jb.setAttribute("data-action","open-jd");
+      jb.setAttribute("data-id", id);
+
+      act.appendChild(jb);
+      top.appendChild(nm);
+      top.appendChild(act);
+
+      const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
+      const sent=document.createElement("div");
+      sent.className="rSent";
+      sent.textContent = (view==="both")
+        ? (oneSentence(id,"informal")+"  "+oneSentence(id,"formal"))
+        : oneSentence(id,view);
+
+      row.appendChild(top);
+      row.appendChild(sent);
+      jiList.appendChild(row);
+    });
+    ovJI.classList.add("show");
+    panelJI.classList.add("show");
+  }
+  function closeJI(){ovJI.classList.remove("show");panelJI.classList.remove("show");}
+
+  function openJD(id){
+    jdTitle.textContent = (lang==="zh")?"跳转卡组":(lang==="es")?"MAZO":"JUMP DECK";
+    jdBody.innerHTML="";
+
+    const row=document.createElement("div");
+    row.className="row";
+
+    const top=document.createElement("div");
+    top.className="rTop";
+    const nm=document.createElement("div");
+    nm.className="rName";
+    nm.textContent=nodeLabel(id);
+    top.appendChild(nm);
+    row.appendChild(top);
 
     const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
-    const hint=document.createElement("div"); hint.className="hint";
-    hint.textContent = (view==="both")
+    const s=document.createElement("div");
+    s.className="rSent";
+    s.textContent = (view==="both")
       ? (oneSentence(id,"informal")+"  "+oneSentence(id,"formal"))
       : oneSentence(id,view);
+    row.appendChild(s);
 
-    tt.appendChild(nm); tt.appendChild(hint);
+    const a=document.createElement("div");
+    a.className="rSent";
+    a.textContent=analogSentence(id);
+    row.appendChild(a);
 
-    const chev=document.createElement("div"); chev.className="chev"; chev.textContent="›";
+    jdBody.appendChild(row);
 
-    el.appendChild(d); el.appendChild(tt); el.appendChild(chev);
-
-    el.addEventListener("click", ()=>showDetail(id));
-    return el;
+    ovJD.classList.add("show");
+    panelJD.classList.add("show");
+    lsSet("hub_active_node", id);
   }
+  function closeJD(){ovJD.classList.remove("show");panelJD.classList.remove("show");}
 
-  // Render two separate sets of four
-  gridCore.innerHTML="";
-  ["N","E","S","W"].forEach(id=>gridCore.appendChild(makeTile(id)));
+  // ---- close buttons ----
+  document.getElementById("dClose").setAttribute("data-action","close-detail");
+  jiClose.setAttribute("data-action","close-ji");
+  jdClose.setAttribute("data-action","close-jd");
 
-  gridMeta.innerHTML="";
-  ["APPENDIX","GLOSSARY","ABOUT","LINKS"].forEach(id=>gridMeta.appendChild(makeTile(id)));
-
-  // Close detail
-  dClose.addEventListener("click", ()=>detail.classList.remove("show"));
-
-  // Dock labels + actions
+  // ---- dock ----
   const navExit=document.getElementById("navExit");
   const navJI=document.getElementById("navJI");
   const navJD=document.getElementById("navJD");
   const navActive=document.getElementById("navActive");
-
   navExit.textContent=T().exit;
   navJI.textContent=T().ji;
   navJD.textContent=T().jd;
   navActive.textContent=T().active;
 
-  navExit.addEventListener("click", ()=>location.href="/door/"+makeQS());
-  navJI.addEventListener("click", openJI);
-  navJD.addEventListener("click", ()=>openJD(lsGet("hub_active_node")||"N"));
-  navActive.addEventListener("click", ()=>openJD(lsGet("hub_active_node")||"N"));
+  navExit.setAttribute("data-action","exit");
+  navJI.setAttribute("data-action","open-ji");
+  navJD.setAttribute("data-action","open-jd");
+  navActive.setAttribute("data-action","open-jd-active");
 
-  // Default selection (no auto-click ambiguity; choose last active if valid)
+  // ---- delegated tap handler (THE FIX) ----
+  function onTap(e){
+    const target = e.target;
+    const btn = target.closest("[data-action], .tile, .nHead, .subHead, .pill");
+    if(!btn) return;
+
+    // stop accidental text selection + ghost clicks
+    e.preventDefault();
+    e.stopPropagation();
+
+    // tile click
+    const tile = btn.closest(".tile");
+    if(tile){
+      const id = tile.getAttribute("data-id");
+      if(id) showDetail(id);
+      return;
+    }
+
+    // action routing
+    const action = btn.getAttribute("data-action");
+
+    if(action==="close-detail"){
+      detail.classList.remove("show");
+      return;
+    }
+    if(action==="open-ji"){ openJI(); return; }
+    if(action==="close-ji"){ closeJI(); return; }
+    if(action==="close-jd"){ closeJD(); return; }
+
+    if(action==="open-jd"){
+      const id = btn.getAttribute("data-id") || lsGet("hub_active_node") || "N";
+      openJD(id);
+      return;
+    }
+    if(action==="open-jd-active"){
+      openJD(lsGet("hub_active_node") || "N");
+      return;
+    }
+    if(action==="exit"){
+      location.href="/door/" + makeQS();
+      return;
+    }
+
+    // node toggles
+    if(btn.classList.contains("nHead")){
+      const node = btn.closest(".node");
+      if(node) node.classList.toggle("open");
+      return;
+    }
+    if(btn.classList.contains("subHead")){
+      const sub = btn.closest(".subNode");
+      if(sub) sub.classList.toggle("open");
+      return;
+    }
+    if(action==="toggle-node"){
+      const node = btn.closest(".node");
+      if(node) node.classList.toggle("open");
+      return;
+    }
+    if(action==="toggle-analog"){
+      const sub = btn.closest(".subNode");
+      if(sub) sub.classList.toggle("open");
+      return;
+    }
+  }
+
+  // pointerup is most reliable on mobile; click fallback for older browsers
+  document.addEventListener("pointerup", onTap, {passive:false});
+  document.addEventListener("click", onTap, {passive:false});
+
+  // ---- overlay close taps ----
+  ovJI.addEventListener("pointerup", (e)=>{e.preventDefault();closeJI();}, {passive:false});
+  ovJD.addEventListener("pointerup", (e)=>{e.preventDefault();closeJD();}, {passive:false});
+
+  // ---- default selection ----
   const last = lsGet("hub_active_node") || "N";
   const valid = TREE[last] ? last : "N";
   showDetail(valid);

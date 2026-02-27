@@ -1,25 +1,21 @@
-<!-- TNT — /explore/frontier/index.html  (EXPLORE · FRONTIER · 4 QUESTIONS · VERTICAL DIAMONDS · MODAL LENSES)
+<!-- TNT — /explore/index.html  (EXPLORE · HUB · NO QUESTION WORDS · 2 VERTICAL DIAMONDS · JUMP-ONLY)
      PURPOSE:
-       - Frontier hub that DOES NOT overload the face.
-       - 4 vertical diamonds (tap-safe) = 4 questions:
-           1) IF (Is it possible?)
-           2) HOW (How could it be possible without cheating?)
-           3) WHEN (What must be true before it becomes possible?)
-           4) FIRST (What must be built first?)
-       - Tap a diamond → ONE modal opens (no stacked doors).
-       - Modal lenses ONLY inside modal:
-           STYLE (gd_style): formal / informal
-           TIME  (gd_time):  origin / now / post   (Concept / Live / Roadmap)
-       - Modal content = 4 “jump cards” (no raw links): each card is a jump surface.
+       - Explore is a routing hub ONLY (no IF/HOW/WHEN/FIRST here).
+       - Two vertical diamonds (tap-safe):
+           1) LANGUAGE INNOVATION (Grammar / DOT.GRID / SSG / Acronyms)
+           2) FRONTIER (Frontier hub + Frontier entry points)
+       - Tap diamond → ONE modal opens (accordion jump rows).
+       - NO lenses on Explore hub (preserves lang/style/time but does not depend on them).
        - Bilingual:
            lang=en => EN only
            lang=zh => 中文 only
        - State propagation via ?lang=&style=&time= + localStorage gd_*
      LOCKS:
+       - TNT FULL FILE
        - Uses /assets/ui.css + /assets/branch.css only
        - DOES NOT style html/body background (ui.css owns field)
        - No new state keys beyond gd_lang/gd_style/gd_time
-       - Tap-safe: bind FIRST; overlay never blocks modal; no inline onclick reliance
+       - Tap-safe: overlay never blocks modal; no inline onclick reliance
 -->
 
 <!doctype html>
@@ -27,34 +23,46 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>EXPLORE · FRONTIER</title>
+<title>EXPLORE · Hub</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instrument.js"></script>
 
 <style>
+/* DO NOT TOUCH FIELD — ui.css owns html/body background */
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:inherit;text-decoration:none}
+
+/* Use site button class if present, otherwise fallback */
+.crp-btn, .btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 16px;border-radius:14px;
+  background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  color:#fff;border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 36px rgba(0,0,0,.7);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+}
+.crp-btn:hover, .btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px rgba(212,175,55,.22)}
+
 :root{
   --R:132px;
-  --D:188px;
+  --D:210px;
 
   /* Pearlescent lacquer (aligned with your good builds) */
   --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 
-  --mut: rgba(255,255,255,.90);
-  --mut2: rgba(255,255,255,.74);
+  --mut: rgba(255,255,255,.88);
+  --mut2: rgba(255,255,255,.72);
 }
-
-/* Base (no field paint) */
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-a{color:inherit;text-decoration:none}
 
 /* Top-left */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
 /* Brand */
@@ -72,11 +80,30 @@ a{color:inherit;text-decoration:none}
 
 /* Stage */
 .stage{
-  position:fixed;left:50%;top:54%;
+  position:fixed;left:50%;top:56%;
   transform:translate(-50%,-50%);
-  width:min(720px,94vw);
-  height:min(720px,94vw);
+  width:min(560px,92vw);
+  height:min(560px,92vw);
   z-index:60;
+  pointer-events:none;
+}
+
+/* Decorative outer */
+.outer{
+  position:absolute;left:50%;top:50%;
+  width:min(560px,92vw);height:min(560px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;
+  background:
+    radial-gradient(circle at 52% 14%, rgba(176,0,0,.18), transparent 55%),
+    radial-gradient(circle at 38% 28%, rgba(90,140,255,.10), transparent 55%),
+    linear-gradient(145deg, rgba(17,22,28,.56), rgba(11,15,20,.70));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+  opacity:.55;
   pointer-events:none;
 }
 
@@ -102,7 +129,6 @@ a{color:inherit;text-decoration:none}
     0 0 32px rgba(212,175,55,.22),
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -40px 72px rgba(0,0,0,.78);
-
   transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
   overflow:hidden;
 }
@@ -130,11 +156,9 @@ a{color:inherit;text-decoration:none}
 }
 .d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
-/* vertical placement */
-.d1{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1.30)) rotate(45deg)}
-.d2{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -0.43)) rotate(45deg)}
-.d3{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  0.43)) rotate(45deg)}
-.d4{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1.30)) rotate(45deg)}
+/* Vertical stack */
+.d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -0.95)) rotate(45deg)}
+.d-bot{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  0.95)) rotate(45deg)}
 
 .inner{
   width:100%;height:100%;
@@ -171,7 +195,6 @@ a{color:inherit;text-decoration:none}
   display:none;
 }
 .bd.show{display:block}
-
 .modal{
   position:fixed;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -181,17 +204,14 @@ a{color:inherit;text-decoration:none}
   display:none;
 }
 .modal.show{display:block}
-
 .shell{
   background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));
   border:1px solid rgba(255,255,255,.12);
   border-radius:24px;
   box-shadow:0 60px 180px rgba(0,0,0,.85);
   overflow:hidden;
-  display:flex;
-  flex-direction:column;
+  display:flex;flex-direction:column;
 }
-
 .mhead{
   display:flex;align-items:center;justify-content:space-between;
   padding:14px 16px;
@@ -199,31 +219,7 @@ a{color:inherit;text-decoration:none}
 }
 .mtitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
 .mclose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px}
-
-.mbody{
-  padding:14px 16px 18px;
-  overflow:auto;-webkit-overflow-scrolling:touch;
-}
-
-/* Lenses INSIDE modal only */
-.lensRow{
-  max-width:980px;margin:0 auto 14px;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;
-}
-.pill{
-  padding:10px 16px;border-radius:999px;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.12);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  color:#fff;
-  user-select:none;
-}
-.pill.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:0 0 22px rgba(212,175,55,.18);
-}
+.mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch}
 
 /* Header card */
 .hcard{
@@ -234,54 +230,50 @@ a{color:inherit;text-decoration:none}
   color:rgba(255,255,255,.86);
   line-height:1.35;
 }
-.hcard .h1{margin:0 0 4px;font-weight:950;font-size:14px}
-.hcard .h2{margin:0;color:rgba(255,255,255,.86);line-height:1.45;font-size:12.5px}
-.hcard .h3{margin:8px 0 0;color:rgba(255,255,255,.70);font-size:12px;line-height:1.35}
+.h1{margin:0 0 4px;font-weight:950;font-size:14px}
+.h2{margin:0;color:rgba(255,255,255,.86);line-height:1.45;font-size:12.5px}
 
-/* Jump cards */
-.grid{
-  max-width:980px;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-@media (max-width:720px){ .grid{grid-template-columns:1fr;} }
-
-.card{
-  position:relative;
-  border-radius:20px;
+/* Accordion rows */
+.stackList{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.stackRow{
   border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.18), transparent 48%),
-    radial-gradient(circle at 70% 80%, rgba(0,120,255,.12), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
-  box-shadow:0 22px 72px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.06);
-  padding:18px 16px;
-  cursor:pointer;
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
+}
+.stackHead{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;padding:14px 16px;cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 }
-.card::before{
-  content:"";
-  position:absolute;inset:0;border-radius:20px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.28) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
+.stackLeft{display:flex;align-items:center;gap:12px;min-width:0}
+.stackBar{width:6px;height:22px;border-radius:99px;background:var(--domc, rgba(255,255,255,.20));flex:0 0 auto}
+.stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stackSub{font-size:12px;opacity:.72;margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto}
+.stackBody{
+  display:none;
+  padding:14px 16px 10px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
-.ct{margin:0 0 6px;font-weight:950;letter-spacing:.2px;font-size:18px}
-.cs{margin:0;opacity:.82;font-size:13px;line-height:1.35}
+.stackRow.open .stackBody{display:block}
+.pdesc{margin:0 0 10px;color:rgba(255,255,255,.86);line-height:1.55}
+.jumpRow{display:flex;gap:10px;flex-wrap:wrap}
 
-/* Footer */
+/* Footer actions */
 .mact{
   max-width:980px;margin:16px auto 0;
   display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
 }
 
+/* Mobile */
 @media (max-width:560px){
-  :root{--D:176px; --R:124px}
-  .stage{top:55%}
+  :root{--D:196px; --R:124px}
+  .stage{top:58%}
 }
 </style>
 </head>
@@ -289,85 +281,62 @@ a{color:inherit;text-decoration:none}
 <body>
 
 <div class="top-left">
-  <a class="crp-btn" id="btnExplore" href="/explore/">EXPLORE</a>
+  <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
   <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
 <div class="brand" aria-hidden="true">
   <p class="k" id="bk">CARDINAL AXIS</p>
-  <h1 class="t" id="bt">FRONTIER</h1>
-  <p class="s" id="bs">Bounded ambition · Jump surfaces</p>
+  <h1 class="t" id="bt">EXPLORE</h1>
+  <p class="s" id="bs">Innovation lanes · Frontier lanes</p>
 </div>
 
-<div class="stage" aria-label="Frontier questions">
-  <div class="d d1" id="dIf" role="button" tabindex="0">
+<div class="stage" aria-label="Explore hub">
+  <div class="outer"></div>
+
+  <div class="d d-top" id="dLanguage" role="button" tabindex="0" aria-label="Language Innovation">
     <div class="inner">
-      <div class="lab" id="labIf">IF</div>
-      <div class="sub" id="subIf">Is it possible?</div>
+      <div class="lab" id="labLanguage">LANGUAGE</div>
+      <div class="sub" id="subLanguage">Grammar · DOT.GRID · SSG · Acronyms</div>
     </div>
   </div>
 
-  <div class="d d2" id="dHow" role="button" tabindex="0">
+  <div class="d d-bot" id="dFrontier" role="button" tabindex="0" aria-label="Frontier">
     <div class="inner">
-      <div class="lab" id="labHow">HOW</div>
-      <div class="sub" id="subHow">How could it be possible without cheating?</div>
-    </div>
-  </div>
-
-  <div class="d d3" id="dWhen" role="button" tabindex="0">
-    <div class="inner">
-      <div class="lab" id="labWhen">WHEN</div>
-      <div class="sub" id="subWhen">What must be true before it becomes possible?</div>
-    </div>
-  </div>
-
-  <div class="d d4" id="dFirst" role="button" tabindex="0">
-    <div class="inner">
-      <div class="lab" id="labFirst">FIRST</div>
-      <div class="sub" id="subFirst">What must be built first?</div>
+      <div class="lab" id="labFrontier">FRONTIER</div>
+      <div class="sub" id="subFrontier">Bounded ambition · jump surfaces</div>
     </div>
   </div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
   <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="crp-btn" id="dockHub" href="/home/">HUB</a>
+  <a class="crp-btn" id="dockExplore" href="/explore/">EXPLORE</a>
   <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="crp-btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
 </nav>
 
-<div class="bd" id="bd"></div>
+<div class="bd" id="bd" aria-hidden="true"></div>
 
 <div class="modal" id="modal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="mTitle">FRONTIER</h3>
+      <h3 class="mtitle" id="mTitle">EXPLORE</h3>
       <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
     </div>
-
     <div class="mbody">
-      <div class="lensRow">
-        <div class="pill" id="pillFormal">FORMAL</div>
-        <div class="pill" id="pillInformal">INFORMAL</div>
-        <div class="pill" id="pillConcept">CONCEPT</div>
-        <div class="pill" id="pillLive">LIVE</div>
-        <div class="pill" id="pillRoadmap">ROADMAP</div>
-      </div>
-
       <div class="hcard">
-        <div class="h1" id="h1">—</div>
-        <div class="h2" id="h2">—</div>
-        <div class="h3" id="h3">—</div>
+        <div class="h1" id="mh1">—</div>
+        <div class="h2" id="mh2">—</div>
       </div>
 
-      <div class="grid" id="grid"></div>
+      <div class="stackList" id="stackList"></div>
 
       <div class="mact">
         <button class="crp-btn" id="mReturn" type="button">RETURN</button>
-        <a class="crp-btn" id="mJumpExplore" href="/explore/">JUMP EXPLORE</a>
-        <a class="crp-btn" id="mJumpEnergy" href="/products/energy/">JUMP ENERGY</a>
-        <a class="crp-btn" id="mJumpReadiness" href="/explore/fusion-readiness/">FUSION READINESS</a>
+        <a class="crp-btn" id="mJumpFrontier" href="/explore/frontier/">JUMP FRONTIER</a>
+        <a class="crp-btn" id="mJumpLanguage" href="/explore/innovation/language/">JUMP LANGUAGE</a>
       </div>
     </div>
   </div>
@@ -376,337 +345,243 @@ a{color:inherit;text-decoration:none}
 <script>
 (function(){
   // ===== State hydration (gd_* only) =====
-  var qs = new URLSearchParams(location.search);
+  var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var gdStyle = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var gdTime  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  if(time==="trajectory") time="post";
   if(lang!=="en" && lang!=="zh") lang="en";
-  if(gdStyle!=="formal" && gdStyle!=="informal") gdStyle="formal";
-  if(gdTime==="trajectory") gdTime="post";
-  if(gdTime!=="origin" && gdTime!=="now" && gdTime!=="post") gdTime="origin";
-  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime);}catch(e){}
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+  }catch(e){}
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   function q(){
     var p=new URLSearchParams();
-    p.set("lang",lang); p.set("style",gdStyle); p.set("time",gdTime);
+    p.set("lang",lang); p.set("style",style); p.set("time",time);
     return "?"+p.toString();
   }
 
-  // wire nav
-  document.getElementById("btnExplore").href="/explore/"+q();
+  // Wire nav
+  document.getElementById("btnHub").href="/home/"+q();
   document.getElementById("btnExit").href="/door/"+q();
   document.getElementById("dockTerminal").href="/index.html"+q();
-  document.getElementById("dockHub").href="/home/"+q();
+  document.getElementById("dockExplore").href="/explore/"+q();
   document.getElementById("dockProducts").href="/products/"+q();
   document.getElementById("dockLaws").href="/laws/"+q();
-  document.getElementById("dockGauges").href="/gauges/"+q();
+  document.getElementById("dockLinks").href="/links/"+q();
+  document.getElementById("mJumpFrontier").href="/explore/frontier/"+q();
+  document.getElementById("mJumpLanguage").href="/explore/innovation/language/"+q();
 
-  document.getElementById("mJumpExplore").href="/explore/"+q();
-  document.getElementById("mJumpEnergy").href="/products/energy/"+q();
-  document.getElementById("mJumpReadiness").href="/explore/fusion-readiness/"+q();
-
-  // i18n
+  // i18n (single-language render)
   var UI = {
     en:{
-      brand:{k:"CARDINAL AXIS", t:"FRONTIER", s:"Bounded ambition · Jump surfaces"},
+      brand:{k:"CARDINAL AXIS", t:"EXPLORE", s:"Innovation lanes · Frontier lanes"},
       diamonds:{
-        if:{lab:"IF", sub:"Is it possible?"},
-        how:{lab:"HOW", sub:"How could it be possible without cheating?"},
-        when:{lab:"WHEN", sub:"What must be true before it becomes possible?"},
-        first:{lab:"FIRST", sub:"What must be built first?"}
+        lang:{lab:"LANGUAGE", sub:"Grammar · DOT.GRID · SSG · Acronyms"},
+        frontier:{lab:"FRONTIER", sub:"Bounded ambition · jump surfaces"}
       },
-      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", live:"LIVE", roadmap:"ROADMAP"},
-      buttons:{ret:"RETURN", ex:"JUMP EXPLORE", en:"JUMP ENERGY", fr:"FUSION READINESS"}
+      modal:{
+        langTitle:"EXPLORE · LANGUAGE INNOVATION",
+        langH1:"Language substrate lanes",
+        langH2:"These pages explain what makes execution possible: structure, encoding, and shared terminology.",
+        frontierTitle:"EXPLORE · FRONTIER",
+        frontierH1:"Frontier lanes",
+        frontierH2:"These pages invite big ideas without overclaim: bounded ambition, jump surfaces, and prerequisites."
+      },
+      rows:{
+        grammar:{t:"GRAMMAR", s:"Traversal contracts · structural language", href:"/explore/innovation/language/grammar/"},
+        dot:{t:"DOT.GRID", s:"256-state indexing · sweeps", href:"/explore/innovation/language/dot-grid/"},
+        ssg:{t:"SSG", s:"Constraint syntax geometry", href:"/explore/innovation/language/ssg/"},
+        acr:{t:"ACRONYMS", s:"Lookup anchors · shared language", href:"/explore/innovation/language/acronyms/"},
+        frontier:{t:"FRONTIER HUB", s:"4-question frontier page (IF/HOW/WHEN/FIRST)", href:"/explore/frontier/"},
+        readiness:{t:"FUSION READINESS", s:"Requirements-only doctrine (no gain claims)", href:"/explore/fusion-readiness/"},
+        energy:{t:"ENERGY", s:"Industrial plasma thermal substitution (C)", href:"/products/energy/"},
+        laws:{t:"LAWS", s:"Constraints, governance, and standards", href:"/laws/"},
+        gauges:{t:"GAUGGES", s:"Measurement surfaces and dashboards", href:"/gauges/"}
+      },
+      buttons:{ret:"RETURN", jf:"JUMP FRONTIER", jl:"JUMP LANGUAGE"}
     },
     zh:{
-      brand:{k:"基轴体系", t:"前沿", s:"有界雄心 · 跳转面"},
+      brand:{k:"基轴体系", t:"探索", s:"创新干线 · 前沿干线"},
       diamonds:{
-        if:{lab:"是否", sub:"它是否可能？"},
-        how:{lab:"如何", sub:"如何在不作弊的前提下可能？"},
-        when:{lab:"何时", sub:"在何种条件下才可能？"},
-        first:{lab:"先做", sub:"必须先建什么？"}
+        lang:{lab:"语言", sub:"语法 · DOT.GRID · SSG · 缩略语"},
+        frontier:{lab:"前沿", sub:"有界雄心 · 跳转面"}
       },
-      lens:{formal:"正式", informal:"通俗", concept:"概念", live:"现况", roadmap:"路线图"},
-      buttons:{ret:"返回", ex:"跳转探索", en:"跳转能源", fr:"聚变就绪"}
+      modal:{
+        langTitle:"探索 · 语言创新",
+        langH1:"语言基底干线",
+        langH2:"这些页面解释“可执行”如何成立：结构、编码与共用术语。",
+        frontierTitle:"探索 · 前沿",
+        frontierH1:"前沿干线",
+        frontierH2:"前沿邀请大想法但不夸口：有界雄心、跳转面与先决条件。"
+      },
+      rows:{
+        grammar:{t:"语法", s:"遍历契约 · 结构语言", href:"/explore/innovation/language/grammar/"},
+        dot:{t:"DOT.GRID", s:"256态索引 · 扫掠", href:"/explore/innovation/language/dot-grid/"},
+        ssg:{t:"SSG", s:"约束语法几何", href:"/explore/innovation/language/ssg/"},
+        acr:{t:"缩略语", s:"查表锚点 · 共用术语", href:"/explore/innovation/language/acronyms/"},
+        frontier:{t:"前沿枢纽", s:"四问前沿页（是否/如何/何时/先做）", href:"/explore/frontier/"},
+        readiness:{t:"聚变就绪", s:"仅需求通道（无增益主张）", href:"/explore/fusion-readiness/"},
+        energy:{t:"能源", s:"工业等离子热替代（C）", href:"/products/energy/"},
+        laws:{t:"法则", s:"约束/治理/标准", href:"/laws/"},
+        gauges:{t:"量规", s:"测量面与仪表板", href:"/gauges/"}
+      },
+      buttons:{ret:"返回", jf:"跳转前沿", jl:"跳转语言"}
     }
   };
   var T = (lang==="zh") ? UI.zh : UI.en;
-
   document.getElementById("bk").textContent=T.brand.k;
   document.getElementById("bt").textContent=T.brand.t;
   document.getElementById("bs").textContent=T.brand.s;
+  document.getElementById("labLanguage").textContent=T.diamonds.lang.lab;
+  document.getElementById("subLanguage").textContent=T.diamonds.lang.sub;
+  document.getElementById("labFrontier").textContent=T.diamonds.frontier.lab;
+  document.getElementById("subFrontier").textContent=T.diamonds.frontier.sub;
 
-  document.getElementById("labIf").textContent=T.diamonds.if.lab;
-  document.getElementById("subIf").textContent=T.diamonds.if.sub;
-  document.getElementById("labHow").textContent=T.diamonds.how.lab;
-  document.getElementById("subHow").textContent=T.diamonds.how.sub;
-  document.getElementById("labWhen").textContent=T.diamonds.when.lab;
-  document.getElementById("subWhen").textContent=T.diamonds.when.sub;
-  document.getElementById("labFirst").textContent=T.diamonds.first.lab;
-  document.getElementById("subFirst").textContent=T.diamonds.first.sub;
-
-  // modal refs
+  // Modal logic
   var bd=document.getElementById("bd");
   var modal=document.getElementById("modal");
   var mClose=document.getElementById("mClose");
   var mReturn=document.getElementById("mReturn");
   var mTitle=document.getElementById("mTitle");
+  var mh1=document.getElementById("mh1");
+  var mh2=document.getElementById("mh2");
+  var stackList=document.getElementById("stackList");
 
-  var pillFormal=document.getElementById("pillFormal");
-  var pillInformal=document.getElementById("pillInformal");
-  var pillConcept=document.getElementById("pillConcept");
-  var pillLive=document.getElementById("pillLive");
-  var pillRoadmap=document.getElementById("pillRoadmap");
+  document.getElementById("mJumpFrontier").textContent = T.buttons.jf;
+  document.getElementById("mJumpLanguage").textContent = T.buttons.jl;
+  document.getElementById("mReturn").textContent = T.buttons.ret;
 
-  var h1=document.getElementById("h1");
-  var h2=document.getElementById("h2");
-  var h3=document.getElementById("h3");
-  var grid=document.getElementById("grid");
+  function showOverlay(){ bd.classList.add("show"); }
+  function hideOverlay(){ bd.classList.remove("show"); }
+  function openModal(){ showOverlay(); modal.classList.add("show"); }
+  function closeModal(){ modal.classList.remove("show"); hideOverlay(); }
 
-  pillFormal.textContent=T.lens.formal;
-  pillInformal.textContent=T.lens.informal;
-  pillConcept.textContent=T.lens.concept;
-  pillLive.textContent=T.lens.live;
-  pillRoadmap.textContent=T.lens.roadmap;
-
-  mReturn.textContent=T.buttons.ret;
-  document.getElementById("mJumpExplore").textContent=T.buttons.ex;
-  document.getElementById("mJumpEnergy").textContent=T.buttons.en;
-  document.getElementById("mJumpReadiness").textContent=T.buttons.fr;
-
-  var active = "if";
-
-  function setLensUI(){
-    pillFormal.classList.toggle("active", gdStyle==="formal");
-    pillInformal.classList.toggle("active", gdStyle==="informal");
-    pillConcept.classList.toggle("active", gdTime==="origin");
-    pillLive.classList.toggle("active", gdTime==="now");
-    pillRoadmap.classList.toggle("active", gdTime==="post");
-  }
-
-  function card(title, sub, href){
-    var el=document.createElement("div");
-    el.className="card";
-    el.setAttribute("role","button");
-    el.setAttribute("tabindex","0");
-
-    var t=document.createElement("div");
-    t.className="ct";
-    t.textContent=title;
-
-    var s=document.createElement("div");
-    s.className="cs";
-    s.textContent=sub;
-
-    el.appendChild(t); el.appendChild(s);
-
-    function go(){
-      if(!href) return;
-      location.href = href + q();
-    }
-    el.addEventListener("click", go);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); }
-    });
-
-    return el;
-  }
-
-  function headerCopy(){
-    var timeLab = (gdTime==="origin") ? T.lens.concept : (gdTime==="now") ? T.lens.live : T.lens.roadmap;
-    var styleLab = (gdStyle==="formal") ? T.lens.formal : T.lens.informal;
-
-    var map = {
-      if: (lang==="zh")?("是否 · "+timeLab+" · "+styleLab):("IF · "+timeLab+" · "+styleLab),
-      how:(lang==="zh")?("如何 · "+timeLab+" · "+styleLab):("HOW · "+timeLab+" · "+styleLab),
-      when:(lang==="zh")?("何时 · "+timeLab+" · "+styleLab):("WHEN · "+timeLab+" · "+styleLab),
-      first:(lang==="zh")?("先做 · "+timeLab+" · "+styleLab):("FIRST · "+timeLab+" · "+styleLab)
-    };
-    h1.textContent = map[active] || "FRONTIER";
-
-    if(active==="if"){
-      h2.textContent = (lang==="zh")
-        ? "先判定“可不可能”。可行性不靠口号，而靠约束、证据与接口边界。"
-        : "Start with possibility. Feasibility is not a slogan; it is constraints, evidence, and boundary interfaces.";
-      h3.textContent = (lang==="zh")
-        ? "前沿不等于承诺。它是有界的跳转与结构化路线。"
-        : "Frontier is not a promise. It is bounded jump surfaces and structured routes.";
-      return;
-    }
-    if(active==="how"){
-      h2.textContent = (lang==="zh")
-        ? "再问“怎么可能”。答案必须避免作弊：禁止凭叙事升级，必须可审计、可证伪、可回放。"
-        : "Then ask how. The answer must avoid cheating: no narrative upgrades, auditability, falsifiers, and replayability.";
-      h3.textContent = (lang==="zh")
-        ? "如果不能被独立复算，就只能停留在概念层。"
-        : "If it cannot be independently recomputed, it stays conceptual.";
-      return;
-    }
-    if(active==="when"){
-      h2.textContent = (lang==="zh")
-        ? "再问“何时可能”。时间不是日期，而是一组必须先成立的门槛：仪器、收据、稳定性与治理。"
-        : "Then ask when. ‘When’ is not a date; it is prerequisites: instruments, receipts, stability, governance.";
-      h3.textContent = (lang==="zh")
-        ? "门槛没过，就不允许把愿景写成现实。"
-        : "If gates are not passed, vision cannot be written as reality.";
-      return;
-    }
-    h2.textContent = (lang==="zh")
-      ? "最后问“先做什么”。先建基底：语言与一致性标准，然后才有产品执行与前沿扩展。"
-      : "Finally ask what comes first. Build substrate: language + coherence standards, then products, then frontier expansion.";
-    h3.textContent = (lang==="zh")
-      ? "先把“可执行”做出来，再把“宏大”带上去。"
-      : "Make it executable first, then carry the ambition forward.";
-  }
-
-  function render(){
-    setLensUI();
-    headerCopy();
-    grid.innerHTML="";
-
-    if(active==="if"){
-      grid.appendChild(card(
-        (lang==="zh")?"能源：工业可行面":"Energy: industrial feasibility",
-        (lang==="zh")?"工业等离子热替代（C）是可测的现实入口。":"Industrial plasma thermal substitution (C) is the measurable entry point.",
-        "/products/energy/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"聚变：就绪门槛":"Fusion: readiness gates",
-        (lang==="zh")?"仅需求：仪器、收据、证伪、独立审计。":"Requirements-only: instruments, receipts, falsifiers, independent audit.",
-        "/explore/fusion-readiness/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"规则：标准与治理":"Rules: laws & governance",
-        (lang==="zh")?"约束先行，防止规模化后才发现风险。":"Constraints first to prevent scale-before-safety.",
-        "/laws/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"测量：量规":"Measurement: gauges",
-        (lang==="zh")?"让状态与变化可见，避免凭感觉升级。":"Make state and change visible; avoid ‘feel-based’ upgrades.",
-        "/gauges/"
-      ));
-      return;
-    }
-
-    if(active==="how"){
-      grid.appendChild(card(
-        (lang==="zh")?"基底：语言创新枢纽":"Substrate: language hub",
-        (lang==="zh")?"语法、SSG、DOT.GRID、缩略语：把执行写成结构。":"Grammar, SSG, DOT.GRID, acronyms: execution as structure.",
-        "/explore/innovation/language/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"DOT.GRID":"DOT.GRID",
-        (lang==="zh")?"256态编码与扫掠，让证据可重放。":"256-state encoding and sweeps for replayable evidence.",
-        "/explore/innovation/language/dot-grid/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"SSG":"SSG",
-        (lang==="zh")?"约束语法几何：把规则压缩成可执行文本。":"Constraint syntax geometry for executable rules.",
-        "/explore/innovation/language/ssg/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"能源：链路表达":"Energy: chain expression",
-        (lang==="zh")?"把太阳→等离子→工业热替代写成可审计链路。":"Write solar→plasma→industrial heat as an auditable chain.",
-        "/products/energy/"
-      ));
-      return;
-    }
-
-    if(active==="when"){
-      grid.appendChild(card(
-        (lang==="zh")?"门槛：聚变就绪":"Gate: fusion readiness",
-        (lang==="zh")?"“何时”由门槛决定，不由日期决定。":"‘When’ is gate-dependent, not date-dependent.",
-        "/explore/fusion-readiness/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"治理：标准页":"Governance: laws",
-        (lang==="zh")?"门槛必须写成规则：可证伪、可审计、可回滚。":"Gates must be rules: falsifiable, auditable, rollback-safe.",
-        "/laws/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"测量：量规":"Measurement: gauges",
-        (lang==="zh")?"门槛必须可测，且噪声/伪象必须被压制。":"Gates must be measurable; noise/artifacts must be suppressed.",
-        "/gauges/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"产品：工业执行":"Products: industrial execution",
-        (lang==="zh")?"可行性先在工业场景落地，再谈更远的前沿。":"Land feasibility in industrial reality before farther frontier.",
-        "/products/"
-      ));
-      return;
-    }
-
-    // first
-    grid.appendChild(card(
-      (lang==="zh")?"第一步：基底":"Step 1: substrate",
-      (lang==="zh")?"语言+一致性标准让系统可教、可复用、可审计。":"Language + coherence standards make the system teachable and auditable.",
-      "/explore/innovation/language/"
-    ));
-    grid.appendChild(card(
-      (lang==="zh")?"第二步：产品执行":"Step 2: products",
-      (lang==="zh")?"把结构做成可用产品面：能源/教育/软件/商业。":"Turn structure into products: Energy/Education/Software/Commercial.",
-      "/products/"
-    ));
-    grid.appendChild(card(
-      (lang==="zh")?"第三步：工业能源":"Step 3: energy",
-      (lang==="zh")?"工业等离子替代（C）是公开、可测、可部署的起点。":"Industrial plasma substitution (C) is the public measurable start.",
-      "/products/energy/"
-    ));
-    grid.appendChild(card(
-      (lang==="zh")?"第四步：前沿扩展":"Step 4: frontier",
-      (lang==="zh")?"前沿作为跳转面存在：愿景与约束保持连接。":"Frontier exists as bounded jump surfaces tied to constraints.",
-      "/explore/"
-    ));
-  }
-
-  function openModal(which){
-    active = which;
-    mTitle.textContent = (lang==="zh") ? "前沿" : "FRONTIER";
-    bd.classList.add("show");
-    modal.classList.add("show");
-    render();
-  }
-  function closeModal(){
-    modal.classList.remove("show");
-    bd.classList.remove("show");
-  }
-
-  // bind FIRST (tap-safe)
-  function bind(id, which){
-    var el=document.getElementById(id);
-    if(!el) return;
-    function go(){ openModal(which); }
-    el.addEventListener("click", go);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); }
-    });
-  }
-  bind("dIf","if");
-  bind("dHow","how");
-  bind("dWhen","when");
-  bind("dFirst","first");
-
-  // lens toggles
-  function persist(){
-    try{ localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime);}catch(e){}
-  }
-  pillFormal.addEventListener("click", function(){ gdStyle="formal"; persist(); render(); });
-  pillInformal.addEventListener("click", function(){ gdStyle="informal"; persist(); render(); });
-  pillConcept.addEventListener("click", function(){ gdTime="origin"; persist(); render(); });
-  pillLive.addEventListener("click", function(){ gdTime="now"; persist(); render(); });
-  pillRoadmap.addEventListener("click", function(){ gdTime="post"; persist(); render(); });
-
-  // initialize lens UI
-  setLensUI();
-
-  // close
   bd.addEventListener("click", closeModal);
   mClose.addEventListener("click", closeModal);
   mReturn.addEventListener("click", closeModal);
-
-  // stop overlay click-through (modal should be tappable)
   modal.addEventListener("click", function(e){ e.stopPropagation(); });
+
+  function row(title, sub, href, color){
+    return {title:title, sub:sub, href:href, color:color};
+  }
+
+  function makeRow(r){
+    var rowEl=document.createElement("div");
+    rowEl.className="stackRow";
+    rowEl.style.setProperty("--domc", r.color);
+
+    var head=document.createElement("div");
+    head.className="stackHead";
+
+    var left=document.createElement("div");
+    left.className="stackLeft";
+
+    var bar=document.createElement("div");
+    bar.className="stackBar";
+    bar.style.background=r.color;
+
+    var title=document.createElement("div");
+    title.className="stackTitle";
+    title.textContent=r.title;
+
+    var sub=document.createElement("div");
+    sub.className="stackSub";
+    sub.textContent=r.sub;
+
+    left.appendChild(bar);
+    left.appendChild(title);
+    left.appendChild(sub);
+
+    var chev=document.createElement("div");
+    chev.className="stackChevron";
+    chev.textContent="▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="stackBody";
+
+    var copy=document.createElement("p");
+    copy.className="pdesc";
+    copy.textContent=r.sub;
+
+    var jr=document.createElement("div");
+    jr.className="jumpRow";
+
+    var a=document.createElement("a");
+    a.className="crp-btn";
+    a.textContent=(lang==="zh")?"打开":"OPEN";
+    a.href = r.href + q();
+    jr.appendChild(a);
+
+    body.appendChild(copy);
+    body.appendChild(jr);
+
+    head.addEventListener("click", function(){
+      // close others
+      stackList.querySelectorAll(".stackRow").forEach(function(x){
+        if(x!==rowEl){ x.classList.remove("open"); x.querySelector(".stackChevron").textContent="▸"; }
+      });
+      var open = rowEl.classList.toggle("open");
+      chev.textContent = open ? "▾" : "▸";
+    });
+
+    rowEl.appendChild(head);
+    rowEl.appendChild(body);
+    return rowEl;
+  }
+
+  function build(mode){
+    stackList.innerHTML="";
+    var rows=[];
+    if(mode==="lang"){
+      mTitle.textContent = T.modal.langTitle;
+      mh1.textContent = T.modal.langH1;
+      mh2.textContent = T.modal.langH2;
+      rows = [
+        row(T.rows.grammar.t, T.rows.grammar.s, T.rows.grammar.href, "#D4AF37"),
+        row(T.rows.dot.t,     T.rows.dot.s,     T.rows.dot.href,     "#93C5FD"),
+        row(T.rows.ssg.t,     T.rows.ssg.s,     T.rows.ssg.href,     "#60A5FA"),
+        row(T.rows.acr.t,     T.rows.acr.s,     T.rows.acr.href,     "#A3A3A3")
+      ];
+    }else{
+      mTitle.textContent = T.modal.frontierTitle;
+      mh1.textContent = T.modal.frontierH1;
+      mh2.textContent = T.modal.frontierH2;
+      rows = [
+        row(T.rows.frontier.t,  T.rows.frontier.s,  T.rows.frontier.href,  "#93C5FD"),
+        row(T.rows.readiness.t, T.rows.readiness.s, T.rows.readiness.href, "#A3A3A3"),
+        row(T.rows.energy.t,    T.rows.energy.s,    T.rows.energy.href,    "#F59E0B"),
+        row(T.rows.laws.t,      T.rows.laws.s,      T.rows.laws.href,      "#D4AF37")
+      ];
+    }
+
+    rows.forEach(function(r, idx){
+      var el=makeRow(r);
+      stackList.appendChild(el);
+      if(idx===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
+    });
+  }
+
+  function bindDiamond(id, mode){
+    var el=document.getElementById(id);
+    if(!el) return;
+    function go(){ openModal(); build(mode); }
+    el.addEventListener("click", go);
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); }
+    });
+  }
+
+  bindDiamond("dLanguage","lang");
+  bindDiamond("dFrontier","frontier");
 
 })();
 </script>

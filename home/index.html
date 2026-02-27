@@ -1,21 +1,8 @@
 <!-- TNT — /home/index.html
-     HUB A · DIAMOND FORK TREE (FIXED) + RUSSIAN DOLL
+     HUB A · DIAMOND FORK TREE + RUSSIAN DOLL + FOCUS MODE + PATH BAR
      INSTRUMENT-COMPATIBLE:
        URL keys: lang/style/time/depth
        LS keys: gd_lang/gd_style/gd_time/gd_depth
-
-     TREE (LOCKED):
-       Start: N / E / S / W only
-       Open Primary -> North Star + NE/NW/SE/SW
-       Open Diagonal -> ENE/WNW/ESE/WSW
-       Optional: WNW -> NNW, WSW -> SSW
-       Open North Star -> local N/E/S/W
-
-     CONTENT:
-       One paragraph per lens (informal/formal)
-       View: Informal/Formal/Both
-       Language: EN/中文
-       Per node Jump (fill JUMPS)
 -->
 
 <!doctype html>
@@ -31,7 +18,8 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-:root{--dockH:92px}
+:root{--dockH:92px;--barH:54px}
+
 .page{
   width:min(980px,94vw);
   margin:0 auto;
@@ -55,7 +43,51 @@ a{color:inherit;text-decoration:none}
 .s{font-size:13px;opacity:.82;line-height:1.5;margin:0;max-width:860px}
 .ctrl{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:12px}
 
-/* node */
+/* ===== PATH BAR (sticky, horizontal scroll) ===== */
+.pathBar{
+  position:sticky;
+  top:0;
+  z-index:210;
+  margin-top:10px;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 14px 44px rgba(0,0,0,.55);
+  display:none;
+}
+.pathBar.show{display:block}
+
+.pathRow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.pathRow::-webkit-scrollbar{display:none}
+
+.chip{
+  flex:0 0 auto;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.18);
+  padding:8px 12px;
+  border-radius:999px;
+  font-weight:900;
+  letter-spacing:.2px;
+  cursor:pointer;
+  white-space:nowrap;
+  -webkit-tap-highlight-color:transparent;
+}
+.chip:hover{border-color:var(--gold)}
+.chip.on{
+  border-color:var(--gold);
+  box-shadow:0 0 18px rgba(212,175,55,.22);
+}
+
+/* nodes */
 .node{
   --c:#93C5FD;
   border:1px solid rgba(255,255,255,.10);
@@ -82,7 +114,7 @@ a{color:inherit;text-decoration:none}
   padding:12px 14px 14px;
   border-top:1px solid rgba(255,255,255,.08);
 
-  /* Russian doll scroll */
+  /* Russian doll */
   overflow:auto;
   -webkit-overflow-scrolling:touch;
 }
@@ -114,6 +146,10 @@ a{color:inherit;text-decoration:none}
 .view-informal .lensBlock[data-lens="formal"]{display:none}
 .view-both .lensBlock{display:block}
 
+/* ===== Focus mode: hide other primaries to create reading isolation ===== */
+.focusMode .primaryWrap{display:none}
+.focusMode .primaryWrap.active{display:block}
+
 /* dock */
 .dock{
   position:fixed;left:50%;
@@ -143,11 +179,12 @@ a{color:inherit;text-decoration:none}
 
 <body>
 
-<div class="page">
+<div class="page" id="page">
+
   <div class="header" id="brand">
     <p class="k" id="hk">CARDINAL AXIS</p>
     <h1 class="t" id="ht">HUB A · Index</h1>
-    <p class="s" id="hs">Diamond fork. Start with N/E/S/W. Each expands into North Star + diagonals. Diagonals refine only when opened.</p>
+    <p class="s" id="hs">Diamond fork. Click N/E/S/W to isolate a section for reading.</p>
 
     <div class="ctrl">
       <button class="btn" id="vInformal" type="button">INFORMAL</button>
@@ -156,9 +193,15 @@ a{color:inherit;text-decoration:none}
       <button class="btn" id="bEN" type="button">EN</button>
       <button class="btn" id="bZH" type="button">中文</button>
     </div>
+
+    <!-- Path bar shows only in focus mode -->
+    <div class="pathBar" id="pathBar">
+      <div class="pathRow" id="pathRow"></div>
+    </div>
   </div>
 
   <div id="root"></div>
+
 </div>
 
 <div class="dock" id="dock" aria-label="Navigation">
@@ -203,11 +246,19 @@ a{color:inherit;text-decoration:none}
   }
   function nav(path){ location.href = path + makeQS(); }
 
-  // ---- View toggle (UI only) ----
+  // ---- UI refs ----
+  const page=document.getElementById("page");
   const root=document.getElementById("root");
+  const dock=document.getElementById("dock");
+  const brand=document.getElementById("brand");
+  const pathBar=document.getElementById("pathBar");
+  const pathRow=document.getElementById("pathRow");
+
+  // ---- View toggle ----
   const vInformal=document.getElementById("vInformal");
   const vFormal=document.getElementById("vFormal");
   const vBoth=document.getElementById("vBoth");
+
   function applyView(v){
     root.classList.remove("view-formal","view-informal","view-both");
     root.classList.add("view-"+v);
@@ -216,26 +267,26 @@ a{color:inherit;text-decoration:none}
     vBoth.classList.toggle("active", v==="both");
   }
   applyView(style);
-
   vInformal.onclick=()=>applyView("informal");
   vFormal.onclick=()=>applyView("formal");
   vBoth.onclick=()=>applyView("both");
 
-  // ---- Lang toggle (instrument-compatible: URL uses lang=) ----
+  // ---- Language toggle ----
   const bEN=document.getElementById("bEN");
   const bZH=document.getElementById("bZH");
+  const hk=document.getElementById("hk");
+  const ht=document.getElementById("ht");
+  const hs=document.getElementById("hs");
+
   function paintLang(){
     bEN.classList.toggle("active", lang==="en");
     bZH.classList.toggle("active", lang==="zh");
     hk.textContent = (lang==="zh") ? "基轴体系" : "CARDINAL AXIS";
     ht.textContent = (lang==="zh") ? "枢纽A · 索引" : "HUB A · Index";
     hs.textContent = (lang==="zh")
-      ? "钻石分叉。从N/E/S/W开始。展开为北极星 + 对角。对角仅在打开时细化。"
-      : "Diamond fork. Start with N/E/S/W. Each expands into North Star + diagonals. Diagonals refine only when opened.";
+      ? "钻石分叉。点击N/E/S/W可隔离该区以便阅读。"
+      : "Diamond fork. Click N/E/S/W to isolate a section for reading.";
   }
-  const hk=document.getElementById("hk");
-  const ht=document.getElementById("ht");
-  const hs=document.getElementById("hs");
   paintLang();
 
   function snapshotOpen(){
@@ -250,7 +301,6 @@ a{color:inherit;text-decoration:none}
     });
     recomputeHeights();
   }
-
   function setLang(next){
     const open=snapshotOpen();
     lang=next;
@@ -260,29 +310,23 @@ a{color:inherit;text-decoration:none}
     paintLang();
     render();
     restoreOpen(open);
+    updatePathBar();
   }
   bEN.onclick=()=>setLang("en");
   bZH.onclick=()=>setLang("zh");
 
-  // ---- FIXED TREE (Diamond Fork functioning correctly) ----
-  // PRIMARY: N/E/S/W only
-  // Each primary children: STAR + NE/NW/SE/SW
-  // Diagonal refinement: NE->ENE, NW->WNW, SE->ESE, SW->WSW
-  // Optional: WNW->NNW, WSW->SSW
-  // STAR children: local N/E/S/W
+  // ---- Tree (same as your working diamond-fork draft) ----
   const TREE = {
     N:{label:{en:"N · DEFINITIONS",zh:"N · 定义"}, color:"#1F3A8A", children:["N★","N:NE","N:NW","N:SE","N:SW"]},
     E:{label:{en:"E · PRODUCTS",zh:"E · 产品"}, color:"#0EA5E9", children:["E★","E:NE","E:NW","E:SE","E:SW"]},
     S:{label:{en:"S · CONSTRAINTS",zh:"S · 约束"}, color:"#F59E0B", children:["S★","S:NE","S:NW","S:SE","S:SW"]},
     W:{label:{en:"W · CONTAINMENT",zh:"W · 隔离"}, color:"#7F1D1D", children:["W★","W:NE","W:NW","W:SE","W:SW"]},
 
-    // Star nodes
     "N★":{label:{en:"NORTH STAR",zh:"北极星"}, color:"#2C3EAF", children:["N★:N","N★:E","N★:S","N★:W"]},
     "E★":{label:{en:"NORTH STAR",zh:"北极星"}, color:"#2C3EAF", children:["E★:N","E★:E","E★:S","E★:W"]},
     "S★":{label:{en:"NORTH STAR",zh:"北极星"}, color:"#2C3EAF", children:["S★:N","S★:E","S★:S","S★:W"]},
     "W★":{label:{en:"NORTH STAR",zh:"北极星"}, color:"#2C3EAF", children:["W★:N","W★:E","W★:S","W★:W"]},
 
-    // Diagonals (same labels, but unique IDs)
     "N:NE":{label:{en:"NE",zh:"NE"}, color:"#2C3EAF", children:["N:ENE"]},
     "N:NW":{label:{en:"NW",zh:"NW"}, color:"#9333EA", children:["N:WNW"]},
     "N:SE":{label:{en:"SE",zh:"SE"}, color:"#14B8A6", children:["N:ESE"]},
@@ -303,7 +347,6 @@ a{color:inherit;text-decoration:none}
     "W:SE":{label:{en:"SE",zh:"SE"}, color:"#14B8A6", children:["W:ESE"]},
     "W:SW":{label:{en:"SW",zh:"SW"}, color:"#EA580C", children:["W:WSW"]},
 
-    // Refinements
     "N:ENE":{label:{en:"ENE",zh:"ENE"}, color:"#4B3FBF", children:[]},
     "N:WNW":{label:{en:"WNW",zh:"WNW"}, color:"#9333EA", children:["N:NNW"]},
     "N:ESE":{label:{en:"ESE",zh:"ESE"}, color:"#14B8A6", children:[]},
@@ -332,7 +375,6 @@ a{color:inherit;text-decoration:none}
     "W:NNW":{label:{en:"NNW",zh:"NNW"}, color:"#334155", children:[]},
     "W:SSW":{label:{en:"SSW",zh:"SSW"}, color:"#EA580C", children:[]},
 
-    // Star-local micro compass labels (these are where NN/SN/EN/WN concept can be layered later)
     "N★:N":{label:{en:"N",zh:"N"}, color:"#1F3A8A", children:[]},
     "N★:E":{label:{en:"E",zh:"E"}, color:"#0EA5E9", children:[]},
     "N★:S":{label:{en:"S",zh:"S"}, color:"#F59E0B", children:[]},
@@ -354,40 +396,36 @@ a{color:inherit;text-decoration:none}
     "W★:W":{label:{en:"W",zh:"W"}, color:"#7F1D1D", children:[]}
   };
 
-  // ---- JUMPS (fill real routes later) ----
-  const JUMPS = {}; // key: node id -> route string
+  // ---- product jump map (fill later) ----
+  const JUMPS = {}; // id -> path
 
-  // ---- copy: minimal (kept short; you can expand) ----
+  // ---- basic copy (keep short) ----
   function copyFor(id, lens){
-    // lens: "informal" | "formal"
-    // If you want, you can replace this with per-node text tables later.
     if(lang==="zh"){
       return lens==="formal"
-        ? "（正式）该节点定义边界并约束解释，使扩张不漂移。"
-        : "（非正式）该节点把含义钉住，让扩张不乱跑。";
+        ? "（正式）该节点约束含义并执行边界，使扩张不漂移。"
+        : "（非正式）该节点把含义钉住，扩张才不会乱跑。";
     }
     return lens==="formal"
       ? "(Formal) This node constrains meaning and enforces boundaries so growth cannot drift."
       : "(Informal) This node pins meaning so expansion stays disciplined instead of chaotic.";
   }
 
-  function lensTitle(lens){
-    return (lens==="formal")
-      ? (lang==="zh" ? "正式" : "Formal")
-      : (lang==="zh" ? "非正式" : "Informal");
-  }
-
   function makeLensBlock(lens, txt){
     const b=document.createElement("div");
     b.className="lensBlock";
     b.setAttribute("data-lens", lens);
+
     const t=document.createElement("div");
     t.className="lensTitle";
-    t.textContent=lensTitle(lens);
+    t.textContent = (lens==="formal") ? (lang==="zh"?"正式":"Formal") : (lang==="zh"?"非正式":"Informal");
+
     const p=document.createElement("div");
     p.className="paragraph";
-    p.textContent=txt;
-    b.appendChild(t); b.appendChild(p);
+    p.textContent = txt;
+
+    b.appendChild(t);
+    b.appendChild(p);
     return b;
   }
 
@@ -403,6 +441,10 @@ a{color:inherit;text-decoration:none}
     line.appendChild(a);
     return line;
   }
+
+  // parent map for breadcrumbs
+  const PARENT = {};
+  function registerParent(child, parent){ PARENT[child]=parent; }
 
   function makeNode(id){
     const info = TREE[id];
@@ -426,14 +468,31 @@ a{color:inherit;text-decoration:none}
     if(info.children && info.children.length){
       const stack=document.createElement("div");
       stack.className="childStack";
-      info.children.forEach(child=>stack.appendChild(makeNode(child)));
+      info.children.forEach(child=>{
+        registerParent(child, id);
+        stack.appendChild(makeNode(child));
+      });
       b.appendChild(stack);
     }
 
     h.addEventListener("click",()=>{
       s.classList.toggle("open");
+
+      // Set active primary + focus mode
+      const primary = id.split(":")[0].replace("★",""); // crude but works: N / E / S / W
+      const isPrimary = (id==="N"||id==="E"||id==="S"||id==="W");
+
+      if(isPrimary){
+        setFocusPrimary(id, true);
+      }else{
+        // keep focus if already in one
+        if(activePrimary) setFocusPrimary(activePrimary, true);
+      }
+
       localStorage.setItem("hub_active_node", id);
+      activeNode = id;
       recomputeHeights();
+      updatePathBar();
     });
 
     s.appendChild(h);
@@ -441,10 +500,105 @@ a{color:inherit;text-decoration:none}
     return s;
   }
 
+  // Wrap primaries for focus hiding
+  function makePrimaryWrap(id){
+    const w=document.createElement("div");
+    w.className="primaryWrap";
+    w.setAttribute("data-primary", id);
+    w.appendChild(makeNode(id));
+    return w;
+  }
+
+  let activePrimary = null;
+  let activeNode = null;
+
   function render(){
     root.innerHTML="";
-    ["N","E","S","W"].forEach(k=>root.appendChild(makeNode(k)));
+    ["N","E","S","W"].forEach(k=>root.appendChild(makePrimaryWrap(k)));
     recomputeHeights();
+    updatePathBar();
+  }
+
+  function setFocusPrimary(primaryId, on){
+    activePrimary = on ? primaryId : null;
+
+    if(on){
+      page.classList.add("focusMode");
+      root.querySelectorAll(".primaryWrap").forEach(w=>{
+        const p = w.getAttribute("data-primary");
+        w.classList.toggle("active", p===primaryId);
+      });
+      pathBar.classList.add("show");
+    }else{
+      page.classList.remove("focusMode");
+      root.querySelectorAll(".primaryWrap").forEach(w=>w.classList.remove("active"));
+      pathBar.classList.remove("show");
+    }
+  }
+
+  // Build breadcrumb chips
+  function updatePathBar(){
+    // show only if in focus mode
+    if(!activePrimary){
+      pathBar.classList.remove("show");
+      pathRow.innerHTML="";
+      return;
+    }
+    pathBar.classList.add("show");
+    pathRow.innerHTML="";
+
+    // ALL chip
+    const all=document.createElement("div");
+    all.className="chip";
+    all.textContent = (lang==="zh") ? "全部" : "ALL";
+    all.onclick=()=>{
+      // collapse focus, keep sections as-is
+      setFocusPrimary(null,false);
+      recomputeHeights();
+    };
+    pathRow.appendChild(all);
+
+    // Primary chips
+    ["N","E","S","W"].forEach(p=>{
+      const c=document.createElement("div");
+      c.className="chip" + (p===activePrimary ? " on" : "");
+      c.textContent=p;
+      c.onclick=()=>{
+        setFocusPrimary(p,true);
+        // scroll to top of focused section
+        window.scrollTo({top:0,behavior:"smooth"});
+        updatePathBar();
+        recomputeHeights();
+      };
+      pathRow.appendChild(c);
+    });
+
+    // Breadcrumb chips for activeNode inside focused primary
+    if(activeNode){
+      // only show chain if node belongs to activePrimary branch
+      const chain=[];
+      let cur=activeNode;
+      // build chain until primary
+      let guard=0;
+      while(cur && guard++ < 40){
+        chain.push(cur);
+        if(cur===activePrimary) break;
+        cur = PARENT[cur];
+      }
+      chain.reverse();
+      if(chain.length){
+        chain.forEach(id=>{
+          const c=document.createElement("div");
+          c.className="chip";
+          c.textContent = (lang==="zh") ? TREE[id].label.zh : TREE[id].label.en;
+          c.onclick=()=>{
+            const el = root.querySelector("[data-id='"+id.replace(/'/g,"\\'")+"']");
+            if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+          };
+          pathRow.appendChild(c);
+        });
+      }
+    }
   }
 
   // Russian doll cap

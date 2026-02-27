@@ -1,22 +1,15 @@
-<!-- TNT — /explore/index.html
-     EXPLORE · SPLINE B HUB (MIRROR HALF)
-     PURPOSE (LOCK):
-       - Explore is the hub for the Innovation/Product spline (Spline B).
-       - Two vertical diamonds only:
-           1) INNOVATION (substrate + language + encoding)
-           2) PRODUCTS (adoption + deployment surfaces)
-       - Tap diamond → ONE modal opens (accordion jump rows).
-       - NO style/time lens widgets here (state is preserved + propagated only).
-       - Language is page-level only (EN / 中文 / ES) via instruments.js state.
-     STATE:
-       - URL keys: lang/style/time/depth
-       - LS keys: gd_lang/gd_style/gd_time/gd_depth
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css only (no html/body background styling)
-       - Uses /assets/instruments.js (canonical) (NOT instrument.js)
-       - Tap-safe: overlay never blocks modal; no inline onclick reliance
-       - Barcode registry not yet externalized: this page contains a LOCAL binding table (BIND) as placeholder.
-         Later: replace BIND with fetch(/assets/bindings.json) without changing geometry.
+<!-- TNT — /explore/index.html  (EXPLORE · HUB · 2 DIAMONDS · ONE MODAL · ACCORD vs ORIGIN)
+     UPDATE GOAL (LOCK):
+       - Products + Innovation route to the SAME surface (ACCORD).
+       - “How we got there” routes to the other axis (ORIGIN).
+       - Two diamonds only (tap-safe). One modal only. No extra UI layers.
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns field (NO html/body background styling here)
+       - State carry: lang/style/time/depth via query; LS gd_*
+
+     DIAMONDS:
+       1) ACCORD  (Products + Innovation together)
+       2) ORIGIN  (How we got there: language substrate + verification posture)
 -->
 
 <!doctype html>
@@ -24,7 +17,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>EXPLORE · Spline B Hub</title>
+<title>EXPLORE · Hub</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -32,17 +25,8 @@
 
 <style>
 /* DO NOT TOUCH FIELD — ui.css owns html/body background */
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
 
-/* Buttons (use ui.css .btn; provide only layout tweaks) */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  white-space:nowrap;
-  -webkit-tap-highlight-color:transparent;
-}
-
-/* Layout vars */
 :root{
   --R:132px;
   --D:210px;
@@ -55,12 +39,6 @@ a{color:inherit;text-decoration:none}
 /* Top-left */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-
-/* Top-right language toggle (page-level only) */
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:120;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
@@ -218,8 +196,7 @@ a{color:inherit;text-decoration:none}
   border-bottom:1px solid rgba(255,255,255,.08);
 }
 .mtitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
-.mclose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px;border-radius:12px}
-.mclose:hover{background:rgba(255,255,255,.08)}
+.mclose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px}
 .mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch}
 
 /* Header card */
@@ -247,7 +224,6 @@ a{color:inherit;text-decoration:none}
   display:flex;align-items:center;justify-content:space-between;
   gap:10px;padding:14px 16px;cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
 }
 .stackLeft{display:flex;align-items:center;gap:12px;min-width:0}
 .stackBar{width:6px;height:22px;border-radius:99px;background:var(--domc, rgba(255,255,255,.20));flex:0 0 auto}
@@ -287,38 +263,34 @@ a{color:inherit;text-decoration:none}
   <a class="btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
-<div class="top-right">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
-</div>
-
 <div class="brand" aria-hidden="true">
   <p class="k" id="bk">CARDINAL AXIS</p>
   <h1 class="t" id="bt">EXPLORE</h1>
-  <p class="s" id="bs">Innovation spline · Product spline</p>
+  <p class="s" id="bs">Accord lanes · Origin lanes</p>
 </div>
 
 <div class="stage" aria-label="Explore hub">
   <div class="outer"></div>
 
-  <div class="d d-top" id="dInnovation" role="button" tabindex="0" aria-label="Innovation">
+  <!-- ACCORD (Products + Innovation together) -->
+  <div class="d d-top" id="dAccord" role="button" tabindex="0" aria-label="Accord">
     <div class="inner">
-      <div class="lab" id="labInnovation">INNOVATION</div>
-      <div class="sub" id="subInnovation">Language · Encoding · Indexing</div>
+      <div class="lab" id="labAccord">ACCORD</div>
+      <div class="sub" id="subAccord">Products · Innovation</div>
     </div>
   </div>
 
-  <div class="d d-bot" id="dProducts" role="button" tabindex="0" aria-label="Products">
+  <!-- ORIGIN (How we got there) -->
+  <div class="d d-bot" id="dOrigin" role="button" tabindex="0" aria-label="Origin">
     <div class="inner">
-      <div class="lab" id="labProducts">PRODUCTS</div>
-      <div class="sub" id="subProducts">Adoption · Deployment · Surfaces</div>
+      <div class="lab" id="labOrigin">ORIGIN</div>
+      <div class="sub" id="subOrigin">How we got there</div>
     </div>
   </div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
   <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
@@ -343,6 +315,8 @@ a{color:inherit;text-decoration:none}
 
       <div class="mact">
         <button class="btn" id="mReturn" type="button">RETURN</button>
+        <a class="btn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
+        <a class="btn" id="mJumpLaws" href="/laws/">JUMP LAWS</a>
       </div>
     </div>
   </div>
@@ -350,16 +324,16 @@ a{color:inherit;text-decoration:none}
 
 <script>
 (function(){
-  // ===== State hydration (canonical): URL keys lang/style/time/depth; LS gd_* =====
+  // ===== State hydration (URL: lang/style/time/depth; LS: gd_*) =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
   if(time==="trajectory") time="post";
+  if(lang!=="en" && lang!=="zh") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
 
@@ -369,7 +343,7 @@ a{color:inherit;text-decoration:none}
     localStorage.setItem("gd_time",time);
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   function q(){
     var p=new URLSearchParams();
@@ -377,88 +351,89 @@ a{color:inherit;text-decoration:none}
     return "?"+p.toString();
   }
 
-  // ===== Local barcode binding placeholder =====
-  // Later: replace with fetch('/assets/bindings.json') and keep the same shape.
-  var BIND = {
-    innovation: [
-      {id:"grammar",  t:{en:"GRAMMAR", zh:"语法", es:"GRAMÁTICA"}, s:{en:"Traversal contracts · structural language", zh:"遍历契约 · 结构语言", es:"Contratos de recorrido · lenguaje estructural"}, href:"/explore/innovation/language/grammar/", c:"#D4AF37"},
-      {id:"dotgrid",  t:{en:"DOT.GRID", zh:"DOT.GRID", es:"DOT.GRID"}, s:{en:"256-state indexing · sweeps", zh:"256态索引 · 扫掠", es:"Indexación 256 · barridos"}, href:"/explore/innovation/language/dot-grid/", c:"#93C5FD"},
-      {id:"ssg",      t:{en:"SSG", zh:"SSG", es:"SSG"}, s:{en:"Constraint syntax geometry", zh:"约束语法几何", es:"Geometría de sintaxis de restricciones"}, href:"/explore/innovation/language/ssg/", c:"#60A5FA"},
-      {id:"acronyms", t:{en:"ACRONYMS", zh:"缩略语", es:"ACRÓNIMOS"}, s:{en:"Lookup anchors · shared language", zh:"查表锚点 · 共用术语", es:"Anclas de consulta · lenguaje compartido"}, href:"/explore/innovation/language/acronyms/", c:"#A3A3A3"}
-    ],
-    products: [
-      {id:"energy",   t:{en:"ENERGY", zh:"能源", es:"ENERGÍA"}, s:{en:"Industrial plasma thermal substitution (C)", zh:"工业等离子热替代（C）", es:"Sustitución térmica por plasma (C)"}, href:"/products/energy/", c:"#F59E0B"},
-      {id:"products", t:{en:"PRODUCTS HUB", zh:"产品枢纽", es:"CENTRO DE PRODUCTOS"}, s:{en:"All adoption surfaces", zh:"全部采纳面", es:"Todas las superficies de adopción"}, href:"/products/", c:"#93C5FD"},
-      {id:"laws",     t:{en:"LAWS", zh:"法则", es:"LEYES"}, s:{en:"Constraints, governance, standards", zh:"约束/治理/标准", es:"Restricciones, gobernanza, estándares"}, href:"/laws/", c:"#D4AF37"},
-      {id:"gauges",   t:{en:"GAUGES", zh:"量规", es:"MEDIDORES"}, s:{en:"Measurement surfaces and dashboards", zh:"测量面与仪表板", es:"Superficies de medición y paneles"}, href:"/gauges/", c:"#A3A3A3"}
-    ]
-  };
-
-  function TT(obj){ return (lang==="zh") ? obj.zh : (lang==="es" ? (obj.es||obj.en) : obj.en); }
-
-  // ===== Wire nav =====
+  // Wire nav
   document.getElementById("btnHub").href="/home/"+q();
   document.getElementById("btnExit").href="/door/"+q();
-  document.getElementById("dockHome").href="/home/"+q();
+  document.getElementById("dockTerminal").href="/index.html"+q();
   document.getElementById("dockExplore").href="/explore/"+q();
   document.getElementById("dockProducts").href="/products/"+q();
   document.getElementById("dockLaws").href="/laws/"+q();
   document.getElementById("dockLinks").href="/links/"+q();
+  document.getElementById("mJumpProducts").href="/products/"+q();
+  document.getElementById("mJumpLaws").href="/laws/"+q();
 
-  // ===== Page i18n =====
+  // i18n (single-language render)
   var UI = {
     en:{
-      k:"CARDINAL AXIS", t:"EXPLORE", s:"Innovation spline · Product spline",
-      d1:{lab:"INNOVATION", sub:"Language · Encoding · Indexing"},
-      d2:{lab:"PRODUCTS", sub:"Adoption · Deployment · Surfaces"},
-      m:{ret:"RETURN"},
-      mh:{i1:"Innovation lanes", i2:"Substrate and encoding surfaces for shared execution.", p1:"Product lanes", p2:"Adoption surfaces that remain bounded by proof posture."}
+      brand:{k:"CARDINAL AXIS", t:"EXPLORE", s:"Accord lanes · Origin lanes"},
+      diamonds:{
+        accord:{lab:"ACCORD", sub:"Products · Innovation"},
+        origin:{lab:"ORIGIN", sub:"How we got there"}
+      },
+      modal:{
+        accordTitle:"EXPLORE · ACCORD",
+        accordH1:"Products + innovation",
+        accordH2:"Adoption surfaces and innovation lanes live together: what exists, and what can be built next.",
+        originTitle:"EXPLORE · ORIGIN",
+        originH1:"How we got there",
+        originH2:"Language substrate, encoding, and verification posture: the path that keeps claims bounded."
+      },
+      rows:{
+        // ACCORD (products + innovation together)
+        energy:{t:"ENERGY", s:"Industrial plasma thermal substitution (C)", href:"/products/energy/"},
+        products:{t:"PRODUCTS HUB", s:"All adoption surfaces", href:"/products/"},
+        dot:{t:"DOT.GRID", s:"256-state indexing · sweeps", href:"/explore/innovation/language/dot-grid/"},
+        ssg:{t:"SSG", s:"Constraint syntax geometry", href:"/explore/innovation/language/ssg/"},
+        // ORIGIN (how we got there)
+        grammar:{t:"GRAMMAR", s:"Traversal contracts · structural language", href:"/explore/innovation/language/grammar/"},
+        acr:{t:"ACRONYMS", s:"Lookup anchors · shared language", href:"/explore/innovation/language/acronyms/"},
+        laws:{t:"LAWS", s:"Constraints, governance, standards", href:"/laws/"},
+        gauges:{t:"GAUGES", s:"Measurement surfaces and dashboards", href:"/gauges/"}
+      },
+      buttons:{ret:"RETURN", jp:"JUMP PRODUCTS", jl:"JUMP LAWS"}
     },
     zh:{
-      k:"基轴体系", t:"探索", s:"创新脊柱 · 产品脊柱",
-      d1:{lab:"创新", sub:"语言 · 编码 · 索引"},
-      d2:{lab:"产品", sub:"采纳 · 部署 · 执行面"},
-      m:{ret:"返回"},
-      mh:{i1:"创新干线", i2:"用于共用执行的语言与编码基底。", p1:"产品干线", p2:"在证明姿态边界内的采纳执行面。"}
-    },
-    es:{
-      k:"CARDINAL AXIS", t:"EXPLORAR", s:"Ramal de innovación · Ramal de productos",
-      d1:{lab:"INNOVACIÓN", sub:"Lenguaje · Codificación · Índice"},
-      d2:{lab:"PRODUCTOS", sub:"Adopción · Despliegue · Superficies"},
-      m:{ret:"VOLVER"},
-      mh:{i1:"Carriles de innovación", i2:"Superficies de sustrato y codificación para ejecución compartida.", p1:"Carriles de productos", p2:"Superficies de adopción acotadas por postura de prueba."}
+      brand:{k:"基轴体系", t:"探索", s:"合流干线 · 溯源干线"},
+      diamonds:{
+        accord:{lab:"合流", sub:"产品 · 创新"},
+        origin:{lab:"溯源", sub:"如何抵达"}
+      },
+      modal:{
+        accordTitle:"探索 · 合流",
+        accordH1:"产品 + 创新",
+        accordH2:"采纳面与创新干线放在一起：已经能用的，以及下一步能建的。",
+        originTitle:"探索 · 溯源",
+        originH1:"如何抵达",
+        originH2:"语言基底、编码与核查姿态：让主张保持有界的路径。"
+      },
+      rows:{
+        energy:{t:"能源", s:"工业等离子热替代（C）", href:"/products/energy/"},
+        products:{t:"产品枢纽", s:"所有采纳面", href:"/products/"},
+        dot:{t:"DOT.GRID", s:"256态索引 · 扫掠", href:"/explore/innovation/language/dot-grid/"},
+        ssg:{t:"SSG", s:"约束语法几何", href:"/explore/innovation/language/ssg/"},
+        grammar:{t:"语法", s:"遍历契约 · 结构语言", href:"/explore/innovation/language/grammar/"},
+        acr:{t:"缩略语", s:"查表锚点 · 共用术语", href:"/explore/innovation/language/acronyms/"},
+        laws:{t:"法则", s:"约束/治理/标准", href:"/laws/"},
+        gauges:{t:"量规", s:"测量面与仪表板", href:"/gauges/"}
+      },
+      buttons:{ret:"返回", jp:"跳转产品", jl:"跳转法则"}
     }
   };
-  var T = (lang==="zh") ? UI.zh : (lang==="es" ? UI.es : UI.en);
 
-  document.getElementById("bk").textContent=T.k;
-  document.getElementById("bt").textContent=T.t;
-  document.getElementById("bs").textContent=T.s;
-  document.getElementById("labInnovation").textContent=T.d1.lab;
-  document.getElementById("subInnovation").textContent=T.d1.sub;
-  document.getElementById("labProducts").textContent=T.d2.lab;
-  document.getElementById("subProducts").textContent=T.d2.sub;
-  document.getElementById("mReturn").textContent=T.m.ret;
+  var T = (lang==="zh") ? UI.zh : UI.en;
 
-  // Language toggle (page-level)
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    location.href = "/explore/" + q(); // reload with updated state
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
+  document.getElementById("bk").textContent=T.brand.k;
+  document.getElementById("bt").textContent=T.brand.t;
+  document.getElementById("bs").textContent=T.brand.s;
+
+  document.getElementById("labAccord").textContent=T.diamonds.accord.lab;
+  document.getElementById("subAccord").textContent=T.diamonds.accord.sub;
+  document.getElementById("labOrigin").textContent=T.diamonds.origin.lab;
+  document.getElementById("subOrigin").textContent=T.diamonds.origin.sub;
+
+  document.getElementById("mReturn").textContent=T.buttons.ret;
+  document.getElementById("mJumpProducts").textContent=T.buttons.jp;
+  document.getElementById("mJumpLaws").textContent=T.buttons.jl;
 
   // Modal logic
   var bd=document.getElementById("bd");
@@ -480,10 +455,14 @@ a{color:inherit;text-decoration:none}
   mReturn.addEventListener("click", closeModal);
   modal.addEventListener("click", function(e){ e.stopPropagation(); });
 
+  function row(title, sub, href, color){
+    return {title:title, sub:sub, href:href, color:color};
+  }
+
   function makeRow(r){
     var rowEl=document.createElement("div");
     rowEl.className="stackRow";
-    rowEl.style.setProperty("--domc", r.c);
+    rowEl.style.setProperty("--domc", r.color);
 
     var head=document.createElement("div");
     head.className="stackHead";
@@ -493,15 +472,15 @@ a{color:inherit;text-decoration:none}
 
     var bar=document.createElement("div");
     bar.className="stackBar";
-    bar.style.background=r.c;
+    bar.style.background=r.color;
 
     var title=document.createElement("div");
     title.className="stackTitle";
-    title.textContent=TT(r.t);
+    title.textContent=r.title;
 
     var sub=document.createElement("div");
     sub.className="stackSub";
-    sub.textContent=TT(r.s);
+    sub.textContent=r.sub;
 
     left.appendChild(bar);
     left.appendChild(title);
@@ -519,14 +498,14 @@ a{color:inherit;text-decoration:none}
 
     var copy=document.createElement("p");
     copy.className="pdesc";
-    copy.textContent=TT(r.s);
+    copy.textContent=r.sub;
 
     var jr=document.createElement("div");
     jr.className="jumpRow";
 
     var a=document.createElement("a");
     a.className="btn";
-    a.textContent=(lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
+    a.textContent=(lang==="zh")?"打开":"OPEN";
     a.href = r.href + q();
     jr.appendChild(a);
 
@@ -549,16 +528,26 @@ a{color:inherit;text-decoration:none}
   function build(mode){
     stackList.innerHTML="";
     var rows=[];
-    if(mode==="innovation"){
-      mTitle.textContent = (lang==="zh")?"探索 · 创新":(lang==="es")?"EXPLORAR · INNOVACIÓN":"EXPLORE · INNOVATION";
-      mh1.textContent = T.mh.i1;
-      mh2.textContent = T.mh.i2;
-      rows = BIND.innovation.slice();
+    if(mode==="accord"){
+      mTitle.textContent = T.modal.accordTitle;
+      mh1.textContent = T.modal.accordH1;
+      mh2.textContent = T.modal.accordH2;
+      rows = [
+        row(T.rows.energy.t,   T.rows.energy.s,   T.rows.energy.href,   "#F59E0B"),
+        row(T.rows.products.t, T.rows.products.s, T.rows.products.href, "#93C5FD"),
+        row(T.rows.dot.t,      T.rows.dot.s,      T.rows.dot.href,      "#60A5FA"),
+        row(T.rows.ssg.t,      T.rows.ssg.s,      T.rows.ssg.href,      "#A3A3A3")
+      ];
     }else{
-      mTitle.textContent = (lang==="zh")?"探索 · 产品":(lang==="es")?"EXPLORAR · PRODUCTOS":"EXPLORE · PRODUCTS";
-      mh1.textContent = T.mh.p1;
-      mh2.textContent = T.mh.p2;
-      rows = BIND.products.slice();
+      mTitle.textContent = T.modal.originTitle;
+      mh1.textContent = T.modal.originH1;
+      mh2.textContent = T.modal.originH2;
+      rows = [
+        row(T.rows.grammar.t, T.rows.grammar.s, T.rows.grammar.href, "#D4AF37"),
+        row(T.rows.acr.t,     T.rows.acr.s,     T.rows.acr.href,     "#A3A3A3"),
+        row(T.rows.laws.t,    T.rows.laws.s,    T.rows.laws.href,    "#D4AF37"),
+        row(T.rows.gauges.t,  T.rows.gauges.s,  T.rows.gauges.href,  "#93C5FD")
+      ];
     }
 
     rows.forEach(function(r, idx){
@@ -578,8 +567,9 @@ a{color:inherit;text-decoration:none}
     });
   }
 
-  bindDiamond("dInnovation","innovation");
-  bindDiamond("dProducts","products");
+  // KEY CHANGE: products + innovation share the same surface => both routed into ACCORD content.
+  bindDiamond("dAccord","accord");
+  bindDiamond("dOrigin","origin");
 
 })();
 </script>

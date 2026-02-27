@@ -1,22 +1,23 @@
 <!-- TNT — /home/index.html
-     HUB A · EXECUTIVE INDEX (NO EXPANSION)
+     HUB A · CENTRAL CIRCUIT BOARD (8 BUBBLES) · RUSSIAN-DOLL BRANCHING + JI
      PURPOSE:
-       - 4 primary nodes only (N / E / S / W)
-       - Tap a node = immediate jump (no sub-bubbles here)
-       - Jump Deck + Jump Index handle explanations + full jump catalog
-     CONTROLS:
-       - View: Informal / Formal / Both (changes the 1-sentence line)
-       - Language: EN / 中文 / ES (triangle cluster; single-language render)
-     BOTTOM (NO TABS / NO STACKING):
-       - EXIT (Door)
-       - JUMP DECK
-       - JUMP INDEX
-       - ACTIVE JUMP (last selected node)
+       - 8 top-level bubbles at rest:
+         N / E / S / W + APPENDIX / GLOSSARY / ABOUT / LINKS
+       - Tap bubble = expand/collapse ONLY (no auto-jump)
+       - Each expanded node contains:
+         - 1 sentence (view-filtered: Informal/Formal/Both) (no visible "Formal/Informal" labels)
+         - JUMP button (explicit)
+         - JI pill (opens Jump Index directory overlay)
+       - Jump Index overlay:
+         - Title + 1 sentence + Jump button for every node (flat directory)
+       - Bottom dock (no stacking): EXIT · JI · JUMP DECK · ACTIVE JUMP
      STATE:
        - URL keys: lang/style/time/depth
        - LS keys: gd_lang/gd_style/gd_time/gd_depth
+     LANG:
+       - EN / 中文 / ES (triangle cluster)
      LOCKS:
-       - ui.css owns field; no html/body background styling
+       - ui.css owns field (no html/body background styling)
        - uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
 -->
 
@@ -35,6 +36,7 @@
 a{color:inherit;text-decoration:none}
 :root{--dockH:84px}
 
+/* page container */
 .page{
   width:min(980px,94vw);
   margin:0 auto;
@@ -44,7 +46,7 @@ a{color:inherit;text-decoration:none}
   gap:12px;
 }
 
-/* Header */
+/* header */
 .header{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
@@ -57,7 +59,7 @@ a{color:inherit;text-decoration:none}
 .t{font-weight:950;font-size:24px;letter-spacing:.3px;margin:0 0 6px}
 .s{font-size:13px;opacity:.82;line-height:1.5;margin:0;max-width:860px}
 
-/* Controls row */
+/* controls row */
 .ctrl{
   display:flex;
   justify-content:flex-end;
@@ -67,7 +69,7 @@ a{color:inherit;text-decoration:none}
   margin-top:12px;
 }
 
-/* Triangle language cluster (compact) */
+/* triangle language cluster */
 .langTri{
   position:relative;
   width:126px;
@@ -93,15 +95,16 @@ a{color:inherit;text-decoration:none}
 .langTri .en{left:50%;top:0;transform:translateX(-50%);}
 .langTri .zh{left:0;bottom:0;}
 .langTri .es{right:0;bottom:0;}
-
 @media (max-width:520px){
   .langTri{width:116px;height:74px}
   .langTri .tri{width:102px;height:60px}
   .langTri .btn{padding:8px 10px}
 }
 
-/* Node list */
+/* list */
 .list{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+
+/* node bubble */
 .node{
   --c:#93C5FD;
   border:1px solid rgba(255,255,255,.10);
@@ -111,13 +114,11 @@ a{color:inherit;text-decoration:none}
     linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
   box-shadow:0 18px 60px rgba(0,0,0,.62);
   overflow:hidden;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
 }
 .nHead{
   display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:14px 16px;
+  padding:14px 16px;cursor:pointer;font-weight:950;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
 }
 .nLeft{display:flex;align-items:flex-start;gap:10px;min-width:0}
 .diamond{
@@ -127,21 +128,53 @@ a{color:inherit;text-decoration:none}
 }
 .nText{min-width:0}
 .nTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nOne{
-  margin-top:6px;
-  font-size:13px;
-  opacity:.84;
-  line-height:1.35;
-  max-width:60ch;
-}
 .chev{opacity:.75;font-size:18px;flex:0 0 auto}
+.nBody{
+  display:none;
+  padding:12px 14px 14px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.node.open>.nBody{display:block}
 
-/* View filtering for the single-sentence line */
-.view-informal .nOne[data-lens="formal"]{display:none}
-.view-formal .nOne[data-lens="informal"]{display:none}
-.view-both .nOne{display:block}
+/* one-sentence (view filtered, no visible labels) */
+.one{margin:0;line-height:1.65;font-size:14px;color:rgba(255,255,255,.90)}
+.one[data-lens="informal"]{display:none}
+.one[data-lens="formal"]{display:block}
+.view-informal .one[data-lens="formal"]{display:none}
+.view-informal .one[data-lens="informal"]{display:block}
+.view-both .one[data-lens="formal"]{display:block}
+.view-both .one[data-lens="informal"]{display:block}
 
-/* Bottom dock: single row, no wrap, no stacking */
+/* actions row */
+.actRow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-end;
+  margin-top:10px;
+}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  font-weight:950;
+  letter-spacing:.2px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.pill:hover{border-color:var(--gold)}
+.pill:active{transform:scale(.98)}
+.pill.ji{min-width:44px}
+
+/* children */
+.childStack{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+
+/* Dock: single row, no stacking */
 .dock{
   position:fixed;
   left:50%;
@@ -157,7 +190,7 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 18px 60px rgba(0,0,0,.55);
 
   display:grid;
-  grid-auto-flow:column;
+  grid-template-columns:repeat(4, minmax(0,1fr));
   gap:10px;
 
   overflow-x:auto;
@@ -167,13 +200,72 @@ a{color:inherit;text-decoration:none}
 }
 .dock::-webkit-scrollbar{display:none}
 .dock .btn{width:100%;border-radius:999px;white-space:nowrap;padding:10px 10px}
-.dock[data-cols="4"]{grid-template-columns:repeat(4, minmax(150px,1fr));}
-.dock[data-cols="5"]{grid-template-columns:repeat(5, minmax(150px,1fr));}
-@media (max-width:520px){
-  :root{--dockH:92px}
-  .dock[data-cols="4"]{grid-template-columns:repeat(4, minmax(132px,1fr));}
-  .dock[data-cols="5"]{grid-template-columns:repeat(5, minmax(132px,1fr));}
+@media (max-width:520px){ :root{--dockH:92px} }
+
+/* Jump Index overlay */
+.ov{
+  position:fixed;
+  inset:0;
+  z-index:500;
+  display:none;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(10px);
 }
+.ov.show{display:block}
+.panel{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(980px,94vw);
+  height:min(86vh, 860px);
+  z-index:510;
+  display:none;
+}
+.panel.show{display:block}
+.shell{
+  height:100%;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  box-shadow:0 60px 180px rgba(0,0,0,.85);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.pHead{
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.pTitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
+.pClose{
+  border:0;background:transparent;color:#fff;
+  font-size:20px;cursor:pointer;padding:6px 10px;border-radius:12px;
+}
+.pClose:hover{background:rgba(255,255,255,.08)}
+.pBody{
+  padding:14px 16px 18px;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  flex:1 1 auto;
+}
+
+/* directory rows */
+.dirList{display:flex;flex-direction:column;gap:10px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(0,0,0,.18);
+  padding:12px 14px;
+}
+.rTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.rName{font-weight:950;letter-spacing:.2px}
+.rSent{margin-top:6px;color:rgba(255,255,255,.86);line-height:1.45;font-size:13px}
+.rAct{margin-top:10px;display:flex;justify-content:flex-end}
 </style>
 </head>
 
@@ -184,7 +276,7 @@ a{color:inherit;text-decoration:none}
   <div class="header" id="brand">
     <p class="k" id="hk">CARDINAL AXIS</p>
     <h1 class="t" id="ht">HUB A · Index</h1>
-    <p class="s" id="hs">Primary compass index. Tap a direction to jump.</p>
+    <p class="s" id="hs">Central circuit board. Expand a branch. Jump when ready.</p>
 
     <div class="ctrl">
       <button class="btn" id="vInformal" type="button">INFORMAL</button>
@@ -204,15 +296,26 @@ a{color:inherit;text-decoration:none}
   <div class="list view-formal" id="list"></div>
 </div>
 
-<nav class="dock" id="dock" data-cols="4" aria-label="Bottom actions">
+<nav class="dock" id="dock" aria-label="Bottom actions">
   <button class="btn" id="navExit" type="button">EXIT</button>
+  <button class="btn" id="navJI" type="button">JUMP INDEX</button>
   <button class="btn" id="navDeck" type="button">JUMP DECK</button>
-  <button class="btn" id="navIndex" type="button">JUMP INDEX</button>
   <button class="btn" id="navActive" type="button">ACTIVE JUMP</button>
-
-  <!-- optional 5th slot for wider screens (kept, no stacking; dock scrolls) -->
-  <button class="btn" id="navSpline2" type="button">SPLINE 2</button>
 </nav>
+
+<!-- Jump Index Overlay -->
+<div class="ov" id="ov"></div>
+<div class="panel" id="panel" role="dialog" aria-modal="true">
+  <div class="shell">
+    <div class="pHead">
+      <h3 class="pTitle" id="jiTitle">JUMP INDEX</h3>
+      <button class="pClose" id="jiClose" type="button" aria-label="Close">✕</button>
+    </div>
+    <div class="pBody">
+      <div class="dirList" id="dir"></div>
+    </div>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -227,78 +330,137 @@ a{color:inherit;text-decoration:none}
   let depth = qs.get("depth") || lsGet("gd_depth") || "explore";
 
   if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  if(style!=="formal"&&style!=="informal"&&style!=="both") style="formal";
+  if(style!=="formal"&&style!=="informal") style="formal";
   if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
   if(depth!=="explore"&&depth!=="learn") depth="explore";
 
-  // Persist (style in URL stays; internal view supports BOTH as UI-only)
   lsSet("gd_lang",lang);
-  lsSet("gd_style",(style==="both")?"formal":style);
+  lsSet("gd_style",style);
   lsSet("gd_time",time);
   lsSet("gd_depth",depth);
+
   document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
   function makeQS(over){
     const p=new URLSearchParams();
     p.set("lang",  (over&&over.lang)  || lang);
-    p.set("style", (over&&over.style) || ((style==="both")?"formal":style));
+    p.set("style", (over&&over.style) || style);
     p.set("time",  (over&&over.time)  || time);
     p.set("depth", (over&&over.depth) || depth);
     return "?"+p.toString();
   }
 
-  // ===== ROUTES (edit only if your paths differ) =====
-  // These are the only guessed paths; change here if needed.
+  // ===== Routes =====
   const ROUTE = {
     door: "/door/",
     deck: "/home/deck/",
-    index: "/home/jumps/",
-    spline2: "/explore/"
+    jumpIndex: "/home/jumps/" // optional separate page; overlay is primary
   };
 
-  // ===== JUMPS (wire to real surfaces; replace when your jump pages are installed) =====
-  // Default conservative mapping:
-  // N -> Laws, E -> Products, S -> Laws, W -> Laws (change as needed)
+  // ===== Binding (replace routes when your jump pages are installed) =====
+  // Rule: explicit jump button only; node tap expands.
   const JUMPS = {
-    N: "/laws/",
-    E: "/products/",
-    S: "/laws/",
-    W: "/laws/"
+    // Core trunks (safe defaults)
+    "N": "/laws/",
+    "E": "/products/",
+    "S": "/laws/",
+    "W": "/gauges/",
+    "APPENDIX": "/appendix/",
+    "GLOSSARY": "/glossary/",
+    "ABOUT": "/about/",
+    "LINKS": "/links/"
   };
 
-  // ===== Labels + 1-sentence per lens =====
-  const NODE = {
-    N:{
-      color:"#1F3A8A",
-      title:{en:"N · STRUCTURE",zh:"N · 结构",es:"N · ESTRUCTURA"},
-      one:{
-        informal:{en:"Pin meaning before power moves.",zh:"先钉住含义，后谈扩张。",es:"Fija el significado antes de mover poder."},
-        formal:{en:"Scope precedes authority.",zh:"范围先于权力。",es:"El alcance precede a la autoridad."}
-      }
+  // ===== 8 Top Bubbles + Branches =====
+  // Minimal branch set now; expand later by adding children + jump bindings.
+  const TREE = {
+    "N":{color:"#1F3A8A", title:{en:"N · STRUCTURE",zh:"N · 结构",es:"N · ESTRUCTURA"}, children:["N:DEF","N:ALG","N:LAW","N:MATH"]},
+    "E":{color:"#0EA5E9", title:{en:"E · PRODUCTS",zh:"E · 产品",es:"E · PRODUCTOS"}, children:["E:LINE","E:SURF","E:ADOPT","E:INTEG"]},
+    "S":{color:"#F59E0B", title:{en:"S · CONSTRAINTS",zh:"S · 约束",es:"S · RESTRICCIONES"}, children:["S:GATES","S:READY","S:REFUSE","S:PHASE"]},
+    "W":{color:"#7F1D1D", title:{en:"W · CONTAINMENT",zh:"W · 隔离",es:"W · CONTENCIÓN"}, children:["W:ROLL","W:SEG","W:RECOV","W:AUDIT"]},
+
+    "APPENDIX":{color:"#A3A3A3", title:{en:"APPENDIX",zh:"附录",es:"APÉNDICE"}, children:["A:LEGAL","A:PROV","A:TIME","A:IP"]},
+    "GLOSSARY":{color:"#93C5FD", title:{en:"GLOSSARY",zh:"术语表",es:"GLOSARIO"}, children:["G:TERMS","G:ACR","G:SYMS"]},
+    "ABOUT":{color:"#D4AF37", title:{en:"ABOUT",zh:"关于",es:"ACERCA"}, children:["AB:MISSION","AB:POSTURE","AB:WHAT"]},
+    "LINKS":{color:"#60A5FA", title:{en:"LINKS",zh:"链接",es:"ENLACES"}, children:["L:OSF","L:GITHUB","L:EXT"]},
+
+    // North branch nodes
+    "N:DEF":{color:"#1F3A8A", title:{en:"Definitions",zh:"定义",es:"Definiciones"}, children:[]},
+    "N:ALG":{color:"#1F3A8A", title:{en:"Algorithms",zh:"算法",es:"Algoritmos"}, children:[]},
+    "N:LAW":{color:"#1F3A8A", title:{en:"Admissibility",zh:"可采信",es:"Admisibilidad"}, children:[]},
+    "N:MATH":{color:"#1F3A8A", title:{en:"Frontier Math",zh:"前沿数学",es:"Matemática"}, children:[]},
+
+    // East branch nodes
+    "E:LINE":{color:"#0EA5E9", title:{en:"Product Line",zh:"产品线",es:"Línea"}, children:[]},
+    "E:SURF":{color:"#0EA5E9", title:{en:"Surfaces",zh:"执行面",es:"Superficies"}, children:[]},
+    "E:ADOPT":{color:"#0EA5E9", title:{en:"Adoption",zh:"采纳",es:"Adopción"}, children:[]},
+    "E:INTEG":{color:"#0EA5E9", title:{en:"Integration",zh:"集成",es:"Integración"}, children:[]},
+
+    // South branch nodes
+    "S:GATES":{color:"#F59E0B", title:{en:"Gates",zh:"闸门",es:"Compuertas"}, children:[]},
+    "S:READY":{color:"#F59E0B", title:{en:"Readiness",zh:"就绪",es:"Preparación"}, children:[]},
+    "S:REFUSE":{color:"#F59E0B", title:{en:"Refusal Logic",zh:"拒绝逻辑",es:"Rechazo"}, children:[]},
+    "S:PHASE":{color:"#F59E0B", title:{en:"Phase Thresholds",zh:"阶段阈值",es:"Fases"}, children:[]},
+
+    // West branch nodes
+    "W:ROLL":{color:"#7F1D1D", title:{en:"Rollback",zh:"回滚",es:"Reversión"}, children:[]},
+    "W:SEG":{color:"#7F1D1D", title:{en:"Segmentation",zh:"分段",es:"Segmentación"}, children:[]},
+    "W:RECOV":{color:"#7F1D1D", title:{en:"Recovery",zh:"恢复",es:"Recuperación"}, children:[]},
+    "W:AUDIT":{color:"#7F1D1D", title:{en:"Audit Paths",zh:"审计路径",es:"Auditoría"}, children:[]},
+
+    // Appendix
+    "A:LEGAL":{color:"#A3A3A3", title:{en:"Legal + Notice",zh:"法律与声明",es:"Legal"}, children:[]},
+    "A:PROV":{color:"#A3A3A3", title:{en:"Provenance",zh:"溯源",es:"Proveniencia"}, children:[]},
+    "A:TIME":{color:"#A3A3A3", title:{en:"Timestamps",zh:"时间戳",es:"Marcas de tiempo"}, children:[]},
+    "A:IP":{color:"#A3A3A3", title:{en:"Structural IP",zh:"结构IP",es:"IP estructural"}, children:[]},
+
+    // Glossary
+    "G:TERMS":{color:"#93C5FD", title:{en:"Terms",zh:"术语",es:"Términos"}, children:[]},
+    "G:ACR":{color:"#93C5FD", title:{en:"Acronyms",zh:"缩略语",es:"Acrónimos"}, children:[]},
+    "G:SYMS":{color:"#93C5FD", title:{en:"Symbols",zh:"符号",es:"Símbolos"}, children:[]},
+
+    // About
+    "AB:MISSION":{color:"#D4AF37", title:{en:"Mission",zh:"使命",es:"Misión"}, children:[]},
+    "AB:POSTURE":{color:"#D4AF37", title:{en:"Posture",zh:"姿态",es:"Postura"}, children:[]},
+    "AB:WHAT":{color:"#D4AF37", title:{en:"What this is",zh:"这是什么",es:"Qué es"}, children:[]},
+
+    // Links
+    "L:OSF":{color:"#60A5FA", title:{en:"OSF",zh:"OSF",es:"OSF"}, children:[]},
+    "L:GITHUB":{color:"#60A5FA", title:{en:"GitHub",zh:"GitHub",es:"GitHub"}, children:[]},
+    "L:EXT":{color:"#60A5FA", title:{en:"External",zh:"外部",es:"Externo"}, children:[]}
+  };
+
+  // ===== One sentence per node per lens (replace later; unique enough for now) =====
+  const SENT = {
+    en:{
+      "N":{informal:"Lock meaning before movement.",formal:"Scope precedes authority."},
+      "E":{informal:"Turn structure into usable surfaces.",formal:"Execution inherits boundary conditions."},
+      "S":{informal:"Prove readiness before expansion.",formal:"Constraint is not optional."},
+      "W":{informal:"Keep damage local and reversible.",formal:"Local failure must stay local."},
+      "APPENDIX":{informal:"Operational packets and protections live here.",formal:"Reference materials and provenance controls."},
+      "GLOSSARY":{informal:"Shared language prevents drift.",formal:"Canonical terms preserve semantics."},
+      "ABOUT":{informal:"What this is—and what it refuses.",formal:"Mission and posture under bounded claims."},
+      "LINKS":{informal:"Direct anchors to external proof surfaces.",formal:"Curated outbound references and artifacts."}
     },
-    E:{
-      color:"#0EA5E9",
-      title:{en:"E · PRODUCTS",zh:"E · 产品",es:"E · PRODUCTOS"},
-      one:{
-        informal:{en:"Turn claims into usable surfaces with limits.",zh:"把主张变成可用执行面，并带边界。",es:"Convierte promesas en superficies con límites."},
-        formal:{en:"Execution inherits boundary conditions.",zh:"执行继承边界条件。",es:"La ejecución hereda condiciones de borde."}
-      }
+    zh:{
+      "N":{informal:"先钉住含义，再谈移动。",formal:"范围先于权力。"},
+      "E":{informal:"把结构变成可用执行面。",formal:"执行继承边界条件。"},
+      "S":{informal:"先证明就绪，再允许扩张。",formal:"约束不可选。"},
+      "W":{informal:"损伤局部化并可回退。",formal:"局部失败必须局部化。"},
+      "APPENDIX":{informal:"操作包与保护都在这里。",formal:"参考材料与溯源控制。"},
+      "GLOSSARY":{informal:"共用语言防漂移。",formal:"术语规范保持语义。"},
+      "ABOUT":{informal:"这是什么，以及它拒绝什么。",formal:"使命与姿态（有界主张）。"},
+      "LINKS":{informal:"外部证明锚点入口。",formal:"外链与证据工件目录。"}
     },
-    S:{
-      color:"#F59E0B",
-      title:{en:"S · CONSTRAINTS",zh:"S · 约束",es:"S · RESTRICCIONES"},
-      one:{
-        informal:{en:"If it can’t be bounded, it can’t scale.",zh:"不有界，就别规模化。",es:"Si no se puede acotar, no puede escalar."},
-        formal:{en:"Constraint is not optional.",zh:"约束不可选。",es:"La restricción no es opcional."}
-      }
-    },
-    W:{
-      color:"#7F1D1D",
-      title:{en:"W · CONTAINMENT",zh:"W · 隔离",es:"W · CONTENCIÓN"},
-      one:{
-        informal:{en:"Keep damage local; return clean.",zh:"损伤局部化，返回要干净。",es:"Mantén el daño local; vuelve limpio."},
-        formal:{en:"Local failure must stay local.",zh:"局部失败必须局部化。",es:"El fallo local debe permanecer local."}
-      }
+    es:{
+      "N":{informal:"Fija el significado antes de moverte.",formal:"El alcance precede a la autoridad."},
+      "E":{informal:"Convierte estructura en superficies utilizables.",formal:"La ejecución hereda condiciones de borde."},
+      "S":{informal:"Prueba preparación antes de expandir.",formal:"La restricción no es opcional."},
+      "W":{informal:"Mantén el daño local y reversible.",formal:"El fallo local debe permanecer local."},
+      "APPENDIX":{informal:"Paquetes operativos y protección viven aquí.",formal:"Materiales de referencia y controles de proveniencia."},
+      "GLOSSARY":{informal:"Lenguaje compartido evita la deriva.",formal:"Términos canónicos preservan semántica."},
+      "ABOUT":{informal:"Qué es esto y qué rechaza.",formal:"Misión y postura bajo afirmaciones acotadas."},
+      "LINKS":{informal:"Anclas directas a pruebas externas.",formal:"Referencias externas y artefactos curados."}
     }
   };
 
@@ -311,18 +473,18 @@ a{color:inherit;text-decoration:none}
   if(lang==="zh"){
     hk.textContent="基轴体系";
     ht.textContent="枢纽A · 索引";
-    hs.textContent="主罗盘索引。点击方向即可跳转。";
+    hs.textContent="中央电路板。展开分支；准备好再跳转。";
   }else if(lang==="es"){
     hk.textContent="CARDINAL AXIS";
     ht.textContent="HUB A · Índice";
-    hs.textContent="Índice de brújula principal. Toca una dirección para saltar.";
+    hs.textContent="Placa central. Expande ramas; salta cuando estés listo.";
   }else{
     hk.textContent="CARDINAL AXIS";
     ht.textContent="HUB A · Index";
-    hs.textContent="Primary compass index. Tap a direction to jump.";
+    hs.textContent="Central circuit board. Expand a branch. Jump when ready.";
   }
 
-  // ===== View mode (controls only what line is visible) =====
+  // ===== View mode (formal/informal/both) =====
   const list=document.getElementById("list");
   const vInformal=document.getElementById("vInformal");
   const vFormal=document.getElementById("vFormal");
@@ -334,11 +496,9 @@ a{color:inherit;text-decoration:none}
     vInformal.classList.toggle("active", v==="informal");
     vFormal.classList.toggle("active", v==="formal");
     vBoth.classList.toggle("active", v==="both");
-    style=v;
-    // do NOT store "both" into gd_style; only for UI
     lsSet("hub_view", v);
   }
-  const viewInit = lsGet("hub_view") || (lsGet("gd_style")==="informal" ? "informal" : "formal");
+  const viewInit = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
   applyView(viewInit);
 
   vInformal.onclick=()=>applyView("informal");
@@ -349,7 +509,6 @@ a{color:inherit;text-decoration:none}
   const bEN=document.getElementById("bEN");
   const bZH=document.getElementById("bZH");
   const bES=document.getElementById("bES");
-
   function paintLangBtns(){
     bEN.classList.toggle("active", lang==="en");
     bZH.classList.toggle("active", lang==="zh");
@@ -359,26 +518,125 @@ a{color:inherit;text-decoration:none}
 
   function setLang(next){
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
-    const openView = lsGet("hub_view") || "formal";
     lang=next;
     lsSet("gd_lang",lang);
-    document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
     history.replaceState({}, "", location.pathname + makeQS({lang}));
-    location.reload(); // simplest + safest: single-language render, no mixed residue
+    location.reload(); // safest for single-language purity
   }
   bEN.onclick=()=>setLang("en");
   bZH.onclick=()=>setLang("zh");
   bES.onclick=()=>setLang("es");
 
-  // ===== Render nodes (4 only) =====
-  function makeNode(id){
-    const n=NODE[id];
-    const title=T(n.title);
+  // ===== Overlay (Jump Index) =====
+  const ov=document.getElementById("ov");
+  const panel=document.getElementById("panel");
+  const dir=document.getElementById("dir");
+  const jiTitle=document.getElementById("jiTitle");
+  const jiClose=document.getElementById("jiClose");
 
-    const el=document.createElement("div");
-    el.className="node";
-    el.style.setProperty("--c", n.color);
-    el.setAttribute("data-id", id);
+  function openJI(){
+    // title
+    if(lang==="zh") jiTitle.textContent="跳转目录";
+    else if(lang==="es") jiTitle.textContent="ÍNDICE DE SALTOS";
+    else jiTitle.textContent="JUMP INDEX";
+
+    // build directory rows from TREE keys (stable order)
+    dir.innerHTML="";
+
+    const orderTop = ["N","E","S","W","APPENDIX","GLOSSARY","ABOUT","LINKS"];
+    const keys = [];
+    // top first
+    orderTop.forEach(k=>keys.push(k));
+    // then children breadth-first
+    function addChildren(id){
+      const c = TREE[id] && TREE[id].children ? TREE[id].children : [];
+      c.forEach(x=>keys.push(x));
+      c.forEach(x=>addChildren(x));
+    }
+    orderTop.forEach(k=>addChildren(k));
+
+    keys.forEach(id=>{
+      if(!TREE[id]) return;
+
+      const row=document.createElement("div");
+      row.className="row";
+
+      const rTop=document.createElement("div");
+      rTop.className="rTop";
+
+      const name=document.createElement("div");
+      name.className="rName";
+      name.textContent = T(TREE[id].title);
+
+      const act=document.createElement("div");
+      // inline Jump button
+      const jb=document.createElement("a");
+      jb.className="btn";
+      jb.textContent = (lang==="zh") ? "跳转" : (lang==="es" ? "Saltar" : "Jump");
+      const target = JUMPS[id] || JUMPS[id.split(":")[0]] || "#";
+      jb.href = (target==="#") ? "#" : (target + makeQS());
+      act.appendChild(jb);
+
+      rTop.appendChild(name);
+      rTop.appendChild(act);
+
+      // sentence (view-aware; show both if BOTH)
+      const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
+
+      const sent=document.createElement("div");
+      sent.className="rSent";
+      const dict = (lang==="zh") ? SENT.zh : (lang==="es") ? SENT.es : SENT.en;
+      const srec = dict[id] || dict[id.split(":")[0]] || {informal:"",formal:""};
+      if(view==="both"){
+        sent.textContent = srec.informal + "  " + srec.formal;
+      }else{
+        sent.textContent = srec[view] || srec.formal || srec.informal || "";
+      }
+
+      row.appendChild(rTop);
+      row.appendChild(sent);
+
+      // click row name to set active node
+      row.addEventListener("click", function(e){
+        // avoid stealing click from Jump button
+        if(e.target && (e.target.tagName==="A" || e.target.tagName==="BUTTON")) return;
+        lsSet("hub_active_node", id);
+      });
+
+      dir.appendChild(row);
+    });
+
+    ov.classList.add("show");
+    panel.classList.add("show");
+  }
+
+  function closeJI(){
+    ov.classList.remove("show");
+    panel.classList.remove("show");
+  }
+
+  ov.addEventListener("click", closeJI);
+  jiClose.addEventListener("click", closeJI);
+  panel.addEventListener("click", function(e){ e.stopPropagation(); });
+
+  // ===== Build node bubble (expand/collapse only; jump explicit) =====
+  function oneSentence(id, lens){
+    const dict = (lang==="zh") ? SENT.zh : (lang==="es") ? SENT.es : SENT.en;
+    const rec = dict[id] || dict[id.split(":")[0]];
+    if(rec && rec[lens]) return rec[lens];
+    // fallback: minimal
+    if(lang==="zh") return (lens==="formal") ? "该节点定义边界。" : "该节点提供方向。";
+    if(lang==="es") return (lens==="formal") ? "Este nodo define límites." : "Este nodo da dirección.";
+    return (lens==="formal") ? "This node defines bounds." : "This node provides direction.";
+  }
+
+  function buildNode(id){
+    const info=TREE[id];
+
+    const node=document.createElement("section");
+    node.className="node";
+    node.style.setProperty("--c", info.color || "#93C5FD");
+    node.setAttribute("data-id", id);
 
     const head=document.createElement("div");
     head.className="nHead";
@@ -386,101 +644,127 @@ a{color:inherit;text-decoration:none}
     const left=document.createElement("div");
     left.className="nLeft";
 
-    const d=document.createElement("div");
-    d.className="diamond";
+    const dia=document.createElement("div");
+    dia.className="diamond";
 
-    const text=document.createElement("div");
-    text.className="nText";
+    const txt=document.createElement("div");
+    txt.className="nText";
 
-    const ttl=document.createElement("div");
-    ttl.className="nTitle";
-    ttl.textContent=title;
+    const title=document.createElement("div");
+    title.className="nTitle";
+    title.textContent=T(info.title);
 
-    const oneI=document.createElement("div");
-    oneI.className="nOne";
-    oneI.setAttribute("data-lens","informal");
-    oneI.textContent=T(n.one.informal);
-
-    const oneF=document.createElement("div");
-    oneF.className="nOne";
-    oneF.setAttribute("data-lens","formal");
-    oneF.textContent=T(n.one.formal);
-
-    text.appendChild(ttl);
-    text.appendChild(oneI);
-    text.appendChild(oneF);
-
-    left.appendChild(d);
-    left.appendChild(text);
+    txt.appendChild(title);
+    left.appendChild(dia);
+    left.appendChild(txt);
 
     const chev=document.createElement("div");
     chev.className="chev";
-    chev.textContent="›";
+    chev.textContent="▸";
 
     head.appendChild(left);
     head.appendChild(chev);
 
-    el.appendChild(head);
+    const body=document.createElement("div");
+    body.className="nBody";
 
-    function jump(){
-      const target = JUMPS[id] || "#";
-      lsSet("hub_active_node", id);
-      if(target==="#") return;
-      location.href = target + makeQS();
-    }
-    el.addEventListener("click", jump);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); jump(); }
+    const pInf=document.createElement("p");
+    pInf.className="one";
+    pInf.setAttribute("data-lens","informal");
+    pInf.textContent=oneSentence(id,"informal");
+
+    const pFor=document.createElement("p");
+    pFor.className="one";
+    pFor.setAttribute("data-lens","formal");
+    pFor.textContent=oneSentence(id,"formal");
+
+    body.appendChild(pInf);
+    body.appendChild(pFor);
+
+    // actions
+    const act=document.createElement("div");
+    act.className="actRow";
+
+    const ji=document.createElement("div");
+    ji.className="pill ji";
+    ji.textContent="JI";
+    ji.title = (lang==="zh") ? "跳转目录" : (lang==="es" ? "Índice" : "Jump Index");
+    ji.addEventListener("click", function(e){
+      e.stopPropagation();
+      openJI();
     });
-    el.tabIndex=0;
-    el.setAttribute("role","button");
-    return el;
+
+    const jump=document.createElement("a");
+    jump.className="btn";
+    jump.textContent = (lang==="zh") ? "跳转" : (lang==="es" ? "Saltar" : "Jump");
+    const target = JUMPS[id] || JUMPS[id.split(":")[0]] || "#";
+    jump.href = (target==="#") ? "#" : (target + makeQS());
+    jump.addEventListener("click", function(e){
+      // explicit jump action
+      lsSet("hub_active_node", id);
+    });
+
+    act.appendChild(ji);
+    act.appendChild(jump);
+    body.appendChild(act);
+
+    // children
+    if(info.children && info.children.length){
+      const stack=document.createElement("div");
+      stack.className="childStack";
+      info.children.forEach(child=>{
+        stack.appendChild(buildNode(child));
+      });
+      body.appendChild(stack);
+    }
+
+    head.addEventListener("click", function(){
+      node.classList.toggle("open");
+      chev.textContent = node.classList.contains("open") ? "▾" : "▸";
+      lsSet("hub_active_node", id);
+    });
+
+    node.appendChild(head);
+    node.appendChild(body);
+    return node;
   }
 
+  // render the 8 bubbles
   list.innerHTML="";
-  ["N","E","S","W"].forEach(id=>list.appendChild(makeNode(id)));
+  ["N","E","S","W","APPENDIX","GLOSSARY","ABOUT","LINKS"].forEach(id=>{
+    list.appendChild(buildNode(id));
+  });
 
-  // ===== Dock: 4 or 5 across =====
-  const dock=document.getElementById("dock");
-  if((window.innerWidth||0) >= 920) dock.setAttribute("data-cols","5");
-  else dock.setAttribute("data-cols","4");
-
-  // Button labels i18n
+  // ===== Dock behavior =====
   const navExit=document.getElementById("navExit");
+  const navJI=document.getElementById("navJI");
   const navDeck=document.getElementById("navDeck");
-  const navIndex=document.getElementById("navIndex");
   const navActive=document.getElementById("navActive");
-  const navSpline2=document.getElementById("navSpline2");
 
   if(lang==="zh"){
     navExit.textContent="退出";
+    navJI.textContent="跳转目录";
     navDeck.textContent="跳转卡组";
-    navIndex.textContent="跳转目录";
     navActive.textContent="当前跳转";
-    navSpline2.textContent="第二匝道";
   }else if(lang==="es"){
     navExit.textContent="SALIR";
+    navJI.textContent="ÍNDICE";
     navDeck.textContent="MAZO";
-    navIndex.textContent="ÍNDICE";
     navActive.textContent="SALTO ACTIVO";
-    navSpline2.textContent="RAMPA 2";
   }else{
     navExit.textContent="EXIT";
+    navJI.textContent="JUMP INDEX";
     navDeck.textContent="JUMP DECK";
-    navIndex.textContent="JUMP INDEX";
     navActive.textContent="ACTIVE JUMP";
-    navSpline2.textContent="SPLINE 2";
   }
 
-  // Dock actions
   navExit.onclick=()=>location.href = ROUTE.door + makeQS();
   navDeck.onclick=()=>location.href = ROUTE.deck + makeQS();
-  navIndex.onclick=()=>location.href = ROUTE.index + makeQS();
-  navSpline2.onclick=()=>location.href = ROUTE.spline2 + makeQS();
+  navJI.onclick=openJI;
 
   navActive.onclick=()=>{
     const id = lsGet("hub_active_node") || "N";
-    const target = JUMPS[id] || "#";
+    const target = JUMPS[id] || JUMPS[id.split(":")[0]] || "#";
     if(target==="#") return;
     location.href = target + makeQS();
   };

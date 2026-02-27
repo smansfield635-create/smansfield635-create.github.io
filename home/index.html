@@ -1,13 +1,12 @@
 <!-- TNT — /home/index.html
-     HUB A · 3-TIER CARDINAL INDEX
-     Geometry Locked:
-       Tier 1: N E S W (Concept/Live/Roadmap × Formal/Informal)
-       Tier 2: NE SE SW NW (1 paragraph × Formal/Informal)
-       Tier 3: NNE ENE ESE SSE SSW WSW WNW NNW (1 paragraph total)
-     Lenses:
-       - Formal / Informal
-       - EN / 中文
-     No structural drift.
+     HUB A · 12-DIRECTION INDEX
+     MODE: INDEX / JUMP / DUAL LENS / DUAL LANGUAGE
+     LOCKS:
+       - 12 bubbles (N, NNE, ENE, E, ESE, SSE, S, SSW, WSW, W, WNW, NNW)
+       - Click bubble → expand → show 1 paragraph per lens
+       - Formal / Informal toggle (single paragraph visible at a time)
+       - EN / 中文 toggle (single language visible)
+       - No structural drift
 -->
 
 <!doctype html>
@@ -18,252 +17,251 @@
 <title>HUB · Index</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-.wrap{width:min(980px,94vw);margin:0 auto;padding:24px 0 120px;display:flex;flex-direction:column;gap:16px}
-
-.lensBar{
-  display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;
-}
-.lensBtn{
-  padding:8px 16px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.15);
-  background:rgba(0,0,0,.35);
-  cursor:pointer;font-weight:700;
-}
-.lensBtn.active{
-  background:#fff;color:#000;
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:#fff;
 }
 
-.group{
-  border:1px solid rgba(255,255,255,.12);
+/* ===== TOP CONTROLS ===== */
+
+.controls{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  padding:20px;
+  position:sticky;
+  top:0;
+  backdrop-filter:blur(12px);
+  z-index:100;
+}
+
+.toggle{
+  padding:10px 18px;
   border-radius:20px;
-  background:linear-gradient(145deg, rgba(12,22,38,.88), rgba(7,11,18,.92));
+  background:rgba(0,0,0,.4);
+  border:1px solid rgba(255,255,255,.15);
+  cursor:pointer;
+  font-weight:600;
+  letter-spacing:.5px;
+}
+
+.toggle.active{
+  background:#fff;
+  color:#000;
+}
+
+/* ===== INDEX STACK ===== */
+
+.wrap{
+  width:min(900px,92vw);
+  margin:0 auto;
+  padding-bottom:100px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.node{
+  border-radius:22px;
+  background:linear-gradient(145deg,#121a2c,#0b1018);
+  border:1px solid rgba(255,255,255,.1);
   overflow:hidden;
+  transition:all .25s ease;
 }
 
-.ghead{
-  padding:16px 18px;
-  display:flex;justify-content:space-between;cursor:pointer;
-  font-weight:900;letter-spacing:.3px;
+.node-header{
+  padding:16px 20px;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-weight:800;
+  letter-spacing:.5px;
 }
 
-.section{
-  display:none;padding:16px 18px;
-  border-top:1px solid rgba(255,255,255,.08);
+.node-header:hover{
+  background:rgba(255,255,255,.05);
 }
 
-.section.open{display:block;}
-
-.subHead{
-  font-weight:800;margin-bottom:8px;
-}
-
-.para{
-  line-height:1.6;margin-bottom:12px;
-}
-
-.tier2, .tier3{
-  padding:14px 18px;
-  border-top:1px solid rgba(255,255,255,.08);
+.node-body{
   display:none;
+  padding:16px 20px 22px 20px;
+  border-top:1px solid rgba(255,255,255,.08);
 }
 
-.group.open > .tier2,
-.group.open > .tier3{
+.node.open .node-body{
   display:block;
 }
 
-.tier2 .para,
-.tier3 .para{
+.node p{
   margin:0;
+  line-height:1.6;
+  font-size:14px;
+  opacity:.92;
+}
+
+.jump{
+  margin-top:14px;
+}
+
+.jump a{
+  text-decoration:none;
+  font-weight:700;
+  letter-spacing:.4px;
+  color:#4ea3ff;
 }
 </style>
 </head>
+
 <body>
 
-<div class="wrap">
-
-<div class="lensBar">
-  <div class="lensBtn active" id="informalBtn">Informal</div>
-  <div class="lensBtn" id="formalBtn">Formal</div>
-  <div class="lensBtn active" id="enBtn">EN</div>
-  <div class="lensBtn" id="zhBtn">中文</div>
+<div class="controls">
+  <div id="informalBtn" class="toggle active">INFORMAL</div>
+  <div id="formalBtn" class="toggle">FORMAL</div>
+  <div id="enBtn" class="toggle active">EN</div>
+  <div id="zhBtn" class="toggle">中文</div>
 </div>
 
-<!-- ========================= -->
-<!-- TIER 1 — PRIMARY CARDINALS -->
-<!-- ========================= -->
-
-<div class="group" data-tier="1">
-  <div class="ghead">N · DEFINITIONS</div>
-
-  <div class="section" data-type="concept">
-    <div class="subHead">Concept</div>
-    <div class="para informal">
-      Collapse begins with loose language. When meaning floats, power expands unchecked. North fixes terms before authority moves. It pins scope so interpretation cannot stretch under pressure. It prevents semantic drift from dissolving accountability. Cooperation requires shared definitions. Without that, scale fractures.
-    </div>
-    <div class="para formal" style="display:none;">
-      Scope precedes authority. Definitions constrain interpretation prior to exposure. Verification references fixed semantic anchors. Cross-domain mapping remains comparable under scale. Drift surfaces at first deviation. Enforcement derives from declared boundary. Anything less destabilizes coordination.
-    </div>
-  </div>
-
-  <div class="section" data-type="live">
-    <div class="subHead">Live</div>
-    <div class="para informal">
-      Institutions argue over wording while deadlines advance. Ambiguity widens interpretive gaps. Accountability evaporates quietly. North clamps meaning before deployment. It forces alignment before execution. Shared vocabulary stabilizes collaboration. Otherwise drift wins.
-    </div>
-    <div class="para formal" style="display:none;">
-      Operational language remains stable across instances. Claims route to definition registry. Enforcement blocks semantic mutation. Deployment inherits declared scope. Ambiguity triggers correction. Comparison remains measurable. Stability persists under load.
-    </div>
-  </div>
-
-  <div class="section" data-type="roadmap">
-    <div class="subHead">Roadmap</div>
-    <div class="para informal">
-      Expand the registry. Tighten boundaries. Increase lookup speed. Reduce interpretive friction. Scale without dilution. Publish definitions publicly. Prevent drift before it metastasizes.
-    </div>
-    <div class="para formal" style="display:none;">
-      Add semantic entries without altering geometry. Version changes explicitly. Maintain backward traceability. Require citation for all claims. Audit compliance continuously. Shorten return distance. Preserve coherence under expansion.
-    </div>
-  </div>
-</div>
-
-<!-- TIER 1 — E -->
-
-<div class="group" data-tier="1">
-  <div class="ghead">E · PRODUCTS</div>
-
-  <div class="section">
-    <div class="subHead">Concept</div>
-    <div class="para informal">
-      Products fail when contracts never reach the surface. East forces structure into execution. It transforms declared meaning into enforceable interfaces. Users feel truth when constraints appear. Power becomes accountable. Deployment stops being theater. Otherwise rollout becomes illusion.
-    </div>
-    <div class="para formal" style="display:none;">
-      Execution inherits boundary conditions. Interfaces encode declared contracts. Claims route to verification surfaces. Scale requires replication, not redesign. Enforcement persists through deployment. Failure localizes under containment. Drift does not propagate.
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="subHead">Live</div>
-    <div class="para informal">
-      Users trust surfaces that expose limits. Adoption accelerates when contracts are visible. Hidden constraints create backlash. East publishes enforcement. Execution becomes predictable. Trust compounds. Otherwise credibility collapses.
-    </div>
-    <div class="para formal" style="display:none;">
-      Operational surfaces reflect declared scope. Boundary enforcement remains machine-readable. Adoption metrics align with admissibility. Replication maintains geometry. Claims reference receipts. Exposure does not exceed authorization.
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="subHead">Roadmap</div>
-    <div class="para informal">
-      Multiply surfaces without mutating contracts. Strengthen packaging without inflating claims. Expand adoption while preserving constraint. Publish readiness gates. Remove ambiguity from scale.
-    </div>
-    <div class="para formal" style="display:none;">
-      Standardize execution schema. Harden validation logic. Audit deployment artifacts. Preserve traceability. Scale via duplication. Maintain invariant boundary across instances.
-    </div>
-  </div>
-</div>
-
-<!-- TIER 1 — S -->
-
-<div class="group" data-tier="1">
-  <div class="ghead">S · CONSTRAINTS</div>
-
-  <div class="section">
-    <div class="subHead">Concept</div>
-    <div class="para informal">
-      Growth without gates guarantees failure. South enforces admissibility before scale. It blocks shortcuts. It denies expansion without proof. Constraint protects integrity. Otherwise ambition corrupts.
-    </div>
-    <div class="para formal" style="display:none;">
-      No claim proceeds without scope. No expansion proceeds without validation. Constraint precedes authority. Phase gates require measurable readiness. Evidence binds progression. Enforcement overrides narrative.
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="subHead">Live</div>
-    <div class="para informal">
-      Pressure exposes weak gates. Drift accelerates under stress. South tightens thresholds. It denies bypass. It forces correction. Stability emerges from refusal.
-    </div>
-    <div class="para formal" style="display:none;">
-      Gate logic enforces boundary. Validation prevents premature exposure. Exceptions require documentation. Failure triggers containment. Drift does not compound.
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="subHead">Roadmap</div>
-    <div class="para informal">
-      Strengthen rejection logic. Publish gate criteria. Remove silent approvals. Replace optimism with verification.
-    </div>
-    <div class="para formal" style="display:none;">
-      Increase validation coverage. Tighten admissibility matrix. Expand audit surface. Preserve geometric invariance under scale.
-    </div>
-  </div>
-</div>
-
-<!-- TIER 1 — W -->
-
-<div class="group" data-tier="1">
-  <div class="ghead">W · CONTAINMENT</div>
-
-  <div class="section">
-    <div class="subHead">Concept</div>
-    <div class="para informal">
-      Failure spreads when it remains unsegmented. West isolates deviation. It prevents cascade. It localizes damage. Recovery becomes surgical. Otherwise collapse multiplies.
-    </div>
-    <div class="para formal" style="display:none;">
-      Segmentation prevents systemic propagation. Isolation contains breach vectors. Return paths remain available. Integrity persists under correction.
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="subHead">Live</div>
-    <div class="para informal">
-      One crack should not ruin the wall. West enforces boundaries between subsystems. Failures remain local. Correction stays clean.
-    </div>
-    <div class="para formal" style="display:none;">
-      Containment absorbs deviation. State restores deterministically. No silent mutation occurs.
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="subHead">Roadmap</div>
-    <div class="para informal">
-      Increase isolation layers. Strengthen rollback. Publish audit results. Reduce spillover risk.
-    </div>
-    <div class="para formal" style="display:none;">
-      Harden containment topology. Improve traceability. Expand audit instrumentation. Preserve systemic coherence.
-    </div>
-  </div>
-</div>
-
-<!-- TIER 2 & 3 REDUCED STRUCTURE -->
-<!-- Example only; replicate pattern for NE, SE, SW, NW and NNE... -->
-
-</div>
+<div class="wrap" id="indexStack"></div>
 
 <script>
-document.querySelectorAll(".ghead").forEach(h=>{
-  h.addEventListener("click",()=>{
-    h.parentElement.classList.toggle("open");
-  });
+(function(){
+
+let lens="informal";
+let lang="en";
+
+const nodes=[
+"N","NNE","ENE","E","ESE","SSE","S","SSW","WSW","W","WNW","NNW"
+];
+
+const content={
+  N:{
+    en:{
+      informal:"North anchors meaning before motion. Collapse begins when language drifts and teams argue semantics instead of solving problems. Precision stabilizes scale.",
+      formal:"Scope precedes authority. Definitions constrain interpretation and verification inherits boundary conditions."
+    },
+    zh:{
+      informal:"北方先固定含义再行动。系统崩溃往往始于语义漂移。精确性稳定规模。",
+      formal:"范围先于权力。定义约束解释，验证继承边界条件。"
+    }
+  },
+  E:{
+    en:{
+      informal:"East turns doctrine into surface. Execution without boundary becomes theater. Products must carry constraint visibly.",
+      formal:"Deployment inherits structural limits. Execution surfaces must preserve navigation contracts."
+    },
+    zh:{
+      informal:"东方把原则转为执行面。没有边界的执行只是表演。产品必须携带约束。",
+      formal:"部署继承结构限制。执行面必须保持导航契约。"
+    }
+  },
+  S:{
+    en:{
+      informal:"South enforces gates. Most failure spreads because refusal comes too late. Constraint prevents drift.",
+      formal:"Admissibility gates precede expansion. Claims without scope are rejected."
+    },
+    zh:{
+      informal:"南方执行闸门。失败扩散因为拒绝太晚。约束防止漂移。",
+      formal:"可采信闸门先于扩张。无范围主张被拒绝。"
+    }
+  },
+  W:{
+    en:{
+      informal:"West isolates fracture. Damage grows when segmentation fails. Containment preserves coherence.",
+      formal:"Failure remains local. Segmentation prevents cascade under scale."
+    },
+    zh:{
+      informal:"西方隔离裂缝。分段失败会放大损伤。隔离维持一致性。",
+      formal:"失败必须局部化。分段防止规模级联。"
+    }
+  }
+};
+
+/* fallback for secondary nodes */
+nodes.forEach(n=>{
+  if(!content[n]){
+    content[n]={
+      en:{
+        informal:n+" functions as a transitional vector within the compass.",
+        formal:n+" expresses relational movement between primary directions."
+      },
+      zh:{
+        informal:n+" 是罗盘中的过渡向量。",
+        formal:n+" 表达主方向之间的关系运动。"
+      }
+    }
+  }
 });
 
-document.getElementById("formalBtn").onclick=function(){
-  document.querySelectorAll(".informal").forEach(e=>e.style.display="none");
-  document.querySelectorAll(".formal").forEach(e=>e.style.display="block");
-  this.classList.add("active");
-  document.getElementById("informalBtn").classList.remove("active");
+const stack=document.getElementById("indexStack");
+
+function render(){
+  stack.innerHTML="";
+  nodes.forEach(n=>{
+    const node=document.createElement("div");
+    node.className="node";
+
+    const header=document.createElement("div");
+    header.className="node-header";
+    header.innerHTML=`<span>${n}</span><span>▸</span>`;
+
+    const body=document.createElement("div");
+    body.className="node-body";
+
+    const p=document.createElement("p");
+    p.textContent=content[n][lang][lens];
+
+    const jump=document.createElement("div");
+    jump.className="jump";
+    jump.innerHTML=`<a href="#">Jump → ${n}</a>`;
+
+    body.appendChild(p);
+    body.appendChild(jump);
+
+    header.addEventListener("click",()=>{
+      node.classList.toggle("open");
+    });
+
+    node.appendChild(header);
+    node.appendChild(body);
+    stack.appendChild(node);
+  });
+}
+
+document.getElementById("informalBtn").onclick=()=>{
+  lens="informal";
+  document.getElementById("informalBtn").classList.add("active");
+  document.getElementById("formalBtn").classList.remove("active");
+  render();
 };
 
-document.getElementById("informalBtn").onclick=function(){
-  document.querySelectorAll(".informal").forEach(e=>e.style.display="block");
-  document.querySelectorAll(".formal").forEach(e=>e.style.display="none");
-  this.classList.add("active");
-  document.getElementById("formalBtn").classList.remove("active");
+document.getElementById("formalBtn").onclick=()=>{
+  lens="formal";
+  document.getElementById("formalBtn").classList.add("active");
+  document.getElementById("informalBtn").classList.remove("active");
+  render();
 };
+
+document.getElementById("enBtn").onclick=()=>{
+  lang="en";
+  document.getElementById("enBtn").classList.add("active");
+  document.getElementById("zhBtn").classList.remove("active");
+  render();
+};
+
+document.getElementById("zhBtn").onclick=()=>{
+  lang="zh";
+  document.getElementById("zhBtn").classList.add("active");
+  document.getElementById("enBtn").classList.remove("active");
+  render();
+};
+
+render();
+
+})();
 </script>
 
 </body>

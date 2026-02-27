@@ -1,16 +1,18 @@
-<!-- TNT — /explore/frontier/index.html  (EXPLORE · FRONTIER · ROUTER MODE · VERTICAL DIAMONDS · TAP-SAFE)
-     EXECUTION (NO MORE DISCUSSION):
-       - Frontier is a JUMP SURFACE (router), not an explanation page.
-       - 4 vertical diamonds: IF / HOW / WHEN / FIRST.
-       - Tap diamond → ONE modal.
-       - Modal keeps lenses (STYLE + TIME) but ONLY changes a single one-line hint + card subtitles.
-       - Modal body = jump cards ONLY (no long paragraphs).
-       - Bilingual: lang=en => EN only, lang=zh => 中文 only.
-       - Deterministic state propagation via ?lang=&style=&time= and gd_* localStorage.
-     LOCKS:
+<!-- TNT — /explore/frontier/index.html
+     FRONTIER · TWO MASSIVE DIAMONDS · PURE JUMP FORK · NO MODALS · NO LENSES
+
+     IDENTITY:
+       - This page is a traversal fork.
+       - Two vertical diamonds only:
+            1) STRUCTURE  (what makes it possible)
+            2) VISION     (where it could go)
+       - NO overlays
+       - NO modals
+       - NO lens toggles
+       - Hard navigation only
+       - Full state propagation (lang/style/time)
        - Uses /assets/ui.css + /assets/branch.css only
        - Does NOT style html/body background (ui.css owns field)
-       - Tap-safe binding first; no stacked doors; no competing UI
 -->
 
 <!doctype html>
@@ -26,41 +28,70 @@
 
 <style>
 :root{
-  --R:132px;
-  --D:188px;
-
-  /* Pearlescent lacquer */
+  --R:170px;
+  --D:260px;
   --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 }
 
-/* Base (no field paint) */
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+/* Base (no field styling) */
+body{
+  margin:0;
+  color:#fff;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
 a{color:inherit;text-decoration:none}
 
-/* Controls */
+/* Top-left */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  position:fixed;
+  left:16px;
+  top:16px;
+  z-index:120;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
 /* Brand */
 .brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:110;text-align:center;
-  padding:10px 18px;border-radius:999px;
+  position:fixed;
+  left:50%;
+  top:16px;
+  transform:translateX(-50%);
+  z-index:110;
+  text-align:center;
+  padding:10px 18px;
+  border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
   pointer-events:none;
 }
-.brand .k{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.78;margin:0 0 6px 0}
-.brand .t{font-weight:950;font-size:40px;letter-spacing:.3px;margin:0;line-height:1.02}
-.brand .s{opacity:.85;font-size:13.5px;margin:6px 0 0}
+.brand .k{
+  font-size:12px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:.75;
+  margin:0 0 6px 0;
+}
+.brand .t{
+  font-weight:950;
+  font-size:40px;
+  letter-spacing:.3px;
+  margin:0;
+}
+.brand .s{
+  font-size:13px;
+  opacity:.8;
+  margin-top:6px;
+}
 
 /* Stage */
 .stage{
-  position:fixed;left:50%;top:54%;
+  position:fixed;
+  left:50%;
+  top:55%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
@@ -68,16 +99,19 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Diamonds */
+/* Massive diamonds */
 .d{
-  width:var(--D);height:var(--D);
-  position:absolute;left:50%;top:50%;
+  width:var(--D);
+  height:var(--D);
+  position:absolute;
+  left:50%;
+  top:50%;
   transform-origin:center;
-  border-radius:28px;
+  border-radius:34px;
   cursor:pointer;
   pointer-events:auto;
-  touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 48%),
@@ -86,17 +120,20 @@ a{color:inherit;text-decoration:none}
 
   border:1px solid rgba(255,255,255,.16);
   box-shadow:
-    0 38px 120px rgba(0,0,0,.85),
-    0 0 32px rgba(212,175,55,.22),
+    0 50px 160px rgba(0,0,0,.85),
+    0 0 38px rgba(212,175,55,.25),
     inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -40px 72px rgba(0,0,0,.78);
+    inset 0 -50px 90px rgba(0,0,0,.78);
 
   transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
   overflow:hidden;
 }
 .d::before{
   content:"";
-  position:absolute;inset:0;border-radius:28px;padding:1px;
+  position:absolute;
+  inset:0;
+  border-radius:34px;
+  padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.60;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -106,7 +143,11 @@ a{color:inherit;text-decoration:none}
 }
 .d::after{
   content:"";
-  position:absolute;left:10%;right:10%;top:10%;height:28%;
+  position:absolute;
+  left:10%;
+  right:10%;
+  top:10%;
+  height:28%;
   border-radius:999px;
   background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
   transform:rotate(-10deg);
@@ -114,160 +155,58 @@ a{color:inherit;text-decoration:none}
 }
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-  border-color:rgba(212,175,55,.28);
+  border-color:rgba(212,175,55,.30);
 }
-.d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
-/* vertical placement */
-.d1{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1.30)) rotate(45deg)}
-.d2{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -0.43)) rotate(45deg)}
-.d3{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  0.43)) rotate(45deg)}
-.d4{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1.30)) rotate(45deg)}
+/* Vertical layout */
+.d-top{
+  transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg);
+}
+.d-bottom{
+  transform:translate(-50%,-50%) translate(0, calc(var(--R) * 1)) rotate(45deg);
+}
 
 .inner{
-  width:100%;height:100%;
+  width:100%;
+  height:100%;
   transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
-  padding:14px;
-  gap:8px;
+  padding:18px;
+  gap:10px;
   pointer-events:none;
-  user-select:none;
 }
-.lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 18px rgba(255,255,255,.10)}
-.sub{font-size:12.5px;opacity:.86;line-height:1.25;max-width:20em}
+.lab{
+  font-weight:950;
+  font-size:22px;
+  letter-spacing:.8px;
+}
+.sub{
+  font-size:14px;
+  opacity:.85;
+  line-height:1.35;
+  max-width:22em;
+}
 
 /* Dock */
 .dock{
-  position:fixed;left:50%;
+  position:fixed;
+  left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:120;width:min(980px,94vw);
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;
+  z-index:120;
+  width:min(980px,94vw);
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:10px 12px;
+  border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.20);
-  pointer-events:none;
-}
-.dock .crp-btn, .dock .btn{pointer-events:auto}
-
-/* Overlay + modal */
-.bd{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,.70);
-  display:none;
-}
-.bd.show{display:block}
-
-.modal{
-  position:fixed;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(1100px,96vw);
-  max-height:90vh;
-  z-index:210;
-  display:none;
-}
-.modal.show{display:block}
-
-.shell{
-  background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:24px;
-  box-shadow:0 60px 180px rgba(0,0,0,.85);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-}
-
-.mhead{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 16px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-.mtitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
-.mclose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px}
-
-.mbody{
-  padding:14px 16px 18px;
-  overflow:auto;-webkit-overflow-scrolling:touch;
-}
-
-/* Lenses INSIDE modal only */
-.lensRow{
-  max-width:980px;margin:0 auto 14px;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;
-}
-.pill{
-  padding:10px 16px;border-radius:999px;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.12);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  color:#fff;
-  user-select:none;
-}
-.pill.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:0 0 22px rgba(212,175,55,.18);
-}
-
-/* Hint (one line only) */
-.hint{
-  max-width:980px;margin:0 auto 14px;
-  padding:12px 14px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
-  color:rgba(255,255,255,.86);
-  line-height:1.35;
-  font-size:13px;
-}
-
-/* Jump cards */
-.grid{
-  max-width:980px;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-@media (max-width:720px){ .grid{grid-template-columns:1fr;} }
-
-.card{
-  position:relative;
-  border-radius:20px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.18), transparent 48%),
-    radial-gradient(circle at 70% 80%, rgba(0,120,255,.12), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
-  box-shadow:0 22px 72px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.06);
-  padding:18px 16px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.card::before{
-  content:"";
-  position:absolute;inset:0;border-radius:20px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.28) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.ct{margin:0 0 6px;font-weight:950;letter-spacing:.2px;font-size:18px}
-.cs{margin:0;opacity:.82;font-size:13px;line-height:1.35}
-
-/* Footer */
-.mact{
-  max-width:980px;margin:16px auto 0;
-  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
-}
-
-@media (max-width:560px){
-  :root{--D:176px; --R:124px}
-  .stage{top:55%}
 }
 </style>
 </head>
@@ -275,408 +214,105 @@ a{color:inherit;text-decoration:none}
 <body>
 
 <div class="top-left">
-  <a class="crp-btn" id="btnExplore" href="/explore/">EXPLORE</a>
+  <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
   <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
-<div class="brand" aria-hidden="true">
-  <p class="k" id="bk">CARDINAL AXIS</p>
-  <h1 class="t" id="bt">FRONTIER</h1>
-  <p class="s" id="bs">Bounded ambition · Jump surfaces</p>
+<div class="brand">
+  <div class="k" id="bk">CARDINAL AXIS</div>
+  <div class="t" id="bt">FRONTIER</div>
+  <div class="s" id="bs">Choose your direction</div>
 </div>
 
-<div class="stage" aria-label="Frontier router">
-  <div class="d d1" id="dIf" role="button" tabindex="0">
+<div class="stage">
+
+  <!-- STRUCTURE -->
+  <div class="d d-top" id="dStructure" role="button" tabindex="0">
     <div class="inner">
-      <div class="lab" id="labIf">IF</div>
-      <div class="sub" id="subIf">Is it possible?</div>
+      <div class="lab" id="labStructure">STRUCTURE</div>
+      <div class="sub" id="subStructure">
+        Laws · Gauges · Language · Energy discipline
+      </div>
     </div>
   </div>
 
-  <div class="d d2" id="dHow" role="button" tabindex="0">
+  <!-- VISION -->
+  <div class="d d-bottom" id="dVision" role="button" tabindex="0">
     <div class="inner">
-      <div class="lab" id="labHow">HOW</div>
-      <div class="sub" id="subHow">How without cheating?</div>
+      <div class="lab" id="labVision">VISION</div>
+      <div class="sub" id="subVision">
+        Orbital · Solar · Fusion readiness · Industry scale
+      </div>
     </div>
   </div>
 
-  <div class="d d3" id="dWhen" role="button" tabindex="0">
-    <div class="inner">
-      <div class="lab" id="labWhen">WHEN</div>
-      <div class="sub" id="subWhen">What must be true?</div>
-    </div>
-  </div>
-
-  <div class="d d4" id="dFirst" role="button" tabindex="0">
-    <div class="inner">
-      <div class="lab" id="labFirst">FIRST</div>
-      <div class="sub" id="subFirst">What must be built first?</div>
-    </div>
-  </div>
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
+<nav class="dock">
   <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="crp-btn" id="dockHub" href="/home/">HUB</a>
   <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
   <a class="crp-btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
-<div class="bd" id="bd"></div>
-
-<div class="modal" id="modal" role="dialog" aria-modal="true">
-  <div class="shell">
-    <div class="mhead">
-      <h3 class="mtitle" id="mTitle">FRONTIER</h3>
-      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
-    </div>
-
-    <div class="mbody">
-      <div class="lensRow">
-        <div class="pill" id="pillFormal">FORMAL</div>
-        <div class="pill" id="pillInformal">INFORMAL</div>
-        <div class="pill" id="pillConcept">CONCEPT</div>
-        <div class="pill" id="pillLive">LIVE</div>
-        <div class="pill" id="pillRoadmap">ROADMAP</div>
-      </div>
-
-      <div class="hint" id="hintLine">—</div>
-
-      <div class="grid" id="grid"></div>
-
-      <div class="mact">
-        <button class="crp-btn" id="mReturn" type="button">RETURN</button>
-        <a class="crp-btn" id="mJumpExplore" href="/explore/">JUMP EXPLORE</a>
-        <a class="crp-btn" id="mJumpEnergy" href="/products/energy/">JUMP ENERGY</a>
-        <a class="crp-btn" id="mJumpReadiness" href="/explore/fusion-readiness/">FUSION READINESS</a>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
 (function(){
-  // ===== State hydration (gd_* only) =====
+
+  // --- Canonical state propagation ---
   var qs = new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var gdStyle = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var gdTime  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
+
   if(lang!=="en" && lang!=="zh") lang="en";
-  if(gdStyle!=="formal" && gdStyle!=="informal") gdStyle="formal";
-  if(gdTime==="trajectory") gdTime="post";
-  if(gdTime!=="origin" && gdTime!=="now" && gdTime!=="post") gdTime="origin";
-  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime);}catch(e){}
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="origin";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+  }catch(e){}
+
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   function q(){
-    var p=new URLSearchParams();
-    p.set("lang",lang); p.set("style",gdStyle); p.set("time",gdTime);
-    return "?"+p.toString();
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time);
   }
 
-  // wire nav
-  document.getElementById("btnExplore").href="/explore/"+q();
+  // Wire dock + top
+  document.getElementById("btnHub").href="/home/"+q();
   document.getElementById("btnExit").href="/door/"+q();
   document.getElementById("dockTerminal").href="/index.html"+q();
-  document.getElementById("dockHub").href="/home/"+q();
   document.getElementById("dockProducts").href="/products/"+q();
   document.getElementById("dockLaws").href="/laws/"+q();
   document.getElementById("dockGauges").href="/gauges/"+q();
 
-  document.getElementById("mJumpExplore").href="/explore/"+q();
-  document.getElementById("mJumpEnergy").href="/products/energy/"+q();
-  document.getElementById("mJumpReadiness").href="/explore/fusion-readiness/"+q();
-
-  // i18n
-  var UI = {
-    en:{
-      brand:{k:"CARDINAL AXIS", t:"FRONTIER", s:"Bounded ambition · Jump surfaces"},
-      diamonds:{
-        if:{lab:"IF", sub:"Is it possible?"},
-        how:{lab:"HOW", sub:"How without cheating?"},
-        when:{lab:"WHEN", sub:"What must be true?"},
-        first:{lab:"FIRST", sub:"What must be built first?"}
-      },
-      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", live:"LIVE", roadmap:"ROADMAP"},
-      buttons:{ret:"RETURN", ex:"JUMP EXPLORE", en:"JUMP ENERGY", fr:"FUSION READINESS"}
-    },
-    zh:{
-      brand:{k:"基轴体系", t:"前沿", s:"有界雄心 · 跳转面"},
-      diamonds:{
-        if:{lab:"是否", sub:"它是否可能？"},
-        how:{lab:"如何", sub:"如何不作弊？"},
-        when:{lab:"何时", sub:"需要哪些条件？"},
-        first:{lab:"先做", sub:"必须先建什么？"}
-      },
-      lens:{formal:"正式", informal:"通俗", concept:"概念", live:"现况", roadmap:"路线图"},
-      buttons:{ret:"返回", ex:"跳转探索", en:"跳转能源", fr:"聚变就绪"}
-    }
-  };
-  var T = (lang==="zh") ? UI.zh : UI.en;
-
-  document.getElementById("bk").textContent=T.brand.k;
-  document.getElementById("bt").textContent=T.brand.t;
-  document.getElementById("bs").textContent=T.brand.s;
-
-  document.getElementById("labIf").textContent=T.diamonds.if.lab;
-  document.getElementById("subIf").textContent=T.diamonds.if.sub;
-  document.getElementById("labHow").textContent=T.diamonds.how.lab;
-  document.getElementById("subHow").textContent=T.diamonds.how.sub;
-  document.getElementById("labWhen").textContent=T.diamonds.when.lab;
-  document.getElementById("subWhen").textContent=T.diamonds.when.sub;
-  document.getElementById("labFirst").textContent=T.diamonds.first.lab;
-  document.getElementById("subFirst").textContent=T.diamonds.first.sub;
-
-  // modal refs
-  var bd=document.getElementById("bd");
-  var modal=document.getElementById("modal");
-  var mClose=document.getElementById("mClose");
-  var mReturn=document.getElementById("mReturn");
-  var mTitle=document.getElementById("mTitle");
-  var hintLine=document.getElementById("hintLine");
-  var grid=document.getElementById("grid");
-
-  var pillFormal=document.getElementById("pillFormal");
-  var pillInformal=document.getElementById("pillInformal");
-  var pillConcept=document.getElementById("pillConcept");
-  var pillLive=document.getElementById("pillLive");
-  var pillRoadmap=document.getElementById("pillRoadmap");
-
-  pillFormal.textContent=T.lens.formal;
-  pillInformal.textContent=T.lens.informal;
-  pillConcept.textContent=T.lens.concept;
-  pillLive.textContent=T.lens.live;
-  pillRoadmap.textContent=T.lens.roadmap;
-
-  mReturn.textContent=T.buttons.ret;
-  document.getElementById("mJumpExplore").textContent=T.buttons.ex;
-  document.getElementById("mJumpEnergy").textContent=T.buttons.en;
-  document.getElementById("mJumpReadiness").textContent=T.buttons.fr;
-
-  var active = "if";
-
-  function persist(){
-    try{ localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime);}catch(e){}
+  // Navigation targets
+  function goStructure(){
+    // structural substrate path
+    location.href = "/explore/innovation/language/"+q();
   }
-  function setLensUI(){
-    pillFormal.classList.toggle("active", gdStyle==="formal");
-    pillInformal.classList.toggle("active", gdStyle==="informal");
-    pillConcept.classList.toggle("active", gdTime==="origin");
-    pillLive.classList.toggle("active", gdTime==="now");
-    pillRoadmap.classList.toggle("active", gdTime==="post");
+  function goVision(){
+    // visionary frontier board
+    location.href = "/explore/"+q();
   }
 
-  function card(title, sub, href){
-    var el=document.createElement("div");
-    el.className="card";
-    el.setAttribute("role","button");
-    el.setAttribute("tabindex","0");
+  var ds = document.getElementById("dStructure");
+  var dv = document.getElementById("dVision");
 
-    var t=document.createElement("div");
-    t.className="ct";
-    t.textContent=title;
+  ds.addEventListener("click", goStructure);
+  dv.addEventListener("click", goVision);
 
-    var s=document.createElement("div");
-    s.className="cs";
-    s.textContent=sub;
-
-    el.appendChild(t); el.appendChild(s);
-
-    function go(){
-      if(!href) return;
-      location.href = href + q();
-    }
-    el.addEventListener("click", go);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); }
-    });
-
-    return el;
-  }
-
-  function hintText(){
-    var timeLab = (gdTime==="origin") ? T.lens.concept : (gdTime==="now") ? T.lens.live : T.lens.roadmap;
-    var styleLab = (gdStyle==="formal") ? T.lens.formal : T.lens.informal;
-    var key = active + "|" + gdStyle + "|" + gdTime;
-
-    var H_EN = {
-      "if|formal|origin":"Feasibility lanes: constraints → measurement → admissible posture.",
-      "if|formal|now":"Feasibility now: stay inside envelopes and publish only what is measured.",
-      "if|formal|post":"Feasibility roadmap: tighten gates as scale increases.",
-      "if|informal|origin":"Can it be real? Only if it stays checkable and bounded.",
-      "if|informal|now":"Can it run today? Only if the numbers behave under stress.",
-      "if|informal|post":"Can it scale? Only if proof beats hype at every step.",
-
-      "how|formal|origin":"Mechanisms without cheating: auditability, falsifiers, replayability.",
-      "how|formal|now":"Mechanisms now: deterministic telemetry, controlled interfaces, clean rollback.",
-      "how|formal|post":"Mechanisms roadmap: more rigor, not more narrative.",
-      "how|informal|origin":"How without cheating? Build a system that can’t win by storytelling.",
-      "how|informal|now":"How today? Make drift visible early and make rollback normal.",
-      "how|informal|post":"How later? Make proof easier to verify and harder to fake.",
-
-      "when|formal|origin":"‘When’ is gates, not dates: instruments, receipts, stability, governance.",
-      "when|formal|now":"‘When’ now: do not advance without passing the current gate.",
-      "when|formal|post":"‘When’ roadmap: each gate becomes stricter as stakes rise.",
-      "when|informal|origin":"When is it real? When the gates say yes.",
-      "when|informal|now":"When today? When the evidence stays calm under pressure.",
-      "when|informal|post":"When later? When independent checks stop being scary.",
-
-      "first|formal|origin":"Build substrate first: language + coherence standards, then products, then frontier.",
-      "first|formal|now":"Build first now: make execution surfaces stable before widening scope.",
-      "first|formal|post":"Build first roadmap: clone the contract, expand content, keep meaning fixed.",
-      "first|informal|origin":"First: build the spine, then let the dream ride on top of it.",
-      "first|informal|now":"First today: make it usable, repeatable, and return-safe.",
-      "first|informal|post":"First later: scale by cloning, not improvising."
-    };
-
-    var H_ZH = {
-      "if|formal|origin":"可行性通道：约束→测量→可采纳姿态。",
-      "if|formal|now":"当前可行：保持在测量包络内，只发布可测内容。",
-      "if|formal|post":"路线图可行：规模越大闸门越紧。",
-      "if|informal|origin":"能成真吗？只有在可检验且有边界时。",
-      "if|informal|now":"今天能跑吗？只有在压力下数字也守规矩时。",
-      "if|informal|post":"能扩展吗？只有在每一步都让证据赢过口号时。",
-
-      "how|formal|origin":"不作弊机制：可审计、可证伪、可回放。",
-      "how|formal|now":"当前机制：确定遥测、可控接口、可回滚。",
-      "how|formal|post":"路线图机制：加严谨，不加叙事。",
-      "how|informal|origin":"怎么不作弊？让系统无法靠故事取胜。",
-      "how|informal|now":"怎么今天跑？让漂移早可见，让回滚很正常。",
-      "how|informal|post":"怎么未来扩？让证明更易验、更难伪。",
-
-      "when|formal|origin":"“何时”是闸门不是日期：仪器、收据、稳定、治理。",
-      "when|formal|now":"当前“何时”：不过闸门不前进。",
-      "when|formal|post":"路线图“何时”：风险越大闸门越严。",
-      "when|informal|origin":"何时成真？当闸门说可以。",
-      "when|informal|now":"何时今天？当证据在压力下仍平静。",
-      "when|informal|post":"何时未来？当独立验证不再可怕。",
-
-      "first|formal|origin":"先建基底：语言+一致性标准，然后产品，再前沿。",
-      "first|formal|now":"当前优先：先稳住执行面，再扩大范围。",
-      "first|formal|post":"路线图优先：复制契约，扩内容，含义不变。",
-      "first|informal|origin":"先把脊梁建起来，再让梦想搭车。",
-      "first|informal|now":"先把它做成可用、可复用、可返回。",
-      "first|informal|post":"先用复制来扩展，而不是即兴。"
-    };
-
-    var H = (lang==="zh") ? H_ZH : H_EN;
-    return H[key] || (active.toUpperCase()+" · "+timeLab+" · "+styleLab);
-  }
-
-  function render(){
-    setLensUI();
-    hintLine.textContent = hintText();
-    grid.innerHTML="";
-
-    function addCards(cards){
-      cards.forEach(function(c){ grid.appendChild(card(c.t, c.s, c.h)); });
-    }
-
-    var EN = {
-      if:[
-        {t:"Energy (industrial)", s:"Measured entry point (C).", h:"/products/energy/"},
-        {t:"Fusion readiness", s:"Requirements-only gates.", h:"/explore/fusion-readiness/"},
-        {t:"Laws", s:"Standards and constraints.", h:"/laws/"},
-        {t:"Gauges", s:"Measurement surfaces.", h:"/gauges/"}
-      ],
-      how:[
-        {t:"Language hub", s:"Grammar · SSG · DOT.GRID · Acronyms.", h:"/explore/innovation/language/"},
-        {t:"DOT.GRID", s:"Replayable sweeps and indexing.", h:"/explore/innovation/language/dot-grid/"},
-        {t:"SSG", s:"Executable constraint syntax.", h:"/explore/innovation/language/ssg/"},
-        {t:"Energy chain", s:"Solar→plasma→industrial substitution.", h:"/products/energy/"}
-      ],
-      when:[
-        {t:"Fusion readiness", s:"‘When’ = gates, not dates.", h:"/explore/fusion-readiness/"},
-        {t:"Laws", s:"Gate definitions and enforcement.", h:"/laws/"},
-        {t:"Gauges", s:"Make prerequisites measurable.", h:"/gauges/"},
-        {t:"Products", s:"Execution surfaces before frontier.", h:"/products/"}
-      ],
-      first:[
-        {t:"Substrate", s:"Language + coherence standards.", h:"/explore/innovation/language/"},
-        {t:"Products", s:"Energy/Education/Software/Commercial.", h:"/products/"},
-        {t:"Energy", s:"Industrial (C) measurable start.", h:"/products/energy/"},
-        {t:"Explore", s:"Frontier stays bounded and routed.", h:"/explore/"}
-      ]
-    };
-
-    var ZH = {
-      if:[
-        {t:"能源（工业）", s:"可测入口（C）。", h:"/products/energy/"},
-        {t:"聚变就绪", s:"仅需求闸门。", h:"/explore/fusion-readiness/"},
-        {t:"法则", s:"标准与约束。", h:"/laws/"},
-        {t:"量规", s:"测量面。", h:"/gauges/"}
-      ],
-      how:[
-        {t:"语言枢纽", s:"语法 · SSG · DOT.GRID · 缩略语。", h:"/explore/innovation/language/"},
-        {t:"DOT.GRID", s:"可回放扫掠与索引。", h:"/explore/innovation/language/dot-grid/"},
-        {t:"SSG", s:"可执行约束语法。", h:"/explore/innovation/language/ssg/"},
-        {t:"能源链路", s:"太阳→等离子→工业热替代。", h:"/products/energy/"}
-      ],
-      when:[
-        {t:"聚变就绪", s:"“何时”由闸门决定。", h:"/explore/fusion-readiness/"},
-        {t:"法则", s:"闸门定义与执行。", h:"/laws/"},
-        {t:"量规", s:"先把门槛测出来。", h:"/gauges/"},
-        {t:"产品", s:"先执行，再前沿。", h:"/products/"}
-      ],
-      first:[
-        {t:"基底", s:"语言+一致性标准。", h:"/explore/innovation/language/"},
-        {t:"产品", s:"能源/教育/软件/商业。", h:"/products/"},
-        {t:"能源", s:"工业（C）可测起点。", h:"/products/energy/"},
-        {t:"探索", s:"前沿保持有界跳转。", h:"/explore/"}
-      ]
-    };
-
-    var PACK = (lang==="zh") ? ZH : EN;
-    addCards(PACK[active] || []);
-  }
-
-  function openModal(which){
-    active = which;
-    var titleMapEN = {if:"FRONTIER · IF", how:"FRONTIER · HOW", when:"FRONTIER · WHEN", first:"FRONTIER · FIRST"};
-    var titleMapZH = {if:"前沿 · 是否", how:"前沿 · 如何", when:"前沿 · 何时", first:"前沿 · 先做"};
-    mTitle.textContent = (lang==="zh") ? (titleMapZH[active]||"前沿") : (titleMapEN[active]||"FRONTIER");
-    bd.classList.add("show");
-    modal.classList.add("show");
-    render();
-  }
-  function closeModal(){
-    modal.classList.remove("show");
-    bd.classList.remove("show");
-  }
-
-  // bind FIRST (tap-safe)
-  function bind(id, which){
-    var el=document.getElementById(id);
-    if(!el) return;
-    function go(){ openModal(which); }
-    el.addEventListener("click", go);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); }
-    });
-  }
-  bind("dIf","if");
-  bind("dHow","how");
-  bind("dWhen","when");
-  bind("dFirst","first");
-
-  // lens toggles
-  pillFormal.addEventListener("click", function(){ gdStyle="formal"; persist(); render(); });
-  pillInformal.addEventListener("click", function(){ gdStyle="informal"; persist(); render(); });
-  pillConcept.addEventListener("click", function(){ gdTime="origin"; persist(); render(); });
-  pillLive.addEventListener("click", function(){ gdTime="now"; persist(); render(); });
-  pillRoadmap.addEventListener("click", function(){ gdTime="post"; persist(); render(); });
-
-  // init lens UI
-  setLensUI();
-
-  // close
-  bd.addEventListener("click", closeModal);
-  mClose.addEventListener("click", closeModal);
-  mReturn.addEventListener("click", closeModal);
-
-  // stop overlay click-through
-  modal.addEventListener("click", function(e){ e.stopPropagation(); });
+  ds.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goStructure(); }
+  });
+  dv.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goVision(); }
+  });
 
 })();
 </script>

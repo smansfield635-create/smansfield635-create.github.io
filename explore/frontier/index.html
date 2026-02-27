@@ -1,25 +1,16 @@
-<!-- TNT — /explore/frontier/index.html  (EXPLORE · FRONTIER · 4 QUESTIONS · VERTICAL DIAMONDS · MODAL LENSES)
-     PURPOSE:
-       - Frontier hub that DOES NOT overload the face.
-       - 4 vertical diamonds (tap-safe) = 4 questions:
-           1) IF (Is it possible?)
-           2) HOW (How could it be possible without cheating?)
-           3) WHEN (What must be true before it becomes possible?)
-           4) FIRST (What must be built first?)
-       - Tap a diamond → ONE modal opens (no stacked doors).
-       - Modal lenses ONLY inside modal:
-           STYLE (gd_style): formal / informal
-           TIME  (gd_time):  origin / now / post   (Concept / Live / Roadmap)
-       - Modal content = 4 “jump cards” (no raw links): each card is a jump surface.
-       - Bilingual:
-           lang=en => EN only
-           lang=zh => 中文 only
-       - State propagation via ?lang=&style=&time= + localStorage gd_*
+<!-- TNT — /explore/frontier/index.html  (EXPLORE · FRONTIER · ROUTER MODE · VERTICAL DIAMONDS · TAP-SAFE)
+     EXECUTION (NO MORE DISCUSSION):
+       - Frontier is a JUMP SURFACE (router), not an explanation page.
+       - 4 vertical diamonds: IF / HOW / WHEN / FIRST.
+       - Tap diamond → ONE modal.
+       - Modal keeps lenses (STYLE + TIME) but ONLY changes a single one-line hint + card subtitles.
+       - Modal body = jump cards ONLY (no long paragraphs).
+       - Bilingual: lang=en => EN only, lang=zh => 中文 only.
+       - Deterministic state propagation via ?lang=&style=&time= and gd_* localStorage.
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css only
-       - DOES NOT style html/body background (ui.css owns field)
-       - No new state keys beyond gd_lang/gd_style/gd_time
-       - Tap-safe: bind FIRST; overlay never blocks modal; no inline onclick reliance
+       - Does NOT style html/body background (ui.css owns field)
+       - Tap-safe binding first; no stacked doors; no competing UI
 -->
 
 <!doctype html>
@@ -38,23 +29,20 @@
   --R:132px;
   --D:188px;
 
-  /* Pearlescent lacquer (aligned with your good builds) */
+  /* Pearlescent lacquer */
   --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
-
-  --mut: rgba(255,255,255,.90);
-  --mut2: rgba(255,255,255,.74);
 }
 
 /* Base (no field paint) */
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
 
-/* Top-left */
+/* Controls */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
 /* Brand */
@@ -225,18 +213,16 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 0 22px rgba(212,175,55,.18);
 }
 
-/* Header card */
-.hcard{
+/* Hint (one line only) */
+.hint{
   max-width:980px;margin:0 auto 14px;
   padding:12px 14px;border-radius:16px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.14);
   color:rgba(255,255,255,.86);
   line-height:1.35;
+  font-size:13px;
 }
-.hcard .h1{margin:0 0 4px;font-weight:950;font-size:14px}
-.hcard .h2{margin:0;color:rgba(255,255,255,.86);line-height:1.45;font-size:12.5px}
-.hcard .h3{margin:8px 0 0;color:rgba(255,255,255,.70);font-size:12px;line-height:1.35}
 
 /* Jump cards */
 .grid{
@@ -299,7 +285,7 @@ a{color:inherit;text-decoration:none}
   <p class="s" id="bs">Bounded ambition · Jump surfaces</p>
 </div>
 
-<div class="stage" aria-label="Frontier questions">
+<div class="stage" aria-label="Frontier router">
   <div class="d d1" id="dIf" role="button" tabindex="0">
     <div class="inner">
       <div class="lab" id="labIf">IF</div>
@@ -310,14 +296,14 @@ a{color:inherit;text-decoration:none}
   <div class="d d2" id="dHow" role="button" tabindex="0">
     <div class="inner">
       <div class="lab" id="labHow">HOW</div>
-      <div class="sub" id="subHow">How could it be possible without cheating?</div>
+      <div class="sub" id="subHow">How without cheating?</div>
     </div>
   </div>
 
   <div class="d d3" id="dWhen" role="button" tabindex="0">
     <div class="inner">
       <div class="lab" id="labWhen">WHEN</div>
-      <div class="sub" id="subWhen">What must be true before it becomes possible?</div>
+      <div class="sub" id="subWhen">What must be true?</div>
     </div>
   </div>
 
@@ -355,11 +341,7 @@ a{color:inherit;text-decoration:none}
         <div class="pill" id="pillRoadmap">ROADMAP</div>
       </div>
 
-      <div class="hcard">
-        <div class="h1" id="h1">—</div>
-        <div class="h2" id="h2">—</div>
-        <div class="h3" id="h3">—</div>
-      </div>
+      <div class="hint" id="hintLine">—</div>
 
       <div class="grid" id="grid"></div>
 
@@ -412,8 +394,8 @@ a{color:inherit;text-decoration:none}
       brand:{k:"CARDINAL AXIS", t:"FRONTIER", s:"Bounded ambition · Jump surfaces"},
       diamonds:{
         if:{lab:"IF", sub:"Is it possible?"},
-        how:{lab:"HOW", sub:"How could it be possible without cheating?"},
-        when:{lab:"WHEN", sub:"What must be true before it becomes possible?"},
+        how:{lab:"HOW", sub:"How without cheating?"},
+        when:{lab:"WHEN", sub:"What must be true?"},
         first:{lab:"FIRST", sub:"What must be built first?"}
       },
       lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", live:"LIVE", roadmap:"ROADMAP"},
@@ -423,8 +405,8 @@ a{color:inherit;text-decoration:none}
       brand:{k:"基轴体系", t:"前沿", s:"有界雄心 · 跳转面"},
       diamonds:{
         if:{lab:"是否", sub:"它是否可能？"},
-        how:{lab:"如何", sub:"如何在不作弊的前提下可能？"},
-        when:{lab:"何时", sub:"在何种条件下才可能？"},
+        how:{lab:"如何", sub:"如何不作弊？"},
+        when:{lab:"何时", sub:"需要哪些条件？"},
         first:{lab:"先做", sub:"必须先建什么？"}
       },
       lens:{formal:"正式", informal:"通俗", concept:"概念", live:"现况", roadmap:"路线图"},
@@ -452,17 +434,14 @@ a{color:inherit;text-decoration:none}
   var mClose=document.getElementById("mClose");
   var mReturn=document.getElementById("mReturn");
   var mTitle=document.getElementById("mTitle");
+  var hintLine=document.getElementById("hintLine");
+  var grid=document.getElementById("grid");
 
   var pillFormal=document.getElementById("pillFormal");
   var pillInformal=document.getElementById("pillInformal");
   var pillConcept=document.getElementById("pillConcept");
   var pillLive=document.getElementById("pillLive");
   var pillRoadmap=document.getElementById("pillRoadmap");
-
-  var h1=document.getElementById("h1");
-  var h2=document.getElementById("h2");
-  var h3=document.getElementById("h3");
-  var grid=document.getElementById("grid");
 
   pillFormal.textContent=T.lens.formal;
   pillInformal.textContent=T.lens.informal;
@@ -477,6 +456,9 @@ a{color:inherit;text-decoration:none}
 
   var active = "if";
 
+  function persist(){
+    try{ localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime);}catch(e){}
+  }
   function setLensUI(){
     pillFormal.classList.toggle("active", gdStyle==="formal");
     pillInformal.classList.toggle("active", gdStyle==="informal");
@@ -513,156 +495,147 @@ a{color:inherit;text-decoration:none}
     return el;
   }
 
-  function headerCopy(){
+  function hintText(){
     var timeLab = (gdTime==="origin") ? T.lens.concept : (gdTime==="now") ? T.lens.live : T.lens.roadmap;
     var styleLab = (gdStyle==="formal") ? T.lens.formal : T.lens.informal;
+    var key = active + "|" + gdStyle + "|" + gdTime;
 
-    var map = {
-      if: (lang==="zh")?("是否 · "+timeLab+" · "+styleLab):("IF · "+timeLab+" · "+styleLab),
-      how:(lang==="zh")?("如何 · "+timeLab+" · "+styleLab):("HOW · "+timeLab+" · "+styleLab),
-      when:(lang==="zh")?("何时 · "+timeLab+" · "+styleLab):("WHEN · "+timeLab+" · "+styleLab),
-      first:(lang==="zh")?("先做 · "+timeLab+" · "+styleLab):("FIRST · "+timeLab+" · "+styleLab)
+    var H_EN = {
+      "if|formal|origin":"Feasibility lanes: constraints → measurement → admissible posture.",
+      "if|formal|now":"Feasibility now: stay inside envelopes and publish only what is measured.",
+      "if|formal|post":"Feasibility roadmap: tighten gates as scale increases.",
+      "if|informal|origin":"Can it be real? Only if it stays checkable and bounded.",
+      "if|informal|now":"Can it run today? Only if the numbers behave under stress.",
+      "if|informal|post":"Can it scale? Only if proof beats hype at every step.",
+
+      "how|formal|origin":"Mechanisms without cheating: auditability, falsifiers, replayability.",
+      "how|formal|now":"Mechanisms now: deterministic telemetry, controlled interfaces, clean rollback.",
+      "how|formal|post":"Mechanisms roadmap: more rigor, not more narrative.",
+      "how|informal|origin":"How without cheating? Build a system that can’t win by storytelling.",
+      "how|informal|now":"How today? Make drift visible early and make rollback normal.",
+      "how|informal|post":"How later? Make proof easier to verify and harder to fake.",
+
+      "when|formal|origin":"‘When’ is gates, not dates: instruments, receipts, stability, governance.",
+      "when|formal|now":"‘When’ now: do not advance without passing the current gate.",
+      "when|formal|post":"‘When’ roadmap: each gate becomes stricter as stakes rise.",
+      "when|informal|origin":"When is it real? When the gates say yes.",
+      "when|informal|now":"When today? When the evidence stays calm under pressure.",
+      "when|informal|post":"When later? When independent checks stop being scary.",
+
+      "first|formal|origin":"Build substrate first: language + coherence standards, then products, then frontier.",
+      "first|formal|now":"Build first now: make execution surfaces stable before widening scope.",
+      "first|formal|post":"Build first roadmap: clone the contract, expand content, keep meaning fixed.",
+      "first|informal|origin":"First: build the spine, then let the dream ride on top of it.",
+      "first|informal|now":"First today: make it usable, repeatable, and return-safe.",
+      "first|informal|post":"First later: scale by cloning, not improvising."
     };
-    h1.textContent = map[active] || "FRONTIER";
 
-    if(active==="if"){
-      h2.textContent = (lang==="zh")
-        ? "先判定“可不可能”。可行性不靠口号，而靠约束、证据与接口边界。"
-        : "Start with possibility. Feasibility is not a slogan; it is constraints, evidence, and boundary interfaces.";
-      h3.textContent = (lang==="zh")
-        ? "前沿不等于承诺。它是有界的跳转与结构化路线。"
-        : "Frontier is not a promise. It is bounded jump surfaces and structured routes.";
-      return;
-    }
-    if(active==="how"){
-      h2.textContent = (lang==="zh")
-        ? "再问“怎么可能”。答案必须避免作弊：禁止凭叙事升级，必须可审计、可证伪、可回放。"
-        : "Then ask how. The answer must avoid cheating: no narrative upgrades, auditability, falsifiers, and replayability.";
-      h3.textContent = (lang==="zh")
-        ? "如果不能被独立复算，就只能停留在概念层。"
-        : "If it cannot be independently recomputed, it stays conceptual.";
-      return;
-    }
-    if(active==="when"){
-      h2.textContent = (lang==="zh")
-        ? "再问“何时可能”。时间不是日期，而是一组必须先成立的门槛：仪器、收据、稳定性与治理。"
-        : "Then ask when. ‘When’ is not a date; it is prerequisites: instruments, receipts, stability, governance.";
-      h3.textContent = (lang==="zh")
-        ? "门槛没过，就不允许把愿景写成现实。"
-        : "If gates are not passed, vision cannot be written as reality.";
-      return;
-    }
-    h2.textContent = (lang==="zh")
-      ? "最后问“先做什么”。先建基底：语言与一致性标准，然后才有产品执行与前沿扩展。"
-      : "Finally ask what comes first. Build substrate: language + coherence standards, then products, then frontier expansion.";
-    h3.textContent = (lang==="zh")
-      ? "先把“可执行”做出来，再把“宏大”带上去。"
-      : "Make it executable first, then carry the ambition forward.";
+    var H_ZH = {
+      "if|formal|origin":"可行性通道：约束→测量→可采纳姿态。",
+      "if|formal|now":"当前可行：保持在测量包络内，只发布可测内容。",
+      "if|formal|post":"路线图可行：规模越大闸门越紧。",
+      "if|informal|origin":"能成真吗？只有在可检验且有边界时。",
+      "if|informal|now":"今天能跑吗？只有在压力下数字也守规矩时。",
+      "if|informal|post":"能扩展吗？只有在每一步都让证据赢过口号时。",
+
+      "how|formal|origin":"不作弊机制：可审计、可证伪、可回放。",
+      "how|formal|now":"当前机制：确定遥测、可控接口、可回滚。",
+      "how|formal|post":"路线图机制：加严谨，不加叙事。",
+      "how|informal|origin":"怎么不作弊？让系统无法靠故事取胜。",
+      "how|informal|now":"怎么今天跑？让漂移早可见，让回滚很正常。",
+      "how|informal|post":"怎么未来扩？让证明更易验、更难伪。",
+
+      "when|formal|origin":"“何时”是闸门不是日期：仪器、收据、稳定、治理。",
+      "when|formal|now":"当前“何时”：不过闸门不前进。",
+      "when|formal|post":"路线图“何时”：风险越大闸门越严。",
+      "when|informal|origin":"何时成真？当闸门说可以。",
+      "when|informal|now":"何时今天？当证据在压力下仍平静。",
+      "when|informal|post":"何时未来？当独立验证不再可怕。",
+
+      "first|formal|origin":"先建基底：语言+一致性标准，然后产品，再前沿。",
+      "first|formal|now":"当前优先：先稳住执行面，再扩大范围。",
+      "first|formal|post":"路线图优先：复制契约，扩内容，含义不变。",
+      "first|informal|origin":"先把脊梁建起来，再让梦想搭车。",
+      "first|informal|now":"先把它做成可用、可复用、可返回。",
+      "first|informal|post":"先用复制来扩展，而不是即兴。"
+    };
+
+    var H = (lang==="zh") ? H_ZH : H_EN;
+    return H[key] || (active.toUpperCase()+" · "+timeLab+" · "+styleLab);
   }
 
   function render(){
     setLensUI();
-    headerCopy();
+    hintLine.textContent = hintText();
     grid.innerHTML="";
 
-    if(active==="if"){
-      grid.appendChild(card(
-        (lang==="zh")?"能源：工业可行面":"Energy: industrial feasibility",
-        (lang==="zh")?"工业等离子热替代（C）是可测的现实入口。":"Industrial plasma thermal substitution (C) is the measurable entry point.",
-        "/products/energy/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"聚变：就绪门槛":"Fusion: readiness gates",
-        (lang==="zh")?"仅需求：仪器、收据、证伪、独立审计。":"Requirements-only: instruments, receipts, falsifiers, independent audit.",
-        "/explore/fusion-readiness/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"规则：标准与治理":"Rules: laws & governance",
-        (lang==="zh")?"约束先行，防止规模化后才发现风险。":"Constraints first to prevent scale-before-safety.",
-        "/laws/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"测量：量规":"Measurement: gauges",
-        (lang==="zh")?"让状态与变化可见，避免凭感觉升级。":"Make state and change visible; avoid ‘feel-based’ upgrades.",
-        "/gauges/"
-      ));
-      return;
+    function addCards(cards){
+      cards.forEach(function(c){ grid.appendChild(card(c.t, c.s, c.h)); });
     }
 
-    if(active==="how"){
-      grid.appendChild(card(
-        (lang==="zh")?"基底：语言创新枢纽":"Substrate: language hub",
-        (lang==="zh")?"语法、SSG、DOT.GRID、缩略语：把执行写成结构。":"Grammar, SSG, DOT.GRID, acronyms: execution as structure.",
-        "/explore/innovation/language/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"DOT.GRID":"DOT.GRID",
-        (lang==="zh")?"256态编码与扫掠，让证据可重放。":"256-state encoding and sweeps for replayable evidence.",
-        "/explore/innovation/language/dot-grid/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"SSG":"SSG",
-        (lang==="zh")?"约束语法几何：把规则压缩成可执行文本。":"Constraint syntax geometry for executable rules.",
-        "/explore/innovation/language/ssg/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"能源：链路表达":"Energy: chain expression",
-        (lang==="zh")?"把太阳→等离子→工业热替代写成可审计链路。":"Write solar→plasma→industrial heat as an auditable chain.",
-        "/products/energy/"
-      ));
-      return;
-    }
+    var EN = {
+      if:[
+        {t:"Energy (industrial)", s:"Measured entry point (C).", h:"/products/energy/"},
+        {t:"Fusion readiness", s:"Requirements-only gates.", h:"/explore/fusion-readiness/"},
+        {t:"Laws", s:"Standards and constraints.", h:"/laws/"},
+        {t:"Gauges", s:"Measurement surfaces.", h:"/gauges/"}
+      ],
+      how:[
+        {t:"Language hub", s:"Grammar · SSG · DOT.GRID · Acronyms.", h:"/explore/innovation/language/"},
+        {t:"DOT.GRID", s:"Replayable sweeps and indexing.", h:"/explore/innovation/language/dot-grid/"},
+        {t:"SSG", s:"Executable constraint syntax.", h:"/explore/innovation/language/ssg/"},
+        {t:"Energy chain", s:"Solar→plasma→industrial substitution.", h:"/products/energy/"}
+      ],
+      when:[
+        {t:"Fusion readiness", s:"‘When’ = gates, not dates.", h:"/explore/fusion-readiness/"},
+        {t:"Laws", s:"Gate definitions and enforcement.", h:"/laws/"},
+        {t:"Gauges", s:"Make prerequisites measurable.", h:"/gauges/"},
+        {t:"Products", s:"Execution surfaces before frontier.", h:"/products/"}
+      ],
+      first:[
+        {t:"Substrate", s:"Language + coherence standards.", h:"/explore/innovation/language/"},
+        {t:"Products", s:"Energy/Education/Software/Commercial.", h:"/products/"},
+        {t:"Energy", s:"Industrial (C) measurable start.", h:"/products/energy/"},
+        {t:"Explore", s:"Frontier stays bounded and routed.", h:"/explore/"}
+      ]
+    };
 
-    if(active==="when"){
-      grid.appendChild(card(
-        (lang==="zh")?"门槛：聚变就绪":"Gate: fusion readiness",
-        (lang==="zh")?"“何时”由门槛决定，不由日期决定。":"‘When’ is gate-dependent, not date-dependent.",
-        "/explore/fusion-readiness/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"治理：标准页":"Governance: laws",
-        (lang==="zh")?"门槛必须写成规则：可证伪、可审计、可回滚。":"Gates must be rules: falsifiable, auditable, rollback-safe.",
-        "/laws/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"测量：量规":"Measurement: gauges",
-        (lang==="zh")?"门槛必须可测，且噪声/伪象必须被压制。":"Gates must be measurable; noise/artifacts must be suppressed.",
-        "/gauges/"
-      ));
-      grid.appendChild(card(
-        (lang==="zh")?"产品：工业执行":"Products: industrial execution",
-        (lang==="zh")?"可行性先在工业场景落地，再谈更远的前沿。":"Land feasibility in industrial reality before farther frontier.",
-        "/products/"
-      ));
-      return;
-    }
+    var ZH = {
+      if:[
+        {t:"能源（工业）", s:"可测入口（C）。", h:"/products/energy/"},
+        {t:"聚变就绪", s:"仅需求闸门。", h:"/explore/fusion-readiness/"},
+        {t:"法则", s:"标准与约束。", h:"/laws/"},
+        {t:"量规", s:"测量面。", h:"/gauges/"}
+      ],
+      how:[
+        {t:"语言枢纽", s:"语法 · SSG · DOT.GRID · 缩略语。", h:"/explore/innovation/language/"},
+        {t:"DOT.GRID", s:"可回放扫掠与索引。", h:"/explore/innovation/language/dot-grid/"},
+        {t:"SSG", s:"可执行约束语法。", h:"/explore/innovation/language/ssg/"},
+        {t:"能源链路", s:"太阳→等离子→工业热替代。", h:"/products/energy/"}
+      ],
+      when:[
+        {t:"聚变就绪", s:"“何时”由闸门决定。", h:"/explore/fusion-readiness/"},
+        {t:"法则", s:"闸门定义与执行。", h:"/laws/"},
+        {t:"量规", s:"先把门槛测出来。", h:"/gauges/"},
+        {t:"产品", s:"先执行，再前沿。", h:"/products/"}
+      ],
+      first:[
+        {t:"基底", s:"语言+一致性标准。", h:"/explore/innovation/language/"},
+        {t:"产品", s:"能源/教育/软件/商业。", h:"/products/"},
+        {t:"能源", s:"工业（C）可测起点。", h:"/products/energy/"},
+        {t:"探索", s:"前沿保持有界跳转。", h:"/explore/"}
+      ]
+    };
 
-    // first
-    grid.appendChild(card(
-      (lang==="zh")?"第一步：基底":"Step 1: substrate",
-      (lang==="zh")?"语言+一致性标准让系统可教、可复用、可审计。":"Language + coherence standards make the system teachable and auditable.",
-      "/explore/innovation/language/"
-    ));
-    grid.appendChild(card(
-      (lang==="zh")?"第二步：产品执行":"Step 2: products",
-      (lang==="zh")?"把结构做成可用产品面：能源/教育/软件/商业。":"Turn structure into products: Energy/Education/Software/Commercial.",
-      "/products/"
-    ));
-    grid.appendChild(card(
-      (lang==="zh")?"第三步：工业能源":"Step 3: energy",
-      (lang==="zh")?"工业等离子替代（C）是公开、可测、可部署的起点。":"Industrial plasma substitution (C) is the public measurable start.",
-      "/products/energy/"
-    ));
-    grid.appendChild(card(
-      (lang==="zh")?"第四步：前沿扩展":"Step 4: frontier",
-      (lang==="zh")?"前沿作为跳转面存在：愿景与约束保持连接。":"Frontier exists as bounded jump surfaces tied to constraints.",
-      "/explore/"
-    ));
+    var PACK = (lang==="zh") ? ZH : EN;
+    addCards(PACK[active] || []);
   }
 
   function openModal(which){
     active = which;
-    mTitle.textContent = (lang==="zh") ? "前沿" : "FRONTIER";
+    var titleMapEN = {if:"FRONTIER · IF", how:"FRONTIER · HOW", when:"FRONTIER · WHEN", first:"FRONTIER · FIRST"};
+    var titleMapZH = {if:"前沿 · 是否", how:"前沿 · 如何", when:"前沿 · 何时", first:"前沿 · 先做"};
+    mTitle.textContent = (lang==="zh") ? (titleMapZH[active]||"前沿") : (titleMapEN[active]||"FRONTIER");
     bd.classList.add("show");
     modal.classList.add("show");
     render();
@@ -688,16 +661,13 @@ a{color:inherit;text-decoration:none}
   bind("dFirst","first");
 
   // lens toggles
-  function persist(){
-    try{ localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime);}catch(e){}
-  }
   pillFormal.addEventListener("click", function(){ gdStyle="formal"; persist(); render(); });
   pillInformal.addEventListener("click", function(){ gdStyle="informal"; persist(); render(); });
   pillConcept.addEventListener("click", function(){ gdTime="origin"; persist(); render(); });
   pillLive.addEventListener("click", function(){ gdTime="now"; persist(); render(); });
   pillRoadmap.addEventListener("click", function(){ gdTime="post"; persist(); render(); });
 
-  // initialize lens UI
+  // init lens UI
   setLensUI();
 
   // close
@@ -705,7 +675,7 @@ a{color:inherit;text-decoration:none}
   mClose.addEventListener("click", closeModal);
   mReturn.addEventListener("click", closeModal);
 
-  // stop overlay click-through (modal should be tappable)
+  // stop overlay click-through
   modal.addEventListener("click", function(e){ e.stopPropagation(); });
 
 })();

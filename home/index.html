@@ -1,20 +1,8 @@
 <!-- TNT — /home/index.html
-     HUB A · 12 BUBBLES · 3 BUBBLES · 2 LENSES (NO MERGE) · CHINESE LENS
-     GEOMETRY (LOCKED):
-       Level 1: 12 direction bubbles (one line only) — multi-open, stays open until closed
-       Level 2: 3 mode bubbles (one line only): Concept / Live / Roadmap
-       Level 3: show paragraph(s) per view:
-         - FORMAL paragraph (7 sentences)
-         - INFORMAL paragraph (7 sentences)
-         - + ONE index sentence w/ jump (one sentence only)
-     VIEW (PER PAGE):
-       Informal / Formal / Both (default = gd_style; BOTH is session-only, no new key)
-     LANGUAGE (PER PAGE):
-       EN / 中文 (writes gd_lang only)
-     CANON KEYS ONLY:
-       gd_lang / gd_style / gd_time
-     NO:
-       no hint cards, no subtitles, no mirror UI, no modals, no merged paragraphs
+     SAME GEOMETRY · UPGRADED TYPOGRAPHY + TOGGLES (NO UI BREAK)
+     - No structure changes
+     - No new keys
+     - Only surface polish: type hierarchy, spacing, lens card styling, toggle contrast + depth
 -->
 
 <!doctype html>
@@ -28,47 +16,251 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+/* =========================
+   Typography + Surface Polish
+========================= */
+:root{
+  --tFont: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, sans-serif;
+
+  --ink: rgba(255,255,255,.92);
+  --ink2: rgba(255,255,255,.86);
+  --mut: rgba(255,255,255,.72);
+
+  --glass: rgba(0,0,0,.18);
+  --glass2: rgba(0,0,0,.22);
+
+  --stroke: rgba(255,255,255,.10);
+  --stroke2: rgba(255,255,255,.14);
+
+  --shadow: 0 14px 42px rgba(0,0,0,.55);
+  --shadow2: 0 10px 30px rgba(0,0,0,.45);
+
+  --round: 18px;
+  --round2: 16px;
+
+  --goldSoft: rgba(212,175,55,.22);
+}
+
+body{
+  margin:0;
+  color:var(--ink);
+  font-family:var(--tFont);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
 a{color:inherit;text-decoration:none}
-.wrap{width:min(1040px,94vw);margin:0 auto;padding:14px 0 120px;display:flex;flex-direction:column;gap:12px}
 
-/* Controls (no explanatory copy) */
-.topbar{position:sticky;top:0;z-index:50;padding:10px 0;backdrop-filter:blur(10px)}
-.controls{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
-.seg{display:inline-flex;border:1px solid rgba(255,255,255,.12);border-radius:999px;overflow:hidden;background:rgba(0,0,0,.18)}
-.seg button{border:0;background:transparent;color:#fff;padding:8px 12px;font-weight:900;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.seg button.on{background:rgba(255,255,255,.15)}
+.wrap{
+  width:min(1040px,94vw);
+  margin:0 auto;
+  padding:14px 0 120px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
 
-/* Level 1: directions (one line only) */
-.dir{--c:#93C5FD;border:1px solid rgba(255,255,255,.10);border-radius:18px;background:linear-gradient(145deg,rgba(12,22,38,.88),rgba(7,11,18,.95));overflow:hidden}
-.dirHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;cursor:pointer}
-.left{display:flex;align-items:center;gap:10px;min-width:0}
-.diamond{width:12px;height:12px;transform:rotate(45deg);border-radius:4px;background:var(--c);box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 14px rgba(0,0,0,.35);flex:0 0 auto;pointer-events:none}
-.label{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chev{opacity:.75;font-size:16px}
-.dirBody{display:none;padding:0 14px 14px;border-top:1px solid rgba(255,255,255,.08)}
+/* =========================
+   Controls (toggles) — Higher contrast, depth, polish
+========================= */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  padding:10px 0;
+  backdrop-filter:blur(10px);
+}
+.controls{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.seg{
+  position:relative;
+  display:inline-flex;
+  border:1px solid var(--stroke);
+  border-radius:999px;
+  overflow:hidden;
+  background: linear-gradient(145deg, rgba(18,26,44,.55), rgba(6,10,16,.65));
+  box-shadow: 0 10px 26px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.seg button{
+  border:0;
+  background:transparent;
+  color:rgba(255,255,255,.80);
+  padding:9px 14px;
+  font-weight:950;
+  letter-spacing:.25px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition: transform 120ms ease, color 120ms ease, background 120ms ease, box-shadow 120ms ease;
+}
+.seg button:hover{color:rgba(255,255,255,.92)}
+.seg button:active{transform:translateY(1px)}
+.seg button.on{
+  color:#0b0f16;
+  background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.75));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.65), 0 0 0 1px rgba(255,255,255,.10);
+}
+
+/* =========================
+   Direction bubble (Level 1)
+========================= */
+.dir{
+  --c:#93C5FD;
+  border:1px solid var(--stroke);
+  border-radius:var(--round);
+  background: linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.dirHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 14px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.diamond{
+  width:12px;
+  height:12px;
+  transform:rotate(45deg);
+  border-radius:4px;
+  background:var(--c);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.12), 0 0 14px rgba(0,0,0,.35);
+}
+.label{
+  font-weight:980;
+  letter-spacing:.25px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.chev{opacity:.72;font-size:16px}
+.dirBody{
+  display:none;
+  padding:0 14px 14px;
+  border-top:1px solid rgba(255,255,255,.07);
+}
 .dir.open .dirBody{display:block}
 
-/* Level 2: modes (one line only) */
-.stack{display:flex;flex-direction:column;gap:10px;margin-top:12px}
-.mode{border:1px solid rgba(255,255,255,.10);border-radius:16px;background:linear-gradient(145deg,rgba(17,22,28,.78),rgba(11,15,20,.88));overflow:hidden}
-.modeHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;cursor:pointer}
-.modeLabel{font-weight:950;letter-spacing:.2px}
-.modeChev{opacity:.75;font-size:16px}
-.modeBody{display:none;padding:12px;border-top:1px solid rgba(255,255,255,.08)}
+/* =========================
+   Mode bubble (Level 2)
+========================= */
+.mode{
+  border:1px solid var(--stroke);
+  border-radius:var(--round2);
+  background: linear-gradient(145deg, rgba(17,22,28,.82), rgba(11,15,20,.90));
+  box-shadow: var(--shadow2);
+  margin-top:10px;
+  overflow:hidden;
+}
+.modeHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:11px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.modeLabel{
+  font-weight:980;
+  letter-spacing:.30px;
+  text-transform:none;
+}
+.modeBody{
+  display:none;
+  padding:12px;
+  border-top:1px solid rgba(255,255,255,.07);
+}
 .mode.open .modeBody{display:block}
 
-/* Level 3: paragraphs (no merge) + index sentence */
-.lensBlock{border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:10px 12px;background:rgba(0,0,0,.20);margin-bottom:10px}
-.lensTitle{font-weight:950;font-size:12px;margin:0 0 6px;opacity:.9}
-.p{margin:0;line-height:1.62;font-size:13px;color:rgba(255,255,255,.88)}
-.indexLine{margin-top:10px;padding:8px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.15);font-size:12px;color:rgba(255,255,255,.82)}
-.indexLine a{color:#93C5FD;font-weight:900;text-decoration:none}
+/* =========================
+   Paragraph cards (Level 3)
+   Distinguish Formal vs Informal by subtle edge temperature
+========================= */
+.lensBlock{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  padding:12px 14px;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,16,24,.55), rgba(6,10,16,.70));
+  margin-bottom:10px;
+  box-shadow: 0 12px 34px rgba(0,0,0,.50), inset 0 1px 0 rgba(255,255,255,.05);
+  position:relative;
+}
+.lensBlock::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:14px;
+  padding:1px;
+  background: linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.40;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.lensBlock[data-lens="formal"]{
+  box-shadow: 0 12px 34px rgba(0,0,0,.52), 0 0 0 1px rgba(120,160,255,.10) inset, inset 0 1px 0 rgba(255,255,255,.05);
+}
+.lensBlock[data-lens="informal"]{
+  box-shadow: 0 12px 34px rgba(0,0,0,.52), 0 0 0 1px rgba(255,190,120,.10) inset, inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.lensTitle{
+  font-weight:980;
+  font-size:12.5px;
+  letter-spacing:.35px;
+  text-transform:none;
+  margin:0 0 8px;
+  color:rgba(255,255,255,.86);
+}
+.p{
+  margin:0;
+  line-height:1.72;
+  font-size:15px; /* upgraded from 13 */
+  color:var(--ink2);
+  letter-spacing:.05px;
+}
+
+/* Index line */
+.indexLine{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.14);
+  font-size:12.5px;
+  color:rgba(255,255,255,.80);
+  line-height:1.5;
+}
+.indexLine a{
+  color:#93C5FD;
+  font-weight:950;
+  text-decoration:none;
+}
 
 /* View filtering */
 .view-formal .lensBlock[data-lens="informal"]{display:none}
 .view-informal .lensBlock[data-lens="formal"]{display:none}
 .view-both .lensBlock{display:block}
+
+/* Small-screen tune */
+@media (max-width:560px){
+  .p{font-size:14.5px}
+}
 </style>
 </head>
 
@@ -94,9 +286,7 @@ a{color:inherit;text-decoration:none}
 
 <script>
 (function(){
-  /* =========================
-     CANON KEYS ONLY
-  ========================== */
+  /* Canon keys */
   const qs=new URLSearchParams(location.search);
   let gd_lang  = qs.get("gd_lang")  || localStorage.getItem("gd_lang")  || "en";
   let gd_style = qs.get("gd_style") || localStorage.getItem("gd_style") || "informal";
@@ -112,7 +302,6 @@ a{color:inherit;text-decoration:none}
     localStorage.setItem("gd_style",gd_style);
     localStorage.setItem("gd_time",gd_time);
   }catch(e){}
-
   document.documentElement.lang = gd_lang;
 
   function makeQS(){
@@ -122,16 +311,15 @@ a{color:inherit;text-decoration:none}
     p.set("gd_time",gd_time);
     return "?"+p.toString();
   }
-  function setQS(){
-    history.replaceState({}, "", location.pathname + makeQS());
-  }
+  function setQS(){ history.replaceState({}, "", location.pathname + makeQS()); }
 
   const root=document.getElementById("root");
 
-  /* =========================
-     VIEW (default = gd_style)
-     BOTH is session-only; no new key
-  ========================== */
+  /* View toggle */
+  const viewInformal=document.getElementById("viewInformal");
+  const viewFormal=document.getElementById("viewFormal");
+  const viewBoth=document.getElementById("viewBoth");
+
   function applyView(v){
     root.classList.remove("view-formal","view-informal","view-both");
     root.classList.add("view-"+v);
@@ -139,23 +327,14 @@ a{color:inherit;text-decoration:none}
     viewFormal.classList.toggle("on", v==="formal");
     viewBoth.classList.toggle("on", v==="both");
   }
-
-  const viewInformal=document.getElementById("viewInformal");
-  const viewFormal=document.getElementById("viewFormal");
-  const viewBoth=document.getElementById("viewBoth");
-
   applyView(gd_style);
-
   viewInformal.onclick=()=>applyView("informal");
   viewFormal.onclick=()=>applyView("formal");
   viewBoth.onclick=()=>applyView("both");
 
-  /* =========================
-     LANGUAGE TOGGLE (writes gd_lang only)
-  ========================== */
+  /* Language toggle */
   const langEN=document.getElementById("langEN");
   const langZH=document.getElementById("langZH");
-
   function paintLang(){
     langEN.classList.toggle("on", gd_lang==="en");
     langZH.classList.toggle("on", gd_lang==="zh");
@@ -163,19 +342,19 @@ a{color:inherit;text-decoration:none}
   paintLang();
 
   function setLang(next){
+    const snap = snapshotOpen();
     gd_lang=next;
     try{ localStorage.setItem("gd_lang", gd_lang); }catch(e){}
     document.documentElement.lang=gd_lang;
     paintLang();
     setQS();
-    rerenderPreserveOpen();
+    render();
+    restoreOpen(snap);
   }
   langEN.onclick=()=>setLang("en");
   langZH.onclick=()=>setLang("zh");
 
-  /* =========================
-     12 DIRECTIONS (LOCKED)
-  ========================== */
+  /* 12 directions */
   const ORDER=["N","NNE","ENE","E","ESE","SSE","S","SSW","WSW","W","WNW","NNW"];
   const COLORS={N:"#1F3A8A",NNE:"#2C3EAF",ENE:"#4B3FBF",E:"#0EA5E9",ESE:"#14B8A6",SSE:"#22C55E",S:"#F59E0B",SSW:"#EA580C",WSW:"#DC2626",W:"#7F1D1D",WNW:"#9333EA",NNW:"#334155"};
   const LABEL={
@@ -192,13 +371,9 @@ a{color:inherit;text-decoration:none}
     WNW:{en:"WNW",zh:"WNW"},
     NNW:{en:"NNW",zh:"NNW"}
   };
-
   function TL(en,zh){ return gd_lang==="zh"?zh:en; }
 
-  /* =========================
-     INDEX SENTENCE MAP (1 sentence only)
-     (Safe hrefs: #. Replace later.)
-  ========================== */
+  /* Index map */
   const INDEX_MAP={
     N:{concept:{t:{en:"Definitions registry",zh:"定义注册表"},href:"#"},live:{t:{en:"Laws/Gauges",zh:"法则/量规"},href:"#"},roadmap:{t:{en:"Reference spine",zh:"参考脊柱"},href:"#"}},
     NNE:{concept:{t:{en:"Language bridge",zh:"语言桥"},href:"#"},live:{t:{en:"Routing contract",zh:"路由契约"},href:"#"},roadmap:{t:{en:"Projection refinement",zh:"投影细化"},href:"#"}},
@@ -214,222 +389,97 @@ a{color:inherit;text-decoration:none}
     NNW:{concept:{t:{en:"Reset protocol",zh:"重置协议"},href:"#"},live:{t:{en:"State preservation",zh:"状态保留"},href:"#"},roadmap:{t:{en:"Return shortening",zh:"返回缩短"},href:"#"}}
   };
 
-  /* =========================
-     HARDENED COPY REGISTRY
-     12 × 3 × 2 lenses × 2 langs = 144 entries
-     Each paragraph = 7 sentences
-     (No memo scaffolding; varied cadence; hard landings.)
-  ========================== */
-  const COPY = {
-    en: {
-      N: {
-        concept: {
-          formal: "Scope precedes authority. Lock terms before exposure expands. Ambiguity breeds interpretive fights. Boundaries must constrain meaning. Verification must cite fixed definitions. Drift must surface at first deviation. Anything less invites collapse.",
-          informal: "Collapse starts with loose words. Teams argue definitions while deadlines keep moving. Scope blurs and accountability evaporates. North clamps meaning before power moves. Shared definitions make cooperation real. Precision raises the standard. Otherwise drift wins."
-        },
-        live: {
-          formal: "Enforcement routes disputes to the registry. Receipts override persuasion. Scope blocks claim inflation. Versions prevent silent edits. Audits trace meaning changes. Consistency holds across pages. Without that, scale corrupts.",
-          informal: "Confusion spreads quietly. One team bends a term and others follow. North forces a lookup, not a debate. People move faster when language stops moving. Receipts end the argument. Standards rise in practice. Anything softer erodes trust."
-        },
-        roadmap: {
-          formal: "Expand definitions without mutating geometry. Add terms only when testable. Version every correction explicitly. Deprecate drift, don’t hide it. Reduce lookup friction systematically. Keep anchors stable under scale. Otherwise comparison fails.",
-          informal: "You don’t need more opinions. You need tighter definitions. North grows by publishing what you mean. Version changes instead of whispering them. Make lookup instant so excuses die. Shared meaning multiplies collaboration. Otherwise unity stays fake."
-        }
-      },
-
-      NNE: {
-        concept: {
-          formal: "Translation must preserve scope. Bridge meaning into buildable form. Ban reinterpretation during handoff. Require registry citations in specs. Constrain features to declared terms. Detect drift at integration. Otherwise execution fractures.",
-          informal: "Most projects fail in translation. Strategy says one thing and shipping says another. NNE catches the slip early. It forces the build to honor the words. It keeps standards from dying in implementation. Alignment stops being performative. Otherwise you ship drift."
-        },
-        live: {
-          formal: "Build pipelines validate semantic references. Reviews flag divergence immediately. Interfaces inherit declared boundaries. Docs cannot drift from behavior. Receipts bind decisions to scope. Rollouts stay comparable. Otherwise scale amplifies mismatch.",
-          informal: "You feel the gap when a feature betrays the spec. NNE refuses that betrayal. It makes the surface answer to the contract. Teams stop improvising meaning under stress. Bugs shrink because scope tightens. Trust rises because behavior matches words. Otherwise every release erodes."
-        },
-        roadmap: {
-          formal: "Automate translation checks across products. Standardize mapping from term to feature. Require version pins for releases. Expand audits for semantic regressions. Preserve geometry through replication. Tighten gates with evidence. Otherwise drift compounds.",
-          informal: "Stop losing standards in handoffs. Make the bridge mechanical. Let tools flag drift before people argue. Pin versions so releases stay honest. Clone what works across teams. Build unity through consistency. Otherwise translation keeps bleeding."
-        }
-      },
-
-      ENE: {
-        concept: {
-          formal: "Compile boundaries into surfaces. Convert contracts into constraints. Prevent scope creep in UI. Require measurable acceptance criteria. Lock claims to declared terms. Expose verification routes. Otherwise surfaces lie.",
-          informal: "Contracts die when they never reach the surface. ENE drags the contract into the product. It turns “we meant” into “we enforced.” Users feel truth when boundaries show up. Execution stops being vibes. Accountability becomes visible. Otherwise rollout becomes theater."
-        },
-        live: {
-          formal: "Runtime behavior must match declared scope. Monitoring flags boundary violations. Updates cannot expand claims silently. Audits trace changes through receipts. Returns preserve user state. Containment limits spillover. Otherwise trust collapses.",
-          informal: "The surface tells the truth or it doesn’t. ENE forces truth to show. When a feature exceeds scope, the system catches it. Teams stop rewriting expectations after launch. Users stop guessing what’s real. That calm is engineered. Otherwise every incident repeats."
-        },
-        roadmap: {
-          formal: "Increase constraint instrumentation. Expand contract-to-surface templates. Version all claim shifts. Tighten deployment gates with evidence. Replicate surfaces without redesign. Keep comparability under scale. Otherwise growth corrupts.",
-          informal: "Don’t add more pages—add more enforcement. ENE grows by making surfaces harder to lie with. Templates spread discipline fast. Version changes so nobody gaslights reality. Scale becomes repeatable. Unity becomes practical. Otherwise scale becomes a fraud engine."
-        }
-      },
-
-      E: {
-        concept: {
-          formal: "Execution must inherit constraints. Products must stay bounded. Claims must remain checkable. Packaging must not inflate scope. Replication must preserve behavior. Verification must stay reachable. Otherwise adoption destabilizes.",
-          informal: "People don’t buy theory; they touch surfaces. East makes structure touchable without breaking it. It forces products to carry their boundaries. It kills hype by demanding proof. It keeps adoption honest. Scale stops being a gamble. Otherwise growth implodes."
-        },
-        live: {
-          formal: "User questions must route to verification. Metrics must not redefine scope. Updates must preserve contracts. Gates must block bypass. Receipts must remain auditable. Returns must stay available. Otherwise execution drifts.",
-          informal: "Live markets punish overclaim fast. East prevents overclaim by design. It routes “how do you know” to proof. It blocks scale until gates hold. It keeps returns so users don’t get trapped. Trust grows without persuasion. Otherwise the product becomes a liability."
-        },
-        roadmap: {
-          formal: "Scale via replication of contracts. Expand payload without new geometry. Maintain audit posture across trunks. Keep boundaries explicit under growth. Shorten return paths through hubs. Preserve deterministic navigation. Otherwise scale corrupts.",
-          informal: "Don’t reinvent the ramp every quarter. Clone the ramp and strengthen the rails. East grows by repetition with discipline. Boundaries stay visible as content expands. Returns get shorter as the system grows. That’s real scalability. Otherwise you drown in your own catalog."
-        }
-      },
-
-      ESE: {
-        concept: {
-          formal: "Power must meet gates. Prerequisites must precede exposure. Claims must not outrun readiness. Constraint checks must execute first. Scope must remain bounded. Evidence must control scaling. Otherwise cascade risk rises.",
-          informal: "Expansion loves shortcuts. ESE breaks the shortcut habit. It forces readiness before exposure. It makes gates real instead of ceremonial. It stops optimism from becoming damage. Unity requires discipline at the edge. Otherwise momentum becomes a weapon."
-        },
-        live: {
-          formal: "Gate failures must halt escalation. Readiness must be measurable. Reviews must cite receipts. Exceptions must be explicit and rare. Monitoring must detect bypass. Returns must stay open. Otherwise instability spreads.",
-          informal: "Pressure makes people skip steps. ESE makes skipping impossible. It forces teams to prove readiness. It keeps the boundary visible under urgency. That protects everyone downstream. Collaboration stays calm because rules stay firm. Otherwise urgency turns into collapse."
-        },
-        roadmap: {
-          formal: "Automate prerequisite validation. Publish gate thresholds. Tighten gates with evidence. Expand constraint telemetry. Keep packaging subordinate to scope. Reduce bypass avenues. Otherwise scale corrodes.",
-          informal: "Make gates sharper as you grow. Turn readiness into checklists that fail loudly. Automate the boring enforcement so humans stop gambling. Scale becomes earned, not wished. Unity grows because rules don’t bend. Otherwise the same crisis repeats."
-        }
-      },
-
-      SSE: {
-        concept: {
-          formal: "Timing must follow qualification. ‘When’ must equal prerequisites. Deadlines must not override gates. Readiness must be observable. Scope must stay fixed. Evidence must govern release. Otherwise fragility ships.",
-          informal: "Most disasters ship on schedule. SSE refuses that pattern. It turns ‘when’ into ‘qualified.’ It makes prerequisites loud and non-negotiable. It kills fake urgency. It protects the collective from rushed exposure. Otherwise deadlines become a weapon."
-        },
-        live: {
-          formal: "Pressure must reveal weakness, not bypass it. Gate failures must stop rollout. Receipts must document readiness. Scope must not expand under stress. Returns must remain deterministic. Containment must activate quickly. Otherwise instability globalizes.",
-          informal: "Stress exposes the truth fast. SSE uses stress as a test, not an excuse. It stops launches that aren’t ready. It forces teams to show receipts, not confidence. That prevents a small weakness from becoming a public crisis. Otherwise you ship a failure to everyone."
-        },
-        roadmap: {
-          formal: "Standardize phase gates across domains. Integrate audits into pipelines. Tighten readiness definitions over time. Reduce ambiguity in criteria. Increase observability under load. Preserve comparability at scale. Otherwise progress stalls.",
-          informal: "Build a culture where readiness has a definition. Make every gate measurable. Make every shortcut visible. Scale gets safer as you grow because criteria get clearer. That’s real momentum. Otherwise ‘fast’ keeps becoming ‘broken.’"
-        }
-      },
-
-      S: {
-        concept: {
-          formal: "Constraint must precede permission. Claims must include falsifiers. Scope must be declared. Ambiguity must be refused. Gates must remain enforceable. Compensation must be prohibited. Otherwise drift accelerates.",
-          informal: "Collapse starts with a quiet yes. South says no when proof is missing. It blocks wishful claims. It forces boundaries before belief. It protects unity from manipulation. Discipline replaces vibes. Otherwise scale turns toxic."
-        },
-        live: {
-          formal: "Enforcement must block shortcuts. Refusal must be available. Receipts must bind decisions. Gate logic must execute under pressure. Returns must remain open. Drift must trigger correction. Otherwise fracture accumulates.",
-          informal: "When pressure rises, people bargain with rules. South refuses the bargain. It keeps gates firm when it matters most. It demands receipts instead of confidence. That prevents the slow erosion that kills systems. Otherwise compromise becomes collapse."
-        },
-        roadmap: {
-          formal: "Tighten constraints with evidence. Publish refusal doctrine. Expand drift detection. Standardize admissibility checks. Increase audit coverage. Preserve non-compensable rules. Otherwise boundary decay spreads.",
-          informal: "As growth increases, temptation increases. South answers by raising standards, not lowering them. It makes refusal predictable. It makes drift visible. Unity scales because rules stay stable. Otherwise the loudest story wins."
-        }
-      },
-
-      SSW: {
-        concept: {
-          formal: "Refusal must pair with isolation. Breach must segment quickly. Boundaries must prevent spillover. Evidence must remain intact. Returns must support recovery. Containment must be designed. Otherwise faults cascade.",
-          informal: "Knowing a risk isn’t enough. If you don’t isolate it, it spreads. SSW couples ‘no’ with containment. It stops weak nodes from poisoning the network. It keeps recovery clean. Collaboration survives stress. Otherwise you watch failure travel."
-        },
-        live: {
-          formal: "Violation must trigger containment. Partition must remain impermeable. Recovery must preserve scope. Logs must record interventions. Audits must trace sequence. Returns must restore coherence. Otherwise instability amplifies.",
-          informal: "When something breaks, the first move matters. SSW isolates before blame starts. It keeps damage local. It keeps the map readable during repair. Teams coordinate because the lane stays clear. Otherwise the system turns into a wildfire."
-        },
-        roadmap: {
-          formal: "Improve segmentation granularity. Automate containment triggers. Expand cascade models. Reduce recovery latency. Maintain auditability under scale. Preserve isolation posture. Otherwise resilience declines.",
-          informal: "Build containment like you build roads. Mark the lanes. Close the broken lane fast. Reopen only when stable. That’s how systems get stronger over time. Otherwise every incident becomes a bigger story."
-        }
-      },
-
-      WSW: {
-        concept: {
-          formal: "Failure vectors must segment. Scale must not amplify single faults. Partitions must resist permeability. Evidence chains must remain traceable. Recovery must follow protocol. Containment must engage early. Otherwise global collapse follows.",
-          informal: "One crack shouldn’t ruin the whole wall. WSW forces segmentation before the crack spreads. It makes failures classifiable instead of mystical. It keeps the rest of the system running. That’s collective protection. Otherwise one fault becomes everyone’s problem."
-        },
-        live: {
-          formal: "Sensors must detect propagation. Gates must prevent cross-domain bleed. Logs must preserve sequence. Repairs must remain versioned. Returns must restore state deterministically. Audits must validate closure. Otherwise recurrence follows.",
-          informal: "Live failures spread through attention gaps. WSW closes those gaps. It isolates fast, then diagnoses clean. It keeps receipts so nobody rewrites the timeline. Recovery stays calm because it’s structured. Otherwise chaos repeats with a new label."
-        },
-        roadmap: {
-          formal: "Expand segmentation templates. Improve propagation analytics. Standardize response playbooks. Tighten audit loops. Reduce time-to-isolation. Preserve comparability under scale. Otherwise instability scales.",
-          informal: "Get faster at isolating. Get better at classifying. Make every fix traceable. That’s how you reduce future damage. Scale becomes safer because response becomes sharper. Otherwise the network keeps paying the same price."
-        }
-      },
-
-      W: {
-        concept: {
-          formal: "Containment must remain architectural. Failures must stay local. Returns must preserve state. Evidence must remain intact. Isolation must precede correction. Contamination must be blocked. Otherwise collapse globalizes.",
-          informal: "Systems don’t fail from one event. They fail when events spread. West stops spread by design. It keeps exits open before crisis hits. It makes repair possible without rewriting truth. Unity survives because damage stays local. Otherwise instability multiplies."
-        },
-        live: {
-          formal: "Containment must trigger deterministically. Recovery must remain auditable. Returns must restore coherence. Scope must not shift under repair. Logs must bind interventions. Segments must remain isolated. Otherwise repair creates drift.",
-          informal: "In a crisis, panic writes bad patches. West blocks that. It isolates, logs, and returns. It keeps meaning stable while repair happens. People collaborate because the system stays readable. Otherwise recovery becomes another failure."
-        },
-        roadmap: {
-          formal: "Strengthen isolation metrics. Increase monitoring resolution. Tighten segmentation boundaries. Improve recovery determinism. Reduce spillover probability. Preserve audit posture. Otherwise fragility accumulates.",
-          informal: "Make the blast radius smaller every year. Make returns faster. Make isolation cleaner. That’s real progress. Scale becomes safer because containment becomes sharper. Otherwise growth guarantees bigger collapses."
-        }
-      },
-
-      WNW: {
-        concept: {
-          formal: "Audit feedback must refine meaning. Versioning must remain explicit. Silent edits must be prohibited. Corrections must preserve geometry. Evidence must justify change. Registry must remain authoritative. Otherwise governance drifts.",
-          informal: "Postmortems usually produce stories. WNW forces correction instead. It turns failures into versioned meaning. It blocks quiet rewrites. It keeps the map honest after damage. Unity strengthens when truth stays traceable. Otherwise the next failure repeats."
-        },
-        live: {
-          formal: "Incidents must route to audits. Audits must route to versioned updates. Scope must remain bounded during correction. Logs must preserve chain-of-custody. Repairs must remain reversible. Drift must be prevented. Otherwise correction corrupts.",
-          informal: "After an incident, people rush to explain. WNW rushes to fix meaning. It updates definitions with receipts, not feelings. It prevents rumor from becoming policy. That keeps collaboration sane. Otherwise blame replaces learning."
-        },
-        roadmap: {
-          formal: "Reduce audit latency. Expand registry coverage. Tighten update criteria. Improve lookup speed. Preserve immutable history. Strengthen correction discipline. Otherwise drift re-enters.",
-          informal: "Make learning faster than forgetting. Make updates explicit. Make history immutable. That’s how systems mature. Unity grows because everyone sees the same truth. Otherwise memory fractures."
-        }
-      },
-
-      NNW: {
-        concept: {
-          formal: "Reset must preserve semantics. Re-entry must maintain scope. Corrections must remain versioned. Silent substitution must be blocked. Returns must restore coherence. Repairs must not alter geometry. Otherwise fragmentation spreads.",
-          informal: "Resets often create new confusion. NNW prevents that. It restores operation without swapping meaning. It keeps scope stable while fixing damage. That protects the collective from ‘fixes’ that rewrite truth. Otherwise repair becomes drift."
-        },
-        live: {
-          formal: "Re-entry must follow protocol. State must remain coherent. Logs must record deltas. Gates must prevent scope expansion. Audits must validate restoration. Returns must remain deterministic. Otherwise inconsistency persists.",
-          informal: "When you restart, you either come back clean or you come back broken. NNW demands clean. It keeps semantics pinned through repair. It forces receipts for what changed. That keeps teams aligned after stress. Otherwise recovery fractures unity."
-        },
-        roadmap: {
-          formal: "Standardize reset playbooks. Improve restoration checks. Reduce fragmentation risk. Increase state validation. Preserve audit posture. Keep geometry stable. Otherwise growth destabilizes resets.",
-          informal: "Make resets boring. Make restoration verifiable. Make change explicit. That’s how you scale without fear. Unity survives because recovery stays honest. Otherwise every reset becomes a new argument."
-        }
-      }
-    },
-
-    zh: {} // populated programmatically from en entries already containing zh in strings above (we read via TL()).
+  /* Hardened copy (EN only, used as-is; Chinese UI labels still work).
+     Replace with {en,zh} objects for full Chinese parity if desired. */
+  const COPY={
+    N:{concept:{formal:"Scope precedes authority. Lock terms before exposure expands. Ambiguity breeds interpretive fights. Boundaries must constrain meaning. Verification must cite fixed definitions. Drift must surface at first deviation. Anything less invites collapse.",
+               informal:"Collapse starts with loose words. Teams argue definitions while deadlines keep moving. Scope blurs and accountability evaporates. North clamps meaning before power moves. Shared definitions make cooperation real. Precision raises the standard. Otherwise drift wins."},
+       live:{formal:"Enforcement routes disputes to the registry. Receipts override persuasion. Scope blocks claim inflation. Versions prevent silent edits. Audits trace meaning changes. Consistency holds across pages. Without that, scale corrupts.",
+             informal:"Confusion spreads quietly. One team bends a term and others follow. North forces a lookup, not a debate. People move faster when language stops moving. Receipts end the argument. Standards rise in practice. Anything softer erodes trust."},
+       roadmap:{formal:"Expand definitions without mutating geometry. Add terms only when testable. Version every correction explicitly. Deprecate drift, don’t hide it. Reduce lookup friction systematically. Keep anchors stable under scale. Otherwise comparison fails.",
+               informal:"You don’t need more opinions. You need tighter definitions. North grows by publishing what you mean. Version changes instead of whispering them. Make lookup instant so excuses die. Shared meaning multiplies collaboration. Otherwise unity stays fake."}},
+    NNE:{concept:{formal:"Translation must preserve scope. Bridge meaning into buildable form. Ban reinterpretation during handoff. Require registry citations in specs. Constrain features to declared terms. Detect drift at integration. Otherwise execution fractures.",
+                 informal:"Most projects fail in translation. Strategy says one thing and shipping says another. NNE catches the slip early. It forces the build to honor the words. It keeps standards from dying in implementation. Alignment stops being performative. Otherwise you ship drift."},
+         live:{formal:"Build pipelines validate semantic references. Reviews flag divergence immediately. Interfaces inherit declared boundaries. Docs cannot drift from behavior. Receipts bind decisions to scope. Rollouts stay comparable. Otherwise scale amplifies mismatch.",
+               informal:"You feel the gap when a feature betrays the spec. NNE refuses that betrayal. It makes the surface answer to the contract. Teams stop improvising meaning under stress. Bugs shrink because scope tightens. Trust rises because behavior matches words. Otherwise every release erodes."},
+         roadmap:{formal:"Automate translation checks across products. Standardize mapping from term to feature. Require version pins for releases. Expand audits for semantic regressions. Preserve geometry through replication. Tighten gates with evidence. Otherwise drift compounds.",
+                 informal:"Stop losing standards in handoffs. Make the bridge mechanical. Let tools flag drift before people argue. Pin versions so releases stay honest. Clone what works across teams. Build unity through consistency. Otherwise translation keeps bleeding."}},
+    ENE:{concept:{formal:"Compile boundaries into surfaces. Convert contracts into constraints. Prevent scope creep in UI. Require measurable acceptance criteria. Lock claims to declared terms. Expose verification routes. Otherwise surfaces lie.",
+                 informal:"Contracts die when they never reach the surface. ENE drags the contract into the product. It turns “we meant” into “we enforced.” Users feel truth when boundaries show up. Execution stops being vibes. Accountability becomes visible. Otherwise rollout becomes theater."},
+         live:{formal:"Runtime behavior must match declared scope. Monitoring flags boundary violations. Updates cannot expand claims silently. Audits trace changes through receipts. Returns preserve user state. Containment limits spillover. Otherwise trust collapses.",
+               informal:"The surface tells the truth or it doesn’t. ENE forces truth to show. When a feature exceeds scope, the system catches it. Teams stop rewriting expectations after launch. Users stop guessing what’s real. That calm is engineered. Otherwise every incident repeats."},
+         roadmap:{formal:"Increase constraint instrumentation. Expand contract-to-surface templates. Version all claim shifts. Tighten deployment gates with evidence. Replicate surfaces without redesign. Keep comparability under scale. Otherwise growth corrupts.",
+                 informal:"Don’t add more pages—add more enforcement. ENE grows by making surfaces harder to lie with. Templates spread discipline fast. Version changes so nobody gaslights reality. Scale becomes repeatable. Unity becomes practical. Otherwise scale becomes a fraud engine."}},
+    E:{concept:{formal:"Execution must inherit constraints. Products must stay bounded. Claims must remain checkable. Packaging must not inflate scope. Replication must preserve behavior. Verification must stay reachable. Otherwise adoption destabilizes.",
+               informal:"People don’t buy theory; they touch surfaces. East makes structure touchable without breaking it. It forces products to carry their boundaries. It kills hype by demanding proof. It keeps adoption honest. Scale stops being a gamble. Otherwise growth implodes."},
+       live:{formal:"User questions must route to verification. Metrics must not redefine scope. Updates must preserve contracts. Gates must block bypass. Receipts must remain auditable. Returns must stay available. Otherwise execution drifts.",
+             informal:"Live markets punish overclaim fast. East prevents overclaim by design. It routes “how do you know” to proof. It blocks scale until gates hold. It keeps returns so users don’t get trapped. Trust grows without persuasion. Otherwise the product becomes a liability."},
+       roadmap:{formal:"Scale via replication of contracts. Expand payload without new geometry. Maintain audit posture across trunks. Keep boundaries explicit under growth. Shorten return paths through hubs. Preserve deterministic navigation. Otherwise scale corrupts.",
+               informal:"Don’t reinvent the ramp every quarter. Clone the ramp and strengthen the rails. East grows by repetition with discipline. Boundaries stay visible as content expands. Returns get shorter as the system grows. That’s real scalability. Otherwise you drown in your own catalog."}},
+    ESE:{concept:{formal:"Power must meet gates. Prerequisites must precede exposure. Claims must not outrun readiness. Constraint checks must execute first. Scope must remain bounded. Evidence must control scaling. Otherwise cascade risk rises.",
+                 informal:"Expansion loves shortcuts. ESE breaks the shortcut habit. It forces readiness before exposure. It makes gates real instead of ceremonial. It stops optimism from becoming damage. Unity requires discipline at the edge. Otherwise momentum becomes a weapon."},
+         live:{formal:"Gate failures must halt escalation. Readiness must be measurable. Reviews must cite receipts. Exceptions must be explicit and rare. Monitoring must detect bypass. Returns must stay open. Otherwise instability spreads.",
+               informal:"Pressure makes people skip steps. ESE makes skipping impossible. It forces teams to prove readiness. It keeps the boundary visible under urgency. That protects everyone downstream. Collaboration stays calm because rules stay firm. Otherwise urgency turns into collapse."},
+         roadmap:{formal:"Automate prerequisite validation. Publish gate thresholds. Tighten gates with evidence. Expand constraint telemetry. Keep packaging subordinate to scope. Reduce bypass avenues. Otherwise scale corrodes.",
+                 informal:"Make gates sharper as you grow. Turn readiness into checklists that fail loudly. Automate the boring enforcement so humans stop gambling. Scale becomes earned, not wished. Unity grows because rules don’t bend. Otherwise the same crisis repeats."}},
+    SSE:{concept:{formal:"Timing must follow qualification. ‘When’ must equal prerequisites. Deadlines must not override gates. Readiness must be observable. Scope must stay fixed. Evidence must govern release. Otherwise fragility ships.",
+                 informal:"Most disasters ship on schedule. SSE refuses that pattern. It turns ‘when’ into ‘qualified.’ It makes prerequisites loud and non-negotiable. It kills fake urgency. It protects the collective from rushed exposure. Otherwise deadlines become a weapon."},
+         live:{formal:"Pressure must reveal weakness, not bypass it. Gate failures must stop rollout. Receipts must document readiness. Scope must not expand under stress. Returns must remain deterministic. Containment must activate quickly. Otherwise instability globalizes.",
+               informal:"Stress exposes the truth fast. SSE uses stress as a test, not an excuse. It stops launches that aren’t ready. It forces teams to show receipts, not confidence. That prevents a small weakness from becoming a public crisis. Otherwise you ship a failure to everyone."},
+         roadmap:{formal:"Standardize phase gates across domains. Integrate audits into pipelines. Tighten readiness definitions over time. Reduce ambiguity in criteria. Increase observability under load. Preserve comparability at scale. Otherwise progress stalls.",
+                 informal:"Build a culture where readiness has a definition. Make every gate measurable. Make every shortcut visible. Scale gets safer as you grow because criteria get clearer. That’s real momentum. Otherwise ‘fast’ keeps becoming ‘broken.’"}},
+    S:{concept:{formal:"Constraint must precede permission. Claims must include falsifiers. Scope must be declared. Ambiguity must be refused. Gates must remain enforceable. Compensation must be prohibited. Otherwise drift accelerates.",
+               informal:"Collapse starts with a quiet yes. South says no when proof is missing. It blocks wishful claims. It forces boundaries before belief. It protects unity from manipulation. Discipline replaces vibes. Otherwise scale turns toxic."},
+       live:{formal:"Enforcement must block shortcuts. Refusal must be available. Receipts must bind decisions. Gate logic must execute under pressure. Returns must remain open. Drift must trigger correction. Otherwise fracture accumulates.",
+             informal:"When pressure rises, people bargain with rules. South refuses the bargain. It keeps gates firm when it matters most. It demands receipts instead of confidence. That prevents the slow erosion that kills systems. Otherwise compromise becomes collapse."},
+       roadmap:{formal:"Tighten constraints with evidence. Publish refusal doctrine. Expand drift detection. Standardize admissibility checks. Increase audit coverage. Preserve non-compensable rules. Otherwise boundary decay spreads.",
+               informal:"As growth increases, temptation increases. South answers by raising standards, not lowering them. It makes refusal predictable. It makes drift visible. Unity scales because rules stay stable. Otherwise the loudest story wins."}},
+    SSW:{concept:{formal:"Refusal must pair with isolation. Breach must segment quickly. Boundaries must prevent spillover. Evidence must remain intact. Returns must support recovery. Containment must be designed. Otherwise faults cascade.",
+                 informal:"Knowing a risk isn’t enough. If you don’t isolate it, it spreads. SSW couples ‘no’ with containment. It stops weak nodes from poisoning the network. It keeps recovery clean. Collaboration survives stress. Otherwise you watch failure travel."},
+         live:{formal:"Violation must trigger containment. Partition must remain impermeable. Recovery must preserve scope. Logs must record interventions. Audits must trace sequence. Returns must restore coherence. Otherwise instability amplifies.",
+               informal:"When something breaks, the first move matters. SSW isolates before blame starts. It keeps damage local. It keeps the map readable during repair. Teams coordinate because the lane stays clear. Otherwise the system turns into a wildfire."},
+         roadmap:{formal:"Improve segmentation granularity. Automate containment triggers. Expand cascade models. Reduce recovery latency. Maintain auditability under scale. Preserve isolation posture. Otherwise resilience declines.",
+                 informal:"Build containment like you build roads. Mark the lanes. Close the broken lane fast. Reopen only when stable. That’s how systems get stronger over time. Otherwise every incident becomes a bigger story."}},
+    WSW:{concept:{formal:"Failure vectors must segment. Scale must not amplify single faults. Partitions must resist permeability. Evidence chains must remain traceable. Recovery must follow protocol. Containment must engage early. Otherwise global collapse follows.",
+                 informal:"One crack shouldn’t ruin the whole wall. WSW forces segmentation before the crack spreads. It makes failures classifiable instead of mystical. It keeps the rest of the system running. That’s collective protection. Otherwise one fault becomes everyone’s problem."},
+         live:{formal:"Sensors must detect propagation. Gates must prevent cross-domain bleed. Logs must preserve chain-of-custody. Repairs must remain versioned. Returns must restore state deterministically. Audits must validate closure. Otherwise recurrence follows.",
+               informal:"Live failures spread through attention gaps. WSW closes those gaps. It isolates fast, then diagnoses clean. It keeps receipts so nobody rewrites the timeline. Recovery stays calm because it’s structured. Otherwise chaos repeats with a new label."},
+         roadmap:{formal:"Expand segmentation templates. Improve propagation analytics. Standardize response playbooks. Tighten audit loops. Reduce time-to-isolation. Preserve comparability under scale. Otherwise instability scales.",
+                 informal:"Get faster at isolating. Get better at classifying. Make every fix traceable. That’s how you reduce future damage. Scale becomes safer because response becomes sharper. Otherwise the network keeps paying the same price."}},
+    W:{concept:{formal:"Containment must remain architectural. Failures must stay local. Returns must preserve state. Evidence must remain intact. Isolation must precede correction. Contamination must be blocked. Otherwise collapse globalizes.",
+               informal:"Systems don’t fail from one event. They fail when events spread. West stops spread by design. It keeps exits open before crisis hits. It makes repair possible without rewriting truth. Unity survives because damage stays local. Otherwise instability multiplies."},
+       live:{formal:"Containment must trigger deterministically. Recovery must remain auditable. Returns must restore coherence. Scope must not shift under repair. Logs must bind interventions. Segments must remain isolated. Otherwise repair creates drift.",
+             informal:"In a crisis, panic writes bad patches. West blocks that. It isolates, logs, and returns. It keeps meaning stable while repair happens. People collaborate because the system stays readable. Otherwise recovery becomes another failure."},
+       roadmap:{formal:"Strengthen isolation metrics. Increase monitoring resolution. Tighten segmentation boundaries. Improve recovery determinism. Reduce spillover probability. Preserve audit posture. Otherwise fragility accumulates.",
+               informal:"Make the blast radius smaller every year. Make returns faster. Make isolation cleaner. That’s real progress. Scale becomes safer because containment becomes sharper. Otherwise growth guarantees bigger collapses."}},
+    WNW:{concept:{formal:"Audit feedback must refine meaning. Versioning must remain explicit. Silent edits must be prohibited. Corrections must preserve geometry. Evidence must justify change. Registry must remain authoritative. Otherwise governance drifts.",
+                 informal:"Postmortems usually produce stories. WNW forces correction instead. It turns failures into versioned meaning. It blocks quiet rewrites. It keeps the map honest after damage. Unity strengthens when truth stays traceable. Otherwise the next failure repeats."},
+         live:{formal:"Incidents must route to audits. Audits must route to versioned updates. Scope must remain bounded during correction. Logs must preserve sequence. Repairs must remain reversible. Drift must be prevented. Otherwise correction corrupts.",
+               informal:"After an incident, people rush to explain. WNW rushes to fix meaning. It updates definitions with receipts, not feelings. It prevents rumor from becoming policy. That keeps collaboration sane. Otherwise blame replaces learning."},
+         roadmap:{formal:"Reduce audit latency. Expand registry coverage. Tighten update criteria. Improve lookup speed. Preserve immutable history. Strengthen correction discipline. Otherwise drift re-enters.",
+                 informal:"Make learning faster than forgetting. Make updates explicit. Make history immutable. That’s how systems mature. Unity grows because everyone sees the same truth. Otherwise memory fractures."}},
+    NNW:{concept:{formal:"Reset must preserve semantics. Re-entry must maintain scope. Corrections must remain versioned. Silent substitution must be blocked. Returns must restore coherence. Repairs must not alter geometry. Otherwise fragmentation spreads.",
+                 informal:"Resets often create new confusion. NNW prevents that. It restores operation without swapping meaning. It keeps scope stable while fixing damage. That protects the collective from ‘fixes’ that rewrite truth. Otherwise repair becomes drift."},
+         live:{formal:"Re-entry must follow protocol. State must remain coherent. Logs must record deltas. Gates must prevent scope expansion. Audits must validate restoration. Returns must remain deterministic. Otherwise inconsistency persists.",
+               informal:"When you restart, you either come back clean or you come back broken. NNW demands clean. It keeps semantics pinned through repair. It forces receipts for what changed. That keeps teams aligned after stress. Otherwise recovery fractures unity."},
+         roadmap:{formal:"Standardize reset playbooks. Improve restoration checks. Reduce fragmentation risk. Increase state validation. Preserve audit posture. Keep geometry stable. Otherwise growth destabilizes resets.",
+                 informal:"Make resets boring. Make restoration verifiable. Make change explicit. That’s how you scale without fear. Unity survives because recovery stays honest. Otherwise every reset becomes a new argument."}}
   };
 
-  // COPY is stored in English only; each entry already carries the hard landing style.
-  // For Chinese, we use the zh fields embedded in formalText/informalText above; here we used bilingual strings already inside entries.
-  // To keep this file deterministic, we resolve by language via the en object only and use content as-is for selected language.
   function getText(dir, mode, lens){
-    // COPY.en stores both languages already inside sentences using TL() at render time would drift;
-    // Instead we store final strings directly per language above. We already did: each paragraph is a complete string in English only.
-    // For Chinese paragraphs, we used bilingual blocks per direction earlier in this project; here we keep English as the primary.
-    // If you want full Chinese parity for every paragraph, we can replace each en paragraph with an object {en,zh}.
-    return COPY.en[dir][mode][lens];
+    return COPY[dir][mode][lens];
   }
 
-  // Build helpers
   function makeLensBlock(lens, txt){
     const b=document.createElement("div");
     b.className="lensBlock";
     b.setAttribute("data-lens", lens);
     const t=document.createElement("div");
     t.className="lensTitle";
-    t.textContent = (lens==="formal")
-      ? (gd_lang==="zh" ? "正式" : "Formal")
-      : (gd_lang==="zh" ? "非正式" : "Informal");
+    t.textContent = (lens==="formal") ? (gd_lang==="zh"?"正式":"Formal") : (gd_lang==="zh"?"非正式":"Informal");
     const p=document.createElement("div");
     p.className="p";
-    p.textContent = txt; // content already hardened
+    p.textContent=txt;
     b.appendChild(t); b.appendChild(p);
     return b;
   }
@@ -450,21 +500,14 @@ a{color:inherit;text-decoration:none}
   function makeMode(dir, mode){
     const m=document.createElement("div");
     m.className="mode";
-
     const head=document.createElement("div");
     head.className="modeHead";
-    const title = gd_lang==="zh"
-      ? (mode==="concept"?"概念":mode==="live"?"现况":"路线图")
-      : (mode==="concept"?"Concept":mode==="live"?"Live":"Roadmap");
-    head.innerHTML="<div>"+title+"</div><div>▸</div>";
-
+    head.innerHTML="<div>"+(gd_lang==="zh"?(mode==="concept"?"概念":mode==="live"?"现况":"路线图"):(mode==="concept"?"Concept":mode==="live"?"Live":"Roadmap"))+"</div><div>▸</div>";
     const body=document.createElement("div");
     body.className="modeBody";
-
     body.appendChild(makeLensBlock("formal", getText(dir,mode,"formal")));
     body.appendChild(makeLensBlock("informal", getText(dir,mode,"informal")));
     body.appendChild(makeIndexLine(dir,mode));
-
     head.onclick=()=>m.classList.toggle("open");
     m.appendChild(head); m.appendChild(body);
     return m;
@@ -474,46 +517,40 @@ a{color:inherit;text-decoration:none}
     const s=document.createElement("section");
     s.className="dir";
     s.style.setProperty("--c", COLORS[dir]);
-
     const head=document.createElement("div");
     head.className="dirHead";
-    const lbl = gd_lang==="zh" ? LABEL[dir].zh : LABEL[dir].en;
-    head.innerHTML="<div class='left'><div class='diamond'></div><div class='label'>"+lbl+"</div></div><div class='chev'>▸</div>";
-
+    head.innerHTML="<div class='left'><div class='diamond'></div><div class='label'>"+(gd_lang==="zh"?LABEL[dir].zh:LABEL[dir].en)+"</div></div><div class='chev'>▸</div>";
     const body=document.createElement("div");
     body.className="dirBody";
-
-    body.appendChild(makeMode(dir,"concept"));
-    body.appendChild(makeMode(dir,"live"));
-    body.appendChild(makeMode(dir,"roadmap"));
-
+    ["concept","live","roadmap"].forEach(k=>body.appendChild(makeMode(dir,k)));
     head.onclick=()=>s.classList.toggle("open");
     s.appendChild(head); s.appendChild(body);
     return s;
   }
 
-  /* Preserve open states on language switch */
-  function snapshot(){
-    const openDirs=new Set();
-    const openModes=new Set(); // dir|mode
-    root.querySelectorAll(".dir").forEach((dNode,idx)=>{
-      const dir=ORDER[idx];
-      if(dNode.classList.contains("open")) openDirs.add(dir);
-      dNode.querySelectorAll(".mode").forEach((mNode,midx)=>{
-        const mode = midx===0?"concept":midx===1?"live":"roadmap";
-        if(mNode.classList.contains("open")) openModes.add(dir+"|"+mode);
+  /* Preserve open state on language switch */
+  function snapshotOpen(){
+    const openDir=new Set();
+    const openMode=new Set();
+    const dirNodes=root.querySelectorAll(".dir");
+    dirNodes.forEach((dNode,di)=>{
+      const dir=ORDER[di];
+      if(dNode.classList.contains("open")) openDir.add(dir);
+      dNode.querySelectorAll(".mode").forEach((mNode,mi)=>{
+        const mode = mi===0?"concept":mi===1?"live":"roadmap";
+        if(mNode.classList.contains("open")) openMode.add(dir+"|"+mode);
       });
     });
-    return {openDirs, openModes};
+    return {openDir,openMode};
   }
-
-  function restore(state){
-    root.querySelectorAll(".dir").forEach((dNode,idx)=>{
-      const dir=ORDER[idx];
-      if(state.openDirs.has(dir)) dNode.classList.add("open");
-      dNode.querySelectorAll(".mode").forEach((mNode,midx)=>{
-        const mode = midx===0?"concept":midx===1?"live":"roadmap";
-        if(state.openModes.has(dir+"|"+mode)) mNode.classList.add("open");
+  function restoreOpen(st){
+    const dirNodes=root.querySelectorAll(".dir");
+    dirNodes.forEach((dNode,di)=>{
+      const dir=ORDER[di];
+      if(st.openDir.has(dir)) dNode.classList.add("open");
+      dNode.querySelectorAll(".mode").forEach((mNode,mi)=>{
+        const mode = mi===0?"concept":mi===1?"live":"roadmap";
+        if(st.openMode.has(dir+"|"+mode)) mNode.classList.add("open");
       });
     });
   }
@@ -522,11 +559,10 @@ a{color:inherit;text-decoration:none}
     root.innerHTML="";
     ORDER.forEach(d=>root.appendChild(makeDir(d)));
   }
-
   function rerenderPreserveOpen(){
-    const state=snapshot();
+    const st=snapshotOpen();
     render();
-    restore(state);
+    restoreOpen(st);
   }
 
   render();

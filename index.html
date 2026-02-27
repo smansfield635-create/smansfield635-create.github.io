@@ -1,7 +1,7 @@
 <!-- TNT — /index.html
-     FINAL: restore language toggles to original top-right (top:16px)
-            nudge ONLY the center brand bubble down slightly
-     NO OTHER CHANGES.
+     UPDATE: add ES language toggle (top-right stays at top:16px)
+             keep brand pill nudged down slightly (minimal)
+     NO OTHER STRUCTURAL CHANGES.
 -->
 
 <!doctype html>
@@ -34,11 +34,11 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Top-right language toggle — RESTORED */
+/* Top-right language toggle — stays at top:16px */
 .top-right{
   position:fixed;
   right:16px;
-  top:16px; /* restored */
+  top:16px;
   z-index:120;
   display:flex;
   gap:10px;
@@ -46,11 +46,11 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   align-items:center;
 }
 
-/* Brand — NUDGED DOWN ONLY */
+/* Brand — nudged down slightly (minimal) */
 .brand{
   position:fixed;
   left:50%;
-  top:28px; /* was 16px; nudged down slightly */
+  top:32px; /* slight nudge to clear 3 buttons */
   transform:translateX(-50%);
   z-index:110;
   text-align:center;
@@ -162,13 +162,13 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   :root{ --R:150px; --D:244px; --dockH:118px; }
   .stage{ top:51%; }
   .brand .t{ font-size:38px; }
-  .brand{ top:26px; } /* keep nudge consistent */
+  .brand{ top:30px; }
 }
 @media (max-width:420px){
   :root{ --R:140px; --D:236px; --dockH:132px; }
   .stage{ top:50%; }
   .brand .t{ font-size:36px; }
-  .brand{ top:24px; }
+  .brand{ top:28px; }
 }
 </style>
 </head>
@@ -182,6 +182,7 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
 <div class="top-right">
   <button class="btn" id="btnEN" type="button">EN</button>
   <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
 </div>
 
 <div class="brand" aria-hidden="true">
@@ -224,7 +225,7 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en" && lang!=="zh") lang="en";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
@@ -237,7 +238,7 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
   function q(over){
     var L = (over && over.lang) ? over.lang : lang;
@@ -252,6 +253,7 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
 
   var btnEN = document.getElementById("btnEN");
   var btnZH = document.getElementById("btnZH");
+  var btnES = document.getElementById("btnES");
 
   function wireLinks(){
     document.getElementById("btnExit").href="/"+q();
@@ -274,6 +276,18 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
       document.getElementById("dockProducts").textContent="产品";
       document.getElementById("dockLaws").textContent="法则";
       document.getElementById("dockGauges").textContent="量规";
+    }else if(lang==="es"){
+      document.getElementById("bt").textContent="Elige dirección";
+      document.getElementById("bs").textContent="Estructura primero · o avanza hacia adelante";
+      document.getElementById("labFoundation").textContent="BASE";
+      document.getElementById("subFoundation").textContent="Empieza por la estructura y oriéntate rápido.";
+      document.getElementById("labFrontier").textContent="FRONTERA";
+      document.getElementById("subFrontier").textContent="Avanza sin perder el equilibrio.";
+      document.getElementById("btnExit").textContent="SALIR";
+      document.getElementById("dockTerminal").textContent="TERMINAL";
+      document.getElementById("dockProducts").textContent="PRODUCTOS";
+      document.getElementById("dockLaws").textContent="LEYES";
+      document.getElementById("dockGauges").textContent="MEDIDAS";
     }else{
       document.getElementById("bt").textContent="Choose direction";
       document.getElementById("bs").textContent="Structure first · Or expand forward";
@@ -290,20 +304,22 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
 
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
   }
 
   function setLang(next){
-    if(next!=="en" && next!=="zh") next="en";
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang = next;
     try{ localStorage.setItem("gd_lang", lang); }catch(e){}
     history.replaceState({}, "", location.pathname + q({lang: lang}));
-    document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+    document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
     renderLang();
     wireLinks();
   }
 
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
 
   wireLinks();
   renderLang();

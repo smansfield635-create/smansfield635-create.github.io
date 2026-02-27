@@ -1,12 +1,16 @@
-<!-- TNT — /index.html  (GATE · FOUNDATION vs FRONTIER · PEARLESCENT GEM STANDARD · NO COAL)
-     FIX:
-       - Replace “coal” look with the SAME pearlescent lacquer recipe used on your good glossy pages.
-       - No competing UI. ui.css owns field. No extra overlays.
-     BEHAVIOR:
-       - Two vertical diamonds (tap-safe) = FOUNDATION / FRONTIER
-       - State propagation: lang/style/time via query + localStorage (gd_lang/gd_style/gd_time)
-       - FOUNDATION → /home/
-       - FRONTIER   → /explore/frontier/
+<!-- TNT — /index.html
+     OFFICIAL FORK · TWO MASSIVE DIAMONDS · COHERENCE / POWER
+
+     IDENTITY:
+       - This is the first conscious fork after the Door.
+       - Two vertical diamonds only.
+       - No modals.
+       - No overlays.
+       - No lens toggles.
+       - Hard navigation only.
+       - Full state propagation (lang/style/time).
+       - Uses /assets/ui.css + /assets/branch.css only.
+       - Does NOT style html/body background.
 -->
 
 <!doctype html>
@@ -14,315 +18,204 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>GATE · Cardinal Axis</title>
+<title>Cardinal Axis · Choose Direction</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instrument.js"></script>
 
 <style>
-/* DO NOT TOUCH FIELD — ui.css owns html/body background */
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+:root{
+  --R:170px;
+  --D:260px;
+  --goldSoft:rgba(212,175,55,.45);
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
+}
+
+body{
+  margin:0;
+  color:#fff;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
 a{color:inherit;text-decoration:none}
 
-/* Fallback button styling (only if ui.css doesn't supply .btn) */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:10px 16px;border-radius:14px;
-  background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  color:#fff;border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-}
-
-/* =========================
-   PEARLESCENT GEM STANDARD
-   ========================= */
-:root{
-  --R:142px;          /* vertical spacing radius */
-  --D:250px;          /* diamond size */
-
-  /* lacquer base */
-  --obs-0: rgba(0,0,0,.78);
-  --obs-1: rgba(8,10,14,.92);
-  --obs-2: rgba(4,6,10,.96);
-
-  /* sapphire lanes (cool) */
-  --sapphire-1: rgba(40,90,200,.22);
-  --sapphire-2: rgba(110,190,255,.18);
-
-  /* opal film (neutral pearlescence) */
-  --opal-w: rgba(245,248,255,.22);
-  --opal-b: rgba(180,220,255,.14);
-  --opal-a: rgba(255,235,200,.12);
-  --opal-g: rgba(170,255,235,.12);
-
-  /* gold trim */
-  --gold: rgba(212,175,55,.85);
-  --gold-soft: rgba(212,175,55,.38);
-}
-
-/* Top-left */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-
-/* Head copy (center) */
-.head{
-  position:fixed;left:50%;top:54px;transform:translateX(-50%);
-  width:min(860px,94vw);
-  z-index:110;
+/* Brand */
+.brand{
+  position:fixed;
+  left:50%;
+  top:18px;
+  transform:translateX(-50%);
   text-align:center;
+  padding:12px 22px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
   pointer-events:none;
 }
-.kicker{
-  margin:0 0 10px 0;
+.brand .k{
   font-size:12px;
   letter-spacing:3px;
   text-transform:uppercase;
-  opacity:.78;
-  text-shadow:0 18px 60px rgba(0,0,0,.65);
+  opacity:.7;
 }
-.title{
-  margin:0;
-  font-size:54px;
+.brand .t{
   font-weight:950;
-  letter-spacing:.2px;
-  line-height:1.02;
-  text-shadow:0 18px 60px rgba(0,0,0,.65);
+  font-size:40px;
+  margin-top:6px;
 }
-.subt{
-  margin:10px auto 0;
-  max-width:62ch;
-  opacity:.84;
-  font-size:16px;
-  line-height:1.35;
-  text-shadow:0 18px 60px rgba(0,0,0,.55);
+.brand .s{
+  font-size:14px;
+  opacity:.8;
+  margin-top:6px;
 }
 
 /* Stage */
 .stage{
-  position:fixed;left:50%;top:56%;
+  position:fixed;
+  left:50%;
+  top:55%;
   transform:translate(-50%,-50%);
-  width:min(760px,94vw);
-  height:min(760px,94vw);
-  z-index:60;
+  width:min(720px,94vw);
+  height:min(720px,94vw);
   pointer-events:none;
 }
 
-/* Diamonds */
+/* Massive diamonds */
 .d{
-  width:var(--D);height:var(--D);
-  position:absolute;left:50%;top:50%;
+  width:var(--D);
+  height:var(--D);
+  position:absolute;
+  left:50%;
+  top:50%;
   transform-origin:center;
-  border-radius:30px;
+  border-radius:34px;
   cursor:pointer;
   pointer-events:auto;
-  touch-action:manipulation;
-  -webkit-tap-highlight-color:transparent;
 
   background:
-    /* sapphire glow lanes */
-    radial-gradient(circle at 72% 26%, var(--sapphire-2) 0%, rgba(110,190,255,0) 62%),
-    radial-gradient(circle at 34% 78%, var(--sapphire-1) 0%, rgba(40,90,200,0) 64%),
-
-    /* opal interference film */
-    radial-gradient(circle at 34% 22%, var(--opal-w) 0%, rgba(245,248,255,0) 54%),
-    radial-gradient(circle at 78% 32%, var(--opal-b) 0%, rgba(180,220,255,0) 58%),
-    radial-gradient(circle at 82% 78%, var(--opal-a) 0%, rgba(255,235,200,0) 64%),
-    radial-gradient(circle at 30% 82%, var(--opal-g) 0%, rgba(170,255,235,0) 66%),
-
-    /* lacquer base */
-    linear-gradient(160deg, var(--obs-1) 0%, var(--obs-2) 78%);
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 48%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.25), transparent 60%),
+    linear-gradient(160deg, var(--obsA), var(--obsB));
 
   border:1px solid rgba(255,255,255,.16);
-
   box-shadow:
-    0 34px 120px rgba(0,0,0,.78),
-    0 0 26px rgba(212,175,55,.10),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -46px 92px rgba(0,0,0,.82);
-}
+    0 50px 160px rgba(0,0,0,.85),
+    0 0 38px rgba(212,175,55,.25),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -50px 90px rgba(0,0,0,.78);
 
-/* Gold crown rim */
-.d::before{
-  content:"";
-  position:absolute;inset:0;border-radius:30px;padding:1px;
-  background:linear-gradient(135deg,
-    rgba(212,175,55,0) 0%,
-    rgba(212,175,55,.55) 38%,
-    rgba(212,175,55,.88) 50%,
-    rgba(212,175,55,.55) 62%,
-    rgba(212,175,55,0) 100%
-  );
-  opacity:.72;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
+  transition:transform .2s ease, box-shadow .2s ease;
 }
-
-/* Gloss cap (crisp) */
-.d::after{
-  content:"";
-  position:absolute;inset:0;border-radius:30px;
-  background:
-    radial-gradient(120% 58% at 50% 16%, rgba(255,255,255,.34) 0%, rgba(255,255,255,0) 64%),
-    radial-gradient(120% 60% at 50% 56%, rgba(255,255,255,.07) 0%, rgba(255,255,255,0) 62%),
-    radial-gradient(140% 70% at 50% 92%, rgba(0,0,0,.38) 0%, rgba(0,0,0,0) 56%);
-  opacity:.92;
-  pointer-events:none;
-}
-
 .d:hover{
-  border-color:rgba(212,175,55,.30);
-  box-shadow:
-    0 42px 150px rgba(0,0,0,.84),
-    0 0 34px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.20),
-    inset 0 -52px 104px rgba(0,0,0,.86);
-}
-.d:active{
-  transform:translate(-50%,-50%) rotate(45deg) scale(.99);
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
 }
 
-/* Vertical placement */
-.d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
-.d-bot{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
+.d-top{
+  transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg);
+}
+.d-bottom{
+  transform:translate(-50%,-50%) translate(0, calc(var(--R) * 1)) rotate(45deg);
+}
 
-/* Inner content */
 .inner{
-  width:100%;height:100%;
+  width:100%;
+  height:100%;
   transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
-  padding:16px;
-  gap:10px;
-  pointer-events:none;
-  user-select:none;
+  padding:24px;
 }
 .lab{
   font-weight:950;
-  letter-spacing:.9px;
-  font-size:20px;
-  text-shadow:0 0 22px rgba(255,255,255,.10);
+  font-size:26px;
+  letter-spacing:1px;
 }
 .sub{
-  font-size:13px;
-  opacity:.86;
-  line-height:1.25;
-  max-width:22em;
-}
-
-/* Small center mark */
-.core{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:70px;height:70px;border-radius:22px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;place-items:center;
-  font-weight:950;letter-spacing:.5px;opacity:.92;
-  pointer-events:none;
-}
-
-/* Footer line */
-.foot{
-  position:fixed;left:50%;
-  bottom:calc(18px + env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:80;
-  width:min(860px,94vw);
-  text-align:center;
-  opacity:.78;
-  font-size:13px;
+  font-size:15px;
+  opacity:.85;
   line-height:1.35;
-  pointer-events:none;
-  text-shadow:0 18px 60px rgba(0,0,0,.55);
-}
-
-@media (max-width:560px){
-  :root{ --R:132px; --D:232px; }
-  .title{font-size:46px}
-  .head{top:52px}
-  .stage{top:58%}
+  max-width:24em;
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+<div class="brand">
+  <div class="k">CARDINAL AXIS</div>
+  <div class="t">Choose Direction</div>
+  <div class="s">Coherence before power</div>
 </div>
 
-<div class="head" aria-hidden="true">
-  <p class="kicker">CARDINAL AXIS</p>
-  <h1 class="title">A diagnostic compass.</h1>
-  <p class="subt">You came here for direction. Choose your gate.</p>
-</div>
+<div class="stage">
 
-<div class="stage" aria-label="Gate selection">
-  <div class="d d-top" id="goFoundation" role="button" tabindex="0" aria-label="Foundation">
+  <!-- COHERENCE -->
+  <div class="d d-top" id="dCoherence" role="button" tabindex="0">
     <div class="inner">
-      <div class="lab">FOUNDATION</div>
-      <div class="sub">Start with structure. Get oriented fast.</div>
+      <div class="lab">COHERENCE</div>
+      <div class="sub">
+        Definitions · Substrate · Laws · Measurement · Structure
+      </div>
     </div>
   </div>
 
-  <div class="d d-bot" id="goFrontier" role="button" tabindex="0" aria-label="Frontier">
+  <!-- POWER -->
+  <div class="d d-bottom" id="dPower" role="button" tabindex="0">
     <div class="inner">
-      <div class="lab">FRONTIER</div>
-      <div class="sub">Dream forward—without losing your footing.</div>
+      <div class="lab">POWER</div>
+      <div class="sub">
+        Products · Industry · Expansion · Frontier · Application
+      </div>
     </div>
   </div>
 
-  <div class="core">◆</div>
 </div>
-
-<div class="foot">No belief required · No selling · Just traversal</div>
 
 <script>
 (function(){
+
   var qs = new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
+
   if(time==="trajectory") time="post";
   if(lang!=="en" && lang!=="zh") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  try{
-    localStorage.setItem("gd_lang", lang);
-    localStorage.setItem("gd_style", style);
-    localStorage.setItem("gd_time", time);
-  }catch(e){}
+  if(time!=="origin" && time!=="now" && time!=="post") time="origin";
 
   function q(){
-    var p=new URLSearchParams();
-    p.set("lang",lang); p.set("style",style); p.set("time",time);
-    return "?" + p.toString();
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time);
   }
 
-  // EXIT preserves state
-  document.getElementById("btnExit").href="/door/"+q();
+  function goCoherence(){
+    location.href = "/home/"+q();
+  }
 
-  function go(path){ location.href = path + q(); }
+  function goPower(){
+    location.href = "/explore/"+q();
+  }
 
-  var f = document.getElementById("goFoundation");
-  var r = document.getElementById("goFrontier");
+  var dc = document.getElementById("dCoherence");
+  var dp = document.getElementById("dPower");
 
-  f.addEventListener("click", function(){ go("/home/"); });
-  r.addEventListener("click", function(){ go("/explore/frontier/"); });
+  dc.addEventListener("click", goCoherence);
+  dp.addEventListener("click", goPower);
 
-  [f,r].forEach(function(el){
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
-    });
+  dc.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goCoherence(); }
   });
+  dp.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goPower(); }
+  });
+
 })();
 </script>
 

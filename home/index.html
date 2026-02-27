@@ -1,12 +1,21 @@
 <!-- TNT — /home/index.html
-     HUB A · 12-DIRECTION INDEX + RUSSIAN DOLL + PROJECT JUMPS
+     HUB A · DIAMOND FORK TREE (FIXED) + RUSSIAN DOLL
      INSTRUMENT-COMPATIBLE:
-       - Reads URL params: lang/style/time/depth
-       - Writes localStorage keys: gd_lang/gd_style/gd_time/gd_depth
-       - Does NOT invent gd_* query params
-     UI:
-       - ui.css owns field + buttons
-       - branch.css optional (not required here, but safe to include)
+       URL keys: lang/style/time/depth
+       LS keys: gd_lang/gd_style/gd_time/gd_depth
+
+     TREE (LOCKED):
+       Start: N / E / S / W only
+       Open Primary -> North Star + NE/NW/SE/SW
+       Open Diagonal -> ENE/WNW/ESE/WSW
+       Optional: WNW -> NNW, WSW -> SSW
+       Open North Star -> local N/E/S/W
+
+     CONTENT:
+       One paragraph per lens (informal/formal)
+       View: Informal/Formal/Both
+       Language: EN/中文
+       Per node Jump (fill JUMPS)
 -->
 
 <!doctype html>
@@ -18,15 +27,11 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-
-<!-- Instrument must run (canon state + i18n) -->
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-/* DO NOT TOUCH FIELD — ui.css owns html/body background */
 a{color:inherit;text-decoration:none}
 :root{--dockH:92px}
-
 .page{
   width:min(980px,94vw);
   margin:0 auto;
@@ -36,11 +41,11 @@ a{color:inherit;text-decoration:none}
   gap:12px;
 }
 
-/* Header block (uses ui.css field; local glass only) */
+/* header */
 .header{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  background:rgba(0,0,0,.18);
+  background:rgba(0,0,0,.14);
   backdrop-filter:blur(10px);
   padding:14px 16px;
   box-shadow:0 24px 80px rgba(0,0,0,.55);
@@ -48,18 +53,10 @@ a{color:inherit;text-decoration:none}
 .k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
 .t{font-weight:950;font-size:24px;letter-spacing:.3px;margin:0 0 6px}
 .s{font-size:13px;opacity:.82;line-height:1.5;margin:0;max-width:860px}
+.ctrl{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:12px}
 
-/* Controls row */
-.ctrl{
-  display:flex;
-  justify-content:flex-end;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:12px;
-}
-
-/* Direction bubble list */
-.dir{
+/* node */
+.node{
   --c:#93C5FD;
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
@@ -69,38 +66,31 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 18px 60px rgba(0,0,0,.62);
   overflow:hidden;
 }
-.dHead{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:14px 16px;
-  cursor:pointer;
-  font-weight:950;
-  letter-spacing:.2px;
+.nHead{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:14px 16px;cursor:pointer;font-weight:950;letter-spacing:.2px;
 }
-.dLeft{display:flex;align-items:center;gap:10px;min-width:0}
+.nLeft{display:flex;align-items:center;gap:10px;min-width:0}
 .diamond{
-  width:12px;height:12px;
-  transform:rotate(45deg);
-  border-radius:4px;
-  background:var(--c);
+  width:12px;height:12px;transform:rotate(45deg);border-radius:4px;background:var(--c);
   box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;
+  flex:0 0 auto;pointer-events:none;
 }
-.dLabel{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dBody{
+.nLabel{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nBody{
   display:none;
   padding:12px 14px 14px;
   border-top:1px solid rgba(255,255,255,.08);
 
-  /* Russian doll: each open body scrolls */
+  /* Russian doll scroll */
   overflow:auto;
   -webkit-overflow-scrolling:touch;
 }
-.dir.open .dBody{display:block}
+.node.open>.nBody{display:block}
 
-/* Lens blocks */
+.childStack{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+
+/* content */
 .lensBlock{
   border:1px solid rgba(255,255,255,.10);
   border-radius:14px;
@@ -111,27 +101,22 @@ a{color:inherit;text-decoration:none}
 }
 .lensTitle{font-weight:950;font-size:12px;margin:0 0 8px;opacity:.88}
 .paragraph{margin:0;line-height:1.72;font-size:14.5px;color:rgba(255,255,255,.90)}
-
 .indexLine{
-  margin-top:10px;
-  padding:10px 12px;
-  border-radius:14px;
+  margin-top:10px;padding:10px 12px;border-radius:14px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.14);
-  font-size:12.5px;
-  color:rgba(255,255,255,.80);
+  font-size:12.5px;color:rgba(255,255,255,.80)
 }
 .indexLine a{color:var(--gold);font-weight:950;text-decoration:none}
 
-/* View filter */
+/* view filter */
 .view-formal .lensBlock[data-lens="informal"]{display:none}
 .view-informal .lensBlock[data-lens="formal"]{display:none}
 .view-both .lensBlock{display:block}
 
-/* Bottom dock (mobile-safe grid) */
+/* dock */
 .dock{
-  position:fixed;
-  left:50%;
+  position:fixed;left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:220;
@@ -147,10 +132,11 @@ a{color:inherit;text-decoration:none}
   grid-template-columns:repeat(4, minmax(0,1fr));
   gap:10px;
 }
-.dock .btn{width:100%; padding:10px 10px; border-radius:999px;}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;}
 .dock .full{grid-column:1 / -1;}
 @media (max-width:520px){
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+  .dock .full{grid-column:1 / -1;}
 }
 </style>
 </head>
@@ -158,26 +144,21 @@ a{color:inherit;text-decoration:none}
 <body>
 
 <div class="page">
-
   <div class="header" id="brand">
     <p class="k" id="hk">CARDINAL AXIS</p>
     <h1 class="t" id="ht">HUB A · Index</h1>
-    <p class="s" id="hs">12-direction index. Each direction opens into one summary paragraph per lens, plus a project jump.</p>
+    <p class="s" id="hs">Diamond fork. Start with N/E/S/W. Each expands into North Star + diagonals. Diagonals refine only when opened.</p>
 
     <div class="ctrl">
-      <!-- View (uses ui.css button system) -->
       <button class="btn" id="vInformal" type="button">INFORMAL</button>
       <button class="btn" id="vFormal" type="button">FORMAL</button>
       <button class="btn" id="vBoth" type="button">BOTH</button>
-
-      <!-- Language -->
       <button class="btn" id="bEN" type="button">EN</button>
       <button class="btn" id="bZH" type="button">中文</button>
     </div>
   </div>
 
   <div id="root"></div>
-
 </div>
 
 <div class="dock" id="dock" aria-label="Navigation">
@@ -185,260 +166,273 @@ a{color:inherit;text-decoration:none}
   <button class="btn" id="navForward" type="button">FORWARD</button>
   <button class="btn" id="navHub" type="button">HUB</button>
   <button class="btn" id="navExplore" type="button">EXPLORE</button>
-
   <button class="btn" id="navProducts" type="button">PRODUCTS</button>
   <button class="btn" id="navLaws" type="button">LAWS</button>
   <button class="btn" id="navGauges" type="button">GAUGES</button>
   <button class="btn" id="navTop" type="button">TOP</button>
-
   <button class="btn full" id="navJump" type="button">JUMP (ACTIVE PROJECT)</button>
 </div>
 
 <script>
 (function(){
-  // --- Read canon from URL (instrument style) ---
-  const qs = new URLSearchParams(location.search);
-  function qGet(k){ return qs.get(k); }
+  // ---- Instrument-compatible state: URL keys lang/style/time/depth ----
+  const qs=new URLSearchParams(location.search);
+  const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+  const lsSet=(k,v)=>{try{localStorage.setItem(k,String(v))}catch(e){}};
 
-  // Prefer URL params (lang/style/time/depth), fallback to instrument LS keys
-  function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
-  function lsSet(k,v){ try{localStorage.setItem(k,String(v));}catch(e){} }
+  let lang  = qs.get("lang")  || lsGet("gd_lang")  || "en";
+  let style = qs.get("style") || lsGet("gd_style") || "formal";
+  let time  = qs.get("time")  || lsGet("gd_time")  || "now";
+  let depth = qs.get("depth") || lsGet("gd_depth") || "explore";
 
-  let lang  = qGet("lang")  || lsGet("gd_lang")  || "en";
-  let style = qGet("style") || lsGet("gd_style") || "formal";
-  let time  = qGet("time")  || lsGet("gd_time")  || "now";
-  let depth = qGet("depth") || lsGet("gd_depth") || "explore";
+  if(lang!=="en"&&lang!=="zh") lang="en";
+  if(style!=="formal"&&style!=="informal") style="formal";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(depth!=="explore"&&depth!=="learn") depth="explore";
 
-  if(lang!=="en" && lang!=="zh") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+  lsSet("gd_lang",lang); lsSet("gd_style",style); lsSet("gd_time",time); lsSet("gd_depth",depth);
+  document.documentElement.lang=lang;
 
-  // Persist canon LS (instrument-compatible)
-  lsSet("gd_lang",lang);
-  lsSet("gd_style",style);
-  lsSet("gd_time",time);
-  lsSet("gd_depth",depth);
-
-  document.documentElement.lang = lang;
-
-  function makeQS(overrides){
-    const p = new URLSearchParams();
-    p.set("lang",  (overrides && overrides.lang)  || lang);
-    p.set("style", (overrides && overrides.style) || style);
-    p.set("time",  (overrides && overrides.time)  || time);
-    p.set("depth", (overrides && overrides.depth) || depth);
-    return "?" + p.toString();
+  function makeQS(over){
+    const p=new URLSearchParams();
+    p.set("lang",  (over&&over.lang)  || lang);
+    p.set("style", (over&&over.style) || style);
+    p.set("time",  (over&&over.time)  || time);
+    p.set("depth", (over&&over.depth) || depth);
+    return "?"+p.toString();
   }
+  function nav(path){ location.href = path + makeQS(); }
 
-  // --- View mode (separate from gd_style; BOTH is UI-only) ---
-  const root = document.getElementById("root");
+  // ---- View toggle (UI only) ----
+  const root=document.getElementById("root");
+  const vInformal=document.getElementById("vInformal");
+  const vFormal=document.getElementById("vFormal");
+  const vBoth=document.getElementById("vBoth");
   function applyView(v){
     root.classList.remove("view-formal","view-informal","view-both");
     root.classList.add("view-"+v);
-
-    // ui.css uses .btn.active, so we toggle that
     vInformal.classList.toggle("active", v==="informal");
     vFormal.classList.toggle("active", v==="formal");
     vBoth.classList.toggle("active", v==="both");
   }
-
-  // Controls
-  const vInformal=document.getElementById("vInformal");
-  const vFormal=document.getElementById("vFormal");
-  const vBoth=document.getElementById("vBoth");
-  const bEN=document.getElementById("bEN");
-  const bZH=document.getElementById("bZH");
-
-  // Default view follows style (formal/informal); BOTH is optional
   applyView(style);
-
-  bEN.classList.toggle("active", lang==="en");
-  bZH.classList.toggle("active", lang==="zh");
 
   vInformal.onclick=()=>applyView("informal");
   vFormal.onclick=()=>applyView("formal");
   vBoth.onclick=()=>applyView("both");
 
-  function setLang(next){
-    // preserve open dirs
-    const open = new Set();
-    root.querySelectorAll(".dir").forEach((n,i)=>{ if(n.classList.contains("open")) open.add(i); });
-
-    lang = next;
-    lsSet("gd_lang", lang);
-    document.documentElement.lang = lang;
-
-    // update URL to match instrument convention
-    history.replaceState({}, "", location.pathname + makeQS({lang}));
-
-    // update button state
+  // ---- Lang toggle (instrument-compatible: URL uses lang=) ----
+  const bEN=document.getElementById("bEN");
+  const bZH=document.getElementById("bZH");
+  function paintLang(){
     bEN.classList.toggle("active", lang==="en");
     bZH.classList.toggle("active", lang==="zh");
-
-    // update header language only (rest of text in nodes updates on rebuild)
-    setHeaderLang();
-
-    // rebuild nodes (safe)
-    render();
-    root.querySelectorAll(".dir").forEach((n,i)=>{ if(open.has(i)) n.classList.add("open"); });
-    recomputeHeights();
-  }
-
-  bEN.onclick=()=>setLang("en");
-  bZH.onclick=()=>setLang("zh");
-
-  function setHeaderLang(){
-    if(lang==="zh"){
-      hk.textContent="基轴体系";
-      ht.textContent="枢纽A · 索引";
-      hs.textContent="12方向索引。每个方向展开每个镜头的一段总结，并提供项目跳转。";
-    }else{
-      hk.textContent="CARDINAL AXIS";
-      ht.textContent="HUB A · Index";
-      hs.textContent="12-direction index. Each direction opens into one summary paragraph per lens, plus a project jump.";
-    }
+    hk.textContent = (lang==="zh") ? "基轴体系" : "CARDINAL AXIS";
+    ht.textContent = (lang==="zh") ? "枢纽A · 索引" : "HUB A · Index";
+    hs.textContent = (lang==="zh")
+      ? "钻石分叉。从N/E/S/W开始。展开为北极星 + 对角。对角仅在打开时细化。"
+      : "Diamond fork. Start with N/E/S/W. Each expands into North Star + diagonals. Diagonals refine only when opened.";
   }
   const hk=document.getElementById("hk");
   const ht=document.getElementById("ht");
   const hs=document.getElementById("hs");
-  setHeaderLang();
+  paintLang();
 
-  // --- 12 directions & colors (restored scheme) ---
-  const ORDER=["N","NNE","ENE","E","ESE","SSE","S","SSW","WSW","W","WNW","NNW"];
-  const COLORS={
-    N:"#1F3A8A", NNE:"#2C3EAF", ENE:"#4B3FBF", E:"#0EA5E9",
-    ESE:"#14B8A6", SSE:"#22C55E", S:"#F59E0B", SSW:"#EA580C",
-    WSW:"#DC2626", W:"#7F1D1D", WNW:"#9333EA", NNW:"#334155"
-  };
-  const LABEL={
-    N:{en:"N · DEFINITIONS",zh:"N · 定义"},
-    NNE:{en:"NNE",zh:"NNE"},
-    ENE:{en:"ENE",zh:"ENE"},
-    E:{en:"E · PRODUCTS",zh:"E · 产品"},
-    ESE:{en:"ESE",zh:"ESE"},
-    SSE:{en:"SSE",zh:"SSE"},
-    S:{en:"S · CONSTRAINTS",zh:"S · 约束"},
-    SSW:{en:"SSW",zh:"SSW"},
-    WSW:{en:"WSW",zh:"WSW"},
-    W:{en:"W · CONTAINMENT",zh:"W · 隔离"},
-    WNW:{en:"WNW",zh:"WNW"},
-    NNW:{en:"NNW",zh:"NNW"}
+  function snapshotOpen(){
+    const ids=[];
+    root.querySelectorAll(".node.open").forEach(n=>ids.push(n.getAttribute("data-id")));
+    return ids;
+  }
+  function restoreOpen(ids){
+    const set=new Set(ids);
+    root.querySelectorAll(".node").forEach(n=>{
+      if(set.has(n.getAttribute("data-id"))) n.classList.add("open");
+    });
+    recomputeHeights();
+  }
+
+  function setLang(next){
+    const open=snapshotOpen();
+    lang=next;
+    lsSet("gd_lang",lang);
+    document.documentElement.lang=lang;
+    history.replaceState({}, "", location.pathname + makeQS({lang}));
+    paintLang();
+    render();
+    restoreOpen(open);
+  }
+  bEN.onclick=()=>setLang("en");
+  bZH.onclick=()=>setLang("zh");
+
+  // ---- FIXED TREE (Diamond Fork functioning correctly) ----
+  // PRIMARY: N/E/S/W only
+  // Each primary children: STAR + NE/NW/SE/SW
+  // Diagonal refinement: NE->ENE, NW->WNW, SE->ESE, SW->WSW
+  // Optional: WNW->NNW, WSW->SSW
+  // STAR children: local N/E/S/W
+  const TREE = {
+    N:{label:{en:"N · DEFINITIONS",zh:"N · 定义"}, color:"#1F3A8A", children:["N★","N:NE","N:NW","N:SE","N:SW"]},
+    E:{label:{en:"E · PRODUCTS",zh:"E · 产品"}, color:"#0EA5E9", children:["E★","E:NE","E:NW","E:SE","E:SW"]},
+    S:{label:{en:"S · CONSTRAINTS",zh:"S · 约束"}, color:"#F59E0B", children:["S★","S:NE","S:NW","S:SE","S:SW"]},
+    W:{label:{en:"W · CONTAINMENT",zh:"W · 隔离"}, color:"#7F1D1D", children:["W★","W:NE","W:NW","W:SE","W:SW"]},
+
+    // Star nodes
+    "N★":{label:{en:"NORTH STAR",zh:"北极星"}, color:"#2C3EAF", children:["N★:N","N★:E","N★:S","N★:W"]},
+    "E★":{label:{en:"NORTH STAR",zh:"北极星"}, color:"#2C3EAF", children:["E★:N","E★:E","E★:S","E★:W"]},
+    "S★":{label:{en:"NORTH STAR",zh:"北极星"}, color:"#2C3EAF", children:["S★:N","S★:E","S★:S","S★:W"]},
+    "W★":{label:{en:"NORTH STAR",zh:"北极星"}, color:"#2C3EAF", children:["W★:N","W★:E","W★:S","W★:W"]},
+
+    // Diagonals (same labels, but unique IDs)
+    "N:NE":{label:{en:"NE",zh:"NE"}, color:"#2C3EAF", children:["N:ENE"]},
+    "N:NW":{label:{en:"NW",zh:"NW"}, color:"#9333EA", children:["N:WNW"]},
+    "N:SE":{label:{en:"SE",zh:"SE"}, color:"#14B8A6", children:["N:ESE"]},
+    "N:SW":{label:{en:"SW",zh:"SW"}, color:"#EA580C", children:["N:WSW"]},
+
+    "E:NE":{label:{en:"NE",zh:"NE"}, color:"#2C3EAF", children:["E:ENE"]},
+    "E:NW":{label:{en:"NW",zh:"NW"}, color:"#9333EA", children:["E:WNW"]},
+    "E:SE":{label:{en:"SE",zh:"SE"}, color:"#14B8A6", children:["E:ESE"]},
+    "E:SW":{label:{en:"SW",zh:"SW"}, color:"#EA580C", children:["E:WSW"]},
+
+    "S:NE":{label:{en:"NE",zh:"NE"}, color:"#2C3EAF", children:["S:ENE"]},
+    "S:NW":{label:{en:"NW",zh:"NW"}, color:"#9333EA", children:["S:WNW"]},
+    "S:SE":{label:{en:"SE",zh:"SE"}, color:"#14B8A6", children:["S:ESE"]},
+    "S:SW":{label:{en:"SW",zh:"SW"}, color:"#EA580C", children:["S:WSW"]},
+
+    "W:NE":{label:{en:"NE",zh:"NE"}, color:"#2C3EAF", children:["W:ENE"]},
+    "W:NW":{label:{en:"NW",zh:"NW"}, color:"#9333EA", children:["W:WNW"]},
+    "W:SE":{label:{en:"SE",zh:"SE"}, color:"#14B8A6", children:["W:ESE"]},
+    "W:SW":{label:{en:"SW",zh:"SW"}, color:"#EA580C", children:["W:WSW"]},
+
+    // Refinements
+    "N:ENE":{label:{en:"ENE",zh:"ENE"}, color:"#4B3FBF", children:[]},
+    "N:WNW":{label:{en:"WNW",zh:"WNW"}, color:"#9333EA", children:["N:NNW"]},
+    "N:ESE":{label:{en:"ESE",zh:"ESE"}, color:"#14B8A6", children:[]},
+    "N:WSW":{label:{en:"WSW",zh:"WSW"}, color:"#DC2626", children:["N:SSW"]},
+    "N:NNW":{label:{en:"NNW",zh:"NNW"}, color:"#334155", children:[]},
+    "N:SSW":{label:{en:"SSW",zh:"SSW"}, color:"#EA580C", children:[]},
+
+    "E:ENE":{label:{en:"ENE",zh:"ENE"}, color:"#4B3FBF", children:[]},
+    "E:WNW":{label:{en:"WNW",zh:"WNW"}, color:"#9333EA", children:["E:NNW"]},
+    "E:ESE":{label:{en:"ESE",zh:"ESE"}, color:"#14B8A6", children:[]},
+    "E:WSW":{label:{en:"WSW",zh:"WSW"}, color:"#DC2626", children:["E:SSW"]},
+    "E:NNW":{label:{en:"NNW",zh:"NNW"}, color:"#334155", children:[]},
+    "E:SSW":{label:{en:"SSW",zh:"SSW"}, color:"#EA580C", children:[]},
+
+    "S:ENE":{label:{en:"ENE",zh:"ENE"}, color:"#4B3FBF", children:[]},
+    "S:WNW":{label:{en:"WNW",zh:"WNW"}, color:"#9333EA", children:["S:NNW"]},
+    "S:ESE":{label:{en:"ESE",zh:"ESE"}, color:"#14B8A6", children:[]},
+    "S:WSW":{label:{en:"WSW",zh:"WSW"}, color:"#DC2626", children:["S:SSW"]},
+    "S:NNW":{label:{en:"NNW",zh:"NNW"}, color:"#334155", children:[]},
+    "S:SSW":{label:{en:"SSW",zh:"SSW"}, color:"#EA580C", children:[]},
+
+    "W:ENE":{label:{en:"ENE",zh:"ENE"}, color:"#4B3FBF", children:[]},
+    "W:WNW":{label:{en:"WNW",zh:"WNW"}, color:"#9333EA", children:["W:NNW"]},
+    "W:ESE":{label:{en:"ESE",zh:"ESE"}, color:"#14B8A6", children:[]},
+    "W:WSW":{label:{en:"WSW",zh:"WSW"}, color:"#DC2626", children:["W:SSW"]},
+    "W:NNW":{label:{en:"NNW",zh:"NNW"}, color:"#334155", children:[]},
+    "W:SSW":{label:{en:"SSW",zh:"SSW"}, color:"#EA580C", children:[]},
+
+    // Star-local micro compass labels (these are where NN/SN/EN/WN concept can be layered later)
+    "N★:N":{label:{en:"N",zh:"N"}, color:"#1F3A8A", children:[]},
+    "N★:E":{label:{en:"E",zh:"E"}, color:"#0EA5E9", children:[]},
+    "N★:S":{label:{en:"S",zh:"S"}, color:"#F59E0B", children:[]},
+    "N★:W":{label:{en:"W",zh:"W"}, color:"#7F1D1D", children:[]},
+
+    "E★:N":{label:{en:"N",zh:"N"}, color:"#1F3A8A", children:[]},
+    "E★:E":{label:{en:"E",zh:"E"}, color:"#0EA5E9", children:[]},
+    "E★:S":{label:{en:"S",zh:"S"}, color:"#F59E0B", children:[]},
+    "E★:W":{label:{en:"W",zh:"W"}, color:"#7F1D1D", children:[]},
+
+    "S★:N":{label:{en:"N",zh:"N"}, color:"#1F3A8A", children:[]},
+    "S★:E":{label:{en:"E",zh:"E"}, color:"#0EA5E9", children:[]},
+    "S★:S":{label:{en:"S",zh:"S"}, color:"#F59E0B", children:[]},
+    "S★:W":{label:{en:"W",zh:"W"}, color:"#7F1D1D", children:[]},
+
+    "W★:N":{label:{en:"N",zh:"N"}, color:"#1F3A8A", children:[]},
+    "W★:E":{label:{en:"E",zh:"E"}, color:"#0EA5E9", children:[]},
+    "W★:S":{label:{en:"S",zh:"S"}, color:"#F59E0B", children:[]},
+    "W★:W":{label:{en:"W",zh:"W"}, color:"#7F1D1D", children:[]}
   };
 
-  // --- Project Jumps (FILL THESE EXACT PATHS) ---
-  // Replace "#" with your real routes.
-  const JUMPS={
-    N:"#",   NNE:"#", ENE:"#", E:"#",
-    ESE:"#", SSE:"#", S:"#",   SSW:"#",
-    WSW:"#", W:"#",   WNW:"#", NNW:"#"
-  };
+  // ---- JUMPS (fill real routes later) ----
+  const JUMPS = {}; // key: node id -> route string
 
-  // --- Copy (summary per lens per direction, bilingual) ---
-  const COPY={
-    N:{
-      informal:{en:"Collapse starts with loose words. North pins meaning before motion so scope stays honest under pressure and collaboration stays real.",zh:"崩塌始于词义松动。北在行动前钉住含义，使范围在压力下保持诚实，协作保持真实。"},
-      formal:{en:"Scope precedes authority. Definitions constrain interpretation and verification cites fixed anchors so drift is detectable at first deviation.",zh:"范围先于权力。定义约束解释，核查引用固定锚点，使漂移在首次偏差时可检测。"}
-    },
-    NNE:{
-      informal:{en:"Translation kills most projects. NNE stops semantic slip during handoff so what you build still matches what you meant.",zh:"翻译杀死多数项目。NNE阻止交接时语义滑移，使构建仍匹配本意。"},
-      formal:{en:"Translation preserves scope. Specs cite semantic anchors and integration detects drift before scale amplifies mismatch.",zh:"翻译必须保范围。规格引用语义锚点，集成前检测漂移以防规模放大不匹配。"}
-    },
-    ENE:{
-      informal:{en:"ENE drags contracts into surfaces. Boundaries show up where behavior lives so users stop guessing what’s real.",zh:"ENE把契约拖进执行面。边界出现在行为处，用户不再猜测什么是真实的。"},
-      formal:{en:"ENE compiles boundaries into interfaces. Claims lock to declared terms and acceptance criteria remain measurable.",zh:"ENE把边界编译进接口。主张锁定声明术语，验收标准保持可测。"}
-    },
-    E:{
-      informal:{en:"East turns structure into usable surfaces without lying. Products carry boundaries so adoption stays honest under scale.",zh:"东把结构变成可用执行面而不撒谎。产品携带边界，使采纳在规模下仍诚实。"},
-      formal:{en:"Execution inherits constraints. Products remain bounded and verification routes remain explicit under growth.",zh:"执行继承约束。产品保持有界，核查路径在增长中仍显式。"}
-    },
-    ESE:{
-      informal:{en:"ESE is power meeting gates. Readiness must lead exposure or momentum becomes damage.",zh:"ESE是能力遇闸门。就绪必须领先曝光，否则动量变损伤。"},
-      formal:{en:"ESE binds scaling to prerequisites and evidence so rollout cannot outrun admissibility.",zh:"ESE把扩张绑定先决条件与证据，使上线不能跑过可采信。"}
-    },
-    SSE:{
-      informal:{en:"SSE turns ‘when’ into qualification. Deadlines stop deciding readiness; prerequisites do.",zh:"SSE把“何时”变成资格。就绪不由截止日决定，而由先决条件决定。"},
-      formal:{en:"SSE enforces phase gates so fragility cannot ship by schedule.",zh:"SSE执行阶段闸门，使脆弱不能按日程上线。"}
-    },
-    S:{
-      informal:{en:"South enforces refusal before scale. If proof is missing, expansion stops, and unity stays protected.",zh:"南在规模化前执行拒绝。缺证据就停止扩张，统一得以保护。"},
-      formal:{en:"Constraint precedes permission. Gates reject unsupported claims so growth cannot outrun evidence.",zh:"约束先于许可。闸门拒绝无支撑主张，使增长不能跑过证据。"}
-    },
-    SSW:{
-      informal:{en:"SSW couples refusal with isolation. Segment breaches early so local failure doesn’t become global damage.",zh:"SSW把拒绝与隔离耦合。提早分段破口，使局部失败不变全局损伤。"},
-      formal:{en:"SSW pairs admissibility with containment so boundary breaches segment immediately to prevent cascade.",zh:"SSW配对可采信与隔离，使破界立即分段以防级联。"}
-    },
-    WSW:{
-      informal:{en:"WSW keeps one crack from becoming everyone’s outage. Contain first, repair clean, continue.",zh:"WSW让一条裂缝不变全民停机。先隔离，干净修复，再继续。"},
-      formal:{en:"WSW segments failure vectors. Partitioning prevents scale from amplifying single faults across domains.",zh:"WSW分段失败向量。分区防止规模放大单点故障到跨域。"}
-    },
-    W:{
-      informal:{en:"West isolates fracture so damage stays local and recovery stays clean. That’s how systems survive scale.",zh:"西隔离裂缝，使损伤局部化、恢复干净。这就是系统在规模下存活的方式。"},
-      formal:{en:"Containment remains architectural. Segmentation prevents cascade and returns preserve state under correction.",zh:"隔离必须是架构。分段防级联，返回在修正中保状态。"}
-    },
-    WNW:{
-      informal:{en:"WNW turns scars into clarity. Version meaning with receipts; don’t rewrite history.",zh:"WNW把伤痕变清晰。用收据版本化含义，不改写历史。"},
-      formal:{en:"WNW routes audit feedback into explicit corrections; silent edits are prohibited.",zh:"WNW将审计反馈路由到显式修正；禁止静默改义。"}
-    },
-    NNW:{
-      informal:{en:"NNW resets without semantic swap. Recovery must not smuggle new meaning into old claims.",zh:"NNW重置但不偷换概念。恢复不能把新含义偷渡进旧主张。"},
-      formal:{en:"NNW preserves semantics during return. Re-entry maintains scope and changes remain auditable.",zh:"NNW在返回中保持语义。重入保持范围，变化保持可审计。"}
+  // ---- copy: minimal (kept short; you can expand) ----
+  function copyFor(id, lens){
+    // lens: "informal" | "formal"
+    // If you want, you can replace this with per-node text tables later.
+    if(lang==="zh"){
+      return lens==="formal"
+        ? "（正式）该节点定义边界并约束解释，使扩张不漂移。"
+        : "（非正式）该节点把含义钉住，让扩张不乱跑。";
     }
-  };
+    return lens==="formal"
+      ? "(Formal) This node constrains meaning and enforces boundaries so growth cannot drift."
+      : "(Informal) This node pins meaning so expansion stays disciplined instead of chaotic.";
+  }
 
-  function makeLensBlock(lens, obj){
+  function lensTitle(lens){
+    return (lens==="formal")
+      ? (lang==="zh" ? "正式" : "Formal")
+      : (lang==="zh" ? "非正式" : "Informal");
+  }
+
+  function makeLensBlock(lens, txt){
     const b=document.createElement("div");
     b.className="lensBlock";
     b.setAttribute("data-lens", lens);
-
     const t=document.createElement("div");
     t.className="lensTitle";
-    t.textContent = (lens==="formal") ? (lang==="zh"?"正式":"Formal") : (lang==="zh"?"非正式":"Informal");
-
+    t.textContent=lensTitle(lens);
     const p=document.createElement("div");
     p.className="paragraph";
-    p.textContent = (lang==="zh") ? obj.zh : obj.en;
-
-    b.appendChild(t);
-    b.appendChild(p);
+    p.textContent=txt;
+    b.appendChild(t); b.appendChild(p);
     return b;
   }
 
-  function makeIndexLine(dir){
+  function makeIndexLine(id){
     const line=document.createElement("div");
     line.className="indexLine";
-    const lbl = (lang==="zh") ? LABEL[dir].zh : LABEL[dir].en;
-    line.append((lang==="zh")
-      ? ("索引：跳转到 "+lbl+" 对应项目。 ")
-      : ("Index: jump to the project for "+lbl+". ")
-    );
+    const lbl = (lang==="zh") ? TREE[id].label.zh : TREE[id].label.en;
+    line.append((lang==="zh") ? ("索引：跳转到 "+lbl+" 对应项目。 ") : ("Index: jump to the project for "+lbl+". "));
     const a=document.createElement("a");
-    const target = JUMPS[dir] || "#";
-    a.href = (target === "#") ? "#" : (target + makeQS());
+    const target = JUMPS[id] || "#";
+    a.href = (target==="#") ? "#" : (target + makeQS());
     a.textContent = (lang==="zh") ? "跳转" : "Jump";
     line.appendChild(a);
     return line;
   }
 
-  function makeDir(dir){
+  function makeNode(id){
+    const info = TREE[id];
+
     const s=document.createElement("section");
-    s.className="dir";
-    s.style.setProperty("--c", COLORS[dir]);
+    s.className="node";
+    s.style.setProperty("--c", info.color || "#93C5FD");
+    s.setAttribute("data-id", id);
 
     const h=document.createElement("div");
-    h.className="dHead";
-    const lbl = (lang==="zh") ? LABEL[dir].zh : LABEL[dir].en;
-    h.innerHTML="<div class='dLeft'><div class='diamond'></div><div class='dLabel'>"+lbl+"</div></div><div>▸</div>";
+    h.className="nHead";
+    h.innerHTML="<div class='nLeft'><div class='diamond'></div><div class='nLabel'>"+((lang==="zh")?info.label.zh:info.label.en)+"</div></div><div>▸</div>";
 
     const b=document.createElement("div");
-    b.className="dBody";
-    b.appendChild(makeLensBlock("informal", COPY[dir].informal));
-    b.appendChild(makeLensBlock("formal", COPY[dir].formal));
-    b.appendChild(makeIndexLine(dir));
+    b.className="nBody";
+
+    b.appendChild(makeLensBlock("informal", copyFor(id,"informal")));
+    b.appendChild(makeLensBlock("formal", copyFor(id,"formal")));
+    b.appendChild(makeIndexLine(id));
+
+    if(info.children && info.children.length){
+      const stack=document.createElement("div");
+      stack.className="childStack";
+      info.children.forEach(child=>stack.appendChild(makeNode(child)));
+      b.appendChild(stack);
+    }
 
     h.addEventListener("click",()=>{
       s.classList.toggle("open");
-      localStorage.setItem("hub_active_dir", dir);
+      localStorage.setItem("hub_active_node", id);
       recomputeHeights();
     });
 
@@ -449,26 +443,27 @@ a{color:inherit;text-decoration:none}
 
   function render(){
     root.innerHTML="";
-    ORDER.forEach(d=>root.appendChild(makeDir(d)));
+    ["N","E","S","W"].forEach(k=>root.appendChild(makeNode(k)));
     recomputeHeights();
   }
 
-  // Russian doll height cap for open bodies
+  // Russian doll cap
   function recomputeHeights(){
-    const dockH = dock ? dock.getBoundingClientRect().height : 92;
+    const dockEl=document.getElementById("dock");
+    const dockH = dockEl ? dockEl.getBoundingClientRect().height : 92;
     document.documentElement.style.setProperty("--dockH", dockH + "px");
 
     const brandH = brand ? brand.getBoundingClientRect().height : 0;
     const viewportH = window.innerHeight || 800;
     const avail = Math.max(220, viewportH - brandH - dockH - 48);
 
-    root.querySelectorAll(".dir.open .dBody").forEach(el=>{
+    root.querySelectorAll(".node.open .nBody").forEach(el=>{
       el.style.maxHeight = avail + "px";
     });
   }
   window.addEventListener("resize", recomputeHeights);
 
-  // Bottom dock wiring
+  // Dock
   navBack.onclick=()=>history.back();
   navForward.onclick=()=>history.forward();
   navHub.onclick=()=>nav("/home/");
@@ -478,13 +473,13 @@ a{color:inherit;text-decoration:none}
   navGauges.onclick=()=>nav("/gauges/");
   navTop.onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
   navJump.onclick=()=>{
-    const d = localStorage.getItem("hub_active_dir") || "N";
-    const target = JUMPS[d] || "#";
+    const id = localStorage.getItem("hub_active_node") || "N";
+    const target = JUMPS[id] || "#";
     if(target==="#") return;
     location.href = target + makeQS();
   };
 
-  // Initialize
+  // Init
   render();
 
 })();

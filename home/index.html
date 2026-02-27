@@ -1,8 +1,23 @@
 <!-- TNT — /home/index.html
-     HUB A · DIAMOND FORK TREE + RUSSIAN DOLL + FOCUS MODE + PATH BAR
-     INSTRUMENT-COMPATIBLE:
-       URL keys: lang/style/time/depth
-       LS keys: gd_lang/gd_style/gd_time/gd_depth
+     HUB A · EXECUTIVE INDEX (NO EXPANSION)
+     PURPOSE:
+       - 4 primary nodes only (N / E / S / W)
+       - Tap a node = immediate jump (no sub-bubbles here)
+       - Jump Deck + Jump Index handle explanations + full jump catalog
+     CONTROLS:
+       - View: Informal / Formal / Both (changes the 1-sentence line)
+       - Language: EN / 中文 / ES (triangle cluster; single-language render)
+     BOTTOM (NO TABS / NO STACKING):
+       - EXIT (Door)
+       - JUMP DECK
+       - JUMP INDEX
+       - ACTIVE JUMP (last selected node)
+     STATE:
+       - URL keys: lang/style/time/depth
+       - LS keys: gd_lang/gd_style/gd_time/gd_depth
+     LOCKS:
+       - ui.css owns field; no html/body background styling
+       - uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
 -->
 
 <!doctype html>
@@ -18,18 +33,18 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-:root{--dockH:92px;--barH:54px}
+:root{--dockH:84px}
 
 .page{
   width:min(980px,94vw);
   margin:0 auto;
-  padding:14px 0 calc(var(--dockH) + 22px);
+  padding:14px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
   gap:12px;
 }
 
-/* header */
+/* Header */
 .header{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
@@ -41,53 +56,52 @@ a{color:inherit;text-decoration:none}
 .k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
 .t{font-weight:950;font-size:24px;letter-spacing:.3px;margin:0 0 6px}
 .s{font-size:13px;opacity:.82;line-height:1.5;margin:0;max-width:860px}
-.ctrl{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:12px}
 
-/* ===== PATH BAR (sticky, horizontal scroll) ===== */
-.pathBar{
-  position:sticky;
-  top:0;
-  z-index:210;
-  margin-top:10px;
-  padding:8px 10px;
+/* Controls row */
+.ctrl{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  margin-top:12px;
+}
+
+/* Triangle language cluster (compact) */
+.langTri{
+  position:relative;
+  width:126px;
+  height:78px;
   border-radius:18px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  box-shadow:0 14px 44px rgba(0,0,0,.55);
-  display:none;
-}
-.pathBar.show{display:block}
-
-.pathRow{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
-}
-.pathRow::-webkit-scrollbar{display:none}
-
-.chip{
-  flex:0 0 auto;
-  border:1px solid rgba(255,255,255,.14);
   background:rgba(0,0,0,.18);
+  box-shadow:0 14px 36px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
+  display:grid;
+  place-items:center;
+  padding:8px;
+}
+.langTri .tri{position:relative;width:110px;height:62px;}
+.langTri .btn{
+  position:absolute;
   padding:8px 12px;
   border-radius:999px;
   font-weight:900;
   letter-spacing:.2px;
-  cursor:pointer;
+  line-height:1;
   white-space:nowrap;
-  -webkit-tap-highlight-color:transparent;
 }
-.chip:hover{border-color:var(--gold)}
-.chip.on{
-  border-color:var(--gold);
-  box-shadow:0 0 18px rgba(212,175,55,.22);
+.langTri .en{left:50%;top:0;transform:translateX(-50%);}
+.langTri .zh{left:0;bottom:0;}
+.langTri .es{right:0;bottom:0;}
+
+@media (max-width:520px){
+  .langTri{width:116px;height:74px}
+  .langTri .tri{width:102px;height:60px}
+  .langTri .btn{padding:8px 10px}
 }
 
-/* nodes */
+/* Node list */
+.list{display:flex;flex-direction:column;gap:10px;margin-top:4px}
 .node{
   --c:#93C5FD;
   border:1px solid rgba(255,255,255,.10);
@@ -97,62 +111,40 @@ a{color:inherit;text-decoration:none}
     linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
   box-shadow:0 18px 60px rgba(0,0,0,.62);
   overflow:hidden;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
 .nHead{
   display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:14px 16px;cursor:pointer;font-weight:950;letter-spacing:.2px;
+  padding:14px 16px;
 }
-.nLeft{display:flex;align-items:center;gap:10px;min-width:0}
+.nLeft{display:flex;align-items:flex-start;gap:10px;min-width:0}
 .diamond{
   width:12px;height:12px;transform:rotate(45deg);border-radius:4px;background:var(--c);
   box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;pointer-events:none;
+  flex:0 0 auto;pointer-events:none;margin-top:4px;
 }
-.nLabel{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nBody{
-  display:none;
-  padding:12px 14px 14px;
-  border-top:1px solid rgba(255,255,255,.08);
-
-  /* Russian doll */
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
+.nText{min-width:0}
+.nTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nOne{
+  margin-top:6px;
+  font-size:13px;
+  opacity:.84;
+  line-height:1.35;
+  max-width:60ch;
 }
-.node.open>.nBody{display:block}
+.chev{opacity:.75;font-size:18px;flex:0 0 auto}
 
-.childStack{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+/* View filtering for the single-sentence line */
+.view-informal .nOne[data-lens="formal"]{display:none}
+.view-formal .nOne[data-lens="informal"]{display:none}
+.view-both .nOne{display:block}
 
-/* content */
-.lensBlock{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:14px;
-  padding:12px 14px;
-  background:rgba(0,0,0,.18);
-  margin-bottom:10px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
-}
-.lensTitle{font-weight:950;font-size:12px;margin:0 0 8px;opacity:.88}
-.paragraph{margin:0;line-height:1.72;font-size:14.5px;color:rgba(255,255,255,.90)}
-.indexLine{
-  margin-top:10px;padding:10px 12px;border-radius:14px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
-  font-size:12.5px;color:rgba(255,255,255,.80)
-}
-.indexLine a{color:var(--gold);font-weight:950;text-decoration:none}
-
-/* view filter */
-.view-formal .lensBlock[data-lens="informal"]{display:none}
-.view-informal .lensBlock[data-lens="formal"]{display:none}
-.view-both .lensBlock{display:block}
-
-/* ===== Focus mode: hide other primaries to create reading isolation ===== */
-.focusMode .primaryWrap{display:none}
-.focusMode .primaryWrap.active{display:block}
-
-/* dock */
+/* Bottom dock: single row, no wrap, no stacking */
 .dock{
-  position:fixed;left:50%;
+  position:fixed;
+  left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:220;
@@ -165,14 +157,22 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 18px 60px rgba(0,0,0,.55);
 
   display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
+  grid-auto-flow:column;
   gap:10px;
+
+  overflow-x:auto;
+  overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;}
-.dock .full{grid-column:1 / -1;}
+.dock::-webkit-scrollbar{display:none}
+.dock .btn{width:100%;border-radius:999px;white-space:nowrap;padding:10px 10px}
+.dock[data-cols="4"]{grid-template-columns:repeat(4, minmax(150px,1fr));}
+.dock[data-cols="5"]{grid-template-columns:repeat(5, minmax(150px,1fr));}
 @media (max-width:520px){
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
-  .dock .full{grid-column:1 / -1;}
+  :root{--dockH:92px}
+  .dock[data-cols="4"]{grid-template-columns:repeat(4, minmax(132px,1fr));}
+  .dock[data-cols="5"]{grid-template-columns:repeat(5, minmax(132px,1fr));}
 }
 </style>
 </head>
@@ -184,41 +184,39 @@ a{color:inherit;text-decoration:none}
   <div class="header" id="brand">
     <p class="k" id="hk">CARDINAL AXIS</p>
     <h1 class="t" id="ht">HUB A · Index</h1>
-    <p class="s" id="hs">Diamond fork. Click N/E/S/W to isolate a section for reading.</p>
+    <p class="s" id="hs">Primary compass index. Tap a direction to jump.</p>
 
     <div class="ctrl">
       <button class="btn" id="vInformal" type="button">INFORMAL</button>
       <button class="btn" id="vFormal" type="button">FORMAL</button>
       <button class="btn" id="vBoth" type="button">BOTH</button>
-      <button class="btn" id="bEN" type="button">EN</button>
-      <button class="btn" id="bZH" type="button">中文</button>
-    </div>
 
-    <!-- Path bar shows only in focus mode -->
-    <div class="pathBar" id="pathBar">
-      <div class="pathRow" id="pathRow"></div>
+      <div class="langTri" aria-label="Language">
+        <div class="tri">
+          <button class="btn en" id="bEN" type="button">EN</button>
+          <button class="btn zh" id="bZH" type="button">中文</button>
+          <button class="btn es" id="bES" type="button">ES</button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div id="root"></div>
-
+  <div class="list view-formal" id="list"></div>
 </div>
 
-<div class="dock" id="dock" aria-label="Navigation">
-  <button class="btn" id="navBack" type="button">BACK</button>
-  <button class="btn" id="navForward" type="button">FORWARD</button>
-  <button class="btn" id="navHub" type="button">HUB</button>
-  <button class="btn" id="navExplore" type="button">EXPLORE</button>
-  <button class="btn" id="navProducts" type="button">PRODUCTS</button>
-  <button class="btn" id="navLaws" type="button">LAWS</button>
-  <button class="btn" id="navGauges" type="button">GAUGES</button>
-  <button class="btn" id="navTop" type="button">TOP</button>
-  <button class="btn full" id="navJump" type="button">JUMP (ACTIVE PROJECT)</button>
-</div>
+<nav class="dock" id="dock" data-cols="4" aria-label="Bottom actions">
+  <button class="btn" id="navExit" type="button">EXIT</button>
+  <button class="btn" id="navDeck" type="button">JUMP DECK</button>
+  <button class="btn" id="navIndex" type="button">JUMP INDEX</button>
+  <button class="btn" id="navActive" type="button">ACTIVE JUMP</button>
+
+  <!-- optional 5th slot for wider screens (kept, no stacking; dock scrolls) -->
+  <button class="btn" id="navSpline2" type="button">SPLINE 2</button>
+</nav>
 
 <script>
 (function(){
-  // ---- Instrument-compatible state: URL keys lang/style/time/depth ----
+  // ===== State (instrument-compatible) =====
   const qs=new URLSearchParams(location.search);
   const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
   const lsSet=(k,v)=>{try{localStorage.setItem(k,String(v))}catch(e){}};
@@ -228,413 +226,264 @@ a{color:inherit;text-decoration:none}
   let time  = qs.get("time")  || lsGet("gd_time")  || "now";
   let depth = qs.get("depth") || lsGet("gd_depth") || "explore";
 
-  if(lang!=="en"&&lang!=="zh") lang="en";
-  if(style!=="formal"&&style!=="informal") style="formal";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  if(style!=="formal"&&style!=="informal"&&style!=="both") style="formal";
   if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
   if(depth!=="explore"&&depth!=="learn") depth="explore";
 
-  lsSet("gd_lang",lang); lsSet("gd_style",style); lsSet("gd_time",time); lsSet("gd_depth",depth);
-  document.documentElement.lang=lang;
+  // Persist (style in URL stays; internal view supports BOTH as UI-only)
+  lsSet("gd_lang",lang);
+  lsSet("gd_style",(style==="both")?"formal":style);
+  lsSet("gd_time",time);
+  lsSet("gd_depth",depth);
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
   function makeQS(over){
     const p=new URLSearchParams();
     p.set("lang",  (over&&over.lang)  || lang);
-    p.set("style", (over&&over.style) || style);
+    p.set("style", (over&&over.style) || ((style==="both")?"formal":style));
     p.set("time",  (over&&over.time)  || time);
     p.set("depth", (over&&over.depth) || depth);
     return "?"+p.toString();
   }
-  function nav(path){ location.href = path + makeQS(); }
 
-  // ---- UI refs ----
-  const page=document.getElementById("page");
-  const root=document.getElementById("root");
-  const dock=document.getElementById("dock");
-  const brand=document.getElementById("brand");
-  const pathBar=document.getElementById("pathBar");
-  const pathRow=document.getElementById("pathRow");
+  // ===== ROUTES (edit only if your paths differ) =====
+  // These are the only guessed paths; change here if needed.
+  const ROUTE = {
+    door: "/door/",
+    deck: "/home/deck/",
+    index: "/home/jumps/",
+    spline2: "/explore/"
+  };
 
-  // ---- View toggle ----
+  // ===== JUMPS (wire to real surfaces; replace when your jump pages are installed) =====
+  // Default conservative mapping:
+  // N -> Laws, E -> Products, S -> Laws, W -> Laws (change as needed)
+  const JUMPS = {
+    N: "/laws/",
+    E: "/products/",
+    S: "/laws/",
+    W: "/laws/"
+  };
+
+  // ===== Labels + 1-sentence per lens =====
+  const NODE = {
+    N:{
+      color:"#1F3A8A",
+      title:{en:"N · STRUCTURE",zh:"N · 结构",es:"N · ESTRUCTURA"},
+      one:{
+        informal:{en:"Pin meaning before power moves.",zh:"先钉住含义，后谈扩张。",es:"Fija el significado antes de mover poder."},
+        formal:{en:"Scope precedes authority.",zh:"范围先于权力。",es:"El alcance precede a la autoridad."}
+      }
+    },
+    E:{
+      color:"#0EA5E9",
+      title:{en:"E · PRODUCTS",zh:"E · 产品",es:"E · PRODUCTOS"},
+      one:{
+        informal:{en:"Turn claims into usable surfaces with limits.",zh:"把主张变成可用执行面，并带边界。",es:"Convierte promesas en superficies con límites."},
+        formal:{en:"Execution inherits boundary conditions.",zh:"执行继承边界条件。",es:"La ejecución hereda condiciones de borde."}
+      }
+    },
+    S:{
+      color:"#F59E0B",
+      title:{en:"S · CONSTRAINTS",zh:"S · 约束",es:"S · RESTRICCIONES"},
+      one:{
+        informal:{en:"If it can’t be bounded, it can’t scale.",zh:"不有界，就别规模化。",es:"Si no se puede acotar, no puede escalar."},
+        formal:{en:"Constraint is not optional.",zh:"约束不可选。",es:"La restricción no es opcional."}
+      }
+    },
+    W:{
+      color:"#7F1D1D",
+      title:{en:"W · CONTAINMENT",zh:"W · 隔离",es:"W · CONTENCIÓN"},
+      one:{
+        informal:{en:"Keep damage local; return clean.",zh:"损伤局部化，返回要干净。",es:"Mantén el daño local; vuelve limpio."},
+        formal:{en:"Local failure must stay local.",zh:"局部失败必须局部化。",es:"El fallo local debe permanecer local."}
+      }
+    }
+  };
+
+  function T(obj){ return (lang==="zh") ? obj.zh : (lang==="es") ? obj.es : obj.en; }
+
+  // ===== Header i18n =====
+  const hk=document.getElementById("hk");
+  const ht=document.getElementById("ht");
+  const hs=document.getElementById("hs");
+  if(lang==="zh"){
+    hk.textContent="基轴体系";
+    ht.textContent="枢纽A · 索引";
+    hs.textContent="主罗盘索引。点击方向即可跳转。";
+  }else if(lang==="es"){
+    hk.textContent="CARDINAL AXIS";
+    ht.textContent="HUB A · Índice";
+    hs.textContent="Índice de brújula principal. Toca una dirección para saltar.";
+  }else{
+    hk.textContent="CARDINAL AXIS";
+    ht.textContent="HUB A · Index";
+    hs.textContent="Primary compass index. Tap a direction to jump.";
+  }
+
+  // ===== View mode (controls only what line is visible) =====
+  const list=document.getElementById("list");
   const vInformal=document.getElementById("vInformal");
   const vFormal=document.getElementById("vFormal");
   const vBoth=document.getElementById("vBoth");
 
   function applyView(v){
-    root.classList.remove("view-formal","view-informal","view-both");
-    root.classList.add("view-"+v);
+    list.classList.remove("view-formal","view-informal","view-both");
+    list.classList.add("view-"+v);
     vInformal.classList.toggle("active", v==="informal");
     vFormal.classList.toggle("active", v==="formal");
     vBoth.classList.toggle("active", v==="both");
+    style=v;
+    // do NOT store "both" into gd_style; only for UI
+    lsSet("hub_view", v);
   }
-  applyView(style);
+  const viewInit = lsGet("hub_view") || (lsGet("gd_style")==="informal" ? "informal" : "formal");
+  applyView(viewInit);
+
   vInformal.onclick=()=>applyView("informal");
   vFormal.onclick=()=>applyView("formal");
   vBoth.onclick=()=>applyView("both");
 
-  // ---- Language toggle ----
+  // ===== Language triangle =====
   const bEN=document.getElementById("bEN");
   const bZH=document.getElementById("bZH");
-  const hk=document.getElementById("hk");
-  const ht=document.getElementById("ht");
-  const hs=document.getElementById("hs");
+  const bES=document.getElementById("bES");
 
-  function paintLang(){
+  function paintLangBtns(){
     bEN.classList.toggle("active", lang==="en");
     bZH.classList.toggle("active", lang==="zh");
-    hk.textContent = (lang==="zh") ? "基轴体系" : "CARDINAL AXIS";
-    ht.textContent = (lang==="zh") ? "枢纽A · 索引" : "HUB A · Index";
-    hs.textContent = (lang==="zh")
-      ? "钻石分叉。点击N/E/S/W可隔离该区以便阅读。"
-      : "Diamond fork. Click N/E/S/W to isolate a section for reading.";
+    bES.classList.toggle("active", lang==="es");
   }
-  paintLang();
+  paintLangBtns();
 
-  function snapshotOpen(){
-    const ids=[];
-    root.querySelectorAll(".node.open").forEach(n=>ids.push(n.getAttribute("data-id")));
-    return ids;
-  }
-  function restoreOpen(ids){
-    const set=new Set(ids);
-    root.querySelectorAll(".node").forEach(n=>{
-      if(set.has(n.getAttribute("data-id"))) n.classList.add("open");
-    });
-    recomputeHeights();
-  }
   function setLang(next){
-    const open=snapshotOpen();
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    const openView = lsGet("hub_view") || "formal";
     lang=next;
     lsSet("gd_lang",lang);
-    document.documentElement.lang=lang;
+    document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
     history.replaceState({}, "", location.pathname + makeQS({lang}));
-    paintLang();
-    render();
-    restoreOpen(open);
-    updatePathBar();
+    location.reload(); // simplest + safest: single-language render, no mixed residue
   }
   bEN.onclick=()=>setLang("en");
   bZH.onclick=()=>setLang("zh");
+  bES.onclick=()=>setLang("es");
 
-  // ---- Tree (same as your working diamond-fork draft) ----
-  const TREE = {
-    N:{label:{en:"N · DEFINITIONS",zh:"N · 定义"}, color:"#1F3A8A", children:["N★","N:NE","N:NW","N:SE","N:SW"]},
-    E:{label:{en:"E · PRODUCTS",zh:"E · 产品"}, color:"#0EA5E9", children:["E★","E:NE","E:NW","E:SE","E:SW"]},
-    S:{label:{en:"S · CONSTRAINTS",zh:"S · 约束"}, color:"#F59E0B", children:["S★","S:NE","S:NW","S:SE","S:SW"]},
-    W:{label:{en:"W · CONTAINMENT",zh:"W · 隔离"}, color:"#7F1D1D", children:["W★","W:NE","W:NW","W:SE","W:SW"]},
-
-    "N★":{label:{en:"NORTH STAR",zh:"北极星"}, color:"#2C3EAF", children:["N★:N","N★:E","N★:S","N★:W"]},
-    "E★":{label:{en:"NORTH STAR",zh:"北极星"}, color:"#2C3EAF", children:["E★:N","E★:E","E★:S","E★:W"]},
-    "S★":{label:{en:"NORTH STAR",zh:"北极星"}, color:"#2C3EAF", children:["S★:N","S★:E","S★:S","S★:W"]},
-    "W★":{label:{en:"NORTH STAR",zh:"北极星"}, color:"#2C3EAF", children:["W★:N","W★:E","W★:S","W★:W"]},
-
-    "N:NE":{label:{en:"NE",zh:"NE"}, color:"#2C3EAF", children:["N:ENE"]},
-    "N:NW":{label:{en:"NW",zh:"NW"}, color:"#9333EA", children:["N:WNW"]},
-    "N:SE":{label:{en:"SE",zh:"SE"}, color:"#14B8A6", children:["N:ESE"]},
-    "N:SW":{label:{en:"SW",zh:"SW"}, color:"#EA580C", children:["N:WSW"]},
-
-    "E:NE":{label:{en:"NE",zh:"NE"}, color:"#2C3EAF", children:["E:ENE"]},
-    "E:NW":{label:{en:"NW",zh:"NW"}, color:"#9333EA", children:["E:WNW"]},
-    "E:SE":{label:{en:"SE",zh:"SE"}, color:"#14B8A6", children:["E:ESE"]},
-    "E:SW":{label:{en:"SW",zh:"SW"}, color:"#EA580C", children:["E:WSW"]},
-
-    "S:NE":{label:{en:"NE",zh:"NE"}, color:"#2C3EAF", children:["S:ENE"]},
-    "S:NW":{label:{en:"NW",zh:"NW"}, color:"#9333EA", children:["S:WNW"]},
-    "S:SE":{label:{en:"SE",zh:"SE"}, color:"#14B8A6", children:["S:ESE"]},
-    "S:SW":{label:{en:"SW",zh:"SW"}, color:"#EA580C", children:["S:WSW"]},
-
-    "W:NE":{label:{en:"NE",zh:"NE"}, color:"#2C3EAF", children:["W:ENE"]},
-    "W:NW":{label:{en:"NW",zh:"NW"}, color:"#9333EA", children:["W:WNW"]},
-    "W:SE":{label:{en:"SE",zh:"SE"}, color:"#14B8A6", children:["W:ESE"]},
-    "W:SW":{label:{en:"SW",zh:"SW"}, color:"#EA580C", children:["W:WSW"]},
-
-    "N:ENE":{label:{en:"ENE",zh:"ENE"}, color:"#4B3FBF", children:[]},
-    "N:WNW":{label:{en:"WNW",zh:"WNW"}, color:"#9333EA", children:["N:NNW"]},
-    "N:ESE":{label:{en:"ESE",zh:"ESE"}, color:"#14B8A6", children:[]},
-    "N:WSW":{label:{en:"WSW",zh:"WSW"}, color:"#DC2626", children:["N:SSW"]},
-    "N:NNW":{label:{en:"NNW",zh:"NNW"}, color:"#334155", children:[]},
-    "N:SSW":{label:{en:"SSW",zh:"SSW"}, color:"#EA580C", children:[]},
-
-    "E:ENE":{label:{en:"ENE",zh:"ENE"}, color:"#4B3FBF", children:[]},
-    "E:WNW":{label:{en:"WNW",zh:"WNW"}, color:"#9333EA", children:["E:NNW"]},
-    "E:ESE":{label:{en:"ESE",zh:"ESE"}, color:"#14B8A6", children:[]},
-    "E:WSW":{label:{en:"WSW",zh:"WSW"}, color:"#DC2626", children:["E:SSW"]},
-    "E:NNW":{label:{en:"NNW",zh:"NNW"}, color:"#334155", children:[]},
-    "E:SSW":{label:{en:"SSW",zh:"SSW"}, color:"#EA580C", children:[]},
-
-    "S:ENE":{label:{en:"ENE",zh:"ENE"}, color:"#4B3FBF", children:[]},
-    "S:WNW":{label:{en:"WNW",zh:"WNW"}, color:"#9333EA", children:["S:NNW"]},
-    "S:ESE":{label:{en:"ESE",zh:"ESE"}, color:"#14B8A6", children:[]},
-    "S:WSW":{label:{en:"WSW",zh:"WSW"}, color:"#DC2626", children:["S:SSW"]},
-    "S:NNW":{label:{en:"NNW",zh:"NNW"}, color:"#334155", children:[]},
-    "S:SSW":{label:{en:"SSW",zh:"SSW"}, color:"#EA580C", children:[]},
-
-    "W:ENE":{label:{en:"ENE",zh:"ENE"}, color:"#4B3FBF", children:[]},
-    "W:WNW":{label:{en:"WNW",zh:"WNW"}, color:"#9333EA", children:["W:NNW"]},
-    "W:ESE":{label:{en:"ESE",zh:"ESE"}, color:"#14B8A6", children:[]},
-    "W:WSW":{label:{en:"WSW",zh:"WSW"}, color:"#DC2626", children:["W:SSW"]},
-    "W:NNW":{label:{en:"NNW",zh:"NNW"}, color:"#334155", children:[]},
-    "W:SSW":{label:{en:"SSW",zh:"SSW"}, color:"#EA580C", children:[]},
-
-    "N★:N":{label:{en:"N",zh:"N"}, color:"#1F3A8A", children:[]},
-    "N★:E":{label:{en:"E",zh:"E"}, color:"#0EA5E9", children:[]},
-    "N★:S":{label:{en:"S",zh:"S"}, color:"#F59E0B", children:[]},
-    "N★:W":{label:{en:"W",zh:"W"}, color:"#7F1D1D", children:[]},
-
-    "E★:N":{label:{en:"N",zh:"N"}, color:"#1F3A8A", children:[]},
-    "E★:E":{label:{en:"E",zh:"E"}, color:"#0EA5E9", children:[]},
-    "E★:S":{label:{en:"S",zh:"S"}, color:"#F59E0B", children:[]},
-    "E★:W":{label:{en:"W",zh:"W"}, color:"#7F1D1D", children:[]},
-
-    "S★:N":{label:{en:"N",zh:"N"}, color:"#1F3A8A", children:[]},
-    "S★:E":{label:{en:"E",zh:"E"}, color:"#0EA5E9", children:[]},
-    "S★:S":{label:{en:"S",zh:"S"}, color:"#F59E0B", children:[]},
-    "S★:W":{label:{en:"W",zh:"W"}, color:"#7F1D1D", children:[]},
-
-    "W★:N":{label:{en:"N",zh:"N"}, color:"#1F3A8A", children:[]},
-    "W★:E":{label:{en:"E",zh:"E"}, color:"#0EA5E9", children:[]},
-    "W★:S":{label:{en:"S",zh:"S"}, color:"#F59E0B", children:[]},
-    "W★:W":{label:{en:"W",zh:"W"}, color:"#7F1D1D", children:[]}
-  };
-
-  // ---- product jump map (fill later) ----
-  const JUMPS = {}; // id -> path
-
-  // ---- basic copy (keep short) ----
-  function copyFor(id, lens){
-    if(lang==="zh"){
-      return lens==="formal"
-        ? "（正式）该节点约束含义并执行边界，使扩张不漂移。"
-        : "（非正式）该节点把含义钉住，扩张才不会乱跑。";
-    }
-    return lens==="formal"
-      ? "(Formal) This node constrains meaning and enforces boundaries so growth cannot drift."
-      : "(Informal) This node pins meaning so expansion stays disciplined instead of chaotic.";
-  }
-
-  function makeLensBlock(lens, txt){
-    const b=document.createElement("div");
-    b.className="lensBlock";
-    b.setAttribute("data-lens", lens);
-
-    const t=document.createElement("div");
-    t.className="lensTitle";
-    t.textContent = (lens==="formal") ? (lang==="zh"?"正式":"Formal") : (lang==="zh"?"非正式":"Informal");
-
-    const p=document.createElement("div");
-    p.className="paragraph";
-    p.textContent = txt;
-
-    b.appendChild(t);
-    b.appendChild(p);
-    return b;
-  }
-
-  function makeIndexLine(id){
-    const line=document.createElement("div");
-    line.className="indexLine";
-    const lbl = (lang==="zh") ? TREE[id].label.zh : TREE[id].label.en;
-    line.append((lang==="zh") ? ("索引：跳转到 "+lbl+" 对应项目。 ") : ("Index: jump to the project for "+lbl+". "));
-    const a=document.createElement("a");
-    const target = JUMPS[id] || "#";
-    a.href = (target==="#") ? "#" : (target + makeQS());
-    a.textContent = (lang==="zh") ? "跳转" : "Jump";
-    line.appendChild(a);
-    return line;
-  }
-
-  // parent map for breadcrumbs
-  const PARENT = {};
-  function registerParent(child, parent){ PARENT[child]=parent; }
-
+  // ===== Render nodes (4 only) =====
   function makeNode(id){
-    const info = TREE[id];
+    const n=NODE[id];
+    const title=T(n.title);
 
-    const s=document.createElement("section");
-    s.className="node";
-    s.style.setProperty("--c", info.color || "#93C5FD");
-    s.setAttribute("data-id", id);
+    const el=document.createElement("div");
+    el.className="node";
+    el.style.setProperty("--c", n.color);
+    el.setAttribute("data-id", id);
 
-    const h=document.createElement("div");
-    h.className="nHead";
-    h.innerHTML="<div class='nLeft'><div class='diamond'></div><div class='nLabel'>"+((lang==="zh")?info.label.zh:info.label.en)+"</div></div><div>▸</div>";
+    const head=document.createElement("div");
+    head.className="nHead";
 
-    const b=document.createElement("div");
-    b.className="nBody";
+    const left=document.createElement("div");
+    left.className="nLeft";
 
-    b.appendChild(makeLensBlock("informal", copyFor(id,"informal")));
-    b.appendChild(makeLensBlock("formal", copyFor(id,"formal")));
-    b.appendChild(makeIndexLine(id));
+    const d=document.createElement("div");
+    d.className="diamond";
 
-    if(info.children && info.children.length){
-      const stack=document.createElement("div");
-      stack.className="childStack";
-      info.children.forEach(child=>{
-        registerParent(child, id);
-        stack.appendChild(makeNode(child));
-      });
-      b.appendChild(stack);
+    const text=document.createElement("div");
+    text.className="nText";
+
+    const ttl=document.createElement("div");
+    ttl.className="nTitle";
+    ttl.textContent=title;
+
+    const oneI=document.createElement("div");
+    oneI.className="nOne";
+    oneI.setAttribute("data-lens","informal");
+    oneI.textContent=T(n.one.informal);
+
+    const oneF=document.createElement("div");
+    oneF.className="nOne";
+    oneF.setAttribute("data-lens","formal");
+    oneF.textContent=T(n.one.formal);
+
+    text.appendChild(ttl);
+    text.appendChild(oneI);
+    text.appendChild(oneF);
+
+    left.appendChild(d);
+    left.appendChild(text);
+
+    const chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="›";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    el.appendChild(head);
+
+    function jump(){
+      const target = JUMPS[id] || "#";
+      lsSet("hub_active_node", id);
+      if(target==="#") return;
+      location.href = target + makeQS();
     }
-
-    h.addEventListener("click",()=>{
-      s.classList.toggle("open");
-
-      // Set active primary + focus mode
-      const primary = id.split(":")[0].replace("★",""); // crude but works: N / E / S / W
-      const isPrimary = (id==="N"||id==="E"||id==="S"||id==="W");
-
-      if(isPrimary){
-        setFocusPrimary(id, true);
-      }else{
-        // keep focus if already in one
-        if(activePrimary) setFocusPrimary(activePrimary, true);
-      }
-
-      localStorage.setItem("hub_active_node", id);
-      activeNode = id;
-      recomputeHeights();
-      updatePathBar();
+    el.addEventListener("click", jump);
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); jump(); }
     });
-
-    s.appendChild(h);
-    s.appendChild(b);
-    return s;
+    el.tabIndex=0;
+    el.setAttribute("role","button");
+    return el;
   }
 
-  // Wrap primaries for focus hiding
-  function makePrimaryWrap(id){
-    const w=document.createElement("div");
-    w.className="primaryWrap";
-    w.setAttribute("data-primary", id);
-    w.appendChild(makeNode(id));
-    return w;
+  list.innerHTML="";
+  ["N","E","S","W"].forEach(id=>list.appendChild(makeNode(id)));
+
+  // ===== Dock: 4 or 5 across =====
+  const dock=document.getElementById("dock");
+  if((window.innerWidth||0) >= 920) dock.setAttribute("data-cols","5");
+  else dock.setAttribute("data-cols","4");
+
+  // Button labels i18n
+  const navExit=document.getElementById("navExit");
+  const navDeck=document.getElementById("navDeck");
+  const navIndex=document.getElementById("navIndex");
+  const navActive=document.getElementById("navActive");
+  const navSpline2=document.getElementById("navSpline2");
+
+  if(lang==="zh"){
+    navExit.textContent="退出";
+    navDeck.textContent="跳转卡组";
+    navIndex.textContent="跳转目录";
+    navActive.textContent="当前跳转";
+    navSpline2.textContent="第二匝道";
+  }else if(lang==="es"){
+    navExit.textContent="SALIR";
+    navDeck.textContent="MAZO";
+    navIndex.textContent="ÍNDICE";
+    navActive.textContent="SALTO ACTIVO";
+    navSpline2.textContent="RAMPA 2";
+  }else{
+    navExit.textContent="EXIT";
+    navDeck.textContent="JUMP DECK";
+    navIndex.textContent="JUMP INDEX";
+    navActive.textContent="ACTIVE JUMP";
+    navSpline2.textContent="SPLINE 2";
   }
 
-  let activePrimary = null;
-  let activeNode = null;
+  // Dock actions
+  navExit.onclick=()=>location.href = ROUTE.door + makeQS();
+  navDeck.onclick=()=>location.href = ROUTE.deck + makeQS();
+  navIndex.onclick=()=>location.href = ROUTE.index + makeQS();
+  navSpline2.onclick=()=>location.href = ROUTE.spline2 + makeQS();
 
-  function render(){
-    root.innerHTML="";
-    ["N","E","S","W"].forEach(k=>root.appendChild(makePrimaryWrap(k)));
-    recomputeHeights();
-    updatePathBar();
-  }
-
-  function setFocusPrimary(primaryId, on){
-    activePrimary = on ? primaryId : null;
-
-    if(on){
-      page.classList.add("focusMode");
-      root.querySelectorAll(".primaryWrap").forEach(w=>{
-        const p = w.getAttribute("data-primary");
-        w.classList.toggle("active", p===primaryId);
-      });
-      pathBar.classList.add("show");
-    }else{
-      page.classList.remove("focusMode");
-      root.querySelectorAll(".primaryWrap").forEach(w=>w.classList.remove("active"));
-      pathBar.classList.remove("show");
-    }
-  }
-
-  // Build breadcrumb chips
-  function updatePathBar(){
-    // show only if in focus mode
-    if(!activePrimary){
-      pathBar.classList.remove("show");
-      pathRow.innerHTML="";
-      return;
-    }
-    pathBar.classList.add("show");
-    pathRow.innerHTML="";
-
-    // ALL chip
-    const all=document.createElement("div");
-    all.className="chip";
-    all.textContent = (lang==="zh") ? "全部" : "ALL";
-    all.onclick=()=>{
-      // collapse focus, keep sections as-is
-      setFocusPrimary(null,false);
-      recomputeHeights();
-    };
-    pathRow.appendChild(all);
-
-    // Primary chips
-    ["N","E","S","W"].forEach(p=>{
-      const c=document.createElement("div");
-      c.className="chip" + (p===activePrimary ? " on" : "");
-      c.textContent=p;
-      c.onclick=()=>{
-        setFocusPrimary(p,true);
-        // scroll to top of focused section
-        window.scrollTo({top:0,behavior:"smooth"});
-        updatePathBar();
-        recomputeHeights();
-      };
-      pathRow.appendChild(c);
-    });
-
-    // Breadcrumb chips for activeNode inside focused primary
-    if(activeNode){
-      // only show chain if node belongs to activePrimary branch
-      const chain=[];
-      let cur=activeNode;
-      // build chain until primary
-      let guard=0;
-      while(cur && guard++ < 40){
-        chain.push(cur);
-        if(cur===activePrimary) break;
-        cur = PARENT[cur];
-      }
-      chain.reverse();
-      if(chain.length){
-        chain.forEach(id=>{
-          const c=document.createElement("div");
-          c.className="chip";
-          c.textContent = (lang==="zh") ? TREE[id].label.zh : TREE[id].label.en;
-          c.onclick=()=>{
-            const el = root.querySelector("[data-id='"+id.replace(/'/g,"\\'")+"']");
-            if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
-          };
-          pathRow.appendChild(c);
-        });
-      }
-    }
-  }
-
-  // Russian doll cap
-  function recomputeHeights(){
-    const dockEl=document.getElementById("dock");
-    const dockH = dockEl ? dockEl.getBoundingClientRect().height : 92;
-    document.documentElement.style.setProperty("--dockH", dockH + "px");
-
-    const brandH = brand ? brand.getBoundingClientRect().height : 0;
-    const viewportH = window.innerHeight || 800;
-    const avail = Math.max(220, viewportH - brandH - dockH - 48);
-
-    root.querySelectorAll(".node.open .nBody").forEach(el=>{
-      el.style.maxHeight = avail + "px";
-    });
-  }
-  window.addEventListener("resize", recomputeHeights);
-
-  // Dock
-  navBack.onclick=()=>history.back();
-  navForward.onclick=()=>history.forward();
-  navHub.onclick=()=>nav("/home/");
-  navExplore.onclick=()=>nav("/explore/");
-  navProducts.onclick=()=>nav("/products/");
-  navLaws.onclick=()=>nav("/laws/");
-  navGauges.onclick=()=>nav("/gauges/");
-  navTop.onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
-  navJump.onclick=()=>{
-    const id = localStorage.getItem("hub_active_node") || "N";
+  navActive.onclick=()=>{
+    const id = lsGet("hub_active_node") || "N";
     const target = JUMPS[id] || "#";
     if(target==="#") return;
     location.href = target + makeQS();
   };
-
-  // Init
-  render();
 
 })();
 </script>

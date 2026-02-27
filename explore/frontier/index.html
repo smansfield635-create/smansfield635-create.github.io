@@ -1,12 +1,25 @@
-<!-- TNT — /explore/frontier/index.html  (EXPLORE · FRONTIER HUB · GEM STANDARD · BILINGUAL)
-     FIX (YOUR ISSUE: DIAMONDS WON’T OPEN):
-       - The previous file had a JS hard-crash (undefined function/variable) BEFORE click handlers bound.
-       - This TNT removes the crash and binds diamonds FIRST.
+<!-- TNT — /explore/frontier/index.html  (EXPLORE · FRONTIER · 4 QUESTIONS · VERTICAL DIAMONDS · MODAL LENSES)
+     PURPOSE:
+       - Frontier hub that DOES NOT overload the face.
+       - 4 vertical diamonds (tap-safe) = 4 questions:
+           1) IF (Is it possible?)
+           2) HOW (How could it be possible without cheating?)
+           3) WHEN (What must be true before it becomes possible?)
+           4) FIRST (What must be built first?)
+       - Tap a diamond → ONE modal opens (no stacked doors).
+       - Modal lenses ONLY inside modal:
+           STYLE (gd_style): formal / informal
+           TIME  (gd_time):  origin / now / post   (Concept / Live / Roadmap)
+       - Modal content = 4 “jump cards” (no raw links): each card is a jump surface.
+       - Bilingual:
+           lang=en => EN only
+           lang=zh => 中文 only
+       - State propagation via ?lang=&style=&time= + localStorage gd_*
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css only
        - DOES NOT style html/body background (ui.css owns field)
-       - No new state keys (gd_lang/gd_style/gd_time only)
-       - Single-language render (en/zh)
+       - No new state keys beyond gd_lang/gd_style/gd_time
+       - Tap-safe: bind FIRST; overlay never blocks modal; no inline onclick reliance
 -->
 
 <!doctype html>
@@ -21,303 +34,254 @@
 <script defer src="/assets/instrument.js"></script>
 
 <style>
-/* PAGE-LOCAL ONLY (no field ownership) */
 :root{
-  --R:124px;
-  --goldSoft:rgba(212,175,55,.35);
-  --obs1:#070b12;
-  --obs2:#0c1626;
-  --mut:rgba(255,255,255,.84);
+  --R:132px;
+  --D:188px;
+
+  /* Pearlescent lacquer (aligned with your good builds) */
+  --goldSoft:rgba(212,175,55,.45);
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
+
+  --mut: rgba(255,255,255,.90);
+  --mut2: rgba(255,255,255,.74);
 }
 
-/* Top-left controls */
+/* Base (no field paint) */
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:inherit;text-decoration:none}
+
+/* Top-left */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:90;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  position:fixed;left:16px;top:16px;z-index:120;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center
 }
 
-/* Title pill */
+/* Brand */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:80;text-align:center;
-  padding:10px 14px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);
-  backdrop-filter:blur(8px);
+  z-index:110;text-align:center;
+  padding:10px 18px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
   pointer-events:none;
 }
-.brand .t1{font-weight:950;letter-spacing:1.1px;font-size:12px;opacity:.95}
-.brand .t2{margin-top:2px;font-size:11px;letter-spacing:.6px;opacity:.72}
+.brand .k{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.78;margin:0 0 6px 0}
+.brand .t{font-weight:950;font-size:40px;letter-spacing:.3px;margin:0;line-height:1.02}
+.brand .s{opacity:.85;font-size:13.5px;margin:6px 0 0}
 
 /* Stage */
 .stage{
-  position:fixed;left:50%;top:52%;
+  position:fixed;left:50%;top:54%;
   transform:translate(-50%,-50%);
-  width:min(560px,92vw);
-  height:min(560px,92vw);
-  z-index:40;
-}
-
-/* Outer gem diamond */
-.outer{
-  position:absolute;left:50%;top:50%;
-  width:min(560px,92vw);
-  height:min(560px,92vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:60px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.62),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none;
-  opacity:.85;
-}
-.outer::after{
-  content:"";
-  position:absolute; inset:0; border-radius:60px;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.16;
+  width:min(720px,94vw);
+  height:min(720px,94vw);
+  z-index:60;
   pointer-events:none;
 }
 
-/* Gem diamonds */
+/* Diamonds */
 .d{
-  width:150px;height:150px;
+  width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
   transform-origin:center;
-  border-radius:26px;
+  border-radius:28px;
   cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
   pointer-events:auto;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
 
   background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 48%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.25), transparent 60%),
+    linear-gradient(160deg, var(--obsA), var(--obsB));
 
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.16);
   box-shadow:
-    0 28px 84px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.14),
-    inset 0 -28px 44px rgba(0,0,0,.62);
+    0 38px 120px rgba(0,0,0,.85),
+    0 0 32px rgba(212,175,55,.22),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -40px 72px rgba(0,0,0,.78);
 
-  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  overflow:hidden;
 }
 .d::before{
   content:"";
-  position:absolute; inset:0; border-radius:26px; padding:1px;
+  position:absolute;inset:0;border-radius:28px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.45;
+  opacity:.60;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
   pointer-events:none;
 }
 .d::after{
   content:"";
-  position:absolute; left:12%; right:12%; top:10%; height:28%;
+  position:absolute;left:10%;right:10%;top:10%;height:28%;
   border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
-  opacity:.85;
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
   transform:rotate(-10deg);
   pointer-events:none;
 }
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 18px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
   border-color:rgba(212,175,55,.28);
 }
-.d.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 30px rgba(212,175,55,.40),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-}
+.d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
-.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
+/* vertical placement */
+.d1{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1.30)) rotate(45deg)}
+.d2{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -0.43)) rotate(45deg)}
+.d3{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  0.43)) rotate(45deg)}
+.d4{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1.30)) rotate(45deg)}
 
-.in{
-  width:100%; height:100%;
+.inner{
+  width:100%;height:100%;
   transform:rotate(-45deg);
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
   text-align:center;
-  padding:16px;
+  padding:14px;
   gap:8px;
   pointer-events:none;
   user-select:none;
 }
-.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
-.sub{ font-size:12.5px; opacity:.86; line-height:1.35; max-width:16em; }
-
-/* Core */
-.core{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:64px;height:64px;border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;place-items:center;
-  font-weight:950;letter-spacing:.5px;
-  opacity:.92;
-  pointer-events:none;
-}
+.lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 18px rgba(255,255,255,.10)}
+.sub{font-size:12.5px;opacity:.86;line-height:1.25;max-width:20em}
 
 /* Dock */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:90;
-  width:min(980px,94vw);
-  display:flex;justify-content:center;
-  gap:10px;flex-wrap:wrap;
+  z-index:120;width:min(980px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
   padding:10px 12px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.20);
-  backdrop-filter:blur(8px);
+  pointer-events:none;
 }
+.dock .crp-btn, .dock .btn{pointer-events:auto}
 
-/* Modal */
+/* Overlay + modal */
 .bd{
   position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(10px);
+  background:rgba(0,0,0,.70);
   display:none;
 }
-.bd.show{display:block;}
+.bd.show{display:block}
+
 .modal{
   position:fixed;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(1020px,94vw);
-  max-height:88vh;
-  display:none;
+  width:min(1100px,96vw);
+  max-height:90vh;
   z-index:210;
+  display:none;
 }
-.modal.show{display:block;}
+.modal.show{display:block}
+
 .shell{
-  height:88vh;
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
-    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
-    linear-gradient(160deg, rgba(17,22,28,.90), rgba(11,15,20,.94));
-  box-shadow:0 60px 180px rgba(0,0,0,.92);
+  background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:24px;
+  box-shadow:0 60px 180px rgba(0,0,0,.85);
   overflow:hidden;
   display:flex;
   flex-direction:column;
-  position:relative;
 }
-.shell::before{
-  content:"";
-  position:absolute;left:50%;top:58%;
-  width:min(980px,94vw);
-  height:min(980px,94vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:70px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.16), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);
-  box-shadow:
-    0 100px 280px rgba(0,0,0,.72),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -55px 100px rgba(0,0,0,.55);
-  opacity:.55;
-  pointer-events:none;
-}
-.mhead{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative;z-index:2;
-}
-.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
-.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
 
-.lensbar{
-  display:flex;gap:10px;flex-wrap:wrap;
-  align-items:center;justify-content:center;
-  padding:10px 10px 12px;border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative;z-index:2;
+.mhead{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
-.chip{
-  padding:10px 16px;border-radius:999px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
-}
-.chip.active{
-  border-color:rgba(212,175,55,.35);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
-}
+.mtitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
+.mclose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px}
 
 .mbody{
   padding:14px 16px 18px;
   overflow:auto;-webkit-overflow-scrolling:touch;
-  flex:1 1 auto;
-  position:relative;z-index:2;
 }
 
-/* 4 bubbles */
-.grid{display:grid;gap:14px}
-@media (min-width:920px){ .grid{grid-template-columns:1fr 1fr} }
-.bubble{
-  padding:16px 18px;border-radius:22px;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
-  position:relative;
+/* Lenses INSIDE modal only */
+.lensRow{
+  max-width:980px;margin:0 auto 14px;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;
 }
-.bubble::before{
+.pill{
+  padding:10px 16px;border-radius:999px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.12);
+  cursor:pointer;
+  font-weight:900;
+  letter-spacing:.2px;
+  color:#fff;
+  user-select:none;
+}
+.pill.active{
+  border-color:rgba(212,175,55,.55);
+  box-shadow:0 0 22px rgba(212,175,55,.18);
+}
+
+/* Header card */
+.hcard{
+  max-width:980px;margin:0 auto 14px;
+  padding:12px 14px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  color:rgba(255,255,255,.86);
+  line-height:1.35;
+}
+.hcard .h1{margin:0 0 4px;font-weight:950;font-size:14px}
+.hcard .h2{margin:0;color:rgba(255,255,255,.86);line-height:1.45;font-size:12.5px}
+.hcard .h3{margin:8px 0 0;color:rgba(255,255,255,.70);font-size:12px;line-height:1.35}
+
+/* Jump cards */
+.grid{
+  max-width:980px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+@media (max-width:720px){ .grid{grid-template-columns:1fr;} }
+
+.card{
+  position:relative;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.18), transparent 48%),
+    radial-gradient(circle at 70% 80%, rgba(0,120,255,.12), transparent 60%),
+    linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
+  box-shadow:0 22px 72px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.06);
+  padding:18px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.card::before{
   content:"";
-  position:absolute;inset:0;border-radius:22px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.35) 50%, transparent 100%);
+  position:absolute;inset:0;border-radius:20px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.28) 50%, transparent 100%);
   opacity:.55;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   pointer-events:none;
 }
-.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
-.bubble p{margin:0;color:var(--mut);line-height:1.55}
-.bubble p span{color:rgba(255,255,255,.70);font-weight:800}
+.ct{margin:0 0 6px;font-weight:950;letter-spacing:.2px;font-size:18px}
+.cs{margin:0;opacity:.82;font-size:13px;line-height:1.35}
 
-/* Modal footer actions */
-.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
-.sbtn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:12px 18px;border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:#fff;border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
+/* Footer */
+.mact{
+  max-width:980px;margin:16px auto 0;
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
 }
-.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.20); }
 
-@media (max-width:520px){
-  :root{ --R: 116px; }
-  .stage{ width:min(520px,92vw); height:min(520px,92vw); }
-  .outer{ width:min(520px,92vw); height:min(520px,92vw); }
-  .core{ width:58px; height:58px; }
-  .shell{ height:90vh; }
+@media (max-width:560px){
+  :root{--D:176px; --R:124px}
+  .stage{top:55%}
 }
 </style>
 </head>
@@ -325,56 +289,52 @@
 <body>
 
 <div class="top-left">
-  <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
-  <a class="crp-btn" id="btnLanguage" href="/explore/">LANGUAGE HUB</a>
+  <a class="crp-btn" id="btnExplore" href="/explore/">EXPLORE</a>
   <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
-<div class="brand">
-  <div class="t1" id="brandTop">FRONTIER</div>
-  <div class="t2" id="brandSub">SPACE · SOLAR · FUSION READINESS · ORBITAL</div>
+<div class="brand" aria-hidden="true">
+  <p class="k" id="bk">CARDINAL AXIS</p>
+  <h1 class="t" id="bt">FRONTIER</h1>
+  <p class="s" id="bs">Bounded ambition · Jump surfaces</p>
 </div>
 
-<div class="stage" aria-label="Frontier hub">
-  <div class="outer"></div>
-
-  <div class="d d-n" id="dSpace" role="button" tabindex="0">
-    <div class="in">
-      <div class="lab" id="labSpace">SPACE</div>
-      <div class="sub" id="subSpace">Habitation · logistics · stability.</div>
+<div class="stage" aria-label="Frontier questions">
+  <div class="d d1" id="dIf" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="labIf">IF</div>
+      <div class="sub" id="subIf">Is it possible?</div>
     </div>
   </div>
 
-  <div class="d d-e" id="dSolar" role="button" tabindex="0">
-    <div class="in">
-      <div class="lab" id="labSolar">SOLAR</div>
-      <div class="sub" id="subSolar">Capture · storage · conversion.</div>
+  <div class="d d2" id="dHow" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="labHow">HOW</div>
+      <div class="sub" id="subHow">How could it be possible without cheating?</div>
     </div>
   </div>
 
-  <div class="d d-s" id="dFusion" role="button" tabindex="0">
-    <div class="in">
-      <div class="lab" id="labFusion">FUSION</div>
-      <div class="sub" id="subFusion">Readiness · gates · evidence.</div>
+  <div class="d d3" id="dWhen" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="labWhen">WHEN</div>
+      <div class="sub" id="subWhen">What must be true before it becomes possible?</div>
     </div>
   </div>
 
-  <div class="d d-w" id="dOrbit" role="button" tabindex="0">
-    <div class="in">
-      <div class="lab" id="labOrbit">ORBITAL</div>
-      <div class="sub" id="subOrbit">Infrastructure · stations · industry.</div>
+  <div class="d d4" id="dFirst" role="button" tabindex="0">
+    <div class="inner">
+      <div class="lab" id="labFirst">FIRST</div>
+      <div class="sub" id="subFirst">What must be built first?</div>
     </div>
   </div>
-
-  <div class="core">◆</div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
   <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="crp-btn" id="dockHub" href="/home/">HUB</a>
   <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="crp-btn" id="dockExplore" href="/explore/">EXPLORE</a>
   <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
+  <a class="crp-btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
 <div class="bd" id="bd"></div>
@@ -386,26 +346,28 @@
       <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
     </div>
 
-    <div class="lensbar">
-      <button class="chip" id="chipStyle" type="button">STYLE: FORMAL</button>
-      <button class="chip" id="chipConcept" type="button">CONCEPT</button>
-      <button class="chip" id="chipNow" type="button">NOW</button>
-      <button class="chip" id="chipRoadmap" type="button">ROADMAP</button>
-    </div>
-
     <div class="mbody">
-      <div class="grid">
-        <div class="bubble"><h4 id="h1"></h4><p id="p1"></p></div>
-        <div class="bubble"><h4 id="h2"></h4><p id="p2"></p></div>
-        <div class="bubble"><h4 id="h3"></h4><p id="p3"></p></div>
-        <div class="bubble"><h4 id="h4"></h4><p id="p4"></p></div>
+      <div class="lensRow">
+        <div class="pill" id="pillFormal">FORMAL</div>
+        <div class="pill" id="pillInformal">INFORMAL</div>
+        <div class="pill" id="pillConcept">CONCEPT</div>
+        <div class="pill" id="pillLive">LIVE</div>
+        <div class="pill" id="pillRoadmap">ROADMAP</div>
       </div>
 
+      <div class="hcard">
+        <div class="h1" id="h1">—</div>
+        <div class="h2" id="h2">—</div>
+        <div class="h3" id="h3">—</div>
+      </div>
+
+      <div class="grid" id="grid"></div>
+
       <div class="mact">
-        <button class="sbtn" id="mReturn" type="button">RETURN</button>
-        <a class="sbtn" id="mJumpLanguage" href="/explore/">LANGUAGE HUB</a>
-        <a class="sbtn" id="mJumpEnergy" href="/products/energy/">JUMP ENERGY</a>
-        <a class="sbtn" id="mJumpFusion" href="/explore/fusion-readiness/">FUSION READINESS</a>
+        <button class="crp-btn" id="mReturn" type="button">RETURN</button>
+        <a class="crp-btn" id="mJumpExplore" href="/explore/">JUMP EXPLORE</a>
+        <a class="crp-btn" id="mJumpEnergy" href="/products/energy/">JUMP ENERGY</a>
+        <a class="crp-btn" id="mJumpReadiness" href="/explore/fusion-readiness/">FUSION READINESS</a>
       </div>
     </div>
   </div>
@@ -413,345 +375,339 @@
 
 <script>
 (function(){
-  // ===== STATE =====
+  // ===== State hydration (gd_* only) =====
   var qs = new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var gdStyle = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var gdTime  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
   if(lang!=="en" && lang!=="zh") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-
-  try{
-    localStorage.setItem("gd_lang", lang);
-    localStorage.setItem("gd_style", style);
-    localStorage.setItem("gd_time", time);
-  }catch(e){}
-
+  if(gdStyle!=="formal" && gdStyle!=="informal") gdStyle="formal";
+  if(gdTime==="trajectory") gdTime="post";
+  if(gdTime!=="origin" && gdTime!=="now" && gdTime!=="post") gdTime="origin";
+  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime);}catch(e){}
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   function q(){
-    return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
+    var p=new URLSearchParams();
+    p.set("lang",lang); p.set("style",gdStyle); p.set("time",gdTime);
+    return "?"+p.toString();
   }
-  function wire(){
-    var s=q();
-    document.getElementById("btnHub").href="/home/?"+s;
-    document.getElementById("btnLanguage").href="/explore/?"+s;
-    document.getElementById("btnExit").href="/door/?"+s;
 
-    document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockExplore").href="/explore/?"+s;
-    document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
+  // wire nav
+  document.getElementById("btnExplore").href="/explore/"+q();
+  document.getElementById("btnExit").href="/door/"+q();
+  document.getElementById("dockTerminal").href="/index.html"+q();
+  document.getElementById("dockHub").href="/home/"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
 
-    document.getElementById("mJumpLanguage").href="/explore/?"+s;
-    document.getElementById("mJumpEnergy").href="/products/energy/?"+s;
-    document.getElementById("mJumpFusion").href="/explore/fusion-readiness/?"+s;
-  }
-  wire();
+  document.getElementById("mJumpExplore").href="/explore/"+q();
+  document.getElementById("mJumpEnergy").href="/products/energy/"+q();
+  document.getElementById("mJumpReadiness").href="/explore/fusion-readiness/"+q();
 
-  // ===== UI =====
+  // i18n
   var UI = {
     en:{
-      top:"FRONTIER",
-      sub:"SPACE · SOLAR · FUSION READINESS · ORBITAL",
-      tiles:{
-        space:{lab:"SPACE", sub:"Habitation · logistics · stability."},
-        solar:{lab:"SOLAR", sub:"Capture · storage · conversion."},
-        fusion:{lab:"FUSION", sub:"Readiness · gates · evidence."},
-        orbit:{lab:"ORBITAL", sub:"Infrastructure · stations · industry."}
+      brand:{k:"CARDINAL AXIS", t:"FRONTIER", s:"Bounded ambition · Jump surfaces"},
+      diamonds:{
+        if:{lab:"IF", sub:"Is it possible?"},
+        how:{lab:"HOW", sub:"How could it be possible without cheating?"},
+        when:{lab:"WHEN", sub:"What must be true before it becomes possible?"},
+        first:{lab:"FIRST", sub:"What must be built first?"}
       },
-      lens:{formal:"FORMAL",informal:"INFORMAL",concept:"CONCEPT",now:"NOW",roadmap:"ROADMAP"},
-      btn:{ret:"RETURN", hub:"LANGUAGE HUB", energy:"JUMP ENERGY", fr:"FUSION READINESS"},
-      stylePrefix:"STYLE: "
+      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", live:"LIVE", roadmap:"ROADMAP"},
+      buttons:{ret:"RETURN", ex:"JUMP EXPLORE", en:"JUMP ENERGY", fr:"FUSION READINESS"}
     },
     zh:{
-      top:"前沿",
-      sub:"太空 · 太阳能 · 聚变就绪 · 轨道",
-      tiles:{
-        space:{lab:"太空", sub:"栖居 · 物流 · 稳定。"},
-        solar:{lab:"太阳能", sub:"捕获 · 存储 · 转换。"},
-        fusion:{lab:"聚变", sub:"就绪 · 闸门 · 证据。"},
-        orbit:{lab:"轨道", sub:"基础设施 · 空间站 · 工业。"}
+      brand:{k:"基轴体系", t:"前沿", s:"有界雄心 · 跳转面"},
+      diamonds:{
+        if:{lab:"是否", sub:"它是否可能？"},
+        how:{lab:"如何", sub:"如何在不作弊的前提下可能？"},
+        when:{lab:"何时", sub:"在何种条件下才可能？"},
+        first:{lab:"先做", sub:"必须先建什么？"}
       },
-      lens:{formal:"正式",informal:"通俗",concept:"概念",now:"现况",roadmap:"路线图"},
-      btn:{ret:"返回", hub:"语言枢纽", energy:"跳转能源", fr:"聚变就绪"},
-      stylePrefix:"风格："
+      lens:{formal:"正式", informal:"通俗", concept:"概念", live:"现况", roadmap:"路线图"},
+      buttons:{ret:"返回", ex:"跳转探索", en:"跳转能源", fr:"聚变就绪"}
     }
   };
   var T = (lang==="zh") ? UI.zh : UI.en;
 
-  document.getElementById("brandTop").textContent = T.top;
-  document.getElementById("brandSub").textContent = T.sub;
+  document.getElementById("bk").textContent=T.brand.k;
+  document.getElementById("bt").textContent=T.brand.t;
+  document.getElementById("bs").textContent=T.brand.s;
 
-  document.getElementById("labSpace").textContent = T.tiles.space.lab;
-  document.getElementById("subSpace").textContent = T.tiles.space.sub;
-  document.getElementById("labSolar").textContent = T.tiles.solar.lab;
-  document.getElementById("subSolar").textContent = T.tiles.solar.sub;
-  document.getElementById("labFusion").textContent = T.tiles.fusion.lab;
-  document.getElementById("subFusion").textContent = T.tiles.fusion.sub;
-  document.getElementById("labOrbit").textContent = T.tiles.orbit.lab;
-  document.getElementById("subOrbit").textContent = T.tiles.orbit.sub;
+  document.getElementById("labIf").textContent=T.diamonds.if.lab;
+  document.getElementById("subIf").textContent=T.diamonds.if.sub;
+  document.getElementById("labHow").textContent=T.diamonds.how.lab;
+  document.getElementById("subHow").textContent=T.diamonds.how.sub;
+  document.getElementById("labWhen").textContent=T.diamonds.when.lab;
+  document.getElementById("subWhen").textContent=T.diamonds.when.sub;
+  document.getElementById("labFirst").textContent=T.diamonds.first.lab;
+  document.getElementById("subFirst").textContent=T.diamonds.first.sub;
 
-  document.getElementById("mReturn").textContent = T.btn.ret;
-  document.getElementById("mJumpLanguage").textContent = T.btn.hub;
-  document.getElementById("mJumpEnergy").textContent = T.btn.energy;
-  document.getElementById("mJumpFusion").textContent = T.btn.fr;
-
-  // ===== Modal wiring (bind FIRST) =====
+  // modal refs
   var bd=document.getElementById("bd");
   var modal=document.getElementById("modal");
   var mClose=document.getElementById("mClose");
-  var mTitle=document.getElementById("mTitle");
   var mReturn=document.getElementById("mReturn");
+  var mTitle=document.getElementById("mTitle");
 
-  var chipStyle=document.getElementById("chipStyle");
-  var chipConcept=document.getElementById("chipConcept");
-  var chipNow=document.getElementById("chipNow");
-  var chipRoadmap=document.getElementById("chipRoadmap");
+  var pillFormal=document.getElementById("pillFormal");
+  var pillInformal=document.getElementById("pillInformal");
+  var pillConcept=document.getElementById("pillConcept");
+  var pillLive=document.getElementById("pillLive");
+  var pillRoadmap=document.getElementById("pillRoadmap");
 
-  var h1=document.getElementById("h1"),p1=document.getElementById("p1");
-  var h2=document.getElementById("h2"),p2=document.getElementById("p2");
-  var h3=document.getElementById("h3"),p3=document.getElementById("p3");
-  var h4=document.getElementById("h4"),p4=document.getElementById("p4");
+  var h1=document.getElementById("h1");
+  var h2=document.getElementById("h2");
+  var h3=document.getElementById("h3");
+  var grid=document.getElementById("grid");
 
-  // Click targets
-  var dSpace=document.getElementById("dSpace");
-  var dSolar=document.getElementById("dSolar");
-  var dFusion=document.getElementById("dFusion");
-  var dOrbit=document.getElementById("dOrbit");
+  pillFormal.textContent=T.lens.formal;
+  pillInformal.textContent=T.lens.informal;
+  pillConcept.textContent=T.lens.concept;
+  pillLive.textContent=T.lens.live;
+  pillRoadmap.textContent=T.lens.roadmap;
 
-  // Active tile key
-  var active="space";
+  mReturn.textContent=T.buttons.ret;
+  document.getElementById("mJumpExplore").textContent=T.buttons.ex;
+  document.getElementById("mJumpEnergy").textContent=T.buttons.en;
+  document.getElementById("mJumpReadiness").textContent=T.buttons.fr;
 
-  // Copy packs (NO CRASH, no undefined calls)
-  var COPY = (lang==="zh")
-    ? {
-        space:{
-          origin:{formal:[
-            {h:"范围",p:"太空栖居被当作“稳定性工程”：电力稳定先于生命支持稳定。<span>先约束后扩张。</span>"},
-            {h:"最低条件",p:"把居住当作系统：封闭循环、冗余、可审计的故障恢复。<span>不靠叙事。</span>"},
-            {h:"连接到本网站",p:"前沿内容只通过结构化跳转呈现，并保持与标准/量规相连。<span>不脱离约束。</span>"},
-            {h:"边界",p:"此处不发布危险细节与配方；仅提供结构与路线。<span>安全优先。</span>"}
-          ],informal:[
-            {h:"想象",p:"当电力稳定成为常态，太空就不再只是目标，而是下一层基础设施。<span>先稳再飞。</span>"},
-            {h:"现实感",p:"每个生活系统都必须能被解释、被测量、被恢复。<span>这才是真正的“可居住”。</span>"},
-            {h:"我们怎么讲",p:"我们把它写成可导航的地图：你可以追线索，但不会被幻想带跑。<span>约束一直在。</span>"},
-            {h:"下一步",p:"从能源与标准开始，再把稳定扩展到更高层的系统。<span>一步一步。</span>"}
-          ]},
-          now:{formal:[
-            {h:"当前目标",p:"把“太空叙事”绑定到可执行约束：稳定、隔离、回滚、审计。<span>可复现语言。</span>"},
-            {h:"当前边界",p:"所有前沿页面保持“跳转面”身份：不升级主张，不混合证据。<span>纪律。</span>"},
-            {h:"当前连接",p:"前沿跳转直接进入创新/法则/量规/能源等主干。<span>快速定位。</span>"},
-            {h:"当前价值",p:"让大想法保持可说、可测、可扩展。<span>不漂移。</span>"}
-          ],informal:[
-            {h:"现在",p:"我们把太空当成“稳定的下一站”，而不是“遥远的幻想”。<span>先把地面做对。</span>"},
-            {h:"不迷路",p:"你可以从任意话题进入，但总能回到约束与测量。<span>这就是地图。</span>"},
-            {h:"为什么有用",p:"因为宏大叙事一旦脱离约束，就会变成噪声。<span>我们拒绝噪声。</span>"},
-            {h:"你会看到",p:"清晰的跳转与边界：哪里是工程，哪里是就绪门槛。<span>不混。</span>"}
-          ]},
-          post:{formal:[
-            {h:"路线图",p:"把前沿扩展为“可审计的板”：每个概念都对应约束、证伪、与跳转。<span>结构化策展。</span>"},
-            {h:"扩展规则",p:"扩展不改契约；只增加深度与链接。<span>复制而非重做。</span>"},
-            {h:"风险控制",p:"任何新增主张都必须被归类、被门控、被审计。<span>不允许偷渡。</span>"},
-            {h:"结果",p:"让前沿成为可持续的工程叙事，而非一次性宣传。<span>长期可信。</span>"}
-          ],informal:[
-            {h:"下一步",p:"把前沿做成一块“未来路线板”：每条路线都能回到现实的约束。<span>越飞越稳。</span>"},
-            {h:"扩展方式",p:"我们只加深，不改规则。<span>同一张地图走得更远。</span>"},
-            {h:"防飘移",p:"任何夸张都会被结构拒绝。<span>这反而让愿景更强。</span>"},
-            {h:"期待",p:"当稳定成为默认值，边界会打开，但永远是“可测的打开”。<span>可复现。</span>"}
-          ]}
-        },
-        solar:{
-          origin:{formal:[
-            {h:"范围",p:"太阳能被当作输入端：捕获、缓冲、再分配。<span>输入必须可测。</span>"},
-            {h:"核心问题",p:"问题不是“能不能捕获”，而是“能不能稳定交付”。<span>稳定优先。</span>"},
-            {h:"与能源产品的关系",p:"工业等离子热替代是可见输出端；太阳是上游输入端之一。<span>不混主张。</span>"},
-            {h:"边界",p:"此处不公开危险细节；只定义链路与边界。<span>公开安全。</span>"}
-          ],informal:[
-            {h:"画面",p:"想象一片“太阳能农场”像粮仓一样储存能量：先储、再放、再交付。<span>能量也能像收成。</span>"},
-            {h:"关键",p:"真正的突破是稳定：把波动变成可预期的曲线。<span>稳定就是价值。</span>"},
-            {h:"连接",p:"你会看到链路：捕获→缓冲→工业交付→再扩展。<span>一步不跳。</span>"},
-            {h:"边界",p:"我们描述结构与可测接口，不发布配方。<span>安全 + 清晰。</span>"}
-          ]},
-          now:{formal:[
-            {h:"当前目标",p:"把捕获/存储/交付写成可审计的链路，并与量规连接。<span>可复算。</span>"},
-            {h:"当前边界",p:"所有说法保持“可测接口”语言，不升级为性能承诺。<span>纪律。</span>"},
-            {h:"当前连接",p:"太阳相关内容通过前沿跳转进入创新与产品页。<span>统一导航。</span>"},
-            {h:"当前价值",p:"将复杂系统表述为可导航的链路。<span>减少迷雾。</span>"}
-          ],informal:[
-            {h:"现在",p:"我们把太阳写成“可交付的链路”，而不是“漂亮的口号”。<span>这就是差别。</span>"},
-            {h:"为什么兴奋",p:"因为一旦稳定交付成立，产业就能按计划运行。<span>世界会变得更安静。</span>"},
-            {h:"怎么读",p:"打开气泡，沿着链路走，你会看到哪些是现在，哪些是下一步。<span>不混。</span>"},
-            {h:"安全感",p:"结构化的边界让你既能梦想，也能相信它不会乱飞。<span>有护栏的愿景。</span>"}
-          ]},
-          post:{formal:[
-            {h:"路线图",p:"扩展为分层页面：捕获、缓冲、转换、交付、审计。<span>链路更深。</span>"},
-            {h:"证据包",p:"每一段链路对应可重复的证据包模板。<span>可审计。</span>"},
-            {h:"协作",p:"共享定义减少争论，让协作聚焦在测量与改进。<span>加速。</span>"},
-            {h:"结果",p:"太阳成为可规模化的工业输入端叙事。<span>可复制。</span>"}
-          ],informal:[
-            {h:"下一步",p:"把太阳能写成一张“收成地图”：从光到热到工业交付。<span>能量像粮食。</span>"},
-            {h:"证据",p:"每一步都能留下可复算的证据。<span>越大越稳。</span>"},
-            {h:"合作",p:"当定义一致，合作就像拼图，不像争吵。<span>速度起飞。</span>"},
-            {h:"结果",p:"太阳不只是发电，它是稳定工业的第一口粮。<span>基础设施。</span>"}
-          ]}
-        },
-        fusion:{
-          origin:{formal:[
-            {h:"范围",p:"聚变仅为“就绪门槛”叙事：定义证据、定义证伪、定义停止条件。<span>不主张增益。</span>"},
-            {h:"门控原则",p:"没有仪器冻结与独立验证，就不升级语言。<span>收据决定。</span>"},
-            {h:"与能源产品的关系",p:"能源产品公开姿态为工业热替代（C）。聚变就绪为单独跳转面。<span>不混。</span>"},
-            {h:"目的",p:"把高风险话题写成可审计的要求清单。<span>降低噪声。</span>"}
-          ],informal:[
-            {h:"直说",p:"聚变很酷，但酷不等于可用。我们把“酷”锁在门后，把“就绪”写成清单。<span>这才是尊重现实。</span>"},
-            {h:"为什么重要",p:"因为世界不缺口号，缺的是可复现的门槛。<span>门槛就是速度。</span>"},
-            {h:"你会看到",p:"仪器、收据、证伪、独立审计——这些不是限制，这是通往未来的跑道。<span>跑道先铺好。</span>"},
-            {h:"边界",p:"这里不说“我们做到了”，只说“做到必须满足什么”。<span>清晰而诚实。</span>"}
-          ]},
-          now:{formal:[
-            {h:"当前目标",p:"将就绪门槛与能源页面跳转绑定，并保持语言有界。<span>不偷渡。</span>"},
-            {h:"当前内容",p:"概念/现况/路线图三层叙事仅描述要求与方法学，不描述成果。<span>严格。</span>"},
-            {h:"当前约束",p:"任何增益暗示都被排除；任何危险步骤都不公开。<span>公开安全。</span>"},
-            {h:"当前价值",p:"把争议话题变成可执行的审计清单。<span>减少争吵。</span>"}
-          ],informal:[
-            {h:"现在",p:"我们把聚变当作“未来的门”，而不是“现在的宣称”。<span>门是清单。</span>"},
-            {h:"机会成本",p:"如果你跳过门槛，你会用时间、金钱、信任来付账。<span>我们不做那种账。</span>"},
-            {h:"风险与回报",p:"越高的回报，越需要更严的门控。<span>严不是慢，是快。</span>"},
-            {h:"结果",p:"你得到的是一条可持续前进的路线，不是一阵热闹。<span>长期赢。</span>"}
-          ]},
-          post:{formal:[
-            {h:"路线图",p:"将就绪门槛扩展为证据包模板与第三方复算流程。<span>可审计升级。</span>"},
-            {h:"门控升级",p:"升级只发生在证据链完整时，并产生可公开的原因码。<span>无灰区。</span>"},
-            {h:"协作接口",p:"通过标准化要求，让外部团队在同一语言下协作。<span>减少摩擦。</span>"},
-            {h:"结果",p:"就绪门槛成为长期可信的“前沿—工程”接口。<span>可持续。</span>"}
-          ],informal:[
-            {h:"下一步",p:"把聚变就绪做成可复算的“通关卡”：每张卡都能被外部验证。<span>真正的加速器。</span>"},
-            {h:"机会成本",p:"每一次跳过验证都会让未来更贵。我们选择让未来更便宜。<span>这是战略。</span>"},
-            {h:"风险回报",p:"风险不靠勇气解决，靠结构解决。结构越强，回报越稳。<span>稳才会大。</span>"},
-            {h:"结果",p:"当门槛被满足，升级会自然发生，不需要说服。<span>证据会说话。</span>"}
-          ]}
-        },
-        orbit:{
-          origin:{formal:[
-            {h:"范围",p:"轨道基础设施被当作“工业扩展层”：发电、存储、制造、维护。<span>先稳定后扩张。</span>"},
-            {h:"核心约束",p:"任何轨道愿景都必须回到：电力、热控、材料、补给、故障恢复。<span>可测。</span>"},
-            {h:"与网站结构的关系",p:"轨道内容通过前沿跳转保持与法则与量规联动。<span>不脱离标准。</span>"},
-            {h:"边界",p:"本页不发布危险细节；仅叙事结构与跳转。<span>公开安全。</span>"}
-          ],informal:[
-            {h:"画面",p:"轨道不是浪漫，它是下一层工业园区：稳定电力让制造离开地面。<span>这不是科幻，是路线。</span>"},
-            {h:"现实",p:"没有稳定就没有轨道工业。稳定来自约束、测量、恢复。<span>三件事缺一不可。</span>"},
-            {h:"机会成本",p:"把愿景说得太早会烧掉信任；把约束写得太清会赢得合作。<span>我们选后者。</span>"},
-            {h:"结果",p:"你会看到跳转与边界：先把地面系统做稳，再把稳复制到更高处。<span>复制上天。</span>"}
-          ]},
-          now:{formal:[
-            {h:"当前目标",p:"将轨道叙事作为策展板：每个概念绑定约束与跳转。<span>可追溯。</span>"},
-            {h:"当前姿态",p:"不做时间线承诺；只写结构依赖与门控条件。<span>有界。</span>"},
-            {h:"当前连接",p:"轨道主题跳转至创新与标准与能源主干。<span>统一导航。</span>"},
-            {h:"当前价值",p:"让宏大叙事保持可读与可审计。<span>减少噪声。</span>"}
-          ],informal:[
-            {h:"现在",p:"轨道工业不需要被神化，它需要被结构化。<span>结构让未来变得可谈。</span>"},
-            {h:"风险回报",p:"回报很大，但只有当风险被拆解、被隔离、被审计时才会变成现实。<span>结构换回报。</span>"},
-            {h:"机会成本",p:"如果你不把依赖讲清楚，你会在最贵的时候发现缺了最便宜的部件。<span>我们提前讲清。</span>"},
-            {h:"结果",p:"你获得的是一条可持续扩展的路线，而不是一段短暂的兴奋。<span>长期叙事。</span>"}
-          ]},
-          post:{formal:[
-            {h:"路线图",p:"扩展轨道主题为依赖图与门控图，并与量规联动。<span>可复算。</span>"},
-            {h:"约束升级",p:"规模越大，约束越严格：材料、热控、辐射、防故障。<span>不放松。</span>"},
-            {h:"协作接口",p:"定义一致可让合作变成模块拼装。<span>减少争论。</span>"},
-            {h:"结果",p:"轨道叙事成为工程路线的上层索引。<span>可持续。</span>"}
-          ],informal:[
-            {h:"下一步",p:"把轨道愿景写成一张可走的路线图：每一步都有门槛、有依赖、有回退。<span>可走。</span>"},
-            {h:"风险回报",p:"越大的回报越需要更清晰的依赖。清晰不是束缚，是加速。<span>加速。</span>"},
-            {h:"机会成本",p:"今天写清依赖，明天就少烧掉一个十倍成本的错误。<span>这就是赢。</span>"},
-            {h:"结果",p:"当稳定的能量与标准形成闭环，轨道工业就不再遥远。<span>它会靠近。</span>"}
-          ]}
-        }
-      };
+  var active = "if";
 
-  function setLensLabels(){
-    chipStyle.textContent = T.stylePrefix + (style==="formal" ? T.lens.formal : T.lens.informal);
-    chipConcept.textContent = T.lens.concept;
-    chipNow.textContent = T.lens.now;
-    chipRoadmap.textContent = T.lens.roadmap;
-
-    chipConcept.classList.toggle("active", time==="origin");
-    chipNow.classList.toggle("active", time==="now");
-    chipRoadmap.classList.toggle("active", time==="post");
+  function setLensUI(){
+    pillFormal.classList.toggle("active", gdStyle==="formal");
+    pillInformal.classList.toggle("active", gdStyle==="informal");
+    pillConcept.classList.toggle("active", gdTime==="origin");
+    pillLive.classList.toggle("active", gdTime==="now");
+    pillRoadmap.classList.toggle("active", gdTime==="post");
   }
 
-  function persist(){
-    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time);}catch(e){}
+  function card(title, sub, href){
+    var el=document.createElement("div");
+    el.className="card";
+    el.setAttribute("role","button");
+    el.setAttribute("tabindex","0");
+
+    var t=document.createElement("div");
+    t.className="ct";
+    t.textContent=title;
+
+    var s=document.createElement("div");
+    s.className="cs";
+    s.textContent=sub;
+
+    el.appendChild(t); el.appendChild(s);
+
+    function go(){
+      if(!href) return;
+      location.href = href + q();
+    }
+    el.addEventListener("click", go);
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); }
+    });
+
+    return el;
+  }
+
+  function headerCopy(){
+    var timeLab = (gdTime==="origin") ? T.lens.concept : (gdTime==="now") ? T.lens.live : T.lens.roadmap;
+    var styleLab = (gdStyle==="formal") ? T.lens.formal : T.lens.informal;
+
+    var map = {
+      if: (lang==="zh")?("是否 · "+timeLab+" · "+styleLab):("IF · "+timeLab+" · "+styleLab),
+      how:(lang==="zh")?("如何 · "+timeLab+" · "+styleLab):("HOW · "+timeLab+" · "+styleLab),
+      when:(lang==="zh")?("何时 · "+timeLab+" · "+styleLab):("WHEN · "+timeLab+" · "+styleLab),
+      first:(lang==="zh")?("先做 · "+timeLab+" · "+styleLab):("FIRST · "+timeLab+" · "+styleLab)
+    };
+    h1.textContent = map[active] || "FRONTIER";
+
+    if(active==="if"){
+      h2.textContent = (lang==="zh")
+        ? "先判定“可不可能”。可行性不靠口号，而靠约束、证据与接口边界。"
+        : "Start with possibility. Feasibility is not a slogan; it is constraints, evidence, and boundary interfaces.";
+      h3.textContent = (lang==="zh")
+        ? "前沿不等于承诺。它是有界的跳转与结构化路线。"
+        : "Frontier is not a promise. It is bounded jump surfaces and structured routes.";
+      return;
+    }
+    if(active==="how"){
+      h2.textContent = (lang==="zh")
+        ? "再问“怎么可能”。答案必须避免作弊：禁止凭叙事升级，必须可审计、可证伪、可回放。"
+        : "Then ask how. The answer must avoid cheating: no narrative upgrades, auditability, falsifiers, and replayability.";
+      h3.textContent = (lang==="zh")
+        ? "如果不能被独立复算，就只能停留在概念层。"
+        : "If it cannot be independently recomputed, it stays conceptual.";
+      return;
+    }
+    if(active==="when"){
+      h2.textContent = (lang==="zh")
+        ? "再问“何时可能”。时间不是日期，而是一组必须先成立的门槛：仪器、收据、稳定性与治理。"
+        : "Then ask when. ‘When’ is not a date; it is prerequisites: instruments, receipts, stability, governance.";
+      h3.textContent = (lang==="zh")
+        ? "门槛没过，就不允许把愿景写成现实。"
+        : "If gates are not passed, vision cannot be written as reality.";
+      return;
+    }
+    h2.textContent = (lang==="zh")
+      ? "最后问“先做什么”。先建基底：语言与一致性标准，然后才有产品执行与前沿扩展。"
+      : "Finally ask what comes first. Build substrate: language + coherence standards, then products, then frontier expansion.";
+    h3.textContent = (lang==="zh")
+      ? "先把“可执行”做出来，再把“宏大”带上去。"
+      : "Make it executable first, then carry the ambition forward.";
   }
 
   function render(){
-    persist();
-    wire();
-    setLensLabels();
+    setLensUI();
+    headerCopy();
+    grid.innerHTML="";
 
-    var titleMap = {
-      space: (lang==="zh" ? "前沿 · 太空" : "FRONTIER · SPACE"),
-      solar: (lang==="zh" ? "前沿 · 太阳能" : "FRONTIER · SOLAR"),
-      fusion:(lang==="zh" ? "前沿 · 聚变就绪" : "FRONTIER · FUSION READINESS"),
-      orbit: (lang==="zh" ? "前沿 · 轨道" : "FRONTIER · ORBITAL")
-    };
-    mTitle.textContent = titleMap[active] || T.top;
+    if(active==="if"){
+      grid.appendChild(card(
+        (lang==="zh")?"能源：工业可行面":"Energy: industrial feasibility",
+        (lang==="zh")?"工业等离子热替代（C）是可测的现实入口。":"Industrial plasma thermal substitution (C) is the measurable entry point.",
+        "/products/energy/"
+      ));
+      grid.appendChild(card(
+        (lang==="zh")?"聚变：就绪门槛":"Fusion: readiness gates",
+        (lang==="zh")?"仅需求：仪器、收据、证伪、独立审计。":"Requirements-only: instruments, receipts, falsifiers, independent audit.",
+        "/explore/fusion-readiness/"
+      ));
+      grid.appendChild(card(
+        (lang==="zh")?"规则：标准与治理":"Rules: laws & governance",
+        (lang==="zh")?"约束先行，防止规模化后才发现风险。":"Constraints first to prevent scale-before-safety.",
+        "/laws/"
+      ));
+      grid.appendChild(card(
+        (lang==="zh")?"测量：量规":"Measurement: gauges",
+        (lang==="zh")?"让状态与变化可见，避免凭感觉升级。":"Make state and change visible; avoid ‘feel-based’ upgrades.",
+        "/gauges/"
+      ));
+      return;
+    }
 
-    var pack = COPY[active][time][style];
-    h1.textContent = pack[0].h; p1.innerHTML = pack[0].p;
-    h2.textContent = pack[1].h; p2.innerHTML = pack[1].p;
-    h3.textContent = pack[2].h; p3.innerHTML = pack[2].p;
-    h4.textContent = pack[3].h; p4.innerHTML = pack[3].p;
+    if(active==="how"){
+      grid.appendChild(card(
+        (lang==="zh")?"基底：语言创新枢纽":"Substrate: language hub",
+        (lang==="zh")?"语法、SSG、DOT.GRID、缩略语：把执行写成结构。":"Grammar, SSG, DOT.GRID, acronyms: execution as structure.",
+        "/explore/innovation/language/"
+      ));
+      grid.appendChild(card(
+        (lang==="zh")?"DOT.GRID":"DOT.GRID",
+        (lang==="zh")?"256态编码与扫掠，让证据可重放。":"256-state encoding and sweeps for replayable evidence.",
+        "/explore/innovation/language/dot-grid/"
+      ));
+      grid.appendChild(card(
+        (lang==="zh")?"SSG":"SSG",
+        (lang==="zh")?"约束语法几何：把规则压缩成可执行文本。":"Constraint syntax geometry for executable rules.",
+        "/explore/innovation/language/ssg/"
+      ));
+      grid.appendChild(card(
+        (lang==="zh")?"能源：链路表达":"Energy: chain expression",
+        (lang==="zh")?"把太阳→等离子→工业热替代写成可审计链路。":"Write solar→plasma→industrial heat as an auditable chain.",
+        "/products/energy/"
+      ));
+      return;
+    }
+
+    if(active==="when"){
+      grid.appendChild(card(
+        (lang==="zh")?"门槛：聚变就绪":"Gate: fusion readiness",
+        (lang==="zh")?"“何时”由门槛决定，不由日期决定。":"‘When’ is gate-dependent, not date-dependent.",
+        "/explore/fusion-readiness/"
+      ));
+      grid.appendChild(card(
+        (lang==="zh")?"治理：标准页":"Governance: laws",
+        (lang==="zh")?"门槛必须写成规则：可证伪、可审计、可回滚。":"Gates must be rules: falsifiable, auditable, rollback-safe.",
+        "/laws/"
+      ));
+      grid.appendChild(card(
+        (lang==="zh")?"测量：量规":"Measurement: gauges",
+        (lang==="zh")?"门槛必须可测，且噪声/伪象必须被压制。":"Gates must be measurable; noise/artifacts must be suppressed.",
+        "/gauges/"
+      ));
+      grid.appendChild(card(
+        (lang==="zh")?"产品：工业执行":"Products: industrial execution",
+        (lang==="zh")?"可行性先在工业场景落地，再谈更远的前沿。":"Land feasibility in industrial reality before farther frontier.",
+        "/products/"
+      ));
+      return;
+    }
+
+    // first
+    grid.appendChild(card(
+      (lang==="zh")?"第一步：基底":"Step 1: substrate",
+      (lang==="zh")?"语言+一致性标准让系统可教、可复用、可审计。":"Language + coherence standards make the system teachable and auditable.",
+      "/explore/innovation/language/"
+    ));
+    grid.appendChild(card(
+      (lang==="zh")?"第二步：产品执行":"Step 2: products",
+      (lang==="zh")?"把结构做成可用产品面：能源/教育/软件/商业。":"Turn structure into products: Energy/Education/Software/Commercial.",
+      "/products/"
+    ));
+    grid.appendChild(card(
+      (lang==="zh")?"第三步：工业能源":"Step 3: energy",
+      (lang==="zh")?"工业等离子替代（C）是公开、可测、可部署的起点。":"Industrial plasma substitution (C) is the public measurable start.",
+      "/products/energy/"
+    ));
+    grid.appendChild(card(
+      (lang==="zh")?"第四步：前沿扩展":"Step 4: frontier",
+      (lang==="zh")?"前沿作为跳转面存在：愿景与约束保持连接。":"Frontier exists as bounded jump surfaces tied to constraints.",
+      "/explore/"
+    ));
   }
 
-  function open(which){
-    active=which;
-    ["dSpace","dSolar","dFusion","dOrbit"].forEach(function(id){
-      document.getElementById(id).classList.toggle("active",
-        (which==="space" && id==="dSpace") ||
-        (which==="solar" && id==="dSolar") ||
-        (which==="fusion" && id==="dFusion") ||
-        (which==="orbit" && id==="dOrbit")
-      );
-    });
-    render();
+  function openModal(which){
+    active = which;
+    mTitle.textContent = (lang==="zh") ? "前沿" : "FRONTIER";
     bd.classList.add("show");
     modal.classList.add("show");
+    render();
   }
-  function close(){
-    bd.classList.remove("show");
+  function closeModal(){
     modal.classList.remove("show");
-    ["dSpace","dSolar","dFusion","dOrbit"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
+    bd.classList.remove("show");
   }
 
-  // Bind diamonds
-  dSpace.addEventListener("click", function(){ open("space"); });
-  dSolar.addEventListener("click", function(){ open("solar"); });
-  dFusion.addEventListener("click", function(){ open("fusion"); });
-  dOrbit.addEventListener("click", function(){ open("orbit"); });
-
-  ["dSpace","dSolar","dFusion","dOrbit"].forEach(function(id){
+  // bind FIRST (tap-safe)
+  function bind(id, which){
     var el=document.getElementById(id);
+    if(!el) return;
+    function go(){ openModal(which); }
+    el.addEventListener("click", go);
     el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); }
     });
-  });
+  }
+  bind("dIf","if");
+  bind("dHow","how");
+  bind("dWhen","when");
+  bind("dFirst","first");
 
-  // Lenses
-  chipStyle.onclick=function(){ style=(style==="formal")?"informal":"formal"; render(); };
-  chipConcept.onclick=function(){ time="origin"; render(); };
-  chipNow.onclick=function(){ time="now"; render(); };
-  chipRoadmap.onclick=function(){ time="post"; render(); };
+  // lens toggles
+  function persist(){
+    try{ localStorage.setItem("gd_style",gdStyle); localStorage.setItem("gd_time",gdTime);}catch(e){}
+  }
+  pillFormal.addEventListener("click", function(){ gdStyle="formal"; persist(); render(); });
+  pillInformal.addEventListener("click", function(){ gdStyle="informal"; persist(); render(); });
+  pillConcept.addEventListener("click", function(){ gdTime="origin"; persist(); render(); });
+  pillLive.addEventListener("click", function(){ gdTime="now"; persist(); render(); });
+  pillRoadmap.addEventListener("click", function(){ gdTime="post"; persist(); render(); });
 
-  // Close
-  bd.onclick=close;
-  mClose.onclick=close;
-  mReturn.onclick=close;
+  // initialize lens UI
+  setLensUI();
 
-  // Initial labels
-  setLensLabels();
+  // close
+  bd.addEventListener("click", closeModal);
+  mClose.addEventListener("click", closeModal);
+  mReturn.addEventListener("click", closeModal);
+
+  // stop overlay click-through (modal should be tappable)
+  modal.addEventListener("click", function(e){ e.stopPropagation(); });
+
 })();
 </script>
 

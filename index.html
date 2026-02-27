@@ -1,15 +1,18 @@
 <!-- TNT — /index.html
-     INDEX (GATE) · TWO MASSIVE DIAMONDS · SPLINE ROUTER (NO MODALS)
-     GOAL: eliminate redundancy + rename diamonds to SPLINE 1 / SPLINE 2
-     ROUTES:
-       TOP    = STRUCTURAL SPLINE     → /home/
-       BOTTOM = PRODUCT/INNOVATION    → /explore/
-     LOCKS:
-       - ui.css owns field (no html/body background)
-       - uses /assets/ui.css + /assets/branch.css
-       - uses /assets/instruments.js
-       - state carry: ?lang=&style=&time=&depth=
-       - LS: gd_lang/gd_style/gd_time/gd_depth
+     INDEX · PRIMARY FORK AFTER DOOR · TWO MASSIVE DIAMONDS · SPLINE A vs SPLINE B
+     PURPOSE (LOCK):
+       - This is the first commitment after the Door.
+       - Two vertical diamonds only (tap-safe).
+       - No modals. No overlays. No lens widgets on this page.
+       - Language is page-level only (EN / 中文 / ES).
+       - Preserves and propagates state: lang/style/time/depth (URL) + gd_* (localStorage).
+     ROUTES (LOCKED FOR NOW):
+       - TOP DIAMOND  -> /home/        (Spline A: Structure / Lattice / Verification)
+       - BOTTOM DIAMOND -> /explore/   (Spline B: Accord / Products + Innovation)
+     OWNERSHIP:
+       - ui.css owns field (no html/body background styling)
+       - branch.css owns geometry primitives (used but not redefined)
+       - instruments.js owns canonical state normalize + i18n loader
 -->
 
 <!doctype html>
@@ -17,59 +20,89 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cardinal Axis · Entry</title>
+<title>INDEX · Cardinal Axis</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
+/* DO NOT TOUCH FIELD — ui.css owns html/body background */
+a{color:inherit;text-decoration:none}
+
 :root{
   --R:170px;
   --D:260px;
-  --dockH:96px;
   --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 }
-a{color:inherit;text-decoration:none}
-body{padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom));}
 
 /* Top-left */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  position:fixed;
+  left:16px;
+  top:16px;
+  z-index:140;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
 }
 
-/* Top-right language toggle */
+/* Top-right language toggle (page-level only) */
 .top-right{
-  position:fixed;right:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  position:fixed;
+  right:16px;
+  top:16px;
+  z-index:140;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
 }
 
-/* Brand (reduced redundancy) */
+/* Brand */
 .brand{
-  position:fixed;left:50%;top:28px;transform:translateX(-50%);
-  z-index:110;text-align:center;
-  padding:10px 18px;border-radius:999px;
+  position:fixed;
+  left:50%;
+  top:18px;
+  transform:translateX(-50%);
+  z-index:130;
+  text-align:center;
+  padding:10px 18px;
+  border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
   pointer-events:none;
 }
 .brand .k{
-  font-size:12px;letter-spacing:3px;text-transform:uppercase;
-  opacity:.75;margin:0 0 6px 0;
+  font-size:12px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:.78;
+  margin:0 0 6px 0;
 }
 .brand .t{
-  font-weight:950;font-size:40px;letter-spacing:.3px;margin:0;line-height:1.02;
+  font-weight:950;
+  font-size:40px;
+  letter-spacing:.3px;
+  margin:0;
+  line-height:1.02;
 }
 .brand .s{
-  font-size:13px;opacity:.82;margin:8px 0 0;line-height:1.35;
+  opacity:.85;
+  font-size:13.5px;
+  margin:8px 0 0;
+  line-height:1.35;
+  max-width:min(860px,94vw);
 }
 
 /* Stage */
 .stage{
-  position:fixed;left:50%;top:55%;
+  position:fixed;
+  left:50%;
+  top:56%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
@@ -77,10 +110,13 @@ body{padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom));}
   pointer-events:none;
 }
 
-/* Massive diamonds */
+/* Massive diamonds (opal lacquer) */
 .d{
-  width:var(--D);height:var(--D);
-  position:absolute;left:50%;top:50%;
+  width:var(--D);
+  height:var(--D);
+  position:absolute;
+  left:50%;
+  top:50%;
   transform-origin:center;
   border-radius:34px;
   cursor:pointer;
@@ -91,6 +127,7 @@ body{padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom));}
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 48%),
     radial-gradient(circle at 70% 78%, rgba(0,120,255,.25), transparent 60%),
+    radial-gradient(circle at 48% 52%, rgba(255,255,255,.06), transparent 62%),
     linear-gradient(160deg, var(--obsA), var(--obsB));
 
   border:1px solid rgba(255,255,255,.16);
@@ -100,14 +137,17 @@ body{padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom));}
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -50px 90px rgba(0,0,0,.78);
 
-  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  transition:transform .18s ease, border-color .18s ease;
   overflow:hidden;
 }
 .d::before{
   content:"";
-  position:absolute;inset:0;border-radius:34px;padding:1px;
+  position:absolute;
+  inset:0;
+  border-radius:34px;
+  padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.60;
+  opacity:.62;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
@@ -115,7 +155,11 @@ body{padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom));}
 }
 .d::after{
   content:"";
-  position:absolute;left:10%;right:10%;top:10%;height:28%;
+  position:absolute;
+  left:10%;
+  right:10%;
+  top:10%;
+  height:28%;
   border-radius:999px;
   background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
   transform:rotate(-10deg);
@@ -125,53 +169,61 @@ body{padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom));}
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
   border-color:rgba(212,175,55,.30);
 }
+.d:active{
+  transform:translate(-50%,-50%) rotate(45deg) scale(.99);
+}
 
 /* Vertical layout */
 .d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
 
 .inner{
-  width:100%;height:100%;
+  width:100%;
+  height:100%;
   transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
-  padding:18px;gap:10px;
+  padding:18px;
+  gap:10px;
   pointer-events:none;
+  user-select:none;
 }
-.lab{font-weight:950;font-size:22px;letter-spacing:.8px}
-.sub{font-size:14px;opacity:.85;line-height:1.35;max-width:22em}
+.lab{
+  font-weight:950;
+  font-size:22px;
+  letter-spacing:.8px;
+  text-shadow:0 0 18px rgba(255,255,255,.10);
+}
+.sub{
+  font-size:14px;
+  opacity:.85;
+  line-height:1.35;
+  max-width:22em;
+}
 
-/* Dock */
-.dock{
+/* Footer micro-line */
+.footer{
   position:fixed;
   left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
+  bottom:calc(16px + env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:120;
-  width:min(980px,94vw);
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
+  width:min(920px,94vw);
+  text-align:center;
+  font-size:13px;
+  opacity:.78;
+  text-shadow:0 18px 60px rgba(0,0,0,.55);
+  pointer-events:none;
 }
 
 /* Mobile */
 @media (max-width:560px){
-  :root{ --R:150px; --D:244px; --dockH:118px; }
-  .stage{ top:54%; }
-  .brand .t{ font-size:38px; }
-  .brand{ top:26px; }
-}
-@media (max-width:420px){
-  :root{ --R:140px; --D:236px; --dockH:132px; }
-  .stage{ top:53%; }
-  .brand .t{ font-size:36px; }
-  .brand{ top:24px; }
+  :root{ --R:156px; --D:244px; }
+  .stage{top:58%}
+  .brand .t{font-size:36px}
 }
 </style>
 </head>
@@ -179,7 +231,7 @@ body{padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom));}
 <body>
 
 <div class="top-left">
-  <a class="btn" id="btnExit" href="/">EXIT</a>
+  <a class="btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
 <div class="top-right">
@@ -189,37 +241,32 @@ body{padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom));}
 </div>
 
 <div class="brand" aria-hidden="true">
-  <div class="k" id="bk">CARDINAL AXIS</div>
-  <div class="t" id="bt">Select spline</div>
-  <div class="s" id="bs">Two ramps · one system</div>
+  <p class="k" id="bk">CARDINAL AXIS</p>
+  <h1 class="t" id="bt">INDEX</h1>
+  <p class="s" id="bs">Choose a path · Both return to structure</p>
 </div>
 
-<div class="stage" aria-label="Spline router">
+<div class="stage" aria-label="Primary fork">
 
-  <!-- SPLINE 1: STRUCTURAL -->
-  <div class="d d-top" id="dStructural" role="button" tabindex="0" aria-label="Structural spline">
+  <!-- SPLINE A -->
+  <div class="d d-top" id="dSplineA" role="button" tabindex="0" aria-label="Spline A">
     <div class="inner">
-      <div class="lab" id="labStructural">STRUCTURE</div>
-      <div class="sub" id="subStructural">Definitions · gates · proof posture</div>
+      <div class="lab" id="labA">STRUCTURE SPLINE</div>
+      <div class="sub" id="subA">Definitions · Lattice · Verification</div>
     </div>
   </div>
 
-  <!-- SPLINE 2: PRODUCT / INNOVATION -->
-  <div class="d d-bottom" id="dInnovation" role="button" tabindex="0" aria-label="Innovation spline">
+  <!-- SPLINE B -->
+  <div class="d d-bottom" id="dSplineB" role="button" tabindex="0" aria-label="Spline B">
     <div class="inner">
-      <div class="lab" id="labInnovation">INNOVATION</div>
-      <div class="sub" id="subInnovation">Products · integration · frontier</div>
+      <div class="lab" id="labB">ACCORD SPLINE</div>
+      <div class="sub" id="subB">Products · Innovation · Adoption</div>
     </div>
   </div>
 
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
-</nav>
+<div class="footer" id="foot">Orientation before scale · Scale before claims</div>
 
 <script>
 (function(){
@@ -256,58 +303,17 @@ body{padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom));}
            "&depth="+encodeURIComponent(D);
   }
 
-  function wireLinks(){
-    document.getElementById("btnExit").href="/"+q();
-    document.getElementById("dockTerminal").href="/index.html"+q();
-    document.getElementById("dockProducts").href="/products/"+q();
-    document.getElementById("dockLaws").href="/laws/"+q();
-    document.getElementById("dockGauges").href="/gauges/"+q();
-  }
+  // page-level language toggle
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
 
-  function renderLang(){
-    // Minimal i18n just for visible surface (no extra density)
-    if(lang==="zh"){
-      document.getElementById("bt").textContent="选择路线";
-      document.getElementById("bs").textContent="双匝道 · 同一系统";
-      document.getElementById("labStructural").textContent="结构";
-      document.getElementById("subStructural").textContent="定义 · 闸门 · 证明姿态";
-      document.getElementById("labInnovation").textContent="创新";
-      document.getElementById("subInnovation").textContent="产品 · 集成 · 前沿";
-      document.getElementById("dockTerminal").textContent="终端";
-      document.getElementById("dockProducts").textContent="产品";
-      document.getElementById("dockLaws").textContent="法则";
-      document.getElementById("dockGauges").textContent="量规";
-      document.getElementById("btnExit").textContent="退出";
-    }else if(lang==="es"){
-      document.getElementById("bt").textContent="Elige carril";
-      document.getElementById("bs").textContent="Dos rampas · un sistema";
-      document.getElementById("labStructural").textContent="ESTRUCTURA";
-      document.getElementById("subStructural").textContent="Definiciones · compuertas · prueba";
-      document.getElementById("labInnovation").textContent="INNOVACIÓN";
-      document.getElementById("subInnovation").textContent="Productos · integración · frontera";
-      document.getElementById("dockTerminal").textContent="TERMINAL";
-      document.getElementById("dockProducts").textContent="PRODUCTOS";
-      document.getElementById("dockLaws").textContent="LEYES";
-      document.getElementById("dockGauges").textContent="MEDIDAS";
-      document.getElementById("btnExit").textContent="SALIR";
-    }else{
-      document.getElementById("bt").textContent="Select spline";
-      document.getElementById("bs").textContent="Two ramps · one system";
-      document.getElementById("labStructural").textContent="STRUCTURE";
-      document.getElementById("subStructural").textContent="Definitions · gates · proof posture";
-      document.getElementById("labInnovation").textContent="INNOVATION";
-      document.getElementById("subInnovation").textContent="Products · integration · frontier";
-      document.getElementById("dockTerminal").textContent="TERMINAL";
-      document.getElementById("dockProducts").textContent="PRODUCTS";
-      document.getElementById("dockLaws").textContent="LAWS";
-      document.getElementById("dockGauges").textContent="GAUGES";
-      document.getElementById("btnExit").textContent="EXIT";
-    }
-
+  function paintLang(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
     btnES.classList.toggle("active", lang==="es");
   }
+  paintLang();
 
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
@@ -316,35 +322,65 @@ body{padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom));}
     history.replaceState({}, "", location.pathname + q({lang: lang}));
     document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
     renderLang();
-    wireLinks();
+    paintLang();
   }
 
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  wireLinks();
+  // i18n (EN/中文/ES)
+  function renderLang(){
+    if(lang==="zh"){
+      document.getElementById("bt").textContent="索引";
+      document.getElementById("bs").textContent="选择路径 · 两条路都回到结构";
+      document.getElementById("labA").textContent="结构脊柱";
+      document.getElementById("subA").textContent="定义 · 格点 · 核查";
+      document.getElementById("labB").textContent="合流脊柱";
+      document.getElementById("subB").textContent="产品 · 创新 · 采纳";
+      document.getElementById("foot").textContent="先导览 · 再规模 · 再主张";
+      document.getElementById("btnExit").textContent="退出";
+    }else if(lang==="es"){
+      document.getElementById("bt").textContent="ÍNDICE";
+      document.getElementById("bs").textContent="Elige un camino · Ambos regresan a estructura";
+      document.getElementById("labA").textContent="RAMAL DE ESTRUCTURA";
+      document.getElementById("subA").textContent="Definiciones · Lattice · Verificación";
+      document.getElementById("labB").textContent="RAMAL DE ACUERDO";
+      document.getElementById("subB").textContent="Productos · Innovación · Adopción";
+      document.getElementById("foot").textContent="Orientación · Escala · Afirmaciones";
+      document.getElementById("btnExit").textContent="SALIR";
+    }else{
+      document.getElementById("bt").textContent="INDEX";
+      document.getElementById("bs").textContent="Choose a path · Both return to structure";
+      document.getElementById("labA").textContent="STRUCTURE SPLINE";
+      document.getElementById("subA").textContent="Definitions · Lattice · Verification";
+      document.getElementById("labB").textContent="ACCORD SPLINE";
+      document.getElementById("subB").textContent="Products · Innovation · Adoption";
+      document.getElementById("foot").textContent="Orientation before scale · Scale before claims";
+      document.getElementById("btnExit").textContent="EXIT";
+    }
+  }
   renderLang();
 
   // Routes
-  function goStructural(){ location.href="/home/"+q(); }
-  function goInnovation(){ location.href="/explore/"+q(); }
+  function goSplineA(){ location.href="/home/"+q(); }
+  function goSplineB(){ location.href="/explore/"+q(); }
 
-  var ds=document.getElementById("dStructural");
-  var di=document.getElementById("dInnovation");
+  var a=document.getElementById("dSplineA");
+  var b=document.getElementById("dSplineB");
 
-  ds.addEventListener("click", goStructural);
-  di.addEventListener("click", goInnovation);
+  a.addEventListener("click", goSplineA);
+  b.addEventListener("click", goSplineB);
 
-  ds.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goStructural(); }
+  a.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goSplineA(); }
   });
-  di.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goInnovation(); }
+  b.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goSplineB(); }
   });
+
+  // Exit preserves state
+  document.getElementById("btnExit").href="/door/"+q();
 
 })();
 </script>

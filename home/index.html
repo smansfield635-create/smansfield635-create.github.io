@@ -1,33 +1,7 @@
 <!-- TNT — /home/index.html
-     HUB A · 12 → 3 → 2(+1) TREE · “COLLAPSIBLE BOOK”
-     GOAL: Most thorough, stable, non-drift implementation.
-
-     GEOMETRY (LOCKED):
-       LEVEL 1: 12 direction bubbles (one-line only) — multi-open allowed
-       CLICK direction → LEVEL 2: 3 mode bubbles (one-line only): Concept / Live / Roadmap
-       CLICK mode → LEVEL 3: show BOTH paragraphs (NO MERGE):
-         - Formal paragraph (7–9 sentences)
-         - Informal paragraph (7–9 sentences)
-         - + ONE mirrored index sentence with jump (one sentence only)
-       Mode bubbles stay open until manually closed.
-       Multiple modes and multiple directions can remain open simultaneously.
-
-     LENSES (LOCKED):
-       - No global “formal/informal” toggle hiding content.
-       - Both paragraphs are visible together at Level 3.
-       - Chinese lens available via gd_lang=en|zh (and optional tiny toggle UI).
-       - Canon keys: gd_lang / gd_style / gd_time only. (gd_style is persisted but not required for visibility.)
-
-     UI (LOCKED):
-       - No hint cards / no under-the-hood explanation above the hood
-       - No subtitles under direction names
-       - Diamond color marker left of direction name (12-color ring)
-       - No mirror UI
-       - No modals
-
-     NOTE:
-       - This is “sophisticated” in the right way: a single source of truth registry,
-         deterministic rendering, no duplication drift, correct multi-open behavior.
+     HUB A · 12 → 3 → (Formal/Informal view) + 1 index sentence
+     Canon keys only: gd_lang / gd_style / gd_time
+     Multi-open, no merging, no modals
 -->
 
 <!doctype html>
@@ -41,156 +15,45 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-/* DO NOT TOUCH FIELD — ui.css owns html/body background */
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
 .wrap{width:min(1040px,94vw);margin:0 auto;padding:12px 0 120px;display:flex;flex-direction:column;gap:12px}
 
-/* Minimal lens bar (no explanation) */
-.topbar{
-  position:sticky;top:0;z-index:50;
-  padding:10px 0;
-  backdrop-filter:blur(10px);
-}
-.lensRow{
-  display:flex;
-  justify-content:flex-end;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.seg{
-  display:inline-flex;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:999px;
-  overflow:hidden;
-  background:rgba(0,0,0,.16);
-}
-.seg button{
-  border:0;background:transparent;color:#fff;
-  padding:9px 12px;
-  font-weight:950;
-  letter-spacing:.2px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
+/* Top controls */
+.topbar{position:sticky;top:0;z-index:50;padding:10px 0;backdrop-filter:blur(10px)}
+.controls{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid rgba(255,255,255,.10);border-radius:999px;overflow:hidden;background:rgba(0,0,0,.16)}
+.seg button{border:0;background:transparent;color:#fff;padding:9px 12px;font-weight:950;cursor:pointer}
 .seg button.on{background:rgba(255,255,255,.12)}
 
-/* LEVEL 1: direction bubble (one line only) */
-.dir{
-  --c:#93C5FD;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:linear-gradient(145deg, rgba(12,22,38,.88), rgba(7,11,18,.94));
-  box-shadow:0 14px 42px rgba(0,0,0,.55);
-  overflow:hidden;
-}
-.dirHead{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:12px 14px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.left{display:flex;align-items:center;gap:10px;min-width:0}
-.diamond{
-  width:12px;height:12px;
-  transform:rotate(45deg);
-  border-radius:4px;
-  background:var(--c);
-  box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;
-  pointer-events:none;
-}
-.label{
-  font-weight:950;
-  letter-spacing:.2px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.chev{opacity:.75;font-size:16px;flex:0 0 auto}
+/* Directions */
+.dir{--c:#93C5FD;border:1px solid rgba(255,255,255,.10);border-radius:18px;background:linear-gradient(145deg,rgba(12,22,38,.88),rgba(7,11,18,.94));overflow:hidden}
+.dirHead{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer}
+.left{display:flex;align-items:center;gap:10px}
+.diamond{width:12px;height:12px;transform:rotate(45deg);border-radius:4px;background:var(--c)}
+.label{font-weight:950}
+.chev{opacity:.75}
 .dirBody{display:none;padding:0 14px 14px;border-top:1px solid rgba(255,255,255,.08)}
 .dir.open .dirBody{display:block}
 
-/* LEVEL 2: mode bubble (one line only) */
+/* Modes */
 .stack{display:flex;flex-direction:column;gap:10px;margin-top:12px}
-.mode{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:16px;
-  background:linear-gradient(145deg, rgba(17,22,28,.78), rgba(11,15,20,.86));
-  box-shadow:0 10px 30px rgba(0,0,0,.45);
-  overflow:hidden;
-}
-.modeHead{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:11px 12px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.modeLabel{font-weight:950;letter-spacing:.2px}
-.modeChev{opacity:.75;font-size:16px}
+.mode{border:1px solid rgba(255,255,255,.10);border-radius:16px;background:linear-gradient(145deg,rgba(17,22,28,.78),rgba(11,15,20,.86))}
+.modeHead{display:flex;justify-content:space-between;padding:11px 12px;cursor:pointer}
 .modeBody{display:none;padding:12px;border-top:1px solid rgba(255,255,255,.08)}
 .mode.open .modeBody{display:block}
 
-/* LEVEL 3: dual paragraphs + single index sentence */
-.lensBlock{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:14px;
-  padding:10px 12px;
-  background:rgba(0,0,0,.18);
-  margin-bottom:10px;
-}
-.lensTitle{
-  font-weight:950;
-  font-size:12px;
-  letter-spacing:.2px;
-  opacity:.9;
-  margin:0 0 6px;
-}
-.p{
-  margin:0;
-  line-height:1.62;
-  font-size:13px;
-  color:rgba(255,255,255,.88);
-}
-.indexLine{
-  margin-top:10px;
-  padding:10px 12px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
-  color:rgba(255,255,255,.82);
-  font-size:12.5px;
-  line-height:1.55;
-}
-.indexLine a{
-  color:#93C5FD;
-  font-weight:950;
-  text-decoration:none;
-}
+/* Paragraphs */
+.lensBlock{border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:10px 12px;background:rgba(0,0,0,.18);margin-bottom:10px}
+.lensTitle{font-weight:950;font-size:12px;margin-bottom:6px}
+.p{margin:0;line-height:1.6;font-size:13px;color:rgba(255,255,255,.88)}
+.indexLine{margin-top:10px;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.14);font-size:12px}
+.indexLine a{color:#93C5FD;font-weight:900;text-decoration:none}
 
-/* Dock */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:120;
-  width:min(980px,94vw);
-  display:flex;justify-content:center;
-  gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
-  backdrop-filter:blur(8px);
-}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:10px 14px;border-radius:14px;
-  background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  color:#fff;border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 12px 30px rgba(0,0,0,.55);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-}
+/* View filtering */
+.view-formal .lensBlock[data-lens="informal"]{display:none}
+.view-informal .lensBlock[data-lens="formal"]{display:none}
+.view-both .lensBlock{display:block}
 </style>
 </head>
 
@@ -198,471 +61,144 @@ a{color:inherit;text-decoration:none}
 
 <div class="topbar">
   <div class="wrap">
-    <div class="lensRow">
-      <!-- Optional language lens controls (no explanatory copy) -->
-      <div class="seg" aria-label="Language lens">
-        <button id="langEN" type="button">EN</button>
-        <button id="langZH" type="button">中文</button>
+    <div class="controls">
+      <div class="seg">
+        <button id="viewInformal">INFORMAL</button>
+        <button id="viewFormal">FORMAL</button>
+        <button id="viewBoth">BOTH</button>
+      </div>
+      <div class="seg">
+        <button id="langEN">EN</button>
+        <button id="langZH">中文</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="wrap" id="root"></div>
-
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockHub" href="/home/">HUB</a>
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
-</nav>
+<div class="wrap view-informal" id="root"></div>
 
 <script>
 (function(){
 
-/* ===========================
-   CANON KEYS ONLY
-=========================== */
-const qs = new URLSearchParams(location.search);
-let gd_lang  = qs.get("gd_lang")  || localStorage.getItem("gd_lang")  || "en";
-let gd_style = qs.get("gd_style") || localStorage.getItem("gd_style") || "informal";
-let gd_time  = qs.get("gd_time")  || localStorage.getItem("gd_time")  || "now";
+/* Canon keys */
+const qs=new URLSearchParams(location.search);
+let gd_lang=qs.get("gd_lang")||localStorage.getItem("gd_lang")||"en";
+let gd_style=qs.get("gd_style")||localStorage.getItem("gd_style")||"informal";
+let gd_time=qs.get("gd_time")||localStorage.getItem("gd_time")||"now";
+if(gd_lang!=="en"&&gd_lang!=="zh")gd_lang="en";
+if(gd_style!=="formal"&&gd_style!=="informal")gd_style="informal";
+localStorage.setItem("gd_lang",gd_lang);
+localStorage.setItem("gd_style",gd_style);
+document.documentElement.lang=gd_lang;
 
-if(gd_lang !== "en" && gd_lang !== "zh") gd_lang = "en";
-if(gd_style !== "formal" && gd_style !== "informal") gd_style = "informal";
-if(gd_time === "trajectory") gd_time = "post";
-if(gd_time !== "origin" && gd_time !== "now" && gd_time !== "post") gd_time = "now";
-
-try{
-  localStorage.setItem("gd_lang", gd_lang);
-  localStorage.setItem("gd_style", gd_style);
-  localStorage.setItem("gd_time", gd_time);
-}catch(e){}
-
-document.documentElement.lang = (gd_lang === "zh") ? "zh" : "en";
-
-function makeQS(){
-  const p = new URLSearchParams();
-  p.set("gd_lang", gd_lang);
-  p.set("gd_style", gd_style);
-  p.set("gd_time", gd_time);
-  return "?" + p.toString();
-}
-
-/* Dock links preserve state */
-document.getElementById("dockHub").href="/home/"+makeQS();
-document.getElementById("dockExplore").href="/explore/"+makeQS();
-document.getElementById("dockProducts").href="/products/"+makeQS();
-document.getElementById("dockLaws").href="/laws/"+makeQS();
-document.getElementById("dockGauges").href="/gauges/"+makeQS();
-
-/* Optional language buttons */
-const langEN = document.getElementById("langEN");
-const langZH = document.getElementById("langZH");
-function paintLang(){
-  langEN.classList.toggle("on", gd_lang==="en");
-  langZH.classList.toggle("on", gd_lang==="zh");
-}
-paintLang();
-
-function applyLang(next){
-  gd_lang = next;
-  try{ localStorage.setItem("gd_lang", gd_lang); }catch(e){}
-  history.replaceState({}, "", location.pathname + makeQS());
-  document.documentElement.lang = (gd_lang === "zh") ? "zh" : "en";
-  paintLang();
-  // Re-render text in-place without changing open/closed state.
-  rerenderAllText();
-}
-
-langEN.addEventListener("click", ()=>applyLang("en"));
-langZH.addEventListener("click", ()=>applyLang("zh"));
-
-/* ===========================
-   12-COLOR RING + ORDER (LOCKED)
-=========================== */
-const COLORS = {
-  N:"#1F3A8A", NNE:"#2C3EAF", ENE:"#4B3FBF", E:"#0EA5E9",
-  ESE:"#14B8A6", SSE:"#22C55E", S:"#F59E0B", SSW:"#EA580C",
-  WSW:"#DC2626", W:"#7F1D1D", WNW:"#9333EA", NNW:"#334155"
-};
-
-const ORDER = ["N","NNE","ENE","E","ESE","SSE","S","SSW","WSW","W","WNW","NNW"];
-
-/* One-line labels only (no subtitles) */
-const LABEL = {
-  N:   {en:"N · DEFINITIONS", zh:"N · 定义"},
-  NNE: {en:"NNE", zh:"NNE"},
-  ENE: {en:"ENE", zh:"ENE"},
-  E:   {en:"E · PRODUCTS", zh:"E · 产品"},
-  ESE: {en:"ESE", zh:"ESE"},
-  SSE: {en:"SSE", zh:"SSE"},
-  S:   {en:"S · CONSTRAINTS", zh:"S · 约束"},
-  SSW: {en:"SSW", zh:"SSW"},
-  WSW: {en:"WSW", zh:"WSW"},
-  W:   {en:"W · CONTAINMENT", zh:"W · 隔离"},
-  WNW: {en:"WNW", zh:"WNW"},
-  NNW: {en:"NNW", zh:"NNW"}
-};
-
-/* ===========================
-   COPY REGISTRY (SOPHISTICATED, DIRECTION-AWARE)
-   - 12 directions × 3 modes × 2 lenses = 72 paragraphs
-   - Plus 36 index sentences
-   - EN and ZH both included; swapped by gd_lang
-   - No merging; both paragraphs visible together
-=========================== */
-
-function P7(a,b,c,d,e,f,g){ return [a,b,c,d,e,f,g].join(" "); }
-
-/* “Flavor” per direction to make text feel direction-aware without drift */
-const FLAVOR = {
-  N:   {en:"North anchors meaning.", zh:"北锚定含义。"},
-  NNE: {en:"NNE blends meaning into action.", zh:"NNE把含义桥接到行动。"},
-  ENE: {en:"ENE converts contract into surface.", zh:"ENE把契约转为执行面。"},
-  E:   {en:"East expresses deployment surfaces.", zh:"东表达部署执行面。"},
-  ESE: {en:"ESE binds power to gates.", zh:"ESE把能力绑定到闸门。"},
-  SSE: {en:"SSE tests readiness under pressure.", zh:"SSE在压力下测试就绪。"},
-  S:   {en:"South enforces admissibility.", zh:"南执行可采信。"},
-  SSW: {en:"SSW couples refusal and containment.", zh:"SSW耦合拒绝与隔离。"},
-  WSW: {en:"WSW segments failure vectors.", zh:"WSW分段失败向量。"},
-  W:   {en:"West contains and recovers.", zh:"西隔离并恢复。"},
-  WNW: {en:"WNW audits back to meaning.", zh:"WNW审计回到含义。"},
-  NNW: {en:"NNW resets without semantic swap.", zh:"NNW重置而不偷换概念。"}
-};
-
-/* Product/instrument mapping (light index sentence, one per construct).
-   No guessing: hrefs are safe placeholders. Replace later. */
-const INDEX_MAP = {
-  N:   {concept:{t:"Definitions registry",href:"#"}, live:{t:"Laws/Gauges spine",href:"#"}, roadmap:{t:"Reference expansion",href:"#"}},
-  NNE: {concept:{t:"Language bridge",href:"#"},      live:{t:"Routing contract",href:"#"},   roadmap:{t:"Projection refinement",href:"#"}},
-  ENE: {concept:{t:"Execution surface spec",href:"#"},live:{t:"Deployment checklist",href:"#"},roadmap:{t:"Replication pattern",href:"#"}},
-  E:   {concept:{t:"Products hub",href:"#"},         live:{t:"Adoption surfaces",href:"#"},  roadmap:{t:"Licensing packaging",href:"#"}},
-  ESE: {concept:{t:"Gate prerequisites",href:"#"},   live:{t:"Readiness doctrine",href:"#"}, roadmap:{t:"Constraint scaling",href:"#"}},
-  SSE: {concept:{t:"Pressure protocol",href:"#"},    live:{t:"Phase gate checks",href:"#"},  roadmap:{t:"Auditability upgrades",href:"#"}},
-  S:   {concept:{t:"Admissibility rules",href:"#"},  live:{t:"Refusal doctrine",href:"#"},   roadmap:{t:"Drift detectors",href:"#"}},
-  SSW: {concept:{t:"Containment coupling",href:"#"}, live:{t:"Return mechanics",href:"#"},   roadmap:{t:"Cascade reduction",href:"#"}},
-  WSW: {concept:{t:"Segmentation design",href:"#"},  live:{t:"Evidence chain",href:"#"},     roadmap:{t:"Audit posture",href:"#"}},
-  W:   {concept:{t:"Containment layer",href:"#"},    live:{t:"Recoverability",href:"#"},     roadmap:{t:"Isolation metrics",href:"#"}},
-  WNW: {concept:{t:"Audit return",href:"#"},         live:{t:"Version corrections",href:"#"},roadmap:{t:"Lookup expansion",href:"#"}},
-  NNW: {concept:{t:"Reset protocol",href:"#"},       live:{t:"State preservation",href:"#"},roadmap:{t:"Return shortening",href:"#"}}
-};
-
-/* Core paragraph builders: 7 sentences each, EN + ZH, formal + informal */
-function formalParagraph(dir, mode){
-  const f = FLAVOR[dir];
-  if(mode==="concept") return {
-    en: P7(
-      f.en,
-      "This mode defines the structural meaning of the direction before any claim is admitted.",
-      "Scope is declared explicitly so interpretation remains bounded.",
-      "Terms are pinned to prevent silent semantic edits under pressure.",
-      "Verification posture is specified as a requirement, not a suggestion.",
-      "Cross-domain mapping remains comparable as scale increases.",
-      "Product linkage remains secondary and strictly inside boundaries."
-    ),
-    zh: P7(
-      f.zh,
-      "该模式在任何主张被采纳之前定义该方向的结构含义。",
-      "范围被显式声明以保持解释有界。",
-      "术语被钉住以防压力下静默改义。",
-      "核查姿态被规定为要求而非建议。",
-      "跨领域映射在规模扩展时保持可比较。",
-      "产品关联保持次要且严格在边界内。"
-    )
-  };
-
-  if(mode==="live") return {
-    en: P7(
-      f.en,
-      "This mode describes how the direction behaves under real conditions.",
-      "Disputes route into structure rather than persuasion or narrative defense.",
-      "Receipts bind actions to evidence within declared scope.",
-      "Gates prevent bypass when pressure rises and time is scarce.",
-      "Return paths keep traversal deterministic and non-tunnel.",
-      "Containment limits local faults from becoming cascades."
-    ),
-    zh: P7(
-      f.zh,
-      "该模式描述该方向在真实条件下如何运作。",
-      "争议路由回结构而非说服或叙事辩护。",
-      "收据在声明范围内把行动绑定证据。",
-      "压力上升且时间稀缺时闸门阻止绕过。",
-      "返回路径让遍历保持确定性且非隧道化。",
-      "隔离限制局部故障演变为级联。"
-    )
-  };
-
-  return {
-    en: P7(
-      f.en,
-      "This mode defines forward expansion without mutating geometry.",
-      "New claims require explicit boundaries and falsifiers before acceptance.",
-      "New surfaces must preserve contracts, gates, and return paths.",
-      "Corrections require explicit versioning rather than silent edits.",
-      "Scaling occurs by replication of proven structure, not redesign.",
-      "Audit posture strengthens while proprietary recipes remain protected."
-    ),
-    zh: P7(
-      f.zh,
-      "该模式定义在不改变几何的前提下向前扩张。",
-      "新主张在采纳前必须带明确边界与证伪条件。",
-      "新执行面必须保持契约、闸门与返回路径。",
-      "修正必须显式版本化而非静默修改。",
-      "规模化通过复制已验证结构实现而非重造。",
-      "审计姿态增强同时专有配方仍受保护。"
-    )
-  };
-}
-
-function informalParagraph(dir, mode){
-  const f = FLAVOR[dir];
-  if(mode==="concept") return {
-    en: P7(
-      f.en,
-      "This tells you what role you are standing in right now.",
-      "If you don’t name the role, everything turns into opinion and noise.",
-      "Scope makes the game real and keeps it honest.",
-      "Pinned meaning stops words from wiggling under pressure.",
-      "Boundaries make growth predictable instead of chaotic.",
-      "Verification stays inside the rules, not inside persuasion."
-    ),
-    zh: P7(
-      f.zh,
-      "这告诉你此刻你站在什么角色里。",
-      "不命名角色，后面就会变成观点与噪音。",
-      "范围让游戏真实，也让它诚实。",
-      "钉住含义让压力来时词不乱动。",
-      "边界让增长可预期而不是混乱。",
-      "核查在规则里发生，而不是在说服里发生。"
-    )
-  };
-
-  if(mode==="live") return {
-    en: P7(
-      f.en,
-      "When it gets fuzzy, don’t argue—route.",
-      "Use gates so hype can’t sneak past the boundary.",
-      "Keep receipts so reality can’t be rewritten later.",
-      "Keep returns so you never get trapped in a tunnel.",
-      "Contain damage before it spreads into chaos.",
-      "Stay consistent across pages so your system stays sane."
-    ),
-    zh: P7(
-      f.zh,
-      "一旦模糊，别吵——直接跳转。",
-      "用闸门让噱头过不去边界。",
-      "保留收据让现实不能事后改写。",
-      "保留返回不让你被困在隧道里。",
-      "先隔离损伤别让它扩散成混乱。",
-      "跨页面保持一致让系统保持清醒。"
-    )
-  };
-
-  return {
-    en: P7(
-      f.en,
-      "Roadmap means grow without breaking the compass.",
-      "Add depth, not drift.",
-      "Clone what works instead of reinventing everything.",
-      "Make gates clearer as you scale.",
-      "Make returns shorter over time.",
-      "If meaning changes, version it—don’t hide it."
-    ),
-    zh: P7(
-      f.zh,
-      "路线图就是长大但别把罗盘弄坏。",
-      "加深，不加漂移。",
-      "复制有效的，不要重造一切。",
-      "越大闸门越清晰。",
-      "时间越久返回越短。",
-      "含义变了就版本化——别藏。"
-    )
-  };
-}
-
-/* ===========================
-   DOM BUILDERS (NO MERGE)
-=========================== */
-
-function makeLensBlock(title, text){
-  const b=document.createElement("div");
-  b.className="lensBlock";
-  const t=document.createElement("p");
-  t.className="lensTitle";
-  t.textContent=title;
-  const p=document.createElement("p");
-  p.className="p";
-  p.textContent=text;
-  b.appendChild(t);
-  b.appendChild(p);
-  return b;
-}
-
-function makeIndexLine(dir, modeKey){
-  const info = INDEX_MAP[dir][modeKey];
-  const line=document.createElement("div");
-  line.className="indexLine";
-  const a=document.createElement("a");
-  a.href = info.href === "#" ? "#" : (info.href + makeQS());
-  a.textContent = (gd_lang==="zh")
-    ? ("跳转：" + info.t)
-    : ("Jump: " + info.t);
-  // One sentence only (mirrored index line)
-  line.textContent = (gd_lang==="zh")
-    ? ("索引：该构件对应“" + info.t + "”。 ")
-    : ("Index: this construct maps to “" + info.t + "”. ");
-  line.appendChild(a);
-  return line;
-}
-
-function makeMode(dir, modeKey){
-  const mode=document.createElement("div");
-  mode.className="mode";
-
-  const head=document.createElement("div");
-  head.className="modeHead";
-
-  const label=document.createElement("div");
-  label.className="modeLabel";
-  label.textContent = (gd_lang==="zh")
-    ? (modeKey==="concept"?"概念":modeKey==="live"?"现况":"路线图")
-    : (modeKey==="concept"?"Concept":modeKey==="live"?"Live":"Roadmap");
-
-  const chev=document.createElement("div");
-  chev.className="modeChev";
-  chev.textContent="▸";
-
-  head.appendChild(label);
-  head.appendChild(chev);
-
-  const body=document.createElement("div");
-  body.className="modeBody";
-
-  // Both paragraphs visible together (NO MERGE)
-  const f = formalParagraph(dir, modeKey);
-  const i = informalParagraph(dir, modeKey);
-
-  body.appendChild(makeLensBlock(gd_lang==="zh"?"正式":"Formal", gd_lang==="zh"?f.zh:f.en));
-  body.appendChild(makeLensBlock(gd_lang==="zh"?"非正式":"Informal", gd_lang==="zh"?i.zh:i.en));
-  body.appendChild(makeIndexLine(dir, modeKey));
-
-  head.addEventListener("click", function(e){
-    e.stopPropagation();
-    mode.classList.toggle("open");
-    chev.textContent = mode.classList.contains("open") ? "▾" : "▸";
-  });
-
-  mode.appendChild(head);
-  mode.appendChild(body);
-  return mode;
-}
-
-function makeDir(dir){
-  const wrap=document.createElement("section");
-  wrap.className="dir";
-  wrap.style.setProperty("--c", COLORS[dir] || "#93C5FD");
-
-  const head=document.createElement("div");
-  head.className="dirHead";
-
-  const left=document.createElement("div");
-  left.className="left";
-
-  const diamond=document.createElement("div");
-  diamond.className="diamond";
-
-  const label=document.createElement("div");
-  label.className="label";
-  label.textContent = (gd_lang==="zh") ? LABEL[dir].zh : LABEL[dir].en;
-
-  left.appendChild(diamond);
-  left.appendChild(label);
-
-  const chev=document.createElement("div");
-  chev.className="chev";
-  chev.textContent="▸";
-
-  head.appendChild(left);
-  head.appendChild(chev);
-
-  const body=document.createElement("div");
-  body.className="dirBody";
-
-  const stack=document.createElement("div");
-  stack.className="stack";
-  stack.appendChild(makeMode(dir,"concept"));
-  stack.appendChild(makeMode(dir,"live"));
-  stack.appendChild(makeMode(dir,"roadmap"));
-  body.appendChild(stack);
-
-  head.addEventListener("click", function(){
-    wrap.classList.toggle("open");
-    chev.textContent = wrap.classList.contains("open") ? "▾" : "▸";
-  });
-
-  wrap.appendChild(head);
-  wrap.appendChild(body);
-  return wrap;
-}
-
-/* ===========================
-   RENDER + RERENDER IN PLACE
-=========================== */
-
+/* View toggle */
 const root=document.getElementById("root");
-const dirNodes = new Map();
+function applyView(v){
+root.classList.remove("view-formal","view-informal","view-both");
+root.classList.add("view-"+v);
+}
+applyView(gd_style);
+document.getElementById("viewFormal").onclick=()=>applyView("formal");
+document.getElementById("viewInformal").onclick=()=>applyView("informal");
+document.getElementById("viewBoth").onclick=()=>applyView("both");
 
-function renderAll(){
-  root.innerHTML="";
-  dirNodes.clear();
-  ORDER.forEach(d=>{
-    const node = makeDir(d);
-    dirNodes.set(d, node);
-    root.appendChild(node);
-  });
+/* Language toggle */
+function applyLang(l){
+gd_lang=l;localStorage.setItem("gd_lang",l);
+document.documentElement.lang=l;
+rerender();
+}
+document.getElementById("langEN").onclick=()=>applyLang("en");
+document.getElementById("langZH").onclick=()=>applyLang("zh");
+
+/* 12 Directions */
+const ORDER=["N","NNE","ENE","E","ESE","SSE","S","SSW","WSW","W","WNW","NNW"];
+const COLORS={N:"#1F3A8A",NNE:"#2C3EAF",ENE:"#4B3FBF",E:"#0EA5E9",ESE:"#14B8A6",SSE:"#22C55E",S:"#F59E0B",SSW:"#EA580C",WSW:"#DC2626",W:"#7F1D1D",WNW:"#9333EA",NNW:"#334155"};
+
+function T(en,zh){return gd_lang==="zh"?zh:en}
+function P(a){return a}
+
+/* Informal N + NNE from previous work */
+const INFORMAL_CUSTOM={
+N:{
+concept:P("You are standing at the point where meaning either stabilizes your life or quietly sabotages it. Most systems fail not because they lack ambition, but because they never agreed on what words actually mean. You can feel that fracture everywhere—in institutions, in markets, in conversations that go nowhere. When definitions drift, power becomes persuasion and persuasion becomes chaos. The problem is not disagreement; the problem is unanchored language. North is the discipline of naming reality before trying to change it. It is the courage to define boundaries so collaboration becomes possible. If you want collective movement, you must first share a map. This direction invites you to participate in building that map with clarity."),
+live:P("In real time, you are already navigating systems built on ambiguous definitions. You see institutions arguing past each other. You see teams misaligned despite good intentions. You may even feel friction in your own ambitions because the target was never clearly defined. The problem is not laziness; it is drift. North asks you to stop tolerating drift. It asks you to slow down long enough to declare your terms. When you do that, collaboration stops being chaotic and starts being coherent. Unity is not emotional agreement; it is shared definition."),
+roadmap:P("If you raise your standard here, everything downstream strengthens. When meaning becomes disciplined, execution becomes trustworthy. When execution becomes trustworthy, collaboration becomes powerful. You are not reading this because you are satisfied. You are reading this because you sense there is a better structure possible. The roadmap of North is simple but demanding: define, version, correct, and expand without distortion. It invites you to become someone who does not compromise clarity for speed. And when enough people operate at that standard, collective systems stabilize. North is the beginning of that elevation.")
+},
+NNE:{
+concept:P("You don’t lack tools. You lack translation. The problem is not that meaning is missing; it’s that you haven’t connected meaning to action. You’ve defined things in theory but abandoned them in execution. That gap is where frustration lives. NNE closes that gap. It asks you to take the standards you claim to value and bind them to what you actually build. You already possess the discipline at the conceptual level. The question is whether you are willing to let your work reflect it. Alignment is not about ambition—it’s about integrity between what you say and what you ship."),
+live:P("In real time, you feel the friction when execution drifts from declared standards. You see teams claiming principles while shipping compromises. You see institutions declaring values but operating differently under pressure. That tension isn’t a mystery; it’s translation failure. NNE forces you to bridge that space. It reminds you that standards unused are standards abandoned. When you reconnect definition to deployment, friction decreases. Trust increases because behavior reflects structure. You stop shopping for new answers because you finally use what you already own."),
+roadmap:P("The path forward is not invention; it is integration. Take the clarity you already possess and wire it into your systems. Build surfaces that cannot contradict your declared standards. Make execution answerable to meaning. As this alignment strengthens, collaboration stabilizes naturally. You won’t need to persuade people—you’ll demonstrate coherence. That is how unity scales: not through slogans, but through consistency. You are not building something new; you are finishing something you started.")
+}
+};
+
+/* Generic formal + informal for other directions (kept strong but concise) */
+function formalGeneric(dir){
+return P("This direction establishes a bounded structural role within the compass. Scope is declared before any claim is admitted. Constraints prevent semantic drift. Verification remains explicit and auditable. Cross-domain comparison remains stable under scale. Execution inherits boundary conditions from here. Structure governs expansion without mutation.");
+}
+function informalGeneric(dir){
+return P("You already possess structure; what you lack is disciplined alignment. This direction exposes the gap between intention and execution. When standards are ignored, friction multiplies. When structure is honored, collaboration accelerates. The problem is not scarcity; it is mismanagement. The solution is disciplined integration. Unity emerges when boundaries are respected. You don’t need more tools—you need to use the ones you have.");
 }
 
-function rerenderAllText(){
-  // Preserve open states (dir + mode)
-  const openDir = new Set();
-  const openMode = new Set(); // key: dir|modeKey
+/* Build */
+function build(){
+root.innerHTML="";
+ORDER.forEach(dir=>{
+const section=document.createElement("section");
+section.className="dir";
+section.style.setProperty("--c",COLORS[dir]);
 
-  dirNodes.forEach((node, dir)=>{
-    if(node.classList.contains("open")) openDir.add(dir);
-    node.querySelectorAll(".mode").forEach(m=>{
-      if(m.classList.contains("open")){
-        const mk = m.querySelector(".modeLabel")?.textContent || "";
-        // We can’t rely on label text across language, so store by order:
-        const idx = Array.from(m.parentElement.children).indexOf(m);
-        const key = idx===0?"concept":idx===1?"live":"roadmap";
-        openMode.add(dir+"|"+key);
-      }
-    });
-  });
+const head=document.createElement("div");
+head.className="dirHead";
+head.innerHTML="<div class='left'><div class='diamond'></div><div class='label'>"+dir+"</div></div><div class='chev'>▸</div>";
 
-  // Rebuild DOM cleanly and reapply open states (deterministic, no drift)
-  renderAll();
+const body=document.createElement("div");
+body.className="dirBody";
+const stack=document.createElement("div");
+stack.className="stack";
 
-  // Reapply open states
-  dirNodes.forEach((node, dir)=>{
-    if(openDir.has(dir)){
-      node.classList.add("open");
-      node.querySelector(".chev").textContent="▾";
-    }
-    const modes = node.querySelectorAll(".mode");
-    ["concept","live","roadmap"].forEach((k,idx)=>{
-      const m = modes[idx];
-      if(openMode.has(dir+"|"+k)){
-        m.classList.add("open");
-        m.querySelector(".modeChev").textContent="▾";
-      }
-    });
-  });
+["concept","live","roadmap"].forEach(mode=>{
+const m=document.createElement("div");
+m.className="mode";
+m.innerHTML="<div class='modeHead'><div>"+mode.toUpperCase()+"</div><div>▸</div></div>";
+
+const mb=document.createElement("div");
+mb.className="modeBody";
+
+const f=document.createElement("div");
+f.className="lensBlock";
+f.setAttribute("data-lens","formal");
+f.innerHTML="<div class='lensTitle'>Formal</div><p class='p'>"+formalGeneric(dir)+"</p>";
+
+const i=document.createElement("div");
+i.className="lensBlock";
+i.setAttribute("data-lens","informal");
+let informalText=(INFORMAL_CUSTOM[dir]&&INFORMAL_CUSTOM[dir][mode])?INFORMAL_CUSTOM[dir][mode]:informalGeneric(dir);
+i.innerHTML="<div class='lensTitle'>Informal</div><p class='p'>"+informalText+"</p>";
+
+const index=document.createElement("div");
+index.className="indexLine";
+index.innerHTML="Index: maps to related instrument. <a href='#'>Jump</a>";
+
+mb.appendChild(f);
+mb.appendChild(i);
+mb.appendChild(index);
+
+m.querySelector(".modeHead").onclick=()=>m.classList.toggle("open");
+
+m.appendChild(mb);
+stack.appendChild(m);
+});
+
+head.onclick=()=>section.classList.toggle("open");
+section.appendChild(head);
+section.appendChild(body);
+body.appendChild(stack);
+root.appendChild(section);
+});
 }
 
-renderAll();
+build();
 
 })();
 </script>

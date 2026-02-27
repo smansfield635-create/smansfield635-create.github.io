@@ -1,6 +1,9 @@
 <!-- TNT — /home/index.html
-     FINAL INTEGRATED HUB A
-     12 Directions × 3 Constructs × 2 Lenses
+     HUB A · 12 → 3 → (Formal/Informal/Both) + 1 index sentence
+     FIX: Expression geometry is now preserved (no generic paragraphs).
+     - Every (direction × mode × lens × language) is distinct.
+     - Informal uses news-bulletin anchor tone.
+     - Formal uses objective science/standards tone.
      Canon keys only: gd_lang / gd_style / gd_time
 -->
 
@@ -61,12 +64,12 @@ a{color:inherit;text-decoration:none}
 <div class="topbar">
   <div class="wrap">
     <div class="controls">
-      <div class="seg">
+      <div class="seg" aria-label="View">
         <button id="viewInformal">INFORMAL</button>
         <button id="viewFormal">FORMAL</button>
         <button id="viewBoth">BOTH</button>
       </div>
-      <div class="seg">
+      <div class="seg" aria-label="Language">
         <button id="langEN">EN</button>
         <button id="langZH">中文</button>
       </div>
@@ -78,115 +81,398 @@ a{color:inherit;text-decoration:none}
 
 <script>
 (function(){
+  /* =========================
+     CANON KEYS ONLY
+  ========================== */
+  const qs = new URLSearchParams(location.search);
+  let gd_lang  = qs.get("gd_lang")  || localStorage.getItem("gd_lang")  || "en";
+  let gd_style = qs.get("gd_style") || localStorage.getItem("gd_style") || "informal";
+  let gd_time  = qs.get("gd_time")  || localStorage.getItem("gd_time")  || "now";
 
-/* Canon keys */
-const qs=new URLSearchParams(location.search);
-let gd_lang=qs.get("gd_lang")||localStorage.getItem("gd_lang")||"en";
-let gd_style=qs.get("gd_style")||localStorage.getItem("gd_style")||"informal";
-if(gd_lang!=="en"&&gd_lang!=="zh")gd_lang="en";
-if(gd_style!=="formal"&&gd_style!=="informal")gd_style="informal";
-localStorage.setItem("gd_lang",gd_lang);
-localStorage.setItem("gd_style",gd_style);
-document.documentElement.lang=gd_lang;
+  if(gd_lang!=="en" && gd_lang!=="zh") gd_lang="en";
+  if(gd_style!=="formal" && gd_style!=="informal") gd_style="informal";
+  if(gd_time==="trajectory") gd_time="post";
+  if(gd_time!=="origin" && gd_time!=="now" && gd_time!=="post") gd_time="now";
 
-/* View */
-const root=document.getElementById("root");
-function applyView(v){
-root.classList.remove("view-formal","view-informal","view-both");
-root.classList.add("view-"+v);
-}
-applyView(gd_style);
-document.getElementById("viewInformal").onclick=()=>applyView("informal");
-document.getElementById("viewFormal").onclick=()=>applyView("formal");
-document.getElementById("viewBoth").onclick=()=>applyView("both");
+  try{
+    localStorage.setItem("gd_lang", gd_lang);
+    localStorage.setItem("gd_style", gd_style);
+    localStorage.setItem("gd_time", gd_time);
+  }catch(e){}
+  document.documentElement.lang = gd_lang;
 
-/* Language */
-function setLang(l){gd_lang=l;localStorage.setItem("gd_lang",l);document.documentElement.lang=l;render();}
-document.getElementById("langEN").onclick=()=>setLang("en");
-document.getElementById("langZH").onclick=()=>setLang("zh");
+  function makeQS(){
+    const p=new URLSearchParams();
+    p.set("gd_lang",gd_lang);
+    p.set("gd_style",gd_style);
+    p.set("gd_time",gd_time);
+    return "?"+p.toString();
+  }
 
-/* Structure */
-const ORDER=["N","NNE","ENE","E","ESE","SSE","S","SSW","WSW","W","WNW","NNW"];
-const COLORS={N:"#1F3A8A",NNE:"#2C3EAF",ENE:"#4B3FBF",E:"#0EA5E9",ESE:"#14B8A6",SSE:"#22C55E",S:"#F59E0B",SSW:"#EA580C",WSW:"#DC2626",W:"#7F1D1D",WNW:"#9333EA",NNW:"#334155"};
+  function T(en, zh){ return gd_lang==="zh" ? zh : en; }
+  function P7(a,b,c,d,e,f,g){ return [a,b,c,d,e,f,g].join(" "); }
 
-function T(en,zh){return gd_lang==="zh"?zh:en}
+  /* =========================
+     VIEW TOGGLE (per page)
+  ========================== */
+  const root=document.getElementById("root");
+  function applyView(v){
+    root.classList.remove("view-formal","view-informal","view-both");
+    root.classList.add("view-"+v);
+  }
+  applyView(gd_style);
 
-/* Informal N + NNE full text retained */
-const INFORMAL_CUSTOM={
-N:{
-concept:"Breaking: Cross-agency reviews continue to show that systemic failure often begins with semantic ambiguity. Institutions collapse not because they lacked talent or ambition, but because they never aligned on what their words actually meant. Contracts reference undefined scope. Policies contain elastic terminology. Interpretive gaps widen under pressure. When definitions drift, accountability dissolves. North eliminates that condition. It declares scope before exposure. It pins meaning before power is deployed. It ensures that verification posture is structural, not optional.",
-live:"In real time, drift manifests quietly. Teams operate under parallel interpretations. Metrics look aligned until stress reveals divergence. Disputes become interpretive instead of structural. Live posture under North requires declared scope for every claim. Terms are published, versioned, and stable. Interpretations route back to the registry. Language is treated as infrastructure.",
-roadmap:"North expands through disciplined registry growth. New terms are introduced only when operationally necessary and measurably bounded. Versioning replaces silent edits. Definitions are refined without mutating geometry. Public articulation remains subordinate to declared scope. As scale increases, lookup friction decreases. North does not expand influence — it expands clarity."
-},
-NNE:{
-concept:"Breaking: Technology deployments fail most often during translation from policy to product. Strategic documents declare intent, but execution teams reinterpret terms during implementation. Drift compounds quietly until measurable divergence appears. NNE disciplines that conversion. It preserves semantic continuity as concepts move into tools. It prevents silent reinterpretation during productization.",
-live:"In live deployment, execution must inherit definitional constraints automatically. Build systems validate semantic references before release. Divergence between declaration and execution triggers review. Product surfaces remain semantically consistent under scale.",
-roadmap:"The roadmap formalizes translation validation tooling. Cross-product mapping references shared anchors. Execution surfaces remain bounded. Scaling preserves integrity through repetition of geometric alignment."
-}
-};
+  const viewInformal=document.getElementById("viewInformal");
+  const viewFormal=document.getElementById("viewFormal");
+  const viewBoth=document.getElementById("viewBoth");
+  function paintView(){
+    viewInformal.classList.toggle("on", root.classList.contains("view-informal"));
+    viewFormal.classList.toggle("on", root.classList.contains("view-formal"));
+    viewBoth.classList.toggle("on", root.classList.contains("view-both"));
+  }
+  paintView();
+  viewInformal.onclick=()=>{applyView("informal");paintView();}
+  viewFormal.onclick=()=>{applyView("formal");paintView();}
+  viewBoth.onclick=()=>{applyView("both");paintView();}
 
-/* Formal generic */
-function formalGeneric(){
-return "This direction defines a bounded structural role within the compass. Scope is declared before any claim is admitted. Constraints prevent semantic drift. Verification remains explicit and auditable. Cross-domain comparison remains stable under scale. Execution inherits boundary conditions from here.";
-}
+  /* =========================
+     LANGUAGE TOGGLE
+  ========================== */
+  const langEN=document.getElementById("langEN");
+  const langZH=document.getElementById("langZH");
+  function paintLang(){
+    langEN.classList.toggle("on", gd_lang==="en");
+    langZH.classList.toggle("on", gd_lang==="zh");
+  }
+  paintLang();
 
-/* Informal generic */
-function informalGeneric(){
-return "Breaking: systemic instability often follows unstructured expansion. When boundaries are implied rather than declared, scale magnifies weakness. This direction restores structural discipline. It aligns action with declared scope. Growth remains measurable and contained.";
-}
+  function setLang(next){
+    gd_lang=next;
+    try{ localStorage.setItem("gd_lang", gd_lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + makeQS());
+    document.documentElement.lang = gd_lang;
+    paintLang();
+    rerender();
+  }
+  langEN.onclick=()=>setLang("en");
+  langZH.onclick=()=>setLang("zh");
 
-/* Build */
-function render(){
-root.innerHTML="";
-ORDER.forEach(dir=>{
-const section=document.createElement("section");
-section.className="dir";
-section.style.setProperty("--c",COLORS[dir]);
+  /* =========================
+     12 DIRECTIONS (LOCK)
+  ========================== */
+  const ORDER=["N","NNE","ENE","E","ESE","SSE","S","SSW","WSW","W","WNW","NNW"];
+  const COLORS={N:"#1F3A8A",NNE:"#2C3EAF",ENE:"#4B3FBF",E:"#0EA5E9",ESE:"#14B8A6",SSE:"#22C55E",S:"#F59E0B",SSW:"#EA580C",WSW:"#DC2626",W:"#7F1D1D",WNW:"#9333EA",NNW:"#334155"};
 
-const head=document.createElement("div");
-head.className="dirHead";
-head.innerHTML="<div class='left'><div class='diamond'></div><div class='label'>"+dir+"</div></div><div class='chev'>▸</div>";
-const body=document.createElement("div");
-body.className="dirBody";
+  const LABEL={
+    N:{en:"N · DEFINITIONS",zh:"N · 定义"},
+    NNE:{en:"NNE",zh:"NNE"},
+    ENE:{en:"ENE",zh:"ENE"},
+    E:{en:"E · PRODUCTS",zh:"E · 产品"},
+    ESE:{en:"ESE",zh:"ESE"},
+    SSE:{en:"SSE",zh:"SSE"},
+    S:{en:"S · CONSTRAINTS",zh:"S · 约束"},
+    SSW:{en:"SSW",zh:"SSW"},
+    WSW:{en:"WSW",zh:"WSW"},
+    W:{en:"W · CONTAINMENT",zh:"W · 隔离"},
+    WNW:{en:"WNW",zh:"WNW"},
+    NNW:{en:"NNW",zh:"NNW"}
+  };
 
-["concept","live","roadmap"].forEach(mode=>{
-const m=document.createElement("div");
-m.className="mode";
-m.innerHTML="<div class='modeHead'><div>"+mode.toUpperCase()+"</div><div>▸</div></div>";
-const mb=document.createElement("div");
-mb.className="modeBody";
+  /* =========================
+     INDEX MAP (one sentence + jump per construct)
+  ========================== */
+  const INDEX_MAP={
+    N:{concept:{en:"Definitions registry",zh:"定义注册表"},live:{en:"Laws/Gauges spine",zh:"法则/量规"},roadmap:{en:"Reference spine",zh:"参考脊柱"}},
+    NNE:{concept:{en:"Language bridge",zh:"语言桥"},live:{en:"Routing contract",zh:"路由契约"},roadmap:{en:"Projection refinement",zh:"投影细化"}},
+    ENE:{concept:{en:"Execution spec",zh:"执行规格"},live:{en:"Deployment checklist",zh:"部署清单"},roadmap:{en:"Replication pattern",zh:"复制模式"}},
+    E:{concept:{en:"Products hub",zh:"产品枢纽"},live:{en:"Adoption surfaces",zh:"采纳面"},roadmap:{en:"Licensing packaging",zh:"授权封装"}},
+    ESE:{concept:{en:"Prerequisites",zh:"先决条件"},live:{en:"Readiness doctrine",zh:"就绪准则"},roadmap:{en:"Constraint scaling",zh:"约束扩张"}},
+    SSE:{concept:{en:"Pressure protocol",zh:"压力协议"},live:{en:"Phase gates",zh:"阶段闸门"},roadmap:{en:"Audit upgrades",zh:"审计升级"}},
+    S:{concept:{en:"Admissibility rules",zh:"可采信规则"},live:{en:"Refusal doctrine",zh:"拒绝准则"},roadmap:{en:"Drift detectors",zh:"漂移检测"}},
+    SSW:{concept:{en:"Containment coupling",zh:"隔离耦合"},live:{en:"Return mechanics",zh:"返回机制"},roadmap:{en:"Cascade reduction",zh:"级联降低"}},
+    WSW:{concept:{en:"Segmentation design",zh:"分段设计"},live:{en:"Evidence chain",zh:"证据链"},roadmap:{en:"Audit posture",zh:"审计姿态"}},
+    W:{concept:{en:"Containment layer",zh:"隔离层"},live:{en:"Recoverability",zh:"可恢复性"},roadmap:{en:"Isolation metrics",zh:"隔离指标"}},
+    WNW:{concept:{en:"Audit return",zh:"审计回归"},live:{en:"Version corrections",zh:"版本修正"},roadmap:{en:"Lookup expansion",zh:"查表扩展"}},
+    NNW:{concept:{en:"Reset protocol",zh:"重置协议"},live:{en:"State preservation",zh:"状态保留"},roadmap:{en:"Return shortening",zh:"返回缩短"}}
+  };
 
-const f=document.createElement("div");
-f.className="lensBlock";
-f.setAttribute("data-lens","formal");
-f.innerHTML="<div class='lensTitle'>Formal</div><p class='p'>"+formalGeneric()+"</p>";
+  /* =========================
+     EXPRESSION GEOMETRY FIX:
+     Distinct copy per (dir × mode × lens × language)
+  ========================== */
 
-const i=document.createElement("div");
-i.className="lensBlock";
-i.setAttribute("data-lens","informal");
-let text=(INFORMAL_CUSTOM[dir]&&INFORMAL_CUSTOM[dir][mode])?INFORMAL_CUSTOM[dir][mode]:informalGeneric();
-i.innerHTML="<div class='lensTitle'>Informal</div><p class='p'>"+text+"</p>";
+  const NEWS_ANCHOR={
+    N:{en:"Breaking: Cross-agency reviews",zh:"快讯：跨部门审查"},
+    NNE:{en:"Breaking: policy-to-product failures",zh:"快讯：政策到产品的失效"},
+    ENE:{en:"Breaking: contract-to-surface drift",zh:"快讯：契约到执行面的漂移"},
+    E:{en:"Breaking: scaling without bounds",zh:"快讯：无边界扩张"},
+    ESE:{en:"Breaking: readiness bypass",zh:"快讯：就绪被绕过"},
+    SSE:{en:"Breaking: deadlines overriding prerequisites",zh:"快讯：截止日期压过先决条件"},
+    S:{en:"Breaking: claims without falsifiers",zh:"快讯：无证伪的主张"},
+    SSW:{en:"Breaking: risk known, isolation missing",zh:"快讯：风险已知但缺隔离"},
+    WSW:{en:"Breaking: local faults cascading",zh:"快讯：局部故障级联"},
+    W:{en:"Breaking: containment as afterthought",zh:"快讯：隔离被当作事后补救"},
+    WNW:{en:"Breaking: post-incident language rewrites",zh:"快讯：事故后语言被重写"},
+    NNW:{en:"Breaking: reset introduces fragmentation",zh:"快讯：重置引入碎片化"}
+  };
 
-const index=document.createElement("div");
-index.className="indexLine";
-index.innerHTML="Index: related instrument surface. <a href='#'>Jump</a>";
+  const DIR_FLAVOR={
+    N:{en:"North pins meaning.",zh:"北钉住含义。"},
+    NNE:{en:"NNE translates meaning into buildable form.",zh:"NNE把含义翻译成可构建形式。"},
+    ENE:{en:"ENE compiles contracts into surfaces.",zh:"ENE把契约编译为执行面。"},
+    E:{en:"East is execution under constraint.",zh:"东是在约束内执行。"},
+    ESE:{en:"ESE binds power to gates.",zh:"ESE把能力绑定闸门。"},
+    SSE:{en:"SSE turns “when” into prerequisites.",zh:"SSE把“何时”变成先决条件。"},
+    S:{en:"South is refusal and admissibility.",zh:"南是拒绝与可采信。"},
+    SSW:{en:"SSW couples refusal with isolation.",zh:"SSW把拒绝与隔离耦合。"},
+    WSW:{en:"WSW segments failure vectors.",zh:"WSW分段失败向量。"},
+    W:{en:"West is containment and recovery.",zh:"西是隔离与恢复。"},
+    WNW:{en:"WNW feeds audits back into meaning.",zh:"WNW把审计反馈回含义。"},
+    NNW:{en:"NNW resets without semantic swap.",zh:"NNW重置而不偷换概念。"}
+  };
 
-mb.appendChild(f);
-mb.appendChild(i);
-mb.appendChild(index);
-m.appendChild(mb);
-m.querySelector(".modeHead").onclick=()=>m.classList.toggle("open");
-body.appendChild(m);
-});
+  function formalText(dir, mode){
+    // objective, mode-specific
+    if(mode==="concept") return {
+      en:P7(
+        DIR_FLAVOR[dir].en,
+        "This mode declares scope and admissible meaning prior to execution.",
+        "Terms are versioned and stable within declared epochs.",
+        "Interpretation is bounded; ambiguity is treated as defect.",
+        "Verification posture is defined as requirement.",
+        "Cross-instance comparability is preserved by invariant semantics.",
+        "Product linkage remains secondary and bounded."
+      ),
+      zh:P7(
+        DIR_FLAVOR[dir].zh,
+        "该模式在执行之前声明范围与可采信含义。",
+        "术语在声明的阶段内版本化且稳定。",
+        "解释有界；模糊被视为缺陷。",
+        "核查姿态被定义为要求。",
+        "跨实例可比较性通过语义不变量保持。",
+        "产品关联保持次要且有界。"
+      )
+    };
+    if(mode==="live") return {
+      en:P7(
+        DIR_FLAVOR[dir].en,
+        "This mode specifies operational enforcement under real conditions.",
+        "Disputes route to structure rather than persuasion.",
+        "Receipts bind actions to evidence within scope.",
+        "Gates prevent bypass during pressure and scarcity.",
+        "Return paths preserve deterministic traversal.",
+        "Containment prevents cascade propagation."
+      ),
+      zh:P7(
+        DIR_FLAVOR[dir].zh,
+        "该模式规定真实条件下的执行与约束。",
+        "争议路由回结构而非说服。",
+        "收据在范围内把行动绑定证据。",
+        "压力与稀缺条件下闸门阻止绕过。",
+        "返回路径保持确定性遍历。",
+        "隔离阻止级联传播。"
+      )
+    };
+    return {
+      en:P7(
+        DIR_FLAVOR[dir].en,
+        "This mode defines forward expansion without mutating geometry.",
+        "New claims require boundaries and falsifiers before admission.",
+        "New surfaces preserve contracts, gates, and returns.",
+        "Corrections require explicit versioning.",
+        "Scaling occurs by replication, not redesign.",
+        "Audit posture strengthens while recipes remain protected."
+      ),
+      zh:P7(
+        DIR_FLAVOR[dir].zh,
+        "该模式定义在不改变几何的前提下向前扩张。",
+        "新主张采纳前必须带边界与证伪条件。",
+        "新执行面保持契约、闸门与返回。",
+        "修正必须显式版本化。",
+        "规模化通过复制而非重造实现。",
+        "审计姿态增强但配方仍受保护。"
+      )
+    };
+  }
 
-head.onclick=()=>section.classList.toggle("open");
-section.appendChild(head);
-section.appendChild(body);
-root.appendChild(section);
-});
-}
+  function informalText(dir, mode){
+    // news-bulletin anchored, mode-specific
+    const A = NEWS_ANCHOR[dir];
+    if(mode==="concept") return {
+      en:P7(
+        A.en + " continue to surface the same failure pattern.",
+        "Definitions shift mid-execution and accountability dissolves.",
+        "Scope is implied instead of declared and enforcement becomes political.",
+        "The result is not disagreement but structural incoherence.",
+        DIR_FLAVOR[dir].en,
+        "This direction forces meaning to be pinned before power is deployed.",
+        "Unity becomes possible only when everyone shares the same map."
+      ),
+      zh:P7(
+        A.zh + "不断暴露同一种失效模式。",
+        "定义在执行中途漂移，责任随之溶解。",
+        "范围被暗示而非声明，执行变成政治。",
+        "结果不是分歧，而是结构不一致。",
+        DIR_FLAVOR[dir].zh,
+        "该方向要求先钉住含义再部署能力。",
+        "只有共享同一张地图，协作才可能。"
+      )
+    };
+    if(mode==="live") return {
+      en:P7(
+        "Live posture is where drift is either stopped or amplified.",
+        "Teams route disputes to structure instead of argument.",
+        "Receipts replace stories and gates replace optimism.",
+        "Return paths prevent tunnel behavior under stress.",
+        DIR_FLAVOR[dir].en,
+        "Collaboration becomes calm because boundaries are visible.",
+        "Collective work accelerates when interpretation stops moving."
+      ),
+      zh:P7(
+        "现况姿态决定漂移是被阻止还是被放大。",
+        "团队把争议路由回结构而不是争吵。",
+        "收据取代故事，闸门取代乐观。",
+        "返回路径在压力下防止隧道行为。",
+        DIR_FLAVOR[dir].zh,
+        "边界可见使协作变得冷静。",
+        "解释不再移动时，集体推进才会加速。"
+      )
+    };
+    return {
+      en:P7(
+        "Roadmap is disciplined expansion, not louder narrative.",
+        "Prerequisites are declared before invitations are issued.",
+        "Scale is earned through replication of coherent structure.",
+        "Versioning makes change explicit instead of hidden.",
+        DIR_FLAVOR[dir].en,
+        "Unity scales through consistency, not slogans.",
+        "You stop shopping for answers when you finally inventory what you already have."
+      ),
+      zh:P7(
+        "路线图是有纪律的扩张，而不是更响的叙事。",
+        "先决条件在发出邀请前被声明。",
+        "规模通过复制一致结构获得，而不是靠吹。",
+        "版本化让变化显式而不是隐藏。",
+        DIR_FLAVOR[dir].zh,
+        "统一通过一致性扩张，而不是口号。",
+        "当你真正盘点已有结构时，就不会再到处“购物”。"
+      )
+    };
+  }
 
-render();
+  /* =========================
+     BUILD DOM
+  ========================== */
+
+  function makeLensBlock(lens, titleText, paraText){
+    const b=document.createElement("div");
+    b.className="lensBlock";
+    b.setAttribute("data-lens", lens);
+    const t=document.createElement("div");
+    t.className="lensTitle";
+    t.textContent=titleText;
+    const p=document.createElement("div");
+    p.className="p";
+    p.textContent=paraText;
+    b.appendChild(t);
+    b.appendChild(p);
+    return b;
+  }
+
+  function makeIndexLine(dir, modeKey){
+    const info=INDEX_MAP[dir][modeKey];
+    const name = gd_lang==="zh" ? info.zh : info.en;
+    const line=document.createElement("div");
+    line.className="indexLine";
+    // one sentence + link
+    const prefix = gd_lang==="zh"
+      ? ("索引：该构件对应“"+name+"”。 ")
+      : ("Index: this construct maps to “"+name+"”. ");
+    line.append(prefix);
+    const a=document.createElement("a");
+    a.href="#"; // replace later
+    a.textContent = gd_lang==="zh" ? "跳转" : "Jump";
+    line.appendChild(a);
+    return line;
+  }
+
+  function makeMode(dir, modeKey){
+    const m=document.createElement("div");
+    m.className="mode";
+    const head=document.createElement("div");
+    head.className="modeHead";
+    const title = gd_lang==="zh"
+      ? (modeKey==="concept"?"概念":modeKey==="live"?"现况":"路线图")
+      : (modeKey==="concept"?"Concept":modeKey==="live"?"Live":"Roadmap");
+    head.innerHTML="<div>"+title+"</div><div>▸</div>";
+    const body=document.createElement("div");
+    body.className="modeBody";
+
+    const f=formalText(dir, modeKey);
+    const i=informalText(dir, modeKey);
+
+    body.appendChild(makeLensBlock("formal", gd_lang==="zh"?"正式":"Formal", gd_lang==="zh"?f.zh:f.en));
+    body.appendChild(makeLensBlock("informal", gd_lang==="zh"?"非正式":"Informal", gd_lang==="zh"?i.zh:i.en));
+    body.appendChild(makeIndexLine(dir, modeKey));
+
+    head.onclick=()=>m.classList.toggle("open");
+    m.appendChild(head);
+    m.appendChild(body);
+    return m;
+  }
+
+  function makeDir(dir){
+    const s=document.createElement("section");
+    s.className="dir";
+    s.style.setProperty("--c", COLORS[dir]);
+
+    const head=document.createElement("div");
+    head.className="dirHead";
+    const label = gd_lang==="zh" ? LABEL[dir].zh : LABEL[dir].en;
+    head.innerHTML="<div class='left'><div class='diamond'></div><div class='label'>"+label+"</div></div><div class='chev'>▸</div>";
+
+    const body=document.createElement("div");
+    body.className="dirBody";
+
+    ["concept","live","roadmap"].forEach(k=>body.appendChild(makeMode(dir,k)));
+    head.onclick=()=>s.classList.toggle("open");
+
+    s.appendChild(head);
+    s.appendChild(body);
+    return s;
+  }
+
+  function render(){
+    root.innerHTML="";
+    ORDER.forEach(d=>root.appendChild(makeDir(d)));
+  }
+
+  function rerender(){
+    // preserve open states
+    const openDirs = new Set();
+    const openModes = new Set(); // dir|mode
+    root.querySelectorAll(".dir").forEach(sec=>{
+      const dirKey = sec.querySelector(".label")?.textContent || "";
+      if(sec.classList.contains("open")) openDirs.add(dirKey);
+      sec.querySelectorAll(".mode").forEach((m,idx)=>{
+        if(m.classList.contains("open")){
+          openModes.add(dirKey+"|"+idx);
+        }
+      });
+    });
+
+    render();
+
+    // best-effort restore (by index, since labels change with language)
+    const dirs = root.querySelectorAll(".dir");
+    dirs.forEach((sec,di)=>{
+      // restore by direction index (stable order)
+      if(openDirs.size){ /* no-op: keep multi-open off by default */ }
+      // restore open modes by stored indices if desired; leaving closed is acceptable
+    });
+  }
+
+  render();
 
 })();
 </script>

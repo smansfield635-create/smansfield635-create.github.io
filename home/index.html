@@ -1,20 +1,14 @@
 <!-- TNT — /home/index.html
-     HUB A · 12-DIRECTION INDEX (RUSSIAN DOLL METRIC + PROJECT JUMPS)
+     · 12-DIRECTION INDEX + RUSSIAN DOLL + PROJECT JUMPS
 
-     GEOMETRY (LOCKED):
-       Level 1: 12 direction bubbles (one-line): N, NNE, ENE, E, ESE, SSE, S, SSW, WSW, W, WNW, NNW
-       Level 2: click direction → reveal:
-         - ONE paragraph per lens (Formal + Informal) (no merge)
-         - View toggle controls visibility: Informal / Formal / Both
-         - Language toggle swaps EN/中文 (no re-render necessary)
-         - + ONE index sentence + Jump link (per direction)
-
-     RUSSIAN DOLL METRIC:
-       - Each open direction body is its own scroll region with capped max-height
-       - You never “bottom out” to reach other bubbles
+     WHAT THIS FIXES:
+       - Mobile header no longer eats the whole screen
+       - Bottom dock never cuts off buttons (2-row grid on small screens)
+       - Russian doll scroll prevents bottoming out
+       - JUMPS table supports 12 per-direction project links (fill paths)
 
      CANON KEYS ONLY:
-       gd_lang / gd_style / gd_time (query + localStorage)
+       gd_lang / gd_style / gd_time
 -->
 
 <!doctype html>
@@ -31,35 +25,43 @@
 /* DO NOT TOUCH FIELD — ui.css owns html/body background */
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
-:root{--dockH:78px}
+:root{--dockH:92px}
 
 .wrap{
   width:min(980px,94vw);
   margin:0 auto;
-  padding:16px 0 calc(var(--dockH) + 24px);
+  padding:14px 0 calc(var(--dockH) + 22px);
   display:flex;
   flex-direction:column;
   gap:12px;
 }
 
-/* ===== Brand header (keeps lacquer look) ===== */
+/* ===== Header (reduced height, mobile safe) ===== */
 .brand{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  padding:16px 18px;
+  padding:14px 16px;
   background:rgba(0,0,0,.14);
   backdrop-filter:blur(10px);
   box-shadow:0 24px 80px rgba(0,0,0,.55);
 }
 .brand .k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.70;margin:0 0 6px}
-.brand .t{font-weight:950;font-size:26px;letter-spacing:.3px;margin:0 0 8px}
-.brand .s{font-size:13.5px;opacity:.82;line-height:1.55;margin:0;max-width:820px}
+.brand .t{font-weight:950;font-size:24px;letter-spacing:.3px;margin:0 0 6px}
+.brand .s{font-size:13px;opacity:.80;line-height:1.5;margin:0;max-width:820px}
 
 /* ===== Controls ===== */
-.controls{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:12px}
+.controls{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
 .seg{
-  display:inline-flex;border:1px solid rgba(255,255,255,.12);
-  border-radius:999px;overflow:hidden;
+  display:inline-flex;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  overflow:hidden;
   background:rgba(0,0,0,.18);
   backdrop-filter:blur(10px);
   box-shadow:0 12px 34px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.07);
@@ -67,9 +69,8 @@ a{color:inherit;text-decoration:none}
 .seg button{
   border:0;background:transparent;color:rgba(255,255,255,.86);
   padding:9px 14px;font-weight:950;letter-spacing:.2px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;transition:background .12s ease,transform .12s ease;
+  -webkit-tap-highlight-color:transparent;
 }
-.seg button:active{transform:translateY(1px)}
 .seg button.on{background:rgba(255,255,255,.15);color:#fff}
 
 /* ===== Direction bubble ===== */
@@ -99,7 +100,7 @@ a{color:inherit;text-decoration:none}
   padding:12px 14px 14px;
   border-top:1px solid rgba(255,255,255,.08);
 
-  /* Russian doll: each open body becomes its own scroll region */
+  /* Russian doll */
   overflow:auto;
   -webkit-overflow-scrolling:touch;
 }
@@ -117,7 +118,7 @@ a{color:inherit;text-decoration:none}
 .lensTitle{font-weight:950;font-size:12px;margin:0 0 8px;opacity:.88}
 .paragraph{margin:0;line-height:1.72;font-size:14.5px;color:rgba(255,255,255,.90)}
 
-/* ===== Index line ===== */
+/* ===== Index jump ===== */
 .indexLine{
   margin-top:10px;
   padding:10px 12px;
@@ -134,21 +135,47 @@ a{color:inherit;text-decoration:none}
 .view-informal .lensBlock[data-lens="formal"]{display:none}
 .view-both .lensBlock{display:block}
 
-/* ===== Bottom dock ===== */
+/* ===== Bottom dock (mobile-safe grid) ===== */
 .bottomDock{
-  position:fixed;left:50%;bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);z-index:220;width:min(980px,94vw);
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);backdrop-filter:blur(10px);
+  position:fixed;
+  left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
+
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
 }
 .dbtn{
-  border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.20);
-  color:#fff;padding:10px 14px;border-radius:999px;font-weight:900;letter-spacing:.2px;
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.20);
+  color:#fff;
+  padding:10px 10px;
+  border-radius:999px;
+  font-weight:900;
+  letter-spacing:.2px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  text-align:center;
+  white-space:nowrap;
 }
 .dbtn:hover{background:rgba(255,255,255,.10)}
+.dbtn.wide{grid-column:span 2;}
+.dbtn.full{grid-column:1 / -1;}
+
+@media (max-width:520px){
+  .brand .t{font-size:22px}
+  .bottomDock{grid-template-columns:repeat(3, minmax(0,1fr))}
+  .dbtn.wide{grid-column:span 3;}
+}
 </style>
 </head>
 
@@ -159,9 +186,7 @@ a{color:inherit;text-decoration:none}
   <div class="brand" id="brand">
     <div class="k" id="bk">CARDINAL AXIS</div>
     <div class="t" id="bt">HUB A · Index</div>
-    <p class="s" id="bs">
-      12-direction index. Each direction opens into one summary paragraph per lens, plus a project jump.
-    </p>
+    <p class="s" id="bs">12-direction index. Each direction opens into one summary paragraph per lens, plus a project jump.</p>
 
     <div class="controls">
       <div class="seg" aria-label="View">
@@ -185,10 +210,13 @@ a{color:inherit;text-decoration:none}
   <button class="dbtn" id="navForward" type="button">FORWARD</button>
   <button class="dbtn" id="navHub" type="button">HUB</button>
   <button class="dbtn" id="navExplore" type="button">EXPLORE</button>
+
   <button class="dbtn" id="navProducts" type="button">PRODUCTS</button>
   <button class="dbtn" id="navLaws" type="button">LAWS</button>
-  <button class="dbtn" id="navGauges" type="button">GAUGGES</button>
-  <button class="dbtn" id="navTop" type="button">JUMP TOP</button>
+  <button class="dbtn" id="navGauges" type="button">GAUGES</button>
+  <button class="dbtn" id="navTop" type="button">TOP</button>
+
+  <button class="dbtn full" id="navJump" type="button">JUMP (OPEN PROJECT)</button>
 </div>
 
 <script>
@@ -218,15 +246,13 @@ a{color:inherit;text-decoration:none}
     p.set("gd_time",gd_time);
     return "?"+p.toString();
   }
-  function nav(path){
-    location.href = path + makeQS();
-  }
+  function nav(path){ location.href = path + makeQS(); }
 
-  /* ===== Controls ===== */
   const root=document.getElementById("root");
   const dock=document.getElementById("dock");
   const brand=document.getElementById("brand");
 
+  /* ===== Controls ===== */
   const viewInformal=document.getElementById("viewInformal");
   const viewFormal=document.getElementById("viewFormal");
   const viewBoth=document.getElementById("viewBoth");
@@ -240,6 +266,8 @@ a{color:inherit;text-decoration:none}
     viewFormal.classList.toggle("on", v==="formal");
     viewBoth.classList.toggle("on", v==="both");
   }
+  applyView(gd_style);
+
   function paintLang(){
     langEN.classList.toggle("on", gd_lang==="en");
     langZH.classList.toggle("on", gd_lang==="zh");
@@ -253,39 +281,11 @@ a{color:inherit;text-decoration:none}
       document.getElementById("bs").textContent="12-direction index. Each direction opens into one summary paragraph per lens, plus a project jump.";
     }
   }
-
-  applyView(gd_style);
   paintLang();
 
   viewInformal.onclick=()=>applyView("informal");
   viewFormal.onclick=()=>applyView("formal");
   viewBoth.onclick=()=>applyView("both");
-
-  function snapshotOpen(){
-    const open=new Set();
-    root.querySelectorAll(".dir").forEach((node,idx)=>{
-      if(node.classList.contains("open")) open.add(idx);
-    });
-    return open;
-  }
-  function restoreOpen(open){
-    root.querySelectorAll(".dir").forEach((node,idx)=>{
-      if(open.has(idx)) node.classList.add("open");
-    });
-    recomputeHeights();
-  }
-
-  function setLang(next){
-    const open=snapshotOpen();
-    gd_lang=next;
-    try{ localStorage.setItem("gd_lang",gd_lang); }catch(e){}
-    document.documentElement.lang = (gd_lang==="zh") ? "zh" : "en";
-    paintLang();
-    render();          // rebuild only to swap text cleanly
-    restoreOpen(open);
-  }
-  langEN.onclick=()=>setLang("en");
-  langZH.onclick=()=>setLang("zh");
 
   /* ===== 12 directions ===== */
   const ORDER=["N","NNE","ENE","E","ESE","SSE","S","SSW","WSW","W","WNW","NNW"];
@@ -309,10 +309,7 @@ a{color:inherit;text-decoration:none}
     NNW:{en:"NNW",zh:"NNW"}
   };
 
-  /* ===== PROJECT JUMPS (SET THESE) =====
-     Put the exact target path per direction here.
-     Example: "/laws/definitions/"  (no guessing in code)
-  */
+  /* ===== PROJECT JUMPS (FILL THESE WITH REAL PATHS) ===== */
   const JUMPS={
     N:"#",
     NNE:"#",
@@ -328,7 +325,7 @@ a{color:inherit;text-decoration:none}
     NNW:"#"
   };
 
-  /* ===== COPY (one summary paragraph per lens per direction, bilingual) ===== */
+  /* ===== Copy (1 summary paragraph per lens per direction, bilingual) ===== */
   const COPY={
     N:{
       informal:{en:"Collapse starts with loose words. Teams argue definitions while deadlines move. Scope blurs and accountability evaporates. North clamps meaning before power moves. Shared definitions make cooperation real. Precision raises the standard. Otherwise drift wins.",
@@ -404,23 +401,7 @@ a{color:inherit;text-decoration:none}
     }
   };
 
-  /* ===== Project jump links (SET THESE EXACT PATHS) ===== */
-  const JUMPS={
-    N:"#",
-    NNE:"#",
-    ENE:"#",
-    E:"#",
-    ESE:"#",
-    SSE:"#",
-    S:"#",
-    SSW:"#",
-    WSW:"#",
-    W:"#",
-    WNW:"#",
-    NNW:"#"
-  };
-
-  /* ===== Build helpers ===== */
+  /* ===== Build ===== */
   function makeLensBlock(lens, obj){
     const b=document.createElement("div");
     b.className="lensBlock";
@@ -440,17 +421,13 @@ a{color:inherit;text-decoration:none}
   }
 
   function makeIndexLine(dir){
-    const name = gd_lang==="zh"
-      ? (LABEL[dir].zh)
-      : (LABEL[dir].en);
-
     const line=document.createElement("div");
     line.className="indexLine";
-    const prefix = gd_lang==="zh"
-      ? ("索引：跳转到 "+name+" 对应项目。 ")
-      : ("Index: jump to the project for "+name+". ");
-    line.append(prefix);
-
+    const lbl = gd_lang==="zh" ? LABEL[dir].zh : LABEL[dir].en;
+    line.append(gd_lang==="zh"
+      ? ("索引：跳转到 "+lbl+" 对应项目。 ")
+      : ("Index: jump to the project for "+lbl+". ")
+    );
     const a=document.createElement("a");
     a.href = (JUMPS[dir] === "#") ? "#" : (JUMPS[dir] + makeQS());
     a.textContent = gd_lang==="zh" ? "跳转" : "Jump";
@@ -478,6 +455,8 @@ a{color:inherit;text-decoration:none}
     h.addEventListener("click",()=>{
       s.classList.toggle("open");
       recomputeHeights();
+      // store "active direction" for navJump
+      localStorage.setItem("hub_active_dir", dir);
     });
 
     s.appendChild(h);
@@ -491,9 +470,9 @@ a{color:inherit;text-decoration:none}
     recomputeHeights();
   }
 
-  /* ===== Russian doll metric ===== */
+  /* ===== Russian Doll Metric ===== */
   function recomputeHeights(){
-    const dockH = dock ? dock.getBoundingClientRect().height : 78;
+    const dockH = dock ? dock.getBoundingClientRect().height : 92;
     document.documentElement.style.setProperty("--dockH", dockH + "px");
 
     const brandH = brand ? brand.getBoundingClientRect().height : 0;
@@ -504,10 +483,9 @@ a{color:inherit;text-decoration:none}
       el.style.maxHeight = avail + "px";
     });
   }
-
   window.addEventListener("resize", recomputeHeights);
 
-  /* ===== Language switch (re-render safely) ===== */
+  /* ===== Language switching (safe re-render) ===== */
   function setLang(next){
     const open=new Set();
     root.querySelectorAll(".dir").forEach((n,i)=>{ if(n.classList.contains("open")) open.add(i); });
@@ -516,9 +494,7 @@ a{color:inherit;text-decoration:none}
     document.documentElement.lang = (gd_lang==="zh") ? "zh" : "en";
     paintLang();
     setHeaderLang();
-    setQS();
     render();
-    // restore open
     root.querySelectorAll(".dir").forEach((n,i)=>{ if(open.has(i)) n.classList.add("open"); });
     recomputeHeights();
   }
@@ -544,16 +520,24 @@ a{color:inherit;text-decoration:none}
   langZH.onclick=()=>setLang("zh");
 
   /* ===== Bottom dock wiring ===== */
-  document.getElementById("navBack").addEventListener("click",()=>history.back());
-  document.getElementById("navForward").addEventListener("click",()=>history.forward());
-  document.getElementById("navHub").addEventListener("click",()=>nav("/home/"));
-  document.getElementById("navExplore").addEventListener("click",()=>nav("/explore/"));
-  document.getElementById("navProducts").addEventListener("click",()=>nav("/products/"));
-  document.getElementById("navLaws").addEventListener("click",()=>nav("/laws/"));
-  document.getElementById("navGauges").addEventListener("click",()=>nav("/gauges/"));
-  document.getElementById("navTop").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+  document.getElementById("navBack").onclick=()=>history.back();
+  document.getElementById("navForward").onclick=()=>history.forward();
+  document.getElementById("navHub").onclick=()=>nav("/home/");
+  document.getElementById("navExplore").onclick=()=>nav("/explore/");
+  document.getElementById("navProducts").onclick=()=>nav("/products/");
+  document.getElementById("navLaws").onclick=()=>nav("/laws/");
+  document.getElementById("navGauges").onclick=()=>nav("/gauges/");
+  document.getElementById("navTop").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
 
-  /* ===== Initialize ===== */
+  // Jump to currently selected direction project
+  document.getElementById("navJump").onclick=()=>{
+    const dir = localStorage.getItem("hub_active_dir") || "N";
+    const target = JUMPS[dir] || "#";
+    if(target === "#"){ return; }
+    location.href = target + makeQS();
+  };
+
+  /* ===== Init ===== */
   paintLang();
   setHeaderLang();
   render();

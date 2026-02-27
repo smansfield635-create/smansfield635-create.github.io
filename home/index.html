@@ -1,7 +1,7 @@
 <!-- TNT — /home/index.html
-     HUB A · 12 → 3 → (Formal/Informal view) + 1 index sentence
+     FINAL INTEGRATED HUB A
+     12 Directions × 3 Constructs × 2 Lenses
      Canon keys only: gd_lang / gd_style / gd_time
-     Multi-open, no merging, no modals
 -->
 
 <!doctype html>
@@ -17,37 +17,36 @@
 <style>
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
-.wrap{width:min(1040px,94vw);margin:0 auto;padding:12px 0 120px;display:flex;flex-direction:column;gap:12px}
+.wrap{width:min(1040px,94vw);margin:0 auto;padding:14px 0 120px;display:flex;flex-direction:column;gap:12px}
 
-/* Top controls */
-.topbar{position:sticky;top:0;z-index:50;padding:10px 0;backdrop-filter:blur(10px)}
+/* Controls */
+.topbar{position:sticky;top:0;z-index:50;padding:10px 0;backdrop-filter:blur(8px)}
 .controls{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
-.seg{display:inline-flex;border:1px solid rgba(255,255,255,.10);border-radius:999px;overflow:hidden;background:rgba(0,0,0,.16)}
-.seg button{border:0;background:transparent;color:#fff;padding:9px 12px;font-weight:950;cursor:pointer}
-.seg button.on{background:rgba(255,255,255,.12)}
+.seg{display:inline-flex;border:1px solid rgba(255,255,255,.12);border-radius:999px;overflow:hidden;background:rgba(0,0,0,.18)}
+.seg button{border:0;background:transparent;color:#fff;padding:8px 12px;font-weight:900;cursor:pointer}
+.seg button.on{background:rgba(255,255,255,.15)}
 
-/* Directions */
-.dir{--c:#93C5FD;border:1px solid rgba(255,255,255,.10);border-radius:18px;background:linear-gradient(145deg,rgba(12,22,38,.88),rgba(7,11,18,.94));overflow:hidden}
+/* Direction */
+.dir{--c:#93C5FD;border:1px solid rgba(255,255,255,.10);border-radius:18px;background:linear-gradient(145deg,rgba(12,22,38,.88),rgba(7,11,18,.95));overflow:hidden}
 .dirHead{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer}
 .left{display:flex;align-items:center;gap:10px}
 .diamond{width:12px;height:12px;transform:rotate(45deg);border-radius:4px;background:var(--c)}
 .label{font-weight:950}
-.chev{opacity:.75}
+.chev{opacity:.7}
 .dirBody{display:none;padding:0 14px 14px;border-top:1px solid rgba(255,255,255,.08)}
 .dir.open .dirBody{display:block}
 
-/* Modes */
-.stack{display:flex;flex-direction:column;gap:10px;margin-top:12px}
-.mode{border:1px solid rgba(255,255,255,.10);border-radius:16px;background:linear-gradient(145deg,rgba(17,22,28,.78),rgba(11,15,20,.86))}
-.modeHead{display:flex;justify-content:space-between;padding:11px 12px;cursor:pointer}
+/* Mode */
+.mode{border:1px solid rgba(255,255,255,.10);border-radius:16px;background:linear-gradient(145deg,rgba(17,22,28,.78),rgba(11,15,20,.88));margin-top:10px}
+.modeHead{display:flex;justify-content:space-between;padding:10px 12px;cursor:pointer}
 .modeBody{display:none;padding:12px;border-top:1px solid rgba(255,255,255,.08)}
 .mode.open .modeBody{display:block}
 
-/* Paragraphs */
-.lensBlock{border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:10px 12px;background:rgba(0,0,0,.18);margin-bottom:10px}
+/* Paragraph blocks */
+.lensBlock{border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:10px 12px;background:rgba(0,0,0,.20);margin-bottom:10px}
 .lensTitle{font-weight:950;font-size:12px;margin-bottom:6px}
 .p{margin:0;line-height:1.6;font-size:13px;color:rgba(255,255,255,.88)}
-.indexLine{margin-top:10px;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.14);font-size:12px}
+.indexLine{margin-top:10px;padding:8px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.15);font-size:12px}
 .indexLine a{color:#93C5FD;font-weight:900;text-decoration:none}
 
 /* View filtering */
@@ -84,64 +83,60 @@ a{color:inherit;text-decoration:none}
 const qs=new URLSearchParams(location.search);
 let gd_lang=qs.get("gd_lang")||localStorage.getItem("gd_lang")||"en";
 let gd_style=qs.get("gd_style")||localStorage.getItem("gd_style")||"informal";
-let gd_time=qs.get("gd_time")||localStorage.getItem("gd_time")||"now";
 if(gd_lang!=="en"&&gd_lang!=="zh")gd_lang="en";
 if(gd_style!=="formal"&&gd_style!=="informal")gd_style="informal";
 localStorage.setItem("gd_lang",gd_lang);
 localStorage.setItem("gd_style",gd_style);
 document.documentElement.lang=gd_lang;
 
-/* View toggle */
+/* View */
 const root=document.getElementById("root");
 function applyView(v){
 root.classList.remove("view-formal","view-informal","view-both");
 root.classList.add("view-"+v);
 }
 applyView(gd_style);
-document.getElementById("viewFormal").onclick=()=>applyView("formal");
 document.getElementById("viewInformal").onclick=()=>applyView("informal");
+document.getElementById("viewFormal").onclick=()=>applyView("formal");
 document.getElementById("viewBoth").onclick=()=>applyView("both");
 
-/* Language toggle */
-function applyLang(l){
-gd_lang=l;localStorage.setItem("gd_lang",l);
-document.documentElement.lang=l;
-rerender();
-}
-document.getElementById("langEN").onclick=()=>applyLang("en");
-document.getElementById("langZH").onclick=()=>applyLang("zh");
+/* Language */
+function setLang(l){gd_lang=l;localStorage.setItem("gd_lang",l);document.documentElement.lang=l;render();}
+document.getElementById("langEN").onclick=()=>setLang("en");
+document.getElementById("langZH").onclick=()=>setLang("zh");
 
-/* 12 Directions */
+/* Structure */
 const ORDER=["N","NNE","ENE","E","ESE","SSE","S","SSW","WSW","W","WNW","NNW"];
 const COLORS={N:"#1F3A8A",NNE:"#2C3EAF",ENE:"#4B3FBF",E:"#0EA5E9",ESE:"#14B8A6",SSE:"#22C55E",S:"#F59E0B",SSW:"#EA580C",WSW:"#DC2626",W:"#7F1D1D",WNW:"#9333EA",NNW:"#334155"};
 
 function T(en,zh){return gd_lang==="zh"?zh:en}
-function P(a){return a}
 
-/* Informal N + NNE from previous work */
+/* Informal N + NNE full text retained */
 const INFORMAL_CUSTOM={
 N:{
-concept:P("You are standing at the point where meaning either stabilizes your life or quietly sabotages it. Most systems fail not because they lack ambition, but because they never agreed on what words actually mean. You can feel that fracture everywhere—in institutions, in markets, in conversations that go nowhere. When definitions drift, power becomes persuasion and persuasion becomes chaos. The problem is not disagreement; the problem is unanchored language. North is the discipline of naming reality before trying to change it. It is the courage to define boundaries so collaboration becomes possible. If you want collective movement, you must first share a map. This direction invites you to participate in building that map with clarity."),
-live:P("In real time, you are already navigating systems built on ambiguous definitions. You see institutions arguing past each other. You see teams misaligned despite good intentions. You may even feel friction in your own ambitions because the target was never clearly defined. The problem is not laziness; it is drift. North asks you to stop tolerating drift. It asks you to slow down long enough to declare your terms. When you do that, collaboration stops being chaotic and starts being coherent. Unity is not emotional agreement; it is shared definition."),
-roadmap:P("If you raise your standard here, everything downstream strengthens. When meaning becomes disciplined, execution becomes trustworthy. When execution becomes trustworthy, collaboration becomes powerful. You are not reading this because you are satisfied. You are reading this because you sense there is a better structure possible. The roadmap of North is simple but demanding: define, version, correct, and expand without distortion. It invites you to become someone who does not compromise clarity for speed. And when enough people operate at that standard, collective systems stabilize. North is the beginning of that elevation.")
+concept:"Breaking: Cross-agency reviews continue to show that systemic failure often begins with semantic ambiguity. Institutions collapse not because they lacked talent or ambition, but because they never aligned on what their words actually meant. Contracts reference undefined scope. Policies contain elastic terminology. Interpretive gaps widen under pressure. When definitions drift, accountability dissolves. North eliminates that condition. It declares scope before exposure. It pins meaning before power is deployed. It ensures that verification posture is structural, not optional.",
+live:"In real time, drift manifests quietly. Teams operate under parallel interpretations. Metrics look aligned until stress reveals divergence. Disputes become interpretive instead of structural. Live posture under North requires declared scope for every claim. Terms are published, versioned, and stable. Interpretations route back to the registry. Language is treated as infrastructure.",
+roadmap:"North expands through disciplined registry growth. New terms are introduced only when operationally necessary and measurably bounded. Versioning replaces silent edits. Definitions are refined without mutating geometry. Public articulation remains subordinate to declared scope. As scale increases, lookup friction decreases. North does not expand influence — it expands clarity."
 },
 NNE:{
-concept:P("You don’t lack tools. You lack translation. The problem is not that meaning is missing; it’s that you haven’t connected meaning to action. You’ve defined things in theory but abandoned them in execution. That gap is where frustration lives. NNE closes that gap. It asks you to take the standards you claim to value and bind them to what you actually build. You already possess the discipline at the conceptual level. The question is whether you are willing to let your work reflect it. Alignment is not about ambition—it’s about integrity between what you say and what you ship."),
-live:P("In real time, you feel the friction when execution drifts from declared standards. You see teams claiming principles while shipping compromises. You see institutions declaring values but operating differently under pressure. That tension isn’t a mystery; it’s translation failure. NNE forces you to bridge that space. It reminds you that standards unused are standards abandoned. When you reconnect definition to deployment, friction decreases. Trust increases because behavior reflects structure. You stop shopping for new answers because you finally use what you already own."),
-roadmap:P("The path forward is not invention; it is integration. Take the clarity you already possess and wire it into your systems. Build surfaces that cannot contradict your declared standards. Make execution answerable to meaning. As this alignment strengthens, collaboration stabilizes naturally. You won’t need to persuade people—you’ll demonstrate coherence. That is how unity scales: not through slogans, but through consistency. You are not building something new; you are finishing something you started.")
+concept:"Breaking: Technology deployments fail most often during translation from policy to product. Strategic documents declare intent, but execution teams reinterpret terms during implementation. Drift compounds quietly until measurable divergence appears. NNE disciplines that conversion. It preserves semantic continuity as concepts move into tools. It prevents silent reinterpretation during productization.",
+live:"In live deployment, execution must inherit definitional constraints automatically. Build systems validate semantic references before release. Divergence between declaration and execution triggers review. Product surfaces remain semantically consistent under scale.",
+roadmap:"The roadmap formalizes translation validation tooling. Cross-product mapping references shared anchors. Execution surfaces remain bounded. Scaling preserves integrity through repetition of geometric alignment."
 }
 };
 
-/* Generic formal + informal for other directions (kept strong but concise) */
-function formalGeneric(dir){
-return P("This direction establishes a bounded structural role within the compass. Scope is declared before any claim is admitted. Constraints prevent semantic drift. Verification remains explicit and auditable. Cross-domain comparison remains stable under scale. Execution inherits boundary conditions from here. Structure governs expansion without mutation.");
+/* Formal generic */
+function formalGeneric(){
+return "This direction defines a bounded structural role within the compass. Scope is declared before any claim is admitted. Constraints prevent semantic drift. Verification remains explicit and auditable. Cross-domain comparison remains stable under scale. Execution inherits boundary conditions from here.";
 }
-function informalGeneric(dir){
-return P("You already possess structure; what you lack is disciplined alignment. This direction exposes the gap between intention and execution. When standards are ignored, friction multiplies. When structure is honored, collaboration accelerates. The problem is not scarcity; it is mismanagement. The solution is disciplined integration. Unity emerges when boundaries are respected. You don’t need more tools—you need to use the ones you have.");
+
+/* Informal generic */
+function informalGeneric(){
+return "Breaking: systemic instability often follows unstructured expansion. When boundaries are implied rather than declared, scale magnifies weakness. This direction restores structural discipline. It aligns action with declared scope. Growth remains measurable and contained.";
 }
 
 /* Build */
-function build(){
+function render(){
 root.innerHTML="";
 ORDER.forEach(dir=>{
 const section=document.createElement("section");
@@ -151,54 +146,47 @@ section.style.setProperty("--c",COLORS[dir]);
 const head=document.createElement("div");
 head.className="dirHead";
 head.innerHTML="<div class='left'><div class='diamond'></div><div class='label'>"+dir+"</div></div><div class='chev'>▸</div>";
-
 const body=document.createElement("div");
 body.className="dirBody";
-const stack=document.createElement("div");
-stack.className="stack";
 
 ["concept","live","roadmap"].forEach(mode=>{
 const m=document.createElement("div");
 m.className="mode";
 m.innerHTML="<div class='modeHead'><div>"+mode.toUpperCase()+"</div><div>▸</div></div>";
-
 const mb=document.createElement("div");
 mb.className="modeBody";
 
 const f=document.createElement("div");
 f.className="lensBlock";
 f.setAttribute("data-lens","formal");
-f.innerHTML="<div class='lensTitle'>Formal</div><p class='p'>"+formalGeneric(dir)+"</p>";
+f.innerHTML="<div class='lensTitle'>Formal</div><p class='p'>"+formalGeneric()+"</p>";
 
 const i=document.createElement("div");
 i.className="lensBlock";
 i.setAttribute("data-lens","informal");
-let informalText=(INFORMAL_CUSTOM[dir]&&INFORMAL_CUSTOM[dir][mode])?INFORMAL_CUSTOM[dir][mode]:informalGeneric(dir);
-i.innerHTML="<div class='lensTitle'>Informal</div><p class='p'>"+informalText+"</p>";
+let text=(INFORMAL_CUSTOM[dir]&&INFORMAL_CUSTOM[dir][mode])?INFORMAL_CUSTOM[dir][mode]:informalGeneric();
+i.innerHTML="<div class='lensTitle'>Informal</div><p class='p'>"+text+"</p>";
 
 const index=document.createElement("div");
 index.className="indexLine";
-index.innerHTML="Index: maps to related instrument. <a href='#'>Jump</a>";
+index.innerHTML="Index: related instrument surface. <a href='#'>Jump</a>";
 
 mb.appendChild(f);
 mb.appendChild(i);
 mb.appendChild(index);
-
-m.querySelector(".modeHead").onclick=()=>m.classList.toggle("open");
-
 m.appendChild(mb);
-stack.appendChild(m);
+m.querySelector(".modeHead").onclick=()=>m.classList.toggle("open");
+body.appendChild(m);
 });
 
 head.onclick=()=>section.classList.toggle("open");
 section.appendChild(head);
 section.appendChild(body);
-body.appendChild(stack);
 root.appendChild(section);
 });
 }
 
-build();
+render();
 
 })();
 </script>

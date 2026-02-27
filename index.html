@@ -1,7 +1,7 @@
 <!-- TNT — /index.html
-     FINAL TWEAK:
-       - Move TOP-RIGHT language buttons DOWN so they never collide with the center brand pill
-       - Keep everything else unchanged
+     FINAL: restore language toggles to original top-right (top:16px)
+            nudge ONLY the center brand bubble down slightly
+     NO OTHER CHANGES.
 -->
 
 <!doctype html>
@@ -20,7 +20,6 @@
   --R:170px;
   --D:260px;
   --dockH:96px;
-
   --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
@@ -35,11 +34,11 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Top-right language toggle (MOVED DOWN to avoid brand collision) */
+/* Top-right language toggle — RESTORED */
 .top-right{
   position:fixed;
   right:16px;
-  top:64px;            /* CHANGED: was 16px */
+  top:16px; /* restored */
   z-index:120;
   display:flex;
   gap:10px;
@@ -47,11 +46,16 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   align-items:center;
 }
 
-/* Brand */
+/* Brand — NUDGED DOWN ONLY */
 .brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:110;text-align:center;
-  padding:10px 18px;border-radius:999px;
+  position:fixed;
+  left:50%;
+  top:28px; /* was 16px; nudged down slightly */
+  transform:translateX(-50%);
+  z-index:110;
+  text-align:center;
+  padding:10px 18px;
+  border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
   pointer-events:none;
@@ -158,13 +162,13 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   :root{ --R:150px; --D:244px; --dockH:118px; }
   .stage{ top:51%; }
   .brand .t{ font-size:38px; }
-  .top-right{ top:60px; } /* keep clear on small screens */
+  .brand{ top:26px; } /* keep nudge consistent */
 }
 @media (max-width:420px){
   :root{ --R:140px; --D:236px; --dockH:132px; }
   .stage{ top:50%; }
   .brand .t{ font-size:36px; }
-  .top-right{ top:58px; }
+  .brand{ top:24px; }
 }
 </style>
 </head>
@@ -246,11 +250,8 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
            "&depth="+encodeURIComponent(D);
   }
 
-  // Toggle UI state
   var btnEN = document.getElementById("btnEN");
   var btnZH = document.getElementById("btnZH");
-  btnEN.classList.toggle("active", lang==="en");
-  btnZH.classList.toggle("active", lang==="zh");
 
   function wireLinks(){
     document.getElementById("btnExit").href="/"+q();
@@ -286,6 +287,9 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
       document.getElementById("dockLaws").textContent="LAWS";
       document.getElementById("dockGauges").textContent="GAUGES";
     }
+
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
   }
 
   function setLang(next){
@@ -294,8 +298,6 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
     try{ localStorage.setItem("gd_lang", lang); }catch(e){}
     history.replaceState({}, "", location.pathname + q({lang: lang}));
     document.documentElement.lang = (lang==="zh") ? "zh" : "en";
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
     renderLang();
     wireLinks();
   }
@@ -306,7 +308,6 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   wireLinks();
   renderLang();
 
-  // Routing
   function goFoundation(){ location.href="/home/"+q(); }
   function goFrontier(){ location.href="/explore/frontier/"+q(); }
 

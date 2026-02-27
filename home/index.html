@@ -1,13 +1,9 @@
-<!-- TNT — CARDINALITY_SPINE_ADVANCED_v1 (PLACE THIS AS YOUR “CARDINALITY-FIRST INDEX” PAGE)
-     MODE: ADVANCED (PAGINATED) · NO DRIFT · CARDINALITY-FIRST · MIRROR-READY
-     SCOPE (PHASE 1): 4-FACE ONLY (N/E/S/W)
-     LENSES: gd_style=formal|informal (copy only)
-     LANG: gd_lang=en|zh (EN-only / 中文-only)
-     KEYS (CANON): gd_lang / gd_style / gd_time (read+persist; no new keys)
-     NOTE:
-       - This is the “Cardinality Spine” (Structure-first). Mirror page comes later.
-       - Product jump links are STUBBED safely (you can replace hrefs later).
-       - Geometry/count is stable: same rows exist in both lenses and both languages.
+<!-- TNT — /home/index.html (HUB A · 13 CONSTRUCT STACK · COLORED DIAMOND MARKERS)
+     MODE: STRUCTURE-UNDER-HOOD / TED-TALK vs SCIENCE via gd_style
+     LANG: gd_lang=en|zh controls EN-only / 中文-only rendering (no language UI)
+     KEYS (CANON): gd_lang / gd_style / gd_time only
+     UI: 13 long horizontal bubbles stacked vertically; each has a left diamond color marker
+     NOTE: Replace href "#" with real targets later (no guessing here).
 -->
 
 <!doctype html>
@@ -15,7 +11,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cardinality Spine · Index</title>
+<title>HUB · Cardinal Axis</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -37,6 +33,10 @@ a{color:inherit;text-decoration:none}
 }
 .btn:hover,.crp-btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px rgba(212,175,55,.20)}
 .btn:active,.crp-btn:active{transform:translateY(1px)}
+
+:root{
+  --goldSoft:rgba(212,175,55,.35);
+}
 
 /* Layout */
 .wrap{width:min(1040px,94vw);margin:0 auto;padding:14px 0 110px;display:flex;flex-direction:column;gap:14px}
@@ -67,45 +67,56 @@ a{color:inherit;text-decoration:none}
   color:#fff;font-weight:900;letter-spacing:.2px;
 }
 
-/* Face header card */
-.faceCard{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.80), rgba(11,15,20,.88));
-  box-shadow:0 18px 60px rgba(0,0,0,.70);
-  padding:14px 16px;
-  display:flex;gap:14px;align-items:flex-start;
-}
-.faceBar{width:10px;border-radius:99px;background:var(--faceColor);flex:0 0 auto}
-.faceMeta{flex:1 1 auto;min-width:0}
-.faceMeta h2{margin:0 0 6px;font-weight:950;letter-spacing:.2px;font-size:16px}
-.faceMeta p{margin:0;color:rgba(255,255,255,.84);line-height:1.45;font-size:13px}
-.faceMeta .hint{margin-top:8px;color:rgba(255,255,255,.70);font-size:12px}
-
-/* Narrative rows (long horizontal bubbles stacked vertically) */
+/* Rows (long horizontal bubbles stacked vertically) */
 .list{display:flex;flex-direction:column;gap:12px}
 .row{
+  --c:#93C5FD;
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
   background:linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
   box-shadow:0 16px 52px rgba(0,0,0,.60);
   overflow:hidden;
 }
-.head{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:14px 16px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
+.row::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
 }
-.left{display:flex;align-items:center;gap:12px;min-width:0}
-.badge{width:10px;height:22px;border-radius:99px;background:var(--faceColor);flex:0 0 auto}
-.title{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sub{font-size:12px;opacity:.72;margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chev{font-size:16px;opacity:.75;flex:0 0 auto}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+  padding:14px 16px;
+}
+.left{display:flex;align-items:flex-start;gap:12px;min-width:0}
 
-/* Body: 3 stacked paragraph bubbles (Concept / Live / Roadmap) */
-.body{display:none;padding:14px 16px 16px;border-top:1px solid rgba(255,255,255,.08)}
-.row.open .body{display:block}
-.pstack{display:flex;flex-direction:column;gap:12px}
+/* Diamond marker */
+.mark{
+  width:14px;height:14px;
+  margin-top:3px;
+  transform:rotate(45deg);
+  border-radius:4px;
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 18px rgba(0,0,0,.35);
+  flex:0 0 auto;
+  pointer-events:none; /* never intercept taps */
+}
+
+/* Title block */
+.tblock{min-width:0}
+.title{
+  font-weight:950;letter-spacing:.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sub{
+  margin-top:4px;
+  font-size:12px;opacity:.72;line-height:1.35;
+}
+
+/* Body */
+.body{
+  padding:0 16px 16px;
+  display:flex;flex-direction:column;gap:12px;
+}
 .pbub{
   padding:14px 16px;border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
@@ -113,15 +124,23 @@ a{color:inherit;text-decoration:none}
     radial-gradient(circle at 30% 30%, rgba(120,160,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(17,22,28,.80), rgba(11,15,20,.88));
   box-shadow:0 12px 40px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.05);
+  position:relative;
 }
-.pbub .pt{margin:0 0 8px;font-weight:950;letter-spacing:.2px;font-size:13px}
-.pbub .pp{margin:0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13px}
-.tag{opacity:.75}
+.pbub::before{
+  content:"";
+  position:absolute;inset:0;border-radius:18px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.pt{margin:0 0 8px;font-weight:950;letter-spacing:.2px;font-size:13px}
+.pp{margin:0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13px}
 
-/* Jump row */
-.jump{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.jump{display:flex;justify-content:flex-end}
 
-/* Bottom dock */
+/* Dock */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -136,7 +155,6 @@ a{color:inherit;text-decoration:none}
   backdrop-filter:blur(8px);
 }
 
-/* Mobile */
 @media (max-width:560px){
   .brand .t{font-size:16px}
   .controls{justify-content:flex-start}
@@ -150,45 +168,22 @@ a{color:inherit;text-decoration:none}
   <div class="wrap">
     <div class="toprow">
       <div class="brand" aria-hidden="true">
-        <p class="k" id="bk">CARDINALITY SPINE</p>
-        <p class="t" id="bt">Index · Structure-first</p>
-        <p class="s" id="bs">North · East · South · West</p>
+        <p class="k" id="bk">CARDINAL AXIS</p>
+        <p class="t" id="bt">HUB · Index</p>
+        <p class="s" id="bs">13 constructs · Concept/Live/Roadmap · Jump</p>
       </div>
 
       <div class="controls">
-        <select class="select" id="faceSelect" aria-label="Face">
-          <option value="N">N · DEFINITIONS</option>
-          <option value="E">E · PRODUCTS</option>
-          <option value="S">S · CONSTRAINTS</option>
-          <option value="W">W · CONTAINMENT</option>
-        </select>
-
         <select class="select" id="lensSelect" aria-label="Lens">
-          <option value="formal">Formal</option>
           <option value="informal">Informal</option>
+          <option value="formal">Formal</option>
         </select>
-
-        <select class="select" id="langSelect" aria-label="Language">
-          <option value="en">EN</option>
-          <option value="zh">中文</option>
-        </select>
-
-        <a class="btn" id="btnMirror" href="#">MIRROR</a>
       </div>
     </div>
   </div>
 </div>
 
 <div class="wrap">
-  <div class="faceCard" id="faceCard" style="--faceColor:#1F3A8A">
-    <div class="faceBar"></div>
-    <div class="faceMeta">
-      <h2 id="faceH">N · DEFINITIONS</h2>
-      <p id="faceP">Cardinality-first. Meaning before deployment. Definitions bind scope and prevent drift.</p>
-      <p class="hint" id="faceHint">Two narratives per face. Each expands into Concept · Live · Roadmap, then jumps to a product page.</p>
-    </div>
-  </div>
-
   <div class="list" id="list"></div>
 </div>
 
@@ -205,11 +200,11 @@ a{color:inherit;text-decoration:none}
   // ===== CANON KEYS ONLY =====
   var qs = new URLSearchParams(location.search);
   var gd_lang  = qs.get("gd_lang")  || localStorage.getItem("gd_lang")  || "en";
-  var gd_style = qs.get("gd_style") || localStorage.getItem("gd_style") || "formal";
+  var gd_style = qs.get("gd_style") || localStorage.getItem("gd_style") || "informal";
   var gd_time  = qs.get("gd_time")  || localStorage.getItem("gd_time")  || "now";
 
   if(gd_lang!=="en" && gd_lang!=="zh") gd_lang="en";
-  if(gd_style!=="formal" && gd_style!=="informal") gd_style="formal";
+  if(gd_style!=="formal" && gd_style!=="informal") gd_style="informal";
   if(gd_time==="trajectory") gd_time="post";
   if(gd_time!=="origin" && gd_time!=="now" && gd_time!=="post") gd_time="now";
 
@@ -236,366 +231,223 @@ a{color:inherit;text-decoration:none}
   document.getElementById("dockLaws").href="/laws/"+q();
   document.getElementById("dockGauges").href="/gauges/"+q();
 
-  // Controls initial
-  var faceSelect=document.getElementById("faceSelect");
+  // Lens control (only UI control on this page)
   var lensSelect=document.getElementById("lensSelect");
-  var langSelect=document.getElementById("langSelect");
   lensSelect.value = gd_style;
-  langSelect.value = gd_lang;
 
-  // Face colors (subset of your 12-shade ring)
-  var FACE_COLOR = { N:"#1F3A8A", E:"#0EA5E9", S:"#F59E0B", W:"#7F1D1D" };
+  lensSelect.addEventListener("change", function(){
+    gd_style = lensSelect.value;
+    try{ localStorage.setItem("gd_style", gd_style); }catch(e){}
+    location.search = q();
+  });
 
-  // Helpers
+  // Color ring (12) + CORE color (13th)
+  var COLORS = {
+    N:"#1F3A8A",
+    NNE:"#2C3EAF",
+    ENE:"#4B3FBF",
+    E:"#0EA5E9",
+    ESE:"#14B8A6",
+    SSE:"#22C55E",
+    S:"#F59E0B",
+    SSW:"#EA580C",
+    WSW:"#DC2626",
+    W:"#7F1D1D",
+    WNW:"#9333EA",
+    NNW:"#334155",
+    CORE:"#D4AF37"
+  };
+
   function T(enF,enI,zhF,zhI){
     return (gd_lang==="zh") ? ((gd_style==="formal")?zhF:zhI) : ((gd_style==="formal")?enF:enI);
   }
 
-  // === Phase 1 content: 4 faces × 2 narratives each (no product guessing; safe stubs) ===
-  // Replace href fields later with your real product pages.
-  var DATA = {
-    N: {
-      labelEN:"N · DEFINITIONS",
-      labelZH:"N · 定义",
-      descEN:"Cardinality-first. Meaning before deployment. Definitions bind scope and prevent drift.",
-      descZH:"先结构后执行。定义先行，范围可采信，语义不漂移。",
-      rows:[
-        {
-          tEN:"N1 · Semantic Contract",
-          tZH:"N1 · 语义契约",
-          sEN:"Meaning is pinned before measurement.",
-          sZH:"先钉含义，再谈测量。",
-          cENF:"Definitions lock meaning so measurement and claims remain admissible within declared scope.",
-          cENI:"Lock meanings first so nothing drifts.",
-          cZHF:"定义钉住含义，使测量与主张在声明范围内保持可采信。",
-          cZHI:"先把词钉死，后面就不漂。",
-          nENF:"Live usage routes disputes to definitions and registries instead of persuasion.",
-          nENI:"When it’s fuzzy, you route—don’t argue.",
-          nZHF:"现况中，争议被路由回定义与注册表，而不是靠说服。",
-          nZHI:"模糊就跳转，不争论。",
-          rENF:"Extend definitions only by explicit declaration and testability; never by narrative inflation.",
-          rENI:"Add meaning carefully—never by hype.",
-          rZHF:"路线图：只通过明确声明与可证伪性扩展定义；绝不靠叙事膨胀。",
-          rZHI:"加词要谨慎，别靠吹。",
-          href:"#"
-        },
-        {
-          tEN:"N2 · Invariants Under Scale",
-          tZH:"N2 · 规模下的不变量",
-          sEN:"What must never change.",
-          sZH:"永远不该变的线。",
-          cENF:"Invariants define the non-negotiables that keep the compass coherent across instances.",
-          cENI:"The rules you never bend.",
-          cZHF:"不变量定义跨实例保持罗盘一致性的不可协商项。",
-          cZHI:"永远不弯的规则。",
-          nENF:"Live enforcement prevents silent semantic edits during expansion and product proliferation.",
-          nENI:"No silent edits allowed.",
-          nZHF:"现况执行阻止扩张与产品倍增过程中的静默改义。",
-          nZHI:"不让你悄悄改。",
-          rENF:"Add invariants only when observer-invariant and testable; otherwise refuse expansion.",
-          rENI:"Only add weight when it’s measurable.",
-          rZHF:"路线图：只在可观察一致且可证伪时增加不变量；否则拒绝扩张。",
-          rZHI:"能测才加重量。",
-          href:"#"
-        }
-      ]
+  // 13 constructs (placeholders; stable structure; replace copy later)
+  // Each has: key, title, sub, concept, live, roadmap, href
+  var ITEMS = [
+    {k:"CORE", title:T("CORE · Integrative Baseline","CORE · Baseline","核心 · 统合基线","核心 · 基线"), sub:T("Integration point that keeps everything comparable.","The center that keeps it sane.","统合点：让一切可比较。","中心：让系统不乱。"),
+      c:T("CORE defines the invariant hinge that stabilizes traversal and admissibility.","CORE keeps the whole thing coherent.","核心定义稳定遍历与可采信的铰链。","核心让系统保持一致。"),
+      n:T("Live behavior routes disputes into structure instead of escalation.","Live: return to center, then move.","现况：争议被路由回结构，而不是升级冲突。","现况：先回中心再走。"),
+      r:T("Roadmap adds capability only by completing the geometry—never exceeding it.","Roadmap: grow within the cage.","路线图：只通过补全结构增长——绝不越界。","路线图：在边界内增长。"),
+      href:"#"
     },
 
-    E: {
-      labelEN:"E · PRODUCTS",
-      labelZH:"E · 产品",
-      descEN:"Cardinality-first. Products are bounded execution ramps—adoption surfaces under constraint.",
-      descZH:"先结构后产品。产品是有界执行匝道，在约束内被采纳。",
-      rows:[
-        {
-          tEN:"E1 · Execution Surfaces",
-          tZH:"E1 · 执行面",
-          sEN:"Deploy without drift.",
-          sZH:"部署不漂移。",
-          cENF:"A product is an execution surface that must preserve navigation contracts and admissibility boundaries.",
-          cENI:"A tool that must keep the rules intact.",
-          cZHF:"产品是执行面，必须保持导航契约与可采信边界。",
-          cZHI:"工具也要守规矩。",
-          nENF:"Live deployment routes verification to Laws/Gauges rather than persuasion.",
-          nENI:"Proof has an address.",
-          nZHF:"现况部署把核查路由到法则/量规，而不是靠说服。",
-          nZHI:"证据有地址。",
-          rENF:"Scale products by replication of the same compass geometry, not redesign.",
-          rENI:"Clone structure, don’t reinvent.",
-          rZHF:"路线图：通过复制同一罗盘几何扩张产品，而不是重造。",
-          rZHI:"复制结构，不重造。",
-          href:"#"
-        },
-        {
-          tEN:"E2 · IP vs SKU",
-          tZH:"E2 · IP与SKU",
-          sEN:"Structure vs packaging.",
-          sZH:"结构 vs 封装。",
-          cENF:"IP is structural capability; SKU is market packaging. Packaging never changes geometry.",
-          cENI:"Engine vs box. Box never changes the compass.",
-          cZHF:"IP是结构能力；SKU是市场封装。封装不改变几何。",
-          cZHI:"发动机 vs 盒子。盒子不改罗盘。",
-          nENF:"Live SKU expansion is allowed only as payload under fixed anchors.",
-          nENI:"More SKUs, same compass.",
-          nZHF:"现况中SKU扩张只能作为固定锚点下的载荷。",
-          nZHI:"SKU多了，罗盘不变。",
-          rENF:"Licensing lives inside Products as packaging rules, not new coordinates.",
-          rENI:"Licensing is packaging, not geometry.",
-          rZHF:"路线图：授权属于产品封装规则，而不是新坐标。",
-          rZHI:"授权是封装，不是几何。",
-          href:"#"
-        }
-      ]
+    {k:"N", title:T("N · DEFINITIONS","N · DEFINITIONS","北 · 定义","北 · 定义"), sub:T("Meaning before measurement.","Lock meaning first.","测量之前先定含义。","先钉含义。"),
+      c:T("Definitions pin semantics so claims remain admissible under declared scope.","Lock meanings so nothing drifts.","定义钉住语义，使主张在声明范围内可采信。","把词钉死，后面就不漂。"),
+      n:T("Live: shared terms remain stable across pages; disputes route to definitions.","Live: no semantic arguments—route.","现况：术语跨页面一致；争议回到定义。","现况：不吵语义，直接跳转。"),
+      r:T("Roadmap: expand registry without mutating geometry.","Roadmap: grow dictionary, keep compass.","路线图：扩展注册表但不改变几何。","路线图：词典变大，罗盘不变。"),
+      href:"#"
     },
 
-    S: {
-      labelEN:"S · CONSTRAINTS",
-      labelZH:"S · 约束",
-      descEN:"Cardinality-first. Constraints protect truth boundaries: admissibility, gates, and anti-drift.",
-      descZH:"先约束再扩张。可采信闸门、阶段闸门、反漂移共同守边界。",
-      rows:[
-        {
-          tEN:"S1 · Admissibility Gate",
-          tZH:"S1 · 可采信闸门",
-          sEN:"No scope, no claim.",
-          sZH:"无范围，不主张。",
-          cENF:"Claims are refused without declared scope, receipts, and falsifiers.",
-          cENI:"No proof, no claim.",
-          cZHF:"无声明范围、无收据、无证伪条件则拒绝主张。",
-          cZHI:"没证据就别说。",
-          nENF:"Live gates block shortcut traversal and narrative inflation.",
-          nENI:"No shortcuts.",
-          nZHF:"现况闸门阻止抄近道与叙事膨胀。",
-          nZHI:"不走捷径。",
-          rENF:"Publish refusal doctrine so boundaries remain stable under scale.",
-          rENI:"Make ‘no’ explicit.",
-          rZHF:"路线图：公开拒绝准则，使边界在规模化中仍稳定。",
-          rZHI:"把“不行”写清楚。",
-          href:"#"
-        },
-        {
-          tEN:"S2 · Phase Gates",
-          tZH:"S2 · 阶段闸门",
-          sEN:"Prerequisites, not hype.",
-          sZH:"先决条件，不是噱头。",
-          cENF:"‘When’ is prerequisites. Readiness is a checklist, not a date.",
-          cENI:"Readiness is a list, not a promise.",
-          cZHF:"“何时”是先决条件。就绪是清单，不是日期。",
-          cZHI:"就绪是清单，不是承诺。",
-          nENF:"Live frontier expansion must show prerequisites before invitation.",
-          nENI:"Gate before dream.",
-          nZHF:"现况前沿扩张必须先展示先决条件，再发出邀请。",
-          nZHI:"先闸门再做梦。",
-          rENF:"Tighten gates only with evidence; never loosen by narrative.",
-          rENI:"Evidence tightens—stories don’t.",
-          rZHF:"路线图：只用证据收紧闸门；绝不靠叙事放松。",
-          rZHI:"证据能收紧，故事不能放松。",
-          href:"#"
-        }
-      ]
+    {k:"E", title:T("E · PRODUCTS","E · PRODUCTS","东 · 产品","东 · 产品"), sub:T("Execution surfaces under constraint.","Tools with boundaries.","在约束内的执行面。","有边界的工具。"),
+      c:T("Products are bounded adoption ramps that preserve navigation contracts.","Tools that keep the rules.","产品是有界采纳匝道，必须保持导航契约。","工具也要守规矩。"),
+      n:T("Live: claims route to verification surfaces, not persuasion.","Live: proof has an address.","现况：主张跳转核查面，而不是靠说服。","现况：证据有地址。"),
+      r:T("Roadmap: scale by replication, not redesign.","Roadmap: clone structure.","路线图：复制扩张，不重造。","路线图：复制结构。"),
+      href:"#"
     },
 
-    W: {
-      labelEN:"W · CONTAINMENT",
-      labelZH:"W · 隔离",
-      descEN:"Cardinality-first. Containment prevents cascade: isolation, evidence chain, and recoverability.",
-      descZH:"先隔离再扩张。隔离层、证据链、可恢复性共同防级联。",
-      rows:[
-        {
-          tEN:"W1 · Isolation",
-          tZH:"W1 · 隔离层",
-          sEN:"Keep damage local.",
-          sZH:"把损伤局部化。",
-          cENF:"Failures must be segmented so local breaks cannot become global collapse.",
-          cENI:"Contain it fast.",
-          cZHF:"失败必须分段，局部破损不能演变为全局崩塌。",
-          cZHI:"先隔离，别扩散。",
-          nENF:"Live lane separation + return paths prevent tunnel behavior.",
-          nENI:"Always keep an exit.",
-          nZHF:"现况干线分离+返回路径防止隧道效应。",
-          nZHI:"永远有出口。",
-          rENF:"Add containment gauges as the system scales; measure spillover mechanically.",
-          rENI:"Measure containment, don’t assume it.",
-          rZHF:"路线图：规模化时增加隔离量规；用机制测外溢。",
-          rZHI:"隔离要测，别靠感觉。",
-          href:"#"
-        },
-        {
-          tEN:"W2 · Evidence Chain",
-          tZH:"W2 · 证据链",
-          sEN:"Receipts bind reality.",
-          sZH:"收据绑定现实。",
-          cENF:"Actions bind to receipts so narrative cannot inflate claims.",
-          cENI:"Receipts beat persuasion.",
-          cZHF:"行动绑定收据，叙事无法膨胀主张。",
-          cZHI:"收据胜过说服。",
-          nENF:"Live verification routes remain linkable (Laws/Gauges) without exposing recipes.",
-          nENI:"Proof posture, not secrets.",
-          nZHF:"现况核查路径可引用（法则/量规），但不泄露配方。",
-          nZHI:"证明姿态，不泄密。",
-          rENF:"Strengthen audit posture as artifacts accumulate; keep boundaries intact.",
-          rENI:"More artifacts, stronger proof.",
-          rZHF:"路线图：工件越多审计越强；边界保持不变。",
-          rZHI:"工件越多，证明越强。",
-          href:"#"
-        }
-      ]
+    {k:"S", title:T("S · CONSTRAINTS","S · CONSTRAINTS","南 · 约束","南 · 约束"), sub:T("Admissibility gates prevent drift.","Gates before expansion.","闸门防漂移。","先闸门再扩张。"),
+      c:T("Constraints refuse claims without scope, receipts, and falsifiers.","No proof, no claim.","约束拒绝无范围/无收据/无证伪条件的主张。","没证据就别说。"),
+      n:T("Live: gate enforcement blocks shortcuts and inflation.","Live: no shortcuts.","现况：闸门执行阻止抄近道与膨胀。","现况：不走捷径。"),
+      r:T("Roadmap: tighten only with evidence; never loosen by story.","Roadmap: evidence tightens.","路线图：只用证据收紧，不靠叙事放松。","路线图：证据能收紧。"),
+      href:"#"
+    },
+
+    {k:"W", title:T("W · CONTAINMENT","W · CONTAINMENT","西 · 隔离","西 · 隔离"), sub:T("Isolation prevents cascade.","Keep damage local.","隔离防级联。","把损伤局部化。"),
+      c:T("Containment segments failure so local breaks don’t become global collapse.","Contain fast.","隔离把失败分段，防止全局崩塌。","先隔离别扩散。"),
+      n:T("Live: return paths stay available; evidence chains stay linkable.","Live: always an exit.","现况：返回路径始终存在；证据链可引用。","现况：永远有出口。"),
+      r:T("Roadmap: add containment gauges as scale increases.","Roadmap: measure spillover.","路线图：规模增长时增加隔离量规。","路线图：测外溢。"),
+      href:"#"
+    },
+
+    // 8 transitional faces (legend-level constructs, still valid as constructs)
+    {k:"NNE", title:T("NNE · Blend","NNE · Blend","NNE · 过渡","NNE · 过渡"), sub:T("Definitions → Products blend.","Meaning becoming tool.","定义→产品混合。","含义走向工具。"),
+      c:T("Concept: bridge semantics into executable form without drift.","Concept: bridge meaning to tool.","概念：把语义桥接为可执行形式且不漂移。","概念：含义变工具。"),
+      n:T("Live: transitional definitions remain bounded and cite the spine.","Live: cite the spine.","现况：过渡定义保持有界并引用脊柱。","现况：引用脊柱。"),
+      r:T("Roadmap: refine projection without creating new geometry.","Roadmap: refine without new faces.","路线图：细化投影但不新增几何。","路线图：细化不加面。"),
+      href:"#"
+    },
+    {k:"ENE", title:T("ENE · Transition","ENE · Transition","ENE · 转换","ENE · 转换"), sub:T("Definitions → Products transition.","From contract to surface.","定义→产品转换。","从契约到执行面。"),
+      c:T("Concept: convert declared meaning into stable execution surfaces.","Concept: convert meaning to surface.","概念：把声明含义转为稳定执行面。","概念：含义变执行面。"),
+      n:T("Live: execution inherits limits from definitions.","Live: boundaries travel.","现况：执行继承定义边界。","现况：边界跟着走。"),
+      r:T("Roadmap: keep deployment comparable across instances.","Roadmap: comparable scaling.","路线图：保持跨实例可比较部署。","路线图：可比扩张。"),
+      href:"#"
+    },
+    {k:"ESE", title:T("ESE · Blend","ESE · Blend","ESE · 过渡","ESE · 过渡"), sub:T("Products → Constraints blend.","Power meets gate.","产品→约束混合。","能力遇到闸门。"),
+      c:T("Concept: execution must meet admissibility gates.","Concept: power meets rules.","概念：执行必须满足可采信闸门。","概念：能力遇规则。"),
+      n:T("Live: products route to gates before scale.","Live: gate before scale.","现况：产品扩张前先过闸门。","现况：先闸门。"),
+      r:T("Roadmap: publish readiness checklists, not hype.","Roadmap: checklist culture.","路线图：公开清单，不搞噱头。","路线图：清单文化。"),
+      href:"#"
+    },
+    {k:"SSE", title:T("SSE · Transition","SSE · Transition","SSE · 转换","SSE · 转换"), sub:T("Products → Constraints transition.","Deployment under pressure.","产品→约束转换。","压力下部署。"),
+      c:T("Concept: ‘when’ equals prerequisites, not dates.","Concept: readiness first.","概念：“何时”=先决条件。","概念：先就绪。"),
+      n:T("Live: gates prevent narrative inflation during pressure.","Live: pressure reveals truth.","现况：压力下闸门阻止膨胀。","现况：压力见真章。"),
+      r:T("Roadmap: tighten gates with evidence accumulation.","Roadmap: evidence tightens.","路线图：证据积累收紧闸门。","路线图：证据收紧。"),
+      href:"#"
+    },
+    {k:"SSW", title:T("SSW · Blend","SSW · Blend","SSW · 过渡","SSW · 过渡"), sub:T("Constraints → Containment blend.","Gate meets isolation.","约束→隔离混合。","闸门遇隔离。"),
+      c:T("Concept: refusal and containment cooperate.","Concept: no + isolate.","概念：拒绝与隔离协同。","概念：拒绝+隔离。"),
+      n:T("Live: safe ‘no’ plus clean back paths.","Live: safe exits.","现况：安全拒绝+干净返回。","现况：安全出口。"),
+      r:T("Roadmap: reduce cascade risk as scale increases.","Roadmap: anti-cascade.","路线图：规模化降低级联风险。","路线图：抗级联。"),
+      href:"#"
+    },
+    {k:"WSW", title:T("WSW · Transition","WSW · Transition","WSW · 转换","WSW · 转换"), sub:T("Constraints → Containment transition.","Failure vector controlled.","约束→隔离转换。","控制失败向量。"),
+      c:T("Concept: segment failures so they don’t amplify.","Concept: contain fast.","概念：分段失败防放大。","概念：快速隔离。"),
+      n:T("Live: evidence chains keep integrity enforceable.","Live: receipts bind reality.","现况：证据链让完整性可执行。","现况：收据绑定现实。"),
+      r:T("Roadmap: audit posture strengthens without exposing recipes.","Roadmap: audit safely.","路线图：强化审计姿态但不泄密。","路线图：安全审计。"),
+      href:"#"
+    },
+    {k:"WNW", title:T("WNW · Blend","WNW · Blend","WNW · 过渡","WNW · 过渡"), sub:T("Containment → Definitions blend.","Return to meaning.","隔离→定义混合。","回到含义。"),
+      c:T("Concept: containment feeds back into clearer definitions.","Concept: tighten language.","概念：隔离反馈更清晰定义。","概念：收紧语言。"),
+      n:T("Live: audits drive definition corrections via versioning.","Live: versioned corrections.","现况：审计通过版本化推动定义修正。","现况：版本化修正。"),
+      r:T("Roadmap: shorten returns as registry grows.","Roadmap: faster re-anchor.","路线图：注册表增长让返回更短。","路线图：更快再锚定。"),
+      href:"#"
+    },
+    {k:"NNW", title:T("NNW · Transition","NNW · Transition","NNW · 转换","NNW · 转换"), sub:T("Containment → Definitions transition.","Reset without drift.","隔离→定义转换。","不漂移的重置。"),
+      c:T("Concept: return paths restore coherence under pressure.","Concept: reset clean.","概念：返回路径在压力下恢复一致性。","概念：干净重置。"),
+      n:T("Live: re-entry preserves state and avoids semantic swaps.","Live: no silent swaps.","现况：重入保持状态并防静默偷换。","现况：不悄悄换。"),
+      r:T("Roadmap: add lookup points to reduce confusion under scale.","Roadmap: more lookup.","路线图：增加查表点减少规模化困惑。","路线图：更多查表。"),
+      href:"#"
     }
-  };
+  ];
 
-  // UI i18n (single-language)
+  // Header i18n (render-only)
   function setText(id, txt){ var el=document.getElementById(id); if(el) el.textContent=txt; }
   if(gd_lang==="zh"){
     setText("bk","基轴体系");
-    setText("bt","索引 · 先结构");
-    setText("bs","北 · 东 · 南 · 西");
-    setText("btnMirror","镜像");
-    faceSelect.options[0].text="N · 定义";
-    faceSelect.options[1].text="E · 产品";
-    faceSelect.options[2].text="S · 约束";
-    faceSelect.options[3].text="W · 隔离";
+    setText("bt","枢纽 · 索引");
+    setText("bs","13个构件 · 概念/现况/路线图 · 跳转");
+    lensSelect.options[0].text="非正式";
+    lensSelect.options[1].text="正式";
+  }else{
+    setText("bk","CARDINAL AXIS");
+    setText("bt","HUB · Index");
+    setText("bs","13 constructs · Concept/Live/Roadmap · Jump");
+    lensSelect.options[0].text="Informal";
+    lensSelect.options[1].text="Formal";
   }
 
-  // Set face card + list
-  var faceCard=document.getElementById("faceCard");
-  var faceH=document.getElementById("faceH");
-  var faceP=document.getElementById("faceP");
+  // Render list
   var list=document.getElementById("list");
 
-  function renderFace(face){
-    // color + header
-    faceCard.style.setProperty("--faceColor", FACE_COLOR[face] || "#93C5FD");
-    var pack = DATA[face];
-    faceH.textContent = (gd_lang==="zh") ? pack.labelZH : pack.labelEN;
-    faceP.textContent = (gd_lang==="zh") ? pack.descZH : pack.descEN;
+  function makeRow(item){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", COLORS[item.k] || "#93C5FD");
 
-    // list rows
+    var head=document.createElement("div");
+    head.className="head";
+
+    var left=document.createElement("div");
+    left.className="left";
+
+    var mark=document.createElement("div");
+    mark.className="mark";
+
+    var tblock=document.createElement("div");
+    tblock.className="tblock";
+
+    var title=document.createElement("div");
+    title.className="title";
+    title.textContent=item.title;
+
+    var sub=document.createElement("div");
+    sub.className="sub";
+    sub.textContent=item.sub;
+
+    tblock.appendChild(title);
+    tblock.appendChild(sub);
+
+    left.appendChild(mark);
+    left.appendChild(tblock);
+
+    head.appendChild(left);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    function para(label, text){
+      var b=document.createElement("div");
+      b.className="pbub";
+      var pt=document.createElement("p");
+      pt.className="pt";
+      pt.textContent=label;
+      var pp=document.createElement("p");
+      pp.className="pp";
+      pp.textContent=text;
+      b.appendChild(pt);
+      b.appendChild(pp);
+      return b;
+    }
+
+    var Lc = (gd_lang==="zh") ? "概念" : "Concept";
+    var Ln = (gd_lang==="zh") ? "现况" : "Live";
+    var Lr = (gd_lang==="zh") ? "路线图" : "Roadmap";
+    body.appendChild(para(Lc, item.c));
+    body.appendChild(para(Ln, item.n));
+    body.appendChild(para(Lr, item.r));
+
+    var jump=document.createElement("div");
+    jump.className="jump";
+    var a=document.createElement("a");
+    a.className="btn";
+    a.textContent = (gd_lang==="zh") ? "跳转" : "JUMP";
+    a.href = item.href + (item.href.indexOf("?")>=0 ? "" : q());
+    if(item.href==="#") a.href="#";
+    jump.appendChild(a);
+    body.appendChild(jump);
+
+    row.appendChild(head);
+    row.appendChild(body);
+    return row;
+  }
+
+  function render(){
     list.innerHTML="";
-    pack.rows.forEach(function(r, idx){
-      var row=document.createElement("div");
-      row.className="row";
-      row.style.setProperty("--faceColor", FACE_COLOR[face] || "#93C5FD");
-
-      var head=document.createElement("div");
-      head.className="head";
-
-      var left=document.createElement("div");
-      left.className="left";
-
-      var badge=document.createElement("div");
-      badge.className="badge";
-
-      var title=document.createElement("div");
-      title.className="title";
-      title.textContent = (gd_lang==="zh") ? r.tZH : r.tEN;
-
-      var sub=document.createElement("div");
-      sub.className="sub";
-      sub.textContent = (gd_lang==="zh") ? r.sZH : r.sEN;
-
-      left.appendChild(badge);
-      left.appendChild(title);
-      left.appendChild(sub);
-
-      var chev=document.createElement("div");
-      chev.className="chev";
-      chev.textContent="▸";
-
-      head.appendChild(left);
-      head.appendChild(chev);
-
-      var body=document.createElement("div");
-      body.className="body";
-
-      var pstack=document.createElement("div");
-      pstack.className="pstack";
-
-      function paraBlock(mode, text){
-        var pb=document.createElement("div");
-        pb.className="pbub";
-        var pt=document.createElement("p");
-        pt.className="pt";
-        pt.textContent=mode;
-        var pp=document.createElement("p");
-        pp.className="pp";
-        pp.textContent=text;
-        pb.appendChild(pt);
-        pb.appendChild(pp);
-        return pb;
-      }
-
-      // Resolve per lens
-      var c = T(r.cENF,r.cENI,r.cZHF,r.cZHI);
-      var n = T(r.nENF,r.nENI,r.nZHF,r.nZHI);
-      var ro= T(r.rENF,r.rENI,r.rZHF,r.rZHI);
-
-      var mC = (gd_lang==="zh") ? "概念" : "Concept";
-      var mN = (gd_lang==="zh") ? "现况" : "Live";
-      var mR = (gd_lang==="zh") ? "路线图" : "Roadmap";
-
-      pstack.appendChild(paraBlock(mC, c));
-      pstack.appendChild(paraBlock(mN, n));
-      pstack.appendChild(paraBlock(mR, ro));
-
-      var jump=document.createElement("div");
-      jump.className="jump";
-
-      var a=document.createElement("a");
-      a.className="btn";
-      a.textContent = (gd_lang==="zh") ? "跳转产品" : "JUMP TO PRODUCT";
-      a.href = r.href; // STUB SAFE (#) until you replace
-      jump.appendChild(a);
-
-      body.appendChild(pstack);
-      body.appendChild(jump);
-
-      head.addEventListener("click", function(){
-        // close others
-        list.querySelectorAll(".row").forEach(function(x){
-          if(x!==row){ x.classList.remove("open"); var c=x.querySelector(".chev"); if(c) c.textContent="▸"; }
-        });
-        var open = row.classList.toggle("open");
-        chev.textContent = open ? "▾" : "▸";
-      });
-
-      row.appendChild(head);
-      row.appendChild(body);
-      list.appendChild(row);
-
-      // open first by default
-      if(idx===0){
-        row.classList.add("open");
-        chev.textContent="▾";
-      }
-    });
+    ITEMS.forEach(function(it){ list.appendChild(makeRow(it)); });
   }
 
-  // Bind controls
-  function applyState(){
-    gd_style = lensSelect.value;
-    gd_lang  = langSelect.value;
-    try{
-      localStorage.setItem("gd_style", gd_style);
-      localStorage.setItem("gd_lang", gd_lang);
-    }catch(e){}
-    location.search = q() + "&face=" + encodeURIComponent(faceSelect.value);
-  }
-
-  // Face selection from query
-  var face = (new URLSearchParams(location.search).get("face") || "N").toUpperCase();
-  if(!DATA[face]) face="N";
-  faceSelect.value = face;
-
-  // Mirror button (stub; replace when mirror page path is known)
-  document.getElementById("btnMirror").href = "#";
-
-  // Render
-  renderFace(face);
-
-  // Change handlers (reload with preserved keys)
-  faceSelect.addEventListener("change", function(){ location.search = q() + "&face=" + encodeURIComponent(faceSelect.value); });
-  lensSelect.addEventListener("change", applyState);
-  langSelect.addEventListener("change", applyState);
+  render();
 
 })();
 </script>

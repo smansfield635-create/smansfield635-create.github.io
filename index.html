@@ -1,10 +1,7 @@
 <!-- TNT — /index.html
-     ADD: EN / 中文 TOGGLE (INSTRUMENT-COMPATIBLE)
-     RULES:
-       - No language “gate”
-       - Toggle sets URL param lang=en|zh (NOT gd_lang in URL)
-       - Also writes localStorage gd_lang
-       - No background edits (ui.css owns field)
+     FINAL TWEAK:
+       - Move TOP-RIGHT language buttons DOWN so they never collide with the center brand pill
+       - Keep everything else unchanged
 -->
 
 <!doctype html>
@@ -30,8 +27,6 @@
 }
 
 a{color:inherit;text-decoration:none}
-
-/* Reserve space so dock never overlaps diamonds */
 body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
 
 /* Top-left */
@@ -40,10 +35,16 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Top-right language toggle */
+/* Top-right language toggle (MOVED DOWN to avoid brand collision) */
 .top-right{
-  position:fixed;right:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  position:fixed;
+  right:16px;
+  top:64px;            /* CHANGED: was 16px */
+  z-index:120;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
 }
 
 /* Brand */
@@ -157,11 +158,13 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   :root{ --R:150px; --D:244px; --dockH:118px; }
   .stage{ top:51%; }
   .brand .t{ font-size:38px; }
+  .top-right{ top:60px; } /* keep clear on small screens */
 }
 @media (max-width:420px){
   :root{ --R:140px; --D:236px; --dockH:132px; }
   .stage{ top:50%; }
   .brand .t{ font-size:36px; }
+  .top-right{ top:58px; }
 }
 </style>
 </head>
@@ -249,23 +252,13 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   btnEN.classList.toggle("active", lang==="en");
   btnZH.classList.toggle("active", lang==="zh");
 
-  function setLang(next){
-    if(next!=="en" && next!=="zh") next="en";
-    lang = next;
-    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
-    // Update URL in-place to instrument convention
-    history.replaceState({}, "", location.pathname + q({lang: lang}));
-    document.documentElement.lang = (lang==="zh") ? "zh" : "en";
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    // Re-render copy
-    renderLang();
-    // Re-wire hrefs (they depend on q())
-    wireLinks();
+  function wireLinks(){
+    document.getElementById("btnExit").href="/"+q();
+    document.getElementById("dockTerminal").href="/index.html"+q();
+    document.getElementById("dockProducts").href="/products/"+q();
+    document.getElementById("dockLaws").href="/laws/"+q();
+    document.getElementById("dockGauges").href="/gauges/"+q();
   }
-
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
 
   function renderLang(){
     if(lang==="zh"){
@@ -295,14 +288,20 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
     }
   }
 
-  function wireLinks(){
-    document.getElementById("btnExit").href="/"+q();
-
-    document.getElementById("dockTerminal").href="/index.html"+q();
-    document.getElementById("dockProducts").href="/products/"+q();
-    document.getElementById("dockLaws").href="/laws/"+q();
-    document.getElementById("dockGauges").href="/gauges/"+q();
+  function setLang(next){
+    if(next!=="en" && next!=="zh") next="en";
+    lang = next;
+    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang: lang}));
+    document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    renderLang();
+    wireLinks();
   }
+
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
 
   wireLinks();
   renderLang();

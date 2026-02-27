@@ -1,15 +1,12 @@
-<!-- TNT — /home/index.html  (HUB · GEM STANDARD · THOROUGH · NO LENS TOGGLES)
+<!-- TNT — /home/index.html  (HUB · GEM STANDARD · THOROUGH · NO LENS TOGGLES · ADOPT DIAMOND SCHEME)
      PURPOSE:
-       - HUB remains the primary compass.
+       - HUB is the primary compass.
        - Bilingual: lang=en => EN only, lang=zh => 中文 only.
        - NO lens toggles on HUB (no style/time chips).
-       - Concept/Live/Roadmap are built INTO each bubble as 3 short paragraphs (one bubble = one theme).
+       - Concept/Live/Roadmap are built INTO each bubble as 3 short paragraphs.
        - HUB preserves and propagates existing gd_lang/gd_style/gd_time (does not change them).
-       - Modal shows 4 bubbles per selection (N/E/S/W/MAP), each bubble contains:
-           Concept paragraph
-           Live paragraph
-           Roadmap paragraph
-       - Frontier is handled as a MAP bubble + jump button (no extra UI competing layers).
+       - Modal shows 4 bubbles per selection (N/E/S/W/MAP).
+       - Frontier handled inside MAP bubbles + jump button (no competing UI layers).
      LOCKS:
        - TNT FULL FILE
        - Uses /assets/ui.css + /assets/branch.css only
@@ -26,9 +23,24 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instrument.js"></script>
 
 <style>
+/* DO NOT TOUCH FIELD — ui.css owns html/body background */
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:inherit;text-decoration:none}
+
+/* Button (fallback-safe; does not repaint field) */
+.btn, .crp-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 16px;border-radius:14px;
+  background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  color:#fff;border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:hover, .crp-btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px rgba(212,175,55,.20)}
+
 :root{
   --R:124px;
   --goldSoft:rgba(212,175,55,.35);
@@ -39,14 +51,14 @@
 
 /* Top-left controls */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:90;
+  position:fixed;left:16px;top:16px;z-index:120;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
 /* Title pill */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:80;text-align:center;
+  z-index:110;text-align:center;
   padding:10px 14px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.16);
@@ -62,10 +74,10 @@
   transform:translate(-50%,-50%);
   width:min(560px,92vw);
   height:min(560px,92vw);
-  z-index:40;
+  z-index:60;
 }
 
-/* Outer gem diamond */
+/* Outer gem diamond (decor only) */
 .outer{
   position:absolute;left:50%;top:50%;
   width:min(560px,92vw);
@@ -92,7 +104,7 @@
   pointer-events:none;
 }
 
-/* Gem diamonds */
+/* Gem diamonds (ADOPTED SCHEME — do not compete) */
 .d{
   width:150px;height:150px;
   position:absolute;left:50%;top:50%;
@@ -170,7 +182,7 @@
 .lab{ font-weight:950; letter-spacing:.8px; font-size:15px; }
 .sub{ font-size:12.5px; opacity:.86; line-height:1.35; max-width:16em; }
 
-/* Center MAP button (clickable) */
+/* Center MAP button */
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -193,7 +205,7 @@
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:90;
+  z-index:120;
   width:min(980px,94vw);
   display:flex;justify-content:center;
   gap:10px;flex-wrap:wrap;
@@ -232,12 +244,10 @@
   overflow:hidden;
   display:flex;
   flex-direction:column;
-  position:relative;
 }
 .mhead{
   display:flex;justify-content:space-between;align-items:center;
   gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative;z-index:2;
 }
 .mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
 .mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
@@ -245,10 +255,9 @@
   padding:14px 16px 18px;
   overflow:auto;-webkit-overflow-scrolling:touch;
   flex:1 1 auto;
-  position:relative;z-index:2;
 }
 
-/* 4 bubbles */
+/* Bubbles */
 .grid{display:grid;gap:14px}
 @media (min-width:920px){ .grid{grid-template-columns:1fr 1fr} }
 .bubble{
@@ -270,9 +279,9 @@
   pointer-events:none;
 }
 .bubble h4{margin:0 0 10px;font-weight:950;letter-spacing:.2px}
-.bubble .seg{margin:0 0 10px;color:rgba(255,255,255,.86);line-height:1.55}
-.bubble .seg:last-child{margin-bottom:0}
-.bubble .tag{
+.seg{margin:0 0 10px;color:rgba(255,255,255,.86);line-height:1.55}
+.seg:last-child{margin-bottom:0}
+.tag{
   font-weight:900;
   color:rgba(255,255,255,.72);
   letter-spacing:.3px;
@@ -284,12 +293,11 @@
 .sbtn{
   display:inline-flex;align-items:center;justify-content:center;
   padding:12px 18px;border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
+  background:linear-gradient(145deg, var(--obs2), var(--obs1));
   color:#fff;border:1px solid rgba(255,255,255,.08);
   box-shadow:0 14px 36px rgba(0,0,0,.7);
   cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
 }
-.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.20); }
 
 @media (max-width:520px){
   :root{ --R: 116px; }
@@ -304,8 +312,8 @@
 <body>
 
 <div class="top-left">
-  <a class="crp-btn" id="btnFrontier" href="/explore/">FRONTIER</a>
-  <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
+  <a class="btn" id="btnFrontier" href="/explore/">FRONTIER</a>
+  <a class="btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
 <div class="brand">
@@ -348,11 +356,11 @@
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
-  <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="crp-btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
 <div class="bd" id="bd"></div>
@@ -404,7 +412,7 @@
 
 <script>
 (function(){
-  // Canonical state hydration (preserve; do not invent new keys)
+  // Preserve/propagate state (do not introduce new keys)
   var qs = new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
@@ -421,25 +429,24 @@
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   function q(){
-    return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time);
+    var p=new URLSearchParams();
+    p.set("lang",lang); p.set("style",style); p.set("time",time);
+    return "?"+p.toString();
   }
 
-  function wire(){
-    var s=q();
-    document.getElementById("btnFrontier").href="/explore/?"+s;
-    document.getElementById("btnExit").href="/door/?"+s;
-    document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
-    document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockGauges").href="/gauges/?"+s;
+  // Wire nav
+  document.getElementById("btnFrontier").href="/explore/"+q();
+  document.getElementById("btnExit").href="/door/"+q();
+  document.getElementById("dockTerminal").href="/index.html"+q();
+  document.getElementById("dockLinks").href="/links/"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
+  document.getElementById("mJumpTerminal").href="/index.html"+q();
+  document.getElementById("mJumpFrontier").href="/explore/"+q();
+  document.getElementById("mJumpProducts").href="/products/"+q();
 
-    document.getElementById("mJumpTerminal").href="/index.html?"+s;
-    document.getElementById("mJumpFrontier").href="/explore/?"+s;
-    document.getElementById("mJumpProducts").href="/products/?"+s;
-  }
-  wire();
-
+  // i18n (single-language render)
   var UI = {
     en:{
       top:"HUB", sub:"NORTH · EAST · SOUTH · WEST",
@@ -448,7 +455,8 @@
       s:{lab:"SOUTH", sub:"Pressure · convergence · change."},
       w:{lab:"WEST",  sub:"Containment · gates · integrity."},
       map:"MAP",
-      btn:{ret:"RETURN", jt:"JUMP TERMINAL", jf:"JUMP FRONTIER", jp:"JUMP PRODUCTS"}
+      btn:{ret:"RETURN", jt:"JUMP TERMINAL", jf:"JUMP FRONTIER", jp:"JUMP PRODUCTS"},
+      tag:{c:"Concept", n:"Live", r:"Roadmap"}
     },
     zh:{
       top:"枢纽", sub:"北 · 东 · 南 · 西",
@@ -457,7 +465,8 @@
       s:{lab:"南", sub:"压力 · 收敛 · 变化。"},
       w:{lab:"西", sub:"隔离 · 闸门 · 完整性。"},
       map:"地图",
-      btn:{ret:"返回", jt:"跳转终端", jf:"跳转前沿", jp:"跳转产品"}
+      btn:{ret:"返回", jt:"跳转终端", jf:"跳转前沿", jp:"跳转产品"},
+      tag:{c:"概念", n:"现况", r:"路线图"}
     }
   };
   var T = (lang==="zh") ? UI.zh : UI.en;
@@ -487,454 +496,125 @@
   var mTitle=document.getElementById("mTitle");
 
   function seg(id, label, txt){
-    var el=document.getElementById(id);
-    el.innerHTML = '<span class="tag">'+label+'</span>' + txt;
+    document.getElementById(id).innerHTML = '<span class="tag">'+label+'</span>' + txt;
   }
 
-  // Content packs (choose by gd_style, but no toggles here)
-  function pack(which){
-    var formal = (style==="formal");
-    var zh = (lang==="zh");
+  // Packs: 4 bubbles per selection, each bubble contains Concept/Live/Roadmap (built-in)
+  function packs(which){
+    var zh=(lang==="zh");
+    var formal=(style==="formal");
 
-    // helper: choose string pairs
-    function S(enFormal, enInformal, zhFormal, zhInformal){
-      if(zh) return formal ? zhFormal : zhInformal;
-      return formal ? enFormal : enInformal;
-    }
+    function S(enF,enI,zhF,zhI){ return zh ? (formal?zhF:zhI) : (formal?enF:enI); }
 
-    // Three built-in segments per bubble
-    // Labels are language-local and fixed (no toggles).
-    var L = zh ? {c:"概念", n:"现况", r:"路线图"} : {c:"Concept", n:"Live", r:"Roadmap"};
-
-    var P = {
+    var P={
       north:[
-        {
-          h: zh ? "北：定义与标准" : "North: definitions and standards",
-          c: S(
-            "North establishes stable definitions so the rest of the system can remain measurable and non-ambiguous under scaling.",
-            "North is where the words stop drifting so the rest of the journey feels obvious instead of chaotic.",
-            "北把定义钉死，让系统在扩展时仍可测、可复算、可审计。",
-            "北让词不漂移，所以你走得越远越清楚，而不是越走越乱。"
-          ),
-          n: S(
-            "In live use, North behaves as an anchor: it prevents silent meaning changes and keeps claims tied to falsifiers.",
-            "In practice, North keeps everyone playing the same game instead of arguing about what the game is.",
-            "在现况里，北是锚点：禁止静默改义，主张必须绑定证伪条件。",
-            "在现实里，北让所有人说同一种话，不再靠争论定义。"
-          ),
-          r: S(
-            "Roadmap expands registries and lookup surfaces so external readers can verify meaning without insider context.",
-            "Next, North becomes a public dictionary + rulebook you can trust while everything else grows fast.",
-            "路线图会扩展注册表与查询面，让外部读者无需内幕也能核对含义。",
-            "下一步，北会变成公开的词典与规则书，让高速扩展不失真。"
-          )
+        {h: zh?"北：定义与标准":"North: definitions and standards",
+         c:S("North pins meaning so measurement stays admissible.","North stops word-drift so everything else feels obvious.","北把含义钉死，测量才可采信。","北让词不漂移，所以后面的路更清楚。"),
+         n:S("Live, it blocks silent semantic edits.","Live, it keeps everyone playing the same game.","现况里，它阻止静默改义。","现况里，它让所有人说同一套话。"),
+         r:S("Roadmap expands registries for public verification.","Roadmap becomes the public dictionary you can trust.","路线图扩展注册表供外部核查。","路线图会变成可信的公开词典。")
         },
-        {
-          h: zh ? "北：证伪与边界" : "North: falsifiers and bounds",
-          c: S(
-            "A claim is admissible only when its scope and disproof conditions are explicit and stable.",
-            "North makes big ideas safe by forcing them into clear boundaries before anyone believes them.",
-            "主张只有在范围与证伪条件明确且稳定时才可采信。",
-            "北用边界让大想法变安全：先清楚，再相信。"
-          ),
-          n: S(
-            "When something breaks, North ensures the failure is classifiable: missing route, missing receipt, or violated constraint.",
-            "When it breaks, North makes it obvious why—so you can fix it fast and keep moving.",
-            "当出现故障，北把失败分类：缺路径、缺收据、或违反约束。",
-            "坏了也不神秘：北让原因清楚，修完继续走。"
-          ),
-          r: S(
-            "North evolves into a stable reference backbone that other trunks can link to without rewriting.",
-            "North becomes the spine everyone can link to without re-explaining the basics on every page.",
-            "北会变成稳定参考骨架，其他干线可直接引用而无需重写。",
-            "北会成为脊柱：别的页面不必重复解释基础。"
-          )
+        {h: zh?"北：证伪与边界":"North: falsifiers and bounds",
+         c:S("Claims require scope + disproof conditions.","Big ideas become safe when bounded first.","主张必须带范围与证伪条件。","大想法先有边界才安全。"),
+         n:S("Failures are classifiable: route, receipt, constraint.","When it breaks, you can fix it fast.","失败可分类：路由/收据/约束。","坏了也能快速修。"),
+         r:S("North becomes the reference spine other pages link to.","No more copy-paste explanations everywhere.","北成为可引用的脊柱。","不再到处复制解释。")
         },
-        {
-          h: zh ? "北：一致性契约" : "North: coherence contract",
-          c: S(
-            "North defines the contract: what must remain invariant for the system to stay coherent under pressure.",
-            "North is the rule that keeps the whole machine from turning into mush when people push it.",
-            "北定义契约：在压力下哪些必须不变，系统才不会散架。",
-            "北就是那条线：再大的压力也压不烂结构。"
-          ),
-          n: S(
-            "In operation, invariants prevent drift across language, routing, and measurement semantics.",
-            "Live use feels calmer because the rules don’t change when the mood changes.",
-            "在运行中，不变量防止语言、路由、测量语义漂移。",
-            "现况更冷静，因为规则不会随情绪改。"
-          ),
-          r: S(
-            "Roadmap publishes more invariants only when they are observer-invariant and testable.",
-            "We add new rules only when they’re real, testable, and worth the weight.",
-            "路线图只发布可观察一致且可测试的新不变量。",
-            "只有当规则是真的、可测的、值得的，才会加。"
-          )
+        {h: zh?"北：一致性契约":"North: coherence contract",
+         c:S("Invariants define what must never change.","The rule that keeps the machine from mush.","不变量定义哪些永远不该变。","那条线让机器不融化。"),
+         n:S("Live invariants prevent drift across language and routing.","Rules don’t change with mood.","现况不变量阻止语言与路由漂移。","规则不会随情绪改。"),
+         r:S("Add invariants only when observer-invariant and testable.","We add weight only when it’s real.","只在可观察一致且可测时加不变量。","真实才加重量。")
         },
-        {
-          h: zh ? "北：返回与复用" : "North: reuse and return",
-          c: S(
-            "North makes other pages smaller by holding shared meaning once, instead of repeating it everywhere.",
-            "North is how we stop the site from becoming a copy-paste tunnel.",
-            "北把共用含义集中一次，其他页面就不用重复堆字。",
-            "北让网站不变成复制粘贴的隧道。"
-          ),
-          n: S(
-            "When users return to North, they re-anchor; then they re-enter products with the same state intact.",
-            "Return to North feels like taking a breath—then you jump back in with clarity.",
-            "回到北就是重新锚定，再回产品仍保持同一状态。",
-            "回到北像深呼吸，然后带着清晰继续。"
-          ),
-          r: S(
-            "Roadmap adds more lookups so return paths become faster as content scales.",
-            "As the site grows, returns get faster—not harder.",
-            "路线图会增加更多查询点，让内容越多返回越快。",
-            "越长越好找，而不是越长越难。"
-          )
+        {h: zh?"北：复用与返回":"North: reuse and return",
+         c:S("Shared meaning lives once, not everywhere.","Prevents the site becoming a tunnel.","共用含义只写一次。","防止网站变隧道。"),
+         n:S("Return re-anchors, then re-enter with state intact.","Return feels like a breath.","返回即再锚定，状态不丢。","返回像深呼吸。"),
+         r:S("More lookup points shorten returns as the site grows.","More scale, less confusion.","查询点越多返回越短。","规模越大越不乱。")
         }
       ],
       east:[
-        {
-          h: zh ? "东：产品执行面" : "East: product execution surfaces",
-          c: S(
-            "East is where structure becomes usable products: clear entry points, stable behavior, and bounded claims.",
-            "East is where the ideas stop being theory and start feeling like tools you can actually use.",
-            "东把结构变成可用产品：入口清楚、行为稳定、主张有界。",
-            "东让想法从理论变成工具，能用、能跑、能复用。"
-          ),
-          n: S(
-            "Live posture prioritizes deterministic navigation and consistent returns across product pages.",
-            "In live mode, it should feel impossible to get lost.",
-            "现况优先确定导航与一致返回。",
-            "现况应该让你几乎不可能迷路。"
-          ),
-          r: S(
-            "Roadmap grows sub-hubs without changing the contract; expansion is additive, not redesign.",
-            "We scale by cloning the pattern, not reinventing the UI every time.",
-            "路线图扩展子枢纽但不改契约；扩展是加法，不是翻新。",
-            "我们靠复制模式扩展，而不是反复重造UI。"
-          )
+        {h: zh?"东：产品执行面":"East: product execution surfaces",
+         c:S("Products are adoption surfaces with bounded claims.","Ideas become tools you can use.","产品是采纳面，主张有界。","想法变成能用的工具。"),
+         n:S("Live use prioritizes deterministic navigation and returns.","It should feel hard to get lost.","现况优先确定导航与返回。","现况不该迷路。"),
+         r:S("Scale by cloning the contract, not redesign.","More homes, same ramps.","复制契约扩展，不重造。","更多主页，同一匝道。")
         },
-        {
-          h: zh ? "东：产品—证据分离" : "East: product vs evidence separation",
-          c: S(
-            "East presents products as adoption surfaces; evidence lives in Laws/Gauges to avoid mixed messaging.",
-            "East is the showroom; Laws and Gauges are the lab and the inspection bay.",
-            "东是采纳面；证据放在法则/量规，避免混说。",
-            "东像展厅；法则与量规像实验室与检验台。"
-          ),
-          n: S(
-            "Live pages keep positioning disciplined: what exists, what is gated, and what is roadmap—without blur.",
-            "Live pages stay honest: what’s real now, what’s gated, what’s next.",
-            "现况页面保持纪律：现有/门槛/路线图清晰分开。",
-            "现况保持诚实：现在、门槛、下一步分开写。"
-          ),
-          r: S(
-            "Roadmap adds deeper product detail only when it remains public-safe and does not leak recipes.",
-            "We can show the power without giving away the secret sauce.",
-            "路线图只在公开安全且不泄露配方时加深产品细节。",
-            "我们展示能力，但不交出配方。"
-          )
+        {h: zh?"东：产品—证据分离":"East: product vs evidence separation",
+         c:S("Show products here; verify via Laws/Gauges.","Showroom vs lab stays separate.","这里展示产品；法则/量规负责核查。","展厅与实验室分离。"),
+         n:S("Live pages keep 'now' vs 'roadmap' clean.","Honest surfaces build trust.","现况页面把现在/路线图分开。","诚实更快建信任。"),
+         r:S("Deeper detail only when public-safe.","Show power, not recipes.","只在公开安全时加深细节。","展示能力，不泄露配方。")
         },
-        {
-          h: zh ? "东：学习路径" : "East: learning path",
-          c: S(
-            "East teaches by traversal: tap a node, open a modal, jump deeper only when ready.",
-            "You learn like exploring a map, not like reading a textbook front-to-back.",
-            "东用遍历教学：点节点、开模态、准备好再往深走。",
-            "学习像逛地图，不像从头读到尾。"
-          ),
-          n: S(
-            "Live usability depends on stable state carry; context should not reset across jumps.",
-            "Live use feels smooth when your settings follow you everywhere.",
-            "现况可用性靠状态传递；跳转不该重置上下文。",
-            "设置能跟着你走，体验才顺。"
-          ),
-          r: S(
-            "Roadmap expands the encyclopedia without turning it into a tunnel by keeping hubs as maps.",
-            "More content, same sense of direction.",
-            "路线图扩展百科但不变隧道：枢纽始终像地图。",
-            "内容更多，方向感不丢。"
-          )
+        {h: zh?"东：学习路径":"East: learning path",
+         c:S("Traversal teaches faster than linear reading.","Learn like exploring a map.","遍历比线性阅读更快。","像逛地图学习。"),
+         n:S("State carry prevents resets across jumps.","Your context follows you.","状态传递避免重置。","上下文跟着你走。"),
+         r:S("More content, same orientation via hubs.","Grow the encyclopedia, keep the map.","内容更多但方向感不丢。","百科增长，地图不变。")
         },
-        {
-          h: zh ? "东：扩展与复制" : "East: scaling by replication",
-          c: S(
-            "East is designed to replicate: product pages share the same geometry so scaling does not create drift.",
-            "East is built to multiply without chaos.",
-            "东为复制而设计：同几何让扩展不漂移。",
-            "东为倍增而建：不乱。"
-          ),
-          n: S(
-            "Live expansion is tracked as new routes, not new behaviors; behaviors remain stable.",
-            "New pages appear; the rules don’t change.",
-            "现况扩展表现为新路径，不是新行为；行为保持稳定。",
-            "页面增多，规则不变。"
-          ),
-          r: S(
-            "Roadmap adds more product ‘home pages’ while keeping the same hub-to-home traversal.",
-            "Every product gets a home, and the ramps stay open.",
-            "路线图会让每个产品有自己的主页，同时保持同一跳转逻辑。",
-            "每个产品都有家，匝道都通。"
-          )
+        {h: zh?"东：复制式扩展":"East: replication scaling",
+         c:S("Shared geometry prevents drift under growth.","Built to multiply without chaos.","同几何防漂移。","为倍增而建。"),
+         n:S("New routes, same behaviors.","Pages multiply, rules don’t.","新增路径，不改行为。","页面增多，规则不变。"),
+         r:S("Each product gains a home page over time.","Every trunk gets its own doorstep.","每个产品逐步有主页。","每条干线都有门口。")
         }
       ],
       south:[
-        {
-          h: zh ? "南：压力下的收敛" : "South: convergence under pressure",
-          c: S(
-            "South defines what must hold when scale and pressure increase: caps, gates, and refusal rules.",
-            "South is where we stop pretending everything scales smoothly.",
-            "南定义规模与压力上升时必须成立的东西：上限、闸门、拒绝。",
-            "南让我们不再假装一切都能顺滑放大。"
-          ),
-          n: S(
-            "Live South is operational: it prevents silent expansion beyond what receipts support.",
-            "South keeps the system honest when people try to rush it.",
-            "现况的南是可执行的：收据不够就不允许扩张。",
-            "南在你想冲的时候把你拉回现实。"
-          ),
-          r: S(
-            "Roadmap strengthens constraint surfaces and publishes clearer gates as new evidence becomes available.",
-            "As evidence grows, the gates get clearer—not looser.",
-            "路线图强化约束面，证据增加时把闸门写得更清楚。",
-            "证据越多，闸门越清晰，而不是越松。"
-          )
+        {h: zh?"南：压力下收敛":"South: convergence under pressure",
+         c:S("Caps and refusal rules define admissibility at scale.","Stop pretending everything scales smoothly.","上限与拒绝定义可采信范围。","别假装都能顺滑放大。"),
+         n:S("Live, receipts gate expansion and prevent drift.","Keeps the system honest when rushed.","现况靠收据闸门阻止扩张漂移。","冲的时候把你拉回现实。"),
+         r:S("Roadmap clarifies gates as evidence grows.","Gates get clearer, not looser.","证据越多闸门越清晰。","清晰而不是放松。")
         },
-        {
-          h: zh ? "南：反偏差" : "South: anti-drift",
-          c: S(
-            "South blocks drift by refusing ambiguous interpretations and requiring declared semantics.",
-            "South prevents “story upgrades.”",
-            "南通过拒绝模糊解释与要求声明语义来阻止漂移。",
-            "南阻止“讲故事升级”。"
-          ),
-          n: S(
-            "Live enforcement keeps lens semantics consistent across pages and prevents state collisions.",
-            "Live enforcement feels boring—in the best way.",
-            "现况执行保持镜头语义一致，避免状态冲突。",
-            "现况执行应该“无聊”，那才是稳定。"
-          ),
-          r: S(
-            "Roadmap improves guardrails for collaboration so edits cannot silently change meaning.",
-            "Future edits stay auditable and reversible.",
-            "路线图为协作加护栏，防止编辑静默改义。",
-            "未来编辑可审计、可回退。"
-          )
+        {h: zh?"南：反偏差":"South: anti-drift",
+         c:S("Ambiguity is refused; semantics must be declared.","Stops story-upgrades.","拒绝模糊；语义必须声明。","阻止讲故事升级。"),
+         n:S("Live enforcement keeps semantics consistent across pages.","Boring in the best way.","现况执行保持语义一致。","稳定就该“无聊”。"),
+         r:S("Collaboration guardrails prevent silent meaning change.","Edits stay auditable and reversible.","协作护栏防静默改义。","编辑可审计可回退。")
         },
-        {
-          h: zh ? "南：阶段门槛" : "South: phase gates",
-          c: S(
-            "South frames “when” as prerequisites, not dates: instrumentation first, then deployment.",
-            "South turns hype timelines into checklists.",
-            "南把“何时”写成先决条件，而不是日期：先仪器，再部署。",
-            "南把时间线变成清单。"
-          ),
-          n: S(
-            "Live, gates prevent mixing readiness doctrine with public claims.",
-            "Gates stop the slippery language.",
-            "现况闸门阻止把就绪门槛混成公开主张。",
-            "闸门阻止语言滑坡。"
-          ),
-          r: S(
-            "Roadmap publishes gate upgrades only when they remain verifiable and public-safe.",
-            "We tighten the method, not the marketing.",
-            "路线图只在可验证且公开安全时升级闸门。",
-            "我们升级方法，不升级营销。"
-          )
+        {h: zh?"南：阶段门槛":"South: phase gates",
+         c:S("'When' is prerequisites, not dates.","Turns timelines into checklists.","“何时”是先决条件，不是日期。","把时间线变清单。"),
+         n:S("Live gates prevent mixing readiness doctrine with claims.","Stops slippery language.","现况闸门阻止混说。","阻止语言滑坡。"),
+         r:S("Upgrade gates only when verifiable and public-safe.","Tighten method, not marketing.","只在可验证且公开安全时升级。","升级方法，不升级营销。")
         },
-        {
-          h: zh ? "南：复归路径" : "South: return paths",
-          c: S(
-            "South ensures every route has a return and a refusal; the system never forces a false binary.",
-            "South gives you a safe ‘no’ and a clean ‘back.’",
-            "南保证每条路都有返回与拒绝；系统不逼你二选一。",
-            "南给你安全的“不”与干净的“回”。"
-          ),
-          n: S(
-            "Live returns keep users oriented and prevent tunnel behavior.",
-            "You can explore without fear of getting trapped.",
-            "现况返回保持方向感，避免隧道行为。",
-            "你可以探索，但不会被困住。"
-          ),
-          r: S(
-            "Roadmap improves navigation so return paths shorten as the site grows.",
-            "More scale, less confusion.",
-            "路线图让网站越大返回越短。",
-            "规模越大，混乱越少。"
-          )
+        {h: zh?"南：返回与拒绝":"South: returns and refusals",
+         c:S("Every route has a clean back and safe no.","Never forces a false binary.","每条路都有返回与拒绝。","不逼假二选一。"),
+         n:S("Live returns prevent tunnel behavior.","Explore without traps.","现况返回防隧道。","探索不被困。"),
+         r:S("Return paths shorten as site grows.","More scale, less confusion.","网站越大返回越短。","规模越大越不乱。")
         }
       ],
       west:[
-        {
-          h: zh ? "西：隔离与回滚" : "West: containment and rollback",
-          c: S(
-            "West defines isolation boundaries and rollback posture so local failures don’t become global failures.",
-            "West is how we keep damage small.",
-            "西定义隔离边界与回滚姿态，让局部失败不变成全局失败。",
-            "西让损伤保持在小范围。"
-          ),
-          n: S(
-            "Live containment is visible as deterministic modals, stable navigation, and consistent behavior across pages.",
-            "Live containment feels like calm execution.",
-            "现况隔离体现为确定模态、稳定导航、全站一致行为。",
-            "现况隔离像冷静执行。"
-          ),
-          r: S(
-            "Roadmap adds dashboards and integrity artifacts that make containment measurable, not rhetorical.",
-            "Containment becomes auditable at scale.",
-            "路线图加入仪表板与完整性工件，让隔离可测而不是口号。",
-            "隔离在规模化下仍可审计。"
-          )
+        {h: zh?"西：隔离与回滚":"West: containment and rollback",
+         c:S("Isolation prevents local failure becoming global.","Keeps damage small.","隔离防局部变全局。","把损伤变小。"),
+         n:S("Live containment appears as deterministic UI and stable routes.","Calm execution feel.","现况隔离=确定UI+稳定路由。","像冷静执行。"),
+         r:S("Dashboards make containment measurable, not rhetorical.","Auditable at scale.","仪表板让隔离可测。","规模化仍可审计。")
         },
-        {
-          h: zh ? "西：证据链" : "West: evidence chain",
-          c: S(
-            "West ties actions to receipts so claims cannot be inflated by narrative editing.",
-            "West prevents manipulation by design.",
-            "西把行动绑到收据，主张不能靠叙事编辑膨胀。",
-            "西用结构阻止操控。"
-          ),
-          n: S(
-            "Live, failures remain visible and classifiable; fixes become surgical instead of emotional.",
-            "Fix the route, fix the state, move on.",
-            "现况里，失败可见且可分类；修复变成手术而不是情绪。",
-            "修路由、修状态、继续走。"
-          ),
-          r: S(
-            "Roadmap publishes reason codes and revocation logic so integrity remains enforceable.",
-            "Hard standards, soft experience.",
-            "路线图发布原因码与撤销逻辑，让完整性可执行。",
-            "标准很硬，体验很顺。"
-          )
+        {h: zh?"西：证据链":"West: evidence chain",
+         c:S("Actions tie to receipts so narrative editing can’t inflate claims.","Prevents manipulation by design.","行动绑收据，叙事不能膨胀主张。","结构阻止操控。"),
+         n:S("Live failures stay visible and classifiable.","Fix route/state, move on.","失败可见可分类。","修路由/状态继续走。"),
+         r:S("Reason codes and revocation keep integrity enforceable.","Hard standards, soft experience.","原因码与撤销让完整性可执行。","标准硬，体验顺。")
         },
-        {
-          h: zh ? "西：抗级联" : "West: anti-cascade",
-          c: S(
-            "West assumes cascade risk and builds segmentation so scaling does not amplify a single failure mode.",
-            "West treats scale as an amplifier and designs accordingly.",
-            "西假设级联风险并构建分区，扩展不放大单点失败。",
-            "西把规模当作放大器来设计。"
-          ),
-          n: S(
-            "Live segmentation keeps products, rules, and measurement lanes distinct and navigable.",
-            "Different lanes, same contract.",
-            "现况分区保持产品/规则/测量干线分离且可导航。",
-            "不同干线，同一契约。"
-          ),
-          r: S(
-            "Roadmap supports independent auditing routes so external verification is possible without privileged access.",
-            "Third-party paths are part of the design.",
-            "路线图支持独立审计路径，让外部无需特权也可核查。",
-            "第三方路径是设计的一部分。"
-          )
+        {h: zh?"西：抗级联":"West: anti-cascade",
+         c:S("Segmentation prevents scale amplifying single failure modes.","Scale is an amplifier.","分区防规模放大单点失败。","规模是放大器。"),
+         n:S("Live lanes stay distinct and navigable.","Different lanes, same contract.","现况干线分离且可导航。","不同干线，同一契约。"),
+         r:S("Independent audit paths are part of the design.","Third-party verification built-in.","独立审计路径内建。","第三方核查内建。")
         },
-        {
-          h: zh ? "西：可恢复性" : "West: recoverability",
-          c: S(
-            "West prioritizes recoverability: fail safe, return clean, and preserve state where it matters.",
-            "West makes failure survivable.",
-            "西优先可恢复性：安全失败、干净返回、关键处保留状态。",
-            "西让失败可承受。"
-          ),
-          n: S(
-            "Live, you can always return to HUB and re-enter without losing your orientation.",
-            "Return is not a luxury; it’s part of correctness.",
-            "现况下，你总能回枢纽再进入而不丢方向。",
-            "返回不是奢侈，是正确性的一部分。"
-          ),
-          r: S(
-            "Roadmap tightens recovery doctrine so changes remain traceable and reversible under pressure.",
-            "Growth stays calm.",
-            "路线图收紧恢复准则，让变更在压力下仍可追溯、可回退。",
-            "增长保持冷静。"
-          )
+        {h: zh?"西：可恢复性":"West: recoverability",
+         c:S("Fail safe, return clean, preserve state where it matters.","Makes failure survivable.","安全失败、干净返回、关键处保留状态。","让失败可承受。"),
+         n:S("Live, you can always return to HUB and re-enter.","Return is correctness.","现况总能回枢纽再进入。","返回是正确性。"),
+         r:S("Recovery doctrine tightens under growth.","Growth stays calm.","增长时恢复准则更严。","增长仍冷静。")
         }
       ],
       map:[
-        {
-          h: zh ? "地图：全站结构" : "Map: full-site structure",
-          c: S(
-            "Concept: this hub is the compass that keeps the site legible while the encyclopedia grows.",
-            "Concept: the compass is the reason the chaos stays organized.",
-            "概念：枢纽是罗盘，让百科增长时仍可读。",
-            "概念：罗盘让看似混乱的东西保持有序。"
-          ),
-          n: S(
-            "Live: use HUB to choose North (rules), East (products), South (constraints), West (containment), then return.",
-            "Live: pick one direction and move; returns keep you oriented.",
-            "现况：用枢纽选择北/东/南/西，然后返回。",
-            "现况：选一个方向走；返回保持方向感。"
-          ),
-          r: S(
-            "Roadmap: more hubs and product homes appear, but this contract stays unchanged.",
-            "Roadmap: scale by cloning, not reinventing.",
-            "路线图：更多枢纽与产品主页会出现，但契约不变。",
-            "路线图：靠复制扩展，不靠重造。"
-          )
+        {h: zh?"地图：结构":"Map: structure",
+         c:S("Concept: the compass keeps the encyclopedia legible.","Concept: the reason chaos stays organized.","概念：罗盘让百科可读。","概念：罗盘让混乱有序。"),
+         n:S("Live: choose North/East/South/West, then return.","Live: pick one direction and move.","现况：选北/东/南/西然后返回。","现况：选一个方向走。"),
+         r:S("Roadmap: more hubs appear; contract stays unchanged.","Roadmap: clone, don’t reinvent.","路线图：更多枢纽出现，契约不变。","路线图：复制不重造。")
         },
-        {
-          h: zh ? "地图：前沿入口" : "Map: frontier entry",
-          c: S(
-            "Concept: frontier is a bounded invitation—big ideas stay connected to rules and measurement.",
-            "Concept: dream, but keep the gates visible.",
-            "概念：前沿是有界邀请——愿景要连着规则与测量。",
-            "概念：可以梦，但闸门要可见。"
-          ),
-          n: S(
-            "Live: jump to Explore to see frontier boards and prerequisite routes without mixing claims.",
-            "Live: explore without losing your place.",
-            "现况：跳转探索看前沿板与先决路线，不混主张。",
-            "现况：探索但不丢位置。"
-          ),
-          r: S(
-            "Roadmap: frontier pages expand as curated jump surfaces, not as unchecked promises.",
-            "Roadmap: ambition grows with discipline.",
-            "路线图：前沿页会以策展跳转面扩展，不以无约束承诺扩展。",
-            "路线图：雄心随纪律增长。"
-          )
+        {h: zh?"地图：前沿入口":"Map: frontier entry",
+         c:S("Frontier is a bounded invitation tied to rules and measurement.","Dream with gates visible.","前沿是有界邀请，连着规则与测量。","可以梦，但闸门要可见。"),
+         n:S("Jump Explore to see curated frontier boards and prerequisites.","Explore without losing your place.","跳转探索看前沿板与先决条件。","探索不丢位置。"),
+         r:S("Frontier expands as curated jump surfaces, not unchecked promises.","Ambition grows with discipline.","前沿以策展跳转面扩展。","雄心随纪律增长。")
         },
-        {
-          h: zh ? "地图：产品入口" : "Map: product entry",
-          c: S(
-            "Concept: products are where structure becomes executable surfaces users can adopt and test.",
-            "Concept: products are the ramps you can actually drive on.",
-            "概念：产品是结构落地成可执行面的地方。",
-            "概念：产品就是你能真正开上去的匝道。"
-          ),
-          n: S(
-            "Live: navigate Products as a spine; each product has a home and returns to hubs remain stable.",
-            "Live: it should feel impossible to get stuck.",
-            "现况：产品是脊柱；每个产品有主页，返回枢纽稳定。",
-            "现况：你几乎不可能被卡住。"
-          ),
-          r: S(
-            "Roadmap: product homes deepen while Laws/Gauges remain the verification backbone.",
-            "Roadmap: scale content, keep proof posture intact.",
-            "路线图：产品主页加深，同时法则/量规保持核查骨架。",
-            "路线图：扩内容，不丢证明姿态。"
-          )
+        {h: zh?"地图：产品入口":"Map: product entry",
+         c:S("Products turn structure into executable surfaces.","The ramps you can drive on.","产品把结构变成可执行面。","这是能开上去的匝道。"),
+         n:S("Navigate the Products spine; returns stay stable.","Hard to get stuck.","产品是脊柱；返回稳定。","不容易被卡住。"),
+         r:S("Homes deepen while verification stays in Laws/Gauges.","Scale content, keep proof posture.","主页加深，核查仍在法则/量规。","扩内容不丢证明。")
         },
-        {
-          h: zh ? "地图：核查入口" : "Map: verification entry",
-          c: S(
-            "Concept: Laws and Gauges are the verification backbone: standards and measurement surfaces.",
-            "Concept: proof posture lives there, not in marketing.",
-            "概念：法则与量规是核查骨架：标准与测量面。",
-            "概念：证明姿态在那里，而不是在营销里。"
-          ),
-          n: S(
-            "Live: when someone asks “how do you know,” you route to Laws/Gauges, not stories.",
-            "Live: receipts beat persuasion.",
-            "现况：别人问“你怎么知道”，就路由到法则/量规，不讲故事。",
-            "现况：收据胜过说服。"
-          ),
-          r: S(
-            "Roadmap: more audits and dashboards appear as the system matures, keeping claims bounded.",
-            "Roadmap: more visibility, less drift.",
-            "路线图：系统成熟后会出现更多审计与仪表板，保持主张有界。",
-            "路线图：可见性更强，漂移更少。"
-          )
+        {h: zh?"地图：核查入口":"Map: verification entry",
+         c:S("Laws/Gauges are the verification backbone.","Proof posture lives there.","法则/量规是核查骨架。","证明姿态在那里。"),
+         n:S("When asked “how do you know,” route to Laws/Gauges.","Receipts beat persuasion.","问“怎么知道”就跳到法则/量规。","收据胜过说服。"),
+         r:S("More audit surfaces appear as the system matures.","More visibility, less drift.","成熟后出现更多审计面。","可见性更强，漂移更少。")
         }
       ]
     };
@@ -942,9 +622,8 @@
     return P[which];
   }
 
-  // Render function
   function render(which){
-    var titleMap = {
+    var titleMap={
       north:(lang==="zh"?"枢纽 · 北":"HUB · NORTH"),
       east:(lang==="zh"?"枢纽 · 东":"HUB · EAST"),
       south:(lang==="zh"?"枢纽 · 南":"HUB · SOUTH"),
@@ -953,39 +632,20 @@
     };
     mTitle.textContent = titleMap[which] || (lang==="zh"?"枢纽":"HUB");
 
-    var pack = pack(which);
+    var pack = packs(which);
 
-    // bubble 1
-    document.getElementById("h1").textContent = pack[0].h;
-    seg("p1c",(lang==="zh"?"概念":"Concept"), pack[0].c);
-    seg("p1n",(lang==="zh"?"现况":"Live"),    pack[0].n);
-    seg("p1r",(lang==="zh"?"路线图":"Roadmap"), pack[0].r);
-
-    // bubble 2
-    document.getElementById("h2").textContent = pack[1].h;
-    seg("p2c",(lang==="zh"?"概念":"Concept"), pack[1].c);
-    seg("p2n",(lang==="zh"?"现况":"Live"),    pack[1].n);
-    seg("p2r",(lang==="zh"?"路线图":"Roadmap"), pack[1].r);
-
-    // bubble 3
-    document.getElementById("h3").textContent = pack[2].h;
-    seg("p3c",(lang==="zh"?"概念":"Concept"), pack[2].c);
-    seg("p3n",(lang==="zh"?"现况":"Live"),    pack[2].n);
-    seg("p3r",(lang==="zh"?"路线图":"Roadmap"), pack[2].r);
-
-    // bubble 4
-    document.getElementById("h4").textContent = pack[3].h;
-    seg("p4c",(lang==="zh"?"概念":"Concept"), pack[3].c);
-    seg("p4n",(lang==="zh"?"现况":"Live"),    pack[3].n);
-    seg("p4r",(lang==="zh"?"路线图":"Roadmap"), pack[3].r);
+    function fill(idx){
+      document.getElementById("h"+idx).textContent = pack[idx-1].h;
+      seg("p"+idx+"c", T.tag.c, pack[idx-1].c);
+      seg("p"+idx+"n", T.tag.n, pack[idx-1].n);
+      seg("p"+idx+"r", T.tag.r, pack[idx-1].r);
+    }
+    fill(1); fill(2); fill(3); fill(4);
   }
 
   function open(which){
     ["dNorth","dEast","dSouth","dWest"].forEach(function(id){
-      var on = (which==="north" && id==="dNorth") ||
-               (which==="east"  && id==="dEast")  ||
-               (which==="south" && id==="dSouth") ||
-               (which==="west"  && id==="dWest");
+      var on=(which==="north"&&id==="dNorth")||(which==="east"&&id==="dEast")||(which==="south"&&id==="dSouth")||(which==="west"&&id==="dWest");
       document.getElementById(id).classList.toggle("active", on);
     });
     render(which);
@@ -999,24 +659,26 @@
     ["dNorth","dEast","dSouth","dWest"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
   }
 
-  // Bind clicks
-  document.getElementById("dNorth").onclick=function(){ open("north"); };
-  document.getElementById("dEast").onclick=function(){ open("east"); };
-  document.getElementById("dSouth").onclick=function(){ open("south"); };
-  document.getElementById("dWest").onclick=function(){ open("west"); };
-  document.getElementById("dMap").onclick=function(){ open("map"); };
-
-  ["dNorth","dEast","dSouth","dWest","dMap"].forEach(function(id){
+  // Bind (tap-safe)
+  function bind(id, which){
     var el=document.getElementById(id);
+    if(!el) return;
+    el.addEventListener("click", function(){ open(which); });
     el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(which); }
     });
-  });
+  }
+  bind("dNorth","north");
+  bind("dEast","east");
+  bind("dSouth","south");
+  bind("dWest","west");
+  bind("dMap","map");
 
-  // Close
-  bd.onclick=close;
-  mClose.onclick=close;
-  mReturn.onclick=close;
+  // Close wiring
+  bd.addEventListener("click", close);
+  mClose.addEventListener("click", close);
+  mReturn.addEventListener("click", close);
+  modal.addEventListener("click", function(e){ e.stopPropagation(); });
 
 })();
 </script>

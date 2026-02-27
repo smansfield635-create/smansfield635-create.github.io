@@ -1,17 +1,12 @@
-<!-- TNT — /index.html  (TERMINAL · 2 PRIMARY DIAMONDS · VERTICAL · NO COMPETING UI · FRONTIER SECTION)
-     FIXES (FULL FILE):
-       1) REMOVE COMPETING UI:
-          - NO bottom dock on Terminal (only top-left EXIT + HUB).
-       2) DIAMONDS VERTICAL (stacked):
-          - Two primary diamonds are TOP/BOTTOM, centered.
-       3) COMPLETE MAP COVERAGE:
-          - WHERE TO GO NEXT includes: HOME, HUB, DOOR, TERMINAL, PRODUCTS (+ Energy/Education/Software/Commercial), LAWS, GAUGES, LINKS, INNOVATION.
-          - FRONTIER includes: INNOVATION, FUSION READINESS, ENERGY, SOLAR/SPACE lanes.
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css only
-       - DOES NOT style html/body background (ui.css owns field)
-       - NO lenses anywhere on Terminal
-       - Terminal preserves & propagates lang/style/time if present, but does NOT change them
+<!-- TNT — /index.html  (GATE · FOUNDATION vs FRONTIER · PEARLESCENT GEM STANDARD · NO COAL)
+     FIX:
+       - Replace “coal” look with the SAME pearlescent lacquer recipe used on your good glossy pages.
+       - No competing UI. ui.css owns field. No extra overlays.
+     BEHAVIOR:
+       - Two vertical diamonds (tap-safe) = FOUNDATION / FRONTIER
+       - State propagation: lang/style/time via query + localStorage (gd_lang/gd_style/gd_time)
+       - FOUNDATION → /home/
+       - FRONTIER   → /explore/frontier/
 -->
 
 <!doctype html>
@@ -19,228 +14,241 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>TERMINAL</title>
+<title>GATE · Cardinal Axis</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
 /* DO NOT TOUCH FIELD — ui.css owns html/body background */
-a{color:inherit;text-decoration:none}
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:inherit;text-decoration:none}
 
-:root{
-  --R:136px;
-  --red: rgba(176,0,0,.22);
-  --gold: rgba(212,175,55,.55);
-  --mut: rgba(255,255,255,.88);
-}
-
-/* Buttons (use site class if present; fallback included) */
-.crp-btn, .btn{
+/* Fallback button styling (only if ui.css doesn't supply .btn) */
+.btn{
   display:inline-flex;align-items:center;justify-content:center;
   padding:10px 16px;border-radius:14px;
   background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  color:#fff;border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
+  color:#fff;border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
   cursor:pointer;font-weight:900;letter-spacing:.2px;
   -webkit-tap-highlight-color:transparent;
 }
-.crp-btn:hover, .btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px rgba(212,175,55,.22)}
 
-/* Top-left (ONLY navigation on Terminal) */
+/* =========================
+   PEARLESCENT GEM STANDARD
+   ========================= */
+:root{
+  --R:142px;          /* vertical spacing radius */
+  --D:250px;          /* diamond size */
+
+  /* lacquer base */
+  --obs-0: rgba(0,0,0,.78);
+  --obs-1: rgba(8,10,14,.92);
+  --obs-2: rgba(4,6,10,.96);
+
+  /* sapphire lanes (cool) */
+  --sapphire-1: rgba(40,90,200,.22);
+  --sapphire-2: rgba(110,190,255,.18);
+
+  /* opal film (neutral pearlescence) */
+  --opal-w: rgba(245,248,255,.22);
+  --opal-b: rgba(180,220,255,.14);
+  --opal-a: rgba(255,235,200,.12);
+  --opal-g: rgba(170,255,235,.12);
+
+  /* gold trim */
+  --gold: rgba(212,175,55,.85);
+  --gold-soft: rgba(212,175,55,.38);
+}
+
+/* Top-left */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:120;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Brand pill */
-.brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:110;text-align:center;padding:10px 14px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);
-  backdrop-filter:blur(8px);
+/* Head copy (center) */
+.head{
+  position:fixed;left:50%;top:54px;transform:translateX(-50%);
+  width:min(860px,94vw);
+  z-index:110;
+  text-align:center;
   pointer-events:none;
 }
-.brand .name{font-weight:950;letter-spacing:1.2px;font-size:12px;opacity:.95}
-.brand .tag{font-size:11px;letter-spacing:.6px;opacity:.70;margin-top:2px}
+.kicker{
+  margin:0 0 10px 0;
+  font-size:12px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:.78;
+  text-shadow:0 18px 60px rgba(0,0,0,.65);
+}
+.title{
+  margin:0;
+  font-size:54px;
+  font-weight:950;
+  letter-spacing:.2px;
+  line-height:1.02;
+  text-shadow:0 18px 60px rgba(0,0,0,.65);
+}
+.subt{
+  margin:10px auto 0;
+  max-width:62ch;
+  opacity:.84;
+  font-size:16px;
+  line-height:1.35;
+  text-shadow:0 18px 60px rgba(0,0,0,.55);
+}
 
 /* Stage */
 .stage{
-  position:fixed;left:50%;top:54%;
+  position:fixed;left:50%;top:56%;
   transform:translate(-50%,-50%);
-  width:min(560px,92vw);height:min(560px,92vw);
+  width:min(760px,94vw);
+  height:min(760px,94vw);
   z-index:60;
   pointer-events:none;
 }
 
-/* Outer shell (visual only) */
-.outer{
+/* Diamonds */
+.d{
+  width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
-  width:min(560px,92vw);height:min(560px,92vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:64px;
+  transform-origin:center;
+  border-radius:30px;
+  cursor:pointer;
+  pointer-events:auto;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+
   background:
-    radial-gradient(circle at 52% 14%, var(--red), transparent 55%),
-    radial-gradient(circle at 38% 28%, rgba(90,140,255,.10), transparent 55%),
-    linear-gradient(145deg, rgba(17,22,28,.56), rgba(11,15,20,.70));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 90px 260px rgba(0,0,0,.72), inset 0 2px 0 rgba(255,255,255,.10), inset 0 -50px 90px rgba(0,0,0,.55);
-  opacity:.55;
+    /* sapphire glow lanes */
+    radial-gradient(circle at 72% 26%, var(--sapphire-2) 0%, rgba(110,190,255,0) 62%),
+    radial-gradient(circle at 34% 78%, var(--sapphire-1) 0%, rgba(40,90,200,0) 64%),
+
+    /* opal interference film */
+    radial-gradient(circle at 34% 22%, var(--opal-w) 0%, rgba(245,248,255,0) 54%),
+    radial-gradient(circle at 78% 32%, var(--opal-b) 0%, rgba(180,220,255,0) 58%),
+    radial-gradient(circle at 82% 78%, var(--opal-a) 0%, rgba(255,235,200,0) 64%),
+    radial-gradient(circle at 30% 82%, var(--opal-g) 0%, rgba(170,255,235,0) 66%),
+
+    /* lacquer base */
+    linear-gradient(160deg, var(--obs-1) 0%, var(--obs-2) 78%);
+
+  border:1px solid rgba(255,255,255,.16);
+
+  box-shadow:
+    0 34px 120px rgba(0,0,0,.78),
+    0 0 26px rgba(212,175,55,.10),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -46px 92px rgba(0,0,0,.82);
+}
+
+/* Gold crown rim */
+.d::before{
+  content:"";
+  position:absolute;inset:0;border-radius:30px;padding:1px;
+  background:linear-gradient(135deg,
+    rgba(212,175,55,0) 0%,
+    rgba(212,175,55,.55) 38%,
+    rgba(212,175,55,.88) 50%,
+    rgba(212,175,55,.55) 62%,
+    rgba(212,175,55,0) 100%
+  );
+  opacity:.72;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
   pointer-events:none;
 }
 
-/* Diamonds (gloss) */
-.d{
-  width:210px;height:210px;
-  position:absolute;left:50%;top:50%;
-  transform-origin:center;border-radius:28px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  background:
-    radial-gradient(circle at 35% 22%, rgba(255,255,255,.18), transparent 58%),
-    radial-gradient(circle at 70% 82%, rgba(0,80,255,.18), transparent 62%),
-    linear-gradient(160deg, rgba(12,22,38,.94) 0%, rgba(7,11,18,.96) 72%);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 30px 90px rgba(0,0,0,.78), inset 0 2px 0 rgba(255,255,255,.10);
-  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
-  pointer-events:auto;
-  touch-action:manipulation;
-  overflow:hidden;
-}
-.d::before{
-  content:"";position:absolute;inset:0;border-radius:28px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--gold) 50%, transparent 100%);
-  opacity:.38;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  pointer-events:none;
-}
+/* Gloss cap (crisp) */
 .d::after{
-  content:"";position:absolute;left:-45%;top:-70%;
-  width:190%;height:180%;
-  background:linear-gradient(120deg, rgba(255,255,255,.00) 0%, rgba(255,255,255,.14) 45%, rgba(255,255,255,.00) 60%);
-  transform:rotate(18deg);
-  opacity:.55;
+  content:"";
+  position:absolute;inset:0;border-radius:30px;
+  background:
+    radial-gradient(120% 58% at 50% 16%, rgba(255,255,255,.34) 0%, rgba(255,255,255,0) 64%),
+    radial-gradient(120% 60% at 50% 56%, rgba(255,255,255,.07) 0%, rgba(255,255,255,0) 62%),
+    radial-gradient(140% 70% at 50% 92%, rgba(0,0,0,.38) 0%, rgba(0,0,0,0) 56%);
+  opacity:.92;
   pointer-events:none;
-  animation:shimmer 7.2s linear infinite;
 }
-@keyframes shimmer{
-  0%{transform:translateX(-18%) rotate(18deg);opacity:.30}
-  45%{opacity:.75}
-  100%{transform:translateX(18%) rotate(18deg);opacity:.30}
-}
+
 .d:hover{
-  box-shadow:0 36px 120px rgba(0,0,0,.90),0 0 22px rgba(212,175,55,.22), inset 0 2px 0 rgba(255,255,255,.12);
   border-color:rgba(212,175,55,.30);
+  box-shadow:
+    0 42px 150px rgba(0,0,0,.84),
+    0 0 34px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.20),
+    inset 0 -52px 104px rgba(0,0,0,.86);
 }
+.d:active{
+  transform:translate(-50%,-50%) rotate(45deg) scale(.99);
+}
+
+/* Vertical placement */
 .d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-bot{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
 
+/* Inner content */
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  text-align:center;padding:18px;gap:10px;
-  pointer-events:none;user-select:none
+  text-align:center;
+  padding:16px;
+  gap:10px;
+  pointer-events:none;
+  user-select:none;
 }
-.lab{font-weight:950;letter-spacing:.8px;font-size:18px}
-.sub{font-size:12.5px;opacity:.82;line-height:1.28;max-width:20em}
+.lab{
+  font-weight:950;
+  letter-spacing:.9px;
+  font-size:20px;
+  text-shadow:0 0 22px rgba(255,255,255,.10);
+}
+.sub{
+  font-size:13px;
+  opacity:.86;
+  line-height:1.25;
+  max-width:22em;
+}
 
+/* Small center mark */
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:78px;height:78px;border-radius:22px;
+  width:70px;height:70px;border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;place-items:center;font-weight:950;letter-spacing:.5px;opacity:.92;
+  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;
+  font-weight:950;letter-spacing:.5px;opacity:.92;
   pointer-events:none;
 }
 
-/* Modal */
-.bd{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(10px);
-  display:none;
+/* Footer line */
+.foot{
+  position:fixed;left:50%;
+  bottom:calc(18px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:80;
+  width:min(860px,94vw);
+  text-align:center;
+  opacity:.78;
+  font-size:13px;
+  line-height:1.35;
+  pointer-events:none;
+  text-shadow:0 18px 60px rgba(0,0,0,.55);
 }
-.bd.show{display:block;}
-.modal{
-  position:fixed;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(1180px,96vw);
-  max-height:90vh;
-  display:none;z-index:210;
-}
-.modal.show{display:block;}
-.shell{
-  height:90vh;
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 52% 14%, var(--red), transparent 55%),
-    radial-gradient(circle at 38% 28%, rgba(90,140,255,.12), transparent 55%),
-    linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-  box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;
-  display:flex;flex-direction:column;
-}
-.mhead{
-  display:flex;justify-content:space-between;align-items:center;gap:10px;
-  padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
-}
-.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
-.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
-.mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
-
-/* Header card */
-.hcard{
-  padding:14px 16px;border-radius:22px;margin:0 0 14px;
-  background:rgba(0,0,0,.10);
-  border:1px solid rgba(255,255,255,.10);
-}
-.hcard .h1{margin:0 0 6px;font-weight:950;font-size:16px}
-.hcard .h2{margin:0;color:var(--mut);line-height:1.55}
-.hcard .h3{margin:10px 0 0;color:rgba(255,255,255,.70);font-size:12px;line-height:1.45}
-
-/* Stacked bubbles (accordion) */
-.stackList{display:flex;flex-direction:column;gap:12px;margin:0 0 14px}
-.stackRow{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
-  overflow:hidden;
-}
-.stackHead{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:10px;padding:14px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent;
-}
-.stackLeft{display:flex;align-items:center;gap:12px;min-width:0}
-.stackBar{width:6px;height:22px;border-radius:99px;background:var(--domc, rgba(255,255,255,.20));box-shadow:0 0 18px rgba(255,255,255,.08);flex:0 0 auto}
-.stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stackSub{font-size:12px;opacity:.72;margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto}
-.stackBody{
-  display:none;
-  padding:14px 16px 10px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
-}
-.stackRow.open .stackBody{display:block}
-.pdesc{margin:0 0 10px;color:rgba(255,255,255,.86);line-height:1.55}
-.jumpRow{display:flex;gap:10px;flex-wrap:wrap}
-.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
 
 @media (max-width:560px){
-  :root{--R:124px}
-  .d{width:200px;height:200px}
-  .stage{top:56%}
+  :root{ --R:132px; --D:232px; }
+  .title{font-size:46px}
+  .head{top:52px}
+  .stage{top:58%}
 }
 </style>
 </head>
@@ -248,377 +256,73 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 <body>
 
 <div class="top-left">
-  <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
-  <a class="crp-btn" id="btnHub" href="/home/">HUB</a>
+  <a class="btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
-<div class="brand" aria-hidden="true">
-  <div class="name" id="brandName">TERMINAL</div>
-  <div class="tag" id="brandTag">Two diamonds · Jump-only · Vertical</div>
+<div class="head" aria-hidden="true">
+  <p class="kicker">CARDINAL AXIS</p>
+  <h1 class="title">A diagnostic compass.</h1>
+  <p class="subt">You came here for direction. Choose your gate.</p>
 </div>
 
-<div class="stage" aria-label="Terminal entry">
-  <div class="outer"></div>
-
-  <div class="d d-top" id="dNext" role="button" tabindex="0">
+<div class="stage" aria-label="Gate selection">
+  <div class="d d-top" id="goFoundation" role="button" tabindex="0" aria-label="Foundation">
     <div class="inner">
-      <div class="lab" id="labNext">WHERE TO GO NEXT</div>
-      <div class="sub" id="subNext">Full map · Clean jumps · Return-safe</div>
+      <div class="lab">FOUNDATION</div>
+      <div class="sub">Start with structure. Get oriented fast.</div>
     </div>
   </div>
 
-  <div class="d d-bot" id="dFrontier" role="button" tabindex="0">
+  <div class="d d-bot" id="goFrontier" role="button" tabindex="0" aria-label="Frontier">
     <div class="inner">
-      <div class="lab" id="labFrontier">FRONTIER</div>
-      <div class="sub" id="subFrontier">Space · Solar · Fusion readiness · Innovation</div>
+      <div class="lab">FRONTIER</div>
+      <div class="sub">Dream forward—without losing your footing.</div>
     </div>
   </div>
 
   <div class="core">◆</div>
 </div>
 
-<div class="bd" id="bd" aria-hidden="true"></div>
-
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Terminal panel">
-  <div class="shell">
-    <div class="mhead">
-      <h3 class="mtitle" id="mTitle">TERMINAL</h3>
-      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
-    </div>
-
-    <div class="mbody">
-      <div class="hcard">
-        <div class="h1" id="mh1">—</div>
-        <div class="h2" id="mh2">—</div>
-        <div class="h3" id="mh3">—</div>
-      </div>
-
-      <div class="stackList" id="stackList"></div>
-
-      <div class="mact">
-        <button class="crp-btn" id="mReturn" type="button">RETURN</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="foot">No belief required · No selling · Just traversal</div>
 
 <script>
 (function(){
-  // Preserve any existing query params; Terminal does NOT modify style/time.
-  const qs=new URLSearchParams(location.search);
-  let lang = qs.get("lang") || localStorage.getItem("gd_lang") || "en";
+  var qs = new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  if(time==="trajectory") time="post";
   if(lang!=="en" && lang!=="zh") lang="en";
-  try{ localStorage.setItem("gd_lang",lang);}catch(e){}
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
-
-  // Preserve style/time if present (or stored), but DO NOT change them here.
-  const style = qs.get("style") || localStorage.getItem("gd_style") || "";
-  const time  = qs.get("time")  || localStorage.getItem("gd_time")  || "";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  try{
+    localStorage.setItem("gd_lang", lang);
+    localStorage.setItem("gd_style", style);
+    localStorage.setItem("gd_time", time);
+  }catch(e){}
 
   function q(){
-    const p = new URLSearchParams();
-    if(lang) p.set("lang",lang);
-    if(style) p.set("style",style);
-    if(time) p.set("time",time);
-    const s = p.toString();
-    return s ? ("?"+s) : "";
+    var p=new URLSearchParams();
+    p.set("lang",lang); p.set("style",style); p.set("time",time);
+    return "?" + p.toString();
   }
 
-  // Wire top buttons
+  // EXIT preserves state
   document.getElementById("btnExit").href="/door/"+q();
-  document.getElementById("btnHub").href="/home/"+q();
 
-  // i18n (minimal)
-  const UI = {
-    en:{
-      brandName:"TERMINAL",
-      brandTag:"Two diamonds · Jump-only · Vertical",
-      leftLab:"WHERE TO GO NEXT",
-      leftSub:"Full map · Clean jumps · Return-safe",
-      rightLab:"FRONTIER",
-      rightSub:"Space · Solar · Fusion readiness · Innovation",
-      ret:"RETURN"
-    },
-    zh:{
-      brandName:"终端",
-      brandTag:"双菱形 · 仅跳转 · 垂直",
-      leftLab:"下一步去哪",
-      leftSub:"全站地图 · 干净跳转 · 可返回",
-      rightLab:"前沿",
-      rightSub:"太空 · 太阳能 · 聚变就绪 · 创新",
-      ret:"返回"
-    }
-  };
-  const T = (lang==="zh") ? UI.zh : UI.en;
-  document.getElementById("brandName").textContent = T.brandName;
-  document.getElementById("brandTag").textContent = T.brandTag;
-  document.getElementById("labNext").textContent = T.leftLab;
-  document.getElementById("subNext").textContent = T.leftSub;
-  document.getElementById("labFrontier").textContent = T.rightLab;
-  document.getElementById("subFrontier").textContent = T.rightSub;
-  document.getElementById("mReturn").textContent = T.ret;
+  function go(path){ location.href = path + q(); }
 
-  // Modal refs
-  const bd=document.getElementById("bd");
-  const modal=document.getElementById("modal");
-  const mClose=document.getElementById("mClose");
-  const mReturn=document.getElementById("mReturn");
-  const mTitle=document.getElementById("mTitle");
-  const mh1=document.getElementById("mh1");
-  const mh2=document.getElementById("mh2");
-  const mh3=document.getElementById("mh3");
-  const stackList=document.getElementById("stackList");
+  var f = document.getElementById("goFoundation");
+  var r = document.getElementById("goFrontier");
 
-  function openModal(mode){
-    bd.classList.add("show");
-    modal.classList.add("show");
-    build(mode);
-  }
-  function closeModal(){
-    bd.classList.remove("show");
-    modal.classList.remove("show");
-  }
-  bd.addEventListener("click", closeModal);
-  mClose.addEventListener("click", closeModal);
-  mReturn.addEventListener("click", closeModal);
+  f.addEventListener("click", function(){ go("/home/"); });
+  r.addEventListener("click", function(){ go("/explore/frontier/"); });
 
-  // Diamond clicks
-  const dNext=document.getElementById("dNext");
-  const dFrontier=document.getElementById("dFrontier");
-  dNext.addEventListener("click", ()=>openModal("nav"));
-  dFrontier.addEventListener("click", ()=>openModal("frontier"));
-  dNext.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal("nav"); }});
-  dFrontier.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal("frontier"); }});
-
-  function row(title, sub, copy, jumps, color){
-    return {title, sub, copy, jumps, color};
-  }
-  function jump(label, href){ return {label, href}; }
-
-  function makeRow(r){
-    const rowEl=document.createElement("div");
-    rowEl.className="stackRow";
-    rowEl.style.setProperty("--domc", r.color);
-
-    const head=document.createElement("div");
-    head.className="stackHead";
-
-    const left=document.createElement("div");
-    left.className="stackLeft";
-
-    const bar=document.createElement("div");
-    bar.className="stackBar";
-    bar.style.background=r.color;
-
-    const title=document.createElement("div");
-    title.className="stackTitle";
-    title.textContent=r.title;
-
-    const sub=document.createElement("div");
-    sub.className="stackSub";
-    sub.textContent=r.sub;
-
-    left.appendChild(bar);
-    left.appendChild(title);
-    left.appendChild(sub);
-
-    const chev=document.createElement("div");
-    chev.className="stackChevron";
-    chev.textContent="▸";
-
-    head.appendChild(left);
-    head.appendChild(chev);
-
-    const body=document.createElement("div");
-    body.className="stackBody";
-
-    const copy=document.createElement("p");
-    copy.className="pdesc";
-    copy.textContent=r.copy;
-
-    const jr=document.createElement("div");
-    jr.className="jumpRow";
-
-    r.jumps.forEach(j=>{
-      const a=document.createElement("a");
-      a.className="crp-btn";
-      a.textContent=j.label;
-      a.href = j.href + q();
-      jr.appendChild(a);
+  [f,r].forEach(function(el){
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
     });
-
-    body.appendChild(copy);
-    body.appendChild(jr);
-
-    head.addEventListener("click", ()=>{
-      stackList.querySelectorAll(".stackRow").forEach(x=>{
-        if(x!==rowEl){ x.classList.remove("open"); x.querySelector(".stackChevron").textContent="▸"; }
-      });
-      const open = rowEl.classList.toggle("open");
-      chev.textContent = open ? "▾" : "▸";
-    });
-
-    rowEl.appendChild(head);
-    rowEl.appendChild(body);
-    return rowEl;
-  }
-
-  function build(mode){
-    stackList.innerHTML="";
-    const ACC = { nav:"#D4AF37", frontier:"#93C5FD", energy:"#F59E0B", explore:"#A78BFA", safety:"#A3A3A3", green:"#22C55E" };
-
-    const NAV_ROWS_EN = [
-      row("HOME","Primary entry.",
-          "Home is the canonical entry surface. If you want to start clean, go there first.",
-          [ jump("JUMP HOME","/home/") ],
-          ACC.nav),
-      row("HUB","Compass orientation.",
-          "Hub is the map: North defines, East executes, South constrains, West contains. Use it when you feel lost.",
-          [ jump("JUMP HUB","/home/") ],
-          ACC.nav),
-      row("DOOR","Language selection.",
-          "Door is the language gate. If language feels wrong, re-enter there to reset cleanly.",
-          [ jump("JUMP DOOR","/door/") ],
-          ACC.safety),
-      row("PRODUCTS","Catalog spine.",
-          "Products contains the four execution volumes. Use these jumps to go directly.",
-          [ jump("JUMP PRODUCTS","/products/"),
-            jump("ENERGY","/products/energy/"),
-            jump("EDUCATION","/products/education/"),
-            jump("SOFTWARE","/products/software/"),
-            jump("COMMERCIAL","/products/commercial/") ],
-          ACC.green),
-      row("LAWS","Definitions and governance.",
-          "Laws holds bounded definitions and governance rules. If you need clarity, start there.",
-          [ jump("JUMP LAWS","/laws/") ],
-          ACC.nav),
-      row("GAUGES","Measurement surfaces.",
-          "Gauges exposes measurement-facing views without changing claims.",
-          [ jump("JUMP GAUGES","/gauges/") ],
-          ACC.nav),
-      row("LINKS","External index.",
-          "Links is the outward directory for cross-site resources.",
-          [ jump("JUMP LINKS","/links/") ],
-          ACC.nav),
-      row("INNOVATION","Frontier lane.",
-          "Innovation is the frontier lane. Big ideas live there with bounded posture.",
-          [ jump("JUMP INNOVATION","/explore/") ],
-          ACC.explore),
-      row("TERMINAL","This page.",
-          "Terminal is lens-free and jump-only. It preserves your current lang/style/time; it does not change them.",
-          [ jump("RELOAD TERMINAL","/index.html") ],
-          ACC.nav)
-    ];
-
-    const NAV_ROWS_ZH = [
-      row("主页","主入口。",
-          "主页是规范入口。想要干净开始，就先去那里。",
-          [ jump("跳转主页","/home/") ],
-          ACC.nav),
-      row("枢纽","罗盘定位。",
-          "枢纽是地图：北定义，东执行，南约束，西隔离。迷路就先来这里。",
-          [ jump("跳转枢纽","/home/") ],
-          ACC.nav),
-      row("入口(语言)","语言选择。",
-          "入口是语言闸门。语言不对就回入口重进。",
-          [ jump("跳转入口","/door/") ],
-          ACC.safety),
-      row("产品","目录脊柱。",
-          "产品包含四大执行卷。可直接跳转。",
-          [ jump("跳转产品","/products/"),
-            jump("能源","/products/energy/"),
-            jump("教育","/products/education/"),
-            jump("软件","/products/software/"),
-            jump("商业","/products/commercial/") ],
-          ACC.green),
-      row("法则","定义与治理。",
-          "法则保存有界定义与治理规则。需要清晰就从这里开始。",
-          [ jump("跳转法则","/laws/") ],
-          ACC.nav),
-      row("量规","测量面。",
-          "量规展示测量视图，但不改变主张。",
-          [ jump("跳转量规","/gauges/") ],
-          ACC.nav),
-      row("链接","外部索引。",
-          "链接是外部资源目录。",
-          [ jump("跳转链接","/links/") ],
-          ACC.nav),
-      row("创新","前沿通道。",
-          "创新是前沿通道。大想法在这里保持有界。",
-          [ jump("跳转创新","/explore/") ],
-          ACC.explore),
-      row("终端","本页。",
-          "终端无镜头、仅跳转。它保留lang/style/time，不会修改。",
-          [ jump("重载终端","/index.html") ],
-          ACC.nav)
-    ];
-
-    const FRONTIER_ROWS_EN = [
-      row("INNOVATION","Frontier board.",
-          "Innovation is the curated frontier lane. Explore big ideas through structure, not drift.",
-          [ jump("JUMP INNOVATION","/explore/") ],
-          ACC.explore),
-      row("FUSION READINESS","Requirements-only.",
-          "Fusion readiness stays requirements doctrine: instruments, receipts, disproof, independent audit.",
-          [ jump("FUSION READINESS","/explore/fusion-readiness/"), jump("JUMP GAUGES","/gauges/"), jump("JUMP LAWS","/laws/") ],
-          ACC.safety),
-      row("ENERGY","Industrial-first surface.",
-          "Energy remains Industrial Plasma Thermal Substitution (C) publicly. Frontier narratives are bounded and staged.",
-          [ jump("JUMP ENERGY","/products/energy/"), jump("JUMP PRODUCTS","/products/") ],
-          ACC.energy),
-      row("SOLAR / SPACE","Vision with constraints.",
-          "Solar scaling and space communities belong in Frontier pages as staged feasibility, tied to constraints and measurement.",
-          [ jump("JUMP INNOVATION","/explore/"), jump("JUMP LAWS","/laws/"), jump("JUMP LINKS","/links/") ],
-          ACC.frontier)
-    ];
-
-    const FRONTIER_ROWS_ZH = [
-      row("创新","前沿板。",
-          "创新是前沿通道。用结构探索大想法，不漂移。",
-          [ jump("跳转创新","/explore/") ],
-          ACC.explore),
-      row("聚变就绪","仅需求。",
-          "聚变就绪保持为需求：仪器、收据、证伪、独立审计。",
-          [ jump("聚变就绪","/explore/fusion-readiness/"), jump("跳转量规","/gauges/"), jump("跳转法则","/laws/") ],
-          ACC.safety),
-      row("能源","工业优先面。",
-          "能源公开姿态保持工业等离子热替代（C）。前沿叙事保持有界与分阶段。",
-          [ jump("跳转能源","/products/energy/"), jump("跳转产品","/products/") ],
-          ACC.energy),
-      row("太阳/太空","愿景带约束。",
-          "太阳能扩展与太空社区属于前沿页面：分阶段可行性，并绑定约束与测量。",
-          [ jump("跳转创新","/explore/"), jump("跳转法则","/laws/"), jump("跳转链接","/links/") ],
-          ACC.frontier)
-    ];
-
-    const rows = (mode==="nav")
-      ? ((lang==="zh")?NAV_ROWS_ZH:NAV_ROWS_EN)
-      : ((lang==="zh")?FRONTIER_ROWS_ZH:FRONTIER_ROWS_EN);
-
-    mTitle.textContent = (mode==="nav")
-      ? ((lang==="zh")?"终端 · 下一步去哪":"TERMINAL · WHERE TO GO NEXT")
-      : ((lang==="zh")?"终端 · 前沿":"TERMINAL · FRONTIER");
-
-    mh1.textContent = (mode==="nav")
-      ? ((lang==="zh")?"全站地图。干净跳转。":"Full map. Clean jumps.")
-      : ((lang==="zh")?"前沿吸引你，但约束保护你。":"Frontier pulls you in, constraints keep it real.");
-    mh2.textContent = (mode==="nav")
-      ? ((lang==="zh")?"终端无镜头。仅跳转。不改状态。":"No lenses here. Jump-only. Terminal does not change your state.")
-      : ((lang==="zh")?"太空/太阳能/聚变以结构化跳转呈现。":"Space/solar/fusion appear as structured jump surfaces.");
-    mh3.textContent = (mode==="nav")
-      ? ((lang==="zh")?"不确定就先去枢纽。":"If unsure, go to HUB first.")
-      : ((lang==="zh")?"公开姿态仍为工业（C）；聚变仅就绪门槛。":"Public posture stays Industrial (C); fusion stays readiness-only.");
-
-    rows.forEach((r, idx)=>{
-      const el = makeRow(r);
-      stackList.appendChild(el);
-      if(idx===0){
-        el.classList.add("open");
-        el.querySelector(".stackChevron").textContent="▾";
-      }
-    });
-  }
-
+  });
 })();
 </script>
 

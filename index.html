@@ -1,19 +1,10 @@
 <!-- TNT — /index.html
-     INDEX · PRIMARY FORK · TWO MASSIVE DIAMONDS · HARD NAVIGATION ONLY
-
-     UPDATE GOALS:
-       - ADD DEPTH propagation (URL: lang/style/time/depth; LS: gd_*)
-       - USE /assets/instruments.js (canonical) (NOT instrument.js)
-       - UNIFY MATERIAL + BUTTONS with ui.css (.btn)
-       - REDUCE REDUNDANCY: ui.css owns field + typography; this file owns ONLY fork layout + diamond material
-
-     ROLE:
-       TOP:    FOUNDATION  → /home/
-       BOTTOM: FRONTIER    → /explore/frontier/
-
-     NO:
-       - No overlays/modals
-       - No lens widgets here (depth is propagated only)
+     FIX: LAYOUT COLLISION BETWEEN BOTTOM DIAMOND + DOCK
+     METHOD:
+       - Reserve vertical space for dock (padding-bottom)
+       - Lift stage slightly on small screens
+       - Reduce diamond radius (R) on small screens only
+       - Keep ui.css as field owner (no background edits)
 -->
 
 <!doctype html>
@@ -31,64 +22,42 @@
 :root{
   --R:170px;
   --D:260px;
+  --dockH:96px; /* reserved space for dock */
   --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 }
 
 /* DO NOT TOUCH FIELD — ui.css owns html/body background */
-/* Keep only minimal layout styling here */
 a{color:inherit;text-decoration:none}
+
+/* Reserve space so dock never overlaps diamonds */
+body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
 
 /* Top-left */
 .top-left{
-  position:fixed;
-  left:16px;
-  top:16px;
-  z-index:120;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
+  position:fixed;left:16px;top:16px;z-index:120;
+  display:flex;gap:10px;flex-wrap:wrap;
 }
 
 /* Brand */
 .brand{
-  position:fixed;
-  left:50%;
-  top:16px;
-  transform:translateX(-50%);
-  z-index:110;
-  text-align:center;
-  padding:10px 18px;
-  border-radius:999px;
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:110;text-align:center;
+  padding:10px 18px;border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
   pointer-events:none;
 }
-.brand .k{
-  font-size:12px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  opacity:.75;
-  margin:0 0 6px 0;
-}
-.brand .t{
-  font-weight:950;
-  font-size:40px;
-  letter-spacing:.3px;
-  margin:0;
-}
-.brand .s{
-  font-size:13px;
-  opacity:.8;
-  margin-top:6px;
-}
+.brand .k{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.75;margin:0 0 6px 0}
+.brand .t{font-weight:950;font-size:40px;letter-spacing:.3px;margin:0}
+.brand .s{font-size:13px;opacity:.8;margin-top:6px}
 
 /* Stage */
 .stage{
   position:fixed;
   left:50%;
-  top:55%;
+  top:53%;              /* lifted slightly to avoid dock */
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
@@ -98,11 +67,8 @@ a{color:inherit;text-decoration:none}
 
 /* Massive diamonds (lacquer) */
 .d{
-  width:var(--D);
-  height:var(--D);
-  position:absolute;
-  left:50%;
-  top:50%;
+  width:var(--D);height:var(--D);
+  position:absolute;left:50%;top:50%;
   transform-origin:center;
   border-radius:34px;
   cursor:pointer;
@@ -127,10 +93,7 @@ a{color:inherit;text-decoration:none}
 }
 .d::before{
   content:"";
-  position:absolute;
-  inset:0;
-  border-radius:34px;
-  padding:1px;
+  position:absolute;inset:0;border-radius:34px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.60;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -140,11 +103,7 @@ a{color:inherit;text-decoration:none}
 }
 .d::after{
   content:"";
-  position:absolute;
-  left:10%;
-  right:10%;
-  top:10%;
-  height:28%;
+  position:absolute;left:10%;right:10%;top:10%;height:28%;
   border-radius:999px;
   background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
   transform:rotate(-10deg);
@@ -160,16 +119,12 @@ a{color:inherit;text-decoration:none}
 .d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
 
 .inner{
-  width:100%;
-  height:100%;
+  width:100%;height:100%;
   transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
   text-align:center;
-  padding:18px;
-  gap:10px;
+  padding:18px;gap:10px;
   pointer-events:none;
 }
 .lab{font-weight:950;font-size:22px;letter-spacing:.8px}
@@ -192,13 +147,24 @@ a{color:inherit;text-decoration:none}
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.20);
 }
+
+/* Mobile: reduce radius + lift stage more + increase reserved dock space */
+@media (max-width:560px){
+  :root{ --R:150px; --D:244px; --dockH:118px; }
+  .stage{ top:51%; }
+  .brand .t{ font-size:38px; }
+}
+@media (max-width:420px){
+  :root{ --R:140px; --D:236px; --dockH:132px; }
+  .stage{ top:50%; }
+  .brand .t{ font-size:36px; }
+}
 </style>
 </head>
 
 <body>
 
 <div class="top-left">
-  <!-- Use ui.css material button -->
   <a class="btn" id="btnExit" href="/">EXIT</a>
 </div>
 
@@ -210,7 +176,6 @@ a{color:inherit;text-decoration:none}
 
 <div class="stage" aria-label="Primary fork">
 
-  <!-- FOUNDATION -->
   <div class="d d-top" id="dFoundation" role="button" tabindex="0" aria-label="Foundation">
     <div class="inner">
       <div class="lab" id="labFoundation">FOUNDATION</div>
@@ -218,7 +183,6 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 
-  <!-- FRONTIER -->
   <div class="d d-bottom" id="dFrontier" role="button" tabindex="0" aria-label="Frontier">
     <div class="inner">
       <div class="lab" id="labFrontier">FRONTIER</div>

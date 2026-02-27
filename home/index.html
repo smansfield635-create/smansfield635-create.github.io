@@ -1,16 +1,11 @@
 <!-- TNT — /home/index.html
-     HUB A · GRID (8) → RUSSIAN DOLL BRANCHING (FULL STRUCTURE) · JI+JD OVERLAYS (NO EXTERNAL PAGES YET)
-     LOCKS:
-       - ui.css owns field; no html/body background styling
-       - uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - URL keys: lang/style/time/depth
-       - LS keys: gd_lang/gd_style/gd_time/gd_depth
-       - LANGS: en / zh / es (triangle stack)
-       - VIEW: informal / formal / both (no visible labels in content)
-       - TAP: expand/collapse only (no auto-jump)
-       - JI: Jump Index overlay (directory: title + 1 sentence + Jump)
-       - JD: Jump Deck overlay (content placeholder; later can be split into a page)
-       - Bottom dock: EXIT · JI · JD · ACTIVE (no stacking)
+     HUB A · GRID (TWO SETS OF FOUR) → RUSSIAN DOLL BRANCHING (FULL STRUCTURE) · JI+JD OVERLAYS
+     FIXES IN THIS VERSION:
+       1) BUBBLES OPEN: explicit addEventListener wiring + z-index + no auto-click selector ambiguity
+       2) TWO SEPARATE SETS OF FOUR (NOT MIXED):
+          - Set A: N / E / S / W  (2×2)
+          - Set B: APPENDIX / GLOSSARY / ABOUT / LINKS (2×2)
+       3) Keeps: EN/中文/ES triangle, Informal/Formal/Both, field ownership, Russian doll, Analog sub-bubble, JI/JD overlays
 -->
 
 <!doctype html>
@@ -29,7 +24,7 @@ a{color:inherit;text-decoration:none}
 :root{--dockH:92px}
 
 /* page */
-.page{width:min(980px,94vw);margin:0 auto;padding:14px 0 calc(var(--dockH) + 22px);display:flex;flex-direction:column;gap:12px}
+.page{width:min(980px,94vw);margin:0 auto;padding:14px 0 calc(var(--dockH) + 22px);display:flex;flex-direction:column;gap:12px;position:relative;z-index:5}
 
 /* header */
 .header{
@@ -39,6 +34,7 @@ a{color:inherit;text-decoration:none}
   backdrop-filter:blur(10px);
   padding:14px 16px;
   box-shadow:0 24px 80px rgba(0,0,0,.55);
+  position:relative;z-index:20;
 }
 .k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
 .t{font-weight:950;font-size:24px;letter-spacing:.3px;margin:0 0 6px}
@@ -71,9 +67,21 @@ a{color:inherit;text-decoration:none}
   color:rgba(255,255,255,.86);line-height:1.45;font-size:13px;
 }
 
-/* 2x4 grid */
-.grid{display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:10px}
-@media (max-width:820px){.grid{grid-template-columns:repeat(2, minmax(0,1fr));}}
+/* section labels */
+.sectionLabel{
+  margin-top:6px;
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+  color:rgba(255,255,255,.86);
+  font-weight:950;
+  letter-spacing:.2px;
+  position:relative;z-index:10;
+}
+
+/* 2×2 grids */
+.grid2{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:10px;position:relative;z-index:10}
 
 /* tiles */
 .tile{
@@ -89,6 +97,7 @@ a{color:inherit;text-decoration:none}
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
   display:flex;gap:10px;align-items:flex-start;
+  position:relative;z-index:15;
 }
 .tile:hover{border-color:rgba(212,175,55,.35)}
 .tile.active{border-color:rgba(212,175,55,.65);box-shadow:0 18px 60px rgba(0,0,0,.62),0 0 18px rgba(212,175,55,.22)}
@@ -107,6 +116,7 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 24px 80px rgba(0,0,0,.55);
   padding:14px 16px;
   display:none;
+  position:relative;z-index:12;
 }
 .detail.show{display:block}
 .dHead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
@@ -212,7 +222,11 @@ a{color:inherit;text-decoration:none}
     <div class="metric" id="metric">All scalable navigation begins with declared boundaries.</div>
   </div>
 
-  <div class="grid" id="grid"></div>
+  <div class="sectionLabel" id="labCore">Core compass</div>
+  <div class="grid2" id="gridCore"></div>
+
+  <div class="sectionLabel" id="labMeta">Meta spine</div>
+  <div class="grid2" id="gridMeta"></div>
 
   <div class="detail" id="detail">
     <div class="dHead">
@@ -260,6 +274,7 @@ a{color:inherit;text-decoration:none}
 
 <script>
 (function(){
+  // ---- state ----
   const qs=new URLSearchParams(location.search);
   const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
   const lsSet=(k,v)=>{try{localStorage.setItem(k,String(v))}catch(e){}};
@@ -287,19 +302,21 @@ a{color:inherit;text-decoration:none}
   }
 
   const L={
-    en:{hk:"CARDINAL AXIS",ht:"HUB A · Index",hs:"Grid for clarity · Russian doll for depth · Jump when ready.",metric:"All scalable navigation begins with declared boundaries.",exit:"EXIT",ji:"JUMP INDEX",jd:"JUMP DECK",active:"ACTIVE",analog:"Analog Layer",jump:"Jump",jiPill:"JI",all:"ALL"},
-    zh:{hk:"基轴体系",ht:"枢纽A · 索引",hs:"网格求清晰 · 俄套求深度 · 需要时跳转。",metric:"一切可规模化的导航，始于明确的边界。",exit:"退出",ji:"跳转目录",jd:"跳转卡组",active:"当前",analog:"类比层",jump:"跳转",jiPill:"JI",all:"全部"},
-    es:{hk:"CARDINAL AXIS",ht:"HUB A · Índice",hs:"Cuadrícula para claridad · Profundidad en capas · Salta cuando listo.",metric:"Toda navegación escalable empieza con límites declarados.",exit:"SALIR",ji:"ÍNDICE",jd:"MAZO",active:"ACTIVO",analog:"Capa Analógica",jump:"Saltar",jiPill:"JI",all:"TODO"}
+    en:{hk:"CARDINAL AXIS",ht:"HUB A · Index",hs:"Grid for clarity · Russian doll for depth · Jump when ready.",metric:"All scalable navigation begins with declared boundaries.",core:"Core compass",meta:"Meta spine",exit:"EXIT",ji:"JUMP INDEX",jd:"JUMP DECK",active:"ACTIVE",analog:"Analog Layer",jump:"Jump",jiPill:"JI"},
+    zh:{hk:"基轴体系",ht:"枢纽A · 索引",hs:"网格求清晰 · 俄套求深度 · 需要时跳转。",metric:"一切可规模化的导航，始于明确的边界。",core:"核心罗盘",meta:"元脊柱",exit:"退出",ji:"跳转目录",jd:"跳转卡组",active:"当前",analog:"类比层",jump:"跳转",jiPill:"JI"},
+    es:{hk:"CARDINAL AXIS",ht:"HUB A · Índice",hs:"Cuadrícula para claridad · Profundidad en capas · Salta cuando listo.",metric:"Toda navegación escalable empieza con límites declarados.",core:"Brújula núcleo",meta:"Columna meta",exit:"SALIR",ji:"ÍNDICE",jd:"MAZO",active:"ACTIVO",analog:"Capa Analógica",jump:"Saltar",jiPill:"JI"}
   };
   const T=()=> (lang==="zh")?L.zh:(lang==="es")?L.es:L.en;
 
-  // Header text
+  // ---- header text ----
   document.getElementById("hk").textContent=T().hk;
   document.getElementById("ht").textContent=T().ht;
   document.getElementById("hs").textContent=T().hs;
   document.getElementById("metric").textContent=T().metric;
+  document.getElementById("labCore").textContent=T().core;
+  document.getElementById("labMeta").textContent=T().meta;
 
-  // View toggle
+  // ---- view toggle ----
   const page=document.getElementById("page");
   const vInformal=document.getElementById("vInformal");
   const vFormal=document.getElementById("vFormal");
@@ -313,11 +330,11 @@ a{color:inherit;text-decoration:none}
     lsSet("hub_view", v);
   }
   applyView(lsGet("hub_view") || (style==="informal"?"informal":"formal"));
-  vInformal.onclick=()=>applyView("informal");
-  vFormal.onclick=()=>applyView("formal");
-  vBoth.onclick=()=>applyView("both");
+  vInformal.addEventListener("click", ()=>applyView("informal"));
+  vFormal.addEventListener("click", ()=>applyView("formal"));
+  vBoth.addEventListener("click", ()=>applyView("both"));
 
-  // Language triangle
+  // ---- language ----
   const bEN=document.getElementById("bEN");
   const bZH=document.getElementById("bZH");
   const bES=document.getElementById("bES");
@@ -333,97 +350,94 @@ a{color:inherit;text-decoration:none}
     history.replaceState({}, "", location.pathname + makeQS({lang}));
     location.reload();
   }
-  bEN.onclick=()=>setLang("en");
-  bZH.onclick=()=>setLang("zh");
-  bES.onclick=()=>setLang("es");
+  bEN.addEventListener("click", ()=>setLang("en"));
+  bZH.addEventListener("click", ()=>setLang("zh"));
+  bES.addEventListener("click", ()=>setLang("es"));
 
-  // Full structure tree (cardinals + stars + diagonals + refinements + 4 meta)
-  const TREE = window.__HUB_TREE__ || (function(){
-    // embedded directly to avoid external dependencies
-    return {
-      N:{label:{en:"N · DEFINITIONS",zh:"N · 定义",es:"N · DEFINICIONES"}, color:"#1F3A8A", children:["N★","N:NE","N:NW","N:SE","N:SW"]},
-      E:{label:{en:"E · PRODUCTS",zh:"E · 产品",es:"E · PRODUCTOS"}, color:"#0EA5E9", children:["E★","E:NE","E:NW","E:SE","E:SW"]},
-      S:{label:{en:"S · CONSTRAINTS",zh:"S · 约束",es:"S · RESTRICCIONES"}, color:"#F59E0B", children:["S★","S:NE","S:NW","S:SE","S:SW"]},
-      W:{label:{en:"W · CONTAINMENT",zh:"W · 隔离",es:"W · CONTENCIÓN"}, color:"#7F1D1D", children:["W★","W:NE","W:NW","W:SE","W:SW"]},
-      APPENDIX:{label:{en:"APPENDIX",zh:"附录",es:"APÉNDICE"}, color:"#A3A3A3", children:[]},
-      GLOSSARY:{label:{en:"GLOSSARY",zh:"术语表",es:"GLOSARIO"}, color:"#93C5FD", children:[]},
-      ABOUT:{label:{en:"ABOUT",zh:"关于",es:"ACERCA"}, color:"#D4AF37", children:[]},
-      LINKS:{label:{en:"LINKS",zh:"链接",es:"ENLACES"}, color:"#60A5FA", children:[]},
+  // ---- TREE ----
+  const TREE = {
+    N:{label:{en:"N · DEFINITIONS",zh:"N · 定义",es:"N · DEFINICIONES"}, color:"#1F3A8A", children:["N★","N:NE","N:NW","N:SE","N:SW"]},
+    E:{label:{en:"E · PRODUCTS",zh:"E · 产品",es:"E · PRODUCTOS"}, color:"#0EA5E9", children:["E★","E:NE","E:NW","E:SE","E:SW"]},
+    S:{label:{en:"S · CONSTRAINTS",zh:"S · 约束",es:"S · RESTRICCIONES"}, color:"#F59E0B", children:["S★","S:NE","S:NW","S:SE","S:SW"]},
+    W:{label:{en:"W · CONTAINMENT",zh:"W · 隔离",es:"W · CONTENCIÓN"}, color:"#7F1D1D", children:["W★","W:NE","W:NW","W:SE","W:SW"]},
+    APPENDIX:{label:{en:"APPENDIX",zh:"附录",es:"APÉNDICE"}, color:"#A3A3A3", children:[]},
+    GLOSSARY:{label:{en:"GLOSSARY",zh:"术语表",es:"GLOSARIO"}, color:"#93C5FD", children:[]},
+    ABOUT:{label:{en:"ABOUT",zh:"关于",es:"ACERCA"}, color:"#D4AF37", children:[]},
+    LINKS:{label:{en:"LINKS",zh:"链接",es:"ENLACES"}, color:"#60A5FA", children:[]},
 
-      "N★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["N★:N","N★:E","N★:S","N★:W"]},
-      "E★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["E★:N","E★:E","E★:S","E★:W"]},
-      "S★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["S★:N","S★:E","S★:S","S★:W"]},
-      "W★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["W★:N","W★:E","W★:S","W★:W"]},
+    "N★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["N★:N","N★:E","N★:S","N★:W"]},
+    "E★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["E★:N","E★:E","E★:S","E★:W"]},
+    "S★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["S★:N","S★:E","S★:S","S★:W"]},
+    "W★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["W★:N","W★:E","W★:S","W★:W"]},
 
-      "N:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["N:ENE"]},
-      "N:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["N:WNW"]},
-      "N:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["N:ESE"]},
-      "N:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["N:WSW"]},
+    "N:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["N:ENE"]},
+    "N:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["N:WNW"]},
+    "N:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["N:ESE"]},
+    "N:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["N:WSW"]},
 
-      "E:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["E:ENE"]},
-      "E:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["E:WNW"]},
-      "E:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["E:ESE"]},
-      "E:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["E:WSW"]},
+    "E:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["E:ENE"]},
+    "E:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["E:WNW"]},
+    "E:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["E:ESE"]},
+    "E:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["E:WSW"]},
 
-      "S:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["S:ENE"]},
-      "S:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["S:WNW"]},
-      "S:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["S:ESE"]},
-      "S:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["S:WSW"]},
+    "S:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["S:ENE"]},
+    "S:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["S:WNW"]},
+    "S:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["S:ESE"]},
+    "S:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["S:WSW"]},
 
-      "W:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["W:ENE"]},
-      "W:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["W:WNW"]},
-      "W:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["W:ESE"]},
-      "W:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["W:WSW"]},
+    "W:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["W:ENE"]},
+    "W:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["W:WNW"]},
+    "W:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["W:ESE"]},
+    "W:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["W:WSW"]},
 
-      "N:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
-      "N:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["N:NNW"]},
-      "N:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
-      "N:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["N:SSW"]},
-      "N:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
-      "N:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
+    "N:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
+    "N:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["N:NNW"]},
+    "N:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
+    "N:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["N:SSW"]},
+    "N:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
+    "N:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
 
-      "E:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
-      "E:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["E:NNW"]},
-      "E:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
-      "E:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["E:SSW"]},
-      "E:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
-      "E:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
+    "E:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
+    "E:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["E:NNW"]},
+    "E:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
+    "E:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["E:SSW"]},
+    "E:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
+    "E:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
 
-      "S:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
-      "S:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["S:NNW"]},
-      "S:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
-      "S:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["S:SSW"]},
-      "S:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
-      "S:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
+    "S:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
+    "S:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["S:NNW"]},
+    "S:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
+    "S:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["S:SSW"]},
+    "S:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
+    "S:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
 
-      "W:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
-      "W:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["W:NNW"]},
-      "W:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
-      "W:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["W:SSW"]},
-      "W:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
-      "W:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
+    "W:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
+    "W:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["W:NNW"]},
+    "W:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
+    "W:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["W:SSW"]},
+    "W:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
+    "W:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
 
-      "N★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
-      "N★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
-      "N★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
-      "N★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]},
+    "N★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
+    "N★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
+    "N★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
+    "N★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]},
 
-      "E★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
-      "E★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
-      "E★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
-      "E★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]},
+    "E★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
+    "E★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
+    "E★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
+    "E★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]},
 
-      "S★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
-      "S★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
-      "S★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
-      "S★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]},
+    "S★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
+    "S★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
+    "S★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
+    "S★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]},
 
-      "W★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
-      "W★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
-      "W★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
-      "W★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]}
-    };
-  })();
+    "W★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
+    "W★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
+    "W★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
+    "W★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]}
+  };
 
   function nodeLabel(id){
     const o=TREE[id] && TREE[id].label;
@@ -433,7 +447,6 @@ a{color:inherit;text-decoration:none}
     return o.en;
   }
 
-  // Objective, diagnostic sentences (minimal)
   function oneSentence(id, lens){
     const core = id.split(":")[0].replace("★","");
     if(lang==="zh"){
@@ -503,20 +516,9 @@ a{color:inherit;text-decoration:none}
     return "Cross-domain: one constraint contract, different surfaces.";
   }
 
-  // 8 tiles (clock order for cardinals as you asked)
-  const TILES = [
-    {id:"N", color:"#1F3A8A"},
-    {id:"S", color:"#F59E0B"},
-    {id:"APPENDIX", color:"#A3A3A3"},
-    {id:"GLOSSARY", color:"#93C5FD"},
-    {id:"E", color:"#0EA5E9"},
-    {id:"W", color:"#7F1D1D"},
-    {id:"ABOUT", color:"#D4AF37"},
-    {id:"LINKS", color:"#60A5FA"}
-  ];
-
-  // UI refs
-  const grid=document.getElementById("grid");
+  // ---- UI refs ----
+  const gridCore=document.getElementById("gridCore");
+  const gridMeta=document.getElementById("gridMeta");
   const detail=document.getElementById("detail");
   const dTitle=document.getElementById("dTitle");
   const dClose=document.getElementById("dClose");
@@ -538,7 +540,8 @@ a{color:inherit;text-decoration:none}
   function openJI(){
     jiTitle.textContent = (lang==="zh")?"跳转目录":(lang==="es")?"ÍNDICE DE SALTOS":"JUMP INDEX";
     jiList.innerHTML="";
-    Object.keys(TREE).forEach(id=>{
+    const ids=Object.keys(TREE);
+    ids.forEach(id=>{
       const row=document.createElement("div");
       row.className="row";
       const top=document.createElement("div");
@@ -549,9 +552,9 @@ a{color:inherit;text-decoration:none}
       const act=document.createElement("div");
       const jb=document.createElement("a");
       jb.className="btn";
-      jb.textContent=T().jump;
+      jb.textContent=(lang==="zh")?"跳转":(lang==="es")?"Saltar":"Jump";
       jb.href="#";
-      jb.onclick=function(e){e.preventDefault();openJD(id);};
+      jb.addEventListener("click",(e)=>{e.preventDefault();e.stopPropagation();openJD(id);});
       act.appendChild(jb);
       top.appendChild(nm);
       top.appendChild(act);
@@ -565,17 +568,16 @@ a{color:inherit;text-decoration:none}
 
       row.appendChild(top);
       row.appendChild(sent);
-      row.onclick=function(e){
-        if(e.target && e.target.tagName==="A") return;
-        localStorage.setItem("hub_active_node", id);
-      };
+      row.addEventListener("click",()=>lsSet("hub_active_node", id));
       jiList.appendChild(row);
     });
     ovJI.classList.add("show");
     panelJI.classList.add("show");
   }
   function closeJI(){ovJI.classList.remove("show");panelJI.classList.remove("show");}
-  ovJI.onclick=closeJI; jiClose.onclick=closeJI; panelJI.onclick=e=>e.stopPropagation();
+  ovJI.addEventListener("click", closeJI);
+  jiClose.addEventListener("click", closeJI);
+  panelJI.addEventListener("click",(e)=>e.stopPropagation());
 
   function openJD(id){
     jdTitle.textContent = (lang==="zh")?"跳转卡组":(lang==="es")?"MAZO":"JUMP DECK";
@@ -608,10 +610,10 @@ a{color:inherit;text-decoration:none}
     note.className="rSent";
     note.style.opacity=".7";
     note.textContent = (lang==="zh")
-      ? "（占位）此处将放置绑定内容与产品/证明跳转。"
+      ? "（占位）此处将绑定到产品/证明页面。"
       : (lang==="es")
-      ? "(Marcador) Aquí irá el contenido y los saltos a producto/prueba."
-      : "(Placeholder) Binding content + product/proof jumps will live here.";
+      ? "(Marcador) Aquí se enlazará a producto/prueba."
+      : "(Placeholder) This will bind to product/proof pages.";
     row.appendChild(note);
 
     jdBody.appendChild(row);
@@ -620,7 +622,9 @@ a{color:inherit;text-decoration:none}
     panelJD.classList.add("show");
   }
   function closeJD(){ovJD.classList.remove("show");panelJD.classList.remove("show");}
-  ovJD.onclick=closeJD; jdClose.onclick=closeJD; panelJD.onclick=e=>e.stopPropagation();
+  ovJD.addEventListener("click", closeJD);
+  jdClose.addEventListener("click", closeJD);
+  panelJD.addEventListener("click",(e)=>e.stopPropagation());
 
   // Build russian-doll node
   function buildNode(id){
@@ -663,7 +667,7 @@ a{color:inherit;text-decoration:none}
     sb.appendChild(ap);
     sub.appendChild(sh);
     sub.appendChild(sb);
-    sh.onclick=(e)=>{e.stopPropagation();sub.classList.toggle("open");};
+    sh.addEventListener("click",(e)=>{e.stopPropagation();sub.classList.toggle("open");});
 
     body.appendChild(sub);
 
@@ -673,12 +677,12 @@ a{color:inherit;text-decoration:none}
     const ji=document.createElement("div");
     ji.className="pill ji";
     ji.textContent=T().jiPill;
-    ji.onclick=(e)=>{e.stopPropagation();openJI();};
+    ji.addEventListener("click",(e)=>{e.stopPropagation();openJI();});
 
     const jump=document.createElement("div");
     jump.className="pill";
     jump.textContent=T().jump;
-    jump.onclick=(e)=>{e.stopPropagation();openJD(id);};
+    jump.addEventListener("click",(e)=>{e.stopPropagation();openJD(id);});
 
     act.appendChild(ji);
     act.appendChild(jump);
@@ -691,58 +695,71 @@ a{color:inherit;text-decoration:none}
       body.appendChild(stack);
     }
 
-    head.onclick=()=>{
+    head.addEventListener("click",()=>{
       node.classList.toggle("open");
-      localStorage.setItem("hub_active_node", id);
-    };
+      lsSet("hub_active_node", id);
+    });
 
     node.appendChild(head);
     node.appendChild(body);
     return node;
   }
 
-  // Render 8 tiles
-  function makeTile(t){
+  function showDetail(id){
+    // mark active tile
+    document.querySelectorAll(".tile").forEach(x=>{
+      x.classList.toggle("active", x.getAttribute("data-id")===id);
+    });
+
+    detail.classList.add("show");
+    dTitle.textContent=nodeLabel(id);
+    branch.innerHTML="";
+    branch.appendChild(buildNode(id));
+    lsSet("hub_active_node", id);
+
+    // scroll to detail
+    detail.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  // Make tiles (core + meta)
+  function makeTile(id){
+    const info=TREE[id];
     const el=document.createElement("div");
     el.className="tile";
-    el.style.setProperty("--c", t.color);
-    el.setAttribute("data-id", t.id);
+    el.style.setProperty("--c", info.color || "#93C5FD");
+    el.setAttribute("data-id", id);
 
     const d=document.createElement("div"); d.className="diamond";
     const tt=document.createElement("div"); tt.className="tt";
-    const nm=document.createElement("div"); nm.className="name"; nm.textContent=nodeLabel(t.id);
-    const hint=document.createElement("div"); hint.className="hint";
+    const nm=document.createElement("div"); nm.className="name"; nm.textContent=nodeLabel(id);
+
     const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
-    hint.textContent = (view==="informal") ? oneSentence(t.id,"informal") : oneSentence(t.id,"formal");
+    const hint=document.createElement("div"); hint.className="hint";
+    hint.textContent = (view==="both")
+      ? (oneSentence(id,"informal")+"  "+oneSentence(id,"formal"))
+      : oneSentence(id,view);
+
     tt.appendChild(nm); tt.appendChild(hint);
 
     const chev=document.createElement("div"); chev.className="chev"; chev.textContent="›";
 
     el.appendChild(d); el.appendChild(tt); el.appendChild(chev);
 
-    el.onclick=()=>{
-      document.querySelectorAll(".tile").forEach(x=>x.classList.toggle("active", x.getAttribute("data-id")===t.id));
-      detail.classList.add("show");
-      dTitle.textContent=nodeLabel(t.id);
-      branch.innerHTML="";
-      branch.appendChild(buildNode(t.id));
-      detail.scrollIntoView({behavior:"smooth",block:"start"});
-      localStorage.setItem("hub_active_node", t.id);
-    };
+    el.addEventListener("click", ()=>showDetail(id));
     return el;
   }
 
-  grid.innerHTML="";
-  TILES.forEach(t=>grid.appendChild(makeTile(t)));
+  // Render two separate sets of four
+  gridCore.innerHTML="";
+  ["N","E","S","W"].forEach(id=>gridCore.appendChild(makeTile(id)));
 
-  // default open last
-  const last = lsGet("hub_active_node") || "N";
-  const firstTile = TILES.find(x=>x.id===last) || TILES[0];
-  setTimeout(()=>{ document.querySelector("[data-id='"+firstTile.id+"']").click(); }, 0);
+  gridMeta.innerHTML="";
+  ["APPENDIX","GLOSSARY","ABOUT","LINKS"].forEach(id=>gridMeta.appendChild(makeTile(id)));
 
-  dClose.onclick=()=>detail.classList.remove("show");
+  // Close detail
+  dClose.addEventListener("click", ()=>detail.classList.remove("show"));
 
-  // Dock
+  // Dock labels + actions
   const navExit=document.getElementById("navExit");
   const navJI=document.getElementById("navJI");
   const navJD=document.getElementById("navJD");
@@ -753,10 +770,15 @@ a{color:inherit;text-decoration:none}
   navJD.textContent=T().jd;
   navActive.textContent=T().active;
 
-  navExit.onclick=()=>location.href="/door/"+makeQS();
-  navJI.onclick=openJI;
-  navJD.onclick=()=>openJD(lsGet("hub_active_node")||"N");
-  navActive.onclick=()=>openJD(lsGet("hub_active_node")||"N");
+  navExit.addEventListener("click", ()=>location.href="/door/"+makeQS());
+  navJI.addEventListener("click", openJI);
+  navJD.addEventListener("click", ()=>openJD(lsGet("hub_active_node")||"N"));
+  navActive.addEventListener("click", ()=>openJD(lsGet("hub_active_node")||"N"));
+
+  // Default selection (no auto-click ambiguity; choose last active if valid)
+  const last = lsGet("hub_active_node") || "N";
+  const valid = TREE[last] ? last : "N";
+  showDetail(valid);
 
 })();
 </script>

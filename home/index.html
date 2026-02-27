@@ -1,15 +1,19 @@
 <!-- TNT — /home/index.html
      HUB A · 12-DIRECTION INDEX · NARRATIVE ACCORDION (NO MODALS)
-     LOCKS:
+     LOCKS (as you pasted, enforced):
        - CANON KEYS ONLY: gd_lang / gd_style / gd_time (query + localStorage)
        - NO language selector UI (gd_lang controls EN-only / 中文-only)
        - NO mirror UI
-       - 12 directions in fixed order: N, NNE, ENE, E, ESE, SSE, S, SSW, WSW, W, WNW, NNW
+       - 12 directions fixed order: N, NNE, ENE, E, ESE, SSE, S, SSW, WSW, W, WNW, NNW
        - Per direction: 2 narrative bubbles (FORMAL + INFORMAL)
-       - Each narrative bubble expands to 3 inner bubbles (Concept/Live/Roadmap) = 3 paragraphs
+       - Each narrative expands to 3 inner bubbles (Concept/Live/Roadmap) = 3 paragraphs
        - 6 paragraphs per direction total
        - One Jump per narrative (href "#" until you set targets; no guessing)
        - ui.css owns field (no html/body background styling)
+     FIXES (what you asked):
+       - NO auto-open anywhere (bubble implies click-to-open)
+       - Each Concept/Live/Roadmap is a REAL paragraph (7 sentences) in BOTH lenses
+       - Cardinal-heavy paragraphs with LIGHT product-integration sentence embedded (no extra bubbles)
 -->
 
 <!doctype html>
@@ -232,177 +236,120 @@ a{color:inherit;text-decoration:none}
 
   // 12-face colors (LOCK)
   var COLORS = {
-    N:"#1F3A8A",
-    NNE:"#2C3EAF",
-    ENE:"#4B3FBF",
-    E:"#0EA5E9",
-    ESE:"#14B8A6",
-    SSE:"#22C55E",
-    S:"#F59E0B",
-    SSW:"#EA580C",
-    WSW:"#DC2626",
-    W:"#7F1D1D",
-    WNW:"#9333EA",
-    NNW:"#334155"
+    N:"#1F3A8A", NNE:"#2C3EAF", ENE:"#4B3FBF", E:"#0EA5E9",
+    ESE:"#14B8A6", SSE:"#22C55E", S:"#F59E0B", SSW:"#EA580C",
+    WSW:"#DC2626", W:"#7F1D1D", WNW:"#9333EA", NNW:"#334155"
   };
 
   // 12 directions in fixed order (LOCK)
   var ORDER = ["N","NNE","ENE","E","ESE","SSE","S","SSW","WSW","W","WNW","NNW"];
 
-  // Helper: pick text by language + narrative type
+  // Helper: pick language
   function T(en, zh){ return (gd_lang==="zh") ? zh : en; }
 
-  // DATA: placeholders (replace later). Structure is locked.
-  // Each direction has:
-  // - name, desc
-  // - 2 narratives: formal + informal
-  // Each narrative has concept/live/roadmap paragraphs + jump href
-  var DATA = {
-    N:{
-      name:T("N · DEFINITIONS","N · 定义"),
-      desc:T("Meaning before measurement.","测量之前先定含义。"),
-      formal:{
-        label:T("Formal narrative","正式叙述"),
-        sub:T("Objective, bounded, falsifiable posture.","客观、有界、可证伪姿态。"),
-        concept:T("Definitions pin semantics so claims remain admissible under declared scope.","定义钉住语义，使主张在声明范围内可采信。"),
-        live:T("Shared terms remain stable across pages; disputes route to definitions.","术语跨页面一致；争议回到定义。"),
-        roadmap:T("Expand registry without mutating geometry.","扩展注册表但不改变几何。"),
-        href:"#"
-      },
-      informal:{
-        label:T("Informal narrative","非正式叙述"),
-        sub:T("TED-style delivery inside the boundary.","边界内的TED式表达。"),
-        concept:T("Lock meanings first so nothing drifts.","先把词钉死，后面就不漂。"),
-        live:T("When it’s fuzzy, you route—don’t argue.","模糊就跳转，不争论。"),
-        roadmap:T("Grow the dictionary, keep the compass.","词典变大，罗盘不变。"),
-        href:"#"
-      }
-    },
+  // Sentence bank → returns exactly 7 sentences joined.
+  function P7(s1,s2,s3,s4,s5,s6,s7){ return [s1,s2,s3,s4,s5,s6,s7].join(" "); }
 
-    NNE:{name:T("NNE","NNE"),desc:T("Definitions→Products blend.","定义→产品过渡。"),
-      formal:{label:T("Formal narrative","正式叙述"),sub:T("Bridge semantics into execution.","把语义桥接到执行。"),
-        concept:T("Transitional definitions remain bounded and cite the spine.","过渡定义保持有界并引用脊柱。"),
-        live:T("Execution inherits limits from definitions.","执行继承定义边界。"),
-        roadmap:T("Refine projection without creating new geometry.","细化投影但不新增几何。"),href:"#"},
-      informal:{label:T("Informal narrative","非正式叙述"),sub:T("Make meaning become tool.","让含义变成工具。"),
-        concept:T("Turn clarity into something you can use.","把清晰变成能用的东西。"),
-        live:T("You don’t argue—your system routes.","你不争论，系统会路由。"),
-        roadmap:T("More scale, same compass.","规模更大，罗盘不变。"),href:"#"}
-    },
+  // Direction meaning (cardinal-heavy), light product integration sentence embedded as last sentence in each paragraph.
+  function makeFormalConcept(dir){
+    return P7(
+      T("This direction defines a bounded structural role in the compass.", "该方向定义罗盘中的有界结构角色。"),
+      T("It states what is admissible before any claim is made.", "它在任何主张之前声明什么是可采信的。"),
+      T("It pins meaning to prevent silent semantic swaps under pressure.", "它钉住含义，防止压力下静默偷换概念。"),
+      T("It keeps scope explicit so measurement remains valid.", "它让范围明确，使测量保持有效。"),
+      T("It forces language to match declared boundaries, not convenience.", "它迫使语言匹配声明边界，而非图省事。"),
+      T("It ensures other directions reference the same anchor without drift.", "它确保其他方向引用同一锚点而不漂移。"),
+      T("Product tie-in stays secondary and routes through the Products spine.", "产品关联为次要，并通过产品脊柱路由。")
+    );
+  }
+  function makeFormalLive(dir){
+    return P7(
+      T("Live execution routes disputes into structure instead of persuasion.", "现况执行把争议路由回结构而不是说服。"),
+      T("The same scope must produce consistent outcomes across pages.", "同一范围必须在跨页面产生一致结果。"),
+      T("Receipts bind actions to evidence and prevent narrative inflation.", "收据把行动绑定证据，防止叙事膨胀。"),
+      T("Gates prevent bypass when pressure increases and time is scarce.", "压力增加且时间紧张时，闸门阻止绕过。"),
+      T("Returns remain available so traversal never becomes a tunnel.", "返回始终可用，使遍历不会变隧道。"),
+      T("Containment keeps local failures from cascading into global collapse.", "隔离防止局部失败级联为全局崩塌。"),
+      T("Product reference remains a bridge, not a driver of meaning.", "产品引用只是桥梁，不是含义的驱动。")
+    );
+  }
+  function makeFormalRoadmap(dir){
+    return P7(
+      T("Expansion completes the same geometry rather than mutating it.", "扩张补全同一几何，而不是使其变形。"),
+      T("New claims require explicit scope and falsifiers before acceptance.", "新主张在采纳前必须带明确范围与证伪条件。"),
+      T("New surfaces must preserve contracts, gates, and return paths.", "新执行面必须保持契约、闸门与返回路径。"),
+      T("Versioning is mandatory when meaning changes across time.", "含义随时间改变时必须版本化。"),
+      T("Scaling occurs by replication of proven structure, not redesign.", "规模化通过复制已验证结构，而不是重造。"),
+      T("Audit posture strengthens while proprietary recipes remain protected.", "审计姿态增强，同时专有配方仍受保护。"),
+      T("Products deepen as payload under fixed anchors, never as geometry.", "产品作为固定锚点下的载荷加深，绝不成为几何。")
+    );
+  }
 
-    ENE:{name:T("ENE","ENE"),desc:T("Definitions→Products transition.","定义→产品转换。"),
-      formal:{label:T("Formal narrative","正式叙述"),sub:T("Contract to surface.","从契约到执行面。"),
-        concept:T("Convert declared meaning into stable execution surfaces.","把声明含义转为稳定执行面。"),
-        live:T("Deployment remains comparable across instances.","部署在实例间保持可比。"),
-        roadmap:T("Publish boundaries without recipes.","公开边界不泄密。"),href:"#"},
-      informal:{label:T("Informal narrative","非正式叙述"),sub:T("From words to action.","从词到行动。"),
-        concept:T("Make it executable—without losing integrity.","变可执行，但不丢完整性。"),
-        live:T("Same rules, different scale.","同规则，不同规模。"),
-        roadmap:T("Clone the ramp, don’t reinvent it.","复制匝道，不重造。"),href:"#"}
-    },
+  function makeInformalConcept(dir){
+    return P7(
+      T("This direction tells you what role you’re standing in.", "这个方向告诉你你站在哪个角色上。"),
+      T("If you don’t name the role, everything turns into opinion.", "不把角色说清，后面就全变成观点。"),
+      T("When the role is declared, the fog clears fast.", "角色一声明，雾就散得很快。"),
+      T("Scope makes the game real and keeps you honest.", "范围让游戏真实，也让你诚实。"),
+      T("It stops words from wiggling when pressure shows up.", "它阻止压力来时词乱动。"),
+      T("It keeps the compass steady while the world moves.", "世界在动，罗盘不动。"),
+      T("The product mention is just a bridge, not the main story.", "产品只是桥，不是主角。")
+    );
+  }
+  function makeInformalLive(dir){
+    return P7(
+      T("When things get fuzzy, you don’t argue—you route.", "一旦模糊，你别吵——直接跳转。"),
+      T("You go back to the anchor where meaning is pinned.", "回到含义被钉死的锚点。"),
+      T("You use gates so hype can’t sneak past the boundary.", "用闸门让噱头过不去。"),
+      T("You keep receipts so reality can’t be rewritten later.", "保留收据，让现实不能事后改写。"),
+      T("You keep returns so you never get trapped in a tunnel.", "保留返回，不让你被困在隧道里。"),
+      T("You contain damage before it spreads into chaos.", "先隔离损伤，别让它扩散成混乱。"),
+      T("And yes, products matter—but only inside the rules.", "产品当然重要——但只能在规则里。")
+    );
+  }
+  function makeInformalRoadmap(dir){
+    return P7(
+      T("Roadmap means grow without breaking the compass.", "路线图就是长大还不崩罗盘。"),
+      T("Add depth, not drift.", "加深，不加漂移。"),
+      T("Clone what works instead of reinventing everything.", "复制有效的，不要重造一切。"),
+      T("Make gates clearer as you scale.", "越大闸门越清晰。"),
+      T("Make returns shorter as the site grows.", "网站越大返回越短。"),
+      T("If meaning changes, version it—don’t hide it.", "含义变了就版本化——别藏。"),
+      T("Products expand as payload, not as new geometry.", "产品扩张是载荷，不是新几何。")
+    );
+  }
 
-    E:{name:T("E · PRODUCTS","E · 产品"),desc:T("Execution surfaces under constraint.","在约束内的执行面。"),
-      formal:{label:T("Formal narrative","正式叙述"),sub:T("Bounded adoption ramps.","有界采纳匝道。"),
-        concept:T("Products are bounded adoption ramps that preserve navigation contracts.","产品是有界采纳匝道，必须保持导航契约。"),
-        live:T("Claims route to verification surfaces, not persuasion.","主张跳转核查面，而不是靠说服。"),
-        roadmap:T("Scale by replication, not redesign.","复制扩张，不重造。"),href:"#"},
-      informal:{label:T("Informal narrative","非正式叙述"),sub:T("Tools that hold the line.","守规矩的工具。"),
-        concept:T("Build tools that can’t drift while they scale.","做能扩张也不漂移的工具。"),
-        live:T("Proof has an address—use it.","证据有地址，直接用。"),
-        roadmap:T("Multiply without chaos.","倍增而不混乱。"),href:"#"}
-    },
+  function dirName(key){
+    var mapEN={
+      N:"N · DEFINITIONS",NNE:"NNE · DEFINITIONS→PRODUCTS",ENE:"ENE · DEFINITIONS→PRODUCTS",
+      E:"E · PRODUCTS",ESE:"ESE · PRODUCTS→CONSTRAINTS",SSE:"SSE · PRODUCTS→CONSTRAINTS",
+      S:"S · CONSTRAINTS",SSW:"SSW · CONSTRAINTS→CONTAINMENT",WSW:"WSW · CONSTRAINTS→CONTAINMENT",
+      W:"W · CONTAINMENT",WNW:"WNW · CONTAINMENT→DEFINITIONS",NNW:"NNW · CONTAINMENT→DEFINITIONS"
+    };
+    var mapZH={
+      N:"N · 定义",NNE:"NNE · 定义→产品",ENE:"ENE · 定义→产品",
+      E:"E · 产品",ESE:"ESE · 产品→约束",SSE:"SSE · 产品→约束",
+      S:"S · 约束",SSW:"SSW · 约束→隔离",WSW:"WSW · 约束→隔离",
+      W:"W · 隔离",WNW:"WNW · 隔离→定义",NNW:"NNW · 隔离→定义"
+    };
+    return (gd_lang==="zh") ? mapZH[key] : mapEN[key];
+  }
 
-    ESE:{name:T("ESE","ESE"),desc:T("Products→Constraints blend.","产品→约束过渡。"),
-      formal:{label:T("Formal narrative","正式叙述"),sub:T("Power meets gate.","能力遇到闸门。"),
-        concept:T("Execution must satisfy admissibility gates.","执行必须满足可采信闸门。"),
-        live:T("Products route to gates before scale.","产品扩张前先过闸门。"),
-        roadmap:T("Publish readiness checklists.","公开就绪清单。"),href:"#"},
-      informal:{label:T("Informal narrative","非正式叙述"),sub:T("Dreams with guardrails.","有护栏的梦想。"),
-        concept:T("Big ideas stay safe when the gates are visible.","闸门可见，大想法才安全。"),
-        live:T("No gate, no growth.","没闸门就别扩张。"),
-        roadmap:T("Turn hype into prerequisites.","把噱头变成先决条件。"),href:"#"}
-    },
-
-    SSE:{name:T("SSE","SSE"),desc:T("Products→Constraints transition.","产品→约束转换。"),
-      formal:{label:T("Formal narrative","正式叙述"),sub:T("Readiness before invitation.","先就绪再邀请。"),
-        concept:T("‘When’ equals prerequisites, not dates.","“何时”=先决条件，不是日期。"),
-        live:T("Pressure reveals weak gates; tighten with evidence.","压力暴露闸门薄弱；用证据收紧。"),
-        roadmap:T("Phase gates become auditable checklists.","阶段闸门变为可审计清单。"),href:"#"},
-      informal:{label:T("Informal narrative","非正式叙述"),sub:T("Stop guessing. Gate it.","别猜了，上闸门。"),
-        concept:T("If you can’t state prerequisites, you’re not ready.","说不清先决条件，就没准备好。"),
-        live:T("Pressure doesn’t lie.","压力不会撒谎。"),
-        roadmap:T("Make readiness obvious.","让就绪一眼可见。"),href:"#"}
-    },
-
-    S:{name:T("S · CONSTRAINTS","S · 约束"),desc:T("Admissibility gates prevent drift.","闸门防漂移。"),
-      formal:{label:T("Formal narrative","正式叙述"),sub:T("No scope, no claim.","无范围，不主张。"),
-        concept:T("Claims are refused without scope, receipts, and falsifiers.","无范围/无收据/无证伪条件则拒绝主张。"),
-        live:T("Gate enforcement blocks shortcut traversal and inflation.","闸门执行阻止抄近道与膨胀。"),
-        roadmap:T("Tighten only with evidence; never loosen by story.","只用证据收紧；绝不靠叙事放松。"),href:"#"},
-      informal:{label:T("Informal narrative","非正式叙述"),sub:T("Hard no saves lives.","硬拒绝救命。"),
-        concept:T("If it isn’t bounded, it isn’t real.","不有界，就不真实。"),
-        live:T("Shortcuts are where drift is born.","捷径是漂移的出生地。"),
-        roadmap:T("Make ‘no’ a feature.","把“不行”做成特性。"),href:"#"}
-    },
-
-    SSW:{name:T("SSW","SSW"),desc:T("Constraints→Containment blend.","约束→隔离过渡。"),
-      formal:{label:T("Formal narrative","正式叙述"),sub:T("Refusal + isolation cooperate.","拒绝+隔离协同。"),
-        concept:T("Containment complements refusal to prevent cascade.","隔离与拒绝互补防级联。"),
-        live:T("Safe ‘no’ plus clean return paths.","安全拒绝+干净返回。"),
-        roadmap:T("Reduce cascade risk as scale increases.","规模化降低级联风险。"),href:"#"},
-      informal:{label:T("Informal narrative","非正式叙述"),sub:T("Say no, then contain.","先拒绝，再隔离。"),
-        concept:T("A clean ‘no’ is kindness.","干净的拒绝是善意。"),
-        live:T("Exit paths keep you sane.","出口让你保持清醒。"),
-        roadmap:T("Bigger system, tighter containment.","越大越要隔离。"),href:"#"}
-    },
-
-    WSW:{name:T("WSW","WSW"),desc:T("Constraints→Containment transition.","约束→隔离转换。"),
-      formal:{label:T("Formal narrative","正式叙述"),sub:T("Segment failure vectors.","分段失败向量。"),
-        concept:T("Segmentation prevents scale amplifying single failure modes.","分段防止规模放大单点失败。"),
-        live:T("Evidence chains keep integrity enforceable.","证据链让完整性可执行。"),
-        roadmap:T("Audit posture strengthens without recipes.","强化审计姿态但不泄密。"),href:"#"},
-      informal:{label:T("Informal narrative","非正式叙述"),sub:T("Don’t let one crack ruin the whole wall.","别让一条裂缝毁整面墙。"),
-        concept:T("Contain fast. Fix clean.","快隔离，干净修。"),
-        live:T("Receipts keep people honest.","收据让人诚实。"),
-        roadmap:T("Audit without drama.","审计不需要戏。"),href:"#"}
-    },
-
-    W:{name:T("W · CONTAINMENT","W · 隔离"),desc:T("Isolation prevents cascade.","隔离防级联。"),
-      formal:{label:T("Formal narrative","正式叙述"),sub:T("Local failure must stay local.","局部失败必须局部化。"),
-        concept:T("Failures must be segmented so local breaks do not become global collapse.","失败必须分段，局部破损不能变全局崩塌。"),
-        live:T("Return paths remain available; state remains coherent.","返回路径可用；状态保持一致。"),
-        roadmap:T("Add containment gauges as the system scales.","规模化时增加隔离量规。"),href:"#"},
-      informal:{label:T("Informal narrative","非正式叙述"),sub:T("Keep damage small.","把损伤变小。"),
-        concept:T("Contain it before it spreads.","先隔离，别扩散。"),
-        live:T("Always keep an exit.","永远有出口。"),
-        roadmap:T("Measure spillover, don’t guess.","测外溢，别猜。"),href:"#"}
-    },
-
-    WNW:{name:T("WNW","WNW"),desc:T("Containment→Definitions blend.","隔离→定义过渡。"),
-      formal:{label:T("Formal narrative","正式叙述"),sub:T("Audit feeds definitions via versioning.","审计通过版本化反哺定义。"),
-        concept:T("Containment feedback clarifies definitions and tightens registries.","隔离反馈澄清定义并收紧注册表。"),
-        live:T("Audits drive corrections without silent edits.","审计推动修正，避免静默改义。"),
-        roadmap:T("Shorten returns as lookup points grow.","查表点越多返回越短。"),href:"#"},
-      informal:{label:T("Informal narrative","非正式叙述"),sub:T("Containment teaches you what words really mean.","隔离让你知道词到底啥意思。"),
-        concept:T("Reality sharpens language.","现实会磨尖语言。"),
-        live:T("Fix it with versions, not vibes.","用版本修，不靠感觉。"),
-        roadmap:T("More lookup, less confusion.","更多查表，更少困惑。"),href:"#"}
-    },
-
-    NNW:{name:T("NNW","NNW"),desc:T("Containment→Definitions transition.","隔离→定义转换。"),
-      formal:{label:T("Formal narrative","正式叙述"),sub:T("Reset without drift.","不漂移的重置。"),
-        concept:T("Return paths restore coherence under pressure.","返回路径在压力下恢复一致性。"),
-        live:T("Re-entry preserves state; semantics do not swap silently.","重入保留状态；语义不静默偷换。"),
-        roadmap:T("Add lookup points to reduce confusion under scale.","增加查表点减少规模化困惑。"),href:"#"},
-      informal:{label:T("Informal narrative","非正式叙述"),sub:T("Breathe. Reset. Continue.","呼吸，重置，继续。"),
-        concept:T("A clean reset is power.","干净重置就是力量。"),
-        live:T("No silent swaps.","不许悄悄换。"),
-        roadmap:T("Make returns shorter over time.","让返回越来越短。"),href:"#"}
-    }
-  };
-
-  // Build UI
-  var groups=document.getElementById("groups");
+  function dirDesc(key){
+    var en={
+      N:"Meaning before measurement.",NNE:"Bridge meaning into execution.",ENE:"Contract transitions into surface.",
+      E:"Execution surfaces under bounded claims.",ESE:"Power meets gates and prerequisites.",SSE:"Deployment under pressure.",
+      S:"Admissibility, gates, anti-drift.",SSW:"Refusal and containment cooperate.",WSW:"Failure vector controlled.",
+      W:"Isolation prevents cascade.",WNW:"Audit returns to clearer meaning.",NNW:"Reset without semantic swaps."
+    };
+    var zh={
+      N:"测量之前先定含义。",NNE:"把含义桥接到执行。",ENE:"把契约转为执行面。",
+      E:"有界主张下的执行面。",ESE:"能力遇闸门与先决条件。",SSE:"压力下部署。",
+      S:"可采信、闸门、反漂移。",SSW:"拒绝与隔离协同。",WSW:"控制失败向量。",
+      W:"隔离防级联。",WNW:"审计回到更清晰含义。",NNW:"不偷换概念的重置。"
+    };
+    return (gd_lang==="zh") ? zh[key] : en[key];
+  }
 
   function mkPara(label, text){
     var pb=document.createElement("div");
@@ -418,7 +365,17 @@ a{color:inherit;text-decoration:none}
     return pb;
   }
 
-  function mkRow(faceKey, narKey, nar){
+  function mkRow(faceKey, lens){
+    var isFormal = (lens==="formal");
+    var label = isFormal ? T("Formal narrative","正式叙述") : T("Informal narrative","非正式叙述");
+    var sub = isFormal
+      ? T("Objective, bounded, falsifiable posture.","客观、有界、可证伪姿态。")
+      : T("TED-style delivery inside the boundary.","边界内的TED式表达。");
+
+    var concept = isFormal ? makeFormalConcept(faceKey) : makeInformalConcept(faceKey);
+    var live    = isFormal ? makeFormalLive(faceKey)    : makeInformalLive(faceKey);
+    var road    = isFormal ? makeFormalRoadmap(faceKey) : makeInformalRoadmap(faceKey);
+
     var row=document.createElement("div");
     row.className="row";
 
@@ -433,15 +390,15 @@ a{color:inherit;text-decoration:none}
 
     var name=document.createElement("div");
     name.className="rname";
-    name.textContent = nar.label;
+    name.textContent=label;
 
-    var sub=document.createElement("div");
-    sub.className="rsub";
-    sub.textContent = nar.sub;
+    var subel=document.createElement("div");
+    subel.className="rsub";
+    subel.textContent=sub;
 
     left.appendChild(pip);
     left.appendChild(name);
-    left.appendChild(sub);
+    left.appendChild(subel);
 
     var chev=document.createElement("div");
     chev.className="chev";
@@ -460,19 +417,16 @@ a{color:inherit;text-decoration:none}
     var Ln = T("Live","现况");
     var Lr = T("Roadmap","路线图");
 
-    stack.appendChild(mkPara(Lc, nar.concept));
-    stack.appendChild(mkPara(Ln, nar.live));
-    stack.appendChild(mkPara(Lr, nar.roadmap));
+    stack.appendChild(mkPara(Lc, concept));
+    stack.appendChild(mkPara(Ln, live));
+    stack.appendChild(mkPara(Lr, road));
 
     var jump=document.createElement("div");
     jump.className="jump";
     var a=document.createElement("a");
     a.className="btn";
-    a.textContent = T("JUMP","跳转");
-    a.href = nar.href;
-    if(nar.href !== "#"){
-      a.href = nar.href + (nar.href.indexOf("?")>=0 ? "" : q());
-    }
+    a.textContent=T("JUMP","跳转");
+    a.href="#"; // no guessing
     jump.appendChild(a);
 
     body.appendChild(stack);
@@ -485,13 +439,10 @@ a{color:inherit;text-decoration:none}
 
     row.appendChild(head);
     row.appendChild(body);
-
-    // Optional default open: only first direction, only the lens selected
     return row;
   }
 
   function mkGroup(faceKey){
-    var pack=DATA[faceKey];
     var group=document.createElement("section");
     group.className="group";
     group.style.setProperty("--c", COLORS[faceKey] || "#93C5FD");
@@ -507,12 +458,14 @@ a{color:inherit;text-decoration:none}
 
     var gt=document.createElement("div");
     gt.className="gtitle";
+
     var n=document.createElement("div");
     n.className="name";
-    n.textContent=pack.name;
+    n.textContent=dirName(faceKey);
+
     var ds=document.createElement("div");
     ds.className="desc";
-    ds.textContent=pack.desc;
+    ds.textContent=dirDesc(faceKey);
 
     gt.appendChild(n);
     gt.appendChild(ds);
@@ -525,23 +478,9 @@ a{color:inherit;text-decoration:none}
     var rows=document.createElement("div");
     rows.className="rows";
 
-    // Two narratives per direction (FORMAL + INFORMAL)
-    var r1 = mkRow(faceKey,"formal",pack.formal);
-    var r2 = mkRow(faceKey,"informal",pack.informal);
-
-    rows.appendChild(r1);
-    rows.appendChild(r2);
-
-    // Default open behavior (allowed): first face only, one narrative based on gd_style
-    if(faceKey==="N"){
-      if(gd_style==="formal"){
-        r1.classList.add("open");
-        r1.querySelector(".chev").textContent="▾";
-      }else{
-        r2.classList.add("open");
-        r2.querySelector(".chev").textContent="▾";
-      }
-    }
+    // Two narratives per direction (LOCK)
+    rows.appendChild(mkRow(faceKey,"formal"));
+    rows.appendChild(mkRow(faceKey,"informal"));
 
     group.appendChild(ghead);
     group.appendChild(rows);
@@ -549,9 +488,10 @@ a{color:inherit;text-decoration:none}
   }
 
   // Render in fixed order
-  ORDER.forEach(function(k){
-    if(DATA[k]) groups.appendChild(mkGroup(k));
-  });
+  var groups=document.getElementById("groups");
+  ORDER.forEach(function(k){ groups.appendChild(mkGroup(k)); });
+
+  // IMPORTANT: no auto-open anywhere (bubble implies click-to-open)
 
 })();
 </script>

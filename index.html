@@ -1,16 +1,23 @@
 <!-- TNT — /index.html
-     OFFICIAL FORK · TWO MASSIVE DIAMONDS · COHERENCE / POWER
+     INDEX · PRIMARY FORK · TWO MASSIVE DIAMONDS · HARD NAVIGATION ONLY
 
-     IDENTITY:
-       - This is the first conscious fork after the Door.
-       - Two vertical diamonds only.
-       - No modals.
+     ROLE:
+       - This is the first directional commitment after language.
        - No overlays.
-       - No lens toggles.
-       - Hard navigation only.
-       - Full state propagation (lang/style/time).
-       - Uses /assets/ui.css + /assets/branch.css only.
-       - Does NOT style html/body background.
+       - No modals.
+       - No lenses.
+       - Pure fork.
+
+       TOP:    FOUNDATION  → /home/
+       BOTTOM: FRONTIER    → /explore/frontier/
+
+     STATE:
+       - Full propagation of lang/style/time
+       - No new keys
+
+     STYLE:
+       - EXACT same massive lacquer diamond system as approved Frontier page
+       - No deviation
 -->
 
 <!doctype html>
@@ -18,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cardinal Axis · Choose Direction</title>
+<title>Cardinal Axis · Direction</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -40,14 +47,25 @@ body{
 }
 a{color:inherit;text-decoration:none}
 
+/* Top-left */
+.top-left{
+  position:fixed;
+  left:16px;
+  top:16px;
+  z-index:120;
+  display:flex;
+  gap:10px;
+}
+
 /* Brand */
 .brand{
   position:fixed;
   left:50%;
-  top:18px;
+  top:16px;
   transform:translateX(-50%);
+  z-index:110;
   text-align:center;
-  padding:12px 22px;
+  padding:10px 18px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
@@ -57,16 +75,18 @@ a{color:inherit;text-decoration:none}
   font-size:12px;
   letter-spacing:3px;
   text-transform:uppercase;
-  opacity:.7;
+  opacity:.75;
+  margin:0 0 6px 0;
 }
 .brand .t{
   font-weight:950;
-  font-size:40px;
-  margin-top:6px;
+  font-size:42px;
+  letter-spacing:.3px;
+  margin:0;
 }
 .brand .s{
   font-size:14px;
-  opacity:.8;
+  opacity:.85;
   margin-top:6px;
 }
 
@@ -78,6 +98,7 @@ a{color:inherit;text-decoration:none}
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
+  z-index:60;
   pointer-events:none;
 }
 
@@ -92,6 +113,8 @@ a{color:inherit;text-decoration:none}
   border-radius:34px;
   cursor:pointer;
   pointer-events:auto;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 48%),
@@ -105,12 +128,40 @@ a{color:inherit;text-decoration:none}
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -50px 90px rgba(0,0,0,.78);
 
-  transition:transform .2s ease, box-shadow .2s ease;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  overflow:hidden;
+}
+.d::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:34px;
+  padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.60;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:"";
+  position:absolute;
+  left:10%;
+  right:10%;
+  top:10%;
+  height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  pointer-events:none;
 }
 .d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  border-color:rgba(212,175,55,.30);
 }
 
+/* Vertical layout */
 .d-top{
   transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg);
 }
@@ -127,67 +178,105 @@ a{color:inherit;text-decoration:none}
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:24px;
+  padding:18px;
+  gap:12px;
+  pointer-events:none;
 }
 .lab{
   font-weight:950;
-  font-size:26px;
-  letter-spacing:1px;
+  font-size:24px;
+  letter-spacing:.8px;
 }
 .sub{
   font-size:15px;
   opacity:.85;
   line-height:1.35;
   max-width:24em;
-  margin-top:10px;
+}
+
+/* Dock */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:120;
+  width:min(980px,94vw);
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.20);
 }
 </style>
 </head>
 
 <body>
 
+<div class="top-left">
+  <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
+</div>
+
 <div class="brand">
-  <div class="k">CARDINAL AXIS</div>
-  <div class="t">Choose Direction</div>
-  <div class="s">Coherence before power</div>
+  <div class="k" id="bk">CARDINAL AXIS</div>
+  <div class="t" id="bt">Choose direction</div>
+  <div class="s" id="bs">Structure first · Or expand forward</div>
 </div>
 
 <div class="stage">
 
-  <!-- COHERENCE -->
-  <div class="d d-top" id="dCoherence" role="button" tabindex="0">
+  <!-- FOUNDATION -->
+  <div class="d d-top" id="dFoundation" role="button" tabindex="0">
     <div class="inner">
-      <div class="lab">COHERENCE</div>
-      <div class="sub">
-        Definitions · Substrate · Laws · Measurement · Structure
+      <div class="lab" id="labFoundation">FOUNDATION</div>
+      <div class="sub" id="subFoundation">
+        Start with structure. Get oriented fast.
       </div>
     </div>
   </div>
 
-  <!-- POWER -->
-  <div class="d d-bottom" id="dPower" role="button" tabindex="0">
+  <!-- FRONTIER -->
+  <div class="d d-bottom" id="dFrontier" role="button" tabindex="0">
     <div class="inner">
-      <div class="lab">POWER</div>
-      <div class="sub">
-        Products · Industry · Expansion · Frontier · Application
+      <div class="lab" id="labFrontier">FRONTIER</div>
+      <div class="sub" id="subFrontier">
+        Dream forward — without losing your footing.
       </div>
     </div>
   </div>
 
 </div>
 
+<nav class="dock">
+  <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="crp-btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
 <script>
 (function(){
 
+  // Canonical state propagation
   var qs = new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
 
-  if(time==="trajectory") time="post";
   if(lang!=="en" && lang!=="zh") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="origin";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+  }catch(e){}
+
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   function q(){
     return "?lang="+encodeURIComponent(lang)+
@@ -195,25 +284,35 @@ a{color:inherit;text-decoration:none}
            "&time="+encodeURIComponent(time);
   }
 
-  function goCoherence(){
-    location.href = "/home/"+q();
+  // Bilingual render
+  if(lang==="zh"){
+    document.getElementById("bt").textContent="选择方向";
+    document.getElementById("bs").textContent="先结构 · 或向前扩展";
+    document.getElementById("labFoundation").textContent="基础";
+    document.getElementById("subFoundation").textContent="从结构开始。快速获得方向。";
+    document.getElementById("labFrontier").textContent="前沿";
+    document.getElementById("subFrontier").textContent="向前探索——但不失根基。";
   }
 
-  function goPower(){
-    location.href = "/explore/"+q();
+  // Routing
+  function goFoundation(){
+    location.href="/home/"+q();
+  }
+  function goFrontier(){
+    location.href="/explore/frontier/"+q();
   }
 
-  var dc = document.getElementById("dCoherence");
-  var dp = document.getElementById("dPower");
+  var df=document.getElementById("dFoundation");
+  var dfr=document.getElementById("dFrontier");
 
-  dc.addEventListener("click", goCoherence);
-  dp.addEventListener("click", goPower);
+  df.addEventListener("click",goFoundation);
+  dfr.addEventListener("click",goFrontier);
 
-  dc.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goCoherence(); }
+  df.addEventListener("keydown",function(e){
+    if(e.key==="Enter"||e.key===" "){e.preventDefault();goFoundation();}
   });
-  dp.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goPower(); }
+  dfr.addEventListener("keydown",function(e){
+    if(e.key==="Enter"||e.key===" "){e.preventDefault();goFrontier();}
   });
 
 })();

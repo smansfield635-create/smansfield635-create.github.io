@@ -1,19 +1,14 @@
 <!-- TNT — /home/index.html
-     HUB A · 12-DIRECTION INDEX · NARRATIVE ACCORDION (NO MODALS)
-     LOCKS (as you pasted, enforced):
-       - CANON KEYS ONLY: gd_lang / gd_style / gd_time (query + localStorage)
-       - NO language selector UI (gd_lang controls EN-only / 中文-only)
-       - NO mirror UI
-       - 12 directions fixed order: N, NNE, ENE, E, ESE, SSE, S, SSW, WSW, W, WNW, NNW
-       - Per direction: 2 narrative bubbles (FORMAL + INFORMAL)
-       - Each narrative expands to 3 inner bubbles (Concept/Live/Roadmap) = 3 paragraphs
-       - 6 paragraphs per direction total
-       - One Jump per narrative (href "#" until you set targets; no guessing)
-       - ui.css owns field (no html/body background styling)
-     FIXES (what you asked):
-       - NO auto-open anywhere (bubble implies click-to-open)
-       - Each Concept/Live/Roadmap is a REAL paragraph (7 sentences) in BOTH lenses
-       - Cardinal-heavy paragraphs with LIGHT product-integration sentence embedded (no extra bubbles)
+     HUB A · 12 BUBBLES ONLY · 3 SUB-BUBBLES ONLY · PARAGRAPH ONLY AT LEVEL 2
+     LOCKS:
+       - Canon keys only: gd_lang / gd_style / gd_time
+       - No language selector UI (gd_lang decides EN-only / 中文-only)
+       - No mirror UI
+       - No subtitles / no hint cards / no extra context above the hood
+       - 12 directions are ONE LINE each (bubble)
+       - Click direction => exactly 3 one-line bubbles (Concept/Live/Roadmap)
+       - Click Concept/Live/Roadmap => show 1 paragraph (7–9 sentences)
+       - Nothing else appears
 -->
 
 <!doctype html>
@@ -27,114 +22,68 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-/* DO NOT TOUCH FIELD — ui.css owns html/body background */
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
+.wrap{width:min(980px,94vw);margin:0 auto;padding:16px 0 110px;display:flex;flex-direction:column;gap:12px}
 
-/* Buttons */
-.btn,.crp-btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:10px 14px;border-radius:14px;
-  background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  color:#fff;border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-}
-.btn:hover,.crp-btn:hover{box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px rgba(212,175,55,.20)}
-.btn:active,.crp-btn:active{transform:translateY(1px)}
-
-/* Page frame */
-.wrap{width:min(1040px,94vw);margin:0 auto;padding:14px 0 110px;display:flex;flex-direction:column;gap:14px}
-.topbar{position:sticky;top:0;z-index:50;padding:12px 0;backdrop-filter:blur(8px)}
-.toprow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-.brand{
-  display:flex;flex-direction:column;gap:4px;
-  padding:10px 14px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);
-}
-.brand .k{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.78;margin:0}
-.brand .t{font-weight:950;font-size:18px;letter-spacing:.2px;margin:0}
-.brand .s{font-size:12px;opacity:.78;margin:0}
-
-.hintCard{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.80), rgba(11,15,20,.88));
-  box-shadow:0 18px 60px rgba(0,0,0,.70);
-  padding:14px 16px;
-}
-.hintCard h2{margin:0 0 6px;font-weight:950;letter-spacing:.2px;font-size:16px}
-.hintCard p{margin:0;color:rgba(255,255,255,.84);line-height:1.45;font-size:13px}
-
-/* Direction groups */
-.group{
+/* Single-line bubble */
+.bubble{
   --c:#93C5FD;
   border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
-  overflow:hidden;
-}
-.ghead{
-  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
-  padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
-}
-.gleft{display:flex;align-items:flex-start;gap:12px;min-width:0}
-.diamond{
-  width:14px;height:14px;margin-top:3px;
-  transform:rotate(45deg);
-  border-radius:4px;
-  background:var(--c);
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 18px rgba(0,0,0,.35);
-  flex:0 0 auto;
-  pointer-events:none;
-}
-.gtitle{min-width:0}
-.gtitle .name{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gtitle .desc{margin-top:4px;font-size:12px;opacity:.74;line-height:1.35}
-
-/* Narrative rows */
-.rows{display:flex;flex-direction:column;gap:10px;padding:12px 12px 14px}
-.row{
-  border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
-  background:linear-gradient(145deg, rgba(17,22,28,.78), rgba(11,15,20,.86));
+  background:linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
   box-shadow:0 12px 40px rgba(0,0,0,.55);
   overflow:hidden;
 }
-.rhead{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
+.bhead{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:12px 14px;cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 }
-.rleft{display:flex;align-items:center;gap:10px;min-width:0}
-.pip{
-  width:8px;height:18px;border-radius:99px;background:var(--c);
-  flex:0 0 auto;opacity:.85;
+.left{display:flex;align-items:center;gap:10px;min-width:0}
+.diamond{
+  width:12px;height:12px;transform:rotate(45deg);border-radius:4px;
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;
   pointer-events:none;
 }
-.rname{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rsub{font-size:12px;opacity:.70;margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chev{font-size:16px;opacity:.75;flex:0 0 auto}
-
-/* Inner bubbles */
-.rbody{display:none;padding:12px 14px 14px;border-top:1px solid rgba(255,255,255,.08)}
-.row.open .rbody{display:block}
-.pstack{display:flex;flex-direction:column;gap:10px}
-.pbub{
-  padding:12px 14px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
-  box-shadow:0 10px 32px rgba(0,0,0,.45), inset 0 2px 0 rgba(255,255,255,.05);
+.label{
+  font-weight:950;letter-spacing:.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.pbub .pt{margin:0 0 6px;font-weight:950;letter-spacing:.2px;font-size:13px}
-.pbub .pp{margin:0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13px}
+.chev{opacity:.75;font-size:16px;flex:0 0 auto}
 
-.jump{display:flex;justify-content:flex-end;margin-top:10px}
+/* Level containers */
+.body{display:none;padding:0 14px 12px;border-top:1px solid rgba(255,255,255,.08)}
+.bubble.open .body{display:block}
+.stack{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+
+/* Mode bubble (Concept/Live/Roadmap) */
+.mode{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  background:linear-gradient(145deg, rgba(17,22,28,.78), rgba(11,15,20,.86));
+  box-shadow:0 10px 32px rgba(0,0,0,.45);
+  overflow:hidden;
+}
+.mhead{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:11px 12px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.mlabel{font-weight:950;letter-spacing:.2px}
+.mchev{opacity:.75;font-size:16px}
+.mbody{display:none;padding:10px 12px 12px;border-top:1px solid rgba(255,255,255,.08)}
+.mode.open .mbody{display:block}
+
+/* Paragraph only appears at Level 2 */
+.p{
+  margin:0;
+  color:rgba(255,255,255,.86);
+  line-height:1.6;
+  font-size:13px;
+}
 
 /* Dock */
 .dock{
@@ -150,35 +99,21 @@ a{color:inherit;text-decoration:none}
   background:rgba(0,0,0,.20);
   backdrop-filter:blur(8px);
 }
-
-@media (max-width:560px){
-  .brand .t{font-size:16px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 14px;border-radius:14px;
+  background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  color:#fff;border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 12px 30px rgba(0,0,0,.55);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
 }
 </style>
 </head>
 
 <body>
 
-<div class="topbar">
-  <div class="wrap">
-    <div class="toprow">
-      <div class="brand" aria-hidden="true">
-        <p class="k" id="bk">CARDINAL AXIS</p>
-        <p class="t" id="bt">HUB · Index</p>
-        <p class="s" id="bs">12 directions · 2 narratives each · Concept/Live/Roadmap</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="wrap">
-  <div class="hintCard">
-    <h2 id="hH">Cardinality index</h2>
-    <p id="hP">Each direction contains two narratives: Formal and Informal. Tap a narrative to reveal Concept · Live · Roadmap. One jump per narrative.</p>
-  </div>
-
-  <div id="groups"></div>
-</div>
+<div class="wrap" id="list"></div>
 
 <nav class="dock" aria-label="Bottom navigation">
   <a class="btn" id="dockHub" href="/home/">HUB</a>
@@ -190,7 +125,7 @@ a{color:inherit;text-decoration:none}
 
 <script>
 (function(){
-  // ===== CANON KEYS ONLY =====
+  // Canon keys only
   var qs = new URLSearchParams(location.search);
   var gd_lang  = qs.get("gd_lang")  || localStorage.getItem("gd_lang")  || "en";
   var gd_style = qs.get("gd_style") || localStorage.getItem("gd_style") || "informal";
@@ -217,281 +152,203 @@ a{color:inherit;text-decoration:none}
     return "?"+p.toString();
   }
 
-  // Wire dock (state preserved)
+  // Dock links preserve state
   document.getElementById("dockHub").href="/home/"+q();
   document.getElementById("dockExplore").href="/explore/"+q();
   document.getElementById("dockProducts").href="/products/"+q();
   document.getElementById("dockLaws").href="/laws/"+q();
   document.getElementById("dockGauges").href="/gauges/"+q();
 
-  // Header i18n (render-only)
-  function setText(id, txt){ var el=document.getElementById(id); if(el) el.textContent=txt; }
-  if(gd_lang==="zh"){
-    setText("bk","基轴体系");
-    setText("bt","枢纽 · 索引");
-    setText("bs","12方向 · 每方向2叙述 · 概念/现况/路线图");
-    setText("hH","基数索引");
-    setText("hP","每个方向包含两条叙述：正式与非正式。点击叙述展开概念·现况·路线图。每条叙述一个跳转。");
-  }
-
-  // 12-face colors (LOCK)
+  // 12-color ring
   var COLORS = {
     N:"#1F3A8A", NNE:"#2C3EAF", ENE:"#4B3FBF", E:"#0EA5E9",
     ESE:"#14B8A6", SSE:"#22C55E", S:"#F59E0B", SSW:"#EA580C",
     WSW:"#DC2626", W:"#7F1D1D", WNW:"#9333EA", NNW:"#334155"
   };
 
-  // 12 directions in fixed order (LOCK)
   var ORDER = ["N","NNE","ENE","E","ESE","SSE","S","SSW","WSW","W","WNW","NNW"];
 
-  // Helper: pick language
   function T(en, zh){ return (gd_lang==="zh") ? zh : en; }
 
-  // Sentence bank → returns exactly 7 sentences joined.
-  function P7(s1,s2,s3,s4,s5,s6,s7){ return [s1,s2,s3,s4,s5,s6,s7].join(" "); }
+  // One-line labels only (no subtitles)
+  var LABEL = {
+    N:   T("N · DEFINITIONS","N · 定义"),
+    NNE: T("NNE","NNE"),
+    ENE: T("ENE","ENE"),
+    E:   T("E · PRODUCTS","E · 产品"),
+    ESE: T("ESE","ESE"),
+    SSE: T("SSE","SSE"),
+    S:   T("S · CONSTRAINTS","S · 约束"),
+    SSW: T("SSW","SSW"),
+    WSW: T("WSW","WSW"),
+    W:   T("W · CONTAINMENT","W · 隔离"),
+    WNW: T("WNW","WNW"),
+    NNW: T("NNW","NNW")
+  };
 
-  // Direction meaning (cardinal-heavy), light product integration sentence embedded as last sentence in each paragraph.
-  function makeFormalConcept(dir){
-    return P7(
-      T("This direction defines a bounded structural role in the compass.", "该方向定义罗盘中的有界结构角色。"),
-      T("It states what is admissible before any claim is made.", "它在任何主张之前声明什么是可采信的。"),
-      T("It pins meaning to prevent silent semantic swaps under pressure.", "它钉住含义，防止压力下静默偷换概念。"),
-      T("It keeps scope explicit so measurement remains valid.", "它让范围明确，使测量保持有效。"),
-      T("It forces language to match declared boundaries, not convenience.", "它迫使语言匹配声明边界，而非图省事。"),
-      T("It ensures other directions reference the same anchor without drift.", "它确保其他方向引用同一锚点而不漂移。"),
-      T("Product tie-in stays secondary and routes through the Products spine.", "产品关联为次要，并通过产品脊柱路由。")
-    );
-  }
-  function makeFormalLive(dir){
-    return P7(
-      T("Live execution routes disputes into structure instead of persuasion.", "现况执行把争议路由回结构而不是说服。"),
-      T("The same scope must produce consistent outcomes across pages.", "同一范围必须在跨页面产生一致结果。"),
-      T("Receipts bind actions to evidence and prevent narrative inflation.", "收据把行动绑定证据，防止叙事膨胀。"),
-      T("Gates prevent bypass when pressure increases and time is scarce.", "压力增加且时间紧张时，闸门阻止绕过。"),
-      T("Returns remain available so traversal never becomes a tunnel.", "返回始终可用，使遍历不会变隧道。"),
-      T("Containment keeps local failures from cascading into global collapse.", "隔离防止局部失败级联为全局崩塌。"),
-      T("Product reference remains a bridge, not a driver of meaning.", "产品引用只是桥梁，不是含义的驱动。")
-    );
-  }
-  function makeFormalRoadmap(dir){
-    return P7(
-      T("Expansion completes the same geometry rather than mutating it.", "扩张补全同一几何，而不是使其变形。"),
-      T("New claims require explicit scope and falsifiers before acceptance.", "新主张在采纳前必须带明确范围与证伪条件。"),
-      T("New surfaces must preserve contracts, gates, and return paths.", "新执行面必须保持契约、闸门与返回路径。"),
-      T("Versioning is mandatory when meaning changes across time.", "含义随时间改变时必须版本化。"),
-      T("Scaling occurs by replication of proven structure, not redesign.", "规模化通过复制已验证结构，而不是重造。"),
-      T("Audit posture strengthens while proprietary recipes remain protected.", "审计姿态增强，同时专有配方仍受保护。"),
-      T("Products deepen as payload under fixed anchors, never as geometry.", "产品作为固定锚点下的载荷加深，绝不成为几何。")
-    );
-  }
+  // 7-sentence paragraphs (formal/informal swap by gd_style)
+  function P7(a,b,c,d,e,f,g){ return [a,b,c,d,e,f,g].join(" "); }
 
-  function makeInformalConcept(dir){
-    return P7(
-      T("This direction tells you what role you’re standing in.", "这个方向告诉你你站在哪个角色上。"),
-      T("If you don’t name the role, everything turns into opinion.", "不把角色说清，后面就全变成观点。"),
-      T("When the role is declared, the fog clears fast.", "角色一声明，雾就散得很快。"),
-      T("Scope makes the game real and keeps you honest.", "范围让游戏真实，也让你诚实。"),
-      T("It stops words from wiggling when pressure shows up.", "它阻止压力来时词乱动。"),
-      T("It keeps the compass steady while the world moves.", "世界在动，罗盘不动。"),
-      T("The product mention is just a bridge, not the main story.", "产品只是桥，不是主角。")
-    );
-  }
-  function makeInformalLive(dir){
-    return P7(
-      T("When things get fuzzy, you don’t argue—you route.", "一旦模糊，你别吵——直接跳转。"),
-      T("You go back to the anchor where meaning is pinned.", "回到含义被钉死的锚点。"),
-      T("You use gates so hype can’t sneak past the boundary.", "用闸门让噱头过不去。"),
-      T("You keep receipts so reality can’t be rewritten later.", "保留收据，让现实不能事后改写。"),
-      T("You keep returns so you never get trapped in a tunnel.", "保留返回，不让你被困在隧道里。"),
-      T("You contain damage before it spreads into chaos.", "先隔离损伤，别让它扩散成混乱。"),
-      T("And yes, products matter—but only inside the rules.", "产品当然重要——但只能在规则里。")
-    );
-  }
-  function makeInformalRoadmap(dir){
-    return P7(
-      T("Roadmap means grow without breaking the compass.", "路线图就是长大还不崩罗盘。"),
-      T("Add depth, not drift.", "加深，不加漂移。"),
-      T("Clone what works instead of reinventing everything.", "复制有效的，不要重造一切。"),
-      T("Make gates clearer as you scale.", "越大闸门越清晰。"),
-      T("Make returns shorter as the site grows.", "网站越大返回越短。"),
-      T("If meaning changes, version it—don’t hide it.", "含义变了就版本化——别藏。"),
-      T("Products expand as payload, not as new geometry.", "产品扩张是载荷，不是新几何。")
-    );
-  }
-
-  function dirName(key){
-    var mapEN={
-      N:"N · DEFINITIONS",NNE:"NNE · DEFINITIONS→PRODUCTS",ENE:"ENE · DEFINITIONS→PRODUCTS",
-      E:"E · PRODUCTS",ESE:"ESE · PRODUCTS→CONSTRAINTS",SSE:"SSE · PRODUCTS→CONSTRAINTS",
-      S:"S · CONSTRAINTS",SSW:"SSW · CONSTRAINTS→CONTAINMENT",WSW:"WSW · CONSTRAINTS→CONTAINMENT",
-      W:"W · CONTAINMENT",WNW:"WNW · CONTAINMENT→DEFINITIONS",NNW:"NNW · CONTAINMENT→DEFINITIONS"
-    };
-    var mapZH={
-      N:"N · 定义",NNE:"NNE · 定义→产品",ENE:"ENE · 定义→产品",
-      E:"E · 产品",ESE:"ESE · 产品→约束",SSE:"SSE · 产品→约束",
-      S:"S · 约束",SSW:"SSW · 约束→隔离",WSW:"WSW · 约束→隔离",
-      W:"W · 隔离",WNW:"WNW · 隔离→定义",NNW:"NNW · 隔离→定义"
-    };
-    return (gd_lang==="zh") ? mapZH[key] : mapEN[key];
+  function copy(dir, mode){
+    // mode: "concept" | "live" | "roadmap"
+    // Keep it cardinal-heavy; product mention stays implicit (under the hood).
+    if(gd_style==="formal"){
+      if(mode==="concept") return P7(
+        T("This direction defines a bounded structural role within the compass.", "该方向在罗盘中定义一个有界结构角色。"),
+        T("Meaning is declared before any claim is admitted.", "含义先声明，主张才可采纳。"),
+        T("Scope constrains interpretation and prevents drift.", "范围约束解释并防止漂移。"),
+        T("The role anchors how verification must be performed.", "该角色锚定核查应如何执行。"),
+        T("It keeps cross-domain mapping comparable under scale.", "它让跨域映射在规模下可比较。"),
+        T("It enforces consistency across instances and pages.", "它在实例与页面间强制一致性。"),
+        T("It is operational, not rhetorical.", "它是可执行结构，而非修辞。")
+      );
+      if(mode==="live") return P7(
+        T("Disputes route into structure rather than persuasion.", "争议路由回结构而非说服。"),
+        T("Receipts bind actions to evidence inside declared scope.", "收据在声明范围内把行动绑定证据。"),
+        T("Gates prevent bypass during pressure and time scarcity.", "压力与时间稀缺时闸门阻止绕过。"),
+        T("Returns keep traversal deterministic and non-tunnel.", "返回让遍历保持确定性且非隧道化。"),
+        T("Containment limits local faults from becoming cascades.", "隔离限制局部故障演变为级联。"),
+        T("Language remains consistent across surfaces.", "语言在各执行面保持一致。"),
+        T("Integrity is maintained by enforcement, not intent.", "完整性靠执行维持，不靠意图。")
+      );
+      return P7(
+        T("Expansion completes geometry instead of mutating it.", "扩张补全几何而非使其变形。"),
+        T("New claims require boundaries and falsifiers.", "新主张必须带边界与证伪条件。"),
+        T("New surfaces preserve contracts, gates, and returns.", "新执行面保持契约、闸门与返回。"),
+        T("Corrections require explicit versioning.", "修正必须显式版本化。"),
+        T("Scaling occurs by replication of proven structure.", "规模化通过复制已验证结构实现。"),
+        T("Audit posture strengthens without revealing recipes.", "审计姿态增强但不泄露配方。"),
+        T("The system remains admissible as it grows.", "系统在增长中保持可采信。")
+      );
+    } else {
+      if(mode==="concept") return P7(
+        T("This bubble is your role.", "这个气泡就是你的角色。"),
+        T("If you don’t declare it, everything turns into opinion.", "不声明它，后面全变成观点。"),
+        T("Scope makes the game real.", "范围让游戏真实。"),
+        T("It stops words from wiggling under pressure.", "它让压力来时词不乱动。"),
+        T("It keeps you anchored while you move fast.", "你走得快也不会漂。"),
+        T("It makes the whole system readable.", "它让整个系统变得可读。"),
+        T("That’s the point of the compass.", "这就是罗盘的意义。")
+      );
+      if(mode==="live") return P7(
+        T("When it gets fuzzy, don’t argue—route.", "一模糊，别吵——直接跳转。"),
+        T("Use gates so hype can’t sneak past.", "用闸门让噱头过不去。"),
+        T("Keep receipts so reality can’t be rewritten.", "保留收据让现实不能改写。"),
+        T("Keep returns so you never get trapped.", "保留返回不让你被困。"),
+        T("Contain damage before it spreads.", "先隔离损伤别扩散。"),
+        T("Stay consistent across pages.", "跨页面保持一致。"),
+        T("That’s how you scale clean.", "这就是干净扩张。")
+      );
+      return P7(
+        T("Grow without breaking the compass.", "长大但别崩罗盘。"),
+        T("Add depth, not drift.", "加深，不加漂移。"),
+        T("Clone what works.", "复制有效的。"),
+        T("Make gates clearer as you scale.", "越大闸门越清晰。"),
+        T("Make returns shorter over time.", "返回越来越短。"),
+        T("If meaning changes, version it.", "含义变了就版本化。"),
+        T("Then momentum stays clean.", "动量就保持干净。")
+      );
+    }
   }
 
-  function dirDesc(key){
-    var en={
-      N:"Meaning before measurement.",NNE:"Bridge meaning into execution.",ENE:"Contract transitions into surface.",
-      E:"Execution surfaces under bounded claims.",ESE:"Power meets gates and prerequisites.",SSE:"Deployment under pressure.",
-      S:"Admissibility, gates, anti-drift.",SSW:"Refusal and containment cooperate.",WSW:"Failure vector controlled.",
-      W:"Isolation prevents cascade.",WNW:"Audit returns to clearer meaning.",NNW:"Reset without semantic swaps."
-    };
-    var zh={
-      N:"测量之前先定含义。",NNE:"把含义桥接到执行。",ENE:"把契约转为执行面。",
-      E:"有界主张下的执行面。",ESE:"能力遇闸门与先决条件。",SSE:"压力下部署。",
-      S:"可采信、闸门、反漂移。",SSW:"拒绝与隔离协同。",WSW:"控制失败向量。",
-      W:"隔离防级联。",WNW:"审计回到更清晰含义。",NNW:"不偷换概念的重置。"
-    };
-    return (gd_lang==="zh") ? zh[key] : en[key];
+  function makeMode(dir, modeKey){
+    var mode = document.createElement("div");
+    mode.className="mode";
+
+    var head = document.createElement("div");
+    head.className="mhead";
+
+    var label = document.createElement("div");
+    label.className="mlabel";
+    label.textContent = modeKey==="concept" ? T("Concept","概念")
+                     : modeKey==="live" ? T("Live","现况")
+                     : T("Roadmap","路线图");
+
+    var chev = document.createElement("div");
+    chev.className="mchev";
+    chev.textContent="▸";
+
+    head.appendChild(label);
+    head.appendChild(chev);
+
+    var body = document.createElement("div");
+    body.className="mbody";
+
+    var p = document.createElement("p");
+    p.className="p";
+    p.textContent = copy(dir, modeKey);
+
+    body.appendChild(p);
+
+    head.addEventListener("click", function(e){
+      e.stopPropagation();
+      var open = mode.classList.toggle("open");
+      chev.textContent = open ? "▾" : "▸";
+    });
+
+    mode.appendChild(head);
+    mode.appendChild(body);
+    return mode;
   }
 
-  function mkPara(label, text){
-    var pb=document.createElement("div");
-    pb.className="pbub";
-    var pt=document.createElement("p");
-    pt.className="pt";
-    pt.textContent=label;
-    var pp=document.createElement("p");
-    pp.className="pp";
-    pp.textContent=text;
-    pb.appendChild(pt);
-    pb.appendChild(pp);
-    return pb;
-  }
+  function makeDir(dir){
+    var bubble = document.createElement("div");
+    bubble.className="bubble";
+    bubble.style.setProperty("--c", COLORS[dir] || "#93C5FD");
 
-  function mkRow(faceKey, lens){
-    var isFormal = (lens==="formal");
-    var label = isFormal ? T("Formal narrative","正式叙述") : T("Informal narrative","非正式叙述");
-    var sub = isFormal
-      ? T("Objective, bounded, falsifiable posture.","客观、有界、可证伪姿态。")
-      : T("TED-style delivery inside the boundary.","边界内的TED式表达。");
+    var head = document.createElement("div");
+    head.className="bhead";
 
-    var concept = isFormal ? makeFormalConcept(faceKey) : makeInformalConcept(faceKey);
-    var live    = isFormal ? makeFormalLive(faceKey)    : makeInformalLive(faceKey);
-    var road    = isFormal ? makeFormalRoadmap(faceKey) : makeInformalRoadmap(faceKey);
+    var left = document.createElement("div");
+    left.className="left";
 
-    var row=document.createElement("div");
-    row.className="row";
+    var diamond = document.createElement("div");
+    diamond.className="diamond";
 
-    var head=document.createElement("div");
-    head.className="rhead";
+    var label = document.createElement("div");
+    label.className="label";
+    label.textContent = LABEL[dir] || dir;
 
-    var left=document.createElement("div");
-    left.className="rleft";
+    left.appendChild(diamond);
+    left.appendChild(label);
 
-    var pip=document.createElement("div");
-    pip.className="pip";
-
-    var name=document.createElement("div");
-    name.className="rname";
-    name.textContent=label;
-
-    var subel=document.createElement("div");
-    subel.className="rsub";
-    subel.textContent=sub;
-
-    left.appendChild(pip);
-    left.appendChild(name);
-    left.appendChild(subel);
-
-    var chev=document.createElement("div");
+    var chev = document.createElement("div");
     chev.className="chev";
     chev.textContent="▸";
 
     head.appendChild(left);
     head.appendChild(chev);
 
-    var body=document.createElement("div");
-    body.className="rbody";
+    var body = document.createElement("div");
+    body.className="body";
 
-    var stack=document.createElement("div");
-    stack.className="pstack";
+    var stack = document.createElement("div");
+    stack.className="stack";
 
-    var Lc = T("Concept","概念");
-    var Ln = T("Live","现况");
-    var Lr = T("Roadmap","路线图");
-
-    stack.appendChild(mkPara(Lc, concept));
-    stack.appendChild(mkPara(Ln, live));
-    stack.appendChild(mkPara(Lr, road));
-
-    var jump=document.createElement("div");
-    jump.className="jump";
-    var a=document.createElement("a");
-    a.className="btn";
-    a.textContent=T("JUMP","跳转");
-    a.href="#"; // no guessing
-    jump.appendChild(a);
+    // Exactly 3 sub-bubbles only
+    stack.appendChild(makeMode(dir, "concept"));
+    stack.appendChild(makeMode(dir, "live"));
+    stack.appendChild(makeMode(dir, "roadmap"));
 
     body.appendChild(stack);
-    body.appendChild(jump);
 
     head.addEventListener("click", function(){
-      var open=row.classList.toggle("open");
-      chev.textContent = open ? "▾" : "▸";
+      var already = bubble.classList.contains("open");
+      // close all others
+      document.querySelectorAll(".bubble").forEach(function(x){
+        if(x!==bubble){ x.classList.remove("open"); var c=x.querySelector(".chev"); if(c) c.textContent="▸"; }
+      });
+      bubble.classList.toggle("open", !already);
+      chev.textContent = bubble.classList.contains("open") ? "▾" : "▸";
     });
 
-    row.appendChild(head);
-    row.appendChild(body);
-    return row;
+    bubble.appendChild(head);
+    bubble.appendChild(body);
+    return bubble;
   }
 
-  function mkGroup(faceKey){
-    var group=document.createElement("section");
-    group.className="group";
-    group.style.setProperty("--c", COLORS[faceKey] || "#93C5FD");
-
-    var ghead=document.createElement("div");
-    ghead.className="ghead";
-
-    var gleft=document.createElement("div");
-    gleft.className="gleft";
-
-    var d=document.createElement("div");
-    d.className="diamond";
-
-    var gt=document.createElement("div");
-    gt.className="gtitle";
-
-    var n=document.createElement("div");
-    n.className="name";
-    n.textContent=dirName(faceKey);
-
-    var ds=document.createElement("div");
-    ds.className="desc";
-    ds.textContent=dirDesc(faceKey);
-
-    gt.appendChild(n);
-    gt.appendChild(ds);
-
-    gleft.appendChild(d);
-    gleft.appendChild(gt);
-
-    ghead.appendChild(gleft);
-
-    var rows=document.createElement("div");
-    rows.className="rows";
-
-    // Two narratives per direction (LOCK)
-    rows.appendChild(mkRow(faceKey,"formal"));
-    rows.appendChild(mkRow(faceKey,"informal"));
-
-    group.appendChild(ghead);
-    group.appendChild(rows);
-    return group;
-  }
-
-  // Render in fixed order
-  var groups=document.getElementById("groups");
-  ORDER.forEach(function(k){ groups.appendChild(mkGroup(k)); });
-
-  // IMPORTANT: no auto-open anywhere (bubble implies click-to-open)
+  var list = document.getElementById("list");
+  ORDER.forEach(function(d){ list.appendChild(makeDir(d)); });
 
 })();
 </script>

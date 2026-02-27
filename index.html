@@ -1,20 +1,19 @@
 <!-- TNT — /index.html
      INDEX · PRIMARY FORK · TWO MASSIVE DIAMONDS · HARD NAVIGATION ONLY
 
+     UPDATE GOALS:
+       - ADD DEPTH propagation (URL: lang/style/time/depth; LS: gd_*)
+       - USE /assets/instruments.js (canonical) (NOT instrument.js)
+       - UNIFY MATERIAL + BUTTONS with ui.css (.btn)
+       - REDUCE REDUNDANCY: ui.css owns field + typography; this file owns ONLY fork layout + diamond material
+
      ROLE:
-       - First directional commitment after Door.
-       - No overlays. No modals. No lenses. Pure fork.
        TOP:    FOUNDATION  → /home/
        BOTTOM: FRONTIER    → /explore/frontier/
 
-     STATE:
-       - URL propagation: ?lang=&style=&time=
-       - LocalStorage: gd_lang / gd_style / gd_time
-       - No new keys
-
-     STYLE:
-       - MATCHES approved /explore/frontier/ diamond system (lacquer, sizing, spacing)
-       - ui.css owns field (no html/body background styling)
+     NO:
+       - No overlays/modals
+       - No lens widgets here (depth is propagated only)
 -->
 
 <!doctype html>
@@ -26,7 +25,7 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instrument.js"></script>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
 :root{
@@ -37,12 +36,8 @@
   --obsB:rgba(6,10,16,.98);
 }
 
-/* Base (no field styling) */
-body{
-  margin:0;
-  color:#fff;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-}
+/* DO NOT TOUCH FIELD — ui.css owns html/body background */
+/* Keep only minimal layout styling here */
 a{color:inherit;text-decoration:none}
 
 /* Top-left */
@@ -101,7 +96,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Massive diamonds (MATCH Frontier) */
+/* Massive diamonds (lacquer) */
 .d{
   width:var(--D);
   height:var(--D);
@@ -161,12 +156,8 @@ a{color:inherit;text-decoration:none}
 }
 
 /* Vertical layout */
-.d-top{
-  transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg);
-}
-.d-bottom{
-  transform:translate(-50%,-50%) translate(0, calc(var(--R) * 1)) rotate(45deg);
-}
+.d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
+.d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
 
 .inner{
   width:100%;
@@ -181,19 +172,10 @@ a{color:inherit;text-decoration:none}
   gap:10px;
   pointer-events:none;
 }
-.lab{
-  font-weight:950;
-  font-size:22px;
-  letter-spacing:.8px;
-}
-.sub{
-  font-size:14px;
-  opacity:.85;
-  line-height:1.35;
-  max-width:22em;
-}
+.lab{font-weight:950;font-size:22px;letter-spacing:.8px}
+.sub{font-size:14px;opacity:.85;line-height:1.35;max-width:22em}
 
-/* Dock (MATCH Frontier) */
+/* Dock */
 .dock{
   position:fixed;
   left:50%;
@@ -216,7 +198,8 @@ a{color:inherit;text-decoration:none}
 <body>
 
 <div class="top-left">
-  <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
+  <!-- Use ui.css material button -->
+  <a class="btn" id="btnExit" href="/">EXIT</a>
 </div>
 
 <div class="brand" aria-hidden="true">
@@ -246,29 +229,33 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="crp-btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
 <script>
 (function(){
-  // Canonical state propagation (URL: lang/style/time; Storage: gd_*)
+  // Canon state (instrument-compatible): URL keys lang/style/time/depth; LS keys gd_*
   var qs = new URLSearchParams(location.search);
+
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
   if(lang!=="en" && lang!=="zh") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
     localStorage.setItem("gd_style",style);
     localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
@@ -276,11 +263,12 @@ a{color:inherit;text-decoration:none}
   function q(){
     return "?lang="+encodeURIComponent(lang)+
            "&style="+encodeURIComponent(style)+
-           "&time="+encodeURIComponent(time);
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
   }
 
-  // Wire top + dock to preserve state
-  document.getElementById("btnExit").href="/door/"+q();
+  // Wire top + dock to preserve canon URL state
+  document.getElementById("btnExit").href="/"+q();
   document.getElementById("dockTerminal").href="/index.html"+q();
   document.getElementById("dockProducts").href="/products/"+q();
   document.getElementById("dockLaws").href="/laws/"+q();
@@ -312,6 +300,7 @@ a{color:inherit;text-decoration:none}
   dfr.addEventListener("keydown", function(e){
     if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goFrontier(); }
   });
+
 })();
 </script>
 

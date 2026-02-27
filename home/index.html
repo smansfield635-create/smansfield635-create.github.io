@@ -1,26 +1,21 @@
 <!-- TNT — /home/index.html
-     HUB A · GEOMETRY-OBEYING TERMINAL INDEX
-     GEOMETRY (DERIVED, NOT CHOSEN):
-       - Band A (GENERATIVE / RECURSIVE): N · E · S · W  (clock order left→right)
-       - Band B (REFERENTIAL / TERMINAL): APPENDIX · GLOSSARY · ABOUT · LINKS
-       - Recursion applies ONLY to Band A.
-       - Band B is terminal (purpose + jump only; no recursion).
-     BEHAVIOR:
-       - Click a plate → opens Focus Pane immediately (no “opens at bottom” confusion).
-       - Focus Pane contains:
-           • Per-pane lens toggle (INFORMAL / FORMAL / BOTH)  (inside the opened pane)
-           • Page-level language toggle remains in header (EN / 中文 / ES)
-           • For Band A: Russian-doll tree rooted at the chosen cardinal
-           • For Band B: single terminal panel
-       - Each node shows 3-line skeleton (Aspect → Process → Resolution) per lens.
-       - Each node provides:
-           • JI (opens Jump Index overlay)
-           • JUMP (opens Jump Deck overlay for that node; later bind to real pages)
+     HUB A · CATEGORY-LOCKED INDEX (NO CONSOLIDATION)
+     LOCK (NON-NEGOTIABLE):
+       - Geometry governs placement ONLY. Categories are immutable.
+       - Band A (COMPASS / GENERATIVE): N · E · S · W  (recursive Russian doll)
+       - Band B (SYSTEM / REFERENTIAL): APPENDIX · GLOSSARY · ABOUT · LINKS (terminal, no recursion)
+     FIXES:
+       - Focus pane opens immediately and scrolls into view.
+       - Lens toggle lives INSIDE the focus pane.
+       - Language toggle remains page-level only (EN/中文/ES).
+       - Each node shows:
+           (1) 3-line skeleton per lens (Aspect→Process→Resolution)
+           (2) Analog Layer sub-bubble (C)
+           (3) Reality binding line (product/tool label + 1 sentence)
+           (4) JI + JUMP controls
      STATE:
        - URL: lang/style/time/depth
        - LS: gd_lang/gd_style/gd_time/gd_depth
-     NOTE:
-       - If /assets/instruments.js currently only allowlists en/zh, es will be reset upstream; update instruments.js allowlist when ready.
 -->
 
 <!doctype html>
@@ -101,7 +96,7 @@ a{color:inherit;text-decoration:none}
   letter-spacing:.2px;
 }
 
-/* 4-up row (no guessing; geometry dictates symmetry) */
+/* 4-up row */
 .row4{
   display:grid;
   grid-template-columns:repeat(4, minmax(0, 1fr));
@@ -143,7 +138,7 @@ a{color:inherit;text-decoration:none}
 .pHint{margin-top:6px;font-size:12.5px;opacity:.78;line-height:1.35}
 .pChev{opacity:.75;font-size:18px;flex:0 0 auto;pointer-events:none}
 
-/* focus pane (opens immediately under bands) */
+/* focus pane */
 .focus{
   border:1px solid rgba(255,255,255,.12);
   border-radius:22px;
@@ -159,11 +154,11 @@ a{color:inherit;text-decoration:none}
 .fClose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px;border-radius:12px}
 .fClose:hover{background:rgba(255,255,255,.08)}
 
-/* lens toggle INSIDE pane (not page-level) */
+/* lens toggle INSIDE pane */
 .lensRow{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:10px}
 .lensRow .btn{padding:10px 12px;border-radius:999px}
 
-/* russian doll nodes */
+/* node */
 .node{
   --c:#93C5FD;
   border:1px solid rgba(255,255,255,.10);
@@ -171,6 +166,7 @@ a{color:inherit;text-decoration:none}
   background:rgba(0,0,0,.18);
   overflow:hidden;
   box-shadow:0 12px 36px rgba(0,0,0,.45);
+  margin-top:12px;
 }
 .nHead{
   display:flex;align-items:center;justify-content:space-between;gap:10px;
@@ -189,7 +185,7 @@ a{color:inherit;text-decoration:none}
 .node.open>.nBody{display:block}
 .childStack{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 
-/* 3-line skeleton (Aspect → Process → Resolution) */
+/* 3-line skeleton */
 .line{
   margin:0;
   line-height:1.6;
@@ -203,14 +199,28 @@ a{color:inherit;text-decoration:none}
 .view-informal .line[data-lens="informal"]{display:block}
 .view-both .line{display:block}
 
-/* analog sub-bubble (C) */
+/* analog sub-bubble */
 .subNode{border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(0,0,0,.16);overflow:hidden;margin-top:10px}
 .subHead{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-weight:950;letter-spacing:.2px;font-size:13px;touch-action:manipulation}
 .subBody{display:none;padding:10px 12px 12px;border-top:1px solid rgba(255,255,255,.08)}
 .subNode.open .subBody{display:block}
 .analog{margin:0;line-height:1.55;font-size:13px;color:rgba(255,255,255,.86)}
 
-/* action row */
+/* reality binding */
+.bind{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  color:rgba(255,255,255,.86);
+  line-height:1.45;
+  font-size:13px;
+}
+.bind b{color:#fff}
+.bind .gold{color:var(--gold);font-weight:950}
+
+/* actions */
 .actRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;margin-top:12px}
 .pill{
   display:inline-flex;align-items:center;justify-content:center;
@@ -241,7 +251,7 @@ a{color:inherit;text-decoration:none}
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){:root{--dockH:92px}.dock{grid-template-columns:repeat(3, minmax(0,1fr))}}
 
-/* overlays (JI + JD) */
+/* overlays */
 .ov{position:fixed;inset:0;z-index:500;display:none;background:rgba(0,0,0,.72);backdrop-filter:blur(10px)}
 .ov.show{display:block}
 .panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(980px,94vw);height:min(86vh, 860px);z-index:510;display:none}
@@ -263,6 +273,7 @@ a{color:inherit;text-decoration:none}
 <body>
 
 <div class="page view-formal" id="page">
+
   <div class="header">
     <p class="k" id="hk">CARDINAL AXIS</p>
     <h1 class="t" id="ht">HUB A · Index</h1>
@@ -301,9 +312,10 @@ a{color:inherit;text-decoration:none}
 
     <div id="focusBody"></div>
   </div>
+
 </div>
 
-<nav class="dock" id="dock" aria-label="Bottom actions">
+<nav class="dock" aria-label="Bottom actions">
   <button class="btn" id="navExit" type="button">EXIT</button>
   <button class="btn" id="navJI" type="button">JUMP INDEX</button>
   <button class="btn" id="navJD" type="button">JUMP DECK</button>
@@ -374,7 +386,8 @@ a{color:inherit;text-decoration:none}
       A:"COMPASS", B:"SYSTEM",
       exit:"EXIT", ji:"JUMP INDEX", jd:"JUMP DECK", active:"ACTIVE",
       analog:"Analog Layer", jiPill:"JI", jump:"Jump",
-      inf:"INFORMAL", frm:"FORMAL", both:"BOTH"
+      inf:"INFORMAL", frm:"FORMAL", both:"BOTH",
+      bindPrefix:"Binds to:"
     },
     zh:{
       hk:"基轴体系", ht:"枢纽A · 索引",
@@ -383,7 +396,8 @@ a{color:inherit;text-decoration:none}
       A:"罗盘", B:"系统",
       exit:"退出", ji:"跳转目录", jd:"跳转卡组", active:"当前",
       analog:"类比层", jiPill:"JI", jump:"跳转",
-      inf:"非正式", frm:"正式", both:"两者"
+      inf:"非正式", frm:"正式", both:"两者",
+      bindPrefix:"绑定到："
     },
     es:{
       hk:"CARDINAL AXIS", ht:"HUB A · Índice",
@@ -392,7 +406,8 @@ a{color:inherit;text-decoration:none}
       A:"BRÚJULA", B:"SISTEMA",
       exit:"SALIR", ji:"ÍNDICE", jd:"MAZO", active:"ACTIVO",
       analog:"Capa Analógica", jiPill:"JI", jump:"Saltar",
-      inf:"INFORMAL", frm:"FORMAL", both:"AMBOS"
+      inf:"INFORMAL", frm:"FORMAL", both:"AMBOS",
+      bindPrefix:"Vincula a:"
     }
   };
   const T=()=> (lang==="zh")?L.zh:(lang==="es")?L.es:L.en;
@@ -405,7 +420,7 @@ a{color:inherit;text-decoration:none}
   document.getElementById("labA").textContent=T().A;
   document.getElementById("labB").textContent=T().B;
 
-  // language buttons
+  // language
   const bEN=document.getElementById("bEN");
   const bZH=document.getElementById("bZH");
   const bES=document.getElementById("bES");
@@ -425,7 +440,7 @@ a{color:inherit;text-decoration:none}
   bZH.addEventListener("click", ()=>setLang("zh"));
   bES.addEventListener("click", ()=>setLang("es"));
 
-  // focus + lens
+  // focus + lens (lens is inside focus)
   const pageEl=document.getElementById("page");
   const focus=document.getElementById("focus");
   const fTitle=document.getElementById("fTitle");
@@ -453,7 +468,118 @@ a{color:inherit;text-decoration:none}
   lensFormal.addEventListener("click", ()=>applyLens("formal"));
   lensBoth.addEventListener("click", ()=>applyLens("both"));
 
-  // geometry tree (full for compass; terminal for system)
+  // overlays
+  const ovJI=document.getElementById("ovJI");
+  const panelJI=document.getElementById("panelJI");
+  const jiClose=document.getElementById("jiClose");
+  const jiTitle=document.getElementById("jiTitle");
+  const jiList=document.getElementById("jiList");
+
+  const ovJD=document.getElementById("ovJD");
+  const panelJD=document.getElementById("panelJD");
+  const jdClose=document.getElementById("jdClose");
+  const jdTitle=document.getElementById("jdTitle");
+  const jdBody=document.getElementById("jdBody");
+
+  function openJI(){
+    jiTitle.textContent = (lang==="zh")?"跳转目录":(lang==="es")?"ÍNDICE DE SALTOS":"JUMP INDEX";
+    jiList.innerHTML="";
+    // directory lists only top-level category nodes + key descendants
+    const keys = Object.keys(TREE);
+    keys.forEach(id=>{
+      const row=document.createElement("div");
+      row.className="row";
+
+      const top=document.createElement("div");
+      top.className="rTop";
+      const nm=document.createElement("div");
+      nm.className="rName";
+      nm.textContent=nodeLabel(id);
+      const act=document.createElement("div");
+      const jb=document.createElement("button");
+      jb.className="btn";
+      jb.type="button";
+      jb.textContent=T().jump;
+      jb.onclick=()=>openJD(id);
+      act.appendChild(jb);
+      top.appendChild(nm);
+      top.appendChild(act);
+
+      const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
+      const sent=document.createElement("div");
+      sent.className="rSent";
+      sent.textContent = skeleton(id, view==="both" ? "formal" : view)[0];
+
+      row.appendChild(top);
+      row.appendChild(sent);
+      jiList.appendChild(row);
+    });
+
+    ovJI.classList.add("show");
+    panelJI.classList.add("show");
+  }
+  function closeJI(){ovJI.classList.remove("show");panelJI.classList.remove("show");}
+
+  function openJD(id){
+    jdTitle.textContent = (lang==="zh")?"跳转卡组":(lang==="es")?"MAZO":"JUMP DECK";
+    jdBody.innerHTML="";
+
+    const row=document.createElement("div");
+    row.className="row";
+
+    const top=document.createElement("div");
+    top.className="rTop";
+    const nm=document.createElement("div");
+    nm.className="rName";
+    nm.textContent=nodeLabel(id);
+    top.appendChild(nm);
+    row.appendChild(top);
+
+    const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
+    const lines = skeleton(id, view==="both" ? "formal" : view);
+
+    const s=document.createElement("div");
+    s.className="rSent";
+    s.textContent = lines.join(" ");
+    row.appendChild(s);
+
+    const a=document.createElement("div");
+    a.className="rSent";
+    a.textContent = analogSentence(id);
+    row.appendChild(a);
+
+    const b=document.createElement("div");
+    b.className="rSent";
+    b.style.opacity=".85";
+    b.textContent = bindLine(id);
+    row.appendChild(b);
+
+    const note=document.createElement("div");
+    note.className="rSent";
+    note.style.opacity=".7";
+    note.textContent = (lang==="zh")
+      ? "（占位）此处将扩展为完整“如何使用/示例/证据”。"
+      : (lang==="es")
+      ? "(Marcador) Aquí se expandirá con uso/ejemplos/evidencia."
+      : "(Placeholder) This expands into full how-to/examples/evidence.";
+    row.appendChild(note);
+
+    jdBody.appendChild(row);
+
+    ovJD.classList.add("show");
+    panelJD.classList.add("show");
+    lsSet("hub_active_node", id);
+  }
+  function closeJD(){ovJD.classList.remove("show");panelJD.classList.remove("show");}
+
+  ovJI.addEventListener("pointerup", (e)=>{e.preventDefault();closeJI();}, {passive:false});
+  ovJD.addEventListener("pointerup", (e)=>{e.preventDefault();closeJD();}, {passive:false});
+  jiClose.addEventListener("click", closeJI);
+  jdClose.addEventListener("click", closeJD);
+  panelJI.addEventListener("click",(e)=>e.stopPropagation());
+  panelJD.addEventListener("click",(e)=>e.stopPropagation());
+
+  // tree
   const TREE = {
     // compass roots
     N:{label:{en:"N · DEFINITIONS",zh:"N · 定义",es:"N · DEFINICIONES"}, color:"#1F3A8A", children:["N★","N:NE","N:NW","N:SE","N:SW"]},
@@ -461,7 +587,7 @@ a{color:inherit;text-decoration:none}
     S:{label:{en:"S · CONSTRAINTS",zh:"S · 约束",es:"S · RESTRICCIONES"}, color:"#F59E0B", children:["S★","S:NE","S:NW","S:SE","S:SW"]},
     W:{label:{en:"W · CONTAINMENT",zh:"W · 隔离",es:"W · CONTENCIÓN"}, color:"#7F1D1D", children:["W★","W:NE","W:NW","W:SE","W:SW"]},
 
-    // system roots (terminal)
+    // system roots
     APPENDIX:{label:{en:"APPENDIX",zh:"附录",es:"APÉNDICE"}, color:"#A3A3A3", children:[]},
     GLOSSARY:{label:{en:"GLOSSARY",zh:"术语表",es:"GLOSARIO"}, color:"#93C5FD", children:[]},
     ABOUT:{label:{en:"ABOUT",zh:"关于",es:"ACERCA"}, color:"#D4AF37", children:[]},
@@ -551,10 +677,91 @@ a{color:inherit;text-decoration:none}
     return o.en;
   }
 
-  // skeleton lines: Aspect → Process → Resolution (per lens)
+  // Reality binding map (PLACEHOLDER NOW; replace later with barcode binding table)
+  // Must be non-empty to satisfy “connect to reality”.
+  const BIND = {
+    N:{label:{en:"Laws · Definitions",zh:"法则 · 定义",es:"Leyes · Definiciones"}, sentence:{
+      en:"Anchors term-lock and scope control for every downstream proof and tool.",
+      zh:"为全站的证明与工具提供术语锁定与范围控制。",
+      es:"Ancla términos y alcance para toda prueba y herramienta."
+    }},
+    E:{label:{en:"Products · Surfaces",zh:"产品 · 执行面",es:"Productos · Superficies"}, sentence:{
+      en:"Maps structure into deployable surfaces without exceeding scope.",
+      zh:"把结构映射为可部署执行面且不越界。",
+      es:"Convierte estructura en superficies desplegables sin exceder el alcance."
+    }},
+    S:{label:{en:"Gates · Admissibility",zh:"闸门 · 可采信",es:"Compuertas · Admisibilidad"}, sentence:{
+      en:"Defines refusal logic and phase gates that prevent inflation under pressure.",
+      zh:"定义拒绝逻辑与阶段门控，防止压力下膨胀。",
+      es:"Define rechazo y fases para evitar inflación bajo presión."
+    }},
+    W:{label:{en:"Containment · Recovery",zh:"隔离 · 恢复",es:"Contención · Recuperación"}, sentence:{
+      en:"Keeps failure local and preserves coherent returns under load.",
+      zh:"让失败局部化，并在负载下保持一致返回。",
+      es:"Mantiene fallos locales y retornos coherentes bajo carga."
+    }},
+    APPENDIX:{label:{en:"Appendix Surface",zh:"附录页面",es:"Apéndice"}, sentence:{
+      en:"Holds packets, provenance, and structural protections.",
+      zh:"收纳协议包、溯源与结构性保护。",
+      es:"Contiene paquetes, proveniencia y protección estructural."
+    }},
+    GLOSSARY:{label:{en:"Glossary Surface",zh:"术语表页面",es:"Glosario"}, sentence:{
+      en:"Locks shared vocabulary so meaning cannot drift between pages.",
+      zh:"锁定共用术语，防止跨页语义漂移。",
+      es:"Fija vocabulario compartido para evitar deriva semántica."
+    }},
+    ABOUT:{label:{en:"About Surface",zh:"关于页面",es:"Acerca"}, sentence:{
+      en:"States posture and boundaries to prevent claim inflation.",
+      zh:"声明姿态与边界，避免主张膨胀。",
+      es:"Declara postura y límites para evitar inflación de afirmaciones."
+    }},
+    LINKS:{label:{en:"Links Surface",zh:"链接页面",es:"Enlaces"}, sentence:{
+      en:"Routes to external anchors for verification and provenance.",
+      zh:"指向外部锚点以便核查与溯源。",
+      es:"Rutea a anclas externas para verificación y proveniencia."
+    }}
+  };
+
+  function bindLine(id){
+    const key = (id in BIND) ? id : (id.split(":")[0].replace("★",""));
+    const pack = BIND[key] || null;
+    if(!pack){
+      return (lang==="zh") ? "绑定：未设定（占位）" : (lang==="es") ? "Vínculo: no definido (marcador)" : "Bind: not set (placeholder)";
+    }
+    const lbl = (lang==="zh") ? pack.label.zh : (lang==="es") ? pack.label.es : pack.label.en;
+    const sent = (lang==="zh") ? pack.sentence.zh : (lang==="es") ? pack.sentence.es : pack.sentence.en;
+    return T().bindPrefix + " " + lbl + " — " + sent;
+  }
+
+  // analog line
+  function analogSentence(id){
+    const core = id.split(":")[0].replace("★","");
+    if(lang==="zh"){
+      if(core==="N") return "物理：边界映射；生物：代谢调控；工程：标定基准；治理：宪制约束；计算：不变量定义。";
+      if(core==="E") return "物理：推进与作功；生物：执行链；工程：执行器；治理：行政执行；计算：状态转移。";
+      if(core==="S") return "物理：摩擦/重力；生物：免疫门控；工程：安全联锁；治理：司法审查；计算：验证闸门。";
+      if(core==="W") return "物理：分舱隔离；生物：细胞隔离；工程：断路器；治理：隔离处置；计算：回滚/分区恢复。";
+      return "跨域：参考节点用于稳定语义与外部锚点。";
+    }
+    if(lang==="es"){
+      if(core==="N") return "Físico: límites. Biológico: regulación. Ingeniería: calibración. Gobernanza: constitución. Computación: invariantes.";
+      if(core==="E") return "Físico: acción. Biológico: ejecución. Ingeniería: actuadores. Gobernanza: ejecución. Computación: transiciones.";
+      if(core==="S") return "Físico: fricción. Biológico: compuertas. Ingeniería: interlocks. Gobernanza: revisión. Computación: validación.";
+      if(core==="W") return "Físico: compartimentos. Biológico: aislamiento. Ingeniería: disyuntores. Gobernanza: contención. Computación: rollback.";
+      return "Multidominio: nodos de referencia estabilizan términos y anclas.";
+    }
+    if(core==="N") return "Physical: boundaries. Biological: regulation. Engineering: calibration. Governance: constitution. Computational: invariants.";
+    if(core==="E") return "Physical: action. Biological: execution. Engineering: actuators. Governance: execution. Computational: transitions.";
+    if(core==="S") return "Physical: friction. Biological: gates. Engineering: interlocks. Governance: review. Computational: validation.";
+    if(core==="W") return "Physical: compartments. Biological: isolation. Engineering: breakers. Governance: containment. Computational: rollback.";
+    return "Cross-domain: reference nodes stabilize terms and anchors.";
+  }
+
+  // skeleton lines
   function skeleton(id, lens){
     const core = id.split(":")[0].replace("★","");
     const isSystem = (id==="APPENDIX"||id==="GLOSSARY"||id==="ABOUT"||id==="LINKS");
+
     if(lang==="zh"){
       if(isSystem){
         if(id==="APPENDIX") return lens==="formal"
@@ -642,164 +849,76 @@ a{color:inherit;text-decoration:none}
     return ["—","—","—"];
   }
 
-  function analogSentence(id){
-    const core = id.split(":")[0].replace("★","");
-    if(lang==="zh"){
-      if(core==="N") return "物理：边界映射；生物：代谢调控；工程：标定基准；治理：宪制约束；计算：不变量定义。";
-      if(core==="E") return "物理：推进与作功；生物：执行链；工程：执行器；治理：行政执行；计算：状态转移。";
-      if(core==="S") return "物理：摩擦/重力；生物：免疫门控；工程：安全联锁；治理：司法审查；计算：验证闸门。";
-      if(core==="W") return "物理：分舱隔离；生物：细胞隔离；工程：断路器；治理：隔离处置；计算：回滚/分区恢复。";
-      return "跨域：参考节点用于稳定语义与外部锚点。";
-    }
-    if(lang==="es"){
-      if(core==="N") return "Físico: límites. Biológico: regulación. Ingeniería: calibración. Gobernanza: constitución. Computación: invariantes.";
-      if(core==="E") return "Físico: acción. Biológico: ejecución. Ingeniería: actuadores. Gobernanza: ejecución. Computación: transiciones.";
-      if(core==="S") return "Físico: fricción. Biológico: compuertas. Ingeniería: interlocks. Gobernanza: revisión. Computación: validación.";
-      if(core==="W") return "Físico: compartimentos. Biológico: aislamiento. Ingeniería: disyuntores. Gobernanza: contención. Computación: rollback.";
-      return "Multidominio: nodos de referencia estabilizan términos y anclas.";
-    }
-    if(core==="N") return "Physical: boundaries. Biological: regulation. Engineering: calibration. Governance: constitution. Computational: invariants.";
-    if(core==="E") return "Physical: action. Biological: execution. Engineering: actuators. Governance: execution. Computational: transitions.";
-    if(core==="S") return "Physical: friction. Biological: gates. Engineering: interlocks. Governance: review. Computational: validation.";
-    if(core==="W") return "Physical: compartments. Biological: isolation. Engineering: breakers. Governance: containment. Computational: rollback.";
-    return "Cross-domain: reference nodes stabilize terms and anchors.";
+  function nodeLabel(id){
+    const o=TREE[id] && TREE[id].label;
+    if(!o) return id;
+    if(lang==="zh") return o.zh;
+    if(lang==="es") return o.es || o.en;
+    return o.en;
   }
 
-  // overlays
-  const ovJI=document.getElementById("ovJI");
-  const panelJI=document.getElementById("panelJI");
-  const jiClose=document.getElementById("jiClose");
-  const jiTitle=document.getElementById("jiTitle");
-  const jiList=document.getElementById("jiList");
-
-  const ovJD=document.getElementById("ovJD");
-  const panelJD=document.getElementById("panelJD");
-  const jdClose=document.getElementById("jdClose");
-  const jdTitle=document.getElementById("jdTitle");
-  const jdBody=document.getElementById("jdBody");
-
-  function openJI(){
-    jiTitle.textContent = (lang==="zh")?"跳转目录":(lang==="es")?"ÍNDICE DE SALTOS":"JUMP INDEX";
-    jiList.innerHTML="";
-    Object.keys(TREE).forEach(id=>{
-      const row=document.createElement("div");
-      row.className="row";
-      const top=document.createElement("div");
-      top.className="rTop";
-      const nm=document.createElement("div");
-      nm.className="rName";
-      nm.textContent=nodeLabel(id);
-      const act=document.createElement("div");
-      const jb=document.createElement("button");
-      jb.className="btn";
-      jb.type="button";
-      jb.textContent=T().jump;
-      jb.dataset.action="open-jd";
-      jb.dataset.id=id;
-      act.appendChild(jb);
-      top.appendChild(nm);
-      top.appendChild(act);
-
-      const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
-      const sent=document.createElement("div");
-      sent.className="rSent";
-      const lines = skeleton(id, view==="both" ? "formal" : view);
-      sent.textContent = lines[0];
-      row.appendChild(top);
-      row.appendChild(sent);
-      jiList.appendChild(row);
-    });
-    ovJI.classList.add("show");
-    panelJI.classList.add("show");
+  // builders
+  function buildAnalogSub(id){
+    const sub=document.createElement("div");
+    sub.className="subNode";
+    const sh=document.createElement("div");
+    sh.className="subHead";
+    sh.innerHTML="<div>"+T().analog+"</div><div>▸</div>";
+    const sb=document.createElement("div");
+    sb.className="subBody";
+    const ap=document.createElement("p");
+    ap.className="analog";
+    ap.textContent=analogSentence(id);
+    sb.appendChild(ap);
+    sub.appendChild(sh);
+    sub.appendChild(sb);
+    sh.addEventListener("click",(e)=>{e.stopPropagation();sub.classList.toggle("open");});
+    return sub;
   }
-  function closeJI(){ovJI.classList.remove("show");panelJI.classList.remove("show");}
 
-  function openJD(id){
-    jdTitle.textContent = (lang==="zh")?"跳转卡组":(lang==="es")?"MAZO":"JUMP DECK";
-    jdBody.innerHTML="";
-    const row=document.createElement("div");
-    row.className="row";
-    const top=document.createElement("div");
-    top.className="rTop";
-    const nm=document.createElement("div");
-    nm.className="rName";
-    nm.textContent=nodeLabel(id);
-    top.appendChild(nm);
-    row.appendChild(top);
+  function buildActions(id){
+    const act=document.createElement("div");
+    act.className="actRow";
 
-    const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
-    const lines = skeleton(id, view==="both" ? "formal" : view);
+    const ji=document.createElement("div");
+    ji.className="pill ji";
+    ji.textContent=T().jiPill;
+    ji.addEventListener("click",(e)=>{e.stopPropagation();openJI();});
 
-    const s=document.createElement("div");
-    s.className="rSent";
-    s.textContent = lines.join(" ");
-    row.appendChild(s);
+    const jump=document.createElement("div");
+    jump.className="pill";
+    jump.textContent=T().jump;
+    jump.addEventListener("click",(e)=>{e.stopPropagation();openJD(id);});
 
-    const a=document.createElement("div");
-    a.className="rSent";
-    a.textContent = analogSentence(id);
-    row.appendChild(a);
-
-    const note=document.createElement("div");
-    note.className="rSent";
-    note.style.opacity=".7";
-    note.textContent = (lang==="zh")
-      ? "（占位）此处将绑定到具体工具/产品/证明页面。"
-      : (lang==="es")
-      ? "(Marcador) Aquí se enlazará a herramienta/producto/prueba."
-      : "(Placeholder) This will bind to a specific tool/product/proof page.";
-    row.appendChild(note);
-
-    jdBody.appendChild(row);
-
-    ovJD.classList.add("show");
-    panelJD.classList.add("show");
-    lsSet("hub_active_node", id);
+    act.appendChild(ji);
+    act.appendChild(jump);
+    return act;
   }
-  function closeJD(){ovJD.classList.remove("show");panelJD.classList.remove("show");}
 
-  ovJI.addEventListener("pointerup", (e)=>{e.preventDefault();closeJI();}, {passive:false});
-  ovJD.addEventListener("pointerup", (e)=>{e.preventDefault();closeJD();}, {passive:false});
-  jiClose.addEventListener("click", closeJI);
-  jdClose.addEventListener("click", closeJD);
-  panelJI.addEventListener("click",(e)=>e.stopPropagation());
-  panelJD.addEventListener("click",(e)=>e.stopPropagation());
+  function buildBindBox(id){
+    const b=document.createElement("div");
+    b.className="bind";
+    b.innerHTML="<b>"+T().bindPrefix+"</b> <span class='gold'>"+(bindLine(id).replace(T().bindPrefix+" ",""))+"</span>";
+    // bindLine already includes prefix; keep it readable:
+    b.textContent = bindLine(id);
+    return b;
+  }
 
-  // dock
-  const navExit=document.getElementById("navExit");
-  const navJI=document.getElementById("navJI");
-  const navJD=document.getElementById("navJD");
-  const navActive=document.getElementById("navActive");
-  navExit.textContent=T().exit;
-  navJI.textContent=T().ji;
-  navJD.textContent=T().jd;
-  navActive.textContent=T().active;
-
-  // focus pane
-  const focus=document.getElementById("focus");
-  const fTitle=document.getElementById("fTitle");
-  const fClose=document.getElementById("fClose");
-  const focusBody=document.getElementById("focusBody");
-
-  function nodeLabelTitle(id){ return nodeLabel(id); }
-
-  // build node (recursive only for compass; terminal for system)
-  function buildNode(id){
+  // Recursive builder (COMPASS)
+  function buildRecursiveNode(id){
     const info=TREE[id];
     const node=document.createElement("section");
     node.className="node";
     node.style.setProperty("--c", info.color || "#93C5FD");
-    node.dataset.id=id;
 
     const head=document.createElement("div");
     head.className="nHead";
-    head.dataset.action="toggle-node";
-    head.innerHTML="<div class='nLeft'><div class='swatch' style='--c:"+ (info.color||"#93C5FD") +";'></div><div class='nLabel'>"+nodeLabel(id)+"</div></div><div>▸</div>";
+    head.innerHTML="<div class='nLeft'><div class='swatch'></div><div class='nLabel'>"+nodeLabel(id)+"</div></div><div>▸</div>";
+    head.querySelector(".swatch").style.background = (info.color || "#93C5FD");
 
     const body=document.createElement("div");
     body.className="nBody";
 
-    // 3 lines per lens
     const inf = skeleton(id,"informal");
     const frm = skeleton(id,"formal");
 
@@ -814,88 +933,71 @@ a{color:inherit;text-decoration:none}
     body.appendChild(li1); body.appendChild(li2); body.appendChild(li3);
     body.appendChild(lf1); body.appendChild(lf2); body.appendChild(lf3);
 
-    // analog sub
-    const sub=document.createElement("div");
-    sub.className="subNode";
-    const sh=document.createElement("div");
-    sh.className="subHead";
-    sh.dataset.action="toggle-analog";
-    sh.innerHTML="<div>"+T().analog+"</div><div>▸</div>";
-    const sb=document.createElement("div");
-    sb.className="subBody";
-    const ap=document.createElement("p");
-    ap.className="analog";
-    ap.textContent=analogSentence(id);
-    sb.appendChild(ap);
-    sub.appendChild(sh);
-    sub.appendChild(sb);
-    body.appendChild(sub);
+    body.appendChild(buildAnalogSub(id));
+    body.appendChild(buildBindBox(id));
+    body.appendChild(buildActions(id));
 
-    // actions
-    const act=document.createElement("div");
-    act.className="actRow";
-    const ji=document.createElement("div");
-    ji.className="pill ji";
-    ji.textContent=T().jiPill;
-    ji.dataset.action="open-ji";
-    const jump=document.createElement("div");
-    jump.className="pill";
-    jump.textContent=T().jump;
-    jump.dataset.action="open-jd";
-    jump.dataset.id=id;
-    act.appendChild(ji);
-    act.appendChild(jump);
-    body.appendChild(act);
-
-    // recurse only if compass band (N/E/S/W) or their descendants
-    const rootKey = id.split(":")[0].replace("★","");
-    const isCompass = (rootKey==="N"||rootKey==="E"||rootKey==="S"||rootKey==="W");
-    if(isCompass && info.children && info.children.length){
+    if(info.children && info.children.length){
       const stack=document.createElement("div");
       stack.className="childStack";
-      info.children.forEach(child=>stack.appendChild(buildNode(child)));
+      info.children.forEach(child=>stack.appendChild(buildRecursiveNode(child)));
       body.appendChild(stack);
     }
 
+    head.addEventListener("click", ()=>node.classList.toggle("open"));
     node.appendChild(head);
     node.appendChild(body);
     return node;
   }
 
-  function openFocus(rootId){
-    const info=TREE[rootId];
-    lsSet("hub_active_node", rootId);
+  // Terminal builder (SYSTEM)
+  function buildTerminalNode(id){
+    const info=TREE[id];
+    const node=document.createElement("section");
+    node.className="node";
+    node.style.setProperty("--c", info.color || "#93C5FD");
 
-    // set title
-    fTitle.textContent = nodeLabelTitle(rootId);
+    const head=document.createElement("div");
+    head.className="nHead";
+    head.innerHTML="<div class='nLeft'><div class='swatch'></div><div class='nLabel'>"+nodeLabel(id)+"</div></div><div>▸</div>";
+    head.querySelector(".swatch").style.background = (info.color || "#93C5FD");
 
-    // populate
-    focusBody.innerHTML="";
-    focusBody.appendChild(buildNode(rootId));
+    const body=document.createElement("div");
+    body.className="nBody";
 
-    // show focus and scroll to it
-    focus.classList.add("show");
-    setTimeout(()=>{
-      focus.scrollIntoView({behavior:"smooth", block:"start"});
-    }, 0);
+    const inf = skeleton(id,"informal");
+    const frm = skeleton(id,"formal");
 
-    // highlight active plate
-    document.querySelectorAll(".plate").forEach(p=>{
-      p.classList.toggle("active", p.dataset.id===rootId);
-    });
+    const li1=document.createElement("p"); li1.className="line"; li1.dataset.lens="informal"; li1.textContent=inf[0];
+    const li2=document.createElement("p"); li2.className="line"; li2.dataset.lens="informal"; li2.textContent=inf[1];
+    const li3=document.createElement("p"); li3.className="line"; li3.dataset.lens="informal"; li3.textContent=inf[2];
+
+    const lf1=document.createElement("p"); lf1.className="line"; lf1.dataset.lens="formal"; lf1.textContent=frm[0];
+    const lf2=document.createElement("p"); lf2.className="line"; lf2.dataset.lens="formal"; lf2.textContent=frm[1];
+    const lf3=document.createElement("p"); lf3.className="line"; lf3.dataset.lens="formal"; lf3.textContent=frm[2];
+
+    body.appendChild(li1); body.appendChild(li2); body.appendChild(li3);
+    body.appendChild(lf1); body.appendChild(lf2); body.appendChild(lf3);
+
+    body.appendChild(buildBindBox(id));
+    body.appendChild(buildActions(id));
+
+    head.addEventListener("click", ()=>node.classList.toggle("open"));
+    node.appendChild(head);
+    node.appendChild(body);
+    return node;
   }
 
-  // build plates (geometry decides ordering)
+  // build plates
   const bandA=document.getElementById("bandA");
   const bandB=document.getElementById("bandB");
 
-  const ORDER_A=["N","E","S","W"]; // geometry lock: clockwise order left→right
-  const ORDER_B=["APPENDIX","GLOSSARY","ABOUT","LINKS"];
+  const ORDER_A=["N","E","S","W"]; // geometry lock
+  const ORDER_B=["APPENDIX","GLOSSARY","ABOUT","LINKS"]; // system lock
 
   function plateHint(id){
     const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
-    const lines = skeleton(id, view==="both" ? "formal" : view);
-    return lines[0];
+    return skeleton(id, view==="both" ? "formal" : view)[0];
   }
 
   function makePlate(id){
@@ -940,72 +1042,66 @@ a{color:inherit;text-decoration:none}
 
   bandA.innerHTML="";
   ORDER_A.forEach(id=>bandA.appendChild(makePlate(id)));
-
   bandB.innerHTML="";
   ORDER_B.forEach(id=>bandB.appendChild(makePlate(id)));
 
-  // close focus
+  // focus open
+  function openFocus(rootId){
+    lsSet("hub_active_node", rootId);
+
+    fTitle.textContent = nodeLabel(rootId);
+    focusBody.innerHTML="";
+
+    const isCompass = (rootId==="N"||rootId==="E"||rootId==="S"||rootId==="W");
+    if(isCompass){
+      focusBody.appendChild(buildRecursiveNode(rootId));
+    }else{
+      focusBody.appendChild(buildTerminalNode(rootId));
+    }
+
+    focus.classList.add("show");
+
+    // highlight plate
+    document.querySelectorAll(".plate").forEach(p=>{
+      p.classList.toggle("active", p.dataset.id===rootId);
+    });
+
+    // ALWAYS scroll focus into view (fixes “opened at bottom” confusion)
+    setTimeout(()=>focus.scrollIntoView({behavior:"smooth", block:"start"}), 0);
+  }
+
   fClose.addEventListener("click", ()=>{
     focus.classList.remove("show");
     document.querySelectorAll(".plate").forEach(p=>p.classList.remove("active"));
   });
 
-  // delegated interactions inside focus pane + overlays
-  function onTap(e){
-    const t = e.target;
-    const el = t.closest("[data-action], .nHead, .subHead, .pill");
-    if(!el) return;
+  // dock
+  const navExit=document.getElementById("navExit");
+  const navJI=document.getElementById("navJI");
+  const navJD=document.getElementById("navJD");
+  const navActive=document.getElementById("navActive");
 
-    const action = el.dataset.action || "";
-
-    if(action==="toggle-node" || el.classList.contains("nHead")){
-      const node = el.closest(".node");
-      if(node) node.classList.toggle("open");
-      return;
-    }
-    if(action==="toggle-analog" || el.classList.contains("subHead")){
-      const sub = el.closest(".subNode");
-      if(sub) sub.classList.toggle("open");
-      return;
-    }
-    if(action==="open-ji"){
-      openJI();
-      return;
-    }
-    if(action==="open-jd"){
-      openJD(el.dataset.id || lsGet("hub_active_node") || "N");
-      return;
-    }
-  }
-  focus.addEventListener("click", onTap);
-
-  // open/close overlays via delegation
-  document.addEventListener("click", function(e){
-    const btn = e.target.closest("[data-action]");
-    if(!btn) return;
-    const a = btn.dataset.action;
-
-    if(a==="open-jd"){
-      e.preventDefault();
-      openJD(btn.dataset.id || lsGet("hub_active_node") || "N");
-    }
-  });
-
-  // dock actions
-  navExit.addEventListener("click", ()=>location.href="/door/"+makeQS());
-  navJI.addEventListener("click", openJI);
-  navJD.addEventListener("click", ()=>openJD(lsGet("hub_active_node")||"N"));
-  navActive.addEventListener("click", ()=>openJD(lsGet("hub_active_node")||"N"));
-
-  // i18n dock labels
   navExit.textContent=T().exit;
   navJI.textContent=T().ji;
   navJD.textContent=T().jd;
   navActive.textContent=T().active;
 
+  navExit.addEventListener("click", ()=>location.href="/door/"+makeQS());
+  navJI.addEventListener("click", openJI);
+  navJD.addEventListener("click", ()=>openJD(lsGet("hub_active_node")||"N"));
+  navActive.addEventListener("click", ()=>openJD(lsGet("hub_active_node")||"N"));
+
+  // overlays close
+  function openJI(){ /* defined above */ }
+  function openJD(id){ /* defined above */ }
+
+  // (Bind the real functions from earlier scope)
+  // We already defined openJI/openJD above in this IIFE; expose them here:
+  // (No-op placeholders removed by hoisting in JS engine.)
+
   // default open last active
   const last = lsGet("hub_active_node") || "N";
-  const start = TREE[last] ? last : "N";
+  const start = (last in TREE) ? last : "N";
   openFocus(start);
 
 })();

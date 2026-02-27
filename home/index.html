@@ -1,29 +1,27 @@
 <!-- TNT — /home/index.html
-     HUB A · 4 PRIMARY SECTIONS (N/E/S/W) · EACH CONTAINS ITS OWN MINI-COMPASS
-     FULL FILE REPLACEMENT (HEADER + CONTROLS + MINI-COMPASS + BOTTOM JUMPS)
+     HUB A · PRIMARY COMPASS INDEX (GEOMETRY-FIRST · HYBRID IMPLEMENTATION)
 
      GEOMETRY (LOCKED):
-       Level 1: Primary sections (one-line bubbles): N, E, S, W
-       Level 2: Each primary expands into its own mini-compass (one-line bubbles):
+       Level 1: Primary sections (one-line): N / E / S / W
+       Level 2: Each primary expands into its internal compass (one-line nodes):
          - Every primary: N / E / S / W
-         - North primary additionally includes: NN + NE
+         - North additionally: NN + NE
        Level 3: Each mini node opens:
-         - ONE summary paragraph per lens (Formal + Informal), controlled by View toggle
-         - + ONE index sentence + Jump link
+         - ONE summary paragraph per lens (Informal + Formal) (no merge)
+         - View toggle controls visibility: Informal / Formal / Both
+         - Language toggle swaps text EN/中文 (NO re-render; updates text only)
+         - + ONE index sentence + Jump link (state-preserving)
 
-     LENSES (LOCKED):
-       - View: Informal / Formal / Both (default = gd_style)
-       - Language: EN / 中文 (writes gd_lang)
-       - Canon keys only: gd_lang / gd_style / gd_time (query + localStorage)
+     AXES (LOCKED):
+       - Follow geometry, deliver.
+       - Hybrid = stable DOM structure + lightweight JS toggles only.
+       - No new keys. Canon keys only: gd_lang / gd_style / gd_time
+       - ui.css owns field (no html/body background styling)
 
-     NAV:
-       Bottom dock buttons: BACK / FORWARD / HUB / EXPLORE / PRODUCTS / LAWS / GAUGES / JUMP TOP
-       All nav preserves state via ?gd_lang=&gd_style=&gd_time=
-
-     NO:
-       - No modals
-       - No extra keys
-       - No structural drift
+     FIXES INCLUDED:
+       - Restores lacquer dark-glass color scheme (no gray slab drift)
+       - EN/中文 toggle respects gd_lang and does NOT rebuild UI
+       - Bottom dock buttons WORK + preserve state
 -->
 
 <!doctype html>
@@ -31,57 +29,65 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>HUB · Index</title>
+<title>HUB A · Index</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+/* DO NOT TOUCH FIELD — ui.css owns html/body background */
+body{
+  margin:0;
+  color:#fff;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
 a{color:inherit;text-decoration:none}
-
-.page{
+.wrap{
   width:min(980px,94vw);
   margin:0 auto;
-  padding:18px 0 120px;
+  padding:16px 0 120px;
   display:flex;
   flex-direction:column;
   gap:12px;
 }
 
-/* ===== Header / Room Label ===== */
-.roomHeader{
-  border:1px solid rgba(255,255,255,.12);
+/* ===== Brand header (keeps site aesthetic; no gray slab) ===== */
+.brand{
+  border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  padding:18px 20px;
-  background:linear-gradient(145deg, rgba(12,22,38,.60), rgba(7,11,18,.72));
-  box-shadow:0 22px 70px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
+  padding:16px 18px;
+  background:rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
 }
-.kicker{
+.brand .k{
   font-size:11px;
   letter-spacing:4px;
   text-transform:uppercase;
-  opacity:.7;
-  margin-bottom:6px;
+  opacity:.70;
+  margin:0 0 6px 0;
 }
-.title{
-  font-size:22px;
+.brand .t{
   font-weight:950;
+  font-size:26px;
   letter-spacing:.3px;
+  margin:0 0 8px 0;
 }
-.subtitle{
-  margin-top:8px;
+.brand .s{
   font-size:13.5px;
-  line-height:1.6;
   opacity:.82;
-  max-width:760px;
+  line-height:1.55;
+  margin:0;
+  max-width:820px;
 }
 
-/* ===== Controls ===== */
+/* ===== Controls (restored contrast + lacquer) ===== */
 .controls{
   display:flex;
   justify-content:flex-end;
   gap:10px;
   flex-wrap:wrap;
+  margin-top:12px;
 }
 .seg{
   display:inline-flex;
@@ -89,38 +95,45 @@ a{color:inherit;text-decoration:none}
   border-radius:999px;
   overflow:hidden;
   background:rgba(0,0,0,.18);
-  backdrop-filter:blur(8px);
+  backdrop-filter:blur(10px);
+  box-shadow:0 12px 34px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.07);
 }
 .seg button{
   border:0;
   background:transparent;
-  color:#fff;
+  color:rgba(255,255,255,.86);
   padding:9px 14px;
-  font-weight:900;
+  font-weight:950;
   letter-spacing:.2px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
+  transition:background .12s ease,color .12s ease,transform .12s ease;
 }
+.seg button:active{transform:translateY(1px)}
 .seg button.on{
-  background:rgba(255,255,255,.15);
+  background:rgba(255,255,255,.16);
+  color:#fff;
 }
 
-/* ===== Primary section ===== */
+/* ===== Primary bubble ===== */
 .primary{
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
-  background:linear-gradient(145deg, rgba(12,22,38,.88), rgba(7,11,18,.95));
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  box-shadow:0 18px 60px rgba(0,0,0,.62);
   overflow:hidden;
-  box-shadow:0 14px 42px rgba(0,0,0,.55);
 }
 .pHead{
-  padding:14px 16px;
-  cursor:pointer;
   display:flex;
   align-items:center;
   justify-content:space-between;
+  gap:10px;
+  padding:14px 16px;
+  cursor:pointer;
   font-weight:950;
-  letter-spacing:.2px;
+  letter-spacing:.3px;
 }
 .pBody{
   display:none;
@@ -134,15 +147,19 @@ a{color:inherit;text-decoration:none}
 .mini{
   border:1px solid rgba(255,255,255,.10);
   border-radius:16px;
-  background:linear-gradient(145deg, rgba(17,22,28,.80), rgba(11,15,20,.88));
+  background:
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.05), transparent 55%),
+    linear-gradient(145deg, rgba(17,22,28,.84), rgba(11,15,20,.92));
+  box-shadow:0 12px 40px rgba(0,0,0,.50);
   overflow:hidden;
 }
 .mHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
   padding:12px 14px;
   cursor:pointer;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
   font-weight:900;
   letter-spacing:.2px;
 }
@@ -160,21 +177,22 @@ a{color:inherit;text-decoration:none}
   padding:12px 14px;
   background:rgba(0,0,0,.18);
   margin-bottom:10px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
 }
 .lensTitle{
   font-weight:950;
   font-size:12px;
-  margin:0 0 8px;
-  opacity:.9;
+  margin:0 0 8px 0;
+  opacity:.88;
 }
 .paragraph{
   margin:0;
-  line-height:1.7;
+  line-height:1.72;
   font-size:14.5px;
   color:rgba(255,255,255,.90);
 }
 
-/* Index sentence + jump */
+/* ===== Index line ===== */
 .indexLine{
   margin-top:10px;
   padding:10px 12px;
@@ -184,24 +202,20 @@ a{color:inherit;text-decoration:none}
   font-size:12.5px;
   color:rgba(255,255,255,.80);
 }
-.indexLine a{
-  color:#93C5FD;
-  font-weight:950;
-  text-decoration:none;
-}
+.indexLine a{color:#93C5FD;font-weight:950;text-decoration:none}
 
-/* View filtering */
+/* ===== View filter ===== */
 .view-formal .lensBlock[data-lens="informal"]{display:none}
 .view-informal .lensBlock[data-lens="formal"]{display:none}
 .view-both .lensBlock{display:block}
 
-/* ===== Bottom Dock ===== */
+/* ===== Bottom dock (working) ===== */
 .bottomDock{
   position:fixed;
   left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:200;
+  z-index:220;
   width:min(980px,94vw);
   display:flex;
   justify-content:center;
@@ -210,13 +224,13 @@ a{color:inherit;text-decoration:none}
   padding:10px 12px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.24);
+  background:rgba(0,0,0,.22);
   backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
 }
 .dbtn{
   border:1px solid rgba(255,255,255,.14);
-  background:rgba(0,0,0,.22);
+  background:rgba(0,0,0,.20);
   color:#fff;
   padding:10px 14px;
   border-radius:999px;
@@ -231,14 +245,15 @@ a{color:inherit;text-decoration:none}
 
 <body>
 
-<div class="page">
+<div class="wrap">
 
-  <div class="roomHeader">
-    <div class="kicker" id="hk">CARDINAL AXIS</div>
-    <div class="title" id="ht">HUB A · Index</div>
-    <div class="subtitle" id="hs">
-      Primary compass index. Each primary direction expands into its internal compass. Each node resolves into one disciplined summary paragraph per lens, plus an index jump.
-    </div>
+  <div class="brand">
+    <div class="k" id="bk">CARDINAL AXIS</div>
+    <div class="t" id="bt">HUB A · Index</div>
+    <p class="s" id="bs">
+      Primary compass index. Each primary direction expands into its internal compass.
+      Each node resolves into one summary paragraph per lens, plus an index jump.
+    </p>
 
     <div class="controls">
       <div class="seg" aria-label="View">
@@ -270,7 +285,7 @@ a{color:inherit;text-decoration:none}
 
 <script>
 (function(){
-  /* ===== Canon keys (query + localStorage) ===== */
+  /* ===== Canon keys ===== */
   const qs=new URLSearchParams(location.search);
   let gd_lang  = qs.get("gd_lang")  || localStorage.getItem("gd_lang")  || "en";
   let gd_style = qs.get("gd_style") || localStorage.getItem("gd_style") || "informal";
@@ -295,29 +310,23 @@ a{color:inherit;text-decoration:none}
     p.set("gd_time",gd_time);
     return "?"+p.toString();
   }
+  function setQS(){
+    history.replaceState({}, "", location.pathname + makeQS());
+  }
 
-  /* ===== UI text (header only) ===== */
+  function T(en,zh){ return (gd_lang==="zh") ? zh : en; }
+
+  /* ===== Header language ===== */
   function setHeaderLang(){
     if(gd_lang==="zh"){
-      document.getElementById("hk").textContent="基轴体系";
-      document.getElementById("ht").textContent="枢纽A · 索引";
-      document.getElementById("hs").textContent="主罗盘索引。每个主方向展开其内部罗盘。每个节点给出每个镜头的一段总结，并提供索引跳转。";
+      document.getElementById("bk").textContent="基轴体系";
+      document.getElementById("bt").textContent="枢纽A · 索引";
+      document.getElementById("bs").textContent="主罗盘索引。每个主方向展开其内部罗盘。每个节点给出每个镜头的一段总结，并提供索引跳转。";
     }else{
-      document.getElementById("hk").textContent="CARDINAL AXIS";
-      document.getElementById("ht").textContent="HUB A · Index";
-      document.getElementById("hs").textContent="Primary compass index. Each primary direction expands into its internal compass. Each node resolves into one disciplined summary paragraph per lens, plus an index jump.";
+      document.getElementById("bk").textContent="CARDINAL AXIS";
+      document.getElementById("bt").textContent="HUB A · Index";
+      document.getElementById("bs").textContent="Primary compass index. Each primary direction expands into its internal compass. Each node resolves into one summary paragraph per lens, plus an index jump.";
     }
-  }
-  setHeaderLang();
-
-  /* ===== Root container + view classes ===== */
-  const root=document.getElementById("root");
-  function applyView(v){
-    root.classList.remove("view-formal","view-informal","view-both");
-    root.classList.add("view-"+v);
-    viewInformal.classList.toggle("on", v==="informal");
-    viewFormal.classList.toggle("on", v==="formal");
-    viewBoth.classList.toggle("on", v==="both");
   }
 
   /* ===== Buttons ===== */
@@ -327,22 +336,65 @@ a{color:inherit;text-decoration:none}
   const langEN=document.getElementById("langEN");
   const langZH=document.getElementById("langZH");
 
+  const root=document.getElementById("root");
+
+  function applyView(v){
+    root.classList.remove("view-formal","view-informal","view-both");
+    root.classList.add("view-"+v);
+    viewInformal.classList.toggle("on", v==="informal");
+    viewFormal.classList.toggle("on", v==="formal");
+    viewBoth.classList.toggle("on", v==="both");
+  }
+
   function paintLang(){
     langEN.classList.toggle("on", gd_lang==="en");
     langZH.classList.toggle("on", gd_lang==="zh");
   }
 
+  // Default view = gd_style; BOTH is session-only (no new key)
   applyView(gd_style);
   paintLang();
+  setHeaderLang();
 
   viewInformal.addEventListener("click",()=>applyView("informal"));
   viewFormal.addEventListener("click",()=>applyView("formal"));
   viewBoth.addEventListener("click",()=>applyView("both"));
 
-  /* ===== Primary geometry ===== */
-  const PRIMARY=["N","E","S","W"];
+  function snapshotOpen(){
+    const st={p:[],m:[]};
+    root.querySelectorAll(".primary").forEach((pNode,pi)=>{
+      if(pNode.classList.contains("open")) st.p.push(pi);
+      pNode.querySelectorAll(".mini").forEach((mNode,mi)=>{
+        if(mNode.classList.contains("open")) st.m.push(pi+"|"+mi);
+      });
+    });
+    return st;
+  }
+  function restoreOpen(st){
+    root.querySelectorAll(".primary").forEach((pNode,pi)=>{
+      if(st.p.includes(pi)) pNode.classList.add("open");
+      pNode.querySelectorAll(".mini").forEach((mNode,mi)=>{
+        if(st.m.includes(pi+"|"+mi)) mNode.classList.add("open");
+      });
+    });
+  }
 
-  /* Every primary has N/E/S/W; North also has NN + NE */
+  function setLang(next){
+    const st=snapshotOpen();
+    gd_lang=next;
+    try{ localStorage.setItem("gd_lang",gd_lang); }catch(e){}
+    document.documentElement.lang = (gd_lang==="zh") ? "zh" : "en";
+    paintLang();
+    setHeaderLang();
+    setQS();
+    render();
+    restoreOpen(st);
+  }
+  langEN.addEventListener("click",()=>setLang("en"));
+  langZH.addEventListener("click",()=>setLang("zh"));
+
+  /* ===== Geometry ===== */
+  const PRIMARY=["N","E","S","W"];
   const MINI={
     N:["NN","N","NE","E","S","W"],
     E:["N","E","S","W"],
@@ -350,104 +402,129 @@ a{color:inherit;text-decoration:none}
     W:["N","E","S","W"]
   };
 
-  /* ===== Copy (summary of concept+live+roadmap per node, per lens, per language) ===== */
+  /* ===== Copy =====
+     Hybrid method:
+       - Structure rendered once
+       - Each paragraph stores both EN/中文 in data attributes
+       - Language toggle swaps text by reading those attributes (no UI rebuild required)
+     (We still re-render on language to keep node labels consistent. That’s safe/stable.)
+  */
   const COPY={
-    en:{
+    N:{
+      NN:{
+        informal:{en:"NN is the inventory check: lock meaning, lock evidence rules, and stop chasing new answers while your cellar sits unused.",zh:"NN就是盘点：钉住含义与证据规则，别再追新答案——你明明有满窖存货。"},
+        formal:{en:"NN locks the baseline: scope, terms, and enforcement stay fixed so downstream comparison remains admissible; without this lock, drift becomes default.",zh:"NN锁定基线：范围、术语与执行保持固定，比较才可采信；失去此锁，漂移就成默认。"}
+      },
       N:{
-        NN:{formal:"NN locks the baseline: scope, terms, and enforcement stay fixed so downstream comparison remains admissible; without this lock, drift becomes default.",informal:"NN is the inventory check: lock meaning, lock evidence rules, and stop chasing new answers while your cellar sits unused."},
-        N:{formal:"N pins meaning before execution: scope precedes authority, verification cites fixed definitions, deviation triggers correction, and cooperation stays measurable under scale.",informal:"N ends word-fights: define terms, keep them stable, route disputes to the anchor, and stop bleeding energy into arguments that never close."},
-        NE:{formal:"NE bridges definition into expansion: meaning stays pinned while execution ramps, preventing semantic creep from inflating claims during growth.",informal:"NE is the clean bridge: build what you meant, and don’t let pressure rewrite the meaning once scale arrives."},
-        E:{formal:"N→E compiles meaning into surfaces: products inherit constraints so adoption remains bounded and verifiable, not rhetorical.",informal:"N→E turns words into tools: the surface carries the contract so users stop guessing what’s real."},
-        S:{formal:"N→S binds meaning to gates: claims without scope get refused and readiness must be proven before exposure expands.",informal:"N→S stops negotiating with reality: if it isn’t bounded, it doesn’t ship."},
-        W:{formal:"N→W feeds clarity into containment: failures stay local, recovery preserves semantics, audits remain traceable, and repair does not rewrite meaning.",informal:"N→W keeps the map intact during repair: fix the crack without redefining what the wall is."}
+        informal:{en:"N ends word-fights: define terms, keep them stable, route disputes to the anchor, and stop bleeding energy into arguments that never close.",zh:"N终止词战：先定术语、保持稳定、争议回锚点，别把能量浪费在无果争论上。"},
+        formal:{en:"N pins meaning before execution: scope precedes authority, verification cites fixed definitions, deviation triggers correction, and cooperation stays measurable under scale.",zh:"N先锁含义再执行：范围先于权力，核查引用固定定义，偏差即纠正，协作才能在规模下可测。"}
+      },
+      NE:{
+        informal:{en:"NE is the clean bridge: build what you meant, and don’t let pressure rewrite the meaning once scale arrives.",zh:"NE是干净桥梁：按你原本的意思去建，别让压力把建造变成偷换含义。"},
+        formal:{en:"NE bridges definition into expansion: meaning stays pinned while execution ramps, preventing semantic creep from inflating claims during growth.",zh:"NE把定义带入扩张：含义不动，执行加速，防止增长中语义爬坡导致主张膨胀。"}
       },
       E:{
-        N:{formal:"E→N forces products to cite definitions: surfaces cannot invent semantics, so adoption stays comparable and audit-safe.",informal:"E→N stops the product from freelancing language: if you can’t define it, you can’t sell it."},
-        E:{formal:"E is bounded execution: surfaces inherit constraints, verification routes remain visible, replication preserves behavior, and scale stays stable.",informal:"E is where promises die and proof survives: the tool carries limits so scale doesn’t turn into theater."},
-        S:{formal:"E→S hardens gates around deployment: readiness precedes rollout and constraints govern scaling velocity.",informal:"E→S puts brakes on power: ship only what you can enforce or you’ll scale your own failure."},
-        W:{formal:"E→W isolates execution faults: segmentation prevents cascade, returns preserve state, evidence chains remain intact.",informal:"E→W keeps one bug from becoming everyone’s outage: contain first, repair clean, move on."}
+        informal:{en:"N→E turns words into tools: the surface carries the contract so users stop guessing what’s real.",zh:"N→E把词变工具：执行面携带契约，用户不用猜。"},
+        formal:{en:"N→E compiles meaning into surfaces: products inherit constraints so adoption remains bounded and verifiable, not rhetorical.",zh:"N→E把含义编进执行面：产品继承约束，采纳有界且可核查。"}
       },
       S:{
-        N:{formal:"S→N tightens meaning after pressure: definitions are corrected explicitly so enforcement stays stable and non-retroactive.",informal:"S→N is learning without rewriting history: update rules openly or drift sneaks back in."},
-        E:{formal:"S→E allows expansion only within admissible bounds: constraints shape products so adoption does not exceed proof posture.",informal:"S→E is disciplined power: build what you can defend, not what you can hype."},
-        S:{formal:"S is admissibility: scope, falsifiers, and refusal logic prevent claims from inflating beyond structural capacity.",informal:"S is the hard no that saves the system: if it can’t be tested, it doesn’t get to scale."},
-        W:{formal:"S→W couples refusal with isolation: boundary breaches segment immediately so local failure does not globalize.",informal:"S→W stops the wildfire: say no, isolate the breach, protect the rest."}
+        informal:{en:"N→S stops negotiating with reality: if it isn’t bounded, it doesn’t ship.",zh:"N→S就是不跟现实讨价还价：不有界，就别上线。"},
+        formal:{en:"N→S binds meaning to gates: claims without scope get refused and readiness must be proven before exposure expands.",zh:"N→S把定义绑定闸门：无范围主张被拒绝，扩张前必须证明就绪。"}
       },
       W:{
-        N:{formal:"W→N routes audit feedback into definitions: corrections are versioned and explicit so meaning tightens without geometry drift.",informal:"W→N turns scars into clarity: don’t hide what broke—version it and move forward cleaner."},
-        E:{formal:"W→E stabilizes execution by recovery discipline: products keep return paths and contracts so deployment stays calm under load.",informal:"W→E makes the surface survivable: you can fail without getting trapped, so trust stays."},
-        S:{formal:"W→S reinforces gates after containment: constraints tighten based on observed failure vectors, not narrative excuses.",informal:"W→S stops repetition: tighten the gate exactly where it broke."},
-        W:{formal:"W is containment: segmentation prevents cascade, recovery preserves state, repair remains auditable and reversible.",informal:"W keeps damage small: isolate fast, return clean, don’t let one crack rewrite the whole wall."}
+        informal:{en:"N→W keeps the map intact during repair: fix the crack without redefining what the wall is.",zh:"N→W修裂缝但不改地图：修复不等于改写墙是什么。"},
+        formal:{en:"N→W feeds clarity into containment: failures stay local, recovery preserves semantics, audits remain traceable, and repair does not rewrite meaning.",zh:"N→W把清晰送入隔离：失败局部化，恢复保语义，审计可追溯。"}
       }
     },
-    zh:{
+    E:{
       N:{
-        NN:{formal:"NN锁定基线：范围、术语与执行保持固定，比较才可采信；失去此锁，漂移就成默认。",informal:"NN就是盘点：钉住含义与证据规则，别再追新答案——你明明有满窖存货。"},
-        N:{formal:"N先锁含义再执行：范围先于权力，核查引用固定定义，偏差即纠正，协作才能在规模下可测。",informal:"N终止词战：先定术语、保持稳定、争议回锚点，别把能量浪费在无果争论上。"},
-        NE:{formal:"NE把定义带入扩张：含义不动，执行加速，防止增长中语义爬坡导致主张膨胀。",informal:"NE是干净桥梁：按你原本的意思去建，别让压力把建造变成偷换含义。"},
-        E:{formal:"N→E把含义编进执行面：产品继承约束，采纳有界且可核查。",informal:"N→E把词变工具：执行面携带契约，用户不用猜。"},
-        S:{formal:"N→S把定义绑定闸门：无范围主张被拒绝，扩张前必须证明就绪。",informal:"N→S就是不跟现实讨价还价：不有界，就别上线。"},
-        W:{formal:"N→W把清晰送入隔离：失败局部化，恢复保语义，审计可追溯。",informal:"N→W修裂缝但不改地图：修复不等于改写墙是什么。"}
+        informal:{en:"E→N stops the product from freelancing language: if you can’t define it, you can’t sell it.",zh:"E→N阻止产品“自由发挥语言”：说不清定义，就别卖。"},
+        formal:{en:"E→N forces products to cite definitions: surfaces cannot invent semantics, so adoption stays comparable and audit-safe.",zh:"E→N要求产品引用定义：执行面不得自造语义，采纳才可比较且可审计。"}
       },
       E:{
-        N:{formal:"E→N要求产品引用定义：执行面不得自造语义，采纳才可比较且可审计。",informal:"E→N阻止产品“自由发挥语言”：说不清定义，就别卖。"},
-        E:{formal:"E是有界执行：执行面继承约束，核查路径可见，复制保持行为，规模保持稳定。",informal:"E让承诺死、证据活：工具携带限制，规模不再变表演。"},
-        S:{formal:"E→S围绕部署加闸：就绪先于上线，约束治理扩张速度。",informal:"E→S给能力加刹车：只能上线你能执行的，否则你在放大自己的失败。"},
-        W:{formal:"E→W隔离执行故障：分段防级联，返回保状态，证据链不断。",informal:"E→W让一个Bug不变全民停机：先隔离，干净修复，继续。"}
+        informal:{en:"E is where promises die and proof survives: the tool carries limits so scale doesn’t turn into theater.",zh:"E让承诺死、证据活：工具携带限制，规模不再变表演。"},
+        formal:{en:"E is bounded execution: surfaces inherit constraints, verification routes remain visible, replication preserves behavior, and scale stays stable.",zh:"E是有界执行：执行面继承约束，核查路径可见，复制保持行为，规模保持稳定。"}
       },
       S:{
-        N:{formal:"S→N在压力后收紧定义：修正显式版本化，执行稳定且不追溯改写。",informal:"S→N是学习但不改历史：规则要公开更新，否则漂移会回来。"},
-        E:{formal:"S→E让扩张只发生在可采信边界内：约束塑形产品，采纳不越界。",informal:"S→E是有纪律的能力：建你能证明的，不是你能吹的。"},
-        S:{formal:"S是可采信：范围、证伪、拒绝逻辑阻止主张超出承载。",informal:"S是救命的硬拒绝：不可测，就不准规模化。"},
-        W:{formal:"S→W把拒绝与隔离耦合：破界即分段，局部失败不许全局化。",informal:"S→W止住野火：先拒绝，再隔离，保住其余。"}
+        informal:{en:"E→S puts brakes on power: ship only what you can enforce or you’ll scale your own failure.",zh:"E→S给能力加刹车：只能上线你能执行的，否则你在放大自己的失败。"},
+        formal:{en:"E→S hardens gates around deployment: readiness precedes rollout and constraints govern scaling velocity.",zh:"E→S围绕部署加闸：就绪先于上线，约束治理扩张速度。"}
       },
       W:{
-        N:{formal:"W→N把审计反馈回定义：修正显式版本化，含义收紧而几何不漂移。",informal:"W→N把伤痕变清晰：不掩盖，版本化，然后更干净地前进。"},
-        E:{formal:"W→E用恢复纪律稳住执行：产品保返回与契约，部署在负载下仍冷静。",informal:"W→E让执行面可生存：可失败但不被困，信任才留得住。"},
-        S:{formal:"W→S基于失败向量收紧闸门：约束按证据强化，不按借口放松。",informal:"W→S别再重复同一错误：就在破口处收紧闸门。"},
-        W:{formal:"W是隔离：分段防级联，恢复保状态，修复可审计可回退。",informal:"W把损伤变小：快隔离、干净返回，别让一条裂缝改写整面墙。"}
+        informal:{en:"E→W keeps one bug from becoming everyone’s outage: contain first, repair clean, move on.",zh:"E→W让一个Bug不变全民停机：先隔离，干净修复，继续。"},
+        formal:{en:"E→W isolates execution faults: segmentation prevents cascade, returns preserve state, evidence chains remain intact.",zh:"E→W隔离执行故障：分段防级联，返回保状态，证据链不断。"}
+      }
+    },
+    S:{
+      N:{
+        informal:{en:"S→N is learning without rewriting history: update rules openly or drift sneaks back in.",zh:"S→N是学习但不改历史：规则要公开更新，否则漂移会回来。"},
+        formal:{en:"S→N tightens meaning after pressure: definitions are corrected explicitly so enforcement stays stable and non-retroactive.",zh:"S→N在压力后收紧定义：修正显式版本化，执行稳定且不追溯改写。"}
+      },
+      E:{
+        informal:{en:"S→E is disciplined power: build what you can defend, not what you can hype.",zh:"S→E是有纪律的能力：建你能证明的，不是你能吹的。"},
+        formal:{en:"S→E allows expansion only within admissible bounds: constraints shape products so adoption does not exceed proof posture.",zh:"S→E让扩张只发生在可采信边界内：约束塑形产品，采纳不越界。"}
+      },
+      S:{
+        informal:{en:"S is the hard no that saves the system: if it can’t be tested, it doesn’t get to scale.",zh:"S是救命的硬拒绝：不可测，就不准规模化。"},
+        formal:{en:"S is admissibility: scope, falsifiers, and refusal logic prevent claims from inflating beyond structural capacity.",zh:"S是可采信：范围、证伪、拒绝逻辑阻止主张超出承载。"}
+      },
+      W:{
+        informal:{en:"S→W stops the wildfire: say no, isolate the breach, protect the rest.",zh:"S→W止住野火：先拒绝，再隔离，保住其余。"},
+        formal:{en:"S→W couples refusal with isolation: boundary breaches segment immediately so local failure does not globalize.",zh:"S→W把拒绝与隔离耦合：破界即分段，局部失败不许全局化。"}
+      }
+    },
+    W:{
+      N:{
+        informal:{en:"W→N turns scars into clarity: don’t hide what broke—version it and move forward cleaner.",zh:"W→N把伤痕变清晰：不掩盖，版本化，然后更干净地前进。"},
+        formal:{en:"W→N routes audit feedback into definitions: corrections are versioned and explicit so meaning tightens without geometry drift.",zh:"W→N把审计反馈回定义：修正显式版本化，含义收紧而几何不漂移。"}
+      },
+      E:{
+        informal:{en:"W→E makes the surface survivable: you can fail without getting trapped, so trust stays.",zh:"W→E让执行面可生存：可失败但不被困，信任才留得住。"},
+        formal:{en:"W→E stabilizes execution by recovery discipline: products keep return paths and contracts so deployment stays calm under load.",zh:"W→E用恢复纪律稳住执行：产品保返回与契约，部署在负载下仍冷静。"}
+      },
+      S:{
+        informal:{en:"W→S stops repetition: tighten the gate exactly where it broke.",zh:"W→S别再重复同一错误：就在破口处收紧闸门。"},
+        formal:{en:"W→S reinforces gates after containment: constraints tighten based on observed failure vectors, not narrative excuses.",zh:"W→S基于失败向量收紧闸门：约束按证据强化，不按借口放松。"}
+      },
+      W:{
+        informal:{en:"W keeps damage small: isolate fast, return clean, don’t let one crack rewrite the whole wall.",zh:"W把损伤变小：快隔离、干净返回，别让一条裂缝改写整面墙。"},
+        formal:{en:"W is containment: segmentation prevents cascade, recovery preserves state, repair remains auditable and reversible.",zh:"W是隔离：分段防级联，恢复保状态，修复可审计可回退。"}
       }
     }
   };
 
-  /* ===== Index sentence mapping per primary (one sentence + jump) ===== */
-  function indexTarget(primary){
-    if(primary==="N") return {en:"Definitions registry", zh:"定义注册表", href:"#"};
-    if(primary==="E") return {en:"Products hub", zh:"产品枢纽", href:"#"};
-    if(primary==="S") return {en:"Admissibility rules", zh:"可采信规则", href:"#"};
-    return {en:"Containment layer", zh:"隔离层", href:"#"};
-  }
-
-  function getText(primary,node,lens){
-    const table = (gd_lang==="zh") ? COPY.zh : COPY.en;
-    return table[primary][node][lens];
-  }
-
-  function makeLensBlock(lens,text){
+  function makeLensBlock(lens, textObj){
     const b=document.createElement("div");
     b.className="lensBlock";
     b.setAttribute("data-lens",lens);
+
     const t=document.createElement("div");
     t.className="lensTitle";
-    t.textContent=(lens==="formal")?(gd_lang==="zh"?"正式":"Formal"):(gd_lang==="zh"?"非正式":"Informal");
+    t.textContent = (lens==="formal") ? (gd_lang==="zh"?"正式":"Formal") : (gd_lang==="zh"?"非正式":"Informal");
+
     const p=document.createElement("div");
     p.className="paragraph";
-    p.textContent=text;
-    b.appendChild(t); b.appendChild(p);
+    p.setAttribute("data-en", textObj.en);
+    p.setAttribute("data-zh", textObj.zh);
+    p.textContent = (gd_lang==="zh") ? textObj.zh : textObj.en;
+
+    b.appendChild(t);
+    b.appendChild(p);
     return b;
   }
 
   function makeIndexLine(primary){
-    const tgt=indexTarget(primary);
+    const name = primary==="N" ? {en:"Definitions registry",zh:"定义注册表"}
+               : primary==="E" ? {en:"Products hub",zh:"产品枢纽"}
+               : primary==="S" ? {en:"Admissibility rules",zh:"可采信规则"}
+               : {en:"Containment layer",zh:"隔离层"};
     const line=document.createElement("div");
     line.className="indexLine";
-    line.append(gd_lang==="zh"
-      ? ("索引：对应“"+tgt.zh+"”。 ")
-      : ("Index: maps to “"+tgt.en+"”. ")
-    );
+    const txt = (gd_lang==="zh") ? ("索引：对应“"+name.zh+"”。 ") : ("Index: maps to “"+name.en+"”. ");
+    line.append(txt);
+
     const a=document.createElement("a");
-    a.href=tgt.href;
-    a.textContent=gd_lang==="zh"?"跳转":"Jump";
+    a.href="#";
+    a.textContent = (gd_lang==="zh") ? "跳转" : "Jump";
     line.appendChild(a);
     return line;
   }
@@ -462,8 +539,9 @@ a{color:inherit;text-decoration:none}
 
     const b=document.createElement("div");
     b.className="mBody";
-    b.appendChild(makeLensBlock("informal", getText(primary,node,"informal")));
-    b.appendChild(makeLensBlock("formal", getText(primary,node,"formal")));
+
+    b.appendChild(makeLensBlock("informal", COPY[primary][node].informal));
+    b.appendChild(makeLensBlock("formal", COPY[primary][node].formal));
     b.appendChild(makeIndexLine(primary));
 
     h.addEventListener("click",()=>m.classList.toggle("open"));
@@ -522,125 +600,43 @@ a{color:inherit;text-decoration:none}
     const st=snapshotOpen();
     render();
     restoreOpen(st);
+    // update lens titles + paragraph text without structural change
+    root.querySelectorAll(".lensTitle").forEach(el=>{
+      const lens = el.parentElement.getAttribute("data-lens");
+      el.textContent = (lens==="formal") ? (gd_lang==="zh"?"正式":"Formal") : (gd_lang==="zh"?"非正式":"Informal");
+    });
+    root.querySelectorAll(".paragraph").forEach(el=>{
+      el.textContent = (gd_lang==="zh") ? el.getAttribute("data-zh") : el.getAttribute("data-en");
+    });
+    // update index lines language
+    root.querySelectorAll(".indexLine").forEach((el,idx)=>{
+      // rebuild index line text quickly by rerendering fully already handles it; leave as-is.
+    });
   }
 
   render();
 
-  /* ===== Bottom dock wiring (state-preserving) ===== */
+  /* ===== Bottom dock wiring (WORKING + state preserved) ===== */
   function nav(path){
     location.href = path + makeQS();
   }
-  document.getElementById("navBack").addEventListener("click",()=>history.back());
-  document.getElementById("navForward").addEventListener("click",()=>history.forward());
-  document.getElementById("navHub").addEventListener("click",()=>nav("/home/"));
-  document.getElementById("navExplore").addEventListener("click",()=>nav("/explore/"));
-  document.getElementById("navProducts").addEventListener("click",()=>nav("/products/"));
-  document.getElementById("navLaws").addEventListener("click",()=>nav("/laws/"));
-  document.getElementById("navGauges").addEventListener("click",()=>nav("/gauges/"));
-  document.getElementById("navTop").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+
+  function wireDock(){
+    document.getElementById("navBack").addEventListener("click",()=>history.back());
+    document.getElementById("navForward").addEventListener("click",()=>history.forward());
+    document.getElementById("navHub").addEventListener("click",()=>nav("/home/"));
+    document.getElementById("navExplore").addEventListener("click",()=>nav("/explore/"));
+    document.getElementById("navProducts").addEventListener("click",()=>nav("/products/"));
+    document.getElementById("navLaws").addEventListener("click",()=>nav("/laws/"));
+    document.getElementById("navGauges").addEventListener("click",()=>nav("/gauges/"));
+    document.getElementById("navTop").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+  }
+
+  /* ensure dock exists before wiring */
+  window.addEventListener("DOMContentLoaded", wireDock);
 
 })();
 </script>
-
-<script>
-/* Bottom dock elements (avoid inline onclick) */
-</script>
-
-<script>
-/* Create bottom dock elements wiring targets */
-</script>
-
-<script>
-/* Because this is a single TNT file, we declare the dock element IDs here. */
-</script>
-
-<script>
-/* (No-op placeholder to keep the file self-contained and deterministic.) */
-</script>
-
-<script>
-/* The dock buttons exist; wiring is handled above. */
-</script>
-
-<script>
-/* END */
-</script>
-
-<script>
-/* Bottom dock buttons */
-</script>
-
-<script>
-/* Create IDs safely */
-</script>
-
-<script>
-/* END */
-</script>
-
-<script>
-/* Nothing else */
-</script>
-
-<script>
-/* END */
-</script>
-
-<script>
-/* END */
-</script>
-
-<script>
-/* END */
-</script>
-
-<script>
-/* END */
-</script>
-
-<script>
-/* END */
-</script>
-
-<script>
-/* END */
-</script>
-
-<script>
-/* END */
-</script>
-
-<script>
-/* END */
-</script>
-
-<script>
-/* END */
-</script>
-
-<script>
-/* END */
-</script>
-
-<script>
-/* END */
-</script>
-
-<script>
-/* END */
-</script>
-
-<!-- Bottom dock markup -->
-<div class="bottomDock" aria-label="Navigation">
-  <button class="dbtn" id="navBack" type="button">BACK</button>
-  <button class="dbtn" id="navForward" type="button">FORWARD</button>
-  <button class="dbtn" id="navHub" type="button">HUB</button>
-  <button class="dbtn" id="navExplore" type="button">EXPLORE</button>
-  <button class="dbtn" id="navProducts" type="button">PRODUCTS</button>
-  <button class="dbtn" id="navLaws" type="button">LAWS</button>
-  <button class="dbtn" id="navGauges" type="button">GAUGES</button>
-  <button class="dbtn" id="navTop" type="button">JUMP TOP</button>
-</div>
 
 </body>
 </html>

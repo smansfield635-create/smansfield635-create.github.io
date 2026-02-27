@@ -1,10 +1,10 @@
-<!-- TNT — /home/index.html  (HUB A · COORDINATE HUB · STRUCTURE-FIRST · NO DRIFT)
+<!-- TNT — /home/index.html  (HUB A · COORDINATE HUB · 12 STACKED BUBBLES PER CARDINAL)
      PURPOSE:
        - /home/ = HUB A (Coordinate Hub / Structure Root)
        - 4-face visible: N/E/S/W (DEFINITIONS / PRODUCTS / CONSTRAINTS / CONTAINMENT)
-       - MAP opens 4 bubbles (legend + contracts + returns + verification)
-       - Each selection opens ONE modal with 4 bubbles, each bubble embeds:
+       - MAP opens 4 topics; each topic expands into 3 stacked bubbles:
            Concept / Live / Roadmap
+       - Modal output per selection = 12 stacked bubbles (single column)
        - Bilingual: gd_lang=en => EN ONLY; gd_lang=zh => 中文 ONLY
        - Lens: gd_style=formal|informal (copy only; no geometry changes)
        - Keys: ONLY gd_lang / gd_style / gd_time (query + localStorage)
@@ -104,7 +104,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Gem diamonds (adopted scheme — do not compete) */
+/* Gem diamonds */
 .d{
   width:150px;height:150px;
   position:absolute;left:50%;top:50%;
@@ -257,9 +257,10 @@ a{color:inherit;text-decoration:none}
   flex:1 1 auto;
 }
 
-/* Bubbles */
-.grid{display:grid;gap:14px}
-@media (min-width:920px){ .grid{grid-template-columns:1fr 1fr} }
+/* STACK (12 bubbles, single column) */
+.stack{display:flex;flex-direction:column;gap:14px}
+
+/* Bubble */
 .bubble{
   padding:16px 18px;border-radius:22px;
   background:
@@ -279,13 +280,11 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 .bubble h4{margin:0 0 10px;font-weight:950;letter-spacing:.2px}
-.seg{margin:0 0 10px;color:rgba(255,255,255,.86);line-height:1.55}
-.seg:last-child{margin-bottom:0}
+.seg{margin:0;color:rgba(255,255,255,.86);line-height:1.55}
 .tag{
   font-weight:900;
   color:rgba(255,255,255,.72);
   letter-spacing:.3px;
-  margin-right:8px;
 }
 
 /* Modal footer actions */
@@ -373,32 +372,7 @@ a{color:inherit;text-decoration:none}
     </div>
 
     <div class="mbody">
-      <div class="grid">
-        <div class="bubble">
-          <h4 id="h1">—</h4>
-          <p class="seg" id="p1c">—</p>
-          <p class="seg" id="p1n">—</p>
-          <p class="seg" id="p1r">—</p>
-        </div>
-        <div class="bubble">
-          <h4 id="h2">—</h4>
-          <p class="seg" id="p2c">—</p>
-          <p class="seg" id="p2n">—</p>
-          <p class="seg" id="p2r">—</p>
-        </div>
-        <div class="bubble">
-          <h4 id="h3">—</h4>
-          <p class="seg" id="p3c">—</p>
-          <p class="seg" id="p3n">—</p>
-          <p class="seg" id="p3r">—</p>
-        </div>
-        <div class="bubble">
-          <h4 id="h4">—</h4>
-          <p class="seg" id="p4c">—</p>
-          <p class="seg" id="p4n">—</p>
-          <p class="seg" id="p4r">—</p>
-        </div>
-      </div>
+      <div class="stack" id="stack"></div>
 
       <div class="mact">
         <button class="sbtn" id="mReturn" type="button">RETURN</button>
@@ -451,483 +425,12 @@ a{color:inherit;text-decoration:none}
   document.getElementById("mJumpFrontier").href="/explore/"+q();
   document.getElementById("mJumpProducts").href="/products/"+q();
 
-  // ===== TAG labels (embedded; no external time chips) =====
-  function tags(){
-    if(gd_lang==="zh"){
-      return { c:"概念", n:"现况", r:"路线图" };
-    }
-    return { c:"Concept", n:"Live", r:"Roadmap" };
-  }
-  var TAG = tags();
-
-  function seg(id, label, txt){
-    document.getElementById(id).innerHTML = '<span class="tag">'+label+'</span>' + txt;
-  }
-
-  // ===== HUB A Registry (lens+language stable; diffable) =====
-  function T(enF,enI,zhF,zhI){
-    return (gd_lang==="zh") ? ((gd_style==="formal")?zhF:zhI) : ((gd_style==="formal")?enF:enI);
-  }
-
-  var REG = {
-    north:{
-      titleEN:"HUB · DEFINITIONS",
-      titleZH:"枢纽 · 定义",
-      bubbles:[
-        {
-          h: T("Definitions · Contract","Definitions · Contract","定义 · 契约","定义 · 契约"),
-          c: T(
-            "Definitions pin meaning so measurement and claims remain admissible.",
-            "Lock meanings so nothing drifts.",
-            "定义钉住含义，使测量与主张保持可采信。",
-            "把词钉死，后面就不漂。"
-          ),
-          n: T(
-            "Shared terms remain stable across the declared scope.",
-            "Everyone plays the same game.",
-            "在声明范围内术语保持稳定。",
-            "大家说的是同一套话。"
-          ),
-          r: T(
-            "Expand the registry without changing compass geometry.",
-            "Grow the dictionary, keep the compass.",
-            "扩展注册表，但不改变罗盘几何。",
-            "词典变大，罗盘不变。"
-          )
-        },
-        {
-          h: T("Definitions · Invariants","Definitions · Invariants","定义 · 不变量","定义 · 不变量"),
-          c: T(
-            "Invariants define what must never change under declared rules.",
-            "The line you never cross.",
-            "不变量定义在已声明规则下永远不该变的东西。",
-            "那条永远不该越的线。"
-          ),
-          n: T(
-            "Invariants block silent redefinition during expansion.",
-            "No silent edits.",
-            "不变量阻止扩张中的静默改义。",
-            "不让你悄悄换意思。"
-          ),
-          r: T(
-            "Add invariants only when observer-invariant and testable.",
-            "Only add weight when it’s measurable.",
-            "只在可观察一致且可证伪时增加不变量。",
-            "能测才加重量。"
-          )
-        },
-        {
-          h: T("Definitions · Measurement Frame","Definitions · Measurement Frame","定义 · 测量框架","定义 · 测量框架"),
-          c: T(
-            "Measurement requires scope, units, and falsifiers before interpretation.",
-            "Measure first, story later.",
-            "测量先有范围、单位与证伪条件，才谈解释。",
-            "先量再说。"
-          ),
-          n: T(
-            "Receipts bind metrics to scope to prevent overclaim.",
-            "Receipts beat persuasion.",
-            "收据把指标绑定范围，防止夸口。",
-            "收据胜过说服。"
-          ),
-          r: T(
-            "Publish boundary conditions without exposing proprietary recipes.",
-            "Proof posture, not secrets.",
-            "公开边界条件，不泄露专有配方。",
-            "证明姿态，不泄密。"
-          )
-        },
-        {
-          h: T("Definitions · Reference Spine","Definitions · Reference Spine","定义 · 参考脊柱","定义 · 参考脊柱"),
-          c: T(
-            "North anchors other directions by reference, not rhetoric.",
-            "Home base for meaning.",
-            "北通过引用而非修辞锚定其他方向。",
-            "方向感的家。"
-          ),
-          n: T(
-            "Other pages cite this spine to avoid copy-paste drift.",
-            "One source of truth.",
-            "其他页面引用此脊柱，避免复制漂移。",
-            "一处真源。"
-          ),
-          r: T(
-            "Add lookup points as the site scales so returns shorten.",
-            "Bigger system, shorter returns.",
-            "规模扩大时增加查表点，让返回更短。",
-            "越大越好回。"
-          )
-        }
-      ]
-    },
-
-    east:{
-      titleEN:"HUB · PRODUCTS",
-      titleZH:"枢纽 · 产品",
-      bubbles:[
-        {
-          h: T("Products · Execution Surfaces","Products · Execution Surfaces","产品 · 执行面","产品 · 执行面"),
-          c: T(
-            "Products are bounded execution ramps—adoption surfaces under constraint.",
-            "Tools you can actually use.",
-            "产品是有界执行匝道——在约束下的采纳面。",
-            "真能用的工具。"
-          ),
-          n: T(
-            "Deployment preserves navigation contracts and clean returns.",
-            "Hard to get lost.",
-            "部署保持导航契约与干净返回。",
-            "不容易迷路。"
-          ),
-          r: T(
-            "Scale by replication of the same compass, not redesign.",
-            "Clone structure; don’t reinvent.",
-            "通过复制同一罗盘扩张，而不是重造。",
-            "复制结构，不重造。"
-          )
-        },
-        {
-          h: T("Products · IP vs SKU","Products · IP vs SKU","产品 · IP与SKU","产品 · IP与SKU"),
-          c: T(
-            "IP is structure; SKU is packaging. Packaging never changes geometry.",
-            "Engine vs box.",
-            "IP是结构；SKU是封装。封装不改变几何。",
-            "发动机 vs 盒子。"
-          ),
-          n: T(
-            "SKUs may expand without changing anchors or admissibility boundaries.",
-            "More SKUs, same compass.",
-            "SKU可扩张，但不得改变锚点或可采信边界。",
-            "SKU多了，罗盘不变。"
-          ),
-          r: T(
-            "Licensing appears as packaging inside Products, not new faces.",
-            "Licensing lives under Products.",
-            "授权作为产品封装出现，而不是新增面。",
-            "授权在产品里。"
-          )
-        },
-        {
-          h: T("Products · Adoption Discipline","Products · Adoption Discipline","产品 · 采纳纪律","产品 · 采纳纪律"),
-          c: T(
-            "Adoption requires explicit limits and verification posture.",
-            "Adoption needs rules.",
-            "采纳需要明确边界与核查姿态。",
-            "采纳要有规矩。"
-          ),
-          n: T(
-            "When challenged, route to Laws/Gauges—do not argue.",
-            "‘How do you know?’ has an address.",
-            "被质疑时跳到法则/量规，不争论。",
-            "“怎么知道”有去处。"
-          ),
-          r: T(
-            "Each trunk gains a stable home plus a bounded adoption checklist.",
-            "Every trunk gets a doorstep.",
-            "每个主干获得稳定主页与有界采纳清单。",
-            "每条干线都有门口。"
-          )
-        },
-        {
-          h: T("Products · Replication Scaling","Products · Replication Scaling","产品 · 复制扩张","产品 · 复制扩张"),
-          c: T(
-            "Scaling replicates contracts across instances (site/hub/page).",
-            "Same rules, different scale.",
-            "扩张是跨实例（站点/枢纽/页面）复制契约。",
-            "同规则，不同规模。"
-          ),
-          n: T(
-            "Instances remain comparable because geometry does not mutate.",
-            "Compare anything to anything.",
-            "几何不变，所以实例可比较。",
-            "万物可比。"
-          ),
-          r: T(
-            "Add instances only when they complete the structure—never add faces.",
-            "Expand occupancy, not geometry.",
-            "只在补全结构时新增实例——不加新面。",
-            "扩占位，不扩几何。"
-          )
-        }
-      ]
-    },
-
-    south:{
-      titleEN:"HUB · CONSTRAINTS",
-      titleZH:"枢纽 · 约束",
-      bubbles:[
-        {
-          h: T("Constraints · Admissibility Gate","Constraints · Admissibility Gate","约束 · 可采信闸门","约束 · 可采信闸门"),
-          c: T(
-            "Claims are refused without scope, receipts, and falsifiers.",
-            "No proof, no claim.",
-            "无范围、无收据、无证伪条件则拒绝主张。",
-            "没证据就别说。"
-          ),
-          n: T(
-            "Gate enforcement prevents shortcut traversal and claim inflation.",
-            "No shortcuts.",
-            "闸门执行阻止抄近道与主张膨胀。",
-            "不走捷径。"
-          ),
-          r: T(
-            "Publish refusal rules so boundaries remain stable under scale.",
-            "Make ‘no’ explicit.",
-            "公开拒绝规则，使边界在扩张中仍稳定。",
-            "把“不行”写清楚。"
-          )
-        },
-        {
-          h: T("Constraints · Phase Gates","Constraints · Phase Gates","约束 · 阶段闸门","约束 · 阶段闸门"),
-          c: T(
-            "‘When’ is prerequisites, not dates or hype.",
-            "Readiness is a checklist.",
-            "“何时”是先决条件，不是日期或噱头。",
-            "就绪就是清单。"
-          ),
-          n: T(
-            "Frontier lanes must show prerequisites before expansion.",
-            "Gate before dream.",
-            "前沿干线扩张前必须展示先决条件。",
-            "先闸门再做梦。"
-          ),
-          r: T(
-            "Tighten gates only with evidence; never loosen by narrative.",
-            "Evidence tightens—stories don’t.",
-            "只用证据收紧闸门；绝不靠叙事放松。",
-            "证据能收紧，故事不能放松。"
-          )
-        },
-        {
-          h: T("Constraints · Anti-Drift","Constraints · Anti-Drift","约束 · 反漂移","约束 · 反漂移"),
-          c: T(
-            "Ambiguity is refused; semantics must be declared.",
-            "Don’t let meaning slip.",
-            "拒绝模糊；语义必须声明。",
-            "别让含义滑走。"
-          ),
-          n: T(
-            "Cross-page + bilingual parity blocks silent semantic upgrades.",
-            "Same meaning, both languages.",
-            "跨页+双语一致阻止静默语义升级。",
-            "两种语言同一含义。"
-          ),
-          r: T(
-            "Add drift detectors as gauges, not marketing.",
-            "Detect drift mechanically.",
-            "把漂移检测做成量规，而不是营销。",
-            "用机制抓漂移。"
-          )
-        },
-        {
-          h: T("Constraints · Return Discipline","Constraints · Return Discipline","约束 · 返回纪律","约束 · 返回纪律"),
-          c: T(
-            "Every forward jump must have a clean return and stable state.",
-            "No dead ends.",
-            "每次前跳都必须有干净返回与稳定状态。",
-            "不能有死胡同。"
-          ),
-          n: T(
-            "Forward, lateral, hub-return, fork-return remain available.",
-            "You can always get home.",
-            "前跳/横跳/回枢纽/回分叉都可用。",
-            "随时回家。"
-          ),
-          r: T(
-            "As content grows, returns get shorter, not longer.",
-            "Bigger site, faster return.",
-            "内容越多返回越短，不越长。",
-            "越大越好回。"
-          )
-        }
-      ]
-    },
-
-    west:{
-      titleEN:"HUB · CONTAINMENT",
-      titleZH:"枢纽 · 隔离",
-      bubbles:[
-        {
-          h: T("Containment · Isolation","Containment · Isolation","隔离 · 隔离层","隔离 · 隔离层"),
-          c: T(
-            "Failures must be segmented so local breaks don’t become global.",
-            "Keep damage small.",
-            "失败必须分段，局部破损不能变全局。",
-            "把损伤变小。"
-          ),
-          n: T(
-            "Lanes remain distinct; cross-links never erase boundaries.",
-            "Separate lanes, same compass.",
-            "干线分离；交叉链接不抹平边界。",
-            "分线不混线。"
-          ),
-          r: T(
-            "Add containment dashboards as gauges for scale safety.",
-            "Measure containment.",
-            "用量规做隔离仪表板，保证规模安全。",
-            "隔离也要可测。"
-          )
-        },
-        {
-          h: T("Containment · Evidence Chain","Containment · Evidence Chain","隔离 · 证据链","隔离 · 证据链"),
-          c: T(
-            "Actions bind to receipts so narrative cannot inflate claims.",
-            "Receipts prevent manipulation.",
-            "行动绑定收据，叙事无法膨胀主张。",
-            "收据防操控。"
-          ),
-          n: T(
-            "Verification routes remain visible and linkable (Laws/Gauges).",
-            "Proof has an address.",
-            "核查路径可见可引用（法则/量规）。",
-            "证据有地址。"
-          ),
-          r: T(
-            "Strengthen audit posture without exposing proprietary recipes.",
-            "Audit without secrets.",
-            "强化审计姿态，但不泄露专有配方。",
-            "可审计但不泄密。"
-          )
-        },
-        {
-          h: T("Containment · Anti-Cascade","Containment · Anti-Cascade","隔离 · 抗级联","隔离 · 抗级联"),
-          c: T(
-            "Scale amplifies weakness unless anti-cascade rules exist.",
-            "Scale is an amplifier.",
-            "规模会放大弱点，必须有抗级联规则。",
-            "规模是放大器。"
-          ),
-          n: T(
-            "Partition + gate rules prevent cross-domain spillover.",
-            "Stop spillover.",
-            "分区+闸门规则阻止跨域外溢。",
-            "阻止外溢。"
-          ),
-          r: T(
-            "Formalize cascade risk surfaces inside gauges.",
-            "Make cascade measurable.",
-            "在量规中形式化级联风险面。",
-            "让级联可测。"
-          )
-        },
-        {
-          h: T("Containment · Recoverability","Containment · Recoverability","隔离 · 可恢复性","隔离 · 可恢复性"),
-          c: T(
-            "Failure must be survivable: safe no, clean back, preserved state.",
-            "Fail safe.",
-            "失败必须可承受：安全拒绝、干净返回、状态保留。",
-            "安全失败。"
-          ),
-          n: T(
-            "Hub re-entry remains available; state stays coherent.",
-            "Re-enter without reset.",
-            "随时可回枢纽；状态保持一致。",
-            "回去不重置。"
-          ),
-          r: T(
-            "Tighten recovery doctrine as instances replicate.",
-            "More instances, stronger recovery.",
-            "实例复制越多，恢复准则越严格。",
-            "越复制越能恢复。"
-          )
-        }
-      ]
-    },
-
-    map:{
-      titleEN:"HUB · MAP",
-      titleZH:"枢纽 · 地图",
-      bubbles:[
-        {
-          h: T("MAP · 12-face legend","MAP · 12-face legend","地图 · 12面图例","地图 · 12面图例"),
-          c: T(
-            "The 12-face ring is a projection legend, not a second compass.",
-            "Same compass, finer projection.",
-            "12面环是投影图例，不是第二个罗盘。",
-            "同一罗盘，更细投影。"
-          ),
-          n: T(
-            "Default UI stays 4-face; 12-face stays under terminal legend only.",
-            "Surface 4-face; terminal 12-face.",
-            "默认UI仅4面；12面只在终端图例出现。",
-            "表面4面，终端12面。"
-          ),
-          r: T(
-            "Document projections without changing navigation geometry.",
-            "Write more; don’t mutate routes.",
-            "增加投影文档，不改变导航几何。",
-            "多写说明，不改几何。"
-          )
-        },
-        {
-          h: T("MAP · Structure ↔ Vision contract","MAP · Structure ↔ Vision contract","地图 · 结构↔愿景契约","地图 · 结构↔愿景契约"),
-          c: T(
-            "Structure defines admissibility; Vision renders strictly inside boundary.",
-            "Vision cannot exceed Structure.",
-            "结构定义可采信边界；愿景必须在边界内渲染。",
-            "愿景不能超过结构。"
-          ),
-          n: T(
-            "Any Vision claim routes to Laws/Gauges instead of persuasion.",
-            "Vision points to proof.",
-            "任何愿景主张必须跳到法则/量规核查，而非说服。",
-            "愿景指向证据。"
-          ),
-          r: T(
-            "Build /home/vision/ as a hub mirror without geometry change.",
-            "Mirror the hub, not the compass.",
-            "构建/home/vision/镜像枢纽，但不改几何。",
-            "镜像枢纽，不镜像几何。"
-          )
-        },
-        {
-          h: T("MAP · Returns","MAP · Returns","地图 · 返回","地图 · 返回"),
-          c: T(
-            "Traversal is multi-fork; returns prevent tunnel behavior.",
-            "Always keep an exit.",
-            "遍历是多分叉；返回防止隧道效应。",
-            "永远有出口。"
-          ),
-          n: T(
-            "Forward jump, lateral jump, hub return, fork return remain available.",
-            "No dead ends.",
-            "前跳/横跳/回枢纽/回分叉都可用。",
-            "没有死路。"
-          ),
-          r: T(
-            "As the system grows, returns get shorter—navigation stays deterministic.",
-            "Bigger system, tighter navigation.",
-            "系统越大返回越短——导航保持确定。",
-            "越大越紧凑。"
-          )
-        },
-        {
-          h: T("MAP · Verification backbone","MAP · Verification backbone","地图 · 核查骨架","地图 · 核查骨架"),
-          c: T(
-            "Laws/Gauges provide proof posture without revealing recipes.",
-            "Proof posture, not secrets.",
-            "法则/量规提供证明姿态，但不泄露配方。",
-            "证明姿态，不泄密。"
-          ),
-          n: T(
-            "When challenged, route to verification spine—do not argue.",
-            "Don’t argue—route.",
-            "被质疑时跳到核查脊柱——不争论。",
-            "不争论，直接跳。"
-          ),
-          r: T(
-            "Expand verification surfaces as public-safe artifacts accumulate.",
-            "More artifacts, stronger proof.",
-            "公开安全工件越多，核查面越强。",
-            "工件越多，证明越强。"
-          )
-        }
-      ]
-    }
-  };
-
-  // ===== UI i18n (single-language render) =====
+  // ===== Labels + buttons (single-language render) =====
   function setText(id, txt){ var el=document.getElementById(id); if(el) el.textContent=txt; }
+
+  var TAG = (gd_lang==="zh")
+    ? { c:"概念", n:"现况", r:"路线图" }
+    : { c:"Concept", n:"Live", r:"Roadmap" };
 
   if(gd_lang==="zh"){
     setText("brandTop","枢纽");
@@ -963,25 +466,169 @@ a{color:inherit;text-decoration:none}
     setText("mJumpProducts","JUMP PRODUCTS");
   }
 
-  // ===== Modal refs =====
+  // ===== Registry (4 topics per direction; each topic becomes 3 stacked bubbles) =====
+  function T(enF,enI,zhF,zhI){
+    return (gd_lang==="zh") ? ((gd_style==="formal")?zhF:zhI) : ((gd_style==="formal")?enF:enI);
+  }
+
+  var REG = {
+    north:{ titleEN:"HUB · DEFINITIONS", titleZH:"枢纽 · 定义", topics:[
+      { h:T("Definitions · Contract","Definitions · Contract","定义 · 契约","定义 · 契约"),
+        c:T("Definitions pin meaning so measurement and claims remain admissible.","Lock meanings so nothing drifts.","定义钉住含义，使测量与主张保持可采信。","把词钉死，后面就不漂。"),
+        n:T("Shared terms remain stable across the declared scope.","Everyone plays the same game.","在声明范围内术语保持稳定。","大家说的是同一套话。"),
+        r:T("Expand the registry without changing compass geometry.","Grow the dictionary, keep the compass.","扩展注册表，但不改变罗盘几何。","词典变大，罗盘不变。")
+      },
+      { h:T("Definitions · Invariants","Definitions · Invariants","定义 · 不变量","定义 · 不变量"),
+        c:T("Invariants define what must never change under declared rules.","The line you never cross.","不变量定义在已声明规则下永远不该变的东西。","那条永远不该越的线。"),
+        n:T("Invariants block silent redefinition during expansion.","No silent edits.","不变量阻止扩张中的静默改义。","不让你悄悄换意思。"),
+        r:T("Add invariants only when observer-invariant and testable.","Only add weight when it’s measurable.","只在可观察一致且可证伪时增加不变量。","能测才加重量。")
+      },
+      { h:T("Definitions · Measurement Frame","Definitions · Measurement Frame","定义 · 测量框架","定义 · 测量框架"),
+        c:T("Measurement requires scope, units, and falsifiers before interpretation.","Measure first, story later.","测量先有范围、单位与证伪条件，才谈解释。","先量再说。"),
+        n:T("Receipts bind metrics to scope to prevent overclaim.","Receipts beat persuasion.","收据把指标绑定范围，防止夸口。","收据胜过说服。"),
+        r:T("Publish boundary conditions without exposing proprietary recipes.","Proof posture, not secrets.","公开边界条件，不泄露专有配方。","证明姿态，不泄密。")
+      },
+      { h:T("Definitions · Reference Spine","Definitions · Reference Spine","定义 · 参考脊柱","定义 · 参考脊柱"),
+        c:T("North anchors other directions by reference, not rhetoric.","Home base for meaning.","北通过引用而非修辞锚定其他方向。","方向感的家。"),
+        n:T("Other pages cite this spine to avoid copy-paste drift.","One source of truth.","其他页面引用此脊柱，避免复制漂移。","一处真源。"),
+        r:T("Add lookup points as the site scales so returns shorten.","Bigger system, shorter returns.","规模扩大时增加查表点，让返回更短。","越大越好回。")
+      }
+    ]},
+
+    east:{ titleEN:"HUB · PRODUCTS", titleZH:"枢纽 · 产品", topics:[
+      { h:T("Products · Execution Surfaces","Products · Execution Surfaces","产品 · 执行面","产品 · 执行面"),
+        c:T("Products are bounded execution ramps—adoption surfaces under constraint.","Tools you can actually use.","产品是有界执行匝道——在约束下的采纳面。","真能用的工具。"),
+        n:T("Deployment preserves navigation contracts and clean returns.","Hard to get lost.","部署保持导航契约与干净返回。","不容易迷路。"),
+        r:T("Scale by replication of the same compass, not redesign.","Clone structure; don’t reinvent.","通过复制同一罗盘扩张，而不是重造。","复制结构，不重造。")
+      },
+      { h:T("Products · IP vs SKU","Products · IP vs SKU","产品 · IP与SKU","产品 · IP与SKU"),
+        c:T("IP is structure; SKU is packaging. Packaging never changes geometry.","Engine vs box.","IP是结构；SKU是封装。封装不改变几何。","发动机 vs 盒子。"),
+        n:T("SKUs may expand without changing anchors or admissibility boundaries.","More SKUs, same compass.","SKU可扩张，但不得改变锚点或可采信边界。","SKU多了，罗盘不变。"),
+        r:T("Licensing appears as packaging inside Products, not new faces.","Licensing lives under Products.","授权作为产品封装出现，而不是新增面。","授权在产品里。")
+      },
+      { h:T("Products · Adoption Discipline","Products · Adoption Discipline","产品 · 采纳纪律","产品 · 采纳纪律"),
+        c:T("Adoption requires explicit limits and verification posture.","Adoption needs rules.","采纳需要明确边界与核查姿态。","采纳要有规矩。"),
+        n:T("When challenged, route to Laws/Gauges—do not argue.","‘How do you know?’ has an address.","被质疑时跳到法则/量规，不争论。","“怎么知道”有去处。"),
+        r:T("Each trunk gains a stable home plus a bounded adoption checklist.","Every trunk gets a doorstep.","每个主干获得稳定主页与有界采纳清单。","每条干线都有门口。")
+      },
+      { h:T("Products · Replication Scaling","Products · Replication Scaling","产品 · 复制扩张","产品 · 复制扩张"),
+        c:T("Scaling replicates contracts across instances (site/hub/page).","Same rules, different scale.","扩张是跨实例（站点/枢纽/页面）复制契约。","同规则，不同规模。"),
+        n:T("Instances remain comparable because geometry does not mutate.","Compare anything to anything.","几何不变，所以实例可比较。","万物可比。"),
+        r:T("Add instances only when they complete the structure—never add faces.","Expand occupancy, not geometry.","只在补全结构时新增实例——不加新面。","扩占位，不扩几何。")
+      }
+    ]},
+
+    south:{ titleEN:"HUB · CONSTRAINTS", titleZH:"枢纽 · 约束", topics:[
+      { h:T("Constraints · Admissibility Gate","Constraints · Admissibility Gate","约束 · 可采信闸门","约束 · 可采信闸门"),
+        c:T("Claims are refused without scope, receipts, and falsifiers.","No proof, no claim.","无范围、无收据、无证伪条件则拒绝主张。","没证据就别说。"),
+        n:T("Gate enforcement prevents shortcut traversal and claim inflation.","No shortcuts.","闸门执行阻止抄近道与主张膨胀。","不走捷径。"),
+        r:T("Publish refusal rules so boundaries remain stable under scale.","Make ‘no’ explicit.","公开拒绝规则，使边界在扩张中仍稳定。","把“不行”写清楚。")
+      },
+      { h:T("Constraints · Phase Gates","Constraints · Phase Gates","约束 · 阶段闸门","约束 · 阶段闸门"),
+        c:T("‘When’ is prerequisites, not dates or hype.","Readiness is a checklist.","“何时”是先决条件，不是日期或噱头。","就绪就是清单。"),
+        n:T("Frontier lanes must show prerequisites before expansion.","Gate before dream.","前沿干线扩张前必须展示先决条件。","先闸门再做梦。"),
+        r:T("Tighten gates only with evidence; never loosen by narrative.","Evidence tightens—stories don’t.","只用证据收紧闸门；绝不靠叙事放松。","证据能收紧，故事不能放松。")
+      },
+      { h:T("Constraints · Anti-Drift","Constraints · Anti-Drift","约束 · 反漂移","约束 · 反漂移"),
+        c:T("Ambiguity is refused; semantics must be declared.","Don’t let meaning slip.","拒绝模糊；语义必须声明。","别让含义滑走。"),
+        n:T("Cross-page + bilingual parity blocks silent semantic upgrades.","Same meaning, both languages.","跨页+双语一致阻止静默语义升级。","两种语言同一含义。"),
+        r:T("Add drift detectors as gauges, not marketing.","Detect drift mechanically.","把漂移检测做成量规，而不是营销。","用机制抓漂移。")
+      },
+      { h:T("Constraints · Return Discipline","Constraints · Return Discipline","约束 · 返回纪律","约束 · 返回纪律"),
+        c:T("Every forward jump must have a clean return and stable state.","No dead ends.","每次前跳都必须有干净返回与稳定状态。","不能有死胡同。"),
+        n:T("Forward, lateral, hub-return, fork-return remain available.","You can always get home.","前跳/横跳/回枢纽/回分叉都可用。","随时回家。"),
+        r:T("As content grows, returns get shorter, not longer.","Bigger site, faster return.","内容越多返回越短，不越长。","越大越好回。")
+      }
+    ]},
+
+    west:{ titleEN:"HUB · CONTAINMENT", titleZH:"枢纽 · 隔离", topics:[
+      { h:T("Containment · Isolation","Containment · Isolation","隔离 · 隔离层","隔离 · 隔离层"),
+        c:T("Failures must be segmented so local breaks don’t become global.","Keep damage small.","失败必须分段，局部破损不能变全局。","把损伤变小。"),
+        n:T("Lanes remain distinct; cross-links never erase boundaries.","Separate lanes, same compass.","干线分离；交叉链接不抹平边界。","分线不混线。"),
+        r:T("Add containment dashboards as gauges for scale safety.","Measure containment.","用量规做隔离仪表板，保证规模安全。","隔离也要可测。")
+      },
+      { h:T("Containment · Evidence Chain","Containment · Evidence Chain","隔离 · 证据链","隔离 · 证据链"),
+        c:T("Actions bind to receipts so narrative cannot inflate claims.","Receipts prevent manipulation.","行动绑定收据，叙事无法膨胀主张。","收据防操控。"),
+        n:T("Verification routes remain visible and linkable (Laws/Gauges).","Proof has an address.","核查路径可见可引用（法则/量规）。","证据有地址。"),
+        r:T("Strengthen audit posture without exposing proprietary recipes.","Audit without secrets.","强化审计姿态，但不泄露专有配方。","可审计但不泄密。")
+      },
+      { h:T("Containment · Anti-Cascade","Containment · Anti-Cascade","隔离 · 抗级联","隔离 · 抗级联"),
+        c:T("Scale amplifies weakness unless anti-cascade rules exist.","Scale is an amplifier.","规模会放大弱点，必须有抗级联规则。","规模是放大器。"),
+        n:T("Partition + gate rules prevent cross-domain spillover.","Stop spillover.","分区+闸门规则阻止跨域外溢。","阻止外溢。"),
+        r:T("Formalize cascade risk surfaces inside gauges.","Make cascade measurable.","在量规中形式化级联风险面。","让级联可测。")
+      },
+      { h:T("Containment · Recoverability","Containment · Recoverability","隔离 · 可恢复性","隔离 · 可恢复性"),
+        c:T("Failure must be survivable: safe no, clean back, preserved state.","Fail safe.","失败必须可承受：安全拒绝、干净返回、状态保留。","安全失败。"),
+        n:T("Hub re-entry remains available; state stays coherent.","Re-enter without reset.","随时可回枢纽；状态保持一致。","回去不重置。"),
+        r:T("Tighten recovery doctrine as instances replicate.","More instances, stronger recovery.","实例复制越多，恢复准则越严格。","越复制越能恢复。")
+      }
+    ]},
+
+    map:{ titleEN:"HUB · MAP", titleZH:"枢纽 · 地图", topics:[
+      { h:T("MAP · 12-face legend","MAP · 12-face legend","地图 · 12面图例","地图 · 12面图例"),
+        c:T("The 12-face ring is a projection legend, not a second compass.","Same compass, finer projection.","12面环是投影图例，不是第二个罗盘。","同一罗盘，更细投影。"),
+        n:T("Default UI stays 4-face; 12-face stays under terminal legend only.","Surface 4-face; terminal 12-face.","默认UI仅4面；12面只在终端图例出现。","表面4面，终端12面。"),
+        r:T("Document projections without changing navigation geometry.","Write more; don’t mutate routes.","增加投影文档，不改变导航几何。","多写说明，不改几何。")
+      },
+      { h:T("MAP · Structure ↔ Vision contract","MAP · Structure ↔ Vision contract","地图 · 结构↔愿景契约","地图 · 结构↔愿景契约"),
+        c:T("Structure defines admissibility; Vision renders strictly inside boundary.","Vision cannot exceed Structure.","结构定义可采信边界；愿景必须在边界内渲染。","愿景不能超过结构。"),
+        n:T("Any Vision claim routes to Laws/Gauges instead of persuasion.","Vision points to proof.","任何愿景主张必须跳到法则/量规核查，而非说服。","愿景指向证据。"),
+        r:T("Build /home/vision/ as a hub mirror without geometry change.","Mirror the hub, not the compass.","构建/home/vision/镜像枢纽，但不改几何。","镜像枢纽，不镜像几何。")
+      },
+      { h:T("MAP · Returns","MAP · Returns","地图 · 返回","地图 · 返回"),
+        c:T("Traversal is multi-fork; returns prevent tunnel behavior.","Always keep an exit.","遍历是多分叉；返回防止隧道效应。","永远有出口。"),
+        n:T("Forward jump, lateral jump, hub return, fork return remain available.","No dead ends.","前跳/横跳/回枢纽/回分叉都可用。","没有死路。"),
+        r:T("As the system grows, returns get shorter—navigation stays deterministic.","Bigger system, tighter navigation.","系统越大返回越短——导航保持确定。","越大越紧凑。")
+      },
+      { h:T("MAP · Verification backbone","MAP · Verification backbone","地图 · 核查骨架","地图 · 核查骨架"),
+        c:T("Laws/Gauges provide proof posture without revealing recipes.","Proof posture, not secrets.","法则/量规提供证明姿态，但不泄露配方。","证明姿态，不泄密。"),
+        n:T("When challenged, route to verification spine—do not argue.","Don’t argue—route.","被质疑时跳到核查脊柱——不争论。","不争论，直接跳。"),
+        r:T("Expand verification surfaces as public-safe artifacts accumulate.","More artifacts, stronger proof.","公开安全工件越多，核查面越强。","工件越多，证明越强。")
+      }
+    ]}
+  };
+
+  // ===== Modal Rendering: 12 stacked bubbles =====
   var bd=document.getElementById("bd");
   var modal=document.getElementById("modal");
   var mClose=document.getElementById("mClose");
   var mReturn=document.getElementById("mReturn");
   var mTitle=document.getElementById("mTitle");
+  var stack=document.getElementById("stack");
+
+  function titleFor(which){
+    var pack=REG[which]||REG.map;
+    return (gd_lang==="zh") ? pack.titleZH : pack.titleEN;
+  }
+
+  function makeBubble(title, modeLabel, text){
+    var wrap=document.createElement("div");
+    wrap.className="bubble";
+    var h=document.createElement("h4");
+    h.textContent=title + " · " + modeLabel;
+    var p=document.createElement("p");
+    p.className="seg";
+    p.innerHTML='<span class="tag">'+modeLabel+'</span> ' + text;
+    wrap.appendChild(h);
+    wrap.appendChild(p);
+    return wrap;
+  }
 
   function render(which){
-    var pack = REG[which] || REG.map;
-    mTitle.textContent = (gd_lang==="zh") ? pack.titleZH : pack.titleEN;
+    var pack=REG[which]||REG.map;
+    mTitle.textContent = titleFor(which);
+    stack.innerHTML="";
 
-    function fill(idx){
-      var b = pack.bubbles[idx-1];
-      setText("h"+idx, b.h);
-      seg("p"+idx+"c", TAG.c, b.c);
-      seg("p"+idx+"n", TAG.n, b.n);
-      seg("p"+idx+"r", TAG.r, b.r);
-    }
-    fill(1); fill(2); fill(3); fill(4);
+    var modeC = TAG.c;
+    var modeN = TAG.n;
+    var modeR = TAG.r;
+
+    // 4 topics -> 12 stacked bubbles
+    pack.topics.forEach(function(t){
+      stack.appendChild(makeBubble(t.h, modeC, t.c));
+      stack.appendChild(makeBubble(t.h, modeN, t.n));
+      stack.appendChild(makeBubble(t.h, modeR, t.r));
+    });
   }
 
   function open(which){

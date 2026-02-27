@@ -1,9 +1,24 @@
+<!-- TNT — /home/index.html
+     HUB A · GRID (8) → RUSSIAN DOLL BRANCHING (FULL STRUCTURE) · JI+JD OVERLAYS (NO EXTERNAL PAGES YET)
+     LOCKS:
+       - ui.css owns field; no html/body background styling
+       - uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - URL keys: lang/style/time/depth
+       - LS keys: gd_lang/gd_style/gd_time/gd_depth
+       - LANGS: en / zh / es (triangle stack)
+       - VIEW: informal / formal / both (no visible labels in content)
+       - TAP: expand/collapse only (no auto-jump)
+       - JI: Jump Index overlay (directory: title + 1 sentence + Jump)
+       - JD: Jump Deck overlay (content placeholder; later can be split into a page)
+       - Bottom dock: EXIT · JI · JD · ACTIVE (no stacking)
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>HUB A · Diagnostic Index</title>
+<title>HUB A · Index</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -11,227 +26,737 @@
 
 <style>
 a{color:inherit;text-decoration:none}
+:root{--dockH:92px}
 
-.page{
-  width:min(1000px,94vw);
-  margin:0 auto;
-  padding:24px 0 120px;
-  display:flex;
-  flex-direction:column;
-  gap:18px;
+/* page */
+.page{width:min(980px,94vw);margin:0 auto;padding:14px 0 calc(var(--dockH) + 22px);display:flex;flex-direction:column;gap:12px}
+
+/* header */
+.header{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  padding:14px 16px;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+}
+.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
+.t{font-weight:950;font-size:24px;letter-spacing:.3px;margin:0 0 6px}
+.s{font-size:13px;opacity:.82;line-height:1.5;margin:0;max-width:860px}
+
+.ctrl{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;align-items:flex-start;margin-top:12px}
+
+/* language triangle */
+.langTri{
+  position:relative;width:128px;height:78px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);
+  box-shadow:0 14px 36px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
+  display:grid;place-items:center;padding:8px;
+}
+.langTri .tri{position:relative;width:112px;height:62px;}
+.langTri .btn{position:absolute;padding:8px 12px;border-radius:999px;font-weight:900;letter-spacing:.2px;line-height:1;white-space:nowrap}
+.langTri .en{left:50%;top:0;transform:translateX(-50%)}
+.langTri .zh{left:0;bottom:0}
+.langTri .es{right:0;bottom:0}
+@media (max-width:520px){
+  .langTri{width:118px;height:74px}
+  .langTri .tri{width:104px;height:60px}
+  .langTri .btn{padding:8px 10px}
 }
 
-.header{
+/* metric line */
+.metric{
+  margin-top:10px;padding:10px 12px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.14);
+  color:rgba(255,255,255,.86);line-height:1.45;font-size:13px;
+}
+
+/* 2x4 grid */
+.grid{display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:10px}
+@media (max-width:820px){.grid{grid-template-columns:repeat(2, minmax(0,1fr));}}
+
+/* tiles */
+.tile{
+  --c:#93C5FD;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  box-shadow:0 18px 60px rgba(0,0,0,.62);
+  padding:14px 14px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  display:flex;gap:10px;align-items:flex-start;
+}
+.tile:hover{border-color:rgba(212,175,55,.35)}
+.tile.active{border-color:rgba(212,175,55,.65);box-shadow:0 18px 60px rgba(0,0,0,.62),0 0 18px rgba(212,175,55,.22)}
+.diamond{width:12px;height:12px;transform:rotate(45deg);border-radius:4px;background:var(--c);box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 14px rgba(0,0,0,.35);flex:0 0 auto;margin-top:4px}
+.tt{min-width:0}
+.tt .name{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt .hint{margin-top:6px;font-size:12.5px;opacity:.78;line-height:1.35}
+.chev{opacity:.75;font-size:18px;flex:0 0 auto}
+
+/* detail (expanded russian doll container) */
+.detail{
   border:1px solid rgba(255,255,255,.12);
   border-radius:22px;
-  background:rgba(0,0,0,.18);
+  background:rgba(0,0,0,.16);
   backdrop-filter:blur(10px);
-  padding:18px 20px;
-  box-shadow:0 30px 80px rgba(0,0,0,.55);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:14px 16px;
+  display:none;
 }
+.detail.show{display:block}
+.dHead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.dTitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
+.dClose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px;border-radius:12px}
+.dClose:hover{background:rgba(255,255,255,.08)}
 
-.hTitle{
-  font-weight:950;
-  font-size:26px;
-  letter-spacing:.4px;
-  margin:0 0 8px;
-}
-
-.hSub{
-  font-size:14px;
-  opacity:.85;
-  margin:0;
-  line-height:1.6;
-}
-
-/* GRID LAYOUT */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:18px;
-}
-
-@media (max-width:720px){
-  .grid{ grid-template-columns:1fr; }
-}
-
+/* node list (russian doll) */
 .node{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:18px;
-  background:linear-gradient(160deg, rgba(12,22,38,.95), rgba(7,11,18,.98));
-  overflow:hidden;
-  box-shadow:0 24px 70px rgba(0,0,0,.6);
-}
-
-.nodeHead{
-  padding:16px 18px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.3px;
-}
-
-.nodeBody{
-  display:none;
-  padding:16px 18px 20px;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-
-.node.open .nodeBody{ display:block; }
-
-.paragraph{
-  font-size:14.5px;
-  line-height:1.75;
-  margin:0 0 14px;
-  color:rgba(255,255,255,.9);
-}
-
-.subNode{
+  --c:#93C5FD;
   border:1px solid rgba(255,255,255,.10);
-  border-radius:14px;
-  padding:12px 14px;
-  margin-top:12px;
-  background:rgba(0,0,0,.22);
+  border-radius:18px;
+  background:rgba(0,0,0,.18);
+  overflow:hidden;
+  box-shadow:0 12px 36px rgba(0,0,0,.45);
 }
+.nHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;cursor:pointer;font-weight:950;letter-spacing:.2px}
+.nLeft{display:flex;align-items:center;gap:10px;min-width:0}
+.nLabel{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nBody{display:none;padding:12px 14px 14px;border-top:1px solid rgba(255,255,255,.08);overflow:auto;-webkit-overflow-scrolling:touch}
+.node.open>.nBody{display:block}
+.childStack{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 
-.subHead{
-  font-weight:900;
-  font-size:13px;
-  letter-spacing:.2px;
-  cursor:pointer;
+/* sentences (no visible labels) */
+.one{margin:0;line-height:1.65;font-size:14px;color:rgba(255,255,255,.90)}
+.one[data-lens="informal"]{display:none}
+.one[data-lens="formal"]{display:block}
+.view-informal .one[data-lens="formal"]{display:none}
+.view-informal .one[data-lens="informal"]{display:block}
+.view-both .one{display:block}
+
+/* analog sub-bubble */
+.subNode{border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(0,0,0,.16);overflow:hidden;margin-top:10px}
+.subHead{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-weight:950;letter-spacing:.2px;font-size:13px}
+.subBody{display:none;padding:10px 12px 12px;border-top:1px solid rgba(255,255,255,.08)}
+.subNode.open .subBody{display:block}
+.analog{margin:0;line-height:1.55;font-size:13px;color:rgba(255,255,255,.86)}
+
+/* action row */
+.actRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;margin-top:12px}
+.pill{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);font-weight:950;letter-spacing:.2px;cursor:pointer
 }
+.pill:hover{border-color:var(--gold)}
+.pill:active{transform:scale(.98)}
+.pill.ji{min-width:44px}
 
-.subBody{
-  display:none;
-  margin-top:10px;
+/* dock */
+.dock{
+  position:fixed;left:50%;bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);z-index:220;width:min(980px,94vw);
+  padding:10px 12px;border-radius:22px;border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:10px;
 }
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){:root{--dockH:92px}.dock{grid-template-columns:repeat(3, minmax(0,1fr))}}
 
-.subNode.open .subBody{ display:block; }
-
-.jumpRow{
-  margin-top:14px;
-  font-size:13px;
-  opacity:.9;
-}
-
-.jumpRow a{
-  color:var(--gold);
-  font-weight:900;
-  margin-right:14px;
-}
-
-.footer{
-  text-align:center;
-  margin-top:20px;
-  font-size:12px;
-  opacity:.7;
-}
+/* overlays (JI + JD) */
+.ov{position:fixed;inset:0;z-index:500;display:none;background:rgba(0,0,0,.72);backdrop-filter:blur(10px)}
+.ov.show{display:block}
+.panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(980px,94vw);height:min(86vh, 860px);z-index:510;display:none}
+.panel.show{display:block}
+.shell{height:100%;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));box-shadow:0 60px 180px rgba(0,0,0,.85);overflow:hidden;display:flex;flex-direction:column}
+.pHead{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)}
+.pTitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
+.pClose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px;border-radius:12px}
+.pClose:hover{background:rgba(255,255,255,.08)}
+.pBody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
+.dirList{display:flex;flex-direction:column;gap:10px}
+.row{border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(0,0,0,.18);padding:12px 14px}
+.rTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.rName{font-weight:950;letter-spacing:.2px}
+.rSent{margin-top:6px;color:rgba(255,255,255,.86);line-height:1.45;font-size:13px}
 </style>
 </head>
 
 <body>
 
-<div class="page">
-
+<div class="page view-formal" id="page">
   <div class="header">
-    <div class="hTitle">Cardinal Diagnostic Framework</div>
-    <div class="hSub">
-      North precedes East. East collides with South. South forces West. West restores North.  
-      This index defines the structural loop governing navigation, constraint, containment, and expansion.
+    <p class="k" id="hk">CARDINAL AXIS</p>
+    <h1 class="t" id="ht">HUB A · Index</h1>
+    <p class="s" id="hs">Grid for clarity · Russian doll for depth · Jump when ready.</p>
+
+    <div class="ctrl">
+      <button class="btn" id="vInformal" type="button">INFORMAL</button>
+      <button class="btn" id="vFormal" type="button">FORMAL</button>
+      <button class="btn" id="vBoth" type="button">BOTH</button>
+
+      <div class="langTri" aria-label="Language">
+        <div class="tri">
+          <button class="btn en" id="bEN" type="button">EN</button>
+          <button class="btn zh" id="bZH" type="button">中文</button>
+          <button class="btn es" id="bES" type="button">ES</button>
+        </div>
+      </div>
     </div>
+
+    <div class="metric" id="metric">All scalable navigation begins with declared boundaries.</div>
   </div>
 
   <div class="grid" id="grid"></div>
 
-  <div class="footer">
-    Jump Index (JI) provides full routing directory.
+  <div class="detail" id="detail">
+    <div class="dHead">
+      <h3 class="dTitle" id="dTitle">—</h3>
+      <button class="dClose" id="dClose" type="button" aria-label="Close">✕</button>
+    </div>
+    <div id="branch"></div>
   </div>
+</div>
 
+<nav class="dock" id="dock" aria-label="Bottom actions">
+  <button class="btn" id="navExit" type="button">EXIT</button>
+  <button class="btn" id="navJI" type="button">JUMP INDEX</button>
+  <button class="btn" id="navJD" type="button">JUMP DECK</button>
+  <button class="btn" id="navActive" type="button">ACTIVE</button>
+</nav>
+
+<!-- JI overlay -->
+<div class="ov" id="ovJI"></div>
+<div class="panel" id="panelJI" role="dialog" aria-modal="true">
+  <div class="shell">
+    <div class="pHead">
+      <h3 class="pTitle" id="jiTitle">JUMP INDEX</h3>
+      <button class="pClose" id="jiClose" type="button" aria-label="Close">✕</button>
+    </div>
+    <div class="pBody">
+      <div class="dirList" id="jiList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- JD overlay -->
+<div class="ov" id="ovJD"></div>
+<div class="panel" id="panelJD" role="dialog" aria-modal="true">
+  <div class="shell">
+    <div class="pHead">
+      <h3 class="pTitle" id="jdTitle">JUMP DECK</h3>
+      <button class="pClose" id="jdClose" type="button" aria-label="Close">✕</button>
+    </div>
+    <div class="pBody">
+      <div class="dirList" id="jdBody"></div>
+    </div>
+  </div>
 </div>
 
 <script>
 (function(){
+  const qs=new URLSearchParams(location.search);
+  const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+  const lsSet=(k,v)=>{try{localStorage.setItem(k,String(v))}catch(e){}};
 
-  const NODES = {
-    N:{
-      label:"N · Definitions",
-      text:"Definitions constrain semantics before expansion. Scope precedes authority. Without boundary clarity, every downstream system destabilizes.",
-      analog:"Physical: boundary mapping. Biological: metabolic regulation. Engineering: reference calibration. Governance: constitutional constraint. Computational: invariant state definition."
-    },
-    E:{
-      label:"E · Products",
-      text:"Execution inherits definition. Deployment without constraint fractures coherence and amplifies drift under scale.",
-      analog:"Physical: directional propulsion. Biological: muscle activation. Engineering: actuator systems. Governance: administrative execution. Computational: state transition function."
-    },
-    S:{
-      label:"S · Constraints",
-      text:"Constraint enforces admissibility. Expansion without gate logic converts power into systemic instability.",
-      analog:"Physical: gravity and friction. Biological: immune response. Engineering: safety interlock. Governance: judicial review. Computational: validation gate."
-    },
-    W:{
-      label:"W · Containment",
-      text:"Containment isolates failure vectors and restores baseline coherence. Without segmentation, local failure globalizes.",
-      analog:"Physical: structural compartmentalization. Biological: cellular isolation. Engineering: circuit breaker. Governance: emergency powers. Computational: rollback and partition recovery."
-    }
-  };
+  let lang  = qs.get("lang")  || lsGet("gd_lang")  || "en";
+  let style = qs.get("style") || lsGet("gd_style") || "formal";
+  let time  = qs.get("time")  || lsGet("gd_time")  || "now";
+  let depth = qs.get("depth") || lsGet("gd_depth") || "explore";
 
-  const grid = document.getElementById("grid");
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
-  function createNode(key,data){
-    const wrap=document.createElement("div");
-    wrap.className="node";
+  lsSet("gd_lang",lang); lsSet("gd_style",style); lsSet("gd_time",time); lsSet("gd_depth",depth);
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
-    const head=document.createElement("div");
-    head.className="nodeHead";
-    head.innerHTML="<div>"+data.label+"</div><div>▸</div>";
-
-    const body=document.createElement("div");
-    body.className="nodeBody";
-
-    const p=document.createElement("div");
-    p.className="paragraph";
-    p.textContent=data.text;
-
-    const analogWrap=document.createElement("div");
-    analogWrap.className="subNode";
-
-    const analogHead=document.createElement("div");
-    analogHead.className="subHead";
-    analogHead.textContent="Analog Layer";
-
-    const analogBody=document.createElement("div");
-    analogBody.className="subBody";
-
-    const analogText=document.createElement("div");
-    analogText.className="paragraph";
-    analogText.textContent=data.analog;
-
-    analogBody.appendChild(analogText);
-    analogWrap.appendChild(analogHead);
-    analogWrap.appendChild(analogBody);
-
-    const jump=document.createElement("div");
-    jump.className="jumpRow";
-    jump.innerHTML='<a href="#">Jump to Product</a><a href="#">JI</a>';
-
-    head.onclick=()=>wrap.classList.toggle("open");
-    analogHead.onclick=()=>analogWrap.classList.toggle("open");
-
-    body.appendChild(p);
-    body.appendChild(analogWrap);
-    body.appendChild(jump);
-
-    wrap.appendChild(head);
-    wrap.appendChild(body);
-
-    return wrap;
+  function makeQS(over){
+    const p=new URLSearchParams();
+    p.set("lang",  (over&&over.lang)  || lang);
+    p.set("style", (over&&over.style) || style);
+    p.set("time",  (over&&over.time)  || time);
+    p.set("depth", (over&&over.depth) || depth);
+    return "?"+p.toString();
   }
 
-  Object.keys(NODES).forEach(k=>{
-    grid.appendChild(createNode(k,NODES[k]));
-  });
+  const L={
+    en:{hk:"CARDINAL AXIS",ht:"HUB A · Index",hs:"Grid for clarity · Russian doll for depth · Jump when ready.",metric:"All scalable navigation begins with declared boundaries.",exit:"EXIT",ji:"JUMP INDEX",jd:"JUMP DECK",active:"ACTIVE",analog:"Analog Layer",jump:"Jump",jiPill:"JI",all:"ALL"},
+    zh:{hk:"基轴体系",ht:"枢纽A · 索引",hs:"网格求清晰 · 俄套求深度 · 需要时跳转。",metric:"一切可规模化的导航，始于明确的边界。",exit:"退出",ji:"跳转目录",jd:"跳转卡组",active:"当前",analog:"类比层",jump:"跳转",jiPill:"JI",all:"全部"},
+    es:{hk:"CARDINAL AXIS",ht:"HUB A · Índice",hs:"Cuadrícula para claridad · Profundidad en capas · Salta cuando listo.",metric:"Toda navegación escalable empieza con límites declarados.",exit:"SALIR",ji:"ÍNDICE",jd:"MAZO",active:"ACTIVO",analog:"Capa Analógica",jump:"Saltar",jiPill:"JI",all:"TODO"}
+  };
+  const T=()=> (lang==="zh")?L.zh:(lang==="es")?L.es:L.en;
+
+  // Header text
+  document.getElementById("hk").textContent=T().hk;
+  document.getElementById("ht").textContent=T().ht;
+  document.getElementById("hs").textContent=T().hs;
+  document.getElementById("metric").textContent=T().metric;
+
+  // View toggle
+  const page=document.getElementById("page");
+  const vInformal=document.getElementById("vInformal");
+  const vFormal=document.getElementById("vFormal");
+  const vBoth=document.getElementById("vBoth");
+  function applyView(v){
+    page.classList.remove("view-formal","view-informal","view-both");
+    page.classList.add("view-"+v);
+    vInformal.classList.toggle("active", v==="informal");
+    vFormal.classList.toggle("active", v==="formal");
+    vBoth.classList.toggle("active", v==="both");
+    lsSet("hub_view", v);
+  }
+  applyView(lsGet("hub_view") || (style==="informal"?"informal":"formal"));
+  vInformal.onclick=()=>applyView("informal");
+  vFormal.onclick=()=>applyView("formal");
+  vBoth.onclick=()=>applyView("both");
+
+  // Language triangle
+  const bEN=document.getElementById("bEN");
+  const bZH=document.getElementById("bZH");
+  const bES=document.getElementById("bES");
+  function paintLangBtns(){
+    bEN.classList.toggle("active", lang==="en");
+    bZH.classList.toggle("active", lang==="zh");
+    bES.classList.toggle("active", lang==="es");
+  }
+  paintLangBtns();
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next; lsSet("gd_lang",lang);
+    history.replaceState({}, "", location.pathname + makeQS({lang}));
+    location.reload();
+  }
+  bEN.onclick=()=>setLang("en");
+  bZH.onclick=()=>setLang("zh");
+  bES.onclick=()=>setLang("es");
+
+  // Full structure tree (cardinals + stars + diagonals + refinements + 4 meta)
+  const TREE = window.__HUB_TREE__ || (function(){
+    // embedded directly to avoid external dependencies
+    return {
+      N:{label:{en:"N · DEFINITIONS",zh:"N · 定义",es:"N · DEFINICIONES"}, color:"#1F3A8A", children:["N★","N:NE","N:NW","N:SE","N:SW"]},
+      E:{label:{en:"E · PRODUCTS",zh:"E · 产品",es:"E · PRODUCTOS"}, color:"#0EA5E9", children:["E★","E:NE","E:NW","E:SE","E:SW"]},
+      S:{label:{en:"S · CONSTRAINTS",zh:"S · 约束",es:"S · RESTRICCIONES"}, color:"#F59E0B", children:["S★","S:NE","S:NW","S:SE","S:SW"]},
+      W:{label:{en:"W · CONTAINMENT",zh:"W · 隔离",es:"W · CONTENCIÓN"}, color:"#7F1D1D", children:["W★","W:NE","W:NW","W:SE","W:SW"]},
+      APPENDIX:{label:{en:"APPENDIX",zh:"附录",es:"APÉNDICE"}, color:"#A3A3A3", children:[]},
+      GLOSSARY:{label:{en:"GLOSSARY",zh:"术语表",es:"GLOSARIO"}, color:"#93C5FD", children:[]},
+      ABOUT:{label:{en:"ABOUT",zh:"关于",es:"ACERCA"}, color:"#D4AF37", children:[]},
+      LINKS:{label:{en:"LINKS",zh:"链接",es:"ENLACES"}, color:"#60A5FA", children:[]},
+
+      "N★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["N★:N","N★:E","N★:S","N★:W"]},
+      "E★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["E★:N","E★:E","E★:S","E★:W"]},
+      "S★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["S★:N","S★:E","S★:S","S★:W"]},
+      "W★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["W★:N","W★:E","W★:S","W★:W"]},
+
+      "N:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["N:ENE"]},
+      "N:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["N:WNW"]},
+      "N:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["N:ESE"]},
+      "N:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["N:WSW"]},
+
+      "E:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["E:ENE"]},
+      "E:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["E:WNW"]},
+      "E:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["E:ESE"]},
+      "E:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["E:WSW"]},
+
+      "S:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["S:ENE"]},
+      "S:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["S:WNW"]},
+      "S:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["S:ESE"]},
+      "S:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["S:WSW"]},
+
+      "W:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["W:ENE"]},
+      "W:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["W:WNW"]},
+      "W:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["W:ESE"]},
+      "W:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["W:WSW"]},
+
+      "N:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
+      "N:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["N:NNW"]},
+      "N:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
+      "N:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["N:SSW"]},
+      "N:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
+      "N:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
+
+      "E:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
+      "E:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["E:NNW"]},
+      "E:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
+      "E:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["E:SSW"]},
+      "E:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
+      "E:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
+
+      "S:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
+      "S:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["S:NNW"]},
+      "S:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
+      "S:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["S:SSW"]},
+      "S:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
+      "S:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
+
+      "W:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
+      "W:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["W:NNW"]},
+      "W:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
+      "W:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["W:SSW"]},
+      "W:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
+      "W:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
+
+      "N★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
+      "N★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
+      "N★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
+      "N★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]},
+
+      "E★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
+      "E★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
+      "E★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
+      "E★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]},
+
+      "S★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
+      "S★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
+      "S★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
+      "S★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]},
+
+      "W★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
+      "W★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
+      "W★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
+      "W★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]}
+    };
+  })();
+
+  function nodeLabel(id){
+    const o=TREE[id] && TREE[id].label;
+    if(!o) return id;
+    if(lang==="zh") return o.zh;
+    if(lang==="es") return o.es || o.en;
+    return o.en;
+  }
+
+  // Objective, diagnostic sentences (minimal)
+  function oneSentence(id, lens){
+    const core = id.split(":")[0].replace("★","");
+    if(lang==="zh"){
+      if(lens==="formal"){
+        if(core==="N") return "范围先于权力；语义锁定后扩张才可采信。";
+        if(core==="E") return "执行继承边界条件；表面不得越界。";
+        if(core==="S") return "约束定义可采信；无闸门则拒绝扩张。";
+        if(core==="W") return "隔离防级联；局部失败必须局部化。";
+        return "该节点用于保持结构在可审计边界内。";
+      }
+      if(core==="N") return "先钉住含义，后续决策才不漂。";
+      if(core==="E") return "执行必须带边界，否则规模反噬。";
+      if(core==="S") return "闸门先行；不有界就不扩张。";
+      if(core==="W") return "先隔离再修复，避免级联。";
+      return "该节点用于保持系统可控。";
+    }
+
+    if(lang==="es"){
+      if(lens==="formal"){
+        if(core==="N") return "El alcance precede a la autoridad; el significado debe fijarse antes de escalar.";
+        if(core==="E") return "La ejecución hereda condiciones de borde; la superficie no puede exceder el alcance.";
+        if(core==="S") return "La restricción define admisibilidad; sin compuertas no hay expansión.";
+        if(core==="W") return "La contención evita cascada; el fallo local debe permanecer local.";
+        return "Este nodo mantiene el sistema dentro de límites auditables.";
+      }
+      if(core==="N") return "Fija el significado y la deriva deja de esconderse.";
+      if(core==="E") return "Ejecuta con límites o la escala te rompe.";
+      if(core==="S") return "Compuertas primero; sin límites no hay expansión.";
+      if(core==="W") return "Aísla y repara para evitar cascada.";
+      return "Este punto mantiene el sistema controlable.";
+    }
+
+    if(lens==="formal"){
+      if(core==="N") return "Scope precedes authority; meaning must lock before scale.";
+      if(core==="E") return "Execution inherits boundary conditions; surfaces must not exceed scope.";
+      if(core==="S") return "Constraint defines admissibility; without gates, expansion is refused.";
+      if(core==="W") return "Containment prevents cascade; local failure must stay local.";
+      return "This node preserves integrity under audit.";
+    }
+    if(core==="N") return "Lock meaning first and drift loses its hiding place.";
+    if(core==="E") return "Execute inside bounds or scale amplifies failure.";
+    if(core==="S") return "Gate first; without limits expansion corrupts.";
+    if(core==="W") return "Isolate and recover before it cascades.";
+    return "This point keeps the system controllable.";
+  }
+
+  function analogSentence(id){
+    const core = id.split(":")[0].replace("★","");
+    if(lang==="zh"){
+      if(core==="N") return "物理：边界映射；生物：代谢调控；工程：标定基准；治理：宪制约束；计算：不变量定义。";
+      if(core==="E") return "物理：推进与作功；生物：执行链；工程：执行器；治理：行政执行；计算：状态转移。";
+      if(core==="S") return "物理：摩擦/重力；生物：免疫门控；工程：安全联锁；治理：司法审查；计算：验证闸门。";
+      if(core==="W") return "物理：分舱隔离；生物：细胞隔离；工程：断路器；治理：隔离处置；计算：回滚/分区恢复。";
+      return "跨域：同一约束合同在不同系统呈现不同表面。";
+    }
+    if(lang==="es"){
+      if(core==="N") return "Físico: límites. Biológico: regulación metabólica. Ingeniería: calibración. Gobernanza: constitución. Computación: invariantes.";
+      if(core==="E") return "Físico: acción/propulsión. Biológico: cadena de ejecución. Ingeniería: actuadores. Gobernanza: ejecución. Computación: transición de estado.";
+      if(core==="S") return "Físico: fricción/gravedad. Biológico: compuertas inmunes. Ingeniería: interlocks. Gobernanza: revisión. Computación: validación.";
+      if(core==="W") return "Físico: compartimentación. Biológico: aislamiento celular. Ingeniería: disyuntor. Gobernanza: contención. Computación: rollback/particiones.";
+      return "Multidominio: un contrato de restricciones, distintas superficies.";
+    }
+    if(core==="N") return "Physical: boundaries. Biological: metabolic regulation. Engineering: calibration baseline. Governance: constitutional constraint. Computational: invariants.";
+    if(core==="E") return "Physical: propulsion/work. Biological: execution chain. Engineering: actuators. Governance: administrative execution. Computational: state transitions.";
+    if(core==="S") return "Physical: friction/gravity. Biological: immune gating. Engineering: safety interlocks. Governance: judicial review. Computational: validation gates.";
+    if(core==="W") return "Physical: compartmentalization. Biological: cellular isolation. Engineering: breakers. Governance: containment doctrine. Computational: rollback/partition recovery.";
+    return "Cross-domain: one constraint contract, different surfaces.";
+  }
+
+  // 8 tiles (clock order for cardinals as you asked)
+  const TILES = [
+    {id:"N", color:"#1F3A8A"},
+    {id:"S", color:"#F59E0B"},
+    {id:"APPENDIX", color:"#A3A3A3"},
+    {id:"GLOSSARY", color:"#93C5FD"},
+    {id:"E", color:"#0EA5E9"},
+    {id:"W", color:"#7F1D1D"},
+    {id:"ABOUT", color:"#D4AF37"},
+    {id:"LINKS", color:"#60A5FA"}
+  ];
+
+  // UI refs
+  const grid=document.getElementById("grid");
+  const detail=document.getElementById("detail");
+  const dTitle=document.getElementById("dTitle");
+  const dClose=document.getElementById("dClose");
+  const branch=document.getElementById("branch");
+
+  // overlays
+  const ovJI=document.getElementById("ovJI");
+  const panelJI=document.getElementById("panelJI");
+  const jiClose=document.getElementById("jiClose");
+  const jiTitle=document.getElementById("jiTitle");
+  const jiList=document.getElementById("jiList");
+
+  const ovJD=document.getElementById("ovJD");
+  const panelJD=document.getElementById("panelJD");
+  const jdClose=document.getElementById("jdClose");
+  const jdTitle=document.getElementById("jdTitle");
+  const jdBody=document.getElementById("jdBody");
+
+  function openJI(){
+    jiTitle.textContent = (lang==="zh")?"跳转目录":(lang==="es")?"ÍNDICE DE SALTOS":"JUMP INDEX";
+    jiList.innerHTML="";
+    Object.keys(TREE).forEach(id=>{
+      const row=document.createElement("div");
+      row.className="row";
+      const top=document.createElement("div");
+      top.className="rTop";
+      const nm=document.createElement("div");
+      nm.className="rName";
+      nm.textContent=nodeLabel(id);
+      const act=document.createElement("div");
+      const jb=document.createElement("a");
+      jb.className="btn";
+      jb.textContent=T().jump;
+      jb.href="#";
+      jb.onclick=function(e){e.preventDefault();openJD(id);};
+      act.appendChild(jb);
+      top.appendChild(nm);
+      top.appendChild(act);
+
+      const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
+      const sent=document.createElement("div");
+      sent.className="rSent";
+      sent.textContent = (view==="both")
+        ? (oneSentence(id,"informal")+"  "+oneSentence(id,"formal"))
+        : oneSentence(id,view);
+
+      row.appendChild(top);
+      row.appendChild(sent);
+      row.onclick=function(e){
+        if(e.target && e.target.tagName==="A") return;
+        localStorage.setItem("hub_active_node", id);
+      };
+      jiList.appendChild(row);
+    });
+    ovJI.classList.add("show");
+    panelJI.classList.add("show");
+  }
+  function closeJI(){ovJI.classList.remove("show");panelJI.classList.remove("show");}
+  ovJI.onclick=closeJI; jiClose.onclick=closeJI; panelJI.onclick=e=>e.stopPropagation();
+
+  function openJD(id){
+    jdTitle.textContent = (lang==="zh")?"跳转卡组":(lang==="es")?"MAZO":"JUMP DECK";
+    jdBody.innerHTML="";
+
+    const row=document.createElement("div");
+    row.className="row";
+    const top=document.createElement("div");
+    top.className="rTop";
+    const nm=document.createElement("div");
+    nm.className="rName";
+    nm.textContent=nodeLabel(id);
+    top.appendChild(nm);
+    row.appendChild(top);
+
+    const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
+    const s=document.createElement("div");
+    s.className="rSent";
+    s.textContent = (view==="both")
+      ? (oneSentence(id,"informal")+"  "+oneSentence(id,"formal"))
+      : oneSentence(id,view);
+    row.appendChild(s);
+
+    const a=document.createElement("div");
+    a.className="rSent";
+    a.textContent = analogSentence(id);
+    row.appendChild(a);
+
+    const note=document.createElement("div");
+    note.className="rSent";
+    note.style.opacity=".7";
+    note.textContent = (lang==="zh")
+      ? "（占位）此处将放置绑定内容与产品/证明跳转。"
+      : (lang==="es")
+      ? "(Marcador) Aquí irá el contenido y los saltos a producto/prueba."
+      : "(Placeholder) Binding content + product/proof jumps will live here.";
+    row.appendChild(note);
+
+    jdBody.appendChild(row);
+
+    ovJD.classList.add("show");
+    panelJD.classList.add("show");
+  }
+  function closeJD(){ovJD.classList.remove("show");panelJD.classList.remove("show");}
+  ovJD.onclick=closeJD; jdClose.onclick=closeJD; panelJD.onclick=e=>e.stopPropagation();
+
+  // Build russian-doll node
+  function buildNode(id){
+    const info=TREE[id];
+    const node=document.createElement("div");
+    node.className="node";
+    node.style.setProperty("--c", info.color || "#93C5FD");
+    node.setAttribute("data-id", id);
+
+    const head=document.createElement("div");
+    head.className="nHead";
+    head.innerHTML="<div class='nLeft'><div class='diamond'></div><div class='nLabel'>"+nodeLabel(id)+"</div></div><div>▸</div>";
+
+    const body=document.createElement("div");
+    body.className="nBody";
+
+    const pInf=document.createElement("p");
+    pInf.className="one";
+    pInf.setAttribute("data-lens","informal");
+    pInf.textContent=oneSentence(id,"informal");
+
+    const pFor=document.createElement("p");
+    pFor.className="one";
+    pFor.setAttribute("data-lens","formal");
+    pFor.textContent=oneSentence(id,"formal");
+
+    body.appendChild(pInf);
+    body.appendChild(pFor);
+
+    const sub=document.createElement("div");
+    sub.className="subNode";
+    const sh=document.createElement("div");
+    sh.className="subHead";
+    sh.innerHTML="<div>"+T().analog+"</div><div>▸</div>";
+    const sb=document.createElement("div");
+    sb.className="subBody";
+    const ap=document.createElement("p");
+    ap.className="analog";
+    ap.textContent=analogSentence(id);
+    sb.appendChild(ap);
+    sub.appendChild(sh);
+    sub.appendChild(sb);
+    sh.onclick=(e)=>{e.stopPropagation();sub.classList.toggle("open");};
+
+    body.appendChild(sub);
+
+    const act=document.createElement("div");
+    act.className="actRow";
+
+    const ji=document.createElement("div");
+    ji.className="pill ji";
+    ji.textContent=T().jiPill;
+    ji.onclick=(e)=>{e.stopPropagation();openJI();};
+
+    const jump=document.createElement("div");
+    jump.className="pill";
+    jump.textContent=T().jump;
+    jump.onclick=(e)=>{e.stopPropagation();openJD(id);};
+
+    act.appendChild(ji);
+    act.appendChild(jump);
+    body.appendChild(act);
+
+    if(info.children && info.children.length){
+      const stack=document.createElement("div");
+      stack.className="childStack";
+      info.children.forEach(child=>stack.appendChild(buildNode(child)));
+      body.appendChild(stack);
+    }
+
+    head.onclick=()=>{
+      node.classList.toggle("open");
+      localStorage.setItem("hub_active_node", id);
+    };
+
+    node.appendChild(head);
+    node.appendChild(body);
+    return node;
+  }
+
+  // Render 8 tiles
+  function makeTile(t){
+    const el=document.createElement("div");
+    el.className="tile";
+    el.style.setProperty("--c", t.color);
+    el.setAttribute("data-id", t.id);
+
+    const d=document.createElement("div"); d.className="diamond";
+    const tt=document.createElement("div"); tt.className="tt";
+    const nm=document.createElement("div"); nm.className="name"; nm.textContent=nodeLabel(t.id);
+    const hint=document.createElement("div"); hint.className="hint";
+    const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
+    hint.textContent = (view==="informal") ? oneSentence(t.id,"informal") : oneSentence(t.id,"formal");
+    tt.appendChild(nm); tt.appendChild(hint);
+
+    const chev=document.createElement("div"); chev.className="chev"; chev.textContent="›";
+
+    el.appendChild(d); el.appendChild(tt); el.appendChild(chev);
+
+    el.onclick=()=>{
+      document.querySelectorAll(".tile").forEach(x=>x.classList.toggle("active", x.getAttribute("data-id")===t.id));
+      detail.classList.add("show");
+      dTitle.textContent=nodeLabel(t.id);
+      branch.innerHTML="";
+      branch.appendChild(buildNode(t.id));
+      detail.scrollIntoView({behavior:"smooth",block:"start"});
+      localStorage.setItem("hub_active_node", t.id);
+    };
+    return el;
+  }
+
+  grid.innerHTML="";
+  TILES.forEach(t=>grid.appendChild(makeTile(t)));
+
+  // default open last
+  const last = lsGet("hub_active_node") || "N";
+  const firstTile = TILES.find(x=>x.id===last) || TILES[0];
+  setTimeout(()=>{ document.querySelector("[data-id='"+firstTile.id+"']").click(); }, 0);
+
+  dClose.onclick=()=>detail.classList.remove("show");
+
+  // Dock
+  const navExit=document.getElementById("navExit");
+  const navJI=document.getElementById("navJI");
+  const navJD=document.getElementById("navJD");
+  const navActive=document.getElementById("navActive");
+
+  navExit.textContent=T().exit;
+  navJI.textContent=T().ji;
+  navJD.textContent=T().jd;
+  navActive.textContent=T().active;
+
+  navExit.onclick=()=>location.href="/door/"+makeQS();
+  navJI.onclick=openJI;
+  navJD.onclick=()=>openJD(lsGet("hub_active_node")||"N");
+  navActive.onclick=()=>openJD(lsGet("hub_active_node")||"N");
 
 })();
 </script>

@@ -1,21 +1,25 @@
 <!-- TNT — /home/index.html
-     HUB A · CATEGORY-LOCKED INDEX (NO CONSOLIDATION)
+     HUB A · MIRROR-RECURSIVE SPLINE ARCHITECTURE (MRSA) · CATEGORY-LOCKED
      LOCK (NON-NEGOTIABLE):
        - Geometry governs placement ONLY. Categories are immutable.
-       - Band A (COMPASS / GENERATIVE): N · E · S · W  (recursive Russian doll)
-       - Band B (SYSTEM / REFERENTIAL): APPENDIX · GLOSSARY · ABOUT · LINKS (terminal, no recursion)
-     FIXES:
-       - Focus pane opens immediately and scrolls into view.
-       - Lens toggle lives INSIDE the focus pane.
-       - Language toggle remains page-level only (EN/中文/ES).
-       - Each node shows:
-           (1) 3-line skeleton per lens (Aspect→Process→Resolution)
-           (2) Analog Layer sub-bubble (C)
-           (3) Reality binding line (product/tool label + 1 sentence)
-           (4) JI + JUMP controls
+       - Band A (COMPASS / GENERATIVE / RECURSIVE): N · E · S · W (recursive Russian doll)
+       - Band B (SYSTEM / REFERENTIAL / TERMINAL): APPENDIX · GLOSSARY · ABOUT · LINKS (terminal; no recursion)
+     BEHAVIOR:
+       - Click a plate → opens Focus Pane immediately (scrolls into view).
+       - Focus Pane contains lens toggle (INFORMAL / FORMAL / BOTH) (inside pane).
+       - Language is page-level only (EN / 中文 / ES) (top-right buttons).
+       - Each node shows 3-line skeleton per lens (Aspect → Process → Resolution).
+       - Each node includes:
+           • Analog Layer sub-bubble
+           • Reality binding line (tool/platform surface)
+           • JI (Jump Index overlay) + JUMP (Jump Deck overlay)
      STATE:
        - URL: lang/style/time/depth
        - LS: gd_lang/gd_style/gd_time/gd_depth
+     OWNERSHIP:
+       - ui.css owns field (no html/body background styling)
+       - branch.css geometry only
+       - instruments.js canonical state loader
 -->
 
 <!doctype html>
@@ -30,6 +34,7 @@
 <script defer src="/assets/instruments.js"></script>
 
 <style>
+/* DO NOT TOUCH FIELD — ui.css owns html/body background */
 a{color:inherit;text-decoration:none}
 :root{--dockH:88px}
 
@@ -59,7 +64,6 @@ a{color:inherit;text-decoration:none}
 .k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
 .t{font-weight:950;font-size:24px;letter-spacing:.3px;margin:0 0 6px}
 .s{font-size:13px;opacity:.82;line-height:1.5;margin:0;max-width:980px}
-
 .ctrl{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start;margin-top:12px}
 .metric{
   margin-top:10px;padding:10px 12px;border-radius:18px;
@@ -67,22 +71,10 @@ a{color:inherit;text-decoration:none}
   color:rgba(255,255,255,.86);line-height:1.45;font-size:13px;
 }
 
-/* language triangle (page-level only) */
-.langTri{
-  position:relative;width:128px;height:78px;border-radius:18px;
-  border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);
-  box-shadow:0 14px 36px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
-  display:grid;place-items:center;padding:8px;
-}
-.langTri .tri{position:relative;width:112px;height:62px;}
-.langTri .btn{position:absolute;padding:8px 12px;border-radius:999px;font-weight:900;letter-spacing:.2px;line-height:1;white-space:nowrap}
-.langTri .en{left:50%;top:0;transform:translateX(-50%)}
-.langTri .zh{left:0;bottom:0}
-.langTri .es{right:0;bottom:0}
-@media (max-width:520px){
-  .langTri{width:118px;height:74px}
-  .langTri .tri{width:104px;height:60px}
-  .langTri .btn{padding:8px 10px}
+/* language buttons (page-level only) */
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:240;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
 /* bands */
@@ -96,7 +88,7 @@ a{color:inherit;text-decoration:none}
   letter-spacing:.2px;
 }
 
-/* 4-up row */
+/* 4-up rows */
 .row4{
   display:grid;
   grid-template-columns:repeat(4, minmax(0, 1fr));
@@ -154,11 +146,11 @@ a{color:inherit;text-decoration:none}
 .fClose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px;border-radius:12px}
 .fClose:hover{background:rgba(255,255,255,.08)}
 
-/* lens toggle INSIDE pane */
+/* lens toggle inside pane */
 .lensRow{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:10px}
 .lensRow .btn{padding:10px 12px;border-radius:999px}
 
-/* node */
+/* nodes */
 .node{
   --c:#93C5FD;
   border:1px solid rgba(255,255,255,.10);
@@ -217,8 +209,6 @@ a{color:inherit;text-decoration:none}
   line-height:1.45;
   font-size:13px;
 }
-.bind b{color:#fff}
-.bind .gold{color:var(--gold);font-weight:950}
 
 /* actions */
 .actRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;margin-top:12px}
@@ -277,19 +267,13 @@ a{color:inherit;text-decoration:none}
   <div class="header">
     <p class="k" id="hk">CARDINAL AXIS</p>
     <h1 class="t" id="ht">HUB A · Index</h1>
-    <p class="s" id="hs">Compass spine (recursive) · Support spine (terminal) · Focus always.</p>
+    <p class="s" id="hs">Compass (recursive) · System (terminal) · Orientation to scale</p>
 
     <div class="ctrl">
-      <div class="langTri" aria-label="Language">
-        <div class="tri">
-          <button class="btn en" id="bEN" type="button">EN</button>
-          <button class="btn zh" id="bZH" type="button">中文</button>
-          <button class="btn es" id="bES" type="button">ES</button>
-        </div>
-      </div>
+      <div></div>
     </div>
 
-    <div class="metric" id="metric">All scalable navigation begins with declared boundaries.</div>
+    <div class="metric" id="metric">Orientation before scale · Scale before claims</div>
   </div>
 
   <div class="bandLabel" id="labA">COMPASS</div>
@@ -313,6 +297,12 @@ a{color:inherit;text-decoration:none}
     <div id="focusBody"></div>
   </div>
 
+</div>
+
+<div class="top-right">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
 </div>
 
 <nav class="dock" aria-label="Bottom actions">
@@ -378,56 +368,14 @@ a{color:inherit;text-decoration:none}
     return "?"+p.toString();
   }
 
-  const L={
-    en:{
-      hk:"CARDINAL AXIS", ht:"HUB A · Index",
-      hs:"Compass spine (recursive) · Support spine (terminal) · Focus always.",
-      metric:"All scalable navigation begins with declared boundaries.",
-      A:"COMPASS", B:"SYSTEM",
-      exit:"EXIT", ji:"JUMP INDEX", jd:"JUMP DECK", active:"ACTIVE",
-      analog:"Analog Layer", jiPill:"JI", jump:"Jump",
-      inf:"INFORMAL", frm:"FORMAL", both:"BOTH",
-      bindPrefix:"Binds to:"
-    },
-    zh:{
-      hk:"基轴体系", ht:"枢纽A · 索引",
-      hs:"罗盘脊柱（可递归）· 支持脊柱（终端）· 始终聚焦。",
-      metric:"一切可规模化的导航，始于明确的边界。",
-      A:"罗盘", B:"系统",
-      exit:"退出", ji:"跳转目录", jd:"跳转卡组", active:"当前",
-      analog:"类比层", jiPill:"JI", jump:"跳转",
-      inf:"非正式", frm:"正式", both:"两者",
-      bindPrefix:"绑定到："
-    },
-    es:{
-      hk:"CARDINAL AXIS", ht:"HUB A · Índice",
-      hs:"Brújula (recursiva) · Soporte (terminal) · Enfoque siempre.",
-      metric:"Toda navegación escalable empieza con límites declarados.",
-      A:"BRÚJULA", B:"SISTEMA",
-      exit:"SALIR", ji:"ÍNDICE", jd:"MAZO", active:"ACTIVO",
-      analog:"Capa Analógica", jiPill:"JI", jump:"Saltar",
-      inf:"INFORMAL", frm:"FORMAL", both:"AMBOS",
-      bindPrefix:"Vincula a:"
-    }
-  };
-  const T=()=> (lang==="zh")?L.zh:(lang==="es")?L.es:L.en;
-
-  // header labels
-  document.getElementById("hk").textContent=T().hk;
-  document.getElementById("ht").textContent=T().ht;
-  document.getElementById("hs").textContent=T().hs;
-  document.getElementById("metric").textContent=T().metric;
-  document.getElementById("labA").textContent=T().A;
-  document.getElementById("labB").textContent=T().B;
-
-  // language
-  const bEN=document.getElementById("bEN");
-  const bZH=document.getElementById("bZH");
-  const bES=document.getElementById("bES");
+  // language buttons
+  const btnEN=document.getElementById("btnEN");
+  const btnZH=document.getElementById("btnZH");
+  const btnES=document.getElementById("btnES");
   function paintLang(){
-    bEN.classList.toggle("active", lang==="en");
-    bZH.classList.toggle("active", lang==="zh");
-    bES.classList.toggle("active", lang==="es");
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
   }
   paintLang();
   function setLang(next){
@@ -436,24 +384,29 @@ a{color:inherit;text-decoration:none}
     history.replaceState({}, "", location.pathname + makeQS({lang}));
     location.reload();
   }
-  bEN.addEventListener("click", ()=>setLang("en"));
-  bZH.addEventListener("click", ()=>setLang("zh"));
-  bES.addEventListener("click", ()=>setLang("es"));
+  btnEN.onclick=()=>setLang("en");
+  btnZH.onclick=()=>setLang("zh");
+  btnES.onclick=()=>setLang("es");
 
-  // focus + lens (lens is inside focus)
+  const L={
+    en:{A:"COMPASS",B:"SYSTEM",metric:"Orientation before scale · Scale before claims",inf:"INFORMAL",frm:"FORMAL",both:"BOTH",analog:"Analog Layer",ji:"JUMP INDEX",jd:"JUMP DECK",active:"ACTIVE",exit:"EXIT"},
+    zh:{A:"罗盘",B:"系统",metric:"先导览 · 再规模 · 再主张",inf:"非正式",frm:"正式",both:"两者",analog:"类比层",ji:"跳转目录",jd:"跳转卡组",active:"当前",exit:"退出"},
+    es:{A:"BRÚJULA",B:"SISTEMA",metric:"Orientación · Escala · Afirmaciones",inf:"INFORMAL",frm:"FORMAL",both:"AMBOS",analog:"Capa Analógica",ji:"ÍNDICE",jd:"MAZO",active:"ACTIVO",exit:"SALIR"}
+  };
+  const T = (lang==="zh")?L.zh:(lang==="es")?L.es:L.en;
+
+  document.getElementById("labA").textContent=T.A;
+  document.getElementById("labB").textContent=T.B;
+  document.getElementById("metric").textContent=T.metric;
+
+  // lens buttons inside focus
   const pageEl=document.getElementById("page");
-  const focus=document.getElementById("focus");
-  const fTitle=document.getElementById("fTitle");
-  const fClose=document.getElementById("fClose");
-  const focusBody=document.getElementById("focusBody");
-
   const lensInformal=document.getElementById("lensInformal");
   const lensFormal=document.getElementById("lensFormal");
   const lensBoth=document.getElementById("lensBoth");
-
-  lensInformal.textContent=T().inf;
-  lensFormal.textContent=T().frm;
-  lensBoth.textContent=T().both;
+  lensInformal.textContent=T.inf;
+  lensFormal.textContent=T.frm;
+  lensBoth.textContent=T.both;
 
   function applyLens(v){
     pageEl.classList.remove("view-formal","view-informal","view-both");
@@ -464,9 +417,195 @@ a{color:inherit;text-decoration:none}
     lsSet("hub_view", v);
   }
   applyLens(lsGet("hub_view") || (style==="informal" ? "informal" : "formal"));
-  lensInformal.addEventListener("click", ()=>applyLens("informal"));
-  lensFormal.addEventListener("click", ()=>applyLens("formal"));
-  lensBoth.addEventListener("click", ()=>applyLens("both"));
+  lensInformal.onclick=()=>applyLens("informal");
+  lensFormal.onclick=()=>applyLens("formal");
+  lensBoth.onclick=()=>applyLens("both");
+
+  // tree (minimal for demo; expand later by barcode table)
+  const TREE = {
+    N:{label:{en:"N · DEFINITIONS",zh:"N · 定义",es:"N · DEFINICIONES"}, color:"#1F3A8A", children:["N:NE","N:NW","N:SE","N:SW"]},
+    E:{label:{en:"E · PRODUCTS",zh:"E · 产品",es:"E · PRODUCTOS"}, color:"#0EA5E9", children:["E:NE","E:NW","E:SE","E:SW"]},
+    S:{label:{en:"S · CONSTRAINTS",zh:"S · 约束",es:"S · RESTRICCIONES"}, color:"#F59E0B", children:["S:NE","S:NW","S:SE","S:SW"]},
+    W:{label:{en:"W · CONTAINMENT",zh:"W · 隔离",es:"W · CONTENCIÓN"}, color:"#7F1D1D", children:["W:NE","W:NW","W:SE","W:SW"]},
+    APPENDIX:{label:{en:"APPENDIX",zh:"附录",es:"APÉNDICE"}, color:"#A3A3A3", children:[]},
+    GLOSSARY:{label:{en:"GLOSSARY",zh:"术语表",es:"GLOSARIO"}, color:"#93C5FD", children:[]},
+    ABOUT:{label:{en:"ABOUT",zh:"关于",es:"ACERCA"}, color:"#D4AF37", children:[]},
+    LINKS:{label:{en:"LINKS",zh:"链接",es:"ENLACES"}, color:"#60A5FA", children:[]},
+
+    "N:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:[]},
+    "N:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:[]},
+    "N:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:[]},
+    "N:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:[]},
+
+    "E:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:[]},
+    "E:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:[]},
+    "E:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:[]},
+    "E:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:[]},
+
+    "S:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:[]},
+    "S:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:[]},
+    "S:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:[]},
+    "S:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:[]},
+
+    "W:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:[]},
+    "W:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:[]},
+    "W:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:[]},
+    "W:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:[]}
+  };
+
+  function nodeLabel(id){
+    const o=TREE[id] && TREE[id].label;
+    if(!o) return id;
+    if(lang==="zh") return o.zh;
+    if(lang==="es") return o.es || o.en;
+    return o.en;
+  }
+
+  function skeleton(id, lens){
+    const core = id.split(":")[0];
+    const isSystem = (id==="APPENDIX"||id==="GLOSSARY"||id==="ABOUT"||id==="LINKS");
+    // simple universal skeleton, non-repeating, bounded
+    if(lang==="zh"){
+      if(isSystem){
+        if(id==="APPENDIX") return lens==="formal"?["用途：收纳包。","过程：统一引用。","结果：可溯源。"]:["附录：集中关键包。","少找，多用。","需要就跳。"];
+        if(id==="GLOSSARY") return lens==="formal"?["用途：锁术语。","过程：防漂移。","结果：可比较。"]:["术语表：同词同义。","减少争论。","需要就跳。"];
+        if(id==="ABOUT") return lens==="formal"?["用途：声明边界。","过程：防膨胀。","结果：少误读。"]:["关于：是什么/不是什么。","不卖信仰。","需要就跳。"];
+        return lens==="formal"?["用途：外部锚点。","过程：直达证据。","结果：可核查。"]:["链接：直达锚点。","少解释。","需要就跳。"];
+      }
+      if(lens==="formal"){
+        if(core==="N") return ["定义：范围先于权力。","过程：锁语义→控扩张。","结果：漂移收敛。"];
+        if(core==="E") return ["执行：继承边界条件。","过程：执行面不越界。","结果：可复制。"];
+        if(core==="S") return ["闸门：约束定义可采信。","过程：无证据拒绝。","结果：扩张有序。"];
+        if(core==="W") return ["隔离：失败局部化。","过程：分段/回滚。","结果：恢复一致性。"];
+      }else{
+        if(core==="N") return ["先钉住含义。","再谈怎么走。","不然会漂。"];
+        if(core==="E") return ["先守边界。","再上线扩张。","否则反噬。"];
+        if(core==="S") return ["闸门先行。","没边界就停。","否则腐化。"];
+        if(core==="W") return ["先隔离。","再修复。","避免级联。"];
+      }
+    }else if(lang==="es"){
+      if(isSystem){
+        if(id==="APPENDIX") return lens==="formal"?["Propósito: paquetes.","Proceso: referencia única.","Resultado: proveniencia."]:["Apéndice: todo junto.","Menos búsqueda.","Salta cuando quieras."];
+        if(id==="GLOSSARY") return lens==="formal"?["Propósito: fijar términos.","Proceso: bloquear deriva.","Resultado: comparabilidad."]:["Glosario: mismas palabras.","Menos ruido.","Salta cuando quieras."];
+        if(id==="ABOUT") return lens==="formal"?["Propósito: límites.","Proceso: evitar inflación.","Resultado: menos errores."]:["Acerca: qué es/qué no es.","Sin venta.","Salta cuando quieras."];
+        return lens==="formal"?["Propósito: anclas externas.","Proceso: evidencia directa.","Resultado: verificable."]:["Enlaces: directo a anclas.","Sin charla.","Salta cuando quieras."];
+      }
+      if(lens==="formal"){
+        if(core==="N") return ["Definición: alcance primero.","Proceso: fijar significado.","Resultado: menos deriva."];
+        if(core==="E") return ["Ejecución: límites heredados.","Proceso: superficie acotada.","Resultado: réplica estable."];
+        if(core==="S") return ["Compuertas: admisibilidad.","Proceso: rechazo sin evidencia.","Resultado: escala disciplinada."];
+        if(core==="W") return ["Contención: fallo local.","Proceso: segmentar/rollback.","Resultado: coherencia."];
+      }else{
+        if(core==="N") return ["Fija el significado.","Luego avanzas.","Si no, deriva."];
+        if(core==="E") return ["Ejecuta con límites.","Si no, te rompe.","Escala amplifica."];
+        if(core==="S") return ["Compuertas primero.","Sin límites, no.","O se pudre."];
+        if(core==="W") return ["Aísla y repara.","Corta cascada.","Vuelve estable."];
+      }
+    }else{
+      if(isSystem){
+        if(id==="APPENDIX") return lens==="formal"?["Purpose: packets.","Process: single reference.","Result: provenance."]:["Appendix: everything in one place.","Less hunting.","Jump when needed."];
+        if(id==="GLOSSARY") return lens==="formal"?["Purpose: lock terms.","Process: prevent drift.","Result: comparability."]:["Glossary: same words.","Less arguing.","Jump when needed."];
+        if(id==="ABOUT") return lens==="formal"?["Purpose: posture + limits.","Process: prevent inflation.","Result: fewer misreads."]:["About: what it is / isn’t.","No selling.","Jump when needed."];
+        return lens==="formal"?["Purpose: external anchors.","Process: direct evidence.","Result: verifiable."]:["Links: direct anchors.","No talk.","Jump when needed."];
+      }
+      if(lens==="formal"){
+        if(core==="N") return ["Definition: scope first.","Process: lock meaning.","Result: drift reduced."];
+        if(core==="E") return ["Execution: bounded surfaces.","Process: inherit limits.","Result: stable replication."];
+        if(core==="S") return ["Gates: admissibility.","Process: refuse without evidence.","Result: disciplined scale."];
+        if(core==="W") return ["Containment: local failure.","Process: segment/rollback.","Result: coherence restored."];
+      }else{
+        if(core==="N") return ["Lock meaning.","Then move.","Or drift."];
+        if(core==="E") return ["Execute inside limits.","Scale amplifies failure.","Working wins."];
+        if(core==="S") return ["Gate first.","No limits, no scale.","Or rot."];
+        if(core==="W") return ["Isolate and repair.","Stop cascade.","Return stable."];
+      }
+    }
+    return ["—","—","—"];
+  }
+
+  function analogSentence(id){
+    const core = id.split(":")[0];
+    if(lang==="zh"){
+      if(core==="N") return "边界/宪制/不变量：定义层的统一锚点。";
+      if(core==="E") return "执行/转移/部署：把结构变成可用表面。";
+      if(core==="S") return "门控/验证/阶段：压力下保持可采信。";
+      if(core==="W") return "隔离/回滚/恢复：阻断级联。";
+      return "参考节点：语义稳定与外部锚点。";
+    }
+    if(lang==="es"){
+      if(core==="N") return "Límites/constitución/invariantes: ancla de definición.";
+      if(core==="E") return "Ejecución/transición/despliegue: superficie utilizable.";
+      if(core==="S") return "Compuertas/validación/fases: admisibilidad bajo presión.";
+      if(core==="W") return "Contención/rollback/recuperación: cortar cascada.";
+      return "Nodos de referencia: estabilidad semántica y anclas.";
+    }
+    if(core==="N") return "Boundaries/constitution/invariants: definition anchor.";
+    if(core==="E") return "Execution/transition/deployment: usable surfaces.";
+    if(core==="S") return "Gating/validation/phases: admissibility under pressure.";
+    if(core==="W") return "Containment/rollback/recovery: stop cascade.";
+    return "Reference nodes: semantic stability and anchors.";
+  }
+
+  // reality bindings (platform spine)
+  const BIND = {
+    N:{label:{en:"Coherence Diagnostic + Laws",zh:"一致性诊断 + 法则",es:"Diagnóstico + Leyes"}, route:"/laws/", sentence:{
+      en:"Pins meaning and admissibility so every downstream claim stays bounded.",
+      zh:"锁定语义与可采信，保证下游主张有界。",
+      es:"Fija significado y admisibilidad para acotar afirmaciones."
+    }},
+    E:{label:{en:"Products (Platforms)",zh:"产品（平台）",es:"Productos (Plataformas)"}, route:"/products/", sentence:{
+      en:"Maps structure into deployable adoption surfaces without exceeding scope.",
+      zh:"把结构映射为可部署采纳面且不越界。",
+      es:"Convierte estructura en superficies desplegables sin exceder alcance."
+    }},
+    S:{label:{en:"Adoption Ladder + Gates",zh:"采纳阶梯 + 闸门",es:"Escalera + Compuertas"}, route:"/products/adoption-ladder/", sentence:{
+      en:"Defines phase gates that prevent scaling beyond verification capacity.",
+      zh:"定义阶段门控，防止超出核查能力的扩张。",
+      es:"Define compuertas por fases para evitar escalar sin verificación."
+    }},
+    W:{label:{en:"Containment + Enforcement",zh:"隔离 + 执行",es:"Contención + Ejecución"}, route:"/laws/", sentence:{
+      en:"Keeps failures local and enforces rollback discipline under load.",
+      zh:"让失败局部化，并在负载下执行回滚纪律。",
+      es:"Mantiene fallos locales y disciplina de rollback bajo carga."
+    }},
+    APPENDIX:{label:{en:"Appendix",zh:"附录",es:"Apéndice"}, route:"/appendix/", sentence:{
+      en:"Centralizes packets, receipts, and provenance surfaces.",
+      zh:"集中协议包、收据与溯源面。",
+      es:"Centraliza paquetes, recibos y proveniencia."
+    }},
+    GLOSSARY:{label:{en:"Glossary",zh:"术语表",es:"Glosario"}, route:"/glossary/", sentence:{
+      en:"Locks canonical terms to prevent semantic drift across the site.",
+      zh:"锁定规范术语，防止跨页语义漂移。",
+      es:"Fija términos canónicos para evitar deriva semántica."
+    }},
+    ABOUT:{label:{en:"About",zh:"关于",es:"Acerca"}, route:"/about/", sentence:{
+      en:"States posture and boundaries to prevent claim inflation.",
+      zh:"声明姿态与边界，避免主张膨胀。",
+      es:"Declara postura y límites para evitar inflación."
+    }},
+    LINKS:{label:{en:"Links",zh:"链接",es:"Enlaces"}, route:"/links/", sentence:{
+      en:"Routes to external anchors for verification and provenance.",
+      zh:"指向外部锚点以便核查与溯源。",
+      es:"Enruta a anclas externas para verificación y proveniencia."
+    }}
+  };
+
+  function bindLine(id){
+    const key = (id in BIND) ? id : (id.split(":")[0]);
+    const pack = BIND[key];
+    if(!pack){
+      return (lang==="zh")?"绑定：未设定":"Bind: not set";
+    }
+    const lbl = (lang==="zh")?pack.label.zh:(lang==="es")?(pack.label.es||pack.label.en):pack.label.en;
+    const sent = (lang==="zh")?pack.sentence.zh:(lang==="es")?(pack.sentence.es||pack.sentence.en):pack.sentence.en;
+    return lbl + " — " + sent;
+  }
+
+  function bindRoute(id){
+    const key = (id in BIND) ? id : (id.split(":")[0]);
+    const pack = BIND[key];
+    return pack ? pack.route : "#";
+  }
 
   // overlays
   const ovJI=document.getElementById("ovJI");
@@ -482,14 +621,12 @@ a{color:inherit;text-decoration:none}
   const jdBody=document.getElementById("jdBody");
 
   function openJI(){
-    jiTitle.textContent = (lang==="zh")?"跳转目录":(lang==="es")?"ÍNDICE DE SALTOS":"JUMP INDEX";
+    jiTitle.textContent = (lang==="zh")?"跳转目录":(lang==="es")?"ÍNDICE":"JUMP INDEX";
     jiList.innerHTML="";
-    // directory lists only top-level category nodes + key descendants
-    const keys = Object.keys(TREE);
-    keys.forEach(id=>{
+    Object.keys(TREE).forEach(id=>{
+      if(id.indexOf(":")>=0) return; // keep index minimal: top-level only
       const row=document.createElement("div");
       row.className="row";
-
       const top=document.createElement("div");
       top.className="rTop";
       const nm=document.createElement("div");
@@ -497,9 +634,8 @@ a{color:inherit;text-decoration:none}
       nm.textContent=nodeLabel(id);
       const act=document.createElement("div");
       const jb=document.createElement("button");
-      jb.className="btn";
-      jb.type="button";
-      jb.textContent=T().jump;
+      jb.className="btn"; jb.type="button";
+      jb.textContent=(lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
       jb.onclick=()=>openJD(id);
       act.appendChild(jb);
       top.appendChild(nm);
@@ -514,7 +650,6 @@ a{color:inherit;text-decoration:none}
       row.appendChild(sent);
       jiList.appendChild(row);
     });
-
     ovJI.classList.add("show");
     panelJI.classList.add("show");
   }
@@ -550,19 +685,23 @@ a{color:inherit;text-decoration:none}
 
     const b=document.createElement("div");
     b.className="rSent";
-    b.style.opacity=".85";
     b.textContent = bindLine(id);
     row.appendChild(b);
 
-    const note=document.createElement("div");
-    note.className="rSent";
-    note.style.opacity=".7";
-    note.textContent = (lang==="zh")
-      ? "（占位）此处将扩展为完整“如何使用/示例/证据”。"
-      : (lang==="es")
-      ? "(Marcador) Aquí se expandirá con uso/ejemplos/evidencia."
-      : "(Placeholder) This expands into full how-to/examples/evidence.";
-    row.appendChild(note);
+    const go=document.createElement("div");
+    go.className="rSent";
+    go.style.opacity=".8";
+    go.textContent = (lang==="zh") ? "（跳转）进入对应平台/页面。"
+                    : (lang==="es") ? "(Salto) Ir a la superficie correspondiente."
+                    : "(Jump) Go to the corresponding surface.";
+    row.appendChild(go);
+
+    const btn=document.createElement("a");
+    btn.className="btn";
+    const route = bindRoute(id);
+    btn.href = (route==="#" ? "#" : (route + makeQS()));
+    btn.textContent = (lang==="zh")?"跳转":(lang==="es")?"SALTAR":"JUMP";
+    row.appendChild(btn);
 
     jdBody.appendChild(row);
 
@@ -574,296 +713,23 @@ a{color:inherit;text-decoration:none}
 
   ovJI.addEventListener("pointerup", (e)=>{e.preventDefault();closeJI();}, {passive:false});
   ovJD.addEventListener("pointerup", (e)=>{e.preventDefault();closeJD();}, {passive:false});
-  jiClose.addEventListener("click", closeJI);
-  jdClose.addEventListener("click", closeJD);
-  panelJI.addEventListener("click",(e)=>e.stopPropagation());
-  panelJD.addEventListener("click",(e)=>e.stopPropagation());
+  jiClose.onclick=closeJI;
+  jdClose.onclick=closeJD;
+  panelJI.onclick=(e)=>e.stopPropagation();
+  panelJD.onclick=(e)=>e.stopPropagation();
 
-  // tree
-  const TREE = {
-    // compass roots
-    N:{label:{en:"N · DEFINITIONS",zh:"N · 定义",es:"N · DEFINICIONES"}, color:"#1F3A8A", children:["N★","N:NE","N:NW","N:SE","N:SW"]},
-    E:{label:{en:"E · PRODUCTS",zh:"E · 产品",es:"E · PRODUCTOS"}, color:"#0EA5E9", children:["E★","E:NE","E:NW","E:SE","E:SW"]},
-    S:{label:{en:"S · CONSTRAINTS",zh:"S · 约束",es:"S · RESTRICCIONES"}, color:"#F59E0B", children:["S★","S:NE","S:NW","S:SE","S:SW"]},
-    W:{label:{en:"W · CONTAINMENT",zh:"W · 隔离",es:"W · CONTENCIÓN"}, color:"#7F1D1D", children:["W★","W:NE","W:NW","W:SE","W:SW"]},
+  // focus open
+  const focus=document.getElementById("focus");
+  const fTitle=document.getElementById("fTitle");
+  const fClose=document.getElementById("fClose");
+  const focusBody=document.getElementById("focusBody");
 
-    // system roots
-    APPENDIX:{label:{en:"APPENDIX",zh:"附录",es:"APÉNDICE"}, color:"#A3A3A3", children:[]},
-    GLOSSARY:{label:{en:"GLOSSARY",zh:"术语表",es:"GLOSARIO"}, color:"#93C5FD", children:[]},
-    ABOUT:{label:{en:"ABOUT",zh:"关于",es:"ACERCA"}, color:"#D4AF37", children:[]},
-    LINKS:{label:{en:"LINKS",zh:"链接",es:"ENLACES"}, color:"#60A5FA", children:[]},
-
-    // star
-    "N★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["N★:N","N★:E","N★:S","N★:W"]},
-    "E★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["E★:N","E★:E","E★:S","E★:W"]},
-    "S★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["S★:N","S★:E","S★:S","S★:W"]},
-    "W★":{label:{en:"NORTH STAR",zh:"北极星",es:"ESTRELLA NORTE"}, color:"#2C3EAF", children:["W★:N","W★:E","W★:S","W★:W"]},
-
-    // diagonals + refinements
-    "N:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["N:ENE"]},
-    "N:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["N:WNW"]},
-    "N:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["N:ESE"]},
-    "N:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["N:WSW"]},
-
-    "E:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["E:ENE"]},
-    "E:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["E:WNW"]},
-    "E:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["E:ESE"]},
-    "E:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["E:WSW"]},
-
-    "S:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["S:ENE"]},
-    "S:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["S:WNW"]},
-    "S:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["S:ESE"]},
-    "S:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["S:WSW"]},
-
-    "W:NE":{label:{en:"NE",zh:"NE",es:"NE"}, color:"#2C3EAF", children:["W:ENE"]},
-    "W:NW":{label:{en:"NW",zh:"NW",es:"NW"}, color:"#9333EA", children:["W:WNW"]},
-    "W:SE":{label:{en:"SE",zh:"SE",es:"SE"}, color:"#14B8A6", children:["W:ESE"]},
-    "W:SW":{label:{en:"SW",zh:"SW",es:"SW"}, color:"#EA580C", children:["W:WSW"]},
-
-    "N:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
-    "N:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["N:NNW"]},
-    "N:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
-    "N:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["N:SSW"]},
-    "N:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
-    "N:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
-
-    "E:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
-    "E:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["E:NNW"]},
-    "E:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
-    "E:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["E:SSW"]},
-    "E:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
-    "E:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
-
-    "S:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
-    "S:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["S:NNW"]},
-    "S:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
-    "S:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["S:SSW"]},
-    "S:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
-    "S:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
-
-    "W:ENE":{label:{en:"ENE",zh:"ENE",es:"ENE"}, color:"#4B3FBF", children:[]},
-    "W:WNW":{label:{en:"WNW",zh:"WNW",es:"WNW"}, color:"#9333EA", children:["W:NNW"]},
-    "W:ESE":{label:{en:"ESE",zh:"ESE",es:"ESE"}, color:"#14B8A6", children:[]},
-    "W:WSW":{label:{en:"WSW",zh:"WSW",es:"WSW"}, color:"#DC2626", children:["W:SSW"]},
-    "W:NNW":{label:{en:"NNW",zh:"NNW",es:"NNW"}, color:"#334155", children:[]},
-    "W:SSW":{label:{en:"SSW",zh:"SSW",es:"SSW"}, color:"#EA580C", children:[]},
-
-    "N★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
-    "N★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
-    "N★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
-    "N★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]},
-
-    "E★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
-    "E★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
-    "E★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
-    "E★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]},
-
-    "S★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
-    "S★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
-    "S★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
-    "S★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]},
-
-    "W★:N":{label:{en:"N",zh:"N",es:"N"}, color:"#1F3A8A", children:[]},
-    "W★:E":{label:{en:"E",zh:"E",es:"E"}, color:"#0EA5E9", children:[]},
-    "W★:S":{label:{en:"S",zh:"S",es:"S"}, color:"#F59E0B", children:[]},
-    "W★:W":{label:{en:"W",zh:"W",es:"W"}, color:"#7F1D1D", children:[]}
-  };
-
-  function nodeLabel(id){
-    const o=TREE[id] && TREE[id].label;
-    if(!o) return id;
-    if(lang==="zh") return o.zh;
-    if(lang==="es") return o.es || o.en;
-    return o.en;
-  }
-
-  // Reality binding map (PLACEHOLDER NOW; replace later with barcode binding table)
-  // Must be non-empty to satisfy “connect to reality”.
-  const BIND = {
-    N:{label:{en:"Laws · Definitions",zh:"法则 · 定义",es:"Leyes · Definiciones"}, sentence:{
-      en:"Anchors term-lock and scope control for every downstream proof and tool.",
-      zh:"为全站的证明与工具提供术语锁定与范围控制。",
-      es:"Ancla términos y alcance para toda prueba y herramienta."
-    }},
-    E:{label:{en:"Products · Surfaces",zh:"产品 · 执行面",es:"Productos · Superficies"}, sentence:{
-      en:"Maps structure into deployable surfaces without exceeding scope.",
-      zh:"把结构映射为可部署执行面且不越界。",
-      es:"Convierte estructura en superficies desplegables sin exceder el alcance."
-    }},
-    S:{label:{en:"Gates · Admissibility",zh:"闸门 · 可采信",es:"Compuertas · Admisibilidad"}, sentence:{
-      en:"Defines refusal logic and phase gates that prevent inflation under pressure.",
-      zh:"定义拒绝逻辑与阶段门控，防止压力下膨胀。",
-      es:"Define rechazo y fases para evitar inflación bajo presión."
-    }},
-    W:{label:{en:"Containment · Recovery",zh:"隔离 · 恢复",es:"Contención · Recuperación"}, sentence:{
-      en:"Keeps failure local and preserves coherent returns under load.",
-      zh:"让失败局部化，并在负载下保持一致返回。",
-      es:"Mantiene fallos locales y retornos coherentes bajo carga."
-    }},
-    APPENDIX:{label:{en:"Appendix Surface",zh:"附录页面",es:"Apéndice"}, sentence:{
-      en:"Holds packets, provenance, and structural protections.",
-      zh:"收纳协议包、溯源与结构性保护。",
-      es:"Contiene paquetes, proveniencia y protección estructural."
-    }},
-    GLOSSARY:{label:{en:"Glossary Surface",zh:"术语表页面",es:"Glosario"}, sentence:{
-      en:"Locks shared vocabulary so meaning cannot drift between pages.",
-      zh:"锁定共用术语，防止跨页语义漂移。",
-      es:"Fija vocabulario compartido para evitar deriva semántica."
-    }},
-    ABOUT:{label:{en:"About Surface",zh:"关于页面",es:"Acerca"}, sentence:{
-      en:"States posture and boundaries to prevent claim inflation.",
-      zh:"声明姿态与边界，避免主张膨胀。",
-      es:"Declara postura y límites para evitar inflación de afirmaciones."
-    }},
-    LINKS:{label:{en:"Links Surface",zh:"链接页面",es:"Enlaces"}, sentence:{
-      en:"Routes to external anchors for verification and provenance.",
-      zh:"指向外部锚点以便核查与溯源。",
-      es:"Rutea a anclas externas para verificación y proveniencia."
-    }}
-  };
-
-  function bindLine(id){
-    const key = (id in BIND) ? id : (id.split(":")[0].replace("★",""));
-    const pack = BIND[key] || null;
-    if(!pack){
-      return (lang==="zh") ? "绑定：未设定（占位）" : (lang==="es") ? "Vínculo: no definido (marcador)" : "Bind: not set (placeholder)";
-    }
-    const lbl = (lang==="zh") ? pack.label.zh : (lang==="es") ? pack.label.es : pack.label.en;
-    const sent = (lang==="zh") ? pack.sentence.zh : (lang==="es") ? pack.sentence.es : pack.sentence.en;
-    return T().bindPrefix + " " + lbl + " — " + sent;
-  }
-
-  // analog line
-  function analogSentence(id){
-    const core = id.split(":")[0].replace("★","");
-    if(lang==="zh"){
-      if(core==="N") return "物理：边界映射；生物：代谢调控；工程：标定基准；治理：宪制约束；计算：不变量定义。";
-      if(core==="E") return "物理：推进与作功；生物：执行链；工程：执行器；治理：行政执行；计算：状态转移。";
-      if(core==="S") return "物理：摩擦/重力；生物：免疫门控；工程：安全联锁；治理：司法审查；计算：验证闸门。";
-      if(core==="W") return "物理：分舱隔离；生物：细胞隔离；工程：断路器；治理：隔离处置；计算：回滚/分区恢复。";
-      return "跨域：参考节点用于稳定语义与外部锚点。";
-    }
-    if(lang==="es"){
-      if(core==="N") return "Físico: límites. Biológico: regulación. Ingeniería: calibración. Gobernanza: constitución. Computación: invariantes.";
-      if(core==="E") return "Físico: acción. Biológico: ejecución. Ingeniería: actuadores. Gobernanza: ejecución. Computación: transiciones.";
-      if(core==="S") return "Físico: fricción. Biológico: compuertas. Ingeniería: interlocks. Gobernanza: revisión. Computación: validación.";
-      if(core==="W") return "Físico: compartimentos. Biológico: aislamiento. Ingeniería: disyuntores. Gobernanza: contención. Computación: rollback.";
-      return "Multidominio: nodos de referencia estabilizan términos y anclas.";
-    }
-    if(core==="N") return "Physical: boundaries. Biological: regulation. Engineering: calibration. Governance: constitution. Computational: invariants.";
-    if(core==="E") return "Physical: action. Biological: execution. Engineering: actuators. Governance: execution. Computational: transitions.";
-    if(core==="S") return "Physical: friction. Biological: gates. Engineering: interlocks. Governance: review. Computational: validation.";
-    if(core==="W") return "Physical: compartments. Biological: isolation. Engineering: breakers. Governance: containment. Computational: rollback.";
-    return "Cross-domain: reference nodes stabilize terms and anchors.";
-  }
-
-  // skeleton lines
-  function skeleton(id, lens){
-    const core = id.split(":")[0].replace("★","");
-    const isSystem = (id==="APPENDIX"||id==="GLOSSARY"||id==="ABOUT"||id==="LINKS");
-
-    if(lang==="zh"){
-      if(isSystem){
-        if(id==="APPENDIX") return lens==="formal"
-          ? ["用途：收纳协议/证明/声明。","过程：为全站提供可引用骨架。","结果：统一版本与溯源。"]
-          : ["附录：把关键包放在一个地方。","你不必到处找。","需要时一键跳。"];
-        if(id==="GLOSSARY") return lens==="formal"
-          ? ["用途：锁定术语。","过程：防止语义漂移。","结果：跨域可比较。"]
-          : ["术语表：大家说同一套话。","少争论，多前进。","需要时一键跳。"];
-        if(id==="ABOUT") return lens==="formal"
-          ? ["用途：声明姿态与边界。","过程：避免主张膨胀。","结果：减少误读。"]
-          : ["关于：告诉你这是什么/不是什么。","不卖信仰，只给结构。","需要时一键跳。"];
-        return lens==="formal"
-          ? ["用途：外部锚点目录。","过程：指向OSF/GitHub等。","结果：可核查。"]
-          : ["链接：所有外部证据入口。","不解释，直接给锚点。","需要时一键跳。"];
-      }
-      if(lens==="formal"){
-        if(core==="N") return ["定义：范围先于权力。","过程：锁定语义→约束扩张。","结果：避免漂移。"];
-        if(core==="E") return ["执行：继承边界条件。","过程：表面遵循约束→可部署。","结果：可复制而不腐化。"];
-        if(core==="S") return ["闸门：可采信由约束决定。","过程：无证据拒绝→阶段门控。","结果：扩张不越界。"];
-        if(core==="W") return ["隔离：局部失败必须局部化。","过程：分段/回滚→阻断级联。","结果：恢复一致性。"];
-      }else{
-        if(core==="N") return ["先钉住含义。","然后才谈扩张怎么走。","不然会漂。"];
-        if(core==="E") return ["先守边界再上线。","否则规模放大故障。","可用才算赢。"];
-        if(core==="S") return ["闸门先行。","没边界就别扩张。","否则系统变烂。"];
-        if(core==="W") return ["先隔离再修。","别让小问题变全局。","回到稳定再走。"];
-      }
-    }
-
-    if(lang==="es"){
-      if(isSystem){
-        if(id==="APPENDIX") return lens==="formal"
-          ? ["Propósito: paquetes, pruebas y avisos.","Proceso: referencia única del proyecto.","Resultado: versiones y proveniencia unificadas."]
-          : ["Apéndice: todo lo crítico en un lugar.","No busques por todo el sitio.","Salta cuando lo necesites."];
-        if(id==="GLOSSARY") return lens==="formal"
-          ? ["Propósito: fijar términos canónicos.","Proceso: bloquear deriva semántica.","Resultado: comparación entre dominios."]
-          : ["Glosario: mismas palabras, menos peleas.","Más claridad, menos ruido.","Salta cuando lo necesites."];
-        if(id==="ABOUT") return lens==="formal"
-          ? ["Propósito: postura y límites.","Proceso: evitar inflación de afirmaciones.","Resultado: menos malentendidos."]
-          : ["Acerca: qué es y qué no es.","Sin venta; solo estructura.","Salta cuando lo necesites."];
-        return lens==="formal"
-          ? ["Propósito: directorio de anclas externas.","Proceso: OSF/GitHub y pruebas.","Resultado: verificabilidad."]
-          : ["Enlaces: entradas directas a pruebas.","Sin charla; solo anclas.","Salta cuando lo necesites."];
-      }
-      if(lens==="formal"){
-        if(core==="N") return ["Definición: el alcance precede a la autoridad.","Proceso: fijar significado → acotar expansión.","Resultado: deriva reducida."];
-        if(core==="E") return ["Ejecución: hereda condiciones de borde.","Proceso: superficies dentro de límites → despliegue.","Resultado: réplica sin corrupción."];
-        if(core==="S") return ["Compuertas: la restricción define admisibilidad.","Proceso: rechazo sin evidencia → fases.","Resultado: expansión disciplinada."];
-        if(core==="W") return ["Contención: el fallo local debe permanecer local.","Proceso: segmentar/rollback → cortar cascada.","Resultado: coherencia restaurada."];
-      }else{
-        if(core==="N") return ["Fija el significado primero.","Luego decides cómo avanzar.","Si no, deriva."];
-        if(core==="E") return ["Ejecuta con límites.","La escala amplifica fallos.","Funcionar es ganar."];
-        if(core==="S") return ["Compuertas primero.","Sin límites no escales.","O se pudre."];
-        if(core==="W") return ["Aísla y repara.","No dejes que se propague.","Vuelve estable y continúa."];
-      }
-    }
-
-    // en
-    if(isSystem){
-      if(id==="APPENDIX") return lens==="formal"
-        ? ["Purpose: packets, proofs, notices.","Process: single reference backbone.","Result: unified version + provenance."]
-        : ["Appendix: everything critical in one place.","No hunting across the site.","Jump when needed."];
-      if(id==="GLOSSARY") return lens==="formal"
-        ? ["Purpose: lock canonical terms.","Process: prevent semantic drift.","Result: cross-domain comparability."]
-        : ["Glossary: same words, less arguing.","More clarity, less noise.","Jump when needed."];
-      if(id==="ABOUT") return lens==="formal"
-        ? ["Purpose: posture and limits.","Process: prevent claim inflation.","Result: fewer misreads."]
-        : ["About: what this is / is not.","No selling; only structure.","Jump when needed."];
-      return lens==="formal"
-        ? ["Purpose: external anchor directory.","Process: OSF/GitHub proof links.","Result: verifiability."]
-        : ["Links: direct entrances to proof.","No talk; just anchors.","Jump when needed."];
-    }
-
-    if(lens==="formal"){
-      if(core==="N") return ["Definition: scope precedes authority.","Process: lock meaning → bound expansion.","Result: drift reduced."];
-      if(core==="E") return ["Execution: inherits boundary conditions.","Process: surfaces inside scope → deploy.","Result: replicate without corruption."];
-      if(core==="S") return ["Gates: constraint defines admissibility.","Process: refuse without evidence → phase gates.","Result: disciplined expansion."];
-      if(core==="W") return ["Containment: local failure stays local.","Process: segment/rollback → stop cascade.","Result: coherence restored."];
-    }else{
-      if(core==="N") return ["Lock meaning first.","Then decide how to move.","Otherwise drift."];
-      if(core==="E") return ["Execute inside limits.","Scale amplifies failure.","Working is winning."];
-      if(core==="S") return ["Gate first.","No limits, no scale.","Or it rots."];
-      if(core==="W") return ["Isolate and repair.","Don’t let it spread.","Return stable, continue."];
-    }
-
-    return ["—","—","—"];
-  }
-
-  function nodeLabel(id){
-    const o=TREE[id] && TREE[id].label;
-    if(!o) return id;
-    if(lang==="zh") return o.zh;
-    if(lang==="es") return o.es || o.en;
-    return o.en;
-  }
-
-  // builders
   function buildAnalogSub(id){
     const sub=document.createElement("div");
     sub.className="subNode";
     const sh=document.createElement("div");
     sh.className="subHead";
-    sh.innerHTML="<div>"+T().analog+"</div><div>▸</div>";
+    sh.innerHTML="<div>"+T.analog+"</div><div>▸</div>";
     const sb=document.createElement("div");
     sb.className="subBody";
     const ap=document.createElement("p");
@@ -872,7 +738,7 @@ a{color:inherit;text-decoration:none}
     sb.appendChild(ap);
     sub.appendChild(sh);
     sub.appendChild(sb);
-    sh.addEventListener("click",(e)=>{e.stopPropagation();sub.classList.toggle("open");});
+    sh.onclick=(e)=>{e.stopPropagation();sub.classList.toggle("open");};
     return sub;
   }
 
@@ -882,13 +748,13 @@ a{color:inherit;text-decoration:none}
 
     const ji=document.createElement("div");
     ji.className="pill ji";
-    ji.textContent=T().jiPill;
-    ji.addEventListener("click",(e)=>{e.stopPropagation();openJI();});
+    ji.textContent="JI";
+    ji.onclick=(e)=>{e.stopPropagation();openJI();};
 
     const jump=document.createElement("div");
     jump.className="pill";
-    jump.textContent=T().jump;
-    jump.addEventListener("click",(e)=>{e.stopPropagation();openJD(id);});
+    jump.textContent=(lang==="zh")?"跳转":(lang==="es")?"SALTAR":"JUMP";
+    jump.onclick=(e)=>{e.stopPropagation();openJD(id);};
 
     act.appendChild(ji);
     act.appendChild(jump);
@@ -898,13 +764,10 @@ a{color:inherit;text-decoration:none}
   function buildBindBox(id){
     const b=document.createElement("div");
     b.className="bind";
-    b.innerHTML="<b>"+T().bindPrefix+"</b> <span class='gold'>"+(bindLine(id).replace(T().bindPrefix+" ",""))+"</span>";
-    // bindLine already includes prefix; keep it readable:
     b.textContent = bindLine(id);
     return b;
   }
 
-  // Recursive builder (COMPASS)
   function buildRecursiveNode(id){
     const info=TREE[id];
     const node=document.createElement("section");
@@ -914,7 +777,7 @@ a{color:inherit;text-decoration:none}
     const head=document.createElement("div");
     head.className="nHead";
     head.innerHTML="<div class='nLeft'><div class='swatch'></div><div class='nLabel'>"+nodeLabel(id)+"</div></div><div>▸</div>";
-    head.querySelector(".swatch").style.background = (info.color || "#93C5FD");
+    head.querySelector(".swatch").style.background=(info.color||"#93C5FD");
 
     const body=document.createElement("div");
     body.className="nBody";
@@ -922,16 +785,18 @@ a{color:inherit;text-decoration:none}
     const inf = skeleton(id,"informal");
     const frm = skeleton(id,"formal");
 
-    const li1=document.createElement("p"); li1.className="line"; li1.dataset.lens="informal"; li1.textContent=inf[0];
-    const li2=document.createElement("p"); li2.className="line"; li2.dataset.lens="informal"; li2.textContent=inf[1];
-    const li3=document.createElement("p"); li3.className="line"; li3.dataset.lens="informal"; li3.textContent=inf[2];
-
-    const lf1=document.createElement("p"); lf1.className="line"; lf1.dataset.lens="formal"; lf1.textContent=frm[0];
-    const lf2=document.createElement("p"); lf2.className="line"; lf2.dataset.lens="formal"; lf2.textContent=frm[1];
-    const lf3=document.createElement("p"); lf3.className="line"; lf3.dataset.lens="formal"; lf3.textContent=frm[2];
-
-    body.appendChild(li1); body.appendChild(li2); body.appendChild(li3);
-    body.appendChild(lf1); body.appendChild(lf2); body.appendChild(lf3);
+    ["informal",inf[0],inf[1],inf[2]].forEach((v,i)=>{
+      if(i===0) return;
+      const p=document.createElement("p");
+      p.className="line"; p.dataset.lens="informal"; p.textContent=v;
+      body.appendChild(p);
+    });
+    ["formal",frm[0],frm[1],frm[2]].forEach((v,i)=>{
+      if(i===0) return;
+      const p=document.createElement("p");
+      p.className="line"; p.dataset.lens="formal"; p.textContent=v;
+      body.appendChild(p);
+    });
 
     body.appendChild(buildAnalogSub(id));
     body.appendChild(buildBindBox(id));
@@ -944,13 +809,12 @@ a{color:inherit;text-decoration:none}
       body.appendChild(stack);
     }
 
-    head.addEventListener("click", ()=>node.classList.toggle("open"));
+    head.onclick=()=>node.classList.toggle("open");
     node.appendChild(head);
     node.appendChild(body);
     return node;
   }
 
-  // Terminal builder (SYSTEM)
   function buildTerminalNode(id){
     const info=TREE[id];
     const node=document.createElement("section");
@@ -960,7 +824,7 @@ a{color:inherit;text-decoration:none}
     const head=document.createElement("div");
     head.className="nHead";
     head.innerHTML="<div class='nLeft'><div class='swatch'></div><div class='nLabel'>"+nodeLabel(id)+"</div></div><div>▸</div>";
-    head.querySelector(".swatch").style.background = (info.color || "#93C5FD");
+    head.querySelector(".swatch").style.background=(info.color||"#93C5FD");
 
     const body=document.createElement("div");
     body.className="nBody";
@@ -968,32 +832,53 @@ a{color:inherit;text-decoration:none}
     const inf = skeleton(id,"informal");
     const frm = skeleton(id,"formal");
 
-    const li1=document.createElement("p"); li1.className="line"; li1.dataset.lens="informal"; li1.textContent=inf[0];
-    const li2=document.createElement("p"); li2.className="line"; li2.dataset.lens="informal"; li2.textContent=inf[1];
-    const li3=document.createElement("p"); li3.className="line"; li3.dataset.lens="informal"; li3.textContent=inf[2];
-
-    const lf1=document.createElement("p"); lf1.className="line"; lf1.dataset.lens="formal"; lf1.textContent=frm[0];
-    const lf2=document.createElement("p"); lf2.className="line"; lf2.dataset.lens="formal"; lf2.textContent=frm[1];
-    const lf3=document.createElement("p"); lf3.className="line"; lf3.dataset.lens="formal"; lf3.textContent=frm[2];
-
-    body.appendChild(li1); body.appendChild(li2); body.appendChild(li3);
-    body.appendChild(lf1); body.appendChild(lf2); body.appendChild(lf3);
+    [inf[0],inf[1],inf[2]].forEach(v=>{
+      const p=document.createElement("p");
+      p.className="line"; p.dataset.lens="informal"; p.textContent=v;
+      body.appendChild(p);
+    });
+    [frm[0],frm[1],frm[2]].forEach(v=>{
+      const p=document.createElement("p");
+      p.className="line"; p.dataset.lens="formal"; p.textContent=v;
+      body.appendChild(p);
+    });
 
     body.appendChild(buildBindBox(id));
     body.appendChild(buildActions(id));
 
-    head.addEventListener("click", ()=>node.classList.toggle("open"));
+    head.onclick=()=>node.classList.toggle("open");
     node.appendChild(head);
     node.appendChild(body);
     return node;
   }
 
+  function openFocus(rootId){
+    lsSet("hub_active_node", rootId);
+    fTitle.textContent=nodeLabel(rootId);
+    focusBody.innerHTML="";
+
+    const isCompass = (rootId==="N"||rootId==="E"||rootId==="S"||rootId==="W");
+    focusBody.appendChild(isCompass ? buildRecursiveNode(rootId) : buildTerminalNode(rootId));
+
+    focus.classList.add("show");
+
+    document.querySelectorAll(".plate").forEach(p=>{
+      p.classList.toggle("active", p.dataset.id===rootId);
+    });
+
+    setTimeout(()=>focus.scrollIntoView({behavior:"smooth", block:"start"}), 0);
+  }
+
+  fClose.onclick=()=>{
+    focus.classList.remove("show");
+    document.querySelectorAll(".plate").forEach(p=>p.classList.remove("active"));
+  };
+
   // build plates
   const bandA=document.getElementById("bandA");
   const bandB=document.getElementById("bandB");
-
-  const ORDER_A=["N","E","S","W"]; // geometry lock
-  const ORDER_B=["APPENDIX","GLOSSARY","ABOUT","LINKS"]; // system lock
+  const ORDER_A=["N","E","S","W"];
+  const ORDER_B=["APPENDIX","GLOSSARY","ABOUT","LINKS"];
 
   function plateHint(id){
     const view = lsGet("hub_view") || (style==="informal" ? "informal" : "formal");
@@ -1009,17 +894,13 @@ a{color:inherit;text-decoration:none}
 
     const left=document.createElement("div");
     left.className="pLeft";
-
     const sw=document.createElement("div");
     sw.className="swatch";
-
     const txt=document.createElement("div");
     txt.className="pTxt";
-
     const name=document.createElement("div");
     name.className="pName";
     name.textContent=nodeLabel(id);
-
     const hint=document.createElement("div");
     hint.className="pHint";
     hint.textContent=plateHint(id);
@@ -1035,74 +916,31 @@ a{color:inherit;text-decoration:none}
 
     p.appendChild(left);
     p.appendChild(chev);
-
-    p.addEventListener("click", ()=>openFocus(id));
+    p.onclick=()=>openFocus(id);
     return p;
   }
 
-  bandA.innerHTML="";
-  ORDER_A.forEach(id=>bandA.appendChild(makePlate(id)));
-  bandB.innerHTML="";
-  ORDER_B.forEach(id=>bandB.appendChild(makePlate(id)));
-
-  // focus open
-  function openFocus(rootId){
-    lsSet("hub_active_node", rootId);
-
-    fTitle.textContent = nodeLabel(rootId);
-    focusBody.innerHTML="";
-
-    const isCompass = (rootId==="N"||rootId==="E"||rootId==="S"||rootId==="W");
-    if(isCompass){
-      focusBody.appendChild(buildRecursiveNode(rootId));
-    }else{
-      focusBody.appendChild(buildTerminalNode(rootId));
-    }
-
-    focus.classList.add("show");
-
-    // highlight plate
-    document.querySelectorAll(".plate").forEach(p=>{
-      p.classList.toggle("active", p.dataset.id===rootId);
-    });
-
-    // ALWAYS scroll focus into view (fixes “opened at bottom” confusion)
-    setTimeout(()=>focus.scrollIntoView({behavior:"smooth", block:"start"}), 0);
-  }
-
-  fClose.addEventListener("click", ()=>{
-    focus.classList.remove("show");
-    document.querySelectorAll(".plate").forEach(p=>p.classList.remove("active"));
-  });
+  bandA.innerHTML=""; ORDER_A.forEach(id=>bandA.appendChild(makePlate(id)));
+  bandB.innerHTML=""; ORDER_B.forEach(id=>bandB.appendChild(makePlate(id)));
 
   // dock
   const navExit=document.getElementById("navExit");
   const navJI=document.getElementById("navJI");
   const navJD=document.getElementById("navJD");
   const navActive=document.getElementById("navActive");
+  navExit.textContent=T.exit;
+  navJI.textContent=T.ji;
+  navJD.textContent=T.jd;
+  navActive.textContent=T.active;
 
-  navExit.textContent=T().exit;
-  navJI.textContent=T().ji;
-  navJD.textContent=T().jd;
-  navActive.textContent=T().active;
-
-  navExit.addEventListener("click", ()=>location.href="/door/"+makeQS());
-  navJI.addEventListener("click", openJI);
-  navJD.addEventListener("click", ()=>openJD(lsGet("hub_active_node")||"N"));
-  navActive.addEventListener("click", ()=>openJD(lsGet("hub_active_node")||"N"));
-
-  // overlays close
-  function openJI(){ /* defined above */ }
-  function openJD(id){ /* defined above */ }
-
-  // (Bind the real functions from earlier scope)
-  // We already defined openJI/openJD above in this IIFE; expose them here:
-  // (No-op placeholders removed by hoisting in JS engine.)
+  navExit.onclick=()=>location.href="/index.html"+makeQS();
+  navJI.onclick=openJI;
+  navJD.onclick=()=>openJD(lsGet("hub_active_node")||"N");
+  navActive.onclick=()=>openJD(lsGet("hub_active_node")||"N");
 
   // default open last active
   const last = lsGet("hub_active_node") || "N";
-  const start = (last in TREE) ? last : "N";
-  openFocus(start);
+  openFocus((last in TREE) ? last : "N");
 
 })();
 </script>

@@ -1,7 +1,15 @@
 <!-- TNT — /index.html
-     UPDATE: add ES language toggle (top-right stays at top:16px)
-             keep brand pill nudged down slightly (minimal)
-     NO OTHER STRUCTURAL CHANGES.
+     INDEX (GATE) · TWO MASSIVE DIAMONDS · SPLINE ROUTER (NO MODALS)
+     GOAL: eliminate redundancy + rename diamonds to SPLINE 1 / SPLINE 2
+     ROUTES:
+       TOP    = STRUCTURAL SPLINE     → /home/
+       BOTTOM = PRODUCT/INNOVATION    → /explore/
+     LOCKS:
+       - ui.css owns field (no html/body background)
+       - uses /assets/ui.css + /assets/branch.css
+       - uses /assets/instruments.js
+       - state carry: ?lang=&style=&time=&depth=
+       - LS: gd_lang/gd_style/gd_time/gd_depth
 -->
 
 <!doctype html>
@@ -9,7 +17,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cardinal Axis · Direction</title>
+<title>Cardinal Axis · Entry</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -24,9 +32,8 @@
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 }
-
 a{color:inherit;text-decoration:none}
-body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
+body{padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom));}
 
 /* Top-left */
 .top-left{
@@ -34,39 +41,35 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Top-right language toggle — stays at top:16px */
+/* Top-right language toggle */
 .top-right{
-  position:fixed;
-  right:16px;
-  top:16px;
-  z-index:120;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
+  position:fixed;right:16px;top:16px;z-index:120;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Brand — nudged down slightly (minimal) */
+/* Brand (reduced redundancy) */
 .brand{
-  position:fixed;
-  left:50%;
-  top:32px; /* slight nudge to clear 3 buttons */
-  transform:translateX(-50%);
-  z-index:110;
-  text-align:center;
-  padding:10px 18px;
-  border-radius:999px;
+  position:fixed;left:50%;top:28px;transform:translateX(-50%);
+  z-index:110;text-align:center;
+  padding:10px 18px;border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
   pointer-events:none;
 }
-.brand .k{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.75;margin:0 0 6px 0}
-.brand .t{font-weight:950;font-size:40px;letter-spacing:.3px;margin:0}
-.brand .s{font-size:13px;opacity:.8;margin-top:6px}
+.brand .k{
+  font-size:12px;letter-spacing:3px;text-transform:uppercase;
+  opacity:.75;margin:0 0 6px 0;
+}
+.brand .t{
+  font-weight:950;font-size:40px;letter-spacing:.3px;margin:0;line-height:1.02;
+}
+.brand .s{
+  font-size:13px;opacity:.82;margin:8px 0 0;line-height:1.35;
+}
 
 /* Stage */
 .stage{
-  position:fixed;left:50%;top:53%;
+  position:fixed;left:50%;top:55%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
@@ -74,7 +77,7 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   pointer-events:none;
 }
 
-/* Diamonds */
+/* Massive diamonds */
 .d{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
@@ -160,15 +163,15 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
 /* Mobile */
 @media (max-width:560px){
   :root{ --R:150px; --D:244px; --dockH:118px; }
-  .stage{ top:51%; }
+  .stage{ top:54%; }
   .brand .t{ font-size:38px; }
-  .brand{ top:30px; }
+  .brand{ top:26px; }
 }
 @media (max-width:420px){
   :root{ --R:140px; --D:236px; --dockH:132px; }
-  .stage{ top:50%; }
+  .stage{ top:53%; }
   .brand .t{ font-size:36px; }
-  .brand{ top:28px; }
+  .brand{ top:24px; }
 }
 </style>
 </head>
@@ -187,23 +190,25 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
 
 <div class="brand" aria-hidden="true">
   <div class="k" id="bk">CARDINAL AXIS</div>
-  <div class="t" id="bt">Choose direction</div>
-  <div class="s" id="bs">Structure first · Or expand forward</div>
+  <div class="t" id="bt">Select spline</div>
+  <div class="s" id="bs">Two ramps · one system</div>
 </div>
 
-<div class="stage" aria-label="Primary fork">
+<div class="stage" aria-label="Spline router">
 
-  <div class="d d-top" id="dFoundation" role="button" tabindex="0" aria-label="Foundation">
+  <!-- SPLINE 1: STRUCTURAL -->
+  <div class="d d-top" id="dStructural" role="button" tabindex="0" aria-label="Structural spline">
     <div class="inner">
-      <div class="lab" id="labFoundation">FOUNDATION</div>
-      <div class="sub" id="subFoundation">Start with structure. Get oriented fast.</div>
+      <div class="lab" id="labStructural">STRUCTURE</div>
+      <div class="sub" id="subStructural">Definitions · gates · proof posture</div>
     </div>
   </div>
 
-  <div class="d d-bottom" id="dFrontier" role="button" tabindex="0" aria-label="Frontier">
+  <!-- SPLINE 2: PRODUCT / INNOVATION -->
+  <div class="d d-bottom" id="dInnovation" role="button" tabindex="0" aria-label="Innovation spline">
     <div class="inner">
-      <div class="lab" id="labFrontier">FRONTIER</div>
-      <div class="sub" id="subFrontier">Dream forward — without losing your footing.</div>
+      <div class="lab" id="labInnovation">INNOVATION</div>
+      <div class="sub" id="subInnovation">Products · integration · frontier</div>
     </div>
   </div>
 
@@ -251,10 +256,6 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
            "&depth="+encodeURIComponent(D);
   }
 
-  var btnEN = document.getElementById("btnEN");
-  var btnZH = document.getElementById("btnZH");
-  var btnES = document.getElementById("btnES");
-
   function wireLinks(){
     document.getElementById("btnExit").href="/"+q();
     document.getElementById("dockTerminal").href="/index.html"+q();
@@ -264,42 +265,43 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   }
 
   function renderLang(){
+    // Minimal i18n just for visible surface (no extra density)
     if(lang==="zh"){
-      document.getElementById("bt").textContent="选择方向";
-      document.getElementById("bs").textContent="先结构 · 或向前扩展";
-      document.getElementById("labFoundation").textContent="基础";
-      document.getElementById("subFoundation").textContent="从结构开始。快速获得方向。";
-      document.getElementById("labFrontier").textContent="前沿";
-      document.getElementById("subFrontier").textContent="向前探索——但不失根基。";
-      document.getElementById("btnExit").textContent="退出";
+      document.getElementById("bt").textContent="选择路线";
+      document.getElementById("bs").textContent="双匝道 · 同一系统";
+      document.getElementById("labStructural").textContent="结构";
+      document.getElementById("subStructural").textContent="定义 · 闸门 · 证明姿态";
+      document.getElementById("labInnovation").textContent="创新";
+      document.getElementById("subInnovation").textContent="产品 · 集成 · 前沿";
       document.getElementById("dockTerminal").textContent="终端";
       document.getElementById("dockProducts").textContent="产品";
       document.getElementById("dockLaws").textContent="法则";
       document.getElementById("dockGauges").textContent="量规";
+      document.getElementById("btnExit").textContent="退出";
     }else if(lang==="es"){
-      document.getElementById("bt").textContent="Elige dirección";
-      document.getElementById("bs").textContent="Estructura primero · o avanza hacia adelante";
-      document.getElementById("labFoundation").textContent="BASE";
-      document.getElementById("subFoundation").textContent="Empieza por la estructura y oriéntate rápido.";
-      document.getElementById("labFrontier").textContent="FRONTERA";
-      document.getElementById("subFrontier").textContent="Avanza sin perder el equilibrio.";
-      document.getElementById("btnExit").textContent="SALIR";
+      document.getElementById("bt").textContent="Elige carril";
+      document.getElementById("bs").textContent="Dos rampas · un sistema";
+      document.getElementById("labStructural").textContent="ESTRUCTURA";
+      document.getElementById("subStructural").textContent="Definiciones · compuertas · prueba";
+      document.getElementById("labInnovation").textContent="INNOVACIÓN";
+      document.getElementById("subInnovation").textContent="Productos · integración · frontera";
       document.getElementById("dockTerminal").textContent="TERMINAL";
       document.getElementById("dockProducts").textContent="PRODUCTOS";
       document.getElementById("dockLaws").textContent="LEYES";
       document.getElementById("dockGauges").textContent="MEDIDAS";
+      document.getElementById("btnExit").textContent="SALIR";
     }else{
-      document.getElementById("bt").textContent="Choose direction";
-      document.getElementById("bs").textContent="Structure first · Or expand forward";
-      document.getElementById("labFoundation").textContent="FOUNDATION";
-      document.getElementById("subFoundation").textContent="Start with structure. Get oriented fast.";
-      document.getElementById("labFrontier").textContent="FRONTIER";
-      document.getElementById("subFrontier").textContent="Dream forward — without losing your footing.";
-      document.getElementById("btnExit").textContent="EXIT";
+      document.getElementById("bt").textContent="Select spline";
+      document.getElementById("bs").textContent="Two ramps · one system";
+      document.getElementById("labStructural").textContent="STRUCTURE";
+      document.getElementById("subStructural").textContent="Definitions · gates · proof posture";
+      document.getElementById("labInnovation").textContent="INNOVATION";
+      document.getElementById("subInnovation").textContent="Products · integration · frontier";
       document.getElementById("dockTerminal").textContent="TERMINAL";
       document.getElementById("dockProducts").textContent="PRODUCTS";
       document.getElementById("dockLaws").textContent="LAWS";
       document.getElementById("dockGauges").textContent="GAUGES";
+      document.getElementById("btnExit").textContent="EXIT";
     }
 
     btnEN.classList.toggle("active", lang==="en");
@@ -317,6 +319,9 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
     wireLinks();
   }
 
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
@@ -324,20 +329,21 @@ body{ padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom)); }
   wireLinks();
   renderLang();
 
-  function goFoundation(){ location.href="/home/"+q(); }
-  function goFrontier(){ location.href="/explore/frontier/"+q(); }
+  // Routes
+  function goStructural(){ location.href="/home/"+q(); }
+  function goInnovation(){ location.href="/explore/"+q(); }
 
-  var df=document.getElementById("dFoundation");
-  var dfr=document.getElementById("dFrontier");
+  var ds=document.getElementById("dStructural");
+  var di=document.getElementById("dInnovation");
 
-  df.addEventListener("click", goFoundation);
-  dfr.addEventListener("click", goFrontier);
+  ds.addEventListener("click", goStructural);
+  di.addEventListener("click", goInnovation);
 
-  df.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goFoundation(); }
+  ds.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goStructural(); }
   });
-  dfr.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goFrontier(); }
+  di.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goInnovation(); }
   });
 
 })();

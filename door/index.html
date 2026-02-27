@@ -1,20 +1,18 @@
 <!-- TNT — /door/index.html
-     DOOR · TWO MASSIVE DIAMONDS · LANGUAGE GATE · NO MODALS · NO LENSES
-
-     IDENTITY:
-       - This is the entry gate.
-       - Two vertical diamonds only:
-            1) ENGLISH
-            2) 中文
-       - NO overlays/modals/lens toggles
-       - Hard navigation only
-       - Full state propagation (lang/style/time) + gd_* localStorage
-       - Keeps the pearlescent opal diamond material (NOT coal)
-       - Adds subtle gold diamond lattice (inside body; does NOT style html/body background)
+     DOOR (GATE 1) · TWO MASSIVE DIAMONDS · ORIENTATION SURFACE (NOT LANGUAGE GATE)
+     STRATEGY (C + D + HYBRID, UNDER THE HOOD):
+       - Calm institutional surface + slight mystery
+       - No explicit "Foundation / Frontier" naming here
+       - No density until a direction/path is defined (Gate 2)
+       - Both diamonds route to the same Gate 2 calibration page (selection finalized there)
+       - Language is an eternal lens: EN / 中文 / ES (toggle here)
+       - Bypass available: Enter Hub A directly (defaults to Hub A)
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css only
        - DOES NOT style html/body background (ui.css owns field)
-       - No new state keys beyond gd_lang/gd_style/gd_time
+       - Uses /assets/instruments.js (canonical)
+       - State carry ALWAYS via querystring: ?lang=&style=&time=&depth=
+       - LocalStorage canon: gd_lang/gd_style/gd_time/gd_depth (no extra keys)
 -->
 
 <!doctype html>
@@ -26,25 +24,34 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instrument.js"></script>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
 :root{
   --R:170px;
   --D:260px;
+  --dockH:92px;
+
   --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 }
 
-/* Base (no field styling) */
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
+
+/* Reserve space for bottom dock */
+body{padding-bottom:calc(var(--dockH) + env(safe-area-inset-bottom));}
 
 /* Top-left */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:wrap;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+
+/* Top-right language toggle */
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:120;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
 /* Brand (hook) */
@@ -56,16 +63,9 @@ a{color:inherit;text-decoration:none}
   background:rgba(0,0,0,.18);
   pointer-events:none;
 }
-.brand .k{
-  font-size:12px;letter-spacing:3px;text-transform:uppercase;
-  opacity:.75;margin:0 0 6px 0;
-}
-.brand .t{
-  font-weight:950;font-size:44px;letter-spacing:.3px;margin:0;line-height:1.02;
-}
-.brand .s{
-  font-size:13.5px;opacity:.82;margin:8px 0 0;line-height:1.35;
-}
+.brand .k{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.75;margin:0 0 6px 0}
+.brand .t{font-weight:950;font-size:42px;letter-spacing:.3px;margin:0;line-height:1.02}
+.brand .s{font-size:13.5px;opacity:.82;margin:8px 0 0;line-height:1.35}
 
 /* Decorative lattice (inside body; no field ownership) */
 .lattice{
@@ -161,7 +161,7 @@ a{color:inherit;text-decoration:none}
 
 /* Vertical layout */
 .d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
-.d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) * 1)) rotate(45deg)}
+.d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
 
 .inner{
   width:100%;height:100%;
@@ -183,10 +183,10 @@ a{color:inherit;text-decoration:none}
 /* Footer */
 .footer{
   position:fixed;left:50%;
-  bottom:calc(16px + env(safe-area-inset-bottom));
+  bottom:calc(16px + env(safe-area-inset-bottom) + var(--dockH));
   transform:translateX(-50%);
   z-index:110;
-  width:min(820px,94vw);
+  width:min(860px,94vw);
   text-align:center;
   font-size:13px;
   opacity:.78;
@@ -194,11 +194,28 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Mobile */
+/* Dock */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:120;
+  width:min(980px,94vw);
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.20);
+}
+
 @media (max-width:560px){
-  :root{ --R:156px; --D:244px; }
+  :root{ --R:156px; --D:244px; --dockH:110px; }
   .stage{top:58%}
-  .brand .t{font-size:40px}
+  .brand .t{font-size:38px}
 }
 </style>
 </head>
@@ -208,87 +225,181 @@ a{color:inherit;text-decoration:none}
 <div class="lattice" aria-hidden="true"></div>
 
 <div class="top-left">
-  <a class="crp-btn" id="btnExit" href="/home/">EXIT</a>
+  <a class="btn" id="btnHub" href="/home/">HUB</a>
+  <a class="btn" id="btnExit" href="/">EXIT</a>
+</div>
+
+<div class="top-right">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
 </div>
 
 <div class="brand" aria-hidden="true">
   <div class="k" id="bk">CARDINAL AXIS</div>
-  <div class="t" id="bt">A diagnostic compass.</div>
-  <div class="s" id="bs">No belief required · No selling · Just traversal. Choose your language.</div>
+  <div class="t" id="bt">Begin.</div>
+  <div class="s" id="bs">Two entrances · one structure · your pace.</div>
 </div>
 
-<div class="stage" aria-label="Language gate">
+<div class="stage" aria-label="Orientation gate">
 
-  <!-- ENGLISH -->
-  <div class="d d-top" id="dEN" role="button" tabindex="0" aria-label="English">
+  <!-- ENTRY A (neutral) -->
+  <div class="d d-top" id="dA" role="button" tabindex="0" aria-label="Entry A">
     <div class="inner">
-      <div class="lab" id="labEN">ENGLISH</div>
-      <div class="sub" id="subEN">Start with structure. Get oriented fast.</div>
+      <div class="lab" id="labA">START</div>
+      <div class="sub" id="subA">Enter calmly · orient first.</div>
     </div>
   </div>
 
-  <!-- 中文 -->
-  <div class="d d-bottom" id="dZH" role="button" tabindex="0" aria-label="Chinese">
+  <!-- ENTRY B (neutral) -->
+  <div class="d d-bottom" id="dB" role="button" tabindex="0" aria-label="Entry B">
     <div class="inner">
-      <div class="lab" id="labZH">中文</div>
-      <div class="sub" id="subZH">从结构开始。快速获得方向。</div>
+      <div class="lab" id="labB">PROCEED</div>
+      <div class="sub" id="subB">Enter forward · discover by contrast.</div>
     </div>
   </div>
 
 </div>
 
-<div class="footer" id="foot">Coherence-based traversal · under construction · safe to explore</div>
+<div class="footer" id="foot">No belief required · no selling · navigation by structure</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockCalibrate" href="/door/calibrate/">CONTINUE</a>
+  <a class="btn" id="dockHub" href="/home/">ENTER HUB</a>
+  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
+</nav>
 
 <script>
 (function(){
-  // --- Canonical state propagation ---
+  // Canon state (instrument-compatible): URL keys lang/style/time/depth; LS keys gd_*
   var qs = new URLSearchParams(location.search);
+
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en" && lang!=="zh") lang="en";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
     localStorage.setItem("gd_style",style);
     localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
-  function q(){
-    return "?lang="+encodeURIComponent(lang)+
-           "&style="+encodeURIComponent(style)+
-           "&time="+encodeURIComponent(time);
+  function q(over){
+    var L = (over && over.lang) ? over.lang : lang;
+    var S = (over && over.style) ? over.style : style;
+    var T = (over && over.time) ? over.time : time;
+    var D = (over && over.depth) ? over.depth : depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
   }
 
-  // Exit keeps state
-  document.getElementById("btnExit").href = "/home/" + q();
+  // Wire nav (state carry)
+  document.getElementById("btnHub").href="/home/"+q();
+  document.getElementById("btnExit").href="/"+q();
 
-  function goLanguage(nextLang){
-    try{ localStorage.setItem("gd_lang", nextLang); }catch(e){}
-    // Next gate after language is /index.html (your fork page)
-    location.href = "/index.html?lang="+encodeURIComponent(nextLang)+
-                    "&style="+encodeURIComponent(style)+
-                    "&time="+encodeURIComponent(time);
+  document.getElementById("dockCalibrate").href="/door/calibrate/"+q();
+  document.getElementById("dockHub").href="/home/"+q();
+  document.getElementById("dockIndex").href="/index.html"+q();
+
+  // Both diamonds route to Gate 2 (calibration) — decision finalized there
+  function goGate2(){ location.href="/door/calibrate/"+q(); }
+
+  var dA=document.getElementById("dA");
+  var dB=document.getElementById("dB");
+  dA.addEventListener("click", goGate2);
+  dB.addEventListener("click", goGate2);
+  dA.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goGate2(); }});
+  dB.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goGate2(); }});
+
+  // Language toggle (eternal lens; no gate)
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
   }
 
-  var en = document.getElementById("dEN");
-  var zh = document.getElementById("dZH");
+  function renderCopy(){
+    // Calm institutional + slight mystery; no fork labeling
+    if(lang==="zh"){
+      document.getElementById("bt").textContent="开始。";
+      document.getElementById("bs").textContent="两种入口 · 一种结构 · 由你掌控节奏。";
+      document.getElementById("labA").textContent="进入";
+      document.getElementById("subA").textContent="先定方向 · 再前进。";
+      document.getElementById("labB").textContent="继续";
+      document.getElementById("subB").textContent="先探索 · 用对比来发现。";
+      document.getElementById("foot").textContent="无需信仰 · 不做推销 · 以结构导航";
+      document.getElementById("dockCalibrate").textContent="继续";
+      document.getElementById("dockHub").textContent="进入枢纽";
+      document.getElementById("dockIndex").textContent="索引";
+      document.getElementById("btnHub").textContent="枢纽";
+      document.getElementById("btnExit").textContent="退出";
+    }else if(lang==="es"){
+      document.getElementById("bt").textContent="Comienza.";
+      document.getElementById("bs").textContent="Dos entradas · una estructura · tu ritmo.";
+      document.getElementById("labA").textContent="INICIAR";
+      document.getElementById("subA").textContent="Orienta primero · avanza después.";
+      document.getElementById("labB").textContent="SEGUIR";
+      document.getElementById("subB").textContent="Explora primero · descubre por contraste.";
+      document.getElementById("foot").textContent="Sin creencias · sin venta · navegación por estructura";
+      document.getElementById("dockCalibrate").textContent="CONTINUAR";
+      document.getElementById("dockHub").textContent="ENTRAR HUB";
+      document.getElementById("dockIndex").textContent="ÍNDICE";
+      document.getElementById("btnHub").textContent="HUB";
+      document.getElementById("btnExit").textContent="SALIR";
+    }else{
+      document.getElementById("bt").textContent="Begin.";
+      document.getElementById("bs").textContent="Two entrances · one structure · your pace.";
+      document.getElementById("labA").textContent="START";
+      document.getElementById("subA").textContent="Enter calmly · orient first.";
+      document.getElementById("labB").textContent="PROCEED";
+      document.getElementById("subB").textContent="Enter forward · discover by contrast.";
+      document.getElementById("foot").textContent="No belief required · no selling · navigation by structure";
+      document.getElementById("dockCalibrate").textContent="CONTINUE";
+      document.getElementById("dockHub").textContent="ENTER HUB";
+      document.getElementById("dockIndex").textContent="INDEX";
+      document.getElementById("btnHub").textContent="HUB";
+      document.getElementById("btnExit").textContent="EXIT";
+    }
+  }
 
-  en.addEventListener("click", function(){ goLanguage("en"); });
-  zh.addEventListener("click", function(){ goLanguage("zh"); });
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang = next;
+    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang: lang}));
+    document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+    paintLang();
+    renderCopy();
+    // update links
+    document.getElementById("btnHub").href="/home/"+q();
+    document.getElementById("btnExit").href="/"+q();
+    document.getElementById("dockCalibrate").href="/door/calibrate/"+q();
+    document.getElementById("dockHub").href="/home/"+q();
+    document.getElementById("dockIndex").href="/index.html"+q();
+  }
 
-  en.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goLanguage("en"); }
-  });
-  zh.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goLanguage("zh"); }
-  });
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  paintLang();
+  renderCopy();
 
 })();
 </script>

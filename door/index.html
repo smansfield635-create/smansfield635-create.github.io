@@ -1,12 +1,18 @@
 <!-- TNT — /door/index.html
-     CLEAN DOOR
-     KEEP: EXIT + INDEX + EN/中文/ES
-     KEEP: START + PROCEED
-     REMOVE: HUB / CONTINUE / ENTER HUB
-     MOVE: “No belief required · no selling · navigation by structure”
-           directly under “Begin”
-     REMOVE: period after “Begin”
-     NO OTHER STRUCTURAL CHANGES
+     DOOR · ORIENTATION CHAMBER (LAYER 0) · TWO MASSIVE DIAMONDS · NO MODALS
+     ROUTE LOCK (NEW):
+       - Both actions route to the site index: /index.html
+       - “Enter Site” and “Site Navigation” are two cognitive entry actions, not two different destinations (yet).
+     LANGUAGE:
+       - Page-level only (EN / 中文 / ES) via buttons (top-right)
+       - Stored in localStorage gd_lang
+       - Propagated via query: lang/style/time/depth
+     LENSES:
+       - No formal/informal UI on Door (preserve state only)
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Does NOT style html/body background (ui.css owns field)
+       - Tap-safe (no overlays intercepting)
 -->
 
 <!doctype html>
@@ -14,13 +20,16 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOOR · Cardinal Axis</title>
+<title>DOOR · Orientation</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
+/* DO NOT TOUCH FIELD — ui.css owns html/body background */
+a{color:inherit;text-decoration:none}
+
 :root{
   --R:170px;
   --D:260px;
@@ -29,27 +38,37 @@
   --obsB:rgba(6,10,16,.98);
 }
 
-a{color:inherit;text-decoration:none}
-
 /* Top-left */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  position:fixed;
+  left:16px;
+  top:16px;
+  z-index:140;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
 }
 
-/* Top-right language */
+/* Top-right language toggle (page-level only) */
 .top-right{
-  position:fixed;right:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  position:fixed;
+  right:16px;
+  top:16px;
+  z-index:140;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
 }
 
-/* Brand */
+/* Brand (orientation copy) */
 .brand{
   position:fixed;
   left:50%;
-  top:22px;
+  top:18px;
   transform:translateX(-50%);
-  z-index:110;
+  z-index:130;
   text-align:center;
   padding:10px 18px;
   border-radius:999px;
@@ -61,26 +80,62 @@ a{color:inherit;text-decoration:none}
   font-size:12px;
   letter-spacing:3px;
   text-transform:uppercase;
-  opacity:.75;
+  opacity:.78;
   margin:0 0 6px 0;
 }
 .brand .t{
   font-weight:950;
-  font-size:44px;
+  font-size:40px;
   letter-spacing:.3px;
   margin:0;
   line-height:1.02;
 }
 .brand .s{
-  font-size:14px;
   opacity:.85;
-  margin-top:8px;
+  font-size:13.5px;
+  margin:8px 0 0;
   line-height:1.35;
+  max-width:min(860px,94vw);
+}
+
+/* subtle interior lattice (no field ownership) */
+.lattice{
+  position:fixed;
+  inset:0;
+  z-index:20;
+  pointer-events:none;
+  opacity:.10;
+  mix-blend-mode:screen;
+}
+.lattice::before{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  transform:rotate(45deg);
+  background:
+    repeating-linear-gradient(0deg,
+      rgba(212,175,55,.22) 0px,
+      rgba(212,175,55,.22) 1px,
+      transparent 1px,
+      transparent 48px),
+    repeating-linear-gradient(90deg,
+      rgba(212,175,55,.22) 0px,
+      rgba(212,175,55,.22) 1px,
+      transparent 1px,
+      transparent 48px);
+}
+.lattice::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 50% 22%, rgba(255,255,255,.10), transparent 55%);
 }
 
 /* Stage */
 .stage{
-  position:fixed;left:50%;top:58%;
+  position:fixed;
+  left:50%;
+  top:56%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
@@ -88,10 +143,13 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Diamonds */
+/* Massive diamonds */
 .d{
-  width:var(--D);height:var(--D);
-  position:absolute;left:50%;top:50%;
+  width:var(--D);
+  height:var(--D);
+  position:absolute;
+  left:50%;
+  top:50%;
   transform-origin:center;
   border-radius:34px;
   cursor:pointer;
@@ -102,6 +160,7 @@ a{color:inherit;text-decoration:none}
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 48%),
     radial-gradient(circle at 70% 78%, rgba(0,120,255,.25), transparent 60%),
+    radial-gradient(circle at 48% 52%, rgba(255,255,255,.06), transparent 62%),
     linear-gradient(160deg, var(--obsA), var(--obsB));
 
   border:1px solid rgba(255,255,255,.16);
@@ -111,12 +170,15 @@ a{color:inherit;text-decoration:none}
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -50px 90px rgba(0,0,0,.78);
 
-  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  transition:transform .18s ease, border-color .18s ease;
   overflow:hidden;
 }
 .d::before{
   content:"";
-  position:absolute;inset:0;border-radius:34px;padding:1px;
+  position:absolute;
+  inset:0;
+  border-radius:34px;
+  padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.62;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -126,7 +188,11 @@ a{color:inherit;text-decoration:none}
 }
 .d::after{
   content:"";
-  position:absolute;left:10%;right:10%;top:10%;height:28%;
+  position:absolute;
+  left:10%;
+  right:10%;
+  top:10%;
+  height:28%;
   border-radius:999px;
   background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
   transform:rotate(-10deg);
@@ -136,38 +202,71 @@ a{color:inherit;text-decoration:none}
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
   border-color:rgba(212,175,55,.30);
 }
+.d:active{
+  transform:translate(-50%,-50%) rotate(45deg) scale(.99);
+}
 
+/* Vertical layout */
 .d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
 
 .inner{
-  width:100%;height:100%;
+  width:100%;
+  height:100%;
   transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
-  padding:18px;gap:10px;
-  pointer-events:none;user-select:none;
+  padding:18px;
+  gap:10px;
+  pointer-events:none;
+  user-select:none;
 }
-.lab{font-weight:950;font-size:22px;letter-spacing:.8px}
-.sub{font-size:14px;opacity:.85;line-height:1.35;max-width:22em}
+.lab{
+  font-weight:950;
+  font-size:22px;
+  letter-spacing:.8px;
+  text-shadow:0 0 18px rgba(255,255,255,.10);
+}
+.sub{
+  font-size:14px;
+  opacity:.85;
+  line-height:1.35;
+  max-width:22em;
+}
 
-/* Footer note removed */
-.footer{display:none;}
+/* Footer micro-line */
+.footer{
+  position:fixed;
+  left:50%;
+  bottom:calc(16px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:120;
+  width:min(920px,94vw);
+  text-align:center;
+  font-size:13px;
+  opacity:.78;
+  text-shadow:0 18px 60px rgba(0,0,0,.55);
+  pointer-events:none;
+}
 
+/* Mobile */
 @media (max-width:560px){
   :root{ --R:156px; --D:244px; }
-  .stage{top:60%}
-  .brand .t{font-size:40px}
+  .stage{top:58%}
+  .brand .t{font-size:36px}
 }
 </style>
 </head>
 
 <body>
 
+<div class="lattice" aria-hidden="true"></div>
+
 <div class="top-left">
   <a class="btn" id="btnExit" href="/">EXIT</a>
-  <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
 </div>
 
 <div class="top-right">
@@ -177,83 +276,148 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <div class="brand" aria-hidden="true">
-  <div class="k">CARDINAL AXIS</div>
-  <div class="t" id="bt">Begin</div>
-  <div class="s" id="bs">No belief required · no selling · navigation by structure</div>
+  <p class="k" id="bk">CARDINAL AXIS</p>
+  <h1 class="t" id="bt">ORIENTATION</h1>
+  <p class="s" id="bs">No belief required · No selling · Navigation by structure</p>
 </div>
 
-<div class="stage" aria-label="Primary fork">
+<div class="stage" aria-label="Orientation chamber">
 
-  <div class="d d-top" id="dStart" role="button" tabindex="0">
+  <!-- ENTER SITE -->
+  <div class="d d-top" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
     <div class="inner">
-      <div class="lab">START</div>
-      <div class="sub">Enter calmly · orient first.</div>
+      <div class="lab" id="labEnter">ENTER SITE</div>
+      <div class="sub" id="subEnter">Start moving. If it gets confusing, return and use navigation.</div>
     </div>
   </div>
 
-  <div class="d d-bottom" id="dProceed" role="button" tabindex="0">
+  <!-- SITE NAVIGATION -->
+  <div class="d d-bottom" id="dNav" role="button" tabindex="0" aria-label="Site navigation">
     <div class="inner">
-      <div class="lab">PROCEED</div>
-      <div class="sub">Enter forward · discover by contrast.</div>
+      <div class="lab" id="labNav">SITE NAVIGATION</div>
+      <div class="sub" id="subNav">See the map first. Then enter with orientation.</div>
     </div>
   </div>
 
 </div>
+
+<div class="footer" id="foot">Orientation before scale · Scale before claims</div>
 
 <script>
 (function(){
+  // Canonical state: URL lang/style/time/depth; LS gd_*
   var qs = new URLSearchParams(location.search);
 
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
-  localStorage.setItem("gd_lang",lang);
-  localStorage.setItem("gd_style",style);
-  localStorage.setItem("gd_time",time);
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
 
-  document.documentElement.lang = lang;
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
   function q(over){
     var L = (over && over.lang) ? over.lang : lang;
     var S = (over && over.style) ? over.style : style;
     var T = (over && over.time) ? over.time : time;
+    var D = (over && over.depth) ? over.depth : depth;
     return "?lang="+encodeURIComponent(L)+
            "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T);
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
   }
 
-  document.getElementById("btnExit").href="/"+q();
-  document.getElementById("btnIndex").href="/index.html"+q();
+  // page-level language toggle
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
 
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang = next;
-    localStorage.setItem("gd_lang",lang);
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    document.documentElement.lang = lang;
+    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang: lang}));
+    document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+    renderLang();
+    paintLang();
   }
 
-  btnEN.onclick=function(){ setLang("en"); };
-  btnZH.onclick=function(){ setLang("zh"); };
-  btnES.onclick=function(){ setLang("es"); };
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
 
-  function goStart(){ location.href="/index.html"+q(); }
-  function goProceed(){ location.href="/index.html"+q(); }
+  // bilingual copy (EN/中文/ES) — minimalist, orientation-first
+  function renderLang(){
+    if(lang==="zh"){
+      document.getElementById("bt").textContent="导览";
+      document.getElementById("bs").textContent="无需信仰 · 不做推销 · 以结构导航";
+      document.getElementById("labEnter").textContent="进入网站";
+      document.getElementById("subEnter").textContent="先进入。如果觉得迷糊，返回再用导航。";
+      document.getElementById("labNav").textContent="网站导航";
+      document.getElementById("subNav").textContent="先看地图，再带着方向进入。";
+      document.getElementById("foot").textContent="先导览 · 再规模 · 再主张";
+      document.getElementById("btnExit").textContent="退出";
+    }else if(lang==="es"){
+      document.getElementById("bt").textContent="ORIENTACIÓN";
+      document.getElementById("bs").textContent="Sin creencias · Sin venta · Navegación por estructura";
+      document.getElementById("labEnter").textContent="ENTRAR AL SITIO";
+      document.getElementById("subEnter").textContent="Entra primero. Si confunde, vuelve y usa navegación.";
+      document.getElementById("labNav").textContent="NAVEGACIÓN";
+      document.getElementById("subNav").textContent="Mira el mapa primero. Luego entra con orientación.";
+      document.getElementById("foot").textContent="Orientación · Escala · Afirmaciones";
+      document.getElementById("btnExit").textContent="SALIR";
+    }else{
+      document.getElementById("bt").textContent="ORIENTATION";
+      document.getElementById("bs").textContent="No belief required · No selling · Navigation by structure";
+      document.getElementById("labEnter").textContent="ENTER SITE";
+      document.getElementById("subEnter").textContent="Start moving. If it gets confusing, return and use navigation.";
+      document.getElementById("labNav").textContent="SITE NAVIGATION";
+      document.getElementById("subNav").textContent="See the map first. Then enter with orientation.";
+      document.getElementById("foot").textContent="Orientation before scale · Scale before claims";
+      document.getElementById("btnExit").textContent="EXIT";
+    }
+  }
+  renderLang();
 
-  dStart.onclick=goStart;
-  dProceed.onclick=goProceed;
+  // Both route to /index.html (first of the three: door → index → home)
+  function goIndex(){
+    location.href = "/index.html" + q();
+  }
 
-  dStart.onkeydown=function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goStart(); }
-  };
-  dProceed.onkeydown=function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goProceed(); }
-  };
+  var enter=document.getElementById("dEnter");
+  var nav=document.getElementById("dNav");
+
+  enter.addEventListener("click", goIndex);
+  nav.addEventListener("click", goIndex);
+
+  enter.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goIndex(); }
+  });
+  nav.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goIndex(); }
+  });
+
+  // Exit preserves state (back to root; adjust if you prefer /home/)
+  document.getElementById("btnExit").href = "/" + q();
 
 })();
 </script>

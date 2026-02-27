@@ -2,22 +2,19 @@
      INDEX · PRIMARY FORK · TWO MASSIVE DIAMONDS · HARD NAVIGATION ONLY
 
      ROLE:
-       - This is the first directional commitment after language.
-       - No overlays.
-       - No modals.
-       - No lenses.
-       - Pure fork.
-
+       - First directional commitment after Door.
+       - No overlays. No modals. No lenses. Pure fork.
        TOP:    FOUNDATION  → /home/
        BOTTOM: FRONTIER    → /explore/frontier/
 
      STATE:
-       - Full propagation of lang/style/time
+       - URL propagation: ?lang=&style=&time=
+       - LocalStorage: gd_lang / gd_style / gd_time
        - No new keys
 
      STYLE:
-       - EXACT same massive lacquer diamond system as approved Frontier page
-       - No deviation
+       - MATCHES approved /explore/frontier/ diamond system (lacquer, sizing, spacing)
+       - ui.css owns field (no html/body background styling)
 -->
 
 <!doctype html>
@@ -40,6 +37,7 @@
   --obsB:rgba(6,10,16,.98);
 }
 
+/* Base (no field styling) */
 body{
   margin:0;
   color:#fff;
@@ -55,6 +53,7 @@ a{color:inherit;text-decoration:none}
   z-index:120;
   display:flex;
   gap:10px;
+  flex-wrap:wrap;
 }
 
 /* Brand */
@@ -80,13 +79,13 @@ a{color:inherit;text-decoration:none}
 }
 .brand .t{
   font-weight:950;
-  font-size:42px;
+  font-size:40px;
   letter-spacing:.3px;
   margin:0;
 }
 .brand .s{
-  font-size:14px;
-  opacity:.85;
+  font-size:13px;
+  opacity:.8;
   margin-top:6px;
 }
 
@@ -102,7 +101,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Massive diamonds */
+/* Massive diamonds (MATCH Frontier) */
 .d{
   width:var(--D);
   height:var(--D);
@@ -179,22 +178,22 @@ a{color:inherit;text-decoration:none}
   justify-content:center;
   text-align:center;
   padding:18px;
-  gap:12px;
+  gap:10px;
   pointer-events:none;
 }
 .lab{
   font-weight:950;
-  font-size:24px;
+  font-size:22px;
   letter-spacing:.8px;
 }
 .sub{
-  font-size:15px;
+  font-size:14px;
   opacity:.85;
   line-height:1.35;
-  max-width:24em;
+  max-width:22em;
 }
 
-/* Dock */
+/* Dock (MATCH Frontier) */
 .dock{
   position:fixed;
   left:50%;
@@ -205,6 +204,7 @@ a{color:inherit;text-decoration:none}
   display:flex;
   justify-content:center;
   gap:10px;
+  flex-wrap:wrap;
   padding:10px 12px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
@@ -219,37 +219,33 @@ a{color:inherit;text-decoration:none}
   <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
 </div>
 
-<div class="brand">
+<div class="brand" aria-hidden="true">
   <div class="k" id="bk">CARDINAL AXIS</div>
   <div class="t" id="bt">Choose direction</div>
   <div class="s" id="bs">Structure first · Or expand forward</div>
 </div>
 
-<div class="stage">
+<div class="stage" aria-label="Primary fork">
 
   <!-- FOUNDATION -->
-  <div class="d d-top" id="dFoundation" role="button" tabindex="0">
+  <div class="d d-top" id="dFoundation" role="button" tabindex="0" aria-label="Foundation">
     <div class="inner">
       <div class="lab" id="labFoundation">FOUNDATION</div>
-      <div class="sub" id="subFoundation">
-        Start with structure. Get oriented fast.
-      </div>
+      <div class="sub" id="subFoundation">Start with structure. Get oriented fast.</div>
     </div>
   </div>
 
   <!-- FRONTIER -->
-  <div class="d d-bottom" id="dFrontier" role="button" tabindex="0">
+  <div class="d d-bottom" id="dFrontier" role="button" tabindex="0" aria-label="Frontier">
     <div class="inner">
       <div class="lab" id="labFrontier">FRONTIER</div>
-      <div class="sub" id="subFrontier">
-        Dream forward — without losing your footing.
-      </div>
+      <div class="sub" id="subFrontier">Dream forward — without losing your footing.</div>
     </div>
   </div>
 
 </div>
 
-<nav class="dock">
+<nav class="dock" aria-label="Bottom navigation">
   <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
   <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
@@ -258,17 +254,16 @@ a{color:inherit;text-decoration:none}
 
 <script>
 (function(){
-
-  // Canonical state propagation
+  // Canonical state propagation (URL: lang/style/time; Storage: gd_*)
   var qs = new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
 
   if(lang!=="en" && lang!=="zh") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
   if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="origin";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -284,7 +279,14 @@ a{color:inherit;text-decoration:none}
            "&time="+encodeURIComponent(time);
   }
 
-  // Bilingual render
+  // Wire top + dock to preserve state
+  document.getElementById("btnExit").href="/door/"+q();
+  document.getElementById("dockTerminal").href="/index.html"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
+
+  // Bilingual render (single-language)
   if(lang==="zh"){
     document.getElementById("bt").textContent="选择方向";
     document.getElementById("bs").textContent="先结构 · 或向前扩展";
@@ -295,26 +297,21 @@ a{color:inherit;text-decoration:none}
   }
 
   // Routing
-  function goFoundation(){
-    location.href="/home/"+q();
-  }
-  function goFrontier(){
-    location.href="/explore/frontier/"+q();
-  }
+  function goFoundation(){ location.href="/home/"+q(); }
+  function goFrontier(){ location.href="/explore/frontier/"+q(); }
 
   var df=document.getElementById("dFoundation");
   var dfr=document.getElementById("dFrontier");
 
-  df.addEventListener("click",goFoundation);
-  dfr.addEventListener("click",goFrontier);
+  df.addEventListener("click", goFoundation);
+  dfr.addEventListener("click", goFrontier);
 
-  df.addEventListener("keydown",function(e){
-    if(e.key==="Enter"||e.key===" "){e.preventDefault();goFoundation();}
+  df.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goFoundation(); }
   });
-  dfr.addEventListener("keydown",function(e){
-    if(e.key==="Enter"||e.key===" "){e.preventDefault();goFrontier();}
+  dfr.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goFrontier(); }
   });
-
 })();
 </script>
 

@@ -1,21 +1,18 @@
-<!-- TNT — /products/education/index.html  (EDUCATION · QUADRANTS → DOMAINS → NARRATIVE · EN/中文 SINGLE-LANG)
-     STRUCTURE (matches latest Energy construct):
-       - 4 quadrant diamonds on face
-       - Tap quadrant → Domains modal (tile grid)
-       - Tap domain → Narrative modal (FORMAL/INFORMAL + Concept/Live/Roadmap)
-       - Universal return:
-           RETURN TO DOMAINS (one layer back)
-           BACK TO QUADRANTS (close stack)
-     LANGUAGE (MANDATORY):
-       - lang=en => EN only
-       - lang=zh => 中文 only
-       - uses gd_lang + ?lang=
-     STATE (NO NEW KEYS):
-       - gd_lang / gd_style / gd_time only
+<!-- TNT — /products/education/index.html
+     PRODUCTS · EDUCATION
+     UNIVERSAL PRODUCT MODEL (LOCKED):
+       4 QUADRANTS → QUADRANT MODAL (3 DOMAINS + RETURN) → DOMAIN MODAL:
+         - Tone toggle: FORMAL / INFORMAL
+         - 3 bubbles: CONCEPT / LIVE / ROADMAP (tap-to-open)
+     LANGUAGE:
+       - EN / 中文 / ES (single-language per page via gd_lang)
+     STATE:
+       - URL: lang/style/time/depth
+       - LS: gd_lang/gd_style/gd_time/gd_depth
      LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css only
-       - Does NOT style html/body background (ui.css owns field)
-       - Tap-safe (bind first; null-safe; no inline onclick dependency)
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - No html/body background overrides
+       - Tap-safe (no inline onclick)
 -->
 
 <!doctype html>
@@ -27,100 +24,113 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
+a{color:inherit;text-decoration:none}
 :root{
   --R:150px;
   --D:184px;
-
-  /* Pearlescent lacquer (match Energy) */
   --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
+  --mut:rgba(255,255,255,.90);
+  --mut2:rgba(255,255,255,.74);
 }
 
-/* Base */
+/* base */
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-a{text-decoration:none;color:inherit}
+body::before,body::after{pointer-events:none!important}
 
-/* Top controls */
+/* top */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:120;
+  position:fixed;left:16px;top:16px;z-index:140;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
-
-/* Header pill */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:110;text-align:center;
+  z-index:130;text-align:center;
   padding:10px 18px;border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
   pointer-events:none;
 }
-.brand .k{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.78;margin:0 0 6px 0}
-.brand .t{font-weight:950;font-size:44px;letter-spacing:.3px;margin:0;line-height:1.02}
-.brand .s{opacity:.85;font-size:14px;margin:6px 0 0}
+.brand .t{font-weight:950;font-size:40px;letter-spacing:.25px;line-height:1.05;margin:0}
+.brand .s{opacity:.86;font-size:14px;margin:6px 0 0;line-height:1.25}
 
-/* Stage */
+/* stage */
 .stage{
   position:fixed;left:50%;top:56%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
   z-index:60;
-  pointer-events:none; /* diamonds override */
+}
+.outer{
+  position:absolute;left:50%;top:50%;
+  width:min(680px,92vw);height:min(680px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;opacity:.62;pointer-events:none;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.42) 0%, rgba(7,11,18,.58) 70%);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.55),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+}
+.outer::after{
+  content:"";position:absolute;inset:0;border-radius:60px;opacity:.12;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
 }
 
-/* Diamonds */
+/* glossy diamond */
 .d{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
-  transform-origin:center;
-  border-radius:28px;
-  cursor:pointer;
-  pointer-events:auto;
-  touch-action:manipulation;
+  transform-origin:center;border-radius:28px;
+  cursor:pointer;pointer-events:auto;touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
-
   background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 48%),
-    radial-gradient(circle at 70% 78%, rgba(0,120,255,.25), transparent 60%),
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.30), transparent 60%),
     linear-gradient(160deg, var(--obsA), var(--obsB));
-
   border:1px solid rgba(255,255,255,.16);
   box-shadow:
     0 38px 120px rgba(0,0,0,.85),
-    0 0 32px rgba(212,175,55,.25),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -40px 72px rgba(0,0,0,.78);
-
-  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    0 0 32px rgba(212,175,55,.28),
+    inset 0 2px 0 rgba(255,255,255,.25),
+    inset 0 -42px 78px rgba(0,0,0,.80);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
   overflow:hidden;
 }
 .d::before{
-  content:"";
-  position:absolute;inset:0;border-radius:28px;padding:1px;
+  content:"";position:absolute;inset:0;border-radius:28px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.60;
+  opacity:.65;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
+  -webkit-mask-composite:xor;mask-composite:exclude;
   pointer-events:none;
 }
 .d::after{
-  content:"";
-  position:absolute;left:10%;right:10%;top:10%;height:28%;
+  content:"";position:absolute;left:10%;right:10%;top:10%;height:28%;
   border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  background:linear-gradient(to bottom, rgba(255,255,255,.25), rgba(255,255,255,0));
   transform:rotate(-10deg);
   pointer-events:none;
 }
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-  border-color:rgba(212,175,55,.28);
+  border-color:rgba(212,175,55,.35);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 44px rgba(212,175,55,.32),
+    inset 0 2px 0 rgba(255,255,255,.28),
+    inset 0 -46px 86px rgba(0,0,0,.84);
 }
-.d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
+.d:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
 
 .d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R)*-1)) rotate(45deg)}
 .d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
@@ -128,20 +138,14 @@ a{text-decoration:none;color:inherit}
 .d-w{transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg)}
 
 .inner{
-  transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;
-  height:100%;
-  padding:14px;
-  gap:8px;
-  pointer-events:none;
-  user-select:none;
+  transform:rotate(-45deg) translateY(-3px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;height:100%;padding:14px;gap:8px;
+  pointer-events:none;user-select:none;
 }
-.lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 18px rgba(255,255,255,.10)}
-.sub{font-size:13px;opacity:.86;line-height:1.25}
+.lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 16px rgba(255,255,255,.14)}
+.sub{font-size:13px;opacity:.88;line-height:1.25;max-width:18em}
 
-/* Core */
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -153,153 +157,83 @@ a{text-decoration:none;color:inherit}
   pointer-events:none;
 }
 
-/* Dock */
+/* dock */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:120;width:min(900px,94vw);
+  z-index:120;width:min(980px,94vw);
   display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
   padding:10px 12px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
+  background:rgba(0,0,0,.18);
   pointer-events:none;
 }
 .dock .btn{pointer-events:auto}
 
-/* Overlay */
-.bd{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,.70);
-  display:none;
-}
+/* overlay + modals */
+.bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);display:none}
 .bd.show{display:block}
-
-/* Modal */
-.modal{
-  position:fixed;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(1100px,96vw);
-  max-height:90vh;
-  z-index:210;
-  display:none;
-}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1180px,96vw);height:90vh;display:none;z-index:210}
 .modal.show{display:block}
+.shell{height:90vh;border-radius:22px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));overflow:hidden;display:flex;flex-direction:column}
+.mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
+.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
+.mbody{padding:16px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-.shell{
-  background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:24px;
-  box-shadow:0 60px 180px rgba(0,0,0,.85);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-}
-.mhead{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 16px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-.mtitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
-.mclose{
-  border:0;background:transparent;color:#fff;
-  font-size:20px;cursor:pointer;padding:6px 10px;
-}
-.mbody{
-  padding:14px 16px 18px;
-  overflow:auto;-webkit-overflow-scrolling:touch;
-}
-
-/* Domains grid */
-.gridNote{
-  max-width:980px;margin:0 auto 14px;
-  padding:12px 14px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
-  color:rgba(255,255,255,.86);
-  line-height:1.35;
-  font-size:13px;
-}
-.domGrid{
-  max-width:980px;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-@media (max-width:720px){ .domGrid{grid-template-columns:1fr;} }
-
-.domCard{
-  position:relative;
-  border-radius:20px;
-  border:1px solid rgba(255,255,255,.10);
+.hint{max-width:980px;margin:0 auto 12px;padding:10px 12px;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.16);color:rgba(255,255,255,.80);font-size:12.5px;line-height:1.45}
+.qgrid{display:grid;gap:14px;grid-template-columns:1fr}
+@media (min-width:760px){.qgrid{grid-template-columns:1fr 1fr}}
+.smallDiamond{
+  width:100%;height:140px;position:relative;border-radius:22px;
+  cursor:pointer;pointer-events:auto;touch-action:manipulation;
   background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.18), transparent 48%),
-    radial-gradient(circle at 70% 80%, rgba(0,120,255,.12), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
-  box-shadow:0 22px 72px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.06);
-  padding:22px 18px;
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.50), transparent 52%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.26), transparent 62%),
+    linear-gradient(160deg, rgba(14,24,40,.96), rgba(7,11,18,.98));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 22px 70px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.22), inset 0 -34px 60px rgba(0,0,0,.70);
+}
+.smallDiamond::before{
+  content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.sdInner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;pointer-events:none}
+.sdT{font-weight:950;letter-spacing:.25px}
+.sdS{font-size:12.5px;opacity:.82;margin-top:6px}
+
+.lensbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 14px}
+.pill{
+  padding:10px 14px;border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.pill.active{border-color:rgba(212,175,55,.60);box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.22)}
+
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(255,255,255,.05);
+  padding:14px 14px 12px;
+  margin:0 0 12px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 }
-.domCard::before{
-  content:"";
-  position:absolute;inset:0;border-radius:20px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.28) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.domTitle{font-weight:950;letter-spacing:.2px;font-size:22px;margin:0 0 6px 0}
-.domSub{margin:0;opacity:.82;font-size:13px}
+.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
+.bubble p{margin:0;color:var(--mut2);line-height:1.65;display:none}
+.bubble.open p{display:block}
 
-/* Narrative */
-.toggleRow{
-  max-width:980px;margin:0 auto 14px;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;
-}
-.pill{
-  padding:10px 16px;border-radius:999px;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.12);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  color:#fff;
-  user-select:none;
-}
-.pill.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:0 0 22px rgba(212,175,55,.18);
-}
-.banner{
-  max-width:980px;margin:0 auto 14px;
-  padding:12px 14px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
-  color:rgba(255,255,255,.86);
-  line-height:1.35;
-  font-size:13px;
-}
-.bubble{
-  max-width:980px;margin:0 auto 14px;
-  padding:18px 16px;border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.05);
-}
-.bubble h3{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
-.bubble p{margin:0;color:rgba(255,255,255,.86);line-height:1.55}
-.returnRow{
-  max-width:980px;margin:16px auto 0;
-  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
-}
-.sbtn{
-  padding:12px 18px;border-radius:14px;
-  background:linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  color:#fff;border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;
+@media (max-width:560px){
+  :root{--R:136px;--D:170px}
+  .stage{top:54%}
 }
 </style>
 </head>
@@ -308,583 +242,305 @@ a{text-decoration:none;color:inherit}
 
 <div class="top-left">
   <a class="btn" id="btnBack" href="/products/">BACK</a>
-  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
 </div>
 
 <div class="brand" aria-hidden="true">
-  <p class="k" id="hdrK">CARDINAL AXIS</p>
-  <h1 class="t" id="hdrT">Education</h1>
-  <p class="s" id="hdrS">Traversal learning · bilingual · 1001 words</p>
+  <div class="t" id="hdrT">Education</div>
+  <div class="s" id="hdrS">Programs · Language · Training · Certification</div>
 </div>
 
 <div class="stage" aria-label="Education quadrants">
-  <div class="d d-n" id="qPrograms" role="button" tabindex="0" aria-label="Programs">
-    <div class="inner">
-      <div class="lab" id="labPrograms">PROGRAMS</div>
-      <div class="sub" id="subPrograms">Tracks · outcomes · routines</div>
-    </div>
-  </div>
+  <div class="outer"></div>
 
-  <div class="d d-e" id="qLanguage" role="button" tabindex="0" aria-label="Language">
-    <div class="inner">
-      <div class="lab" id="labLanguage">LANGUAGE</div>
-      <div class="sub" id="subLanguage">1001 · 4 levels</div>
-    </div>
-  </div>
-
-  <div class="d d-s" id="qTraining" role="button" tabindex="0" aria-label="Training">
-    <div class="inner">
-      <div class="lab" id="labTraining">TRAINING</div>
-      <div class="sub" id="subTraining">Masterclasses · reps</div>
-    </div>
-  </div>
-
-  <div class="d d-w" id="qCertification" role="button" tabindex="0" aria-label="Certification">
-    <div class="inner">
-      <div class="lab" id="labCertification">CERTIFICATION</div>
-      <div class="sub" id="subCertification">Verification · tiers</div>
-    </div>
-  </div>
+  <div class="d d-n" id="qPrograms" role="button" tabindex="0"><div class="inner"><div class="lab" id="labN">PROGRAMS</div><div class="sub" id="subN">Tracks · outcomes · routines</div></div></div>
+  <div class="d d-e" id="qLanguage" role="button" tabindex="0"><div class="inner"><div class="lab" id="labE">LANGUAGE</div><div class="sub" id="subE">Core 1001 · practice</div></div></div>
+  <div class="d d-s" id="qTraining" role="button" tabindex="0"><div class="inner"><div class="lab" id="labS">TRAINING</div><div class="sub" id="subS">Masterclasses · reps</div></div></div>
+  <div class="d d-w" id="qCertification" role="button" tabindex="0"><div class="inner"><div class="lab" id="labW">CERTIFICATION</div><div class="sub" id="subW">Evidence · tiers</div></div></div>
 
   <div class="core">◆</div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="btn" id="dockHub" href="/home/">HUB</a>
-  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
 <div class="bd" id="bd"></div>
 
-<!-- MODAL A: DOMAINS -->
-<div class="modal" id="modalDomains" role="dialog" aria-modal="true">
+<!-- Quadrant Modal -->
+<div class="modal" id="quadModal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="domainsTitle">EDUCATION · PROGRAMS</h3>
-      <button class="mclose" id="domainsClose" aria-label="Close" type="button">✕</button>
+      <h3 class="mtitle" id="quadTitle">EDUCATION</h3>
+      <button class="mclose" id="quadClose" aria-label="Close" type="button">✕</button>
     </div>
     <div class="mbody">
-      <div class="gridNote" id="domainsNote">Tap a domain to enter its narrative. Return closes this layer.</div>
-      <div class="domGrid" id="domainsGrid"></div>
+      <div class="hint" id="quadHint">Tap a domain to read Concept / Live / Roadmap. Return closes this layer.</div>
+      <div class="qgrid" id="quadGrid"></div>
     </div>
   </div>
 </div>
 
-<!-- MODAL B: NARRATIVE -->
-<div class="modal" id="modalNarrative" role="dialog" aria-modal="true">
+<!-- Domain Modal -->
+<div class="modal" id="domainModal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="narTitle">EDUCATION · Domain</h3>
-      <button class="mclose" id="narClose" aria-label="Close" type="button">✕</button>
+      <h3 class="mtitle" id="domainTitle">EDUCATION · Domain</h3>
+      <button class="mclose" id="domainClose" aria-label="Close" type="button">✕</button>
     </div>
-    <div class="mbody" id="narBody">
-
-      <div class="toggleRow">
-        <div class="pill active" id="pillFormal">FORMAL</div>
-        <div class="pill" id="pillInformal">INFORMAL</div>
+    <div class="mbody">
+      <div class="lensbar">
+        <div class="pill active" id="toneFormal">FORMAL</div>
+        <div class="pill" id="toneInformal">INFORMAL</div>
       </div>
 
-      <div class="banner" id="bannerLine">Traversal-first learning: structure stays stable while depth expands.</div>
+      <div class="hint" id="domainHint">These narratives evolve by time (Concept → Live → Roadmap) and by tone (Formal vs Informal).</div>
 
-      <div class="bubble">
-        <h3 id="hConcept">Concept</h3>
-        <p id="tConcept">—</p>
-      </div>
-
-      <div class="bubble">
-        <h3 id="hLive">Live</h3>
-        <p id="tLive">—</p>
-      </div>
-
-      <div class="bubble">
-        <h3 id="hRoadmap">Roadmap</h3>
-        <p id="tRoadmap">—</p>
-      </div>
-
-      <div class="returnRow">
-        <button class="sbtn" id="btnReturnDomains" type="button">RETURN TO DOMAINS</button>
-        <button class="sbtn" id="btnReturnQuadrants" type="button">BACK TO QUADRANTS</button>
-      </div>
-
+      <div class="bubble" id="bConcept"><h4 id="hConcept">Concept</h4><p id="pConcept"></p></div>
+      <div class="bubble" id="bLive"><h4 id="hLive">Live</h4><p id="pLive"></p></div>
+      <div class="bubble" id="bRoadmap"><h4 id="hRoadmap">Roadmap</h4><p id="pRoadmap"></p></div>
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  // ===== State hydration (gd_* only) =====
-  var qs = new URLSearchParams(location.search);
+  // state
+  var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
   if(time==="trajectory") time="post";
-  if(lang!=="en" && lang!=="zh") lang="en";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  try{ localStorage.setItem("gd_lang",lang); localStorage.setItem("gd_style",style); localStorage.setItem("gd_time",time);}catch(e){}
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(){
     var p=new URLSearchParams();
-    p.set("lang",lang); p.set("style",style); p.set("time",time);
+    p.set("lang",lang); p.set("style",style); p.set("time",time); p.set("depth",depth);
     return "?"+p.toString();
   }
 
-  // links
+  // nav
   document.getElementById("btnBack").href="/products/"+q();
-  document.getElementById("btnExit").href="/door/"+q();
-  document.getElementById("dockTerminal").href="/index.html"+q();
-  document.getElementById("dockHub").href="/home/"+q();
+  document.getElementById("btnExit").href="/index.html"+q();
   document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockExplore").href="/explore/"+q();
   document.getElementById("dockLaws").href="/laws/"+q();
-  document.getElementById("dockLinks").href="/links/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
 
-  // ===== UI text (single-language render) =====
-  var TXT = {
+  // i18n (single-language)
+  var UI={
     en:{
-      hdr:{t:"Education", s:"Traversal learning · bilingual · 1001 words"},
-      q:{
-        programs:{lab:"PROGRAMS", sub:"Tracks · outcomes · routines"},
-        language:{lab:"LANGUAGE", sub:"1001 · 4 levels"},
-        training:{lab:"TRAINING", sub:"Masterclasses · reps"},
-        cert:{lab:"CERTIFICATION", sub:"Verification · tiers"}
-      },
-      modal:{
-        note:"Tap a domain to enter its narrative. Return closes this layer.",
-        banner:"Traversal-first learning: structure stays stable while depth expands.",
-        concept:"Concept", live:"Live", roadmap:"Roadmap",
-        formal:"FORMAL", informal:"INFORMAL"
-      },
-      domains:{
-        programs:[
-          {key:"curriculum", title:"Curriculum Map", sub:"Concept · Live · Roadmap"},
-          {key:"routines", title:"Daily Routines", sub:"Concept · Live · Roadmap"},
-          {key:"checkpoints", title:"Checkpoints", sub:"Concept · Live · Roadmap"},
-          {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
-        ],
-        language:[
-          {key:"core1001", title:"Core 1001", sub:"Concept · Live · Roadmap"},
-          {key:"levels", title:"Four Levels", sub:"Concept · Live · Roadmap"},
-          {key:"practice", title:"Practice Loops", sub:"Concept · Live · Roadmap"},
-          {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
-        ],
-        training:[
-          {key:"masterclass", title:"Masterclasses", sub:"Concept · Live · Roadmap"},
-          {key:"trainer", title:"Train the Trainer", sub:"Concept · Live · Roadmap"},
-          {key:"rubrics", title:"Rubrics", sub:"Concept · Live · Roadmap"},
-          {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
-        ],
-        cert:[
-          {key:"evidence", title:"Evidence-Based Verification", sub:"Concept · Live · Roadmap"},
-          {key:"tiers", title:"Tier System", sub:"Concept · Live · Roadmap"},
-          {key:"integrity", title:"Anti-Gaming Discipline", sub:"Concept · Live · Roadmap"},
-          {key:"return", title:"RETURN", sub:"Back to quadrants", action:"RETURN"}
-        ]
-      }
+      hdrT:"Education", hdrS:"Programs · Language · Training · Certification",
+      q:{N:["PROGRAMS","Tracks · outcomes · routines"],E:["LANGUAGE","Core 1001 · practice"],S:["TRAINING","Masterclasses · reps"],W:["CERTIFICATION","Evidence · tiers"]},
+      hintA:"Tap a domain to read Concept / Live / Roadmap. Return closes this layer.",
+      hintB:"These narratives evolve by time (Concept → Live → Roadmap) and by tone (Formal vs Informal).",
+      concept:"Concept", live:"Live", roadmap:"Roadmap", formal:"FORMAL", informal:"INFORMAL",
+      ret:"RETURN", dom:"Concept · Live · Roadmap"
     },
     zh:{
-      hdr:{t:"教育", s:"遍历学习 · 中英双语 · 1001词"},
-      q:{
-        programs:{lab:"课程体系", sub:"路径 · 成果 · 例程"},
-        language:{lab:"语言", sub:"1001 · 四级"},
-        training:{lab:"训练", sub:"大师课 · 反复练"},
-        cert:{lab:"认证", sub:"验证 · 分层"}
-      },
-      modal:{
-        note:"点选一个域进入叙事。返回将关闭本层。",
-        banner:"遍历优先：结构稳定，深度逐步扩展。",
-        concept:"概念", live:"上线", roadmap:"路线图",
-        formal:"正式", informal:"通俗"
-      },
-      domains:{
-        programs:[
-          {key:"curriculum", title:"课程地图", sub:"概念 · 上线 · 路线图"},
-          {key:"routines", title:"每日例程", sub:"概念 · 上线 · 路线图"},
-          {key:"checkpoints", title:"检查点", sub:"概念 · 上线 · 路线图"},
-          {key:"return", title:"返回", sub:"回到四象限", action:"RETURN"}
-        ],
-        language:[
-          {key:"core1001", title:"核心1001词", sub:"概念 · 上线 · 路线图"},
-          {key:"levels", title:"四级结构", sub:"概念 · 上线 · 路线图"},
-          {key:"practice", title:"练习循环", sub:"概念 · 上线 · 路线图"},
-          {key:"return", title:"返回", sub:"回到四象限", action:"RETURN"}
-        ],
-        training:[
-          {key:"masterclass", title:"大师课", sub:"概念 · 上线 · 路线图"},
-          {key:"trainer", title:"培训讲师", sub:"概念 · 上线 · 路线图"},
-          {key:"rubrics", title:"评分规", sub:"概念 · 上线 · 路线图"},
-          {key:"return", title:"返回", sub:"回到四象限", action:"RETURN"}
-        ],
-        cert:[
-          {key:"evidence", title:"基于证据的验证", sub:"概念 · 上线 · 路线图"},
-          {key:"tiers", title:"分层体系", sub:"概念 · 上线 · 路线图"},
-          {key:"integrity", title:"防作弊纪律", sub:"概念 · 上线 · 路线图"},
-          {key:"return", title:"返回", sub:"回到四象限", action:"RETURN"}
-        ]
-      }
+      hdrT:"教育", hdrS:"课程 · 语言 · 训练 · 认证",
+      q:{N:["课程体系","路径 · 成果 · 例程"],E:["语言","核心1001 · 练习"],S:["训练","大师课 · 反复练"],W:["认证","证据 · 分层"]},
+      hintA:"点选域阅读：概念 / 上线 / 路线图。返回会关闭本层。",
+      hintB:"内容随时间（概念→上线→路线图）与语气（正式/通俗）演进。",
+      concept:"概念", live:"上线", roadmap:"路线图", formal:"正式", informal:"通俗",
+      ret:"返回", dom:"概念 · 上线 · 路线图"
+    },
+    es:{
+      hdrT:"Educación", hdrS:"Programas · Lenguaje · Formación · Certificación",
+      q:{N:["PROGRAMAS","Rutas · resultados · rutinas"],E:["LENGUAJE","1001 · práctica"],S:["FORMACIÓN","Clases · repeticiones"],W:["CERTIFICACIÓN","Evidencia · niveles"]},
+      hintA:"Toca un dominio para leer Concepto / En vivo / Hoja de ruta. RETURN cierra esta capa.",
+      hintB:"El contenido evoluciona por tiempo (Concepto → En vivo → Hoja de ruta) y por tono (Formal vs Informal).",
+      concept:"Concepto", live:"En vivo", roadmap:"Hoja de ruta", formal:"FORMAL", informal:"INFORMAL",
+      ret:"RETURN", dom:"Concepto · En vivo · Hoja de ruta"
     }
   };
+  var T = (lang==="zh")?UI.zh:(lang==="es")?UI.es:UI.en;
+  document.getElementById("hdrT").textContent=T.hdrT;
+  document.getElementById("hdrS").textContent=T.hdrS;
+  document.getElementById("labN").textContent=T.q.N[0]; document.getElementById("subN").textContent=T.q.N[1];
+  document.getElementById("labE").textContent=T.q.E[0]; document.getElementById("subE").textContent=T.q.E[1];
+  document.getElementById("labS").textContent=T.q.S[0]; document.getElementById("subS").textContent=T.q.S[1];
+  document.getElementById("labW").textContent=T.q.W[0]; document.getElementById("subW").textContent=T.q.W[1];
+  document.getElementById("quadHint").textContent=T.hintA;
+  document.getElementById("domainHint").textContent=T.hintB;
+  document.getElementById("hConcept").textContent=T.concept;
+  document.getElementById("hLive").textContent=T.live;
+  document.getElementById("hRoadmap").textContent=T.roadmap;
+  document.getElementById("toneFormal").textContent=T.formal;
+  document.getElementById("toneInformal").textContent=T.informal;
 
-  var T = (lang==="zh") ? TXT.zh : TXT.en;
+  // model: 4 quadrants × 3 domains
+  var QUADS={
+    PROGRAMS:["Curriculum Map","Daily Routines","Checkpoints"],
+    LANGUAGE:["Core 1001","Four Levels","Practice Loops"],
+    TRAINING:["Masterclasses","Train the Trainer","Rubrics"],
+    CERTIFICATION:["Evidence Verification","Tier System","Integrity Discipline"]
+  };
 
-  document.getElementById("hdrT").textContent = T.hdr.t;
-  document.getElementById("hdrS").textContent = T.hdr.s;
+  // text generator (evolutive, not merged)
+  function textFor(domain, tone, phase){
+    // phase: concept/live/roadmap
+    // tone: formal/informal
+    var d = domain;
+    if(lang==="zh"){
+      var base={
+        "Curriculum Map":"课程地图","Daily Routines":"每日例程","Checkpoints":"检查点",
+        "Core 1001":"核心1001词","Four Levels":"四级结构","Practice Loops":"练习循环",
+        "Masterclasses":"大师课","Train the Trainer":"培训讲师","Rubrics":"评分规",
+        "Evidence Verification":"证据验证","Tier System":"分层体系","Integrity Discipline":"防作弊纪律"
+      }[d] || d;
+      if(tone==="formal"){
+        if(phase==="concept") return "【"+base+"】以可重复的结构表达学习目标：输入被约束，输出可核查，路径可返回。概念层强调：先定义，再训练，再验证，避免“学会了”的幻觉。";
+        if(phase==="live") return "【"+base+"】上线层强调可执行：每次练习都有边界、计时不作闸门、结果可复现。你看到的是可操作流程，而不是描述性文字。";
+        return "【"+base+"】路线图层强调扩展但不漂移：增加域包与双语一致性，同时保持同一套结构与评估规则，使规模化学习保持稳定。";
+      }else{
+        if(phase==="concept") return "【"+base+"】先把路画出来，你才不会学着学着迷路：知道学什么、怎么练、怎么算真的会。";
+        if(phase==="live") return "【"+base+"】现在就是“能用”：少废话，多练习；每一步都清楚，你做完就知道有没有进步。";
+        return "【"+base+"】以后会更大更爽：更多场景包、更多练习法，但你永远不会被改规则搞糊涂。";
+      }
+    }
+    if(lang==="es"){
+      if(tone==="formal"){
+        if(phase==="concept") return "["+d+"] define una estructura repetible: entradas acotadas, salidas verificables y retorno estable. Concepto: definir → practicar → verificar, sin deriva semántica.";
+        if(phase==="live") return "["+d+"] opera con ejecución: rutinas cortas, criterios claros y resultados reproducibles. Lo importante es lo medible, no la narrativa.";
+        return "["+d+"] escala sin cambiar reglas: más dominios y bilingüismo consistente, manteniendo la misma arquitectura y evaluación.";
+      }else{
+        if(phase==="concept") return "["+d+"] es el mapa para no perderte: sabes qué aprender, cómo practicar y cómo comprobarlo.";
+        if(phase==="live") return "["+d+"] es “útil hoy”: menos charla, más repeticiones; sales con una mejora real.";
+        return "["+d+"] luego crece sin volverse confuso: más packs, misma estructura, misma claridad.";
+      }
+    }
+    // en
+    if(tone==="formal"){
+      if(phase==="concept") return "["+d+"] defines a repeatable structure: bounded inputs, verifiable outputs, and stable return paths. Concept emphasizes define → practice → verify to prevent drift.";
+      if(phase==="live") return "["+d+"] runs as execution: short routines, clear checkpoints, and reproducible results. Live emphasizes what is measurable, not what is promised.";
+      return "["+d+"] scales without changing the contract: more domains and bilingual parity while preserving the same structure and evaluation rules.";
+    }else{
+      if(phase==="concept") return "["+d+"] is the map so you don’t get lost: what to learn, how to practice, and how to know it’s real.";
+      if(phase==="live") return "["+d+"] is usable today: fewer words, more reps, and you can feel the improvement quickly.";
+      return "["+d+"] grows without confusion: more packs, same structure, same clarity, no moving goalposts.";
+    }
+  }
 
-  document.getElementById("labPrograms").textContent = T.q.programs.lab;
-  document.getElementById("subPrograms").textContent = T.q.programs.sub;
-  document.getElementById("labLanguage").textContent = T.q.language.lab;
-  document.getElementById("subLanguage").textContent = T.q.language.sub;
-  document.getElementById("labTraining").textContent = T.q.training.lab;
-  document.getElementById("subTraining").textContent = T.q.training.sub;
-  document.getElementById("labCertification").textContent = T.q.cert.lab;
-  document.getElementById("subCertification").textContent = T.q.cert.sub;
-
-  document.getElementById("domainsNote").textContent = T.modal.note;
-  document.getElementById("bannerLine").textContent = T.modal.banner;
-
-  document.getElementById("hConcept").textContent = T.modal.concept;
-  document.getElementById("hLive").textContent = T.modal.live;
-  document.getElementById("hRoadmap").textContent = T.modal.roadmap;
-
-  document.getElementById("pillFormal").textContent = T.modal.formal;
-  document.getElementById("pillInformal").textContent = T.modal.informal;
-
-  // ===== refs =====
+  // refs
   var bd=document.getElementById("bd");
+  var quadModal=document.getElementById("quadModal");
+  var domainModal=document.getElementById("domainModal");
+  var quadClose=document.getElementById("quadClose");
+  var domainClose=document.getElementById("domainClose");
+  var quadTitle=document.getElementById("quadTitle");
+  var quadGrid=document.getElementById("quadGrid");
+  var domainTitle=document.getElementById("domainTitle");
+  var toneFormal=document.getElementById("toneFormal");
+  var toneInformal=document.getElementById("toneInformal");
+  var bConcept=document.getElementById("bConcept");
+  var bLive=document.getElementById("bLive");
+  var bRoadmap=document.getElementById("bRoadmap");
+  var pConcept=document.getElementById("pConcept");
+  var pLive=document.getElementById("pLive");
+  var pRoadmap=document.getElementById("pRoadmap");
 
-  var modalDomains=document.getElementById("modalDomains");
-  var domainsClose=document.getElementById("domainsClose");
-  var domainsTitle=document.getElementById("domainsTitle");
-  var domainsGrid=document.getElementById("domainsGrid");
+  var currentQuad=null;
+  var currentDomain=null;
+  var tone="formal";
 
-  var modalNarr=document.getElementById("modalNarrative");
-  var narClose=document.getElementById("narClose");
-  var narTitle=document.getElementById("narTitle");
-  var tConcept=document.getElementById("tConcept");
-  var tLive=document.getElementById("tLive");
-  var tRoadmap=document.getElementById("tRoadmap");
+  function showBD(){bd.classList.add("show")}
+  function hideBD(){bd.classList.remove("show")}
+  function closeAll(){quadModal.classList.remove("show");domainModal.classList.remove("show");hideBD()}
 
-  var pillFormal=document.getElementById("pillFormal");
-  var pillInformal=document.getElementById("pillInformal");
-
-  var btnReturnDomains=document.getElementById("btnReturnDomains");
-  var btnReturnQuadrants=document.getElementById("btnReturnQuadrants");
-
-  var state = { quadrant:"PROGRAMS", domain:null, voice:"formal" };
-
-  function showOverlay(){ bd.classList.add("show"); }
-  function hideOverlay(){ bd.classList.remove("show"); }
-  function showDomains(){
-    showOverlay();
-    modalNarr.classList.remove("show");
-    modalDomains.classList.add("show");
-  }
-  function showNarrative(){
-    showOverlay();
-    modalDomains.classList.remove("show");
-    modalNarr.classList.add("show");
-  }
-  function closeAll(){
-    modalDomains.classList.remove("show");
-    modalNarr.classList.remove("show");
-    hideOverlay();
-  }
-
-  function quadrantTitle(){
-    if(state.quadrant==="PROGRAMS") return (lang==="zh")?"教育 · 课程体系":"EDUCATION · PROGRAMS";
-    if(state.quadrant==="LANGUAGE") return (lang==="zh")?"教育 · 语言":"EDUCATION · LANGUAGE";
-    if(state.quadrant==="TRAINING") return (lang==="zh")?"教育 · 训练":"EDUCATION · TRAINING";
-    return (lang==="zh")?"教育 · 认证":"EDUCATION · CERTIFICATION";
-  }
-
-  function getDomainsForQuadrant(){
-    if(state.quadrant==="PROGRAMS") return T.domains.programs;
-    if(state.quadrant==="LANGUAGE") return T.domains.language;
-    if(state.quadrant==="TRAINING") return T.domains.training;
-    return T.domains.cert;
-  }
-
-  function narrativeLabel(key){
-    var enMap={
-      curriculum:"Curriculum Map", routines:"Daily Routines", checkpoints:"Checkpoints",
-      core1001:"Core 1001", levels:"Four Levels", practice:"Practice Loops",
-      masterclass:"Masterclasses", trainer:"Train the Trainer", rubrics:"Rubrics",
-      evidence:"Evidence-Based Verification", tiers:"Tier System", integrity:"Anti-Gaming Discipline"
-    };
-    var zhMap={
-      curriculum:"课程地图", routines:"每日例程", checkpoints:"检查点",
-      core1001:"核心1001词", levels:"四级结构", practice:"练习循环",
-      masterclass:"大师课", trainer:"培训讲师", rubrics:"评分规",
-      evidence:"基于证据的验证", tiers:"分层体系", integrity:"防作弊纪律"
-    };
-    return (lang==="zh") ? (zhMap[key]||"域") : (enMap[key]||"Domain");
-  }
-
-  function narrativePack(key, voice){
-    var inf = (voice==="informal");
-    var P = {
-      curriculum:{
-        formal:{
-          concept:"The curriculum is a navigable map, not a linear textbook. Each node is defined by an outcome and a checkpoint. Structure stays stable while content expands.",
-          live:"Live operation emphasizes repeatable routines, measurable checkpoints, and predictable returns. Learners enter at need, practice, and return without losing context.",
-          roadmap:"Roadmap expands the map into domain tracks with consistent labels, bilingual parity, and exportable study bundles. The topology remains unchanged."
-        },
-        informal:{
-          concept:"Think of it like a city map for learning. You don’t walk every street in order—you go where you need, then you come back smarter.",
-          live:"Right now, the map stays steady while you explore. Tap what you need, practice it fast, and keep your momentum without getting lost.",
-          roadmap:"Next, the map becomes a full adventure: more tracks, more practice packs, and more real-world missions—same structure, deeper results."
-        }
-      },
-      routines:{
-        formal:{
-          concept:"Daily routines convert knowledge into skill through repetition under a stable structure. The objective is retention and execution, not memorization.",
-          live:"Live routines are short, bounded, and trackable. Each routine ties to a node, and each node ties to a measurable checkpoint.",
-          roadmap:"Roadmap adds adaptive scheduling and printable drill packs while preserving the same navigation contract and language parity."
-        },
-        informal:{
-          concept:"This is the part where progress becomes real. A small routine you actually do beats a big plan you never run.",
-          live:"You can run these drills daily like a gym. A few clean reps, a quick win, and you keep moving.",
-          roadmap:"Soon you’ll have routine packs for any goal—speaking, writing, confidence—delivered in the same clean, tap-first flow."
-        }
-      },
-      checkpoints:{
-        formal:{
-          concept:"Checkpoints are evidence gates. They prevent drift by verifying outputs instead of trusting intention. Completion is defined by observable performance.",
-          live:"Live checkpoints are lightweight but strict: pass/fail thresholds, clear retry loops, and consistent measurement language across EN/中文.",
-          roadmap:"Roadmap adds tiering and optional certification pathways while maintaining neutrality and auditability."
-        },
-        informal:{
-          concept:"Checkpoints keep it honest. They stop you from thinking you learned something when you only read it once.",
-          live:"You’ll know exactly what ‘done’ means. Pass it, and move on. Miss it, and you get a clean path to fix it.",
-          roadmap:"Later, checkpoints can turn into badges if you want—without turning the system into a credential circus."
-        }
-      },
-
-      core1001:{
-        formal:{
-          concept:"Clean English Core is a constrained vocabulary system designed for fast functional output. The core set is stable and the delivery is traversal-first.",
-          live:"Live usage focuses on high-frequency utility: immediate conversation, comprehension, and daily practice loops supported by bilingual mapping.",
-          roadmap:"Roadmap extends the core with overlays and domain packs while preserving the 1001 anchor for consistency and portability."
-        },
-        informal:{
-          concept:"1001 words is the cheat code for momentum. Small, powerful, and practical—so you can actually start talking.",
-          live:"You can use it today: learn a slice, speak it, and build confidence fast—中文支持 keeps you oriented.",
-          roadmap:"Next, you get overlays for real life: work, sales, travel—without breaking the core that makes it simple."
-        }
-      },
-      levels:{
-        formal:{
-          concept:"Four levels partition the 1001 set into mastery bands. Each band has defined outcomes and checkpoints and remains stable across translations.",
-          live:"Live progression is non-linear: learners may traverse categories within a level and return as needed. Structure prevents confusion while allowing freedom.",
-          roadmap:"Roadmap adds placement diagnostics and expansion packs while keeping the four-level backbone unchanged."
-        },
-        informal:{
-          concept:"Four levels means you always know where you are. It’s like climbing clean steps instead of wandering in fog.",
-          live:"You can jump around inside a level and still feel organized. That’s the whole point: freedom without chaos.",
-          roadmap:"Later, you’ll get smart placement and extra packs, but the ladder stays the same so you never lose your footing."
-        }
-      },
-      practice:{
-        formal:{
-          concept:"Practice loops are short execution cycles that convert vocabulary into automatic output. The loop is structured, repeatable, and measurable.",
-          live:"Live loops prioritize speaking, listening, and recall under time bounds. The goal is high retention with low friction.",
-          roadmap:"Roadmap expands loops into guided routines with optional audio prompts and printable practice cards."
-        },
-        informal:{
-          concept:"This is where the language becomes yours. You don’t ‘study’ it—you run it until it’s automatic.",
-          live:"Short loops, fast wins. You practice like an athlete, not like you’re taking notes for a test.",
-          roadmap:"Next you’ll have audio prompts and cards that make practice feel like a game—still disciplined, still real."
-        }
-      },
-
-      masterclass:{
-        formal:{
-          concept:"Masterclasses train traversal literacy: how to navigate maps, switch lenses, and build repeatable learning habits without drift.",
-          live:"Live delivery uses modules, drills, and checkpoints tied to the same platform structure. Facilitators remain aligned via rubrics.",
-          roadmap:"Roadmap scales via train-the-trainer kits and bilingual facilitator materials while maintaining the same contract."
-        },
-        informal:{
-          concept:"Masterclasses teach the method—not just the content. You learn how to learn, fast.",
-          live:"Workshops feel like a lab: you practice, get feedback, and leave with a clean routine you can run.",
-          roadmap:"Next, we package the whole thing so trusted teachers can multiply the impact without watering it down."
-        }
-      },
-      trainer:{
-        formal:{
-          concept:"Training instructors is a scaling strategy: it reduces drift and multiplies reach while maintaining observer-invariant evaluation standards.",
-          live:"Live train-the-trainer uses rubrics, evidence requirements, and repeatable delivery scripts to preserve meaning.",
-          roadmap:"Roadmap adds tiered instructor levels and audit-ready logs where certification is appropriate."
-        },
-        informal:{
-          concept:"If you want this to spread safely, you train the trainers. That’s how you scale without chaos.",
-          live:"We give teachers a playbook that actually works: simple structure, clear drills, and honest checkpoints.",
-          roadmap:"Then you build tiers—so the best teachers can lead, and the system stays clean as it grows."
-        }
-      },
-      rubrics:{
-        formal:{
-          concept:"Rubrics define observer-invariant scoring. They prevent intent-based interpretation and keep evaluation tied to outputs and evidence.",
-          live:"Live rubrics are used to score performance consistently across facilitators, languages, and cohorts.",
-          roadmap:"Roadmap integrates rubrics into registries and optional verification layers while preserving neutrality."
-        },
-        informal:{
-          concept:"Rubrics stop the drama. They make scoring about what happened, not what someone ‘meant.’",
-          live:"That means any teacher can grade the same output the same way—EN or 中文—no guessing.",
-          roadmap:"Later, rubrics plug into verification if you want, but the heart stays simple: show the output, earn the result."
-        }
-      },
-
-      evidence:{
-        formal:{
-          concept:"Verification is evidence-based: completion is tied to receipts and observed outputs, not self-report or credential branding.",
-          live:"Live verification supports lookupable status and clear reason codes, while separating builders from issuers to reduce capture risk.",
-          roadmap:"Roadmap expands into tiered verification and registry integration while maintaining the same structural constraints."
-        },
-        informal:{
-          concept:"We verify what’s real. Not vibes. Not resumes. Outputs.",
-          live:"If you did the work, you can prove it cleanly. If you didn’t, the system won’t pretend you did.",
-          roadmap:"Later, verification becomes more powerful—still honest, still bounded—because trust scales when proof scales."
-        }
-      },
-      tiers:{
-        formal:{
-          concept:"Tiering organizes capability into bounded levels. Each tier has defined requirements, evidence, and renewal rules when applicable.",
-          live:"Live tiers remain neutral and output-based. They are designed to prevent gaming and to support safe scaling.",
-          roadmap:"Roadmap adds cross-domain tier mapping while preserving the same admissibility discipline."
-        },
-        informal:{
-          concept:"Tiers make progress visible. You can see your level, and you know what ‘next’ means.",
-          live:"You climb by proving it, not by pretending. That keeps the culture clean.",
-          roadmap:"Later, tiers connect across tracks—language, method, leadership—without turning into bureaucracy."
-        }
-      },
-      integrity:{
-        formal:{
-          concept:"Anti-gaming discipline prevents credential inflation. It requires evidence, defines disproof conditions, and logs exceptions explicitly.",
-          live:"Live integrity controls enforce separation of roles, audit logs, and deterministic rules for validity windows and revocation.",
-          roadmap:"Roadmap strengthens public-safe transparency while maintaining user privacy boundaries and scope control."
-        },
-        informal:{
-          concept:"If a system can be gamed, it’s broken. So we build it to resist shortcuts.",
-          live:"That means clear rules, clear logs, and no secret exceptions. Trust stays high because cheating stays expensive.",
-          roadmap:"Later, integrity becomes the platform’s superpower: people adopt what stays honest under pressure."
-        }
-      }
-    };
-
-    var node = P[key];
-    if(!node){
-      return {
-        concept:(lang==="zh")?"该域内容待补充。":"This domain is not populated yet.",
-        live:(lang==="zh")?"该域内容待补充。":"This domain is not populated yet.",
-        roadmap:(lang==="zh")?"该域内容待补充。":"This domain is not populated yet."
-      };
-    }
-    return (voice==="informal") ? node.informal : node.formal;
-  }
-
-  function showOverlay(){ bd.classList.add("show"); }
-  function hideOverlay(){ bd.classList.remove("show"); }
-  function showDomains(){
-    showOverlay();
-    modalNarr.classList.remove("show");
-    modalDomains.classList.add("show");
-  }
-  function showNarrative(){
-    showOverlay();
-    modalDomains.classList.remove("show");
-    modalNarr.classList.add("show");
-  }
-  function closeAll(){
-    modalDomains.classList.remove("show");
-    modalNarr.classList.remove("show");
-    hideOverlay();
-  }
-
-  function renderDomains(){
-    domainsTitle.textContent = quadrantTitle();
-    domainsGrid.innerHTML = "";
-
-    var items = getDomainsForQuadrant();
-    items.forEach(function(it){
-      var card=document.createElement("div");
-      card.className="domCard";
-      card.setAttribute("role","button");
-      card.setAttribute("tabindex","0");
-
-      var h=document.createElement("div");
-      h.className="domTitle";
-      h.textContent=it.title;
-
-      var s=document.createElement("div");
-      s.className="domSub";
-      s.textContent=it.sub;
-
-      card.appendChild(h);
-      card.appendChild(s);
-
-      function act(){
-        if(it.action==="RETURN"){ closeAll(); return; }
-        state.domain = it.key;
-        renderNarrative();
-        showNarrative();
-      }
-      card.addEventListener("click", act);
-      card.addEventListener("keydown", function(e){
-        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-      });
-
-      domainsGrid.appendChild(card);
+  function openQuad(qname){
+    currentQuad=qname;
+    quadTitle.textContent = (lang==="zh") ? ("教育 · "+T.q[qname==="PROGRAMS"?"N":qname==="LANGUAGE"?"E":qname==="TRAINING"?"S":"W"][0])
+                    : (lang==="es") ? ("EDUCACIÓN · "+qname)
+                    : ("EDUCATION · "+qname);
+    quadGrid.innerHTML="";
+    var domains=QUADS[qname]||[];
+    domains.forEach(function(d){
+      var tile=document.createElement("div");
+      tile.className="smallDiamond";
+      tile.setAttribute("role","button");
+      tile.tabIndex=0;
+      tile.innerHTML='<div class="sdInner"><div class="sdT">'+d+'</div><div class="sdS">'+T.dom+'</div></div>';
+      function act(){ openDomain(d); }
+      tile.addEventListener("click", act);
+      tile.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+      quadGrid.appendChild(tile);
     });
+
+    var ret=document.createElement("div");
+    ret.className="smallDiamond";
+    ret.setAttribute("role","button");
+    ret.tabIndex=0;
+    ret.innerHTML='<div class="sdInner"><div class="sdT">'+T.ret+'</div><div class="sdS">—</div></div>';
+    function r(){ closeAll(); }
+    ret.addEventListener("click", r);
+    ret.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); r(); }});
+    quadGrid.appendChild(ret);
+
+    showBD(); quadModal.classList.add("show");
+    domainModal.classList.remove("show");
   }
 
-  function renderNarrative(){
-    narTitle.textContent = (lang==="zh") ? ("教育 · " + narrativeLabel(state.domain)) : ("EDUCATION · " + narrativeLabel(state.domain));
-    pillFormal.classList.toggle("active", state.voice==="formal");
-    pillInformal.classList.toggle("active", state.voice==="informal");
-
-    var pack = narrativePack(state.domain, state.voice);
-    tConcept.textContent = pack.concept;
-    tLive.textContent = pack.live;
-    tRoadmap.textContent = pack.roadmap;
+  function openDomain(dname){
+    currentDomain=dname;
+    domainTitle.textContent = (lang==="zh") ? ("教育 · "+dname) : (lang==="es") ? ("EDUCACIÓN · "+dname) : ("EDUCATION · "+dname);
+    // reset bubbles
+    [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
+    applyTone(tone);
+    quadModal.classList.remove("show");
+    showBD(); domainModal.classList.add("show");
   }
 
-  function bindQuad(id, quad){
-    var el=document.getElementById(id);
-    if(!el) return;
-    function open(){
-      state.quadrant = quad;
-      state.domain = null;
-      renderDomains();
-      showDomains();
-    }
-    el.addEventListener("click", open);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(); }
-    });
+  function applyTone(t){
+    tone=t;
+    toneFormal.classList.toggle("active", tone==="formal");
+    toneInformal.classList.toggle("active", tone==="informal");
+    pConcept.textContent = textFor(currentDomain, tone, "concept");
+    pLive.textContent    = textFor(currentDomain, tone, "live");
+    pRoadmap.textContent = textFor(currentDomain, tone, "roadmap");
+  }
+
+  function bindBubble(box){
+    box.tabIndex=0; box.setAttribute("role","button");
+    box.addEventListener("click", function(){ box.classList.toggle("open"); });
+    box.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); box.classList.toggle("open"); }});
+  }
+  bindBubble(bConcept); bindBubble(bLive); bindBubble(bRoadmap);
+
+  // close wiring
+  quadClose.addEventListener("click", closeAll);
+  domainClose.addEventListener("click", closeAll);
+  bd.addEventListener("click", closeAll);
+  quadModal.addEventListener("click", function(e){ e.stopPropagation(); });
+  domainModal.addEventListener("click", function(e){ e.stopPropagation(); });
+
+  toneFormal.addEventListener("click", function(){ applyTone("formal"); });
+  toneInformal.addEventListener("click", function(){ applyTone("informal"); });
+
+  function bindQuad(elId, quad){
+    var el=document.getElementById(elId);
+    function act(){ openQuad(quad); }
+    el.addEventListener("click", act);
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
   }
   bindQuad("qPrograms","PROGRAMS");
   bindQuad("qLanguage","LANGUAGE");
   bindQuad("qTraining","TRAINING");
-  bindQuad("qCertification","CERT");
-
-  // close wiring
-  domainsClose.addEventListener("click", closeAll);
-  narClose.addEventListener("click", showDomains);
-  bd.addEventListener("click", closeAll);
-  modalDomains.addEventListener("click", function(e){ e.stopPropagation(); });
-  modalNarr.addEventListener("click", function(e){ e.stopPropagation(); });
-
-  // voice toggle
-  pillFormal.addEventListener("click", function(){ state.voice="formal"; renderNarrative(); });
-  pillInformal.addEventListener("click", function(){ state.voice="informal"; renderNarrative(); });
-
-  // returns
-  btnReturnDomains.addEventListener("click", showDomains);
-  btnReturnQuadrants.addEventListener("click", closeAll);
+  bindQuad("qCertification","CERTIFICATION");
 
 })();
 </script>

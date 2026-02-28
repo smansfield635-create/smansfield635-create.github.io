@@ -1,18 +1,17 @@
-/* TNT — /assets/i18n_canon.json  (i18n_canon_v1.1 · EN/中文)
+/* TNT — /assets/i18n_canon.json  (i18n_canon_v1.2 · EN / 中文 / ES)
    LOCKS:
-   - Canonical langs: ["en","zh"]
+   - Canonical langs: ["en","zh","es"]
    - Primary: "en"
-   - Symbols listed in meta.invariant_symbols are treated as invariant labels.
-   PATCH:
-   - Home subtitle upgraded from hexagonal wording to OCTAGONAL PROCESSOR wording (matches current direction).
+   - Symbols listed in meta.invariant_symbols are invariant labels.
 */
 {
   "meta": {
-    "id": "i18n_canon_v1.1",
-    "canon_langs": ["en", "zh"],
+    "id": "i18n_canon_v1.2",
+    "canon_langs": ["en", "zh", "es"],
     "primary_lang": "en",
     "invariant_symbols": ["DIAMOND", "CARES", "UCI", "HIP", "ρ", "TC", "Δ", "λ", "CERT"]
   },
+
   "en": {
     "global": {
       "brand": "GEODIAMETRICS"
@@ -29,14 +28,15 @@
     },
     "axes": {
       "nucleus": { "title": "DIAMOND", "kicker": "Nucleus" },
-      "rho": { "title": "ρ", "kicker": "Correlation" },
-      "tc": { "title": "TC", "kicker": "Alignment" },
-      "delta": { "title": "Δ", "kicker": "Acceleration" },
-      "hip": { "title": "HIP", "kicker": "Gates" },
-      "lambda": { "title": "λ", "kicker": "Hazard" },
-      "cert": { "title": "CERT", "kicker": "Authority" }
+      "rho":     { "title": "ρ", "kicker": "Correlation" },
+      "tc":      { "title": "TC", "kicker": "Alignment" },
+      "delta":   { "title": "Δ", "kicker": "Acceleration" },
+      "hip":     { "title": "HIP", "kicker": "Gates" },
+      "lambda":  { "title": "λ", "kicker": "Hazard" },
+      "cert":    { "title": "CERT", "kicker": "Authority" }
     }
   },
+
   "zh": {
     "global": {
       "brand": "GEODIAMETRICS"
@@ -53,12 +53,37 @@
     },
     "axes": {
       "nucleus": { "title": "DIAMOND", "kicker": "核心" },
-      "rho": { "title": "ρ", "kicker": "相关暴露" },
-      "tc": { "title": "TC", "kicker": "轨迹一致" },
-      "delta": { "title": "Δ", "kicker": "加速度" },
-      "hip": { "title": "HIP", "kicker": "闸门" },
-      "lambda": { "title": "λ", "kicker": "风险" },
-      "cert": { "title": "CERT", "kicker": "认证" }
+      "rho":     { "title": "ρ", "kicker": "相关暴露" },
+      "tc":      { "title": "TC", "kicker": "轨迹一致" },
+      "delta":   { "title": "Δ", "kicker": "加速度" },
+      "hip":     { "title": "HIP", "kicker": "闸门" },
+      "lambda":  { "title": "λ", "kicker": "风险" },
+      "cert":    { "title": "CERT", "kicker": "认证" }
+    }
+  },
+
+  "es": {
+    "global": {
+      "brand": "GEODIAMETRICS"
+    },
+    "index": {
+      "title": "DIAMOND",
+      "subtitle": "Elige tu alcance.",
+      "enter": "ENTRAR",
+      "footnote": "El alcance controla idioma, profundidad, estilo y tiempo."
+    },
+    "home": {
+      "title": "COMPASS",
+      "subtitle": "Geometría de Procesador Octagonal"
+    },
+    "axes": {
+      "nucleus": { "title": "DIAMOND", "kicker": "Núcleo" },
+      "rho":     { "title": "ρ", "kicker": "Correlación" },
+      "tc":      { "title": "TC", "kicker": "Alineación" },
+      "delta":   { "title": "Δ", "kicker": "Aceleración" },
+      "hip":     { "title": "HIP", "kicker": "Compuertas" },
+      "lambda":  { "title": "λ", "kicker": "Riesgo" },
+      "cert":    { "title": "CERT", "kicker": "Autoridad" }
     }
   }
 }

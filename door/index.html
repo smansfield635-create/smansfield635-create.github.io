@@ -1,12 +1,9 @@
 <!-- TNT — /door/index.html
-     DOOR → PRELUDE (LAUNCHPAD)
-     RULES:
-       - DOOR does NOT go to HOME anymore.
-       - ENTER SITE → /prelude/?view=enter
-       - VIEW SITE MAP → /prelude/?view=map
-       - No competing UI. No banners. No footer under diamonds.
-       - Pearlescent black gems.
-       - Top bar never wraps.
+     DOOR ALIAS → ROOT
+     PURPOSE:
+       - Keep cogrid.net/ as the canonical Door
+       - Make /door/ work for old links without duplicating UI
+       - Preserve lang/style/time/depth (query + localStorage)
 -->
 
 <!doctype html>
@@ -14,227 +11,49 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOOR</title>
+<title>Door</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=1001"/>
-<link rel="stylesheet" href="/assets/branch.css?v=1001"/>
-<script defer src="/assets/instruments.js?v=1001"></script>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
-a{color:inherit;text-decoration:none}
-
-/* Force ui.css overlays behind door UI */
-html,body{position:relative}
-body{z-index:0}
-body::before, body::after{z-index:-1 !important; pointer-events:none !important;}
-#doorRoot{position:relative; z-index:10}
-
-/* Tokens */
-:root{
-  --D: clamp(190px, 28vh, 270px);
-  --R: calc(var(--D) * 0.72);
-  --stageShift: 64px;
-
-  --deepA:#0f1624;
-  --deepB:#070c14;
-
-  --goldGlow: rgba(212,175,55,.55);
-  --violet: rgba(165,120,255,.82);
-  --cyan: rgba(110,230,255,.66);
+/* ui.css owns field */
+.wrap{
+  width:min(820px,92vw);
+  margin:0 auto;
+  padding:22px 0;
 }
-
-/* Top bar (no wrap) */
-.top{
-  position:fixed;
-  top:16px;
-  left:0; right:0;
-  padding:0 16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  z-index:300;
-  pointer-events:none;
+.card{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  background:rgba(0,0,0,.16);
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:16px 16px;
 }
-.top-left,.top-right{
-  display:flex;
-  gap:12px;
-  flex-wrap:nowrap;
-  white-space:nowrap;
-  pointer-events:auto;
-}
-.top .btn{white-space:nowrap}
-@media (max-width:420px){
-  .top{padding:0 12px}
-  .top-left,.top-right{gap:10px}
-  .top .btn{padding:9px 14px}
-}
-
-/* Stage */
-.stage{
-  position:fixed;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%) translateY(var(--stageShift));
-  width:min(760px,94vw);
-  height:min(760px,94vw);
-  pointer-events:none;
-  z-index:240;
-}
-
-/* Pearlescent gem */
-.diamond{
-  position:absolute;
-  width:var(--D);
-  height:var(--D);
-  left:50%;
-  top:50%;
-  transform-origin:center;
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:40px;
-  pointer-events:auto;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-
-  background:
-    radial-gradient(circle at 20% 15%, rgba(255,255,255,.20) 0%, transparent 45%),
-    radial-gradient(circle at 78% 26%, var(--violet) 0%, transparent 62%),
-    radial-gradient(circle at 62% 86%, var(--cyan) 0%, transparent 76%),
-    radial-gradient(circle at 46% 48%, rgba(255,255,255,.10) 0%, transparent 66%),
-    linear-gradient(165deg, var(--deepA) 0%, var(--deepB) 60%, #04060a 100%);
-
-  border:1px solid rgba(255,255,255,.55);
-
-  box-shadow:
-    0 120px 240px rgba(0,0,0,.92),
-    0 0 150px var(--goldGlow),
-    inset 0 4px 0 rgba(255,255,255,.55),
-    inset 0 -120px 180px rgba(0,0,0,.98);
-
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-  overflow:hidden;
-}
-
-/* Rim */
-.diamond::before{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  border-radius:42px;
-  background:
-    linear-gradient(120deg,
-      rgba(255,255,255,.10) 0%,
-      rgba(255,255,255,.55) 18%,
-      rgba(212,175,55,.45) 38%,
-      rgba(255,255,255,.08) 60%,
-      rgba(255,255,255,.45) 82%,
-      rgba(255,255,255,.08) 100%);
-  opacity:.58;
-  pointer-events:none;
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  padding:2px;
-}
-
-/* Specular sweep */
-.diamond::after{
-  content:"";
-  position:absolute;
-  left:-18%;
-  top:-22%;
-  width:150%;
-  height:70%;
-  transform:rotate(-12deg);
-  background:
-    radial-gradient(circle at 32% 60%, rgba(255,255,255,.55), rgba(255,255,255,0) 62%),
-    linear-gradient(to bottom, rgba(255,255,255,.30), rgba(255,255,255,0));
-  opacity:.52;
-  pointer-events:none;
-}
-
-.diamond:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
-  border-color:rgba(255,255,255,.72);
-  box-shadow:
-    0 140px 280px rgba(0,0,0,.96),
-    0 0 200px rgba(212,175,55,.72),
-    inset 0 4px 0 rgba(255,255,255,.70),
-    inset 0 -120px 180px rgba(0,0,0,.98);
-}
-.diamond:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
-
-/* Placement */
-.topDiamond{transform:translate(-50%,-50%) translate(0,calc(var(--R) * -1)) rotate(45deg)}
-.bottomDiamond{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
-
-/* Inner */
-.inner{
-  transform:rotate(-45deg);
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:22px;
-  user-select:none;
-  pointer-events:none;
-}
-.lab{
-  font-size:clamp(18px, 2.3vh, 22px);
-  font-weight:950;
-  letter-spacing:1px;
-  text-shadow:0 10px 40px rgba(0,0,0,.65);
-}
-.sub{
-  margin-top:10px;
-  font-size:clamp(12.5px, 1.8vh, 15px);
-  opacity:.95;
-  line-height:1.35;
-  text-shadow:0 10px 40px rgba(0,0,0,.65);
-}
-.pref{font-weight:950;font-style:italic}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.75}
+.t{margin:0;font-weight:950;letter-spacing:.6px;font-size:18px}
+.p{margin:10px 0 0;color:rgba(255,255,255,.82);line-height:1.5;font-size:13px}
 </style>
 </head>
 
 <body>
-<div id="doorRoot">
-
-  <div class="top" aria-label="Top controls">
-    <div class="top-left">
-      <a class="btn" id="btnExit" href="/">EXIT</a>
-    </div>
-    <div class="top-right" aria-label="Language">
-      <button class="btn" id="btnEN" type="button">EN</button>
-      <button class="btn" id="btnZH" type="button">中文</button>
-      <button class="btn" id="btnES" type="button">ES</button>
+  <div class="wrap">
+    <div class="card">
+      <p class="k">COGRID.NET</p>
+      <p class="t">Redirecting…</p>
+      <p class="p">If you’re not redirected, use the button below.</p>
+      <p style="margin-top:12px">
+        <a class="btn" id="go" href="/">GO</a>
+      </p>
     </div>
   </div>
-
-  <div class="stage" aria-label="Door fork">
-    <div class="diamond topDiamond" id="dEnter" role="button" tabindex="0" aria-label="Enter">
-      <div class="inner">
-        <div class="lab" id="labEnter">ENTER SITE</div>
-        <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Go inside.</div>
-      </div>
-    </div>
-
-    <div class="diamond bottomDiamond" id="dMap" role="button" tabindex="0" aria-label="Map">
-      <div class="inner">
-        <div class="lab" id="labMap">VIEW SITE MAP</div>
-        <div class="sub" id="subMap"><span class="pref" id="prefMap">First:</span> Get oriented.</div>
-      </div>
-    </div>
-  </div>
-
-</div>
 
 <script>
 (function(){
   var qs=new URLSearchParams(location.search);
 
+  // keep whatever is currently set (fallbacks)
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
@@ -253,90 +72,19 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
   }
 
-  document.getElementById("btnExit").href="/"+q();
+  var target = "/" + q();
+  document.getElementById("go").href = target;
 
-  // language buttons
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    location.reload();
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
-
-  function renderLang(){
-    if(lang==="zh"){
-      document.getElementById("labEnter").textContent="进入网站";
-      document.getElementById("prefEnter").textContent="直接：";
-      document.getElementById("subEnter").lastChild.nodeValue=" 进入。";
-      document.getElementById("labMap").textContent="查看网站地图";
-      document.getElementById("prefMap").textContent="先：";
-      document.getElementById("subMap").lastChild.nodeValue=" 先导览。";
-      document.getElementById("btnExit").textContent="退出";
-    }else if(lang==="es"){
-      document.getElementById("labEnter").textContent="ENTRAR";
-      document.getElementById("prefEnter").textContent="Directo:";
-      document.getElementById("subEnter").lastChild.nodeValue=" Entra.";
-      document.getElementById("labMap").textContent="MAPA";
-      document.getElementById("prefMap").textContent="Primero:";
-      document.getElementById("subMap").lastChild.nodeValue=" Oriéntate.";
-      document.getElementById("btnExit").textContent="SALIR";
-    }else{
-      document.getElementById("labEnter").textContent="ENTER SITE";
-      document.getElementById("prefEnter").textContent="Direct:";
-      document.getElementById("subEnter").lastChild.nodeValue=" Go inside.";
-      document.getElementById("labMap").textContent="VIEW SITE MAP";
-      document.getElementById("prefMap").textContent="First:";
-      document.getElementById("subMap").lastChild.nodeValue=" Get oriented.";
-      document.getElementById("btnExit").textContent="EXIT";
-    }
-  }
-  renderLang();
-
-  // DOOR → PRELUDE (launchpad)
-  function goPrelude(view){ location.href="/prelude/" + q() + "&view=" + encodeURIComponent(view); }
-
-  var dEnter=document.getElementById("dEnter");
-  var dMap=document.getElementById("dMap");
-
-  dEnter.addEventListener("click", function(){ goPrelude("enter"); });
-  dMap.addEventListener("click", function(){ goPrelude("map"); });
-
-  dEnter.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goPrelude("enter"); }
-  });
-  dMap.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goPrelude("map"); }
-  });
-
+  // immediate redirect (no history pollution)
+  window.location.replace(target);
 })();
 </script>
-
 </body>
 </html>

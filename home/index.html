@@ -1,9 +1,21 @@
+<!-- TNT — /home/index.html
+     HUB A · HYBRID DENSITY · FORMAL + INFORMAL LENS
+     MODE: FULL FILE REPLACEMENT
+     LOCK:
+       - Informal = default
+       - Formal toggle inside focus
+       - Hybrid density (clear + structural)
+       - No abstract fluff
+       - ui.css owns field
+       - branch.css owns geometry
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>HUB A · Structure</title>
+<title>HUB A · Orientation</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -11,340 +23,309 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-:root{--dockH:100px}
-
-/* =========================
-   STRUCTURE WRAP
-========================= */
+:root{--dockH:88px}
 
 .page{
-  width:min(1150px,94vw);
+  width:min(1100px,94vw);
   margin:0 auto;
-  padding:24px 0 calc(var(--dockH) + 40px);
+  padding:18px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:24px;
+  gap:14px;
 }
-
-/* =========================
-   HEADER (OPAL CONTRAST)
-========================= */
 
 .header{
   border:1px solid rgba(255,255,255,.14);
-  border-radius:26px;
-  padding:22px;
-  background:
-    radial-gradient(circle at 18% 28%, rgba(200,170,255,.22), transparent 70%),
-    radial-gradient(circle at 80% 70%, rgba(90,210,255,.14), transparent 75%),
-    rgba(0,0,0,.22);
-  backdrop-filter:blur(12px);
+  border-radius:22px;
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  padding:18px;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
 }
 
-.k{
-  font-size:12px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.75;
-  margin:0 0 10px;
-}
-
-.t{
-  font-weight:950;
-  font-size:30px;
-  margin:0 0 8px;
-}
-
-.s{
-  font-size:15px;
-  opacity:.85;
-  line-height:1.5;
-  margin:0;
-}
-
-/* =========================
-   BANDS
-========================= */
+.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.75;margin:0 0 6px}
+.t{font-weight:950;font-size:26px;letter-spacing:.4px;margin:0 0 8px}
+.s{font-size:14px;opacity:.88;line-height:1.55;margin:0;max-width:920px}
 
 .band{
-  padding:14px 18px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.10);
+  padding:10px 14px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
   font-weight:950;
-  letter-spacing:.5px;
+  letter-spacing:.4px;
 }
 
-/* =========================
-   GRID
-========================= */
-
-.grid{
+.row4{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:18px;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+}
+@media(max-width:900px){
+  .row4{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
-@media (max-width:900px){
-  .grid{grid-template-columns:repeat(2,1fr);}
-}
-
-/* =========================
-   PLATES
-========================= */
-
-.plate{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:24px;
-  padding:20px;
+.card{
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;
+  background:rgba(0,0,0,.22);
+  padding:16px;
   cursor:pointer;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.06), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.95), rgba(6,10,16,.98));
-  transition:.2s ease;
+  transition:transform .15s ease, border-color .15s ease;
 }
-
-.plate:hover{
+.card:hover{
   border-color:rgba(212,175,55,.45);
-  box-shadow:0 0 28px rgba(212,175,55,.18);
+  transform:translateY(-2px);
 }
 
-.pName{
-  font-weight:950;
-  letter-spacing:.6px;
-  font-size:15px;
-}
-
-.pHint{
-  margin-top:10px;
-  font-size:14px;
-  opacity:.75;
-  line-height:1.5;
-}
-
-/* =========================
-   FOCUS
-========================= */
+.cTitle{font-weight:950;letter-spacing:.4px;margin:0 0 6px}
+.cHint{font-size:13px;opacity:.85;line-height:1.45;margin:0}
 
 .focus{
-  display:none;
+  margin-top:14px;
   border:1px solid rgba(255,255,255,.14);
-  border-radius:28px;
-  padding:26px;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(210,190,255,.24), transparent 70%),
-    rgba(0,0,0,.28);
-  backdrop-filter:blur(14px);
-}
-
-.focus.show{display:block;}
-
-.fTitle{
-  font-weight:950;
-  font-size:22px;
-  margin-bottom:18px;
-}
-
-/* Dense block sections */
-
-.section{
-  border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
+  background:rgba(0,0,0,.28);
+  backdrop-filter:blur(10px);
   padding:18px;
-  margin-top:16px;
-  background:rgba(0,0,0,.18);
+  display:none;
 }
+.focus.show{display:block}
 
-.section p{
-  margin:0;
-  font-size:14px;
-  line-height:1.6;
-  opacity:.92;
-}
-
-.section p + p{margin-top:12px;}
-
-.section strong{font-weight:950;}
-.section em{font-style:italic;}
-
-/* =========================
-   ACTIONS
-========================= */
-
-.actions{
-  margin-top:22px;
+.fHead{
   display:flex;
-  gap:14px;
-  justify-content:flex-end;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
 }
 
-.actions .btn{
-  padding:10px 18px;
-  border-radius:999px;
+.fTitle{font-weight:950;letter-spacing:.4px;margin:0}
+.lens{display:flex;gap:10px}
+
+.block{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  padding:14px;
+  margin-top:12px;
+  background:rgba(0,0,0,.22);
 }
+
+.line{margin:0;line-height:1.6;font-size:14px}
+.line + .line{margin-top:8px}
+
+.bind{
+  margin-top:12px;
+  font-size:13px;
+  opacity:.85;
+  border-top:1px solid rgba(255,255,255,.12);
+  padding-top:10px;
+}
+
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:200;
+  display:flex;gap:10px;
+}
+
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(12px,env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:200;
+  width:min(980px,94vw);
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  padding:12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.32);
+}
+.dock .btn{width:100%}
 </style>
 </head>
 
 <body>
 
-<div class="page">
+<div class="top-right">
+  <button class="btn" id="btnEN">EN</button>
+  <button class="btn" id="btnZH">中文</button>
+  <button class="btn" id="btnES">ES</button>
+</div>
+
+<div class="page view-informal" id="page">
 
   <div class="header">
     <p class="k">CARDINAL AXIS</p>
-    <h1 class="t">HUB A · STRUCTURE</h1>
+    <h1 class="t">HUB A · ORIENTATION</h1>
     <p class="s">
-      Structure precedes scale. Scale precedes claims.
+      This page explains how the system holds together.
+      Informal view is human-readable.
+      Formal view shows structural constraints.
     </p>
   </div>
 
   <div class="band">COMPASS</div>
-  <div class="grid" id="bandA"></div>
+  <div class="row4">
+    <div class="card" onclick="openNode('N')">
+      <p class="cTitle">DEFINITIONS</p>
+      <p class="cHint">Lock meaning before movement.</p>
+    </div>
+    <div class="card" onclick="openNode('E')">
+      <p class="cTitle">PRODUCTS</p>
+      <p class="cHint">Usable tools and platforms.</p>
+    </div>
+    <div class="card" onclick="openNode('S')">
+      <p class="cTitle">CONSTRAINTS</p>
+      <p class="cHint">Limits that prevent drift.</p>
+    </div>
+    <div class="card" onclick="openNode('W')">
+      <p class="cTitle">CONTAINMENT</p>
+      <p class="cHint">Keep failure local.</p>
+    </div>
+  </div>
 
   <div class="band">SYSTEM</div>
-  <div class="grid" id="bandB"></div>
+  <div class="row4">
+    <div class="card" onclick="openNode('APP')">
+      <p class="cTitle">APPENDIX</p>
+      <p class="cHint">Packets and references.</p>
+    </div>
+    <div class="card" onclick="openNode('GLO')">
+      <p class="cTitle">GLOSSARY</p>
+      <p class="cHint">Canon terms.</p>
+    </div>
+    <div class="card" onclick="openNode('ABT')">
+      <p class="cTitle">ABOUT</p>
+      <p class="cHint">Scope and posture.</p>
+    </div>
+    <div class="card" onclick="openNode('LNK')">
+      <p class="cTitle">LINKS</p>
+      <p class="cHint">External anchors.</p>
+    </div>
+  </div>
 
   <div class="focus" id="focus">
-    <div class="fTitle" id="fTitle"></div>
-
-    <div class="section" id="secAspect"></div>
-    <div class="section" id="secProcess"></div>
-    <div class="section" id="secResolution"></div>
-    <div class="section" id="secAnalog"></div>
-    <div class="section" id="secBind"></div>
-
-    <div class="actions">
-      <a class="btn" id="btnJump" href="#">JUMP</a>
-      <button class="btn" id="btnClose">CLOSE</button>
+    <div class="fHead">
+      <h3 class="fTitle" id="fTitle">—</h3>
+      <div class="lens">
+        <button class="btn" onclick="setLens('informal')">INFORMAL</button>
+        <button class="btn" onclick="setLens('formal')">FORMAL</button>
+        <button class="btn" onclick="setLens('both')">BOTH</button>
+      </div>
     </div>
+
+    <div class="block" id="fContent"></div>
   </div>
 
 </div>
 
+<nav class="dock">
+  <a class="btn" href="/index.html">INDEX</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+</nav>
+
 <script>
-(function(){
+let currentLens = "informal";
 
-const DATA={
-  N:{
-    title:"DEFINITIONS",
-    hint:"Words that do not move.",
-    aspect:"Scope must be declared before authority.",
-    process:"Language is pinned to prevent drift under expansion.",
-    resolution:"All downstream claims remain bounded.",
-    analog:"Like constitutional law for language.",
-    bind:"Binds to: Laws + Diagnostic Engine",
-    route:"/laws/"
-  },
-  E:{
-    title:"PRODUCTS",
-    hint:"Deployable surfaces.",
-    aspect:"Execution inherits boundary conditions.",
-    process:"Deployment surfaces cannot exceed declared scope.",
-    resolution:"Replication remains stable under scale.",
-    analog:"Like engineering tolerances in production.",
-    bind:"Binds to: Platform Surfaces",
-    route:"/products/"
-  },
-  S:{
-    title:"CONSTRAINTS",
-    hint:"Limits prevent collapse.",
-    aspect:"Admissibility is defined before scale.",
-    process:"If evidence fails threshold, expansion stops.",
-    resolution:"Integrity remains preserved.",
-    analog:"Like circuit breakers under load.",
-    bind:"Binds to: Adoption Ladder + Gates",
-    route:"/laws/"
-  },
-  W:{
-    title:"CONTAINMENT",
-    hint:"Failure stays local.",
-    aspect:"Failure must be isolated.",
-    process:"Rollback prevents cascade.",
-    resolution:"System coherence restored.",
-    analog:"Like watertight compartments in a ship.",
-    bind:"Binds to: Enforcement + Governance",
-    route:"/laws/"
-  },
-  APPENDIX:{
-    title:"APPENDIX",
-    hint:"Supporting packets.",
-    aspect:"Documentation centralized.",
-    process:"Proof stored without interpretation.",
-    resolution:"Verifiable surfaces maintained.",
-    analog:"Like an archive vault.",
-    bind:"Binds to: Reference Surfaces",
-    route:"/appendix/"
-  },
-  GLOSSARY:{
-    title:"GLOSSARY",
-    hint:"Locked terminology.",
-    aspect:"Canonical definitions enforced.",
-    process:"Prevents semantic drift.",
-    resolution:"Cross-domain clarity preserved.",
-    analog:"Like a legal dictionary.",
-    bind:"Binds to: Language Engine",
-    route:"/glossary/"
-  },
-  ABOUT:{
-    title:"ABOUT",
-    hint:"Declared posture.",
-    aspect:"Scope and limits stated.",
-    process:"Prevents inflation.",
-    resolution:"Misinterpretation reduced.",
-    analog:"Like a mission charter.",
-    bind:"Binds to: Public Surface",
-    route:"/about/"
-  },
-  LINKS:{
-    title:"LINKS",
-    hint:"External anchors.",
-    aspect:"External references indexed.",
-    process:"Direct verification paths.",
-    resolution:"Evidence transparency.",
-    analog:"Like citations in research.",
-    bind:"Binds to: OSF + Repos",
-    route:"/links/"
-  }
+const DATA = {
+N:{
+informal:[
+"Lock meaning before you move.",
+"If the words shift, the system drifts.",
+"Definitions prevent invisible inflation."
+],
+formal:[
+"Scope precedes authority.",
+"Semantic anchoring constrains expansion vectors.",
+"Claim surfaces remain bounded under scale."
+],
+bind:"Binds to: Coherence Diagnostic + Laws."
+},
+E:{
+informal:[
+"Tools you can actually use.",
+"Deployment without hype.",
+"Structure turned into application."
+],
+formal:[
+"Execution inherits boundary conditions.",
+"Deployment surfaces remain within scope.",
+"Replication occurs without corruption."
+],
+bind:"Binds to: Platform surfaces."
+},
+S:{
+informal:[
+"Limits stop drift.",
+"Constraints prevent inflation.",
+"No boundary, no stability."
+],
+formal:[
+"Admissibility defined by constraint gates.",
+"Scaling blocked without verification.",
+"Phase discipline prevents collapse."
+],
+bind:"Binds to: Adoption Ladder + Gate logic."
+},
+W:{
+informal:[
+"Failure stays local.",
+"Small breaks don’t spread.",
+"Isolation protects scale."
+],
+formal:[
+"Rollback segmentation prevents cascade.",
+"Load containment preserves coherence.",
+"Recovery maintains structural invariance."
+],
+bind:"Binds to: Enforcement + Containment."
+},
+APP:{
+informal:[
+"Everything important in one place.",
+"No searching across the site.",
+"When you need proof, you go here."
+],
+formal:[
+"Canonical packet consolidation.",
+"Unified provenance layer.",
+"Version control across public surfaces."
+],
+bind:"Terminal reference surface."
+}
 };
 
-function buildBand(keys,target){
-  const el=document.getElementById(target);
-  keys.forEach(k=>{
-    const p=document.createElement("div");
-    p.className="plate";
-    p.innerHTML=
-      "<div class='pName'>"+DATA[k].title+"</div>"+
-      "<div class='pHint'>"+DATA[k].hint+"</div>";
-    p.onclick=()=>openFocus(k);
-    el.appendChild(p);
+function openNode(key){
+  const f = document.getElementById("focus");
+  const c = document.getElementById("fContent");
+  const t = document.getElementById("fTitle");
+  t.textContent = key;
+  c.innerHTML = "";
+  const node = DATA[key];
+  if(!node) return;
+  const lines = currentLens==="both"
+    ? node.informal.concat(node.formal)
+    : node[currentLens];
+  lines.forEach(l=>{
+    const p=document.createElement("p");
+    p.className="line";
+    p.textContent=l;
+    c.appendChild(p);
   });
-}
-
-function openFocus(key){
-  const f=document.getElementById("focus");
-  const d=DATA[key];
-
-  document.getElementById("fTitle").textContent=d.title;
-
-  document.getElementById("secAspect").innerHTML="<p><strong>Aspect:</strong> "+d.aspect+"</p>";
-  document.getElementById("secProcess").innerHTML="<p><strong>Process:</strong> "+d.process+"</p>";
-  document.getElementById("secResolution").innerHTML="<p><strong>Resolution:</strong> "+d.resolution+"</p>";
-  document.getElementById("secAnalog").innerHTML="<p><em>"+d.analog+"</em></p>";
-  document.getElementById("secBind").innerHTML="<p>"+d.bind+"</p>";
-
-  document.getElementById("btnJump").href=d.route;
-
+  const b=document.createElement("div");
+  b.className="bind";
+  b.textContent=node.bind;
+  c.appendChild(b);
   f.classList.add("show");
-  f.scrollIntoView({behavior:"smooth",block:"start"});
+  f.scrollIntoView({behavior:"smooth"});
 }
 
-document.getElementById("btnClose").onclick=function(){
-  document.getElementById("focus").classList.remove("show");
-};
-
-buildBand(["N","E","S","W"],"bandA");
-buildBand(["APPENDIX","GLOSSARY","ABOUT","LINKS"],"bandB");
-
-})();
+function setLens(v){
+  currentLens=v;
+}
 </script>
 
 </body>

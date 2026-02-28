@@ -1,15 +1,3 @@
-<!-- TNT — /home/index.html
-     HUB A · HYBRID DENSITY · FORMAL + INFORMAL LENS
-     MODE: FULL FILE REPLACEMENT
-     LOCK:
-       - Informal = default
-       - Formal toggle inside focus
-       - Hybrid density (clear + structural)
-       - No abstract fluff
-       - ui.css owns field
-       - branch.css owns geometry
--->
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -18,129 +6,131 @@
 <title>HUB A · Orientation</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
 :root{--dockH:88px}
 
-.page{
+/* Strong contrast container */
+.panel{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:18px 0 calc(var(--dockH) + 24px);
+  padding:24px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:14px;
+  gap:18px;
 }
 
-.header{
-  border:1px solid rgba(255,255,255,.14);
+/* Heavy contrast glass */
+.block{
+  background:rgba(0,0,0,.65);
+  border:1px solid rgba(255,255,255,.18);
   border-radius:22px;
-  background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  padding:18px;
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:22px;
+  backdrop-filter:blur(12px);
+  box-shadow:0 40px 120px rgba(0,0,0,.75);
 }
 
-.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.75;margin:0 0 6px}
-.t{font-weight:950;font-size:26px;letter-spacing:.4px;margin:0 0 8px}
-.s{font-size:14px;opacity:.88;line-height:1.55;margin:0;max-width:920px}
+.k{
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.7;
+  margin:0 0 6px;
+}
 
-.band{
-  padding:10px 14px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
+.h{
+  font-size:28px;
   font-weight:950;
-  letter-spacing:.4px;
+  margin:0 0 12px;
 }
 
-.row4{
+.p{
+  font-size:15px;
+  line-height:1.6;
+  opacity:.92;
+  margin:0;
+}
+
+/* Grid */
+.grid{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:12px;
+  gap:16px;
 }
 @media(max-width:900px){
-  .row4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
 .card{
-  border:1px solid rgba(255,255,255,.14);
+  background:rgba(10,15,20,.85);
+  border:1px solid rgba(255,255,255,.15);
   border-radius:18px;
-  background:rgba(0,0,0,.22);
-  padding:16px;
+  padding:18px;
   cursor:pointer;
-  transition:transform .15s ease, border-color .15s ease;
+  transition:all .15s ease;
 }
 .card:hover{
-  border-color:rgba(212,175,55,.45);
-  transform:translateY(-2px);
+  border-color:rgba(212,175,55,.55);
+  transform:translateY(-3px);
 }
 
-.cTitle{font-weight:950;letter-spacing:.4px;margin:0 0 6px}
-.cHint{font-size:13px;opacity:.85;line-height:1.45;margin:0}
+.ct{
+  font-weight:950;
+  margin:0 0 6px;
+  font-size:16px;
+}
 
+.cd{
+  font-size:14px;
+  opacity:.85;
+  margin:0;
+}
+
+/* Focus area */
 .focus{
-  margin-top:14px;
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:22px;
-  background:rgba(0,0,0,.28);
-  backdrop-filter:blur(10px);
-  padding:18px;
   display:none;
 }
-.focus.show{display:block}
 
-.fHead{
+.focus.show{
+  display:block;
+}
+
+.lens{
   display:flex;
-  justify-content:space-between;
-  align-items:center;
   gap:10px;
-  margin-bottom:12px;
+  margin-top:14px;
 }
 
-.fTitle{font-weight:950;letter-spacing:.4px;margin:0}
-.lens{display:flex;gap:10px}
-
-.block{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:18px;
-  padding:14px;
-  margin-top:12px;
-  background:rgba(0,0,0,.22);
+.line{
+  margin-top:10px;
+  font-size:15px;
+  line-height:1.6;
 }
-
-.line{margin:0;line-height:1.6;font-size:14px}
-.line + .line{margin-top:8px}
 
 .bind{
-  margin-top:12px;
-  font-size:13px;
+  margin-top:18px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.18);
+  font-size:14px;
   opacity:.85;
-  border-top:1px solid rgba(255,255,255,.12);
-  padding-top:10px;
 }
 
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:200;
-  display:flex;gap:10px;
-}
-
+/* Dock */
 .dock{
   position:fixed;
   left:50%;
   bottom:max(12px,env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:200;
   width:min(980px,94vw);
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
-  padding:12px;
+  gap:12px;
+  padding:14px;
+  background:rgba(0,0,0,.85);
   border-radius:22px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(0,0,0,.32);
+  border:1px solid rgba(255,255,255,.18);
 }
 .dock .btn{width:100%}
 </style>
@@ -148,75 +138,50 @@ a{color:inherit;text-decoration:none}
 
 <body>
 
-<div class="top-right">
-  <button class="btn" id="btnEN">EN</button>
-  <button class="btn" id="btnZH">中文</button>
-  <button class="btn" id="btnES">ES</button>
-</div>
+<div class="panel">
 
-<div class="page view-informal" id="page">
-
-  <div class="header">
+  <div class="block">
     <p class="k">CARDINAL AXIS</p>
-    <h1 class="t">HUB A · ORIENTATION</h1>
-    <p class="s">
-      This page explains how the system holds together.
-      Informal view is human-readable.
-      Formal view shows structural constraints.
+    <h1 class="h">HOW THIS SYSTEM HOLDS TOGETHER</h1>
+    <p class="p">
+      Informal view explains it like a human.  
+      Formal view explains it like a constraint system.
     </p>
   </div>
 
-  <div class="band">COMPASS</div>
-  <div class="row4">
-    <div class="card" onclick="openNode('N')">
-      <p class="cTitle">DEFINITIONS</p>
-      <p class="cHint">Lock meaning before movement.</p>
-    </div>
-    <div class="card" onclick="openNode('E')">
-      <p class="cTitle">PRODUCTS</p>
-      <p class="cHint">Usable tools and platforms.</p>
-    </div>
-    <div class="card" onclick="openNode('S')">
-      <p class="cTitle">CONSTRAINTS</p>
-      <p class="cHint">Limits that prevent drift.</p>
-    </div>
-    <div class="card" onclick="openNode('W')">
-      <p class="cTitle">CONTAINMENT</p>
-      <p class="cHint">Keep failure local.</p>
-    </div>
-  </div>
+  <div class="block">
+    <div class="grid">
+      <div class="card" onclick="openNode('N')">
+        <p class="ct">DEFINITIONS</p>
+        <p class="cd">If the meaning moves, everything breaks.</p>
+      </div>
 
-  <div class="band">SYSTEM</div>
-  <div class="row4">
-    <div class="card" onclick="openNode('APP')">
-      <p class="cTitle">APPENDIX</p>
-      <p class="cHint">Packets and references.</p>
-    </div>
-    <div class="card" onclick="openNode('GLO')">
-      <p class="cTitle">GLOSSARY</p>
-      <p class="cHint">Canon terms.</p>
-    </div>
-    <div class="card" onclick="openNode('ABT')">
-      <p class="cTitle">ABOUT</p>
-      <p class="cHint">Scope and posture.</p>
-    </div>
-    <div class="card" onclick="openNode('LNK')">
-      <p class="cTitle">LINKS</p>
-      <p class="cHint">External anchors.</p>
-    </div>
-  </div>
+      <div class="card" onclick="openNode('E')">
+        <p class="ct">PRODUCTS</p>
+        <p class="cd">Tools only work if structure is respected.</p>
+      </div>
 
-  <div class="focus" id="focus">
-    <div class="fHead">
-      <h3 class="fTitle" id="fTitle">—</h3>
-      <div class="lens">
-        <button class="btn" onclick="setLens('informal')">INFORMAL</button>
-        <button class="btn" onclick="setLens('formal')">FORMAL</button>
-        <button class="btn" onclick="setLens('both')">BOTH</button>
+      <div class="card" onclick="openNode('S')">
+        <p class="ct">CONSTRAINTS</p>
+        <p class="cd">No limits means no stability.</p>
+      </div>
+
+      <div class="card" onclick="openNode('W')">
+        <p class="ct">CONTAINMENT</p>
+        <p class="cd">Failure must stay local.</p>
       </div>
     </div>
+  </div>
 
-    <div class="block" id="fContent"></div>
+  <div class="block focus" id="focus">
+    <h2 id="fTitle"></h2>
+
+    <div class="lens">
+      <button class="btn" onclick="setLens('informal')">INFORMAL</button>
+      <button class="btn" onclick="setLens('formal')">FORMAL</button>
+    </div>
+
+    <div id="fBody"></div>
   </div>
 
 </div>
@@ -229,102 +194,99 @@ a{color:inherit;text-decoration:none}
 
 <script>
 let currentLens = "informal";
+let currentNode = null;
 
 const DATA = {
 N:{
 informal:[
-"Lock meaning before you move.",
-"If the words shift, the system drifts.",
-"Definitions prevent invisible inflation."
+"If two people use the same word differently, they are not in the same system.",
+"Definitions prevent invisible drift.",
+"Scope must be declared before authority is claimed."
 ],
 formal:[
-"Scope precedes authority.",
-"Semantic anchoring constrains expansion vectors.",
-"Claim surfaces remain bounded under scale."
+"Semantic anchoring precedes admissibility.",
+"Unbounded terminology produces structural drift.",
+"Scope declaration constrains expansion vectors."
 ],
-bind:"Binds to: Coherence Diagnostic + Laws."
+bind:"Bound to: Laws + Coherence Diagnostic."
 },
 E:{
 informal:[
-"Tools you can actually use.",
-"Deployment without hype.",
-"Structure turned into application."
+"A tool that ignores limits will eventually fail.",
+"Execution inherits the structure it was built on.",
+"Scale amplifies both strength and weakness."
 ],
 formal:[
-"Execution inherits boundary conditions.",
-"Deployment surfaces remain within scope.",
-"Replication occurs without corruption."
+"Deployment surfaces inherit boundary conditions.",
+"Execution without constraint introduces instability.",
+"Scale multiplies system error functions."
 ],
-bind:"Binds to: Platform surfaces."
+bind:"Bound to: Product Platforms."
 },
 S:{
 informal:[
-"Limits stop drift.",
-"Constraints prevent inflation.",
-"No boundary, no stability."
+"No boundaries means nothing can be verified.",
+"Gates stop bad expansion.",
+"Admissibility protects scale."
 ],
 formal:[
-"Admissibility defined by constraint gates.",
-"Scaling blocked without verification.",
-"Phase discipline prevents collapse."
+"Constraint gates define admissible state transitions.",
+"Unverified scale destabilizes system coherence.",
+"Phase gating preserves structural integrity."
 ],
-bind:"Binds to: Adoption Ladder + Gate logic."
+bind:"Bound to: Adoption Ladder."
 },
 W:{
 informal:[
-"Failure stays local.",
-"Small breaks don’t spread.",
-"Isolation protects scale."
+"If failure spreads, the system is weak.",
+"Isolation protects everything else.",
+"Rollback is discipline."
 ],
 formal:[
-"Rollback segmentation prevents cascade.",
-"Load containment preserves coherence.",
-"Recovery maintains structural invariance."
+"Cascade suppression preserves invariants.",
+"Rollback protocols restore coherence.",
+"Containment localizes entropy."
 ],
-bind:"Binds to: Enforcement + Containment."
-},
-APP:{
-informal:[
-"Everything important in one place.",
-"No searching across the site.",
-"When you need proof, you go here."
-],
-formal:[
-"Canonical packet consolidation.",
-"Unified provenance layer.",
-"Version control across public surfaces."
-],
-bind:"Terminal reference surface."
+bind:"Bound to: Enforcement Layer."
 }
 };
 
 function openNode(key){
-  const f = document.getElementById("focus");
-  const c = document.getElementById("fContent");
-  const t = document.getElementById("fTitle");
-  t.textContent = key;
-  c.innerHTML = "";
-  const node = DATA[key];
-  if(!node) return;
-  const lines = currentLens==="both"
-    ? node.informal.concat(node.formal)
-    : node[currentLens];
-  lines.forEach(l=>{
-    const p=document.createElement("p");
-    p.className="line";
-    p.textContent=l;
-    c.appendChild(p);
-  });
-  const b=document.createElement("div");
-  b.className="bind";
-  b.textContent=node.bind;
-  c.appendChild(b);
-  f.classList.add("show");
-  f.scrollIntoView({behavior:"smooth"});
+  currentNode = key;
+  renderNode();
+  document.getElementById("focus").classList.add("show");
 }
 
-function setLens(v){
-  currentLens=v;
+function setLens(l){
+  currentLens = l;
+  renderNode();
+}
+
+function renderNode(){
+  if(!currentNode) return;
+  const node = DATA[currentNode];
+  const title = {
+    N:"DEFINITIONS",
+    E:"PRODUCTS",
+    S:"CONSTRAINTS",
+    W:"CONTAINMENT"
+  };
+  document.getElementById("fTitle").textContent = title[currentNode];
+
+  const body = document.getElementById("fBody");
+  body.innerHTML = "";
+
+  node[currentLens].forEach(line=>{
+    const p = document.createElement("p");
+    p.className = "line";
+    p.textContent = line;
+    body.appendChild(p);
+  });
+
+  const bind = document.createElement("div");
+  bind.className = "bind";
+  bind.textContent = node.bind;
+  body.appendChild(bind);
 }
 </script>
 

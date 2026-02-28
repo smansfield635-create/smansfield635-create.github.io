@@ -1,22 +1,22 @@
 <!-- TNT — /index.html
-     ROOT = DOOR (LIVE ROUTE FIX)
+     ROOT DOOR · PEARLESCENT BLACK · NO COMPETING UI · TAP-SAFE
      PURPOSE:
-       - This file is the live ROOT page: https://smansfield635-create.github.io/
-       - ROOT behaves as the Door experience (no /door/ dependency)
-     UI (NO COMPETING LAYERS):
-       - Top bar: LEFT = PRELUDE (map) · RIGHT = EN / 中文 / ES
-       - Center: ENTER headline + 3-line promise (opal glass)
-       - Two pearlescent-black 3D diamonds (vertical)
-           TOP:    ENTER SITE     → /home/
-           BOTTOM: VIEW SITE MAP  → /prelude/
-       - Fine print + COGRID.NET signature at bottom
+       - This is the ROOT entry for https://smansfield635-create.github.io/
+       - Two diamonds only:
+           1) ENTER SITE     → /home/
+           2) VIEW SITE MAP  → /prelude/
+     TOP CONTROLS (LOCKED):
+       - LEFT:  EXIT (/) + PRELUDE (/prelude/)
+       - RIGHT: EN / 中文 / ES
      STATE:
        - URL: lang/style/time/depth
-       - LocalStorage: gd_lang/gd_style/gd_time/gd_depth
+       - LS: gd_lang/gd_style/gd_time/gd_depth
+     HARD FIX:
+       - Forces ui.css overlays (body::before/body::after) BEHIND the door UI
+       - Prevents top controls from wrapping
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - DOES NOT set html/body background (ui.css owns field)
-       - Tap-safe (no overlays; no inline onclick)
+       - Does NOT set html/body background (ui.css owns field)
 -->
 
 <!doctype html>
@@ -26,153 +26,127 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>ENTER</title>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
+<link rel="stylesheet" href="/assets/ui.css?v=1001"/>
+<link rel="stylesheet" href="/assets/branch.css?v=1001"/>
+<script defer src="/assets/instruments.js?v=1001"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
 
-/* IMPORTANT:
-   ui.css owns field. We do NOT set html/body background here.
-   We only ensure our foreground sits above ui.css overlays. */
-body{position:relative;z-index:0}
-body::before, body::after{z-index:0 !important; pointer-events:none !important}
+/* =========================================================
+   CRITICAL: FORCE ui.css OVERLAYS BEHIND DOOR UI
+   (Stops “coal / washed” look + UI competition)
+   ========================================================= */
+html,body{position:relative}
+body{z-index:0}
+body::before, body::after{z-index:-1 !important; pointer-events:none !important;}
+#doorRoot{position:relative; z-index:10}
 
-#rootDoor{
-  position:relative;
-  z-index:10; /* above ui.css overlays */
-}
-
-/* ---------- TOKENS ---------- */
+/* =========================================================
+   TOKENS (viewport-scaled geometry)
+   ========================================================= */
 :root{
-  /* Responsive geometry */
-  --D: min(40vh, 300px);
-  --R: calc(var(--D) * 0.92);
+  --D:min(34vh, 300px);
+  --R:calc(var(--D) * 0.82);
 
-  /* Pearlescent-black gem material */
   --deepA:#0f1624;
   --deepB:#070c14;
 
-  /* Opal blooms */
-  --opalV: rgba(160,120,255,.82);
-  --opalC: rgba(110,230,255,.66);
-
-  /* Gold glow */
-  --goldGlow: rgba(212,175,55,.68);
-
-  /* Glass stroke */
-  --stroke: rgba(255,255,255,.16);
+  --goldGlow:rgba(212,175,55,.55);
 }
 
-/* ---------- TOP BAR (NO WRAP EVER) ---------- */
+/* =========================================================
+   TOP BAR (NO WRAP EVER)
+   ========================================================= */
 .top{
   position:fixed;
   top:16px;
   left:0;
   right:0;
   padding:0 16px;
-  z-index:300;
-
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:12px;
-
+  z-index:300;
   pointer-events:none;
 }
-.top-left,
-.top-right{
+.top-left,.top-right{
   display:flex;
-  align-items:center;
   gap:12px;
-
   flex-wrap:nowrap;
   white-space:nowrap;
-
   pointer-events:auto;
 }
-.top .btn{
-  white-space:nowrap;
-  padding:10px 14px;
-  border-radius:999px;
-}
+.top .btn{white-space:nowrap}
 
-/* tighter phones */
+/* tighten for small screens */
 @media (max-width:420px){
   .top{padding:0 12px}
   .top-left,.top-right{gap:10px}
-  .top .btn{padding:10px 12px}
 }
 
-/* ---------- TITLE GLASS (SINGLE HIERARCHY, NO COLLISION) ---------- */
+/* =========================================================
+   TITLE GLASS (ONE LAYER ONLY)
+   ========================================================= */
 .title{
   position:fixed;
-  top:86px;
+  top:92px;
   left:50%;
   transform:translateX(-50%);
-  z-index:140;
-
   width:min(980px,94vw);
   text-align:center;
-
-  border:1px solid var(--stroke);
+  z-index:200;
+  padding:16px 14px;
   border-radius:22px;
-  padding:16px 14px 14px;
-
+  border:1px solid rgba(255,255,255,.16);
   background:
-    radial-gradient(circle at 22% 36%, rgba(210,190,255,.18), transparent 70%),
-    radial-gradient(circle at 78% 60%, rgba(120,70,255,.14), transparent 74%),
+    radial-gradient(circle at 18% 34%, rgba(210,190,255,.18), transparent 72%),
+    radial-gradient(circle at 82% 62%, rgba(120,70,255,.14), transparent 74%),
     linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.16));
   backdrop-filter:blur(12px);
-
   box-shadow:0 40px 140px rgba(0,0,0,.62);
   pointer-events:none;
 }
 .title h1{
   margin:0;
-  font-size:52px;
-  font-weight:950;
+  font-size:clamp(38px, 5.6vh, 52px);
   letter-spacing:2px;
+  font-weight:950;
   line-height:1.02;
 }
 .title p{
   margin:12px 0 0;
-  font-size:15px;
+  font-size:clamp(13px, 1.9vh, 15px);
   line-height:1.55;
   opacity:.90;
 }
-@media (max-width:560px){
-  .title{top:82px}
-  .title h1{font-size:46px}
-  .title p{font-size:14px}
-}
 
-/* ---------- STAGE ---------- */
+/* =========================================================
+   STAGE (centered)
+   ========================================================= */
 .stage{
   position:fixed;
   inset:0;
-  z-index:200;
-
   display:flex;
   align-items:center;
   justify-content:center;
-
   pointer-events:none;
+  z-index:240;
 }
 
-/* ---------- PEARLESCENT BLACK 3D DIAMONDS ---------- */
-.gem{
+/* =========================================================
+   TRUE PEARLESCENT BLACK GEM (3D)
+   ========================================================= */
+.diamond{
   position:absolute;
   width:var(--D);
   height:var(--D);
   left:50%;
   top:50%;
   transform-origin:center;
-
-  border-radius:40px;
   transform:translate(-50%,-50%) rotate(45deg);
-
+  border-radius:40px;
   pointer-events:auto;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
@@ -180,8 +154,8 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
 
   background:
     radial-gradient(circle at 22% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.62) 12%, transparent 38%),
-    radial-gradient(circle at 78% 28%, var(--opalV) 0%, transparent 60%),
-    radial-gradient(circle at 62% 86%, var(--opalC) 0%, transparent 74%),
+    radial-gradient(circle at 78% 28%, rgba(160,120,255,.78) 0%, transparent 60%),
+    radial-gradient(circle at 62% 86%, rgba(110,230,255,.66) 0%, transparent 74%),
     radial-gradient(circle at 46% 46%, rgba(255,255,255,.14) 0%, transparent 62%),
     linear-gradient(165deg, var(--deepA) 0%, var(--deepB) 60%, #04060a 100%);
 
@@ -195,48 +169,44 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
 
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.gem:hover{
+.diamond:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.04);
   border-color:rgba(255,255,255,.82);
   box-shadow:
     0 160px 320px rgba(0,0,0,.98),
-    0 0 240px rgba(212,175,55,.75),
+    0 0 240px rgba(212,175,55,.70),
     inset 0 5px 0 rgba(255,255,255,1),
     inset 0 -120px 180px rgba(0,0,0,.98);
 }
-.gem:active{
+.diamond:active{
   transform:translate(-50%,-50%) rotate(45deg) scale(.99);
 }
 
 /* placement */
-.gem.top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
-.gem.bot{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
+.topDiamond{transform:translate(-50%,-50%) translate(0,calc(var(--R) * -1)) rotate(45deg)}
+.bottomDiamond{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
 
-/* inner label upright */
+/* inner label */
 .inner{
   transform:rotate(-45deg);
   height:100%;
-  width:100%;
-
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-
   text-align:center;
   padding:28px;
-
   user-select:none;
   pointer-events:none;
 }
 .lab{
-  font-size:clamp(20px, 2.6vh, 26px);
+  font-size:clamp(18px, 2.6vh, 24px);
   font-weight:950;
   letter-spacing:1px;
 }
 .sub{
   margin-top:14px;
-  font-size:clamp(14px, 2.0vh, 18px);
+  font-size:clamp(13px, 2vh, 16px);
   opacity:.95;
   line-height:1.35;
 }
@@ -245,17 +215,15 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
   font-style:italic;
 }
 
-/* ---------- FOOTER ---------- */
+/* footer */
 .footer{
   position:fixed;
-  left:50%;
   bottom:18px;
+  left:50%;
   transform:translateX(-50%);
-  z-index:220;
-
   width:min(980px,94vw);
   text-align:center;
-
+  z-index:260;
   font-size:13.5px;
   opacity:.88;
   pointer-events:none;
@@ -266,14 +234,20 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
   letter-spacing:3px;
   opacity:.70;
 }
+
+/* mobile spacing */
+@media (max-width:560px){
+  .title{top:86px}
+}
 </style>
 </head>
 
 <body>
-<div id="rootDoor">
+<div id="doorRoot">
 
   <div class="top" aria-label="Top controls">
     <div class="top-left">
+      <a class="btn" id="btnExit" href="/">EXIT</a>
       <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
     </div>
     <div class="top-right" aria-label="Language">
@@ -285,25 +259,21 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
 
   <div class="title" aria-hidden="true">
     <h1 id="ttl">ENTER</h1>
-    <p id="tag">
-      This is a structural site.<br/>
-      It does not sell belief.<br/>
-      It measures coherence.
-    </p>
+    <p id="tag">This is a structural site.<br/>It does not sell belief.<br/>It measures coherence.</p>
   </div>
 
   <div class="stage" aria-label="Door fork">
-    <div class="gem top" id="goEnter" role="button" tabindex="0" aria-label="Enter site">
+    <div class="diamond topDiamond" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
       <div class="inner">
         <div class="lab" id="labEnter">ENTER SITE</div>
-        <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Go inside.</div>
+        <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Move forward into systems.</div>
       </div>
     </div>
 
-    <div class="gem bot" id="goMap" role="button" tabindex="0" aria-label="View site map">
+    <div class="diamond bottomDiamond" id="dMap" role="button" tabindex="0" aria-label="View site map">
       <div class="inner">
         <div class="lab" id="labMap">VIEW SITE MAP</div>
-        <div class="sub" id="subMap"><span class="pref" id="prefMap">First:</span> Get oriented.</div>
+        <div class="sub" id="subMap"><span class="pref" id="prefMap">First:</span> See the structure before movement.</div>
       </div>
     </div>
   </div>
@@ -317,7 +287,6 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
 
 <script>
 (function(){
-  // ----- Canon state -----
   var qs=new URLSearchParams(location.search);
 
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
@@ -338,7 +307,7 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(over){
     var L=(over&&over.lang)?over.lang:lang;
@@ -351,10 +320,11 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
            "&depth="+encodeURIComponent(D);
   }
 
-  // Top link state carry
+  // top links carry state
+  document.getElementById("btnExit").href="/"+q();
   document.getElementById("btnPrelude").href="/prelude/"+q();
 
-  // Language buttons
+  // language buttons
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -373,62 +343,68 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
     history.replaceState({}, "", location.pathname + q({lang:lang}));
     location.reload();
   }
-
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // Minimal visible i18n
+  // minimal i18n (keeps layout stable)
   function renderLang(){
     if(lang==="zh"){
       document.getElementById("ttl").textContent="进入";
       document.getElementById("tag").innerHTML="这是一个结构型网站。<br/>不出售信仰。<br/>衡量一致性。";
       document.getElementById("labEnter").textContent="进入网站";
       document.getElementById("prefEnter").textContent="直接：";
-      document.getElementById("subEnter").lastChild.nodeValue=" 进入。";
+      document.getElementById("subEnter").lastChild.nodeValue=" 进入系统。";
       document.getElementById("labMap").textContent="查看网站地图";
       document.getElementById("prefMap").textContent="先：";
-      document.getElementById("subMap").lastChild.nodeValue=" 先获得方向。";
+      document.getElementById("subMap").lastChild.nodeValue=" 先看结构再行动。";
+      document.getElementById("btnExit").textContent="退出";
+      document.getElementById("btnPrelude").textContent="前置页";
     }else if(lang==="es"){
       document.getElementById("ttl").textContent="ENTRAR";
       document.getElementById("tag").innerHTML="Este es un sitio estructural.<br/>No vende creencias.<br/>Mide coherencia.";
       document.getElementById("labEnter").textContent="ENTRAR AL SITIO";
       document.getElementById("prefEnter").textContent="Directo:";
-      document.getElementById("subEnter").lastChild.nodeValue=" Entra.";
+      document.getElementById("subEnter").lastChild.nodeValue=" Entra en los sistemas.";
       document.getElementById("labMap").textContent="VER MAPA DEL SITIO";
       document.getElementById("prefMap").textContent="Primero:";
-      document.getElementById("subMap").lastChild.nodeValue=" Oriéntate.";
+      document.getElementById("subMap").lastChild.nodeValue=" Ve la estructura antes de moverte.";
+      document.getElementById("btnExit").textContent="SALIR";
+      document.getElementById("btnPrelude").textContent="PRELUDIO";
     }else{
       document.getElementById("ttl").textContent="ENTER";
       document.getElementById("tag").innerHTML="This is a structural site.<br/>It does not sell belief.<br/>It measures coherence.";
       document.getElementById("labEnter").textContent="ENTER SITE";
       document.getElementById("prefEnter").textContent="Direct:";
-      document.getElementById("subEnter").lastChild.nodeValue=" Go inside.";
+      document.getElementById("subEnter").lastChild.nodeValue=" Move forward into systems.";
       document.getElementById("labMap").textContent="VIEW SITE MAP";
       document.getElementById("prefMap").textContent="First:";
-      document.getElementById("subMap").lastChild.nodeValue=" Get oriented.";
+      document.getElementById("subMap").lastChild.nodeValue=" See the structure before movement.";
+      document.getElementById("btnExit").textContent="EXIT";
+      document.getElementById("btnPrelude").textContent="PRELUDE";
     }
   }
   renderLang();
 
-  // Routes
+  // routes
   function goEnter(){ location.href="/home/"+q(); }
   function goMap(){ location.href="/prelude/"+q(); }
 
-  var goEnterEl=document.getElementById("goEnter");
-  var goMapEl=document.getElementById("goMap");
+  var dEnter=document.getElementById("dEnter");
+  var dMap=document.getElementById("dMap");
 
-  goEnterEl.addEventListener("click", goEnter);
-  goMapEl.addEventListener("click", goMap);
+  dEnter.addEventListener("click", goEnter);
+  dMap.addEventListener("click", goMap);
 
-  goEnterEl.addEventListener("keydown", function(e){
+  dEnter.addEventListener("keydown", function(e){
     if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goEnter(); }
   });
-  goMapEl.addEventListener("keydown", function(e){
+  dMap.addEventListener("keydown", function(e){
     if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goMap(); }
   });
-
 })();
 </script>
+
 </body>
 </html>
+```0

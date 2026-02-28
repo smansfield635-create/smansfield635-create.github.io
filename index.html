@@ -1,10 +1,15 @@
 <!-- TNT — /index.html
-     ROOT RETURN PAGE (NOT COMPASS)
-     CTAs:
-       - PRELUDE -> /prelude/
-       - DOOR    -> /door/
-       - ENTER   -> /home/
-     EN/中文/ES + state carry
+     ROOT · ORIENTATION (INFO-FIRST) · 3 LANG (EN/中文/ES)
+     PURPOSE:
+       - This page is the best orientation surface on the site.
+       - Prelude = gateway posture, Door = compass spine, Enter = primary hub.
+       - Explains CLAIM vs SUPPORT and how navigation preserves state.
+     BRAND:
+       - Replace COGRID.NET → DIAMONDGATEBRIDGE.COM
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Does NOT set html/body background (ui.css owns field)
+       - Preserves state params (lang/style/time/depth)
 -->
 
 <!doctype html>
@@ -20,36 +25,132 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-.wrap{
-  width:min(980px,92vw);
-  margin:0 auto;
-  padding:90px 0 40px;
-  text-align:center;
-  position:relative;
-  z-index:10;
+:root{--dockH:86px}
+
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:220;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;
 }
-.h1{margin:0;font-weight:950;letter-spacing:2px;font-size:38px}
-.p{margin:12px auto 0;max-width:70ch;opacity:.86;line-height:1.5}
-.row{
-  margin:28px auto 0;
-  display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+.top-right .btn{white-space:nowrap}
+
+.wrap{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:86px 0 calc(var(--dockH) + 18px);
+  position:relative;z-index:10;
+  display:flex;flex-direction:column;gap:12px;
+}
+
+.hero{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(210,190,255,.14), transparent 70%),
+    radial-gradient(circle at 75% 60%, rgba(120,70,255,.10), transparent 72%),
+    rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  padding:16px 16px;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+}
+.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
+.h1{margin:0;font-weight:950;letter-spacing:2px;font-size:38px;line-height:1.05}
+.p{margin:10px 0 0;opacity:.86;line-height:1.55;max-width:92ch}
+
+.ctaRow{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:12px;
+}
+@media(max-width:920px){
+  .ctaRow{grid-template-columns:1fr}
 }
 .card{
-  width:min(320px,92vw);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  padding:16px 16px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.card h3{margin:0;font-weight:950;letter-spacing:.3px}
+.card p{margin:0;opacity:.84;line-height:1.45}
+.card .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-start}
+
+.band{
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.86);
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:12px;
+}
+@media(max-width:920px){
+  .grid2{grid-template-columns:1fr}
+}
+
+.panel{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  padding:16px 16px;
+}
+.panel h4{margin:0;font-weight:950;letter-spacing:.2px}
+.panel p{margin:10px 0 0;opacity:.84;line-height:1.55}
+.mini{
+  margin-top:10px;
+  padding:12px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  opacity:.92;
+  line-height:1.5;
+  font-size:13px;
+}
+
+.footer{
+  margin-top:10px;
+  text-align:center;
+  opacity:.78;
+  font-size:12.5px;
+  padding-bottom:8px;
+}
+.sig{
+  margin-top:6px;
+  letter-spacing:3px;
+  font-size:11px;
+  opacity:.65;
+}
+
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
+  background:rgba(0,0,0,.22);
   backdrop-filter:blur(10px);
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
-  padding:16px 16px;
-  text-align:left;
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
 }
-.card h3{margin:0;font-weight:950;letter-spacing:.4px}
-.card p{margin:8px 0 0;opacity:.82;line-height:1.45}
-.actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:200;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:98px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
 </head>
@@ -63,37 +164,98 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <div class="wrap">
-  <div class="h1" id="ttl">ROOT</div>
-  <div class="p" id="tag">Minimal return page. Prelude is the gateway. Door is the compass.</div>
 
-  <div class="row">
+  <div class="hero">
+    <p class="k" id="hk">ROOT</p>
+    <div class="h1" id="ttl">ROOT</div>
+    <p class="p" id="tag">Orientation page. Prelude is the gateway. Door is the compass. Enter is the hub.</p>
+  </div>
+
+  <div class="ctaRow" aria-label="Primary entries">
     <div class="card">
       <h3 id="hPrelude">PRELUDE</h3>
       <p id="pPrelude">Gateway posture. Choose informal or formal entry into Door.</p>
-      <div class="actions">
+      <div class="row">
         <a class="btn" id="goPrelude" href="/prelude/">OPEN</a>
       </div>
     </div>
 
     <div class="card">
       <h3 id="hDoor">DOOR</h3>
-      <p id="pDoor">Compass spine. N/E/S/W with lenses.</p>
-      <div class="actions">
+      <p id="pDoor">Compass spine. N/E/S/W with lenses (formality, expression, chronology).</p>
+      <div class="row">
         <a class="btn" id="goDoor" href="/door/">OPEN</a>
       </div>
     </div>
 
     <div class="card">
       <h3 id="hEnter">ENTER</h3>
-      <p id="pEnter">Go to the primary hub.</p>
-      <div class="actions">
+      <p id="pEnter">Primary hub. Use this when you already know where you’re going.</p>
+      <div class="row">
         <a class="btn" id="goHome" href="/home/">OPEN</a>
       </div>
     </div>
   </div>
 
-  <div class="p" style="margin-top:22px;opacity:.72">COGRID.NET</div>
+  <div class="band" id="b1">HOW THIS SITE WORKS</div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h4 id="a1t">Purpose Definition</h4>
+      <p id="a1p">This site is a structural interface. It does not sell belief. It binds every claim to bounded meaning, and it separates what is offered (claim) from what makes it verifiable (support).</p>
+      <div class="mini" id="a1m">Rule Anchor: Claims remain bounded. Support remains checkable. Navigation preserves state.</div>
+    </div>
+
+    <div class="panel">
+      <h4 id="a2t">Fast Navigation</h4>
+      <p id="a2p">Use Prelude when you want a calm entry. Use Door when you want compass traversal. Use Enter when you want to jump directly into the hub and move by function.</p>
+      <div class="mini" id="a2m">Entry Rule: Prelude → Door → (N/E/S/W). Enter bypasses Prelude.</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h4 id="a3t">Claim vs Support</h4>
+      <p id="a3p">Claim means two things: a stated problem (a need) and a stated offer (a solution). Support means two things: assistance (services) and verification (systems). This site keeps them distinct on purpose.</p>
+      <div class="mini" id="a3m">Separation Rule: Products & Services = claim surface. Software & Systems = support surface.</div>
+    </div>
+
+    <div class="panel">
+      <h4 id="a4t">Lenses Meaning</h4>
+      <p id="a4p">Formality changes wording and framing. Expression changes encoding posture (SSG/MSSG/BSSG). Chronology changes what you’re looking at (origin/current/trajectory). These toggles are not decoration; they change meaning.</p>
+      <div class="mini" id="a4m">Lens Rule: If a lens switch does not change content, it is a failure.</div>
+    </div>
+  </div>
+
+  <div class="band" id="b2">WHAT TO DO NEXT</div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h4 id="n1t">If You Want The Structure</h4>
+      <p id="n1p">Open Door. Pick a direction. If you want governance and constraint, go North. If you want measurement, go East. If you want deployable surfaces, go South. If you want references, go West.</p>
+      <div class="mini" id="n1m">Compass Rule: Direction first. Lenses second. Then move.</div>
+    </div>
+
+    <div class="panel">
+      <h4 id="n2t">If You Want The Offer</h4>
+      <p id="n2p">Open Prelude. Choose posture. Then enter Door. From there, move to Products & Services (claim) or Software & Systems (support) depending on whether you want capability or verification.</p>
+      <div class="mini" id="n2m">Posture Rule: Claim must be supported. Support must be verifiable.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span id="foot">Minimal return page. Orientation is the product.</span>
+    <div class="sig" id="sig">DIAMONDGATEBRIDGE.COM</div>
+  </div>
+
 </div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockPrelude" href="/prelude/">PRELUDE</a>
+  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+</nav>
 
 <script>
 (function(){
@@ -125,19 +287,30 @@ a{color:inherit;text-decoration:none}
            "&depth="+encodeURIComponent(depth);
   }
 
-  document.getElementById("goPrelude").href="/prelude/"+q();
-  document.getElementById("goDoor").href="/door/"+q();
-  document.getElementById("goHome").href="/home/"+q();
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+
+  wire("goPrelude","/prelude/");
+  wire("goDoor","/door/");
+  wire("goHome","/home/");
+  wire("dockPrelude","/prelude/");
+  wire("dockDoor","/door/");
+  wire("dockProducts","/products/");
+  wire("dockHome","/home/");
 
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
+
   function paintLang(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
     btnES.classList.toggle("active", lang==="es");
   }
   paintLang();
+
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
@@ -148,27 +321,102 @@ a{color:inherit;text-decoration:none}
   btnZH.onclick=function(){ setLang("zh"); };
   btnES.onclick=function(){ setLang("es"); };
 
+  function T(id, txt){ var el=document.getElementById(id); if(el) el.textContent=txt; }
+
   if(lang==="zh"){
-    document.getElementById("ttl").textContent="主页";
-    document.getElementById("tag").textContent="最小返回页：前置页=入口姿态，门=罗盘。";
-    document.getElementById("hPrelude").textContent="前置页";
-    document.getElementById("pPrelude").textContent="入口姿态：通俗/正式进入门。";
-    document.getElementById("hDoor").textContent="门";
-    document.getElementById("pDoor").textContent="罗盘主干：N/E/S/W + 透镜。";
-    document.getElementById("hEnter").textContent="进入";
-    document.getElementById("pEnter").textContent="进入主枢纽。";
-    document.querySelectorAll(".actions .btn").forEach(function(b){ b.textContent="打开"; });
-  }else if(lang==="es"){
-    document.getElementById("ttl").textContent="INICIO";
-    document.getElementById("tag").textContent="Página mínima: Preludio = postura, Puerta = brújula.";
-    document.getElementById("hPrelude").textContent="PRELUDIO";
-    document.getElementById("pPrelude").textContent="Postura de entrada: informal/formal hacia Puerta.";
-    document.getElementById("hDoor").textContent="PUERTA";
-    document.getElementById("pDoor").textContent="Eje brújula: N/E/S/O con lentes.";
-    document.getElementById("hEnter").textContent="ENTRAR";
-    document.getElementById("pEnter").textContent="Ir al hub principal.";
-    document.querySelectorAll(".actions .btn").forEach(function(b){ b.textContent="ABRIR"; });
+    T("hk","主页");
+    T("ttl","主页");
+    T("tag","定向信息页：前置页=入口姿态；门=罗盘；进入=枢纽。");
+
+    T("hPrelude","前置页");
+    T("pPrelude","入口姿态：选择通俗或正式进入“门”。");
+    T("hDoor","门");
+    T("pDoor","罗盘主干：N/E/S/W + 透镜（正式度/表达/时间）。");
+    T("hEnter","进入");
+    T("pEnter","主枢纽：已知道方向时直接跳转。");
+
+    document.querySelectorAll("#goPrelude,#goDoor,#goHome").forEach(function(a){ a.textContent="打开"; });
+
+    T("b1","网站怎么工作");
+    T("a1t","目的定义");
+    T("a1p","该网站是结构界面：不出售信仰。它把每个主张绑定到有界含义，并把“提供什么（主张）”与“如何可核查（支撑）”分离。");
+    T("a1m","规则锚点：主张必须有界；支撑必须可核查；导航必须保留状态。");
+
+    T("a2t","快速导航");
+    T("a2p","想平稳进入就用前置页。想罗盘遍历就用门。想直接跳到枢纽就用进入。");
+    T("a2m","入口规则：前置页 → 门 →（N/E/S/W）。进入会绕过前置页。");
+
+    T("a3t","主张与支撑");
+    T("a3p","主张有两层：声明问题（需求）与声明方案（提供）。支撑也有两层：服务协助与系统核查。网站故意把它们分离。");
+    T("a3m","分离规则：产品与服务=主张面；软件与系统=支撑面。");
+
+    T("a4t","透镜含义");
+    T("a4p","正式度改变措辞与框架。表达改变编码姿态（SSG/MSSG/BSSG）。时间改变你看的阶段（起源/当前/轨迹）。这些不是装饰，会改变含义。");
+    T("a4m","透镜规则：切换透镜不改内容=失败。");
+
+    T("b2","下一步怎么走");
+    T("n1t","如果你要结构");
+    T("n1p","打开门，选方向：北=治理与约束，东=测量与量规，南=产品与部署，西=链接与参考。");
+    T("n1m","罗盘规则：先方向，再透镜，然后行动。");
+
+    T("n2t","如果你要提供");
+    T("n2p","打开前置页，选姿态，再进入门：从门里选择产品与服务（主张）或软件与系统（支撑）。");
+    T("n2m","姿态规则：主张必须被支撑；支撑必须可核查。");
+
+    T("foot","最小返回页：定向本身就是产品。");
+    T("dockPrelude","前置页");
+    T("dockDoor","门");
+    T("dockProducts","产品");
+    T("dockHome","枢纽");
   }
+
+  if(lang==="es"){
+    T("hk","INICIO");
+    T("ttl","INICIO");
+    T("tag","Página de orientación: Preludio = postura; Puerta = brújula; Entrar = hub.");
+
+    T("hPrelude","PRELUDIO");
+    T("pPrelude","Postura de entrada: informal o formal hacia Puerta.");
+    T("hDoor","PUERTA");
+    T("pDoor","Eje brújula: N/E/S/O con lentes (formalidad/expresión/tiempo).");
+    T("hEnter","ENTRAR");
+    T("pEnter","Hub principal: úsalo si ya sabes adónde vas.");
+
+    document.querySelectorAll("#goPrelude,#goDoor,#goHome").forEach(function(a){ a.textContent="ABRIR"; });
+
+    T("b1","CÓMO FUNCIONA");
+    T("a1t","Definición de propósito");
+    T("a1p","Este sitio es una interfaz estructural. No vende creencias. Vincula cada afirmación a significado acotado y separa lo ofrecido (reclamo) de lo verificable (soporte).");
+    T("a1m","Regla: Reclamos acotados. Soporte verificable. Navegación preserva estado.");
+
+    T("a2t","Navegación rápida");
+    T("a2p","Usa Preludio para entrar con calma. Usa Puerta para brújula. Usa Entrar para saltar al hub.");
+    T("a2m","Regla: Preludio → Puerta → (N/E/S/O). Entrar salta Preludio.");
+
+    T("a3t","Reclamo vs Soporte");
+    T("a3p","Reclamo puede ser problema (necesidad) o oferta (solución). Soporte puede ser servicio (asistencia) o sistema (verificación). Separamos ambos a propósito.");
+    T("a3m","Regla: Productos y Servicios = reclamo. Software y Sistemas = soporte.");
+
+    T("a4t","Significado de lentes");
+    T("a4p","Formalidad cambia el marco. Expresión cambia el modo (SSG/MSSG/BSSG). Tiempo cambia etapa (origen/actual/trayectoria). No es decoración: cambia significado.");
+    T("a4m","Regla: Si un lente no cambia contenido, falla.");
+
+    T("b2","QUÉ HACER AHORA");
+    T("n1t","Si quieres la estructura");
+    T("n1p","Abre Puerta y elige dirección: Norte = leyes; Este = medición; Sur = productos; Oeste = enlaces.");
+    T("n1m","Regla: Dirección primero. Lentes después. Luego avanza.");
+
+    T("n2t","Si quieres la oferta");
+    T("n2p","Abre Preludio, elige postura y entra a Puerta. Desde allí elige reclamo (productos/servicios) o soporte (software/sistemas).");
+    T("n2m","Regla: Reclamo debe ser soportado. Soporte debe ser verificable.");
+
+    T("foot","Página mínima: la orientación es el producto.");
+    T("dockPrelude","PRELUDIO");
+    T("dockDoor","PUERTA");
+    T("dockProducts","PRODUCTOS");
+    T("dockHome","HUB");
+  }
+
 })();
 </script>
 

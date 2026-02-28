@@ -1,0 +1,578 @@
+<!-- TNT — /products/adoption-ladder/index.html
+     PRODUCTS · ADOPTION LADDER (PHASE GATES FOR SCALING)
+     GOAL:
+       - Build the missing Adoption Ladder page so /explore/ can link to it.
+       - 3 languages (EN / 中文 / ES) page-level toggle.
+       - Formal/Informal lens toggle ACTUALLY changes content.
+       - No html/body background styling (ui.css owns field).
+       - Tap-safe (no inline onclick; no overlay interception).
+     ROUTES:
+       - BACK → /products/
+       - EXIT → /index.html   (Door root)
+       - DOCK: HOME / PRODUCTS / LAWS / GAUGES
+     STATE:
+       - URL: lang/style/time/depth
+       - LS: gd_lang/gd_style/gd_time/gd_depth
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PRODUCTS · Adoption Ladder</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+
+/* ===== Layout ===== */
+:root{--dockH:92px;}
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:14px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+  z-index:10;
+}
+
+/* ===== Top controls ===== */
+.top{
+  position:sticky;
+  top:0;
+  z-index:240;
+  padding:10px 0 6px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  pointer-events:auto;
+}
+
+/* ===== Header ===== */
+.header{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(210,190,255,.14), transparent 70%),
+    radial-gradient(circle at 75% 60%, rgba(120,70,255,.10), transparent 72%),
+    rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:14px 16px;
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72}
+.t{margin:0;font-weight:950;font-size:26px;letter-spacing:.6px}
+.s{margin:10px 0 0;font-size:13.5px;opacity:.86;line-height:1.5;max-width:980px}
+.fine{margin-top:10px;font-size:12.25px;opacity:.70;line-height:1.45}
+
+/* ===== Lens bar ===== */
+.lens{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.lens .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
+
+/* ===== Band ===== */
+.band{
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.86);
+}
+
+/* ===== Step cards ===== */
+.stack{display:flex;flex-direction:column;gap:12px}
+.card{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
+}
+.head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  padding:14px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.bar{width:6px;height:22px;border-radius:99px;background:rgba(212,175,55,.55);flex:0 0 auto;margin-top:2px}
+.name{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.card.open .body{display:block}
+.p{margin:0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13.25px}
+.p + .p{margin-top:10px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
+
+/* ===== Dock ===== */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:98px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page" id="page">
+
+  <div class="top" aria-label="Top controls">
+    <div class="left">
+      <a class="btn" id="btnBack" href="/products/">BACK</a>
+      <a class="btn" id="btnExit" href="/index.html">EXIT</a>
+    </div>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
+    </div>
+  </div>
+
+  <div class="header">
+    <p class="k" id="hk">PRODUCTS</p>
+    <h1 class="t" id="ht">ADOPTION LADDER</h1>
+    <p class="s" id="hs">Phase gates for scaling responsibly. This page defines how adoption moves from curiosity to deployment without collapsing proof.</p>
+    <div class="fine" id="fine">Fine print: Gates reference Laws for admissibility and Gauges for measurement.</div>
+
+    <div class="lens" aria-label="Lens">
+      <button class="btn" id="lensInformal" type="button">INFORMAL</button>
+      <button class="btn" id="lensFormal" type="button">FORMAL</button>
+    </div>
+  </div>
+
+  <div class="band" id="band">PHASES</div>
+  <div class="stack" id="stack"></div>
+
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  // ----- State -----
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
+  }
+
+  // ----- Wire nav with state -----
+  document.getElementById("btnBack").href="/products/"+q();
+  document.getElementById("btnExit").href="/index.html"+q();
+  document.getElementById("dockHome").href="/home/"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
+
+  // ----- Language buttons -----
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    location.href = "/products/adoption-ladder/" + q({lang:lang});
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  // ----- Lens (formal/informal) actually changes content -----
+  var lens="formal";
+  var lensInformal=document.getElementById("lensInformal");
+  var lensFormal=document.getElementById("lensFormal");
+
+  function setLens(v){
+    lens = (v==="informal") ? "informal" : "formal";
+    lensInformal.classList.toggle("active", lens==="informal");
+    lensFormal.classList.toggle("active", lens==="formal");
+    render();
+  }
+  lensInformal.addEventListener("click", function(){ setLens("informal"); });
+  lensFormal.addEventListener("click", function(){ setLens("formal"); });
+  setLens(style==="informal" ? "informal" : "formal"); // initialize from gd_style
+
+  // ----- Copy packs -----
+  var COPY={
+    en:{
+      hk:"PRODUCTS",
+      ht:"ADOPTION LADDER",
+      hs:"Phase gates for scaling responsibly. This page defines how adoption moves from curiosity to deployment without collapsing proof.",
+      fine:"Fine print: Gates reference Laws for admissibility and Gauges for measurement.",
+      band:"PHASES",
+      open:"OPEN",
+      steps:[
+        {
+          title:"Phase 0 — Orientation",
+          sub:"Start here. Confirm scope and the surface you’re using.",
+          formal:[
+            "Input: a declared use-case and declared scope.",
+            "Constraint: scope must be explicit before any outcome claims.",
+            "Output: a bounded intent statement that can be audited.",
+            "Gate: if scope is vague, adoption cannot advance."
+          ],
+          informal:[
+            "Name what you’re trying to do.",
+            "Name what you’re NOT doing.",
+            "Don’t scale confusion.",
+            "If you can’t say it clearly, stop here."
+          ],
+          links:[
+            {label:"LAWS (scope)", href:"/laws/"},
+            {label:"GAUGES (baseline)", href:"/gauges/"}
+          ]
+        },
+        {
+          title:"Phase 1 — Evidence Intake",
+          sub:"Bring receipts. Choose what is measured vs. what is not measured.",
+          formal:[
+            "Input: receipts, logs, or measurable outputs.",
+            "Constraint: claims cannot exceed available receipts.",
+            "Output: admissibility posture (what is allowed to be asserted).",
+            "Gate: missing receipts forces non-claim posture."
+          ],
+          informal:[
+            "Bring what’s real.",
+            "If it can’t be shown, it can’t be upgraded.",
+            "No receipts = no claims.",
+            "That keeps you safe at scale."
+          ],
+          links:[
+            {label:"LAWS (admissibility)", href:"/laws/"},
+            {label:"GAUGES (signals)", href:"/gauges/"}
+          ]
+        },
+        {
+          title:"Phase 2 — Bounded Deployment",
+          sub:"Deploy inside limits. Contain failure before expanding.",
+          formal:[
+            "Input: a bounded surface and operating envelope.",
+            "Constraint: rollback/containment must be available before expansion.",
+            "Output: a stable operational band with tracked variance.",
+            "Gate: expansion is blocked if containment is not demonstrated."
+          ],
+          informal:[
+            "Deploy small first.",
+            "Prove you can stop damage fast.",
+            "Then grow.",
+            "Scale amplifies mistakes."
+          ],
+          links:[
+            {label:"PRODUCTS (surfaces)", href:"/products/"},
+            {label:"LAWS (containment)", href:"/laws/"}
+          ]
+        },
+        {
+          title:"Phase 3 — Replication",
+          sub:"Copy what works without importing hidden drift.",
+          formal:[
+            "Input: proven configuration and defined invariants.",
+            "Constraint: replication must preserve invariants and logs.",
+            "Output: repeatable outcomes with comparable measurements.",
+            "Gate: if outcomes diverge, roll back and re-baseline."
+          ],
+          informal:[
+            "Copy the working version.",
+            "Don’t improvise while scaling.",
+            "If results drift, stop and fix.",
+            "That’s how you avoid cascade."
+          ],
+          links:[
+            {label:"GAUGES (compare)", href:"/gauges/"},
+            {label:"LINKS (anchors)", href:"/links/"}
+          ]
+        },
+        {
+          title:"Phase 4 — Certification (Optional)",
+          sub:"Publish status without inflating claims.",
+          formal:[
+            "Input: stable outputs + repeatable measurement + logs.",
+            "Constraint: certification is bounded to scope and window.",
+            "Output: a public posture that is verifiable.",
+            "Gate: certification is revoked on integrity violation."
+          ],
+          informal:[
+            "Only certify what you can prove.",
+            "Keep it scoped.",
+            "Make it checkable.",
+            "Never sell belief."
+          ],
+          links:[
+            {label:"LINKS (proof anchors)", href:"/links/"},
+            {label:"ABOUT (posture)", href:"/about/"}
+          ]
+        }
+      ]
+    },
+    zh:{
+      hk:"产品",
+      ht:"采纳阶梯",
+      hs:"负责任扩张的阶段门控。此页定义从好奇到部署的路径，并避免在规模下崩塌。",
+      fine:"细则：门控引用法则（可采信）与量规（测量）。",
+      band:"阶段",
+      open:"打开",
+      steps:[
+        {
+          title:"阶段0 — 导览",
+          sub:"从这里开始。先声明范围与执行面。",
+          formal:["输入：用途 + 范围声明。","约束：范围先于结果主张。","输出：可审计的有界意图。","门控：范围不清则不可前进。"],
+          informal:["先说清你要做什么。","再说清你不做什么。","不要放大困惑。","说不清就停在这里。"],
+          links:[{label:"法则（范围）",href:"/laws/"},{label:"量规（基线）",href:"/gauges/"}]
+        },
+        {
+          title:"阶段1 — 证据输入",
+          sub:"带收据。区分已测与未测。",
+          formal:["输入：收据/日志/可测输出。","约束：主张不得超过收据。","输出：可采信姿态（允许说什么）。","门控：无收据则只能非主张。"],
+          informal:["带真实证据来。","不可展示就不可升级。","没收据就别主张。","规模下更安全。"],
+          links:[{label:"法则（可采信）",href:"/laws/"},{label:"量规（信号）",href:"/gauges/"}]
+        },
+        {
+          title:"阶段2 — 有界部署",
+          sub:"在限制内部署。先隔离再扩张。",
+          formal:["输入：有界执行面与工作包络。","约束：扩张前必须具备回滚/隔离。","输出：稳定操作带与方差记录。","门控：未证隔离则禁止扩张。"],
+          informal:["先小规模部署。","证明能快速止损。","再增长。","规模会放大错误。"],
+          links:[{label:"产品（执行面）",href:"/products/"},{label:"法则（隔离）",href:"/laws/"}]
+        },
+        {
+          title:"阶段3 — 复制扩张",
+          sub:"复制有效版本，拒绝隐性漂移。",
+          formal:["输入：已验证配置与不变量。","约束：复制必须保留不变量与日志。","输出：可比较的可重复结果。","门控：结果分歧则回滚并重建基线。"],
+          informal:["复制有效版本。","扩张时别临场发挥。","结果漂移就停下来修。","防止级联。"],
+          links:[{label:"量规（对比）",href:"/gauges/"},{label:"链接（锚点）",href:"/links/"}]
+        },
+        {
+          title:"阶段4 — 认证（可选）",
+          sub:"发布状态，但不膨胀主张。",
+          formal:["输入：稳定输出 + 可重复测量 + 日志。","约束：认证绑定范围与时间窗。","输出：可核查的公开姿态。","门控：完整性违规则撤销。"],
+          informal:["只认证你能证明的。","保持有界。","让它可核查。","不卖信仰。"],
+          links:[{label:"链接（证据锚点）",href:"/links/"},{label:"关于（姿态）",href:"/about/"}]
+        }
+      ]
+    },
+    es:{
+      hk:"PRODUCTOS",
+      ht:"ESCALERA DE ADOPCIÓN",
+      hs:"Compuertas por fases para escalar con responsabilidad. Define cómo pasar de curiosidad a despliegue sin colapsar la prueba.",
+      fine:"Letra pequeña: las compuertas referencian Leyes (admisibilidad) y Medidores (medición).",
+      band:"FASES",
+      open:"ABRIR",
+      steps:[
+        {
+          title:"Fase 0 — Orientación",
+          sub:"Empieza aquí. Declara alcance y superficie.",
+          formal:["Entrada: caso de uso + alcance declarado.","Restricción: el alcance va antes de las afirmaciones.","Salida: intención acotada auditable.","Compuerta: sin alcance claro, no avanzas."],
+          informal:["Di qué quieres hacer.","Di qué NO estás haciendo.","No escales confusión.","Si no es claro, detente."],
+          links:[{label:"LEYES (alcance)",href:"/laws/"},{label:"MEDIDORES (base)",href:"/gauges/"}]
+        },
+        {
+          title:"Fase 1 — Evidencia",
+          sub:"Trae recibos. Define medido vs no medido.",
+          formal:["Entrada: recibos, logs u outputs medibles.","Restricción: las afirmaciones no superan la evidencia.","Salida: postura de admisibilidad.","Compuerta: sin recibos, postura sin afirmación."],
+          informal:["Trae lo real.","Si no se puede mostrar, no se sube.","Sin recibos, sin afirmaciones.","Más seguro a escala."],
+          links:[{label:"LEYES (admisibilidad)",href:"/laws/"},{label:"MEDIDORES (señales)",href:"/gauges/"}]
+        },
+        {
+          title:"Fase 2 — Despliegue Acotado",
+          sub:"Despliega dentro de límites. Contén antes de crecer.",
+          formal:["Entrada: superficie acotada + envolvente.","Restricción: rollback/contención antes de expansión.","Salida: banda estable con varianza registrada.","Compuerta: sin contención demostrada, no se escala."],
+          informal:["Despliega pequeño.","Prueba que puedes cortar daño rápido.","Luego creces.","La escala amplifica errores."],
+          links:[{label:"PRODUCTOS",href:"/products/"},{label:"LEYES (contención)",href:"/laws/"}]
+        },
+        {
+          title:"Fase 3 — Replicación",
+          sub:"Copia lo que funciona sin importar deriva oculta.",
+          formal:["Entrada: config probada + invariantes.","Restricción: la réplica preserva invariantes y logs.","Salida: resultados comparables.","Compuerta: si diverge, rollback y re-baseline."],
+          informal:["Copia la versión que funciona.","No improvises al escalar.","Si deriva, para y arregla.","Evita cascada."],
+          links:[{label:"MEDIDORES (comparar)",href:"/gauges/"},{label:"ENLACES",href:"/links/"}]
+        },
+        {
+          title:"Fase 4 — Certificación (Opcional)",
+          sub:"Publica estado sin inflar afirmaciones.",
+          formal:["Entrada: outputs estables + medición repetible + logs.","Restricción: certificado acotado a alcance/ventana.","Salida: postura verificable.","Compuerta: se revoca por violación de integridad."],
+          informal:["Certifica solo lo que puedes probar.","Mantén el alcance.","Hazlo verificable.","No vendas creencia."],
+          links:[{label:"ENLACES (anclas)",href:"/links/"},{label:"ACERCA",href:"/about/"}]
+        }
+      ]
+    }
+  };
+
+  function pick(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
+
+  // ----- Render -----
+  function render(){
+    var C=pick();
+    document.getElementById("hk").textContent=C.hk;
+    document.getElementById("ht").textContent=C.ht;
+    document.getElementById("hs").textContent=C.hs;
+    document.getElementById("fine").textContent=C.fine;
+    document.getElementById("band").textContent=C.band;
+
+    var stack=document.getElementById("stack");
+    stack.innerHTML="";
+
+    C.steps.forEach(function(step, idx){
+      var card=document.createElement("div");
+      card.className="card" + (idx===0 ? " open" : "");
+
+      var head=document.createElement("div");
+      head.className="head";
+
+      var hL=document.createElement("div");
+      hL.className="hL";
+      var bar=document.createElement("div");
+      bar.className="bar";
+      var block=document.createElement("div");
+      block.style.minWidth="0";
+
+      var name=document.createElement("div");
+      name.className="name";
+      name.textContent=step.title;
+
+      var sub=document.createElement("div");
+      sub.className="sub";
+      sub.textContent=step.sub;
+
+      block.appendChild(name);
+      block.appendChild(sub);
+      hL.appendChild(bar);
+      hL.appendChild(block);
+
+      var chev=document.createElement("div");
+      chev.className="chev";
+      chev.textContent = (idx===0) ? "▾" : "▸";
+
+      head.appendChild(hL);
+      head.appendChild(chev);
+
+      var body=document.createElement("div");
+      body.className="body";
+
+      var lines = (lens==="formal") ? step.formal : step.informal;
+      lines.forEach(function(t){
+        var p=document.createElement("p");
+        p.className="p";
+        p.textContent=t;
+        body.appendChild(p);
+      });
+
+      var actions=document.createElement("div");
+      actions.className="actions";
+      (step.links||[]).forEach(function(lk){
+        var a=document.createElement("a");
+        a.className="btn";
+        a.textContent = lk.label;
+        a.href = lk.href + q();
+        actions.appendChild(a);
+      });
+      body.appendChild(actions);
+
+      function toggle(){
+        var openNow = card.classList.toggle("open");
+        chev.textContent = openNow ? "▾" : "▸";
+      }
+      head.addEventListener("click", toggle);
+
+      card.appendChild(head);
+      card.appendChild(body);
+      stack.appendChild(card);
+    });
+  }
+
+  render();
+})();
+</script>
+
+</body>
+</html>

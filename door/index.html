@@ -1,203 +1,458 @@
+<!-- TNT — /explore/index.html
+     EXPLORE · PRODUCTS & INNOVATION (LAYER 2 · SPLINE B HUB)
+     PRIMARY RULE:
+       - Plain language in bold layer
+       - Any abstract/scientific language goes to fine print only
+     PURPOSE:
+       - This page is the Products + Innovation hub (same accord).
+       - 2 bands (kept separate, no mixing):
+           Band A: PRODUCTS (usable surfaces)
+           Band B: INNOVATION (labs / frontier / language)
+       - Click a card → expands in-place (accordion) + OPEN button.
+       - No modals. No overlays. No “opens at bottom” confusion.
+     CONTROLS:
+       - Page-level language toggle only (EN / 中文 / ES) at top-right
+       - No language toggle inside cards
+     ROUTING (no placeholders here; all targets are existing trunks or known hubs):
+       - Products cards route to /products/ or known product pages
+       - Innovation cards route to /explore/frontier/ or /explore/innovation/language/
+     STATE:
+       - URL: lang/style/time/depth
+       - LS:  gd_lang/gd_style/gd_time/gd_depth
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - No html/body background styling
+       - Tap-safe
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ENTER</title>
+<title>EXPLORE · Products & Innovation</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
+:root{--dockH:86px}
 
-:root{
-  --D:240px;        /* reduced size */
-  --R:180px;        /* reduced spacing */
-  --deepA:#0f1624;
-  --deepB:#060a12;
-}
-
-/* -------------------- CONTROLS -------------------- */
-
-.controls{
-  position:fixed;
-  top:18px;
-  left:0;
-  right:0;
+/* page */
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:14px 0 calc(var(--dockH) + 18px);
   display:flex;
-  justify-content:space-between;
-  padding:0 18px;
-  z-index:5;
-}
-
-.controls .left,
-.controls .right{
-  display:flex;
+  flex-direction:column;
   gap:12px;
 }
 
-/* -------------------- BANNER -------------------- */
-
-.banner{
-  position:fixed;
-  top:90px;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(90vw,900px);
-  padding:28px 32px;
-  border-radius:26px;
-
-  background:linear-gradient(160deg, rgba(18,24,40,.94), rgba(10,14,24,.98));
-  border:1px solid rgba(255,255,255,.25);
-
-  text-align:center;
-  z-index:1;
+/* top controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-.banner h1{
-  margin:0;
-  font-size:42px;
-  font-weight:900;
-}
-
-.banner p{
-  margin:14px 0 0;
-  font-size:15px;
-  line-height:1.6;
-}
-
-/* -------------------- STAGE -------------------- */
-
-.stage{
-  position:fixed;
-  left:50%;
-  top:60%;
-  transform:translate(-50%,-50%);
-  width:100%;
-  max-width:600px;
-  height:600px;
-  z-index:2;
-  pointer-events:none;
-}
-
-/* -------------------- DIAMONDS -------------------- */
-
-.diamond{
-  width:var(--D);
-  height:var(--D);
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform-origin:center;
-  border-radius:32px;
-  cursor:pointer;
-  pointer-events:auto;
-  transform:translate(-50%,-50%) rotate(45deg);
-
+/* header */
+.header{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
   background:
-    radial-gradient(circle at 20% 15%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.55) 14%, transparent 38%),
-    radial-gradient(circle at 78% 26%, rgba(170,130,255,.65) 0%, transparent 60%),
-    radial-gradient(circle at 62% 82%, rgba(120,240,255,.55) 0%, transparent 75%),
-    linear-gradient(165deg, var(--deepA) 0%, var(--deepB) 70%, #020409 100%);
+    radial-gradient(circle at 30% 25%, rgba(210,190,255,.14), transparent 70%),
+    radial-gradient(circle at 75% 60%, rgba(120,70,255,.10), transparent 72%),
+    rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  padding:14px 16px;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+}
+.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
+.t{font-weight:950;font-size:26px;letter-spacing:.6px;margin:0 0 6px}
+.s{font-size:13.5px;opacity:.86;line-height:1.5;margin:0;max-width:980px}
+.fine{margin-top:10px;font-size:12.25px;opacity:.70;line-height:1.45}
 
-  border:1px solid rgba(255,255,255,.6);
-
-  box-shadow:
-    0 80px 200px rgba(0,0,0,.95),
-    0 0 120px rgba(212,175,55,.35),
-    inset 0 4px 0 rgba(255,255,255,.85),
-    inset 0 -90px 160px rgba(0,0,0,.98);
+/* band label */
+.band{
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.86);
 }
 
-.inner{
-  transform:rotate(-45deg);
-  width:100%;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:24px;
+/* list */
+.stackList{display:flex;flex-direction:column;gap:12px}
+.stackRow{
+  --domc:#93C5FD;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
 }
-
-.lab{
-  font-size:20px;
-  font-weight:900;
+.stackHead{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:14px 16px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
-
-.sub{
-  margin-top:12px;
-  font-size:15px;
+.stackLeft{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.stackBar{width:6px;height:22px;border-radius:99px;background:var(--domc);flex:0 0 auto;margin-top:2px}
+.stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stackSub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
+.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.stackBody{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
+.stackRow.open .stackBody{display:block}
+.pdesc{margin:0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13.25px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
 
-/* Placement */
-.topDiamond{
-  transform:translate(-50%,-50%) translate(0,-180px) rotate(45deg);
-}
-
-.bottomDiamond{
-  transform:translate(-50%,-50%) translate(0,180px) rotate(45deg);
-}
-
-/* -------------------- FOOTER -------------------- */
-
-.footer{
-  position:fixed;
-  bottom:30px;
-  left:50%;
+/* dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  font-size:13px;
-  z-index:4;
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:98px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
 </head>
 
 <body>
 
-<div class="controls">
-  <div class="left">
-    <a class="btn" href="/">EXIT</a>
-    <a class="btn" href="/prelude/">PRELUDE</a>
-  </div>
-  <div class="right">
-    <button class="btn">EN</button>
-    <button class="btn">中文</button>
-    <button class="btn">ES</button>
-  </div>
+<div class="top-left">
+  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+  <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
 </div>
 
-<div class="banner">
-  <h1>ENTER</h1>
-  <p>
-    This is a structural site.<br/>
-    It does not sell belief.<br/>
-    It measures coherence.
-  </p>
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
 </div>
 
-<div class="stage">
+<div class="page">
 
-  <div class="diamond topDiamond" onclick="location.href='/home/'">
-    <div class="inner">
-      <div class="lab">ENTER SITE</div>
-      <div class="sub"><strong>Direct:</strong> Move forward into systems.</div>
-    </div>
+  <div class="header">
+    <p class="k" id="hk">EXPLORE</p>
+    <h1 class="t" id="ht">PRODUCTS & INNOVATION</h1>
+    <p class="s" id="hs">Open a card. Read one paragraph. Jump when you’re ready.</p>
+    <div class="fine" id="fine">Fine print: deeper theory lives under Laws and Gauges.</div>
   </div>
 
-  <div class="diamond bottomDiamond" onclick="location.href='/prelude/'">
-    <div class="inner">
-      <div class="lab">VIEW SITE MAP</div>
-      <div class="sub"><strong>First:</strong> See the structure before movement.</div>
-    </div>
-  </div>
+  <div class="band" id="bandA">PRODUCTS</div>
+  <div class="stackList" id="listA"></div>
+
+  <div class="band" id="bandB">INNOVATION</div>
+  <div class="stackList" id="listB"></div>
 
 </div>
 
-<div class="footer">
-  Scale without structure collapses.
-</div>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  // state
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  localStorage.setItem("gd_lang",lang);
+  localStorage.setItem("gd_style",style);
+  localStorage.setItem("gd_time",time);
+  localStorage.setItem("gd_depth",depth);
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
+  }
+
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnDoor","/door/");
+  wire("btnIndex","/index.html");
+  wire("dockHome","/home/");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
+
+  // language toggle
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    localStorage.setItem("gd_lang",lang);
+    location.href="/explore/" + q();
+  }
+  btnEN.onclick=function(){ setLang("en"); };
+  btnZH.onclick=function(){ setLang("zh"); };
+  btnES.onclick=function(){ setLang("es"); };
+
+  // i18n header (plain)
+  function renderHeader(){
+    if(lang==="zh"){
+      document.getElementById("hk").textContent="探索";
+      document.getElementById("ht").textContent="产品与创新";
+      document.getElementById("hs").textContent="打开一张卡。读一段话。准备好就跳转。";
+      document.getElementById("fine").textContent="细则：更深的理论在法则与量规中。";
+      document.getElementById("bandA").textContent="产品";
+      document.getElementById("bandB").textContent="创新";
+      document.getElementById("btnDoor").textContent="门";
+      document.getElementById("btnIndex").textContent="索引";
+      document.getElementById("dockHome").textContent="主页";
+      document.getElementById("dockProducts").textContent="产品";
+      document.getElementById("dockLaws").textContent="法则";
+      document.getElementById("dockGauges").textContent="量规";
+    }else if(lang==="es"){
+      document.getElementById("hk").textContent="EXPLORAR";
+      document.getElementById("ht").textContent="PRODUCTOS E INNOVACIÓN";
+      document.getElementById("hs").textContent="Abre una tarjeta. Lee un párrafo. Salta cuando estés listo.";
+      document.getElementById("fine").textContent="Letra pequeña: la teoría vive en Leyes y Medidores.";
+      document.getElementById("bandA").textContent="PRODUCTOS";
+      document.getElementById("bandB").textContent="INNOVACIÓN";
+      document.getElementById("btnDoor").textContent="PUERTA";
+      document.getElementById("btnIndex").textContent="ÍNDICE";
+      document.getElementById("dockHome").textContent="INICIO";
+      document.getElementById("dockProducts").textContent="PRODUCTOS";
+      document.getElementById("dockLaws").textContent="LEYES";
+      document.getElementById("dockGauges").textContent="MEDIDORES";
+    }else{
+      document.getElementById("hk").textContent="EXPLORE";
+      document.getElementById("ht").textContent="PRODUCTS & INNOVATION";
+      document.getElementById("hs").textContent="Open a card. Read one paragraph. Jump when you’re ready.";
+      document.getElementById("fine").textContent="Fine print: deeper theory lives under Laws and Gauges.";
+      document.getElementById("bandA").textContent="PRODUCTS";
+      document.getElementById("bandB").textContent="INNOVATION";
+      document.getElementById("btnDoor").textContent="DOOR";
+      document.getElementById("btnIndex").textContent="INDEX";
+      document.getElementById("dockHome").textContent="HOME";
+      document.getElementById("dockProducts").textContent="PRODUCTS";
+      document.getElementById("dockLaws").textContent="LAWS";
+      document.getElementById("dockGauges").textContent="GAUGES";
+    }
+  }
+  renderHeader();
+
+  // data (no placeholders; only known hubs/pages)
+  var PRODUCTS = [
+    {
+      c:"#0EA5E9",
+      t:{en:"Products",zh:"产品总览",es:"Productos"},
+      s:{en:"Everything you can use, packaged as surfaces.",zh:"所有可用内容的总入口。",es:"Entrada a todo lo utilizable."},
+      p:{en:"This is the product spine. Each item links to doctrine (Laws) and measurement (Gauges) without mixing them.",
+         zh:"这是产品脊柱。每项都可回到法则与量规，但不混写。",
+         es:"Este es el eje de productos. Cada elemento enlaza a Leyes y Medidores sin mezclar."},
+      href:"/products/"
+    },
+    {
+      c:"#F59E0B",
+      t:{en:"Energy (Industrial)",zh:"能源（工业）",es:"Energía (Industrial)"},
+      s:{en:"Industrial posture only. No gain claims.",zh:"仅工业姿态。无增益主张。",es:"Solo postura industrial. Sin ganancias."},
+      p:{en:"Industrial thermal substitution surfaces. Any frontier statements stay as readiness doctrine under Laws.",
+         zh:"工业热替代执行面。任何前沿表述都只作为法则下的就绪教义。",
+         es:"Superficies de sustitución térmica industrial. Lo fronterizo queda como doctrina de preparación."},
+      href:"/products/energy/"
+    },
+    {
+      c:"#93C5FD",
+      t:{en:"Coherence Diagnostic",zh:"一致性诊断",es:"Diagnóstico de coherencia"},
+      s:{en:"Decision support and classification surfaces.",zh:"决策支持与分类执行面。",es:"Soporte de decisión y clasificación."},
+      p:{en:"A diagnostic surface that references Hybrid Collapse Rule (Laws) and outputs (Gauges) without inflating claims.",
+         zh:"诊断执行面：引用混合崩塌规则（法则）与输出（量规），不膨胀主张。",
+         es:"Superficie diagnóstica: referencia Leyes y salidas de Medidores sin inflar afirmaciones."},
+      href:"/products/"
+    },
+    {
+      c:"#60A5FA",
+      t:{en:"Platforms",zh:"平台",es:"Plataformas"},
+      s:{en:"Core engines and deployable units.",zh:"核心引擎与可部署单元。",es:"Motores y unidades desplegables."},
+      p:{en:"Platform catalog with bounded summaries. The proof posture stays in Laws/Gauges.",
+         zh:"平台目录（有界摘要）。证明姿态在法则/量规。",
+         es:"Catálogo de plataformas con resúmenes acotados. La prueba vive en Leyes/Medidores."},
+      href:"/products/"
+    }
+  ];
+
+  var INNOV = [
+    {
+      c:"#93C5FD",
+      t:{en:"Frontier",zh:"前沿",es:"Frontera"},
+      s:{en:"Concept lab and readiness pathways.",zh:"概念实验室与就绪路径。",es:"Laboratorio de conceptos y preparación."},
+      p:{en:"Big ideas are allowed here, but claims remain bounded. Anything measurable routes to Gauges.",
+         zh:"这里允许大想法，但主张必须有界。可测内容跳到量规。",
+         es:"Aquí caben ideas grandes, pero las afirmaciones siguen acotadas. Lo medible va a Medidores."},
+      href:"/explore/frontier/"
+    },
+    {
+      c:"#D4AF37",
+      t:{en:"Language",zh:"语言",es:"Lenguaje"},
+      s:{en:"Shared terms and structural encoding.",zh:"共用术语与结构编码。",es:"Términos compartidos y codificación."},
+      p:{en:"This lane prevents meaning drift by keeping terminology stable across pages.",
+         zh:"此干线通过稳定术语来阻止含义漂移。",
+         es:"Este carril evita deriva manteniendo términos estables."},
+      href:"/explore/innovation/language/"
+    },
+    {
+      c:"#A3A3A3",
+      t:{en:"Readiness Only",zh:"仅就绪",es:"Solo preparación"},
+      s:{en:"Requirements, not achievements.",zh:"需求，不是成就。",es:"Requisitos, no logros."},
+      p:{en:"If you’re looking for “proof,” go to Laws and Gauges. This lane is for prerequisites.",
+         zh:"如果你要“证明”，去法则与量规。这里是先决条件。",
+         es:"Si buscas “prueba”, ve a Leyes y Medidores. Aquí son prerrequisitos."},
+      href:"/laws/fusion-readiness/"
+    },
+    {
+      c:"#334155",
+      t:{en:"Jump Lists",zh:"跳转列表",es:"Listas de salto"},
+      s:{en:"Fast routing without reading everything.",zh:"不必全读，快速跳转。",es:"Rutas rápidas sin leer todo."},
+      p:{en:"Use this when you know what you want. If you don’t, open a card and read one paragraph.",
+         zh:"知道要什么就用这个。不知道就打开卡片读一段。",
+         es:"Úsalo si ya sabes qué quieres. Si no, abre una tarjeta y lee un párrafo."},
+      href:"/home/"
+    }
+  ];
+
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en; }
+
+  function makeRow(item){
+    var row=document.createElement("div");
+    row.className="stackRow";
+    row.style.setProperty("--domc", item.c);
+
+    var head=document.createElement("div");
+    head.className="stackHead";
+
+    var left=document.createElement("div");
+    left.className="stackLeft";
+
+    var bar=document.createElement("div");
+    bar.className="stackBar";
+    bar.style.background=item.c;
+
+    var block=document.createElement("div");
+    block.style.minWidth="0";
+
+    var title=document.createElement("div");
+    title.className="stackTitle";
+    title.textContent=pick(item.t);
+
+    var sub=document.createElement("div");
+    sub.className="stackSub";
+    sub.textContent=pick(item.s);
+
+    block.appendChild(title);
+    block.appendChild(sub);
+
+    left.appendChild(bar);
+    left.appendChild(block);
+
+    var chev=document.createElement("div");
+    chev.className="stackChevron";
+    chev.textContent="▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="stackBody";
+
+    var p=document.createElement("p");
+    p.className="pdesc";
+    p.textContent=pick(item.p);
+
+    var acts=document.createElement("div");
+    acts.className="actions";
+    var open=document.createElement("a");
+    open.className="btn";
+    open.textContent = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
+    open.href = item.href + q();
+    acts.appendChild(open);
+
+    body.appendChild(p);
+    body.appendChild(acts);
+
+    head.addEventListener("click", function(){
+      var openNow=row.classList.toggle("open");
+      chev.textContent = openNow ? "▾" : "▸";
+    });
+
+    row.appendChild(head);
+    row.appendChild(body);
+    return row;
+  }
+
+  var listA=document.getElementById("listA");
+  var listB=document.getElementById("listB");
+
+  PRODUCTS.forEach(function(it,i){
+    var el=makeRow(it);
+    listA.appendChild(el);
+    if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
+  });
+
+  INNOV.forEach(function(it,i){
+    var el=makeRow(it);
+    listB.appendChild(el);
+    if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
+  });
+
+})();
+</script>
 
 </body>
 </html>

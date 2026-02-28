@@ -1,407 +1,281 @@
-<!-- TNT — /products/index.html
-     PRODUCTS · LANDING (SELLABLE SURFACES ONLY)
-     PURPOSE (LOCK):
-       - Consolidated product taxonomy hub (7 categories).
-       - No internal doctrine marketing. No laws copy. No fusion gain claims.
-       - 1–2 sentence summaries per product node.
-       - Each node declares licensing classes: SaaS / Enterprise / Government.
-       - Tap-safe accordion (open/close per row).
-       - Language is page-level only (EN / 中文 / ES).
-       - State carry: lang/style/time/depth (URL) + gd_* (localStorage).
-     OWNERSHIP:
-       - ui.css owns field (no html/body background styling)
-       - branch.css for geometry primitives (not redefined)
-       - instruments.js canonical state loader
--->
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRODUCTS · Platforms</title>
+<title>PRODUCTS · Surfaces</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-/* DO NOT TOUCH FIELD — ui.css owns html/body background */
 a{color:inherit;text-decoration:none}
-
 :root{--dockH:88px}
 
-/* page */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:14px 0 calc(var(--dockH) + 22px);
+  padding:24px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:12px;
-  position:relative;
-  z-index:5;
+  gap:20px;
 }
 
-/* top controls */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:140;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:140;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-
-/* header */
-.header{
-  border:1px solid rgba(255,255,255,.10);
+/* Heavy contrast container */
+.block{
+  background:rgba(0,0,0,.72);
+  border:1px solid rgba(255,255,255,.18);
   border-radius:22px;
-  background:rgba(0,0,0,.14);
-  backdrop-filter:blur(10px);
-  padding:14px 16px;
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:24px;
+  backdrop-filter:blur(14px);
+  box-shadow:0 40px 120px rgba(0,0,0,.85);
 }
-.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
-.t{font-weight:950;font-size:24px;letter-spacing:.3px;margin:0 0 6px}
-.s{font-size:13px;opacity:.82;line-height:1.5;margin:0;max-width:980px}
 
-/* list */
-.stackList{display:flex;flex-direction:column;gap:12px;margin-top:4px}
-.stackRow{
-  --domc:#93C5FD;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
-  overflow:hidden;
+.k{
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.7;
+  margin:0 0 6px;
 }
-.stackHead{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:14px 16px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-.stackLeft{display:flex;align-items:flex-start;gap:12px;min-width:0}
-.stackBar{width:6px;height:22px;border-radius:99px;background:var(--domc);flex:0 0 auto;margin-top:2px}
-.stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stackSub{margin-top:6px;font-size:12.5px;opacity:.78;line-height:1.35;max-width:72ch}
-.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
-.stackBody{
-  display:none;
-  padding:14px 16px 16px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
-}
-.stackRow.open .stackBody{display:block}
 
-/* license chips */
-.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.chip{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:7px 10px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.14);
-  font-weight:950;letter-spacing:.2px;font-size:12px;
+.h{
+  font-size:28px;
+  font-weight:950;
+  margin:0 0 12px;
 }
-.chip.on{border-color:rgba(212,175,55,.55);box-shadow:0 0 14px rgba(212,175,55,.18)}
-/* actions */
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
-.actions .btn{padding:10px 12px;border-radius:999px}
 
-/* dock */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:220;
-  width:min(980px,94vw);
-  padding:10px 12px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
+.p{
+  font-size:15px;
+  line-height:1.6;
+  opacity:.92;
+  margin:0;
+}
+
+/* Grid */
+.grid{
   display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
-  gap:10px;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-@media (max-width:520px){:root{--dockH:92px}.dock{grid-template-columns:repeat(3, minmax(0,1fr))}}
+@media(max-width:900px){
+  .grid{grid-template-columns:repeat(1,minmax(0,1fr))}
+}
+
+.card{
+  background:rgba(12,18,24,.95);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:20px;
+  padding:20px;
+  cursor:pointer;
+  transition:all .15s ease;
+}
+
+.card:hover{
+  border-color:rgba(212,175,55,.6);
+  transform:translateY(-4px);
+}
+
+.ct{
+  font-weight:950;
+  margin:0 0 8px;
+  font-size:17px;
+}
+
+.cd{
+  font-size:14px;
+  opacity:.85;
+  margin:0 0 10px;
+}
+
+.focus{
+  display:none;
+}
+
+.focus.show{
+  display:block;
+}
+
+.lens{
+  display:flex;
+  gap:10px;
+  margin-top:16px;
+}
+
+.line{
+  margin-top:10px;
+  font-size:15px;
+  line-height:1.6;
+}
+
+.bind{
+  margin-top:18px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.18);
+  font-size:14px;
+  opacity:.85;
+}
+
+/* Dock */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(12px,env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  padding:14px;
+  background:rgba(0,0,0,.9);
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.18);
+}
+.dock .btn{width:100%}
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnHome" href="/home/">HOME</a>
-  <a class="btn" id="btnExit" href="/index.html">INDEX</a>
-</div>
-
-<div class="top-right">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
-</div>
-
 <div class="page">
 
-  <div class="header">
-    <p class="k" id="hk">PRODUCTS</p>
-    <h1 class="t" id="ht">Platforms</h1>
-    <p class="s" id="hs">Sellable surfaces only. Doctrine lives in Laws. Instrumentation lives in Gauges.</p>
+  <div class="block">
+    <p class="k">EXECUTION SURFACES</p>
+    <h1 class="h">WHAT YOU CAN ACTUALLY USE</h1>
+    <p class="p">
+      Structure without application is theory.  
+      Products convert structure into action.
+    </p>
   </div>
 
-  <div class="stackList" id="stackList"></div>
+  <div class="block">
+    <div class="grid">
+
+      <div class="card" onclick="openNode('diagnostic')">
+        <p class="ct">COHERENCE DIAGNOSTIC</p>
+        <p class="cd">Measure drift before scale amplifies it.</p>
+      </div>
+
+      <div class="card" onclick="openNode('adoption')">
+        <p class="ct">ADOPTION LADDER</p>
+        <p class="cd">Phase gates for scaling responsibly.</p>
+      </div>
+
+      <div class="card" onclick="openNode('vault')">
+        <p class="ct">CANONICAL VAULT</p>
+        <p class="cd">Version-controlled reference surfaces.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="block focus" id="focus">
+    <h2 id="fTitle"></h2>
+
+    <div class="lens">
+      <button class="btn" onclick="setLens('informal')">INFORMAL</button>
+      <button class="btn" onclick="setLens('formal')">FORMAL</button>
+    </div>
+
+    <div id="fBody"></div>
+  </div>
 
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockHome" href="/home/">HOME</a>
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+<nav class="dock">
+  <a class="btn" href="/home/">HOME</a>
+  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" href="/index.html">INDEX</a>
 </nav>
 
 <script>
-(function(){
-  // ===== State hydration (URL: lang/style/time/depth; LS: gd_*) =====
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+let currentLens = "informal";
+let currentNode = null;
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+const DATA = {
 
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+diagnostic:{
+informal:[
+"This tool detects contradiction before it becomes collapse.",
+"It compares stated values to observable behavior.",
+"If alignment drops, scale must pause."
+],
+formal:[
+"External coherence cannot exceed internal consistency.",
+"Observer-invariant classification under constraint.",
+"Misalignment triggers admissibility threshold failure."
+],
+bind:"Bound to: Laws + Hub A Constraints."
+},
 
-  function q(){
-    var p=new URLSearchParams();
-    p.set("lang",lang); p.set("style",style); p.set("time",time); p.set("depth",depth);
-    return "?"+p.toString();
-  }
+adoption:{
+informal:[
+"Scaling without gates creates instability.",
+"Each phase must pass before expansion.",
+"Verification capacity sets the ceiling."
+],
+formal:[
+"Phase-gated expansion model.",
+"Admissibility precedes deployment.",
+"Load increases amplify systemic variance."
+],
+bind:"Bound to: Constraints + Containment."
+},
 
-  // Wire nav
-  document.getElementById("btnHome").href="/home/"+q();
-  document.getElementById("btnExit").href="/index.html"+q();
-  document.getElementById("dockHome").href="/home/"+q();
-  document.getElementById("dockExplore").href="/explore/"+q();
-  document.getElementById("dockProducts").href="/products/"+q();
-  document.getElementById("dockLaws").href="/laws/"+q();
-  document.getElementById("dockGauges").href="/gauges/"+q();
+vault:{
+informal:[
+"This is where finalized material lives.",
+"Nothing enters without constraint verification.",
+"Version control prevents silent mutation."
+],
+formal:[
+"Canonical packet consolidation layer.",
+"Unified provenance spine.",
+"Terminal reference surface."
+],
+bind:"Bound to: Appendix + Glossary."
+}
 
-  // Page language buttons
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    location.href="/products/"+q();
-  }
-  btnEN.onclick=function(){ setLang("en"); };
-  btnZH.onclick=function(){ setLang("zh"); };
-  btnES.onclick=function(){ setLang("es"); };
+};
 
-  // i18n header
-  var H = {
-    en:{k:"PRODUCTS",t:"Platforms",s:"Sellable surfaces only. Doctrine lives in Laws. Instrumentation lives in Gauges.",
-        open:"OPEN",doc:"DOCS",spec:"SPEC",saas:"SaaS",ent:"Enterprise",gov:"Government"},
-    zh:{k:"产品",t:"平台",s:"仅可售执行面。内部教义在法则。仪表与测量在量规。",
-        open:"打开",doc:"文档",spec:"规格",saas:"SaaS",ent:"企业",gov:"政府"},
-    es:{k:"PRODUCTOS",t:"Plataformas",s:"Solo superficies vendibles. Doctrina en Leyes. Instrumentación en Medidores.",
-        open:"ABRIR",doc:"DOCS",spec:"ESPEC",saas:"SaaS",ent:"Empresa",gov:"Gobierno"}
+function openNode(key){
+  currentNode = key;
+  renderNode();
+  document.getElementById("focus").classList.add("show");
+}
+
+function setLens(l){
+  currentLens = l;
+  renderNode();
+}
+
+function renderNode(){
+  if(!currentNode) return;
+  const node = DATA[currentNode];
+
+  const titleMap = {
+    diagnostic:"COHERENCE DIAGNOSTIC",
+    adoption:"ADOPTION LADDER",
+    vault:"CANONICAL VAULT"
   };
-  var T = (lang==="zh")?H.zh:(lang==="es")?H.es:H.en;
-  document.getElementById("hk").textContent=T.k;
-  document.getElementById("ht").textContent=T.t;
-  document.getElementById("hs").textContent=T.s;
 
-  // Product taxonomy (7) — routes are canonical targets
-  var PRODUCTS = [
-    {id:"canon", c:"#D4AF37",
-      name:{en:"Canon Engine (State Runtime)",zh:"规范引擎（状态运行时）",es:"Motor Canónico (Runtime de Estado)"},
-      one:{en:"Deterministic state propagation and traversal runtime for the entire platform.",
-           zh:"为整个平台提供确定性状态传播与遍历运行时。",
-           es:"Runtime determinista de estado y recorrido para toda la plataforma."},
-      route:"/products/canon-engine/",
-      license:{saas:1, ent:1, gov:1}
-    },
-    {id:"cohdiag", c:"#93C5FD",
-      name:{en:"Coherence Diagnostic Engine",zh:"一致性诊断引擎",es:"Motor Diagnóstico de Coherencia"},
-      one:{en:"Classifies coherence under constraint; routes to bounded evaluation outputs.",
-           zh:"在约束下分类一致性，并路由到有界评估输出。",
-           es:"Clasifica coherencia bajo restricción; rutea a salidas acotadas."},
-      route:"/products/coherence-diagnostic/",
-      license:{saas:1, ent:1, gov:1}
-    },
-    {id:"dotgrid", c:"#60A5FA",
-      name:{en:"Dot.Grid 256-State Indexing System",zh:"Dot.Grid 256态索引系统",es:"Sistema Dot.Grid de 256 Estados"},
-      one:{en:"256-state indexing and sweep surfaces tied to declared bit models.",
-           zh:"将256态索引与扫掠面绑定到声明的位模型。",
-           es:"Indexación y barridos de 256 estados vinculados a modelos de bits."},
-      route:"/products/dot-grid/",
-      license:{saas:1, ent:1, gov:1}
-    },
-    {id:"adopt", c:"#F59E0B",
-      name:{en:"Adoption Ladder Framework",zh:"采纳阶梯框架",es:"Marco de Escalera de Adopción"},
-      one:{en:"Phase gating and readiness pathways that prevent scaling beyond proof posture.",
-           zh:"阶段门控与就绪路径，防止超出证明姿态的扩张。",
-           es:"Compuertas por fases y preparación para evitar escalar sin pruebas."},
-      route:"/products/adoption-ladder/",
-      license:{saas:1, ent:1, gov:1}
-    },
-    {id:"huba", c:"#7F1D1D",
-      name:{en:"Hub A Recursive Knowledge Architecture",zh:"枢纽A递归知识架构",es:"Arquitectura Recursiva HUB A"},
-      one:{en:"Mirror-recursive index spine for orientation-to-scale and controlled reveal.",
-           zh:"用于规模导向与渐进揭示的镜像递归索引脊柱。",
-           es:"Columna índice recursiva para orientación a escala y revelado controlado."},
-      route:"/products/hub-a-architecture/",
-      license:{saas:1, ent:1, gov:1}
-    },
-    {id:"ssg", c:"#9333EA",
-      name:{en:"SSG Platform",zh:"SSG平台",es:"Plataforma SSG"},
-      one:{en:"Constraint syntax geometry for executable structural specifications.",
-           zh:"用于可执行结构规格的约束语法几何。",
-           es:"Geometría de sintaxis de restricciones para especificaciones ejecutables."},
-      route:"/products/ssg/",
-      license:{saas:1, ent:1, gov:1}
-    },
-    {id:"energy", c:"#EA580C",
-      name:{en:"Energy (Industrial C)",zh:"能源（工业C）",es:"Energía (Industrial C)"},
-      one:{en:"Industrial thermal substitution posture (C); no net-positive fusion gain claims.",
-           zh:"工业热替代姿态（C）；不做净增益聚变主张。",
-           es:"Postura industrial (C); sin afirmaciones de ganancia neta de fusión."},
-      route:"/products/energy/",
-      license:{saas:1, ent:1, gov:1}
-    }
-  ];
+  document.getElementById("fTitle").textContent = titleMap[currentNode];
 
-  function pick(obj){
-    return (lang==="zh")?obj.zh:(lang==="es")?(obj.es||obj.en):obj.en;
-  }
+  const body = document.getElementById("fBody");
+  body.innerHTML = "";
 
-  function makeRow(p){
-    var row=document.createElement("div");
-    row.className="stackRow";
-    row.style.setProperty("--domc", p.c);
-
-    var head=document.createElement("div");
-    head.className="stackHead";
-
-    var left=document.createElement("div");
-    left.className="stackLeft";
-
-    var bar=document.createElement("div");
-    bar.className="stackBar";
-    bar.style.background=p.c;
-
-    var block=document.createElement("div");
-    block.style.minWidth="0";
-
-    var title=document.createElement("div");
-    title.className="stackTitle";
-    title.textContent=pick(p.name);
-
-    var sub=document.createElement("div");
-    sub.className="stackSub";
-    sub.textContent=pick(p.one);
-
-    block.appendChild(title);
-    block.appendChild(sub);
-
-    left.appendChild(bar);
-    left.appendChild(block);
-
-    var chev=document.createElement("div");
-    chev.className="stackChevron";
-    chev.textContent="▸";
-
-    head.appendChild(left);
-    head.appendChild(chev);
-
-    var body=document.createElement("div");
-    body.className="stackBody";
-
-    // license chips
-    var chips=document.createElement("div");
-    chips.className="chips";
-    function chip(txt,on){
-      var c=document.createElement("div");
-      c.className="chip"+(on?" on":"");
-      c.textContent=txt;
-      return c;
-    }
-    chips.appendChild(chip(T.saas, !!p.license.saas));
-    chips.appendChild(chip(T.ent,  !!p.license.ent));
-    chips.appendChild(chip(T.gov,  !!p.license.gov));
-    body.appendChild(chips);
-
-    // actions
-    var acts=document.createElement("div");
-    acts.className="actions";
-
-    var open=document.createElement("a");
-    open.className="btn";
-    open.textContent=T.open;
-    open.href=p.route + q();
-
-    var spec=document.createElement("a");
-    spec.className="btn";
-    spec.textContent=T.spec;
-    spec.href=p.route + q(); // same for now; later route to /spec inside product
-
-    var doc=document.createElement("a");
-    doc.className="btn";
-    doc.textContent=T.doc;
-    doc.href=p.route + q(); // same for now; later route to /docs inside product
-
-    acts.appendChild(open);
-    acts.appendChild(spec);
-    acts.appendChild(doc);
-
-    body.appendChild(acts);
-
-    head.addEventListener("click", function(){
-      var openNow = row.classList.toggle("open");
-      chev.textContent = openNow ? "▾" : "▸";
-    });
-
-    row.appendChild(head);
-    row.appendChild(body);
-    return row;
-  }
-
-  var list=document.getElementById("stackList");
-  list.innerHTML="";
-  PRODUCTS.forEach(function(p,i){
-    var el=makeRow(p);
-    list.appendChild(el);
-    if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
+  node[currentLens].forEach(line=>{
+    const p = document.createElement("p");
+    p.className = "line";
+    p.textContent = line;
+    body.appendChild(p);
   });
 
-})();
+  const bind = document.createElement("div");
+  bind.className = "bind";
+  bind.textContent = node.bind;
+  body.appendChild(bind);
+}
 </script>
 
 </body>

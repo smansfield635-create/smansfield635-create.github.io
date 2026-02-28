@@ -3,133 +3,228 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ENTER</title>
+<title>DOOR · Enter</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
 
-/* Ensure gold grid stays behind everything */
+/* Ensure gold grid stays behind jewels */
 body{position:relative;z-index:0}
 body::before, body::after{z-index:0}
 
-/* Layout */
-.stage{
-  position:fixed;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:min(900px,94vw);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:60px;
-  z-index:10;
+/* Layout tokens */
+:root{
+  --R:170px;
+  --D:260px;
 }
 
-/* Header */
-.header{
-  background:rgba(0,0,0,.85);
-  border:1px solid rgba(255,255,255,.25);
-  border-radius:22px;
-  padding:30px 40px;
-  text-align:center;
-  backdrop-filter:blur(14px);
-  box-shadow:0 60px 160px rgba(0,0,0,.9);
-}
-
-.k{
-  font-size:12px;
-  letter-spacing:4px;
-  opacity:.7;
-  margin:0 0 8px;
-}
-
-.t{
-  font-size:54px;
-  font-weight:950;
-  margin:0;
-  letter-spacing:2px;
-}
-
-.s{
-  margin-top:14px;
-  font-size:16px;
-  opacity:.85;
-}
-
-/* Fork diamonds */
-.fork{
-  display:flex;
-  gap:60px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
-
-.card{
-  width:240px;
-  height:240px;
-  transform:rotate(45deg);
-  border-radius:28px;
-  background:linear-gradient(160deg,#0b0f16,#111827);
-  border:1px solid rgba(255,255,255,.25);
-  box-shadow:
-    0 40px 120px rgba(0,0,0,.9),
-    0 0 30px rgba(212,175,55,.2);
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:transform .18s ease;
-}
-
-.card:hover{
-  transform:rotate(45deg) scale(1.05);
-}
-
-.inner{
-  transform:rotate(-45deg);
-  text-align:center;
-  padding:20px;
-}
-
-.lab{
-  font-size:20px;
-  font-weight:950;
-  margin-bottom:10px;
-}
-
-.sub{
-  font-size:14px;
-  opacity:.8;
-}
-
-.footer{
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:12px;
-  opacity:.6;
-  letter-spacing:1px;
-}
-
+/* Top Controls */
 .top-left{
   position:fixed;
-  left:20px;
-  top:20px;
+  left:16px;
+  top:16px;
+  z-index:200;
   display:flex;
   gap:10px;
 }
 
 .top-right{
   position:fixed;
-  right:20px;
-  top:20px;
+  right:16px;
+  top:16px;
+  z-index:200;
   display:flex;
   gap:10px;
+}
+
+/* Header Panel */
+.head{
+  position:fixed;
+  left:50%;
+  top:18px;
+  transform:translateX(-50%);
+  z-index:150;
+
+  width:min(880px,94vw);
+  text-align:center;
+
+  border-radius:22px;
+  padding:18px 18px 16px;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.12), transparent 60%),
+    linear-gradient(160deg, rgba(35,25,55,.55), rgba(15,10,25,.35));
+
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.18);
+
+  box-shadow:
+    0 25px 80px rgba(0,0,0,.55),
+    inset 0 2px 6px rgba(255,255,255,.2);
+}
+
+.k{
+  margin:0 0 6px;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.75;
+}
+
+.t{
+  margin:0;
+  font-size:44px;
+  font-weight:950;
+  letter-spacing:1.4px;
+}
+
+.s{
+  margin:10px 0 0;
+  font-size:14px;
+  opacity:.9;
+}
+
+/* Stage */
+.stage{
+  position:fixed;
+  left:50%;
+  top:56%;
+  transform:translate(-50%,-50%);
+  width:min(720px,94vw);
+  height:min(720px,94vw);
+  z-index:100;
+  pointer-events:none;
+}
+
+/* ===========================
+   GLOSSY GEM MATERIAL
+   =========================== */
+
+.d{
+  width:var(--D);
+  height:var(--D);
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform-origin:center;
+  border-radius:34px;
+  cursor:pointer;
+  pointer-events:auto;
+  overflow:hidden;
+
+  background:
+    radial-gradient(circle at 50% 15%, rgba(255,255,255,.85), transparent 35%),
+    radial-gradient(circle at 75% 30%, rgba(170,140,255,.35), transparent 55%),
+    radial-gradient(circle at 60% 75%, rgba(90,150,255,.28), transparent 70%),
+    linear-gradient(160deg, #202836 0%, #111822 60%, #070b14 100%);
+
+  border:1px solid rgba(255,255,255,.3);
+
+  box-shadow:
+    0 0 70px rgba(0,0,0,.85),
+    0 0 30px rgba(212,175,55,.4),
+    inset 0 3px 12px rgba(255,255,255,.35),
+    inset 0 -90px 140px rgba(0,0,0,.85);
+
+  transition:all .18s ease;
+}
+
+.d::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:34px;
+  padding:1px;
+  background:linear-gradient(120deg,
+      transparent 0%,
+      rgba(212,175,55,.9) 50%,
+      transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+
+.d::after{
+  content:"";
+  position:absolute;
+  left:15%;
+  right:15%;
+  top:8%;
+  height:30%;
+  border-radius:999px;
+  background:linear-gradient(to bottom,
+      rgba(255,255,255,.6),
+      rgba(255,255,255,.2),
+      transparent 85%);
+  transform:rotate(-12deg);
+  pointer-events:none;
+}
+
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.04);
+  filter:brightness(1.08) saturate(1.1);
+}
+
+/* Diamond positioning */
+.d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
+.d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) * 1)) rotate(45deg)}
+
+.inner{
+  width:100%;
+  height:100%;
+  transform:rotate(-45deg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:8px;
+  padding:20px;
+}
+
+.lab{
+  font-weight:950;
+  font-size:22px;
+}
+
+.sub{
+  font-size:14px;
+  opacity:.9;
+}
+
+.pref{
+  font-weight:950;
+  font-style:italic;
+}
+
+/* Footer */
+.footer{
+  position:fixed;
+  left:50%;
+  bottom:26px;
+  transform:translateX(-50%);
+  font-size:12px;
+  opacity:.7;
+}
+
+.sig{
+  position:fixed;
+  left:50%;
+  bottom:6px;
+  transform:translateX(-50%);
+  font-size:11px;
+  letter-spacing:2px;
+  opacity:.5;
+}
+
+@media (max-width:560px){
+  :root{--R:150px;--D:230px}
+  .t{font-size:36px}
 }
 </style>
 </head>
@@ -137,7 +232,8 @@ body::before, body::after{z-index:0}
 <body>
 
 <div class="top-left">
-  <a class="btn" href="/">EXIT</a>
+  <a class="btn" id="btnExit" href="/">EXIT</a>
+  <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
 </div>
 
 <div class="top-right">
@@ -146,63 +242,64 @@ body::before, body::after{z-index:0}
   <button class="btn" id="btnES">ES</button>
 </div>
 
+<div class="head">
+  <p class="k">CARDINAL AXIS</p>
+  <h1 class="t">ENTER</h1>
+  <p class="s"><strong>No belief required</strong> · <strong>No selling</strong> · <em>Navigation by structure</em></p>
+</div>
+
 <div class="stage">
 
-  <div class="header">
-    <p class="k">CARDINAL AXIS</p>
-    <h1 class="t">ENTER</h1>
-    <p class="s">Choose how you want to begin.</p>
+  <div class="d d-top" id="dEnter">
+    <div class="inner">
+      <div class="lab">ENTER SITE</div>
+      <div class="sub"><span class="pref">Direct:</span> Go directly inside.</div>
+    </div>
   </div>
 
-  <div class="fork">
-    <div class="card" onclick="goHome()">
-      <div class="inner">
-        <div class="lab">ENTER SITE</div>
-        <div class="sub">Go directly inside.</div>
-      </div>
-    </div>
-
-    <div class="card" onclick="goPrelude()">
-      <div class="inner">
-        <div class="lab">VIEW SITE MAP</div>
-        <div class="sub">Get oriented first.</div>
-      </div>
+  <div class="d d-bottom" id="dMap">
+    <div class="inner">
+      <div class="lab">VIEW SITE MAP</div>
+      <div class="sub"><span class="pref">First:</span> Get oriented first.</div>
     </div>
   </div>
 
 </div>
 
-<div class="footer">
-  COGRID.NET
-</div>
+<div class="footer">Fine print: orientation before scale · scale before claims</div>
+<div class="sig">COGRID.NET</div>
 
 <script>
-function qs(){
-  const p=new URLSearchParams(location.search);
-  const lang=p.get("lang")||localStorage.getItem("gd_lang")||"en";
-  const style=p.get("style")||localStorage.getItem("gd_style")||"formal";
-  const time=p.get("time")||localStorage.getItem("gd_time")||"now";
-  const depth=p.get("depth")||localStorage.getItem("gd_depth")||"explore";
-  return "?lang="+lang+"&style="+style+"&time="+time+"&depth="+depth;
-}
+(function(){
+  const qs=new URLSearchParams(location.search);
 
-function goHome(){
-  location.href="/home/"+qs();
-}
+  let lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+  let style=qs.get("style")||localStorage.getItem("gd_style")||"formal";
+  let time=qs.get("time")||localStorage.getItem("gd_time")||"now";
+  let depth=qs.get("depth")||localStorage.getItem("gd_depth")||"explore";
 
-function goPrelude(){
-  location.href="/prelude/"+qs();
-}
+  if(!["en","zh","es"].includes(lang)) lang="en";
 
-/* language switch */
-btnEN.onclick=()=>setLang("en");
-btnZH.onclick=()=>setLang("zh");
-btnES.onclick=()=>setLang("es");
+  localStorage.setItem("gd_lang",lang);
+  localStorage.setItem("gd_style",style);
+  localStorage.setItem("gd_time",time);
+  localStorage.setItem("gd_depth",depth);
 
-function setLang(l){
-  localStorage.setItem("gd_lang",l);
-  location.reload();
-}
+  function q(){
+    return "?lang="+lang+"&style="+style+"&time="+time+"&depth="+depth;
+  }
+
+  document.getElementById("btnPrelude").href="/prelude/"+q();
+  document.getElementById("btnExit").href="/"+q();
+
+  document.getElementById("dEnter").onclick=()=>{
+    location.href="/home/"+q();
+  };
+
+  document.getElementById("dMap").onclick=()=>{
+    location.href="/prelude/"+q();
+  };
+})();
 </script>
 
 </body>

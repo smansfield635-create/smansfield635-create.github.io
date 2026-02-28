@@ -1,32 +1,27 @@
 <!-- TNT — /door/index.html
      DOOR · ORIENTATION CHAMBER (LAYER 0) · TWO MASSIVE DIAMONDS · NO MODALS
-
-     PRIMARY RULE (LOCKED):
-       - Stark minimalist headline: ENTER
-       - Bold layer = plain language only (no abstract/scientific terms)
-       - Any abstract/scientific language goes to fine print only
-
-     ROUTE LOCK:
-       - Both diamonds route to: /index.html
+     UPDATE (WIRE TO PRELUDE SITE MAP):
+       - ENTER SITE     → /index.html
+       - VIEW SITE MAP  → /prelude/
+       - INDEX button   → /prelude/   (artifact + map vault; no longer redundant)
 
      TOP CONTROLS (LOCKED):
        - LEFT:  EXIT + INDEX
        - RIGHT: EN / 中文 / ES
 
-     STATE:
+     STATE (LOCKED):
        - URL: lang/style/time/depth
        - LS: gd_lang/gd_style/gd_time/gd_depth
 
-     STYLE:
-       - High-contrast opal / violet glass for readability (no red-on-red reading surfaces)
-       - Titles: big, bold, uppercase
-       - Preface lines: bold + italic (for fast scanning)
-       - Optional subtle glyphs only (no playful emoji clutter)
+     STYLE (LOCKED):
+       - High-contrast opal/violet lacquer (no coal)
+       - Plain language in bold layer
+       - Fine print only for any abstract hints
 
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - Does NOT style html/body background (ui.css owns field)
-       - Tap-safe (no overlays intercepting)
+       - Tap-safe
 -->
 
 <!doctype html>
@@ -55,7 +50,7 @@ a{color:inherit;text-decoration:none}
 
   --goldSoft:rgba(212,175,55,.42);
 
-  /* Deep material base (kept) */
+  /* Deep material base */
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 }
@@ -170,13 +165,10 @@ a{color:inherit;text-decoration:none}
   touch-action:manipulation;
 
   background:
-    /* opal highlights */
     radial-gradient(circle at 28% 22%, rgba(255,255,255,.42), transparent 52%),
     radial-gradient(circle at 76% 30%, var(--opalA), transparent 58%),
     radial-gradient(circle at 60% 78%, var(--opalB), transparent 62%),
     radial-gradient(circle at 32% 70%, var(--opalC), transparent 64%),
-
-    /* deep base */
     linear-gradient(160deg, var(--obsA), var(--obsB));
 
   border:1px solid rgba(255,255,255,.18);
@@ -286,7 +278,7 @@ a{color:inherit;text-decoration:none}
 
 <div class="top-left">
   <a class="btn" id="btnExit" href="/">EXIT</a>
-  <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
+  <a class="btn" id="btnIndex" href="/prelude/">INDEX</a>
 </div>
 
 <div class="top-right" aria-label="Language">
@@ -361,7 +353,7 @@ a{color:inherit;text-decoration:none}
 
   function wireTop(){
     document.getElementById("btnExit").href  = "/" + q();
-    document.getElementById("btnIndex").href = "/index.html" + q();
+    document.getElementById("btnIndex").href = "/prelude/" + q();
   }
   wireTop();
 
@@ -443,22 +435,27 @@ a{color:inherit;text-decoration:none}
   }
   renderLang();
 
-  // Both diamonds route to /index.html (same destination for now)
+  // ENTER SITE → /index.html
   function goIndex(){
     location.href = "/index.html" + q();
+  }
+
+  // VIEW SITE MAP → /prelude/
+  function goPrelude(){
+    location.href = "/prelude/" + q();
   }
 
   var enter=document.getElementById("dEnter");
   var nav=document.getElementById("dNav");
 
   enter.addEventListener("click", goIndex);
-  nav.addEventListener("click", goIndex);
+  nav.addEventListener("click", goPrelude);
 
   enter.addEventListener("keydown", function(e){
     if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goIndex(); }
   });
   nav.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goIndex(); }
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goPrelude(); }
   });
 
 })();

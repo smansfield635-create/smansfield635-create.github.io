@@ -7,106 +7,81 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
 
-/* =====================================================
-   LAYER SYSTEM (NO CONFLICT)
-   ===================================================== */
-
-/* 0 = lattice (ui.css) */
-/* 1 = banner */
-/* 2 = diamonds */
-/* 3 = controls */
-/* 4 = footer */
-
 :root{
-  --D:300px;
-  --R:220px;
-
+  --D:240px;        /* reduced size */
+  --R:180px;        /* reduced spacing */
   --deepA:#0f1624;
   --deepB:#060a12;
 }
 
-/* Ensure lattice stays behind */
-body{ position:relative; }
+/* -------------------- CONTROLS -------------------- */
 
-/* =====================================================
-   TOP CONTROLS
-   ===================================================== */
-
-.controls-left,
-.controls-right{
+.controls{
   position:fixed;
-  top:24px;
-  z-index:3;
+  top:18px;
+  left:0;
+  right:0;
   display:flex;
-  gap:14px;
+  justify-content:space-between;
+  padding:0 18px;
+  z-index:5;
 }
 
-.controls-left{ left:24px; }
-.controls-right{ right:24px; }
+.controls .left,
+.controls .right{
+  display:flex;
+  gap:12px;
+}
 
-/* =====================================================
-   BANNER (BEHIND DIAMONDS)
-   ===================================================== */
+/* -------------------- BANNER -------------------- */
 
 .banner{
   position:fixed;
-  left:50%;
   top:90px;
+  left:50%;
   transform:translateX(-50%);
-  width:min(1000px,92vw);
-  padding:36px 42px;
-  border-radius:32px;
+  width:min(90vw,900px);
+  padding:28px 32px;
+  border-radius:26px;
 
-  background:
-    linear-gradient(155deg, rgba(18,24,40,.94), rgba(10,14,24,.98));
-
-  border:1px solid rgba(255,255,255,.28);
-
-  box-shadow:
-    0 70px 180px rgba(0,0,0,.85),
-    inset 0 2px 0 rgba(255,255,255,.25);
+  background:linear-gradient(160deg, rgba(18,24,40,.94), rgba(10,14,24,.98));
+  border:1px solid rgba(255,255,255,.25);
 
   text-align:center;
-  z-index:1; /* below diamonds */
+  z-index:1;
 }
 
 .banner h1{
   margin:0;
-  font-size:58px;
+  font-size:42px;
   font-weight:900;
-  letter-spacing:2px;
 }
 
 .banner p{
-  margin:18px 0 0;
-  font-size:18px;
-  line-height:1.7;
-  opacity:.95;
+  margin:14px 0 0;
+  font-size:15px;
+  line-height:1.6;
 }
 
-/* =====================================================
-   STAGE
-   ===================================================== */
+/* -------------------- STAGE -------------------- */
 
 .stage{
   position:fixed;
   left:50%;
-  top:58%;
+  top:60%;
   transform:translate(-50%,-50%);
-  width:min(820px,94vw);
-  height:min(820px,94vw);
-  z-index:2; /* above banner */
+  width:100%;
+  max-width:600px;
+  height:600px;
+  z-index:2;
   pointer-events:none;
 }
 
-/* =====================================================
-   TRUE PEARLESCENT GEM
-   ===================================================== */
+/* -------------------- DIAMONDS -------------------- */
 
 .diamond{
   width:var(--D);
@@ -115,13 +90,13 @@ body{ position:relative; }
   left:50%;
   top:50%;
   transform-origin:center;
-  border-radius:38px;
+  border-radius:32px;
   cursor:pointer;
   pointer-events:auto;
   transform:translate(-50%,-50%) rotate(45deg);
 
   background:
-    radial-gradient(circle at 18% 14%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.55) 14%, transparent 38%),
+    radial-gradient(circle at 20% 15%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.55) 14%, transparent 38%),
     radial-gradient(circle at 78% 26%, rgba(170,130,255,.65) 0%, transparent 60%),
     radial-gradient(circle at 62% 82%, rgba(120,240,255,.55) 0%, transparent 75%),
     linear-gradient(165deg, var(--deepA) 0%, var(--deepB) 70%, #020409 100%);
@@ -129,21 +104,10 @@ body{ position:relative; }
   border:1px solid rgba(255,255,255,.6);
 
   box-shadow:
-    0 140px 300px rgba(0,0,0,.95),
-    0 0 200px rgba(212,175,55,.45),
-    inset 0 5px 0 rgba(255,255,255,.9),
-    inset 0 -120px 200px rgba(0,0,0,.98);
-
-  transition:transform .18s ease, box-shadow .18s ease;
-}
-
-.diamond:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.06);
-  box-shadow:
-    0 160px 340px rgba(0,0,0,.98),
-    0 0 240px rgba(212,175,55,.6),
-    inset 0 5px 0 rgba(255,255,255,.95),
-    inset 0 -120px 200px rgba(0,0,0,.98);
+    0 80px 200px rgba(0,0,0,.95),
+    0 0 120px rgba(212,175,55,.35),
+    inset 0 4px 0 rgba(255,255,255,.85),
+    inset 0 -90px 160px rgba(0,0,0,.98);
 }
 
 .inner{
@@ -155,70 +119,53 @@ body{ position:relative; }
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:30px;
+  padding:24px;
 }
 
 .lab{
-  font-size:24px;
+  font-size:20px;
   font-weight:900;
-  letter-spacing:1px;
 }
 
 .sub{
-  margin-top:16px;
-  font-size:17px;
-  opacity:.96;
+  margin-top:12px;
+  font-size:15px;
 }
 
-.pref{
-  font-weight:900;
-  font-style:italic;
-}
-
-/* placement */
-
+/* Placement */
 .topDiamond{
-  transform:translate(-50%,-50%) translate(0,-220px) rotate(45deg);
+  transform:translate(-50%,-50%) translate(0,-180px) rotate(45deg);
 }
 
 .bottomDiamond{
-  transform:translate(-50%,-50%) translate(0,220px) rotate(45deg);
+  transform:translate(-50%,-50%) translate(0,180px) rotate(45deg);
 }
 
-/* =====================================================
-   FOOTER
-   ===================================================== */
+/* -------------------- FOOTER -------------------- */
 
 .footer{
   position:fixed;
+  bottom:30px;
   left:50%;
-  bottom:40px;
   transform:translateX(-50%);
-  font-size:15px;
-  opacity:.95;
+  font-size:13px;
   z-index:4;
-}
-
-.sig{
-  margin-top:8px;
-  letter-spacing:3px;
-  font-size:12px;
-  opacity:.75;
 }
 </style>
 </head>
 
 <body>
 
-<div class="controls-left">
-  <a class="btn" href="/">EXIT</a>
-  <a class="btn" href="/prelude/">PRELUDE</a>
-</div>
-
-<div class="controls-right">
-  <button class="btn">EN</button>
-  <button class="btn">中文</button>
-  <button class="btn">ES</button>
+<div class="controls">
+  <div class="left">
+    <a class="btn" href="/">EXIT</a>
+    <a class="btn" href="/prelude/">PRELUDE</a>
+  </div>
+  <div class="right">
+    <button class="btn">EN</button>
+    <button class="btn">中文</button>
+    <button class="btn">ES</button>
+  </div>
 </div>
 
 <div class="banner">
@@ -235,14 +182,14 @@ body{ position:relative; }
   <div class="diamond topDiamond" onclick="location.href='/home/'">
     <div class="inner">
       <div class="lab">ENTER SITE</div>
-      <div class="sub"><span class="pref">Direct:</span> Move forward into systems.</div>
+      <div class="sub"><strong>Direct:</strong> Move forward into systems.</div>
     </div>
   </div>
 
   <div class="diamond bottomDiamond" onclick="location.href='/prelude/'">
     <div class="inner">
       <div class="lab">VIEW SITE MAP</div>
-      <div class="sub"><span class="pref">First:</span> See the structure before movement.</div>
+      <div class="sub"><strong>First:</strong> See the structure before movement.</div>
     </div>
   </div>
 
@@ -250,7 +197,6 @@ body{ position:relative; }
 
 <div class="footer">
   Scale without structure collapses.
-  <div class="sig">COGRID.NET</div>
 </div>
 
 </body>

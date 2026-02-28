@@ -1,14 +1,28 @@
 <!-- TNT — /door/index.html
      DOOR · ORIENTATION CHAMBER (LAYER 0) · TWO MASSIVE DIAMONDS · NO MODALS
-     ROUTE LOCK (NEW):
-       - Both actions route to the site index: /index.html
-       - “Enter Site” and “Site Navigation” are two cognitive entry actions, not two different destinations (yet).
-     LANGUAGE:
-       - Page-level only (EN / 中文 / ES) via buttons (top-right)
-       - Stored in localStorage gd_lang
-       - Propagated via query: lang/style/time/depth
-     LENSES:
-       - No formal/informal UI on Door (preserve state only)
+
+     PRIMARY RULE (LOCKED):
+       - Stark minimalist headline: ENTER
+       - Bold layer = plain language only (no abstract/scientific terms)
+       - Any abstract/scientific language goes to fine print only
+
+     ROUTE LOCK:
+       - Both diamonds route to: /index.html
+
+     TOP CONTROLS (LOCKED):
+       - LEFT:  EXIT + INDEX
+       - RIGHT: EN / 中文 / ES
+
+     STATE:
+       - URL: lang/style/time/depth
+       - LS: gd_lang/gd_style/gd_time/gd_depth
+
+     STYLE:
+       - High-contrast opal / violet glass for readability (no red-on-red reading surfaces)
+       - Titles: big, bold, uppercase
+       - Preface lines: bold + italic (for fast scanning)
+       - Optional subtle glyphs only (no playful emoji clutter)
+
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - Does NOT style html/body background (ui.css owns field)
@@ -20,49 +34,45 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOOR · Orientation</title>
+<title>DOOR · Enter</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-/* DO NOT TOUCH FIELD — ui.css owns html/body background */
+/* ui.css owns field */
 a{color:inherit;text-decoration:none}
 
 :root{
   --R:170px;
   --D:260px;
-  --goldSoft:rgba(212,175,55,.45);
+
+  /* Opal/violet readability layer */
+  --opalA:rgba(210,190,255,.22);
+  --opalB:rgba(120,70,255,.14);
+  --opalC:rgba(90,210,255,.10);
+
+  --goldSoft:rgba(212,175,55,.42);
+
+  /* Deep material base (kept) */
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 }
 
 /* Top-left */
 .top-left{
-  position:fixed;
-  left:16px;
-  top:16px;
-  z-index:140;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
+  position:fixed;left:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Top-right language toggle (page-level only) */
+/* Top-right language toggle */
 .top-right{
-  position:fixed;
-  right:16px;
-  top:16px;
-  z-index:140;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
+  position:fixed;right:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Brand (orientation copy) */
+/* Brand (opal glass) */
 .brand{
   position:fixed;
   left:50%;
@@ -70,28 +80,34 @@ a{color:inherit;text-decoration:none}
   transform:translateX(-50%);
   z-index:130;
   text-align:center;
-  padding:10px 18px;
+  padding:12px 18px;
   border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.10), transparent 62%),
+    radial-gradient(circle at 20% 40%, var(--opalA), transparent 70%),
+    radial-gradient(circle at 80% 60%, var(--opalB), transparent 72%),
+    linear-gradient(160deg, rgba(0,0,0,.26), rgba(0,0,0,.12));
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.45);
   pointer-events:none;
 }
 .brand .k{
-  font-size:12px;
-  letter-spacing:3px;
+  font-size:11px;
+  letter-spacing:4px;
   text-transform:uppercase;
   opacity:.78;
   margin:0 0 6px 0;
 }
 .brand .t{
   font-weight:950;
-  font-size:40px;
-  letter-spacing:.3px;
+  font-size:44px;
+  letter-spacing:1.2px;
   margin:0;
   line-height:1.02;
 }
 .brand .s{
-  opacity:.85;
+  opacity:.88;
   font-size:13.5px;
   margin:8px 0 0;
   line-height:1.35;
@@ -100,35 +116,31 @@ a{color:inherit;text-decoration:none}
 
 /* subtle interior lattice (no field ownership) */
 .lattice{
-  position:fixed;
-  inset:0;
-  z-index:20;
+  position:fixed;inset:0;z-index:20;
   pointer-events:none;
-  opacity:.10;
+  opacity:.08;
   mix-blend-mode:screen;
 }
 .lattice::before{
   content:"";
-  position:absolute;
-  inset:-40%;
+  position:absolute;inset:-40%;
   transform:rotate(45deg);
   background:
     repeating-linear-gradient(0deg,
       rgba(212,175,55,.22) 0px,
       rgba(212,175,55,.22) 1px,
       transparent 1px,
-      transparent 48px),
+      transparent 52px),
     repeating-linear-gradient(90deg,
       rgba(212,175,55,.22) 0px,
       rgba(212,175,55,.22) 1px,
       transparent 1px,
-      transparent 48px);
+      transparent 52px);
 }
 .lattice::after{
   content:"";
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at 50% 22%, rgba(255,255,255,.10), transparent 55%);
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 18%, rgba(255,255,255,.10), transparent 58%);
 }
 
 /* Stage */
@@ -143,7 +155,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Massive diamonds */
+/* Massive diamonds (opal/violet lacquer) */
 .d{
   width:var(--D);
   height:var(--D);
@@ -158,27 +170,28 @@ a{color:inherit;text-decoration:none}
   touch-action:manipulation;
 
   background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 48%),
-    radial-gradient(circle at 70% 78%, rgba(0,120,255,.25), transparent 60%),
-    radial-gradient(circle at 48% 52%, rgba(255,255,255,.06), transparent 62%),
+    /* opal highlights */
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.42), transparent 52%),
+    radial-gradient(circle at 76% 30%, var(--opalA), transparent 58%),
+    radial-gradient(circle at 60% 78%, var(--opalB), transparent 62%),
+    radial-gradient(circle at 32% 70%, var(--opalC), transparent 64%),
+
+    /* deep base */
     linear-gradient(160deg, var(--obsA), var(--obsB));
 
-  border:1px solid rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.18);
   box-shadow:
-    0 50px 160px rgba(0,0,0,.85),
-    0 0 38px rgba(212,175,55,.25),
+    0 50px 160px rgba(0,0,0,.86),
+    0 0 40px rgba(212,175,55,.22),
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -50px 90px rgba(0,0,0,.78);
 
-  transition:transform .18s ease, border-color .18s ease;
+  transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
   overflow:hidden;
 }
 .d::before{
   content:"";
-  position:absolute;
-  inset:0;
-  border-radius:34px;
-  padding:1px;
+  position:absolute;inset:0;border-radius:34px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.62;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -188,11 +201,7 @@ a{color:inherit;text-decoration:none}
 }
 .d::after{
   content:"";
-  position:absolute;
-  left:10%;
-  right:10%;
-  top:10%;
-  height:28%;
+  position:absolute;left:10%;right:10%;top:10%;height:28%;
   border-radius:999px;
   background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
   transform:rotate(-10deg);
@@ -200,7 +209,12 @@ a{color:inherit;text-decoration:none}
 }
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-  border-color:rgba(212,175,55,.30);
+  border-color:rgba(212,175,55,.32);
+  box-shadow:
+    0 50px 160px rgba(0,0,0,.86),
+    0 0 52px rgba(212,175,55,.26),
+    inset 0 2px 0 rgba(255,255,255,.24),
+    inset 0 -50px 90px rgba(0,0,0,.78);
 }
 .d:active{
   transform:translate(-50%,-50%) rotate(45deg) scale(.99);
@@ -227,17 +241,22 @@ a{color:inherit;text-decoration:none}
 .lab{
   font-weight:950;
   font-size:22px;
-  letter-spacing:.8px;
+  letter-spacing:1px;
   text-shadow:0 0 18px rgba(255,255,255,.10);
 }
 .sub{
   font-size:14px;
-  opacity:.85;
+  opacity:.90;
   line-height:1.35;
-  max-width:22em;
+  max-width:24em;
+}
+.pref{
+  font-weight:950;
+  font-style:italic;
+  letter-spacing:.2px;
 }
 
-/* Footer micro-line */
+/* Fine print only */
 .footer{
   position:fixed;
   left:50%;
@@ -246,8 +265,8 @@ a{color:inherit;text-decoration:none}
   z-index:120;
   width:min(920px,94vw);
   text-align:center;
-  font-size:13px;
-  opacity:.78;
+  font-size:12.5px;
+  opacity:.70;
   text-shadow:0 18px 60px rgba(0,0,0,.55);
   pointer-events:none;
 }
@@ -256,7 +275,7 @@ a{color:inherit;text-decoration:none}
 @media (max-width:560px){
   :root{ --R:156px; --D:244px; }
   .stage{top:58%}
-  .brand .t{font-size:36px}
+  .brand .t{font-size:38px}
 }
 </style>
 </head>
@@ -267,9 +286,10 @@ a{color:inherit;text-decoration:none}
 
 <div class="top-left">
   <a class="btn" id="btnExit" href="/">EXIT</a>
+  <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
 </div>
 
-<div class="top-right">
+<div class="top-right" aria-label="Language">
   <button class="btn" id="btnEN" type="button">EN</button>
   <button class="btn" id="btnZH" type="button">中文</button>
   <button class="btn" id="btnES" type="button">ES</button>
@@ -277,7 +297,7 @@ a{color:inherit;text-decoration:none}
 
 <div class="brand" aria-hidden="true">
   <p class="k" id="bk">CARDINAL AXIS</p>
-  <h1 class="t" id="bt">ORIENTATION</h1>
+  <h1 class="t" id="bt">ENTER</h1>
   <p class="s" id="bs">No belief required · No selling · Navigation by structure</p>
 </div>
 
@@ -287,21 +307,21 @@ a{color:inherit;text-decoration:none}
   <div class="d d-top" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
     <div class="inner">
       <div class="lab" id="labEnter">ENTER SITE</div>
-      <div class="sub" id="subEnter">Start moving. If it gets confusing, return and use navigation.</div>
+      <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Go directly inside.</div>
     </div>
   </div>
 
-  <!-- SITE NAVIGATION -->
-  <div class="d d-bottom" id="dNav" role="button" tabindex="0" aria-label="Site navigation">
+  <!-- VIEW SITE MAP -->
+  <div class="d d-bottom" id="dNav" role="button" tabindex="0" aria-label="View site map">
     <div class="inner">
-      <div class="lab" id="labNav">SITE NAVIGATION</div>
-      <div class="sub" id="subNav">See the map first. Then enter with orientation.</div>
+      <div class="lab" id="labNav">VIEW SITE MAP</div>
+      <div class="sub" id="subNav"><span class="pref" id="prefNav">First:</span> Get oriented first.</div>
     </div>
   </div>
 
 </div>
 
-<div class="footer" id="foot">Orientation before scale · Scale before claims</div>
+<div class="footer" id="foot">Fine print: orientation before scale · scale before claims</div>
 
 <script>
 (function(){
@@ -339,7 +359,13 @@ a{color:inherit;text-decoration:none}
            "&depth="+encodeURIComponent(D);
   }
 
-  // page-level language toggle
+  function wireTop(){
+    document.getElementById("btnExit").href  = "/" + q();
+    document.getElementById("btnIndex").href = "/index.html" + q();
+  }
+  wireTop();
+
+  // Page-level language toggle
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -359,46 +385,65 @@ a{color:inherit;text-decoration:none}
     document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
     renderLang();
     paintLang();
+    wireTop();
   }
 
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // bilingual copy (EN/中文/ES) — minimalist, orientation-first
+  // Copy (EN/中文/ES) — plain, human-first
   function renderLang(){
     if(lang==="zh"){
-      document.getElementById("bt").textContent="导览";
+      document.getElementById("bt").textContent="进入";
       document.getElementById("bs").textContent="无需信仰 · 不做推销 · 以结构导航";
+
       document.getElementById("labEnter").textContent="进入网站";
-      document.getElementById("subEnter").textContent="先进入。如果觉得迷糊，返回再用导航。";
-      document.getElementById("labNav").textContent="网站导航";
-      document.getElementById("subNav").textContent="先看地图，再带着方向进入。";
-      document.getElementById("foot").textContent="先导览 · 再规模 · 再主张";
+      document.getElementById("prefEnter").textContent="直接：";
+      document.getElementById("subEnter").lastChild.nodeValue = " 直接进入。";
+
+      document.getElementById("labNav").textContent="查看网站地图";
+      document.getElementById("prefNav").textContent="先：";
+      document.getElementById("subNav").lastChild.nodeValue = " 先获得方向。";
+
       document.getElementById("btnExit").textContent="退出";
+      document.getElementById("btnIndex").textContent="索引";
+      document.getElementById("foot").textContent="细则：先导览 · 再规模 · 再主张";
     }else if(lang==="es"){
-      document.getElementById("bt").textContent="ORIENTACIÓN";
+      document.getElementById("bt").textContent="ENTRAR";
       document.getElementById("bs").textContent="Sin creencias · Sin venta · Navegación por estructura";
+
       document.getElementById("labEnter").textContent="ENTRAR AL SITIO";
-      document.getElementById("subEnter").textContent="Entra primero. Si confunde, vuelve y usa navegación.";
-      document.getElementById("labNav").textContent="NAVEGACIÓN";
-      document.getElementById("subNav").textContent="Mira el mapa primero. Luego entra con orientación.";
-      document.getElementById("foot").textContent="Orientación · Escala · Afirmaciones";
+      document.getElementById("prefEnter").textContent="Directo:";
+      document.getElementById("subEnter").lastChild.nodeValue = " Entra directamente.";
+
+      document.getElementById("labNav").textContent="VER MAPA DEL SITIO";
+      document.getElementById("prefNav").textContent="Primero:";
+      document.getElementById("subNav").lastChild.nodeValue = " Oriéntate primero.";
+
       document.getElementById("btnExit").textContent="SALIR";
+      document.getElementById("btnIndex").textContent="ÍNDICE";
+      document.getElementById("foot").textContent="Letra pequeña: orientación · escala · afirmaciones";
     }else{
-      document.getElementById("bt").textContent="ORIENTATION";
+      document.getElementById("bt").textContent="ENTER";
       document.getElementById("bs").textContent="No belief required · No selling · Navigation by structure";
+
       document.getElementById("labEnter").textContent="ENTER SITE";
-      document.getElementById("subEnter").textContent="Start moving. If it gets confusing, return and use navigation.";
-      document.getElementById("labNav").textContent="SITE NAVIGATION";
-      document.getElementById("subNav").textContent="See the map first. Then enter with orientation.";
-      document.getElementById("foot").textContent="Orientation before scale · Scale before claims";
+      document.getElementById("prefEnter").textContent="Direct:";
+      document.getElementById("subEnter").lastChild.nodeValue = " Go directly inside.";
+
+      document.getElementById("labNav").textContent="VIEW SITE MAP";
+      document.getElementById("prefNav").textContent="First:";
+      document.getElementById("subNav").lastChild.nodeValue = " Get oriented first.";
+
       document.getElementById("btnExit").textContent="EXIT";
+      document.getElementById("btnIndex").textContent="INDEX";
+      document.getElementById("foot").textContent="Fine print: orientation before scale · scale before claims";
     }
   }
   renderLang();
 
-  // Both route to /index.html (first of the three: door → index → home)
+  // Both diamonds route to /index.html (same destination for now)
   function goIndex(){
     location.href = "/index.html" + q();
   }
@@ -415,9 +460,6 @@ a{color:inherit;text-decoration:none}
   nav.addEventListener("keydown", function(e){
     if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goIndex(); }
   });
-
-  // Exit preserves state (back to root; adjust if you prefer /home/)
-  document.getElementById("btnExit").href = "/" + q();
 
 })();
 </script>

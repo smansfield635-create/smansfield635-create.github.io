@@ -1,0 +1,390 @@
+<!-- TNT — /products/dot-grid/index.html
+     PRODUCTS · DOT.GRID (INDEXING + SWEEPS SURFACE)
+     GOAL:
+       - Build the missing .DOTGrid page so /explore/ and /products/ can link to it.
+       - 3 languages (EN / 中文 / ES).
+       - Formal / Informal lens ACTUALLY changes content.
+       - Accordion depth (vertical) + lens depth (horizontal).
+       - No html/body background styling (ui.css owns field).
+       - Tap-safe, no inline onclick.
+     ROUTES:
+       - BACK → /products/
+       - EXIT → /index.html
+       - DOCK: HOME / PRODUCTS / LAWS / GAUGES
+     STATE:
+       - URL: lang/style/time/depth
+       - LS: gd_lang / gd_style / gd_time / gd_depth
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PRODUCTS · Dot.Grid</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+:root{--dockH:92px}
+
+/* Layout */
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:14px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+  z-index:10;
+}
+
+/* Top */
+.top{
+  position:sticky;
+  top:0;
+  z-index:240;
+  padding:10px 0 6px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  pointer-events:auto;
+}
+
+/* Header */
+.header{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(210,190,255,.14), transparent 70%),
+    radial-gradient(circle at 75% 60%, rgba(120,70,255,.10), transparent 72%),
+    rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:14px 16px;
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72}
+.t{margin:0;font-weight:950;font-size:26px;letter-spacing:.6px}
+.s{margin:10px 0 0;font-size:13.5px;opacity:.86;line-height:1.5;max-width:980px}
+.fine{margin-top:10px;font-size:12.25px;opacity:.70;line-height:1.45}
+
+/* Lens */
+.lens{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.lens .btn{padding:10px 12px;border-radius:999px}
+
+/* Band */
+.band{
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.86);
+}
+
+/* Cards */
+.stack{display:flex;flex-direction:column;gap:12px}
+.card{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
+}
+.head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  padding:14px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.bar{width:6px;height:22px;border-radius:99px;background:rgba(0,180,255,.55);flex:0 0 auto;margin-top:2px}
+.name{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.card.open .body{display:block}
+.p{margin:0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13.25px}
+.p + .p{margin-top:10px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{padding:10px 12px;border-radius:999px}
+
+/* Dock */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:98px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="top">
+    <div class="left">
+      <a class="btn" id="btnBack" href="/products/">BACK</a>
+      <a class="btn" id="btnExit" href="/index.html">EXIT</a>
+    </div>
+    <div class="right">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
+    </div>
+  </div>
+
+  <div class="header">
+    <p class="k" id="hk">PRODUCTS</p>
+    <h1 class="t" id="ht">DOT.GRID</h1>
+    <p class="s" id="hs">Indexing + sweep surface. This tool maps signals across nodes and exposes correlation before it compounds.</p>
+    <div class="fine" id="fine">Fine print: Dot.Grid does not classify admissibility. It exposes structure for other layers to evaluate.</div>
+
+    <div class="lens">
+      <button class="btn" id="lensInformal" type="button">INFORMAL</button>
+      <button class="btn" id="lensFormal" type="button">FORMAL</button>
+    </div>
+  </div>
+
+  <div class="band" id="band">LAYERS</div>
+  <div class="stack" id="stack"></div>
+
+</div>
+
+<nav class="dock">
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  // ----- State -----
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
+  }
+
+  document.getElementById("btnBack").href="/products/"+q();
+  document.getElementById("btnExit").href="/index.html"+q();
+  document.getElementById("dockHome").href="/home/"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
+
+  // Language toggle
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
+    location.href="/products/dot-grid/"+q({lang:lang});
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  // Lens
+  var lens="formal";
+  var lensInformal=document.getElementById("lensInformal");
+  var lensFormal=document.getElementById("lensFormal");
+
+  function setLens(v){
+    lens=(v==="informal")?"informal":"formal";
+    lensInformal.classList.toggle("active", lens==="informal");
+    lensFormal.classList.toggle("active", lens==="formal");
+    render();
+  }
+  lensInformal.addEventListener("click", function(){ setLens("informal"); });
+  lensFormal.addEventListener("click", function(){ setLens("formal"); });
+  setLens(style==="informal"?"informal":"formal");
+
+  // Copy
+  var COPY={
+    en:{
+      hk:"PRODUCTS",
+      ht:"DOT.GRID",
+      hs:"Indexing + sweep surface. This tool maps signals across nodes and exposes correlation before it compounds.",
+      fine:"Fine print: Dot.Grid does not classify admissibility. It exposes structure for other layers to evaluate.",
+      band:"LAYERS",
+      layers:[
+        {
+          title:"Index Layer",
+          sub:"Map nodes and surfaces.",
+          formal:[
+            "Enumerates active surfaces across domains.",
+            "Defines node adjacency and shared dependencies.",
+            "Preserves gd_* state across traversal.",
+            "Outputs a structural map, not a decision."
+          ],
+          informal:[
+            "See what connects to what.",
+            "Spot shared dependencies fast.",
+            "Don’t guess the network.",
+            "Map it before you scale it."
+          ]
+        },
+        {
+          title:"Sweep Layer",
+          sub:"Run horizontal passes across domains.",
+          formal:[
+            "Performs cross-domain correlation sweeps.",
+            "Flags clusters that exceed baseline variance.",
+            "Does not enforce; only exposes.",
+            "Feeds signals into Gauges or Laws."
+          ],
+          informal:[
+            "Sweep for patterns.",
+            "Look for clusters.",
+            "Expose weirdness early.",
+            "Send real issues downstream."
+          ]
+        },
+        {
+          title:"Drift Detection",
+          sub:"Track structural deviation.",
+          formal:[
+            "Measures change in adjacency and dependency over time.",
+            "Identifies acceleration vs stable variance.",
+            "Logs drift without classifying admissibility.",
+            "Prevents silent structural mutation."
+          ],
+          informal:[
+            "Watch what’s shifting.",
+            "Catch acceleration early.",
+            "Log it before it hides.",
+            "Structure shouldn’t mutate quietly."
+          ]
+        },
+        {
+          title:"Export Surface",
+          sub:"Deliver maps to other layers.",
+          formal:[
+            "Exports structured snapshots for Gauges.",
+            "Provides reproducible traversal states.",
+            "Supports replay under declared windows.",
+            "Remains substrate-neutral."
+          ],
+          informal:[
+            "Share the map.",
+            "Replay what you saw.",
+            "Keep snapshots clean.",
+            "Stay neutral."
+          ]
+        }
+      ]
+    },
+    zh:{
+      hk:"产品",
+      ht:"点阵",
+      hs:"索引 + 扫描面。跨节点映射信号，在相关性放大前暴露结构。",
+      fine:"细则：点阵不判定可采信，只暴露结构供其他层处理。",
+      band:"层级",
+      layers:[
+        {title:"索引层",sub:"映射节点与执行面。",formal:["枚举活动执行面。","定义节点邻接与依赖。","保持 gd_* 状态。","输出结构图。"],informal:["看清连接。","快速发现共享依赖。","别猜网络。","先画图再扩张。"]},
+        {title:"扫描层",sub:"跨域横向扫描。",formal:["执行跨域相关扫描。","标记异常集群。","只暴露不执法。","输出至量规或法则。"],informal:["扫模式。","找集群。","早点暴露异常。","交给下游处理。"]},
+        {title:"漂移检测",sub:"追踪结构偏移。",formal:["测量邻接变化。","识别加速。","记录而不裁决。","防止静默变异。"],informal:["看谁在动。","抓加速。","先记录。","别让结构偷偷变。"]},
+        {title:"导出面",sub:"向其他层输出。",formal:["输出结构快照。","支持回放。","窗口内可重复。","保持中立。"],informal:["分享地图。","回放所见。","保持干净。","保持中立。"]}
+      ]
+    },
+    es:{
+      hk:"PRODUCTOS",
+      ht:"DOT.GRID",
+      hs:"Superficie de indexado + barrido. Mapea señales y expone correlación antes de que se amplifique.",
+      fine:"Letra pequeña: Dot.Grid no clasifica admisibilidad. Solo expone estructura.",
+      band:"CAPAS",
+      layers:[
+        {title:"Capa de Índice",sub:"Mapea nodos y superficies.",formal:["Enumera superficies activas.","Define adyacencias.","Preserva estado gd_*.","Entrega mapa estructural."],informal:["Mira conexiones.","Detecta dependencias.","No adivines.","Mapea primero."]},
+        {title:"Capa de Barrido",sub:"Barridos horizontales.",formal:["Detecta correlaciones cruzadas.","Marca clusters anómalos.","No ejecuta decisiones.","Alimenta Leyes o Medidores."],informal:["Busca patrones.","Encuentra clusters.","Expón raro temprano.","Envía a evaluación."]},
+        {title:"Detección de Deriva",sub:"Sigue desviación estructural.",formal:["Mide cambio en dependencias.","Detecta aceleración.","Registra sin clasificar.","Evita mutación silenciosa."],informal:["Observa cambios.","Captura aceleración.","Registra primero.","Evita mutación silenciosa."]},
+        {title:"Superficie de Exportación",sub:"Entrega mapas a otras capas.",formal:["Exporta snapshots.","Permite replay.","Ventanas reproducibles.","Neutralidad."],informal:["Comparte mapa.","Reproduce.","Mantén limpio.","Neutral."]}
+      ]
+    }
+  };
+
+  function pick(){ return (lang==="zh")?COPY.zh:(lang==="

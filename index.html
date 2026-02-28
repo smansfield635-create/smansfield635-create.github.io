@@ -1,23 +1,25 @@
-<!-- TNT — /index.html
-     INDEX · PRIMARY ROUTER (LAYER 1) · MATCH DOOR OPAL (NO COAL) · NO COMPETING UI
-
-     SURFACE RULE (LOCKED):
-       - Plain English only (no abstract/scientific terms on surface)
-       - Fine print only for structural/technical language
-       - Two lanes (two diamonds):
-           1) STRUCTURE  → /home/
-           2) PRODUCTS   → /explore/
-       - Top controls:
-           LEFT:  DOOR
-           RIGHT: EN / 中文 / ES
-       - COGRlD.NET signature: subtle, non-promotional
-
+<!-- TNT — /door/index.html
+     DOOR · CLEAN ORIENTATION (NO COMPETING UI)
+     FIXES:
+       - Removes competing UI layers (no center brand bubble fighting the diamonds)
+       - Uses one hierarchy:
+           TOP controls (Exit + Prelude) + language
+           CENTER “ENTER” headline
+           TWO diamonds (Enter Site / View Site Map)
+           FINE PRINT (bottom)
+       - Opal/violet contrast panels (no red-on-red)
+       - Gold grid stays behind jewels (enforced)
+     ROUTES (LOCKED):
+       - ENTER SITE     → /home/
+       - VIEW SITE MAP  → /prelude/
+     TOP (LOCKED):
+       - LEFT:  EXIT + PRELUDE
+       - RIGHT: EN / 中文 / ES
      STATE:
        - URL: lang/style/time/depth
        - LS: gd_lang/gd_style/gd_time/gd_depth
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - Does NOT style html/body background
+     SIGNATURE:
+       - COGRlD.NET (subtle, non-promotional)
 -->
 
 <!doctype html>
@@ -25,7 +27,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>INDEX · Choose Path</title>
+<title>DOOR · Enter</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -34,20 +36,25 @@
 <style>
 a{color:inherit;text-decoration:none}
 
+/* Keep ui.css gold grid BEHIND everything on this page */
+body{position:relative;z-index:0}
+body::before, body::after{z-index:0}
+
+/* Tokens */
 :root{
   --R:170px;
   --D:260px;
 
-  /* Door-matched opal/violet */
-  --opalA:rgba(210,190,255,.22);
-  --opalB:rgba(120,70,255,.14);
-  --opalC:rgba(90,210,255,.10);
+  --opalA:rgba(210,190,255,.24);
+  --opalB:rgba(120,70,255,.16);
+  --opalC:rgba(90,210,255,.12);
 
   --goldSoft:rgba(212,175,55,.42);
 
-  /* Deep base */
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
+
+  --stroke:rgba(255,255,255,.12);
 }
 
 /* Top controls */
@@ -60,76 +67,51 @@ a{color:inherit;text-decoration:none}
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Brand (opal glass) */
-.brand{
+/* Center headline (single hierarchy) */
+.head{
   position:fixed;
   left:50%;
   top:18px;
   transform:translateX(-50%);
-  z-index:130;
+  z-index:120;
+  width:min(920px,94vw);
   text-align:center;
-  padding:12px 18px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.14);
+
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  padding:16px 16px 14px;
+
   background:
     radial-gradient(circle at 50% 0%, rgba(255,255,255,.10), transparent 62%),
-    radial-gradient(circle at 20% 40%, var(--opalA), transparent 70%),
-    radial-gradient(circle at 80% 60%, var(--opalB), transparent 72%),
-    linear-gradient(160deg, rgba(0,0,0,.26), rgba(0,0,0,.12));
+    radial-gradient(circle at 18% 34%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 62%, var(--opalB), transparent 74%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.12));
   backdrop-filter:blur(10px);
   box-shadow:0 24px 80px rgba(0,0,0,.45);
-  pointer-events:none;
 }
-.brand .k{
+.k{
+  margin:0 0 6px;
   font-size:11px;
   letter-spacing:4px;
   text-transform:uppercase;
   opacity:.78;
-  margin:0 0 6px 0;
 }
-.brand .t{
-  font-weight:950;
-  font-size:42px;
-  letter-spacing:1.2px;
+.t{
   margin:0;
+  font-weight:950;
+  font-size:44px;
+  letter-spacing:1.4px;
   line-height:1.02;
 }
-.brand .s{
-  opacity:.88;
+.s{
+  margin:10px auto 0;
   font-size:13.5px;
-  margin:8px 0 0;
-  line-height:1.35;
-  max-width:min(860px,94vw);
+  color:rgba(255,255,255,.82);
+  line-height:1.4;
+  max-width:860px;
 }
-
-/* subtle interior lattice (no field ownership) */
-.lattice{
-  position:fixed;inset:0;z-index:20;
-  pointer-events:none;
-  opacity:.08;
-  mix-blend-mode:screen;
-}
-.lattice::before{
-  content:"";
-  position:absolute;inset:-40%;
-  transform:rotate(45deg);
-  background:
-    repeating-linear-gradient(0deg,
-      rgba(212,175,55,.22) 0px,
-      rgba(212,175,55,.22) 1px,
-      transparent 1px,
-      transparent 52px),
-    repeating-linear-gradient(90deg,
-      rgba(212,175,55,.22) 0px,
-      rgba(212,175,55,.22) 1px,
-      transparent 1px,
-      transparent 52px);
-}
-.lattice::after{
-  content:"";
-  position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 18%, rgba(255,255,255,.10), transparent 58%);
-}
+.s strong{font-weight:950}
+.s em{font-style:italic;opacity:.95}
 
 /* Stage */
 .stage{
@@ -143,7 +125,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Massive diamonds (opal/violet lacquer) */
+/* Diamonds */
 .d{
   width:var(--D);
   height:var(--D);
@@ -156,9 +138,10 @@ a{color:inherit;text-decoration:none}
   pointer-events:auto;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
+  overflow:hidden;
 
   background:
-    radial-gradient(circle at 28% 22%, rgba(255,255,255,.42), transparent 52%),
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.45), transparent 52%),
     radial-gradient(circle at 76% 30%, var(--opalA), transparent 58%),
     radial-gradient(circle at 60% 78%, var(--opalB), transparent 62%),
     radial-gradient(circle at 32% 70%, var(--opalC), transparent 64%),
@@ -172,7 +155,6 @@ a{color:inherit;text-decoration:none}
     inset 0 -50px 90px rgba(0,0,0,.78);
 
   transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
-  overflow:hidden;
 }
 .d::before{
   content:"";
@@ -201,24 +183,19 @@ a{color:inherit;text-decoration:none}
     inset 0 2px 0 rgba(255,255,255,.24),
     inset 0 -50px 90px rgba(0,0,0,.78);
 }
-.d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
+.d:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
 
 /* Vertical layout */
 .d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
 
 .inner{
-  width:100%;
-  height:100%;
+  width:100%;height:100%;
   transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
   text-align:center;
-  padding:18px;
-  gap:10px;
-  pointer-events:none;
+  padding:18px;gap:10px;
   user-select:none;
 }
 .lab{
@@ -233,8 +210,13 @@ a{color:inherit;text-decoration:none}
   line-height:1.35;
   max-width:24em;
 }
+.pref{
+  font-weight:950;
+  font-style:italic;
+  letter-spacing:.2px;
+}
 
-/* Fine print */
+/* Fine print + signature */
 .footer{
   position:fixed;
   left:50%;
@@ -248,9 +230,7 @@ a{color:inherit;text-decoration:none}
   text-shadow:0 18px 60px rgba(0,0,0,.55);
   pointer-events:none;
 }
-
-/* COGRlD signature */
-.cogrid{
+.sig{
   position:fixed;
   left:50%;
   bottom:calc(6px + env(safe-area-inset-bottom));
@@ -263,19 +243,18 @@ a{color:inherit;text-decoration:none}
 }
 
 @media (max-width:560px){
-  :root{ --R:156px; --D:244px; }
-  .brand .t{font-size:38px}
+  :root{--R:156px;--D:244px}
   .stage{top:58%}
+  .t{font-size:38px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="lattice" aria-hidden="true"></div>
-
 <div class="top-left">
-  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+  <a class="btn" id="btnExit" href="/">EXIT</a>
+  <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
 </div>
 
 <div class="top-right" aria-label="Language">
@@ -284,38 +263,36 @@ a{color:inherit;text-decoration:none}
   <button class="btn" id="btnES" type="button">ES</button>
 </div>
 
-<div class="brand" aria-hidden="true">
-  <p class="k" id="bk">CARDINAL AXIS</p>
-  <h1 class="t" id="bt">CHOOSE PATH</h1>
-  <p class="s" id="bs">Two ways in. Both lead to clarity.</p>
+<div class="head" aria-hidden="true">
+  <p class="k" id="k">CARDINAL AXIS</p>
+  <h1 class="t" id="t">ENTER</h1>
+  <p class="s" id="s"><strong>No belief required</strong> · <strong>No selling</strong> · <em>Navigation by structure</em></p>
 </div>
 
-<div class="stage" aria-label="Primary router">
+<div class="stage" aria-label="Door fork">
 
-  <!-- STRUCTURE -->
-  <div class="d d-top" id="dStructure" role="button" tabindex="0" aria-label="Structure">
+  <div class="d d-top" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
     <div class="inner">
-      <div class="lab" id="labStructure">STRUCTURE</div>
-      <div class="sub" id="subStructure">Definitions. Boundaries. Clear foundations.</div>
+      <div class="lab" id="labEnter">ENTER SITE</div>
+      <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Go directly inside.</div>
     </div>
   </div>
 
-  <!-- PRODUCTS -->
-  <div class="d d-bottom" id="dProducts" role="button" tabindex="0" aria-label="Products">
+  <div class="d d-bottom" id="dMap" role="button" tabindex="0" aria-label="View site map">
     <div class="inner">
-      <div class="lab" id="labProducts">PRODUCTS</div>
-      <div class="sub" id="subProducts">Tools. Platforms. What you can use.</div>
+      <div class="lab" id="labMap">VIEW SITE MAP</div>
+      <div class="sub" id="subMap"><span class="pref" id="prefMap">First:</span> Get oriented first.</div>
     </div>
   </div>
 
 </div>
 
-<div class="footer" id="foot">Fine print: structure prevents drift · tools inherit limits</div>
-<div class="cogrid">COGRlD.NET</div>
+<div class="footer" id="foot">Fine print: orientation before scale · scale before claims</div>
+<div class="sig">COGRlD.NET</div>
 
 <script>
 (function(){
-  var qs = new URLSearchParams(location.search);
+  var qs=new URLSearchParams(location.search);
 
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
@@ -348,14 +325,14 @@ a{color:inherit;text-decoration:none}
            "&depth="+encodeURIComponent(D);
   }
 
-  // Wire DOOR link
-  document.getElementById("btnDoor").href = "/door/" + q();
+  // top links carry state
+  document.getElementById("btnExit").href="/"+q();
+  document.getElementById("btnPrelude").href="/prelude/"+q();
 
-  // Language buttons
+  // language buttons
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
-
   function paintLang(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
@@ -365,68 +342,68 @@ a{color:inherit;text-decoration:none}
 
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang = next;
+    lang=next;
     try{ localStorage.setItem("gd_lang", lang); }catch(e){}
     history.replaceState({}, "", location.pathname + q({lang:lang}));
-    document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
-    paintLang();
-    renderLang();
-    document.getElementById("btnDoor").href="/door/"+q();
+    location.reload();
   }
 
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // Copy i18n (plain, human-first)
+  // i18n minimal
   function renderLang(){
     if(lang==="zh"){
-      document.getElementById("bt").textContent="选择路径";
-      document.getElementById("bs").textContent="两条路。都通向清晰。";
-      document.getElementById("labStructure").textContent="结构";
-      document.getElementById("subStructure").textContent="定义。边界。清晰基础。";
-      document.getElementById("labProducts").textContent="产品";
-      document.getElementById("subProducts").textContent="工具。平台。可用内容。";
-      document.getElementById("btnDoor").textContent="门";
-      document.getElementById("foot").textContent="细则：结构防漂移 · 工具有边界";
+      document.getElementById("t").textContent="进入";
+      document.getElementById("s").innerHTML="<strong>无需信仰</strong> · <strong>不做推销</strong> · <em>以结构导航</em>";
+      document.getElementById("labEnter").textContent="进入网站";
+      document.getElementById("prefEnter").textContent="直接：";
+      document.getElementById("subEnter").lastChild.nodeValue=" 直接进入。";
+      document.getElementById("labMap").textContent="查看网站地图";
+      document.getElementById("prefMap").textContent="先：";
+      document.getElementById("subMap").lastChild.nodeValue=" 先获得方向。";
+      document.getElementById("btnExit").textContent="退出";
+      document.getElementById("btnPrelude").textContent="前置页";
+      document.getElementById("foot").textContent="细则：先导览 · 再规模 · 再主张";
     }else if(lang==="es"){
-      document.getElementById("bt").textContent="ELEGIR RUTA";
-      document.getElementById("bs").textContent="Dos caminos. Ambos llevan a claridad.";
-      document.getElementById("labStructure").textContent="ESTRUCTURA";
-      document.getElementById("subStructure").textContent="Definiciones. Límites. Base clara.";
-      document.getElementById("labProducts").textContent="PRODUCTOS";
-      document.getElementById("subProducts").textContent="Herramientas. Plataformas. Usable.";
-      document.getElementById("btnDoor").textContent="PUERTA";
-      document.getElementById("foot").textContent="Letra pequeña: la estructura evita deriva · las herramientas tienen límites";
+      document.getElementById("t").textContent="ENTRAR";
+      document.getElementById("s").innerHTML="<strong>Sin creencias</strong> · <strong>Sin venta</strong> · <em>Navegación por estructura</em>";
+      document.getElementById("labEnter").textContent="ENTRAR AL SITIO";
+      document.getElementById("prefEnter").textContent="Directo:";
+      document.getElementById("subEnter").lastChild.nodeValue=" Entra directamente.";
+      document.getElementById("labMap").textContent="VER MAPA DEL SITIO";
+      document.getElementById("prefMap").textContent="Primero:";
+      document.getElementById("subMap").lastChild.nodeValue=" Oriéntate primero.";
+      document.getElementById("btnExit").textContent="SALIR";
+      document.getElementById("btnPrelude").textContent="PRELUDIO";
+      document.getElementById("foot").textContent="Letra pequeña: orientación · escala · afirmaciones";
     }else{
-      document.getElementById("bt").textContent="CHOOSE PATH";
-      document.getElementById("bs").textContent="Two ways in. Both lead to clarity.";
-      document.getElementById("labStructure").textContent="STRUCTURE";
-      document.getElementById("subStructure").textContent="Definitions. Boundaries. Clear foundations.";
-      document.getElementById("labProducts").textContent="PRODUCTS";
-      document.getElementById("subProducts").textContent="Tools. Platforms. What you can use.";
-      document.getElementById("btnDoor").textContent="DOOR";
-      document.getElementById("foot").textContent="Fine print: structure prevents drift · tools inherit limits";
+      document.getElementById("t").textContent="ENTER";
+      document.getElementById("s").innerHTML="<strong>No belief required</strong> · <strong>No selling</strong> · <em>Navigation by structure</em>";
+      document.getElementById("labEnter").textContent="ENTER SITE";
+      document.getElementById("prefEnter").textContent="Direct:";
+      document.getElementById("subEnter").lastChild.nodeValue=" Go directly inside.";
+      document.getElementById("labMap").textContent="VIEW SITE MAP";
+      document.getElementById("prefMap").textContent="First:";
+      document.getElementById("subMap").lastChild.nodeValue=" Get oriented first.";
+      document.getElementById("btnExit").textContent="EXIT";
+      document.getElementById("btnPrelude").textContent="PRELUDE";
+      document.getElementById("foot").textContent="Fine print: orientation before scale · scale before claims";
     }
   }
   renderLang();
 
-  // Routing
-  function goStructure(){ location.href="/home/" + q(); }
-  function goProducts(){ location.href="/explore/" + q(); }
+  // fork routes (LOCKED)
+  function goEnter(){ location.href="/home/"+q(); }
+  function goMap(){ location.href="/prelude/"+q(); }
 
-  var dS=document.getElementById("dStructure");
-  var dP=document.getElementById("dProducts");
-
-  dS.addEventListener("click", goStructure);
-  dP.addEventListener("click", goProducts);
-
-  dS.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goStructure(); }
-  });
-  dP.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goProducts(); }
-  });
+  var dEnter=document.getElementById("dEnter");
+  var dMap=document.getElementById("dMap");
+  dEnter.addEventListener("click", goEnter);
+  dMap.addEventListener("click", goMap);
+  dEnter.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goEnter(); }});
+  dMap.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goMap(); }});
 
 })();
 </script>

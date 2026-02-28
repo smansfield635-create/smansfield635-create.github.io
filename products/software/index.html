@@ -1,24 +1,20 @@
-<!-- TNT — /products/software/index.html
-     PRODUCTS · SOFTWARE (ENERGY-MODEL CLONE · 72 NARRATIVES)
-     STRUCTURE (IDENTICAL TO ENERGY):
-       LEVEL 1 (Page): 4 glossy diamonds = ENGINE / PLATFORM / INSTRUMENTS / GOVERNANCE
-       LEVEL 2 (Quadrant Modal): 4 glossy diamonds = 3 domains + RETURN
-       LEVEL 3 (Domain Modal): 3 tap-to-open bubbles = CONCEPT / LIVE / ROADMAP
-         Each bubble contains 2-tone toggle = FORMAL / INFORMAL
+<!-- TNT — /products/software/index.html  (SOFTWARE · 2-POINT WISHBONE · 72 NARRATIVES · EN/中文/ES)
+     MODEL (LOCKED):
+       LEVEL 1 (Page): 2 glossy diamonds = ENGINE / PLATFORM
+       LEVEL 2 (Domains Modal): 6 domains + RETURN
+       LEVEL 3 (Narrative Modal): Tone toggle (FORMAL / INFORMAL) + 3 bubbles (CONCEPT / LIVE / ROADMAP) tap-to-open
      COUNT:
        12 domains × 3 time bubbles × 2 tones = 72 narratives
      LANGUAGE:
-       - lang=en => EN only
-       - lang=zh => 中文 only
-       - lang=es => ES only
-     STATE (NO NEW KEYS):
-       - gd_lang / gd_style / gd_time only (reads style/time, but page uses its own tone toggle)
-       - URL: lang/style/time/depth (carried forward)
+       lang=en => EN only
+       lang=zh => 中文 only
+       lang=es => ES only
+     STATE:
+       URL + LS: gd_lang/gd_style/gd_time/gd_depth (preserved on every jump)
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - Does NOT style html/body background (ui.css owns field)
-       - Tap-safe (no pointer blockers)
-       - No inline onclick
+       - No html/body background overrides (ui.css owns field)
+       - Tap-safe (no inline onclick)
 -->
 
 <!doctype html>
@@ -33,19 +29,29 @@
 <script defer src="/assets/instruments.js"></script>
 
 <style>
+a{text-decoration:none;color:inherit}
 :root{
-  --R:150px;
-  --D:184px;
+  --R:170px;
+  --D:198px;
   --goldSoft:rgba(212,175,55,.45);
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
   --mut:rgba(255,255,255,.90);
   --mut2:rgba(255,255,255,.74);
 }
+
+/* base */
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-a{text-decoration:none;color:inherit}
 body::before,body::after{pointer-events:none!important}
 
 /* Top */
-.top-left{position:fixed;left:16px;top:16px;z-index:140;display:flex;gap:10px;flex-wrap:wrap}
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-left .btn{white-space:nowrap}
+
+/* Brand */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
   z-index:130;text-align:center;padding:10px 18px;border-radius:999px;
@@ -55,7 +61,7 @@ body::before,body::after{pointer-events:none!important}
 .brand .s{opacity:.86;font-size:14px;margin:6px 0 0;line-height:1.25}
 
 /* Stage */
-.stage{position:fixed;left:50%;top:56%;transform:translate(-50%,-50%);width:min(720px,94vw);height:min(720px,94vw);z-index:60}
+.stage{position:fixed;left:50%;top:56%;transform:translate(-50%,-50%);width:min(720px,94vw);height:min(720px,94vw);z-index:60;pointer-events:none}
 .outer{
   position:absolute;left:50%;top:50%;
   width:min(680px,92vw);height:min(680px,92vw);
@@ -76,17 +82,18 @@ body::before,body::after{pointer-events:none!important}
   background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg)
 }
 
-/* Pearlescent glossy diamond (LOCK) */
+/* Glossy diamond */
 .d{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
   transform-origin:center;border-radius:28px;
   cursor:pointer;pointer-events:auto;touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
+  overflow:hidden;
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
     radial-gradient(circle at 70% 78%, rgba(0,120,255,.30), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.96), rgba(7,11,18,.98));
+    linear-gradient(160deg, var(--obsA), var(--obsB));
   border:1px solid rgba(255,255,255,.16);
   box-shadow:
     0 38px 120px rgba(0,0,0,.85),
@@ -110,7 +117,7 @@ body::before,body::after{pointer-events:none!important}
   transform:rotate(-10deg);pointer-events:none
 }
 .d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(1.02);
   border-color:rgba(212,175,55,.35);
   box-shadow:
     0 44px 140px rgba(0,0,0,.92),
@@ -118,10 +125,22 @@ body::before,body::after{pointer-events:none!important}
     inset 0 2px 0 rgba(255,255,255,.28),
     inset 0 -46px 86px rgba(0,0,0,.84)
 }
-.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R)*-1)) rotate(45deg)}
-.d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
-.d-s{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
-.d-w{transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg)}
+.d:active{
+  transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(.99);
+}
+.d.active{
+  border-color:rgba(212,175,55,.65);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 66px rgba(212,175,55,.34),
+    inset 0 2px 0 rgba(255,255,255,.28),
+    inset 0 -46px 86px rgba(0,0,0,.84);
+}
+
+/* Wishbone placement (2-point) */
+.dL{ --tx:calc(var(--R) * -1); --ty:0px; transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
+.dR{ --tx:var(--R);           --ty:0px; transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
+
 .inner{
   transform:rotate(-45deg) translateY(-3px);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -172,10 +191,19 @@ body::before,body::after{pointer-events:none!important}
 .mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
 .mbody{padding:16px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-/* Domain grid inside quadrant modal */
+.hint{
+  max-width:980px;margin:0 auto 12px;
+  padding:10px 12px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16);
+  color:rgba(255,255,255,.80);
+  font-size:12.5px;line-height:1.45
+}
+
+/* Domains grid */
 .qgrid{display:grid;gap:14px;grid-template-columns:1fr}
 @media (min-width:760px){.qgrid{grid-template-columns:1fr 1fr}}
-.smallDiamond{
+.domCard{
   width:100%;height:140px;position:relative;border-radius:22px;
   cursor:pointer;pointer-events:auto;touch-action:manipulation;
   background:
@@ -185,7 +213,7 @@ body::before,body::after{pointer-events:none!important}
   border:1px solid rgba(255,255,255,.16);
   box-shadow:0 22px 70px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.22), inset 0 -34px 60px rgba(0,0,0,.70)
 }
-.smallDiamond::before{
+.domCard::before{
   content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.55;
@@ -193,11 +221,11 @@ body::before,body::after{pointer-events:none!important}
   -webkit-mask-composite:xor;mask-composite:exclude;
   pointer-events:none
 }
-.sdInner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;pointer-events:none}
-.sdT{font-weight:950;letter-spacing:.25px}
-.sdS{font-size:12.5px;opacity:.82;margin-top:6px}
+.dcInner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;pointer-events:none}
+.dcT{font-weight:950;letter-spacing:.25px}
+.dcS{font-size:12.5px;opacity:.82;margin-top:6px}
 
-/* Domain narrative modal */
+/* Narrative modal */
 .lensbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 14px}
 .pill{
   padding:10px 14px;border-radius:999px;
@@ -217,19 +245,13 @@ body::before,body::after{pointer-events:none!important}
 .bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
 .bubble p{margin:0;color:var(--mut2);line-height:1.65;display:none}
 .bubble.open p{display:block}
-.hint{
-  max-width:980px;margin:0 auto 12px;
-  padding:10px 12px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);
-  color:rgba(255,255,255,.80);
-  font-size:12.5px;line-height:1.45
-}
 
 @media (max-width:560px){
-  :root{--R:136px}
-  .d{width:158px;height:158px}
+  :root{--R:148px;--D:176px}
   .stage{top:54%}
+}
+@media (max-width:420px){
+  :root{--R:138px;--D:168px}
 }
 </style>
 </head>
@@ -243,26 +265,24 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="brand" aria-hidden="true">
   <div class="t" id="hdrT">Software</div>
-  <div class="s" id="hdrS">72 Narratives · 4→12→36→72</div>
+  <div class="s" id="hdrS">Wishbone · Engine ↔ Platform · 72 Narratives</div>
 </div>
 
-<div class="stage" aria-label="Software quadrants">
+<div class="stage" aria-label="Software wishbone">
   <div class="outer"></div>
 
-  <div class="d d-n" id="qEngine" role="button" tabindex="0" aria-label="Engine">
-    <div class="inner"><div class="lab" id="labEngine">ENGINE</div><div class="sub" id="subEngine">Runtime · state · determinism</div></div>
+  <div class="d dL" id="dEngine" role="button" tabindex="0" aria-label="Engine">
+    <div class="inner">
+      <div class="lab" id="labEngine">ENGINE</div>
+      <div class="sub" id="subEngine">How it runs · state · gates</div>
+    </div>
   </div>
 
-  <div class="d d-e" id="qPlatform" role="button" tabindex="0" aria-label="Platform">
-    <div class="inner"><div class="lab" id="labPlatform">PLATFORM</div><div class="sub" id="subPlatform">Surfaces · routing · adoption</div></div>
-  </div>
-
-  <div class="d d-s" id="qInstruments" role="button" tabindex="0" aria-label="Instruments">
-    <div class="inner"><div class="lab" id="labInstruments">INSTRUMENTS</div><div class="sub" id="subInstruments">Gauges · scoring · exports</div></div>
-  </div>
-
-  <div class="d d-w" id="qGovernance" role="button" tabindex="0" aria-label="Governance">
-    <div class="inner"><div class="lab" id="labGovernance">GOVERNANCE</div><div class="sub" id="subGovernance">Rules · gates · integrity</div></div>
+  <div class="d dR" id="dPlatform" role="button" tabindex="0" aria-label="Platform">
+    <div class="inner">
+      <div class="lab" id="labPlatform">PLATFORM</div>
+      <div class="sub" id="subPlatform">How it ships · surfaces · routing</div>
+    </div>
   </div>
 
   <div class="core">◆</div>
@@ -270,43 +290,45 @@ body::before,body::after{pointer-events:none!important}
 
 <nav class="dock" aria-label="Bottom navigation">
   <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
   <a class="btn" id="dockHub" href="/home/">HUB</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
   <a class="btn" id="dockLinks" href="/links/">LINKS</a>
 </nav>
 
 <div class="bd" id="bd"></div>
 
-<!-- Quadrant Modal -->
-<div class="modal" id="quadModal" role="dialog" aria-modal="true">
+<!-- Domains Modal -->
+<div class="modal" id="domainsModal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="quadTitle">Quadrant</h3>
-      <button class="mclose" id="quadClose" aria-label="Close" type="button">✕</button>
+      <h3 class="mtitle" id="domainsTitle">SOFTWARE · ENGINE</h3>
+      <button class="mclose" id="domainsClose" aria-label="Close" type="button">✕</button>
     </div>
     <div class="mbody">
-      <div class="hint" id="quadHint">Tap a domain diamond to enter its narrative. Return closes this layer.</div>
-      <div class="qgrid" id="quadGrid"></div>
+      <div class="hint" id="domainsHint">Tap a domain to enter its narrative. RETURN closes this layer.</div>
+      <div class="qgrid" id="domainsGrid"></div>
     </div>
   </div>
 </div>
 
-<!-- Domain Modal -->
-<div class="modal" id="domainModal" role="dialog" aria-modal="true">
+<!-- Narrative Modal -->
+<div class="modal" id="narrativeModal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="domainTitle">Domain</h3>
-      <button class="mclose" id="domainClose" aria-label="Close" type="button">✕</button>
+      <h3 class="mtitle" id="narTitle">SOFTWARE · Domain</h3>
+      <button class="mclose" id="narClose" aria-label="Close" type="button">✕</button>
     </div>
 
-    <div class="mbody" id="domainBody">
+    <div class="mbody">
       <div class="lensbar">
         <div class="pill active" id="toneFormal">FORMAL</div>
         <div class="pill" id="toneInformal">INFORMAL</div>
       </div>
 
-      <div class="hint" id="claimHint">This page describes software posture only. Proof lives under Laws; measurement lives under Gauges.</div>
+      <div class="hint" id="narHint">Content evolves by time (Concept → Live → Roadmap) and by tone (Formal vs Informal).</div>
 
       <div class="bubble" id="bConcept"><h4 id="hConcept">Concept</h4><p id="pConcept"></p></div>
       <div class="bubble" id="bLive"><h4 id="hLive">Live</h4><p id="pLive"></p></div>
@@ -317,17 +339,18 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
-  // state hydration
+  // ===== state =====
   var qs=new URLSearchParams(location.search);
-  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
-  var style=qs.get("style")||localStorage.getItem("gd_style")||"formal";
-  var time=qs.get("time")||localStorage.getItem("gd_time")||"now";
-  var depth=qs.get("depth")||localStorage.getItem("gd_depth")||"explore";
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
   if(time==="trajectory") time="post";
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  if(style!=="formal"&&style!=="informal") style="formal";
-  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
-  if(depth!=="explore"&&depth!=="learn") depth="explore";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
   try{
     localStorage.setItem("gd_lang",lang);
     localStorage.setItem("gd_style",style);
@@ -346,270 +369,578 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("btnBack").href="/products/"+q();
   document.getElementById("btnExit").href="/index.html"+q();
   document.getElementById("dockTerminal").href="/index.html"+q();
+  document.getElementById("dockDoor").href="/door/"+q();
   document.getElementById("dockHub").href="/home/"+q();
   document.getElementById("dockProducts").href="/products/"+q();
   document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
   document.getElementById("dockLinks").href="/links/"+q();
 
-  // i18n (single language)
+  // ===== UI text =====
   var UI={
     en:{
       hdrT:"Software",
-      hdrS:"72 Narratives · 4→12→36→72",
-      q:{
-        engine:{lab:"ENGINE", sub:"Runtime · state · determinism"},
-        platform:{lab:"PLATFORM", sub:"Surfaces · routing · adoption"},
-        instruments:{lab:"INSTRUMENTS", sub:"Gauges · scoring · exports"},
-        governance:{lab:"GOVERNANCE", sub:"Rules · gates · integrity"}
-      },
-      quadHint:"Tap a domain diamond to enter its narrative. Return closes this layer.",
-      claim:"This page describes software posture only. Proof lives under Laws; measurement lives under Gauges.",
-      concept:"Concept", live:"Live", roadmap:"Roadmap",
+      hdrS:"Wishbone · Engine ↔ Platform · 72 Narratives",
+      d:{engine:{lab:"ENGINE",sub:"How it runs · state · gates"}, platform:{lab:"PLATFORM",sub:"How it ships · surfaces · routing"}},
+      domainsHint:"Tap a domain to enter its narrative. RETURN closes this layer.",
+      narHint:"Content evolves by time (Concept → Live → Roadmap) and by tone (Formal vs Informal).",
       formal:"FORMAL", informal:"INFORMAL",
-      ret:"RETURN", domSub:"Concept · Live · Roadmap"
+      concept:"Concept", live:"Live", roadmap:"Roadmap",
+      domSub:"Concept · Live · Roadmap",
+      ret:"RETURN"
     },
     zh:{
       hdrT:"软件",
-      hdrS:"72段叙事 · 4→12→36→72",
-      q:{
-        engine:{lab:"引擎", sub:"运行时 · 状态 · 确定性"},
-        platform:{lab:"平台", sub:"界面 · 路由 · 采纳"},
-        instruments:{lab:"量具", sub:"仪表 · 评分 · 导出"},
-        governance:{lab:"治理", sub:"规则 · 闸门 · 纪律"}
-      },
-      quadHint:"点选一个域进入叙事。RETURN 将关闭本层。",
-      claim:"本页只描述软件姿态。证明在法则；测量在量规。",
-      concept:"概念", live:"上线", roadmap:"路线图",
+      hdrS:"叉形入口 · 引擎 ↔ 平台 · 72段叙事",
+      d:{engine:{lab:"引擎",sub:"怎么跑 · 状态 · 闸门"}, platform:{lab:"平台",sub:"怎么交付 · 界面 · 路由"}},
+      domainsHint:"点选域进入叙事。RETURN 关闭本层。",
+      narHint:"内容随时间（概念→上线→路线图）与语气（正式/通俗）演进。",
       formal:"正式", informal:"通俗",
-      ret:"RETURN", domSub:"概念 · 上线 · 路线图"
+      concept:"概念", live:"上线", roadmap:"路线图",
+      domSub:"概念 · 上线 · 路线图",
+      ret:"RETURN"
     },
     es:{
       hdrT:"Software",
-      hdrS:"72 Narrativas · 4→12→36→72",
-      q:{
-        engine:{lab:"MOTOR", sub:"Runtime · estado · determinismo"},
-        platform:{lab:"PLATAFORMA", sub:"Superficies · rutas · adopción"},
-        instruments:{lab:"INSTRUMENTOS", sub:"Medidores · puntuación · exportación"},
-        governance:{lab:"GOBIERNO", sub:"Reglas · compuertas · integridad"}
-      },
-      quadHint:"Toca un dominio para ver su narrativa. RETURN cierra esta capa.",
-      claim:"Esta página describe postura de software. La prueba vive en Leyes; la medición en Medidores.",
-      concept:"Concepto", live:"En vivo", roadmap:"Hoja de ruta",
+      hdrS:"Horquilla · Motor ↔ Plataforma · 72 Narrativas",
+      d:{engine:{lab:"MOTOR",sub:"Cómo corre · estado · compuertas"}, platform:{lab:"PLATAFORMA",sub:"Cómo se entrega · superficies · rutas"}},
+      domainsHint:"Toca un dominio para ver su narrativa. RETURN cierra esta capa.",
+      narHint:"El contenido evoluciona por tiempo (Concepto → En vivo → Hoja de ruta) y por tono (Formal vs Informal).",
       formal:"FORMAL", informal:"INFORMAL",
-      ret:"RETURN", domSub:"Concepto · En vivo · Hoja de ruta"
+      concept:"Concepto", live:"En vivo", roadmap:"Hoja de ruta",
+      domSub:"Concepto · En vivo · Hoja de ruta",
+      ret:"RETURN"
     }
   };
   var T=(lang==="zh")?UI.zh:(lang==="es")?UI.es:UI.en;
 
   document.getElementById("hdrT").textContent=T.hdrT;
   document.getElementById("hdrS").textContent=T.hdrS;
+  document.getElementById("labEngine").textContent=T.d.engine.lab;
+  document.getElementById("subEngine").textContent=T.d.engine.sub;
+  document.getElementById("labPlatform").textContent=T.d.platform.lab;
+  document.getElementById("subPlatform").textContent=T.d.platform.sub;
 
-  document.getElementById("labEngine").textContent=T.q.engine.lab;
-  document.getElementById("subEngine").textContent=T.q.engine.sub;
-  document.getElementById("labPlatform").textContent=T.q.platform.lab;
-  document.getElementById("subPlatform").textContent=T.q.platform.sub;
-  document.getElementById("labInstruments").textContent=T.q.instruments.lab;
-  document.getElementById("subInstruments").textContent=T.q.instruments.sub;
-  document.getElementById("labGovernance").textContent=T.q.governance.lab;
-  document.getElementById("subGovernance").textContent=T.q.governance.sub;
-
-  document.getElementById("quadHint").textContent=T.quadHint;
-  document.getElementById("claimHint").textContent=T.claim;
+  document.getElementById("domainsHint").textContent=T.domainsHint;
+  document.getElementById("narHint").textContent=T.narHint;
+  document.getElementById("toneFormal").textContent=T.formal;
+  document.getElementById("toneInformal").textContent=T.informal;
   document.getElementById("hConcept").textContent=T.concept;
   document.getElementById("hLive").textContent=T.live;
   document.getElementById("hRoadmap").textContent=T.roadmap;
-  document.getElementById("toneFormal").textContent=T.formal;
-  document.getElementById("toneInformal").textContent=T.informal;
 
-  // Quadrant -> domains mapping (4 quadrants × 3 domains = 12)
-  var QUADS = {
-    "ENGINE": ["State Runtime","Deterministic Gates","Receipt Progression"],
-    "PLATFORM": ["Navigation Surfaces","Product Packaging","Enterprise Deployment"],
-    "INSTRUMENTS": ["Dot.Grid Sweeps","Scoring Outputs","Registry Lookups"],
-    "GOVERNANCE": ["Admissibility Doctrine","Audit Discipline","Change Control"]
+  // ===== Domain catalog (stable IDs) =====
+  var DOMAINS = {
+    state_runtime: {en:"State Runtime", zh:"状态运行时", es:"Runtime de estado"},
+    deterministic_gates: {en:"Deterministic Gates", zh:"确定性闸门", es:"Compuertas deterministas"},
+    receipt_progression: {en:"Receipt Progression", zh:"收据式推进", es:"Progresión por recibos"},
+    change_control: {en:"Change Control", zh:"变更控制", es:"Control de cambios"},
+    audit_discipline: {en:"Audit Discipline", zh:"审计纪律", es:"Disciplina de auditoría"},
+    admissibility_doctrine: {en:"Admissibility Doctrine", zh:"可采信教义", es:"Doctrina de admisibilidad"},
+
+    navigation_surfaces: {en:"Navigation Surfaces", zh:"导航界面", es:"Superficies de navegación"},
+    product_packaging: {en:"Product Packaging", zh:"产品封装", es:"Empaquetado de producto"},
+    enterprise_deployment: {en:"Enterprise Deployment", zh:"企业部署", es:"Despliegue empresarial"},
+    dotgrid_sweeps: {en:"Dot.Grid Sweeps", zh:"Dot.Grid 扫掠", es:"Barridos Dot.Grid"},
+    scoring_outputs: {en:"Scoring Outputs", zh:"评分输出", es:"Salidas de puntuación"},
+    registry_lookups: {en:"Registry Lookups", zh:"登记查询", es:"Consultas de registro"}
   };
 
-  // 72 narratives (unique per domain / time / tone)
-  var N = {
-    "State Runtime":{
-      concept:{
-        formal:"The runtime is a constrained state machine: declared keys define the coordinate, and transitions are atomic. State is not a vibe; it is an admissible snapshot produced under the same rules for every observer. The purpose is repeatable execution without semantic drift.",
-        informal:"The runtime is the part that keeps things from turning into chaos. It’s a simple rule: you’re always in a state, and every move changes state cleanly. No magic. No guessing."
-      },
-      live:{
-        formal:"Live operation emphasizes stability and recoverability: state must survive refresh, navigation, and device variance. A valid move produces the same next state regardless of user path. When drift appears, rollback is deterministic.",
-        informal:"Live means it doesn’t break when you tap around. If you leave and come back, the system remembers the right thing. If something goes weird, it resets cleanly."
-      },
-      roadmap:{
-        formal:"Roadmap extends the runtime into domain adapters and exported receipts: every transition can emit a small proof bundle (inputs, decision, result). The contract remains invariant while coverage expands.",
-        informal:"Next, the runtime learns new domains without changing the rules. More surfaces, same discipline. And you can export what happened so people can verify it."
-      }
-    },
-    "Deterministic Gates":{
-      concept:{
-        formal:"Gates are binary admissibility checks applied under declared scope. They prevent escalation without receipts and suppress narrative inflation. A gate is not persuasion; it is a rule that yields pass or fail given inputs.",
-        informal:"Gates are the ‘yes/no’ switches that keep the system honest. If the proof isn’t there, you don’t get to level up. Simple."
-      },
-      live:{
-        formal:"In live mode, gates are enforced under load: no timers-as-gates, no hidden shortcuts, no silent overrides. Failures are contained and logged; success advances with a receipt.",
-        informal:"Live gating means no sneaky passes. You either meet the requirement or you don’t. If you fail, it tells you and stops the drift."
-      },
-      roadmap:{
-        formal:"Roadmap adds standardized reason codes and replay: any gate decision can be reproduced by independent observers from the same receipt set. This upgrades trust while keeping the logic minimal.",
-        informal:"Next, gate decisions come with ‘why’ in a clean, checkable way. Same inputs, same result—anyone can rerun it."
-      }
-    },
-    "Receipt Progression":{
-      concept:{
-        formal:"Progression is receipt-gated: advancement requires evidence that survives scope locks. This eliminates time-based advancement and replaces it with measurable completion. Progress becomes audit-friendly by default.",
-        informal:"You don’t progress because time passed—you progress because you did the thing. Receipts are the proof that you earned the next step."
-      },
-      live:{
-        formal:"Live progression preserves position across navigation and language toggles. Back-navigation can invalidate downstream receipts; forward movement requires fresh confirmation. The system favors safety over momentum when conflict appears.",
-        informal:"Live progression means you can’t accidentally ‘skip’ into a future state. If you back out, the system knows what becomes invalid and keeps you honest."
-      },
-      roadmap:{
-        formal:"Roadmap adds registrable receipts (hashable bundles) so progress can be recognized across products without leaking private data. This enables scalable verification without central trust.",
-        informal:"Next, your receipts can become portable—so progress can be verified elsewhere without exposing your whole life. Proof scales; privacy stays."
-      }
-    },
-    "Navigation Surfaces":{
-      concept:{
-        formal:"Surfaces are the user-facing contracts that present options without altering invariants. A surface may simplify choices, but it must not change what is admissible. UX is subordinate to the engine rules.",
-        informal:"The surface is the clean interface. It’s allowed to look simple, but it can’t lie. Pretty doesn’t get to override the rules."
-      },
-      live:{
-        formal:"Live surfaces emphasize tap reliability and isolation: no overlays intercept actions, no competing UI stacks, no accidental double routes. Each tap yields one deterministic outcome.",
-        informal:"Live means every tap works the first time. No ghost layers. No weird overlaps. You touch it, and it does exactly one thing."
-      },
-      roadmap:{
-        formal:"Roadmap introduces reusable surface templates across products so the same interactions feel identical everywhere. Consistency reduces cognitive load and improves adoption velocity.",
-        informal:"Next, every product page feels like the same ‘machine.’ Once you learn one, you can use them all without relearning the UI."
-      }
-    },
-    "Product Packaging":{
-      concept:{
-        formal:"Packaging binds engines to sellable surfaces without mixing doctrine into marketing. A product page explains what it does, while proof pages explain what is true. This separation prevents claim inflation.",
-        informal:"Packaging means: ‘Here’s what you can use’ without turning the proof into sales copy. Products do the job. Laws prove the boundaries."
-      },
-      live:{
-        formal:"Live packaging maintains stable routes and eliminates dead ends: every product card opens, every open has a return, and state is preserved across jumps. The product spine stays navigable under pressure.",
-        informal:"Live packaging means you can actually find things and get back. No 404s. No loops. Just clean routes and clean returns."
-      },
-      roadmap:{
-        formal:"Roadmap adds tiering (SaaS/Enterprise/Government) and registry status so users can understand access level without reading internal doctrine. The packaging stays human-first.",
-        informal:"Next, products get clear tiers and access signals—so anyone can understand what’s available without digging into the technical weeds."
-      }
-    },
-    "Enterprise Deployment":{
-      concept:{
-        formal:"Enterprise deployment is defined as staged rollout with segmentation and rollback. Claims remain bounded to what is measured. Governance interfaces are explicit: who can deploy, who can audit, who can tune thresholds.",
-        informal:"Enterprise is ‘scale without breaking.’ You roll out in waves, keep zones independent, and always have rollback ready. No hero moves."
-      },
-      live:{
-        formal:"Live enterprise posture tracks correlated exposure and adoption gates. Deployment decisions reference receipts, not urgency. Any instability triggers containment and a return to last stable state.",
-        informal:"Live enterprise means: if it wobbles, you stop. If it clusters, you split. If it drifts, you roll back. Stability wins."
-      },
-      roadmap:{
-        formal:"Roadmap builds audit bundles and API exports so third parties can verify posture without privileged access. This enables external trust at scale.",
-        informal:"Next, enterprise gets ‘proof packages’ you can hand to auditors and partners. They can verify without needing your whole stack."
-      }
-    },
-    "Dot.Grid Sweeps":{
-      concept:{
-        formal:"Dot.Grid is a traversal-friendly indexing sweep: it enumerates states under fixed definitions and creates comparable evidence windows. The value is repeatable classification under constraint.",
-        informal:"Dot.Grid is the scanner. It lets you sweep through states the same way every time so results don’t depend on mood or narrative."
-      },
-      live:{
-        formal:"Live sweeps enforce window discipline and consistent naming so comparisons remain valid across time. Outputs are routed to Gauges for display and to Laws for interpretation bounds.",
-        informal:"Live sweeps mean you can compare today to yesterday without tricking yourself. Same window, same labels, same output."
-      },
-      roadmap:{
-        formal:"Roadmap adds adapter packs so sweeps apply to multiple domains (software, energy, governance) while preserving the same 256-style stability contract when used.",
-        informal:"Next, Dot.Grid plugs into more domains—same sweep logic, more places to use it. You learn it once and reuse it."
-      }
-    },
-    "Scoring Outputs":{
-      concept:{
-        formal:"Scoring converts gate vectors and exposure into a bounded metric with reason codes. The score is subordinate to admissibility: it cannot override a fail state. Its purpose is decision compression, not persuasion.",
-        informal:"Scoring makes the signal easy to read. It doesn’t let you cheat a fail. It just tells you where you stand and why."
-      },
-      live:{
-        formal:"Live scoring produces stable summaries and exports. Any threshold change requires a new epoch; silent tuning is disallowed. This keeps comparisons honest and prevents retroactive narrative edits.",
-        informal:"Live scoring means you can’t quietly move the goalposts. If the rule changes, it’s obvious. If you compare scores, it’s a fair comparison."
-      },
-      roadmap:{
-        formal:"Roadmap integrates underwriting and portfolio views while keeping raw evidence traceable. Scores become shareable without exposing private telemetry, via hashed receipts.",
-        informal:"Next, you can share a score with proof attached—without dumping private data. Trust gets easier when the evidence travels with the number."
-      }
-    },
-    "Registry Lookups":{
-      concept:{
-        formal:"Registry provides lookupable status for packages, tiers, and validity windows. It is designed to publish the minimum necessary truth without leaking sensitive internals. Status is time-anchored and reason-coded.",
-        informal:"Registry is the ‘check the status’ screen. It tells you what’s active, what’s revoked, and why—without drama and without leaks."
-      },
-      live:{
-        formal:"Live registry enforces non-silent revocation and deterministic renewal rules. Any suspension or reinstatement is logged and can be audited. This prevents capture and hidden exceptions.",
-        informal:"Live registry means nobody can quietly flip things behind the scenes. If it changes, you can see it. If it’s revoked, there’s a reason."
-      },
-      roadmap:{
-        formal:"Roadmap adds third-party attestations and replay bundles so claims become verifiable across organizations. The registry becomes the bridge between internal execution and external trust.",
-        informal:"Next, registry turns into real-world credibility. Outside groups can verify status without taking your word for it."
-      }
-    },
-    "Admissibility Doctrine":{
-      concept:{
-        formal:"Doctrine defines what may be claimed and what must remain conditional. It prevents upgrades beyond receipts and locks language to measured scope. Software must obey this to avoid becoming narrative-driven.",
-        informal:"Doctrine is the rule: don’t say more than you can prove. Software is dangerous when it starts selling stories. This keeps it honest."
-      },
-      live:{
-        formal:"Live doctrine enforces posture: concept stays concept, live stays measured, roadmap stays gated. If evidence is missing, the system must say so and refuse escalation.",
-        informal:"Live doctrine means: call things what they are. If it’s not measured, you don’t hype it. If it’s only a plan, you label it as a plan."
-      },
-      roadmap:{
-        formal:"Roadmap expands doctrine into standardized templates across products so the same claim discipline holds everywhere. This reduces drift and accelerates safe adoption.",
-        informal:"Next, every product page speaks the same ‘honest language.’ No surprises. No inflated claims. Just clear posture everywhere."
-      }
-    },
-    "Audit Discipline":{
-      concept:{
-        formal:"Audit discipline requires observer-invariant evaluation: outputs must be judged by receipts, not intent. This is implemented as logging, replay, and fixed rule application under declared scope.",
-        informal:"Audit discipline means: show what happened. Not what you meant. Not what you hoped. Receipts decide."
-      },
-      live:{
-        formal:"Live audit mode produces bundles that can be re-run. Any disagreement must be resolved by scope or missing receipts, not by arguing interpretations.",
-        informal:"Live auditing makes fights boring. If you disagree, you look at the receipt. If it’s missing, you log it and move on."
-      },
-      roadmap:{
-        formal:"Roadmap adds audit automation with strict separation of tuning authority. Builders cannot silently adjust thresholds; auditors cannot silently relax rules.",
-        informal:"Next, audits get faster without getting weaker. And nobody gets to secretly ‘tune’ outcomes to make themselves look good."
-      }
-    },
-    "Change Control":{
-      concept:{
-        formal:"Change control defines how updates occur without corrupting comparability. A change that affects outcomes creates a new epoch. Old results remain interpretable under their original rules.",
-        informal:"Change control is how you upgrade without rewriting history. If you change the rules, you stamp it. Then comparisons stay honest."
-      },
-      live:{
-        formal:"Live control requires staged rollout, rollback readiness, and documented reason for change. Hot fixes must not act as hidden policy changes. Stability is treated as primary.",
-        informal:"Live change control means: don’t push chaos to production. Roll out in waves, keep rollback ready, and don’t pretend a ‘hotfix’ is harmless."
-      },
-      roadmap:{
-        formal:"Roadmap introduces policy registries and signed releases so changes become verifiable events. This strengthens external trust while maintaining internal speed.",
-        informal:"Next, updates become ‘signed events’ you can point to. People trust systems that don’t quietly change under their feet."
-      }
-    }
+  var ENGINE6 = ["state_runtime","deterministic_gates","receipt_progression","change_control","audit_discipline","admissibility_doctrine"];
+  var PLATFORM6 = ["navigation_surfaces","product_packaging","enterprise_deployment","dotgrid_sweeps","scoring_outputs","registry_lookups"];
+
+  function dTitle(id){
+    var o=DOMAINS[id]||null;
+    if(!o) return id;
+    return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en;
+  }
+
+  // ===== 72 narratives (3 lang × 2 tone × 3 time) =====
+  // tone: formal|informal, phase: concept|live|roadmap
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function N(formal,informal){ return {formal:formal, informal:informal}; }
+  function T3(concept,live,roadmap){ return {concept:concept, live:live, roadmap:roadmap}; }
+
+  var TEXT = {
+    state_runtime: T3(
+      N(
+        P(
+          "The runtime is a constrained state machine: declared keys define the coordinate and each transition is atomic. The same evidence stream yields the same next state under identical rules. This makes execution reproducible and drift-resistant.",
+          "运行时是受约束的状态机：规范键定义坐标，状态转移必须原子化。同一证据流在同一规则下得到同一下一状态，从而让执行可复现、抗漂移。",
+          "El runtime es una máquina de estados acotada: las claves declaradas definen la coordenada y cada transición es atómica. La misma evidencia produce el mismo siguiente estado bajo las mismas reglas."
+        ),
+        P(
+          "The runtime is the part that keeps everything from turning into chaos. You are always in a state, and every move changes state cleanly. No guessing, no magic—just discipline.",
+          "运行时负责防止系统变成混乱：你总在某个状态里，每一步都干净地换到下一个状态。不靠猜，不靠“魔法”，靠纪律。",
+          "El runtime evita el caos: siempre estás en un estado y cada paso cambia el estado de forma limpia. Sin magia ni suposiciones: disciplina."
+        )
+      ),
+      N(
+        P(
+          "Live operation requires state to survive refresh, navigation, and device variance. Back-navigation can invalidate downstream receipts; forward movement requires fresh confirmation. Drift triggers rollback rather than reinterpretation.",
+          "上线态要求状态能穿越刷新、返回、设备差异。回退会使下游收据失效；前进需要重新确认。出现漂移则回滚，而不是改口解释。",
+          "En vivo, el estado debe sobrevivir recarga, navegación y variaciones del dispositivo. Volver puede invalidar recibos; avanzar requiere confirmación. La deriva dispara rollback."
+        ),
+        P(
+          "Live means it doesn’t break when you tap around. Leave and come back and it still knows what’s true. If something goes weird, it resets cleanly instead of spiraling.",
+          "上线意味着你怎么点都不崩：离开再回来，系统仍知道什么是真的。出问题就干净重置，不让它螺旋失控。",
+          "En vivo significa que no se rompe cuando tocas. Sales y vuelves y sigue siendo correcto. Si se pone raro, se reinicia limpio."
+        )
+      ),
+      N(
+        P(
+          "Roadmap extends the runtime into domain adapters and exportable receipts: each transition can emit a compact proof bundle (inputs, decision, result). Coverage expands without changing the core contract.",
+          "路线图把运行时扩展为可插拔的领域适配器与可导出的收据：每次转移都可输出小型证明包（输入、决策、结果）。覆盖面扩大但契约不变。",
+          "La hoja de ruta añade adaptadores por dominio y recibos exportables: cada transición puede emitir un paquete de prueba (entradas, decisión, resultado) sin cambiar el contrato base."
+        ),
+        P(
+          "Next, the runtime learns new domains without changing the rules. More surfaces, same discipline. And you can export what happened so others can verify it.",
+          "下一步是在不改规则的前提下接入更多领域：更多界面，同样纪律；还可以导出发生了什么，让别人能核查。",
+          "Luego, el runtime se extiende a nuevos dominios sin cambiar reglas: más superficies, misma disciplina, y exportas lo ocurrido para que otros lo verifiquen."
+        )
+      )
+    ),
+
+    deterministic_gates: T3(
+      N(
+        P(
+          "Gates are binary admissibility checks under declared scope. They prevent escalation without receipts and suppress narrative inflation. A gate is a rule: given inputs, it yields pass or fail.",
+          "闸门是在声明范围内的二元可采信检查：没有收据就不允许升级，防止叙事膨胀。闸门是规则：给定输入，只产出通过/失败。",
+          "Las compuertas son verificaciones binarias de admisibilidad bajo alcance declarado. Sin recibos no hay escalación. Dado un input, devuelve pasa/falla."
+        ),
+        P(
+          "Gates are the yes/no switches that keep the system honest. If the proof isn’t there, you don’t level up. Simple and clean.",
+          "闸门就是让系统诚实的“是/否”开关：没证明就不升级，干净利落。",
+          "Las compuertas son el sí/no que mantiene honestidad. Si no hay prueba, no subes de nivel. Simple."
+        )
+      ),
+      N(
+        P(
+          "Live gates forbid timers-as-gates, hidden shortcuts, and silent overrides. Failures are contained and logged; success advances with a receipt. This preserves comparability across time.",
+          "上线闸门禁止用计时当闸门、禁止暗捷径、禁止静默覆盖。失败会被隔离并记录；通过则携带收据推进，从而保证跨时间可比较。",
+          "En vivo, no hay temporizadores como compuertas, ni atajos ocultos, ni overrides silenciosos. Fallos se contienen y registran; éxitos avanzan con recibo."
+        ),
+        P(
+          "Live gating means no sneaky passes. You either meet it or you don’t. If you fail, it stops drift immediately and tells you what broke.",
+          "上线闸门不允许“偷过”：要么满足，要么不满足。不满足就立刻止漂移，并告诉你哪里坏了。",
+          "En vivo no hay pases furtivos: cumples o no. Si fallas, corta la deriva y te dice qué se rompió."
+        )
+      ),
+      N(
+        P(
+          "Roadmap adds reason codes and replay: independent observers can reproduce gate decisions from the same receipt set. That upgrades trust while keeping the logic minimal.",
+          "路线图加入原因码与可回放：独立观察者可用同一收据集复现闸门决策。在保持逻辑极简的同时提升可信度。",
+          "La hoja de ruta añade códigos de razón y replay: observadores independientes pueden reproducir la decisión con el mismo set de recibos, aumentando confianza."
+        ),
+        P(
+          "Next, every gate comes with a clean “why” that anyone can rerun. Same inputs, same result. That’s how trust scales.",
+          "下一步是每个闸门都有可复跑的“为什么”：同输入同结果，信任因此能规模化。",
+          "Luego, cada compuerta viene con un “por qué” rerunable: mismo input, mismo resultado. Así escala la confianza."
+        )
+      )
+    ),
+
+    receipt_progression: T3(
+      N(
+        P(
+          "Progression is receipt-gated: advancement requires evidence that survives scope locks. Time does not grant progress; outputs do. This makes progress audit-friendly by default.",
+          "推进是收据闸门式的：升级必须有在范围锁下仍成立的证据。时间不授予进步，输出才授予进步，因此默认可审计。",
+          "La progresión está acotada por recibos: avanzar requiere evidencia que sobreviva al alcance. El tiempo no otorga progreso; la salida sí. Por defecto es audit-able."
+        ),
+        P(
+          "You don’t progress because time passed—you progress because you did the thing. Receipts are the proof you earned the next step.",
+          "不是因为过了时间就算进步，而是因为你做到了。收据就是你配得上下一步的证明。",
+          "No avanzas por pasar tiempo; avanzas por hacerlo. Los recibos prueban que te ganaste el siguiente paso."
+        )
+      ),
+      N(
+        P(
+          "Live progression preserves position across navigation and language toggles. Back-navigation can invalidate downstream receipts; forward steps require confirmation. Conflicts prefer safety over momentum.",
+          "上线推进会在导航与语言切换中保持位置。回退会使下游收据失效；前进需要确认。出现冲突时优先安全而非速度。",
+          "En vivo, la progresión se conserva al navegar o cambiar idioma. Volver puede invalidar recibos; avanzar requiere confirmación. Ante conflicto, seguridad > impulso."
+        ),
+        P(
+          "Live means you can’t accidentally skip into the future. If you back out, the system knows what becomes invalid and keeps you honest.",
+          "上线意味着你无法误闯未来：你一回退，系统就知道哪些东西无效，并把你拉回真实状态。",
+          "En vivo no puedes “saltar” por accidente. Si retrocedes, el sistema sabe qué se invalida y te mantiene honesto."
+        )
+      ),
+      N(
+        P(
+          "Roadmap adds registrable receipt bundles (hashable) so progress can be recognized across products without leaking private data. Verification scales without centralized trust.",
+          "路线图加入可登记的收据包（可哈希），让进度能跨产品被认可而不泄露隐私。验证可扩展且不依赖中心信任。",
+          "La hoja de ruta añade paquetes de recibos registrables (hasheables) para reconocer progreso entre productos sin filtrar datos privados. La verificación escala sin confianza central."
+        ),
+        P(
+          "Next, your receipts become portable. Proof scales; privacy stays. That’s how progress becomes real outside one page.",
+          "下一步是收据可携带：证明可扩展，隐私不牺牲。这样进度才能在页面之外也算数。",
+          "Luego, tus recibos se vuelven portátiles: la prueba escala y la privacidad permanece. Así el progreso cuenta fuera de una sola página."
+        )
+      )
+    ),
+
+    change_control: T3(
+      N(
+        P(
+          "Change control defines how updates occur without corrupting comparability. If a change affects outcomes, it creates a new epoch. Past results remain interpretable under original rules.",
+          "变更控制规定如何升级而不破坏可比性：只要影响结果就开启新纪元；旧结果仍按旧规则可解释。",
+          "El control de cambios define cómo actualizar sin romper comparabilidad. Si cambia resultados, crea una nueva época. Lo anterior sigue interpretable con reglas originales."
+        ),
+        P(
+          "Change control is how you upgrade without rewriting history. If rules change, you stamp it. Comparisons stay honest.",
+          "变更控制就是“不改历史”的升级法：规则变了就盖章，比较才诚实。",
+          "Control de cambios es actualizar sin reescribir historia. Si cambias reglas, lo marcas. Comparaciones honestas."
+        )
+      ),
+      N(
+        P(
+          "Live control requires staged rollout, rollback readiness, and documented reasons. Hotfixes must not become hidden policy changes. Stability remains primary.",
+          "上线变更必须分阶段发布、随时可回滚、且理由可追溯。热修不能变成暗政策变更。稳定性优先。",
+          "En vivo, requiere rollout por fases, rollback listo y razones documentadas. Los hotfix no pueden ser cambios de política ocultos. La estabilidad es prioridad."
+        ),
+        P(
+          "Live means don’t push chaos to production. Roll out in waves, keep rollback ready, and don’t pretend a hotfix is harmless.",
+          "上线意味着别把混乱推到生产：分波次、备回滚、别假装热修无害。",
+          "En vivo: no empujes caos a producción. Ola por ola, rollback listo, y no finjas que un hotfix es inocuo."
+        )
+      ),
+      N(
+        P(
+          "Roadmap introduces signed releases and policy registries so changes become verifiable events. This strengthens external trust while keeping internal speed.",
+          "路线图引入签名发布与策略登记，使变更成为可验证事件：外部信任增强，内部速度不降。",
+          "La hoja de ruta añade releases firmados y registros de política para que los cambios sean eventos verificables, fortaleciendo confianza externa sin perder velocidad interna."
+        ),
+        P(
+          "Next, updates become ‘signed events’ you can point to. People trust systems that don’t quietly change under their feet.",
+          "下一步是更新变成“可指认的签名事件”：人们信任不会悄悄换地板的系统。",
+          "Luego, las actualizaciones son ‘eventos firmados’. La gente confía en sistemas que no cambian silenciosamente bajo sus pies."
+        )
+      )
+    ),
+
+    audit_discipline: T3(
+      N(
+        P(
+          "Audit discipline requires observer-invariant evaluation: outputs are judged by receipts, not intent. Implemented via logging, replay, and fixed rule application under declared scope.",
+          "审计纪律要求观察者不变：用收据判输出，而不是用意图判。通过日志、回放、固定规则在声明范围内实现。",
+          "La disciplina de auditoría exige evaluación invariante: se juzga por recibos, no por intención. Se implementa con logs, replay y reglas fijas bajo alcance declarado."
+        ),
+        P(
+          "Audit discipline means: show what happened. Not what you meant. Receipts decide.",
+          "审计纪律就是：看发生了什么，不看你“想表达什么”。收据说了算。",
+          "Auditoría significa: muestra lo que pasó, no lo que ‘quisiste’. Los recibos deciden."
+        )
+      ),
+      N(
+        P(
+          "Live audit mode produces bundles that can be re-run. Disagreements resolve via scope or missing receipts, not interpretation battles. This keeps disputes cheap and bounded.",
+          "上线审计会产出可复跑的包。分歧通过范围或缺失收据解决，而不是争论解释。争议因此变得便宜且有界。",
+          "En vivo, el modo auditoría produce paquetes re-ejecutables. Desacuerdos se resuelven por alcance o recibos faltantes, no por debates de interpretación. Disputas quedan acotadas."
+        ),
+        P(
+          "Live auditing makes fights boring. If you disagree, look at the receipt. If it’s missing, log it and move on.",
+          "上线审计让争吵变无聊：不一致就看收据；没收据就记缺失，然后继续。",
+          "La auditoría en vivo vuelve las peleas aburridas: si discrepas, mira el recibo. Si falta, regístralo y sigue."
+        )
+      ),
+      N(
+        P(
+          "Roadmap adds audit automation with strict separation of tuning authority. Builders cannot silently tune thresholds; auditors cannot silently relax them. This blocks capture.",
+          "路线图加入自动审计，同时严格分离调参权：开发者不能暗调阈值，审计者也不能暗放宽。防捕获。",
+          "La hoja de ruta añade automatización con separación estricta de autoridad: quien construye no puede ajustar umbrales en silencio; quien audita no puede relajarlos en silencio. Evita captura."
+        ),
+        P(
+          "Next, audits get faster without getting weaker. And nobody gets to secretly tune outcomes to look good.",
+          "下一步是审计更快但不更弱；没人能偷偷调结果来“好看”。",
+          "Luego, auditorías más rápidas sin volverse débiles. Nadie puede ‘tunear’ resultados en secreto para verse bien."
+        )
+      )
+    ),
+
+    admissibility_doctrine: T3(
+      N(
+        P(
+          "Doctrine defines what may be claimed and what must remain conditional. It prevents upgrades beyond receipts and locks language to measured scope. Software must obey this or it becomes narrative-driven.",
+          "教义规定什么能主张、什么必须条件化：防止超出收据升级，并把语言锁在可测范围内。软件必须遵守，否则就会被叙事驱动。",
+          "La doctrina define qué se puede afirmar y qué debe ser condicional. Evita upgrades sin recibos y ata el lenguaje al alcance medido. Sin esto, el software se vuelve narrativo."
+        ),
+        P(
+          "Doctrine is the rule: don’t say more than you can prove. Software gets dangerous when it sells stories. This keeps it honest.",
+          "教义就是：别说超过你能证明的东西。软件一卖故事就危险。这个规则让它诚实。",
+          "Doctrina: no digas más de lo que puedes probar. El software se vuelve peligroso cuando vende historias. Esto lo mantiene honesto."
+        )
+      ),
+      N(
+        P(
+          "Live doctrine enforces posture: concept stays concept, live stays measured, roadmap stays gated. If evidence is missing, the system must say so and refuse escalation.",
+          "上线教义会强制姿态：概念就是概念；上线必须可测；路线图必须有闸门。证据缺失就必须声明并拒绝升级。",
+          "En vivo, la doctrina mantiene postura: concepto es concepto, en vivo es medido, roadmap es con compuertas. Si falta evidencia, el sistema lo declara y no escala."
+        ),
+        P(
+          "Live doctrine means call things what they are. If it’s not measured, don’t hype it. If it’s only a plan, label it as a plan.",
+          "上线教义就是：是什么就说是什么。没测就别吹；只是计划就标成计划。",
+          "En vivo: llama a las cosas por su nombre. Si no está medido, no lo exageres. Si es plan, dilo plan."
+        )
+      ),
+      N(
+        P(
+          "Roadmap standardizes doctrine templates across products so claim discipline holds everywhere. This reduces drift and accelerates safe adoption.",
+          "路线图把教义模板标准化到全产品：主张纪律处处一致，漂移减少，安全采纳加速。",
+          "La hoja de ruta estandariza plantillas doctrinales entre productos para que la disciplina de afirmación sea consistente. Reduce deriva y acelera adopción segura."
+        ),
+        P(
+          "Next, every page speaks the same honest language. No surprises. No inflated claims. Clear posture everywhere.",
+          "下一步是每一页都说同一种诚实语言：没惊喜、没膨胀、姿态清晰。",
+          "Luego, cada página habla el mismo lenguaje honesto: sin sorpresas, sin inflación de afirmaciones, postura clara en todas partes."
+        )
+      )
+    ),
+
+    navigation_surfaces: T3(
+      N(
+        P(
+          "Surfaces present options without altering invariants. A surface may simplify choices, but it must not change what is admissible. UX is subordinate to engine rules.",
+          "界面负责呈现选项但不能改不变量：可以简化选择，但不能改变什么是可采信。体验必须服从引擎规则。",
+          "Las superficies presentan opciones sin alterar invariantes. Pueden simplificar, pero no cambiar lo admisible. La UX está subordinada a reglas del motor."
+        ),
+        P(
+          "The surface can look simple, but it can’t lie. Pretty doesn’t get to override the rules.",
+          "界面可以很简单，但不能撒谎；漂亮不能覆盖规则。",
+          "La superficie puede ser simple, pero no puede mentir. Lo bonito no anula reglas."
+        )
+      ),
+      N(
+        P(
+          "Live surfaces require tap reliability: no competing UI stacks, no intercepting overlays, no double routes. Each action yields one deterministic outcome.",
+          "上线界面要求点按可靠：没有竞争层、没有拦截遮罩、没有双重路由；每次动作只产生一个确定结果。",
+          "En vivo, la superficie exige fiabilidad de toque: sin UI compitiendo, sin overlays interceptando, sin rutas dobles. Cada acción produce un resultado determinista."
+        ),
+        P(
+          "Live means every tap works the first time. No ghost layers. Touch it, and it does exactly one thing.",
+          "上线意味着每次点按一次成功：没有幽灵层；你点它，它只做一件事。",
+          "En vivo, cada toque funciona a la primera. Sin capas fantasma. Lo tocas y hace exactamente una cosa."
+        )
+      ),
+      N(
+        P(
+          "Roadmap introduces reusable templates across products so interactions feel identical everywhere. Consistency reduces cognitive load and increases adoption velocity.",
+          "路线图引入跨产品复用模板：交互处处一致，认知负担下降，采纳速度提升。",
+          "La hoja de ruta trae plantillas reutilizables entre productos: misma interacción en todas partes, menos carga cognitiva, más adopción."
+        ),
+        P(
+          "Next, every product page feels like the same machine. Learn one, use them all.",
+          "下一步是每个产品页都像同一台机器：学会一个，就能用全部。",
+          "Luego, cada página de producto se siente como la misma máquina: aprendes una y usas todas."
+        )
+      )
+    ),
+
+    product_packaging: T3(
+      N(
+        P(
+          "Packaging binds engines to sellable surfaces without mixing doctrine into marketing. Product pages state what you can use; proof pages state what is true. This prevents claim inflation.",
+          "封装把引擎绑定到可交付界面，但不把教义写成营销：产品页说你能用什么，证明页说什么是真的。防止主张膨胀。",
+          "El empaquetado une motores a superficies vendibles sin mezclar doctrina con marketing. Producto: qué puedes usar. Prueba: qué es cierto. Evita inflación de afirmaciones."
+        ),
+        P(
+          "Packaging is: here’s what you can use—without turning proof into sales copy. Products do the job; laws set boundaries.",
+          "封装就是：告诉你能用什么，但不把证明写成广告。产品做事，法则定边界。",
+          "Empaquetado: aquí está lo que puedes usar, sin convertir prueba en publicidad. Productos hacen el trabajo; leyes fijan límites."
+        )
+      ),
+      N(
+        P(
+          "Live packaging eliminates dead ends: every card opens, every open has a return, and state is preserved across jumps. The spine stays navigable under pressure.",
+          "上线封装消灭死路：每张卡都能打开；每个打开都有返回；跳转保持状态。压力下依旧可导航。",
+          "En vivo elimina callejones: cada tarjeta abre, cada abrir tiene retorno, y el estado se conserva. La columna sigue navegable bajo presión."
+        ),
+        P(
+          "Live packaging means you can actually find things and get back. No 404s. No loops. Clean routes.",
+          "上线封装意味着你真能找到东西并回得来：不404、不绕圈、路由干净。",
+          "Empaquetado en vivo: encuentras cosas y vuelves. Sin 404, sin bucles, rutas limpias."
+        )
+      ),
+      N(
+        P(
+          "Roadmap adds tiering (SaaS/Enterprise/Government) and registry status so access level is legible without reading internal doctrine. Packaging stays human-first.",
+          "路线图加入分级（SaaS/企业/政府）与登记状态，让访问级别一眼可读，无需翻内部教义。封装保持人类可读。",
+          "La hoja de ruta añade niveles (SaaS/Empresa/Gobierno) y estado de registro para que el acceso sea legible sin leer doctrina interna."
+        ),
+        P(
+          "Next, products get clear tiers and access signals. People don’t need jargon to understand what’s available.",
+          "下一步是产品拥有清晰分级与访问信号：不靠术语也能理解可用内容。",
+          "Luego, productos con niveles claros y señales de acceso. Sin jerga para entender qué está disponible."
+        )
+      )
+    ),
+
+    enterprise_deployment: T3(
+      N(
+        P(
+          "Enterprise deployment is staged rollout with segmentation and rollback readiness. Claims remain bounded to measured bands. Governance is explicit: who deploys, who audits, who tunes.",
+          "企业部署是分阶段发布+分区隔离+可回滚准备。主张必须限制在可测区间。治理明确：谁部署、谁审计、谁调参。",
+          "Despliegue empresarial = rollout por fases con segmentación y rollback listo. Afirmaciones acotadas a bandas medidas. Gobernanza explícita: quién despliega, audita y ajusta."
+        ),
+        P(
+          "Enterprise is scale without breaking. Waves, zones, rollback. No hero moves.",
+          "企业就是“不坏掉的扩张”：波次、分区、回滚；不靠英雄主义。",
+          "Empresa es escalar sin romper: olas, zonas, rollback. Sin heroísmos."
+        )
+      ),
+      N(
+        P(
+          "Live posture monitors correlated exposure and gate compliance. Deployment decisions reference receipts, not urgency. Instability triggers containment and reversion to last stable state.",
+          "上线姿态监测相关暴露与闸门合规。部署决策依据收据而非紧迫感。不稳即隔离并回到上一稳定态。",
+          "En vivo monitorea exposición correlacionada y compuertas. Decisiones se basan en recibos, no urgencia. Inestabilidad → contención y volver al último estado estable."
+        ),
+        P(
+          "Live enterprise means: if it wobbles, stop. If it clusters, split. If it drifts, roll back.",
+          "上线企业：一晃就停；一聚就拆；一漂就回滚。",
+          "Empresa en vivo: si tiembla, para. Si se agrupa, separa. Si deriva, rollback."
+        )
+      ),
+      N(
+        P(
+          "Roadmap builds audit bundles and API exports so third parties can verify posture without privileged access. External trust scales when proof is portable.",
+          "路线图构建审计包与API导出，让第三方无需特权也能核查姿态。证明可携带，外部信任才能扩张。",
+          "La hoja de ruta añade paquetes de auditoría y exports API para que terceros verifiquen sin acceso privilegiado. La confianza escala cuando la prueba es portable."
+        ),
+        P(
+          "Next, enterprise gets ‘proof packages’ you can hand to auditors and partners. They verify without your whole stack.",
+          "下一步：企业拥有可交给审计与合作方的“证明包”，无需交出整套系统也能核查。",
+          "Luego, la empresa tiene ‘paquetes de prueba’ para auditores y socios, verificables sin entregar todo tu stack."
+        )
+      )
+    ),
+
+    dotgrid_sweeps: T3(
+      N(
+        P(
+          "Dot.Grid is a traversal-friendly indexing sweep: it enumerates states under fixed definitions and produces comparable windows. Its value is repeatable classification under constraint.",
+          "Dot.Grid 是面向遍历的索引扫掠：在固定定义下枚举状态并产出可比较窗口。价值在于“约束下的可重复分类”。",
+          "Dot.Grid es un barrido de indexación para recorrido: enumera estados bajo definiciones fijas y produce ventanas comparables. Valor: clasificación repetible bajo restricción."
+        ),
+        P(
+          "Dot.Grid is the scanner. It lets you sweep the same way every time so results don’t depend on mood or narrative.",
+          "Dot.Grid 就是扫描器：每次同样扫法，结果不依赖情绪或故事。",
+          "Dot.Grid es el escáner: barridos iguales cada vez; resultados no dependen de estado de ánimo o narrativa."
+        )
+      ),
+      N(
+        P(
+          "Live sweeps enforce window discipline and stable naming so comparisons remain valid across time. Outputs route to Gauges for display and Laws for interpretation bounds.",
+          "上线扫掠强制窗口纪律与稳定命名，使跨时间比较有效。输出去量规展示，去法则约束解释。",
+          "En vivo, los barridos mantienen disciplina de ventana y nombres estables para comparar en el tiempo. Salidas van a Medidores (visual) y Leyes (límites de interpretación)."
+        ),
+        P(
+          "Live sweeps mean you can compare today to yesterday fairly. Same window, same labels, same output.",
+          "上线扫掠让今天对昨天的比较变公平：同窗口、同标签、同输出。",
+          "Barridos en vivo: comparar hoy vs ayer de forma justa. Misma ventana, mismas etiquetas, misma salida."
+        )
+      ),
+      N(
+        P(
+          "Roadmap adds adapter packs so sweeps apply across domains (software, energy, governance) while preserving the same stability contract when the 256-style indexing is used.",
+          "路线图加入适配包，使扫掠可跨领域（软件/能源/治理），同时在使用256式索引时保持同一稳定契约。",
+          "La hoja de ruta añade adaptadores para aplicar barridos a múltiples dominios (software, energía, gobernanza) manteniendo el mismo contrato de estabilidad cuando se usa el estilo 256."
+        ),
+        P(
+          "Next, Dot.Grid plugs into more domains—same sweep logic, more places to use it. Learn once, reuse everywhere.",
+          "下一步：Dot.Grid 接入更多领域——同扫掠逻辑，更多用武之地；学一次，到处复用。",
+          "Luego, Dot.Grid se conecta a más dominios: misma lógica, más usos. Aprendes una vez, reutilizas en todas partes."
+        )
+      )
+    ),
+
+    scoring_outputs: T3(
+      N(
+        P(
+          "Scoring converts gate vectors and exposure into a bounded metric with reason codes. A score cannot override a fail state; it compresses decisions, not reality.",
+          "评分把闸门向量与暴露转成带原因码的有界指标。分数不能覆盖失败态；它压缩决策，不改现实。",
+          "La puntuación convierte vectores de compuertas y exposición en una métrica acotada con códigos de razón. No puede anular un fallo; comprime decisiones, no la realidad."
+        ),
+        P(
+          "Scoring makes the signal easy to read. It doesn’t let you cheat a fail. It tells you where you stand and why.",
+          "评分让信号更好读：不允许你“用分数作弊”去盖过失败；它告诉你位置和原因。",
+          "La puntuación hace la señal legible: no te deja ‘tapar’ un fallo. Te dice dónde estás y por qué."
+        )
+      ),
+      N(
+        P(
+          "Live scoring produces stable summaries and exports. Any threshold change creates a new epoch; silent tuning is disallowed. This keeps comparisons honest.",
+          "上线评分会产出稳定摘要与导出。阈值变更必须新纪元；禁止静默调参。比较因此诚实。",
+          "En vivo, produce resúmenes y exports estables. Cambiar umbrales crea nueva época; ajustar en silencio está prohibido. Comparaciones honestas."
+        ),
+        P(
+          "Live scoring means no moving goalposts. If the rule changes, it’s stamped. If you compare scores, it’s fair.",
+          "上线评分意味着不挪球门：规则变了就盖章；你比对分数才公平。",
+          "En vivo, no se mueven los postes: si cambia la regla, se marca. Comparar puntuaciones es justo."
+        )
+      ),
+      N(
+        P(
+          "Roadmap integrates portfolio and underwriting views while keeping evidence traceable via hashed receipts. Scores become shareable without leaking private telemetry.",
+          "路线图接入组合与承保视图，同时用哈希收据保持证据可追溯。分数可分享但不泄露隐私遥测。",
+          "La hoja de ruta integra vistas de portafolio y underwriting manteniendo evidencia trazable con recibos hasheados. Puntuaciones se comparten sin filtrar telemetría privada."
+        ),
+        P(
+          "Next, you can share a score with proof attached—without dumping private data. Trust gets easier when evidence travels with the number.",
+          "下一步：你能分享带证明的分数，而不倾倒隐私数据。证据跟着数字走，信任就更容易。",
+          "Luego, compartes puntuación con prueba adjunta sin volcar datos privados. La confianza crece cuando la evidencia viaja con el número."
+        )
+      )
+    ),
+
+    registry_lookups: T3(
+      N(
+        P(
+          "Registry provides lookupable status for packages, tiers, and validity windows. It publishes minimum necessary truth (status, time, reason) without exposing sensitive internals.",
+          "登记系统提供可查询的包状态、分层与有效窗口；它只发布最小必要真相（状态/时间/原因），不暴露敏感内部。",
+          "El registro ofrece estado consultable de paquetes, niveles y ventanas de validez. Publica la verdad mínima (estado, tiempo, razón) sin exponer internos sensibles."
+        ),
+        P(
+          "Registry is the status check. Active, suspended, revoked—plus the reason. Clear and verifiable.",
+          "登记系统就是状态核查：启用/暂停/撤销+原因码。清楚且可核查。",
+          "Registro es el chequeo de estado: activo, suspendido, revocado—con razón. Claro y verificable."
+        )
+      ),
+      N(
+        P(
+          "Live registry forbids silent revocation and enforces deterministic renewal. Every suspension or reinstatement is logged and auditable. This blocks capture and hidden exceptions.",
+          "上线登记禁止静默撤销，并强制确定性续期规则。暂停/恢复都必须有日志可审计，阻断捕获与暗例外。",
+          "En vivo, prohíbe revocación silenciosa y obliga renovaciones deterministas. Suspensiones y reintegros quedan registrados y auditables. Bloquea captura y excepciones ocultas."
+        ),
+        P(
+          "Live registry means nobody can quietly flip things behind the scenes. If it changes, you can see it.",
+          "上线登记意味着没人能背地里悄悄翻转状态：一变就能看见。",
+          "Registro en vivo: nadie puede cambiar cosas en secreto. Si cambia, lo ves."
+        )
+      ),
+      N(
+        P(
+          "Roadmap adds third-party attestations and replay bundles so status becomes verifiable across organizations. Registry becomes the bridge from internal execution to external trust.",
+          "路线图加入第三方证明与回放包，使状态能跨组织核查。登记成为内部执行到外部信任的桥梁。",
+          "La hoja de ruta añade atestaciones de terceros y paquetes de replay para verificar estado entre organizaciones. El registro se vuelve el puente entre ejecución interna y confianza externa."
+        ),
+        P(
+          "Next, registry becomes real-world credibility. Outside groups verify status without taking your word for it.",
+          "下一步：登记系统成为现实世界的可信度。外部机构无需“听你说”，就能核查状态。",
+          "Luego, el registro se vuelve credibilidad real: terceros verifican estado sin depender de tu palabra."
+        )
+      )
+    )
   };
 
-  // UI refs
+  // ===== refs =====
   var bd=document.getElementById("bd");
-  var quadModal=document.getElementById("quadModal");
-  var domainModal=document.getElementById("domainModal");
-  var quadClose=document.getElementById("quadClose");
-  var domainClose=document.getElementById("domainClose");
-  var quadTitle=document.getElementById("quadTitle");
-  var quadGrid=document.getElementById("quadGrid");
-  var domainTitle=document.getElementById("domainTitle");
+  var domainsModal=document.getElementById("domainsModal");
+  var narrativeModal=document.getElementById("narrativeModal");
+  var domainsClose=document.getElementById("domainsClose");
+  var narClose=document.getElementById("narClose");
+  var domainsTitle=document.getElementById("domainsTitle");
+  var domainsGrid=document.getElementById("domainsGrid");
+  var narTitle=document.getElementById("narTitle");
+
   var toneFormal=document.getElementById("toneFormal");
   var toneInformal=document.getElementById("toneInformal");
   var bConcept=document.getElementById("bConcept");
@@ -619,109 +950,130 @@ body::before,body::after{pointer-events:none!important}
   var pLive=document.getElementById("pLive");
   var pRoadmap=document.getElementById("pRoadmap");
 
-  var currentQuad=null;
-  var currentDomain=null;
-  var tone="formal";
+  var currentSide="ENGINE"; // ENGINE|PLATFORM
+  var currentDomain=null;   // domain id
+  var tone="formal";        // formal|informal
 
   function showBD(){ bd.classList.add("show"); }
   function hideBD(){ bd.classList.remove("show"); }
+  function closeAll(){
+    domainsModal.classList.remove("show");
+    narrativeModal.classList.remove("show");
+    hideBD();
+    setActiveDiamond(null);
+  }
 
-  function openQuad(qname){
-    currentQuad=qname;
-    quadTitle.textContent = (lang==="zh" ? "软件 · " : (lang==="es" ? "Software · " : "SOFTWARE · ")) + qname;
-    quadGrid.innerHTML="";
+  function setActiveDiamond(which){
+    var dE=document.getElementById("dEngine");
+    var dP=document.getElementById("dPlatform");
+    dE.classList.toggle("active", which==="ENGINE");
+    dP.classList.toggle("active", which==="PLATFORM");
+  }
 
-    var domains = QUADS[qname] || [];
-    domains.forEach(function(d){
-      var tile=document.createElement("div");
-      tile.className="smallDiamond";
-      tile.setAttribute("role","button");
-      tile.tabIndex=0;
-      tile.innerHTML='<div class="sdInner"><div class="sdT">'+d+'</div><div class="sdS">'+T.domSub+'</div></div>';
-      tile.addEventListener("click", function(){ openDomain(d); });
-      tile.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openDomain(d);} });
-      quadGrid.appendChild(tile);
+  function openDomains(side){
+    currentSide=side;
+    setActiveDiamond(side);
+    domainsTitle.textContent = (lang==="zh" ? "软件 · " : (lang==="es" ? "Software · " : "SOFTWARE · ")) + (side==="ENGINE" ? T.d.engine.lab : T.d.platform.lab);
+
+    // build 6 domains + RETURN
+    domainsGrid.innerHTML="";
+    var list = (side==="ENGINE") ? ENGINE6 : PLATFORM6;
+
+    list.forEach(function(id){
+      var card=document.createElement("div");
+      card.className="domCard";
+      card.setAttribute("role","button");
+      card.tabIndex=0;
+      card.innerHTML='<div class="dcInner"><div class="dcT">'+dTitle(id)+'</div><div class="dcS">'+T.domSub+'</div></div>';
+      function act(){ openNarrative(id); }
+      card.addEventListener("click", act);
+      card.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+      domainsGrid.appendChild(card);
     });
 
-    // Return tile
     var ret=document.createElement("div");
-    ret.className="smallDiamond";
+    ret.className="domCard";
     ret.setAttribute("role","button");
     ret.tabIndex=0;
-    ret.innerHTML='<div class="sdInner"><div class="sdT">'+T.ret+'</div><div class="sdS">Back to quadrants</div></div>';
-    ret.addEventListener("click", closeQuad);
-    ret.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); closeQuad(); }});
-    quadGrid.appendChild(ret);
+    ret.innerHTML='<div class="dcInner"><div class="dcT">'+T.ret+'</div><div class="dcS">—</div></div>';
+    function r(){ closeAll(); }
+    ret.addEventListener("click", r);
+    ret.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); r(); }});
+    domainsGrid.appendChild(ret);
 
     showBD();
-    quadModal.classList.add("show");
+    narrativeModal.classList.remove("show");
+    domainsModal.classList.add("show");
   }
 
-  function closeQuad(){
-    quadModal.classList.remove("show");
-    if(!domainModal.classList.contains("show")) hideBD();
-  }
-
-  function openDomain(dname){
-    currentDomain=dname;
-    domainTitle.textContent = (lang==="zh" ? "软件 · " : (lang==="es" ? "Software · " : "SOFTWARE · ")) + dname;
-
-    [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
-
-    applyTone(tone);
-
-    quadModal.classList.remove("show");
-    showBD();
-    domainModal.classList.add("show");
-  }
-
-  function applyTone(t){
-    tone=t;
+  function applyTone(next){
+    tone=next;
     toneFormal.classList.toggle("active", tone==="formal");
     toneInformal.classList.toggle("active", tone==="informal");
+    renderNarrative();
+  }
 
-    var pack=N[currentDomain] || null;
-    if(!pack){
-      pConcept.textContent="NOT MEASURED";
-      pLive.textContent="NOT MEASURED";
-      pRoadmap.textContent="NOT MEASURED";
-      return;
+  function renderNarrative(){
+    if(!currentDomain){ return; }
+    var pack = TEXT[currentDomain];
+    var phase = {
+      concept: pack.concept[tone],
+      live: pack.live[tone],
+      roadmap: pack.roadmap[tone]
+    };
+    function pickLang(obj){
+      return (lang==="zh") ? obj.zh : (lang==="es") ? obj.es : obj.en;
     }
-    pConcept.textContent = pack.concept[tone];
-    pLive.textContent = pack.live[tone];
-    pRoadmap.textContent = pack.roadmap[tone];
+    pConcept.textContent = pickLang(phase.concept);
+    pLive.textContent = pickLang(phase.live);
+    pRoadmap.textContent = pickLang(phase.roadmap);
+  }
+
+  function openNarrative(domainId){
+    currentDomain=domainId;
+    narTitle.textContent = (lang==="zh" ? "软件 · " : (lang==="es" ? "Software · " : "SOFTWARE · ")) + dTitle(domainId);
+
+    // reset bubbles
+    [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
+
+    // ensure tone
+    applyTone(tone);
+
+    domainsModal.classList.remove("show");
+    showBD();
+    narrativeModal.classList.add("show");
   }
 
   function bindBubble(box){
+    box.tabIndex=0; box.setAttribute("role","button");
     box.addEventListener("click", function(){ box.classList.toggle("open"); });
     box.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); box.classList.toggle("open"); }});
-    box.tabIndex=0; box.setAttribute("role","button");
   }
   bindBubble(bConcept); bindBubble(bLive); bindBubble(bRoadmap);
 
+  // buttons
   toneFormal.addEventListener("click", function(){ applyTone("formal"); });
   toneInformal.addEventListener("click", function(){ applyTone("informal"); });
 
-  // backdrop click closes both
-  bd.addEventListener("click", function(){
-    domainModal.classList.remove("show");
-    quadModal.classList.remove("show");
-    hideBD();
-  });
-  quadClose.addEventListener("click", function(){ quadModal.classList.remove("show"); hideBD(); });
-  domainClose.addEventListener("click", function(){ domainModal.classList.remove("show"); quadModal.classList.remove("show"); hideBD(); });
+  // close wiring
+  domainsClose.addEventListener("click", closeAll);
+  narClose.addEventListener("click", closeAll);
+  bd.addEventListener("click", closeAll);
+  domainsModal.addEventListener("click", function(e){ e.stopPropagation(); });
+  narrativeModal.addEventListener("click", function(e){ e.stopPropagation(); });
 
-  // quadrants
-  function bindQuad(id,name){
+  // diamond bindings
+  function bindDiamond(id, side){
     var el=document.getElementById(id);
-    el.addEventListener("click", function(){ openQuad(name); });
-    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openQuad(name);} });
+    function act(){ openDomains(side); }
+    el.addEventListener("click", act);
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
   }
-  bindQuad("qEngine","ENGINE");
-  bindQuad("qPlatform","PLATFORM");
-  bindQuad("qInstruments","INSTRUMENTS");
-  bindQuad("qGovernance","GOVERNANCE");
+  bindDiamond("dEngine","ENGINE");
+  bindDiamond("dPlatform","PLATFORM");
 
+  // default open
+  openDomains("ENGINE");
 })();
 </script>
 

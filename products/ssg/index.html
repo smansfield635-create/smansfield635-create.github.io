@@ -1,0 +1,416 @@
+<!-- TNT — /products/ssg/index.html
+     PRODUCTS · SSG (ROOT GEOMETRY) · VARIANTS APPEND (MSSG/BSSG)
+     MODE: TNT · FULL FILE REPLACEMENT
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background
+       - No new primitives introduced
+       - SSG remains single root geometry
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SSG · Simplified Syntax Geometry</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body::before,body::after{pointer-events:none!important}
+
+/* Top controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:nowrap;align-items:center;white-space:nowrap;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:nowrap;align-items:center;white-space:nowrap;
+}
+.top-left .btn,.top-right .btn{white-space:nowrap}
+
+/* Header pill */
+.brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:120;text-align:center;
+  padding:10px 18px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(8px);
+  pointer-events:none;
+}
+.brand .t{margin:0;font-weight:950;font-size:20px;letter-spacing:.2px;line-height:1.1}
+.brand .s{margin:6px 0 0;opacity:.82;font-size:12.75px;line-height:1.25}
+
+/* Page layout */
+:root{--dockH:84px}
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:92px 0 calc(var(--dockH) + 26px);
+  position:relative;
+  z-index:10;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+/* Panels */
+.panel{
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.10), transparent 56%),
+    radial-gradient(circle at 78% 30%, rgba(160,120,255,.12), transparent 62%),
+    radial-gradient(circle at 62% 86%, rgba(110,230,255,.10), transparent 72%),
+    rgba(0,0,0,.16);
+  backdrop-filter:blur(10px);
+  box-shadow:0 26px 90px rgba(0,0,0,.55);
+  padding:18px 18px 16px;
+}
+
+.k{
+  margin:0 0 8px;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.78;
+}
+.h1{
+  margin:0;
+  font-weight:950;
+  font-size:28px;
+  letter-spacing:.3px;
+}
+.p{
+  margin:10px 0 0;
+  color:rgba(255,255,255,.86);
+  line-height:1.55;
+  font-size:13.5px;
+}
+
+.rulebox{
+  margin-top:14px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  padding:14px 14px 12px;
+}
+.rulebox .title{
+  margin:0 0 8px;
+  font-weight:950;
+  letter-spacing:.2px;
+}
+.ul{
+  margin:0 0 0 18px;
+  padding:0;
+  color:rgba(255,255,255,.80);
+}
+.ul li{margin:6px 0; line-height:1.45}
+
+/* Markdown-like content formatting (no new framework) */
+.md h2{
+  margin:0 0 10px;
+  font-weight:950;
+  font-size:18px;
+  letter-spacing:.2px;
+}
+.md h3{
+  margin:18px 0 8px;
+  font-weight:950;
+  font-size:15px;
+  letter-spacing:.2px;
+  opacity:.96;
+}
+.md h4{
+  margin:16px 0 8px;
+  font-weight:950;
+  font-size:13.5px;
+  letter-spacing:.2px;
+  opacity:.96;
+}
+.md p{
+  margin:8px 0 0;
+  color:rgba(255,255,255,.86);
+  line-height:1.55;
+  font-size:13.5px;
+}
+.hr{
+  margin:14px 0;
+  height:1px;
+  background:rgba(255,255,255,.10);
+}
+.codeblock{
+  margin-top:10px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  padding:12px 14px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  font-size:12.5px;
+  line-height:1.5;
+  color:rgba(255,255,255,.86);
+  white-space:pre-wrap;
+}
+
+/* Dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:120;width:min(980px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(8px);
+  pointer-events:none;
+}
+.dock .btn{pointer-events:auto}
+</style>
+</head>
+
+<body>
+
+<div class="top-left">
+  <a class="btn" id="btnBack" href="/products/">BACK</a>
+  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
+</div>
+
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
+</div>
+
+<div class="brand" aria-hidden="true">
+  <p class="t" id="hdrT">SSG</p>
+  <p class="s" id="hdrS">Simplified Syntax Geometry · Root</p>
+</div>
+
+<div class="page">
+
+  <!-- CORE SSG DEFINITION BLOCK (UNCHANGED PRIMITIVES) -->
+  <section class="panel" id="ssgCore">
+    <p class="k" id="kCore">ROOT GEOMETRY</p>
+    <h1 class="h1" id="tCore">Simplified Syntax Geometry (SSG)</h1>
+    <p class="p" id="pCore">
+      SSG is a constraint-based structural encoding system that expresses system behavior using five primitives:
+      <strong>Resources · Stores · Constraints · Goals · Guards</strong>
+    </p>
+
+    <div class="rulebox" aria-label="SSG preserves">
+      <p class="title" id="corePresTitle">SSG preserves:</p>
+      <ul class="ul" id="corePres">
+        <li>Non-circularity</li>
+        <li>Deterministic admissibility under declared rules</li>
+        <li>Receipt-gated progression</li>
+        <li>No timers as gates</li>
+        <li>Atomic state transitions</li>
+      </ul>
+    </div>
+
+    <div class="rulebox" aria-label="SSG notes">
+      <p class="title" id="coreNotesTitle">Notes:</p>
+      <ul class="ul" id="coreNotes">
+        <li>SSG is language-agnostic and substrate-independent.</li>
+        <li>SSG defines geometry. It does not define linguistic encoding or compression style.</li>
+        <li>Status: ROOT · CANONICAL · INDEPENDENT</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- REQUIRED APPEND (EXACT TEXT — NO MODIFICATION) -->
+  <section class="panel md" id="ssgVariants">
+    <h2>SSG Variants (Canonical Layers)</h2>
+
+    <p>SSG is the single root geometry. MSSG and BSSG are dependent execution layers that preserve SSG invariants and introduce zero new primitives.</p>
+
+    <div class="hr"></div>
+
+    <h4>SSG — Simplified Syntax Geometry (Root)</h4>
+
+    <p>SSG is a constraint-based structural encoding system that expresses system behavior using five primitives:</p>
+
+    <p><strong>Resources · Stores · Constraints · Goals · Guards</strong></p>
+
+    <p>SSG preserves:</p>
+    <p>• Non-circularity<br/>
+    • Deterministic admissibility under declared rules<br/>
+    • Receipt-gated progression<br/>
+    • No timers as gates<br/>
+    • Atomic state transitions</p>
+
+    <p>SSG is language-agnostic and substrate-independent.<br/>
+    SSG defines geometry. It does not define linguistic encoding or compression style.</p>
+
+    <p><strong>Status:</strong> ROOT · CANONICAL · INDEPENDENT</p>
+
+    <div class="hr"></div>
+
+    <h4>MSSG — Mandarin Simplified Syntax Geometry (Encoding Layer)</h4>
+
+    <p>MSSG is SSG expressed through a Mandarin linguistic compression surface. It is an encoding layer only.</p>
+
+    <p>MSSG:<br/>
+    • Preserves all SSG invariants<br/>
+    • Introduces zero new primitives<br/>
+    • Does not alter constraint logic<br/>
+    • Does not alter admissibility rules<br/>
+    • Exists to improve compression and transfer density</p>
+
+    <p><strong>Dependency:</strong> MSSG requires SSG.</p>
+
+    <p><strong>Status:</strong> DEPENDENT · EXECUTION ENCODING LAYER</p>
+
+    <div class="hr"></div>
+
+    <h4>BSSG — Binary Simplified Syntax Geometry (Admissibility Layer)</h4>
+
+    <p>BSSG is a binary admissibility projection of SSG states into:</p>
+
+    <p><strong>Admissible / Inadmissible</strong></p>
+
+    <p>under declared measurement rules.</p>
+
+    <p>BSSG:<br/>
+    • Preserves all SSG invariants<br/>
+    • Introduces zero new primitives<br/>
+    • Does not alter constraint logic<br/>
+    • Collapses multi-state structures into binary gate classifications for validation and stress testing</p>
+
+    <p><strong>Dependency:</strong> BSSG requires SSG.</p>
+
+    <p><strong>Status:</strong> DEPENDENT · BINARY ADMISSIBILITY LAYER</p>
+
+    <div class="hr"></div>
+
+    <h4>Dependency Graph</h4>
+
+    <div class="codeblock">SSG (Root Geometry)
+├─ MSSG (Encoding Layer)
+└─ BSSG (Admissibility Layer)</div>
+
+    <p>MSSG and BSSG are not separate geometries.<br/>
+    They are dependent layers that route through SSG.</p>
+  </section>
+
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockPrelude" href="/prelude/">PRELUDE</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
+  }
+
+  document.getElementById("btnBack").href="/products/"+q();
+  document.getElementById("btnExit").href="/index.html"+q();
+
+  document.getElementById("dockPrelude").href="/prelude/"+q();
+  document.getElementById("dockExplore").href="/explore/"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
+
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    location.href=location.pathname + q();
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  var I18N = {
+    en:{
+      hdrT:"SSG",
+      hdrS:"Simplified Syntax Geometry · Root",
+      kCore:"ROOT GEOMETRY",
+      tCore:"Simplified Syntax Geometry (SSG)",
+      pCore:"SSG is a constraint-based structural encoding system that expresses system behavior using five primitives: Resources · Stores · Constraints · Goals · Guards",
+      corePresTitle:"SSG preserves:",
+      coreNotesTitle:"Notes:"
+    },
+    zh:{
+      hdrT:"SSG",
+      hdrS:"简化语法几何 · 根层",
+      kCore:"根几何",
+      tCore:"简化语法几何（SSG）",
+      pCore:"SSG 是基于约束的结构编码系统，用五个原语表达系统行为：Resources · Stores · Constraints · Goals · Guards",
+      corePresTitle:"SSG 保持：",
+      coreNotesTitle:"备注："
+    },
+    es:{
+      hdrT:"SSG",
+      hdrS:"Geometría de Sintaxis Simplificada · Raíz",
+      kCore:"GEOMETRÍA RAÍZ",
+      tCore:"Geometría de Sintaxis Simplificada (SSG)",
+      pCore:"SSG es un sistema de codificación estructural basado en restricciones que expresa el comportamiento usando cinco primitivas: Resources · Stores · Constraints · Goals · Guards",
+      corePresTitle:"SSG preserva:",
+      coreNotesTitle:"Notas:"
+    }
+  };
+
+  var T = (lang==="zh") ? I18N.zh : (lang==="es") ? I18N.es : I18N.en;
+
+  document.getElementById("hdrT").textContent=T.hdrT;
+  document.getElementById("hdrS").textContent=T.hdrS;
+  document.getElementById("kCore").textContent=T.kCore;
+  document.getElementById("tCore").textContent=T.tCore;
+  document.getElementById("pCore").innerHTML=T.pCore.replace("Resources · Stores · Constraints · Goals · Guards","<strong>Resources · Stores · Constraints · Goals · Guards</strong>");
+  document.getElementById("corePresTitle").textContent=T.corePresTitle;
+  document.getElementById("coreNotesTitle").textContent=T.coreNotesTitle;
+})();
+</script>
+
+</body>
+</html>

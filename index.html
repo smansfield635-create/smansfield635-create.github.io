@@ -1,19 +1,18 @@
 <!-- TNT — /index.html
      INDEX · PRIMARY ROUTER (LAYER 1)
-     ROLE:
-       - First page after DOOR
-       - Two clear lanes:
-           1) STRUCTURE
-           2) PRODUCTS & INNOVATION
-       - Stark minimalist
-       - Plain English only (no abstract terminology on surface)
-       - Scientific language allowed only in fine print
-       - Routes:
-           STRUCTURE  → /home/
-           PRODUCTS   → /explore/
-       - Page-level language toggle (EN / 中文 / ES)
-       - State propagation: lang/style/time/depth
-       - Uses ui.css + branch.css + instruments.js
+     FIXES (NO VISUAL DRIFT):
+       - Wire EN / 中文 / ES buttons (they were dead)
+       - Ensure documentElement.lang is set
+       - Make q() canonical + URL-safe (encodeURIComponent)
+       - Keep existing look/geometry unchanged
+     ROUTES:
+       - STRUCTURE  → /home/
+       - PRODUCTS   → /explore/
+     STATE:
+       - URL: lang/style/time/depth
+       - LS: gd_lang/gd_style/gd_time/gd_depth
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - No field overrides
 -->
 
@@ -197,7 +196,7 @@ a{color:inherit;text-decoration:none}
   <a class="btn" id="btnDoor" href="/door/">DOOR</a>
 </div>
 
-<div class="top-right">
+<div class="top-right" aria-label="Language">
   <button class="btn" id="btnEN" type="button">EN</button>
   <button class="btn" id="btnZH" type="button">中文</button>
   <button class="btn" id="btnES" type="button">ES</button>
@@ -209,10 +208,10 @@ a{color:inherit;text-decoration:none}
   <p class="s" id="bs">Two ways in. Both lead to clarity.</p>
 </div>
 
-<div class="stage">
+<div class="stage" aria-label="Primary router">
 
   <!-- STRUCTURE -->
-  <div class="d d-top" id="dStructure" role="button" tabindex="0">
+  <div class="d d-top" id="dStructure" role="button" tabindex="0" aria-label="Structure">
     <div class="inner">
       <div class="lab" id="labStructure">STRUCTURE</div>
       <div class="sub" id="subStructure">Definitions. Boundaries. Clear foundations.</div>
@@ -220,7 +219,7 @@ a{color:inherit;text-decoration:none}
   </div>
 
   <!-- PRODUCTS -->
-  <div class="d d-bottom" id="dProducts" role="button" tabindex="0">
+  <div class="d d-bottom" id="dProducts" role="button" tabindex="0" aria-label="Products and innovation">
     <div class="inner">
       <div class="lab" id="labProducts">PRODUCTS & INNOVATION</div>
       <div class="sub" id="subProducts">Tools. Platforms. What you can use.</div>
@@ -246,30 +245,109 @@ a{color:inherit;text-decoration:none}
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
 
-  localStorage.setItem("gd_lang",lang);
-  localStorage.setItem("gd_style",style);
-  localStorage.setItem("gd_time",time);
-  localStorage.setItem("gd_depth",depth);
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
 
-  function q(){
-    return "?lang="+lang+"&style="+style+"&time="+time+"&depth="+depth;
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+
+  function q(over){
+    var L = (over && over.lang) ? over.lang : lang;
+    var S = (over && over.style) ? over.style : style;
+    var T = (over && over.time) ? over.time : time;
+    var D = (over && over.depth) ? over.depth : depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
   }
 
-  document.getElementById("btnDoor").href="/door/"+q();
+  // Language buttons (WAS MISSING)
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
 
-  document.getElementById("dStructure").onclick=function(){
-    location.href="/home/"+q();
-  };
-  document.getElementById("dProducts").onclick=function(){
-    location.href="/explore/"+q();
-  };
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
 
-  document.getElementById("dStructure").onkeydown=function(e){
-    if(e.key==="Enter"||e.key===" "){e.preventDefault();location.href="/home/"+q();}
-  };
-  document.getElementById("dProducts").onkeydown=function(e){
-    if(e.key==="Enter"||e.key===" "){e.preventDefault();location.href="/explore/"+q();}
-  };
+  function wireLinks(){
+    document.getElementById("btnDoor").href = "/door/" + q();
+  }
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang = next;
+    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang: lang}));
+    document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+    paintLang();
+    wireLinks();
+    renderLang();
+  }
+
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  paintLang();
+  wireLinks();
+
+  // Optional page copy i18n (kept minimal; no abstract terms)
+  function renderLang(){
+    if(lang==="zh"){
+      document.getElementById("bt").textContent="选择路径";
+      document.getElementById("bs").textContent="两条路。都通向清晰。";
+      document.getElementById("labStructure").textContent="结构";
+      document.getElementById("subStructure").textContent="定义。边界。清晰基础。";
+      document.getElementById("labProducts").textContent="产品与创新";
+      document.getElementById("subProducts").textContent="工具。平台。可用内容。";
+      document.getElementById("btnDoor").textContent="门";
+      document.getElementById("foot").textContent="细则：结构防漂移 · 工具需要结构";
+    }else if(lang==="es"){
+      document.getElementById("bt").textContent="ELEGIR RUTA";
+      document.getElementById("bs").textContent="Dos caminos. Ambos llevan a claridad.";
+      document.getElementById("labStructure").textContent="ESTRUCTURA";
+      document.getElementById("subStructure").textContent="Definiciones. Límites. Base clara.";
+      document.getElementById("labProducts").textContent="PRODUCTOS E INNOVACIÓN";
+      document.getElementById("subProducts").textContent="Herramientas. Plataformas. Usable.";
+      document.getElementById("btnDoor").textContent="PUERTA";
+      document.getElementById("foot").textContent="Letra pequeña: estructura evita deriva · herramientas requieren estructura";
+    }else{
+      document.getElementById("bt").textContent="CHOOSE PATH";
+      document.getElementById("bs").textContent="Two ways in. Both lead to clarity.";
+      document.getElementById("labStructure").textContent="STRUCTURE";
+      document.getElementById("subStructure").textContent="Definitions. Boundaries. Clear foundations.";
+      document.getElementById("labProducts").textContent="PRODUCTS & INNOVATION";
+      document.getElementById("subProducts").textContent="Tools. Platforms. What you can use.";
+      document.getElementById("btnDoor").textContent="DOOR";
+      document.getElementById("foot").textContent="Fine print: structure prevents drift · tools require structure";
+    }
+  }
+  renderLang();
+
+  // Routing
+  function goStructure(){ location.href="/home/" + q(); }
+  function goProducts(){ location.href="/explore/" + q(); }
+
+  var dS=document.getElementById("dStructure");
+  var dP=document.getElementById("dProducts");
+
+  dS.addEventListener("click", goStructure);
+  dP.addEventListener("click", goProducts);
+
+  dS.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goStructure(); }
+  });
+  dP.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goProducts(); }
+  });
+
 })();
 </script>
 
